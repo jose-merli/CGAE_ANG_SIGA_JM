@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { Router, RoutesRecognized } from '@angular/router';
 import { Message } from 'primeng/components/common/api';
 
 @Component({
@@ -8,6 +9,10 @@ import { Message } from 'primeng/components/common/api';
   styleUrls: ['./buscador-asistencia-expres.component.scss']
 })
 export class BuscadorAsistenciaExpresComponent implements OnInit {
+  usuarioBusquedaExpress = {
+    numColegiado: '',
+    nombreAp: ''
+  };
   expanded = true;
   datos;
   aeForm = new FormGroup({
@@ -21,7 +26,7 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
   rutas: string[] = ['SJCS', 'Guardia', 'Asistencias'];
 
 
-  constructor() {
+  constructor(private router: Router) {
     this.datos = {
       radios: [],
       dropdowns: [
@@ -90,6 +95,11 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.checkLastRoute();
+
+    if (sessionStorage.getItem('esBuscadorColegiados') == "true" && sessionStorage.getItem('usuarioBusquedaExpress')) {
+      this.usuarioBusquedaExpress = JSON.parse(sessionStorage.getItem('usuarioBusquedaExpress'));
+    }
     this.titulo = 'Datos Comunes';
   }
   opcionSeleccionado: string = '0';
@@ -112,6 +122,20 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  checkLastRoute() {
+
+    this.router.events
+      .filter(e => e instanceof RoutesRecognized)
+      .pairwise()
+      .subscribe((event: any[]) => {
+        if (event[0].urlAfterRedirects == "/pantallaBuscadorColegiados") {
+          sessionStorage.setItem("esBuscadorColegiados", "true");
+        } else {
+          sessionStorage.setItem("esBuscadorColegiados", "false");
+        }
+      });
   }
 
 }

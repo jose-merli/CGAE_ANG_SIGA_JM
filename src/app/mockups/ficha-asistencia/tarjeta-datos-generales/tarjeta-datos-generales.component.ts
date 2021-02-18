@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Message } from 'primeng/components/common/api';
+import { Router, RoutesRecognized } from '@angular/router';
 
 @Component({
   selector: 'app-tarjeta-datos-generales-asistencia',
@@ -8,6 +9,10 @@ import { Message } from 'primeng/components/common/api';
   styleUrls: ['./tarjeta-datos-generales.component.scss']
 })
 export class TarjetaDatosGeneralesAsistenciaComponent implements OnInit {
+  usuarioBusquedaExpress = {
+    numColegiado: '',
+    nombreAp: ''
+  };
   msgs: Message[] = [];
   datePickers1 = ["Fecha Asistencia", "Fecha Solicitud"];
   inputs1 = [
@@ -83,10 +88,16 @@ export class TarjetaDatosGeneralesAsistenciaComponent implements OnInit {
     }
   ];
 
-  constructor() { }
+  constructor(private router: Router) { }
   dgForm = new FormGroup({
   });
+
   ngOnInit(): void {
+    this.checkLastRoute();
+
+    if (sessionStorage.getItem('esBuscadorColegiados') == "true" && sessionStorage.getItem('usuarioBusquedaExpress')) {
+      this.usuarioBusquedaExpress = JSON.parse(sessionStorage.getItem('usuarioBusquedaExpress'));
+    }
   }
 
   showMsg(severity, summary, detail) {
@@ -100,6 +111,20 @@ export class TarjetaDatosGeneralesAsistenciaComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  checkLastRoute() {
+
+    this.router.events
+      .filter(e => e instanceof RoutesRecognized)
+      .pairwise()
+      .subscribe((event: any[]) => {
+        if (event[0].urlAfterRedirects == "/pantallaBuscadorColegiados") {
+          sessionStorage.setItem("esBuscadorColegiados", "true");
+        } else {
+          sessionStorage.setItem("esBuscadorColegiados", "false");
+        }
+      });
   }
 
 }

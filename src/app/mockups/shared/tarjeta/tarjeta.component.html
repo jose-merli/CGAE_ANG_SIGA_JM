@@ -8,7 +8,7 @@
 
     </div>
     <div class="col-lg-11 col-md-10 m-form-row">
-      <div class="d-flex justify-content-start mb-1">
+      <div class="d-flex justify-content-start">
         <label class="mr-auto titulo-tarjeta">{{ cardTitle }}</label>
       </div>
       <div *ngIf="campos" class="d-flex justify-content-between campos">
@@ -19,8 +19,8 @@
           </span>
         </label>
       </div>
-      <div *ngIf="enlaces" class="d-flex justify-content-between">
-        <label *ngFor="let enlace of enlaces">
+      <div *ngIf="enlaces" class="d-flex flex-wrap justify-content-between pt-2">
+        <label *ngFor="let enlace of enlaces" class="mr-auto">
           <a [routerLink]="[enlace.href,  enlace.params]">
             <span class="enlace">
               {{ enlace.texto }}

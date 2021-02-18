@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { Router, RoutesRecognized } from '@angular/router';
 
 @Component({
   selector: 'app-busqueda-ejg',
@@ -9,6 +10,12 @@ import { FormControl, FormGroup } from '@angular/forms';
 export class BusquedaEJGComponent implements OnInit {
 
   expanded = true;
+  expandedTra = false;
+  usuarioBusquedaExpress = {
+    numColegiado: '',
+    nombreAp: ''
+  };
+
   @Output() formulario = new EventEmitter<boolean>();
   cForm = new FormGroup({
     anio: new FormControl(''),
@@ -32,9 +39,20 @@ export class BusquedaEJGComponent implements OnInit {
   inputs2 = [];
   inputs3 = [];
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
+
+    this.checkLastRoute();
+
+    if (sessionStorage.getItem('esBuscadorColegiados') == "true") {
+      this.expandedTra = true;
+
+      if (sessionStorage.getItem('usuarioBusquedaExpress')) {
+        this.usuarioBusquedaExpress = JSON.parse(sessionStorage.getItem('usuarioBusquedaExpress'));
+      }
+    }
+
     for (let i = 0; i < this.selectores.length; i++) {
       this.selectores1 = this.selectores[0];
       this.selectores2 = this.selectores[1];
@@ -58,4 +76,19 @@ export class BusquedaEJGComponent implements OnInit {
   sendFom(value: FormGroup) {
     this.formulario.emit(value.valid)
   }
+
+  checkLastRoute() {
+
+    this.router.events
+      .filter(e => e instanceof RoutesRecognized)
+      .pairwise()
+      .subscribe((event: any[]) => {
+        if (event[0].urlAfterRedirects == "/pantallaBuscadorColegiados") {
+          sessionStorage.setItem("esBuscadorColegiados", "true");
+        } else {
+          sessionStorage.setItem("esBuscadorColegiados", "false");
+        }
+      });
+  }
+
 }

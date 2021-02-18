@@ -461,6 +461,9 @@ import { DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent } from '.
 import { FichaCambioLetradoComponent } from './mockups/ficha-cambio-letrado/ficha-cambio-letrado.component';
 import { DetalleTarjetaDatosRenuncianteComponent } from './mockups/ficha-cambio-letrado/detalle-tarjeta-datos-renunciante/detalle-tarjeta-datos-renunciante.component';
 import { DetalleTarjetaDatosSustitutoComponent } from './mockups/ficha-cambio-letrado/detalle-tarjeta-datos-sustituto/detalle-tarjeta-datos-sustituto.component';
+import { PantallaBuscadorColegiadosComponent } from './mockups/pantalla-buscador-colegiados/pantalla-buscador-colegiados.component';
+import { BuscadorColegiadosComponent } from './mockups/pantalla-buscador-colegiados/buscador-colegiados/buscador-colegiados.component';
+import { ResultadoBuscadorColegiadosComponent } from './mockups/pantalla-buscador-colegiados/resultado-buscador-colegiados/resultado-buscador-colegiados.component';
 
 
 
@@ -875,6 +878,9 @@ import { DetalleTarjetaDatosSustitutoComponent } from './mockups/ficha-cambio-le
 		FichaCambioLetradoComponent,
 		DetalleTarjetaDatosRenuncianteComponent,
 		DetalleTarjetaDatosSustitutoComponent,
+		PantallaBuscadorColegiadosComponent,
+		BuscadorColegiadosComponent,
+		ResultadoBuscadorColegiadosComponent,
 	],
 	imports: [
 		BrowserModule,
