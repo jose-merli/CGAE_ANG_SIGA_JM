@@ -462,6 +462,9 @@ import { DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent } from '.
 import { FichaCambioLetradoComponent } from './mockups/ficha-cambio-letrado/ficha-cambio-letrado.component';
 import { DetalleTarjetaDatosRenuncianteComponent } from './mockups/ficha-cambio-letrado/detalle-tarjeta-datos-renunciante/detalle-tarjeta-datos-renunciante.component';
 import { DetalleTarjetaDatosSustitutoComponent } from './mockups/ficha-cambio-letrado/detalle-tarjeta-datos-sustituto/detalle-tarjeta-datos-sustituto.component';
+import { TablaResultadoMixFAService } from './mockups/shared/tabla-resultado-mix/tabla-resultado-mix-fa.service';
+import { TablaResultadoOrderCGService } from './mockups/shared/tabla-resultado-order/tabla-resultado-order-cg.service';
+import { TablaResultadoOrderComponent } from './mockups/shared/tabla-resultado-order/tabla-resultado-order.component';
 
 
 
@@ -877,6 +880,7 @@ import { DetalleTarjetaDatosSustitutoComponent } from './mockups/ficha-cambio-le
 		FichaCambioLetradoComponent,
 		DetalleTarjetaDatosRenuncianteComponent,
 		DetalleTarjetaDatosSustitutoComponent,
+		TablaResultadoOrderComponent
 	],
 	imports: [
 		BrowserModule,
@@ -958,6 +962,8 @@ import { DetalleTarjetaDatosSustitutoComponent } from './mockups/ficha-cambio-le
 		MessageService,
 		AuthenticationService,
 		ConfirmationService,
+		TablaResultadoMixFAService,
+		TablaResultadoOrderCGService,
 
 		TrimPipePipe,
 

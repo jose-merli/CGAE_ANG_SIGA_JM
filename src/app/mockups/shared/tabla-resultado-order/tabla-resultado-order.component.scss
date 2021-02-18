@@ -22,7 +22,9 @@ overflow-wrap: break-word;}
   flex-direction: row;
   position: relative;
 }
-
+.pointer {
+  cursor: pointer;
+}
 .table-cell {
   // display: table-cell;
   // display: flex;
@@ -424,4 +426,20 @@ padding: 0;
 }
 .pointer{
   cursor : pointer;
+}
+.centerAlign{
+  display: flex;
+  align-items: center;
+}
+
+.styledBut{
+  background-color: #e6ecf1;
+  border: 1px solid #c6c7c8;
+  color: #595959;
+}
+.messageBox{
+  background-color: #8da3c1;
+  color: white;
+  border-radius: 5px;
+  border-color: #8da3c1;
 }

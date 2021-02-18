@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Message } from 'primeng/components/common/api';
+import { TablaResultadoMixFAService, Row } from '../../shared/tabla-resultado-mix/tabla-resultado-mix-fa.service';
 
 @Component({
   selector: 'app-detalle-tarjeta-documentacion-ficha-actuacion',
@@ -11,7 +12,14 @@ export class DetalleTarjetaDocumentacionFichaActuacionComponent implements OnIni
   msgs: Message[] = [];
   allSelected = false;
   isDisabled = true;
-
+  rowGroups: Row[];
+  rowGroupsAux: Row[];
+  showDatos: boolean = false;
+  modoBusqueda: string = 'b';
+  modoBusquedaB: boolean = true;
+  selectAll = false;
+  selectMultiple = false;
+  showResponse = true;
   cabeceras = [
     {
       id: "fechaentrada",
@@ -35,23 +43,13 @@ export class DetalleTarjetaDocumentacionFichaActuacionComponent implements OnIni
     },
   ];
 
-  elementos = [
-    ['28/08/2007', "2 Inic. DILIGENCIAS INDETERMINADAS", "Justificación Actuación", "jrbgjrbjrbjr.txt", ""],
-    ['28/08/2007', "2 Inic. DILIGENCIAS INDETERMINADAS", "Justificación Actuación", "ththtrhtrh.txt", ""],
-    ['28/08/2007', "2 Inic. DILIGENCIAS INDETERMINADAS", "Justificación Actuación", "grgergerg_frfger.doc", "grbejgberjgberj"],
-    ['28/08/2007', "2 Inic. DILIGENCIAS INDETERMINADAS", "Justificación Actuación", "TOLEDO_30112015_REV2_59722.xls", ""],
-  ];
+  constructor(
+    private trmService: TablaResultadoMixFAService,
+  ) { }
 
-  elementosAux = [
-    ['28/08/2007', "2 Inic. DILIGENCIAS INDETERMINADAS", "Justificación Actuación", "jrbgjrbjrbjr.txt", ""],
-    ['28/08/2007', "2 Inic. DILIGENCIAS INDETERMINADAS", "Justificación Actuación", "ththtrhtrh.txt", ""],
-    ['28/08/2007', "2 Inic. DILIGENCIAS INDETERMINADAS", "Justificación Actuación", "grgergerg_frfger.doc", "grbejgberjgberj"],
-    ['28/08/2007', "2 Inic. DILIGENCIAS INDETERMINADAS", "Justificación Actuación", "TOLEDO_30112015_REV2_59722.xls", ""],
-  ];
-
-  constructor() { }
-
-  ngOnInit() {
+  ngOnInit(): void {
+    this.rowGroups = this.trmService.getTableData();
+    this.rowGroupsAux = this.trmService.getTableData();
   }
 
   selectedAll(event) {
@@ -77,5 +75,8 @@ export class DetalleTarjetaDocumentacionFichaActuacionComponent implements OnIni
   clear() {
     this.msgs = [];
   }
+
+
+
 
 }
