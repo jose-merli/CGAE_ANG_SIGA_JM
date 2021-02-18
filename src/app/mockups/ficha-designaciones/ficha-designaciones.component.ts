@@ -1,7 +1,3 @@
-import { ElementRef } from '@angular/core';
-import { HostListener } from '@angular/core';
-import { Renderer2 } from '@angular/core';
-import { ViewChild } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -68,7 +64,7 @@ export class FichaDesignacionesComponent implements OnInit {
         {
           "key": "Designación Art. 27-28",
           "value": "NO"
-        },{
+        }, {
           "key": "Tipo",
           "value": "VERJSDHFBSDF"
         }
@@ -104,7 +100,7 @@ export class FichaDesignacionesComponent implements OnInit {
       id: 'sjcsDesigDatAdicionales',
       nombre: "Datos Adicionales",
       imagen: "",
-      icono: 'fa fa-user',
+      icono: 'fa fa-university',
       detalle: true,
       fixed: false,
       opened: false,
@@ -127,7 +123,7 @@ export class FichaDesignacionesComponent implements OnInit {
       id: 'sjcsDesigInt',
       nombre: "Interesados",
       imagen: "",
-      icono: "fa fa-briefcase",
+      icono: "fa fa-users",
       detalle: true,
       fixed: false,
       opened: false,
@@ -141,11 +137,11 @@ export class FichaDesignacionesComponent implements OnInit {
           "value": "sfsd dfgdg, Juan"
         }
       ]
-    },{
+    }, {
       id: 'sjcsDesigContra',
       nombre: "Contrarios",
       imagen: "",
-      icono: "fa fa-briefcase",
+      icono: "fa fa-users",
       detalle: true,
       fixed: false,
       opened: false,
@@ -155,11 +151,11 @@ export class FichaDesignacionesComponent implements OnInit {
           "value": "8"
         }
       ]
-    },   {
+    }, {
       id: 'sjcsDesigProc',
       nombre: "Procurador",
       imagen: "",
-      icono: "fa fa-briefcase",
+      icono: "fa fa-user",
       detalle: true,
       fixed: false,
       opened: false,
@@ -177,11 +173,11 @@ export class FichaDesignacionesComponent implements OnInit {
           "value": "02/07/2007"
         }
       ]
-    },   {
+    }, {
       id: 'sjcsDesigCamb',
       nombre: "Cambio Letrado",
       imagen: "",
-      icono: "fa fa-briefcase",
+      icono: "fa fa-graduation-cap",
       detalle: true,
       fixed: false,
       opened: false,
@@ -199,25 +195,25 @@ export class FichaDesignacionesComponent implements OnInit {
           "value": "02/07/2007"
         }
       ],
-      enlaces: [    
+      enlaces: [
         {
-        "texto": "Ficha colegial",
-        "href": "/fichaColegial"
-      }]
+          "texto": "Ficha colegial",
+          "href": "/fichaColegial"
+        }]
     }, {
       id: 'sjcsDesigRel',
       nombre: "Relaciones",
       imagen: "",
-      icono: "fa fa-briefcase",
+      icono: "fas fa-link",
       detalle: false,
       fixed: false,
       opened: false,
       campos: []
-    },  {
+    }, {
       id: 'sjcsDesigCom',
       nombre: "Comunicaciones",
       imagen: "",
-      icono: "fa fa-briefcase",
+      icono: "fa fa-inbox",
       detalle: true,
       fixed: false,
       opened: false,
@@ -227,7 +223,7 @@ export class FichaDesignacionesComponent implements OnInit {
           "value": "54"
         }
       ]
-    },  {
+    }, {
       id: 'sjcsDesigDoc',
       nombre: "Documentación",
       imagen: "",
@@ -241,11 +237,11 @@ export class FichaDesignacionesComponent implements OnInit {
           "value": "7"
         }
       ]
-    },  {
+    }, {
       id: 'sjcsDesigAct',
       nombre: "Actuaciones",
       imagen: "",
-      icono: "fa fa-briefcase",
+      icono: "fa fa-gavel",
       detalle: true,
       fixed: false,
       opened: false,
@@ -255,29 +251,32 @@ export class FichaDesignacionesComponent implements OnInit {
           "value": "5"
         }
       ]
-    }
+    },
+    {
+      id: 'sjcsDesigDatFac',
+      nombre: "Datos Facturación",
+      imagen: "",
+      icono: 'fa fa-usd',
+      fixed: false,
+      detalle: true,
+      opened: false,
+      campos: [
+        {
+          "key": "Partida Presupuestaria",
+          "value": "frfr frfrgtg ththth"
+        },
+      ]
+    },
   ];
 
-  stickyElementoffset = 0;
-  scrollOffset = 0;
-  enableSticky = false;
-  navbarHeight = 0;
-  scrollWidth = 0;
-
-  @ViewChild('parent') private parent: ElementRef;
-  @ViewChild('navbar') private navbarElement: ElementRef;
-  @ViewChild('content') private content: ElementRef;
-  @ViewChild('main') private main: ElementRef;
-
-  constructor(private renderer: Renderer2) { }
+  constructor() { }
 
   ngOnInit() {
   }
 
   ngAfterViewInit() {
-    this.stickyElementoffset = this.navbarElement.nativeElement.getBoundingClientRect().top;
-    this.navbarHeight = this.navbarElement.nativeElement.clientHeight;
-    this.scrollWidth = this.main.nativeElement.clientHeight - this.parent.nativeElement.clientHeight;
+
+    this.goTop();
 
     this.listaTarjetas.forEach(tarj => {
       let tarjTmp = {
@@ -291,24 +290,6 @@ export class FichaDesignacionesComponent implements OnInit {
 
   }
 
-  @HostListener("scroll", ['$event'])
-  manageScroll($event: Event) {
-    this.scrollOffset = $event.srcElement['scrollTop'];
-    this.setSticky();
-  }
-
-  setSticky() {
-    if (this.scrollOffset >= this.stickyElementoffset) {
-      this.enableSticky = true;
-      this.renderer.setStyle(this.content.nativeElement, "padding-top", this.navbarHeight + "px");
-      this.renderer.setStyle(this.navbarElement.nativeElement, "right", this.scrollWidth + "px");
-    } else {
-      this.enableSticky = false;
-      this.renderer.setStyle(this.content.nativeElement, "padding-top", "0px");
-      this.renderer.setStyle(this.navbarElement.nativeElement, "right", this.scrollWidth + "px");
-    }
-  }
-
   isOpenReceive(event) {
     let tarjTemp = this.listaTarjetas.find(tarj => tarj.id == event);
 
@@ -316,6 +297,14 @@ export class FichaDesignacionesComponent implements OnInit {
       tarjTemp.opened = true;
     }
 
+  }
+
+  goTop() {
+    let top = document.getElementById("top");
+    if (top) {
+      top.scrollIntoView();
+      top = null;
+    }
   }
 
 

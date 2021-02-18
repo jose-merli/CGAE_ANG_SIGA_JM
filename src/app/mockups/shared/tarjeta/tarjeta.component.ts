@@ -16,6 +16,7 @@ export class TarjetaComponent implements OnInit {
   @Input() campos;
   @Input() enlaces;
   @Input() fixed: boolean;
+  @Input() enlaceCardClosed;
   @Output() isOpen = new EventEmitter<any>();
 
   constructor() { }

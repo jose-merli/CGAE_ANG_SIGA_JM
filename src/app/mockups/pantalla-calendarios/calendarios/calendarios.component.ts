@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Message } from 'primeng/components/common/api';
 
 @Component({
   selector: 'app-calendarios',
@@ -6,8 +7,10 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./calendarios.component.scss']
 })
 export class CalendariosComponent implements OnInit {
+
+  msgs: Message[] = [];
   isDisabled = true;
-  show = true;
+  show = false;
   cFormValidity = true;
   modoBusqueda = 'a';
   modoBusquedaB = false;
@@ -78,7 +81,7 @@ export class CalendariosComponent implements OnInit {
         { label: '10', value: 10 },
       ]
     },
-        {
+    {
       nombre: "Guardias",
       opciones: [
         { label: '1', value: 1 },
@@ -133,12 +136,12 @@ export class CalendariosComponent implements OnInit {
   inputs = [this.inputs1, this.inputs2];
   emptyAccordions = [];
   constructor() { }
-  selectedAll(event){
+  selectedAll(event) {
     this.allSelected = event;
     this.isDisabled = !event;
   }
-  notifyAnySelected(event){
-    if (this.allSelected || event){
+  notifyAnySelected(event) {
+    if (this.allSelected || event) {
       this.isDisabled = false;
     } else {
       this.isDisabled = true;
@@ -163,6 +166,19 @@ export class CalendariosComponent implements OnInit {
     } else if (this.modoBusqueda === 'a') {
       this.modoBusquedaB = false;
     }
+  }
+
+  showMsg(severity, summary, detail) {
+    this.msgs = [];
+    this.msgs.push({
+      severity,
+      summary,
+      detail
+    });
+  }
+
+  clear() {
+    this.msgs = [];
   }
 
 }

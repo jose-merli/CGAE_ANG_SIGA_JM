@@ -6,37 +6,36 @@
         </div>
         <!-- <img [src]="imagen"> -->
     </div>
-    <div class="bloque col-lg-10 col-md-9">
+    <div class="col-lg-10 col-md-9">
 
         <form [formGroup]="notarioForm">
             <div class="form-row">
                 <div *ngFor="let campo of campos" class="form-group col-lg-3 col-md-6 inline">
-                    <div>
+                    <div class="w-100">
                         <label>{{campo.nombre}}</label>
                         <input [type]="campo.tipo" [formControlName]="campo.id" class="form-control" pInputText>
                     </div>
                     <div class="toBottom ml-3" *ngIf="campo.id=='id'">
-                        <i class="toBottom fa fa-search"></i>
+                        <i class="toBottom fa fa-search icon-search"></i>
                     </div>
-                 
+
                 </div>
                 <div *ngFor="let selector of selectores" class="form-group col-lg-3 col-md-6">
-                    
-                   <app-selector [i]="0" [selector]="selector"></app-selector>
+                    <app-selector [i]="0" [selector]="selector"></app-selector>
                 </div>
             </div>
         </form>
     </div>
     <div class="w-100" style="padding-top: 0.6rem;"></div>
 </div>
-.c
+
 <div class="card-footer">
     <div class="text-right main-button">
         <button pButton type="button"  icon="fa fa-undo" iconPos="left" label="Desasociar"
             (click)="showMsg('success', 'Se ha desasociado correctamente', '')"></button>
-        <button pButton type="button"  icon="far fa-save" iconPos="left" label="Guardar"
-            (click)="showMsg('success', 'Se ha guardado correctamente', '')"></button>
         <button pButton type="button"  icon="fa fa-search" iconPos="left" label="Buscar"
             (click)="showMsg('info', 'Mostrando información buscada', '')"></button>
+        <button pButton type="button"  icon="far fa-save" iconPos="left" label="Guardar"
+            (click)="showMsg('success', 'Se ha guardado correctamente', '')"></button>
     </div>
 </div>

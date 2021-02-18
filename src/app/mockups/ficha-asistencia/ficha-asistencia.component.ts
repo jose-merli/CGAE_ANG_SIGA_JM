@@ -1,7 +1,3 @@
-import { ViewChild } from '@angular/core';
-import { HostListener } from '@angular/core';
-import { Renderer2 } from '@angular/core';
-import { ElementRef } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -12,6 +8,7 @@ import { Component, OnInit } from '@angular/core';
 export class FichaAsistenciaComponent implements OnInit {
 
   rutas: string[] = ['SJCS', 'Asistencia'];
+
   tarjetaFija = {
     nombre: "Resumen Asistencia",
     icono: 'fas fa-clipboard',
@@ -55,7 +52,7 @@ export class FichaAsistenciaComponent implements OnInit {
     {
       id: 'sjcsEjgsfichAsistDatGen',
       nombre: "Datos Generales",
-      imagen: "assets/images/img-colegiado.PNG",
+      imagen: "",
       icono: 'far fa-address-book',
       detalle: true,
       fixed: false,
@@ -83,7 +80,7 @@ export class FichaAsistenciaComponent implements OnInit {
       id: 'sjcsEjgsfichAsistOtros',
       nombre: "Otros Datos",
       imagen: "",
-      icono: "fa fa-gavel",
+      icono: "fa fa-university",
       detalle: true,
       fixed: false,
       opened: false,
@@ -106,7 +103,7 @@ export class FichaAsistenciaComponent implements OnInit {
       id: 'sjcsEjgsfichAsistDatAd',
       nombre: "Datos Adicionales",
       imagen: "",
-      icono: "fa fa-gavel",
+      icono: "fa fa-university",
       detalle: true,
       fixed: false,
       opened: false,
@@ -116,7 +113,7 @@ export class FichaAsistenciaComponent implements OnInit {
       id: 'sjcsEjgsfichAsistRel',
       nombre: "Relaciones",
       imagen: "",
-      icono: 'fa fa-users',
+      icono: 'fas fa-link icon-ficha',
       detalle: true,
       fixed: false,
       opened: false,
@@ -147,7 +144,7 @@ export class FichaAsistenciaComponent implements OnInit {
       id: 'sjcsEjgsfichAsistAs',
       nombre: "Asistido",
       imagen: "",
-      icono: 'fa fa-dollar',
+      icono: 'fa fa-user',
       detalle: true,
       fixed: false,
       opened: false,
@@ -155,20 +152,21 @@ export class FichaAsistenciaComponent implements OnInit {
         {
           "key": "Identificación",
           "value": "56784308R"
-        },{
+        }, {
           "key": "Apellidos",
           "value": "SAFSF SFSDFDSF"
-        },{
+        }, {
           "key": "Nombre",
           "value": "JUAN"
         }
-      ]
+      ],
+      enlaceCardClosed: { href: '/fichaJusticiable', title: 'Ficha Justiciable' }
     },
     {
       id: 'sjcsEjgsfichAsistCont',
       nombre: "Contrarios",
       imagen: "",
-      icono: 'fas fa-link',
+      icono: 'fa fa-users',
       detalle: true,
       fixed: false,
       opened: false,
@@ -182,12 +180,17 @@ export class FichaAsistenciaComponent implements OnInit {
       id: 'sjcsEjgsfichAsistDoc',
       nombre: "Documentación",
       imagen: "",
-      icono: 'fa fa-graduation-cap',
+      icono: 'fa fa-briefcase',
       detalle: true,
       fixed: false,
       opened: false,
-      campos: []
-    },{
+      campos: [
+        {
+          "key": "Número total de Documentos",
+          "value": "7"
+        }
+      ]
+    }, {
       id: 'sjcsEjgsfichAsistCol',
       nombre: "Colegiado",
       imagen: "",
@@ -211,7 +214,7 @@ export class FichaAsistenciaComponent implements OnInit {
       id: 'sjcsEjgsfichAsistAct',
       nombre: "Actuaciones",
       imagen: "",
-      icono: 'fa fa-certificate',
+      icono: 'fa fa-map-marker',
       detalle: true,
       fixed: false,
       opened: false,
@@ -236,26 +239,14 @@ export class FichaAsistenciaComponent implements OnInit {
     }
   ];
 
-  stickyElementoffset = 0;
-  scrollOffset = 0;
-  enableSticky = false;
-  navbarHeight = 0;
-  scrollWidth = 0;
-
-  @ViewChild('parent') private parent: ElementRef;
-  @ViewChild('navbar') private navbarElement: ElementRef;
-  @ViewChild('content') private content: ElementRef;
-  @ViewChild('main') private main: ElementRef;
-
-  constructor(private renderer: Renderer2) { }
+  constructor() { }
 
   ngOnInit() {
   }
 
   ngAfterViewInit() {
-    this.stickyElementoffset = this.navbarElement.nativeElement.getBoundingClientRect().top;
-    this.navbarHeight = this.navbarElement.nativeElement.clientHeight;
-    this.scrollWidth = this.main.nativeElement.clientHeight - this.parent.nativeElement.clientHeight;
+
+    this.goTop();
 
     this.listaTarjetas.forEach(tarj => {
       let tarjTmp = {
@@ -268,24 +259,6 @@ export class FichaAsistenciaComponent implements OnInit {
     });
   }
 
-  @HostListener("scroll", ['$event'])
-  manageScroll($event: Event) {
-    this.scrollOffset = $event.srcElement['scrollTop'];
-    this.setSticky();
-  }
-
-  setSticky() {
-    if (this.scrollOffset >= this.stickyElementoffset) {
-      this.enableSticky = true;
-      this.renderer.setStyle(this.content.nativeElement, "padding-top", this.navbarHeight + "px");
-      this.renderer.setStyle(this.navbarElement.nativeElement, "right", this.scrollWidth + "px");
-    } else {
-      this.enableSticky = false;
-      this.renderer.setStyle(this.content.nativeElement, "padding-top", "0px");
-      this.renderer.setStyle(this.navbarElement.nativeElement, "right", this.scrollWidth + "px");
-    }
-  }
-
   isOpenReceive(event) {
     let tarjTemp = this.listaTarjetas.find(tarj => tarj.id == event);
 
@@ -293,6 +266,14 @@ export class FichaAsistenciaComponent implements OnInit {
       tarjTemp.opened = true;
     }
 
+  }
+
+  goTop() {
+    let top = document.getElementById("top");
+    if (top) {
+      top.scrollIntoView();
+      top = null;
+    }
   }
 
 }
