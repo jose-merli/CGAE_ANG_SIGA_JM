@@ -1,7 +1,7 @@
 import { NgModule, LOCALE_ID } from '@angular/core';
 import { CommonModule, DatePipe, APP_BASE_HREF, UpperCasePipe } from '@angular/common';
 import { DataTableModule, PaginatorModule, InputTextModule, CheckboxModule, DropdownModule, ButtonModule, GrowlModule, ConfirmationService, MenubarModule, ConfirmDialogModule, MultiSelectModule } from 'primeng/primeng';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { PipeTranslationModule } from '../../../commons/translate/pipe-translation.module';
 import { TableModule } from '../../../../../node_modules/primeng/table';
 import { FechaModule } from '../../../commons/fecha/fecha.module';
@@ -18,44 +18,34 @@ import { environment } from '../../../../environments/environment';
 import { HTTP_INTERCEPTORS } from '../../../../../node_modules/@angular/common/http';
 import { JwtInterceptor } from '../../../_interceptor/jwt.interceptor';
 import { CookieService } from '../../../../../node_modules/ngx-cookie-service';
-
-//EJG
-import { EjgComponent } from './ejg.component';
-import { EmptyAccordionComponent } from '../../../commons/empty-accordion/empty-accordion.component';
-import { FiltroBusquedaEJGComponent } from './busqueda/filtro-busqueda-ejg/filtro-busqueda-ejg.component';
-import { TablaBusquedaEJGComponent } from './busqueda/tabla-busqueda-ejg/tabla-busqueda-ejg.component';
-import { BusquedaEjgComponent } from './busqueda/busqueda-ejg.component';
-import { TarjetaDatosGeneralesComponent } from './ficha/tarjeta-datos-generales/tarjeta-datos-generales.component';
-import { TarjetaDictamenComponent } from './ficha/tarjeta-dictamen/tarjeta-dictamen.component';
-import { TarjetaDocumentacionComponent } from './ficha/tarjeta-documentacion/tarjeta-documentacion.component';
-import { TarjetaExpedientesEconomicosComponent } from './ficha/tarjeta-expedientes-economicos/tarjeta-expedientes-economicos.component';
-import { TarjetaImpugnacionComponent } from './ficha/tarjeta-impugnacion/tarjeta-impugnacion.component';
-import { TarjetaResolucionComponent } from './ficha/tarjeta-resolucion/tarjeta-resolucion.component';
-import { TarjetaServiciosTramitacionComponent } from './ficha/tarjeta-servicios-tramitacion/tarjeta-servicios-tramitacion.component';
-import { TarjetaUnidadFamiliarComponent } from './ficha/tarjeta-unidad-familiar/tarjeta-unidad-familiar.component';
-import { FichaEjgsComponent } from './ficha/ficha-ejgs.component';
-
+import { FiltrosEjgComponent } from './filtros-busqueda-ejg/filtros-ejg.component';
+import { TablaEjgComponent } from './tabla-ejg/tabla-ejg.component';
+// import { EJGComponent } from './ejg.component';
 import { BusquedaColegiadoExpressModule } from '../../../commons/busqueda-colegiado-express/busqueda-colegiado-express.module';
 import { TarjetaResumenFijaModule } from '../../../commons/tarjeta-resumen-fija/tarjeta-resumen-fija.module';
+import { GestionEjgComponent } from './gestion-ejg/gestion-ejg.component';
+import { DatosGeneralesEjgComponent } from './gestion-ejg/datos-generales-ejg/datos-generales-ejg.component';
+import { ServiciosTramitacionComponent } from './gestion-ejg/servicios-tramitacion/servicios-tramitacion.component';
+import { EJGComponent } from './ejg.component';
+import { UnidadFamiliarComponent } from './gestion-ejg/unidad-familiar/unidad-familiar.component';
+import { ExpedientesEconomicosComponent } from './gestion-ejg/expedientes-economicos/expedientes-economicos.component';
+import { RelacionesComponent } from './gestion-ejg/relaciones/relaciones.component';
+import { EstadosComponent } from './gestion-ejg/estados/estados.component';
+import { DocumentacionComponent } from './gestion-ejg/documentacion/documentacion.component';
+import { InformeCalificacionComponent } from './gestion-ejg/informe-calificacion/informe-calificacion.component';
+import { ResolucionComponent } from './gestion-ejg/resolucion/resolucion.component';
+import { ImpugnacionComponent } from './gestion-ejg/impugnacion/impugnacion.component';
+import { RegtelComponent } from './gestion-ejg/regtel/regtel.component';
+import { ComunicacionesComponent } from './gestion-ejg/comunicaciones/comunicaciones.component';
 
-import { MatSelectModule } from '@angular/material/select';
-import { MatSortModule } from '@angular/material/sort';
-import { MatTableModule } from '@angular/material/table';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MatInputModule } from '@angular/material/input';
-import { SelectorComponent } from '../../../commons/selector/selector.component';
-import { BuscadorColegialComponent } from '../../../commons/buscadorColegial/buscador-colegial.component';
-import { TablaResultadoComponent } from '../../../commons/tabla-resultado/tabla-resultado.component';
-import { PaginadorComponent } from '../../../commons/paginador/paginador.component';
-import { MigasDePanComponent } from '../../../commons/migas-de-pan/migas-de-pan.component';
-import { TablaSimpleComponent } from '../../../commons/tabla-simple/tabla-simple.component';
-import { InputDivididoComponent } from '../../../commons/input-dividido/input-dividido.component';
-import { DatePickerRangeComponent } from '../../../commons/date-picker-range/date-picker-range.component';
-import { TarjetaComponent } from '../../../commons/tarjeta/tarjeta.component';
+// import { GestionModulosYBasesComponent } from './edicion-modulos/gestion-modulosybasesdecompensacion.component';
+// import { MaestrosModulosComponent } from './busqueda-modulosybasesdecompensacion.component';
+// import { EdicionModulosComponent } from './edicion-modulos/gestion-modulos/edicion-modulos.component';
+// import { TablaAcreditacionesComponent } from './edicion-modulos/tabla-acreditaciones/tabla-acreditaciones.component';
+
+
+
+// import { FichaGrupoZonaModule } from './ficha-grupo-zona/ficha-grupo-zona.module';
 
 @NgModule({
   imports: [
@@ -67,7 +57,6 @@ import { TarjetaComponent } from '../../../commons/tarjeta/tarjeta.component';
     DropdownModule,
     CheckboxModule,
     FormsModule,
-    ReactiveFormsModule, 
     GrowlModule,
     PipeTranslationModule,
     MenubarModule,
@@ -77,41 +66,26 @@ import { TarjetaComponent } from '../../../commons/tarjeta/tarjeta.component';
     ConfirmDialogModule,
     BusquedaColegiadoExpressModule,
     TarjetaResumenFijaModule,
-    MatInputModule,
-    MatNativeDateModule,
-    MatDatepickerModule,
-    MatCheckboxModule,
-    MatPaginatorModule,
-    MatExpansionModule,
-    MatTableModule,
-    MatSortModule,
-    MatSelectModule
+    // FichaGrupoZonaModule
+
   ],
   declarations: [
-    EjgComponent,
-    EmptyAccordionComponent,
-    FiltroBusquedaEJGComponent,
-    TablaBusquedaEJGComponent,
-    BusquedaEjgComponent,
-    TarjetaDatosGeneralesComponent,
-    TarjetaDictamenComponent,
-    TarjetaDocumentacionComponent,
-    TarjetaExpedientesEconomicosComponent,
-    TarjetaImpugnacionComponent,
-    TarjetaResolucionComponent,
-    TarjetaServiciosTramitacionComponent,
-    TarjetaUnidadFamiliarComponent,
-    FichaEjgsComponent,
-		SelectorComponent,
-    BuscadorColegialComponent,
-    EmptyAccordionComponent,
-    TablaResultadoComponent,
-    PaginadorComponent,
-    MigasDePanComponent,
-    TablaSimpleComponent,
-    InputDivididoComponent,
-    TarjetaComponent,
-    DatePickerRangeComponent
+    FiltrosEjgComponent,
+    TablaEjgComponent,
+    EJGComponent,
+    GestionEjgComponent,
+    DatosGeneralesEjgComponent,
+    ServiciosTramitacionComponent,
+    UnidadFamiliarComponent,
+    ExpedientesEconomicosComponent,
+    RelacionesComponent,
+    EstadosComponent,
+    DocumentacionComponent,
+    InformeCalificacionComponent,
+    ResolucionComponent,
+    ImpugnacionComponent,
+    RegtelComponent,
+    ComunicacionesComponent
   ],
   providers: [
     ImagePipe,

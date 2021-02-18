@@ -142,7 +142,7 @@ import { MaestroPJComponent } from "./features/sjcs/maestros/maestro-pj/maestro-
 import { DestinatariosRetencionesComponent } from "./features/sjcs/maestros/destinatarios-retenciones/destinatarios-retenciones.component";
 import { TiposAsistenciaComponent } from "./features/sjcs/maestros/tiposAsistencia/tiposAsistencia.component";
 import { SOJComponent } from "./features/sjcs/soj/soj.component";
-import { EjgComponent } from "./features/sjcs/ejg/ejg.component";
+import { EJGComponent } from "./features/sjcs/ejg/ejg.component";
 import { GestionActasComponent } from "./features/sjcs/gestion-actas/gestion-actas.component";
 import { JustificacionLetradoComponent } from "./features/sjcs/informes/justificacion-letrado/justificacion-letrado.component";
 import { InformeFacturacionComponent } from "./features/sjcs/informes/informe-facturacion/informe-facturacion.component";
@@ -773,7 +773,7 @@ import { DialogoComunicacionesComponent } from "./features/informes-comunicacion
 	},
 	{
 		path: 'ejg',
-		component: EjgComponent,
+		component: EJGComponent,
 		canActivate: [ AuthGuard ]
 	},
 	{

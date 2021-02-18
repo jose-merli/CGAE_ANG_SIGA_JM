@@ -335,17 +335,6 @@ import { GeneralSJCSModule } from './commons/busqueda-generalSJCS/busqueda-gener
 import { BusquedaAsuntosModule } from './commons/busqueda-asuntos/busqueda-asuntos.module';
 import { PipeTranslationModule } from './commons/translate/pipe-translation.module';
 
-//angular material
-import { MatSelectModule } from '@angular/material/select';
-import { MatSortModule } from '@angular/material/sort';
-import { MatTableModule } from '@angular/material/table';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MatInputModule } from '@angular/material/input';
-
 @NgModule({
 	declarations: [
 		AppComponent,
@@ -686,16 +675,7 @@ import { MatInputModule } from '@angular/material/input';
 		// BusquedaAsuntosModule,
 		EditorModule,
 		SjcsModule,
-		BusquedaAsuntosModule,
-		MatSelectModule,
-		MatSortModule,
-		MatTableModule,
-		MatExpansionModule,
-		MatPaginatorModule,
-		MatCheckboxModule,
-		MatDatepickerModule,
-		MatNativeDateModule,
-		MatInputModule
+		BusquedaAsuntosModule
 	],
 
 	exports: [],
