@@ -161,7 +161,7 @@ export class FichaAsistenciaComponent implements OnInit {
           "value": "JUAN"
         }
       ],
-      enlaceCardClosed: { href: '/fichaJusticiable', title: 'Ficha Justiciable' }
+      enlaceCardOpen: { href: '/fichaJusticiable', title: 'Ficha Justiciable' }
     },
     {
       id: 'sjcsEjgsfichAsistCont',

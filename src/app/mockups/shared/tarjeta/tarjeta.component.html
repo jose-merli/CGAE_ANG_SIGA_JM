@@ -10,8 +10,12 @@
     <div class="col-lg-11 col-md-10 m-form-row">
       <div class="d-flex justify-content-start">
         <label class="mr-auto titulo-tarjeta">{{ cardTitle }}</label>
+        <div *ngIf="enlaceCardClosed !== undefined && enlaceCardClosed !== null" class="right">
+          <a [routerLink]="enlaceCardClosed.href" class="enlace"> <i class="fas fa-external-link-alt mr-2 icono-enlace"
+              aria-hidden="true"></i>{{ enlaceCardClosed.title }}</a>
+        </div>
       </div>
-      <div *ngIf="campos" class="d-flex justify-content-between campos">
+      <div *ngIf="campos" class="d-flex justify-content-between campos pt-2">
         <label *ngFor="let campo of campos">
           {{ campo.key }}:
           <span>
@@ -41,9 +45,9 @@
       <label class="titulo-tarjeta">{{ cardTitle }}</label>
     </div>
 
-    <div *ngIf="enlaceCardClosed !== undefined" class="right mr-4">
-      <a [routerLink]="enlaceCardClosed.href" class="enlace"> <i class="fas fa-external-link-alt mr-2 icono-enlace"
-          aria-hidden="true"></i>{{ enlaceCardClosed.title }}</a>
+    <div *ngIf="enlaceCardOpen !== undefined" class="right mr-4">
+      <a [routerLink]="enlaceCardOpen.href" class="enlace"> <i class="fas fa-external-link-alt mr-2 icono-enlace"
+          aria-hidden="true"></i>{{ enlaceCardOpen.title }}</a>
     </div>
 
   </div>

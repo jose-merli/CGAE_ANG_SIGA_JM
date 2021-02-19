@@ -137,7 +137,8 @@ export class FichaDesignacionesComponent implements OnInit {
           "value": "sfsd dfgdg, Juan"
         }
       ]
-    }, {
+    },
+    {
       id: 'sjcsDesigContra',
       nombre: "Contrarios",
       imagen: "",
@@ -151,7 +152,8 @@ export class FichaDesignacionesComponent implements OnInit {
           "value": "8"
         }
       ]
-    }, {
+    },
+    {
       id: 'sjcsDesigProc',
       nombre: "Procurador",
       imagen: "",
@@ -173,7 +175,8 @@ export class FichaDesignacionesComponent implements OnInit {
           "value": "02/07/2007"
         }
       ]
-    }, {
+    },
+    {
       id: 'sjcsDesigCamb',
       nombre: "Cambio Letrado",
       imagen: "",
@@ -195,12 +198,10 @@ export class FichaDesignacionesComponent implements OnInit {
           "value": "02/07/2007"
         }
       ],
-      enlaces: [
-        {
-          "texto": "Ficha colegial",
-          "href": "/fichaColegial"
-        }]
-    }, {
+      enlaces: [],
+      enlaceCardClosed: { href: '/fichaColegial', title: 'Ficha colegial' }
+    },
+    {
       id: 'sjcsDesigRel',
       nombre: "Relaciones",
       imagen: "",
@@ -209,7 +210,8 @@ export class FichaDesignacionesComponent implements OnInit {
       fixed: false,
       opened: false,
       campos: []
-    }, {
+    },
+    {
       id: 'sjcsDesigCom',
       nombre: "Comunicaciones",
       imagen: "",
@@ -223,7 +225,8 @@ export class FichaDesignacionesComponent implements OnInit {
           "value": "54"
         }
       ]
-    }, {
+    },
+    {
       id: 'sjcsDesigDoc',
       nombre: "Documentación",
       imagen: "",
@@ -237,7 +240,8 @@ export class FichaDesignacionesComponent implements OnInit {
           "value": "7"
         }
       ]
-    }, {
+    },
+    {
       id: 'sjcsDesigAct',
       nombre: "Actuaciones",
       imagen: "",

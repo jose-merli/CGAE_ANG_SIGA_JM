@@ -56,6 +56,9 @@ export class PantallaBuscadorColegiadosComponent implements OnInit {
   constructor(private location: Location) { }
 
   ngOnInit() {
+    if (sessionStorage.getItem('usuarioBusquedaExpress')) {
+      sessionStorage.removeItem('usuarioBusquedaExpress')
+    }
   }
 
   showMsg(severity, summary, detail) {
@@ -80,9 +83,6 @@ export class PantallaBuscadorColegiadosComponent implements OnInit {
   }
 
   goBack() {
-    if (sessionStorage.getItem('usuarioBusquedaExpress')) {
-      sessionStorage.removeItem('usuarioBusquedaExpress')
-    }
     this.location.back();
   }
 
