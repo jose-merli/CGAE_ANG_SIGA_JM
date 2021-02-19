@@ -61,6 +61,8 @@ export class FichaCambioLetradoComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
 
+    this.goTop();
+
     this.listaTarjetas.forEach(tarj => {
       let tarjTmp = {
         id: tarj.id,
@@ -93,6 +95,14 @@ export class FichaCambioLetradoComponent implements OnInit, AfterViewInit {
       tarjTemp.opened = true;
     }
 
+  }
+
+  goTop() {
+    let top = document.getElementById("top");
+    if (top) {
+      top.scrollIntoView();
+      top = null;
+    }
   }
 
 }

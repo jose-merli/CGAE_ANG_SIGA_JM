@@ -85,6 +85,11 @@ export class FichaCalendarioProgramacionComponent implements OnInit {
 
   ngOnInit(): void {
   }
+
+  ngAfterViewInit(): void {
+    this.goTop();
+  }
+
   saveForm($event) {
     this.cFormValidity = $event;
   }
@@ -118,5 +123,13 @@ export class FichaCalendarioProgramacionComponent implements OnInit {
   clear() {
     this.msgs = [];
 
+  }
+
+  goTop() {
+    let top = document.getElementById("top");
+    if (top) {
+      top.scrollIntoView();
+      top = null;
+    }
   }
 }
