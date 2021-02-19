@@ -22,6 +22,7 @@ export class TablaEjgComponent implements OnInit {
   selectedItem: number = 10;
   selectAll;
   selectedDatos = [];
+  selectDatos: EJGItem = new EJGItem();
   numSelected = 0;
   selectMultiple: boolean = false;
   seleccion: boolean = false;
@@ -317,7 +318,17 @@ export class TablaEjgComponent implements OnInit {
   }
 
   downloadEEJ() {
+    this.progressSpinner=true;
 
+    this.sigaServices.post("descargarEEJ", this.selectDatos).subscribe(
+      n => {
+        this.progressSpinner=false;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner=false;
+      }
+    );
   }
 
   addRemesa() {
