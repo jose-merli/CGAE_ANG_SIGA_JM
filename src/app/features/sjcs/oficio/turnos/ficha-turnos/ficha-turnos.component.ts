@@ -109,7 +109,17 @@ export class FichaTurnosComponent implements OnInit {
       	setTimeout(() => {
         	this.enviarEnlacesTarjeta();
 		  }, 2000);
-		
+
+		this.goTop();
+	}
+
+	goTop(){
+		let top = document.getElementById("top");
+		if (top) {
+		  top.scrollIntoView();
+		  top = null;
+		}
+	 
 	}
 
 	ngOnChanges(changes: SimpleChanges) {

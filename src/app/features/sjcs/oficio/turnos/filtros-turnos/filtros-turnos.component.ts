@@ -234,7 +234,7 @@ export class FiltrosTurnos implements OnInit {
 
   onChangeZona() {
 
-    this.filtros.idzubzona = "";
+    this.filtros.idsubzona = "";
     this.subzonas = [];
 
     if (this.filtros.idzona != undefined && this.filtros.idzona != "") {
@@ -306,7 +306,8 @@ export class FiltrosTurnos implements OnInit {
   }
 
   partidoJudiciales() {
-       this.sigaServices
+    if (this.filtros.idsubzona.length > 0) {
+      this.sigaServices
         .getParam(
           "fichaZonas_searchSubzones",
           "?idZona=" + this.filtros.idzona
@@ -317,13 +318,15 @@ export class FiltrosTurnos implements OnInit {
           },
           err => {
             console.log(err);
-  
+
           }, () => {
             this.getPartidosJudiciales();
           }
         );
-  
-      // }
+    } else {
+      //this.isDisabledSubZona = true;
+      this.partidoJudicial = "";
+    }
   }
 
   newTurno() {
@@ -344,8 +347,8 @@ export class FiltrosTurnos implements OnInit {
     (this.filtros.idarea == null ||
         this.filtros.idarea == undefined
         ) &&
-    (this.filtros.idzubzona == null ||
-        this.filtros.idzubzona == undefined) &&
+    (this.filtros.idsubzona == null ||
+        this.filtros.idsubzona == undefined) &&
     (this.filtros.idmateria == null ||
         this.filtros.idmateria == undefined )&&
     (this.filtros.idtipoturno == null ||
@@ -413,7 +416,7 @@ export class FiltrosTurnos implements OnInit {
     this.filtros.nombre = "";
     this.filtros.abreviatura = "";
     this.filtros.idarea = undefined;
-    this.filtros.idzubzona = undefined
+    this.filtros.idsubzona = undefined
     this.filtros.idmateria = undefined
     this.filtros.idtipoturno = undefined
     this.filtros.idpartidapresupuestaria = undefined
