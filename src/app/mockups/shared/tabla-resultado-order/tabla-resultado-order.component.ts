@@ -14,6 +14,7 @@ export class TablaResultadoOrderComponent implements OnInit {
   @Input() cabeceras = [];
   @Input() rowGroups: Row[];
   @Input() rowGroupsAux: Row[];
+  rowGroupsOrdered = [];
   @Input() seleccionarTodo = false;
   @Output() anySelected = new EventEmitter<any>();
   cabecerasMultiselect = [];
@@ -33,6 +34,7 @@ export class TablaResultadoOrderComponent implements OnInit {
   positionSelected = 0;
   grupos = [];
   x = 0;
+  xArr = [];
   unavailableUp = false;
   unavailableDown = false;
   @ViewChild('table') table: ElementRef;
@@ -58,15 +60,16 @@ export class TablaResultadoOrderComponent implements OnInit {
     this.cabeceras.forEach(cab =>{
       this.cabecerasMultiselect.push(cab.name);
     })
-    this.rowGroups.forEach(rg =>{
+    this.xArr = [];
+    this.rowGroups.forEach((rg, i) =>{
       this.grupos.push(rg.cells[0]);
+      let x = this.ordenValue(i);
+      this.xArr.push(x);
     })
     
   }
   ordenValue(i){
   if(this.grupos[i-1] != undefined){
-    console.log('this.grupos[i-1].value: ', this.grupos[i-1].value)
-    console.log('this.grupos[i].value: ', this.grupos[i].value)
     if ((this.grupos[i-1].value != this.grupos[i].value)){
       this.x = 1;
     } else {
@@ -75,7 +78,6 @@ export class TablaResultadoOrderComponent implements OnInit {
   } else {
     this.x = 1;
   }
-  console.log('x: ', this.x)
   return this.x;
 }
   validaCheck(texto) {
@@ -96,7 +98,54 @@ export class TablaResultadoOrderComponent implements OnInit {
     }
     
   }
+
   guardar(){
+      this.ordenarGrupos();
+      this.orderByOrder();
+    let errorVacio = this.checkEmpty();
+    let errorSecuencia = this.checkSequence();
+    if (!errorVacio && !errorSecuencia){
+      this.showMsg('success', 'Se ha guardado correctamente', '')
+    } else if (errorVacio){
+      this.showMsg('info', 'Error. Existen campos vacíos en la tabla.', '')
+    }else if (errorSecuencia){
+      this.showMsg('info', 'Error. Los valores en la columna "Orden" deben ser secuenciales.', '')
+    }
+    return errorVacio;
+  }
+
+  checkSequence(){
+    let positions = "";
+    const numbers = "123456789";
+    let errorSecuencia = false;
+    let errSeqArr = [];
+    let err2 = false;
+    this.rowGroups.forEach((row, i) => { 
+      if (i < this.rowGroups.length - 1){
+        if (this.rowGroups[i].cells[0].value != this.rowGroups[i + 1].cells[0].value){
+          positions = positions + row.cells[1].value;
+          errorSecuencia = numbers.indexOf(positions) === -1;
+          errSeqArr.push(errorSecuencia);
+          positions = "";
+        } else {
+          positions = positions + row.cells[1].value;
+        }
+      } else {
+        positions = positions + row.cells[1].value;
+        errorSecuencia = numbers.indexOf(positions) === -1;
+        errSeqArr.push(errorSecuencia);
+      }
+    });
+    //Returns false, if the number is in sequence
+    errSeqArr.forEach(err => {
+      if (err){
+        err2=true;
+      }
+    });
+    return err2;
+  }
+
+  checkEmpty(){
     let errorVacio = false;
     this.rowGroups.forEach((row, i) => {
       row.cells.forEach(cell =>{
@@ -105,14 +154,43 @@ export class TablaResultadoOrderComponent implements OnInit {
         }
       })
     })
-    if (!errorVacio){
-      this.ordenar();
-      this.showMsg('success', 'Se ha guardado correctamente', '')
-    } else {
-      this.showMsg('info', 'Error. Existen campos vacíos en la tabla.', '')
-    }
     return errorVacio;
   }
+orderByOrder(){
+    let rowsByGroup : Row[] = [];
+    this.rowGroups.forEach((row, i) => { 
+      if (i < this.rowGroups.length - 1){
+        if (this.rowGroups[i].cells[0].value != this.rowGroups[i + 1].cells[0].value){
+          rowsByGroup.push(row);
+          //ordenar y guardar
+          this.orderSubGroups(rowsByGroup);
+          rowsByGroup = [];
+        } else {
+          rowsByGroup.push(row);
+        }
+      } else {
+        rowsByGroup.push(row);
+        //ordenar y guardar
+        this.orderSubGroups(rowsByGroup);
+      }
+    });
+    this.rowGroups = this.rowGroupsOrdered;
+    this.rowGroupsAux = this.rowGroups;
+    this.rowGroupsOrdered = [];
+}
+
+orderSubGroups(rowsByGroup){
+  let data = rowsByGroup;
+  rowsByGroup = data.sort((a, b) => {
+    let resultado;
+      resultado = compare(a.cells[1].value, b.cells[1].value, true);
+  return resultado ;
+});
+rowsByGroup.forEach(row => {
+  this.rowGroupsOrdered.push(row);
+})
+return rowsByGroup;
+}
   showMsg(severity, summary, detail) {
     this.msgs = [];
     this.msgs.push({
@@ -122,43 +200,36 @@ export class TablaResultadoOrderComponent implements OnInit {
     });
   }
   
-    clear() {
+  clear() {
     this.msgs = [];
   }
-  ordenar(){
+
+  ordenarGrupos(){
     let data :Row[] = [];
     this.rowGroups = this.rowGroupsAux.filter((row) => {
         data.push(row);
     });
-
     this.rowGroups = data.sort((a, b) => {
       let resultado;
         resultado = compare(a.cells[0].value, b.cells[0].value, true);
     return resultado ;
   });
-  
   this.rowGroupsAux = this.rowGroups;
-  this.rowGroups.forEach((row, i) => {
-    console.log('celda: ', this.rowGroups[i].cells[1].value)
-    console.log('valor: ', this.ordenValue(i).toString())
-    this.rowGroups[i].cells[1].value = this.ordenValue(i).toString();
-    
-});
-this.rowGroupsAux = this.rowGroups;
   }
 
 
-  valueChange(i, z, $event){
-    console.log('$event.target: ', $event.target.value)
-
-    console.log('i: ', i)
-    console.log('z: ', z)
-    
-    console.log('this.rowGroups[i]: ', this.rowGroups[i])
-    console.log('this.rowGroups[i].cells[z]: ', this.rowGroups[i].cells[z])
-    console.log('this.rowGroups[i].cells[z].value: ', this.rowGroups[i].cells[z].value)
-this.rowGroups[i].cells[z].value = $event.target.value;
-console.log('this.rowGroups[i].cells[z].value 2: ', this.rowGroups[i].cells[z].value)
+valueChange(i, z, $event){
+    this.rowGroups[i].cells[z].value = $event.target.value;
+    if ( z ==0){
+      this.rowGroups[i].cells[z].type = 'input';
+      this.grupos[i].value = $event.target.value;
+    }else if (z == 1){
+      this.rowGroups[i].cells[z].type = 'position';
+      this.xArr[i] = $event.target.value;
+    }else{
+      this.rowGroups[i].cells[z].type = $event.target.type;
+    }
+this.rowGroupsAux = this.rowGroups;
   }
  /* moveRow( movement){
     let position = this.positionSelected;
@@ -185,18 +256,15 @@ console.log('this.rowGroups[i].cells[z].value 2: ', this.rowGroups[i].cells[z].v
   }*/
   moveRow(movement){
     let groupSelected = this.rowGroups[this.positionSelected].cells[0].value;
-    console.log('groupSelected: ', groupSelected)
     this.rowGroupsAux.forEach((row, index)=> {
       
         if (movement == 'up'){
-          console.log('UP')
           if(Number(row.cells[0].value) == Number(groupSelected)){
             this.rowGroups[index].cells[0].value = (Number(groupSelected) - 1).toString();
           } else if (Number(row.cells[0].value) == Number(groupSelected) - 1){
             this.rowGroups[index].cells[0].value = groupSelected;
           }
         } else if (movement == 'down'){
-          console.log('DOWN')
           if(Number(row.cells[0].value) == Number(groupSelected)){
             this.rowGroups[index].cells[0].value = (Number(groupSelected) + 1).toString();
           } else if (Number(row.cells[0].value) == Number(groupSelected) + 1){
@@ -205,7 +273,6 @@ console.log('this.rowGroups[i].cells[z].value 2: ', this.rowGroups[i].cells[z].v
         }
       
     })
-console.log('this.rowGroups: ', this.rowGroups)
 this.rowGroupsAux = this.rowGroups;
   }
   isSelected(id){
@@ -217,25 +284,22 @@ this.rowGroupsAux = this.rowGroups;
   }
   disableButton(type){
     let disable = false;
-    if (this.positionSelected == 0){
+    if (this.positionSelected == 0 || this.grupos[this.positionSelected].value <= 1){
       this.unavailableUp = true;
     } else {
       this.unavailableUp = false;
     }
-    if (this.positionSelected == this.grupos.length - 1){
+    if (this.positionSelected == this.grupos.length - 1 || this.grupos[this.positionSelected].value  >= this.grupos[this.grupos.length - 1]){
       this.unavailableDown = true;
     } else {
       this.unavailableDown = false;
     }
-        console.log('this.unavailable up: ', this.unavailableUp)
-    console.log('this.unavailable up: ', this.unavailableDown)
 
     if ( this.selectedArray.length != 1 || (this.unavailableUp && type == 'up')){
       disable = true;
     }else if ( this.selectedArray.length != 1 || (this.unavailableDown && type == 'down')){
       disable = true;
     }
-    console.log('disable: ', disable)
     return disable;
   }
   sortData(sort: Sort) {
