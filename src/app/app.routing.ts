@@ -258,6 +258,8 @@ import { PantallaCalendariosComponent } from "./mockups/pantalla-calendarios/pan
 import { FichaActuacionOficioComponent } from "./mockups/ficha-actuacion-oficio/ficha-actuacion-oficio.component";
 import { FichaCambioLetradoComponent } from "./mockups/ficha-cambio-letrado/ficha-cambio-letrado.component";
 import { PantallaBuscadorColegiadosComponent } from "./mockups/pantalla-buscador-colegiados/pantalla-buscador-colegiados.component";
+import { TarjetaDocumentacionAsistenciaComponent } from "./mockups/ficha-asistencia/tarjeta-documentacion-asistencia/tarjeta-documentacion-asistencia.component";
+import { TablaResultadoOrderComponent } from "./mockups/shared/tabla-resultado-order/tabla-resultado-order.component";
 
 const appRoutes: Routes = [
 	{ path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
@@ -1397,6 +1399,16 @@ const appRoutes: Routes = [
 		path: 'pantallaBuscadorColegiados',
 		component: PantallaBuscadorColegiadosComponent
 	},
+	{
+		path: 'tarjetaDocumentacionDesig',
+		component: TarjetaDocumentacionAsistenciaComponent
+	},
+	{
+		path: 'prueba',
+		component: TablaResultadoOrderComponent
+	},
+	
+	
 
 
 	{ path: ' ', redirectTo: 'home' }

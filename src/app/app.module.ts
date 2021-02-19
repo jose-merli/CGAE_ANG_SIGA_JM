@@ -464,6 +464,9 @@ import { DetalleTarjetaDatosSustitutoComponent } from './mockups/ficha-cambio-le
 import { PantallaBuscadorColegiadosComponent } from './mockups/pantalla-buscador-colegiados/pantalla-buscador-colegiados.component';
 import { BuscadorColegiadosComponent } from './mockups/pantalla-buscador-colegiados/buscador-colegiados/buscador-colegiados.component';
 import { ResultadoBuscadorColegiadosComponent } from './mockups/pantalla-buscador-colegiados/resultado-buscador-colegiados/resultado-buscador-colegiados.component';
+import { TablaResultadoMixFAService } from './mockups/shared/tabla-resultado-mix/tabla-resultado-mix-fa.service';
+import { TablaResultadoOrderCGService } from './mockups/shared/tabla-resultado-order/tabla-resultado-order-cg.service';
+import { TablaResultadoOrderComponent } from './mockups/shared/tabla-resultado-order/tabla-resultado-order.component';
 
 
 
@@ -881,6 +884,7 @@ import { ResultadoBuscadorColegiadosComponent } from './mockups/pantalla-buscado
 		PantallaBuscadorColegiadosComponent,
 		BuscadorColegiadosComponent,
 		ResultadoBuscadorColegiadosComponent,
+		TablaResultadoOrderComponent
 	],
 	imports: [
 		BrowserModule,
@@ -962,6 +966,8 @@ import { ResultadoBuscadorColegiadosComponent } from './mockups/pantalla-buscado
 		MessageService,
 		AuthenticationService,
 		ConfirmationService,
+		TablaResultadoMixFAService,
+		TablaResultadoOrderCGService,
 
 		TrimPipePipe,
 

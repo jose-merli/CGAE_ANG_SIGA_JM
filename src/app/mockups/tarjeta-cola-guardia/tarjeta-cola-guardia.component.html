@@ -25,10 +25,10 @@
 
             </div>
 
-            <div class="padding-interior">
-              <app-tabla-resultado [allSelected]="allSelected" [cabeceras]="cabeceras" [elementos]="elementos"
-                [elementosAux]="elementosAux" (anySelected)="notifyAnySelected($event)">
-              </app-tabla-resultado>
+            <div class="padding-interior">  
+              <app-tabla-resultado-order *ngIf="showResponse" [seleccionarTodo]="seleccionarTodo"
+              [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups"
+              (anySelected)="notifyAnySelected($event)"></app-tabla-resultado-order>
             </div>
 
             <div class="card-footer">
@@ -42,8 +42,7 @@
                   (click)="showMsg('success', 'Se ha comunicado correctamente', '')"></button>
                 <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer"
                   (click)="showMsg('success', 'Se ha restablecido correctamente', '')" [disabled]="isDisabled"></button>
-                <button pButton type="button" icon="far fa-save" iconPos="left" label="Guardar" [disabled]="isDisabled"
-                  (click)="showMsg('success', 'Se ha guardado correctamente', '')"></button>
+
               </div>
             </div>
 

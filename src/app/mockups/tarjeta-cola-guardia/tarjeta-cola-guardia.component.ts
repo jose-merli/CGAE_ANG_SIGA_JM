@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Message } from 'primeng/components/common/api';
+import { TablaResultadoOrderCGService, Row } from '../shared/tabla-resultado-order/tabla-resultado-order-cg.service';
 
 @Component({
   selector: 'app-tarjeta-cola-guardia',
@@ -56,10 +57,6 @@ export class TarjetaColaGuardiaComponent implements OnInit {
 
   cabeceras = [
     {
-      id: "ordencola",
-      name: "Orden Cola"
-    },
-    {
       id: "grupo",
       name: "Grupo"
     },
@@ -92,20 +89,36 @@ export class TarjetaColaGuardiaComponent implements OnInit {
       name: "Saltos"
     },
   ];
-  elementos = [
-    ['1', "1", "3", "6454", "ADFAF ASFSAFASF, VICTOR JAVIER", "28/04/2010", "28/04/2010", "1", "1"],
-    ['1', "2", "3", "6462", "ADFAF ASFSAFASF, MARIA MERCEDES", "28/04/2010", "28/04/2010", "2", "2"],
-  ];
-  elementosAux = [
-    ['1', "1", "3", "6454", "ADFAF ASFSAFASF, VICTOR JAVIER", "28/04/2010", "28/04/2010", "1", "1"],
-    ['1', "2", "3", "6462", "ADFAF ASFSAFASF, MARIA MERCEDES", "28/04/2010", "28/04/2010", "2", "2"],
-  ];
-  constructor() { }
+  showResponse = true;
+  rowGroups: Row[];
+  rowGroupsAux: Row[];
+  showDatos: boolean = false;
+  modoBusqueda: string = 'b';
+  modoBusquedaB: boolean = true;
+  selectAll = false;
+  selectMultiple = false;
+ 
+  seleccionarTodo = false;
+
+  constructor(
+    private trmService: TablaResultadoOrderCGService,
+  ) { }
 
   ngOnInit(): void {
+    this.rowGroups = this.trmService.getTableData();
+    this.rowGroupsAux = this.trmService.getTableData();
   }
+
   selectedAll(event) {
-    this.allSelected = event;
+    this.seleccionarTodo = event;
+    this.isDisabled = !event;
+  }
+  notifyAnySelected(event) {
+    if (this.seleccionarTodo || event) {
+      this.isDisabled = false;
+    } else {
+      this.isDisabled = true;
+    }
   }
 
   showMsg(severity, summary, detail) {
@@ -119,14 +132,6 @@ export class TarjetaColaGuardiaComponent implements OnInit {
 
   clear() {
     this.msgs = [];
-  }
-
-  notifyAnySelected(event) {
-    if (this.allSelected || event) {
-      this.isDisabled = false;
-    } else {
-      this.isDisabled = true;
-    }
   }
 
 }
