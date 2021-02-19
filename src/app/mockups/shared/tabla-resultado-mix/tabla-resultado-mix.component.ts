@@ -3,6 +3,7 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Sort } from '@angular/material/sort';
 import { Row, Cell } from './tabla-resultado-mix-fc.service';
+import { Message } from 'primeng/components/common/api';
 @Component({
   selector: 'app-tabla-resultado-mix',
   templateUrl: './tabla-resultado-mix.component.html',
@@ -10,6 +11,7 @@ import { Row, Cell } from './tabla-resultado-mix-fc.service';
 })
 export class TablaResultadoMixComponent implements OnInit {
   info = new FormControl();
+  msgs: Message[] = [];
   @Input() cabeceras = [];
   @Input() rowGroups: Row[];
   @Input() rowGroupsAux: Row[];
@@ -122,6 +124,15 @@ export class TablaResultadoMixComponent implements OnInit {
           return row;
         }
       });
+      }
+
+      showMsg(severity, summary, detail) {
+        this.msgs = [];
+        this.msgs.push({
+          severity,
+          summary,
+          detail
+        });
       }
 
     isPar(numero):boolean {

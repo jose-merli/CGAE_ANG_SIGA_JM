@@ -1,4 +1,5 @@
 
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="table"  matSort (matSortChange)="sortData($event)" #table>
     <div class="table-header ">
         <div class="table-header-child p-2" *ngFor="let cabecera of cabeceras; let j = index" #BorderedHeader>
@@ -24,7 +25,7 @@
                     <span class="w100 cell-value" *ngIf="cell.type == 'select'"><app-selector class="center" [i]="0" [textoVisible]="" [selector]="cell.value"></app-selector></span>
                     <span class="w100 cell-value" *ngIf="cell.type == 'number'">{{cell.value}}</span>
                     <span class="w100 cell-value" *ngIf="cell.type == 'link'"><a>{{cell.value}}</a></span>
-                    <span class="w100 cell-value" *ngIf="cell.type == 'download'"><i class="pointer fa fa-download"></i></span>
+                    <span class="w100 cell-value" *ngIf="cell.type == 'download'"><div (click)="showMsg('success', 'Documento descargado', '')"><i class="pointer fa fa-download"></i></div></span>
                     <span class="w100 cell-value" *ngIf="cell.type == '5InputSelector'">
                         <input type="text" class="form-control " pInputText   size="10" [placeholder]="cell.value[0]">
                     <input type="text" class="form-control " pInputText   size="10" [placeholder]="cell.value[1]">
