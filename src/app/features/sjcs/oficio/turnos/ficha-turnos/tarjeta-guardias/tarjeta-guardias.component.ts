@@ -16,6 +16,8 @@ import { GuardiaObject } from '../../../../../../models/sjcs/GuardiaObject';
 import { PartidasObject } from '../../../../../../models/sjcs/PartidasObject';
 import { MultiSelect } from '../../../../../../../../node_modules/primeng/primeng';
 import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
+import { GuardiaItem } from '../../../../../../models/guardia/GuardiaItem';
+import { Router } from '@angular/router';
 @Component({
   selector: "app-tarjeta-guardias",
   templateUrl: "./tarjeta-guardias.component.html",
@@ -93,7 +95,8 @@ export class TarjetaGuardias implements OnInit {
   ];
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices, private translateService: TranslateService, private upperCasePipe: UpperCasePipe,
-    private persistenceService: PersistenceService, private commonsService: CommonsService, private confirmationService: ConfirmationService) { }
+    private persistenceService: PersistenceService, private commonsService: CommonsService, private confirmationService: ConfirmationService,
+    private router: Router) { }
 
   ngOnChanges(changes: SimpleChanges) {
     this.getCols();
@@ -530,7 +533,7 @@ export class TarjetaGuardias implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "nombre", header: "administracion.parametrosGenerales.literal.nombre" },
+      { field: "nombre", header: "dato.jgr.guardia.guardias.guardia" },
       { field: "tipoDia", header: "dato.jgr.guardia.guardias.tipoDia" },
       { field: "duracion", header: "dato.jgr.guardia.guardias.duracion" },
       { field: "letradosGuardia", header: "dato.jgr.guardia.guardias.letradosGuardia" },
@@ -604,9 +607,17 @@ export class TarjetaGuardias implements OnInit {
     }
   }
   openTab(evento) {
+    // if (this.persistenceService.getPermisos() != undefined) {
+    //   this.permisoEscritura = this.persistenceService.getPermisos();
+    // }
     if (!this.selectAll && !this.selectMultiple) {
-      // this.progressSpinner = true;
-      this.persistenceService.setDatos(evento.data);
+      this.progressSpinner = true;
+      let guardiaItem = new GuardiaItem();
+      guardiaItem.idGuardia = evento.idGuardia;
+      guardiaItem.idTurno = evento.idTurno;
+      this.persistenceService.setDatos(guardiaItem);
+      this.persistenceService.setHistorico(evento.fechabaja ? true : false);
+      this.router.navigate(["/gestionGuardias"]);
       // this.router.navigate(["/gestionTurnos"], { queryParams: { idturno: evento.data.idturno } });
     } else {
 
