@@ -4,7 +4,7 @@
   <div class="card-body p-0">
     <!-- TABLA RESULTADOS -->
 
-    <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple" [responsive]="true"
+    <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple" [responsive]="true" (onRowSelect)="clickFila($event)"
       [first]="first" #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowUnselect)="actualizaSeleccionados(selectedDatos)" [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
@@ -87,10 +87,18 @@
       <button *ngIf="!historico" pButton [disabled]="!permisos || ((!selectMultiple || !selectAll) && selectedDatos.length == 0)"
         (click)="delete()" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
       <button *ngIf="historico" pButton [disabled]="!permisos || ((!selectMultiple || !selectAll) && selectedDatos.length == 0)"
-        (click)="delete()" type="button" icon="fa fa-check" iconPos="left" label="{{'general.boton.activar' | translate}}"></button>
+        (click)="delete()" type="button" icon="fa fa-check" iconPos="left" label="Reactivar"></button>
     </div>
   </div>
 </div>
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="deletePlantillaDoc" icon="icon" width="425"
+  #deletePlantillaDoc>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="deletePlantillaDoc.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="deletePlantillaDoc.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>

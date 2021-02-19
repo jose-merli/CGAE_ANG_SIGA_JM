@@ -5,7 +5,7 @@ import { ModulosItem } from '../../../../../models/sjcs/ModulosItem';
 import { UpperCasePipe } from '../../../../../../../node_modules/@angular/common';
 import { PartidasObject } from '../../../../../models/sjcs/PartidasObject';
 import { findIndex } from 'rxjs/operators';
-import { MultiSelect, SortEvent, DataTable } from 'primeng/primeng';
+import { MultiSelect, SortEvent, DataTable, ConfirmationService } from 'primeng/primeng';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { TurnosObject } from '../../../../../models/sjcs/TurnosObject';
@@ -67,7 +67,8 @@ export class TablaTurnosComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
     private sigaServices: SigaServices,
-    private persistenceService: PersistenceService
+    private persistenceService: PersistenceService,
+    private confirmationService: ConfirmationService
   ) { }
 
   ngOnInit() {
@@ -357,32 +358,54 @@ export class TablaTurnosComponent implements OnInit {
 
 
   delete() {
-    let turnosDelete = new TurnosObject();
-    turnosDelete.turnosItem = this.selectedDatos
-    this.sigaServices.post("turnos_eliminateTurnos", turnosDelete).subscribe(
-      data => {
-        this.selectedDatos = [];
-        this.searchPartidas.emit(false);
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
+
+    let keyConfirmation = "deletePlantillaDoc";
+
+    this.confirmationService.confirm({
+      key: keyConfirmation,
+      // message: this.translateService.instant("messages.deleteConfirmation"),
+      message: this.translateService.instant('sjcs.oficio.turnos.eliminar.mensajeConfirmacion'),
+      icon: "fa fa-trash-alt",
+      accept: () => {
+        let turnosDelete = new TurnosObject();
+        turnosDelete.turnosItem = this.selectedDatos
+        this.sigaServices.post("turnos_eliminateTurnos", turnosDelete).subscribe(
+          data => {
+            this.selectedDatos = [];
+            this.searchPartidas.emit(false);
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+            this.progressSpinner = false;
+          },
+          err => {
+            if (err != undefined && JSON.parse(err.error).error.description != "") {
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+            } else {
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+            }
+            this.progressSpinner = false;
+          },
+          () => {
+            this.progressSpinner = false;
+            this.historico = false;
+            this.selectMultiple = false;
+            this.selectAll = false;
+            this.editMode = false;
+            this.nuevo = false;
+          }
+        );
       },
-      err => {
-        if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-        this.historico = false;
-        this.selectMultiple = false;
-        this.selectAll = false;
-        this.editMode = false;
-        this.nuevo = false;
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "info",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
       }
-    );
+    });
   }
 
   onChangeSelectAll() {
@@ -547,6 +570,12 @@ export class TablaTurnosComponent implements OnInit {
   }
   obtenerPartidos(dato) {
     return dato.nombrepartidosjudiciales;
+  }
+
+  clickFila(event) {
+    if(event.data && event.data.fechabaja == null && this.historico){
+      this.selectedDatos.pop();
+    }
   }
 
 }

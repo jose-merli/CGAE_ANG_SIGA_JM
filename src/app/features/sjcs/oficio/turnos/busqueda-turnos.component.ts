@@ -75,7 +75,39 @@ export class TurnosComponent implements OnInit {
 
 
   searchPartidas(event) {
-    this.filtros.filtroAux = this.persistenceService.getFiltrosAux()
+    this.filtros.filtroAux = this.persistenceService.getFiltrosAux();
+    if(this.filtros.filtroAux.idarea != undefined){
+      let idAreaAux = this.filtros.filtroAux.idarea.toString();
+      this.filtros.filtroAux.idarea = idAreaAux;
+    }
+    if(this.filtros.filtroAux.grupofacturacion != undefined){
+      let grupoFacturacionAux = this.filtros.filtroAux.grupofacturacion.toString();
+      this.filtros.filtroAux.grupofacturacion = grupoFacturacionAux;
+    }
+    if(this.filtros.filtroAux.idpartidapresupuestaria != undefined){
+      let idPartidaPresupuestariaAux = this.filtros.filtroAux.idpartidapresupuestaria.toString();
+      this.filtros.filtroAux.idpartidapresupuestaria = idPartidaPresupuestariaAux;
+    }
+    if(this.filtros.filtroAux.idtipoturno != undefined){
+      let idTipoTurnoAux = this.filtros.filtroAux.idtipoturno.toString();
+      this.filtros.filtroAux.idtipoturno = idTipoTurnoAux;
+    }
+    if(this.filtros.filtroAux.idzona != undefined){
+      let idZonaAux = this.filtros.filtroAux.idzona.toString();
+      this.filtros.filtroAux.idzona = idZonaAux;
+    }
+    if(this.filtros.filtroAux.idzubzona != undefined){
+      let idZubZonaAux = this.filtros.filtroAux.idzubzona.toString();
+      this.filtros.filtroAux.idzubzona = idZubZonaAux;
+    }
+    if(this.filtros.filtroAux.jurisdiccion != undefined){
+      let jurisdiccionAux = this.filtros.filtroAux.jurisdiccion.toString();
+      this.filtros.filtroAux.jurisdiccion = jurisdiccionAux;
+    }
+    if(this.filtros.filtroAux.idmateria != undefined){
+      let idMateriaAux = this.filtros.filtroAux.idmateria.toString();
+      this.filtros.filtroAux.idmateria = idMateriaAux;
+    }
     this.filtros.filtroAux.historico = event;
     this.persistenceService.setHistorico(event);
     this.progressSpinner = true;

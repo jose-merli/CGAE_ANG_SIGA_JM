@@ -306,22 +306,24 @@ export class FiltrosTurnos implements OnInit {
   }
 
   partidoJudiciales() {
-    this.sigaServices
-      .getParam(
-        "fichaZonas_searchSubzones",
-        "?idZona=" + this.filtros.idzona
-      )
-      .subscribe(
-        n => {
-          this.partidasJudiciales = n.zonasItems;
-        },
-        err => {
-          console.log(err);
-
-        }, () => {
-          this.getPartidosJudiciales();
-        }
-      );
+       this.sigaServices
+        .getParam(
+          "fichaZonas_searchSubzones",
+          "?idZona=" + this.filtros.idzona
+        )
+        .subscribe(
+          n => {
+            this.partidasJudiciales = n.zonasItems;
+          },
+          err => {
+            console.log(err);
+  
+          }, () => {
+            this.getPartidosJudiciales();
+          }
+        );
+  
+      // }
   }
 
   newTurno() {
@@ -333,15 +335,42 @@ export class FiltrosTurnos implements OnInit {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
   checkFilters() {
-    // quita espacios vacios antes de buscar
-    if (this.filtros.abreviatura != undefined && this.filtros.abreviatura != null) {
-      this.filtros.abreviatura = this.filtros.abreviatura.trim();
+    if((this.filtros.nombre == null ||
+        this.filtros.nombre == undefined ||
+        this.filtros.nombre.trim().length < 3) &&
+    (this.filtros.abreviatura == null ||
+        this.filtros.abreviatura == undefined ||
+        this.filtros.abreviatura.trim().length < 3) &&
+    (this.filtros.idarea == null ||
+        this.filtros.idarea == undefined
+        ) &&
+    (this.filtros.idzubzona == null ||
+        this.filtros.idzubzona == undefined) &&
+    (this.filtros.idmateria == null ||
+        this.filtros.idmateria == undefined )&&
+    (this.filtros.idtipoturno == null ||
+        this.filtros.idtipoturno == undefined )&&
+    (this.filtros.idpartidapresupuestaria == null ||
+        this.filtros.idpartidapresupuestaria == undefined )&&
+    (this.filtros.idzona == null ||
+        this.filtros.idzona == undefined )&&
+    (this.filtros.jurisdiccion == null ||
+        this.filtros.jurisdiccion == undefined )&&
+    (this.filtros.grupofacturacion == null ||
+        this.filtros.grupofacturacion == undefined ))
+    {
+      this.showSearchIncorrect();
+      return false;
+    } else {
+      // quita espacios vacios antes de buscar
+      if (this.filtros.abreviatura != undefined && this.filtros.abreviatura != null && this.filtros.abreviatura != "") {
+        this.filtros.abreviatura = this.filtros.abreviatura.trim();
+      }
+      if (this.filtros.nombre != undefined && this.filtros.nombre != null && this.filtros.nombre != "") {
+        this.filtros.nombre = this.filtros.nombre.trim();
+      }
+      return true;
     }
-    if (this.filtros.nombre != undefined && this.filtros.nombre != null) {
-      this.filtros.nombre = this.filtros.nombre.trim();
-    }
-    return true;
-
   }
   showMessage(severity, summary, msg) {
     this.msgs = [];
@@ -354,10 +383,16 @@ export class FiltrosTurnos implements OnInit {
 
   isBuscar() {
     if (this.checkFilters()) {
+      if(this.filtros.idmateria == ""){
+        this.filtros.idmateria = null;
+      }
       this.persistenceService.setFiltros(this.filtros);
       this.persistenceService.setFiltrosAux(this.filtros);
-      this.filtroAux = this.persistenceService.getFiltrosAux()
-      this.busqueda.emit(false)
+      this.filtroAux = this.persistenceService.getFiltrosAux();
+      if(this.filtros.idmateria == null || this.filtros.idmateria == undefined){
+        this.filtros.idmateria = "";
+      }
+      this.busqueda.emit(false);
       this.commonsService.scrollTablaFoco('tablaFoco');
     }
   }
