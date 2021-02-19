@@ -1,6 +1,7 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 
 <div id="fichaCalendarioProgramacion">
+    <div id="top"></div>
 
     <div *ngFor="let tarj of listaTarjetas; let i = index;">
         <div class="card" [id]="tarj.id">
@@ -27,5 +28,5 @@
             </div>
         </div>
     </div>
-
+    <div id="down"></div>
 </div>
