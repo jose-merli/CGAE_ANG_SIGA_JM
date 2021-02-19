@@ -20,13 +20,16 @@ import { EJGItem } from '../../../models/sjcs/EJGItem';
 export class EJGComponent implements OnInit {
 
   url;
-  historico: boolean = false;
-  progressSpinner: boolean = false;
-  permisoEscritura: any;
-  buscar: boolean = false;
   datos;
   msgs;
   institucionActual;
+
+  historico: boolean = false;
+  progressSpinner: boolean = false;
+  buscar: boolean = false;
+
+  permisoEscritura: any;
+  
 
   //Mediante esta sentencia el padre puede acceder a los datos y atributos del hijo
   // la particularidad de éste método es que tenemos que esperar a que la vista esté totalmente 

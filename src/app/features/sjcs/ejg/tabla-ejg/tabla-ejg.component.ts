@@ -5,17 +5,20 @@ import { Router } from '../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../_services/siga.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { EJGItem } from '../../../../models/sjcs/EJGItem';
+
 @Component({
   selector: 'app-tabla-ejg',
   templateUrl: './tabla-ejg.component.html',
   styleUrls: ['./tabla-ejg.component.scss']
 })
+
 export class TablaEjgComponent implements OnInit {
   [x: string]: any;
   rowsPerPage: any = [];
+
   cols;
   msgs;
-
+  
   selectedItem: number = 10;
   selectAll;
   selectedDatos = [];
@@ -31,25 +34,30 @@ export class TablaEjgComponent implements OnInit {
   nuevo: boolean = false;
   progressSpinner: boolean = false;
 
+  fechaEstado = new Date();
+  valueComboEstado = "";
 
   //Resultados de la busqueda
   @Input() datos;
 
-
   @ViewChild("table") table: DataTable;
   @Output() searchHistoricalSend = new EventEmitter<boolean>();
-  constructor(private translateService: TranslateService,
-    private changeDetectorRef: ChangeDetectorRef,
-    private router: Router,
-    private sigaServices: SigaServices,
-    private persistenceService: PersistenceService,
-    private confirmationService: ConfirmationService
-  ) { }
+
+  showModalCambioEstado = false;
+
+  constructor(private translateService: TranslateService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
+    private sigaServices: SigaServices, private persistenceService: PersistenceService, private confirmationService: ConfirmationService) {
+
+  }
 
   ngOnInit() {
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos();
     }
+
+    this.showModalCambioEstado = false;
+    this.fechaEstado = new Date();
+    this.valueComboEstado = "";
 
     this.getCols();
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
@@ -58,34 +66,7 @@ export class TablaEjgComponent implements OnInit {
       this.historico = this.persistenceService.getHistorico();
     }
   }
-  ngOnChanges() {
-    // this.datos.forEach((value: EJGItem) => {
-    //   if (value.fechaApertura != undefined) {
-    //     value.fechaApertura = this.transformaFecha((value.fechaApertura);
-    //   }
-    // });
-
-  }
-  // confirmDelete() {
-  //   let mess = this.translateService.instant('messages.deleteConfirmation');
-  //   let icon = 'fa fa-edit';
-  //   this.confirmationService.confirm({
-  //     message: mess,
-  //     icon: icon,
-  //     accept: () => {
-  //       this.delete();
-  //     },
-  //     reject: () => {
-  //       this.msgs = [
-  //         {
-  //           severity: 'info',
-  //           summary: 'Cancel',
-  //           detail: this.translateService.instant('general.message.accion.cancelada')
-  //         }
-  //       ];
-  //     }
-  //   });
-  // }
+  
   openTab(evento) {
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos();
@@ -101,9 +82,10 @@ export class TablaEjgComponent implements OnInit {
       }
     }
   }
+
   datosEJG(selected) {
-    // this.body = this.persistenceService.getFiltros();
     this.progressSpinner = true;
+    
     this.sigaServices.post("gestionejg_datosEJG", selected).subscribe(
       n => {
         this.ejgObject = JSON.parse(n.body).ejgItems;
@@ -111,7 +93,6 @@ export class TablaEjgComponent implements OnInit {
         this.persistenceService.setDatos(this.datosItem);
         this.consultaUnidadFamiliar(selected);
         this.commonsService.scrollTop();
-        // this.progressSpinner = false;
       },
       err => {
         console.log(err);
@@ -119,8 +100,10 @@ export class TablaEjgComponent implements OnInit {
       }
     );
   }
+
   consultaUnidadFamiliar(selected) {
     this.progressSpinner = true;
+
     this.sigaServices.post("gestionejg_unidadFamiliarEJG", selected).subscribe(
       n => {
         this.datosFamiliares = JSON.parse(n.body).unidadFamiliarEJGItems;
@@ -136,16 +119,13 @@ export class TablaEjgComponent implements OnInit {
   }
 
   setItalic(dato) {
-    if (dato.fechabaja == null) return false;
-    else return true;
+    if (dato.fechabaja == null){
+      return false;
+    }else{
+      return true;
+    }
   }
-  delete() {
 
-  }
-  //igual puedo ahorrarmelo y todo a delete? (o solo se ahce en el back)
-  activate() {
-
-  }
   getCols() {
     this.cols = [
       { field: "turnoDes", header: "justiciaGratuita.justiciables.literal.turnoGuardia", width: "20%" },
@@ -155,8 +135,8 @@ export class TablaEjgComponent implements OnInit {
       { field: "fechaApertura", header: "gratuita.busquedaEJG.literal.fechaApertura", width: "10%" },
       { field: "estadoEJG", header: "justiciaGratuita.ejg.datosGenerales.EstadoEJG", width: "15%" },
       { field: "nombreApeSolicitante", header: "administracion.parametrosGenerales.literal.nombre.apellidos", width: "20%" },
-
     ];
+
     this.cols.forEach(it => this.buscadores.push(""));
 
     this.rowsPerPage = [
@@ -178,10 +158,71 @@ export class TablaEjgComponent implements OnInit {
       }
     ];
   }
+
+  getComboEstado() {
+    this.progressSpinner=true;
+
+    this.sigaServices.get("filtrosejg_comboEstadoEJG").subscribe(
+      n => {
+        this.comboEstadoEJG = n.combooItems;
+        //this.commonServices.arregloTildesCombo(data);
+        this.progressSpinner=false;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner=false;
+      }
+    );
+  }
+  
+  cancelaCambiarEstados(){
+    this.showModalCambioEstado = false;
+  }
+
+  checkCambiarEstados(){
+    let mess = this.translateService.instant("justiciaGratuita.ejg.message.cambiarEstado");
+    let icon = "fa fa-edit";
+
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.cambiarEstados();
+      },
+      reject: () => {
+        this.msgs = [{
+          severity: "info",
+          summary: "Cancel",
+          detail: this.translateService.instant("general.message.accion.cancelada")
+        }];
+
+        this.cancelaCambiarEstados();
+      }
+    });
+  }
+
+  cambiarEstados(){
+    this.progressSpinner=true;
+
+    let data = {fecha: this.fechaEstado, estado: this.valueComboEstado, ejgs: this.selectedDatos}
+
+    this.sigaServices.post("cambiarEstadoEJGs", data).subscribe(
+      n => {
+        this.progressSpinner=false;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner=false;
+      }
+    );
+  }
+
   isSelectMultiple() {
     this.selectAll = false;
+
     if (this.permisoEscritura) {
       this.selectMultiple = !this.selectMultiple;
+      
       if (!this.selectMultiple) {
         this.selectedDatos = [];
         this.numSelected = 0;
@@ -198,15 +239,18 @@ export class TablaEjgComponent implements OnInit {
     this.persistenceService.setHistorico(this.historico);
     this.searchHistoricalSend.emit(this.historico);
     this.selectAll = false;
+    
     if (this.selectMultiple) {
       this.selectMultiple = false;
     }
   }
+  
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
     this.table.reset();
   }
+
   onChangeSelectAll() {
     if (this.permisoEscritura) {
       if (!this.historico) {
@@ -222,9 +266,7 @@ export class TablaEjgComponent implements OnInit {
       } else {
         if (this.selectAll) {
           this.selectMultiple = true;
-          this.selectedDatos = this.datos.filter(
-            (dato) => dato.fechaBaja != undefined && dato.fechaBaja != null
-          );
+          this.selectedDatos = this.datos.filter((dato) => dato.fechaBaja != undefined && dato.fechaBaja != null);
           this.numSelected = this.selectedDatos.length;
         } else {
           this.selectedDatos = [];
@@ -243,18 +285,41 @@ export class TablaEjgComponent implements OnInit {
       detail: msg
     });
   }
+
+  checkPermisos() {
+    if (!this.permisoEscritura) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   clear() {
     this.msgs = [];
   }
+
   comunicar() {
 
   }
-  changeEstado() {
 
+  changeEstado() {
+    if (this.selectedDatos != null && this.selectedDatos != undefined && this.selectedDatos.length > 0 && this.checkPermisos()) {
+      this.showModalCambioEstado = true;
+      this.getComboEstado();      
+    } else {
+      this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("censo.datosBancarios.mensaje.seleccionar.almenosUno"));
+    }
   }
+
+  cerrarDialog() {
+    this.showModalCambioEstado = false;
+  }
+
   downloadEEJ() {
 
   }
+
   addRemesa() {
 
   }

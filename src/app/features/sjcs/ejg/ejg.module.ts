@@ -37,18 +37,11 @@ import { ResolucionComponent } from './gestion-ejg/resolucion/resolucion.compone
 import { ImpugnacionComponent } from './gestion-ejg/impugnacion/impugnacion.component';
 import { RegtelComponent } from './gestion-ejg/regtel/regtel.component';
 import { ComunicacionesComponent } from './gestion-ejg/comunicaciones/comunicaciones.component';
-
-// import { GestionModulosYBasesComponent } from './edicion-modulos/gestion-modulosybasesdecompensacion.component';
-// import { MaestrosModulosComponent } from './busqueda-modulosybasesdecompensacion.component';
-// import { EdicionModulosComponent } from './edicion-modulos/gestion-modulos/edicion-modulos.component';
-// import { TablaAcreditacionesComponent } from './edicion-modulos/tabla-acreditaciones/tabla-acreditaciones.component';
-
-
-
-// import { FichaGrupoZonaModule } from './ficha-grupo-zona/ficha-grupo-zona.module';
+import { DialogModule } from 'primeng/dialog';
 
 @NgModule({
   imports: [
+    DialogModule,
     CommonModule,
     DataTableModule,
     PaginatorModule,
