@@ -14,8 +14,7 @@
             <label class="mr-auto title-ficha" style="cursor:pointer">{{'menu.justiciaGratuita.guardia.guardias'|translate}}</label>
           </div>
           <div class="d-flex justify-content-between" style="cursor:default">
-            <label *ngIf="mostrarVacio">{{ "justiciaGratuita.oficio.turnos.numeroguardias" | translate }}
-              <span>{{ numeroGuardias }}</span>
+            <label *ngIf="mostrarVacio">{{ "justiciaGratuita.oficio.turnos.numeroguardias.vacio" | translate }}
             </label>
             <label *ngIf="mostrarNumero">{{ "justiciaGratuita.oficio.turnos.numeroguardias" | translate }}
               <span>{{ numeroGuardias }}</span>
@@ -42,9 +41,9 @@
       </div>
     </div>
     <!--cuerpo datos generales-->
-    <div *ngIf="esFichaActiva('tarjetaguardias') && openFicha" class="card-body card-body-ficha">
-      <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [selectionMode]="selectionMode" [responsive]="true"
-        #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="openTab($event)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
+    <div *ngIf="openFicha" class="card-body card-body-ficha">
+      <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [selectionMode]="selectionMode" [responsive]="true" (onRowSelect)="clickFila($event)"
+        #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
         [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">
         <ng-template pTemplate="colgroup" let-columns>
           <colgroup>

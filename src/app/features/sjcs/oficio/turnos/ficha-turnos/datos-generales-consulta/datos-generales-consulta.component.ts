@@ -138,6 +138,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
   ngOnInit() {
     this.actualizarFichaResumen();
     this.resaltadoDatosGenerales = true;
+    this.abreCierraFicha('datosGenerales');
     this.commonsService.checkAcceso(procesos_oficio.datosGenerales)
       .then(respuesta => {
         this.permisosTarjeta = respuesta;
@@ -164,7 +165,8 @@ export class DatosGeneralesTurnosComponent implements OnInit {
       this.modoEdicion = true;
     }
     this.getCombos();
-  }
+    
+    }
 
 
   getCombos() {

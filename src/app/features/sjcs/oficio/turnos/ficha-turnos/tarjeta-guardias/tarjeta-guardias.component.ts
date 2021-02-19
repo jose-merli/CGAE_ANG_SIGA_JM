@@ -673,4 +673,10 @@ export class TarjetaGuardias implements OnInit {
   onHideTarjeta() {
     this.showTarjeta = !this.showTarjeta;
   }
+
+  clickFila(event) {
+    if(event.data && event.data.fechabaja == null && this.historico){
+      this.selectedDatos.pop();
+    }
+  }
 }
