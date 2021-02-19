@@ -35,6 +35,7 @@ export class TablaEjgComponent implements OnInit {
   nuevo: boolean = false;
   progressSpinner: boolean = false;
 
+  comboEstadoEJG = [];
   fechaEstado = new Date();
   valueComboEstado = "";
 
@@ -166,7 +167,7 @@ export class TablaEjgComponent implements OnInit {
     this.sigaServices.get("filtrosejg_comboEstadoEJG").subscribe(
       n => {
         this.comboEstadoEJG = n.combooItems;
-        //this.commonServices.arregloTildesCombo(data);
+        //this.commonServices.arregloTildesCombo(this.comboEstadoEJG);
         this.progressSpinner=false;
       },
       err => {
@@ -204,10 +205,18 @@ export class TablaEjgComponent implements OnInit {
 
   cambiarEstados(){
     this.progressSpinner=true;
+    let data = [];
+    let ejg: EJGItem;
 
-    let data = {fecha: this.fechaEstado, estado: this.valueComboEstado, ejgs: this.selectedDatos}
+    for(let i=0; this.selectedDatos.length>i; i++){
+      ejg = this.selectedDatos[i];
+      ejg.fechaEstadoNew=this.fechaEstado;
+      ejg.estadoNew=this.valueComboEstado;
 
-    this.sigaServices.post("cambiarEstadoEJGs", data).subscribe(
+      data.push(ejg);
+    }
+
+    this.sigaServices.post("gestionejg_cambioEstadoMasivo", data).subscribe(
       n => {
         this.progressSpinner=false;
       },

@@ -89,5 +89,9 @@ export class EJGItem {
     sentidoAuto: String;
     autoResolutorio: String;
     fechaAuto: Date;
+
+    fechaEstadoNew: Date;
+    estadoNew: String;
+
     constructor() { }
 }
