@@ -461,6 +461,9 @@ import { DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent } from '.
 import { FichaCambioLetradoComponent } from './mockups/ficha-cambio-letrado/ficha-cambio-letrado.component';
 import { DetalleTarjetaDatosRenuncianteComponent } from './mockups/ficha-cambio-letrado/detalle-tarjeta-datos-renunciante/detalle-tarjeta-datos-renunciante.component';
 import { DetalleTarjetaDatosSustitutoComponent } from './mockups/ficha-cambio-letrado/detalle-tarjeta-datos-sustituto/detalle-tarjeta-datos-sustituto.component';
+import { PantallaBuscadorColegiadosComponent } from './mockups/pantalla-buscador-colegiados/pantalla-buscador-colegiados.component';
+import { BuscadorColegiadosComponent } from './mockups/pantalla-buscador-colegiados/buscador-colegiados/buscador-colegiados.component';
+import { ResultadoBuscadorColegiadosComponent } from './mockups/pantalla-buscador-colegiados/resultado-buscador-colegiados/resultado-buscador-colegiados.component';
 import { TablaResultadoMixFAService } from './mockups/shared/tabla-resultado-mix/tabla-resultado-mix-fa.service';
 import { TablaResultadoOrderCGService } from './mockups/shared/tabla-resultado-order/tabla-resultado-order-cg.service';
 import { TablaResultadoOrderComponent } from './mockups/shared/tabla-resultado-order/tabla-resultado-order.component';
@@ -878,6 +881,9 @@ import { TablaResultadoOrderComponent } from './mockups/shared/tabla-resultado-o
 		FichaCambioLetradoComponent,
 		DetalleTarjetaDatosRenuncianteComponent,
 		DetalleTarjetaDatosSustitutoComponent,
+		PantallaBuscadorColegiadosComponent,
+		BuscadorColegiadosComponent,
+		ResultadoBuscadorColegiadosComponent,
 		TablaResultadoOrderComponent
 	],
 	imports: [

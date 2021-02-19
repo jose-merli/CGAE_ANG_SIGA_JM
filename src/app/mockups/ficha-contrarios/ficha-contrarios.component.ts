@@ -140,11 +140,8 @@ export class FichaContrariosComponent implements OnInit {
           "value": "676767676"
         }
       ],
-      enlaces: [    
-        {
-        "texto": "Ficha Justiciable",
-        "href": "/fichaJusticiable"
-      }]
+      enlaces: [],
+      enlaceCardClosed: { href: '/fichaJusticiable', title: 'Ficha Justiciable' }
     },
     {
       id: 'sjcsEjgsfichContAsunt',
@@ -200,11 +197,8 @@ export class FichaContrariosComponent implements OnInit {
           "value": "Ejerciente"
         }
       ],
-      enlaces: [    
-        {
-        "texto": "Ficha colegial",
-        "href": "/fichaColegial"
-      }]
+      enlaces: [],
+      enlaceCardClosed: { href: '/fichaColegial', title: 'Ficha colegial' }
     },
     {
       id: 'sjcsEjgsfichContProc',
@@ -227,26 +221,14 @@ export class FichaContrariosComponent implements OnInit {
     }
   ];
 
-  stickyElementoffset = 0;
-  scrollOffset = 0;
-  enableSticky = false;
-  navbarHeight = 0;
-  scrollWidth = 0;
-
-  @ViewChild('parent') private parent: ElementRef;
-  @ViewChild('navbar') private navbarElement: ElementRef;
-  @ViewChild('content') private content: ElementRef;
-  @ViewChild('main') private main: ElementRef;
-
-  constructor(private renderer: Renderer2) { }
+  constructor() { }
 
   ngOnInit() {
   }
 
   ngAfterViewInit() {
-    this.stickyElementoffset = this.navbarElement.nativeElement.getBoundingClientRect().top;
-    this.navbarHeight = this.navbarElement.nativeElement.clientHeight;
-    this.scrollWidth = this.main.nativeElement.clientHeight - this.parent.nativeElement.clientHeight;
+
+    this.goTop();
 
     this.listaTarjetas.forEach(tarj => {
       let tarjTmp = {
@@ -259,24 +241,6 @@ export class FichaContrariosComponent implements OnInit {
     });
   }
 
-  @HostListener("scroll", ['$event'])
-  manageScroll($event: Event) {
-    this.scrollOffset = $event.srcElement['scrollTop'];
-    this.setSticky();
-  }
-
-  setSticky() {
-    if (this.scrollOffset >= this.stickyElementoffset) {
-      this.enableSticky = true;
-      this.renderer.setStyle(this.content.nativeElement, "padding-top", this.navbarHeight + "px");
-      this.renderer.setStyle(this.navbarElement.nativeElement, "right", this.scrollWidth + "px");
-    } else {
-      this.enableSticky = false;
-      this.renderer.setStyle(this.content.nativeElement, "padding-top", "0px");
-      this.renderer.setStyle(this.navbarElement.nativeElement, "right", this.scrollWidth + "px");
-    }
-  }
-
   isOpenReceive(event) {
     let tarjTemp = this.listaTarjetas.find(tarj => tarj.id == event);
 
@@ -284,6 +248,14 @@ export class FichaContrariosComponent implements OnInit {
       tarjTemp.opened = true;
     }
 
+  }
+
+  goTop() {
+    let top = document.getElementById("top");
+    if (top) {
+      top.scrollIntoView();
+      top = null;
+    }
   }
 
 }

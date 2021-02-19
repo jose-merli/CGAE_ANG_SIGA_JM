@@ -1,37 +1,38 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <form [formGroup]="dgForm">
-  <div class="row padding-interior">
-    <div class="col-lg-12 col-md-12">
-      <div class="form-row">
-          <div class="form-check col-lg-12 col-md-12">
-              <br>
-              <label class="form-group-label pt-2"><b>Solo generar vacios</b></label>
-              &nbsp;&nbsp;
-              <p-checkbox binary="true"></p-checkbox>
-          </div>
-          <div class="form-group col-lg-3 col-md-3" *ngFor="let selector of selectores1; let i = index;">
-              <app-selector [i]="i" [selector]="selector"></app-selector>
-            </div>
-        <div class="inline form-group col-lg-3 col-md-3" *ngFor="let datePickerTitle of datePickers1">
-            <div class="form-group col-lg-8 col-md-8">
-                <label>{{ datePickerTitle }}</label>
-              <app-fecha [utc]="false"></app-fecha>
-            </div>   
+  <div class="row w-100 m-0 padding-interior">
+
+
+    <div class="form-row w-100">
+      <div class="form-group col-lg-12 col-md-12 w-100">
+        <div id="check6">
+          <p-checkbox binary="true" label="Solo generar vacíos"></p-checkbox>
         </div>
-        <div class="form-group col-lg-6 col-md-6 w-100" *ngFor="let input of inputs1">
-            <label>{{input.nombre}}</label>
-            <textarea [rows]="5" [cols]="30" pInputTextarea autoResize="false" [placeholder]="input.valor"></textarea>
-          </div>
       </div>
     </div>
+
+    <div class="form-row w-100">
+      <div class="form-group col-lg-3 col-md-3 w-100" *ngFor="let selector of selectores1; let i = index;">
+        <app-selector [i]="0" [selector]="selector"></app-selector>
+      </div>
+      <div class="form-group col-lg-3 col-md-3 w-100" *ngFor="let datePickerTitle of datePickers1">
+        <label>{{ datePickerTitle }}</label>
+        <app-fecha [utc]="true"></app-fecha>
+      </div>
+      <div class="form-group col-lg-6 col-md-6 w-100" *ngFor="let input of inputs1">
+        <label>{{input.nombre}}</label>
+        <textarea [rows]="5" [cols]="30" pInputTextarea autoResize="false" [placeholder]="input.valor"></textarea>
+      </div>
+    </div>
+    
   </div>
 </form>
 
 <div class="card-footer">
   <div class="text-right main-button">
-    <button pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"
-      (click)="showMsg('success', 'Se ha guardado correctamente', '')"></button>
     <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer"
       (click)="showMsg('success', 'Se ha restablecido correctamente', '')"></button>
+    <button pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"
+      (click)="showMsg('success', 'Se ha guardado correctamente', '')"></button>
   </div>
 </div>

@@ -257,6 +257,7 @@ import { TarjetaColaGuardiaComponent } from "./mockups/tarjeta-cola-guardia/tarj
 import { PantallaCalendariosComponent } from "./mockups/pantalla-calendarios/pantalla-calendarios.component";
 import { FichaActuacionOficioComponent } from "./mockups/ficha-actuacion-oficio/ficha-actuacion-oficio.component";
 import { FichaCambioLetradoComponent } from "./mockups/ficha-cambio-letrado/ficha-cambio-letrado.component";
+import { PantallaBuscadorColegiadosComponent } from "./mockups/pantalla-buscador-colegiados/pantalla-buscador-colegiados.component";
 import { TarjetaDocumentacionAsistenciaComponent } from "./mockups/ficha-asistencia/tarjeta-documentacion-asistencia/tarjeta-documentacion-asistencia.component";
 import { TablaResultadoOrderComponent } from "./mockups/shared/tabla-resultado-order/tabla-resultado-order.component";
 
@@ -1393,6 +1394,10 @@ const appRoutes: Routes = [
 	{
 		path: 'fichaDesignacionOfiCambioLetrado',
 		component: FichaCambioLetradoComponent
+	},
+	{
+		path: 'pantallaBuscadorColegiados',
+		component: PantallaBuscadorColegiadosComponent
 	},
 	{
 		path: 'tarjetaDocumentacionDesig',

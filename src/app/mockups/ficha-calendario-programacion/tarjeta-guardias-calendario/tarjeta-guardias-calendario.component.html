@@ -6,9 +6,9 @@
   </div>
 
   <div class="col-md-12 col-lg-12 p-0">
-      <app-tabla-resultado-mix *ngIf="showResponse" [seleccionarTodo]="seleccionarTodo"
-      [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups"
-      (anySelected)="notifyAnySelected($event)"></app-tabla-resultado-mix>
+    <app-tabla-resultado-mix *ngIf="showResponse" [seleccionarTodo]="seleccionarTodo" [cabeceras]="cabeceras"
+      [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" (anySelected)="notifyAnySelected($event)">
+    </app-tabla-resultado-mix>
   </div>
 
   <div class="padding-interior w-100 mt-3">
@@ -19,12 +19,10 @@
 
 <div class="card-footer">
   <div class="text-right main-button">
-      <button [disabled]="isDisabled" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"
-      (click)="showMsg('success', 'Se ha guardado correctamente', '')"></button>
     <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer"
       (click)="showMsg('success', 'Se ha restablecido correctamente', '')"></button>
+    <button [disabled]="isDisabled" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"
+      (click)="showMsg('success', 'Se ha guardado correctamente', '')"></button>
     <button pButton type="button" icon="fa fa-plus" iconPos="left" label="Nuevo"></button>
-
-   
   </div>
 </div>

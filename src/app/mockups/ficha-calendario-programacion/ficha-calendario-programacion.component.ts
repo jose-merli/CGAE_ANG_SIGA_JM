@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 import { Message } from 'primeng/components/common/api';
 
 @Component({
@@ -14,6 +13,31 @@ export class FichaCalendarioProgramacionComponent implements OnInit {
   cFormValidity = true;
   show = true;
   allSelected = false;
+
+  listaTarjetas = [
+    {
+      id: 'sjcsGuardiaFicCalProDatGen',
+      nombre: "Datos Generales",
+      imagen: "",
+      icono: 'fa fa-user',
+      fixed: false,
+      detalle: true,
+      opened: true,
+      campos: []
+    },
+    {
+      id: 'sjcsGuardiaFicCalProGuarCalen',
+      nombre: "Guardias Calendario",
+      imagen: "",
+      icono: 'fa fa-pencil-square',
+      fixed: false,
+      detalle: true,
+      opened: true,
+      campos: []
+    },
+  ];
+
+
   cabeceras = [
     {
       id: "periodo",
@@ -71,12 +95,12 @@ export class FichaCalendarioProgramacionComponent implements OnInit {
     this.show = false;
   }
 
-  selectedAll(event){
+  selectedAll(event) {
     this.allSelected = event;
     this.isDisabled = !event;
   }
-  notifyAnySelected(event){
-    if (this.allSelected || event){
+  notifyAnySelected(event) {
+    if (this.allSelected || event) {
       this.isDisabled = false;
     } else {
       this.isDisabled = true;

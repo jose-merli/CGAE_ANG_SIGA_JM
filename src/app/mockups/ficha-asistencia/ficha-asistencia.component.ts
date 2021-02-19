@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router, RoutesRecognized } from '@angular/router';
 
 @Component({
   selector: 'app-ficha-asistencia',
@@ -160,7 +161,7 @@ export class FichaAsistenciaComponent implements OnInit {
           "value": "JUAN"
         }
       ],
-      enlaceCardClosed: { href: '/fichaJusticiable', title: 'Ficha Justiciable' }
+      enlaceCardOpen: { href: '/fichaJusticiable', title: 'Ficha Justiciable' }
     },
     {
       id: 'sjcsEjgsfichAsistCont',
@@ -239,9 +240,14 @@ export class FichaAsistenciaComponent implements OnInit {
     }
   ];
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit() {
+    this.checkLastRoute();
+
+    if (sessionStorage.getItem('esBuscadorColegiados') == "true" && sessionStorage.getItem("tarjeta")) {
+      this.isOpenReceive(sessionStorage.getItem("tarjeta"));
+    }
   }
 
   ngAfterViewInit() {
@@ -260,6 +266,7 @@ export class FichaAsistenciaComponent implements OnInit {
   }
 
   isOpenReceive(event) {
+    console.log(event);
     let tarjTemp = this.listaTarjetas.find(tarj => tarj.id == event);
 
     if (tarjTemp.detalle) {
@@ -274,6 +281,20 @@ export class FichaAsistenciaComponent implements OnInit {
       top.scrollIntoView();
       top = null;
     }
+  }
+
+  checkLastRoute() {
+
+    this.router.events
+      .filter(e => e instanceof RoutesRecognized)
+      .pairwise()
+      .subscribe((event: any[]) => {
+        if (event[0].urlAfterRedirects == "/pantallaBuscadorColegiados") {
+          sessionStorage.setItem("esBuscadorColegiados", "true");
+        } else {
+          sessionStorage.setItem("esBuscadorColegiados", "false");
+        }
+      });
   }
 
 }
