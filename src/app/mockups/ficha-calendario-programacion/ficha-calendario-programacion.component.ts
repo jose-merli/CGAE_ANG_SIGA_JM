@@ -84,6 +84,7 @@ export class FichaCalendarioProgramacionComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    
   }
 
   ngAfterViewInit(): void {

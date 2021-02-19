@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Message } from 'primeng/components/common/api';
+import { DataService } from '../../shared/services/data.service';
 
 @Component({
   selector: 'app-calendarios',
@@ -135,7 +136,9 @@ export class CalendariosComponent implements OnInit {
   datePickers = [this.datePickers1, this.datePickers2];
   inputs = [this.inputs1, this.inputs2];
   emptyAccordions = [];
-  constructor() { }
+
+  constructor(private data: DataService) { }
+
   selectedAll(event) {
     this.allSelected = event;
     this.isDisabled = !event;
@@ -148,6 +151,13 @@ export class CalendariosComponent implements OnInit {
     }
   }
   ngOnInit(): void {
+    this.data.changeMessage({
+      listadoGuardia: '',
+      fechaDesde: null,
+      fechaHasta: null,
+      fechaProgramada: null,
+      observaciones: '',
+    });
   }
   showResponse() {
     this.show = true;

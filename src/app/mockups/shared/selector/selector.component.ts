@@ -9,8 +9,8 @@ export class SelectorComponent implements OnInit {
   @Input() selector;
   @Input() i;
   @Input() textoVisible = "Seleccionar";
-  opcionSeleccionado: number = 0;
-  verSeleccion: number;
+  opcionSeleccionado: [number]  = [0];
+  verSeleccion: [number];
   constructor() { }
  
   ngOnInit(): void {
