@@ -61,5 +61,6 @@ export class TurnosItems {
   fechabajapersona: Date;
   fechabajaguardia: Date;
   fechaActual: Date;
+  numeroInscritos;
   constructor() { }
 }

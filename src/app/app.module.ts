@@ -367,6 +367,7 @@ import { OtrasColegiacionesFichaColegialComponent } from './features/censo/ficha
 import { ServiciosInteresFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/servicios-interes-ficha-colegial/servicios-interes-ficha-colegial.component';
 import { TarjetaResumenFijaModule } from './commons/tarjeta-resumen-fija/tarjeta-resumen-fija.module';
 import { PipeTranslationModule } from './commons/translate/pipe-translation.module';
+import { GuardiaModule } from './features/sjcs/guardia/guardia.module';
 
 
 @NgModule({
@@ -734,7 +735,7 @@ import { PipeTranslationModule } from './commons/translate/pipe-translation.modu
 		ColorPickerModule,
 		// BusquedaAsuntosModule,
 		EditorModule,
-
+		GuardiaModule,
 		SjcsModule,
 		OficioModule,
 		BusquedaAsuntosModule

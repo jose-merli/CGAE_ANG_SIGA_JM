@@ -22,6 +22,7 @@ import { RequestOptions, Headers, ResponseContentType } from "@angular/http";
 import { Subject } from "rxjs/Subject";
 import { endpoints_maestros } from "../utils/endpoints_maestros";
 import { endpoints_justiciables } from "../utils/endpoints_justiciables";
+import { endpoints_guardia } from "../utils/endpoints_guardia";
 
 import { endpoints_oficio } from "../utils/endpoints_oficio";
 
@@ -633,6 +634,7 @@ export class SigaServices {
   private desHabilitarDocs = new Subject<any>();
   private sendFechaBaja = new Subject<any>();
   private sendSelectedDatos = new Subject<any>();
+  private sendDatosRedy = new Subject<any>();
  
 
   menuToggled$ = this.menuToggled.asObservable();
@@ -647,6 +649,7 @@ export class SigaServices {
   habilitarDocs$ = this.habilitarDocs.asObservable();
   desHabilitarDocs$ = this.desHabilitarDocs.asObservable();
   sendFechaBaja$ = this.sendFechaBaja.asObservable();
+  datosRedy$ = this.sendDatosRedy.asObservable();
 
   private guardarDatosGeneralesJusticiable = new Subject<any>();
   guardarDatosGeneralesJusticiable$ = this.guardarDatosGeneralesJusticiable.asObservable();
@@ -969,7 +972,15 @@ export class SigaServices {
     this.sendFechaBaja.next(fecha);
   }
 
-  postSendContentAndParameter(service: string, param: string, file: any): Observable<any> {
+  notifysendDatosRedy(datos) {
+    this.sendDatosRedy.next(datos);
+  }
+
+  postSendContentAndParameter(
+    service: string,
+    param: string,
+    file: any
+  ): Observable<any> {
     let formData: FormData = new FormData();
     if (file != undefined) {
         formData.append('uploadFile', file, file.name);

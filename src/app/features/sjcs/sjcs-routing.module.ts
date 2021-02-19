@@ -73,8 +73,12 @@ const routesSjcs: Routes = [
 	{
 		path: 'turnos',
 		loadChildren: './oficio/turnos/turnos.module#GestionTurnosModule'
-	}
+	},
 
+	{     //GUARDIAS ---------------------------------------------------------------------------------
+		path: "guardias",
+		loadChildren: './guardia/guardia.module#GuardiaModule'
+	}
 ];
 
 @NgModule({
