@@ -614,12 +614,17 @@ export class TarjetaColaOficio implements OnInit {
     });
   }
 
+  existenDatos(){
+    if(this.datos != undefined)    return this.datos.length > 0;
+    else return false;
+  }
   getCols() {
 
     this.cols = [
       { field: "orden", header: "administracion.informes.literal.orden" },
       { field: "numerocolegiado", header: "censo.busquedaClientesAvanzada.literal.nColegiado" },
       { field: "nombrepersona", header: "administracion.parametrosGenerales.literal.nombre.apellidos" },
+      { field: "fechabaja", header: "justiciaGratuita.oficio.turnos.fechaBaja" },
       // { field: "alfabeticoapellidos", header: "administracion.parametrosGenerales.literal.nombre" },
       { field: "fechavalidacion", header: "justiciaGratuita.oficio.turnos.fechavalidacion" },
       { field: "saltos", header: "justiciaGratuita.oficio.turnos.saltos" },

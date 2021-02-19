@@ -13,23 +13,23 @@
           <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('colaOficio')">
             <label class="mr-auto title-ficha" style="cursor:pointer" >{{'justiciaGratuita.oficio.turnos.coladeoficio'|translate}}</label>
           </div>
-          <div class="d-flex justify-content-between" style="cursor:default">
-            <label>{{ "justiciaGratuita.oficio.turnos.ncolegiadoprimero" | translate }}
+          <div  class="d-flex justify-content-between" style="cursor:default">
+            <label *ngIf="existenDatos()">{{ "justiciaGratuita.oficio.turnos.ncolegiadoprimero" | translate }}
               <span>{{ primerLetrado }}</span>
             </label>
-            <label>{{ "justiciaGratuita.oficio.turnos.apellidosprimerletrado" | translate }}
+            <label *ngIf="existenDatos()">{{ "justiciaGratuita.oficio.turnos.apellidosprimerletrado" | translate }}
               <span>{{ nombreApellidosPrimerLetrado }}</span>
             </label>
-            <label>{{ "justiciaGratuita.oficio.turnos.ncolegiadoultimo" | translate }}
+            <label *ngIf="existenDatos()">{{ "justiciaGratuita.oficio.turnos.ncolegiadoultimo" | translate }}
               <span>{{ ultimoLetrado }}</span>
             </label>
-            <label>{{ "justiciaGratuita.oficio.turnos.apellidosultmletrado" | translate }}
+            <label *ngIf="existenDatos()">{{ "justiciaGratuita.oficio.turnos.apellidosultmletrado" | translate }}
               <span>{{ apeyNombreUltimo }}</span>
             </label>
-            <label>{{ "justiciaGratuita.oficio.turnos.ninscritos" | translate }}
+            <label *ngIf="existenDatos()">{{ "justiciaGratuita.oficio.turnos.ninscritos" | translate }}
               <span>{{ nInscritos }}</span>
             </label>
-            <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} " (click)="abreCierraFicha('colaOficio')"></i>
+            <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "  (click)="abreCierraFicha('colaOficio')"></i>
           </div>
         </div>
       </div>
@@ -42,8 +42,7 @@
       </div>
     </div>
     <!--cuerpo datos generales-->
-    <!-- esFichaActiva('tablacolaoficio') && -->
-    <div *ngIf=" openFicha" class="card-body card-body-ficha">
+    <div *ngIf="esFichaActiva('tablacolaoficio') && openFicha" class="card-body card-body-ficha">
       <div class="form-row">
         <div class="form-group col-lg-2 col-md-2">
           <label>{{ "justiciaGratuita.oficio.turnos.mostrarinscripciones" | translate }} (*)
@@ -95,6 +94,12 @@
               <div *ngIf="setItalic(dato) && col.field !='nombreguardia' && col.field !='fechavalidacion'">
                 <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
               </div>
+              <div *ngIf="setItalic(dato) && col.field =='fechabaja'">
+                <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
+              </div>
+              <div *ngIf="!setItalic(dato) && col.field =='fechabaja'">
+                <span>{{dato[col.field]}}</span>
+              </div>
               <div *ngIf="!setItalic(dato) && col.field !='nombrepersona' && col.field !='fechavalidacion'">
                 <span>{{dato[col.field]}}</span>
               </div>
@@ -128,11 +133,9 @@
     </div>
     <div *ngIf="openFicha" class="card-footer">
       <div class="text-right main-button">
-        <!-- [disabled]="disableAll || !selectMultiple || -->
-        <button [disabled]="  selectedDatos.length == 0 || selectedDatos.length > 1" (click)="confirmUltimo(selectedDatos)"
+        <button [disabled]=" disableAll || !selectMultiple || selectedDatos.length == 0 || selectedDatos.length > 1" (click)="confirmUltimo(selectedDatos)"
           pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'justiciaGratuita.oficio.turnos.marcarultimo' | translate}}"></button>
-          <!-- [disabled]="disableAll || !selectMultiple || -->
-        <button pButton [disabled]=" selectedDatos.length == 0 || selectedDatos.length > 1" type="button"
+        <button pButton [disabled]=" disableAll || !selectMultiple || selectedDatos.length == 0 || selectedDatos.length > 1" type="button"
           (click)="saltoCompensacion(selectedDatos)" icon="fa fa-plus" iconPos="left" label="{{ 'justiciaGratuita.oficio.turnos.nuevosaltocompen' | translate}}"></button>
 
       </div>

@@ -19,7 +19,7 @@
             </label>
             <label *ngIf="!existenGuardias">{{ "justiciaGratuita.oficio.turnos.noexistenguardias" | translate }}
             </label>
-            <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} " (click)="abreCierraFicha('colaGuardias')"></i>
+            <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "  (click)="abreCierraFicha('colaGuardias')"></i>
           </div>
         </div>
       </div>
@@ -32,7 +32,7 @@
       </div>
     </div>
     <!--cuerpo datos generales-->
-    <div *ngIf="esFichaActiva('tablacolaguardias') && openFicha" class="card-body card-body-ficha">
+    <div *ngIf=" esFichaActiva('tablacolaguardias') && openFicha" class="card-body card-body-ficha">
       <div class="form-row">
         <div class="form-group col-lg-2 col-md-2">
           <label>{{ "justiciaGratuita.oficio.turnos.mostrarinscripciones" | translate }}
@@ -92,6 +92,12 @@
               <div *ngIf="setItalic(dato) && col.field !='nombreguardia' && col.field !='fechavalidacion'">
                 <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
               </div>
+              <div *ngIf="setItalic(dato) && col.field =='fechabajaguardia'">
+                <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
+              </div>
+              <div *ngIf="!setItalic(dato) && col.field =='fechabajaguardia'">
+                <span>{{dato[col.field]}}</span>
+              </div>
               <div *ngIf="!setItalic(dato) && col.field !='nombreguardia' && col.field !='fechavalidacion'">
                 <span>{{dato[col.field]}}</span>
               </div>
@@ -132,8 +138,12 @@
     <div *ngIf="openFicha" class="card-footer">
       <div class="text-right main-button">
 
-        <button pButton [disabled]="disableAll || !selectMultiple || selectedDatos.length == 0 || selectedDatos.length > 1" type="button"
-          icon="fa fa-plus" iconPos="left" label="{{ 'justiciaGratuita.oficio.turnos.nuevosaltocompen' | translate}}"></button>
+
+        <button [disabled]=" disableAll || !selectMultiple || selectedDatos.length == 0 || selectedDatos.length > 1" (click)="confirmUltimo(selectedDatos)"
+          pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'justiciaGratuita.oficio.turnos.marcarultimo' | translate}}"></button>
+
+        <button pButton [disabled]=" disableAll || !selectMultiple || selectedDatos.length == 0 || selectedDatos.length > 1" type="button"
+          (click)="saltoCompensacion(selectedDatos)" icon="fa fa-plus" iconPos="left" label="{{ 'justiciaGratuita.oficio.turnos.nuevosaltocompen' | translate}}"></button>
 
       </div>
     </div>

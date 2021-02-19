@@ -15,6 +15,7 @@ import { TurnosObject } from '../../../../../../models/sjcs/TurnosObject';
 import { PartidasObject } from '../../../../../../models/sjcs/PartidasObject';
 import { MultiSelect } from '../../../../../../../../node_modules/primeng/primeng';
 import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
+import { Router } from '../../../../../../../../node_modules/@angular/router';
 @Component({
   selector: "app-tarjeta-colaguardias",
   templateUrl: "./tarjeta-colaguardias.component.html",
@@ -92,7 +93,8 @@ export class TarjetaColaGuardias implements OnInit {
   ];
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices, private translateService: TranslateService, private upperCasePipe: UpperCasePipe,
-    private persistenceService: PersistenceService, private confirmationService: ConfirmationService, private commonsService: CommonsService) { }
+    private persistenceService: PersistenceService, private confirmationService: ConfirmationService, private commonsService: CommonsService,
+    private router: Router) { }
 
   ngOnChanges(changes: SimpleChanges) {
     this.getCols();
@@ -621,6 +623,7 @@ export class TarjetaColaGuardias implements OnInit {
       { field: "orden", header: "administracion.informes.literal.orden" },
       { field: "numerocolegiado", header: "censo.busquedaClientesAvanzada.literal.nColegiado" },
       { field: "nombreguardia", header: "administracion.parametrosGenerales.literal.nombre.apellidos" },
+      { field: "fechabajaguardia", header: "dato.jgr.guardia.guardias.fechaBaja" },
       // { field: "alfabeticoapellidos", header: "administracion.parametrosGenerales.literal.nombre" },
       { field: "fechavalidacion", header: "justiciaGratuita.oficio.turnos.fechavalidacion" },
       { field: "saltos", header: "justiciaGratuita.oficio.turnos.saltos" },
@@ -752,6 +755,12 @@ export class TarjetaColaGuardias implements OnInit {
     this.opened.emit(this.openFicha);
     this.idOpened.emit(key);
   }
+
+  saltoCompensacion(evento){
+    this.progressSpinner = true;
+    this.persistenceService.setDatos(evento);
+    this.router.navigate(["/saltosYCompensaciones"], { queryParams: { idturno: evento.idturno , 'numerocolegiado': evento.numerocolegiado } });
+  } 
 
   openMultiSelect(dato) {
     // console.log(this.multiSelect);
