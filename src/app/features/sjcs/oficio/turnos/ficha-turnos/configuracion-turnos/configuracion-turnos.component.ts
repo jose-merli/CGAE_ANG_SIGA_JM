@@ -66,6 +66,7 @@ export class ConfiguracionTurnosComponent implements OnInit {
   faxValido: boolean = true;
   mvlValido: boolean = true;
   edicionEmail: boolean = false;
+  requisitoInicial: any;
 
   @ViewChild("mailto") mailto;
 
@@ -149,9 +150,12 @@ export class ConfiguracionTurnosComponent implements OnInit {
         this.abreCierraFicha('configTurnos')
       }
     }
+
+    this.requisitoInicial = this.requisitosGuardiasDescripcion;
   }
 
   ngOnInit() {
+    
     this.commonsService.checkAcceso(procesos_oficio.datosGenerales)
       .then(respuesta => {
         this.permisosTarjeta = respuesta;
@@ -219,15 +223,18 @@ export class ConfiguracionTurnosComponent implements OnInit {
 
   confirmGuardar() {
     //Comprobar que se ha modificado el campo de "requisitos guardias"
-    if (this.bodyInicial.idguardias != this.body.idguardias){
-      let mess = this.translateService.instant(
-        "justiciaGratuita.oficio.turnos.confirmguardarturnos"
-      );
-      let icon = "fa fa-edit";
-      this.confirmationService.confirm({
-        message: mess,
-        icon: icon,
-        accept: () => {
+    // if (this.bodyInicial.idguardias != this.body.idguardias){
+      console.log(this.requisitosGuardiasDescripcion);
+      console.log(this.requisitoInicial);
+    
+   let keyConfirmation = "deletePlantillaDoc";
+
+    this.confirmationService.confirm({
+      key: keyConfirmation,
+      // message: this.translateService.instant("messages.deleteConfirmation"),
+      message: this.translateService.instant('justiciaGratuita.oficio.turnos.confirmguardarturnos'),
+      icon: "fa fa-trash-alt",
+      accept: () => {
           this.save()
         },
         reject: () => {
@@ -243,8 +250,7 @@ export class ConfiguracionTurnosComponent implements OnInit {
         }
       });
     }
-    else this.save()
-  }
+    
   getFichaPosibleByKey(key): any {
     let fichaPosible = this.fichasPosibles.filter(elto => {
       return elto.key === key;
