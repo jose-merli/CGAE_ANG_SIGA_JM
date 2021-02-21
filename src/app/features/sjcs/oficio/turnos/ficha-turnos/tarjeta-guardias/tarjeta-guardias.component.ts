@@ -35,7 +35,7 @@ export class TarjetaGuardias implements OnInit {
 
   selectedItem: number = 10;
   selectAll;
-  selectedDatos = [];
+  selectedDatos: any[] = [];
   numSelected = 0;
   selectMultiple: boolean = false;
   seleccion: boolean = false;
@@ -65,7 +65,7 @@ export class TarjetaGuardias implements OnInit {
   duracionGuardias;
   nletradosGuardias;
   overlayVisible: boolean = false;
-  selectionMode: string = "single";
+  selectionMode: string = "multiple";
   pesosSeleccionadosTarjeta2;
   updateCombo;
   //Resultados de la busqueda
@@ -143,9 +143,11 @@ export class TarjetaGuardias implements OnInit {
         }
       }).catch(error => console.error(error));
     this.getCols();
+    
     if (this.idTurno != undefined) {
       this.modoEdicion = true;
       // this.getMaterias();
+      if(this.datos.length==0) this.mostrarVacio = true;
     } else {
       this.modoEdicion = false;
       this.mostrarVacio = true;
@@ -469,6 +471,7 @@ export class TarjetaGuardias implements OnInit {
     }
   }
 
+
   delete(selectedDatos) {
     this.body = new GuardiaObject();
     this.body.guardiaItems = this.selectedDatos;
@@ -574,7 +577,7 @@ export class TarjetaGuardias implements OnInit {
       this.selectedDatos = this.datos;
       this.numSelected = this.datos.length;
       if (this.historico) {
-        this.selectedDatos = this.datos.filter(dato => dato.fechabaja != undefined && dato.fechabaja != null);
+        this.selectedDatos = this.datos.filter(dato => dato.fechabajapersona != undefined && dato.fechabajapersona != null);
       } else {
         this.selectedDatos = this.datos;
       }
@@ -628,12 +631,12 @@ export class TarjetaGuardias implements OnInit {
     }
   }
 
-  actualizaSeleccionados(selectedDatos) {
+  actualizaSeleccionados() {
     if (this.selectedDatos == undefined) {
       this.selectedDatos = []
     }
-    if (selectedDatos != undefined) {
-      this.numSelected = selectedDatos.length;
+    if (this.selectedDatos != undefined) {
+      this.numSelected = this.selectedDatos.length;
     }
   }
 

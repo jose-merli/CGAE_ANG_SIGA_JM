@@ -62,7 +62,7 @@ export class TarjetaColaGuardias implements OnInit {
   existenGuardias: boolean = false;
   nombreApellidosPrimerLetrado;
   overlayVisible: boolean = false;
-  selectionMode: string = "single";
+  selectionMode: string = "multiple";
   pesosSeleccionadosTarjeta2;
   turnosItem2;
   @Input() turnosItem: TurnosItems;

@@ -33,7 +33,7 @@ export class TarjetaColaOficio implements OnInit {
 
   selectedItem: number = 10;
   selectAll;
-  selectedDatos = [];
+  selectedDatos: any[] = [];
   numSelected = 0;
   selectMultiple: boolean = false;
   seleccion: boolean = false;
@@ -62,7 +62,7 @@ export class TarjetaColaOficio implements OnInit {
   primerLetrado;
   nombreApellidosPrimerLetrado;
   overlayVisible: boolean = false;
-  selectionMode: string = "single";
+  selectionMode: string = "multiple";
   pesosSeleccionadosTarjeta2;
   //Resultados de la busqueda
   @Input() turnosItem: TurnosItems;
@@ -710,12 +710,12 @@ export class TarjetaColaOficio implements OnInit {
     }
   }
 
-  actualizaSeleccionados(selectedDatos) {
+  actualizaSeleccionados() {
     if (this.selectedDatos == undefined) {
       this.selectedDatos = []
     }
-    if (selectedDatos != undefined) {
-      this.numSelected = selectedDatos.length;
+    if (this.selectedDatos != undefined) {
+      this.numSelected = this.selectedDatos.length;
     }
   }
 

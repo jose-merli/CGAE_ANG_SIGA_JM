@@ -29,6 +29,8 @@
             <label *ngIf="existenDatos()">{{ "justiciaGratuita.oficio.turnos.ninscritos" | translate }}
               <span>{{ nInscritos }}</span>
             </label>
+            <label *ngIf="!existenDatos()">{{ "justiciaGratuita.oficio.turnos.colaoficio.vacio" | translate }}
+            </label>
             <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "  (click)="abreCierraFicha('colaOficio')"></i>
           </div>
         </div>
@@ -42,7 +44,8 @@
       </div>
     </div>
     <!--cuerpo datos generales-->
-    <div *ngIf="esFichaActiva('tablacolaoficio') && openFicha" class="card-body card-body-ficha">
+    <!-- esFichaActiva('tablacolaoficio') && -->
+    <div *ngIf=" openFicha" class="card-body card-body-ficha">
       <div class="form-row">
         <div class="form-group col-lg-2 col-md-2">
           <label>{{ "justiciaGratuita.oficio.turnos.mostrarinscripciones" | translate }} (*)
@@ -118,24 +121,35 @@
               {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
             </td>
           </tr>
-        </ng-template>
+        </ng-template>        
         <ng-template pTemplate="paginatorleft">
           <div class="mostrar d-flex text-right justify-content-end">
             <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }}{{table.first + 1}} al {{table.first
               + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}</label>
+              <!-- *ngIf="selectedDatos  && selectedDatos.length > 0" -->
+              <label class="pr-3 numSeleccionados" >{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{selectedDatos.length}}
+              </label>
+              <!-- <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: 0
+              </label> -->
             <label>{{"general.message.mostrar" | translate}}</label>
             <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
             </p-dropdown>
             <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+            <div class="ml-3 selectAll">
+              <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true"
+                  label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname">
+              </p-checkbox>
+            </div>
           </div>
         </ng-template>
+        
       </p-table>
     </div>
     <div *ngIf="openFicha" class="card-footer">
       <div class="text-right main-button">
-        <button [disabled]=" disableAll || !selectMultiple || selectedDatos.length == 0 || selectedDatos.length > 1" (click)="confirmUltimo(selectedDatos)"
+        <button [disabled]=" disableAll || selectedDatos.length == 0 || selectedDatos.length > 1" (click)="confirmUltimo(selectedDatos)"
           pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'justiciaGratuita.oficio.turnos.marcarultimo' | translate}}"></button>
-        <button pButton [disabled]=" disableAll || !selectMultiple || selectedDatos.length == 0 || selectedDatos.length > 1" type="button"
+        <button pButton [disabled]=" disableAll || selectedDatos.length == 0 || selectedDatos.length > 1" type="button"
           (click)="saltoCompensacion(selectedDatos)" icon="fa fa-plus" iconPos="left" label="{{ 'justiciaGratuita.oficio.turnos.nuevosaltocompen' | translate}}"></button>
 
       </div>

@@ -42,8 +42,9 @@
     </div>
     <!--cuerpo datos generales-->
     <div *ngIf="openFicha" class="card-body card-body-ficha">
-      <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [selectionMode]="selectionMode" [responsive]="true" (onRowSelect)="clickFila($event)"
-        #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
+       <!-- clickFila($event) -->
+      <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [selectionMode]="selectionMode" [responsive]="true" (onRowSelect)="actualizaSeleccionados()"
+        #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowUnselect)="actualizaSeleccionados()"
         [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">
         <ng-template pTemplate="colgroup" let-columns>
           <colgroup>
@@ -99,20 +100,20 @@
           <div class="mostrar d-flex text-right justify-content-end">
             <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }}{{table.first + 1}} al {{table.first
               + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}</label>
-            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{selectedDatos.length}}
+            <!-- *ngIf="selectedDatos  && selectedDatos.length > 0" -->
+            <label class="pr-3 numSeleccionados" >{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{selectedDatos.length}}
             </label>
-            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: 0
-            </label>
+            <!-- <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: 0
+            </label> -->
             <label>{{"general.message.mostrar" | translate}}</label>
             <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
             </p-dropdown>
             <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-            <!-- <div class="ml-3 selectAll">
-              <p-checkbox [disabled]="disableAll" (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
-                name="groupname"></p-checkbox>
-            </div> -->
-            <!-- <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
-              <i class="pr-2 fa fa-mouse-pointer"></i>{{"general.message.seleccion.multiple" | translate}}</label> -->
+            <div class="ml-3 selectAll">
+              <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true"
+                  label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname">
+              </p-checkbox>
+            </div>
           </div>
         </ng-template>
       </p-table>
@@ -136,7 +137,7 @@
         <!-- <button pButton [disabled]="disableAll || historico || disabledSave()" (click)="save()" type="button" icon="far fa-save"
           iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button> -->
 
-        <button pButton [disabled]="disableAll || selectMultiple || selectAll || historico" type="button" icon="fa fa-plus" iconPos="left"
+        <button pButton [disabled]="disableAll || selectAll || historico" type="button" icon="fa fa-plus" iconPos="left"
           label="{{ 'general.boton.new' | translate}}"></button>
 
       </div>

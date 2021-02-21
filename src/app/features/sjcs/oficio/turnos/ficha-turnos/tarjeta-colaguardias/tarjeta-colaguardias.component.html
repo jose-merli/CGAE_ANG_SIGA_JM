@@ -32,7 +32,8 @@
       </div>
     </div>
     <!--cuerpo datos generales-->
-    <div *ngIf=" esFichaActiva('tablacolaguardias') && openFicha" class="card-body card-body-ficha">
+    <!-- esFichaActiva('tablacolaguardias') && -->
+    <div *ngIf="  openFicha" class="card-body card-body-ficha">
       <div class="form-row">
         <div class="form-group col-lg-2 col-md-2">
           <label>{{ "justiciaGratuita.oficio.turnos.mostrarinscripciones" | translate }}
@@ -129,8 +130,11 @@
             <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
             </p-dropdown>
             <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-            <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
-              <i class="pr-2 fa" style="cursor:pointer"></i>{{"general.message.seleccion.multiple" | translate}}</label>
+            <div class="ml-3 selectAll">
+              <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true"
+                  label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname">
+              </p-checkbox>
+            </div>
           </div>
         </ng-template>
       </p-table>
@@ -139,10 +143,10 @@
       <div class="text-right main-button">
 
 
-        <button [disabled]=" disableAll || !selectMultiple || selectedDatos.length == 0 || selectedDatos.length > 1" (click)="confirmUltimo(selectedDatos)"
+        <button [disabled]=" disableAll || selectedDatos.length == 0 || selectedDatos.length > 1" (click)="confirmUltimo(selectedDatos)"
           pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'justiciaGratuita.oficio.turnos.marcarultimo' | translate}}"></button>
 
-        <button pButton [disabled]=" disableAll || !selectMultiple || selectedDatos.length == 0 || selectedDatos.length > 1" type="button"
+        <button pButton [disabled]=" disableAll ||  selectedDatos.length == 0 || selectedDatos.length > 1" type="button"
           (click)="saltoCompensacion(selectedDatos)" icon="fa fa-plus" iconPos="left" label="{{ 'justiciaGratuita.oficio.turnos.nuevosaltocompen' | translate}}"></button>
 
       </div>
