@@ -402,14 +402,13 @@ import { MockTarjetaRelacionesComponent } from './mockups/mock-tarjeta-relacione
 import { TarjetaRelacionesComponent } from './mockups/mock-tarjeta-relaciones/tarjeta-relaciones/tarjeta-relaciones.component';
 import { FichaPredesignacionComponent } from './mockups/ficha-predesignacion/ficha-predesignacion.component';
 import { DetalleTarjetaComponent } from './mockups/ficha-predesignacion/detalle-tarjeta/detalle-tarjeta.component';
-import { TarjetaDatosGeneralesComponent } from './mockups/ficha-ejgs/tarjeta-datos-generales/tarjeta-datos-generales.component';
+import { TarjetaDatosGeneralesEjgsComponent } from './mockups/ficha-ejgs/tarjeta-datos-generales/tarjeta-datos-generales-ejgs.component';
 import { TarjetaServiciosTramitacionComponent } from './mockups/ficha-ejgs/tarjeta-servicios-tramitacion/tarjeta-servicios-tramitacion.component';
 import { TarjetaUnidadFamiliarComponent } from './mockups/ficha-ejgs/tarjeta-unidad-familiar/tarjeta-unidad-familiar.component';
-import { TarjetaExpedientesEconomicosComponent } from './mockups/ficha-ejgs/tarjeta-expedientes-economicos/tarjeta-expedientes-economicos.component';
-import { TarjetaDictamenComponent } from './mockups/ficha-ejgs/tarjeta-dictamen/tarjeta-dictamen.component';
-import { TarjetaDocumentacionComponent } from './mockups/ficha-ejgs/tarjeta-documentacion/tarjeta-documentacion.component';
-import { TarjetaImpugnacionComponent } from './mockups/ficha-ejgs/tarjeta-impugnacion/tarjeta-impugnacion.component';
-import { TarjetaResolucionComponent } from './mockups/ficha-ejgs/tarjeta-resolucion/tarjeta-resolucion.component';
+import { TarjetaExpedientesEconomicosEjgsComponent } from './mockups/ficha-ejgs/tarjeta-expedientes-economicos/tarjeta-expedientes-economicos-ejgs.component';
+import { TarjetaDictamenEjgsComponent } from './mockups/ficha-ejgs/tarjeta-dictamen/tarjeta-dictamen-ejgs.component';
+import { TarjetaImpugnacionEjgsComponent } from './mockups/ficha-ejgs/tarjeta-impugnacion/tarjeta-impugnacion-ejgs.component';
+import { TarjetaResolucionEjgsComponent } from './mockups/ficha-ejgs/tarjeta-resolucion/tarjeta-resolucion-ejgs.component';
 import { TablaResultadoDesplegableJEService } from './mockups/tabla-resultado-desplegable/tabla-resultado-desplegable-je.service';
 import { TablaResultadoDesplegableAEService } from './mockups/tabla-resultado-desplegable/tabla-resultado-desplegable-ae.service';
 import { AsistenciaExpresComponent } from './mockups/pantalla-asistencia-expres/asistencia-expres/asistencia-expres.component';
@@ -467,6 +466,13 @@ import { TablaResultadoOrderCGService } from './mockups/shared/tabla-resultado-o
 import { TablaResultadoOrderComponent } from './mockups/shared/tabla-resultado-order/tabla-resultado-order.component';
 import { DataService } from './mockups/shared/services/data.service';
 import { PreviousRouteService } from './mockups/shared/services/previous-route.service';
+import { TarjetaDatosGeneralesComponent } from './mockups/ficha-contrarios/tarjeta-datos-generales/tarjeta-datos-generales.component';
+import { TarjetaDictamenComponent } from './mockups/ficha-contrarios/tarjeta-dictamen/tarjeta-dictamen.component';
+import { TarjetaDocumentacionEjgsComponent } from './mockups/ficha-ejgs/tarjeta-documentacion/tarjeta-documentacion-ejgs.component';
+import { TarjetaDocumentacionComponent } from './mockups/ficha-contrarios/tarjeta-documentacion/tarjeta-documentacion.component';
+import { TarjetaExpedientesEconomicosComponent } from './mockups/ficha-contrarios/tarjeta-expedientes-economicos/tarjeta-expedientes-economicos.component';
+import { TarjetaImpugnacionComponent } from './mockups/ficha-contrarios/tarjeta-impugnacion/tarjeta-impugnacion.component';
+import { TarjetaResolucionComponent } from './mockups/ficha-contrarios/tarjeta-resolucion/tarjeta-resolucion.component';
 
 
 
@@ -823,14 +829,17 @@ import { PreviousRouteService } from './mockups/shared/services/previous-route.s
 		TarjetaRelacionesComponent,
 		FichaPredesignacionComponent,
 		DetalleTarjetaComponent,
-		TarjetaDatosGeneralesComponent,
+		TarjetaDatosGeneralesEjgsComponent,
 		TarjetaServiciosTramitacionComponent,
 		TarjetaUnidadFamiliarComponent,
 		TarjetaExpedientesEconomicosComponent,
-		TarjetaDictamenComponent,
+		TarjetaExpedientesEconomicosEjgsComponent,
+		TarjetaDictamenEjgsComponent,
 		TarjetaDocumentacionComponent,
 		TarjetaImpugnacionComponent,
+		TarjetaImpugnacionEjgsComponent,
 		TarjetaResolucionComponent,
+		TarjetaResolucionEjgsComponent,
 		AsistenciaExpresComponent,
 		ResultadoAsistenciaExpresComponent,
 		ResultadoAsistenciaExpresComponent,
@@ -882,7 +891,10 @@ import { PreviousRouteService } from './mockups/shared/services/previous-route.s
 		PantallaBuscadorColegiadosComponent,
 		BuscadorColegiadosComponent,
 		ResultadoBuscadorColegiadosComponent,
-		TablaResultadoOrderComponent
+		TablaResultadoOrderComponent,
+		TarjetaDatosGeneralesComponent,
+		TarjetaDictamenComponent,
+		TarjetaDocumentacionEjgsComponent
 	],
 	imports: [
 		BrowserModule,

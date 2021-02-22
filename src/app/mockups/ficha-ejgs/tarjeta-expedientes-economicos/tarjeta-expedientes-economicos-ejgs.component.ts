@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-tarjeta-expedientes-economicos',
-  templateUrl: './tarjeta-expedientes-economicos.component.html',
-  styleUrls: ['./tarjeta-expedientes-economicos.component.scss']
+  selector: 'app-tarjeta-expedientes-economicos-ejgs',
+  templateUrl: './tarjeta-expedientes-economicos-ejgs.component.html',
+  styleUrls: ['./tarjeta-expedientes-economicos-ejgs.component.scss']
 })
-export class TarjetaExpedientesEconomicosComponent implements OnInit {
+export class TarjetaExpedientesEconomicosEjgsComponent implements OnInit {
 
   cabeceras2 = [
     {

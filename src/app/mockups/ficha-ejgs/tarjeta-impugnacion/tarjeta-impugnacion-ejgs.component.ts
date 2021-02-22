@@ -3,27 +3,29 @@ import { FormGroup } from '@angular/forms';
 import { Message } from 'primeng/components/common/api';
 
 @Component({
-  selector: 'app-tarjeta-datos-generales',
-  templateUrl: './tarjeta-datos-generales.component.html',
-  styleUrls: ['./tarjeta-datos-generales.component.scss']
+  selector: 'app-tarjeta-impugnacion-ejgs',
+  templateUrl: './tarjeta-impugnacion-ejgs.component.html',
+  styleUrls: ['./tarjeta-impugnacion-ejgs.component.scss']
 })
-export class TarjetaDatosGeneralesComponent implements OnInit {
+export class TarjetaImpugnacionEjgsComponent implements OnInit {
   msgs: Message[] = [];
-  datePickers1 = ["Fecha Apertura *"];
+  iForm = new FormGroup({
+  });
+  constructor() { }
+  datePickers1 = ["Fecha Auto *", "Fecha Publicación"];
   inputs1 = [
     {
-      nombre: "Año",
-      valor: ""
-    },
-    {
-      nombre: "Número",
+      nombre: "Observaciones",
       valor: ""
     }];
-
-  datePickers2 = ["Fecha Presentación", "Fecha Límite Presentación"];
-  selectores2 = [
+  inputs2 = [
     {
-      nombre: "Tipo EJG",
+      nombre: "Número de Impugnación",
+      valor: ""
+    }];
+  selectores1 = [
+    {
+      nombre: "Auto Resolutorio",
       opciones: [
         { label: '1', value: 1 },
         { label: '2', value: 2 },
@@ -38,22 +40,7 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
       ]
     },
     {
-      nombre: "Tipo EJG Colegio",
-      opciones: [
-        { label: '1', value: 1 },
-        { label: '2', value: 2 },
-        { label: '3', value: 3 },
-        { label: '4', value: 4 },
-        { label: '5', value: 5 },
-        { label: '6', value: 6 },
-        { label: '7', value: 7 },
-        { label: '8', value: 8 },
-        { label: '9', value: 9 },
-        { label: '10', value: 10 },
-      ]
-    },
-    {
-      nombre: "Prestaciones",
+      nombre: "Sentido del Auto",
       opciones: [
         { label: '1', value: 1 },
         { label: '2', value: 2 },
@@ -68,20 +55,10 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
       ]
     }
   ];
-
-  inputs3 = [
-    {
-      nombre: "Año",
-      valor: ""
-    },
-    {
-      nombre: "Número Expediente",
-      valor: ""
-    }];
-
-  constructor() { }
-  dgForm = new FormGroup({
-  });
+  checkboxTexts = [
+    "Bis",
+    "Requiere turnado de profesionales"
+  ];
   ngOnInit(): void {
   }
 
@@ -90,12 +67,13 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
     this.msgs.push({
       severity,
       summary,
-      detail,
+      detail
     });
   }
 
   clear() {
     this.msgs = [];
   }
+
 
 }

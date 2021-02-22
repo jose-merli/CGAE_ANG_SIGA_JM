@@ -3,11 +3,11 @@ import { Message } from 'primeng/components/common/api';
 
 
 @Component({
-  selector: 'app-tarjeta-documentacion',
-  templateUrl: './tarjeta-documentacion.component.html',
-  styleUrls: ['./tarjeta-documentacion.component.scss']
+  selector: 'app-tarjeta-documentacion-ejgs',
+  templateUrl: './tarjeta-documentacion-ejgs.component.html',
+  styleUrls: ['./tarjeta-documentacion-ejgs.component.scss']
 })
-export class TarjetaDocumentacionComponent implements OnInit {
+export class TarjetaDocumentacionEjgsComponent implements OnInit {
   msgs: Message[] = [];
   constructor() { }
   allSelected = false;
