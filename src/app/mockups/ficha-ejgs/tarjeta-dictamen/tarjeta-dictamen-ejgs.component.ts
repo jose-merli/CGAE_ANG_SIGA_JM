@@ -3,29 +3,25 @@ import { FormGroup } from '@angular/forms';
 import { Message } from 'primeng/components/common/api';
 
 @Component({
-  selector: 'app-tarjeta-impugnacion',
-  templateUrl: './tarjeta-impugnacion.component.html',
-  styleUrls: ['./tarjeta-impugnacion.component.scss']
+  selector: 'app-tarjeta-dictamen-ejgs',
+  templateUrl: './tarjeta-dictamen-ejgs.component.html',
+  styleUrls: ['./tarjeta-dictamen-ejgs.component.scss']
 })
-export class TarjetaImpugnacionComponent implements OnInit {
+export class TarjetaDictamenEjgsComponent implements OnInit {
   msgs: Message[] = [];
-  iForm = new FormGroup({
+  dForm = new FormGroup({
   });
   constructor() { }
-  datePickers1 = ["Fecha Auto *", "Fecha Publicación"];
+  datePickers1 = ["Fecha"];
   inputs1 = [
     {
       nombre: "Observaciones",
       valor: ""
     }];
-  inputs2 = [
-    {
-      nombre: "Número de Impugnación",
-      valor: ""
-    }];
+
   selectores1 = [
     {
-      nombre: "Auto Resolutorio",
+      nombre: "Tipo Dictamen",
       opciones: [
         { label: '1', value: 1 },
         { label: '2', value: 2 },
@@ -40,7 +36,7 @@ export class TarjetaImpugnacionComponent implements OnInit {
       ]
     },
     {
-      nombre: "Sentido del Auto",
+      nombre: "Fundamento Calificación",
       opciones: [
         { label: '1', value: 1 },
         { label: '2', value: 2 },
@@ -54,10 +50,6 @@ export class TarjetaImpugnacionComponent implements OnInit {
         { label: '10', value: 10 },
       ]
     }
-  ];
-  checkboxTexts = [
-    "Bis",
-    "Requiere turnado de profesionales"
   ];
   ngOnInit(): void {
   }
@@ -74,6 +66,5 @@ export class TarjetaImpugnacionComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
-
 
 }

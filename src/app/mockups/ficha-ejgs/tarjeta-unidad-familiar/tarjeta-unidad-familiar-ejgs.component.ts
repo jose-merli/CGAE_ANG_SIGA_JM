@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Message } from 'primeng/components/common/api';
 
 @Component({
-  selector: 'app-tarjeta-unidad-familiar',
-  templateUrl: './tarjeta-unidad-familiar.component.html',
-  styleUrls: ['./tarjeta-unidad-familiar.component.scss']
+  selector: 'app-tarjeta-unidad-familiar-ejgs',
+  templateUrl: './tarjeta-unidad-familiar-ejgs.component.html',
+  styleUrls: ['./tarjeta-unidad-familiar-ejgs.component.scss']
 })
-export class TarjetaUnidadFamiliarComponent implements OnInit {
+export class TarjetaUnidadFamiliarEjgsComponent implements OnInit {
   allSelected = false;
   isDisabled = true;
   msgs: Message[] = [];

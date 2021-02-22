@@ -3,11 +3,11 @@ import { FormGroup } from '@angular/forms';
 import { Message } from 'primeng/components/common/api';
 
 @Component({
-  selector: 'app-tarjeta-resolucion',
-  templateUrl: './tarjeta-resolucion.component.html',
-  styleUrls: ['./tarjeta-resolucion.component.scss']
+  selector: 'app-tarjeta-resolucion-ejgs',
+  templateUrl: './tarjeta-resolucion-ejgs.component.html',
+  styleUrls: ['./tarjeta-resolucion-ejgs.component.scss']
 })
-export class TarjetaResolucionComponent implements OnInit {
+export class TarjetaResolucionEjgsComponent implements OnInit {
   msgs: Message[] = [];
   msgInfo: boolean = false;
   rForm = new FormGroup({
