@@ -756,10 +756,10 @@ export class TarjetaColaGuardias implements OnInit {
     this.idOpened.emit(key);
   }
 
-  saltoCompensacion(evento){
+  saltoCompensacion(){
     this.progressSpinner = true;
-    this.persistenceService.setDatos(evento);
-    this.router.navigate(["/saltosYCompensaciones"], { queryParams: { idturno: evento.idturno , 'numerocolegiado': evento.numerocolegiado } });
+    this.persistenceService.setDatos(this.selectedDatos[0]);
+    this.router.navigate(["/saltosYCompensaciones"], { queryParams: { idturno: this.selectedDatos[0].idturno , 'numerocolegiado': this.selectedDatos[0].numerocolegiado } });
   } 
 
   openMultiSelect(dato) {
