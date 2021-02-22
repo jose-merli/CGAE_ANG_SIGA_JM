@@ -4,7 +4,7 @@
         <div class="col-lg-3 col-md-3 w-100 messageBox" *ngIf="msgInfo">
                 {{textoInformativo}}
         </div>
-<div class="col-lg-11 col-md-11 table" matSort (matSortChange)="sortData($event)" #table>
+<div class="col-lg-11 col-md-11 table" matSort #table>
     <div class="table-header ">
         <div class="table-header-child p-2" *ngFor="let cabecera of cabeceras; let j = index" #BorderedHeader>
             <div>
@@ -16,11 +16,11 @@
     
     <div *ngFor="let row of rowGroups; let i = index" class="table-row child">
      
-              <div (click)="selectRow(i)" class="table-row-wrapper hoverBlue" [ngClass]="{'hoverBlue2': isSelected(i), 'fixedBlue': seleccionarTodo}" #rowSelected>
+              <div (click)="selectRow(i)" class="table-row-wrapper hoverBlue" [ngClass]="{'hoverBlue2': isSelected(i), 'fixedBlue': seleccionarTodo, 'fixedRed': selectWrong(i)}" #rowSelected>
             
             <div *ngFor="let cell of row['cells']; let z = index" class="table-cell p-2 selectedRowClass" [ngClass]="{'borders-child': isPar(i)}" #cellSelected>
                 <div class="cell-wrapper selectedRowClass">
-                     <span class="w100 cell-value" *ngIf="cell.type == 'position'"><input type="text" (change)="valueChange(i, z, $event)" class="form-control mt-2" pInputText  [(ngModel)]="cell.value" [placeholder]="xArr[i]"></span>
+                     <span class="w100 cell-value" *ngIf="cell.type == 'position'"><input type="text" (change)="valueChange(i, z, $event)" class="form-control mt-2" pInputText  [(ngModel)]="cell.value" [placeholder]="cell.value"></span>
                     <span class="w100 cell-value" *ngIf="cell.type == 'input'"><input type="text"  (change)="valueChange(i, z, $event)" class="form-control mt-2" pInputText  [(ngModel)]="cell.value" [placeholder]="cell.value"></span>
                     <span class="w100 cell-value" *ngIf="cell.type == 'text'">{{cell.value}}</span> 
                     <span class="w100 cell-value" *ngIf="cell.type == 'buttom'"><button pButton type="button"  iconPos="left" [label]="cell.value"></button></span> 

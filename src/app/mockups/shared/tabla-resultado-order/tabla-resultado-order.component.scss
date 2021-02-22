@@ -11,7 +11,8 @@ overflow-wrap: break-word;}
 }
 
 ::ng-deep .mat-sort-header-arrow {
-  opacity: 1 !important;
+  opacity: 0 !important;
+  display: none !important;
 }
 .column-title {
   display: none;
@@ -414,6 +415,9 @@ padding: 0;
 }
 .fixedBlue{
   background-color: lightsteelblue !important;
+}
+.fixedRed{
+  background-color: rgb(255, 149, 142) !important;
 }
 .hoverBlue2{
   background-color: lightsteelblue !important;

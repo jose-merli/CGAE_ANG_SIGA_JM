@@ -37,6 +37,8 @@ export class TablaResultadoOrderComponent implements OnInit {
   xArr = [];
   unavailableUp = false;
   unavailableDown = false;
+  maxGroup = 0;
+  wrongPositionArr = [];
   @ViewChild('table') table: ElementRef;
 
   
@@ -62,11 +64,12 @@ export class TablaResultadoOrderComponent implements OnInit {
     })
     this.xArr = [];
     this.rowGroups.forEach((rg, i) =>{
-      this.grupos.push(rg.cells[0]);
+      this.grupos.push(rg.cells[0].value);
       let x = this.ordenValue(i);
       this.xArr.push(x);
     })
-    
+
+    this.maxGroup = this.grupos.reduce((a, b)=>Math.max(a, b)); 
   }
   ordenValue(i){
   if(this.grupos[i-1] != undefined){
@@ -100,6 +103,7 @@ export class TablaResultadoOrderComponent implements OnInit {
   }
 
   guardar(){
+    this.displayWrongSequence();
       this.ordenarGrupos();
       this.orderByOrder();
     let errorVacio = this.checkEmpty();
@@ -107,19 +111,39 @@ export class TablaResultadoOrderComponent implements OnInit {
     if (!errorVacio && !errorSecuencia){
       this.showMsg('success', 'Se ha guardado correctamente', '')
     } else if (errorVacio){
-      this.showMsg('info', 'Error. Existen campos vacíos en la tabla.', '')
+      this.showMsg('error', 'Error. Existen campos vacíos en la tabla.', '')
     }else if (errorSecuencia){
-      this.showMsg('info', 'Error. Los valores en la columna "Orden" deben ser secuenciales.', '')
+      this.showMsg('error', 'Error. Los valores en la columna "Orden" deben ser secuenciales.', '')
     }
     return errorVacio;
   }
-
+displayWrongSequence(){
+  this.wrongPositionArr = [];
+  let positions = "";
+    const numbers = "123456789";
+  this.rowGroups.forEach((row, i) => { 
+    if (i < this.rowGroups.length - 1){
+      if (this.rowGroups[i].cells[0].value != this.rowGroups[i + 1].cells[0].value){
+        positions = positions + row.cells[1].value;
+        this.compareStrings(numbers, positions, row.cells[2].value);
+        positions = "";
+      } else {
+        positions = positions + row.cells[1].value;
+      }
+    } else {
+      positions = positions + row.cells[1].value;
+      this.compareStrings(numbers, positions, row.cells[2].value);
+    }
+  });
+  //Returns false, 
+}
   checkSequence(){
     let positions = "";
     const numbers = "123456789";
     let errorSecuencia = false;
     let errSeqArr = [];
     let err2 = false;
+    console.log('this.rowGroups: ', this.rowGroups)
     this.rowGroups.forEach((row, i) => { 
       if (i < this.rowGroups.length - 1){
         if (this.rowGroups[i].cells[0].value != this.rowGroups[i + 1].cells[0].value){
@@ -144,7 +168,21 @@ export class TablaResultadoOrderComponent implements OnInit {
     });
     return err2;
   }
-
+  compareStrings(numbers, positions, numCol){
+    console.log('numCol', numCol)
+    console.log('numbers', numbers)
+    console.log('positions', positions)
+    let numbersArr = Array.from(numbers);
+    let positionsArr = Array.from(positions);
+    console.log('numbersArr', numbersArr)
+    console.log('positionsArr', positionsArr)
+    for (var i = 0, len = positionsArr.length; i < len; i++){
+        if (numbersArr[i] !== positionsArr[i]){
+            this.wrongPositionArr.push(numCol);
+        }
+    }
+    console.log('this.wrongPositionArr: ', this.wrongPositionArr)
+  }
   checkEmpty(){
     let errorVacio = false;
     this.rowGroups.forEach((row, i) => {
@@ -215,6 +253,10 @@ return rowsByGroup;
     return resultado ;
   });
   this.rowGroupsAux = this.rowGroups;
+  this.grupos = [];
+  this.rowGroups.forEach((rg, i) =>{
+    this.grupos.push(rg.cells[0].value);
+  })
   }
 
 
@@ -230,6 +272,10 @@ valueChange(i, z, $event){
       this.rowGroups[i].cells[z].type = $event.target.type;
     }
 this.rowGroupsAux = this.rowGroups;
+this.grupos = [];
+this.rowGroups.forEach((rg, i) =>{
+  this.grupos.push(rg.cells[0].value);
+})
   }
  /* moveRow( movement){
     let position = this.positionSelected;
@@ -282,14 +328,25 @@ this.rowGroupsAux = this.rowGroups;
       return false;
     }
   }
+  selectWrong(i){
+    if (this.wrongPositionArr.includes(this.rowGroups[i].cells[2].value)){
+      return true;
+    } else {
+      return false;
+    }
+  }
   disableButton(type){
+    this.grupos = [];
+    this.rowGroups.forEach((rg, i) =>{
+    this.grupos.push(rg.cells[0].value);
+  })
     let disable = false;
-    if (this.positionSelected == 0 || this.grupos[this.positionSelected].value <= 1){
+    if (this.positionSelected == 0 || this.grupos[this.positionSelected] <= 1){
       this.unavailableUp = true;
     } else {
       this.unavailableUp = false;
     }
-    if (this.positionSelected == this.grupos.length - 1 || this.grupos[this.positionSelected].value  >= this.grupos[this.grupos.length - 1]){
+    if (this.positionSelected == this.grupos.length - 1 || this.grupos[this.positionSelected]  >= this.maxGroup){
       this.unavailableDown = true;
     } else {
       this.unavailableDown = false;

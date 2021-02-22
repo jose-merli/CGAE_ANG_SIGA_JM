@@ -15,7 +15,7 @@ export class TablaResultadoOrderCGService {
     [
       { type: 'input', value: '1' },
       { type: 'position', value: '1' },
-      { type: 'text', value: '4567' },
+      { type: 'text', value: '9567' },
       { type: 'text', value: 'MARIA FHHGGH FHFHFH' },
       { type: 'text', value: '23/02/2018' },
       { type: 'text', value: '23/02/2020' },
@@ -35,7 +35,7 @@ export class TablaResultadoOrderCGService {
     [
       { type: 'input', value: '1' },
       { type: 'position', value: '3' },
-      { type: 'text', value: '3567' },
+      { type: 'text', value: '3568' },
       { type: 'text', value: 'VICTOR FHHGGH FHFHFH' },
       { type: 'text', value: '26/02/2018' },
       { type: 'text', value: '26/02/2020' },
@@ -45,7 +45,7 @@ export class TablaResultadoOrderCGService {
     [
       { type: 'input', value: '1' },
       { type: 'position', value: '4' },
-      { type: 'text', value: '3567' },
+      { type: 'text', value: '3569' },
       { type: 'text', value: 'ROCIO FHHGGH FHFHFH' },
       { type: 'text', value: '26/02/2018' },
       { type: 'text', value: '26/02/2020' },
@@ -55,7 +55,7 @@ export class TablaResultadoOrderCGService {
     [
       { type: 'input', value: '' },
       { type: 'input', value: '' },
-      { type: 'text', value: '3567' },
+      { type: 'text', value: '6567' },
       { type: 'text', value: 'PACO FHHGGH FHFHFH' },
       { type: 'text', value: '16/02/2018' },
       { type: 'text', value: '16/02/2020' },
@@ -85,7 +85,7 @@ export class TablaResultadoOrderCGService {
     [
       { type: 'input', value: '2' },
       { type: 'position', value: '3' },
-      { type: 'text', value: '1567' },
+      { type: 'text', value: '4567' },
       { type: 'text', value: 'LUCIA FHHGGH FHFHFH' },
       { type: 'text', value: '12/02/2018' },
       { type: 'text', value: '12/02/2020' },
@@ -95,7 +95,7 @@ export class TablaResultadoOrderCGService {
     [
       { type: 'input', value: '3' },
       { type: 'position', value: '1' },
-      { type: 'text', value: '1567' },
+      { type: 'text', value: '7567' },
       { type: 'text', value: 'MIGUEL FHHGGH FHFHFH' },
       { type: 'text', value: '12/02/2018' },
       { type: 'text', value: '12/02/2020' },

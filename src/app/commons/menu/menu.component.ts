@@ -23,6 +23,7 @@ export class MenuComponent implements OnInit {
   selectedLabelOfChild: any;
   encontrado: boolean;
   progressSpinner: boolean = false;
+  openMockups: boolean = false;
 
   constructor(
     private router: Router,
