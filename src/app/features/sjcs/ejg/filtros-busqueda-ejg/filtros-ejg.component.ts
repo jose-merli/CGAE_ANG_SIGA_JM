@@ -82,12 +82,7 @@ export class FiltrosEjgComponent implements OnInit {
     }
     if (this.persistenceService.getFiltros() != undefined) {
       this.body = this.persistenceService.getFiltros();
-      // let prueba = this.persistenceService.getFiltrosAux();
-      // if (this.body.fechaAperturaDesd != undefined)
-      //   this.body.fechaAperturaDesd = new Date(this.body.fechaAperturaDesd);
-      // if (this.body.fechaAperturaHast != undefined)
-      //   this.body.fechaAperturaHast = new Date(this.body.fechaAperturaHast);
-      // this.filtros.bodyAux.fechaAperturaDesd = this.transformDate(this.filtros.bodyAux.fechaAperturaDesd);
+     
       this.body.fechaAperturaDesd = this.transformDate(this.body.fechaAperturaDesd);
       this.body.fechaAperturaHast = this.transformDate(this.body.fechaAperturaHast);
       this.body.fechaEstadoDesd = this.transformDate(this.body.fechaEstadoDesd);
@@ -100,14 +95,18 @@ export class FiltrosEjgComponent implements OnInit {
       this.body.fechaImpugnacionHast = this.transformDate(this.body.fechaImpugnacionHast);
       this.body.fechaPonenteDesd = this.transformDate(this.body.fechaPonenteDesd);
       this.body.fechaPonenteHast = this.transformDate(this.body.fechaPonenteHast);
+      
       if (this.persistenceService.getHistorico() != undefined) {
         this.historico = this.persistenceService.getHistorico();
       }
-      this.busqueda.emit(this.historico)
+      
+      this.busqueda.emit(this.historico);
+
     } else {
       this.body = new EJGItem();
+      this.body.annio = new Date().getFullYear().toString();      
     }
-    this.body.annio = new Date().getFullYear().toString();
+    
     setTimeout(() => {
       this.inputNumero.nativeElement.focus();  
     }, 300);
