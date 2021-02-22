@@ -15,6 +15,7 @@ export class TarjetaDatosGeneralesAsistenciaComponent implements OnInit {
   };
   msgs: Message[] = [];
   datePickers1 = ["Fecha Asistencia", "Fecha Solicitud"];
+  datePickers2 = ["Fecha Estado", "Fecha Cierre"];
   inputs1 = [
     {
       nombre: "Año",
@@ -23,7 +24,12 @@ export class TarjetaDatosGeneralesAsistenciaComponent implements OnInit {
     {
       nombre: "Número",
       valor: ""
-    }];
+    },
+    {
+      nombre: "Estado",
+      valor: ""
+    },
+  ];
 
   selectores1 = [
     {

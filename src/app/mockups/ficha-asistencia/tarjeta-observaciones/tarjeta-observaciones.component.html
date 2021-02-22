@@ -1,7 +1,7 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <form [formGroup]="rForm">
   <div class="row w-100 m-0 padding-interior">
-    <div class="bloque col-lg-3 col-md-3 col-sm-3 mb-5 pl-0">
+    <!--<div class="bloque col-lg-3 col-md-3 col-sm-3 mb-5 pl-0">
       <div class="form-row" *ngFor="let campo of campos1">
         <div class="form-group col-lg-6 col-md-6 w-100">
           <label>{{ campo.nombre }}</label>
@@ -14,8 +14,8 @@
           <app-fecha [utc]="true"></app-fecha>
         </div>
       </div>
-    </div>
-    <div class="col-lg-9 col-md-9 col-sm-9 mb-5 pr-0">
+    </div> -->
+    <div class="col-lg-12 col-md-12 col-sm-12 px-0">
       <div class="form-row">
         <div class="form-group col-lg-6 col-md-6 w-100" *ngFor="let input of inputs1;">
           <label>{{input.nombre}}</label>

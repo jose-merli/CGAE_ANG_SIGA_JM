@@ -38,7 +38,7 @@ export class SociedadesFichaColegialComponent implements OnInit {
       activa: false
     }
   ];
-  selectedDatosSociedades;
+  selectedDatosSociedades:any[];
   rowsPerPage = [];
   disabledAction:boolean = false;
   emptyLoadFichaColegial: boolean = false;
@@ -78,7 +78,7 @@ export class SociedadesFichaColegialComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (this.idPersona != undefined) {
+    if (this.idPersona != undefined && (this.tarjetaSociedades == "3" || this.tarjetaSociedades =="2")) {
       this.searchSocieties();
     }
     if (this.openSocie == true) {
@@ -185,9 +185,11 @@ export class SociedadesFichaColegialComponent implements OnInit {
       );
   }
 
-  redireccionarSociedades(datos) {
-    // this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
-    sessionStorage.setItem("usuarioBody", JSON.stringify(datos));
+  redireccionarSociedades(datos:any) {
+    this.selectedDatosSociedades = [];
+    this.selectedDatosSociedades.push(datos);
+    // this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody")); 
+    sessionStorage.setItem("usuarioBody", JSON.stringify(this.selectedDatosSociedades));
     this.router.navigate(["/fichaPersonaJuridica"]);
   }
 

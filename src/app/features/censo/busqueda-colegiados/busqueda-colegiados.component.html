@@ -1,4 +1,5 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<p-growl [(value)]="msgsDescarga" (onHover)="clear()" life="150000"></p-growl>
 
 <div class="busqueda-container">
     <div class="header-title">
@@ -575,7 +576,7 @@
         </div>
     </div>
 
-    <p-table [value]="datosDirecciones" [columns]="colsDirecciones" [responsive]="false" #table class="tabla-listado"
+    <p-table [value]="datosDirecciones" [columns]="colsDirecciones" [responsive]="true" #table class="tabla-listado"
         [paginator]="true" [rows]="selectedItem" [first]="first" [ngClass]="{ 'customCursor': selectMultiple}"
         paginatorPosition="both">
         <ng-template pTemplate="colgroup" let-columns>

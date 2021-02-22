@@ -39,7 +39,7 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
   datosCertificados: any[] = [];
   certificadosBody: FichaColegialCertificadosObject = new FichaColegialCertificadosObject();
   selectedDatosCertificados;
-  mostrarNumero: Boolean = false;
+  mostrarNumero: Boolean = true;
   fichasPosibles = [
     {
       key: "certificados",
@@ -132,7 +132,11 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
       this.checkGeneralBody.colegiado = this.esColegiado;
     }
     if (this.idPersona != undefined) {
-      this.searchCertificados();
+      if(this.datosCertificados == undefined){
+        if(this.tarjetaCertificados == "3" || this.tarjetaCertificados == "2"){
+          this.searchCertificados();
+        }
+      }
     }
     if (this.openCertifi == true) {
       if (this.openFicha == false) {

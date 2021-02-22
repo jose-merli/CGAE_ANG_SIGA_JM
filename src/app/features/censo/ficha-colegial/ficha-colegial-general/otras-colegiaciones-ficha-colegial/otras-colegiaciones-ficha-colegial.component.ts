@@ -37,8 +37,8 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
   colsColegiaciones;
   mostrarOtrasColegiaciones;
   mostrarNumero: Boolean = false;
-  message;
-  messageNoContent;
+  message: String;
+  messageNoContent: String = "";
   fichasPosibles = [
     {
       key: "colegiaciones",
@@ -125,6 +125,9 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
 
       this.generalBody.colegiado = this.esColegiado;
       this.checkGeneralBody.colegiado = this.esColegiado;
+    }
+    if(this.tarjetaOtrasColegiaciones == "3" || this.tarjetaOtrasColegiaciones == "2"){
+      this.onInitOtrasColegiaciones();
     }
     if (this.openOtrasCole == true) {
       if (this.openFicha == false) {

@@ -44,14 +44,11 @@
                                     <app-tarjeta-datos-generales-asistencia>
                                     </app-tarjeta-datos-generales-asistencia>
                                 </div>
-                                <div *ngIf="tarj.nombre == 'Colegiado'">
-
+                                <div *ngIf="tarj.nombre == 'Observaciones'">
+                                    <app-tarjeta-observaciones></app-tarjeta-observaciones>
                                 </div>
-                                <div *ngIf="tarj.nombre == 'Otros Datos'">
-                                    <app-tarjeta-otros-datos></app-tarjeta-otros-datos>
-                                </div>
-                                <div *ngIf="tarj.nombre == 'Datos Adicionales'">
-                                    <app-tarjeta-datos-adicionales></app-tarjeta-datos-adicionales>
+                                <div *ngIf="tarj.nombre == 'Defensa Jurídica'">
+                                    <app-tarjeta-defensa-juridica></app-tarjeta-defensa-juridica>
                                 </div>
                                 <div *ngIf="tarj.nombre == 'Relaciones'">
                                     <app-tarjeta-relaciones-asistencia></app-tarjeta-relaciones-asistencia>

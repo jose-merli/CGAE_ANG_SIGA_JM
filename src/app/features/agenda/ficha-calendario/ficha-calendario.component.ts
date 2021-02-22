@@ -103,7 +103,6 @@ export class FichaCalendarioComponent implements OnInit {
 
     this.sigaServices.menuToggled$.subscribe(() => {
       this.isWidthChange = !this.isWidthChange;
-      console.log(this.isWidthChange);
     });
   }
 
@@ -272,7 +271,6 @@ export class FichaCalendarioComponent implements OnInit {
         },
         () => {
           this.progressSpinner = false;
-          console.log(this.datosNotificaciones);
         }
       );
   }

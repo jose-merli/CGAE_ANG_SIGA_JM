@@ -28,3 +28,22 @@
     color:#F4F4F4 !important;
     background-color: #F4F4F4 !important;
 }
+.ui-autocomplete-token-icon {
+    margin-top: -0.45em;
+    position: absolute;
+    top: 50%;
+    cursor: pointer;
+    left: .55em;
+}
+.ui-autocomplete-multiple-container.ui-inputtext {
+    margin-right: 0px;
+    padding-right: .7em;
+}
+.configEtiq{
+    padding-left: 1.25em;
+    padding-right: .7em;
+}
+span.ul.ui-autocomplete-multiple-container.ui-widget.ui-inputtext.ui-state-default.ui-corner-all.ng-star-inserted {
+    padding-left: 0;
+    padding-top: .3em;
+}

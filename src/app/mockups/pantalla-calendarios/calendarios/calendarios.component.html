@@ -20,8 +20,7 @@
                 pButton type="button" icon="fa fa-plus" iconPos="left" label="Nuevo"></button>
             <button (click)="hideResponse();" pButton type="button" icon="fa fa-trash-alt" iconPos="left"
                 label="Limpiar"></button>
-            <button type="submit" pButton icon="fa fa-search" iconPos="left"
-                label="{{'general.boton.search' | translate}}"
+            <button type="submit" pButton icon="fa fa-search" iconPos="left" label="Buscar"
                 (click)="showResponse();showMsg('info', 'Mostrando información buscada', '');"
                 [disabled]="!cFormValidity"></button>
         </div>

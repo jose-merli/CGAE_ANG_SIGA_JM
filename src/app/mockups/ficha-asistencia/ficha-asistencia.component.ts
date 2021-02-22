@@ -78,70 +78,6 @@ export class FichaAsistenciaComponent implements OnInit {
       ]
     },
     {
-      id: 'sjcsEjgsfichAsistOtros',
-      nombre: "Otros Datos",
-      imagen: "",
-      icono: "fa fa-university",
-      detalle: true,
-      fixed: false,
-      opened: false,
-      campos: [
-        {
-          "key": "Estado",
-          "value": "ACTIVA"
-        },
-        {
-          "key": "Fecha estado",
-          "value": "28/02/2016"
-        },
-        {
-          "key": "Fecha Cierre",
-          "value": "12/06/2018"
-        }
-      ]
-    },
-    {
-      id: 'sjcsEjgsfichAsistDatAd',
-      nombre: "Datos Adicionales",
-      imagen: "",
-      icono: "fa fa-university",
-      detalle: true,
-      fixed: false,
-      opened: false,
-      campos: []
-    },
-    {
-      id: 'sjcsEjgsfichAsistRel',
-      nombre: "Relaciones",
-      imagen: "",
-      icono: 'fas fa-link icon-ficha',
-      detalle: true,
-      fixed: false,
-      opened: false,
-      campos: [
-        {
-          "key": "",
-          "value": "E2018/00987"
-        },
-        {
-          "key": "Dictamen",
-          "value": "Favorable"
-        },
-        {
-          "key": "Fecha dictamen",
-          "value": "28/09/2019"
-        },
-        {
-          "key": "Resolución",
-          "value": ""
-        },
-        {
-          "key": "Fecha Resolución",
-          "value": ""
-        }
-      ]
-    },
-    {
       id: 'sjcsEjgsfichAsistAs',
       nombre: "Asistido",
       imagen: "",
@@ -178,6 +114,70 @@ export class FichaAsistenciaComponent implements OnInit {
       ]
     },
     {
+      id: 'sjcsEjgsfichAsistDefJuri',
+      nombre: "Defensa Jurídica",
+      imagen: "",
+      icono: "fa fa-university",
+      detalle: true,
+      fixed: false,
+      opened: false,
+      campos: []
+    },
+    {
+      id: 'sjcsEjgsfichAsistObserva',
+      nombre: "Observaciones",
+      imagen: "",
+      icono: "fa fa-university",
+      detalle: true,
+      fixed: false,
+      opened: false,
+      campos: [
+        // {
+        //   "key": "Estado",
+        //   "value": "ACTIVA"
+        // },
+        // {
+        //   "key": "Fecha estado",
+        //   "value": "28/02/2016"
+        // },
+        // {
+        //   "key": "Fecha Cierre",
+        //   "value": "12/06/2018"
+        // }
+      ]
+    },
+    {
+      id: 'sjcsEjgsfichAsistRel',
+      nombre: "Relaciones",
+      imagen: "",
+      icono: 'fas fa-link icon-ficha',
+      detalle: true,
+      fixed: false,
+      opened: false,
+      campos: [
+        {
+          "key": "",
+          "value": "E2018/00987"
+        },
+        {
+          "key": "Dictamen",
+          "value": "Favorable"
+        },
+        {
+          "key": "Fecha dictamen",
+          "value": "28/09/2019"
+        },
+        {
+          "key": "Resolución",
+          "value": ""
+        },
+        {
+          "key": "Fecha Resolución",
+          "value": ""
+        }
+      ]
+    },
+    {
       id: 'sjcsEjgsfichAsistDoc',
       nombre: "Documentación",
       imagen: "",
@@ -191,15 +191,6 @@ export class FichaAsistenciaComponent implements OnInit {
           "value": "7"
         }
       ]
-    }, {
-      id: 'sjcsEjgsfichAsistCol',
-      nombre: "Colegiado",
-      imagen: "",
-      icono: 'fa fa-graduation-cap',
-      detalle: true,
-      fixed: false,
-      opened: false,
-      campos: []
     },
     {
       id: 'sjcsEjgsfichAsistCar',

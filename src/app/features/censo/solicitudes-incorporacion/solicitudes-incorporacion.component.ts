@@ -229,7 +229,7 @@ export class SolicitudesIncorporacionComponent implements OnInit {
       var enviarDatos = null;
       enviarDatos = item[0];
       sessionStorage.setItem("editedSolicitud", JSON.stringify(enviarDatos));
-      if (enviarDatos.estadoSolicitud == "Pendiente aprobación") {
+      if (enviarDatos.idEstado == "20") {
         sessionStorage.setItem("consulta", "false");
         sessionStorage.setItem("pendienteAprobacion", "true");
       } else {

@@ -409,7 +409,6 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
 
   getComboPoblacion(filtro: string) {
     let poblacionBuscada = filtro;
-    console.log(this.body.nombrePoblacion);
     this.sigaServices
       .getParam(
         "direcciones_comboPoblacion",
@@ -508,7 +507,6 @@ para poder filtrar el dato con o sin estos caracteres*/
       .subscribe(
         result => {
           this.poblaciones = result.combooItems;
-          console.log(this.poblaciones);
         },
         error => {
           this.progressSpinner = false;

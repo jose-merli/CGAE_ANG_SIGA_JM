@@ -156,7 +156,7 @@ export class FichaColegialComponent implements OnInit {
 
 
   onChangeRowsPerPages(event) {
-    console.log(event);
+     
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
     this.table.reset()
