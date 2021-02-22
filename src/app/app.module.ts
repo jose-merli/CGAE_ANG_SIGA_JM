@@ -403,8 +403,8 @@ import { TarjetaRelacionesComponent } from './mockups/mock-tarjeta-relaciones/ta
 import { FichaPredesignacionComponent } from './mockups/ficha-predesignacion/ficha-predesignacion.component';
 import { DetalleTarjetaComponent } from './mockups/ficha-predesignacion/detalle-tarjeta/detalle-tarjeta.component';
 import { TarjetaDatosGeneralesEjgsComponent } from './mockups/ficha-ejgs/tarjeta-datos-generales/tarjeta-datos-generales-ejgs.component';
-import { TarjetaServiciosTramitacionComponent } from './mockups/ficha-ejgs/tarjeta-servicios-tramitacion/tarjeta-servicios-tramitacion.component';
-import { TarjetaUnidadFamiliarComponent } from './mockups/ficha-ejgs/tarjeta-unidad-familiar/tarjeta-unidad-familiar.component';
+import { TarjetaServiciosTramitacionEjgsComponent } from './mockups/ficha-ejgs/tarjeta-servicios-tramitacion/tarjeta-servicios-tramitacion-ejgs.component';
+import { TarjetaUnidadFamiliarEjgsComponent } from './mockups/ficha-ejgs/tarjeta-unidad-familiar/tarjeta-unidad-familiar-ejgs.component';
 import { TarjetaExpedientesEconomicosEjgsComponent } from './mockups/ficha-ejgs/tarjeta-expedientes-economicos/tarjeta-expedientes-economicos-ejgs.component';
 import { TarjetaDictamenEjgsComponent } from './mockups/ficha-ejgs/tarjeta-dictamen/tarjeta-dictamen-ejgs.component';
 import { TarjetaImpugnacionEjgsComponent } from './mockups/ficha-ejgs/tarjeta-impugnacion/tarjeta-impugnacion-ejgs.component';
@@ -473,6 +473,8 @@ import { TarjetaDocumentacionComponent } from './mockups/ficha-contrarios/tarjet
 import { TarjetaExpedientesEconomicosComponent } from './mockups/ficha-contrarios/tarjeta-expedientes-economicos/tarjeta-expedientes-economicos.component';
 import { TarjetaImpugnacionComponent } from './mockups/ficha-contrarios/tarjeta-impugnacion/tarjeta-impugnacion.component';
 import { TarjetaResolucionComponent } from './mockups/ficha-contrarios/tarjeta-resolucion/tarjeta-resolucion.component';
+import { TarjetaServiciosTramitacionComponent } from './mockups/ficha-contrarios/tarjeta-servicios-tramitacion/tarjeta-servicios-tramitacion.component';
+import { TarjetaUnidadFamiliarComponent } from './mockups/ficha-contrarios/tarjeta-unidad-familiar/tarjeta-unidad-familiar.component';
 
 
 
@@ -831,7 +833,9 @@ import { TarjetaResolucionComponent } from './mockups/ficha-contrarios/tarjeta-r
 		DetalleTarjetaComponent,
 		TarjetaDatosGeneralesEjgsComponent,
 		TarjetaServiciosTramitacionComponent,
+		TarjetaServiciosTramitacionEjgsComponent,
 		TarjetaUnidadFamiliarComponent,
+		TarjetaUnidadFamiliarEjgsComponent,
 		TarjetaExpedientesEconomicosComponent,
 		TarjetaExpedientesEconomicosEjgsComponent,
 		TarjetaDictamenEjgsComponent,
