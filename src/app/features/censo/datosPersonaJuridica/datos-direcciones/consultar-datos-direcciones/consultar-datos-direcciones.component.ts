@@ -60,7 +60,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   historyDisable: boolean = false;
   bodyCodigoPostal: DatosDireccionesCodigoPostalItem = new DatosDireccionesCodigoPostalItem();
   bodyCodigoPostalSearch: DatosDireccionesCodigoPostalObject = new DatosDireccionesCodigoPostalObject();
-  disableCheck: boolean;
+  disableCheck: boolean = false;
   poblacionExtranjera: boolean = false;
   displayAuditoria: boolean = false;
   showGuardarAuditoria: boolean = false;
@@ -71,7 +71,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   poblacionBuscada: any;
   permisos: boolean = true; //true
 
-  permisoTarjeta: string;
+  permisoTarjeta: string = "2";
   migaPan: string = "";
 
   valorResidencia: string = "1";
@@ -151,7 +151,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     if (sessionStorage.getItem("isLetrado")) {
       this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
     }
-    if (sessionStorage.getItem("historicoDir") != null) {
+    if (JSON.parse(sessionStorage.getItem("historicoDir")) == true) {
       this.historyDisable = true;
       this.disableCheck = true;
     }
@@ -289,9 +289,10 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     // this.checkBody.idPais = "191";
     this.progressSpinner = false;
 
-    this.permisoTarjeta = JSON.parse(sessionStorage.getItem("permisoTarjeta"));
-    sessionStorage.removeItem("permisoTarjeta");
-
+    if (sessionStorage.getItem("permisoTarjeta") != null) {
+      this.permisoTarjeta = JSON.parse(sessionStorage.getItem("permisoTarjeta"));
+      sessionStorage.removeItem("permisoTarjeta");
+    }
     if (sessionStorage.getItem("direcciones") != null) {
       this.datosDirecciones = JSON.parse(sessionStorage.getItem("direcciones"));
     }
@@ -1040,6 +1041,10 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   comprobarTablaDatosContactos() {
     if (
+      this.datosContacto != null ||
+      this.datosContacto != undefined
+    ) {
+    if (
       this.datosContacto[0].valor != null ||
       this.datosContacto[0].valor != undefined
     ) {
@@ -1079,7 +1084,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         this.body.paginaWeb = this.datosContacto[4].valor;
       }
     }
-
+  }
 
   }
 
@@ -1399,7 +1404,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   ngOnDestroy() {
-    sessionStorage.removeItem("historicoDir");
+    //sessionStorage.removeItem("historicoDir");
   }
   clear() {
     this.msgs = [];

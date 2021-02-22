@@ -6,6 +6,7 @@ import {
   ViewEncapsulation
 } from "@angular/core";
 import { SigaServices } from "../../../_services/siga.service";
+import { Response } from "@angular/http";
 import { DatosInscripcionItem } from "../../../models/DatosInscripcionItem";
 import { esCalendar } from "../../../utils/calendar";
 import { Location } from "@angular/common";
@@ -16,6 +17,7 @@ import { Router } from "@angular/router";
 import { DatosCursosItem } from "../../../models/DatosCursosItem";
 import { TranslateService } from "../../../commons/translate";
 import { PersonaObject } from "../../../models/PersonaObject";
+import { saveAs } from "file-saver/FileSaver";
 import { ControlAccesoDto } from "../../../models/ControlAccesoDto";
 import { CommonsService } from '../../../_services/commons.service';
 
@@ -37,6 +39,7 @@ export class FichaInscripcionComponent implements OnInit {
   isValidate: boolean;
   editar: boolean = false;
 
+  uploadFileDisable: boolean = true;
   persona: PersonaItem = new PersonaItem();
   bodySearch: PersonaObject = new PersonaObject();
   inscripcion: DatosInscripcionItem = new DatosInscripcionItem();
@@ -44,6 +47,10 @@ export class FichaInscripcionComponent implements OnInit {
   isAdministrador: boolean = false;
   isNuevoNoColegiado: boolean = false;
 
+  archivoDisponible: boolean = false;
+  existeArchivo: boolean = false;
+  @ViewChild("pUploadFile") pUploadFile;
+  file: File = undefined;
   datosCertificates = [];
   colsCertificates;
   selectedCertificates: number = 10;
@@ -432,7 +439,7 @@ export class FichaInscripcionComponent implements OnInit {
   }
 
   getComboModoPago() {
-    this.sigaServices.get("fichaInscripcion/getPaymentMode").subscribe(
+    this.sigaServices.get("fichaInscripcion_getPaymentMode").subscribe(
       n => {
         this.comboModoPago = n.combooItems;
         this.arregloTildesCombo(this.comboModoPago);
@@ -1227,6 +1234,9 @@ export class FichaInscripcionComponent implements OnInit {
   }
 
   restablecer() {
+    this.pUploadFile.clear();
+    this.pUploadFile.chooseLabel = "Seleccionar Archivo";
+    this.uploadFileDisable = true;
     this.inscripcion = JSON.parse(JSON.stringify(this.checkBody));
     this.inscripcion.fechaSolicitud = this.arreglarFecha(
       this.inscripcion.fechaSolicitud
@@ -1317,4 +1327,125 @@ export class FichaInscripcionComponent implements OnInit {
       this.resaltadoDatos=true;
     }
   }
+
+  getFile(event: any) {
+    let fileList: FileList = event.files;
+    this.uploadFileDisable = false;
+
+    let nombreCompletoArchivo = fileList[0].name;
+    let extensionArchivo = nombreCompletoArchivo.substring(
+      nombreCompletoArchivo.lastIndexOf("."),
+      nombreCompletoArchivo.length
+    );
+
+    if (
+      extensionArchivo == null ||
+      extensionArchivo.trim() == ""
+    ) {
+      this.file = undefined;
+      this.archivoDisponible = false;
+      this.existeArchivo = false;
+      this.showFail(
+        "La extensión del fichero no es correcta."
+      );
+      this.uploadFileDisable = true;
+    } else {
+      // se almacena el archivo para habilitar boton guardar
+      this.file = fileList[0];
+      this.archivoDisponible = true;
+      this.uploadFileDisable = false;
+      this.existeArchivo = true;
+
+      this.pUploadFile.chooseLabel = nombreCompletoArchivo;
+    }
+  }
+
+   uploadFile(event: any) {
+      if (
+      this.inscripcion.idPersona == null ||
+      this.inscripcion.idInscripcion == null ||
+      this.inscripcion.idPersona == "" ||
+      this.inscripcion.idInscripcion == "" 
+    ) {
+           this.showFail( this.translateService.instant("fichero.comprobante.pago.no.existe.inscripcion"));
+    } else {
+
+           this.progressSpinner = true;
+    if (this.file != undefined) {
+      this.sigaServices
+        .postSendFileAndParametersComprobantePago("inscripcionescomprobantepago_uploadFile", this.file,this.inscripcion.idPersona,this.inscripcion.idInscripcion)
+        .subscribe(
+          data => {
+            this.file = null;
+            this.progressSpinner = false;
+            this.uploadFileDisable = true;
+
+            if (data["error"].code == 200) {
+              this.showSuccess();
+            } else if (data["error"].code == null) {
+              this.showFail(data["error"].message);
+            }
+          },
+          error => {
+           
+            this.showFail("Error en la subida del fichero.");
+            this.progressSpinner = false;
+          },
+          () => {
+            this.pUploadFile.clear();
+            this.pUploadFile.chooseLabel = "Seleccionar Archivo";
+            this.progressSpinner = false;
+          }
+        );
+    }
+    }
+  }
+
+
+downloadFile(data: Response) {
+       let filename;
+
+    this.sigaServices
+      .post("inscripcion_fileDownloadInformation", this.inscripcion)
+      .subscribe(
+        data => {
+          let a = JSON.parse(data["body"]);
+          filename = a.value + "." + a.label;
+        },
+        error => {
+          console.log(error);
+        },
+        () => {
+          this.sigaServices
+            .postDownloadFiles("inscripcion_downloadFile", this.inscripcion)
+            .subscribe(data => {
+              const blob = new Blob([data], { type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" });
+              if (blob.size == 0) {
+                
+                this.showFail( this.translateService.instant("messages.general.error.ficheroNoExiste"));
+              } else {
+                //let filename = "2006002472110.pdf";
+                saveAs(blob, filename);
+              }
+            });
+        }
+      );
+  }
+
+
+  
+  validateInscripcion() {
+    if (
+      this.inscripcion.fechaSolicitud == null ||
+      this.inscripcion.idEstadoInscripcion == null ||
+      this.inscripcion.formaPago == null ||
+      this.inscripcion.idEstadoInscripcion == "" ||
+      this.inscripcion.formaPago == "" 
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
 }

@@ -29,7 +29,7 @@ export class DatosBancariosComponent implements OnInit {
   disabledAction: boolean = false;
 
   msgs: Message[];
-  camposDesactivados: boolean;
+  camposDesactivados: boolean = false;
   usuarioBody: any[];
   cols: any = [];
   rowsPerPage: any = [];

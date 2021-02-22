@@ -105,26 +105,37 @@
       <!-- Cuerpo-->
       <div class="card-body card-body-ficha" *ngIf="esFichaActiva('inscripcion')">
         <div class="form-row lg-12 md-12">
-          <div class="col-lg-4 col-md-4">
+          <div class="col-lg-3 col-md-3">
             <label>{{ 'censo.nuevaSolicitud.fechaSolicitud' | translate }} (*)</label>
             <app-fecha [inputStyleClass]="styleObligatorio(inscripcion.fechaSolicitud)" [(value)]="inscripcion.fechaSolicitud" [disabled]="modoEdicion || !activacionEditar" [minDate]="minDateFechaSolicitud"
               (valueChangeSelected)="fillFechaSolicitud($event)" (valueChangeInput)="fillFechaSolicitud($event)"></app-fecha>
           </div>
-          <div class="col-lg-4 col-md-4">
+          <div class="col-lg-3 col-md-3">
             <label>{{ "censo.busquedaSolicitudesModificacion.literal.estado" | translate}}</label>
             <p-dropdown placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form" [(ngModel)]='inscripcion.idEstadoInscripcion'
               [options]="comboEstados" [filter]="true" filterBy="label,labelSinTilde" [disabled]="true"></p-dropdown>
           </div>
-          <div class="col-lg-2 col-md-2">
+          <div class="col-lg-3 col-md-3">
             <label>{{ 'formacion.busquedaInscripcion.calificacion' | translate }}</label>
             <input class="form-control" name="calificacion" [(ngModel)]='inscripcion.calificacion' [disabled]="true" type="text" pInputText>
           </div>
+          <div class="col-lg-3 col-md-3">
+            <label>{{ 'ficha.inscripcion.asistencia' | translate }} </label>
+            <p-checkbox name="minimaAsistencia" binary="true" class = "ml-1" [(ngModel)]='inscripcion.checkMinimaAsistencia' [disabled]="true"></p-checkbox>
+          </div>  
         </div>
         <div class="form-row lg-12 md-12" style="margin-top: 10px">
           <div class="col-lg-3 col-md-3">
-            <label>{{ 'formacion.busquedaInscripcion.asistencia' | translate }}</label>
-            <p-checkbox name="minimaAsistencia" binary="true" [(ngModel)]='inscripcion.checkMinimaAsistencia' [disabled]="true"></p-checkbox>
+            <label>{{ "formacion.fichaInscripcion.datosPago.modoPago" | translate}} (*)</label>
+            <p-dropdown placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form" [(ngModel)]='inscripcion.formaPago'
+              [options]="comboModoPago" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" [disabled]="modoEdicion || !activacionEditar" ></p-dropdown>  
           </div>
+          <div class="form-group col-lg-3 col-md-3">
+            <label>{{ 'ficha.inscripcion.comprobante.pago' | translate }} </label>
+            <br>
+            <p-fileUpload #pUploadFile chooseLabel="{{ 'censo.sociedades.datosBancarios.seleccionarArchivo' | translate}}" name="file"
+              mode="basic"  class="edit my-0 mx-auto main-button" (onSelect)="getFile($event)" auto="true"> </p-fileUpload>
+          </div>  
         </div>
       </div>
       <div class="card-footer" *ngIf="esFichaActiva('inscripcion')">
@@ -132,9 +143,12 @@
           <!-- <button pButton (click)="restEvent()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate }}" [disabled]="tipoAccesoLectura"></button>
           <button pButton (click)="saveEvent()" type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.guardar' | translate }}" [disabled]="validateForm() || tipoAccesoLectura"></button>
         -->
-          <button pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate }}" [disabled]="!activacionEditar || desactivarBotones"
+        <button pButton type="button" [disabled]="uploadFileDisable" (click)="uploadFile($event)" icon="fa fa-upload" iconPos="left"
+        label="{{ 'general.boton.cargarFichero' | translate}}"></button>
+        <button pButton type="button" (click)="downloadFile($event)" icon="fa fa-download" iconPos="left" label="Descargar Fichero"></button>
+        <button pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate }}" [disabled]="!activacionEditar || desactivarBotones"
             (click)="restablecer()"></button>
-          <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}" [disabled]="!activacionEditar || desactivarBotones"
+        <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}" [disabled]="validateInscripcion() || !activacionEditar || desactivarBotones"
             (click)="checkDatos()"></button>
         </div>
       </div>

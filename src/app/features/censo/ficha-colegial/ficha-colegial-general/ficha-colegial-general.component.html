@@ -1,4 +1,13 @@
 <div class="busqueda-container" id="top">
+  <div class="info-limit" *ngIf="publicarDatosContacto">
+    <img src="./assets/images/icons/warning.png">
+    <div class="d-inline-block">
+        <div>
+            <span class="pr-2 text-left">{{"menu.fichaColegial.lopd.literal" | translate}}</span>
+        </div>
+    </div>
+  </div>
+
   <div class="header-title">
     <i class="fa fa-square"></i>
     <p *ngIf="esColegiado">
@@ -10,11 +19,14 @@
       <i class="fa fa-angle-right"></i>{{ "menu.censo.fichaNoColegial" | translate }}
     </p>
   </div>
-  <div>
+  <div [hidden]="displayColegiado">
+
     <app-tarjeta-resumen-fija class="pb-50"  [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" *ngIf="idPersona != undefined" [chincheta]="true" [datos]="datosTarjetaResumen" [enlaces] = "enlacesTarjetaResumen" [icono]="iconoTarjetaResumen"
         (modoEdicionSend)="modoEdicionSend($event)" (isOpen)="isOpenReceive($event)" [manuallyOpened] = "manuallyOpened"></app-tarjeta-resumen-fija>
     <app-servicios-interes-ficha-colegial (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaInteres]="tarjetaInteres" [esColegiado]="esColegiado"></app-servicios-interes-ficha-colegial>
-    <app-datos-generales-ficha-colegial (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaGenerales]="tarjetaGenerales" [esColegiado]="esColegiado" (datosTarjetaResumenEmit)= "datosTarjetaResumenEvent($event)" (idPersonaNuevo)="idPersonaNuevoEvent($event)" [openGen]="openGen"></app-datos-generales-ficha-colegial>
+          
+    <app-datos-generales-ficha-colegial (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaGenerales]="tarjetaGenerales" 
+      [esColegiado]="esColegiado" (datosTarjetaResumenEmit)= "datosTarjetaResumenEvent($event)" (idPersonaNuevo)="idPersonaNuevoEvent($event)" (aparecerLOPD)="aparecerLOPDEvent($event)" [openGen]="openGen"></app-datos-generales-ficha-colegial>
     <app-datos-colegiales-ficha-colegial (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaColegiales]="tarjetaColegiales" [esColegiado]="esColegiado" [openColegia]="openColegia"></app-datos-colegiales-ficha-colegial>
     <app-otras-colegiaciones-ficha-colegial (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaOtrasColegiaciones]="tarjetaOtrasColegiaciones" 
       [esColegiado]="esColegiado" [openOtrasCole]="openOtrasCole"></app-otras-colegiaciones-ficha-colegial>
@@ -41,4 +53,27 @@
     <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
   </div>
   <app-dialog></app-dialog>
+  <p-dialog [(visible)]="displayColegiado" responsive="true" [draggable]="false" modal="modal" resizable="false"
+  [minWidth]="500">
+  <p-header class="title">
+    <label>{{ "general.ventana.cgae" | translate }} - {{ "general.message.informacion" | translate }}
+    </label>
+  </p-header>
+
+  <div class="bloque col-lg-12 col-md-12">
+    <div class="row">
+      <span> {{ "mensaje.informacion.noAcceso.fichaColegial" | translate }} </span>
+    </div>
+  </div>
+
+  <p-footer>
+    <div class="text-right main-button ">
+      <button (click)="returnHome()" pButton type="button" icon="fa fa-check" iconPos="left"
+        label="{{ 'general.boton.submit' | translate }}"></button>
+    </div>
+  </p-footer>
+</p-dialog>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
 </div>

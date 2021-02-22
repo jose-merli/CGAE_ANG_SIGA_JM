@@ -177,7 +177,6 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
       .postPaginado("parametros_search", "?numPagina=1", this.body)
       .subscribe(
         data => {
-          console.log(data);
           this.progressSpinner = false;
           this.searchParametros = JSON.parse(data["body"]);
           this.datosBuscar = this.searchParametros.parametrosItems;
@@ -202,7 +201,6 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
 
     this.sigaServices.post("parametros_delete", this.bodyDelete).subscribe(
       data => {
-        console.log(data);
         this.showSuccessDelete();
       },
       err => {
@@ -254,7 +252,6 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
       this.mapUpdate.forEach((value: ParametroUpdateDto, key: String) => {
         this.sigaServices.post("parametros_update", value).subscribe(
           data => {
-            console.log(data);
           },
           err => {
             console.log(err);
@@ -298,7 +295,6 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
       .postPaginado("parametros_historico", "?numPagina=1", this.bodyHistorico)
       .subscribe(
         data => {
-          console.log(data);
 
           this.historicoParametros = JSON.parse(data["body"]);
           this.datosHistorico = this.historicoParametros.parametrosItems;

@@ -1,5 +1,5 @@
-import { ErrorItem } from "./ErrorItem";
-import { ComboItem } from "./ComboItem";
+import { ErrorItem } from './ErrorItem';
+import { ComboItem } from './ComboItem';
 export class FichaColegialGeneralesItem {
   searchLoggedUser: Boolean;
   idPersona: String;
@@ -44,5 +44,17 @@ export class FichaColegialGeneralesItem {
   numColegiado: String;
   identificadords: string;
   situacionResidente:string;
+  nombrePoblacion: String;
+  direccion: String;
+  idPoblacion: String;
+  idPais: String;
+  idProvincia: String;
+  codigoPostal: String;
+  telefono1: String;
+  telefono2: String;
+  fax1: String;
+  fax2: String;
+  movil: String;
+  correoelectronico: String;
   constructor() { }
 }

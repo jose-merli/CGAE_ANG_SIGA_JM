@@ -1,17 +1,18 @@
-import { Component, OnInit, ViewChild, HostListener, ChangeDetectorRef, ViewEncapsulation } from "@angular/core";
-import { SigaServices } from "../../../_services/siga.service";
-import { Location } from "@angular/common";
-import { BusquedaFisicaItem } from "../../../models/BusquedaFisicaItem";
-import { BusquedaFisicaObject } from "../../../models/BusquedaFisicaObject";
-import { Router } from "../../../../../node_modules/@angular/router";
-import { DatosColegiadosItem } from "../../../models/DatosColegiadosItem";
-import { DatosColegiadosObject } from "../../../models/DatosColegiadosObject";
-import { AuthenticationService } from "../../../_services/authentication.service";
-import { DatosNoColegiadosObject } from "../../../models/DatosNoColegiadosObject";
-import { NoColegiadoItem } from "../../../models/NoColegiadoItem";
-import { TranslateService } from "../../../commons/translate";
-import { ConfirmationService } from "../../../../../node_modules/primeng/primeng";
-import { FichaColegialGeneralesItem } from "../../../models/FichaColegialGeneralesItem";
+import { Component, OnInit, ViewChild, HostListener, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
+import { SigaServices } from '../../../_services/siga.service';
+import { Location } from '@angular/common';
+import { BusquedaFisicaItem } from '../../../models/BusquedaFisicaItem';
+import { BusquedaFisicaObject } from '../../../models/BusquedaFisicaObject';
+import { Router } from '../../../../../node_modules/@angular/router';
+import { DatosColegiadosItem } from '../../../models/DatosColegiadosItem';
+import { DatosColegiadosObject } from '../../../models/DatosColegiadosObject';
+import { AuthenticationService } from '../../../_services/authentication.service';
+import { SolicitudIncorporacionItem } from '../../../models/SolicitudIncorporacionItem';
+import { DatosNoColegiadosObject } from '../../../models/DatosNoColegiadosObject';
+import { NoColegiadoItem } from '../../../models/NoColegiadoItem';
+import { TranslateService } from '../../../commons/translate';
+import { ConfirmationService } from '../../../../../node_modules/primeng/primeng';
+import { FichaColegialGeneralesItem } from '../../../models/FichaColegialGeneralesItem';
 import { CommonsService } from '../../../_services/commons.service';
 import { MultiSelect } from 'primeng/multiselect';
 
@@ -20,14 +21,14 @@ export enum KEY_CODE {
 }
 
 @Component({
-  selector: "app-busqueda-censo-general",
-  templateUrl: "./busqueda-censo-general.component.html",
-  styleUrls: ["./busqueda-censo-general.component.scss"],
+  selector: 'app-busqueda-censo-general',
+  templateUrl: './busqueda-censo-general.component.html',
+  styleUrls: ['./busqueda-censo-general.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
 export class BusquedaCensoGeneralComponent implements OnInit {
-  textFilter: String = "Elegir";
-  textSelected: String = "{0} opciones seleccionadas";
+  textFilter: String = 'Elegir';
+  textSelected: String = '{0} opciones seleccionadas';
 
   cols: any = [];
   rowsPerPage: any = [];
@@ -48,15 +49,16 @@ export class BusquedaCensoGeneralComponent implements OnInit {
   bodyNoColegiado: NoColegiadoItem = new NoColegiadoItem();
   noColegiadoSearch = new DatosNoColegiadosObject();
 
+  bodyFisica: BusquedaFisicaItem = new BusquedaFisicaItem();
   personaBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
 
   bodyColegiado: DatosColegiadosItem = new DatosColegiadosItem();
   colegiadoSearch = new DatosColegiadosObject();
-  modoBusqueda: string = "aprox";
+  modoBusqueda: string = 'aprox';
   modoBusquedaAprox: boolean = true;
   selectedItem: number = 10;
   @ViewChild('someDropdown') someDropdown: MultiSelect;
-  @ViewChild("table")
+  @ViewChild('table')
   table;
   selectedDatos;
 
@@ -72,28 +74,28 @@ export class BusquedaCensoGeneralComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    sessionStorage.removeItem("esNuevoNoColegiado");
+    sessionStorage.removeItem('esNuevoNoColegiado');
 
-    if (sessionStorage.getItem("filtrosBusqueda") != null) {
-      this.body = JSON.parse(sessionStorage.getItem("filtrosBusqueda"));
+    if (sessionStorage.getItem('filtrosBusqueda') != null) {
+      this.body = JSON.parse(sessionStorage.getItem('filtrosBusqueda'));
 
-      if (sessionStorage.getItem("busquedaCensoGeneral") != null) {
-        this.body = JSON.parse(sessionStorage.getItem("filtrosBusqueda"));
+      if (sessionStorage.getItem('busquedaCensoGeneral') != null) {
+        this.body = JSON.parse(sessionStorage.getItem('filtrosBusqueda'));
         this.colegios_seleccionados = this.body.colegios_seleccionados;
         this.isBuscarAprox();
-        sessionStorage.removeItem("busquedaCensoGeneral");
+        sessionStorage.removeItem('busquedaCensoGeneral');
       }
 
-      sessionStorage.removeItem("filtrosBusqueda");
+      sessionStorage.removeItem('filtrosBusqueda');
     }
 
     this.fillDataTable();
 
-    this.sigaServices.get("busquedaPer_colegio").subscribe(
-      n => {
+    this.sigaServices.get('busquedaPer_colegio').subscribe(
+            (n) => {
         this.colegios = n.combooItems;
       },
-      err => {
+            (err) => {
         console.log(err);
       }
     );
@@ -102,40 +104,40 @@ export class BusquedaCensoGeneralComponent implements OnInit {
   fillDataTable() {
     this.cols = [
       {
-        field: "nif",
-        header: "censo.consultaDatosColegiacion.literal.numIden"
+        field: 'nif',
+        header: 'censo.consultaDatosColegiacion.literal.numIden'
       },
       {
-        field: "nombre",
-        header: "administracion.parametrosGenerales.literal.nombre"
+        field: 'nombre',
+        header: 'administracion.parametrosGenerales.literal.nombre'
       },
       {
-        field: "apellidos",
-        header: "gratuita.mantenimientoTablasMaestra.literal.apellidos"
+        field: 'apellidos',
+        header: 'gratuita.mantenimientoTablasMaestra.literal.apellidos'
       },
       {
-        field: "numeroColegiado",
-        header: "censo.busquedaClientesAvanzada.literal.nColegiado"
+        field: 'numeroColegiado',
+        header: 'censo.busquedaClientesAvanzada.literal.nColegiado'
       },
       {
-        field: "colegio",
-        header: "censo.busquedaClientesAvanzada.literal.colegio"
+        field: 'colegio',
+        header: 'censo.busquedaClientesAvanzada.literal.colegio'
       },
       {
-        field: "situacion",
-        header: "censo.fichaCliente.situacion.cabecera"
+        field: 'situacion',
+        header: 'censo.fichaCliente.situacion.cabecera'
       },
       {
-        field: "fechaEstado",
-        header: "censo.nuevaSolicitud.fechaEstado"
+        field: 'fechaEstado',
+        header: 'censo.nuevaSolicitud.fechaEstado'
       },
       {
-        field: "residente",
-        header: "censo.ws.literal.residente"
+        field: 'residente',
+        header: 'censo.ws.literal.residente'
       },
       {
-        field: "domicilio",
-        header: "solicitudModificacion.especifica.domicilio.literal"
+        field: 'domicilio',
+        header: 'solicitudModificacion.especifica.domicilio.literal'
       }
     ];
 
@@ -179,7 +181,7 @@ export class BusquedaCensoGeneralComponent implements OnInit {
     if (this.checkFilters()) {
       if (
         this.body.numeroColegiado != undefined &&
-        this.body.numeroColegiado != ""
+        this.body.numeroColegiado != ''
       ) {
         if (
           this.colegios_seleccionados != undefined &&
@@ -187,7 +189,7 @@ export class BusquedaCensoGeneralComponent implements OnInit {
         ) {
           this.search();
         } else {
-          this.showFail(this.translateService.instant("censo.busquedaCensoGeneral.mensaje.introducir.colegio"));
+          this.showFail(this.translateService.instant('censo.busquedaCensoGeneral.mensaje.introducir.colegio'));
         }
       } else {
         this.search();
@@ -203,6 +205,7 @@ export class BusquedaCensoGeneralComponent implements OnInit {
     } else {
       this.isBuscarExacta();
     }
+    this.sessionInfo();
   }
 
   isBuscarExacta() {
@@ -212,14 +215,14 @@ export class BusquedaCensoGeneralComponent implements OnInit {
       this.buscar = true;
 
       this.sigaServices
-        .postPaginado("busquedaCensoGeneral_searchExact", "?numPagina=1", this.body)
+        .postPaginado('busquedaCensoGeneral_searchExact', '?numPagina=1', this.body)
         .subscribe(
-          data => {
+                (data) => {
             this.progressSpinner = false;
-            this.bodySearch = JSON.parse(data["body"]);
+            this.bodySearch = JSON.parse(data['body']);
             this.datos = this.bodySearch.busquedaFisicaItems;
           },
-          err => {
+                (err) => {
             console.log(err);
             this.progressSpinner = false;
           },
@@ -232,7 +235,7 @@ export class BusquedaCensoGeneralComponent implements OnInit {
         );
 
     } else {
-      this.showFail(this.translateService.instant("censo.busquedaCensoGeneral.mensaje.introducir.numero.colegiado"));
+      this.showFail(this.translateService.instant('censo.busquedaCensoGeneral.mensaje.introducir.numero.colegiado'));
     }
   }
 
@@ -245,21 +248,21 @@ export class BusquedaCensoGeneralComponent implements OnInit {
       this.colegios_seleccionados.length > 0
     ) {
       this.body.idInstitucion = [];
-      this.colegios_seleccionados.forEach(element => {
+      this.colegios_seleccionados.forEach((element) => {
         this.body.idInstitucion.push(element.value);
       });
       // this.body.idInstitucion.push(this.colegios_seleccionados[0].value);
     }
 
     this.sigaServices
-      .postPaginado("busquedaCensoGeneral_search", "?numPagina=1", this.body)
+      .postPaginado('busquedaCensoGeneral_search', '?numPagina=1', this.body)
       .subscribe(
-        data => {
+            (data) => {
           this.progressSpinner = false;
-          this.bodySearch = JSON.parse(data["body"]);
+          this.bodySearch = JSON.parse(data['body']);
           this.datos = this.bodySearch.busquedaFisicaItems;
         },
-        err => {
+            (err) => {
           console.log(err);
           this.progressSpinner = false;
         },
@@ -274,10 +277,8 @@ export class BusquedaCensoGeneralComponent implements OnInit {
 
   irFichaColegial(selectedDatos) {
     this.progressSpinner = true;
-    sessionStorage.setItem("busquedaCensoGeneral", "true");
     this.body.colegios_seleccionados = this.colegios_seleccionados;
-    sessionStorage.setItem("filtrosBusqueda", JSON.stringify(this.body));
-
+    
     // if (this.authenticationService.getInstitucionSession() == 2000) {
     //   this.getNoColegiado(selectedDatos);
     // } else {
@@ -296,18 +297,23 @@ export class BusquedaCensoGeneralComponent implements OnInit {
     // }
   }
 
+  sessionInfo(){
+    sessionStorage.setItem('busquedaCensoGeneral', 'true');
+    sessionStorage.setItem('filtrosBusqueda', JSON.stringify(this.body));
+  }
+
   getColegiado(selectedDatos) {
     this.bodyColegiado.nif = selectedDatos.nif;
     this.bodyColegiado.idInstitucion = selectedDatos.numeroInstitucion;
 
     this.sigaServices
       .postPaginado(
-        "busquedaCensoGeneral_searchColegiado",
-        "?numPagina=1",
+        'busquedaCensoGeneral_searchColegiado',
+        '?numPagina=1',
         this.bodyColegiado
       )
-      .subscribe(data => {
-        this.colegiadoSearch = JSON.parse(data["body"]);
+            .subscribe((data) => {
+        this.colegiadoSearch = JSON.parse(data['body']);
         this.datosColegiados = this.colegiadoSearch.colegiadoItem;
 
         if (this.datosColegiados == null || this.datosColegiados == undefined ||
@@ -315,17 +321,17 @@ export class BusquedaCensoGeneralComponent implements OnInit {
           this.getNoColegiado(selectedDatos);
         } else {
           sessionStorage.setItem(
-            "personaBody",
+            'personaBody',
             JSON.stringify(this.datosColegiados[0])
           );
           sessionStorage.setItem(
-            "esColegiado",
+            'esColegiado',
             JSON.stringify(true)
           );
-          this.router.navigate(["/fichaColegial"]);
+          this.router.navigate(['/fichaColegial']);
         }
       },
-        err => {
+                (err) => {
           this.progressSpinner = false;
 
         });
@@ -333,17 +339,17 @@ export class BusquedaCensoGeneralComponent implements OnInit {
 
   getNoColegiado(selectedDatos) {
     this.bodyNoColegiado.nif = selectedDatos.nif;
-    this.bodyNoColegiado.idInstitucion = this.authenticationService.getInstitucionSession();
+    this.bodyNoColegiado.idInstitucion = selectedDatos.numeroInstitucion;
 
     this.sigaServices
       .postPaginado(
-        "busquedaNoColegiados_searchNoColegiado",
-        "?numPagina=1",
+        'busquedaNoColegiados_searchNoColegiado',
+        '?numPagina=1',
         this.bodyNoColegiado
       )
-      .subscribe(data => {
+            .subscribe((data) => {
         this.progressSpinner = false;
-        this.noColegiadoSearch = JSON.parse(data["body"]);
+        this.noColegiadoSearch = JSON.parse(data['body']);
         this.datosNoColegiados = this.noColegiadoSearch.noColegiadoItem;
 
         if (this.datosNoColegiados.length > 0) {
@@ -354,21 +360,21 @@ export class BusquedaCensoGeneralComponent implements OnInit {
           }
 
           sessionStorage.setItem(
-            "esColegiado",
+            'esColegiado',
             JSON.stringify(false)
           );
 
           sessionStorage.setItem(
-            "personaBody",
+            'personaBody',
             JSON.stringify(this.datosNoColegiados[0])
           );
 
-          this.router.navigate(["/fichaColegial"]);
+          this.router.navigate(['/fichaColegial']);
         } else {
           this.getCliente(selectedDatos);
         }
       },
-        err => {
+                 (err) => {
           this.progressSpinner = false;
 
         });
@@ -379,15 +385,15 @@ export class BusquedaCensoGeneralComponent implements OnInit {
 
     this.sigaServices
       .postPaginado(
-        "busquedaCensoGeneral_searchCliente",
-        "?numPagina=1",
+        'busquedaCensoGeneral_searchCliente',
+        '?numPagina=1',
         this.bodyNoColegiado
       )
-      .subscribe(data => {
+            .subscribe((data) => {
         this.progressSpinner = false;
-        this.noColegiadoSearch = JSON.parse(data["body"]);
+        this.noColegiadoSearch = JSON.parse(data['body']);
         this.datosNoColegiados = this.noColegiadoSearch.noColegiadoItem;
-        sessionStorage.setItem("esColegiado", "false");
+        sessionStorage.setItem('esColegiado', 'false');
 
         if (this.datosNoColegiados.length > 0) {
           if (this.datosNoColegiados[0].fechaNacimiento != null) {
@@ -397,42 +403,104 @@ export class BusquedaCensoGeneralComponent implements OnInit {
           }
 
           sessionStorage.setItem(
-            "personaBody",
+            'personaBody',
             JSON.stringify(this.datosNoColegiados[0])
           );
 
-          this.router.navigate(["/fichaColegial"]);
+          this.router.navigate(['/fichaColegial']);
         } else {
           this.confirmationService.confirm({
-            message: this.translateService.instant("censo.busquedaCensoGeneral.mensaje.crear.noColegiado"),
-            icon: "fa fa-info",
+            message: this.translateService.instant(
+	    'censo.busquedaCensoGeneral.mensaje.crear.noColegiado'
+	    ),
+            icon: 'fa fa-info',
             accept: () => {
-              sessionStorage.setItem("esNuevoNoColegiado", "true");
-              sessionStorage.setItem("busquedaCensoGeneral", "true");
+              this.bodyFisica.idInstitucion = [];
+              this.bodyFisica.idInstitucion.push(selectedDatos.numeroInstitucion);
+								// this.bodyFisica.idInstitucion = selectedDatos.numeroInstitucion;
+								this.bodyFisica.addDestinatarioIndv = false;
+								this.bodyFisica.nif = selectedDatos.nif;
+								this.sigaServices
+									.postPaginado('busquedaPer_searchFisica', '?numPagina=1', this.bodyFisica)
+									.subscribe(
+										(data) => {
+											this.bodySearch = JSON.parse(data['body']);
+											this.datosNoColegiados = this.bodySearch.busquedaFisicaItems;
+											if (this.datosNoColegiados.length > 0) {
+												// if (this.datosNoColegiados[0].fechaNacimiento != null) {
+												// 	this.datosNoColegiados[0].fechaNacimiento = this.personaBodyFecha(
+												// 		this.datosNoColegiados[0].fechaNacimiento
+												// 	);
+												// }
+												let enviar = new SolicitudIncorporacionItem();
+												enviar.numeroIdentificacion = this.datosNoColegiados[0].nif;
+												enviar.apellido1 = this.datosNoColegiados[0].primerApellido;
+												enviar.nombre = this.datosNoColegiados[0].nombre;
+												enviar.numColegiado = this.datosNoColegiados[0].numeroColegiado;
+												enviar.idInstitucion = this.datosNoColegiados[0].numeroInstitucion;
+												enviar.apellido2 = this.datosNoColegiados[0].segundoApellido;
+												enviar.sexo = this.datosNoColegiados[0].sexo;
+												enviar.naturalDe = this.datosNoColegiados[0].naturalDe;
+												enviar.idTipoIdentificacion = this.datosNoColegiados[0].idTipoIdentificacion;
+												enviar.idEstadoCivil = this.datosNoColegiados[0].idEstadoCivil;
+												enviar.fechaNacimiento = this.datosNoColegiados[0].fechaNacimientoString;
+												enviar.idTratamiento = this.datosNoColegiados[0].idTratamiento;
+												enviar.idEstado = this.datosNoColegiados[0].situacion;
+												enviar.domicilio = this.datosNoColegiados[0].direccion;
+												enviar.idProvincia = this.datosNoColegiados[0].idProvincia;
+												enviar.idPoblacion = this.datosNoColegiados[0].idPoblacion;
+												enviar.idPais = this.datosNoColegiados[0].idPais;
+												enviar.movil = this.datosNoColegiados[0].movil;
+												enviar.telefono1 = this.datosNoColegiados[0].telefono1;
+												enviar.telefono2 = this.datosNoColegiados[0].telefono2;
+												enviar.fax1 = this.datosNoColegiados[0].fax1;
+												enviar.fax2 = this.datosNoColegiados[0].fax2;
+												enviar.correoElectronico = this.datosNoColegiados[0].correoelectronico;
+												enviar.codigoPostal = this.datosNoColegiados[0].codigoPostal;
+												enviar.nombrePoblacion = this.datosNoColegiados[0].nombrePoblacion;
+												sessionStorage.setItem('nuevoNoColegiado', JSON.stringify(enviar));
+												sessionStorage.setItem('esNuevoNoColegiado', 'true');
+												sessionStorage.setItem('busquedaCensoGeneral', 'true');
+												sessionStorage.removeItem('disabledAction');
+												sessionStorage.setItem(
+													'personaBody',
+													JSON.stringify(this.datosNoColegiados[0])
+												);
+												this.router.navigate([ '/fichaColegial' ]);
+											} else {
+												sessionStorage.setItem('esNuevoNoColegiado', 'true');
+												sessionStorage.setItem('busquedaCensoGeneral', 'true');
               let noColegiado = new NoColegiadoItem();
               noColegiado.nif = selectedDatos.nif;
               noColegiado.idPersona = selectedDatos.idPersona;
               noColegiado.soloNombre = selectedDatos.nombre;
               noColegiado.apellidos1 = selectedDatos.primerApellido;
               noColegiado.apellidos2 = selectedDatos.segundoApellido;
-              sessionStorage.removeItem("disabledAction");
+												noColegiado.sexo = selectedDatos.sexo;
+              sessionStorage.removeItem('disabledAction');
               this.datosNoColegiados.push(noColegiado);
               sessionStorage.setItem(
-                "personaBody",
+                'personaBody',
                 JSON.stringify(this.datosNoColegiados[0])
               );
 
-              this.router.navigate(["/fichaColegial"]);
+              this.router.navigate(['/fichaColegial']);
+											}
             },
+										(err) => {
+											this.progressSpinner = false;
+										}
+									);
+							},
             reject: () => {
-              sessionStorage.setItem("busquedaCensoGeneral", "false");
+              sessionStorage.setItem('busquedaCensoGeneral', 'false');
 
               this.msgs = [
                 {
-                  severity: "info",
-                  summary: "Info",
+                  severity: 'info',
+                  summary: 'Info',
                   detail: this.translateService.instant(
-                    "general.message.accion.cancelada"
+                    'general.message.accion.cancelada'
                   )
                 }
               ];
@@ -441,7 +509,7 @@ export class BusquedaCensoGeneralComponent implements OnInit {
             }
           });
           this.progressSpinner = false;
-          sessionStorage.removeItem("esNuevoNoColegiado");
+          sessionStorage.removeItem('esNuevoNoColegiado');
         }
       },
         err => {
@@ -456,7 +524,7 @@ export class BusquedaCensoGeneralComponent implements OnInit {
     let month = f.substring(5, 7);
     let day = f.substring(8, 10);
 
-    return day + "/" + month + "/" + year;
+    return day + '/' + month + '/' + year;
   }
 
   clear() {
@@ -466,22 +534,22 @@ export class BusquedaCensoGeneralComponent implements OnInit {
   showFail(message: string) {
     this.msgs = [];
     this.msgs.push({
-      severity: "error",
-      summary: "Error",
+      severity: 'error',
+      summary: 'Error',
       detail: message
     });
   }
 
   disableBuscar(): boolean {
     if (
-      (this.body.nif != undefined && this.body.nif != "") ||
-      (this.body.nombre != undefined && this.body.nombre != "") ||
+      (this.body.nif != undefined && this.body.nif != '') ||
+      (this.body.nombre != undefined && this.body.nombre != '') ||
       (this.body.primerApellido != undefined &&
-        this.body.primerApellido != "") ||
+        this.body.primerApellido != '') ||
       (this.body.segundoApellido != undefined &&
-        this.body.segundoApellido != "") ||
+        this.body.segundoApellido != '') ||
       (this.body.numeroColegiado != undefined &&
-        this.body.numeroColegiado != "") ||
+        this.body.numeroColegiado != '') ||
       (this.colegios_seleccionados != undefined &&
         this.colegios_seleccionados.length > 0)
     ) {
@@ -492,7 +560,7 @@ export class BusquedaCensoGeneralComponent implements OnInit {
   }
 
   //búsqueda con enter
-  @HostListener("document:keypress", ["$event"])
+  @HostListener('document:keypress', ['$event'])
   onKeyPress(event: KeyboardEvent) {
     if (event.keyCode === KEY_CODE.ENTER) {
       this.isBuscarAprox();
@@ -560,10 +628,10 @@ export class BusquedaCensoGeneralComponent implements OnInit {
   showSearchIncorrect() {
     this.msgs = [];
     this.msgs.push({
-      severity: "error",
-      summary: this.translateService.instant("general.message.incorrect"),
+      severity: 'error',
+      summary: this.translateService.instant('general.message.incorrect'),
       detail: this.translateService.instant(
-        "cen.busqueda.error.busquedageneral"
+        'cen.busqueda.error.busquedageneral'
       )
     });
   }
@@ -573,9 +641,9 @@ export class BusquedaCensoGeneralComponent implements OnInit {
     this.buscar = false;
     this.isLimpiar();
 
-    if (this.modoBusqueda == "aprox") {
+    if (this.modoBusqueda == 'aprox') {
       this.modoBusquedaAprox = true;
-    } else if (this.modoBusqueda == "exacta") {
+    } else if (this.modoBusqueda == 'exacta') {
       this.modoBusquedaAprox = false;
     }
   }
@@ -587,7 +655,7 @@ export class BusquedaCensoGeneralComponent implements OnInit {
   }
 
   navigateTo() {
-    this.router.navigate(["/fichaColegial"]);
+    this.router.navigate(['/fichaColegial']);
   }
 
 }
