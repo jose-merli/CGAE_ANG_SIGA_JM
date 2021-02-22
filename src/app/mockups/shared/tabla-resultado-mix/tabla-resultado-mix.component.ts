@@ -31,18 +31,18 @@ export class TablaResultadoMixComponent implements OnInit {
   down = false;
   @ViewChild('table') table: ElementRef;
 
-  
+
   constructor(
     private renderer: Renderer2
   ) {
-    this.renderer.listen('window', 'click',(event: { target: HTMLInputElement; })=>{
+    this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
       for (let i = 0; i < this.table.nativeElement.children.length; i++) {
 
-      if(!event.target.classList.contains("selectedRowClass")){
-        this.selected = false;
-        this.selectedArray = [];
+        if (!event.target.classList.contains("selectedRowClass")) {
+          this.selected = false;
+          this.selectedArray = [];
+        }
       }
-    }
     });
   }
 
@@ -50,7 +50,7 @@ export class TablaResultadoMixComponent implements OnInit {
     console.log('rowGroups: ', this.rowGroups);
     this.numCabeceras = this.cabeceras.length;
     this.numColumnas = this.numCabeceras;
-    this.cabeceras.forEach(cab =>{
+    this.cabeceras.forEach(cab => {
       this.cabecerasMultiselect.push(cab.name);
     })
   }
@@ -58,31 +58,31 @@ export class TablaResultadoMixComponent implements OnInit {
   validaCheck(texto) {
     return texto === 'Si';
   }
-  selectRow(rowId){
-    if(this.selectedArray.includes(rowId)){
+  selectRow(rowId) {
+    if (this.selectedArray.includes(rowId)) {
       const i = this.selectedArray.indexOf(rowId);
       this.selectedArray.splice(i, 1);
-    }else{
+    } else {
       this.selectedArray.push(rowId);
     }
-    if(this.selectedArray.length != 0){
+    if (this.selectedArray.length != 0) {
       this.anySelected.emit(true);
-    }else{
+    } else {
       this.anySelected.emit(false);
     }
-    
+
   }
-  isSelected(id){
-    if(this.selectedArray.includes(id)){
+  isSelected(id) {
+    if (this.selectedArray.includes(id)) {
       return true;
     } else {
       return false;
     }
   }
   sortData(sort: Sort) {
-    let data :Row[] = [];
+    let data: Row[] = [];
     this.rowGroups = this.rowGroupsAux.filter((row) => {
-        data.push(row);
+      data.push(row);
     });
     console.log('data: ', data)
     data = data.slice();
@@ -94,51 +94,55 @@ export class TablaResultadoMixComponent implements OnInit {
     this.rowGroups = data.sort((a, b) => {
       const isAsc = sort.direction === 'asc';
       let resultado;
-        for (let i = 0; i < a.cells.length; i++) {
+      for (let i = 0; i < a.cells.length; i++) {
         resultado = compare(a.cells[i].value, b.cells[i].value, isAsc);
-        }
-    return resultado ;
-  });
-  this.rowGroupsAux = this.rowGroups;
-  
-    } 
-
-
-    searchChange(j: any) {
-      let isReturn = true;
-      let isReturnArr = [];
-      this.rowGroups = this.rowGroupsAux.filter((row) => {
-            console.log('row.cells[i].value.toString().toLowerCase(): ', row.cells[j].value.toString().toLowerCase())
-            console.log('this.searchText[j].toLowerCase(): ', this.searchText[j].toLowerCase())
-            if (
-              this.searchText[j] != " " &&
-              this.searchText[j] != undefined && 
-              !row.cells[j].value.toString().toLowerCase().includes(this.searchText[j].toLowerCase())
-            ) {
-              isReturn = false;
-            } else {
-              isReturn = true;
-            }
-        if (isReturn) {
-          console.log('RETURN ROW: ', row)
-          return row;
-        }
-      });
       }
+      return resultado;
+    });
+    this.rowGroupsAux = this.rowGroups;
 
-      showMsg(severity, summary, detail) {
-        this.msgs = [];
-        this.msgs.push({
-          severity,
-          summary,
-          detail
-        });
+  }
+
+
+  searchChange(j: any) {
+    let isReturn = true;
+    let isReturnArr = [];
+    this.rowGroups = this.rowGroupsAux.filter((row) => {
+      console.log('row.cells[i].value.toString().toLowerCase(): ', row.cells[j].value.toString().toLowerCase())
+      console.log('this.searchText[j].toLowerCase(): ', this.searchText[j].toLowerCase())
+      if (
+        this.searchText[j] != " " &&
+        this.searchText[j] != undefined &&
+        !row.cells[j].value.toString().toLowerCase().includes(this.searchText[j].toLowerCase())
+      ) {
+        isReturn = false;
+      } else {
+        isReturn = true;
       }
+      if (isReturn) {
+        console.log('RETURN ROW: ', row)
+        return row;
+      }
+    });
+  }
 
-    isPar(numero):boolean {
-      return numero % 2 === 0;
-    }
-  
+  showMsg(severity, summary, detail) {
+    this.msgs = [];
+    this.msgs.push({
+      severity,
+      summary,
+      detail
+    });
+  }
+
+  clear() {
+    this.msgs = [];
+  }
+
+  isPar(numero): boolean {
+    return numero % 2 === 0;
+  }
+
 }
 function compare(a: number | string, b: number | string, isAsc: boolean) {
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);

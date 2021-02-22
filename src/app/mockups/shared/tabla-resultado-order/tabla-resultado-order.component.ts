@@ -10,6 +10,7 @@ import { Row, Cell } from './tabla-resultado-order-cg.service';
   styleUrls: ['./tabla-resultado-order.component.scss']
 })
 export class TablaResultadoOrderComponent implements OnInit {
+  isDisabled = false;
   info = new FormControl();
   @Input() cabeceras = [];
   @Input() rowGroups: Row[];

@@ -13,6 +13,7 @@ export class FichaAsistenciaComponent implements OnInit {
   tarjetaFija = {
     nombre: "Resumen Asistencia",
     icono: 'fas fa-clipboard',
+    imagen: '',
     detalle: false,
     fixed: true,
     opened: false,
