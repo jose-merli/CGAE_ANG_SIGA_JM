@@ -4,6 +4,7 @@ import { PersistenceService } from '../../../../../_services/persistence.service
 import { SigaServices } from '../../../../../_services/siga.service';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { TranslateService } from '../../../../../commons/translate';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 
 @Component({
@@ -24,6 +25,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
   progressSpinner: boolean = false;
   body: EJGItem;
   bodyInicial: EJGItem;
+  bodyNuevo: EJGItem = new EJGItem();
   msgs = [];
   nuevo;
   textSelected;
@@ -34,6 +36,10 @@ export class DatosGeneralesEjgComponent implements OnInit {
   comboTipoExpediente = [];
   tipoExpedienteDes: string;
   showTipoExp: boolean = false;
+  
+
+  selectedDatosColegiales;
+  showMessageInscripcion;
 
   resaltadoDatosGenerales: boolean = false;
   resaltadoDatos: boolean = false;
@@ -225,7 +231,17 @@ export class DatosGeneralesEjgComponent implements OnInit {
     }
   }
   save(){
+    this.progressSpinner=true;
 
+    this.sigaServices.post("guardarDatosGenerales", this.body).subscribe(
+      n => {
+        this.progressSpinner=false;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner=false;
+      }
+    );
   }
   checkPermisosRest() {
     let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
@@ -291,6 +307,15 @@ export class DatosGeneralesEjgComponent implements OnInit {
   muestraCamposObligatorios(){
     this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
     this.resaltadoDatos=true;
+  }
+
+  restablecerGenerales() {
+    this.selectedDatosColegiales = '';
+    this.showMessageInscripcion = false;
+    this.bodyInicial = JSON.parse(JSON.stringify(this.bodyNuevo));
+    this.resaltadoDatosGenerales = false;
+    this.bodyNuevo = new EJGItem();
+    this.bodyNuevo = JSON.parse(JSON.stringify(this.bodyInicial));
   }
 
 }

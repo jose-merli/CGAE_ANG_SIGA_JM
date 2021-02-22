@@ -93,5 +93,7 @@ export class EJGItem {
     fechaEstadoNew: Date;
     estadoNew: String;
 
+    etiquetas: any[];
+
     constructor() { }
 }

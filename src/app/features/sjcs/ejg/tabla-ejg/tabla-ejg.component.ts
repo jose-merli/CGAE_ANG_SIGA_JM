@@ -5,6 +5,7 @@ import { Router } from '../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../_services/siga.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { EJGItem } from '../../../../models/sjcs/EJGItem';
+import { CommonsService } from '../../../../_services/commons.service';
 
 @Component({
   selector: 'app-tabla-ejg',
@@ -13,8 +14,9 @@ import { EJGItem } from '../../../../models/sjcs/EJGItem';
 })
 
 export class TablaEjgComponent implements OnInit {
-  [x: string]: any;
   rowsPerPage: any = [];
+
+  [x: string]: any;
 
   cols;
   msgs;
@@ -48,7 +50,7 @@ export class TablaEjgComponent implements OnInit {
   showModalCambioEstado = false;
 
   constructor(private translateService: TranslateService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
-    private sigaServices: SigaServices, private persistenceService: PersistenceService, private confirmationService: ConfirmationService) {
+    private sigaServices: SigaServices, private persistenceService: PersistenceService, private confirmationService: ConfirmationService, private commonServices: CommonsService) {
 
   }
 
@@ -94,11 +96,11 @@ export class TablaEjgComponent implements OnInit {
         this.datosItem = this.ejgObject[0];
         this.persistenceService.setDatos(this.datosItem);
         this.consultaUnidadFamiliar(selected);
-        this.commonsService.scrollTop();
+        this.commonServices.scrollTop();
       },
       err => {
         console.log(err);
-        this.commonsService.scrollTop();
+        this.commonServices.scrollTop();
       }
     );
   }
@@ -112,7 +114,7 @@ export class TablaEjgComponent implements OnInit {
         this.persistenceService.setBodyAux(this.datosFamiliares);
         this.router.navigate(['/gestionEjg']);
         this.progressSpinner = false;
-        this.commonsService.scrollTop();
+        this.commonServices.scrollTop();
       },
       err => {
         console.log(err);
@@ -182,7 +184,7 @@ export class TablaEjgComponent implements OnInit {
   }
 
   checkCambiarEstados(){
-    let mess = this.translateService.instant("justiciaGratuita.ejg.message.cambiarEstado");
+    let mess = this.translateService.instant("Se va a proceder a añadir los expedientes seleccionados a la Remesa indicado. ¿Desea Continuar?");
     let icon = "fa fa-edit";
 
     this.confirmationService.confirm({
@@ -341,6 +343,36 @@ export class TablaEjgComponent implements OnInit {
   }
 
   addRemesa() {
+    let mess = this.translateService.instant("justiciaGratuita.ejg.message.cambiarEstado");
+    let icon = "fa fa-edit";
 
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.anadirRemesa();
+      },
+      reject: () => {
+        this.msgs = [{
+          severity: "info",
+          summary: "Cancel",
+          detail: this.translateService.instant("general.message.accion.cancelada")
+        }];
+      }
+    });
+  }
+
+  anadirRemesa(){
+    this.progressSpinner=true;
+
+    this.sigaServices.post("anadirExpedienteARemesa", this.selectDatos).subscribe(
+      n => {
+        this.progressSpinner=false;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner=false;
+      }
+    );
   }
 }

@@ -21,6 +21,7 @@ export class GestionEjgComponent implements OnInit {
   icono = "clipboard";
   msgs;
   body: EJGItem = new EJGItem();
+  prueba: EJGItem = new EJGItem();
   datosFamiliares: any;
   datos;
   // datosItem: EJGItem;
@@ -28,7 +29,7 @@ export class GestionEjgComponent implements OnInit {
   filtros;
   filtrosAux;
   permisoEscritura: boolean = true;
-  modoEdicion: boolean;
+  modoEdicion: boolean = true;
   permisoEscrituraResumen: boolean = false;
   permisoEscrituraDatosGenerales: boolean = false;
   permisoEscrituraServiciosTramitacion: boolean = false;
@@ -140,6 +141,7 @@ export class GestionEjgComponent implements OnInit {
             //  hemos pulsado nuevo
             this.body = new EJGItem();
             this.modoEdicion = false;
+            this.isOpenReceive("datosGenerales");
           }
          }
          this.obtenerPermisos();
@@ -150,6 +152,7 @@ export class GestionEjgComponent implements OnInit {
     //this.commonsService.scrollTop();
     this.goTop();
   }
+
   goTop() {
     document.children[document.children.length - 1]
     let top = document.getElementById("top");
