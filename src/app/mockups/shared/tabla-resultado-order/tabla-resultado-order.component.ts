@@ -103,9 +103,10 @@ export class TablaResultadoOrderComponent implements OnInit {
   }
 
   guardar(){
-    this.displayWrongSequence();
+    this.wrongPositionArr = [];
       this.ordenarGrupos();
       this.orderByOrder();
+      this.displayWrongSequence();
     let errorVacio = this.checkEmpty();
     let errorSecuencia = this.checkSequence();
     if (!errorVacio && !errorSecuencia){
@@ -120,19 +121,24 @@ export class TablaResultadoOrderComponent implements OnInit {
 displayWrongSequence(){
   this.wrongPositionArr = [];
   let positions = "";
+  let numColArr = [];
     const numbers = "123456789";
   this.rowGroups.forEach((row, i) => { 
     if (i < this.rowGroups.length - 1){
       if (this.rowGroups[i].cells[0].value != this.rowGroups[i + 1].cells[0].value){
         positions = positions + row.cells[1].value;
-        this.compareStrings(numbers, positions, row.cells[2].value);
+        numColArr.push(row.cells[2].value)
+        this.compareStrings(numbers, positions, numColArr);
         positions = "";
+        numColArr = [];
       } else {
         positions = positions + row.cells[1].value;
+        numColArr.push(row.cells[2].value)
       }
     } else {
       positions = positions + row.cells[1].value;
-      this.compareStrings(numbers, positions, row.cells[2].value);
+      numColArr.push(row.cells[2].value)
+      this.compareStrings(numbers, positions, numColArr);
     }
   });
   //Returns false, 
@@ -168,17 +174,23 @@ displayWrongSequence(){
     });
     return err2;
   }
-  compareStrings(numbers, positions, numCol){
-    console.log('numCol', numCol)
+  compareStrings(numbers, positions, numColArr){
+   
+    let z = 0;
+    console.log('numColArr', numColArr)
     console.log('numbers', numbers)
     console.log('positions', positions)
     let numbersArr = Array.from(numbers);
     let positionsArr = Array.from(positions);
     console.log('numbersArr', numbersArr)
     console.log('positionsArr', positionsArr)
+    z = 0;
     for (var i = 0, len = positionsArr.length; i < len; i++){
         if (numbersArr[i] !== positionsArr[i]){
-            this.wrongPositionArr.push(numCol);
+          z++;
+          if (z<=1){
+            this.wrongPositionArr.push(numColArr[i]);
+          }
         }
     }
     console.log('this.wrongPositionArr: ', this.wrongPositionArr)
