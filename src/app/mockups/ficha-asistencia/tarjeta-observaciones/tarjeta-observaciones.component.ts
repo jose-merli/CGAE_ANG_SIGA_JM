@@ -3,11 +3,11 @@ import { FormGroup } from '@angular/forms';
 import { Message } from 'primeng/components/common/api';
 
 @Component({
-  selector: 'app-tarjeta-otros-datos',
-  templateUrl: './tarjeta-otros-datos.component.html',
-  styleUrls: ['./tarjeta-otros-datos.component.scss']
+  selector: 'app-tarjeta-observaciones',
+  templateUrl: './tarjeta-observaciones.component.html',
+  styleUrls: ['./tarjeta-observaciones.component.scss']
 })
-export class TarjetaOtrosDatosComponent implements OnInit {
+export class TarjetaObservacionesComponent implements OnInit {
   msgs: Message[] = [];
   msgInfo: boolean = false;
   rForm = new FormGroup({

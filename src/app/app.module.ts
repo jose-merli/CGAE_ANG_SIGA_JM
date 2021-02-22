@@ -430,7 +430,7 @@ import { TarjetaAsistidoComponent } from './mockups/ficha-asistencia/tarjeta-asi
 import { TarjetaActuacionesComponent } from './mockups/ficha-asistencia/tarjeta-actuaciones/tarjeta-actuaciones.component';
 import { HoraComponent } from './mockups/shared/hora/hora.component';
 import { TarjetaDatosGeneralesAsistenciaComponent } from './mockups/ficha-asistencia/tarjeta-datos-generales/tarjeta-datos-generales.component';
-import { TarjetaOtrosDatosComponent } from './mockups/ficha-asistencia/tarjeta-otros-datos/tarjeta-otros-datos.component';
+import { TarjetaObservacionesComponent } from './mockups/ficha-asistencia/tarjeta-observaciones/tarjeta-observaciones.component';
 import { TarjetaRelacionesAsistenciaComponent } from './mockups/ficha-asistencia/tarjeta-relaciones/tarjeta-relaciones.component';
 import { TarjetaContrariosComponent } from './mockups/ficha-asistencia/tarjeta-contrarios/tarjeta-contrarios.component';
 import { TablaResultadoMixComponent } from './mockups/shared/tabla-resultado-mix/tabla-resultado-mix.component';
@@ -440,7 +440,7 @@ import { TablaResultadoMixFCService } from './mockups/shared/tabla-resultado-mix
 import { TablaResultadoMixDAService } from './mockups/shared/tabla-resultado-mix/tabla-resultado-mix-da.service';
 import { TarjetaGuardiasCalendarioComponent } from './mockups/ficha-calendario-programacion/tarjeta-guardias-calendario/tarjeta-guardias-calendario.component';
 import { TarjetaDatosGeneralesCalendarioComponent } from './mockups/ficha-calendario-programacion/tarjeta-datos-generales-calendario/tarjeta-datos-generales-calendario.component';
-import { TarjetaDatosAdicionalesComponent } from './mockups/ficha-asistencia/tarjeta-datos-adicionales/tarjeta-datos-adicionales.component';
+import { TarjetaDefensaJuridicaComponent } from './mockups/ficha-asistencia/tarjeta-defensa-juridica/tarjeta-defensa-juridica.component';
 import { TarjetaCaracteristicasComponent } from './mockups/ficha-asistencia/tarjeta-caracteristicas/tarjeta-caracteristicas.component';
 import { TarjetaColaGuardiaComponent } from './mockups/tarjeta-cola-guardia/tarjeta-cola-guardia.component';
 import { DetalleTarjetaDatosGeneralesFichaActuacionComponent } from './mockups/ficha-actuacion/detalle-tarjeta-datos-generales-ficha-actuacion/detalle-tarjeta-datos-generales-ficha-actuacion.component';
@@ -850,7 +850,7 @@ import { PreviousRouteService } from './mockups/shared/services/previous-route.s
 		TarjetaActuacionesComponent,
 		HoraComponent,
 		TarjetaDatosGeneralesAsistenciaComponent,
-		TarjetaOtrosDatosComponent,
+		TarjetaObservacionesComponent,
 		TarjetaContrariosComponent,
 		TarjetaRelacionesAsistenciaComponent,
 		TablaResultadoMixComponent,
@@ -859,7 +859,7 @@ import { PreviousRouteService } from './mockups/shared/services/previous-route.s
 		FichaCalendarioProgramacionComponent,
 		TarjetaGuardiasCalendarioComponent,
 		TarjetaDatosGeneralesCalendarioComponent,
-		TarjetaDatosAdicionalesComponent,
+		TarjetaDefensaJuridicaComponent,
 		TarjetaCaracteristicasComponent,
 		TarjetaColaGuardiaComponent,
 		PantallaCalendariosComponent,
