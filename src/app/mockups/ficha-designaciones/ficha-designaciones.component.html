@@ -58,6 +58,10 @@
                                         <app-detalle-tarjeta-datos-facturacion-ficha-designacion-oficio>
                                         </app-detalle-tarjeta-datos-facturacion-ficha-designacion-oficio>
                                     </div>
+                                    <div *ngIf="tarj.nombre == 'Documentación'">
+                                        <app-detalle-tarjeta-documentacion-ficha-designacion-oficio>
+                                        </app-detalle-tarjeta-documentacion-ficha-designacion-oficio>
+                                    </div>
                                 </ng-template>
                             </mat-expansion-panel>
                         </mat-accordion>
