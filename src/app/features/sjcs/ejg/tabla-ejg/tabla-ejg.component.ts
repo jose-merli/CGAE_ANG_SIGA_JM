@@ -44,6 +44,8 @@ export class TablaEjgComponent implements OnInit {
 
   @ViewChild("table") table: DataTable;
   @Output() searchHistoricalSend = new EventEmitter<boolean>();
+  @Output() busqueda = new EventEmitter<boolean>();
+
 
   showModalCambioEstado = false;
 
@@ -56,6 +58,8 @@ export class TablaEjgComponent implements OnInit {
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos();
     }
+
+    this.selectedDatos = [];
 
     this.showModalCambioEstado = false;
     this.fechaEstado = new Date();
@@ -219,10 +223,18 @@ export class TablaEjgComponent implements OnInit {
     this.sigaServices.post("gestionejg_cambioEstadoMasivo", data).subscribe(
       n => {
         this.progressSpinner=false;
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.busqueda.emit(false);
+        this.showModalCambioEstado = false;
+        this.selectedDatos = [];
       },
       err => {
         console.log(err);
         this.progressSpinner=false;
+        this.busqueda.emit(false);
+        this.showModalCambioEstado = false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        this.selectedDatos = [];
       }
     );
   }

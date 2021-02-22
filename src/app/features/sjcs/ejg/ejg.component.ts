@@ -44,8 +44,7 @@ export class EJGComponent implements OnInit {
     private sigaServices: SigaServices,
     private commonsService: CommonsService,
     private persistenceService: PersistenceService,
-    private router: Router,
-    private datepipe: DatePipe) { }
+    private router: Router) { }
 
   ngOnInit() {
     this.buscar = this.filtros.buscar
