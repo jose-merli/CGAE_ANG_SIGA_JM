@@ -258,9 +258,37 @@ export class DatosColaGuardiaComponent implements OnInit {
   }
 
   transformDate(fecha) {
+    /*if (fecha){
+    fecha = new Date(fecha).toLocaleDateString();
+    }
+    let dia = "";
+    let mes = "";
+    let splitted = fecha.toString().split("/", fecha.toString().length); 
+    console.log('splitted: ', splitted)
+    console.log('splitted[0].length: ', splitted[0].length)
+    console.log('splitted[1].length: ', splitted[1].length)
+    if (splitted[0].length == 1){
+      dia = '0' + splitted[0].toString();
+    }
+    else if (splitted[1].length == 1){
+      mes = '0' + splitted[1].toString();
+      console.log('mes: ', mes)
+    }
+    if (splitted[0].length == 1 && splitted[1].length == 1){
+      fecha  = dia + '/' + mes + '/' + splitted[2];
+    } else {
+      if (splitted[0].length == 1){
+        fecha  = dia + '/' + splitted[1] + '/' + splitted[2];
+      }else if (splitted[1].length == 1){
+        fecha  = splitted[0] + '/' + mes + '/' + splitted[2];
+        console.log('fecha: ', fecha)
+      }
+    }
+    console.log('fecha final: ', fecha)
     if (fecha)
-      fecha = new Date(fecha).toLocaleDateString();
-    this.body.letradosIns = this.datepipe.transform(fecha, 'dd/MM/yyyy')
+      fecha = new Date(fecha + "T00:00:00");*/
+    this.body.letradosIns = this.datepipe.transform(new Date(fecha), 'dd/MM/yyyy');
+    console.log('this.body.letradosIns : ', this.body.letradosIns )
   }
 
   getColaGuardia() {
