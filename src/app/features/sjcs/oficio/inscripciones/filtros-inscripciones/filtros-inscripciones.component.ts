@@ -6,6 +6,7 @@ import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { TurnosItems } from '../../../../../models/sjcs/TurnosItems';
 import { InscripcionesItems } from '../../../../../models/sjcs/InscripcionesItems';
+import { CommonsService } from '../../../../../../app/_services/commons.service';
 
 @Component({
   selector: 'app-filtrosinscripciones',
@@ -37,10 +38,14 @@ export class FiltrosInscripciones implements OnInit {
   grupofacturacion: any[] = [];
   comboPJ;
   comboEstados = [
-    { label: "Pendiente", value: "0" },
-    { label: "Confirmada", value: "1" },
-    { label: "Denegada", value: "2" }
+    { label: "Pendiente de Alta", value: "0" },
+    { label: "Alta", value: "1" },
+    { label: "Pendiente de Baja", value: "2" },
+    { label: "Baja", value: "3" },
+    { label: "Denegada", value: "4" }
   ];
+
+  textSelected: String = 'general.boton.seleccionar';
   @Input() permisos;
   /*Éste método es útil cuando queremos queremos informar de cambios en los datos desde el hijo,
     por ejemplo, si tenemos un botón en el componente hijo y queremos actualizar los datos del padre.*/
@@ -49,6 +54,7 @@ export class FiltrosInscripciones implements OnInit {
   constructor(private router: Router,
     private sigaServices: SigaServices,
     private translateService: TranslateService,
+    private commonsService: CommonsService,
     private persistenceService: PersistenceService) { }
 
   ngOnInit() {   
@@ -121,6 +127,7 @@ export class FiltrosInscripciones implements OnInit {
       this.persistenceService.setFiltrosAux(this.filtros);
       this.filtroAux = this.persistenceService.getFiltrosAux()
       this.busqueda.emit(false)
+      this.commonsService.scrollTablaFoco('tablaFoco');
     }
   }
 

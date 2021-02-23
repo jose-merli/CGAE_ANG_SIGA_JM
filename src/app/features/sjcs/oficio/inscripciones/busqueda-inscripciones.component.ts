@@ -77,6 +77,17 @@ export class InscripcionesComponent implements OnInit {
 
   searchPartidas(event) {
     this.filtros.filtroAux = this.persistenceService.getFiltrosAux()
+    if(this.filtros.filtroAux.estado != undefined){
+      let estadoAux = this.filtros.filtroAux.estado.toString();
+      if(estadoAux == "" ) this.filtros.filtroAux.estado = null;
+      else this.filtros.filtroAux.estado = estadoAux;
+    }
+    if(this.filtros.filtroAux.idturno != undefined){
+      let idturnoAux = this.filtros.filtroAux.idturno.toString();
+      if( idturnoAux == "") this.filtros.filtroAux.idturno = null;
+      else this.filtros.filtroAux.idturno = idturnoAux;
+
+    } 
     this.filtros.filtroAux.historico = event;
     this.persistenceService.setHistorico(event);
     this.progressSpinner = true;

@@ -14,13 +14,15 @@
       <div class="form-row">
         <div class="form-group col-lg-3 col-md-3">
           <label>{{'censo.fichaIntegrantes.literal.estado'|translate}}</label>
-          <p-dropdown class="select-form" [(ngModel)]='filtros.estado' placeholder="Seleccionar" [options]="comboEstados"
-            [filter]="true" [disabled]="disabledestado" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+          <p-multiSelect class="select-form" [(ngModel)]='filtros.estado' placeholder="Seleccionar" [options]="comboEstados"
+            [filter]="true" [disabled]="disabledestado" maxSelectedLabels="10" filterBy="label,labelSinTilde" selectionLimit="10" styleClass="widthAll"
+            defaultLabel="{{ 'general.boton.seleccionar' | translate}}"></p-multiSelect>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{'menu.justiciaGratuita.oficio.comboturno'|translate}}</label>
-          <p-dropdown class="select-form" [(ngModel)]='filtros.idturno' placeholder="Seleccionar" [options]="turnos"
-            [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+          <p-multiSelect class="select-form" [(ngModel)]='filtros.idturno' placeholder="Seleccionar" [options]="turnos"
+            [filter]="true" filterBy="label,labelSinTilde" maxSelectedLabels="10" selectionLimit="10" styleClass="widthAll" 
+            defaultLabel="{{ 'general.boton.seleccionar' | translate}}"></p-multiSelect>
         </div>
         <div class="form-group col-lg-2 col-md-2">
           <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaDesde" | translate }}

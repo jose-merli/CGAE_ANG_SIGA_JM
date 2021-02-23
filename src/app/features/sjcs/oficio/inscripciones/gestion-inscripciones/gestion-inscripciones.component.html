@@ -31,14 +31,23 @@
               <span
                 [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
             </div>
-            <div *ngIf="!setItalic(dato) && col.field =='fechasolicitud'">
-              <span>{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
+            <div *ngIf="!setItalic(dato) && col.field == 'apellidosnombre'">
+              <a class="enlace" (click)="openTab(dato)">{{dato[col.field]}}</a>
             </div>
             <div *ngIf="!setItalic(dato) && col.field !='fechasolicitud' && col.field!='apellidosnombre'">
               <span>{{dato[col.field]}}</span>
             </div>
-            <div *ngIf="!setItalic(dato) && col.field == 'apellidosnombre'">
-              <a class="enlace" (click)="openTab(dato)">{{dato[col.field]}}</a>
+            <div *ngIf="!setItalic(dato) && col.field =='fechasolicitud'">
+              <span>{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
+            </div>
+            <div *ngIf="!setItalic(dato) && col.field =='fechavalidacion'">
+              <span>{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
+            </div>
+            <div *ngIf="!setItalic(dato) && col.field =='fechasolicitudbaja'">
+              <span>{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
+            </div>
+            <div *ngIf="!setItalic(dato) && col.field =='fechabaja'">
+              <span>{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
             </div>
           </td>
         </tr>
@@ -101,8 +110,9 @@
         <div class="form-group prueba">
           <label>
           </label>
+          <!-- [disabled]="!permisos || ((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledValidar || !isLetrado)" -->
           <button *ngIf="!historico" pButton
-            [disabled]="!permisos || ((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledValidar || !isLetrado)" (click)="validar(selectedDatos)"
+            [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledValidar)" (click)="validar(selectedDatos)"
             type="button" icon="fa fa-trash-alt" iconPos="left"
             label="{{ 'general.boton.validar' | translate}}"></button>
 
@@ -110,8 +120,9 @@
         <div class="form-group">
           <label>
           </label>
+          <!-- [disabled]="!permisos || ((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledDenegar || !isLetrado)" -->
           <button *ngIf="!historico" pButton
-            [disabled]="!permisos || ((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledDenegar || !isLetrado)" (click)="denegar(selectedDatos)"
+            [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledDenegar)" (click)="denegar(selectedDatos)"
             type="button" icon="fa fa-trash-alt" iconPos="left"
             label="{{ 'general.boton.denegar' | translate}}"></button>
         </div>

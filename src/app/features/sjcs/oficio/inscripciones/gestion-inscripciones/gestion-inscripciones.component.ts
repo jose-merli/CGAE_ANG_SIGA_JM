@@ -594,14 +594,17 @@ export class TablaInscripcionesComponent implements OnInit {
   }
 
   getCols() {
-
+    // Para cambiar la presentacion de las columnas en la tabala se debe 
+    // cambiar de orden aqui.
     this.cols = [
       { field: "ncolegiado", header: "facturacionSJCS.facturacionesYPagos.numColegiado" },
       { field: "apellidosnombre", header: "administracion.parametrosGenerales.literal.nombre.apellidos" },
-      { field: "abreviatura", header: "dato.jgr.guardia.guardias.turno" },
-      { field: "fechasolicitud", header: "formacion.busquedaInscripcion.fechaSolicitud" },
-      { field: "estadonombre", header: "censo.fichaIntegrantes.literal.estado" },
-
+      { field: "abreviatura", header: "dato.jgr.guardia.guardias.turno" },      
+      { field: "fechasolicitud", header: "oficio.busquedaInscripcion.fechaSolicitudAlta" },      
+      { field: "fechavalidacion", header: "oficio.busquedaInscripcion.fechaEfectivaAlta" },
+      { field: "fechasolicitudbaja", header: "oficio.busquedaInscripcion.fechaSolicitudBaja" },
+      { field: "fechabaja", header: "oficio.busquedaInscripcion.fechaEfectivaBaja" },
+      { field: "estadonombre", header: "censo.fichaIntegrantes.literal.estado" }
     ];
     this.cols.forEach(element => {
       this.buscadores.push("");
