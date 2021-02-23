@@ -4,6 +4,9 @@ import { PersistenceService } from '../../../../../_services/persistence.service
 import { SigaServices } from '../../../../../_services/siga.service';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { ResolucionEJGItem } from '../../../../../models/sjcs/ResolucionEJGItem';
+import { TranslateService } from '../../../../../commons/translate/translation.service';
+import { ConfirmationService } from 'primeng/api';
+
 @Component({
   selector: 'app-resolucion',
   templateUrl: './resolucion.component.html',
@@ -14,11 +17,13 @@ export class ResolucionComponent implements OnInit {
   @Input() permisoEscritura;
   @Input() tarjetaResolucion: string;
 
+  //[x : string] : any;
+
   openFicha: boolean = false;
   nuevo;
   body: EJGItem;
+  bodyInicial: EJGItem = new EJGItem();
   resolucion: ResolucionEJGItem;
-  [x: string]: any;
   msgs;
   comboActaAnnio = [];
   comboResolucion = [];
@@ -28,6 +33,7 @@ export class ResolucionComponent implements OnInit {
   isDisabledFundamentosJurid: boolean = true;
   fundamentoJuridicoDesc: String;
   ResolDesc: String;
+  progressSpinner: boolean = false;
 
   resaltadoDatosGenerales: boolean = false;
   
@@ -43,14 +49,14 @@ export class ResolucionComponent implements OnInit {
 
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
-    private commonsServices: CommonsService) { }
+    private commonsServices: CommonsService,private translateService: TranslateService, private confirmationService: ConfirmationService) { }
 
   ngOnInit() {
     if (this.persistenceService.getDatos()) {
         this.modoEdicion = true;
         this.nuevo = false;
-        this.item = this.persistenceService.getDatos();
-        this.getResolucion(this.item);
+        this.body = this.persistenceService.getDatos();
+        this.getResolucion(this.body);
       }else {
       this.modoEdicion = false;
       this.nuevo = true;
@@ -231,15 +237,40 @@ export class ResolucionComponent implements OnInit {
   }
   save(){
   }
-  checkPermisosRest() {
+  checkPermisosConfirmRest(){
     let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
     } else {
-      this.rest();
+      this.confirmRest();
     }
   }
+  confirmRest(){
+    let mess = this.translateService.instant(
+      "messages.ReestablecerDictamen"
+    );
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.rest()
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancelar",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
   rest(){
+    this.resolucion = JSON.parse(JSON.stringify(this.bodyInicial));
   }
   checkPermisosOpenActa() {
     let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);

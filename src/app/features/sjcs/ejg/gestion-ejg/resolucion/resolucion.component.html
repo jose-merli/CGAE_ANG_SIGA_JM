@@ -143,12 +143,18 @@
         <div class="text-right main-button ">
           <button (click)="checkPermisosOpenActa()" pButton [disabled]="!permisoEscritura" type="button"
             label="{{ 'general.boton.abrirActa' | translate}}"></button>
-          <button (click)="checkPermisosRest()" pButton [disabled]="!permisoEscritura" type="button" icon="fa fa-undo"
+          <button (click)="checkPermisosConfirmRest()" pButton [disabled]="!permisoEscritura" type="button" icon="fa fa-undo"
             iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
           <button (click)="checkPermisosSave()" pButton [disabled]="!permisoEscritura || disabledSave()" type="button"
             icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
         </div>
       </div>
+      <p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" #cd>
+        <p-footer>
+          <button type="button" pButton icon="fa-check" label="Si" (click)="cd.accept()"></button>
+          <button type="button" pButton icon="fa-close" label="No" (click)="cd.reject()"></button>
+        </p-footer>
+      </p-confirmDialog>
     </div>
   </div>
   <div *ngIf="progressSpinner" class="overlay-spinner">
