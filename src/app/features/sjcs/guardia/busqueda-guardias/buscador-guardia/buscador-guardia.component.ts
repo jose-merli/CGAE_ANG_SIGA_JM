@@ -59,7 +59,11 @@ export class BuscadorGuardiaComponent implements OnInit {
   }
 
   search(event) {
+
     this.filtros.filtroAux = this.persistenceService.getFiltrosAux()
+
+    this.convertArraysToStrings();
+
     this.filtros.filtroAux.historico = event;
     this.persistenceService.setHistorico(event);
     this.progressSpinner = true;
@@ -82,7 +86,7 @@ export class BuscadorGuardiaComponent implements OnInit {
         this.progressSpinner = false;
         console.log(err);
       },
-      ()=>{
+      () => {
         this.commonsService.scrollTablaFoco('tablaFoco');
       });
   }
@@ -111,6 +115,19 @@ export class BuscadorGuardiaComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  convertArraysToStrings() {
+
+    const array = ['idTurno', 'area', 'materia', 'jurisdiccion', 'grupoFacturacion', 'partidaPresupuestaria', 'tipoTurno', 'idTipoGuardia'];
+
+    array.forEach(element => {
+      if (this.filtros.filtroAux[element] != undefined && this.filtros.filtroAux[element] != null && this.filtros.filtroAux[element].length > 0) {
+        let aux = this.filtros.filtroAux[element].toString();
+        this.filtros.filtroAux[element] = aux;
+      }
+    });
+
   }
 
 }

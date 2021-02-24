@@ -5,6 +5,7 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { GuardiaItem } from '../../../../../../models/guardia/GuardiaItem';
+import { MultiSelect } from 'primeng/primeng';
 
 @Component({
   selector: 'app-filtros-guardia',
@@ -41,6 +42,10 @@ export class FiltrosGuardiaComponent implements OnInit {
   KEY_CODE = {
     ENTER: 13
   }
+
+  textFilter: string = "Seleccionar";
+  textSelected: String = "{0} etiquetas seleccionadas";
+
   constructor(private router: Router,
     private translateService: TranslateService,
     private sigaServices: SigaServices,
@@ -395,6 +400,12 @@ export class FiltrosGuardiaComponent implements OnInit {
     if (event.keyCode === this.KEY_CODE.ENTER) {
       this.search();
     }
+  }
+
+  focusInputField(multiSelect: MultiSelect) {
+    setTimeout(() => {
+      multiSelect.filterInputChild.nativeElement.focus();
+    }, 300);
   }
 
 }
