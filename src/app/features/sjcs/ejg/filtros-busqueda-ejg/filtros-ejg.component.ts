@@ -68,6 +68,11 @@ export class FiltrosEjgComponent implements OnInit {
   
   @ViewChild('inputNumero') inputNumero: ElementRef;
 
+  usuarioBusquedaExpress = {​​
+    numColegiado: '',
+    nombreAp: ''
+  }​​;
+
   constructor(private router: Router,
     private sigaServices: SigaServices,
     private translateService: TranslateService,
@@ -107,6 +112,11 @@ export class FiltrosEjgComponent implements OnInit {
       this.body.annio = new Date().getFullYear().toString();      
     }
     
+
+    if(sessionStorage.getItem("tarjeta")){
+      this.showTramitador=true;
+    }
+
     setTimeout(() => {
       this.inputNumero.nativeElement.focus();  
     }, 300);
