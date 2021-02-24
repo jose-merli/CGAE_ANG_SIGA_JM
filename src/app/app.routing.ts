@@ -220,6 +220,7 @@ import { FichaInscripcionComponent } from "./features/formacion/ficha-inscripcio
 import { ConsultasComponent } from "./features/informes-comunicaciones/consultas/consultas.component";
 import { FichaConsultaComponent } from "./features/informes-comunicaciones/consultas/ficha-consulta/ficha-consulta.component";
 import { DialogoComunicacionesComponent } from "./features/informes-comunicaciones/dialogo-comunicaciones/dialogo-comunicaciones.component";
+import { PantallaBuscadorColegiadosComponent } from "./commons/pantalla-buscador-colegiados/pantalla-buscador-colegiados.component";
 
 	const appRoutes: Routes = [
 		{ path: 'home', component: HomeComponent, canActivate: [ AuthGuard ] },
@@ -1185,6 +1186,10 @@ import { DialogoComunicacionesComponent } from "./features/informes-comunicacion
 		component: BusquedaGeneralSJCSComponent,
 		canActivate: [AuthGuard]
 	},
+	{​​
+        path: 'pantallaBuscadorColegiados',
+        component: PantallaBuscadorColegiadosComponent
+    }​​,
 
 	{ path: ' ', redirectTo: 'home' }
 ];

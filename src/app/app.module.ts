@@ -244,7 +244,7 @@ import { DatosCvComponent } from './features/censo/cargas-masivas/datos-cv/datos
 import { CargaEtiquetasComponent2 } from './features/censo/cargaEtiquetas/cargaEtiquetas.component';
 import { DatosCVComponent2 } from './features/censo/datosCV/datosCV.component';
 import { AgendaComponent } from './features/agenda/agenda.component';
-import { SelectButtonModule, ColorPickerModule, OverlayPanelModule } from 'primeng/primeng';
+import { SelectButtonModule, ColorPickerModule, OverlayPanelModule, PaginatorModule } from 'primeng/primeng';
 import { FichaCalendarioComponent } from './features/agenda/ficha-calendario/ficha-calendario.component';
 import { CargasMasivasComponent } from './features/censo/cargas-masivas/cargas-masivas.component';
 import { DatosNotificacionesComponent } from './features/agenda/datos-notificaciones/datos-notificaciones.component';
@@ -334,6 +334,22 @@ import { GeneralSJCSModule } from './commons/busqueda-generalSJCS/busqueda-gener
 
 import { BusquedaAsuntosModule } from './commons/busqueda-asuntos/busqueda-asuntos.module';
 import { PipeTranslationModule } from './commons/translate/pipe-translation.module';
+
+import { MatSelectModule } from '@angular/material/select';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatInputModule } from '@angular/material/input';
+import { PantallaBuscadorColegiadosComponent } from './commons/pantalla-buscador-colegiados/pantalla-buscador-colegiados.component';
+import { BuscadorColegiadosComponent } from './commons/pantalla-buscador-colegiados/buscador-colegiados/buscador-colegiados.component';
+import { ResultadoBuscadorColegiadosComponent } from './commons/pantalla-buscador-colegiados/resultado-buscador-colegiados/resultado-buscador-colegiados.component';
+import { PaginadorComponent } from './commons/shared/paginador/paginador.component';
+import { TablaResultadoComponent } from './commons/shared/tabla-resultado/tabla-resultado.component';
+import { SelectorComponent } from './commons/shared/selector/selector.component';
 
 @NgModule({
 	declarations: [
@@ -619,6 +635,12 @@ import { PipeTranslationModule } from './commons/translate/pipe-translation.modu
 		BuscadorProcuradoresComponent,
 		FiltroBuscadorProcuradorComponent,
 		TablaBuscadorProcuradorComponent,
+		PantallaBuscadorColegiadosComponent,
+        BuscadorColegiadosComponent,
+        ResultadoBuscadorColegiadosComponent,
+        PaginadorComponent,
+        TablaResultadoComponent,
+        SelectorComponent
 	],
 	imports: [
 		BrowserModule,
@@ -675,7 +697,18 @@ import { PipeTranslationModule } from './commons/translate/pipe-translation.modu
 		// BusquedaAsuntosModule,
 		EditorModule,
 		SjcsModule,
-		BusquedaAsuntosModule
+		BusquedaAsuntosModule,
+
+		MatExpansionModule,
+        MatCheckboxModule,
+        MatInputModule,
+        MatSortModule,
+        MatSelectModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        PaginatorModule
 	],
 
 	exports: [],

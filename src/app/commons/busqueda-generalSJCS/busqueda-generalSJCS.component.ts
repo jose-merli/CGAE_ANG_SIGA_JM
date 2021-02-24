@@ -2,8 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { PersistenceService } from '../../_services/persistence.service';
 import { SigaServices } from '../../_services/siga.service';
 import { CommonsService } from '../../_services/commons.service';
-import { TranslateService } from '../translate';
-import { Router } from '@angular/router';
+import { TranslateService } from '../../commons/translate';
+import { Router } from '../../../../node_modules/@angular/router';
 import { FiltrosGeneralSJCSComponent } from './filtros-generalSJCS/filtros-generalSJCS.component';
 import { TablaGeneralSJCSComponent } from './tabla-generalSJCS/tabla-generalSJCS.component';
 import { procesos_maestros } from '../../permisos/procesos_maestros';
@@ -29,7 +29,6 @@ export class BusquedaGeneralSJCSComponent implements OnInit {
 
   //comboPartidosJudiciales
   comboPJ;
-
   msgs;
 
   permisoEscritura;
@@ -53,9 +52,11 @@ export class BusquedaGeneralSJCSComponent implements OnInit {
   }
 
   search(event) {
-
+    this.filtros.filtroAux = this.persistenceService.getFiltrosAux()
+    this.filtros.filtroAux.historico = event;
+    this.persistenceService.setHistorico(event);
     this.progressSpinner = true;
-    this.sigaServices.post("componenteGeneralJG_busquedaGeneralSJCS", this.filtros.filtros).subscribe(
+    this.sigaServices.post("componenteGeneralJG_busquedaGeneralSJCS", this.filtros.filtroAux).subscribe(
       n => {
 
         this.datos = JSON.parse(n.body).colegiadosSJCSItem;
@@ -80,7 +81,6 @@ export class BusquedaGeneralSJCSComponent implements OnInit {
       this.tabla.selectAll = false;
     }
   }
-
   showMessage(event) {
     this.msgs = [];
     this.msgs.push({

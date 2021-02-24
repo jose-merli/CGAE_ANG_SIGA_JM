@@ -1,9 +1,9 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { BusquedaColegiadoExpressComponent } from "./busqueda-colegiado-express.component";
-import { InputTextModule, ButtonModule, GrowlModule } from 'primeng/primeng';
+import { InputTextModule, ButtonModule, GrowlModule } from "primeng/primeng";
 import { PipeTranslationModule } from "../translate/pipe-translation.module";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
 @NgModule({
   imports: [
@@ -12,7 +12,9 @@ import { FormsModule } from "@angular/forms";
     PipeTranslationModule,
     InputTextModule,
     ButtonModule,
-    GrowlModule
+    GrowlModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   declarations: [BusquedaColegiadoExpressComponent],
   exports: [BusquedaColegiadoExpressComponent]
