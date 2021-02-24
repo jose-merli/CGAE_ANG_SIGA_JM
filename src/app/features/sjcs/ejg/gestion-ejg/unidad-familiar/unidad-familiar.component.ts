@@ -1,9 +1,8 @@
-import { Component, OnInit, Input, ChangeDetectorRef, EventEmitter, Output,SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Router } from '../../../../../../../node_modules/@angular/router';
-import { SigaServices } from '../../../../../_services/siga.service';
-import { PersistenceService } from '../../../../../_services/persistence.service';
-import { EJGItem } from '../../../../../models/sjcs/EJGItem';
+import { UnidadFamiliarEJGItem } from '../../../../../models/sjcs/UnidadFamiliarEJGItem';
 import { fichasPosibles_unidadFamiliar } from '../../../../../utils/fichasPosibles_justiciables';
+import { PersistenceService } from '../../../../../_services/persistence.service';
 
 @Component({
   selector: 'app-unidad-familiar',
@@ -13,81 +12,82 @@ import { fichasPosibles_unidadFamiliar } from '../../../../../utils/fichasPosibl
 export class UnidadFamiliarComponent implements OnInit {
   [x: string]: any;
   rowsPerPage: any = [];
-  cols;
-  msgs;
-  selectedItem: number = 10;
-  selectAll;
   selectedDatos = [];
   buscadores = [];
-  numSelected = 0;
+
+  body: UnidadFamiliarEJGItem = new UnidadFamiliarEJGItem();
+  selectAll;
+  cols;
+  msgs;
+  datosFamiliares;
+  datosFamiliaresActivos;
+
+  numSelected:number = 0;
+  selectedItem: number = 10;
+
   selectMultiple: boolean = false;
   seleccion: boolean = false;
   openFicha: boolean = false;
   historico: boolean = false;
-  datosFamiliares;
-  datosFamiliaresActivos;
+  resaltadoDatosGenerales: boolean = false;
+  activacionTarjeta: boolean = false;
 
   @Input() modoEdicion;
   @Input() tarjetaUnidadFamiliar: string;
-
   @Input() permisoEscritura;
-  @Output() searchHistoricalSend = new EventEmitter<boolean>();
+  @Input() openTarjetaUnidadFamiliar;
 
-  resaltadoDatosGenerales: boolean = false;
-  
+  @Output() searchHistoricalSend = new EventEmitter<boolean>();
+  @Output() opened = new EventEmitter<boolean>();
+  @Output() idOpened = new EventEmitter<boolean>();
+
   fichaPosible = {
     key: "unidadFamiliar",
     activa: false
   }
-  
-  activacionTarjeta: boolean = false;
-  @Output() opened = new EventEmitter<Boolean>();
-  @Output() idOpened = new EventEmitter<Boolean>();
-  @Input() openTarjetaUnidadFamiliar;
-
-
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
-    private persistenceService: PersistenceService, private router: Router ) { }
+    private persistenceService: PersistenceService, private router: Router) { }
 
   ngOnInit() {
-      if (this.persistenceService.getDatos()) {
-        this.nuevo = false;
-        this.modoEdicion = true;
-        this.body = this.persistenceService.getDatos();
-        this.datosFamiliares = this.persistenceService.getBodyAux();
-        let nombresol = this.body.nombreApeSolicitante;
-        this.datosFamiliares.forEach(element => {
-          element.nombreApeSolicitante = nombresol;
-          if (element.estado == 30) {
-            element.estadoDes = "Denegada";
-          } else if (element.estado == 40) {
-            element.estadoDes = "Suspendida";
-          } else if (element.estado == 50) {
-            element.estadoDes = "Aprobada";
-          } else if (element.estado == 10) {
-            element.estadoDes = "Pendiente documentación";
-          } else if (element.estado == 20) {
-            element.estadoDes = "Pendiente aprobación";
-          }
-          if (element.estadoDes != undefined && element.fechaSolicitud != undefined) {
-            element.expedienteEconom = element.estadoDes + " * " + element.fechaSolicitud;
-          } else if (element.estadoDes != undefined && element.fechaSolicitud == undefined) {
-            element.expedienteEconom = element.estadoDes + " * ";
-          } else if (element.estadoDes == undefined && element.fechaSolicitud != undefined) {
-            element.expedienteEconom = " * " + element.fechaSolicitud;
-          } else if (element.estadoDes == undefined && element.fechaSolicitud == undefined) {
-            element.expedienteEconom = "  ";
-          }
-        });
-        
-      }else{
-        this.nuevo = true;
-        this.modoEdicion = false;
+    if (this.persistenceService.getDatos()) {
+      this.nuevo = false;
+      this.modoEdicion = true;
+      this.body = this.persistenceService.getDatos();
+      this.datosFamiliares = this.persistenceService.getBodyAux();
+      let nombresol = this.body.nombreApeSolicitante;
+      
+      this.datosFamiliares.forEach(element => {
+        element.nombreApeSolicitante = nombresol;
+        if (element.estado == 30) {
+          element.estadoDes = "Denegada";
+        } else if (element.estado == 40) {
+          element.estadoDes = "Suspendida";
+        } else if (element.estado == 50) {
+          element.estadoDes = "Aprobada";
+        } else if (element.estado == 10) {
+          element.estadoDes = "Pendiente documentación";
+        } else if (element.estado == 20) {
+          element.estadoDes = "Pendiente aprobación";
+        }
+
+        if (element.estadoDes != undefined && element.fechaSolicitud != undefined) {
+          element.expedienteEconom = element.estadoDes + " * " + element.fechaSolicitud;
+        } else if (element.estadoDes != undefined && element.fechaSolicitud == undefined) {
+          element.expedienteEconom = element.estadoDes + " * ";
+        } else if (element.estadoDes == undefined && element.fechaSolicitud != undefined) {
+          element.expedienteEconom = " * " + element.fechaSolicitud;
+        } else if (element.estadoDes == undefined && element.fechaSolicitud == undefined) {
+          element.expedienteEconom = "  ";
+        }
+      });
+    } else {
+      this.nuevo = true;
+      this.modoEdicion = false;
       // this.body = new EJGItem();
-      }
-      this.datosFamiliaresActivos = this.datosFamiliares.filter(
-        (dato) => /*dato.fechaBaja != undefined && */ dato.fechaBaja == null);
+    }
+    this.datosFamiliaresActivos = this.datosFamiliares.filter(
+      (dato) => /*dato.fechaBaja != undefined && */ dato.fechaBaja == null);
     this.getCols();
   }
 
@@ -126,7 +126,7 @@ export class UnidadFamiliarComponent implements OnInit {
     else return true;
   }
   openTab(evento) {
-    
+
     this.persistenceService.setBody(evento);
     this.persistenceService.setFichasPosibles(fichasPosibles_unidadFamiliar);
     this.router.navigate(["/gestionJusticiables"], { queryParams: { fr: "u" } });
@@ -253,10 +253,10 @@ export class UnidadFamiliarComponent implements OnInit {
   delete() {
 
   }
-  activate(){
+  activate() {
 
   }
-  searchHistorical(){
+  searchHistorical() {
     this.datosFamiliares.historico = !this.datosFamiliares.historico;
     this.historico = !this.historico;
     if (this.historico) {
@@ -265,16 +265,16 @@ export class UnidadFamiliarComponent implements OnInit {
       this.selectAll = false;
       this.numSelected = 0;
       this.datosFamiliaresActivos = JSON.parse(JSON.stringify(this.datosFamiliares));
-    }else{
+    } else {
       this.datosFamiliaresActivos = this.datosFamiliares.filter(
         (dato) =>  /*dato.fechaBaja != undefined && */dato.fechaBaja == null);
     }
     this.selectMultiple = false;
-     this.selectionMode = "single";
+    this.selectionMode = "single";
     this.persistenceService.setHistorico(this.historico);
-    
+
   }
-  checkPermisosDownloadEEJ(){
+  checkPermisosDownloadEEJ() {
     let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
@@ -282,10 +282,10 @@ export class UnidadFamiliarComponent implements OnInit {
       this.downloadEEJ();
     }
   }
-  downloadEEJ(){
+  downloadEEJ() {
 
   }
-  checkPermisosSolicitarEEJ(){
+  checkPermisosSolicitarEEJ() {
     let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
@@ -293,45 +293,45 @@ export class UnidadFamiliarComponent implements OnInit {
       this.solicitarEEJ();
     }
   }
-    solicitarEEJ(){
+  solicitarEEJ() {
 
+  }
+  checkPermisosComunicar(datos) {
+    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.comunicar(datos);
     }
-    checkPermisosComunicar(datos){
-      let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
-      if (msg != undefined) {
-        this.msgs = msg;
-      } else {
-        this.comunicar(datos);
-      }
-    }
-    comunicar(datos){
+  }
+  comunicar(datos) {
 
+  }
+  checkPermisosConfirmDelete() {
+    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.confirmDelete();
     }
-    checkPermisosConfirmDelete(){
-      let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
-      if (msg != undefined) {
-        this.msgs = msg;
-      } else {
-        this.confirmDelete();
-      }
+  }
+  checkPermisosActivate() {
+    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.activate();
     }
-    checkPermisosActivate(){
-      let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
-      if (msg != undefined) {
-        this.msgs = msg;
-      } else {
-        this.activate();
-      }
+  }
+  checkPermisosAsociar() {
+    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.asociar();
     }
-    checkPermisosAsociar(){
-      let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
-      if (msg != undefined) {
-        this.msgs = msg;
-      } else {
-        this.asociar();
-      }
-    }
-    asociar(){
-      
-    }
+  }
+  asociar() {
+
+  }
 }

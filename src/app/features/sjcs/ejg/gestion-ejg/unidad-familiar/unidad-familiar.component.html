@@ -54,28 +54,21 @@
             <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
               <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
                 <td class="text-center" *ngFor="let col of columns">
-                  <div *ngIf="col.field == 'expedienteEconom' && dato[col.field] && col.field=='pjg_nif'">
-                    <div *ngIf="setItalic(dato)">
-                      <label class="enlace" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ dato[col.field].split("*")[0]}} -- {{ dato[col.field].split("*")[1] | date: 'dd/MM/yyyy'}}</label>
-                    </div>
-                    <div *ngIf="!setItalic(dato) && col.field == 'pjg_nif'">
-                      <label class="enlace">{{ dato[col.field].split("*")[0]}} -- {{ dato[col.field].split("*")[1] | date: 'dd/MM/yyyy'}}</label>
-                    </div>
+                  
+                  <!-- NIF Y NOMBRE -->
+                  <div *ngIf="setItalic(dato) && (col.field == 'pjg_nif' || col.field == 'pjg_nombrecompleto')">
+                    <span  class="enlace"  (click)="openTab(dato)" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
                   </div>
-
-                  <div *ngIf="col.field != 'expedienteEconom'">
-                    <div *ngIf="setItalic(dato) && col.field != 'pjg_nif' && col.field != 'pjg_nombrecompleto'">
-                    <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
+                  <div *ngIf="!setItalic(dato) && (col.field == 'pjg_nif' || col.field == 'pjg_nombrecompleto')">
+                    <span class="enlace" (click)="openTab(dato)">{{dato[col.field]}}</span>
                   </div>
-                  <div *ngIf="!setItalic(dato) && col.field != 'pjg_nif' && col.field != 'pjg_nombrecompleto'">
-                    <span>{{dato[col.field]}}</span>
+                  
+                  <!-- RESTO COLUMNAS -->
+                  <div *ngIf="setItalic(dato) && col.field != 'pjg_nif' && col.field == 'pjg_nombrecompleto'">
+                    <span class="enlace" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
                   </div>
-                    <div *ngIf="setItalic(dato) && (col.field == 'pjg_nif' || col.field == 'pjg_nombrecompleto')">
-                      <span  class="enlace"  (click)="openTab(dato)" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
-                    </div>
-                    <div *ngIf="!setItalic(dato) && (col.field == 'pjg_nif' || col.field == 'pjg_nombrecompleto')">
-                      <span class="enlace" (click)="openTab(dato)">{{dato[col.field]}}</span>
-                    </div>
+                  <div *ngIf="!setItalic(dato) && col.field != 'pjg_nif' && col.field == 'pjg_nombrecompleto'">
+                    <span class="enlace">{{dato[col.field]}}</span>
                   </div>
                 </td>
               </tr>
