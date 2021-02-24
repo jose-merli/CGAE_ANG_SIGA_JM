@@ -1,8 +1,12 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { UnidadFamiliarEJGItem } from '../../../../../models/sjcs/UnidadFamiliarEJGItem';
-import { fichasPosibles_unidadFamiliar } from '../../../../../utils/fichasPosibles_justiciables';
 import { PersistenceService } from '../../../../../_services/persistence.service';
+import { fichasPosibles_unidadFamiliar } from '../../../../../utils/fichasPosibles_justiciables';
+import { CommonsService } from '../../../../../_services/commons.service';
+import { TranslateService } from '../../../../../commons/translate/translation.service';
+import { ConfirmationService } from 'primeng/api';
+import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 
 @Component({
   selector: 'app-unidad-familiar',
@@ -10,13 +14,13 @@ import { PersistenceService } from '../../../../../_services/persistence.service
   styleUrls: ['./unidad-familiar.component.scss']
 })
 export class UnidadFamiliarComponent implements OnInit {
-  [x: string]: any;
   rowsPerPage: any = [];
   selectedDatos = [];
   buscadores = [];
 
   body: UnidadFamiliarEJGItem = new UnidadFamiliarEJGItem();
   selectAll;
+  [ x : string ] : any;
   cols;
   msgs;
   datosFamiliares;
@@ -46,8 +50,9 @@ export class UnidadFamiliarComponent implements OnInit {
     activa: false
   }
 
-  constructor(private changeDetectorRef: ChangeDetectorRef,
-    private persistenceService: PersistenceService, private router: Router) { }
+  constructor(private changeDetectorRef: ChangeDetectorRef, private confirmationService: ConfirmationService,
+    private persistenceService: PersistenceService, private router: Router,
+    private commonsService: CommonsService, private translateService: TranslateService ) { }
 
   ngOnInit() {
     if (this.persistenceService.getDatos()) {
@@ -251,7 +256,29 @@ export class UnidadFamiliarComponent implements OnInit {
     });
   }
   delete() {
+    this.progressSpinner=true;
 
+    let data = [];
+    let ejg: EJGItem;
+
+    for(let i=0; this.selectedDatos.length>i; i++){
+      ejg = this.selectedDatos[i];
+      ejg.fechaEstadoNew=this.fechaEstado;
+      ejg.estadoNew=this.valueComboEstado;
+
+      data.push(ejg);
+    }
+    this.sigaServices.post("gestionejg_borrarFamiliar", data).subscribe(
+      n => {
+        this.progressSpinner=false;
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner=false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
   }
   activate() {
 
@@ -274,19 +301,29 @@ export class UnidadFamiliarComponent implements OnInit {
     this.persistenceService.setHistorico(this.historico);
 
   }
-  checkPermisosDownloadEEJ() {
-    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+  checkPermisosDownloadEEJ(){
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
     } else {
       this.downloadEEJ();
     }
   }
-  downloadEEJ() {
+  downloadEEJ(){
+    this.progressSpinner=true;
 
+    this.sigaServices.post("gestionejg_descargarExpedientesJG", this.selectDatos).subscribe(
+      n => {
+        this.progressSpinner=false;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner=false;
+      }
+    );
   }
-  checkPermisosSolicitarEEJ() {
-    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+  checkPermisosSolicitarEEJ(){
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
     } else {

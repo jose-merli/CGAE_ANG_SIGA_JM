@@ -1,10 +1,14 @@
-import { Component, OnInit, Input, Output, EventEmitter,SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { EstadoEJGItem } from '../../../../../models/sjcs/EstadoEJGItem';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { TranslateService } from '../../../../../commons/translate';
+import { ConfirmationService } from 'primeng/api';
+import { DataTable } from "primeng/datatable";
+import { DatosFamiliaresItem } from '../../../../../models/DatosFamiliaresItem';
+import { UnidadFamiliarEJGItem } from '../../../../../models/sjcs/UnidadFamiliarEJGItem';
 
 @Component({
   selector: 'app-estados',
@@ -33,6 +37,16 @@ export class EstadosComponent implements OnInit {
   seleccion: boolean = false;
   historico: boolean = false;
   estados: EstadoEJGItem;
+
+  valueComboEstado = "";
+  fechaEstado = new Date();
+
+  datosFamiliares=[];
+  
+  selectionMode: string = "single";
+  editMode: boolean;
+
+  progressSpinner: boolean = false;
   
   resaltadoDatosGenerales: boolean = false;
   fichaPosible = {
@@ -45,12 +59,16 @@ export class EstadosComponent implements OnInit {
   @Output() idOpened = new EventEmitter<Boolean>();
   @Input() openTarjetaEstados;
 
-  [x: string]: any;
+  @ViewChild("table")
+  table: DataTable;
+
+  //[x: string]: any;
 
 
   constructor(private sigaServices: SigaServices,
     private persistenceService: PersistenceService,private commonsServices: CommonsService,
-    private translateService: TranslateService) { }
+    private translateService: TranslateService, private confirmationService: ConfirmationService,
+    private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit() {
       if (this.persistenceService.getDatos()) {
@@ -228,7 +246,30 @@ export class EstadosComponent implements OnInit {
 
   }
   delete() {
+    this.progressSpinner=true;
 
+    this.body.nuevoEJG=!this.modoEdicion;
+    let data = [];
+    let ejg: EJGItem;
+
+    for(let i=0; this.selectedDatos.length>i; i++){
+      ejg = this.selectedDatos[i];
+      ejg.fechaEstadoNew=this.fechaEstado;
+      ejg.estadoNew=this.valueComboEstado;
+
+      data.push(ejg);
+    }
+    this.sigaServices.post("gestionejg_borrarEstado", data).subscribe(
+      n => {
+        this.progressSpinner=false;
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner=false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
   }
   activate() {
 
@@ -273,12 +314,12 @@ export class EstadosComponent implements OnInit {
     this.idOpened.emit(key);
   }
   checkPermisosDelete() {
-    let msg = this.commonsServices.checkPermisos(this.permisos, undefined);
+    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
 
     if (msg != undefined) {
       this.msgs = msg;
     } else {
-      if (!this.permisos || (!this.selectMultiple && !this.selectAll) || this.selectedDatos.length == 0) {
+      if (!this.permisoEscritura || (!this.selectMultiple && !this.selectAll) || this.selectedDatos.length == 0) {
         this.msgs = this.commonsServices.checkPermisoAccion();
       } else {
         this.confirmDelete();

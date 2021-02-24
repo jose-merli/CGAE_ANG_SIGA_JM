@@ -35,7 +35,7 @@
           <div class="form-row">
             <div *ngIf="impugnacion" class="form-group col-lg-3 col-md-3">
               <label>{{ "justiciaGratuita.ejg.datosGenerales.fechaAuto" | translate }} * </label>
-              <app-fecha [inputStyleClass]="styleObligatorio(impugnacion.fechaAuto)" [(value)]="impugnacion.fechaAuto" (valueChangeSelected)="fillFechaAuto($event)" (valueChangeInput)="fillFechaAuto($event)"></app-fecha>
+              <app-fecha [inputStyleClass]="styleObligatorio(impugnacion.fechaApertura)" [(value)]="impugnacion.fechaAuto" (valueChangeSelected)="fillFechaAuto($event)" (valueChangeInput)="fillFechaAuto($event)"></app-fecha>
             </div>
             <div *ngIf="impugnacion" class="form-group col-lg-6 col-md-6">
                 <label>{{ "justiciaGratuita.ejg.datosGenerales.AutoResolutorio" | translate }}</label>
@@ -80,18 +80,20 @@
     </div>
     <div *ngIf="esFichaActiva('impugnacion')" class="card-footer">
       <div class="text-right main-button ">
-        <button (click)="checkPermisosSave()" pButton [disabled]="!permisoEscritura" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="checkPermisosSave()" pButton [disabled]="!permisoEscritura" type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
         <button (click)="checkPermisosConfirmRest()" pButton [disabled]="!permisoEscritura" type="button" icon="fa fa-repeat" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
       </div> 
     </div>
-    <p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" #cd>
-      <p-footer>
-        <button type="button" pButton icon="fa-check" label="Si" (click)="cd.accept()"></button>
-        <button type="button" pButton icon="fa-close" label="No" (click)="cd.reject()"></button>
-      </p-footer>
-    </p-confirmDialog>
   </div>
 </div>
+
+<p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" #cd>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="cd.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="cd.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
+
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
 </div>

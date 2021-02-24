@@ -21,6 +21,7 @@ export class ImpugnacionComponent implements OnInit {
   progressSpinner: boolean = false;
   impugnacion: EJGItem;
   item: EJGItem;
+  bodyInicial: EJGItem = new EJGItem();
   msgs = [];
   nuevo;
   comboFundamentoImpug = [];
@@ -166,7 +167,7 @@ save(){
   }
   confirmRest(){
     let mess = this.translateService.instant(
-      "messages.ReestablecerDictamen"
+      "justiciaGratuita.ejg.message.restablecerImpugnacion"
     );
     let icon = "fa fa-edit";
     this.confirmationService.confirm({
@@ -189,6 +190,7 @@ save(){
     });
   }
   rest(){
+    this.impugnacion = JSON.parse(JSON.stringify(this.bodyInicial));
   }
   checkPermisosSave(){
     let msg = this.commonServices.checkPermisos(this.permisoEscritura, undefined);

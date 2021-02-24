@@ -85,7 +85,7 @@
   </div>
   <div class="card-footer">
     <div class="text-right main-button">
-      <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="comunicar()" type="button" icon="fas fa-comment" iconPos="left" label="{{ 'general.boton.comunicar' | translate}}">
+      <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="comunicar()" type="button" icon="fa fa-comment" iconPos="left" label="{{ 'general.boton.comunicar' | translate}}">
       </button>
       
       <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="changeEstado()" type="button" icon="fas fa-exchange-alt" iconPos="left" label="{{'general.boton.cambiarEstado' | translate}}">
@@ -94,7 +94,7 @@
       <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="downloadEEJ()" type="button" icon="fa fa-download" iconPos="left" label="{{'justiciaGratuita.ejg.datosGenerales.DescargarEEJ' | translate}}">
       </button>
       
-      <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="addRemesa()" type="button" iconPos="left" label="{{'general.boton.aniadirARemesa' | translate}}">
+      <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="addRemesa()" type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.aniadirARemesa' | translate}}">
       </button>
     </div>
   </div>
@@ -129,6 +129,14 @@
   <p-footer>
     <button type="button" pButton icon="fa-check" label="Si" (click)="cd.accept()"></button>
     <button type="button" pButton icon="fa-close" label="No" (click)="cd.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+<!--DIALOG AÑADIR REMESA-->
+<p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" #cd1>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="cd1.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="cd1.reject()"></button>
   </p-footer>
 </p-confirmDialog>
 
