@@ -109,7 +109,7 @@
               <strong>{{ "justiciaGratuita.guardia.gestion.requeridaValidacionGuardiasColegio" | translate }}</strong>
             </div>
             <div class="col-2 p-0 pt-2">
-              <p-checkbox binary="true" [disabled]="true" [(ngModel)]="body.requeridaValidacion"></p-checkbox>
+              <p-checkbox binary="true" [disabled]="!permisoEscritura || historico" [(ngModel)]="body.requeridaValidacion"></p-checkbox>
             </div>
           </div>
         </div>
@@ -184,10 +184,10 @@
             <div class="form-row mt-3">
               <div class="col-7 ml-2 p-0">
                 <strong *ngIf="!body.separarGuardia">{{'justiciaGratuita.guardia.gestion.separarGuardiaCalendario'|translate}}</strong>
-                <strong *ngIf="body.separarGuardia">{{'justiciaGratuita.guardia.gestion.separarGuardiaCalendario'|translate}} [{{body.separarGuardia}}]</strong>
+                <strong *ngIf="body.separarGuardia">{{'justiciaGratuita.guardia.gestion.separarGuardiaCalendario'|translate}} </strong>
               </div>
               <div class="col-2">
-                <p-checkbox binary="true" disabled="true" [(ngModel)]="body.separarGuardia"></p-checkbox>
+                <p-checkbox binary="true" [disabled]="!permisoEscritura || historico" [(ngModel)]="body.separarGuardia"></p-checkbox>
               </div>
             </div>
           </div>

@@ -14,7 +14,7 @@ export class DatosIncompatibilidadesComponent implements OnInit {
 
   msgs = [];
   cols = [];
-  openFicha: boolean = false;
+  @Input() openFicha: boolean = false;
 
   buscadores = [];
   rowsPerPage;

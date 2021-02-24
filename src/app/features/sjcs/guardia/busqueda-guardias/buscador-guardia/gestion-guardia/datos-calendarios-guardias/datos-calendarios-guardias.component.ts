@@ -15,7 +15,7 @@ import { CommonsService } from '../../../../../../../_services/commons.service';
 })
 export class DatosCalendariosGuardiasComponent implements OnInit {
 
-  openFicha: boolean = false;
+  @Input() openFicha: boolean = false;
   selectLaborables = false;
   selectFestividades = false;
   body: GuardiaItem = new GuardiaItem();

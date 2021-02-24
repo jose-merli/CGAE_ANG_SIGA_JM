@@ -420,16 +420,16 @@ export class GestionGuardiaComponent implements OnInit {
   isCloseReceive(event) {
     if (event != undefined) {
       switch (event) {
-        case "generales":
+        case "datosGenerales":
           this.openGen = this.manuallyOpened;
           break;
         case "calendarioGuardia":
           this.openCalendarioGuardia = this.manuallyOpened;
           break;
-        case "configCola":
+        case "configuracionCola":
           this.openConfigCola = this.manuallyOpened;
           break;
-        case "cola":
+        case "colaGuardias":
           this.openCola = this.manuallyOpened;
           break;
         case "incompatibilidades":
@@ -444,7 +444,7 @@ export class GestionGuardiaComponent implements OnInit {
         case "inscripciones":
           this.openInscripciones = this.manuallyOpened;
           break;
-        case "turno":
+        case "turnos":
           this.openTurno = this.manuallyOpened;
           break;
       }
@@ -452,19 +452,19 @@ export class GestionGuardiaComponent implements OnInit {
   }
 
   isOpenReceive(event) {
-
+console.log('ABRIR TARJETA: ', event)
     if (event != undefined) {
       switch (event) {
-        case "generales":
+        case "datosGenerales":
           this.openGen = true;
           break;
         case "calendarioGuardia":
           this.openCalendarioGuardia = true;
           break;
-        case "configCola":
+        case "configuracionCola":
           this.openConfigCola = true;
           break;
-        case "cola":
+        case "colaGuardias":
           this.openCola = true;
           break;
         case "incompatibilidades":

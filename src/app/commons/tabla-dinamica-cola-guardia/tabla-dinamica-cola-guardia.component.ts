@@ -34,6 +34,7 @@ export class TablaDinamicaColaGuardiaComponent implements OnInit {
   constructor(private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit() {
+    console.log('tabla cola guardia: ', this.datos)
     this.getCols()
   }
 

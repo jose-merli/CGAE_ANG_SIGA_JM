@@ -33,7 +33,7 @@ export class DatosConfColaComponent implements OnInit {
   pesosExistentesInicial: any[];
   pesosSeleccionados: any[];
   pesosSeleccionadosInicial: any[];
-  openFicha: boolean = false;
+  @Input() openFicha: boolean = false;
   historico: boolean = false;
   ordenacion = "";
   numeroletradosguardia = "";
@@ -70,6 +70,9 @@ export class DatosConfColaComponent implements OnInit {
   }
 
   disabledSave() {
+    console.log('!this.historico && this.body.letradosGuardia: ', !this.historico && this.body.letradosGuardia)
+    console.log('JSON.stringify(this.body) != JSON.stringify(this.bodyInicial)', JSON.stringify(this.body) != JSON.stringify(this.bodyInicial))
+    console.log('JSON.stringify(this.pesosSeleccionados) != JSON.stringify(this.pesosSeleccionadosInicial): ', JSON.stringify(this.pesosSeleccionados) != JSON.stringify(this.pesosSeleccionadosInicial))
     if (!this.historico && this.body.letradosGuardia
       && ((JSON.stringify(this.body) != JSON.stringify(this.bodyInicial))
         || (JSON.stringify(this.pesosSeleccionados) != JSON.stringify(this.pesosSeleccionadosInicial)))) {

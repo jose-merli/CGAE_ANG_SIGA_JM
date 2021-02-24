@@ -15,7 +15,7 @@ import { TranslateService } from '../../../../../../../commons/translate';
 export class DatosColaGuardiaComponent implements OnInit {
 
   msgs = [];
-  openFicha: boolean = false;
+  @Input() openFicha: boolean = false;
   permitirGuardar: boolean = false;
   rowsPerPage;
   cols = [];
@@ -44,6 +44,7 @@ export class DatosColaGuardiaComponent implements OnInit {
     public translateService: TranslateService) { }
 
   ngOnInit() {
+    console.log('openFicha: ', this.openFicha)
     this.historico = this.persistenceService.getHistorico();
 
     this.sigaService.datosRedy$.subscribe(
@@ -298,6 +299,7 @@ export class DatosColaGuardiaComponent implements OnInit {
     this.sigaService.post(
       "busquedaGuardias_getColaGuardia", this.body).subscribe(
         data => {
+          console.log('RESPUESTA COLA GUARDIA: ', this.datos)
           this.datos = JSON.parse(data.body).inscripcionesItem;
           this.datos = this.datos.map(it => {
             it.nombreApe = it.apellido1 + " " + it.apellido2 + " " + it.nombre;
