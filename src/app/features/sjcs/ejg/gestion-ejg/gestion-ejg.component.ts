@@ -141,7 +141,7 @@ export class GestionEjgComponent implements OnInit {
             //  hemos pulsado nuevo
             this.body = new EJGItem();
             this.modoEdicion = false;
-            this.isOpenReceive("datosGenerales");
+            this.isOpenReceive('datosGenerales');
           }
          }
          this.obtenerPermisos();

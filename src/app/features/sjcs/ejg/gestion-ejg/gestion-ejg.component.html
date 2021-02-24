@@ -14,8 +14,8 @@
         <app-servicios-tramitacion (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaServiciosTramitacion]="tarjetaServiciosTramitacion" *ngIf="permisoEscrituraServiciosTramitacion != undefined && body != undefined" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraServiciosTramitacion" (modoEdicionSend)="modoEdicionSend($event)" [openTarjetaServiciosTramitacion]="openTarjetaServiciosTramitacion">
         </app-servicios-tramitacion>
         
-        <!-- <app-unidad-familiar (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaUnidadFamiliar]="tarjetaUnidadFamiliar" *ngIf="permisoEscrituraUnidadFamiliar != undefined && body != undefined" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraUnidadFamiliar" (modoEdicionSend)="modoEdicionSend($event)" [openTarjetaUnidadFamiliar]="openTarjetaUnidadFamiliar"> 
-        </app-unidad-familiar> -->
+        <app-unidad-familiar (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaUnidadFamiliar]="tarjetaUnidadFamiliar" *ngIf="permisoEscrituraUnidadFamiliar != undefined && body != undefined" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraUnidadFamiliar" (modoEdicionSend)="modoEdicionSend($event)" [openTarjetaUnidadFamiliar]="openTarjetaUnidadFamiliar"> 
+        </app-unidad-familiar>
         
         <app-expedientes-economicos (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaExpedientesEconomicos]="tarjetaExpedientesEconomicos" *ngIf="permisoEscrituraExpedientesEconomicos != undefined && body != undefined" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraExpedientesEconomicos" (modoEdicionSend)="modoEdicionSend($event)" [openTarjetaExpedientesEconomicos]="openTarjetaExpedientesEconomicos">
         </app-expedientes-economicos>

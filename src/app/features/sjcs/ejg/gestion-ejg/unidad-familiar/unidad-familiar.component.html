@@ -112,19 +112,19 @@
             <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="checkPermisosSolicitarEEJ()"
               type="button" label="{{'general.boton.volver.solicitudEejg' | translate}}"></button>
             <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="checkPermisosDownloadEEJ()"
-              type="button" icon="fas fa-download" iconPos="left" label="{{'justiciaGratuita.ejg.datosGenerales.DescargarEEJ' | translate}}"></button>
+              type="button" icon="fa fa-download" iconPos="left" label="{{'justiciaGratuita.ejg.datosGenerales.DescargarEEJ' | translate}}"></button>
             <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="checkPermisosSolicitarEEJ()"
               type="button" label="{{'general.boton.solicitudEejg' | translate}}"></button>
             <button [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="checkPermisosComunicar(selectedDatos)"
-              pButton type="button" icon="fa fa-download" iconPos="left" label="{{'general.boton.comunicar' | translate }}"></button>
+              pButton type="button" icon="fa fa-comment" iconPos="left" label="{{'general.boton.comunicar' | translate }}"></button>
               <button *ngIf="!historico" (click)="searchHistorical(); selectedDatos=[]" pButton type="button" iconPos="left"
               label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
-            <button *ngIf="historico" (click)="searchHistorical(); selectedDatos=[]" pButton type="button" icon="fa fa-comment" iconPos="left"
+            <button *ngIf="historico" (click)="searchHistorical(); selectedDatos=[]" pButton type="button" icon="fa fa-history" iconPos="left"
               label="{{'general.message.ocultarHistorico' | translate}}"></button>
             <button pButton *ngIf="!historico" [disabled]="!permisoEscritura || ((!selectMultiple || !selectAll) && selectedDatos.length == 0)"
-              (click)="checkPermisosConfirmDelete()" type="button" icon="fa fa-history" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
+              (click)="checkPermisosConfirmDelete()" type="button" icon="fa fa-trash" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
             <button *ngIf="historico" pButton [disabled]="!permisoEscritura || ((!selectMultiple || !selectAll) && selectedDatos.length == 0)"
-              (click)="checkPermisosActivate()" type="button" icon="fa fa-trash" iconPos="left" label="{{'general.boton.activar' | translate}}"></button>
+              (click)="checkPermisosActivate()" type="button" iconPos="left" label="{{'general.boton.activar' | translate}}"></button>
             <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="checkPermisosAsociar()"
               type="button" icon="fa fa-plus" iconPos="left" label="{{'justiciaGratuita.ejg.datosGenerales.Asociar' | translate }}"></button>
           </div>

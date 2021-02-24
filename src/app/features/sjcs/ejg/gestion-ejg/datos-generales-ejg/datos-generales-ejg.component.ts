@@ -24,6 +24,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
   progressSpinner: boolean = false;
   body: EJGItem;
   bodyInicial: EJGItem;
+  nuevoBody:EJGItem = new EJGItem();
   msgs = [];
   nuevo;
   textSelected;
@@ -234,7 +235,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
 
     this.body.nuevoEJG=!this.modoEdicion;
 
-    this.sigaServices.post("guardarDatosGenerales", this.body).subscribe(
+    this.sigaServices.post("gestionejg_guardarDatosGenerales", this.body).subscribe(
       n => {
         this.progressSpinner=false;
       },
@@ -253,7 +254,20 @@ export class DatosGeneralesEjgComponent implements OnInit {
     }
   }
   rest(){
+    if(this.body != undefined){
       this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+
+      if (this.body.fechalimitepresentacion != undefined)
+        this.body.fechalimitepresentacion = new Date(this.body.fechalimitepresentacion);
+      if (this.body.fechapresentacion != undefined)
+        this.body.fechapresentacion = new Date(this.body.fechapresentacion);
+      if (this.body.fechaApertura != undefined)
+        this.body.fechaApertura = new Date(this.body.fechaApertura);
+      if (this.body.idTipoExpediente != undefined)
+        this.showTipoExp = true;
+    }else{
+      this.body = JSON.parse(JSON.stringify(this.nuevoBody));
+    }
   }
   checkPermisosComunicar(){
     let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);

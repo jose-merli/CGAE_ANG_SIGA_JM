@@ -5,6 +5,7 @@ import { fichasPosibles_unidadFamiliar } from '../../../../../utils/fichasPosibl
 import { CommonsService } from '../../../../../_services/commons.service';
 import { TranslateService } from '../../../../../commons/translate/translation.service';
 import { ConfirmationService } from 'primeng/api';
+import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 
 @Component({
   selector: 'app-unidad-familiar',
@@ -253,7 +254,30 @@ export class UnidadFamiliarComponent implements OnInit {
     });
   }
   delete() {
+    this.progressSpinner=true;
 
+    this.body.nuevoEJG=!this.modoEdicion;
+    let data = [];
+    let ejg: EJGItem;
+
+    for(let i=0; this.selectedDatos.length>i; i++){
+      ejg = this.selectedDatos[i];
+      ejg.fechaEstadoNew=this.fechaEstado;
+      ejg.estadoNew=this.valueComboEstado;
+
+      data.push(ejg);
+    }
+    this.sigaServices.post("gestionejg_borrarFamiliar", data).subscribe(
+      n => {
+        this.progressSpinner=false;
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner=false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
   }
   activate(){
 
@@ -285,7 +309,17 @@ export class UnidadFamiliarComponent implements OnInit {
     }
   }
   downloadEEJ(){
+    this.progressSpinner=true;
 
+    this.sigaServices.post("gestionejg_descargarExpedientesJG", this.selectDatos).subscribe(
+      n => {
+        this.progressSpinner=false;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner=false;
+      }
+    );
   }
   checkPermisosSolicitarEEJ(){
     let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);

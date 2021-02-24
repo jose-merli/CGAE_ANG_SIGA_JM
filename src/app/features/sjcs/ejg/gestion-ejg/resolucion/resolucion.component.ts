@@ -247,7 +247,7 @@ export class ResolucionComponent implements OnInit {
   }
   confirmRest(){
     let mess = this.translateService.instant(
-      "messages.ReestablecerDictamen"
+      "justiciaGratuita.ejg.message.restablecerResolucion"
     );
     let icon = "fa fa-edit";
     this.confirmationService.confirm({

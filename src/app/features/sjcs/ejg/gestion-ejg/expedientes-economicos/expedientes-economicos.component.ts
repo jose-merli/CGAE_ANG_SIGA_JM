@@ -2,6 +2,7 @@ import { Component, OnInit, Input,Output,SimpleChanges,EventEmitter } from '@ang
 import { SigaServices } from '../../../../../_services/siga.service';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 import { PersistenceService } from '../../../../../_services/persistence.service';
+import { CommonsService } from '../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-expedientes-economicos',
@@ -13,11 +14,12 @@ export class ExpedientesEconomicosComponent implements OnInit {
   @Input() permisoEscritura;
   @Input() tarjetaExpedientesEconomicos: string;
 
+  [x : string] : any;
+
   openFicha: boolean = false;
   nuevo;
   body: EJGItem;
   bodyInicial;
-  [x: string]: any;
   rowsPerPage: any = [];
   cols;
   msgs;
@@ -30,7 +32,11 @@ export class ExpedientesEconomicosComponent implements OnInit {
   seleccion: boolean = false;
   item: EJGItem;
   nExpedientes;
+  progressSpinner: boolean = false;
 
+  datosFamiliares : any;
+
+  selectDatos: EJGItem = new EJGItem();
   resaltadoDatosGenerales: boolean = false;
   resaltadoDatos: boolean = false;
   
@@ -46,7 +52,8 @@ export class ExpedientesEconomicosComponent implements OnInit {
 
   constructor(
     private sigaServices: SigaServices,
-    private persistenceService: PersistenceService, ) { }
+    private persistenceService: PersistenceService,
+    private commonsService: CommonsService ) { }
 
   ngOnInit() {
       if (this.persistenceService.getDatos()) {
@@ -219,7 +226,7 @@ export class ExpedientesEconomicosComponent implements OnInit {
     this.msgs = [];
   }
   checkPermisosDownloadEEJ(){
-    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
     } else {
@@ -227,6 +234,16 @@ export class ExpedientesEconomicosComponent implements OnInit {
     }
   }
   downloadEEJ(){
+    this.progressSpinner=true;
 
+    this.sigaServices.post("gestionejg_descargarExpedientesJG", this.selectDatos).subscribe(
+      n => {
+        this.progressSpinner=false;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner=false;
+      }
+    );
   }
 }

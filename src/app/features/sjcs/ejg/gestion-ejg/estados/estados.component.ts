@@ -38,6 +38,9 @@ export class EstadosComponent implements OnInit {
   historico: boolean = false;
   estados: EstadoEJGItem;
 
+  valueComboEstado = "";
+  fechaEstado = new Date();
+
   datosFamiliares=[];
   
   selectionMode: string = "single";
@@ -243,7 +246,30 @@ export class EstadosComponent implements OnInit {
 
   }
   delete() {
+    this.progressSpinner=true;
 
+    this.body.nuevoEJG=!this.modoEdicion;
+    let data = [];
+    let ejg: EJGItem;
+
+    for(let i=0; this.selectedDatos.length>i; i++){
+      ejg = this.selectedDatos[i];
+      ejg.fechaEstadoNew=this.fechaEstado;
+      ejg.estadoNew=this.valueComboEstado;
+
+      data.push(ejg);
+    }
+    this.sigaServices.post("gestionejg_borrarEstado", data).subscribe(
+      n => {
+        this.progressSpinner=false;
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner=false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
   }
   activate() {
 

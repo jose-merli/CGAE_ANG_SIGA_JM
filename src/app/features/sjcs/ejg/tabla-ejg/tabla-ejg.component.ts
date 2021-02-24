@@ -16,7 +16,6 @@ import { CommonsService } from '../../../../_services/commons.service';
 export class TablaEjgComponent implements OnInit {
   rowsPerPage: any = [];
 
-  [x: string]: any;
 
   cols;
   msgs;
@@ -36,6 +35,9 @@ export class TablaEjgComponent implements OnInit {
   datosItem: EJGItem;
   nuevo: boolean = false;
   progressSpinner: boolean = false;
+
+  ejgObject = [];
+  datosFamiliares = [];
 
   comboEstadoEJG = [];
   fechaEstado = new Date();
@@ -188,7 +190,7 @@ export class TablaEjgComponent implements OnInit {
   }
 
   checkCambiarEstados(){
-    let mess = this.translateService.instant("Se va a proceder a añadir los expedientes seleccionados a la Remesa indicado. ¿Desea Continuar?");
+    let mess = this.translateService.instant("justiciaGratuita.ejg.message.cambiarEstado");
     let icon = "fa fa-edit";
 
     this.confirmationService.confirm({
@@ -343,7 +345,7 @@ export class TablaEjgComponent implements OnInit {
   downloadEEJ() {
     this.progressSpinner=true;
 
-    this.sigaServices.post("descargarEEJ", this.selectDatos).subscribe(
+    this.sigaServices.post("gestionejg_descargarExpedientesJG", this.selectDatos).subscribe(
       n => {
         this.progressSpinner=false;
       },
