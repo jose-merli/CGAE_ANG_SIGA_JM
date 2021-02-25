@@ -10,7 +10,7 @@
 <div class="card">
   <div class="card-body">
     <!-- CAMPOS COMPONEN FILTROS BUSQUEDA-->
-    <div *ngIf="showDatosGenerales" class="module vista-avanzada">
+    <div  class="module vista-avanzada">
       <div class="form-row">
         <div class="form-group col-lg-3 col-md-3">
           <label>{{'censo.fichaIntegrantes.literal.estado'|translate}}</label>
@@ -39,8 +39,6 @@
           </label>
           <app-fecha [(value)]="filtros.afechade" (valueChangeInput)="fillAfechaDeCalendar($event)" (valueChangeSelected)="fillAfechaDeCalendar($event)"></app-fecha>
         </div>
-
-
       </div>
     </div>
     <p (click)="onHideDatosGenerales()" class="title-module">{{ "justiciaGratuita.justiciables.literal.colegiado" | translate}}
@@ -54,7 +52,6 @@
         </div>
       </div>
     </div>
-
   </div>
   <div class="card-footer">
     <!-- BOTONES TARJETA -->

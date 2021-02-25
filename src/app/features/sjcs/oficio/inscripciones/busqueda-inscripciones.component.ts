@@ -86,7 +86,11 @@ export class InscripcionesComponent implements OnInit {
       let idturnoAux = this.filtros.filtroAux.idturno.toString();
       if( idturnoAux == "") this.filtros.filtroAux.idturno = null;
       else this.filtros.filtroAux.idturno = idturnoAux;
-
+    } 
+    if((<HTMLInputElement>document.getElementById("nColegiado")) != null || (<HTMLInputElement>document.getElementById("nColegiado")).value != undefined){
+      let ncolegiadoAux = (<HTMLInputElement>document.getElementById("nColegiado")).value;
+      if( ncolegiadoAux == "") this.filtros.filtroAux.ncolegiado = null;
+      else this.filtros.filtroAux.ncolegiado = ncolegiadoAux;
     } 
     this.filtros.filtroAux.historico = event;
     this.persistenceService.setHistorico(event);
@@ -94,6 +98,14 @@ export class InscripcionesComponent implements OnInit {
     this.sigaServices.post("inscripciones_busquedaInscripciones", this.filtros.filtroAux).subscribe(
       n => {
         this.datos = JSON.parse(n.body).inscripcionesItem;
+        let error = JSON.parse(n.body).error;
+        if (error != null && error.description != null) {
+          this.msgs = [];
+          this.msgs.push({
+            severity:"info", 
+            summary:this.translateService.instant("general.message.informacion"), 
+            detail: error.description});
+        }
         this.datos.forEach(element => {
           if(element.estado == "0"){
             element.estadonombre = "Pendiente de Alta";

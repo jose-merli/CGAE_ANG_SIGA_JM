@@ -1,5 +1,4 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
-
 <div class="card mt-3">
   <div class="card-body p-0">
     <!-- TABLA RESULTADOS -->
@@ -31,22 +30,20 @@
               <span
                 [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
             </div>
+            <!-- columnas con enlace redirigiendo a su ficha de inscripcion -->
             <div *ngIf="!setItalic(dato) && col.field == 'apellidosnombre'">
               <a class="enlace" (click)="openTab(dato)">{{dato[col.field]}}</a>
             </div>
-            <div *ngIf="!setItalic(dato) && col.field !='fechasolicitud' && col.field!='apellidosnombre'">
+            <!-- columna turno con tooltip indicando su nombre -->
+            <div *ngIf="!setItalic(dato) && col.field =='abreviatura'">
+              <span >{{dato[col.field]}}</span>
+            </div>
+            <!-- columnas con formato estandar -->
+            <div *ngIf="!setItalic(dato) && (col.field =='ncolegiado'  || col.field =='estadonombre')">
               <span>{{dato[col.field]}}</span>
             </div>
-            <div *ngIf="!setItalic(dato) && col.field =='fechasolicitud'">
-              <span>{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
-            </div>
-            <div *ngIf="!setItalic(dato) && col.field =='fechavalidacion'">
-              <span>{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
-            </div>
-            <div *ngIf="!setItalic(dato) && col.field =='fechasolicitudbaja'">
-              <span>{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
-            </div>
-            <div *ngIf="!setItalic(dato) && col.field =='fechabaja'">
+            <!-- columnas con formato fecha -->
+            <div *ngIf="!setItalic(dato) && (col.field =='fechasolicitud' || col.field =='fechavalidacion' || col.field =='fechasolicitudbaja' || col.field =='fechabaja')">
               <span>{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
             </div>
           </td>
@@ -113,8 +110,7 @@
           <!-- [disabled]="!permisos || ((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledValidar || !isLetrado)" -->
           <button *ngIf="!historico" pButton
             [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledValidar)" (click)="validar(selectedDatos)"
-            type="button" icon="fa fa-trash-alt" iconPos="left"
-            label="{{ 'general.boton.validar' | translate}}"></button>
+            type="button" label="{{ 'general.boton.validar' | translate}}"></button>
 
         </div>
         <div class="form-group">
@@ -123,25 +119,21 @@
           <!-- [disabled]="!permisos || ((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledDenegar || !isLetrado)" -->
           <button *ngIf="!historico" pButton
             [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledDenegar)" (click)="denegar(selectedDatos)"
-            type="button" icon="fa fa-trash-alt" iconPos="left"
-            label="{{ 'general.boton.denegar' | translate}}"></button>
+            type="button" label="{{ 'general.boton.denegar' | translate}}"></button>
         </div>
         <div class="form-group">
           <label>
           </label>
           <button *ngIf="!historico" pButton
             [disabled]="!permisos || ((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledSolicitarBaja)" (click)="solicitarBaja(selectedDatos)"
-            type="button" icon="fa fa-trash-alt" iconPos="left"
-            label="{{ 'general.boton.solicitarbaja' | translate}}"></button>
+            type="button" label="{{ 'general.boton.solicitarbaja' | translate}}"></button>
         </div>
         <div class="form-group">
           <label>
           </label>
           <button *ngIf="!historico" pButton
             [disabled]="!permisos || ((!selectMultiple || !selectAll) && selectedDatos.length == 0)" (click)="cambiarFecha(selectedDatos)"
-            type="button" icon="fa fa-trash-alt" iconPos="left"
-            label="{{ 'justiciaGratuita.oficio.inscripciones.cambiarfecha' | translate}}"></button>
-
+            type="button" label="{{ 'justiciaGratuita.oficio.inscripciones.cambiarfecha' | translate}}"></button>
         </div>
       </div>
 
