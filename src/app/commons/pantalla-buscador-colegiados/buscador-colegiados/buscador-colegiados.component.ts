@@ -74,7 +74,8 @@ export class BuscadorColegiadosComponent implements OnInit {
   getComboTurno(){
     this.progressSpinner=true;
 
-    this.sigaServices.get("combo_turnos").subscribe(
+    //si la pantalla viene de ejg, se cargan unos turnos
+    this.sigaServices.getParam("busquedaColegiadoEJG_comboTurnos", "?pantalla="+sessionStorage.getItem("pantalla")).subscribe(
       n => {
         this.comboTurno = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboTurno);

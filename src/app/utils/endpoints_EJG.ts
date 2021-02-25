@@ -31,5 +31,6 @@ export let endpoints_EJG: any = {
     gestionejg_descargarExpedientesJG: "ejg/gestion-ejg/descargarExpedientesJG",
     gestionejg_anadirExpedienteARemesa: "ejg/gestion-ejg/anadirExpedienteARemesa",
     gestionejg_guardarDatosGenerales: "ejg/gestion-ejg/guardarDatosGenerales",
-    gestionejg_borrarEstado: "ejg/gestion-ejg/borrarEstado"
+    gestionejg_borrarEstado: "ejg/gestion-ejg/borrarEstado",
+    busquedaColegiadoEJG_comboTurnos:"ejg/busquedaColegiadoEJG/comboTurnos"
 }

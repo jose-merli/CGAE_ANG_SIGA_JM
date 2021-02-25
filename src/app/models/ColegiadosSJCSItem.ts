@@ -27,7 +27,7 @@ export class ColegiadosSJCSItem {
 	abreviatura: string;
 	idPersona: string;
 	residente: boolean;
-	estadoColegial: string;
+	nComunitario: string;
 
   constructor() { }
 }
