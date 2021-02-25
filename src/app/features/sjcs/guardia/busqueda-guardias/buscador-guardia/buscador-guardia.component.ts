@@ -50,6 +50,12 @@ export class BuscadorGuardiaComponent implements OnInit {
         }
       }
       ).catch(error => console.error(error));
+
+    if (sessionStorage.getItem("filtrosBusquedaGuardiasFichaGuardia") == null || sessionStorage.getItem("filtrosBusquedaGuardiasFichaGuardia") == undefined) {
+      this.datos = {};
+      this.buscar = false;
+    }
+
   }
 
 
@@ -69,7 +75,7 @@ export class BuscadorGuardiaComponent implements OnInit {
     this.progressSpinner = true;
     this.sigaServices.post("busquedaGuardias_searchGuardias", this.filtros.filtroAux).subscribe(
       n => {
-
+        let error = JSON.parse(n.body).error;
         this.datos = JSON.parse(n.body).guardiaItems;
         this.buscar = true;
         this.datos = this.datos.map(it => {
@@ -81,6 +87,10 @@ export class BuscadorGuardiaComponent implements OnInit {
           this.tabla.historico = event;
         }
         this.resetSelect();
+
+        if (error != null && error.description != null) {
+          this.showMessage({ severity: 'info', summary: this.translateService.instant("general.message.informacion"), msg: error.description });
+        }
       },
       err => {
         this.progressSpinner = false;
@@ -126,6 +136,11 @@ export class BuscadorGuardiaComponent implements OnInit {
         let aux = this.filtros.filtroAux[element].toString();
         this.filtros.filtroAux[element] = aux;
       }
+
+      if (this.filtros.filtroAux[element] != undefined && this.filtros.filtroAux[element] != null && this.filtros.filtroAux[element].length == 0) {
+        delete this.filtros.filtroAux[element];
+      }
+
     });
 
   }
