@@ -77,10 +77,10 @@ export class DatosGeneralesEjgComponent implements OnInit {
         if (this.body.idTipoExpediente != undefined)
           this.showTipoExp = true;
       }else {
-      this.nuevo = true;
-      this.modoEdicion = false;
-       this.body = new EJGItem();
-       this.showTipoExp = false;
+        this.nuevo = true;
+        this.modoEdicion = false;
+        this.body = new EJGItem();
+        this.showTipoExp = false;
       // this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     }
   }
@@ -254,7 +254,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
     }
   }
   rest(){
-    if(this.body != undefined){
+    if(!this.nuevo){
       this.body = JSON.parse(JSON.stringify(this.bodyInicial));
 
       if (this.body.fechalimitepresentacion != undefined)

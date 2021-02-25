@@ -142,8 +142,19 @@ getComboFundamentoImpug() {
 }
 
 save(){
-  if(this.disabledSave()){
-    }
+  this.progressSpinner=true;
+
+    this.impugnacion.nuevoEJG=!this.modoEdicion;
+
+    this.sigaServices.post("gestionejg_guardarImpugnacion", this.impugnacion).subscribe(
+      n => {
+        this.progressSpinner=false;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner=false;
+      }
+    );
 }
 
   showMessage(severity, summary, msg) {

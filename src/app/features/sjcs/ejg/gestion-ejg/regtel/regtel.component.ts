@@ -1,9 +1,11 @@
-import { Component, OnInit, Input, Output, SimpleChanges, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, SimpleChanges, EventEmitter, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
-import { TranslateService } from '../../../../../commons/translate';
-import { ConfirmationService } from 'primeng/api';
+import { CommonsService } from '../../../../../_services/commons.service';
+import { saveAs } from 'file-saver/FileSaver';
+import { DocushareItem } from '../../../../../models/DocushareItem';
+import { DataTable } from "primeng/datatable";
 
 @Component({
   selector: 'app-regtel',
@@ -20,7 +22,6 @@ export class RegtelComponent implements OnInit {
   body: EJGItem;
   item: EJGItem;
   bodyInicial;
-  [x: string]: any;
   rowsPerPage: any = [];
   cols;
   msgs;
@@ -34,6 +35,12 @@ export class RegtelComponent implements OnInit {
   nRegtel;
 
   resaltadoDatosGenerales: boolean = false;
+  progressSpinner: boolean;
+  selectedDatosRegtel: DocushareItem;
+  idPersona: any;
+
+  @ViewChild("table")
+  table: DataTable;
   
   fichaPosible = {
     key: "regtel",
@@ -48,8 +55,8 @@ export class RegtelComponent implements OnInit {
 
   constructor(private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private translateService: TranslateService,
-    private confirmationService: ConfirmationService) { }
+    private commonsServices: CommonsService,
+    private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit() {
     if (this.persistenceService.getDatos()) {
@@ -171,7 +178,28 @@ export class RegtelComponent implements OnInit {
     }
   }
   download(){
+    this.progressSpinner = true;
+    this.selectedDatosRegtel.idPersona = this.idPersona;
+    let selectedRegtel = JSON.parse(JSON.stringify(this.selectedDatosRegtel));
+    selectedRegtel.fechaModificacion = undefined;
+    this.sigaServices
+      .postDownloadFiles(
+        "fichaColegialRegTel_downloadDoc",
 
+        selectedRegtel
+      )
+      .subscribe(
+        data => {
+          const blob = new Blob([data], { type: "application/octet-stream" });
+          saveAs(blob, this.selectedDatosRegtel.originalFilename);
+          //this.selectedDatosRegtel.fechaModificacion = fechaModificacionRegtel;
+          this.progressSpinner = false;
+        },
+        err => {
+          //this.selectedDatosRegtel.fechaModificacion = fechaModificacionRegtel;
+          this.progressSpinner = false;
+        }
+      );
   }
   checkPermisosShowFolder(){
     let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);

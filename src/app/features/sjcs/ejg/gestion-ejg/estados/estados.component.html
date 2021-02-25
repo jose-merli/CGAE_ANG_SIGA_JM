@@ -139,7 +139,7 @@
             <button [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="checkPermisosConsultar()"
               pButton type="button" icon="fa fa-angle-up" iconPos="left" label="{{ 'general.boton.consultar' | translate}}/{{ 'general.boton.edit' | translate}}"></button>
 
-            <button [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="checkPermisosNewEstado()"
+            <button [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="changeEstado()"
               pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
 
             <button *ngIf="!historico" (click)="searchHistorical(); selectedDatos=[]" pButton type="button" icon="fa fa-history" iconPos="left"
@@ -149,12 +149,35 @@
               label="{{'general.message.ocultarHistorico' | translate}}"></button>
           </div>
         </div>
-        <p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" #cd>
-          <p-footer>
-            <button type="button" pButton icon="fa-check" label="Si" (click)="cd.accept()"></button>
-            <button type="button" pButton icon="fa-close" label="No" (click)="cd.reject()"></button>
-          </p-footer>
-        </p-confirmDialog>
       </div>
     </div>
+</div>
+
+<!--DIALOG ANADIR ESTADO-->
+<p-dialog width="320" responsive="true" modal="modal" [draggable]="false" resizable="false" [(visible)]="showModalAnadirEstado" (onHide)="cancelaAnadirEstado()">
+  <p-header class="title">
+    <label>{{'general.boton.cambiarEstado' | translate}} </label>
+  </p-header>
+  <div class="form-row">
+    <div class="form-group-interlineado col-lg-12 col-md-12" >
+      <label>{{'censo.nuevaSolicitud.fechaEstado' | translate}}</label>
+      <app-fecha [(value)]="fechaEstado"></app-fecha>
+    </div>
+    <div class="form-group-interlineado col-lg-12 col-md-12">
+      <label>{{ "justiciaGratuita.ejg.datosGenerales.EstadoEJG" | translate }}</label>
+      <p-dropdown  [(ngModel)]='valueComboEstado' class="select-form" placeholder="Seleccionar" [options]="comboEstadoEJG" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+    </div>
+    <div class="form-group-interlineado col-lg-12 col-md-12">
+      <label>{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{selectedDatos.length}}</label>
+    </div>
+
+    <div class="main-button col-lg-12 col-md-12">
+      <button (click)="checkAnadirEstado()" pButton type="button" icon="fa fa-edit" iconPos="left" label="{{'general.boton.guardarCerrar' | translate}}"></button>
+      <button (click)="cancelaAnadirEstado()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
+    </div>
+  </div>
+</p-dialog>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
 </div>

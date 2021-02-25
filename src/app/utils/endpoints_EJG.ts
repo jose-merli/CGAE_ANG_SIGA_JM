@@ -26,10 +26,15 @@ export let endpoints_EJG: any = {
     gestionejg_getResolucion: "ejg/gestion-ejg/getResolucion",
     gestionejg_comboTipoExpediente: "ejg/gestion-ejg/comboTipoExpediente",
     gestionejg_cambioEstadoMasivo: "ejg/gestion-ejg/cambioEstadoMasivo",
-    descargarEEJ: "ejg/descargarExpedientesJG",
     busquedaColegiadoEJG: "ejg/busquedaColegiadoEJG",
     gestionejg_descargarExpedientesJG: "ejg/gestion-ejg/descargarExpedientesJG",
     gestionejg_anadirExpedienteARemesa: "ejg/gestion-ejg/anadirExpedienteARemesa",
     gestionejg_guardarDatosGenerales: "ejg/gestion-ejg/guardarDatosGenerales",
-    gestionejg_borrarEstado: "ejg/gestion-ejg/borrarEstado"
+    gestionejg_nuevoEstado: "ejg/gestion-ejg/nuevoEstado",
+    gestionejg_borrarEstado: "ejg/gestion-ejg/borrarEstado",
+    gestionejg_guardarResolucion: "ejg/gestion-ejg/guardarResolucion",
+    gestionejg_guardarImpugnacion: "ejg/gestion-ejg/guardarImpugnacion",
+    gestionejg_guardarInformeCalfiacion: "ejg/gestion-ejg/guardarInformeCalificacion",
+    gestionejg_descargarInformeCalificacion: "ejg/gestion-ejg/descargarInformeCalificacion",
+    gestionejg_descargarDocumentacion: "ejg/gestion-ejg/descargarDocumentacion"
 }

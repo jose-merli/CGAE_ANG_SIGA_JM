@@ -236,6 +236,19 @@ export class ResolucionComponent implements OnInit {
     }
   }
   save(){
+    this.progressSpinner=true;
+
+    this.body.nuevoEJG=!this.modoEdicion;
+
+    this.sigaServices.post("gestionejg_guardarResolucion", this.body).subscribe(
+      n => {
+        this.progressSpinner=false;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner=false;
+      }
+    );
   }
   checkPermisosConfirmRest(){
     let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);

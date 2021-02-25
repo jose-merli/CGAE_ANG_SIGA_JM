@@ -20,13 +20,19 @@ export class InformeCalificacionComponent implements OnInit {
   textFilter: string = "Seleccionar";
   progressSpinner: boolean = false;
   dictamen: EJGItem;
+  nuevoBody: EJGItem = new EJGItem();
   item: EJGItem;
+  
+  bodyInicial: EJGItem;
   msgs = [];
-  [x: string]: any;
   nuevo;
   isDisabledFundamentosCalif: boolean = true;
   comboFundamentoCalif = [];
   comboDictamen = [];
+
+  selectedDatos = [];
+  valueComboEstado = "";
+  fechaEstado = new Date();
 
   resaltadoDatosGenerales: boolean = false;
   
@@ -149,7 +155,20 @@ export class InformeCalificacionComponent implements OnInit {
   }
 save(){
   if(this.disabledSave()){
-    }
+    this.progressSpinner=true;
+
+    this.dictamen.nuevoEJG=!this.modoEdicion;
+
+    this.sigaServices.post("gestionejg_guardarInformeCalfiacion", this.dictamen).subscribe(
+      n => {
+        this.progressSpinner=false;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner=false;
+      }
+    );
+  }
 }
 confirmRest(){
   let mess = this.translateService.instant(
@@ -200,13 +219,50 @@ confirmDelete() {
   });
 }
     delete(){
+      this.progressSpinner=true;
 
+      this.dictamen.nuevoEJG=!this.modoEdicion;
+      let data = [];
+      let ejg: EJGItem;
+
+      for(let i=0; this.selectedDatos.length>i; i++){
+        ejg = this.selectedDatos[i];
+        ejg.fechaEstadoNew=this.fechaEstado;
+        ejg.estadoNew=this.valueComboEstado;
+
+        data.push(ejg);
+      }
+      this.sigaServices.post("gestionejg_borrarInformeCalificacion", data).subscribe(
+        n => {
+          this.progressSpinner=false;
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner=false;
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        }
+      );
     }
     rest(){
-      
+      this.dictamen = JSON.parse(JSON.stringify(this.bodyInicial));
     }
     download(){
-      
+      if(this.disabledSave()){
+        this.progressSpinner=true;
+    
+        this.dictamen.nuevoEJG=!this.modoEdicion;
+    
+        this.sigaServices.post("gestionejg_descargarInformeCalificacion", this.dictamen).subscribe(
+          n => {
+            this.progressSpinner=false;
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner=false;
+          }
+        );
+      }
     }
 
   showMessage(severity, summary, msg) {
@@ -221,7 +277,7 @@ confirmDelete() {
     this.msgs = [];
   }
   checkPermisosConfirmDelete(){
-    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    let msg = this.commonServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
     } else {
@@ -229,7 +285,7 @@ confirmDelete() {
     }
   }
   checkPermisosConfirmRest(){
-    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    let msg = this.commonServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
     } else {
@@ -237,12 +293,12 @@ confirmDelete() {
     }
   }
   checkPermisosSave(){
-    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    let msg = this.commonServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
     } else {
       if (this.disabledSave()) {
-        this.msgs = this.commonsServices.checkPermisoAccion();
+        this.msgs = this.commonServices.checkPermisoAccion();
       } else {
         this.save();
       }
@@ -250,14 +306,14 @@ confirmDelete() {
   }
   disabledSave() {
     if (this.nuevo) {
-      if (this.body.fechaApertura != undefined) {
+      if (this.dictamen.fechaApertura != undefined) {
         return false;
       } else {
         return true;
       }
     } else {
       if (this.permisoEscritura) {
-        if (this.body.fechaApertura != undefined) {
+        if (this.dictamen.fechaApertura != undefined) {
           return false;
         } else {
           return true;
@@ -268,7 +324,7 @@ confirmDelete() {
     }
   }
   checkPermisosDownload(){
-    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    let msg = this.commonServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
     } else {

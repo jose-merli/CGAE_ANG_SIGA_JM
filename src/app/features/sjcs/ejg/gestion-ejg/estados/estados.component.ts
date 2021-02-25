@@ -7,8 +7,6 @@ import { CommonsService } from '../../../../../_services/commons.service';
 import { TranslateService } from '../../../../../commons/translate';
 import { ConfirmationService } from 'primeng/api';
 import { DataTable } from "primeng/datatable";
-import { DatosFamiliaresItem } from '../../../../../models/DatosFamiliaresItem';
-import { UnidadFamiliarEJGItem } from '../../../../../models/sjcs/UnidadFamiliarEJGItem';
 
 @Component({
   selector: 'app-estados',
@@ -38,8 +36,10 @@ export class EstadosComponent implements OnInit {
   historico: boolean = false;
   estados: EstadoEJGItem;
 
+  comboEstadoEJG = [];
   valueComboEstado = "";
   fechaEstado = new Date();
+  showModalAnadirEstado: boolean;
 
   datosFamiliares=[];
   
@@ -58,6 +58,7 @@ export class EstadosComponent implements OnInit {
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
   @Input() openTarjetaEstados;
+  @Output() busqueda = new EventEmitter<boolean>();
 
   @ViewChild("table")
   table: DataTable;
@@ -275,9 +276,89 @@ export class EstadosComponent implements OnInit {
 
   }
 
-  newEstado() {
+  getComboEstado() {
+    this.progressSpinner=true;
 
+    this.sigaServices.get("filtrosejg_comboEstadoEJG").subscribe(
+      n => {
+        this.comboEstadoEJG = n.combooItems;
+        //this.commonServices.arregloTildesCombo(this.comboEstadoEJG);
+        this.progressSpinner=false;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner=false;
+      }
+    );
   }
+
+  changeEstado() {
+    if (this.selectedDatos != null && this.selectedDatos != undefined && this.selectedDatos.length > 0 ) {
+      this.showModalAnadirEstado = true;
+      this.getComboEstado();      
+    } else {
+      this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("censo.datosBancarios.mensaje.seleccionar.almenosUno"));
+    }
+  }
+   
+  cancelaAnadirEstado(){
+    this.showModalAnadirEstado = false;
+  }
+
+  checkAnadirEstado(){
+    let mess = this.translateService.instant("justiciaGratuita.ejg.message.cambiarEstado");
+    let icon = "fa fa-edit";
+
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.anadirEstado();
+      },
+      reject: () => {
+        this.msgs = [{
+          severity: "info",
+          summary: "Cancel",
+          detail: this.translateService.instant("general.message.accion.cancelada")
+        }];
+
+        this.cancelaAnadirEstado();
+      }
+    });
+  }
+
+  anadirEstado(){
+    this.progressSpinner=true;
+    let data = [];
+    let ejg: EJGItem;
+
+    for(let i=0; this.selectedDatos.length>i; i++){
+      ejg = this.selectedDatos[i];
+      ejg.fechaEstadoNew=this.fechaEstado;
+      ejg.estadoNew=this.valueComboEstado;
+
+      data.push(ejg);
+    }
+
+    this.sigaServices.post("gestionejg_nuevoEstado", data).subscribe(
+      n => {
+        this.progressSpinner=false;
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.busqueda.emit(false);
+        this.showModalAnadirEstado = false;
+        this.selectedDatos = [];
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner=false;
+        this.busqueda.emit(false);
+        this.showModalAnadirEstado = false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        this.selectedDatos = [];
+      }
+    );
+  }
+
   searchHistorical() {
     this.item.historico = !this.item.historico;
     this.historico = !this.historico;
@@ -294,7 +375,6 @@ export class EstadosComponent implements OnInit {
   }
 
   esFichaActiva(key) {
-
     return this.fichaPosible.activa;
   }
   abreCierraFicha(key) {
@@ -340,14 +420,6 @@ export class EstadosComponent implements OnInit {
       this.msgs = msg;
     } else {
       this.consultar();
-    }
-  }
-  checkPermisosNewEstado(){
-    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
-    if (msg != undefined) {
-      this.msgs = msg;
-    } else {
-      this.newEstado();
     }
   }
 }

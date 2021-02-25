@@ -4,6 +4,7 @@ import { PersistenceService } from '../../../../../_services/persistence.service
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 import { TranslateService } from '../../../../../commons/translate';
 import { ConfirmationService } from 'primeng/api';
+import { CommonsService } from '../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-documentacion',
@@ -19,7 +20,6 @@ export class DocumentacionComponent implements OnInit {
   body: EJGItem;
   item: EJGItem;
   bodyInicial;
-  [x: string]: any;
   rowsPerPage: any = [];
   cols;
   msgs;
@@ -31,6 +31,9 @@ export class DocumentacionComponent implements OnInit {
   selectMultiple: boolean = false;
   seleccion: boolean = false;
   nDocumentos;
+  progressSpinner: boolean;
+
+  [x : string] : any;
 
   resaltadoDatosGenerales: boolean = false;
   
@@ -44,8 +47,9 @@ export class DocumentacionComponent implements OnInit {
   @Output() idOpened = new EventEmitter<Boolean>();
   @Input() openTarjetaDocumentacion;
 
-  constructor(private sigaServices: SigaServices,
-    private persistenceService: PersistenceService, private translateService: TranslateService, private confirmationService: ConfirmationService) { }
+  constructor(private sigaServices: SigaServices, private persistenceService: PersistenceService, 
+    private translateService: TranslateService, private confirmationService: ConfirmationService,
+    private commonsServices: CommonsService) { }
 
   ngOnInit() {
     if (this.persistenceService.getDatos()) {
@@ -287,7 +291,19 @@ abreCierraFicha(key) {
       }
     }
     download(){
+      this.progressSpinner=true;
 
+      this.body.nuevoEJG=!this.modoEdicion;
+
+      this.sigaServices.post("gestionejg_descargarDocumentacion", this.body).subscribe(
+        n => {
+          this.progressSpinner=false;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner=false;
+        }
+      );
     }
     checkPermisosConfirmDelete(){
       let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);

@@ -216,7 +216,19 @@ export class ServiciosTramitacionComponent implements OnInit {
     }
   }
   save(){
+    this.progressSpinner=true;
 
+    this.body.nuevoEJG=!this.modoEdicion;
+
+    this.sigaServices.post("gestionejg_guardarDatosGenerales", this.body).subscribe(
+      n => {
+        this.progressSpinner=false;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner=false;
+      }
+    );
   }
   checkPermisosRest() {
     let msg = this.commonServices.checkPermisos(this.permisoEscritura, undefined);

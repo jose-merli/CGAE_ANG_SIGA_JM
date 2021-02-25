@@ -7,6 +7,7 @@ import { CommonsService } from '../../../../../_services/commons.service';
 import { TranslateService } from '../../../../../commons/translate/translation.service';
 import { ConfirmationService } from 'primeng/api';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
+import { SigaServices } from '../../../../../_services/siga.service';
 
 @Component({
   selector: 'app-unidad-familiar',
@@ -14,17 +15,25 @@ import { EJGItem } from '../../../../../models/sjcs/EJGItem';
   styleUrls: ['./unidad-familiar.component.scss']
 })
 export class UnidadFamiliarComponent implements OnInit {
+
+  [x : string]: any;
+
   rowsPerPage: any = [];
   selectedDatos = [];
   buscadores = [];
 
+  nuevo: boolean;
   body: UnidadFamiliarEJGItem = new UnidadFamiliarEJGItem();
   selectAll;
-  [ x : string ] : any;
   cols;
   msgs;
   datosFamiliares;
   datosFamiliaresActivos;
+  
+  selectionMode;
+  editMode;
+  progressSpinner: boolean = false;
+  selectDatos;
 
   numSelected:number = 0;
   selectedItem: number = 10;
@@ -52,7 +61,8 @@ export class UnidadFamiliarComponent implements OnInit {
 
   constructor(private changeDetectorRef: ChangeDetectorRef, private confirmationService: ConfirmationService,
     private persistenceService: PersistenceService, private router: Router,
-    private commonsService: CommonsService, private translateService: TranslateService ) { }
+    private commonsService: CommonsService, private translateService: TranslateService,
+    private sigaServices: SigaServices ) { }
 
   ngOnInit() {
     if (this.persistenceService.getDatos()) {
@@ -334,7 +344,7 @@ export class UnidadFamiliarComponent implements OnInit {
 
   }
   checkPermisosComunicar(datos) {
-    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
     } else {
@@ -345,7 +355,7 @@ export class UnidadFamiliarComponent implements OnInit {
 
   }
   checkPermisosConfirmDelete() {
-    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
     } else {
@@ -353,7 +363,7 @@ export class UnidadFamiliarComponent implements OnInit {
     }
   }
   checkPermisosActivate() {
-    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
     } else {
@@ -361,7 +371,7 @@ export class UnidadFamiliarComponent implements OnInit {
     }
   }
   checkPermisosAsociar() {
-    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
     } else {
