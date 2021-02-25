@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Message } from 'primeng/components/common/api';
 import { TablaResultadoOrderCGService, Row } from '../shared/tabla-resultado-order/tabla-resultado-order-cg.service';
+import { TablaResultadoOrderComponent } from '../shared/tabla-resultado-order/tabla-resultado-order.component';
 
 @Component({
   selector: 'app-tarjeta-cola-guardia',
@@ -8,9 +9,14 @@ import { TablaResultadoOrderCGService, Row } from '../shared/tabla-resultado-ord
   styleUrls: ['./tarjeta-cola-guardia.component.scss']
 })
 export class TarjetaColaGuardiaComponent implements OnInit {
+
+  @ViewChild(TablaResultadoOrderComponent) tablaResultadoOrderComponent: TablaResultadoOrderComponent;
+
   msgs: Message[] = [];
   allSelected = false;
   isDisabled = true;
+  isDisabled2 = false;
+
   tarj = {
     opened: false,
     nombre: "Cola de Guardia",
@@ -97,7 +103,7 @@ export class TarjetaColaGuardiaComponent implements OnInit {
   modoBusquedaB: boolean = true;
   selectAll = false;
   selectMultiple = false;
- 
+
   seleccionarTodo = false;
 
   constructor(
@@ -132,6 +138,10 @@ export class TarjetaColaGuardiaComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  guardar() {
+    this.tablaResultadoOrderComponent.guardar();
   }
 
 }

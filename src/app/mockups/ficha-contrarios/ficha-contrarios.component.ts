@@ -198,7 +198,7 @@ export class FichaContrariosComponent implements OnInit {
         }
       ],
       enlaces: [],
-      enlaceCardClosed: { href: '/fichaColegial', title: 'Ficha colegial' }
+      enlaceCardClosed: { href: '/fichaColegiado', title: 'Ficha colegial' }
     },
     {
       id: 'sjcsEjgsfichContProc',

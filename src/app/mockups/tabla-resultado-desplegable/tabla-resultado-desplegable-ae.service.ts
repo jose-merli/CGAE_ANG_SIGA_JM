@@ -59,7 +59,7 @@ export class TablaResultadoDesplegableAEService {
               { type: '2SelectorInput', value: '' },
               { type: 'link', value: '' },
               { type: 'datePicker', value: '' },
-              { type: 'select', value: 'COMISARÍA CENTRO ALICANTE' },
+              { type: 'buttomSelect', value: ['C / J', 'COMISARÍA CENTRO ALICANTE', 'PRUEBA J', 'C'] },
               { type: 'input', value: '' },
             ],
           },
@@ -69,7 +69,7 @@ export class TablaResultadoDesplegableAEService {
               { type: '2SelectorInput', value: '' },
               { type: 'link', value: '' },
               { type: 'datePicker', value: '' },
-              { type: 'select', value: 'COMISARÍA CENTRO ALICANTE' },
+              { type: 'buttomSelect', value: ['C / J', 'COMISARÍA CENTRO ALICANTE', 'PRUEBA J', 'C'] },
               { type: 'input', value: '' },
             ],
           }

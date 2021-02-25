@@ -15,21 +15,40 @@
               aria-hidden="true"></i>{{ enlaceCardClosed.title }}</a>
         </div>
       </div>
-      <div *ngIf="campos" class="d-flex justify-content-between campos pt-2">
-        <label *ngFor="let campo of campos">
-          {{ campo.key }}:
-          <span>
-            {{ campo.value }}
-          </span>
-        </label>
+      <div *ngIf="campos" class="col-12 form-row m-0 p-0 pt-2 justify-content-between">
+        <div *ngFor="let campo of campos" class="d-flex flex-wrap campos">
+          <label>
+            {{ campo.key }}:
+            <span>
+              {{ campo.value }}
+            </span>
+          </label>
+        </div>
       </div>
       <div *ngIf="enlaces" class="d-flex flex-wrap justify-content-between pt-2">
-        <label *ngFor="let enlace of enlaces" class="mr-auto">
-          <a [routerLink]="[enlace.href,  enlace.params]">
+        <label *ngFor="let enlace of enlaces" class="mr-auto pr-2">
+
+          <a *ngIf="enlace.href != undefined && enlace.href != '' && enlace.params != undefined && enlace.params != ''"
+            [routerLink]="[enlace.href,  enlace.params]">
             <span class="enlace">
               {{ enlace.texto }}
             </span>
           </a>
+
+          <a *ngIf="enlace.href != undefined && enlace.href != '' && (enlace.params == undefined || enlace.params == '')"
+            [routerLink]="[enlace.href]">
+            <span class="enlace">
+              {{ enlace.texto }}
+            </span>
+          </a>
+
+          <a
+            *ngIf="(enlace.href == undefined || enlace.href == '') && (enlace.params == undefined || enlace.params == '')">
+            <span class="enlace">
+              {{ enlace.texto }}
+            </span>
+          </a>
+
         </label>
       </div>
 

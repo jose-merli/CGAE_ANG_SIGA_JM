@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Message } from 'primeng/components/common/api';
 
 @Component({
   selector: 'app-tarjeta-expedientes-economicos-ejgs',
@@ -6,6 +7,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./tarjeta-expedientes-economicos-ejgs.component.scss']
 })
 export class TarjetaExpedientesEconomicosEjgsComponent implements OnInit {
+
+  msgs: Message[] = [];
+  isDisabled = true;
 
   cabeceras2 = [
     {
@@ -31,15 +35,35 @@ export class TarjetaExpedientesEconomicosEjgsComponent implements OnInit {
   ];
 
   elementos2 = [
-    ["JAIME PASCUAL ANTONIA", "JAIME PASCUAL ANTONIA", "07/04/2017 13:37:40", "09/04/2017 15:37:40", "Pendiente Información"],
-    ["JAIME PASCUAL ANTONIA", "JAIME PASCUAL ANTONIA", "07/04/2017 13:37:40", "09/04/2017 15:37:40", "Pendiente Información"],
-    ["JAIME PASCUAL ANTONIA", "JAIME PASCUAL ANTONIA", "07/04/2017 13:37:40", "09/04/2017 15:37:40", "Pendiente Información"],
-    ["JAIME PASCUAL ANTONIA", "JAIME PASCUAL ANTONIA", "07/04/2017 13:37:40", "09/04/2017 15:37:40", "Pendiente Información"]
+    ["JESUCRISTO DIOS MAGDALENA", "JUAN PERSONAL DE COLEGIO", "07/04/2017 13:37:40", "09/04/2017 15:37:40", "Pendiente Información"],
+    ["MARIA MAGDALENA", "JUAN PERSONAL DE COLEGIO", "07/04/2017 13:37:40", "09/04/2017 15:37:40", "Pendiente Información"],
+    ["JESUS EL NAZARENO", "JUAN PERSONAL DE COLEGIO", "07/04/2017 13:37:40", "09/04/2017 15:37:40", "Anulado"]
   ];
 
   constructor() { }
 
   ngOnInit() {
+  }
+
+  showMsg(severity, summary, detail) {
+    this.msgs = [];
+    this.msgs.push({
+      severity,
+      summary,
+      detail,
+    });
+  }
+
+  clear() {
+    this.msgs = [];
+  }
+
+  notifyAnySelected(event) {
+    if (event) {
+      this.isDisabled = false;
+    } else {
+      this.isDisabled = true;
+    }
   }
 
 }

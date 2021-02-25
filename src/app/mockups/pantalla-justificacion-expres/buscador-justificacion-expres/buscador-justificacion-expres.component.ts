@@ -16,6 +16,7 @@ export class BuscadorJustificacionExpresComponent implements OnInit {
   @Input() datePickers;
   @Input() inputs1;
   @Input() selectores1;
+  @Input() modoBusqueda;
   datePickers1 = [];
   datePickers2 = [];
   constructor(private router: Router) { }

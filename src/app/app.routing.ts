@@ -1388,7 +1388,7 @@ const appRoutes: Routes = [
 		component: TarjetaColaGuardiaComponent
 	},
 	{
-		path: 'fichaActuacionOficio',
+		path: 'fichaActOficio',
 		component: FichaActuacionOficioComponent
 	},
 	{

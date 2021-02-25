@@ -19,7 +19,7 @@ export class TablaResultadoDesplegableJEService {
   result = {
     data: [
       {
-        "D2019/2345676 - 03/04/2020": [
+        "D2019/234567 - 03/04/2020": [
           {
             a1: [
               { type: 'text', value: 'E2018/2323' },
@@ -68,7 +68,7 @@ export class TablaResultadoDesplegableJEService {
         ],
       },
       {
-        "D2019/3565676 - 06/04/2020": [
+        "D2019/356567 - 06/04/2020": [
           {
             b1: [
               { type: 'text', value: 'E2018/343' },

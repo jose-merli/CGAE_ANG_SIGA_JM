@@ -16,6 +16,11 @@ export class JustificacionExpresComponent implements OnInit {
   numActuaciones = 0;
   totalActuaciones = 0;
   isDisabled = true;
+  modoBusqueda = 'b';
+  radios = [
+    { label: 'Designas', value: 'a' },
+    { label: 'Justificación Exprés', value: 'b' }
+  ];
   cabeceras = [
     {
       id: "anio",

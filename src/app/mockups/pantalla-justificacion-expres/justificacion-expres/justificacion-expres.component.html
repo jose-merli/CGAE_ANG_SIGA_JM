@@ -1,7 +1,12 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="card">
     <div class="card-body">
-        <app-buscador-justificacion-expres [datePickers]="datePickers" [selectores1]="selectores1" [inputs1]="inputs1">
+        <div>
+            <p-radioButton *ngFor="let radio of radios" [(ngModel)]='modoBusqueda' (click)="hideResponse()" class="mr-4"
+                name="modo" [value]="radio.value" [label]="radio.label"></p-radioButton>
+        </div>
+        <app-buscador-justificacion-expres [datePickers]="datePickers" [selectores1]="selectores1" [inputs1]="inputs1"
+            [modoBusqueda]="modoBusqueda">
         </app-buscador-justificacion-expres>
     </div>
     <div class="card-footer">

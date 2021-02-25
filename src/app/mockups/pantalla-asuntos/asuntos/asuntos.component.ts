@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Message } from 'primeng/components/common/api';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-asuntos',
@@ -12,11 +13,11 @@ export class AsuntosComponent implements OnInit {
   show = false;
   cFormValidity = true;
   modoBusqueda = 'a';
-  modoBusquedaB = false;
   radios = [
     { label: 'Designaciones', value: 'a' },
     { label: 'SOJ', value: 'b' },
-    { label: 'Asistencias', value: 'c' }
+    { label: 'Asistencias', value: 'c' },
+    { label: 'EJGs', value: 'd' }
   ];
   cabeceras = [
     {
@@ -271,7 +272,8 @@ export class AsuntosComponent implements OnInit {
   selectores = [this.selectores1, this.selectores2];
   datePickers = [this.datePickers1, this.datePickers2];
   emptyAccordions = ["Datos Defensa", "CAJG"];
-  constructor() { }
+
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
   }
@@ -287,11 +289,11 @@ export class AsuntosComponent implements OnInit {
 
   changeTab() {
     this.hideResponse();
-    if (this.modoBusqueda === 'b') {
-      this.modoBusquedaB = true;
-    } else if (this.modoBusqueda === 'a') {
-      this.modoBusquedaB = false;
+
+    if (this.modoBusqueda == 'd') {
+      this.router.navigate(['/pantallaEJG']);
     }
+
   }
   selectedAll(event) {
     this.allSelected = event;

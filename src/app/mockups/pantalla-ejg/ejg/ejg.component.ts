@@ -355,8 +355,8 @@ export class EjgComponent2 implements OnInit {
       name: "Estado del EJG"
     },
     {
-      id: "apellidosnombre",
-      name: "Apellidos, Nombre"
+      id: "solicitante",
+      name: "Solicitante"
     },
 
   ];

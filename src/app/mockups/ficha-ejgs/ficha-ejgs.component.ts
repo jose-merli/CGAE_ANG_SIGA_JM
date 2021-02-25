@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router, RoutesRecognized } from '@angular/router';
 
 @Component({
   selector: 'app-ficha-ejgs',
@@ -84,7 +85,7 @@ export class FichaEjgsComponent implements OnInit {
       nombre: "Servicios de tramitación",
       imagen: "",
       icono: "fa fa-gavel",
-      detalle: false,
+      detalle: true,
       fixed: false,
       opened: false,
       campos: [
@@ -140,7 +141,7 @@ export class FichaEjgsComponent implements OnInit {
       campos: [
         {
           "key": "Número total",
-          "value": "5"
+          "value": "3"
         }
       ]
     },
@@ -153,6 +154,34 @@ export class FichaEjgsComponent implements OnInit {
       fixed: false,
       opened: false,
       campos: [
+        {
+          "key": "SJCS",
+          "value": "Asistencia"
+        },
+        {
+          "key": "Año/Número",
+          "value": "A2021/02365"
+        },
+        {
+          "key": "Fecha",
+          "value": "06/02/2019"
+        },
+        {
+          "key": "Turno/Guardia",
+          "value": "-"
+        },
+        {
+          "key": "Letrado",
+          "value": "234234 ADFAF ASFSAFASF, VICTOR JAVIER"
+        },
+        {
+          "key": "Interesado",
+          "value": "234234 ADFAF ASFSAFASF, JAVIER"
+        },
+        {
+          "key": "Datos de interés",
+          "value": "INSTRUCCION1"
+        },
         {
           "key": "Número total de Relaciones",
           "value": "5"
@@ -294,10 +323,14 @@ export class FichaEjgsComponent implements OnInit {
     }
   ];
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit() {
+    this.checkLastRoute();
 
+    if (sessionStorage.getItem('esBuscadorColegiados') == "true" && sessionStorage.getItem("tarjeta")) {
+      this.isOpenReceive(sessionStorage.getItem("tarjeta"));
+    }
   }
 
   ngAfterViewInit() {
@@ -329,6 +362,20 @@ export class FichaEjgsComponent implements OnInit {
       top.scrollIntoView();
       top = null;
     }
+  }
+
+  checkLastRoute() {
+
+    this.router.events
+      .filter(e => e instanceof RoutesRecognized)
+      .pairwise()
+      .subscribe((event: any[]) => {
+        if (event[0].urlAfterRedirects == "/pantallaBuscadorColegiados") {
+          sessionStorage.setItem("esBuscadorColegiados", "true");
+        } else {
+          sessionStorage.setItem("esBuscadorColegiados", "false");
+        }
+      });
   }
 
 }

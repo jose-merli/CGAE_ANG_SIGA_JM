@@ -42,38 +42,52 @@ export class FichaColegiadoComponent implements OnInit {
       fixed: false,
       enlaces: [
         {
-          "texto": "Facturación",
-          // "href": "/mantenimientoFactura",
+          "texto": "SJCS > Inscripciones Turno",
           "href": "",
           "params": ""
         },
         {
-          "texto": "Auditoría",
-          "href": "/auditoriaUsuarios",
-          "params": "21496003L"
-        },
-        {
-          "texto": "Comunicaciones",
+          "texto": "SJCS > Inscripciones Guardia",
           "href": "",
           "params": ""
         },
         {
-          "texto": "Guardias inscrito",
+          "texto": "SJCS > Calendario Guardias",
+          "href": "/pantallaCalendariosComponent",
+          "params": ""
+        },
+        {
+          "texto": "SJCS > Desginaciones",
+          "href": "/fichaDesignacionesComponent",
+          "params": ""
+        },
+        {
+          "texto": "SJCS > Asistencias",
+          "href": "/fichaAsistenciaComponent",
+          "params": ""
+        },
+        {
+          "texto": "SJCS > Preasistencias",
           "href": "",
           "params": ""
         },
         {
-          "texto": "Calendario de Guardias",
+          "texto": "SJCS > Facturación > Cartas facturación y pago",
           "href": "",
           "params": ""
         },
         {
-          "texto": "Asistencias",
+          "texto": "SJCS > Facturación > Retenciones",
           "href": "",
           "params": ""
         },
         {
-          "texto": "Pre Asistencias",
+          "texto": "SJCS > Facturación > Movimientos varios",
+          "href": "",
+          "params": ""
+        },
+        {
+          "texto": "Facturación > ...",
           "href": "",
           "params": ""
         }

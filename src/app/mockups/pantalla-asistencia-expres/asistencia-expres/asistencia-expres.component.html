@@ -3,8 +3,8 @@
 <div class="card">
     <div class="card-body">
         <div>
-            <p-radioButton *ngFor="let radio of radios" [(ngModel)]='modoBusqueda' class="mr-4" name="modo"
-                [value]="radio.value" [label]="radio.label"></p-radioButton>
+            <p-radioButton *ngFor="let radio of radios" [(ngModel)]='modoBusqueda' (click)="hideResponse()" class="mr-4"
+                name="modo" [value]="radio.value" [label]="radio.label"></p-radioButton>
         </div>
         <app-buscador-asistencia-expres [modoBusqueda]="modoBusqueda"></app-buscador-asistencia-expres>
     </div>

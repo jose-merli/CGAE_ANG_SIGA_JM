@@ -199,7 +199,7 @@ export class FichaDesignacionesComponent implements OnInit {
         }
       ],
       enlaces: [],
-      enlaceCardClosed: { href: '/fichaColegial', title: 'Ficha colegial' }
+      enlaceCardClosed: { href: '/fichaColegiado', title: 'Ficha colegial' }
     },
     {
       id: 'sjcsDesigRel',

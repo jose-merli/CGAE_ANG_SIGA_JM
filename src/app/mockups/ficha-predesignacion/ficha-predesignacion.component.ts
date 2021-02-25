@@ -33,10 +33,6 @@ export class FichaPredesignacionComponent implements OnInit {
           "value": "Dictaminado"
         },
         {
-          "key": "Designado",
-          "value": "XXXXX XXXXX, YYYY"
-        },
-        {
           "key": "Dictamen",
           "value": "sasfsf drgftdgf ergege"
         },

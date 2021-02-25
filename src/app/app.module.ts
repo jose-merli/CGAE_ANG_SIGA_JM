@@ -476,6 +476,7 @@ import { TarjetaResolucionComponent } from './mockups/ficha-contrarios/tarjeta-r
 import { TarjetaServiciosTramitacionComponent } from './mockups/ficha-contrarios/tarjeta-servicios-tramitacion/tarjeta-servicios-tramitacion.component';
 import { TarjetaUnidadFamiliarComponent } from './mockups/ficha-contrarios/tarjeta-unidad-familiar/tarjeta-unidad-familiar.component';
 import { DetalleTarjetaDocumentacionFichaDesignacionOficioComponent } from './mockups/ficha-designaciones/detalle-tarjeta-documentacion-ficha-designacion-oficio/detalle-tarjeta-documentacion-ficha-designacion-oficio.component';
+import { TarjetaRelacionesEjgsComponent } from './mockups/ficha-ejgs/tarjeta-relaciones-ejgs/tarjeta-relaciones-ejgs.component';
 
 
 
@@ -900,7 +901,8 @@ import { DetalleTarjetaDocumentacionFichaDesignacionOficioComponent } from './mo
 		TarjetaDatosGeneralesComponent,
 		TarjetaDictamenComponent,
 		TarjetaDocumentacionEjgsComponent,
-		DetalleTarjetaDocumentacionFichaDesignacionOficioComponent
+		DetalleTarjetaDocumentacionFichaDesignacionOficioComponent,
+		TarjetaRelacionesEjgsComponent
 	],
 	imports: [
 		BrowserModule,
