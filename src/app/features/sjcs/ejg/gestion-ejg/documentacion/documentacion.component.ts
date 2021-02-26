@@ -1,10 +1,11 @@
-import { Component, OnInit, Input,Output,EventEmitter,SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input,Output,EventEmitter,SimpleChanges, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 import { TranslateService } from '../../../../../commons/translate';
 import { ConfirmationService } from 'primeng/api';
 import { CommonsService } from '../../../../../_services/commons.service';
+import { DataTable } from 'primeng/datatable';
 
 @Component({
   selector: 'app-documentacion',
@@ -31,9 +32,13 @@ export class DocumentacionComponent implements OnInit {
   selectMultiple: boolean = false;
   seleccion: boolean = false;
   nDocumentos;
-  progressSpinner: boolean;
+  documentos;
 
-  [x : string] : any;
+  progressSpinner: boolean;
+  @ViewChild("table") table: DataTable;
+  historico: boolean;
+  datosFamiliares: any;
+
 
   resaltadoDatosGenerales: boolean = false;
   
@@ -49,7 +54,7 @@ export class DocumentacionComponent implements OnInit {
 
   constructor(private sigaServices: SigaServices, private persistenceService: PersistenceService, 
     private translateService: TranslateService, private confirmationService: ConfirmationService,
-    private commonsServices: CommonsService) { }
+    private commonsServices: CommonsService, private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit() {
     if (this.persistenceService.getDatos()) {

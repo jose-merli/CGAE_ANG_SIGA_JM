@@ -91,24 +91,22 @@
           </p-table>
 
 
-    <!-- <div class="card-footer">
+     <div class="card-footer">
           <div class="text-right main-button">
-            <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="solicitarEEJ()"
-              type="button" icon="fas fa-download" iconPos="left" label="{{'general.boton.solicitudEejg' | translate}}"></button>
-            <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="downloadEEJ()"
-              type="button" icon="fas fa-download" iconPos="left" label="{{'justiciaGratuita.ejg.datosGenerales.DescargarEEJ' | translate}}"></button>
-            <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="solicitarEEJ()"
-              type="button" icon="fas fa-download" iconPos="left" label="{{'general.boton.solicitudEejg' | translate}}"></button>
-            <button [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="navigateComunicar(selectedDatos)"
-              pButton type="button" icon="fa fa-comment" iconPos="left" label="{{'general.boton.comunicar' | translate }}"></button>
-            <button [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" *ngIf="!historico"
-              (click)="mostrarHistorico(); selectedDatos = []" pButton type="button" icon="fa fa-history" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
-            <button *ngIf="!historico" pButton [disabled]="!permisoEscritura || ((!selectMultiple || !selectAll) && selectedDatos.length == 0)"
-              (click)="confirmDelete()" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
-            <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="asociar()"
-              type="button" iconPos="left" label="AsociarMAL"></button>OJO HACER LOS CHECKPERMISOS
+            <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="checkPermisosAsociarAsistencia()"
+              type="button" iconPos="left" label="{{ 'general.boton.AsociarAsistencia' | translate }}"></button>
+            <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="checkPermisosAsociarSOJ()"
+              type="button" iconPos="left" label="{{'general.boton.asociarSOJ' | translate}}"></button>
+            <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="checkPermisosAsociarDesignacion()"
+              type="button" iconPos="left" label="{{'general.boton.AsociarDesignacion' | translate}}"></button>
+            <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="checkPermisosCrearDesignacion()"
+                type="button" iconPos="left" label="{{'general.boton.crearDesignacion' | translate}}"></button>
+            <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="checkPermisosConfirmDelete()"
+                type="button" iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
+            <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="checkPermisosConsultEdiRelacion()"
+                type="button" iconPos="left" label="{{'general.boton.consultEditRelacion' | translate}}"></button>
           </div>
-        </div> -->
+      </div> 
     <p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" #cd>
           <p-footer>
             <button type="button" pButton icon="fa-check" label="Si" (click)="cd.accept()"></button>

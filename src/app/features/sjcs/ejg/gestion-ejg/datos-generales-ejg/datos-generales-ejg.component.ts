@@ -4,7 +4,7 @@ import { PersistenceService } from '../../../../../_services/persistence.service
 import { SigaServices } from '../../../../../_services/siga.service';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { TranslateService } from '../../../../../commons/translate';
-
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-datos-generales-ejg',
@@ -55,7 +55,8 @@ export class DatosGeneralesEjgComponent implements OnInit {
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
     private commonsServices: CommonsService,
-    private translateService: TranslateService) { }
+    private translateService: TranslateService,
+    private router: Router) { }
 
   ngOnInit() {
     this.resaltadoDatos=true;
@@ -278,7 +279,8 @@ export class DatosGeneralesEjgComponent implements OnInit {
     }
   }
   comunicar(){
-
+    this.persistenceService.clearDatos();
+    this.router.navigate(["/gestionEjg"]);
   }
   checkPermisosAsociarDes(){
     let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
@@ -289,7 +291,8 @@ export class DatosGeneralesEjgComponent implements OnInit {
     }
   }
   asociarDes(){
-    
+    this.persistenceService.clearDatos();
+    this.router.navigate(["/gestionEjg"]);
   }
   checkPermisosCreateDes(){
     let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
@@ -300,7 +303,8 @@ export class DatosGeneralesEjgComponent implements OnInit {
     }
   }
   createDes(){
-    
+    this.persistenceService.clearDatos();
+    this.router.navigate(["/gestionEjg"]);
   }
   checkPermisosAddExp(){
     let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
@@ -311,7 +315,8 @@ export class DatosGeneralesEjgComponent implements OnInit {
     }
   }
   addExp(){
-    
+    this.persistenceService.clearDatos();
+    this.router.navigate(["/gestionEjg"]);
   }
 
   styleObligatorio(evento){

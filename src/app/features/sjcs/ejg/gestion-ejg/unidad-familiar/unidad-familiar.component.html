@@ -64,11 +64,11 @@
                   </div>
                   
                   <!-- RESTO COLUMNAS -->
-                  <div *ngIf="setItalic(dato) && col.field != 'pjg_nif' && col.field == 'pjg_nombrecompleto'">
-                    <span class="enlace" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
+                  <div *ngIf="setItalic(dato) && col.field != 'pjg_nif' && col.field != 'pjg_nombrecompleto'">
+                    <span>{{dato[col.field]}}</span>
                   </div>
-                  <div *ngIf="!setItalic(dato) && col.field != 'pjg_nif' && col.field == 'pjg_nombrecompleto'">
-                    <span class="enlace">{{dato[col.field]}}</span>
+                  <div *ngIf="!setItalic(dato) && col.field != 'pjg_nif' && col.field != 'pjg_nombrecompleto'">
+                    <span>{{dato[col.field]}}</span>
                   </div>
                 </td>
               </tr>

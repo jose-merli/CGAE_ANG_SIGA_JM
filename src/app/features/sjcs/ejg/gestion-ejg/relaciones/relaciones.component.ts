@@ -1,8 +1,12 @@
-import { Component, OnInit, Input,Output,EventEmitter,SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input,Output,EventEmitter,SimpleChanges, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
-import { EstadoEJGItem } from '../../../../../models/sjcs/EstadoEJGItem';
+import { ConfirmationService } from 'primeng/api';
+import { TranslateService } from '../../../../../commons/translate/translation.service';
+import { DataTable } from 'primeng/datatable';
+import { CommonsService } from '../../../../../_services/commons.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-relaciones',
@@ -18,7 +22,6 @@ export class RelacionesComponent implements OnInit {
   nuevo;
   body: EJGItem;
   bodyInicial;
-  [x: string]: any;
   rowsPerPage: any = [];
   cols;
   msgs;
@@ -29,10 +32,18 @@ export class RelacionesComponent implements OnInit {
   numSelected = 0;
   selectMultiple: boolean = false;
   seleccion: boolean = false;
-  relaciones: EstadoEJGItem; //cambiar item
+  relaciones: EJGItem; //cambiar item
   nRelaciones;
-
+  progressSpinner: boolean;
+  historico: boolean;
   resaltadoDatosGenerales: boolean = false;
+  datosFamiliares: any;
+  
+  @ViewChild("table") table: DataTable;
+
+  
+  valueComboEstado = "";
+  fechaEstado = new Date();
   
   fichaPosible = {
     key: "relaciones",
@@ -45,7 +56,12 @@ export class RelacionesComponent implements OnInit {
   @Input() openTarjetaRelaciones;
 
   constructor(private sigaServices: SigaServices,
-    private persistenceService: PersistenceService, ) { }
+    private persistenceService: PersistenceService,
+    private translateServices: TranslateService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private confirmationService: ConfirmationService,
+    private commonsServices: CommonsService,
+    private router: Router ) { }
 
   ngOnInit() {
       if (this.persistenceService.getDatos()) {
@@ -203,8 +219,8 @@ export class RelacionesComponent implements OnInit {
   }
 
   confirmDelete() {
-    let mess = this.translateService.instant(
-      "messages.deleteConfirmation"
+    let mess = this.translateServices.instant(
+      "justiciaGratuita.ejg.message.eliminarRelacion"
     );
     let icon = "fa fa-edit";
     this.confirmationService.confirm({
@@ -218,7 +234,7 @@ export class RelacionesComponent implements OnInit {
           {
             severity: "info",
             summary: "Cancelar",
-            detail: this.translateService.instant(
+            detail: this.translateServices.instant(
               "general.message.accion.cancelada"
             )
           }
@@ -227,10 +243,30 @@ export class RelacionesComponent implements OnInit {
     });
   }
   delete() {
+    this.progressSpinner=true;
 
-  }
-  mostrarHistorico() {
+    this.relaciones.nuevoEJG=!this.modoEdicion;
+    let data = [];
+    let ejg: EJGItem;
 
+    for(let i=0; this.selectedDatos.length>i; i++){
+      ejg = this.selectedDatos[i];
+      ejg.fechaEstadoNew=this.fechaEstado;
+      ejg.estadoNew=this.valueComboEstado;
+
+      data.push(ejg);
+    }
+    this.sigaServices.post("gestionejg_borrarRelacion", data).subscribe(
+      n => {
+        this.progressSpinner=false;
+        this.showMessage("success", this.translateServices.instant("general.message.correct"), this.translateServices.instant("general.message.accion.realizada"));
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner=false;
+        this.showMessage("error", this.translateServices.instant("general.message.incorrect"), this.translateServices.instant("general.mensaje.error.bbdd"));
+      }
+    );
   }
 
   onChangeRowsPerPages(event) {
@@ -250,5 +286,91 @@ export class RelacionesComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  checkPermisosConsultEditRelacion(){
+    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.consultEditRelacion();
+    }
+  }
+  consultEditRelacion(){
+    this.progressSpinner=true;
+
+    this.body.nuevoEJG=!this.modoEdicion;
+
+    this.sigaServices.post("gestionejg_consultEditRelacion", this.body).subscribe(
+      n => {
+        this.progressSpinner=false;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner=false;
+      }
+    );
+  }
+
+  checkPermisosDelete(){
+    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.confirmDelete();
+    }
+  }
+
+  checkPermisosCrearDesignacion(){
+    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.crearDesignacion();
+    }
+  }
+  crearDesignacion(){
+    this.persistenceService.clearDatos();
+    this.router.navigate(["/gestionEjg"]);
+  }
+
+  checkPermisosAsociarDesignacion(){
+    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.asociarDesignacion();
+    }
+  }
+  asociarDesignacion(){
+    this.persistenceService.clearDatos();
+    this.router.navigate(["/gestionEjg"]);
+  }
+
+  checkPermisosAsociarSOJ(){
+    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.asociarSOJ();
+    }
+  }
+  asociarSOJ(){
+    this.persistenceService.clearDatos();
+    this.router.navigate(["/gestionEjg"]);
+  }
+
+  checkPermisosAsociarAsistencia(){
+    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.asociarAsistencia();
+    }
+  }
+
+  asociarAsistencia(){
+    this.persistenceService.clearDatos();
+    this.router.navigate(["/gestionEjg"]);
   }
 }

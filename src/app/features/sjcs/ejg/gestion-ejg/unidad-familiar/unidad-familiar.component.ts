@@ -243,7 +243,7 @@ export class UnidadFamiliarComponent implements OnInit {
   }
   confirmDelete() {
     let mess = this.translateService.instant(
-      "messages.deleteConfirmation"
+      "justiciaGratuita.ejg.message.eliminarFamiliar"
     );
     let icon = "fa fa-edit";
     this.confirmationService.confirm({
@@ -352,7 +352,8 @@ export class UnidadFamiliarComponent implements OnInit {
     }
   }
   comunicar(datos) {
-
+    this.persistenceService.clearDatos();
+    this.router.navigate(["/gestionEjg"]);
   }
   checkPermisosConfirmDelete() {
     let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
@@ -379,6 +380,7 @@ export class UnidadFamiliarComponent implements OnInit {
     }
   }
   asociar() {
-
+    this.persistenceService.clearDatos();
+    this.router.navigate(["/gestionEjg"]);
   }
 }

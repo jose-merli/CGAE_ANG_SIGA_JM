@@ -221,7 +221,7 @@ export class EstadosComponent implements OnInit {
   }
   confirmDelete() {
     let mess = this.translateService.instant(
-      "messages.deleteConfirmation"
+      "justiciaGratuita.ejg.message.eliminarEstado"
     );
     let icon = "fa fa-edit";
     this.confirmationService.confirm({
