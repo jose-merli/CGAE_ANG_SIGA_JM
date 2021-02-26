@@ -1,14 +1,15 @@
-import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from "@angular/router";
 import { Location } from '@angular/common';
 import { DataTable } from 'primeng/primeng';
+import { ColegiadosSJCSItem } from '../../../models/ColegiadosSJCSItem';
 
 @Component({
-  selector: 'app-resultado-buscador-colegiados',
-  templateUrl: './resultado-buscador-colegiados.component.html',
-  styleUrls: ['./resultado-buscador-colegiados.component.scss']
+  selector: 'app-tabla-buscador-colegiados',
+  templateUrl: './tabla-buscador-colegiados.component.html',
+  styleUrls: ['./tabla-buscador-colegiados.component.scss']
 })
-export class ResultadoBuscadorColegiadosComponent implements OnInit {
+export class TablaBuscadorColegiadosComponent implements OnInit {
   progressSpinner: boolean = false;
  
   cols;
@@ -20,6 +21,8 @@ export class ResultadoBuscadorColegiadosComponent implements OnInit {
   selectedItem: number = 10;
 
   @Input() datos;
+
+  @Output() colegiado = new EventEmitter<ColegiadosSJCSItem>();
 
   @ViewChild("table") table: DataTable;
 
@@ -33,15 +36,7 @@ export class ResultadoBuscadorColegiadosComponent implements OnInit {
   }
 
   colegiadoSelected(event) {
-    console.log(event);
-    // let user = {
-    //   numColegiado:,
-    //   nombreAp: `${this.elementos[this.rowSelected][2]}, ${this.elementos[this.rowSelected][1]}`
-    // };
-
-    // sessionStorage.setItem("usuarioBusquedaExpress", JSON.stringify(user));
-
-    // this.location.back();
+    this.colegiado.emit(event.data);
   }
 
   getCols(){

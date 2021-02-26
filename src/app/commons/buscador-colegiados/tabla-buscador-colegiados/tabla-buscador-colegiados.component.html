@@ -1,7 +1,7 @@
 <div class="row w-100 m-0">
   <div class="col-lg-12 col-md-12 w-100">
     <p-table [autoLayout]="true" [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table
-      class="tabla-listado overflow" [paginator]="true" [rows]="selectedItem" (onRowSelect)="ColegiadoSelected($event)" [ngClass]="{ 'customCursor': selectMultiple}"
+      class="tabla-listado overflow" [paginator]="true" [rows]="selectedItem" (onRowSelect)="colegiadoSelected($event)" [ngClass]="{ 'customCursor': selectMultiple}"
       selectionMode="single" paginatorPosition="both" id="tablaFoco">
 
       <ng-template pTemplate="colgroup" let-columns>

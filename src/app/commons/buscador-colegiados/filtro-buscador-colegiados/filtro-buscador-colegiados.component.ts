@@ -5,12 +5,12 @@ import { SigaServices } from '../../../_services/siga.service';
 import { TranslateService } from '../../translate';
 
 @Component({
-  selector: 'app-buscador-colegiados',
-  templateUrl: './buscador-colegiados.component.html',
-  styleUrls: ['./buscador-colegiados.component.scss']
+  selector: 'app-filtro-buscador-colegiados',
+  templateUrl: './filtro-buscador-colegiados.component.html',
+  styleUrls: ['./filtro-buscador-colegiados.component.scss']
 })
 
-export class BuscadorColegiadosComponent implements OnInit {
+export class FiltroBuscadorColegiadosComponent implements OnInit {
 
   institucionActual;
   msgs;

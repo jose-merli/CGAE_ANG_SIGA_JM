@@ -344,12 +344,12 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
-import { PantallaBuscadorColegiadosComponent } from './commons/pantalla-buscador-colegiados/pantalla-buscador-colegiados.component';
-import { BuscadorColegiadosComponent } from './commons/pantalla-buscador-colegiados/buscador-colegiados/buscador-colegiados.component';
-import { ResultadoBuscadorColegiadosComponent } from './commons/pantalla-buscador-colegiados/resultado-buscador-colegiados/resultado-buscador-colegiados.component';
-import { PaginadorComponent } from './commons/shared/paginador/paginador.component';
-import { TablaResultadoComponent } from './commons/shared/tabla-resultado/tabla-resultado.component';
-import { SelectorComponent } from './commons/shared/selector/selector.component';
+import { BuscadorColegiadosComponent } from './commons/buscador-colegiados/buscador-colegiados.component';
+import { FiltroBuscadorColegiadosComponent } from './commons/buscador-colegiados/filtro-buscador-colegiados/filtro-buscador-colegiados.component';
+import { TablaBuscadorColegiadosComponent } from './commons/buscador-colegiados/tabla-buscador-colegiados/tabla-buscador-colegiados.component';
+import { PaginadorComponent } from './commons/paginador/paginador.component';
+import { TablaResultadoComponent } from './commons/tabla-resultado/tabla-resultado.component';
+import { SelectorComponent } from './commons/selector/selector.component';
 
 @NgModule({
 	declarations: [
@@ -635,9 +635,9 @@ import { SelectorComponent } from './commons/shared/selector/selector.component'
 		BuscadorProcuradoresComponent,
 		FiltroBuscadorProcuradorComponent,
 		TablaBuscadorProcuradorComponent,
-		PantallaBuscadorColegiadosComponent,
+		TablaBuscadorColegiadosComponent,
         BuscadorColegiadosComponent,
-        ResultadoBuscadorColegiadosComponent,
+        FiltroBuscadorColegiadosComponent,
         PaginadorComponent,
         TablaResultadoComponent,
         SelectorComponent
