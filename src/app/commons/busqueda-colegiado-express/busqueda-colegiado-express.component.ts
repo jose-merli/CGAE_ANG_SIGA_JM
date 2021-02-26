@@ -16,6 +16,8 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
   @Input() numColegiado;
   @Input() nombreAp;
   @Input() tarjeta;
+  @Input() pantalla;
+
   @Output() idPersona = new EventEmitter<string>();
   progressSpinner: boolean = false;
   nColegiado: string = "";
@@ -49,6 +51,14 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
 
     if (sessionStorage.getItem("tarjeta")) {
       sessionStorage.removeItem("tarjeta");
+    }
+
+    if (sessionStorage.getItem("pantalla")) {
+      sessionStorage.removeItem("pantalla");
+    }
+
+    if(this.pantalla){
+      sessionStorage.setItem("pantalla", this.pantalla);
     }
 
     if (this.tarjeta) {

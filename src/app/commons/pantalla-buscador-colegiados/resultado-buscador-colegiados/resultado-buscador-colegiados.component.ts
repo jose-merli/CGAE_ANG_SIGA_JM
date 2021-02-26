@@ -15,6 +15,7 @@ export class ResultadoBuscadorColegiadosComponent implements OnInit {
 
   rowsPerPage = [];
   selectedDatos = [];
+  buscadores = [];
 
   selectedItem: number = 10;
 
@@ -45,14 +46,16 @@ export class ResultadoBuscadorColegiadosComponent implements OnInit {
 
   getCols(){
     this.cols = [
-    { field: "nifCif", header: "administracion.usuarios.literal.NIFCIF" },
-    { field: "nombre", header: "administracion.parametrosGenerales.literal.nombre" },
-    { field: "nombreApe", header: "gratuita.mantenimientoTablasMaestra.literal.apellidos" },
-    { field: "idInstitucion", header: "censo.busquedaClientesAvanzada.literal.colegio" },
-    { field: "nColegiado", header: "censo.resultadoDuplicados.numeroColegiado" },
-    { field: "estadoColegial", header: "menu.justiciaGratuita.componentes.estadoColegial" },
-    { field: "residencia", header: "censo.busquedaClientes.noResidente" }
+      { field: "nif", header: "administracion.usuarios.literal.NIFCIF" },
+      { field: "nombre", header: "administracion.parametrosGenerales.literal.nombre" },
+      { field: "apellidos", header: "gratuita.mantenimientoTablasMaestra.literal.apellidos" },
+      { field: "abreviatura", header: "censo.busquedaClientesAvanzada.literal.colegio" },
+      { field: "nColegiado", header: "censo.busquedaClientesAvanzada.literal.nColegiado" },
+      { field: "descripcion", header: "menu.justiciaGratuita.componentes.estadoColegial" },
+      { field: "residente", header: "censo.busquedaClientes.noResidente" }
     ];
+
+    this.cols.forEach(it => this.buscadores.push(""));
 
     this.rowsPerPage = [
       {

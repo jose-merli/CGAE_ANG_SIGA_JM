@@ -3,9 +3,9 @@ import { Message } from 'primeng/components/common/api';
 import { Location } from '@angular/common';
 import { BuscadorColegiadosComponent } from './buscador-colegiados/buscador-colegiados.component';
 import { SigaServices } from '../../_services/siga.service';
-import { DatosColegiadosItem } from '../../models/DatosColegiadosItem';
 import { TranslateService } from '../translate';
 import { ColegiadosSJCSItem } from '../../models/ColegiadosSJCSItem';
+import { ResultadoBuscadorColegiadosComponent } from './resultado-buscador-colegiados/resultado-buscador-colegiados.component';
 
 @Component({
   selector: 'app-pantalla-buscador-colegiados',
@@ -20,6 +20,7 @@ export class PantallaBuscadorColegiadosComponent implements OnInit {
   datos: ColegiadosSJCSItem = new ColegiadosSJCSItem();
 
   @ViewChild(BuscadorColegiadosComponent) filtro;
+  @ViewChild(ResultadoBuscadorColegiadosComponent) tabla;
 
   constructor(private location: Location, private sigaServices: SigaServices, private translateService: TranslateService) { }
 
@@ -61,8 +62,20 @@ export class PantallaBuscadorColegiadosComponent implements OnInit {
       this.sigaServices.post("busquedaColegiadoEJG", this.filtro.filtro).subscribe(
         data => {
           this.progressSpinner = false;
+          this.show=true;
+          this.datos = JSON.parse(data.body).colegiadosSJCSItem;
+          let error = JSON.parse(data.body).error;
 
-          this.datos=data;
+          if (this.tabla != null && this.tabla != undefined) {
+            this.tabla.table.sortOrder = 0;
+            this.tabla.table.sortField = '';
+            this.tabla.table.reset();
+            this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
+          }
+
+          if (error != null && error.description != null) {
+            this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
+          }
         },
         error => {
           this.progressSpinner = false;
