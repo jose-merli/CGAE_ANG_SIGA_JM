@@ -1,26 +1,27 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Message } from 'primeng/components/common/api';
 import { Location } from '@angular/common';
-import { BuscadorColegiadosComponent } from './buscador-colegiados/buscador-colegiados.component';
+import { FiltroBuscadorColegiadosComponent } from './filtro-buscador-colegiados/filtro-buscador-colegiados.component';
 import { SigaServices } from '../../_services/siga.service';
 import { TranslateService } from '../translate';
 import { ColegiadosSJCSItem } from '../../models/ColegiadosSJCSItem';
-import { ResultadoBuscadorColegiadosComponent } from './resultado-buscador-colegiados/resultado-buscador-colegiados.component';
+import { TablaBuscadorColegiadosComponent } from './tabla-buscador-colegiados/tabla-buscador-colegiados.component';
 
 @Component({
-  selector: 'app-pantalla-buscador-colegiados',
-  templateUrl: './pantalla-buscador-colegiados.component.html',
-  styleUrls: ['./pantalla-buscador-colegiados.component.scss']
+  selector: 'app-buscador-colegiados',
+  templateUrl: './buscador-colegiados.component.html',
+  styleUrls: ['./buscador-colegiados.component.scss']
 })
-export class PantallaBuscadorColegiadosComponent implements OnInit {
+export class BuscadorColegiadosComponent implements OnInit {
   progressSpinner: boolean = false;
   msgs: Message[] = [];
   show = false;
 
   datos: ColegiadosSJCSItem = new ColegiadosSJCSItem();
 
-  @ViewChild(BuscadorColegiadosComponent) filtro;
-  @ViewChild(ResultadoBuscadorColegiadosComponent) tabla;
+  @ViewChild(FiltroBuscadorColegiadosComponent) filtro;
+  
+  @ViewChild(TablaBuscadorColegiadosComponent) tabla;
 
   constructor(private location: Location, private sigaServices: SigaServices, private translateService: TranslateService) { }
 
@@ -84,6 +85,11 @@ export class PantallaBuscadorColegiadosComponent implements OnInit {
         }
       );
     }
+  }
+
+  getColegiado(event){
+    sessionStorage.setItem("buscadorColegiados", JSON.stringify(event));
+    this.location.back();
   }
 
   showMessage(severity, summary, msg) {

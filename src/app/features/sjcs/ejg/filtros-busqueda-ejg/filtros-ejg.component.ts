@@ -117,6 +117,12 @@ export class FiltrosEjgComponent implements OnInit {
       this.showTramitador=true;
     }
 
+    if(sessionStorage.getItem("buscadorColegiados")){
+      let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
+      this.usuarioBusquedaExpress.nombreAp=busquedaColegiado.nombre+" "+busquedaColegiado.apellidos;
+      this.usuarioBusquedaExpress.numColegiado=busquedaColegiado.nColegiado;
+    }
+
     setTimeout(() => {
       this.inputNumero.nativeElement.focus();  
     }, 300);
@@ -593,8 +599,14 @@ export class FiltrosEjgComponent implements OnInit {
   //Busca ejg según los filtros
   isBuscar() {
     if (this.checkFilters()) {
-      this.persistenceService.setFiltros(this.body);
+      //this.persistenceService.setFiltros(this.body);
       // this.persistenceService.setFiltrosAux(this.body);
+
+      if(this.usuarioBusquedaExpress.numColegiado!=undefined && this.usuarioBusquedaExpress.numColegiado!=null 
+        && this.usuarioBusquedaExpress.numColegiado.trim()!=""){
+          this.body.numColegiado=this.usuarioBusquedaExpress.numColegiado;
+      }
+
       this.busqueda.emit(false);
       
     }

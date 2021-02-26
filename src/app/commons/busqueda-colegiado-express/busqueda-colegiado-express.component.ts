@@ -45,38 +45,12 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
 
   }
 
-  submitForm(form) {
-
-    this.isBuscar(form);
-
-    if (sessionStorage.getItem("tarjeta")) {
-      sessionStorage.removeItem("tarjeta");
-    }
-
-    if (sessionStorage.getItem("pantalla")) {
-      sessionStorage.removeItem("pantalla");
-    }
-
-    if(this.pantalla){
-      sessionStorage.setItem("pantalla", this.pantalla);
-    }
-
-    if (this.tarjeta) {
-      sessionStorage.setItem("tarjeta", this.tarjeta);
-    }
-
-    if (form.numColegiado === '' || form.numColegiado === null) {
-      this.router.navigate(["/pantallaBuscadorColegiados"]);
-    }
-
-  }
-
   clearForm() {
     this.colegiadoForm.reset();
   }
 
   isBuscar(form) {
-    if(form.numColegiado.length!=0){
+    if(form.numColegiado != undefined && form.numColegiado != null && form.numColegiado.length!=0){
       this.progressSpinner = true;
 
       this.sigaServices.getParam("componenteGeneralJG_busquedaColegiado","?colegiadoJGItem=" + form.numColegiado).subscribe(
@@ -110,6 +84,26 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
       this.progressSpinner = false;
       this.apellidosNombre = "";
       this.idPersona.emit("");
+
+      if (sessionStorage.getItem("tarjeta")) {
+        sessionStorage.removeItem("tarjeta");
+      }
+  
+      if (sessionStorage.getItem("pantalla")) {
+        sessionStorage.removeItem("pantalla");
+      }
+  
+      if(this.pantalla){
+        sessionStorage.setItem("pantalla", this.pantalla);
+      }
+  
+      if (this.tarjeta) {
+        sessionStorage.setItem("tarjeta", this.tarjeta);
+      }
+  
+      if (form.numColegiado == null || form.numColegiado == undefined || form.numColegiado.trim() == "") {
+        this.router.navigate(["/buscadorColegiados"]);
+      }
     }
     // this.buscarDisabled=false;
   }

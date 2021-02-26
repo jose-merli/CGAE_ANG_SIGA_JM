@@ -38,6 +38,7 @@ export class EJGComponent implements OnInit {
   //  el hijo lo declaramos como @ViewChild(ChildComponent)).
 
   @ViewChild(FiltrosEjgComponent) filtros;
+  @ViewChild(FiltrosEjgComponent) usuarioBusquedaExpress;
   @ViewChild(TablaEjgComponent) tabla;
 
   constructor(private translateService: TranslateService,
