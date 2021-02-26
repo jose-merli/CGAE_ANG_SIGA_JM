@@ -3,26 +3,27 @@
 <div class="consultas-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
-    <p>
-      {{ "menu.informesYcomunicaciones" | translate }}
-      <i class="pl-1 fa fa-angle-right"></i>{{ "menu.informesYcomunicaciones.consultas" | translate }}
-      <i class="pl-1 fa fa-angle-right"></i>{{ "informesycomunicaciones.consultas.ficha.fichaConsulta" | translate }}
+    <p>{{'menu.justiciaGratuita' | translate}}
+      <i class="fa fa-angle-right"></i>{{ 'menu.justiciaGratuita.TurnosOficio' | translate}}
+      <i class="fa fa-angle-right"></i>{{ 'formacion.fichaCurso.inscripciones.cabecera' | translate}}
     </p>
   </div>
-  <app-tarjeta-resumen-fija *ngIf="permisosTarjetaResumen" chincheta="true" icono="far fa-file-alt"
-    titulo="justiciaGratuita.oficio.turnos.inforesumen" [datos]="datos2"></app-tarjeta-resumen-fija>
-
-  <app-tarjeta-cola-fija *ngIf="permisosTarjetaCola" chincheta="true" icono="far fa-file-alt"
-    titulo="justiciaGratuita.oficio.inscripciones.posicionenlacola" [datos]="datos3"></app-tarjeta-cola-fija>
+  <div id="fijoInscripciones">
+  <app-tarjeta-resumen-fija class="pb-50" *ngIf="permisosTarjetaResumen"  [chincheta]="true" icono="far fa-file-alt" [enlaces]="enlacesTarjetaResumen"
+    titulo="justiciaGratuita.oficio.turnos.inforesumen" [datos]="datosTarjetaResumen" [icono]="iconoTarjetaResumen" (isOpen)="isOpenReceive($event)" [manuallyOpened]="manuallyOpened"></app-tarjeta-resumen-fija>
+    <app-tarjeta-cola-fija class="pb-50" *ngIf="permisosTarjetaCola" chincheta="true" icono="far fa-file-alt" 
+      titulo="justiciaGratuita.oficio.inscripciones.posicionenlacola" [datos]="datos3"></app-tarjeta-cola-fija>
+    </div> 
+  
   <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
-    <app-tarjeta-letrado [datos]="datos" (datosSend2)="datosSend2($event)" (datosSend)="datosSend($event)"
-      (modoEdicionSend)="modoEdicionSend($event)" *ngSwitchCase="'generales'"></app-tarjeta-letrado>
+    <app-tarjeta-letrado (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaLetrado]="tarjetaLetrado" 
+      (modoEdicionSend)="modoEdicionSend($event)" *ngSwitchCase="'letrado'" [openLetrado]="openLetrado"></app-tarjeta-letrado>
     <app-tarjeta-inscripcion [datos]="datos" [idPersona]="idPersona" (seleccionadosSend)="seleccionadosSend($event)"  [modoEdicion]="modoEdicion"
       *ngSwitchCase="'inscripcion'"></app-tarjeta-inscripcion>
     <app-tarjeta-gestion-inscripcion [datos]="datos" [idPersona]="idPersona" [modoEdicion]="modoEdicion"
       *ngSwitchCase="'gestioninscripcion'"></app-tarjeta-gestion-inscripcion>
   </div>
-
+  
 </div>
 <div class="card-footer">
   <div class="main-button">

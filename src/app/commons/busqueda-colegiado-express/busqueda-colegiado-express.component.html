@@ -1,23 +1,19 @@
-<div class="card-body">
-  <div class="form-row">
-    <div class="form-group col-lg-3 col-md-3">
-      <label>{{"censo.resultadoDuplicados.numeroColegiado" | translate}}</label>
-      <input type="text" name="nColegiado" class="form-control" [(ngModel)]="nColegiado" (blur)="isBuscar()" (focus)="focusNColegiado()"
-        pInputText />
-    </div>
-    <div class="form-group col-lg-6 col-md-6">
-      <label>{{"administracion.parametrosGenerales.literal.nombre.apellidos" | translate}}</label>
-      <input type="text" name="apellidosNombre" class="form-control" disabled [(ngModel)]="apellidosNombre" pInputText />
-    </div>
-    <div class="form-group col-lg-3 col-md-3">
-      <div id="buttonExpressColegiados" class="text-right main-button">
-        <button (click)="isLimpiar()" pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate }}"></button>
-        <button (click)="isBuscar()" pButton [disabled]="buscarDisabled" type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"></button>
-      </div>
-    </div>
-  </div>
-</div>
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 
-<div *ngIf="progressSpinner " class="overlay-spinner ">
-  <div class="loader "></div>
-</div>
+<form [formGroup]="colegiadoForm" (ngSubmit)="submitForm(colegiadoForm.value)">
+    <div class="form-row margin-form-row">
+        <div class="form-group col-lg-3 col-md-3">
+            <label>Número de colegiado</label>
+            <input type="text" class="form-control" pInputText formControlName="numColegiado">
+        </div>
+        <div class="form-group col-lg-6 col-md-6">
+            <label>Apellidos, Nombre</label>
+            <input type="text" class="form-control" pInputText formControlName="nombreAp">
+        </div>
+        <div class="form-group text-left main-button pt-3 col-lg-3 col-md-3">
+            <button [disabled]="!colegiadoForm.valid" pButton type="button"  icon="fa fa-eraser"  iconPos="left"
+                (click)="clearForm()"></button>
+            <button type="submit" [disabled]="!colegiadoForm.valid" pButton icon="fa fa-search" iconPos="left"></button>
+        </div>
+    </div>
+</form>

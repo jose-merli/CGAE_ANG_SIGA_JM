@@ -4,15 +4,14 @@ import { KEY_CODE } from '../../../../censo/busqueda-no-colegiados/busqueda-no-c
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
-import { TurnosItems } from '../../../../../models/sjcs/TurnosItems';
 import { InscripcionesItems } from '../../../../../models/sjcs/InscripcionesItems';
 
 @Component({
-  selector: 'app-filtrosinscripciones',
-  templateUrl: './filtros-inscripciones.component.html',
-  styleUrls: ['./filtros-inscripciones.component.scss']
+  selector: 'app-filtrossaltosycompensaciones',
+  templateUrl: './filtros-saltosYcompensaciones.component.html',
+  styleUrls: ['./filtros-saltosYcompensaciones.component.scss']
 })
-export class FiltrosInscripciones implements OnInit {
+export class FiltrosSaltosYCompensaciones implements OnInit {
 
   showDatosGenerales: boolean = true;
   buscar: boolean = false;
@@ -20,6 +19,7 @@ export class FiltrosInscripciones implements OnInit {
   isDisabledMateria: boolean = true;
   isDisabledSubZona: boolean = true;
   turnos: any[] = [];
+  guardias: any[] = [];
   disabledFechaHasta:boolean = true;
   partidoJudicial: string;
   resultadosPoblaciones: any;
@@ -41,6 +41,10 @@ export class FiltrosInscripciones implements OnInit {
     { label: "Confirmada", value: "1" },
     { label: "Denegada", value: "2" }
   ];
+  usuarioBusquedaExpress = {
+    numColegiado: '',
+    nombreAp: ''
+  };
   @Input() permisos;
   /*Éste método es útil cuando queremos queremos informar de cambios en los datos desde el hijo,
     por ejemplo, si tenemos un botón en el componente hijo y queremos actualizar los datos del padre.*/
@@ -52,18 +56,6 @@ export class FiltrosInscripciones implements OnInit {
     private persistenceService: PersistenceService) { }
 
   ngOnInit() {   
-    if (this.persistenceService.getHistorico() != undefined) {
-      this.filtros.historico = this.persistenceService.getHistorico();
-      // this.isBuscar();
-    }
-    if (this.persistenceService.getPermisos() != undefined) {
-      this.permisos = this.persistenceService.getPermisos();
-    }
-    if (this.persistenceService.getFiltros() != undefined) {
-      this.filtros = this.persistenceService.getFiltros();
-      this.isBuscar();
-    }
-
     this.sigaServices.get("inscripciones_comboTurnos").subscribe(
       n => {
         this.turnos = n.combooItems;
@@ -73,23 +65,27 @@ export class FiltrosInscripciones implements OnInit {
       },
       err => {
         console.log(err);
-      },()=>{
-        if (sessionStorage.getItem("idTurno") != undefined) {
-          this.filtros.idturno = JSON.parse(
-            sessionStorage.getItem("idTurno")
-          );
-          this.isBuscar();
-          sessionStorage.setItem("idTurno",undefined);
-        }
+      }
+    );
+
+    this.sigaServices.get("combossjcs_comboGuardias").subscribe(
+      n => {
+        this.guardias = n.combooItems;
+
+        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+    para poder filtrar el dato con o sin estos caracteres*/
+      },
+      err => {
+        console.log(err);
       }
     );
 
   }
 
 
-  newInscripcion() {
-    this.persistenceService.setFiltros(this.filtros);
-    this.router.navigate(["/gestionInscripciones"]);
+  newTurno() {
+    // this.persistenceService.setFiltros(this.filtros);
+    // this.router.navigate(["/gestionTurnos"]);
   }
 
   onHideDatosGenerales() {

@@ -14,6 +14,8 @@ import { TurnosItems } from '../../../../../../models/sjcs/TurnosItems';
 import { ModulosItem } from '../../../../../../models/sjcs/ModulosItem';
 import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
 import { InscripcionesItems } from '../../../../../../models/sjcs/InscripcionesItems';
+import { Router } from '@angular/router';
+import { ColegiadoItem } from '../../../../../../models/ColegiadoItem';
 @Component({
   selector: "app-tarjeta-letrado",
   templateUrl: "./tarjeta-letrado.component.html",
@@ -56,7 +58,7 @@ export class TarjetaLetradoComponent implements OnInit {
   comboPJ
   datos2;
   datos3;
-  datosContacto;
+  datosContacto: any[];
   tipoturnoDescripcion;
   jurisdiccionDescripcion;
   partidaPresupuestaria;
@@ -72,6 +74,8 @@ export class TarjetaLetradoComponent implements OnInit {
       activa: false
     },
   ];
+
+  datosBody: any[];
   @Output() datosSend = new EventEmitter<any>();
 
   @Output() datosSend2 = new EventEmitter<any>();
@@ -80,14 +84,16 @@ export class TarjetaLetradoComponent implements OnInit {
 
   @ViewChild("importe") importe;
   //Resultados de la busqueda
-
   @Input() datos: InscripcionesItems;
+  @Input() tarjetaLetrado: string;
+  @Input() openLetrado;
 
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
     private persistenceService: PersistenceService,
     private commonsService: CommonsService,
-    private datepipe: DatePipe) { }
+    private datepipe: DatePipe,
+    private router: Router) { }
 
   ngOnChanges(changes: SimpleChanges) {
     if (this.datos != undefined) {
@@ -114,6 +120,34 @@ export class TarjetaLetradoComponent implements OnInit {
   abreCierraFicha() {
     this.openFicha = !this.openFicha;
   }
+
+  navigateToFichaColegial(){
+    console.log(this.body);
+    let colegiado = new ColegiadoItem;
+    colegiado.numColegiado = this.body.ncolegiado;
+    this.sigaServices
+        .post("busquedaColegiados_searchColegiadoFicha", colegiado)
+        .subscribe(
+          data => {
+            // this.colegiadoItem = datosColegiadosItem = new DatosColegiadosItem();
+            let colegiadoItem = JSON.parse(data.body);
+            sessionStorage.setItem("personaBody", JSON.stringify(colegiadoItem.colegiadoItem[0]));
+
+            // if (id[0].situacion == 30) {
+            //   sessionStorage.setItem("disabledAction", "true");
+            // } else {
+            sessionStorage.setItem("disabledAction", "false");
+            // }
+
+            this.router.navigate(["/fichaColegial"]);
+          },
+          err => {
+            console.log(err);
+          },
+
+        );
+  }
+
   ngOnInit() {
     this.commonsService.checkAcceso(procesos_oficio.tarjetaLetrado)
       .then(respuesta => {
@@ -155,12 +189,14 @@ export class TarjetaLetradoComponent implements OnInit {
       ];
 
       this.datosContacto = [
-        { tipo: "censo.ws.literal.telefono", value: "tlf", valor: "" },
-        { tipo: "censo.datosDireccion.literal.movil", value: "mvl", valor: "" },
+        { tipo: "censo.ws.literal.telefono", value: "tlf", valor: "657190336" },
+        { tipo: "censo.datosDireccion.literal.movil", value: "mvl", valor: "95577777" },
       ];
     if (this.persistenceService.getPermisos() != true) {
       this.disableAll = true;
     }
+
+    this.datos.ncolegiado = sessionStorage.getItem("ncolegiado");
 
     if (this.datos != undefined) {
       this.body = this.datos;

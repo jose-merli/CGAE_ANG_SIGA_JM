@@ -7,3 +7,10 @@
 .form-group-date, .form-group,.prueba {
     margin-top: auto;
 }
+
+#fijoInscripciones {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 2;
+}

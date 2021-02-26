@@ -2,20 +2,22 @@
 
 
 <!--cuerpo datos generales-->
-<div class="card">
+<div class="busqueda-container" id="datosInscripcion">
+  <div *ngIf="permisosTarjeta" class="card">
   <div class="card-header header-ficha">
-    <div class="form-row">
-      <div class="col-lg-1 col-md-2">
+    <div class=" header-ficha-open d-flex justify-content-start align-items-center">
+      
         <div class="img-colegiado">
           <i class="fas fa-link icon-ficha"></i>
         </div>
-      </div>
-      <div class="col-lg-11 col-md-10">
-        <div class="d-flex justify-content-start mb-1">
-          <label
-            class="mr-auto title-ficha">{{ 'formacion.fichaCurso.boton.inscripcion' | translate }}</label>
-        </div>
-
+        <label class="title-ficha">{{ 'formacion.fichaCurso.boton.inscripcion' | translate }}</label>
+    </div>
+  </div>
+      <div class="card-body card-body-ficha">
+        <div class="row">
+          <!-- <div class="bloque col-lg-4 col-md-4"> -->
+  
+            <!-- <div class="form-row"> -->
         <p-table #table class="tabla-listado" [responsive]="true" [(selection)]="selectedDatos" [selectionMode]="selectionMode" 
         [value]="inscripcionesItem" dataKey="nombre_turno" [columns]="cols" [rows]="selectedItem">
           <ng-template pTemplate="colgroup" let-columns>
@@ -68,8 +70,12 @@
             </tr>
           </ng-template>
         </p-table>
-      </div>
-    </div>
+      <!-- </div> -->
+    <!-- </div> -->
+  </div>
+</div>
+      
+    
   </div>
 </div>
 

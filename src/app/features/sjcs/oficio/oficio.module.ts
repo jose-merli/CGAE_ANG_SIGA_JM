@@ -9,6 +9,7 @@ import { GestionInscripcionesModule } from './inscripciones/inscripciones.module
 // import { GestionTurnosModule } from '../oficio/turnos/turnos.module';
 import { OficioRoutingModule } from './oficio-routing.module';
 import { GestionBajasTemporalesModule } from './bajas-temporales/bajas-temporales.module';
+import { GrowlModule } from 'primeng/growl';
 
 @NgModule({
         declarations: [],
@@ -19,6 +20,8 @@ import { GestionBajasTemporalesModule } from './bajas-temporales/bajas-temporale
                 GestionTurnosModule,
                 GestionInscripcionesModule,
                 GestionBajasTemporalesModule,
+                GrowlModule
+
         ],
 
         providers: []
