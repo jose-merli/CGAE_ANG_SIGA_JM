@@ -21,7 +21,7 @@ export class TablaResultadoDesplegableAEService {
         "A2019/123": [
           {
             a1: [
-              { type: 'text', value: 'SANDRA SFDSGDS DSGDGSF' },
+              { type: 'text', value: '1237 - HBFRBFJ JFJRBFR, SANDRA - MUJER' },
               { type: 'text', value: '' },
               { type: 'link', value: 'E2018/0001' },
               { type: 'text', value: '10/10/2010 9:45' },
@@ -31,7 +31,7 @@ export class TablaResultadoDesplegableAEService {
           },
           {
             a2: [
-              { type: 'text', value: 'SANDRA SFDSGDS DSGDGSF' },
+              { type: 'text', value: '5674 - EFBJB IOPHTY, MANUEL - HOMBRE' },
               { type: 'text', value: '' },
               { type: 'link', value: 'E2018/0001' },
               { type: 'text', value: '10/10/2010 9:45' },
@@ -41,7 +41,7 @@ export class TablaResultadoDesplegableAEService {
           },
           {
             a3: [
-              { type: 'text', value: 'SANDRA SFDSGDS DSGDGSF' },
+              { type: 'text', value: '7856 - VBER OPIUY, JESÚS - HOMBRE' },
               { type: 'text', value: '' },
               { type: 'link', value: 'E2018/0001' },
               { type: 'text', value: '10/10/2010 9:45' },
@@ -55,7 +55,7 @@ export class TablaResultadoDesplegableAEService {
         "A2019/124": [
           {
             b1: [
-              { type: '5InputSelector', value: [123, 'PEREZ', 'ROMERO', 'JUAN', 'HOMBRE'] },
+              { type: '5InputSelector', value: [3333, 'PEREZ', 'ROMERO', 'JUAN', 'HOMBRE'] },
               { type: '2SelectorInput', value: '' },
               { type: 'link', value: '' },
               { type: 'datePicker', value: '' },
@@ -65,7 +65,7 @@ export class TablaResultadoDesplegableAEService {
           },
           {
             b2: [
-              { type: '5InputSelector', value: [123, 'PEREZ', 'ROMERO', 'JUAN', 'HOMBRE'] },
+              { type: '5InputSelector', value: [2222, 'LOPEZ', 'CALLES', 'ANA', 'MUJER'] },
               { type: '2SelectorInput', value: '' },
               { type: 'link', value: '' },
               { type: 'datePicker', value: '' },
@@ -77,7 +77,7 @@ export class TablaResultadoDesplegableAEService {
       },
     ],
   };
-  constructor() {}
+  constructor() { }
 
   public getTableData() {
     let rowGroups: RowGroup[] = [];

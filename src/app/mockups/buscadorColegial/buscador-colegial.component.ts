@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Message } from "primeng/components/common/api";
-import { Router } from "@angular/router";
+import { Router, RoutesRecognized } from "@angular/router";
 
 @Component({
   selector: 'app-buscador-colegial',
@@ -22,6 +22,15 @@ export class BuscadorColegialComponent implements OnInit {
   constructor(private router: Router) { }
 
   ngOnInit() {
+
+    this.checkLastRoute();
+
+    if (sessionStorage.getItem('esBuscadorColegiados') == "true" && sessionStorage.getItem('usuarioBusquedaExpress')) {
+
+      let usuarioBusquedaExpress = JSON.parse(sessionStorage.getItem('usuarioBusquedaExpress'));
+      this.colegiadoForm.get('numColegiado').setValue(usuarioBusquedaExpress.numColegiado);
+      this.colegiadoForm.get('nombreAp').setValue(usuarioBusquedaExpress.nombreAp);
+    }
 
     if (this.numColegiado) {
       this.colegiadoForm.get('numColegiado').setValue(this.numColegiado);
@@ -53,6 +62,20 @@ export class BuscadorColegialComponent implements OnInit {
 
   clearForm() {
     this.colegiadoForm.reset();
+  }
+
+  checkLastRoute() {
+
+    this.router.events
+      .filter(e => e instanceof RoutesRecognized)
+      .pairwise()
+      .subscribe((event: any[]) => {
+        if (event[0].urlAfterRedirects == "/pantallaBuscadorColegiados") {
+          sessionStorage.setItem("esBuscadorColegiados", "true");
+        } else {
+          sessionStorage.setItem("esBuscadorColegiados", "false");
+        }
+      });
   }
 
 }

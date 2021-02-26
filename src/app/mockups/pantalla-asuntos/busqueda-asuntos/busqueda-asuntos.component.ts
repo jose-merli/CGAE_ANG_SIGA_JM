@@ -23,6 +23,7 @@ export class BusquedaAsuntosComponent implements OnInit {
   titulosInputInteresados = ["NIF", "Apellidos", "Nombre"];
   titulosInputTramitacion = ["NIF", "Apellidos", "Nombre", "Número de colegiado"];
   inputsDivididos = ["Año / Número Designación", "Número Procedimiento"]
+  inputsDivididosAsis = ["Año / Número Asistencia", "Número Procedimiento"]
   selectores1 = [];
   selectores2 = [];
   datePickers1 = [];
@@ -37,9 +38,19 @@ export class BusquedaAsuntosComponent implements OnInit {
       ]
     };
 
+  selectorEJG =
+    {
+      nombre: "Tipo EJG",
+      opciones: [
+        { label: 'XXXXXXXXXXX', value: 1 },
+        { label: 'XXXXXXXXXXX', value: 2 },
+        { label: 'XXXXXXXXXXX', value: 3 },
+      ]
+    };
+
   selectoresAsistencias = [
     {
-      nombre: "Tipo Designación",
+      nombre: "Tipo de Asistencia",
       opciones: [
         { label: 'XXXXXXXXXXX', value: 1 },
         { label: 'XXXXXXXXXXX', value: 2 },

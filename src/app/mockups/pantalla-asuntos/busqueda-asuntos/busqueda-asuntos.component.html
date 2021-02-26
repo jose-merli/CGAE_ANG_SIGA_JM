@@ -44,7 +44,8 @@
                     </div>
 
                     <div *ngIf="modoBusqueda === 'c'" class="form-row">
-                        <div class="form-group-interlineado col-lg-3 col-md-3" *ngFor="let titulo of inputsDivididos">
+                        <div class="form-group-interlineado col-lg-3 col-md-3"
+                            *ngFor="let titulo of inputsDivididosAsis">
                             <app-input-dividido [titulo]=titulo></app-input-dividido>
                         </div>
 
@@ -54,7 +55,7 @@
                         </div>
 
                         <div class="form-group-interlineado col-lg-6 col-md-6">
-                            <app-date-picker-range [datePickerTitle]="'Fecha Apertura Designación'">
+                            <app-date-picker-range [datePickerTitle]="'Fecha Apertura Asistencia'">
                             </app-date-picker-range>
                         </div>
                         <div class="form-group-interlineado col-lg-3 col-md-3">
@@ -64,7 +65,17 @@
                     </div>
 
                     <div *ngIf="modoBusqueda === 'd'" class="form-row">
+                        <div class="form-group-interlineado col-lg-3 col-md-3">
+                            <app-input-dividido [titulo]="'Año / Número EJG'"></app-input-dividido>
+                        </div>
 
+                        <div class="form-group-interlineado col-lg-6 col-md-6">
+                            <app-date-picker-range [datePickerTitle]="'Fecha Apertura EJG'"></app-date-picker-range>
+                        </div>
+
+                        <div class="form-group-interlineado col-lg-3 col-md-3">
+                            <app-selector [selector]="selectorEJG"></app-selector>
+                        </div>
                     </div>
 
                 </ng-template>

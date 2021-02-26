@@ -289,12 +289,8 @@ export class AsuntosComponent implements OnInit {
 
   changeTab() {
     this.hideResponse();
-
-    if (this.modoBusqueda == 'd') {
-      this.router.navigate(['/pantallaEJG']);
-    }
-
   }
+
   selectedAll(event) {
     this.allSelected = event;
   }

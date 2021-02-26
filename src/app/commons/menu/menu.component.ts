@@ -127,4 +127,9 @@ export class MenuComponent implements OnInit {
   backMenuChild() {
     this.showChildOfChild = false;
   }
+
+  mockups() {
+    this.onCloseMenu();
+  }
+
 }
