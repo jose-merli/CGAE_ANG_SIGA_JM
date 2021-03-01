@@ -64,7 +64,7 @@
               <label>
                 {{ "censo.fichaCliente.literal.identificacion" | translate }} (*)
               </label>
-              <input disabled="true" type="text" class="form-control" [maxLength]="30"
+              <input [(ngModel)]="datos.nifcif" disabled="true" type="text" class="form-control" [maxLength]="30"
                 pInputText  >
             </div>
 
@@ -101,6 +101,8 @@
                     <span *ngIf="col.field !='valor'">{{ dato[col.field] | translate }}</span>
                     <!-- <span *ngIf="col.field =='valor' && dato.value== 'tlf'">{{ dato[col.field]}}</span> -->
                     <input *ngIf="col.field =='valor' && dato.value== 'tlf'" [(ngModel)]="dato.valor" type="text" class="form-control" disabled
+                    pInputText />
+                    <input *ngIf="col.field =='valor' && dato.value== 'mvl'" [(ngModel)]="dato.valor" type="text" class="form-control" disabled
                     pInputText />
                   </td>
                 </tr>

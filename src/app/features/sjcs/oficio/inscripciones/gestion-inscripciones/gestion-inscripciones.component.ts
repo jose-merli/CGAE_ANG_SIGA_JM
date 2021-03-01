@@ -638,9 +638,8 @@ export class TablaInscripcionesComponent implements OnInit {
     if (!this.selectAll && !this.selectMultiple) {
       this.progressSpinner = true;
       this.persistenceService.setDatos(evento);
-      console.log(evento);
       sessionStorage.setItem("turno", JSON.stringify(evento));
-      this.router.navigate(["/gestionInscripciones"], { queryParams: { turno: evento } });
+      this.router.navigate(["/gestionInscripciones"]);
     } else {
       let findDato = this.selectedDatos.find(item => item.estado != 1);
       if(findDato != null){

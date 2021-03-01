@@ -46,7 +46,7 @@
                   <div class="text-center" *ngIf="col.field =='nombre_turno'">                       
                       <i
                       [ngClass]="expanded ? 'fa fa-fw fa-chevron-circle-down' : 'fa fa-fw fa-chevron-circle-right'"></i>
-                    <span>{{rowData[col.field]}}</span>
+                      <a (click)="openTab(rowData, 'Turno')"><span>{{rowData[col.field]}}</span></a>
                   </div>
                 
                 </a>
@@ -63,7 +63,7 @@
               <td *ngFor="let col of columns">
                 <div *ngIf="col.field=='nombre_turno'" class="displayMargin">    
                     <p-checkbox [disabled]="disabledGuardias" [(ngModel)]="dato.selectedBoolean" (onChange)="seleccionarFila(dato, $event)" binary="true"></p-checkbox>    
-                    <span class="form-group-label">{{dato.nombre_guardia}}</span>
+                    <span (click)="openTab(dato, 'Guardia')" class="form-group-label">{{dato.nombre_guardia}}</span>
                 </div>
               </td>
 

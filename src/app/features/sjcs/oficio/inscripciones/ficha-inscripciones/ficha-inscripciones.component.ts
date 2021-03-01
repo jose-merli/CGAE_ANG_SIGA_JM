@@ -34,12 +34,13 @@ export class FichaInscripcionesComponent implements OnInit {
 	pesosSeleccionadosTarjeta: string;
 	datos;
 	datosTarjetaResumen;
+	letradoItem;
 	body;
 	datos3;
 	permisos: boolean = false;
 	isLetrado: boolean = false;
 	disabledValidar: boolean = false;
-	disabledDenegar: boolean = false;
+	disabledDenegar: boolean = true;
 	disabledSolicitarBaja: boolean = false;
 	messageShow: string;
 	permisosTarjetaResumen: boolean = true;
@@ -48,8 +49,14 @@ export class FichaInscripcionesComponent implements OnInit {
 	manuallyOpened:Boolean;
 	permisosTarjetaCola: boolean = true;
 	openLetrado : Boolean = false;
+	turno: any;
 	constructor(public datepipe: DatePipe, private translateService: TranslateService, private route: ActivatedRoute, 
 		 private sigaServices: SigaServices, private location: Location, private persistenceService: PersistenceService,private commonsService: CommonsService) { }
+
+	ngAfterViewInit(): void {
+		this.enviarEnlacesTarjeta();
+		this.goTop();
+	}
 
 	ngOnInit() {
 		this.datosTarjetaResumen = [];
@@ -89,19 +96,13 @@ export class FichaInscripcionesComponent implements OnInit {
 					this.permisosTarjetaCola = true;
 				}
 			}).catch(error => console.error(error));
-		let turno = JSON.parse(sessionStorage.getItem("turno"));
-		let datosResumen = [];
-		datosResumen[0] = {label: "Turno", value: turno.nombreturno};
-		datosResumen[1] = {label: "Fecha Solicitud", value: this.datepipe.transform(turno.fechasolicitud, 'dd/MM/yyyy')};
-		datosResumen[2] = {label: "Fecha Efec. Alta", value: this.datepipe.transform(turno.fechavalidacion, 'dd/MM/yyyy')};
-		datosResumen[3] = {label: "Estado", value: turno.estadonombre};
-		this.datosTarjetaResumen = datosResumen;
-		// this.route.queryParams
-		// 	.subscribe(params => {
-		// 		// this.idPersona = params.idPersona;
-		// 		// this.ncolegiado = params.ncolegiado
-		// 		console.log(params);
-		// 	});
+		this.turno = JSON.parse(sessionStorage.getItem("turno"));
+		this.selectedDatos = this.turno;
+		if((this.turno.estado == 0 || this.turno.estado ==2) && !this.isLetrado ){
+			this.disabledDenegar = false;
+		}
+		this.getDatosTarjetaResumen(this.turno);
+		this.letradoItem = this.turno;
 		
 		if (this.persistenceService.getDatos() != undefined) {
 			this.datos = this.persistenceService.getDatos();
@@ -127,7 +128,7 @@ export class FichaInscripcionesComponent implements OnInit {
 				activa: true
 			},
 		];
-		this.enviarEnlacesTarjeta();
+		
 
 			// this.filtros.filtroAux = this.persistenceService.getFiltrosAux()
 			// this.filtros.filtroAux.historico = event;
@@ -244,20 +245,7 @@ export class FichaInscripcionesComponent implements OnInit {
 	denegar(selectedDatos) {
 		this.progressSpinner = true;
 		this.body = new InscripcionesObject();
-		this.body.inscripcionesItem = selectedDatos
-		this.body.inscripcionesItem.forEach(element => {
-			element.idpersona = this.datos.idpersona;
-			element.fechaActual = this.datosSelected.fechaActual;
-			element.observaciones = this.datosSelected.observaciones;
-			element.fechasolicitud = this.datos.fechasolicitud;
-			element.fechadenegacion = this.datos.fechadenegacion;
-			element.fechabaja = this.datos.fechabaja;
-			element.fechasolicitudbaja = this.datos.fechasolicitudbaja;
-			element.fechavalidacion = this.datos.fechavalidacion;
-			element.estadonombre = this.datos.estadonombre;
-			element.validarinscripciones = this.datos.validarinscripciones;
-			element.tipoguardias = this.datos.tipoguardias;
-		});
+		this.body.inscripcionesItem[0] = this.turno;
 		this.sigaServices.post("inscripciones_updateDenegar", this.body).subscribe(
 			data => {
 				this.selectedDatos = [];
@@ -279,6 +267,15 @@ export class FichaInscripcionesComponent implements OnInit {
 		);
 	}
 
+	goTop(){
+		let top = document.getElementById("top");
+		if (top) {
+		  top.scrollIntoView();
+		  top = null;
+		}
+	 
+	}
+
 
 	solicitarBaja(selectedDatos) {
 		this.progressSpinner = true;
@@ -289,20 +286,7 @@ export class FichaInscripcionesComponent implements OnInit {
 			this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.inscripciones.mensajesolicitarbaja"));
 		} else {
 			this.body = new InscripcionesObject();
-			this.body.inscripcionesItem = selectedDatos
-			this.body.inscripcionesItem.forEach(element => {
-				element.idpersona = this.datos.idpersona;
-				element.fechaActual = this.datos.fechaActual;
-				element.observaciones = this.datos.observaciones;
-				element.fechasolicitud = this.datos.fechasolicitud;
-				element.fechadenegacion = this.datos.fechadenegacion;
-				element.fechabaja = this.datos.fechabaja;
-				element.fechasolicitudbaja = this.datos.fechasolicitudbaja;
-				element.fechavalidacion = this.datos.fechavalidacion;
-				element.estadonombre = this.datos.estadonombre;
-				element.validarinscripciones = this.datos.validarinscripciones;
-				element.tipoguardias = this.datos.tipoguardias;
-			});
+			this.body.inscripcionesItem[0] = this.turno;
 			this.sigaServices.post("inscripciones_updateSolicitarBaja", this.body).subscribe(
 				data => {
 					this.selectedDatos = [];
@@ -328,20 +312,7 @@ export class FichaInscripcionesComponent implements OnInit {
 	cambiarFecha(selectedDatos) {
 		this.progressSpinner = true;
 		this.body = new InscripcionesObject();
-		this.body.inscripcionesItem = selectedDatos
-		this.body.inscripcionesItem.forEach(element => {
-			element.idpersona = this.datos.idpersona;
-			element.fechaActual = this.datos.fechaActual;
-			element.observaciones = this.datos.observaciones;
-			element.fechasolicitud = this.datos.fechasolicitud;
-			element.fechadenegacion = this.datos.fechadenegacion;
-			element.fechabaja = this.datos.fechabaja;
-			element.fechasolicitudbaja = this.datos.fechasolicitudbaja;
-			element.fechavalidacion = this.datos.fechavalidacion;
-			element.estadonombre = this.datos.estadonombre;
-			element.validarinscripciones = this.datos.validarinscripciones;
-			element.tipoguardias = this.datos.tipoguardias;
-		});
+		this.body.inscripcionesItem[0] = this.turno;
 		this.sigaServices.post("inscripciones_updateCambiarFecha", this.body).subscribe(
 			data => {
 				this.selectedDatos = [];
@@ -481,4 +452,13 @@ export class FichaInscripcionesComponent implements OnInit {
 		  }
 		}
 	   }
+
+	   getDatosTarjetaResumen(turno: any){
+		let datosResumen = [];
+		datosResumen[0] = {label: "Turno", value: turno.nombreturno};
+		datosResumen[1] = {label: "Fecha Solicitud", value: this.datepipe.transform(turno.fechasolicitud, 'dd/MM/yyyy')};
+		datosResumen[2] = {label: "Fecha Efec. Alta", value: this.datepipe.transform(turno.fechavalidacion, 'dd/MM/yyyy')};
+		datosResumen[3] = {label: "Estado", value: turno.estadonombre};
+		this.datosTarjetaResumen = datosResumen;
+	}
 }
