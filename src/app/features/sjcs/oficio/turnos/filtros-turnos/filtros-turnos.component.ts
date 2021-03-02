@@ -58,9 +58,6 @@ export class FiltrosTurnos implements OnInit {
       if (this.persistenceService.getHistorico() != undefined) {
         this.busqueda.emit(this.persistenceService.getHistorico());
       }
-      else {
-        this.isBuscar();
-      }
     } else {
       this.filtros = new TurnosItems();
     }

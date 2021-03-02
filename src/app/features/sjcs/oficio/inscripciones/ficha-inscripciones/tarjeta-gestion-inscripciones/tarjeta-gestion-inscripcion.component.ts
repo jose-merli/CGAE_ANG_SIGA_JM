@@ -83,20 +83,7 @@ export class TarjetaGestionInscripcion implements OnInit {
   @ViewChild("table") table: Table;
   @ViewChild("checkPadre") checkPadre: Checkbox;
   @ViewChild("multiSelect") multiSelect: MultiSelect;
-  fichasPosibles = [
-    {
-      key: "generales",
-      activa: false
-    },
-    {
-      key: "configuracion",
-      activa: false
-    },
-    {
-      key: "gestioninscripcion",
-      activa: true
-    },
-  ];
+  
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices, private translateService: TranslateService, private upperCasePipe: UpperCasePipe,
     private persistenceService: PersistenceService, private commonsService: CommonsService, private confirmationService: ConfirmationService) { }
@@ -566,13 +553,13 @@ export class TarjetaGestionInscripcion implements OnInit {
     this.msgs = [];
   }
   getFichaPosibleByKey(key): any {
-    let fichaPosible = this.fichasPosibles.filter(elto => {
-      return elto.key === key;
-    });
-    if (fichaPosible && fichaPosible.length) {
-      return fichaPosible[0];
-    }
-    return {};
+    // let fichaPosible = this.fichasPosibles.filter(elto => {
+    //   return elto.key === key;
+    // });
+    // if (fichaPosible && fichaPosible.length) {
+    //   return fichaPosible[0];
+    // }
+    // return {};
   }
   abrirFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);

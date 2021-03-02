@@ -1,5 +1,5 @@
 <p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
-<div class="busqueda-container">
+<div class="busqueda-container" id="datosLetrado">
   <div *ngIf="permisosTarjeta" class="card">
     <div class="card-header header-ficha">
       <div *ngIf="!openFicha" class="form-row">
@@ -14,6 +14,11 @@
 
             </label>
           </div>
+          <label>
+            <a (click)="navigateToFichaColegial()">
+              <span style="color: blue; text-decoration: underline; cursor: pointer;">{{"informesycomunicaciones.comunicaciones.fichaColegial" | translate}}</span>
+            </a>
+          </label>
           <div class="d-flex justify-content-between">
             <!-- <i *ngIf="!esFichaActiva('generales')" class="fa fa-angle-down float-right"></i> -->
             <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
@@ -25,7 +30,20 @@
           <i class="far fa-address-card icon-ficha"></i>
         </div>
         <label class="title-ficha">{{ "busquedaSanciones.detalleSancion.letrado.literal" | translate }}</label>
-        <i class="fa fa-angle-up ml-auto"></i>
+        <!-- <label>
+          <a (click)="navigateToFichaColegial()">
+            <span style="color: blue; text-decoration: underline; cursor: pointer;">{{"informesycomunicaciones.comunicaciones.fichaColegial" | translate}}</span>
+          </a>
+        </label> -->
+        <label class="mr-3" style="margin-left: 86%!important">
+          <i
+            class="fas fa-external-link-alt mr-2"></i>
+          <a  (click)="navigateToFichaColegial();">
+            <span style="color: blue; text-decoration: underline;cursor:pointer;">
+              {{"informesycomunicaciones.comunicaciones.fichaColegial" | translate}}
+            </span>
+          </a>
+        </label>
       </div>
     </div>
 
@@ -46,7 +64,7 @@
               <label>
                 {{ "censo.fichaCliente.literal.identificacion" | translate }} (*)
               </label>
-              <input disabled="true" type="text" class="form-control" [maxLength]="30"
+              <input [(ngModel)]="datos.nifcif" disabled="true" type="text" class="form-control" [maxLength]="30"
                 pInputText  >
             </div>
 
@@ -64,15 +82,16 @@
 
         <div class="bloque col-lg-4 col-md-4">
           <div class="form-row">
-            <div class="form-group col-lg-12 col-md-12">
+            <div class="form-group-interlineado col-lg-12 col-md-12">
               <label style="text-align:center; font-weight: bold;">{{ 'censo.datosDireccion.literal.datos.contacto' | translate }}</label>
             </div>
-            <p-table [value]="datos" [columns]="cols" [responsive]="true" #table class="tabla-listado" [first]="first">
+            <p-table id="tablaLetrado" [value]="datosContacto" [columns]="cols" [responsive]="true" #table class="tabla-listado" [first]="first">
 
               <ng-template pTemplate="header" let-columns>
                 <tr>
-                  <th *ngFor="let col of columns">
+                  <th [pSortableColumn]="col.header" *ngFor="let col of columns">
                     {{col.header | translate}}
+                    <p-sortIcon [field]="col.header"></p-sortIcon>
                   </th>
                 </tr>
               </ng-template>
@@ -80,7 +99,11 @@
                 <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
                   <td *ngFor="let col of columns">
                     <span *ngIf="col.field !='valor'">{{ dato[col.field] | translate }}</span>
-                    <!-- <span *ngIf="col.field =='valor' && dato.value== 'tlf'">{{direccion.telefono}}</span> -->
+                    <!-- <span *ngIf="col.field =='valor' && dato.value== 'tlf'">{{ dato[col.field]}}</span> -->
+                    <input *ngIf="col.field =='valor' && dato.value== 'tlf'" [(ngModel)]="dato.valor" type="text" class="form-control" disabled
+                    pInputText />
+                    <input *ngIf="col.field =='valor' && dato.value== 'mvl'" [(ngModel)]="dato.valor" type="text" class="form-control" disabled
+                    pInputText />
                   </td>
                 </tr>
               </ng-template>

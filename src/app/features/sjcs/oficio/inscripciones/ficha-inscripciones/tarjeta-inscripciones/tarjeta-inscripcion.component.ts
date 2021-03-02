@@ -21,6 +21,8 @@ import { TreeNode } from 'primeng/api';
 import { findIndex } from 'rxjs/operators';
 import { Table } from 'primeng/table';
 import { Checkbox } from 'primeng/primeng';
+import { Router } from '@angular/router';
+import { GuardiaItem } from '../../../../../../models/guardia/GuardiaItem';
 @Component({
   selector: "app-tarjeta-inscripcion",
   templateUrl: "./tarjeta-inscripcion.component.html",
@@ -98,7 +100,7 @@ export class TarjetaInscripcion implements OnInit {
       activa: true
     },
   ];
-  constructor(private changeDetectorRef: ChangeDetectorRef,
+  constructor(private changeDetectorRef: ChangeDetectorRef, private router: Router,
     private sigaServices: SigaServices, private translateService: TranslateService, private upperCasePipe: UpperCasePipe,
     private persistenceService: PersistenceService, private commonsService: CommonsService, private confirmationService: ConfirmationService) { }
 
@@ -551,11 +553,25 @@ export class TarjetaInscripcion implements OnInit {
       }
     }
   }
-  openTab(evento) {
+  openTab(evento, turnoGuardia: String) {
     if (!this.selectAll && !this.selectMultiple) {
-      // this.progressSpinner = true;
-      this.persistenceService.setDatos(evento.data);
-      // this.router.navigate(["/gestionTurnos"], { queryParams: { idturno: evento.data.idturno } });
+      if(turnoGuardia != null && turnoGuardia.indexOf('Guardia') != -1 ){
+        this.progressSpinner = true;
+        let guardiaItem = new GuardiaItem();
+        guardiaItem.idGuardia = evento.idGuardia;
+        guardiaItem.idTurno = evento.idTurno;
+        this.persistenceService.setDatos(guardiaItem);
+        this.persistenceService.setHistorico(evento.fechabaja ? true : false);
+        this.router.navigate(["/gestionGuardias"]);
+      }else if(turnoGuardia != null && turnoGuardia.indexOf('Turno') != -1){
+        this.progressSpinner = true;
+        let turnoItem = new TurnosItems();
+        turnoItem.idturno = evento.idTurno;
+        turnoItem.nombre = evento.nombre_turno;
+        this.persistenceService.setDatos(turnoItem);
+        this.router.navigate(["/gestionTurnos"], { queryParams: { idturno: evento.idturno } });
+      }
+      
     } else {
 
       if (evento.data.fechabaja == undefined && this.historico) {

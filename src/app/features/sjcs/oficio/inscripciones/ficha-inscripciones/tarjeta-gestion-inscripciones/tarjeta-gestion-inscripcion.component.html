@@ -1,6 +1,6 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 
-<div class="ficha-container">
+<div class="ficha-container" id="gestioninscripcion">
   <div *ngIf="permisosTarjeta" class="card">
     <div class="card-header header-ficha" (click)="abreCierraFicha();abrirFicha('gestioninscripcion')">
       <div *ngIf="!openFicha" class="form-row">
@@ -25,7 +25,7 @@
       </div>
     </div>
     <!--cuerpo datos generales-->
-    <div *ngIf="esFichaActiva('gestioninscripcion') && openFicha" class="card-body card-body-ficha">
+    <div *ngIf="openFicha" class="card-body card-body-ficha">
       <p-table [value]="datos2" [columns]="cols" [(selection)]="selectedDatos" [selectionMode]="selectionMode" [responsive]="true"
         #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="actualizaSeleccionados()" (onRowUnselect)="actualizaSeleccionados()"
         [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">

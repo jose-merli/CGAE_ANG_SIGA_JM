@@ -94,6 +94,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
     if (this.turnosItem != undefined) {
       if (this.turnosItem.idturno != undefined) {
         this.body = this.turnosItem;
+        this.checkDatosGenerales();
         if (this.body.idturno == undefined) {
           this.modoEdicion = false;
         } else {
@@ -110,11 +111,11 @@ export class DatosGeneralesTurnosComponent implements OnInit {
       this.turnosItem = new TurnosItems();
     }
 
-    if (this.openGen == true) {
-      if (this.openFicha == false) {
-        this.abreCierraFicha('datosGenerales')
-      }
-    }
+    // if (this.openGen == true) {
+    //   if (this.openFicha == false) {
+    //     this.abreCierraFicha('datosGenerales')
+    //   }
+    // }
   }
 
   abreCierraFicha(key) {
@@ -138,7 +139,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
   ngOnInit() {
     this.actualizarFichaResumen();
     this.resaltadoDatosGenerales = true;
-    this.abreCierraFicha('datosGenerales');
+    // this.abreCierraFicha('datosGenerales');
     this.commonsService.checkAcceso(procesos_oficio.datosGenerales)
       .then(respuesta => {
         this.permisosTarjeta = respuesta;
@@ -846,5 +847,22 @@ export class DatosGeneralesTurnosComponent implements OnInit {
       return fichaPosible[0];
     }
     return {};
+  }
+
+  checkDatosGenerales() {
+    if (this.body.abreviatura != "" && this.body.abreviatura != undefined && this.body.abreviatura != null 
+        && this.body.nombre != "" && this.body.nombre != "" && this.body.nombre != "" != null
+        && this.body.idpartidapresupuestaria != undefined && this.body.idpartidapresupuestaria != "" && this.body.idpartidapresupuestaria != null
+        && this.body.grupofacturacion != undefined &&  this.body.grupofacturacion != "" &&  this.body.grupofacturacion != null
+        && this.body.idtipoturno != "" &&  this.body.idtipoturno !=undefined &&  this.body.idtipoturno != null
+        && this.body.idarea != null && this.body.idarea != undefined && this.body.idarea != ""
+        && this.body.idmateria != null && this.body.idmateria != undefined && this.body.idmateria != ""
+        && this.body.idsubzona != null && this.body.idsubzona != undefined && this.body.idsubzona != ""
+        && this.body.idzona != null && this.body.idzona != undefined && this.body.idzona != ""
+    ) {
+      this.abreCierraFicha('datosGenerales');
+    } else {
+      this.abreCierraFicha('datosGenerales');
+    }
   }
 }

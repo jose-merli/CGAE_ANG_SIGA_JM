@@ -21,6 +21,7 @@ export class FichaInscripcionesComponent implements OnInit {
 	fichasPosibles: any[];
 	filtrosConsulta;
 	idPersona: string;
+	ncolegiado: string;
 	turnosItem;
 	progressSpinner: boolean = false;
 	turnosItem2;
@@ -32,21 +33,33 @@ export class FichaInscripcionesComponent implements OnInit {
 	idProcedimiento;
 	pesosSeleccionadosTarjeta: string;
 	datos;
-	datos2;
+	datosTarjetaResumen;
+	letradoItem;
 	body;
 	datos3;
 	permisos: boolean = false;
 	isLetrado: boolean = false;
 	disabledValidar: boolean = false;
-	disabledDenegar: boolean = false;
+	disabledDenegar: boolean = true;
 	disabledSolicitarBaja: boolean = false;
 	messageShow: string;
 	permisosTarjetaResumen: boolean = true;
+	iconoTarjetaResumen = "clipboard";
+	enlacesTarjetaResumen: any[] = [];
+	manuallyOpened:Boolean;
 	permisosTarjetaCola: boolean = true;
+	openLetrado : Boolean = false;
+	turno: any;
+	constructor(public datepipe: DatePipe, private translateService: TranslateService, private route: ActivatedRoute, 
+		 private sigaServices: SigaServices, private location: Location, private persistenceService: PersistenceService,private commonsService: CommonsService) { }
 
-	constructor(private translateService: TranslateService, private route: ActivatedRoute, private sigaServices: SigaServices, private datepipe: DatePipe, private location: Location, private persistenceService: PersistenceService, private commonsService: CommonsService) { }
+	ngAfterViewInit(): void {
+		this.enviarEnlacesTarjeta();
+		this.goTop();
+	}
 
 	ngOnInit() {
+		this.datosTarjetaResumen = [];
 		this.selectedDatos = [];
 		this.datosSelected = new InscripcionesItems();
 		this.datosSelected.fechaActual = new Date();
@@ -64,7 +77,7 @@ export class FichaInscripcionesComponent implements OnInit {
 			this.permisos = false;
 		}
 
-		this.commonsService.checkAcceso(procesos_oficio.tarjetaResumenInscripciones)
+		this.commonsService.checkAcceso(procesos_oficio.tarjetaResumen)
 			.then(respuesta => {
 				this.permisosTarjetaResumen = respuesta;
 				if (this.permisosTarjetaResumen != true) {
@@ -83,11 +96,14 @@ export class FichaInscripcionesComponent implements OnInit {
 					this.permisosTarjetaCola = true;
 				}
 			}).catch(error => console.error(error));
-		// this.route.queryParams
-		// 	.subscribe(params => {
-		// 		this.idPersona = params.idpersona
-		// 		console.log(params);
-		// 	});
+		this.turno = JSON.parse(sessionStorage.getItem("turno"));
+		this.selectedDatos = this.turno;
+		if((this.turno.estado == 0 || this.turno.estado ==2) && !this.isLetrado ){
+			this.disabledDenegar = false;
+		}
+		this.getDatosTarjetaResumen(this.turno);
+		this.letradoItem = this.turno;
+		
 		if (this.persistenceService.getDatos() != undefined) {
 			this.datos = this.persistenceService.getDatos();
 			this.modoEdicion = true;
@@ -96,32 +112,64 @@ export class FichaInscripcionesComponent implements OnInit {
 			this.modoEdicion = false;
 		}
 
+		
 		this.fichasPosibles = [
 			{
-				key: 'generales',
+				key: 'letrado',
 				activa: true
 			},
 			{
 				key: 'inscripcion',
 				activa: true
 			},
+			
 			{
 				key: 'gestioninscripcion',
 				activa: true
 			},
 		];
-		if (this.datos.estadonombre == "Alta") {
-			this.disabledSolicitarBaja = false;
-		} else {
-			this.disabledSolicitarBaja = true;
-		}
-		if (this.datos.estadonombre == "Pendiente de Baja" || this.datos.estadonombre == "Pendiente de Alta") {
-			this.disabledValidar = false;
-			this.disabledDenegar = false;
-		} else {
-			this.disabledValidar = true;
-			this.disabledDenegar = true;
-		}
+		
+
+			// this.filtros.filtroAux = this.persistenceService.getFiltrosAux()
+			// this.filtros.filtroAux.historico = event;
+			// this.persistenceService.setHistorico(event);
+			// this.progressSpinner = true;
+			// this.sigaServices.post("inscripciones_busquedaInscripciones", this.filtros.filtroAux).subscribe(
+			//   n => {
+			// 	this.datos = JSON.parse(n.body).inscripcionesItem;
+			// 	this.datos.forEach(element => {
+			// 	  if(element.estado == "0"){
+			// 		element.estadonombre = "Pendiente de Alta";
+			// 	  }
+			// 	  if(element.estado == "1"){
+			// 		element.estadonombre = "Alta";
+			// 	  }
+			// 	  if(element.estado == "2"){
+			// 		element.estadonombre = "Pendiente de Baja";
+			// 	  }
+			// 	  if(element.estado == "3"){
+			// 		element.estadonombre = "Baja";
+			// 	  }
+			// 	  if(element.estado == "4"){
+			// 		element.estadonombre = "Denegada";
+			// 	  }
+			// 	  element.ncolegiado = +element.ncolegiado;
+			// 	});
+			// 	this.buscar = true;
+			// 	this.progressSpinner = false;
+			// 	if (this.tablapartida != undefined) {
+			// 	  this.tablapartida.tabla.sortOrder = 0;
+			// 	  this.tablapartida.tabla.sortField = '';
+			// 	  this.tablapartida.tabla.reset();
+			// 	  this.tablapartida.buscadores = this.tablapartida.buscadores.map(it => it = "");
+			// 	}
+			//   },
+			//   err => {
+			// 	this.progressSpinner = false;
+			// 	console.log(err);
+			//   }, () => {
+			//   }
+			// );
 	}
 
 	modoEdicionSend(event) {
@@ -129,13 +177,16 @@ export class FichaInscripcionesComponent implements OnInit {
 		this.idPersona = event.idPersona
 	}
 
-	datosSend(event) {
-		this.datos2 = event;
+	datosTarjetaResumenEvent(event) {
+		if (event != undefined) {
+		  this.datosTarjetaResumen = event;
+		}
 	}
 
 	datosSend2(event) {
 		this.datos3 = event;
 	}
+	
 	seleccionadosSend(event) {
 		this.selectedDatos = event.prueba;
 	}
@@ -194,20 +245,7 @@ export class FichaInscripcionesComponent implements OnInit {
 	denegar(selectedDatos) {
 		this.progressSpinner = true;
 		this.body = new InscripcionesObject();
-		this.body.inscripcionesItem = selectedDatos
-		this.body.inscripcionesItem.forEach(element => {
-			element.idpersona = this.datos.idpersona;
-			element.fechaActual = this.datosSelected.fechaActual;
-			element.observaciones = this.datosSelected.observaciones;
-			element.fechasolicitud = this.datos.fechasolicitud;
-			element.fechadenegacion = this.datos.fechadenegacion;
-			element.fechabaja = this.datos.fechabaja;
-			element.fechasolicitudbaja = this.datos.fechasolicitudbaja;
-			element.fechavalidacion = this.datos.fechavalidacion;
-			element.estadonombre = this.datos.estadonombre;
-			element.validarinscripciones = this.datos.validarinscripciones;
-			element.tipoguardias = this.datos.tipoguardias;
-		});
+		this.body.inscripcionesItem[0] = this.turno;
 		this.sigaServices.post("inscripciones_updateDenegar", this.body).subscribe(
 			data => {
 				this.selectedDatos = [];
@@ -229,6 +267,15 @@ export class FichaInscripcionesComponent implements OnInit {
 		);
 	}
 
+	goTop(){
+		let top = document.getElementById("top");
+		if (top) {
+		  top.scrollIntoView();
+		  top = null;
+		}
+	 
+	}
+
 
 	solicitarBaja(selectedDatos) {
 		this.progressSpinner = true;
@@ -239,20 +286,7 @@ export class FichaInscripcionesComponent implements OnInit {
 			this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.inscripciones.mensajesolicitarbaja"));
 		} else {
 			this.body = new InscripcionesObject();
-			this.body.inscripcionesItem = selectedDatos
-			this.body.inscripcionesItem.forEach(element => {
-				element.idpersona = this.datos.idpersona;
-				element.fechaActual = this.datos.fechaActual;
-				element.observaciones = this.datos.observaciones;
-				element.fechasolicitud = this.datos.fechasolicitud;
-				element.fechadenegacion = this.datos.fechadenegacion;
-				element.fechabaja = this.datos.fechabaja;
-				element.fechasolicitudbaja = this.datos.fechasolicitudbaja;
-				element.fechavalidacion = this.datos.fechavalidacion;
-				element.estadonombre = this.datos.estadonombre;
-				element.validarinscripciones = this.datos.validarinscripciones;
-				element.tipoguardias = this.datos.tipoguardias;
-			});
+			this.body.inscripcionesItem[0] = this.turno;
 			this.sigaServices.post("inscripciones_updateSolicitarBaja", this.body).subscribe(
 				data => {
 					this.selectedDatos = [];
@@ -278,20 +312,7 @@ export class FichaInscripcionesComponent implements OnInit {
 	cambiarFecha(selectedDatos) {
 		this.progressSpinner = true;
 		this.body = new InscripcionesObject();
-		this.body.inscripcionesItem = selectedDatos
-		this.body.inscripcionesItem.forEach(element => {
-			element.idpersona = this.datos.idpersona;
-			element.fechaActual = this.datos.fechaActual;
-			element.observaciones = this.datos.observaciones;
-			element.fechasolicitud = this.datos.fechasolicitud;
-			element.fechadenegacion = this.datos.fechadenegacion;
-			element.fechabaja = this.datos.fechabaja;
-			element.fechasolicitudbaja = this.datos.fechasolicitudbaja;
-			element.fechavalidacion = this.datos.fechavalidacion;
-			element.estadonombre = this.datos.estadonombre;
-			element.validarinscripciones = this.datos.validarinscripciones;
-			element.tipoguardias = this.datos.tipoguardias;
-		});
+		this.body.inscripcionesItem[0] = this.turno;
 		this.sigaServices.post("inscripciones_updateCambiarFecha", this.body).subscribe(
 			data => {
 				this.selectedDatos = [];
@@ -336,5 +357,108 @@ export class FichaInscripcionesComponent implements OnInit {
 
 
 		return fecha;
+	}
+	
+		enviarEnlacesTarjeta() {
+
+		this.enlacesTarjetaResumen = [];
+	
+		let tarjetaLetrado = {
+			label: "busquedaSanciones.detalleSancion.letrado.literal",
+			value: document.getElementById("datosLetrado"),
+			nombre: "datosLetrado",
+		  };
+	
+		 this.enlacesTarjetaResumen.push(tarjetaLetrado);
+
+		 let tarjetaInscripciones= {
+			label: "menu.justiciaGratuita.oficio.inscripciones",
+			value: document.getElementById("datosInscripcion"),
+			nombre: "datosInscripcion",
+		  };
+	
+		 this.enlacesTarjetaResumen.push(tarjetaInscripciones);
+
+		 let tarjetaColaFijaInscripcion= {
+			label: "justiciaGratuita.oficio.inscripciones.posicionenlacola",
+			value: document.getElementById("colaFijaInscripcion"),
+			nombre: "colaFijaInscripcion",
+		  };
+	
+		 this.enlacesTarjetaResumen.push(tarjetaColaFijaInscripcion);
+
+		 let tarjetaGestionInscripciones= {
+			label: "justiciaGratuita.oficio.inscripciones.seguimientoInscripcion",
+			value: document.getElementById("gestioninscripcion"),
+			nombre: "gestioninscripcion",
+		  };
+	
+		 this.enlacesTarjetaResumen.push(tarjetaGestionInscripciones);
+	  }
+	
+	  isCloseReceive(event) {
+		if (event != undefined) {
+		  	switch (event) {
+				case "tarjetaLetrado":
+				this.openLetrado = this.manuallyOpened;
+				break;
+				// case "configTurnos":
+				// this.openConfigTurnos = this.manuallyOpened;
+				// break;
+				// case "configColaOficio":
+				// this.openConfigColaOficio = this.manuallyOpened;
+				// break;
+				// case "colaOficio":
+				// this.openColaOficio = this.manuallyOpened;
+				// break;
+				// case "guardias":
+				// this.openGuardias = this.manuallyOpened;
+				// break;
+				// case "colaGuardias":
+				// this.openColaGuardias = this.manuallyOpened;
+				// break;
+				// case "inscripciones":
+				// this.openInscripciones = this.manuallyOpened;
+				// break;
+			}
+		}
+	  }
+	
+	  isOpenReceive(event) {
+		
+		if (event != undefined) {
+		  switch (event) {
+			case "tarjetaLetrado":
+			  this.openLetrado = true;
+			  break;
+			// case "configTurnos":
+			//   this.openConfigTurnos = true;
+			//   break;
+			// case "configColaOficio":
+			//   this.openConfigColaOficio = true;
+			//   break;
+			// case "colaOficio":
+			//   this.openColaOficio = true;
+			//   break;
+			// case "guardias":
+			//   this.openGuardias = true;
+			//   break;
+			// case "colaGuardias":
+			//   this.openColaGuardias = true;
+			//   break;
+			// case "inscripciones":
+			//   this.openInscripciones = true;
+			//   break;
+		  }
+		}
+	   }
+
+	   getDatosTarjetaResumen(turno: any){
+		let datosResumen = [];
+		datosResumen[0] = {label: "Turno", value: turno.nombreturno};
+		datosResumen[1] = {label: "Fecha Solicitud", value: this.datepipe.transform(turno.fechasolicitud, 'dd/MM/yyyy')};
+		datosResumen[2] = {label: "Fecha Efec. Alta", value: this.datepipe.transform(turno.fechavalidacion, 'dd/MM/yyyy')};
+		datosResumen[3] = {label: "Estado", value: turno.estadonombre};
+		this.datosTarjetaResumen = datosResumen;
 	}
 }

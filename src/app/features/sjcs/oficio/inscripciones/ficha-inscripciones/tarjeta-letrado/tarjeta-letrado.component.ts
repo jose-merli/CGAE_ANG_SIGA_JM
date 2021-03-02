@@ -14,6 +14,10 @@ import { TurnosItems } from '../../../../../../models/sjcs/TurnosItems';
 import { ModulosItem } from '../../../../../../models/sjcs/ModulosItem';
 import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
 import { InscripcionesItems } from '../../../../../../models/sjcs/InscripcionesItems';
+import { Router } from '@angular/router';
+import { ColegiadoItem } from '../../../../../../models/ColegiadoItem';
+import { DatosDireccionesItem } from '../../../../../../models/DatosDireccionesItem';
+import { DatosDireccionesObject } from '../../../../../../models/DatosDireccionesObject';
 @Component({
   selector: "app-tarjeta-letrado",
   templateUrl: "./tarjeta-letrado.component.html",
@@ -56,12 +60,16 @@ export class TarjetaLetradoComponent implements OnInit {
   comboPJ
   datos2;
   datos3;
-  datosContacto;
+  datosContacto: any[];
   tipoturnoDescripcion;
   jurisdiccionDescripcion;
   partidaPresupuestaria;
   MateriaDescripcion
   isDisabledSubZona: boolean = false;
+  colegiadoInscripcion = new ColegiadoItem();
+  bodyDirecciones: DatosDireccionesItem;
+  searchDireccionIdPersona = new DatosDireccionesObject();
+  datosDirecciones: DatosDireccionesItem[] = [];
   fichasPosibles = [
     {
       key: "generales",
@@ -72,6 +80,8 @@ export class TarjetaLetradoComponent implements OnInit {
       activa: false
     },
   ];
+
+  datosBody: any[];
   @Output() datosSend = new EventEmitter<any>();
 
   @Output() datosSend2 = new EventEmitter<any>();
@@ -80,14 +90,17 @@ export class TarjetaLetradoComponent implements OnInit {
 
   @ViewChild("importe") importe;
   //Resultados de la busqueda
-
   @Input() datos: InscripcionesItems;
+  @Input() tarjetaLetrado: string;
+  @Input() letradoItem: any;
+  @Input() openLetrado;
 
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
     private persistenceService: PersistenceService,
     private commonsService: CommonsService,
-    private datepipe: DatePipe) { }
+    private datepipe: DatePipe,
+    private router: Router) { }
 
   ngOnChanges(changes: SimpleChanges) {
     if (this.datos != undefined) {
@@ -111,9 +124,10 @@ export class TarjetaLetradoComponent implements OnInit {
     }
   }
 
-  abreCierraFicha() {
-    this.openFicha = !this.openFicha;
+  navigateToFichaColegial(){
+            this.router.navigate(["/fichaColegial"]);
   }
+
   ngOnInit() {
     this.commonsService.checkAcceso(procesos_oficio.tarjetaLetrado)
       .then(respuesta => {
@@ -154,13 +168,73 @@ export class TarjetaLetradoComponent implements OnInit {
         }
       ];
 
-      this.datosContacto = [
-        { tipo: "censo.ws.literal.telefono", value: "tlf", valor: "" },
-        { tipo: "censo.datosDireccion.literal.movil", value: "mvl", valor: "" },
-      ];
+      this.colegiadoInscripcion.numColegiado = this.letradoItem.ncolegiado;
+      this.colegiadoInscripcion.idPersona = this.letradoItem.idpersona;
+      this.colegiadoInscripcion.idInstitucion = this.letradoItem.idinstitucion;
+        this.sigaServices
+        .post("busquedaColegiados_searchColegiadoFicha", this.colegiadoInscripcion)
+        .subscribe(
+          data => {
+            let colegiadoItem = JSON.parse(data.body);
+            sessionStorage.setItem("personaBody", JSON.stringify(colegiadoItem.colegiadoItem[0]));
+            sessionStorage.setItem("disabledAction", "false");
+
+            this.datos.ncolegiado = this.letradoItem.ncolegiado;
+            this.datos.apellidosnombre = this.letradoItem.apellidosnombre;
+            this.datos.nifcif = colegiadoItem.colegiadoItem[0].nif;
+
+            //Buscamos los datos de contacto asociados a la direccion de guardia del colegiado
+            this.bodyDirecciones = new DatosDireccionesItem();
+            this.bodyDirecciones.idPersona = colegiadoItem.colegiadoItem[0].idPersona;
+            this.bodyDirecciones.historico = false;
+            if (this.bodyDirecciones.idPersona != undefined && this.bodyDirecciones.idPersona != null) {
+              this.sigaServices
+                .postPaginado(
+                  "fichaDatosDirecciones_datosDireccionesSearch",
+                  "?numPagina=1",
+                  this.bodyDirecciones
+                )
+                .subscribe(
+                  data => {
+                    this.searchDireccionIdPersona = JSON.parse(data["body"]);
+                    this.datosDirecciones = this.searchDireccionIdPersona.datosDireccionesItem;
+                    let contador = 0;
+                    this.datosDirecciones.forEach(element => {
+                             
+                      if (element.tipoDireccion != undefined)  {
+                        var index = element.tipoDireccion.indexOf( "Guardia" ); 
+                        if(index != -1){
+                          this.datosContacto = [
+                            { tipo: "censo.ws.literal.telefono", value: "tlf", valor: element.telefono},
+                            { tipo: "censo.datosDireccion.literal.movil", value: "mvl", valor:  element.movil},
+                          ];
+                        }
+                        
+                      }
+                    });
+                    sessionStorage.setItem("numDespacho", JSON.stringify(contador));
+        
+                    this.progressSpinner = false;
+                  },
+                  err => {
+                    console.log(err);
+                    this.progressSpinner = false;
+                  }
+                );
+            }
+          },
+          err => {
+            console.log(err);
+          },
+
+        );
+      
+     
     if (this.persistenceService.getPermisos() != true) {
       this.disableAll = true;
     }
+
+    this.datos.ncolegiado = sessionStorage.getItem("ncolegiado");
 
     if (this.datos != undefined) {
       this.body = this.datos;

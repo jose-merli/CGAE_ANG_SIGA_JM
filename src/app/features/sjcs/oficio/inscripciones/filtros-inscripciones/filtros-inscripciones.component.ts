@@ -93,9 +93,9 @@ export class FiltrosInscripciones implements OnInit {
   }
 
 
-  newTurno() {
+  newInscripcion() {
     this.persistenceService.setFiltros(this.filtros);
-    this.router.navigate(["/gestionTurnos"]);
+    this.router.navigate(["/gestionInscripciones"]);
   }
 
   onHideDatosGenerales() {

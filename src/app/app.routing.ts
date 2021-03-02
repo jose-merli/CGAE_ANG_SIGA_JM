@@ -234,6 +234,7 @@ import { MaestrosModulosComponent } from "./features/sjcs/maestros/maestros-modu
 import { PartidosJudicialesComponent } from "./features/sjcs/maestros/partidos-judiciales/partidas-judiciales.component";
 import { BajasTemporalesComponent } from "./features/sjcs/oficio/bajas-temporales/busqueda-bajas-temporales.component";
 import { TurnosComponent } from "./features/sjcs/oficio/turnos/busqueda-turnos.component";
+import { PantallaBuscadorColegiadosComponent } from "./commons/pantalla-buscador-colegiados/pantalla-buscador-colegiados.component";
 
 const appRoutes: Routes = [
 	{ path: 'home', component: HomeComponent, canActivate: [ AuthGuard ] },
@@ -1310,6 +1311,10 @@ const appRoutes: Routes = [
 		//canActivate: [AuthGuard]
 	},
 
+	{
+		path: 'pantallaBuscadorColegiados',
+		component: PantallaBuscadorColegiadosComponent
+	},
 	{ path: ' ', redirectTo: 'home' }
 ];
 export const routing = RouterModule.forRoot(appRoutes);
