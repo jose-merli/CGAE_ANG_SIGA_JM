@@ -129,7 +129,7 @@ export class BuscadorGuardiaComponent implements OnInit {
 
   convertArraysToStrings() {
 
-    const array = ['idTurno', 'area', 'materia', 'jurisdiccion', 'grupoFacturacion', 'partidaPresupuestaria', 'tipoTurno', 'idTipoGuardia'];
+    const array = ['idTurno', 'jurisdiccion', 'grupoFacturacion', 'partidaPresupuestaria', 'tipoTurno', 'idTipoGuardia'];
 
     array.forEach(element => {
       if (this.filtros.filtroAux[element] != undefined && this.filtros.filtroAux[element] != null && this.filtros.filtroAux[element].length > 0) {

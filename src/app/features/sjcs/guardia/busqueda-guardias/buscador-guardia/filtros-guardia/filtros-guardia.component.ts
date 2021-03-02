@@ -64,7 +64,6 @@ export class FiltrosGuardiaComponent implements OnInit {
     this.getComboArea();
     this.getComboTipoGuardia();
     this.getComboTipoTurno();
-    this.getComboArea();
     this.getComboGrupoZona();
 
     if (sessionStorage.getItem("filtrosBusquedaGuardiasFichaGuardia") != null) {
@@ -72,6 +71,11 @@ export class FiltrosGuardiaComponent implements OnInit {
       this.filtros = JSON.parse(
         sessionStorage.getItem("filtrosBusquedaGuardiasFichaGuardia")
       );
+
+      if (this.filtros.materia != null && this.filtros.materia != undefined && this.filtros.materia != '') {
+        this.getComboMateria("");
+        this.isDisabledMateria = false;
+      }
 
       sessionStorage.removeItem("filtrosBusquedaGuardiasFichaGuardia");
 
@@ -397,6 +401,7 @@ export class FiltrosGuardiaComponent implements OnInit {
 
   rest() {
     this.filtros = new GuardiaItem();
+    this.isDisabledMateria = true;
   }
 
 

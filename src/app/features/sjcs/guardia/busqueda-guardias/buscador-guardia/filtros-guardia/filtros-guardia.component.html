@@ -29,20 +29,20 @@
         <!-- AREAS -->
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{"menu.justiciaGratuita.maestros.Area" | translate}}</label>
-          <p-multiSelect #multiSelectArea [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtros.area'
-            [options]="comboArea" maxSelectedLabels="10" [selectedItemsLabel]="textSelected" styleClass="widthAll"
-            [filter]="true" filterBy="label,labelSinTilde" (onPanelShow)="focusInputField(multiSelectArea)"
-            (onChange)="onChangeArea()">
-          </p-multiSelect>
+          <p-dropdown class="select-form" (onChange)="onChangeArea()" [filter]="true" [(ngModel)]="filtros.area"
+            [options]="comboArea" filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
+            [showClear]="true">
+          </p-dropdown>
         </div>
 
         <!-- MATERIA -->
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{"menu.justiciaGratuita.maestros.Materia" | translate}}</label>
-          <p-multiSelect #multiSelectMateria [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtros.materia'
-            [options]="comboMateria" maxSelectedLabels="10" [selectedItemsLabel]="textSelected" styleClass="widthAll"
-            [filter]="true" filterBy="label,labelSinTilde" (onPanelShow)="focusInputField(multiSelectMateria)"
-            [(disabled)]="isDisabledMateria" (input)="buscarMateria($event)"></p-multiSelect>
+          <p-dropdown class="select-form" [(ngModel)]="filtros.materia" [options]="comboMateria" [filter]="true"
+            filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
+            [(disabled)]="isDisabledMateria" (input)="buscarMateria($event)" [showClear]="true"
+            [emptyFilterMessage]="resultadosAreas">
+          </p-dropdown>
         </div>
 
         <!-- GRUPOZONA -->
