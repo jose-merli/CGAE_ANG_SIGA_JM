@@ -38,6 +38,7 @@ export class TablaInscripcionesComponent implements OnInit {
   disabledSolicitarBaja: boolean = false;
   disabledValidar: boolean = false;
   disabledDenegar: boolean = false;
+  disabledCambiarFecha: boolean = false;
   body;
   partidasJudiciales: any[] = [];
 
@@ -142,6 +143,8 @@ export class TablaInscripcionesComponent implements OnInit {
 
         evento.data.editable = true;
         this.editMode = true;
+
+        if(evento.data.estado!= 0 || evento.data.estado!= 2)this.disabledDenegar=true;
 
         this.selectedDatos = [];
         this.selectedDatos.push(evento.data);
@@ -435,6 +438,7 @@ export class TablaInscripcionesComponent implements OnInit {
     this.body.inscripcionesItem.forEach(element => {
       element.fechaActual = this.datos.fechaActual;
       element.observaciones = this.datos.observaciones;
+     // this.sigaServices.post("inscripciones_busquedaInscripciones", element).subscribe();
     });
     this.sigaServices.post("inscripciones_updateCambiarFecha", this.body).subscribe(
       data => {
@@ -710,6 +714,7 @@ export class TablaInscripcionesComponent implements OnInit {
     if (this.selectedDatos == undefined) {
       this.selectedDatos = []
     }
+    
     if (selectedDatos != undefined) {
       this.numSelected = selectedDatos.length;
       let findDato = this.selectedDatos.find(item => item.estado != 1);
@@ -727,6 +732,13 @@ export class TablaInscripcionesComponent implements OnInit {
       else{
         this.disabledValidar = false;
         this.disabledDenegar = false;
+      }
+      let findDato3 = this.selectedDatos.find(item => item.estado != 1 && item.estado != 2 && item.estado != 3);
+      if(findDato3 != null){
+        this.disabledCambiarFecha = true;
+      }
+      else{
+        this.disabledCambiarFecha = false;
       }
     }
   }

@@ -5,7 +5,7 @@
 
     <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple"
       [responsive]="true" [first]="first" #table class="tabla-listado" [paginator]="true" [rows]="selectedItem"
-      (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
+      (onRowUnselect)="actualizaSeleccionados(selectedDatos)" (onRowSelect)="actualizaSeleccionados(selectedDatos)"
       [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
@@ -35,7 +35,7 @@
               <a class="enlace" (click)="openTab(dato)">{{dato[col.field]}}</a>
             </div>
             <!-- columna turno con tooltip indicando su nombre -->
-            <div *ngIf="!setItalic(dato) && col.field =='abreviatura'">
+            <div *ngIf="!setItalic(dato) && col.field =='abreviatura'" title="{{dato['nombreturno']}}"> 
               <span >{{dato[col.field]}}</span>
             </div>
             <!-- columnas con formato estandar -->
@@ -109,7 +109,7 @@
           </label>
           <!-- [disabled]="!permisos || ((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledValidar || !isLetrado)" -->
           <button *ngIf="!historico" pButton
-            [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledValidar)" (click)="validar(selectedDatos)"
+            [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledValidar || !isLetrado)" (click)="validar(selectedDatos)"
             type="button" label="{{ 'general.boton.validar' | translate}}"></button>
 
         </div>
@@ -118,7 +118,7 @@
           </label>
           <!-- [disabled]="!permisos || ((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledDenegar || !isLetrado)" -->
           <button *ngIf="!historico" pButton
-            [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledDenegar)" (click)="denegar(selectedDatos)"
+            [disabled]="!permisos || ((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledDenegar || !isLetrado)" (click)="denegar(selectedDatos)"
             type="button" label="{{ 'general.boton.denegar' | translate}}"></button>
         </div>
         <div class="form-group">
@@ -132,7 +132,7 @@
           <label>
           </label>
           <button *ngIf="!historico" pButton
-            [disabled]="!permisos || ((!selectMultiple || !selectAll) && selectedDatos.length == 0)" (click)="cambiarFecha(selectedDatos)"
+            [disabled]="!permisos || ((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledCambiarFecha)" (click)="cambiarFecha(selectedDatos)"
             type="button" label="{{ 'justiciaGratuita.oficio.inscripciones.cambiarfecha' | translate}}"></button>
         </div>
       </div>

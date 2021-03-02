@@ -87,7 +87,7 @@ export class InscripcionesComponent implements OnInit {
       if( idturnoAux == "") this.filtros.filtroAux.idturno = null;
       else this.filtros.filtroAux.idturno = idturnoAux;
     } 
-    if((<HTMLInputElement>document.getElementById("nColegiado")) != null || (<HTMLInputElement>document.getElementById("nColegiado")).value != undefined){
+    if((<HTMLInputElement>document.getElementById("nColegiado")) != null){
       let ncolegiadoAux = (<HTMLInputElement>document.getElementById("nColegiado")).value;
       if( ncolegiadoAux == "") this.filtros.filtroAux.ncolegiado = null;
       else this.filtros.filtroAux.ncolegiado = ncolegiadoAux;
