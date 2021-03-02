@@ -67,8 +67,14 @@ export class FiltrosGuardiaComponent implements OnInit {
     this.getComboArea();
     this.getComboGrupoZona();
 
-    if (this.persistenceService.getFiltros() != undefined) {
-      this.filtros = this.persistenceService.getFiltros();
+    if (sessionStorage.getItem("filtrosBusquedaGuardiasFichaGuardia") != null) {
+
+      this.filtros = JSON.parse(
+        sessionStorage.getItem("filtrosBusquedaGuardiasFichaGuardia")
+      );
+
+      sessionStorage.removeItem("filtrosBusquedaGuardiasFichaGuardia");
+
       if (this.persistenceService.getHistorico() != undefined) {
         this.historico = this.persistenceService.getHistorico();
       }
@@ -77,6 +83,7 @@ export class FiltrosGuardiaComponent implements OnInit {
     } else {
       this.filtros = new GuardiaItem();
     }
+
   }
 
 
@@ -212,7 +219,7 @@ export class FiltrosGuardiaComponent implements OnInit {
 
   }
   onChangeSubZona() {
-    this.filtros.partidaJudicial = this.comboZona.find(it => it.value == this.filtros.zona).partido;
+    this.filtros.partidoJudicial = this.comboZona.find(it => it.value == this.filtros.zona).partido;
   }
 
 
@@ -326,7 +333,8 @@ export class FiltrosGuardiaComponent implements OnInit {
     if (this.checkFilters()) {
       this.persistenceService.setFiltros(this.filtros);
       this.persistenceService.setFiltrosAux(this.filtros);
-      this.filtroAux = this.persistenceService.getFiltrosAux()
+      this.filtroAux = this.persistenceService.getFiltrosAux();
+      sessionStorage.setItem('filtrosBusquedaGuardias', JSON.stringify(this.filtros));
       this.isOpen.emit(false)
     }
 

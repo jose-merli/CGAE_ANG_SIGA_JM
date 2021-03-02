@@ -1,6 +1,7 @@
 import { Location } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, SimpleChanges } from '@angular/core';
 import { TranslateService } from '../../../../../../commons/translate';
+import { GuardiaItem } from '../../../../../../models/guardia/GuardiaItem';
 import { procesos_guardia } from '../../../../../../permisos/procesos_guarida';
 import { procesos_maestros } from '../../../../../../permisos/procesos_maestros';
 import { CommonsService } from '../../../../../../_services/commons.service';
@@ -35,7 +36,7 @@ export class GestionGuardiaComponent implements OnInit {
 
   infoResumen = [];
   enlacesTarjetaResumen: any[] = [];
-  manuallyOpened:Boolean;
+  manuallyOpened: Boolean;
   openGen: Boolean = false;
   openCalendarios: Boolean = false;
   openConfigCola: Boolean = false;
@@ -49,12 +50,14 @@ export class GestionGuardiaComponent implements OnInit {
   tarjetaDatosGenerales: string;
   tarjetaCalendariosGuardias: string;
   tarjetaConfigColatarjetaColaGuardia: string;
-  tarjetaColaGuardia : string;
+  tarjetaColaGuardia: string;
   tarjetaIncompatibilidades: string;
   tarjetaBaremos: string;
-  tarjetaCalendarios: string;  
+  tarjetaCalendarios: string;
   tarjetaInscripcionesGuardias: string;
   tarjetaTurnoGuardias: string;
+
+  persistenciaGuardia: GuardiaItem;
 
   constructor(private persistenceService: PersistenceService,
     private location: Location, private sigaServices: SigaServices,
@@ -71,6 +74,15 @@ export class GestionGuardiaComponent implements OnInit {
       this.modoEdicion = false;
     }
     this.obtenerPermisos();
+
+    if (sessionStorage.getItem("filtrosBusquedaGuardias")) {
+      sessionStorage.removeItem("filtrosBusquedaGuardiasFichaGuardia");
+      this.persistenciaGuardia = new GuardiaItem();
+      this.persistenciaGuardia = JSON.parse(
+        sessionStorage.getItem("filtrosBusquedaGuardias")
+      );
+    }
+
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -97,6 +109,14 @@ export class GestionGuardiaComponent implements OnInit {
 
 
   backTo() {
+
+    if (this.persistenciaGuardia != undefined) {
+      sessionStorage.setItem(
+        "filtrosBusquedaGuardiasFichaGuardia",
+        JSON.stringify(this.persistenciaGuardia)
+      );
+    }
+
     this.location.back();
   }
 
@@ -332,31 +352,31 @@ export class GestionGuardiaComponent implements OnInit {
         this.progressSpinner = false
       });
 
-      //
-      //PROVISIONAL
-      //cuando se vaya a seguir con el desarrollo de guardias, hay que cambiar esto y la carga de las tarjetas
-      //
-      setTimeout(() => {
-        this.enviarEnlacesTarjeta();
-      }, 2000);
+    //
+    //PROVISIONAL
+    //cuando se vaya a seguir con el desarrollo de guardias, hay que cambiar esto y la carga de las tarjetas
+    //
+    setTimeout(() => {
+      this.enviarEnlacesTarjeta();
+    }, 2000);
   }
 
   enviarEnlacesTarjeta() {
     this.enlacesTarjetaResumen = [];
 
     let pruebaTarjeta = {
-        label: "general.message.datos.generales",
-        value: document.getElementById("datosGenerales"),
-        nombre: "datosGenerales",
-      };
+      label: "general.message.datos.generales",
+      value: document.getElementById("datosGenerales"),
+      nombre: "datosGenerales",
+    };
 
     this.enlacesTarjetaResumen.push(pruebaTarjeta);
 
     pruebaTarjeta = {
-        label: "justiciaGratuita.guardia.gestion.configuracionCalendarios",
-        value: document.getElementById("calendarioGuardia"),
-        nombre: "calendarioGuardia",
-      };
+      label: "justiciaGratuita.guardia.gestion.configuracionCalendarios",
+      value: document.getElementById("calendarioGuardia"),
+      nombre: "calendarioGuardia",
+    };
 
     this.enlacesTarjetaResumen.push(pruebaTarjeta);
 
@@ -407,7 +427,7 @@ export class GestionGuardiaComponent implements OnInit {
     };
 
     this.enlacesTarjetaResumen.push(pruebaTarjeta);
-    
+
     pruebaTarjeta = {
       label: "dato.jgr.guardia.guardias.turno",
       value: document.getElementById("turnos"),
@@ -452,7 +472,7 @@ export class GestionGuardiaComponent implements OnInit {
   }
 
   isOpenReceive(event) {
-console.log('ABRIR TARJETA: ', event)
+    console.log('ABRIR TARJETA: ', event)
     if (event != undefined) {
       switch (event) {
         case "datosGenerales":
