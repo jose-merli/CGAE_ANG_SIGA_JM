@@ -336,7 +336,7 @@ import { OtrasColegiacionesFichaColegialComponent } from './features/censo/ficha
 import { ServiciosInteresFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/servicios-interes-ficha-colegial/servicios-interes-ficha-colegial.component';
 import { TarjetaResumenFijaModule } from './commons/tarjeta-resumen-fija/tarjeta-resumen-fija.module';
 import { PartidosJudicialesComponent } from './features/sjcs/maestros/partidos-judiciales/partidas-judiciales.component';
-
+import { MatSortModule } from '@angular/material/sort';
 
 @NgModule({
 	declarations: [
@@ -652,6 +652,7 @@ import { PartidosJudicialesComponent } from './features/sjcs/maestros/partidos-j
 		ServiciosInteresFichaColegialComponent//,
 	],
 	imports: [
+		MatSortModule,
 		BrowserModule,
 		BrowserAnimationsModule,
 		HttpClientModule,
@@ -707,7 +708,7 @@ import { PartidosJudicialesComponent } from './features/sjcs/maestros/partidos-j
 		EditorModule,
 
 		SjcsModule,
-		BusquedaAsuntosModule
+		BusquedaAsuntosModule,
 	],
 
 	exports: [],

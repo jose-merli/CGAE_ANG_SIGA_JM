@@ -40,6 +40,7 @@ export class TablaDinamicaColaGuardiaComponent implements OnInit {
 
 
   sube(selected) {
+    console.log('SUBE: ', selected)
     let index = this.datos.indexOf(selected);
     if (this.porGrupos) { // MOVIMIENTO CUANDO ESTAN AGRUPADOS
       let seMueve = this.datos.filter(it => selected.numeroGrupo == it.numeroGrupo); // Los que se desplazan

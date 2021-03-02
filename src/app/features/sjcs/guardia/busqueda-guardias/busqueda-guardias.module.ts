@@ -35,6 +35,7 @@ import { GestionGuardiaComponent } from './buscador-guardia/gestion-guardia/gest
 import { TablaGuardiasComponent } from './buscador-guardia/tabla-guardias/tabla-guardias.component';
 import { DatosIncripcionesGuardiasComponent } from './buscador-guardia/gestion-guardia/datos-incripciones-guardias/datos-incripciones-guardias.component';
 import { DatosTurnoGuardiasComponent } from './buscador-guardia/gestion-guardia/datos-turno-guardias/datos-turno-guardias.component';
+import { TablaResultadoOrderModule } from '../../../../commons/tabla-resultado-order/tabla-resultado-order.module';
 
 @NgModule({
   imports: [
@@ -59,6 +60,7 @@ import { DatosTurnoGuardiasComponent } from './buscador-guardia/gestion-guardia/
     TablaDinamicaColaGuardiaModule,
     ConfirmDialogModule,
     FechaModule,
+    TablaResultadoOrderModule
 
 
   ],
