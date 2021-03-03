@@ -306,7 +306,7 @@ export class EstadosComponent implements OnInit {
   }
 
   checkAnadirEstado(){
-    let mess = this.translateService.instant("justiciaGratuita.ejg.message.cambiarEstado");
+    let mess = this.translateService.instant("justiciaGratuita.ejg.datosGenerales.AddEstado");
     let icon = "fa fa-edit";
 
     this.confirmationService.confirm({

@@ -5,7 +5,7 @@
     <!-- TABLA RESULTADOS -->
 
     <p-table [autoLayout]="true" [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table
-      class="tabla-listado overflow" [paginator]="true" [rows]="selectedItem" (onRowUnselect)="actualizaSeleccionados(selectedDatos)" [ngClass]="{ 'customCursor': selectMultiple}"
+      class="tabla-listado overflow" [paginator]="true" [rows]="selectedItem" (onRowUnselect)="actualizaSeleccionados(selectedDatos)" [ngClass]="{ 'customCursor' : selectMultiple }"
       selectionMode="multiple" paginatorPosition="both" id="tablaFoco">
 
       <ng-template pTemplate="colgroup" let-columns>
@@ -29,26 +29,26 @@
         <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
           <td class="text-center" *ngFor="let col of columns">
 
-            <div *ngIf="col.field == 'fechaApertura' && col.field=='annio'">
+            <div *ngIf="col.field == 'fechaApertura' && col.field=='numAnnioProcedimiento'">
               <div *ngIf="setItalic(dato)">
                 <label class="enlace" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ dato[col.field] | date: 'dd/MM/yyyy'}}</label>
               </div>
-              <div *ngIf="!setItalic(dato) && col.field=='annio'">
+              <div *ngIf="!setItalic(dato) && col.field=='numAnnioProcedimiento'">
                 <label class="enlace">{{ dato[col.field] | date: 'dd/MM/yyyy'}}</label>
               </div>
             </div>
 
             <div *ngIf="col.field != 'fechaApertura'">
-              <div *ngIf="setItalic(dato) && col.field!='annio'">
+              <div *ngIf="setItalic(dato) && col.field!='numAnnioProcedimiento'">
                 <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
               </div>
-              <div *ngIf="!setItalic(dato) && col.field!='annio'">
+              <div *ngIf="!setItalic(dato) && col.field!='numAnnioProcedimiento'">
                 <span>{{dato[col.field]}}</span>
               </div>
-              <div *ngIf="setItalic(dato) && col.field=='annio'">
+              <div *ngIf="setItalic(dato) && col.field=='numAnnioProcedimiento'">
                 <span  class="enlace"  (click)="datosEJG(dato)" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
               </div>
-              <div *ngIf="!setItalic(dato) && col.field=='annio'">
+              <div *ngIf="!setItalic(dato) && col.field=='numAnnioProcedimiento'">
                 <span class="enlace" (click)="datosEJG(dato)">{{dato[col.field]}}</span>
               </div>
             </div>

@@ -140,7 +140,7 @@ export class TablaEjgComponent implements OnInit {
     this.cols = [
       { field: "turnoDes", header: "justiciaGratuita.justiciables.literal.turnoGuardia", width: "20%" },
       { field: "turno", header: "dato.jgr.guardia.guardias.turno", width: "10%" },
-      { field: "annio", header: "justiciaGratuita.maestros.calendarioLaboralAgenda.anio", width: "5%" },
+      { field: "numAnnioProcedimiento", header: "justiciaGratuita.ejg.datosGenerales.numAnnioProcedimiento", width: "5%" },
       { field: "apellidosYNombre", header: "busquedaSanciones.detalleSancion.letrado.literal", width: "20%" },
       { field: "fechaApertura", header: "gratuita.busquedaEJG.literal.fechaApertura", width: "10%" },
       { field: "estadoEJG", header: "justiciaGratuita.ejg.datosGenerales.EstadoEJG", width: "15%" },
@@ -357,7 +357,7 @@ export class TablaEjgComponent implements OnInit {
   }
 
   addRemesa() {
-    let mess = this.translateService.instant("justiciaGratuita.ejg.message.cambiarEstado");
+    let mess = this.translateService.instant("justiciaGratuita.ejg.message.anadirExpedienteARemesa");
     let icon = "fa fa-edit";
 
     this.confirmationService.confirm({
@@ -379,7 +379,7 @@ export class TablaEjgComponent implements OnInit {
   anadirRemesa(){
     this.progressSpinner=true;
 
-    this.sigaServices.post("anadirExpedienteARemesa", this.selectDatos).subscribe(
+    this.sigaServices.post("gestionejg_anadirExpedienteARemesa", this.selectDatos).subscribe(
       n => {
         this.progressSpinner=false;
       },
