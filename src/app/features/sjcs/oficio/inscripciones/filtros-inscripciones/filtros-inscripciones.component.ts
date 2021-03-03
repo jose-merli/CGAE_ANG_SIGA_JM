@@ -14,7 +14,8 @@ import { CommonsService } from '../../../../../../app/_services/commons.service'
   styleUrls: ['./filtros-inscripciones.component.scss']
 })
 export class FiltrosInscripciones implements OnInit {
-
+  
+  progressSpinner: boolean = false;
   showDatosGenerales: boolean = true;
   buscar: boolean = false;
   filtroAux: InscripcionesItems = new InscripcionesItems();
@@ -95,22 +96,54 @@ export class FiltrosInscripciones implements OnInit {
 
   newInscripcion() {
     this.persistenceService.setFiltros(this.filtros);
-    this.router.navigate(["/gestionInscripciones"]);
+    let isLetrado:boolean = false;
+    if (
+      sessionStorage.getItem("isLetrado") != null &&
+      sessionStorage.getItem("isLetrado") != undefined
+    ) {
+      isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
+    }
+    this.progressSpinner = true;
+    /* this.persistenceService.setDatos(evento);
+    sessionStorage.setItem("ncolegiado", JSON.stringify(evento)); */
+    if(isLetrado)   this.router.navigate(["/gestionInscripciones"]);
+    //EN PROCESO
+    else this.router.navigate(["/gestionInscripciones"]);
   }
 
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
   checkFilters() {
-    // quita espacios vacios antes de buscar
-    if (this.filtros.abreviatura != undefined && this.filtros.abreviatura != null) {
-      this.filtros.abreviatura = this.filtros.abreviatura.trim();
+    if((this.filtros.estado == null ||
+        this.filtros.estado == undefined) &&
+      (this.filtros.abreviatura == null ||
+        this.filtros.abreviatura == undefined ) &&
+      (this.filtros.idturno == null ||
+        this.filtros.idturno == undefined ) &&
+      (this.filtros.fechadesde == null ||
+        this.filtros.fechadesde == undefined ) &&
+      (this.filtros.afechade == null ||
+        this.filtros.afechade == undefined ) &&
+      (this.filtros.abreviatura == null ||
+        this.filtros.abreviatura == undefined ) &&
+      ((<HTMLInputElement>document.querySelector("input[formControlName='nombreAp']")).value == null ||
+        (<HTMLInputElement>document.querySelector("input[formControlName='nombreAp']")).value == undefined ||
+        (<HTMLInputElement>document.querySelector("input[formControlName='nombreAp']")).value == "")){
+    this.showSearchIncorrect();
+    return false;
     }
-    if (this.filtros.nombre != undefined && this.filtros.nombre != null) {
-      this.filtros.nombre = this.filtros.nombre.trim();
-    }
-    return true;
+    else{
+      // quita espacios vacios antes de buscar
+      if (this.filtros.abreviatura != undefined && this.filtros.abreviatura != null) {
+        this.filtros.abreviatura = this.filtros.abreviatura.trim();
+      }
+      if (this.filtros.nombre != undefined && this.filtros.nombre != null) {
+        this.filtros.nombre = this.filtros.nombre.trim();
+      }
 
+      return true;
+    }
   }
   showMessage(severity, summary, msg) {
     this.msgs = [];
