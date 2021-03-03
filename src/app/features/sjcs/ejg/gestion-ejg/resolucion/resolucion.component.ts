@@ -238,7 +238,7 @@ export class ResolucionComponent implements OnInit {
   save(){
     this.progressSpinner=true;
 
-    this.body.nuevoEJG=!this.modoEdicion;
+    //this.body.nuevoEJG=!this.modoEdicion;
 
     this.sigaServices.post("gestionejg_guardarResolucion", this.body).subscribe(
       n => {

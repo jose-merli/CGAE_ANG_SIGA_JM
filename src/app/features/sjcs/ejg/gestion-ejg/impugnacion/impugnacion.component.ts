@@ -144,7 +144,7 @@ getComboFundamentoImpug() {
 save(){
   this.progressSpinner=true;
 
-    this.impugnacion.nuevoEJG=!this.modoEdicion;
+   // this.impugnacion.nuevoEJG=!this.modoEdicion;
 
     this.sigaServices.post("gestionejg_guardarImpugnacion", this.impugnacion).subscribe(
       n => {

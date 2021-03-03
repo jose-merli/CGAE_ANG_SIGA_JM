@@ -298,7 +298,7 @@ abreCierraFicha(key) {
     download(){
       this.progressSpinner=true;
 
-      this.body.nuevoEJG=!this.modoEdicion;
+      //this.body.nuevoEJG=!this.modoEdicion;
 
       this.sigaServices.post("gestionejg_descargarDocumentacion", this.body).subscribe(
         n => {

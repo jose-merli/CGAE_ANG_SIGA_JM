@@ -249,7 +249,7 @@ export class EstadosComponent implements OnInit {
   delete() {
     this.progressSpinner=true;
 
-    this.body.nuevoEJG=!this.modoEdicion;
+   // this.body.nuevoEJG=!this.modoEdicion;
     let data = [];
     let ejg: EJGItem;
 

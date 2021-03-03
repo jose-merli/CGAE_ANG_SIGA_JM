@@ -105,7 +105,6 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
         this.router.navigate(["/buscadorColegiados"]);
       }
     }
-    // this.buscarDisabled=false;
   }
 
   showMessage(severity, summary, msg) {

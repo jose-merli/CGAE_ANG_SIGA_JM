@@ -93,9 +93,5 @@ export class EJGItem {
     fechaEstadoNew: Date;
     estadoNew: String;
 
-    nuevoEJG: boolean;
-
-    etiquetas: any[];
-
     constructor() { }
 }

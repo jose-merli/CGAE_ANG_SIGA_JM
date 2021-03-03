@@ -157,7 +157,7 @@ save(){
   if(this.disabledSave()){
     this.progressSpinner=true;
 
-    this.dictamen.nuevoEJG=!this.modoEdicion;
+   // this.dictamen.nuevoEJG=!this.modoEdicion;
 
     this.sigaServices.post("gestionejg_guardarInformeCalfiacion", this.dictamen).subscribe(
       n => {
@@ -221,7 +221,7 @@ confirmDelete() {
     delete(){
       this.progressSpinner=true;
 
-      this.dictamen.nuevoEJG=!this.modoEdicion;
+      //this.dictamen.nuevoEJG=!this.modoEdicion;
       let data = [];
       let ejg: EJGItem;
 
@@ -251,7 +251,7 @@ confirmDelete() {
       if(this.disabledSave()){
         this.progressSpinner=true;
     
-        this.dictamen.nuevoEJG=!this.modoEdicion;
+       // this.dictamen.nuevoEJG=!this.modoEdicion;
     
         this.sigaServices.post("gestionejg_descargarInformeCalificacion", this.dictamen).subscribe(
           n => {

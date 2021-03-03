@@ -245,7 +245,7 @@ export class RelacionesComponent implements OnInit {
   delete() {
     this.progressSpinner=true;
 
-    this.relaciones.nuevoEJG=!this.modoEdicion;
+    //this.relaciones.nuevoEJG=!this.modoEdicion;
     let data = [];
     let ejg: EJGItem;
 
@@ -299,7 +299,7 @@ export class RelacionesComponent implements OnInit {
   consultEditRelacion(){
     this.progressSpinner=true;
 
-    this.body.nuevoEJG=!this.modoEdicion;
+    //this.body.nuevoEJG=!this.modoEdicion;
 
     this.sigaServices.post("gestionejg_consultEditRelacion", this.body).subscribe(
       n => {

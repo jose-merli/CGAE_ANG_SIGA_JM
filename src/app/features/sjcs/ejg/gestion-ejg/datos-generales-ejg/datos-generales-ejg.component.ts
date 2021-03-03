@@ -234,18 +234,31 @@ export class DatosGeneralesEjgComponent implements OnInit {
   save(){
     this.progressSpinner=true;
 
-    this.body.nuevoEJG=!this.modoEdicion;
-
-    this.sigaServices.post("gestionejg_guardarDatosGenerales", this.body).subscribe(
-      n => {
-        this.progressSpinner=false;
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner=false;
-      }
-    );
+    if(this.modoEdicion){
+      //hacer update
+      this.sigaServices.post("gestionejg_actualizaDatosGenerales", this.body).subscribe(
+        n => {
+          this.progressSpinner=false;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner=false;
+        }
+      );
+    }else{
+      //hacer insert
+      this.sigaServices.post("gestionejg_insertaDatosGenerales", this.body).subscribe(
+        n => {
+          this.progressSpinner=false;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner=false;
+        }
+      );
+    }
   }
+
   checkPermisosRest() {
     let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {

@@ -218,7 +218,7 @@ export class ServiciosTramitacionComponent implements OnInit {
   save(){
     this.progressSpinner=true;
 
-    this.body.nuevoEJG=!this.modoEdicion;
+    //this.body.nuevoEJG=!this.modoEdicion;
 
     this.sigaServices.post("gestionejg_guardarDatosGenerales", this.body).subscribe(
       n => {
