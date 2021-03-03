@@ -1,11 +1,8 @@
 import { Component, OnInit, Input, EventEmitter, Output, HostListener } from '@angular/core';
-import { Router } from '../../../../../../../../node_modules/@angular/router';
-import { TranslateService } from '../../../../../../commons/translate';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { KEY_CODE } from '../../../../maestros/fundamentos-calificacion/fundamentos-calificacion.component';
-import { GuardiaItem } from '../../../../../../models/guardia/GuardiaItem';
 import { SaltoCompItem } from '../../../../../../models/guardia/SaltoCompItem';
 
 @Component({
@@ -16,6 +13,7 @@ import { SaltoCompItem } from '../../../../../../models/guardia/SaltoCompItem';
 export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
 
   showDatosGenerales: boolean = true;
+  showColegiado: boolean = false;
   msgs = [];
 
   filtros: SaltoCompItem = new SaltoCompItem();
@@ -96,12 +94,15 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
 
+  onHideColegiado() {
+    this.showColegiado = !this.showColegiado;
+  }
+
   search() {
     this.persistenceService.setFiltros(this.filtros);
     this.persistenceService.setFiltrosAux(this.filtros);
     this.filtroAux = this.persistenceService.getFiltrosAux()
     this.isOpen.emit(false);
-
   }
 
   fillFechaDesde(event) {

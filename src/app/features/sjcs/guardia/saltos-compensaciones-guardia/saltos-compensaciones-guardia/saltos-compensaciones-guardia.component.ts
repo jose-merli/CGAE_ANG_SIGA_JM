@@ -31,6 +31,8 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
 
   permisoEscritura;
 
+  showResults: boolean = false;
+
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
     private commonsService: CommonsService, private translateService: TranslateService, private router: Router) { }
 
@@ -66,7 +68,7 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
     this.filtros.filtroAux.historico = event;
     this.persistenceService.setHistorico(event);
     this.progressSpinner = true;
-    this.sigaServices.post("busquedaSaltosCompG_searchSaltosYComp", this.filtros.filtroAux).subscribe(
+    this.sigaServices.postPaginado("busquedaSaltosCompG_searchSaltosYComp", "?numPagina=1", this.filtros.filtroAux).subscribe(
       n => {
 
         this.datos = JSON.parse(n.body).saltosCompItems;
@@ -78,9 +80,11 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
           this.tabla.tabla.sortField = '';
           this.tabla.tabla.reset();
           this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
+          this.tabla.datos = this.datos;
         }
 
         this.progressSpinner = false;
+        this.showResults = true;
         this.resetSelect();
       },
       err => {
