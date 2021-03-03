@@ -27,11 +27,9 @@ export let endpoints_EJG: any = {
     gestionejg_comboTipoExpediente: "ejg/gestion-ejg/comboTipoExpediente",
 
     //Busqueda EJG
-        busquedaColegiadoEJG: "ejg/busquedaColegiadoEJG",
-        gestionejg_descargarExpedientesJG: "ejg/gestion-ejg/descargarExpedientesJG",
-        gestionejg_anadirExpedienteARemesa: "ejg/gestion-ejg/anadirExpedienteARemesa",
-        gestionejg_cambioEstadoMasivo: "ejg/gestion-ejg/cambioEstadoMasivo",
-        busquedaColegiadoEJG_comboTurnos:"ejg/busquedaColegiadoEJG/comboTurnos",
+    gestionejg_descargarExpedientesJG: "ejg/gestion-ejg/descargarExpedientesJG",
+    gestionejg_anadirExpedienteARemesa: "ejg/gestion-ejg/anadirExpedienteARemesa",
+    gestionejg_cambioEstadoMasivo: "ejg/gestion-ejg/cambioEstadoMasivo",
 
     //Datos Generales
         gestionejg_guardarDatosGenerales: "ejg/gestion-ejg/guardarDatosGenerales",
