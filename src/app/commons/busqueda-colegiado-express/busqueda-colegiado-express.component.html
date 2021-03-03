@@ -1,6 +1,6 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 
-<form [formGroup]="colegiadoForm" (ngSubmit)="submitForm(colegiadoForm.value)">
+<form [formGroup]="colegiadoForm" (ngSubmit)="isBuscar(colegiadoForm.value)">
     <div class="form-row margin-form-row">
         <div class="form-group col-lg-3 col-md-3">
             <label>Número de colegiado</label>

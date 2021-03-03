@@ -234,7 +234,7 @@ import { MaestrosModulosComponent } from "./features/sjcs/maestros/maestros-modu
 import { PartidosJudicialesComponent } from "./features/sjcs/maestros/partidos-judiciales/partidas-judiciales.component";
 import { BajasTemporalesComponent } from "./features/sjcs/oficio/bajas-temporales/busqueda-bajas-temporales.component";
 import { TurnosComponent } from "./features/sjcs/oficio/turnos/busqueda-turnos.component";
-import { PantallaBuscadorColegiadosComponent } from "./commons/pantalla-buscador-colegiados/pantalla-buscador-colegiados.component";
+import { BuscadorColegiadosComponent } from "./commons/buscador-colegiados/buscador-colegiados.component";
 
 const appRoutes: Routes = [
 	{ path: 'home', component: HomeComponent, canActivate: [ AuthGuard ] },
@@ -1312,8 +1312,8 @@ const appRoutes: Routes = [
 	},
 
 	{
-		path: 'pantallaBuscadorColegiados',
-		component: PantallaBuscadorColegiadosComponent
+		path: 'buscadorColegiados',
+		component: BuscadorColegiadosComponent
 	},
 	{ path: ' ', redirectTo: 'home' }
 ];
