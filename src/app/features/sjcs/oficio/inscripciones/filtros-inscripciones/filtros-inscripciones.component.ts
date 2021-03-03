@@ -45,6 +45,10 @@ export class FiltrosInscripciones implements OnInit {
     { label: "Baja", value: "3" },
     { label: "Denegada", value: "4" }
   ];
+  usuarioBusquedaExpress = {​​​​​​​​​
+    numColegiado: '',
+    nombreAp: ''
+  }​​​​​​​​​;
 
   textSelected: String = 'general.boton.seleccionar';
   @Input() permisos;
@@ -90,6 +94,16 @@ export class FiltrosInscripciones implements OnInit {
         }
       }
     );
+
+    if(sessionStorage.getItem("buscadorColegiados")){​​
+
+      let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
+
+      this.usuarioBusquedaExpress.nombreAp=busquedaColegiado.nombre+" "+busquedaColegiado.apellidos;
+
+      this.usuarioBusquedaExpress.numColegiado=busquedaColegiado.nColegiado;
+
+    }​​
 
   }
 
