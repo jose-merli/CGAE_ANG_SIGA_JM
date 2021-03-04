@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Message } from 'primeng/components/common/api';
 import { RowGroup, TablaResultadoDesplegableJEService } from '../../tabla-resultado-desplegable/tabla-resultado-desplegable-je.service';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-justificacion-expres',
   templateUrl: './justificacion-expres.component.html',
@@ -16,7 +17,7 @@ export class JustificacionExpresComponent implements OnInit {
   numActuaciones = 0;
   totalActuaciones = 0;
   isDisabled = true;
-  modoBusqueda = 'b';
+  modoBusqueda: string = 'b';
   radios = [
     { label: 'Designas', value: 'a' },
     { label: 'Justificación Exprés', value: 'b' }
@@ -119,11 +120,22 @@ export class JustificacionExpresComponent implements OnInit {
   seleccionarTodo = false;
   constructor(
     private trdService: TablaResultadoDesplegableJEService,
+    private activatedRoute: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
     this.rowGroups = this.trdService.getTableData();
     this.rowGroupsAux = this.trdService.getTableData();
+
+    if (this.activatedRoute.snapshot.queryParamMap.get('searchMode') != null &&
+      this.activatedRoute.snapshot.queryParamMap.get('searchMode') != undefined
+      && this.activatedRoute.snapshot.queryParamMap.get('searchMode') != ''
+      && this.activatedRoute.snapshot.queryParamMap.get('searchMode') == 'a') {
+
+      this.modoBusqueda = 'a';
+
+    }
+
   }
   showResponse() {
     this.show = true;
@@ -154,6 +166,10 @@ export class JustificacionExpresComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  isDisabledButtons() {
+    return this.modoBusqueda == 'a';
   }
 
 }

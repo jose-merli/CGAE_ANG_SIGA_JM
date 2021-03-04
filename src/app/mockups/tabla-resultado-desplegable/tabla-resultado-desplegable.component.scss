@@ -2,9 +2,11 @@
   margin: 0 !important;
   bottom: 3px;
 }
-.wrapText{
-max-width: 110px;
-overflow-wrap: break-word;}
+
+.wrapText {
+  max-width: 110px;
+  overflow-wrap: break-word;
+}
 
 .row {
   margin: 0;
@@ -13,9 +15,11 @@ overflow-wrap: break-word;}
 ::ng-deep .mat-sort-header-arrow {
   opacity: 1 !important;
 }
+
 .column-title {
   display: none;
 }
+
 .table-row {
   // display: table-row;
   display: flex;
@@ -33,11 +37,15 @@ overflow-wrap: break-word;}
   align-items: center;
   justify-content: center;
 }
+
 .table-cell:not(:first-child) {
-  border-left: 1px solid #D5D5D5;;
+  border-left: 1px solid #D5D5D5;
+  ;
 }
+
 .border {
-  border: 1px solid #D5D5D5;;
+  border: 1px solid #D5D5D5;
+  ;
 }
 
 .table {
@@ -47,6 +55,7 @@ overflow-wrap: break-word;}
   width: 90%;
   margin: 0 auto;
 }
+
 .w100 {
   width: 100%;
 }
@@ -61,29 +70,36 @@ overflow-wrap: break-word;}
   flex-direction: column;
   border-bottom: 1px solid #D5D5D5;
 }
+
 .table-header {
   display: flex;
   flex-wrap: wrap;
   align-content: center;
   width: 100%;
   justify-content: center;
-  border: 1px solid #D5D5D5;;
+  border: 1px solid #D5D5D5;
+  ;
+
   .table-header-child {
     flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
   }
+
   .table-header-child:not(:first-child) {
-    border-left: 1px solid #D5D5D5;;
+    border-left: 1px solid #D5D5D5;
+    ;
   }
 }
+
 .table-row-header {
   flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
 .table-row-header.hidden {
   visibility: hidden;
 }
@@ -114,6 +130,7 @@ overflow-wrap: break-word;}
 .table-row-child-wrapper.height {
   max-height: 100%;
 }
+
 .center {
   display: flex;
   align-items: center;
@@ -128,20 +145,25 @@ overflow-wrap: break-word;}
   position: absolute;
   left: -20px;
 }
+
 .borderBottom {
   border-bottom: 1px solid #595959;
 }
+
 .h100 {
-height: 100%;
+  height: 100%;
 }
+
 .w100 {
-width: 100%;
+  width: 100%;
 }
+
 .inputWidth {
   width: 81%;
 }
+
 .ml-7 {
-    margin-left: 5.7%;
+  margin-left: 5.7%;
 }
 
 ::ng-deep .mat-expansion-panel {
@@ -167,23 +189,25 @@ width: 100%;
   align-content: center;
   flex-direction: column;
 }
-.borders-child {	
-	border-top: 1px solid #D5D5D5;	
-    border-bottom: 1px solid #D5D5D5;	
+
+.borders-child {
+  border-top: 1px solid #D5D5D5;
+  border-bottom: 1px solid #D5D5D5;
 }
+
 ::ng-deep {
   span.cdk-visually-hidden {
-      display: none !important;
+    display: none !important;
   }
 
   button.mat-sort-header-button {
-      margin: auto !important;
-      color: #595959 !important;
-      font-family: "Ubuntu" !important;
+    margin: auto !important;
+    color: #595959 !important;
+    font-family: "Ubuntu" !important;
   }
 
   div.mat-sort-header-arrow {
-      margin: 0 !important;
+    margin: 0 !important;
   }
 }
 
@@ -191,39 +215,49 @@ width: 100%;
   .column-title {
     display: block;
   }
+
   .table-row-wrapper {
     border: none;
     flex-wrap: wrap;
     flex-direction: column;
   }
+
   .table-row:nth-child(even) {
     .table-row-wrapper {
       background-color: #e9ecef6e;
     }
   }
+
   .table-cell:not(:first-child) {
     border: none;
   }
+
   .border {
     border: none;
   }
+
   .table-row-group {
     border: none;
   }
+
   .table-header {
     border: none;
+
     .table-header-child {
       width: 50%;
       flex: none;
     }
+
     .table-header-child:not(:first-child) {
       border-left: none;
     }
   }
+
   .table-row-header {
     flex: 0 0 100%;
     background-color: #e6ecf1;
   }
+
   .cell-wrapper {
     display: flex;
     flex-direction: row;
@@ -231,66 +265,73 @@ width: 100%;
     width: 100%;
     text-align: left;
   }
+
   .table {
     margin: 0;
     width: 100%;
   }
+
   .cell-value {
     text-align: right;
   }
+
   .arrow {
     left: 10px;
     top: 8px;
   }
+
   ::ng-deep .mat-sort-header-arrow {
     margin: 0 !important;
   }
 }
 
 @media (max-width: 378px) {
-	.table-header {
-		.table-header-child {
-			width: 100%;
-		}
-	}	
+  .table-header {
+    .table-header-child {
+      width: 100%;
+    }
+  }
 }
 
 //Migue
 
 
-.table-row{
+.table-row {
   // display: table-row;
   display: flex;
-flex-direction: row;
-position: relative;
+  flex-direction: row;
+  position: relative;
 }
 
-.table-cell{
+.table-cell {
   // display: table-cell;
   // display: flex;
   // flex-direction: column;
   flex: 1;
-text-align: center;
-display: flex;
-align-items: center;
-justify-content: center;
-}
-.table-cell:not(:first-child) {
-border-left: 1px solid #D5D5D5;
-}
-.border{
-border: 1px solid rgb(97, 95, 95);
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.table{
+.table-cell:not(:first-child) {
+  border-left: 1px solid #D5D5D5;
+}
+
+.border {
+  border: 1px solid rgb(97, 95, 95);
+}
+
+.table {
   // display: table;
   display: flex;
-flex-direction: column;
-width: 90%;
-margin: 0 auto;
-// word-break: break-word;
+  flex-direction: column;
+  width: 90%;
+  margin: 0 auto;
+  // word-break: break-word;
 }
-.w100{
+
+.w100 {
   width: 100%;
 }
 
@@ -298,49 +339,54 @@ margin: 0 auto;
 //     display: table-column;
 // }
 
-.table-row-group{
+.table-row-group {
   // display: table-row-group;
   display: flex;
-flex-direction: column;
-border-bottom: 1px solid #D5D5D5;
+  flex-direction: column;
+  border-bottom: 1px solid #D5D5D5;
 }
-.table-header{
-display: flex;
-flex-wrap: wrap;
-align-content: center;
-width: 100%;
-justify-content: center;
-background-color: #e6ecf1;
-border: 1px solid #e6ecf1;
-.table-header-child{
+
+.table-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  width: 100%;
+  justify-content: center;
+  background-color: #e6ecf1;
+  border: 1px solid #e6ecf1;
+
+  .table-header-child {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .table-header-child:not(:first-child) {
+    border-left: 1px solid #e6ecf1;
+  }
+
+}
+
+.table-row-header {
   flex: 1;
   display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.table-header-child:not(:first-child){
-  border-left: 1px solid #e6ecf1;
-}
-  
-}
-.table-row-header{
-flex: 1;
-display: flex;
   justify-content: center;
   align-items: center;
 }
-.table-row-header.hidden{
+
+.table-row-header.hidden {
   visibility: hidden;
 }
 
-.table-row-wrapper{
+.table-row-wrapper {
   display: flex;
-width: 100%;
-border-left: 1px solid #D5D5D5;
-border-right: 1px solid #D5D5D5;
+  width: 100%;
+  border-left: 1px solid #D5D5D5;
+  border-right: 1px solid #D5D5D5;
 }
 
-.collapse{
+.collapse {
   display: none !important;
 }
 
@@ -348,78 +394,86 @@ border-right: 1px solid #D5D5D5;
 //     display: none;
 // }
 
-.table-row-child-wrapper{
+.table-row-child-wrapper {
   overflow: hidden;
 }
 
-.table-row-child-wrapper{
+.table-row-child-wrapper {
   max-height: 0;
 }
 
-.table-row-child-wrapper.height{
+.table-row-child-wrapper.height {
   max-height: 100%;
 }
-.center{
-display: flex;
-align-items: center;
-justify-content: center;
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.w100{
-width: 100%;
+.w100 {
+  width: 100%;
 }
 
-.arrow{
-position: absolute;
-left: -20px;
+.arrow {
+  position: absolute;
+  left: -20px;
 }
 
 ::ng-deep {
   span.cdk-visually-hidden {
-      display: none !important;
+    display: none !important;
   }
 
   button.mat-sort-header-button {
-      margin: auto !important;
-      color: #595959 !important;
-      font-family: "Ubuntu" !important;
+    margin: auto !important;
+    color: #595959 !important;
+    font-family: "Ubuntu" !important;
   }
 
   div.mat-sort-header-arrow {
-      margin: 0 !important;
+    margin: 0 !important;
   }
 }
 
 .borders-child {
-border-top: 1px solid #D5D5D5;
+  border-top: 1px solid #D5D5D5;
   border-bottom: 1px solid #D5D5D5;
 }
+
 .cell-value ::ng-deep .ui-calendar-w-btn input {
-padding: 0;
+  padding: 0;
 }
+
 .cell-value ::ng-deep .ui-widget.ui-button {
   position: relative;
   height: 100%;
 }
+
 .cell-value ::ng-deep .ui-calendar-w-btn span {
   display: flex !important;
 }
+
 .cell-value ::ng-deep .ui-calendar {
   display: flex !important;
 }
+
 .hoverBlue:hover {
-	background-color: lightsteelblue !important;
-}
-.fixedBlue{
   background-color: lightsteelblue !important;
-}
-.hoverBlue2{
-  background-color: lightsteelblue !important;
-}
-.center {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0;
 }
 
+.fixedBlue {
+  background-color: lightsteelblue !important;
+}
+
+.hoverBlue2 {
+  background-color: lightsteelblue !important;
+}
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+}

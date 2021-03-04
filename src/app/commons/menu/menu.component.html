@@ -60,6 +60,12 @@
             <i class="fa fa-angle-right float-right"></i>
             <br>
           </li>
+          <li>
+            <a [routerLink]="['/pantallaJustificacionExpres']" [queryParams]="{ searchMode : 'a' }"
+              (click)="mockups()">Designaciones</a>
+            <i class="fa fa-angle-right float-right"></i>
+            <br>
+          </li>
           <li [ngClass]="{'menu-item-active': isRoute('/pantallaJustificacionExpres')}">
             <a [routerLink]="['/pantallaJustificacionExpres']" (click)="mockups()">Justificación Exprés</a>
             <i class="fa fa-angle-right float-right"></i>
@@ -77,6 +83,12 @@
           </li>
           <li [ngClass]="{'menu-item-active': isRoute('/fichaPredesignacion')}">
             <a [routerLink]="['/fichaPredesignacion']" (click)="mockups()">Ficha Predesignación (EJG)</a>
+            <i class="fa fa-angle-right float-right"></i>
+            <br>
+          </li>
+          <li>
+            <a [routerLink]="['/pantallaAsistenciaExpres']" [queryParams]="{ searchMode : 'a' }"
+              (click)="mockups()">Asistencias</a>
             <i class="fa fa-angle-right float-right"></i>
             <br>
           </li>

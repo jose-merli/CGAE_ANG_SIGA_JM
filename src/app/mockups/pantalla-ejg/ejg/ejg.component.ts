@@ -362,23 +362,27 @@ export class EjgComponent2 implements OnInit {
   ];
 
   elementos = [
-    ['T.O PENAL NOVELDA/G. Civil Novelda', 'T.O PEN NOVIEMBRE', 'E2018/00068', 'ASNDADBH AHDBHAJD, ANA', '27/05/2018', 'Archivado', 'ASNDADBH AHDBHAJD, JUAN'],
-    ['T.O PENAL NOVELDA/G. Civil Novelda', 'T.O PEN NOVIEMBRE', 'E2018/00070', 'ASNDADBH AHDBHAJD, JUAN', '25/04/2018', 'Archivado', 'ASNDADBH AHDBHAJD, ANA'],
+    ["T.O PENAL NOVELDA/G. Civil Novelda", "T.O PEN NOVIEMBRE", "E2018/00068@enlace/fichaEjg", "ASNDADBH AHDBHAJD, ANA", "27/05/2018", "Archivado", "ASNDADBH AHDBHAJD, JUAN"],
+    ["T.O PENAL NOVELDA/G. Civil Novelda", "T.O PEN NOVIEMBRE", "E2018/00070@enlace/fichaEjg", "ASNDADBH AHDBHAJD, JUAN", "25/04/2018", "Archivado", "ASNDADBH AHDBHAJD, ANA"]
   ];
   elementosAux = [
-    ['T.O PENAL NOVELDA/G. Civil Novelda', 'T.O PEN NOVIEMBRE', 'E2018/00068', 'ASNDADBH AHDBHAJD, ANA', '27/05/2018', 'Archivado', 'ASNDADBH AHDBHAJD, JUAN'],
-    ['T.O PENAL NOVELDA/G. Civil Novelda', 'T.O PEN NOVIEMBRE', 'E2018/00070', 'ASNDADBH AHDBHAJD, JUAN', '25/04/2018', 'Archivado', 'ASNDADBH AHDBHAJD, ANA'],
+    ['T.O PENAL NOVELDA/G. Civil Novelda', 'T.O PEN NOVIEMBRE', 'E2018/00068@enlace/fichaEjg', 'ASNDADBH AHDBHAJD, ANA', '27/05/2018', 'Archivado', 'ASNDADBH AHDBHAJD, JUAN'],
+    ['T.O PENAL NOVELDA/G. Civil Novelda', 'T.O PEN NOVIEMBRE', 'E2018/00070@enlace/fichaEjg', 'ASNDADBH AHDBHAJD, JUAN', '25/04/2018', 'Archivado', 'ASNDADBH AHDBHAJD, ANA'],
   ];
+
   constructor() { }
 
   ngOnInit(): void {
   }
+
   saveForm($event) {
     this.cFormValidity = $event;
   }
+
   showResponse() {
     this.show = true;
   }
+
   hideResponse() {
     this.show = false;
   }
@@ -387,6 +391,7 @@ export class EjgComponent2 implements OnInit {
     this.allSelected = event;
     this.isDisabled = !event;
   }
+
   notifyAnySelected(event) {
     if (this.allSelected || event) {
       this.isDisabled = false;

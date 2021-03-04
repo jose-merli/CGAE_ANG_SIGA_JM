@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Message } from 'primeng/components/common/api';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-asistencia-expres',
@@ -17,9 +18,17 @@ export class AsistenciaExpresComponent implements OnInit {
     { label: 'Asistencia Exprés', value: 'b' }
   ];
 
-  constructor() { }
+  constructor(private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
+    if (this.activatedRoute.snapshot.queryParamMap.get('searchMode') != null &&
+      this.activatedRoute.snapshot.queryParamMap.get('searchMode') != undefined
+      && this.activatedRoute.snapshot.queryParamMap.get('searchMode') != ''
+      && this.activatedRoute.snapshot.queryParamMap.get('searchMode') == 'a') {
+
+      this.modoBusqueda = 'a';
+
+    }
   }
   showResponse() {
     this.show = true;
@@ -42,6 +51,10 @@ export class AsistenciaExpresComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  isDisabled() {
+    return this.modoBusqueda == 'a';
   }
 
 }

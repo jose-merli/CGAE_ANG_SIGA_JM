@@ -12,10 +12,12 @@
     <div class="card-footer">
         <div class="text-right main-button">
             <button pButton type="button" icon="fa fa-eraser" iconPos="left"
-                label="{{ 'general.boton.clear' | translate}}" (click)="hideResponse()"></button>
+                label="{{ 'general.boton.clear' | translate}}" (click)="hideResponse()"
+                [disabled]="isDisabledButtons()"></button>
             <button type="submit" pButton icon="fa fa-search" iconPos="left"
                 label="{{'general.boton.search' | translate}}"
-                (click)="showResponse();showMsg('info', 'Mostrando información buscada', '')"></button>
+                (click)="showResponse();showMsg('info', 'Mostrando información buscada', '')"
+                [disabled]="isDisabledButtons()"></button>
         </div>
     </div>
 </div>

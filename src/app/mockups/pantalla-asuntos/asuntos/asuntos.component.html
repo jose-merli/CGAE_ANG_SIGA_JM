@@ -8,7 +8,8 @@
         </div>
 
         <app-busqueda-asuntos [selectorEstados]="" [datePickers]="datePickers" [selectores]="selectores"
-            [emptyAccordions]="emptyAccordions" (formulario)="saveForm($event)" [modoBusqueda]="modoBusqueda">
+            [emptyAccordions]="emptyAccordions" (formulario)="saveForm($event)" [modoBusqueda]="modoBusqueda"
+            [datos]="datos">
         </app-busqueda-asuntos>
 
     </div>
@@ -30,8 +31,8 @@
 
             <app-paginador (seleccionarTodo)="selectedAll($event)" [type]="'TOP'"></app-paginador>
 
-            <app-resultado-asuntos [allSelected]="allSelected" [showResponse]="show" [cabeceras]="cabeceras" [elementos]="elementos"
-                [elementosAux]="elementosAux"></app-resultado-asuntos>
+            <app-resultado-asuntos [allSelected]="allSelected" [showResponse]="show" [cabeceras]="cabeceras"
+                [elementos]="elementos" [elementosAux]="elementosAux"></app-resultado-asuntos>
 
             <div>
                 <app-paginador [type]="'BOTTOM'"></app-paginador>

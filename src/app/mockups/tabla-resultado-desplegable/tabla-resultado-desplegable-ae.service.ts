@@ -59,7 +59,26 @@ export class TablaResultadoDesplegableAEService {
               { type: '2SelectorInput', value: '' },
               { type: 'link', value: '' },
               { type: 'datePicker', value: '' },
-              { type: 'buttomSelect', value: ['C / J', 'COMISARÍA CENTRO ALICANTE', 'PRUEBA J', 'C'] },
+              {
+                type: 'buttomSelect', value: ['C / J',
+                  {
+                    opciones: [
+                      { label: 'GUARDIA CIVIL IBI - IGCI', value: 1 },
+                      { label: 'POLICIA LOCAL SAX - VPLS', value: 2 },
+                      { label: 'SEPRONA ALICANTE - ASA', value: 3 },
+                      { label: 'CCOMISARIA PROVINCIAL ALICANTE - ACPA', value: 4 },
+                    ]
+                  },
+                  {
+                    opciones: [
+                      { label: 'JUZGADO DE LO SOCIAL Nº 5 - AS5', value: 1 },
+                      { label: 'JUZGADO DE MENORES Nº 1 - AMN1', value: 2 },
+                      { label: 'JUZGADO DE INSTRUCCIÓN Nº 1 - BITR1', value: 3 },
+                      { label: 'JUZGADO DE LO PENAL Nº 1 - BP1', value: 4 },
+                    ]
+                  }
+                  , 'C']
+              },
               { type: 'input', value: '' },
             ],
           },
@@ -69,7 +88,26 @@ export class TablaResultadoDesplegableAEService {
               { type: '2SelectorInput', value: '' },
               { type: 'link', value: '' },
               { type: 'datePicker', value: '' },
-              { type: 'buttomSelect', value: ['C / J', 'COMISARÍA CENTRO ALICANTE', 'PRUEBA J', 'C'] },
+              {
+                type: 'buttomSelect', value: ['C / J',
+                  {
+                    opciones: [
+                      { label: 'GUARDIA CIVIL IBI - IGCI', value: 1 },
+                      { label: 'POLICIA LOCAL SAX - VPLS', value: 2 },
+                      { label: 'SEPRONA ALICANTE - ASA', value: 3 },
+                      { label: 'CCOMISARIA PROVINCIAL ALICANTE - ACPA', value: 4 },
+                    ]
+                  },
+                  {
+                    opciones: [
+                      { label: 'JUZGADO DE LO SOCIAL Nº 5 - AS5', value: 1 },
+                      { label: 'JUZGADO DE MENORES Nº 1 - AMN1', value: 2 },
+                      { label: 'JUZGADO DE INSTRUCCIÓN Nº 1 - BITR1', value: 3 },
+                      { label: 'JUZGADO DE LO PENAL Nº 1 - BP1', value: 4 },
+                    ]
+                  }
+                  , 'C']
+              },
               { type: 'input', value: '' },
             ],
           }

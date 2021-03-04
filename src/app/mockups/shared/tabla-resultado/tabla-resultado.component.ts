@@ -121,6 +121,19 @@ export class TablaResultadoComponent implements OnInit {
     });
     this.elementToSortedData();
   }
+
+  isEnlace(texto: string): boolean {
+    return texto.indexOf('@enlace') != -1;
+  }
+
+  getEnlace(texto: string) {
+    return texto.split('@enlace')[1];
+  }
+
+  getTexto(texto: string): string {
+    return texto.split('@enlace')[0];
+  }
+
 }
 
 function compare(a: number | string, b: number | string, isAsc: boolean) {

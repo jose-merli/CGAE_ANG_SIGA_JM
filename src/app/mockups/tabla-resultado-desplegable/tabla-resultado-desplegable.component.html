@@ -7,13 +7,14 @@
       </mat-form-field>
       <span>Columnas</span>-->
     <p-multiSelect #mySelect [formControl]="info" [(ngModel)]='selectedHeader' [options]="cabeceras"
-        [defaultLabel]="numColumnas + ' visibles'" optionLabel="name" optionValue="id" [displaySelectedLabel]="false">
+        [defaultLabel]="numColumnas + ' visibles'" optionLabel="name" optionValue="id" [displaySelectedLabel]="false"
+        (onChange)="ocultarCabecera($event)">
     </p-multiSelect> Columnas
 </div>
 <div class="table" matSort (matSortChange)="sortData($event)" #table id="tablaResultadoDesplegable">
     <div class="table-header ">
         <div class="table-header-child p-2" *ngFor="let cabecera of cabeceras; let j = index" #BorderedHeader
-            [ngClass]="{'collapse': cabeceraOculta(selectedHeader, cabecera.id, BorderedHeader, BorderedCell)}">
+            [id]="cabecera.id">
             <div>
                 <div [mat-sort-header]=cabecera.id>{{cabecera.name}}</div>
                 <input type="text" class="form-control" pInputTex [(ngModel)]="searchText[j]"
@@ -83,8 +84,9 @@
                                     </div>
                                 </div>
                                 <div class="col-7 ml-2 my-auto p-0">
-                                    <app-selector [textoVisible]="cell.value[3] == 'C' ? cell.value[1] : cell.value[2]"
-                                        [i]="0" [selector]="cell.value"></app-selector>
+                                    <app-selector [i]="0"
+                                        [selector]="cell.value[3] == 'C' ? cell.value[1] : cell.value[2]">
+                                    </app-selector>
                                 </div>
                             </div>
                         </span>
@@ -141,8 +143,9 @@
                                     </div>
                                 </div>
                                 <div class="col-7 ml-2 my-auto p-0">
-                                    <app-selector [textoVisible]="cell.value[3] == 'C' ? cell.value[1] : cell.value[2]"
-                                        [i]="0" [selector]="cell.value"></app-selector>
+                                    <app-selector [i]="0"
+                                        [selector]="cell.value[3] == 'C' ? cell.value[1] : cell.value[2]">
+                                    </app-selector>
                                 </div>
                             </div>
                         </span>

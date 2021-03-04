@@ -8,10 +8,10 @@ import { Component, Input, OnInit } from '@angular/core';
 export class MigasDePanComponent implements OnInit {
 
   @Input() rutas: string[];
+  @Input() tooltip: string;
 
   constructor() { }
 
   ngOnInit() {
   }
-
 }

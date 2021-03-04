@@ -58,8 +58,8 @@ export class TarjetaRelacionesComponent implements OnInit {
       name: "SJCS"
     },
     {
-      id: "anioNum",
-      name: "Año/Número"
+      id: "identificacion",
+      name: "Identificación"
     },
     {
       id: "fecha",

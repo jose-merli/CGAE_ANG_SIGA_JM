@@ -13,8 +13,8 @@ export class TarjetaExpedientesEconomicosEjgsComponent implements OnInit {
 
   cabeceras2 = [
     {
-      id: "justiciable",
-      name: "Justiciable"
+      id: "apellidosnombre",
+      name: "Apelidos, Nombre"
     },
     {
       id: "solicitado",

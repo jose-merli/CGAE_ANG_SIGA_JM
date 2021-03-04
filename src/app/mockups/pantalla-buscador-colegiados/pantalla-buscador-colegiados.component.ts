@@ -9,6 +9,7 @@ import { Location } from '@angular/common';
 })
 export class PantallaBuscadorColegiadosComponent implements OnInit {
 
+  rutas: string[] = ['SJCS', 'EJGs', 'Búsqueda Colegiado'];
   msgs: Message[] = [];
   show = false;
 
@@ -59,6 +60,8 @@ export class PantallaBuscadorColegiadosComponent implements OnInit {
     if (sessionStorage.getItem('usuarioBusquedaExpress')) {
       sessionStorage.removeItem('usuarioBusquedaExpress')
     }
+
+    this.showMsg('info', 'Este buscador puede ser accedido desde varios lugares', '');
   }
 
   showMsg(severity, summary, detail) {

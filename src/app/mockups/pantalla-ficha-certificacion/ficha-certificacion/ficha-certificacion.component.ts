@@ -9,9 +9,9 @@ import { Message } from 'primeng/components/common/api';
 })
 export class FichaCertificacionComponent implements OnInit {
 
-  panelDatGenOpenState: boolean = false;
+  panelDatGenOpenState: boolean = true;
   isDisabled = true;
-  panelFacOpenState: boolean = false;
+  panelFacOpenState: boolean = true;
   msgs: Message[] = [];
   tarjetaFija = null;
   rutas = null;

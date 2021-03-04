@@ -10,23 +10,44 @@
                 <ng-template matExpansionPanelContent>
 
                     <div *ngIf="modoBusqueda === 'a'" class="form-row">
-                        <div class="form-group-interlineado col-lg-3 col-md-3" *ngFor="let titulo of inputsDivididos">
-                            <app-input-dividido [titulo]=titulo></app-input-dividido>
+                        <div class="form-group-interlineado col-lg-3 col-md-3">
+                            <label>{{ datosFiltroDesignaciones.inputsDivididos[0] }}</label>
+                            <div class="d-flex">
+                                <input type="text" class="form-control" pInputText style="width: 48%;">
+                                <span class="mx-1 d-flex justify-content-center align-items-center"
+                                    style="width: 4%;">/</span>
+                                <input type="text" class="form-control" pInputText style="width: 48%;">
+                            </div>
                         </div>
 
                         <div class="form-group-interlineado col-lg-3 col-md-3"
-                            *ngFor="let selector of selectores1; let i = index;">
-                            <app-selector [i]="i" [selector]="selector"></app-selector>
+                            *ngFor="let datePickerTitle of datosFiltroDesignaciones.datepickers">
+                            <label>{{ datePickerTitle }}</label>
+                            <app-fecha [utc]="false"></app-fecha>
                         </div>
 
-                        <div class="form-group-interlineado col-lg-6 col-md-6"
-                            *ngFor="let datePickerTitle of datePickers1">
-                            <app-date-picker-range [datePickerTitle]="datePickerTitle"></app-date-picker-range>
-                        </div>
                         <div class="form-group-interlineado col-lg-3 col-md-3">
-                            <label>NIG</label>
+                            <app-selector [i]="i" [selector]="datosFiltroDesignaciones.selectores[0]"></app-selector>
+                        </div>
+
+                        <div class="form-group-interlineado col-lg-3 col-md-3">
+                            <label>{{ datosFiltroDesignaciones.inputsDivididos[1] }}</label>
                             <input type="text" class="form-control" pInputText>
                         </div>
+
+                        <div class="form-group-interlineado col-lg-3 col-md-3">
+                            <app-selector [i]="i" [selector]="datosFiltroDesignaciones.selectores[1]"></app-selector>
+                        </div>
+
+                        <div class="form-group-interlineado col-lg-3 col-md-3">
+                            <label>{{ datosFiltroDesignaciones.inputs[0] }}</label>
+                            <input type="text" class="form-control" pInputText>
+                        </div>
+
+                        <div class="form-group-interlineado col-lg-3 col-md-3">
+                            <app-selector [i]="i" [selector]="datosFiltroDesignaciones.selectores[2]"></app-selector>
+                        </div>
+
                     </div>
 
                     <div *ngIf="modoBusqueda === 'b'" class="form-row">
@@ -44,23 +65,42 @@
                     </div>
 
                     <div *ngIf="modoBusqueda === 'c'" class="form-row">
-                        <div class="form-group-interlineado col-lg-3 col-md-3"
-                            *ngFor="let titulo of inputsDivididosAsis">
-                            <app-input-dividido [titulo]=titulo></app-input-dividido>
-                        </div>
-
-                        <div class="form-group-interlineado col-lg-3 col-md-3"
-                            *ngFor="let selector of selectoresAsistencias; let i = index;">
-                            <app-selector [i]="i" [selector]="selector"></app-selector>
-                        </div>
-
-                        <div class="form-group-interlineado col-lg-6 col-md-6">
-                            <app-date-picker-range [datePickerTitle]="'Fecha Apertura Asistencia'">
-                            </app-date-picker-range>
-                        </div>
                         <div class="form-group-interlineado col-lg-3 col-md-3">
-                            <label>Nº Diligencia / Nº Asunto</label>
+                            <label>{{ datosFiltroAsistencias.inputsDivididos[0] }}</label>
+                            <div class="d-flex">
+                                <input type="text" class="form-control" pInputText style="width: 48%;">
+                                <span class="mx-1 d-flex justify-content-center align-items-center"
+                                    style="width: 4%;">/</span>
+                                <input type="text" class="form-control" pInputText style="width: 48%;">
+                            </div>
+                        </div>
+
+                        <div class="form-group-interlineado col-lg-3 col-md-3"
+                            *ngFor="let datePickerTitle of datosFiltroAsistencias.datepickers">
+                            <label>{{ datePickerTitle }}</label>
+                            <app-fecha [utc]="false"></app-fecha>
+                        </div>
+
+                        <div class="form-group-interlineado col-lg-3 col-md-3">
+                            <app-selector [i]="i" [selector]="datosFiltroAsistencias.selectores[0]"></app-selector>
+                        </div>
+
+                        <div class="form-group-interlineado col-lg-3 col-md-3">
+                            <label>{{ datosFiltroAsistencias.inputsDivididos[1] }}</label>
                             <input type="text" class="form-control" pInputText>
+                        </div>
+
+                        <div class="form-group-interlineado col-lg-3 col-md-3">
+                            <app-selector [i]="i" [selector]="datosFiltroAsistencias.selectores[1]"></app-selector>
+                        </div>
+
+                        <div class="form-group-interlineado col-lg-3 col-md-3">
+                            <label>{{ datosFiltroAsistencias.inputs[0] }}</label>
+                            <input type="text" class="form-control" pInputText>
+                        </div>
+
+                        <div class="form-group-interlineado col-lg-3 col-md-3">
+                            <app-selector [i]="i" [selector]="datosFiltroAsistencias.selectores[2]"></app-selector>
                         </div>
                     </div>
 
@@ -86,7 +126,7 @@
             <mat-expansion-panel class="mb-1">
                 <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
                     <div class="w100 font-weight-bold">
-                        <p class="w100">Interesados</p>
+                        <p class="w100">Interesado</p>
                     </div>
                 </mat-expansion-panel-header>
                 <ng-template matExpansionPanelContent>
@@ -102,7 +142,7 @@
         </mat-accordion>
 
         <mat-accordion class="example-headers-align" multi>
-            <mat-expansion-panel class="mb-1">
+            <mat-expansion-panel class="mb-1" [expanded]="expandedTra">
                 <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
                     <div class="w100 font-weight-bold">
                         <p class="w100">Tramitación</p>
@@ -111,14 +151,13 @@
                 <ng-template matExpansionPanelContent>
                     <form [formGroup]="cForm">
                         <div class="form-row">
-                            <div class="form-group-interlineado col-lg-3 col-md-3"
+                            <div class="form-group-interlineado col-lg-6 col-md-6"
                                 *ngFor="let selector of selectores2; let i = index;">
                                 <app-selector [i]="i" [selector]="selector"></app-selector>
                             </div>
-                            <div class="form-group-interlineado col-lg-3 col-md-3"
-                                *ngFor="let tituloInput of titulosInputTramitacion">
-                                <label>{{tituloInput}}</label>
-                                <input type="text" class="form-control" pInputText>
+                            <div class="form-group-interlineado col-lg-12 col-md-12">
+                                <app-buscador-colegial [numColegiado]="usuarioBusquedaExpress.numColegiado"
+                                    [nombreAp]="usuarioBusquedaExpress.nombreAp"></app-buscador-colegial>
                             </div>
                         </div>
                     </form>

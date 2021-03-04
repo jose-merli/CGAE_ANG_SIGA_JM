@@ -202,6 +202,10 @@ export class FichaEjgsComponent implements OnInit {
           "value": "Dictaminado"
         },
         {
+          "key": "Usuario alta",
+          "value": "ACXVQJPF YQSGM, MARIA DEL MAR"
+        },
+        {
           "key": "Fecha",
           "value": "02/07/2007"
         }

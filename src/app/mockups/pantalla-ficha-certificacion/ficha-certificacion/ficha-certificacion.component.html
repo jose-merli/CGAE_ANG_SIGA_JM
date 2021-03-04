@@ -4,7 +4,8 @@
             <mat-accordion class="example-headers-align" multi>
 
                 <mat-expansion-panel (opened)="panelDatGenOpenState = true" (closed)="panelDatGenOpenState = false"
-                    [ngClass]="{'tarjeta-cerrada': !panelDatGenOpenState, 'tarjeta-abierta' : panelDatGenOpenState}">
+                    [ngClass]="{'tarjeta-cerrada': !panelDatGenOpenState, 'tarjeta-abierta' : panelDatGenOpenState}"
+                    [expanded]="panelDatGenOpenState">
                     <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
                         <div *ngIf="!panelDatGenOpenState" class="form-row w100">
 
@@ -97,7 +98,8 @@
         <div class="card-body p-0">
             <mat-accordion class="example-headers-align" multi>
                 <mat-expansion-panel (opened)="panelFacOpenState = true" (closed)="panelFacOpenState = false"
-                    [ngClass]="{'tarjeta-cerrada': !panelFacOpenState, 'tarjeta-abierta' : panelFacOpenState}">
+                    [ngClass]="{'tarjeta-cerrada': !panelFacOpenState, 'tarjeta-abierta' : panelFacOpenState}"
+                    [expanded]="panelFacOpenState">
                     <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
                         <div *ngIf="!panelFacOpenState" class="form-row w100">
 
