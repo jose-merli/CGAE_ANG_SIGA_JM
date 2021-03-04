@@ -247,7 +247,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
       );
     }else{
       //hacer insert
-      this.sigaServices.post("gestionejg_insertaDatosGenerales", this.body).subscribe(
+      this.sigaServices.post("gestionejg_insertaDatosGenerales", JSON.stringify(this.body)).subscribe(
         n => {
           this.progressSpinner=false;
         },

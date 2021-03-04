@@ -32,7 +32,9 @@ export let endpoints_EJG: any = {
         gestionejg_cambioEstadoMasivo: "ejg/gestion-ejg/cambioEstadoMasivo",
 
     //Datos Generales
-        gestionejg_guardarDatosGenerales: "ejg/gestion-ejg/guardarDatosGenerales",
+        //gestionejg_guardarDatosGenerales: "ejg/gestion-ejg/guardarDatosGenerales",
+        gestionejg_insertaDatosGenerales: "ejg/gestion-ejg/insertaDatosGenerales",
+        gestionejg_actualizaDatosGenerales:"ejg/gestion-ejg/actualizaDatosGenerales",
 
     //Unidad Familiar
         gestionejg_borrarFamiliar: "ejg/gestion-ejg/borrarFamiliar",

@@ -17,6 +17,8 @@ export class EJGItem {
     fechaLimiteDesd: Date;
     fechaLimiteHast: Date;
 
+    idInstitucion: string;
+
 
     dictamen: string;
     dictamenSing: string;
