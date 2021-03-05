@@ -83,7 +83,7 @@ export class DetalleTarjetaComponent implements OnInit {
       this.notarioForm.get('nombre').setValue(this.datosProcurador.nombre);
       this.notarioForm.get('ap1').setValue(this.datosProcurador.ap1);
       this.notarioForm.get('ap2').setValue(this.datosProcurador.ap2);
-      this.notarioForm.get('numDesig').setValue('D2019/234567');
+      this.notarioForm.get('numDesig').setValue('2019/234567');
       this.fechaDesig = new Date('02/04/2019');
     }
 

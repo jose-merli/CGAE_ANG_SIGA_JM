@@ -7,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FichaActuacionOficioComponent implements OnInit {
 
-  rutas: string[] = ['SJCS', 'Designaciones', 'Actuaciones'];
+  rutas: string[] = ['SJCS', 'Designaciones', 'Actuaciones', 'Ficha Actuación'];
 
   tarjetaFija = {
     nombre: "Resumen Actuación",

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ElementRef, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router, RoutesRecognized } from '@angular/router';
 
@@ -25,6 +25,8 @@ export class BusquedaEJGComponent implements OnInit {
   @Input() selectores = [];
   @Input() datePickers = [];
   @Input() inputs = [];
+
+  @ViewChild('numero') numero: ElementRef;
 
   selectores1 = [];
   selectores2 = [];
@@ -71,6 +73,8 @@ export class BusquedaEJGComponent implements OnInit {
       this.inputs2 = this.inputs[1];
       this.inputs3 = this.inputs[2];
     }
+
+    this.cForm.get('anio').setValue(new Date().getFullYear().toString());
   }
 
   sendFom(value: FormGroup) {
@@ -89,6 +93,10 @@ export class BusquedaEJGComponent implements OnInit {
           sessionStorage.setItem("esBuscadorColegiados", "false");
         }
       });
+  }
+
+  ngAfterViewInit(): void {
+    this.numero.nativeElement.focus();
   }
 
 }

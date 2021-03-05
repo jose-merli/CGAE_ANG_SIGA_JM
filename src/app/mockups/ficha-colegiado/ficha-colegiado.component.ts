@@ -7,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FichaColegiadoComponent implements OnInit {
 
+  rutas: string[] = ['Censo', 'Colegiados', 'Ficha colegial'];
   tarjetaFija = {
     nombre: "Información Resumen",
     icono: 'fas fa-clipboard',

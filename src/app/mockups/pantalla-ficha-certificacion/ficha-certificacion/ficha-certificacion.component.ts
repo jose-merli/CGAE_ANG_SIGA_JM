@@ -9,12 +9,12 @@ import { Message } from 'primeng/components/common/api';
 })
 export class FichaCertificacionComponent implements OnInit {
 
+  rutas = ['SJCS', 'Facturación', 'Certificaciones', 'Ficha Certificación'];
   panelDatGenOpenState: boolean = true;
   isDisabled = true;
   panelFacOpenState: boolean = true;
   msgs: Message[] = [];
   tarjetaFija = null;
-  rutas = null;
   listaTarjetas = [
     {
       id: 'pantFichaCertiDatGen',
@@ -125,8 +125,8 @@ export class FichaCertificacionComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  notifyAnySelected(event){
-    if (event){
+  notifyAnySelected(event) {
+    if (event) {
       this.isDisabled = false;
     } else {
       this.isDisabled = true;

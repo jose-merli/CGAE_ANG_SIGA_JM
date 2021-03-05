@@ -22,7 +22,7 @@ export class FichaPredesignacionComponent implements OnInit {
       detalle: false,
       campos: [
         {
-          "key": "Año/Número EJG",
+          "key": "Identificación EJG",
           "value": "E2018/00068"
         },
         {
@@ -92,8 +92,16 @@ export class FichaPredesignacionComponent implements OnInit {
           "value": "6492"
         },
         {
-          "key": "Nombre",
-          "value": "MIGUEL DSFDFGDG DSGASG"
+          "key": "Apellidos, nombre",
+          "value": "DSFDFGDG DSGASG, MIGUEL"
+        },
+        {
+          "key": "Nº Designación",
+          "value": "2019/234567"
+        },
+        {
+          "key": "Fecha de designación",
+          "value": "02/04/2019"
         }
       ]
     },

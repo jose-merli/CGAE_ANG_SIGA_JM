@@ -8,6 +8,8 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./justificacion-expres.component.scss']
 })
 export class JustificacionExpresComponent implements OnInit {
+
+  rutas = ['SJCS', 'Designaciones'];
   msgs: Message[] = [];
   rowGroups: RowGroup[];
   rowGroupsAux: RowGroup[];

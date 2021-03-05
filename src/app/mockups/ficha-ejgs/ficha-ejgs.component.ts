@@ -8,7 +8,7 @@ import { Router, RoutesRecognized } from '@angular/router';
 })
 export class FichaEjgsComponent implements OnInit {
 
-  rutas: string[] = ['SJCS', 'EJGS'];
+  rutas: string[] = ['SJCS', 'EJGS', 'Ficha EJG'];
   tarjetaFija = {
     nombre: "Información Resumen",
     icono: 'fas fa-clipboard',
@@ -63,8 +63,8 @@ export class FichaEjgsComponent implements OnInit {
           "value": "J02/07/2007"
         },
         {
-          "key": "Año/Número EJG",
-          "value": "e2018/00068"
+          "key": "Identificación",
+          "value": "E2018/00068"
         },
         {
           "key": "Tipo EJG",
@@ -117,12 +117,8 @@ export class FichaEjgsComponent implements OnInit {
           "value": "21490602T"
         },
         {
-          "key": "Apellidos",
-          "value": "RFOFOSQ DDUVBJX"
-        },
-        {
-          "key": "Nombre",
-          "value": "JUAN"
+          "key": "Apellidos, nombre",
+          "value": "PÉREZ GÓMEZ, JUAN"
         },
         {
           "key": "Estado EJG",
@@ -221,8 +217,36 @@ export class FichaEjgsComponent implements OnInit {
       opened: false,
       campos: [
         {
+          "key": "Fecha lim.Presentación",
+          "value": "06/02/2019"
+        },
+        {
+          "key": "Presentador",
+          "value": "GÓMEZ ADASDF, VICTOR JAVIER (SOLICITANTE)"
+        },
+        {
+          "key": "Documento",
+          "value": "SFSFSAF"
+        },
+        {
+          "key": "Registro entrada",
+          "value": "6742dhui"
+        },
+        {
+          "key": "Registro salida",
+          "value": "23dfgdfg"
+        },
+        {
+          "key": "Fecha de presentación",
+          "value": "09/02/2019"
+        },
+        {
+          "key": "Propietario",
+          "value": "SDFSDF GDSDGGS, SUSANA"
+        },
+        {
           "key": "Número total de Documentos",
-          "value": "7"
+          "value": "2"
         }
       ]
     },

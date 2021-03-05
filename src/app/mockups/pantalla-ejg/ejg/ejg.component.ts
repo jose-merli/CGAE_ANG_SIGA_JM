@@ -8,7 +8,7 @@ import { Message } from 'primeng/components/common/api';
 })
 export class EjgComponent2 implements OnInit {
   isDisabled = true;
-  rutas = ['SJCS', 'E.J.G'];
+  rutas = ['SJCS', 'EJGs'];
   msgs: Message[] = [];
   cFormValidity = true;
   show = false;

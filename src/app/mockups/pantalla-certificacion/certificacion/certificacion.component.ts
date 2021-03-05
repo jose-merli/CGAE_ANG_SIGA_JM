@@ -9,6 +9,7 @@ import { Message } from 'primeng/components/common/api';
 })
 export class CertificacionComponent2 implements OnInit {
 
+  rutas = ['SJCS', 'Facturación', 'Certificaciones'];
   isDisabled = true;
   msgs: Message[] = [];
   cFormValidity = true;
@@ -71,12 +72,12 @@ export class CertificacionComponent2 implements OnInit {
     this.show = false;
   }
 
-  selectedAll(event){
+  selectedAll(event) {
     this.allSelected = event;
     this.isDisabled = !event;
   }
-  notifyAnySelected(event){
-    if (this.allSelected || event){
+  notifyAnySelected(event) {
+    if (this.allSelected || event) {
       this.isDisabled = false;
     } else {
       this.isDisabled = true;
