@@ -107,7 +107,7 @@ export class GestionEjgComponent implements OnInit {
               value: this.body.numAnnioProcedimiento
             },
             {
-              label: "Apellidos, Nombre Solicitante",
+              label: "Solicitante",
               value: this.body.nombreApeSolicitante
             },
       
@@ -116,7 +116,7 @@ export class GestionEjgComponent implements OnInit {
               value: this.body.estadoEJG
             },
             {
-              label: "Apellidos, Nombre Designado",
+              label: "Designado",
               value: this.body.apellidosYNombre
             },
             {
@@ -124,7 +124,7 @@ export class GestionEjgComponent implements OnInit {
               value: this.body.dictamenSing
             },
             {
-              label: "Resolución CAJG",
+              label: "CAJG",
               value: this.body.resolucion
             },
             {
@@ -141,12 +141,9 @@ export class GestionEjgComponent implements OnInit {
             //  hemos pulsado nuevo
             this.body = new EJGItem();
             this.modoEdicion = false;
-            this.isOpenReceive('datosGenerales');
           }
          }
          this.obtenerPermisos();
-          
-         
     }
     ).catch(error => console.error(error));
     //this.commonsService.scrollTop();

@@ -1,10 +1,11 @@
-import { Component, OnInit, Input, EventEmitter, Output, ViewEncapsulation, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, ViewEncapsulation, SimpleChanges, ViewChild } from '@angular/core';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { TranslateService } from '../../../../../commons/translate';
 import { Router } from '@angular/router';
+import { MultiSelect } from 'primeng/multiselect';
 
 @Component({
   selector: 'app-datos-generales-ejg',
@@ -36,6 +37,8 @@ export class DatosGeneralesEjgComponent implements OnInit {
   tipoExpedienteDes: string;
   showTipoExp: boolean = false;
   
+
+  @ViewChild('someDropdown') someDropdown: MultiSelect;
 
   selectedDatosColegiales;
   showMessageInscripcion;
@@ -341,4 +344,11 @@ export class DatosGeneralesEjgComponent implements OnInit {
     this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
     this.resaltadoDatos=true;
   }
+
+  focusInputField() {
+    setTimeout(() => {
+      this.someDropdown.filterInputChild.nativeElement.focus();  
+    }, 300);
+  }
+
 }
