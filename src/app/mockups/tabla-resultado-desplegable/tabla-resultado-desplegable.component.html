@@ -6,9 +6,9 @@
         </mat-select>
       </mat-form-field>
       <span>Columnas</span>-->
-    <p-multiSelect #mySelect [formControl]="info" [(ngModel)]='selectedHeader' [options]="cabeceras"
-        [defaultLabel]="numColumnas + ' visibles'" optionLabel="name" optionValue="id" [displaySelectedLabel]="false"
-        (onChange)="ocultarCabecera($event)">
+    <p-multiSelect #mySelect [formControl]="info" [(ngModel)]='selectedHeader' [options]="cabeceras" optionLabel="name"
+        optionValue="id" (onChange)="ocultarColumna($event)" defaultLabel="0 visibles" maxSelectedLabels="0"
+        [selectedItemsLabel]="textSelected">
     </p-multiSelect> Columnas
 </div>
 <div class="table" matSort (matSortChange)="sortData($event)" #table id="tablaResultadoDesplegable">

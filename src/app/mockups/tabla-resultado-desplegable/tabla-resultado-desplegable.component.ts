@@ -20,14 +20,14 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   searchText = [];
   selectedHeader = [];
   positionsToDelete = [];
-  numCabeceras = 0;
-  numColumnas = 0;
   numColumnasChecked = 0;
   selected = false;
   selectedArray = [];
   RGid = "inicial";
   down = false;
   @ViewChild('table') table: ElementRef;
+  itemsaOcultar = [];
+  textSelected: string = "{0} visibles";
 
 
   constructor(
@@ -45,8 +45,6 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.numCabeceras = this.cabeceras.length;
-    this.numColumnas = this.numCabeceras;
     this.cabeceras.forEach(cab => {
       this.selectedHeader.push(cab);
       this.cabecerasMultiselect.push(cab.name);
@@ -138,16 +136,10 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }
     pos = this.getPosition(selectedHeaders);
 
-    if (ocultar) {
-      this.renderer.addClass(document.getElementById(cabecera), "collapse");
-    } else {
-      this.renderer.removeClass(document.getElementById(cabecera), "collapse");
-    }
     return ocultar;
   }
   posicionOcultar(z) {
-    if (this.positionsToDelete != undefined && this.positionsToDelete != []) {
-      this.numColumnas = this.numCabeceras - this.positionsToDelete.length + 1;
+    if (this.positionsToDelete != undefined && this.positionsToDelete.length > 0) {
       return this.positionsToDelete.includes(z);
     } else {
       return false;
@@ -235,24 +227,25 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     return texto === 'Si';
   }
 
-  ocultarCabecera(event) {
-    console.log(event.itemValue);
-    console.log(event.value);
-    console.log(event.originalEvent);
+  ocultarColumna(event) {
 
     if (event.itemValue == undefined && event.value.length == 0) {
       this.cabeceras.forEach(element => {
         this.renderer.addClass(document.getElementById(element.id), "collapse");
       });
+      this.getPosition(this.cabeceras);
+      this.itemsaOcultar = this.cabeceras;
     }
 
     if (event.itemValue == undefined && event.value.length > 0) {
       this.cabeceras.forEach(element => {
         this.renderer.removeClass(document.getElementById(element.id), "collapse");
       });
+      this.getPosition([]);
+      this.itemsaOcultar = [];
     }
 
-    if (event.itemValue != undefined && event.value.length > 0) {
+    if (event.itemValue != undefined && event.value.length >= 0) {
 
       let ocultar = true;
       event.value.forEach(element => {
@@ -261,7 +254,20 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         }
       });
 
-      ocultar ? this.renderer.addClass(document.getElementById(event.itemValue.id), "collapse") : this.renderer.removeClass(document.getElementById(event.itemValue.id), "collapse");
+      if (ocultar) {
+        this.renderer.addClass(document.getElementById(event.itemValue.id), "collapse");
+        this.itemsaOcultar.push(event.itemValue);
+      } else {
+        this.renderer.removeClass(document.getElementById(event.itemValue.id), "collapse");
+        this.itemsaOcultar.forEach((element, index) => {
+          if (element.id == event.itemValue.id) {
+            this.itemsaOcultar.splice(index, 1);
+          }
+        });
+
+      }
+
+      this.getPosition(this.itemsaOcultar);
 
     }
 

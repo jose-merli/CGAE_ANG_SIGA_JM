@@ -10,11 +10,15 @@
 
         <form [formGroup]="notarioForm">
             <div class="form-row">
-                <div *ngFor="let campo of campos" class="form-group col-lg-3 col-md-6">
+                <div *ngFor="let campo of campos" class="form-group col-lg-3 col-md-3">
                     <label>{{campo.nombre}}</label>
                     <input [type]="campo.tipo" [formControlName]="campo.id" class="form-control" pInputText>
                 </div>
-                <div *ngFor="let selector of selectores" class="form-group col-lg-3 col-md-6">
+                <div *ngFor="let datepicker of datepickers" class="form-group col-lg-3 col-md-3">
+                    <label>{{ datepicker }}</label>
+                    <app-fecha [utc]="false" [(value)]="fechaDesig"></app-fecha>
+                </div>
+                <div *ngFor="let selector of selectores" class="form-group col-lg-3 col-md-3">
                     <app-selector [i]="0" [selector]="selector"></app-selector>
                 </div>
             </div>
@@ -30,6 +34,6 @@
         <button pButton type="button"  icon="far fa-save" iconPos="left" label="Guardar"
             (click)="showMsg('success', 'Se ha guardado correctamente', '')"></button>
         <button pButton type="button"  icon="fa fa-search" iconPos="left" label="Buscar"
-            (click)="showMsg('info', 'Mostrando información buscada', '')"></button>
+            (click)="showMsg('info', 'Mostrando información buscada', '');search();"></button>
     </div>
 </div>

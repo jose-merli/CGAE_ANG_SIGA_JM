@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Message } from 'primeng/components/common/api';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-detalle-tarjeta',
@@ -8,33 +9,51 @@ import { Message } from 'primeng/components/common/api';
   styleUrls: ['./detalle-tarjeta.component.scss']
 })
 export class DetalleTarjetaComponent implements OnInit {
+
   msgs: Message[] = [];
   @Input() title = "";
+  @Input() datosProcurador;
   imagen = "assets/user.PNG";
+
   notarioForm = new FormGroup({
     id: new FormControl(''),
     tipo: new FormControl(''),
     nombre: new FormControl(''),
     ap1: new FormControl(''),
     ap2: new FormControl(''),
+    numDesig: new FormControl('')
   });
-  campos = [{
-    id: "id",
-    nombre: "Identificación (*)",
-    tipo: "text"
-  }, {
-    id: "nombre",
-    nombre: "Nombre",
-    tipo: "text"
-  }, {
-    id: "ap1",
-    nombre: "Primer apellido",
-    tipo: "text"
-  }, {
-    id: "ap2",
-    nombre: "Segundo apellido",
-    tipo: "text"
-  }];
+
+  fechaDesig = null;
+
+  campos = [
+    {
+      id: "id",
+      nombre: "Identificación (*)",
+      tipo: "text"
+    },
+    {
+      id: "nombre",
+      nombre: "Nombre",
+      tipo: "text"
+    },
+    {
+      id: "ap1",
+      nombre: "Primer apellido",
+      tipo: "text"
+    },
+    {
+      id: "ap2",
+      nombre: "Segundo apellido",
+      tipo: "text"
+    },
+    {
+      id: "numDesig",
+      nombre: "Número de designación",
+      tipo: "text"
+    }
+  ];
+
   selectores = [
     {
       nombre: "Tipo (*)",
@@ -53,9 +72,21 @@ export class DetalleTarjetaComponent implements OnInit {
     }
   ];
 
-  constructor() { }
+  datepickers = ['Fecha Designación'];
+
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
+
+    if (Object.keys(this.datosProcurador).length !== 0) {
+      this.notarioForm.get('id').setValue(this.datosProcurador.identificacion);
+      this.notarioForm.get('nombre').setValue(this.datosProcurador.nombre);
+      this.notarioForm.get('ap1').setValue(this.datosProcurador.ap1);
+      this.notarioForm.get('ap2').setValue(this.datosProcurador.ap2);
+      this.notarioForm.get('numDesig').setValue('D2019/234567');
+      this.fechaDesig = new Date('02/04/2019');
+    }
+
   }
 
   showMsg(severity, summary, detail) {
@@ -69,6 +100,10 @@ export class DetalleTarjetaComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  search() {
+    this.router.navigate(['/pantallaBuscadorProcurador']);
   }
 
 }

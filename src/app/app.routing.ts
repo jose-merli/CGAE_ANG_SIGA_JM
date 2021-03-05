@@ -260,6 +260,7 @@ import { FichaCambioLetradoComponent } from "./mockups/ficha-cambio-letrado/fich
 import { PantallaBuscadorColegiadosComponent } from "./mockups/pantalla-buscador-colegiados/pantalla-buscador-colegiados.component";
 import { TarjetaDocumentacionAsistenciaComponent } from "./mockups/ficha-asistencia/tarjeta-documentacion-asistencia/tarjeta-documentacion-asistencia.component";
 import { TablaResultadoOrderComponent } from "./mockups/shared/tabla-resultado-order/tabla-resultado-order.component";
+import { PantallaBuscadorProcuradorComponent } from "./mockups/pantalla-buscador-procurador/pantalla-buscador-procurador.component";
 
 const appRoutes: Routes = [
 	{ path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
@@ -1366,21 +1367,21 @@ const appRoutes: Routes = [
 	}, {
 		path: 'pantallaCalendariosComponent',
 		component: PantallaCalendariosComponent
-	},{
+	}, {
 		path: 'calendariosComponent',
 		component: CalendariosComponent
-	},{
+	}, {
 		path: 'fichaDesignacionesComponent',
 		component: FichaDesignacionesComponent
-	},{
+	}, {
 		path: 'fichaContrariosComponent',
 		component: FichaContrariosComponent
-	},{
+	}, {
 		path: 'fichaAsistenciaComponent',
 		component: FichaAsistenciaComponent
-	},{
+	}, {
 		path: 'fichaCalendarioProgramacionComponent',
-		component: 	FichaCalendarioProgramacionComponent
+		component: FichaCalendarioProgramacionComponent
 
 	},
 	{
@@ -1407,8 +1408,12 @@ const appRoutes: Routes = [
 		path: 'prueba',
 		component: TablaResultadoOrderComponent
 	},
-	
-	
+	{
+		path: 'pantallaBuscadorProcurador',
+		component: PantallaBuscadorProcuradorComponent
+	},
+
+
 
 
 	{ path: ' ', redirectTo: 'home' }

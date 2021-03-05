@@ -1,20 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from "@angular/router";
+import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
 @Component({
-  selector: 'app-resultado-buscador-colegiados',
-  templateUrl: './resultado-buscador-colegiados.component.html',
-  styleUrls: ['./resultado-buscador-colegiados.component.scss']
+  selector: 'app-resultado-buscador-procurador',
+  templateUrl: './resultado-buscador-procurador.component.html',
+  styleUrls: ['./resultado-buscador-procurador.component.scss']
 })
-export class ResultadoBuscadorColegiadosComponent implements OnInit {
+export class ResultadoBuscadorProcuradorComponent implements OnInit {
 
   rowSelected;
 
   cabeceras = [
     {
-      id: "identificador",
-      name: "Identificador"
+      id: "nifcif",
+      name: "NIF/CIF"
     },
     {
       id: "nombre",
@@ -62,12 +62,14 @@ export class ResultadoBuscadorColegiadosComponent implements OnInit {
 
   notifyAnySelected(event) {
 
-    let user = {
-      numColegiado: this.elementos[this.rowSelected][4],
-      nombreAp: `${this.elementos[this.rowSelected][2]}, ${this.elementos[this.rowSelected][1]}`
+    let procurador = {
+      identificacion: this.elementos[this.rowSelected][0],
+      nombre: this.elementos[this.rowSelected][1],
+      ap1: this.elementos[this.rowSelected][2].split(' ')[0],
+      ap2: this.elementos[this.rowSelected][2].split(' ')[1]
     };
 
-    sessionStorage.setItem("usuarioBusquedaProcurador", JSON.stringify(user));
+    sessionStorage.setItem("usuarioBusquedaProcurador", JSON.stringify(procurador));
 
     this.location.back();
 

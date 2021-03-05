@@ -40,7 +40,7 @@
                 </mat-expansion-panel-header>
                 <ng-template matExpansionPanelContent>
 
-                  <app-detalle-tarjeta *ngIf="tarj.nombre == 'Procurador'" [title]="'Notario'">
+                  <app-detalle-tarjeta *ngIf="tarj.nombre == 'Procurador'" [title]="'Notario'" [datosProcurador]="datosProcurador">
                   </app-detalle-tarjeta>
 
                   <div *ngIf="tarj.nombre == 'Contrarios'">

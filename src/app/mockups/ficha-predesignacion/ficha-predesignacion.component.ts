@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Message } from 'primeng/components/common/api';
+import { PreviousRouteService } from '../shared/services/previous-route.service';
 
 @Component({
   selector: 'app-ficha-predesignacion',
@@ -115,48 +116,52 @@ export class FichaPredesignacionComponent implements OnInit {
 
   cabeceras = [
     {
-      id: "nif",
-      name: "NIF"
+      id: "identificador",
+      name: "Identificador"
     },
     {
-      id: "nombre",
-      name: "Nombre"
+      id: "apellidosnombre",
+      name: "Apellidos, Nombre"
     },
     {
-      id: "apellidos",
-      name: "Apellidos"
+      id: "direccion",
+      name: "Dirección"
     },
     {
-      id: "fechaAlta",
-      name: "Fecha Alta"
-    },
-    {
-      id: "cargos",
-      name: "Cargos"
-    },
-    {
-      id: "estado",
-      name: "Estado"
-    },
-    {
-      id: "participación",
-      name: "Participación"
+      id: "rol",
+      name: "Rol"
     }
   ];
+
   elementos = [
-    ['78900234T', "VICTOR JAVIER", "SFSFSAF DSGSDGSG", "06/02/2019", "Administrador", "Ejerciente", ""],
-    ['23768954R', "MARIA TERESA", "ASWDFASG RETGAEWRT", "08/02/2019", "Administrador", "Ejerciente", ""]
+    ['78900234T', "SFSFSAF DSGSDGSG, VICTOR JAVIER", "C/ LA SERNA Nº 10 - 03001 - ALICANTE", "Contrario"],
+    ['23768954R', "ASWDFASG RETGAEWRT, MARIA TERESA", "C/ CAMARADA CÉSAR ELGUEZABAL Nº 18 - 03001 - ALICANTE", "Contrario"]
   ];
+
   elementosAux = [
-    ['78900234T', "VICTOR JAVIER", "SFSFSAF DSGSDGSG", "06/02/2019", "Administrador", "Ejerciente", ""],
-    ['23768954R', "MARIA TERESA", "ASWDFASG RETGAEWRT", "08/02/2019", "Administrador", "Ejerciente", ""]
+    ['78900234T', "SFSFSAF DSGSDGSG, VICTOR JAVIER", "C/ LA SERNA Nº 10 - 03001 - ALICANTE", "Contrario"],
+    ['23768954R', "ASWDFASG RETGAEWRT, MARIA TERESA", "C/ CAMARADA CÉSAR ELGUEZABAL Nº 18 - 03001 - ALICANTE", "Contrario"]
   ];
+
   isDisabled = true;
 
-  constructor() { }
+  datosProcurador = {};
+
+  constructor(private previousRouteService: PreviousRouteService) { }
 
   ngOnInit() {
 
+
+    if (this.previousRouteService.previousUrl.getValue() == '/pantallaBuscadorProcurador') {
+
+      this.listaTarjetas.find(tarj => tarj.id == 'sjcsEjgsRelaPreDesigProcu').opened = true;
+
+      if (sessionStorage.getItem('usuarioBusquedaProcurador')) {
+        this.datosProcurador = JSON.parse(sessionStorage.getItem('usuarioBusquedaProcurador'));
+        sessionStorage.removeItem('usuarioBusquedaProcurador')
+      }
+
+    }
   }
 
   ngAfterViewInit() {
@@ -171,11 +176,14 @@ export class FichaPredesignacionComponent implements OnInit {
 
       this.listaTarjetasFijas[0].enlaces.push(tarjTmp);
     });
+
   }
+
   selectedAll(event) {
     this.allSelected = event;
     this.isDisabled = !event;
   }
+
   notifyAnySelected(event) {
     if (this.allSelected || event) {
       this.isDisabled = false;

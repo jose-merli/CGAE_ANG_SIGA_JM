@@ -8,6 +8,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./asuntos.component.scss']
 })
 export class AsuntosComponent implements OnInit {
+
+  rutas = ['SJCS', 'EJGs', 'Relacionar asunto'];
   allSelected = false;
   msgs: Message[] = [];
   show = false;
@@ -248,6 +250,7 @@ export class AsuntosComponent implements OnInit {
   constructor(private router: Router) { }
 
   ngOnInit(): void {
+    this.showMsg('info', 'Este buscador puede ser accedido desde varios lugares', '');
   }
   showResponse() {
     this.show = true;

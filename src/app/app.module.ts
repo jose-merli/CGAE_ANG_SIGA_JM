@@ -477,6 +477,9 @@ import { TarjetaServiciosTramitacionComponent } from './mockups/ficha-contrarios
 import { TarjetaUnidadFamiliarComponent } from './mockups/ficha-contrarios/tarjeta-unidad-familiar/tarjeta-unidad-familiar.component';
 import { DetalleTarjetaDocumentacionFichaDesignacionOficioComponent } from './mockups/ficha-designaciones/detalle-tarjeta-documentacion-ficha-designacion-oficio/detalle-tarjeta-documentacion-ficha-designacion-oficio.component';
 import { TarjetaRelacionesEjgsComponent } from './mockups/ficha-ejgs/tarjeta-relaciones-ejgs/tarjeta-relaciones-ejgs.component';
+import { PantallaBuscadorProcuradorComponent } from './mockups/pantalla-buscador-procurador/pantalla-buscador-procurador.component';
+import { FiltroBuscadorProcuradorComponent } from './mockups/pantalla-buscador-procurador/filtro-buscador-procurador/filtro-buscador-procurador.component';
+import { ResultadoBuscadorProcuradorComponent } from './mockups/pantalla-buscador-procurador/resultado-buscador-procurador/resultado-buscador-procurador.component';
 
 
 
@@ -902,7 +905,10 @@ import { TarjetaRelacionesEjgsComponent } from './mockups/ficha-ejgs/tarjeta-rel
 		TarjetaDictamenComponent,
 		TarjetaDocumentacionEjgsComponent,
 		DetalleTarjetaDocumentacionFichaDesignacionOficioComponent,
-		TarjetaRelacionesEjgsComponent
+		TarjetaRelacionesEjgsComponent,
+		PantallaBuscadorProcuradorComponent,
+		FiltroBuscadorProcuradorComponent,
+		ResultadoBuscadorProcuradorComponent
 	],
 	imports: [
 		BrowserModule,
