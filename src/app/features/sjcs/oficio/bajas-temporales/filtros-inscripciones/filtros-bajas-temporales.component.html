@@ -12,32 +12,32 @@
     <!-- CAMPOS COMPONEN FILTROS BUSQUEDA-->
     <div *ngIf="showDatosGenerales" class="module vista-avanzada">
       <div class="form-row">
-        <div class="form-group col-lg-3 col-md-3">
+        <div class="form-group-interlineado col-lg-2 col-md-3">
           <label>{{'censo.busquedaClientesAvanzada.literal.tipoCliente'|translate}}</label>
           <p-dropdown class="select-form" [(ngModel)]='filtros.tipo' placeholder="Seleccionar" [options]="comboTipo"
             [filter]="true" [disabled]="disabledestado" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
         </div>
-        <div class="form-group col-lg-3 col-md-3">
+        <div class="form-group-interlineado col-lg-2 col-md-3">
           <label>{{'censo.fichaIntegrantes.literal.estado'|translate}}</label>
           <p-dropdown class="select-form" [(ngModel)]='filtros.estado' placeholder="Seleccionar" [options]="comboEstados"
             [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
         </div>
-        <div class="form-group col-lg-2 col-md-1">
+        <div class="form-group-interlineado col-lg-2 col-md-1">
           <label>{{ "formacion.busquedaInscripcion.fechaSolicitud" | translate }}
           </label>
           <app-fecha [(value)]="filtros.fechasolicituddesde" (valueChangeInput)="fillFechaSolicitudDesdeCalendar($event)" (valueChangeSelected)="fillFechaSolicitudDesdeCalendar($event)"></app-fecha>
         </div>
-        <div class="form-group col-lg-2 col-md-1">
+        <div class="form-group-interlineado col-lg-2 col-md-1">
           <label>{{ "formacion.busquedaInscripcion.fechaSolicitud" | translate }}
           </label>
           <app-fecha [(value)]="filtros.fechasolicitudhasta" [disabled]="disabledFechaSolicitudHasta" (valueChangeInput)="fillFechaHastaSolicitudCalendar($event)" [minDate]="filtros.fechasolicituddesde" (valueChangeSelected)="fillFechaHastaSolicitudCalendar($event)"></app-fecha>
         </div>
-        <div class="form-group col-lg-2 col-md-1">
+        <div class="form-group-interlineado col-lg-2 col-md-1">
           <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaDesde" | translate }}
           </label>
           <app-fecha [(value)]="filtros.fechadesde" (valueChangeInput)="fillFechaDesdeCalendar($event)" (valueChangeSelected)="fillFechaDesdeCalendar($event)"></app-fecha>
         </div>
-        <div class="form-group col-lg-2 col-md-1">
+        <div class="form-group-interlineado col-lg-2 col-md-1">
           <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta" | translate }}
           </label>
           <app-fecha [(value)]="filtros.fechahasta" [disabled]="disabledFechaHasta" [minDate]="filtros.fechadesde" (valueChangeInput)="fillFechaHastaCalendar($event)" (valueChangeSelected)="fillFechaHastaCalendar($event)"></app-fecha>
@@ -45,14 +45,15 @@
 
       </div>
     </div>
+    
     <p (click)="onHideDatosGenerales()" class="title-module">{{ "justiciaGratuita.justiciables.literal.colegiado" | translate}}
       <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
       <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
     </p>
     <div *ngIf="showDatosGenerales" class="module vista-avanzada">
       <div class="form-row">
-        <div class="form-group col-lg-12 col-md-12">
-          <app-busqueda-colegiado-express></app-busqueda-colegiado-express>
+        <div class="form-group-interlineado col-lg-12 col-md-12">
+          <app-busqueda-colegiado-express [pantalla]="'ejg'" [numColegiado]="usuarioBusquedaExpress.numColegiado" [nombreAp]="usuarioBusquedaExpress.nombreAp"></app-busqueda-colegiado-express>
         </div>
       </div>
     </div>
@@ -61,9 +62,36 @@
   <div class="card-footer">
     <!-- BOTONES TARJETA -->
     <div class="text-right main-button">
-      <button (click)="clearFilters()" pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate}}"></button>
-      <button (click)="isBuscar()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"></button>
-      <button (click)="newTurno()" [disabled]="!permisos" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+      <button (click)="clearFilters()" pButton type="button" icon="fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate}}"></button>
+      <button (click)="isBuscar()" pButton type="button" icon="fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"></button>
+      <button (click)="checkNuevaBajaTemporal()" [disabled]="!permisos" pButton type="button" icon="fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
     </div>
   </div>
 </div>
+<!-- 
+  DIALOG NUEVA BAJA TEMPORAL
+<p-dialog width="320" responsive="true" modal="modal" [draggable]="false" resizable="false" [(visible)]="showModalNuevaBaja" (onHide)="cerrarDialog()">
+  <p-header class="title">
+  </p-header>
+  <div class="form-row">
+   <div class="form-group-interlineado col-lg-12 col-md-12">
+      <label>{{ "justiciaGratuita.ejg.datosGenerales.EstadoEJG" | translate }}</label>
+      <p-dropdown  [(ngModel)]='valueComboEstado' class="select-form" placeholder="Seleccionar" [options]="comboEstadoEJG" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+      </div>
+
+    <div class="main-button col-lg-12 col-md-12">
+      <button (click)="checkNuevaBajaTemporal()" pButton type="button" icon="fa fa-edit" iconPos="left" label="{{'general.boton.guardarCerrar' | translate}}"></button>
+      <button (click)="cancelaNuevaBaja()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
+    </div>
+  </div>
+</p-dialog>
+
+<p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" #cd>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="cd.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="cd.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
+-->
+
+
