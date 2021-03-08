@@ -361,6 +361,8 @@ export class EjgComponent2 implements OnInit {
 
   ];
 
+  columnsSize = ['14.29%', '14.29%', '7.14%', '14.29%', '7.14%', '7.14%', '14.29%'];
+
   elementos = [
     ["T.O PENAL NOVELDA/G. Civil Novelda", "T.O PEN NOVIEMBRE", "E2018/00068@enlace/fichaEjg", "ASNDADBH AHDBHAJD, ANA", "27/05/2018", "Archivado", "ASNDADBH AHDBHAJD, JUAN"],
     ["T.O PENAL NOVELDA/G. Civil Novelda", "T.O PEN NOVIEMBRE", "E2018/00070@enlace/fichaEjg", "ASNDADBH AHDBHAJD, JUAN", "25/04/2018", "Archivado", "ASNDADBH AHDBHAJD, ANA"]
@@ -373,6 +375,7 @@ export class EjgComponent2 implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+
   }
 
   saveForm($event) {

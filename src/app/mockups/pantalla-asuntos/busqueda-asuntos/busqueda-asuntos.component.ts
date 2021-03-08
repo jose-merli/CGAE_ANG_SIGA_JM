@@ -44,7 +44,7 @@ export class BusquedaAsuntosComponent implements OnInit {
   datePickers2 = [];
   selectorSOJ =
     {
-      nombre: "Tipo SOJ",
+      nombre: "Tipo",
       opciones: [
         { label: 'XXXXXXXXXXX', value: 1 },
         { label: 'XXXXXXXXXXX', value: 2 },
@@ -54,7 +54,7 @@ export class BusquedaAsuntosComponent implements OnInit {
 
   selectorEJG =
     {
-      nombre: "Tipo EJG",
+      nombre: "Tipo",
       opciones: [
         { label: 'XXXXXXXXXXX', value: 1 },
         { label: 'XXXXXXXXXXX', value: 2 },

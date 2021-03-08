@@ -133,7 +133,6 @@ export class FichaCertificacionComponent implements OnInit {
     }
   }
 
-
   showMsg(severity, summary, detail) {
     this.msgs = [];
     this.msgs.push({

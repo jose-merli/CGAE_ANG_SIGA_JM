@@ -73,10 +73,6 @@ export class FichaEjgsComponent implements OnInit {
         {
           "key": "Tipo EJG Colegio",
           "value": "Penal"
-        },
-        {
-          "key": "Estado",
-          "value": "Dictaminado"
         }
       ]
     },
@@ -99,7 +95,7 @@ export class FichaEjgsComponent implements OnInit {
         },
         {
           "key": "Tramitador",
-          "value": "TORRES ALFARO, PEDRO"
+          "value": "9867 TORRES ALFARO, PEDRO"
         }
       ]
     },

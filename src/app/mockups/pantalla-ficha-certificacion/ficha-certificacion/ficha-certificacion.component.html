@@ -1,4 +1,5 @@
 <div id="fichaCertificacion">
+    <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
     <app-migas-de-pan [rutas]="rutas"></app-migas-de-pan>
     <div class="card">
         <div class="card-body p-0">
@@ -31,42 +32,61 @@
                         </div>
                     </mat-expansion-panel-header>
                     <ng-template matExpansionPanelContent>
-                        <div class="form-row padding-interior">
-                            <div class="form-group-interlineado col-lg-6 col-md-6" style="padding-left: 2px;">
-                                <div class="form-row mb-3">
-                                    <div class="col-md-12 col-lg-12 form-group-interlineado">
-                                        <div *ngFor="let input of inputs">
+
+                        <div class="row w-100 m-0 padding-interior">
+
+                            <div class="row w-100">
+
+                                <div class="col-lg-6 col-md-6 border-line paddings-columns">
+
+                                    <label class="title-bloque mb-2">Datos Generales</label>
+
+                                    <div class="row w-100 m-0">
+
+                                        <div class="form-group col-lg-12 col-md-12 w-100" *ngFor="let input of inputs">
                                             <label>{{input.nombre}}</label>
                                             <input type="text" class="form-control" pInputText
                                                 [placeholder]="input.valor">
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="col-md-12 col-lg-12 form-group-interlineado">
-                                        <div class="form-row">
-                                            <div *ngFor="let campo of campos"
-                                                class="col-md-6 col-lg-6 form-group-interlineado">
-                                                <div>{{campo.nombre}}</div>
-                                                <div>{{campo.valor}}</div>
-                                            </div>
+
+                                        <div class="form-group col-lg-6 col-md-6 w-100" *ngFor="let campo of campos">
+                                            <div>{{campo.nombre}}</div>
+                                            <div>{{campo.valor}}</div>
                                         </div>
+
                                     </div>
+
                                 </div>
+
+                                <div class="col-lg-6 col-md-6 paddings-columns">
+
+                                    <label class="title-bloque mb-2">Histórico de Estados</label>
+
+                                    <div class="row w-100 m-0">
+
+                                        <div class="form-group col-lg-12 col-md-12 w-100">
+
+                                            <div>
+                                                <app-paginador (seleccionarTodo)="selectedAll($event)"></app-paginador>
+                                            </div>
+                                            <div>
+                                                <app-tabla-simple [cabeceras]="cabeceras2" [elementos]="elementos2">
+                                                </app-tabla-simple>
+                                            </div>
+                                            <div>
+                                                <app-paginador [type]="'BOTTOM'"></app-paginador>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
                             </div>
-                            <div class="form-group-interlineado col-lg-6 col-md-6">
-                                <div>
-                                    <app-paginador (seleccionarTodo)="selectedAll($event)"></app-paginador>
-                                </div>
-                                <div>
-                                    <app-tabla-simple [cabeceras]="cabeceras2" [elementos]="elementos2"
-                                        (anySelected)="notifyAnySelected($event)"></app-tabla-simple>
-                                </div>
-                                <div>
-                                    <app-paginador [type]="'BOTTOM'"></app-paginador>
-                                </div>
-                            </div>
+
                         </div>
+
                     </ng-template>
                 </mat-expansion-panel>
             </mat-accordion>
@@ -74,22 +94,19 @@
         <div *ngIf="panelDatGenOpenState" class="card-footer">
             <div class="text-right main-button">
 
-                <button [disabled]="isDisabled" pButton type="button"  icon="fa fa-eraser"  iconPos="left"
-                    label="Incidencias"></button>
-                <button [disabled]="isDisabled" pButton type="button"  icon="fa fa-eraser"  iconPos="left"
-                    label="Subir fichero"
+                <button pButton type="button"  icon="fa fa-eraser"  iconPos="left" label="Incidencias"></button>
+                <button pButton type="button"  icon="fa fa-eraser"  iconPos="left" label="Subir fichero"
                     (click)="showMsg('success', 'Se ha subido el fichero correctamente', '')"></button>
-                <button [disabled]="isDisabled" pButton type="button"  icon="fa fa-eraser"  iconPos="left"
-                    label="Reabrir" (click)="showMsg('success', 'Se ha reabierto correctamente', '')"></button>
-                <button [disabled]="isDisabled" pButton type="button"  icon="fa fa-eraser"  iconPos="left"
-                    label="Cerrar y Enviar"
+                <button pButton type="button"  icon="fa fa-eraser"  iconPos="left" label="Reabrir"
+                    (click)="showMsg('success', 'Se ha reabierto correctamente', '')"></button>
+                <button pButton type="button"  icon="fa fa-eraser"  iconPos="left" label="Cerrar y Enviar"
                     (click)="showMsg('success', 'Se ha cerrado y enviado correctamente', '')"></button>
-                <button [disabled]="isDisabled" pButton type="button"  icon="fa fa-eraser"  iconPos="left"
-                    label="Comunicar" (click)="showMsg('success', 'Se ha comunicado correctamente', '')"></button>
-                <button [disabled]="isDisabled" pButton type="button"  icon="far fa-save"  iconPos="left"
-                    label="Guardar" (click)="showMsg('success', 'Se ha guardado correctamente', '')"></button>
-                <button [disabled]="isDisabled" pButton type="button"  icon="fa fa-undo"  iconPos="left"
-                    label="Restablecer" (click)="showMsg('success', 'Se ha restablecido correctamente', '')"></button>
+                <button pButton type="button"  icon="fa fa-eraser"  iconPos="left" label="Comunicar"
+                    (click)="showMsg('success', 'Se ha comunicado correctamente', '')"></button>
+                <button pButton type="button"  icon="far fa-save"  iconPos="left" label="Guardar"
+                    (click)="showMsg('success', 'Se ha guardado correctamente', '')"></button>
+                <button pButton type="button"  icon="fa fa-undo"  iconPos="left" label="Restablecer"
+                    (click)="showMsg('success', 'Se ha restablecido correctamente', '')"></button>
 
             </div>
         </div>

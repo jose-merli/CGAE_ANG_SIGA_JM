@@ -32,7 +32,12 @@
 
                         <div class="form-group-interlineado col-lg-3 col-md-3">
                             <label>{{ datosFiltroDesignaciones.inputsDivididos[1] }}</label>
-                            <input type="text" class="form-control" pInputText>
+                            <div class="d-flex">
+                                <input type="text" class="form-control" pInputText style="width: 48%;">
+                                <span class="mx-1 d-flex justify-content-center align-items-center"
+                                    style="width: 4%;">/</span>
+                                <input type="text" class="form-control" pInputText style="width: 48%;">
+                            </div>
                         </div>
 
                         <div class="form-group-interlineado col-lg-3 col-md-3">
@@ -52,11 +57,17 @@
 
                     <div *ngIf="modoBusqueda === 'b'" class="form-row">
                         <div class="form-group-interlineado col-lg-3 col-md-3">
-                            <app-input-dividido [titulo]="'Año / Número SOJ'"></app-input-dividido>
+                            <label>Año / Número</label>
+                            <div class="d-flex">
+                                <input type="text" class="form-control" pInputText style="width: 48%;">
+                                <span class="mx-1 d-flex justify-content-center align-items-center"
+                                    style="width: 4%;">/</span>
+                                <input type="text" class="form-control" pInputText style="width: 48%;">
+                            </div>
                         </div>
 
                         <div class="form-group-interlineado col-lg-6 col-md-6">
-                            <app-date-picker-range [datePickerTitle]="'Fecha Apertura SOJ'"></app-date-picker-range>
+                            <app-date-picker-range [datePickerTitle]="'Fecha Apertura'"></app-date-picker-range>
                         </div>
 
                         <div class="form-group-interlineado col-lg-3 col-md-3">
@@ -87,7 +98,12 @@
 
                         <div class="form-group-interlineado col-lg-3 col-md-3">
                             <label>{{ datosFiltroAsistencias.inputsDivididos[1] }}</label>
-                            <input type="text" class="form-control" pInputText>
+                            <div class="d-flex">
+                                <input type="text" class="form-control" pInputText style="width: 48%;">
+                                <span class="mx-1 d-flex justify-content-center align-items-center"
+                                    style="width: 4%;">/</span>
+                                <input type="text" class="form-control" pInputText style="width: 48%;">
+                            </div>
                         </div>
 
                         <div class="form-group-interlineado col-lg-3 col-md-3">
@@ -106,11 +122,17 @@
 
                     <div *ngIf="modoBusqueda === 'd'" class="form-row">
                         <div class="form-group-interlineado col-lg-3 col-md-3">
-                            <app-input-dividido [titulo]="'Año / Número EJG'"></app-input-dividido>
+                            <label>Año / Número</label>
+                            <div class="d-flex">
+                                <input type="text" class="form-control" pInputText style="width: 48%;">
+                                <span class="mx-1 d-flex justify-content-center align-items-center"
+                                    style="width: 4%;">/</span>
+                                <input type="text" class="form-control" pInputText style="width: 48%;">
+                            </div>
                         </div>
 
                         <div class="form-group-interlineado col-lg-6 col-md-6">
-                            <app-date-picker-range [datePickerTitle]="'Fecha Apertura EJG'"></app-date-picker-range>
+                            <app-date-picker-range [datePickerTitle]="'Fecha Apertura'"></app-date-picker-range>
                         </div>
 
                         <div class="form-group-interlineado col-lg-3 col-md-3">

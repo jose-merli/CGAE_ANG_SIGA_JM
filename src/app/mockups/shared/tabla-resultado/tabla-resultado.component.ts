@@ -13,6 +13,7 @@ export class TablaResultadoComponent implements OnInit {
   @Input() elementos = [];
   @Input() elementosAux = [];
   @Input() allSelected = false;
+  @Input() columnsSize: string[] = [];
   @ViewChild('tablaResultado') table: ElementRef;
   ids = [];
   sortedData = [];
@@ -44,6 +45,7 @@ export class TablaResultadoComponent implements OnInit {
     })
     this.interface = _temp;
     this.elementToSortedData();
+
   }
 
   selectRow(rowId) {
@@ -132,6 +134,16 @@ export class TablaResultadoComponent implements OnInit {
 
   getTexto(texto: string): string {
     return texto.split('@enlace')[0];
+  }
+
+  ngAfterViewInit(): void {
+
+    if (this.columnsSize != undefined && this.columnsSize != null && this.columnsSize.length > 0 && this.columnsSize.length == this.cabeceras.length) {
+      this.cabeceras.forEach((cab, index) => {
+        document.getElementById(cab.id).setAttribute("style", `width: ${this.columnsSize[index]}`);
+      });
+    }
+
   }
 
 }

@@ -11,12 +11,13 @@ export class ResultadoEJGComponent implements OnInit {
   @Input() elementos = [];
   @Input() elementosAux = [];
   @Input() allSelected = [];
+  @Input() columnsSize: string[] = [];
   @Output() anySelected = new EventEmitter();
   constructor() { }
 
   ngOnInit(): void {
   }
-  notifyAnySelected(event){
+  notifyAnySelected(event) {
     this.anySelected.emit(event);
   }
 }

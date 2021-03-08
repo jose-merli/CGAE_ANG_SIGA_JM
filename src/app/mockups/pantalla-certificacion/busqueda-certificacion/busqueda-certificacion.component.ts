@@ -125,6 +125,22 @@ export class BusquedaCertificacionComponent implements OnInit {
       ]
     },
     {
+      nombre: "Facturaciones",
+      opciones: [
+        { label: 'XXXXXXXXXXXXX', value: 1 },
+        { label: 'XXXXXXXXXXXXX', value: 2 },
+        { label: 'XXXXXXXXXXXXX', value: 3 },
+      ]
+    },
+    {
+      nombre: "Estado",
+      opciones: [
+        { label: 'XXXXXXXXXXXXX', value: 1 },
+        { label: 'XXXXXXXXXXXXX', value: 2 },
+        { label: 'XXXXXXXXXXXXX', value: 3 },
+      ]
+    },
+    {
       nombre: "Partida Presupuestaria",
       opciones: [
         { label: 'Ministerio de Justicia (turno de oficio y asistencia al detenido)', value: 1 },
@@ -156,6 +172,9 @@ export class BusquedaCertificacionComponent implements OnInit {
       ]
     }
   ];
+
+  datepickers = ['Fecha desde Facturaciones', 'Fechas hasta Facturaciones'];
+
   opcionSeleccionado: string = '0';
   verSeleccion: string = '';
   constructor() { }

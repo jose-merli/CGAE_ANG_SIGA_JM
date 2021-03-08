@@ -6,7 +6,7 @@
                 <table matSort (matSortChange)="sortData($event)">
                     <thead class="ui-table-thead">
                         <tr>
-                            <th *ngFor="let cabecera of cabeceras; let i = index">
+                            <th *ngFor="let cabecera of cabeceras; let i = index" [id]="cabecera.id">
                                 <div [mat-sort-header]="cabecera.id" class="w100">
                                     {{cabecera.name}}
                                 </div>
