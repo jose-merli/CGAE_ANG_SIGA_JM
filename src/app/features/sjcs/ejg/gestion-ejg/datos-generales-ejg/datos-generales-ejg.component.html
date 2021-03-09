@@ -46,7 +46,7 @@
               </div>
               <div class="form-group col-lg-9 col-md-9 pr-0">
                 <label>{{ 'gratuita.busquedaAsistencias.literal.numero' | translate}}</label>
-                <input type="text" class="form-control" (keypress)="numberOnly($event)" maxLength="10" pInputText [(ngModel)]="body.numEjg">
+                <input type="text" class="form-control" [disabled]="true" (keypress)="numberOnly($event)" maxLength="10" pInputText [(ngModel)]="body.numEjg">
               </div>
             </div>
           </div>
@@ -83,8 +83,8 @@
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "justiciaGratuita.ejg.datosGenerales.Prestaciones" | translate }}</label>
-              <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='body.prestacion' [options]="comboPrestaciones"
-                [selectedItemsLabel]="textSelected" styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde" maxSelectedLabels="10"></p-multiSelect>
+              <p-multiSelect #someDropdown [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='body.prestacion' [options]="comboPrestaciones"
+                [selectedItemsLabel]="textSelected" styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde" maxSelectedLabels="10" (onPanelShow)="focusInputField()" [panelStyle]="{width:'100%'}"></p-multiSelect>
             </div>
           </div>
           <label style="text-align:center; font-weight: bold; padding-bottom: 10px">{{ "justiciaGratuita.ejg.datosGenerales.DatosExpediente" | translate }}</label>

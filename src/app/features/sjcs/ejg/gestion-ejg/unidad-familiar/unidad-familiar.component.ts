@@ -101,9 +101,12 @@ export class UnidadFamiliarComponent implements OnInit {
       this.modoEdicion = false;
       // this.body = new EJGItem();
     }
+
+    if(this.datosFamiliares != undefined){
     this.datosFamiliaresActivos = this.datosFamiliares.filter(
       (dato) => /*dato.fechaBaja != undefined && */ dato.fechaBaja == null);
     this.getCols();
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
