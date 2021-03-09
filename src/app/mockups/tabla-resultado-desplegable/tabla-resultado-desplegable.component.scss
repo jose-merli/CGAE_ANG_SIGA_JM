@@ -211,7 +211,20 @@
   }
 }
 
+.column-d-flex {
+  display: flex;
+}
+
 @media (max-width: 1256px) {
+
+  .table-cell {
+    max-width: 100% !important;
+  }
+
+  .table-row-header {
+    max-width: 100% !important;
+  }
+
   .column-title {
     display: block;
   }
@@ -242,6 +255,7 @@
 
   .table-header {
     border: none;
+    display: none !important;
 
     .table-header-child {
       width: 50%;

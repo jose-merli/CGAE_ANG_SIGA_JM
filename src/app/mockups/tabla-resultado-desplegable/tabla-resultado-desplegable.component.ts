@@ -14,6 +14,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   @Input() rowGroups: RowGroup[];
   @Input() rowGroupsAux: RowGroup[];
   @Input() seleccionarTodo = false;
+  @Input() pantalla: string = '';
   @Output() anySelected = new EventEmitter<any>();
   cabecerasMultiselect = [];
   modalStateDisplay = true;
@@ -28,7 +29,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   @ViewChild('table') table: ElementRef;
   itemsaOcultar = [];
   textSelected: string = "{0} visibles";
-
+  columnsSizes = [];
+  tamanioTablaResultados = 0;
 
   constructor(
     private renderer: Renderer2
@@ -77,9 +79,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.rowGroups = this.rowGroupsAux.filter((row) => {
       data.push(row);
     });
-    console.log('data: ', data)
     data = data.slice();
-    console.log('data slice: ', data)
     if (!sort.active || sort.direction === '') {
       this.rowGroups = data;
       return;
@@ -187,6 +187,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
               this.searchText[j] != undefined && !row.id.toString().toLowerCase().includes(this.searchText[j].toLowerCase())
             ) {
               isReturn = false;
+            } else {
+              isReturn = true;
             }
           }
         })
@@ -198,8 +200,10 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       let isReturn = true;
       let isReturnArr = [];
       this.rowGroups = this.rowGroupsAux.filter((row) => {
+        isReturnArr = [];
         row.rows.forEach(cell => {
           for (let i = 0; i < cell.cells.length; i++) {
+
             if (
               this.searchText[j] != " " &&
               this.searchText[j] != undefined &&
@@ -217,6 +221,11 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         }
       });
     }
+    let self = this;
+    setTimeout(function () {
+      self.setTamanios();
+      self.setTamanioPrimerRegistroGrupo();
+    }, 1);
   }
 
   isPar(numero): boolean {
@@ -229,12 +238,15 @@ export class TablaResultadoDesplegableComponent implements OnInit {
 
   ocultarColumna(event) {
 
+    let tabla = document.getElementById("tablaResultadoDesplegable");
+
     if (event.itemValue == undefined && event.value.length == 0) {
       this.cabeceras.forEach(element => {
         this.renderer.addClass(document.getElementById(element.id), "collapse");
       });
       this.getPosition(this.cabeceras);
       this.itemsaOcultar = this.cabeceras;
+      tabla.setAttribute("style", 'width: 0px !important');
     }
 
     if (event.itemValue == undefined && event.value.length > 0) {
@@ -243,6 +255,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       });
       this.getPosition([]);
       this.itemsaOcultar = [];
+      this.setTamanioPrimerRegistroGrupo();
+      tabla.setAttribute("style", `width: ${this.tamanioTablaResultados}px !important`);
     }
 
     if (event.itemValue != undefined && event.value.length >= 0) {
@@ -257,6 +271,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       if (ocultar) {
         this.renderer.addClass(document.getElementById(event.itemValue.id), "collapse");
         this.itemsaOcultar.push(event.itemValue);
+
+        tabla.setAttribute("style", `width: ${tabla.clientWidth - this.columnsSizes.find(el => el.id == event.itemValue.id).size}px !important`);
       } else {
         this.renderer.removeClass(document.getElementById(event.itemValue.id), "collapse");
         this.itemsaOcultar.forEach((element, index) => {
@@ -264,13 +280,110 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             this.itemsaOcultar.splice(index, 1);
           }
         });
-
+        tabla.setAttribute("style", `width: ${tabla.clientWidth + this.columnsSizes.find(el => el.id == event.itemValue.id).size}px !important`);
       }
 
       this.getPosition(this.itemsaOcultar);
 
+      if (!ocultar) {
+        this.setTamanioPrimerRegistroGrupo();
+      }
+
     }
 
+  }
+
+  setTamanioPrimerRegistroGrupo() {
+    if (this.pantalla == 'AE') {
+      let self = this;
+      setTimeout(function () {
+        let primerRegistroDelGrupo = document.getElementsByClassName("table-row-header");
+
+        for (let i = 0; i < primerRegistroDelGrupo.length; i++) {
+          primerRegistroDelGrupo[i].setAttribute("style", `max-width: ${self.columnsSizes[0].size}px`);
+        }
+      }, 1);
+    }
+  }
+
+  ngAfterViewInit(): void {
+
+    this.setTamanios()
+
+    // } else if (this.pantalla == 'JE') {
+
+    //   this.cabeceras.forEach(ind => {
+    //     if (ind.id != 'clientes') {
+    //       document.getElementById(ind.id).setAttribute("style", "max-width: 7.5757575757%");
+    //     } else {
+    //       document.getElementById(ind.id).setAttribute("style", "max-width: 16.6666666666%");
+    //     }
+    //   });
+
+    //   let primeraColumna = document.getElementsByClassName("table-row-header");
+    //   let columnasHijas = document.getElementsByClassName("table-cell");
+
+    //   for (let i = 0; i < primeraColumna.length; i++) {
+    //     primeraColumna[i].setAttribute("style", "max-width: 7.5757575757%");
+    //   }
+
+
+    //   for (let j = 0; j < columnasHijas.length; j++) {
+
+    //     if (j == 1 || j == 12 || j == 23 || j == 34 || j == 45 || j == 56) {
+    //       columnasHijas[j].setAttribute("style", "max-width: 25%");
+    //     } else {
+    //       columnasHijas[j].setAttribute("style", "max-width: 7.5757575757%");
+    //     }
+    //   }
+
+    // }
+
+    console.log(document.getElementsByClassName("content")[0].clientWidth);
+    this.tamanioTablaResultados = document.getElementById("tablaResultadoDesplegable").clientWidth;
+  }
+
+  setTamanios() {
+    if (this.pantalla == 'AE') {
+
+      this.cabeceras.forEach(ind => {
+        if (ind.id != 'idApNombreSexo') {
+          this.columnsSizes.push({
+            id: ind.id,
+            size: 225.75
+          });
+          document.getElementById(ind.id).setAttribute("style", "max-width: 225.75px");
+        } else {
+          this.columnsSizes.push({
+            id: ind.id,
+            size: 445.5
+          });
+          document.getElementById(ind.id).setAttribute("style", "max-width: 445.5px");
+        }
+      });
+
+      let primeraColumna = document.getElementsByClassName("table-row-header");
+      let columnasHijas = document.getElementsByClassName("table-cell");
+
+      for (let i = 0; i < primeraColumna.length; i++) {
+        primeraColumna[i].setAttribute("style", "max-width: 225.75px");
+      }
+
+
+      for (let j = 0; j < columnasHijas.length; j++) {
+
+        if (j == 0 || j == 6 || j == 12 || j == 18 || j == 24) {
+          columnasHijas[j].setAttribute("style", "max-width: 445.5px");
+        } else {
+          columnasHijas[j].setAttribute("style", "max-width: 225.75px");
+        }
+      }
+
+    }
+  }
+
+  changeDisplay() {
+    return (document.getElementsByClassName("openedMenu").length == 0 && document.documentElement.clientWidth > 1812);
   }
 
 }

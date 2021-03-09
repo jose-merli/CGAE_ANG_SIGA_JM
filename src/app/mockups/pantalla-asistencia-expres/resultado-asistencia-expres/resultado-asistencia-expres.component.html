@@ -7,7 +7,7 @@
 
 <app-tabla-resultado-desplegable [seleccionarTodo]="seleccionarTodo" [ngClass]="{'customCursor': selectMultiple}"
     [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups"
-    (anySelected)="notifyAnySelected($event)" (anySelected)="notifyAnySelected($event)">
+    (anySelected)="notifyAnySelected($event)" (anySelected)="notifyAnySelected($event)" [pantalla]="pantalla">
 </app-tabla-resultado-desplegable>
 
 <div class="mt-3 padding-interior" style="padding-bottom: 0.6rem;">

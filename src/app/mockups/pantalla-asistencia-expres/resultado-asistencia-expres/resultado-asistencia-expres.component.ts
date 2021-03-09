@@ -18,6 +18,7 @@ export class ResultadoAsistenciaExpresComponent implements OnInit {
   isDisabled = true;
   selectMultiple = false;
   titulo = "Asistencias";
+  pantalla = 'AE';
   cabeceras = [
     {
       id: "asistencia",

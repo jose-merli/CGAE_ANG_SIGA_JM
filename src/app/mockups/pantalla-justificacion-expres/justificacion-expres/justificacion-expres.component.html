@@ -33,7 +33,7 @@
 
             <app-tabla-resultado-desplegable *ngIf="showResponse" [seleccionarTodo]="seleccionarTodo"
                 [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups"
-                (anySelected)="notifyAnySelected($event)"></app-tabla-resultado-desplegable>
+                (anySelected)="notifyAnySelected($event)" [pantalla]="pantalla"></app-tabla-resultado-desplegable>
 
             <div class="mt-4 padding-interior padding-inferior">
                 <app-paginador [type]="'BOTTOM'"></app-paginador>

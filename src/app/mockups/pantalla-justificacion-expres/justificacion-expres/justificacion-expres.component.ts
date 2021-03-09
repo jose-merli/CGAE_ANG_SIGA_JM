@@ -19,6 +19,7 @@ export class JustificacionExpresComponent implements OnInit {
   numActuaciones = 0;
   totalActuaciones = 0;
   isDisabled = true;
+  pantalla = 'JE';
   modoBusqueda: string = 'b';
   radios = [
     { label: 'Designas', value: 'a' },
