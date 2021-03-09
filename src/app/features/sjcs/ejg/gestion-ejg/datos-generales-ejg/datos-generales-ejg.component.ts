@@ -19,6 +19,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
   @Input() permisoEscritura;
   @Input() tarjetaDatosGenerales: string;
   @Output() modoEdicionSend = new EventEmitter<any>();
+
   openFicha: boolean = false;
   textFilter: string = "Seleccionar";
   progressSpinner: boolean = false;
@@ -36,7 +37,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
   tipoExpedienteDes: string;
   showTipoExp: boolean = false;
   
-
+  institucionActual;
   selectedDatosColegiales;
   showMessageInscripcion;
 
@@ -64,6 +65,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
     this.getComboTipoEJGColegio();
     this.getComboPrestaciones();
     this.getComboTipoExpediente();
+
       if (this.persistenceService.getDatos()) {
         this.modoEdicion = true;
         this.nuevo = false;
@@ -84,6 +86,10 @@ export class DatosGeneralesEjgComponent implements OnInit {
         this.showTipoExp = false;
       // this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     }
+
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      this.institucionActual = n.value;
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -107,6 +113,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
       }
     );
   }
+
   getComboTipoEJGColegio() {
     this.sigaServices.get("filtrosejg_comboTipoEJGColegio").subscribe(
       n => {
@@ -118,6 +125,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
       }
     );
   }
+
   getComboTipoExpediente(){
     this.sigaServices.get("gestionejg_comboTipoExpediente").subscribe(
       n => {
@@ -133,7 +141,8 @@ export class DatosGeneralesEjgComponent implements OnInit {
         console.log(err);
       }
     );
-    }
+  }
+
   getComboPrestaciones() {
     this.sigaServices.get("filtrosejg_comboPrestaciones").subscribe(
       n => {
@@ -151,16 +160,19 @@ export class DatosGeneralesEjgComponent implements OnInit {
   fillFechaApertura(event) {
     this.body.fechaApertura = event;
   }
+
   fillFechaPresentacion(event) {
     this.body.fechapresentacion = event;
   }
+
   fillFechaLimPresentacion(event) {
     this.body.fechalimitepresentacion = event;
   }
-  esFichaActiva(key) {
 
+  esFichaActiva(key) {
     return this.fichaPosible.activa;
   }
+
   abreCierraFicha(key) {
     this.resaltadoDatosGenerales = true;
     if (
@@ -177,6 +189,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
     this.opened.emit(this.openFicha);
     this.idOpened.emit(key);
   }
+
   showMessage(severity, summary, msg) {
     this.msgs = [];
     this.msgs.push({
@@ -185,6 +198,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
       detail: msg
     });
   }
+
   disabledSave() {
     if (this.nuevo) {
       if (this.body.fechaApertura != undefined) {
@@ -204,6 +218,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
       }
     }
   }
+
   numberOnly(event): boolean {
     const charCode = (event.which) ? event.which : event.keyCode;
     if (charCode >= 48 && charCode <= 57) {
@@ -214,9 +229,11 @@ export class DatosGeneralesEjgComponent implements OnInit {
 
     }
   }
+
   clear() {
     this.msgs = [];
   }
+
   checkPermisosSave() {
     let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
@@ -239,14 +256,22 @@ export class DatosGeneralesEjgComponent implements OnInit {
       this.sigaServices.post("gestionejg_actualizaDatosGenerales", this.body).subscribe(
         n => {
           this.progressSpinner=false;
+
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+
         },
         err => {
           console.log(err);
           this.progressSpinner=false;
+
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         }
       );
     }else{
       //hacer insert
+      this.body.annio=this.body.fechaApertura.getFullYear().toString();
+      this.body.idInstitucion=this.institucionActual;
+      
       this.sigaServices.post("gestionejg_insertaDatosGenerales", JSON.stringify(this.body)).subscribe(
         n => {
           this.progressSpinner=false;

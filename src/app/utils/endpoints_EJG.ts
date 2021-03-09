@@ -27,40 +27,40 @@ export let endpoints_EJG: any = {
     gestionejg_comboTipoExpediente: "ejg/gestion-ejg/comboTipoExpediente",
 
     //Busqueda EJG
-        gestionejg_descargarExpedientesJG: "ejg/gestion-ejg/descargarExpedientesJG",
-        gestionejg_anadirExpedienteARemesa: "ejg/gestion-ejg/anadirExpedienteARemesa",
-        gestionejg_cambioEstadoMasivo: "ejg/gestion-ejg/cambioEstadoMasivo",
+    gestionejg_descargarExpedientesJG: "ejg/gestion-ejg/descargarExpedientesJG",
+    gestionejg_anadirExpedienteARemesa: "ejg/gestion-ejg/anadirExpedienteARemesa",
+    gestionejg_cambioEstadoMasivo: "ejg/gestion-ejg/cambioEstadoMasivo",
 
     //Datos Generales
-        //gestionejg_guardarDatosGenerales: "ejg/gestion-ejg/guardarDatosGenerales",
-        gestionejg_insertaDatosGenerales: "ejg/gestion-ejg/insertaDatosGenerales",
-        gestionejg_actualizaDatosGenerales:"ejg/gestion-ejg/actualizaDatosGenerales",
+    //gestionejg_guardarDatosGenerales: "ejg/gestion-ejg/guardarDatosGenerales",
+    gestionejg_insertaDatosGenerales: "ejg/gestion-ejg/insertaDatosGenerales",
+    gestionejg_actualizaDatosGenerales: "ejg/gestion-ejg/actualizaDatosGenerales",
 
     //Unidad Familiar
-        gestionejg_borrarFamiliar: "ejg/gestion-ejg/borrarFamiliar",
+    gestionejg_borrarFamiliar: "ejg/gestion-ejg/borrarFamiliar",
 
     //Estado
-        gestionejg_borrarEstado: "ejg/gestion-ejg/borrarEstado",
-        gestionejg_nuevoEstado: "ejg/gestion-ejg/nuevoEstado",
+    gestionejg_borrarEstado: "ejg/gestion-ejg/borrarEstado",
+    gestionejg_nuevoEstado: "ejg/gestion-ejg/nuevoEstado",
 
     //Resolucion
-        gestionejg_guardarResolucion: "ejg/gestion-ejg/guardarResolucion",
+    gestionejg_guardarResolucion: "ejg/gestion-ejg/guardarResolucion",
 
     //Impugnacion
-        gestionejg_guardarImpugnacion: "ejg/gestion-ejg/guardarImpugnacion",
+    gestionejg_guardarImpugnacion: "ejg/gestion-ejg/guardarImpugnacion",
 
     //Informe Calificacion
-        gestionejg_guardarInformeCalfiacion: "ejg/gestion-ejg/guardarInformeCalificacion",
-        gestionejg_descargarInformeCalificacion: "ejg/gestion-ejg/descargarInformeCalificacion",
+    gestionejg_guardarInformeCalfiacion: "ejg/gestion-ejg/guardarInformeCalificacion",
+    gestionejg_descargarInformeCalificacion: "ejg/gestion-ejg/descargarInformeCalificacion",
 
     //Documentacion
-        gestionejg_descargarDocumentacion: "ejg/gestion-ejg/descargarDocumentacion",
+    gestionejg_descargarDocumentacion: "ejg/gestion-ejg/descargarDocumentacion",
 
     //Relaciones
-        gestionejg_borrarRelacion: "ejg/gestion-ejg/borrarRelacion",
-        gestionejg_crearDesignacion: "ejg/gestion-ejg/crearDesignacion",
-        gestionejg_asociarDesignacion: "ejg/gestion-ejg/asociarDesignacion",
-        gestionejg_asociarSOJ: "ejg/gestion-ejg/asociarSOJ",
-        gestionejg_asociarAsistencia: "ejg/gestion-ejg/asociarAsistencia",
-        gestionejg_consultEditRelacion: "ejg/gestion-ejg/consultEditRelacion"
+    gestionejg_borrarRelacion: "ejg/gestion-ejg/borrarRelacion",
+    gestionejg_crearDesignacion: "ejg/gestion-ejg/crearDesignacion",
+    gestionejg_asociarDesignacion: "ejg/gestion-ejg/asociarDesignacion",
+    gestionejg_asociarSOJ: "ejg/gestion-ejg/asociarSOJ",
+    gestionejg_asociarAsistencia: "ejg/gestion-ejg/asociarAsistencia",
+    gestionejg_consultEditRelacion: "ejg/gestion-ejg/consultEditRelacion"
 }
