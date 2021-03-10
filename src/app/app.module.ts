@@ -358,6 +358,130 @@ import { OtrasColegiacionesFichaColegialComponent } from './features/censo/ficha
 import { ServiciosInteresFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/servicios-interes-ficha-colegial/servicios-interes-ficha-colegial.component';
 import { TarjetaResumenFijaModule } from './commons/tarjeta-resumen-fija/tarjeta-resumen-fija.module';
 import { PipeTranslationModule } from './commons/translate/pipe-translation.module';
+import { BuscadorColegialComponent } from './mockups/buscadorColegial/buscador-colegial.component';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatInputModule } from '@angular/material/input';
+import { TarjetaComponent } from './mockups/shared/tarjeta/tarjeta.component';
+import { MigasDePanComponent } from './mockups/shared/migas-de-pan/migas-de-pan.component';
+import { FichaActuacionComponent } from './mockups/ficha-actuacion/ficha-actuacion.component';
+import { FichaEjgsComponent } from './mockups/ficha-ejgs/ficha-ejgs.component';
+import { FichaColegiadoComponent } from './mockups/ficha-colegiado/ficha-colegiado.component';
+import { CertificacionComponent2 } from './mockups/pantalla-certificacion/certificacion/certificacion.component';
+import { BusquedaCertificacionComponent } from './mockups/pantalla-certificacion/busqueda-certificacion/busqueda-certificacion.component';
+import { ResultadoCertificacionComponent } from './mockups/pantalla-certificacion/resultado-certificacion/resultado-certificacion.component';
+import { TablaResultadoComponent } from './mockups/shared/tabla-resultado/tabla-resultado.component';
+import { PantallaCertificacionComponent } from './mockups/pantalla-certificacion/pantalla-certificacion.component';
+import { PaginadorComponent } from './mockups/shared/paginador/paginador.component';
+import { PaginatorModule } from 'primeng/paginator';
+import { PantallaEjgComponent } from './mockups/pantalla-ejg/pantalla-ejg.component';
+import { BusquedaEJGComponent } from './mockups/pantalla-ejg/busqueda-ejg/busqueda-ejg.component';
+import { EjgComponent2 } from './mockups/pantalla-ejg/ejg/ejg.component';
+import { EmptyAccordionComponent } from './mockups/pantalla-ejg/empty-accordion/empty-accordion.component';
+import { ResultadoEJGComponent } from './mockups/pantalla-ejg/resultado-ejg/resultado-ejg.component';
+import { SelectorComponent } from './mockups/shared/selector/selector.component';
+import { PantallaAsuntosComponent } from './mockups/pantalla-asuntos/pantalla-asuntos.component';
+import { AsuntosComponent } from './mockups/pantalla-asuntos/asuntos/asuntos.component';
+import { BusquedaAsuntosComponent } from './mockups/pantalla-asuntos/busqueda-asuntos/busqueda-asuntos.component';
+import { DatePickerRangeComponent } from './mockups/shared/date-picker-range/date-picker-range.component';
+import { InputDivididoComponent } from './mockups/shared/input-dividido/input-dividido.component';
+import { ResultadoAsuntosComponent } from './mockups/pantalla-asuntos/resultado-asuntos/resultado-asuntos.component';
+import { JustificacionExpresComponent } from './mockups/pantalla-justificacion-expres/justificacion-expres/justificacion-expres.component';
+import { BuscadorJustificacionExpresComponent } from './mockups/pantalla-justificacion-expres/buscador-justificacion-expres/buscador-justificacion-expres.component';
+import { TablaResultadoDesplegableComponent } from './mockups/tabla-resultado-desplegable/tabla-resultado-desplegable.component';
+import { PantallaFichaCertificacionComponent } from './mockups/pantalla-ficha-certificacion/pantalla-ficha-certificacion.component';
+import { FichaCertificacionComponent } from './mockups/pantalla-ficha-certificacion/ficha-certificacion/ficha-certificacion.component';
+import { TablaSimpleComponent } from './mockups/shared/tabla-simple/tabla-simple.component';
+import { MockTarjetaRelacionesComponent } from './mockups/mock-tarjeta-relaciones/mock-tarjeta-relaciones.component';
+import { TarjetaRelacionesComponent } from './mockups/mock-tarjeta-relaciones/tarjeta-relaciones/tarjeta-relaciones.component';
+import { FichaPredesignacionComponent } from './mockups/ficha-predesignacion/ficha-predesignacion.component';
+import { DetalleTarjetaComponent } from './mockups/ficha-predesignacion/detalle-tarjeta/detalle-tarjeta.component';
+import { TarjetaDatosGeneralesEjgsComponent } from './mockups/ficha-ejgs/tarjeta-datos-generales/tarjeta-datos-generales-ejgs.component';
+import { TarjetaServiciosTramitacionEjgsComponent } from './mockups/ficha-ejgs/tarjeta-servicios-tramitacion/tarjeta-servicios-tramitacion-ejgs.component';
+import { TarjetaUnidadFamiliarEjgsComponent } from './mockups/ficha-ejgs/tarjeta-unidad-familiar/tarjeta-unidad-familiar-ejgs.component';
+import { TarjetaExpedientesEconomicosEjgsComponent } from './mockups/ficha-ejgs/tarjeta-expedientes-economicos/tarjeta-expedientes-economicos-ejgs.component';
+import { TarjetaDictamenEjgsComponent } from './mockups/ficha-ejgs/tarjeta-dictamen/tarjeta-dictamen-ejgs.component';
+import { TarjetaImpugnacionEjgsComponent } from './mockups/ficha-ejgs/tarjeta-impugnacion/tarjeta-impugnacion-ejgs.component';
+import { TarjetaResolucionEjgsComponent } from './mockups/ficha-ejgs/tarjeta-resolucion/tarjeta-resolucion-ejgs.component';
+import { TablaResultadoDesplegableJEService } from './mockups/tabla-resultado-desplegable/tabla-resultado-desplegable-je.service';
+import { TablaResultadoDesplegableAEService } from './mockups/tabla-resultado-desplegable/tabla-resultado-desplegable-ae.service';
+import { AsistenciaExpresComponent } from './mockups/pantalla-asistencia-expres/asistencia-expres/asistencia-expres.component';
+import { ResultadoAsistenciaExpresComponent } from './mockups/pantalla-asistencia-expres/resultado-asistencia-expres/resultado-asistencia-expres.component';
+import { PantallaAplicacionEnPagosComponent } from './mockups/pantalla-busqueda-aplicacion-en-pagos/pantalla-aplicacionEnPagos.component';
+import { AplicacionEnPagosComponent } from './mockups/pantalla-busqueda-aplicacion-en-pagos/aplicacionEnPagos/aplicacionEnPagos.component';
+import { ResultadoAplicacionEnPagosComponent } from './mockups/pantalla-busqueda-aplicacion-en-pagos/resultado-aplicacionEnPagos/resultado-aplicacionEnPagos.component';
+import { BusquedaAplicacionEnPagosComponent } from './mockups/pantalla-busqueda-aplicacion-en-pagos/busqueda-aplicacionEnPagos/busqueda-aplicacionEnPagos.component';
+import { BuscadorAsistenciaExpresComponent } from './mockups/pantalla-asistencia-expres/asistencia-expres/buscadorAsistenciaExpres/buscador-asistencia-expres.component';
+import { PantallaCalendariosComponent } from './mockups/pantalla-calendarios/pantalla-calendarios.component';
+import { CalendariosComponent } from './mockups/pantalla-calendarios/calendarios/calendarios.component';
+import { ResultadoCalendariosComponent } from './mockups/pantalla-calendarios/resultado-calendarios/resultado-calendarios.component';
+import { BusquedaCalendariosComponent } from './mockups/pantalla-calendarios/busqueda-calendarios/busqueda-calendarios.component';
+import { FichaDesignacionesComponent } from './mockups/ficha-designaciones/ficha-designaciones.component';
+import { FichaContrariosComponent } from './mockups/ficha-contrarios/ficha-contrarios.component';
+import { FichaAsistenciaComponent } from './mockups/ficha-asistencia/ficha-asistencia.component';
+import { TarjetaAsistidoComponent } from './mockups/ficha-asistencia/tarjeta-asistido/tarjeta-asistido.component';
+import { TarjetaActuacionesComponent } from './mockups/ficha-asistencia/tarjeta-actuaciones/tarjeta-actuaciones.component';
+import { HoraComponent } from './mockups/shared/hora/hora.component';
+import { TarjetaDatosGeneralesAsistenciaComponent } from './mockups/ficha-asistencia/tarjeta-datos-generales/tarjeta-datos-generales.component';
+import { TarjetaObservacionesComponent } from './mockups/ficha-asistencia/tarjeta-observaciones/tarjeta-observaciones.component';
+import { TarjetaRelacionesAsistenciaComponent } from './mockups/ficha-asistencia/tarjeta-relaciones/tarjeta-relaciones.component';
+import { TarjetaContrariosComponent } from './mockups/ficha-asistencia/tarjeta-contrarios/tarjeta-contrarios.component';
+import { TablaResultadoMixComponent } from './mockups/shared/tabla-resultado-mix/tabla-resultado-mix.component';
+import { TarjetaDocumentacionAsistenciaComponent } from './mockups/ficha-asistencia/tarjeta-documentacion-asistencia/tarjeta-documentacion-asistencia.component';
+import { FichaCalendarioProgramacionComponent } from './mockups/ficha-calendario-programacion/ficha-calendario-programacion.component';
+import { TablaResultadoMixFCService } from './mockups/shared/tabla-resultado-mix/tabla-resultado-mix-fc.service';
+import { TablaResultadoMixDAService } from './mockups/shared/tabla-resultado-mix/tabla-resultado-mix-da.service';
+import { TarjetaGuardiasCalendarioComponent } from './mockups/ficha-calendario-programacion/tarjeta-guardias-calendario/tarjeta-guardias-calendario.component';
+import { TarjetaDatosGeneralesCalendarioComponent } from './mockups/ficha-calendario-programacion/tarjeta-datos-generales-calendario/tarjeta-datos-generales-calendario.component';
+import { TarjetaDefensaJuridicaComponent } from './mockups/ficha-asistencia/tarjeta-defensa-juridica/tarjeta-defensa-juridica.component';
+import { TarjetaCaracteristicasComponent } from './mockups/ficha-asistencia/tarjeta-caracteristicas/tarjeta-caracteristicas.component';
+import { TarjetaColaGuardiaComponent } from './mockups/tarjeta-cola-guardia/tarjeta-cola-guardia.component';
+import { DetalleTarjetaDatosGeneralesFichaActuacionComponent } from './mockups/ficha-actuacion/detalle-tarjeta-datos-generales-ficha-actuacion/detalle-tarjeta-datos-generales-ficha-actuacion.component';
+import { DetalleTarjetaJustificacionFichaActuacionComponent } from './mockups/ficha-actuacion/detalle-tarjeta-justificacion-ficha-actuacion/detalle-tarjeta-justificacion-ficha-actuacion.component';
+import { DetalleTarjetaHistoricoFichaActuacionComponent } from './mockups/ficha-actuacion/detalle-tarjeta-historico-ficha-actuacion/detalle-tarjeta-historico-ficha-actuacion.component';
+import { DetalleTarjetaDocumentacionFichaActuacionComponent } from './mockups/ficha-actuacion/detalle-tarjeta-documentacion-ficha-actuacion/detalle-tarjeta-documentacion-ficha-actuacion.component';
+import { FichaActuacionOficioComponent } from './mockups/ficha-actuacion-oficio/ficha-actuacion-oficio.component';
+import { DetalleTarjetaDatosGeneralesFichaActuacionOficioComponent } from './mockups/ficha-actuacion-oficio/detalle-tarjeta-datos-generales-ficha-actuacion-oficio/detalle-tarjeta-datos-generales-ficha-actuacion-oficio.component';
+import { DetalleTarjetaJustificacionFichaActuacionOficioComponent } from './mockups/ficha-actuacion-oficio/detalle-tarjeta-justificacion-ficha-actuacion-oficio/detalle-tarjeta-justificacion-ficha-actuacion-oficio.component';
+import { DetalleTarjetaGestionFichaActuacionOficoComponent } from './mockups/ficha-actuacion-oficio/detalle-tarjeta-gestion-ficha-actuacion-ofico/detalle-tarjeta-gestion-ficha-actuacion-ofico.component';
+import { DetalleTarjetaDatosFacturacionFichaActuacionOficioComponent } from './mockups/ficha-actuacion-oficio/detalle-tarjeta-datos-facturacion-ficha-actuacion-oficio/detalle-tarjeta-datos-facturacion-ficha-actuacion-oficio.component';
+import { DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent } from './mockups/ficha-designaciones/detalle-tarjeta-datos-generales-ficha-designacion-oficio/detalle-tarjeta-datos-generales-ficha-designacion-oficio.component';
+import { DetalleTarjetaDetalleFichaDesignacionOficioComponent } from './mockups/ficha-designaciones/detalle-tarjeta-detalle-ficha-designacion-oficio/detalle-tarjeta-detalle-ficha-designacion-oficio.component';
+import { DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent } from './mockups/ficha-designaciones/detalle-tarjeta-datos-adicionales-ficha-designacion-oficio/detalle-tarjeta-datos-adicionales-ficha-designacion-oficio.component';
+import { DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent } from './mockups/ficha-designaciones/detalle-tarjeta-datos-facturacion-ficha-designacion-oficio/detalle-tarjeta-datos-facturacion-ficha-designacion-oficio.component';
+import { FichaCambioLetradoComponent } from './mockups/ficha-cambio-letrado/ficha-cambio-letrado.component';
+import { DetalleTarjetaDatosRenuncianteComponent } from './mockups/ficha-cambio-letrado/detalle-tarjeta-datos-renunciante/detalle-tarjeta-datos-renunciante.component';
+import { DetalleTarjetaDatosSustitutoComponent } from './mockups/ficha-cambio-letrado/detalle-tarjeta-datos-sustituto/detalle-tarjeta-datos-sustituto.component';
+import { PantallaBuscadorColegiadosComponent } from './mockups/pantalla-buscador-colegiados/pantalla-buscador-colegiados.component';
+import { BuscadorColegiadosComponent } from './mockups/pantalla-buscador-colegiados/buscador-colegiados/buscador-colegiados.component';
+import { ResultadoBuscadorColegiadosComponent } from './mockups/pantalla-buscador-colegiados/resultado-buscador-colegiados/resultado-buscador-colegiados.component';
+import { TablaResultadoMixFAService } from './mockups/shared/tabla-resultado-mix/tabla-resultado-mix-fa.service';
+import { TablaResultadoOrderCGService } from './mockups/shared/tabla-resultado-order/tabla-resultado-order-cg.service';
+import { TablaResultadoOrderComponent } from './mockups/shared/tabla-resultado-order/tabla-resultado-order.component';
+import { DataService } from './mockups/shared/services/data.service';
+import { PreviousRouteService } from './mockups/shared/services/previous-route.service';
+import { TarjetaDatosGeneralesComponent } from './mockups/ficha-contrarios/tarjeta-datos-generales/tarjeta-datos-generales.component';
+import { TarjetaDictamenComponent } from './mockups/ficha-contrarios/tarjeta-dictamen/tarjeta-dictamen.component';
+import { TarjetaDocumentacionEjgsComponent } from './mockups/ficha-ejgs/tarjeta-documentacion/tarjeta-documentacion-ejgs.component';
+import { TarjetaDocumentacionComponent } from './mockups/ficha-contrarios/tarjeta-documentacion/tarjeta-documentacion.component';
+import { TarjetaExpedientesEconomicosComponent } from './mockups/ficha-contrarios/tarjeta-expedientes-economicos/tarjeta-expedientes-economicos.component';
+import { TarjetaImpugnacionComponent } from './mockups/ficha-contrarios/tarjeta-impugnacion/tarjeta-impugnacion.component';
+import { TarjetaResolucionComponent } from './mockups/ficha-contrarios/tarjeta-resolucion/tarjeta-resolucion.component';
+import { TarjetaServiciosTramitacionComponent } from './mockups/ficha-contrarios/tarjeta-servicios-tramitacion/tarjeta-servicios-tramitacion.component';
+import { TarjetaUnidadFamiliarComponent } from './mockups/ficha-contrarios/tarjeta-unidad-familiar/tarjeta-unidad-familiar.component';
+import { DetalleTarjetaDocumentacionFichaDesignacionOficioComponent } from './mockups/ficha-designaciones/detalle-tarjeta-documentacion-ficha-designacion-oficio/detalle-tarjeta-documentacion-ficha-designacion-oficio.component';
+import { TarjetaRelacionesEjgsComponent } from './mockups/ficha-ejgs/tarjeta-relaciones-ejgs/tarjeta-relaciones-ejgs.component';
+import { PantallaBuscadorProcuradorComponent } from './mockups/pantalla-buscador-procurador/pantalla-buscador-procurador.component';
+import { FiltroBuscadorProcuradorComponent } from './mockups/pantalla-buscador-procurador/filtro-buscador-procurador/filtro-buscador-procurador.component';
+import { ResultadoBuscadorProcuradorComponent } from './mockups/pantalla-buscador-procurador/resultado-buscador-procurador/resultado-buscador-procurador.component';
+
+
 
 
 @NgModule({
@@ -676,8 +800,115 @@ import { PipeTranslationModule } from './commons/translate/pipe-translation.modu
 		MutualidadAbogaciaFichaColegialComponent,
 		DatosColegialesFichaColegialComponent,
 		OtrasColegiacionesFichaColegialComponent,
-		ServiciosInteresFichaColegialComponent//,
+		ServiciosInteresFichaColegialComponent,
 		//TarjetaResumenFijaComponent
+		BuscadorColegialComponent,
+		TarjetaComponent,
+		MigasDePanComponent,
+		FichaActuacionComponent,
+		FichaEjgsComponent,
+		FichaColegiadoComponent,
+		BusquedaCertificacionComponent,
+		CertificacionComponent2,
+		ResultadoCertificacionComponent,
+		TablaResultadoComponent,
+		PantallaCertificacionComponent,
+		PaginadorComponent,
+		PantallaEjgComponent,
+		BusquedaEJGComponent,
+		EjgComponent2,
+		EmptyAccordionComponent,
+		ResultadoEJGComponent,
+		SelectorComponent,
+		PantallaAsuntosComponent,
+		AsuntosComponent,
+		BusquedaAsuntosComponent,
+		DatePickerRangeComponent,
+		InputDivididoComponent,
+		ResultadoAsuntosComponent,
+		JustificacionExpresComponent,
+		BuscadorJustificacionExpresComponent,
+		TablaResultadoDesplegableComponent,
+		PantallaFichaCertificacionComponent,
+		FichaCertificacionComponent,
+		TablaSimpleComponent,
+		MockTarjetaRelacionesComponent,
+		TarjetaRelacionesComponent,
+		FichaPredesignacionComponent,
+		DetalleTarjetaComponent,
+		TarjetaDatosGeneralesEjgsComponent,
+		TarjetaServiciosTramitacionComponent,
+		TarjetaServiciosTramitacionEjgsComponent,
+		TarjetaUnidadFamiliarComponent,
+		TarjetaUnidadFamiliarEjgsComponent,
+		TarjetaExpedientesEconomicosComponent,
+		TarjetaExpedientesEconomicosEjgsComponent,
+		TarjetaDictamenEjgsComponent,
+		TarjetaDocumentacionComponent,
+		TarjetaImpugnacionComponent,
+		TarjetaImpugnacionEjgsComponent,
+		TarjetaResolucionComponent,
+		TarjetaResolucionEjgsComponent,
+		AsistenciaExpresComponent,
+		ResultadoAsistenciaExpresComponent,
+		ResultadoAsistenciaExpresComponent,
+		BuscadorAsistenciaExpresComponent,
+		PantallaAplicacionEnPagosComponent,
+		AplicacionEnPagosComponent,
+		ResultadoAplicacionEnPagosComponent,
+		BusquedaAplicacionEnPagosComponent,
+		PantallaCalendariosComponent,
+		CalendariosComponent,
+		ResultadoCalendariosComponent,
+		BusquedaCalendariosComponent,
+		FichaDesignacionesComponent,
+		FichaContrariosComponent,
+		FichaAsistenciaComponent,
+		TarjetaAsistidoComponent,
+		TarjetaActuacionesComponent,
+		HoraComponent,
+		TarjetaDatosGeneralesAsistenciaComponent,
+		TarjetaObservacionesComponent,
+		TarjetaContrariosComponent,
+		TarjetaRelacionesAsistenciaComponent,
+		TablaResultadoMixComponent,
+		TarjetaRelacionesAsistenciaComponent,
+		TarjetaDocumentacionAsistenciaComponent,
+		FichaCalendarioProgramacionComponent,
+		TarjetaGuardiasCalendarioComponent,
+		TarjetaDatosGeneralesCalendarioComponent,
+		TarjetaDefensaJuridicaComponent,
+		TarjetaCaracteristicasComponent,
+		TarjetaColaGuardiaComponent,
+		PantallaCalendariosComponent,
+		DetalleTarjetaDatosGeneralesFichaActuacionComponent,
+		DetalleTarjetaJustificacionFichaActuacionComponent,
+		DetalleTarjetaHistoricoFichaActuacionComponent,
+		DetalleTarjetaDocumentacionFichaActuacionComponent,
+		FichaActuacionOficioComponent,
+		DetalleTarjetaDatosGeneralesFichaActuacionOficioComponent,
+		DetalleTarjetaJustificacionFichaActuacionOficioComponent,
+		DetalleTarjetaGestionFichaActuacionOficoComponent,
+		DetalleTarjetaDatosFacturacionFichaActuacionOficioComponent,
+		DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent,
+		DetalleTarjetaDetalleFichaDesignacionOficioComponent,
+		DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent,
+		DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent,
+		FichaCambioLetradoComponent,
+		DetalleTarjetaDatosRenuncianteComponent,
+		DetalleTarjetaDatosSustitutoComponent,
+		PantallaBuscadorColegiadosComponent,
+		BuscadorColegiadosComponent,
+		ResultadoBuscadorColegiadosComponent,
+		TablaResultadoOrderComponent,
+		TarjetaDatosGeneralesComponent,
+		TarjetaDictamenComponent,
+		TarjetaDocumentacionEjgsComponent,
+		DetalleTarjetaDocumentacionFichaDesignacionOficioComponent,
+		TarjetaRelacionesEjgsComponent,
+		PantallaBuscadorProcuradorComponent,
+		FiltroBuscadorProcuradorComponent,
+		ResultadoBuscadorProcuradorComponent
 	],
 	imports: [
 		BrowserModule,
@@ -726,16 +957,33 @@ import { PipeTranslationModule } from './commons/translate/pipe-translation.modu
 
 		SelectButtonModule,
 		ColorPickerModule,
-		EditorModule
+		EditorModule,
+
+		MatExpansionModule,
+		MatCheckboxModule,
+		MatInputModule,
+		MatSortModule,
+		MatSelectModule,
+		MatTableModule,
+		MatPaginatorModule,
+		MatDatepickerModule,
+		MatNativeDateModule,
+		PaginatorModule,
+
 	],
 	providers: [
 		// { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
 		TranslateService,
 		ImagePipe,
 		DatePipe,
+		DataService,
+		PreviousRouteService,
 
 		TrimPipePipe,
-
+		TablaResultadoDesplegableAEService,
+		TablaResultadoDesplegableJEService,
+		TablaResultadoMixDAService,
+		TablaResultadoMixFCService,
 		OldSigaServices,
 		SigaServices,
 		CommonsService,
@@ -744,6 +992,8 @@ import { PipeTranslationModule } from './commons/translate/pipe-translation.modu
 		MessageService,
 		AuthenticationService,
 		ConfirmationService,
+		TablaResultadoMixFAService,
+		TablaResultadoOrderCGService,
 
 		TrimPipePipe,
 

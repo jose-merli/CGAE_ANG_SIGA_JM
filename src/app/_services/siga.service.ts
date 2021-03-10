@@ -605,7 +605,9 @@ export class SigaServices {
 		dialogo_keys: 'dialogoComunicacion/keys',
 		dialogo_obtenerCamposDinamicos: 'dialogoComunicacion/obtenerCamposDinamicos',
 		dialogo_envioTest: 'dialogoComunicacion/envioTest',
-		dialogo_maxModelos: 'dialogoComunicacion/maxModelos'
+		dialogo_maxModelos: 'dialogoComunicacion/maxModelos',
+
+		showMockups: 'showMockups'
 	};
 
 	private menuToggled = new Subject<any>();
