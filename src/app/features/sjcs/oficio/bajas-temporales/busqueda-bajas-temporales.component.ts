@@ -3,12 +3,7 @@ import { TranslateService } from '../../../../commons/translate';
 import { SigaServices } from '../../../../_services/siga.service';
 import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
-import { procesos_maestros } from '../../../../permisos/procesos_maestros';
 import { Router } from '@angular/router';
-import { MultiSelect } from 'primeng/primeng';
-import { TiposActuacionObject } from '../../../../models/sjcs/TiposActuacionObject';
-import { PartidasPresupuestarias } from '../../maestros/partidas/partidasPresupuestarias/partidasPresupuestarias.component';
-import { TablaPartidasComponent } from '../../maestros/partidas/gestion-partidas/gestion-partidaspresupuestarias.component';
 // import { FiltrosTurnos } from './filtros-turnos/filtros-turnos.component';
 // import { TablaTurnosComponent } from './gestion-turnos/gestion-turnos.component';
 import { procesos_oficio } from '../../../../permisos/procesos_oficio';
@@ -112,6 +107,9 @@ export class BajasTemporalesComponent implements OnInit {
         this.progressSpinner = false;
         console.log(err);
       }, () => {
+        setTimeout(()=>{
+          this.commonsService.scrollTablaFoco('tablaFoco');
+        }, 5);
       }
     );
   }

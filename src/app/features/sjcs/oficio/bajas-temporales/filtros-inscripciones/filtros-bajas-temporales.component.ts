@@ -1,12 +1,12 @@
-import { Component, OnInit, Input, HostListener, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, HostListener, Output, EventEmitter } from '@angular/core';
 import { TranslateService } from '../../../../../commons/translate';
 import { KEY_CODE } from '../../../../censo/busqueda-no-colegiados/busqueda-no-colegiados.component';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
-import { TurnosItems } from '../../../../../models/sjcs/TurnosItems';
-import { InscripcionesItems } from '../../../../../models/sjcs/InscripcionesItems';
 import { BajasTemporalesItem } from '../../../../../models/sjcs/BajasTemporalesItem';
+import { ConfirmationService } from 'primeng/api';
+import { Usuarios } from '../../../../administracion/usuarios/usuarios.component';
 
 @Component({
   selector: 'app-filtros-bajas-temporales',
@@ -49,6 +49,16 @@ export class FiltrosBajasTemporales implements OnInit {
     { label:"Validado", value:"1"},
     { label:"Pendiente", value:"2"},
   ]
+
+  usuarioBusquedaExpress = {​​​​​​​​​
+    numColegiado: '',
+    nombreAp: ''
+  }​​​​​​​​​;
+
+  
+  showModalNuevaBaja = false;
+
+
   @Input() permisos;
   /*Éste método es útil cuando queremos queremos informar de cambios en los datos desde el hijo,
     por ejemplo, si tenemos un botón en el componente hijo y queremos actualizar los datos del padre.*/
@@ -57,7 +67,8 @@ export class FiltrosBajasTemporales implements OnInit {
   constructor(private router: Router,
     private sigaServices: SigaServices,
     private translateService: TranslateService,
-    private persistenceService: PersistenceService) { }
+    private persistenceService: PersistenceService,
+    private confirmationService: ConfirmationService) { }
 
   ngOnInit() {   
     if (this.persistenceService.getHistorico() != undefined) {
@@ -71,13 +82,17 @@ export class FiltrosBajasTemporales implements OnInit {
       this.filtros = this.persistenceService.getFiltros();
       this.isBuscar();
     }
+    
+    if(sessionStorage.getItem("buscadorColegiados")){​​
 
-  }
+      let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
 
+      this.usuarioBusquedaExpress.nombreAp=busquedaColegiado.nombre+" "+busquedaColegiado.apellidos;
 
-  newTurno() {
-    this.persistenceService.setFiltros(this.filtros);
-    this.router.navigate(["/gestionTurnos"]);
+      this.usuarioBusquedaExpress.numColegiado=busquedaColegiado.nColegiado;
+
+    }​​
+
   }
 
   onHideDatosGenerales() {
@@ -104,6 +119,10 @@ export class FiltrosBajasTemporales implements OnInit {
   }
 
   isBuscar() {
+    if((<HTMLInputElement>document.querySelector("input[formControlName='numColegiado']")).value != null || (<HTMLInputElement>document.querySelector("input[formControlName='numColegiado']")).value != ""){
+      this.filtros.ncolegiado = (<HTMLInputElement>document.querySelector("input[formControlName='numColegiado']")).value;
+    }
+
     if (this.checkFilters()) {
       this.persistenceService.setFiltros(this.filtros);
       this.persistenceService.setFiltrosAux(this.filtros);
@@ -154,7 +173,7 @@ export class FiltrosBajasTemporales implements OnInit {
   fillAfechaDeCalendar(event) {
     this.filtros.fechadesde = this.transformaFecha(event);
     if(this.filtros.fechadesde != undefined){
-      this.filtros.estado = undefined;
+      this.filtros.validado = undefined;
       this.disabledestado = true;
     }else{
       this.disabledestado = false;
@@ -181,7 +200,7 @@ export class FiltrosBajasTemporales implements OnInit {
   }
 
   clearFilters() {
-    this.filtros.estado = undefined;
+    this.filtros.validado = undefined;
     this.filtros.fechadesde = undefined;
     this.filtros.fechahasta = undefined;
     this.filtros.fechasolicituddesde = undefined;
@@ -202,5 +221,4 @@ export class FiltrosBajasTemporales implements OnInit {
   clear() {
     this.msgs = [];
   }
-
 }

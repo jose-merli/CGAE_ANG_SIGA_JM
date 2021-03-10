@@ -1,19 +1,13 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, Output, EventEmitter, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../commons/translate/translation.service';
-import { ModulosItem } from '../../../../../models/sjcs/ModulosItem';
-import { UpperCasePipe, DatePipe } from '../../../../../../../node_modules/@angular/common';
+import {  DatePipe } from '../../../../../../../node_modules/@angular/common';
 import { PartidasObject } from '../../../../../models/sjcs/PartidasObject';
-import { findIndex } from 'rxjs/operators';
-import { MultiSelect, SortEvent, DataTable } from 'primeng/primeng';
+import { DataTable } from 'primeng/primeng';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { Router } from '../../../../../../../node_modules/@angular/router';
-import { TurnosObject } from '../../../../../models/sjcs/TurnosObject';
-import { DatosDireccionesObject } from '../../../../../models/DatosDireccionesObject';
-import { DatosDireccionesItem } from '../../../../../models/DatosDireccionesItem';
-import { InscripcionesObject } from '../../../../../models/sjcs/InscripcionesObject';
-import { InscripcionesItems } from '../../../../../models/sjcs/InscripcionesItems';
 import { CommonsService } from '../../../../../_services/commons.service';
+import { BajasTemporalesItem } from '../../../../../models/sjcs/BajasTemporalesItem';
 
 
 @Component({
@@ -84,7 +78,6 @@ export class TablaBajasTemporalesComponent implements OnInit {
     private router: Router,
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private datepipe: DatePipe,
     private commonsService: CommonsService
   ) { }
 
@@ -404,16 +397,50 @@ export class TablaBajasTemporalesComponent implements OnInit {
     //   this.selectionMode = "multiple";
     // }
   }
+
+  anular(selectedDatos) {
+    this.progressSpinner = true;
+    this.body = new BajasTemporalesItem();
+    this.body = selectedDatos
+    this.body.forEach(element => {
+      element.fechaActual = this.datos.fechaActual;
+      element.observaciones = this.datos.observaciones;
+    });
+    this.sigaServices.post("bajasTemporales_updateAnular", this.body).subscribe(
+      data => {
+        this.selectedDatos = [];
+        this.searchPartidas.emit(false);
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.progressSpinner = false;
+      },
+      err => {
+        if (err != undefined && JSON.parse(err.error).error.description != "") {
+          this.showMessage("success", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+        this.historico = false;
+        this.selectMultiple = false;
+        this.selectAll = false;
+        this.editMode = false;
+        this.nuevo = false;
+      }
+    );  
+}
   
   validar(selectedDatos) {
       this.progressSpinner = true;
-      this.body = new InscripcionesObject();
-      this.body.inscripcionesItem = selectedDatos
-      this.body.inscripcionesItem.forEach(element => {
+      this.body = new BajasTemporalesItem();
+      this.body = selectedDatos
+      this.body.forEach(element => {
         element.fechaActual = this.datos.fechaActual;
         element.observaciones = this.datos.observaciones;
       });
-      this.sigaServices.post("inscripciones_updateValidar", this.body).subscribe(
+      this.sigaServices.post("bajasTemporales_updateValidar", this.body).subscribe(
         data => {
           this.selectedDatos = [];
           this.searchPartidas.emit(false);
@@ -439,49 +466,15 @@ export class TablaBajasTemporalesComponent implements OnInit {
       );  
   }
 
-  cambiarFecha(selectedDatos) {
-    this.progressSpinner = true;
-    this.body = new InscripcionesObject();
-    this.body.inscripcionesItem = selectedDatos
-    this.body.inscripcionesItem.forEach(element => {
-      element.fechaActual = this.datos.fechaActual;
-      element.observaciones = this.datos.observaciones;
-    });
-    this.sigaServices.post("inscripciones_updateCambiarFecha", this.body).subscribe(
-      data => {
-        this.selectedDatos = []; 
-        this.searchPartidas.emit(false);
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
-      },
-      err => {
-        if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-        this.historico = false;
-        this.selectMultiple = false;
-        this.selectAll = false;
-        this.editMode = false;
-        this.nuevo = false;
-      }
-    );  
-}
-
   denegar(selectedDatos) {
     this.progressSpinner = true;
-    this.body = new InscripcionesObject();
-    this.body.inscripcionesItem = selectedDatos
-    this.body.inscripcionesItem.forEach(element => {
+    this.body = new BajasTemporalesItem();
+    this.body = selectedDatos
+    this.body.forEach(element => {
       element.fechaActual = this.datos.fechaActual;
       element.observaciones = this.datos.observaciones;
     });
-    this.sigaServices.post("inscripciones_updateDenegar", this.body).subscribe(
+    this.sigaServices.post("bajasTemporales_updateDenegar", this.body).subscribe(
       data => {
         this.selectedDatos = []; 
         this.searchPartidas.emit(false);
@@ -506,47 +499,6 @@ export class TablaBajasTemporalesComponent implements OnInit {
       }
     );  
 }
-
-  solicitarBaja(selectedDatos) {
-    this.progressSpinner = true;
-    this.fechaDeHoy = new Date();
-    let fechaHoy =this.datepipe.transform(this.fechaDeHoy, 'dd/MM/yyyy');
-    let fechaActual2 = this.datepipe.transform(this.datos.fechaActual,'dd/MM/yyyy')
-    if(fechaActual2 != fechaHoy){
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.inscripciones.mensajesolicitarbaja"));
-    }else{
-      this.body = new InscripcionesObject();
-      this.body.inscripcionesItem = selectedDatos
-      this.body.inscripcionesItem.forEach(element => {
-        element.fechaActual = this.datos.fechaActual;
-        element.observaciones = this.datos.observaciones;
-      });
-      this.sigaServices.post("inscripciones_updateSolicitarBaja", this.body).subscribe(
-        data => {
-          this.selectedDatos = [];
-          this.searchPartidas.emit(false);
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.progressSpinner = false;
-        },
-        err => {
-          if (err != undefined && JSON.parse(err.error).error.description != "") {
-            this.showMessage("success", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-          } else {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-          }
-          this.progressSpinner = false;
-        },
-        () => {
-          this.progressSpinner = false;
-          this.historico = false;
-          this.selectMultiple = false;
-          this.selectAll = false;
-          this.editMode = false;
-          this.nuevo = false;
-        }
-      );
-    }  
-  }
 
   onChangeSelectAll() {
     if (this.selectAll === true) {
