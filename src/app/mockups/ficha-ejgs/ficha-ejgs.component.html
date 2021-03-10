@@ -72,7 +72,7 @@
                                     </div>
                                     <span
                                         *ngIf="tarj.nombre == 'Estados' || tarj.nombre == 'Regtel' || tarj.nombre == 'Comunicaciones'"
-                                        style="padding-left: 158.16px;">
+                                        [ngClass]="{'padding-menu-closed': changeDisplay(), 'padding-menu-opened': !changeDisplay()}">
                                         Tarjeta pendiente de desarrollar
                                     </span>
                                 </ng-template>

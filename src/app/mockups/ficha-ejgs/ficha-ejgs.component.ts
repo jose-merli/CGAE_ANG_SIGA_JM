@@ -402,4 +402,8 @@ export class FichaEjgsComponent implements OnInit {
       });
   }
 
+  changeDisplay() {
+    return document.getElementsByClassName("openedMenu").length == 0;
+  }
+
 }

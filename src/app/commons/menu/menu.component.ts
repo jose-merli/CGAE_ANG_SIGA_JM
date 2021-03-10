@@ -24,6 +24,7 @@ export class MenuComponent implements OnInit {
   encontrado: boolean;
   progressSpinner: boolean = false;
   openMockups: boolean = false;
+  showMockups: boolean = false;
 
   constructor(
     private router: Router,
@@ -36,26 +37,35 @@ export class MenuComponent implements OnInit {
   ngOnInit() {
     this.progressSpinner = true;
     //this.sigaServices.get("diccionarios").subscribe(response => {
-      //response.DiccionarioItems;
-      //this.sigaServices.get("menu").subscribe(response => {
-          
+    //response.DiccionarioItems;
+    //this.sigaServices.get("menu").subscribe(response => {
+
     this.translateService.getTranslations().then(
-      items=>{
+      items => {
         this.items = items;
-  
-      this.progressSpinner = false;
-//        this.items = response.menuItems;
-//        return this.items;
-//      });
-//    });
+
+        this.progressSpinner = false;
+        //        this.items = response.menuItems;
+        //        return this.items;
+        //      });
+        //    });
       }
     );
+
+    this.sigaServices.getBackend("showMockups").subscribe(
+      n => {
+        this.showMockups = n.valor == 'true';
+      },
+      err => {
+        console.log(err);
+      });
   }
+
   onCloseMenu() {
     if (!this.bloquedMenu) {
       this.closeMenu = !this.closeMenu;
       this.sigaServices.notifyMenuToggled();
-     }
+    }
   }
 
   onFixedMenu() {

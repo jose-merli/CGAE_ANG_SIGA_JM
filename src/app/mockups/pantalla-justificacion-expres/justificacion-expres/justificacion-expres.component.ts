@@ -40,7 +40,8 @@ export class JustificacionExpresComponent implements OnInit {
     },
     {
       id: 'finalizado',
-      name: 'Finalizado'
+      name: 'Fin.',
+      nameComplete: 'Finalizado'
     },
     {
       id: 'juzgado',
@@ -72,7 +73,8 @@ export class JustificacionExpresComponent implements OnInit {
     },
     {
       id: "validar",
-      name: "Validar"
+      name: "Val.",
+      nameComplete: 'Validar'
     }
   ];
   selectores1 = [

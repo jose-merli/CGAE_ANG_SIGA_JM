@@ -294,7 +294,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   }
 
   setTamanioPrimerRegistroGrupo() {
-    if (this.pantalla == 'AE') {
+    if (this.pantalla == 'AE' || this.pantalla == 'JE') {
       let self = this;
       setTimeout(function () {
         let primerRegistroDelGrupo = document.getElementsByClassName("table-row-header");
@@ -307,39 +307,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-
-    this.setTamanios()
-
-    // } else if (this.pantalla == 'JE') {
-
-    //   this.cabeceras.forEach(ind => {
-    //     if (ind.id != 'clientes') {
-    //       document.getElementById(ind.id).setAttribute("style", "max-width: 7.5757575757%");
-    //     } else {
-    //       document.getElementById(ind.id).setAttribute("style", "max-width: 16.6666666666%");
-    //     }
-    //   });
-
-    //   let primeraColumna = document.getElementsByClassName("table-row-header");
-    //   let columnasHijas = document.getElementsByClassName("table-cell");
-
-    //   for (let i = 0; i < primeraColumna.length; i++) {
-    //     primeraColumna[i].setAttribute("style", "max-width: 7.5757575757%");
-    //   }
-
-
-    //   for (let j = 0; j < columnasHijas.length; j++) {
-
-    //     if (j == 1 || j == 12 || j == 23 || j == 34 || j == 45 || j == 56) {
-    //       columnasHijas[j].setAttribute("style", "max-width: 25%");
-    //     } else {
-    //       columnasHijas[j].setAttribute("style", "max-width: 7.5757575757%");
-    //     }
-    //   }
-
-    // }
-
-    console.log(document.getElementsByClassName("content")[0].clientWidth);
+    this.setTamanios();
     this.tamanioTablaResultados = document.getElementById("tablaResultadoDesplegable").clientWidth;
   }
 
@@ -372,13 +340,55 @@ export class TablaResultadoDesplegableComponent implements OnInit {
 
       for (let j = 0; j < columnasHijas.length; j++) {
 
-        if (j == 0 || j == 6 || j == 12 || j == 18 || j == 24) {
+        if ([0, 6, 12, 18, 24].includes(j)) {
           columnasHijas[j].setAttribute("style", "max-width: 445.5px");
         } else {
           columnasHijas[j].setAttribute("style", "max-width: 225.75px");
         }
       }
 
+    } else if (this.pantalla == 'JE') {
+
+      this.cabeceras.forEach(ind => {
+        if (ind.id == 'clientes') {
+          this.columnsSizes.push({
+            id: ind.id,
+            size: 300
+          });
+          document.getElementById(ind.id).setAttribute("style", "max-width: 300px");
+        } else if (ind.id == 'finalizado' || ind.id == 'validar') {
+          this.columnsSizes.push({
+            id: ind.id,
+            size: 50
+          });
+          document.getElementById(ind.id).setAttribute("style", "max-width: 50px");
+        } else {
+          this.columnsSizes.push({
+            id: ind.id,
+            size: 153.7
+          });
+          document.getElementById(ind.id).setAttribute("style", "max-width: 153.7px");
+        }
+      });
+
+      let primeraColumna = document.getElementsByClassName("table-row-header");
+      let columnasHijas = document.getElementsByClassName("table-cell");
+
+      for (let i = 0; i < primeraColumna.length; i++) {
+        primeraColumna[i].setAttribute("style", "max-width: 153.7px");
+      }
+
+
+      for (let j = 0; j < columnasHijas.length; j++) {
+
+        if ([1, 12, 23, 34, 45, 56].includes(j)) {
+          columnasHijas[j].setAttribute("style", "max-width: 300px");
+        } else if ([2, 10, 13, 21, 24, 32, 35, 43, 46, 54, 57, 65].includes(j)) {
+          columnasHijas[j].setAttribute("style", "max-width: 50px");
+        } else {
+          columnasHijas[j].setAttribute("style", "max-width: 153.7px");
+        }
+      }
     }
   }
 

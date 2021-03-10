@@ -1,11 +1,4 @@
 <div class="center mb-3">
-    <!--<mat-form-field appearance="fill">
-        <mat-label>{{numCabeceras - info.value?.length}} <span>visibles</span></mat-label>
-        <mat-select [formControl]="info" multiple [(value)]="selectedHeader"> 
-          <mat-option *ngFor="let cabecera of cabeceras" [value]="cabecera.id">{{cabecera.name}}</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <span>Columnas</span>-->
     <p-multiSelect #mySelect [formControl]="info" [(ngModel)]='selectedHeader' [options]="cabeceras" optionLabel="name"
         optionValue="id" (onChange)="ocultarColumna($event)" defaultLabel="0 visibles" maxSelectedLabels="0"
         [selectedItemsLabel]="textSelected">
@@ -17,7 +10,8 @@
             <div class="table-header-child p-2" *ngFor="let cabecera of cabeceras; let j = index" #BorderedHeader
                 [id]="cabecera.id">
                 <div>
-                    <div [mat-sort-header]=cabecera.id>{{cabecera.name}}</div>
+                    <div [mat-sort-header]=cabecera.id [pTooltip]="cabecera.nameComplete" tooltipPosition="top">
+                        {{cabecera.name}}</div>
                     <input type="text" class="form-control" pInputTex [(ngModel)]="searchText[j]"
                         (ngModelChange)="searchChange(j)" autocomplete="off" placeholder="Buscar">
                 </div>
@@ -83,19 +77,6 @@
                             <span class="w100 cell-value" *ngIf="cell.type == 'input'"><input type="text"
                                     class="form-control" pInputText size="10" [placeholder]="cell.value"></span>
                             <span class="w100 cell-value d-flex" *ngIf="cell.type == 'buttomSelect'">
-                                <!-- <div class="row justify-content-center">
-                                    <div class="col-auto mx-0 px-0 d-flex align-items-center">
-                                        <div class="main-button">
-                                            <button pButton type="button" iconPos="left" [label]="cell.value[0]"
-                                                (click)="cell.value[3] == 'C' ? cell.value[3] = 'J' :  cell.value[3] = 'C'"></button>
-                                        </div>
-                                    </div>
-                                    <div class="col-7 ml-2 my-auto p-0">
-                                        <app-selector [i]="0"
-                                            [selector]="cell.value[3] == 'C' ? cell.value[1] : cell.value[2]">
-                                        </app-selector>
-                                    </div>
-                                </div> -->
                                 <div class="main-button" style="width: 40%;">
                                     <button pButton type="button" iconPos="left" [label]="cell.value[0]"
                                         (click)="cell.value[3] == 'C' ? cell.value[3] = 'J' :  cell.value[3] = 'C'"></button>
@@ -160,19 +141,6 @@
                                 <input type="text" class="form-control" pInputText [placeholder]="cell.value">
                             </span>
                             <span class="w100 cell-value d-flex" *ngIf="cell.type == 'buttomSelect'">
-                                <!-- <div class="row justify-content-center">
-                                    <div class="col-auto mx-0 px-0 d-flex align-items-center">
-                                        <div class="main-button">
-                                            <button pButton type="button" iconPos="left" [label]="cell.value[0]"
-                                                (click)="cell.value[3] == 'C' ? cell.value[3] = 'J' :  cell.value[3] = 'C'"></button>
-                                        </div>
-                                    </div>
-                                    <div class="col-7 ml-2 my-auto p-0">
-                                        <app-selector [i]="0"
-                                            [selector]="cell.value[3] == 'C' ? cell.value[1] : cell.value[2]">
-                                        </app-selector>
-                                    </div>
-                                </div> -->
                                 <div class="main-button" style="width: 40%;">
                                     <button pButton type="button" iconPos="left" [label]="cell.value[0]"
                                         (click)="cell.value[3] == 'C' ? cell.value[3] = 'J' :  cell.value[3] = 'C'"></button>
