@@ -7,7 +7,7 @@
     <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [(selectionMode)]="selectionMode"
       [responsive]="true" [first]="first" #table class="tabla-listado overflow" [paginator]="true" [rows]="selectedItem"
       (onRowSelect)="edit($event)" (onRowUnselect)="actualizaSeleccionados($event, selectedDatos)" [paginator]="true"
-      [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both" id="tablaFoco">
+      [ngClass]="{'customCursor': selectMultiple}" paginatorPosition="both" id="tablaFoco">
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
           <col *ngFor="let col of cols" [style.width]="col.width">
@@ -102,10 +102,13 @@
           </p-dropdown>
           <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
           <div class="ml-3 selectAll">
-            <!-- <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true"
+            <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true"
               label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname" [disabled]="!permisos">
-            </p-checkbox> -->
+            </p-checkbox>
           </div>
+          <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}"
+            (click)="isSelectMultiple()">
+          <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate }} </label>
         </div>
       </ng-template>
     </p-table>
@@ -113,32 +116,25 @@
   </div>
   <div class="card-footer">
     <div class="text-right main-button">
+
+      <button pButton (click)="anular()" type="button" iconPos="left" label="{{ 'general.boton.anular' | translate}}"></button>
+      
+      <button pButton type="button" (click)="validar" iconPos="left" label="{{ 'general.boton.validar' | translate}}"></button>
+      
+      <button pButton type="button" (click)="denegar()" iconPos="left" label="{{ 'general.boton.denegar' | translate}}"></button>
+
+      <button *ngIf="!historico" pButton [disabled]="!permisos || (!selectMultiple && !selectAll) || selectedDatos.length == 0"
+        (click)="checkPermisosDelete(selectedDatos);" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
+
       <button [disabled]="nuevo || editMode" *ngIf="!historico" (click)="checkPermisosSearchPartida(); selectedDatos = []" pButton
         type="button" icon="fa fa-history" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
 
       <button [disabled]="nuevo" *ngIf="historico" (click)="checkPermisosSearchPartida(); selectedDatos = []" pButton type="button"
         icon="fa fa-undo" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
 
-      <button [disabled]="historico || !permisos" (click)="checkPermisosRest()" pButton type="button" icon="fa fa-undo" iconPos="left"
-        label="{{ 'general.boton.restablecer' | translate}}"></button>
-
-      <button *ngIf="!historico" pButton [disabled]="!permisos || (!selectMultiple && !selectAll) || selectedDatos.length == 0"
-        (click)="checkPermisosDelete(selectedDatos);" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
-
-      <button *ngIf="historico" pButton [disabled]="!permisos || (!selectMultiple || !selectAll) && (selectedDatos == undefined || selectedDatos.length == 0)"
-        (click)="checkPermisosActivate(selectedDatos)" type="button" icon="fa fa-check" iconPos="left" label="{{'general.boton.activar' | translate}}"></button>
-
-      <!-- <button pButton [disabled]="disabledSave()" (click)="checkPermisosSave()" type="button" icon="far fa-save" iconPos="left"
-        label="{{ 'general.boton.guardar' | translate}}"></button> -->
       <button pButton [disabled]="disabledSave()" type="button" icon="far fa-save" iconPos="left"
         label="{{ 'general.boton.guardar' | translate}}"></button>
 
-      <!-- <button pButton [disabled]="selectMultiple || selectAll || nuevo || historico || editMode || !permisos" (click)="checkPermisosNewPartidaPresupuestaria()"
-        type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button> -->
-      <button pButton [disabled]="selectMultiple || selectAll || nuevo || historico || editMode || !permisos"
-        type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
-
-      <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
       </div>
   </div>
 </div>

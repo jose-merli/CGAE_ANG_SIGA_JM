@@ -6,6 +6,7 @@ import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { BajasTemporalesItem } from '../../../../../models/sjcs/BajasTemporalesItem';
 import { ConfirmationService } from 'primeng/api';
+import { Usuarios } from '../../../../administracion/usuarios/usuarios.component';
 
 @Component({
   selector: 'app-filtros-bajas-temporales',
@@ -118,6 +119,10 @@ export class FiltrosBajasTemporales implements OnInit {
   }
 
   isBuscar() {
+    if((<HTMLInputElement>document.querySelector("input[formControlName='numColegiado']")).value != null || (<HTMLInputElement>document.querySelector("input[formControlName='numColegiado']")).value != ""){
+      this.filtros.ncolegiado = (<HTMLInputElement>document.querySelector("input[formControlName='numColegiado']")).value;
+    }
+
     if (this.checkFilters()) {
       this.persistenceService.setFiltros(this.filtros);
       this.persistenceService.setFiltrosAux(this.filtros);
@@ -168,7 +173,7 @@ export class FiltrosBajasTemporales implements OnInit {
   fillAfechaDeCalendar(event) {
     this.filtros.fechadesde = this.transformaFecha(event);
     if(this.filtros.fechadesde != undefined){
-      this.filtros.estado = undefined;
+      this.filtros.validado = undefined;
       this.disabledestado = true;
     }else{
       this.disabledestado = false;
@@ -195,7 +200,7 @@ export class FiltrosBajasTemporales implements OnInit {
   }
 
   clearFilters() {
-    this.filtros.estado = undefined;
+    this.filtros.validado = undefined;
     this.filtros.fechadesde = undefined;
     this.filtros.fechahasta = undefined;
     this.filtros.fechasolicituddesde = undefined;

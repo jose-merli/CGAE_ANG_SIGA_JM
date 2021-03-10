@@ -28,6 +28,7 @@ export let endpoints_oficio: any = {
     turnos_busquedaGuardias: "oficio/turnos/busquedaGuardias",
     turnos_eliminateGuardia: "oficio/turnos/eliminateGuardia",
     turnos_updateUltimo: "oficio/turnos/updateUltimo",
+    turno_changeRequisitoGuardias: "oficio/turnos/changeRequisitoGuardias",
     //FIN DE TURNOS
 
     inscripciones_comboTurnos: "oficio/inscripciones/comboTurnos",
@@ -42,4 +43,8 @@ export let endpoints_oficio: any = {
     //FIN DE INSCRIPCIONES
 
     bajasTemporales_busquedaBajasTemporales:"oficio/bajasTemporales/busquedaBajasTemporales",
+    bajasTemporales_updateAnular:"oficio/bajasTemporales/updateAnular",
+    bajasTemporales_updateValidar:"oficio/bajasTemporales/updateValidar",
+    bajasTemporales_updateDenegar:"oficio/bajasTemporales/updateDenegar"
+    //FIN DE BAJAS TEMPORALES
 }
