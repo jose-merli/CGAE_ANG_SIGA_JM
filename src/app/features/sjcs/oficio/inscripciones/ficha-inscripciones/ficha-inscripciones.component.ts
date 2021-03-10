@@ -26,22 +26,19 @@ export class FichaInscripcionesComponent implements OnInit {
 	progressSpinner: boolean = false;
 	turnosItem2;
 	modoEdicion: boolean;
-	selectedDatos;
+	disabledSolicitarBaja: boolean = false;
+	disabledValidar: boolean = false;
+	disabledDenegar: boolean = false;
+	disabledCambiarFecha: boolean = false;
 	msgs;
-	fechaDeHoy;
-	datosSelected;
 	idProcedimiento;
 	pesosSeleccionadosTarjeta: string;
 	datos;
 	datosTarjetaResumen;
 	letradoItem;
-	body;
 	datos3;
 	permisos: boolean = false;
 	isLetrado: boolean = false;
-	disabledValidar: boolean = false;
-	disabledDenegar: boolean = true;
-	disabledSolicitarBaja: boolean = false;
 	messageShow: string;
 	permisosTarjetaResumen: boolean = true;
 	iconoTarjetaResumen = "clipboard";
@@ -51,7 +48,8 @@ export class FichaInscripcionesComponent implements OnInit {
 	openLetrado : Boolean = false;
 	turno: any;
 	constructor(public datepipe: DatePipe, private translateService: TranslateService, private route: ActivatedRoute, 
-		 private sigaServices: SigaServices, private location: Location, private persistenceService: PersistenceService,private commonsService: CommonsService) { }
+		 private sigaServices: SigaServices, private location: Location, private persistenceService: PersistenceService,
+		 private router: Router, private commonsService: CommonsService) { }
 
 	ngAfterViewInit(): void {
 		this.enviarEnlacesTarjeta();
@@ -59,11 +57,8 @@ export class FichaInscripcionesComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.datosTarjetaResumen = [];
-		this.selectedDatos = [];
-		this.datosSelected = new InscripcionesItems();
-		this.datosSelected.fechaActual = new Date();
-		this.datosSelected.observaciones = " ";
+		this.datosTarjetaResumen = [];		
+		sessionStorage.setItem("origin","newInscrip");
 		if (
 			sessionStorage.getItem("isLetrado") != null &&
 			sessionStorage.getItem("isLetrado") != undefined
@@ -97,10 +92,15 @@ export class FichaInscripcionesComponent implements OnInit {
 				}
 			}).catch(error => console.error(error));
 		this.turno = JSON.parse(sessionStorage.getItem("turno"));
-		this.selectedDatos = this.turno;
 		if((this.turno.estado == 0 || this.turno.estado ==2) && !this.isLetrado ){
 			this.disabledDenegar = false;
 		}
+		if(this.turno.fechasolicitud == undefined)  this.turno.fechasolicitud = new Date();
+		if(this.turno.estadonombre == undefined){
+			this.turno.estadonombre = "Pendiente de Alta";
+			this.turno.estado="0";
+		}
+		
 		this.getDatosTarjetaResumen(this.turno);
 		this.letradoItem = this.turno;
 		
@@ -111,7 +111,13 @@ export class FichaInscripcionesComponent implements OnInit {
 			this.datos = new InscripcionesItems();
 			this.modoEdicion = false;
 		}
-
+		if(this.datos.fechasolicitud == undefined)  this.datos.fechasolicitud = new Date();
+		if(this.datos.estadonombre == undefined){
+			this.datos.estadonombre = "Pendiente de Alta";
+			this.datos.estado="0";
+		}
+		this.datos.fechaActual = new Date();
+		this.datos.observaciones = "";
 		
 		this.fichasPosibles = [
 			{
@@ -128,7 +134,7 @@ export class FichaInscripcionesComponent implements OnInit {
 				activa: true
 			},
 		];
-		
+		this.actualizarBotones();
 
 			// this.filtros.filtroAux = this.persistenceService.getFiltrosAux()
 			// this.filtros.filtroAux.historico = event;
@@ -172,6 +178,10 @@ export class FichaInscripcionesComponent implements OnInit {
 			// );
 	}
 
+	ngOnChanges(changes: SimpleChanges) {
+		this.datos.fechaActual = new Date();
+		this.actualizarBotones();
+	}
 	modoEdicionSend(event) {
 		this.modoEdicion = event.modoEdicion;
 		this.idPersona = event.idPersona
@@ -187,9 +197,6 @@ export class FichaInscripcionesComponent implements OnInit {
 		this.datos3 = event;
 	}
 	
-	seleccionadosSend(event) {
-		this.selectedDatos = event.prueba;
-	}
 	backTo() {
 		this.location.back();
 	}
@@ -204,29 +211,19 @@ export class FichaInscripcionesComponent implements OnInit {
 		});
 	}
 
-	validar(selectedDatos) {
+	validar() {
 		this.progressSpinner = true;
-		this.body = new InscripcionesObject();
-		this.body.inscripcionesItem = selectedDatos
-		this.body.inscripcionesItem.forEach(element => {
-			element.idpersona = this.datos.idpersona;
-			element.fechaActual = this.datosSelected.fechaActual;
-			element.observaciones = this.datosSelected.observaciones;
-			element.fechasolicitud = this.datos.fechasolicitud;
-			element.fechadenegacion = this.datos.fechadenegacion;
-			element.fechabaja = this.datos.fechabaja;
-			element.fechasolicitudbaja = this.datos.fechasolicitudbaja;
-			element.fechavalidacion = this.datos.fechavalidacion;
-			element.estadonombre = this.datos.estadonombre;
-			element.validarinscripciones = this.datos.validarinscripciones;
-			element.tipoguardias = this.datos.tipoguardias;
-		});
-		this.sigaServices.post("inscripciones_updateValidar", this.body).subscribe(
+		let body = new InscripcionesObject();
+      	body.inscripcionesItem[0] = this.datos;
+      	body.inscripcionesItem[0].fechaActual = this.datos.fechaActual;
+		body.inscripcionesItem[0].observaciones = this.datos.observaciones;
+		this.sigaServices.post("inscripciones_updateValidar", body).subscribe(
 			data => {
-				this.selectedDatos = [];
-				// this.searchPartidas.emit(false);
 				this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 				this.progressSpinner = false;
+				//El redireccionamiento es una solucion temporal hasta que se
+				//decida el método de actualización de la ficha.
+				this.router.navigate(["/inscripciones"]);
 			},
 			err => {
 				if (err != undefined && JSON.parse(err.error).error.description != "") {
@@ -242,16 +239,19 @@ export class FichaInscripcionesComponent implements OnInit {
 		);
 	}
 
-	denegar(selectedDatos) {
+	denegar() {
 		this.progressSpinner = true;
-		this.body = new InscripcionesObject();
-		this.body.inscripcionesItem[0] = this.turno;
-		this.sigaServices.post("inscripciones_updateDenegar", this.body).subscribe(
+		let body = new InscripcionesObject();
+      	body.inscripcionesItem[0] = this.datos;
+      	body.inscripcionesItem[0].fechaActual = this.datos.fechaActual;
+		body.inscripcionesItem[0].observaciones = this.datos.observaciones;
+		this.sigaServices.post("inscripciones_updateDenegar", body).subscribe(
 			data => {
-				this.selectedDatos = [];
-				// this.searchPartidas.emit(false);
 				this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 				this.progressSpinner = false;
+				//El redireccionamiento es una solucion temporal hasta que se
+				//decida el método de actualización de la ficha.
+				this.router.navigate(["/inscripciones"]);
 			},
 			err => {
 				if (err != undefined && JSON.parse(err.error).error.description != "") {
@@ -277,22 +277,25 @@ export class FichaInscripcionesComponent implements OnInit {
 	}
 
 
-	solicitarBaja(selectedDatos) {
+	solicitarBaja() {
 		this.progressSpinner = true;
-		this.fechaDeHoy = new Date();
-		let fechaHoy = this.datepipe.transform(this.fechaDeHoy, 'dd/MM/yyyy');
-		let fechaActual2 = this.datepipe.transform(this.datosSelected.fechaActual, 'dd/MM/yyyy')
+		let fechaDeHoy = new Date();
+		let fechaHoy = this.datepipe.transform(fechaDeHoy, 'dd/MM/yyyy');
+		let fechaActual2 = this.datepipe.transform(this.datos.fechaActual, 'dd/MM/yyyy')
 		if (fechaActual2 != fechaHoy) {
 			this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.inscripciones.mensajesolicitarbaja"));
 		} else {
-			this.body = new InscripcionesObject();
-			this.body.inscripcionesItem[0] = this.turno;
-			this.sigaServices.post("inscripciones_updateSolicitarBaja", this.body).subscribe(
+			let body = new InscripcionesObject();
+			body.inscripcionesItem[0] = this.datos;
+      		body.inscripcionesItem[0].fechaActual = this.datos.fechaActual;
+			body.inscripcionesItem[0].observaciones = this.datos.observaciones;
+			this.sigaServices.post("inscripciones_updateSolicitarBaja", body).subscribe(
 				data => {
-					this.selectedDatos = [];
-					//   this.searchPartidas.emit(false);
 					this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 					this.progressSpinner = false;
+					//El redireccionamiento es una solucion temporal hasta que se
+					//decida el método de actualización de la ficha.
+					this.router.navigate(["/inscripciones"]);
 				},
 				err => {
 					if (err != undefined && JSON.parse(err.error).error.description != "") {
@@ -309,16 +312,19 @@ export class FichaInscripcionesComponent implements OnInit {
 		}
 	}
 
-	cambiarFecha(selectedDatos) {
+	cambiarFecha() {
 		this.progressSpinner = true;
-		this.body = new InscripcionesObject();
-		this.body.inscripcionesItem[0] = this.turno;
-		this.sigaServices.post("inscripciones_updateCambiarFecha", this.body).subscribe(
+		let body = new InscripcionesObject();
+		body.inscripcionesItem[0] = this.datos;
+      	body.inscripcionesItem[0].fechaActual = this.datos.fechaActual;
+		body.inscripcionesItem[0].observaciones = this.datos.observaciones;
+		this.sigaServices.post("inscripciones_updateCambiarFecha", body).subscribe(
 			data => {
-				this.selectedDatos = [];
-				// this.searchPartidas.emit(false);
 				this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 				this.progressSpinner = false;
+				//El redireccionamiento es una solucion temporal hasta que se
+				//decida el método de actualización de la ficha.
+				this.router.navigate(["/inscripciones"]);
 			},
 			err => {
 				if (err != undefined && JSON.parse(err.error).error.description != "") {
@@ -461,4 +467,29 @@ export class FichaInscripcionesComponent implements OnInit {
 		datosResumen[3] = {label: "Estado", value: turno.estadonombre};
 		this.datosTarjetaResumen = datosResumen;
 	}
+
+	actualizarBotones() {
+		
+		if(this.datos.estado == "1"){
+			this.disabledSolicitarBaja = false;
+		}
+		else{
+			this.disabledSolicitarBaja = true;
+		}
+		if(this.datos.estado == "2" || this.datos.estado == "0"){
+			this.disabledValidar = false;
+			this.disabledDenegar = false;
+		}
+		else{
+			this.disabledValidar = true;
+			this.disabledDenegar = true;
+		}
+		if(this.datos.estado == "1" || this.datos.estado == "2" || this.datos.estado == "3"){
+			this.disabledCambiarFecha = false;
+		}
+		else{
+			this.disabledCambiarFecha = true;
+		}
+	}
+	  
 }

@@ -13,6 +13,7 @@ import { DatosDireccionesObject } from '../../../../../models/DatosDireccionesOb
 import { DatosDireccionesItem } from '../../../../../models/DatosDireccionesItem';
 import { InscripcionesObject } from '../../../../../models/sjcs/InscripcionesObject';
 import { InscripcionesItems } from '../../../../../models/sjcs/InscripcionesItems';
+import { CommonsService } from '../../../../../_services/commons.service';
 
 
 @Component({
@@ -55,7 +56,6 @@ export class TablaInscripcionesComponent implements OnInit {
   public ascNumberSort = true;
   permisos: boolean = false;
   initDatos;
-  fechaDeHoy;
   nuevo: boolean = false;
   progressSpinner: boolean = false;
   selectionMode: string = "single";
@@ -77,7 +77,8 @@ export class TablaInscripcionesComponent implements OnInit {
     private router: Router,
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private datepipe: DatePipe
+    private datepipe: DatePipe,
+    private commonsService: CommonsService
   ) { }
 
   ngOnInit() {
@@ -97,6 +98,7 @@ export class TablaInscripcionesComponent implements OnInit {
       this.first = paginacion.paginacion;
       this.selectedItem = paginacion.selectedItem;
     }
+    this.commonsService.scrollTablaFoco('tablaFoco');
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -502,8 +504,8 @@ export class TablaInscripcionesComponent implements OnInit {
 
   solicitarBaja(selectedDatos) {
     this.progressSpinner = true;
-    this.fechaDeHoy = new Date();
-    let fechaHoy =this.datepipe.transform(this.fechaDeHoy, 'dd/MM/yyyy');
+    let fechaDeHoy = new Date();
+    let fechaHoy =this.datepipe.transform(fechaDeHoy, 'dd/MM/yyyy');
     let fechaActual2 = this.datepipe.transform(this.datos.fechaActual,'dd/MM/yyyy')
     if(fechaActual2 != fechaHoy){
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.inscripciones.mensajesolicitarbaja"));
@@ -560,6 +562,7 @@ export class TablaInscripcionesComponent implements OnInit {
       }
       this.selectionMode = "multiple";
       this.numSelected = this.datos.length;
+      this.actualizaBotones(this.selectedDatos)
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
@@ -647,28 +650,9 @@ export class TablaInscripcionesComponent implements OnInit {
       this.persistenceService.setDatos(evento);
       sessionStorage.setItem("turno", JSON.stringify(evento));
       this.router.navigate(["/gestionInscripciones"]);
-    } else {
-      let findDato = this.selectedDatos.find(item => item.estado != 1);
-      if(findDato != null){
-        this.disabledSolicitarBaja = true;
-      }
-      else{
-        this.disabledSolicitarBaja = false;
-      }
-      let findDato2 = this.selectedDatos.find(item => item.estado != 2 && item.estado != 0);
-      if(findDato2 != undefined){
-        this.disabledValidar = true;
-        this.disabledDenegar = true;
-      }
-      else{
-        this.disabledValidar = false;
-        this.disabledDenegar = false;
-      }
-      if (evento.data.fechabaja == undefined && this.historico) {
-        this.selectedDatos.pop();
-      }
-
     }
+
+
   }
 
 
@@ -711,7 +695,7 @@ export class TablaInscripcionesComponent implements OnInit {
   }
 
 
-  actualizaSeleccionados(selectedDatos) {
+  actualizaBotones(selectedDatos) {
     if (this.selectedDatos == undefined) {
       this.selectedDatos = []
     }
