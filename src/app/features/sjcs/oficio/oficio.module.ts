@@ -7,12 +7,25 @@ import { routingOficio } from './oficio-routing.module';
 import { GestionTurnosModule } from './turnos/turnos.module';
 import { GestionInscripcionesModule } from './inscripciones/inscripciones.module';
 // import { GestionTurnosModule } from '../oficio/turnos/turnos.module';
-import { OficioRoutingModule } from './oficio-routing.module';
 import { GestionBajasTemporalesModule } from './bajas-temporales/bajas-temporales.module';
 import { GrowlModule } from 'primeng/growl';
+import { PipeTranslationModule } from '../../../commons/translate/pipe-translation.module';
+
+//DESGINACIONES
+import { DesignacionesComponent } from './designaciones/designaciones.component';
+import { FiltroDesignacionesComponent } from './designaciones/filtro-designaciones/filtro-designaciones.component';
+import { ButtonModule, CheckboxModule, RadioButtonModule } from 'primeng/primeng';
+import { FormsModule } from '@angular/forms';
+import { MatExpansionModule } from '@angular/material';
+import { BusquedaColegiadoExpressModule } from '../../../commons/busqueda-colegiado-express/busqueda-colegiado-express.module';
+//import { DesignacionesComponent } from './designaciones/designaciones.component';
+
 
 @NgModule({
-        declarations: [],
+        declarations: [
+                DesignacionesComponent,
+                FiltroDesignacionesComponent,
+        ],
         imports: [
                 CommonModule,
                 MenubarModule,
@@ -20,8 +33,14 @@ import { GrowlModule } from 'primeng/growl';
                 GestionTurnosModule,
                 GestionInscripcionesModule,
                 GestionBajasTemporalesModule,
-                GrowlModule
-
+                GrowlModule,
+                RadioButtonModule,
+                PipeTranslationModule,
+                ButtonModule,
+                FormsModule,
+                MatExpansionModule,
+                BusquedaColegiadoExpressModule,
+                CheckboxModule
         ],
 
         providers: []
