@@ -42,6 +42,7 @@ export let endpoints_oficio: any = {
     //FIN DE INSCRIPCIONES
 
     bajasTemporales_busquedaBajasTemporales:"oficio/bajasTemporales/busquedaBajasTemporales",
+    bajasTemporales_nuevaBajaTemporal:"oficio/bajasTemporales/nuevaBajaTemporal",
     bajasTemporales_updateAnular:"oficio/bajasTemporales/updateAnular",
     bajasTemporales_updateValidar:"oficio/bajasTemporales/updateValidar",
     bajasTemporales_updateDenegar:"oficio/bajasTemporales/updateDenegar"

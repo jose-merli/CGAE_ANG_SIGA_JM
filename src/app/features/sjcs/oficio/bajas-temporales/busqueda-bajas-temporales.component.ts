@@ -75,6 +75,7 @@ export class BajasTemporalesComponent implements OnInit {
     this.filtros.filtroAux.historico = event;
     this.persistenceService.setHistorico(event);
     this.progressSpinner = true;
+
     this.sigaServices.post("bajasTemporales_busquedaBajasTemporales", this.filtros.filtroAux).subscribe(
       n => {
         this.datos = JSON.parse(n.body).bajasTemporalesItem;
