@@ -46,13 +46,14 @@
 
                             <div class="form-group-interlineado col-lg-4 col-md-4">
                                 <label>**Fecha de Justificación Desde**</label>
-                                <app-fecha></app-fecha>
-                                <!-- <app-fecha [(value)]="fechaIncorporacionDesdeSelect" [utc]="false" (valueChangeSelected)="fillFechaIncorporacionDesde($event)" (valueChangeInput)="fillFechaIncorporacionDesde($event)"> -->
+                                <app-fecha [(value)]="filtroJustificacion.justificacionDesde" [maxDate]="filtroJustificacion.justificacionHasta" (valueChangeInput)="fillFechasJustificacion($event, 'justificacionDesde')" (valueChangeSelected)="fillFechasJustificacion($event, 'justificacionDesde')">
+                                </app-fecha>
                             </div>
 
                             <div class="form-group-interlineado col-lg-4 col-md-4">
                                 <label>**Fecha de Justificación Hasta**</label>
-                                <app-fecha></app-fecha>
+                                <app-fecha [(value)]="filtroJustificacion.justificacionHasta" [minDate]="filtroJustificacion.justificacionDesde" (valueChangeInput)="fillFechasJustificacion($event, 'justificacionHasta')" (valueChangeSelected)="fillFechasJustificacion($event, 'justificacionHasta')">
+                                </app-fecha>
                             </div>
 
                             <div class="form-group-interlineado col-lg-4 col-md-4 vertical-center">
@@ -60,35 +61,33 @@
                             </div>
 
                             <div class="form-group-interlineado col-lg-4 col-md-4">
-                                <!-- <app-selector [selector]="selector"></app-selector> -->
                                 <label>**Estado**</label>
-                                <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}">
-                                    <!-- [(ngModel)]='filtros.jurisdiccion' [options]="jurisdicciones"> -->
+                                <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='filtroJustificacion.estado' [options]="comboEstados">
                               </p-dropdown>
                             </div>
                             <div class="form-group-interlineado col-lg-4 col-md-4">
                                 <label>**Actuaciones Validadas**</label>
-                                <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}">
+                                <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='filtroJustificacion.actuacionesValidadas' [options]="comboActuacionesValidadas">
                                 </p-dropdown>
                             </div>
                             <div class="form-group-interlineado col-lg-4 col-md-4">
                                 <label>**Incluir sin EJG**</label>
-                                <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}">
+                                <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='filtroJustificacion.sinEJG' [options]="comboSinEJG">
                                 </p-dropdown>
                             </div>
                             <div class="form-group-interlineado col-lg-4 col-md-4">
                                 <label>**Con EJG no favorables**</label>
-                                <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}">
+                                <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='filtroJustificacion.conEJGNoFavorables' [options]="comboEJGnoFavorable">
                                 </p-dropdown>
                             </div>
                             <div class="form-group-interlineado col-lg-4 col-md-4">
                                 <label>**EJG's sin resolución**</label>
-                                <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}">
+                                <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='filtroJustificacion.ejgSinResolucion' [options]="comboEJGSinResolucion">
                                 </p-dropdown>
                             </div>
                             <div class="form-group-interlineado col-lg-4 col-md-4">
                                 <label>**EJG's Resolución PTE CAJG**</label>
-                                <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}">
+                                <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='filtroJustificacion.resolucionPTECAJG' [options]="comborResoluciones">
                                 </p-dropdown>
                             </div>
                         </div>
@@ -109,38 +108,38 @@
 
                             <div class="form-group-interlineado col-lg-4 col-md-4">
                                 <label>**Fecha de Designación Desde**</label>
-                                <app-fecha></app-fecha>
-                                <!-- <app-fecha [(value)]="fechaIncorporacionDesdeSelect" [utc]="false" (valueChangeSelected)="fillFechaIncorporacionDesde($event)" (valueChangeInput)="fillFechaIncorporacionDesde($event)"></app-fecha> -->
+                                <app-fecha [(value)]="filtroJustificacion.designacionDesde" [maxDate]="filtroJustificacion.designacionHasta" (valueChangeInput)="fillFechasJustificacion($event, 'designacionDesde')" (valueChangeSelected)="fillFechasJustificacion($event, 'designacionDesde')">
+                                </app-fecha>
                             </div>
                             <div class="form-group-interlineado col-lg-4 col-md-4">
                                 <label>**Fecha de Designación Hasta**</label>
-                                <app-fecha></app-fecha>
+                                <app-fecha [(value)]="filtroJustificacion.designacionHasta" [minDate]="filtroJustificacion.designacionDesde" (valueChangeInput)="fillFechasJustificacion($event, 'designacionHasta')" (valueChangeSelected)="fillFechasJustificacion($event, 'designacionHasta')">
+                                </app-fecha>
                             </div>
 
                             <div class="form-group-interlineado col-lg-4 col-md-4">
                                 <label>**Año Designación**</label> 
-                                <input pInputText type="text" class="form-control"> <!-- [(ngModel)]='filtros.nombreMateria' maxLength="30"> -->
-                                <!-- <input type="text" class="form-control" pInputText> -->
+                                <input pInputText type="text" class="form-control" [(ngModel)]='filtroJustificacion.anioDesignacion' maxLength="4"> 
                             </div>
                             <div class="form-group-interlineado col-lg-4 col-md-4">
                                 <label>**Número Designación**</label> 
-                                <input pInputText type="text" class="form-control">
+                                <input pInputText type="text" class="form-control" [(ngModel)]='filtroJustificacion.numDesignacion' maxLength="10"> 
                             </div>
                             <div class="form-group-interlineado col-lg-4 col-md-4">
                                 <label>**Apellidos**</label> 
-                                <input pInputText type="text" class="form-control">
+                                <input pInputText type="text" class="form-control" [(ngModel)]='filtroJustificacion.apellidos' maxLength="60"> 
                             </div>
                             <div class="form-group-interlineado col-lg-4 col-md-4">
                                 <label>**Nombre**</label> 
-                                <input pInputText type="text" class="form-control">
+                                <input pInputText type="text" class="form-control" [(ngModel)]='filtroJustificacion.nombre' maxLength="30"> 
                             </div>
                             <div class="form-group-interlineado col-lg-4 col-md-4">
                                 <label>**Año EJG**</label> 
-                                <input pInputText type="text" class="form-control">
+                                <input pInputText type="text" class="form-control" [(ngModel)]='filtroJustificacion.anioEJG' maxLength="4"> 
                             </div>
                             <div class="form-group-interlineado col-lg-4 col-md-4">
                                 <label>**Número EJG**</label> 
-                                <input pInputText type="text" class="form-control">
+                                <input pInputText type="text" class="form-control" [(ngModel)]='filtroJustificacion.numEJG' maxLength="10"> 
                             </div>
                         </div>
                     </ng-template>

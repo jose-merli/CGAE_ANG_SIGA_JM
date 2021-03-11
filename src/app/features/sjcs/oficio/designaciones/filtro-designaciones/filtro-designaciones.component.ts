@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router, RoutesRecognized } from '@angular/router';
 import { TranslateService } from '../../../../../commons/translate';
+import { JustificacionExpressItem } from '../../../../../models/sjcs/JustificacionExpressItem';
 
 @Component({
   selector: 'app-filtro-designaciones',
@@ -14,7 +15,9 @@ export class FiltroDesignacionesComponent implements OnInit {
     nombreAp: ''
   };
   
-  expanded = true;
+  filtroJustificacion: JustificacionExpressItem = new JustificacionExpressItem();
+
+  expanded: boolean = true;
 
   @Input() modoBusqueda;
 
@@ -27,6 +30,8 @@ export class FiltroDesignacionesComponent implements OnInit {
   constructor(private router: Router, private translateService: TranslateService) { }
 
   ngOnInit(): void {
+    this.filtroJustificacion = new JustificacionExpressItem();
+
     this.progressSpinner=true;
     this.showDesignas = true;
 
@@ -44,5 +49,23 @@ export class FiltroDesignacionesComponent implements OnInit {
 
   checkLastRoute() {
     this.progressSpinner=false;
+  }
+
+  fillFechasJustificacion(event, campo) {
+    if(campo=='justificacionDesde'){
+      this.filtroJustificacion.justificacionDesde=event;
+    }
+
+    if(campo=='justificacionHasta'){
+      this.filtroJustificacion.justificacionHasta=event;
+    }
+
+    if(campo=='designacionHasta'){
+      this.filtroJustificacion.designacionHasta=event;
+    }
+
+    if(campo=='designacionDesde'){
+      this.filtroJustificacion.designacionDesde=event;
+    }
   }
 }
