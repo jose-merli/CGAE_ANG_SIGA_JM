@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { MenubarModule } from 'primeng/menubar';
-
 import { routingOficio } from './oficio-routing.module';
 import { GestionTurnosModule } from './turnos/turnos.module';
 import { GestionInscripcionesModule } from './inscripciones/inscripciones.module';
@@ -13,11 +12,14 @@ import { PipeTranslationModule } from '../../../commons/translate/pipe-translati
 
 //DESGINACIONES
 import { DesignacionesComponent } from './designaciones/designaciones.component';
+import { FechaModule } from '../../../commons/fecha/fecha.module';
 import { FiltroDesignacionesComponent } from './designaciones/filtro-designaciones/filtro-designaciones.component';
-import { ButtonModule, CheckboxModule, RadioButtonModule } from 'primeng/primeng';
+import { ButtonModule, CheckboxModule, RadioButtonModule, DropdownModule, InputTextModule, ConfirmDialogModule } from 'primeng/primeng';
 import { FormsModule } from '@angular/forms';
 import { MatExpansionModule } from '@angular/material';
 import { BusquedaColegiadoExpressModule } from '../../../commons/busqueda-colegiado-express/busqueda-colegiado-express.module';
+
+
 //import { DesignacionesComponent } from './designaciones/designaciones.component';
 
 
@@ -35,12 +37,16 @@ import { BusquedaColegiadoExpressModule } from '../../../commons/busqueda-colegi
                 GestionBajasTemporalesModule,
                 GrowlModule,
                 RadioButtonModule,
+                DropdownModule, 
+                InputTextModule,
+                ConfirmDialogModule,
                 PipeTranslationModule,
                 ButtonModule,
                 FormsModule,
                 MatExpansionModule,
                 BusquedaColegiadoExpressModule,
-                CheckboxModule
+                CheckboxModule,
+                FechaModule
         ],
 
         providers: []

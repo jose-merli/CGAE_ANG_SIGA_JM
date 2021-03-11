@@ -2,106 +2,150 @@
 
 <div class="card">
     <div class="card-body">
-        <div class="form-row">
-            <div class="form-group-interlineado">
-                <div class="col-lg-3 col-md-3">
-                    <p-radioButton [(ngModel)]='radioTarjeta' name="tarj" value="designas" (click)="changeFilters()" label="Designas" ></p-radioButton>
-                </div>
-               
-                <div class="col-lg-3 col-md-3">
-                    <p-radioButton [(ngModel)]='radioTarjeta' name="tarj" value="justifiacion" (click)="changeFilters()" label="Justificación Expréss"></p-radioButton>
-                </div>
-            </div>
+        <div class="form-group-interlineado">
+            <p-radioButton [(ngModel)]='radioTarjeta' name="tarj" value="designas" (click)="changeFilters()" label="**Designas**" class="mr-4"></p-radioButton>
+            <p-radioButton [(ngModel)]='radioTarjeta' name="tarj" value="justificacion" (click)="changeFilters()" label="**Justificación Expréss**" class="mr-4"></p-radioButton>
         </div>
 
         <!-- FILTRO DESIGNAS -->
-        <div id="designas" *ngIf="showDesignas">
-            designasfasdfas
+        <div id="designas" *ngIf="showDesignas" class="form-group-interlineado">
+
         </div>
 
         <!-- FILTRO JUSTIFICACION EXPRESS -->
-        <div class="form-row">
-            <div id="buscaJustiExp" *ngIf="showJustificacionExpress" class="form-group">
-                <mat-accordion class="example-headers-align" multi>
-                    <mat-expansion-panel class="my-1" [expanded]="expanded">
-                        <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
-                            <div class="w100 font-weight-bold">
-                                <p class="w100">Colegiado</p>
+        <div id="buscaJustiExp" *ngIf="showJustificacionExpress" class="form-group-interlineado">
+
+            <!-- colegiado -->
+            <mat-accordion class="example-headers-align" multi>
+                <mat-expansion-panel class="my-1" [expanded]="expanded">
+                    <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+                        <div class="font-weight-bold">
+                            <p class="w100">**Colegiado**</p>
+                        </div>
+                    </mat-expansion-panel-header>
+                    <ng-template matExpansionPanelContent>
+                        <app-busqueda-colegiado-express class="flexCenter" [pantalla]="'ejg'" [numColegiado]="usuarioBusquedaExpress.numColegiado" [nombreAp]="usuarioBusquedaExpress.nombreAp">
+                        </app-busqueda-colegiado-express>
+                    </ng-template>
+                </mat-expansion-panel>
+            </mat-accordion>
+
+            <!-- restricciones -->
+            <mat-accordion class="example-headers-align" multi>
+                <mat-expansion-panel class="mb-1">
+                    <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+                        <div class="font-weight-bold">
+                            <p class="w100">**Restricciones de búsqueda**</p>
+                        </div>
+                    </mat-expansion-panel-header>
+                    <ng-template matExpansionPanelContent>
+                        <div class="form-row">
+                            <div class="form-group-interlineado col-lg-4 col-md-4 vertical-center">
+                                <p-checkbox binary="true" label="**Mostrar solo justificaciones y/0 validaciones pendientes**" class="ml-0"></p-checkbox>
                             </div>
-                        </mat-expansion-panel-header>
-                        <ng-template matExpansionPanelContent>
-                            <app-busqueda-colegiado-express [pantalla]="'ejg'" [numColegiado]="usuarioBusquedaExpress.numColegiado" [nombreAp]="usuarioBusquedaExpress.nombreAp">
-                            </app-busqueda-colegiado-express>
-                            <!-- <app-buscador-colegiados class="flexCenter" [numColegiado]="usuarioBusquedaExpress.numColegiado" [nombreAp]="usuarioBusquedaExpress.nombreAp">
-                            </app-buscador-colegiados> -->
-                        </ng-template>
-                    </mat-expansion-panel>
-                </mat-accordion>
 
-                <mat-accordion class="example-headers-align" multi>
-                    <mat-expansion-panel class="mb-1">
-                        <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
-                            <div class="w100 font-weight-bold">
-                                <p class="w100">Restricciones de búsqueda</p>
+                            <div class="form-group-interlineado col-lg-4 col-md-4">
+                                <label>**Fecha de Justificación Desde**</label>
+                                <app-fecha></app-fecha>
+                                <!-- <app-fecha [(value)]="fechaIncorporacionDesdeSelect" [utc]="false" (valueChangeSelected)="fillFechaIncorporacionDesde($event)" (valueChangeInput)="fillFechaIncorporacionDesde($event)"> -->
                             </div>
-                        </mat-expansion-panel-header>
-                        <ng-template matExpansionPanelContent>
-                            <div class="form-row">
-                                <div class="form-group-interlineado col-lg-4 col-md-4 vertical-center">
-                                    <p-checkbox binary="true" label="Mostrar solo justificaciones y/0 validaciones pendientes" class="ml-0"></p-checkbox>
-                                </div>
 
-                                <!-- <div class="form-group-interlineado col-lg-4 col-md-4"
-                                        *ngFor="let datePickerTitle of datePickers1">
-                                        <label>{{ datePickerTitle }}</label>
-                                        <app-fecha [(value)]="fechaIncorporacionDesdeSelect" [utc]="false"
-                                            (valueChangeSelected)="fillFechaIncorporacionDesde($event)"
-                                            (valueChangeInput)="fillFechaIncorporacionDesde($event)"></app-fecha>
-                                    </div> -->
-
-                                <div class="form-group-interlineado col-lg-4 col-md-4 vertical-center">
-                                    <p-checkbox binary="true" label="Activar restricciones de visualización de la ficha colegial" class="ml-0"></p-checkbox>
-                                </div>
-
-                                <!-- <div class="form-group-interlineado col-lg-4 col-md-4"
-                                        *ngFor="let selector of selectores1; let i = index;">
-                                        <app-selector [i]="i" [selector]="selector"></app-selector>
-                                    </div> -->
-
+                            <div class="form-group-interlineado col-lg-4 col-md-4">
+                                <label>**Fecha de Justificación Hasta**</label>
+                                <app-fecha></app-fecha>
                             </div>
-                        </ng-template>
-                    </mat-expansion-panel>
-                </mat-accordion>
 
-                <mat-accordion class="example-headers-align" multi>
-                    <mat-expansion-panel class="mb-1">
-                        <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
-                            <div class="w100 font-weight-bold">
-                                <p class="w100">Datos Designación y EJG's</p>
+                            <div class="form-group-interlineado col-lg-4 col-md-4 vertical-center">
+                                <p-checkbox binary="true" label="**Activar restricciones de visualización de la ficha colegial**" class="ml-0"></p-checkbox>
                             </div>
-                        </mat-expansion-panel-header>
-                        <ng-template matExpansionPanelContent>
-                            <!-- <form [formGroup]="cForm">
-                                    <div class="form-row">
-                                        <div class="form-group-interlineado col-lg-4 col-md-4"
-                                            *ngFor="let datePickerTitle of datePickers2">
-                                            <label>{{ datePickerTitle }}</label>
-                                            <app-fecha [(value)]="fechaIncorporacionDesdeSelect" [utc]="false"
-                                                (valueChangeSelected)="fillFechaIncorporacionDesde($event)"
-                                                (valueChangeInput)="fillFechaIncorporacionDesde($event)"></app-fecha>
-                                        </div>
 
-                                        <div class="form-group-interlineado col-lg-4 col-md-4"
-                                            *ngFor="let tituloInput of inputs1">
-                                            <label>{{tituloInput}}</label>
-                                            <input type="text" class="form-control" pInputText>
-                                        </div>
-                                    </div>
-                                </form> -->
-                        </ng-template>
-                    </mat-expansion-panel>
-                </mat-accordion>
-            </div>
+                            <div class="form-group-interlineado col-lg-4 col-md-4">
+                                <!-- <app-selector [selector]="selector"></app-selector> -->
+                                <label>**Estado**</label>
+                                <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}">
+                                    <!-- [(ngModel)]='filtros.jurisdiccion' [options]="jurisdicciones"> -->
+                              </p-dropdown>
+                            </div>
+                            <div class="form-group-interlineado col-lg-4 col-md-4">
+                                <label>**Actuaciones Validadas**</label>
+                                <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}">
+                                </p-dropdown>
+                            </div>
+                            <div class="form-group-interlineado col-lg-4 col-md-4">
+                                <label>**Incluir sin EJG**</label>
+                                <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}">
+                                </p-dropdown>
+                            </div>
+                            <div class="form-group-interlineado col-lg-4 col-md-4">
+                                <label>**Con EJG no favorables**</label>
+                                <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}">
+                                </p-dropdown>
+                            </div>
+                            <div class="form-group-interlineado col-lg-4 col-md-4">
+                                <label>**EJG's sin resolución**</label>
+                                <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}">
+                                </p-dropdown>
+                            </div>
+                            <div class="form-group-interlineado col-lg-4 col-md-4">
+                                <label>**EJG's Resolución PTE CAJG**</label>
+                                <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                    </ng-template>
+                </mat-expansion-panel>
+            </mat-accordion>
+
+            <!-- datos designacion -->
+            <mat-accordion class="example-headers-align" multi>
+                <mat-expansion-panel class="mb-1">
+                    <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+                        <div class="font-weight-bold">
+                            <p class="w100">**Datos Designación y EJG's**</p>
+                        </div>
+                    </mat-expansion-panel-header>
+                    <ng-template matExpansionPanelContent>
+                        <div class="form-row">
+
+                            <div class="form-group-interlineado col-lg-4 col-md-4">
+                                <label>**Fecha de Designación Desde**</label>
+                                <app-fecha></app-fecha>
+                                <!-- <app-fecha [(value)]="fechaIncorporacionDesdeSelect" [utc]="false" (valueChangeSelected)="fillFechaIncorporacionDesde($event)" (valueChangeInput)="fillFechaIncorporacionDesde($event)"></app-fecha> -->
+                            </div>
+                            <div class="form-group-interlineado col-lg-4 col-md-4">
+                                <label>**Fecha de Designación Hasta**</label>
+                                <app-fecha></app-fecha>
+                            </div>
+
+                            <div class="form-group-interlineado col-lg-4 col-md-4">
+                                <label>**Año Designación**</label> 
+                                <input pInputText type="text" class="form-control"> <!-- [(ngModel)]='filtros.nombreMateria' maxLength="30"> -->
+                                <!-- <input type="text" class="form-control" pInputText> -->
+                            </div>
+                            <div class="form-group-interlineado col-lg-4 col-md-4">
+                                <label>**Número Designación**</label> 
+                                <input pInputText type="text" class="form-control">
+                            </div>
+                            <div class="form-group-interlineado col-lg-4 col-md-4">
+                                <label>**Apellidos**</label> 
+                                <input pInputText type="text" class="form-control">
+                            </div>
+                            <div class="form-group-interlineado col-lg-4 col-md-4">
+                                <label>**Nombre**</label> 
+                                <input pInputText type="text" class="form-control">
+                            </div>
+                            <div class="form-group-interlineado col-lg-4 col-md-4">
+                                <label>**Año EJG**</label> 
+                                <input pInputText type="text" class="form-control">
+                            </div>
+                            <div class="form-group-interlineado col-lg-4 col-md-4">
+                                <label>**Número EJG**</label> 
+                                <input pInputText type="text" class="form-control">
+                            </div>
+                        </div>
+                    </ng-template>
+                </mat-expansion-panel>
+            </mat-accordion>
         </div>
     </div>
 
