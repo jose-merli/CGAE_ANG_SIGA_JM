@@ -50,10 +50,10 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
   }
 
   isBuscar(form) {
-    if(form.numColegiado != undefined && form.numColegiado != null && form.numColegiado.length!=0){
+    if (form.numColegiado != undefined && form.numColegiado != null && form.numColegiado.length != 0) {
       this.progressSpinner = true;
 
-      this.sigaServices.getParam("componenteGeneralJG_busquedaColegiado","?colegiadoJGItem=" + form.numColegiado).subscribe(
+      this.sigaServices.getParam("componenteGeneralJG_busquedaColegiado", "?colegiadoJGItem=" + form.numColegiado).subscribe(
         data => {
           this.progressSpinner = false;
 
@@ -73,14 +73,14 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
         error => {
           this.progressSpinner = false;
           this.apellidosNombre = "";
-          form.numColegiado= "";
-          this.numColegiado="";
+          form.numColegiado = "";
+          this.numColegiado = "";
           this.idPersona.emit("");
           console.log(error);
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         }
       );
-    }else{
+    } else {
       this.progressSpinner = false;
       this.apellidosNombre = "";
       this.idPersona.emit("");
@@ -88,19 +88,19 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
       if (sessionStorage.getItem("tarjeta")) {
         sessionStorage.removeItem("tarjeta");
       }
-  
+
       if (sessionStorage.getItem("pantalla")) {
         sessionStorage.removeItem("pantalla");
       }
-  
-      if(this.pantalla){
+
+      if (this.pantalla) {
         sessionStorage.setItem("pantalla", this.pantalla);
       }
-  
+
       if (this.tarjeta) {
         sessionStorage.setItem("tarjeta", this.tarjeta);
       }
-  
+
       if (form.numColegiado == null || form.numColegiado == undefined || form.numColegiado.trim() == "") {
         this.router.navigate(["/buscadorColegiados"]);
       }

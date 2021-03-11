@@ -1,9 +1,9 @@
-import { Component, OnInit, Input, EventEmitter, Output, HostListener } from '@angular/core';
-import { SigaServices } from '../../../../../../_services/siga.service';
-import { PersistenceService } from '../../../../../../_services/persistence.service';
-import { CommonsService } from '../../../../../../_services/commons.service';
-import { KEY_CODE } from '../../../../maestros/fundamentos-calificacion/fundamentos-calificacion.component';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { SaltoCompItem } from '../../../../../../models/guardia/SaltoCompItem';
+import { CommonsService } from '../../../../../../_services/commons.service';
+import { PersistenceService } from '../../../../../../_services/persistence.service';
+import { SigaServices } from '../../../../../../_services/siga.service';
+import { KEY_CODE } from '../../../../maestros/fundamentos-calificacion/fundamentos-calificacion.component';
 
 @Component({
   selector: 'app-filtros-saltos-compensaciones-guardia',
@@ -12,6 +12,10 @@ import { SaltoCompItem } from '../../../../../../models/guardia/SaltoCompItem';
 })
 export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
 
+  usuarioBusquedaExpress = {
+    numColegiado: '',
+    nombreAp: ''
+  };
   showDatosGenerales: boolean = true;
   showColegiado: boolean = false;
   msgs = [];
@@ -28,6 +32,9 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
   comboTurnos = [];
 
   @Output() isOpen = new EventEmitter<boolean>();
+
+  textFilter: string = "Seleccionar";
+  textSelected: String = "{0} etiquetas seleccionadas";
 
   constructor(private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
@@ -46,8 +53,16 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
       }
       this.isOpen.emit(this.historico)
 
-    } else {
-      // this.filtros = new RetencionIrpfItem();
+    }
+
+    if (sessionStorage.getItem('buscadorColegiados')) {
+
+      const { nombre, apellidos, nColegiado } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
+
+      this.usuarioBusquedaExpress.nombreAp = `${apellidos}, ${nombre}`;
+      this.usuarioBusquedaExpress.numColegiado = nColegiado;
+      this.showColegiado = true;
+
     }
 
   }
@@ -99,6 +114,7 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
   }
 
   search() {
+    this.filtros.letrado = this.usuarioBusquedaExpress.numColegiado;
     this.persistenceService.setFiltros(this.filtros);
     this.persistenceService.setFiltrosAux(this.filtros);
     this.filtroAux = this.persistenceService.getFiltrosAux()
@@ -145,6 +161,8 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
 
   clearFilters() {
     this.filtros = new SaltoCompItem();
+    this.usuarioBusquedaExpress.nombreAp = '';
+    this.usuarioBusquedaExpress.numColegiado = '';
   }
 
   clear() {
@@ -166,6 +184,12 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
     if (event.keyCode === KEY_CODE.ENTER) {
       this.search();
     }
+  }
+
+  focusInputField(someDropdown) {
+    setTimeout(() => {
+      someDropdown.filterInputChild.nativeElement.focus();
+    }, 300);
   }
 
 }

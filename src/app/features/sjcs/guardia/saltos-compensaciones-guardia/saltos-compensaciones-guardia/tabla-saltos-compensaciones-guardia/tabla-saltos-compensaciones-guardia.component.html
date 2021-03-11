@@ -4,9 +4,9 @@
 <div class="card mt-3">
   <div class="card-body p-0">
 
-    <p-table [value]="datos" [columns]="cols" [selectionMode]="selectionMode" [(selection)]="selectedDatos"
-      [responsive]="true" #tabla class="tabla-listado" [paginator]="true" [rows]="selectedItem"
-      (onRowSelect)="edit($event)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
+    <p-table [autoLayout]="true" [value]="datos" [columns]="cols" [selectionMode]="selectionMode"
+      [(selection)]="selectedDatos" [responsive]="true" #tabla class="tabla-listado" [paginator]="true"
+      [rows]="selectedItem" (onRowSelect)="edit($event)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
       [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
@@ -100,9 +100,9 @@
               label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname" [disabled]="!permisos">
             </p-checkbox>
           </div>
-          <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple && permisos}"
+          <!-- <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple && permisos}"
             (click)="isSelectMultiple()">
-            <i class="pr-2 fa fa-mouse-pointer"></i>{{"general.message.seleccion.multiple" | translate}}</label>
+            <i class="pr-2 fa fa-mouse-pointer"></i>{{"general.message.seleccion.multiple" | translate}}</label> -->
         </div>
       </ng-template>
     </p-table>

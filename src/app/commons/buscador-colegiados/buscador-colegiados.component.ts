@@ -60,7 +60,7 @@ export class BuscadorColegiadosComponent implements OnInit {
     if(this.filtro.filtro.length!=0){
       this.progressSpinner = true;
       
-      this.sigaServices.post("busquedaColegiadoEJG", this.filtro.filtro).subscribe(
+      this.sigaServices.post("componenteGeneralJG_busquedaColegiadoEJG", this.filtro.filtro).subscribe(
         data => {
           this.progressSpinner = false;
           this.show=true;

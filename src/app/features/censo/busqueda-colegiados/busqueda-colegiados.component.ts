@@ -90,7 +90,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   comboColegios: any[];
   colsDirecciones: any = [];
   selection: String = "multiple";
-  textSelected: String = "{0} etiquetas seleccionadas";
+  textSelected: String = "{0} elementos seleccionados";
   body: DatosColegiadosItem = new DatosColegiadosItem();
   colegiadoSearch = new DatosColegiadosObject();
   subtipoCurricular: SubtipoCurricularItem = new SubtipoCurricularItem();

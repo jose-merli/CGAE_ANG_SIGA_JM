@@ -46,8 +46,9 @@ export class TablaSaltosCompensacionesGuardiaComponent implements OnInit {
     this.selectedDatos = [];
     this.getCols();
 
-    this.datosInicial = JSON.parse(JSON.stringify(this.datos));
-    // this.initDatos = JSON.parse(JSON.stringify((this.datos)));
+    if (this.datos != undefined) {
+      this.datosInicial = JSON.parse(JSON.stringify(this.datos));
+    }
 
   }
 
