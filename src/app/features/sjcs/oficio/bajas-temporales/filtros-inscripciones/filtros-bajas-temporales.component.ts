@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, HostListener, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, HostListener, Output, EventEmitter} from '@angular/core';
 import { TranslateService } from '../../../../../commons/translate';
 import { KEY_CODE } from '../../../../censo/busqueda-no-colegiados/busqueda-no-colegiados.component';
 import { Router } from '../../../../../../../node_modules/@angular/router';
@@ -6,7 +6,8 @@ import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { BajasTemporalesItem } from '../../../../../models/sjcs/BajasTemporalesItem';
 import { ConfirmationService } from 'primeng/api';
-import { Usuarios } from '../../../../administracion/usuarios/usuarios.component';
+import { CommonsService } from '../../../../../_services/commons.service';
+
 
 @Component({
   selector: 'app-filtros-bajas-temporales',
@@ -55,9 +56,7 @@ export class FiltrosBajasTemporales implements OnInit {
     nombreAp: ''
   }​​​​​​​​​;
 
-  
-  showModalNuevaBaja = false;
-
+  progressSpinner = false;
 
   @Input() permisos;
   /*Éste método es útil cuando queremos queremos informar de cambios en los datos desde el hijo,
@@ -68,9 +67,10 @@ export class FiltrosBajasTemporales implements OnInit {
     private sigaServices: SigaServices,
     private translateService: TranslateService,
     private persistenceService: PersistenceService,
-    private confirmationService: ConfirmationService) { }
+    private commonsService: CommonsService) { }
 
   ngOnInit() {   
+
     if (this.persistenceService.getHistorico() != undefined) {
       this.filtros.historico = this.persistenceService.getHistorico();
       // this.isBuscar();
@@ -80,7 +80,10 @@ export class FiltrosBajasTemporales implements OnInit {
     }
     if (this.persistenceService.getFiltros() != undefined) {
       this.filtros = this.persistenceService.getFiltros();
-      this.isBuscar();
+    }
+
+    if(sessionStorage.getItem("nuevaBaja")){
+      this.nuevaBajaTemporal();
     }
     
     if(sessionStorage.getItem("buscadorColegiados")){​​
@@ -90,9 +93,7 @@ export class FiltrosBajasTemporales implements OnInit {
       this.usuarioBusquedaExpress.nombreAp=busquedaColegiado.nombre+" "+busquedaColegiado.apellidos;
 
       this.usuarioBusquedaExpress.numColegiado=busquedaColegiado.nColegiado;
-
     }​​
-
   }
 
   onHideDatosGenerales() {
@@ -119,8 +120,11 @@ export class FiltrosBajasTemporales implements OnInit {
   }
 
   isBuscar() {
-    if((<HTMLInputElement>document.querySelector("input[formControlName='numColegiado']")).value != null || (<HTMLInputElement>document.querySelector("input[formControlName='numColegiado']")).value != ""){
+
+    if((<HTMLInputElement>document.querySelector("input[formControlName='numColegiado']")).value != null && (<HTMLInputElement>document.querySelector("input[formControlName='numColegiado']")).value != ""){
       this.filtros.ncolegiado = (<HTMLInputElement>document.querySelector("input[formControlName='numColegiado']")).value;
+    }else{
+      this.filtros.ncolegiado = null;
     }
 
     if (this.checkFilters()) {
@@ -220,5 +224,33 @@ export class FiltrosBajasTemporales implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  checkNuevaBajaTemporal(){
+    if(sessionStorage.getItem("nuevaBaja")){
+      sessionStorage.removeItem("nuevaBaja");
+    }
+
+    sessionStorage.setItem("nuevaBaja", "true");
+    
+    this.router.navigate(["/buscadorColegiados"]);
+    
+  }
+
+  nuevaBajaTemporal(){
+
+    this.progressSpinner = true;
+
+    let colegiado = sessionStorage.getItem("buscadorColegiados");
+
+    this.sigaServices.post("bajasTemporales_nuevaBajaTemporal", colegiado).subscribe(
+      n => {
+       this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+        console.log(err);
+      }
+    );
   }
 }

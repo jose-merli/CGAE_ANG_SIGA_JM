@@ -132,8 +132,8 @@
       <button [disabled]="nuevo" *ngIf="historico" (click)="checkPermisosSearchPartida(); selectedDatos = []" pButton type="button"
         icon="fa fa-undo" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
 
-      <button pButton [disabled]="disabledSave()" type="button" icon="far fa-save" iconPos="left"
-        label="{{ 'general.boton.guardar' | translate}}"></button>
+      <button pButton type="button" icon="far fa-save" iconPos="left"
+        label="{{ 'general.boton.guardar' | translate}}" (click)="disabledSave()"></button>
 
       </div>
   </div>
