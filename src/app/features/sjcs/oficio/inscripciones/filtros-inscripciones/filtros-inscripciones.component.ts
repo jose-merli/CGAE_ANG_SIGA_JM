@@ -78,7 +78,15 @@ export class FiltrosInscripciones implements OnInit {
     this.sigaServices.get("inscripciones_comboTurnos").subscribe(
       n => {
         this.turnos = n.combooItems;
-
+        let turnoInscripcion = JSON.parse(sessionStorage.getItem("idTurno"));
+				if(turnoInscripcion != null && turnoInscripcion != undefined){
+          this.turnos.forEach(turnoCombo =>{ 
+            if(turnoCombo.value == turnoInscripcion){
+              this.filtros.idturno = turnoCombo;
+              
+            }
+          });
+				}
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
     para poder filtrar el dato con o sin estos caracteres*/
       },
@@ -141,6 +149,7 @@ export class FiltrosInscripciones implements OnInit {
         this.filtros.afechade == undefined ) &&
       (this.filtros.abreviatura == null ||
         this.filtros.abreviatura == undefined ) &&
+      ((<HTMLInputElement>document.querySelector("input[formControlName='nombreAp']")) != null) &&
       ((<HTMLInputElement>document.querySelector("input[formControlName='nombreAp']")).value == null ||
         (<HTMLInputElement>document.querySelector("input[formControlName='nombreAp']")).value == undefined ||
         (<HTMLInputElement>document.querySelector("input[formControlName='nombreAp']")).value == "")){

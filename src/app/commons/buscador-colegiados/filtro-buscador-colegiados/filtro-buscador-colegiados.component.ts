@@ -102,6 +102,8 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
           this.progressSpinner=false;
         }
       );
+    } else{
+      this.progressSpinner=false;
     }
   }
 

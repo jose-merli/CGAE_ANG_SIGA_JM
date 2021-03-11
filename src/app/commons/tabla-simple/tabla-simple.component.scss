@@ -1,0 +1,28 @@
+table {
+    display: table;
+    text-align: center;
+    border-collapse: collapse;
+    width: 100%;
+
+    tr {
+        td {
+            white-space: nowrap;
+        }
+        th {
+            white-space: nowrap;
+            color: black !important;
+            font-weight: bold;
+        }
+    }
+}
+
+.ui-table .ui-table-tbody > tr > td {
+    border: none !important;
+    text-align: center !important;
+}
+.fixedBlue{
+    background-color: lightsteelblue !important;
+  }
+.hoverBlue{
+    background-color: lightsteelblue !important;
+  }
