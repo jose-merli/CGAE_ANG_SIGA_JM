@@ -1,11 +1,9 @@
-import { Component, OnInit, Output, EventEmitter, Input } from "@angular/core";
-import { FormGroup, FormControl } from "@angular/forms";
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { FormControl, FormGroup } from "@angular/forms";
 import { Router } from "@angular/router";
-import { Message } from "_debugger";
-import { USER_VALIDATIONS } from "../../properties/val-properties";
+import { PersistenceService } from '../../_services/persistence.service';
 import { TranslateService } from "../translate";
 import { SigaServices } from "./../../_services/siga.service";
-import { PersistenceService } from '../../_services/persistence.service';
 
 @Component({
   selector: "app-busqueda-colegiado-express",
@@ -17,6 +15,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
   @Input() nombreAp;
   @Input() tarjeta;
   @Input() pantalla;
+  @Input() disabled: boolean = false;
 
   @Output() idPersona = new EventEmitter<string>();
   progressSpinner: boolean = false;
@@ -42,6 +41,10 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
     }
 
     this.colegiadoForm.controls['nombreAp'].disable();
+
+    if (this.disabled) {
+      this.colegiadoForm.controls['numColegiado'].disable();
+    }
 
   }
 
