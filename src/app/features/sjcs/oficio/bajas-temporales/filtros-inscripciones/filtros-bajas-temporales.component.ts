@@ -5,7 +5,6 @@ import { Router } from '../../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { BajasTemporalesItem } from '../../../../../models/sjcs/BajasTemporalesItem';
-import { ConfirmationService } from 'primeng/api';
 import { CommonsService } from '../../../../../_services/commons.service';
 
 
@@ -46,9 +45,10 @@ export class FiltrosBajasTemporales implements OnInit {
     { label: "Suspensión por sanción", value: "S" }
   ];
   comboEstados = [
-    { label:"Denegado", value:"0"},
-    { label:"Validado", value:"1"},
+    { label:"Denegada", value:"0"},
+    { label:"Validada", value:"1"},
     { label:"Pendiente", value:"2"},
+    { label:"Anulada", value:"3"}
   ]
 
   usuarioBusquedaExpress = {​​​​​​​​​
@@ -66,8 +66,7 @@ export class FiltrosBajasTemporales implements OnInit {
   constructor(private router: Router,
     private sigaServices: SigaServices,
     private translateService: TranslateService,
-    private persistenceService: PersistenceService,
-    private commonsService: CommonsService) { }
+    private persistenceService: PersistenceService) { }
 
   ngOnInit() {   
 
@@ -80,6 +79,10 @@ export class FiltrosBajasTemporales implements OnInit {
     }
     if (this.persistenceService.getFiltros() != undefined) {
       this.filtros = this.persistenceService.getFiltros();
+    }
+    
+    if(sessionStorage.getItem("nuevaBaja")){
+      this.isBuscar();
     }
 
     if(sessionStorage.getItem("nuevaBaja")){

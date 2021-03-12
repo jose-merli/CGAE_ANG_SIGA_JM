@@ -101,10 +101,6 @@ export class TablaBajasTemporalesComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (this.historico == false) {
-      this.selectMultiple = false;
-      this.selectionMode = "single"
-    }
     this.datos.fechaActual = new Date();
     this.selectedDatos = [];
     this.updatePartidasPres = [];
@@ -161,9 +157,7 @@ export class TablaBajasTemporalesComponent implements OnInit {
             this.selectedDatos = [];
           }
         }
-
       }
-
     }
   }
 
