@@ -9,8 +9,71 @@
 
         <!-- FILTRO DESIGNAS -->
         <div id="designas" *ngIf="showDesignas" class="form-group-interlineado">
+            <!-- datos identificacion -->
+            <mat-accordion class="example-headers-align" multi>
+                <mat-expansion-panel class="my-1" [expanded]="expanded">
+                    <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+                        <div class="font-weight-bold">
+                            <p class="w100">{{ "justiciaGratuita.sjcs.designas.DatosIden" | translate }}</p>
+                        </div>
+                    </mat-expansion-panel-header>
+                    <ng-template matExpansionPanelContent>
+                        <div class="form-row">
+                            <div class="form-group-interlineado col-lg-2 col-md-2">
+                                <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.ano" | translate}}</label> 
+                                <input pInputText type="text" class="form-control"> <!-- [(ngModel)]='filtros.nombreMateria' maxLength="30"> -->
+                                <!-- <input type="text" class="form-control" pInputText> -->
+                            </div>
+                            <div class="form-group-interlineado col-lg-2 col-md-2">
+                                <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.numero" | translate}}</label> 
+                                <input pInputText type="text" class="form-control">
+                            </div>
+                            <div class="form-group-interlineado col-lg-2 col-md-2">
+                                <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.fchAdesde" | translate}}</label>
+                                <app-fecha></app-fecha>
+                                <!-- <app-fecha [(value)]="fechaIncorporacionDesdeSelect" [utc]="false" (valueChangeSelected)="fillFechaIncorporacionDesde($event)" (valueChangeInput)="fillFechaIncorporacionDesde($event)"></app-fecha> -->
+                            </div>
+                            <div class="form-group-interlineado col-lg-2 col-md-2">
+                                <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.fchAhasta" | translate}}</label>
+                                <app-fecha></app-fecha>
+                            </div>
+                            <div class="form-group-interlineado col-lg-2 col-md-2">
+                                <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.estado" | translate}}</label>
+                                <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}">
+                                </p-dropdown>
+                            </div>
+                            <div class="form-group-interlineado col-lg-2 col-md-2">
+                                <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.tipoDesigna" | translate}}</label>
+                                <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}">
+                                </p-dropdown>
+                            </div>
 
+                            <div class="form-group-interlineado col-lg-6 col-md-6">
+                                <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.turno" | translate}}</label>
+                                <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}">
+                                </p-dropdown>
+                            </div>
+                            <div class="form-group-interlineado col-lg-2 col-md-2">
+                                <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.actuacionesV" | translate}}</label>
+                                <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}">
+                                </p-dropdown>
+                            </div>
+                            <div class="form-group-interlineado col-lg-2 col-md-2">
+                                <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.actuacionesDocu" | translate}}</label>
+                                <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}">
+                                </p-dropdown>
+                            </div>
+                            <div class="form-group-interlineado col-lg-2 col-md-2">
+                                <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.art" | translate}}</label>
+                                <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                    </ng-template>
+                </mat-expansion-panel>
+            </mat-accordion>
         </div>
+
 
         <!-- FILTRO JUSTIFICACION EXPRESS -->
         <div id="buscaJustiExp" *ngIf="showJustificacionExpress" class="form-group-interlineado">

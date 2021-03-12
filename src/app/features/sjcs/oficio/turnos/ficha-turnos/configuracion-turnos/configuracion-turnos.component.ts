@@ -254,8 +254,6 @@ export class ConfiguracionTurnosComponent implements OnInit {
 
 
   confirmGuardar() {
-    //Comprobar que se ha modificado el campo de "requisitos guardias"
-    // if (this.bodyInicial.idguardias != this.body.idguardias){
       console.log(this.requisitosGuardiasDescripcion);
       console.log(this.requisitoInicial);
     
