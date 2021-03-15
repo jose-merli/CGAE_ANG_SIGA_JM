@@ -50,5 +50,8 @@ export let endpoints_oficio: any = {
     //FIN DE BAJAS TEMPORALES
 
     //justificacion express
-    justificacionExpres_busqueda: "oficio/busquedaJustificacionExpres"
+    justificacionExpres_busqueda: "oficio/busquedaJustificacionExpres",
+
+    //BUSQUEDA DESIGNAS
+    desginas_tipoDesignas:"designas/comboTipoDesgina"
 }

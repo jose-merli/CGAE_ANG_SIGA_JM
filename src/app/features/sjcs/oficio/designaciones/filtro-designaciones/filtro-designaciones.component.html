@@ -38,36 +38,52 @@
                             </div>
                             <div class="form-group-interlineado col-lg-2 col-md-2">
                                 <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.estado" | translate}}</label>
-                                <p-dropdown [filter]="true" [options]="comboEstados" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" >
+                                <p-dropdown [filter]="true" [options]="comboEstados" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true"  placeholder="{{ 'general.boton.seleccionar' | translate }}">
                                 </p-dropdown>
                             </div>
                             <div class="form-group-interlineado col-lg-2 col-md-2">
                                 <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.tipoDesigna" | translate}}</label>
-                                <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}">
+                                <p-dropdown [filter]="true"  [options]="comboTipoDesigna" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}">
                                 </p-dropdown>
                             </div>
 
                             <div class="form-group-interlineado col-lg-6 col-md-6">
                                 <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.turno" | translate}}</label>
-                                <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}">
+                                <p-dropdown [filter]="true" [options]="comboTurno" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}">
                                 </p-dropdown>
                             </div>
                             <div class="form-group-interlineado col-lg-2 col-md-2">
                                 <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.actuacionesV" | translate}}</label>
-                                <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}">
+                                <p-dropdown [filter]="true" [options]="actuacionesV" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}">
                                 </p-dropdown>
                             </div>
                             <div class="form-group-interlineado col-lg-2 col-md-2">
                                 <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.actuacionesDocu" | translate}}</label>
-                                <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}">
+                                <p-dropdown [filter]="true" [options]="actuacionesDocu" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}">
                                 </p-dropdown>
                             </div>
                             <div class="form-group-interlineado col-lg-2 col-md-2">
                                 <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.art" | translate}}</label>
-                                <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}">
+                                <p-dropdown [filter]="true" [options]="comboArt" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}">
                                 </p-dropdown>
                             </div>
                         </div>
+                    </ng-template>
+                </mat-expansion-panel>
+            </mat-accordion>
+             <!-- colegiado -->
+             <mat-accordion class="example-headers-align" multi>
+                <mat-expansion-panel class="my-1" [expanded]="showColegiado">
+                    <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+                        <div class="font-weight-bold">
+                            <p class="w100">{{ "justiciaGratuita.sjcs.designas.colegiado" | translate}}</p>
+                        </div>
+                    </mat-expansion-panel-header>
+                    <ng-template matExpansionPanelContent>
+                        <app-busqueda-colegiado-express class="flexCenter" [pantalla]="'guardia'"
+                            [numColegiado]="usuarioBusquedaExpress.numColegiado" [nombreAp]="usuarioBusquedaExpress.nombreAp"
+                            [disabled]="disabledBusquedaExpress">
+                         </app-busqueda-colegiado-express>
                     </ng-template>
                 </mat-expansion-panel>
             </mat-accordion>

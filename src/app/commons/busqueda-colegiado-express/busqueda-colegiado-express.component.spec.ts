@@ -8,9 +8,9 @@ describe('BusquedaColegiadoExpressComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ BusquedaColegiadoExpressComponent ]
+      declarations: [BusquedaColegiadoExpressComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
