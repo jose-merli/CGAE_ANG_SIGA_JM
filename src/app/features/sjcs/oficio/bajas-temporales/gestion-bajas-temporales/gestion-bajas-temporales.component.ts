@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, Output, EventEmitter, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../commons/translate/translation.service';
-import {  DatePipe } from '../../../../../../../node_modules/@angular/common';
 import { PartidasObject } from '../../../../../models/sjcs/PartidasObject';
 import { DataTable } from 'primeng/primeng';
 import { PersistenceService } from '../../../../../_services/persistence.service';
@@ -60,6 +59,13 @@ export class TablaBajasTemporalesComponent implements OnInit {
     { label: "Maternidad", value: "M" },
     { label: "Baja", value: "B" },
     { label: "Suspensión por sanción", value: "S" }
+  ];
+
+  comboEstados = [
+    { label: "Validada", value: "0" },
+    { label: "Denegada", value: "1" },
+    { label: "Pendiente", value: "2" || null },
+    { label: "Anulada", value: "3" }
   ];
   //Resultados de la busqueda
   @Input() datos;
@@ -244,7 +250,7 @@ export class TablaBajasTemporalesComponent implements OnInit {
 
   }
 
-
+/*
   save() {
     this.progressSpinner = true;
     let url = "";
@@ -391,16 +397,39 @@ export class TablaBajasTemporalesComponent implements OnInit {
     //   this.selectionMode = "multiple";
     // }
   }
+*/
+  checkAnular(){
+    if(this.datos.validado == "Pendiente"){
+      this.datos.validado = "Anular";
+      this.cambioEstado();
+    }else{
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+    }
+  }
 
-  anular(selectedDatos) {
+  checkDenegar(){
+    if(this.datos.validado == "Pendiente"){
+      this.datos.validado = "Denegar";
+      this.cambioEstado();
+    }else{
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+    }
+  }
+
+  checkValidar(){
+    if(this.datos.validado == "Pendiente"){
+      this.datos.validado = "Validar";
+      this.cambioEstado();
+    }else{
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+    }
+  }
+
+  cambioEstado() {
     this.progressSpinner = true;
     this.body = new BajasTemporalesItem();
-    this.body = selectedDatos
-    this.body.forEach(element => {
-      element.fechaActual = this.datos.fechaActual;
-      element.observaciones = this.datos.observaciones;
-    });
-    this.sigaServices.post("bajasTemporales_updateAnular", this.body).subscribe(
+
+    this.sigaServices.post("bajasTemporales_updateBajaTemporal", this.body).subscribe(
       data => {
         this.selectedDatos = [];
         this.searchPartidas.emit(false);
@@ -414,85 +443,9 @@ export class TablaBajasTemporalesComponent implements OnInit {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
         this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-        this.historico = false;
-        this.selectMultiple = false;
-        this.selectAll = false;
-        this.editMode = false;
-        this.nuevo = false;
       }
     );  
-}
-  
-  validar(selectedDatos) {
-      this.progressSpinner = true;
-      this.body = new BajasTemporalesItem();
-      this.body = selectedDatos
-      this.body.forEach(element => {
-        element.fechaActual = this.datos.fechaActual;
-        element.observaciones = this.datos.observaciones;
-      });
-      this.sigaServices.post("bajasTemporales_updateValidar", this.body).subscribe(
-        data => {
-          this.selectedDatos = [];
-          this.searchPartidas.emit(false);
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.progressSpinner = false;
-        },
-        err => {
-          if (err != undefined && JSON.parse(err.error).error.description != "") {
-            this.showMessage("success", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-          } else {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-          }
-          this.progressSpinner = false;
-        },
-        () => {
-          this.progressSpinner = false;
-          this.historico = false;
-          this.selectMultiple = false;
-          this.selectAll = false;
-          this.editMode = false;
-          this.nuevo = false;
-        }
-      );  
   }
-
-  denegar(selectedDatos) {
-    this.progressSpinner = true;
-    this.body = new BajasTemporalesItem();
-    this.body = selectedDatos
-    this.body.forEach(element => {
-      element.fechaActual = this.datos.fechaActual;
-      element.observaciones = this.datos.observaciones;
-    });
-    this.sigaServices.post("bajasTemporales_updateDenegar", this.body).subscribe(
-      data => {
-        this.selectedDatos = []; 
-        this.searchPartidas.emit(false);
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
-      },
-      err => {
-        if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-        this.historico = false;
-        this.selectMultiple = false;
-        this.selectAll = false;
-        this.editMode = false;
-        this.nuevo = false;
-      }
-    );  
-}
 
   onChangeSelectAll() {
     if (this.selectAll === true) {
@@ -560,6 +513,8 @@ export class TablaBajasTemporalesComponent implements OnInit {
       { field: "fechadesde", header: "facturacion.seriesFacturacion.literal.fInicio" },
       { field: "fechahasta", header: "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta" },
       { field: "fechaalta", header: "formacion.busquedaInscripcion.fechaSolicitud" },
+      { field: "validado", header: "censo.busquedaSolicitudesModificacion.literal.estado" },
+      { field: "fechabt", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaEstado" },
     ];
     this.cols.forEach(element => {
       this.buscadores.push("");
@@ -743,7 +698,7 @@ export class TablaBajasTemporalesComponent implements OnInit {
     if (msg != undefined) {
       this.msgs = msg;
     } else {
-      this.rest();
+      //this.rest();
     }
   }
 }

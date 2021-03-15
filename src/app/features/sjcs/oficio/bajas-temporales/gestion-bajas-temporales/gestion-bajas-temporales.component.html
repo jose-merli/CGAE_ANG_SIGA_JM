@@ -40,7 +40,7 @@
             <div *ngIf="!dato.editable && !setItalic(dato) && col.field !='nombre' && col.field !='fechadesde' && col.field !='fechahasta' && col.field !='fechaalta'">
               <span>{{dato[col.field]}}</span>
             </div>
-            <div *ngIf="dato.editable && !setItalic(dato) && col.field !='nombre' && col.field !='tiponombre' && col.field !='fechadesde' && col.field !='fechahasta' && col.field !='descripcion' && col.field !='fechaalta'">
+            <div *ngIf="dato.editable && !setItalic(dato) && col.field !='nombre' && col.field !='tiponombre' && col.field !='fechadesde' && col.field !='fechahasta' && col.field !='descripcion' && col.field !='fechaalta' && col.field !='validado'">
               <span>{{dato[col.field]}}</span>
             </div>
             <div *ngIf="dato.editable && !setItalic(dato) && col.field =='fechaalta'">
@@ -53,6 +53,9 @@
               <span>{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
             </div>
             <div *ngIf="!dato.editable && !setItalic(dato) && col.field =='fechaalta'">
+              <span>{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
+            </div>
+            <div *ngIf="!dato.editable && !setItalic(dato) && col.field =='fechabt'">
               <span>{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
             </div>
 
@@ -71,6 +74,11 @@
               <input class="form-control paddingInput" [(ngModel)]="dato.descripcion" name="descripcion " type="text
               " maxLength="58 " on-focusout="changeDescripcion(dato) " [(disabled)]="!permisos " (onBlur)="changeDescripcion(dato)
               " (input)="changeDescripcion(dato)" />
+            </div>
+
+            <div *ngIf="dato.editable && col.field=='validado'">
+              <p-dropdown class="select-form" [(ngModel)]='dato.validado' [options]="comboEstados"
+              [filter]="true" [disabled]="disabledestado" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
             </div>
           </td>
         </tr>
@@ -117,11 +125,11 @@
   <div class="card-footer">
     <div class="text-right main-button">
 
-      <button pButton (click)="anular()" type="button" iconPos="left" label="{{ 'general.boton.anular' | translate}}"></button>
+      <button pButton (click)="checkAnular()" type="button" iconPos="left" label="{{ 'general.boton.anular' | translate}}"></button>
       
-      <button pButton type="button" (click)="validar" iconPos="left" label="{{ 'general.boton.validar' | translate}}"></button>
+      <button pButton (click)="checkValidar()" type="button" (click)="validar" iconPos="left" label="{{ 'general.boton.validar' | translate}}"></button>
       
-      <button pButton type="button" (click)="denegar()" iconPos="left" label="{{ 'general.boton.denegar' | translate}}"></button>
+      <button pButton (click)="checkDenegar()" type="button" (click)="denegar()" iconPos="left" label="{{ 'general.boton.denegar' | translate}}"></button>
 
       <button *ngIf="!historico" pButton [disabled]="!permisos || (!selectMultiple && !selectAll) || selectedDatos.length == 0"
         (click)="checkPermisosDelete(selectedDatos);" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>

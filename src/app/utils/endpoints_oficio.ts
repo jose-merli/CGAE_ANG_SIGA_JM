@@ -42,10 +42,9 @@ export let endpoints_oficio: any = {
     inscripciones_busquedaTarjeta:"oficio/inscripciones/busquedaTarjeta",
     //FIN DE INSCRIPCIONES
 
+    bajasTemporales_comboEstado:"oficio/bajasTemporales/comboEstado",
     bajasTemporales_busquedaBajasTemporales:"oficio/bajasTemporales/busquedaBajasTemporales",
     bajasTemporales_nuevaBajaTemporal:"oficio/bajasTemporales/nuevaBajaTemporal",
-    bajasTemporales_updateAnular:"oficio/bajasTemporales/updateAnular",
-    bajasTemporales_updateValidar:"oficio/bajasTemporales/updateValidar",
-    bajasTemporales_updateDenegar:"oficio/bajasTemporales/updateDenegar"
+    bajasTemporales_updateBajaTemporal:"oficio/bajasTemporales/updateEstado"
     //FIN DE BAJAS TEMPORALES
 }

@@ -44,12 +44,6 @@ export class FiltrosBajasTemporales implements OnInit {
     { label: "Baja", value: "B" },
     { label: "Suspensión por sanción", value: "S" }
   ];
-  comboEstados = [
-    { label:"Denegada", value:"0"},
-    { label:"Validada", value:"1"},
-    { label:"Pendiente", value:"2"},
-    { label:"Anulada", value:"3"}
-  ]
 
   usuarioBusquedaExpress = {​​​​​​​​​
     numColegiado: '',
@@ -57,6 +51,7 @@ export class FiltrosBajasTemporales implements OnInit {
   }​​​​​​​​​;
 
   progressSpinner = false;
+  comboEstado: any;
 
   @Input() permisos;
   /*Éste método es útil cuando queremos queremos informar de cambios en los datos desde el hijo,
@@ -66,9 +61,12 @@ export class FiltrosBajasTemporales implements OnInit {
   constructor(private router: Router,
     private sigaServices: SigaServices,
     private translateService: TranslateService,
-    private persistenceService: PersistenceService) { }
+    private persistenceService: PersistenceService,
+    private commonsService: CommonsService) { }
 
   ngOnInit() {   
+
+    this.getComboEstado();
 
     if (this.persistenceService.getHistorico() != undefined) {
       this.filtros.historico = this.persistenceService.getHistorico();
@@ -124,8 +122,8 @@ export class FiltrosBajasTemporales implements OnInit {
 
   isBuscar() {
 
-    if((<HTMLInputElement>document.querySelector("input[formControlName='numColegiado']")).value != null && (<HTMLInputElement>document.querySelector("input[formControlName='numColegiado']")).value != ""){
-      this.filtros.ncolegiado = (<HTMLInputElement>document.querySelector("input[formControlName='numColegiado']")).value;
+    if((<HTMLInputElement>document.querySelector("input[formControlName='numColegiado']")).value != null && (<HTMLInputElement>document.querySelector("input[formControlName='numColegiado']")).value  != ""){
+      this.filtros.ncolegiado = (<HTMLInputElement>document.querySelector("input[formControlName='numColegiado']")).value ;
     }else{
       this.filtros.ncolegiado = null;
     }
@@ -227,6 +225,22 @@ export class FiltrosBajasTemporales implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  getComboEstado(){
+    this.progressSpinner=true;
+
+      this.sigaServices.get("bajasTemporales_comboEstado").subscribe(
+        n => {
+          this.comboEstado = n.combooItems;
+          this.commonsService.arregloTildesCombo(this.comboEstado);
+          this.progressSpinner=false;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner=false;
+        }
+      );
   }
 
   checkNuevaBajaTemporal(){

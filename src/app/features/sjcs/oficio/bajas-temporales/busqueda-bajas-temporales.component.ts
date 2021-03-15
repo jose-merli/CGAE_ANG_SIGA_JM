@@ -1,4 +1,4 @@
-import { Component, OnInit, HostBinding, ViewChild, AfterViewInit, Output, EventEmitter, ContentChildren, QueryList, ChangeDetectorRef, SimpleChanges, Input } from '@angular/core';
+import { Component, OnInit, ViewChild} from '@angular/core';
 import { TranslateService } from '../../../../commons/translate';
 import { SigaServices } from '../../../../_services/siga.service';
 import { CommonsService } from '../../../../_services/commons.service';
@@ -91,6 +91,19 @@ export class BajasTemporalesComponent implements OnInit {
           }
           if(element.tipo == "S"){
             element.tiponombre = "Suspensión por sanción";
+          }
+
+          if(element.validado == "0"){
+            element.validado = "Denegada";
+          }
+          if(element.validado == "1"){
+            element.validado = "Validada";
+          }
+          if(element.validado == "2" || element.validado == null){
+            element.validado = "Pendiente";
+          }
+          if(element.validado == "3"){
+            element.validado = "Anulada";
           }
           element.ncolegiado = +element.ncolegiado;
 
