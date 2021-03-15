@@ -1,4 +1,5 @@
 import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+import { ColegiadoItem } from '../../../../../../models/ColegiadoItem';
 import { SaltoCompItem } from '../../../../../../models/guardia/SaltoCompItem';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
@@ -14,10 +15,12 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
 
   usuarioBusquedaExpress = {
     numColegiado: '',
-    nombreAp: ''
+    nombreAp: '',
   };
+  disabledBusquedaExpress: boolean = false;
   showDatosGenerales: boolean = true;
   showColegiado: boolean = false;
+  progressSpinner: boolean = false;
   msgs = [];
 
   filtros: SaltoCompItem = new SaltoCompItem();
@@ -53,6 +56,12 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
       }
       this.isOpen.emit(this.historico)
 
+    }
+
+
+    if (sessionStorage.getItem("esColegiado") && sessionStorage.getItem("esColegiado") == 'true') {
+      this.disabledBusquedaExpress = true;
+      this.getDataLoggedUser();
     }
 
     if (sessionStorage.getItem('buscadorColegiados')) {
@@ -114,7 +123,7 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
   }
 
   search() {
-    this.filtros.letrado = this.usuarioBusquedaExpress.numColegiado;
+    this.filtros.colegiadoGrupo = this.usuarioBusquedaExpress.numColegiado;
     this.persistenceService.setFiltros(this.filtros);
     this.persistenceService.setFiltrosAux(this.filtros);
     this.filtroAux = this.persistenceService.getFiltrosAux()
@@ -190,6 +199,28 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
     setTimeout(() => {
       someDropdown.filterInputChild.nativeElement.focus();
     }, 300);
+  }
+
+  getDataLoggedUser() {
+
+    this.progressSpinner = true;
+
+    this.sigaServices.get("usuario_logeado").subscribe(n => {
+
+      const usuario = n.usuarioLogeadoItem;
+      const colegiadoItem = new ColegiadoItem();
+      colegiadoItem.nif = usuario[0].dni;
+
+      this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(usr => {
+        const { numColegiado, nombre } = JSON.parse(usr.body).colegiadoItem[0];
+        this.usuarioBusquedaExpress.numColegiado = numColegiado;
+        this.usuarioBusquedaExpress.nombreAp = nombre;
+        this.showColegiado = true;
+        this.progressSpinner = false;
+      });
+
+    });
+
   }
 
 }

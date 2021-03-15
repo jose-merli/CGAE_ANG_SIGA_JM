@@ -65,7 +65,8 @@
       <div class="form-row">
         <div class="form-group-interlineado col-lg-6 col-md-6">
           <app-busqueda-colegiado-express class="flexCenter" [pantalla]="'guardia'"
-            [numColegiado]="usuarioBusquedaExpress.numColegiado" [nombreAp]="usuarioBusquedaExpress.nombreAp">
+            [numColegiado]="usuarioBusquedaExpress.numColegiado" [nombreAp]="usuarioBusquedaExpress.nombreAp"
+            [disabled]="disabledBusquedaExpress">
           </app-busqueda-colegiado-express>
         </div>
       </div>
@@ -84,4 +85,8 @@
     </div>
   </div>
 
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
 </div>
