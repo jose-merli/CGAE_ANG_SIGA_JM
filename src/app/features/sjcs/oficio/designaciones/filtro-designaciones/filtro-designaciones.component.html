@@ -21,25 +21,24 @@
                         <div class="form-row">
                             <div class="form-group-interlineado col-lg-2 col-md-2">
                                 <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.ano" | translate}}</label> 
-                                <input pInputText type="text" class="form-control"> <!-- [(ngModel)]='filtros.nombreMateria' maxLength="30"> -->
-                                <!-- <input type="text" class="form-control" pInputText> -->
+                                <input type="number" class="form-control" [(ngModel)]='body.ano' maxLength = "4" pInputText> 
                             </div>
                             <div class="form-group-interlineado col-lg-2 col-md-2">
                                 <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.numero" | translate}}</label> 
-                                <input pInputText type="text" class="form-control">
+                                <input  type="text"  maxLength = "10" class="form-control" [(ngModel)]='body.codigo' pInputText>
                             </div>
                             <div class="form-group-interlineado col-lg-2 col-md-2">
                                 <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.fchAdesde" | translate}}</label>
-                                <app-fecha></app-fecha>
+                                <app-fecha (valueChangeSelected)="fillFechaAperturaDesde($event)" (valueChangeInput)="fillFechaAperturaDesde($event)"></app-fecha>
                                 <!-- <app-fecha [(value)]="fechaIncorporacionDesdeSelect" [utc]="false" (valueChangeSelected)="fillFechaIncorporacionDesde($event)" (valueChangeInput)="fillFechaIncorporacionDesde($event)"></app-fecha> -->
                             </div>
                             <div class="form-group-interlineado col-lg-2 col-md-2">
                                 <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.fchAhasta" | translate}}</label>
-                                <app-fecha></app-fecha>
+                                <app-fecha (valueChangeSelected)="fillFechaAperturaHasta($event)" (valueChangeInput)="fillFechaAperturaHasta($event)"></app-fecha>
                             </div>
                             <div class="form-group-interlineado col-lg-2 col-md-2">
                                 <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.estado" | translate}}</label>
-                                <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}">
+                                <p-dropdown [filter]="true" [options]="comboEstados" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" >
                                 </p-dropdown>
                             </div>
                             <div class="form-group-interlineado col-lg-2 col-md-2">
