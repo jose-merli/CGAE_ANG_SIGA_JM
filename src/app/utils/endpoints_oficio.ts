@@ -45,6 +45,12 @@ export let endpoints_oficio: any = {
     bajasTemporales_comboEstado:"oficio/bajasTemporales/comboEstado",
     bajasTemporales_busquedaBajasTemporales:"oficio/bajasTemporales/busquedaBajasTemporales",
     bajasTemporales_nuevaBajaTemporal:"oficio/bajasTemporales/nuevaBajaTemporal",
-    bajasTemporales_updateBajaTemporal:"oficio/bajasTemporales/updateEstado"
+    bajasTemporales_updateEstado:"oficio/bajasTemporales/updateEstado",
     //FIN DE BAJAS TEMPORALES
+
+    //justificacion express
+    justificacionExpres_busqueda: "oficio/busquedaJustificacionExpres",
+
+    //BUSQUEDA DESIGNAS
+    desginas_tipoDesignas:"designas/comboTipoDesgina"
 }

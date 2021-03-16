@@ -12,8 +12,6 @@ export class DesignacionesComponent implements OnInit {
 
   url;
   rutas = ['SJCS', 'Designaciones'];
-  modoBusqueda: string = 'b';
-  
   progressSpinner: boolean = false;
 
   constructor(public sigaServices: OldSigaServices) {
