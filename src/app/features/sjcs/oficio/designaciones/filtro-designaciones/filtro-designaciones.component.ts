@@ -20,8 +20,8 @@ export class FiltroDesignacionesComponent implements OnInit {
   
   filtroJustificacion: JustificacionExpressItem = new JustificacionExpressItem();
 
-  expanded: boolean = true;
-  
+  expanded: boolean = false;
+  textSelected: String = "{0} etiquetas seleccionadas";
   progressSpinner: boolean = false;
   showDesignas: boolean = false;
   showJustificacionExpress: boolean = false;
@@ -29,7 +29,7 @@ export class FiltroDesignacionesComponent implements OnInit {
   checkRestricciones: boolean = true;
 
   disabledBusquedaExpress: boolean = false;
-  showColegiado: any;
+  showColegiado: boolean = false;
   radioTarjeta: string = 'designas';
 
   //Variables busqueda designas
@@ -37,7 +37,7 @@ export class FiltroDesignacionesComponent implements OnInit {
   body: DesignaItem = new DesignaItem();
   fechaAperturaHastaSelect: Date;
   fechaAperturaDesdeSelect: Date;
-
+  textFilter: String = "Seleccionar";
   comboEstados: any[];
   comboActuacionesValidadas: any [];
   comboSinEJG: any [];
@@ -75,13 +75,15 @@ export class FiltroDesignacionesComponent implements OnInit {
       this.disabledBusquedaExpress = true;
       this.getDataLoggedUser();
     }
+
     if (sessionStorage.getItem('buscadorColegiados')) {
+
       const { nombre, apellidos, nColegiado } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
+
       this.usuarioBusquedaExpress.nombreAp = `${apellidos}, ${nombre}`;
       this.usuarioBusquedaExpress.numColegiado = nColegiado;
-      this.showColegiado = "expanded";
-    }else{
-      this.showColegiado = "collapsed";
+      this.showColegiado = true;
+
     }
 
     //combo comun
@@ -344,6 +346,8 @@ export class FiltroDesignacionesComponent implements OnInit {
   }
 
   getDataLoggedUser() {
+    this.progressSpinner = true;
+
     this.sigaServices.get("usuario_logeado").subscribe(n => {
 
       const usuario = n.usuarioLogeadoItem;
@@ -354,7 +358,10 @@ export class FiltroDesignacionesComponent implements OnInit {
         const { numColegiado, nombre } = JSON.parse(usr.body).colegiadoItem[0];
         this.usuarioBusquedaExpress.numColegiado = numColegiado;
         this.usuarioBusquedaExpress.nombreAp = nombre;
+        this.showColegiado = true;
+        this.progressSpinner = false;
       });
+
     });
   }
 }

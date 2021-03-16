@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { MultiSelectModule } from "primeng/multiselect";
 import { MenubarModule } from 'primeng/menubar';
 import { routingOficio } from './oficio-routing.module';
 import { GestionTurnosModule } from './turnos/turnos.module';
@@ -46,7 +46,8 @@ import { BusquedaColegiadoExpressModule } from '../../../commons/busqueda-colegi
                 MatExpansionModule,
                 BusquedaColegiadoExpressModule,
                 CheckboxModule,
-                FechaModule
+                FechaModule,
+                MultiSelectModule,
         ],
 
         providers: []
