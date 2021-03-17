@@ -14,6 +14,7 @@ import { DatosDireccionesItem } from '../../../../../models/DatosDireccionesItem
 import { InscripcionesObject } from '../../../../../models/sjcs/InscripcionesObject';
 import { InscripcionesItems } from '../../../../../models/sjcs/InscripcionesItems';
 import { CommonsService } from '../../../../../_services/commons.service';
+import { ConfirmationService } from '../../../../../../../node_modules/primeng/primeng';
 
 
 @Component({
@@ -78,7 +79,8 @@ export class TablaInscripcionesComponent implements OnInit {
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
     private datepipe: DatePipe,
-    private commonsService: CommonsService
+    private commonsService: CommonsService,
+    private confirmationService: ConfirmationService
   ) { }
 
   ngOnInit() {
@@ -98,7 +100,9 @@ export class TablaInscripcionesComponent implements OnInit {
       this.first = paginacion.paginacion;
       this.selectedItem = paginacion.selectedItem;
     }
-    this.commonsService.scrollTablaFoco('tablaFoco');
+    setTimeout(()=>{
+      this.commonsService.scrollTablaFoco('tablaFoco');
+    }, 5);
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -398,15 +402,51 @@ export class TablaInscripcionesComponent implements OnInit {
     //   this.selectionMode = "multiple";
     // }
   }
-  
-  validar(selectedDatos) {
+  checkTrabajosSJCS(selectedDatos, access){
+    this.sigaServices.post("inscripciones_checkTrabajosSJCS", selectedDatos).subscribe(
+      n => {
+        let keyConfirmation = "deletePlantillaDoc";
+        if(n.body==true){
+          this.progressSpinner = false;
+          this.confirmationService.confirm({
+            key: keyConfirmation,
+            message: this.translateService.instant("justiciaGratuita.oficio.inscripciones.mensajeSJCS"),
+            icon: "fa fa-trash-alt",
+            accept: () => {
+              if(access==0)this.validar(selectedDatos.inscripcionesItem, 1);
+              else if(access==2)this.solicitarBaja(selectedDatos.inscripcionesItem, 3);
+            },
+            reject: () => {
+              this.msgs = [
+                {
+                  severity: "info",
+                  summary: "Cancel",
+                  detail: this.translateService.instant(
+                    "general.message.accion.cancelada"
+                  )
+                }
+              ];
+            }
+          });
+        }
+        if(access==0)this.validar(selectedDatos.inscripcionesItem, 1);
+        else if(access==2)this.solicitarBaja(selectedDatos.inscripcionesItem, 3);
+      });
+    this.progressSpinner = false;
+  }
+
+  validar(selectedDatos, access=0) {
+    let vb=0;
       this.progressSpinner = true;
       this.body = new InscripcionesObject();
       this.body.inscripcionesItem = selectedDatos
       this.body.inscripcionesItem.forEach(element => {
         element.fechaActual = this.datos.fechaActual;
         element.observaciones = this.datos.observaciones;
+        if(element.estado=="2")vb++;
       });
+      if(vb>0 && access==0)this.checkTrabajosSJCS(this.body, access);
+      else{
       this.sigaServices.post("inscripciones_updateValidar", this.body).subscribe(
         data => {
           this.selectedDatos = [];
@@ -431,6 +471,7 @@ export class TablaInscripcionesComponent implements OnInit {
           this.nuevo = false;
         }
       );  
+      }
   }
 
   cambiarFecha(selectedDatos) {
@@ -470,7 +511,6 @@ export class TablaInscripcionesComponent implements OnInit {
 
   denegar(selectedDatos) {
     this.progressSpinner = true;
-    this.body = new InscripcionesObject();
     this.body.inscripcionesItem = selectedDatos
     this.body.inscripcionesItem.forEach(element => {
       element.fechaActual = this.datos.fechaActual;
@@ -502,7 +542,7 @@ export class TablaInscripcionesComponent implements OnInit {
     );  
 }
 
-  solicitarBaja(selectedDatos) {
+  solicitarBaja(selectedDatos, access=2) {
     this.progressSpinner = true;
     let fechaDeHoy = new Date();
     let fechaHoy =this.datepipe.transform(fechaDeHoy, 'dd/MM/yyyy');
@@ -510,12 +550,16 @@ export class TablaInscripcionesComponent implements OnInit {
     if(fechaActual2 != fechaHoy){
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.inscripciones.mensajesolicitarbaja"));
     }else{
+      let vb = 0;
       this.body = new InscripcionesObject();
       this.body.inscripcionesItem = selectedDatos
       this.body.inscripcionesItem.forEach(element => {
         element.fechaActual = this.datos.fechaActual;
         element.observaciones = this.datos.observaciones;
+        if(element.estado=="2")vb++;
       });
+      if(vb>0 && access == 2 )this.checkTrabajosSJCS(this.body,access);
+      else{
       this.sigaServices.post("inscripciones_updateSolicitarBaja", this.body).subscribe(
         data => {
           this.selectedDatos = [];
@@ -540,6 +584,7 @@ export class TablaInscripcionesComponent implements OnInit {
           this.nuevo = false;
         }
       );
+      }
     }  
   }
 
@@ -648,7 +693,7 @@ export class TablaInscripcionesComponent implements OnInit {
     if (!this.selectAll && !this.selectMultiple) {
       this.progressSpinner = true;
       this.persistenceService.setDatos(evento);
-      sessionStorage.setItem("turno", JSON.stringify(evento));
+      //sessionStorage.setItem("turno", JSON.stringify(evento));
       this.router.navigate(["/gestionInscripciones"]);
     }
 

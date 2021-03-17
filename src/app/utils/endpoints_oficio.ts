@@ -34,6 +34,8 @@ export let endpoints_oficio: any = {
     inscripciones_busquedaInscripciones:"oficio/inscripciones/busquedaInscripciones",
     inscripciones_updateSolicitarBaja:"oficio/inscripciones/updateSolicitarBaja",
     inscripciones_busquedaTarjetaInscripciones:"oficio/inscripciones/busquedaTarjetaInscripciones",
+    inscripciones_insertSolicitarAlta:"oficio/inscripciones/insertSolicitarAlta",
+    inscripciones_checkTrabajosSJCS:"oficio/inscripciones/checkTrabajosSJCS",
     inscripciones_updateValidar:"oficio/inscripciones/updateValidar",
     inscripciones_updateDenegar:"oficio/inscripciones/updateDenegar",
     inscripciones_updateCambiarFecha:"oficio/inscripciones/updateCambiarFecha",

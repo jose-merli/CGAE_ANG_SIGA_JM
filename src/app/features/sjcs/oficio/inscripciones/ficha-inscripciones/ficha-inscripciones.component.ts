@@ -9,6 +9,8 @@ import { procesos_oficio } from '../../../../../permisos/procesos_oficio';
 import { InscripcionesItems } from '../../../../../models/sjcs/InscripcionesItems';
 import { InscripcionesObject } from '../../../../../models/sjcs/InscripcionesObject';
 import { TranslateService } from '../../../../../commons/translate/translation.service';
+import { ConfirmationService } from '../../../../../../../node_modules/primeng/primeng';
+import { ColegiadoItem } from '../../../../../models/ColegiadoItem';
 
 @Component({
 	selector: 'app-ficha-inscripciones',
@@ -27,10 +29,12 @@ export class FichaInscripcionesComponent implements OnInit {
 	turnosItem2;
 	modoEdicion: boolean;
 	disabledSolicitarBaja: boolean = false;
+	disabledSolicitarAlta: boolean = false;
 	disabledValidar: boolean = false;
 	disabledDenegar: boolean = false;
 	disabledCambiarFecha: boolean = false;
 	msgs;
+	inscripcionesSelected;
 	idProcedimiento;
 	pesosSeleccionadosTarjeta: string;
 	datos;
@@ -49,7 +53,7 @@ export class FichaInscripcionesComponent implements OnInit {
 	turno: any;
 	constructor(public datepipe: DatePipe, private translateService: TranslateService, private route: ActivatedRoute, 
 		 private sigaServices: SigaServices, private location: Location, private persistenceService: PersistenceService,
-		 private router: Router, private commonsService: CommonsService) { }
+		 private router: Router, private commonsService: CommonsService, private confirmationService: ConfirmationService) { }
 
 	ngAfterViewInit(): void {
 		this.enviarEnlacesTarjeta();
@@ -58,7 +62,7 @@ export class FichaInscripcionesComponent implements OnInit {
 
 	ngOnInit() {
 		this.datosTarjetaResumen = [];		
-		sessionStorage.setItem("origin","newInscrip");
+		
 		if (
 			sessionStorage.getItem("isLetrado") != null &&
 			sessionStorage.getItem("isLetrado") != undefined
@@ -91,31 +95,32 @@ export class FichaInscripcionesComponent implements OnInit {
 					this.permisosTarjetaCola = true;
 				}
 			}).catch(error => console.error(error));
-		this.turno = JSON.parse(sessionStorage.getItem("turno"));
-		if((this.turno.estado == 0 || this.turno.estado ==2) && !this.isLetrado ){
-			this.disabledDenegar = false;
-		}
-		if(this.turno.fechasolicitud == undefined)  this.turno.fechasolicitud = new Date();
-		if(this.turno.estadonombre == undefined){
-			this.turno.estadonombre = "Pendiente de Alta";
-			this.turno.estado="0";
-		}
-		
-		this.getDatosTarjetaResumen(this.turno);
-		this.letradoItem = this.turno;
-		
-		if (this.persistenceService.getDatos() != undefined) {
-			this.datos = this.persistenceService.getDatos();
-			this.modoEdicion = true;
-		} else {
-			this.datos = new InscripcionesItems();
+		//this.turno = JSON.parse(sessionStorage.getItem("turno"));
+		//if (this.persistenceService.getDatos() != undefined) {
+		this.datos = this.persistenceService.getDatos();
+		//Comprueba la procedencia
+		if(sessionStorage.getItem("origin") == "newInscrip"){
+			this.datos.fechasolicitud = new Date();
 			this.modoEdicion = false;
+		} else {
+			this.modoEdicion = true;
 		}
-		if(this.datos.fechasolicitud == undefined)  this.datos.fechasolicitud = new Date();
-		if(this.datos.estadonombre == undefined){
-			this.datos.estadonombre = "Pendiente de Alta";
-			this.datos.estado="0";
-		}
+		
+		this.getDatosTarjetaResumen(this.datos);
+		this.letradoItem = this.datos;
+      	this.idPersona = this.datos.idpersona;
+		  if(this.idPersona == undefined)this.idPersona = this.datos.idPersona;
+		  if(this.idPersona == null){
+			let colegiadoConectado = new ColegiadoItem();
+			colegiadoConectado.nif = this.datos.nif;
+			  this.sigaServices
+		  .post("busquedaColegiados_searchColegiado", colegiadoConectado)
+		  .subscribe(
+			data => {
+			let colegiadoSeleccionado = JSON.parse(data.body).colegiadoItem[0];
+			this.idPersona = colegiadoSeleccionado.idPersona;
+			})}
+		
 		this.datos.fechaActual = new Date();
 		this.datos.observaciones = "";
 		
@@ -211,12 +216,52 @@ export class FichaInscripcionesComponent implements OnInit {
 		});
 	}
 
-	validar() {
+	checkTrabajosSJCS(selectedDatos,access){
+		this.sigaServices.post("inscripciones_checkTrabajosSJCS", selectedDatos).subscribe(
+		  n => {
+			let keyConfirmation = "deletePlantillaDoc";
+			//temporal
+			n.body=true;
+			if(n.body==true){
+			  this.progressSpinner = false;
+			  this.confirmationService.confirm({
+				key: keyConfirmation,
+				message: this.translateService.instant("justiciaGratuita.oficio.inscripciones.mensajeSJCS"),
+				icon: "fa fa-trash-alt",
+				accept: () => {
+					if(access==0)this.validar(1);
+              		else if(access==2)this.solicitarBaja(3);
+				},
+				reject: () => {
+				  this.msgs = [
+					{
+					  severity: "info",
+					  summary: "Cancel",
+					  detail: this.translateService.instant(
+						"general.message.accion.cancelada"
+					  )
+					}
+				  ];
+				}
+			  });
+			}
+			if(access==0)this.validar(1);
+            else if(access==2)this.solicitarBaja(3);
+		  });
+		this.progressSpinner = false;
+	}
+	
+	validar(access=0) {
+		let vb=0;
 		this.progressSpinner = true;
 		let body = new InscripcionesObject();
+
       	body.inscripcionesItem[0] = this.datos;
       	body.inscripcionesItem[0].fechaActual = this.datos.fechaActual;
 		body.inscripcionesItem[0].observaciones = this.datos.observaciones;
+		if(this.datos.estado=="2")vb++;
+		if(vb>0 && access==0)this.checkTrabajosSJCS(body, access);
+      	else{
 		this.sigaServices.post("inscripciones_updateValidar", body).subscribe(
 			data => {
 				this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
@@ -237,6 +282,7 @@ export class FichaInscripcionesComponent implements OnInit {
 				this.progressSpinner = false;
 			}
 		);
+		}
 	}
 
 	denegar() {
@@ -277,7 +323,7 @@ export class FichaInscripcionesComponent implements OnInit {
 	}
 
 
-	solicitarBaja() {
+	solicitarBaja(access=2) {
 		this.progressSpinner = true;
 		let fechaDeHoy = new Date();
 		let fechaHoy = this.datepipe.transform(fechaDeHoy, 'dd/MM/yyyy');
@@ -285,10 +331,14 @@ export class FichaInscripcionesComponent implements OnInit {
 		if (fechaActual2 != fechaHoy) {
 			this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.inscripciones.mensajesolicitarbaja"));
 		} else {
+			let vb=0;
 			let body = new InscripcionesObject();
 			body.inscripcionesItem[0] = this.datos;
       		body.inscripcionesItem[0].fechaActual = this.datos.fechaActual;
 			body.inscripcionesItem[0].observaciones = this.datos.observaciones;
+			if(this.datos.estado=="2")vb++;
+			if(vb>0 && access==2)this.checkTrabajosSJCS(body, access);
+      		else{
 			this.sigaServices.post("inscripciones_updateSolicitarBaja", body).subscribe(
 				data => {
 					this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
@@ -308,7 +358,7 @@ export class FichaInscripcionesComponent implements OnInit {
 				() => {
 					this.progressSpinner = false;
 				}
-			);
+			);}
 		}
 	}
 
@@ -319,6 +369,37 @@ export class FichaInscripcionesComponent implements OnInit {
       	body.inscripcionesItem[0].fechaActual = this.datos.fechaActual;
 		body.inscripcionesItem[0].observaciones = this.datos.observaciones;
 		this.sigaServices.post("inscripciones_updateCambiarFecha", body).subscribe(
+			data => {
+				this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+				this.progressSpinner = false;
+				//El redireccionamiento es una solucion temporal hasta que se
+				//decida el método de actualización de la ficha.
+				this.router.navigate(["/inscripciones"]);
+			},
+			err => {
+				if (err != undefined && JSON.parse(err.error).error.description != "") {
+					this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+				} else {
+					this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+				}
+				this.progressSpinner = false;
+			},
+			() => {
+				this.progressSpinner = false;
+			}
+		);
+	}
+
+	solicitarAlta() {
+		this.progressSpinner = true;
+		
+		let body = new InscripcionesObject();
+		body.inscripcionesItem= this.inscripcionesSelected.inscripcionesSelected;
+        body.inscripcionesItem.forEach(element => {
+        element.idpersona= this.idPersona;
+        element.observacionessolicitud = this.datos.observaciones;
+      	});
+		this.sigaServices.post("inscripciones_insertSolicitarAlta", body).subscribe(
 			data => {
 				this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 				this.progressSpinner = false;
@@ -365,7 +446,7 @@ export class FichaInscripcionesComponent implements OnInit {
 		return fecha;
 	}
 	
-		enviarEnlacesTarjeta() {
+	enviarEnlacesTarjeta() {
 
 		this.enlacesTarjetaResumen = [];
 	
@@ -469,13 +550,25 @@ export class FichaInscripcionesComponent implements OnInit {
 	}
 
 	actualizarBotones() {
-		
+
+		if(this.datos.estado == undefined){
+			if(this.inscripcionesSelected == undefined) this.disabledSolicitarAlta = true;
+			else{
+			if(this.inscripcionesSelected.inscripcionesSelected.length == 0) this.disabledSolicitarAlta = true;
+			else this.disabledSolicitarAlta = false;
+			}
+		}
+		else{
+			this.disabledSolicitarAlta = true;
+		}
+
 		if(this.datos.estado == "1"){
 			this.disabledSolicitarBaja = false;
 		}
 		else{
 			this.disabledSolicitarBaja = true;
 		}
+
 		if(this.datos.estado == "2" || this.datos.estado == "0"){
 			this.disabledValidar = false;
 			this.disabledDenegar = false;
@@ -484,12 +577,18 @@ export class FichaInscripcionesComponent implements OnInit {
 			this.disabledValidar = true;
 			this.disabledDenegar = true;
 		}
+
 		if(this.datos.estado == "1" || this.datos.estado == "2" || this.datos.estado == "3"){
 			this.disabledCambiarFecha = false;
 		}
 		else{
 			this.disabledCambiarFecha = true;
 		}
+	}
+
+	seleccionadosSend(datosSelected){
+		this.inscripcionesSelected = datosSelected;
+		this.actualizarBotones();
 	}
 	  
 }

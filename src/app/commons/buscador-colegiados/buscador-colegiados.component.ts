@@ -98,7 +98,8 @@ export class BuscadorColegiadosComponent implements OnInit {
   getColegiado(event){
     if(this.nuevaInscripcion){
       this.persistenceService.setDatos(event);
-      sessionStorage.setItem("turno", JSON.stringify(event));
+      //sessionStorage.setItem("turno", JSON.stringify(event));
+      sessionStorage.setItem("origin","newInscrip");
       this.router.navigate(["/gestionInscripciones"]);
     }
     else{

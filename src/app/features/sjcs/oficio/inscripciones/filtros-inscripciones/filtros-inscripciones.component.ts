@@ -121,18 +121,17 @@ export class FiltrosInscripciones implements OnInit {
     }
     this.progressSpinner = true;
     if(isLetrado){
-      let usuario; 
       let colegiadoConectado = new ColegiadoItem();
       this.sigaServices.get("usuario_logeado").subscribe(n => {
-        usuario = n.usuarioLogeadoItem;
-        colegiadoConectado.nif = usuario[0].dni;
+        colegiadoConectado.nif = n.usuarioLogeadoItem[0].dni;
         this.sigaServices
         .post("busquedaColegiados_searchColegiado", colegiadoConectado)
         .subscribe(
           data => {
           colegiadoConectado = JSON.parse(data.body).colegiadoItem[0];
-          sessionStorage.setItem("turno", JSON.stringify(colegiadoConectado));
-        this.router.navigate(["/gestionInscripciones"]);
+          this.persistenceService.setDatos(colegiadoConectado);
+          sessionStorage.setItem("origin","newInscrip");
+          this.router.navigate(["/gestionInscripciones"]);
         })
       });
     }   
