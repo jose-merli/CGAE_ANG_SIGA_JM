@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
+import { Component, Output, OnInit, EventEmitter, HostListener, Input} from '@angular/core';
 import { ColegiadosSJCSItem } from '../../../models/ColegiadosSJCSItem';
 import { CommonsService } from '../../../_services/commons.service';
 import { SigaServices } from '../../../_services/siga.service';
@@ -25,11 +25,13 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
   expanded: boolean = true;
   progressSpinner: boolean = false;
   institucionGeneral: boolean = false;
+  disabledEstado: boolean = false;
 
   comboColegios: any;
   comboTurno: any;
   comboguardiaPorTurno: any;
   comboEstadoColegial: any;
+  @Input('nuevaInscripcion') nuevaInscripcion;
 
   @Output() buscar = new EventEmitter<boolean>();
 
@@ -52,6 +54,10 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
       this.getComboTurno();
       this.getComboEstadoColegial();
     });
+    if(this.nuevaInscripcion){
+       this.filtro.idEstado = "20";
+       this.disabledEstado = true;
+    }
   }
 
   getComboColegios() {

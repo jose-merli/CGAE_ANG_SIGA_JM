@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Output, EventEmitter} from '@angular/core';
 import { Message } from 'primeng/components/common/api';
 import { Location } from '@angular/common';
 import { FiltroBuscadorColegiadosComponent } from './filtro-buscador-colegiados/filtro-buscador-colegiados.component';
@@ -6,6 +6,8 @@ import { SigaServices } from '../../_services/siga.service';
 import { TranslateService } from '../translate';
 import { ColegiadosSJCSItem } from '../../models/ColegiadosSJCSItem';
 import { TablaBuscadorColegiadosComponent } from './tabla-buscador-colegiados/tabla-buscador-colegiados.component';
+import { Router } from "@angular/router";
+import { PersistenceService } from '../../_services/persistence.service';
 
 @Component({
   selector: 'app-buscador-colegiados',
@@ -16,6 +18,7 @@ export class BuscadorColegiadosComponent implements OnInit {
   progressSpinner: boolean = false;
   msgs: Message[] = [];
   show = false;
+  nuevaInscripcion:boolean = false;
 
   datos: ColegiadosSJCSItem = new ColegiadosSJCSItem();
 
@@ -23,11 +26,16 @@ export class BuscadorColegiadosComponent implements OnInit {
   
   @ViewChild(TablaBuscadorColegiadosComponent) tabla;
 
-  constructor(private location: Location, private sigaServices: SigaServices, private translateService: TranslateService) { }
+  constructor(private router: Router, private persistenceService: PersistenceService, private location: Location, private sigaServices: SigaServices, private translateService: TranslateService) { }
 
   ngOnInit() {
     if (sessionStorage.getItem('usuarioBusquedaExpress')) {
       sessionStorage.removeItem('usuarioBusquedaExpress')
+    }
+    //Comprobar si viene del botón nuevo de busqueda de inscripciones
+    if (sessionStorage.getItem("origin") =="newInscrip") {
+      sessionStorage.removeItem('origin');
+      this.nuevaInscripcion=true;
     }
   }
 
@@ -88,8 +96,16 @@ export class BuscadorColegiadosComponent implements OnInit {
   }
 
   getColegiado(event){
+    if(this.nuevaInscripcion){
+      this.persistenceService.setDatos(event);
+      //sessionStorage.setItem("turno", JSON.stringify(event));
+      sessionStorage.setItem("origin","newInscrip");
+      this.router.navigate(["/gestionInscripciones"]);
+    }
+    else{
     sessionStorage.setItem("buscadorColegiados", JSON.stringify(event));
     this.location.back();
+    }
   }
 
   showMessage(severity, summary, msg) {
