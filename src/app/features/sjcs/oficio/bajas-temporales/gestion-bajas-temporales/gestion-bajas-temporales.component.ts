@@ -62,8 +62,8 @@ export class TablaBajasTemporalesComponent implements OnInit {
   ];
 
   comboEstados = [
-    { label: "Validada", value: "0" },
-    { label: "Denegada", value: "1" },
+    { label: "Denegada", value: "0" },
+    { label: "Validada", value: "1" },
     { label: "Pendiente", value: "2" || null },
     { label: "Anulada", value: "3" }
   ];
@@ -399,7 +399,8 @@ export class TablaBajasTemporalesComponent implements OnInit {
   }
 */
   checkAnular(){
-    if(this.datos.validado == "Pendiente"){
+    this.selectedDatos;
+    if(this.selectedDatos[0].validado == "Pendiente"){
       this.datos.validado = "Anular";
       this.cambioEstado();
     }else{
@@ -427,9 +428,7 @@ export class TablaBajasTemporalesComponent implements OnInit {
 
   cambioEstado() {
     this.progressSpinner = true;
-    this.body = new BajasTemporalesItem();
-
-    this.sigaServices.post("bajasTemporales_updateBajaTemporal", this.body).subscribe(
+    this.sigaServices.post("bajasTemporales_updateBajaTemporal", this.selectedDatos).subscribe(
       data => {
         this.selectedDatos = [];
         this.searchPartidas.emit(false);
@@ -437,11 +436,8 @@ export class TablaBajasTemporalesComponent implements OnInit {
         this.progressSpinner = false;
       },
       err => {
-        if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("success", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        
         this.progressSpinner = false;
       }
     );  
