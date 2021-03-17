@@ -399,31 +399,36 @@ export class TablaBajasTemporalesComponent implements OnInit {
   }
 */
   checkAnular(){
-    this.selectedDatos;
-    if(this.selectedDatos[0].validado == "Pendiente"){
-      this.datos.validado = "Anular";
-      this.cambioEstado();
-    }else{
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-    }
+    this.selectedDatos.forEach(element => {
+      if(element.validado == "Pendiente"){
+        element.validado = "Anular";
+        this.cambioEstado();
+      }else{
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+      }
+    });
   }
 
   checkDenegar(){
-    if(this.datos.validado == "Pendiente"){
-      this.datos.validado = "Denegar";
-      this.cambioEstado();
-    }else{
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-    }
+    this.selectedDatos.forEach(element => {
+      if(element.validado == "Pendiente"){
+        element.validado = "Denegar";
+        this.cambioEstado();
+      }else{
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+      }
+    });
   }
 
   checkValidar(){
-    if(this.datos.validado == "Pendiente"){
-      this.datos.validado = "Validar";
-      this.cambioEstado();
-    }else{
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-    }
+    this.selectedDatos.forEach(element => {
+      if(element.validado == "Pendiente"){
+        element.validado = "Validar";
+        this.cambioEstado();
+      }else{
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+      }
+    });
   }
 
   cambioEstado() {
@@ -696,5 +701,22 @@ export class TablaBajasTemporalesComponent implements OnInit {
     } else {
       //this.rest();
     }
+  }
+
+  deleteBajaTemporal(){
+      this.progressSpinner = true;
+      this.sigaServices.post("bajasTemporales_deleteBajaTemporal", this.selectedDatos).subscribe(
+        data => {
+          this.selectedDatos = [];
+          this.searchPartidas.emit(false);
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.progressSpinner = false;
+        },
+        err => {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          
+          this.progressSpinner = false;
+        }
+      ); 
   }
 }

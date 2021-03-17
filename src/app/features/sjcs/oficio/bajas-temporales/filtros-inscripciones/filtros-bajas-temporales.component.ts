@@ -79,14 +79,6 @@ export class FiltrosBajasTemporales implements OnInit {
       this.filtros = this.persistenceService.getFiltros();
     }
     
-    if(sessionStorage.getItem("nuevaBaja")){
-      this.isBuscar();
-    }
-
-    if(sessionStorage.getItem("nuevaBaja")){
-      this.nuevaBajaTemporal();
-    }
-    
     if(sessionStorage.getItem("buscadorColegiados")){​​
 
       let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
@@ -95,6 +87,15 @@ export class FiltrosBajasTemporales implements OnInit {
 
       this.usuarioBusquedaExpress.numColegiado=busquedaColegiado.nColegiado;
     }​​
+    
+    
+    if(sessionStorage.getItem("nuevaBaja")){
+      this.isBuscar();
+    }
+
+    if(sessionStorage.getItem("nuevaBaja")){
+      this.nuevaBajaTemporal();
+    }
   }
 
   onHideDatosGenerales() {
