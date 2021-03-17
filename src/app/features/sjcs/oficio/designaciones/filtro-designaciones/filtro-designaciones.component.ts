@@ -88,6 +88,8 @@ export class FiltroDesignacionesComponent implements OnInit {
 
     //combo comun
     this.getComboEstados();
+
+    this.progressSpinner=false;
   }
 
   changeFilters(event) {
@@ -159,12 +161,16 @@ export class FiltroDesignacionesComponent implements OnInit {
   }
 
   getComboTurno() {
+    this.progressSpinner=true;
+
     this.sigaServices.get("combo_turnos").subscribe(
       n => {
         this.comboTurno = n.combooItems;
+        this.progressSpinner=false;
       },
       err => {
         console.log(err);
+        this.progressSpinner=false;
 
       }, () => {
         this.arregloTildesCombo(this.comboTurno);
@@ -173,13 +179,16 @@ export class FiltroDesignacionesComponent implements OnInit {
   }
 
   getComboTipoDesignas() {
+    this.progressSpinner=true;
+
     this.sigaServices.get("desginas_tipoDesignas").subscribe(
       n => {
         this.comboTipoDesigna = n.combooItems;
+        this.progressSpinner=false;
       },
       err => {
         console.log(err);
-
+        this.progressSpinner=false;
       }, () => {
         this.arregloTildesCombo(this.comboTurno);
       }
@@ -362,6 +371,10 @@ export class FiltroDesignacionesComponent implements OnInit {
         this.progressSpinner = false;
       });
 
+    },
+    error =>{
+      console.log("ERROR: cargando datos del usuario logado");
+      this.progressSpinner=false;
     });
   }
 }
