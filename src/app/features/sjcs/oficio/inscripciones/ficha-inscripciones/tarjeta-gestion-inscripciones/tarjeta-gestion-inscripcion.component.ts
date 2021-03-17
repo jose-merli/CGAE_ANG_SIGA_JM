@@ -144,17 +144,21 @@ export class TarjetaGestionInscripcion implements OnInit {
   }
   busqueda() {
     this.progressSpinner = true;
-    this.sigaServices.post("inscripciones_busquedaTarjeta", this.datos).subscribe(
-      n => {
-        this.datos2 = JSON.parse(n.body).inscripcionesTarjetaItem;
-        this.progressSpinner = false;
-      },
-      err => {
-        this.progressSpinner = false;
-        console.log(err);
-      }, () => {
-      }
-    );
+    if(this.datos.idturno == null ||
+      this.datos.idturno == undefined){
+      this.sigaServices.post("inscripciones_busquedaTarjeta", this.datos).subscribe(
+        n => {
+          this.datos2 = JSON.parse(n.body).inscripcionesTarjetaItem;
+          this.progressSpinner = false;
+        },
+        err => {
+          this.progressSpinner = false;
+          console.log(err);
+        }, () => {
+        }
+      );
+    }
+    this.progressSpinner = false;
   }
   fillFechaDesdeCalendar(event) {
     this.datos.fechaActual = this.transformaFecha(event);

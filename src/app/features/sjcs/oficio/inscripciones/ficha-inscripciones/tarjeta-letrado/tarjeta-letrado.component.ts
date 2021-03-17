@@ -168,9 +168,14 @@ export class TarjetaLetradoComponent implements OnInit {
         }
       ];
 
+
       this.colegiadoInscripcion.numColegiado = this.letradoItem.ncolegiado;
+      if(this.letradoItem.nColegiado != undefined)this.colegiadoInscripcion.numColegiado = this.letradoItem.nColegiado;
+      if(this.letradoItem.numColegiado != undefined)this.colegiadoInscripcion.numColegiado = this.letradoItem.numColegiado;
       this.colegiadoInscripcion.idPersona = this.letradoItem.idpersona;
+      if(this.letradoItem.idPersona != undefined)this.colegiadoInscripcion.idPersona = this.letradoItem.idPersona;
       this.colegiadoInscripcion.idInstitucion = this.letradoItem.idinstitucion;
+      if(this.letradoItem.idInstitucion != undefined)this.colegiadoInscripcion.idInstitucion = this.letradoItem.idInstitucion;
         this.sigaServices
         .post("busquedaColegiados_searchColegiadoFicha", this.colegiadoInscripcion)
         .subscribe(
@@ -179,8 +184,8 @@ export class TarjetaLetradoComponent implements OnInit {
             sessionStorage.setItem("personaBody", JSON.stringify(colegiadoItem.colegiadoItem[0]));
             sessionStorage.setItem("disabledAction", "false");
 
-            this.datos.ncolegiado = this.letradoItem.ncolegiado;
-            this.datos.apellidosnombre = this.letradoItem.apellidosnombre;
+            this.datos.ncolegiado = colegiadoItem.colegiadoItem[0].numColegiado;
+            this.datos.apellidosnombre = colegiadoItem.colegiadoItem[0].nombre;
             this.datos.nifcif = colegiadoItem.colegiadoItem[0].nif;
 
             //Buscamos los datos de contacto asociados a la direccion de guardia del colegiado
@@ -214,12 +219,23 @@ export class TarjetaLetradoComponent implements OnInit {
                     });
                     sessionStorage.setItem("numDespacho", JSON.stringify(contador));
         
+                    if (this.datos != undefined) {
+                      this.body = this.datos;
+                      this.bodyInicial = JSON.parse(JSON.stringify(this.datos));
+                    } else {
+                      this.datos = new InscripcionesItems();
+                    }
+                    if (this.body.idturno == undefined) {
+                      this.modoEdicion = false;
+                    } else {
+                      this.modoEdicion = true;
+                    }
                     this.progressSpinner = false;
                   },
                   err => {
                     console.log(err);
                     this.progressSpinner = false;
-                  }
+                  },
                 );
             }
           },
@@ -232,20 +248,6 @@ export class TarjetaLetradoComponent implements OnInit {
      
     if (this.persistenceService.getPermisos() != true) {
       this.disableAll = true;
-    }
-
-    this.datos.ncolegiado = sessionStorage.getItem("ncolegiado");
-
-    if (this.datos != undefined) {
-      this.body = this.datos;
-      this.bodyInicial = JSON.parse(JSON.stringify(this.datos));
-    } else {
-      this.datos = new InscripcionesItems();
-    }
-    if (this.body.idturno == undefined) {
-      this.modoEdicion = false;
-    } else {
-      this.modoEdicion = true;
     }
   }
 

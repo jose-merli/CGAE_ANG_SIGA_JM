@@ -181,7 +181,7 @@ export class FiltroDesignacionesComponent implements OnInit {
   getComboTipoDesignas() {
     this.progressSpinner=true;
 
-    this.sigaServices.get("desginas_tipoDesignas").subscribe(
+    this.sigaServices.get("designas_tipoDesignas").subscribe(
       n => {
         this.comboTipoDesigna = n.combooItems;
         this.progressSpinner=false;

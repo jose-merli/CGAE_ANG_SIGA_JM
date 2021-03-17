@@ -5,7 +5,7 @@
 
     <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple"
       [responsive]="true" [first]="first" #table class="tabla-listado" [paginator]="true" [rows]="selectedItem"
-      (onRowUnselect)="actualizaSeleccionados(selectedDatos)" (onRowSelect)="actualizaSeleccionados(selectedDatos)"
+      (onRowUnselect)="actualizaBotones(selectedDatos)" (onRowSelect)="actualizaBotones(selectedDatos)"
       [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
@@ -76,9 +76,9 @@
           </p-dropdown>
           <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
           <div class="ml-3 selectAll">
-            <!-- <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true"
+            <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true"
               label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname" [disabled]="!permisos">
-            </p-checkbox> -->
+            </p-checkbox>
           </div>
         </div>
       </ng-template>
@@ -109,7 +109,7 @@
           </label>
           <!-- [disabled]="!permisos || ((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledValidar || !isLetrado)" -->
           <button *ngIf="!historico" pButton
-            [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledValidar || !isLetrado)" (click)="validar(selectedDatos)"
+            [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledValidar || isLetrado)" (click)="validar(selectedDatos)"
             type="button" label="{{ 'general.boton.validar' | translate}}"></button>
 
         </div>
@@ -118,7 +118,7 @@
           </label>
           <!-- [disabled]="!permisos || ((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledDenegar || !isLetrado)" -->
           <button *ngIf="!historico" pButton
-            [disabled]="!permisos || ((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledDenegar || !isLetrado)" (click)="denegar(selectedDatos)"
+            [disabled]="!permisos || ((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledDenegar || isLetrado)" (click)="denegar(selectedDatos)"
             type="button" label="{{ 'general.boton.denegar' | translate}}"></button>
         </div>
         <div class="form-group">
@@ -140,6 +140,14 @@
     </div>
   </div>
 </div>
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="deletePlantillaDoc" icon="icon" width="425"
+  #deletePlantillaDoc>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="deletePlantillaDoc.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="deletePlantillaDoc.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>

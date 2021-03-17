@@ -49,6 +49,10 @@ export class InscripcionesComponent implements OnInit {
 
 
   ngOnInit() {
+    this.buscar = this.filtros.buscar;
+    if (sessionStorage.getItem("origin") =="newInscrip") {
+      sessionStorage.removeItem('origin');
+    }
     this.commonsService.checkAcceso(procesos_oficio.inscripciones)
       .then(respuesta => {
         this.permisoEscritura = respuesta;
@@ -99,14 +103,10 @@ export class InscripcionesComponent implements OnInit {
     this.sigaServices.post("inscripciones_busquedaInscripciones", this.filtros.filtroAux).subscribe(
       n => {
         this.datos = JSON.parse(n.body).inscripcionesItem;
+        this.buscar = true;
         let error = JSON.parse(n.body).error;
-        if (error != null && error.description != null) {
-          this.msgs = [];
-          this.msgs.push({
-            severity:"info", 
-            summary:this.translateService.instant("general.message.informacion"), 
-            detail: error.description});
-        }
+        this.progressSpinner = false;
+        
         this.datos.forEach(element => {
           if(element.estado == "0"){
             element.estadonombre = "Pendiente de Alta";
@@ -125,21 +125,30 @@ export class InscripcionesComponent implements OnInit {
           }
           element.ncolegiado = +element.ncolegiado;
         });
-        this.buscar = true;
-        this.progressSpinner = false;
+        
         if (this.tablapartida != undefined) {
           this.tablapartida.tabla.sortOrder = 0;
           this.tablapartida.tabla.sortField = '';
           this.tablapartida.tabla.reset();
           this.tablapartida.buscadores = this.tablapartida.buscadores.map(it => it = "");
         }
+        this.commonsService.scrollTablaFoco("tablaFoco");
+        if (error != null && error.description != null) {
+          this.msgs = [];
+          this.msgs.push({
+            severity:"info", 
+            summary:this.translateService.instant("general.message.informacion"), 
+            detail: error.description});
+        }
       },
       err => {
         this.progressSpinner = false;
         console.log(err);
       }, () => {
+        this.commonsService.scrollTablaFoco("tablaFoco");
       }
     );
+    this.commonsService.scrollTablaFoco('tablaFoco');
   }
 
   showMessage(event) {

@@ -2,14 +2,14 @@
 
 <div class="card">
   <div class="card-body p-0">
-    <app-filtro-buscador-colegiados (buscar)="buscar()"></app-filtro-buscador-colegiados>
+    <app-filtro-buscador-colegiados [nuevaInscripcion]="nuevaInscripcion" (buscar)="buscar()"></app-filtro-buscador-colegiados>
   </div>
 </div>
 
 <div *ngIf="show">
   <div class="card">
     <div class="card-body">
-      <app-tabla-buscador-colegiados [datos]="datos" (colegiado)="getColegiado($event)"></app-tabla-buscador-colegiados>
+      <app-tabla-buscador-colegiados [datos]="datos"  (colegiado)="getColegiado($event)"></app-tabla-buscador-colegiados>
     </div>
   </div>
 </div>
