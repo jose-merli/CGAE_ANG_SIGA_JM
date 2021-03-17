@@ -183,7 +183,6 @@ import { NuevoExpedienteComponent } from './features/expedientes/nuevo-expedient
 import { DevolucionComponent } from './features/sjcs/devolucion/devolucion.component';
 import { JustificacionComponent } from './features/sjcs/justificacion/justificacion.component';
 import { CertificacionComponent } from './features/sjcs/certificacion/certificacion.component';
-import { DesignacionesComponent } from './features/sjcs/oficio/designaciones/designaciones.component';
 import { ZonasYSubzonasComponent } from './features/sjcs/maestros/zonas-subzonas/zonas-subzonas.component';
 import { AreasYMateriasComponent } from './features/sjcs/maestros/areas-materias/areas-materias.component';
 import { RetencionesIRPFComponent } from './features/sjcs/maestros/retenciones-IRPF/retenciones-IRPF.component';
@@ -384,7 +383,7 @@ import { TablaResultadoComponent } from './commons/tabla-resultado/tabla-resulta
 import { BuscadorColegiadosComponent } from './commons/buscador-colegiados/buscador-colegiados.component';
 import { FiltroBuscadorColegiadosComponent } from './commons/buscador-colegiados/filtro-buscador-colegiados/filtro-buscador-colegiados.component';
 import { TablaBuscadorColegiadosComponent } from './commons/buscador-colegiados/tabla-buscador-colegiados/tabla-buscador-colegiados.component';
-
+import { MigasDePanComponent } from './commons/migas-de-pan/migas-de-pan.component';
 
 @NgModule({
 	declarations: [
@@ -443,9 +442,6 @@ import { TablaBuscadorColegiadosComponent } from './commons/buscador-colegiados/
 		ServiciosInteresComponent,
 		FacturacionSociedadesCensoComponent,
 		ComunicacionSociedadesComponent,
-
-		//SJRS
-		DesignacionesComponent,
 
 		//Certificados
 		ComunicacionInterprofesionalComponent,
@@ -702,8 +698,8 @@ import { TablaBuscadorColegiadosComponent } from './commons/buscador-colegiados/
 		FiltroBuscadorColegiadosComponent,
 		PaginadorComponent,
 		TablaResultadoComponent,
-		SelectorComponent
-
+		SelectorComponent,
+		MigasDePanComponent
 	],
 	imports: [
 		BrowserModule,
@@ -754,12 +750,11 @@ import { TablaBuscadorColegiadosComponent } from './commons/buscador-colegiados/
 		BusquedaColegiadoExpressModule,
 		GeneralSJCSModule,
 		TarjetaResumenFijaModule,
-
 		SelectButtonModule,
 		ColorPickerModule,
 		// BusquedaAsuntosModule,
 		EditorModule,
-MatExpansionModule,
+		MatExpansionModule,
 		MatCheckboxModule,
 		MatInputModule,
 		MatSortModule,
@@ -773,7 +768,6 @@ MatExpansionModule,
 		SjcsModule,
 		OficioModule,
 		BusquedaAsuntosModule
-		
 	],
 
 	exports: [],
@@ -789,9 +783,7 @@ MatExpansionModule,
 		MessageService,
 		AuthenticationService,
 		ConfirmationService,
-
 		PersistenceService,
-
 		TrimPipePipe,
 
 		AuthGuard,
@@ -808,8 +800,6 @@ MatExpansionModule,
 		{ provide: LOCALE_ID, useValue: 'es-ES' }
 	],
 
-
 	bootstrap: [AppComponent]
-
 })
 export class AppModule { }

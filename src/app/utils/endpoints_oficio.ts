@@ -28,6 +28,7 @@ export let endpoints_oficio: any = {
     turnos_busquedaGuardias: "oficio/turnos/busquedaGuardias",
     turnos_eliminateGuardia: "oficio/turnos/eliminateGuardia",
     turnos_updateUltimo: "oficio/turnos/updateUltimo",
+    turno_changeRequisitoGuardias: "oficio/turnos/changeRequisitoGuardias",
     //FIN DE TURNOS
 
     inscripciones_comboTurnos: "oficio/inscripciones/comboTurnos",
@@ -43,9 +44,15 @@ export let endpoints_oficio: any = {
     inscripciones_busquedaTarjeta:"oficio/inscripciones/busquedaTarjeta",
     //FIN DE INSCRIPCIONES
 
+    bajasTemporales_comboEstado:"oficio/bajasTemporales/comboEstado",
     bajasTemporales_busquedaBajasTemporales:"oficio/bajasTemporales/busquedaBajasTemporales",
-    bajasTemporales_updateAnular:"oficio/bajasTemporales/updateAnular",
-    bajasTemporales_updateValidar:"oficio/bajasTemporales/updateValidar",
-    bajasTemporales_updateDenegar:"oficio/bajasTemporales/updateDenegar"
+    bajasTemporales_nuevaBajaTemporal:"oficio/bajasTemporales/nuevaBajaTemporal",
+    bajasTemporales_updateBajaTemporal:"oficio/bajasTemporales/updateEstado",
     //FIN DE BAJAS TEMPORALES
+
+    //justificacion express
+    justificacionExpres_busqueda: "oficio/busquedaJustificacionExpres",
+
+    //BUSQUEDA DESIGNAS
+    desginas_tipoDesignas:"oficio/designas/comboTipoDesigna"
 }

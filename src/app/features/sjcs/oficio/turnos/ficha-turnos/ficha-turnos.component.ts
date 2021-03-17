@@ -51,6 +51,7 @@ export class FichaTurnosComponent implements OnInit {
 	constructor(private route: ActivatedRoute, private sigaServices: SigaServices, private location: Location, private persistenceService: PersistenceService,private commonsService: CommonsService) { }
 
 	ngOnInit() {
+		
 		this.datosTarjetaResumen = [];
 		this.commonsService.checkAcceso(procesos_oficio.tarjetaResumen)
 		.then(respuesta => {

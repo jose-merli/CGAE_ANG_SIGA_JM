@@ -211,6 +211,38 @@ export class ConfiguracionTurnosComponent implements OnInit {
   onChangeRequisitosGuardias() {
     for (let i = 0; i < this.guardias.length; i++) {
       if (this.guardias[i].value == this.turnosItem.idguardias) {
+        if(this.requisitosGuardiasDescripcion == "Todas o ninguna" && this.guardias[i].label == "Obligatorias"){
+          this.sigaServices.post("turno_changeRequisitoGuardias", this.body).subscribe(
+            data => {
+              this.progressSpinner = false;
+               let error = JSON.parse(data.body).error;
+              if (error != null && error.description != null) {
+                this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
+              }
+            },
+            error => {
+              this.progressSpinner = false;
+              console.log(error);
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+            }
+          );
+        }
+        if(this.requisitosGuardiasDescripcion == "A elegir" && this.guardias[i].label == "Obligatorias"){
+          this.sigaServices.post("turno_changeRequisitoGuardias", this.body).subscribe(
+            data => {
+              this.progressSpinner = false;
+               let error = JSON.parse(data.body).error;
+              if (error != null && error.description != null) {
+                this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
+              }
+            },
+            error => {
+              this.progressSpinner = false;
+              console.log(error);
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+            }
+          );
+        }
         this.requisitosGuardiasDescripcion = this.guardias[i].label
       }
     }
@@ -222,8 +254,6 @@ export class ConfiguracionTurnosComponent implements OnInit {
 
 
   confirmGuardar() {
-    //Comprobar que se ha modificado el campo de "requisitos guardias"
-    // if (this.bodyInicial.idguardias != this.body.idguardias){
       console.log(this.requisitosGuardiasDescripcion);
       console.log(this.requisitoInicial);
     
@@ -290,17 +320,17 @@ export class ConfiguracionTurnosComponent implements OnInit {
   callSaveService(url) {
     this.sigaServices.post(url, this.turnosItem).subscribe(
       data => {
-        // if (!this.modoEdicion) {
-        //   this.modoEdicion = true;
-        //   let turnos = JSON.parse(data.body);
-        //   // this.modulosItem = JSON.parse(data.body);
-        //   this.turnosItem.idturno = turnos.id;
-        //   let send = {
-        //     modoEdicion: this.modoEdicion,
-        //     idturno: this.turnosItem.idturno
-        //   }
-        //   this.modoEdicionSend.emit(send);
-        // }
+        if (!this.modoEdicion) {
+          this.modoEdicion = true;
+          let turnos = JSON.parse(data.body);
+          // this.modulosItem = JSON.parse(data.body);
+          this.turnosItem.idturno = turnos.id;
+          let send = {
+            modoEdicion: this.modoEdicion,
+            idturno: this.turnosItem.idturno
+          }
+          this.modoEdicionSend.emit(send);
+        }
         
         if (this.turnosItem.validarjustificaciones == 'S') {
           this.validJustificacion = "SI";

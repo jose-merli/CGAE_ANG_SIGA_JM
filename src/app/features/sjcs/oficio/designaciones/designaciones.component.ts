@@ -11,6 +11,8 @@ import { OldSigaServices } from '../../../../_services/oldSiga.service'
 export class DesignacionesComponent implements OnInit {
 
   url;
+  rutas = ['SJCS', 'Designaciones'];
+  progressSpinner: boolean = false;
 
   constructor(public sigaServices: OldSigaServices) {
     this.url = sigaServices.getOldSigaUrl("designaciones");
@@ -18,8 +20,5 @@ export class DesignacionesComponent implements OnInit {
 
   ngOnInit() {
   }
-
-
-
 
 }
