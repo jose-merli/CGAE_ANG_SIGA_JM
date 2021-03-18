@@ -55,7 +55,7 @@
             <div *ngIf="!dato.editable && !setItalic(dato) && col.field =='fechaalta'">
               <span>{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
             </div>
-            <div *ngIf="!dato.editable && !setItalic(dato) && col.field =='fechabt'">
+            <div *ngIf="!dato.editable && !setItalic(dato) && col.field =='fechaestado'">
               <span>{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
             </div>
 
@@ -68,11 +68,11 @@
               <app-fecha [(value)]='dato.fechadesde' (valueChangeInput)="fillFechaDesdeCalendar($event)" (valueChangeSelected)="fillFechaDesdeCalendar($event)"></app-fecha>
             </div>
             <div *ngIf="dato.editable && col.field=='fechahasta'">
-              <app-fecha (valueChangeInput)="fillFechaHastaSolicitudCalendar($event)" (valueChangeSelected)="fillFechaHastaSolicitudCalendar($event)"></app-fecha>
+              <app-fecha [(value)]='dato.fechahasta' (valueChangeInput)="fillFechaHastaSolicitudCalendar($event)" (valueChangeSelected)="fillFechaHastaSolicitudCalendar($event)"></app-fecha>
             </div>
             <div *ngIf="dato.editable && col.field=='descripcion'">
-              <input class="form-control paddingInput" [(ngModel)]="dato.descripcion" name="descripcion " type="text
-              " maxLength="58 " on-focusout="changeDescripcion(dato) " [(disabled)]="!permisos " (onBlur)="changeDescripcion(dato)
+              <input class="form-control paddingInput" [(ngModel)]="dato.descripcion" name="descripcion" type="text
+              " maxLength="58" on-focusout="changeDescripcion(dato) " [(disabled)]="!permisos" (onBlur)="changeDescripcion(dato)
               " (input)="changeDescripcion(dato)" />
             </div>
 
@@ -132,7 +132,7 @@
       <button pButton (click)="checkDenegar()" type="button" iconPos="left" label="{{ 'general.boton.denegar' | translate}}"></button>
 
       <button *ngIf="!historico" pButton [disabled]="!permisos || (!selectMultiple && !selectAll) || selectedDatos.length == 0"
-        (click)="checkPermisosDelete(selectedDatos);" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
+        (click)="deleteBajaTemporal()" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
 
       <button [disabled]="nuevo || editMode" *ngIf="!historico" (click)="checkPermisosSearchPartida(); selectedDatos = []" pButton
         type="button" icon="fa fa-history" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>

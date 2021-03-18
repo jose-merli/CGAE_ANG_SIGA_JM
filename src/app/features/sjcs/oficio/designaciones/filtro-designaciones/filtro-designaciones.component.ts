@@ -26,10 +26,11 @@ export class FiltroDesignacionesComponent implements OnInit {
   showDesignas: boolean = false;
   showJustificacionExpress: boolean = false;
   checkMostrarPendientes: boolean = true;
-  checkRestricciones: boolean = true;
+  checkRestricciones: boolean = false;
 
   disabledBusquedaExpress: boolean = false;
   showColegiado: boolean = false;
+  esColegiado: boolean = false;
   radioTarjeta: string = 'designas';
 
   //Variables busqueda designas
@@ -64,8 +65,10 @@ export class FiltroDesignacionesComponent implements OnInit {
   ngOnInit(): void {
     this.filtroJustificacion = new JustificacionExpressItem();
 
+    this. esColegiado = false;
     this.progressSpinner=true;
     this.showDesignas = true;
+    this.checkRestricciones = false;
 
     // this.checkLastRoute();
 
@@ -109,12 +112,9 @@ export class FiltroDesignacionesComponent implements OnInit {
     if(event=='justificacion'){
       this.showDesignas=false;
       this.showJustificacionExpress=true;
+      this.expanded=true;
     }
   }
-
-  // checkLastRoute() {
-  //   this.progressSpinner=false;
-  // }
 
   fillFechasJustificacion(event, campo) {
     if(campo=='justificacionDesde'){
@@ -443,8 +443,20 @@ getComboCalidad() {
     }  
   }
 
-  onChangeChecRestricciones(event) {
+  onChangeCheckRestricciones(event) {
     this.checkRestricciones = event;
+
+    if(!event){
+      this.filtroJustificacion.ejgSinResolucion="2"; 
+      this.filtroJustificacion.sinEJG="2";
+      this.filtroJustificacion.resolucionPTECAJG="2";
+      this.filtroJustificacion.conEJGNoFavorables="2";
+    }else{
+      this.filtroJustificacion.ejgSinResolucion="0"; 
+      this.filtroJustificacion.sinEJG="0";
+      this.filtroJustificacion.resolucionPTECAJG="0";
+      this.filtroJustificacion.conEJGNoFavorables="0";
+    }
   }
 
   getComboArticulo() {
@@ -474,6 +486,13 @@ getComboCalidad() {
 
   getDataLoggedUser() {
     this.progressSpinner = true;
+    this.esColegiado = false;
+    
+    //si es colegio, valor por defecto para justificacion
+    this.filtroJustificacion.ejgSinResolucion="2"; 
+    this.filtroJustificacion.sinEJG="2";
+    this.filtroJustificacion.resolucionPTECAJG="2";
+    this.filtroJustificacion.conEJGNoFavorables="2";
 
     this.sigaServices.get("usuario_logeado").subscribe(n => {
 
@@ -486,6 +505,18 @@ getComboCalidad() {
         this.usuarioBusquedaExpress.numColegiado = numColegiado;
         this.usuarioBusquedaExpress.nombreAp = nombre;
         this.showColegiado = true;
+        this.progressSpinner = false;
+
+        //es colegiado, filtro por defecto para justificacion
+        this.filtroJustificacion.ejgSinResolucion="0";
+        this.filtroJustificacion.sinEJG="0";
+        this.filtroJustificacion.resolucionPTECAJG="0";
+        this.filtroJustificacion.conEJGNoFavorables="0";
+
+        this.esColegiado = true;
+        this.checkRestricciones = true;
+      },
+      err =>{
         this.progressSpinner = false;
       });
 
