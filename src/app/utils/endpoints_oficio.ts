@@ -54,5 +54,8 @@ export let endpoints_oficio: any = {
     justificacionExpres_busqueda: "oficio/busquedaJustificacionExpres",
 
     //BUSQUEDA DESIGNAS
-    designas_tipoDesignas:"oficio/designas/comboTipoDesigna"
+    designas_tipoDesignas:"oficio/designas/comboTipoDesigna",
+    combo_comboJuzgadoDesignaciones: "combo/comboJuzgadoDesignaciones",
+    combo_comboModulosDesignaciones: "oficio/comboModulo",
+    combo_comboProcedimientosDesignaciones: "oficio/comboProcedimientos"
 }
