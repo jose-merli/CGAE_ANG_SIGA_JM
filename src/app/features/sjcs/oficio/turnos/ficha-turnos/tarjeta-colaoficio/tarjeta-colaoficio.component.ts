@@ -16,6 +16,7 @@ import { PartidasObject } from '../../../../../../models/sjcs/PartidasObject';
 import { MultiSelect } from '../../../../../../../../node_modules/primeng/primeng';
 import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
 import { Router } from '../../../../../../../../node_modules/@angular/router';
+import { TurnosItem } from '../../../../../../models/sjcs/TurnosItem';
 @Component({
   selector: "app-tarjeta-colaoficio",
   templateUrl: "./tarjeta-colaoficio.component.html",
@@ -235,10 +236,10 @@ export class TarjetaColaOficio implements OnInit {
     return fichaPosible.activa;
   }
   marcarUltimo(selectedDatos) {
-    this.body = new TurnosObject();
-    this.body.turnosItem = this.selectedDatos;
+    this.body = new TurnosItem();
+    this.body = this.selectedDatos[0];
 
-    this.sigaServices.post("turnos_updateUltimo", this.body.turnosItem).subscribe(
+    this.sigaServices.post("turnos_updateUltimo", this.body).subscribe(
       data => {
 
         var ultimaPosicion = this.datos[this.datos.length-1];
