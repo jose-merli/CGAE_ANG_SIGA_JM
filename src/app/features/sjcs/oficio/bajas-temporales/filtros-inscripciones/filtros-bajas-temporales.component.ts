@@ -79,14 +79,6 @@ export class FiltrosBajasTemporales implements OnInit {
       this.filtros = this.persistenceService.getFiltros();
     }
     
-    if(sessionStorage.getItem("nuevaBaja")){
-      this.isBuscar();
-    }
-
-    if(sessionStorage.getItem("nuevaBaja")){
-      this.nuevaBajaTemporal();
-    }
-    
     if(sessionStorage.getItem("buscadorColegiados")){​​
 
       let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
@@ -95,22 +87,47 @@ export class FiltrosBajasTemporales implements OnInit {
 
       this.usuarioBusquedaExpress.numColegiado=busquedaColegiado.nColegiado;
     }​​
+    
+    
+    /*if(sessionStorage.getItem("nuevaBaja")){
+      this.isBuscar();
+    }
+*/
+    if(sessionStorage.getItem("nuevaBaja")){
+      this.nuevaBajaTemporal();
+    }
+
+    
+    sessionStorage.removeItem("nuevaBaja");
   }
 
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
   checkFilters() {
-    // quita espacios vacios antes de buscar
-    // if (this.filtros.abreviatura != undefined && this.filtros.abreviatura != null) {
-    //   this.filtros.abreviatura = this.filtros.abreviatura.trim();
-    // }
-    // if (this.filtros.nombre != undefined && this.filtros.nombre != null) {
-    //   this.filtros.nombre = this.filtros.nombre.trim();
-    // }
-    return true;
-
+      if((this.filtros.tipo == null ||
+          this.filtros.tipo == undefined) &&
+      (this.filtros.validado == null ||
+          this.filtros.validado == undefined) &&
+      (this.filtros.fechasolicitudhasta == null ||
+          this.filtros.fechasolicitudhasta == undefined
+          ) &&
+      (this.filtros.fechasolicituddesde == null ||
+          this.filtros.fechasolicituddesde == undefined) &&
+      (this.filtros.fechahasta == null ||
+          this.filtros.fechahasta == undefined )&&
+      (this.filtros.fechadesde == null ||
+          this.filtros.fechadesde == undefined )&&
+      (this.filtros.ncolegiado == null ||
+          this.filtros.ncolegiado == undefined ))
+      {
+        this.showSearchIncorrect();
+        return false;
+      } else {
+        return true;
+      }
   }
+
   showMessage(severity, summary, msg) {
     this.msgs = [];
     this.msgs.push({
@@ -122,8 +139,12 @@ export class FiltrosBajasTemporales implements OnInit {
 
   isBuscar() {
 
-    if((<HTMLInputElement>document.querySelector("input[formControlName='numColegiado']")).value != null && (<HTMLInputElement>document.querySelector("input[formControlName='numColegiado']")).value  != ""){
-      this.filtros.ncolegiado = (<HTMLInputElement>document.querySelector("input[formControlName='numColegiado']")).value ;
+    if((<HTMLInputElement>document.querySelector("input[formControlName='numColegiado']")).value != undefined){
+      if((<HTMLInputElement>document.querySelector("input[formControlName='numColegiado']")).value != null && (<HTMLInputElement>document.querySelector("input[formControlName='numColegiado']")).value  != ""){
+        this.filtros.ncolegiado = (<HTMLInputElement>document.querySelector("input[formControlName='numColegiado']")).value ;
+      }else{
+        this.filtros.ncolegiado = null;
+      }
     }else{
       this.filtros.ncolegiado = null;
     }
@@ -199,7 +220,7 @@ export class FiltrosBajasTemporales implements OnInit {
       severity: "error",
       summary: "Incorrecto",
       detail: this.translateService.instant(
-        "cen.busqueda.error.busquedageneral"
+        "oficio.busqueda.error.busquedageneral"
       )
     });
   }

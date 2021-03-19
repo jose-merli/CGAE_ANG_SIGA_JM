@@ -13,6 +13,7 @@ export class BajasTemporalesItem {
   apellidos2:String;
   validado:String;
   fechaalta:Date;
+  fechabt:Date;
   historico:boolean;
   constructor() { }
 }

@@ -250,180 +250,43 @@ export class TablaBajasTemporalesComponent implements OnInit {
 
   }
 
-/*
-  save() {
-    this.progressSpinner = true;
-    let url = "";
-
-    if (this.nuevo) {
-      url = "gestionPartidasPres_createPartidasPres";
-      let partidaPresupuestaria = this.datos[0];
-      this.body = partidaPresupuestaria;
-      this.body.importepartida = this.body.valorNum;
-      this.body.importepartida = this.body.importepartida.replace(",", ".");
-      this.body.importepartidaReal = +this.body.importepartida;
-      if (this.body.importepartida == ".") {
-        this.body.importepartida = 0;
-      }
-      this.callSaveService(url);
-
-    } else {
-      url = "gestionPartidasPres_updatePartidasPres";
-      this.editMode = false;
-      if (this.validateUpdate()) {
-        this.body = new PartidasObject();
-        this.body.partidasItem = this.updatePartidasPres;
-        this.body.partidasItem.forEach(element => {
-          element.importepartida = element.importepartida.replace(",", ".");
-          element.importepartidaReal = +element.importepartida;
-          if (element.importepartida == ".") {
-            element.importepartida = 0;
-          }
-        });
-        this.callSaveService(url);
-      } else {
-        err => {
-
-          if (err.error != undefined && JSON.parse(err.error).error.description != "") {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-          } else {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-          }
-          this.progressSpinner = false;
-        }
-      }
-    }
-
-  }
-  rest() {
-    if (this.datosInicial != undefined) {
-      this.datos = JSON.parse(JSON.stringify(this.datosInicial));
-    } else {
-      this.datos = [];
-    }
-    this.editElementDisabled();
-    this.selectedDatos = [];
-    this.updatePartidasPres = [];
-    this.nuevo = false;
-    this.editMode = false;
-    this.tabla.sortOrder = 0;
-    this.tabla.sortField = '';
-    this.tabla.reset();
-  }
-
-  // rest() {
-  //   if (this.editMode) {
-  //     if (this.datosInicial != undefined) this.datos = JSON.parse(JSON.stringify(this.datosInicial));
-  //   } else {
-  //     this.partidasItem = new PartidasItem();
-  //   }
-  // }
-
-  newPartidaPresupuestaria() {
-    this.nuevo = true;
-    this.editMode = false;
-    this.selectionMode = "single";
-    this.tabla.sortOrder = 0;
-    this.tabla.sortField = '';
-    this.tabla.reset();
-    if (this.datosInicial != undefined && this.datosInicial != null) {
-      this.datos = JSON.parse(JSON.stringify(this.datosInicial));
-    } else {
-      this.datos = [];
-    }
-
-    let partidaPresupuestaria = {
-      nombrepartida: undefined,
-      descripcion: undefined,
-      importepartida: "0",
-      importepartidaReal: 0,
-      idpartidapresupuestaria: undefined,
-      editable: true
-    };
-    if (this.datos.length == 0) {
-      this.datos.push(partidaPresupuestaria);
-    } else {
-      this.datos = [partidaPresupuestaria, ...this.datos];
-    }
-    this.tabla.sortOrder = 0;
-    this.tabla.sortField = '';
-    this.tabla.reset();
-  }
-
-  disabledSave() {
-    if (this.nuevo) {
-      if (this.datos[0].nombrepartida != "" && this.datos[0].descripcion != "" && this.datos[0].nombrepartida != undefined && this.datos[0].descripcion != undefined
-        && this.datos[0].valorNum != undefined) {
-        return false;
-      } else {
-        return true;
-      }
-
-    } else {
-      if (!this.historico && (this.updatePartidasPres != undefined && this.updatePartidasPres.length > 0) && this.permisos) {
-        return false;
-      } else {
-        return true;
-      }
-    }
-  }
-
-
-  validateUpdate() {
-
-    let check = true;
-
-    this.updatePartidasPres.forEach(dato => {
-
-      let findDatos = this.datos.filter(item => item.nombrepartida === dato.nombrepartida && item.descripcion === dato.descripcion && item.importepartida === dato.importepartida);
-
-      if (findDatos != undefined && findDatos.length > 1) {
-        check = false;
-      }
-
-    });
-
-    return check;
-  }
-
   searchHistorical() {
-
     this.historico = !this.historico;
     this.persistenceService.setHistorico(this.historico);
     this.searchPartidas.emit(this.historico);
-    this.selectAll = false
-    // if (this.historico) {
-    //   this.selectMultiple = true;
-    //   this.selectionMode = "multiple";
-    // }
+    this.selectAll = false;
   }
-*/
   checkAnular(){
-    this.selectedDatos;
-    if(this.selectedDatos[0].validado == "Pendiente"){
-      this.datos.validado = "Anular";
-      this.cambioEstado();
-    }else{
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-    }
+    this.selectedDatos.forEach(element => {
+      if(element.validado == "Pendiente"){
+        element.validado = "Anular";
+        this.cambioEstado();
+      }else{
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+      }
+    });
   }
 
   checkDenegar(){
-    if(this.datos.validado == "Pendiente"){
-      this.datos.validado = "Denegar";
-      this.cambioEstado();
-    }else{
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-    }
+    this.selectedDatos.forEach(element => {
+      if(element.validado == "Pendiente"){
+        element.validado = "Denegar";
+        this.cambioEstado();
+      }else{
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+      }
+    });
   }
 
   checkValidar(){
-    if(this.datos.validado == "Pendiente"){
-      this.datos.validado = "Validar";
-      this.cambioEstado();
-    }else{
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-    }
+    this.selectedDatos.forEach(element => {
+      if(element.validado == "Pendiente"){
+        element.validado = "Validar";
+        this.cambioEstado();
+      }else{
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+      }
+    });
   }
 
   cambioEstado() {
@@ -495,7 +358,7 @@ export class TablaBajasTemporalesComponent implements OnInit {
 
 
   setItalic(dato) {
-    if (dato.fechabaja == null) return false;
+    if (dato.eliminado == 1) return false;
     else return true;
   }
 
@@ -507,7 +370,7 @@ export class TablaBajasTemporalesComponent implements OnInit {
       { field: "tiponombre", header: "dato.jgr.guardia.guardias.turno" },
       { field: "descripcion", header: "administracion.auditoriaUsuarios.literal.motivo" },
       { field: "fechadesde", header: "facturacion.seriesFacturacion.literal.fInicio" },
-      { field: "fechahasta", header: "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta" },
+      { field: "fechahasta", header: "facturacion.seriesFacturacion.literal.fFin" },
       { field: "fechaalta", header: "formacion.busquedaInscripcion.fechaSolicitud" },
       { field: "validado", header: "censo.busquedaSolicitudesModificacion.literal.estado" },
       { field: "fechabt", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaEstado" },
@@ -602,8 +465,6 @@ export class TablaBajasTemporalesComponent implements OnInit {
     });
   }
 
-
-
   isSelectMultiple() {
     if (this.permisos && !this.historico) {
       if (this.nuevo) this.datos.shift();
@@ -696,5 +557,22 @@ export class TablaBajasTemporalesComponent implements OnInit {
     } else {
       //this.rest();
     }
+  }
+
+  deleteBajaTemporal(){
+      this.progressSpinner = true;
+      this.sigaServices.post("bajasTemporales_deleteBajaTemporal", this.selectedDatos).subscribe(
+        data => {
+          this.selectedDatos = [];
+          this.searchPartidas.emit(false);
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.progressSpinner = false;
+        },
+        err => {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          
+          this.progressSpinner = false;
+        }
+      ); 
   }
 }

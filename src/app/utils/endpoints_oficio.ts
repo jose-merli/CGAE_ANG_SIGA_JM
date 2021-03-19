@@ -50,11 +50,15 @@ export let endpoints_oficio: any = {
     bajasTemporales_busquedaBajasTemporales:"oficio/bajasTemporales/busquedaBajasTemporales",
     bajasTemporales_nuevaBajaTemporal:"oficio/bajasTemporales/nuevaBajaTemporal",
     bajasTemporales_updateBajaTemporal:"oficio/bajasTemporales/updateEstado",
+    bajasTemporales_deleteBajaTemporal:"oficio/bajasTemporales/deleteBajaTemporal",
     //FIN DE BAJAS TEMPORALES
 
     //justificacion express
     justificacionExpres_busqueda: "oficio/busquedaJustificacionExpres",
 
     //BUSQUEDA DESIGNAS
-    designas_tipoDesignas:"oficio/designas/comboTipoDesigna"
+    designas_tipoDesignas:"oficio/designas/comboTipoDesigna",
+    combo_comboJuzgadoDesignaciones: "combo/comboJuzgadoDesignaciones",
+    combo_comboModulosDesignaciones: "oficio/comboModulo",
+    combo_comboProcedimientosDesignaciones: "oficio/comboProcedimientos"
 }

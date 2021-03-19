@@ -26,10 +26,11 @@ export class FiltroDesignacionesComponent implements OnInit {
   showDesignas: boolean = false;
   showJustificacionExpress: boolean = false;
   checkMostrarPendientes: boolean = true;
-  checkRestricciones: boolean = true;
+  checkRestricciones: boolean = false;
 
   disabledBusquedaExpress: boolean = false;
   showColegiado: boolean = false;
+  esColegiado: boolean = false;
   radioTarjeta: string = 'designas';
 
   //Variables busqueda designas
@@ -37,6 +38,8 @@ export class FiltroDesignacionesComponent implements OnInit {
   body: DesignaItem = new DesignaItem();
   fechaAperturaHastaSelect: Date;
   fechaAperturaDesdeSelect: Date;
+  fechaJustificacionDesdeSelect: Date;
+  fechaJustificacionHastaSelect: Date;
   textFilter: String = "Seleccionar";
   comboEstados: any[];
   comboActuacionesValidadas: any [];
@@ -44,20 +47,28 @@ export class FiltroDesignacionesComponent implements OnInit {
   comboResoluciones: any [];
   comboEJGSinResolucion: any [];
   comboEJGnoFavorable: any [];
-
+  disabledFechaAHasta:boolean = true;
+  disabledfechaJustificacion:boolean = true;
   comboTipoDesigna: any[];
   comboTurno: any[];
   actuacionesV: any[];
   comboArt: any[];
   actuacionesDocu: any[];
+  comboJuzgados: any[];
+  comboModulos: any[];
+  comboCalidad: any[];
+  comboProcedimientos: any[];
+  comboOrigenActuaciones: any[];
 
   constructor(private translateService: TranslateService, private sigaServices: SigaServices) { }
 
   ngOnInit(): void {
     this.filtroJustificacion = new JustificacionExpressItem();
 
+    this. esColegiado = false;
     this.progressSpinner=true;
     this.showDesignas = true;
+    this.checkRestricciones = false;
 
     // this.checkLastRoute();
 
@@ -101,12 +112,9 @@ export class FiltroDesignacionesComponent implements OnInit {
     if(event=='justificacion'){
       this.showDesignas=false;
       this.showJustificacionExpress=true;
+      this.expanded=true;
     }
   }
-
-  // checkLastRoute() {
-  //   this.progressSpinner=false;
-  // }
 
   fillFechasJustificacion(event, campo) {
     if(campo=='justificacionDesde'){
@@ -136,20 +144,65 @@ export class FiltroDesignacionesComponent implements OnInit {
     this.getActuacionesV();
     this.getDocuActuaciones();
     this.getComboArticulo();
+    this.getComboJuzgados();
+    this.getComboModulos();
+    this.getComboCalidad();
+    this.getComboProcedimientos();
+    this.getOrigenActuaciones();
   }
 
   fillFechaAperturaDesde(event) {
-    this.fechaAperturaDesdeSelect = event;
-    if((this.fechaAperturaHastaSelect != null && this.fechaAperturaHastaSelect != undefined) && (this.fechaAperturaDesdeSelect > this.fechaAperturaHastaSelect)){
-      this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('justiciaGratuita.sjcs.designas.mensaje.Fechas')}];
-    }
+    // this.fechaAperturaDesdeSelect = event;
+    // if((this.fechaAperturaHastaSelect != null && this.fechaAperturaHastaSelect != undefined) && (this.fechaAperturaDesdeSelect > this.fechaAperturaHastaSelect)){
+    //   this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('justiciaGratuita.sjcs.designas.mensaje.Fechas')}];
+    // }
   }
 
   fillFechaAperturaHasta(event) {
-    this.fechaAperturaHastaSelect = event;
-    if(this.fechaAperturaDesdeSelect > this.fechaAperturaHastaSelect ){
-      this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('justiciaGratuita.sjcs.designas.mensaje.Fechas')}];
+    // this.fechaAperturaHastaSelect = event;
+    // if(this.fechaAperturaDesdeSelect > this.fechaAperturaHastaSelect ){
+    //   this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('justiciaGratuita.sjcs.designas.mensaje.Fechas')}];
+    // }
+  }
+
+  fillFechaADesdeCalendar(event) {
+    if(event != null){
+      this.fechaAperturaDesdeSelect = this.transformaFecha(event);
+      this.disabledFechaAHasta = false;
+    }else{
+      this.fechaAperturaDesdeSelect = undefined;
+      this.disabledFechaAHasta = true;
     }
+  
+  }
+
+  fillFechaJustificacionDesdeCalendar(event) {
+    if(event != null){
+      this.fechaJustificacionDesdeSelect = this.transformaFecha(event);
+      this.disabledfechaJustificacion = false;
+    }else{
+      this.fechaJustificacionDesdeSelect = undefined;
+      this.disabledfechaJustificacion = true;
+    }
+  
+  }
+
+  transformaFecha(fecha) {
+    if (fecha != null) {
+      let jsonDate = JSON.stringify(fecha);
+      let rawDate = jsonDate.slice(1, -1);
+      if (rawDate.length < 14) {
+        let splitDate = rawDate.split("/");
+        let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+        fecha = new Date((arrayDate += "T00:00:00.001Z"));
+      } else {
+        fecha = new Date(fecha);
+      }
+    } else {
+      fecha = undefined;
+    }
+
+    return fecha;
   }
 
   getComboEstados() {
@@ -209,6 +262,71 @@ export class FiltroDesignacionesComponent implements OnInit {
       {label:'Algunas', value:'ALGUNAS'},
       {label:'Ninguna', value:'NINGUNA'}
     ]
+  }
+
+getComboCalidad() {
+    this.comboCalidad = [
+      {label:'Demandante', value:'DEMANDANTE'},
+      {label:'Demandado', value:'DEMANDADO'}
+    ]
+  }
+
+  getOrigenActuaciones() {
+    this.comboOrigenActuaciones = [
+      {label:'Colegio', value:'COLEGIO'},
+      {label:'Colegiado', value:'COLEGIADO'}
+    ]
+  }
+
+  getComboJuzgados() {
+    this.progressSpinner=true;
+
+    this.sigaServices.get("combo_comboJuzgadoDesignaciones").subscribe(
+      n => {
+        this.comboJuzgados = n.combooItems;
+        this.progressSpinner=false;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner=false;
+      }, () => {
+        this.arregloTildesCombo(this.comboTurno);
+      }
+    );
+  }
+
+  getComboModulos() {
+    this.progressSpinner=true;
+
+    this.sigaServices.get("combo_comboModulosDesignaciones").subscribe(
+      n => {
+        this.comboModulos = n.combooItems;
+        this.progressSpinner=false;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner=false;
+      }, () => {
+        this.arregloTildesCombo(this.comboTurno);
+      }
+    );
+  }
+
+  getComboProcedimientos() {
+    this.progressSpinner=true;
+
+    this.sigaServices.get("combo_comboProcedimientosDesignaciones").subscribe(
+      n => {
+        this.comboProcedimientos = n.combooItems;
+        this.progressSpinner=false;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner=false;
+      }, () => {
+        this.arregloTildesCombo(this.comboTurno);
+      }
+    );
   }
 
   cargaCombosJustificacion(){
@@ -325,8 +443,20 @@ export class FiltroDesignacionesComponent implements OnInit {
     }  
   }
 
-  onChangeChecRestricciones(event) {
+  onChangeCheckRestricciones(event) {
     this.checkRestricciones = event;
+
+    if(!event){
+      this.filtroJustificacion.ejgSinResolucion="2"; 
+      this.filtroJustificacion.sinEJG="2";
+      this.filtroJustificacion.resolucionPTECAJG="2";
+      this.filtroJustificacion.conEJGNoFavorables="2";
+    }else{
+      this.filtroJustificacion.ejgSinResolucion="0"; 
+      this.filtroJustificacion.sinEJG="0";
+      this.filtroJustificacion.resolucionPTECAJG="0";
+      this.filtroJustificacion.conEJGNoFavorables="0";
+    }
   }
 
   getComboArticulo() {
@@ -356,6 +486,13 @@ export class FiltroDesignacionesComponent implements OnInit {
 
   getDataLoggedUser() {
     this.progressSpinner = true;
+    this.esColegiado = false;
+    
+    //si es colegio, valor por defecto para justificacion
+    this.filtroJustificacion.ejgSinResolucion="2"; 
+    this.filtroJustificacion.sinEJG="2";
+    this.filtroJustificacion.resolucionPTECAJG="2";
+    this.filtroJustificacion.conEJGNoFavorables="2";
 
     this.sigaServices.get("usuario_logeado").subscribe(n => {
 
@@ -368,6 +505,18 @@ export class FiltroDesignacionesComponent implements OnInit {
         this.usuarioBusquedaExpress.numColegiado = numColegiado;
         this.usuarioBusquedaExpress.nombreAp = nombre;
         this.showColegiado = true;
+        this.progressSpinner = false;
+
+        //es colegiado, filtro por defecto para justificacion
+        this.filtroJustificacion.ejgSinResolucion="0";
+        this.filtroJustificacion.sinEJG="0";
+        this.filtroJustificacion.resolucionPTECAJG="0";
+        this.filtroJustificacion.conEJGNoFavorables="0";
+
+        this.esColegiado = true;
+        this.checkRestricciones = true;
+      },
+      err =>{
         this.progressSpinner = false;
       });
 
