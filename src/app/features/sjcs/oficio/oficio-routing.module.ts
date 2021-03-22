@@ -6,6 +6,7 @@ import { FichaTurnosComponent } from './turnos/ficha-turnos/ficha-turnos.compone
 import { InscripcionesComponent } from './inscripciones/busqueda-inscripciones.component';
 import { FichaInscripcionesComponent } from './inscripciones/ficha-inscripciones/ficha-inscripciones.component';
 import { BajasTemporalesComponent } from './bajas-temporales/busqueda-bajas-temporales.component';
+import { CargasMasivasOficioComponent } from './cargas-masivas-oficio/cargas-masivas-oficio.component';
 
 
 const routesOficio: Routes = [
@@ -32,6 +33,11 @@ const routesOficio: Routes = [
   {
     path: "bajasTemporales",
     component: BajasTemporalesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "cargasMasivasOficio",
+    component: CargasMasivasOficioComponent,
     canActivate: [AuthGuard]
   },
 ];

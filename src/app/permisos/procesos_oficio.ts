@@ -17,4 +17,7 @@ export const procesos_oficio: any = {
     tarjetaResumenInscripciones:"99P",
     tarjetaResumenCola:"93P",
     //FIN INSCRIPCIONES TURNO
+
+    cargasMasivasOficio:"97M"
+    //FIN CARGAS MASIVAS
 }

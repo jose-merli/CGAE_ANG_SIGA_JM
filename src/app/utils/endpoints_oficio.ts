@@ -56,6 +56,8 @@ export let endpoints_oficio: any = {
     //justificacion express
     justificacionExpres_busqueda: "oficio/busquedaJustificacionExpres",
 
+    cargasMasivasOficio_comboguardias: "oficio/cargasMasivasOficio/comboGuardias",
+
     //BUSQUEDA DESIGNAS
     designas_tipoDesignas:"oficio/designas/comboTipoDesigna",
     combo_comboJuzgadoDesignaciones: "combo/comboJuzgadoDesignaciones",
