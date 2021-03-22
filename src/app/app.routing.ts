@@ -147,6 +147,7 @@ import { ComunicaCargaComponent } from './features/sjcs/comunicaciones/comunica-
 import { ComunicaResolucionesComponent } from './features/sjcs/comunicaciones/comunica-resoluciones/comunica-resoluciones.component';
 import { ComunicaDesignacionesComponent } from './features/sjcs/comunicaciones/comunica-designaciones/comunica-designaciones.component';
 import { DesignacionesComponent } from './features/sjcs/oficio/designaciones/designaciones.component';
+import { CargasMasivasOficioComponent } from './features/sjcs/oficio/cargas-masivas-oficio/cargas-masivas-oficio.component';
 
 //Consultas
 import { RecuperarConsultasComponent } from './features/consultas/recuperar-consultas/recuperar-consultas.component';
@@ -686,6 +687,12 @@ const appRoutes: Routes = [
     {
 		path: 'costesFijos',
 		loadChildren: './features/sjcs/sjcs.module#SjcsModule'
+	},
+	{
+		
+		path: 'cargasMasivasOficio',
+		component: CargasMasivasOficioComponent,
+		canActivate: [ AuthGuard ]
 	},
 	{
 		path: 'funcamentosCalificacion',
