@@ -50,12 +50,13 @@ export class FiltrosBajasTemporales implements OnInit {
     nombreAp: ''
   }​​​​​​​​​;
 
+  nuevaBaja = false;
   progressSpinner = false;
   comboEstado: any;
 
   @Input() permisos;
   /*Éste método es útil cuando queremos queremos informar de cambios en los datos desde el hijo,
-    por ejemplo, si tenemos un botón en el componente hijo y queremos actualizar los datos del padre.*/
+    por ejemplo, si tenemos un boStón en el componente hijo y queremos actualizar los datos del padre.*/
   @Output() busqueda = new EventEmitter<boolean>();
 
   constructor(private router: Router,
@@ -153,7 +154,8 @@ export class FiltrosBajasTemporales implements OnInit {
       this.persistenceService.setFiltros(this.filtros);
       this.persistenceService.setFiltrosAux(this.filtros);
       this.filtroAux = this.persistenceService.getFiltrosAux()
-      this.busqueda.emit(false)
+      this.busqueda.emit(false);
+      this.nuevaBaja = true;
     }
   }
 
@@ -276,19 +278,7 @@ export class FiltrosBajasTemporales implements OnInit {
   }
 
   nuevaBajaTemporal(){
-
-    this.progressSpinner = true;
-
-    let colegiado = sessionStorage.getItem("buscadorColegiados");
-
-    this.sigaServices.post("bajasTemporales_nuevaBajaTemporal", colegiado).subscribe(
-      n => {
-       this.progressSpinner = false;
-      },
-      err => {
-        this.progressSpinner = false;
-        console.log(err);
-      }
-    );
+    //this.nuevaBaja.emit(true);
+    this.busqueda;
   }
 }

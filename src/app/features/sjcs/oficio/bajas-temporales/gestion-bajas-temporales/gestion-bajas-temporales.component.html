@@ -4,9 +4,9 @@
   <div class="card-body p-0">
     <!-- TABLA RESULTADOS -->
 
-    <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [(selectionMode)]="selectionMode"
-      [responsive]="true" [first]="first" #table class="tabla-listado overflow" [paginator]="true" [rows]="selectedItem"
-      (onRowSelect)="edit($event)" (onRowUnselect)="actualizaSeleccionados($event, selectedDatos)" [paginator]="true"
+    <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple"
+      [responsive]="true" [first]="first" #table class="tabla-listado" [paginator]="true" [rows]="selectedItem"
+      (onRowSelect)="edit(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
       [ngClass]="{'customCursor': selectMultiple}" paginatorPosition="both" id="tablaFoco">
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
@@ -31,18 +31,18 @@
               <span
                 [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
             </div>
-            <div *ngIf="!dato.editable && !setItalic(dato) && col.field =='nombre'">
+             <div *ngIf="!dato.editable && !setItalic(dato) && col.field =='nombre'">
               <span>{{dato.apellidos1}} {{dato.apellidos2}}, {{dato[col.field] }}</span>
             </div>
             <div *ngIf="dato.editable && !setItalic(dato) && col.field =='nombre'">
               <span>{{dato.apellidos1}} {{dato.apellidos2}}, {{dato[col.field] }}</span>
             </div>
-            <div *ngIf="!dato.editable && !setItalic(dato) && col.field !='nombre' && col.field !='fechadesde' && col.field !='fechahasta' && col.field !='fechaalta'">
+            <div *ngIf="!dato.editable && !setItalic(dato) && col.field !='nombre' && col.field !='fechadesde' && col.field !='fechahasta' && col.field !='fechaalta' && col.field != 'fechabt'">
               <span>{{dato[col.field]}}</span>
             </div>
-            <div *ngIf="dato.editable && !setItalic(dato) && col.field !='nombre' && col.field !='tiponombre' && col.field !='fechadesde' && col.field !='fechahasta' && col.field !='descripcion' && col.field !='fechaalta' && col.field !='validado'">
+            <div *ngIf="dato.editable && !setItalic(dato) && col.field !='nombre' && col.field !='fechadesde' && col.field !='fechahasta' && col.field !='fechaalta' && col.field != 'fechabt'">
               <span>{{dato[col.field]}}</span>
-            </div>
+            </div>-->
             <div *ngIf="!dato.editable && !setItalic(dato) && col.field =='fechadesde'">
               <span>{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
             </div>
@@ -52,10 +52,15 @@
             <div *ngIf="!dato.editable && !setItalic(dato) && col.field =='fechaalta'">
               <span>{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
             </div>
-            <div *ngIf="!dato.editable && !setItalic(dato) && col.field =='fechaestado'">
+            <div *ngIf="!dato.editable && !setItalic(dato) && col.field =='fechabt'">
               <span>{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
             </div>
-
+            <div *ngIf="dato.editable && !setItalic(dato) && col.field =='fechabt'">
+              <span>{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
+            </div>
+            <div *ngIf="dato.editable && !setItalic(dato) && col.field =='fechaalta'">
+              <span>{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
+            </div>
             <div *ngIf="dato.editable && col.field=='tiponombre'">
               <p-dropdown class="select-form" [(ngModel)]='dato.tipo' placeholder="Seleccionar" [options]="comboTipo"
               [filter]="true" [disabled]="disabledestado" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
@@ -65,7 +70,7 @@
               <app-fecha [(value)]='dato.fechadesde' (valueChangeInput)="fillFechaDesdeCalendar($event)" (valueChangeSelected)="fillFechaDesdeCalendar($event)"></app-fecha>
             </div>
             <div *ngIf="dato.editable && col.field=='fechahasta'">
-              <app-fecha [(value)]='dato.fechahasta' (valueChangeInput)="fillFechaHastaSolicitudCalendar($event)" (valueChangeSelected)="fillFechaHastaSolicitudCalendar($event)"></app-fecha>
+              <app-fecha [(value)]='dato.fechahasta' (valueChangeInput)="fillFechaHastaCalendar($event)" (valueChangeSelected)="fillFechaHastaCalendar($event)"></app-fecha>
             </div>
             <div *ngIf="dato.editable && col.field=='descripcion'">
               <input class="form-control paddingInput" [(ngModel)]="dato.descripcion" name="descripcion" type="text
@@ -111,9 +116,6 @@
               label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname" [disabled]="!permisos">
             </p-checkbox>
           </div>
-          <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}"
-            (click)="isSelectMultiple()">
-          <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate }} </label>
         </div>
       </ng-template>
     </p-table>
@@ -122,11 +124,11 @@
   <div class="card-footer">
     <div class="text-right main-button">
 
-      <button pButton (click)="checkAnular()" type="button" iconPos="left" label="{{ 'general.boton.anular' | translate}}"></button>
+      <button pButton (click)="checkAnular()" [disabled]="!permisos || selectedDatos.length == 0" type="button" iconPos="left" label="{{ 'general.boton.anular' | translate}}"></button>
       
-      <button pButton (click)="checkValidar()" type="button" iconPos="left" label="{{ 'general.boton.validar' | translate}}"></button>
+      <button pButton (click)="checkValidar()" [disabled]="!permisos || selectedDatos.length == 0" type="button" iconPos="left" label="{{ 'general.boton.validar' | translate}}"></button>
       
-      <button pButton (click)="checkDenegar()" type="button" iconPos="left" label="{{ 'general.boton.denegar' | translate}}"></button>
+      <button pButton (click)="checkDenegar()" [disabled]="!permisos || selectedDatos.length == 0" type="button" iconPos="left" label="{{ 'general.boton.denegar' | translate}}"></button>
 
       <button *ngIf="!historico" pButton [disabled]="!permisos || selectedDatos.length == 0"
         (click)="deleteBajaTemporal()" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>

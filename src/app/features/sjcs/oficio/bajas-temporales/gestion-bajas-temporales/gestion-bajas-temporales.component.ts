@@ -1,12 +1,10 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, Output, EventEmitter, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../commons/translate/translation.service';
-import { PartidasObject } from '../../../../../models/sjcs/PartidasObject';
 import { DataTable } from 'primeng/primeng';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { CommonsService } from '../../../../../_services/commons.service';
-import { BajasTemporalesItem } from '../../../../../models/sjcs/BajasTemporalesItem';
 
 
 @Component({
@@ -49,7 +47,6 @@ export class TablaBajasTemporalesComponent implements OnInit {
   public ascNumberSort = true;
   permisos: boolean = false;
   initDatos;
-  fechaDeHoy;
   nuevo: boolean = false;
   progressSpinner: boolean = false;
   selectionMode: string = "single";
@@ -67,11 +64,11 @@ export class TablaBajasTemporalesComponent implements OnInit {
     { label: "Pendiente", value: "2" || null },
     { label: "Anulada", value: "3" }
   ];
+
+  activacionEditar: boolean;
+
   //Resultados de la busqueda
   @Input() datos;
-
-  //Combo partidos judiciales
-  comboPJ;
 
   @Output() searchPartidas = new EventEmitter<boolean>();
 
@@ -131,38 +128,13 @@ export class TablaBajasTemporalesComponent implements OnInit {
 
   }
 
-  edit(evento) {
-    if (this.selectedDatos == undefined) {
-      this.selectedDatos = [];
-    }
-    if (!this.nuevo && this.permisos) {
-
-      if (!this.selectAll && !this.selectMultiple && !this.historico) {
-
-        this.datos.forEach(element => {
-          element.editable = false;
-          element.overlayVisible = false;
-        });
-
-        evento.data.editable = true;
-        this.editMode = true;
-
-        this.selectedDatos = [];
-        this.selectedDatos.push(evento.data);
-      
-        this.datos.forEach(element => {
-          element.fechadesde = new Date(element.fechadesde);
-        });
-        let findDato = this.datosInicial.find(item => item.tiponombre === this.selectedDatos[0].tiponombre);
-
-        this.selectedBefore = findDato;
-      } else {
-        if ((evento.data.fechabaja == null || evento.data.fechabaja == undefined) && this.historico) {
-          if (this.selectedDatos[0] != undefined) {
-          } else {
-            this.selectedDatos = [];
-          }
-        }
+  edit(event) {
+    if (event != undefined) {
+      this.numSelected = this.selectedDatos.length
+      if(this.numSelected > 1){
+        event.editable = false;
+      }else{
+        event.editable = true;
       }
     }
   }
@@ -358,8 +330,11 @@ export class TablaBajasTemporalesComponent implements OnInit {
 
 
   setItalic(dato) {
-    if (dato.eliminado == 1) return false;
-    else return true;
+    if (dato.eliminado == 0){
+      return false;
+    }else{ 
+      return true;
+    }
   }
 
   getCols() {
@@ -370,7 +345,7 @@ export class TablaBajasTemporalesComponent implements OnInit {
       { field: "tiponombre", header: "dato.jgr.guardia.guardias.turno" },
       { field: "descripcion", header: "administracion.auditoriaUsuarios.literal.motivo" },
       { field: "fechadesde", header: "facturacion.seriesFacturacion.literal.fInicio" },
-      { field: "fechahasta", header: "facturacion.seriesFacturacion.literal.fFin" },
+      { field: "fechahasta", header: "censo.consultaDatos.literal.fechaFin" },
       { field: "fechaalta", header: "formacion.busquedaInscripcion.fechaSolicitud" },
       { field: "validado", header: "censo.busquedaSolicitudesModificacion.literal.estado" },
       { field: "fechabt", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaEstado" },
@@ -489,16 +464,14 @@ export class TablaBajasTemporalesComponent implements OnInit {
   }
 
 
-  actualizaSeleccionados(event,selectedDatos) {
-    this.selectedDatosCopy = [];
-    if(event != undefined){
-      this.selectedDatosCopy.push(event.data);
-    }
-    if (this.selectedDatos == undefined) {
-      this.selectedDatos = [];
-    }
-    if (selectedDatos != undefined) {
+  actualizaSeleccionados(selectedDatos) {
+    if (this.selectedDatos != undefined) {
+      if(this.selectedDatos.length == 1){
+        this.activacionEditar = true;
+      }
       this.numSelected = selectedDatos.length;
+    } else {
+      this.selectedDatos = [];
     }
     
   }
@@ -527,10 +500,28 @@ export class TablaBajasTemporalesComponent implements OnInit {
     }
   }
 
-  fillFechaHastaSolicitudCalendar(event) {
-    this.selectedDatos.forEach(element => {
-      element.fechahasta = this.transformaFecha(event);
-    });
+  fillFechaHastaCalendar(event) {
+    if(this.selectedDatos.length > 0){
+      let findDato = this.datos.find(item => item.editable === this.selectedDatos[0].editable);
+      if(findDato != undefined){
+        this.datos.forEach(element => {
+          if(element == findDato){
+            element.fechahasta = this.transformaFecha(event);
+            // this.selectedDatos.push(element);
+          }
+        });
+      }
+    }else{
+     let dato = this.datos.find(item => item.editable == this.selectedDatosCopy[0].editable);
+     if(dato != undefined){
+       this.datos.forEach(element => {
+         if(element == dato){
+           element.fechahasta = this.transformaFecha(event);
+           this.selectedDatos.push(element);
+         }
+       });
+     }
+    }
   }
 
   showMessage(severity, summary, msg) {
@@ -544,9 +535,6 @@ export class TablaBajasTemporalesComponent implements OnInit {
 
   clear() {
     this.msgs = [];
-  }
-  obtenerPartidos(dato) {
-    return dato.nombrepartidosjudiciales;
   }
 
   checkPermisosRest() {
