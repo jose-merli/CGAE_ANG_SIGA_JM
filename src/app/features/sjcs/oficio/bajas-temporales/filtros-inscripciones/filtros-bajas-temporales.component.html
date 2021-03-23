@@ -53,7 +53,7 @@
     <div *ngIf="showDatosGenerales" class="module vista-avanzada">
       <div class="form-row">
         <div class="form-group-interlineado col-lg-12 col-md-12">
-          <app-busqueda-colegiado-express [pantalla]="'ejg'" [numColegiado]="usuarioBusquedaExpress.numColegiado" [nombreAp]="usuarioBusquedaExpress.nombreAp"></app-busqueda-colegiado-express>
+          <app-busqueda-colegiado-express [pantalla]="'ejg'" [(numColegiado)]="usuarioBusquedaExpress.numColegiado" [(nombreAp)]="usuarioBusquedaExpress.nombreAp" (colegiado)="updateColegiado($event)"></app-busqueda-colegiado-express>
         </div>
       </div>
     </div>
@@ -64,7 +64,6 @@
     <div class="text-right main-button">
       <button (click)="clearFilters()" pButton type="button" icon="fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate}}"></button>
       <button (click)="isBuscar()" pButton type="button" icon="fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"></button>
-      <button (click)="checkNuevaBajaTemporal()" [disabled]="!permisos || nuevaBaja" pButton type="button" icon="fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
     </div>
   </div>
 </div>

@@ -18,26 +18,11 @@ export class FiltrosBajasTemporales implements OnInit {
   showDatosGenerales: boolean = true;
   buscar: boolean = false;
   filtroAux: BajasTemporalesItem = new BajasTemporalesItem();
-  isDisabledMateria: boolean = true;
-  isDisabledSubZona: boolean = true;
-  turnos: any[] = [];
   disabledFechaHasta:boolean = true;
   disabledFechaSolicitudHasta:boolean = true;
-  partidoJudicial: string;
-  resultadosPoblaciones: any;
   disabledestado: boolean = false;
   msgs: any[] = [];
   filtros: BajasTemporalesItem = new BajasTemporalesItem();
-  jurisdicciones: any[] = [];
-  areas: any[] = [];
-  tiposturno: any[] = [];
-  zonas: any[] = [];
-  subzonas: any[] = [];
-  materias: any[] = [];
-  partidas: any[] = [];
-  partidasJudiciales: any[] = [];
-  grupofacturacion: any[] = [];
-  comboPJ;
   comboTipo = [
     { label: "Vacaciones", value: "V" },
     { label: "Maternidad", value: "M" },
@@ -50,7 +35,7 @@ export class FiltrosBajasTemporales implements OnInit {
     nombreAp: ''
   }​​​​​​​​​;
 
-  nuevaBaja = false;
+  nuevaBaja = true;
   progressSpinner = false;
   comboEstado: any;
 
@@ -89,17 +74,25 @@ export class FiltrosBajasTemporales implements OnInit {
       this.usuarioBusquedaExpress.numColegiado=busquedaColegiado.nColegiado;
     }​​
     
-    
-    /*if(sessionStorage.getItem("nuevaBaja")){
-      this.isBuscar();
-    }
-*/
-    if(sessionStorage.getItem("nuevaBaja")){
-      this.nuevaBajaTemporal();
-    }
+  if((this.filtros.tipo == null ||
+      this.filtros.tipo == undefined) &&
+    (this.filtros.validado == null ||
+      this.filtros.validado == undefined) &&
+    (this.filtros.fechasolicitudhasta == null ||
+      this.filtros.fechasolicitudhasta == undefined) &&
+    (this.filtros.fechasolicituddesde == null ||
+      this.filtros.fechasolicituddesde == undefined) &&
+    (this.filtros.fechahasta == null ||
+      this.filtros.fechahasta == undefined )&&
+    (this.filtros.fechadesde == null ||
+      this.filtros.fechadesde == undefined )&&
+    (this.usuarioBusquedaExpress.numColegiado == null ||
+      this.usuarioBusquedaExpress.numColegiado == "" )){
 
+  }else{
+    this.isBuscar();
+  }
     
-    sessionStorage.removeItem("nuevaBaja");
   }
 
   onHideDatosGenerales() {
@@ -111,16 +104,15 @@ export class FiltrosBajasTemporales implements OnInit {
       (this.filtros.validado == null ||
           this.filtros.validado == undefined) &&
       (this.filtros.fechasolicitudhasta == null ||
-          this.filtros.fechasolicitudhasta == undefined
-          ) &&
+          this.filtros.fechasolicitudhasta == undefined) &&
       (this.filtros.fechasolicituddesde == null ||
           this.filtros.fechasolicituddesde == undefined) &&
       (this.filtros.fechahasta == null ||
           this.filtros.fechahasta == undefined )&&
       (this.filtros.fechadesde == null ||
           this.filtros.fechadesde == undefined )&&
-      (this.filtros.ncolegiado == null ||
-          this.filtros.ncolegiado == undefined ))
+      (this.usuarioBusquedaExpress.numColegiado == null ||
+          this.usuarioBusquedaExpress.numColegiado == "" ))
       {
         this.showSearchIncorrect();
         return false;
@@ -140,9 +132,9 @@ export class FiltrosBajasTemporales implements OnInit {
 
   isBuscar() {
 
-    if((<HTMLInputElement>document.querySelector("input[formControlName='numColegiado']")).value != undefined){
-      if((<HTMLInputElement>document.querySelector("input[formControlName='numColegiado']")).value != null && (<HTMLInputElement>document.querySelector("input[formControlName='numColegiado']")).value  != ""){
-        this.filtros.ncolegiado = (<HTMLInputElement>document.querySelector("input[formControlName='numColegiado']")).value ;
+    if(this.usuarioBusquedaExpress.nombreAp != undefined){
+      if(this.usuarioBusquedaExpress.numColegiado!= null && this.usuarioBusquedaExpress.numColegiado  != ""){
+        this.filtros.ncolegiado = this.usuarioBusquedaExpress.numColegiado;
       }else{
         this.filtros.ncolegiado = null;
       }
@@ -151,11 +143,14 @@ export class FiltrosBajasTemporales implements OnInit {
     }
 
     if (this.checkFilters()) {
-      this.persistenceService.setFiltros(this.filtros);
-      this.persistenceService.setFiltrosAux(this.filtros);
-      this.filtroAux = this.persistenceService.getFiltrosAux()
-      this.busqueda.emit(false);
-      this.nuevaBaja = true;
+      if(this.usuarioBusquedaExpress.numColegiado != ""){
+        this.filtros.ncolegiado = this.usuarioBusquedaExpress.numColegiado
+      }
+        this.persistenceService.setFiltros(this.filtros);
+        this.persistenceService.setFiltrosAux(this.filtros);
+        this.filtroAux = this.persistenceService.getFiltrosAux();
+        this.busqueda.emit(false);
+        this.nuevaBaja = false
     }
   }
 
@@ -266,19 +261,8 @@ export class FiltrosBajasTemporales implements OnInit {
       );
   }
 
-  checkNuevaBajaTemporal(){
-    if(sessionStorage.getItem("nuevaBaja")){
-      sessionStorage.removeItem("nuevaBaja");
-    }
-
-    sessionStorage.setItem("nuevaBaja", "true");
-    
-    this.router.navigate(["/buscadorColegiados"]);
-    
-  }
-
-  nuevaBajaTemporal(){
-    //this.nuevaBaja.emit(true);
-    this.busqueda;
+  updateColegiado(event) {
+    this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
+    this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
   }
 }

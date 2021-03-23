@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Output, EventEmitter} from '@angular/core';
+import { Component, OnInit, ViewChild, Input,Output, EventEmitter} from '@angular/core';
 import { Message } from 'primeng/components/common/api';
 import { Location } from '@angular/common';
 import { FiltroBuscadorColegiadosComponent } from './filtro-buscador-colegiados/filtro-buscador-colegiados.component';
@@ -25,6 +25,8 @@ export class BuscadorColegiadosComponent implements OnInit {
   @ViewChild(FiltroBuscadorColegiadosComponent) filtro;
   
   @ViewChild(TablaBuscadorColegiadosComponent) tabla;
+
+  @Input() volver;
 
   constructor(private router: Router, private persistenceService: PersistenceService, private location: Location, private sigaServices: SigaServices, private translateService: TranslateService) { }
 
@@ -104,6 +106,11 @@ export class BuscadorColegiadosComponent implements OnInit {
     }
     else{
     sessionStorage.setItem("buscadorColegiados", JSON.stringify(event));
+    
+    if(event.nColegiado!=null &&  event.nColegiado!=undefined && event.nColegiado != ""){
+      sessionStorage.setItem("volverBaja","true");
+    }
+    
     this.location.back();
     }
   }

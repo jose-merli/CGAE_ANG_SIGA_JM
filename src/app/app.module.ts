@@ -195,6 +195,7 @@ import { MaestroPJComponent } from './features/sjcs/maestros/maestro-pj/maestro-
 import { DestinatariosRetencionesComponent } from './features/sjcs/maestros/destinatarios-retenciones/destinatarios-retenciones.component';
 import { SolicitudesTurnosGuardiasComponent } from './features/sjcs/oficio/solicitudesTurnosGuardias/solicitudesTurnosGuardias.component';
 import { SaltosYCompensacionesComponent } from './features/sjcs/oficio/saltos-compensaciones/saltos-compensaciones.component';
+import { DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-datos-adicionales-ficha-designacion-oficio/detalle-tarjeta-datos-adicionales-ficha-designacion-oficio.component';
 import { GuardiasSolicitudesTurnosComponent } from './features/sjcs/guardia/solicitudes-turnos/solicitudes-turnos.component';
 import { GuardiasIncompatibilidadesComponent } from './features/sjcs/guardia/guardias-incompatibilidades/guardias-incompatibilidades.component';
 import { ProgramacionCalendariosComponent } from './features/sjcs/guardia/programacionCalendarios/programacionCalendarios.component';
@@ -239,6 +240,7 @@ import { MutualidadAbogaciaSeguroAccidentes } from './features/censo/solicitudes
 import { AlterMutuaRetaComponent } from './features/censo/solicitudes-incorporacion/alter-mutua/alterMutuaReta/alter-mutua-reta.component';
 import { AlterMutuaComponent } from './features/censo/solicitudes-incorporacion/alter-mutua/alter-mutua.component';
 import { AlterMutuaOfertasComponent } from './features/censo/solicitudes-incorporacion/alter-mutua/alterMutuaOfertas/alter-mutua-ofertas.component';
+import { CargasMasivasOficioComponent } from './features/sjcs/oficio/cargas-masivas-oficio/cargas-masivas-oficio.component';
 
 //Consultas
 import { RecuperarConsultasComponent } from './features/consultas/recuperar-consultas/recuperar-consultas.component';
@@ -384,11 +386,31 @@ import { BuscadorColegiadosComponent } from './commons/buscador-colegiados/busca
 import { FiltroBuscadorColegiadosComponent } from './commons/buscador-colegiados/filtro-buscador-colegiados/filtro-buscador-colegiados.component';
 import { TablaBuscadorColegiadosComponent } from './commons/buscador-colegiados/tabla-buscador-colegiados/tabla-buscador-colegiados.component';
 import { MigasDePanComponent } from './commons/migas-de-pan/migas-de-pan.component';
+import { FormularioBusquedaComponent } from './features/sjcs/oficio/cargas-masivas-oficio/formulario-busqueda/formulario-busqueda.component';
+import { DatePickerRangeComponent } from './commons/date-picker-range/date-picker-range.component';
+import { HoraComponent } from './commons/hora/hora.component';
+import { InputDivididoComponent } from './commons/input-dividido/input-dividido.component';
+import { TablaResultadoMixComponent } from './commons/tabla-resultado-mix/tabla-resultado-mix.component';
+import { FichaDesignacionesComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/ficha-designaciones.component';
+import { DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-datos-facturacion-ficha-designacion-oficio/detalle-tarjeta-datos-facturacion-ficha-designacion-oficio.component';
+import { DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-datos-generales-ficha-designacion-oficio/detalle-tarjeta-datos-generales-ficha-designacion-oficio.component';
+import { DetalleTarjetaDetalleFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-detalle-ficha-designacion-oficio/detalle-tarjeta-detalle-ficha-designacion-oficio.component';
+import { DetalleTarjetaDocumentacionFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-documentacion-ficha-designacion-oficio/detalle-tarjeta-documentacion-ficha-designacion-oficio.component';
+import { TablaResultadoOrderComponent } from './commons/tabla-resultado-order/tabla-resultado-order.component';
+import { TablaSimpleComponent } from './commons/tabla-simple/tabla-simple.component';
+import { TarjetaComponent } from './commons/tarjeta/tarjeta.component';
 
 @NgModule({
 	declarations: [
 		AppComponent,
 		ImagePipe,
+		DatePickerRangeComponent,
+		HoraComponent,
+		InputDivididoComponent,
+		TablaResultadoMixComponent,
+		TablaResultadoOrderComponent,
+		TablaSimpleComponent,
+		TarjetaComponent,
 
 		MyIframeComponent,
 		MenuComponent,
@@ -497,6 +519,12 @@ import { MigasDePanComponent } from './commons/migas-de-pan/migas-de-pan.compone
 		MaestroPJComponent,
 		SolicitudesTurnosGuardiasComponent,
 		SaltosYCompensacionesComponent,
+		DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent,
+		FichaDesignacionesComponent,
+		DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent,
+		DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent,
+		DetalleTarjetaDetalleFichaDesignacionOficioComponent,
+		DetalleTarjetaDocumentacionFichaDesignacionOficioComponent,
 		GuardiasSolicitudesTurnosComponent,
 		GuardiasIncompatibilidadesComponent,
 		ProgramacionCalendariosComponent,
@@ -537,6 +565,7 @@ import { MigasDePanComponent } from './commons/migas-de-pan/migas-de-pan.compone
 		ComunicaCargaComponent,
 		ComunicaResolucionesComponent,
 		ComunicaDesignacionesComponent,
+		CargasMasivasOficioComponent,
 
 		//Consultas
 		RecuperarConsultasComponent,
@@ -699,9 +728,13 @@ import { MigasDePanComponent } from './commons/migas-de-pan/migas-de-pan.compone
 		PaginadorComponent,
 		TablaResultadoComponent,
 		SelectorComponent,
-		MigasDePanComponent
+		MigasDePanComponent,
+		FormularioBusquedaComponent
+
 	],
 	imports: [
+		
+
 		BrowserModule,
 		BrowserAnimationsModule,
 		HttpClientModule,

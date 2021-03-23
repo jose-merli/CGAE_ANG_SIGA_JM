@@ -31,7 +31,6 @@ export class TablaBajasTemporalesComponent implements OnInit {
   disabledValidar: boolean = false;
   disabledDenegar: boolean = false;
   body;
-  partidasJudiciales: any[] = [];
   updateBajasTemporales = [];
   selectedItem: number = 10;
   selectAll;
@@ -65,7 +64,7 @@ export class TablaBajasTemporalesComponent implements OnInit {
     { label: "Anulada", value: "3" }
   ];
 
-  activacionEditar: boolean;
+  nuevaBaja:boolean = false;
 
   //Resultados de la busqueda
   @Input() datos;
@@ -101,6 +100,25 @@ export class TablaBajasTemporalesComponent implements OnInit {
       this.first = paginacion.paginacion;
       this.selectedItem = paginacion.selectedItem;
     }
+
+    if(sessionStorage.getItem("volverBaja") && sessionStorage.getItem('buscadorColegiados')){
+      this.nuevaBaja = true;
+      this.datos.editable = false;
+        const { nombre, apellidos, nColegiado } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
+        console.log(nColegiado);
+        const newLine = {
+          'ncolegiado': nColegiado,
+          'nombre': apellidos +', '+nombre,
+          'tiponombre': '',
+          'descripcion': '',
+          'fechadesde': new Date(),
+          'fechahasta': '',
+          'fechaalta': '',
+          'validado': 'Pendiente',
+          'fechabt': ''
+        };
+        this.datos= [newLine,...this.datos];
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -128,16 +146,42 @@ export class TablaBajasTemporalesComponent implements OnInit {
 
   }
 
-  edit(event) {
-    if (event != undefined) {
-      this.numSelected = this.selectedDatos.length
-      if(this.numSelected > 1){
-        event.editable = false;
-      }else{
-        event.editable = true;
+  edit(evento) {
+    if (this.selectedDatos == undefined) {
+      this.selectedDatos = [];
+    }
+    if (!this.nuevo && this.permisos) {
+
+      if (!this.selectAll && !this.selectMultiple && !this.historico) {
+
+        this.datos.forEach(element => {
+          element.editable = false;
+          element.overlayVisible = false;
+        });
+
+        evento.data.editable = true;
+        this.editMode = true;
+
+        this.selectedDatos = [];
+        this.selectedDatos.push(evento.data);
+      
+        this.datos.forEach(element => {
+          element.fechadesde = new Date(element.fechadesde);
+        });
+        let findDato = this.datosInicial.find(item => item.tiponombre === this.selectedDatos[0].tiponombre);
+
+        this.selectedBefore = findDato;
+      } else {
+        if ((evento.data.fechabaja == null || evento.data.fechabaja == undefined) && this.historico) {
+          if (this.selectedDatos[0] != undefined) {
+          } else {
+            this.selectedDatos = [];
+          }
+        }
       }
     }
   }
+
 
   mySort(event: any, field: string) {
     if (event.order === 1) {
@@ -261,9 +305,17 @@ export class TablaBajasTemporalesComponent implements OnInit {
     });
   }
 
-  cambioEstado() {
+  checkSave(){
+    if(this.nuevaBaja){
+      this.insertarBaja();
+    }else{
+      this.cambioEstado();
+    }
+  }
+
+  insertarBaja(){
     this.progressSpinner = true;
-    this.sigaServices.post("bajasTemporales_updateBajaTemporal", this.selectedDatos).subscribe(
+    this.sigaServices.post("bajasTemporales_nuevaBajaTemporal", this.selectedDatos).subscribe(
       data => {
         this.selectedDatos = [];
         this.searchPartidas.emit(false);
@@ -275,7 +327,24 @@ export class TablaBajasTemporalesComponent implements OnInit {
         
         this.progressSpinner = false;
       }
-    );  
+    );
+  }
+
+  cambioEstado() {
+    this.progressSpinner = true;
+      this.sigaServices.post("bajasTemporales_updateBajaTemporal", this.selectedDatos).subscribe(
+        data => {
+          this.selectedDatos = [];
+          this.searchPartidas.emit(false);
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.progressSpinner = false;
+        },
+        err => {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          
+          this.progressSpinner = false;
+        }
+      );
   }
 
   onChangeSelectAll() {
@@ -330,7 +399,7 @@ export class TablaBajasTemporalesComponent implements OnInit {
 
 
   setItalic(dato) {
-    if (dato.eliminado == 0){
+    if (dato.eliminado != 1){
       return false;
     }else{ 
       return true;
@@ -464,40 +533,18 @@ export class TablaBajasTemporalesComponent implements OnInit {
   }
 
 
-  actualizaSeleccionados(selectedDatos) {
-    if (this.selectedDatos != undefined) {
-      if(this.selectedDatos.length == 1){
-        this.activacionEditar = true;
-      }
-      this.numSelected = selectedDatos.length;
-    } else {
+  actualizaSeleccionados(event,selectedDatos) {
+    this.selectedDatosCopy = [];
+    if(event != undefined){
+      this.selectedDatosCopy.push(event.data);
+    }
+    if (this.selectedDatos == undefined) {
       this.selectedDatos = [];
     }
-    
-  }
-
-  fillFechaDesdeCalendar(event) {
-    if(this.selectedDatos.length > 0){
-      let findDato = this.datos.find(item => item.editable === this.selectedDatos[0].editable);
-      if(findDato != undefined){
-        this.datos.forEach(element => {
-          if(element == findDato){
-            element.fechadesde = this.transformaFecha(event);
-            // this.selectedDatos.push(element);
-          }
-        });
-      }
-    }else{
-     let dato = this.datos.find(item => item.editable == this.selectedDatosCopy[0].editable);
-     if(dato != undefined){
-       this.datos.forEach(element => {
-         if(element == dato){
-           element.fechadesde = this.transformaFecha(event);
-           this.selectedDatos.push(element);
-         }
-       });
-     }
+    if (selectedDatos != undefined) {
+      this.numSelected = selectedDatos.length;
     }
+    
   }
 
   fillFechaHastaCalendar(event) {
@@ -562,5 +609,9 @@ export class TablaBajasTemporalesComponent implements OnInit {
           this.progressSpinner = false;
         }
       ); 
+  }
+  
+  checkNuevaBajaTemporal(){
+    this.router.navigate(["/buscadorColegiados"]);
   }
 }

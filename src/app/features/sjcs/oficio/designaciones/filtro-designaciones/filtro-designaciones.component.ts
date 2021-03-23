@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Message } from "primeng/components/common/api";
 import { TranslateService } from '../../../../../commons/translate';
 import { ColegiadoItem } from '../../../../../models/ColegiadoItem';
@@ -22,7 +22,7 @@ export class FiltroDesignacionesComponent implements OnInit {
 
   expanded: boolean = false;
   textSelected: String = "{0} etiquetas seleccionadas";
-  progressSpinner: boolean = false;
+  progressSpinner: boolean = true;
   showDesignas: boolean = false;
   showJustificacionExpress: boolean = false;
   checkMostrarPendientes: boolean = true;
@@ -61,6 +61,10 @@ export class FiltroDesignacionesComponent implements OnInit {
   comboOrigenActuaciones: any[];
   comboRoles: any[];
 
+  datosJustificacion: DesignaItem = new DesignaItem();
+
+  @Output() showTablaJustificacion = new EventEmitter<boolean>();
+
   constructor(private translateService: TranslateService, private sigaServices: SigaServices) { }
 
   ngOnInit(): void {
@@ -89,19 +93,15 @@ export class FiltroDesignacionesComponent implements OnInit {
     }
 
     if (sessionStorage.getItem('buscadorColegiados')) {
-
       const { nombre, apellidos, nColegiado } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
 
       this.usuarioBusquedaExpress.nombreAp = `${apellidos}, ${nombre}`;
       this.usuarioBusquedaExpress.numColegiado = nColegiado;
       this.showColegiado = true;
-
     }
 
     //combo comun
     this.getComboEstados();
-
-    this.progressSpinner=false;
   }
 
   changeFilters(event) {
@@ -361,7 +361,6 @@ getComboCalidad() {
   }
 
   cargaCombosJustificacion(){
-    this.progressSpinner=false;
     this.cargaComboActuacionesValidadas();
     this.cargaComboSinEJG();
     this.cargaComboEJGnoFavorable();
@@ -416,14 +415,24 @@ getComboCalidad() {
         this.filtroJustificacion.nColegiado=this.usuarioBusquedaExpress.numColegiado;
       }
 
+      this.filtroJustificacion.muestraPendiente = this.checkMostrarPendientes;
+      this.filtroJustificacion.restriccionesVisualizacion = this.checkRestricciones;
+
       if(this.compruebaFiltroJustificacion()){
         this.progressSpinner=true;
 
         // this.filtroJustificacion.muestraPendiente=this.checkMostrarPendientes;
 
         this.sigaServices.post("justificacionExpres_busqueda", this.filtroJustificacion).subscribe(
-          n => {
+          data => {
             this.progressSpinner=false;
+            
+
+            if(data!=undefined && data!=null){
+              this.datosJustificacion = JSON.parse(data.body).DesignaItem;
+            }
+
+            this.showTablaJustificacion.emit(true);
           },
           err => {
             this.progressSpinner = false;
@@ -521,10 +530,12 @@ getComboCalidad() {
   limpiar(){
     this.filtroJustificacion = new JustificacionExpressItem();
     
-    this.usuarioBusquedaExpress = {
-      numColegiado: '',
-      nombreAp: ''
-    };
+    if(!this.esColegiado){
+      this.usuarioBusquedaExpress = {
+        numColegiado: '',
+        nombreAp: ''
+      };
+    }
   }
 
   onChangeCheckMostrarPendientes(event) {
@@ -595,6 +606,7 @@ getComboCalidad() {
       const colegiadoItem = new ColegiadoItem();
       colegiadoItem.nif = usuario[0].dni;
 
+      //cambiar, nullpointer si no es colegiado
       this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(usr => {
         const { numColegiado, nombre } = JSON.parse(usr.body).colegiadoItem[0];
         this.usuarioBusquedaExpress.numColegiado = numColegiado;
@@ -620,5 +632,9 @@ getComboCalidad() {
       console.log("ERROR: cargando datos del usuario logado");
       this.progressSpinner=false;
     });
+  }
+
+  clear() {
+    this.msgs = [];
   }
 }

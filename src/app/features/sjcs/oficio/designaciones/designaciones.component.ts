@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { OldSigaServices } from '../../../../_services/oldSiga.service'
-
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { OldSigaServices } from '../../../../_services/oldSiga.service';
+import { FiltroDesignacionesComponent } from './filtro-designaciones/filtro-designaciones.component';
+import { Message } from 'primeng/components/common/api';
 
 @Component({
   selector: 'app-designaciones',
@@ -13,12 +14,25 @@ export class DesignacionesComponent implements OnInit {
   url;
   rutas = ['SJCS', 'Designaciones'];
   progressSpinner: boolean = false;
+  muestraTablaJustificacion: boolean = false;
+
+  @ViewChild(FiltroDesignacionesComponent) datosJustificacion;
+  
+  msgs: Message[] = [];
 
   constructor(public sigaServices: OldSigaServices) {
     this.url = sigaServices.getOldSigaUrl("designaciones");
   }
 
   ngOnInit() {
+  }
+
+  showTablaJustificacion(event){
+    this.muestraTablaJustificacion=event;
+  }
+  
+  clear() {
+    this.msgs = [];
   }
 
 }
