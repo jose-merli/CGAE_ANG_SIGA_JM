@@ -484,9 +484,6 @@ export class ConsultasPlantillasComponent implements OnInit {
         }
       );
 
-    console.log("selectedDatos", this.selectedDatos);
-    console.log("nuevaConsulta", this.nuevaConsulta);
-    console.log("soloLectura", this.soloLectura);
   }
 
   desasociar(dato) {
@@ -592,7 +589,6 @@ export class ConsultasPlantillasComponent implements OnInit {
           }
         }
         this.datos = [...this.datos];
-        console.log(this.datos);
       },
       err => {
         console.log(err);

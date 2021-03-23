@@ -167,10 +167,6 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   selectedDatos;
 
   sessionInfo(){
-    console.log("ENTRA")
-    console.log("1 -", this.fechaIncorporacionDesdeSelect)
-    console.log("2 -", this.fechaIncorporacionHastaSelect)
-    console.log("3 -", this.fechaNacimientoDesdeSelect)
     sessionStorage.setItem("esNuevoNoColegiado", JSON.stringify(false));
       sessionStorage.removeItem("personaBody");
       sessionStorage.setItem("esColegiado", "true");
@@ -233,10 +229,8 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     sessionStorage.removeItem("busqueda");
 
     let idInstitucion = this.authenticationService.getInstitucionSession();
-    console.log(idInstitucion);
     if (idInstitucion > 3000 || idInstitucion == 2000) {
        this.isConsejo = true;
-       console.log(idInstitucion);
     }
 
     if (sessionStorage.getItem("fechaIncorporacionHastaSelect") != null) {

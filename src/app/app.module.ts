@@ -271,7 +271,6 @@ import { DefinirListasGuardiasComponent } from './features/sjcs/guardia/definir-
 import { GuardiasAsistenciasComponent } from './features/sjcs/guardia/guardias-asistencias/guardias-asistencias.component';
 import { GuardiasBajasTemporalesComponent } from './features/sjcs/guardia/guardias-bajas-temporales/guardias-bajas-temporales.component';
 import { GuardiasCentralitaComponent } from './features/sjcs/guardia/guardias-centralita/guardias-centralita.component';
-import { GuardiasIncompatibilidadesComponent } from './features/sjcs/guardia/guardias-incompatibilidades/guardias-incompatibilidades.component';
 import { GuardiasSaltosCompensacionesComponent } from './features/sjcs/guardia/guardias-saltos-compensaciones/guardias-saltos-compensaciones.component';
 import { ProgramacionCalendariosComponent } from './features/sjcs/guardia/programacionCalendarios/programacionCalendarios.component';
 import { GuardiasSolicitudesTurnosComponent } from './features/sjcs/guardia/solicitudes-turnos/solicitudes-turnos.component';
@@ -337,6 +336,7 @@ import { ServiciosInteresFichaColegialComponent } from './features/censo/ficha-c
 import { TarjetaResumenFijaModule } from './commons/tarjeta-resumen-fija/tarjeta-resumen-fija.module';
 import { PartidosJudicialesComponent } from './features/sjcs/maestros/partidos-judiciales/partidas-judiciales.component';
 import { MatSortModule } from '@angular/material/sort';
+import { PaginadorModule } from './commons/paginador/paginador.module';
 
 @NgModule({
 	declarations: [
@@ -456,7 +456,6 @@ import { MatSortModule } from '@angular/material/sort';
 		SaltosYCompensacionesComponent,
 		GuardiasSolicitudesTurnosComponent,
 		TurnosComponent,
-		GuardiasIncompatibilidadesComponent,
 		ProgramacionCalendariosComponent,
 		GuardiasBajasTemporalesComponent,
 		GuardiasSaltosCompensacionesComponent,
@@ -495,7 +494,7 @@ import { MatSortModule } from '@angular/material/sort';
 		ComunicaCargaComponent,
 		ComunicaResolucionesComponent,
 		ComunicaDesignacionesComponent,
-
+		
 		//Consultas
 		RecuperarConsultasComponent,
 		ConsultasListasDinamicasComponent,
@@ -694,6 +693,7 @@ import { MatSortModule } from '@angular/material/sort';
 		PipeTranslationModule,
 		PipeNumberModule,
 		FechaModule,
+		PaginadorModule,
 		DialogoModule,
 		PrecioModule,
 		KeyFilterModule,

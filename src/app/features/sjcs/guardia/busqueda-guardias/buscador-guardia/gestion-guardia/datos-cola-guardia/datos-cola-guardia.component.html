@@ -51,9 +51,9 @@
          
           <!--<app-tabla-dinamica-cola-guardia [selectionMode]="selectionMode" [editable]="editable" [idUltimo]="body.idPersonaUltimo"
             [porGrupos]="body.porGrupos" [botActivos]="disabledBotones()" [datos]="datos" (updateInscripciones)="changeGrupo($event);changeOrden($event)"></app-tabla-dinamica-cola-guardia>-->
-          <app-tabla-resultado-order  [seleccionarTodo]="seleccionarTodo"
+          <app-tabla-resultado-order  [totalRegistros] = "totalRegistros" [seleccionarTodo]="seleccionarTodo"
               [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups"
-              (anySelected)="notifyAnySelected($event)">
+              (anySelected)="notifyAnySelected($event)" (selectedRow)="checkSelectedRow($event)" (colaGuardiaModified)="updateColaGuardia($event)" (rest)="rest($event)" (dupli)="duplicar($event)">
             </app-tabla-resultado-order>
         </div>
       </div>
@@ -61,7 +61,7 @@
   </div>
   <div *ngIf="openFicha" class="card-footer ">
     <div class="text-right main-button ">
-      <button pButton [disabled]="historico || !permisoEscritura || !body.porGrupos || duplicarDisabled()" (click)="duplicar()"
+      <!--<button pButton [disabled]="historico || !permisoEscritura || !body.porGrupos || duplicarDisabled()" (click)="duplicar()"
         type="button" icon="fa fa-reply-all" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
       <button pButton [disabled]="historico || !permisoEscritura || true" type="button" icon="fa fa-plus" iconPos="left" label="{{ 'justiciaGratuita.oficio.turnos.nuevosaltocompen' | translate}}"></button>
       <button pButton [disabled]="disabledUltimo()" (click)="ultimo(tabla.selectedDatos)" type="button" label="{{ 'justiciaGratuita.oficio.turnos.marcarultimo' | translate}}"></button>
@@ -69,7 +69,7 @@
       <button pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-undo-alt" (click)="rest()" iconPos="left"
         label="{{ 'general.boton.restablecer' | translate}}"></button>
       <button pButton [disabled]="historico || !permisoEscritura || disabledSave()" type="button" (click)="save()" label="{{'general.boton.guardar' | translate}}"
-        icon="fa fa-save" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+        icon="fa fa-save" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>-->
     </div>
   </div>
 </div>

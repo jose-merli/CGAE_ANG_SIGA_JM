@@ -7,6 +7,7 @@ import { GuardiaItem } from '../../../../../../../models/guardia/GuardiaItem';
 import { datos_combos } from '../../../../../../../utils/datos_combos';
 import { endpoints_guardia } from '../../../../../../../utils/endpoints_guardia';
 import { TranslateService } from '../../../../../../../commons/translate';
+import { ConfiguracionCola, GlobalGuardiasService } from '../../../../guardiasGlobal.service';
 
 const asc = "ascendente"
 const desc = "descendente"
@@ -43,7 +44,8 @@ export class DatosConfColaComponent implements OnInit {
   isDisabledGuardia: boolean = true;
   constructor(private persistenceService: PersistenceService,
     private translateService: TranslateService,
-    private sigaServices: SigaServices) { }
+    private sigaServices: SigaServices,
+    private globalGuardiasService: GlobalGuardiasService) { }
 
   ngOnInit() {
     this.historico = this.persistenceService.getHistorico();
@@ -70,12 +72,12 @@ export class DatosConfColaComponent implements OnInit {
   }
 
   disabledSave() {
-    console.log('!this.historico && this.body.letradosGuardia: ', !this.historico && this.body.letradosGuardia)
-    console.log('JSON.stringify(this.body) != JSON.stringify(this.bodyInicial)', JSON.stringify(this.body) != JSON.stringify(this.bodyInicial))
-    console.log('JSON.stringify(this.pesosSeleccionados) != JSON.stringify(this.pesosSeleccionadosInicial): ', JSON.stringify(this.pesosSeleccionados) != JSON.stringify(this.pesosSeleccionadosInicial))
-    if (!this.historico && this.body.letradosGuardia
+     /* if (!this.historico && this.body.letradosGuardia
       && ((JSON.stringify(this.body) != JSON.stringify(this.bodyInicial))
         || (JSON.stringify(this.pesosSeleccionados) != JSON.stringify(this.pesosSeleccionadosInicial)))) {
+      return false;
+    } else return true;*/
+    if (!this.historico && this.body.letradosGuardia) {
       return false;
     } else return true;
 
@@ -268,7 +270,12 @@ export class DatosConfColaComponent implements OnInit {
     }
   }
   cambiaGrupo() {
+    let configuracionCola: ConfiguracionCola = {
+      'manual': true,
+      'porGrupos': this.body.porGrupos
+    };
     if (this.body.porGrupos) {
+      this.globalGuardiasService.emitConf(configuracionCola);
       this.pesosSeleccionados = this.pesosSeleccionados.filter(it => {
         return it.por_filas != ordManual;
       });
@@ -287,6 +294,8 @@ export class DatosConfColaComponent implements OnInit {
         por_filas: ordManual,
         orden: ""
       }), ...this.pesosSeleccionados];
+    } else {
+      this.globalGuardiasService.emitConf(configuracionCola);
     }
     // else {
     //   this.pesosExistentes = this.pesosExistentes.filter(it => {

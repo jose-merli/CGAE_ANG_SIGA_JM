@@ -29,6 +29,7 @@ export let endpoints_guardia: any = {
     busquedaGuardias_getBaremos: "guardia/busquedaGuardia/getBaremos",
     busquedaGuardias_getCalendario: "guardia/busquedaGuardia/getCalendario",
     busquedaGuardias_getColaGuardia: "guardia/busquedaGuardia/getColaGuardia",
+    busquedaGuardias_updateColaGuardia: "guardia/busquedaGuardia/updateColaGuardia",
     busquedaGuardias_getUltimo: "guardia/gestionGuardia/ultimo",
     gestionGuardias_updateColaGuardia: "guardia/gestionGuardia/updateColaGuardia",
     gestionGuardias_resumenIncompatibilidades: "guardia/gestionGuardia/resumenIncompatibilidades",
@@ -39,4 +40,8 @@ export let endpoints_guardia: any = {
     // Saltos y compensaciones Guardia
     busquedaSaltosCompG_searchSaltosYComp: "/busquedaSaltosCompG/searchSaltosYCompensaciones",
 
+    //Incompatibilidades
+    guardiasIncompatibilidades_buscarIncompatibilidades : "guardia/buscarIncompatibilidades",
+    guardiasIncompatibilidades_eliminarIncompatibilidades:  "guardia/eliminarIncompatibilidades",
+    guardiasIncompatibilidades_guardarIncompatibilidades: "guardia/guardarIncompatibilidades"
 }

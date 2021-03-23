@@ -5,6 +5,8 @@ import { TarjetaResumenFijaModule } from "../../../commons/tarjeta-resumen-fija/
 import { SaltosCompensacionesGuardiaModule } from "./saltos-compensaciones-guardia/saltos-compensaciones-guardia.module";
 import { TablaResultadoOrderModule } from "../../../commons/tabla-resultado-order/tabla-resultado-order.module";
 import { TablaResultadoOrderCGService } from "../../../commons/tabla-resultado-order/tabla-resultado-order-cg.service";
+import { GlobalGuardiasService } from "./guardiasGlobal.service";
+import { BusquedaGuardiasIncompatibilidadesModule } from "./guardias-incompatibilidades/busqueda-guardias-incompatibilidades.module";
 
 @NgModule({
     declarations: [],
@@ -13,12 +15,14 @@ import { TablaResultadoOrderCGService } from "../../../commons/tabla-resultado-o
         BusquedaGuardiasModule,
         TarjetaResumenFijaModule,
         SaltosCompensacionesGuardiaModule,
-        TablaResultadoOrderModule
+        TablaResultadoOrderModule,
+        BusquedaGuardiasIncompatibilidadesModule
     ],
 
     providers: [
         
-		TablaResultadoOrderCGService,
+    TablaResultadoOrderCGService,
+    GlobalGuardiasService,
     ]
 })
 export class GuardiaModule { }

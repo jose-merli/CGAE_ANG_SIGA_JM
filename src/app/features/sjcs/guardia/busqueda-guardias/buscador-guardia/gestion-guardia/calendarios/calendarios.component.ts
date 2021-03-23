@@ -34,8 +34,10 @@ export class CalendariosComponent implements OnInit {
 
 
   getDatosCalendario() {
+    //let idGuardiaprovisional = 362; //borrar
     this.sigaServices.post(
       "busquedaGuardias_getCalendario", this.persistenceService.getDatos().idGuardia).subscribe(
+       // "busquedaGuardias_getCalendario", idGuardiaprovisional).subscribe(
         data => {
           if (data.body)
             this.datos = JSON.parse(data.body);
