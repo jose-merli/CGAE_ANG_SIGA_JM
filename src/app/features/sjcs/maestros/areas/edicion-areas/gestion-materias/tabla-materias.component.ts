@@ -283,6 +283,7 @@ export class TablaMateriasComponent implements OnInit {
     }
 
   }
+
   validateUpdate() {
     let check = true;
 

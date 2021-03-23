@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '../../../../commons/translate';
 import { SigaServices } from '../../../../_services/siga.service';
-import { SelectItem } from 'primeng/api';
+import { Message, SelectItem } from 'primeng/api';
 
 @Component({
   selector: 'app-cargas-masivas-oficio',
@@ -9,7 +9,8 @@ import { SelectItem } from 'primeng/api';
   styleUrls: ['./cargas-masivas-oficio.component.scss']
 })
 export class CargasMasivasOficioComponent implements OnInit {
-  msgs: any[];
+  msgs: Message[] = [];
+  progressSpinner: boolean = false;
   
   showCargasMasivas = false;
   constructor(private translateService: TranslateService,
