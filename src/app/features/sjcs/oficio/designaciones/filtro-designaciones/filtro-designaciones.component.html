@@ -29,16 +29,16 @@
                             </div>
                             <div class="form-group-interlineado col-lg-2 col-md-2">
                                 <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.fchAdesde" | translate}}</label>
-                                <app-fecha [(value)]="fechaAperturaDesdeSelect"  (valueChangeSelected)="fillFechaADesdeCalendar($event)" (valueChangeInput)="fillFechaADesdeCalendar($event)"></app-fecha>
+                                <app-fecha [(value)]="fechaAperturaDesdeSelect" (valueChangeSelected)="fillFechaADesdeCalendar($event)" (valueChangeInput)="fillFechaADesdeCalendar($event)"></app-fecha>
                             </div>
                             <div class="form-group-interlineado col-lg-2 col-md-2">
                                 <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.fchAhasta" | translate}}</label>
-                                <app-fecha (valueChangeSelected)="fillFechaADesdeCalendar($event)"  [disabled]="disabledFechaAHasta" [minDate]="fechaAperturaDesdeSelect" ></app-fecha>
+                                <app-fecha [(value)]="fechaAperturaHastaSelect"  (valueChangeSelected)="fillFechaAHastaCalendar($event)" [disabled]="disabledFechaAHasta"  [minDate]="fechaAperturaDesdeSelect" ></app-fecha>
                             </div>
                             <div class="form-group-interlineado col-lg-2 col-md-2">
                                 <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.estado" | translate}}</label>
                                 <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [options]="comboEstados" [selectedItemsLabel]="textSelected"
-                                maxSelectedLabels="10" styleClass="widthAll" filterBy ="label, labelSinTilde"></p-multiSelect>
+                                maxSelectedLabels="10" styleClass="widthAll" filterBy ="label, labelSinTilde" [(ngModel)]='body.estados'></p-multiSelect>
                             </div>
                             <div class="form-group-interlineado col-lg-2 col-md-2">
                                 <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.tipoDesigna" | translate}}</label>
@@ -54,17 +54,19 @@
                             <div class="form-group-interlineado col-lg-2 col-md-2">
                                 <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.actuacionesV" | translate}}</label>
                                 <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [options]="actuacionesV" [selectedItemsLabel]="textSelected"
-                                maxSelectedLabels="10" styleClass="widthAll" filterBy ="label, labelSinTilde" ></p-multiSelect>
+                                maxSelectedLabels="10" styleClass="widthAll" filterBy ="label, labelSinTilde" [(ngModel)]="body.idActuacionesV" ></p-multiSelect>
                             </div>
                             <div class="form-group-interlineado col-lg-2 col-md-2">
                                 <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.actuacionesDocu" | translate}}</label>
-                                <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [options]="actuacionesDocu" [selectedItemsLabel]="textSelected"
-                                maxSelectedLabels="10" styleClass="widthAll" filterBy ="label, labelSinTilde" ></p-multiSelect>
+                                <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}" 
+                                [(ngModel)]='body.documentacionActuacion ' [options]="actuacionesDocu">
+                                </p-dropdown>
                             </div>
                             <div class="form-group-interlineado col-lg-2 col-md-2">
                                 <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.art" | translate}}</label>
-                                <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [options]="comboArt" [selectedItemsLabel]="textSelected"
-                                maxSelectedLabels="10" styleClass="widthAll" filterBy ="label, labelSinTilde" ></p-multiSelect>
+                                <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}" 
+                                [(ngModel)]='body.idArt27 ' [options]="comboArt">
+                                </p-dropdown>
                             </div>
                         </div>
                     </ng-template>
@@ -104,16 +106,16 @@
                         <div class="form-group-interlineado col-lg-6 col-md-6">
                             <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.modulo" | translate}}</label>
                             <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" filterBy ="label, labelSinTilde" [options]="comboModulos" [selectedItemsLabel]="textSelected"
-                                maxSelectedLabels="10" styleClass="widthAll" ></p-multiSelect>
+                                maxSelectedLabels="10" styleClass="widthAll"  [(ngModel)]="body.idModulo" ></p-multiSelect>
                         </div>
                         <div class="form-group-interlineado col-lg-2 col-md-2">
                             <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.calidad" | translate}}</label>
                             <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [options]="comboCalidad" [selectedItemsLabel]="textSelected"
-                            maxSelectedLabels="10" styleClass="widthAll" filterBy ="label, labelSinTilde" [(ngModel)]="body.idTipoDesignaColegio"></p-multiSelect>
+                            maxSelectedLabels="10" styleClass="widthAll" filterBy ="label, labelSinTilde" [(ngModel)]="body.idCalidad"></p-multiSelect>
                         </div>
                         <div class="form-group-interlineado col-lg-2 col-md-2">
                             <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.numAno" | translate}}</label> 
-                            <input  type="text"  maxLength = "10" class="form-control"  pInputText>
+                            <input  type="text"  maxLength = "10" class="form-control"   [(ngModel)]="body.anoProcedimiento" pInputText>
                         </div>
                         <div class="form-group-interlineado col-lg-6 col-md-6">
                             <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.procedimiento" | translate}}</label>
@@ -122,11 +124,11 @@
                         </div>
                         <div class="form-group-interlineado col-lg-2 col-md-2">
                             <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.NIG" | translate}}</label> 
-                            <input  type="text"  maxLength = "10" class="form-control"  pInputText>
+                            <input  type="text"  maxLength = "10" class="form-control"  [(ngModel)]="body.nig" pInputText>
                         </div>
                         <div class="form-group-interlineado col-lg-2 col-md-2">
                             <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.asunto" | translate}}</label> 
-                            <input  type="text"  maxLength = "10" class="form-control"  pInputText>
+                            <input  type="text"  maxLength = "10" class="form-control"   [(ngModel)]="body.asunto" pInputText>
                         </div>
                         </div>
                     </ng-template>
@@ -145,7 +147,7 @@
                         <div class="form-group-interlineado col-lg-6 col-md-6">
                             <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.juzgado" | translate}}</label>
                             <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [options]="comboJuzgados" [selectedItemsLabel]="textSelected"
-                            maxSelectedLabels="10" styleClass="widthAll" filterBy ="label, labelSinTilde" ></p-multiSelect>
+                            maxSelectedLabels="10" styleClass="widthAll" filterBy ="label, labelSinTilde"  [(ngModel)]="body.idJuzgadoActu" ></p-multiSelect>
                         </div>
                         <div class="form-group-interlineado col-lg-6 col-md-6">
                             <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.modulo" | translate}}</label>
@@ -155,17 +157,17 @@
                         <div class="form-group-interlineado col-lg-6 col-md-6">
                             <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.procedimiento" | translate}}</label>
                             <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [options]="comboProcedimientos" [selectedItemsLabel]="textSelected"
-                                maxSelectedLabels="10" styleClass="widthAll" filterBy ="label, labelSinTilde" ></p-multiSelect>
+                                maxSelectedLabels="10" styleClass="widthAll" filterBy ="label, labelSinTilde" [(ngModel)]="body.idProcedimientoActuaciones"></p-multiSelect>
                         </div>
                         <div class="form-group-interlineado col-lg-6 col-md-6">
                             <label>{{ "justiciaGratuita.sjcs.designas.datosActu.acreditacion" | translate}}</label>
                             <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [options]="" [selectedItemsLabel]="textSelected"
-                            maxSelectedLabels="10" styleClass="widthAll" filterBy ="label, labelSinTilde"></p-multiSelect>
+                            maxSelectedLabels="10" styleClass="widthAll" filterBy ="label, labelSinTilde"  [(ngModel)]="body.idAcreditacion"></p-multiSelect>
                         </div>
                         <div class="form-group-interlineado col-lg-6 col-md-6">
                             <label>{{ "justiciaGratuita.sjcs.designas.datosActu.origen" | translate}}</label>
                             <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [options]="comboOrigenActuaciones" [selectedItemsLabel]="textSelected"
-                            maxSelectedLabels="10" styleClass="widthAll" filterBy ="label, labelSinTilde" ></p-multiSelect>
+                            maxSelectedLabels="10" styleClass="widthAll" filterBy ="label, labelSinTilde"  [(ngModel)]="body.idOrigen"></p-multiSelect>
                         </div>
                         <div class="form-group-interlineado col-lg-2 col-md-2">
                             <label>{{ "justiciaGratuita.sjcs.designas.datosActu.fchaJustiDesde" | translate}}</label>
@@ -174,13 +176,13 @@
                         </div>
                         <div class="form-group-interlineado col-lg-2 col-md-2">
                             <label>{{ "justiciaGratuita.sjcs.designas.datosActu.fchaJustiHasta" | translate}}</label>
-                            <app-fecha (valueChangeSelected)="fillFechaJustificacionDesdeCalendar($event)"  [disabled]="disabledfechaJustificacion" [minDate]="fechaJustificacionDesdeSelect" ></app-fecha>
+                            <app-fecha [(value)]="fechaJustificacionHastaSelect" (valueChangeSelected)="fillFechaJustificacionHastaCalendar($event)"  [disabled]="disabledfechaJustificacion" [minDate]="fechaJustificacionDesdeSelect" ></app-fecha>
                         </div>
                         </div>
                     </ng-template>
                 </mat-expansion-panel>
             </mat-accordion>
-             <!-- Interesados -->
+             <!-- Datos Interesados -->
              <mat-accordion class="example-headers-align" multi>
                 <mat-expansion-panel class="my-1" [expanded]="expanded">
                     <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
@@ -192,20 +194,20 @@
                         <div class="form-row">
                         <div class="form-group-interlineado col-lg-2 col-md-2">
                             <label>{{ "administracion.usuarios.literal.NIF" | translate}}</label> 
-                            <input  type="text"  maxLength = "10" class="form-control"  pInputText>
+                            <input  type="text"  maxLength = "10" class="form-control"  [(ngModel)]="body.nif" pInputText>
                         </div>
                         <div class="form-group-interlineado col-lg-2 col-md-2">
                             <label>{{ "gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate}}</label> 
-                            <input  type="text"  maxLength = "10" class="form-control"  pInputText>
+                            <input  type="text"  maxLength = "10" class="form-control"  [(ngModel)]="body.apellidosInteresado" pInputText>
                         </div>
                         <div class="form-group-interlineado col-lg-2 col-md-2">
                             <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate}}</label> 
-                            <input  type="text"  maxLength = "10" class="form-control"  pInputText>
+                            <input  type="text"  maxLength = "10" class="form-control" [(ngModel)]="body.nombreInteresado" pInputText>
                         </div>
                         <div class="form-group-interlineado col-lg-6 col-md-6">
-                            <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.estado" | translate}}</label>
-                            <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [options]="" [selectedItemsLabel]="textSelected"
-                            maxSelectedLabels="10" styleClass="widthAll" filterBy ="label, labelSinTilde"></p-multiSelect>
+                            <label>{{ "administracion.usuarios.literal.rol" | translate}}</label>
+                            <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [options]="comboRoles" [selectedItemsLabel]="textSelected"
+                            maxSelectedLabels="10" styleClass="widthAll" filterBy ="label, labelSinTilde"  [(ngModel)]="body.rol"></p-multiSelect>
                         </div>
                         </div>
                     </ng-template>

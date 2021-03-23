@@ -334,6 +334,7 @@ export class FiltrosTurnos implements OnInit {
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
+  
   checkFilters() {
     if((this.filtros.nombre == null ||
         this.filtros.nombre == undefined ||

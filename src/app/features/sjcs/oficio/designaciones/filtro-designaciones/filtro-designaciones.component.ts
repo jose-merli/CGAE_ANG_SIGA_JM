@@ -59,6 +59,7 @@ export class FiltroDesignacionesComponent implements OnInit {
   comboCalidad: any[];
   comboProcedimientos: any[];
   comboOrigenActuaciones: any[];
+  comboRoles: any[];
 
   constructor(private translateService: TranslateService, private sigaServices: SigaServices) { }
 
@@ -149,6 +150,7 @@ export class FiltroDesignacionesComponent implements OnInit {
     this.getComboCalidad();
     this.getComboProcedimientos();
     this.getOrigenActuaciones();
+    this.getComboRoles();
   }
 
   fillFechaAperturaDesde(event) {
@@ -176,6 +178,15 @@ export class FiltroDesignacionesComponent implements OnInit {
   
   }
 
+  fillFechaAHastaCalendar(event) {
+    if(event != null){
+      this.fechaAperturaHastaSelect = this.transformaFecha(event);
+    }else{
+      this.fechaAperturaHastaSelect = undefined;
+    }
+  
+  }
+
   fillFechaJustificacionDesdeCalendar(event) {
     if(event != null){
       this.fechaJustificacionDesdeSelect = this.transformaFecha(event);
@@ -183,6 +194,15 @@ export class FiltroDesignacionesComponent implements OnInit {
     }else{
       this.fechaJustificacionDesdeSelect = undefined;
       this.disabledfechaJustificacion = true;
+    }
+  
+  }
+
+  fillFechaJustificacionHastaCalendar(event) {
+    if(event != null){
+      this.fechaJustificacionHastaSelect = this.transformaFecha(event);
+    }else{
+      this.fechaJustificacionHastaSelect = undefined;
     }
   
   }
@@ -207,9 +227,9 @@ export class FiltroDesignacionesComponent implements OnInit {
 
   getComboEstados() {
     this.comboEstados = [
-      {label:'Activo', value:'ACTIVO'},
-      {label:'Finalizada', value:'FINALIZADA'},
-      {label:'Anulada', value:'ANULADA'}
+      {label:'Activo', value:'V'},
+      {label:'Finalizada', value:'F'},
+      {label:'Anulada', value:'A'}
     ]
   }
 
@@ -266,8 +286,8 @@ export class FiltroDesignacionesComponent implements OnInit {
 
 getComboCalidad() {
     this.comboCalidad = [
-      {label:'Demandante', value:'DEMANDANTE'},
-      {label:'Demandado', value:'DEMANDADO'}
+      {label:'Demandante', value:'D'},
+      {label:'Demandado', value:'O'}
     ]
   }
 
@@ -327,6 +347,17 @@ getComboCalidad() {
         this.arregloTildesCombo(this.comboTurno);
       }
     );
+  }
+
+  getComboRoles() {
+    this.progressSpinner=true;
+
+    this.comboRoles = [
+      {label:'Solicitante', value:'SOLICITANTE'},
+      {label:'Contrario', value:'CONTRARIO'},
+      {label:'Representante del solicitante', value:'REPRESENTANTE'},
+      {label:'Unidad familiar', value:'UNIDAD'}
+    ]
   }
 
   cargaCombosJustificacion(){
@@ -403,6 +434,70 @@ getComboCalidad() {
           });
       }
     }
+    else{
+      if(this.usuarioBusquedaExpress.numColegiado!=undefined && this.usuarioBusquedaExpress.numColegiado!=null){
+        this.filtroJustificacion.nColegiado=this.usuarioBusquedaExpress.numColegiado;
+      }
+
+        this.progressSpinner=true;
+        let designa = new DesignaItem();
+        designa.ano = this.body.ano;
+        designa.codigo = this.body.codigo;
+        designa.fechaEntradaInicio = this.fechaAperturaDesdeSelect;
+        designa.fechaEntradaFin = this.fechaAperturaHastaSelect;
+        designa.estados = this.body.estados;
+        designa.idTipoDesignaColegio = (this.body.idTipoDesignaColegio); 
+        designa.idTurno = this.body.idTurno; 
+        if(designa.idTurno != null){
+          designa.nombreTurno = this.comboTurno.find(
+            item => item.value == designa.idTurno
+          ).label;
+        }
+        designa.documentacionActuacion = this.body.documentacionActuacion;
+        designa.idActuacionesV = this.body.idActuacionesV;
+        designa.idArt27 = this.body.idArt27; 
+        designa.numColegiado = this.usuarioBusquedaExpress.numColegiado;
+
+        designa.idJuzgado = this.body.idJuzgado;
+        designa.idModulo = this.body.idModulo;
+        designa.idCalidad = this.body.idCalidad;
+        designa.numProcedimiento = this.body.anoProcedimiento.toString();
+        designa.idProcedimiento = this.body.idProcedimiento;
+        designa.nig = this.body.nig;
+        designa.asunto = this.body.asunto;
+
+        designa.idJuzgadoActu = this.body.idJuzgadoActu;
+        if(designa.idJuzgadoActu != null){
+        designa.nombreJuzgadoActu = this.comboJuzgados.find(
+          item => item.value == designa.idJuzgadoActu
+        ).label;
+       }
+       if(this.body.idAcreditacion != undefined){
+        designa.idAcreditacion = this.body.idAcreditacion;
+       }
+        designa.idOrigen = this.body.idOrigen;
+        designa.fechaJustificacionDesde = this.fechaJustificacionDesdeSelect;
+        designa.fechaJustificacionHasta = this.fechaJustificacionHastaSelect;
+        designa.idModuloActuaciones = this.body.idModuloActuaciones;
+        designa.idProcedimientoActuaciones = this.body.idProcedimientoActuaciones;
+        designa.nif = this.body.nif;
+        designa.apellidosInteresado = this.body.apellidosInteresado;
+        designa.nombreInteresado = this.body.nombreInteresado;
+        designa.rol = this.body.rol;
+        // this.filtroJustificacion.muestraPendiente=this.checkMostrarPendientes;
+
+        this.sigaServices.post("designaciones_busqueda", designa).subscribe(
+          n => {
+            this.progressSpinner=false;
+          },
+          err => {
+            this.progressSpinner = false;
+
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+
+            console.log(err);
+          });
+    }
   }
 
   showMessage(severity, summary, msg) {
@@ -461,8 +556,8 @@ getComboCalidad() {
 
   getComboArticulo() {
     this.comboArt = [
-      {label:'Si', value:'SI'},
-      {label:'No', value:'NO'}
+      {label:'Si', value:'S'},
+      {label:'No', value:'N'}
     ]
   }
 
