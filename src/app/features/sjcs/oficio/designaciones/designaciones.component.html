@@ -5,6 +5,7 @@
 <div class="card">
     <div class="card-body">
         <app-filtro-designaciones></app-filtro-designaciones >
+        <app-gestion-designaciones *ngIf="buscar" [datos]="datos" (searchPartidas)="searchPartidas($event)" id="tablaFoco"></app-gestion-designaciones>
     </div>
 </div>
 <!-- 

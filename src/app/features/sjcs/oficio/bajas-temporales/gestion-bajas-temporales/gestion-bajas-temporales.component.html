@@ -127,7 +127,7 @@
       <button *ngIf="historico" (click)="searchHistorical(); selectedDatos=[]" pButton type="button" icon="fa fa-undo" iconPos="left"
         label="{{'general.message.ocultarHistorico' | translate}}"></button>
 
-      <button pButton type="button" icon="fa fa-save" iconPos="left"
+      <button pButton type="button" icon="fa fa-save" [disabled]="!permisos || selectedDatos.length == 0" iconPos="left"
         label="{{ 'general.boton.guardar' | translate}}" (click)="checkSave()"></button>
 
       <button pButton type="button" icon="fa-plus" iconPos="left"
