@@ -1,12 +1,10 @@
-import { Component, OnInit, Input, EventEmitter, Output, HostListener } from '@angular/core';
-import { Router } from '../../../../../../../../node_modules/@angular/router';
-import { TranslateService } from '../../../../../../commons/translate';
-import { SigaServices } from '../../../../../../_services/siga.service';
-import { PersistenceService } from '../../../../../../_services/persistence.service';
-import { CommonsService } from '../../../../../../_services/commons.service';
-import { KEY_CODE } from '../../../../maestros/fundamentos-calificacion/fundamentos-calificacion.component';
-import { GuardiaItem } from '../../../../../../models/guardia/GuardiaItem';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+import { ColegiadoItem } from '../../../../../../models/ColegiadoItem';
 import { SaltoCompItem } from '../../../../../../models/guardia/SaltoCompItem';
+import { CommonsService } from '../../../../../../_services/commons.service';
+import { PersistenceService } from '../../../../../../_services/persistence.service';
+import { SigaServices } from '../../../../../../_services/siga.service';
+import { KEY_CODE } from '../../../../maestros/fundamentos-calificacion/fundamentos-calificacion.component';
 
 @Component({
   selector: 'app-filtros-saltos-compensaciones-guardia',
@@ -15,7 +13,14 @@ import { SaltoCompItem } from '../../../../../../models/guardia/SaltoCompItem';
 })
 export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
 
+  usuarioBusquedaExpress = {
+    numColegiado: '',
+    nombreAp: '',
+  };
+  disabledBusquedaExpress: boolean = false;
   showDatosGenerales: boolean = true;
+  showColegiado: boolean = false;
+  progressSpinner: boolean = false;
   msgs = [];
 
   filtros: SaltoCompItem = new SaltoCompItem();
@@ -30,6 +35,9 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
   comboTurnos = [];
 
   @Output() isOpen = new EventEmitter<boolean>();
+
+  textFilter: string = "Seleccionar";
+  textSelected: String = "{0} etiquetas seleccionadas";
 
   constructor(private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
@@ -48,8 +56,22 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
       }
       this.isOpen.emit(this.historico)
 
-    } else {
-      // this.filtros = new RetencionIrpfItem();
+    }
+
+
+    if (sessionStorage.getItem("esColegiado") && sessionStorage.getItem("esColegiado") == 'true') {
+      this.disabledBusquedaExpress = true;
+      this.getDataLoggedUser();
+    }
+
+    if (sessionStorage.getItem('buscadorColegiados')) {
+
+      const { nombre, apellidos, nColegiado } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
+
+      this.usuarioBusquedaExpress.nombreAp = `${apellidos}, ${nombre}`;
+      this.usuarioBusquedaExpress.numColegiado = nColegiado;
+      this.showColegiado = true;
+
     }
 
   }
@@ -96,12 +118,16 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
 
+  onHideColegiado() {
+    this.showColegiado = !this.showColegiado;
+  }
+
   search() {
+    this.filtros.colegiadoGrupo = this.usuarioBusquedaExpress.numColegiado;
     this.persistenceService.setFiltros(this.filtros);
     this.persistenceService.setFiltrosAux(this.filtros);
     this.filtroAux = this.persistenceService.getFiltrosAux()
     this.isOpen.emit(false);
-
   }
 
   fillFechaDesde(event) {
@@ -144,6 +170,8 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
 
   clearFilters() {
     this.filtros = new SaltoCompItem();
+    this.usuarioBusquedaExpress.nombreAp = '';
+    this.usuarioBusquedaExpress.numColegiado = '';
   }
 
   clear() {
@@ -165,6 +193,34 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
     if (event.keyCode === KEY_CODE.ENTER) {
       this.search();
     }
+  }
+
+  focusInputField(someDropdown) {
+    setTimeout(() => {
+      someDropdown.filterInputChild.nativeElement.focus();
+    }, 300);
+  }
+
+  getDataLoggedUser() {
+
+    this.progressSpinner = true;
+
+    this.sigaServices.get("usuario_logeado").subscribe(n => {
+
+      const usuario = n.usuarioLogeadoItem;
+      const colegiadoItem = new ColegiadoItem();
+      colegiadoItem.nif = usuario[0].dni;
+
+      this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(usr => {
+        const { numColegiado, nombre } = JSON.parse(usr.body).colegiadoItem[0];
+        this.usuarioBusquedaExpress.numColegiado = numColegiado;
+        this.usuarioBusquedaExpress.nombreAp = nombre;
+        this.showColegiado = true;
+        this.progressSpinner = false;
+      });
+
+    });
+
   }
 
 }

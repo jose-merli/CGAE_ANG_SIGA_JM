@@ -1,5 +1,8 @@
-import { Component, OnInit, Output, EventEmitter } from "@angular/core";
-import { USER_VALIDATIONS } from "../../properties/val-properties";
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { FormControl, FormGroup } from "@angular/forms";
+import { Router } from "@angular/router";
+import { PersistenceService } from '../../_services/persistence.service';
+import { TranslateService } from "../translate";
 import { SigaServices } from "./../../_services/siga.service";
 
 @Component({
@@ -8,58 +11,116 @@ import { SigaServices } from "./../../_services/siga.service";
   styleUrls: ["./busqueda-colegiado-express.component.scss"]
 })
 export class BusquedaColegiadoExpressComponent implements OnInit {
-  nColegiado: string = "";
-  @Output() idPersona = new EventEmitter<string>();
-  apellidosNombre: string = "";
-  progressSpinner: boolean = false;
-  buscarDisabled: boolean = false;
+  @Input() numColegiado;
+  @Input() nombreAp;
+  @Input() tarjeta;
+  @Input() pantalla;
+  @Input() disabled: boolean = false;
 
-  constructor(private sigaServices: SigaServices) {}
+  @Output() idPersona = new EventEmitter<string>();
+  progressSpinner: boolean = false;
+  nColegiado: string = "";
+  apellidosNombre: string = "";
+  colegiadoForm = new FormGroup({
+    numColegiado: new FormControl(''),
+    nombreAp: new FormControl(''),
+  });
+
+  msgs;
+
+  constructor(private router: Router, private sigaServices: SigaServices, private translateService: TranslateService, private PpersistenceService: PersistenceService) { }
 
   ngOnInit() {
-    this.idPersona.emit("");
-  } 
 
-  isBuscar() {
-    if(this.nColegiado.length!=0){
+    if (this.numColegiado) {
+      this.colegiadoForm.get('numColegiado').setValue(this.numColegiado);
+    }
+
+    if (this.nombreAp) {
+      this.colegiadoForm.get('nombreAp').setValue(this.nombreAp);
+    }
+
+    this.colegiadoForm.controls['nombreAp'].disable();
+
+    if (this.disabled) {
+      this.colegiadoForm.controls['numColegiado'].disable();
+    }
+
+  }
+
+  clearForm() {
+    this.colegiadoForm.reset();
+  }
+
+  isBuscar(form) {
+    if (form.numColegiado != undefined && form.numColegiado != null && form.numColegiado.length != 0) {
       this.progressSpinner = true;
 
-      this.sigaServices.getParam("componenteGeneralJG_busquedaColegiado","?colegiadoJGItem=" + this.nColegiado).subscribe(
+      this.sigaServices.getParam("componenteGeneralJG_busquedaColegiado", "?colegiadoJGItem=" + form.numColegiado).subscribe(
         data => {
           this.progressSpinner = false;
 
           if (data.colegiadoJGItem.length == 1) {
             this.apellidosNombre = data.colegiadoJGItem[0].nombre;
             this.idPersona.emit(data.colegiadoJGItem[0].idPersona);
+            this.colegiadoForm.get("nombreAp").setValue(this.apellidosNombre);
           } else {
             this.apellidosNombre = "";
-            this.nColegiado = "";
+            this.numColegiado = ""
+            form.numColegiado = "";
             this.idPersona.emit("");
+
+            this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("general.message.colegiadoNoEncontrado"));
           }
         },
         error => {
           this.progressSpinner = false;
           this.apellidosNombre = "";
-          this.nColegiado = "";
+          form.numColegiado = "";
+          this.numColegiado = "";
           this.idPersona.emit("");
           console.log(error);
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         }
       );
-    }else{
+    } else {
       this.progressSpinner = false;
       this.apellidosNombre = "";
       this.idPersona.emit("");
+
+      if (sessionStorage.getItem("tarjeta")) {
+        sessionStorage.removeItem("tarjeta");
+      }
+
+      if (sessionStorage.getItem("pantalla")) {
+        sessionStorage.removeItem("pantalla");
+      }
+
+      if (this.pantalla) {
+        sessionStorage.setItem("pantalla", this.pantalla);
+      }
+
+      if (this.tarjeta) {
+        sessionStorage.setItem("tarjeta", this.tarjeta);
+      }
+
+      if (form.numColegiado == null || form.numColegiado == undefined || form.numColegiado.trim() == "") {
+        this.router.navigate(["/buscadorColegiados"]);
+      }
     }
-    this.buscarDisabled=false;
+    // this.buscarDisabled=false;
   }
 
-  focusNColegiado(){
-    this.buscarDisabled=true;
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
   }
 
-  isLimpiar() {
-    this.apellidosNombre="";
-    this.nColegiado="";
-    this.idPersona.emit("");
+  clear() {
+    this.msgs = [];
   }
 }

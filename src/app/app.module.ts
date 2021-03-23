@@ -52,7 +52,6 @@ import { BuscadorProcuradoresComponent } from './commons/buscador-procuradores/b
 import { FiltroBuscadorProcuradorComponent } from './commons/buscador-procuradores/filtro/filtro.component';
 import { TablaBuscadorProcuradorComponent } from './commons/buscador-procuradores/tabla/tabla.component';
 import { BusquedaAsuntosModule } from './commons/busqueda-asuntos/busqueda-asuntos.module';
-import { BusquedaColegiadoExpressModule } from './commons/busqueda-colegiado-express/busqueda-colegiado-express.module';
 import { GeneralSJCSModule } from './commons/busqueda-generalSJCS/busqueda-generalSJCS.module';
 import { DialogoModule } from './commons/dialog/dialogo.module';
 import { ErrorAccesoComponent } from './commons/error/error-acceso/error-acceso.component';
@@ -337,6 +336,12 @@ import { TarjetaResumenFijaModule } from './commons/tarjeta-resumen-fija/tarjeta
 import { PartidosJudicialesComponent } from './features/sjcs/maestros/partidos-judiciales/partidas-judiciales.component';
 import { MatSortModule } from '@angular/material/sort';
 import { PaginadorModule } from './commons/paginador/paginador.module';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { BuscadorColegiadosComponent } from "./commons/buscador-colegiados/buscador-colegiados.component";
+import { FiltroBuscadorColegiadosComponent } from './commons/buscador-colegiados/filtro-buscador-colegiados/filtro-buscador-colegiados.component';
+import { TablaBuscadorColegiadosComponent } from './commons/buscador-colegiados/tabla-buscador-colegiados/tabla-buscador-colegiados.component';
+import { BusquedaColegiadoExpressModule } from './commons/busqueda-colegiado-express/busqueda-colegiado-express.module';
+
 
 @NgModule({
 	declarations: [
@@ -648,10 +653,14 @@ import { PaginadorModule } from './commons/paginador/paginador.module';
 		DatosColegialesFichaColegialComponent,
 		OtrasColegiacionesFichaColegialComponent,
 		PartidosJudicialesComponent,
-		ServiciosInteresFichaColegialComponent//,
+		ServiciosInteresFichaColegialComponent,
+		BuscadorColegiadosComponent,
+		FiltroBuscadorColegiadosComponent,
+		TablaBuscadorColegiadosComponent
 	],
 	imports: [
 		MatSortModule,
+		MatExpansionModule,
 		BrowserModule,
 		BrowserAnimationsModule,
 		HttpClientModule,

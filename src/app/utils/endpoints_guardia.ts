@@ -38,7 +38,7 @@ export let endpoints_guardia: any = {
 
 
     // Saltos y compensaciones Guardia
-    busquedaSaltosCompG_searchSaltosYComp: "/busquedaSaltosCompG/searchSaltosYCompensaciones",
+    busquedaSaltosCompG_searchSaltosYComp: "guardia/busquedaSaltosCompG/searchSaltosYCompensaciones",
 
     //Incompatibilidades
     guardiasIncompatibilidades_buscarIncompatibilidades : "guardia/buscarIncompatibilidades",

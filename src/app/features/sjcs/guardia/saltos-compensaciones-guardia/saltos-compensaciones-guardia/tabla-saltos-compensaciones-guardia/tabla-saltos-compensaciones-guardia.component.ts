@@ -46,8 +46,9 @@ export class TablaSaltosCompensacionesGuardiaComponent implements OnInit {
     this.selectedDatos = [];
     this.getCols();
 
-    this.datosInicial = JSON.parse(JSON.stringify(this.datos));
-    // this.initDatos = JSON.parse(JSON.stringify((this.datos)));
+    if (this.datos != undefined) {
+      this.datosInicial = JSON.parse(JSON.stringify(this.datos));
+    }
 
   }
 
@@ -239,12 +240,12 @@ export class TablaSaltosCompensacionesGuardiaComponent implements OnInit {
     this.cols = [
       { field: "turno", header: "dato.jgr.guardia.guardias.turno", width: "20%" },
       { field: "guardia", header: "menu.justiciaGratuita.GuardiaMenu", width: "20%" },
-      { field: "nColegiado", header: "censo.nuevaSolicitud.numColegiado", width: "5%" },
+      { field: "nColegiado", header: "censo.nuevaSolicitud.numColegiado", width: "7%" },
       { field: "letrados", header: "justiciaGratuita.oficio.turnos.nletrados", width: "15%" },
       { field: "tipo", header: "censo.nuevaSolicitud.tipoSolicitud", width: "10%" },
       { field: "fecha", header: "censo.resultadosSolicitudesModificacion.literal.fecha", width: "10%" },
       { field: "motivos", header: "dato.jgr.guardia.guardias.motivos", width: "10%" },
-      { field: "fechaUso", header: "", width: "10%" },
+      { field: "fechaUso", header: "dato.jgr.guardia.guardias.fechaUso", width: "10%" },
 
 
     ];
