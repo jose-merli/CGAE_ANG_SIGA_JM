@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Message } from "primeng/components/common/api";
 import { TranslateService } from '../../../../../commons/translate';
 import { ColegiadoItem } from '../../../../../models/ColegiadoItem';
@@ -59,6 +59,10 @@ export class FiltroDesignacionesComponent implements OnInit {
   comboCalidad: any[];
   comboProcedimientos: any[];
   comboOrigenActuaciones: any[];
+
+  datosJustificacion: DesignaItem = new DesignaItem();
+
+  @Output() showTablaJustificacion = new EventEmitter<boolean>();
 
   constructor(private translateService: TranslateService, private sigaServices: SigaServices) { }
 
@@ -389,8 +393,15 @@ getComboCalidad() {
         // this.filtroJustificacion.muestraPendiente=this.checkMostrarPendientes;
 
         this.sigaServices.post("justificacionExpres_busqueda", this.filtroJustificacion).subscribe(
-          n => {
+          data => {
             this.progressSpinner=false;
+            
+
+            if(data!=undefined && data!=null){
+              this.datosJustificacion = JSON.parse(data.body).DesignaItem;
+            }
+
+            this.showTablaJustificacion.emit(true);
           },
           err => {
             this.progressSpinner = false;
