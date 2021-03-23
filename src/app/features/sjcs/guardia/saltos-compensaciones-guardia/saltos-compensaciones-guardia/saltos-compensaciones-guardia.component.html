@@ -1,3 +1,5 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
 <div class="busqueda-container">
 
   <div class="header-title">
@@ -8,15 +10,16 @@
   </div>
 
 
-  <app-filtros-saltos-compensaciones-guardia [permisoEscritura]="permisoEscritura" (isOpen)="isOpenReceive($event)">
+  <app-filtros-saltos-compensaciones-guardia [permisoEscritura]="permisoEscritura" (isBuscar)="isBuscar($event)">
   </app-filtros-saltos-compensaciones-guardia>
 
 </div>
 
-<div *ngIf="progressSpinner" class="overlay-spinner">
-  <div class="loader"></div>
+<div *ngIf="showResults">
+  <app-tabla-saltos-compensaciones-guardia [datos]="datos" (search)="searchHistory($event)">
+  </app-tabla-saltos-compensaciones-guardia>
 </div>
 
-<div *ngIf="showResults">
-  <app-tabla-saltos-compensaciones-guardia></app-tabla-saltos-compensaciones-guardia>
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
 </div>

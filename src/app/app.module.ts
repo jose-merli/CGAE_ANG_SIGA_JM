@@ -656,7 +656,7 @@ import { BusquedaColegiadoExpressModule } from './commons/busqueda-colegiado-exp
 		ServiciosInteresFichaColegialComponent,
 		BuscadorColegiadosComponent,
 		FiltroBuscadorColegiadosComponent,
-		TablaBuscadorColegiadosComponent
+		TablaBuscadorColegiadosComponent,
 	],
 	imports: [
 		MatSortModule,

@@ -1,0 +1,15 @@
+.setItalic {
+    font-style: italic;
+    font-weight: bold;
+    text-decoration: line-through;
+}
+
+textarea {
+    display: block;
+    width: 100%;
+    border: 1px solid #c6c7c8 !important;
+    color: #595959;
+    text-overflow: ellipsis;
+    border-radius: 3px;
+    padding: 0.25rem;
+}

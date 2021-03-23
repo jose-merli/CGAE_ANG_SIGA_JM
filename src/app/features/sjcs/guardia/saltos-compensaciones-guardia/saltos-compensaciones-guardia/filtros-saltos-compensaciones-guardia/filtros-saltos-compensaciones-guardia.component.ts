@@ -21,7 +21,6 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
   showDatosGenerales: boolean = true;
   showColegiado: boolean = false;
   progressSpinner: boolean = false;
-  msgs = [];
 
   filtros: SaltoCompItem = new SaltoCompItem();
   filtroAux: SaltoCompItem = new SaltoCompItem();
@@ -34,7 +33,7 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
   comboGuardias = [];
   comboTurnos = [];
 
-  @Output() isOpen = new EventEmitter<boolean>();
+  @Output() isBuscar = new EventEmitter<boolean>();
 
   textFilter: string = "Seleccionar";
   textSelected: String = "{0} etiquetas seleccionadas";
@@ -54,7 +53,7 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
       if (this.persistenceService.getHistorico() != undefined) {
         this.historico = this.persistenceService.getHistorico();
       }
-      this.isOpen.emit(this.historico)
+      this.isBuscar.emit(this.historico)
 
     }
 
@@ -127,7 +126,7 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
     this.persistenceService.setFiltros(this.filtros);
     this.persistenceService.setFiltrosAux(this.filtros);
     this.filtroAux = this.persistenceService.getFiltrosAux()
-    this.isOpen.emit(false);
+    this.isBuscar.emit(false);
   }
 
   fillFechaDesde(event) {
@@ -172,19 +171,6 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
     this.filtros = new SaltoCompItem();
     this.usuarioBusquedaExpress.nombreAp = '';
     this.usuarioBusquedaExpress.numColegiado = '';
-  }
-
-  clear() {
-    this.msgs = [];
-  }
-
-  showMessage(severity, summary, msg) {
-    this.msgs = [];
-    this.msgs.push({
-      severity: severity,
-      summary: summary,
-      detail: msg
-    });
   }
 
   //búsqueda con enter
