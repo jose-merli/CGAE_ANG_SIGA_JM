@@ -9,6 +9,7 @@ import { NgModule } from '@angular/core';
 import { TablaResultadoOrderComponent } from './tabla-resultado-order.component';
 import { SelectorModule } from '../selector/selector.module';
 import { FechaModule } from '../fecha/fecha.module';
+import { PaginadorModule } from '../paginador/paginador.module';
 @NgModule({
     declarations: [TablaResultadoOrderComponent],
     imports: [
@@ -26,6 +27,7 @@ import { FechaModule } from '../fecha/fecha.module';
         MatSortModule,
         FormsModule,
         FechaModule,
+        PaginadorModule,
         CheckboxModule
         
     ],

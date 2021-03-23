@@ -18,6 +18,13 @@ export class TablaResultadoOrderComponent implements OnInit {
   rowGroupsOrdered = [];
   @Input() seleccionarTodo = false;
   @Output() anySelected = new EventEmitter<any>();
+  @Output() selectedRow = new EventEmitter<any>();
+  @Output() colaGuardiaModified = new EventEmitter<any>();
+  @Output() rest = new EventEmitter<Boolean>();
+  @Output() dupli = new EventEmitter<Boolean>();
+  anySelectedBol = false;
+  from = 0;
+  to = 10;
   cabecerasMultiselect = [];
   modalStateDisplay = true;
   msgs: Message[] = [];
@@ -40,6 +47,9 @@ export class TablaResultadoOrderComponent implements OnInit {
   unavailableDown = false;
   maxGroup = 0;
   wrongPositionArr = [];
+  ana = [];
+  @Input() totalRegistros = 0;
+  numperPage = 10;
   @ViewChild('table') table: ElementRef;
 
   
@@ -52,13 +62,15 @@ export class TablaResultadoOrderComponent implements OnInit {
       if(!event.target.classList.contains("selectedRowClass")){
         this.selected = false;
         this.selectedArray = [];
+        this.anySelectedBol = false;
       }
     }
     });
   }
 
   ngOnInit(): void {
-    console.log('this.cabeceras: ', this.cabeceras)
+    this.selectedArray = [];
+    this.totalRegistros = this.rowGroups.length;
     this.numCabeceras = this.cabeceras.length;
     this.numColumnas = this.numCabeceras;
     this.cabeceras.forEach(cab =>{
@@ -66,13 +78,16 @@ export class TablaResultadoOrderComponent implements OnInit {
     })
     this.xArr = [];
     this.rowGroups.forEach((rg, i) =>{
-      this.grupos.push(rg.cells[0].value);
+      this.grupos.push(rg.cells[1].value);
       let x = this.ordenValue(i);
       this.xArr.push(x);
     })
 
     this.maxGroup = this.grupos.reduce((a, b)=>Math.max(a, b)); 
     this.ordenarGrupos();
+  }
+  perPage(perPage){
+    this.numperPage = perPage;
   }
   ordenValue(i){
   if(this.grupos[i-1] != undefined){
@@ -89,7 +104,7 @@ export class TablaResultadoOrderComponent implements OnInit {
   validaCheck(texto) {
     return texto === 'Si';
   }
-  selectRow(rowId){
+  selectRow(rowId, rowSelected){
     if(this.selectedArray.includes(rowId)){
       const i = this.selectedArray.indexOf(rowId);
       this.selectedArray.splice(i, 1);
@@ -99,8 +114,11 @@ export class TablaResultadoOrderComponent implements OnInit {
     }
     if(this.selectedArray.length != 0){
       this.anySelected.emit(true);
+      this.anySelectedBol = true;
+      this.selectedRow.emit(rowSelected);
     }else{
       this.anySelected.emit(false);
+      this.anySelectedBol = false;
     }
     
   }
@@ -112,7 +130,9 @@ export class TablaResultadoOrderComponent implements OnInit {
       this.displayWrongSequence();
     let errorVacio = this.checkEmpty();
     let errorSecuencia = this.checkSequence();
+    this.totalRegistros = this.rowGroups.length;
     if (!errorVacio && !errorSecuencia){
+      this.updateColaGuardia();
       this.showMsg('success', 'Se ha guardado correctamente', '')
     } else if (errorVacio){
       this.showMsg('error', 'Error. Existen campos vacíos en la tabla.', '')
@@ -121,6 +141,10 @@ export class TablaResultadoOrderComponent implements OnInit {
     }
     return errorVacio;
   }
+  updateColaGuardia(){
+    this.colaGuardiaModified.emit(this.rowGroups);
+    this.totalRegistros = this.rowGroups.length;
+  }
 displayWrongSequence(){
   this.wrongPositionArr = [];
   let positions = "";
@@ -128,34 +152,40 @@ displayWrongSequence(){
     const numbers = "123456789";
   this.rowGroups.forEach((row, i) => { 
     if (i < this.rowGroups.length - 1){
-      if (this.rowGroups[i].cells[0].value != this.rowGroups[i + 1].cells[0].value){
-        positions = positions + row.cells[1].value;
-        numColArr.push(row.cells[2].value)
+      if (this.rowGroups[i].cells[1].value != this.rowGroups[i + 1].cells[1].value){
+        positions = positions + row.cells[2].value;
+        numColArr.push(row.cells[3].value)
         this.compareStrings(numbers, positions, numColArr);
         positions = "";
         numColArr = [];
       } else {
-        positions = positions + row.cells[1].value;
-        numColArr.push(row.cells[2].value)
+        positions = positions + row.cells[2].value;
+        numColArr.push(row.cells[3].value)
       }
     } else {
-      positions = positions + row.cells[1].value;
-      numColArr.push(row.cells[2].value)
+      positions = positions + row.cells[2].value;
+      numColArr.push(row.cells[3].value)
       this.compareStrings(numbers, positions, numColArr);
     }
   });
   //Returns false, 
 }
-isIncreasingSequence(numbers) {
-  let numArr = Array.prototype.slice.call(arguments);
-
+isIncreasingSequence(numArr) {
+  let errArr = [];
+  let resultado = false;
   for (var num = 0; num < numArr.length - 1; num++) {
       if (numArr[num] >= numArr[num + 1] || Number.isNaN(numArr[num]) || Number.isNaN(numArr[num + 1])) {
-          return false;
+        errArr.push(true);
+      } else {
+        errArr.push(false);
       }
   }
-
-  return true;
+  errArr.forEach(err => {
+if (err == true){
+  resultado = err;
+}
+  });
+  return resultado;
 }
   checkSequence(){
     let positions = "";
@@ -163,14 +193,15 @@ isIncreasingSequence(numbers) {
     let errorSecuencia = false;
     let errSeqArr = [];
     let err2 = false;
-    console.log('this.rowGroups: ', this.rowGroups)
     this.rowGroups.forEach((row, i) => { 
       if (i < this.rowGroups.length - 1){
-        if (this.rowGroups[i].cells[0].value != this.rowGroups[i + 1].cells[0].value){
+        if (this.rowGroups[i].cells[1].value != this.rowGroups[i + 1].cells[1].value){
           positions = positions + row.cells[1].value;
           //errorSecuencia = numbers.indexOf(positions) === -1;
           errorSecuencia = this.isIncreasingSequence(positions);
           errSeqArr.push(errorSecuencia);
+          if (errorSecuencia == true){
+          }
           positions = "";
         } else {
           positions = positions + row.cells[1].value;
@@ -178,6 +209,8 @@ isIncreasingSequence(numbers) {
       } else {
         positions = positions + row.cells[1].value;
         errorSecuencia = this.isIncreasingSequence(positions);
+        if (errorSecuencia == true){
+        }
         //errorSecuencia = numbers.indexOf(positions) === -1;
         errSeqArr.push(errorSecuencia);
       }
@@ -192,30 +225,24 @@ isIncreasingSequence(numbers) {
   }
   compareStrings(numbers, positions, numColArr){
    
-    let z = 0;
-    console.log('numColArr', numColArr)
-    console.log('numbers', numbers)
-    console.log('positions', positions)
+    let z = 1;
     let numbersArr = Array.from(numbers);
     let positionsArr = Array.from(positions);
-    console.log('numbersArr', numbersArr)
-    console.log('positionsArr', positionsArr)
-    z = 0;
+    z = 1;
     for (var i = 0, len = positionsArr.length; i < len; i++){
         if (numbersArr[i] !== positionsArr[i]){
           z++;
-          if (z<=1){
+          if (z<=2){
             this.wrongPositionArr.push(numColArr[i]);
           }
         }
     }
-    console.log('this.wrongPositionArr: ', this.wrongPositionArr)
   }
   checkEmpty(){
     let errorVacio = false;
-    this.rowGroups.forEach((row, i) => {
-      row.cells.forEach(cell =>{
-        if (cell.value == ''){
+    this.rowGroups.forEach((row, r) => {
+      row.cells.forEach((cell,i)  =>{
+        if (cell.value == '' && ( i == 1 || i == 2)){
           errorVacio = true;
         }
       })
@@ -226,7 +253,7 @@ orderByOrder(){
     let rowsByGroup : Row[] = [];
     this.rowGroups.forEach((row, i) => { 
       if (i < this.rowGroups.length - 1){
-        if (this.rowGroups[i].cells[0].value != this.rowGroups[i + 1].cells[0].value){
+        if (this.rowGroups[i].cells[1].value != this.rowGroups[i + 1].cells[1].value){
           rowsByGroup.push(row);
           //ordenar y guardar
           this.orderSubGroups(rowsByGroup);
@@ -241,6 +268,7 @@ orderByOrder(){
       }
     });
     this.rowGroups = this.rowGroupsOrdered;
+    this.totalRegistros = this.rowGroups.length;
     this.rowGroupsAux = this.rowGroups;
     this.rowGroupsOrdered = [];
 }
@@ -277,23 +305,28 @@ return rowsByGroup;
     });
     this.rowGroups = data.sort((a, b) => {
       let resultado;
-        resultado = compare(a.cells[0].value, b.cells[0].value, true);
+        resultado = compare(a.cells[1].value, b.cells[1].value, true);
     return resultado ;
   });
   this.rowGroupsAux = this.rowGroups;
   this.grupos = [];
   this.rowGroups.forEach((rg, i) =>{
-    this.grupos.push(rg.cells[0].value);
+    this.grupos.push(rg.cells[1].value);
   })
+  this.totalRegistros = this.rowGroups.length;
   }
 
 
 valueChange(i, z, $event){
-    this.rowGroups[i].cells[z].value = $event.target.value;
-    if ( z ==0){
+    if ( z == 1){
+      this.rowGroups[i].cells[z].value = Number($event.target.value);
+    } else {
+      this.rowGroups[i].cells[z].value = $event.target.value.toString();
+    }
+    if ( z ==1){
       this.rowGroups[i].cells[z].type = 'input';
-      this.grupos[i].value = $event.target.value;
-    }else if (z == 1){
+      this.grupos[i] = Number($event.target.value);
+    }else if (z == 2){
       this.rowGroups[i].cells[z].type = 'position';
       this.xArr[i] = $event.target.value;
     }else{
@@ -302,8 +335,9 @@ valueChange(i, z, $event){
 this.rowGroupsAux = this.rowGroups;
 this.grupos = [];
 this.rowGroups.forEach((rg, i) =>{
-  this.grupos.push(rg.cells[0].value);
+  this.grupos.push(rg.cells[1].value);
 })
+this.totalRegistros = this.rowGroups.length;
   }
  /* moveRow( movement){
     let position = this.positionSelected;
@@ -328,26 +362,40 @@ this.rowGroups.forEach((rg, i) =>{
     }
 
   }*/
+  moveToLast(){
+    let lastGroup = this.grupos[this.grupos.length - 1];
+    let groupSelected = this.rowGroups[this.positionSelected].cells[1].value;
+    this.rowGroupsAux.forEach((row, index)=> {
+      if(Number(row.cells[1].value) == Number(groupSelected)){
+        this.rowGroups[index].cells[1].value = lastGroup;
+      } else if (Number(row.cells[1].value) > Number(groupSelected)){
+        this.rowGroups[index].cells[1].value = Number(row.cells[1].value) - 1;
+      }
+  });
+  this.guardar();
+  this.totalRegistros = this.rowGroups.length;
+  }
   moveRow(movement){
-    let groupSelected = this.rowGroups[this.positionSelected].cells[0].value;
+    let groupSelected = this.rowGroups[this.positionSelected].cells[1].value;
     this.rowGroupsAux.forEach((row, index)=> {
       
         if (movement == 'up'){
-          if(Number(row.cells[0].value) == Number(groupSelected)){
-            this.rowGroups[index].cells[0].value = (Number(groupSelected) - 1).toString();
-          } else if (Number(row.cells[0].value) == Number(groupSelected) - 1){
-            this.rowGroups[index].cells[0].value = groupSelected;
+          if(Number(row.cells[1].value) == Number(groupSelected)){
+            this.rowGroups[index].cells[1].value = (Number(groupSelected) - 1);
+          } else if (Number(row.cells[1].value) == Number(groupSelected) - 1){
+            this.rowGroups[index].cells[1].value = groupSelected;
           }
         } else if (movement == 'down'){
-          if(Number(row.cells[0].value) == Number(groupSelected)){
-            this.rowGroups[index].cells[0].value = (Number(groupSelected) + 1).toString();
-          } else if (Number(row.cells[0].value) == Number(groupSelected) + 1){
-            this.rowGroups[index].cells[0].value = groupSelected;
+          if(Number(row.cells[1].value) == Number(groupSelected)){
+            this.rowGroups[index].cells[1].value = (Number(groupSelected) + 1);
+          } else if (Number(row.cells[1].value) == Number(groupSelected) + 1){
+            this.rowGroups[index].cells[1].value = groupSelected;
           }
         }
       
     })
 this.rowGroupsAux = this.rowGroups;
+this.totalRegistros = this.rowGroups.length;
   }
   isSelected(id){
     if(this.selectedArray.includes(id)){
@@ -366,10 +414,10 @@ this.rowGroupsAux = this.rowGroups;
   disableButton(type){
     this.grupos = [];
     this.rowGroups.forEach((rg, i) =>{
-    this.grupos.push(rg.cells[0].value);
+    this.grupos.push(rg.cells[1].value);
   })
     let disable = false;
-    if (this.positionSelected == 0 || this.grupos[this.positionSelected] <= 1){
+    if (this.positionSelected == 1 || this.grupos[this.positionSelected] <= 2){
       this.unavailableUp = true;
     } else {
       this.unavailableUp = false;
@@ -427,10 +475,26 @@ this.rowGroupsAux = this.rowGroups;
           return row;
         }
       });
+      this.totalRegistros = this.rowGroups.length;
       }
 
     isPar(numero):boolean {
       return numero % 2 === 0;
+    }
+    restablecer(){
+      this.rest.emit(true);
+    }
+    duplicar(){
+      this.dupli.emit(true);
+    }
+    selectedAll(evento){
+      this.seleccionarTodo = evento;
+    }
+    fromReg(event){
+      this.from = Number(event) - 1;
+    }
+    toReg(event){
+      this.to = Number(event);
     }
   
 }

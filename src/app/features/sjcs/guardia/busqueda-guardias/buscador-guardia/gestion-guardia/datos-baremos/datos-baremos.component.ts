@@ -53,7 +53,9 @@ export class DatosBaremosComponent implements OnInit {
   }
 
   getBaremos() {
+    //let idGuardiaProvisional =362; //borrar
     this.sigaServices.post(
+      //"busquedaGuardias_getBaremos", idGuardiaProvisional).subscribe(
       "busquedaGuardias_getBaremos", this.persistenceService.getDatos().idGuardia).subscribe(
         data => {
           JSON.parse(data.body).combooItems.forEach(it => {

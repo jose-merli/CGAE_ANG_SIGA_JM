@@ -56,7 +56,6 @@ export class GestionGuardiaComponent implements OnInit {
   tarjetaCalendarios: string;
   tarjetaInscripcionesGuardias: string;
   tarjetaTurnoGuardias: string;
-
   persistenciaGuardia: GuardiaItem;
 
   constructor(private persistenceService: PersistenceService,
@@ -88,7 +87,6 @@ export class GestionGuardiaComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges) {
     this.enviarEnlacesTarjeta();
   }
-
   search() {
     this.progressSpinner = true;
     this.datos = JSON.parse(JSON.stringify(this.persistenceService.getDatos()));
@@ -472,7 +470,6 @@ export class GestionGuardiaComponent implements OnInit {
   }
 
   isOpenReceive(event) {
-    console.log('ABRIR TARJETA: ', event)
     if (event != undefined) {
       switch (event) {
         case "datosGenerales":

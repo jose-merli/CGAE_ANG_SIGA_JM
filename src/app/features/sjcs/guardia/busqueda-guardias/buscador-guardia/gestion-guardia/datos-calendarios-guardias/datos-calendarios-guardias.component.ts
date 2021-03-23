@@ -99,6 +99,8 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
 
   styleObligatorio(evento){
     if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
+      this.openFicha = true;
+      this.opened.emit(this.openFicha);
       return this.commonsService.styleObligatorio(evento);
     }
   }
@@ -286,11 +288,15 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
       });
     }
     //Comprobamos todo
-    if (!this.historico && this.permisoEscritura && this.body.diasSeparacionGuardias && this.body.diasGuardia && this.body.tipoDiasGuardia
+    /*if (!this.historico && this.permisoEscritura && this.body.diasSeparacionGuardias && this.body.diasGuardia && this.body.tipoDiasGuardia
       && !(this.body.requeridaValidacion && !this.body.diasPeriodo) &&
       !(this.body.diasPeriodo && !this.body.tipoDiasPeriodo) && !(!this.body.diasPeriodo && this.body.tipoDiasPeriodo)
       && ((JSON.stringify(this.body) != JSON.stringify(this.bodyInicial)) || boolFestivo || boolLaborable)) {
-      return false;
+      return false;*/
+      if (!this.historico && this.permisoEscritura && this.body.diasSeparacionGuardias && this.body.diasGuardia && this.body.tipoDiasGuardia
+        && !(this.body.requeridaValidacion && !this.body.diasPeriodo) &&
+        !(this.body.diasPeriodo && !this.body.tipoDiasPeriodo) && !(!this.body.diasPeriodo && this.body.tipoDiasPeriodo)) {
+        return false;
     }
     return true;
   }

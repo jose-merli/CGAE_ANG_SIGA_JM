@@ -8,6 +8,8 @@ import { TablaDinamicaColaGuardiaComponent } from '../../../../../../../commons/
 import { TranslateService } from '../../../../../../../commons/translate';
 import { Row, TablaResultadoOrderCGService } from '../../../../../../../commons/tabla-resultado-order/tabla-resultado-order-cg.service';
 import { TablaResultadoOrderComponent } from '../../../../../../../commons/tabla-resultado-order/tabla-resultado-order.component';
+import { ConfiguracionCola, GlobalGuardiasService } from '../../../../guardiasGlobal.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-datos-cola-guardia',
@@ -36,6 +38,10 @@ export class DatosColaGuardiaComponent implements OnInit {
   rowGroups: Row[];
   rowGroupsAux: Row[];
   cabeceras = [
+    {
+      id: "ordenCola",
+      name: "dato.jgr.guardia.guardias.ordenCola"
+    },
     {
       id: "grupo",
       name: "dato.jgr.guardia.guardias.grupo"
@@ -67,20 +73,24 @@ export class DatosColaGuardiaComponent implements OnInit {
     {
       id: "saltos",
       name: "justiciaGratuita.oficio.turnos.saltos"
-    },
-    {
-      id: "ordenCola",
-      name: "justiciaGratuita.guardia.gestion.ordenCola"
     }
   ];
+  configuracionCola: ConfiguracionCola = {
+    'manual': true,
+    'porGrupos': true
+};
   allSelected = false;
   isDisabled = true;
   seleccionarTodo = false;
   processedData = [];
+  rowGroupModified:Row[];
+  selectedRow:Row;
+  totalRegistros = 0;
+  suscription: Subscription;
   @Input() tarjetaColaGuardia;
   @Input() permisoEscritura: boolean = false;
   @Input() modoEdicion = false;
-  @ViewChild(TablaDinamicaColaGuardiaComponent) tabla;
+  //@ViewChild(TablaDinamicaColaGuardiaComponent) tabla;
   @ViewChild(TablaResultadoOrderComponent) tablaOrder;
 
   constructor(private sigaService: SigaServices,
@@ -88,11 +98,22 @@ export class DatosColaGuardiaComponent implements OnInit {
     public datepipe: DatePipe,
     public commonsService: CommonsService,
     public translateService: TranslateService,
-    private trmService: TablaResultadoOrderCGService) { }
-    ngOnInit(): void {
-    console.log('openFicha: ', this.openFicha)
-    this.historico = this.persistenceService.getHistorico();
+    private trmService: TablaResultadoOrderCGService,
+    private globalGuardiasService: GlobalGuardiasService) { }
 
+    ngOnInit(): void {
+      this.suscription = this.globalGuardiasService.getConf().subscribe((confValue)=>{
+        this.configuracionCola = confValue;
+        this.inicio();
+        this.getColaGuardia();
+      });
+  }
+ ngOnDestroy(){
+  this.suscription.unsubscribe();
+ }
+inicio(){
+  this.datos = [];
+    this.historico = this.persistenceService.getHistorico();
     this.sigaService.datosRedy$.subscribe(
       data => {
         if (data.body)
@@ -109,25 +130,23 @@ export class DatosColaGuardiaComponent implements OnInit {
         this.body.idGrupoUltimo = data.idGrupoUltimo;
         this.body.porGrupos = data.porGrupos == "1" ? true : false;
         this.body.letradosIns = new Date();
-
+        
+        if (this.configuracionCola.manual && this.configuracionCola.porGrupos){
+          this.body.porGrupos = true;
+          this.getColaGuardia();
+        } else {
+          this.body.porGrupos = false;
+          this.getColaGuardia();
+        }
         if (this.body.porGrupos) {
           this.body.ordenacionManual = true;
           this.editable = true;
           this.botActivos = true;
-
-          this.getColaGuardia();
-
         }
-        else {
-          this.body.ordenacionManual = false;
-          this.isOrdenacionManual();
-        }
-
       });
-      
-  }
- 
 
+
+}
   
     selectedAll(event) {
       this.seleccionarTodo = event;
@@ -318,74 +337,55 @@ export class DatosColaGuardiaComponent implements OnInit {
   }
 
   transformDate(fecha) {
-    /*if (fecha){
-    fecha = new Date(fecha).toLocaleDateString();
-    }
-    let dia = "";
-    let mes = "";
-    let splitted = fecha.toString().split("/", fecha.toString().length); 
-    console.log('splitted: ', splitted)
-    console.log('splitted[0].length: ', splitted[0].length)
-    console.log('splitted[1].length: ', splitted[1].length)
-    if (splitted[0].length == 1){
-      dia = '0' + splitted[0].toString();
-    }
-    else if (splitted[1].length == 1){
-      mes = '0' + splitted[1].toString();
-      console.log('mes: ', mes)
-    }
-    if (splitted[0].length == 1 && splitted[1].length == 1){
-      fecha  = dia + '/' + mes + '/' + splitted[2];
-    } else {
-      if (splitted[0].length == 1){
-        fecha  = dia + '/' + splitted[1] + '/' + splitted[2];
-      }else if (splitted[1].length == 1){
-        fecha  = splitted[0] + '/' + mes + '/' + splitted[2];
-        console.log('fecha: ', fecha)
-      }
-    }
-    console.log('fecha final: ', fecha)
-    if (fecha)
-      fecha = new Date(fecha + "T00:00:00");*/
     this.body.letradosIns = this.datepipe.transform(new Date(fecha), 'dd/MM/yyyy');
-    console.log('this.body.letradosIns : ', this.body.letradosIns )
+  }
+  setColaGuardia(colaGuardiaModificado){
+    let colaGuardiaModificadoSt = JSON.parse(JSON.stringify(colaGuardiaModificado));
+    this.sigaService.post(
+      "busquedaGuardias_updateColaGuardia", colaGuardiaModificadoSt).subscribe(
+        data => {
+
+        }, err => {
+          console.log(err);
+        });
   }
 
   getColaGuardia() {
     if (this.body.letradosIns instanceof Date) // Se comprueba si es una fecha por si es necesario cambiar el formato.
       this.transformDate(this.body.letradosIns); // Si no es una fecha es que ya está formateada porque viene del back.
     this.progressSpinner = true;
-    this.body.idTurno = 802;
-    this.body.idGuardia = 1441;
-    this.body.letradosIns = '09/12/10';
+    //this.body.idTurno = 802; //borrar
+    //this.body.idGuardia = 1441; //borrar
+    //this.body.letradosIns = '09/12/10';
     this.sigaService.post(
       "busquedaGuardias_getColaGuardia", this.body).subscribe(
         data => {
-          console.log('RESPUESTA COLA GUARDIA: ', this.datos)
           this.datos = JSON.parse(data.body).inscripcionesItem;
           this.datos = this.datos.map(it => {
             it.nombreApe = it.apellido1 + " " + it.apellido2 + " " + it.nombre;
-            if (!this.body.porGrupos && !this.body.ordenacionManual) {
+            /*if (!this.body.porGrupos && !this.body.ordenacionManual) {
               it.numeroGrupo = "";
               it.orden = "";
             } else {
               it.numeroGrupo = +it.numeroGrupo
               it.order = +it.order
-            }
+            }*/
             return it;
           });
           this.transformData();
           this.datosInicial = JSON.parse(JSON.stringify(this.datos));
           if (this.datos && this.datos.length > 0)
             this.resumenColaGuardia = this.datos[0].nColegiado + " " + this.datos[0].nombreApe;
-          if (this.datosInicial.length > 0)
+          /*if (this.datosInicial.length > 0)
             this.resumenColaGuardia = this.resumenColaGuardia.concat(" ... " + this.datos[this.datos.length - 1].nColegiado + " " + this.datos[this.datos.length - 1].nombreApe
-              + " ... " + this.datos.length, " inscritos");
+              + " ... " + this.datos.length, " inscritos");*/
+          if (this.datosInicial.length > 0)
+            this.resumenColaGuardia = this.resumenColaGuardia.concat(" ... " + this.datos.length, " inscritos");
           else
             this.resumenColaGuardia = "0 inscritos";
           if (this.body.idPersonaUltimo && this.datos.length > 0)
             this.body.idGrupoUltimo = this.datos[this.datos.length - 1].idGrupoGuardia;
-          this.rest();
+          //this.rest();
           this.progressSpinner = false;
           
         },
@@ -398,6 +398,7 @@ export class DatosColaGuardiaComponent implements OnInit {
   transformData(){
     let arr = [];
     let objArr = [
+      { type: 'text', value: '1' },
       { type: 'input', value: '2' },
       { type: 'position', value: '3' },
       { type: 'text', value: '4567' },
@@ -405,9 +406,9 @@ export class DatosColaGuardiaComponent implements OnInit {
       { type: 'text', value: '12/02/2018' },
       { type: 'text', value: '12/02/2020' },
       { type: 'text', value: '3' },
-      { type: 'text', value: '3' }
+      { type: 'text', value: '3' },
+      { type: 'text', value: '000' }
     ];
-
     this.datos.forEach(datoObj =>{
       let ordenValue = '';
       if (datoObj.orden != null){
@@ -415,24 +416,83 @@ export class DatosColaGuardiaComponent implements OnInit {
       } else {
         ordenValue = '';
       }
-      objArr = [
-        { type: 'input', value: datoObj.numeroGrupo },
-        { type: 'position', value: ordenValue },
-        { type: 'text', value: datoObj.nColegiado },
-        { type: 'text', value: datoObj.apellido1 + ',' + datoObj.apellido2 + ',' + datoObj.nombre},
-        { type: 'text', value: datoObj.fechaValidacion },
-        { type: 'text', value: datoObj.fechabaja },
-        { type: 'text', value: datoObj.compensaciones },
-        { type: 'text', value: datoObj.saltos },
-        /*{ type: 'text', value: datoObj.ordenCola}*/
-      ];
-      console.log('objArr', objArr)
+      if (this.configuracionCola.porGrupos == false){
+        objArr = [
+          { type: 'text', value: datoObj.ordenCola },
+          { type: 'text', value: datoObj.numeroGrupo },
+          { type: 'text', value: ordenValue },
+          { type: 'text', value: datoObj.nColegiado },
+          { type: 'text', value: datoObj.apellido1 + ',' + datoObj.apellido2 + ',' + datoObj.nombre},
+          { type: 'text', value: datoObj.fechaValidacion },
+          { type: 'text', value: datoObj.fechabaja },
+          { type: 'text', value: datoObj.compensaciones },
+          { type: 'text', value: datoObj.saltos },
+          { type: 'text', value: datoObj.idGrupoGuardiaColegiado}
+        ];
+      } else {
+        objArr = [
+          { type: 'text', value: datoObj.ordenCola },
+          { type: 'input', value: datoObj.numeroGrupo },
+          { type: 'position', value: ordenValue },
+          { type: 'text', value: datoObj.nColegiado },
+          { type: 'text', value: datoObj.apellido1 + ',' + datoObj.apellido2 + ',' + datoObj.nombre},
+          { type: 'text', value: datoObj.fechaValidacion },
+          { type: 'text', value: datoObj.fechabaja },
+          { type: 'text', value: datoObj.compensaciones },
+          { type: 'text', value: datoObj.saltos },
+          { type: 'text', value: datoObj.idGrupoGuardiaColegiado}
+        ];
+      }
     arr.push(objArr);
     })
     this.processedData = arr;
-    console.log('arr', arr)
     this.rowGroups = this.trmService.getTableData(this.processedData);
     this.rowGroupsAux = this.trmService.getTableData(this.processedData);
+    this.totalRegistros = this.rowGroups.length;
+  }
+
+  updateColaGuardia(event){
+    let datCopy = {
+      apellido1: "ZFIM",
+      apellido2: " FIWQUQ",
+      compensaciones: "0",
+      fechaSuscripcion: 1262646000000,
+      fechaValidacion: "12/01/2010",
+      fechabaja: null,
+      idGrupoGuardia: "436",
+      idGrupoGuardiaColegiado: "0000000000000",
+      idGuardia: "1441",
+      idPersona: "2005003340",
+      idTurno: "802",
+      nColegiado: "5980",
+      nombre: "PRUEBA",
+      nombreApe: "PRUEBA",
+      numeroGrupo: 1,
+      orden: "0000000",
+      ordenCola: "1",
+      order: NaN,
+      saltos: "0"
+    };
+    let datosModif = [];
+    this.rowGroupModified = event;
+    this.rowGroupModified.forEach(row => {
+      let ordenCola = row.cells[0];
+      let grupo = row.cells[1];
+      let orden = row.cells[2];
+      let numCol = row.cells[3];
+      let idGGC = row.cells[4]
+      this.datos.forEach(dat => {
+        if (dat.nColegiado == numCol.value && dat.idGrupoGuardiaColegiado != datCopy.idGrupoGuardiaColegiado && dat.idGrupoGuardiaColegiado == idGGC.value){
+            datCopy = Object.assign({},dat);
+            datCopy.ordenCola = ordenCola.value.toString();
+            datCopy.numeroGrupo = Number(grupo.value);
+            datCopy.orden = orden.value.toString();
+          datosModif.push(datCopy);
+        }
+      });
+    })
+    let colaGuardiaUpdated = {"inscripcionesItem": datosModif};
+    this.setColaGuardia(colaGuardiaUpdated);
   }
   fillFecha(event) {
     this.body.letradosIns = event;
@@ -440,7 +500,7 @@ export class DatosColaGuardiaComponent implements OnInit {
   }
 
   ultimo(selected) {
-    if (this.permisoEscritura && !this.historico && selected.ordenCola > 0) {
+    /*if (this.permisoEscritura && !this.historico && selected.ordenCola > 0) {
       this.progressSpinner = true;
       this.body.idPersonaUltimo = selected.idPersona;
       this.body.idGrupoUltimo = selected.idGrupoUltimo;
@@ -467,7 +527,9 @@ export class DatosColaGuardiaComponent implements OnInit {
             this.progressSpinner = false;
           }
         );
-    }
+    }*/
+  
+
   }
 
   isOrdenacionManual() {
@@ -498,54 +560,52 @@ export class DatosColaGuardiaComponent implements OnInit {
         });
 
   }
-
-  duplicar() {
-    this.tabla.tabla.sortOrder = 0;
-    this.tabla.tabla.sortField = '';
-    this.tabla.tabla.reset();
-    // Creamos uno igual menos porque no tendra idGrupoguardiacolegiado. Eso y que el orden sera
-    // menor o igual que 0 es como se diferencian los duplicados. Al menos hasta que se guarden.
-    this.datos = [JSON.parse(JSON.stringify(this.tabla.selectedDatos)), ...this.datos];
-    this.datos[0].numeroGrupo = "";
-    this.datos[0].orden = "";
-    this.datos[0].idGrupoGuardiaColegiado = "";
-    let menorOrdenCola = 0;
-    this.datos.forEach(element => {
-      if (+element.ordenCola <= menorOrdenCola)
-        menorOrdenCola = +element.ordenCola - 1;
+  checkSelectedRow(selected){
+    this.selectedRow = selected;
+  }
+  duplicar(duplicar) {
+    if (duplicar){
+    let datCopy;
+    this.datos.forEach(dat => {
+      if (dat.nColegiado == this.selectedRow.cells[2].value){
+        datCopy = Object.assign({},dat);
+        datCopy.numeroGrupo = Number(this.selectedRow.cells[0].value);
+        datCopy.orden = "0"; // duplicados se identifican por orden <= 0
+        datCopy.idGrupoGuardiaColegiado = null; // duplicados no tienen idGrupoGuardiaColegiado 
+      } 
     });
-    this.datos[0].ordenCola = menorOrdenCola;
-    this.updateInscripciones.push(this.datos[0]);
-    this.botActivos = false;
+    this.datos.push(datCopy);
+    this.transformData();
+  }
   }
 
-  rest() {
-    if (this.datosInicial && this.datos && this.tabla && this.tabla.tabla) {
+
+  rest(rest) {
+if (rest){
+    if (this.datosInicial && this.datos) {
       this.datos = JSON.parse(JSON.stringify(this.datosInicial));
-      this.tabla.tabla.reset();
-      this.tabla.tabla.sortOrder = 0;
-      this.tabla.tabla.sortField = '';
-      this.tabla.selectedDatos = null;
-      this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
+      this.transformData();
+      /*this.tablaOrder.tabla.reset();
+      this.tablaOrder.tabla.sortOrder = 0;
+      this.tablaOrder.tabla.sortField = '';
+      this.tablaOrder.selectedDatos = null;
+      this.tablaOrder.buscadores = this.tablaOrder.buscadores.map(it => it = "");*/
 
       this.updateInscripciones = [];
       // this.tabla.buscadores = this.tabla.buscadores.map(it => it = ""); NO OLVIDAAAAAAAAR!!!!!
     }
   }
+  }
   disabledBotones() {
-    if (!this.botActivos || !this.tabla || (!this.updateInscripciones || this.updateInscripciones.length == 0) || (!this.tabla.selectedDatos || this.tabla.selectedDatos.length == 0))
+    if (!this.botActivos || !this.tablaOrder || (!this.updateInscripciones || this.updateInscripciones.length == 0) || (!this.tablaOrder.selectedDatos || this.tablaOrder.selectedDatos.length == 0))
       return false;
     return true;
   }
   duplicarDisabled() {
-    if (this.tabla && this.tabla.selectedDatos && this.updateInscripciones.length == 0 && this.tabla.selectedDatos.length != 0) return false;
-    return true;
+    return this.isDisabled;
   }
   disabledUltimo() {
-    if (!this.historico && this.permisoEscritura && this.tabla && this.tabla.selectedDatos && this.tabla.selectedDatos.length != 0 && this.updateInscripciones.length == 0) {
-      return false;
-    }
-    return true;
+    return this.isDisabled;
   }
 
   clear() {

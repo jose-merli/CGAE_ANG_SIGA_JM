@@ -7,7 +7,7 @@ export class Row {
 
 export class Cell {
   type: string;
-  value: string;
+  value: any;
 }
 export class TablaResultadoOrderCGService {
 
@@ -15,7 +15,6 @@ constructor() {}
 
 public getTableData(result) {
   if ( result != undefined){
-  console.log('result: ', result)
 let finalRows: Row[] = [];
 result.forEach((rows) => {    
 let rowObject: Row = new Row();

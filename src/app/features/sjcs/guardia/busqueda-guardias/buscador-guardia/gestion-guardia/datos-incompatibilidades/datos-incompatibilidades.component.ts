@@ -15,7 +15,7 @@ export class DatosIncompatibilidadesComponent implements OnInit {
   msgs = [];
   cols = [];
   @Input() openFicha: boolean = false;
-
+  resumenParte1 = "";
   buscadores = [];
   rowsPerPage;
   selectedItem: number = 10
@@ -34,8 +34,9 @@ export class DatosIncompatibilidadesComponent implements OnInit {
 
   ngOnInit() {
     this.getCols();
-    if (this.persistenceService.getDatos())
-      this.getResumenIncompatibilidades();
+    if (this.persistenceService.getDatos()){
+      this.getDatosIncompatibilidades();
+      this.getResumenIncompatibilidades();}
     else
       this.sigaServices.datosRedy$.subscribe(
         n => {
@@ -45,10 +46,17 @@ export class DatosIncompatibilidadesComponent implements OnInit {
   }
 
   getResumenIncompatibilidades() {
-    this.sigaServices.post(
+     this.sigaServices.post(
       "gestionGuardias_resumenIncompatibilidades", this.persistenceService.getDatos()).subscribe(
         data => {
-          this.resumenIncompatibilidades = JSON.parse(data.body).guardiaItems[0].incompatibilidades;
+          
+          //this.datos = JSON.parse(data.body).guardiaItems;
+          //this.resumenIncompatibilidades = JSON.parse(data.body).guardiaItems[0].incompatibilidades;
+          if (this.datos && this.datos.length > 0){
+            this.resumenIncompatibilidades = this.resumenParte1;
+            this.resumenIncompatibilidades = this.resumenIncompatibilidades.concat(" ... " + JSON.parse(data.body).guardiaItems[0].incompatibilidades, " total");
+          }
+
           this.onChangeRowsPerPages({ value: 10 });
           this.progressSpinner = false;
 
@@ -110,14 +118,15 @@ export class DatosIncompatibilidadesComponent implements OnInit {
 
   getDatosIncompatibilidades() {
     if (this.persistenceService.getDatos().idGuardia) {
+      let idGuardia = this.persistenceService.getDatos().idGuardia
+      //idGuardia = 358; //borrar
       this.sigaServices.post(
-        "busquedaGuardias_tarjetaIncompatibilidades", this.persistenceService.getDatos().idGuardia).subscribe(
+        "busquedaGuardias_tarjetaIncompatibilidades", idGuardia).subscribe(
           data => {
             this.datos = JSON.parse(data.body).guardiaItems;
-
+            this.resumenParte1 = this.datos[this.datos.length - 1].turno +  " " + this.datos[this.datos.length - 1].nombre + " " +  this.datos[this.datos.length - 1].tipoDia + " " + this.datos[this.datos.length - 1].descripcion + " " + this.datos[this.datos.length - 1].diasSeparacionGuardias;
             this.onChangeRowsPerPages({ value: 10 });
             this.progressSpinner = false;
-
           },
           err => {
             console.log(err);

@@ -47,7 +47,6 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
 
 
   ngOnInit() {
-    console.log('openFicha: ', this.openFicha)
     this.resaltadoDatos=true;
 
     this.getCols();
@@ -95,7 +94,6 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
   }
 
   muestraCamposObligatorios(){
-  console.log('muestraOBLIGATORIO')
     this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
     this.resaltadoDatos=true;
   }
@@ -110,19 +108,12 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
 
   disabledSave() {
     if (this.permisoEscritura){
-      console.log('this.historico: ', this.historico)
-      console.log('this.body.nombre: ', this.body.nombre)
-      console.log('this.body.nombre.trim(): ', this.body.nombre.trim())
-      console.log('this.body.descripcion: ', this.body.descripcion)
-      console.log('this.body.descripcion.trim(): ', this.body.descripcion.trim())
-      console.log('this.body.idTurnoPrincipal: ', this.body.idTurnoPrincipal)
-      console.log('this.body.idGuardiaPrincipal: ', this.body.idGuardiaPrincipal)
-      console.log('this.body.idTurno: ', this.body.idTurno)
-      console.log('JSON.stringify(this.body): ', JSON.stringify(this.body))
-      console.log('JSON.stringify(this.bodyInicial): ', JSON.stringify(this.bodyInicial))
-      if (!this.historico && (this.body.nombre && this.body.nombre.trim())
+      /*if (!this.historico && (this.body.nombre && this.body.nombre.trim())
         && (this.body.descripcion && this.body.descripcion.trim()) && !(this.body.idTurnoPrincipal && !this.body.idGuardiaPrincipal)
-        && (this.body.idTurno) && (JSON.stringify(this.body) != JSON.stringify(this.bodyInicial))) {
+        && (this.body.idTurno) && (JSON.stringify(this.body) != JSON.stringify(this.bodyInicial))) {*/
+          if (!this.historico && (this.body.nombre && this.body.nombre.trim())
+        && (this.body.descripcion && this.body.descripcion.trim()) && !(this.body.idTurnoPrincipal && !this.body.idGuardiaPrincipal)
+        && (this.body.idTurno)) {
         return false;
       } else return true;
     }
@@ -207,8 +198,6 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
     if (this.body.descripcion != undefined) this.body.descripcion = this.body.descripcion.trim();
     if (this.body.nombre != undefined) this.body.nombre = this.body.nombre.trim();
     if (this.body.envioCentralita == undefined) this.body.envioCentralita = false;
-    console.log('this.body: ', this.body)
-    console.log('url: ', url)
     this.sigaService.post(url, this.body).subscribe(
       data => {
 
@@ -247,7 +236,6 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
   }
 
   save() {
-    console.log('this.disabledSave():_', this.disabledSave())
     if(!this.disabledSave()){
       if (this.permisoEscritura && !this.historico) {
         this.progressSpinner = true;

@@ -270,7 +270,6 @@ import { DefinirListasGuardiasComponent } from './features/sjcs/guardia/definir-
 import { GuardiasAsistenciasComponent } from './features/sjcs/guardia/guardias-asistencias/guardias-asistencias.component';
 import { GuardiasBajasTemporalesComponent } from './features/sjcs/guardia/guardias-bajas-temporales/guardias-bajas-temporales.component';
 import { GuardiasCentralitaComponent } from './features/sjcs/guardia/guardias-centralita/guardias-centralita.component';
-import { GuardiasIncompatibilidadesComponent } from './features/sjcs/guardia/guardias-incompatibilidades/guardias-incompatibilidades.component';
 import { GuardiasSaltosCompensacionesComponent } from './features/sjcs/guardia/guardias-saltos-compensaciones/guardias-saltos-compensaciones.component';
 import { ProgramacionCalendariosComponent } from './features/sjcs/guardia/programacionCalendarios/programacionCalendarios.component';
 import { GuardiasSolicitudesTurnosComponent } from './features/sjcs/guardia/solicitudes-turnos/solicitudes-turnos.component';
@@ -336,11 +335,13 @@ import { ServiciosInteresFichaColegialComponent } from './features/censo/ficha-c
 import { TarjetaResumenFijaModule } from './commons/tarjeta-resumen-fija/tarjeta-resumen-fija.module';
 import { PartidosJudicialesComponent } from './features/sjcs/maestros/partidos-judiciales/partidas-judiciales.component';
 import { MatSortModule } from '@angular/material/sort';
+import { PaginadorModule } from './commons/paginador/paginador.module';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { BuscadorColegiadosComponent } from "./commons/buscador-colegiados/buscador-colegiados.component";
 import { FiltroBuscadorColegiadosComponent } from './commons/buscador-colegiados/filtro-buscador-colegiados/filtro-buscador-colegiados.component';
 import { TablaBuscadorColegiadosComponent } from './commons/buscador-colegiados/tabla-buscador-colegiados/tabla-buscador-colegiados.component';
 import { BusquedaColegiadoExpressModule } from './commons/busqueda-colegiado-express/busqueda-colegiado-express.module';
+
 
 @NgModule({
 	declarations: [
@@ -460,7 +461,6 @@ import { BusquedaColegiadoExpressModule } from './commons/busqueda-colegiado-exp
 		SaltosYCompensacionesComponent,
 		GuardiasSolicitudesTurnosComponent,
 		TurnosComponent,
-		GuardiasIncompatibilidadesComponent,
 		ProgramacionCalendariosComponent,
 		GuardiasBajasTemporalesComponent,
 		GuardiasSaltosCompensacionesComponent,
@@ -499,7 +499,7 @@ import { BusquedaColegiadoExpressModule } from './commons/busqueda-colegiado-exp
 		ComunicaCargaComponent,
 		ComunicaResolucionesComponent,
 		ComunicaDesignacionesComponent,
-
+		
 		//Consultas
 		RecuperarConsultasComponent,
 		ConsultasListasDinamicasComponent,
@@ -702,6 +702,7 @@ import { BusquedaColegiadoExpressModule } from './commons/busqueda-colegiado-exp
 		PipeTranslationModule,
 		PipeNumberModule,
 		FechaModule,
+		PaginadorModule,
 		DialogoModule,
 		PrecioModule,
 		KeyFilterModule,
