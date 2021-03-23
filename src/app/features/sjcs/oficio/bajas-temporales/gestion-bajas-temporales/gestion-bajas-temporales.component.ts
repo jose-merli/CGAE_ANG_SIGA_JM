@@ -64,7 +64,7 @@ export class TablaBajasTemporalesComponent implements OnInit {
     { label: "Anulada", value: "3" }
   ];
 
-  guardar:boolean = false;
+  nuevaBaja:boolean = false;
 
   //Resultados de la busqueda
   @Input() datos;
@@ -102,18 +102,19 @@ export class TablaBajasTemporalesComponent implements OnInit {
     }
 
     if(sessionStorage.getItem("volverBaja") && sessionStorage.getItem('buscadorColegiados')){
+      this.nuevaBaja = true;
       this.datos.editable = false;
         const { nombre, apellidos, nColegiado } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
         console.log(nColegiado);
         const newLine = {
           'ncolegiado': nColegiado,
-          'nombre': apellidos +' '+nombre,
+          'nombre': apellidos +', '+nombre,
           'tiponombre': '',
           'descripcion': '',
-          'fechadesde': '',
+          'fechadesde': new Date(),
           'fechahasta': '',
           'fechaalta': '',
-          'validado': '',
+          'validado': 'Pendiente',
           'fechabt': ''
         };
         this.datos= [newLine,...this.datos];
@@ -305,8 +306,28 @@ export class TablaBajasTemporalesComponent implements OnInit {
   }
 
   checkSave(){
-    this.guardar = true;
-    this.cambioEstado();
+    if(this.nuevaBaja){
+      this.insertarBaja();
+    }else{
+      this.cambioEstado();
+    }
+  }
+
+  insertarBaja(){
+    this.progressSpinner = true;
+    this.sigaServices.post("bajasTemporales_nuevaBajaTemporal", this.selectedDatos).subscribe(
+      data => {
+        this.selectedDatos = [];
+        this.searchPartidas.emit(false);
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.progressSpinner = false;
+      },
+      err => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        
+        this.progressSpinner = false;
+      }
+    );
   }
 
   cambioEstado() {
@@ -378,7 +399,7 @@ export class TablaBajasTemporalesComponent implements OnInit {
 
 
   setItalic(dato) {
-    if (dato.eliminado == 0){
+    if (dato.eliminado != 1){
       return false;
     }else{ 
       return true;

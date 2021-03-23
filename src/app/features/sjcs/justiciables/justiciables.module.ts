@@ -32,6 +32,7 @@ import { DatosDireccionComponent } from './gestion-justiciables/datos-direccion/
 import { DatosSolicitudComponent } from './gestion-justiciables/datos-solicitud/datos-solicitud.component';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/primeng';
+import { DialogoModule } from '../../../commons/dialog/dialogo.module';
 
 @NgModule({
   imports: [
@@ -52,6 +53,7 @@ import { ConfirmDialogModule } from 'primeng/primeng';
     PrecioModule,
     FechaModule,
     FileUploadModule,
+    DialogoModule,
     ConfirmDialogModule
 
   ],

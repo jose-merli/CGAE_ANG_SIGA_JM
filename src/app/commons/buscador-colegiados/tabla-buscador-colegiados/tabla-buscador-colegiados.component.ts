@@ -11,6 +11,7 @@ import { ColegiadosSJCSItem } from '../../../models/ColegiadosSJCSItem';
 })
 export class TablaBuscadorColegiadosComponent implements OnInit {
   progressSpinner: boolean = false;
+  selectMultiple: boolean = false;
  
   cols;
 

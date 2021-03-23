@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { OldSigaServices } from '../../../../_services/oldSiga.service';
 import { FiltroDesignacionesComponent } from './filtro-designaciones/filtro-designaciones.component';
-
+import { Message } from 'primeng/components/common/api';
 
 @Component({
   selector: 'app-designaciones',
@@ -17,6 +17,8 @@ export class DesignacionesComponent implements OnInit {
   muestraTablaJustificacion: boolean = false;
 
   @ViewChild(FiltroDesignacionesComponent) datosJustificacion;
+  
+  msgs: Message[] = [];
 
   constructor(public sigaServices: OldSigaServices) {
     this.url = sigaServices.getOldSigaUrl("designaciones");
@@ -27,6 +29,10 @@ export class DesignacionesComponent implements OnInit {
 
   showTablaJustificacion(event){
     this.muestraTablaJustificacion=event;
+  }
+  
+  clear() {
+    this.msgs = [];
   }
 
 }

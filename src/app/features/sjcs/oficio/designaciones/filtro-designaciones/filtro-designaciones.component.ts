@@ -538,4 +538,8 @@ getComboCalidad() {
       this.progressSpinner=false;
     });
   }
+
+  clear() {
+    this.msgs = [];
+  }
 }
