@@ -22,7 +22,7 @@ export class FiltroDesignacionesComponent implements OnInit {
 
   expanded: boolean = false;
   textSelected: String = "{0} etiquetas seleccionadas";
-  progressSpinner: boolean = false;
+  progressSpinner: boolean = true;
   showDesignas: boolean = false;
   showJustificacionExpress: boolean = false;
   checkMostrarPendientes: boolean = true;
@@ -80,19 +80,15 @@ export class FiltroDesignacionesComponent implements OnInit {
     }
 
     if (sessionStorage.getItem('buscadorColegiados')) {
-
       const { nombre, apellidos, nColegiado } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
 
       this.usuarioBusquedaExpress.nombreAp = `${apellidos}, ${nombre}`;
       this.usuarioBusquedaExpress.numColegiado = nColegiado;
       this.showColegiado = true;
-
     }
 
     //combo comun
     this.getComboEstados();
-
-    this.progressSpinner=false;
   }
 
   changeFilters(event) {
@@ -154,9 +150,9 @@ export class FiltroDesignacionesComponent implements OnInit {
 
   getComboEstados() {
     this.comboEstados = [
-      {label:'Activo', value:'ACTIVO'},
-      {label:'Finalizada', value:'FINALIZADA'},
-      {label:'Anulada', value:'ANULADA'}
+      {label:'Activo', value:'V'},
+      {label:'Finalizada', value:'F'},
+      {label:'Anulada', value:'A'}
     ]
   }
 
@@ -212,7 +208,6 @@ export class FiltroDesignacionesComponent implements OnInit {
   }
 
   cargaCombosJustificacion(){
-    this.progressSpinner=false;
     this.cargaComboActuacionesValidadas();
     this.cargaComboSinEJG();
     this.cargaComboEJGnoFavorable();
@@ -267,6 +262,9 @@ export class FiltroDesignacionesComponent implements OnInit {
         this.filtroJustificacion.nColegiado=this.usuarioBusquedaExpress.numColegiado;
       }
 
+      this.filtroJustificacion.muestraPendiente = this.checkMostrarPendientes;
+      this.filtroJustificacion.restriccionesVisualizacion = this.checkRestricciones;
+
       if(this.compruebaFiltroJustificacion()){
         this.progressSpinner=true;
 
@@ -308,10 +306,12 @@ export class FiltroDesignacionesComponent implements OnInit {
   limpiar(){
     this.filtroJustificacion = new JustificacionExpressItem();
     
-    this.usuarioBusquedaExpress = {
-      numColegiado: '',
-      nombreAp: ''
-    };
+    if(!this.esColegiado){
+      this.usuarioBusquedaExpress = {
+        numColegiado: '',
+        nombreAp: ''
+      };
+    }
   }
 
   onChangeCheckMostrarPendientes(event) {
@@ -382,6 +382,7 @@ export class FiltroDesignacionesComponent implements OnInit {
       const colegiadoItem = new ColegiadoItem();
       colegiadoItem.nif = usuario[0].dni;
 
+      //cambiar, nullpointer si no es colegiado
       this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(usr => {
         const { numColegiado, nombre } = JSON.parse(usr.body).colegiadoItem[0];
         this.usuarioBusquedaExpress.numColegiado = numColegiado;
