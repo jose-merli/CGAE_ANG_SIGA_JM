@@ -262,27 +262,50 @@ export class FichaInscripcionesComponent implements OnInit {
 		if(this.datos.estado=="2")vb++;
 		if(vb>0 && access==0)this.checkTrabajosSJCS(body, access);
       	else{
-		this.sigaServices.post("inscripciones_updateValidar", body).subscribe(
-			data => {
-				this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-				this.progressSpinner = false;
-				//El redireccionamiento es una solucion temporal hasta que se
-				//decida el método de actualización de la ficha.
-				this.router.navigate(["/inscripciones"]);
-			},
-			err => {
-				if (err != undefined && JSON.parse(err.error).error.description != "") {
-					this.showMessage("success", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-				} else {
-					this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+			if(vb>0){
+				this.sigaServices.post("inscripciones_checkSaltos", body).subscribe(
+					n => {
+					let keyConfirmation = "deletePlantillaDoc";
+					let ins=new InscripcionesObject();
+					ins.inscripcionesItem=JSON.parse(n.body).inscripcionesItem;
+					if(ins.inscripcionesItem.length>0){
+					  this.progressSpinner = false;
+					  this.confirmationService.confirm({
+						key: keyConfirmation,
+						message: this.translateService.instant("justiciaGratuita.oficio.inscripciones.mensajeSaltos"),
+						icon: "fa fa-trash-alt",
+						accept: () => { 
+						  ins.inscripcionesItem.forEach(element =>{
+							element.fechaActual = this.datos.fechaActual;
+						  }
+						  )
+						  this.sigaServices.post("inscripciones_updateBorrarSaltos", ins).subscribe();
+						}})
 				}
-				this.progressSpinner = false;
-			},
-			() => {
-				this.progressSpinner = false;
+				  }
+				)
 			}
-		);
-		}
+			this.sigaServices.post("inscripciones_updateValidar", body).subscribe(
+				data => {
+					this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+					this.progressSpinner = false;
+					//El redireccionamiento es una solucion temporal hasta que se
+					//decida el método de actualización de la ficha.
+					this.router.navigate(["/inscripciones"]);
+				},
+				err => {
+					if (err != undefined && JSON.parse(err.error).error.description != "") {
+						this.showMessage("success", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+					} else {
+						this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+					}
+					this.progressSpinner = false;
+				},
+				() => {
+					this.progressSpinner = false;
+				}
+			);
+			}
 	}
 
 	denegar() {

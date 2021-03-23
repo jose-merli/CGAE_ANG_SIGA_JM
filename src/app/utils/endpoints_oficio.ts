@@ -37,6 +37,8 @@ export let endpoints_oficio: any = {
     inscripciones_busquedaTarjetaInscripciones:"oficio/inscripciones/busquedaTarjetaInscripciones",
     inscripciones_insertSolicitarAlta:"oficio/inscripciones/insertSolicitarAlta",
     inscripciones_checkTrabajosSJCS:"oficio/inscripciones/checkTrabajosSJCS",
+    inscripciones_checkSaltos:"oficio/inscripciones/checkSaltos",
+    inscripciones_updateBorrarSaltos:"oficio/inscripciones/updateBorrarSaltos",
     inscripciones_updateValidar:"oficio/inscripciones/updateValidar",
     inscripciones_updateDenegar:"oficio/inscripciones/updateDenegar",
     inscripciones_updateCambiarFecha:"oficio/inscripciones/updateCambiarFecha",
@@ -46,7 +48,6 @@ export let endpoints_oficio: any = {
 
     bajasTemporales_comboEstado:"oficio/bajasTemporales/comboEstado",
     bajasTemporales_busquedaBajasTemporales:"oficio/bajasTemporales/busquedaBajasTemporales",
-    bajasTemporales_nuevaBajaTemporal:"oficio/bajasTemporales/nuevaBajaTemporal",
     bajasTemporales_updateBajaTemporal:"oficio/bajasTemporales/updateEstado",
     bajasTemporales_deleteBajaTemporal:"oficio/bajasTemporales/deleteBajaTemporal",
     //FIN DE BAJAS TEMPORALES
@@ -54,6 +55,11 @@ export let endpoints_oficio: any = {
     //justificacion express
     justificacionExpres_busqueda: "oficio/busquedaJustificacionExpres",
 
+    cargasMasivasOficio_comboguardias: "oficio/cargasMasivasOficio/comboGuardias",
+
     //BUSQUEDA DESIGNAS
-    designas_tipoDesignas:"oficio/designas/comboTipoDesigna"
+    designas_tipoDesignas:"oficio/designas/comboTipoDesigna",
+    combo_comboJuzgadoDesignaciones: "combo/comboJuzgadoDesignaciones",
+    combo_comboModulosDesignaciones: "oficio/comboModulo",
+    combo_comboProcedimientosDesignaciones: "oficio/comboProcedimientos"
 }

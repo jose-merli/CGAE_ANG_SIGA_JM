@@ -1,12 +1,10 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, Output, EventEmitter, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../commons/translate/translation.service';
-import { PartidasObject } from '../../../../../models/sjcs/PartidasObject';
 import { DataTable } from 'primeng/primeng';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { CommonsService } from '../../../../../_services/commons.service';
-import { BajasTemporalesItem } from '../../../../../models/sjcs/BajasTemporalesItem';
 
 
 @Component({
@@ -33,7 +31,6 @@ export class TablaBajasTemporalesComponent implements OnInit {
   disabledValidar: boolean = false;
   disabledDenegar: boolean = false;
   body;
-  partidasJudiciales: any[] = [];
   updateBajasTemporales = [];
   selectedItem: number = 10;
   selectAll;
@@ -49,7 +46,6 @@ export class TablaBajasTemporalesComponent implements OnInit {
   public ascNumberSort = true;
   permisos: boolean = false;
   initDatos;
-  fechaDeHoy;
   nuevo: boolean = false;
   progressSpinner: boolean = false;
   selectionMode: string = "single";
@@ -67,11 +63,11 @@ export class TablaBajasTemporalesComponent implements OnInit {
     { label: "Pendiente", value: "2" || null },
     { label: "Anulada", value: "3" }
   ];
+
+  guardar:boolean = false;
+
   //Resultados de la busqueda
   @Input() datos;
-
-  //Combo partidos judiciales
-  comboPJ;
 
   @Output() searchPartidas = new EventEmitter<boolean>();
 
@@ -103,6 +99,24 @@ export class TablaBajasTemporalesComponent implements OnInit {
       let paginacion = this.persistenceService.getPaginacion();
       this.first = paginacion.paginacion;
       this.selectedItem = paginacion.selectedItem;
+    }
+
+    if(sessionStorage.getItem("volverBaja") && sessionStorage.getItem('buscadorColegiados')){
+      this.datos.editable = false;
+        const { nombre, apellidos, nColegiado } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
+        console.log(nColegiado);
+        const newLine = {
+          'ncolegiado': nColegiado,
+          'nombre': apellidos +' '+nombre,
+          'tiponombre': '',
+          'descripcion': '',
+          'fechadesde': '',
+          'fechahasta': '',
+          'fechaalta': '',
+          'validado': '',
+          'fechabt': ''
+        };
+        this.datos= [newLine,...this.datos];
     }
   }
 
@@ -166,6 +180,7 @@ export class TablaBajasTemporalesComponent implements OnInit {
       }
     }
   }
+
 
   mySort(event: any, field: string) {
     if (event.order === 1) {
@@ -250,154 +265,12 @@ export class TablaBajasTemporalesComponent implements OnInit {
 
   }
 
-/*
-  save() {
-    this.progressSpinner = true;
-    let url = "";
-
-    if (this.nuevo) {
-      url = "gestionPartidasPres_createPartidasPres";
-      let partidaPresupuestaria = this.datos[0];
-      this.body = partidaPresupuestaria;
-      this.body.importepartida = this.body.valorNum;
-      this.body.importepartida = this.body.importepartida.replace(",", ".");
-      this.body.importepartidaReal = +this.body.importepartida;
-      if (this.body.importepartida == ".") {
-        this.body.importepartida = 0;
-      }
-      this.callSaveService(url);
-
-    } else {
-      url = "gestionPartidasPres_updatePartidasPres";
-      this.editMode = false;
-      if (this.validateUpdate()) {
-        this.body = new PartidasObject();
-        this.body.partidasItem = this.updatePartidasPres;
-        this.body.partidasItem.forEach(element => {
-          element.importepartida = element.importepartida.replace(",", ".");
-          element.importepartidaReal = +element.importepartida;
-          if (element.importepartida == ".") {
-            element.importepartida = 0;
-          }
-        });
-        this.callSaveService(url);
-      } else {
-        err => {
-
-          if (err.error != undefined && JSON.parse(err.error).error.description != "") {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-          } else {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-          }
-          this.progressSpinner = false;
-        }
-      }
-    }
-
-  }
-  rest() {
-    if (this.datosInicial != undefined) {
-      this.datos = JSON.parse(JSON.stringify(this.datosInicial));
-    } else {
-      this.datos = [];
-    }
-    this.editElementDisabled();
-    this.selectedDatos = [];
-    this.updatePartidasPres = [];
-    this.nuevo = false;
-    this.editMode = false;
-    this.tabla.sortOrder = 0;
-    this.tabla.sortField = '';
-    this.tabla.reset();
-  }
-
-  // rest() {
-  //   if (this.editMode) {
-  //     if (this.datosInicial != undefined) this.datos = JSON.parse(JSON.stringify(this.datosInicial));
-  //   } else {
-  //     this.partidasItem = new PartidasItem();
-  //   }
-  // }
-
-  newPartidaPresupuestaria() {
-    this.nuevo = true;
-    this.editMode = false;
-    this.selectionMode = "single";
-    this.tabla.sortOrder = 0;
-    this.tabla.sortField = '';
-    this.tabla.reset();
-    if (this.datosInicial != undefined && this.datosInicial != null) {
-      this.datos = JSON.parse(JSON.stringify(this.datosInicial));
-    } else {
-      this.datos = [];
-    }
-
-    let partidaPresupuestaria = {
-      nombrepartida: undefined,
-      descripcion: undefined,
-      importepartida: "0",
-      importepartidaReal: 0,
-      idpartidapresupuestaria: undefined,
-      editable: true
-    };
-    if (this.datos.length == 0) {
-      this.datos.push(partidaPresupuestaria);
-    } else {
-      this.datos = [partidaPresupuestaria, ...this.datos];
-    }
-    this.tabla.sortOrder = 0;
-    this.tabla.sortField = '';
-    this.tabla.reset();
-  }
-
-  disabledSave() {
-    if (this.nuevo) {
-      if (this.datos[0].nombrepartida != "" && this.datos[0].descripcion != "" && this.datos[0].nombrepartida != undefined && this.datos[0].descripcion != undefined
-        && this.datos[0].valorNum != undefined) {
-        return false;
-      } else {
-        return true;
-      }
-
-    } else {
-      if (!this.historico && (this.updatePartidasPres != undefined && this.updatePartidasPres.length > 0) && this.permisos) {
-        return false;
-      } else {
-        return true;
-      }
-    }
-  }
-
-
-  validateUpdate() {
-
-    let check = true;
-
-    this.updatePartidasPres.forEach(dato => {
-
-      let findDatos = this.datos.filter(item => item.nombrepartida === dato.nombrepartida && item.descripcion === dato.descripcion && item.importepartida === dato.importepartida);
-
-      if (findDatos != undefined && findDatos.length > 1) {
-        check = false;
-      }
-
-    });
-
-    return check;
-  }
-
   searchHistorical() {
-
     this.historico = !this.historico;
     this.persistenceService.setHistorico(this.historico);
     this.searchPartidas.emit(this.historico);
-    this.selectAll = false
-    // if (this.historico) {
-    //   this.selectMultiple = true;
-    //   this.selectionMode = "multiple";
-    // }
+    this.selectAll = false;
   }
-*/
   checkAnular(){
     this.selectedDatos.forEach(element => {
       if(element.validado == "Pendiente"){
@@ -431,21 +304,26 @@ export class TablaBajasTemporalesComponent implements OnInit {
     });
   }
 
+  checkSave(){
+    this.guardar = true;
+    this.cambioEstado();
+  }
+
   cambioEstado() {
     this.progressSpinner = true;
-    this.sigaServices.post("bajasTemporales_updateBajaTemporal", this.selectedDatos).subscribe(
-      data => {
-        this.selectedDatos = [];
-        this.searchPartidas.emit(false);
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
-      },
-      err => {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        
-        this.progressSpinner = false;
-      }
-    );  
+      this.sigaServices.post("bajasTemporales_updateBajaTemporal", this.selectedDatos).subscribe(
+        data => {
+          this.selectedDatos = [];
+          this.searchPartidas.emit(false);
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.progressSpinner = false;
+        },
+        err => {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          
+          this.progressSpinner = false;
+        }
+      );
   }
 
   onChangeSelectAll() {
@@ -500,8 +378,11 @@ export class TablaBajasTemporalesComponent implements OnInit {
 
 
   setItalic(dato) {
-    if (dato.fechabaja == null) return false;
-    else return true;
+    if (dato.eliminado == 0){
+      return false;
+    }else{ 
+      return true;
+    }
   }
 
   getCols() {
@@ -512,7 +393,7 @@ export class TablaBajasTemporalesComponent implements OnInit {
       { field: "tiponombre", header: "dato.jgr.guardia.guardias.turno" },
       { field: "descripcion", header: "administracion.auditoriaUsuarios.literal.motivo" },
       { field: "fechadesde", header: "facturacion.seriesFacturacion.literal.fInicio" },
-      { field: "fechahasta", header: "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta" },
+      { field: "fechahasta", header: "censo.consultaDatos.literal.fechaFin" },
       { field: "fechaalta", header: "formacion.busquedaInscripcion.fechaSolicitud" },
       { field: "validado", header: "censo.busquedaSolicitudesModificacion.literal.estado" },
       { field: "fechabt", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaEstado" },
@@ -607,8 +488,6 @@ export class TablaBajasTemporalesComponent implements OnInit {
     });
   }
 
-
-
   isSelectMultiple() {
     if (this.permisos && !this.historico) {
       if (this.nuevo) this.datos.shift();
@@ -647,13 +526,13 @@ export class TablaBajasTemporalesComponent implements OnInit {
     
   }
 
-  fillFechaDesdeCalendar(event) {
+  fillFechaHastaCalendar(event) {
     if(this.selectedDatos.length > 0){
       let findDato = this.datos.find(item => item.editable === this.selectedDatos[0].editable);
       if(findDato != undefined){
         this.datos.forEach(element => {
           if(element == findDato){
-            element.fechadesde = this.transformaFecha(event);
+            element.fechahasta = this.transformaFecha(event);
             // this.selectedDatos.push(element);
           }
         });
@@ -663,18 +542,12 @@ export class TablaBajasTemporalesComponent implements OnInit {
      if(dato != undefined){
        this.datos.forEach(element => {
          if(element == dato){
-           element.fechadesde = this.transformaFecha(event);
+           element.fechahasta = this.transformaFecha(event);
            this.selectedDatos.push(element);
          }
        });
      }
     }
-  }
-
-  fillFechaHastaSolicitudCalendar(event) {
-    this.selectedDatos.forEach(element => {
-      element.fechahasta = this.transformaFecha(event);
-    });
   }
 
   showMessage(severity, summary, msg) {
@@ -688,9 +561,6 @@ export class TablaBajasTemporalesComponent implements OnInit {
 
   clear() {
     this.msgs = [];
-  }
-  obtenerPartidos(dato) {
-    return dato.nombrepartidosjudiciales;
   }
 
   checkPermisosRest() {
@@ -718,5 +588,9 @@ export class TablaBajasTemporalesComponent implements OnInit {
           this.progressSpinner = false;
         }
       ); 
+  }
+  
+  checkNuevaBajaTemporal(){
+    this.router.navigate(["/buscadorColegiados"]);
   }
 }

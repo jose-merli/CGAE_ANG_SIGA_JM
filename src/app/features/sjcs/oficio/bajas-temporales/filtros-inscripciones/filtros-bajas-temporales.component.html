@@ -23,12 +23,12 @@
           [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
         </div>
         <div class="form-group-interlineado col-lg-2 col-md-1">
-          <label>{{ "formacion.busquedaInscripcion.fechaSolicitud" | translate }}
+          <label>{{ "oficio.busquedaBajasTemporales.fechaSolicitudDesde" | translate }}
           </label>
           <app-fecha [(value)]="filtros.fechasolicituddesde" (valueChangeInput)="fillFechaSolicitudDesdeCalendar($event)" (valueChangeSelected)="fillFechaSolicitudDesdeCalendar($event)"></app-fecha>
         </div>
         <div class="form-group-interlineado col-lg-2 col-md-1">
-          <label>{{ "formacion.busquedaInscripcion.fechaSolicitud" | translate }}
+          <label>{{ "oficio.busquedaBajasTemporales.fechaSolicitudHasta" | translate }}
           </label>
           <app-fecha [(value)]="filtros.fechasolicitudhasta" [disabled]="disabledFechaSolicitudHasta" (valueChangeInput)="fillFechaHastaSolicitudCalendar($event)" [minDate]="filtros.fechasolicituddesde" (valueChangeSelected)="fillFechaHastaSolicitudCalendar($event)"></app-fecha>
         </div>
@@ -64,7 +64,6 @@
     <div class="text-right main-button">
       <button (click)="clearFilters()" pButton type="button" icon="fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate}}"></button>
       <button (click)="isBuscar()" pButton type="button" icon="fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"></button>
-      <button (click)="checkNuevaBajaTemporal()" [disabled]="!permisos" pButton type="button" icon="fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
     </div>
   </div>
 </div>

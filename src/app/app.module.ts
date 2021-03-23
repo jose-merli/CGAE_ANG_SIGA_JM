@@ -239,6 +239,7 @@ import { MutualidadAbogaciaSeguroAccidentes } from './features/censo/solicitudes
 import { AlterMutuaRetaComponent } from './features/censo/solicitudes-incorporacion/alter-mutua/alterMutuaReta/alter-mutua-reta.component';
 import { AlterMutuaComponent } from './features/censo/solicitudes-incorporacion/alter-mutua/alter-mutua.component';
 import { AlterMutuaOfertasComponent } from './features/censo/solicitudes-incorporacion/alter-mutua/alterMutuaOfertas/alter-mutua-ofertas.component';
+import { CargasMasivasOficioComponent } from './features/sjcs/oficio/cargas-masivas-oficio/cargas-masivas-oficio.component';
 
 //Consultas
 import { RecuperarConsultasComponent } from './features/consultas/recuperar-consultas/recuperar-consultas.component';
@@ -384,6 +385,7 @@ import { BuscadorColegiadosComponent } from './commons/buscador-colegiados/busca
 import { FiltroBuscadorColegiadosComponent } from './commons/buscador-colegiados/filtro-buscador-colegiados/filtro-buscador-colegiados.component';
 import { TablaBuscadorColegiadosComponent } from './commons/buscador-colegiados/tabla-buscador-colegiados/tabla-buscador-colegiados.component';
 import { MigasDePanComponent } from './commons/migas-de-pan/migas-de-pan.component';
+import { FormularioBusquedaComponent } from './features/sjcs/oficio/cargas-masivas-oficio/formulario-busqueda/formulario-busqueda.component';
 
 @NgModule({
 	declarations: [
@@ -537,6 +539,7 @@ import { MigasDePanComponent } from './commons/migas-de-pan/migas-de-pan.compone
 		ComunicaCargaComponent,
 		ComunicaResolucionesComponent,
 		ComunicaDesignacionesComponent,
+		CargasMasivasOficioComponent,
 
 		//Consultas
 		RecuperarConsultasComponent,
@@ -699,9 +702,13 @@ import { MigasDePanComponent } from './commons/migas-de-pan/migas-de-pan.compone
 		PaginadorComponent,
 		TablaResultadoComponent,
 		SelectorComponent,
-		MigasDePanComponent
+		MigasDePanComponent,
+		FormularioBusquedaComponent
+
 	],
 	imports: [
+		
+
 		BrowserModule,
 		BrowserAnimationsModule,
 		HttpClientModule,

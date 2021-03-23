@@ -15,6 +15,7 @@ import { InscripcionesObject } from '../../../../../models/sjcs/InscripcionesObj
 import { InscripcionesItems } from '../../../../../models/sjcs/InscripcionesItems';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { ConfirmationService } from '../../../../../../../node_modules/primeng/primeng';
+import { TurnosItems } from '../../../../../models/sjcs/TurnosItems';
 
 
 @Component({
@@ -437,41 +438,64 @@ export class TablaInscripcionesComponent implements OnInit {
 
   validar(selectedDatos, access=0) {
     let vb=0;
-      this.progressSpinner = true;
-      this.body = new InscripcionesObject();
-      this.body.inscripcionesItem = selectedDatos
-      this.body.inscripcionesItem.forEach(element => {
-        element.fechaActual = this.datos.fechaActual;
-        element.observaciones = this.datos.observaciones;
-        if(element.estado=="2")vb++;
-      });
-      if(vb>0 && access==0)this.checkTrabajosSJCS(this.body, access);
-      else{
+    this.progressSpinner = true;
+    this.body = new InscripcionesObject();
+    this.body.inscripcionesItem = selectedDatos
+    this.body.inscripcionesItem.forEach(element => {
+      element.fechaActual = this.datos.fechaActual;
+      element.observaciones = this.datos.observaciones;
+      if(element.estado=="2")vb++;
+    });
+    if(vb>0 && access==0)this.checkTrabajosSJCS(this.body, access);
+    else{
+      if(vb>0){
+        this.sigaServices.post("inscripciones_checkSaltos", this.body).subscribe(
+          n => {
+          let keyConfirmation = "deletePlantillaDoc";
+          let ins=new InscripcionesObject();
+          ins.inscripcionesItem=JSON.parse(n.body).inscripcionesItem;
+          if(ins.inscripcionesItem.length>0){
+            this.progressSpinner = false;
+            this.confirmationService.confirm({
+              key: keyConfirmation,
+              message: this.translateService.instant("justiciaGratuita.oficio.inscripciones.mensajeSaltos"),
+              icon: "fa fa-trash-alt",
+              accept: () => { 
+                ins.inscripcionesItem.forEach(element =>{
+                  element.fechaActual = this.datos.fechaActual;
+                }
+                )
+                this.sigaServices.post("inscripciones_updateBorrarSaltos", ins).subscribe();
+              }})
+        }
+          }
+        )
+      }
       this.sigaServices.post("inscripciones_updateValidar", this.body).subscribe(
         data => {
-          this.selectedDatos = [];
-          this.searchPartidas.emit(false);
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.progressSpinner = false;
-        },
-        err => {
-          if (err != undefined && JSON.parse(err.error).error.description != "") {
-            this.showMessage("success", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-          } else {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-          }
-          this.progressSpinner = false;
-        },
-        () => {
-          this.progressSpinner = false;
-          this.historico = false;
-          this.selectMultiple = false;
-          this.selectAll = false;
-          this.editMode = false;
-          this.nuevo = false;
+        this.selectedDatos = [];
+        this.searchPartidas.emit(false);
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.progressSpinner = false;
+      },
+      err => {
+        if (err != undefined && JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
-      );  
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+        this.historico = false;
+        this.selectMultiple = false;
+        this.selectAll = false;
+        this.editMode = false;
+        this.nuevo = false;
       }
+      );
+    }
   }
 
   cambiarFecha(selectedDatos) {

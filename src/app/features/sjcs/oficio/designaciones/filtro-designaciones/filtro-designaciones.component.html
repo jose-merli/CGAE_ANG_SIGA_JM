@@ -29,43 +29,42 @@
                             </div>
                             <div class="form-group-interlineado col-lg-2 col-md-2">
                                 <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.fchAdesde" | translate}}</label>
-                                <app-fecha (valueChangeSelected)="fillFechaAperturaDesde($event)" (valueChangeInput)="fillFechaAperturaDesde($event)"></app-fecha>
-                                <!-- <app-fecha [(value)]="fechaIncorporacionDesdeSelect" [utc]="false" (valueChangeSelected)="fillFechaIncorporacionDesde($event)" (valueChangeInput)="fillFechaIncorporacionDesde($event)"></app-fecha> -->
+                                <app-fecha [(value)]="fechaAperturaDesdeSelect"  (valueChangeSelected)="fillFechaADesdeCalendar($event)" (valueChangeInput)="fillFechaADesdeCalendar($event)"></app-fecha>
                             </div>
                             <div class="form-group-interlineado col-lg-2 col-md-2">
                                 <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.fchAhasta" | translate}}</label>
-                                <app-fecha (valueChangeSelected)="fillFechaAperturaHasta($event)" (valueChangeInput)="fillFechaAperturaHasta($event)"></app-fecha>
+                                <app-fecha (valueChangeSelected)="fillFechaADesdeCalendar($event)"  [disabled]="disabledFechaAHasta" [minDate]="fechaAperturaDesdeSelect" ></app-fecha>
                             </div>
                             <div class="form-group-interlineado col-lg-2 col-md-2">
                                 <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.estado" | translate}}</label>
-                                <p-dropdown [filter]="true" [options]="comboEstados" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true"  placeholder="{{ 'general.boton.seleccionar' | translate }}">
-                                </p-dropdown>
+                                <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [options]="comboEstados" [selectedItemsLabel]="textSelected"
+                                maxSelectedLabels="10" styleClass="widthAll" filterBy ="label, labelSinTilde"></p-multiSelect>
                             </div>
                             <div class="form-group-interlineado col-lg-2 col-md-2">
                                 <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.tipoDesigna" | translate}}</label>
                                 <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [options]="comboTipoDesigna" [selectedItemsLabel]="textSelected"
-                                maxSelectedLabels="10" styleClass="widthAll" [(ngModel)]="body.idTipoDesignaColegio"></p-multiSelect>
+                                maxSelectedLabels="10" styleClass="widthAll" filterBy ="label, labelSinTilde" [(ngModel)]="body.idTipoDesignaColegio"></p-multiSelect>
                             </div>
 
                             <div class="form-group-interlineado col-lg-6 col-md-6">
                                 <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.turno" | translate}}</label>
                                 <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [options]="comboTurno" [selectedItemsLabel]="textSelected"
-                                maxSelectedLabels="10" styleClass="widthAll" [(ngModel)]="body.idTurno"></p-multiSelect>
+                                maxSelectedLabels="10" styleClass="widthAll" filterBy ="label, labelSinTilde" [(ngModel)]="body.idTurno"></p-multiSelect>
                             </div>
                             <div class="form-group-interlineado col-lg-2 col-md-2">
                                 <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.actuacionesV" | translate}}</label>
-                                <p-dropdown [filter]="true" [options]="actuacionesV" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}">
-                                </p-dropdown>
+                                <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [options]="actuacionesV" [selectedItemsLabel]="textSelected"
+                                maxSelectedLabels="10" styleClass="widthAll" filterBy ="label, labelSinTilde" ></p-multiSelect>
                             </div>
                             <div class="form-group-interlineado col-lg-2 col-md-2">
                                 <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.actuacionesDocu" | translate}}</label>
-                                <p-dropdown [filter]="true" [options]="actuacionesDocu" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}">
-                                </p-dropdown>
+                                <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [options]="actuacionesDocu" [selectedItemsLabel]="textSelected"
+                                maxSelectedLabels="10" styleClass="widthAll" filterBy ="label, labelSinTilde" ></p-multiSelect>
                             </div>
                             <div class="form-group-interlineado col-lg-2 col-md-2">
                                 <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.art" | translate}}</label>
-                                <p-dropdown [filter]="true" [options]="comboArt" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}">
-                                </p-dropdown>
+                                <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [options]="comboArt" [selectedItemsLabel]="textSelected"
+                                maxSelectedLabels="10" styleClass="widthAll" filterBy ="label, labelSinTilde" ></p-multiSelect>
                             </div>
                         </div>
                     </ng-template>
@@ -99,18 +98,18 @@
                         <div class="form-row">
                         <div class="form-group-interlineado col-lg-6 col-md-6">
                             <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.juzgado" | translate}}</label>
-                            <p-dropdown [filter]="true" [options]="" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}">
-                            </p-dropdown>
+                            <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [options]="comboJuzgados" [selectedItemsLabel]="textSelected"
+                                maxSelectedLabels="10" styleClass="widthAll" filterBy ="label, labelSinTilde" [(ngModel)]="body.idJuzgado"></p-multiSelect>
                         </div>
                         <div class="form-group-interlineado col-lg-6 col-md-6">
                             <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.modulo" | translate}}</label>
-                            <p-dropdown [filter]="true" [options]="" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}">
-                            </p-dropdown>
+                            <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" filterBy ="label, labelSinTilde" [options]="comboModulos" [selectedItemsLabel]="textSelected"
+                                maxSelectedLabels="10" styleClass="widthAll" ></p-multiSelect>
                         </div>
                         <div class="form-group-interlineado col-lg-2 col-md-2">
                             <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.calidad" | translate}}</label>
-                            <p-dropdown [filter]="true" [options]="" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}">
-                            </p-dropdown>
+                            <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [options]="comboCalidad" [selectedItemsLabel]="textSelected"
+                            maxSelectedLabels="10" styleClass="widthAll" filterBy ="label, labelSinTilde" [(ngModel)]="body.idTipoDesignaColegio"></p-multiSelect>
                         </div>
                         <div class="form-group-interlineado col-lg-2 col-md-2">
                             <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.numAno" | translate}}</label> 
@@ -118,8 +117,8 @@
                         </div>
                         <div class="form-group-interlineado col-lg-6 col-md-6">
                             <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.procedimiento" | translate}}</label>
-                            <p-dropdown [filter]="true" [options]="" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}">
-                            </p-dropdown>
+                            <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [options]="comboProcedimientos" [selectedItemsLabel]="textSelected"
+                                maxSelectedLabels="10" styleClass="widthAll" filterBy ="label, labelSinTilde" [(ngModel)]="body.idProcedimiento"></p-multiSelect>
                         </div>
                         <div class="form-group-interlineado col-lg-2 col-md-2">
                             <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.NIG" | translate}}</label> 
@@ -145,36 +144,37 @@
                         <div class="form-row">
                         <div class="form-group-interlineado col-lg-6 col-md-6">
                             <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.juzgado" | translate}}</label>
-                            <p-dropdown [filter]="true" [options]="" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}">
-                            </p-dropdown>
+                            <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [options]="comboJuzgados" [selectedItemsLabel]="textSelected"
+                            maxSelectedLabels="10" styleClass="widthAll" filterBy ="label, labelSinTilde" ></p-multiSelect>
                         </div>
                         <div class="form-group-interlineado col-lg-6 col-md-6">
                             <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.modulo" | translate}}</label>
-                            <p-dropdown [filter]="true" [options]="" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}">
-                            </p-dropdown>
+                            <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" filterBy ="label, labelSinTilde" [options]="comboModulos" [selectedItemsLabel]="textSelected"
+                                maxSelectedLabels="10" styleClass="widthAll" ></p-multiSelect>
                         </div>
                         <div class="form-group-interlineado col-lg-6 col-md-6">
                             <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.procedimiento" | translate}}</label>
-                            <p-dropdown [filter]="true" [options]="" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}">
-                            </p-dropdown>
+                            <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [options]="comboProcedimientos" [selectedItemsLabel]="textSelected"
+                                maxSelectedLabels="10" styleClass="widthAll" filterBy ="label, labelSinTilde" ></p-multiSelect>
                         </div>
                         <div class="form-group-interlineado col-lg-6 col-md-6">
                             <label>{{ "justiciaGratuita.sjcs.designas.datosActu.acreditacion" | translate}}</label>
-                            <p-dropdown [filter]="true" [options]="" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}">
-                            </p-dropdown>
+                            <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [options]="" [selectedItemsLabel]="textSelected"
+                            maxSelectedLabels="10" styleClass="widthAll" filterBy ="label, labelSinTilde"></p-multiSelect>
                         </div>
                         <div class="form-group-interlineado col-lg-6 col-md-6">
                             <label>{{ "justiciaGratuita.sjcs.designas.datosActu.origen" | translate}}</label>
-                            <p-dropdown [filter]="true" [options]="" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}">
-                            </p-dropdown>
+                            <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [options]="comboOrigenActuaciones" [selectedItemsLabel]="textSelected"
+                            maxSelectedLabels="10" styleClass="widthAll" filterBy ="label, labelSinTilde" ></p-multiSelect>
                         </div>
                         <div class="form-group-interlineado col-lg-2 col-md-2">
                             <label>{{ "justiciaGratuita.sjcs.designas.datosActu.fchaJustiDesde" | translate}}</label>
-                            <app-fecha></app-fecha>
+                            <app-fecha [(value)]="fechaJustificacionDesdeSelect"  (valueChangeSelected)="fillFechaJustificacionDesdeCalendar($event)" (valueChangeInput)="fillFechaJustificacionDesdeCalendar($event)"></app-fecha>
+                            
                         </div>
                         <div class="form-group-interlineado col-lg-2 col-md-2">
                             <label>{{ "justiciaGratuita.sjcs.designas.datosActu.fchaJustiHasta" | translate}}</label>
-                            <app-fecha></app-fecha>
+                            <app-fecha (valueChangeSelected)="fillFechaJustificacionDesdeCalendar($event)"  [disabled]="disabledfechaJustificacion" [minDate]="fechaJustificacionDesdeSelect" ></app-fecha>
                         </div>
                         </div>
                     </ng-template>
@@ -204,8 +204,8 @@
                         </div>
                         <div class="form-group-interlineado col-lg-6 col-md-6">
                             <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.estado" | translate}}</label>
-                            <p-dropdown [filter]="true" [options]="" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}">
-                            </p-dropdown>
+                            <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [options]="" [selectedItemsLabel]="textSelected"
+                            maxSelectedLabels="10" styleClass="widthAll" filterBy ="label, labelSinTilde"></p-multiSelect>
                         </div>
                         </div>
                     </ng-template>

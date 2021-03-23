@@ -34,6 +34,11 @@ export class DesignaItem {
 	 resumenAsunto: String;
 	 sufijo: String;
 	 usuModificacion: number;
+	 nombreTurno: String; 
+	 numColegiado: number;
+	 apellidosNombre: String;
+	 interesados: String[];
+	 validadas: String;
   
     constructor() { }
   }
