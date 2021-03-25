@@ -1,7 +1,10 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="busqueda-container">
-    <app-filtros-bajas-temporales (busqueda)="searchPartidas($event)" [permisos]="permisoEscritura"></app-filtros-bajas-temporales>
-    <app-gestion-bajas-temporales *ngIf="buscar" [datos]="datos" (searchPartidas)="searchPartidas($event)"></app-gestion-bajas-temporales>
+    <app-filtros-bajas-temporales (busqueda)="searchPartidas($event)" [permisos]="permisoEscritura">
+    </app-filtros-bajas-temporales>
+    <app-gestion-bajas-temporales *ngIf="buscar" [cabeceras]="cabeceras" [totalRegistros]="totalRegistros"
+        [seleccionarTodo]="seleccionarTodo" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups">
+    </app-gestion-bajas-temporales>
 </div>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">

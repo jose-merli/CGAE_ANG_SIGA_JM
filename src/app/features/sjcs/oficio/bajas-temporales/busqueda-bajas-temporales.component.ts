@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild} from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '../../../../commons/translate';
 import { SigaServices } from '../../../../_services/siga.service';
 import { CommonsService } from '../../../../_services/commons.service';
@@ -8,7 +8,9 @@ import { Router } from '@angular/router';
 // import { TablaTurnosComponent } from './gestion-turnos/gestion-turnos.component';
 import { procesos_oficio } from '../../../../permisos/procesos_oficio';
 import { FiltrosBajasTemporales } from './filtros-inscripciones/filtros-bajas-temporales.component';
-import { TablaBajasTemporalesComponent } from './gestion-bajas-temporales/gestion-bajas-temporales.component';
+import { GestionBajasTemporalesComponent } from './gestion-bajas-temporales/gestion-bajas-temporales.component';
+import { Row, GestionBajasTemporalesService } from './gestion-bajas-temporales/gestion-bajas-temporales.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-bajas-temporales',
@@ -29,18 +31,43 @@ export class BajasTemporalesComponent implements OnInit {
    el hijo lo declaramos como @ViewChild(ChildComponent)).*/
 
   @ViewChild(FiltrosBajasTemporales) filtros;
-  @ViewChild(TablaBajasTemporalesComponent) tablapartida;
+  @ViewChild(GestionBajasTemporalesComponent) tablapartida;
   //comboPartidosJudiciales
   msgs;
   permisoEscritura: any;
 
+  comboTipo = [
+    { label: "Vacaciones", value: "V" },
+    { label: "Maternidad", value: "M" },
+    { label: "Baja", value: "B" },
+    { label: "Suspensión por sanción", value: "S" }
+  ];
 
+  isDisabled;
+  seleccionarTodo = false;
+  totalRegistros = 0;
+  rowGroups: Row[];
+  rowGroupsAux: Row[];
+  selectedRow: Row;
+  cabeceras = [
+    { id: "ncolegiado", name: "facturacionSJCS.facturacionesYPagos.numColegiado" },
+    { id: "nombre", name: "busquedaSanciones.detalleSancion.letrado.literal" },
+    { id: "tiponombre", name: "dato.jgr.guardia.guardias.turno" },
+    { id: "descripcion", name: "administracion.auditoriaUsuarios.literal.motivo" },
+    { id: "fechadesde", name: "facturacion.seriesFacturacion.literal.fInicio" },
+    { id: "fechahasta", name: "censo.consultaDatos.literal.fechaFin" },
+    { id: "fechaalta", name: "formacion.busquedaInscripcion.fechaSolicitud" },
+    { id: "validado", name: "censo.busquedaSolicitudesModificacion.literal.estado" },
+    { id: "fechabt", name: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaEstado" },
+  ];
 
   constructor(private translateService: TranslateService,
     private sigaServices: SigaServices,
     private commonsService: CommonsService,
     private persistenceService: PersistenceService,
-    private router: Router) { }
+    private router: Router,
+    private gbtservice : GestionBajasTemporalesService,
+    private datePipe: DatePipe) { }
 
 
   ngOnInit() {
@@ -80,34 +107,41 @@ export class BajasTemporalesComponent implements OnInit {
       n => {
         this.datos = JSON.parse(n.body).bajasTemporalesItem;
         this.datos.forEach(element => {
-          if(element.tipo == "V"){
+
+          element.fechadesde = this.formatDate(element.fechadesde);
+          element.fechahasta = this.formatDate(element.fechadesde);
+          element.fechaalta = this.formatDate(element.fechadesde);
+          element.fechabt = this.formatDate(element.fechadesde);
+
+          if (element.tipo == "V") {
             element.tiponombre = "Vacaciones";
           }
-          if(element.tipo == "M"){
+          if (element.tipo == "M") {
             element.tiponombre = "Maternidad";
           }
-          if(element.tipo == "B"){
+          if (element.tipo == "B") {
             element.tiponombre = "Baja";
           }
-          if(element.tipo == "S"){
+          if (element.tipo == "S") {
             element.tiponombre = "Suspensión por sanción";
           }
 
-          if(element.validado == "0"){
+          if (element.validado == "0") {
             element.validado = "Denegada";
           }
-          if(element.validado == "1"){
+          if (element.validado == "1") {
             element.validado = "Validada";
           }
-          if(element.validado == "2" || element.validado == null){
+          if (element.validado == "2" || element.validado == null) {
             element.validado = "Pendiente";
           }
-          if(element.validado == "3"){
+          if (element.validado == "3") {
             element.validado = "Anulada";
           }
           element.ncolegiado = +element.ncolegiado;
 
         });
+        this.jsonToRow(this.datos);
         this.buscar = true;
         this.progressSpinner = false;
         if (this.tablapartida != undefined) {
@@ -121,12 +155,46 @@ export class BajasTemporalesComponent implements OnInit {
         this.progressSpinner = false;
         console.log(err);
       }, () => {
-        setTimeout(()=>{
+        setTimeout(() => {
           this.commonsService.scrollTablaFoco('tablaFoco');
         }, 5);
       }
     );
   }
+
+  formatDate(date) {
+
+    const pattern = 'dd/MM/yyyy';
+
+    return this.datePipe.transform(date, pattern);
+
+  }
+
+jsonToRow(datos){
+  console.log(datos);
+  let arr = [];
+  datos.forEach(element => {
+
+    let italic = (element.eliminado == 1);
+    let obj = [
+      { type: 'text', value: element.ncolegiado, italic: italic },
+      { type: 'text', value: element.nombre, italic: italic },
+      { type: 'select', combo: this.comboTipo ,value: element.tiponombre, italic: italic },
+      { type: 'input', value: element.descripcion, italic: italic },
+      { type: 'datePicker', value: element.fechadesde, italic: italic },
+      { type: 'datePicker', value: element.fechahasta, italic: italic },
+      { type: 'text', value: element.fechaalta, italic: italic },
+      { type: 'text', value: element.validado, italic: italic },
+      { type: 'text', value: element.fechabt, italic: italic }
+    ];
+    arr.push(obj);
+
+  });
+
+  this.rowGroups = this.gbtservice.getTableData(arr);
+  this.rowGroupsAux = this.gbtservice.getTableData(arr);
+  this.totalRegistros = this.rowGroups.length;
+}
 
   showMessage(event) {
     this.msgs = [];
