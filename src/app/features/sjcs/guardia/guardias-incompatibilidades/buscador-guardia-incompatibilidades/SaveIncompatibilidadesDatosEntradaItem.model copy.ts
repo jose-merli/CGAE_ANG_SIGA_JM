@@ -7,7 +7,10 @@ export class SaveIncompatibilidadesDatosEntradaItem{
     motivos: string;
     diasSeparacionGuardias: string;
     usuario: string;
-
+    nombreTurno: string;
+    nombreGuardia: string;
+    nombreTurnoIncompatible: string;
+    nombreGuardiaIncompatible: string;
   constructor(obj: Object) {
     this.idTurno = obj['idTurno'];
     this.idGuardia = obj['idGuardia'];
@@ -17,5 +20,9 @@ export class SaveIncompatibilidadesDatosEntradaItem{
     this.motivos = obj['motivos'];
     this.diasSeparacionGuardias = obj['diasSeparacionGuardias'];
     this.usuario = obj['usuario'];
+    this.nombreTurno = obj['nombreTurno'];
+    this.nombreGuardia = obj['nombreGuardia'];
+    this.nombreTurnoIncompatible = obj['nombreTurnoIncompatible'];
+    this.nombreGuardiaIncompatible = obj['nombreGuardiaIncompatible'];
   }
 }
