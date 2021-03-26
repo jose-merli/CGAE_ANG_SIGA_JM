@@ -19,7 +19,7 @@ export class FiltroDesignacionesComponent implements OnInit {
   };
   
   filtroJustificacion: JustificacionExpressItem = new JustificacionExpressItem();
-
+  datos;
   expanded: boolean = false;
   textSelected: String = "{0} etiquetas seleccionadas";
   progressSpinner: boolean = true;
@@ -64,6 +64,7 @@ export class FiltroDesignacionesComponent implements OnInit {
   datosJustificacion: DesignaItem = new DesignaItem();
 
   @Output() showTablaJustificacion = new EventEmitter<boolean>();
+   @Output() showTablaDesigna = new EventEmitter<boolean>();
 
   constructor(private translateService: TranslateService, private sigaServices: SigaServices) { }
 
@@ -286,8 +287,8 @@ export class FiltroDesignacionesComponent implements OnInit {
 
 getComboCalidad() {
     this.comboCalidad = [
-      {label:'Demandante', value:'D'},
-      {label:'Demandado', value:'O'}
+      {label:'Demandante', value:'1'},
+      {label:'Demandado', value:'0'}
     ]
   }
 
@@ -402,9 +403,9 @@ getComboCalidad() {
 
   cargaComboActuacionesValidadas(){
     this.comboActuacionesValidadas = [
-      {label:'Sí', value:'si'},
-      {label:'No', value:'no'},
-      {label: 'Sin actuaciones', value:'sinActuaciones'}
+      {label:'Sí', value:'SI'},
+      {label:'No', value:'NO'},
+      {label: 'Sin actuaciones', value:'SINACTUACIONES'}
     ];
   }
 
@@ -470,7 +471,9 @@ getComboCalidad() {
         designa.idJuzgado = this.body.idJuzgado;
         designa.idModulo = this.body.idModulo;
         designa.idCalidad = this.body.idCalidad;
-        designa.numProcedimiento = this.body.anoProcedimiento.toString();
+        if(this.body.anoProcedimiento != null && this.body.anoProcedimiento != undefined){
+          designa.numProcedimiento = this.body.anoProcedimiento.toString();
+        }
         designa.idProcedimiento = this.body.idProcedimiento;
         designa.nig = this.body.nig;
         designa.asunto = this.body.asunto;
@@ -497,7 +500,9 @@ getComboCalidad() {
 
         this.sigaServices.post("designaciones_busqueda", designa).subscribe(
           n => {
+            this.datos = JSON.parse(n.body).turnosItem;
             this.progressSpinner=false;
+            this.showTablaDesigna.emit(true);
           },
           err => {
             this.progressSpinner = false;
@@ -505,6 +510,8 @@ getComboCalidad() {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
 
             console.log(err);
+          },() => {
+            this.progressSpinner = false;
           });
     }
   }

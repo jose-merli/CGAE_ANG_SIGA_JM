@@ -14,6 +14,7 @@ import { TablaPartidasComponent } from '../../maestros/partidas/gestion-partidas
 import { procesos_oficio } from '../../../../permisos/procesos_oficio';
 import { TablaInscripcionesComponent } from './gestion-inscripciones/gestion-inscripciones.component';
 import { FiltrosInscripciones } from './filtros-inscripciones/filtros-inscripciones.component';
+import { InscripcionesItems } from '../../../../models/sjcs/InscripcionesItems';
 
 @Component({
   selector: 'app-inscripciones',
@@ -80,7 +81,8 @@ export class InscripcionesComponent implements OnInit {
 
 
   searchPartidas(event) {
-    this.filtros.filtroAux = this.persistenceService.getFiltrosAux()
+    this.filtros.filtroAux = new InscripcionesItems();
+    this.filtros.filtroAux = this.persistenceService.getFiltrosAux();
     if(this.filtros.filtroAux.estado != undefined){
       let estadoAux = this.filtros.filtroAux.estado.toString();
       if(estadoAux == "" ) this.filtros.filtroAux.estado = null;

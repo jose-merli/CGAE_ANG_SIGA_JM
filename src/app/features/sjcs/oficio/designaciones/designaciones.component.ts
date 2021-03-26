@@ -15,6 +15,7 @@ export class DesignacionesComponent implements OnInit {
   rutas = ['SJCS', 'Designaciones'];
   progressSpinner: boolean = false;
   muestraTablaJustificacion: boolean = false;
+  muestraTablaDesignas: boolean = false;
 
   @ViewChild(FiltroDesignacionesComponent) datosJustificacion;
   
@@ -29,6 +30,10 @@ export class DesignacionesComponent implements OnInit {
 
   showTablaJustificacion(event){
     this.muestraTablaJustificacion=event;
+  }
+
+  showTablaDesigna(event){
+    this.muestraTablaDesignas=event;
   }
   
   clear() {

@@ -1,7 +1,6 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 
-<div class="card">
-    <div class="card-body">
+
         <div class="form-group-interlineado">
             <p-radioButton [(ngModel)]='radioTarjeta' name="tarj" value="designas" (click)="changeFilters('designas')" label="{{ 'justiciaGratuita.oficio.designas' | translate }}" class="mr-4"></p-radioButton>
             <p-radioButton [(ngModel)]='radioTarjeta' name="tarj" value="justificacion" (click)="changeFilters('justificacion')" label="{{ 'justiciaGratuita.oficio.justificacionExpres' | translate}}" class="mr-4"></p-radioButton>
@@ -53,8 +52,9 @@
                             </div>
                             <div class="form-group-interlineado col-lg-2 col-md-2">
                                 <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.actuacionesV" | translate}}</label>
-                                <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [options]="actuacionesV" [selectedItemsLabel]="textSelected"
-                                maxSelectedLabels="10" styleClass="widthAll" filterBy ="label, labelSinTilde" [(ngModel)]="body.idActuacionesV" ></p-multiSelect>
+                                <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}" 
+                                [(ngModel)]='body.idActuacionesV ' [options]="actuacionesV">
+                                </p-dropdown>
                             </div>
                             <div class="form-group-interlineado col-lg-2 col-md-2">
                                 <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.actuacionesDocu" | translate}}</label>
@@ -166,8 +166,9 @@
                         </div>
                         <div class="form-group-interlineado col-lg-6 col-md-6">
                             <label>{{ "justiciaGratuita.sjcs.designas.datosActu.origen" | translate}}</label>
-                            <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [options]="comboOrigenActuaciones" [selectedItemsLabel]="textSelected"
-                            maxSelectedLabels="10" styleClass="widthAll" filterBy ="label, labelSinTilde"  [(ngModel)]="body.idOrigen"></p-multiSelect>
+                            <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}" 
+                            [(ngModel)]='body.idOrigen' [options]="comboOrigenActuaciones">
+                            </p-dropdown>
                         </div>
                         <div class="form-group-interlineado col-lg-2 col-md-2">
                             <label>{{ "justiciaGratuita.sjcs.designas.datosActu.fchaJustiDesde" | translate}}</label>
@@ -348,7 +349,7 @@
                 </mat-expansion-panel>
             </mat-accordion>
         </div>
-    </div>
+    
 
     <!-- FOOTER -->
     <div class="card-footer">
@@ -360,7 +361,7 @@
             </button>
         </div>
     </div>
-</div>
+
 
 <div *ngIf="progressSpinner" class="overlay-spinner">
     <div class="loader"></div>

@@ -12,6 +12,7 @@ import { TablaPartidasComponent } from '../../maestros/partidas/gestion-partidas
 import { FiltrosTurnos } from './filtros-turnos/filtros-turnos.component';
 import { TablaTurnosComponent } from './gestion-turnos/gestion-turnos.component';
 import { procesos_oficio } from '../../../../permisos/procesos_oficio';
+import { TurnosItem } from '../../../../models/sjcs/TurnosItem';
 
 @Component({
   selector: 'app-turnos',
@@ -75,6 +76,7 @@ export class TurnosComponent implements OnInit {
 
 
   searchPartidas(event) {
+    this.filtros.filtroAux = new TurnosItem();
     this.filtros.filtroAux = this.persistenceService.getFiltrosAux();
     if(this.filtros.filtroAux.idarea != undefined){
       let idAreaAux = this.filtros.filtroAux.idarea.toString();

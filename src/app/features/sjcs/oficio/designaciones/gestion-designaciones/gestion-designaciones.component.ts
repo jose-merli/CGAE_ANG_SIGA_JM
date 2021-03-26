@@ -1,6 +1,6 @@
 import { Component, OnInit,Input, Output, ViewChild, EventEmitter } from '@angular/core';
 import { PersistenceService } from '../../../../../_services/persistence.service';
-import { DataTable } from 'primeng/primeng';
+import { Table } from 'primeng/table';
 
 
 @Component({
@@ -19,13 +19,14 @@ export class GestionDesignacionesComponent implements OnInit {
   selectedDatos: any[] = [];
   isLetrado:boolean = false;
   first = 0;
+  progressSpinner: boolean = false;
   
   //Resultados de la busqueda
   @Input() datos;
 
   @Output() searchPartidas = new EventEmitter<boolean>();
 
-  @ViewChild("table") tabla: DataTable;
+  @ViewChild("table") tabla: Table;
 
   constructor(private persistenceService: PersistenceService) { }
 
@@ -37,15 +38,16 @@ export class GestionDesignacionesComponent implements OnInit {
       this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
     }
     this.selectedDatos = [];
-    this.datos.fechaActual = new Date();
+    // this.datos.fechaActual = new Date();
     this.getCols();
-    this.datosInicial = JSON.parse(JSON.stringify(this.datos));
-    this.initDatos = JSON.parse(JSON.stringify((this.datos)));
-    if (this.persistenceService.getPaginacion() != undefined) {
-      let paginacion = this.persistenceService.getPaginacion();
-      this.first = paginacion.paginacion;
-      this.selectedItem = paginacion.selectedItem;
-    }
+    // this.datosInicial = JSON.parse(JSON.stringify(this.datos));
+    // this.initDatos = JSON.parse(JSON.stringify((this.datos)));
+    // if (this.persistenceService.getPaginacion() != undefined) {
+    //   let paginacion = this.persistenceService.getPaginacion();
+    //   this.first = paginacion.paginacion;
+    //   this.selectedItem = paginacion.selectedItem;
+    // }
+    this.progressSpinner = false;
   }
 
   getCols(){
