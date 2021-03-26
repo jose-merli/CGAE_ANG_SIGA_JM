@@ -1,8 +1,9 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild, SimpleChanges, Input, Output, EventEmitter } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild, ElementRef } from '@angular/core';
+import { element } from 'protractor';
+import { ConfirmationService, SelectItem } from '../../../../../../../../node_modules/primeng/api';
 import { TranslateService } from '../../../../../../commons/translate';
-import { SigaServices } from '../../../../../../_services/siga.service';
-import { ConfirmationService } from '../../../../../../../../node_modules/primeng/api';
 import { CommonsService } from '../../../../../../_services/commons.service';
+import { SigaServices } from '../../../../../../_services/siga.service';
 
 @Component({
   selector: 'app-tabla-saltos-compensaciones-guardia',
@@ -12,14 +13,12 @@ import { CommonsService } from '../../../../../../_services/commons.service';
 export class TablaSaltosCompensacionesGuardiaComponent implements OnInit {
 
   rowsPerPage: any = [];
-
   cols;
-  datos;
+  @Input() datos;
   datosInicial;
   updateSaltosCompen = [];
   nuevo;
   editMode: boolean = false;
-  selectionMode;
   buscadores = [];
   msgs;
   selectedItem: number = 10;
@@ -29,12 +28,25 @@ export class TablaSaltosCompensacionesGuardiaComponent implements OnInit {
   selectMultiple: boolean = false;
   seleccion: boolean = false;
   historico: boolean = false;
-
+  selectionMode = 'multiple';
+  comboTurnos: SelectItem[];
+  comboGuardias: SelectItem[];
+  opcionesTipo = [
+    {
+      label: 'Salto',
+      value: 'S'
+    },
+    {
+      label: 'Compensación',
+      value: 'C'
+    }
+  ];
 
   @Input() permisoEscritura;
   @Output() search = new EventEmitter<boolean>();
 
   @ViewChild("tabla") tabla;
+  @ViewChild("tablaFoco") tablaFoco: ElementRef;
 
   constructor(private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -43,27 +55,29 @@ export class TablaSaltosCompensacionesGuardiaComponent implements OnInit {
     private commonsService: CommonsService) { }
 
   ngOnInit() {
+
     this.selectedDatos = [];
-    this.getCols();
 
     if (this.datos != undefined) {
-      this.datosInicial = JSON.parse(JSON.stringify(this.datos));
+      this.datosInicial = this.datos;
     }
+
+    this.getComboTurno();
+    this.getCols();
 
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (this.historico == false) {
+    if (this.historico) {
       this.selectMultiple = false;
-      this.selectionMode = "single"
     } else {
       this.selectMultiple = true;
-      this.selectionMode = "multiple"
     }
-    this.selectedDatos = [];
+
+    /*this.selectedDatos = [];
     this.updateSaltosCompen = [];
     this.nuevo = false;
-    this.datosInicial = JSON.parse(JSON.stringify(this.datos));
+    this.datosInicial = this.datos;*/
   }
   changeDescripcion(dato) {
 
@@ -84,8 +98,7 @@ export class TablaSaltosCompensacionesGuardiaComponent implements OnInit {
   }
 
   setItalic(dato) {
-    if (dato.fechabaja == null) return false;
-    else return true;
+    return dato.fechaUso != null || dato.fechaAnulacion != null;
   }
 
   isHistorico() {
@@ -100,11 +113,11 @@ export class TablaSaltosCompensacionesGuardiaComponent implements OnInit {
       this.selectAll = false;
       this.selectedDatos = [];
       this.numSelected = 0;
-      this.selectionMode = "multiple";
+
     }
     else {
       this.selectMultiple = false;
-      this.selectionMode = "single";
+
     }
     this.search.emit(this.historico);
     this.selectAll = false;
@@ -112,7 +125,24 @@ export class TablaSaltosCompensacionesGuardiaComponent implements OnInit {
 
 
   onChangeSelectAll() {
-    if (this.selectAll === true) {
+
+
+    if (this.selectAll) {
+
+      if (this.historico) {
+        this.selectedDatos = this.datos.filter(dato => dato.fechaUso != null);
+        this.numSelected = this.datos.length;
+      } else {
+        this.selectedDatos = this.datos;
+        this.numSelected = this.datos.length;
+      }
+
+    } else {
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    }
+
+    /*if (this.selectAll === true) {
       if (this.nuevo) this.datos.shift();
       this.nuevo = false;
       this.editMode = false;
@@ -122,69 +152,94 @@ export class TablaSaltosCompensacionesGuardiaComponent implements OnInit {
       if (this.historico) {
         this.selectedDatos = this.datos.filter(dato => dato.fechabaja != undefined && dato.fechabaja != null);
         this.selectMultiple = true;
-        this.selectionMode = "single";
+
       } else {
         this.selectedDatos = this.datos;
         this.selectMultiple = false;
-        this.selectionMode = "single";
+
       }
-      this.selectionMode = "multiple";
+
       this.numSelected = this.datos.length;
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
       if (this.historico)
         this.selectMultiple = true;
-      this.selectionMode = "multiple";
-    }
+
+    }*/
   }
 
+  actualizaSeleccionados(selectedDatos) {
+    this.numSelected = selectedDatos.length;
+  }
+
+
   edit(evento) {
-    if (this.selectedDatos == undefined) {
-      this.selectedDatos = [];
+
+    if (evento.data && evento.data.fechaUso == null && this.historico) {
+      this.selectedDatos.pop();
     }
-    if (!this.nuevo && this.permisoEscritura) {
 
-      if (!this.selectAll && !this.selectMultiple && !this.historico) {
+    // if (this.selectedDatos == undefined) {
+    //   this.selectedDatos = [];
+    // }
+    // if (!this.nuevo && this.permisoEscritura) {
 
-        //   this.datos.forEach(element => {
-        //     element.editable = false;
-        //     element.overlayVisible = false;
-        //   });
+    //   if (!this.selectAll && !this.selectMultiple && !this.historico) {
 
-        //   evento.data.editable = true;
-        //   this.editMode = true;
+    //       this.datos.forEach(element => {
+    //         element.editable = false;
+    //         element.overlayVisible = false;
+    //       });
 
-        //   this.selectedDatos = [];
-        //   this.selectedDatos.push(evento.data);
+    //       evento.data.editable = true;
+    //       this.editMode = true;
 
-        //   let findDato = this.datosInicial.find(item => item.nombrepartida === this.selectedDatos[0].nombrepartida && item.descripcion === this.selectedDatos[0].descripcion && item.retencion === this.selectedDatos[0].retencion);
+    //       this.selectedDatos = [];
+    //       this.selectedDatos.push(evento.data);
 
-        //   this.selectedBefore = findDato;
-        // } else {
-        //   if ((evento.data.fechabaja == null || evento.data.fechabaja == undefined) && this.historico) {
-        //     if (this.selectedDatos[0] != undefined) {
-        //       this.selectedDatos.pop();
-        //     } else {
-        //       this.selectedDatos = [];
-        //     }
-        // }
+    //       let findDato = this.datosInicial.find(item => item.nombrepartida === this.selectedDatos[0].nombrepartida && item.descripcion === this.selectedDatos[0].descripcion && item.retencion === this.selectedDatos[0].retencion);
 
-      }
+    //       this.selectedBefore = findDato;
+    //     } else {
+    //       if ((evento.data.fechabaja == null || evento.data.fechabaja == undefined) && this.historico) {
+    //         if (this.selectedDatos[0] != undefined) {
+    //           this.selectedDatos.pop();
+    //         } else {
+    //           this.selectedDatos = [];
+    //         }
+    //     }
 
-    }
+    //   }
+
+    // }
+  }
+
+  createNewSaltoCompensacion() {
+    let dat = this.datos;
+    let nuevo = {
+      turno: '',
+      guardia: '',
+      nColegiado: '',
+      letrado: '',
+      saltoCompensacion: '',
+      fecha: '',
+      motivo: '',
+      fechaUso: ''
+    };
+    this.datos = [nuevo, ...dat];
   }
 
   newSaltoCompensacion() {
     this.nuevo = true;
     this.editMode = false;
-    this.selectionMode = "single";
+
     this.tabla.sortOrder = 0;
     this.tabla.sortField = '';
     this.tabla.reset();
 
     if (this.datosInicial != undefined && this.datosInicial != null) {
-      this.datos = JSON.parse(JSON.stringify(this.datosInicial));
+      this.datos = this.datosInicial;
     } else {
       this.datos = [];
     }
@@ -210,7 +265,7 @@ export class TablaSaltosCompensacionesGuardiaComponent implements OnInit {
 
   rest() {
     if (this.datosInicial != undefined) {
-      this.datos = JSON.parse(JSON.stringify(this.datosInicial));
+      this.datos = this.datosInicial;
     } else {
       this.datos = [];
     }
@@ -238,14 +293,14 @@ export class TablaSaltosCompensacionesGuardiaComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "turno", header: "dato.jgr.guardia.guardias.turno", width: "20%" },
-      { field: "guardia", header: "menu.justiciaGratuita.GuardiaMenu", width: "20%" },
+      { field: "turno", header: "dato.jgr.guardia.guardias.turno", width: "18%" },
+      { field: "guardia", header: "menu.justiciaGratuita.GuardiaMenu", width: "18%" },
       { field: "nColegiado", header: "censo.nuevaSolicitud.numColegiado", width: "7%" },
-      { field: "letrados", header: "justiciaGratuita.oficio.turnos.nletrados", width: "15%" },
-      { field: "tipo", header: "censo.nuevaSolicitud.tipoSolicitud", width: "10%" },
-      { field: "fecha", header: "censo.resultadosSolicitudesModificacion.literal.fecha", width: "10%" },
-      { field: "motivos", header: "dato.jgr.guardia.guardias.motivos", width: "10%" },
-      { field: "fechaUso", header: "dato.jgr.guardia.guardias.fechaUso", width: "10%" },
+      { field: "letrado", header: "justiciaGratuita.oficio.turnos.nletrados", width: "18%" },
+      { field: "saltoCompensacion", header: "censo.nuevaSolicitud.tipoSolicitud", width: "7%" },
+      { field: "fecha", header: "censo.resultadosSolicitudesModificacion.literal.fecha", width: "7%" },
+      { field: "motivo", header: "dato.jgr.guardia.guardias.motivos", width: "18%" },
+      { field: "fechaUso", header: "dato.jgr.guardia.guardias.fechaUso", width: "7%" },
 
 
     ];
@@ -270,14 +325,7 @@ export class TablaSaltosCompensacionesGuardiaComponent implements OnInit {
     ];
   }
 
-  actualizaSeleccionados(selectedDatos) {
-    if (this.selectedDatos == undefined) {
-      this.selectedDatos = []
-    }
-    if (selectedDatos != undefined) {
-      this.numSelected = selectedDatos.length;
-    }
-  }
+
 
   showMessage(severity, summary, msg) {
     this.msgs = [];
@@ -303,12 +351,11 @@ export class TablaSaltosCompensacionesGuardiaComponent implements OnInit {
       if (!this.selectMultiple) {
         this.selectedDatos = [];
         this.numSelected = 0;
-        this.selectionMode = "single";
+
       } else {
         this.selectAll = false;
         this.selectedDatos = [];
         this.numSelected = 0;
-        this.selectionMode = "multiple";
 
       }
     }
@@ -321,5 +368,45 @@ export class TablaSaltosCompensacionesGuardiaComponent implements OnInit {
     this.tabla.reset();
   }
 
+  getComboTurno() {
+
+    this.sigaServices.get("busquedaGuardia_turno").subscribe(
+      n => {
+        this.comboTurnos = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboTurnos);
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  onChangeTurno() {
+    // this.filtros.idGuardia = "";
+    // this.comboGuardias = [];
+
+    // if (this.filtros.idTurno) {
+    //   this.getComboGuardia();
+    // } else {
+    //   this.isDisabledGuardia = true;
+    // }
+  }
+
+  getComboGuardia(idTurno) {
+    this.sigaServices.getParam(
+      "busquedaGuardia_guardia", "?idTurno=" + idTurno).subscribe(
+        data => {
+          this.comboGuardias = data.combooItems;
+          this.commonsService.arregloTildesCombo(this.comboGuardias);
+        },
+        err => {
+          console.log(err);
+        }
+      );
+  }
+
+  fillFecha(event, dato) {
+    dato.fecha = event;
+  }
 
 }
