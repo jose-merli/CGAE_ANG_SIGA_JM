@@ -1,16 +1,15 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild, ElementRef } from '@angular/core';
-import { element } from 'protractor';
 import { ConfirmationService, SelectItem } from '../../../../../../../../node_modules/primeng/api';
 import { TranslateService } from '../../../../../../commons/translate';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
-
 @Component({
   selector: 'app-tabla-saltos-compensaciones-guardia',
   templateUrl: './tabla-saltos-compensaciones-guardia.component.html',
   styleUrls: ['./tabla-saltos-compensaciones-guardia.component.scss']
 })
 export class TablaSaltosCompensacionesGuardiaComponent implements OnInit {
+
 
   rowsPerPage: any = [];
   cols;

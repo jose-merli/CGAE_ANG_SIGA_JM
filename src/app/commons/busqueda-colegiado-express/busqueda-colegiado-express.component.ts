@@ -18,6 +18,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
   @Input() disabled: boolean = false;
 
   @Output() idPersona = new EventEmitter<string>();
+  @Output() colegiado = new EventEmitter<any>();
   progressSpinner: boolean = false;
   nColegiado: string = "";
   apellidosNombre: string = "";
@@ -122,5 +123,13 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  changeColegiado() {
+    let colegiado = {
+      nombreAp: this.colegiadoForm.get('nombreAp').value,
+      numColegiado: this.colegiadoForm.get('numColegiado').value
+    };
+    this.colegiado.emit(colegiado);
   }
 }
