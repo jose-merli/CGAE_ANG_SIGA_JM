@@ -16,6 +16,8 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { ResultadoIncompatibilidades } from './ResultadoIncompatibilidades.model';
 import { Row, TablaResultadoMixIncompService } from '../../../../../commons/tabla-resultado-mix/tabla-resultado-mix-incompatib.service';
 import { AuthenticationService } from '../../../../../_services/authentication.service';
+import { ComboIncompatibilidadesDatosEntradaItem } from './ComboIncompatibilidadesDatosEntradaItem';
+import { ComboIncompatibilidadesRes } from './ComboIncompatibilidadesRes';
 interface GuardiaI {
   label: string,
   value: string
@@ -47,6 +49,8 @@ export class BuscadorGuardiaIncompatibilidadesComponent implements OnInit {
   allSelected = false;
   isDisabled = true;
   seleccionarTodo = false;
+  comboIncompatibilidadesDatosEntradaItem: ComboIncompatibilidadesDatosEntradaItem;
+  comboIncompatibilidadesRes: ComboIncompatibilidadesRes;
   cabeceras = [
     {
       id: "turno",
@@ -84,6 +88,7 @@ export class BuscadorGuardiaIncompatibilidadesComponent implements OnInit {
     }
 
     ngOnInit() {
+      
   this.commonsService.checkAcceso(procesos_guardia.guardias)
       .then(respuesta => {
 
@@ -110,7 +115,9 @@ export class BuscadorGuardiaIncompatibilidadesComponent implements OnInit {
   }
   getFiltrosValues(event){
     this.filtrosValues = event;
-    this.buscarInc();
+    this.convertArraysToStrings();
+    this.getComboGuardiasInc();
+    
   }
 
   selectedAll(event) {
@@ -124,8 +131,46 @@ export class BuscadorGuardiaIncompatibilidadesComponent implements OnInit {
       this.isDisabled = true;
     }
   }
+
+  getComboGuardiasInc(){
+    let idInstitucion = this.authenticationService.getInstitucionSession();
+    this.comboIncompatibilidadesDatosEntradaItem = new ComboIncompatibilidadesDatosEntradaItem(
+      { 'idTurno': this.filtrosValues.idTurno,
+        'idTipoGuardia': this.filtrosValues.idTipoGuardia,
+        'idPartidaPresupuestaria': this.filtrosValues.partidaPresupuestaria,
+        'labels': true,
+        'idInstitucion': idInstitucion
+      }  );
+
+
+    this.sigaServices.post(
+      "guardiasIncompatibilidades_getCombo", this.comboIncompatibilidadesDatosEntradaItem).subscribe(
+        data => {
+          console.log('data: ', JSON.parse(data.body))
+          this.comboIncompatibilidadesRes = new ComboIncompatibilidadesRes(
+            {
+              'values': JSON.parse(data.body).values,
+              'labels': JSON.parse(data.body).labels
+            });
+            console.log(' this.comboIncompatibilidadesRes: ',  this.comboIncompatibilidadesRes)
+            this.comboIncompatibilidadesRes.labels.forEach((l,i) => {
+              let objCombo: GuardiaI = {label: l, value: this.comboIncompatibilidadesRes.values[i]};
+              this.comboGuardiasIncompatibles.push(objCombo);
+            });
+            console.log('this.comboGuardiasIncompatibles: ', this.comboGuardiasIncompatibles)
+            this.buscarInc();
+  },
+    err => {
+      this.progressSpinner = false;
+      console.log(err);
+    });
+}
+  
+
+
 buscarInc(){
-  this.convertArraysToStrings();
+ 
+  
 //let jsonEntrada  = JSON.parse(JSON.stringify(datosEntrada))
 this.incompatibilidadesDatosEntradaItem = new IncompatibilidadesDatosEntradaItem(
     { 'idTurno': this.filtrosValues.idTurno,
@@ -152,6 +197,8 @@ this.incompatibilidadesDatosEntradaItem = new IncompatibilidadesDatosEntradaItem
             it.letradosIns = +it.letradosIns;
             return it;
           })
+          this.respuestaIncompatibilidades = [];
+         // this.comboGuardiasIncompatibles = [];
           this.datos.forEach((dat, i) => {
             let responseObject = new ResultadoIncompatibilidades(
               {
@@ -169,8 +216,8 @@ this.incompatibilidadesDatosEntradaItem = new IncompatibilidadesDatosEntradaItem
               }
               
             );
-            let objCombo: GuardiaI = {label: dat.nombreGuardiaIncompatible, value: dat.idGuardiaIncompatible};
-            this.comboGuardiasIncompatibles.push(objCombo);
+            /*let objCombo: GuardiaI = {label: dat.nombreGuardiaIncompatible, value: dat.idGuardiaIncompatible};
+            this.comboGuardiasIncompatibles.push(objCombo);*/
             this.respuestaIncompatibilidades.push(responseObject);
           })
           this.jsonToRow();
@@ -198,9 +245,10 @@ this.incompatibilidadesDatosEntradaItem = new IncompatibilidadesDatosEntradaItem
 jsonToRow(){
   
   let arr = [];
-  this.respuestaIncompatibilidades.forEach(res => {
+  this.respuestaIncompatibilidades.forEach((res, i) => {
     let ArrComboValue = [res.idGuardiaIncompatible];
-    let obj = [
+    let ArrNombresGI = [res.nombreGuardiaIncompatible]
+    let objCells = [
     { type: 'text', value: res.nombreTurno },
     { type: 'text', value: res.nombreGuardia },
     { type: 'multiselect', combo: this.comboGuardiasIncompatibles, value: ArrComboValue },
@@ -208,38 +256,55 @@ jsonToRow(){
     { type: 'input', value: res.diasSeparacionGuardias },
     { type: 'invisible', value: res.idTurnoIncompatible },
     { type: 'invisible', value: res.idGuardiaIncompatible },
-    { type: 'invisible', value: res.idGuardia }];
+    { type: 'invisible', value: res.idGuardia },
+    { type: 'invisible', value: res.idTurno },
+    { type: 'invisible', value: res.nombreTurnoIncompatible },
+    { type: 'invisible', value: ArrNombresGI }]
+    ;
+
+    let obj = {id: i, cells: objCells};
     arr.push(obj);
   })
   //BORRAR!!!!******
   /*arr = [
-    [
-      { type: 'text', value: '28/08/2007' },
-      { type: 'text', value: 'Designación' },
-      { type: 'multiselect', combo: [{label: "Fact Ayto. Alicante - As. Joven", value: "1"},
-                                     {label: "Fact Ayto. Alicante - As. Joven", value: "2"}] },
-      { type: 'input', value: 'documentoX.txt' },
-      { type: 'input', value: 'Euskara ResultadoConsulta' }
-    ],
-    [
-      { type: 'text', value: '28/08/2007' },
-      { type: 'text', value: 'Designación' },
-      { type: 'multiselect', combo: [{label: "Fact Ayto. Alicante - As. Joven", value: "1"},
-                                    {label: "Fact Ayto. Alicante - As. Joven", value: "2"}]},
-      { type: 'input', value: 'documentoX.txt' },
-      { type: 'input', value: 'Euskara ResultadoConsulta' }
-    ],
-    [
-      { type: 'text', value: '28/08/2007' },
-      { type: 'text', value: 'Designación' },
-      { type: 'multiselect', combo: [{label: "Fact Ayto. Alicante - As. Joven", value: "1"},
-                                    {label: "Fact Ayto. Alicante - As. Joven", value: "2"}] },
-      { type: 'input', value: 'documentoX.txt' },
-      { type: 'input', value: 'Euskara ResultadoConsulta' }
-    ]
+    { id: 1,
+      cells: 
+      [
+        { type: 'text', value: '28/08/2007' },
+        { type: 'text', value: 'Designación' },
+        { type: 'multiselect', combo: [{label: "Fact Ayto. Alicante - As. Joven", value: "1"},
+                                      {label: "Fact Ayto. Alicante - As. Joven", value: "2"}] },
+        { type: 'input', value: 'documentoX.txt' },
+        { type: 'input', value: 'Euskara ResultadoConsulta' }
+      ],
+    },
+    { id: 2,
+      cells: 
+      [
+        { type: 'text', value: '28/08/2007' },
+        { type: 'text', value: 'Designación' },
+        { type: 'multiselect', combo: [{label: "Fact Ayto. Alicante - As. Joven", value: "1"},
+                                      {label: "Fact Ayto. Alicante - As. Joven", value: "2"}]},
+        { type: 'input', value: 'documentoX.txt' },
+        { type: 'input', value: 'Euskara ResultadoConsulta' }
+      ],
+    },
+    { id: 3,
+      cells: 
+      [
+        { type: 'text', value: '28/08/2007' },
+        { type: 'text', value: 'Designación' },
+        { type: 'multiselect', combo: [{label: "Fact Ayto. Alicante - As. Joven", value: "1"},
+                                      {label: "Fact Ayto. Alicante - As. Joven", value: "2"}] },
+        { type: 'input', value: 'documentoX.txt' },
+        { type: 'input', value: 'Euskara ResultadoConsulta' }
+      ]
+    },
   ];*/
    //*****BORRAR!!!!
+   this.rowGroups = [];
   this.rowGroups = this.trmService.getTableData(arr);
+  this.rowGroupsAux = [];
   this.rowGroupsAux = this.trmService.getTableData(arr);
   this.totalRegistros = this.rowGroups.length;
 }
@@ -250,8 +315,19 @@ save(event){
   let motivos;
   let diasSeparacionGuardias;
   let idGuardia;
-  event.forEach(row => {
+  let idTurno;
+  let nombreTurno;
+  let nombreGuardia;
+  let nombreTurnoIncompatible;
+  let nombreGuardiaIncompatible;
+  event.forEach((row, i) => {
     row.cells.forEach((c, index) => {
+      if (index == 0){
+        nombreTurno = c.value;
+      }
+      if (nombreGuardia == 1){
+        motivos = c.value;
+      }
       if (index == 3){
         motivos = c.value;
       }
@@ -267,8 +343,17 @@ save(event){
       if (index == 7){
         idGuardia = c.value;
       }
+      if (index == 8){
+        idTurno = c.value;
+      }
+      if (index == 9){
+        nombreTurnoIncompatible = c.value;
+      }
+      if (index == 10){
+        nombreGuardiaIncompatible = c.value;
+      }
     });
-    this.guardarInc(idTurnoIncompatible, idGuardiaIncompatible, motivos, diasSeparacionGuardias, idGuardia)
+    this.guardarInc(nombreTurno, nombreGuardia, nombreTurnoIncompatible, nombreGuardiaIncompatible, idTurnoIncompatible, idGuardiaIncompatible, motivos, diasSeparacionGuardias, idGuardia, idTurno)
   });
   
    this.rowGroups = event;
@@ -280,6 +365,7 @@ save(event){
     let idTurnoIncompatible;
     let idGuardiaIncompatible;
     let idGuardia;
+    let idTurno;
 rowToDelete.cells.forEach((c, index) => {
       if (index == 5){
         idTurnoIncompatible = c.value;
@@ -290,18 +376,22 @@ rowToDelete.cells.forEach((c, index) => {
       if (index == 7){
         idGuardia = c.value;
       }
+      if (index == 8){
+        idTurno = c.value;
+      }
      /* if(c.type == "multiselect"){
         c.combo.forEach(comboValue => {
           comboValue.value
         })
       }*/
     })
-    this.eliminarInc(idTurnoIncompatible, idGuardiaIncompatible, idGuardia)
+    this.eliminarInc(idTurnoIncompatible, idGuardiaIncompatible, idGuardia, idTurno)
     this.rowGroupsAux = this.rowGroups;
     this.totalRegistros = this.rowGroups.length;
   }
 delete(indexToDelete){
   let idGuardia;
+  let idTurno;
   let toDelete:Row[] = [];
   indexToDelete.forEach(index => {
     toDelete.push(this.rowGroups[index]);
@@ -320,13 +410,16 @@ let idGuardiaIncompatible;
       if (index == 7){
         idGuardia = c.value;
       }
+      if (index == 8){
+        idTurno = c.value;
+      }
      /* if(c.type == "multiselect"){
         c.combo.forEach(comboValue => {
           comboValue.value
         })
       }*/
     })
-    this.eliminarInc(idTurnoIncompatible, idGuardiaIncompatible, idGuardia)
+    this.eliminarInc(idTurnoIncompatible, idGuardiaIncompatible, idGuardia, idTurno)
   })
   this.rowGroupsAux = this.rowGroups;
   this.totalRegistros = this.rowGroups.length;
@@ -334,10 +427,10 @@ let idGuardiaIncompatible;
 
 
 
-  eliminarInc(idTurnoIncompatible, idGuardiaIncompatible, idGuardia){
+  eliminarInc(idTurnoIncompatible, idGuardiaIncompatible, idGuardia, idTurno){
     let idInstitucion = this.authenticationService.getInstitucionSession();
   this.deleteIncompatibilidadesDatosEntradaItem = new DeleteIncompatibilidadesDatosEntradaItem(
-    { 'idTurno': this.filtrosValues.idTurno,
+    { 'idTurno': idTurno,
       'idGuardia': idGuardia,
       'idTurnoIncompatible': idTurnoIncompatible,
       'idGuardiaIncompatible': idGuardiaIncompatible,
@@ -374,17 +467,21 @@ let idGuardiaIncompatible;
   
 }
 
-guardarInc(idTurnoIncompatible, idGuardiaIncompatible, motivos, diasSeparacionGuardias, idGuardia){
+guardarInc(nombreTurno, nombreGuardia, nombreTurnoIncompatible, nombreGuardiaIncompatible, idTurnoIncompatible, idGuardiaIncompatible, motivos, diasSeparacionGuardias, idGuardia, idTurno){
   let idInstitucion = this.authenticationService.getInstitucionSession();
   this.saveIncompatibilidadesDatosEntradaItem = new SaveIncompatibilidadesDatosEntradaItem(
-    { 'idTurno': this.filtrosValues.idTurno,
+    { 'idTurno': idTurno,
       'idGuardia': idGuardia,
       'idTurnoIncompatible': idTurnoIncompatible,
       'idGuardiaIncompatible': idGuardiaIncompatible,
       'idInstitucion': idInstitucion, 
       'motivos': motivos,
       'diasSeparacionGuardias': diasSeparacionGuardias,
-      'usuario': "1", //DUDA
+      'usuario': "1", //se setea en backend
+      'nombreTurno' : nombreTurno,
+      'nombreGuardia' : nombreGuardia,
+      'nombreTurnoIncompatible' : nombreTurnoIncompatible,
+      'nombreGuardiaIncompatible' : nombreGuardiaIncompatible
     }
   );
     this.sigaServices.post(

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class Row {
+  id: number;
   cells: Cell[];
 }
 
@@ -18,7 +19,9 @@ export class Combo {
 export class TablaResultadoMixIncompService {
 
   /*result = [
-    [
+    id: 1,
+    cells: 
+    [ 
       { type: 'text', value: '28/08/2007' },
       { type: 'text', value: 'Designación' },
       { type: 'multiselect', combo: [{label: "Fact Ayto. Alicante - As. Joven", value: "1"},
@@ -26,6 +29,8 @@ export class TablaResultadoMixIncompService {
       { type: 'input', value: 'documentoX.txt' },
       { type: 'input', value: 'Euskara ResultadoConsulta' }
     ],
+    id: 2,
+    cells: 
     [
       { type: 'text', value: '28/08/2007' },
       { type: 'text', value: 'Designación' },
@@ -34,6 +39,8 @@ export class TablaResultadoMixIncompService {
       { type: 'input', value: 'documentoX.txt' },
       { type: 'input', value: 'Euskara ResultadoConsulta' }
     ],
+    id: 3,
+    cells: 
     [
       { type: 'text', value: '28/08/2007' },
       { type: 'text', value: 'Designación' },
@@ -47,10 +54,10 @@ constructor() {}
 
 public getTableData(result) {
 let finalRows: Row[] = [];
-result.forEach((rows) => {    
+result.forEach((rows => {    
 let rowObject: Row = new Row();
 let cells: Cell[] = [];
-rows.forEach((cell) => {
+rows.cells.forEach((cell) => {
   let cellObject: Cell = new Cell();
   if (cell['type'] == 'multiselect'){
     cellObject.type = cell['type'];
@@ -62,6 +69,7 @@ rows.forEach((cell) => {
   }
   cells.push(cellObject);
 });
+rowObject.id = rows.id;
 rowObject.cells = cells;
 finalRows.push(rowObject);
 });

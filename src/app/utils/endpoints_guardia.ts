@@ -43,5 +43,6 @@ export let endpoints_guardia: any = {
     //Incompatibilidades
     guardiasIncompatibilidades_buscarIncompatibilidades : "guardia/buscarIncompatibilidades",
     guardiasIncompatibilidades_eliminarIncompatibilidades:  "guardia/eliminarIncompatibilidades",
-    guardiasIncompatibilidades_guardarIncompatibilidades: "guardia/guardarIncompatibilidades"
+    guardiasIncompatibilidades_guardarIncompatibilidades: "guardia/guardarIncompatibilidades",
+    guardiasIncompatibilidades_getCombo: "guardia/getComboGuardiasInc"
 }

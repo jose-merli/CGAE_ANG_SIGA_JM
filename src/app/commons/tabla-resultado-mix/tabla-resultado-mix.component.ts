@@ -5,14 +5,6 @@ import { Sort } from '@angular/material/sort';
 import { Row, Cell } from './tabla-resultado-mix-incompatib.service';
 import { Message } from 'primeng/components/common/api';
 import { ValidationModule } from '../validation/validation.module';
-interface GuardiaI {
-  label: string,
-  value: string
-}
-interface NewCell {
-  position: string,
-  value: string
-}
 @Component({
   selector: 'app-tabla-resultado-mix',
   templateUrl: './tabla-resultado-mix.component.html',
@@ -47,10 +39,6 @@ export class TablaResultadoMixComponent implements OnInit {
   from = 0;
   to = 10;
   numperPage = 10;
-  newInputValue = [];
-  newInputValuePerRow = [];
-  inputValues: NewCell = {position: '', value: ''};
-  inputValuesArr: NewCell[] = [];
   enableGuardar = false;
   multiselectValue = [];
   multiselectLabels = [];
@@ -106,8 +94,9 @@ export class TablaResultadoMixComponent implements OnInit {
     })
   }
 
-  onChangeMulti(event, rowPosition){
-let deseleccionado;
+  onChangeMulti(event, rowPosition, cell){
+    console.log('cell: ', cell)
+    let deseleccionado;
    
     let selected = event.itemValue;
     let arraySelected = event.value;
@@ -118,47 +107,77 @@ let deseleccionado;
       deseleccionado = true;
     }
     let turno = this.rowGroups[rowPosition].cells[0];
-    let guardia = this.rowGroups[rowPosition].cells[1];
+    let idGuardia = this.rowGroups[rowPosition].cells[7];
+    let idTurno = this.rowGroups[rowPosition].cells[8];
+    let idTurnoIncompatible = this.rowGroups[rowPosition].cells[5];
+    let idGuardiaIncompatible = this.rowGroups[rowPosition].cells[6];
+    let nombreTurnoInc = this.rowGroups[rowPosition].cells[9];
     if (deseleccionado){
       //eliminar doble
       this.eliminarFromCombo(this.rowGroups[rowPosition])
     } else {
       //guardar doble
+      
       this.comboGuardiasIncompatibles.forEach(comboObj => {
         if ( comboObj.value == selected){
           labelSelected = comboObj.label;
         }
       })
-      let cell:  Cell = new Cell();
-      cell.type = 'text';
-      cell.value = labelSelected;
-      this.nuevoFromCombo(turno, cell, guardia);
+      let cellguardiaInc:  Cell = new Cell();
+      cellguardiaInc.type = 'text';
+      cellguardiaInc.value = labelSelected;
+      this.rowGroups[rowPosition].cells[10].value.push(labelSelected);
+      this.nuevoFromCombo(turno, cellguardiaInc, idGuardia, idTurno, idTurnoIncompatible, idGuardiaIncompatible, nombreTurnoInc);
     }
+  
   }
-  nuevoFromCombo(turno, guardiaInc, idGuardia){
+  nuevoFromCombo(turno, guardiaInc, idGuardia, idTurno, idTurnoIncompatible, idGuardiaIncompatible, nombreTurnoInc){
+    console.log('idGuardiaIncompatible: ', idGuardiaIncompatible)
+    console.log('idGuardia: ', idGuardia)
     this.enableGuardar = true;
+    let labelSelected = '';
     let row: Row = new Row();
     let cell1: Cell = new Cell();
     let cell2: Cell = new Cell();
     let cellInvisible: Cell = new Cell();
     let cellMulti:  Cell = new Cell();
+    let cellArr: Cell = new Cell();
+    let idG;
     cell1.type = 'input';
     cell1.value = '';
     cell2.type = 'input';
     cell2.value = '0';
     cellInvisible.type = 'invisible';
-    cellInvisible.value = ' ';
+    cellInvisible.value = nombreTurnoInc;
     cellMulti.combo = this.comboGuardiasIncompatibles;
     cellMulti.type = 'multiselect'; 
     cellMulti.value = [idGuardia.value];
-    row.cells = [turno, guardiaInc, cellMulti, cell1, cell2, cellInvisible, cellInvisible, idGuardia];
+    this.comboGuardiasIncompatibles.forEach(comboObj => {
+      if ( comboObj.value == idGuardia.value){
+        labelSelected = comboObj.label;
+      }
+    });
+    cellArr.type = 'invisible';
+    cellArr.value = [labelSelected];
+    if (idGuardia.value != ''){
+      this.comboGuardiasIncompatibles.push({ label: labelSelected, value: idGuardia.value})
+    }
+    console.log('idGuardia.value: ', idGuardia.value)
+    console.log('this.comboGuardiasIncompatibles: ', this.comboGuardiasIncompatibles)
+    console.log('cellMulti.value: ', cellMulti.value)
+    row.cells = [turno, guardiaInc, cellMulti, cell1, cell2, idTurno, idGuardia, idGuardiaIncompatible, idTurnoIncompatible, cellInvisible, cellArr];
+    if (idGuardia.value != ''){
     this.rowGroups.unshift(row);
+    }
     this.totalRegistros = this.rowGroups.length;
+    this.rowGroupsAux = this.rowGroups;
   }
   validaCheck(texto) {
     return texto === 'Si';
   }
   selectRow(rowId) {
+    console.log('*****SELECTROW')
+    console.log('rowId: ', rowId)
     if (this.selectedArray.includes(rowId)) {
       const i = this.selectedArray.indexOf(rowId);
       this.selectedArray.splice(i, 1);
@@ -221,6 +240,7 @@ let deseleccionado;
       }
     });
     this.totalRegistros = this.rowGroups.length;
+    this.rowGroupsAux = this.rowGroups;
   }
 
   showMsg(severity, summary, detail) {
@@ -249,104 +269,102 @@ let deseleccionado;
     this.numperPage = perPage;
   }
 
- 
-  inputValueChange(event, i , z, cell){
-    let cells: Cell[] = [];
-    let rowFilled: Row =  new Row();
-    rowFilled.cells = cells;
-    if (this.inputValuesArr[z]  != undefined){
-      if (z == 3){
-        this.inputValuesArr[z - 1] = { position: z , value: this.newInputValue[z]};
-      }else{
-        this.inputValuesArr[z] = { position: z , value: this.newInputValue[z]};
-      }
-     
-    }else{
-      this.inputValues.position = z;
-      this.inputValues.value = this.newInputValue[z];
-      this.inputValuesArr.push(Object.assign({},this.inputValues));
-    }
-             this.rowGroups[this.rowGroups.length -1].cells.forEach((cell, c) => {
-              let cellFilled1 = new Cell();
-            if (c != 2){  
-              if (this.inputValuesArr[c]!= undefined && c != 3){
-                let cellFilled = new Cell();
-                cellFilled.value = this.inputValuesArr[c].value;
-                cellFilled.type = 'newinput';
-                cellFilled1 = cellFilled;
-              }
-                else if (this.inputValuesArr[c-1]!= undefined && c >= 3){
-                  let cellFilled = new Cell();
-                  cellFilled.value = this.inputValuesArr[c-1].value;
-                  cellFilled.type = 'newinput';
-                  cellFilled1 = cellFilled;
-                }
-              else {
-                let cellFilled = new Cell();
-                cellFilled.value = ' ';
-                cellFilled.type = 'newinput';
-                cellFilled1 = cellFilled;
-              }
-
-            } else {
-              let cellFilled = new Cell();
-              cellFilled.combo = this.comboGuardiasIncompatibles;
-              cellFilled.type = 'multiselect';  
-              cellFilled1 = cellFilled;
-            }
-           rowFilled.cells.push(cellFilled1);
-          })
-      this.rowGroups[this.rowGroups.length - 1] = rowFilled;
-      this.rowGroupsAux = this.rowGroups;
-      this.totalRegistros = this.rowGroups.length;
-
-  }
   nuevo(){
+        /*{ type: 'text', value: res.nombreTurno },
+    { type: 'text', value: res.nombreGuardia },
+    { type: 'multiselect', combo: this.comboGuardiasIncompatibles, value: ArrComboValue },
+    { type: 'input', value: res.motivos },
+    { type: 'input', value: res.diasSeparacionGuardias },
+    { type: 'invisible', value: res.idTurnoIncompatible },
+    { type: 'invisible', value: res.idGuardiaIncompatible },
+    { type: 'invisible', value: res.idGuardia },
+    { type: 'invisible', value: res.idTurno },
+    { type: 'invisible', value: res.nombreTurnoIncompatible },
+    { type: 'invisible', value: res.nombreGuardiaIncompatible }]*/
     this.enableGuardar = true;
     let row: Row = new Row();
     let cell1: Cell = new Cell();
+    let cell2: Cell = new Cell();
+    let cell3: Cell = new Cell();
+    let cell4: Cell = new Cell();
+    let cell5: Cell = new Cell();
+    let cell6: Cell = new Cell();
+    let cell7: Cell = new Cell();
+    let cell8: Cell = new Cell();
+    let cell9: Cell = new Cell();
+    let cell10: Cell = new Cell();
     let cellMulti:  Cell = new Cell();
-    cell1.type = 'newinput';
-    cell1.value = ' ';
+    cell1.type = 'input';
+    cell1.value = '';
+    cell2.type = 'input';
+    cell2.value = '';
+    cell3.type = 'input';
+    cell3.value = '';
+    cell4.type = 'input';
+    cell4.value = '';
+
+    cell5.type = 'invisible';
+    cell5.value = '';
+    cell6.type = 'invisible';
+    cell6.value = '';
+    cell7.type = 'invisible';
+    cell7.value = '';
+    cell8.type = 'invisible';
+    cell8.value = '';
+    cell9.type = 'invisible';
+    cell9.value = '';
+    cell10.type = 'invisible';
+    cell10.value = [];
     cellMulti.combo = this.comboGuardiasIncompatibles;
     cellMulti.type = 'multiselect'; 
-    row.cells = [cell1, cell1, cellMulti, cell1, cell1];
+    row.cells = [cell1, cell2, cellMulti, cell3, cell4, cell5, cell6, cell7, cell8, cell9, cell2];
     this.rowGroups.unshift(row);
+    this.rowGroupsAux = this.rowGroups;
     this.totalRegistros = this.rowGroups.length;
+    console.log('this.rowGroups: ', this.rowGroups)
     //this.to = this.totalRegistros;
   }
-  inputChange(event, i, z){
+  inputChange(event, i, z, cell){
     this.enableGuardar = true;
+    console.log('this.rowGroups: ', this.rowGroups)
   }
 
   guardar(){
     let anyEmptyArr = [];
+    console.log('GUARDAR: ',  this.rowGroups)
     this.rowGroups.forEach(row =>{
-      if(row.cells[0].value == '' ||  row.cells[0].value == undefined || row.cells[1].value == '' ||  row.cells[1].value == undefined || row.cells[2].value == '' ||  row.cells[2].value == undefined || row.cells[4].value == '' ||  row.cells[4].value == undefined){
+      if(row.cells[0].value == '' ||  row.cells[0].value == null || row.cells[1].value == '' ||  row.cells[1].value == null || row.cells[2].value == '' ||  row.cells[2].value == null || row.cells[4].value == '' ||  row.cells[4].value == null){
         anyEmptyArr.push(true);
+        return ;
       } else{
-        this.save.emit( this.rowGroups);
-        this.enableGuardar = false;
-        this.totalRegistros = this.rowGroups.length;
         anyEmptyArr.push(false);
       }
-
-      if (anyEmptyArr.includes(true)){
-        this.showMsg('error', 'Error. Existen campos vacíos en la tabla.', '')
-      }else{
-        this.showMsg('success', 'Se ha guardado correctamente', '')
-      }
-      
     })
+    
+    if (anyEmptyArr.includes(true)){
+      console.log('ERROR')
+      this.showMsg('error', 'Error. Existen campos vacíos en la tabla.', '')
+    }else{
+      this.showMsg('success', 'Se ha guardado correctamente', '')
+      console.log('SUCCESS')
+      this.save.emit( this.rowGroups);
+      this.enableGuardar = false;
+      this.totalRegistros = this.rowGroups.length;
+    }
   }
   eliminar(){
   this.delete.emit(this.selectedArray);
   this.totalRegistros = this.rowGroups.length;
+  this.rowGroupsAux = this.rowGroups;
   //this.to = this.totalRegistros;
   }
 
   eliminarFromCombo(rowToDelete){
     this.deleteFromCombo.emit(rowToDelete);
+    this.rowGroupsAux = this.rowGroups;
+  }
+  selectedAll(evento){
+    this.seleccionarTodo = evento;
   }
 }
 function compare(a: string, b: number | string, isAsc: boolean) {

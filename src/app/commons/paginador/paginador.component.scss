@@ -44,3 +44,41 @@
 .p-13{
     padding: 13px;
 }
+@media (max-width: 788px) {
+    .toBottomLeft{
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        padding-top: 20px;
+    }
+    .toBottomRight{
+        width: 100% !important;
+        margin-bottom: 7px;
+    }
+  }
+
+  @media (max-width: 378px) {
+    .toBottomLeft{
+        
+        margin-bottom: 20px;
+    }
+    .toBottomRight{
+        width: 100% !important;
+        margin-bottom: 7px;
+    }
+    .paginador1 {
+        display: none !important;
+    }
+  }
+  @media (max-width: 456px) {
+    .paginador1 {
+        display: none !important;
+    }
+}
+
+    @media (max-width: 1880px) {
+        .paginador2 {
+            display: none !important;
+        }
+  }
+  
+  
