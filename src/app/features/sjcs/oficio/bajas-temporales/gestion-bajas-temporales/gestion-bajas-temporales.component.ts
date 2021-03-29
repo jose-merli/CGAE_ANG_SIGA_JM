@@ -4,6 +4,8 @@ import { FormControl } from '@angular/forms';
 import { Sort } from '@angular/material/sort';
 import { Message } from 'primeng/components/common/api';
 import { Row, Cell } from './gestion-bajas-temporales.service';
+import { PersistenceService } from '../../../../../_services/persistence.service';
+
 interface GuardiaI {
   label: string,
   value: string
@@ -30,6 +32,10 @@ export class GestionBajasTemporalesComponent implements OnInit {
   @Output() save = new EventEmitter<Row[]>();
   @Output() delete = new EventEmitter<any>();
   @Output() deleteFromCombo = new EventEmitter<any>();
+  @Output() denegar = new EventEmitter<any>();
+  @Output() anular = new EventEmitter<any>();
+  @Output() validar = new EventEmitter<any>();
+  @Output() searchHistorico = new EventEmitter<any>();
 
   cabecerasMultiselect = [];
   modalStateDisplay = true;
@@ -55,13 +61,15 @@ export class GestionBajasTemporalesComponent implements OnInit {
   multiselectLabels = [];
   cell = [];
   textFilter: string = "Seleccionar";
-  textSelected: String = "{0} guardias seleccionadas";
+  textSelected: String = "{0} bajas temporales seleccionadas";
   @Input() totalRegistros = 0;
   @ViewChild('table') table: ElementRef;
+  historico: boolean = false;
 
 
   constructor(
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private persistenceService: PersistenceService
   ) {
     this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
       for (let i = 0; i < this.table.nativeElement.children.length; i++) {
@@ -342,6 +350,27 @@ let deseleccionado;
   this.delete.emit(this.selectedArray);
   this.totalRegistros = this.rowGroups.length;
   //this.to = this.totalRegistros;
+  }
+
+  searchHistorical() {
+    this.historico = !this.historico;
+    this.persistenceService.setHistorico(this.historico);
+    this.searchHistorico.emit(this.historico);
+  }
+
+  checkDenegar(){
+    this.denegar.emit(this.selectedArray);
+    this.totalRegistros = this.rowGroups.length;
+  }
+
+  checkValidar(){
+    this.validar.emit(this.selectedArray);
+    this.totalRegistros = this.rowGroups.length;
+  }
+
+  checkAnular(){
+    this.anular.emit(this.selectedArray);
+    this.totalRegistros = this.rowGroups.length;
   }
 
   eliminarFromCombo(rowToDelete){

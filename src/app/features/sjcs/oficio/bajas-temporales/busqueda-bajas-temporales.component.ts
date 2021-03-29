@@ -92,11 +92,6 @@ export class BajasTemporalesComponent implements OnInit {
   ngAfterViewInit() {
   }
 
-  // busquedaReceive(event) {
-  //   this.searchAreas();
-  // }
-
-
   searchPartidas(event) {
     this.filtros.filtroAux = this.persistenceService.getFiltrosAux()
     this.filtros.filtroAux.historico = event;
@@ -109,9 +104,9 @@ export class BajasTemporalesComponent implements OnInit {
         this.datos.forEach(element => {
 
           element.fechadesde = this.formatDate(element.fechadesde);
-          element.fechahasta = this.formatDate(element.fechadesde);
-          element.fechaalta = this.formatDate(element.fechadesde);
-          element.fechabt = this.formatDate(element.fechadesde);
+          element.fechahasta = this.formatDate(element.fechahasta);
+          element.fechaalta = this.formatDate(element.fechaalta);
+          element.fechabt = this.formatDate(element.fechabt);
 
           if (element.tipo == "V") {
             element.tiponombre = "Vacaciones";
@@ -163,11 +158,12 @@ export class BajasTemporalesComponent implements OnInit {
   }
 
   formatDate(date) {
-
     const pattern = 'dd/MM/yyyy';
-
     return this.datePipe.transform(date, pattern);
+  }
 
+  historico(event){
+    this.searchPartidas(this.filtros.filtroAux);
   }
 
 jsonToRow(datos){
@@ -178,8 +174,8 @@ jsonToRow(datos){
     let italic = (element.eliminado == 1);
     let obj = [
       { type: 'text', value: element.ncolegiado, italic: italic },
-      { type: 'text', value: element.nombre, italic: italic },
-      { type: 'select', combo: this.comboTipo ,value: element.tiponombre, italic: italic },
+      { type: 'text', value: element.apellidos1 +" "+ element.apellidos2 + ", " + element.nombre, italic: italic },
+      { type: 'select', combo: this.comboTipo ,value: element.tipo, italic: italic },
       { type: 'input', value: element.descripcion, italic: italic },
       { type: 'datePicker', value: element.fechadesde, italic: italic },
       { type: 'datePicker', value: element.fechahasta, italic: italic },
@@ -207,6 +203,89 @@ jsonToRow(datos){
 
   clear() {
     this.msgs = [];
+  }
+
+  delete(event){
+    let array = [];
+    event.forEach(element => {
+      array.push(this.datos[element]);
+    });
+    
+    this.progressSpinner = true;
+    this.sigaServices.post("bajasTemporales_deleteBajaTemporal", array).subscribe(
+      data => {
+        array = [];
+        this.showMessage({ severity: "success", summary: this.translateService.instant("general.message.correct"), msg: this.translateService.instant("general.message.accion.realizada")});
+        this.progressSpinner = false;
+      },
+      err => {
+        this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("general.message.error.realiza.accion")});
+        
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+denegar(event){
+  let array = [];
+  event.forEach(element => {
+    if(this.datos[element].validado == "Pendiente"){
+      this.datos[element].validado = "Denegada";
+      let tmp = this.datos[element];
+      delete tmp.tiponombre;
+      array.push(tmp);
+    }else{
+      this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("general.message.error.realiza.accion")});
+      this.progressSpinner = false;
+    }
+  });
+  this.updateBaja(array);
+}
+
+validar(event){
+  let array = [];
+  let x = 0;
+  event.forEach(element => {
+    if(this.datos[element].validado == "Pendiente"){
+      this.datos[element].validado = "Validada";
+      array[x] = this.datos[element];
+        x=++x;
+    }else{
+      this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("general.message.error.realiza.accion")});
+      this.progressSpinner = false;
+    }
+  });
+  this.updateBaja(array);
+}
+
+anular(event){
+  let x = 0;
+  let array = [];
+  event.forEach(element => {
+    if(this.datos[element].validado == "Pendiente"){
+      this.datos[element].validado = "Anulada";
+      array[x] = this.datos[element];
+        x=++x;
+    }else{
+      this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("general.message.error.realiza.accion")});
+      this.progressSpinner = false;
+    }
+  });
+  this.updateBaja(array);
+}
+
+  updateBaja(event) {
+    this.progressSpinner = true;
+      this.sigaServices.post("bajasTemporales_updateBajaTemporal", event).subscribe(
+        data => {
+            this.showMessage({ severity: "success", summary: this.translateService.instant("general.message.correct"), msg: this.translateService.instant("general.message.accion.realizada")});
+            this.progressSpinner = false;
+      },
+      err => {
+          this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("general.message.error.realiza.accion")});
+          this.progressSpinner = false;
+        }
+      );
   }
 
 }

@@ -48,7 +48,7 @@ export let endpoints_oficio: any = {
 
     bajasTemporales_comboEstado:"oficio/bajasTemporales/comboEstado",
     bajasTemporales_busquedaBajasTemporales:"oficio/bajasTemporales/busquedaBajasTemporales",
-    bajasTemporales_updateBajaTemporal:"oficio/bajasTemporales/updateEstado",
+    bajasTemporales_updateBajaTemporal:"oficio/bajasTemporales/updateBaja",
     bajasTemporales_deleteBajaTemporal:"oficio/bajasTemporales/deleteBajaTemporal",
     //FIN DE BAJAS TEMPORALES
 
