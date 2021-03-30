@@ -24,28 +24,11 @@
      <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
         <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
           <td class="text-center" *ngFor="let col of columns">
-            <div *ngIf="setItalic(dato) && col.field !='subzona' && col.field!='abreviatura' && col.field!='nombre'">
-              <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
-            </div>
-            <div *ngIf="setItalic(dato) && col.field !='subzona' && (col.field=='abreviatura' || col.field=='nombre')">            
-              <a class="enlace" (click)="openTab(dato)"><span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span></a>
-            </div>
-            <div *ngIf="!setItalic(dato) && col.field !='subzona' && col.field!='abreviatura' && col.field!='nombre'">
+            <div *ngIf="col.field !='ano'">
               <span>{{dato[col.field]}}</span>
             </div>
-            <div *ngIf="!setItalic(dato) && col.field !='subzona' && (col.field=='abreviatura' || col.field=='nombre')">            
-              <a class="enlace" (click)="openTab(dato)"><span>{{dato[col.field]}}</span></a>
-            </div>
-            <div *ngIf="!setItalic(dato) && col.field =='subzona'">
-              <div [pTooltip]="obtenerPartidos(dato)" tooltipPosition="top">
-                <span>{{dato[col.field]}}</span>
-              </div>
-            </div>
-            
-            <div *ngIf="col.field =='subzona' && setItalic(dato)">
-              <div [pTooltip]="obtenerPartidos(dato)" tooltipPosition="top">
-                <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
-              </div>
+            <div *ngIf="col.field =='ano'">            
+              <a [routerLink]="" class="enlace" (click)="openTab(dato)"><span>{{dato[col.field]}}</span></a>
             </div>
           </td>
         </tr>

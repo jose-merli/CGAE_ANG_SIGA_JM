@@ -24,6 +24,7 @@ import {FormularioBusquedaComponent} from './cargas-masivas-oficio/formulario-bu
 import { GestionDesignacionesComponent } from './designaciones/gestion-designaciones/gestion-designaciones.component'
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/primeng';
+import { TablaResultadoMixDAService } from '../../../commons/tabla-resultado-mix/tabla-resultado-mix-da.service';
 
 
 //import { DesignacionesComponent } from './designaciones/designaciones.component';
@@ -59,9 +60,8 @@ import { TooltipModule } from 'primeng/primeng';
                 CheckboxModule,
                 FechaModule,
                 MultiSelectModule
-               
         ],
 
-        providers: []
+        providers: [TablaResultadoMixDAService]
 })
 export class OficioModule { }

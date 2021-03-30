@@ -7,6 +7,7 @@ import { InscripcionesComponent } from './inscripciones/busqueda-inscripciones.c
 import { FichaInscripcionesComponent } from './inscripciones/ficha-inscripciones/ficha-inscripciones.component';
 import { BajasTemporalesComponent } from './bajas-temporales/busqueda-bajas-temporales.component';
 import { CargasMasivasOficioComponent } from './cargas-masivas-oficio/cargas-masivas-oficio.component';
+import { FichaDesignacionesComponent } from './designaciones/ficha-designaciones/ficha-designaciones.component';
 
 
 const routesOficio: Routes = [
@@ -40,6 +41,11 @@ const routesOficio: Routes = [
     component: CargasMasivasOficioComponent,
     canActivate: [AuthGuard]
   },
+  {
+		path: 'fichaDesignaciones',
+		component: FichaDesignacionesComponent,
+		canActivate: [ AuthGuard ]
+	},
 ];
 
 @NgModule({

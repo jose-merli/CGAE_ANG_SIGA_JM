@@ -64,5 +64,6 @@ export class DesignaItem {
 	 rol: String;
 	 documentacionActuacion: String;
 	 idModuloActuaciones: String;
+	 descripcionTipoDesigna: String;
     constructor() { }
   }
