@@ -20,7 +20,6 @@ import { HeaderGestionEntidadService } from '../../../../_services/headerGestion
 import { SigaServices } from '../../../../_services/siga.service';
 import { FiltrosSaltosCompensacionesGuardiaComponent } from './saltos-compensaciones-guardia/filtros-saltos-compensaciones-guardia/filtros-saltos-compensaciones-guardia.component';
 import { SaltosCompensacionesGuardiaComponent } from './saltos-compensaciones-guardia/saltos-compensaciones-guardia.component';
-import { TablaSaltosCompensacionesGuardiaComponent } from './saltos-compensaciones-guardia/tabla-saltos-compensaciones-guardia/tabla-saltos-compensaciones-guardia.component';
 import { TablaResultadoMixSaltosCompGuardiaComponent } from './saltos-compensaciones-guardia/tabla-resultado-mix-saltos-comp-guardia/tabla-resultado-mix-saltos-comp-guardia.component';
 import { SelectorModule } from '../../../../commons/selector/selector.module';
 import { MatSortModule } from '@angular/material';
@@ -57,9 +56,9 @@ import { TablaResultadoMixSaltosCompService } from './saltos-compensaciones-guar
   ],
   declarations: [
     SaltosCompensacionesGuardiaComponent,
-    TablaSaltosCompensacionesGuardiaComponent,
     FiltrosSaltosCompensacionesGuardiaComponent,
-    TablaResultadoMixSaltosCompGuardiaComponent],
+    TablaResultadoMixSaltosCompGuardiaComponent
+  ],
   providers: [
     ImagePipe,
     DatePipe,

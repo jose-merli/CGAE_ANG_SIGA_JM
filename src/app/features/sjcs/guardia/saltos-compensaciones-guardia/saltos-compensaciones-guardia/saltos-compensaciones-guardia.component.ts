@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { SelectItem } from 'primeng/api';
+import { Message, SelectItem } from 'primeng/api';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { TranslateService } from '../../../../../commons/translate/translation.service';
 import { procesos_guardia } from '../../../../../permisos/procesos_guarida';
@@ -10,7 +10,6 @@ import { SigaServices } from '../../../../../_services/siga.service';
 import { FiltrosSaltosCompensacionesGuardiaComponent } from './filtros-saltos-compensaciones-guardia/filtros-saltos-compensaciones-guardia.component';
 import { TablaResultadoMixSaltosCompGuardiaComponent } from './tabla-resultado-mix-saltos-comp-guardia/tabla-resultado-mix-saltos-comp-guardia.component';
 import { Row, TablaResultadoMixSaltosCompService } from './tabla-resultado-mix-saltos-comp-guardia/tabla-resultado-mix-saltos-comp.service';
-import { TablaSaltosCompensacionesGuardiaComponent } from './tabla-saltos-compensaciones-guardia/tabla-saltos-compensaciones-guardia.component';
 @Component({
   selector: 'app-saltos-compensaciones-guardia',
   templateUrl: './saltos-compensaciones-guardia.component.html',
@@ -18,7 +17,6 @@ import { TablaSaltosCompensacionesGuardiaComponent } from './tabla-saltos-compen
 })
 export class SaltosCompensacionesGuardiaComponent implements OnInit {
 
-  // Varibles tabla nueva
   isDisabled;
   seleccionarTodo = false;
   totalRegistros = 0;
@@ -62,7 +60,7 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
   ];
   comboTurnos: SelectItem[];
   comboGuardias: SelectItem[];
-  opcionesTipo = [
+  comboTipos = [
     {
       label: 'Salto',
       value: 'S'
@@ -72,26 +70,16 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
       value: 'C'
     }
   ];
-  datosIniciales;
-  // Varibles tabla nueva
-
-  buscar: boolean = false;
   historico: boolean = false;
-
   datos;
-
   progressSpinner: boolean = false;
+  msgs: Message[] = [];
+  permisoEscritura;
+  showResults: boolean = false;
 
   @ViewChild(FiltrosSaltosCompensacionesGuardiaComponent) filtros: FiltrosSaltosCompensacionesGuardiaComponent;
   @ViewChild(TablaResultadoMixSaltosCompGuardiaComponent) tabla: TablaResultadoMixSaltosCompGuardiaComponent;
 
-  //comboPartidosJudiciales
-  comboPJ;
-  msgs;
-
-  permisoEscritura;
-
-  showResults: boolean = false;
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
     private commonsService: CommonsService, private translateService: TranslateService, private router: Router, private datepipe: DatePipe, private trmService: TablaResultadoMixSaltosCompService) { }
@@ -133,19 +121,6 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
     );
   }
 
-  getComboGuardia(idTurno) {
-    this.sigaServices.getParam(
-      "busquedaGuardia_guardia", "?idTurno=" + idTurno).subscribe(
-        data => {
-          this.comboGuardias = data.combooItems;
-          this.commonsService.arregloTildesCombo(this.comboGuardias);
-        },
-        err => {
-          console.log(err);
-        }
-      );
-  }
-
   isBuscar(event) {
     this.search(event);
   }
@@ -163,11 +138,12 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
       n => {
 
         this.datos = JSON.parse(n.body).saltosCompItems;
-        this.modifyData(this.datos);
-        this.buscar = true;
-        this.historico = event;
-
+        console.log("file: saltos-compensaciones-guardia.component.ts ~ line 154 ~ SaltosCompensacionesGuardiaComponent ~ search ~  this.datos", this.datos)
         let error = JSON.parse(n.body).error;
+        this.historico = event;
+        this.jsonToRow();
+        this.showResults = true;
+        this.progressSpinner = false;
 
         if (error != null && error.description != null) {
           this.showMessage({ severity: "info", summary: this.translateService.instant("general.message.informacion"), msg: error.description });
@@ -178,6 +154,11 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
         this.progressSpinner = false;
         console.log(err);
         this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("general.mensaje.error.bbdd") });
+      },
+      () => {
+        setTimeout(() => {
+          this.tabla.tablaFoco.nativeElement.scrollIntoView();
+        }, 5);
       }
     );
   }
@@ -228,119 +209,67 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
     return resp;
   }
 
-  modifyData(datos) {
+  modifyData(dato) {
 
-    datos.forEach(dato => {
+    dato.fecha = this.formatDate(dato.fecha);
 
-      dato.fecha = this.formatDate(dato.fecha);
+    if (dato.fechaUso != undefined && dato.fechaUso != null) {
+      dato.fechaUso = this.formatDate(dato.fechaUso);
+    }
 
-      if (dato.fechaUso != undefined && dato.fechaUso != null) {
-        dato.fechaUso = this.formatDate(dato.fechaUso);
+    if (dato.grupo != undefined && dato.grupo != null) {
+      dato.nColegiado = dato.grupo;
+      dato.letrado = '';
+
+      if (dato.letradosGrupo != undefined && dato.letradosGrupo != null) {
+        dato.letradosGrupo.forEach(element => {
+          dato.letrado += element + '\n';
+        });
       }
 
-      if (dato.grupo != undefined && dato.grupo != null) {
-        dato.nColegiado = dato.grupo;
-        dato.letrado = '';
+    } else {
+      dato.nColegiado = dato.colegiadoGrupo;
+    }
 
-        if (dato.letradosGrupo != undefined && dato.letradosGrupo != null) {
-          dato.letradosGrupo.forEach(element => {
-            dato.letrado += element + '\n';
-          });
-        }
-
-      } else {
-        dato.nColegiado = dato.colegiadoGrupo;
-      }
-
-    });
-
-    this.jsonToRow(datos);
+    return dato;
 
   }
 
-  // jsonToRow(datos) {
-  //   let arr = [];
-  //   datos.forEach((element, index) => {
-
-  //     let italic = (element.fechaUso != null || element.fechaAnulacion != null);
-  //     this.getComboGuardia(element.idTurno);
-  //     let obj = [];
-
-  //     setTimeout(() => {
-  //       obj = [
-  //         { type: 'select', combo: this.comboTurnos, value: element.idTurno, italic: italic },
-  //         { type: 'select', combo: this.comboGuardias, value: element.idGuardia, italic: italic },
-  //         { type: 'text', value: element.nColegiado },
-  //         { type: 'text', value: element.letrado, italic: italic },
-  //         { type: 'select', combo: this.opcionesTipo, value: element.saltoCompensacion, italic: italic },
-  //         { type: 'datePicker', value: element.fecha, italic: italic },
-  //         { type: 'textarea', value: element.motivo, italic: italic },
-  //         { type: 'text', value: element.fechaUso, italic: italic }
-  //       ];
-  //       let superObj = {
-  //         italic: italic,
-  //         row: obj
-  //       };
-  //       arr.push(superObj);
-  //       this.rowGroups = this.trmService.getTableData(arr);
-  //       this.rowGroupsAux = this.trmService.getTableData(arr);
-  //       this.totalRegistros = this.rowGroups.length;
-
-  //       if ((index + 1) == datos.length) {
-  //         this.showResults = true;
-  //         this.progressSpinner = false;
-  //         setTimeout(() => {
-  //           this.tabla.tablaFoco.nativeElement.scrollIntoView();
-  //           this.tabla.historico = this.historico;
-  //           this.rowGroupsInit = [...this.rowGroups];
-  //         }, 5);
-  //       }
-  //     }, 1000);
-
-  //   });
-  // }
-
-  jsonToRow(datos) {
+  jsonToRow() {
     let arr = [];
-    datos.forEach((element, index) => {
+    this.datos.forEach((element, index) => {
+
+      element = this.modifyData(element);
 
       let italic = (element.fechaUso != null || element.fechaAnulacion != null);
 
       let obj = [
-        { type: 'select', combo: this.comboTurnos, value: element.idTurno, italic: italic },
-        { type: 'select', combo: this.comboGuardias, value: element.idGuardia, italic: italic },
-        { type: 'text', value: element.nColegiado },
-        { type: 'text', value: element.letrado, italic: italic },
-        { type: 'select', combo: this.opcionesTipo, value: element.saltoCompensacion, italic: italic },
-        { type: 'datePicker', value: element.fecha, italic: italic },
-        { type: 'textarea', value: element.motivo, italic: italic },
-        { type: 'text', value: element.fechaUso, italic: italic }
+        { type: 'select', combo: this.comboTurnos, value: element.idTurno, header: this.cabeceras[0].id, disabled: false },
+        { type: 'select', combo: element.comboGuardia, value: element.idGuardia, header: this.cabeceras[1].id, disabled: false },
+        { type: element.grupo == null ? 'select' : 'multiselect', combo: element.comboColegiados, value: element.grupo == null ? element.nColegiado : [element.nColegiado], header: this.cabeceras[2].id, disabled: false },
+        { type: 'text', value: element.letrado, header: this.cabeceras[3].id, disabled: false },
+        { type: 'select', combo: this.comboTipos, value: element.saltoCompensacion, header: this.cabeceras[4].id, disabled: false },
+        { type: 'datePicker', value: element.fecha, header: this.cabeceras[5].id, disabled: false },
+        { type: 'textarea', value: element.motivo, header: this.cabeceras[6].id, disabled: false },
+        { type: 'text', value: element.fechaUso, header: this.cabeceras[7].id, disabled: false }
       ];
 
       let superObj = {
+        id: index,
         italic: italic,
         row: obj
       };
 
       arr.push(superObj);
-
-      if ((index + 1) == datos.length) {
-        this.showResults = true;
-        this.progressSpinner = false;
-        setTimeout(() => {
-          this.tabla.tablaFoco.nativeElement.scrollIntoView();
-          this.tabla.historico = this.historico;
-          this.rowGroupsInit = [...this.rowGroups];
-        }, 5);
-      }
-
     });
 
-
+    this.rowGroups = [];
     this.rowGroups = this.trmService.getTableData(arr);
+    this.rowGroupsAux = [];
     this.rowGroupsAux = this.trmService.getTableData(arr);
+    this.rowGroupsInit = [];
+    this.rowGroupsInit = [...this.rowGroups];
     this.totalRegistros = this.rowGroups.length;
-
   }
 
 

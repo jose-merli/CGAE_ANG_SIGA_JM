@@ -1,20 +1,15 @@
 import { ElementRef, Renderer2, Output, EventEmitter } from '@angular/core';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { Sort } from '@angular/material/sort';
 import { Row, Cell } from './tabla-resultado-mix-saltos-comp.service';
 import { Message } from 'primeng/components/common/api';
-
-interface NewCell {
-  position: string,
-  value: string
-}
-
+import { DatePipe } from '@angular/common';
+import { SigaServices } from '../../../../../../_services/siga.service';
+import { CommonsService } from '../../../../../../_services/commons.service';
 interface Cabecera {
   id: string,
   name: string
 }
-
 @Component({
   selector: 'app-tabla-resultado-mix-saltos-comp-guardia',
   templateUrl: './tabla-resultado-mix-saltos-comp-guardia.component.html',
@@ -22,55 +17,44 @@ interface Cabecera {
 })
 export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
 
-  info = new FormControl();
-  msgs: Message[] = [];
   @Input() cabeceras: Cabecera[] = [];
   @Input() rowGroups: Row[];
   @Input() rowGroupsAux: Row[];
   @Input() rowGroupsInit: Row[];
   @Input() seleccionarTodo = false;
-  @Input() comboGuardiasIncompatibles;
+  @Input() totalRegistros = 0;
+  @Input() comboTurnos = [];
+  @Input() comboTipos = [];
+
   @Output() anySelected = new EventEmitter<any>();
-  @Output() save = new EventEmitter<Row[]>();
+  @Output() saveEvent = new EventEmitter<Row[]>();
   @Output() deleteEvent = new EventEmitter<any>();
   @Output() anularEvent = new EventEmitter<any>();
-  @Output() deleteFromCombo = new EventEmitter<any>();
   @Output() searchHistory = new EventEmitter<boolean>();
-  @ViewChild("tablaFoco") tablaFoco: ElementRef;
 
+  @ViewChild("tablaFoco") tablaFoco: ElementRef;
+  @ViewChild('table') table: ElementRef;
+
+  msgs: Message[] = [];
   historico: boolean = false;
   cabecerasMultiselect = [];
-  modalStateDisplay = true;
   searchText = [];
-  selectedHeader;
-  positionsToDelete = [];
   numCabeceras = 0;
   numColumnas = 0;
-  numColumnasChecked = 0;
   selected = false;
   selectedArray = [];
-  RGid = "inicial";
-  down = false;
   from = 0;
   to = 10;
   numperPage = 10;
-  newInputValue = [];
-  newInputValuePerRow = [];
-  inputValues: NewCell = { position: '', value: '' };
-  inputValuesArr: NewCell[] = [];
   enableGuardar = false;
   multiselectValue = [];
   multiselectLabels = [];
   cell = [];
   textFilter: string = "Seleccionar";
   textSelected: String = "{0} guardias seleccionadas";
-  @Input() totalRegistros = 0;
-  @ViewChild('table') table: ElementRef;
+  comboGuardias = [];
 
-
-  constructor(
-    private renderer: Renderer2
-  ) {
+  constructor(private renderer: Renderer2, private datepipe: DatePipe, private sigaServices: SigaServices, private commonsService: CommonsService) {
     this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
       for (let i = 0; i < this.table.nativeElement.children.length; i++) {
 
@@ -103,61 +87,9 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
     this.numColumnas = this.numCabeceras;
     this.cabeceras.forEach(cab => {
       this.cabecerasMultiselect.push(cab.name);
-    })
+    });
   }
 
-  onChangeMulti(event, rowPosition) {
-    let deseleccionado;
-
-    let selected = event.itemValue;
-    let arraySelected = event.value;
-    let labelSelected;
-    if (arraySelected.includes(selected)) {
-      deseleccionado = false;
-    } else {
-      deseleccionado = true;
-    }
-    let turno = this.rowGroups[rowPosition].cells[0];
-    let guardia = this.rowGroups[rowPosition].cells[1];
-    if (deseleccionado) {
-      //eliminar doble
-      this.eliminarFromCombo(this.rowGroups[rowPosition])
-    } else {
-      //guardar doble
-      this.comboGuardiasIncompatibles.forEach(comboObj => {
-        if (comboObj.value == selected) {
-          labelSelected = comboObj.label;
-        }
-      })
-      let cell: Cell = new Cell();
-      cell.type = 'text';
-      cell.value = labelSelected;
-      this.nuevoFromCombo(turno, cell, guardia);
-    }
-  }
-  nuevoFromCombo(turno, guardiaInc, idGuardia) {
-    this.enableGuardar = true;
-    let row: Row = new Row();
-    let cell1: Cell = new Cell();
-    let cell2: Cell = new Cell();
-    let cellInvisible: Cell = new Cell();
-    let cellMulti: Cell = new Cell();
-    cell1.type = 'input';
-    cell1.value = '';
-    cell2.type = 'input';
-    cell2.value = '0';
-    cellInvisible.type = 'invisible';
-    cellInvisible.value = ' ';
-    cellMulti.combo = this.comboGuardiasIncompatibles;
-    cellMulti.type = 'multiselect';
-    cellMulti.value = [idGuardia.value];
-    row.cells = [turno, guardiaInc, cellMulti, cell1, cell2, cellInvisible, cellInvisible, idGuardia];
-    this.rowGroups.unshift(row);
-    this.totalRegistros = this.rowGroups.length;
-  }
-  validaCheck(texto) {
-    return texto === 'Si';
-  }
   selectRow(rowId) {
 
     if (this.selectedArray.includes(rowId)) {
@@ -178,6 +110,7 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
     }
 
   }
+
   isSelected(id) {
     if (this.selectedArray.includes(id)) {
       return true;
@@ -185,6 +118,7 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
       return false;
     }
   }
+
   sortData(sort: Sort) {
     let data: Row[] = [];
     this.rowGroups = this.rowGroupsAux.filter((row) => {
@@ -211,7 +145,6 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
 
   searchChange(j: any) {
     let isReturn = true;
-    let isReturnArr = [];
     this.rowGroups = this.rowGroupsAux.filter((row) => {
       if (
         this.searchText[j] != " " &&
@@ -245,93 +178,73 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
   isPar(numero): boolean {
     return numero % 2 === 0;
   }
+
   fromReg(event) {
     this.from = Number(event) - 1;
   }
+
   toReg(event) {
     this.to = Number(event);
   }
+
   perPage(perPage) {
     this.numperPage = perPage;
   }
 
-
-  inputValueChange(event, i, z, cell) {
-    let cells: Cell[] = [];
-    let rowFilled: Row = new Row();
-    rowFilled.cells = cells;
-    if (this.inputValuesArr[z] != undefined) {
-      if (z == 3) {
-        this.inputValuesArr[z - 1] = { position: z, value: this.newInputValue[z] };
-      } else {
-        this.inputValuesArr[z] = { position: z, value: this.newInputValue[z] };
-      }
-
-    } else {
-      this.inputValues.position = z;
-      this.inputValues.value = this.newInputValue[z];
-      this.inputValuesArr.push(Object.assign({}, this.inputValues));
-    }
-    this.rowGroups[this.rowGroups.length - 1].cells.forEach((cell, c) => {
-      let cellFilled1 = new Cell();
-      if (c != 2) {
-        if (this.inputValuesArr[c] != undefined && c != 3) {
-          let cellFilled = new Cell();
-          cellFilled.value = this.inputValuesArr[c].value;
-          cellFilled.type = 'newinput';
-          cellFilled1 = cellFilled;
-        }
-        else if (this.inputValuesArr[c - 1] != undefined && c >= 3) {
-          let cellFilled = new Cell();
-          cellFilled.value = this.inputValuesArr[c - 1].value;
-          cellFilled.type = 'newinput';
-          cellFilled1 = cellFilled;
-        }
-        else {
-          let cellFilled = new Cell();
-          cellFilled.value = ' ';
-          cellFilled.type = 'newinput';
-          cellFilled1 = cellFilled;
-        }
-
-      } else {
-        let cellFilled = new Cell();
-        cellFilled.combo = this.comboGuardiasIncompatibles;
-        cellFilled.type = 'multiselect';
-        cellFilled1 = cellFilled;
-      }
-      rowFilled.cells.push(cellFilled1);
-    })
-    this.rowGroups[this.rowGroups.length - 1] = rowFilled;
-    this.rowGroupsAux = this.rowGroups;
-    this.totalRegistros = this.rowGroups.length;
-
-  }
   nuevo() {
     this.enableGuardar = true;
     let row: Row = new Row();
+
     let cell1: Cell = new Cell();
-    let cellMulti: Cell = new Cell();
-    cell1.type = 'newinput';
-    cell1.value = ' ';
-    cellMulti.combo = this.comboGuardiasIncompatibles;
-    cellMulti.type = 'multiselect';
-    row.cells = [cell1, cell1, cellMulti, cell1, cell1];
+    let cell2: Cell = new Cell();
+    let cell3: Cell = new Cell();
+    let cell4: Cell = new Cell();
+    let cell5: Cell = new Cell();
+    let cell6: Cell = new Cell();
+    let cell7: Cell = new Cell();
+    let cell8: Cell = new Cell();
+
+    cell1.type = 'select';
+    cell1.combo = this.comboTurnos;
+    cell1.value = '';
+
+    cell2.type = 'select';
+    cell2.value = '';
+
+    cell3.type = 'text';
+    cell3.value = '';
+
+    cell4.type = 'text';
+    cell4.value = '';
+
+    cell5.type = 'select';
+    cell5.combo = this.comboTipos;
+    cell5.value = '';
+
+    cell6.type = 'datePicker';
+    cell6.value = this.datepipe.transform(new Date(), 'dd/MM/yyyy');
+
+    cell7.type = 'textarea';
+    cell7.value = '';
+
+    cell8.type = 'text';
+    cell8.value = '';
+
+    row.cells = [cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8];
     this.rowGroups.unshift(row);
+    this.rowGroupsAux = this.rowGroups;
     this.totalRegistros = this.rowGroups.length;
   }
 
-  inputChange(event, i, z) {
-    this.enableGuardar = true;
-  }
-
   guardar() {
-    let anyEmptyArr = [];
+    console.log("file: tabla-resultado-mix-saltos-comp-guardia.component.ts ~ line 379 ~ TablaResultadoMixSaltosCompGuardiaComponent ~ guardar ~ this.rowGroups", this.rowGroups);
+
+    /*let anyEmptyArr = [];
     this.rowGroups.forEach(row => {
       if (row.cells[0].value == '' || row.cells[0].value == undefined || row.cells[1].value == '' || row.cells[1].value == undefined || row.cells[2].value == '' || row.cells[2].value == undefined || row.cells[4].value == '' || row.cells[4].value == undefined) {
         anyEmptyArr.push(true);
       } else {
-        this.save.emit(this.rowGroups);
+        this.saveEvent.emit(this.rowGroups);
         this.enableGuardar = false;
         this.totalRegistros = this.rowGroups.length;
         anyEmptyArr.push(false);
@@ -343,15 +256,11 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
         this.showMsg('success', 'Se ha guardado correctamente', '')
       }
 
-    })
+    })*/
   }
 
   delete() {
     this.deleteEvent.emit(this.selectedArray);
-  }
-
-  eliminarFromCombo(rowToDelete) {
-    this.deleteFromCombo.emit(rowToDelete);
   }
 
   toogleHistorico(valor: boolean) {
@@ -373,6 +282,45 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
     if (this.selectedArray != null && this.selectedArray.length > 0) {
       this.anularEvent.emit(this.selectedArray);
     }
+  }
+
+  fillFecha(event, cell) {
+    cell.value = this.datepipe.transform(event, 'dd/MM/yyyy');
+  }
+
+  changeMultiSelect(cell) {
+    if (cell.value.length > 1) {
+      cell.value.shift();
+    }
+  }
+
+  changeSelect(row, cell) {
+    const header = cell.header;
+
+    if (header == 'turno') {
+      row.cells[1].value = '';
+      row.cells[2].value = [];
+      row.cells[2].disabled = true;
+      this.getComboGuardia(cell.value, row);
+    }
+  }
+
+  getComboGuardia(idTurno, row) {
+    this.comboGuardias = [];
+    this.sigaServices.getParam(
+      "busquedaGuardia_guardia", "?idTurno=" + idTurno).subscribe(
+        data => {
+          let comboGuardias = data.combooItems;
+          this.commonsService.arregloTildesCombo(comboGuardias);
+          this.comboGuardias = comboGuardias;
+        },
+        err => {
+          console.log(err);
+        },
+        () => {
+          this.rowGroups[row.id].cells[1].combo = this.comboGuardias;
+        }
+      );
   }
 
 }

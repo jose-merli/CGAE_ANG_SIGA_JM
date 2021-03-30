@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 export class Row {
+  id: number;
   cells: Cell[];
   italic: boolean;
 }
@@ -9,12 +10,14 @@ export class Cell {
   type: string;
   value: any;
   combo: Combo[];
-  italic: boolean;
+  header: string;
+  disabled: boolean;
 }
 
 export class Combo {
   label: string;
   value: string;
+  disabled: boolean;
 }
 
 @Injectable()
@@ -37,9 +40,11 @@ export class TablaResultadoMixSaltosCompService {
           cellObject.type = cell['type'];
           cellObject.value = cell['value'];
         }
-        //cellObject.italic = cell['italic'];
+        cellObject.header = cell['header'];
         cells.push(cellObject);
       });
+
+      rowObject.id = rows.id;
       rowObject.cells = cells;
       rowObject.italic = rows.italic;
       finalRows.push(rowObject);

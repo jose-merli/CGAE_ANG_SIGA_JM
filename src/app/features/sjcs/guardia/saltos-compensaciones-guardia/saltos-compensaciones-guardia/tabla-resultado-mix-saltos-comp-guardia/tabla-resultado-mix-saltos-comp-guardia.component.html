@@ -19,62 +19,34 @@
         </div>
       </div>
       <div *ngFor="let row of rowGroups | slice:from:to; let i = index; trackBy:trackByIdx" class="table-row child">
-        <div (click)="selectRow(i)" class="table-row-wrapper hoverBlue"
+        <div (click)="selectRow(row['id'])" class="table-row-wrapper hoverBlue"
           [ngClass]="{'hoverBlue2': isSelected(i), 'fixedBlue': seleccionarTodo}" #rowSelected>
           <div *ngFor="let cell of row['cells'] | slice:0:8; let z = index; trackBy:trackByIdx"
             class="table-cell p-2 selectedRowClass" [ngClass]="{'borders-child': isPar(i)}" #cellSelected>
             <div class="cell-wrapper selectedRowClass">
 
-              <span class="w100 cell-value" *ngIf="cell.type == 'newinput'">
-                <input type="text" class="form-control mt-2" pInputText [(ngModel)]="this.newInputValue[z]"
-                  (change)="inputValueChange($event, i, z, cell)">
-              </span>
-
-              <span class="w100 cell-value" *ngIf="cell.type == 'input'">
-                <input type="text" class="form-control mt-2" pInputText [(ngModel)]="cell.value"
-                  (change)="inputChange($event, i, z)">
-              </span>
-
               <span class="w100 cell-value" *ngIf="cell.type == 'text'"
                 [ngClass]="{'setItalic': row.italic}">{{cell.value}}</span>
 
-              <span class="w100 cell-value" *ngIf="cell.type == 'buttom'">
-                <button pButton type="button" iconPos="left" [label]="cell.value"></button>
-              </span>
-
-              <span class="w100 cell-value" *ngIf="cell.type == 'checkbox'">
-                <p-checkbox [ngModel]="validaCheck(cell.value)" binary="true">
-                </p-checkbox>
-              </span>
 
               <span class="w100 cell-value" *ngIf="cell.type == 'datePicker'">
-                <app-fecha [(value)]="cell.value" [utc]="false"
-                  (valueChangeSelected)="fillFechaIncorporacionDesde($event)"
-                  (valueChangeInput)="fillFechaIncorporacionDesde($event)">
+                <app-fecha [(value)]="cell.value" [utc]="false" (valueChangeSelected)="fillFecha($event, cell)"
+                  (valueChangeInput)="fillFecha($event, cell)">
                 </app-fecha>
               </span>
 
               <span class="w100 cell-value selectWrap" *ngIf="cell.type == 'select'">
                 <p-dropdown autoWidth="false" class="center" [placeholder]="textFilter" [(ngModel)]="cell.value"
-                  [options]="cell.combo" showClear="true" styleClass="widthAll">
+                  [options]="cell.combo" showClear="true" styleClass="widthAll" (onChange)="changeSelect(row, cell)"
+                  [disabled]="cell.disabled">
                 </p-dropdown>
-              </span>
-
-              <span class="w100 cell-value" *ngIf="cell.type == 'number'">{{cell.value}}</span>
-
-              <span class="w100 cell-value" *ngIf="cell.type == 'link'">
-                <a>{{cell.value}}</a>
-              </span>
-
-              <span class="w100 cell-value" *ngIf="cell.type == 'download'">
-                <div (click)="showMsg('success', 'Documento descargado', '')"><i class="pointer fa fa-download"></i>
-                </div>
               </span>
 
               <span class="w100 cell-value" *ngIf="cell.type == 'multiselect'">
                 <p-multiSelect #{i} autoWidth="false" [(ngModel)]='cell.value' [selectedItemsLabel]="textSelected"
                   [defaultLabel]="textFilter" [options]="cell.combo" maxSelectedLabels="10" styleClass="widthAll"
-                  [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeMulti($event, i, cell)">
+                  [filter]="true" filterBy="label,labelSinTilde" (onChange)="changeMultiSelect(cell)" id="notSelectAll"
+                  [disabled]="cell.disabled">
                 </p-multiSelect>
               </span>
 

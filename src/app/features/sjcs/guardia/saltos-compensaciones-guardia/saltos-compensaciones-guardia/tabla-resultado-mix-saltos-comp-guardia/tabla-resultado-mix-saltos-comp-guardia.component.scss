@@ -520,5 +520,11 @@
         bottom: 66px !important;
     }
 
+    #notSelectAll {
+        .ui-multiselect-header .ui-chkbox {
+            display: none;
+        }
+    }
+
 
 }
