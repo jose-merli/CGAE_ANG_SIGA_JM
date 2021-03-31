@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-ficha-designaciones',
@@ -14,32 +15,7 @@ export class FichaDesignacionesComponent implements OnInit {
     icono: 'fas fa-clipboard',
     detalle: false,
     fixed: true,
-    campos: [
-      {
-        "key": "Año/Número",
-        "value": "D2018/00078"
-      },
-      {
-        "key": "Letrado",
-        "value": "2131 SDFASFA SDFF, JUAN"
-      },
-      {
-        "key": "Estado",
-        "value": "Dictaminado"
-      },
-      {
-        "key": "Interesado",
-        "value": "HDFHDFHDF DFHDFHDFH, JUAN"
-      },
-      {
-        "key": "Número Asistencias",
-        "value": "2"
-      },
-      {
-        "key": "Validado",
-        "value": "No"
-      }
-    ],
+    campos: [],
     enlaces: []
   };
 
@@ -52,23 +28,7 @@ export class FichaDesignacionesComponent implements OnInit {
       fixed: false,
       detalle: true,
       opened: false,
-      campos: [
-        {
-          "key": "Turno",
-          "value": "PENAL MADRID FESTIVOS"
-        },
-        {
-          "key": "Fecha",
-          "value": "16/08/2010"
-        },
-        {
-          "key": "Designación Art. 27-28",
-          "value": "NO"
-        }, {
-          "key": "Tipo",
-          "value": "VERJSDHFBSDF"
-        }
-      ]
+      campos: []
     },
     {
       id: 'sjcsDesigaDet',
@@ -273,9 +233,58 @@ export class FichaDesignacionesComponent implements OnInit {
     },
   ];
 
-  constructor() { }
+  constructor( private location: Location) { }
 
   ngOnInit() {
+
+    let designaItem = JSON.parse(sessionStorage.getItem("designaItemLink"));
+    let camposResumen = [
+      {
+        "key": "Año/Número",
+        "value": designaItem.ano
+      },
+      {
+        "key": "Letrado",
+        "value": designaItem.numColegiado
+      },
+      {
+        "key": "Estado",
+        "value": designaItem.art27
+      },
+      {
+        "key": "Interesado",
+        "value": ""
+      },
+      {
+        "key": "Número Asistencias",
+        "value": ""
+      },
+      {
+        "key": "Validado",
+        "value": ""
+      }
+    ];
+
+    let camposGenerales = [
+      {
+        "key": "Turno",
+        "value": designaItem.nombreTurno
+      },
+      {
+        "key": "Fecha",
+        "value": ""
+      },
+      {
+        "key": "Designación Art. 27-28",
+        "value": "NO"
+      }, {
+        "key": "Tipo",
+        "value": designaItem.descripcionTipoDesigna
+      }
+    ];
+
+    this.tarjetaFija.campos = camposResumen;
+    this.listaTarjetas[0].campos = camposGenerales;
   }
 
   ngAfterViewInit() {
@@ -310,6 +319,26 @@ export class FichaDesignacionesComponent implements OnInit {
       top = null;
     }
   }
+  backTo() {
+    this.location.back();
+  }
 
+  transformaFecha(fecha) {
+    if (fecha != null) {
+      let jsonDate = JSON.stringify(fecha);
+      let rawDate = jsonDate.slice(1, -1);
+      if (rawDate.length < 14) {
+        let splitDate = rawDate.split("/");
+        let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+        fecha = new Date((arrayDate += "T00:00:00.001Z"));
+      } else {
+        fecha = new Date(fecha);
+      }
+    } else {
+      fecha = undefined;
+    }
+
+    return fecha;
+  }
 
 }

@@ -22,7 +22,9 @@ import { MatExpansionModule } from '@angular/material';
 import { BusquedaColegiadoExpressModule } from '../../../commons/busqueda-colegiado-express/busqueda-colegiado-express.module';
 import {FormularioBusquedaComponent} from './cargas-masivas-oficio/formulario-busqueda/formulario-busqueda.component';
 import { GestionDesignacionesComponent } from './designaciones/gestion-designaciones/gestion-designaciones.component'
-
+import { TableModule } from 'primeng/table';
+import { TooltipModule } from 'primeng/primeng';
+import { TablaResultadoMixDAService } from '../../../commons/tabla-resultado-mix/tabla-resultado-mix-da.service';
 
 
 //import { DesignacionesComponent } from './designaciones/designaciones.component';
@@ -36,6 +38,8 @@ import { GestionDesignacionesComponent } from './designaciones/gestion-designaci
                 GestionDesignacionesComponent
         ],
         imports: [
+                TooltipModule,
+                TableModule,
                 CommonModule,
                 MenubarModule,
                 routingOficio,
@@ -56,9 +60,8 @@ import { GestionDesignacionesComponent } from './designaciones/gestion-designaci
                 CheckboxModule,
                 FechaModule,
                 MultiSelectModule
-               
         ],
 
-        providers: []
+        providers: [TablaResultadoMixDAService]
 })
 export class OficioModule { }

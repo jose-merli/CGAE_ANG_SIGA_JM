@@ -5,6 +5,7 @@ import { ColegiadoItem } from '../../../../../models/ColegiadoItem';
 import { DesignaItem } from '../../../../../models/sjcs/DesignaItem';
 import { JustificacionExpressItem } from '../../../../../models/sjcs/JustificacionExpressItem';
 import { SigaServices } from '../../../../../_services/siga.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-filtro-designaciones',
@@ -19,7 +20,7 @@ export class FiltroDesignacionesComponent implements OnInit {
   };
   
   filtroJustificacion: JustificacionExpressItem = new JustificacionExpressItem();
-
+  datos;
   expanded: boolean = false;
   textSelected: String = "{0} etiquetas seleccionadas";
   progressSpinner: boolean = true;
@@ -27,7 +28,7 @@ export class FiltroDesignacionesComponent implements OnInit {
   showJustificacionExpress: boolean = false;
   checkMostrarPendientes: boolean = true;
   checkRestricciones: boolean = false;
-
+  @Output() busqueda = new EventEmitter<boolean>();
   disabledBusquedaExpress: boolean = false;
   showColegiado: boolean = false;
   esColegiado: boolean = false;
@@ -60,12 +61,14 @@ export class FiltroDesignacionesComponent implements OnInit {
   comboProcedimientos: any[];
   comboOrigenActuaciones: any[];
   comboRoles: any[];
+  comboAcreditaciones: any[];
 
   datosJustificacion: DesignaItem = new DesignaItem();
 
   @Output() showTablaJustificacion = new EventEmitter<boolean>();
+   @Output() showTablaDesigna = new EventEmitter<boolean>();
 
-  constructor(private translateService: TranslateService, private sigaServices: SigaServices) { }
+  constructor(private translateService: TranslateService, private sigaServices: SigaServices,  private location: Location) { }
 
   ngOnInit(): void {
     this.filtroJustificacion = new JustificacionExpressItem();
@@ -151,6 +154,7 @@ export class FiltroDesignacionesComponent implements OnInit {
     this.getComboProcedimientos();
     this.getOrigenActuaciones();
     this.getComboRoles();
+    this.getComboAcreditaciones();
   }
 
   fillFechaAperturaDesde(event) {
@@ -263,7 +267,7 @@ export class FiltroDesignacionesComponent implements OnInit {
         console.log(err);
         this.progressSpinner=false;
       }, () => {
-        this.arregloTildesCombo(this.comboTurno);
+        this.arregloTildesCombo(this.comboTipoDesigna);
       }
     );
   }
@@ -286,8 +290,8 @@ export class FiltroDesignacionesComponent implements OnInit {
 
 getComboCalidad() {
     this.comboCalidad = [
-      {label:'Demandante', value:'D'},
-      {label:'Demandado', value:'O'}
+      {label:'Demandante', value:'1'},
+      {label:'Demandado', value:'0'}
     ]
   }
 
@@ -360,6 +364,23 @@ getComboCalidad() {
     ]
   }
 
+  getComboAcreditaciones(){
+    this.progressSpinner=true;
+
+    this.sigaServices.get("modulosybasesdecompensacion_comboAcreditaciones").subscribe(
+      n => {
+        this.comboAcreditaciones = n.combooItems;
+        this.progressSpinner=false;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner=false;
+      }, () => {
+        this.arregloTildesCombo(this.comboAcreditaciones);
+      }
+    );
+  }
+
   cargaCombosJustificacion(){
     this.cargaComboActuacionesValidadas();
     this.cargaComboSinEJG();
@@ -402,9 +423,9 @@ getComboCalidad() {
 
   cargaComboActuacionesValidadas(){
     this.comboActuacionesValidadas = [
-      {label:'Sí', value:'si'},
-      {label:'No', value:'no'},
-      {label: 'Sin actuaciones', value:'sinActuaciones'}
+      {label:'Sí', value:'SI'},
+      {label:'No', value:'NO'},
+      {label: 'Sin actuaciones', value:'SINACTUACIONES'}
     ];
   }
 
@@ -470,7 +491,9 @@ getComboCalidad() {
         designa.idJuzgado = this.body.idJuzgado;
         designa.idModulo = this.body.idModulo;
         designa.idCalidad = this.body.idCalidad;
-        designa.numProcedimiento = this.body.anoProcedimiento.toString();
+        if(this.body.anoProcedimiento != null && this.body.anoProcedimiento != undefined){
+          designa.numProcedimiento = this.body.anoProcedimiento.toString();
+        }
         designa.idProcedimiento = this.body.idProcedimiento;
         designa.nig = this.body.nig;
         designa.asunto = this.body.asunto;
@@ -493,21 +516,14 @@ getComboCalidad() {
         designa.apellidosInteresado = this.body.apellidosInteresado;
         designa.nombreInteresado = this.body.nombreInteresado;
         designa.rol = this.body.rol;
+        sessionStorage.setItem("designaItem", JSON.stringify(designa));
         // this.filtroJustificacion.muestraPendiente=this.checkMostrarPendientes;
-
-        this.sigaServices.post("designaciones_busqueda", designa).subscribe(
-          n => {
-            this.progressSpinner=false;
-          },
-          err => {
-            this.progressSpinner = false;
-
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-
-            console.log(err);
-          });
+        this.progressSpinner = false;
+        this.busqueda.emit(false);
+          // this.commonsService.scrollTablaFoco('tablaFoco');
+        }
     }
-  }
+  
 
   showMessage(severity, summary, msg) {
     this.msgs = [];
@@ -637,4 +653,6 @@ getComboCalidad() {
   clear() {
     this.msgs = [];
   }
+
+
 }

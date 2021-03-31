@@ -1132,7 +1132,6 @@ const appRoutes: Routes = [
 		component: FichaRegistroComunicacionComponent,
 		canActivate: [ AuthGuard ]
 	},
-
 	{
 		path: 'enviosMasivos',
 		component: EnviosMasivosComponent,

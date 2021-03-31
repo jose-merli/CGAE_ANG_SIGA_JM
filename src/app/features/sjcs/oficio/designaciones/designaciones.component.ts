@@ -2,6 +2,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { OldSigaServices } from '../../../../_services/oldSiga.service';
 import { FiltroDesignacionesComponent } from './filtro-designaciones/filtro-designaciones.component';
 import { Message } from 'primeng/components/common/api';
+import { SigaServices } from '../../../../_services/siga.service';
+import { Location } from '@angular/common';
+import { CommonsService } from '../../../../_services/commons.service';
 
 @Component({
   selector: 'app-designaciones',
@@ -11,16 +14,19 @@ import { Message } from 'primeng/components/common/api';
 })
 export class DesignacionesComponent implements OnInit {
 
+  datos;
   url;
   rutas = ['SJCS', 'Designaciones'];
   progressSpinner: boolean = false;
   muestraTablaJustificacion: boolean = false;
+  muestraTablaDesignas: boolean = false;
+  comboTipoDesigna: any[];
 
   @ViewChild(FiltroDesignacionesComponent) datosJustificacion;
   
   msgs: Message[] = [];
 
-  constructor(public sigaServices: OldSigaServices) {
+  constructor(public sigaServices: OldSigaServices, public sigaServicesNew: SigaServices, private location: Location,  private commonsService: CommonsService) {
     this.url = sigaServices.getOldSigaUrl("designaciones");
   }
 
@@ -30,9 +36,73 @@ export class DesignacionesComponent implements OnInit {
   showTablaJustificacion(event){
     this.muestraTablaJustificacion=event;
   }
+
+  showTablaDesigna(event){
+    this.muestraTablaDesignas=event;
+    this.progressSpinner=false;
+  }
   
   clear() {
     this.msgs = [];
   }
 
+  searchPartidas(event) {
+    this.progressSpinner = true;
+    let data = sessionStorage.getItem("designaItem");
+    let designaItem = JSON.parse(data);
+    this.sigaServicesNew.post("designaciones_busqueda", designaItem).subscribe(
+      n => {
+        this.datos = JSON.parse(n.body);
+        this.datos.forEach(element => {
+         element.ano = 'D' +  element.ano + '/' + element.numero;
+        //  element.fechaEstado = new Date(element.fechaEstado);
+        element.fechaEstado = this.transformaFecha(element.fechaEstado);
+         if(element.art27 == 'V'){
+          element.art27 = 'Activo';
+         }else if(element.art27 == 'F'){
+          element.art27 = 'Finalizado';
+         }else if(element.art27 == 'A'){
+          element.art27 = 'Anulada';
+         }
+         element.idTipoDesignaColegio = element.observaciones;
+        });
+        this.progressSpinner=false;
+        this.showTablaDesigna(true);
+        this.commonsService.scrollTablaFoco("tablaFoco");
+      },
+      err => {
+        this.progressSpinner = false;
+        this.commonsService.scrollTablaFoco("tablaFoco");
+        // this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+
+        console.log(err);
+      },() => {
+        this.progressSpinner = false;
+        this.commonsService.scrollTablaFoco("tablaFoco");
+      });;
+  }
+
+  backTo() {
+    this.location.back();
+  }
+
+  transformaFecha(fecha) {
+    if (fecha != null) {
+      let jsonDate = JSON.stringify(fecha);
+      let rawDate = jsonDate.slice(1, -1);
+      if (rawDate.length < 14) {
+        let splitDate = rawDate.split("/");
+        let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+        fecha = new Date((arrayDate += "T00:00:00.001Z"));
+      } else {
+        fecha = new Date(fecha);
+      }
+    } else {
+      fecha = undefined;
+    }
+
+    return fecha;
+  }
+
+ 
 }

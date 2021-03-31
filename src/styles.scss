@@ -1520,6 +1520,12 @@ div[class*="header-ficha-open"] {
 	cursor: pointer !important;
 }
 
+.tarjetaFija {
+	position: sticky;
+	top: 0px;
+	z-index: 2;
+	}
+
 
   
 
