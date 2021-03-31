@@ -11,6 +11,7 @@ import { FiltrosBajasTemporales } from './filtros-inscripciones/filtros-bajas-te
 import { GestionBajasTemporalesComponent } from './gestion-bajas-temporales/gestion-bajas-temporales.component';
 import { Row, GestionBajasTemporalesService } from './gestion-bajas-temporales/gestion-bajas-temporales.service';
 import { DatePipe } from '@angular/common';
+import { BajasTemporalesItem } from '../../../../models/sjcs/BajasTemporalesItem';
 
 @Component({
   selector: 'app-bajas-temporales',
@@ -31,7 +32,7 @@ export class BajasTemporalesComponent implements OnInit {
    el hijo lo declaramos como @ViewChild(ChildComponent)).*/
 
   @ViewChild(FiltrosBajasTemporales) filtros;
-  @ViewChild(GestionBajasTemporalesComponent) tablapartida;
+  @ViewChild(GestionBajasTemporalesComponent) tablapartida:GestionBajasTemporalesComponent;
   //comboPartidosJudiciales
   msgs;
   permisoEscritura: any;
@@ -107,6 +108,7 @@ export class BajasTemporalesComponent implements OnInit {
           element.fechahasta = this.formatDate(element.fechahasta);
           element.fechaalta = this.formatDate(element.fechaalta);
           element.fechabt = this.formatDate(element.fechabt);
+          element.fechaestado = this.formatDate(element.fechaestado);
 
           if (element.tipo == "V") {
             element.tiponombre = "Vacaciones";
@@ -139,22 +141,20 @@ export class BajasTemporalesComponent implements OnInit {
         this.jsonToRow(this.datos);
         this.buscar = true;
         this.progressSpinner = false;
-        if (this.tablapartida != undefined) {
-          this.tablapartida.tabla.sortOrder = 0;
-          this.tablapartida.tabla.sortField = '';
-          this.tablapartida.tabla.reset();
-          this.tablapartida.buscadores = this.tablapartida.buscadores.map(it => it = "");
-        }
       },
       err => {
         this.progressSpinner = false;
         console.log(err);
       }, () => {
         setTimeout(() => {
-          this.commonsService.scrollTablaFoco('tablaFoco');
+          this.tablapartida.tablaFoco.nativeElement.scrollIntoView();
         }, 5);
       }
     );
+  }
+
+  searchHistorico(event){
+    this.searchPartidas(event);
   }
 
   formatDate(date) {
@@ -162,34 +162,74 @@ export class BajasTemporalesComponent implements OnInit {
     return this.datePipe.transform(date, pattern);
   }
 
-  historico(event){
-    this.searchPartidas(this.filtros.filtroAux);
-  }
-
 jsonToRow(datos){
   console.log(datos);
   let arr = [];
-  datos.forEach(element => {
 
+  datos.forEach((element, index) => {
     let italic = (element.eliminado == 1);
-    let obj = [
-      { type: 'text', value: element.ncolegiado, italic: italic },
-      { type: 'text', value: element.apellidos1 +" "+ element.apellidos2 + ", " + element.nombre, italic: italic },
-      { type: 'select', combo: this.comboTipo ,value: element.tipo, italic: italic },
-      { type: 'input', value: element.descripcion, italic: italic },
-      { type: 'datePicker', value: element.fechadesde, italic: italic },
-      { type: 'datePicker', value: element.fechahasta, italic: italic },
-      { type: 'text', value: element.fechaalta, italic: italic },
-      { type: 'text', value: element.validado, italic: italic },
-      { type: 'text', value: element.fechabt, italic: italic }
-    ];
-    arr.push(obj);
+    if(element.eliminado == 1){
+      let obj = [
+        { type: 'text', value: element.ncolegiado},
+        { type: 'text', value: element.apellidos1 +" "+ element.apellidos2 + ", " + element.nombre},
+        { type: 'text', combo: this.comboTipo ,value: element.tipo},
+        { type: 'text', value: element.descripcion},
+        { type: 'text', value: element.fechadesde},
+        { type: 'text', value: element.fechahasta},
+        { type: 'text', value: element.fechaalta},
+        { type: 'text', value: element.validado},
+        { type: 'text', value: element.fechaestado}
+      ];
+      let superObj = {
+        id: index,
+        italic: italic,
+        row: obj
+      };
 
+      arr.push(superObj);
+    }else{
+      let obj = [
+        { type: 'text', value: element.ncolegiado},
+        { type: 'text', value: element.apellidos1 +" "+ element.apellidos2 + ", " + element.nombre},
+        { type: 'select', combo: this.comboTipo ,value: element.tiponombre},
+        { type: 'input', value: element.descripcion},
+        { type: 'datePicker', value: element.fechadesde},
+        { type: 'datePicker', value: element.fechahasta},
+        { type: 'text', value: element.fechaalta},
+        { type: 'text', value: element.validado},
+        { type: 'text', value: element.fechaestado}
+      ];
+      let superObj = {
+        id: index,
+        italic: italic,
+        row: obj
+      };
+
+      arr.push(superObj);
+    }
   });
 
   this.rowGroups = this.gbtservice.getTableData(arr);
   this.rowGroupsAux = this.gbtservice.getTableData(arr);
   this.totalRegistros = this.rowGroups.length;
+}
+
+modDatos(event){
+  console.log(event);
+
+  let array = [];
+  let array2 = [];
+
+  event.forEach(element => {
+    element.cells.forEach(dato => {
+      array.push(dato.value);
+    });
+    array2.push(array);
+    array=[];
+  });
+  console.log(array);
+  console.log(array2);
+  this.guardar(array2);
 }
 
   showMessage(event) {
@@ -205,9 +245,41 @@ jsonToRow(datos){
     this.msgs = [];
   }
 
+  transformaFecha(fecha) {
+    if (fecha != null) {
+      let jsonDate = JSON.stringify(fecha);
+      let rawDate = jsonDate.slice(1, -1);
+      if (rawDate.length < 14) {
+        let splitDate = rawDate.split("/");
+        let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+        fecha = new Date((arrayDate += "T00:00:00.001Z"));
+      } else {
+        fecha = new Date(fecha);
+      }
+    } else {
+      fecha = undefined;
+    }
+    return fecha;
+  }
+
   delete(event){
     let array = [];
     event.forEach(element => {
+      if(this.datos[element].fechadesde != null){
+        this.datos[element].fechadesde=this.transformaFecha(this.datos[element].fechadesde);
+      }
+      if(this.datos[element].fechahasta != null){
+        this.datos[element].fechahasta=this.transformaFecha(this.datos[element].fechahasta);
+      }
+      if(this.datos[element].fechaalta != null){
+        this.datos[element].fechaalta=this.transformaFecha(this.datos[element].fechaalta);
+      }
+      if(this.datos[element].fechabt != null){
+        this.datos[element].fechabt=this.transformaFecha(this.datos[element].fechabt);
+      }
+      if(this.datos[element].fechaestado != null){
+        this.datos[element].fechaestado=this.transformaFecha(this.datos[element].fechaestado);
+      }
       array.push(this.datos[element]);
     });
     
@@ -224,12 +296,28 @@ jsonToRow(datos){
         this.progressSpinner = false;
       }
     );
+    this.searchPartidas(this.filtros.filtroAux.historico);
   }
 
 denegar(event){
   let array = [];
   event.forEach(element => {
     if(this.datos[element].validado == "Pendiente"){
+      if(this.datos[element].fechadesde != null){
+        this.datos[element].fechadesde=this.transformaFecha(this.datos[element].fechadesde);
+      }
+      if(this.datos[element].fechahasta != null){
+        this.datos[element].fechahasta=this.transformaFecha(this.datos[element].fechahasta);
+      }
+      if(this.datos[element].fechaalta != null){
+        this.datos[element].fechaalta=this.transformaFecha(this.datos[element].fechaalta);
+      }
+      if(this.datos[element].fechabt != null){
+        this.datos[element].fechabt=this.transformaFecha(this.datos[element].fechabt);
+      }
+      if(this.datos[element].fechaestado != null){
+        this.datos[element].fechaestado=this.transformaFecha(this.datos[element].fechaestado);
+      }
       this.datos[element].validado = "Denegada";
       let tmp = this.datos[element];
       delete tmp.tiponombre;
@@ -244,12 +332,27 @@ denegar(event){
 
 validar(event){
   let array = [];
-  let x = 0;
   event.forEach(element => {
     if(this.datos[element].validado == "Pendiente"){
+      if(this.datos[element].fechadesde != null){
+        this.datos[element].fechadesde=this.transformaFecha(this.datos[element].fechadesde);
+      }
+      if(this.datos[element].fechahasta != null){
+        this.datos[element].fechahasta=this.transformaFecha(this.datos[element].fechahasta);
+      }
+      if(this.datos[element].fechaalta != null){
+        this.datos[element].fechaalta=this.transformaFecha(this.datos[element].fechaalta);
+      }
+      if(this.datos[element].fechabt != null){
+        this.datos[element].fechabt=this.transformaFecha(this.datos[element].fechabt);
+      }
+      if(this.datos[element].fechaestado != null){
+        this.datos[element].fechaestado=this.transformaFecha(this.datos[element].fechaestado);
+      }
       this.datos[element].validado = "Validada";
-      array[x] = this.datos[element];
-        x=++x;
+      let tmp = this.datos[element];
+      delete tmp.tiponombre;
+      array.push(tmp);
     }else{
       this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("general.message.error.realiza.accion")});
       this.progressSpinner = false;
@@ -259,13 +362,28 @@ validar(event){
 }
 
 anular(event){
-  let x = 0;
   let array = [];
   event.forEach(element => {
     if(this.datos[element].validado == "Pendiente"){
+      if(this.datos[element].fechadesde != null){
+        this.datos[element].fechadesde=this.transformaFecha(this.datos[element].fechadesde);
+      }
+      if(this.datos[element].fechahasta != null){
+        this.datos[element].fechahasta=this.transformaFecha(this.datos[element].fechahasta);
+      }
+      if(this.datos[element].fechaalta != null){
+        this.datos[element].fechaalta=this.transformaFecha(this.datos[element].fechaalta);
+      }
+      if(this.datos[element].fechabt != null){
+        this.datos[element].fechabt=this.transformaFecha(this.datos[element].fechabt);
+      }
+      if(this.datos[element].fechaestado != null){
+        this.datos[element].fechaestado =this.transformaFecha(this.datos[element].fechaestado);
+      }
       this.datos[element].validado = "Anulada";
-      array[x] = this.datos[element];
-        x=++x;
+      let tmp = this.datos[element];
+      delete tmp.tiponombre;
+      array.push(tmp);
     }else{
       this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("general.message.error.realiza.accion")});
       this.progressSpinner = false;
@@ -274,8 +392,81 @@ anular(event){
   this.updateBaja(array);
 }
 
+guardar(event) {
+let listaPrueba = [];
+let bajaTemporal = new BajasTemporalesItem();
+event.forEach(element => {
+  bajaTemporal.ncolegiado = element[0];
+  bajaTemporal.nombre = element[1];
+  bajaTemporal.tipo = element[2];
+  bajaTemporal.descripcion = element[3];
+  bajaTemporal.fechadesde = element[4];
+  bajaTemporal.fechahasta = element[5];
+  bajaTemporal.fechaalta = element[6];
+  bajaTemporal.validado = element[7];
+  bajaTemporal.fechabt = element[8];
+
+  listaPrueba.push(bajaTemporal);
+  bajaTemporal = new BajasTemporalesItem();
+});
+
+  listaPrueba.forEach(element => {
+  if(element.fechadesde != null){
+    element.fechadesde=this.transformaFecha(element.fechadesde);
+  }
+  if(element.fechahasta != null){
+    element.fechahasta=this.transformaFecha(element.fechahasta);
+  }
+  if(element.fechaalta != null){
+    element.fechaalta=this.transformaFecha(element.fechaalta);
+  }
+  if(element.fechaestado != null){
+    element.fechaestado=this.transformaFecha(element.fechaestado);
+  }
+  if(element.fechaestado != null){
+    element.fechaestado=this.transformaFecha(element.fechaestado);
+  }
+  if (element.validado == "Denegada") {
+    element.validado  = "0";
+  }
+  if (element.validado  == "Validada") {
+    element.validado  = "1";
+  }
+  if (element.validado  == "Anulada") {
+    element.validado  = "3";
+  }
+  if (element.validado  == "Pendiente") {
+    element.validado  = "2";
+  }
+});
+    this.sigaServices.post("bajasTemporales_saveBajaTemporal", listaPrueba).subscribe(
+      data => {
+          this.showMessage({ severity: "success", summary: this.translateService.instant("general.message.correct"), msg: this.translateService.instant("general.message.accion.realizada")});
+          this.progressSpinner = false;
+          this.searchPartidas(this.filtros.filtroAux);
+    },
+    err => {
+        this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("general.message.error.realiza.accion")});
+        this.progressSpinner = false;
+      }
+    );
+}
+
   updateBaja(event) {
     this.progressSpinner = true;
+
+    event.forEach(element => {
+      if (element.validado == "Denegada") {
+        element.validado = "0";
+      }
+      if (element.validado == "Validada") {
+        element.validado = "1";
+      }
+      if (element.validado == "Anulada") {
+        element.validado = "3";
+      }
+    });
+    
       this.sigaServices.post("bajasTemporales_updateBajaTemporal", event).subscribe(
         data => {
             this.showMessage({ severity: "success", summary: this.translateService.instant("general.message.correct"), msg: this.translateService.instant("general.message.accion.realizada")});
@@ -286,6 +477,7 @@ anular(event){
           this.progressSpinner = false;
         }
       );
+      this.searchPartidas(this.filtros.filtroAux.historico);
   }
 
 }
