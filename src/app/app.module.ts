@@ -194,7 +194,6 @@ import { MantenimientoJuzgadosComponent } from './features/sjcs/maestros/manteni
 import { MaestroPJComponent } from './features/sjcs/maestros/maestro-pj/maestro-pj.component';
 import { DestinatariosRetencionesComponent } from './features/sjcs/maestros/destinatarios-retenciones/destinatarios-retenciones.component';
 import { SolicitudesTurnosGuardiasComponent } from './features/sjcs/oficio/solicitudesTurnosGuardias/solicitudesTurnosGuardias.component';
-import { SaltosYCompensacionesComponent } from './features/sjcs/oficio/saltos-compensaciones/saltos-compensaciones.component';
 import { DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-datos-adicionales-ficha-designacion-oficio/detalle-tarjeta-datos-adicionales-ficha-designacion-oficio.component';
 import { GuardiasSolicitudesTurnosComponent } from './features/sjcs/guardia/solicitudes-turnos/solicitudes-turnos.component';
 import { GuardiasIncompatibilidadesComponent } from './features/sjcs/guardia/guardias-incompatibilidades/guardias-incompatibilidades.component';
@@ -378,7 +377,6 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
-import { FiltrosSaltosYCompensaciones } from './features/sjcs/oficio/saltos-compensaciones/filtros-saltosYcompensaciones/filtros-saltosYcompensaciones.component';
 import { PaginadorComponent } from './commons/paginador/paginador.component';
 import { SelectorComponent } from './commons/selector/selector.component';
 import { TablaResultadoComponent } from './commons/tabla-resultado/tabla-resultado.component';
@@ -518,7 +516,6 @@ import { TarjetaComponent } from './commons/tarjeta/tarjeta.component';
 		MantenimientoJuzgadosComponent,
 		MaestroPJComponent,
 		SolicitudesTurnosGuardiasComponent,
-		SaltosYCompensacionesComponent,
 		DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent,
 		FichaDesignacionesComponent,
 		DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent,
@@ -721,7 +718,6 @@ import { TarjetaComponent } from './commons/tarjeta/tarjeta.component';
 		OtrasColegiacionesFichaColegialComponent,
 		ServiciosInteresFichaColegialComponent,
 		//TarjetaResumenFijaComponent
-		FiltrosSaltosYCompensaciones,
 		BuscadorColegiadosComponent,
 		TablaBuscadorColegiadosComponent,
 		FiltroBuscadorColegiadosComponent,

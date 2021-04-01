@@ -8,6 +8,7 @@ import { FichaInscripcionesComponent } from './inscripciones/ficha-inscripciones
 import { BajasTemporalesComponent } from './bajas-temporales/busqueda-bajas-temporales.component';
 import { CargasMasivasOficioComponent } from './cargas-masivas-oficio/cargas-masivas-oficio.component';
 import { FichaDesignacionesComponent } from './designaciones/ficha-designaciones/ficha-designaciones.component';
+import { SaltosCompensacionesOficioComponent } from './saltos-compensaciones-oficio/saltos-compensaciones-oficio.component';
 
 
 const routesOficio: Routes = [
@@ -46,6 +47,11 @@ const routesOficio: Routes = [
 		component: FichaDesignacionesComponent,
 		canActivate: [ AuthGuard ]
 	},
+  {
+    path: "saltosYCompensaciones",
+    component: SaltosCompensacionesOficioComponent,
+    canActivate: [AuthGuard]
+  },
 ];
 
 @NgModule({

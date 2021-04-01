@@ -51,6 +51,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
 
   clearForm() {
     this.colegiadoForm.reset();
+    this.changeValue();
   }
 
   isBuscar(form) {

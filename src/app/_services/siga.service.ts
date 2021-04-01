@@ -619,7 +619,7 @@ export class SigaServices {
     ...endpoints_oficio,
     dialogo_maxModelos: "dialogoComunicacion/maxModelos",
     ...endpoints_maestros,
-
+    ...endpoints_guardia,
   };
 
   private menuToggled = new Subject<any>();

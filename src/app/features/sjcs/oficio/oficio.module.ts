@@ -25,6 +25,7 @@ import { GestionDesignacionesComponent } from './designaciones/gestion-designaci
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/primeng';
 import { TablaResultadoMixDAService } from '../../../commons/tabla-resultado-mix/tabla-resultado-mix-da.service';
+import { SaltosCompensacionesOficioModule } from './saltos-compensaciones-oficio/saltos-compensaciones-oficio.module';
 
 
 //import { DesignacionesComponent } from './designaciones/designaciones.component';
@@ -35,7 +36,7 @@ import { TablaResultadoMixDAService } from '../../../commons/tabla-resultado-mix
                 DesignacionesComponent,
                 FiltroDesignacionesComponent,
                 TablaJustificacionExpresComponent,
-                GestionDesignacionesComponent
+                GestionDesignacionesComponent,
         ],
         imports: [
                 TooltipModule,
@@ -59,7 +60,8 @@ import { TablaResultadoMixDAService } from '../../../commons/tabla-resultado-mix
                 BusquedaColegiadoExpressModule,
                 CheckboxModule,
                 FechaModule,
-                MultiSelectModule
+                MultiSelectModule,
+                SaltosCompensacionesOficioModule,
         ],
 
         providers: [TablaResultadoMixDAService]

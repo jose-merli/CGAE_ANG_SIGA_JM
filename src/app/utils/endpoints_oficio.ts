@@ -62,5 +62,10 @@ export let endpoints_oficio: any = {
     combo_comboJuzgadoDesignaciones: "combo/comboJuzgadoDesignaciones",
     combo_comboModulosDesignaciones: "oficio/comboModulo",
     combo_comboProcedimientosDesignaciones: "oficio/comboProcedimientos",
-    designaciones_busqueda: "oficio/busquedaDesignaciones"
+    designaciones_busqueda: "oficio/busquedaDesignaciones",
+
+    //SALTOS Y COMPENSACIONES
+    saltosCompensacionesOficio_buscar: "oficio/saltosCompensaciones/buscarSaltosOCompensaciones",
+    saltosCompensacionesOficio_anular: "oficio/saltosCompensaciones/anularSaltosCompensaciones",
+    saltosCompensacionesOficio_borrar: "oficio/saltosCompensaciones/borrarSaltosCompensaciones",
 }
