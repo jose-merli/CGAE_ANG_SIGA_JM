@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 export class Row {
+  id:number;
   cells: Cell[];
+  italic: boolean;
 }
 export class Cell {
   type: string;
   value: any;
   combo: Combo[];
-  italic: boolean;
 }
 export class Combo {
   label: string;
@@ -20,7 +21,7 @@ export class GestionBajasTemporalesService {
     result.forEach((rows) => {
       let rowObject: Row = new Row();
       let cells: Cell[] = [];
-      rows.forEach((cell) => {
+      rows.row.forEach((cell) => {
         let cellObject: Cell = new Cell();
         if (cell['type'] == 'multiselect' || cell['type'] == 'select') {
           cellObject.type = cell['type'];
@@ -30,9 +31,10 @@ export class GestionBajasTemporalesService {
           cellObject.type = cell['type'];
           cellObject.value = cell['value'];
         }
-        cellObject.italic = cell['italic'];
         cells.push(cellObject);
       });
+      rowObject.italic = rows.italic;
+      rowObject.id = rows.id;
       rowObject.cells = cells;
       finalRows.push(rowObject);
     });

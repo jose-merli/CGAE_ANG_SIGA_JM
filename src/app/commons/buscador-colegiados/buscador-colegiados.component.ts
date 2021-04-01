@@ -106,10 +106,8 @@ export class BuscadorColegiadosComponent implements OnInit {
     }
     else{
     sessionStorage.setItem("buscadorColegiados", JSON.stringify(event));
-    
-    if(event.nColegiado!=null &&  event.nColegiado!=undefined && event.nColegiado != ""){
-      sessionStorage.setItem("volverBaja","true");
-    }
+
+    sessionStorage.getItem('nuevo');
     
     this.location.back();
     }

@@ -5,6 +5,8 @@ import { Sort } from '@angular/material/sort';
 import { Message } from 'primeng/components/common/api';
 import { Row, Cell } from './gestion-bajas-temporales.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
+import { DatePipe } from '@angular/common';
+import { Router } from '@angular/router';
 
 interface GuardiaI {
   label: string,
@@ -29,13 +31,14 @@ export class GestionBajasTemporalesComponent implements OnInit {
   @Input() seleccionarTodo = false;
   @Input() comboGuardiasIncompatibles;
   @Output() anySelected = new EventEmitter<any>();
-  @Output() save = new EventEmitter<Row[]>();
   @Output() delete = new EventEmitter<any>();
   @Output() deleteFromCombo = new EventEmitter<any>();
   @Output() denegar = new EventEmitter<any>();
   @Output() anular = new EventEmitter<any>();
   @Output() validar = new EventEmitter<any>();
   @Output() searchHistorico = new EventEmitter<any>();
+  @Output() guardar = new EventEmitter<any>();
+  @Output() modDatos = new EventEmitter<any>();
 
   cabecerasMultiselect = [];
   modalStateDisplay = true;
@@ -66,10 +69,26 @@ export class GestionBajasTemporalesComponent implements OnInit {
   @ViewChild('table') table: ElementRef;
   historico: boolean = false;
 
+  comboTipo = [
+    { label: "Vacaciones", value: "V" },
+    { label: "Maternidad", value: "M" },
+    { label: "Baja", value: "B" },
+    { label: "Suspensión por sanción", value: "S" }
+  ];
+  @ViewChild("tablaFoco") tablaFoco: ElementRef;
+  array = sessionStorage.getItem("buscadorColegiados");
+  nuevaBaja = sessionStorage.getItem("nuevo");
+
+  usuarioBusquedaExpress = {​​​​​​​​​
+    numColegiado: '',
+    nombreAp: ''
+  }​​​​​​​​​;
 
   constructor(
     private renderer: Renderer2,
-    private persistenceService: PersistenceService
+    private persistenceService: PersistenceService,
+    private pipe : DatePipe,
+		private router: Router
   ) {
     this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
       for (let i = 0; i < this.table.nativeElement.children.length; i++) {
@@ -86,6 +105,11 @@ export class GestionBajasTemporalesComponent implements OnInit {
     let values = [];
     let labels = [];
     let arrayOfSelected = [];
+    
+    if(this.nuevaBaja == "true"){
+      this.nuevo();
+    }
+
       this.rowGroups.forEach((row, i) => {
         //selecteCombo = {label: ?, value: row.cells[7].value}
         values.push(row.cells[6].value);
@@ -111,10 +135,14 @@ export class GestionBajasTemporalesComponent implements OnInit {
     this.cabeceras.forEach(cab => {
       this.cabecerasMultiselect.push(cab.name);
     })
+    
+    sessionStorage.removeItem("nuevo");
+
   }
 
-  onChangeMulti(event, rowPosition){
-let deseleccionado;
+  onChangeMulti(event, rowPosition, cell){
+    console.log('cell: ', cell)
+    let deseleccionado;
    
     let selected = event.itemValue;
     let arraySelected = event.value;
@@ -125,42 +153,69 @@ let deseleccionado;
       deseleccionado = true;
     }
     let turno = this.rowGroups[rowPosition].cells[0];
-    let guardia = this.rowGroups[rowPosition].cells[1];
+    let idGuardia = this.rowGroups[rowPosition].cells[7];
+    let idTurno = this.rowGroups[rowPosition].cells[8];
+    let idTurnoIncompatible = this.rowGroups[rowPosition].cells[5];
+    let idGuardiaIncompatible = this.rowGroups[rowPosition].cells[6];
+    let nombreTurnoInc = this.rowGroups[rowPosition].cells[9];
     if (deseleccionado){
       //eliminar doble
       this.eliminarFromCombo(this.rowGroups[rowPosition])
     } else {
       //guardar doble
+      
       this.comboGuardiasIncompatibles.forEach(comboObj => {
         if ( comboObj.value == selected){
           labelSelected = comboObj.label;
         }
       })
-      let cell:  Cell = new Cell();
-      cell.type = 'text';
-      cell.value = labelSelected;
-      this.nuevoFromCombo(turno, cell, guardia);
+      let cellguardiaInc:  Cell = new Cell();
+      cellguardiaInc.type = 'text';
+      cellguardiaInc.value = labelSelected;
+      this.rowGroups[rowPosition].cells[10].value.push(labelSelected);
+      this.nuevoFromCombo(turno, cellguardiaInc, idGuardia, idTurno, idTurnoIncompatible, idGuardiaIncompatible, nombreTurnoInc);
     }
   }
-  nuevoFromCombo(turno, guardiaInc, idGuardia){
+  nuevoFromCombo(turno, guardiaInc, idGuardia, idTurno, idTurnoIncompatible, idGuardiaIncompatible, nombreTurnoInc){
+    console.log('idGuardiaIncompatible: ', idGuardiaIncompatible)
+    console.log('idGuardia: ', idGuardia)
     this.enableGuardar = true;
+    let labelSelected = '';
     let row: Row = new Row();
     let cell1: Cell = new Cell();
     let cell2: Cell = new Cell();
     let cellInvisible: Cell = new Cell();
     let cellMulti:  Cell = new Cell();
+    let cellArr: Cell = new Cell();
+    let idG;
     cell1.type = 'input';
     cell1.value = '';
     cell2.type = 'input';
     cell2.value = '0';
     cellInvisible.type = 'invisible';
-    cellInvisible.value = ' ';
+    cellInvisible.value = nombreTurnoInc;
     cellMulti.combo = this.comboGuardiasIncompatibles;
     cellMulti.type = 'multiselect'; 
     cellMulti.value = [idGuardia.value];
-    row.cells = [turno, guardiaInc, cellMulti, cell1, cell2, cellInvisible, cellInvisible, idGuardia];
+    this.comboGuardiasIncompatibles.forEach(comboObj => {
+      if ( comboObj.value == idGuardia.value){
+        labelSelected = comboObj.label;
+      }
+    });
+    cellArr.type = 'invisible';
+    cellArr.value = [labelSelected];
+    if (idGuardia.value != ''){
+      this.comboGuardiasIncompatibles.push({ label: labelSelected, value: idGuardia.value})
+    }
+    console.log('idGuardia.value: ', idGuardia.value)
+    console.log('this.comboGuardiasIncompatibles: ', this.comboGuardiasIncompatibles)
+    console.log('cellMulti.value: ', cellMulti.value)
+    row.cells = [turno, guardiaInc, cellMulti, cell1, cell2, idTurno, idGuardia, idGuardiaIncompatible, idTurnoIncompatible, cellInvisible, cellArr];
+    if (idGuardia.value != ''){
     this.rowGroups.unshift(row);
+    }
     this.totalRegistros = this.rowGroups.length;
+    this.rowGroupsAux = this.rowGroups;
   }
   validaCheck(texto) {
     return texto === 'Si';
@@ -177,7 +232,6 @@ let deseleccionado;
     } else {
       this.anySelected.emit(false);
     }
-
   }
   isSelected(id) {
     if (this.selectedArray.includes(id)) {
@@ -208,7 +262,6 @@ let deseleccionado;
     this.totalRegistros = this.rowGroups.length;
 
   }
-
 
   searchChange(j: any) {
     let isReturn = true;
@@ -308,24 +361,70 @@ let deseleccionado;
       this.totalRegistros = this.rowGroups.length;
 
   }
+
+  nuevaBajaTemporal(){
+    this.router.navigate(["/buscadorColegiados"]);
+    sessionStorage.setItem("nuevo","true");
+  }
+
   nuevo(){
+    const now = Date.now();
+    const myFormattedDate = this.pipe.transform(now, 'dd/MM/yyyy');
+
+    if(sessionStorage.getItem("buscadorColegiados")){​​
+
+      let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
+
+      this.usuarioBusquedaExpress.nombreAp=busquedaColegiado.apellidos+", "+busquedaColegiado.nombre;
+
+      this.usuarioBusquedaExpress.numColegiado=busquedaColegiado.nColegiado;
+    }​​
+
     this.enableGuardar = true;
     let row: Row = new Row();
     let cell1: Cell = new Cell();
-    let cellMulti:  Cell = new Cell();
-    cell1.type = 'newinput';
-    cell1.value = ' ';
-    cellMulti.combo = this.comboGuardiasIncompatibles;
-    cellMulti.type = 'multiselect'; 
-    row.cells = [cell1, cell1, cellMulti, cell1, cell1];
+    let cell2: Cell = new Cell();
+    let cell3: Cell = new Cell();
+    let cell4: Cell = new Cell();
+    let cell5: Cell = new Cell();
+    let cell6: Cell = new Cell();
+    let cell7: Cell = new Cell();
+    let cell8: Cell = new Cell();
+    let cell9: Cell = new Cell();
+    let cell10: Cell = new Cell();
+    cell1.type = 'text';
+    cell1.value = this.usuarioBusquedaExpress.numColegiado;
+    cell2.type = 'text';
+    cell2.value = this.usuarioBusquedaExpress.nombreAp;
+    cell3.type = 'select';
+    cell3.combo = this.comboTipo;
+    cell3.value = '';
+    cell4.type = 'input';
+    cell4.value = '';
+
+    cell5.type = 'datePicker';
+    cell5.value = '';
+    cell6.type = 'datePicker';
+    cell6.value = '';
+    cell7.type = 'text';
+    cell7.value = myFormattedDate;
+    cell8.type = 'text';
+    cell8.value = 'Pendiente';
+    cell9.type = 'text';
+    cell9.value = myFormattedDate;
+    cell10.type = 'invisible';
+    cell10.value = [];
+    row.cells = [cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8, cell9, cell2];
     this.rowGroups.unshift(row);
+    this.rowGroupsAux = this.rowGroups;
     this.totalRegistros = this.rowGroups.length;
+    console.log('this.rowGroups: ', this.rowGroups)
     //this.to = this.totalRegistros;
-  }
+}
   inputChange(event, i, z){
     this.enableGuardar = true;
   }
-
+  /*
   guardar(){
     let anyEmptyArr = [];
     this.rowGroups.forEach(row =>{
@@ -346,9 +445,11 @@ let deseleccionado;
       
     })
   }
+  */
   eliminar(){
   this.delete.emit(this.selectedArray);
   this.totalRegistros = this.rowGroups.length;
+  this.rowGroupsAux = this.rowGroups;
   //this.to = this.totalRegistros;
   }
 
@@ -356,6 +457,11 @@ let deseleccionado;
     this.historico = !this.historico;
     this.persistenceService.setHistorico(this.historico);
     this.searchHistorico.emit(this.historico);
+  }
+
+  checkGuardar(){
+    this.modDatos.emit(this.rowGroups);
+    this.totalRegistros = this.rowGroups.length;
   }
 
   checkDenegar(){
