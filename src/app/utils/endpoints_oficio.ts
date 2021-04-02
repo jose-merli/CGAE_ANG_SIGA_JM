@@ -69,4 +69,5 @@ export let endpoints_oficio: any = {
     saltosCompensacionesOficio_buscar: "oficio/saltosCompensaciones/buscarSaltosOCompensaciones",
     saltosCompensacionesOficio_anular: "oficio/saltosCompensaciones/anularSaltosCompensaciones",
     saltosCompensacionesOficio_borrar: "oficio/saltosCompensaciones/borrarSaltosCompensaciones",
+    saltosCompensacionesOficio_comboColegiados: "oficio/saltosCompensaciones/searchLetradosGuardia",
 }

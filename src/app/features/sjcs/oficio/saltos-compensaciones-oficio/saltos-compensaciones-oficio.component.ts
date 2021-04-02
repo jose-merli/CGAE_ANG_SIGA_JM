@@ -252,19 +252,21 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
           { type: 'text', value: this.comboTipos.find(el => el.value == element.saltoCompensacion).label, header: this.cabeceras[4].id, disabled: false },
           { type: 'text', value: element.fecha, header: this.cabeceras[5].id, disabled: false },
           { type: 'text', value: element.motivo, header: this.cabeceras[6].id, disabled: false },
-          { type: 'text', value: element.fechaUso, header: this.cabeceras[7].id, disabled: false }
+          { type: 'text', value: element.fechaUso, header: this.cabeceras[7].id, disabled: false },
+          { type: 'invisible', value: element.idPersona, header: 'invisible', disabled: false }
         ];
 
       } else {
         obj = [
           { type: 'select', combo: this.comboTurnos, value: element.idTurno, header: this.cabeceras[0].id, disabled: false },
           { type: 'select', combo: element.comboGuardia, value: element.idGuardia, header: this.cabeceras[1].id, disabled: false },
-          { type: 'select', combo: element.comboColegiados, value: element.nColegiado, header: this.cabeceras[2].id, disabled: false },
+          { type: 'select', combo: element.comboColegiados, value: element.idPersona, header: this.cabeceras[2].id, disabled: false },
           { type: 'text', value: element.letrado, header: this.cabeceras[3].id, disabled: false },
           { type: 'select', combo: this.comboTipos, value: element.saltoCompensacion, header: this.cabeceras[4].id, disabled: false },
           { type: 'datePicker', value: element.fecha, header: this.cabeceras[5].id, disabled: false },
           { type: 'textarea', value: element.motivo, header: this.cabeceras[6].id, disabled: false },
-          { type: 'text', value: element.fechaUso, header: this.cabeceras[7].id, disabled: false }
+          { type: 'text', value: element.fechaUso, header: this.cabeceras[7].id, disabled: false },
+          { type: 'invisible', value: element.idPersona, header: 'invisible', disabled: false }
         ];
       }
 

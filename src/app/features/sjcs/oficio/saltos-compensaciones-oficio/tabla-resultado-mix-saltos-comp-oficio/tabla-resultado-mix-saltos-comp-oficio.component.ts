@@ -2,6 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, Renderer2, SimpleChanges, ViewChild } from '@angular/core';
 import { Sort } from '@angular/material';
 import { Message } from 'primeng/api';
+import { SaltoCompItem } from '../../../../../models/guardia/SaltoCompItem';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { Cell, Row } from './tabla-resultado-mix-saltos-comp-oficio.service';
@@ -54,6 +55,7 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
   textFilter: string = "Seleccionar";
   textSelected: String = "{0} guardias seleccionadas";
   comboGuardias = [];
+  comboColegiados = [];
   progressSpinner: boolean = false;
 
   constructor(private renderer: Renderer2, private datepipe: DatePipe, private sigaServices: SigaServices, private commonsService: CommonsService) {
@@ -297,21 +299,40 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
     cell.value = this.datepipe.transform(event, 'dd/MM/yyyy');
   }
 
-  changeSelect(row, cell) {
+  changeSelect(row: Row, cell) {
     const header = cell.header;
 
     if (header == 'turno') {
-      row.cells[1].value = '';
-      row.cells[2].value = [];
+      if (row.cells[0].value == null) {
+        row.cells[1].disabled = true;
+        row.cells[1].value = '';
+      } else {
+        row.cells[1].value = '';
+        row.cells[1].disabled = false;
+      }
+      row.cells[2].value = '';
       row.cells[2].disabled = true;
+      row.cells[3].value = '';
       this.getComboGuardia(cell.value, row);
+    } else if (header == 'guardia') {
+      if (row.cells[1].value != null) {
+        row.cells[2].disabled = false;
+      }
+      row.cells[2].value = '';
+      row.cells[3].value = '';
+      this.getComboColegiados(row);
+    } else if (header == 'nColegiado') {
+      row.cells[3].value = '';
+      let letrado = row.cells[2].combo.find(el => el.value == row.cells[2].value).label.split(')')[1].trim();
+      row.cells[3].value = letrado;
+      row.cells[8].value = row.cells[2].value;
     }
   }
 
   getComboGuardia(idTurno, row) {
     this.comboGuardias = [];
     this.sigaServices.getParam(
-      "busquedaGuardia_guardia", "?idTurno=" + idTurno).subscribe(
+      "busquedaGuardia_comboGuardia_Nogrupo", "?idTurno=" + idTurno).subscribe(
         data => {
           let comboGuardias = data.combooItems;
           this.commonsService.arregloTildesCombo(comboGuardias);
@@ -322,6 +343,29 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
         },
         () => {
           this.rowGroups[row.id].cells[1].combo = this.comboGuardias;
+        }
+      );
+  }
+
+  getComboColegiados(row: Row) {
+
+    this.comboColegiados = [];
+    let params = new SaltoCompItem();
+    params.idTurno = row.cells[0].value;
+    params.idGuardia = row.cells[1].value;
+
+    this.sigaServices.post(
+      "saltosCompensacionesOficio_comboColegiados", params).subscribe(
+        data => {
+          let comboColegiados = JSON.parse(data.body).combooItems;
+          let error = JSON.parse(data.body).error;
+          this.comboColegiados = comboColegiados;
+        },
+        err => {
+          console.log(err);
+        },
+        () => {
+          this.rowGroups[row.id].cells[2].combo = this.comboColegiados;
         }
       );
   }

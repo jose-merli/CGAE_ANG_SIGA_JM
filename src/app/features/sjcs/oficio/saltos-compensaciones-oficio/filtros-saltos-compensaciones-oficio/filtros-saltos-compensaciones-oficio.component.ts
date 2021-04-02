@@ -101,7 +101,7 @@ export class FiltrosSaltosCompensacionesOficioComponent implements OnInit {
 
   getComboGuardia() {
     this.sigaServices.getParam(
-      "busquedaGuardia_guardia", "?idTurno=" + this.filtros.idTurno).subscribe(
+      "busquedaGuardia_comboGuardia_Nogrupo", "?idTurno=" + this.filtros.idTurno).subscribe(
         data => {
           this.isDisabledGuardia = false;
           this.comboGuardias = data.combooItems;

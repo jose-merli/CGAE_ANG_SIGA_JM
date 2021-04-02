@@ -12,6 +12,7 @@ export let endpoints_guardia: any = {
     busquedaGuardia_tipoTurno: "combo/tipoTurno",
     busquedaGuardia_tiposGuardia: "combo/tipoGuardia",
     busquedaGuardia_guardia: "combo/guardias",
+    busquedaGuardia_comboGuardia_Nogrupo: "combo/guardiasNoGrupo",
 
 
     // Guardias
