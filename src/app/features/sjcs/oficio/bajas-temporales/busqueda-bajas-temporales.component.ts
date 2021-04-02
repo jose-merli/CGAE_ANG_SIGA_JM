@@ -172,7 +172,7 @@ jsonToRow(datos){
       let obj = [
         { type: 'text', value: element.ncolegiado},
         { type: 'text', value: element.apellidos1 +" "+ element.apellidos2 + ", " + element.nombre},
-        { type: 'text', combo: this.comboTipo ,value: element.tipo},
+        { type: 'text', value: element.tiponombre},
         { type: 'text', value: element.descripcion},
         { type: 'text', value: element.fechadesde},
         { type: 'text', value: element.fechahasta},
@@ -191,7 +191,7 @@ jsonToRow(datos){
       let obj = [
         { type: 'text', value: element.ncolegiado},
         { type: 'text', value: element.apellidos1 +" "+ element.apellidos2 + ", " + element.nombre},
-        { type: 'select', combo: this.comboTipo ,value: element.tiponombre},
+        { type: 'select', combo: this.comboTipo ,value: element.tipo},
         { type: 'input', value: element.descripcion},
         { type: 'datePicker', value: element.fechadesde},
         { type: 'datePicker', value: element.fechahasta},
