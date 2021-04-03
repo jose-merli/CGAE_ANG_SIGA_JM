@@ -48,7 +48,6 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
   from = 0;
   to = 10;
   numperPage = 10;
-  enableGuardar = false;
   multiselectValue = [];
   multiselectLabels = [];
   cell = [];
@@ -57,6 +56,7 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
   comboGuardias = [];
   comboColegiados = [];
   progressSpinner: boolean = false;
+  isDisabled: boolean = true;
 
   constructor(private renderer: Renderer2, private datepipe: DatePipe, private sigaServices: SigaServices, private commonsService: CommonsService) {
     this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
@@ -95,23 +95,27 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
     });
   }
 
-  selectRow(rowId) {
+  selectRow(rowId, cells) {
 
-    if (this.selectedArray.includes(rowId)) {
-      const i = this.selectedArray.indexOf(rowId);
-      this.selectedArray.splice(i, 1);
-    } else {
+    if (cells[8].value != null && cells[8].value != '') {
+      if (this.selectedArray.includes(rowId)) {
+        const i = this.selectedArray.indexOf(rowId);
+        this.selectedArray.splice(i, 1);
+      } else {
 
-      if ((this.historico && this.rowGroups[rowId].italic) || (!this.historico)) {
-        this.selectedArray.push(rowId);
+        if ((this.historico && this.rowGroups[rowId].italic) || (!this.historico)) {
+          this.selectedArray.push(rowId);
+        }
+
       }
-
     }
 
     if (this.selectedArray.length != 0) {
       this.anySelected.emit(true);
+      this.isDisabled = false;
     } else {
       this.anySelected.emit(false);
+      this.isDisabled = true;
     }
 
   }
@@ -197,7 +201,7 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
   }
 
   nuevo() {
-    this.enableGuardar = true;
+
     let row: Row = new Row();
 
     let cell1: Cell = new Cell();
@@ -208,60 +212,79 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
     let cell6: Cell = new Cell();
     let cell7: Cell = new Cell();
     let cell8: Cell = new Cell();
+    let cell9: Cell = new Cell();
 
     cell1.type = 'select';
     cell1.combo = this.comboTurnos;
     cell1.value = '';
+    cell1.header = this.cabeceras[0].id;
 
     cell2.type = 'select';
     cell2.value = '';
+    cell2.disabled = true;
+    cell2.header = this.cabeceras[1].id;
 
-    cell3.type = 'text';
+    cell3.type = 'select';
     cell3.value = '';
+    cell3.disabled = true;
+    cell3.header = this.cabeceras[2].id;
 
     cell4.type = 'text';
     cell4.value = '';
+    cell4.header = this.cabeceras[3].id;
 
     cell5.type = 'select';
     cell5.combo = this.comboTipos;
     cell5.value = '';
+    cell5.header = this.cabeceras[4].id;
 
     cell6.type = 'datePicker';
     cell6.value = this.datepipe.transform(new Date(), 'dd/MM/yyyy');
+    cell6.header = this.cabeceras[5].id;
 
     cell7.type = 'textarea';
     cell7.value = '';
+    cell7.header = this.cabeceras[6].id;
 
     cell8.type = 'text';
     cell8.value = '';
+    cell8.header = this.cabeceras[7].id;
 
-    row.cells = [cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8];
+    cell9.type = 'invisible';
+    cell9.value = '';
+    cell9.header = 'invisible';
+
+    row.cells = [cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8, cell9];
+    row.id = this.totalRegistros;
     this.rowGroups.unshift(row);
     this.rowGroupsAux = this.rowGroups;
     this.totalRegistros = this.rowGroups.length;
+    this.tablaFoco.nativeElement.scrollIntoView();
   }
 
   guardar() {
-    console.log("file: tabla-resultado-mix-saltos-comp-guardia.component.ts ~ line 379 ~ TablaResultadoMixSaltosCompGuardiaComponent ~ guardar ~ this.rowGroups", this.rowGroups);
 
-    /*let anyEmptyArr = [];
+    let error = false;
+
     this.rowGroups.forEach(row => {
-      if (row.cells[0].value == '' || row.cells[0].value == undefined || row.cells[1].value == '' || row.cells[1].value == undefined || row.cells[2].value == '' || row.cells[2].value == undefined || row.cells[4].value == '' || row.cells[4].value == undefined) {
-        anyEmptyArr.push(true);
-      } else {
-        this.saveEvent.emit(this.rowGroups);
-        this.enableGuardar = false;
-        this.totalRegistros = this.rowGroups.length;
-        anyEmptyArr.push(false);
+      if (
+        row.cells[0].value == null || row.cells[0].value.trim() == '' ||
+        row.cells[1].value == null || row.cells[1].value.trim() == '' ||
+        row.cells[2].value == null || row.cells[2].value.trim() == '' ||
+        row.cells[3].value == null || row.cells[3].value.trim() == '' ||
+        row.cells[4].value == null || row.cells[4].value.trim() == '' ||
+        row.cells[5].value == null || row.cells[5].value.trim() == '' ||
+        row.cells[6].value == null || row.cells[6].value.trim() == ''
+      ) {
+        error = true;
       }
+    });
 
-      if (anyEmptyArr.includes(true)) {
-        this.showMsg('error', 'Error. Existen campos vacíos en la tabla.', '')
-      } else {
-        this.showMsg('success', 'Se ha guardado correctamente', '')
-      }
-
-    })*/
+    if (error) {
+      this.showMsg({ severity: 'error', summary: 'Error. Existen campos vacíos en la tabla.', detail: '' });
+    } else {
+      this.saveEvent.emit(this.rowGroups);
+    }
   }
 
   delete() {
@@ -275,6 +298,20 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
 
   selectedAll(event) {
     this.seleccionarTodo = event;
+    this.selectedArray = [];
+
+    if (event) {
+      this.rowGroups.forEach(row => {
+        if (row.cells[8].value != null && row.cells[8].value != '') {
+
+          if ((this.historico && this.rowGroups[row.id].italic) || (!this.historico)) {
+            this.selectedArray.push(row.id);
+          }
+
+        }
+      });
+    }
+
   }
 
   restablecer() {
@@ -325,7 +362,6 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
       row.cells[3].value = '';
       let letrado = row.cells[2].combo.find(el => el.value == row.cells[2].value).label.split(')')[1].trim();
       row.cells[3].value = letrado;
-      row.cells[8].value = row.cells[2].value;
     }
   }
 
@@ -342,7 +378,7 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
           console.log(err);
         },
         () => {
-          this.rowGroups[row.id].cells[1].combo = this.comboGuardias;
+          this.rowGroups.find(el => el.id == row.id).cells[1].combo = this.comboGuardias;
         }
       );
   }
@@ -365,9 +401,18 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
           console.log(err);
         },
         () => {
-          this.rowGroups[row.id].cells[2].combo = this.comboColegiados;
+          this.rowGroups.find(el => el.id == row.id).cells[2].combo = this.comboColegiados;
         }
       );
+  }
+
+  isNew(row: Row) {
+    return (row.cells[8].value == null || row.cells[8].value == '');
+  }
+
+
+  isSelectableInHistorical(row: Row) {
+    return (row.italic != undefined && row.italic != null && row.italic);
   }
 
   ngOnChanges(changes: SimpleChanges) {

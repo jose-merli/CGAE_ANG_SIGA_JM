@@ -3,6 +3,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Message, SelectItem } from 'primeng/api';
 import { TranslateService } from '../../../../commons/translate/translation.service';
+import { SaltoCompItem } from '../../../../models/guardia/SaltoCompItem';
 import { procesos_guardia } from '../../../../permisos/procesos_guarida';
 import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
@@ -242,7 +243,7 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
       let italic = (element.fechaUso != null || element.fechaAnulacion != null);
       let obj = [];
 
-      if (italic) {
+      if (italic || this.historico) {
 
         obj = [
           { type: 'text', value: element.turno, header: this.cabeceras[0].id, disabled: false },
@@ -253,7 +254,7 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
           { type: 'text', value: element.fecha, header: this.cabeceras[5].id, disabled: false },
           { type: 'text', value: element.motivo, header: this.cabeceras[6].id, disabled: false },
           { type: 'text', value: element.fechaUso, header: this.cabeceras[7].id, disabled: false },
-          { type: 'invisible', value: element.idPersona, header: 'invisible', disabled: false }
+          { type: 'invisible', value: element.idSaltosTurno, header: 'invisible', disabled: false }
         ];
 
       } else {
@@ -266,7 +267,7 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
           { type: 'datePicker', value: element.fecha, header: this.cabeceras[5].id, disabled: false },
           { type: 'textarea', value: element.motivo, header: this.cabeceras[6].id, disabled: false },
           { type: 'text', value: element.fechaUso, header: this.cabeceras[7].id, disabled: false },
-          { type: 'invisible', value: element.idPersona, header: 'invisible', disabled: false }
+          { type: 'invisible', value: element.idSaltosTurno, header: 'invisible', disabled: false }
         ];
       }
 
@@ -372,6 +373,60 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
         this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("general.mensaje.error.bbdd") });
       }
     );
+  }
+
+  guardar(event: Row[]) {
+
+    let arraySaltos: SaltoCompItem[] = [];
+
+    event.forEach(row => {
+      let salto = new SaltoCompItem();
+      row.cells.forEach((cell, index) => {
+        if (index == 0) {
+          salto.idTurno = cell.value;
+        }
+        if (index == 1) {
+          salto.idGuardia = cell.value;
+        }
+        if (index == 2) {
+          salto.idPersona = cell.value;
+        }
+        if (index == 4) {
+          salto.saltoCompensacion = cell.value;
+        }
+        if (index == 5) {
+          salto.fecha = cell.value;
+        }
+        if (index == 6) {
+          salto.motivo = cell.value;
+        }
+        if (index == 8 && cell.value != null && cell.value != '') {
+          salto.idSaltosTurno = cell.value;
+        }
+      });
+      arraySaltos.push(salto);
+    });
+
+    this.sigaServices.post("saltosCompensacionesOficio_guardar", arraySaltos).subscribe(
+      result => {
+
+        const resp = JSON.parse(result.body);
+
+        if (resp.status == 'KO' || (resp.error != undefined && resp.error != null)) {
+          this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("general.mensaje.error.bbdd") });
+        }
+
+        if (resp.status == 'OK') {
+          this.showMessage({ severity: "success", summary: 'Operación realizada con éxito', msg: 'Los registros seleccionados han sido guardados' });
+          this.search(false);
+        }
+
+      },
+      error => {
+        this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("general.mensaje.error.bbdd") });
+      }
+    );
+
   }
 
 }
