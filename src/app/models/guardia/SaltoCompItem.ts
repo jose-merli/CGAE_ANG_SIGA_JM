@@ -1,5 +1,6 @@
 export class SaltoCompItem {
 
+    idPersona;
     idGuardia;
     idTurno;
     turno;
