@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
+import { DesignaItem } from '../../../../../models/sjcs/DesignaItem';
 
 @Component({
   selector: 'app-ficha-designaciones',
@@ -9,7 +10,7 @@ import { Location } from '@angular/common';
 export class FichaDesignacionesComponent implements OnInit {
 
   rutas: string[] = ['SJCS', 'EJGS'];
-
+  campos: any;
   tarjetaFija = {
     nombre: "Información Resumen",
     icono: 'fas fa-clipboard',
@@ -238,6 +239,7 @@ export class FichaDesignacionesComponent implements OnInit {
   ngOnInit() {
 
     let designaItem = JSON.parse(sessionStorage.getItem("designaItemLink"));
+    this.campos = designaItem;
     let camposResumen = [
       {
         "key": "Año/Número",
@@ -272,7 +274,7 @@ export class FichaDesignacionesComponent implements OnInit {
       },
       {
         "key": "Fecha",
-        "value": ""
+        "value": designaItem.fechaAlta
       },
       {
         "key": "Designación Art. 27-28",

@@ -3,8 +3,9 @@ import { OldSigaServices } from '../../../../_services/oldSiga.service';
 import { FiltroDesignacionesComponent } from './filtro-designaciones/filtro-designaciones.component';
 import { Message } from 'primeng/components/common/api';
 import { SigaServices } from '../../../../_services/siga.service';
-import { Location } from '@angular/common';
+import { DatePipe, Location } from '@angular/common';
 import { CommonsService } from '../../../../_services/commons.service';
+import moment = require('moment');
 
 @Component({
   selector: 'app-designaciones',
@@ -26,7 +27,8 @@ export class DesignacionesComponent implements OnInit {
   
   msgs: Message[] = [];
 
-  constructor(public sigaServices: OldSigaServices, public sigaServicesNew: SigaServices, private location: Location,  private commonsService: CommonsService) {
+  constructor(public sigaServices: OldSigaServices, public sigaServicesNew: SigaServices, private location: Location,  private commonsService: CommonsService, 
+    private datePipe: DatePipe) {
     this.url = sigaServices.getOldSigaUrl("designaciones");
   }
 
@@ -56,7 +58,8 @@ export class DesignacionesComponent implements OnInit {
         this.datos.forEach(element => {
          element.ano = 'D' +  element.ano + '/' + element.numero;
         //  element.fechaEstado = new Date(element.fechaEstado);
-        element.fechaEstado = this.transformaFecha(element.fechaEstado);
+        element.fechaEstado = this.formatDate(element.fechaEstado);
+        element.fechaAlta = this.formatDate(element.fechaAlta);
          if(element.art27 == 'V'){
           element.art27 = 'Activo';
          }else if(element.art27 == 'F'){
@@ -103,6 +106,9 @@ export class DesignacionesComponent implements OnInit {
 
     return fecha;
   }
-
+  formatDate(date) {
+    const pattern = 'dd/MM/yyyy';
+    return this.datePipe.transform(date, pattern);
+  }
  
 }
