@@ -19,6 +19,24 @@ export class JustificacionExpressItem {
   designacionHasta: Date;
   anioDesignacion: String;
   numDesignacion: String;
+  codigoDesignacion: String;
+  expedientes: String;
+	cliente: String;
+	art27: String;
+	nig: String;
+	idJuzgado: String;
+	nombreJuzgado: String;
+	idInstitucionJuzgado: number;
+	anioProcedimiento: number;
+	numProcedimiento: String;
+	fechaJustificacion: Date;
+	fechaActuacion: Date;
+	fechaDesignacion: Date;
+	resolucionDesignacion: String;
+	idInstitucion: String;
+	idTurno: String;
+  idPersona: String;
+  idProcedimiento: String;
 
   constructor() { }
 }

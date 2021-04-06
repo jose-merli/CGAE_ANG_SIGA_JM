@@ -63,10 +63,10 @@ export class FiltroDesignacionesComponent implements OnInit {
   comboRoles: any[];
   comboAcreditaciones: any[];
 
-  datosJustificacion: DesignaItem = new DesignaItem();
+  datosJustificacion: JustificacionExpressItem = new JustificacionExpressItem();
 
   @Output() showTablaJustificacion = new EventEmitter<boolean>();
-   @Output() showTablaDesigna = new EventEmitter<boolean>();
+  @Output() showTablaDesigna = new EventEmitter<boolean>();
 
   constructor(private translateService: TranslateService, private sigaServices: SigaServices,  private location: Location) { }
 
@@ -444,13 +444,15 @@ getComboCalidad() {
 
         // this.filtroJustificacion.muestraPendiente=this.checkMostrarPendientes;
 
+        //QUITAR ESTA LINEA CUANDO FINALICE LAS PRUEBAS
+        this.filtroJustificacion.nColegiado=undefined;
+
         this.sigaServices.post("justificacionExpres_busqueda", this.filtroJustificacion).subscribe(
           data => {
             this.progressSpinner=false;
-            
 
             if(data!=undefined && data!=null){
-              this.datosJustificacion = JSON.parse(data.body).DesignaItem;
+              this.datosJustificacion = JSON.parse(data.body).JustificacionExpressItem;
             }
 
             this.showTablaJustificacion.emit(true);
