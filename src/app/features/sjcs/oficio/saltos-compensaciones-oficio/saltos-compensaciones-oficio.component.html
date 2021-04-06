@@ -9,7 +9,7 @@
       <i class="fa fa-angle-right"></i>{{'menu.justiciaGratuita.saltosYCompensaciones'|translate}}
   </div>
 
-  <app-filtros-saltos-compensaciones-oficio [permisoEscritura]="permisoEscritura" (isBuscar)="isBuscar($event)">
+  <app-filtros-saltos-compensaciones-oficio (isBuscar)="isBuscar($event)" [isNewFromOtherPage]="isNewFromOtherPage">
   </app-filtros-saltos-compensaciones-oficio>
 
 </div>

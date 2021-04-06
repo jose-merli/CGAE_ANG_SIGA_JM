@@ -28,7 +28,7 @@ export class TarjetaColaOficio implements OnInit {
   openFicha: boolean = false;
   textSelected: String = "{label}";
   @Input() openColaOficio;
-  
+
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
 
@@ -94,8 +94,8 @@ export class TarjetaColaOficio implements OnInit {
     private sigaServices: SigaServices, private translateService: TranslateService, private upperCasePipe: UpperCasePipe,
     private persistenceService: PersistenceService, private commonsService: CommonsService, private confirmationService: ConfirmationService,
     private router: Router) {
-      
-     }
+
+  }
 
   ngOnChanges(changes: SimpleChanges) {
     this.getCols();
@@ -242,8 +242,8 @@ export class TarjetaColaOficio implements OnInit {
     this.sigaServices.post("turnos_updateUltimo", this.body).subscribe(
       data => {
 
-        var ultimaPosicion = this.datos[this.datos.length-1];
-        this.datos[this.datos.length-1] = this.selectedDatos[0];
+        var ultimaPosicion = this.datos[this.datos.length - 1];
+        this.datos[this.datos.length - 1] = this.selectedDatos[0];
         this.selectedDatos[0] = ultimaPosicion;
         this.nuevo = false;
         this.selectedDatos = [];
@@ -615,8 +615,8 @@ export class TarjetaColaOficio implements OnInit {
     });
   }
 
-  existenDatos(){
-    if(this.datos != undefined)    return this.datos.length > 0;
+  existenDatos() {
+    if (this.datos != undefined) return this.datos.length > 0;
     else return false;
   }
   getCols() {
@@ -764,11 +764,21 @@ export class TarjetaColaOficio implements OnInit {
     // dato.overlayVisible = true;
   }
 
-  saltoCompensacion(){
-      this.progressSpinner = true;
-      this.persistenceService.setDatos(this.selectedDatos[0]);
-      this.router.navigate(["/saltosYCompensaciones"], { queryParams: { idturno: this.selectedDatos[0].idturno , 'numerocolegiado': this.selectedDatos[0].numerocolegiado } });
-  } 
+  saltoCompensacion() {
+    this.progressSpinner = true;
+    this.persistenceService.setDatos(this.selectedDatos[0]);
+    this.router.navigate(["/saltosYCompensaciones"],
+      {
+        queryParams:
+        {
+          idpersona: this.selectedDatos[0].idpersona,
+          idturno: this.selectedDatos[0].idturno,
+          nombreTurno: this.turnosItem.nombre,
+          numerocolegiado: this.selectedDatos[0].numerocolegiado,
+          letrado: `${this.selectedDatos[0].alfabeticoapellidos}, ${this.selectedDatos[0].nombrepersona}`
+        }
+      });
+  }
 
   onHideTarjeta() {
     this.showTarjeta = !this.showTarjeta;

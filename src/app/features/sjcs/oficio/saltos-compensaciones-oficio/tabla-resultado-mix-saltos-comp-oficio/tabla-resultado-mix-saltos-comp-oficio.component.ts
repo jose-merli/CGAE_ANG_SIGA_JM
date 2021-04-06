@@ -37,9 +37,9 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
 
   @ViewChild("tablaFoco") tablaFoco: ElementRef;
   @ViewChild('table') table: ElementRef;
+  @ViewChild('footer') footer: ElementRef;
 
   msgs: Message[] = [];
-  cabecerasMultiselect = [];
   searchText = [];
   numCabeceras = 0;
   numColumnas = 0;
@@ -52,8 +52,6 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
   multiselectLabels = [];
   cell = [];
   textFilter: string = "Seleccionar";
-  textSelected: String = "{0} guardias seleccionadas";
-  comboGuardias = [];
   comboColegiados = [];
   progressSpinner: boolean = false;
   isDisabled: boolean = true;
@@ -71,33 +69,15 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
   }
 
   ngOnInit() {
-
-    let values = [];
-    let labels = [];
-    let arrayOfSelected = [];
-    this.rowGroups.forEach((row, i) => {
-      values.push(row.cells[6].value);
-    });
-
-    values.forEach((v, i) => {
-      let selecteCombo = { label: '', value: '' }
-      selecteCombo.label = labels[i];
-      selecteCombo.value = v;
-      arrayOfSelected[i] = selecteCombo;
-      this.multiselectValue[i] = arrayOfSelected[i];
-    });
-    this.multiselectLabels = labels;
     this.totalRegistros = this.rowGroups.length;
     this.numCabeceras = this.cabeceras.length;
     this.numColumnas = this.numCabeceras;
-    this.cabeceras.forEach(cab => {
-      this.cabecerasMultiselect.push(cab.name);
-    });
   }
 
   selectRow(rowId, cells) {
 
-    if (cells[8].value != null && cells[8].value != '') {
+    // comprobamos si existe idSaltosTurno para no permitir que se seleccione un registro nuevo
+    if (cells[7].value != null && cells[7].value != '') {
       if (this.selectedArray.includes(rowId)) {
         const i = this.selectedArray.indexOf(rowId);
         this.selectedArray.splice(i, 1);
@@ -212,7 +192,6 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
     let cell6: Cell = new Cell();
     let cell7: Cell = new Cell();
     let cell8: Cell = new Cell();
-    let cell9: Cell = new Cell();
 
     cell1.type = 'select';
     cell1.combo = this.comboTurnos;
@@ -224,37 +203,32 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
     cell2.disabled = true;
     cell2.header = this.cabeceras[1].id;
 
-    cell3.type = 'select';
+    cell3.type = 'text';
     cell3.value = '';
-    cell3.disabled = true;
     cell3.header = this.cabeceras[2].id;
 
-    cell4.type = 'text';
+    cell4.type = 'select';
+    cell4.combo = this.comboTipos;
     cell4.value = '';
     cell4.header = this.cabeceras[3].id;
 
-    cell5.type = 'select';
-    cell5.combo = this.comboTipos;
-    cell5.value = '';
+    cell5.type = 'datePicker';
+    cell5.value = this.datepipe.transform(new Date(), 'dd/MM/yyyy');
     cell5.header = this.cabeceras[4].id;
 
-    cell6.type = 'datePicker';
-    cell6.value = this.datepipe.transform(new Date(), 'dd/MM/yyyy');
+    cell6.type = 'textarea';
+    cell6.value = '';
     cell6.header = this.cabeceras[5].id;
 
-    cell7.type = 'textarea';
+    cell7.type = 'text';
     cell7.value = '';
     cell7.header = this.cabeceras[6].id;
 
-    cell8.type = 'text';
+    cell8.type = 'invisible';
     cell8.value = '';
-    cell8.header = this.cabeceras[7].id;
+    cell8.header = 'invisible';
 
-    cell9.type = 'invisible';
-    cell9.value = '';
-    cell9.header = 'invisible';
-
-    row.cells = [cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8, cell9];
+    row.cells = [cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8];
     row.id = this.totalRegistros;
     this.rowGroups.unshift(row);
     this.rowGroupsAux = this.rowGroups;
@@ -273,8 +247,7 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
         row.cells[2].value == null || row.cells[2].value.trim() == '' ||
         row.cells[3].value == null || row.cells[3].value.trim() == '' ||
         row.cells[4].value == null || row.cells[4].value.trim() == '' ||
-        row.cells[5].value == null || row.cells[5].value.trim() == '' ||
-        row.cells[6].value == null || row.cells[6].value.trim() == ''
+        row.cells[5].value == null || row.cells[5].value.trim() == ''
       ) {
         error = true;
       }
@@ -284,11 +257,16 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
       this.showMsg({ severity: 'error', summary: 'Error. Existen campos vacíos en la tabla.', detail: '' });
     } else {
       this.saveEvent.emit(this.rowGroups);
+      this.selectedArray = [];
     }
   }
 
   delete() {
-    this.deleteEvent.emit(this.selectedArray);
+    if (this.selectedArray != null && this.selectedArray.length > 0) {
+      this.deleteEvent.emit(this.selectedArray);
+      this.selectedArray = [];
+    }
+
   }
 
   toogleHistorico(valor: boolean) {
@@ -302,7 +280,7 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
 
     if (event) {
       this.rowGroups.forEach(row => {
-        if (row.cells[8].value != null && row.cells[8].value != '') {
+        if (row.cells[7].value != null && row.cells[7].value != '') {
 
           if ((this.historico && this.rowGroups[row.id].italic) || (!this.historico)) {
             this.selectedArray.push(row.id);
@@ -315,6 +293,7 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
   }
 
   restablecer() {
+    this.selectedArray = [];
     this.progressSpinner = true;
     this.rowGroups = [];
     this.rowGroups = JSON.parse(sessionStorage.getItem("rowGroupsInitSaltCompOficio"));
@@ -329,6 +308,7 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
   anular() {
     if (this.selectedArray != null && this.selectedArray.length > 0) {
       this.anularEvent.emit(this.selectedArray);
+      this.selectedArray = [];
     }
   }
 
@@ -346,41 +326,14 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
       } else {
         row.cells[1].value = '';
         row.cells[1].disabled = false;
+        this.getComboColegiados(row);
       }
       row.cells[2].value = '';
-      row.cells[2].disabled = true;
-      row.cells[3].value = '';
-      this.getComboGuardia(cell.value, row);
-    } else if (header == 'guardia') {
-      if (row.cells[1].value != null) {
-        row.cells[2].disabled = false;
-      }
-      row.cells[2].value = '';
-      row.cells[3].value = '';
-      this.getComboColegiados(row);
     } else if (header == 'nColegiado') {
-      row.cells[3].value = '';
-      let letrado = row.cells[2].combo.find(el => el.value == row.cells[2].value).label.split(')')[1].trim();
-      row.cells[3].value = letrado;
+      row.cells[2].value = '';
+      let letrado = row.cells[1].combo.find(el => el.value == row.cells[1].value).label.split(')')[1].trim();
+      row.cells[2].value = letrado;
     }
-  }
-
-  getComboGuardia(idTurno, row) {
-    this.comboGuardias = [];
-    this.sigaServices.getParam(
-      "busquedaGuardia_comboGuardia_Nogrupo", "?idTurno=" + idTurno).subscribe(
-        data => {
-          let comboGuardias = data.combooItems;
-          this.commonsService.arregloTildesCombo(comboGuardias);
-          this.comboGuardias = comboGuardias;
-        },
-        err => {
-          console.log(err);
-        },
-        () => {
-          this.rowGroups.find(el => el.id == row.id).cells[1].combo = this.comboGuardias;
-        }
-      );
   }
 
   getComboColegiados(row: Row) {
@@ -401,18 +354,22 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
           console.log(err);
         },
         () => {
-          this.rowGroups.find(el => el.id == row.id).cells[2].combo = this.comboColegiados;
+          this.rowGroups.find(el => el.id == row.id).cells[1].combo = this.comboColegiados;
         }
       );
   }
 
   isNew(row: Row) {
-    return (row.cells[8].value == null || row.cells[8].value == '');
+    return (row.cells[7].value == null || row.cells[7].value == '');
   }
 
 
   isSelectableInHistorical(row: Row) {
     return (row.italic != undefined && row.italic != null && row.italic);
+  }
+
+  prueba() {
+    this.footer.nativeElement
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -421,7 +378,9 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
       sessionStorage.removeItem("rowGroupsInitSaltCompOficio");
     }
 
-    sessionStorage.setItem("rowGroupsInitSaltCompOficio", JSON.stringify(changes.rowGroups.currentValue));
+    if (changes.rowGroups.currentValue) {
+      sessionStorage.setItem("rowGroupsInitSaltCompOficio", JSON.stringify(changes.rowGroups.currentValue));
+    }
   }
 
 }

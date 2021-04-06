@@ -1,16 +1,14 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Message, SelectItem } from 'primeng/api';
 import { TranslateService } from '../../../../commons/translate/translation.service';
 import { SaltoCompItem } from '../../../../models/guardia/SaltoCompItem';
-import { procesos_guardia } from '../../../../permisos/procesos_guarida';
 import { CommonsService } from '../../../../_services/commons.service';
-import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
 import { FiltrosSaltosCompensacionesOficioComponent } from './filtros-saltos-compensaciones-oficio/filtros-saltos-compensaciones-oficio.component';
 import { TablaResultadoMixSaltosCompOficioComponent } from './tabla-resultado-mix-saltos-comp-oficio/tabla-resultado-mix-saltos-comp-oficio.component';
-import { Row, TablaResultadoMixSaltosCompOficioService } from './tabla-resultado-mix-saltos-comp-oficio/tabla-resultado-mix-saltos-comp-oficio.service';
+import { Cell, Row, TablaResultadoMixSaltosCompOficioService } from './tabla-resultado-mix-saltos-comp-oficio/tabla-resultado-mix-saltos-comp-oficio.service';
 
 @Component({
   selector: 'app-saltos-compensaciones-oficio',
@@ -29,10 +27,6 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
     {
       id: "turno",
       name: "dato.jgr.guardia.saltcomp.turno"
-    },
-    {
-      id: "guardia",
-      name: "dato.jgr.guardia.saltcomp.guardia"
     },
     {
       id: "nColegiado",
@@ -60,7 +54,6 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
     }
   ];
   comboTurnos: SelectItem[];
-  comboGuardias: SelectItem[];
   comboTipos = [
     {
       label: 'Salto',
@@ -74,38 +67,42 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
   datos;
   progressSpinner: boolean = false;
   msgs: Message[] = [];
-  permisoEscritura;
   showResults: boolean = false;
   emptyResults: boolean = false;
   historico: boolean = false;
+  isNewFromOtherPage: boolean = false;
+  isNewFromOtherPageObject: any;
 
   @ViewChild(FiltrosSaltosCompensacionesOficioComponent) filtros: FiltrosSaltosCompensacionesOficioComponent;
   @ViewChild(TablaResultadoMixSaltosCompOficioComponent) tabla: TablaResultadoMixSaltosCompOficioComponent;
 
-  constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
-    private commonsService: CommonsService, private translateService: TranslateService, private router: Router, private datepipe: DatePipe, private trmService: TablaResultadoMixSaltosCompOficioService) { }
+  constructor(
+    private sigaServices: SigaServices,
+    private commonsService: CommonsService,
+    private translateService: TranslateService,
+    private datepipe: DatePipe,
+    private trmService: TablaResultadoMixSaltosCompOficioService,
+    private activatedRoute: ActivatedRoute
+  ) { }
 
   ngOnInit() {
 
-    this.commonsService.checkAcceso(procesos_guardia.saltos_compensaciones)
-      .then(respuesta => {
-
-        this.permisoEscritura = respuesta;
-
-        this.persistenceService.setPermisos(this.permisoEscritura);
-
-        if (this.permisoEscritura == undefined) {
-          sessionStorage.setItem("codError", "403");
-          sessionStorage.setItem(
-            "descError",
-            this.translateService.instant("generico.error.permiso.denegado")
-          );
-          this.router.navigate(["/errorAcceso"]);
-        }
-      }).catch(error => console.error(error));
-
     this.getComboTurno();
 
+    let params = this.activatedRoute.snapshot.queryParams;
+    if (params.idturno) {
+
+      let data = {
+        idpersona: params.idpersona,
+        idturno: params.idturno,
+        nombreTurno: params.nombreTurno,
+        numerocolegiado: params.numerocolegiado,
+        letrado: params.letrado
+      }
+      this.isNewFromOtherPage = true;
+      this.isNewFromOtherPageObject = data;
+      this.search(false);
+    }
   }
 
   getComboTurno() {
@@ -122,15 +119,25 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
   }
 
   isBuscar(event) {
+    this.isNewFromOtherPage = false;
     this.search(event);
   }
 
   searchHistory(event) {
+    this.isNewFromOtherPage = false;
     this.search(event);
   }
 
   search(event) {
+
     let filtros = JSON.parse(sessionStorage.getItem("filtrosAuxSaltosCompOficio"));
+
+    if (this.isNewFromOtherPage) {
+      filtros = {};
+      filtros.idTurno = this.isNewFromOtherPageObject.idturno;
+      filtros.colegiadoGrupo = this.isNewFromOtherPageObject.numerocolegiado;
+    }
+
     filtros.historico = event;
     sessionStorage.setItem("historicoSaltosCompOficio", event);
 
@@ -139,22 +146,6 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
         filtros.idTurno = filtros.idTurno.toString();
       } else {
         filtros.idTurno = "";
-      }
-    }
-
-    if (filtros.fechaHasta != undefined && filtros.fechaHasta != null) {
-      filtros.fechaHasta = this.formatDate(filtros.fechaHasta);
-    }
-
-    if (filtros.fechaDesde != undefined && filtros.fechaDesde != null) {
-      filtros.fechaDesde = this.formatDate(filtros.fechaDesde);
-    }
-
-    if (filtros.idGuardia != undefined && filtros.idGuardia != null) {
-      if (filtros.idGuardia.length > 0) {
-        filtros.idGuardia = filtros.idGuardia.toString();
-      } else {
-        filtros.idGuardia = "";
       }
     }
 
@@ -168,10 +159,10 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
         this.emptyResults = false;
         this.historico = event;
 
-        if (this.datos.length == 0) {
+        if (this.datos.length == 0 && !this.isNewFromOtherPage) {
           this.emptyResults = true;
           this.jsonToRowEmptyResults();
-        } else {
+        } else if (this.datos.length > 0) {
           this.jsonToRow();
         }
 
@@ -190,6 +181,9 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
         this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("general.mensaje.error.bbdd") });
       },
       () => {
+        if (this.isNewFromOtherPage) {
+          this.newSalCompFromOtherPage();
+        }
         setTimeout(() => {
           this.tabla.tablaFoco.nativeElement.scrollIntoView();
         }, 5);
@@ -247,31 +241,27 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
 
         obj = [
           { type: 'text', value: element.turno, header: this.cabeceras[0].id, disabled: false },
-          { type: 'text', value: element.guardia, header: this.cabeceras[1].id, disabled: false },
-          { type: 'text', value: element.nColegiado, header: this.cabeceras[2].id, disabled: false },
-          { type: 'text', value: element.letrado, header: this.cabeceras[3].id, disabled: false },
-          { type: 'text', value: this.comboTipos.find(el => el.value == element.saltoCompensacion).label, header: this.cabeceras[4].id, disabled: false },
-          { type: 'text', value: element.fecha, header: this.cabeceras[5].id, disabled: false },
-          { type: 'text', value: element.motivo, header: this.cabeceras[6].id, disabled: false },
-          { type: 'text', value: element.fechaUso, header: this.cabeceras[7].id, disabled: false },
+          { type: 'text', value: element.nColegiado, header: this.cabeceras[1].id, disabled: false },
+          { type: 'text', value: element.letrado, header: this.cabeceras[2].id, disabled: false },
+          { type: 'text', value: this.comboTipos.find(el => el.value == element.saltoCompensacion).label, header: this.cabeceras[3].id, disabled: false },
+          { type: 'text', value: element.fecha, header: this.cabeceras[4].id, disabled: false },
+          { type: 'text', value: element.motivo, header: this.cabeceras[5].id, disabled: false },
+          { type: 'text', value: element.fechaUso, header: this.cabeceras[6].id, disabled: false },
           { type: 'invisible', value: element.idSaltosTurno, header: 'invisible', disabled: false }
         ];
 
       } else {
         obj = [
           { type: 'select', combo: this.comboTurnos, value: element.idTurno, header: this.cabeceras[0].id, disabled: false },
-          { type: 'select', combo: element.comboGuardia, value: element.idGuardia, header: this.cabeceras[1].id, disabled: false },
-          { type: 'select', combo: element.comboColegiados, value: element.idPersona, header: this.cabeceras[2].id, disabled: false },
-          { type: 'text', value: element.letrado, header: this.cabeceras[3].id, disabled: false },
-          { type: 'select', combo: this.comboTipos, value: element.saltoCompensacion, header: this.cabeceras[4].id, disabled: false },
-          { type: 'datePicker', value: element.fecha, header: this.cabeceras[5].id, disabled: false },
-          { type: 'textarea', value: element.motivo, header: this.cabeceras[6].id, disabled: false },
-          { type: 'text', value: element.fechaUso, header: this.cabeceras[7].id, disabled: false },
+          { type: 'select', combo: element.comboColegiados, value: element.idPersona, header: this.cabeceras[1].id, disabled: false },
+          { type: 'text', value: element.letrado, header: this.cabeceras[2].id, disabled: false },
+          { type: 'select', combo: this.comboTipos, value: element.saltoCompensacion, header: this.cabeceras[3].id, disabled: false },
+          { type: 'datePicker', value: element.fecha, header: this.cabeceras[4].id, disabled: false },
+          { type: 'textarea', value: element.motivo, header: this.cabeceras[5].id, disabled: false },
+          { type: 'text', value: element.fechaUso, header: this.cabeceras[6].id, disabled: false },
           { type: 'invisible', value: element.idSaltosTurno, header: 'invisible', disabled: false }
         ];
       }
-
-
 
       let superObj = {
         id: index,
@@ -337,6 +327,7 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
 
         if (resp.status == 'OK') {
           this.showMessage({ severity: "success", summary: 'Operación realizada con éxito', msg: 'Los registros seleccionados han sido anulados' });
+          this.isNewFromOtherPage = false;
           this.search(false);
         }
 
@@ -365,6 +356,7 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
 
         if (resp.status == 'OK') {
           this.showMessage({ severity: "success", summary: 'Operación realizada con éxito', msg: 'Los registros seleccionados han sido eliminados' });
+          this.isNewFromOtherPage = false;
           this.search(false);
         }
 
@@ -403,6 +395,9 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
         if (index == 8 && cell.value != null && cell.value != '') {
           salto.idSaltosTurno = cell.value;
         }
+        if (index == 9 && cell.value != null && cell.value != '') {
+          salto.idPersona = cell.value;
+        }
       });
       arraySaltos.push(salto);
     });
@@ -418,6 +413,7 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
 
         if (resp.status == 'OK') {
           this.showMessage({ severity: "success", summary: 'Operación realizada con éxito', msg: 'Los registros seleccionados han sido guardados' });
+          this.isNewFromOtherPage = false;
           this.search(false);
         }
 
@@ -429,4 +425,74 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
 
   }
 
+  newSalCompFromOtherPage() {
+
+    let data = this.isNewFromOtherPageObject;
+
+    let row: Row = new Row();
+
+    let cell1: Cell = new Cell();
+    let cell2: Cell = new Cell();
+    let cell3: Cell = new Cell();
+    let cell4: Cell = new Cell();
+    let cell5: Cell = new Cell();
+    let cell6: Cell = new Cell();
+    let cell7: Cell = new Cell();
+    let cell8: Cell = new Cell();
+
+    cell1.type = 'text';
+    cell1.value = data.nombreTurno;
+    cell1.header = this.cabeceras[0].id;
+    cell1.disabled = false;
+
+    cell2.type = 'text';
+    cell2.value = data.numerocolegiado;
+    cell2.header = this.cabeceras[1].id;
+    cell2.disabled = false;
+
+    cell3.type = 'text';
+    cell3.value = data.letrado;
+    cell3.header = this.cabeceras[2].id;
+    cell3.disabled = false;
+
+    cell4.type = 'select';
+    cell4.combo = this.comboTipos;
+    cell4.value = '';
+    cell4.header = this.cabeceras[3].id;
+    cell4.disabled = false;
+
+    cell5.type = 'datePicker';
+    cell5.value = this.datepipe.transform(new Date(), 'dd/MM/yyyy');
+    cell5.header = this.cabeceras[4].id;
+    cell5.disabled = false;
+
+    cell6.type = 'textarea';
+    cell6.value = '';
+    cell6.header = this.cabeceras[5].id;
+    cell6.disabled = false;
+
+    cell7.type = 'text';
+    cell7.value = '';
+    cell7.header = this.cabeceras[6].id;
+    cell7.disabled = false;
+
+    cell8.type = 'invisible';
+    cell8.value = '';
+    cell8.header = 'invisible';
+    cell8.disabled = false;
+
+    row.cells = [cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8];
+    row.id = this.totalRegistros == 0 ? 0 : this.totalRegistros;
+    row.italic = false;
+
+    if (this.rowGroups != undefined && this.rowGroups != null) {
+      this.rowGroups.unshift(row);
+    } else {
+      this.rowGroups = [row];
+    }
+    this.rowGroupsAux = this.rowGroups;
+    this.totalRegistros = this.rowGroups.length;
+
+    this.showResults = true;
+  }
 }

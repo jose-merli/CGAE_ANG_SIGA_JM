@@ -1,8 +1,9 @@
+import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { ColegiadoItem } from '../../../../../models/ColegiadoItem';
 import { SaltoCompItem } from '../../../../../models/guardia/SaltoCompItem';
 import { CommonsService } from '../../../../../_services/commons.service';
-import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 
 export enum KEY_CODE {
@@ -31,26 +32,27 @@ export class FiltrosSaltosCompensacionesOficioComponent implements OnInit {
   comboGuardias = [];
   comboTurnos = [];
   textFilter: string = "Seleccionar";
-  textSelected: String = "{0} etiquetas seleccionadas";
+  textSelected: String = "{0} turnos seleccionados";
 
-  @Input() permisoEscritura;
+  @Input() isNewFromOtherPage: boolean = false;
 
   @Output() isBuscar = new EventEmitter<boolean>();
 
-  constructor(private sigaServices: SigaServices,
-    private persistenceService: PersistenceService,
-    private commonServices: CommonsService) { }
+  constructor(
+    private sigaServices: SigaServices,
+    private commonServices: CommonsService,
+    private datepipe: DatePipe,
+    private activatedRoute: ActivatedRoute
+  ) { }
 
   ngOnInit() {
 
-    if (this.persistenceService.getPermisos() != undefined) {
-      this.permisoEscritura = this.persistenceService.getPermisos();
-    }
-
     this.getComboTurno();
 
-    if (sessionStorage.getItem("filtrosSaltosCompOficio")) {
+    if (sessionStorage.getItem("filtrosSaltosCompOficio") && !this.isNewFromOtherPage) {
+
       this.filtros = JSON.parse(sessionStorage.getItem("filtrosSaltosCompOficio"));
+
       if (sessionStorage.getItem("historicoSaltosCompOficio")) {
         this.historico = "true" == sessionStorage.getItem("historicoSaltosCompOficio");
       }
@@ -121,8 +123,29 @@ export class FiltrosSaltosCompensacionesOficioComponent implements OnInit {
     this.showColegiado = !this.showColegiado;
   }
 
+  formatDate(date) {
+
+    const pattern = 'dd/MM/yyyy';
+
+    if (typeof date === 'string') {
+      return date;
+    }
+
+    return this.datepipe.transform(date, pattern);
+
+  }
+
   search() {
     this.filtros.colegiadoGrupo = this.usuarioBusquedaExpress.numColegiado;
+
+    if (this.filtros.fechaDesde != undefined && this.filtros.fechaDesde != null && this.filtros.fechaDesde != '') {
+      this.filtros.fechaDesde = this.formatDate(this.filtros.fechaDesde);
+    }
+
+    if (this.filtros.fechaHasta != undefined && this.filtros.fechaHasta != null && this.filtros.fechaHasta != '') {
+      this.filtros.fechaHasta = this.formatDate(this.filtros.fechaHasta);
+    }
+
     sessionStorage.setItem("filtrosSaltosCompOficio", JSON.stringify(this.filtros));
     sessionStorage.setItem("filtrosAuxSaltosCompOficio", JSON.stringify(this.filtros));
     this.filtroAux = JSON.parse(sessionStorage.getItem("filtrosAuxSaltosCompOficio"));
@@ -136,35 +159,18 @@ export class FiltrosSaltosCompensacionesOficioComponent implements OnInit {
     this.filtros.fechaHasta = event;
   }
 
-  getFechaHasta(fechaInputDesde, fechainputHasta) {
-    if (
-      fechaInputDesde != undefined &&
-      fechainputHasta != undefined
-    ) {
-      let one_day = 1000 * 60 * 60 * 24;
-
-      // convertir fechas en milisegundos
-      let fechaDesde = new Date(fechaInputDesde).getTime();
-      let fechaHasta = new Date(fechainputHasta).getTime();
-      let msRangoFechas = fechaHasta - fechaDesde;
-
-      if (msRangoFechas < 0) fechainputHasta = undefined;
+  maxDate() {
+    if (this.filtros.fechaHasta == null || this.filtros.fechaHasta == undefined) {
+      return undefined;
     }
-    return fechainputHasta;
+    return new Date(this.filtros.fechaHasta);
   }
-  getFechaDesde(fechaInputesde, fechaInputHasta) {
-    if (
-      fechaInputesde != undefined &&
-      fechaInputHasta != undefined
-    ) {
-      // convertir fechas en milisegundos
-      let fechaDesde = new Date(fechaInputesde).getTime();
-      let fechaHasta = new Date(fechaInputHasta).getTime();
-      let msRangoFechas = fechaHasta - fechaDesde;
 
-      if (msRangoFechas < 0) fechaInputesde = undefined;
+  minDate() {
+    if (this.filtros.fechaDesde == null || this.filtros.fechaDesde == undefined) {
+      return undefined;
     }
-    return fechaInputesde;
+    return new Date(this.filtros.fechaDesde);
   }
 
   clearFilters() {

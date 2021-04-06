@@ -17,7 +17,6 @@ export class Cell {
 export class Combo {
   label: string;
   value: string;
-  disabled: boolean;
 }
 
 @Injectable()
