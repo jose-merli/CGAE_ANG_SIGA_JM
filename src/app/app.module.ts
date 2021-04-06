@@ -386,6 +386,8 @@ import { FiltroBuscadorColegiadosComponent } from './commons/buscador-colegiados
 import { TablaBuscadorColegiadosComponent } from './commons/buscador-colegiados/tabla-buscador-colegiados/tabla-buscador-colegiados.component';
 import { MigasDePanComponent } from './commons/migas-de-pan/migas-de-pan.component';
 import { FormularioBusquedaComponent } from './features/sjcs/oficio/cargas-masivas-oficio/formulario-busqueda/formulario-busqueda.component';
+import { FormularioSubidaComponent } from './features/sjcs/oficio/cargas-masivas-oficio/formulario-subida/formulario-subida.component';
+import{ ListaArchivosComponent } from './features/sjcs/oficio/cargas-masivas-oficio/lista-archivos/lista-archivos.component';
 
 @NgModule({
 	declarations: [
@@ -703,7 +705,9 @@ import { FormularioBusquedaComponent } from './features/sjcs/oficio/cargas-masiv
 		TablaResultadoComponent,
 		SelectorComponent,
 		MigasDePanComponent,
-		FormularioBusquedaComponent
+		FormularioBusquedaComponent,
+		FormularioSubidaComponent,
+		ListaArchivosComponent,
 
 	],
 	imports: [

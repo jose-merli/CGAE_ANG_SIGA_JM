@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-lista-archivos',
@@ -7,9 +7,34 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ListaArchivosComponent implements OnInit {
 
-  constructor() { }
+  @Input() datos: any[];
+  @Input() buscar: boolean = false;
+
+  msgs: any[];
+  table;
+  selectedDatos;
+  cols: any = [];
+  rowsPerPage: any = [];
+  numSelected: number = 0;
+  selectedItem: number = 10;
+
+  constructor(
+    private changeDetectorRef: ChangeDetectorRef,) { }
 
   ngOnInit() {
   }
 
+  activarPaginacion() {
+    if (!this.datos || this.datos.length == 0) return false;
+    else return true;
+  }
+
+  onChangeRowsPerPages(event) {
+    this.selectedItem = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.table.reset();
+  }
+  clear() {
+    this.msgs = [];
+  }
 }

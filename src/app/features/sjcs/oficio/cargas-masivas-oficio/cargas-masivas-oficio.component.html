@@ -8,9 +8,9 @@
   </p>
 </div>
 
-<app-formulario-busqueda></app-formulario-busqueda> 
-
-
+<app-formulario-busqueda (tipoEvent)="receiveTipo($event)"></app-formulario-busqueda> 
+<app-formulario-subida *ngIf="tipo!=null" [tipo]="tipo" (datosEvent)="receiveDatos($event)" (buscarEvent)="receiveBuscar($event)"></app-formulario-subida>
+<app-lista-archivos *ngIf="buscar" [datos]="datos" id="tablaFoco"></app-lista-archivos>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">
     <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
