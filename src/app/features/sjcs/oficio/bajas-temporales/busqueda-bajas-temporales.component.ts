@@ -393,6 +393,7 @@ anular(event){
 }
 
 guardar(event) {
+// let listaPrueba: BajasTemporalesItem[]=[];
 let listaPrueba = [];
 let bajaTemporal = new BajasTemporalesItem();
 event.forEach(element => {
@@ -420,12 +421,12 @@ event.forEach(element => {
   if(element.fechaalta != null){
     element.fechaalta=this.transformaFecha(element.fechaalta);
   }
-  if(element.fechaestado != null){
-    element.fechaestado=this.transformaFecha(element.fechaestado);
-  }
-  if(element.fechaestado != null){
-    element.fechaestado=this.transformaFecha(element.fechaestado);
-  }
+  // if(element.fechaestado != null){
+  //   element.fechaestado=this.transformaFecha(element.fechaestado);
+  // }
+  // if(element.fechaestado != null){
+  //   element.fechaestado=this.transformaFecha(element.fechaestado);
+  // }
   if (element.validado == "Denegada") {
     element.validado  = "0";
   }
