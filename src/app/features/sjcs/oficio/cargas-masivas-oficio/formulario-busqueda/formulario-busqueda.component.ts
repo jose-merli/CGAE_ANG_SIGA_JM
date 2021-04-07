@@ -14,11 +14,11 @@ export class FormularioBusquedaComponent implements OnInit {
   msgs: any[];
   progressSpinner: boolean = false;
 
-  cargasMasivas: SelectItem[];
-	cargaMasivaBT: string = this.translateService.instant('oficio.cargasMasivas.bajasTemporales');
-  cargaMasivaIT: string = this.translateService.instant('oficio.cargasMasivas.inscripcionesTurno');
+	cargaMasivaBT: string = "";
+  cargaMasivaIT: string = "";
   selectedTipoCarga: string;
-  
+
+  cargasMasivas : SelectItem[] = [];
 	enableIT: boolean = false;
   enableBT: boolean = false;
   disableGuardia: boolean = true;
@@ -29,7 +29,7 @@ export class FormularioBusquedaComponent implements OnInit {
   turnosSelected: String = null;
   turnos: any[];
   guardiasSelected: String = null;
-  guardias: any[];
+  guardias: any[] ;
 
   @Output() tipoEvent = new EventEmitter<string>();
 
@@ -39,17 +39,21 @@ export class FormularioBusquedaComponent implements OnInit {
   ngOnInit() {
     this.showTipo = true;
 
+    this.cargaMasivaBT = this.translateService.instant('oficio.cargasMasivas.bajasTemporales');
+    this.cargaMasivaIT = this.translateService.instant('oficio.cargasMasivas.inscripcionesTurno');
+   
     //Se asignan las etiquetas constantes con sus valores asociados
     this.cargasMasivas = [
-			{
-				label: this.cargaMasivaIT,
-				value: 'IT'
-			},
-			{
-				label: this.cargaMasivaBT,
-				value: 'BT'
-			},
+      {
+        label: this.cargaMasivaIT,
+        value: 'IT'
+      },
+      {
+        label: this.cargaMasivaBT,
+        value: 'BT'
+      },
     ];
+    
     
     //Se buscan los turnos asociados a ese colegio/institucion
     this.sigaServices.get("inscripciones_comboTurnos").subscribe(
@@ -143,6 +147,9 @@ export class FormularioBusquedaComponent implements OnInit {
 
     //Enviar valor de tipo al componente padre
     this.sendTipo();
+
+    this.turnosSelected = null;
+    this.guardiasSelected = null;
   }
 
   onChangeTurno(){
@@ -164,6 +171,13 @@ export class FormularioBusquedaComponent implements OnInit {
             if(guardiaCombo.value){}
           });
         }
+        //Comprobamos seleccionados para boton y desplegable
+        if(this.guardias != undefined && this.guardias.length >0) {
+          if(this.guardias!=[]) this.disableGuardia=false;
+        }
+        else{
+          this.disableGuardia=true;
+    }
       },
       err => {
         console.log(err);
@@ -177,13 +191,7 @@ export class FormularioBusquedaComponent implements OnInit {
       }
     );
 
-    //Comprobamos seleccionados para boton y desplegable
-    if(this.turnosSelected.length >0) {
-      this.disableGuardia=false;
-    }
-    else{
-      this.disableGuardia=true;
-    }
+    
   }
   abreCierraTipo(){
     this.showTipo=!this.showTipo;

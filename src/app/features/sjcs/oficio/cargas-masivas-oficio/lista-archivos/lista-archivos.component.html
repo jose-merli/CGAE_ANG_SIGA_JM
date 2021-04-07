@@ -4,7 +4,7 @@
   <div class="card-body p-0">
     <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" pageLinks="4" [responsive]="true" #table
       class="tabla-listado" [value]="datos" [sortOrder]="sortO" (onRowSelect)="disabledButtons(selectedDatos)"
-      selectionMode="single" [paginator]="activarPaginacion()" [(selection)]="selectedDatos" paginatorPosition="both"
+      selectionMode="multiple" [paginator]="activarPaginacion()" [(selection)]="selectedDatos" paginatorPosition="both"
       [rows]="selectedItem">
       <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate"
         filterPlaceholder="{{'general.boton.search' | translate}}" [filter]="true" filterMatchMode="contains">
@@ -19,7 +19,7 @@
             {{table.totalRecords}}</label>
           <label
             class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}:
-            {{numSelected}}</label>
+            {{selectedDatos.length}}</label>
           <label>{{ "general.message.mostrar" | translate}}</label>
           <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
           </p-dropdown>
@@ -28,11 +28,15 @@
       </ng-template>
 
       <p-footer>
-        <div *ngIf="selectedDatos != ''" class="text-right main-button">
+        <div class="text-right main-button">
           <button [disabled]="downloadFileDisable" (click)="downloadLogFile(selectedDatos)" pButton type="button"
-            icon="fa fa-download" iconPos="left" label="{{'general.boton.descargar.informe' | translate}}"></button>
+            icon="fa fa-download" iconPos="left" label="{{'general.boton.download' | translate}}"></button>
         </div>
       </p-footer>
     </p-dataTable>
   </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
 </div>

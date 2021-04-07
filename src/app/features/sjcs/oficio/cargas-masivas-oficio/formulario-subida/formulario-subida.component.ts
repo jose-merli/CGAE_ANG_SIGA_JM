@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { CargaMasivaItem } from "../../../../../models/CargaMasivaItem";
 import { DatePipe } from "../../../../../../../node_modules/@angular/common";
 import { SigaServices } from "../../../../../_services/siga.service";
@@ -23,6 +23,7 @@ export class FormularioSubidaComponent implements OnInit {
   file: File = undefined;
   msgs: any;
   datos: any[];
+  selectedDatos;
 
   @Output() datosEvent = new EventEmitter<any[]>();
   @Output() buscarEvent = new EventEmitter<boolean>();
@@ -34,6 +35,14 @@ export class FormularioSubidaComponent implements OnInit {
 
   ngOnInit() {
   }
+
+  ngOnChanges(changes: SimpleChanges) {
+        
+    this.file = undefined;
+    this.fechaSolicitud = undefined;
+    this.pUploadFile.clear();
+    
+}
 
   abreCierraSubidaFichero(){
     this.showSubidaFichero=!this.showSubidaFichero;
@@ -83,9 +92,7 @@ export class FormularioSubidaComponent implements OnInit {
         this.fechaSolicitud,
         "dd/MM/yyyy"
       );
-    } else {
-      body.fechaCarga = null;
-    }
+    
 
     this.sigaServices
       .postPaginado(
@@ -95,13 +102,14 @@ export class FormularioSubidaComponent implements OnInit {
       )
       .subscribe(
         data => {
-          this.sendBuscar();
           this.progressSpinner = false;
           let etiquetasSearch = JSON.parse(data["body"]);
           this.datos = etiquetasSearch.cargaMasivaItem;
 
           //this.table.reset();
           //this.numSelected = this.selectedDatos.length;
+          this.sendDatos();
+          this.sendBuscar();
         },
         err => {
           console.log(err);
@@ -114,7 +122,9 @@ export class FormularioSubidaComponent implements OnInit {
           }, 5);
         }
       );
-      
+    } else {
+      body.fechaCarga = null;
+    }
   }
 
   uploadFile() {
@@ -123,7 +133,7 @@ export class FormularioSubidaComponent implements OnInit {
     if (this.file != undefined) {
       if(this.tipo=="IT"){
         this.sigaServices
-          .post("cargasMasivasOficio_uploadFileIT", this.file)
+          .postSendContent("cargasMasivasOficio_uploadFileIT", this.file)
           .subscribe(
             data => {
               this.file = undefined;
@@ -151,7 +161,7 @@ export class FormularioSubidaComponent implements OnInit {
       }
       else{
         this.sigaServices
-          .post("cargasMasivasOficio_uploadFileBT", this.file)
+          .postSendContent("cargasMasivasOficio_uploadFileBT", this.file)
           .subscribe(
             data => {
               this.file = undefined;
@@ -210,7 +220,7 @@ export class FormularioSubidaComponent implements OnInit {
     });
   }
 
-  sendTipo() {
+  sendDatos() {
     this.datosEvent.emit(this.datos);
   }
 
