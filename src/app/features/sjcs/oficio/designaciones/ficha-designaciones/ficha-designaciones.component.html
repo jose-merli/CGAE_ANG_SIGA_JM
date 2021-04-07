@@ -6,7 +6,7 @@
 
         <div class="tarjetaFija" *ngIf="tarjetaFija !== null">
 
-            <div class="card">
+            <div class="card" style="z-index: 2;">
                 <div class="card-body p-0">
                     <mat-accordion class="example-headers-align" multi>
                         <mat-expansion-panel [disabled]="true">
@@ -43,7 +43,7 @@
                                 </mat-expansion-panel-header>
                                 <ng-template matExpansionPanelContent>
                                     <div *ngIf="tarj.nombre == 'Datos Generales'">
-                                        <app-detalle-tarjeta-datos-generales-ficha-designacion-oficio>
+                                        <app-detalle-tarjeta-datos-generales-ficha-designacion-oficio [campos]="campos">
                                         </app-detalle-tarjeta-datos-generales-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Detalle Designación'">
@@ -69,7 +69,9 @@
                 </div>
             </div>
         </div>
-
+        <div class="mt-3 text-right main-button ">
+            <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
+        </div>
         <div id="down"></div>
     </div>
 

@@ -1,5 +1,6 @@
 export class SaltoCompItem {
 
+    idPersona;
     idGuardia;
     idTurno;
     turno;
@@ -15,5 +16,8 @@ export class SaltoCompItem {
     fechaUso;
     grupo;
     historico: boolean;
+    letradosGrupo;
+    comboGuardia;
+    comboColegiados;
 
 }

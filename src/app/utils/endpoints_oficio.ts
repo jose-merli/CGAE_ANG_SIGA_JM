@@ -48,7 +48,8 @@ export let endpoints_oficio: any = {
 
     bajasTemporales_comboEstado:"oficio/bajasTemporales/comboEstado",
     bajasTemporales_busquedaBajasTemporales:"oficio/bajasTemporales/busquedaBajasTemporales",
-    bajasTemporales_updateBajaTemporal:"oficio/bajasTemporales/updateEstado",
+    bajasTemporales_updateBajaTemporal:"oficio/bajasTemporales/updateBaja",
+    bajasTemporales_saveBajaTemporal:"oficio/bajasTemporales/saveBajaTemporal",
     bajasTemporales_deleteBajaTemporal:"oficio/bajasTemporales/deleteBajaTemporal",
     //FIN DE BAJAS TEMPORALES
 
@@ -65,5 +66,13 @@ export let endpoints_oficio: any = {
     designas_tipoDesignas:"oficio/designas/comboTipoDesigna",
     combo_comboJuzgadoDesignaciones: "combo/comboJuzgadoDesignaciones",
     combo_comboModulosDesignaciones: "oficio/comboModulo",
-    combo_comboProcedimientosDesignaciones: "oficio/comboProcedimientos"
+    combo_comboProcedimientosDesignaciones: "oficio/comboProcedimientos",
+    designaciones_busqueda: "oficio/busquedaDesignaciones",
+
+    //SALTOS Y COMPENSACIONES
+    saltosCompensacionesOficio_buscar: "oficio/saltosCompensaciones/buscarSaltosOCompensaciones",
+    saltosCompensacionesOficio_guardar: "oficio/saltosCompensaciones/guardarSaltosCompensaciones",
+    saltosCompensacionesOficio_anular: "oficio/saltosCompensaciones/anularSaltosCompensaciones",
+    saltosCompensacionesOficio_borrar: "oficio/saltosCompensaciones/borrarSaltosCompensaciones",
+    saltosCompensacionesOficio_comboColegiados: "oficio/saltosCompensaciones/searchLetradosTurno",
 }

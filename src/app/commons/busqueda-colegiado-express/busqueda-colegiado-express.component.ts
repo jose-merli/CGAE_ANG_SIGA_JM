@@ -27,6 +27,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
   });
 
   msgs;
+  @Output() colegiado = new EventEmitter<any>();
 
   constructor(private router: Router, private sigaServices: SigaServices, private translateService: TranslateService, private PpersistenceService: PersistenceService) { }
 
@@ -50,6 +51,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
 
   clearForm() {
     this.colegiadoForm.reset();
+    this.changeValue();
   }
 
   isBuscar(form) {
@@ -122,5 +124,14 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  changeValue() {
+    const colegiado = {
+      nColegiado: this.colegiadoForm.get('numColegiado').value,
+      nombreAp: this.colegiadoForm.get('nombreAp').value
+    }
+
+    this.colegiado.emit(colegiado);
   }
 }

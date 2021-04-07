@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BuscadorJustificacionExpresComponent } from './buscador-justificacion-expres.component';
+import { FiltroDesignacionesComponent } from './filtro-designaciones.component';
 
 describe('BuscadorJustificacionExpresComponent', () => {
-  let component: BuscadorJustificacionExpresComponent;
-  let fixture: ComponentFixture<BuscadorJustificacionExpresComponent>;
+  let component: FiltroDesignacionesComponent;
+  let fixture: ComponentFixture<FiltroDesignacionesComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ BuscadorJustificacionExpresComponent ]
+      declarations: [ FiltroDesignacionesComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(BuscadorJustificacionExpresComponent);
+    fixture = TestBed.createComponent(FiltroDesignacionesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

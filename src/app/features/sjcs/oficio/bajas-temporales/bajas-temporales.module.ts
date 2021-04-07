@@ -28,8 +28,11 @@ import { BusquedaColegiadoExpressModule } from '../../../../commons/busqueda-col
 import {TreeTableModule} from 'primeng/treetable';
 import {TreeNode} from 'primeng/api';
 import { BajasTemporalesComponent } from './busqueda-bajas-temporales.component';
-import { TablaBajasTemporalesComponent } from './gestion-bajas-temporales/gestion-bajas-temporales.component';
+import { MatSortModule } from '@angular/material/sort';
 import { FiltrosBajasTemporales } from './filtros-inscripciones/filtros-bajas-temporales.component';
+import { GestionBajasTemporalesComponent } from './gestion-bajas-temporales/gestion-bajas-temporales.component';
+import { Paginador2Module } from './paginador2/paginador2.module';
+import { GestionBajasTemporalesService } from './gestion-bajas-temporales/gestion-bajas-temporales.service';
 
 @NgModule({
   imports: [
@@ -55,11 +58,14 @@ import { FiltrosBajasTemporales } from './filtros-inscripciones/filtros-bajas-te
     FechaModule,
     BusquedaColegiadoExpressModule,
     TreeTableModule,
+    Paginador2Module,
+    MatSortModule
+    
   ],
   declarations: [
     BajasTemporalesComponent,
     FiltrosBajasTemporales,
-    TablaBajasTemporalesComponent
+    GestionBajasTemporalesComponent
   ],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
@@ -74,7 +80,7 @@ import { FiltrosBajasTemporales } from './filtros-inscripciones/filtros-bajas-te
     MessageService,
     AuthenticationService,
     ConfirmationService,
-
+    GestionBajasTemporalesService,
     AuthGuard,
     {
       provide: APP_BASE_HREF,

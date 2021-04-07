@@ -194,7 +194,7 @@ import { MantenimientoJuzgadosComponent } from './features/sjcs/maestros/manteni
 import { MaestroPJComponent } from './features/sjcs/maestros/maestro-pj/maestro-pj.component';
 import { DestinatariosRetencionesComponent } from './features/sjcs/maestros/destinatarios-retenciones/destinatarios-retenciones.component';
 import { SolicitudesTurnosGuardiasComponent } from './features/sjcs/oficio/solicitudesTurnosGuardias/solicitudesTurnosGuardias.component';
-import { SaltosYCompensacionesComponent } from './features/sjcs/oficio/saltos-compensaciones/saltos-compensaciones.component';
+import { DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-datos-adicionales-ficha-designacion-oficio/detalle-tarjeta-datos-adicionales-ficha-designacion-oficio.component';
 import { GuardiasSolicitudesTurnosComponent } from './features/sjcs/guardia/solicitudes-turnos/solicitudes-turnos.component';
 import { GuardiasIncompatibilidadesComponent } from './features/sjcs/guardia/guardias-incompatibilidades/guardias-incompatibilidades.component';
 import { ProgramacionCalendariosComponent } from './features/sjcs/guardia/programacionCalendarios/programacionCalendarios.component';
@@ -377,7 +377,6 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
-import { FiltrosSaltosYCompensaciones } from './features/sjcs/oficio/saltos-compensaciones/filtros-saltosYcompensaciones/filtros-saltosYcompensaciones.component';
 import { PaginadorComponent } from './commons/paginador/paginador.component';
 import { SelectorComponent } from './commons/selector/selector.component';
 import { TablaResultadoComponent } from './commons/tabla-resultado/tabla-resultado.component';
@@ -386,13 +385,35 @@ import { FiltroBuscadorColegiadosComponent } from './commons/buscador-colegiados
 import { TablaBuscadorColegiadosComponent } from './commons/buscador-colegiados/tabla-buscador-colegiados/tabla-buscador-colegiados.component';
 import { MigasDePanComponent } from './commons/migas-de-pan/migas-de-pan.component';
 import { FormularioBusquedaComponent } from './features/sjcs/oficio/cargas-masivas-oficio/formulario-busqueda/formulario-busqueda.component';
+<<<<<<< HEAD
 import { FormularioSubidaComponent } from './features/sjcs/oficio/cargas-masivas-oficio/formulario-subida/formulario-subida.component';
 import{ ListaArchivosComponent } from './features/sjcs/oficio/cargas-masivas-oficio/lista-archivos/lista-archivos.component';
+=======
+import { DatePickerRangeComponent } from './commons/date-picker-range/date-picker-range.component';
+import { HoraComponent } from './commons/hora/hora.component';
+import { InputDivididoComponent } from './commons/input-dividido/input-dividido.component';
+import { TablaResultadoMixComponent } from './commons/tabla-resultado-mix/tabla-resultado-mix.component';
+import { FichaDesignacionesComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/ficha-designaciones.component';
+import { DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-datos-facturacion-ficha-designacion-oficio/detalle-tarjeta-datos-facturacion-ficha-designacion-oficio.component';
+import { DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-datos-generales-ficha-designacion-oficio/detalle-tarjeta-datos-generales-ficha-designacion-oficio.component';
+import { DetalleTarjetaDetalleFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-detalle-ficha-designacion-oficio/detalle-tarjeta-detalle-ficha-designacion-oficio.component';
+import { DetalleTarjetaDocumentacionFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-documentacion-ficha-designacion-oficio/detalle-tarjeta-documentacion-ficha-designacion-oficio.component';
+import { TablaResultadoOrderComponent } from './commons/tabla-resultado-order/tabla-resultado-order.component';
+import { TablaSimpleComponent } from './commons/tabla-simple/tabla-simple.component';
+import { TarjetaComponent } from './commons/tarjeta/tarjeta.component';
+>>>>>>> 5b87a209d5c075cac1f4ebf635bb8d5e25baed36
 
 @NgModule({
 	declarations: [
 		AppComponent,
 		ImagePipe,
+		DatePickerRangeComponent,
+		HoraComponent,
+		InputDivididoComponent,
+		TablaResultadoMixComponent,
+		TablaResultadoOrderComponent,
+		TablaSimpleComponent,
+		TarjetaComponent,
 
 		MyIframeComponent,
 		MenuComponent,
@@ -500,7 +521,12 @@ import{ ListaArchivosComponent } from './features/sjcs/oficio/cargas-masivas-ofi
 		MantenimientoJuzgadosComponent,
 		MaestroPJComponent,
 		SolicitudesTurnosGuardiasComponent,
-		SaltosYCompensacionesComponent,
+		DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent,
+		FichaDesignacionesComponent,
+		DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent,
+		DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent,
+		DetalleTarjetaDetalleFichaDesignacionOficioComponent,
+		DetalleTarjetaDocumentacionFichaDesignacionOficioComponent,
 		GuardiasSolicitudesTurnosComponent,
 		GuardiasIncompatibilidadesComponent,
 		ProgramacionCalendariosComponent,
@@ -697,7 +723,6 @@ import{ ListaArchivosComponent } from './features/sjcs/oficio/cargas-masivas-ofi
 		OtrasColegiacionesFichaColegialComponent,
 		ServiciosInteresFichaColegialComponent,
 		//TarjetaResumenFijaComponent
-		FiltrosSaltosYCompensaciones,
 		BuscadorColegiadosComponent,
 		TablaBuscadorColegiadosComponent,
 		FiltroBuscadorColegiadosComponent,

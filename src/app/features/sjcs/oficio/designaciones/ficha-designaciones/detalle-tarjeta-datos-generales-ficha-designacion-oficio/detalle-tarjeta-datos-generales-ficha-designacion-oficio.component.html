@@ -5,21 +5,26 @@
     <div class="form-row">
 
       <div class="form-group col-lg-3 col-md-3 w-100">
-        <app-input-dividido titulo="Año / Número"></app-input-dividido>
+        <app-input-dividido [anio]="anio" [numero]="numero" titulo="Año / Número"></app-input-dividido>
       </div>
 
       <div class="form-group col-lg-3 col-md-3 w-100">
         <label>Fecha</label>
-        <app-fecha [utc]="true"></app-fecha>
+        <app-fecha [(value)]='fechaGenerales' [utc]="true"></app-fecha>
       </div>
 
       <div class="form-group col-lg-3 col-md-3 w-100" *ngFor="let selector of selectores">
-        <app-selector [i]="0" [selector]="selector"></app-selector>
+        <!-- <app-selector [i]="0" [selector]="selector"></app-selector> -->
+        <label *ngIf="selector.nombre != ''">{{selector.nombre}}</label>
+        <p-dropdown autoWidth="false" class="inputWidth" placeholder="Seleccionar" disabled="selector.disable"
+          [ngModelOptions]="{standalone: true}" [(ngModel)]="selector.value" [options]="selector.opciones"
+          showClear="true" class="select-form">
+        </p-dropdown>
       </div>
 
       <div class="form-group col-lg-3 col-md-3 w-100" *ngFor="let inputTitle of inputs">
-        <label>{{ inputTitle }}</label>
-        <input type="text" class="form-control" pInputText readonly>
+        <label>{{ inputTitle.nombre }}</label>
+        <input type="text" [(ngModel)]="inputTitle.value" class="form-control" pInputText readonly>
       </div>
 
       <div class="form-group col-lg-3 col-md-3 w-100">
@@ -44,8 +49,8 @@
     <button pButton type="button" icon="fa fa-paper-plane" iconPos="left" label="Comunicar"
       (click)="showMsg('success', 'Se ha comunicado correctamente', '')"></button>
     <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer"
-      (click)="showMsg('success', 'Se ha restablecido correctamente', '')" disabled></button>
+      (click)="showMsg('success', 'Se ha restablecido correctamente', '')" ></button>
     <button pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"
-      (click)="showMsg('success', 'Se ha guardado correctamente', '')" disabled></button>
+      (click)="showMsg('success', 'Se ha guardado correctamente', '')" ></button>
   </div>
 </div>

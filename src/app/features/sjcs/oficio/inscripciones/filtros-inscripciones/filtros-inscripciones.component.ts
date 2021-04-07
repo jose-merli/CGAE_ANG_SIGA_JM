@@ -115,6 +115,8 @@ export class FiltrosInscripciones implements OnInit {
 
     }​​
 
+    this.clearFilters();
+    
   }
 
 
@@ -268,6 +270,7 @@ export class FiltrosInscripciones implements OnInit {
   }
 
   clearFilters() {
+    this.filtros = new InscripcionesItems();
     this.filtros.estado = undefined;
     this.filtros.idturno = undefined; 
     this.filtros.fechadesde = undefined;

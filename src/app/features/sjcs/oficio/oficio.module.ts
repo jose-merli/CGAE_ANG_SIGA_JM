@@ -15,12 +15,17 @@ import { PipeTranslationModule } from '../../../commons/translate/pipe-translati
 import { DesignacionesComponent } from './designaciones/designaciones.component';
 import { FechaModule } from '../../../commons/fecha/fecha.module';
 import { FiltroDesignacionesComponent } from './designaciones/filtro-designaciones/filtro-designaciones.component';
+import { TablaJustificacionExpresComponent  } from './designaciones/tabla-justificacion-expres/tabla-justificacion-expres.component';
 import { ButtonModule, CheckboxModule, RadioButtonModule, DropdownModule, InputTextModule, ConfirmDialogModule } from 'primeng/primeng';
 import { FormsModule } from '@angular/forms';
 import { MatExpansionModule } from '@angular/material';
 import { BusquedaColegiadoExpressModule } from '../../../commons/busqueda-colegiado-express/busqueda-colegiado-express.module';
-import {FormularioBusquedaComponent} from './cargas-masivas-oficio/formulario-busqueda/formulario-busqueda.component'
-
+import {FormularioBusquedaComponent} from './cargas-masivas-oficio/formulario-busqueda/formulario-busqueda.component';
+import { GestionDesignacionesComponent } from './designaciones/gestion-designaciones/gestion-designaciones.component'
+import { TableModule } from 'primeng/table';
+import { TooltipModule } from 'primeng/primeng';
+import { TablaResultadoMixDAService } from '../../../commons/tabla-resultado-mix/tabla-resultado-mix-da.service';
+import { SaltosCompensacionesOficioModule } from './saltos-compensaciones-oficio/saltos-compensaciones-oficio.module';
 
 
 //import { DesignacionesComponent } from './designaciones/designaciones.component';
@@ -29,9 +34,13 @@ import {FormularioBusquedaComponent} from './cargas-masivas-oficio/formulario-bu
 @NgModule({
         declarations: [
                 DesignacionesComponent,
-                FiltroDesignacionesComponent
+                FiltroDesignacionesComponent,
+                TablaJustificacionExpresComponent,
+                GestionDesignacionesComponent,
         ],
         imports: [
+                TooltipModule,
+                TableModule,
                 CommonModule,
                 MenubarModule,
                 routingOficio,
@@ -51,10 +60,10 @@ import {FormularioBusquedaComponent} from './cargas-masivas-oficio/formulario-bu
                 BusquedaColegiadoExpressModule,
                 CheckboxModule,
                 FechaModule,
-                MultiSelectModule
-               
+                MultiSelectModule,
+                SaltosCompensacionesOficioModule,
         ],
 
-        providers: []
+        providers: [TablaResultadoMixDAService]
 })
 export class OficioModule { }

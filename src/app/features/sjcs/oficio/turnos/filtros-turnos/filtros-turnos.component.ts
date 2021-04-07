@@ -6,6 +6,7 @@ import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { TurnosItems } from '../../../../../models/sjcs/TurnosItems';
 import { CommonsService } from '../../../../../../app/_services/commons.service';
+import { TurnosItem } from '../../../../../models/sjcs/TurnosItem';
 
 @Component({
   selector: 'app-filtrosturnos',
@@ -50,13 +51,14 @@ export class FiltrosTurnos implements OnInit {
     textFilter: string = "Seleccionar";
 
   ngOnInit() {
+    this.clearFilters();
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisos = this.persistenceService.getPermisos();
     }
     if (this.persistenceService.getFiltros() != undefined) {
       this.filtros = this.persistenceService.getFiltros();
       if (this.persistenceService.getHistorico() != undefined) {
-        this.busqueda.emit(this.persistenceService.getHistorico());
+        // this.busqueda.emit(this.persistenceService.getHistorico());
       }
     } else {
       this.filtros = new TurnosItems();
@@ -211,6 +213,7 @@ export class FiltrosTurnos implements OnInit {
       }
     );
     this.partidoJudicial = "";
+    this.clearFilters();
   }
 
 
@@ -334,6 +337,7 @@ export class FiltrosTurnos implements OnInit {
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
+  
   checkFilters() {
     if((this.filtros.nombre == null ||
         this.filtros.nombre == undefined ||
@@ -410,16 +414,17 @@ export class FiltrosTurnos implements OnInit {
   }
 
   clearFilters() {
+    this.filtros = new TurnosItems();
     this.filtros.nombre = "";
     this.filtros.abreviatura = "";
-    this.filtros.idarea = undefined;
-    this.filtros.idsubzona = undefined
-    this.filtros.idmateria = undefined
-    this.filtros.idtipoturno = undefined
-    this.filtros.idpartidapresupuestaria = undefined
-    this.filtros.idzona = undefined
-    this.filtros.jurisdiccion = undefined
-    this.filtros.grupofacturacion = undefined
+    this.filtros.idarea = "";
+    this.filtros.idsubzona = "";
+    this.filtros.idmateria = "";
+    this.filtros.idtipoturno = "";
+    this.filtros.idpartidapresupuestaria = "";
+    this.filtros.idzona = "";
+    this.filtros.jurisdiccion = "";
+    this.filtros.grupofacturacion = "";
     this.partidoJudicial = "";
   }
 

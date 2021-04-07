@@ -1,561 +1,294 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, Output, EventEmitter, SimpleChanges, ViewEncapsulation } from '@angular/core';
-import { SigaServices } from '../../../../../_services/siga.service';
-import { TranslateService } from '../../../../../commons/translate/translation.service';
-import { DataTable } from 'primeng/primeng';
+import { ElementRef, Renderer2, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { Sort } from '@angular/material/sort';
+import { Message } from 'primeng/components/common/api';
+import { Row, Cell } from './gestion-bajas-temporales.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
-import { Router } from '../../../../../../../node_modules/@angular/router';
-import { CommonsService } from '../../../../../_services/commons.service';
+import { DatePipe } from '@angular/common';
+import { Router } from '@angular/router';
 
-
+interface GuardiaI {
+  label: string,
+  value: string
+}
+interface NewCell {
+  position: string,
+  value: string
+}
 @Component({
   selector: 'app-gestion-bajas-temporales',
   templateUrl: './gestion-bajas-temporales.component.html',
-  styleUrls: ['./gestion-bajas-temporales.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  styleUrls: ['./gestion-bajas-temporales.component.scss']
 })
-export class TablaBajasTemporalesComponent implements OnInit {
+export class GestionBajasTemporalesComponent implements OnInit {
+  
+  info = new FormControl();
+  msgs: Message[] = [];
+  @Input() cabeceras = [];
+  @Input() rowGroups: Row[];
+  @Input() rowGroupsAux: Row[];
+  @Input() seleccionarTodo = false;
+  @Input() comboGuardiasIncompatibles;
+  @Output() anySelected = new EventEmitter<any>();
+  @Output() delete = new EventEmitter<any>();
+  @Output() deleteFromCombo = new EventEmitter<any>();
+  @Output() denegar = new EventEmitter<any>();
+  @Output() anular = new EventEmitter<any>();
+  @Output() validar = new EventEmitter<any>();
+  @Output() searchHistorico = new EventEmitter<any>();
+  @Output() guardar = new EventEmitter<any>();
+  @Output() modDatos = new EventEmitter<any>();
 
-  rowsPerPage: any = [];
-  cols;
-  colsPartidoJudicial;
-  msgs;
-  partidoJudicial;
-  id;
-
-  datosInicial = [];
-  editMode: boolean = false;
-  selectedBefore;
-  buscadores = [];
-  updatePartidasPres = [];
-  disabledSolicitarBaja: boolean = false;
-  disabledValidar: boolean = false;
-  disabledDenegar: boolean = false;
-  body;
-  updateBajasTemporales = [];
-  selectedItem: number = 10;
-  selectAll;
-  selectedDatos: any[] = [];
-  selectedDatosCopy: any[] = [];
-  numSelected = 0;
-  isLetrado:boolean = false;
-  selectMultiple: boolean = false;
-  seleccion: boolean = false;
+  cabecerasMultiselect = [];
+  modalStateDisplay = true;
+  searchText = [];
+  selectedHeader;
+  positionsToDelete = [];
+  numCabeceras = 0;
+  numColumnas = 0;
+  numColumnasChecked = 0;
+  selected = false;
+  selectedArray = [];
+  RGid = "inicial";
+  down = false;
+  from = 0;
+  to = 10;
+  numperPage = 10;
+  newInputValue = [];
+  newInputValuePerRow = [];
+  inputValues: NewCell = {position: '', value: ''};
+  inputValuesArr: NewCell[] = [];
+  enableGuardar = false;
+  multiselectValue = [];
+  multiselectLabels = [];
+  cell = [];
+  textFilter: string = "Seleccionar";
+  textSelected: String = "{0} bajas temporales seleccionadas";
+  @Input() totalRegistros = 0;
+  @ViewChild('table') table: ElementRef;
   historico: boolean = false;
-  sortO: number = 1;
-  message;
-  public ascNumberSort = true;
-  permisos: boolean = false;
-  initDatos;
-  nuevo: boolean = false;
-  progressSpinner: boolean = false;
-  selectionMode: string = "single";
-  first = 0;
+
   comboTipo = [
     { label: "Vacaciones", value: "V" },
     { label: "Maternidad", value: "M" },
     { label: "Baja", value: "B" },
     { label: "Suspensión por sanción", value: "S" }
   ];
+  @ViewChild("tablaFoco") tablaFoco: ElementRef;
+  array = sessionStorage.getItem("buscadorColegiados");
+  nuevaBaja = sessionStorage.getItem("nuevo");
 
-  comboEstados = [
-    { label: "Denegada", value: "0" },
-    { label: "Validada", value: "1" },
-    { label: "Pendiente", value: "2" || null },
-    { label: "Anulada", value: "3" }
-  ];
+  usuarioBusquedaExpress = {​​​​​​​​​
+    numColegiado: '',
+    nombreAp: ''
+  }​​​​​​​​​;
 
-  guardar:boolean = false;
-
-  //Resultados de la busqueda
-  @Input() datos;
-
-  @Output() searchPartidas = new EventEmitter<boolean>();
-
-  @ViewChild("table") tabla: DataTable;
-  rows: any;
-  sort: (compareFn?: (a: any, b: any) => number) => any[];
-
-  constructor(private translateService: TranslateService,
-    private changeDetectorRef: ChangeDetectorRef,
-    private router: Router,
-    private sigaServices: SigaServices,
+  constructor(
+    private renderer: Renderer2,
     private persistenceService: PersistenceService,
-    private commonsService: CommonsService
-  ) { }
+    private pipe : DatePipe,
+		private router: Router
+  ) {
+    this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
+      for (let i = 0; i < this.table.nativeElement.children.length; i++) {
 
-  ngOnInit() {
-    if (
-      sessionStorage.getItem("isLetrado") != null &&
-      sessionStorage.getItem("isLetrado") != undefined
-    ) {
-      this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
-    }
-    this.selectedDatos = [];
-    this.datos.fechaActual = new Date();
-    this.getCols();
-    this.datosInicial = JSON.parse(JSON.stringify(this.datos));
-    this.initDatos = JSON.parse(JSON.stringify((this.datos)));
-    if (this.persistenceService.getPaginacion() != undefined) {
-      let paginacion = this.persistenceService.getPaginacion();
-      this.first = paginacion.paginacion;
-      this.selectedItem = paginacion.selectedItem;
-    }
-
-    if(sessionStorage.getItem("volverBaja") && sessionStorage.getItem('buscadorColegiados')){
-      this.datos.editable = false;
-        const { nombre, apellidos, nColegiado } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
-        console.log(nColegiado);
-        const newLine = {
-          'ncolegiado': nColegiado,
-          'nombre': apellidos +' '+nombre,
-          'tiponombre': '',
-          'descripcion': '',
-          'fechadesde': '',
-          'fechahasta': '',
-          'fechaalta': '',
-          'validado': '',
-          'fechabt': ''
-        };
-        this.datos= [newLine,...this.datos];
-    }
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    this.datos.fechaActual = new Date();
-    this.selectedDatos = [];
-    this.updatePartidasPres = [];
-    this.nuevo = false;
-    if (this.persistenceService.getPermisos()) {
-      this.permisos = true;
-    } else {
-      this.permisos = false;
-    }
-    this.datosInicial = JSON.parse(JSON.stringify(this.datos));
-  }
-
-  numberOnly(event): boolean {
-    const charCode = (event.which) ? event.which : event.keyCode;
-
-    if (charCode >= 44 && charCode <= 57) {
-      return true;
-    }
-    else {
-      return false;
-    }
-
-  }
-
-  edit(evento) {
-    if (this.selectedDatos == undefined) {
-      this.selectedDatos = [];
-    }
-    if (!this.nuevo && this.permisos) {
-
-      if (!this.selectAll && !this.selectMultiple && !this.historico) {
-
-        this.datos.forEach(element => {
-          element.editable = false;
-          element.overlayVisible = false;
-        });
-
-        evento.data.editable = true;
-        this.editMode = true;
-
-        this.selectedDatos = [];
-        this.selectedDatos.push(evento.data);
-      
-        this.datos.forEach(element => {
-          element.fechadesde = new Date(element.fechadesde);
-        });
-        let findDato = this.datosInicial.find(item => item.tiponombre === this.selectedDatos[0].tiponombre);
-
-        this.selectedBefore = findDato;
-      } else {
-        if ((evento.data.fechabaja == null || evento.data.fechabaja == undefined) && this.historico) {
-          if (this.selectedDatos[0] != undefined) {
-          } else {
-            this.selectedDatos = [];
-          }
+        if (!event.target.classList.contains("selectedRowClass")) {
+          this.selected = false;
+          this.selectedArray = [];
         }
-      }
-    }
-  }
-
-
-  mySort(event: any, field: string) {
-    if (event.order === 1) {
-      this.rows.sort((a, b) => {
-        if (typeof a[field] === 'string') {
-          const sortDesc = a[field] < b[field] ? -1 : 0;
-          return a[field] > b[field] ? 1 : sortDesc;
-        }
-        return a[field] - b[field];
-      });
-    } else {
-      this.rows.sort((a, b) => {
-        if (typeof a[field] === 'string') {
-          const sortDesc = a[field] < b[field] ? 1 : 0;
-          return a[field] > b[field] ? -1 : sortDesc;
-        }
-        return b[field] - a[field];
-      });
-    }
-    this.rows = [...this.rows];
-  }
-
-  getId() {
-    let seleccionados = [];
-    seleccionados.push(this.selectedDatos);
-    this.id = this.datos.findIndex(item => item.idpartidapresupuestaria === seleccionados[0].idpartidapresupuestaria);
-  }
-
-
-  transformaFecha(fecha) {
-    if (fecha != null) {
-      let jsonDate = JSON.stringify(fecha);
-      let rawDate = jsonDate.slice(1, -1);
-      if (rawDate.length < 14) {
-        let splitDate = rawDate.split("/");
-        let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
-        fecha = new Date((arrayDate += "T00:00:00.001Z"));
-      } else {
-        fecha = new Date(fecha);
-      }
-    } else {
-      fecha = undefined;
-    }
-
-
-    return fecha;
-  }
- 
-  fillFechaCalendar(event) {
-    this.datos.fechaActual = this.transformaFecha(event);
-  }
-
-  callSaveService(url) {
-    this.sigaServices.post(url, this.body).subscribe(
-      data => {
-
-        if (this.nuevo) {
-          this.nuevo = false;
-        }
-
-        this.datosInicial = JSON.parse(JSON.stringify(this.datos));
-        this.searchPartidas.emit(false);
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-
-        this.progressSpinner = false;
-      },
-      err => {
-
-        if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
-        this.progressSpinner = false;
-      },
-      () => {
-        this.selectedDatos = [];
-        this.updatePartidasPres = [];
-        this.progressSpinner = false;
-      }
-    );
-
-  }
-
-  searchHistorical() {
-    this.historico = !this.historico;
-    this.persistenceService.setHistorico(this.historico);
-    this.searchPartidas.emit(this.historico);
-    this.selectAll = false;
-  }
-  checkAnular(){
-    this.selectedDatos.forEach(element => {
-      if(element.validado == "Pendiente"){
-        element.validado = "Anular";
-        this.cambioEstado();
-      }else{
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
       }
     });
   }
 
-  checkDenegar(){
-    this.selectedDatos.forEach(element => {
-      if(element.validado == "Pendiente"){
-        element.validado = "Denegar";
-        this.cambioEstado();
-      }else{
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-      }
-    });
-  }
-
-  checkValidar(){
-    this.selectedDatos.forEach(element => {
-      if(element.validado == "Pendiente"){
-        element.validado = "Validar";
-        this.cambioEstado();
-      }else{
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-      }
-    });
-  }
-
-  checkSave(){
-    this.guardar = true;
-    this.cambioEstado();
-  }
-
-  cambioEstado() {
-    this.progressSpinner = true;
-      this.sigaServices.post("bajasTemporales_updateBajaTemporal", this.selectedDatos).subscribe(
-        data => {
-          this.selectedDatos = [];
-          this.searchPartidas.emit(false);
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.progressSpinner = false;
-        },
-        err => {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-          
-          this.progressSpinner = false;
-        }
-      );
-  }
-
-  onChangeSelectAll() {
-    if (this.selectAll === true) {
-      if (this.nuevo) this.datos.shift();
-      this.nuevo = false;
-      this.editMode = false;
-      this.selectMultiple = false;
-      this.editElementDisabled();
-
-      if (this.historico) {
-        this.selectedDatos = this.datos.filter(dato => dato.fechabaja != undefined && dato.fechabaja != null);
-        this.selectMultiple = true;
-        this.selectionMode = "single";
-      } else {
-        this.selectedDatos = this.datos;
-        this.selectMultiple = false;
-        this.selectionMode = "single";
-      }
-      this.selectionMode = "multiple";
-      this.numSelected = this.datos.length;
-    } else {
-      this.selectedDatos = [];
-      this.numSelected = 0;
-      if (this.historico)
-        this.selectMultiple = true;
-      this.selectionMode = "multiple";
-    }
-  }
-
-  searchPartida() {
-    this.historico = !this.historico;
-    if (this.historico) {
-
-      this.editElementDisabled();
-      this.editMode = false;
-      this.nuevo = false;
-      this.selectMultiple = true;
-
-      this.selectAll = false;
-      this.selectedDatos = [];
-      this.numSelected = 0;
-      this.selectionMode = "multiple";
-    }
-    else {
-      this.selectMultiple = false;
-      this.selectionMode = "single";
-    }
-    this.searchPartidas.emit(this.historico);
-    this.selectAll = false;
-  }
-
-
-  setItalic(dato) {
-    if (dato.eliminado == 0){
-      return false;
-    }else{ 
-      return true;
-    }
-  }
-
-  getCols() {
-
-    this.cols = [
-      { field: "ncolegiado", header: "facturacionSJCS.facturacionesYPagos.numColegiado" },
-      { field: "nombre", header: "busquedaSanciones.detalleSancion.letrado.literal" },
-      { field: "tiponombre", header: "dato.jgr.guardia.guardias.turno" },
-      { field: "descripcion", header: "administracion.auditoriaUsuarios.literal.motivo" },
-      { field: "fechadesde", header: "facturacion.seriesFacturacion.literal.fInicio" },
-      { field: "fechahasta", header: "censo.consultaDatos.literal.fechaFin" },
-      { field: "fechaalta", header: "formacion.busquedaInscripcion.fechaSolicitud" },
-      { field: "validado", header: "censo.busquedaSolicitudesModificacion.literal.estado" },
-      { field: "fechabt", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaEstado" },
-    ];
-    this.cols.forEach(element => {
-      this.buscadores.push("");
-    });
-
-    this.rowsPerPage = [
-      {
-        label: 10,
-        value: 10
-      },
-      {
-        label: 20,
-        value: 20
-      },
-      {
-        label: 30,
-        value: 30
-      },
-      {
-        label: 40,
-        value: 40
-      }
-    ];
-  }
-
-  openTab(evento) {
-
-    let paginacion = {
-      paginacion: this.tabla.first,
-      selectedItem: this.selectedItem
-    };
-
-    this.persistenceService.setPaginacion(paginacion);
-    if (!this.selectAll && !this.selectMultiple) {
-      this.progressSpinner = true;
-      this.persistenceService.setDatos(evento.data);
-      this.router.navigate(["/gestionInscripciones"]);
-    } else {
-      let findDato = this.selectedDatos.find(item => item.estado != 1);
-      if(findDato != null){
-        this.disabledSolicitarBaja = true;
-      }
-      else{
-        this.disabledSolicitarBaja = false;
-      }
-      let findDato2 = this.selectedDatos.find(item => item.estado != 2 && item.estado != 0);
-      if(findDato2 != undefined){
-        this.disabledValidar = true;
-        this.disabledDenegar = true;
-      }
-      else{
-        this.disabledValidar = false;
-        this.disabledDenegar = false;
-      }
-      if (evento.data.fechabaja == undefined && this.historico) {
-        // this.selectedDatos.pop();
-      }
-
-    }
-  }
-
-  changeDescripcion(dato) {
-
-    let findDato = this.datosInicial.find(item => item.idpersona === dato.idpersona && item.descripcion === dato.descripcion);
-
-    if (findDato != undefined) {
-      if (dato.descripcion != findDato.descripcion) {
-
-        let findUpdate = this.updateBajasTemporales.find(item => item.idpersona === dato.idpersona && item.descripcion === dato.descripcion);
-
-        if (findUpdate == undefined) {
-          this.updateBajasTemporales.push(dato);
-        }
-      }
-    }
-
-  }
-
-  onChangeRowsPerPages(event) {
-    this.selectedItem = event.value;
-    this.changeDetectorRef.detectChanges();
-    this.tabla.reset();
-  }
-
-  editElementDisabled() {
-    this.datos.forEach(element => {
-      element.editable = false
-      element.overlayVisible = false;
-    });
-  }
-
-  isSelectMultiple() {
-    if (this.permisos && !this.historico) {
-      if (this.nuevo) this.datos.shift();
-      this.editElementDisabled();
-      this.editMode = false;
-      this.nuevo = false;
-      this.selectMultiple = !this.selectMultiple;
-
-      if (!this.selectMultiple) {
-        this.selectedDatos = [];
-        this.numSelected = 0;
-        this.selectionMode = "single";
-      } else {
-        this.selectAll = false;
-        this.selectedDatos = [];
-        this.numSelected = 0;
-        this.selectionMode = "multiple";
-
-      }
-    }
-    // this.volver();
-  }
-
-
-  actualizaSeleccionados(event,selectedDatos) {
-    this.selectedDatosCopy = [];
-    if(event != undefined){
-      this.selectedDatosCopy.push(event.data);
-    }
-    if (this.selectedDatos == undefined) {
-      this.selectedDatos = [];
-    }
-    if (selectedDatos != undefined) {
-      this.numSelected = selectedDatos.length;
-    }
+  ngOnInit(): void {
+    let values = [];
+    let labels = [];
+    let arrayOfSelected = [];
     
-  }
+    if(this.nuevaBaja == "true"){
+      this.nuevo();
+    }
 
-  fillFechaHastaCalendar(event) {
-    if(this.selectedDatos.length > 0){
-      let findDato = this.datos.find(item => item.editable === this.selectedDatos[0].editable);
-      if(findDato != undefined){
-        this.datos.forEach(element => {
-          if(element == findDato){
-            element.fechahasta = this.transformaFecha(event);
-            // this.selectedDatos.push(element);
+      this.rowGroups.forEach((row, i) => {
+        //selecteCombo = {label: ?, value: row.cells[7].value}
+        values.push(row.cells[6].value);
+      });
+      this.comboGuardiasIncompatibles.forEach(combo => {
+        values.forEach(v => {
+          if (combo.value == v){
+            labels.push(combo.label)
           }
         });
-      }
-    }else{
-     let dato = this.datos.find(item => item.editable == this.selectedDatosCopy[0].editable);
-     if(dato != undefined){
-       this.datos.forEach(element => {
-         if(element == dato){
-           element.fechahasta = this.transformaFecha(event);
-           this.selectedDatos.push(element);
-         }
        });
-     }
-    }
+      values.forEach((v, i) => {
+        let selecteCombo = {label: '', value: ''}
+        selecteCombo.label = labels[i];
+        selecteCombo.value = v;
+        arrayOfSelected[i] = selecteCombo;
+        this.multiselectValue[i] = arrayOfSelected[i];
+      });
+      this.multiselectLabels = labels;
+    this.totalRegistros = this.rowGroups.length;
+    this.numCabeceras = this.cabeceras.length;
+    this.numColumnas = this.numCabeceras;
+    this.cabeceras.forEach(cab => {
+      this.cabecerasMultiselect.push(cab.name);
+    })
+    
+    sessionStorage.removeItem("nuevo");
+
   }
 
-  showMessage(severity, summary, msg) {
+  onChangeMulti(event, rowPosition, cell){
+    console.log('cell: ', cell)
+    let deseleccionado;
+   
+    let selected = event.itemValue;
+    let arraySelected = event.value;
+    let labelSelected;
+    if (arraySelected.includes(selected)){
+      deseleccionado = false;
+    } else {
+      deseleccionado = true;
+    }
+    let turno = this.rowGroups[rowPosition].cells[0];
+    let idGuardia = this.rowGroups[rowPosition].cells[7];
+    let idTurno = this.rowGroups[rowPosition].cells[8];
+    let idTurnoIncompatible = this.rowGroups[rowPosition].cells[5];
+    let idGuardiaIncompatible = this.rowGroups[rowPosition].cells[6];
+    let nombreTurnoInc = this.rowGroups[rowPosition].cells[9];
+    if (deseleccionado){
+      //eliminar doble
+      this.eliminarFromCombo(this.rowGroups[rowPosition])
+    } else {
+      //guardar doble
+      
+      this.comboGuardiasIncompatibles.forEach(comboObj => {
+        if ( comboObj.value == selected){
+          labelSelected = comboObj.label;
+        }
+      })
+      let cellguardiaInc:  Cell = new Cell();
+      cellguardiaInc.type = 'text';
+      cellguardiaInc.value = labelSelected;
+      this.rowGroups[rowPosition].cells[10].value.push(labelSelected);
+      this.nuevoFromCombo(turno, cellguardiaInc, idGuardia, idTurno, idTurnoIncompatible, idGuardiaIncompatible, nombreTurnoInc);
+    }
+  }
+  nuevoFromCombo(turno, guardiaInc, idGuardia, idTurno, idTurnoIncompatible, idGuardiaIncompatible, nombreTurnoInc){
+    console.log('idGuardiaIncompatible: ', idGuardiaIncompatible)
+    console.log('idGuardia: ', idGuardia)
+    this.enableGuardar = true;
+    let labelSelected = '';
+    let row: Row = new Row();
+    let cell1: Cell = new Cell();
+    let cell2: Cell = new Cell();
+    let cellInvisible: Cell = new Cell();
+    let cellMulti:  Cell = new Cell();
+    let cellArr: Cell = new Cell();
+    let idG;
+    cell1.type = 'input';
+    cell1.value = '';
+    cell2.type = 'input';
+    cell2.value = '0';
+    cellInvisible.type = 'invisible';
+    cellInvisible.value = nombreTurnoInc;
+    cellMulti.combo = this.comboGuardiasIncompatibles;
+    cellMulti.type = 'multiselect'; 
+    cellMulti.value = [idGuardia.value];
+    this.comboGuardiasIncompatibles.forEach(comboObj => {
+      if ( comboObj.value == idGuardia.value){
+        labelSelected = comboObj.label;
+      }
+    });
+    cellArr.type = 'invisible';
+    cellArr.value = [labelSelected];
+    if (idGuardia.value != ''){
+      this.comboGuardiasIncompatibles.push({ label: labelSelected, value: idGuardia.value})
+    }
+    console.log('idGuardia.value: ', idGuardia.value)
+    console.log('this.comboGuardiasIncompatibles: ', this.comboGuardiasIncompatibles)
+    console.log('cellMulti.value: ', cellMulti.value)
+    row.cells = [turno, guardiaInc, cellMulti, cell1, cell2, idTurno, idGuardia, idGuardiaIncompatible, idTurnoIncompatible, cellInvisible, cellArr];
+    if (idGuardia.value != ''){
+    this.rowGroups.unshift(row);
+    }
+    this.totalRegistros = this.rowGroups.length;
+    this.rowGroupsAux = this.rowGroups;
+  }
+  validaCheck(texto) {
+    return texto === 'Si';
+  }
+  selectRow(rowId) {
+    if (this.selectedArray.includes(rowId)) {
+      const i = this.selectedArray.indexOf(rowId);
+      this.selectedArray.splice(i, 1);
+    } else {
+      this.selectedArray.push(rowId);
+    }
+    if (this.selectedArray.length != 0) {
+      this.anySelected.emit(true);
+    } else {
+      this.anySelected.emit(false);
+    }
+  }
+  isSelected(id) {
+    if (this.selectedArray.includes(id)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  sortData(sort: Sort) {
+    let data: Row[] = [];
+    this.rowGroups = this.rowGroupsAux.filter((row) => {
+      data.push(row);
+    });
+    data = data.slice();
+    if (!sort.active || sort.direction === '') {
+      this.rowGroups = data;
+      return;
+    }
+    this.rowGroups = data.sort((a, b) => {
+      const isAsc = sort.direction === 'asc';
+      let resultado;
+      for (let i = 0; i < a.cells.length; i++) {
+        resultado = compare(a.cells[i].value, b.cells[i].value, isAsc);
+      }
+      return resultado;
+    });
+    this.rowGroupsAux = this.rowGroups;
+    this.totalRegistros = this.rowGroups.length;
+
+  }
+
+  searchChange(j: any) {
+    let isReturn = true;
+    let isReturnArr = [];
+    this.rowGroups = this.rowGroupsAux.filter((row) => {
+      if (
+        this.searchText[j] != " " &&
+        this.searchText[j] != undefined &&
+        !row.cells[j].value.toString().toLowerCase().includes(this.searchText[j].toLowerCase())
+      ) {
+        isReturn = false;
+      } else {
+        isReturn = true;
+      }
+      if (isReturn) {
+        return row;
+      }
+    });
+    this.totalRegistros = this.rowGroups.length;
+  }
+
+  showMsg(severity, summary, detail) {
     this.msgs = [];
     this.msgs.push({
-      severity: severity,
-      summary: summary,
-      detail: msg
+      severity,
+      summary,
+      detail
     });
   }
 
@@ -563,34 +296,193 @@ export class TablaBajasTemporalesComponent implements OnInit {
     this.msgs = [];
   }
 
-  checkPermisosRest() {
-    let msg = this.commonsService.checkPermisos(this.permisos, this.historico);
+  isPar(numero): boolean {
+    return numero % 2 === 0;
+  }
+  fromReg(event){
+    this.from = Number(event) - 1;
+  }
+  toReg(event){
+    this.to = Number(event);
+  }
+  perPage(perPage){
+    this.numperPage = perPage;
+  }
 
-    if (msg != undefined) {
-      this.msgs = msg;
-    } else {
-      //this.rest();
+ 
+  inputValueChange(event, i , z, cell){
+    let cells: Cell[] = [];
+    let rowFilled: Row =  new Row();
+    rowFilled.cells = cells;
+    if (this.inputValuesArr[z]  != undefined){
+      if (z == 3){
+        this.inputValuesArr[z - 1] = { position: z , value: this.newInputValue[z]};
+      }else{
+        this.inputValuesArr[z] = { position: z , value: this.newInputValue[z]};
+      }
+     
+    }else{
+      this.inputValues.position = z;
+      this.inputValues.value = this.newInputValue[z];
+      this.inputValuesArr.push(Object.assign({},this.inputValues));
     }
+             this.rowGroups[this.rowGroups.length -1].cells.forEach((cell, c) => {
+              let cellFilled1 = new Cell();
+            if (c != 2){  
+              if (this.inputValuesArr[c]!= undefined && c != 3){
+                let cellFilled = new Cell();
+                cellFilled.value = this.inputValuesArr[c].value;
+                cellFilled.type = 'newinput';
+                cellFilled1 = cellFilled;
+              }
+                else if (this.inputValuesArr[c-1]!= undefined && c >= 3){
+                  let cellFilled = new Cell();
+                  cellFilled.value = this.inputValuesArr[c-1].value;
+                  cellFilled.type = 'newinput';
+                  cellFilled1 = cellFilled;
+                }
+              else {
+                let cellFilled = new Cell();
+                cellFilled.value = ' ';
+                cellFilled.type = 'newinput';
+                cellFilled1 = cellFilled;
+              }
+
+            } else {
+              let cellFilled = new Cell();
+              cellFilled.combo = this.comboGuardiasIncompatibles;
+              cellFilled.type = 'multiselect';  
+              cellFilled1 = cellFilled;
+            }
+           rowFilled.cells.push(cellFilled1);
+          })
+      this.rowGroups[this.rowGroups.length - 1] = rowFilled;
+      this.rowGroupsAux = this.rowGroups;
+      this.totalRegistros = this.rowGroups.length;
+
   }
 
-  deleteBajaTemporal(){
-      this.progressSpinner = true;
-      this.sigaServices.post("bajasTemporales_deleteBajaTemporal", this.selectedDatos).subscribe(
-        data => {
-          this.selectedDatos = [];
-          this.searchPartidas.emit(false);
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.progressSpinner = false;
-        },
-        err => {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-          
-          this.progressSpinner = false;
-        }
-      ); 
-  }
-  
-  checkNuevaBajaTemporal(){
+  nuevaBajaTemporal(){
     this.router.navigate(["/buscadorColegiados"]);
+    sessionStorage.setItem("nuevo","true");
   }
+
+  nuevo(){
+    const now = Date.now();
+    const myFormattedDate = this.pipe.transform(now, 'dd/MM/yyyy');
+
+    if(sessionStorage.getItem("buscadorColegiados")){​​
+
+      let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
+
+      this.usuarioBusquedaExpress.nombreAp=busquedaColegiado.apellidos+", "+busquedaColegiado.nombre;
+
+      this.usuarioBusquedaExpress.numColegiado=busquedaColegiado.nColegiado;
+    }​​
+
+    this.enableGuardar = true;
+    let row: Row = new Row();
+    let cell1: Cell = new Cell();
+    let cell2: Cell = new Cell();
+    let cell3: Cell = new Cell();
+    let cell4: Cell = new Cell();
+    let cell5: Cell = new Cell();
+    let cell6: Cell = new Cell();
+    let cell7: Cell = new Cell();
+    let cell8: Cell = new Cell();
+    let cell9: Cell = new Cell();
+    let cell10: Cell = new Cell();
+    cell1.type = 'text';
+    cell1.value = this.usuarioBusquedaExpress.numColegiado;
+    cell2.type = 'text';
+    cell2.value = this.usuarioBusquedaExpress.nombreAp;
+    cell3.type = 'select';
+    cell3.combo = this.comboTipo;
+    cell3.value = '';
+    cell4.type = 'input';
+    cell4.value = '';
+
+    cell5.type = 'datePicker';
+    cell5.value = '';
+    cell6.type = 'datePicker';
+    cell6.value = '';
+    cell7.type = 'text';
+    cell7.value = myFormattedDate;
+    cell8.type = 'text';
+    cell8.value = 'Pendiente';
+    cell9.type = 'text';
+    cell9.value = myFormattedDate;
+    cell10.type = 'invisible';
+    cell10.value = [];
+    row.cells = [cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8, cell9, cell2];
+    this.rowGroups.unshift(row);
+    this.rowGroupsAux = this.rowGroups;
+    this.totalRegistros = this.rowGroups.length;
+    console.log('this.rowGroups: ', this.rowGroups)
+    //this.to = this.totalRegistros;
+}
+  inputChange(event, i, z){
+    this.enableGuardar = true;
+  }
+  /*
+  guardar(){
+    let anyEmptyArr = [];
+    this.rowGroups.forEach(row =>{
+      if(row.cells[0].value == '' ||  row.cells[0].value == undefined || row.cells[1].value == '' ||  row.cells[1].value == undefined || row.cells[2].value == '' ||  row.cells[2].value == undefined || row.cells[4].value == '' ||  row.cells[4].value == undefined){
+        anyEmptyArr.push(true);
+      } else{
+        this.save.emit( this.rowGroups);
+        this.enableGuardar = false;
+        this.totalRegistros = this.rowGroups.length;
+        anyEmptyArr.push(false);
+      }
+
+      if (anyEmptyArr.includes(true)){
+        this.showMsg('error', 'Error. Existen campos vacíos en la tabla.', '')
+      }else{
+        this.showMsg('success', 'Se ha guardado correctamente', '')
+      }
+      
+    })
+  }
+  */
+  eliminar(){
+  this.delete.emit(this.selectedArray);
+  this.totalRegistros = this.rowGroups.length;
+  this.rowGroupsAux = this.rowGroups;
+  //this.to = this.totalRegistros;
+  }
+
+  searchHistorical() {
+    this.historico = !this.historico;
+    this.persistenceService.setHistorico(this.historico);
+    this.searchHistorico.emit(this.historico);
+  }
+
+  checkGuardar(){
+    this.modDatos.emit(this.rowGroups);
+    this.totalRegistros = this.rowGroups.length;
+  }
+
+  checkDenegar(){
+    this.denegar.emit(this.selectedArray);
+    this.totalRegistros = this.rowGroups.length;
+  }
+
+  checkValidar(){
+    this.validar.emit(this.selectedArray);
+    this.totalRegistros = this.rowGroups.length;
+  }
+
+  checkAnular(){
+    this.anular.emit(this.selectedArray);
+    this.totalRegistros = this.rowGroups.length;
+  }
+
+  eliminarFromCombo(rowToDelete){
+    this.deleteFromCombo.emit(rowToDelete);
+  }
+}
+function compare(a: string, b: number | string, isAsc: boolean) {
+  return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }

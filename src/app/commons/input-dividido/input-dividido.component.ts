@@ -7,9 +7,12 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class InputDivididoComponent implements OnInit {
   @Input() titulo = "";
+  @Input() anio;
+  @Input() numero;
   constructor() { }
 
   ngOnInit(): void {
+    console.log(this.anio);
   }
 
 }
