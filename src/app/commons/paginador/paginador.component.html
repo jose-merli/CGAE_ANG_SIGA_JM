@@ -23,7 +23,10 @@
             </ng-template>
         </p-paginator>
         <div class="mostrar d-flex text-right justify-content-end toBottomLeft verticalAlign">
-            <div><label class="pr-3 registros-totales">Mostrando registros del {{from}} al {{to}} de un
+            <div *ngIf= "to <= totalRegistros"><label class="pr-3 registros-totales">Mostrando registros del {{from}} al {{to}} de un
+                total
+                de {{totalRegistros}}</label></div>
+            <div *ngIf= "to > totalRegistros"><label class="pr-3 registros-totales">Mostrando registros del {{from}} al {{totalRegistros}} de un
                 total
                 de {{totalRegistros}}</label></div>
                 <div class="pl-1"><label>Mostrar</label></div>

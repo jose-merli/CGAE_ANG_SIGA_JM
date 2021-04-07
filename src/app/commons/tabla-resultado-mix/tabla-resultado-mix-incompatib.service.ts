@@ -54,7 +54,7 @@ constructor() {}
 
 public getTableData(result) {
 let finalRows: Row[] = [];
-result.forEach((rows => {    
+result.forEach((rows) => {    
 let rowObject: Row = new Row();
 let cells: Cell[] = [];
 rows.cells.forEach((cell) => {

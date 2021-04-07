@@ -58,6 +58,9 @@ export class PaginadorComponent implements OnInit {
       this.to = (this.pagNumber+1)*this.selectedPerPage;
 
      }
+     if (this.to > this.totalRegistros){
+       this.to = this.totalRegistros;
+     }
     this.fromReg.emit(this.from);
     this.toReg.emit(this.to);
   }
@@ -76,6 +79,9 @@ export class PaginadorComponent implements OnInit {
     this.to = (this.pagNumber+1)*this.selectedPerPage;
    }
     this.to = (this.pagNumber+1)*this.selectedPerPage;
+    if (this.to > this.totalRegistros){
+      this.to = this.totalRegistros;
+    }
     this.fromReg.emit(this.from);
     this.toReg.emit(this.to);
     this.comeFrom = "TO1";
@@ -96,6 +102,9 @@ export class PaginadorComponent implements OnInit {
      } else {
       this.to = (this.pagNumber+1)*this.selectedPerPage;
      }
+     if (this.to > this.totalRegistros){
+      this.to = this.totalRegistros;
+    }
     this.fromReg.emit(this.from);
     this.toReg.emit(this.to);
     this.comeFrom = "";
@@ -113,6 +122,9 @@ export class PaginadorComponent implements OnInit {
      } else {
       this.to = (this.pagNumber+1)*this.selectedPerPage;
      }
+     if (this.to > this.totalRegistros){
+      this.to = this.totalRegistros;
+    }
     this.fromReg.emit(this.from);
     this.toReg.emit(this.to);
     this.comeFrom = "";

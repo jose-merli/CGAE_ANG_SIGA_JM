@@ -23,7 +23,7 @@
         <!-- GUARDIA -->
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{"dato.jgr.guardia.guardias.guardia" | translate}}</label>
-          <input type="text" class="box" [(ngModel)]="filtros.nombre" class="form-control" pInputText ngDefaultControl>
+          <input type="text" class="box" name="nombre" [(ngModel)]="filtros.nombre" class="form-control" pInputText>
         </div>
 
         <!-- AREAS -->
@@ -67,8 +67,8 @@
         <!-- PARTIDO JUDICIAL -->
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{"agenda.fichaEvento.tarjetaGenerales.partidoJudicial" | translate}}</label>
-          <input type="text" class="box" [disabled]="true" [(ngModel)]="filtros.partidoJudicial"
-            class="form-control" pInputText>
+          <input type="text" name="nombre" class="box" [disabled]="true" [(ngModel)]="filtros.partidoJudicial"
+            class="form-control" pInputText/>
         </div>
 
         <!-- JURISDICCION -->

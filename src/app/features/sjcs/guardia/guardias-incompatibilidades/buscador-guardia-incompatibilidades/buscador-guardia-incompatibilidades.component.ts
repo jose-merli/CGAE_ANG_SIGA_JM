@@ -88,7 +88,6 @@ export class BuscadorGuardiaIncompatibilidadesComponent implements OnInit {
     }
 
     ngOnInit() {
-      
   this.commonsService.checkAcceso(procesos_guardia.guardias)
       .then(respuesta => {
 
@@ -133,6 +132,7 @@ export class BuscadorGuardiaIncompatibilidadesComponent implements OnInit {
   }
 
   getComboGuardiasInc(){
+    this.comboGuardiasIncompatibles = [];
     let idInstitucion = this.authenticationService.getInstitucionSession();
     this.comboIncompatibilidadesDatosEntradaItem = new ComboIncompatibilidadesDatosEntradaItem(
       { 'idTurno': this.filtrosValues.idTurno,
@@ -146,18 +146,15 @@ export class BuscadorGuardiaIncompatibilidadesComponent implements OnInit {
     this.sigaServices.post(
       "guardiasIncompatibilidades_getCombo", this.comboIncompatibilidadesDatosEntradaItem).subscribe(
         data => {
-          console.log('data: ', JSON.parse(data.body))
           this.comboIncompatibilidadesRes = new ComboIncompatibilidadesRes(
             {
               'values': JSON.parse(data.body).values,
               'labels': JSON.parse(data.body).labels
             });
-            console.log(' this.comboIncompatibilidadesRes: ',  this.comboIncompatibilidadesRes)
             this.comboIncompatibilidadesRes.labels.forEach((l,i) => {
               let objCombo: GuardiaI = {label: l, value: this.comboIncompatibilidadesRes.values[i]};
               this.comboGuardiasIncompatibles.push(objCombo);
             });
-            console.log('this.comboGuardiasIncompatibles: ', this.comboGuardiasIncompatibles)
             this.buscarInc();
   },
     err => {
@@ -169,7 +166,6 @@ export class BuscadorGuardiaIncompatibilidadesComponent implements OnInit {
 
 
 buscarInc(){
- 
   
 //let jsonEntrada  = JSON.parse(JSON.stringify(datosEntrada))
 this.incompatibilidadesDatosEntradaItem = new IncompatibilidadesDatosEntradaItem(
@@ -362,6 +358,7 @@ save(event){
   }
 
   deleteFromCombo(rowToDelete){
+
     let idTurnoIncompatible;
     let idGuardiaIncompatible;
     let idGuardia;
@@ -385,10 +382,12 @@ rowToDelete.cells.forEach((c, index) => {
         })
       }*/
     })
+
     this.eliminarInc(idTurnoIncompatible, idGuardiaIncompatible, idGuardia, idTurno)
     this.rowGroupsAux = this.rowGroups;
     this.totalRegistros = this.rowGroups.length;
   }
+
 delete(indexToDelete){
   let idGuardia;
   let idTurno;
@@ -443,10 +442,12 @@ let idGuardiaIncompatible;
           let error = JSON.parse(data.body).error;
           this.datos = JSON.parse(data.body).guardiaItems;
           this.buscar = true;
-          this.datos = this.datos.map(it => {
-            it.letradosIns = +it.letradosIns;
-            return it;
-          })
+          if (this.datos != undefined){
+            this.datos = this.datos.map(it => {
+              it.letradosIns = +it.letradosIns;
+              return it;
+            })
+          }
           this.progressSpinner = false;
           /*if (this.tabla != null && this.tabla != undefined) {
             this.tabla.historico = event;
@@ -583,7 +584,6 @@ guardarInc(nombreTurno, nombreGuardia, nombreTurnoIncompatible, nombreGuardiaInc
   }
 
   convertArraysToStrings() {
-
     const array = ['idTurno', 'jurisdiccion', 'grupoFacturacion', 'partidaPresupuestaria', 'tipoTurno', 'idTipoGuardia'];
     if ( this.filtrosValues != undefined){
         array.forEach(element => {

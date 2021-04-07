@@ -95,7 +95,6 @@ export class TablaResultadoMixComponent implements OnInit {
   }
 
   onChangeMulti(event, rowPosition, cell){
-    console.log('cell: ', cell)
     let deseleccionado;
    
     let selected = event.itemValue;
@@ -132,8 +131,6 @@ export class TablaResultadoMixComponent implements OnInit {
   
   }
   nuevoFromCombo(turno, guardiaInc, idGuardia, idTurno, idTurnoIncompatible, idGuardiaIncompatible, nombreTurnoInc){
-    console.log('idGuardiaIncompatible: ', idGuardiaIncompatible)
-    console.log('idGuardia: ', idGuardia)
     this.enableGuardar = true;
     let labelSelected = '';
     let row: Row = new Row();
@@ -162,9 +159,7 @@ export class TablaResultadoMixComponent implements OnInit {
     if (idGuardia.value != ''){
       this.comboGuardiasIncompatibles.push({ label: labelSelected, value: idGuardia.value})
     }
-    console.log('idGuardia.value: ', idGuardia.value)
-    console.log('this.comboGuardiasIncompatibles: ', this.comboGuardiasIncompatibles)
-    console.log('cellMulti.value: ', cellMulti.value)
+   
     row.cells = [turno, guardiaInc, cellMulti, cell1, cell2, idTurno, idGuardia, idGuardiaIncompatible, idTurnoIncompatible, cellInvisible, cellArr];
     if (idGuardia.value != ''){
     this.rowGroups.unshift(row);
@@ -176,8 +171,7 @@ export class TablaResultadoMixComponent implements OnInit {
     return texto === 'Si';
   }
   selectRow(rowId) {
-    console.log('*****SELECTROW')
-    console.log('rowId: ', rowId)
+ 
     if (this.selectedArray.includes(rowId)) {
       const i = this.selectedArray.indexOf(rowId);
       this.selectedArray.splice(i, 1);
@@ -264,6 +258,9 @@ export class TablaResultadoMixComponent implements OnInit {
   }
   toReg(event){
     this.to = Number(event);
+    if (this.to > this.totalRegistros){
+      this.to = this.totalRegistros;
+    }
   }
   perPage(perPage){
     this.numperPage = perPage;
@@ -321,17 +318,14 @@ export class TablaResultadoMixComponent implements OnInit {
     this.rowGroups.unshift(row);
     this.rowGroupsAux = this.rowGroups;
     this.totalRegistros = this.rowGroups.length;
-    console.log('this.rowGroups: ', this.rowGroups)
     //this.to = this.totalRegistros;
   }
   inputChange(event, i, z, cell){
     this.enableGuardar = true;
-    console.log('this.rowGroups: ', this.rowGroups)
   }
 
   guardar(){
     let anyEmptyArr = [];
-    console.log('GUARDAR: ',  this.rowGroups)
     this.rowGroups.forEach(row =>{
       if(row.cells[0].value == '' ||  row.cells[0].value == null || row.cells[1].value == '' ||  row.cells[1].value == null || row.cells[2].value == '' ||  row.cells[2].value == null || row.cells[4].value == '' ||  row.cells[4].value == null){
         anyEmptyArr.push(true);
@@ -342,11 +336,9 @@ export class TablaResultadoMixComponent implements OnInit {
     })
     
     if (anyEmptyArr.includes(true)){
-      console.log('ERROR')
       this.showMsg('error', 'Error. Existen campos vacíos en la tabla.', '')
     }else{
       this.showMsg('success', 'Se ha guardado correctamente', '')
-      console.log('SUCCESS')
       this.save.emit( this.rowGroups);
       this.enableGuardar = false;
       this.totalRegistros = this.rowGroups.length;

@@ -335,17 +335,15 @@ export class FiltrosGuardiaIncompatibilidadesComponent implements OnInit {
 
   search() {
     if (this.checkFilters()) {
-      this.persistenceService.setFiltros(this.filtros);
+      /*this.persistenceService.setFiltros(this.filtros);
       this.persistenceService.setFiltrosAux(this.filtros);
       this.filtroAux = this.persistenceService.getFiltrosAux();
       sessionStorage.setItem('filtrosBusquedaGuardias', JSON.stringify(this.filtros));
-      this.isOpen.emit(false);
-      this.filtrosValues.emit(this.filtros);
+      this.isOpen.emit(false);*/
+      this.filtrosValues.emit(Object.assign({},this.filtros));
     }
 
   }
-
-
 
   nuevo() {
     if (this.permisoEscritura) {
@@ -355,7 +353,6 @@ export class FiltrosGuardiaIncompatibilidadesComponent implements OnInit {
   }
 
   checkFilters() {
-
     if ((this.filtros.area == null || this.filtros.area == undefined) &&
       (this.filtros.jurisdiccion == null || this.filtros.jurisdiccion == undefined) &&
       (this.filtros.grupoFacturacion == null || this.filtros.grupoFacturacion == undefined) &&
