@@ -2,19 +2,23 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Message } from 'primeng/primeng';
 import { RowGroup, TablaResultadoDesplegableJEService } from '../../../../../commons/tabla-resultado-desplegable/tabla-resultado-desplegable-je.service';
+import { JustificacionExpressItem } from '../../../../../models/sjcs/JustificacionExpressItem';
 
 @Component({
   selector: 'app-tabla-justificacion-expres',
   templateUrl: './tabla-justificacion-expres.component.html',
   styleUrls: ['./tabla-justificacion-expres.component.scss']
 })
+
 export class TablaJustificacionExpresComponent implements OnInit {
 
   progressSpinner: boolean = false;
+  seleccionarTodo: boolean = false;
 
   @Input() datosJustificacion;
 
-  
+  datosJustificacionAux: JustificacionExpressItem = new JustificacionExpressItem();
+
   rutas = ['SJCS', 'Designaciones'];
   msgs: Message[] = [];
   rowGroups: RowGroup[];
@@ -122,31 +126,62 @@ export class TablaJustificacionExpresComponent implements OnInit {
   inputs1 = [
     "Año Designación", "Número Designación", "Apellidos", "Nombre", "Año EJG", "Número EJG"
   ];
-  seleccionarTodo = false;
-  constructor(
-    private trdService: TablaResultadoDesplegableJEService,
-    private activatedRoute: ActivatedRoute
-  ) { }
+
+  constructor(private trdService: TablaResultadoDesplegableJEService) 
+  { }
 
   ngOnInit(): void {
-    this.rowGroups = this.trdService.getTableData();
-    this.rowGroupsAux = this.trdService.getTableData();
 
-    if (this.activatedRoute.snapshot.queryParamMap.get('searchMode') != null &&
-      this.activatedRoute.snapshot.queryParamMap.get('searchMode') != undefined
-      && this.activatedRoute.snapshot.queryParamMap.get('searchMode') != ''
-      && this.activatedRoute.snapshot.queryParamMap.get('searchMode') == 'a') {
+    this.progressSpinner=false;
 
-      this.modoBusqueda = 'a';
+    this.datosJustificacionAux = this.datosJustificacion;
 
-    }
+    this.cargaInicial();
+  }
 
+  cargaInicial(){
+    // this.progressSpinner=true;
+
+  //   let arr = [];
+
+  //   this.datosJustificacion.forEach((res, i) => {
+  //     let expedientes =
+
+
+  //     let objCells = [ "'D"+res.codigoDesignacion+"'": [
+  //       {
+  //         expedientes       
+          
+          
+  //         { type: 'text', value: res.nombreTurno },
+  //         { type: 'text', value: res.nombreGuardia },
+  //         { type: 'multiselect', combo: this.comboGuardiasIncompatibles, value: ArrComboValue },
+  //         { type: 'input', value: res.motivos },
+  //         { type: 'input', value: res.diasSeparacionGuardias },
+  //         { type: 'invisible', value: res.idTurnoIncompatible },
+  //         { type: 'invisible', value: res.idGuardiaIncompatible },
+  //         { type: 'invisible', value: res.idGuardia },
+  //         { type: 'invisible', value: res.idTurno },
+  //         { type: 'invisible', value: res.nombreTurnoIncompatible },
+  //         { type: 'invisible', value: ArrNombresGI }
+  //     ]
+  //   ];
+   
+  //     let obj = {id: i, cells: objCells};
+  //     arr.push(obj);
+  //   });
+
+  //   let datosTabla = { data: [{}]};
+
+  //   this.rowGroups = this.trdService.getTableData(this.datosJustificacion);
+  //   this.rowGroupsAux = this.trdService.getTableData(this.datosJustificacion);
   }
   
-  // selectedAll(event) {
-  //   this.seleccionarTodo = event;
-  //   this.isDisabled = !event;
-  // }
+  selectedAll(event) {
+    this.seleccionarTodo = event;
+    // this.isDisabled = !event;
+  }
+
   // notifyAnySelected(event) {
   //   if (event) {
   //     this.isDisabled = false;
