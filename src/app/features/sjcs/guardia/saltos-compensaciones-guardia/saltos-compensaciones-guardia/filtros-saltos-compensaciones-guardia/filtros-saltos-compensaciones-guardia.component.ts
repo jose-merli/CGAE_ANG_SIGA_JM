@@ -59,8 +59,8 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
 
 
     if (sessionStorage.getItem("esColegiado") && sessionStorage.getItem("esColegiado") == 'true') {
-      this.disabledBusquedaExpress = true;
-      this.getDataLoggedUser();
+      /*this.disabledBusquedaExpress = true;
+      this.getDataLoggedUser();*/
     }
 
     if (sessionStorage.getItem('buscadorColegiados')) {
@@ -207,6 +207,11 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
 
     });
 
+  }
+
+  changeColegiado(event) {
+    this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
+    this.usuarioBusquedaExpress.numColegiado = event.numColegiado;
   }
 
 }

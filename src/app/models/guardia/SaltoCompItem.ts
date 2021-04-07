@@ -15,5 +15,8 @@ export class SaltoCompItem {
     fechaUso;
     grupo;
     historico: boolean;
+    letradosGrupo;
+    comboGuardia;
+    comboColegiados;
 
 }

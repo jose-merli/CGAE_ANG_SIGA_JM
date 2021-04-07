@@ -1,15 +1,15 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { Message, SelectItem } from 'primeng/api';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { TranslateService } from '../../../../../commons/translate/translation.service';
-import { SaltoCompItem } from '../../../../../models/guardia/SaltoCompItem';
-import { SaltoCompObject } from '../../../../../models/guardia/SaltoCompObject';
 import { procesos_guardia } from '../../../../../permisos/procesos_guarida';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { FiltrosSaltosCompensacionesGuardiaComponent } from './filtros-saltos-compensaciones-guardia/filtros-saltos-compensaciones-guardia.component';
-import { TablaSaltosCompensacionesGuardiaComponent } from './tabla-saltos-compensaciones-guardia/tabla-saltos-compensaciones-guardia.component';
+import { TablaResultadoMixSaltosCompGuardiaComponent } from './tabla-resultado-mix-saltos-comp-guardia/tabla-resultado-mix-saltos-comp-guardia.component';
+import { Row, TablaResultadoMixSaltosCompService } from './tabla-resultado-mix-saltos-comp-guardia/tabla-resultado-mix-saltos-comp.service';
 @Component({
   selector: 'app-saltos-compensaciones-guardia',
   templateUrl: './saltos-compensaciones-guardia.component.html',
@@ -17,26 +17,72 @@ import { TablaSaltosCompensacionesGuardiaComponent } from './tabla-saltos-compen
 })
 export class SaltosCompensacionesGuardiaComponent implements OnInit {
 
-  buscar: boolean = false;
-  historico;
-
+  isDisabled;
+  seleccionarTodo = false;
+  totalRegistros = 0;
+  rowGroups: Row[];
+  rowGroupsAux: Row[];
+  rowGroupsInit: Row[];
+  selectedRow: Row;
+  cabeceras = [
+    {
+      id: "turno",
+      name: "dato.jgr.guardia.saltcomp.turno"
+    },
+    {
+      id: "guardia",
+      name: "dato.jgr.guardia.saltcomp.guardia"
+    },
+    {
+      id: "nColegiado",
+      name: "dato.jgr.guardia.saltcomp.ncolegiadoGrupo"
+    },
+    {
+      id: "letrado",
+      name: "dato.jgr.guardia.saltcomp.letrados"
+    },
+    {
+      id: "saltoCompensacion",
+      name: "dato.jgr.guardia.saltcomp.tipo"
+    },
+    {
+      id: "fecha",
+      name: "dato.jgr.guardia.saltcomp.fecha"
+    },
+    {
+      id: "motivo",
+      name: "dato.jgr.guardia.saltcomp.motivos"
+    },
+    {
+      id: "fechaUso",
+      name: "dato.jgr.guardia.saltcomp.fechauso"
+    }
+  ];
+  comboTurnos: SelectItem[];
+  comboGuardias: SelectItem[];
+  comboTipos = [
+    {
+      label: 'Salto',
+      value: 'S'
+    },
+    {
+      label: 'Compensación',
+      value: 'C'
+    }
+  ];
+  historico: boolean = false;
   datos;
-
   progressSpinner: boolean = false;
-
-  @ViewChild(FiltrosSaltosCompensacionesGuardiaComponent) filtros: FiltrosSaltosCompensacionesGuardiaComponent;
-  @ViewChild(TablaSaltosCompensacionesGuardiaComponent) tabla: TablaSaltosCompensacionesGuardiaComponent;
-
-  //comboPartidosJudiciales
-  comboPJ;
-  msgs;
-
+  msgs: Message[] = [];
   permisoEscritura;
-
   showResults: boolean = false;
 
+  @ViewChild(FiltrosSaltosCompensacionesGuardiaComponent) filtros: FiltrosSaltosCompensacionesGuardiaComponent;
+  @ViewChild(TablaResultadoMixSaltosCompGuardiaComponent) tabla: TablaResultadoMixSaltosCompGuardiaComponent;
+
+
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
-    private commonsService: CommonsService, private translateService: TranslateService, private router: Router, private datepipe: DatePipe) { }
+    private commonsService: CommonsService, private translateService: TranslateService, private router: Router, private datepipe: DatePipe, private trmService: TablaResultadoMixSaltosCompService) { }
 
 
   ngOnInit() {
@@ -58,8 +104,22 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
         }
       }
       ).catch(error => console.error(error));
+
+    this.getComboTurno();
   }
 
+  getComboTurno() {
+
+    this.sigaServices.get("busquedaGuardia_turno").subscribe(
+      n => {
+        this.comboTurnos = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboTurnos);
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
 
   isBuscar(event) {
     this.search(event);
@@ -78,22 +138,12 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
       n => {
 
         this.datos = JSON.parse(n.body).saltosCompItems;
-        console.log("file: saltos-compensaciones-guardia.component.ts ~ line 81 ~ SaltosCompensacionesGuardiaComponent ~ search ~ this.datos", this.datos)
-        this.modifyData(this.datos);
-        this.buscar = true;
-
-        if (this.tabla != null && this.tabla != undefined) {
-          this.tabla.historico = event;
-          this.tabla.tabla.sortOrder = 0;
-          this.tabla.tabla.sortField = '';
-          this.tabla.tabla.reset();
-          this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
-        }
-
-        this.showResults = true;
-        this.resetSelect();
-
+        console.log("file: saltos-compensaciones-guardia.component.ts ~ line 154 ~ SaltosCompensacionesGuardiaComponent ~ search ~  this.datos", this.datos)
         let error = JSON.parse(n.body).error;
+        this.historico = event;
+        this.jsonToRow();
+        this.showResults = true;
+        this.progressSpinner = false;
 
         if (error != null && error.description != null) {
           this.showMessage({ severity: "info", summary: this.translateService.instant("general.message.informacion"), msg: error.description });
@@ -106,21 +156,19 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
         this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("general.mensaje.error.bbdd") });
       },
       () => {
-        this.progressSpinner = false;
         setTimeout(() => {
           this.tabla.tablaFoco.nativeElement.scrollIntoView();
         }, 5);
-
       }
     );
   }
 
   resetSelect() {
     if (this.tabla != undefined) {
-      this.tabla.selectedDatos = [];
-      this.tabla.numSelected = 0;
-      this.tabla.selectMultiple = false;
-      this.tabla.selectAll = false;
+      // this.tabla.selectedDatos = [];
+      // this.tabla.numSelected = 0;
+      // this.tabla.selectMultiple = false;
+      // this.tabla.selectAll = false;
     }
   }
 
@@ -161,36 +209,134 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
     return resp;
   }
 
-  modifyData(datos) {
+  modifyData(dato) {
 
-    datos.forEach(dato => {
+    dato.fecha = this.formatDate(dato.fecha);
 
-      // if (dato.saltoCompensacion == 'C') {
-      //   dato.saltoCompensacion = 'Compensación';
-      // } else if (dato.saltoCompensacion == 'S') {
-      //   dato.saltoCompensacion = 'Salto';
-      // }
+    if (dato.fechaUso != undefined && dato.fechaUso != null) {
+      dato.fechaUso = this.formatDate(dato.fechaUso);
+    }
 
-      dato.fecha = this.formatDate(dato.fecha);
+    if (dato.grupo != undefined && dato.grupo != null) {
+      dato.nColegiado = dato.grupo;
+      dato.letrado = '';
 
-      if (dato.fechaUso != undefined && dato.fechaUso != null) {
-        dato.fechaUso = this.formatDate(dato.fechaUso);
+      if (dato.letradosGrupo != undefined && dato.letradosGrupo != null) {
+        dato.letradosGrupo.forEach(element => {
+          dato.letrado += element + '\n';
+        });
       }
 
-      if (dato.grupo != undefined && dato.grupo != null) {
-        dato.nColegiado = dato.grupo;
-        dato.letrado = dato.letradosGrupo;
-      } else {
-        dato.nColegiado = dato.colegiadoGrupo;
-        dato.letrado = [dato.letrado];
-      }
+    } else {
+      dato.nColegiado = dato.colegiadoGrupo;
+    }
 
+    return dato;
 
+  }
 
-      // dato.editable = true; 
+  jsonToRow() {
+    let arr = [];
+    this.datos.forEach((element, index) => {
 
+      element = this.modifyData(element);
+
+      let italic = (element.fechaUso != null || element.fechaAnulacion != null);
+
+      let obj = [
+        { type: 'select', combo: this.comboTurnos, value: element.idTurno, header: this.cabeceras[0].id, disabled: false },
+        { type: 'select', combo: element.comboGuardia, value: element.idGuardia, header: this.cabeceras[1].id, disabled: false },
+        { type: element.grupo == null ? 'select' : 'multiselect', combo: element.comboColegiados, value: element.grupo == null ? element.nColegiado : [element.nColegiado], header: this.cabeceras[2].id, disabled: false },
+        { type: 'text', value: element.letrado, header: this.cabeceras[3].id, disabled: false },
+        { type: 'select', combo: this.comboTipos, value: element.saltoCompensacion, header: this.cabeceras[4].id, disabled: false },
+        { type: 'datePicker', value: element.fecha, header: this.cabeceras[5].id, disabled: false },
+        { type: 'textarea', value: element.motivo, header: this.cabeceras[6].id, disabled: false },
+        { type: 'text', value: element.fechaUso, header: this.cabeceras[7].id, disabled: false }
+      ];
+
+      let superObj = {
+        id: index,
+        italic: italic,
+        row: obj
+      };
+
+      arr.push(superObj);
     });
 
+    this.rowGroups = [];
+    this.rowGroups = this.trmService.getTableData(arr);
+    this.rowGroupsAux = [];
+    this.rowGroupsAux = this.trmService.getTableData(arr);
+    this.rowGroupsInit = [];
+    this.rowGroupsInit = [...this.rowGroups];
+    this.totalRegistros = this.rowGroups.length;
+  }
+
+
+  notifyAnySelected(event) {
+    if (this.seleccionarTodo || event) {
+      this.isDisabled = false;
+    } else {
+      this.isDisabled = true;
+    }
+  }
+
+  checkSelectedRow(selected) {
+    this.selectedRow = selected;
+  }
+
+  anular(event) {
+    let array = [];
+
+    event.forEach(element => {
+      array.push(this.datos[element]);
+    });
+
+    this.sigaServices.post("saltosCompensacionesGuardia_anular", array).subscribe(
+      result => {
+
+        const resp = JSON.parse(result.body);
+
+        if (resp.status == 'KO' || (resp.error != undefined && resp.error != null)) {
+          this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("general.mensaje.error.bbdd") });
+        }
+
+        if (resp.status == 'OK') {
+          this.search(false);
+        }
+
+      },
+      error => {
+        this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("general.mensaje.error.bbdd") });
+      }
+    );
+  }
+
+  delete(event) {
+    let array = [];
+
+    event.forEach(element => {
+      array.push(this.datos[element]);
+    });
+
+    this.sigaServices.post("saltosCompensacionesGuardia_borrar", array).subscribe(
+      result => {
+
+        const resp = JSON.parse(result.body);
+
+        if (resp.status == 'KO' || (resp.error != undefined && resp.error != null)) {
+          this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("general.mensaje.error.bbdd") });
+        }
+
+        if (resp.status == 'OK') {
+          this.search(false);
+        }
+
+      },
+      error => {
+        this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("general.mensaje.error.bbdd") });
+      }
+    );
   }
 
 }

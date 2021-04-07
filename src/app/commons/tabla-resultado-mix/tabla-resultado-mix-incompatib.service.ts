@@ -13,8 +13,8 @@ export class Cell {
 }
 
 export class Combo {
-   label: string;
-   value: string;
+  label: string;
+  value: string;
 }
 export class TablaResultadoMixIncompService {
 
@@ -50,30 +50,29 @@ export class TablaResultadoMixIncompService {
       { type: 'input', value: 'Euskara ResultadoConsulta' }
     ]
   ];*/
-constructor() {}
+  constructor() { }
 
-public getTableData(result) {
-let finalRows: Row[] = [];
-result.forEach((rows) => {    
-let rowObject: Row = new Row();
-let cells: Cell[] = [];
-rows.cells.forEach((cell) => {
-  let cellObject: Cell = new Cell();
-  if (cell['type'] == 'multiselect'){
-    cellObject.type = cell['type'];
-    cellObject.combo = cell['combo'];
-    cellObject.value = cell['value'];
-  }else{
-    cellObject.type = cell['type'];
-    cellObject.value = cell['value'];
-  }
-  cells.push(cellObject);
-});
-rowObject.id = rows.id;
-rowObject.cells = cells;
-finalRows.push(rowObject);
-});
-return finalRows;
-}
+  public getTableData(result) {
+    let finalRows: Row[] = [];
+    result.forEach((rows => {
+      let rowObject: Row = new Row();
+      let cells: Cell[] = [];
+      rows.cells.forEach((cell) => {
+        let cellObject: Cell = new Cell();
+        if (cell['type'] == 'multiselect') {
+          cellObject.type = cell['type'];
+          cellObject.combo = cell['combo'];
+          cellObject.value = cell['value'];
+        } else {
+          cellObject.type = cell['type'];
+          cellObject.value = cell['value'];
+        }
+        cells.push(cellObject);
+      });
+      rowObject.id = rows.id;
+      rowObject.cells = cells;
+      finalRows.push(rowObject);
+    }));
+    return finalRows;
 }
 

@@ -20,9 +20,9 @@ import { BusquedaGuardiasIncompatibilidadesModule } from "./guardias-incompatibi
     ],
 
     providers: [
-        
-    TablaResultadoOrderCGService,
-    GlobalGuardiasService,
+
+        TablaResultadoOrderCGService,
+        GlobalGuardiasService,
     ]
 })
 export class GuardiaModule { }
