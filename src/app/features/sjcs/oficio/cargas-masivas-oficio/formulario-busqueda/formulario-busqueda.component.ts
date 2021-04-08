@@ -174,10 +174,12 @@ export class FormularioBusquedaComponent implements OnInit {
         //Comprobamos seleccionados para boton y desplegable
         if(this.guardias != undefined && this.guardias.length >0) {
           if(this.guardias!=[]) this.disableGuardia=false;
+          else this.guardiasSelected = null;
         }
         else{
           this.disableGuardia=true;
-    }
+          this.guardiasSelected = null;
+        }
       },
       err => {
         console.log(err);
@@ -215,13 +217,13 @@ export class FormularioBusquedaComponent implements OnInit {
 
   descargarModelo(){
     this.progressSpinner = true;
-    let turn = "";
+    let turn : String = "";
     if(this.turnosSelected!=null){
-      turn = this.turnosSelected.toString();
+      turn = this.EncontrarLabels(this.turnos, this.turnosSelected);
     }
-    let guard = "";
+    let guard : String = "";
     if(this.guardiasSelected!=null){
-      guard = this.guardiasSelected.toString();
+      guard = this.EncontrarLabels(this.guardias, this.guardiasSelected);
     }
     let request : String[] = [turn, guard, this.selectedTipoCarga]; 
     this.sigaServices
@@ -234,16 +236,15 @@ export class FormularioBusquedaComponent implements OnInit {
           const blob = new Blob([data], { type: "text/csv" });
           if(this.selectedTipoCarga=="IT")  saveAs(blob, "PlantillaCargaMasivaDatosIT.xls");
           else saveAs(blob, "PlantillaCargaMasivaDatosBT.xls");
-          this.progressSpinner = true;
         },
         err => {
           console.log(err);
-          this.progressSpinner = false;
         },
         () => {
           this.progressSpinner = false;
         }
       );
+      this.progressSpinner = false;
   } 
 
   sendTipo() {
@@ -252,5 +253,26 @@ export class FormularioBusquedaComponent implements OnInit {
   
 	clear() {
 		this.msgs = [];
-	}
+  }
+
+  EncontrarLabels(combo : any[], values : any ){
+    let send: String ="";
+    let i = 0;
+    let select = values;
+    while(i<combo.length 
+     // && select.length>0
+      ){
+      let elementCombo = combo[i];
+      let eleValue:String = elementCombo.value;
+      if((select.indexOf(eleValue) > -1)) {
+      //  select.splice(select.indexOf(eleValue), 1);
+        if(send == "")send+=elementCombo.label;
+        else send+=","+elementCombo.label;
+      }
+      i++;
+    }
+
+    return send;
+  }
+
 }

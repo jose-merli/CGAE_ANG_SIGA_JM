@@ -40,7 +40,10 @@ export class FormularioSubidaComponent implements OnInit {
         
     this.file = undefined;
     this.fechaSolicitud = undefined;
-    this.pUploadFile.clear();
+    if(this.pUploadFile != undefined ){
+      this.pUploadFile.clear();
+      this.pUploadFile.chooseLabel = "Seleccionar Archivo";
+    }
     
 }
 
@@ -82,48 +85,50 @@ export class FormularioSubidaComponent implements OnInit {
   isBuscar() {
 
     if(this.fechaSolicitud==undefined) this.showFail("Debe rellenar todos los campos obligatorios");
-    this.progressSpinner = true;
+    else{
+      this.progressSpinner = true;
 
-    let body: CargaMasivaItem = new CargaMasivaItem();
-    body.tipoCarga = this.tipo;
+      let body: CargaMasivaItem = new CargaMasivaItem();
+      body.tipoCarga = this.tipo;
 
-    if (this.fechaSolicitud != undefined || this.fechaSolicitud != null) {
-      body.fechaCarga = this.datePipe.transform(
-        this.fechaSolicitud,
-        "dd/MM/yyyy"
-      );
-    
+      if (this.fechaSolicitud != undefined && this.fechaSolicitud != null) {
+        body.fechaCarga = this.datePipe.transform(
+          this.fechaSolicitud,
+          "dd/MM/yyyy"
+        );
+      
 
-    this.sigaServices
-      .postPaginado(
-        "cargaMasivaDatosCurriculares_searchCV",
-        "?numPagina=1",
-        body
-      )
-      .subscribe(
-        data => {
-          this.progressSpinner = false;
-          let etiquetasSearch = JSON.parse(data["body"]);
-          this.datos = etiquetasSearch.cargaMasivaItem;
+      this.sigaServices
+        .postPaginado(
+          "cargaMasivaDatosCurriculares_searchCV",
+          "?numPagina=1",
+          body
+        )
+        .subscribe(
+          data => {
+            this.progressSpinner = false;
+            let etiquetasSearch = JSON.parse(data["body"]);
+            this.datos = etiquetasSearch.cargaMasivaItem;
 
-          //this.table.reset();
-          //this.numSelected = this.selectedDatos.length;
-          this.sendDatos();
-          this.sendBuscar();
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        },
-        () => {
-          this.progressSpinner = false;
-          setTimeout(()=>{
-            this.commonsService.scrollTablaFoco('tablaFoco');
-          }, 5);
-        }
-      );
-    } else {
-      body.fechaCarga = null;
+            //this.table.reset();
+            //this.numSelected = this.selectedDatos.length;
+            this.sendDatos();
+            this.sendBuscar();
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+          },
+          () => {
+            this.progressSpinner = false;
+            setTimeout(()=>{
+              this.commonsService.scrollTablaFoco('tablaFoco');
+            }, 5);
+          }
+        );
+      } else {
+        body.fechaCarga = null;
+      }
     }
   }
 
