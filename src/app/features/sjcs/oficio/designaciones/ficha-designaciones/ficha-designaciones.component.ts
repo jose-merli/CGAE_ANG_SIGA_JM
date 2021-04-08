@@ -11,6 +11,7 @@ export class FichaDesignacionesComponent implements OnInit {
 
   rutas: string[] = ['SJCS', 'EJGS'];
   campos: any;
+  nuevaDesigna: any;
   tarjetaFija = {
     nombre: "Información Resumen",
     icono: 'fas fa-clipboard',
@@ -237,7 +238,7 @@ export class FichaDesignacionesComponent implements OnInit {
   constructor( private location: Location) { }
 
   ngOnInit() {
-
+    this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
     let designaItem = JSON.parse(sessionStorage.getItem("designaItemLink"));
     this.campos = designaItem;
     let camposResumen = [

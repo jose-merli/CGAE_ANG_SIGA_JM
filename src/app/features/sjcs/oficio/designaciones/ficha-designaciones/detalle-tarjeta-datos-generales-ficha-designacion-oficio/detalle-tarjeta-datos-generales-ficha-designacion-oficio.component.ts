@@ -11,6 +11,8 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent implements OnInit {
 
   msgs: Message[] = [];
+  nuevaDesigna: any;
+  checkArt: boolean;
   @Input() campos;
   anio = {
     value: "",
@@ -55,6 +57,12 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
 
   ngOnInit() {
     console.log(this.campos);
+    this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
+    if(!this.nuevaDesigna){
+      this.checkArt = true;
+    }else{
+      this.checkArt = false;
+    }
     //EDICION
     this.selectores[0].opciones = [{label: this.campos.nombreTurno, value: this.campos.idTurno}];
     this.selectores[0].value =  this.campos.idTurno;
@@ -67,7 +75,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     this.anio.disable=  true;
     this.numero.value = this.campos.codigo;
     this.numero.disable = false;
-    this.fechaGenerales = this.campos.fechaEstado;
+    this.fechaGenerales = this.campos.fechaAlta;
     let colegiado = new ColegiadoItem();
     colegiado.numColegiado = this.campos.numColegiado;
     colegiado.idInstitucion = this.campos.idInstitucion;

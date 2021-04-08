@@ -78,7 +78,7 @@ export class DesignacionesComponent implements OnInit {
 
   }
 
-  searchPartidas(event) {
+  busquedaDesignaciones(event) {
     this.progressSpinner = true;
     let data = sessionStorage.getItem("designaItem");
     let designaItem = JSON.parse(data);
