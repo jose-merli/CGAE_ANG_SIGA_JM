@@ -91,10 +91,13 @@ export class DesignacionesComponent implements OnInit {
         element.fechaEstado = this.formatDate(element.fechaEstado);
         element.fechaAlta = this.formatDate(element.fechaAlta);
          if(element.art27 == 'V'){
+           element.sufijo = element.art27;
           element.art27 = 'Activo';
          }else if(element.art27 == 'F'){
+          element.sufijo = element.art27;
           element.art27 = 'Finalizado';
          }else if(element.art27 == 'A'){
+          element.sufijo = element.art27;
           element.art27 = 'Anulada';
          }
          element.idTipoDesignaColegio = element.observaciones;

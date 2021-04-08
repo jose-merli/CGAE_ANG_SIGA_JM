@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Message } from 'primeng/components/common/api';
 import { ColegiadoItem } from '../../../../../../models/ColegiadoItem';
+import { CommonsService } from '../../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
 
 @Component({
@@ -10,6 +11,7 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 })
 export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent implements OnInit {
 
+  resaltadoDatos: boolean = false;
   msgs: Message[] = [];
   nuevaDesigna: any;
   checkArt: boolean;
@@ -52,7 +54,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     value:""
   }];
 
-  constructor(private sigaServices: SigaServices) {
+  constructor(private sigaServices: SigaServices,  private commonsService: CommonsService) {
    }
 
   ngOnInit() {
@@ -143,5 +145,9 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
   clear() {
     this.msgs = [];
   }
-
+  styleObligatorio(evento){
+    if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
 }
