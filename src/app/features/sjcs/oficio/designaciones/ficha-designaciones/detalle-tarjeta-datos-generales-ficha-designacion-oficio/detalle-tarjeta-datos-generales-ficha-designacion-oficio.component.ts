@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Message } from 'primeng/components/common/api';
 import { ColegiadoItem } from '../../../../../../models/ColegiadoItem';
+import { CommonsService } from '../../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
 
 @Component({
@@ -10,15 +11,18 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 })
 export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent implements OnInit {
 
+  resaltadoDatos: boolean = false;
   msgs: Message[] = [];
+  nuevaDesigna: any;
+  checkArt: boolean;
   @Input() campos;
-  anio: {
+  anio = {
     value: "",
-    disable: boolean
+    disable: false
   };
-  numero: {
+  numero = {
     value: "",
-    disable: boolean
+    disable: false
   };
   fechaGenerales:any;
 
@@ -50,11 +54,17 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     value:""
   }];
 
-  constructor(private sigaServices: SigaServices) {
+  constructor(private sigaServices: SigaServices,  private commonsService: CommonsService) {
    }
 
   ngOnInit() {
     console.log(this.campos);
+    this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
+    if(!this.nuevaDesigna){
+      this.checkArt = true;
+    }else{
+      this.checkArt = false;
+    }
     //EDICION
     this.selectores[0].opciones = [{label: this.campos.nombreTurno, value: this.campos.idTurno}];
     this.selectores[0].value =  this.campos.idTurno;
@@ -66,8 +76,8 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     this.anio.value=  anioAnterior[0].slice(1);
     this.anio.disable=  true;
     this.numero.value = this.campos.codigo;
-    this.numero.disable = false
-    this.fechaGenerales = this.campos.fechaEstado;
+    this.numero.disable = false;
+    this.fechaGenerales = this.campos.fechaAlta;
     let colegiado = new ColegiadoItem();
     colegiado.numColegiado = this.campos.numColegiado;
     colegiado.idInstitucion = this.campos.idInstitucion;
@@ -135,5 +145,9 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
   clear() {
     this.msgs = [];
   }
-
+  styleObligatorio(evento){
+    if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
 }

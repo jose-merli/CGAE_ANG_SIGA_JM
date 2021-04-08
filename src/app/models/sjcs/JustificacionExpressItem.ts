@@ -20,7 +20,7 @@ export class JustificacionExpressItem {
   anioDesignacion: String;
   numDesignacion: String;
   codigoDesignacion: String;
-  expedientes: String;
+  ejgs: String;
 	cliente: String;
 	art27: String;
 	nig: String;
@@ -37,6 +37,7 @@ export class JustificacionExpressItem {
 	idTurno: String;
   idPersona: String;
   idProcedimiento: String;
+  expedientes = [];
 
   constructor() { }
 }

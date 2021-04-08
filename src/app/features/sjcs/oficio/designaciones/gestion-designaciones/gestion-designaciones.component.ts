@@ -26,7 +26,7 @@ export class GestionDesignacionesComponent implements OnInit {
   //Resultados de la busqueda
   @Input() datos;
 
-  @Output() searchPartidas = new EventEmitter<boolean>();
+  @Output() busquedaDesignaciones = new EventEmitter<boolean>();
 
   @ViewChild("table") tabla: Table;
 
@@ -58,7 +58,7 @@ export class GestionDesignacionesComponent implements OnInit {
     this.cols = [
       { field: "nombreTurno", header: "justiciaGratuita.sjcs.designas.DatosIden.turno" },
       { field: "ano", header: "justiciaGratuita.ejg.datosGenerales.annioNum" },
-      { field: "fechaEstado", header: "censo.resultadosSolicitudesModificacion.literal.fecha" },
+      { field: "fechaAlta", header: "censo.resultadosSolicitudesModificacion.literal.fecha" },
       { field: "art27", header: "censo.nuevaSolicitud.estado" },
       { field: "numColegiado", header: "facturacionSJCS.facturacionesYPagos.numColegiado" },
       { field: "nombre", header: "administracion.parametrosGenerales.literal.nombre.apellidos" },
@@ -97,6 +97,7 @@ export class GestionDesignacionesComponent implements OnInit {
        }
        });
       }
+    sessionStorage.setItem("nuevaDesigna",  "false");
     sessionStorage.setItem("designaItemLink",  JSON.stringify(dato));
     this.router.navigate(["/fichaDesignaciones"]);
   }

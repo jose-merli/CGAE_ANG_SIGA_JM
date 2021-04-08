@@ -9,8 +9,8 @@
       </div>
 
       <div class="form-group col-lg-3 col-md-3 w-100">
-        <label>Fecha</label>
-        <app-fecha [(value)]='fechaGenerales' [utc]="true"></app-fecha>
+        <label>Fecha(*)</label>
+        <app-fecha [inputStyleClass]="styleObligatorio(itemBody.fechaEntrada)" [(value)]='fechaGenerales' [utc]="true"></app-fecha>
       </div>
 
       <div class="form-group col-lg-3 col-md-3 w-100" *ngFor="let selector of selectores">
@@ -31,7 +31,7 @@
         <label>Designación</label>
         <div class="d-flex align-items-baseline justify-content-between">
           <div id="check2">
-            <p-checkbox binary="true" label="Art. 27-28"></p-checkbox>
+            <p-checkbox binary="true" label="Art. 27-28" [(ngModel)]="checkArt" [disabled] = "checkArt"></p-checkbox>
           </div>
           <div class="main-button">
             <button pButton type="button" icon="fa fa-search" iconPos="left"></button>

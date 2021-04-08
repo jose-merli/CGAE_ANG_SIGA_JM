@@ -385,14 +385,20 @@ import { FiltroBuscadorColegiadosComponent } from './commons/buscador-colegiados
 import { TablaBuscadorColegiadosComponent } from './commons/buscador-colegiados/tabla-buscador-colegiados/tabla-buscador-colegiados.component';
 import { MigasDePanComponent } from './commons/migas-de-pan/migas-de-pan.component';
 import { FormularioBusquedaComponent } from './features/sjcs/oficio/cargas-masivas-oficio/formulario-busqueda/formulario-busqueda.component';
-<<<<<<< HEAD
 import { FormularioSubidaComponent } from './features/sjcs/oficio/cargas-masivas-oficio/formulario-subida/formulario-subida.component';
 import{ ListaArchivosComponent } from './features/sjcs/oficio/cargas-masivas-oficio/lista-archivos/lista-archivos.component';
-=======
+
 import { DatePickerRangeComponent } from './commons/date-picker-range/date-picker-range.component';
 import { HoraComponent } from './commons/hora/hora.component';
 import { InputDivididoComponent } from './commons/input-dividido/input-dividido.component';
 import { TablaResultadoMixComponent } from './commons/tabla-resultado-mix/tabla-resultado-mix.component';
+
+//OFICIO
+import { TablaResultadoDesplegableComponent } from './commons/tabla-resultado-desplegable/tabla-resultado-desplegable.component';
+import { TablaResultadoDesplegableAEService } from './commons/tabla-resultado-desplegable/tabla-resultado-desplegable-ae.service';
+import { TablaResultadoDesplegableJEService } from './commons/tabla-resultado-desplegable/tabla-resultado-desplegable-je.service';
+
+//OFICIO > DESIGNACIONES
 import { FichaDesignacionesComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/ficha-designaciones.component';
 import { DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-datos-facturacion-ficha-designacion-oficio/detalle-tarjeta-datos-facturacion-ficha-designacion-oficio.component';
 import { DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-datos-generales-ficha-designacion-oficio/detalle-tarjeta-datos-generales-ficha-designacion-oficio.component';
@@ -401,10 +407,19 @@ import { DetalleTarjetaDocumentacionFichaDesignacionOficioComponent } from './fe
 import { TablaResultadoOrderComponent } from './commons/tabla-resultado-order/tabla-resultado-order.component';
 import { TablaSimpleComponent } from './commons/tabla-simple/tabla-simple.component';
 import { TarjetaComponent } from './commons/tarjeta/tarjeta.component';
->>>>>>> 5b87a209d5c075cac1f4ebf635bb8d5e25baed36
+import { TablaJustificacionExpresComponent  } from './features/sjcs/oficio/designaciones/tabla-justificacion-expres/tabla-justificacion-expres.component';
+import { GestionDesignacionesComponent } from './features/sjcs/oficio/designaciones/gestion-designaciones/gestion-designaciones.component'
+import { FiltroDesignacionesComponent } from './features/sjcs/oficio/designaciones/filtro-designaciones/filtro-designaciones.component';
+import { DesignacionesComponent } from './features/sjcs/oficio/designaciones/designaciones.component';
+
 
 @NgModule({
 	declarations: [
+		TablaResultadoDesplegableComponent,
+		TablaJustificacionExpresComponent,
+		GestionDesignacionesComponent,
+		FiltroDesignacionesComponent,
+		DesignacionesComponent,
 		AppComponent,
 		ImagePipe,
 		DatePickerRangeComponent,
@@ -736,8 +751,6 @@ import { TarjetaComponent } from './commons/tarjeta/tarjeta.component';
 
 	],
 	imports: [
-		
-
 		BrowserModule,
 		BrowserAnimationsModule,
 		HttpClientModule,
@@ -821,6 +834,8 @@ import { TarjetaComponent } from './commons/tarjeta/tarjeta.component';
 		ConfirmationService,
 		PersistenceService,
 		TrimPipePipe,
+		TablaResultadoDesplegableJEService,
+		TablaResultadoDesplegableAEService,
 
 		AuthGuard,
 		{

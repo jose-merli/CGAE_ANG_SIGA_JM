@@ -5,7 +5,9 @@ import { Message } from 'primeng/components/common/api';
 import { SigaServices } from '../../../../_services/siga.service';
 import { DatePipe, Location } from '@angular/common';
 import { CommonsService } from '../../../../_services/commons.service';
+import { JustificacionExpressItem } from '../../../../models/sjcs/JustificacionExpressItem';
 import moment = require('moment');
+import { TranslateService } from '../../../../commons/translate';
 
 @Component({
   selector: 'app-designaciones',
@@ -23,32 +25,60 @@ export class DesignacionesComponent implements OnInit {
   muestraTablaDesignas: boolean = false;
   comboTipoDesigna: any[];
 
-  @ViewChild(FiltroDesignacionesComponent) datosJustificacion;
+  @ViewChild(FiltroDesignacionesComponent) filtros;
+  
+  datosJustificacion: JustificacionExpressItem = new JustificacionExpressItem();
   
   msgs: Message[] = [];
 
   constructor(public sigaServices: OldSigaServices, public sigaServicesNew: SigaServices, private location: Location,  private commonsService: CommonsService, 
-    private datePipe: DatePipe) {
+    private datePipe: DatePipe, private translateService: TranslateService) {
     this.url = sigaServices.getOldSigaUrl("designaciones");
   }
 
   ngOnInit() {
   }
 
-  showTablaJustificacion(event){
-    this.muestraTablaJustificacion=event;
-  }
+  busquedaJustificacionExpres(event){
+    this.progressSpinner=true;
 
-  showTablaDesigna(event){
-    this.muestraTablaDesignas=event;
-    this.progressSpinner=false;
+    this.sigaServicesNew.post("justificacionExpres_busqueda", this.filtros.filtroJustificacion).subscribe(
+      data => {
+        this.progressSpinner=false;
+
+        if(data!=undefined && data!=null){
+          this.datosJustificacion = JSON.parse(data.body);
+        }
+
+        this.muestraTablaJustificacion=true;
+      },
+      err => {
+        this.progressSpinner = false;
+
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        console.log(err);
+      });
   }
   
   clear() {
     this.msgs = [];
   }
 
-  searchPartidas(event) {
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+
+  showTablaDesigna(event){
+    this.muestraTablaDesignas=event;
+
+  }
+
+  busquedaDesignaciones(event) {
     this.progressSpinner = true;
     let data = sessionStorage.getItem("designaItem");
     let designaItem = JSON.parse(data);
@@ -61,10 +91,13 @@ export class DesignacionesComponent implements OnInit {
         element.fechaEstado = this.formatDate(element.fechaEstado);
         element.fechaAlta = this.formatDate(element.fechaAlta);
          if(element.art27 == 'V'){
+           element.sufijo = element.art27;
           element.art27 = 'Activo';
          }else if(element.art27 == 'F'){
+          element.sufijo = element.art27;
           element.art27 = 'Finalizado';
          }else if(element.art27 == 'A'){
+          element.sufijo = element.art27;
           element.art27 = 'Anulada';
          }
          element.idTipoDesignaColegio = element.observaciones;

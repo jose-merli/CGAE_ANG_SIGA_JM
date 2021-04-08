@@ -63,15 +63,16 @@ export class FiltroDesignacionesComponent implements OnInit {
   comboRoles: any[];
   comboAcreditaciones: any[];
 
-  datosJustificacion: JustificacionExpressItem = new JustificacionExpressItem();
-
-  @Output() showTablaJustificacion = new EventEmitter<boolean>();
+  @Output() busquedaJustificacionExpres = new EventEmitter<boolean>();
   @Output() showTablaDesigna = new EventEmitter<boolean>();
-
+  
   constructor(private translateService: TranslateService, private sigaServices: SigaServices,  private location: Location) { }
 
   ngOnInit(): void {
     this.filtroJustificacion = new JustificacionExpressItem();
+
+    this.showDesignas=true;
+    this.showJustificacionExpress=false;
 
     this. esColegiado = false;
     this.progressSpinner=true;
@@ -440,30 +441,12 @@ getComboCalidad() {
       this.filtroJustificacion.restriccionesVisualizacion = this.checkRestricciones;
 
       if(this.compruebaFiltroJustificacion()){
-        this.progressSpinner=true;
-
         // this.filtroJustificacion.muestraPendiente=this.checkMostrarPendientes;
 
         //QUITAR ESTA LINEA CUANDO FINALICE LAS PRUEBAS
         this.filtroJustificacion.nColegiado=undefined;
 
-        this.sigaServices.post("justificacionExpres_busqueda", this.filtroJustificacion).subscribe(
-          data => {
-            this.progressSpinner=false;
-
-            if(data!=undefined && data!=null){
-              this.datosJustificacion = JSON.parse(data.body).JustificacionExpressItem;
-            }
-
-            this.showTablaJustificacion.emit(true);
-          },
-          err => {
-            this.progressSpinner = false;
-
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-
-            console.log(err);
-          });
+        this.busquedaJustificacionExpres.emit(true);
       }
     }
     else{

@@ -47,7 +47,7 @@
                                         </app-detalle-tarjeta-datos-generales-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Detalle Designación'">
-                                        <app-detalle-tarjeta-detalle-ficha-designacion-oficio>
+                                        <app-detalle-tarjeta-detalle-ficha-designacion-oficio [campos]="campos">
                                         </app-detalle-tarjeta-detalle-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Datos Adicionales'">
