@@ -12,13 +12,13 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
 
   msgs: Message[] = [];
   @Input() campos;
-  anio: {
+  anio = {
     value: "",
-    disable: boolean
+    disable: false
   };
-  numero: {
+  numero = {
     value: "",
-    disable: boolean
+    disable: false
   };
   fechaGenerales:any;
 
@@ -66,7 +66,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     this.anio.value=  anioAnterior[0].slice(1);
     this.anio.disable=  true;
     this.numero.value = this.campos.codigo;
-    this.numero.disable = false
+    this.numero.disable = false;
     this.fechaGenerales = this.campos.fechaEstado;
     let colegiado = new ColegiadoItem();
     colegiado.numColegiado = this.campos.numColegiado;
