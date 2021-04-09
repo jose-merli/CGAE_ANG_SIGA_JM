@@ -140,41 +140,55 @@ export class TablaJustificacionExpresComponent implements OnInit {
   }
 
   cargaInicial(){
-    // this.progressSpinner=true;
+    let resultModified = {};
+    let data = [];
+    let dataObj = {};
+    
+    let arr1 = [];
+    let obj1 = {};
+    
+    this.datosJustificacion.forEach((obj, i) =>{
+      let letra = (i + 10).toString(36).toUpperCase()
+      let arr2 = [];
+      let cod = obj.codigoDesignacion;
+      arr1 = [];
+      obj1 = {};
+      obj.expedientes.forEach((expediente, index) =>{
+        arr1 = 
+        [{ type: 'text', value: expediente },
+        { type: 'text', value: obj.cliente },
+        // { type: 'checkbox', value: obj.fin },
+        { type: 'checkbox', value: false },
+        { type: 'text', value: obj.nombreJuzgado },
+        { type: 'text', value: obj.nig},
+        { type: 'text', value: obj.numProcedimiento },
+        // { type: 'select', value: obj.modulo },
+        { type: 'select', value: '' },
+        { type: 'datePicker', value: obj.fechaActuacion },
+        { type: 'text', value: obj.justificacionDesde },
+        { type: 'text', value: obj.acreditacion },
+        // { type: 'checkbox', value: obj.val }
+        { type: 'checkbox', value: false },
+      ];
 
-  //   let arr = [];
+        let key = letra + index;
+        obj1 =  { [key] : arr1};
+        arr1 = [];
+        
+        arr2.push(Object.assign({},obj1));
+        obj1 = null;
+      })
 
-  //   this.datosJustificacion.forEach((res, i) => {
-  //     let expedientes =
+      dataObj = { [cod]  : arr2};
+      data.push(Object.assign({},dataObj));
+    })
 
+    resultModified = Object.assign({},{'data': data});
 
-  //     let objCells = [ "'D"+res.codigoDesignacion+"'": [
-  //       {
-  //         expedientes       
-          
-          
-  //         { type: 'text', value: res.nombreTurno },
-  //         { type: 'text', value: res.nombreGuardia },
-  //         { type: 'multiselect', combo: this.comboGuardiasIncompatibles, value: ArrComboValue },
-  //         { type: 'input', value: res.motivos },
-  //         { type: 'input', value: res.diasSeparacionGuardias },
-  //         { type: 'invisible', value: res.idTurnoIncompatible },
-  //         { type: 'invisible', value: res.idGuardiaIncompatible },
-  //         { type: 'invisible', value: res.idGuardia },
-  //         { type: 'invisible', value: res.idTurno },
-  //         { type: 'invisible', value: res.nombreTurnoIncompatible },
-  //         { type: 'invisible', value: ArrNombresGI }
-  //     ]
-  //   ];
-   
-  //     let obj = {id: i, cells: objCells};
-  //     arr.push(obj);
-  //   });
+    this.rowGroups = this.trdService.getTableData(resultModified);
+    this.rowGroupsAux = this.rowGroups;
 
-  //   let datosTabla = { data: [{}]};
-
-  //   this.rowGroups = this.trdService.getTableData(this.datosJustificacion);
-  //   this.rowGroupsAux = this.trdService.getTableData(this.datosJustificacion);
+    console.log(this.rowGroups);
   }
   
   selectedAll(event) {

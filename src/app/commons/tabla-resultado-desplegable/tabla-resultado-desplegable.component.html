@@ -18,7 +18,8 @@
             </div>
         </div>
         <div *ngFor="let rowGroup of rowGroups" class="table-row-group" #rowGroupEl>
-            <div class="table-row parent">
+            <div class="table-row parent" >
+                
                 <span class="mr-2 arrow" (click)="rowGroupArrowClick(rowGroupEl, rowGroup.id)">
                     <span (click)="iconClickChange(iconrightEl, icondownEl)" #iconrightEl><i
                             class="fas fa-chevron-right"></i></span>

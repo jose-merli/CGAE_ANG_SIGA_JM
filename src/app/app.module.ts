@@ -394,7 +394,6 @@ import { TablaResultadoOrderComponent } from './commons/tabla-resultado-order/ta
 import { TablaSimpleComponent } from './commons/tabla-simple/tabla-simple.component';
 import { TarjetaComponent } from './commons/tarjeta/tarjeta.component';
 
-//OFICIO
 import { TablaResultadoDesplegableComponent } from './commons/tabla-resultado-desplegable/tabla-resultado-desplegable.component';
 import { TablaResultadoDesplegableAEService } from './commons/tabla-resultado-desplegable/tabla-resultado-desplegable-ae.service';
 import { TablaResultadoDesplegableJEService } from './commons/tabla-resultado-desplegable/tabla-resultado-desplegable-je.service';
@@ -409,7 +408,6 @@ import { TablaJustificacionExpresComponent  } from './features/sjcs/oficio/desig
 import { GestionDesignacionesComponent } from './features/sjcs/oficio/designaciones/gestion-designaciones/gestion-designaciones.component'
 import { FiltroDesignacionesComponent } from './features/sjcs/oficio/designaciones/filtro-designaciones/filtro-designaciones.component';
 import { DesignacionesComponent } from './features/sjcs/oficio/designaciones/designaciones.component';
-
 
 @NgModule({
 	declarations: [
