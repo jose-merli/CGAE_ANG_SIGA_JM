@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Message } from 'primeng/components/common/api';
+import { SigaServices } from '../../../../../../_services/siga.service';
 
 @Component({
   selector: 'app-detalle-tarjeta-detalle-ficha-designacion-oficio',
@@ -9,8 +10,13 @@ import { Message } from 'primeng/components/common/api';
 export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnInit {
 
   msgs: Message[] = [];
-
-  inputs = ['NIG', 'Nº Procedimiento'];
+  nuevaDesigna: any;
+  estado: any;
+  @Input() campos;
+  inputs = [
+    {nombre:'NIG', value: ""},
+    {nombre:'Nº Procedimiento', value:""}
+  ];
 
   datePickers = ['Fecha estado', 'Fecha cierre'];
 
@@ -18,17 +24,15 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     {
       nombre: 'Estado',
       opciones: [
-        { label: 'XXXXXXXXXXXX', value: 1 },
-        { label: 'XXXXXXXXXXXX', value: 2 },
-        { label: 'XXXXXXXXXXXX', value: 3 }
+        {label:'Activo', value:'V'},
+        {label:'Finalizada', value:'F'},
+        {label:'Anulada', value:'A'}
       ]
     },
     {
       nombre: 'Juzgado',
       opciones: [
-        { label: 'XXXXXXXXXXXX', value: 1 },
-        { label: 'XXXXXXXXXXXX', value: 2 },
-        { label: 'XXXXXXXXXXXX', value: 3 }
+        
       ]
     },
     {
@@ -57,9 +61,24 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     }
   ];
 
-  constructor() { }
+  constructor(private sigaServices: SigaServices) { }
 
   ngOnInit() {
+    this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
+    if(!this.nuevaDesigna){
+      this.inputs[0].value = this.campos.nig;
+      this.inputs[1].value = this.campos.numProcedimiento;
+      // this.estado = this.campos.art27;
+      this.selectores[0].opciones =[ {label: this.campos.art27, value: this.campos.sufijo} ]; 
+      this.selectores[1].opciones=[{label: this.campos.nombreJuzgado, value: ''}];
+    }else{
+      this.selectores[0].opciones =[ 
+      {label:'Activo', value:'V'},
+      {label:'Finalizada', value:'F'},
+      {label:'Anulada', value:'A'}];
+      this.getComboJuzgados();
+    }
+    
   }
 
   showMsg(severity, summary, detail) {
@@ -75,5 +94,35 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     this.msgs = [];
   }
 
+  getComboJuzgados() {
+
+    this.sigaServices.get("combo_comboJuzgadoDesignaciones").subscribe(
+      n => {
+        this.selectores[1].opciones = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }, () => {
+        this.arregloTildesCombo(this.selectores[1].opciones);
+      }
+    );
+  }
+  arregloTildesCombo(combo) {
+    if (combo != undefined)
+      combo.map(e => {
+        let accents =
+          "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+        let accentsOut =
+          "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+        let i;
+        let x;
+        for (i = 0; i < e.label.length; i++) {
+          if ((x = accents.indexOf(e.label[i])) != -1) {
+            e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+            return e.labelSinTilde;
+          }
+        }
+      });
+  }
 
 }

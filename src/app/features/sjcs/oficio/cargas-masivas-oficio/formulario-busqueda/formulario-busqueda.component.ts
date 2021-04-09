@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { TranslateService } from '../../../../../commons/translate';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { SelectItem } from 'primeng/api';
-
+import { saveAs } from "file-saver/FileSaver";
+import { HttpClient, HttpParams } from '@angular/common/http';
 @Component({
   selector: 'app-formulario-busqueda',
   templateUrl: './formulario-busqueda.component.html',
@@ -13,23 +14,24 @@ export class FormularioBusquedaComponent implements OnInit {
   msgs: any[];
   progressSpinner: boolean = false;
 
-  cargasMasivas: SelectItem[];
-	cargaMasivaBT: string = this.translateService.instant('menu.sjcs.bajasTemporales');
-  cargaMasivaIT: string = this.translateService.instant('justiciaGratuita.oficio.turnos.inscripcionesturno');
+	cargaMasivaBT: string = "";
+  cargaMasivaIT: string = "";
   selectedTipoCarga: string;
-  
+
+  cargasMasivas : SelectItem[] = [];
 	enableIT: boolean = false;
   enableBT: boolean = false;
-  disableDescargar: boolean = true;
+  disableGuardia: boolean = true;
   showTipo: boolean = false;
 	showFicheroModelo: boolean = false;
   showCuerpoFicheroModelo: boolean = false;
 
-  filtros: any;
+  turnosSelected: String = null;
   turnos: any[];
-  guardias: any[];
+  guardiasSelected: String = null;
+  guardias: any[] ;
 
-  file: File = undefined;
+  @Output() tipoEvent = new EventEmitter<string>();
 
   constructor(private translateService: TranslateService,
     private sigaServices: SigaServices) { }
@@ -37,17 +39,21 @@ export class FormularioBusquedaComponent implements OnInit {
   ngOnInit() {
     this.showTipo = true;
 
+    this.cargaMasivaBT = this.translateService.instant('oficio.cargasMasivas.bajasTemporales');
+    this.cargaMasivaIT = this.translateService.instant('oficio.cargasMasivas.inscripcionesTurno');
+   
     //Se asignan las etiquetas constantes con sus valores asociados
     this.cargasMasivas = [
-			{
-				label: this.cargaMasivaIT,
-				value: 'IT'
-			},
-			{
-				label: this.cargaMasivaBT,
-				value: 'BT'
-			},
+      {
+        label: this.cargaMasivaIT,
+        value: 'IT'
+      },
+      {
+        label: this.cargaMasivaBT,
+        value: 'BT'
+      },
     ];
+    
     
     //Se buscan los turnos asociados a ese colegio/institucion
     this.sigaServices.get("inscripciones_comboTurnos").subscribe(
@@ -57,7 +63,7 @@ export class FormularioBusquedaComponent implements OnInit {
 				if(turnoSession != null && turnoSession != undefined){
           this.turnos.forEach(turnoCombo =>{ 
             if(turnoCombo.value == turnoSession){
-              this.filtros.idturno = turnoCombo;
+              this.turnosSelected = turnoCombo;
             }
           });
 				}
@@ -66,7 +72,7 @@ export class FormularioBusquedaComponent implements OnInit {
         console.log(err);
       },()=>{
         if (sessionStorage.getItem("idTurno") != undefined) {
-          this.filtros.idturno = JSON.parse(
+          this.turnosSelected = JSON.parse(
             sessionStorage.getItem("idTurno")
           );
           sessionStorage.setItem("idTurno",undefined);
@@ -74,41 +80,43 @@ export class FormularioBusquedaComponent implements OnInit {
       }
     );
     
-    //Se buscan las guardias asociadas a ese colegio/institucion y a los turnos seleccionados.
-    //No funcional todavia. Se requiere filtrado de las guardias en base a los turnos en el back.
-    //Posible creacion de servicio.
-    this.sigaServices.getParam("busquedaGuardia_guardia?idTurno=",this.filtros.idturno).subscribe(
-      n => {
-        this.guardias = n.combooItems;
-        let guardiaSession = JSON.parse(sessionStorage.getItem("idGuardia"));
-				if(guardiaSession != null && guardiaSession != undefined){
-          this.guardias.forEach(guardiaCombo =>{ 
-            if(guardiaCombo.value == guardiaSession){
-              this.filtros.idguardia = guardiaCombo;
-            }
-          });
+    if(this.turnosSelected!=null){
+      //Se buscan las guardias asociadas a ese colegio/institucion y a los turnos seleccionados.
+      this.sigaServices.getParam("busquedaGuardia_guardia","?idTurno="+this.turnosSelected).subscribe(
+        n => {
+          this.guardias = n.combooItems;
+          let guardiaSession = JSON.parse(sessionStorage.getItem("idGuardia"));
+          if(guardiaSession != null && guardiaSession != undefined){
+            this.guardias.forEach(guardiaCombo =>{ 
+              if(guardiaCombo.value == guardiaSession){
+                this.guardiasSelected = guardiaCombo;
+              }
+            });
+          }
+          else{
+            this.guardias.forEach(guardiaCombo =>{
+              if(guardiaCombo.value){}
+            });
+          }
+        },
+        err => {
+          console.log(err);
+        },()=>{
+          if (sessionStorage.getItem("idGuardia") != undefined) {
+            this.guardiasSelected = JSON.parse(
+              sessionStorage.getItem("idGuardia")
+            );
+            sessionStorage.setItem("idGuardia",undefined);
+          }
         }
-        else{
-          this.guardias.forEach(guardiaCombo =>{
-            if(guardiaCombo.value){}
-          });
-        }
-      },
-      err => {
-        console.log(err);
-      },()=>{
-        if (sessionStorage.getItem("idGuardia") != undefined) {
-          this.filtros.idguardia = JSON.parse(
-            sessionStorage.getItem("idGuardia")
-          );
-          sessionStorage.setItem("idGuardia",undefined);
-        }
-      }
-    );
-
+      );
+    }
 
     //Comprobamos si el filtro de turno tiene algún valor seleccionado para dar acceso al botón o no
-    this.checkButton();
+    this.checkAccess();
+
+    //Enviar valor de tipo al componente padre
+    this.sendTipo();
   }
 
   onChange(event) {
@@ -135,9 +143,58 @@ export class FormularioBusquedaComponent implements OnInit {
     }
 
     //Comprobamos si el filtro de turno tiene algún valor seleccionado para dar acceso al botón o no
-    this.checkButton();
+    this.checkAccess();
+
+    //Enviar valor de tipo al componente padre
+    this.sendTipo();
+
+    this.turnosSelected = null;
+    this.guardiasSelected = null;
   }
 
+  onChangeTurno(){
+    //Se buscan las guardias asociadas a ese colegio/institucion y a los turnos seleccionados.
+    //No funcional todavia. Se requiere filtrado de las guardias en base a los turnos en el back.
+    this.sigaServices.getParam("busquedaGuardia_guardia","?idTurno="+this.turnosSelected).subscribe(
+      n => {
+        this.guardias = n.combooItems;
+        let guardiaSession = JSON.parse(sessionStorage.getItem("idGuardia"));
+				if(guardiaSession != null && guardiaSession != undefined){
+          this.guardias.forEach(guardiaCombo =>{ 
+            if(guardiaCombo.value == guardiaSession){
+              this.guardiasSelected = guardiaCombo;
+            }
+          });
+        }
+        else{
+          this.guardias.forEach(guardiaCombo =>{
+            if(guardiaCombo.value){}
+          });
+        }
+        //Comprobamos seleccionados para boton y desplegable
+        if(this.guardias != undefined && this.guardias.length >0) {
+          if(this.guardias!=[]) this.disableGuardia=false;
+          else this.guardiasSelected = null;
+        }
+        else{
+          this.disableGuardia=true;
+          this.guardiasSelected = null;
+        }
+      },
+      err => {
+        console.log(err);
+      },()=>{
+        if (sessionStorage.getItem("idGuardia") != undefined) {
+          this.guardiasSelected = JSON.parse(
+            sessionStorage.getItem("idGuardia")
+          );
+          sessionStorage.setItem("idGuardia",undefined);
+        }
+      }
+    );
+
+    
+  }
   abreCierraTipo(){
     this.showTipo=!this.showTipo;
   }
@@ -146,41 +203,76 @@ export class FormularioBusquedaComponent implements OnInit {
     this.showCuerpoFicheroModelo=!this.showCuerpoFicheroModelo;
   }
 
-  checkButton(){
-    //Comprobamos si el filtro de turno tiene algún valor seleccionado para dar acceso al botón o no
-    if(!this.filtros.idturno.isEmpty) this.disableDescargar=false;
-    else this.disableDescargar=true;
+  checkAccess(){
+    //Comprobamos si el filtro de turno tiene algún valor seleccionado para dar acceso 
+    if(this.turnosSelected!=null){
+      if(this.turnosSelected.length>0){
+       this.disableGuardia=false;
+      }
+      else{
+        this.disableGuardia=true;
+      } 
+    }
   }
 
-  /* descargarModelo(){
-    //
+  descargarModelo(){
     this.progressSpinner = true;
+    let turn : String = "";
+    if(this.turnosSelected!=null){
+      turn = this.EncontrarLabels(this.turnos, this.turnosSelected);
+    }
+    let guard : String = "";
+    if(this.guardiasSelected!=null){
+      guard = this.EncontrarLabels(this.guardias, this.guardiasSelected);
+    }
+    let request : String[] = [turn, guard, this.selectedTipoCarga]; 
     this.sigaServices
       .postDownloadFiles(
-        "cargaMasivaDatosCurriculares_generateExcelCV",
-        this.filtros
+        "cargasMasivasOficio_decargarModelo", 
+               request
       )
       .subscribe(
         data => {
           const blob = new Blob([data], { type: "text/csv" });
-          if (this.filtros.nombreFichero == undefined) {
-            saveAs(blob, "PlantillaMasivaDatosCV.xls");
-          } else {
-            saveAs(blob, this.body.nombreFichero);
-          }
-          this.progressSpinner = true;
+          if(this.selectedTipoCarga=="IT")  saveAs(blob, "PlantillaCargaMasivaDatosIT.xls");
+          else saveAs(blob, "PlantillaCargaMasivaDatosBT.xls");
         },
         err => {
           console.log(err);
-          this.progressSpinner = false;
         },
         () => {
           this.progressSpinner = false;
         }
       );
-  } */
+      this.progressSpinner = false;
+  } 
+
+  sendTipo() {
+    this.tipoEvent.emit(this.selectedTipoCarga);
+  }
   
 	clear() {
 		this.msgs = [];
-	}
+  }
+
+  EncontrarLabels(combo : any[], values : any ){
+    let send: String ="";
+    let i = 0;
+    let select = values;
+    while(i<combo.length 
+     // && select.length>0
+      ){
+      let elementCombo = combo[i];
+      let eleValue:String = elementCombo.value;
+      if((select.indexOf(eleValue) > -1)) {
+      //  select.splice(select.indexOf(eleValue), 1);
+        if(send == "")send+=elementCombo.label;
+        else send+=","+elementCombo.label;
+      }
+      i++;
+    }
+
+    return send;
+  }
+
 }

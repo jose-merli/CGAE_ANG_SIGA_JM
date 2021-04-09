@@ -52,8 +52,6 @@ import {TreeTableModule} from 'primeng/treetable';
     TreeTableModule,
   ],
   declarations: [
-    ListaArchivosComponent,
-    FormularioSubidaComponent,
   ],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },

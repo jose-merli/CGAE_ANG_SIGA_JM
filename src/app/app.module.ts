@@ -385,15 +385,15 @@ import { FiltroBuscadorColegiadosComponent } from './commons/buscador-colegiados
 import { TablaBuscadorColegiadosComponent } from './commons/buscador-colegiados/tabla-buscador-colegiados/tabla-buscador-colegiados.component';
 import { MigasDePanComponent } from './commons/migas-de-pan/migas-de-pan.component';
 import { FormularioBusquedaComponent } from './features/sjcs/oficio/cargas-masivas-oficio/formulario-busqueda/formulario-busqueda.component';
+import { FormularioSubidaComponent } from './features/sjcs/oficio/cargas-masivas-oficio/formulario-subida/formulario-subida.component';
+import{ ListaArchivosComponent } from './features/sjcs/oficio/cargas-masivas-oficio/lista-archivos/lista-archivos.component';
+
 import { DatePickerRangeComponent } from './commons/date-picker-range/date-picker-range.component';
 import { HoraComponent } from './commons/hora/hora.component';
 import { InputDivididoComponent } from './commons/input-dividido/input-dividido.component';
 import { TablaResultadoMixComponent } from './commons/tabla-resultado-mix/tabla-resultado-mix.component';
 
-import { TablaResultadoOrderComponent } from './commons/tabla-resultado-order/tabla-resultado-order.component';
-import { TablaSimpleComponent } from './commons/tabla-simple/tabla-simple.component';
-import { TarjetaComponent } from './commons/tarjeta/tarjeta.component';
-
+//OFICIO
 import { TablaResultadoDesplegableComponent } from './commons/tabla-resultado-desplegable/tabla-resultado-desplegable.component';
 import { TablaResultadoDesplegableAEService } from './commons/tabla-resultado-desplegable/tabla-resultado-desplegable-ae.service';
 import { TablaResultadoDesplegableJEService } from './commons/tabla-resultado-desplegable/tabla-resultado-desplegable-je.service';
@@ -404,6 +404,9 @@ import { DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent } from '.
 import { DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-datos-generales-ficha-designacion-oficio/detalle-tarjeta-datos-generales-ficha-designacion-oficio.component';
 import { DetalleTarjetaDetalleFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-detalle-ficha-designacion-oficio/detalle-tarjeta-detalle-ficha-designacion-oficio.component';
 import { DetalleTarjetaDocumentacionFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-documentacion-ficha-designacion-oficio/detalle-tarjeta-documentacion-ficha-designacion-oficio.component';
+import { TablaResultadoOrderComponent } from './commons/tabla-resultado-order/tabla-resultado-order.component';
+import { TablaSimpleComponent } from './commons/tabla-simple/tabla-simple.component';
+import { TarjetaComponent } from './commons/tarjeta/tarjeta.component';
 import { TablaJustificacionExpresComponent  } from './features/sjcs/oficio/designaciones/tabla-justificacion-expres/tabla-justificacion-expres.component';
 import { GestionDesignacionesComponent } from './features/sjcs/oficio/designaciones/gestion-designaciones/gestion-designaciones.component'
 import { FiltroDesignacionesComponent } from './features/sjcs/oficio/designaciones/filtro-designaciones/filtro-designaciones.component';
@@ -741,7 +744,9 @@ import { DesignacionesComponent } from './features/sjcs/oficio/designaciones/des
 		TablaResultadoComponent,
 		SelectorComponent,
 		MigasDePanComponent,
-		FormularioBusquedaComponent
+		FormularioBusquedaComponent,
+		FormularioSubidaComponent,
+		ListaArchivosComponent,
 
 	],
 	imports: [
