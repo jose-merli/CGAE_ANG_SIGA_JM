@@ -241,53 +241,59 @@ export class FichaDesignacionesComponent implements OnInit {
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
     let designaItem = JSON.parse(sessionStorage.getItem("designaItemLink"));
     this.campos = designaItem;
-    let camposResumen = [
-      {
-        "key": "Año/Número",
-        "value": designaItem.ano
-      },
-      {
-        "key": "Letrado",
-        "value": designaItem.numColegiado
-      },
-      {
-        "key": "Estado",
-        "value": designaItem.art27
-      },
-      {
-        "key": "Interesado",
-        "value": ""
-      },
-      {
-        "key": "Número Asistencias",
-        "value": ""
-      },
-      {
-        "key": "Validado",
-        "value": ""
-      }
-    ];
-
-    let camposGenerales = [
-      {
-        "key": "Turno",
-        "value": designaItem.nombreTurno
-      },
-      {
-        "key": "Fecha",
-        "value": designaItem.fechaAlta
-      },
-      {
-        "key": "Designación Art. 27-28",
-        "value": "NO"
-      }, {
-        "key": "Tipo",
-        "value": designaItem.descripcionTipoDesigna
-      }
-    ];
-
-    this.tarjetaFija.campos = camposResumen;
-    this.listaTarjetas[0].campos = camposGenerales;
+    if(!this.nuevaDesigna){
+      //EDICIÓN DESIGNA
+      let camposResumen = [
+        {
+          "key": "Año/Número",
+          "value": designaItem.ano
+        },
+        {
+          "key": "Letrado",
+          "value": designaItem.numColegiado
+        },
+        {
+          "key": "Estado",
+          "value": designaItem.art27
+        },
+        {
+          "key": "Interesado",
+          "value": ""
+        },
+        {
+          "key": "Número Actuaciones",
+          "value": ""
+        },
+        {
+          "key": "Validado",
+          "value": ""
+        }
+      ];
+  
+      let camposGenerales = [
+        {
+          "key": "Turno",
+          "value": designaItem.nombreTurno
+        },
+        {
+          "key": "Fecha",
+          "value": designaItem.fechaAlta
+        },
+        {
+          "key": "Designación Art. 27-28",
+          "value": "NO"
+        }, {
+          "key": "Tipo",
+          "value": designaItem.descripcionTipoDesigna
+        }
+      ];
+  
+      this.tarjetaFija.campos = camposResumen;
+      this.listaTarjetas[0].campos = camposGenerales;
+    }else{
+      //NUEVA DESIGNA
+    }
+    
   }
 
   ngAfterViewInit() {

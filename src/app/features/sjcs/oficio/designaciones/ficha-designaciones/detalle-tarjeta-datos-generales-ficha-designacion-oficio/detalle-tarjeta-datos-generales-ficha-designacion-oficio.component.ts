@@ -43,15 +43,18 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
 
   inputs = [{
     nombre: 'Número de colegiado',
-    value:""
+    value:"",
+    disable: false
   },
   {
     nombre:'Apellidos',
-    value:""
+    value:"",
+    disable: false
   },
   {
     nombre:'Nombre',
-    value:""
+    value:"",
+    disable: false
   }];
 
   constructor(private sigaServices: SigaServices,  private commonsService: CommonsService) {
@@ -61,11 +64,8 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     console.log(this.campos);
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
     if(!this.nuevaDesigna){
+      //EDICION
       this.checkArt = true;
-    }else{
-      this.checkArt = false;
-    }
-    //EDICION
     this.selectores[0].opciones = [{label: this.campos.nombreTurno, value: this.campos.idTurno}];
     this.selectores[0].value =  this.campos.idTurno;
     this.selectores[0].disable =  true;
@@ -81,6 +81,9 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     let colegiado = new ColegiadoItem();
     colegiado.numColegiado = this.campos.numColegiado;
     colegiado.idInstitucion = this.campos.idInstitucion;
+    this.inputs[0].disable = true;
+    this.inputs[1].disable = true;
+    this.inputs[2].disable = true;
     this.sigaServices
     .post("busquedaColegiados_searchColegiado", colegiado)
     .subscribe(
@@ -96,6 +99,19 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       },
 
     );
+    }else{
+      this.checkArt = false;
+      this.anio.value= "";
+      this.anio.disable=  true;
+      this.numero.value = "";
+      this.numero.disable = true;
+      this.fechaGenerales = new Date();
+      this.selectores[0].disable =  false;
+      this.selectores[1].disable =  false;
+      this.getComboTurno();
+      this.getComboTipoDesignas();
+    }
+  
     //SE COMPRUEBAN LOS PERMISOS PARA EL BOTON GUARDAR
 // export constprocesos_guardia:any= {​​​​​​​​
 //     guardias: "916",
@@ -133,6 +149,54 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     //EDICION
   }
 
+  getComboTipoDesignas() {
+
+    this.sigaServices.get("designas_tipoDesignas").subscribe(
+      n => {
+        this.selectores[1].opciones = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }, () => {
+        this.arregloTildesCombo(this.selectores[1].opciones);
+      }
+    );
+  }
+
+
+  getComboTurno() {
+
+    this.sigaServices.get("combo_turnos").subscribe(
+      n => {
+        this.selectores[0].opciones = n.combooItems;
+      },
+      err => {
+        console.log(err);
+
+      }, () => {
+        this.arregloTildesCombo(this.selectores[0].opciones);
+      }
+    );
+  }
+
+  arregloTildesCombo(combo) {
+    if (combo != undefined)
+      combo.map(e => {
+        let accents =
+          "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+        let accentsOut =
+          "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+        let i;
+        let x;
+        for (i = 0; i < e.label.length; i++) {
+          if ((x = accents.indexOf(e.label[i])) != -1) {
+            e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+            return e.labelSinTilde;
+          }
+        }
+      });
+  }
+
   showMsg(severity, summary, detail) {
     this.msgs = [];
     this.msgs.push({
@@ -149,5 +213,9 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
       return this.commonsService.styleObligatorio(evento);
     }
+  }
+
+  onChangeArt(){
+    
   }
 }

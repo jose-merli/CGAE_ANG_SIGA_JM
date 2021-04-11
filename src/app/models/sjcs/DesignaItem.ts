@@ -66,5 +66,8 @@ export class DesignaItem {
 	 idModuloActuaciones: String;
 	 descripcionTipoDesigna: String;
 	 nombreProcedimiento: String;
+	 nombreColegiado: String;
+	 apellido1Colegiado: String;
+	 apellido2Colegiado: String;
     constructor() { }
   }
