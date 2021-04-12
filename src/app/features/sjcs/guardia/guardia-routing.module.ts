@@ -4,6 +4,7 @@ import { NgModule } from "../../../../../node_modules/@angular/core";
 import { RouterModule, Routes } from "../../../../../node_modules/@angular/router";
 import { GestionGuardiaComponent } from "./busqueda-guardias/buscador-guardia/gestion-guardia/gestion-guardia.component";
 import { SaltosCompensacionesGuardiaComponent } from "./saltos-compensaciones-guardia/saltos-compensaciones-guardia/saltos-compensaciones-guardia.component";
+import { FichaProgramacionComponent } from "./programacionCalendarios/ficha-programacion/ficha-programacion.component";
 
 const routesGuardia: Routes = [
     {
@@ -19,6 +20,12 @@ const routesGuardia: Routes = [
     {
         path: "guardiasSaltosCompensaciones",
         component: SaltosCompensacionesGuardiaComponent,
+        canActivate: [AuthGuard]
+    },
+
+    {
+        path: "fichaProgramacion",
+        component: FichaProgramacionComponent,
         canActivate: [AuthGuard]
     },
 ];

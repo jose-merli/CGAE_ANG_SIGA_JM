@@ -12,6 +12,8 @@ export let endpoints_guardia: any = {
     busquedaGuardia_tipoTurno: "combo/tipoTurno",
     busquedaGuardia_tiposGuardia: "combo/tipoGuardia",
     busquedaGuardia_guardia: "combo/guardias",
+    busquedaGuardia_listasGuardia: "combo/listasguardias",
+    busquedaGuardia_estado: "combo/estado",
 
 
     // Guardias
@@ -47,5 +49,10 @@ export let endpoints_guardia: any = {
     guardiasIncompatibilidades_buscarIncompatibilidades : "guardia/buscarIncompatibilidades",
     guardiasIncompatibilidades_eliminarIncompatibilidades:  "guardia/eliminarIncompatibilidades",
     guardiasIncompatibilidades_guardarIncompatibilidades: "guardia/guardarIncompatibilidades",
-    guardiasIncompatibilidades_getCombo: "guardia/getComboGuardiasInc"
+    guardiasIncompatibilidades_getCombo: "guardia/getComboGuardiasInc",
+
+    //Calendarios programados
+    guardiaCalendario_buscar : "guardia/buscarCalendariosProgramados",
+    guardiaCalendario_eliminar : "guardia/eliminarCalendariosProgramados",
+    guardiaCalendario_guardar : "guardia/guardarCalendariosProgramados",
 }

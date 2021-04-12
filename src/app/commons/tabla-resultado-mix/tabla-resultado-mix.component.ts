@@ -5,6 +5,8 @@ import { Sort } from '@angular/material/sort';
 import { Row, Cell } from './tabla-resultado-mix-incompatib.service';
 import { Message } from 'primeng/components/common/api';
 import { ValidationModule } from '../validation/validation.module';
+import { CloseScrollStrategy } from '@angular/cdk/overlay';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-tabla-resultado-mix',
   templateUrl: './tabla-resultado-mix.component.html',
@@ -19,6 +21,7 @@ export class TablaResultadoMixComponent implements OnInit {
   @Input() rowGroupsAux: Row[];
   @Input() seleccionarTodo = false;
   @Input() comboGuardiasIncompatibles;
+  @Input() calendarios;
   @Output() anySelected = new EventEmitter<any>();
   @Output() save = new EventEmitter<Row[]>();
   @Output() delete = new EventEmitter<any>();
@@ -43,6 +46,7 @@ export class TablaResultadoMixComponent implements OnInit {
   multiselectValue = [];
   multiselectLabels = [];
   cell = [];
+  selectedRowValue: Cell[] = [];
   textFilter: string = "Seleccionar";
   textSelected: String = "{0} guardias seleccionadas";
   @Input() totalRegistros = 0;
@@ -50,7 +54,8 @@ export class TablaResultadoMixComponent implements OnInit {
 
 
   constructor(
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private router: Router,
   ) {
     this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
       for (let i = 0; i < this.table.nativeElement.children.length; i++) {
@@ -64,13 +69,18 @@ export class TablaResultadoMixComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     let values = [];
     let labels = [];
     let arrayOfSelected = [];
-      this.rowGroups.forEach((row, i) => {
-        //selecteCombo = {label: ?, value: row.cells[7].value}
-        values.push(row.cells[6].value);
-      });
+      if(this.rowGroups != undefined){
+         this.rowGroups.forEach((row, i) => {
+          //selecteCombo = {label: ?, value: row.cells[7].value}
+          values.push(row.cells[6].value);
+        });
+        this.totalRegistros = this.rowGroups.length;
+      }
+      if (this.comboGuardiasIncompatibles != undefined){
       this.comboGuardiasIncompatibles.forEach(combo => {
         values.forEach(v => {
           if (combo.value == v){
@@ -78,6 +88,7 @@ export class TablaResultadoMixComponent implements OnInit {
           }
         });
        });
+      }
       values.forEach((v, i) => {
         let selecteCombo = {label: '', value: ''}
         selecteCombo.label = labels[i];
@@ -86,12 +97,13 @@ export class TablaResultadoMixComponent implements OnInit {
         this.multiselectValue[i] = arrayOfSelected[i];
       });
       this.multiselectLabels = labels;
-    this.totalRegistros = this.rowGroups.length;
     this.numCabeceras = this.cabeceras.length;
     this.numColumnas = this.numCabeceras;
     this.cabeceras.forEach(cab => {
       this.cabecerasMultiselect.push(cab.name);
     })
+    console.log('this.rowGroups: ', this.rowGroups)
+    console.log('this.totalRegistros: ', this.totalRegistros)
   }
 
   onChangeMulti(event, rowPosition, cell){
@@ -170,8 +182,8 @@ export class TablaResultadoMixComponent implements OnInit {
   validaCheck(texto) {
     return texto === 'Si';
   }
-  selectRow(rowId) {
- 
+  selectRow(rowId, rowCells) {
+ this.selectedRowValue = rowCells;
     if (this.selectedArray.includes(rowId)) {
       const i = this.selectedArray.indexOf(rowId);
       this.selectedArray.splice(i, 1);
@@ -266,6 +278,52 @@ export class TablaResultadoMixComponent implements OnInit {
     this.numperPage = perPage;
   }
 
+  descargarLOG
+  duplicar(){
+    if (this.selectedRowValue.length != 0){
+      console.log('this.selectedRowValue', this.selectedRowValue)
+    this.enableGuardar = true;
+    let row: Row = new Row();
+      
+      let cell1: Cell = this.selectedRowValue[0];
+      let cell2: Cell = this.selectedRowValue[1];
+      let cell3: Cell = this.selectedRowValue[2];
+      let cell4: Cell = this.selectedRowValue[3];
+      let cell5: Cell = this.selectedRowValue[4];
+      let cell6: Cell = this.selectedRowValue[5];
+      let cell7: Cell = this.selectedRowValue[6];
+      let cell8: Cell = this.selectedRowValue[7];
+      let cell9: Cell = this.selectedRowValue[8];
+      let cell10: Cell = this.selectedRowValue[9];
+    
+    row.cells = [cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8, cell9, cell10];
+    console.log(row)
+    this.rowGroups.unshift(row);
+    this.rowGroupsAux = this.rowGroups;
+    this.totalRegistros = this.rowGroups.length;
+    }
+  }
+
+  openTab(evento) {
+
+   /* if (this.persistenceService.getPermisos() != undefined) {
+      this.permisoEscritura = this.persistenceService.getPermisos();
+    }*/
+
+    if (!this.seleccionarTodo && this.selectedArray.length <= 1) {
+      /*this.progressSpinner = true;
+      this.datos = new GuardiaItem();
+      this.datos.idGuardia = evento.idGuardia;
+      this.datos.idTurno = evento.idTurno;
+      this.persistenceService.setDatos(this.datos);
+      this.persistenceService.setHistorico(evento.fechabaja ? true : false);*/
+      this.router.navigate(["/fichaProgramacion"]);
+    } else {
+      /*if (evento.fechabaja == undefined && this.historico) {
+        this.selectedDatos.pop();
+      }*/
+    }
+  }
   nuevo(){
         /*{ type: 'text', value: res.nombreTurno },
     { type: 'text', value: res.nombreGuardia },
@@ -280,6 +338,7 @@ export class TablaResultadoMixComponent implements OnInit {
     { type: 'invisible', value: res.nombreGuardiaIncompatible }]*/
     this.enableGuardar = true;
     let row: Row = new Row();
+    
     let cell1: Cell = new Cell();
     let cell2: Cell = new Cell();
     let cell3: Cell = new Cell();
@@ -291,15 +350,39 @@ export class TablaResultadoMixComponent implements OnInit {
     let cell9: Cell = new Cell();
     let cell10: Cell = new Cell();
     let cellMulti:  Cell = new Cell();
-    cell1.type = 'input';
-    cell1.value = '';
-    cell2.type = 'input';
-    cell2.value = '';
-    cell3.type = 'input';
-    cell3.value = '';
-    cell4.type = 'input';
-    cell4.value = '';
 
+
+    if(this.calendarios){
+      cell1.type = 'input';
+      cell1.value = '';
+      cell2.type = 'input';
+      cell2.value = '';
+      cell3.type = 'datePicker';
+      cell3.value = '';
+      cell4.type = 'datePicker';
+      cell4.value = '';
+      cell5.type = 'datePicker';
+      cell5.value = '';
+      cell6.type = 'input';
+      cell6.value = '';
+      cell7.type = 'input';
+      cell7.value = '';
+      cell8.type = 'input';
+      cell8.value = '';
+      cell9.type = 'checkbox';
+      cell9.value = '';
+      cell10.type = 'input';
+      cell10.value = '';
+      row.cells = [cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8, cell9, cell10];
+    }else{
+      cell1.type = 'input';
+      cell1.value = '';
+      cell2.type = 'input';
+      cell2.value = '';
+      cell3.type = 'input';
+      cell3.value = '';
+      cell4.type = 'input';
+      cell4.value = '';
     cell5.type = 'invisible';
     cell5.value = '';
     cell6.type = 'invisible';
@@ -315,6 +398,7 @@ export class TablaResultadoMixComponent implements OnInit {
     cellMulti.combo = this.comboGuardiasIncompatibles;
     cellMulti.type = 'multiselect'; 
     row.cells = [cell1, cell2, cellMulti, cell3, cell4, cell5, cell6, cell7, cell8, cell9, cell2];
+    }
     this.rowGroups.unshift(row);
     this.rowGroupsAux = this.rowGroups;
     this.totalRegistros = this.rowGroups.length;

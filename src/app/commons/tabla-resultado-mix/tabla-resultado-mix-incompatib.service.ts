@@ -76,3 +76,4 @@ export class TablaResultadoMixIncompService {
     return finalRows;
 }
 
+}
