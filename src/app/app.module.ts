@@ -394,6 +394,7 @@ import { DatePickerRangeComponent } from './commons/date-picker-range/date-picke
 import { HoraComponent } from './commons/hora/hora.component';
 import { InputDivididoComponent } from './commons/input-dividido/input-dividido.component';
 import { TablaResultadoMixComponent } from './commons/tabla-resultado-mix/tabla-resultado-mix.component';
+import { Paginador3Module } from './commons/paginador3/paginador3.module'
 
 //OFICIO
 import { TablaResultadoDesplegableComponent } from './commons/tabla-resultado-desplegable/tabla-resultado-desplegable.component';
@@ -753,6 +754,7 @@ import { DesignacionesComponent } from './features/sjcs/oficio/designaciones/des
 
 	],
 	imports: [
+		Paginador3Module,
 		BrowserModule,
 		BrowserAnimationsModule,
 		HttpClientModule,

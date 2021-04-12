@@ -37,7 +37,6 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
 
   @ViewChild("tablaFoco") tablaFoco: ElementRef;
   @ViewChild('table') table: ElementRef;
-  @ViewChild('footer') footer: ElementRef;
 
   msgs: Message[] = [];
   searchText = [];
@@ -192,6 +191,8 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
     let cell6: Cell = new Cell();
     let cell7: Cell = new Cell();
     let cell8: Cell = new Cell();
+    let cell9: Cell = new Cell();
+    let cell10: Cell = new Cell();
 
     cell1.type = 'select';
     cell1.combo = this.comboTurnos;
@@ -226,9 +227,17 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
 
     cell8.type = 'invisible';
     cell8.value = '';
-    cell8.header = 'invisible';
+    cell8.header = 'idSaltosTurno';
 
-    row.cells = [cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8];
+    cell9.type = 'invisible';
+    cell9.value = '';
+    cell9.header = 'idTurno';
+
+    cell10.type = 'invisible';
+    cell10.value = '';
+    cell10.header = 'idPersona';
+
+    row.cells = [cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8, cell9, cell10];
     row.id = this.totalRegistros;
     this.rowGroups.unshift(row);
     this.rowGroupsAux = this.rowGroups;
@@ -341,7 +350,6 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
     this.comboColegiados = [];
     let params = new SaltoCompItem();
     params.idTurno = row.cells[0].value;
-    params.idGuardia = row.cells[1].value;
 
     this.sigaServices.post(
       "saltosCompensacionesOficio_comboColegiados", params).subscribe(
@@ -366,10 +374,6 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
 
   isSelectableInHistorical(row: Row) {
     return (row.italic != undefined && row.italic != null && row.italic);
-  }
-
-  prueba() {
-    this.footer.nativeElement
   }
 
   ngOnChanges(changes: SimpleChanges) {

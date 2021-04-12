@@ -16,6 +16,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
   seleccionarTodo: boolean = false;
 
   @Input() datosJustificacion;
+  totalRegistros = 0;
 
   datosJustificacionAux: JustificacionExpressItem = new JustificacionExpressItem();
 
@@ -28,6 +29,10 @@ export class TablaJustificacionExpresComponent implements OnInit {
   numActuaciones = 0;
   totalActuaciones = 0;
   modoBusqueda: string = 'b';
+
+  from = 0;
+  to = 10;
+  numperPage = 10;
 
   cabeceras = [
     {
@@ -187,14 +192,12 @@ export class TablaJustificacionExpresComponent implements OnInit {
 
     this.rowGroups = this.trdService.getTableData(resultModified);
     this.rowGroupsAux = this.rowGroups;
+    this.totalRegistros = this.rowGroups.length;
 
     console.log(this.rowGroups);
   }
   
-  selectedAll(event) {
-    this.seleccionarTodo = event;
-    // this.isDisabled = !event;
-  }
+  
 
   // notifyAnySelected(event) {
   //   if (event) {

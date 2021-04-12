@@ -2,15 +2,7 @@
 
 <div class="card mt-3">
     <div class="card-body p-0">
-        <div class="padding-interior padding-superior">
-            <app-paginador (seleccionarTodo)="selectedAll($event)" [type]="'TOP'"></app-paginador>
-        </div>
-
-        <app-tabla-resultado-desplegable [seleccionarTodo]="seleccionarTodo" [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups"></app-tabla-resultado-desplegable>
-
-        <div class="mt-4 padding-interior padding-inferior">
-            <app-paginador [type]="'BOTTOM'"></app-paginador>
-        </div>
+        <app-tabla-resultado-desplegable [seleccionarTodo]="seleccionarTodo" [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" [pantalla]="'JE'"></app-tabla-resultado-desplegable>
     </div>
 
     <div class="card-footer">
