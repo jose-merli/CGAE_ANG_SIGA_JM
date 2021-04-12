@@ -13,6 +13,7 @@ export class DesignaItem {
 	fechaEntradaFin: Date;
 	fechaEstado: Date;
 	fechaFin: Date;
+	estado: String;
 	fechaJuicio: Date;
 	fechaModificacion: Date;
 	fechaOficioJuzgado: Date;
@@ -20,12 +21,14 @@ export class DesignaItem {
 	idInstitucion: number;
 	idInstitucion_juzg: number;
 	idInstitucion_procur: number;
-	idJuzgado: String[];
+	idJuzgados: String[];
+	idJuzgado: number;
 	nombreJuzgado: String;
 	idJuzgadoActu: String[];
 	nombreJuzgadoActu: String;
 	idPretension: number;
-	idProcedimiento: String[];
+	idProcedimientos: String[];
+	idProcedimiento: number;
 	idProcurador:number;
 	idTipoDesignaColegio: String[];
 	idTurnos: String[];

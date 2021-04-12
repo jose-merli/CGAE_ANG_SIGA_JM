@@ -95,12 +95,12 @@ export class SelectorComponent implements OnInit {
 
     this.sigaServices.get("combo_comboProcedimientosDesignaciones").subscribe(
       n => {
-        selectorProcedimiento = n.combooItems;
+        selectorProcedimiento.opciones = n.combooItems;
       },
       err => {
         console.log(err);
       }, () => {
-        this.arregloTildesCombo(selectorProcedimiento);
+        this.arregloTildesCombo(selectorProcedimiento.opciones);
       }
     );
   }
