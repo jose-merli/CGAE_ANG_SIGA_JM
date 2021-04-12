@@ -3,7 +3,7 @@
 <div class="card mt-3">
   <div class="card-body p-0" #tablaFoco>
 
-    <div class="padding-interior w-100">
+    <div class="padding-interior w-100" id="paginador">
       <app-paginador2 (perPage)="perPage($event)" (seleccionarTodo)="selectedAll($event)" (fromReg)="fromReg($event)"
         (toReg)="toReg($event)" [totalRegistros]="totalRegistros"></app-paginador2>
     </div>
@@ -58,9 +58,7 @@
       </div>
     </div>
 
-    <div class="padding-interior paginador-bottom">
-
-    </div>
+    <div class="padding-interior paginador-bottom"></div>
 
   </div>
 
