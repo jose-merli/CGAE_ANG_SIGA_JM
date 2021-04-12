@@ -6,6 +6,7 @@ import { DesignaItem } from '../../../../../models/sjcs/DesignaItem';
 import { JustificacionExpressItem } from '../../../../../models/sjcs/JustificacionExpressItem';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { Location } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-filtro-designaciones',
@@ -18,7 +19,7 @@ export class FiltroDesignacionesComponent implements OnInit {
     numColegiado: '',
     nombreAp: ''
   };
-  
+  private isButtonVisible = true;
   filtroJustificacion: JustificacionExpressItem = new JustificacionExpressItem();
   datos;
   expanded: boolean = false;
@@ -66,9 +67,15 @@ export class FiltroDesignacionesComponent implements OnInit {
   @Output() busquedaJustificacionExpres = new EventEmitter<boolean>();
   @Output() showTablaDesigna = new EventEmitter<boolean>();
   
-  constructor(private translateService: TranslateService, private sigaServices: SigaServices,  private location: Location) { }
+  constructor(private translateService: TranslateService, private sigaServices: SigaServices,  private location: Location, private router: Router) { }
 
   ngOnInit(): void {
+    let esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
+    if(!esColegiado){
+      this.isButtonVisible = true;
+    }else{
+      this.isButtonVisible = true;
+    }
     this.filtroJustificacion = new JustificacionExpressItem();
 
     this.showDesignas=true;
@@ -639,5 +646,9 @@ getComboCalidad() {
     this.msgs = [];
   }
 
+  nuevo(){
+      sessionStorage.setItem("nuevaDesigna",  "true");
+      this.router.navigate(["/fichaDesignaciones"]);
+  }
 
 }

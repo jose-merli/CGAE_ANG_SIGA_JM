@@ -42,6 +42,7 @@ export class GestionDesignacionesComponent implements OnInit {
     }
     this.selectedDatos = [];
     // this.datos.fechaActual = new Date();
+    console.log(this.datos);
     this.getCols();
     this.datosInicial = JSON.parse(JSON.stringify(this.datos));
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
@@ -61,7 +62,7 @@ export class GestionDesignacionesComponent implements OnInit {
       { field: "fechaAlta", header: "censo.resultadosSolicitudesModificacion.literal.fecha" },
       { field: "art27", header: "censo.nuevaSolicitud.estado" },
       { field: "numColegiado", header: "facturacionSJCS.facturacionesYPagos.numColegiado" },
-      { field: "nombre", header: "administracion.parametrosGenerales.literal.nombre.apellidos" },
+      { field: "nombreColegiado", header: "administracion.parametrosGenerales.literal.nombre.apellidos" },
       { field: "interesados", header: "justiciaGratuita.justiciables.literal.interesados" },
       { field: "validada", header: "general.boton.validar" },
     ];

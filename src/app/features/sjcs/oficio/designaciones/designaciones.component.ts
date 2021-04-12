@@ -101,6 +101,7 @@ export class DesignacionesComponent implements OnInit {
           element.art27 = 'Anulada';
          }
          element.idTipoDesignaColegio = element.observaciones;
+         element.nombreColegiado = element.apellido1Colegiado +" "+ element.apellido2Colegiado+", "+element.nombreColegiado;
         });
         this.progressSpinner=false;
         this.showTablaDesigna(true);

@@ -19,24 +19,13 @@ export class TablaResultadoDesplegableJEService {
   constructor() { }
 
   public getTableData(result) {
-    
     let resultado = {
       data: [
         {
           "": [
             {
               a1: [
-                { type: 'text', value: '' },
-                { type: 'text', value: '' },
-                { type: 'checkbox', value: '' },
-                { type: 'textTooltip', value: [] },
-                { type: 'text', value: '' },
-                { type: 'text', value: '' },
-                { type: 'select', value: '' },
-                { type: 'datePicker', value: '' },
-                { type: 'text', value: '' },
-                { type: 'buttom', value: '' },
-                { type: 'checkbox', value: '' },
+                { type: '', value: '' },
               ],
             }
           ],
@@ -45,17 +34,7 @@ export class TablaResultadoDesplegableJEService {
           "": [
             {
               b1: [
-                { type: 'text', value: '' },
-                { type: 'text', value: '' },
-                { type: 'checkbox', value: '' },
-                { type: 'textTooltip', value: [] },
-                { type: 'text', value: '' },
-                { type: 'text', value: '' },
-                { type: 'select', value: '' },
-                { type: 'datePicker', value: '' },
-                { type: 'text', value: '' },
-                { type: 'text', value: '' },
-                { type: 'checkbox', value: 'Si' },
+                { type: '', value: '' },
               ],
             
             },

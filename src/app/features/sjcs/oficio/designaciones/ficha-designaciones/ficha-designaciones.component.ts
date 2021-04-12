@@ -238,84 +238,90 @@ export class FichaDesignacionesComponent implements OnInit {
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
     let designaItem = JSON.parse(sessionStorage.getItem("designaItemLink"));
     this.campos = designaItem;
-    let camposResumen = [
-      {
-        "key": "Año/Número",
-        "value": designaItem.ano
-      },
-      {
-        "key": "Letrado",
-        "value": designaItem.numColegiado
-      },
-      {
-        "key": "Estado",
-        "value": designaItem.art27
-      },
-      {
-        "key": "Interesado",
-        "value": ""
-      },
-      {
-        "key": "Número Asistencias",
-        "value": ""
-      },
-      {
-        "key": "Validado",
-        "value": ""
-      }
-    ];
 
-    let camposGenerales = [
-      {
-        "key": "Turno",
-        "value": designaItem.nombreTurno
-      },
-      {
-        "key": "Fecha",
-        "value": designaItem.fechaAlta
-      },
-      {
-        "key": "Designación Art. 27-28",
-        "value": "NO"
-      }, {
-        "key": "Tipo",
-        "value": designaItem.descripcionTipoDesigna
-      }
-    ];
-
-    this.tarjetaFija.campos = camposResumen;
-    this.listaTarjetas[0].campos = camposGenerales;
-
-    //Actualizar para que los campos se rellenen en base a la tabla de la tarjeta contrarios
-    this.listaTarjetas[4].campos = [
-      {
-        "key": null,
-        "value": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.vacio')
-      },
-      {
-        "key": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.identificadorprimero'),
-        "value": designaItem.nombreTurno
-      },
-      {
-        "key": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.apellidosnombreprimero'),
-        "value": designaItem.fechaAlta
-      },
-      {
-        "key": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.abogadoprimero'),
-        "value": "NO"
-      }, {
-        "key": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.procuradorprimero'),
-        "value": designaItem.descripcionTipoDesigna
-      }, {
-        "key": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.ncontrarios'),
-        "value": designaItem.descripcionTipoDesigna
-      }
-    ]
+    if(!this.nuevaDesigna){
+      //EDICIÓN DESIGNA
+      let camposResumen = [
+        {
+          "key": "Año/Número",
+          "value": designaItem.ano
+        },
+        {
+          "key": "Letrado",
+          "value": designaItem.numColegiado
+        },
+        {
+          "key": "Estado",
+          "value": designaItem.art27
+        },
+        {
+          "key": "Interesado",
+          "value": ""
+        },
+        {
+          "key": "Número Actuaciones",
+          "value": ""
+        },
+        {
+          "key": "Validado",
+          "value": ""
+        }
+      ];
+  
+      let camposGenerales = [
+        {
+          "key": "Turno",
+          "value": designaItem.nombreTurno
+        },
+        {
+          "key": "Fecha",
+          "value": designaItem.fechaAlta
+        },
+        {
+          "key": "Designación Art. 27-28",
+          "value": "NO"
+        }, {
+          "key": "Tipo",
+          "value": designaItem.descripcionTipoDesigna
+        }
+      ];
+  
+      this.tarjetaFija.campos = camposResumen;
+      this.listaTarjetas[0].campos = camposGenerales;
+      //Actualizar para que los campos se rellenen en base a la tabla de la tarjeta contrarios
+      this.listaTarjetas[4].campos = [
+        {
+          "key": null,
+          "value": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.vacio')
+        },
+        {
+          "key": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.identificadorprimero'),
+          "value": designaItem.nombreTurno
+        },
+        {
+          "key": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.apellidosnombreprimero'),
+          "value": designaItem.fechaAlta
+        },
+        {
+          "key": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.abogadoprimero'),
+          "value": "NO"
+        }, {
+          "key": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.procuradorprimero'),
+          "value": designaItem.descripcionTipoDesigna
+        }, {
+          "key": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.ncontrarios'),
+          "value": designaItem.descripcionTipoDesigna
+        }
+      ]
     /* this.listaTarjetas[4].enlaces=[{
     id: null,
         ref: null,
         nombre: this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.vacio')
     }] */
+    }else{
+      //NUEVA DESIGNA
+    }
+    
   }
 
   ngAfterViewInit() {

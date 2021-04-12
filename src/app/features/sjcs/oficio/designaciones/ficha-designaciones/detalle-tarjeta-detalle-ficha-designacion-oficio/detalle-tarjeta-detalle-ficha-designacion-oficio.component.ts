@@ -38,9 +38,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     {
       nombre: 'Procedimiento',
       opciones: [
-        { label: 'XXXXXXXXXXXX', value: 1 },
-        { label: 'XXXXXXXXXXXX', value: 2 },
-        { label: 'XXXXXXXXXXXX', value: 3 }
+       
       ]
     },
     {
@@ -71,6 +69,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       // this.estado = this.campos.art27;
       this.selectores[0].opciones =[ {label: this.campos.art27, value: this.campos.sufijo} ]; 
       this.selectores[1].opciones=[{label: this.campos.nombreJuzgado, value: ''}];
+      this.selectores[2].opciones=[{label: this.campos.nombreProcedimiento, value: ''}];
     }else{
       this.selectores[0].opciones =[ 
       {label:'Activo', value:'V'},

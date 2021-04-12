@@ -414,7 +414,6 @@ import { GestionDesignacionesComponent } from './features/sjcs/oficio/designacio
 import { FiltroDesignacionesComponent } from './features/sjcs/oficio/designaciones/filtro-designaciones/filtro-designaciones.component';
 import { DesignacionesComponent } from './features/sjcs/oficio/designaciones/designaciones.component';
 
-
 @NgModule({
 	declarations: [
 		TablaResultadoDesplegableComponent,
