@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { DesignaItem } from '../../../../../models/sjcs/DesignaItem';
+import { TranslateService } from '../../../../../commons/translate';
 
 @Component({
   selector: 'app-ficha-designaciones',
@@ -108,12 +109,7 @@ export class FichaDesignacionesComponent implements OnInit {
       detalle: true,
       fixed: false,
       opened: false,
-      campos: [
-        {
-          "key": "Número de Contrarios",
-          "value": "8"
-        }
-      ]
+      campos: []
     },
     {
       id: 'sjcsDesigProc',
@@ -235,7 +231,8 @@ export class FichaDesignacionesComponent implements OnInit {
     },
   ];
 
-  constructor( private location: Location) { }
+  constructor( private location: Location, 
+    private  translateService: TranslateService) { }
 
   ngOnInit() {
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
@@ -288,6 +285,37 @@ export class FichaDesignacionesComponent implements OnInit {
 
     this.tarjetaFija.campos = camposResumen;
     this.listaTarjetas[0].campos = camposGenerales;
+
+    //Actualizar para que los campos se rellenen en base a la tabla de la tarjeta contrarios
+    this.listaTarjetas[4].campos = [
+      {
+        "key": null,
+        "value": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.vacio')
+      },
+      {
+        "key": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.identificadorprimero'),
+        "value": designaItem.nombreTurno
+      },
+      {
+        "key": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.apellidosnombreprimero'),
+        "value": designaItem.fechaAlta
+      },
+      {
+        "key": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.abogadoprimero'),
+        "value": "NO"
+      }, {
+        "key": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.procuradorprimero'),
+        "value": designaItem.descripcionTipoDesigna
+      }, {
+        "key": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.ncontrarios'),
+        "value": designaItem.descripcionTipoDesigna
+      }
+    ]
+    /* this.listaTarjetas[4].enlaces=[{
+    id: null,
+        ref: null,
+        nombre: this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.vacio')
+    }] */
   }
 
   ngAfterViewInit() {

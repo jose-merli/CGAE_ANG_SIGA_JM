@@ -34,7 +34,9 @@
                         <mat-accordion class="example-headers-align" multi>
                             <mat-expansion-panel (opened)="tarj.opened = true" (closed)="tarj.opened = false"
                                 [disabled]="tarj.fixed || !tarj.detalle" [expanded]="tarj.opened">
-                                <mat-expansion-panel-header class="h-100" [collapsedHeight]="'auto'"
+                                <!-- class="h-100" -->
+                                <mat-expansion-panel-header 
+                                [collapsedHeight]="'auto'"
                                     [expandedHeight]="'auto'">
                                     <app-tarjeta [image]="tarj.imagen" [cardTitle]="tarj.nombre" [campos]="tarj.campos"
                                         [icon]="tarj.icono" [enlaces]="tarj.enlaces" [cardOpenState]="tarj.opened"
@@ -61,6 +63,10 @@
                                     <div *ngIf="tarj.nombre == 'Documentación'">
                                         <app-detalle-tarjeta-documentacion-ficha-designacion-oficio>
                                         </app-detalle-tarjeta-documentacion-ficha-designacion-oficio>
+                                    </div>
+                                    <div *ngIf="tarj.nombre == 'Contrarios'">
+                                        <app-detalle-tarjeta-contrarios-ficha-designacion-oficio [campos]="campos"> 
+                                        </app-detalle-tarjeta-contrarios-ficha-designacion-oficio>
                                     </div>
                                 </ng-template>
                             </mat-expansion-panel>
