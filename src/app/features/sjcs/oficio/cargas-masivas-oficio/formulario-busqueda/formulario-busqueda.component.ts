@@ -112,8 +112,6 @@ export class FormularioBusquedaComponent implements OnInit {
       );
     }
 
-    //Comprobamos si el filtro de turno tiene algún valor seleccionado para dar acceso al botón o no
-    this.checkAccess();
 
     //Enviar valor de tipo al componente padre
     this.sendTipo();
@@ -142,14 +140,14 @@ export class FormularioBusquedaComponent implements OnInit {
       this.showCuerpoFicheroModelo = false;
     }
 
-    //Comprobamos si el filtro de turno tiene algún valor seleccionado para dar acceso al botón o no
-    this.checkAccess();
 
     //Enviar valor de tipo al componente padre
     this.sendTipo();
 
     this.turnosSelected = null;
     this.guardiasSelected = null;
+    this.guardias=[];
+    this.disableGuardia=true;
   }
 
   onChangeTurno(){
@@ -201,18 +199,6 @@ export class FormularioBusquedaComponent implements OnInit {
 
   abreCierraCuerpoFicheroModelo(){
     this.showCuerpoFicheroModelo=!this.showCuerpoFicheroModelo;
-  }
-
-  checkAccess(){
-    //Comprobamos si el filtro de turno tiene algún valor seleccionado para dar acceso 
-    if(this.turnosSelected!=null){
-      if(this.turnosSelected.length>0){
-       this.disableGuardia=false;
-      }
-      else{
-        this.disableGuardia=true;
-      } 
-    }
   }
 
   descargarModelo(){
