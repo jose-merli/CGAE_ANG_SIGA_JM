@@ -32,6 +32,10 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   columnsSizes = [];
   tamanioTablaResultados = 0;
 
+  numperPage = 10;
+  from = 0;
+  to = 10;
+
   constructor(
     private renderer: Renderer2
   ) {
@@ -269,10 +273,14 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       });
 
       if (ocultar) {
+        console.log('(event.itemValue.id: ', event.itemValue.id)
         this.renderer.addClass(document.getElementById(event.itemValue.id), "collapse");
         this.itemsaOcultar.push(event.itemValue);
-
-        tabla.setAttribute("style", `width: ${tabla.clientWidth - this.columnsSizes.find(el => el.id == event.itemValue.id).size}px !important`);
+        console.log(' this.columnsSizes: ',  this.columnsSizes)
+        if(this.columnsSizes.length != 0){
+          tabla.setAttribute("style", `width: ${tabla.clientWidth - this.columnsSizes.find(el => el.id == event.itemValue.id).size}px !important`);
+        }
+       
       } else {
         this.renderer.removeClass(document.getElementById(event.itemValue.id), "collapse");
         this.itemsaOcultar.forEach((element, index) => {
@@ -280,7 +288,9 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             this.itemsaOcultar.splice(index, 1);
           }
         });
+        if(this.columnsSizes.length != 0){ 
         tabla.setAttribute("style", `width: ${tabla.clientWidth + this.columnsSizes.find(el => el.id == event.itemValue.id).size}px !important`);
+        }
       }
 
       this.getPosition(this.itemsaOcultar);
@@ -294,7 +304,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   }
 
   setTamanioPrimerRegistroGrupo() {
-    if (this.pantalla == 'AE' || this.pantalla == 'JE') {
+    if (this.pantalla == 'AE' || this.pantalla == '') {
       let self = this;
       setTimeout(function () {
         let primerRegistroDelGrupo = document.getElementsByClassName("table-row-header");
@@ -347,7 +357,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         }
       }
 
-    } else if (this.pantalla == 'JE') {
+    } else if (this.pantalla == '') {
 
       this.cabeceras.forEach(ind => {
         if (ind.id == 'clientes') {
@@ -394,6 +404,23 @@ export class TablaResultadoDesplegableComponent implements OnInit {
 
   changeDisplay() {
     return (document.getElementsByClassName("openedMenu").length == 0 && document.documentElement.clientWidth > 1812);
+  }
+
+  fromReg(event){
+    this.from = Number(event) - 1;
+  }
+
+  toReg(event){
+    this.to = Number(event);
+  }
+
+  perPage(perPage){
+    this.numperPage = perPage;
+  }
+
+  selectedAll(event) {
+    this.seleccionarTodo = event;
+    // this.isDisabled = !event;
   }
 
 }

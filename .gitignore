@@ -1161,3 +1161,4 @@ src/app/_services/authentication.service.ts
 .scannerwork/report-task.txt
 .scannerwork/.sonar_lock
 .scannerwork/
+.vscode/tasks.json
