@@ -356,7 +356,7 @@ getComboCalidad() {
         console.log(err);
         this.progressSpinner=false;
       }, () => {
-        this.arregloTildesCombo(this.comboTurno);
+        this.arregloTildesCombo(this.comboProcedimientos);
       }
     );
   }
@@ -469,7 +469,7 @@ getComboCalidad() {
         designa.fechaEntradaFin = this.fechaAperturaHastaSelect;
         designa.estados = this.body.estados;
         designa.idTipoDesignaColegio = (this.body.idTipoDesignaColegio); 
-        designa.idTurno = this.body.idTurno; 
+        designa.idTurnos = this.body.idTurnos; 
         if(designa.idTurno != null){
           designa.nombreTurno = this.comboTurno.find(
             item => item.value == designa.idTurno
@@ -480,13 +480,13 @@ getComboCalidad() {
         designa.idArt27 = this.body.idArt27; 
         designa.numColegiado = this.usuarioBusquedaExpress.numColegiado;
 
-        designa.idJuzgado = this.body.idJuzgado;
+        designa.idJuzgados = this.body.idJuzgados;
         designa.idModulo = this.body.idModulo;
         designa.idCalidad = this.body.idCalidad;
         if(this.body.anoProcedimiento != null && this.body.anoProcedimiento != undefined){
           designa.numProcedimiento = this.body.anoProcedimiento.toString();
         }
-        designa.idProcedimiento = this.body.idProcedimiento;
+        designa.idProcedimientos = this.body.idProcedimientos;
         designa.nig = this.body.nig;
         designa.asunto = this.body.asunto;
 

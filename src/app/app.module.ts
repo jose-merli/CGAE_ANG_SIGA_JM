@@ -414,6 +414,7 @@ import { TablaJustificacionExpresComponent  } from './features/sjcs/oficio/desig
 import { GestionDesignacionesComponent } from './features/sjcs/oficio/designaciones/gestion-designaciones/gestion-designaciones.component'
 import { FiltroDesignacionesComponent } from './features/sjcs/oficio/designaciones/filtro-designaciones/filtro-designaciones.component';
 import { DesignacionesComponent } from './features/sjcs/oficio/designaciones/designaciones.component';
+import { DetalleTarjetaActuacionesFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-ficha-designacion-oficio/detalle-tarjeta-actuaciones-ficha-designacion-oficio.component';
 
 @NgModule({
 	declarations: [
@@ -545,6 +546,7 @@ import { DesignacionesComponent } from './features/sjcs/oficio/designaciones/des
 		DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent,
 		DetalleTarjetaDetalleFichaDesignacionOficioComponent,
 		DetalleTarjetaDocumentacionFichaDesignacionOficioComponent,
+		DetalleTarjetaActuacionesFichaDesignacionOficioComponent,
 		GuardiasSolicitudesTurnosComponent,
 		GuardiasIncompatibilidadesComponent,
 		ProgramacionCalendariosComponent,

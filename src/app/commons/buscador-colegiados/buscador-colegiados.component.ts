@@ -67,6 +67,27 @@ export class BuscadorColegiadosComponent implements OnInit {
   }
 
   buscar(){
+    let guardia = "";
+    let turno = "";
+
+    if(this.filtro.filtro.idGuardia != null && this.filtro.filtro.idGuardia != "" &&  this.filtro.filtro.idGuardia instanceof Array){
+      this.filtro.filtro.idGuardia = this.filtro.filtro.idGuardia.toString();
+      // this.filtro.filtro.idGuardia.forEach(element => {
+      //   guardia+=element + ",";
+      // });
+    }
+
+    if(this.filtro.filtro.idTurno != null && this.filtro.filtro.idGuardia != "" &&  this.filtro.filtro.idTurno instanceof Array){
+     
+      this.filtro.filtro.idTurno = this.filtro.filtro.idTurno.toString();
+      // this.filtro.filtro.idTurno.forEach(element => {
+      //   turno+=element + ",";
+      // });
+    }
+
+    // THIS.FILTRO.FILTRO.IDGUARDIA = GUARDIA;
+    // THIS.FILTRO.FILTRO.IDTURNO = TURNO;
+
     if(this.filtro.filtro.length!=0){
       this.progressSpinner = true;
       

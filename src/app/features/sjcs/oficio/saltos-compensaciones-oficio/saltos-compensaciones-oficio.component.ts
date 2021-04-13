@@ -53,7 +53,7 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
       name: "dato.jgr.guardia.saltcomp.fechauso"
     }
   ];
-  comboTurnos: SelectItem[];
+  comboTurnos;
   comboTipos = [
     {
       label: 'Salto',
@@ -72,6 +72,7 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
   historico: boolean = false;
   isNewFromOtherPage: boolean = false;
   isNewFromOtherPageObject: any;
+  comboColegiados = [];
 
   @ViewChild(FiltrosSaltosCompensacionesOficioComponent) filtros: FiltrosSaltosCompensacionesOficioComponent;
   @ViewChild(TablaResultadoMixSaltosCompOficioComponent) tabla: TablaResultadoMixSaltosCompOficioComponent;
@@ -247,19 +248,23 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
           { type: 'text', value: element.fecha, header: this.cabeceras[4].id, disabled: false },
           { type: 'text', value: element.motivo, header: this.cabeceras[5].id, disabled: false },
           { type: 'text', value: element.fechaUso, header: this.cabeceras[6].id, disabled: false },
-          { type: 'invisible', value: element.idSaltosTurno, header: 'invisible', disabled: false }
+          { type: 'invisible', value: element.idSaltosTurno, header: 'idSaltosTurno', disabled: false },
+          { type: 'invisible', value: element.idTurno, header: 'idTurno', disabled: false },
+          { type: 'invisible', value: element.idPersona, header: 'idPersona', disabled: false }
         ];
 
       } else {
         obj = [
-          { type: 'select', combo: this.comboTurnos, value: element.idTurno, header: this.cabeceras[0].id, disabled: false },
-          { type: 'select', combo: element.comboColegiados, value: element.idPersona, header: this.cabeceras[1].id, disabled: false },
+          { type: 'text', value: element.turno, header: this.cabeceras[0].id, disabled: false },
+          { type: 'text', value: element.nColegiado, header: this.cabeceras[1].id, disabled: false },
           { type: 'text', value: element.letrado, header: this.cabeceras[2].id, disabled: false },
           { type: 'select', combo: this.comboTipos, value: element.saltoCompensacion, header: this.cabeceras[3].id, disabled: false },
           { type: 'datePicker', value: element.fecha, header: this.cabeceras[4].id, disabled: false },
           { type: 'textarea', value: element.motivo, header: this.cabeceras[5].id, disabled: false },
           { type: 'text', value: element.fechaUso, header: this.cabeceras[6].id, disabled: false },
-          { type: 'invisible', value: element.idSaltosTurno, header: 'invisible', disabled: false }
+          { type: 'invisible', value: element.idSaltosTurno, header: 'idSaltosTurno', disabled: false },
+          { type: 'invisible', value: element.idTurno, header: 'idTurno', disabled: false },
+          { type: 'invisible', value: element.idPersona, header: 'idPersona', disabled: false }
         ];
       }
 
@@ -374,31 +379,32 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
     event.forEach(row => {
       let salto = new SaltoCompItem();
       row.cells.forEach((cell, index) => {
-        if (index == 0) {
-          salto.idTurno = cell.value;
-        }
-        if (index == 1) {
-          salto.idGuardia = cell.value;
-        }
-        if (index == 2) {
-          salto.idPersona = cell.value;
-        }
-        if (index == 4) {
+        if (index == 3) {
           salto.saltoCompensacion = cell.value;
         }
-        if (index == 5) {
+        if (index == 4) {
           salto.fecha = cell.value;
         }
-        if (index == 6) {
+        if (index == 5) {
           salto.motivo = cell.value;
         }
-        if (index == 8 && cell.value != null && cell.value != '') {
+        if (index == 7) {
           salto.idSaltosTurno = cell.value;
         }
-        if (index == 9 && cell.value != null && cell.value != '') {
+        if (index == 8) {
+          salto.idTurno = cell.value;
+        }
+        if (index == 9) {
           salto.idPersona = cell.value;
         }
+
       });
+
+      if (row.cells[7].value == '') {
+        salto.idTurno = row.cells[0].value;
+        salto.idPersona = row.cells[1].value;
+      }
+
       arraySaltos.push(salto);
     });
 
@@ -439,14 +445,18 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
     let cell6: Cell = new Cell();
     let cell7: Cell = new Cell();
     let cell8: Cell = new Cell();
+    let cell9: Cell = new Cell();
+    let cell10: Cell = new Cell();
 
-    cell1.type = 'text';
-    cell1.value = data.nombreTurno;
+    cell1.type = 'select';
+    cell1.combo = this.comboTurnos;
+    cell1.value = data.idturno;
     cell1.header = this.cabeceras[0].id;
     cell1.disabled = false;
 
-    cell2.type = 'text';
-    cell2.value = data.numerocolegiado;
+    cell2.type = 'select';
+    cell2.value = data.idpersona;
+    cell2.combo = [];
     cell2.header = this.cabeceras[1].id;
     cell2.disabled = false;
 
@@ -478,12 +488,20 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
 
     cell8.type = 'invisible';
     cell8.value = '';
-    cell8.header = 'invisible';
-    cell8.disabled = false;
+    cell8.header = 'idSaltosTurno';
 
-    row.cells = [cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8];
+    cell9.type = 'invisible';
+    cell9.value = '';
+    cell9.header = 'idTurno';
+
+    cell10.type = 'invisible';
+    cell10.value = '';
+    cell10.header = 'idPersona';
+
+    row.cells = [cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8, cell9, cell10];
     row.id = this.totalRegistros == 0 ? 0 : this.totalRegistros;
     row.italic = false;
+    this.getComboColegiados(row);
 
     if (this.rowGroups != undefined && this.rowGroups != null) {
       this.rowGroups.unshift(row);
@@ -494,5 +512,27 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
     this.totalRegistros = this.rowGroups.length;
 
     this.showResults = true;
+  }
+
+  getComboColegiados(row: Row) {
+
+    this.comboColegiados = [];
+    let params = new SaltoCompItem();
+    params.idTurno = row.cells[0].value;
+
+    this.sigaServices.post(
+      "saltosCompensacionesOficio_comboColegiados", params).subscribe(
+        data => {
+          let comboColegiados = JSON.parse(data.body).combooItems;
+          let error = JSON.parse(data.body).error;
+          this.comboColegiados = comboColegiados;
+        },
+        err => {
+          console.log(err);
+        },
+        () => {
+          this.rowGroups.find(el => el.id == row.id).cells[1].combo = this.comboColegiados;
+        }
+      );
   }
 }

@@ -1,5 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Message } from 'primeng/components/common/api';
+import { ParametroDto } from '../../../../../../models/ParametroDto';
+import { ParametroRequestDto } from '../../../../../../models/ParametroRequestDto';
 import { SigaServices } from '../../../../../../_services/siga.service';
 
 @Component({
@@ -11,6 +13,9 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
 
   msgs: Message[] = [];
   nuevaDesigna: any;
+  valorParametro: any;
+  searchParametros: ParametroDto = new ParametroDto();
+  datosBuscar: any[];
   estado: any;
   @Input() campos;
   inputs = [
@@ -18,7 +23,15 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     {nombre:'Nº Procedimiento', value:""}
   ];
 
-  datePickers = ['Fecha estado', 'Fecha cierre'];
+  datePickers = [
+    {
+    nombre:'Fecha estado',
+    value: ""},
+   {
+     nombre:'Fecha cierre',
+     value:""
+    }
+  ];
 
   selectores = [
     {
@@ -44,17 +57,12 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     {
       nombre: 'Módulo',
       opciones: [
-        { label: 'XXXXXXXXXXXX', value: 1 },
-        { label: 'XXXXXXXXXXXX', value: 2 },
-        { label: 'XXXXXXXXXXXX', value: 3 }
       ]
     },
     {
       nombre: 'Delitos',
       opciones: [
-        { label: 'XXXXXXXXXXXX', value: 1 },
-        { label: 'XXXXXXXXXXXX', value: 2 },
-        { label: 'XXXXXXXXXXXX', value: 3 }
+        
       ]
     }
   ];
@@ -64,18 +72,47 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
   ngOnInit() {
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
     if(!this.nuevaDesigna){
+      let parametro = new ParametroRequestDto();
+    parametro.idInstitucion = this.campos.idInstitucion;
+    parametro.modulo = "SCS";
+    parametro.parametrosGenerales = "CONFIGURAR_COMBO_DESIGNA";
+    this.sigaServices
+      .postPaginado("parametros_search", "?numPagina=1", parametro)
+      .subscribe(
+        data => {
+          this.searchParametros = JSON.parse(data["body"]);
+          this.datosBuscar = this.searchParametros.parametrosItems;
+          this.datosBuscar.forEach(element => {
+            if(element.parametro == "CONFIGURAR_COMBO_DESIGNA" && (element.idInstitucion == 0 || element.idInstitucion == element.idinstitucionActual)){
+              this.valorParametro = element.valor;
+            }
+          });
+        },
+        err => {
+          console.log(err);
+        },
+        () => {
+        }
+      );
       this.inputs[0].value = this.campos.nig;
       this.inputs[1].value = this.campos.numProcedimiento;
       // this.estado = this.campos.art27;
       this.selectores[0].opciones =[ {label: this.campos.art27, value: this.campos.sufijo} ]; 
       this.selectores[1].opciones=[{label: this.campos.nombreJuzgado, value: ''}];
       this.selectores[2].opciones=[{label: this.campos.nombreProcedimiento, value: ''}];
+      this.getComboModulos();
+      this.datePickers[0].value =  this.campos.fechaEstado;
     }else{
       this.selectores[0].opciones =[ 
       {label:'Activo', value:'V'},
       {label:'Finalizada', value:'F'},
       {label:'Anulada', value:'A'}];
+      if(this.valorParametro == 1){
+        
+      }
       this.getComboJuzgados();
+      this.getComboProcedimientos();
+      this.getComboModulos();
     }
     
   }
@@ -106,6 +143,35 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       }
     );
   }
+
+  getComboProcedimientos() {
+
+    this.sigaServices.get("combo_comboProcedimientosDesignaciones").subscribe(
+      n => {
+        this.selectores[2].opciones = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }, () => {
+        this.arregloTildesCombo(this.selectores[2].opciones);
+      }
+    );
+  }
+
+  getComboModulos() {
+
+    this.sigaServices.get("combo_comboModulosDesignaciones").subscribe(
+      n => {
+        this.selectores[3].opciones = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }, () => {
+        this.arregloTildesCombo( this.selectores[3].opciones);
+      }
+    );
+  }
+
   arregloTildesCombo(combo) {
     if (combo != undefined)
       combo.map(e => {

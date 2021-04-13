@@ -73,26 +73,10 @@ export class FiltrosBajasTemporales implements OnInit {
 
       this.usuarioBusquedaExpress.numColegiado=busquedaColegiado.nColegiado;
     }​​
-    
-  if((this.filtros.tipo == null ||
-      this.filtros.tipo == undefined) &&
-    (this.filtros.validado == null ||
-      this.filtros.validado == undefined) &&
-    (this.filtros.fechasolicitudhasta == null ||
-      this.filtros.fechasolicitudhasta == undefined) &&
-    (this.filtros.fechasolicituddesde == null ||
-      this.filtros.fechasolicituddesde == undefined) &&
-    (this.filtros.fechahasta == null ||
-      this.filtros.fechahasta == undefined )&&
-    (this.filtros.fechadesde == null ||
-      this.filtros.fechadesde == undefined )&&
-    (this.usuarioBusquedaExpress.numColegiado == null ||
-      this.usuarioBusquedaExpress.numColegiado == "" )){
 
-  }else{
-    this.isBuscar();
-  }
-    
+    if(sessionStorage.getItem("buscadorColegiados")){
+      this.isBuscar();
+    }
   }
 
   onHideDatosGenerales() {
@@ -111,8 +95,10 @@ export class FiltrosBajasTemporales implements OnInit {
           this.filtros.fechahasta == undefined )&&
       (this.filtros.fechadesde == null ||
           this.filtros.fechadesde == undefined )&&
-      (this.usuarioBusquedaExpress.numColegiado == null ||
-          this.usuarioBusquedaExpress.numColegiado == "" ))
+      (this.filtros.nombre == null ||
+          this.filtros.nombre == undefined ) && 
+      (this.filtros.ncolegiado == null ||
+        this.filtros.ncolegiado == undefined ))
       {
         this.showSearchIncorrect();
         return false;
@@ -132,20 +118,18 @@ export class FiltrosBajasTemporales implements OnInit {
 
   isBuscar() {
 
-    if(this.usuarioBusquedaExpress.nombreAp != undefined){
+    if(this.usuarioBusquedaExpress.nombreAp != undefined && this.usuarioBusquedaExpress.nombreAp  != ""){
+      this.filtros.nombre = this.usuarioBusquedaExpress.nombreAp;
       if(this.usuarioBusquedaExpress.numColegiado!= null && this.usuarioBusquedaExpress.numColegiado  != ""){
         this.filtros.ncolegiado = this.usuarioBusquedaExpress.numColegiado;
       }else{
         this.filtros.ncolegiado = null;
       }
     }else{
-      this.filtros.ncolegiado = null;
+      this.filtros.nombre = null;
     }
 
     if (this.checkFilters()) {
-      if(this.usuarioBusquedaExpress.numColegiado != ""){
-        this.filtros.ncolegiado = this.usuarioBusquedaExpress.numColegiado
-      }
         this.persistenceService.setFiltros(this.filtros);
         this.persistenceService.setFiltrosAux(this.filtros);
         this.filtroAux = this.persistenceService.getFiltrosAux();
@@ -264,5 +248,10 @@ export class FiltrosBajasTemporales implements OnInit {
   updateColegiado(event) {
     this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
     this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
+  }
+  
+  nuevaBajaTemporal(){
+    this.router.navigate(["/buscadorColegiados"]);
+    sessionStorage.setItem("nuevo","true");
   }
 }

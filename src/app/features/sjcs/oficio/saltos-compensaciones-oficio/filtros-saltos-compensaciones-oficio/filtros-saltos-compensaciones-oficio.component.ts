@@ -1,6 +1,5 @@
 import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { ColegiadoItem } from '../../../../../models/ColegiadoItem';
 import { SaltoCompItem } from '../../../../../models/guardia/SaltoCompItem';
 import { CommonsService } from '../../../../../_services/commons.service';
@@ -29,7 +28,6 @@ export class FiltrosSaltosCompensacionesOficioComponent implements OnInit {
   filtroAux: SaltoCompItem = new SaltoCompItem();
   historico: boolean = false;
   isDisabledGuardia: boolean = true;
-  comboGuardias = [];
   comboTurnos = [];
   textFilter: string = "Seleccionar";
   textSelected: String = "{0} turnos seleccionados";
@@ -41,8 +39,7 @@ export class FiltrosSaltosCompensacionesOficioComponent implements OnInit {
   constructor(
     private sigaServices: SigaServices,
     private commonServices: CommonsService,
-    private datepipe: DatePipe,
-    private activatedRoute: ActivatedRoute
+    private datepipe: DatePipe
   ) { }
 
   ngOnInit() {
@@ -88,31 +85,6 @@ export class FiltrosSaltosCompensacionesOficioComponent implements OnInit {
         console.log(err);
       }
     );
-  }
-
-  onChangeTurno() {
-    this.filtros.idGuardia = "";
-    this.comboGuardias = [];
-
-    if (this.filtros.idTurno) {
-      this.getComboGuardia();
-    } else {
-      this.isDisabledGuardia = true;
-    }
-  }
-
-  getComboGuardia() {
-    this.sigaServices.getParam(
-      "busquedaGuardia_comboGuardia_Nogrupo", "?idTurno=" + this.filtros.idTurno).subscribe(
-        data => {
-          this.isDisabledGuardia = false;
-          this.comboGuardias = data.combooItems;
-          this.commonServices.arregloTildesCombo(this.comboGuardias);
-        },
-        err => {
-          console.log(err);
-        }
-      );
   }
 
   onHideDatosGenerales() {
