@@ -35,6 +35,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   numperPage = 10;
   from = 0;
   to = 10;
+  totalRegistros = 0;
 
   constructor(
     private renderer: Renderer2
@@ -55,6 +56,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       this.selectedHeader.push(cab);
       this.cabecerasMultiselect.push(cab.name);
     });
+    this.totalRegistros = this.rowGroups.length;
   }
 
   selectRow(rowSelected, rowId) {
@@ -108,6 +110,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       });
       this.rowGroupsAux = this.rowGroups;
     }
+    this.totalRegistros = this.rowGroups.length;
   }
   getPosition(selectedHeaders) {
     this.positionsToDelete = [];
@@ -139,7 +142,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
 
     }
     pos = this.getPosition(selectedHeaders);
-
+    this.totalRegistros = this.rowGroups.length;
     return ocultar;
   }
   posicionOcultar(z) {
@@ -183,7 +186,9 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     if (j == 0) {
       let isReturn = true;
       let isReturnArr = [];
+      console.log('this.rowGroupsAux 1: ', this.rowGroupsAux)
       this.rowGroups = this.rowGroupsAux.filter((row) => {
+        console.log('row 1: ', row)
         row.rows.forEach(cell => {
           for (let i = 0; i < cell.cells.length; i++) {
             if (
@@ -205,13 +210,15 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       let isReturnArr = [];
       this.rowGroups = this.rowGroupsAux.filter((row) => {
         isReturnArr = [];
-        row.rows.forEach(cell => {
-          for (let i = 0; i < cell.cells.length; i++) {
-
+  
+          for (let r = 0; r < row.rows.length; r++) {
+          for (let i = 0; i < row.rows[r].cells.length; i++) {
+            if (row.rows[r].cells[i].value != null){
             if (
               this.searchText[j] != " " &&
               this.searchText[j] != undefined &&
-              !cell.cells[i].value.toString().toLowerCase().includes(this.searchText[j].toLowerCase())
+              this.searchText[j] != null &&
+              !row.rows[r].cells[i].value.toString().toLowerCase().includes(this.searchText[j].toLowerCase())
             ) {
               isReturn = false;
             } else {
@@ -219,17 +226,20 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             }
             isReturnArr.push(isReturn);
           }
-        })
+         }
+    
+        }
         if (isReturnArr.includes(true)) {
           return row;
         }
       });
     }
-    let self = this;
-    setTimeout(function () {
+    //let self = this;
+    /*setTimeout(function () {
       self.setTamanios();
       self.setTamanioPrimerRegistroGrupo();
-    }, 1);
+    }, 1);*/
+    this.totalRegistros = this.rowGroups.length;
   }
 
   isPar(numero): boolean {
@@ -300,7 +310,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       }
 
     }
-
+    this.totalRegistros = this.rowGroups.length;
   }
 
   setTamanioPrimerRegistroGrupo() {
@@ -401,7 +411,12 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       }
     }
   }
-
+  setMyStyles(size) {
+    let styles = {
+      'max-width': size + 'px',
+    };
+    return styles;
+  }
   changeDisplay() {
     return (document.getElementsByClassName("openedMenu").length == 0 && document.documentElement.clientWidth > 1812);
   }
