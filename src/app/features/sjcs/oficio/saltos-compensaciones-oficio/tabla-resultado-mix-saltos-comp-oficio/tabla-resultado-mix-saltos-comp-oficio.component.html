@@ -63,30 +63,32 @@
   </div>
 
   <div class="card-footer" #footer>
-    <div class="text-right main-button butBottom mt10">
+    <div class="text-right main-button butBottom">
 
       <button *ngIf="!historico" (click)="toogleHistorico(true)" pButton type="button" icon="fa fa-history"
-        iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
+        iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"
+        [disabled]="!activacionEditar"></button>
 
       <button *ngIf="historico" (click)="toogleHistorico(false)" pButton type="button" icon="fa fa-undo" iconPos="left"
-        label="{{'general.message.ocultarHistorico' | translate}}"></button>
+        label="{{'general.message.ocultarHistorico' | translate}}" [disabled]="!activacionEditar"></button>
 
       <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"
-        [disabled]="emptyResults || historico" (click)="guardar()"></button>
+        [disabled]="emptyResults || historico || !activacionEditar" (click)="guardar()"></button>
 
 
       <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.anular' | translate}}"
-        [disabled]="historico || emptyResults || isDisabled" (click)="anular()"></button>
+        [disabled]="historico || emptyResults || isDisabled || !activacionEditar" (click)="anular()"></button>
 
       <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"
-        [disabled]="historico" (click)="nuevo()"></button>
+        [disabled]="historico || !activacionEditar" (click)="nuevo()"></button>
 
       <button pButton type="button" icon="fa fa-trash-alt" iconPos="left"
-        label="{{ 'general.boton.eliminar' | translate}}" [disabled]="emptyResults || isDisabled"
+        label="{{ 'general.boton.eliminar' | translate}}" [disabled]="emptyResults || isDisabled || !activacionEditar"
         (click)="delete()"></button>
 
       <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left"
-        label="{{ 'general.boton.restablecer' | translate}}" [disabled]="emptyResults || historico"></button>
+        label="{{ 'general.boton.restablecer' | translate}}"
+        [disabled]="emptyResults || historico || !activacionEditar"></button>
     </div>
   </div>
 </div>

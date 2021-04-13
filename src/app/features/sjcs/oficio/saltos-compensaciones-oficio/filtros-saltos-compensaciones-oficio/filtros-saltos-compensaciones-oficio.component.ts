@@ -33,6 +33,7 @@ export class FiltrosSaltosCompensacionesOficioComponent implements OnInit {
   textSelected: String = "{0} turnos seleccionados";
 
   @Input() isNewFromOtherPage: boolean = false;
+  @Input() activacionEditar: boolean = false;
 
   @Output() isBuscar = new EventEmitter<boolean>();
 
@@ -43,6 +44,11 @@ export class FiltrosSaltosCompensacionesOficioComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+
+    if (!this.activacionEditar) {
+      this.disabledBusquedaExpress = true;
+      this.getDataLoggedUser();
+    }
 
     this.getComboTurno();
 
@@ -55,11 +61,6 @@ export class FiltrosSaltosCompensacionesOficioComponent implements OnInit {
       }
       this.isBuscar.emit(this.historico)
 
-    }
-
-    if (sessionStorage.getItem("esColegiado") && sessionStorage.getItem("esColegiado") == 'true') {
-      /*this.disabledBusquedaExpress = true;
-      this.getDataLoggedUser();*/
     }
 
     if (sessionStorage.getItem('buscadorColegiados')) {
