@@ -29,9 +29,9 @@
                             <span class="w100 cell-value" *ngIf="cell.type == 'text'"
                                 [ngClass]="{'setItalic': row.italic}">{{cell.value}}</span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'datePicker'">
-                                <app-fecha [(value)]="fechaIncorporacionDesdeSelect" [utc]="false"
-                                    (valueChangeSelected)="fillFechaIncorporacionDesde($event)"
-                                    (valueChangeInput)="fillFechaIncorporacionDesde($event)">
+                                <app-fecha [(value)]="cell.value" [utc]="false"
+                                    (valueChangeSelected)="fillFecha($event, cell)"
+                                    (valueChangeInput)="fillFecha($event, cell)">
                                 </app-fecha>
                             </span>
                             <span class="w100 cell-value selectWrap" *ngIf="cell.type == 'select'">

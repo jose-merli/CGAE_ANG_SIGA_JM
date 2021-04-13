@@ -83,6 +83,7 @@ export class FiltrosBajasTemporales implements OnInit {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
   checkFilters() {
+    
       if((this.filtros.tipo == null ||
           this.filtros.tipo == undefined) &&
       (this.filtros.validado == null ||
@@ -96,10 +97,9 @@ export class FiltrosBajasTemporales implements OnInit {
       (this.filtros.fechadesde == null ||
           this.filtros.fechadesde == undefined )&&
       (this.filtros.nombre == null ||
-          this.filtros.nombre == undefined ) && 
-      (this.filtros.ncolegiado == null ||
-        this.filtros.ncolegiado == undefined ))
-      {
+          this.filtros.nombre == undefined ) &&
+      ((<HTMLInputElement>document.getElementById("nombreAp") == null) ||
+      (<HTMLInputElement>document.getElementById("nombreAp")) == null == undefined )){
         this.showSearchIncorrect();
         return false;
       } else {
