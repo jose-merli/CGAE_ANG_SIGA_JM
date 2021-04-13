@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Message, SelectItem } from 'primeng/api';
 import { TranslateService } from '../../../../commons/translate/translation.service';
 import { SaltoCompItem } from '../../../../models/guardia/SaltoCompItem';
@@ -9,6 +9,8 @@ import { SigaServices } from '../../../../_services/siga.service';
 import { FiltrosSaltosCompensacionesOficioComponent } from './filtros-saltos-compensaciones-oficio/filtros-saltos-compensaciones-oficio.component';
 import { TablaResultadoMixSaltosCompOficioComponent } from './tabla-resultado-mix-saltos-comp-oficio/tabla-resultado-mix-saltos-comp-oficio.component';
 import { Cell, Row, TablaResultadoMixSaltosCompOficioService } from './tabla-resultado-mix-saltos-comp-oficio/tabla-resultado-mix-saltos-comp-oficio.service';
+import { ControlAccesoDto } from '../../../../models/ControlAccesoDto';
+import { procesos_oficio } from '../../../../permisos/procesos_oficio';
 
 @Component({
   selector: 'app-saltos-compensaciones-oficio',
@@ -73,6 +75,8 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
   isNewFromOtherPage: boolean = false;
   isNewFromOtherPageObject: any;
   comboColegiados = [];
+  activacionEditar: boolean = false;
+  showFilters: boolean = false;
 
   @ViewChild(FiltrosSaltosCompensacionesOficioComponent) filtros: FiltrosSaltosCompensacionesOficioComponent;
   @ViewChild(TablaResultadoMixSaltosCompOficioComponent) tabla: TablaResultadoMixSaltosCompOficioComponent;
@@ -83,10 +87,13 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
     private translateService: TranslateService,
     private datepipe: DatePipe,
     private trmService: TablaResultadoMixSaltosCompOficioService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private router: Router
   ) { }
 
   ngOnInit() {
+
+    this.checkAcceso();
 
     this.getComboTurno();
 
@@ -238,7 +245,7 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
       let italic = (element.fechaUso != null || element.fechaAnulacion != null);
       let obj = [];
 
-      if (italic || this.historico) {
+      if (italic || this.historico || !this.activacionEditar) {
 
         obj = [
           { type: 'text', value: element.turno, header: this.cabeceras[0].id, disabled: false },
@@ -535,4 +542,41 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
         }
       );
   }
+
+  checkAcceso() {
+    this.progressSpinner = true;
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = procesos_oficio.saltosCompensaciones;
+
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        const permisos = JSON.parse(data.body);
+        const permisosArray = permisos.permisoItems;
+        const derechoAcceso = permisosArray[0].derechoacceso;
+
+        if (derechoAcceso == 3) {
+          this.activacionEditar = true;
+        } else if (derechoAcceso == 2) {
+          this.activacionEditar = false;
+        } else {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
+      },
+      err => {
+        this.progressSpinner = false;
+        console.log(err);
+      },
+      () => {
+        this.progressSpinner = false;
+        this.showFilters = true;
+      }
+    );
+
+  }
+
 }

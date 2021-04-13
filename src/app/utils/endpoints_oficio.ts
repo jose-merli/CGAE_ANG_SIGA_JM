@@ -50,6 +50,7 @@ export let endpoints_oficio: any = {
     bajasTemporales_busquedaBajasTemporales:"oficio/bajasTemporales/busquedaBajasTemporales",
     bajasTemporales_updateBajaTemporal:"oficio/bajasTemporales/updateBaja",
     bajasTemporales_saveBajaTemporal:"oficio/bajasTemporales/saveBajaTemporal",
+    bajasTemporales_nuevaBajaTemporal:"oficio/bajasTemporales/nuevaBajaTemporal",
     bajasTemporales_deleteBajaTemporal:"oficio/bajasTemporales/deleteBajaTemporal",
     //FIN DE BAJAS TEMPORALES
 
@@ -71,6 +72,7 @@ export let endpoints_oficio: any = {
     parametros_search: "parametros/search",
     designaciones_listaContrarios: "oficio/busquedaListaContrarios",
     create_NewDesigna: "designas/createnewDesigna",
+    actuaciones_designacion: "oficio/designas/busquedaActDesigna",
 
     //SALTOS Y COMPENSACIONES
     saltosCompensacionesOficio_buscar: "oficio/saltosCompensaciones/buscarSaltosOCompensaciones",

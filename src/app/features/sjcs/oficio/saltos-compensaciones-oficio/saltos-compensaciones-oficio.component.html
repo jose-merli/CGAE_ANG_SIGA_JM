@@ -9,7 +9,8 @@
       <i class="fa fa-angle-right"></i>{{'menu.justiciaGratuita.saltosYCompensaciones'|translate}}
   </div>
 
-  <app-filtros-saltos-compensaciones-oficio (isBuscar)="isBuscar($event)" [isNewFromOtherPage]="isNewFromOtherPage">
+  <app-filtros-saltos-compensaciones-oficio *ngIf="showFilters" (isBuscar)="isBuscar($event)"
+    [isNewFromOtherPage]="isNewFromOtherPage" [activacionEditar]="activacionEditar">
   </app-filtros-saltos-compensaciones-oficio>
 
 </div>
@@ -19,7 +20,7 @@
   [rowGroups]="rowGroups" (searchHistory)="searchHistory($event)" (anySelected)="notifyAnySelected($event)"
   (selectedRow)="checkSelectedRow($event)" (anularEvent)="anular($event)" (deleteEvent)="delete($event)"
   (saveEvent)="guardar($event)" [comboTurnos]="comboTurnos" [comboTipos]="comboTipos" [emptyResults]="emptyResults"
-  [historico]="historico">
+  [historico]="historico" [activacionEditar]="activacionEditar">
 </app-tabla-resultado-mix-saltos-comp-oficio>
 
 

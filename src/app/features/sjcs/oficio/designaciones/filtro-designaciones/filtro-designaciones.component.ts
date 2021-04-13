@@ -66,6 +66,7 @@ export class FiltroDesignacionesComponent implements OnInit {
 
   @Output() busquedaJustificacionExpres = new EventEmitter<boolean>();
   @Output() showTablaDesigna = new EventEmitter<boolean>();
+  @Output() showTablaJustificacionExpres = new EventEmitter<boolean>();
   
   constructor(private translateService: TranslateService, private sigaServices: SigaServices,  private location: Location, private router: Router) { }
 
@@ -119,12 +120,14 @@ export class FiltroDesignacionesComponent implements OnInit {
     if(event=='designas'){
       this.showDesignas=true;
       this.showJustificacionExpress=false;
+      this.showTablaJustificacionExpres.emit(false);
     }
 
     if(event=='justificacion'){
       this.showDesignas=false;
       this.showJustificacionExpress=true;
       this.expanded=true;
+      this.showTablaDesigna.emit(false);
     }
   }
 
@@ -453,6 +456,7 @@ getComboCalidad() {
         //QUITAR ESTA LINEA CUANDO FINALICE LAS PRUEBAS
         this.filtroJustificacion.nColegiado=undefined;
 
+        this.showTablaJustificacionExpres.emit(false);
         this.busquedaJustificacionExpres.emit(true);
       }
     }

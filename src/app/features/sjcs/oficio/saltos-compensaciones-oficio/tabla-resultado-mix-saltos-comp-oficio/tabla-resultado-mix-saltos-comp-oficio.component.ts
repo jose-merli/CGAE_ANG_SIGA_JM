@@ -28,6 +28,7 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
   @Input() comboTipos = [];
   @Input() emptyResults: boolean = false;
   @Input() historico: boolean = false;
+  @Input() activacionEditar: boolean = false;
 
   @Output() anySelected = new EventEmitter<any>();
   @Output() saveEvent = new EventEmitter<Row[]>();
@@ -76,7 +77,7 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
   selectRow(rowId, cells) {
 
     // comprobamos si existe idSaltosTurno para no permitir que se seleccione un registro nuevo
-    if (cells[7].value != null && cells[7].value != '') {
+    if (!this.emptyResults && cells[7].value != null && cells[7].value != '') {
       if (this.selectedArray.includes(rowId)) {
         const i = this.selectedArray.indexOf(rowId);
         this.selectedArray.splice(i, 1);

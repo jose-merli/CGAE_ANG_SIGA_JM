@@ -437,10 +437,10 @@ let bajaTemporal = new BajasTemporalesItem();
 if(nuevaBaja.length != 0){
   nuevaBaja.forEach(element => {
     if(element.fechadesde != null || element.fechadesde != ""){
-      element.fechadesde=this.transformaFecha("24/03/1997");
+      element.fechadesde=this.transformaFecha(element.fechadesde);
     }
     if(element.fechahasta != null || element.fechahasta != ""){
-      element.fechahasta=this.transformaFecha("24/03/1997");
+      element.fechahasta=this.transformaFecha(element.fechahasta);
     }
     if(element.fechaalta != null || element.fechaalta != ""){
       element.fechaalta=this.transformaFecha(element.fechaalta);
@@ -457,6 +457,8 @@ if(nuevaBaja.length != 0){
     if (element.validado  == "Pendiente") {
       element.validado  = "2";
     }
+
+    element.fechabt = new Date();
   });
 
   
