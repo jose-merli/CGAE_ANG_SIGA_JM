@@ -491,3 +491,18 @@
   justify-content: center;
   margin: 0;
 }
+
+.selectWrap {
+  word-break: break-word;
+
+}
+.ajustarCabecera{
+    height: 100%;
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
+}
+.ajustarBuscador{
+  align-self: flex-end;
+  justify-self: flex-end;
+}
