@@ -34,8 +34,8 @@
                         <mat-accordion class="example-headers-align" multi>
                             <mat-expansion-panel (opened)="tarj.opened = true" (closed)="tarj.opened = false"
                                 [disabled]="tarj.fixed || !tarj.detalle" [expanded]="tarj.opened">
-                                <mat-expansion-panel-header class="h-100" [collapsedHeight]="'auto'"
-                                    [expandedHeight]="'auto'">
+                                <!-- class="h-100" -->
+                                <mat-expansion-panel-header [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
                                     <app-tarjeta [image]="tarj.imagen" [cardTitle]="tarj.nombre" [campos]="tarj.campos"
                                         [icon]="tarj.icono" [enlaces]="tarj.enlaces" [cardOpenState]="tarj.opened"
                                         [fixed]="tarj.fixed" class="w-100" [enlaceCardClosed]="tarj.enlaceCardClosed">
@@ -62,6 +62,14 @@
                                         <app-detalle-tarjeta-documentacion-ficha-designacion-oficio>
                                         </app-detalle-tarjeta-documentacion-ficha-designacion-oficio>
                                     </div>
+                                    <div *ngIf="tarj.nombre == 'Contrarios'">
+                                        <app-detalle-tarjeta-contrarios-ficha-designacion-oficio [campos]="campos">
+                                        </app-detalle-tarjeta-contrarios-ficha-designacion-oficio>
+                                    </div>
+                                    <div *ngIf="tarj.nombre == 'Actuaciones'">
+                                        <app-detalle-tarjeta-actuaciones-ficha-designacion-oficio>
+                                        </app-detalle-tarjeta-actuaciones-ficha-designacion-oficio>
+                                    </div>
                                 </ng-template>
                             </mat-expansion-panel>
                         </mat-accordion>
@@ -70,7 +78,8 @@
             </div>
         </div>
         <div class="mt-3 text-right main-button ">
-            <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
+            <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left"
+                label="{{ 'general.boton.volver' | translate}}"></button>
         </div>
         <div id="down"></div>
     </div>

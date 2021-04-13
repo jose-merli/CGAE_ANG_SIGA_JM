@@ -1,3 +1,7 @@
+<div class="padding-interior padding-superior">
+    <app-paginador3 (perPage)="perPage($event)" (seleccionarTodo)="selectedAll($event)" (fromReg)="fromReg($event)" (toReg)="toReg($event)" [totalRegistros]="totalRegistros"></app-paginador3>
+</div>
+
 <div class="center mb-3">
     <p-multiSelect #mySelect [formControl]="info" [(ngModel)]='selectedHeader' [options]="cabeceras" optionLabel="name"
         optionValue="id" (onChange)="ocultarColumna($event)" defaultLabel="0 visibles" maxSelectedLabels="0"
@@ -17,7 +21,7 @@
                 </div>
             </div>
         </div>
-        <div *ngFor="let rowGroup of rowGroups" class="table-row-group" #rowGroupEl>
+        <div *ngFor="let rowGroup of rowGroups | slice:from:to" class="table-row-group" #rowGroupEl>
             <div class="table-row parent" >
                 
                 <span class="mr-2 arrow" (click)="rowGroupArrowClick(rowGroupEl, rowGroup.id)">
