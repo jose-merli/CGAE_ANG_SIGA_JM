@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Message } from 'primeng/components/common/api';
 import { ColegiadoItem } from '../../../../../../models/ColegiadoItem';
+import { DesignaItem } from '../../../../../../models/sjcs/DesignaItem';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
 
@@ -204,6 +205,30 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       summary,
       detail
     });
+
+    if(detail == "save" && this.anio.value != ""){
+      let newDesigna = new DesignaItem();
+      var idTurno:number = +this.selectores[0].value;
+      newDesigna.idTurno = idTurno;
+      var idTipoDesignaColegio:number = +this.selectores[1].value;
+      newDesigna.idTipoDesignaColegio = idTipoDesignaColegio;
+      newDesigna.numColegiado = this.inputs[0].value;
+      newDesigna.nombreColegiado = this.inputs[1].value;
+      newDesigna.apellidosNombre = this.inputs[2].value;
+      newDesigna.fechaAlta = this.fechaGenerales;
+      newDesigna.ano = 2021;
+      newDesigna.numero = 2021;
+      this.sigaServices.post("create_NewDesigna", newDesigna).subscribe(
+        n => {
+          console.log(n);
+        },
+        err => {
+          console.log(err);
+  
+        }, () => {
+        }
+      );
+    }
   }
 
   clear() {

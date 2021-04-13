@@ -468,7 +468,7 @@ getComboCalidad() {
         designa.fechaEntradaInicio = this.fechaAperturaDesdeSelect;
         designa.fechaEntradaFin = this.fechaAperturaHastaSelect;
         designa.estados = this.body.estados;
-        designa.idTipoDesignaColegio = (this.body.idTipoDesignaColegio); 
+        designa.idTipoDesignaColegios = (this.body.idTipoDesignaColegios); 
         designa.idTurnos = this.body.idTurnos; 
         if(designa.idTurno != null){
           designa.nombreTurno = this.comboTurno.find(
@@ -494,7 +494,7 @@ getComboCalidad() {
         if(designa.idJuzgadoActu != null){
         designa.nombreJuzgadoActu = this.comboJuzgados.find(
           item => item.value == designa.idJuzgadoActu
-        ).label;
+        ).label; 
        }
        if(this.body.idAcreditacion != undefined){
         designa.idAcreditacion = this.body.idAcreditacion;

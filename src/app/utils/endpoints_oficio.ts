@@ -62,7 +62,7 @@ export let endpoints_oficio: any = {
     cargasMasivasOficio_uploadFileIT: "oficio/cargasMasivasOficio/uploadFileIT",
     cargasMasivasOficio_uploadFileBT: "oficio/cargasMasivasOficio/uploadFileBT",
 
-    //BUSQUEDA DESIGNAS
+    //DESIGNAS
     designas_tipoDesignas:"oficio/designas/comboTipoDesigna",
     combo_comboJuzgadoDesignaciones: "combo/comboJuzgadoDesignaciones",
     combo_comboModulosDesignaciones: "oficio/comboModulo",
@@ -70,6 +70,7 @@ export let endpoints_oficio: any = {
     designaciones_busqueda: "oficio/busquedaDesignaciones",
     parametros_search: "parametros/search",
     designaciones_listaContrarios: "oficio/busquedaListaContrarios",
+    create_NewDesigna: "designas/createnewDesigna",
 
     //SALTOS Y COMPENSACIONES
     saltosCompensacionesOficio_buscar: "oficio/saltosCompensaciones/buscarSaltosOCompensaciones",
