@@ -39,6 +39,10 @@ export class DesignacionesComponent implements OnInit {
   ngOnInit() {
   }
 
+  showTablaJustificacionExpres(event){
+    this.muestraTablaJustificacion=event;
+  }
+
   busquedaJustificacionExpres(event){
     this.progressSpinner=true;
 
@@ -57,6 +61,11 @@ export class DesignacionesComponent implements OnInit {
 
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         console.log(err);
+      },
+      ()=>{
+        setTimeout(()=>{
+          this.commonsService.scrollTablaFoco('tablaFoco');
+        }, 5);
       });
   }
   

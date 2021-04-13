@@ -1,4 +1,4 @@
-import { ElementRef, Renderer2, Output, EventEmitter } from '@angular/core';
+import { ElementRef, Renderer2, Output, EventEmitter} from '@angular/core';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Sort } from '@angular/material/sort';
@@ -7,6 +7,7 @@ import { Row, Cell } from './gestion-bajas-temporales.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
+import { TranslateService } from '../../../../../commons/translate/translation.service';
 
 interface GuardiaI {
   label: string,
@@ -88,7 +89,8 @@ export class GestionBajasTemporalesComponent implements OnInit {
     private renderer: Renderer2,
     private persistenceService: PersistenceService,
     private pipe : DatePipe,
-		private router: Router
+		private router: Router,
+    private translateService: TranslateService
   ) {
     this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
       for (let i = 0; i < this.table.nativeElement.children.length; i++) {
@@ -102,40 +104,17 @@ export class GestionBajasTemporalesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    let values = [];
-    let labels = [];
-    let arrayOfSelected = [];
-    
+
     if(this.nuevaBaja == "true"){
       this.nuevo();
     }
 
-      this.rowGroups.forEach((row, i) => {
-        //selecteCombo = {label: ?, value: row.cells[7].value}
-        values.push(row.cells[6].value);
-      });
-      this.comboGuardiasIncompatibles.forEach(combo => {
-        values.forEach(v => {
-          if (combo.value == v){
-            labels.push(combo.label)
-          }
-        });
-       });
-      values.forEach((v, i) => {
-        let selecteCombo = {label: '', value: ''}
-        selecteCombo.label = labels[i];
-        selecteCombo.value = v;
-        arrayOfSelected[i] = selecteCombo;
-        this.multiselectValue[i] = arrayOfSelected[i];
-      });
-      this.multiselectLabels = labels;
     this.totalRegistros = this.rowGroups.length;
+
     this.numCabeceras = this.cabeceras.length;
+
     this.numColumnas = this.numCabeceras;
-    this.cabeceras.forEach(cab => {
-      this.cabecerasMultiselect.push(cab.name);
-    })
-    
+
     sessionStorage.removeItem("nuevo");
 
   }
@@ -283,13 +262,13 @@ export class GestionBajasTemporalesComponent implements OnInit {
     this.totalRegistros = this.rowGroups.length;
     this.rowGroupsAux = this.rowGroups;
   }
-
-  showMsg(severity, summary, detail) {
+  
+  showMessage(event) {
     this.msgs = [];
     this.msgs.push({
-      severity,
-      summary,
-      detail
+      severity: event.severity,
+      summary: event.summary,
+      detail: event.msg
     });
   }
 
@@ -310,6 +289,9 @@ export class GestionBajasTemporalesComponent implements OnInit {
     this.numperPage = perPage;
   }
 
+  fillFecha(event, cell) {
+    cell.value = this.pipe.transform(event, 'dd/MM/yyyy');
+  }
  
   inputValueChange(event, i , z, cell){
     let cells: Cell[] = [];
@@ -436,7 +418,11 @@ export class GestionBajasTemporalesComponent implements OnInit {
   }
 
   checkGuardar(){
-    this.modDatos.emit(this.rowGroups);
+    if(this.rowGroups[0].cells[2].value != "" && this.rowGroups[0].cells[3].value != "" && this.rowGroups[0].cells[4].value != "" && this.rowGroups[0].cells[5].value != ""){
+      this.modDatos.emit(this.rowGroups);
+    }else{
+      this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("general.message.camposObligatorios")});
+    }
     this.totalRegistros = this.rowGroups.length;
   }
 
