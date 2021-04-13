@@ -28,6 +28,8 @@ export class ColegiadosSJCSItem {
 	idPersona: string;
 	residente: boolean;
 	nComunitario: string;
+	tieneGuardia: string;
+	tieneTurno: string;
 
   constructor() { }
 }
