@@ -15,5 +15,6 @@ export class BajasTemporalesItem {
   fechaalta:Date;
   fechabt:Date;
   historico:boolean;
+  nuevo:boolean;
   constructor() { }
 }

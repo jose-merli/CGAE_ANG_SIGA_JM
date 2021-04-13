@@ -13,6 +13,7 @@ export class Row {
 export class Cell {
   type: string;
   value: string;
+  size: number;
 }
 
 export class TablaResultadoDesplegableJEService {
@@ -56,6 +57,7 @@ export class TablaResultadoDesplegableJEService {
           let cellObject: Cell = new Cell();
           cellObject.type = cell['type'];
           cellObject.value = cell['value'];
+          cellObject.size = cell['size'];
           cells.push(cellObject);
         });
         rowObject.cells = cells;

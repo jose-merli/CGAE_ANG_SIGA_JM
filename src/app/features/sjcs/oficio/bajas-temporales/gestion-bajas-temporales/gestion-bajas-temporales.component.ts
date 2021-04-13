@@ -281,6 +281,7 @@ export class GestionBajasTemporalesComponent implements OnInit {
       }
     });
     this.totalRegistros = this.rowGroups.length;
+    this.rowGroupsAux = this.rowGroups;
   }
 
   showMsg(severity, summary, detail) {
@@ -362,11 +363,6 @@ export class GestionBajasTemporalesComponent implements OnInit {
 
   }
 
-  nuevaBajaTemporal(){
-    this.router.navigate(["/buscadorColegiados"]);
-    sessionStorage.setItem("nuevo","true");
-  }
-
   nuevo(){
     const now = Date.now();
     const myFormattedDate = this.pipe.transform(now, 'dd/MM/yyyy');
@@ -380,72 +376,52 @@ export class GestionBajasTemporalesComponent implements OnInit {
       this.usuarioBusquedaExpress.numColegiado=busquedaColegiado.nColegiado;
     }​​
 
-    this.enableGuardar = true;
-    let row: Row = new Row();
-    let cell1: Cell = new Cell();
-    let cell2: Cell = new Cell();
-    let cell3: Cell = new Cell();
-    let cell4: Cell = new Cell();
-    let cell5: Cell = new Cell();
-    let cell6: Cell = new Cell();
-    let cell7: Cell = new Cell();
-    let cell8: Cell = new Cell();
-    let cell9: Cell = new Cell();
-    let cell10: Cell = new Cell();
-    cell1.type = 'text';
-    cell1.value = this.usuarioBusquedaExpress.numColegiado;
-    cell2.type = 'text';
-    cell2.value = this.usuarioBusquedaExpress.nombreAp;
-    cell3.type = 'select';
-    cell3.combo = this.comboTipo;
-    cell3.value = '';
-    cell4.type = 'input';
-    cell4.value = '';
+    if(this.usuarioBusquedaExpress.nombreAp != "" || this.usuarioBusquedaExpress.numColegiado != ""){
+      this.enableGuardar = true;
+      let row: Row = new Row();
+      let cell1: Cell = new Cell();
+      let cell2: Cell = new Cell();
+      let cell3: Cell = new Cell();
+      let cell4: Cell = new Cell();
+      let cell5: Cell = new Cell();
+      let cell6: Cell = new Cell();
+      let cell7: Cell = new Cell();
+      let cell8: Cell = new Cell();
+      let cell9: Cell = new Cell();
+      let cell10: Cell = new Cell();
 
-    cell5.type = 'datePicker';
-    cell5.value = '';
-    cell6.type = 'datePicker';
-    cell6.value = '';
-    cell7.type = 'text';
-    cell7.value = myFormattedDate;
-    cell8.type = 'text';
-    cell8.value = 'Pendiente';
-    cell9.type = 'text';
-    cell9.value = myFormattedDate;
-    cell10.type = 'invisible';
-    cell10.value = [];
-    row.cells = [cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8, cell9, cell2];
-    this.rowGroups.unshift(row);
-    this.rowGroupsAux = this.rowGroups;
-    this.totalRegistros = this.rowGroups.length;
-    console.log('this.rowGroups: ', this.rowGroups)
-    //this.to = this.totalRegistros;
+      cell1.type = 'text';
+      cell1.value = this.usuarioBusquedaExpress.numColegiado;
+      cell2.type = 'text';
+      cell2.value = this.usuarioBusquedaExpress.nombreAp;
+      cell3.type = 'select';
+      cell3.combo = this.comboTipo;
+      cell3.value = '';
+      cell4.type = 'input';
+      cell4.value = '';
+      cell5.type = 'datePicker';
+      cell5.value = '';
+      cell6.type = 'datePicker';
+      cell6.value = '';
+      cell7.type = 'text';
+      cell7.value = myFormattedDate;
+      cell8.type = 'text';
+      cell8.value = 'Pendiente';
+      cell9.type = 'text';
+      cell9.value = myFormattedDate;
+      cell10.type = 'invisible';
+      cell10.value = true;
+      row.cells = [cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8, cell9, cell10];
+      this.rowGroups.unshift(row);
+      this.rowGroupsAux = this.rowGroups;
+      this.totalRegistros = this.rowGroups.length;
+      console.log('this.rowGroups: ', this.rowGroups);
+    }
 }
   inputChange(event, i, z){
     this.enableGuardar = true;
   }
-  /*
-  guardar(){
-    let anyEmptyArr = [];
-    this.rowGroups.forEach(row =>{
-      if(row.cells[0].value == '' ||  row.cells[0].value == undefined || row.cells[1].value == '' ||  row.cells[1].value == undefined || row.cells[2].value == '' ||  row.cells[2].value == undefined || row.cells[4].value == '' ||  row.cells[4].value == undefined){
-        anyEmptyArr.push(true);
-      } else{
-        this.save.emit( this.rowGroups);
-        this.enableGuardar = false;
-        this.totalRegistros = this.rowGroups.length;
-        anyEmptyArr.push(false);
-      }
-
-      if (anyEmptyArr.includes(true)){
-        this.showMsg('error', 'Error. Existen campos vacíos en la tabla.', '')
-      }else{
-        this.showMsg('success', 'Se ha guardado correctamente', '')
-      }
-      
-    })
-  }
-  */
+  
   eliminar(){
   this.delete.emit(this.selectedArray);
   this.totalRegistros = this.rowGroups.length;
@@ -481,6 +457,9 @@ export class GestionBajasTemporalesComponent implements OnInit {
 
   eliminarFromCombo(rowToDelete){
     this.deleteFromCombo.emit(rowToDelete);
+  }
+  selectedAll(evento){
+    this.seleccionarTodo = evento;
   }
 }
 function compare(a: string, b: number | string, isAsc: boolean) {
