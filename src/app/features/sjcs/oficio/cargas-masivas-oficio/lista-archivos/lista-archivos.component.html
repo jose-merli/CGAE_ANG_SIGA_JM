@@ -4,7 +4,7 @@
   <div class="card-body p-0">
     <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" pageLinks="4" [responsive]="true" #table
       class="tabla-listado" [value]="datos" [sortOrder]="sortO" (onRowSelect)="disabledButtons(selectedDatos)"
-      selectionMode="multiple" [paginator]="activarPaginacion()" [(selection)]="selectedDatos" paginatorPosition="both"
+      selectionMode="single" [paginator]="activarPaginacion()" [(selection)]="selectedDatos" paginatorPosition="both"
       [rows]="selectedItem">
       <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate"
         filterPlaceholder="{{'general.boton.search' | translate}}" [filter]="true" filterMatchMode="contains">
