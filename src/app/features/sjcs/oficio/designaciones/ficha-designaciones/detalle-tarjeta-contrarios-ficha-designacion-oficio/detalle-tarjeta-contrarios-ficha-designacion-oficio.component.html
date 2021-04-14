@@ -23,8 +23,11 @@
     <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
       <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
         <td class="text-center" *ngFor="let col of columns">
-          <div>
-            <span>{{dato[col.field]}}</span>
+          <div *ngIf="!isEliminado(dato)">
+            <a class="enlace" (click)="openTab(dato)"><span>{{dato[col.field]}}</span></a>
+          </div>
+          <div *ngIf="isEliminado(dato)">
+            <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
           </div>
         </td>
       </tr>
@@ -63,18 +66,16 @@
   </p-table>
   <div class="card-footer">
     <div class="text-right main-button">
-      <button *ngIf="!historico" (click)="searchHistorical()" pButton type="button" icon="fa fa-history" iconPos="left"
+      <button *ngIf="!historicoContrario" (click)="searchHistorical()" pButton type="button" icon="fa fa-history" iconPos="left"
         label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
-      <button *ngIf="historico" (click)="searchHistorical()" pButton type="button" icon="fa fa-undo" iconPos="left"
+      <button *ngIf="historicoContrario" (click)="searchHistorical()" pButton type="button" icon="fa fa-undo" iconPos="left"
         label="{{'general.message.ocultarHistorico' | translate}}"></button>
-      <button *ngIf="!historico"
+      <button *ngIf="!historicoContrario"
         (click)="NewContrario()" pButton type="button" icon="fa fa-plus" iconPos="left"
         label="{{ 'general.boton.new' | translate}}"></button>
       <button pButton [disabled]=" selectedDatos.length == 0 || selectedDatos.length > 1" type="button"
         (click)="Eliminar()" icon="fa fa-trash-alt" iconPos="left"
         label="{{ 'general.boton.eliminar' | translate}}"></button>
-        <button *ngIf="!historico" pButton [disabled]="!permisos || ((!selectMultiple || !selectAll) && selectedDatos.length == 0)"
-          (click)="comunicar()" type="button" icon="fa fa-comment" iconPos="left" label="{{ 'general.boton.comunicar' | translate}}"></button>
     </div>
   </div>
 </div>

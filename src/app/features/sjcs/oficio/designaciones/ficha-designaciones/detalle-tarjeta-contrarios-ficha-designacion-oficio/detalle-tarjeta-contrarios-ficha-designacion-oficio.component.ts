@@ -3,6 +3,7 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../../commons/translate';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { Router } from '../../../../../../../../node_modules/@angular/router';
+import { DesignaItem } from '../../../../../../models/sjcs/DesignaItem';
 
 @Component({
   selector: 'app-detalle-tarjeta-contrarios-ficha-designacion-oficio',
@@ -16,7 +17,7 @@ export class DetalleTarjetaContrariosFichaDesignacionOficioComponent implements 
   @Output() searchContrarios = new EventEmitter<boolean>();
 
   @Input() contrarios;
-  @Input() historico:boolean;
+  historicoContrario:boolean;
 
   selectedItem: number = 10;
   datos;
@@ -26,7 +27,7 @@ export class DetalleTarjetaContrariosFichaDesignacionOficioComponent implements 
   selectionMode: string = "single";
   numSelected = 0;
   
-  selectedDatos: any[] = [];
+  selectedDatos: any = [];
 
   selectAll: boolean= false;
   progressSpinner: boolean = false;
@@ -61,7 +62,8 @@ export class DetalleTarjetaContrariosFichaDesignacionOficioComponent implements 
       this.selectedDatos = []
     }
     if (this.selectedDatos != undefined) {
-      this.numSelected = this.selectedDatos.length;
+      if(this.selectedDatos.length ==undefined) this.numSelected=1;
+      else this.numSelected = this.selectedDatos.length;
     }
   }
 
@@ -96,12 +98,14 @@ export class DetalleTarjetaContrariosFichaDesignacionOficioComponent implements 
 
   Eliminar(){
     this.progressSpinner = true;
-    this.sigaServices.post("designaciones_deleteContrario", this.selectedDatos).subscribe(
+    let request = [ this.selectedDatos.idInstitucion,  this.selectedDatos.idPersona, this.selectedDatos.anio,  this.selectedDatos.idTurno, this.selectedDatos.numero]
+    this.sigaServices.post("designaciones_deleteContrario", request).subscribe(
       data => {
         this.selectedDatos = [];
         this.searchContrarios.emit(false);
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
+        this.historicoContrario = false;
       },
       err => {
         if (err != undefined && JSON.parse(err.error).error.description != "") {
@@ -141,33 +145,35 @@ export class DetalleTarjetaContrariosFichaDesignacionOficioComponent implements 
 
   searchHistorical() {
 
-    this.historico = !this.historico;
-    this.persistenceService.setHistorico(this.historico);
-    this.searchContrarios.emit(this.historico);
+    this.historicoContrario = !this.historicoContrario;
+    this.searchContrarios.emit(this.historicoContrario);
     this.selectAll = false;
     this.selectedDatos=[];
   }
 
+  isEliminado(dato){
+    return dato.fechaBaja!=null;
+  }
   
   onChangeSelectAll() {
     if (this.selectAll === true) {
-      if (this.historico) {
+      /* if (this.historico) {
         this.selectedDatos = this.datos.filter(dato => dato.fechabaja != undefined && dato.fechabaja != null);
         this.selectMultiple = true;
         this.selectionMode = "single";
-      } else {
+      } else { */
         this.selectedDatos = this.datos;
-        this.selectMultiple = false;
+        /* this.selectMultiple = false;
         this.selectionMode = "single";
       }
-      this.selectionMode = "multiple";
+      this.selectionMode = "multiple"; */
       this.numSelected = this.datos.length;
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
-      if (this.historico)
+     /*  if (this.historico)
         this.selectMultiple = true;
-      this.selectionMode = "multiple";
+      this.selectionMode = "multiple"; */
     }
   }
 }

@@ -19,7 +19,6 @@ export class FichaDesignacionesComponent implements OnInit {
   campos: any;
   nuevaDesigna: any;
   progressSpinner:boolean = false;
-  historico:boolean = false;
   contrarios: any;
   msgs;
   tarjetaFija = {
@@ -371,7 +370,7 @@ export class FichaDesignacionesComponent implements OnInit {
     let data = sessionStorage.getItem("designaItemLink");
     let designaItem = JSON.parse(data);
 
-    let item = [designaItem.idTurno.toString(), designaItem.nombreTurno,  designaItem.numero.toString() , designaItem.ano, this.historico];
+    let item = [designaItem.idTurno.toString(), designaItem.nombreTurno,  designaItem.numero.toString() , designaItem.ano, event];
     /* ano: "D2021/4330"
 nombreTurno: "ZELIMINAR-CIJAECI05 - MATRIMONIAL CONTENCIOSO JAÉN" */
 
