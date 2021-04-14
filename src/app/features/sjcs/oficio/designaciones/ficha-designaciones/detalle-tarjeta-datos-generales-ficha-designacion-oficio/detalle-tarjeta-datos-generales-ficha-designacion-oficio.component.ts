@@ -206,7 +206,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       detail
     });
 
-    if(detail == "save" && this.anio.value != ""){
+    if(detail == "save" && this.anio.value == ""){
       let newDesigna = new DesignaItem();
       var idTurno:number = +this.selectores[0].value;
       newDesigna.idTurno = idTurno;
