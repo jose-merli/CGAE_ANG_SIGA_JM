@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { DesignaItem } from '../../../../../models/sjcs/DesignaItem';
 import { TranslateService } from '../../../../../commons/translate';
+import { SigaServices } from '../../../../../_services/siga.service';
+import{ DetalleTarjetaContrariosFichaDesignacionOficioComponent } from './detalle-tarjeta-contrarios-ficha-designacion-oficio/detalle-tarjeta-contrarios-ficha-designacion-oficio.component';
 
 @Component({
   selector: 'app-ficha-designaciones',
@@ -10,9 +12,16 @@ import { TranslateService } from '../../../../../commons/translate';
 })
 export class FichaDesignacionesComponent implements OnInit {
 
+
+  @ViewChild(DetalleTarjetaContrariosFichaDesignacionOficioComponent) tablaContrarios;
+
   rutas: string[] = ['SJCS', 'EJGS'];
   campos: any;
   nuevaDesigna: any;
+  progressSpinner:boolean = false;
+  historico:boolean = false;
+  contrarios: any;
+  msgs;
   tarjetaFija = {
     nombre: "Información Resumen",
     icono: 'fas fa-clipboard',
@@ -232,7 +241,8 @@ export class FichaDesignacionesComponent implements OnInit {
   ];
 
   constructor( private location: Location, 
-    private  translateService: TranslateService) { }
+    private  translateService: TranslateService,
+    private sigaServices: SigaServices) { }
 
   ngOnInit() {
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
@@ -289,30 +299,8 @@ export class FichaDesignacionesComponent implements OnInit {
       this.tarjetaFija.campos = camposResumen;
       this.listaTarjetas[0].campos = camposGenerales;
       //Actualizar para que los campos se rellenen en base a la tabla de la tarjeta contrarios
-      this.listaTarjetas[4].campos = [
-        {
-          "key": null,
-          "value": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.vacio')
-        },
-        {
-          "key": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.identificadorprimero'),
-          "value": designaItem.nombreTurno
-        },
-        {
-          "key": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.apellidosnombreprimero'),
-          "value": designaItem.fechaAlta
-        },
-        {
-          "key": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.abogadoprimero'),
-          "value": "NO"
-        }, {
-          "key": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.procuradorprimero'),
-          "value": designaItem.descripcionTipoDesigna
-        }, {
-          "key": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.ncontrarios'),
-          "value": designaItem.descripcionTipoDesigna
-        }
-      ]
+      this.searchContrarios(false);  
+      
     /* this.listaTarjetas[4].enlaces=[{
     id: null,
         ref: null,
@@ -376,6 +364,89 @@ export class FichaDesignacionesComponent implements OnInit {
     }
 
     return fecha;
+  }
+
+  searchContrarios(event){
+    this.progressSpinner = true;
+    let data = sessionStorage.getItem("designaItemLink");
+    let designaItem = JSON.parse(data);
+
+    let item = [designaItem.idTurno.toString(), designaItem.nombreTurno,  designaItem.numero.toString() , designaItem.ano, this.historico];
+    /* ano: "D2021/4330"
+nombreTurno: "ZELIMINAR-CIJAECI05 - MATRIMONIAL CONTENCIOSO JAÉN" */
+
+    this.sigaServices.post("designaciones_listaContrarios", item).subscribe(
+      n => {
+
+        this.contrarios = JSON.parse(n.body);
+        let primero = this.contrarios[0];
+        //Columnas a obtener:
+        //Identificador: nif/pasaporte del id persona del contrario. A partir de SCS_CONTRARIOSDESIGNA.IDPERSONA.
+        //Apellido, nombre de dicha persona. A partir de SCS_CONTRARIOSDESIGNA.IDPERSONA.
+        //nº colegiado, apellidos y nombre del abogado del contrario. Extraer de las columnas IDABOGADOCONTRARIO y NOMBREABOGADOCONTRARIO de SCS_CONTRARIOSDESIGNA.
+        //nº colegiado, apellidos y nombre del procurador del contrario. SCS_CONTRARIOSDESIGNA.IDPROCURADOR
+
+        let error = JSON.parse(n.body).error;
+
+        if (error != null && error.description != null) {
+          this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
+        }
+        this.progressSpinner = false;
+        if(this.listaTarjetas[4].campos.length==0){
+          if(this.contrarios.length==0){
+            this.listaTarjetas[4].campos=[{
+                "key": null,
+                "value": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.vacio')
+              },]
+          }
+          
+          else{this.listaTarjetas[4].campos = [
+            {
+              "key": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.identificadorprimero'),
+              "value": primero.nif
+            },
+            {
+              "key": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.apellidosnombreprimero'),
+              "value": primero.apellidosnombre
+            },
+            {
+              "key": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.abogadoprimero'),
+              "value": primero.abogado
+            }, 
+            {
+              "key": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.procuradorprimero'),
+              "value": primero.procurador
+            }, 
+            {
+              "key": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.ncontrarios'),
+              "value": this.contrarios.length
+            }
+          ]
+        }
+      }
+      if (this.tablaContrarios != undefined) {
+        this.tablaContrarios.tabla.sortOrder = 0;
+        this.tablaContrarios.tabla.sortField = '';
+        this.tablaContrarios.tabla.reset();
+        this.tablaContrarios.buscadores = this.tablaContrarios.buscadores.map(it => it = "");
+      }
+      if (this.tablaContrarios != null && this.tablaContrarios != undefined) {
+        this.tablaContrarios.historico = event;
+      }
+      },
+      err => {
+        this.progressSpinner = false;
+        console.log(err);
+      });
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
   }
 
 }

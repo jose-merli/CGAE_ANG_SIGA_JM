@@ -63,7 +63,7 @@
                                         </app-detalle-tarjeta-documentacion-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Contrarios'">
-                                        <app-detalle-tarjeta-contrarios-ficha-designacion-oficio [campos]="campos">
+                                        <app-detalle-tarjeta-contrarios-ficha-designacion-oficio [contrarios]="contrarios" (searchContrarios)="searchContrarios($event)">
                                         </app-detalle-tarjeta-contrarios-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Actuaciones'">
@@ -85,3 +85,7 @@
     </div>
 
 </div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+  </div>

@@ -1,6 +1,8 @@
-import { Component, OnInit, Input, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectorRef, ViewChild, SimpleChanges, EventEmitter, Output } from '@angular/core';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../../commons/translate';
+import { PersistenceService } from '../../../../../../_services/persistence.service';
+import { Router } from '../../../../../../../../node_modules/@angular/router';
 
 @Component({
   selector: 'app-detalle-tarjeta-contrarios-ficha-designacion-oficio',
@@ -11,39 +13,63 @@ export class DetalleTarjetaContrariosFichaDesignacionOficioComponent implements 
 
   msgs;
 
-  @Input() campos;
+  @Output() searchContrarios = new EventEmitter<boolean>();
+
+  @Input() contrarios;
+  @Input() historico:boolean;
 
   selectedItem: number = 10;
   datos;
   cols;
   rowsPerPage;
+  selectMultiple: boolean = false;
+  selectionMode: string = "single";
+  numSelected = 0;
+  
   selectedDatos: any[] = [];
 
-  progressSpinner: boolean = false
+  selectAll: boolean= false;
+  progressSpinner: boolean = false;
   
 
-  @ViewChild("table") table;
+  @ViewChild("table") tabla;
 
   constructor(private sigaServices: SigaServices, 
     private  translateService: TranslateService,
-    private changeDetectorRef: ChangeDetectorRef,) { }
+    private changeDetectorRef: ChangeDetectorRef,
+    private persistenceService: PersistenceService,
+    private router: Router,
+    ) { }
 
   ngOnInit() {
     this.getCols(); 
-    this.search();   
+    this.datos=this.contrarios;
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.datos=this.contrarios;
   }
 
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
-    this.table.reset();
+    this.tabla.reset();
+  }
+
+  actualizaSeleccionados(){
+    if (this.selectedDatos == undefined) {
+      this.selectedDatos = []
+    }
+    if (this.selectedDatos != undefined) {
+      this.numSelected = this.selectedDatos.length;
+    }
   }
 
   getCols() {
 
     this.cols = [
-      { field: "identificador", header: "justiciaGratuita.oficio.designas.contrarios.identificador" },
-      { field: "nombrepersona", header: "administracion.parametrosGenerales.literal.nombre.apellidos" },
+      { field: "nif", header: "justiciaGratuita.oficio.designas.contrarios.identificador" },
+      { field: "apellidosnombre", header: "administracion.parametrosGenerales.literal.nombre.apellidos" },
       { field: "abogado", header: "justiciaGratuita.oficio.designas.contrarios.abogado" },
       { field: "procurador", header: "justiciaGratuita.oficio.designas.contrarios.procurador" }
     ];
@@ -68,40 +94,31 @@ export class DetalleTarjetaContrariosFichaDesignacionOficioComponent implements 
     ];
   }
 
-  search(){
+  Eliminar(){
     this.progressSpinner = true;
-    let data = sessionStorage.getItem("designaItemLink");
-    let designaItem = JSON.parse(data);
-
-    this.sigaServices.post("designaciones_listaContrarios", designaItem.numero).subscribe(
-      n => {
-
-        this.datos = JSON.parse(n.body);
-        //Columnas a obtener:
-        //Identificador: nif/pasaporte del id persona del contrario. A partir de SCS_CONTRARIOSDESIGNA.IDPERSONA.
-        //Apellido, nombre de dicha persona. A partir de SCS_CONTRARIOSDESIGNA.IDPERSONA.
-        //nº colegiado, apellidos y nombre del abogado del contrario. Extraer de las columnas IDABOGADOCONTRARIO y NOMBREABOGADOCONTRARIO de SCS_CONTRARIOSDESIGNA.
-        //nº colegiado, apellidos y nombre del procurador del contrario. SCS_CONTRARIOSDESIGNA.IDPROCURADOR
-
-        let error = JSON.parse(n.body).error;
-
-        if (this.table != undefined) {
-          this.table.table.sortOrder = 0;
-          this.table.table.sortField = '';
-          this.table.table.reset();
-          this.table.buscadores = this.table.buscadores.map(it => it = "");
-        }
-
-        if (error != null && error.description != null) {
-          this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
-        }
-
+    this.sigaServices.post("designaciones_deleteContrario", this.selectedDatos).subscribe(
+      data => {
+        this.selectedDatos = [];
+        this.searchContrarios.emit(false);
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.progressSpinner = false;
       },
       err => {
+        if (err != undefined && JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
         this.progressSpinner = false;
-        console.log(err);
-      });
+      },
+      () => {
+        this.progressSpinner = false;
+        this.selectMultiple = false;
+        this.selectAll = false;
+      }
+    );
   }
+  
 
   showMessage(severity, summary, msg) {
     this.msgs = [];
@@ -112,5 +129,45 @@ export class DetalleTarjetaContrariosFichaDesignacionOficioComponent implements 
     });
   }
 
+  NewContrario(){
+    sessionStorage.setItem("origin","newContrario");
+    this.router.navigate(["/justiciables"]);
+  }
 
+  openTab(evento) {
+    this.persistenceService.setBody(evento.data);
+    this.router.navigate(["/gestionJusticiables"]);
+  }
+
+  searchHistorical() {
+
+    this.historico = !this.historico;
+    this.persistenceService.setHistorico(this.historico);
+    this.searchContrarios.emit(this.historico);
+    this.selectAll = false;
+    this.selectedDatos=[];
+  }
+
+  
+  onChangeSelectAll() {
+    if (this.selectAll === true) {
+      if (this.historico) {
+        this.selectedDatos = this.datos.filter(dato => dato.fechabaja != undefined && dato.fechabaja != null);
+        this.selectMultiple = true;
+        this.selectionMode = "single";
+      } else {
+        this.selectedDatos = this.datos;
+        this.selectMultiple = false;
+        this.selectionMode = "single";
+      }
+      this.selectionMode = "multiple";
+      this.numSelected = this.datos.length;
+    } else {
+      this.selectedDatos = [];
+      this.numSelected = 0;
+      if (this.historico)
+        this.selectMultiple = true;
+      this.selectionMode = "multiple";
+    }
+  }
 }
