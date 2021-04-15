@@ -10,14 +10,19 @@
 
       <div class="form-group col-lg-3 col-md-3 w-100">
         <label>Fecha(*)</label>
-        <app-fecha [inputStyleClass]="styleObligatorio()" [(value)]='fechaGenerales' [utc]="true"></app-fecha>
+        <app-fecha [inputStyleClass]="styleObligatorio('fecha', fechaGenerales)" [(value)]='fechaGenerales' [utc]="true"></app-fecha>
       </div>
 
       <div class="form-group col-lg-3 col-md-3 w-100" *ngFor="let selector of selectores">
         <!-- <app-selector [i]="0" [selector]="selector"></app-selector> -->
         <label *ngIf="selector.nombre != ''">{{selector.nombre}}</label>
-        <p-dropdown autoWidth="false" class="inputWidth" placeholder="Seleccionar" [disabled]="selector.disable"
-          [ngModelOptions]="{standalone: true}" [(ngModel)]="selector.value" [options]="selector.opciones"
+        <label *ngIf="selector.nombre == 'Turno'">{{selector.nombre}}(*)</label>
+        <p-dropdown *ngIf="selector.nombre == 'Turno'" autoWidth="false" class="inputWidth" placeholder="Seleccionar" [disabled]="selector.disable"
+          [ngModelOptions]="{standalone: true}" [(ngModel)]="selector.value" [options]="selector.opciones" 
+          [ngClass]="styleObligatorio('selector', selector.obligatorio)" showClear="true" class="select-form">
+        </p-dropdown>
+        <p-dropdown *ngIf="selector.nombre != 'Turno'" autoWidth="false" class="inputWidth" placeholder="Seleccionar" [disabled]="selector.disable"
+          [ngModelOptions]="{standalone: true}" [(ngModel)]="selector.value" [options]="selector.opciones" 
           showClear="true" class="select-form">
         </p-dropdown>
       </div>
@@ -34,7 +39,7 @@
             <p-checkbox binary="true" label="Art. 27-28" [(ngModel)]="checkArt" [disabled]="checkArt" (onChange)="onChangeArt()"></p-checkbox>
           </div>
           <div class="main-button">
-            <button pButton type="button" icon="fa fa-search" iconPos="left"></button>
+            <button pButton (click)="searchColegiado()" type="button" icon="fa fa-search" iconPos="left"></button>
             <button pButton type="button" icon="fa fa-eraser" iconPos="left"></button>
           </div>
         </div>
@@ -51,6 +56,6 @@
     <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer"
       (click)="showMsg('success', 'Se ha restablecido correctamente', '')" ></button>
     <button pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"
-      (click)="showMsg('success', 'Se ha guardado correctamente', '')" ></button>
+      (click)="showMsg('success', 'Se ha guardado correctamente', 'save')" ></button>
   </div>
 </div>

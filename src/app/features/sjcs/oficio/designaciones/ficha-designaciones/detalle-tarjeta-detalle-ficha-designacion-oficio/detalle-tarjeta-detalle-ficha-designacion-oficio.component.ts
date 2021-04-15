@@ -109,6 +109,17 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       {label:'Anulada', value:'A'}];
       if(this.valorParametro == 1){
         
+      }else if(this.valorParametro == 2){
+
+      }
+      else if(this.valorParametro == 3){
+
+      }
+      else if(this.valorParametro == 4){
+
+      }
+      else if(this.valorParametro == 5){
+
       }
       this.getComboJuzgados();
       this.getComboProcedimientos();

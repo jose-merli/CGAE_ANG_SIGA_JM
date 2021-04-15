@@ -13,10 +13,10 @@
         <div class="table-header ">
             <div class="table-header-child p-2" *ngFor="let cabecera of cabeceras; let j = index" #BorderedHeader
                 [id]="cabecera.id">
-                <div>
+                <div class="ajustarCabecera">
                     <div [mat-sort-header]=cabecera.id [pTooltip]="cabecera.nameComplete" tooltipPosition="top">
                         {{cabecera.name}}</div>
-                    <input type="text" class="form-control" pInputTex [(ngModel)]="searchText[j]"
+                    <input type="text" class="form-control ajustarBuscador" pInputTex [(ngModel)]="searchText[j]"
                         (ngModelChange)="searchChange(j)" autocomplete="off" placeholder="Buscar">
                 </div>
             </div>
@@ -24,7 +24,7 @@
         <div *ngFor="let rowGroup of rowGroups | slice:from:to" class="table-row-group" #rowGroupEl>
             <div class="table-row parent" >
                 
-                <span class="mr-2 arrow" (click)="rowGroupArrowClick(rowGroupEl, rowGroup.id)">
+                <span *ngIf="rowGroup.rows.length > 1" class="mr-2 arrow" (click)="rowGroupArrowClick(rowGroupEl, rowGroup.id)">
                     <span (click)="iconClickChange(iconrightEl, icondownEl)" #iconrightEl><i
                             class="fas fa-chevron-right"></i></span>
                     <span class="collapse" (click)="iconClickChange2(iconrightEl, icondownEl)" #icondownEl><i
@@ -35,14 +35,14 @@
                     #rowSelected>
 
                     <div *ngIf="!posicionOcultar(-1)" class="table-row-header p-2 selectedRowClass">
-                        {{rowGroup.id}}
+                        {{rowGroup.id}}   
                     </div>
                     <div *ngFor="let cell of rowGroup.rows[0]['cells']; let z = index"
                         class="table-cell p-2 selectedRowClass" #BorderedCell
                         [ngClass]="{'collapse':posicionOcultar(z)}" #cellSelected>
-                        <div class="cell-wrapper selectedRowClass w-100">
+                        <div [ngStyle]="setMyStyles(cell.size)" class="cell-wrapper selectedRowClass w-100">
                             <span class="column-title">{{cabeceras[z+1].name}}</span>
-                            <span class="w100 cell-value" *ngIf="cell.type == 'text'">{{cell.value}}</span>
+                            <span class="w100 cell-value selectWrap" *ngIf="cell.type == 'text'">{{cell.value}}</span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'buttom'"><button class="main-button"
                                     pButton type="button" iconPos="left" [label]="cell.value"></button></span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'checkbox'">
@@ -55,7 +55,7 @@
                                     (valueChangeInput)="fillFechaIncorporacionDesde($event)">
                                 </app-fecha>
                             </span>
-                            <span class="w100 cell-value" *ngIf="cell.type == 'select'">
+                            <span class="w100 cell-value selectWrap" *ngIf="cell.type == 'select'">
                                 <app-selector class="wrapText center" [i]="0" [selector]="cell.value"
                                     [textoVisible]="cell.value"></app-selector>
                             </span>
@@ -106,9 +106,9 @@
                     </div>
                     <div *ngFor="let cell of row['cells']; let z = index" class="table-cell p-2 selectedRowClass"
                         [ngClass]="{'collapse':posicionOcultar(z), 'borders-child': isPar(i)}" #cellSelected>
-                        <div class="cell-wrapper selectedRowClass w-100">
+                        <div [ngStyle]="setMyStyles(cell.size)" class="cell-wrapper selectedRowClass w-100">
                             <span class="column-title">{{cabeceras[z+1].name}}</span>
-                            <span class="w100 cell-value" *ngIf="cell.type == 'text'">{{cell.value}}</span>
+                            <span class="w100 cell-value selectWrap" *ngIf="cell.type == 'text'">{{cell.value}}</span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'buttom'"><button pButton type="button"
                                     iconPos="left" [label]="cell.value"></button></span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'checkbox'">
@@ -121,7 +121,7 @@
                                     (valueChangeInput)="fillFechaIncorporacionDesde($event)">
                                 </app-fecha>
                             </span>
-                            <span class="w100 cell-value" *ngIf="cell.type == 'select'">
+                            <span class="w100 cell-value selectWrap" *ngIf="cell.type == 'select'">
                                 <app-selector class="center" [i]="0" [textoVisible]="" [selector]="cell.value">
                                 </app-selector>
                             </span>

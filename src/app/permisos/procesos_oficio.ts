@@ -18,6 +18,9 @@ export const procesos_oficio: any = {
     tarjetaResumenCola:"93P",
     //FIN INSCRIPCIONES TURNO
 
-    cargasMasivasOficio:"97M"
+    cargasMasivasOficio:"97M",
     //FIN CARGAS MASIVAS
+
+    //SALTOS Y COMPENSACIONES
+    saltosCompensaciones: "93N",
 }

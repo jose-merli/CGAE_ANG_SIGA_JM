@@ -50,6 +50,7 @@ export class Paginador3Component implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    console.log('totalRegistros: ', this.totalRegistros)
     this.selectedPerPage = 10;
     this.from = this.pagNumber *this.selectedPerPage + 1;
     if (this.pagNumber + 1 == this.lastPage){

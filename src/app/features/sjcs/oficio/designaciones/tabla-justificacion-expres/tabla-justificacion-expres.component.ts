@@ -160,20 +160,20 @@ export class TablaJustificacionExpresComponent implements OnInit {
       obj1 = {};
       obj.expedientes.forEach((expediente, index) =>{
         arr1 = 
-        [{ type: 'text', value: expediente },
-        { type: 'text', value: obj.cliente },
+        [{ type: 'text', value: expediente, size: 300 },
+        { type: 'text', value: obj.cliente, size: 300 },
         // { type: 'checkbox', value: obj.fin },
-        { type: 'checkbox', value: false },
-        { type: 'text', value: obj.nombreJuzgado },
-        { type: 'text', value: obj.nig},
-        { type: 'text', value: obj.numProcedimiento },
+        { type: 'checkbox', value: false, size: 50 },
+        { type: 'text', value: obj.nombreJuzgado, size: 153 },
+        { type: 'text', value: obj.nig, size: 153},
+        { type: 'text', value: obj.numProcedimiento, size: 153 },
         // { type: 'select', value: obj.modulo },
-        { type: 'select', value: '' },
-        { type: 'datePicker', value: obj.fechaActuacion },
-        { type: 'text', value: obj.justificacionDesde },
-        { type: 'text', value: obj.acreditacion },
+        { type: 'select', value: '', size: 153 },
+        { type: 'datePicker', value: obj.fechaActuacion, size: 153 },
+        { type: 'text', value: obj.justificacionDesde , size: 153},
+        { type: 'text', value: obj.acreditacion , size: 50},
         // { type: 'checkbox', value: obj.val }
-        { type: 'checkbox', value: false },
+        { type: 'checkbox', value: false, size: 50 },
       ];
 
         let key = letra + index;

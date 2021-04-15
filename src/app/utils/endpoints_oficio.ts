@@ -50,6 +50,7 @@ export let endpoints_oficio: any = {
     bajasTemporales_busquedaBajasTemporales:"oficio/bajasTemporales/busquedaBajasTemporales",
     bajasTemporales_updateBajaTemporal:"oficio/bajasTemporales/updateBaja",
     bajasTemporales_saveBajaTemporal:"oficio/bajasTemporales/saveBajaTemporal",
+    bajasTemporales_nuevaBajaTemporal:"oficio/bajasTemporales/nuevaBajaTemporal",
     bajasTemporales_deleteBajaTemporal:"oficio/bajasTemporales/deleteBajaTemporal",
     //FIN DE BAJAS TEMPORALES
 
@@ -62,7 +63,7 @@ export let endpoints_oficio: any = {
     cargasMasivasOficio_uploadFileIT: "oficio/cargasMasivasOficio/uploadFileIT",
     cargasMasivasOficio_uploadFileBT: "oficio/cargasMasivasOficio/uploadFileBT",
 
-    //BUSQUEDA DESIGNAS
+    //DESIGNAS
     designas_tipoDesignas:"oficio/designas/comboTipoDesigna",
     combo_comboJuzgadoDesignaciones: "combo/comboJuzgadoDesignaciones",
     combo_comboModulosDesignaciones: "oficio/comboModulo",
@@ -75,6 +76,8 @@ export let endpoints_oficio: any = {
     designaciones_deleteInteresado:"oficio/designas/deleteInteresado",
     designaciones_insertInteresado:"oficio/designas/insertInteresado",
     designaciones_insertContrario:"oficio/designas/insertContrario",
+    create_NewDesigna: "oficio/designas/createnewDesigna",
+    actuaciones_designacion: "oficio/designas/busquedaActDesigna",
 
     //SALTOS Y COMPENSACIONES
     saltosCompensacionesOficio_buscar: "oficio/saltosCompensaciones/buscarSaltosOCompensaciones",

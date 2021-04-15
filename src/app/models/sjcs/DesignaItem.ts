@@ -30,7 +30,8 @@ export class DesignaItem {
 	idProcedimientos: String[];
 	idProcedimiento: number;
 	idProcurador:number;
-	idTipoDesignaColegio: String[];
+	idTipoDesignaColegios: String[];
+	idTipoDesignaColegio: number;
 	idTurnos: String[];
 	nig: String;
 	numero: number;

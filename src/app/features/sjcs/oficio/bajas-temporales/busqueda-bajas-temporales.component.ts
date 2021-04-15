@@ -59,7 +59,7 @@ export class BajasTemporalesComponent implements OnInit {
     { id: "fechahasta", name: "censo.consultaDatos.literal.fechaFin" },
     { id: "fechaalta", name: "formacion.busquedaInscripcion.fechaSolicitud" },
     { id: "validado", name: "censo.busquedaSolicitudesModificacion.literal.estado" },
-    { id: "fechabt", name: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaEstado" },
+    { id: "fechaestado", name: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaEstado" },
   ];
 
   constructor(private translateService: TranslateService,
@@ -178,7 +178,10 @@ jsonToRow(datos){
         { type: 'text', value: element.fechahasta},
         { type: 'text', value: element.fechaalta},
         { type: 'text', value: element.validado},
-        { type: 'text', value: element.fechaestado}
+        { type: 'text', value: element.fechaestado},
+        { type: 'text', value: element.idpersona},
+        { type: 'text', value: element.fechabt},
+        { type: 'text', value: element.nuevo}
       ];
       let superObj = {
         id: index,
@@ -197,7 +200,10 @@ jsonToRow(datos){
         { type: 'datePicker', value: element.fechahasta},
         { type: 'text', value: element.fechaalta},
         { type: 'text', value: element.validado},
-        { type: 'text', value: element.fechaestado}
+        { type: 'text', value: element.fechaestado},
+        { type: 'text', value: element.idpersona},
+        { type: 'text', value: element.fechabt},
+        { type: 'text', value: element.nuevo}
       ];
       let superObj = {
         id: index,
@@ -393,24 +399,85 @@ anular(event){
 }
 
 guardar(event) {
-// let listaPrueba: BajasTemporalesItem[]=[];
 let listaPrueba = [];
+let nuevaBaja = [];
 let bajaTemporal = new BajasTemporalesItem();
-event.forEach(element => {
-  bajaTemporal.ncolegiado = element[0];
-  bajaTemporal.nombre = element[1];
-  bajaTemporal.tipo = element[2];
-  bajaTemporal.descripcion = element[3];
-  bajaTemporal.fechadesde = element[4];
-  bajaTemporal.fechahasta = element[5];
-  bajaTemporal.fechaalta = element[6];
-  bajaTemporal.validado = element[7];
-  bajaTemporal.fechabt = element[8];
 
-  listaPrueba.push(bajaTemporal);
-  bajaTemporal = new BajasTemporalesItem();
-});
+    event.forEach(element => {
+      if(element.length != 10){
+        bajaTemporal.ncolegiado = element[0];
+        bajaTemporal.nombre = element[1];
+        bajaTemporal.tipo = element[2];
+        bajaTemporal.descripcion = element[3];
+        bajaTemporal.fechadesde = element[4];
+        bajaTemporal.fechahasta = element[5];
+        bajaTemporal.fechaalta = element[6];
+        bajaTemporal.validado = element[7];
+        bajaTemporal.idpersona = element[9];
+        bajaTemporal.fechabt = element[10];
 
+        listaPrueba.push(bajaTemporal);
+        bajaTemporal = new BajasTemporalesItem();
+      }else{
+        bajaTemporal.ncolegiado = element[0];
+        bajaTemporal.nombre = element[1];
+        bajaTemporal.tipo = element[2];
+        bajaTemporal.descripcion = element[3];
+        bajaTemporal.fechadesde = element[4];
+        bajaTemporal.fechahasta = element[5];
+        bajaTemporal.fechaalta = element[6];
+        bajaTemporal.validado = element[7];
+
+        nuevaBaja.push(bajaTemporal);
+        bajaTemporal = new BajasTemporalesItem();
+      }
+    
+  });
+
+if(nuevaBaja.length != 0){
+  nuevaBaja.forEach(element => {
+    if(element.fechadesde != null || element.fechadesde != ""){
+      element.fechadesde=this.transformaFecha(element.fechadesde);
+    }
+    if(element.fechahasta != null || element.fechahasta != ""){
+      element.fechahasta=this.transformaFecha(element.fechahasta);
+    }
+    if(element.fechaalta != null || element.fechaalta != ""){
+      element.fechaalta=this.transformaFecha(element.fechaalta);
+    }
+    if (element.validado == "Denegada") {
+      element.validado  = "0";
+    }
+    if (element.validado  == "Validada") {
+      element.validado  = "1";
+    }
+    if (element.validado  == "Anulada") {
+      element.validado  = "3";
+    }
+    if (element.validado  == "Pendiente") {
+      element.validado  = "2";
+    }
+
+    element.fechabt = new Date();
+  });
+
+  
+  this.sigaServices.post("bajasTemporales_nuevaBajaTemporal", nuevaBaja).subscribe(
+    data => {
+        this.showMessage({ severity: "success", summary: this.translateService.instant("general.message.correct"), msg: this.translateService.instant("general.message.accion.realizada")});
+        this.progressSpinner = false;
+        this.searchPartidas(this.filtros.filtroAux);
+  },
+  err => {
+      this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("general.message.error.realiza.accion")});
+      this.progressSpinner = false;
+    }
+  );
+
+
+}
+
+if(listaPrueba.length != 0){
   listaPrueba.forEach(element => {
   if(element.fechadesde != null){
     element.fechadesde=this.transformaFecha(element.fechadesde);
@@ -421,12 +488,6 @@ event.forEach(element => {
   if(element.fechaalta != null){
     element.fechaalta=this.transformaFecha(element.fechaalta);
   }
-  // if(element.fechaestado != null){
-  //   element.fechaestado=this.transformaFecha(element.fechaestado);
-  // }
-  // if(element.fechaestado != null){
-  //   element.fechaestado=this.transformaFecha(element.fechaestado);
-  // }
   if (element.validado == "Denegada") {
     element.validado  = "0";
   }
@@ -440,6 +501,7 @@ event.forEach(element => {
     element.validado  = "2";
   }
 });
+
     this.sigaServices.post("bajasTemporales_saveBajaTemporal", listaPrueba).subscribe(
       data => {
           this.showMessage({ severity: "success", summary: this.translateService.instant("general.message.correct"), msg: this.translateService.instant("general.message.accion.realizada")});
@@ -451,6 +513,8 @@ event.forEach(element => {
         this.progressSpinner = false;
       }
     );
+
+  }
 }
 
   updateBaja(event) {

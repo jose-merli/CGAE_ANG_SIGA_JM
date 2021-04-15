@@ -66,6 +66,7 @@ export class FiltroDesignacionesComponent implements OnInit {
 
   @Output() busquedaJustificacionExpres = new EventEmitter<boolean>();
   @Output() showTablaDesigna = new EventEmitter<boolean>();
+  @Output() showTablaJustificacionExpres = new EventEmitter<boolean>();
   
   constructor(private translateService: TranslateService, private sigaServices: SigaServices,  private location: Location, private router: Router) { }
 
@@ -119,12 +120,14 @@ export class FiltroDesignacionesComponent implements OnInit {
     if(event=='designas'){
       this.showDesignas=true;
       this.showJustificacionExpress=false;
+      this.showTablaJustificacionExpres.emit(false);
     }
 
     if(event=='justificacion'){
       this.showDesignas=false;
       this.showJustificacionExpress=true;
       this.expanded=true;
+      this.showTablaDesigna.emit(false);
     }
   }
 
@@ -453,6 +456,7 @@ getComboCalidad() {
         //QUITAR ESTA LINEA CUANDO FINALICE LAS PRUEBAS
         this.filtroJustificacion.nColegiado=undefined;
 
+        this.showTablaJustificacionExpres.emit(false);
         this.busquedaJustificacionExpres.emit(true);
       }
     }
@@ -468,7 +472,7 @@ getComboCalidad() {
         designa.fechaEntradaInicio = this.fechaAperturaDesdeSelect;
         designa.fechaEntradaFin = this.fechaAperturaHastaSelect;
         designa.estados = this.body.estados;
-        designa.idTipoDesignaColegio = (this.body.idTipoDesignaColegio); 
+        designa.idTipoDesignaColegios = (this.body.idTipoDesignaColegios); 
         designa.idTurnos = this.body.idTurnos; 
         if(designa.idTurno != null){
           designa.nombreTurno = this.comboTurno.find(
@@ -494,7 +498,7 @@ getComboCalidad() {
         if(designa.idJuzgadoActu != null){
         designa.nombreJuzgadoActu = this.comboJuzgados.find(
           item => item.value == designa.idJuzgadoActu
-        ).label;
+        ).label; 
        }
        if(this.body.idAcreditacion != undefined){
         designa.idAcreditacion = this.body.idAcreditacion;

@@ -130,11 +130,20 @@ export class TurnosComponent implements OnInit {
         if (this.tablapartida != null && this.tablapartida != undefined) {
           this.tablapartida.historico = event;
         }
+        setTimeout(() => {
+          this.commonsService.scrollTablaFoco("tablaFoco");
+        }, 5);
       },
       err => {
         this.progressSpinner = false;
         console.log(err);
+        setTimeout(() => {
+          this.commonsService.scrollTablaFoco("tablaFoco");
+        }, 5);
       }, () => {
+        setTimeout(() => {
+          this.commonsService.scrollTablaFoco("tablaFoco");
+        }, 5);
       }
     );
   }

@@ -346,22 +346,30 @@ export class FiltrosTurnos implements OnInit {
         this.filtros.abreviatura == undefined ||
         this.filtros.abreviatura.trim().length < 3) &&
     (this.filtros.idarea == null ||
-        this.filtros.idarea == undefined
+        this.filtros.idarea == undefined || 
+        this.filtros.idarea == ""
         ) &&
     (this.filtros.idsubzona == null ||
-        this.filtros.idsubzona == undefined) &&
+        this.filtros.idsubzona == undefined
+        || this.filtros.idsubzona == "") &&
     (this.filtros.idmateria == null ||
-        this.filtros.idmateria == undefined )&&
+        this.filtros.idmateria == undefined 
+        || this.filtros.idmateria == "")&&
     (this.filtros.idtipoturno == null ||
-        this.filtros.idtipoturno == undefined )&&
+        this.filtros.idtipoturno == undefined
+        ||  this.filtros.idtipoturno == "")&&
     (this.filtros.idpartidapresupuestaria == null ||
-        this.filtros.idpartidapresupuestaria == undefined )&&
+        this.filtros.idpartidapresupuestaria == undefined 
+        || this.filtros.idpartidapresupuestaria == "")&&
     (this.filtros.idzona == null ||
-        this.filtros.idzona == undefined )&&
+        this.filtros.idzona == undefined 
+        || this.filtros.idzona == "")&&
     (this.filtros.jurisdiccion == null ||
-        this.filtros.jurisdiccion == undefined )&&
+        this.filtros.jurisdiccion == undefined
+        || this.filtros.jurisdiccion == "" )&&
     (this.filtros.grupofacturacion == null ||
-        this.filtros.grupofacturacion == undefined ))
+        this.filtros.grupofacturacion == undefined 
+        || this.filtros.grupofacturacion == ""))
     {
       this.showSearchIncorrect();
       return false;
@@ -376,6 +384,7 @@ export class FiltrosTurnos implements OnInit {
       return true;
     }
   }
+
   showMessage(severity, summary, msg) {
     this.msgs = [];
     this.msgs.push({

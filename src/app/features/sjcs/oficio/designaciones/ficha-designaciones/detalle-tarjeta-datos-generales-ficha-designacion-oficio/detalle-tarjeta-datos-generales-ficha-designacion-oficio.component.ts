@@ -1,6 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Message } from 'primeng/components/common/api';
+import { TranslateService } from '../../../../../../commons/translate';
 import { ColegiadoItem } from '../../../../../../models/ColegiadoItem';
+import { DesignaItem } from '../../../../../../models/sjcs/DesignaItem';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
 
@@ -31,13 +34,16 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       nombre: "Turno",
       opciones: [],
       value: "",
-      disable: false
+      disable: false,
+      obligatorio: true
+
     },
     {
       nombre: "Tipo",
       opciones: [],
       value: "",
-      disable: false
+      disable: false,
+      obligatorio: false
     }
   ];
 
@@ -57,15 +63,16 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     disable: false
   }];
 
-  constructor(private sigaServices: SigaServices,  private commonsService: CommonsService) {
+  constructor(private sigaServices: SigaServices,  private commonsService: CommonsService, private translateService: TranslateService, private router: Router) {
    }
 
   ngOnInit() {
+    this.resaltadoDatos = true;
     console.log(this.campos);
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
     if(!this.nuevaDesigna){
       //EDICION
-      this.checkArt = true;
+    this.checkArt = true;
     this.selectores[0].opciones = [{label: this.campos.nombreTurno, value: this.campos.idTurno}];
     this.selectores[0].value =  this.campos.idTurno;
     this.selectores[0].disable =  true;
@@ -204,15 +211,66 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       summary,
       detail
     });
+
+    if(detail == "save" && this.anio.value == ""){
+      let newDesigna = new DesignaItem();
+      var idTurno:number = +this.selectores[0].value;
+      newDesigna.idTurno = idTurno;
+      var idTipoDesignaColegio:number = +this.selectores[1].value;
+      newDesigna.idTipoDesignaColegio = idTipoDesignaColegio;
+      newDesigna.numColegiado = this.inputs[0].value;
+      newDesigna.nombreColegiado = this.inputs[1].value;
+      newDesigna.apellidosNombre = this.inputs[2].value;
+      newDesigna.fechaAlta = this.fechaGenerales;
+      newDesigna.ano = 2021;
+      this.checkDatosGenerales();
+      this.sigaServices.post("create_NewDesigna", newDesigna).subscribe(
+        n => {
+          //MENSAJE DE TODO CORRECTO
+          console.log(n);
+        },
+        err => {
+          console.log(err);
+  
+        }, () => {
+        }
+      );
+    }
+  }
+
+  checkDatosGenerales() {
+    if (this.fechaGenerales != "" && this.fechaGenerales != undefined && 
+        this.selectores[0].value != "" && this.selectores[0].value != undefined) {
+      this.resaltadoDatos = false;
+    } else {
+      this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+      this.resaltadoDatos = true;
+    }
   }
 
   clear() {
     this.msgs = [];
   }
-  styleObligatorio(evento){
-    if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
+  styleObligatorio(resaltado, evento){
+      if(this.resaltadoDatos && evento==true && resaltado == "selector"){
+        if(this.selectores[0].obligatorio == true && this.selectores[0].nombre == "Turno" && (this.selectores[0].value == "" || this.selectores[0].value == undefined)){
+          return "camposObligatorios";
+        }
+      }
+    if(this.resaltadoDatos && (evento=="fechaGenerales") && resaltado == "fecha"){
+      // return "campoDate";
       return this.commonsService.styleObligatorio(evento);
     }
+    
+  }
+
+  searchColegiado(){
+    sessionStorage.setItem("Art27Activo","false");
+    let datosDesigna = new DesignaItem();
+    datosDesigna.idTurno = Number(this.selectores[0].value);
+    datosDesigna.fechaAlta = this.fechaGenerales;
+    sessionStorage.setItem("datosDesgina",JSON.stringify(datosDesigna));
+    this.router.navigate(["/buscadorColegiados"]);
   }
 
   onChangeArt(){

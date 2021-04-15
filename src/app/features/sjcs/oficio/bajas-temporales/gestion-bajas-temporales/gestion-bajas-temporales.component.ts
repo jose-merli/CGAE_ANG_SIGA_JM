@@ -1,4 +1,4 @@
-import { ElementRef, Renderer2, Output, EventEmitter } from '@angular/core';
+import { ElementRef, Renderer2, Output, EventEmitter} from '@angular/core';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Sort } from '@angular/material/sort';
@@ -7,6 +7,7 @@ import { Row, Cell } from './gestion-bajas-temporales.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
+import { TranslateService } from '../../../../../commons/translate/translation.service';
 
 interface GuardiaI {
   label: string,
@@ -88,7 +89,8 @@ export class GestionBajasTemporalesComponent implements OnInit {
     private renderer: Renderer2,
     private persistenceService: PersistenceService,
     private pipe : DatePipe,
-		private router: Router
+		private router: Router,
+    private translateService: TranslateService
   ) {
     this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
       for (let i = 0; i < this.table.nativeElement.children.length; i++) {
@@ -102,40 +104,17 @@ export class GestionBajasTemporalesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    let values = [];
-    let labels = [];
-    let arrayOfSelected = [];
-    
+
     if(this.nuevaBaja == "true"){
       this.nuevo();
     }
 
-      this.rowGroups.forEach((row, i) => {
-        //selecteCombo = {label: ?, value: row.cells[7].value}
-        values.push(row.cells[6].value);
-      });
-      this.comboGuardiasIncompatibles.forEach(combo => {
-        values.forEach(v => {
-          if (combo.value == v){
-            labels.push(combo.label)
-          }
-        });
-       });
-      values.forEach((v, i) => {
-        let selecteCombo = {label: '', value: ''}
-        selecteCombo.label = labels[i];
-        selecteCombo.value = v;
-        arrayOfSelected[i] = selecteCombo;
-        this.multiselectValue[i] = arrayOfSelected[i];
-      });
-      this.multiselectLabels = labels;
     this.totalRegistros = this.rowGroups.length;
+
     this.numCabeceras = this.cabeceras.length;
+
     this.numColumnas = this.numCabeceras;
-    this.cabeceras.forEach(cab => {
-      this.cabecerasMultiselect.push(cab.name);
-    })
-    
+
     sessionStorage.removeItem("nuevo");
 
   }
@@ -281,14 +260,15 @@ export class GestionBajasTemporalesComponent implements OnInit {
       }
     });
     this.totalRegistros = this.rowGroups.length;
+    this.rowGroupsAux = this.rowGroups;
   }
-
-  showMsg(severity, summary, detail) {
+  
+  showMessage(event) {
     this.msgs = [];
     this.msgs.push({
-      severity,
-      summary,
-      detail
+      severity: event.severity,
+      summary: event.summary,
+      detail: event.msg
     });
   }
 
@@ -309,6 +289,9 @@ export class GestionBajasTemporalesComponent implements OnInit {
     this.numperPage = perPage;
   }
 
+  fillFecha(event, cell) {
+    cell.value = this.pipe.transform(event, 'dd/MM/yyyy');
+  }
  
   inputValueChange(event, i , z, cell){
     let cells: Cell[] = [];
@@ -362,11 +345,6 @@ export class GestionBajasTemporalesComponent implements OnInit {
 
   }
 
-  nuevaBajaTemporal(){
-    this.router.navigate(["/buscadorColegiados"]);
-    sessionStorage.setItem("nuevo","true");
-  }
-
   nuevo(){
     const now = Date.now();
     const myFormattedDate = this.pipe.transform(now, 'dd/MM/yyyy');
@@ -380,72 +358,52 @@ export class GestionBajasTemporalesComponent implements OnInit {
       this.usuarioBusquedaExpress.numColegiado=busquedaColegiado.nColegiado;
     }​​
 
-    this.enableGuardar = true;
-    let row: Row = new Row();
-    let cell1: Cell = new Cell();
-    let cell2: Cell = new Cell();
-    let cell3: Cell = new Cell();
-    let cell4: Cell = new Cell();
-    let cell5: Cell = new Cell();
-    let cell6: Cell = new Cell();
-    let cell7: Cell = new Cell();
-    let cell8: Cell = new Cell();
-    let cell9: Cell = new Cell();
-    let cell10: Cell = new Cell();
-    cell1.type = 'text';
-    cell1.value = this.usuarioBusquedaExpress.numColegiado;
-    cell2.type = 'text';
-    cell2.value = this.usuarioBusquedaExpress.nombreAp;
-    cell3.type = 'select';
-    cell3.combo = this.comboTipo;
-    cell3.value = '';
-    cell4.type = 'input';
-    cell4.value = '';
+    if(this.usuarioBusquedaExpress.nombreAp != "" || this.usuarioBusquedaExpress.numColegiado != ""){
+      this.enableGuardar = true;
+      let row: Row = new Row();
+      let cell1: Cell = new Cell();
+      let cell2: Cell = new Cell();
+      let cell3: Cell = new Cell();
+      let cell4: Cell = new Cell();
+      let cell5: Cell = new Cell();
+      let cell6: Cell = new Cell();
+      let cell7: Cell = new Cell();
+      let cell8: Cell = new Cell();
+      let cell9: Cell = new Cell();
+      let cell10: Cell = new Cell();
 
-    cell5.type = 'datePicker';
-    cell5.value = '';
-    cell6.type = 'datePicker';
-    cell6.value = '';
-    cell7.type = 'text';
-    cell7.value = myFormattedDate;
-    cell8.type = 'text';
-    cell8.value = 'Pendiente';
-    cell9.type = 'text';
-    cell9.value = myFormattedDate;
-    cell10.type = 'invisible';
-    cell10.value = [];
-    row.cells = [cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8, cell9, cell2];
-    this.rowGroups.unshift(row);
-    this.rowGroupsAux = this.rowGroups;
-    this.totalRegistros = this.rowGroups.length;
-    console.log('this.rowGroups: ', this.rowGroups)
-    //this.to = this.totalRegistros;
+      cell1.type = 'text';
+      cell1.value = this.usuarioBusquedaExpress.numColegiado;
+      cell2.type = 'text';
+      cell2.value = this.usuarioBusquedaExpress.nombreAp;
+      cell3.type = 'select';
+      cell3.combo = this.comboTipo;
+      cell3.value = '';
+      cell4.type = 'input';
+      cell4.value = '';
+      cell5.type = 'datePicker';
+      cell5.value = '';
+      cell6.type = 'datePicker';
+      cell6.value = '';
+      cell7.type = 'text';
+      cell7.value = myFormattedDate;
+      cell8.type = 'text';
+      cell8.value = 'Pendiente';
+      cell9.type = 'text';
+      cell9.value = myFormattedDate;
+      cell10.type = 'invisible';
+      cell10.value = true;
+      row.cells = [cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8, cell9, cell10];
+      this.rowGroups.unshift(row);
+      this.rowGroupsAux = this.rowGroups;
+      this.totalRegistros = this.rowGroups.length;
+      console.log('this.rowGroups: ', this.rowGroups);
+    }
 }
   inputChange(event, i, z){
     this.enableGuardar = true;
   }
-  /*
-  guardar(){
-    let anyEmptyArr = [];
-    this.rowGroups.forEach(row =>{
-      if(row.cells[0].value == '' ||  row.cells[0].value == undefined || row.cells[1].value == '' ||  row.cells[1].value == undefined || row.cells[2].value == '' ||  row.cells[2].value == undefined || row.cells[4].value == '' ||  row.cells[4].value == undefined){
-        anyEmptyArr.push(true);
-      } else{
-        this.save.emit( this.rowGroups);
-        this.enableGuardar = false;
-        this.totalRegistros = this.rowGroups.length;
-        anyEmptyArr.push(false);
-      }
-
-      if (anyEmptyArr.includes(true)){
-        this.showMsg('error', 'Error. Existen campos vacíos en la tabla.', '')
-      }else{
-        this.showMsg('success', 'Se ha guardado correctamente', '')
-      }
-      
-    })
-  }
-  */
+  
   eliminar(){
   this.delete.emit(this.selectedArray);
   this.totalRegistros = this.rowGroups.length;
@@ -460,7 +418,11 @@ export class GestionBajasTemporalesComponent implements OnInit {
   }
 
   checkGuardar(){
-    this.modDatos.emit(this.rowGroups);
+    if(this.rowGroups[0].cells[2].value != "" && this.rowGroups[0].cells[3].value != "" && this.rowGroups[0].cells[4].value != "" && this.rowGroups[0].cells[5].value != ""){
+      this.modDatos.emit(this.rowGroups);
+    }else{
+      this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("general.message.camposObligatorios")});
+    }
     this.totalRegistros = this.rowGroups.length;
   }
 
@@ -481,6 +443,9 @@ export class GestionBajasTemporalesComponent implements OnInit {
 
   eliminarFromCombo(rowToDelete){
     this.deleteFromCombo.emit(rowToDelete);
+  }
+  selectedAll(evento){
+    this.seleccionarTodo = evento;
   }
 }
 function compare(a: string, b: number | string, isAsc: boolean) {
