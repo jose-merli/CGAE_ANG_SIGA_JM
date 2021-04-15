@@ -17,14 +17,20 @@
       </div>
       <div *ngIf="campos" class="col-12 form-row m-0 p-0 pt-2 justify-content-between">
         <div *ngFor="let campo of campos" class="d-flex flex-wrap campos">
-          <label>
+          <label *ngIf="campo.key!=null">
             {{ campo.key }}:
+            <span>
+              {{ campo.value }}
+            </span>
+          </label>
+          <label *ngIf="campo.key==null">
             <span>
               {{ campo.value }}
             </span>
           </label>
         </div>
       </div>
+      
       <div *ngIf="enlaces" class="d-flex flex-wrap justify-content-between pt-2">
         <label *ngFor="let enlace of enlaces" class="mr-auto pr-2">
 

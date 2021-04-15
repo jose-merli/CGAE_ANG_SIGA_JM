@@ -70,7 +70,11 @@ export let endpoints_oficio: any = {
     designaciones_busqueda: "oficio/busquedaDesignaciones",
     parametros_search: "parametros/search",
     designaciones_listaContrarios: "oficio/designas/busquedaListaContrarios",
+    designaciones_listaInteresados: "oficio/designas/busquedaListaInteresados",
     designaciones_deleteContrario:"oficio/designas/deleteContrario",
+    designaciones_deleteInteresado:"oficio/designas/deleteInteresado",
+    designaciones_insertInteresado:"oficio/designas/insertInteresado",
+    designaciones_insertContrario:"oficio/designas/insertContrario",
 
     //SALTOS Y COMPENSACIONES
     saltosCompensacionesOficio_buscar: "oficio/saltosCompensaciones/buscarSaltosOCompensaciones",
