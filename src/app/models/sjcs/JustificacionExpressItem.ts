@@ -1,3 +1,5 @@
+import { ActuacionesJustificacionExpressItem } from "./ActuacionesJustificacionExpressItem";
+
 export class JustificacionExpressItem {
   
   nColegiado: String;
@@ -38,6 +40,7 @@ export class JustificacionExpressItem {
   idPersona: String;
   idProcedimiento: String;
   expedientes = [];
+  actuaciones : ActuacionesJustificacionExpressItem[];
 
   constructor() { }
 }

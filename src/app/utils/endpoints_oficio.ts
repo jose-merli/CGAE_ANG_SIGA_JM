@@ -78,6 +78,8 @@ export let endpoints_oficio: any = {
     designaciones_insertContrario:"oficio/designas/insertContrario",
     create_NewDesigna: "oficio/designas/createnewDesigna",
     actuaciones_designacion: "oficio/designas/busquedaActDesigna",
+    actuaciones_designacion_anular: "oficio/designas/anularActDesigna",
+    actuaciones_designacion_reactivar: "oficio/designas/reactivarActDesigna",
 
     //SALTOS Y COMPENSACIONES
     saltosCompensacionesOficio_buscar: "oficio/saltosCompensaciones/buscarSaltosOCompensaciones",

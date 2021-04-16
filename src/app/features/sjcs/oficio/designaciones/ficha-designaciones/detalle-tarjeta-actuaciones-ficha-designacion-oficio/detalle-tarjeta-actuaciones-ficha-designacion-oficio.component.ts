@@ -3,6 +3,7 @@ import { ActuacionDesignaObject } from '../../../../../../models/sjcs/ActuacionD
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { ActuacionDesignaItem } from '../../../../../../models/sjcs/ActuacionDesignaItem';
 import { DatePipe } from '@angular/common';
+import { Message } from 'primeng/api';
 
 export interface Col {
   field: string,
@@ -27,7 +28,7 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
       width: '14.29%'
     },
     {
-      field: 'numero',
+      field: 'numeroAsunto',
       header: 'justiciaGratuita.oficio.designas.actuaciones.nActuacion',
       width: '14.29%'
     },
@@ -47,7 +48,7 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
       width: '14.29%'
     },
     {
-      field: 'validada',
+      field: 'validadaTexto',
       header: 'justiciaGratuita.oficio.designas.actuaciones.validada',
       width: '14.29%'
     },
@@ -58,6 +59,9 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
     }
   ];
   historico: boolean = false;
+  progressSpinner: boolean = false;
+  actuacionesSeleccionadas: ActuacionDesignaItem[] = [];
+  msgs: Message[] = [];
 
   constructor(private sigaServices: SigaServices, private datepipe: DatePipe) { }
 
@@ -68,6 +72,8 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
 
   getActuacionesDesigna(historico = false) {
 
+    this.progressSpinner = true;
+
     const params = {
       anio: this.campos.ano.split('/')[0].replace('D', ''),
       idTurno: this.campos.idTurno,
@@ -77,6 +83,8 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
 
     this.sigaServices.post("actuaciones_designacion", params).subscribe(
       data => {
+        this.progressSpinner = false;
+
         let object: ActuacionDesignaObject = JSON.parse(data.body);
 
         if (object.error != null) {
@@ -89,6 +97,7 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
         }
       },
       err => {
+        this.progressSpinner = false;
         console.log(err);
       }
     );
@@ -96,7 +105,7 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
 
   modifyData() {
     this.actuacionesDesignaItems.forEach(el => {
-      el.validada = el.validada ? 'Sí' : 'No'
+      el.validadaTexto = el.validada ? 'Sí' : 'No'
       el.fechaActuacion = this.datepipe.transform(el.fechaActuacion, 'dd/MM/yyyy');
       el.fechaJustificacion = this.datepipe.transform(el.fechaJustificacion, 'dd/MM/yyyy');
     });
@@ -109,6 +118,71 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
 
   isItalic(dato) {
     return dato.anulada;
+  }
+
+
+  isAnySelected() {
+    return this.actuacionesSeleccionadas.length > 0;
+  }
+
+  onRowSelected(event) {
+
+    if (this.historico && !event.data.anulada) {
+      this.actuacionesSeleccionadas.pop();
+    }
+
+  }
+
+  clear() {
+    this.msgs = [];
+  }
+
+  showMessage(msg: Message) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: msg.severity,
+      summary: msg.summary,
+      detail: msg.detail
+    });
+  }
+
+  anular() {
+    this.progressSpinner = true;
+    let error = false;
+
+    if (this.actuacionesSeleccionadas.length > 0) {
+      const accionesRequest = [];
+
+      this.actuacionesSeleccionadas.forEach(el => {
+        if (!el.facturado) {
+          accionesRequest.push(el);
+        } else {
+          error = true;
+        }
+      });
+
+      if (error) {
+        this.showMessage({ severity: 'error', summary: 'Error', detail: 'Alguno de los elementos seleccionados no puede anularse porque se encuentra facturado' });
+      }
+
+      this.sigaServices.post("actuaciones_designacion_anular", this.actuacionesSeleccionadas).subscribe(
+        data => {
+          this.progressSpinner = false;
+          const resp = JSON.parse(data.body);
+
+          if (resp.status == 'OK') {
+            this.getActuacionesDesigna();
+          }
+
+        },
+        err => {
+          this.progressSpinner = false;
+          console.log(err);
+        }
+      );
+
+    }
+
   }
 
 }
