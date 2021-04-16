@@ -378,61 +378,6 @@ export class FichaProgramacionComponent implements OnInit {
 
     this.enlacesTarjetaResumen.push(pruebaTarjeta);
 
-    pruebaTarjeta = {
-      label: "justiciaGratuita.guardia.gestion.configuracionCola",
-      value: document.getElementById("configuracionCola"),
-      nombre: "configuracionCola",
-    };
-
-    this.enlacesTarjetaResumen.push(pruebaTarjeta);
-
-    pruebaTarjeta = {
-      label: "justiciaGratuita.oficio.turnos.coladeguardias",
-      value: document.getElementById("colaGuardias"),
-      nombre: "colaGuardias",
-    };
-
-    this.enlacesTarjetaResumen.push(pruebaTarjeta);
-
-    pruebaTarjeta = {
-      label: "dato.jgr.guardia.guardias.incompatibilidades",
-      value: document.getElementById("incompatibilidades"),
-      nombre: "incompatibilidades",
-    };
-
-    this.enlacesTarjetaResumen.push(pruebaTarjeta);
-
-    pruebaTarjeta = {
-      label: "dato.jgr.guardia.guardias.baremos",
-      value: document.getElementById("baremos"),
-      nombre: "baremos",
-    };
-
-    this.enlacesTarjetaResumen.push(pruebaTarjeta);
-
-    pruebaTarjeta = {
-      label: "agenda.fichaEventos.datosGenerales.calendario",
-      value: document.getElementById("calendarios"),
-      nombre: "calendarios",
-    };
-
-    this.enlacesTarjetaResumen.push(pruebaTarjeta);
-
-    pruebaTarjeta = {
-      label: "menu.justiciaGratuita.oficio.inscripciones",
-      value: document.getElementById("inscripciones"),
-      nombre: "inscripciones",
-    };
-
-    this.enlacesTarjetaResumen.push(pruebaTarjeta);
-
-    pruebaTarjeta = {
-      label: "dato.jgr.guardia.guardias.turno",
-      value: document.getElementById("turnos"),
-      nombre: "turnos",
-    };
-
-    this.enlacesTarjetaResumen.push(pruebaTarjeta);
   }
 
   isCloseReceive(event) {
@@ -443,27 +388,6 @@ export class FichaProgramacionComponent implements OnInit {
           break;
         case "calendarioGuardia":
           this.openCalendarioGuardia = this.manuallyOpened;
-          break;
-        case "configuracionCola":
-          this.openConfigCola = this.manuallyOpened;
-          break;
-        case "colaGuardias":
-          this.openCola = this.manuallyOpened;
-          break;
-        case "incompatibilidades":
-          this.openIncompatibilidades = this.manuallyOpened;
-          break;
-        case "baremos":
-          this.openBaremos = this.manuallyOpened;
-          break;
-        case "calendarios":
-          this.openCalendarios = this.manuallyOpened;
-          break;
-        case "inscripciones":
-          this.openInscripciones = this.manuallyOpened;
-          break;
-        case "turnos":
-          this.openTurno = this.manuallyOpened;
           break;
       }
     }
@@ -478,28 +402,8 @@ export class FichaProgramacionComponent implements OnInit {
         case "calendarioGuardia":
           this.openCalendarioGuardia = true;
           break;
-        case "configuracionCola":
-          this.openConfigCola = true;
-          break;
-        case "colaGuardias":
-          this.openCola = true;
-          break;
-        case "incompatibilidades":
-          this.openIncompatibilidades = true;
-          break;
-        case "baremos":
-          this.openBaremos = true;
-          break;
-        case "calendarios":
-          this.openCalendarios = true;
-          break;
-        case "inscripciones":
-          this.openInscripciones = true;
-          break;
-        case "turnos":
-          this.openTurno = true;
-          break;
       }
     }
   }
+
 }

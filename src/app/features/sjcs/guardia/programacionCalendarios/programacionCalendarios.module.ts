@@ -28,6 +28,9 @@ import { ProgramacionCalendariosComponent } from './programacionCalendarios.comp
 import { TablaResultadoMixComponent } from '../../../../commons/tabla-resultado-mix/tabla-resultado-mix.component';
 import { TablaResultadoMixModule } from '../../../../commons/tabla-resultado-mix/tabla-resultado-mix.module';
 import { FichaProgramacionComponent } from './ficha-programacion/ficha-programacion.component';
+import { DatosGeneralesFichaProgramacionComponent } from './ficha-programacion/datos-generales-ficha-programacion/datos-generales-ficha-programacion.component';
+import { GuardiasCalendarioFichaProgramacionComponent } from './ficha-programacion/guardias-calendario-ficha-programacion/guardias-calendario-ficha-programacion.component';
+import { TablaResultadoOrderComponent } from '../../../../commons/tabla-resultado-order/tabla-resultado-order.component';
 
 @NgModule({
   imports: [
@@ -52,11 +55,12 @@ import { FichaProgramacionComponent } from './ficha-programacion/ficha-programac
     TablaDinamicaColaGuardiaModule,
     ConfirmDialogModule,
     FechaModule,
+    TablaResultadoOrderModule,
     TablaResultadoMixModule
 
 
   ],
-  declarations: [ProgramacionCalendariosComponent, FiltrosGuardiaCalendarioComponent, FichaProgramacionComponent],
+  declarations: [ProgramacionCalendariosComponent, FiltrosGuardiaCalendarioComponent, FichaProgramacionComponent, DatosGeneralesFichaProgramacionComponent, GuardiasCalendarioFichaProgramacionComponent],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
     ImagePipe,

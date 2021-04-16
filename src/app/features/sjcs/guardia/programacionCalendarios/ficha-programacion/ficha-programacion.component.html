@@ -7,12 +7,13 @@
     </p>
   </div>
   <div>
-    <app-tarjeta-resumen-fija  class="pb-50" *ngIf="permisoEscrituraResumen != undefined" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="infoResumen" [enlaces]="enlacesTarjetaResumen" icono="iconoTarjetaResumen" (modoEdicionSend)="modoEdicionSend($event)" (isOpen)="isOpenReceive($event)" [manuallyOpened]="manuallyOpened"></app-tarjeta-resumen-fija>
+    <app-tarjeta-resumen-fija  class="pb-50" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="infoResumen" [enlaces]="enlacesTarjetaResumen" icono="iconoTarjetaResumen" (modoEdicionSend)="modoEdicionSend($event)" (isOpen)="isOpenReceive($event)" [manuallyOpened]="manuallyOpened"></app-tarjeta-resumen-fija>
 
-    <app-datos-generales-guardias [openFicha]="openGen" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaDatosGenerales]="tarjetaDatosGenerales" *ngIf="permisoEscrituraDatosGenerales != undefined" [permisoEscritura]="permisoEscrituraDatosGenerales" [modoEdicion]="modoEdicion" (modoEdicionSend)="modoEdicionSend($event)"></app-datos-generales-guardias>
+    <app-datos-generales-ficha-programacion [openFicha]="openGen" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaDatosGenerales]="tarjetaDatosGenerales" [permisoEscritura]="permisoEscrituraDatosGenerales" [modoEdicion]="modoEdicion" (modoEdicionSend)="modoEdicionSend($event)"></app-datos-generales-ficha-programacion>
 
-    <app-datos-calendarios-guardias [openFicha]="openCalendarioGuardia" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaCalendariosGuardias]="tarjetaCalendariosGuardias" *ngIf="permisoEscrituraConfCalen != undefined" [permisoEscritura]="permisoEscrituraConfCalen" [modoEdicion]="modoEdicion"></app-datos-calendarios-guardias>
+    <app-guardias-calendario-ficha-programacion [openFicha]="openGen" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaDatosGenerales]="tarjetaDatosGenerales" [permisoEscritura]="permisoEscrituraDatosGenerales" [modoEdicion]="modoEdicion" (modoEdicionSend)="modoEdicionSend($event)"></app-guardias-calendario-ficha-programacion>
 
+    
   </div>
 </div>
 <div class="mt-3 text-right main-button " id="down">

@@ -1,0 +1,113 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+
+<div class="busqueda-container" id="datosGenerales">
+  <div class="card">
+    <div class="card-header header-ficha">
+      <div *ngIf="!openFicha" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('generales')">
+          <div class="img-colegiado">
+            <i class="fas fa-user icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10 cabeza">
+          <div class="d-flex justify-content-end mb-1" (click)="abreCierraFicha('generales')">
+            <label class="mr-auto title-ficha">{{'administracion.catalogos.titulo.datos.generales' | translate}}</label>
+          </div>
+          <div class="d-flex justify-content-between sub">
+            <label>{{'administracion.parametrosGenerales.literal.nombre' | translate}}:
+              <strong>{{body.nombre}}</strong>
+            </label>
+            <label>{{'administracion.parametrosGenerales.literal.descripcion' | translate}}:
+              <strong> {{body.descripcion}}</strong>
+            </label>
+            <label>{{'dato.jgr.guardia.guardias.tipoGuardia' | translate}}:
+              <!--<strong>{{tipoGuardiaResumen.label}}</strong>-->
+            </label>
+            <label>{{'justiciaGratuita.guardia.gestion.sincCentralGuardias' | translate}}:
+              <strong *ngIf="!body.sincCentralGuardias">No</strong>
+              <strong *ngIf="body.sincCentralGuardias">Sí</strong>
+            </label>
+            <i (click)="abreCierraFicha('generales')" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha}"></i>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center" (click)="abreCierraFicha('generales')">
+        <div class="img-colegiado">
+          <i class="fas fa-user icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{'administracion.catalogos.titulo.datos.generales' | translate}}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+    <div *ngIf="openFicha" class="card-body card-body-ficha">
+      <div class="row col-12">
+        <div class="form-group col-lg-12 col-md-12">
+          <label style="text-align:center; font-weight: bold;">{{ "general.message.datos.generales" | translate }}</label>
+        </div>
+        <div class="form-group col-lg-6 col-md-6">
+          <label>Solo generar vacios</label>
+          <input type="checkbox" id="checkedchecky" name="checkedchecky" checked="checked" />
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>
+            {{ "menu.justiciaGratuita.calendarios.ListaGuardias" | translate }} (*)
+          </label>
+          <p-dropdown class="select-form"  [filter]="true" [(ngModel)]="filtros.listaGuardias"
+          [options]="comboListaGuardias" filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
+          [showClear]="true">
+        </p-dropdown>
+        </div>
+        <!-- Nombre -->
+        <div class="form-group col-lg-3 col-md-3">
+          <label>
+            {{ "justiciaGratuita.Calendarios.FechaDesde" | translate }} (*)
+          </label>
+          <app-fecha [(value)]="filtros.fechaCalendarioDesde" [minDate]="getFechaCalendarioDesde(filtros.fechaCalendarioDesde,filtros.fechaCalendarioHasta)"
+            (valueChangeSelected)="fillFechaCalendarioDesde($event)"  (valueChangeInput)="fillFechaCalendarioDesde($event)"></app-fecha>
+        </div>
+
+        <!-- Descripcion -->
+        <div class="form-group col-lg-3 col-md-3">
+          <label>
+            {{"justiciaGratuita.Calendarios.FechaHasta" | translate}} (*)
+          </label>
+          <app-fecha [(value)]="filtros.fechaCalendarioDesde" [minDate]="getFechaCalendarioDesde(filtros.fechaCalendarioDesde,filtros.fechaCalendarioHasta)"
+            (valueChangeSelected)="fillFechaCalendarioDesde($event)"  (valueChangeInput)="fillFechaCalendarioDesde($event)"></app-fecha>
+        </div>
+
+        <!-- Tipo Guardia -->
+        <div class="form-group col-lg-3 col-md-3">
+          <label>
+            {{"justiciaGratuita.Calendarios.FechaProgramada" | translate}}
+          </label>
+          <app-fecha [(value)]="filtros.fechaCalendarioDesde" [minDate]="getFechaCalendarioDesde(filtros.fechaCalendarioDesde,filtros.fechaCalendarioHasta)"
+          (valueChangeSelected)="fillFechaCalendarioDesde($event)"  (valueChangeInput)="fillFechaCalendarioDesde($event)"></app-fecha>
+        </div>
+
+        <div class="row col-6" id="div1">
+          <!-- Descripcion Facturacion -->
+          <div class="form-group col-lg-6 col-md-6" id="desFact">
+            <label>
+              {{"justiciaGratuita.Calendarios.Observaciones" | translate}} 
+            </label>
+            <textarea name="textoEnPlantilla" [disabled]="historico || !permisoEscritura" class="form-control ui-inputtext" pInputTextarea
+              [(ngModel)]="body.descripcionFacturacion" autoResize="autoResize" maxlength="3999"></textarea>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div *ngIf="openFicha" class="card-footer">
+      <div class="text-right main-button">
+        <button (click)="rest()" pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-undo" iconPos="left"
+          label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="save()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

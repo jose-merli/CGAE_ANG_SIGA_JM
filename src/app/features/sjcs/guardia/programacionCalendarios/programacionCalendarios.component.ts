@@ -154,15 +154,14 @@ export class ProgramacionCalendariosComponent implements OnInit {
 
 
 buscarCal(){
-  
+  this.buscar = false;
+  console.log('filtrosValues: ', this.filtrosValues)
 //let jsonEntrada  = JSON.parse(JSON.stringify(datosEntrada))
 let datosEntrada = 
     { 'idTurno': this.filtrosValues.idTurno,
-      'guardia': this.filtrosValues.guardia,
-      'listaGuardias': this.filtrosValues.listaGuardias,
-     // 'idGuardia': this.filtrosValues.idGuardia,
+      'idConjuntoGuardia': this.filtrosValues.listaGuardias,
+     'idGuardia': this.filtrosValues.idGuardia,
      'estado': this.filtrosValues.estado,
-      //'turno': this.filtrosValues.turno,
       'fechaCalendarioDesde': this.filtrosValues.fechaCalendarioDesde,
       'fechaCalendarioHasta': this.filtrosValues.fechaCalendarioHasta,
       'fechaProgramadaDesde': this.filtrosValues.fechaProgramadaDesde,
@@ -172,26 +171,40 @@ let datosEntrada =
     this.sigaServices.post(
       "guardiaCalendario_buscar", datosEntrada).subscribe(
         data => {
+          console.log('data: ', data.body)
           let error = JSON.parse(data.body).error;
           this.datos = JSON.parse(data.body);
+          console.log(' this.datos: ',  this.datos)
    console.log('this.datos', this.datos)
           this.respuestaCalendario = [];
          // this.comboGuardiasIncompatibles = [];
           this.datos.forEach((dat, i) => {
             let responseObject = new CalendariosDatosEntradaItem(
               {
-                'tipo': dat.tipo,
+
                 'turno': dat.turno,
-                'nombre': dat.nombre,
-                'lugar': dat.lugar,
-                'observaciones': dat.observaciones
+                'guardia': dat.guardia,
+                'idTurno': dat.idTurno,
+                'idGuardia': dat.idGuardia,
+                'observaciones': dat.observaciones,
+                'fechaDesde': dat.fechaDesde,
+                'fechaHasta': dat.fechaHasta,
+                'fechaProgramacion': dat.fechaProgramacion,
+                'estado': dat.estado,
+                'generado': dat.generado,
+                'numGuardias': dat.numGuardias,
+                'idCalG': dat.idCalG,
+                'listaGuardias': dat.listaGuardias,
+                'idCalendarioProgramado': dat.idCalendarioProgramado
               }
              
             );
+           
             /*let objCombo: GuardiaI = {label: dat.nombreGuardiaIncompatible, value: dat.idGuardiaIncompatible};
             this.comboGuardiasIncompatibles.push(objCombo);*/
             this.respuestaCalendario.push(responseObject);
           });
+          console.log('respuestaCalendario: ', this.respuestaCalendario)
           this.jsonToRow();
           this.progressSpinner = false;
           /*if (this.tabla != null && this.tabla != undefined) {
@@ -213,21 +226,26 @@ let datosEntrada =
 }
 
 jsonToRow(){
+  this.buscar = false;
   let generado = '??????';
   let numGuardias = '??????';
   let arr = [];
   this.respuestaCalendario.forEach((res, i) => {
     let objCells = [
     { type: 'text', value: res.turno },
-    { type: 'text', value: res.nombre },
-    { type: 'text', value: this.filtrosValues.fechaCalendarioDesde},
-    { type: 'text', value: this.filtrosValues.fechaCalendarioHasta },
-    { type: 'text', value: this.filtrosValues.fechaProgramadaDesde },
-    { type: 'text', value: this.filtrosValues.listaGuardias },
+    { type: 'text', value: res.guardia },
+    { type: 'text', value: res.fechaDesde},
+    { type: 'text', value: res.fechaHasta },
+    { type: 'text', value: res.fechaProgramacion },
+    { type: 'text', value: res.listaGuardias },
     { type: 'text', value: res.observaciones },
-    { type: 'text', value: this.filtrosValues.estado },
-    { type: 'text', value: generado },
-    { type: 'text', value: numGuardias}
+    { type: 'text', value: res.estado },
+    { type: 'text', value: res.generado },
+    { type: 'text', value: res.numGuardias},
+    { type: 'invisible', value: res.idCalendarioProgramado},
+    { type: 'invisible', value: res.idTurno},
+    { type: 'invisible', value: res.idGuardia},
+    
     ];
 
     let obj = {id: i, cells: objCells};
@@ -332,7 +350,7 @@ save(event){
    this.totalRegistros = this.rowGroups.length;
   }
 
-  deleteFromCombo(rowToDelete){
+ /* deleteFromCombo(rowToDelete){
 
     let idTurnoIncompatible;
     let idGuardiaIncompatible;
@@ -351,40 +369,33 @@ rowToDelete.cells.forEach((c, index) => {
       if (index == 8){
         idTurno = c.value;
       }
-     /* if(c.type == "multiselect"){
-        c.combo.forEach(comboValue => {
-          comboValue.value
-        })
-      }*/
+
     })
 
     this.eliminarInc(idTurnoIncompatible, idGuardiaIncompatible, idGuardia, idTurno)
     this.rowGroupsAux = this.rowGroups;
     this.totalRegistros = this.rowGroups.length;
-  }
+  }*/
 
 delete(indexToDelete){
   let idGuardia;
   let idTurno;
+  let idCalendarioProgramado;
   let toDelete:Row[] = [];
   indexToDelete.forEach(index => {
     toDelete.push(this.rowGroups[index]);
     this.rowGroups.splice(index, 1); 
   })
-let idTurnoIncompatible;
-let idGuardiaIncompatible;
+
   toDelete.forEach(row => {
     row.cells.forEach((c, index) => {
-      if (index == 5){
-        idTurnoIncompatible = c.value;
+      if (index == 10){
+        idCalendarioProgramado = c.value;
       }
-      if (index == 6){
-        idGuardiaIncompatible = c.value;
-      }
-      if (index == 7){
+      if (index == 12){
         idGuardia = c.value;
       }
-      if (index == 8){
+      if (index == 11){
         idTurno = c.value;
       }
      /* if(c.type == "multiselect"){
@@ -393,7 +404,7 @@ let idGuardiaIncompatible;
         })
       }*/
     })
-    this.eliminarInc(idTurnoIncompatible, idGuardiaIncompatible, idGuardia, idTurno)
+    this.eliminarCal(idCalendarioProgramado, idGuardia, idTurno)
   })
   this.rowGroupsAux = this.rowGroups;
   this.totalRegistros = this.rowGroups.length;
@@ -401,18 +412,17 @@ let idGuardiaIncompatible;
 
 
 
-  eliminarInc(idTurnoIncompatible, idGuardiaIncompatible, idGuardia, idTurno){
+  eliminarCal(idCalendarioProgramado, idGuardia, idTurno){
     let idInstitucion = this.authenticationService.getInstitucionSession();
-  this.deleteIncompatibilidadesDatosEntradaItem = new DeleteIncompatibilidadesDatosEntradaItem(
+ let deleteParams = 
     { 'idTurno': idTurno,
       'idGuardia': idGuardia,
-      'idTurnoIncompatible': idTurnoIncompatible,
-      'idGuardiaIncompatible': idGuardiaIncompatible,
-      'idInstitucion': idInstitucion, //DUDA
+      'idCalendarioProgramado': idCalendarioProgramado,
+      'idInstitucion': idInstitucion
     }
-  );
+;  
     this.sigaServices.post(
-      "guardiasIncompatibilidades_eliminarIncompatibilidades", this.deleteIncompatibilidadesDatosEntradaItem).subscribe(
+      "guardiaCalendario_eliminar", deleteParams).subscribe(
         data => {
           let error = JSON.parse(data.body).error;
           this.datos = JSON.parse(data.body).guardiaItems;
@@ -573,4 +583,6 @@ guardarInc(nombreTurno, nombreGuardia, nombreTurnoIncompatible, nombreGuardiaInc
 
       }
   }
+
+  
 }

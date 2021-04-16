@@ -33,6 +33,7 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
 
   comboTurno = [];
   comboGuardia = [];
+  comboConjuntoGuardias = [];
   comboListaGuardias = [];
   comboEstado = [];
   
@@ -58,6 +59,7 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
 
     this.getComboTurno()
     this.getComboEstado();
+    this.getComboConjuntouardia();
 
     if (sessionStorage.getItem("filtrosBusquedaGuardiasFichaGuardia") != null) {
 
@@ -126,7 +128,21 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
 
   }
 
-  //TO DO en backend
+  getComboConjuntouardia() {
+    this.sigaServices.get(
+      "busquedaGuardia_conjuntoGuardia").subscribe(
+        data => {
+          this.comboConjuntoGuardias = data.combooItems;
+          this.commonServices.arregloTildesCombo(this.comboConjuntoGuardias);
+        },
+        err => {
+          console.log(err);
+        }
+      )
+
+  }
+  
+  //SE USA?
   getComboListaGuardia() {
     this.sigaServices.getParam(
       "busquedaGuardia_listasGuardia", "?idTurno=" + this.filtros.idTurno).subscribe(
@@ -248,8 +264,7 @@ console.log('search')
       (this.filtros.fechaProgramadaHasta == null || this.filtros.fechaProgramadaHasta == undefined) &&
       (this.filtros.listaGuardias == null || this.filtros.listaGuardias == undefined) &&
       (this.filtros.idTurno == null || this.filtros.idTurno == undefined) &&
-      (this.filtros.idGuardia == null || this.filtros.idGuardia == undefined) &&
-      (this.filtros.guardia == null || this.filtros.guardia == undefined || this.filtros.guardia.trim() == "" || this.filtros.guardia.trim().length < 3)) {
+      (this.filtros.idGuardia == null || this.filtros.idGuardia == undefined)) {
 
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
       return false;

@@ -7,6 +7,7 @@ import { Message } from 'primeng/components/common/api';
 import { ValidationModule } from '../validation/validation.module';
 import { CloseScrollStrategy } from '@angular/cdk/overlay';
 import { Router } from '@angular/router';
+import { PersistenceService } from '../../_services/persistence.service';
 @Component({
   selector: 'app-tabla-resultado-mix',
   templateUrl: './tabla-resultado-mix.component.html',
@@ -56,6 +57,7 @@ export class TablaResultadoMixComponent implements OnInit {
   constructor(
     private renderer: Renderer2,
     private router: Router,
+    private persistenceService: PersistenceService,
   ) {
     this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
       for (let i = 0; i < this.table.nativeElement.children.length; i++) {
@@ -69,7 +71,7 @@ export class TablaResultadoMixComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+console.log('this.rowGroups: tabla ', this.rowGroups)
     let values = [];
     let labels = [];
     let arrayOfSelected = [];
@@ -318,6 +320,7 @@ export class TablaResultadoMixComponent implements OnInit {
       this.persistenceService.setDatos(this.datos);
       this.persistenceService.setHistorico(evento.fechabaja ? true : false);*/
       this.router.navigate(["/fichaProgramacion"]);
+
     } else {
       /*if (evento.fechabaja == undefined && this.historico) {
         this.selectedDatos.pop();

@@ -15,6 +15,7 @@ export class TablaResultadoOrderComponent implements OnInit {
   @Input() cabeceras = [];
   @Input() rowGroups: Row[];
   @Input() rowGroupsAux: Row[];
+  @Input() calendarios;
   rowGroupsOrdered = [];
   @Input() seleccionarTodo = false;
   @Output() anySelected = new EventEmitter<any>();
@@ -51,7 +52,7 @@ export class TablaResultadoOrderComponent implements OnInit {
   @Input() totalRegistros = 0;
   numperPage = 10;
   @ViewChild('table') table: ElementRef;
-
+  @Output() delete = new EventEmitter<any>();
   
   constructor(
     private renderer: Renderer2
@@ -496,6 +497,13 @@ this.totalRegistros = this.rowGroups.length;
     toReg(event){
       this.to = Number(event);
     }
+
+    eliminar(){
+      this.delete.emit(this.selectedArray);
+      this.totalRegistros = this.rowGroups.length;
+      this.rowGroupsAux = this.rowGroups;
+      //this.to = this.totalRegistros;
+      }
   
 }
 function compare(a: number | string, b: number | string, isAsc: boolean) {

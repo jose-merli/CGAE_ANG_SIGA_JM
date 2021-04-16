@@ -23,7 +23,7 @@
         <!-- GUARDIA -->
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
-          <p-dropdown class="select-form" (onChange)="onChangeTurno()" [filter]="true" [(ngModel)]="filtros.guardia"
+          <p-dropdown class="select-form"  [filter]="true" [(ngModel)]="filtros.idGuardia"
           [options]="comboGuardia" filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
           [showClear]="true">
         </p-dropdown>
@@ -33,7 +33,7 @@
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{"menu.justiciaGratuita.calendarios.ListaGuardias" | translate}}</label>
           <p-dropdown class="select-form"  [filter]="true" [(ngModel)]="filtros.listaGuardias"
-            [options]="comboListaGuardias" filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
+            [options]="comboConjuntoGuardias" filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
             [showClear]="true">
           </p-dropdown>
         </div>
