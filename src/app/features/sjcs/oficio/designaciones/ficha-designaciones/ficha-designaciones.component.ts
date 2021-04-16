@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Location } from '@angular/common';
+import { DatePipe, Location } from '@angular/common';
 import { DesignaItem } from '../../../../../models/sjcs/DesignaItem';
 import { TranslateService } from '../../../../../commons/translate';
+import { SigaServices } from '../../../../../_services/siga.service';
+import { ActuacionDesignaItem } from '../../../../../models/sjcs/ActuacionDesignaItem';
+import { ActuacionDesignaObject } from '../../../../../models/sjcs/ActuacionDesignaObject';
+import { Message } from 'primeng/api';
 
 @Component({
   selector: 'app-ficha-designaciones',
@@ -207,12 +211,7 @@ export class FichaDesignacionesComponent implements OnInit {
       detalle: true,
       fixed: false,
       opened: false,
-      campos: [
-        {
-          "key": "Nº total",
-          "value": "5"
-        }
-      ]
+      campos: []
     },
     {
       id: 'sjcsDesigDatFac',
@@ -231,15 +230,19 @@ export class FichaDesignacionesComponent implements OnInit {
     },
   ];
 
-  constructor( private location: Location, 
-    private  translateService: TranslateService) { }
+  actuacionesDesignaItems: ActuacionDesignaItem[];
+  progressSpinner: boolean = false;
+  msgs: Message[] = [];
+
+  constructor(private location: Location,
+    private translateService: TranslateService, private sigaServices: SigaServices, private datepipe: DatePipe) { }
 
   ngOnInit() {
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
     let designaItem = JSON.parse(sessionStorage.getItem("designaItemLink"));
     this.campos = designaItem;
 
-    if(!this.nuevaDesigna){
+    if (!this.nuevaDesigna) {
       //EDICIÓN DESIGNA
       let camposResumen = [
         {
@@ -267,7 +270,7 @@ export class FichaDesignacionesComponent implements OnInit {
           "value": ""
         }
       ];
-  
+
       let camposGenerales = [
         {
           "key": "Turno",
@@ -285,7 +288,7 @@ export class FichaDesignacionesComponent implements OnInit {
           "value": designaItem.descripcionTipoDesigna
         }
       ];
-  
+
       this.tarjetaFija.campos = camposResumen;
       this.listaTarjetas[0].campos = camposGenerales;
       //Actualizar para que los campos se rellenen en base a la tabla de la tarjeta contrarios
@@ -313,15 +316,17 @@ export class FichaDesignacionesComponent implements OnInit {
           "value": designaItem.descripcionTipoDesigna
         }
       ]
-    /* this.listaTarjetas[4].enlaces=[{
-    id: null,
-        ref: null,
-        nombre: this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.vacio')
-    }] */
-    }else{
+      /* this.listaTarjetas[4].enlaces=[{
+      id: null,
+          ref: null,
+          nombre: this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.vacio')
+      }] */
+    } else {
       //NUEVA DESIGNA
     }
-    
+
+    this.getActuacionesDesigna(false);
+
   }
 
   ngAfterViewInit() {
@@ -376,6 +381,146 @@ export class FichaDesignacionesComponent implements OnInit {
     }
 
     return fecha;
+  }
+
+  clear() {
+    this.msgs = [];
+  }
+
+  showMessage(msg: Message) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: msg.severity,
+      summary: msg.summary,
+      detail: msg.detail
+    });
+  }
+
+  getActuacionesDesigna(historico: boolean) {
+
+    this.progressSpinner = true;
+
+    const params = {
+      anio: this.campos.ano.split('/')[0].replace('D', ''),
+      idTurno: this.campos.idTurno,
+      numero: this.campos.codigo,
+      historico: historico
+    };
+
+    this.sigaServices.post("actuaciones_designacion", params).subscribe(
+      data => {
+        this.progressSpinner = false;
+
+        let object: ActuacionDesignaObject = JSON.parse(data.body);
+
+        if (object.error != null && object.error.description != null) {
+          this.showMessage({ severity: 'error', summary: 'Error', detail: object.error.description.toString() });
+        } else {
+          let resp = object.actuacionesDesignaItems;
+
+          let justificadas = 0;
+          let validadas = 0;
+          let facturadas = 0;
+          let total = 0;
+
+          resp.forEach(el => {
+
+            if (el.validada) {
+              validadas += 1;
+            }
+
+            if (el.facturado) {
+              facturadas += 1;
+            }
+
+            if (el.fechaJustificacion != '') {
+              justificadas += 1;
+            }
+
+            el.validadaTexto = el.validada ? 'Sí' : 'No'
+            el.fechaActuacion = this.datepipe.transform(el.fechaActuacion, 'dd/MM/yyyy');
+            el.fechaJustificacion = this.datepipe.transform(el.fechaJustificacion, 'dd/MM/yyyy');
+          });
+          this.actuacionesDesignaItems = resp;
+
+          let tarj = this.listaTarjetas.find(tarj => tarj.id === 'sjcsDesigAct');
+          tarj.campos = [];
+          total = validadas + facturadas + justificadas;
+          if (this.actuacionesDesignaItems.length == 0) {
+
+            tarj.campos = [
+              {
+                "key": "Nº total",
+                "value": "No existen actuaciones asociadas a la designación"
+              }
+            ];
+          } else if (this.actuacionesDesignaItems.length == 1) {
+
+            let act = this.actuacionesDesignaItems[0];
+
+            let estado = '';
+
+            if (act.facturado) {
+              estado = 'Facturada';
+            } else if (act.anulada) {
+              estado = 'Anulada';
+            } else if (!act.validada) {
+              estado = 'Activa';
+            } else if (act.validada) {
+              estado = 'Validada';
+            }
+
+            tarj.campos = [
+              {
+                "key": "Fecha",
+                "value": act.fechaActuacion
+              },
+              {
+                "key": "Módulo",
+                "value": act.modulo
+              },
+              {
+                "key": "Acreditación",
+                "value": act.acreditacion
+              },
+              {
+                "key": "Estado",
+                "value": estado
+              }
+            ];
+
+          } else {
+
+            tarj.campos = [
+              {
+                "key": "Justificadas",
+                "value": justificadas.toString()
+              },
+
+              {
+                "key": "Validadas",
+                "value": validadas.toString()
+              },
+
+              {
+                "key": "Facturadas",
+                "value": facturadas.toString()
+              },
+
+              {
+                "key": "Número total",
+                "value": total.toString()
+              }
+            ];
+            console.log("🚀 ~ file: ficha-designaciones.component.ts ~ line 416 ~ FichaDesignacionesComponent ~ getActuacionesDesigna ~ this.actuacionesDesignaItems", this.actuacionesDesignaItems)
+          }
+        }
+      },
+      err => {
+        this.progressSpinner = false;
+        console.log(err);
+      }
+    );
   }
 
 }

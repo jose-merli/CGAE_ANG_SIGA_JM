@@ -75,6 +75,7 @@ export let endpoints_oficio: any = {
     actuaciones_designacion: "oficio/designas/busquedaActDesigna",
     actuaciones_designacion_anular: "oficio/designas/anularActDesigna",
     actuaciones_designacion_reactivar: "oficio/designas/reactivarActDesigna",
+    actuaciones_designacion_eliminar: "oficio/designas/eliminarActDesigna",
 
     //SALTOS Y COMPENSACIONES
     saltosCompensacionesOficio_buscar: "oficio/saltosCompensaciones/buscarSaltosOCompensaciones",
