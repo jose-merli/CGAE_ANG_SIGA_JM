@@ -417,10 +417,6 @@ import { FiltroDesignacionesComponent } from './features/sjcs/oficio/designacion
 import { DesignacionesComponent } from './features/sjcs/oficio/designaciones/designaciones.component';
 import { DetalleTarjetaActuacionesFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-ficha-designacion-oficio/detalle-tarjeta-actuaciones-ficha-designacion-oficio.component';
 import { FichaActuacionDesignaOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-ficha-designacion-oficio/ficha-actuacion-designa-oficio/ficha-actuacion-designa-oficio.component';
-import { DetalleTarjetaDatosGeneralesFichaActuacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-ficha-designacion-oficio/ficha-actuacion-designa-oficio/detalle-tarjeta-datos-generales-ficha-actuacion-oficio/detalle-tarjeta-datos-generales-ficha-actuacion-oficio.component';
-import { DetalleTarjetaJustificacionFichaActuacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-ficha-designacion-oficio/ficha-actuacion-designa-oficio/detalle-tarjeta-justificacion-ficha-actuacion-oficio/detalle-tarjeta-justificacion-ficha-actuacion-oficio.component';
-import { DetalleTarjetaGestionFichaActuacionOficoComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-ficha-designacion-oficio/ficha-actuacion-designa-oficio/detalle-tarjeta-gestion-ficha-actuacion-ofico/detalle-tarjeta-gestion-ficha-actuacion-ofico.component';
-import { DetalleTarjetaDatosFacturacionFichaActuacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-ficha-designacion-oficio/ficha-actuacion-designa-oficio/detalle-tarjeta-datos-facturacion-ficha-actuacion-oficio/detalle-tarjeta-datos-facturacion-ficha-actuacion-oficio.component';
 import { DetalleTarjetaProcuradorFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-procurador-ficha-designacion-oficio/detalle-tarjeta-procurador-ficha-designacion-oficio.component';
 import { Paginador2Module } from './features/sjcs/oficio/designaciones/ficha-designaciones/paginador2/paginador2.module';
 
@@ -765,10 +761,6 @@ import { Paginador2Module } from './features/sjcs/oficio/designaciones/ficha-des
 		FormularioSubidaComponent,
 		ListaArchivosComponent,
 		FichaActuacionDesignaOficioComponent,
-		DetalleTarjetaDatosGeneralesFichaActuacionOficioComponent,
-		DetalleTarjetaJustificacionFichaActuacionOficioComponent,
-		DetalleTarjetaGestionFichaActuacionOficoComponent,
-		DetalleTarjetaDatosFacturacionFichaActuacionOficioComponent,
 
 	],
 	imports: [
