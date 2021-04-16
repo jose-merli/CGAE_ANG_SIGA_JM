@@ -415,6 +415,9 @@ import { GestionDesignacionesComponent } from './features/sjcs/oficio/designacio
 import { FiltroDesignacionesComponent } from './features/sjcs/oficio/designaciones/filtro-designaciones/filtro-designaciones.component';
 import { DesignacionesComponent } from './features/sjcs/oficio/designaciones/designaciones.component';
 import { DetalleTarjetaActuacionesFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-ficha-designacion-oficio/detalle-tarjeta-actuaciones-ficha-designacion-oficio.component';
+import { DetalleTarjetaProcuradorFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-procurador-ficha-designacion-oficio/detalle-tarjeta-procurador-ficha-designacion-oficio.component';
+import { Paginador2Module } from './features/sjcs/oficio/designaciones/ficha-designaciones/paginador2/paginador2.module';
+
 
 @NgModule({
 	declarations: [
@@ -588,6 +591,7 @@ import { DetalleTarjetaActuacionesFichaDesignacionOficioComponent } from './feat
 		ComunicaResolucionesComponent,
 		ComunicaDesignacionesComponent,
 		CargasMasivasOficioComponent,
+		DetalleTarjetaProcuradorFichaDesignacionOficioComponent,
 
 		//Consultas
 		RecuperarConsultasComponent,
@@ -822,7 +826,8 @@ import { DetalleTarjetaActuacionesFichaDesignacionOficioComponent } from './feat
 		GuardiaModule,
 		SjcsModule,
 		OficioModule,
-		BusquedaAsuntosModule
+		BusquedaAsuntosModule,
+		Paginador2Module
 	],
 
 	exports: [],

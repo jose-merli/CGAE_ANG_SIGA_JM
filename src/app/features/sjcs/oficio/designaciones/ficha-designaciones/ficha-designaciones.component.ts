@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { DesignaItem } from '../../../../../models/sjcs/DesignaItem';
 import { TranslateService } from '../../../../../commons/translate';
+import { Row, DetalleTarjetaProcuradorFichaDesignaionOficioService } from './detalle-tarjeta-procurador-ficha-designacion-oficio/detalle-tarjeta-procurador-ficha-designaion-oficio.service';
+import { SigaServices } from '../../../../../_services/siga.service';
+import { ProcuradorItem } from '../../../../../models/sjcs/ProcuradorItem';
 
 @Component({
   selector: 'app-ficha-designaciones',
@@ -9,9 +12,13 @@ import { TranslateService } from '../../../../../commons/translate';
   styleUrls: ['./ficha-designaciones.component.scss']
 })
 export class FichaDesignacionesComponent implements OnInit {
+  
+  designaItem = JSON.parse(sessionStorage.getItem("designaItemLink"));
+  procurador: ProcuradorItem=new ProcuradorItem();
 
   rutas: string[] = ['SJCS', 'EJGS'];
-  campos: any;
+  campos: DesignaItem=new DesignaItem();
+  procuradores: any;
   nuevaDesigna: any;
   tarjetaFija = {
     nombre: "Información Resumen",
@@ -122,7 +129,7 @@ export class FichaDesignacionesComponent implements OnInit {
       campos: [
         {
           "key": "Nº Colegiado",
-          "value": "6492"
+          "value": this.designaItem.numColegiado
         },
         {
           "key": "Nombre",
@@ -231,13 +238,34 @@ export class FichaDesignacionesComponent implements OnInit {
     },
   ];
 
+  seleccionarTodo = false;
+  totalRegistros = 0;
+  rowGroups: Row[];
+  rowGroupsAux: Row[];
+  selectedRow: Row;
+  cabeceras = [
+    { id: "fecha", name: "dato.jgr.guardia.saltcomp.fecha" },
+    { id: "aninum", name: "justiciaGratuita.ejg.datosGenerales.annioNum" },
+    { id: "nColegiado", name: "censo.resultadosSolicitudesModificacion.literal.nColegiado" },
+    { id: "nombre", name: "justiciaGratuita.oficio.designas.contrarios.procurador" },
+    { id: "motivo", name: "censo.datosHistorico.literal.motivo" },
+    { id: "observaciones", name: "censo.nuevaSolicitud.observaciones" },
+    { id: "fechasolicitud", name: "formacion.busquedaInscripcion.fechaSolicitud" },
+    { id: "fechaefectiva", name: "administracion.auditoriaUsuarios.literal.fechaEfectiva" },
+  ];
+  progressSpinner: boolean = false;
+
   constructor( private location: Location, 
-    private  translateService: TranslateService) { }
+    private  translateService: TranslateService,
+    private sigaServices: SigaServices,
+    private gbtservice : DetalleTarjetaProcuradorFichaDesignaionOficioService,
+    ) { }
 
   ngOnInit() {
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
     let designaItem = JSON.parse(sessionStorage.getItem("designaItemLink"));
     this.campos = designaItem;
+    this.mostrar();
 
     if(!this.nuevaDesigna){
       //EDICIÓN DESIGNA
@@ -378,4 +406,73 @@ export class FichaDesignacionesComponent implements OnInit {
     return fecha;
   }
 
+  modDatos(event){
+    console.log(event);
+  
+    let array = [];
+    let array2 = [];
+  
+    event.forEach(element => {
+      element.cells.forEach(dato => {
+        array.push(dato.value);
+      });
+      array2.push(array);
+      array=[];
+    });
+    console.log(array);
+    console.log(array2);
+    //this.guardar(array2);
+  }
+
+  mostrar(){
+    console.log(this.campos);
+    let procurador = [this.campos.numColegiado,String(this.campos.idInstitucion)];
+      this.sigaServices.post("designaciones_busquedaProcurador", procurador ).subscribe(
+        n => {
+          this.procurador = JSON.parse(n.body).ProcuradoresItem;
+          this.procuradores.forEach(element => {
+
+            element.ncolegiado = +element.ncolegiado;
+          });
+
+          //this.jsonToRow(this.procuradores);
+          this.progressSpinner = false;
+        },
+        err => {
+          this.progressSpinner = false;
+          console.log(err);
+        }
+      );
+  }
+
+jsonToRow(datos){
+  console.log(datos);
+  let arr = [];
+
+  datos.forEach((element, index) => {
+      let obj = [
+        { type: 'text', value: element.ncolegiado},
+        { type: 'text', value: element.apellidos1 +" "+ element.apellidos2 + ", " + element.nombre},
+        { type: 'text', value: element.tiponombre},
+        { type: 'text', value: element.descripcion},
+        { type: 'text', value: element.fechadesde},
+        { type: 'text', value: element.fechahasta},
+        { type: 'text', value: element.fechaalta},
+        { type: 'text', value: element.validado},
+        { type: 'text', value: element.fechaestado},
+        { type: 'text', value: element.idpersona},
+        { type: 'text', value: element.fechabt},
+        { type: 'text', value: element.nuevo}
+      ];
+      let superObj = {
+        id: index,
+        row: obj
+      };
+
+      arr.push(superObj);
+  });
+  this.rowGroups = this.gbtservice.getTableData(arr);
+  this.rowGroupsAux = this.gbtservice.getTableData(arr);
+  this.totalRegistros = this.rowGroups.length;
+}
 }
