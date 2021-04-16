@@ -6,6 +6,7 @@ import { JusticiableObject } from '../../../../../models/sjcs/JusticiableObject'
 import { DataTable } from 'primeng/primeng';
 import { Router } from '@angular/router';
 import { JusticiableBusquedaObject } from '../../../../../models/sjcs/JusticiableBusquedaObject';
+import { JusticiableBusquedaItem } from '../../../../../models/sjcs/JusticiableBusquedaItem';
 
 @Component({
   selector: 'app-tabla-justiciables',
@@ -33,6 +34,8 @@ export class TablaJusticiablesComponent implements OnInit {
   //Resultados de la busqueda
   @Input() datos;
   @Input() modoRepresentante;
+  @Input() nuevoInteresado;
+  @Input() nuevoContrario;
 
   @ViewChild("table") tabla: DataTable;
 
@@ -73,19 +76,123 @@ export class TablaJusticiablesComponent implements OnInit {
 
     this.persistenceService.setPaginacion(paginacion);
 
-    if (!this.modoRepresentante) {
-      this.persistenceService.clearDatos();
-      this.persistenceService.setDatos(evento);
-      this.persistenceService.clearBody();
-      this.router.navigate(["/gestionJusticiables"]);
-    } else {
-      this.persistenceService.clearBody();
-      this.persistenceService.setBody(evento);
-      this.router.navigate(["/gestionJusticiables"]);
+    if(this.nuevoInteresado){
+      if(this.checkInteresado(evento))      this.insertInteresado(evento);
+      else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"))
+      
     }
+    else if(this.nuevoContrario){
+      if(this.checkContrario(evento))  this.insertContrario(evento);
+      else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"))
 
+    }
+    else{
+      if (!this.modoRepresentante) {
+        this.persistenceService.clearDatos();
+        this.persistenceService.setDatos(evento);
+        this.persistenceService.clearBody();
+        this.router.navigate(["/gestionJusticiables"]);
+      } else {
+        this.persistenceService.clearBody();
+        this.persistenceService.setBody(evento);
+        this.router.navigate(["/gestionJusticiables"]);
+      }
+    }
   }
 
+  checkInteresado(justiciable){
+
+    
+    let interesados : any = sessionStorage.getItem("interesados");
+    if(interesados!="") interesados = JSON.parse(interesados);
+    let exist = false;
+
+    let filtros: JusticiableBusquedaItem = new JusticiableBusquedaItem();
+
+    if(this.persistenceService.getFiltrosAux() !=undefined){
+      filtros = this.persistenceService.getFiltrosAux();
+    }
+    else filtros = this.persistenceService.getFiltros();
+
+    if(interesados=="" || filtros.idRol=="1") exist = false;
+    else{
+      //Comprobamos que el justiciable no esta ya en la designacion
+      interesados.forEach(element => {
+        if(element.idPersona == justiciable.idPersona) exist = true;
+      });
+    }
+
+    return !exist;
+  }
+
+  insertInteresado(justiciable){
+    this.progressSpinner = true;
+
+      let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
+
+      let request = [ designa.idInstitucion,  justiciable.idpersona, designa.ano,  designa.idTurno, designa.numero]
+    this.sigaServices.post("designaciones_insertInteresado", request).subscribe(
+      data => {
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.progressSpinner = false;
+        this.router.navigate(["/fichaDesignaciones"]);
+    },
+    err => {
+      if (err != undefined && JSON.parse(err.error).error.description != "") {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+      } else {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+      }
+      this.progressSpinner = false;
+    },
+    () => {
+      this.progressSpinner = false;
+    }
+  );
+  }
+
+  checkContrario(justiciable){
+
+    let contrarios : any = sessionStorage.getItem("contrarios");
+    let exist = false;
+    if(contrarios!="") contrarios = JSON.parse(contrarios);
+
+    if(contrarios=="") exist = false;
+    else{
+      //Comprobamos que el justiciable no esta ya en la designacion
+      contrarios.forEach(element => {
+        if(element.idPersona == justiciable.idPersona) exist = true;
+      });
+    }
+
+    return !exist;
+  }
+
+  insertContrario(justiciable){
+    this.progressSpinner = true;
+
+      let designa: any = JSON.parse(sessionStorage.getItem("designaItemLink"));
+
+      let request = [ designa.idInstitucion,  justiciable.idpersona, designa.ano, designa.idTurno, designa.numero]
+    this.sigaServices.post("designaciones_insertContrario", request).subscribe(
+      data => {
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.progressSpinner = false;
+        this.router.navigate(["/fichaDesignaciones"]);
+    },
+    err => {
+      if (err != undefined && JSON.parse(err.error).error.description != "") {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+      } else {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+      }
+      this.progressSpinner = false;
+    },
+    () => {
+      this.progressSpinner = false;
+    }
+  );
+  }
   getCols() {
 
     this.cols = [

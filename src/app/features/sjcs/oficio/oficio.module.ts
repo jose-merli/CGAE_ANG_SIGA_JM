@@ -25,7 +25,10 @@ import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/primeng';
 import { TablaResultadoMixDAService } from '../../../commons/tabla-resultado-mix/tabla-resultado-mix-da.service';
 import { SaltosCompensacionesOficioModule } from './saltos-compensaciones-oficio/saltos-compensaciones-oficio.module';
-//import { DesignacionesComponent } from './designaciones/designaciones.component';
+import { Paginador2Module } from './designaciones/ficha-designaciones/paginador2/paginador2.module';
+import { MatSortModule } from '@angular/material';
+import { DetalleTarjetaProcuradorFichaDesignacionOficioComponent } from './designaciones/ficha-designaciones/detalle-tarjeta-procurador-ficha-designacion-oficio/detalle-tarjeta-procurador-ficha-designacion-oficio.component';
+import { DetalleTarjetaProcuradorFichaDesignaionOficioService } from './designaciones/ficha-designaciones/detalle-tarjeta-procurador-ficha-designacion-oficio/detalle-tarjeta-procurador-ficha-designaion-oficio.service';
 
 
 @NgModule({
@@ -54,10 +57,12 @@ import { SaltosCompensacionesOficioModule } from './saltos-compensaciones-oficio
                 FechaModule,
                 MultiSelectModule,
                 SaltosCompensacionesOficioModule,
+                MatSortModule,
         ],
 
         providers: [
-                TablaResultadoMixDAService
+                TablaResultadoMixDAService,
+                DetalleTarjetaProcuradorFichaDesignaionOficioService
         ]
 })
 export class OficioModule { }

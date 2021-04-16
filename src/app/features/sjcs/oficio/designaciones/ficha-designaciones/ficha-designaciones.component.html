@@ -67,8 +67,17 @@
                                         </app-detalle-tarjeta-documentacion-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Contrarios'">
-                                        <app-detalle-tarjeta-contrarios-ficha-designacion-oficio [campos]="campos">
+                                        <app-detalle-tarjeta-contrarios-ficha-designacion-oficio [contrarios]="contrarios" (searchContrarios)="searchContrarios($event)">
                                         </app-detalle-tarjeta-contrarios-ficha-designacion-oficio>
+                                    </div>
+                                    <div *ngIf="tarj.nombre == 'Procurador'">
+                                        <app-detalle-tarjeta-procurador-ficha-designacion-oficio [cabeceras]="cabeceras" [totalRegistros]="totalRegistros"
+                                        [seleccionarTodo]="seleccionarTodo" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" (modDatos)="modDatos($event)" (mostrar)="mostrar()">
+                                        </app-detalle-tarjeta-procurador-ficha-designacion-oficio>
+                                    </div>
+                                    <div *ngIf="tarj.nombre == 'Interesados'">
+                                        <app-detalle-tarjeta-interesados-ficha-designacion-oficio [interesados]="interesados" (searchInteresados)="searchInteresados($event)">
+                                        </app-detalle-tarjeta-interesados-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Actuaciones'">
                                         <app-detalle-tarjeta-actuaciones-ficha-designacion-oficio [campos]="campos"

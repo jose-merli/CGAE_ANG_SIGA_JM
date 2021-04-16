@@ -196,6 +196,7 @@ import { DestinatariosRetencionesComponent } from './features/sjcs/maestros/dest
 import { SolicitudesTurnosGuardiasComponent } from './features/sjcs/oficio/solicitudesTurnosGuardias/solicitudesTurnosGuardias.component';
 import { DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-datos-adicionales-ficha-designacion-oficio/detalle-tarjeta-datos-adicionales-ficha-designacion-oficio.component';
 import { DetalleTarjetaContrariosFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-contrarios-ficha-designacion-oficio/detalle-tarjeta-contrarios-ficha-designacion-oficio.component';
+import{ DetalleTarjetaInteresadosFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-interesados-ficha-designacion-oficio/detalle-tarjeta-interesados-ficha-designacion-oficio.component';
 
 import { GuardiasSolicitudesTurnosComponent } from './features/sjcs/guardia/solicitudes-turnos/solicitudes-turnos.component';
 import { GuardiasIncompatibilidadesComponent } from './features/sjcs/guardia/guardias-incompatibilidades/guardias-incompatibilidades.component';
@@ -373,7 +374,7 @@ import { GuardiaModule } from './features/sjcs/guardia/guardia.module';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
-import { MatExpansionModule } from '@angular/material/expansion';
+import { MatAccordion, MatExpansionModule } from '@angular/material/expansion';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -420,6 +421,9 @@ import { DetalleTarjetaDatosGeneralesFichaActuacionOficioComponent } from './fea
 import { DetalleTarjetaJustificacionFichaActuacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-ficha-designacion-oficio/ficha-actuacion-designa-oficio/detalle-tarjeta-justificacion-ficha-actuacion-oficio/detalle-tarjeta-justificacion-ficha-actuacion-oficio.component';
 import { DetalleTarjetaGestionFichaActuacionOficoComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-ficha-designacion-oficio/ficha-actuacion-designa-oficio/detalle-tarjeta-gestion-ficha-actuacion-ofico/detalle-tarjeta-gestion-ficha-actuacion-ofico.component';
 import { DetalleTarjetaDatosFacturacionFichaActuacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-ficha-designacion-oficio/ficha-actuacion-designa-oficio/detalle-tarjeta-datos-facturacion-ficha-actuacion-oficio/detalle-tarjeta-datos-facturacion-ficha-actuacion-oficio.component';
+import { DetalleTarjetaProcuradorFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-procurador-ficha-designacion-oficio/detalle-tarjeta-procurador-ficha-designacion-oficio.component';
+import { Paginador2Module } from './features/sjcs/oficio/designaciones/ficha-designaciones/paginador2/paginador2.module';
+
 
 @NgModule({
 	declarations: [
@@ -546,6 +550,7 @@ import { DetalleTarjetaDatosFacturacionFichaActuacionOficioComponent } from './f
 		SolicitudesTurnosGuardiasComponent,
 		DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent,
 		DetalleTarjetaContrariosFichaDesignacionOficioComponent,
+		DetalleTarjetaInteresadosFichaDesignacionOficioComponent,
 		FichaDesignacionesComponent,
 		DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent,
 		DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent,
@@ -593,6 +598,7 @@ import { DetalleTarjetaDatosFacturacionFichaActuacionOficioComponent } from './f
 		ComunicaResolucionesComponent,
 		ComunicaDesignacionesComponent,
 		CargasMasivasOficioComponent,
+		DetalleTarjetaProcuradorFichaDesignacionOficioComponent,
 
 		//Consultas
 		RecuperarConsultasComponent,
@@ -833,6 +839,7 @@ import { DetalleTarjetaDatosFacturacionFichaActuacionOficioComponent } from './f
 		SjcsModule,
 		OficioModule,
 		BusquedaAsuntosModule,
+		Paginador2Module,
 	],
 
 	exports: [],
