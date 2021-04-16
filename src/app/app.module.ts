@@ -374,7 +374,7 @@ import { GuardiaModule } from './features/sjcs/guardia/guardia.module';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
-import { MatExpansionModule } from '@angular/material/expansion';
+import { MatAccordion, MatExpansionModule } from '@angular/material/expansion';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -829,7 +829,7 @@ import { Paginador2Module } from './features/sjcs/oficio/designaciones/ficha-des
 		SjcsModule,
 		OficioModule,
 		BusquedaAsuntosModule,
-		Paginador2Module
+		Paginador2Module,
 	],
 
 	exports: [],

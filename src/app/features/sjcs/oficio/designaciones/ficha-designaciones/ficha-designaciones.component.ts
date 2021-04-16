@@ -433,16 +433,13 @@ jsonToRow(datos){
       let obj = [
         { type: 'text', value: element.ncolegiado},
         { type: 'text', value: element.apellidos1 +" "+ element.apellidos2 + ", " + element.nombre},
-        { type: 'text', value: element.tiponombre},
-        { type: 'text', value: element.descripcion},
-        { type: 'text', value: element.fechadesde},
-        { type: 'text', value: element.fechahasta},
+        { type: 'text', value: element.numerodesignacion},
+        { type: 'text', value: element.fechadesigna},
+        { type: 'text', value: element.observaciones},
+        { type: 'text', value: element.observaciones},
         { type: 'text', value: element.fechaalta},
-        { type: 'text', value: element.validado},
-        { type: 'text', value: element.fechaestado},
-        { type: 'text', value: element.idpersona},
-        { type: 'text', value: element.fechabt},
-        { type: 'text', value: element.nuevo}
+        { type: 'text', value: element.fecharenunciasolicita},
+        { type: 'text', value: element.fecharenunciaefectiva}
       ];
       let superObj = {
         id: index,
@@ -455,6 +452,56 @@ jsonToRow(datos){
   this.rowGroupsAux = this.gbtservice.getTableData(arr);
   this.totalRegistros = this.rowGroups.length;
 }
+/*
+guardarProcurador(event){
+  let array = [];
+  event.forEach(element => {
+    if(this.datos[element].validado == "Pendiente"){
+      if(this.datos[element].fechadesde != null){
+        this.datos[element].fechadesde=this.transformaFecha(this.datos[element].fechadesde);
+      }
+      if(this.datos[element].fechahasta != null){
+        this.datos[element].fechahasta=this.transformaFecha(this.datos[element].fechahasta);
+      }
+      if(this.datos[element].fechaalta != null){
+        this.datos[element].fechaalta=this.transformaFecha(this.datos[element].fechaalta);
+      }
+      if(this.datos[element].fechabt != null){
+        this.datos[element].fechabt=this.transformaFecha(this.datos[element].fechabt);
+      }
+      if(this.datos[element].fechaestado != null){
+        this.datos[element].fechaestado=this.transformaFecha(this.datos[element].fechaestado);
+      }
+      this.datos[element].validado = "Validada";
+      let tmp = this.datos[element];
+      delete tmp.tiponombre;
+      array.push(tmp);
+    }else{
+      this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("general.message.error.realiza.accion")});
+      this.progressSpinner = false;
+    }
+  });
+  this.updateBaja(array);
+}
+*/
+
+updateProcurador(event){
+  this.progressSpinner = true;
+  
+    this.sigaServices.post("designaciones_guardarProcurador", event).subscribe(
+      data => { 
+          let error = JSON.parse(data.body).error;
+          this.showMessage("info", this.translateService.instant("general.message.correct"), error.description);
+          this.progressSpinner = false;
+    },
+    err => {
+        let error = JSON.parse(err.body).error;
+        this.showMessage("info", this.translateService.instant("general.message.incorrect"), error.description);
+        this.progressSpinner = false;
+      }
+    );
+}
+
   searchContrarios(event){
     this.progressSpinner = true;
     let data = sessionStorage.getItem("designaItemLink");

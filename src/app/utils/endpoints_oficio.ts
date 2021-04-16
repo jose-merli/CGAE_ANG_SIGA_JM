@@ -79,6 +79,7 @@ export let endpoints_oficio: any = {
     create_NewDesigna: "oficio/designas/createnewDesigna",
     actuaciones_designacion: "oficio/designas/busquedaActDesigna",
     designaciones_busquedaProcurador: "oficio/designas/busquedaProcurador",
+    designaciones_guardarProcurador: "oficio/designas/guardarProcurador",
     actuaciones_designacion_anular: "oficio/designas/anularActDesigna",
     actuaciones_designacion_reactivar: "oficio/designas/reactivarActDesigna",
 

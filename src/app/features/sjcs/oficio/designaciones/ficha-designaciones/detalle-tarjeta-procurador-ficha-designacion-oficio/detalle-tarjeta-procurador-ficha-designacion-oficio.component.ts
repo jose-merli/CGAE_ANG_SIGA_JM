@@ -50,14 +50,13 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
   });}
 
   ngOnInit() {
+    this.mostrarDatos();
 
     this.totalRegistros = this.rowGroups.length;
 
     this.numCabeceras = this.cabeceras.length;
 
     this.numColumnas = this.numCabeceras;
-
-    this.mostrarDatos();
   }
 
   mostrarDatos(){
