@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Location } from '@angular/common';
+import { DatePipe, Location } from '@angular/common';
 import { DesignaItem } from '../../../../../models/sjcs/DesignaItem';
 import { TranslateService } from '../../../../../commons/translate';
 
@@ -232,13 +232,18 @@ export class FichaDesignacionesComponent implements OnInit {
   ];
 
   constructor( private location: Location, 
-    private  translateService: TranslateService) { }
+    private  translateService: TranslateService,
+    private datePipe: DatePipe) { }
 
   ngOnInit() {
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
     let designaItem = JSON.parse(sessionStorage.getItem("designaItemLink"));
     this.campos = designaItem;
-
+    if(sessionStorage.getItem("buscadorColegiados")){​​
+      let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
+      // sessionStorage.removeItem("buscadorColegiados");
+      this.listaTarjetas[0].opened = true;
+    }
     if(!this.nuevaDesigna){
       //EDICIÓN DESIGNA
       let camposResumen = [
@@ -267,7 +272,6 @@ export class FichaDesignacionesComponent implements OnInit {
           "value": ""
         }
       ];
-  
       let camposGenerales = [
         {
           "key": "Turno",
@@ -320,8 +324,61 @@ export class FichaDesignacionesComponent implements OnInit {
     }] */
     }else{
       //NUEVA DESIGNA
+      let camposResumen = [
+        {
+          "key": "Año/Número",
+          "value": ""
+        },
+        {
+          "key": "Letrado",
+          "value": ""
+        },
+        {
+          "key": "Estado",
+          "value": ""
+        },
+        {
+          "key": "Interesado",
+          "value": ""
+        },
+        {
+          "key": "Número Actuaciones",
+          "value": ""
+        },
+        {
+          "key": "Validado",
+          "value": ""
+        }
+      ];
+      let camposGenerales = [
+        {
+          "key": "Turno",
+          "value": ""
+        },
+        {
+          "key": "Fecha",
+          "value": this.formatDate(new Date())
+        },
+        {
+          "key": "Designación Art. 27-28",
+          "value": "NO"
+        }, {
+          "key": "Tipo",
+          "value": ""
+        }
+      ];
+  
+      this.tarjetaFija.campos = camposResumen;
+      this.listaTarjetas[0].campos = camposGenerales;
     }
     
+  }
+
+  ngOnChanges() {
+    if(sessionStorage.getItem("buscadorColegiados")){​​
+      let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
+      this.tarjetaFija.campos[1].value = busquedaColegiado.nColegiado;
+    }
   }
 
   ngAfterViewInit() {
@@ -376,6 +433,11 @@ export class FichaDesignacionesComponent implements OnInit {
     }
 
     return fecha;
+  }
+
+  formatDate(date) {
+    const pattern = 'dd/MM/yyyy';
+    return this.datePipe.transform(date, pattern);
   }
 
 }

@@ -102,28 +102,29 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       this.selectores[2].opciones=[{label: this.campos.nombreProcedimiento, value: ''}];
       this.getComboModulos();
       this.datePickers[0].value =  this.campos.fechaEstado;
+      this.datePickers[1].value =  this.campos.fechaFin;
     }else{
       this.selectores[0].opciones =[ 
       {label:'Activo', value:'V'},
       {label:'Finalizada', value:'F'},
       {label:'Anulada', value:'A'}];
       if(this.valorParametro == 1){
-        
+        this.getComboJuzgados();
       }else if(this.valorParametro == 2){
-
+        this.getComboJuzgados();
       }
       else if(this.valorParametro == 3){
-
+        this.getComboJuzgados();
       }
       else if(this.valorParametro == 4){
-
+        this.getComboJuzgados();
       }
       else if(this.valorParametro == 5){
-
+        this.getComboJuzgados();
+        this.getComboProcedimientos();
+        this.getComboModulos();
       }
-      this.getComboJuzgados();
-      this.getComboProcedimientos();
-      this.getComboModulos();
+      
     }
     
   }
