@@ -141,6 +141,7 @@ export class DetalleTarjetaContrariosFichaDesignacionOficioComponent implements 
 
   openTab(evento) {
     this.persistenceService.setBody(evento);
+    sessionStorage.setItem("origin","contrario");
     this.router.navigate(["/gestionJusticiables"]);
   }
 

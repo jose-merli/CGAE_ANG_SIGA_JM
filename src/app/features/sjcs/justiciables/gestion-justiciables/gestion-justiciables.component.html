@@ -50,6 +50,17 @@
 
       <app-asuntos *ngSwitchCase="'asuntos'" [showTarjeta]="ficha.activa" [body]="body" [fromJusticiable]="fromJusticiable" [modoEdicion]="modoEdicion"></app-asuntos>
 
+      <!-- showTarjeta: variable indica si se muestra o no la tarjeta -->
+      <!-- body: variable donde se le pasa la informacion de un justiciable -->
+      <!-- modoEdicion: variable indica si estamos en modo edicion o nuevo -->
+
+      <app-datos-abogado-contrario *ngSwitchCase="'abogado'" [showTarjeta]="ficha.activa" [body]="body"  [modoEdicion]="modoEdicion"></app-datos-abogado-contrario>
+    
+      <!-- showTarjeta: variable indica si se muestra o no la tarjeta -->
+      <!-- body: variable donde se le pasa la informacion de un justiciable -->
+      <!-- modoEdicion: variable indica si estamos en modo edicion o nuevo -->
+
+      <app-datos-procurador-contrario *ngSwitchCase="'procurador'" [showTarjeta]="ficha.activa" [body]="body" [modoEdicion]="modoEdicion"></app-datos-procurador-contrario>
     </div>
   </div>
 </div>

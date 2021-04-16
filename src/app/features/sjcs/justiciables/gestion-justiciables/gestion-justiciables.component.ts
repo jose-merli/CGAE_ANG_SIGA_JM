@@ -83,6 +83,12 @@ export class GestionJusticiablesComponent implements OnInit {
           if (this.persistenceService.getFichasPosibles() != null && this.persistenceService.getFichasPosibles() != undefined) {
             this.fichasPosibles = this.persistenceService.getFichasPosibles();
             this.fromJusticiable = this.fichasPosibles[0].activa;
+        
+            if(sessionStorage.getItem("origin")=="contrario"){
+              sessionStorage.removeItem('origin');
+              this.fichasPosibles[5].activa=true;
+              this.fichasPosibles[6].activa=true;
+            }
           }
 
           //Carga de la persistencia 

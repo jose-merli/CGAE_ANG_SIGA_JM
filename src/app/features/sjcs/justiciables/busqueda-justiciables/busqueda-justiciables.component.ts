@@ -51,6 +51,14 @@ export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
     {
       key: "asuntos",
       activa: false
+    },
+    {
+      key: "abogado",
+      activa: false
+    },
+    {
+      key: "procurador",
+      activa: false
     }
 
   ];

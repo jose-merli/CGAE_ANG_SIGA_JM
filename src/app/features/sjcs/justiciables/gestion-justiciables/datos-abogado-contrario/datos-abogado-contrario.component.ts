@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { JusticiableItem } from '../../../../../models/sjcs/JusticiableItem';
 
 @Component({
   selector: 'app-datos-abogado-contrario',
@@ -6,6 +7,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./datos-abogado-contrario.component.scss']
 })
 export class DatosAbogadoContrarioComponent implements OnInit {
+
+
+  showTarjetaPermiso: boolean = false;
+
+  @Input() body: JusticiableItem;
+  @Input() modoEdicion;
+  @Input() showTarjeta;
 
   constructor() { }
 
