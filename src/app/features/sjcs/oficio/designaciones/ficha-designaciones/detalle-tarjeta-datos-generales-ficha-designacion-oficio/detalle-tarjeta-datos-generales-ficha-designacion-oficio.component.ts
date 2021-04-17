@@ -20,6 +20,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
   nuevaDesigna: any;
   checkArt: boolean;
   @Input() campos;
+  @Input() selectedValue;
   anio = {
     value: "",
     disable: false

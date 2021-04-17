@@ -133,7 +133,7 @@ export class FichaDesignacionesComponent implements OnInit {
       campos: [
         {
           "key": "Nº Colegiado",
-          "value": this.designaItem.numColegiado
+          "value": ""
         },
         {
           "key": "Nombre",

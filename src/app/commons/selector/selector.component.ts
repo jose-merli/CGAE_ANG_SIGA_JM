@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SigaServices } from '../../_services/siga.service';
  
 @Component({
@@ -10,6 +10,9 @@ export class SelectorComponent implements OnInit {
   @Input() selector;
   @Input() i;
   @Input() textoVisible = "Seleccionar";
+  @Output() busqueda = new EventEmitter<boolean>();
+  @Output() busquedaProcedimiento = new EventEmitter<boolean>();
+  @Output() busquedaModulo = new EventEmitter<boolean>();
   opcionSeleccionado: [number]  = [0];
   verSeleccion: [number];
   nuevaDesigna: any;
@@ -44,19 +47,44 @@ export class SelectorComponent implements OnInit {
       this.textoVisible = this.selector.opciones[0].label;
       this.disable = false;
     }else if(this.selector.nombre == "Juzgado" && this.nuevaDesigna){
-      this.disable = true;
+      // this.disable = true;
+      this.getComboJuzgados(this.selector);
     }
     if(this.selector.nombre == "Procedimiento" && !this.nuevaDesigna){
       this.getComboProcedimientos(this.selector);
       this.textoVisible = this.selector.opciones[0].label;
       this.disable = false;
     }else if(this.selector.nombre == "Procedimiento" && this.nuevaDesigna){
-      this.disable = true;
+      // this.disable = true;
     }
   }
   capturar() {
     // Pasamos el valor seleccionado a la variable verSeleccion
     this.verSeleccion = this.opcionSeleccionado;
+    if(this.selector.nombre == "Juzgado"){
+      sessionStorage.setItem(
+        "juzgadoSeleccioadno",
+        JSON.stringify(this.verSeleccion)
+      );
+      this.busqueda.emit(false);
+    }
+
+    if(this.selector.nombre == "Procedimiento"){
+      sessionStorage.setItem(
+        "procedimientoSeleccionado",
+        JSON.stringify(this.verSeleccion)
+      );
+      this.busquedaProcedimiento.emit(false);
+    }
+    
+    if(this.selector.nombre == "Módulo"){
+      sessionStorage.setItem(
+        "moduloSeleccionado",
+        JSON.stringify(this.verSeleccion)
+      );
+      this.busquedaModulo.emit(false);
+    }
+    
   }
   getComboJuzgados(selectorJuzgado) {
 

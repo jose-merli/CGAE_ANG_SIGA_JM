@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { Message } from 'primeng/components/common/api';
 import { ParametroDto } from '../../../../../../models/ParametroDto';
 import { ParametroRequestDto } from '../../../../../../models/ParametroRequestDto';
@@ -14,7 +14,9 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
   msgs: Message[] = [];
   nuevaDesigna: any;
   valorParametro: any;
+  valorParametroNProcedimiento: any;
   searchParametros: ParametroDto = new ParametroDto();
+  searchParametrosFormatoNProcedimiento: ParametroDto = new ParametroDto();
   datosBuscar: any[];
   estado: any;
   @Input() campos;
@@ -71,8 +73,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
 
   ngOnInit() {
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
-    if(!this.nuevaDesigna){
-      let parametro = new ParametroRequestDto();
+    let parametro = new ParametroRequestDto();
     parametro.idInstitucion = this.campos.idInstitucion;
     parametro.modulo = "SCS";
     parametro.parametrosGenerales = "CONFIGURAR_COMBO_DESIGNA";
@@ -94,6 +95,31 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         () => {
         }
       );
+    parametro = new ParametroRequestDto();
+    parametro.idInstitucion = this.campos.idInstitucion;
+    parametro.modulo = "SCS";
+    parametro.parametrosGenerales = "FORMATO_VALIDACION_NPROCEDIMIENTO_DESIGNA";
+    this.sigaServices
+      .postPaginado("parametros_search", "?numPagina=1", parametro)
+      .subscribe(
+        data => {
+          this.searchParametrosFormatoNProcedimiento = JSON.parse(data["body"]);
+          this.datosBuscar = this.searchParametros.parametrosItems;
+          this.datosBuscar.forEach(element => {
+            if(element.parametro == "FORMATO_VALIDACION_NPROCEDIMIENTO_DESIGNA" && (element.idInstitucion == 0 || element.idInstitucion == element.idinstitucionActual)){
+              this.valorParametroNProcedimiento = element.valor;
+              console.log("NUEVO PARAMETRO");
+              console.log(this.valorParametroNProcedimiento);
+            }
+          });
+        },
+        err => {
+          console.log(err);
+        },
+        () => {
+        }
+      );
+    if(!this.nuevaDesigna){
       this.inputs[0].value = this.campos.nig;
       this.inputs[1].value = this.campos.numProcedimiento;
       // this.estado = this.campos.art27;
@@ -108,25 +134,55 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       {label:'Activo', value:'V'},
       {label:'Finalizada', value:'F'},
       {label:'Anulada', value:'A'}];
-      if(this.valorParametro == 1){
-        this.getComboJuzgados();
-      }else if(this.valorParametro == 2){
-        this.getComboJuzgados();
-      }
-      else if(this.valorParametro == 3){
-        this.getComboJuzgados();
-      }
-      else if(this.valorParametro == 4){
-        this.getComboJuzgados();
-      }
-      else if(this.valorParametro == 5){
-        this.getComboJuzgados();
-        this.getComboProcedimientos();
-        this.getComboModulos();
-      }
+      this.getComboJuzgados();
       
     }
     
+  }
+
+  busquedaCombos(event) {
+    let arrayJuzgado = JSON.parse(sessionStorage.getItem("juzgadoSeleccioadno"));
+    if(JSON.parse(sessionStorage.getItem("juzgadoSeleccioadno"))){
+      if(this.valorParametro == 1){
+        this.getComboProcedimientosConJuzgado(arrayJuzgado[0]);
+      }
+      if(this.valorParametro == 2){
+        this.getComboModulosConJuzgado(arrayJuzgado[0]);
+      }
+      if(this.valorParametro == 3){
+        this.getComboModulosConJuzgado(arrayJuzgado[0]);
+        this.getComboProcedimientos();
+      }
+      if(this.valorParametro == 4){
+        this.getComboProcedimientosConJuzgado(arrayJuzgado[0]);
+        this.getComboModulos();
+      }
+      if(this.valorParametro == 5){
+        this.getComboProcedimientos();
+        this.getComboModulos();
+      }
+      sessionStorage.removeItem("juzgadoSeleccioadno");
+    }
+  }
+
+  busquedaCombosModulo(event){
+    let arrayModulo = JSON.parse(sessionStorage.getItem("moduloSeleccionado"));
+    if(JSON.parse(sessionStorage.getItem("moduloSeleccionado"))){
+      if(this.valorParametro == 2){
+        this.getComboProcedimientosConModulo(arrayModulo[0]);
+      }
+      sessionStorage.removeItem("moduloSeleccionado");
+   }
+  }
+
+  busquedaCombosProcedimiento(event){
+    let arrayProcedimiento = JSON.parse(sessionStorage.getItem("procedimientoSeleccionado"));
+    if(JSON.parse(sessionStorage.getItem("procedimientoSeleccionado"))){
+      if(this.valorParametro == 1){
+        this.getcCmboModulosConProcedimientos(arrayProcedimiento[0]);
+      }
+      sessionStorage.removeItem("procedimientoSeleccionado");
+    }
   }
 
   showMsg(severity, summary, detail) {
@@ -184,6 +240,74 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     );
   }
 
+  getComboDelitos() {
+
+    this.sigaServices.get("combo_comboDelitos").subscribe(
+      n => {
+        this.selectores[4].opciones = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }, () => {
+        this.arregloTildesCombo( this.selectores[4].opciones);
+      }
+    );
+  }
+
+  getComboProcedimientosConJuzgado(idJuzgado) {
+    this.sigaServices.post("combo_comboProcedimientosConJuzgado",idJuzgado).subscribe(
+      n => {
+        this.selectores[2].opciones = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }, () => {
+        this.arregloTildesCombo(this.selectores[2].opciones);
+      }
+    );
+  }
+
+   getComboProcedimientosConModulo(idProcedimiento) {
+
+    this.sigaServices.post("combo_comboProcedimientosConModulo",idProcedimiento).subscribe(
+      n => {
+        this.selectores[2].opciones = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }, () => {
+        this.arregloTildesCombo(this.selectores[2].opciones);
+      }
+    );
+  }
+
+  getComboModulosConJuzgado(idJuzgado) {
+
+    this.sigaServices.post("combo_comboModulosConJuzgado",idJuzgado).subscribe(
+      n => {
+        this.selectores[3].opciones = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }, () => {
+        this.arregloTildesCombo( this.selectores[3].opciones);
+      }
+    );
+  }
+
+  getcCmboModulosConProcedimientos(idPretension) {
+
+    this.sigaServices.post("combo_comboModulosConProcedimientos",idPretension).subscribe(
+      n => {
+        this.selectores[3].opciones = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }, () => {
+        this.arregloTildesCombo( this.selectores[3].opciones);
+      }
+    );
+  }
   arregloTildesCombo(combo) {
     if (combo != undefined)
       combo.map(e => {
@@ -200,6 +324,18 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
           }
         }
       });
+  }
+
+  changeNProcedimiento(inputTitle){
+    if(inputTitle.nombre == "Nº Procedimiento" && this.valorParametroNProcedimiento != null && this.valorParametroNProcedimiento != ""){
+      if(this.validaFormatoNrocedimiento(inputTitle.value)){
+        this.showMsg('error', 'El formato del Nº Procedimiento no es correcto', '');
+      }
+    }
+  }
+
+  validaFormatoNrocedimiento(inputTitle){
+    return false;
   }
 
 }
