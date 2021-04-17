@@ -1,9 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ActuacionDesignaObject } from '../../../../../../models/sjcs/ActuacionDesignaObject';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { ActuacionDesignaItem } from '../../../../../../models/sjcs/ActuacionDesignaItem';
-import { DatePipe } from '@angular/common';
 import { Message } from 'primeng/api';
+import { TranslateService } from '../../../../../../commons/translate/translation.service';
+import { Router } from '@angular/router';
 
 export interface Col {
   field: string,
@@ -19,8 +19,10 @@ export interface Col {
 export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements OnInit {
 
   @Input() campos;
+  @Input() actuacionesDesignaItems: ActuacionDesignaItem[];
 
-  actuacionesDesignaItems: ActuacionDesignaItem[];
+  @Output() buscarEvent = new EventEmitter<boolean>();
+
   cols: Col[] = [
     {
       field: 'fechaActuacion',
@@ -63,56 +65,19 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
   actuacionesSeleccionadas: ActuacionDesignaItem[] = [];
   msgs: Message[] = [];
 
-  constructor(private sigaServices: SigaServices, private datepipe: DatePipe) { }
+  constructor
+    (
+      private sigaServices: SigaServices,
+      private translateService: TranslateService,
+      private router: Router
+    ) { }
 
   ngOnInit() {
-
-    this.getActuacionesDesigna();
-  }
-
-  getActuacionesDesigna(historico = false) {
-
-    this.progressSpinner = true;
-
-    const params = {
-      anio: this.campos.ano.split('/')[0].replace('D', ''),
-      idTurno: this.campos.idTurno,
-      numero: this.campos.codigo,
-      historico: historico
-    };
-
-    this.sigaServices.post("actuaciones_designacion", params).subscribe(
-      data => {
-        this.progressSpinner = false;
-
-        let object: ActuacionDesignaObject = JSON.parse(data.body);
-
-        if (object.error != null) {
-          console.log('Se ha producido un error');
-          console.log(object.error);
-        } else {
-          this.actuacionesDesignaItems = object.actuacionesDesignaItems;
-          console.log("file: detalle-tarjeta-actuaciones-ficha-designacion-oficio.component.ts ~ line 87 ~ DetalleTarjetaActuacionesFichaDesignacionOficioComponent ~ getActuacionesDesigna ~ actuacionesDesignaItems", this.actuacionesDesignaItems)
-          this.modifyData();
-        }
-      },
-      err => {
-        this.progressSpinner = false;
-        console.log(err);
-      }
-    );
-  }
-
-  modifyData() {
-    this.actuacionesDesignaItems.forEach(el => {
-      el.validadaTexto = el.validada ? 'Sí' : 'No'
-      el.fechaActuacion = this.datepipe.transform(el.fechaActuacion, 'dd/MM/yyyy');
-      el.fechaJustificacion = this.datepipe.transform(el.fechaJustificacion, 'dd/MM/yyyy');
-    });
   }
 
   toogleHistory(value: boolean) {
-    this.getActuacionesDesigna(value);
+    this.actuacionesSeleccionadas = [];
+    this.buscarEvent.emit(value);
     this.historico = value;
   }
 
@@ -147,15 +112,16 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
   }
 
   anular() {
+
     this.progressSpinner = true;
     let error = false;
 
     if (this.actuacionesSeleccionadas.length > 0) {
-      const accionesRequest = [];
+      let actuacionesRequest = [];
 
       this.actuacionesSeleccionadas.forEach(el => {
         if (!el.facturado) {
-          accionesRequest.push(el);
+          actuacionesRequest.push(el);
         } else {
           error = true;
         }
@@ -165,13 +131,18 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
         this.showMessage({ severity: 'error', summary: 'Error', detail: 'Alguno de los elementos seleccionados no puede anularse porque se encuentra facturado' });
       }
 
-      this.sigaServices.post("actuaciones_designacion_anular", this.actuacionesSeleccionadas).subscribe(
+      this.sigaServices.post("actuaciones_designacion_anular", actuacionesRequest).subscribe(
         data => {
           this.progressSpinner = false;
           const resp = JSON.parse(data.body);
 
           if (resp.status == 'OK') {
-            this.getActuacionesDesigna();
+            this.actuacionesSeleccionadas = [];
+            this.buscarEvent.emit(false);
+          }
+
+          if (resp.error != null && resp.error.descripcion != null) {
+            this.showMessage({ severity: 'error', summary: 'Error', detail: resp.error.descripcion });
           }
 
         },
@@ -183,6 +154,102 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
 
     }
 
+  }
+
+  reactivar() {
+    this.progressSpinner = true;
+    let error = false;
+
+    if (this.actuacionesSeleccionadas.length > 0) {
+
+      let actuacionesRequest = [];
+
+      this.actuacionesSeleccionadas.forEach(el => {
+        if (!el.facturado) {
+          actuacionesRequest.push(el);
+        } else {
+          error = true;
+        }
+      });
+
+      if (error) {
+        this.showMessage({ severity: 'error', summary: 'Error', detail: 'Alguno de los elementos seleccionados no puede reactivarse porque se encuentra facturado' });
+      }
+
+      this.sigaServices.post("actuaciones_designacion_reactivar", actuacionesRequest).subscribe(
+        data => {
+          this.progressSpinner = false;
+          const resp = JSON.parse(data.body);
+
+          if (resp.status == 'OK') {
+            this.actuacionesSeleccionadas = [];
+            this.buscarEvent.emit(true);
+          }
+
+          if (resp.error != null && resp.error.descripcion != null) {
+            this.showMessage({ severity: 'error', summary: 'Error', detail: resp.error.descripcion });
+          }
+
+        },
+        err => {
+          this.progressSpinner = false;
+          console.log(err);
+        }
+      );
+
+    }
+
+  }
+
+  eliminar() {
+    this.progressSpinner = true;
+    let error = false;
+
+    if (this.actuacionesSeleccionadas.length > 0) {
+      let actuacionesRequest = [];
+
+      this.actuacionesSeleccionadas.forEach(el => {
+        if (!el.facturado) {
+          actuacionesRequest.push(el);
+        } else {
+          error = true;
+        }
+      });
+
+      if (error) {
+        this.showMessage({ severity: 'error', summary: 'Error', detail: 'Alguno de los elementos seleccionados no puede anularse porque se encuentra facturado' });
+      }
+
+      this.sigaServices.post("actuaciones_designacion_eliminar", actuacionesRequest).subscribe(
+        data => {
+          this.progressSpinner = false;
+          const resp = JSON.parse(data.body);
+
+          if (resp.status == 'OK') {
+            this.actuacionesSeleccionadas = [];
+            this.buscarEvent.emit(false);
+          }
+
+          if (resp.error != null && resp.error.descripcion != null) {
+
+            if (resp.error.code == '500') this.showMessage({ severity: 'error', summary: 'Error', detail: resp.error.descripcion });
+            if (resp.error.code == '200') this.showMessage({ severity: 'success', summary: 'Correcto', detail: this.translateService.instant(resp.error.descripcion) });
+
+          }
+
+        },
+        err => {
+          this.progressSpinner = false;
+          console.log(err);
+        }
+      );
+
+    }
+
+  }
+
+  nuevo() {
+    this.router.navigate(['/fichaActDesigna']);
   }
 
 }

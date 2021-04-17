@@ -145,7 +145,6 @@ export class FiltrosInscripciones implements OnInit {
         })
       });
     }   
-    //EN PROCESO
     else{ 
       sessionStorage.setItem("origin","newInscrip");
       this.router.navigate(["/buscadorColegiados"]); 

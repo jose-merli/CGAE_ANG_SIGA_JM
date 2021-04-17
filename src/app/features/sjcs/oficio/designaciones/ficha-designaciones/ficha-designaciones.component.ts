@@ -1,7 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { DatePipe, Location } from '@angular/common';
 import { DesignaItem } from '../../../../../models/sjcs/DesignaItem';
 import { TranslateService } from '../../../../../commons/translate';
+import { SigaServices } from '../../../../../_services/siga.service';
+import { ActuacionDesignaItem } from '../../../../../models/sjcs/ActuacionDesignaItem';
+import { ActuacionDesignaObject } from '../../../../../models/sjcs/ActuacionDesignaObject';
+import { Message } from 'primeng/api';
+import { Row, DetalleTarjetaProcuradorFichaDesignaionOficioService } from './detalle-tarjeta-procurador-ficha-designacion-oficio/detalle-tarjeta-procurador-ficha-designaion-oficio.service';
+import { ProcuradorItem } from '../../../../../models/sjcs/ProcuradorItem';
+import { DetalleTarjetaContrariosFichaDesignacionOficioComponent } from './detalle-tarjeta-contrarios-ficha-designacion-oficio/detalle-tarjeta-contrarios-ficha-designacion-oficio.component';
+import { DetalleTarjetaInteresadosFichaDesignacionOficioComponent } from './detalle-tarjeta-interesados-ficha-designacion-oficio/detalle-tarjeta-interesados-ficha-designacion-oficio.component';
 
 @Component({
   selector: 'app-ficha-designaciones',
@@ -10,9 +18,21 @@ import { TranslateService } from '../../../../../commons/translate';
 })
 export class FichaDesignacionesComponent implements OnInit {
 
+  designaItem = JSON.parse(sessionStorage.getItem("designaItemLink"));
+  procurador: ProcuradorItem = new ProcuradorItem();
+
+
+  @ViewChild(DetalleTarjetaContrariosFichaDesignacionOficioComponent) tarjetaContrarios;
+  @ViewChild(DetalleTarjetaInteresadosFichaDesignacionOficioComponent) tarjetaInteresados;
+
   rutas: string[] = ['SJCS', 'EJGS'];
-  campos: any;
+  campos: DesignaItem = new DesignaItem();
+  procuradores: any;
   nuevaDesigna: any;
+  progressSpinner: boolean = false;
+  contrarios: any;
+  interesados: any;
+  msgs;
   tarjetaFija = {
     nombre: "Información Resumen",
     icono: 'fas fa-clipboard',
@@ -90,16 +110,7 @@ export class FichaDesignacionesComponent implements OnInit {
       detalle: true,
       fixed: false,
       opened: false,
-      campos: [
-        {
-          "key": "Identificación",
-          "value": "76543287T"
-        },
-        {
-          "key": "Nombre",
-          "value": "sfsd dfgdg, Juan"
-        }
-      ]
+      campos: []
     },
     {
       id: 'sjcsDesigContra',
@@ -122,7 +133,7 @@ export class FichaDesignacionesComponent implements OnInit {
       campos: [
         {
           "key": "Nº Colegiado",
-          "value": "6492"
+          "value": this.designaItem.numColegiado
         },
         {
           "key": "Nombre",
@@ -207,12 +218,7 @@ export class FichaDesignacionesComponent implements OnInit {
       detalle: true,
       fixed: false,
       opened: false,
-      campos: [
-        {
-          "key": "Nº total",
-          "value": "5"
-        }
-      ]
+      campos: []
     },
     {
       id: 'sjcsDesigDatFac',
@@ -231,9 +237,26 @@ export class FichaDesignacionesComponent implements OnInit {
     },
   ];
 
-  constructor( private location: Location, 
-    private  translateService: TranslateService,
-    private datePipe: DatePipe) { }
+  seleccionarTodo = false;
+  totalRegistros = 0;
+  rowGroups: Row[];
+  rowGroupsAux: Row[];
+  selectedRow: Row;
+  cabeceras = [
+    { id: "fecha", name: "dato.jgr.guardia.saltcomp.fecha" },
+    { id: "aninum", name: "justiciaGratuita.ejg.datosGenerales.annioNum" },
+    { id: "nColegiado", name: "censo.resultadosSolicitudesModificacion.literal.nColegiado" },
+    { id: "nombre", name: "justiciaGratuita.oficio.designas.contrarios.procurador" },
+    { id: "motivo", name: "censo.datosHistorico.literal.motivo" },
+    { id: "observaciones", name: "censo.nuevaSolicitud.observaciones" },
+    { id: "fechasolicitud", name: "formacion.busquedaInscripcion.fechaSolicitud" },
+    { id: "fechaefectiva", name: "administracion.auditoriaUsuarios.literal.fechaEfectiva" },
+  ];
+
+  actuacionesDesignaItems: ActuacionDesignaItem[] = [];
+
+  constructor(private location: Location,
+    private translateService: TranslateService, private sigaServices: SigaServices, private datepipe: DatePipe, private gbtservice: DetalleTarjetaProcuradorFichaDesignaionOficioService) { }
 
   ngOnInit() {
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
@@ -244,7 +267,9 @@ export class FichaDesignacionesComponent implements OnInit {
       // sessionStorage.removeItem("buscadorColegiados");
       this.listaTarjetas[0].opened = true;
     }
-    if(!this.nuevaDesigna){
+
+    if (!this.nuevaDesigna) {
+      this.mostrar();
       //EDICIÓN DESIGNA
       let camposResumen = [
         {
@@ -272,6 +297,7 @@ export class FichaDesignacionesComponent implements OnInit {
           "value": ""
         }
       ];
+
       let camposGenerales = [
         {
           "key": "Turno",
@@ -289,7 +315,7 @@ export class FichaDesignacionesComponent implements OnInit {
           "value": designaItem.descripcionTipoDesigna
         }
       ];
-  
+
       this.tarjetaFija.campos = camposResumen;
       this.listaTarjetas[0].campos = camposGenerales;
       //Actualizar para que los campos se rellenen en base a la tabla de la tarjeta contrarios
@@ -370,8 +396,17 @@ export class FichaDesignacionesComponent implements OnInit {
   
       this.tarjetaFija.campos = camposResumen;
       this.listaTarjetas[0].campos = camposGenerales;
+      /* this.listaTarjetas[4].enlaces=[{
+      id: null,
+          ref: null,
+          nombre: this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.vacio')
+      }] */
+      this.searchContrarios(false);
+      //Actualizar para que los campos se rellenen en base a la tabla de la tarjeta interesados
+      this.searchInteresados();
     }
-    
+    this.getActuacionesDesigna(false);
+
   }
 
   ngOnChanges() {
@@ -437,7 +472,406 @@ export class FichaDesignacionesComponent implements OnInit {
 
   formatDate(date) {
     const pattern = 'dd/MM/yyyy';
-    return this.datePipe.transform(date, pattern);
+    return this.datepipe.transform(date, pattern);
+  }
+
+  clear() {
+    this.msgs = [];
+  }
+
+  getActuacionesDesigna(historico: boolean) {
+
+    this.progressSpinner = true;
+
+    const params = {
+      anio: this.campos.ano.toString().split('/')[0].replace('D', ''),
+      idTurno: this.campos.idTurno,
+      numero: this.campos.codigo,
+      historico: historico
+    };
+
+    this.sigaServices.post("actuaciones_designacion", params).subscribe(
+      data => {
+        this.progressSpinner = false;
+
+        let object: ActuacionDesignaObject = JSON.parse(data.body);
+
+        if (object.error != null && object.error.description != null) {
+          this.showMessage('error', 'Error', object.error.description.toString());
+        } else {
+          let resp = object.actuacionesDesignaItems;
+
+          let justificadas = 0;
+          let validadas = 0;
+          let facturadas = 0;
+          let total = 0;
+
+          resp.forEach(el => {
+
+            if (el.validada) {
+              validadas += 1;
+            }
+
+            if (el.facturado) {
+              facturadas += 1;
+            }
+
+            if (el.fechaJustificacion != '') {
+              justificadas += 1;
+            }
+
+            el.validadaTexto = el.validada ? 'Sí' : 'No'
+            el.fechaActuacion = this.datepipe.transform(el.fechaActuacion, 'dd/MM/yyyy');
+            el.fechaJustificacion = this.datepipe.transform(el.fechaJustificacion, 'dd/MM/yyyy');
+          });
+          this.actuacionesDesignaItems = resp;
+
+          let tarj = this.listaTarjetas.find(tarj => tarj.id === 'sjcsDesigAct');
+          tarj.campos = [];
+          total = validadas + facturadas + justificadas;
+          if (this.actuacionesDesignaItems.length == 0) {
+
+            tarj.campos = [
+              {
+                "key": "Nº total",
+                "value": "No existen actuaciones asociadas a la designación"
+              }
+            ];
+          } else if (this.actuacionesDesignaItems.length == 1) {
+
+            let act = this.actuacionesDesignaItems[0];
+
+            let estado = '';
+
+            if (act.facturado) {
+              estado = 'Facturada';
+            } else if (act.anulada) {
+              estado = 'Anulada';
+            } else if (!act.validada) {
+              estado = 'Activa';
+            } else if (act.validada) {
+              estado = 'Validada';
+            }
+
+            tarj.campos = [
+              {
+                "key": "Fecha",
+                "value": act.fechaActuacion
+              },
+              {
+                "key": "Módulo",
+                "value": act.modulo
+              },
+              {
+                "key": "Acreditación",
+                "value": act.acreditacion
+              },
+              {
+                "key": "Estado",
+                "value": estado
+              }
+            ];
+
+          } else {
+
+            tarj.campos = [
+              {
+                "key": "Justificadas",
+                "value": justificadas.toString()
+              },
+
+              {
+                "key": "Validadas",
+                "value": validadas.toString()
+              },
+
+              {
+                "key": "Facturadas",
+                "value": facturadas.toString()
+              },
+
+              {
+                "key": "Número total",
+                "value": total.toString()
+              }
+            ];
+            console.log("🚀 ~ file: ficha-designaciones.component.ts ~ line 416 ~ FichaDesignacionesComponent ~ getActuacionesDesigna ~ this.actuacionesDesignaItems", this.actuacionesDesignaItems)
+          }
+        }
+      });
+  }
+
+  modDatos(event) {
+    console.log(event);
+
+    let array = [];
+    let array2 = [];
+
+    event.forEach(element => {
+      element.cells.forEach(dato => {
+        array.push(dato.value);
+      });
+      array2.push(array);
+      array = [];
+    });
+    console.log(array);
+    console.log(array2);
+    //this.guardar(array2);
+  }
+
+  mostrar() {
+    console.log(this.campos);
+    let procurador = [this.campos.numColegiado, String(this.campos.idInstitucion)];
+    this.sigaServices.post("designaciones_busquedaProcurador", procurador).subscribe(
+      n => {
+        this.procurador = JSON.parse(n.body).ProcuradoresItem;
+        this.procuradores.forEach(element => {
+
+          element.ncolegiado = +element.ncolegiado;
+        });
+
+        //this.jsonToRow(this.procuradores);
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+        console.log(err);
+      }
+    );
+  }
+
+  jsonToRow(datos) {
+    console.log(datos);
+    let arr = [];
+
+    datos.forEach((element, index) => {
+      let obj = [
+        { type: 'text', value: element.ncolegiado },
+        { type: 'text', value: element.apellidos1 + " " + element.apellidos2 + ", " + element.nombre },
+        { type: 'text', value: element.numerodesignacion },
+        { type: 'text', value: element.fechadesigna },
+        { type: 'text', value: element.observaciones },
+        { type: 'text', value: element.observaciones },
+        { type: 'text', value: element.fechaalta },
+        { type: 'text', value: element.fecharenunciasolicita },
+        { type: 'text', value: element.fecharenunciaefectiva }
+      ];
+      let superObj = {
+        id: index,
+        row: obj
+      };
+
+      arr.push(superObj);
+    });
+    this.rowGroups = this.gbtservice.getTableData(arr);
+    this.rowGroupsAux = this.gbtservice.getTableData(arr);
+    this.totalRegistros = this.rowGroups.length;
+  }
+  /*
+  guardarProcurador(event){
+    let array = [];
+    event.forEach(element => {
+      if(this.datos[element].validado == "Pendiente"){
+        if(this.datos[element].fechadesde != null){
+          this.datos[element].fechadesde=this.transformaFecha(this.datos[element].fechadesde);
+        }
+        if(this.datos[element].fechahasta != null){
+          this.datos[element].fechahasta=this.transformaFecha(this.datos[element].fechahasta);
+        }
+        if(this.datos[element].fechaalta != null){
+          this.datos[element].fechaalta=this.transformaFecha(this.datos[element].fechaalta);
+        }
+        if(this.datos[element].fechabt != null){
+          this.datos[element].fechabt=this.transformaFecha(this.datos[element].fechabt);
+        }
+        if(this.datos[element].fechaestado != null){
+          this.datos[element].fechaestado=this.transformaFecha(this.datos[element].fechaestado);
+        }
+        this.datos[element].validado = "Validada";
+        let tmp = this.datos[element];
+        delete tmp.tiponombre;
+        array.push(tmp);
+      }else{
+        this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("general.message.error.realiza.accion")});
+        this.progressSpinner = false;
+      }
+    });
+    this.updateBaja(array);
+  }
+  */
+
+  updateProcurador(event) {
+    this.progressSpinner = true;
+
+    this.sigaServices.post("designaciones_guardarProcurador", event).subscribe(
+      data => {
+        let error = JSON.parse(data.body).error;
+        this.showMessage("info", this.translateService.instant("general.message.correct"), error.description);
+        this.progressSpinner = false;
+      },
+      err => {
+        let error = JSON.parse(err.body).error;
+        this.showMessage("info", this.translateService.instant("general.message.incorrect"), error.description);
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  searchContrarios(event) {
+    this.progressSpinner = true;
+    let data = sessionStorage.getItem("designaItemLink");
+    let designaItem = JSON.parse(data);
+
+    let item = [designaItem.idTurno.toString(), designaItem.nombreTurno, designaItem.numero.toString(), designaItem.ano, event];
+    /* ano: "D2021/4330"
+nombreTurno: "ZELIMINAR-CIJAECI05 - MATRIMONIAL CONTENCIOSO JAÉN" */
+
+    this.sigaServices.post("designaciones_listaContrarios", item).subscribe(
+      n => {
+
+        this.contrarios = JSON.parse(n.body);
+        let primero = this.contrarios[0];
+        //Columnas a obtener:
+        //Identificador: nif/pasaporte del id persona del contrario. A partir de SCS_CONTRARIOSDESIGNA.IDPERSONA.
+        //Apellido, nombre de dicha persona. A partir de SCS_CONTRARIOSDESIGNA.IDPERSONA.
+        //nº colegiado, apellidos y nombre del abogado del contrario. Extraer de las columnas IDABOGADOCONTRARIO y NOMBREABOGADOCONTRARIO de SCS_CONTRARIOSDESIGNA.
+        //nº colegiado, apellidos y nombre del procurador del contrario. SCS_CONTRARIOSDESIGNA.IDPROCURADOR
+
+        let error = JSON.parse(n.body).error;
+
+        if (error != null && error.description != null) {
+          this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
+        }
+        this.progressSpinner = false;
+        if (this.contrarios.length == 0) {
+          this.listaTarjetas[4].campos = [{
+            "key": null,
+            "value": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.vacio')
+          },]
+        }
+
+        else {
+          this.listaTarjetas[4].campos = [
+            {
+              "key": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.identificadorprimero'),
+              "value": primero.nif
+            },
+            {
+              "key": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.apellidosnombreprimero'),
+              "value": primero.apellidosnombre
+            },
+            {
+              "key": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.abogadoprimero'),
+              "value": primero.abogado
+            },
+            {
+              "key": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.procuradorprimero'),
+              "value": primero.procurador
+            },
+            {
+              "key": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.ncontrarios'),
+              "value": this.contrarios.length
+            }
+          ]
+
+        }
+        if (this.tarjetaContrarios != undefined) {
+          this.tarjetaContrarios.tabla.sortOrder = 0;
+          this.tarjetaContrarios.tabla.sortField = '';
+          this.tarjetaContrarios.tabla.reset();
+          this.tarjetaContrarios.buscadores = this.tarjetaContrarios.buscadores.map(it => it = "");
+        }
+        if (this.tarjetaContrarios != null && this.tarjetaContrarios != undefined) {
+          this.tarjetaContrarios.historico = event;
+        }
+      },
+      err => {
+        this.progressSpinner = false;
+        console.log(err);
+      });
+  }
+
+  searchInteresados() {
+    this.progressSpinner = true;
+    let data = sessionStorage.getItem("designaItemLink");
+    let designaItem = JSON.parse(data);
+
+    let item = [designaItem.idTurno.toString(), designaItem.nombreTurno, designaItem.numero.toString(), designaItem.ano];
+    /* ano: "D2021/4330"
+nombreTurno: "ZELIMINAR-CIJAECI05 - MATRIMONIAL CONTENCIOSO JAÉN" */
+
+    this.sigaServices.post("designaciones_listaInteresados", item).subscribe(
+      n => {
+
+        this.interesados = JSON.parse(n.body);
+        let primero = this.interesados[0];
+        //Columnas a obtener:
+        //Identificador: Número de identificación correspondiente a la persona (NIF, pasaporte,..)
+        //Apellidos, Nombre: Concatenación de los apellidos y nombre de la persona.
+        //Dirección: Dirección postal (domicilio) registrada para esa persona. 
+        //Representante: Apellidos, Nombre del justiciable representante.
+
+
+        let error = JSON.parse(n.body).error;
+
+        if (error != null && error.description != null) {
+          this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
+        }
+        this.progressSpinner = false;
+
+        if (this.interesados.length == 0) {
+          this.listaTarjetas[3].campos = [{
+            "key": null,
+            "value": this.translateService.instant('justiciaGratuita.oficio.designas.interesados.vacio')
+          },]
+        }
+
+        else {
+          this.listaTarjetas[3].campos = [
+            {
+              "key": this.translateService.instant('justiciaGratuita.oficio.designas.interesados.identificadorprimero'),
+              "value": primero.nif
+            },
+            {
+              "key": this.translateService.instant('justiciaGratuita.oficio.designas.interesados.apellidosnombreprimero'),
+              "value": primero.apellidosnombre
+            },
+            {
+              "key": this.translateService.instant('justiciaGratuita.oficio.designas.interesados.diccionarioprimero'),
+              "value": primero.diccionario
+            },
+            {
+              "key": this.translateService.instant('justiciaGratuita.oficio.designas.interesados.representanteprimero'),
+              "value": primero.representante
+            },
+            {
+              "key": this.translateService.instant('justiciaGratuita.oficio.designas.interesados.ninteresados'),
+              "value": this.interesados.length
+            }
+          ]
+        }
+        if (this.tarjetaInteresados != undefined) {
+          this.tarjetaInteresados.tabla.sortOrder = 0;
+          this.tarjetaInteresados.tabla.sortField = '';
+          this.tarjetaInteresados.tabla.reset();
+          this.tarjetaInteresados.buscadores = this.tarjetaInteresados.buscadores.map(it => it = "");
+        }
+      },
+      err => {
+        this.progressSpinner = false;
+        console.log(err);
+      }
+    );
+
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
   }
 
 }

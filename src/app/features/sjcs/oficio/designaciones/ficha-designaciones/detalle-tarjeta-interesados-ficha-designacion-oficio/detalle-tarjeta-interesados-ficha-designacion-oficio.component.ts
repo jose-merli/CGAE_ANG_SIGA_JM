@@ -6,18 +6,17 @@ import { Router } from '../../../../../../../../node_modules/@angular/router';
 import { DesignaItem } from '../../../../../../models/sjcs/DesignaItem';
 
 @Component({
-  selector: 'app-detalle-tarjeta-contrarios-ficha-designacion-oficio',
-  templateUrl: './detalle-tarjeta-contrarios-ficha-designacion-oficio.component.html',
-  styleUrls: ['./detalle-tarjeta-contrarios-ficha-designacion-oficio.component.scss']
+  selector: 'app-detalle-tarjeta-interesados-ficha-designacion-oficio',
+  templateUrl: './detalle-tarjeta-interesados-ficha-designacion-oficio.component.html',
+  styleUrls: ['./detalle-tarjeta-interesados-ficha-designacion-oficio.component.scss']
 })
-export class DetalleTarjetaContrariosFichaDesignacionOficioComponent implements OnInit {
-
+export class DetalleTarjetaInteresadosFichaDesignacionOficioComponent implements OnInit {
+  
   msgs;
 
-  @Output() searchContrarios = new EventEmitter<boolean>();
+  @Output() searchInteresados = new EventEmitter<boolean>();
 
-  @Input() contrarios;
-  historicoContrario:boolean;
+  @Input() interesados;
 
   selectedItem: number = 10;
   datos;
@@ -44,11 +43,11 @@ export class DetalleTarjetaContrariosFichaDesignacionOficioComponent implements 
 
   ngOnInit() {
     this.getCols(); 
-    this.datos=this.contrarios;
+    this.datos=this.interesados;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.datos=this.contrarios;
+    this.datos=this.interesados;
   }
 
   onChangeRowsPerPages(event) {
@@ -70,10 +69,10 @@ export class DetalleTarjetaContrariosFichaDesignacionOficioComponent implements 
   getCols() {
 
     this.cols = [
-      { field: "nif", header: "justiciaGratuita.oficio.designas.contrarios.identificador" },
-      { field: "apellidosnombre", header: "administracion.parametrosGenerales.literal.nombre.apellidos" },
-      { field: "abogado", header: "justiciaGratuita.oficio.designas.contrarios.abogado" },
-      { field: "procurador", header: "justiciaGratuita.oficio.designas.contrarios.procurador" }
+      { field: "nif", header: "justiciaGratuita.oficio.designas.interesados.identificador" },
+      { field: "apellidosnombre", header: "justiciaGratuita.oficio.designas.interesados.apellidosnombre" },
+      { field: "direccion", header: "justiciaGratuita.oficio.designas.interesados.direccion" },
+      { field: "representante", header: "justiciaGratuita.oficio.designas.interesados.representante" }
     ];
 
     this.rowsPerPage = [
@@ -99,13 +98,12 @@ export class DetalleTarjetaContrariosFichaDesignacionOficioComponent implements 
   Eliminar(){
     this.progressSpinner = true;
     let request = [ this.selectedDatos.idInstitucion,  this.selectedDatos.idPersona, this.selectedDatos.anio,  this.selectedDatos.idTurno, this.selectedDatos.numero]
-    this.sigaServices.post("designaciones_deleteContrario", request).subscribe(
+    this.sigaServices.post("designaciones_deleteInteresado", request).subscribe(
       data => {
         this.selectedDatos = [];
-        this.searchContrarios.emit(false);
+        this.searchInteresados.emit();
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
-        this.historicoContrario = false;
       },
       err => {
         if (err != undefined && JSON.parse(err.error).error.description != "") {
@@ -133,27 +131,15 @@ export class DetalleTarjetaContrariosFichaDesignacionOficioComponent implements 
     });
   }
 
-  NewContrario(){
-    sessionStorage.setItem("origin","newContrario");
-    sessionStorage.setItem("contrarios",JSON.stringify(this.contrarios));
+  NewInteresado(){
+    sessionStorage.setItem("origin","newInteresado");
+    sessionStorage.setItem("interesados",JSON.stringify(this.interesados));
     this.router.navigate(["/justiciables"]);
   }
 
   openTab(evento) {
     this.persistenceService.setBody(evento);
     this.router.navigate(["/gestionJusticiables"]);
-  }
-
-  searchHistorical() {
-
-    this.historicoContrario = !this.historicoContrario;
-    this.searchContrarios.emit(this.historicoContrario);
-    this.selectAll = false;
-    this.selectedDatos=[];
-  }
-
-  isEliminado(dato){
-    return dato.fechaBaja!=null;
   }
   
   onChangeSelectAll() {
