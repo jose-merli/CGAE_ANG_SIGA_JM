@@ -77,6 +77,7 @@ export let endpoints_oficio: any = {
     parametros_search: "parametros/search",
     designaciones_listaContrarios: "oficio/designas/busquedaListaContrarios",
     designaciones_listaInteresados: "oficio/designas/busquedaListaInteresados",
+    designaciones_getDatosAdicionales: "oficio/designas/getDatosAdicionales",
     designaciones_deleteContrario:"oficio/designas/deleteContrario",
     designaciones_deleteInteresado:"oficio/designas/deleteInteresado",
     designaciones_insertInteresado:"oficio/designas/insertInteresado",
