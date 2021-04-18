@@ -58,6 +58,8 @@ export class DesignaItem {
 	idOrigen: String;
 	nif: String;
 	nombreInteresado: String;
+	apellido1Interesado: String;
+	apellido2Interesado: String;
 	apellidosInteresado: String;
 	idActuacionesV: String;
 	idArt27: String;

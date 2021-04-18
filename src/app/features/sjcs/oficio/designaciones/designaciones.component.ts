@@ -111,6 +111,7 @@ export class DesignacionesComponent implements OnInit {
          }
          element.idTipoDesignaColegio = element.observaciones;
          element.nombreColegiado = element.apellido1Colegiado +" "+ element.apellido2Colegiado+", "+element.nombreColegiado;
+         element.nombreInteresado = element.apellido1Interesado +" "+ element.apellido2Interesado+", "+element.nombreInteresado;
         });
         this.progressSpinner=false;
         this.showTablaDesigna(true);

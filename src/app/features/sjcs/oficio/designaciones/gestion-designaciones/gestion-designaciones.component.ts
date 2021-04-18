@@ -63,8 +63,8 @@ export class GestionDesignacionesComponent implements OnInit {
       { field: "art27", header: "censo.nuevaSolicitud.estado" },
       { field: "numColegiado", header: "facturacionSJCS.facturacionesYPagos.numColegiado" },
       { field: "nombreColegiado", header: "administracion.parametrosGenerales.literal.nombre.apellidos" },
-      { field: "interesados", header: "justiciaGratuita.justiciables.literal.interesados" },
-      { field: "validada", header: "general.boton.validar" },
+      { field: "nombreInteresado", header: "justiciaGratuita.justiciables.literal.interesados" },
+      { field: "validada", header: "Validada" },
     ];
     this.cols.forEach(element => {
       this.buscadores.push("");
