@@ -70,7 +70,6 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
 
   ngOnInit() {
     this.resaltadoDatos = true;
-    console.log(this.campos);
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
     if(!this.nuevaDesigna){
       //EDICION

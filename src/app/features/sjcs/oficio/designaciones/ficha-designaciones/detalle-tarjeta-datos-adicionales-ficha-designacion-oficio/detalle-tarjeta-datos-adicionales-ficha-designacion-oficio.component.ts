@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Message } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../../../commons/translate';
+import { DesignaItem } from '../../../../../../models/sjcs/DesignaItem';
 import { SigaServices } from '../../../../../../_services/siga.service';
 
 @Component({
@@ -39,10 +40,15 @@ export class DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent imple
   constructor(private sigaServices: SigaServices,  private translateService: TranslateService, private router: Router) { }
 
   ngOnInit() {
-    console.log(this.campos);
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
     if(!this.nuevaDesigna){
-        this.getDatosAdicionales(this.campos);
+        // this.getDatosAdicionales(this.campos);
+        this.bloques[0].value = this.campos.delitos;
+        this.bloques[0].valueDatePicker = this.campos.fechaOficioJuzgado;
+        this.bloques[1].value = this.campos.observaciones;
+        this.bloques[1].valueDatePicker = this.campos.fechaRecepcionColegio;
+        this.bloques[2].value = this.campos.defensaJuridica;
+        this.bloques[2].valueDatePicker = this.campos.fechaJuicio;
     }
   }
 
@@ -60,8 +66,11 @@ export class DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent imple
   }
 
   getDatosAdicionales(datosDesigna) {
-
-    this.sigaServices.post("designaciones_getDatosAdicionales",datosDesigna).subscribe(
+    let desginaAdicionales = new DesignaItem();
+    desginaAdicionales.ano = datosDesigna.ano;
+    desginaAdicionales.numero = datosDesigna.numero;
+    desginaAdicionales.idTurno = datosDesigna.idTurno;
+    this.sigaServices.post("designaciones_getDatosAdicionales",desginaAdicionales).subscribe(
       n => {
         console.log(n.body);
         if(n!=null){

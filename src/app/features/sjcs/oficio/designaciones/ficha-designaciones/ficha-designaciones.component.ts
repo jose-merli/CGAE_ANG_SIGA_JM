@@ -60,24 +60,7 @@ export class FichaDesignacionesComponent implements OnInit {
       detalle: true,
       fixed: false,
       opened: false,
-      campos: [
-        {
-          "key": "Número Procedimiento",
-          "value": "2008/675432"
-        },
-        {
-          "key": "Juzgado",
-          "value": "Juzgado de lo social N1 BADAJOZ"
-        },
-        {
-          "key": "Procedimiento",
-          "value": "CONTENCIOSO ADMINISTRATIVO"
-        },
-        {
-          "key": "Módulo",
-          "value": "SSDF XXXXXXXXX"
-        }
-      ]
+      campos: []
     },
     {
       id: 'sjcsDesigDatAdicionales',
@@ -87,20 +70,7 @@ export class FichaDesignacionesComponent implements OnInit {
       detalle: true,
       fixed: false,
       opened: false,
-      campos: [
-        {
-          "key": "Fecha Oficio Juzgado",
-          "value": "01/09/2019"
-        },
-        {
-          "key": "Fecha Reecepción Colegio",
-          "value": "03/09/2019"
-        },
-        {
-          "key": "Fecha Juicio",
-          "value": "10/09/2019"
-        }
-      ]
+      campos: []
     },
     {
       id: 'sjcsDesigInt',
@@ -316,8 +286,59 @@ export class FichaDesignacionesComponent implements OnInit {
         }
       ];
 
+      let camposDetalle = [
+        {
+          "key": "Número Procedimiento",
+          "value": designaItem.numProcedimiento
+        },
+        {
+          "key": "Juzgado",
+          "value": designaItem.idJuzgado
+        },
+        {
+          "key": "Procedimiento",
+          "value": designaItem.idPretension
+        },
+        {
+          "key": "Módulo",
+          "value": designaItem.idProcedimiento
+        }
+      ];
+      if((designaItem.observaciones == null || designaItem.observaciones == undefined || designaItem.observaciones == "")
+          && (designaItem.delitos == null || designaItem.delitos == undefined || designaItem.delitos == "")
+          && (designaItem.defensaJuridica == null || designaItem.defensaJuridica == undefined || designaItem.defensaJuridica == "")
+           && (designaItem.fechaOficioJuzgado == null || designaItem.fechaOficioJuzgado == undefined || designaItem.fechaOficioJuzgado == "")
+            && (designaItem.fechaJuicio == null || designaItem.fechaJuicio == undefined || designaItem.fechaJuicio == "")
+             && (designaItem.fechaRecepcionColegio == null || designaItem.fechaRecepcionColegio == undefined || designaItem.fechaRecepcionColegio == "")){
+            let datosAdicionales = [
+              {
+                "key": null,
+                "value": "No existen observaciones definidas para la designación"
+              }
+            ];
+            this.listaTarjetas[2].campos = datosAdicionales;
+      }else{
+        let datosAdicionales = [
+          {
+            "key": "Fecha Oficio Juzgado",
+            "value": designaItem.fechaOficioJuzgado
+          },
+          {
+            "key": "Fecha Reecepción Colegio",
+            "value": designaItem.fechaRecepcionColegio
+          },
+          {
+            "key": "Fecha Juicio",
+            "value": designaItem.fechaJuicio
+          }
+        ];
+        this.listaTarjetas[2].campos = datosAdicionales;
+      }
+      
       this.tarjetaFija.campos = camposResumen;
       this.listaTarjetas[0].campos = camposGenerales;
+      this.listaTarjetas[1].campos = camposDetalle;
+      
       //Actualizar para que los campos se rellenen en base a la tabla de la tarjeta contrarios
       this.listaTarjetas[4].campos = [
         {
@@ -393,9 +414,35 @@ export class FichaDesignacionesComponent implements OnInit {
           "value": ""
         }
       ];
-  
+
+      let camposDetalle = [
+        {
+          "key": "Número Procedimiento",
+          "value": ""
+        },
+        {
+          "key": "Juzgado",
+          "value": ""
+        },
+        {
+          "key": "Procedimiento",
+          "value": ""
+        },
+        {
+          "key": "Módulo",
+          "value": ""
+        }
+      ];
+      let datosAdicionales = [
+        {
+          "key": null,
+          "value": "No existen observaciones definidas para la designación"
+        }
+      ];
       this.tarjetaFija.campos = camposResumen;
       this.listaTarjetas[0].campos = camposGenerales;
+      this.listaTarjetas[1].campos = camposDetalle;
+      this.listaTarjetas[2].campos = datosAdicionales;
       /* this.listaTarjetas[4].enlaces=[{
       id: null,
           ref: null,
@@ -614,9 +661,6 @@ export class FichaDesignacionesComponent implements OnInit {
       array2.push(array);
       array = [];
     });
-    console.log(array);
-    console.log(array2);
-    //this.guardar(array2);
   }
 
   mostrar() {
