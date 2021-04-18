@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Message } from 'primeng/components/common/api';
+import { ConfirmationService, Message } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../../../commons/translate';
 import { ColegiadoItem } from '../../../../../../models/ColegiadoItem';
 import { DesignaItem } from '../../../../../../models/sjcs/DesignaItem';
@@ -19,6 +19,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
   msgs: Message[] = [];
   nuevaDesigna: any;
   checkArt: boolean;
+  initDatos: any;
   @Input() campos;
   @Input() selectedValue;
   anio = {
@@ -65,71 +66,20 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     disable: false
   }];
 
-  constructor(private sigaServices: SigaServices,  private commonsService: CommonsService, private translateService: TranslateService, private router: Router) {
+  constructor(private sigaServices: SigaServices,  private commonsService: CommonsService, private confirmationService: ConfirmationService, private translateService: TranslateService, private router: Router) {
    }
 
   ngOnInit() {
     this.resaltadoDatos = true;
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
+    this.initDatos =this.campos;
     if(!this.nuevaDesigna){
       //EDICION
-    this.checkArt = true;
-    this.selectores[0].opciones = [{label: this.campos.nombreTurno, value: this.campos.idTurno}];
-    this.selectores[0].value =  this.campos.idTurno;
-    this.selectores[0].disable =  true;
-    this.selectores[1].opciones = [{label: this.campos.descripcionTipoDesigna, value: this.campos.idTipoDesignaColegio}];
-    this.selectores[1].value =  this.campos.idTipoDesignaColegio;
-    this.selectores[1].disable =  true;
-    var anioAnterior = this.campos.ano.split("/");
-    this.anio.value=  anioAnterior[0].slice(1);
-    this.anio.disable=  true;
-    this.numero.value = this.campos.codigo;
-    this.numero.disable = false;
-    this.fechaGenerales = this.campos.fechaAlta;
-    let colegiado = new ColegiadoItem();
-    colegiado.numColegiado = this.campos.numColegiado;
-    colegiado.idInstitucion = this.campos.idInstitucion;
-    this.inputs[0].disable = true;
-    this.inputs[1].disable = true;
-    this.inputs[2].disable = true;
-    this.sigaServices
-    .post("busquedaColegiados_searchColegiado", colegiado)
-    .subscribe(
-      data => {
-        let colegiadoItem = JSON.parse(data.body);
-        this.inputs[0].value=colegiadoItem.colegiadoItem[0].numColegiado;
-        var apellidosNombre = colegiadoItem.colegiadoItem[0].nombre.split(",");
-        this.inputs[1].value=apellidosNombre[0];
-        this.inputs[2].value=apellidosNombre[1];
-      },
-      err => {
-        console.log(err);
-      },
-
-    );
+      this.cargaDatos(this.initDatos);
+   
     }else{
-      if(sessionStorage.getItem("buscadorColegiados")){​​
-        this.busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
-        // sessionStorage.removeItem("buscadorColegiados");
-        let apellidosExpress = this.busquedaColegiado.apellidos.split(" ");
-        this.inputs[0].value=this.busquedaColegiado.nColegiado;
-        this.inputs[1].value=this.busquedaColegiado.apellidos;
-        this.inputs[2].value=this.busquedaColegiado.nombre;
-        this.inputs[0].disable = true;
-        this.inputs[1].disable = true;
-        this.inputs[2].disable = true;
-        
-      }
-      this.checkArt = false;
-      this.anio.value= "";
-      this.anio.disable=  true;
-      this.numero.value = "";
-      this.numero.disable = true;
-      this.fechaGenerales = new Date();
-      this.selectores[0].disable =  false;
-      this.selectores[1].disable =  false;
-      this.getComboTurno();
-      this.getComboTipoDesignas();
+      this.cargaDatosNueva();
+      
     }
   
     //SE COMPRUEBAN LOS PERMISOS PARA EL BOTON GUARDAR
@@ -167,6 +117,77 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     //     }
     //   }).catch(error => console.error(error));
     //EDICION
+  }
+
+  cargaDatos(datosInicial){
+    this.checkArt = true;
+    this.selectores[0].opciones = [{label: datosInicial.nombreTurno, value: datosInicial.idTurno}];
+    this.selectores[0].value =  datosInicial.idTurno;
+    this.selectores[0].disable =  true;
+    this.selectores[1].opciones = [{label: datosInicial.descripcionTipoDesigna, value: datosInicial.idTipoDesignaColegio}];
+    this.selectores[1].value =  datosInicial.idTipoDesignaColegio;
+    this.selectores[1].disable =  true;
+    var anioAnterior =datosInicial.ano.split("/");
+    this.anio.value=  anioAnterior[0].slice(1);
+    this.anio.disable=  true;
+    this.numero.value = datosInicial.codigo;
+    this.numero.disable = false;
+    this.fechaGenerales = datosInicial.fechaAlta;
+    let colegiado = new ColegiadoItem();
+    colegiado.numColegiado = datosInicial.numColegiado;
+    colegiado.idInstitucion = datosInicial.idInstitucion;
+    this.inputs[0].disable = true;
+    this.inputs[1].disable = true;
+    this.inputs[2].disable = true;
+    this.sigaServices
+    .post("busquedaColegiados_searchColegiado", colegiado)
+    .subscribe(
+      data => {
+        let colegiadoItem = JSON.parse(data.body);
+        this.inputs[0].value=colegiadoItem.colegiadoItem[0].numColegiado;
+        var apellidosNombre = colegiadoItem.colegiadoItem[0].nombre.split(",");
+        this.inputs[1].value=apellidosNombre[0];
+        this.inputs[2].value=apellidosNombre[1];
+      },
+      err => {
+        console.log(err);
+      },
+
+    );
+  }
+
+  cargaDatosNueva(){
+    if(sessionStorage.getItem("buscadorColegiados")){​​
+      this.busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
+      // sessionStorage.removeItem("buscadorColegiados");
+      let apellidosExpress = this.busquedaColegiado.apellidos.split(" ");
+      this.inputs[0].value=this.busquedaColegiado.nColegiado;
+      this.inputs[1].value=this.busquedaColegiado.apellidos;
+      this.inputs[2].value=this.busquedaColegiado.nombre;
+      this.inputs[0].disable = true;
+      this.inputs[1].disable = true;
+      this.inputs[2].disable = true;
+      
+    }else{
+      this.inputs[0].value="";
+      this.inputs[1].value="";
+      this.inputs[2].value="";
+      this.inputs[0].disable = false;
+      this.inputs[1].disable = false;
+      this.inputs[2].disable = false;
+    }
+    this.checkArt = false;
+    this.anio.value= "";
+    this.anio.disable=  true;
+    this.numero.value = "";
+    this.numero.disable = true;
+    this.fechaGenerales = new Date();
+    this.selectores[0].disable =  false;
+    this.selectores[1].disable =  false;
+    this.selectores[0].value = "";
+    this.selectores[1].value="";
+    this.getComboTurno();
+    this.getComboTipoDesignas();
   }
 
   getComboTipoDesignas() {
@@ -219,20 +240,54 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
 
   showMsg(severity, summary, detail) {
     this.msgs = [];
-    if(detail == "save" &&  this.anio.value == ""){
-      let newDesigna = new DesignaItem();
-      var idTurno:number = +this.selectores[0].value;
-      newDesigna.idTurno = idTurno;
-      var idTipoDesignaColegio:number = +this.selectores[1].value;
-      newDesigna.idTipoDesignaColegio = idTipoDesignaColegio;
-      newDesigna.numColegiado = this.inputs[0].value;
-      newDesigna.nombreColegiado = this.inputs[1].value;
-      newDesigna.apellidosNombre = this.inputs[2].value;
-      newDesigna.fechaAlta = this.fechaGenerales;
-      newDesigna.ano = 2021;
-      this.checkDatosGenerales();
-      if(this.resaltadoDatos == true){
-        this.sigaServices.post("create_NewDesigna", newDesigna).subscribe(
+    if(detail == "save" && (this.inputs[0].value =="" || this.inputs[0].value ==undefined)){
+      this.confirmarActivar(severity, summary, detail);
+    }else{
+      if(detail == "save" &&  this.anio.value == ""){
+        let newDesigna = new DesignaItem();
+        var idTurno:number = +this.selectores[0].value;
+        newDesigna.idTurno = idTurno;
+        var idTipoDesignaColegio:number = +this.selectores[1].value;
+        newDesigna.idTipoDesignaColegio = idTipoDesignaColegio;
+        newDesigna.numColegiado = this.inputs[0].value;
+        newDesigna.nombreColegiado = this.inputs[1].value;
+        newDesigna.apellidosNombre = this.inputs[2].value;
+        newDesigna.fechaAlta = this.fechaGenerales;
+        newDesigna.ano = 2021;
+        this.checkDatosGenerales();
+        if(this.resaltadoDatos == true){
+          this.sigaServices.post("create_NewDesigna", newDesigna).subscribe(
+            n => {
+              //MENSAJE DE TODO CORRECTO
+              this.msgs.push({
+                severity,
+                summary,
+                detail
+              });
+              console.log(n);
+            },
+            err => {
+              console.log(err);
+      
+            }, () => {
+            }
+          );
+        }
+        
+      }else if(detail == "save" &&  this.anio.value != ""){
+        let newDesigna = new DesignaItem();
+        var idTurno:number = +this.selectores[0].value;
+        newDesigna.idTurno = idTurno;
+        var idTipoDesignaColegio:number = +this.selectores[1].value;
+        newDesigna.idTipoDesignaColegio = idTipoDesignaColegio;
+        newDesigna.numColegiado = this.inputs[0].value;
+        newDesigna.nombreColegiado = this.inputs[1].value;
+        newDesigna.apellidosNombre = this.inputs[2].value;
+        newDesigna.fechaAlta = new Date(this.fechaGenerales);
+        newDesigna.ano = 2021;
+        this.checkDatosGenerales();
+        if(this.resaltadoDatos == true){
+        this.sigaServices.post("", newDesigna).subscribe(
           n => {
             //MENSAJE DE TODO CORRECTO
             this.msgs.push({
@@ -248,39 +303,22 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
           }, () => {
           }
         );
-      }
-      
-    }else if(detail == "save" &&  this.anio.value != ""){
-      let newDesigna = new DesignaItem();
-      var idTurno:number = +this.selectores[0].value;
-      newDesigna.idTurno = idTurno;
-      var idTipoDesignaColegio:number = +this.selectores[1].value;
-      newDesigna.idTipoDesignaColegio = idTipoDesignaColegio;
-      newDesigna.numColegiado = this.inputs[0].value;
-      newDesigna.nombreColegiado = this.inputs[1].value;
-      newDesigna.apellidosNombre = this.inputs[2].value;
-      newDesigna.fechaAlta = new Date(this.fechaGenerales);
-      newDesigna.ano = 2021;
-      this.checkDatosGenerales();
-      if(this.resaltadoDatos == true){
-      this.sigaServices.post("", newDesigna).subscribe(
-        n => {
-          //MENSAJE DE TODO CORRECTO
-          this.msgs.push({
-            severity,
-            summary,
-            detail
-          });
-          console.log(n);
-        },
-        err => {
-          console.log(err);
-  
-        }, () => {
         }
-      );
+      }
+    
+    }
+
+    if(detail == "Restablecer"){
+      if(!this.nuevaDesigna){
+        //EDICION
+        this.cargaDatos(this.initDatos);
+     
+      }else{
+        this.cargaDatosNueva();
+        
       }
     }
+   
   }
 
   transformaFecha(fecha) {
@@ -339,5 +377,101 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
 
   onChangeArt(){
     
+  }
+
+  confirmarActivar(severity, summary, detail) {
+    let mess = "Se va a seleccionar un letrado automaticamente. ¿Desea continuar?";
+    let icon = "fa fa-trash-alt";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        if(detail == "save" &&  this.anio.value == ""){
+          let newDesigna = new DesignaItem();
+          var idTurno:number = +this.selectores[0].value;
+          newDesigna.idTurno = idTurno;
+          var idTipoDesignaColegio:number = +this.selectores[1].value;
+          newDesigna.idTipoDesignaColegio = idTipoDesignaColegio;
+          newDesigna.numColegiado = this.inputs[0].value;
+          newDesigna.nombreColegiado = this.inputs[1].value;
+          newDesigna.apellidosNombre = this.inputs[2].value;
+          newDesigna.fechaAlta = this.fechaGenerales;
+          newDesigna.ano = 2021;
+          this.checkDatosGenerales();
+          if(this.resaltadoDatos == true){
+            this.sigaServices.post("create_NewDesigna", newDesigna).subscribe(
+              n => {
+                //MENSAJE DE TODO CORRECTO
+                this.msgs.push({
+                  severity,
+                  summary,
+                  detail
+                });
+                console.log(n);
+              },
+              err => {
+                console.log(err);
+                summary = "No existe cola de letrado de oficio";
+                this.msgs.push({
+                  severity,
+                  summary,
+                  detail
+                });
+        
+              }, () => {
+              }
+            );
+          }
+          
+        }else if(detail == "save" &&  this.anio.value != ""){
+          let newDesigna = new DesignaItem();
+          var idTurno:number = +this.selectores[0].value;
+          newDesigna.idTurno = idTurno;
+          var idTipoDesignaColegio:number = +this.selectores[1].value;
+          newDesigna.idTipoDesignaColegio = idTipoDesignaColegio;
+          newDesigna.numColegiado = this.inputs[0].value;
+          newDesigna.nombreColegiado = this.inputs[1].value;
+          newDesigna.apellidosNombre = this.inputs[2].value;
+          newDesigna.fechaAlta = new Date(this.fechaGenerales);
+          newDesigna.ano = 2021;
+          this.checkDatosGenerales();
+          if(this.resaltadoDatos == true){
+          this.sigaServices.post("", newDesigna).subscribe(
+            n => {
+              //MENSAJE DE TODO CORRECTO
+              this.msgs.push({
+                severity,
+                summary,
+                detail
+              });
+              console.log(n);
+              summary = "No existe cola de letrado de oficio";
+              this.msgs.push({
+                severity,
+                summary,
+                detail
+              });
+            },
+            err => {
+              console.log(err);
+      
+            }, () => {
+            }
+          );
+          }
+        }
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
   }
 }

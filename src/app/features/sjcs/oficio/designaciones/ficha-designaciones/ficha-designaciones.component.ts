@@ -256,7 +256,7 @@ export class FichaDesignacionesComponent implements OnInit {
         },
         {
           "key": "Interesado",
-          "value": ""
+          "value": designaItem.nombreInteresado
         },
         {
           "key": "Número Actuaciones",

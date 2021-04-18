@@ -14,6 +14,7 @@ export class DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent imple
 
   msgs: Message[] = [];
   @Input() campos;
+  datosInicial: any;
   nuevaDesigna: any;
   bloques = [
     {
@@ -41,6 +42,7 @@ export class DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent imple
 
   ngOnInit() {
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
+    this.datosInicial = this.campos;
     if(!this.nuevaDesigna){
         // this.getDatosAdicionales(this.campos);
         this.bloques[0].value = this.campos.delitos;
@@ -59,6 +61,18 @@ export class DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent imple
       summary,
       detail
     });
+
+    if(detail == "Restablecer"){
+      if(!this.nuevaDesigna){
+        // this.getDatosAdicionales(this.campos);
+        this.bloques[0].value = this.datosInicial.delitos;
+        this.bloques[0].valueDatePicker = this.datosInicial.fechaOficioJuzgado;
+        this.bloques[1].value = this.datosInicial.observaciones;
+        this.bloques[1].valueDatePicker = this.datosInicial.fechaRecepcionColegio;
+        this.bloques[2].value = this.datosInicial.defensaJuridica;
+        this.bloques[2].valueDatePicker = this.datosInicial.fechaJuicio;
+      }
+    }
   }
 
   clear() {
@@ -88,5 +102,7 @@ export class DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent imple
       }
     );
   }
+
+
 
 }

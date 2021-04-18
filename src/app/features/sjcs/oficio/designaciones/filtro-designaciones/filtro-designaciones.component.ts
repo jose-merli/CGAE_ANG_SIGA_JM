@@ -548,6 +548,8 @@ getComboCalidad() {
         nombreAp: ''
       };
     }
+
+    this.getBuscadorDesignas();
   }
 
   onChangeCheckMostrarPendientes(event) {

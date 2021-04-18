@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Message } from 'primeng/components/common/api';
+import { SigaServices } from '../../../../../../_services/siga.service';
 
 @Component({
   selector: 'app-detalle-tarjeta-datos-facturacion-ficha-designacion-oficio',
@@ -11,20 +12,36 @@ export class DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent imple
   selector =
     {
       nombre: "Partida Presepuestaria",
-      opciones: [
-        { label: 'XXXXXXXXXXXXXX', value: 1 },
-        { label: 'XXXXXXXXXXXXXX', value: 2 },
-        { label: 'XXXXXXXXXXXXXX', value: 3 },
-      ]
+      opciones: []
     };
-
+  nuevaDesigna: any;
   msgs: Message[] = [];
 
-  constructor() { }
+  constructor(private sigaServices: SigaServices) { }
 
-  ngOnInit() {
+  ngOnInit() { 
+    this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
+  if(!this.nuevaDesigna){
+
+  }else{
+    this.getComboPartidaPresupuestaria();
+  }
+    
   }
 
+ getComboPartidaPresupuestaria() {
+
+    this.sigaServices.get("designaciones_comboPartidaPresupuestaria").subscribe(
+      n => {
+        this.selector[0].opciones = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }, () => {
+        this.arregloTildesCombo(this.selector[0].opciones);
+      }
+    );
+  }
 
   showMsg(severity, summary, detail) {
     this.msgs = [];
@@ -33,9 +50,31 @@ export class DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent imple
       summary,
       detail
     });
+
+    if(detail == "Restablecer"){
+
+    }
   }
 
   clear() {
     this.msgs = [];
+  }
+
+  arregloTildesCombo(combo) {
+    if (combo != undefined)
+      combo.map(e => {
+        let accents =
+          "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+        let accentsOut =
+          "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+        let i;
+        let x;
+        for (i = 0; i < e.label.length; i++) {
+          if ((x = accents.indexOf(e.label[i])) != -1) {
+            e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+            return e.labelSinTilde;
+          }
+        }
+      });
   }
 }
