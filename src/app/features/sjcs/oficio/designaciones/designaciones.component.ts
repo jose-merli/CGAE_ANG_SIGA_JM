@@ -1,13 +1,14 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { OldSigaServices } from '../../../../_services/oldSiga.service';
-import { FiltroDesignacionesComponent } from './filtro-designaciones/filtro-designaciones.component';
-import { Message } from 'primeng/components/common/api';
-import { SigaServices } from '../../../../_services/siga.service';
 import { DatePipe, Location } from '@angular/common';
-import { CommonsService } from '../../../../_services/commons.service';
-import { JustificacionExpressItem } from '../../../../models/sjcs/JustificacionExpressItem';
-import moment = require('moment');
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { Message } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../commons/translate';
+import { JustificacionExpressItem } from '../../../../models/sjcs/JustificacionExpressItem';
+import { CommonsService } from '../../../../_services/commons.service';
+import { OldSigaServices } from '../../../../_services/oldSiga.service';
+import { SigaServices } from '../../../../_services/siga.service';
+import { FiltroDesignacionesComponent } from './filtro-designaciones/filtro-designaciones.component';
+import moment = require('moment');
 
 @Component({
   selector: 'app-designaciones',
@@ -33,6 +34,7 @@ export class DesignacionesComponent implements OnInit {
 
   constructor(public sigaServices: OldSigaServices, public sigaServicesNew: SigaServices, private location: Location,  private commonsService: CommonsService, 
     private datePipe: DatePipe, private translateService: TranslateService) {
+
     this.url = sigaServices.getOldSigaUrl("designaciones");
   }
 

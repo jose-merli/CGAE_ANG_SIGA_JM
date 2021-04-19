@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Message } from "primeng/components/common/api";
 import { TranslateService } from '../../../../../commons/translate';
 import { ColegiadoItem } from '../../../../../models/ColegiadoItem';
@@ -7,6 +7,8 @@ import { JustificacionExpressItem } from '../../../../../models/sjcs/Justificaci
 import { SigaServices } from '../../../../../_services/siga.service';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
+import { procesos_oficio } from '../../../../../permisos/procesos_oficio';
+import { ControlAccesoDto } from '../../../../../models/ControlAccesoDto';
 
 @Component({
   selector: 'app-filtro-designaciones',
@@ -29,10 +31,9 @@ export class FiltroDesignacionesComponent implements OnInit {
   showJustificacionExpress: boolean = false;
   checkMostrarPendientes: boolean = true;
   checkRestricciones: boolean = false;
-  @Output() busqueda = new EventEmitter<boolean>();
+  
   disabledBusquedaExpress: boolean = false;
   showColegiado: boolean = false;
-  esColegiado: boolean = false;
   radioTarjeta: string = 'designas';
 
   //Variables busqueda designas
@@ -63,16 +64,22 @@ export class FiltroDesignacionesComponent implements OnInit {
   comboOrigenActuaciones: any[];
   comboRoles: any[];
   comboAcreditaciones: any[];
+  esColegiado: boolean = false;
 
   @Output() busquedaJustificacionExpres = new EventEmitter<boolean>();
   @Output() showTablaDesigna = new EventEmitter<boolean>();
   @Output() showTablaJustificacionExpres = new EventEmitter<boolean>();
-  
+  @Output() busqueda = new EventEmitter<boolean>();
+
   constructor(private translateService: TranslateService, private sigaServices: SigaServices,  private location: Location, private router: Router) { }
 
   ngOnInit(): void {
-    let esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
-    if(!esColegiado){
+    
+    this.checkAcceso();
+  }
+
+  cargaInicial(){
+    if(!this.esColegiado){
       this.isButtonVisible = true;
     }else{
       this.isButtonVisible = true;
@@ -82,16 +89,11 @@ export class FiltroDesignacionesComponent implements OnInit {
     this.showDesignas=true;
     this.showJustificacionExpress=false;
 
-    this. esColegiado = false;
     this.progressSpinner=true;
     this.showDesignas = true;
     this.checkRestricciones = false;
 
     // this.checkLastRoute();
-
-    if (sessionStorage.getItem('esBuscadorColegiados') == "true" && sessionStorage.getItem('usuarioBusquedaExpress')) {
-      this.usuarioBusquedaExpress = JSON.parse(sessionStorage.getItem('usuarioBusquedaExpress'));
-    }
 
     //justificacion expres
     this.cargaCombosJustificacion();
@@ -99,13 +101,26 @@ export class FiltroDesignacionesComponent implements OnInit {
     //Inicializamos buscador designas
     this.getBuscadorDesignas();
 
-    if (sessionStorage.getItem("esColegiado") && sessionStorage.getItem("esColegiado") == 'true') {
+    if (this.esColegiado) {
       this.disabledBusquedaExpress = true;
       this.getDataLoggedUser();
+    }else{
+      this.disabledBusquedaExpress = false;
+      this.filtroJustificacion.ejgSinResolucion="2"; 
+      this.filtroJustificacion.sinEJG="2";
+      this.filtroJustificacion.resolucionPTECAJG="2";
+      this.filtroJustificacion.conEJGNoFavorables="2";
     }
 
+    //viene de buscador express
     if (sessionStorage.getItem('buscadorColegiados')) {
-      const { nombre, apellidos, nColegiado } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
+      this.progressSpinner=true;
+
+      const { nombre, apellidos, nColegiado } = JSON.parse(sessionStorage.getItem('buscadorColegiados')).subscribe(
+        ()=>{
+          this.progressSpinner=false;
+        }
+      );
 
       this.usuarioBusquedaExpress.nombreAp = `${apellidos}, ${nombre}`;
       this.usuarioBusquedaExpress.numColegiado = nColegiado;
@@ -114,6 +129,39 @@ export class FiltroDesignacionesComponent implements OnInit {
 
     //combo comun
     this.getComboEstados();
+  }
+
+  checkAcceso() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = procesos_oficio.saltosCompensaciones;
+
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        const permisos = JSON.parse(data.body);
+        const permisosArray = permisos.permisoItems;
+        const derechoAcceso = permisosArray[0].derechoacceso;
+
+        //revisar esto para la finalizar el desarrollo
+        this.esColegiado=true;
+        if (derechoAcceso == 3) { //es colegio
+          this.esColegiado = false;
+        } else if (derechoAcceso == 2) {//es colegiado
+          this.esColegiado = true;
+        } else {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
+        this.cargaInicial();
+      },
+      err => {
+        this.progressSpinner = false;
+        console.log(err);
+      }
+    );
   }
 
   changeFilters(event) {
@@ -608,12 +656,6 @@ getComboCalidad() {
     this.progressSpinner = true;
     this.esColegiado = false;
     
-    //si es colegio, valor por defecto para justificacion
-    this.filtroJustificacion.ejgSinResolucion="2"; 
-    this.filtroJustificacion.sinEJG="2";
-    this.filtroJustificacion.resolucionPTECAJG="2";
-    this.filtroJustificacion.conEJGNoFavorables="2";
-
     this.sigaServices.get("usuario_logeado").subscribe(n => {
 
       const usuario = n.usuarioLogeadoItem;
@@ -626,7 +668,6 @@ getComboCalidad() {
         this.usuarioBusquedaExpress.numColegiado = numColegiado;
         this.usuarioBusquedaExpress.nombreAp = nombre;
         this.showColegiado = true;
-        this.progressSpinner = false;
 
         //es colegiado, filtro por defecto para justificacion
         this.filtroJustificacion.ejgSinResolucion="0";
@@ -638,6 +679,9 @@ getComboCalidad() {
         this.checkRestricciones = true;
       },
       err =>{
+        this.progressSpinner = false;
+      },
+      ()=>{
         this.progressSpinner = false;
       });
 
