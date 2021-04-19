@@ -9,6 +9,7 @@ import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { procesos_oficio } from '../../../../../permisos/procesos_oficio';
 import { ControlAccesoDto } from '../../../../../models/ControlAccesoDto';
+import { FileAlreadyExistException } from '@angular-devkit/core';
 
 @Component({
   selector: 'app-filtro-designaciones',
@@ -66,6 +67,7 @@ export class FiltroDesignacionesComponent implements OnInit {
   comboAcreditaciones: any[];
   esColegiado: boolean = false;
 
+  institucionActual: any;
   @Output() busquedaJustificacionExpres = new EventEmitter<boolean>();
   @Output() showTablaDesigna = new EventEmitter<boolean>();
   @Output() showTablaJustificacionExpres = new EventEmitter<boolean>();
@@ -82,8 +84,13 @@ export class FiltroDesignacionesComponent implements OnInit {
     if(!this.esColegiado){
       this.isButtonVisible = true;
     }else{
-      this.isButtonVisible = true;
+      this.isButtonVisible = true;// DEBE SER FALSE
     }
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      this.institucionActual = n.value;});
+      if(this.institucionActual == "2003"){
+        this.isButtonVisible = false;
+      }
     this.filtroJustificacion = new JustificacionExpressItem();
 
     this.showDesignas=true;
