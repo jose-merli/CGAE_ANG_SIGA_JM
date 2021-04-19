@@ -59,7 +59,7 @@ export class GestionDesignacionesComponent implements OnInit {
     this.cols = [
       { field: "nombreTurno", header: "justiciaGratuita.sjcs.designas.DatosIden.turno" },
       { field: "ano", header: "justiciaGratuita.ejg.datosGenerales.annioNum" },
-      { field: "fechaAlta", header: "censo.resultadosSolicitudesModificacion.literal.fecha" },
+      { field: "fechaEntradaInicio", header: "censo.resultadosSolicitudesModificacion.literal.fecha" },
       { field: "art27", header: "censo.nuevaSolicitud.estado" },
       { field: "numColegiado", header: "facturacionSJCS.facturacionesYPagos.numColegiado" },
       { field: "nombreColegiado", header: "administracion.parametrosGenerales.literal.nombre.apellidos" },

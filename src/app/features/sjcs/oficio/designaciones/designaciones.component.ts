@@ -95,7 +95,7 @@ export class DesignacionesComponent implements OnInit {
       n => {
         this.datos = JSON.parse(n.body);
         this.datos.forEach(element => {
-         element.ano = 'D' +  element.ano + '/' + element.numero;
+         element.ano = 'D' +  element.ano + '/' + element.codigo;
         //  element.fechaEstado = new Date(element.fechaEstado);
         element.fechaEstado = this.formatDate(element.fechaEstado);
         element.fechaAlta = this.formatDate(element.fechaAlta);

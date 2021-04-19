@@ -236,8 +236,10 @@ export class FichaDesignacionesComponent implements OnInit {
       let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
       // sessionStorage.removeItem("buscadorColegiados");
       this.listaTarjetas[0].opened = true;
+    }else if(sessionStorage.getItem("colegiadoGeneralDesigna")){
+      let colegiadoGeneral = JSON.parse(sessionStorage.getItem("colegiadoGeneralDesigna"));
+      this.listaTarjetas[0].opened = true;
     }
-
     if (!this.nuevaDesigna) {
       this.mostrar();
       //EDICIÓN DESIGNA
@@ -473,6 +475,9 @@ export class FichaDesignacionesComponent implements OnInit {
     if(sessionStorage.getItem("buscadorColegiados")){​​
       let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
       this.tarjetaFija.campos[1].value = busquedaColegiado.nColegiado;
+    }else if(sessionStorage.getItem("colegiadoGeneralDesigna")){​​
+      let busquedaColegiado = JSON.parse(sessionStorage.getItem("colegiadoGeneralDesigna"));
+      this.tarjetaFija.campos[1].value = busquedaColegiado.numeroColegiado;
     }
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
     if(this.nuevaDesigna){
