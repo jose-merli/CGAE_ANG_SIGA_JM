@@ -422,9 +422,9 @@ import { FichaActuacionComponent } from './features/sjcs/oficio/designaciones/fi
 import { TarjetaDatosGenFichaActComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-ficha-designacion-oficio/ficha-actuacion/tarjeta-datos-gen-ficha-act/tarjeta-datos-gen-ficha-act.component';
 import { TarjetaJustificacionFichaActComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-ficha-designacion-oficio/ficha-actuacion/tarjeta-justificacion-ficha-act/tarjeta-justificacion-ficha-act.component';
 import { TarjetaDatosFactFichaActComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-ficha-designacion-oficio/ficha-actuacion/tarjeta-datos-fact-ficha-act/tarjeta-datos-fact-ficha-act.component';
-import { TarjetaDocumentacionFichaActComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-ficha-designacion-oficio/ficha-actuacion/tarjeta-documentacion-ficha-act/tarjeta-documentacion-ficha-act.component';
-import { TarjetaHistoricoFichaActComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-ficha-designacion-oficio/ficha-actuacion/tarjeta-historico-ficha-act/tarjeta-historico-ficha-act.component';
-import { TarjetaRelacionesFichaActComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-ficha-designacion-oficio/ficha-actuacion/tarjeta-relaciones-ficha-act/tarjeta-relaciones-ficha-act.component';
+import { TarjetaDocFichaActComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-ficha-designacion-oficio/ficha-actuacion/tarjeta-doc-ficha-act/tarjeta-doc-ficha-act.component';
+import { TarjetaHisFichaActComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-ficha-designacion-oficio/ficha-actuacion/tarjeta-his-ficha-act/tarjeta-his-ficha-act.component';
+import { TarjetaRelFichaActComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-ficha-designacion-oficio/ficha-actuacion/tarjeta-rel-ficha-act/tarjeta-rel-ficha-act.component';
 
 
 @NgModule({
@@ -769,10 +769,10 @@ import { TarjetaRelacionesFichaActComponent } from './features/sjcs/oficio/desig
 		FichaActuacionComponent,
 		TarjetaDatosGenFichaActComponent,
 		TarjetaJustificacionFichaActComponent,
-		TarjetaRelacionesFichaActComponent,
+		TarjetaRelFichaActComponent,
 		TarjetaDatosFactFichaActComponent,
-		TarjetaDocumentacionFichaActComponent,
-		TarjetaHistoricoFichaActComponent,
+		TarjetaDocFichaActComponent,
+		TarjetaHisFichaActComponent,
 
 	],
 	imports: [
