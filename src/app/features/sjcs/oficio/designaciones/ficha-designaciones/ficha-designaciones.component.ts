@@ -236,8 +236,10 @@ export class FichaDesignacionesComponent implements OnInit {
       let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
       // sessionStorage.removeItem("buscadorColegiados");
       this.listaTarjetas[0].opened = true;
+    }else if(sessionStorage.getItem("colegiadoGeneralDesigna")){
+      let colegiadoGeneral = JSON.parse(sessionStorage.getItem("colegiadoGeneralDesigna"));
+      this.listaTarjetas[0].opened = true;
     }
-
     if (!this.nuevaDesigna) {
       this.mostrar();
       //EDICIÓN DESIGNA
@@ -364,11 +366,13 @@ export class FichaDesignacionesComponent implements OnInit {
           "value": designaItem.descripcionTipoDesigna
         }
       ]
+      // this.searchContrarios(false);
     /* this.listaTarjetas[4].enlaces=[{
     id: null,
         ref: null,
         nombre: this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.vacio')
     }] */
+    this.progressSpinner = false;
     }else{
       //NUEVA DESIGNA
       let camposResumen = [
@@ -443,14 +447,25 @@ export class FichaDesignacionesComponent implements OnInit {
       this.listaTarjetas[0].campos = camposGenerales;
       this.listaTarjetas[1].campos = camposDetalle;
       this.listaTarjetas[2].campos = datosAdicionales;
+      this.listaTarjetas[1].detalle = false;
+      this.listaTarjetas[2].detalle = false;
+      this.listaTarjetas[3].detalle = false;
+      this.listaTarjetas[4].detalle = false;
+      this.listaTarjetas[5].detalle = false;
+      this.listaTarjetas[6].detalle = false;
+      this.listaTarjetas[7].detalle = false;
+      this.listaTarjetas[8].detalle = false;
+      this.listaTarjetas[9].detalle = false;
+      this.listaTarjetas[10].detalle = false;
+      this.listaTarjetas[11].detalle = false;
       /* this.listaTarjetas[4].enlaces=[{
       id: null,
           ref: null,
           nombre: this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.vacio')
       }] */
-      this.searchContrarios(false);
       //Actualizar para que los campos se rellenen en base a la tabla de la tarjeta interesados
       this.searchInteresados();
+      this.progressSpinner = false;
     }
     this.getActuacionesDesigna(false);
 
@@ -460,6 +475,23 @@ export class FichaDesignacionesComponent implements OnInit {
     if(sessionStorage.getItem("buscadorColegiados")){​​
       let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
       this.tarjetaFija.campos[1].value = busquedaColegiado.nColegiado;
+    }else if(sessionStorage.getItem("colegiadoGeneralDesigna")){​​
+      let busquedaColegiado = JSON.parse(sessionStorage.getItem("colegiadoGeneralDesigna"));
+      this.tarjetaFija.campos[1].value = busquedaColegiado.numeroColegiado;
+    }
+    this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
+    if(this.nuevaDesigna){
+      this.listaTarjetas[1].detalle = true;
+      this.listaTarjetas[2].detalle = true;
+      this.listaTarjetas[3].detalle = true;
+      this.listaTarjetas[4].detalle = true;
+      this.listaTarjetas[5].detalle = true;
+      this.listaTarjetas[6].detalle = true;
+      this.listaTarjetas[7].detalle = true;
+      this.listaTarjetas[8].detalle = true;
+      this.listaTarjetas[9].detalle = true;
+      this.listaTarjetas[10].detalle = true;
+      this.listaTarjetas[11].detalle = true;
     }
   }
 
