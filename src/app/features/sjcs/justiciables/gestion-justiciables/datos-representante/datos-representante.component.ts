@@ -293,23 +293,25 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 	}
 
 	searchRepresentanteByIdPersona() {
-		if (this.generalBody.idpersona.trim() != undefined && this.generalBody.idpersona.trim() != '') {
-			this.progressSpinner = true;
-			let bodyBusqueda = new JusticiableBusquedaItem();
-			bodyBusqueda.idpersona = this.generalBody.idpersona;
+		if(this.generalBody.idpersona!=undefined){
+			if (this.generalBody.idpersona.trim() != undefined && this.generalBody.idpersona.trim() != '') {
+				this.progressSpinner = true;
+				let bodyBusqueda = new JusticiableBusquedaItem();
+				bodyBusqueda.idpersona = this.generalBody.idpersona;
 
-			this.sigaServices.post('gestionJusticiables_getJusticiableByIdPersona', bodyBusqueda).subscribe(
-				(n) => {
-					this.generalBody = JSON.parse(n.body).justiciable;
-					this.nifRepresentante = this.generalBody.nif;
-					this.progressSpinner = false;
-					this.compruebaDNI();
-				},
-				(err) => {
-					this.progressSpinner = false;
-					console.log(err);
-				}
-			);
+				this.sigaServices.post('gestionJusticiables_getJusticiableByIdPersona', bodyBusqueda).subscribe(
+					(n) => {
+						this.generalBody = JSON.parse(n.body).justiciable;
+						this.nifRepresentante = this.generalBody.nif;
+						this.progressSpinner = false;
+						this.compruebaDNI();
+					},
+					(err) => {
+						this.progressSpinner = false;
+						console.log(err);
+					}
+				);
+			}
 		}
 	}
 

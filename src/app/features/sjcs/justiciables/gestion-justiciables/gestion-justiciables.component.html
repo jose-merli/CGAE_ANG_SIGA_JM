@@ -28,7 +28,7 @@
       y no querer actualizar el justiciable propio-->
 
       <app-datos-personales *ngSwitchCase="'personales'" [showTarjeta]="ficha.activa" [body]="body" (notifySearchJusticiableByNif)="searchJusticiableByNif($event)"
-        (newJusticiable)="newJusticiable($event)" (searchJusticiableOverwritten)="searchJusticiableOverwritten($event)"></app-datos-generales>
+        (newJusticiable)="newJusticiable($event)" (searchJusticiableOverwritten)="searchJusticiableOverwritten($event)"></app-datos-personales>
 
       <!-- showTarjeta: variable indica si se muestra o no la tarjeta -->
       <!-- body: variable donde se le pasa la informacion de un justiciable -->
@@ -62,13 +62,13 @@
       <!-- body: variable donde se le pasa la informacion de un justiciable -->
       <!-- modoEdicion: variable indica si estamos en modo edicion o nuevo -->
 
-      <app-datos-abogado-contrario *ngSwitchCase="'abogado'" [showTarjeta]="ficha.activa" [body]="body"  [modoEdicion]="modoEdicion"></app-datos-abogado-contrario>
+      <!-- <app-datos-abogado-contrario *ngSwitchCase="'abogado'" [showTarjeta]="ficha.activa" [body]="body"  [modoEdicion]="modoEdicion"></app-datos-abogado-contrario> -->
     
       <!-- showTarjeta: variable indica si se muestra o no la tarjeta -->
       <!-- body: variable donde se le pasa la informacion de un justiciable -->
       <!-- modoEdicion: variable indica si estamos en modo edicion o nuevo -->
 
-      <app-datos-procurador-contrario *ngSwitchCase="'procurador'" [showTarjeta]="ficha.activa" [body]="body" [modoEdicion]="modoEdicion"></app-datos-procurador-contrario>
+      <!-- <app-datos-procurador-contrario *ngSwitchCase="'procurador'" [showTarjeta]="ficha.activa" [body]="body" [modoEdicion]="modoEdicion"></app-datos-procurador-contrario> -->
     </div>
   </div>
 </div>

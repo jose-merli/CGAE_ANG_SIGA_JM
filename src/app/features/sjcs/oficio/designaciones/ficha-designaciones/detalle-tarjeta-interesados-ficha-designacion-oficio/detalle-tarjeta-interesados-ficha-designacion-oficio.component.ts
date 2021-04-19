@@ -41,6 +41,10 @@ export class DetalleTarjetaInteresadosFichaDesignacionOficioComponent implements
       activa: true
     },
     {
+      key: "personales",
+      activa: true
+    },
+    {
       key: "solicitud",
       activa: false
     },
