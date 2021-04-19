@@ -4,16 +4,23 @@
 
 <div class="card">
     <div class="card-body p-0">
-        <app-filtro-designaciones (busquedaJustificacionExpres)="busquedaJustificacionExpres($event)" (busqueda)="busquedaDesignaciones($event)" (showTablaDesigna)="showTablaDesigna($event)" (showTablaJustificacionExpres)="showTablaJustificacionExpres($event)"></app-filtro-designaciones>
-        <app-gestion-designaciones  *ngIf="muestraTablaDesignas" [datos]="datos" id="tablaFoco"></app-gestion-designaciones>
+        <app-filtro-designaciones (busquedaJustificacionExpres)="busquedaJustificacionExpres($event)"
+            (busqueda)="busquedaDesignaciones($event)" (showTablaDesigna)="showTablaDesigna($event)"
+            (showTablaJustificacionExpres)="showTablaJustificacionExpres($event)"></app-filtro-designaciones>
     </div>
 </div>
 
 <div>
-    <app-tabla-justificacion-expres *ngIf="muestraTablaJustificacion" [datosJustificacion]="datosJustificacion" id="tablaFoco"></app-tabla-justificacion-expres>
+    <app-gestion-designaciones *ngIf="muestraTablaDesignas" [datos]="datos" id="tablaFoco"></app-gestion-designaciones>
+</div>
+
+<div>
+    <app-tabla-justificacion-expres *ngIf="muestraTablaJustificacion" [datosJustificacion]="datosJustificacion"
+        id="tablaFoco"></app-tabla-justificacion-expres>
 </div>
 <div class="mt-3 text-right main-button ">
-    <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
+    <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left"
+        label="{{ 'general.boton.volver' | translate}}"></button>
 </div>
 <div *ngIf="progressSpinner" class="overlay-spinner">
     <div class="loader"></div>

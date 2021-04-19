@@ -416,9 +416,15 @@ import { GestionDesignacionesComponent } from './features/sjcs/oficio/designacio
 import { FiltroDesignacionesComponent } from './features/sjcs/oficio/designaciones/filtro-designaciones/filtro-designaciones.component';
 import { DesignacionesComponent } from './features/sjcs/oficio/designaciones/designaciones.component';
 import { DetalleTarjetaActuacionesFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-ficha-designacion-oficio/detalle-tarjeta-actuaciones-ficha-designacion-oficio.component';
-import { FichaActuacionDesignaOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-ficha-designacion-oficio/ficha-actuacion-designa-oficio/ficha-actuacion-designa-oficio.component';
 import { DetalleTarjetaProcuradorFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-procurador-ficha-designacion-oficio/detalle-tarjeta-procurador-ficha-designacion-oficio.component';
 import { Paginador2Module } from './features/sjcs/oficio/designaciones/ficha-designaciones/paginador2/paginador2.module';
+import { FichaActuacionComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-ficha-designacion-oficio/ficha-actuacion/ficha-actuacion.component';
+import { TarjetaDatosGenFichaActComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-ficha-designacion-oficio/ficha-actuacion/tarjeta-datos-gen-ficha-act/tarjeta-datos-gen-ficha-act.component';
+import { TarjetaJustificacionFichaActComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-ficha-designacion-oficio/ficha-actuacion/tarjeta-justificacion-ficha-act/tarjeta-justificacion-ficha-act.component';
+import { TarjetaDatosFactFichaActComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-ficha-designacion-oficio/ficha-actuacion/tarjeta-datos-fact-ficha-act/tarjeta-datos-fact-ficha-act.component';
+import { TarjetaDocumentacionFichaActComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-ficha-designacion-oficio/ficha-actuacion/tarjeta-documentacion-ficha-act/tarjeta-documentacion-ficha-act.component';
+import { TarjetaHistoricoFichaActComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-ficha-designacion-oficio/ficha-actuacion/tarjeta-historico-ficha-act/tarjeta-historico-ficha-act.component';
+import { TarjetaRelacionesFichaActComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-ficha-designacion-oficio/ficha-actuacion/tarjeta-relaciones-ficha-act/tarjeta-relaciones-ficha-act.component';
 
 
 @NgModule({
@@ -760,7 +766,13 @@ import { Paginador2Module } from './features/sjcs/oficio/designaciones/ficha-des
 		FormularioBusquedaComponent,
 		FormularioSubidaComponent,
 		ListaArchivosComponent,
-		FichaActuacionDesignaOficioComponent,
+		FichaActuacionComponent,
+		TarjetaDatosGenFichaActComponent,
+		TarjetaJustificacionFichaActComponent,
+		TarjetaRelacionesFichaActComponent,
+		TarjetaDatosFactFichaActComponent,
+		TarjetaDocumentacionFichaActComponent,
+		TarjetaHistoricoFichaActComponent,
 
 	],
 	imports: [

@@ -34,7 +34,10 @@
   <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
     <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
       <td class="text-center" *ngFor="let col of columns">
-        <span [ngClass]="{'setItalic': isItalic(dato)}">{{dato[col.field]}}</span>
+        <span *ngIf="col.field !='numeroAsunto'" [ngClass]="{'setItalic': isItalic(dato)}">{{dato[col.field]}}</span>
+        <span *ngIf="col.field =='numeroAsunto'" [ngClass]="{'setItalic': isItalic(dato)}">
+          <a (click)="editarActuacion(dato)" class="enlace">{{ dato[col.field]}}</a>
+        </span>
       </td>
     </tr>
   </ng-template>
