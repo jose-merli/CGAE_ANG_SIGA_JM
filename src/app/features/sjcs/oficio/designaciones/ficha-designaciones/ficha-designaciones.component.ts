@@ -516,7 +516,6 @@ nombreTurno: "ZELIMINAR-CIJAECI05 - MATRIMONIAL CONTENCIOSO JAÉN" */
         this.tarjetaContrarios.tabla.sortOrder = 0;
         this.tarjetaContrarios.tabla.sortField = '';
         this.tarjetaContrarios.tabla.reset();
-        this.tarjetaContrarios.buscadores = this.tarjetaContrarios.buscadores.map(it => it = "");
       }
       if (this.tarjetaContrarios != null && this.tarjetaContrarios != undefined) {
         this.tarjetaContrarios.historico = event;
@@ -590,7 +589,6 @@ nombreTurno: "ZELIMINAR-CIJAECI05 - MATRIMONIAL CONTENCIOSO JAÉN" */
         this.tarjetaInteresados.tabla.sortOrder = 0;
         this.tarjetaInteresados.tabla.sortField = '';
         this.tarjetaInteresados.tabla.reset();
-        this.tarjetaInteresados.buscadores = this.tarjetaInteresados.buscadores.map(it => it = "");
       }
       },
       err => {

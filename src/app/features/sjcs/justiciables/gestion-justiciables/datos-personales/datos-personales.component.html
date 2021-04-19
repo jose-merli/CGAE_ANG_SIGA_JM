@@ -1,0 +1,139 @@
+
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+
+
+<div *ngIf="showTarjetaPermiso" class="ficha-container">
+  <div class="card">
+    <div class="card-header header-ficha" (click)="onHideTarjeta()">
+      <div *ngIf="!showTarjeta" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="fa fa-user icon-ficha"></i>
+          </div>
+          <div class="col-lg-11 col-md-10 ">
+            <div class="d-flex justify-content-start mb-1">
+              <label class="mr-auto title-ficha">{{ 'formacion.fichaInscripcion.datosPersonales.cabecera' | translate }}</label>
+            </div>
+            <div class="row">
+              <div class="col-3">
+                <label>{{ "censo.fichaCliente.literal.identificacion" | translate }}
+                  <span>{{ body.nif }}</span>
+                </label>
+              </div>
+              <div class="col-3">
+                <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}
+                  <span>{{ body.nombre }} {{ body.apellido11 }} {{ body.apellido2 }}</span>
+                </label>
+              </div>
+              <div class="col-3">
+                <label>{{ "censo.consultaDatosColegiacion.literal.fechaNac" | translate }}
+                  <span>{{ body.fechanacimiento | date: 'dd/MM/yyyy' }}</span>
+                </label>
+              </div>
+              <div class="col-3">
+                <label>{{ "administracion.usuarios.literal.fechaAlta" | translate }}
+                  <span>{{ body.fechaalta | date: 'dd/MM/yyyy' }}</span>
+                </label>
+                <i *ngIf="!showTarjeta" class="fa fa-angle-down float-right"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="showTarjeta" class=" header-ficha-open d-flex justify-content-start align-items-center">
+          <div class="img-colegiado">
+            <i class="fa fa-user icon-ficha"></i>
+          </div>
+          <label class="title-ficha">{{ 'administracion.catalogos.titulo.datos.generales' | translate }}</label>
+          <i class="fa fa-angle-up ml-auto"></i>
+        </div>
+      </div>
+        </div><div class="bloque col-lg-6 col-md-6">
+  <div class="form-row">
+    <div class="form-group col-lg-12 col-md-1 input-ayuda">
+      <label style="font-weight: bold;">{{ 'formacion.fichaInscripcion.datosPersonales.cabecera' | translate }}</label>
+    </div>
+    <div class="form-group col-lg-3 col-md-3">
+      <label>{{ "censo.busquedaClientesAvanzada.literal.sexo" | translate }}
+      </label>
+      <p-dropdown class="select-form" [(ngModel)]="body.sexo" [options]="comboSexo" [filter]="true" filterBy="label,labelSinTilde"
+        showClear="true" placeholder="{{'general.boton.seleccionar' | translate}}" [disabled]="!permisoEscritura"></p-dropdown>
+    </div>
+    <div class="form-group col-lg-3 col-md-3">
+      <label>{{ "censo.consultaDatosColegiacion.literal.fechaNac" | translate }}
+      </label>
+      <app-fecha [(value)]="body.fechanacimiento" (valueChangeInput)="fillFechaNacimiento($event)" (valueChangeSelected)="fillFechaNacimiento($event)"
+        [utc]="false" [disabled]="!permisoEscritura"></app-fecha>
+    </div>
+    <div class="form-group col-lg-3 col-md-3">
+      <label>{{ "censo.consultaDatosGenerales.literal.edad" | translate }}
+      </label>
+      <input type="text" class="form-control" disabled [(ngModel)]="body.edad" [disabled]="!permisoEscritura" pInputText />
+    </div>
+    <div class="form-group col-lg-3 col-md-3">
+      <label>{{ "administracion.usuarios.literal.fechaAlta" | translate }}
+      </label>
+      <app-fecha [(value)]="body.fechaalta" [disabled]="true" [utc]="false" [disabled]="!permisoEscritura"></app-fecha>
+    </div>
+    <div class="form-group col-lg-6 col-md-6">
+      <label>{{ "censo.consultaDatosGenerales.literal.estadoCivil" | translate }}
+      </label>
+      <p-dropdown class="select-form" [options]="comboEstadoCivil" showClear="true" placeholder="{{'general.boton.seleccionar' | translate}}"
+        [filter]="true" filterBy="label,labelSinTilde" [(ngModel)]="body.idestadocivil" [disabled]="!permisoEscritura"></p-dropdown>
+    </div>
+    <div class="form-group col-lg-6 col-md-6">
+      <label>{{ "gratuita.personaJG.literal.regimenConyugal" | translate }}
+      </label>
+      <p-dropdown class="select-form" [options]="comboRegimenConyugal" showClear="true" placeholder="{{'general.boton.seleccionar' | translate}}"
+        [(ngModel)]="body.regimenConyugal" [filter]="true" filterBy="label,labelSinTilde" [disabled]="!permisoEscritura"></p-dropdown>
+    </div>
+    <div class="form-group col-lg-6 col-md-6">
+      <label>{{ "gratuita.personaJG.literal.profesion" | translate }}
+      </label>
+      <p-dropdown class="select-form" [options]="comboProfesion" showClear="true" placeholder="{{'general.boton.seleccionar' | translate}}"
+        [(ngModel)]="body.idprofesion" [filter]="true" filterBy="label,labelSinTilde" [disabled]="!permisoEscritura"></p-dropdown>
+    </div>
+    <div class="form-group col-lg-3 col-md-3">
+      <label>{{ "gratuita.busquedaSOJ.literal.minusvalia" | translate }}
+      </label>
+      <p-dropdown class="select-form" [options]="comboMinusvalia" showClear="true" placeholder="{{'general.boton.seleccionar' | translate}}"
+        [(ngModel)]="body.idminusvalia" [filter]="true" filterBy="label,labelSinTilde" [disabled]="!permisoEscritura"></p-dropdown>
+    </div>
+    <div class="form-group col-lg-3 col-md-3">
+      <label>{{ 'censo.usuario.idioma' | translate }}
+      </label>
+      <p-dropdown class="select-form" [options]="comboIdiomas" showClear="true" placeholder="{{'general.boton.seleccionar' | translate}}"
+        [(ngModel)]="body.idlenguaje" [filter]="true" filterBy="label,labelSinTilde" [disabled]="!permisoEscritura"></p-dropdown>
+    </div>
+  </div>
+</div>
+
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" icon="fa fa-question-circle" width="425" key="cdGeneralesSave"
+  #cdGeneralesSave>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="cdGeneralesSave.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="cdGeneralesSave.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" icon="fa fa-question-circle" width="425" key="cdGeneralesUpdate"
+  #cdGeneralesUpdate>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="cdGeneralesUpdate.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="reject()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" icon="fa fa-question-circle" width="425" key="cdPreferenteSms"
+  #cdPreferenteSms>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="cdPreferenteSms.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="cdPreferenteSms.reject()"></button>
+  </p-footer>
+</p-confirmDialog>

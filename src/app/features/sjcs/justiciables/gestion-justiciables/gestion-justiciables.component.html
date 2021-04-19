@@ -27,6 +27,14 @@
       <!-- createJusticiableByUpdateSolicitud: Funcion para indicar a las demás tarjetas que se ha creado un nuevo justiciable al cambiar los datos de solicitud
       y no querer actualizar el justiciable propio-->
 
+      <app-datos-personales *ngSwitchCase="'personales'" [showTarjeta]="ficha.activa" [body]="body" (notifySearchJusticiableByNif)="searchJusticiableByNif($event)"
+        (newJusticiable)="newJusticiable($event)" (searchJusticiableOverwritten)="searchJusticiableOverwritten($event)"></app-datos-generales>
+
+      <!-- showTarjeta: variable indica si se muestra o no la tarjeta -->
+      <!-- body: variable donde se le pasa la informacion de un justiciable -->
+      <!-- createJusticiableByUpdateSolicitud: Funcion para indicar a las demás tarjetas que se ha creado un nuevo justiciable al cambiar los datos de solicitud
+      y no querer actualizar el justiciable propio-->
+
       <app-datos-solicitud *ngSwitchCase="'solicitud'" [showTarjeta]="ficha.activa" [body]="body" (createJusticiableByUpdateSolicitud)="createJusticiableByUpdateSolicitud($event)"></app-datos-solicitud>
 
       <!-- showTarjeta: variable indica si se muestra o no la tarjeta -->

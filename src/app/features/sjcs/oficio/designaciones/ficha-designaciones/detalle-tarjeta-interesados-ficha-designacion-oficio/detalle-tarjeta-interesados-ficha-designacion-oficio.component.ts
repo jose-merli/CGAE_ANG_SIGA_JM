@@ -31,6 +31,37 @@ export class DetalleTarjetaInteresadosFichaDesignacionOficioComponent implements
   selectAll: boolean= false;
   progressSpinner: boolean = false;
   
+  fichasPosibles = [
+    {
+      origen: "justiciables",
+      activa: true
+    },
+    {
+      key: "generales",
+      activa: true
+    },
+    {
+      key: "solicitud",
+      activa: false
+    },
+    {
+      key: "representante",
+      activa: false
+    },
+    {
+      key: "asuntos",
+      activa: false
+    },
+    {
+      key: "abogado",
+      activa: false
+    },
+    {
+      key: "procurador",
+      activa: false
+    }
+
+  ];
 
   @ViewChild("table") tabla;
 
@@ -139,6 +170,7 @@ export class DetalleTarjetaInteresadosFichaDesignacionOficioComponent implements
 
   openTab(evento) {
     this.persistenceService.setBody(evento);
+    this.persistenceService.setFichasPosibles(this.fichasPosibles);
     this.router.navigate(["/gestionJusticiables"]);
   }
   

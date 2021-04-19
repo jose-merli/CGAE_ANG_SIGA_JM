@@ -45,7 +45,8 @@ export class GestionJusticiablesComponent implements OnInit {
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
     private commnosService: CommonsService,
-    private authenticationService: AuthenticationService) { }
+    private authenticationService: AuthenticationService, 
+    private location: Location) { }
 
   ngOnInit() {
 
@@ -84,11 +85,11 @@ export class GestionJusticiablesComponent implements OnInit {
             this.fichasPosibles = this.persistenceService.getFichasPosibles();
             this.fromJusticiable = this.fichasPosibles[0].activa;
         
-            if(sessionStorage.getItem("origin")=="contrario"){
+            /* if(sessionStorage.getItem("origin")=="contrario"){
               sessionStorage.removeItem('origin');
               this.fichasPosibles[5].activa=true;
               this.fichasPosibles[6].activa=true;
-            }
+            } */
           }
 
           //Carga de la persistencia 
@@ -297,7 +298,8 @@ export class GestionJusticiablesComponent implements OnInit {
       this.navigateToJusticiable = false;
       this.search();
     } else {
-      this.router.navigate(["/justiciables"]);
+      //this.router.navigate(["/justiciables"]);
+      this.location.back();
     }
 
   }
