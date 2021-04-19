@@ -15,7 +15,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
   @Input() nombreAp;
   @Input() tarjeta;
   @Input() pantalla;
-  @Input() disabled: boolean = false;
+  @Input() disabled;
 
   @Output() idPersona = new EventEmitter<string>();
   progressSpinner: boolean = false;

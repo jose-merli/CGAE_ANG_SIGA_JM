@@ -14,6 +14,7 @@ export class ActuacionesJustificacionExpressItem {
 	numAsunto : String;
 	idProcedimiento : String;
 	idJuzgado : String;
+	nombreJuzgado: String;
 	fechaJustificacion : String;
 	validada : String;
 	idFacturacion : String;
