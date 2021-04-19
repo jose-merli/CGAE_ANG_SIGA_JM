@@ -19,7 +19,9 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
   msgs: Message[] = [];
   nuevaDesigna: any;
   checkArt: boolean;
+  disableCheckArt: boolean;
   initDatos: any;
+  disableButtons: boolean;
   @Input() campos;
   @Input() selectedValue;
   anio = {
@@ -75,9 +77,11 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     this.initDatos =this.campos;
     if(!this.nuevaDesigna){
       //EDICION
+      this.disableButtons = true;
       this.cargaDatos(this.initDatos);
    
     }else{
+      this.disableButtons = false;
       this.cargaDatosNueva();
       
     }
@@ -120,6 +124,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
   }
 
   cargaDatos(datosInicial){
+    this.disableCheckArt = true;
     this.checkArt = true;
     this.selectores[0].opciones = [{label: datosInicial.nombreTurno, value: datosInicial.idTurno}];
     this.selectores[0].value =  datosInicial.idTurno;
@@ -157,6 +162,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
   }
 
   cargaDatosNueva(){
+    this.disableCheckArt = false;
     if(sessionStorage.getItem("buscadorColegiados")){​​
       this.busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
       // sessionStorage.removeItem("buscadorColegiados");
@@ -168,6 +174,8 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       this.inputs[1].disable = true;
       this.inputs[2].disable = true;
       
+    }else if(sessionStorage.getItem("colegiadoGeneralDesigna")){
+       console.log(sessionStorage.getItem("colegiadoGeneralDesigna"));
     }else{
       this.inputs[0].value="";
       this.inputs[1].value="";
@@ -253,11 +261,15 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         newDesigna.nombreColegiado = this.inputs[1].value;
         newDesigna.apellidosNombre = this.inputs[2].value;
         newDesigna.fechaAlta = this.fechaGenerales;
-        newDesigna.ano = 2021;
+        var today = new Date();
+        var year = today.getFullYear().valueOf();
+        newDesigna.ano = year;
         this.checkDatosGenerales();
         if(this.resaltadoDatos == true){
           this.sigaServices.post("create_NewDesigna", newDesigna).subscribe(
             n => {
+              sessionStorage.removeItem("nuevaDesigna");
+              sessionStorage.setItem("nuevaDesigna",  "false;");
               //MENSAJE DE TODO CORRECTO
               this.msgs.push({
                 severity,
@@ -284,7 +296,9 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         newDesigna.nombreColegiado = this.inputs[1].value;
         newDesigna.apellidosNombre = this.inputs[2].value;
         newDesigna.fechaAlta = new Date(this.fechaGenerales);
-        newDesigna.ano = 2021;
+        var today = new Date();
+        var year = today.getFullYear().valueOf();
+        newDesigna.ano = year;
         this.checkDatosGenerales();
         if(this.resaltadoDatos == true){
         this.sigaServices.post("", newDesigna).subscribe(
@@ -367,16 +381,25 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
   }
 
   searchColegiado(){
-    sessionStorage.setItem("Art27Activo","false");
+    sessionStorage.setItem("Art27Activo","true");
     let datosDesigna = new DesignaItem();
     datosDesigna.idTurno = Number(this.selectores[0].value);
     datosDesigna.fechaAlta = this.fechaGenerales;
     sessionStorage.setItem("datosDesgina",JSON.stringify(datosDesigna));
-    this.router.navigate(["/buscadorColegiados"]);
+    if(this.nuevaDesigna && this.checkArt){//BUSQUEDA GENERAL
+      this.router.navigate(["/busquedaGeneral"]);
+    }else if(this.nuevaDesigna && !this.checkArt){//BUSQUEDA SJCS
+      this.router.navigate(["/buscadorColegiados"]);
+    }
+    
   }
 
   onChangeArt(){
-    
+    if(!this.nuevaDesigna){
+        this.disableCheckArt = false;
+    }else{
+      this.disableCheckArt = true;
+    }
   }
 
   confirmarActivar(severity, summary, detail) {
@@ -396,11 +419,15 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
           newDesigna.nombreColegiado = this.inputs[1].value;
           newDesigna.apellidosNombre = this.inputs[2].value;
           newDesigna.fechaAlta = this.fechaGenerales;
-          newDesigna.ano = 2021;
+          var today = new Date();
+          var year = today.getFullYear().valueOf();
+          newDesigna.ano = year;
           this.checkDatosGenerales();
           if(this.resaltadoDatos == true){
             this.sigaServices.post("create_NewDesigna", newDesigna).subscribe(
               n => {
+                sessionStorage.removeItem("nuevaDesigna");
+                sessionStorage.setItem("nuevaDesigna",  "false;");
                 //MENSAJE DE TODO CORRECTO
                 this.msgs.push({
                   severity,
@@ -433,7 +460,9 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
           newDesigna.nombreColegiado = this.inputs[1].value;
           newDesigna.apellidosNombre = this.inputs[2].value;
           newDesigna.fechaAlta = new Date(this.fechaGenerales);
-          newDesigna.ano = 2021;
+          var today = new Date();
+          var year = today.getFullYear().valueOf();
+          newDesigna.ano = year;
           this.checkDatosGenerales();
           if(this.resaltadoDatos == true){
           this.sigaServices.post("", newDesigna).subscribe(

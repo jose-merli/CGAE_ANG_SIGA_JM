@@ -7,6 +7,7 @@ import { JustificacionExpressItem } from '../../../../../models/sjcs/Justificaci
 import { SigaServices } from '../../../../../_services/siga.service';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
+import { FileAlreadyExistException } from '@angular-devkit/core';
 
 @Component({
   selector: 'app-filtro-designaciones',
@@ -63,7 +64,7 @@ export class FiltroDesignacionesComponent implements OnInit {
   comboOrigenActuaciones: any[];
   comboRoles: any[];
   comboAcreditaciones: any[];
-
+  institucionActual: any;
   @Output() busquedaJustificacionExpres = new EventEmitter<boolean>();
   @Output() showTablaDesigna = new EventEmitter<boolean>();
   @Output() showTablaJustificacionExpres = new EventEmitter<boolean>();
@@ -75,8 +76,13 @@ export class FiltroDesignacionesComponent implements OnInit {
     if(!esColegiado){
       this.isButtonVisible = true;
     }else{
-      this.isButtonVisible = true;
+      this.isButtonVisible = true;// DEBE SER FALSE
     }
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      this.institucionActual = n.value;});
+      if(this.institucionActual == "2003"){
+        this.isButtonVisible = false;
+      }
     this.filtroJustificacion = new JustificacionExpressItem();
 
     this.showDesignas=true;
