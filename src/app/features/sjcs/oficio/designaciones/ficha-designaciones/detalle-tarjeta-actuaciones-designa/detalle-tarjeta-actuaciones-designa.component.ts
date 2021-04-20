@@ -19,8 +19,8 @@ export interface Actuacion {
 
 @Component({
   selector: 'app-detalle-tarjeta-actuaciones-ficha-designacion-oficio',
-  templateUrl: './detalle-tarjeta-actuaciones-ficha-designacion-oficio.component.html',
-  styleUrls: ['./detalle-tarjeta-actuaciones-ficha-designacion-oficio.component.scss']
+  templateUrl: './detalle-tarjeta-actuaciones-designa.component.html',
+  styleUrls: ['./detalle-tarjeta-actuaciones-designa.component.scss']
 })
 export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements OnInit {
 

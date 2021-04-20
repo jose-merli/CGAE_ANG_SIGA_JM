@@ -8,7 +8,6 @@ import { CommonsService } from '../../../../_services/commons.service';
 import { OldSigaServices } from '../../../../_services/oldSiga.service';
 import { SigaServices } from '../../../../_services/siga.service';
 import { FiltroDesignacionesComponent } from './filtro-designaciones/filtro-designaciones.component';
-import moment = require('moment');
 
 @Component({
   selector: 'app-designaciones',
