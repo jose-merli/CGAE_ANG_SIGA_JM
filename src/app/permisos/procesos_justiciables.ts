@@ -5,6 +5,9 @@ export const procesos_justiciables: any = {
     tarjetaDatosGenerales: "89B",
     tarjetaDatosSolicitud: "89C",
     tarjetaDatosRepresentante: "89D",
-    tarjetaAsuntos: "89E"
+    tarjetaAsuntos: "89E",
+    tarjetaAbogadoContrario: "89F",
+    tarjetaProcuradorContrario: "89G",
+    tarjetaDatosPersonales: "89H"
 
 }

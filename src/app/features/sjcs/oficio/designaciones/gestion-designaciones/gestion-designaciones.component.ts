@@ -3,6 +3,9 @@ import { PersistenceService } from '../../../../../_services/persistence.service
 import { Table } from 'primeng/table';
 import { Router } from '@angular/router';
 import { SigaServices } from '../../../../../_services/siga.service';
+import { ControlAccesoDto } from '../../../../../models/ControlAccesoDto';
+import { procesos_oficio } from '../../../../../permisos/procesos_oficio';
+import { TranslateService } from '../../../../../commons/translate';
 import { Message } from 'primeng/components/common/api';
 
 
@@ -14,6 +17,7 @@ import { Message } from 'primeng/components/common/api';
 export class GestionDesignacionesComponent implements OnInit {
   msgs: Message[] = [];
   selectMultiple: boolean = false;
+  selectAll: boolean = false;
   rowsPerPage: any = [];
   cols;
   buscadores = [];
@@ -32,7 +36,7 @@ export class GestionDesignacionesComponent implements OnInit {
 
   @ViewChild("table") tabla: Table;
 
-  constructor(private persistenceService: PersistenceService, private router: Router,  public sigaServices: SigaServices) { }
+  constructor(private persistenceService: PersistenceService, private router: Router,  public sigaServices: SigaServices, private translateService: TranslateService) { }
 
   ngOnInit() {
     this.getComboTipoDesignas();
@@ -140,6 +144,40 @@ arregloTildesCombo(combo) {
       });
   }
 
+    checkAcceso() {
+        this.progressSpinner = true;
+        let controlAcceso = new ControlAccesoDto();
+        controlAcceso.idProceso = procesos_oficio.designa;
+    
+        this.sigaServices.post("acces_control", controlAcceso).subscribe(
+          data => {
+            const permisos = JSON.parse(data.body);
+            const permisosArray = permisos.permisoItems;
+            const derechoAcceso = permisosArray[0].derechoacceso;
+    
+            if (derechoAcceso == 3) {// es un colegio
+    //           this.activacionEditar = true;
+            } else if (derechoAcceso == 2) { //es un colegiado
+    //           this.activacionEditar = false;
+            } else {
+              sessionStorage.setItem("codError", "403");
+              sessionStorage.setItem(
+                "descError",
+                this.translateService.instant("generico.error.permiso.denegado")
+              );
+              this.router.navigate(["/errorAcceso"]);
+            }
+          },
+          err => {
+            this.progressSpinner = false;
+            console.log(err);
+          },
+          () => {
+            this.progressSpinner = false;
+          }
+        );
+    
+      } 
   actualizaSeleccionados(selectedDatos) {
 
   }
@@ -170,6 +208,14 @@ arregloTildesCombo(combo) {
 
   clear() {
     this.msgs = [];
+  }
+
+  delete(){
+
+  }
+
+  comunicar(){
+    
   }
 
 }

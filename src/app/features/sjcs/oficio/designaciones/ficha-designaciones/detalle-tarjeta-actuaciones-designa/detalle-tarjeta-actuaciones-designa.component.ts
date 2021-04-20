@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { ActuacionDesignaItem } from '../../../../../../models/sjcs/ActuacionDesignaItem';
-import { Message } from 'primeng/api';
+import { Message } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../../../commons/translate/translation.service';
 import { Router } from '@angular/router';
 

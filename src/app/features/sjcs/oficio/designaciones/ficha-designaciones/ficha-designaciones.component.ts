@@ -374,6 +374,17 @@ export class FichaDesignacionesComponent implements OnInit {
       }] */
       this.progressSpinner = false;
     } else {
+
+      this.searchContrarios(false);
+      /* this.listaTarjetas[4].enlaces=[{
+      id: null,
+          ref: null,
+          nombre: this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.vacio')
+      }] */
+      //Actualizar para que los campos se rellenen en base a la tabla de la tarjeta interesados
+      this.searchInteresados();
+      this.progressSpinner = false;
+
       //NUEVA DESIGNA
       let camposResumen = [
         {
@@ -443,10 +454,22 @@ export class FichaDesignacionesComponent implements OnInit {
           "value": "No existen observaciones definidas para la designación"
         }
       ];
+      let interesadosVacio = [{
+        "key": null,
+        "value": this.translateService.instant('justiciaGratuita.oficio.designas.interesados.vacio')
+      },]
+      let contrariosVacio = [{
+        "key": null,
+        "value": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.vacio')
+      },]
+
       this.tarjetaFija.campos = camposResumen;
       this.listaTarjetas[0].campos = camposGenerales;
       this.listaTarjetas[1].campos = camposDetalle;
       this.listaTarjetas[2].campos = datosAdicionales;
+      this.listaTarjetas[3].campos = interesadosVacio;
+      this.listaTarjetas[4].campos = contrariosVacio;
+
       //DESHABILITAMOS TODAS LAS TARJETAS HASTA Q SE CREE LA DESIGNACION
       // this.listaTarjetas[1].detalle = false;
       // this.listaTarjetas[2].detalle = false;
@@ -464,8 +487,7 @@ export class FichaDesignacionesComponent implements OnInit {
           ref: null,
           nombre: this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.vacio')
       }] */
-      //Actualizar para que los campos se rellenen en base a la tabla de la tarjeta interesados
-      this.searchInteresados();
+
       this.progressSpinner = false;
     }
     this.getActuacionesDesigna(false);
@@ -861,7 +883,6 @@ nombreTurno: "ZELIMINAR-CIJAECI05 - MATRIMONIAL CONTENCIOSO JAÉN" */
           this.tarjetaContrarios.tabla.sortOrder = 0;
           this.tarjetaContrarios.tabla.sortField = '';
           this.tarjetaContrarios.tabla.reset();
-          this.tarjetaContrarios.buscadores = this.tarjetaContrarios.buscadores.map(it => it = "");
         }
         if (this.tarjetaContrarios != null && this.tarjetaContrarios != undefined) {
           this.tarjetaContrarios.historico = event;
@@ -936,7 +957,6 @@ nombreTurno: "ZELIMINAR-CIJAECI05 - MATRIMONIAL CONTENCIOSO JAÉN" */
           this.tarjetaInteresados.tabla.sortOrder = 0;
           this.tarjetaInteresados.tabla.sortField = '';
           this.tarjetaInteresados.tabla.reset();
-          this.tarjetaInteresados.buscadores = this.tarjetaInteresados.buscadores.map(it => it = "");
         }
       },
       err => {
