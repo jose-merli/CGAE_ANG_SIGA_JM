@@ -11,6 +11,12 @@ export interface Col {
   width: string
 }
 
+export interface Actuacion {
+  isNew: boolean,
+  designaItem: any,
+  actuacion: ActuacionDesignaItem
+}
+
 @Component({
   selector: 'app-detalle-tarjeta-actuaciones-ficha-designacion-oficio',
   templateUrl: './detalle-tarjeta-actuaciones-ficha-designacion-oficio.component.html',
@@ -249,7 +255,28 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
   }
 
   nuevo() {
+
+    let actuacion: Actuacion = {
+      isNew: true,
+      designaItem: this.campos,
+      actuacion: null
+    }
+
+    sessionStorage.setItem("actuacionDesigna", JSON.stringify(actuacion));
     this.router.navigate(['/fichaActDesigna']);
+  }
+
+  editarActuacion(act: ActuacionDesignaItem) {
+
+    let actuacion: Actuacion = {
+      isNew: false,
+      designaItem: this.campos,
+      actuacion: act 
+    };
+
+    sessionStorage.setItem("actuacionDesigna", JSON.stringify(actuacion));
+    this.router.navigate(['/fichaActDesigna']);
+
   }
 
 }

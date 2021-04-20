@@ -175,7 +175,11 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       this.inputs[2].disable = true;
       
     }else if(sessionStorage.getItem("colegiadoGeneralDesigna")){
-       console.log(sessionStorage.getItem("colegiadoGeneralDesigna"));
+      let colegiadoGeneral = JSON.parse(sessionStorage.getItem("colegiadoGeneralDesigna"));
+      this.inputs[0].value=colegiadoGeneral[0].numeroColegiado;
+      this.inputs[1].value=colegiadoGeneral[0].apellidos;
+      this.inputs[2].value=colegiadoGeneral[0].nombre;
+      sessionStorage.removeItem("colegiadoGeneralDesigna");
     }else{
       this.inputs[0].value="";
       this.inputs[1].value="";
@@ -269,7 +273,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
           this.sigaServices.post("create_NewDesigna", newDesigna).subscribe(
             n => {
               sessionStorage.removeItem("nuevaDesigna");
-              sessionStorage.setItem("nuevaDesigna",  "false;");
+              sessionStorage.setItem("nuevaDesigna",  "false");
               //MENSAJE DE TODO CORRECTO
               this.msgs.push({
                 severity,

@@ -705,6 +705,7 @@ getComboCalidad() {
 
   nuevo(){
       sessionStorage.setItem("nuevaDesigna",  "true");
+      this.progressSpinner=false;
       this.router.navigate(["/fichaDesignaciones"]);
   }
 

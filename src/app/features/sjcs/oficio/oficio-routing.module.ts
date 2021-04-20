@@ -9,7 +9,7 @@ import { BajasTemporalesComponent } from './bajas-temporales/busqueda-bajas-temp
 import { CargasMasivasOficioComponent } from './cargas-masivas-oficio/cargas-masivas-oficio.component';
 import { FichaDesignacionesComponent } from './designaciones/ficha-designaciones/ficha-designaciones.component';
 import { SaltosCompensacionesOficioComponent } from './saltos-compensaciones-oficio/saltos-compensaciones-oficio.component';
-import { FichaActuacionDesignaOficioComponent } from './designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-ficha-designacion-oficio/ficha-actuacion-designa-oficio/ficha-actuacion-designa-oficio.component';
+import { FichaActuacionComponent } from './designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-ficha-designacion-oficio/ficha-actuacion/ficha-actuacion.component';
 
 
 const routesOficio: Routes = [
@@ -55,7 +55,7 @@ const routesOficio: Routes = [
   },
   {
     path: "fichaActDesigna",
-    component: FichaActuacionDesignaOficioComponent,
+    component: FichaActuacionComponent,
     canActivate: [AuthGuard]
   },
 ];
