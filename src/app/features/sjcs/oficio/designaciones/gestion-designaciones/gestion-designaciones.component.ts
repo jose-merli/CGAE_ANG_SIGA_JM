@@ -173,4 +173,12 @@ arregloTildesCombo(combo) {
     this.msgs = [];
   }
 
+  delete(){
+
+  }
+
+  comunicar(){
+    
+  }
+
 }
