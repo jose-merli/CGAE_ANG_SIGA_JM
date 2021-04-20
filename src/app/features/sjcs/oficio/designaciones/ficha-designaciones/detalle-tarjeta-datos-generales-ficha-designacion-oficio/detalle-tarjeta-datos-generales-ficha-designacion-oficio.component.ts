@@ -137,7 +137,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     this.anio.disable=  true;
     this.numero.value = datosInicial.codigo;
     this.numero.disable = false;
-    this.fechaGenerales = datosInicial.fechaAlta;
+    this.fechaGenerales = datosInicial.fechaEntradaInicio;
     let colegiado = new ColegiadoItem();
     colegiado.numColegiado = datosInicial.numColegiado;
     colegiado.idInstitucion = datosInicial.idInstitucion;

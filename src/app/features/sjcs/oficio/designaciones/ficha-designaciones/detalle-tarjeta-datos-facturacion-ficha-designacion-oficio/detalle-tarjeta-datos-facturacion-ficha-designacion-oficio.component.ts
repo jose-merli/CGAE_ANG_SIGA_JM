@@ -45,15 +45,16 @@ export class DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent imple
 
   showMsg(severity, summary, detail) {
     this.msgs = [];
+    if(detail == "Restablecer"){
+
+    }else if(detail == "Guardar"){
+
+    }
     this.msgs.push({
       severity,
       summary,
       detail
     });
-
-    if(detail == "Restablecer"){
-
-    }
   }
 
   clear() {

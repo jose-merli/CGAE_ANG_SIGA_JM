@@ -22,7 +22,7 @@ export class FiltroDesignacionesComponent implements OnInit {
     numColegiado: '',
     nombreAp: ''
   };
-  private isButtonVisible = true;
+  isButtonVisible = true;
   filtroJustificacion: JustificacionExpressItem = new JustificacionExpressItem();
   datos;
   expanded: boolean = false;
@@ -121,13 +121,7 @@ export class FiltroDesignacionesComponent implements OnInit {
 
     //viene de buscador express
     if (sessionStorage.getItem('buscadorColegiados')) {
-      this.progressSpinner=true;
-
-      const { nombre, apellidos, nColegiado } = JSON.parse(sessionStorage.getItem('buscadorColegiados')).subscribe(
-        ()=>{
-          this.progressSpinner=false;
-        }
-      );
+      const { nombre, apellidos, nColegiado } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
 
       this.usuarioBusquedaExpress.nombreAp = `${apellidos}, ${nombre}`;
       this.usuarioBusquedaExpress.numColegiado = nColegiado;
@@ -148,7 +142,6 @@ export class FiltroDesignacionesComponent implements OnInit {
         const permisosArray = permisos.permisoItems;
         const derechoAcceso = permisosArray[0].derechoacceso;
 
-        //revisar esto para la finalizar el desarrollo
         this.esColegiado=true;
         if (derechoAcceso == 3) { //es colegio
           this.esColegiado = false;
@@ -498,7 +491,8 @@ getComboCalidad() {
   buscar(){
     //es la busqueda de justificacion
     if(this.showJustificacionExpress){
-      if(this.usuarioBusquedaExpress.numColegiado!=undefined && this.usuarioBusquedaExpress.numColegiado!=null){
+      if(this.usuarioBusquedaExpress.numColegiado!=undefined && this.usuarioBusquedaExpress.numColegiado!=null
+        && this.usuarioBusquedaExpress.numColegiado.trim().length!=0){
         this.filtroJustificacion.nColegiado=this.usuarioBusquedaExpress.numColegiado;
       }
 
@@ -506,16 +500,10 @@ getComboCalidad() {
       this.filtroJustificacion.restriccionesVisualizacion = this.checkRestricciones;
 
       if(this.compruebaFiltroJustificacion()){
-        // this.filtroJustificacion.muestraPendiente=this.checkMostrarPendientes;
-
-        //QUITAR ESTA LINEA CUANDO FINALICE LAS PRUEBAS
-        this.filtroJustificacion.nColegiado=undefined;
-
         this.showTablaJustificacionExpres.emit(false);
         this.busquedaJustificacionExpres.emit(true);
       }
-    }
-    else{
+    }else{
       if(this.usuarioBusquedaExpress.numColegiado!=undefined && this.usuarioBusquedaExpress.numColegiado!=null){
         this.filtroJustificacion.nColegiado=this.usuarioBusquedaExpress.numColegiado;
       }
@@ -567,12 +555,12 @@ getComboCalidad() {
         designa.apellidosInteresado = this.body.apellidosInteresado;
         designa.nombreInteresado = this.body.nombreInteresado;
         designa.rol = this.body.rol;
+        
         sessionStorage.setItem("designaItem", JSON.stringify(designa));
-        // this.filtroJustificacion.muestraPendiente=this.checkMostrarPendientes;
+        
         this.progressSpinner = false;
         this.busqueda.emit(false);
-          // this.commonsService.scrollTablaFoco('tablaFoco');
-        }
+      }
     }
   
 
@@ -586,7 +574,8 @@ getComboCalidad() {
   }
 
   compruebaFiltroJustificacion(){
-    if(this.filtroJustificacion.nColegiado!=undefined && this.filtroJustificacion.nColegiado!=null){
+    if(this.filtroJustificacion.nColegiado!=undefined && this.filtroJustificacion.nColegiado!=null
+      && this.usuarioBusquedaExpress.numColegiado.trim().length!=0){
       return true;
     }else{
       this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.oficio.justificacionExpres.message.ncolegiadoObligatorio"));

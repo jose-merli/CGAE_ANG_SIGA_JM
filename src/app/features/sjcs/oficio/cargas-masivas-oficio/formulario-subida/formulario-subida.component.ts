@@ -4,6 +4,7 @@ import { DatePipe } from "../../../../../../../node_modules/@angular/common";
 import { SigaServices } from "../../../../../_services/siga.service";
 import { CommonsService } from '../../../../../_services/commons.service';
 import { TranslateService } from "../../../../../commons/translate";
+import { Message } from 'primeng/components/common/api';
 
 @Component({
   selector: 'app-formulario-subida',
@@ -21,7 +22,7 @@ export class FormularioSubidaComponent implements OnInit {
   progressSpinner: boolean = false;
   fechaSolicitud: Date = undefined;
   file: File = undefined;
-  msgs: any;
+  msgs: Message[] = [];
   datos: any[];
   selectedDatos;
 
@@ -223,6 +224,10 @@ export class FormularioSubidaComponent implements OnInit {
       summary: this.translateService.instant("general.message.incorrect"),
       detail: mensaje
     });
+  }
+
+  clear() {
+    this.msgs = [];
   }
 
   sendDatos() {
