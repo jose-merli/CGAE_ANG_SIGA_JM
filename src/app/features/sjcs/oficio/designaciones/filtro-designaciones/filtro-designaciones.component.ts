@@ -709,4 +709,9 @@ getComboCalidad() {
       this.router.navigate(["/fichaDesignaciones"]);
   }
 
+  changeColegiado(event) {
+    this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
+    this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
+  }
+
 }

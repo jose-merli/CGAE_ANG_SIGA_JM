@@ -109,6 +109,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit {
     this.getComboPrisiones();
 
     if (this.actuacionDesigna.isNew) {
+      this.inputs1[0].value = this.actuacionDesigna.actuacion.numeroAsunto;
       this.inputNig.value = this.actuacionDesigna.designaItem.nig;
       this.inputNumPro.value = this.actuacionDesigna.designaItem.numProcedimiento;
       this.selectores[0].value = this.actuacionDesigna.designaItem.idJuzgado;

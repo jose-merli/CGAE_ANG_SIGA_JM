@@ -10,8 +10,7 @@
 
 <!-- Tabla de actuaciones -->
 <p-table [value]="actuacionesDesignaItems" [columns]="cols" [responsive]="true" #table class="tabla-listado"
-  [first]="first" [ngClass]="{ 'customCursor': selectMultiple}" selectionMode="multiple"
-  [(selection)]="actuacionesSeleccionadas" (onRowSelect)="onRowSelected($event)">
+  selectionMode="multiple" [(selection)]="actuacionesSeleccionadas" (onRowSelect)="onRowSelected($event)">
 
   <ng-template pTemplate="colgroup" let-columns>
     <colgroup>
