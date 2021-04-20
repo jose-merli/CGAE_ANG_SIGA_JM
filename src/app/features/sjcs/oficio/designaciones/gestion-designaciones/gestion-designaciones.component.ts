@@ -14,6 +14,7 @@ import { Message } from 'primeng/components/common/api';
 export class GestionDesignacionesComponent implements OnInit {
   msgs: Message[] = [];
   selectMultiple: boolean = false;
+  selectAll: boolean = false;
   rowsPerPage: any = [];
   cols;
   buscadores = [];
