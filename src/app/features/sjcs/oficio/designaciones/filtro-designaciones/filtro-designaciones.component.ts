@@ -22,7 +22,7 @@ export class FiltroDesignacionesComponent implements OnInit {
     numColegiado: '',
     nombreAp: ''
   };
-  private isButtonVisible = true;
+  isButtonVisible = true;
   filtroJustificacion: JustificacionExpressItem = new JustificacionExpressItem();
   datos;
   expanded: boolean = false;
