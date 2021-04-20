@@ -137,4 +137,20 @@ export class DatosProcuradorContrarioComponent implements OnInit {
 			detail: msg
 		});
 	}
+  
+  clear() {
+		this.msgs = [];
+  }
+	
+  reject(){
+	
+  }
+	
+  rejectAssociate(){
+	
+  }
+	
+  rejectDisassociate(){
+	
+  }
 }
