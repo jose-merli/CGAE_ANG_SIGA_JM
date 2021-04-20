@@ -11,6 +11,7 @@ import { ConfirmationService } from 'primeng/api';
 import { SigaConstants } from '../../../../../utils/SigaConstants';
 import { procesos_justiciables } from '../../../../../permisos/procesos_justiciables';
 import { DatosColegiadosItem } from '../../../../../models/DatosColegiadosItem';
+import { Message } from 'primeng/components/common/api';
 
 @Component({
   selector: 'app-datos-abogado-contrario',
@@ -23,9 +24,9 @@ export class DatosAbogadoContrarioComponent implements OnInit {
   navigateToColegiado: Boolean = false;
   progressSpinner: Boolean = true;
 
-  idPersona;
-  msgs = [];
-  nifRepresentante;
+  idPersona: String = '';
+  msgs: Message[] = [];
+  nifRepresentante: String = '';
 
   showTarjetaPermiso: boolean = false;
   showEnlaceAbogado: boolean = false;
@@ -230,5 +231,22 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 			detail: msg
 		});
   }
+
+  clear() {
+    this.msgs = [];
+  }
+
+  reject(){
+
+  }
+
+  rejectAssociate(){
+
+  }
+
+  rejectDisassociate(){
+
+  }
+  
   
 }
