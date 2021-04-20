@@ -19,6 +19,7 @@ import { ButtonModule, CheckboxModule, RadioButtonModule, DropdownModule, InputT
 import { FormsModule } from '@angular/forms';
 import { MatExpansionModule } from '@angular/material';
 import { BusquedaColegiadoExpressModule } from '../../../commons/busqueda-colegiado-express/busqueda-colegiado-express.module';
+import { FormularioBusquedaComponent } from './cargas-masivas-oficio/formulario-busqueda/formulario-busqueda.component';
 
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/primeng';
@@ -44,7 +45,7 @@ import { DetalleTarjetaProcuradorFichaDesignaionOficioService } from './designac
                 GestionBajasTemporalesModule,
                 GrowlModule,
                 RadioButtonModule,
-                DropdownModule, 
+                DropdownModule,
                 InputTextModule,
                 ConfirmDialogModule,
                 PipeTranslationModule,

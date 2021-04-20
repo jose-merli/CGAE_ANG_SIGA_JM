@@ -9,7 +9,7 @@ export class ColegiadosSJCSItem {
 	inscritoturno: string;
 	inscritoguardia: string;
 	guardiasPendientes: string;
-	idTurno: string;
+	idTurno: String[];
 	idInstitucion: string;
 	usuModificacion: number;
 	fechaModificacion: Date;
@@ -22,7 +22,7 @@ export class ColegiadosSJCSItem {
 	codigoExt: string;
 	email: string;
 	nombrePoblacion: string;
-	idGuardia: string;
+	idGuardia: String[];
 	telefono: string;
 	abreviatura: string;
 	idPersona: string;

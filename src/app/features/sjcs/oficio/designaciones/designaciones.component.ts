@@ -1,13 +1,13 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { OldSigaServices } from '../../../../_services/oldSiga.service';
-import { FiltroDesignacionesComponent } from './filtro-designaciones/filtro-designaciones.component';
-import { Message } from 'primeng/components/common/api';
-import { SigaServices } from '../../../../_services/siga.service';
 import { DatePipe, Location } from '@angular/common';
-import { CommonsService } from '../../../../_services/commons.service';
-import { JustificacionExpressItem } from '../../../../models/sjcs/JustificacionExpressItem';
-import moment = require('moment');
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { Message } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../commons/translate';
+import { JustificacionExpressItem } from '../../../../models/sjcs/JustificacionExpressItem';
+import { CommonsService } from '../../../../_services/commons.service';
+import { OldSigaServices } from '../../../../_services/oldSiga.service';
+import { SigaServices } from '../../../../_services/siga.service';
+import { FiltroDesignacionesComponent } from './filtro-designaciones/filtro-designaciones.component';
 
 @Component({
   selector: 'app-designaciones',
@@ -33,6 +33,7 @@ export class DesignacionesComponent implements OnInit {
 
   constructor(public sigaServices: OldSigaServices, public sigaServicesNew: SigaServices, private location: Location,  private commonsService: CommonsService, 
     private datePipe: DatePipe, private translateService: TranslateService) {
+
     this.url = sigaServices.getOldSigaUrl("designaciones");
   }
 
@@ -91,14 +92,18 @@ export class DesignacionesComponent implements OnInit {
     this.progressSpinner = true;
     let data = sessionStorage.getItem("designaItem");
     let designaItem = JSON.parse(data);
+    if(designaItem.numColegiado == ""){
+      designaItem.numColegiado = null;
+    }
     this.sigaServicesNew.post("designaciones_busqueda", designaItem).subscribe(
       n => {
         this.datos = JSON.parse(n.body);
         this.datos.forEach(element => {
-         element.ano = 'D' +  element.ano + '/' + element.numero;
+         element.ano = 'D' +  element.ano + '/' + element.codigo;
         //  element.fechaEstado = new Date(element.fechaEstado);
         element.fechaEstado = this.formatDate(element.fechaEstado);
         element.fechaAlta = this.formatDate(element.fechaAlta);
+        element.fechaEntradaInicio = this.formatDate(element.fechaEntradaInicio);
          if(element.art27 == 'V'){
            element.sufijo = element.art27;
           element.art27 = 'Activo';
@@ -109,8 +114,8 @@ export class DesignacionesComponent implements OnInit {
           element.sufijo = element.art27;
           element.art27 = 'Anulada';
          }
-         element.idTipoDesignaColegio = element.observaciones;
          element.nombreColegiado = element.apellido1Colegiado +" "+ element.apellido2Colegiado+", "+element.nombreColegiado;
+         element.nombreInteresado = element.apellido1Interesado +" "+ element.apellido2Interesado+", "+element.nombreInteresado;
         });
         this.progressSpinner=false;
         this.showTablaDesigna(true);

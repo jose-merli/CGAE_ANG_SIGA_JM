@@ -10,8 +10,7 @@
 
 <!-- Tabla de actuaciones -->
 <p-table [value]="actuacionesDesignaItems" [columns]="cols" [responsive]="true" #table class="tabla-listado"
-  [first]="first" [ngClass]="{ 'customCursor': selectMultiple}" selectionMode="multiple"
-  [(selection)]="actuacionesSeleccionadas" (onRowSelect)="onRowSelected($event)">
+  selectionMode="multiple" [(selection)]="actuacionesSeleccionadas" (onRowSelect)="onRowSelected($event)">
 
   <ng-template pTemplate="colgroup" let-columns>
     <colgroup>
@@ -34,7 +33,10 @@
   <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
     <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
       <td class="text-center" *ngFor="let col of columns">
-        <span [ngClass]="{'setItalic': isItalic(dato)}">{{dato[col.field]}}</span>
+        <span *ngIf="col.field !='numeroAsunto'" [ngClass]="{'setItalic': isItalic(dato)}">{{dato[col.field]}}</span>
+        <span *ngIf="col.field =='numeroAsunto'" [ngClass]="{'setItalic': isItalic(dato)}">
+          <a (click)="editarActuacion(dato)" class="enlace">{{ dato[col.field]}}</a>
+        </span>
       </td>
     </tr>
   </ng-template>
@@ -53,8 +55,8 @@
   <div class="text-right main-button">
     <button pButton type="button" icon="fa fa-comment" iconPos="left"
       label="{{'general.boton.comunicar' | translate }}"></button>
-    <button [disabled]="!isAnySelected()" pButton type="button" icon="fa fa-trash-alt" iconPos="left"
-      label="{{'general.boton.eliminar' | translate}}"></button>
+    <button [disabled]="!isAnySelected() || historico" pButton type=" button" icon="fa fa-trash-alt" iconPos="left"
+      label="{{'general.boton.eliminar' | translate}}" (click)="eliminar()"></button>
     <button *ngIf="!historico" pButton type="button" icon="fa fa-history" iconPos="left"
       label="{{'general.message.mostrarHistorico' | translate}}" (click)="toogleHistory(true)"></button>
     <button *ngIf="historico" pButton type="button" icon="fa fa-undo" iconPos="left"
@@ -62,9 +64,9 @@
     <button *ngIf="!historico" [disabled]="!isAnySelected()" pButton type="button" iconPos="left"
       label="{{ 'general.boton.anular' | translate}}" (click)="anular()"></button>
     <button *ngIf="historico" [disabled]="!isAnySelected()" pButton type="button" iconPos="left"
-      label="{{ 'general.boton.reactivar' | translate}}"></button>
-    <button pButton type="button" icon="fa fa-plus" iconPos="left"
-      label="{{ 'general.boton.new' | translate}}"></button>
+      label="{{ 'general.boton.reactivar' | translate}}" (click)="reactivar()"></button>
+    <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"
+      (click)="nuevo()"></button>
   </div>
 </div>
 <!-- Tabla de actuaciones -->

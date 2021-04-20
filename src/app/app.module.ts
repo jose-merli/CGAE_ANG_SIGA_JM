@@ -348,7 +348,7 @@ import { FiltroBuscadorProcuradorComponent } from './commons/buscador-procurador
 import { TablaBuscadorProcuradorComponent } from './commons/buscador-procuradores/tabla/tabla.component';
 import { GeneralSJCSModule } from './commons/busqueda-generalSJCS/busqueda-generalSJCS.module';
 import { TurnosComponent } from './features/sjcs/oficio/turnos/busqueda-turnos.component';
-import { BusquedaAsuntosModule} from './commons/busqueda-asuntos/busqueda-asuntos.module';
+import { BusquedaAsuntosModule } from './commons/busqueda-asuntos/busqueda-asuntos.module';
 import { OficioModule } from './features/sjcs/oficio/oficio.module';
 
 
@@ -374,7 +374,7 @@ import { GuardiaModule } from './features/sjcs/guardia/guardia.module';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
-import { MatExpansionModule } from '@angular/material/expansion';
+import { MatAccordion, MatExpansionModule } from '@angular/material/expansion';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -389,7 +389,7 @@ import { TablaBuscadorColegiadosComponent } from './commons/buscador-colegiados/
 import { MigasDePanComponent } from './commons/migas-de-pan/migas-de-pan.component';
 import { FormularioBusquedaComponent } from './features/sjcs/oficio/cargas-masivas-oficio/formulario-busqueda/formulario-busqueda.component';
 import { FormularioSubidaComponent } from './features/sjcs/oficio/cargas-masivas-oficio/formulario-subida/formulario-subida.component';
-import{ ListaArchivosComponent } from './features/sjcs/oficio/cargas-masivas-oficio/lista-archivos/lista-archivos.component';
+import { ListaArchivosComponent } from './features/sjcs/oficio/cargas-masivas-oficio/lista-archivos/lista-archivos.component';
 
 import { DatePickerRangeComponent } from './commons/date-picker-range/date-picker-range.component';
 import { HoraComponent } from './commons/hora/hora.component';
@@ -411,13 +411,20 @@ import { DetalleTarjetaDocumentacionFichaDesignacionOficioComponent } from './fe
 import { TablaResultadoOrderComponent } from './commons/tabla-resultado-order/tabla-resultado-order.component';
 import { TablaSimpleComponent } from './commons/tabla-simple/tabla-simple.component';
 import { TarjetaComponent } from './commons/tarjeta/tarjeta.component';
-import { TablaJustificacionExpresComponent  } from './features/sjcs/oficio/designaciones/tabla-justificacion-expres/tabla-justificacion-expres.component';
+import { TablaJustificacionExpresComponent } from './features/sjcs/oficio/designaciones/tabla-justificacion-expres/tabla-justificacion-expres.component';
 import { GestionDesignacionesComponent } from './features/sjcs/oficio/designaciones/gestion-designaciones/gestion-designaciones.component'
 import { FiltroDesignacionesComponent } from './features/sjcs/oficio/designaciones/filtro-designaciones/filtro-designaciones.component';
 import { DesignacionesComponent } from './features/sjcs/oficio/designaciones/designaciones.component';
-import { DetalleTarjetaActuacionesFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-ficha-designacion-oficio/detalle-tarjeta-actuaciones-ficha-designacion-oficio.component';
+import { DetalleTarjetaActuacionesFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-designa/detalle-tarjeta-actuaciones-designa.component';
 import { DetalleTarjetaProcuradorFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-procurador-ficha-designacion-oficio/detalle-tarjeta-procurador-ficha-designacion-oficio.component';
 import { Paginador2Module } from './features/sjcs/oficio/designaciones/ficha-designaciones/paginador2/paginador2.module';
+import { FichaActuacionComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-designa/ficha-actuacion/ficha-actuacion.component';
+import { TarjetaDatosGenFichaActComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-designa/ficha-actuacion/tarjeta-datos-gen-ficha-act/tarjeta-datos-gen-ficha-act.component';
+import { TarjetaJusFichaActComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-designa/ficha-actuacion/tarjeta-jus-ficha-act/tarjeta-jus-ficha-act.component';
+import { TarjetaDatosFactFichaActComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-designa/ficha-actuacion/tarjeta-datos-fact-ficha-act/tarjeta-datos-fact-ficha-act.component';
+import { TarjetaDocFichaActComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-designa/ficha-actuacion/tarjeta-doc-ficha-act/tarjeta-doc-ficha-act.component';
+import { TarjetaHisFichaActComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-designa/ficha-actuacion/tarjeta-his-ficha-act/tarjeta-his-ficha-act.component';
+import { TarjetaRelFichaActComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-designa/ficha-actuacion/tarjeta-rel-ficha-act/tarjeta-rel-ficha-act.component';
 
 
 @NgModule({
@@ -759,6 +766,13 @@ import { Paginador2Module } from './features/sjcs/oficio/designaciones/ficha-des
 		FormularioBusquedaComponent,
 		FormularioSubidaComponent,
 		ListaArchivosComponent,
+		FichaActuacionComponent,
+		TarjetaDatosGenFichaActComponent,
+		TarjetaJusFichaActComponent,
+		TarjetaRelFichaActComponent,
+		TarjetaDatosFactFichaActComponent,
+		TarjetaDocFichaActComponent,
+		TarjetaHisFichaActComponent,
 
 	],
 	imports: [
@@ -829,7 +843,7 @@ import { Paginador2Module } from './features/sjcs/oficio/designaciones/ficha-des
 		SjcsModule,
 		OficioModule,
 		BusquedaAsuntosModule,
-		Paginador2Module
+		Paginador2Module,
 	],
 
 	exports: [],

@@ -1,0 +1,61 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<!-- Spinner -->
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+<!-- Spinner -->
+
+<div class="row w-100 m-0 padding-interior">
+  <div class="bloque col-lg-4 col-md-4 mb-5">
+    <div class="form-row">
+
+      <div class="form-group col-lg-6 col-md-6 w-100">
+        <label>{{ datePicker.label }}</label>
+        <app-fecha [utc]="true" [(value)]='datePicker.value'></app-fecha>
+      </div>
+
+      <div class="form-group col-lg-6 col-md-6 w-100" *ngFor="let input of inputs1; let i = index;">
+        <label>{{ input.label }}</label>
+        <input type="text" class="form-control" pInputText [(ngModel)]="input.value"
+          [readonly]="i === 0 || i === 1 || i === 2">
+      </div>
+
+      <div class="form-group col-lg-12 col-md-12 w-100">
+        <label>{{ textarea.label }}</label>
+        <textarea class="form-control" pInputTextarea [(ngModel)]="textarea.value"></textarea>
+      </div>
+
+    </div>
+  </div>
+  <div class="col-lg-8 col-md-8 mb-5">
+    <div class="form-row">
+      <div class="form-group col-lg-4 col-md-4 w-100">
+        <label>{{ inputNig.label }}</label>
+        <input type="text" class="form-control" pInputText [(ngModel)]="inputNig.value">
+      </div>
+      <div class="form-group col-lg-2 col-md-2 w-100">
+        <label>{{ inputNumPro.label }}</label>
+        <input type="text" class="form-control" pInputText [(ngModel)]="inputNumPro.value">
+      </div>
+      <div class="form-group col-lg-6 col-md-6 w-100" *ngFor="let selector of selectores">
+        <label>{{ selector.nombre }}</label>
+        <p-dropdown class="select-form" [(ngModel)]="selector.value"
+          placeholder="{{'general.boton.seleccionar' | translate}}" [options]="selector.opciones" [filter]="true"
+          filterBy="label,labelSinTilde" [showClear]="true">
+        </p-dropdown>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card-footer">
+  <div class="text-right main-button">
+    <button pButton type="button" icon="fa fa-paper-plane" iconPos="left" label="Comunicar"
+      (click)="showMsg('success', 'Se ha comunicado correctamente', '')"></button>
+    <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer"
+      (click)="showMsg('success', 'Se ha restablecido correctamente', '')"></button>
+    <button pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"
+      (click)="showMsg('success', 'Se ha guardado correctamente', '')" disabled></button>
+  </div>
+</div>

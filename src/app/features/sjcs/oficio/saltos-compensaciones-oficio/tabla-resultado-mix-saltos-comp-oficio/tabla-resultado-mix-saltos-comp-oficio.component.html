@@ -18,11 +18,11 @@
           </div>
         </div>
       </div>
-      <div *ngFor="let row of rowGroups | slice:from:to; let i = index; trackBy:trackByIdx" class="table-row child">
+      <div *ngFor="let row of rowGroups | slice:from:to; let i = index" class="table-row child">
         <div (click)="selectRow(row['id'], row['cells'])" class="table-row-wrapper hoverBlue"
           [ngClass]="{'hoverBlue2': isSelected(row['id']), 'fixedBlue': seleccionarTodo && ((!historico && !isNew(row)) || (historico && isSelectableInHistorical(row)))}"
           #rowSelected>
-          <div *ngFor="let cell of row['cells'] | slice:0:7; let z = index; trackBy:trackByIdx"
+          <div *ngFor="let cell of row['cells'] | slice:0:7"
             class="table-cell p-2 selectedRowClass"
             [ngClass]="{'borders-child': isPar(i), 'justify-content-start': emptyResults}" #cellSelected>
             <div class="cell-wrapper selectedRowClass">

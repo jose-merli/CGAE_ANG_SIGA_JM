@@ -25,6 +25,9 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
   from = 0;
   to = 10;
   searchText = [];
+  isLetrado: boolean = false;
+  isDisabled: boolean = false;
+  numperPage = 10;
 
   comboMotivo = [
     { label: "Vacaciones", value: "V" },
@@ -35,6 +38,7 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
   
   @Output() modDatos = new EventEmitter<any>();
   @Output() mostrar = new EventEmitter<any>();
+  @Output() restablecer = new EventEmitter<any>();
 
   constructor(
     private renderer: Renderer2,
@@ -50,6 +54,7 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
   });}
 
   ngOnInit() {
+    this.mostrarDatos();
 
     this.totalRegistros = this.rowGroups.length;
 
@@ -57,7 +62,14 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
 
     this.numColumnas = this.numCabeceras;
 
-    this.mostrarDatos();
+        // Si es un colegiado y es un letrado, no podrá guardar/restablecer datos de la inscripcion/personales
+        if (
+          sessionStorage.getItem("isLetrado") != null &&
+          sessionStorage.getItem("isLetrado") != undefined
+        ) {
+          this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
+        }
+            
   }
 
   mostrarDatos(){
@@ -125,6 +137,11 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
     this.totalRegistros = this.rowGroups.length;
   }
 
+  checkRestablecer(){
+    this.restablecer.emit();
+    this.totalRegistros = this.rowGroups.length;
+  }
+
   nuevo(){
     const now = Date.now();
     const myFormattedDate = this.pipe.transform(now, 'dd/MM/yyyy');
@@ -165,6 +182,32 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
       this.totalRegistros = this.rowGroups.length;
       console.log('this.rowGroups: ', this.rowGroups);
     }
+    showMessage(severity, summary, msg) {
+      this.msgs = [];
+      this.msgs.push({
+        severity: severity,
+        summary: summary,
+        detail: msg
+      });
+    }
+  
+    showMsg(severity, summary, detail) {
+      this.msgs = [];
+      this.msgs.push({
+        severity,
+        summary,
+        detail
+      });
+    }
+  
+    clear() {
+      this.msgs = [];
+    }
+
+    perPage(perPage){
+      this.numperPage = perPage;
+    }
+  
 }
 function compare(a: string, b: number | string, isAsc: boolean) {
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);

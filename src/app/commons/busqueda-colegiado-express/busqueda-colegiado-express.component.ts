@@ -15,7 +15,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
   @Input() nombreAp;
   @Input() tarjeta;
   @Input() pantalla;
-  @Input() disabled: boolean = false;
+  @Input() disabled;
 
   @Output() idPersona = new EventEmitter<string>();
   progressSpinner: boolean = false;
@@ -74,6 +74,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
 
             this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("general.message.colegiadoNoEncontrado"));
           }
+          this.changeValue();
         },
         error => {
           this.progressSpinner = false;
@@ -81,6 +82,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
           form.numColegiado = "";
           this.numColegiado = "";
           this.idPersona.emit("");
+          this.changeValue();
           console.log(error);
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         }

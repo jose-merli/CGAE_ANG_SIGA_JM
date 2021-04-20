@@ -3,6 +3,7 @@ import { PersistenceService } from '../../../../../_services/persistence.service
 import { Table } from 'primeng/table';
 import { Router } from '@angular/router';
 import { SigaServices } from '../../../../../_services/siga.service';
+import { Message } from 'primeng/components/common/api';
 
 
 @Component({
@@ -11,7 +12,8 @@ import { SigaServices } from '../../../../../_services/siga.service';
   styleUrls: ['./gestion-designaciones.component.scss']
 })
 export class GestionDesignacionesComponent implements OnInit {
-
+  msgs: Message[] = [];
+  selectMultiple: boolean = false;
   rowsPerPage: any = [];
   cols;
   buscadores = [];
@@ -59,12 +61,12 @@ export class GestionDesignacionesComponent implements OnInit {
     this.cols = [
       { field: "nombreTurno", header: "justiciaGratuita.sjcs.designas.DatosIden.turno" },
       { field: "ano", header: "justiciaGratuita.ejg.datosGenerales.annioNum" },
-      { field: "fechaAlta", header: "censo.resultadosSolicitudesModificacion.literal.fecha" },
+      { field: "fechaEntradaInicio", header: "censo.resultadosSolicitudesModificacion.literal.fecha" },
       { field: "art27", header: "censo.nuevaSolicitud.estado" },
       { field: "numColegiado", header: "facturacionSJCS.facturacionesYPagos.numColegiado" },
       { field: "nombreColegiado", header: "administracion.parametrosGenerales.literal.nombre.apellidos" },
-      { field: "interesados", header: "justiciaGratuita.justiciables.literal.interesados" },
-      { field: "validada", header: "general.boton.validar" },
+      { field: "nombreInteresado", header: "justiciaGratuita.justiciables.literal.interesados" },
+      { field: "validada", header: "Validada" },
     ];
     this.cols.forEach(element => {
       this.buscadores.push("");
@@ -138,5 +140,36 @@ arregloTildesCombo(combo) {
       });
   }
 
+  actualizaSeleccionados(selectedDatos) {
+
+  }
+
+  clickFila(event) {
+    if (event.data) { //} && !event.data.fechaBaja) {
+      this.selectedDatos.pop();
+    }
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+
+  showMsg(severity, summary, detail) {
+    this.msgs = [];
+    this.msgs.push({
+      severity,
+      summary,
+      detail
+    });
+  }
+
+  clear() {
+    this.msgs = [];
+  }
 
 }

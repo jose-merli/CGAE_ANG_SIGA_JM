@@ -1,3 +1,7 @@
+<!-- Alertas -->
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<!-- Alertas -->
+
 <div id="fichaDesignacionOficio">
 
     <div>
@@ -51,7 +55,7 @@
                                         </app-detalle-tarjeta-detalle-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Datos Adicionales'">
-                                        <app-detalle-tarjeta-datos-adicionales-ficha-designacion-oficio>
+                                        <app-detalle-tarjeta-datos-adicionales-ficha-designacion-oficio [campos]="campos">
                                         </app-detalle-tarjeta-datos-adicionales-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Datos Facturación'">
@@ -76,7 +80,9 @@
                                         </app-detalle-tarjeta-interesados-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Actuaciones'">
-                                        <app-detalle-tarjeta-actuaciones-ficha-designacion-oficio [campos]="campos">
+                                        <app-detalle-tarjeta-actuaciones-ficha-designacion-oficio [campos]="campos"
+                                            [actuacionesDesignaItems]="actuacionesDesignaItems"
+                                            (buscarEvent)="getActuacionesDesigna($event)">
                                         </app-detalle-tarjeta-actuaciones-ficha-designacion-oficio>
                                     </div>
                                 </ng-template>
@@ -95,6 +101,8 @@
 
 </div>
 
+<!-- Spinner -->
 <div *ngIf="progressSpinner" class="overlay-spinner">
     <div class="loader"></div>
-  </div>
+</div>
+<!-- Spinner -->
