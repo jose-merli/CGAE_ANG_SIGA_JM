@@ -76,7 +76,8 @@
     </div>
 
     <div class="mt-3 text-right main-button">
-      <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
+      <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left"
+        label="{{ 'general.boton.volver' | translate}}"></button>
     </div>
 
     <div id="down"></div>
@@ -84,3 +85,9 @@
   </div>
 
 </div>
+
+<!-- Spinner -->
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+<!-- Spinner -->

@@ -53,7 +53,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit {
   }
 
   textarea = {
-    label: '',
+    label: 'Observaciones',
     value: null
   }
 
