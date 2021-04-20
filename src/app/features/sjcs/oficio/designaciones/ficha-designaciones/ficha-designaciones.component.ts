@@ -678,7 +678,12 @@ export class FichaDesignacionesComponent implements OnInit {
             console.log("🚀 ~ file: ficha-designaciones.component.ts ~ line 416 ~ FichaDesignacionesComponent ~ getActuacionesDesigna ~ this.actuacionesDesignaItems", this.actuacionesDesignaItems)
           }
         }
-      });
+      },
+      err => {
+        this.progressSpinner = false;
+        console.log(err);
+      }
+      );
   }
 
   modDatos(event) {
