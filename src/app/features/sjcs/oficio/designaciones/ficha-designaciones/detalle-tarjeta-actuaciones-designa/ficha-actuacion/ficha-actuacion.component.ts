@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from "@angular/common";
+import { ActuacionDesignaItem } from '../../../../../../../models/sjcs/ActuacionDesignaItem';
+import { SigaServices } from '../../../../../../../_services/siga.service';
 
 @Component({
   selector: 'app-ficha-actuacion',
@@ -140,7 +142,7 @@ export class FichaActuacionComponent implements OnInit {
   actuacionDesigna: any;
   isNewActDesig: boolean = false;
 
-  constructor(private location: Location) { }
+  constructor(private location: Location, private sigaServices: SigaServices) { }
 
   ngOnInit() {
 
@@ -150,6 +152,7 @@ export class FichaActuacionComponent implements OnInit {
       console.log("🚀 ~ file: ficha-actuacion.component.ts ~ line 149 ~ FichaActuacionComponent ~ ngOnInit ~ this.actuacionDesigna", this.actuacionDesigna)
 
       if (actuacion.isNew) {
+        this.getNewId(actuacion.designaItem);
         this.isNewActDesig = true;
         this.listaTarjetas.forEach(tarj => {
           if (tarj.id != 'sjcsDesigActuaOfiDatosGen') {
@@ -198,7 +201,30 @@ export class FichaActuacionComponent implements OnInit {
   }
 
   backTo() {
-      this.location.back();
+    this.location.back();
+  }
+
+  getNewId(designaItem: any) {
+
+    let actuacionRequest = {
+      anio: designaItem.anio,
+      idTurno: designaItem.idTurno,
+      numero: designaItem.ano.toString().split('/')[0].replace('D', ''),
+    };
+
+    this.sigaServices.post("actuaciones_designacion_newId", actuacionRequest).subscribe(
+      data => {
+        const idMax = JSON.parse(data.body).idMax;
+
+        if(idMax != null) {
+          this.actuacionDesigna.numeroAsunto = idMax;
+        }
+      },
+      err => {
+        console.log(err);
+      }
+    );
+
   }
 
 

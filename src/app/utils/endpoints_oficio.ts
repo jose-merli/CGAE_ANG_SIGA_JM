@@ -90,6 +90,7 @@ export let endpoints_oficio: any = {
     actuaciones_designacion_anular: "oficio/designas/anularActDesigna",
     actuaciones_designacion_reactivar: "oficio/designas/reactivarActDesigna",
     actuaciones_designacion_eliminar: "oficio/designas/eliminarActDesigna",
+    actuaciones_designacion_newId: "oficio/designas/getNewIdActuDesigna",
     combo_prisiones: "oficio/comboPrisiones",
 
     //SALTOS Y COMPENSACIONES

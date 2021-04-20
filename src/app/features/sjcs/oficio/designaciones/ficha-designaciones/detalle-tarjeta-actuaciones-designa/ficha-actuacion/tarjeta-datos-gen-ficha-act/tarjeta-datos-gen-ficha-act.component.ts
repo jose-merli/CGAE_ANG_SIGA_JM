@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Message } from 'primeng/components/common/api';
 import { CommonsService } from '../../../../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../../../../_services/siga.service';
-import { Actuacion } from '../../detalle-tarjeta-actuaciones-ficha-designacion-oficio.component';
+import { Actuacion } from '../../detalle-tarjeta-actuaciones-designa.component';
 
 @Component({
   selector: 'app-tarjeta-datos-gen-ficha-act',
