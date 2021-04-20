@@ -35,6 +35,7 @@ export class DatosAbogadoContrarioComponent implements OnInit {
   @Input() body: JusticiableItem;
   @Input() modoEdicion;
   @Input() showTarjeta;
+  @Input() fromContrario;
 
   
 	@Output() viewAbogado = new EventEmitter<ColegiadoItem>();
