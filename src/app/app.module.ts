@@ -420,7 +420,7 @@ import { DetalleTarjetaProcuradorFichaDesignacionOficioComponent } from './featu
 import { Paginador2Module } from './features/sjcs/oficio/designaciones/ficha-designaciones/paginador2/paginador2.module';
 import { FichaActuacionComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-ficha-designacion-oficio/ficha-actuacion/ficha-actuacion.component';
 import { TarjetaDatosGenFichaActComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-ficha-designacion-oficio/ficha-actuacion/tarjeta-datos-gen-ficha-act/tarjeta-datos-gen-ficha-act.component';
-import { TarjetaJustificacionFichaActComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-ficha-designacion-oficio/ficha-actuacion/tarjeta-justificacion-ficha-act/tarjeta-justificacion-ficha-act.component';
+import { TarjetaJusFichaActComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-ficha-designacion-oficio/ficha-actuacion/tarjeta-jus-ficha-act/tarjeta-jus-ficha-act.component';
 import { TarjetaDatosFactFichaActComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-ficha-designacion-oficio/ficha-actuacion/tarjeta-datos-fact-ficha-act/tarjeta-datos-fact-ficha-act.component';
 import { TarjetaDocFichaActComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-ficha-designacion-oficio/ficha-actuacion/tarjeta-doc-ficha-act/tarjeta-doc-ficha-act.component';
 import { TarjetaHisFichaActComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-ficha-designacion-oficio/ficha-actuacion/tarjeta-his-ficha-act/tarjeta-his-ficha-act.component';
@@ -768,7 +768,7 @@ import { TarjetaRelFichaActComponent } from './features/sjcs/oficio/designacione
 		ListaArchivosComponent,
 		FichaActuacionComponent,
 		TarjetaDatosGenFichaActComponent,
-		TarjetaJustificacionFichaActComponent,
+		TarjetaJusFichaActComponent,
 		TarjetaRelFichaActComponent,
 		TarjetaDatosFactFichaActComponent,
 		TarjetaDocFichaActComponent,

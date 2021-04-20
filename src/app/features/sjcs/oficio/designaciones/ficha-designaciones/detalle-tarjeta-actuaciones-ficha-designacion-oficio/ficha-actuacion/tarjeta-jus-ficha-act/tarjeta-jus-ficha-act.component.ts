@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Message } from 'primeng/components/common/api';
 
 @Component({
-  selector: 'app-tarjeta-justificacion-ficha-act',
-  templateUrl: './tarjeta-justificacion-ficha-act.component.html',
-  styleUrls: ['./tarjeta-justificacion-ficha-act.component.scss']
+  selector: 'app-tarjeta-jus-ficha-act',
+  templateUrl: './tarjeta-jus-ficha-act.component.html',
+  styleUrls: ['./tarjeta-jus-ficha-act.component.scss']
 })
-export class TarjetaJustificacionFichaActComponent implements OnInit {
+export class TarjetaJusFichaActComponent implements OnInit {
 
   msgs: Message[] = [];
 
