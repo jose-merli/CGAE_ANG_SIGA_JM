@@ -39,7 +39,7 @@ export class JustificacionExpressItem {
 	idTurno: String;
   idPersona: String;
   idProcedimiento: String;
-  expedientes = [];
+  expedientes: [{}];
   actuaciones : ActuacionesJustificacionExpressItem[];
 
   constructor() { }
