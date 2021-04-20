@@ -96,7 +96,7 @@
                 <ng-template matExpansionPanelContent>
                     <app-busqueda-colegiado-express class="flexCenter" [pantalla]="'guardia'"
                         [numColegiado]="usuarioBusquedaExpress.numColegiado"
-                        [nombreAp]="usuarioBusquedaExpress.nombreAp" [disabled]="disabledBusquedaExpress">
+                        [nombreAp]="usuarioBusquedaExpress.nombreAp" [disabled]="disabledBusquedaExpress" (colegiado)="changeColegiado($event)">
                     </app-busqueda-colegiado-express>
                 </ng-template>
             </mat-expansion-panel>
@@ -262,7 +262,7 @@
                 <ng-template matExpansionPanelContent>
                     <app-busqueda-colegiado-express class="flexCenter" [pantalla]="'ejg'"
                         [numColegiado]="usuarioBusquedaExpress.numColegiado"
-                        [nombreAp]="usuarioBusquedaExpress.nombreAp">
+                        [nombreAp]="usuarioBusquedaExpress.nombreAp" (colegiado)="changeColegiado($event)">
                     </app-busqueda-colegiado-express>
                 </ng-template>
             </mat-expansion-panel>

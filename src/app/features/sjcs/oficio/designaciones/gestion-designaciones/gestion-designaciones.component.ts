@@ -6,6 +6,7 @@ import { SigaServices } from '../../../../../_services/siga.service';
 import { ControlAccesoDto } from '../../../../../models/ControlAccesoDto';
 import { procesos_oficio } from '../../../../../permisos/procesos_oficio';
 import { TranslateService } from '../../../../../commons/translate';
+import { Message } from 'primeng/components/common/api';
 
 
 @Component({
@@ -14,7 +15,9 @@ import { TranslateService } from '../../../../../commons/translate';
   styleUrls: ['./gestion-designaciones.component.scss']
 })
 export class GestionDesignacionesComponent implements OnInit {
-
+  msgs: Message[] = [];
+  selectMultiple: boolean = false;
+  selectAll: boolean = false;
   rowsPerPage: any = [];
   cols;
   buscadores = [];
@@ -175,5 +178,44 @@ arregloTildesCombo(combo) {
         );
     
       } 
+  actualizaSeleccionados(selectedDatos) {
+
+  }
+
+  clickFila(event) {
+    if (event.data) { //} && !event.data.fechaBaja) {
+      this.selectedDatos.pop();
+    }
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+
+  showMsg(severity, summary, detail) {
+    this.msgs = [];
+    this.msgs.push({
+      severity,
+      summary,
+      detail
+    });
+  }
+
+  clear() {
+    this.msgs = [];
+  }
+
+  delete(){
+
+  }
+
+  comunicar(){
+    
+  }
 
 }

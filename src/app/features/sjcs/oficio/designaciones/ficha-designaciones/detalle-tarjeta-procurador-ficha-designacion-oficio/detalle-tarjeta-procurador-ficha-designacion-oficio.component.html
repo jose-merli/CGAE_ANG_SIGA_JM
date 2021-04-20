@@ -47,11 +47,11 @@
         </div>
         <div class="card-footer h50 pt-5">
             <div class="text-right main-button butBottom mt10">
-                <button pButton (click)="checkAnular()" icon="fa fa-undo" [disabled]="isLetrado || historico" type="button" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+                <button pButton (click)="checkRestablecer()" icon="fa fa-undo" [disabled]="isLetrado" type="button" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
 
-                <button pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}" [disabled]="isDisabled" (click)="checkGuardar()"></button>
+                <button pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}" (click)="checkGuardar()"></button>
                 
-                <button pButton (click)="nuevo()" icon="fa fa-plus" [disabled]="isLetrado || historico" type="button" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+                <button pButton (click)="nuevo()" icon="fa fa-plus" [disabled]="isLetrado" type="button" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
             </div>
         </div>
     </div>
