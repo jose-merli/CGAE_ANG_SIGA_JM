@@ -277,7 +277,7 @@ export class FichaDesignacionesComponent implements OnInit {
         },
         {
           "key": "Fecha",
-          "value": designaItem.fechaAlta
+          "value": designaItem.fechaEntradaInicio
         },
         {
           "key": "Designación Art. 27-28",
@@ -447,17 +447,18 @@ export class FichaDesignacionesComponent implements OnInit {
       this.listaTarjetas[0].campos = camposGenerales;
       this.listaTarjetas[1].campos = camposDetalle;
       this.listaTarjetas[2].campos = datosAdicionales;
-      this.listaTarjetas[1].detalle = false;
-      this.listaTarjetas[2].detalle = false;
-      this.listaTarjetas[3].detalle = false;
-      this.listaTarjetas[4].detalle = false;
-      this.listaTarjetas[5].detalle = false;
-      this.listaTarjetas[6].detalle = false;
-      this.listaTarjetas[7].detalle = false;
-      this.listaTarjetas[8].detalle = false;
-      this.listaTarjetas[9].detalle = false;
-      this.listaTarjetas[10].detalle = false;
-      this.listaTarjetas[11].detalle = false;
+      //DESHABILITAMOS TODAS LAS TARJETAS HASTA Q SE CREE LA DESIGNACION
+      // this.listaTarjetas[1].detalle = false;
+      // this.listaTarjetas[2].detalle = false;
+      // this.listaTarjetas[3].detalle = false;
+      // this.listaTarjetas[4].detalle = false;
+      // this.listaTarjetas[5].detalle = false;
+      // this.listaTarjetas[6].detalle = false;
+      // this.listaTarjetas[7].detalle = false;
+      // this.listaTarjetas[8].detalle = false;
+      // this.listaTarjetas[9].detalle = false;
+      // this.listaTarjetas[10].detalle = false;
+      // this.listaTarjetas[11].detalle = false;
       /* this.listaTarjetas[4].enlaces=[{
       id: null,
           ref: null,

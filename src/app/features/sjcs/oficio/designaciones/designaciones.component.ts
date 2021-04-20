@@ -92,6 +92,9 @@ export class DesignacionesComponent implements OnInit {
     this.progressSpinner = true;
     let data = sessionStorage.getItem("designaItem");
     let designaItem = JSON.parse(data);
+    if(designaItem.numColegiado == ""){
+      designaItem.numColegiado = null;
+    }
     this.sigaServicesNew.post("designaciones_busqueda", designaItem).subscribe(
       n => {
         this.datos = JSON.parse(n.body);
@@ -100,6 +103,7 @@ export class DesignacionesComponent implements OnInit {
         //  element.fechaEstado = new Date(element.fechaEstado);
         element.fechaEstado = this.formatDate(element.fechaEstado);
         element.fechaAlta = this.formatDate(element.fechaAlta);
+        element.fechaEntradaInicio = this.formatDate(element.fechaEntradaInicio);
          if(element.art27 == 'V'){
            element.sufijo = element.art27;
           element.art27 = 'Activo';
@@ -110,7 +114,6 @@ export class DesignacionesComponent implements OnInit {
           element.sufijo = element.art27;
           element.art27 = 'Anulada';
          }
-         element.idTipoDesignaColegio = element.observaciones;
          element.nombreColegiado = element.apellido1Colegiado +" "+ element.apellido2Colegiado+", "+element.nombreColegiado;
          element.nombreInteresado = element.apellido1Interesado +" "+ element.apellido2Interesado+", "+element.nombreInteresado;
         });
