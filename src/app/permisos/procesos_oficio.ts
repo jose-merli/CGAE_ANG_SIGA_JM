@@ -23,4 +23,7 @@ export const procesos_oficio: any = {
 
     //SALTOS Y COMPENSACIONES
     saltosCompensaciones: "93N",
+
+    //DESIGNAS
+    designa:"959"
 }
