@@ -32,6 +32,8 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
   searchText = [];
   enableGuardar = false;
   showModal: boolean = false;
+  isLetrado: boolean = false;
+  isDisabled: boolean = false;
 
   comboMotivo = [
     { label: "Vacaciones", value: "V" },
@@ -76,6 +78,14 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
     this.numCabeceras = this.cabeceras.length;
 
     this.numColumnas = this.numCabeceras;
+
+        // Si es un colegiado y es un letrado, no podrá guardar/restablecer datos de la inscripcion/personales
+        if (
+          sessionStorage.getItem("isLetrado") != null &&
+          sessionStorage.getItem("isLetrado") != undefined
+        ) {
+          this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
+        }
 
     sessionStorage.removeItem("nuevoProcurador");
   }

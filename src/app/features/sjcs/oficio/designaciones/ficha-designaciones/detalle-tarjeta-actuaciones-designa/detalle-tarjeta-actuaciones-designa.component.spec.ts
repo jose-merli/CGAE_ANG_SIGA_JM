@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DetalleTarjetaActuacionesFichaDesignacionOficioComponent } from './detalle-tarjeta-actuaciones-ficha-designacion-oficio.component';
+import { DetalleTarjetaActuacionesFichaDesignacionOficioComponent } from './detalle-tarjeta-actuaciones-designa.component';
 
 describe('DetalleTarjetaActuacionesFichaDesignacionOficioComponent', () => {
   let component: DetalleTarjetaActuacionesFichaDesignacionOficioComponent;

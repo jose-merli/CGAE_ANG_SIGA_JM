@@ -4,6 +4,7 @@ import { TranslateService } from '../../../../../../commons/translate';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { Router } from '../../../../../../../../node_modules/@angular/router';
 import { DesignaItem } from '../../../../../../models/sjcs/DesignaItem';
+import { JusticiableBusquedaItem } from '../../../../../../models/sjcs/JusticiableBusquedaItem';
 
 @Component({
   selector: 'app-detalle-tarjeta-interesados-ficha-designacion-oficio',
@@ -17,6 +18,7 @@ export class DetalleTarjetaInteresadosFichaDesignacionOficioComponent implements
   @Output() searchInteresados = new EventEmitter<boolean>();
 
   @Input() interesados;
+  
 
   selectedItem: number = 10;
   datos;
@@ -31,6 +33,41 @@ export class DetalleTarjetaInteresadosFichaDesignacionOficioComponent implements
   selectAll: boolean= false;
   progressSpinner: boolean = false;
   
+  fichasPosibles = [
+    {
+      origen: "justiciables",
+      activa: false
+    },
+    {
+      key: "generales",
+      activa: true
+    },
+    {
+      key: "personales",
+      activa: true
+    },
+    {
+      key: "solicitud",
+      activa: false
+    },
+    {
+      key: "representante",
+      activa: false
+    },
+    {
+      key: "asuntos",
+      activa: false
+    },
+    {
+      key: "abogado",
+      activa: false
+    },
+    {
+      key: "procurador",
+      activa: false
+    }
+
+  ];
 
   @ViewChild("table") tabla;
 
@@ -138,8 +175,45 @@ export class DetalleTarjetaInteresadosFichaDesignacionOficioComponent implements
   }
 
   openTab(evento) {
-    this.persistenceService.setBody(evento);
-    this.router.navigate(["/gestionJusticiables"]);
+    let interesado = new JusticiableBusquedaItem();
+    let datos;
+    interesado.idpersona=evento.idPersona;
+    this.progressSpinner = true;
+    this.sigaServices.post("busquedaJusticiables_searchJusticiables", interesado).subscribe(
+      n => {
+        datos = JSON.parse(n.body).justiciableBusquedaItems;
+        let error = JSON.parse(n.body).error;
+        this.progressSpinner = false;
+
+        if (error != null && error.description != null) {
+          this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
+        }
+        this.persistenceService.setDatos(datos[0]);
+        this.persistenceService.setFichasPosibles(this.fichasPosibles);
+        sessionStorage.setItem("origin","Designa");
+
+        if(evento.representante!="" && evento.representante!=null){
+          let representante = new JusticiableBusquedaItem();
+          let nombre =evento.representante.split(",");
+          representante.apellidos=nombre[0];
+          representante.nombre= nombre[1];
+          this.sigaServices.post("busquedaJusticiables_searchJusticiables", representante).subscribe(
+            j =>{
+              this.persistenceService.setBody(JSON.parse(j.body).justiciableBusquedaItems[0]);
+              this.router.navigate(["/gestionJusticiables"]);
+            })
+        }
+        else{
+          this.router.navigate(["/gestionJusticiables"]);
+        }
+      },
+      err => {
+        this.progressSpinner = false;
+        console.log(err);
+      });
+  
+
+    
   }
   
   onChangeSelectAll() {

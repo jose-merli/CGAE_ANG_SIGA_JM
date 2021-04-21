@@ -980,6 +980,13 @@ export class BusquedaGeneralComponent implements OnDestroy {
       sessionStorage.setItem('nSancion', JSON.stringify(id));
       this.router.navigate(['detalleSancion']);
     }
+
+
+    if (sessionStorage.getItem("Art27Activo") == 'true') {
+        sessionStorage.removeItem("Art27Activo")
+        sessionStorage.setItem("colegiadoGeneralDesigna",JSON.stringify(id));
+        this.location.back();
+      }
   }
 
   tipoIdentificacionPermitido(value: String): boolean {

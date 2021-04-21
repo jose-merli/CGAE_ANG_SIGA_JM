@@ -96,7 +96,7 @@
                 <ng-template matExpansionPanelContent>
                     <app-busqueda-colegiado-express class="flexCenter" [pantalla]="'guardia'"
                         [numColegiado]="usuarioBusquedaExpress.numColegiado"
-                        [nombreAp]="usuarioBusquedaExpress.nombreAp" [disabled]="disabledBusquedaExpress">
+                        [nombreAp]="usuarioBusquedaExpress.nombreAp" [disabled]="disabledBusquedaExpress" (colegiado)="changeColegiado($event)">
                     </app-busqueda-colegiado-express>
                 </ng-template>
             </mat-expansion-panel>
@@ -262,7 +262,7 @@
                 <ng-template matExpansionPanelContent>
                     <app-busqueda-colegiado-express class="flexCenter" [pantalla]="'ejg'"
                         [numColegiado]="usuarioBusquedaExpress.numColegiado"
-                        [nombreAp]="usuarioBusquedaExpress.nombreAp">
+                        [nombreAp]="usuarioBusquedaExpress.nombreAp" (colegiado)="changeColegiado($event)">
                     </app-busqueda-colegiado-express>
                 </ng-template>
             </mat-expansion-panel>
@@ -424,7 +424,7 @@
                             <input pInputText type="text" class="form-control" [(ngModel)]='filtroJustificacion.nombre'
                                 maxLength="30">
                         </div>
-                        <div class="form-group-interlineado col-lg-4 col-md-4">
+                        <div class="form-group-interlineado col-lg-3 col-md-3">
                             <label>{{ 'justiciaGratuita.oficio.justificacionExpres.anioEJG' | translate }}</label>
                             <input pInputText type="text" class="form-control" [(ngModel)]='filtroJustificacion.anioEJG'
                                 maxLength="4">
@@ -449,7 +449,7 @@
             (click)="limpiar()">
         </button>
 
-        <button *ngIf="this.isButtonVisible" (click)="nuevo()" pButton type="button" icon="fa fa-search" iconPos="left" label="Nuevo"></button>
+        <button *ngIf="this.isButtonVisible" (click)="nuevo()" pButton type="button" icon="fa fa-plus"  iconPos="left" label="Nuevo"></button>
 
         <button pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"
             (click)="buscar()">

@@ -69,6 +69,8 @@ export class GestionBajasTemporalesComponent implements OnInit {
   @Input() totalRegistros = 0;
   @ViewChild('table') table: ElementRef;
   historico: boolean = false;
+  isLetrado: boolean = false;
+  isDisabled: boolean = false;
 
   comboTipo = [
     { label: "Vacaciones", value: "V" },
@@ -116,6 +118,15 @@ export class GestionBajasTemporalesComponent implements OnInit {
     this.numColumnas = this.numCabeceras;
 
     sessionStorage.removeItem("nuevo");
+
+    // Si es un colegiado y es un letrado, no podrá guardar/restablecer datos de la inscripcion/personales
+    if (
+      sessionStorage.getItem("isLetrado") != null &&
+      sessionStorage.getItem("isLetrado") != undefined
+    ) {
+      this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
+    }
+    
 
   }
 

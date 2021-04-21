@@ -7,7 +7,7 @@
         <div class="form-row w-100">
             <div class="form-group col-lg-8 col-md-8 w-100">
                 <label>{{ bloque.datePicker }}</label>
-                <app-fecha [utc]="true"></app-fecha>
+                <app-fecha [utc]="true" [(value)]='bloque.valueDatePicker'></app-fecha>
             </div>
             <div class="form-group col-lg-4 col-md-4 w-100">
                 <div *ngIf="bloque.time" class="row">
@@ -25,7 +25,7 @@
             </div>
             <div class="form-group col-lg-12 col-md-12 w-100">
                 <label>{{ bloque.textArea }}</label>
-                <textarea class="form-control" pInputTextarea></textarea>
+                <textarea class="form-control" [(value)]='bloque.value' pInputTextarea></textarea>
             </div>
         </div>
     </div>
@@ -35,7 +35,7 @@
 <div class="card-footer">
     <div class="text-right main-button">
         <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer"
-            (click)="showMsg('success', 'Se ha restablecido correctamente', '')"></button>
+            (click)="showMsg('success', 'Se ha restablecido correctamente', 'Restablecer')"></button>
         <button pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"
             (click)="showMsg('success', 'Se ha guardado correctamente', '')" disabled></button>
     </div>

@@ -77,6 +77,10 @@ export let endpoints_oficio: any = {
     parametros_search: "parametros/search",
     designaciones_listaContrarios: "oficio/designas/busquedaListaContrarios",
     designaciones_listaInteresados: "oficio/designas/busquedaListaInteresados",
+    designaciones_getDatosAdicionales: "oficio/designas/getDatosAdicionales",
+    designaciones_comboPartidaPresupuestaria:"oficio/designas/comboPartidaPresupuestaria",
+    designaciones_busquedaProcedimiento: "oficio/busquedaProcedimientoDesignas",
+    designaciones_busquedaModulo: "oficio/busquedaModuloDesignas",
     designaciones_deleteContrario:"oficio/designas/deleteContrario",
     designaciones_deleteInteresado:"oficio/designas/deleteInteresado",
     designaciones_insertInteresado:"oficio/designas/insertInteresado",
@@ -90,6 +94,8 @@ export let endpoints_oficio: any = {
     actuaciones_designacion_anular: "oficio/designas/anularActDesigna",
     actuaciones_designacion_reactivar: "oficio/designas/reactivarActDesigna",
     actuaciones_designacion_eliminar: "oficio/designas/eliminarActDesigna",
+    actuaciones_designacion_newId: "oficio/designas/getNewIdActuDesigna",
+    combo_prisiones: "oficio/comboPrisiones",
 
     //SALTOS Y COMPENSACIONES
     saltosCompensacionesOficio_buscar: "oficio/saltosCompensaciones/buscarSaltosOCompensaciones",
