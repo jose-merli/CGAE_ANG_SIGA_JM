@@ -259,7 +259,7 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
     let actuacion: Actuacion = {
       isNew: true,
       designaItem: this.campos,
-      actuacion: null
+      actuacion: new ActuacionDesignaItem()
     }
 
     sessionStorage.setItem("actuacionDesigna", JSON.stringify(actuacion));
@@ -271,7 +271,7 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
     let actuacion: Actuacion = {
       isNew: false,
       designaItem: this.campos,
-      actuacion: act 
+      actuacion: act
     };
 
     sessionStorage.setItem("actuacionDesigna", JSON.stringify(actuacion));

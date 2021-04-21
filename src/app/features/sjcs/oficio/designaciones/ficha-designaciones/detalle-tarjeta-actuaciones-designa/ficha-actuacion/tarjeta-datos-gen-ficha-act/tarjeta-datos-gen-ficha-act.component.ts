@@ -3,6 +3,7 @@ import { Message } from 'primeng/components/common/api';
 import { CommonsService } from '../../../../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../../../../_services/siga.service';
 import { Actuacion } from '../../detalle-tarjeta-actuaciones-designa.component';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-tarjeta-datos-gen-ficha-act',
@@ -53,7 +54,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit {
   }
 
   textarea = {
-    label: '',
+    label: 'Observaciones',
     value: null
   }
 
@@ -98,7 +99,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit {
   @Input() actuacionDesigna: Actuacion;
   progressSpinner: boolean = false;
 
-  constructor(private commonsService: CommonsService, private sigaServices: SigaServices) { }
+  constructor(private commonsService: CommonsService, private sigaServices: SigaServices, private datePipe: DatePipe) { }
 
   ngOnInit() {
 
@@ -110,14 +111,21 @@ export class TarjetaDatosGenFichaActComponent implements OnInit {
 
     if (this.actuacionDesigna.isNew) {
       this.inputs1[0].value = this.actuacionDesigna.actuacion.numeroAsunto;
+      this.inputs1[3].value = this.actuacionDesigna.designaItem.ano.replace('D', '');
+      this.inputs1[4].value = this.actuacionDesigna.actuacion.numeroAsunto;
       this.inputNig.value = this.actuacionDesigna.designaItem.nig;
+      // this.datePicker.value = this.actuacionDesigna.actuacion.fechaActuacion;
+      this.datePicker.value = this.datePipe.transform(new Date(), 'dd/MM/yyyy');
       this.inputNumPro.value = this.actuacionDesigna.designaItem.numProcedimiento;
       this.selectores[0].value = this.actuacionDesigna.designaItem.idJuzgado;
       this.selectores[1].value = this.actuacionDesigna.designaItem.idPretension;
       this.selectores[3].value = this.actuacionDesigna.designaItem.idProcedimiento;
     } else {
       this.inputs1[0].value = this.actuacionDesigna.actuacion.numeroAsunto;
-      this.datePicker.value = this.actuacionDesigna.actuacion.fechaActuacion;
+      this.inputs1[3].value = this.actuacionDesigna.designaItem.ano.replace('D', '').replace('/', '');
+      this.inputs1[4].value = this.actuacionDesigna.actuacion.numeroAsunto;
+      // this.datePicker.value = this.actuacionDesigna.actuacion.fechaActuacion;
+      this.datePicker.value = this.datePipe.transform(new Date(), 'dd/MM/yyyy');
       this.inputs1[1].value = this.actuacionDesigna.actuacion.numColegiado;
       this.inputs1[2].value = this.actuacionDesigna.actuacion.letrado;
       this.inputNig.value = this.actuacionDesigna.actuacion.nig;
@@ -128,8 +136,6 @@ export class TarjetaDatosGenFichaActComponent implements OnInit {
       this.selectores[4].value = this.actuacionDesigna.actuacion.idAcreditacion;
       this.selectores[5].value = this.actuacionDesigna.actuacion.idPrision;
       this.textarea.value = this.actuacionDesigna.actuacion.observaciones;
-      this.inputs1[3].value = this.actuacionDesigna.actuacion.talonario;
-      this.inputs1[4].value = this.actuacionDesigna.actuacion.talon;
     }
   }
 
