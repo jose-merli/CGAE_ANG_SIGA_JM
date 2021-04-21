@@ -205,7 +205,7 @@ export class FichaActuacionComponent implements OnInit {
     let actuacionRequest = {
       anio: designaItem.ano.toString().split('/')[0].replace('D', ''),
       idTurno: designaItem.idTurno,
-      numero: designaItem.numero,
+      numero: designaItem.codigo,
     };
 
     this.sigaServices.post("actuaciones_designacion_newId", actuacionRequest).subscribe(
