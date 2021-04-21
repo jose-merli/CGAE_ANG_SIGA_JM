@@ -3,6 +3,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Message } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../commons/translate';
+import { DesignaItem } from '../../../../models/sjcs/DesignaItem';
 import { JustificacionExpressItem } from '../../../../models/sjcs/JustificacionExpressItem';
 import { CommonsService } from '../../../../_services/commons.service';
 import { OldSigaServices } from '../../../../_services/oldSiga.service';
@@ -99,6 +100,7 @@ export class DesignacionesComponent implements OnInit {
       n => {
         this.datos = JSON.parse(n.body);
         this.datos.forEach(element => {
+         element.factConvenio = element.ano;
          element.ano = 'D' +  element.ano + '/' + element.codigo;
         //  element.fechaEstado = new Date(element.fechaEstado);
         element.fechaEstado = this.formatDate(element.fechaEstado);
@@ -131,6 +133,7 @@ export class DesignacionesComponent implements OnInit {
         this.progressSpinner = false;
         this.commonsService.scrollTablaFoco("tablaFoco");
       });;
+     
   }
 
   backTo() {

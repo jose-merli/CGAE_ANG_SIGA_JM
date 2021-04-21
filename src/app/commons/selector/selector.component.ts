@@ -50,6 +50,7 @@ export class SelectorComponent implements OnInit {
       this.disable = false;
     }else if(this.selector.nombre == "Juzgado" && this.nuevaDesigna){
       // this.disable = true;
+      this.textoVisible = "";
       this.getComboJuzgados(this.selector);
     }
     if(this.selector.nombre == "Procedimiento" && !this.nuevaDesigna){
@@ -58,6 +59,7 @@ export class SelectorComponent implements OnInit {
       this.disable = false;
     }else if(this.selector.nombre == "Procedimiento" && this.nuevaDesigna){
       // this.disable = true;
+      this.textoVisible = "";
     }
     if(this.selector.nombre == "Módulo" && !this.nuevaDesigna){
       this.getComboModulos(this.selector);
@@ -65,6 +67,7 @@ export class SelectorComponent implements OnInit {
       this.disable = false;
     }else if(this.selector.nombre == "Módulo" && this.nuevaDesigna){
       // this.disable = true;
+      this.textoVisible = "";
     }
     if(!this.nuevaDesigna){
       this.cargaCombosDesigna();
@@ -186,7 +189,7 @@ export class SelectorComponent implements OnInit {
         }
       );
 
-    if (this.selector[1].value !=null && this.selector[1].value !=undefined && this.selector[1].value !="") {
+    if (this.selector.nombre == "Juzgado" && this.selector.opciones[0].value !=null && this.selector.opciones[0].value !=undefined && this.selector.opciones[0].value !="") {
       if (valorParametro == 1) {
         this.getComboProcedimientosConJuzgado(this.selector[1].value);
         this.getcCmboModulosConProcedimientos(this.selector[2].value);

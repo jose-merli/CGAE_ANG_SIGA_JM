@@ -23,12 +23,14 @@
 
 <div class="card-footer">
   <div class="text-right main-button">
-    <button pButton type="button" icon="" iconPos="left" label="Finalizar"
-      (click)="showMsg('success', 'Se ha finalizado correctamente', '')"></button>
-    <button pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="Anular"
-      (click)="showMsg('success', 'Se ha anulado correctamente', '')"></button>
+    <button pButton type="button" icon="" iconPos="left" label="Finalizar" [disabled] ="disableFinalizar"
+      (click)="showMsg('success', 'Se ha finalizado correctamente', 'Finalizar')"></button>
+    <button pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="Anular" [disabled] ="disableAnular"
+      (click)="showMsg('success', 'Se ha anulado correctamente', 'Anular')"></button>
+      <button pButton type="button" icon="" iconPos="left" label="Reactivar" [disabled] ="disableReactivar"
+      (click)="showMsg('success', 'Se ha anulado correctamente', 'Reactivar')"></button>
     <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer"
-      (click)="showMsg('success', 'Se ha restablecido correctamente', '')" disabled></button>
+      (click)="showMsg('success', 'Se ha restablecido correctamente', 'Restablecer')" disabled></button>
     <button pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"
       (click)="showMsg('success', 'Se ha guardado correctamente', 'Guardar')" disabled></button>
   </div>

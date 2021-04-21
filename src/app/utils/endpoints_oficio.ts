@@ -79,6 +79,8 @@ export let endpoints_oficio: any = {
     designaciones_listaInteresados: "oficio/designas/busquedaListaInteresados",
     designaciones_getDatosAdicionales: "oficio/designas/getDatosAdicionales",
     designaciones_comboPartidaPresupuestaria:"oficio/designas/comboPartidaPresupuestaria",
+    designaciones_busquedaProcedimiento: "oficio/busquedaProcedimientoDesignas",
+    designaciones_busquedaModulo: "oficio/busquedaModuloDesignas",
     designaciones_deleteContrario:"oficio/designas/deleteContrario",
     designaciones_deleteInteresado:"oficio/designas/deleteInteresado",
     designaciones_insertInteresado:"oficio/designas/insertInteresado",
