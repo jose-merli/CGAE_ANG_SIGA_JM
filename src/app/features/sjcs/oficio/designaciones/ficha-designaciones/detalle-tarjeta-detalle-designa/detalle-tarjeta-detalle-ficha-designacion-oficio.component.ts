@@ -394,30 +394,30 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
 
   validarNig(nig) {
     //Esto es para la validacion de CADECA
+    let ret = false;
     let institucionActual
     this.sigaServices.get("institucionActual").subscribe(n => {
       institucionActual = n.value;
-    });
-
-    if (institucionActual == "2008" || institucionActual == "2015" || institucionActual == "2029" || institucionActual == "2033" || institucionActual == "2036" ||
+      if (institucionActual == "2008" || institucionActual == "2015" || institucionActual == "2029" || institucionActual == "2033" || institucionActual == "2036" ||
       institucionActual == "2043" || institucionActual == "2006" || institucionActual == "2021" || institucionActual == "2035" || institucionActual == "2046" || institucionActual == "2066") {
       if (nig != '') {
         var objRegExp = /^[0-9]{7}[S,C,P,O,I,V,M,6,8,1,2,3,4]{1}(19|20)\d{2}[0-9]{7}$/;
-        var ret = objRegExp.test(nig);
-        return ret;
+        ret = objRegExp.test(nig);
+        
       }
       else
-        return true;
+        ret = true;
     } else {
       if (nig.length == 19) {
         var objRegExp = /^([a-zA-Z0-9]{19})?$/;
-        var ret = objRegExp.test(nig);
-        return ret;
+        ret = objRegExp.test(nig);
       } else {
-        return true;
+        ret = true;
       }
     }
+    });
 
+    return ret;
   }
 
   validarNProcedimiento(nProcedimiento) {
