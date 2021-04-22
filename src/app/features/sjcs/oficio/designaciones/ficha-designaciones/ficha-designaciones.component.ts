@@ -234,6 +234,7 @@ export class FichaDesignacionesComponent implements OnInit {
     private commonsService: CommonsService,private router: Router) { }
 
   ngOnInit() {
+    this.progressSpinner=true;
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
     let designaItem = JSON.parse(sessionStorage.getItem("designaItemLink"));
     this.campos = designaItem;
@@ -502,7 +503,7 @@ export class FichaDesignacionesComponent implements OnInit {
       this.progressSpinner = false;
     }
     this.getActuacionesDesigna(false);
-
+    this.progressSpinner=false;
   }
 
   ngOnChanges() {
