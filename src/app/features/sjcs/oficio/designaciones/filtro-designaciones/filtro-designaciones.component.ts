@@ -68,7 +68,6 @@ export class FiltroDesignacionesComponent implements OnInit {
   comboOrigenActuaciones: any[];
   comboRoles: any[];
   comboAcreditaciones: any[];
-  esColegiado: boolean = false;
 
   institucionActual: any;
   @Output() busquedaJustificacionExpres = new EventEmitter<boolean>();
@@ -84,6 +83,7 @@ export class FiltroDesignacionesComponent implements OnInit {
     this.isColeg.emit(esColegiado);
     if(!esColegiado){   
     this.checkAcceso();
+  }
   }
 
   cargaInicial(){
@@ -102,7 +102,7 @@ export class FiltroDesignacionesComponent implements OnInit {
     this.showDesignas=true;
     this.showJustificacionExpress=false;
     this. esColegiado = false;
-    this.isColeg.emit(esColegiado);
+    this.isColeg.emit(this.esColegiado);
     this.progressSpinner=true;
     this.showDesignas = true;
     this.checkRestricciones = false;
