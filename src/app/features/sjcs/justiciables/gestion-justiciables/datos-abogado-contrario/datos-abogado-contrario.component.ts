@@ -1,17 +1,21 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { JusticiableItem } from '../../../../../models/sjcs/JusticiableItem';
-import { ColegiadoItem } from "../../../../../models/ColegiadoItem";
-import { CommonsService } from '../../../../../_services/commons.service';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { ConfirmationService } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../../commons/translate';
-import { Router } from '@angular/router';
-import { SigaServices } from '../../../../../_services/siga.service';
 import { JusticiableBusquedaItem } from '../../../../../models/sjcs/JusticiableBusquedaItem';
+import { JusticiableItem } from '../../../../../models/sjcs/JusticiableItem';
+import { JusticiableTelefonoItem } from '../../../../../models/sjcs/JusticiableTelefonoItem';
+import { CommonsService } from '../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
-import { ConfirmationService } from 'primeng/api';
+import { SigaServices } from '../../../../../_services/siga.service';
+import { Subject } from 'rxjs';
+import { AuthenticationService } from '../../../../../_services/authentication.service';
+import { Router } from '@angular/router';
 import { SigaConstants } from '../../../../../utils/SigaConstants';
+import { procesos_maestros } from '../../../../../permisos/procesos_maestros';
 import { procesos_justiciables } from '../../../../../permisos/procesos_justiciables';
-import { DatosColegiadosItem } from '../../../../../models/DatosColegiadosItem';
-import { Message } from 'primeng/components/common/api';
+import { Checkbox, ConfirmDialog } from '../../../../../../../node_modules/primeng/primeng';
+import { Dialog } from 'primeng/primeng';
+import { ColegiadoItem } from "../../../../../models/ColegiadoItem";
 
 @Component({
   selector: 'app-datos-abogado-contrario',
@@ -20,26 +24,44 @@ import { Message } from 'primeng/components/common/api';
 })
 export class DatosAbogadoContrarioComponent implements OnInit {
 
-  generalBody: ColegiadoItem = new ColegiadoItem();
-  navigateToColegiado: Boolean = false;
-  progressSpinner: Boolean = true;
+	generalBody: ColegiadoItem = new ColegiadoItem();
 
-  idPersona: String = '';
-  msgs: Message[] = [];
-  nifRepresentante: String = '';
+	tipoIdentificacion;
+	progressSpinner: boolean = false;
+	msgs = [];
+	nifRepresentante;
 
-  showTarjetaPermiso: boolean = false;
-  showEnlaceAbogado: boolean = false;
+	@Input() modoEdicion;
+	@Input() showTarjetaPermiso;
+	@Input() body: JusticiableItem;
+	@Input() checkedViewRepresentante;
+	@Input() navigateToJusticiable: boolean = false;
+	@Input() fromContrario;
+
+	searchRepresentanteGeneral: boolean = false;
+	showEnlaceRepresentante: boolean = false;
+	// navigateToJusticiable: boolean = false;
+	esMenorEdad: boolean = false;
+	idPersona;
+	permisoEscritura;
+	showTarjeta: boolean = false;
+	representanteValido: boolean = false;
+	confirmationAssociate: boolean = false;
 	confirmationDisassociate: boolean = false;
-  permisoEscritura;
+	confirmationCreateRepresentante: boolean = false;
 
-  @Input() body: JusticiableItem;
-  @Input() modoEdicion;
-  @Input() showTarjeta;
-  @Input() fromContrario;
+	@ViewChild('cdCreateRepresentante') cdCreateRepresentante: Dialog;
+	@ViewChild('cdRepresentanteAssociate') cdRepresentanteAssociate: Dialog;
+	@ViewChild('cdRepresentanteDisassociate') cdRepresentanteDisassociate: Dialog;
 
-  
-	@Output() viewAbogado = new EventEmitter<ColegiadoItem>();
+	@Output() newRepresentante = new EventEmitter<JusticiableItem>();
+	@Output() viewRepresentante = new EventEmitter<JusticiableItem>();
+	@Output() createJusticiableByUpdateRepresentante = new EventEmitter<JusticiableItem>();
+
+	confirmationSave: boolean = false;
+	confirmationUpdate: boolean = false;
+
+	menorEdadJusticiable: boolean = false;
 
   constructor(
 		private router: Router,
@@ -48,205 +70,173 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 		private confirmationService: ConfirmationService,
 		private commonsService: CommonsService, private translateService: TranslateService) { }
 
-  ngOnInit() {
-  }
+		ngOnInit() {
 
+			this.progressSpinner = true;
+	
+			/* this.commonsService
+				.checkAcceso(procesos_justiciables.tarjetaAbogadoContrario)
+				.then((respuesta) => {
+					this.permisoEscritura = respuesta;
+	
+					if (this.permisoEscritura == undefined) {
+						this.showTarjetaPermiso = false;
+						this.progressSpinner = false;
+					} else {
+						this.showTarjetaPermiso = true;
+						this.persistenceService.clearFiltrosAux();
+					}
+				})
+				.catch((error) => console.error(error)); */
+	
+			if (this.fromContrario) {
+				this.showTarjetaPermiso = true;
+				this.permisoEscritura = true;
+			}
+			/* Procede de search*() */
+			if (sessionStorage.getItem("abogado")) {
+				apellidos: "QVTCYXWA GOYCHV"
+codigoPostal: "23009"
+colegio: "JAÉN"
+correoelectronico: "papelera@redabogacia.org"
+direccion: "CL.PERPETUO SOCORRO, Nº 30"
+domicilio: null
+fax1: null
+fax2: null
+fechaEstado: null
+fechaNacimiento: "05/08/1954"
+fechaNacimientoString: "06/08/1954"
+idActividadProfesional: null
+idEstadoCivil: "1"
+idInstitucion: null
+idPais: "191"
+idPersona: "2035004392"
+idPoblacion: "23050000000"
+idProvincia: "23"
+idTratamiento: "2"
+movil: "666666666"
+naturalDe: "JAEN"
+nif: "25927006A"
+				let data = this.generalBody = JSON.parse(sessionStorage.getItem("abogado"))[0];
+				sessionStorage.removeItem("abogado");
+				this.generalBody.nombreColegio = data.colegio;
+				this.generalBody.numColegiado = data.numeroColegiado;
+				this.generalBody.estadoColegial = data.situacion;
+				this.generalBody.nombre = data.nombre;
+				this.generalBody.nif = data.nif;
+				
+				this.permisoEscritura = true;
+			}
+			/* Procede de ficha designacion */
+			if (sessionStorage.getItem("abogadoFicha")) {
+				let data = this.generalBody = JSON.parse(sessionStorage.getItem("abogadoFicha"));
+				sessionStorage.removeItem("abogadoFicha");
+				this.generalBody.numColegiado = data.split(",")[0];
+				this.generalBody.nombre = data.split(",")[1].concat(",",data.split(",")[2]);
+				this.permisoEscritura = true;
+			}
 
-  onHideTarjeta() {
-		if (this.modoEdicion) {
+			this.progressSpinner = false;
+		}
+	
+		search() {
+			if (!this.permisoEscritura) {
+				this.showMessage(
+					'error',
+					this.translateService.instant('general.message.incorrect'),
+					this.translateService.instant('general.message.noTienePermisosRealizarAccion')
+				);
+			} else {
+				sessionStorage.setItem("origin", "AbogadoContrario");
+				this.router.navigate(['/busquedaGeneral']);
+			}
+		}
+	
+		Disassociate() {
+		let designa=JSON.parse(sessionStorage.getItem("designaItemLink"));
+				let request = [ designa.idInstitucion,  sessionStorage.getItem("personaDesigna"), designa.ano,  designa.idTurno, designa.numero, ""]
+				this.sigaServices.post('designaciones_updateAbogadoContrario', request).subscribe(
+					(n) => {
+						this.progressSpinner = false;
+						this.showMessage(
+							'success',
+							this.translateService.instant('general.message.correct'),
+							this.translateService.instant('general.message.accion.realizada')
+						);
+						this.persistenceService.setBody(this.generalBody);
+					},
+					(err) => {
+						this.progressSpinner = false;
+						this.translateService.instant('general.message.error.realiza.accion');
+					}
+				);
+		this.generalBody = null;
+		}
+	
+		Associate() {
+			let designa=JSON.parse(sessionStorage.getItem("designaItemLink"));
+				let request = [ designa.idInstitucion,  sessionStorage.getItem("personaDesigna"), designa.ano,  designa.idTurno, designa.numero, this.generalBody.nombre]
+				this.sigaServices.post('designaciones_updateAbogadoContrario', request).subscribe(
+					(n) => {
+						this.progressSpinner = false;
+						this.showMessage(
+							'success',
+							this.translateService.instant('general.message.correct'),
+							this.translateService.instant('general.message.accion.realizada')
+						);
+						this.persistenceService.setBody(this.generalBody);
+					},
+					(err) => {
+						this.progressSpinner = false;
+						this.translateService.instant('general.message.error.realiza.accion');
+					}
+				);
+		}
+	
+		onHideTarjeta() {
 			this.showTarjeta = !this.showTarjeta;
 		}
-  }
-  
-  navigateToAbogado() {
-		if (
-			this.generalBody.idPersona != undefined &&
-			this.generalBody.idPersona != null &&
-			this.generalBody.idPersona != ''
-		) {
-			this.commonsService.scrollTop();
-			this.idPersona = this.generalBody.idPersona;
-			this.viewAbogado.emit(this.generalBody);
-		}
-  }
-
-  validateShowEnlaceAbogado() {
-		if (
-			this.generalBody != undefined &&
-			this.generalBody.numColegiado != undefined &&
-			this.generalBody.numColegiado != null &&
-			this.generalBody.numColegiado != ''
-		) {
-			this.showEnlaceAbogado = true;
-		} else {
-			this.showEnlaceAbogado = false;
-		}
-	}
-  
-
-  disabledSave() {
-		if (this.generalBody.idPersona != undefined && this.generalBody.idPersona != '' ) {
-			return false;
-		} else {
-			return true;
-		}
-  }
-
-  checkPermisosRest() {
-		let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
-
-		if (msg != undefined) {
-			this.msgs = msg;
-		} else {
-			this.rest();
-		}
-  }
-  
-  rest() {
-		if (!this.permisoEscritura) {
-			this.showMessage(
-				'error',
-				this.translateService.instant('general.message.incorrect'),
-				this.translateService.instant('general.message.noTienePermisosRealizarAccion')
-			);
-		} else {
-			if (this.generalBody.colegiado != undefined) {
-				this.searchColegiado();
+	
+		disabledSave() {
+			if (this.generalBody.numColegiado != undefined && this.generalBody.numColegiado != '') {
+				return false;
 			} else {
-				this.generalBody = new ColegiadoItem();
-				this.nifRepresentante = undefined;
+				return true;
 			}
 		}
-  }
-  
-  searchColegiado() {
-		this.progressSpinner = true;
-    let request = [this.generalBody.idPersona, this.generalBody.idInstitucion];
-    let cole: DatosColegiadosItem = new DatosColegiadosItem();
-    cole.idPersona=this.generalBody.idPersona.toString();
-    cole.idInstitucion=this.generalBody.idInstitucion.toString();
-
-		/* this.sigaServices.post('busquedaCensoGeneral_searchColegiado', request).subscribe(
-			(n) => {
-				this.generalBody = JSON.parse(n.body).justiciable;
-				this.nifRepresentante = this.generalBody.nif;
-				this.persistenceService.clearBody();
-				this.progressSpinner = false;
-				// this.navigateToJusticiable = false;
-				this.compruebaDNI();
-			},
-			(err) => {
-				this.progressSpinner = false;
-				console.log(err);
-			}
-		); */
-  }
-  
-  checkPermisosDisassociate() {
-		let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
-
-		if (msg != undefined) {
-			this.msgs = msg;
-		} else {
-			if (this.disabledDisassociate()) {
-				this.msgs = this.commonsService.checkPermisoAccion();
+	
+		disabledDisassociate() {
+			if (this.generalBody.numColegiado != undefined && this.generalBody.numColegiado != '') {
+				return false;
 			} else {
-				this.callConfirmationDisassociate();
+				return true;
 			}
 		}
-  }
-  
-  disabledDisassociate() {
-		if (this.generalBody.idPersona != undefined && this.generalBody.idPersona != '') {
-			return false;
-		} else {
-			return true;
+	
+		showMessage(severity, summary, msg) {
+			this.msgs = [];
+			this.msgs.push({
+				severity: severity,
+				summary: summary,
+				detail: msg
+			});
 		}
-  }
-  
-  callConfirmationDisassociate() {
-
-		this.progressSpinner = false;
-		this.confirmationDisassociate = true;
-
-		this.confirmationService.confirm({
-			key: 'cdRepresentanteDisassociate',
-			message: this.translateService.instant(
-				'gratuita.personaJG.mensaje.actualizarJusticiableParaTodosAsuntos'
-			),
-			icon: 'fa fa-search ',
-			accept: () => {
-				if (
-					this.body.edad == undefined ||
-					(this.body.edad != undefined && JSON.parse(this.body.edad) > SigaConstants.EDAD_ADULTA)
-				) {
-					this.callServiceDisassociate();
-				} else {
-					this.showMessage(
-						'error',
-						this.translateService.instant('general.message.incorrect'),
-						this.translateService.instant(
-							'justiciaGratuita.justiciables.message.asociarRepresentante.menorJusticiable'
-						)
-					);
-				}
-			},
-			reject: () => { }
-		});
-  }
-  
-  callServiceDisassociate() {
-    this.progressSpinner = true;
-    
-    let data = sessionStorage.getItem("designaItemLink");
-    
-    //let request = [ this.generalBody.idInstitucion,  this.idPersona, this.body.anio,  this.body.idTurno, this.body.numero]
-    //this.sigaServices.post("designaciones_deleteContrario", request).subscribe(
-		this.sigaServices.post('gestionJusticiables_disassociateRepresentante', this.body).subscribe(
-			(n) => {
-				this.showMessage(
-					'success',
-					this.translateService.instant('general.message.correct'),
-					this.translateService.instant('general.message.accion.realizada')
-				);
-				this.generalBody = new ColegiadoItem();
-				this.nifRepresentante = undefined;
-				this.persistenceService.setBody(this.generalBody);
-				this.body.idrepresentantejg = undefined;
-				this.showEnlaceAbogado = false;
-				this.progressSpinner = false;
-			},
-			(err) => {
-				this.progressSpinner = false;
-				this.translateService.instant('general.message.error.realiza.accion');
-			}
-		);
-	}
-  
-  showMessage(severity, summary, msg) {
-		this.msgs = [];
-		this.msgs.push({
-			severity: severity,
-			summary: summary,
-			detail: msg
-		});
-  }
-
-  clear() {
-    this.msgs = [];
-  }
-
-  reject(){
-
-  }
-
-  rejectAssociate(){
-
-  }
-
-  rejectDisassociate(){
-
-  }
+	
+		clear() {
+			this.msgs = [];
+		}
+	
+		reject() {
+			this.cdCreateRepresentante.hide();
+		}
+	
+		rejectAssociate() {
+			
+		}
+	
+		rejectDisassociate() {
+			
+		}
   
   
 }

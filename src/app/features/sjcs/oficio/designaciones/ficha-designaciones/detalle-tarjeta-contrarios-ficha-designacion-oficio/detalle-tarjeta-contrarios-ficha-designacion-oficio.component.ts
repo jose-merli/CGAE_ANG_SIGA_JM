@@ -179,6 +179,7 @@ export class DetalleTarjetaContrariosFichaDesignacionOficioComponent implements 
     let contrario = new JusticiableBusquedaItem();
     let datos;
     contrario.idpersona=evento.idPersona;
+    sessionStorage.setItem("personaDesigna",evento.idPersona);
     this.progressSpinner = true;
     this.sigaServices.post("busquedaJusticiables_searchJusticiables", contrario).subscribe(
       n => {
@@ -191,11 +192,17 @@ export class DetalleTarjetaContrariosFichaDesignacionOficioComponent implements 
         }
         this.persistenceService.setDatos(datos[0]);
         this.persistenceService.setFichasPosibles(this.fichasPosibles);
-        sessionStorage.setItem("origin","Designa");
+        sessionStorage.setItem("origin","Contrario");
+        this.persistenceService.clearBody();
 
+        if(evento.abogado!="" && evento.abogado!=null){
+          sessionStorage.setItem("abogadoFicha",evento.abogado);
+        }
+        if(evento.procurador!="" && evento.procurador!=null){
+          sessionStorage.setItem("procuradorFicha",evento.abogado);
+        }
         if(evento.representante!="" && evento.representante!=null){
           let representante = new JusticiableBusquedaItem();
-          let nombre =evento.representante.split(",");
           representante.idpersona=evento.representante;
           this.sigaServices.post("busquedaJusticiables_searchJusticiables", representante).subscribe(
             j =>{
