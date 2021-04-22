@@ -1,5 +1,5 @@
 <!-- <div class="center"> -->
-<label *ngIf="selector.nombre != ''">{{selector.nombre}}</label>
+<label *ngIf="selector != undefined && selector.nombre != ''">{{selector.nombre}}</label>
 <p-dropdown autoWidth="false" class="inputWidth" placeholder="{{textoVisible}}" [ngModelOptions]="{standalone: true}"
     [(ngModel)]="opcionSeleccionado[i]" [options]="selector.opciones" showClear="true" (onChange)="capturar()" [disabled]="disable"
     class="select-form">
