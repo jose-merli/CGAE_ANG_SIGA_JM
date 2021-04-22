@@ -1,42 +1,40 @@
-<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+ <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 
 <div *ngIf="showTarjetaPermiso" class="ficha-container">
   <div class="card">
     <div class="card-header header-ficha" (click)="onHideTarjeta()">
       <div *ngIf="showTarjeta" class="header-ficha-open d-flex justify-content-start align-items-center">
         <div class="img-colegiado">
-          <i class="fa fa-gavel icon-ficha"></i>
+          <i class="fa fa-user icon-ficha"></i>
         </div>
         <label class="title-ficha">{{ 'justiciaGratuita.oficio.designas.contrarios.procurador' | translate }}</label>
-        <div class="d-flex justify-content-start mb-1 ml-auto">
-          <i class="fa fa-angle-up ml-auto"></i>
-        </div>
+        <i class="fa fa-angle-up ml-auto"></i>
       </div>
       <div *ngIf="!showTarjeta" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
-            <i class="fa fa-gavel icon-ficha"></i>
+            <i class="fa fa-user icon-ficha"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">{{ 'justiciaGratuita.oficio.designas.contrarios.procurador' | translate
-              }}
+            <label class="mr-auto title-ficha">{{ 'justiciaGratuita.oficio.designas.contrarios.procurador' | translate }}
             </label>
+            <!-- <label class="registros-ficha">(0 registros)</label> -->
           </div>
           <div class="row">
-            <div class="col-5">
-              <label>NIF
-                <span>{{ generalBody.nif }}</span>
+            <div class="col-3">
+              <label>{{ 'censo.resultadosSolicitudesModificacion.literal.nColegiado' | translate }}
+                <span>{{ generalBody.numColegiado }}</span>
               </label>
             </div>
-            <div class="col-6">
-              <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}
-                <span>{{ generalBody.nombre }} {{ generalBody.apellidos }}</span>
+            <div class="col-3">
+              <label>{{ 'administracion.parametrosGenerales.literal.nombre.apellidos' | translate }}
+                <span>{{ generalBody.nombre }}</span>
               </label>
-
             </div>
-            <div class="col-1">
+            <div class="col-3"></div>
+            <div class="col-3">
               <i class="fa fa-angle-down float-right"></i>
             </div>
           </div>
@@ -73,14 +71,14 @@
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "censo.resultadosSolicitudesModificacion.literal.nColegiado" | translate }}
               </label>
-              <input [(ngModel)]="generalBody.numColegiado" type="text" disabled class="form-control" [maxLength]="100"
-                [disabled]="!permisoEscritura" pInputText />
+              <input [(ngModel)]="generalBody.numColegiado" type="text" disabled class="form-control" [maxLength]="100" [disabled]="!permisoEscritura"
+                pInputText/>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "justiciaGratuita.oficio.designas.interesados.apellidosnombre" | translate }}
               </label>
-              <input [(ngModel)]="generalBody.nombre" type="text" disabled class="form-control" [maxLength]="100"
-                [disabled]="!permisoEscritura" pInputText />
+              <input [(ngModel)]="generalBody.nombre" type="text" disabled class="form-control" [maxLength]="100" [disabled]="!permisoEscritura"
+                pInputText />
             </div>
           </div>
         </div>
@@ -89,13 +87,11 @@
 
     <div [hidden]="!showTarjeta" class="card-footer">
       <div class="text-right main-button">
-        <button pButton (click)="checkPermisosDisassociate()" type="button" icon="fa fa-undo" iconPos="left"
-          label="{{ 'censo.tipoCuenta.cargo.desasociar' | translate }}"
+        <button pButton (click)="Disassociate()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'censo.tipoCuenta.cargo.desasociar' | translate }}"
           [disabled]="!permisoEscritura ||  disabledDisassociate()"></button>
-        <button pButton (click)="search()" type="button" icon="fa fa-search" iconPos="left"
-          label="{{ 'general.boton.search' | translate}}" [disabled]="!permisoEscritura"></button>
-        <button pButton (click)="checkPermisosAssociate()" type="button" icon="far fa-save" iconPos="left"
-          label="{{ 'general.boton.guardar' | translate}}" [disabled]="!permisoEscritura || disabledSave()"></button>
+        <button pButton (click)="search()" type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"></button>
+        <button pButton (click)="Associate()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"
+          [disabled]="!permisoEscritura || disabledSave()"></button>
       </div>
     </div>
   </div>
@@ -105,24 +101,24 @@
   <div class="loader"></div>
 </div>
 
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" icon="fa fa-question-circle" width="425"
-  key="cdCreateRepresentante" #cdCreateRepresentante>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" icon="fa fa-question-circle" width="425" key="cdCreateRepresentante"
+  #cdCreateRepresentante>
   <p-footer>
     <button type="button" pButton icon="fa-check" label="Si" (click)="cdCreateRepresentante.accept()"></button>
     <button type="button" pButton icon="fa-close" label="No" (click)="reject()"></button>
   </p-footer>
 </p-confirmDialog>
 
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" icon="fa fa-question-circle" width="425"
-  key="cdRepresentanteAssociate" #cdRepresentanteAssociate>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" icon="fa fa-question-circle" width="425" key="cdRepresentanteAssociate"
+  #cdRepresentanteAssociate>
   <p-footer>
     <button type="button" pButton icon="fa-check" label="Si" (click)="cdRepresentanteAssociate.accept()"></button>
     <button type="button" pButton icon="fa-close" label="No" (click)="rejectAssociate()"></button>
   </p-footer>
 </p-confirmDialog>
 
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" icon="fa fa-question-circle" width="425"
-  key="cdRepresentanteDisassociate" #cdRepresentanteDisassociate>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" icon="fa fa-question-circle" width="425" key="cdRepresentanteDisassociate"
+  #cdRepresentanteDisassociate>
   <p-footer>
     <button type="button" pButton icon="fa-check" label="Si" (click)="cdRepresentanteDisassociate.accept()"></button>
     <button type="button" pButton icon="fa-close" label="No" (click)="rejectDisassociate()"></button>

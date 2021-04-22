@@ -27,8 +27,8 @@ import { TablaResultadoMixDAService } from '../../../commons/tabla-resultado-mix
 import { SaltosCompensacionesOficioModule } from './saltos-compensaciones-oficio/saltos-compensaciones-oficio.module';
 import { Paginador2Module } from './designaciones/ficha-designaciones/paginador2/paginador2.module';
 import { MatSortModule } from '@angular/material';
-import { DetalleTarjetaProcuradorFichaDesignacionOficioComponent } from './designaciones/ficha-designaciones/detalle-tarjeta-procurador-ficha-designacion-oficio/detalle-tarjeta-procurador-ficha-designacion-oficio.component';
-import { DetalleTarjetaProcuradorFichaDesignaionOficioService } from './designaciones/ficha-designaciones/detalle-tarjeta-procurador-ficha-designacion-oficio/detalle-tarjeta-procurador-ficha-designaion-oficio.service';
+import { DetalleTarjetaProcuradorFichaDesignacionOficioComponent } from './designaciones/ficha-designaciones/detalle-tarjeta-procurador-designa/detalle-tarjeta-procurador-ficha-designacion-oficio.component';
+import { DetalleTarjetaProcuradorFichaDesignaionOficioService } from './designaciones/ficha-designaciones/detalle-tarjeta-procurador-designa/detalle-tarjeta-procurador-ficha-designaion-oficio.service';
 
 @NgModule({
         declarations: [],

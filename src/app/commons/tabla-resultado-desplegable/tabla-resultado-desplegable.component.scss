@@ -506,3 +506,46 @@
   align-self: flex-end;
   justify-self: flex-end;
 }
+.buttomStyle{
+    color: white;
+    background: linear-gradient(to top, rgba(0,67,117,.9) 0%, rgba(0,67,117,1) 100%) !important; 
+		font-size: 0.9rem;
+		padding: 0.2rem;
+		border: none !important;
+		span {
+			color: white;
+		}
+}
+.color-red{
+  color: red;
+}
+.color-blue{
+  color: blue;
+}
+.color-green{
+color: green;
+}
+.color-black{
+  color: black;
+}
+.marginButtons{
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+::ng-deep {
+
+  .selectWrap {
+
+      label.ui-dropdown-label {
+        max-width: 100px;
+      }
+
+  }
+  .p-dropdown-item.p-ripple {
+    white-space: normal !important;
+  }
+}
+
+.p-dropdown-item.p-ripple {
+  white-space: normal !important;
+}

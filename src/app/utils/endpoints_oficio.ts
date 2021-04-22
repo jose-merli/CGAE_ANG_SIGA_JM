@@ -99,6 +99,12 @@ export let endpoints_oficio: any = {
     actuaciones_designacion_validar: "oficio/designas/validarActDesigna",
     actuaciones_designacion_desvalidar: "oficio/designas/desvalidarActDesigna",
     combo_prisiones: "oficio/comboPrisiones",
+    designaciones_updateRepresentanteInteresado:"oficio/designas/updateRepresentanteInteresado",
+    designaciones_updateRepresentanteContrario:"oficio/designas/updateRepresentanteContrario",
+    designaciones_updateAbogadoContrario:"oficio/designas/updateAbogadoContrario",
+    designaciones_updateProcuradorContrario:"oficio/designas/updateProcuradorContrario",
+    designaciones_updateDetalleDesignacion:"oficio/designas/updateDetalleDesignacion",
+    designaciones_searchAbogadoByIdPersona:"oficio/designas/searchAbogadoByIdPersona",
 
     //SALTOS Y COMPENSACIONES
     saltosCompensacionesOficio_buscar: "oficio/saltosCompensaciones/buscarSaltosOCompensaciones",

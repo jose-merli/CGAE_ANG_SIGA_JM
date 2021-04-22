@@ -6,10 +6,10 @@ import { SigaServices } from '../../../../../_services/siga.service';
 import { ActuacionDesignaItem } from '../../../../../models/sjcs/ActuacionDesignaItem';
 import { ActuacionDesignaObject } from '../../../../../models/sjcs/ActuacionDesignaObject';
 import { Message } from 'primeng/api';
-import { Row, DetalleTarjetaProcuradorFichaDesignaionOficioService } from './detalle-tarjeta-procurador-ficha-designacion-oficio/detalle-tarjeta-procurador-ficha-designaion-oficio.service';
+import { Row, DetalleTarjetaProcuradorFichaDesignaionOficioService } from './detalle-tarjeta-procurador-designa/detalle-tarjeta-procurador-ficha-designaion-oficio.service';
 import { ProcuradorItem } from '../../../../../models/sjcs/ProcuradorItem';
-import { DetalleTarjetaContrariosFichaDesignacionOficioComponent } from './detalle-tarjeta-contrarios-ficha-designacion-oficio/detalle-tarjeta-contrarios-ficha-designacion-oficio.component';
-import { DetalleTarjetaInteresadosFichaDesignacionOficioComponent } from './detalle-tarjeta-interesados-ficha-designacion-oficio/detalle-tarjeta-interesados-ficha-designacion-oficio.component';
+import { DetalleTarjetaContrariosFichaDesignacionOficioComponent } from './detalle-tarjeta-contrarios-designa/detalle-tarjeta-contrarios-ficha-designacion-oficio.component';
+import { DetalleTarjetaInteresadosFichaDesignacionOficioComponent } from './detalle-tarjeta-interesados-designa/detalle-tarjeta-interesados-ficha-designacion-oficio.component';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { Router } from '@angular/router';
 import { procesos_oficio } from '../../../../../permisos/procesos_oficio';
@@ -236,7 +236,7 @@ export class FichaDesignacionesComponent implements OnInit {
     private commonsService: CommonsService, private router: Router) { }
 
   ngOnInit() {
-
+    this.progressSpinner=true;
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
     let designaItem = JSON.parse(sessionStorage.getItem("designaItemLink"));
     this.campos = designaItem;
@@ -268,7 +268,7 @@ export class FichaDesignacionesComponent implements OnInit {
         },
         {
           "key": "Estado",
-          "value": designaItem.art27
+          "value": designaItem.estado
         },
         {
           "key": "Interesado",
@@ -355,41 +355,8 @@ export class FichaDesignacionesComponent implements OnInit {
       this.listaTarjetas[0].campos = camposGenerales;
       this.listaTarjetas[1].campos = camposDetalle;
 
-      //Actualizar para que los campos se rellenen en base a la tabla de la tarjeta contrarios
-      this.listaTarjetas[4].campos = [
-        {
-          "key": null,
-          "value": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.vacio')
-        },
-        {
-          "key": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.identificadorprimero'),
-          "value": designaItem.nombreTurno
-        },
-        {
-          "key": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.apellidosnombreprimero'),
-          "value": designaItem.fechaAlta
-        },
-        {
-          "key": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.abogadoprimero'),
-          "value": "NO"
-        }, {
-          "key": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.procuradorprimero'),
-          "value": designaItem.descripcionTipoDesigna
-        }, {
-          "key": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.ncontrarios'),
-          "value": designaItem.descripcionTipoDesigna
-        }
-      ]
+      
       // this.searchContrarios(false);
-      /* this.listaTarjetas[4].enlaces=[{
-      id: null,
-          ref: null,
-          nombre: this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.vacio')
-      }] */
-      this.progressSpinner = false;
-    } else {
-
-      this.searchContrarios(false);
       /* this.listaTarjetas[4].enlaces=[{
       id: null,
           ref: null,
@@ -397,6 +364,17 @@ export class FichaDesignacionesComponent implements OnInit {
       }] */
       //Actualizar para que los campos se rellenen en base a la tabla de la tarjeta interesados
       this.searchInteresados();
+      this.searchContrarios(false);
+      this.progressSpinner = false;
+    } else {
+
+      
+      /* this.listaTarjetas[4].enlaces=[{
+      id: null,
+          ref: null,
+          nombre: this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.vacio')
+      }] */
+     
       this.progressSpinner = false;
 
       //NUEVA DESIGNA
@@ -506,7 +484,7 @@ export class FichaDesignacionesComponent implements OnInit {
     }
 
     this.getActuacionesDesigna(false);
-
+    this.progressSpinner=false;
   }
 
   ngOnChanges() {
@@ -870,19 +848,12 @@ export class FichaDesignacionesComponent implements OnInit {
     let designaItem = JSON.parse(data);
 
     let item = [designaItem.idTurno.toString(), designaItem.nombreTurno, designaItem.numero.toString(), designaItem.ano, event];
-    /* ano: "D2021/4330"
-nombreTurno: "ZELIMINAR-CIJAECI05 - MATRIMONIAL CONTENCIOSO JAÉN" */
 
     this.sigaServices.post("designaciones_listaContrarios", item).subscribe(
       n => {
 
         this.contrarios = JSON.parse(n.body);
         let primero = this.contrarios[0];
-        //Columnas a obtener:
-        //Identificador: nif/pasaporte del id persona del contrario. A partir de SCS_CONTRARIOSDESIGNA.IDPERSONA.
-        //Apellido, nombre de dicha persona. A partir de SCS_CONTRARIOSDESIGNA.IDPERSONA.
-        //nº colegiado, apellidos y nombre del abogado del contrario. Extraer de las columnas IDABOGADOCONTRARIO y NOMBREABOGADOCONTRARIO de SCS_CONTRARIOSDESIGNA.
-        //nº colegiado, apellidos y nombre del procurador del contrario. SCS_CONTRARIOSDESIGNA.IDPROCURADOR
 
         let error = JSON.parse(n.body).error;
 

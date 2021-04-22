@@ -334,7 +334,10 @@ ultimoAsunto: "A2018/04361" */
       this.commnosService.scrollTop();
       this.navigateToJusticiable = false;
       this.search();
-    } else {
+    } else if(this.fromContrario || this.fromInteresado) {
+      this.router.navigate(['/fichaDesignaciones']);
+    }  
+    else {
       //this.router.navigate(["/justiciables"]);
       this.location.back();
     }
@@ -363,5 +366,8 @@ ultimoAsunto: "A2018/04361" */
     justiciableBusqueda.idpersona = justiciable.idpersona;
     justiciableBusqueda.idinstitucion = this.authenticationService.getInstitucionSession();
     this.callServiceSearch(justiciableBusqueda);
+  }
+  contrario(event){
+    this.fromContrario=true;
   }
 }

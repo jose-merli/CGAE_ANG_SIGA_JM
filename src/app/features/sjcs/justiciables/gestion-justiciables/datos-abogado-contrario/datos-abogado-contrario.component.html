@@ -9,14 +9,14 @@
         </div>
         <label class="title-ficha">{{ 'justiciaGratuita.oficio.designas.contrarios.abogado' | translate }}</label>
         <div class="d-flex justify-content-start mb-1 ml-auto">
-          <label *ngIf="showEnlaceAbogado" class="mr-3">
+          <!-- <label *ngIf="showEnlaceAbogado" class="mr-3">
             <i (click)="navigateToAbogado();$event.stopPropagation();" class="fas fa-external-link-alt mr-2"></i>
             <a (click)="navigateToAbogado();$event.stopPropagation();">
               <span style="color: blue; text-decoration: underline;cursor:pointer;"> {{
                 'informesycomunicaciones.comunicaciones.fichaColegial' | translate }}
               </span>
             </a>
-          </label>
+          </label> -->
           <i class="fa fa-angle-up ml-auto"></i>
         </div>
       </div>
@@ -34,17 +34,17 @@
           <div class="row">
             <div class="col-3">
               <label>{{ "censo.busquedaClientesAvanzada.literal.colegio" | translate }}
-                <!-- <span>{{ generalBody.nombre }} {{ generalBody.apellidos }}</span> -->
+                 <span>{{ generalBody.colegio }}</span> 
               </label>
             </div>
             <div class="col-3">
               <label>{{ "censo.resultadosSolicitudesModificacion.literal.nColegiado" | translate }}
-                <!-- <span>{{ generalBody.nombre }} {{ generalBody.apellidos }}</span> -->
+                <span>{{ generalBody.numColegiado }}</span>
               </label>
             </div>
             <div class="col-3">
               <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.estado" | translate }}
-                <!-- <span>{{ generalBody.nombre }} {{ generalBody.apellidos }}</span> -->
+                <span>{{ generalBody.estadoColegial }}</span>
               </label>
             </div>
             <!-- <div *ngIf="!showEnlaceAbogado" class="col-3"></div>
@@ -82,33 +82,33 @@
               <label>{{ "censo.busquedaClientesAvanzada.literal.colegio" | translate }} (*)
               </label>
               <input [(ngModel)]="generalBody.colegio" type="text" class="form-control" maxlength="20" pInputText
-                [disabled]="!permisoEscritura" />
+              disabled />
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{ "censo.resultadosSolicitudesModificacion.literal.nColegiado" | translate }} (*)
               </label>
-              <input [(ngModel)]="generalBody.ncolegio" type="text" class="form-control" maxlength="20" pInputText
-                [disabled]="!permisoEscritura" />
+              <input [(ngModel)]="generalBody.numColegiado" disabled type="text" class="form-control" maxlength="20" pInputText
+                 />
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.estado" | translate }} (*)
               </label>
-              <input [(ngModel)]="generalBody.estado" type="text" class="form-control" maxlength="20" pInputText
-                [disabled]="!permisoEscritura" />
+              <input [(ngModel)]="generalBody.estadoColegial" type="text" disabled class="form-control" maxlength="20" pInputText
+                 />
             </div>
           </div>
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "justiciaGratuita.oficio.designas.interesados.apellidosnombre" | translate }}
               </label>
-              <input [(ngModel)]="generalBody.apellidosnombre" type="text" disabled class="form-control"
-                [maxLength]="100" [disabled]="!permisoEscritura" pInputText />
+              <input [(ngModel)]="generalBody.nombre" type="text" disabled class="form-control"
+                [maxLength]="100"  pInputText />
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "censo.fichaCliente.literal.identificacion" | translate }}
               </label>
-              <input [(ngModel)]="generalBody.nombre" type="text" disabled class="form-control" [maxLength]="100"
-                [disabled]="!permisoEscritura" pInputText />
+              <input [(ngModel)]="generalBody.nif" type="text" disabled class="form-control" [maxLength]="100"
+                 pInputText />
             </div>
           </div>
         </div>
@@ -117,12 +117,12 @@
 
     <div [hidden]="!showTarjeta" class="card-footer">
       <div class="text-right main-button">
-        <button pButton (click)="checkPermisosDisassociate()" type="button" icon="fa fa-undo" iconPos="left"
+        <button pButton (click)="Disassociate()" type="button" icon="fa fa-undo" iconPos="left"
           label="{{ 'censo.tipoCuenta.cargo.desasociar' | translate }}"
           [disabled]="!permisoEscritura ||  disabledDisassociate()"></button>
         <button pButton (click)="search()" type="button" icon="fa fa-search" iconPos="left"
           label="{{ 'general.boton.search' | translate}}"></button>
-        <button pButton (click)="checkPermisosAssociate()" type="button" icon="far fa-save" iconPos="left"
+        <button pButton (click)="Associate()" type="button" icon="far fa-save" iconPos="left"
           label="{{ 'general.boton.guardar' | translate}}" [disabled]="!permisoEscritura || disabledSave()"></button>
       </div>
     </div>
