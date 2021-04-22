@@ -35,6 +35,9 @@ export class FiltroDesignacionesComponent implements OnInit {
   
   disabledBusquedaExpress: boolean = false;
   showColegiado: boolean = false;
+
+  esColegiado: boolean = false;
+  @Output() isColeg = new EventEmitter<boolean>();
   radioTarjeta: string = 'designas';
 
   //Variables busqueda designas
@@ -65,7 +68,6 @@ export class FiltroDesignacionesComponent implements OnInit {
   comboOrigenActuaciones: any[];
   comboRoles: any[];
   comboAcreditaciones: any[];
-  esColegiado: boolean = false;
 
   institucionActual: any;
   @Output() busquedaJustificacionExpres = new EventEmitter<boolean>();
@@ -76,8 +78,12 @@ export class FiltroDesignacionesComponent implements OnInit {
   constructor(private translateService: TranslateService, private sigaServices: SigaServices,  private location: Location, private router: Router) { }
 
   ngOnInit(): void {
-    
+
+    let esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
+    this.isColeg.emit(esColegiado);
+    if(!esColegiado){   
     this.checkAcceso();
+  }
   }
 
   cargaInicial(){
@@ -95,7 +101,8 @@ export class FiltroDesignacionesComponent implements OnInit {
 
     this.showDesignas=true;
     this.showJustificacionExpress=false;
-
+    this. esColegiado = false;
+    this.isColeg.emit(this.esColegiado);
     this.progressSpinner=true;
     this.showDesignas = true;
     this.checkRestricciones = false;
@@ -111,6 +118,7 @@ export class FiltroDesignacionesComponent implements OnInit {
     if (this.esColegiado) {
       this.disabledBusquedaExpress = true;
       this.getDataLoggedUser();
+      this.isColeg.emit(true);
     }else{
       this.disabledBusquedaExpress = false;
       this.filtroJustificacion.ejgSinResolucion="2"; 
@@ -594,7 +602,7 @@ getComboCalidad() {
         nombreAp: ''
       };
     }
-
+    this.isColeg.emit(this.esColegiado);
     this.getBuscadorDesignas();
   }
 
@@ -653,7 +661,12 @@ getComboCalidad() {
   getDataLoggedUser() {
     this.progressSpinner = true;
     this.esColegiado = false;
-    
+    this.isColeg.emit(this.esColegiado);
+    //si es colegio, valor por defecto para justificacion
+    this.filtroJustificacion.ejgSinResolucion="2"; 
+    this.filtroJustificacion.sinEJG="2";
+    this.filtroJustificacion.resolucionPTECAJG="2";
+    this.filtroJustificacion.conEJGNoFavorables="2";
     this.sigaServices.get("usuario_logeado").subscribe(n => {
 
       const usuario = n.usuarioLogeadoItem;
@@ -674,6 +687,7 @@ getComboCalidad() {
         this.filtroJustificacion.conEJGNoFavorables="0";
 
         this.esColegiado = true;
+        this.isColeg.emit(this.esColegiado);
         this.checkRestricciones = true;
       },
       err =>{

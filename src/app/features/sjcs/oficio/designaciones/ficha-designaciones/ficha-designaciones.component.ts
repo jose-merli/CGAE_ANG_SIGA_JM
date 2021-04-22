@@ -265,7 +265,7 @@ export class FichaDesignacionesComponent implements OnInit {
         },
         {
           "key": "Estado",
-          "value": designaItem.art27
+          "value": designaItem.estado
         },
         {
           "key": "Interesado",
