@@ -88,7 +88,6 @@ export class BusquedaGeneralComponent implements OnDestroy {
   idClaseComunicacion: String;
   keys: any[] = [];
   fromAbogadoContrario: boolean = false;
-  fromProcuradorContrario: boolean = false;
 
   migaPan: string = '';
   migaPan2: string = '';
@@ -140,10 +139,6 @@ export class BusquedaGeneralComponent implements OnDestroy {
     if(sessionStorage.getItem("origin")=="AbogadoContrario"){
       sessionStorage.removeItem('origin');
       this.fromAbogadoContrario=true;
-    }
-    if(sessionStorage.getItem("origin")=="ProcuradorContrario"){
-      sessionStorage.removeItem('origin');
-      this.fromProcuradorContrario=true;
     }
     this.progressSpinner = true;
     this.currentRoute = this.router.url;
@@ -747,10 +742,6 @@ export class BusquedaGeneralComponent implements OnDestroy {
   irFichaColegial(id) {
 
     // En caso que venga de una ficha de contrario
-    if(this.fromProcuradorContrario){
-      sessionStorage.setItem('procurador', JSON.stringify(id));
-      this.router.navigate(['/gestionJusticiables']);
-    }
     if(this.fromAbogadoContrario){
       sessionStorage.setItem('abogado', JSON.stringify(id));
       this.router.navigate(['/gestionJusticiables']);

@@ -196,10 +196,10 @@ export class DetalleTarjetaContrariosFichaDesignacionOficioComponent implements 
         this.persistenceService.clearBody();
 
         if(evento.abogado!="" && evento.abogado!=null){
-          sessionStorage.setItem("abogadoFicha",evento.abogado);
+          sessionStorage.setItem("idabogadoFicha",evento.idabogadocontrario);
         }
         if(evento.procurador!="" && evento.procurador!=null){
-          sessionStorage.setItem("procuradorFicha",evento.abogado);
+          sessionStorage.setItem("procuradorFicha",evento.procurador);
         }
         if(evento.representante!="" && evento.representante!=null){
           let representante = new JusticiableBusquedaItem();

@@ -125,7 +125,7 @@ export class DatosProcuradorContrarioComponent implements OnInit {
 			);
 		} else {
 			sessionStorage.setItem("origin", "ProcuradorContrario");
-			this.router.navigate(['/busquedaGeneral']);
+			this.router.navigate(['/mantenimientoprocuradores']);
 		}
 	}
 

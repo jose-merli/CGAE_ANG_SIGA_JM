@@ -107,11 +107,13 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 			}
 			/* Procede de ficha designacion */
 			if (sessionStorage.getItem("abogadoFicha")) {
-				let data = this.generalBody = JSON.parse(sessionStorage.getItem("abogadoFicha"));
+				let idabogado = this.generalBody = JSON.parse(sessionStorage.getItem("idabogadoFicha"));
 				sessionStorage.removeItem("abogadoFicha");
+				/* this.sigaServices.post("busquedaJusticiables_searchJusticiables", idabogado).subscribe(
 				this.generalBody.numColegiado = data.split(",")[0];
 				this.generalBody.nombre = data.split(",")[1].concat(",",data.split(",")[2]);
-				this.permisoEscritura = true;
+				this.permisoEscritura = true; 
+				)*/
 			}
 
 			this.progressSpinner = false;
