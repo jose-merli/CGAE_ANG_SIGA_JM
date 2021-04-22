@@ -18,6 +18,9 @@ export class SelectorComponent implements OnInit {
   verSeleccion: [number];
   nuevaDesigna: any;
   disable: boolean;
+  textoJuzgado: any;
+  textoProcedimiento: any;
+  textoModulo:any;
   constructor(private sigaServices: SigaServices) { }
  
   ngOnInit(): void {
@@ -45,29 +48,28 @@ export class SelectorComponent implements OnInit {
       this.disable = false;
     }
     if(this.selector.nombre == "Juzgado" && !this.nuevaDesigna){
+      // this.textoJuzgado = this.selector.opciones[0].label;
+      this.opcionSeleccionado = [this.selector.opciones[0].value];
       this.getComboJuzgados(this.selector);
-      this.textoVisible = this.selector.opciones[0].label;
       this.disable = false;
     }else if(this.selector.nombre == "Juzgado" && this.nuevaDesigna){
-      // this.disable = true;
-      this.textoVisible = "";
+      this.opcionSeleccionado = [-1];
       this.getComboJuzgados(this.selector);
     }
     if(this.selector.nombre == "Procedimiento" && !this.nuevaDesigna){
+      this.opcionSeleccionado = [this.selector.opciones[0].value];
       this.getComboProcedimientos(this.selector);
-      this.textoVisible = this.selector.opciones[0].label;
       this.disable = false;
     }else if(this.selector.nombre == "Procedimiento" && this.nuevaDesigna){
-      // this.disable = true;
-      this.textoVisible = "";
+      this.opcionSeleccionado = [-1];
     }
     if(this.selector.nombre == "Módulo" && !this.nuevaDesigna){
+      this.opcionSeleccionado = [this.selector.opciones[0].value];
       this.getComboModulos(this.selector);
-      this.textoVisible = this.selector.opciones[0].label;
       this.disable = false;
     }else if(this.selector.nombre == "Módulo" && this.nuevaDesigna){
-      // this.disable = true;
-      this.textoVisible = "";
+      this.opcionSeleccionado = [-1];
+      
     }
     if(!this.nuevaDesigna){
       this.cargaCombosDesigna();

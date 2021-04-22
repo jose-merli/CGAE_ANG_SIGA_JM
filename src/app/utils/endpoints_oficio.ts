@@ -94,6 +94,7 @@ export let endpoints_oficio: any = {
     actuaciones_designacion_eliminar: "oficio/designas/eliminarActDesigna",
     actuaciones_designacion_newId: "oficio/designas/getNewIdActuDesigna",
     combo_prisiones: "oficio/comboPrisiones",
+    designaciones_updateDetalleDesignacion:"oficio/designas/updateDetalleDesignacion",
 
     //SALTOS Y COMPENSACIONES
     saltosCompensacionesOficio_buscar: "oficio/saltosCompensaciones/buscarSaltosOCompensaciones",

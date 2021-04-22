@@ -405,7 +405,7 @@ import { TablaResultadoDesplegableJEService } from './commons/tabla-resultado-de
 //OFICIO > DESIGNACIONES
 import { FichaDesignacionesComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/ficha-designaciones.component';
 import { DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-datos-facturacion-ficha-designacion-oficio/detalle-tarjeta-datos-facturacion-ficha-designacion-oficio.component';
-import { DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-datos-generales-ficha-designacion-oficio/detalle-tarjeta-datos-generales-ficha-designacion-oficio.component';
+import { DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-datos-generales-designa/detalle-tarjeta-datos-generales-ficha-designacion-oficio.component';
 import { DetalleTarjetaDetalleFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-detalle-ficha-designacion-oficio/detalle-tarjeta-detalle-ficha-designacion-oficio.component';
 import { DetalleTarjetaDocumentacionFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-documentacion-ficha-designacion-oficio/detalle-tarjeta-documentacion-ficha-designacion-oficio.component';
 import { TablaResultadoOrderComponent } from './commons/tabla-resultado-order/tabla-resultado-order.component';

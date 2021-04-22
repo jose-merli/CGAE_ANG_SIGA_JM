@@ -106,15 +106,15 @@ export class DesignacionesComponent implements OnInit {
         element.fechaEstado = this.formatDate(element.fechaEstado);
         element.fechaAlta = this.formatDate(element.fechaAlta);
         element.fechaEntradaInicio = this.formatDate(element.fechaEntradaInicio);
-         if(element.art27 == 'V'){
-           element.sufijo = element.art27;
-          element.art27 = 'Activo';
-         }else if(element.art27 == 'F'){
-          element.sufijo = element.art27;
-          element.art27 = 'Finalizado';
-         }else if(element.art27 == 'A'){
-          element.sufijo = element.art27;
-          element.art27 = 'Anulada';
+         if(element.estado == 'V'){
+           element.sufijo = element.estado;
+          element.estado = 'Activo';
+         }else if(element.estado == 'F'){
+          element.sufijo = element.estado;
+          element.estado = 'Finalizado';
+         }else if(element.estado == 'A'){
+          element.sufijo = element.estado;
+          element.estado = 'Anulada';
          }
          element.nombreColegiado = element.apellido1Colegiado +" "+ element.apellido2Colegiado+", "+element.nombreColegiado;
          element.nombreInteresado = element.apellido1Interesado +" "+ element.apellido2Interesado+", "+element.nombreInteresado;
