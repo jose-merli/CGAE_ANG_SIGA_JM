@@ -408,8 +408,10 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
 
   confirmarActivar(severity, summary, detail) {
     let mess = "Se va a seleccionar un letrado automaticamente. ¿Desea continuar?";
-    let icon = "fa fa-trash-alt";
+    let icon = "fa fa-question-circle";
+    let keyConfirmation = "confirmGuardar";
     this.confirmationService.confirm({
+      key: keyConfirmation,
       message: mess,
       icon: icon,
       accept: () => {
@@ -427,7 +429,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
           var year = today.getFullYear().valueOf();
           newDesigna.ano = year;
           this.checkDatosGenerales();
-          if(this.resaltadoDatos == true){
+          if(this.resaltadoDatos == false){
             this.sigaServices.post("create_NewDesigna", newDesigna).subscribe(
               n => {
                 sessionStorage.removeItem("nuevaDesigna");
