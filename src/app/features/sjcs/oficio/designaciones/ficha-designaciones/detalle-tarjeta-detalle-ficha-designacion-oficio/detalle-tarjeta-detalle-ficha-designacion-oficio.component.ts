@@ -11,7 +11,7 @@ import { SigaServices } from '../../../../../../_services/siga.service';
   styleUrls: ['./detalle-tarjeta-detalle-ficha-designacion-oficio.component.scss']
 })
 export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnInit {
-
+  progressSpinner: boolean = false;
   msgs: Message[] = [];
   nuevaDesigna: any;
   valorParametro: any;
@@ -20,6 +20,9 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
   searchParametrosFormatoNProcedimiento: ParametroDto = new ParametroDto();
   datosBuscar: any[];
   estado: any;
+  disableFinalizar: boolean;
+  disableAnular: boolean;
+  disableReactivar: boolean;
   @Input() campos;
   inputs = [
     { nombre: 'NIG', value: "" },
@@ -204,6 +207,51 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     } else {
       this.showMsg('error', 'El formato del Nº Procedimiento o del NIG no es correcto', '');
     }
+    //ANULAR
+    if (detail == "Anular" ) {
+      // this.sigaServices.post("designaciones_busquedaModulo", dataModulo).subscribe(
+      //   n => {
+      //   },
+      //   err => {
+      //     this.progressSpinner = false;
+  
+      //     console.log(err);
+      //   },() => {
+      //     this.progressSpinner = false;
+      //   });;
+    } else {
+      this.showMsg('error', 'No se ha podido anular la designacion', '');
+    }
+    //FINALIZAR
+    if (detail == "Finalizar" ) {
+      // this.sigaServices.post("designaciones_busquedaModulo", dataModulo).subscribe(
+      //   n => {
+      //   },
+      //   err => {
+      //     this.progressSpinner = false;
+  
+      //     console.log(err);
+      //   },() => {
+      //     this.progressSpinner = false;
+      //   });;
+    } else {
+      this.showMsg('error', 'No se ha podido finalizar la designacion', '');
+    }
+    //REACTIVAR
+    // if (detail == "Reactivar") {
+    //   this.sigaServices.post("designaciones_busquedaModulo", dataModulo).subscribe(
+    //     n => {
+    //     },
+    //     err => {
+    //       this.progressSpinner = false;
+  
+    //       console.log(err);
+    //     },() => {
+    //       this.progressSpinner = false;
+    // //     });;
+    // } else {
+    //   this.showMsg('error', 'No se ha podido reactivar la designacion', '');
+    // }
 
     this.msgs.push({
       severity,

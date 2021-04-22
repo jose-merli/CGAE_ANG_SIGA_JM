@@ -7,6 +7,7 @@ import { ControlAccesoDto } from '../../../../../models/ControlAccesoDto';
 import { procesos_oficio } from '../../../../../permisos/procesos_oficio';
 import { TranslateService } from '../../../../../commons/translate';
 import { Message } from 'primeng/components/common/api';
+import { DesignaItem } from '../../../../../models/sjcs/DesignaItem';
 
 
 @Component({
@@ -17,20 +18,21 @@ import { Message } from 'primeng/components/common/api';
 export class GestionDesignacionesComponent implements OnInit {
   msgs: Message[] = [];
   selectMultiple: boolean = false;
-  selectAll: boolean = false;
+  selectAll;
   rowsPerPage: any = [];
   cols;
   buscadores = [];
   selectedItem: number = 10;
   initDatos;
   datosInicial = [];
-  selectedDatos: any[] = [];
+  selectedDatos;
   isLetrado:boolean = false;
   first = 0;
   progressSpinner: boolean = false;
   comboTipoDesigna: any[];
   //Resultados de la busqueda
   @Input() datos;
+  numSelected: number = 0;
 
   @Output() busquedaDesignaciones = new EventEmitter<boolean>();
 
@@ -97,6 +99,9 @@ export class GestionDesignacionesComponent implements OnInit {
   }
 
   openTab(dato){
+    let idProcedimiento = dato.idProcedimiento;;
+    let datosProcedimiento;
+    let datosModulo;
     if(dato.idTipoDesignaColegio != null && dato.idTipoDesignaColegio != undefined){
       this.comboTipoDesigna.forEach(element => {
        if(element.value == dato.idTipoDesignaColegio){
@@ -104,9 +109,60 @@ export class GestionDesignacionesComponent implements OnInit {
        }
        });
       }
-    sessionStorage.setItem("nuevaDesigna",  "false");
-    sessionStorage.setItem("designaItemLink",  JSON.stringify(dato));
-    this.router.navigate(["/fichaDesignaciones"]);
+      let designaProcedimiento = new DesignaItem();
+      let data = sessionStorage.getItem("designaItem");
+      let dataProcedimiento = JSON.parse(data);
+      dataProcedimiento.idPretension = dato.idPretension;
+      dataProcedimiento.idTurno = dato.idTurno;
+      dataProcedimiento.ano = dato.factConvenio;
+      dataProcedimiento.numero = dato.numero
+      this.sigaServices.post("designaciones_busquedaProcedimiento", dataProcedimiento).subscribe(
+        n => {
+          datosProcedimiento = JSON.parse(n.body);
+          if(datosProcedimiento.length == 0){
+            dato.nombreProcedimiento = "";
+            dato.idProcedimiento = "";
+          }else{
+            dato.nombreProcedimiento = datosProcedimiento[0].nombreProcedimiento;
+            dato.idProcedimiento = dataProcedimiento.idPretension;
+          }
+          
+          let designaModulo = new DesignaItem();
+          let dataModulo = JSON.parse(data);
+          dataModulo.idProcedimiento = idProcedimiento;
+          dataModulo.idTurno = dato.idTurno;
+          dataModulo.ano = dato.factConvenio;
+          dataModulo.numero = dato.numero
+          this.sigaServices.post("designaciones_busquedaModulo", dataModulo).subscribe(
+            n => {
+              datosModulo = JSON.parse(n.body);
+              if(datosModulo.length == 0){
+                dato.modulo = "";
+                dato.idModulo = "";
+              }else{
+                dato.modulo = datosModulo[0].modulo;
+                dato.idModulo = datosModulo[0].idModulo;
+              }
+              
+              sessionStorage.setItem("nuevaDesigna",  "false");
+              sessionStorage.setItem("designaItemLink",  JSON.stringify(dato));
+              this.router.navigate(["/fichaDesignaciones"]);
+            },
+            err => {
+              this.progressSpinner = false;
+      
+              console.log(err);
+            },() => {
+              this.progressSpinner = false;
+            });;
+      
+        },
+        err => {
+          this.progressSpinner = false;
+          console.log(err);
+        },() => {
+          this.progressSpinner = false;
+        });;
   }
 
   getComboTipoDesignas() {
@@ -178,8 +234,9 @@ arregloTildesCombo(combo) {
         );
     
       } 
-  actualizaSeleccionados(selectedDatos) {
 
+  actualizaSeleccionados(selectedDatos) {
+    this.numSelected = selectedDatos.length;
   }
 
   clickFila(event) {
@@ -204,6 +261,18 @@ arregloTildesCombo(combo) {
       summary,
       detail
     });
+  }
+
+  onChangeSelectAll() {
+    if (this.selectAll === true) {
+      this.selectMultiple = false;
+      this.selectedDatos = this.datos;
+      this.numSelected = this.datos.length;
+    } else {
+      this.selectMultiple = true;
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    }
   }
 
   clear() {
