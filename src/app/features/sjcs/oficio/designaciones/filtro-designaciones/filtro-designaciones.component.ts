@@ -33,6 +33,7 @@ export class FiltroDesignacionesComponent implements OnInit {
   disabledBusquedaExpress: boolean = false;
   showColegiado: boolean = false;
   esColegiado: boolean = false;
+  @Output() isColeg = new EventEmitter<boolean>();
   radioTarjeta: string = 'designas';
 
   //Variables busqueda designas
@@ -72,6 +73,7 @@ export class FiltroDesignacionesComponent implements OnInit {
 
   ngOnInit(): void {
     let esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
+    this.isColeg.emit(esColegiado);
     if(!esColegiado){
       this.isButtonVisible = true;
     }else{
@@ -83,6 +85,7 @@ export class FiltroDesignacionesComponent implements OnInit {
     this.showJustificacionExpress=false;
 
     this. esColegiado = false;
+    this.isColeg.emit(esColegiado);
     this.progressSpinner=true;
     this.showDesignas = true;
     this.checkRestricciones = false;
@@ -102,8 +105,9 @@ export class FiltroDesignacionesComponent implements OnInit {
     if (sessionStorage.getItem("esColegiado") && sessionStorage.getItem("esColegiado") == 'true') {
       this.disabledBusquedaExpress = true;
       this.getDataLoggedUser();
+      this.isColeg.emit(true);
     }
-
+    
     if (sessionStorage.getItem('buscadorColegiados')) {
       const { nombre, apellidos, nColegiado } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
 
@@ -548,6 +552,7 @@ getComboCalidad() {
         nombreAp: ''
       };
     }
+    this.isColeg.emit(this.esColegiado);
   }
 
   onChangeCheckMostrarPendientes(event) {
@@ -605,7 +610,7 @@ getComboCalidad() {
   getDataLoggedUser() {
     this.progressSpinner = true;
     this.esColegiado = false;
-    
+    this.isColeg.emit(this.esColegiado);
     //si es colegio, valor por defecto para justificacion
     this.filtroJustificacion.ejgSinResolucion="2"; 
     this.filtroJustificacion.sinEJG="2";
@@ -633,6 +638,7 @@ getComboCalidad() {
         this.filtroJustificacion.conEJGNoFavorables="0";
 
         this.esColegiado = true;
+        this.isColeg.emit(this.esColegiado);
         this.checkRestricciones = true;
       },
       err =>{
