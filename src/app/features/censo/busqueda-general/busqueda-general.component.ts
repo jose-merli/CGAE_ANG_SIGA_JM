@@ -87,6 +87,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
   currentRoute: String;
   idClaseComunicacion: String;
   keys: any[] = [];
+  fromAbogadoContrario: boolean = false;
 
   migaPan: string = '';
   migaPan2: string = '';
@@ -134,6 +135,11 @@ export class BusquedaGeneralComponent implements OnDestroy {
   }
 
   ngOnInit() {
+
+    if(sessionStorage.getItem("origin")=="AbogadoContrario"){
+      sessionStorage.removeItem('origin');
+      this.fromAbogadoContrario=true;
+    }
     this.progressSpinner = true;
     this.currentRoute = this.router.url;
     this.getMigaPan();
@@ -734,6 +740,12 @@ export class BusquedaGeneralComponent implements OnDestroy {
   }
 
   irFichaColegial(id) {
+
+    // En caso que venga de una ficha de contrario
+    if(this.fromAbogadoContrario){
+      sessionStorage.setItem('abogado', JSON.stringify(id));
+      this.router.navigate(['/gestionJusticiables']);
+    }
     // ir a ficha de notario
     let colegioSelec = this.colegios_seleccionados[0].idInstitucion;
     if (sessionStorage.getItem('abrirNotario') == 'true' && sessionStorage.getItem('abrirRemitente') != 'true') {

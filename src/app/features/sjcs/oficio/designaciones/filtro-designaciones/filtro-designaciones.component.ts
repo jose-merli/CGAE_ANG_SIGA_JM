@@ -85,7 +85,6 @@ export class FiltroDesignacionesComponent implements OnInit {
     this.checkAcceso();
   // }
   }
-
   cargaInicial(){
     if(!this.esColegiado){
       this.isButtonVisible = true;
@@ -97,6 +96,7 @@ export class FiltroDesignacionesComponent implements OnInit {
       if(this.institucionActual == "2003"){
         this.isButtonVisible = false;
       }
+    
     this.filtroJustificacion = new JustificacionExpressItem();
 
     this.showDesignas=true;
