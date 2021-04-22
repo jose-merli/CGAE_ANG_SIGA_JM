@@ -29,11 +29,9 @@ import { Paginador2Module } from './designaciones/ficha-designaciones/paginador2
 import { MatSortModule } from '@angular/material';
 import { DetalleTarjetaProcuradorFichaDesignacionOficioComponent } from './designaciones/ficha-designaciones/detalle-tarjeta-procurador-ficha-designacion-oficio/detalle-tarjeta-procurador-ficha-designacion-oficio.component';
 import { DetalleTarjetaProcuradorFichaDesignaionOficioService } from './designaciones/ficha-designaciones/detalle-tarjeta-procurador-ficha-designacion-oficio/detalle-tarjeta-procurador-ficha-designaion-oficio.service';
-import { DetalleTarjetaDatosGeneralesFichaActuacionOficioComponent } from './designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-ficha-designacion-oficio/ficha-actuacion-designa-oficio/detalle-tarjeta-datos-generales-ficha-actuacion-oficio/detalle-tarjeta-datos-generales-ficha-actuacion-oficio.component';
-
 
 @NgModule({
-        declarations: [DetalleTarjetaDatosGeneralesFichaActuacionOficioComponent],
+        declarations: [],
         imports: [
                 TooltipModule,
                 TableModule,

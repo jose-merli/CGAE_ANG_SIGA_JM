@@ -18,20 +18,21 @@ import { DesignaItem } from '../../../../../models/sjcs/DesignaItem';
 export class GestionDesignacionesComponent implements OnInit {
   msgs: Message[] = [];
   selectMultiple: boolean = false;
-  selectAll: boolean = false;
+  selectAll;
   rowsPerPage: any = [];
   cols;
   buscadores = [];
   selectedItem: number = 10;
   initDatos;
   datosInicial = [];
-  selectedDatos: any[] = [];
+  selectedDatos;
   isLetrado:boolean = false;
   first = 0;
   progressSpinner: boolean = false;
   comboTipoDesigna: any[];
   //Resultados de la busqueda
   @Input() datos;
+  numSelected: number = 0;
 
   @Output() busquedaDesignaciones = new EventEmitter<boolean>();
 
@@ -233,8 +234,9 @@ arregloTildesCombo(combo) {
         );
     
       } 
-  actualizaSeleccionados(selectedDatos) {
 
+  actualizaSeleccionados(selectedDatos) {
+    this.numSelected = selectedDatos.length;
   }
 
   clickFila(event) {
@@ -259,6 +261,18 @@ arregloTildesCombo(combo) {
       summary,
       detail
     });
+  }
+
+  onChangeSelectAll() {
+    if (this.selectAll === true) {
+      this.selectMultiple = false;
+      this.selectedDatos = this.datos;
+      this.numSelected = this.datos.length;
+    } else {
+      this.selectMultiple = true;
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    }
   }
 
   clear() {

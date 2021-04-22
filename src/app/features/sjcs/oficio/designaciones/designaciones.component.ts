@@ -25,7 +25,7 @@ export class DesignacionesComponent implements OnInit {
   muestraTablaJustificacion: boolean = false;
   muestraTablaDesignas: boolean = false;
   comboTipoDesigna: any[];
-
+  colegiado: boolean;
   @ViewChild(FiltroDesignacionesComponent) filtros;
   
   datosJustificacion: JustificacionExpressItem = new JustificacionExpressItem();
@@ -160,6 +160,11 @@ export class DesignacionesComponent implements OnInit {
   formatDate(date) {
     const pattern = 'dd/MM/yyyy';
     return this.datePipe.transform(date, pattern);
+  }
+
+  esColegiado(event){
+this.colegiado = event;
+console.log('this.colegiado: ', this.colegiado)
   }
  
 }

@@ -51,8 +51,58 @@
 
                 <button pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}" (click)="checkGuardar()"></button>
                 
-                <button pButton (click)="nuevo()" icon="fa fa-plus" [disabled]="isLetrado" type="button" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+                <button pButton (click)="checkNuevo()" icon="fa fa-plus" [disabled]="isLetrado" type="button" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
             </div>
         </div>
     </div>
 </div>
+
+  <!--NUEVO-->
+  <p-dialog [(visible)]="showModal" responsive="true" [draggable]="false" modal="modal" resizable="false"
+    [minWidth]="500">
+    <p-header class="title">
+      <label>{{"justiciaGratuita.oficio.designaciones.nuevoProcurador" | translate}}</label>
+    </p-header>
+
+    <div class="bloque col-lg-12 col-md-12">
+        <label>{{"justiciaGratuita.oficio.designaciones.nuevoProcurador" | translate}}</label>
+      <div class="row">
+        <div class="form-group col-lg-12 col-md-12">
+            <label>{{"censo.resultadosSolicitudesModificacion.literal.nColegiado" | translate}} (*)</label>
+            <label [(ngModel)]="datosProcurador.nColegiado"></label>
+        </div>
+        <div class="form-group col-lg-12 col-md-12">
+            <label>{{"censo.usuario.nombre" | translate}}</label>
+            <label [(ngModel)]="datosProcurador.nombre"></label>
+        </div>
+      </div>
+    </div>
+    <div class="bloque col-lg-12 col-md-12">
+      <div class="row">
+        <div class="form-group col-lg-5 col-md-5">
+            <label>{{"justiciaGratuita.oficio.justificacionExpres.numDesignacion" | translate}} (*)</label>
+            <input type="text" class="form-control" pInputText />
+        </div>
+        <div class="form-group col-lg-5 col-md-5">
+            <label>{{"justiciaGratuita.oficio.designaciones.fechaDesignacion" | translate}} (*)</label>
+            <app-fecha [utc]="false"></app-fecha>
+          <!--(valueChangeSelected)="fillFechaFirmada($event)" (ngModelChange)="muestraCamposObligatorios('datosBancarios')" (valueChangeInput)="detectFechaFirmadaInput($event)"-->
+        </div>
+        <div class="form-group col-lg-12 col-md-12">
+            <label>{{"censo.nuevaSolicitud.observaciones" | translate}}</label>
+            <textarea pInputTextarea autoResize="autoResize"
+            ></textarea>
+          </div>
+      </div>
+    </div>
+    <p-footer>
+      <div class="text-right main-button ">
+        <button (click)="checkNuevoProcurador()" pButton type="button"
+            icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="restablecerProcurador()" pButton type="button" icon="fa fa-repeat"
+            iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="cerrarModal()" pButton type="button" icon="fa fa-close"
+            iconPos="left" label="{{ 'general.boton.close' | translate}}"></button>
+      </div>
+    </p-footer>
+  </p-dialog>
