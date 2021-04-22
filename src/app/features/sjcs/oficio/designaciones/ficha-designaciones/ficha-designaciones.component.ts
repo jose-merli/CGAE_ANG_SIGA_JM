@@ -6,10 +6,10 @@ import { SigaServices } from '../../../../../_services/siga.service';
 import { ActuacionDesignaItem } from '../../../../../models/sjcs/ActuacionDesignaItem';
 import { ActuacionDesignaObject } from '../../../../../models/sjcs/ActuacionDesignaObject';
 import { Message } from 'primeng/api';
-import { Row, DetalleTarjetaProcuradorFichaDesignaionOficioService } from './detalle-tarjeta-procurador-ficha-designacion-oficio/detalle-tarjeta-procurador-ficha-designaion-oficio.service';
+import { Row, DetalleTarjetaProcuradorFichaDesignaionOficioService } from './detalle-tarjeta-procurador-designa/detalle-tarjeta-procurador-ficha-designaion-oficio.service';
 import { ProcuradorItem } from '../../../../../models/sjcs/ProcuradorItem';
-import { DetalleTarjetaContrariosFichaDesignacionOficioComponent } from './detalle-tarjeta-contrarios-ficha-designacion-oficio/detalle-tarjeta-contrarios-ficha-designacion-oficio.component';
-import { DetalleTarjetaInteresadosFichaDesignacionOficioComponent } from './detalle-tarjeta-interesados-ficha-designacion-oficio/detalle-tarjeta-interesados-ficha-designacion-oficio.component';
+import { DetalleTarjetaContrariosFichaDesignacionOficioComponent } from './detalle-tarjeta-contrarios-designa/detalle-tarjeta-contrarios-ficha-designacion-oficio.component';
+import { DetalleTarjetaInteresadosFichaDesignacionOficioComponent } from './detalle-tarjeta-interesados-designa/detalle-tarjeta-interesados-ficha-designacion-oficio.component';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { Router } from '@angular/router';
 
