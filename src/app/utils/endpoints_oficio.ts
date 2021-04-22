@@ -100,6 +100,8 @@ export let endpoints_oficio: any = {
     designaciones_updateRepresentanteContrario:"oficio/designas/updateRepresentanteContrario",
     designaciones_updateAbogadoContrario:"oficio/designas/updateAbogadoContrario",
     designaciones_updateProcuradorContrario:"oficio/designas/updateProcuradorContrario",
+    designaciones_updateDetalleDesignacion:"oficio/designas/updateDetalleDesignacion",
+    designaciones_searchAbogadoByIdPersona:"oficio/designas/searchAbogadoByIdPersona",
 
     //SALTOS Y COMPENSACIONES
     saltosCompensacionesOficio_buscar: "oficio/saltosCompensaciones/buscarSaltosOCompensaciones",

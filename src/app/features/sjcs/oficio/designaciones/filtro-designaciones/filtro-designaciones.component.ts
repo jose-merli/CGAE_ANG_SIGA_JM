@@ -83,8 +83,9 @@ export class FiltroDesignacionesComponent implements OnInit {
     this.isColeg.emit(esColegiado);
     if(!esColegiado){   
     this.checkAcceso();
+    }
   }
-}
+  
   cargaInicial(){
     if(!this.esColegiado){
       this.isButtonVisible = true;
