@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { ActuacionDesignaItem } from '../../../../../../models/sjcs/ActuacionDesignaItem';
-import { Message } from 'primeng/api';
+import { Message } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../../../commons/translate/translation.service';
 import { Router } from '@angular/router';
 
@@ -259,7 +259,7 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
     let actuacion: Actuacion = {
       isNew: true,
       designaItem: this.campos,
-      actuacion: null
+      actuacion: new ActuacionDesignaItem()
     }
 
     sessionStorage.setItem("actuacionDesigna", JSON.stringify(actuacion));
@@ -271,7 +271,7 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
     let actuacion: Actuacion = {
       isNew: false,
       designaItem: this.campos,
-      actuacion: act 
+      actuacion: act
     };
 
     sessionStorage.setItem("actuacionDesigna", JSON.stringify(actuacion));

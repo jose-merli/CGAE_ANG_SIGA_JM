@@ -3,6 +3,11 @@ import { PersistenceService } from '../../../../../_services/persistence.service
 import { Table } from 'primeng/table';
 import { Router } from '@angular/router';
 import { SigaServices } from '../../../../../_services/siga.service';
+import { ControlAccesoDto } from '../../../../../models/ControlAccesoDto';
+import { procesos_oficio } from '../../../../../permisos/procesos_oficio';
+import { TranslateService } from '../../../../../commons/translate';
+import { Message } from 'primeng/components/common/api';
+import { DesignaItem } from '../../../../../models/sjcs/DesignaItem';
 
 
 @Component({
@@ -11,26 +16,29 @@ import { SigaServices } from '../../../../../_services/siga.service';
   styleUrls: ['./gestion-designaciones.component.scss']
 })
 export class GestionDesignacionesComponent implements OnInit {
-
+  msgs: Message[] = [];
+  selectMultiple: boolean = false;
+  selectAll;
   rowsPerPage: any = [];
   cols;
   buscadores = [];
   selectedItem: number = 10;
   initDatos;
   datosInicial = [];
-  selectedDatos: any[] = [];
+  selectedDatos;
   isLetrado:boolean = false;
   first = 0;
   progressSpinner: boolean = false;
   comboTipoDesigna: any[];
   //Resultados de la busqueda
   @Input() datos;
+  numSelected: number = 0;
 
   @Output() busquedaDesignaciones = new EventEmitter<boolean>();
 
   @ViewChild("table") tabla: Table;
 
-  constructor(private persistenceService: PersistenceService, private router: Router,  public sigaServices: SigaServices) { }
+  constructor(private persistenceService: PersistenceService, private router: Router,  public sigaServices: SigaServices, private translateService: TranslateService) { }
 
   ngOnInit() {
     this.getComboTipoDesignas();
@@ -91,6 +99,9 @@ export class GestionDesignacionesComponent implements OnInit {
   }
 
   openTab(dato){
+    let idProcedimiento = dato.idProcedimiento;;
+    let datosProcedimiento;
+    let datosModulo;
     if(dato.idTipoDesignaColegio != null && dato.idTipoDesignaColegio != undefined){
       this.comboTipoDesigna.forEach(element => {
        if(element.value == dato.idTipoDesignaColegio){
@@ -98,9 +109,60 @@ export class GestionDesignacionesComponent implements OnInit {
        }
        });
       }
-    sessionStorage.setItem("nuevaDesigna",  "false");
-    sessionStorage.setItem("designaItemLink",  JSON.stringify(dato));
-    this.router.navigate(["/fichaDesignaciones"]);
+      let designaProcedimiento = new DesignaItem();
+      let data = sessionStorage.getItem("designaItem");
+      let dataProcedimiento = JSON.parse(data);
+      dataProcedimiento.idPretension = dato.idPretension;
+      dataProcedimiento.idTurno = dato.idTurno;
+      dataProcedimiento.ano = dato.factConvenio;
+      dataProcedimiento.numero = dato.numero
+      this.sigaServices.post("designaciones_busquedaProcedimiento", dataProcedimiento).subscribe(
+        n => {
+          datosProcedimiento = JSON.parse(n.body);
+          if(datosProcedimiento.length == 0){
+            dato.nombreProcedimiento = "";
+            dato.idProcedimiento = "";
+          }else{
+            dato.nombreProcedimiento = datosProcedimiento[0].nombreProcedimiento;
+            dato.idProcedimiento = dataProcedimiento.idPretension;
+          }
+          
+          let designaModulo = new DesignaItem();
+          let dataModulo = JSON.parse(data);
+          dataModulo.idProcedimiento = idProcedimiento;
+          dataModulo.idTurno = dato.idTurno;
+          dataModulo.ano = dato.factConvenio;
+          dataModulo.numero = dato.numero
+          this.sigaServices.post("designaciones_busquedaModulo", dataModulo).subscribe(
+            n => {
+              datosModulo = JSON.parse(n.body);
+              if(datosModulo.length == 0){
+                dato.modulo = "";
+                dato.idModulo = "";
+              }else{
+                dato.modulo = datosModulo[0].modulo;
+                dato.idModulo = datosModulo[0].idModulo;
+              }
+              
+              sessionStorage.setItem("nuevaDesigna",  "false");
+              sessionStorage.setItem("designaItemLink",  JSON.stringify(dato));
+              this.router.navigate(["/fichaDesignaciones"]);
+            },
+            err => {
+              this.progressSpinner = false;
+      
+              console.log(err);
+            },() => {
+              this.progressSpinner = false;
+            });;
+      
+        },
+        err => {
+          this.progressSpinner = false;
+          console.log(err);
+        },() => {
+          this.progressSpinner = false;
+        });;
   }
 
   getComboTipoDesignas() {
@@ -138,5 +200,91 @@ arregloTildesCombo(combo) {
       });
   }
 
+    checkAcceso() {
+        this.progressSpinner = true;
+        let controlAcceso = new ControlAccesoDto();
+        controlAcceso.idProceso = procesos_oficio.designa;
+    
+        this.sigaServices.post("acces_control", controlAcceso).subscribe(
+          data => {
+            const permisos = JSON.parse(data.body);
+            const permisosArray = permisos.permisoItems;
+            const derechoAcceso = permisosArray[0].derechoacceso;
+    
+            if (derechoAcceso == 3) {// es un colegio
+    //           this.activacionEditar = true;
+            } else if (derechoAcceso == 2) { //es un colegiado
+    //           this.activacionEditar = false;
+            } else {
+              sessionStorage.setItem("codError", "403");
+              sessionStorage.setItem(
+                "descError",
+                this.translateService.instant("generico.error.permiso.denegado")
+              );
+              this.router.navigate(["/errorAcceso"]);
+            }
+          },
+          err => {
+            this.progressSpinner = false;
+            console.log(err);
+          },
+          () => {
+            this.progressSpinner = false;
+          }
+        );
+    
+      } 
+
+  actualizaSeleccionados(selectedDatos) {
+    this.numSelected = selectedDatos.length;
+  }
+
+  clickFila(event) {
+    if (event.data) { //} && !event.data.fechaBaja) {
+      this.selectedDatos.pop();
+    }
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+
+  showMsg(severity, summary, detail) {
+    this.msgs = [];
+    this.msgs.push({
+      severity,
+      summary,
+      detail
+    });
+  }
+
+  onChangeSelectAll() {
+    if (this.selectAll === true) {
+      this.selectMultiple = false;
+      this.selectedDatos = this.datos;
+      this.numSelected = this.datos.length;
+    } else {
+      this.selectMultiple = true;
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    }
+  }
+
+  clear() {
+    this.msgs = [];
+  }
+
+  delete(){
+
+  }
+
+  comunicar(){
+    
+  }
 
 }

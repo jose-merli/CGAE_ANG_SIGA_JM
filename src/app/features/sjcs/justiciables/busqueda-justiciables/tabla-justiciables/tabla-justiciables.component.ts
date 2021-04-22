@@ -87,6 +87,13 @@ export class TablaJusticiablesComponent implements OnInit {
 
     }
     else{
+      let filtros: JusticiableBusquedaItem = new JusticiableBusquedaItem();
+      if(filtros.idRol=="2"){
+        let fichasPosibles = this.persistenceService.getFichasPosibles();
+        fichasPosibles[6].activa=true;
+        fichasPosibles[7].activa=true;
+        this.persistenceService.setFichasPosibles(fichasPosibles);
+      }
       if (!this.modoRepresentante) {
         this.persistenceService.clearDatos();
         this.persistenceService.setDatos(evento);

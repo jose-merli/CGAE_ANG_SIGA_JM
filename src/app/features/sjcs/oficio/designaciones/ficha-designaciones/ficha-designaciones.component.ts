@@ -10,6 +10,8 @@ import { Row, DetalleTarjetaProcuradorFichaDesignaionOficioService } from './det
 import { ProcuradorItem } from '../../../../../models/sjcs/ProcuradorItem';
 import { DetalleTarjetaContrariosFichaDesignacionOficioComponent } from './detalle-tarjeta-contrarios-ficha-designacion-oficio/detalle-tarjeta-contrarios-ficha-designacion-oficio.component';
 import { DetalleTarjetaInteresadosFichaDesignacionOficioComponent } from './detalle-tarjeta-interesados-ficha-designacion-oficio/detalle-tarjeta-interesados-ficha-designacion-oficio.component';
+import { CommonsService } from '../../../../../_services/commons.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-ficha-designaciones',
@@ -19,7 +21,7 @@ import { DetalleTarjetaInteresadosFichaDesignacionOficioComponent } from './deta
 export class FichaDesignacionesComponent implements OnInit {
 
   designaItem = JSON.parse(sessionStorage.getItem("designaItemLink"));
-  procurador: ProcuradorItem = new ProcuradorItem();
+  procurador;
 
 
   @ViewChild(DetalleTarjetaContrariosFichaDesignacionOficioComponent) tarjetaContrarios;
@@ -27,7 +29,7 @@ export class FichaDesignacionesComponent implements OnInit {
 
   rutas: string[] = ['SJCS', 'EJGS'];
   campos: DesignaItem = new DesignaItem();
-  procuradores: any;
+  comboRenuncia: any;
   nuevaDesigna: any;
   progressSpinner: boolean = false;
   contrarios: any;
@@ -100,20 +102,20 @@ export class FichaDesignacionesComponent implements OnInit {
       detalle: true,
       fixed: false,
       opened: false,
-      campos: [
+     /* campos: [
         {
           "key": "Nº Colegiado",
-          "value": ""
+          "value": this.procurador[0].nColegiado
         },
         {
           "key": "Nombre",
-          "value": "MIGUEL HFGSGS AJSKFI"
+          "value": this.procurador[0].nombre
         },
         {
           "key": "Fecha designación",
-          "value": "02/07/2007"
+          "value": this.procurador[0].fechaDesigna
         }
-      ]
+      ]*/
     },
     {
       id: 'sjcsDesigCamb',
@@ -207,36 +209,45 @@ export class FichaDesignacionesComponent implements OnInit {
     },
   ];
 
+  selectedArray = [];
   seleccionarTodo = false;
   totalRegistros = 0;
   rowGroups: Row[];
   rowGroupsAux: Row[];
   selectedRow: Row;
   cabeceras = [
-    { id: "fecha", name: "dato.jgr.guardia.saltcomp.fecha" },
-    { id: "aninum", name: "justiciaGratuita.ejg.datosGenerales.annioNum" },
+    { id: "fechadesigna", name: "dato.jgr.guardia.saltcomp.fecha" },
+    { id: "numerodesignacion", name: "justiciaGratuita.ejg.datosGenerales.annioNum" },
     { id: "nColegiado", name: "censo.resultadosSolicitudesModificacion.literal.nColegiado" },
     { id: "nombre", name: "justiciaGratuita.oficio.designas.contrarios.procurador" },
     { id: "motivo", name: "censo.datosHistorico.literal.motivo" },
     { id: "observaciones", name: "censo.nuevaSolicitud.observaciones" },
-    { id: "fechasolicitud", name: "formacion.busquedaInscripcion.fechaSolicitud" },
-    { id: "fechaefectiva", name: "administracion.auditoriaUsuarios.literal.fechaEfectiva" },
+    { id: "fecharenunciasolicita", name: "formacion.busquedaInscripcion.fechaSolicitud" },
+    { id: "fechabaja", name: "administracion.auditoriaUsuarios.literal.fechaEfectiva" },
   ];
 
   actuacionesDesignaItems: ActuacionDesignaItem[] = [];
 
   constructor(private location: Location,
-    private translateService: TranslateService, private sigaServices: SigaServices, private datepipe: DatePipe, private gbtservice: DetalleTarjetaProcuradorFichaDesignaionOficioService) { }
+    private translateService: TranslateService, private sigaServices: SigaServices, private datepipe: DatePipe, 
+    private gbtservice: DetalleTarjetaProcuradorFichaDesignaionOficioService,
+    private commonsService: CommonsService,private router: Router) { }
 
   ngOnInit() {
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
     let designaItem = JSON.parse(sessionStorage.getItem("designaItemLink"));
     this.campos = designaItem;
+    this.motivosRenuncia();
+
+    if(sessionStorage.getItem("nuevoProcurador")){​​
+      this.listaTarjetas[5].opened = true;
+    }
+
     if(sessionStorage.getItem("buscadorColegiados")){​​
       let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
       // sessionStorage.removeItem("buscadorColegiados");
       this.listaTarjetas[0].opened = true;
-    }else if(sessionStorage.getItem("colegiadoGeneralDesigna")){
+    } else if (sessionStorage.getItem("colegiadoGeneralDesigna")) {
       let colegiadoGeneral = JSON.parse(sessionStorage.getItem("colegiadoGeneralDesigna"));
       this.listaTarjetas[0].opened = true;
     }
@@ -277,7 +288,7 @@ export class FichaDesignacionesComponent implements OnInit {
         },
         {
           "key": "Fecha",
-          "value": designaItem.fechaAlta
+          "value": designaItem.fechaEntradaInicio
         },
         {
           "key": "Designación Art. 27-28",
@@ -306,20 +317,20 @@ export class FichaDesignacionesComponent implements OnInit {
           "value": designaItem.idProcedimiento
         }
       ];
-      if((designaItem.observaciones == null || designaItem.observaciones == undefined || designaItem.observaciones == "")
-          && (designaItem.delitos == null || designaItem.delitos == undefined || designaItem.delitos == "")
-          && (designaItem.defensaJuridica == null || designaItem.defensaJuridica == undefined || designaItem.defensaJuridica == "")
-           && (designaItem.fechaOficioJuzgado == null || designaItem.fechaOficioJuzgado == undefined || designaItem.fechaOficioJuzgado == "")
-            && (designaItem.fechaJuicio == null || designaItem.fechaJuicio == undefined || designaItem.fechaJuicio == "")
-             && (designaItem.fechaRecepcionColegio == null || designaItem.fechaRecepcionColegio == undefined || designaItem.fechaRecepcionColegio == "")){
-            let datosAdicionales = [
-              {
-                "key": null,
-                "value": "No existen observaciones definidas para la designación"
-              }
-            ];
-            this.listaTarjetas[2].campos = datosAdicionales;
-      }else{
+      if ((designaItem.observaciones == null || designaItem.observaciones == undefined || designaItem.observaciones == "")
+        && (designaItem.delitos == null || designaItem.delitos == undefined || designaItem.delitos == "")
+        && (designaItem.defensaJuridica == null || designaItem.defensaJuridica == undefined || designaItem.defensaJuridica == "")
+        && (designaItem.fechaOficioJuzgado == null || designaItem.fechaOficioJuzgado == undefined || designaItem.fechaOficioJuzgado == "")
+        && (designaItem.fechaJuicio == null || designaItem.fechaJuicio == undefined || designaItem.fechaJuicio == "")
+        && (designaItem.fechaRecepcionColegio == null || designaItem.fechaRecepcionColegio == undefined || designaItem.fechaRecepcionColegio == "")) {
+        let datosAdicionales = [
+          {
+            "key": null,
+            "value": "No existen observaciones definidas para la designación"
+          }
+        ];
+        this.listaTarjetas[2].campos = datosAdicionales;
+      } else {
         let datosAdicionales = [
           {
             "key": "Fecha Oficio Juzgado",
@@ -336,11 +347,11 @@ export class FichaDesignacionesComponent implements OnInit {
         ];
         this.listaTarjetas[2].campos = datosAdicionales;
       }
-      
+
       this.tarjetaFija.campos = camposResumen;
       this.listaTarjetas[0].campos = camposGenerales;
       this.listaTarjetas[1].campos = camposDetalle;
-      
+
       //Actualizar para que los campos se rellenen en base a la tabla de la tarjeta contrarios
       this.listaTarjetas[4].campos = [
         {
@@ -367,13 +378,24 @@ export class FichaDesignacionesComponent implements OnInit {
         }
       ]
       // this.searchContrarios(false);
-    /* this.listaTarjetas[4].enlaces=[{
-    id: null,
-        ref: null,
-        nombre: this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.vacio')
-    }] */
-    this.progressSpinner = false;
-    }else{
+      /* this.listaTarjetas[4].enlaces=[{
+      id: null,
+          ref: null,
+          nombre: this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.vacio')
+      }] */
+      this.progressSpinner = false;
+    } else {
+
+      this.searchContrarios(false);
+      /* this.listaTarjetas[4].enlaces=[{
+      id: null,
+          ref: null,
+          nombre: this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.vacio')
+      }] */
+      //Actualizar para que los campos se rellenen en base a la tabla de la tarjeta interesados
+      this.searchInteresados();
+      this.progressSpinner = false;
+
       //NUEVA DESIGNA
       let camposResumen = [
         {
@@ -443,28 +465,40 @@ export class FichaDesignacionesComponent implements OnInit {
           "value": "No existen observaciones definidas para la designación"
         }
       ];
+      let interesadosVacio = [{
+        "key": null,
+        "value": this.translateService.instant('justiciaGratuita.oficio.designas.interesados.vacio')
+      },]
+      let contrariosVacio = [{
+        "key": null,
+        "value": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.vacio')
+      },]
+
       this.tarjetaFija.campos = camposResumen;
       this.listaTarjetas[0].campos = camposGenerales;
       this.listaTarjetas[1].campos = camposDetalle;
       this.listaTarjetas[2].campos = datosAdicionales;
-      this.listaTarjetas[1].detalle = false;
-      this.listaTarjetas[2].detalle = false;
-      this.listaTarjetas[3].detalle = false;
-      this.listaTarjetas[4].detalle = false;
-      this.listaTarjetas[5].detalle = false;
-      this.listaTarjetas[6].detalle = false;
-      this.listaTarjetas[7].detalle = false;
-      this.listaTarjetas[8].detalle = false;
-      this.listaTarjetas[9].detalle = false;
-      this.listaTarjetas[10].detalle = false;
-      this.listaTarjetas[11].detalle = false;
+      this.listaTarjetas[3].campos = interesadosVacio;
+      this.listaTarjetas[4].campos = contrariosVacio;
+
+      //DESHABILITAMOS TODAS LAS TARJETAS HASTA Q SE CREE LA DESIGNACION
+      // this.listaTarjetas[1].detalle = false;
+      // this.listaTarjetas[2].detalle = false;
+      // this.listaTarjetas[3].detalle = false;
+      // this.listaTarjetas[4].detalle = false;
+      // this.listaTarjetas[5].detalle = false;
+      // this.listaTarjetas[6].detalle = false;
+      // this.listaTarjetas[7].detalle = false;
+      // this.listaTarjetas[8].detalle = false;
+      // this.listaTarjetas[9].detalle = false;
+      // this.listaTarjetas[10].detalle = false;
+      // this.listaTarjetas[11].detalle = false;
       /* this.listaTarjetas[4].enlaces=[{
       id: null,
           ref: null,
           nombre: this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.vacio')
       }] */
-      //Actualizar para que los campos se rellenen en base a la tabla de la tarjeta interesados
-      this.searchInteresados();
+
       this.progressSpinner = false;
     }
     this.getActuacionesDesigna(false);
@@ -472,15 +506,15 @@ export class FichaDesignacionesComponent implements OnInit {
   }
 
   ngOnChanges() {
-    if(sessionStorage.getItem("buscadorColegiados")){​​
+    if (sessionStorage.getItem("buscadorColegiados")) {
       let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
       this.tarjetaFija.campos[1].value = busquedaColegiado.nColegiado;
-    }else if(sessionStorage.getItem("colegiadoGeneralDesigna")){​​
+    } else if (sessionStorage.getItem("colegiadoGeneralDesigna")) {
       let busquedaColegiado = JSON.parse(sessionStorage.getItem("colegiadoGeneralDesigna"));
       this.tarjetaFija.campos[1].value = busquedaColegiado.numeroColegiado;
     }
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
-    if(this.nuevaDesigna){
+    if (this.nuevaDesigna) {
       this.listaTarjetas[1].detalle = true;
       this.listaTarjetas[2].detalle = true;
       this.listaTarjetas[3].detalle = true;
@@ -493,6 +527,14 @@ export class FichaDesignacionesComponent implements OnInit {
       this.listaTarjetas[10].detalle = true;
       this.listaTarjetas[11].detalle = true;
     }
+/*
+    if (sessionStorage.getItem("rowGroupsProcurador")) {
+      sessionStorage.removeItem("rowGroupsProcurador");
+    }
+
+    if (this.changes.rowGroups.currentValue) {
+      sessionStorage.setItem("rowGroupsProcurador", JSON.stringify(this.changes.rowGroups.currentValue));
+    }*/
   }
 
   ngAfterViewInit() {
@@ -607,7 +649,7 @@ export class FichaDesignacionesComponent implements OnInit {
 
           let tarj = this.listaTarjetas.find(tarj => tarj.id === 'sjcsDesigAct');
           tarj.campos = [];
-          total = validadas + facturadas + justificadas;
+          total = this.actuacionesDesignaItems.length;
           if (this.actuacionesDesignaItems.length == 0) {
 
             tarj.campos = [
@@ -682,104 +724,119 @@ export class FichaDesignacionesComponent implements OnInit {
         this.progressSpinner = false;
         console.log(err);
       }
-      );
+    );
   }
 
-  modDatos(event) {
-    console.log(event);
+  motivosRenuncia(){
+    this.progressSpinner=true;
 
-    let array = [];
-    let array2 = [];
-
-    event.forEach(element => {
-      element.cells.forEach(dato => {
-        array.push(dato.value);
-      });
-      array2.push(array);
-      array = [];
-    });
-  }
+    this.sigaServices.get("designaciones_motivosRenuncia").subscribe(
+      n => {
+        this.comboRenuncia = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboRenuncia);
+        this.progressSpinner=false;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner=false;
+      }
+    );
+}
 
   mostrar() {
-    console.log(this.campos);
     let procurador = [this.campos.numColegiado, String(this.campos.idInstitucion)];
     this.sigaServices.post("designaciones_busquedaProcurador", procurador).subscribe(
       n => {
-        this.procurador = JSON.parse(n.body).ProcuradoresItem;
-        this.procuradores.forEach(element => {
-
-          element.ncolegiado = +element.ncolegiado;
+        this.procurador = JSON.parse(n.body).procuradorItems;
+        this.procurador.forEach(element => {
+          element.fechaDesigna = this.formatDate(element.fechaDesigna);
+          element.fecharenunciasolicita = this.formatDate(element.fecharenunciasolicita);
         });
-
-        //this.jsonToRow(this.procuradores);
+        this.jsonToRow(this.procurador);
         this.progressSpinner = false;
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
       }
     );
   }
 
   jsonToRow(datos) {
-    console.log(datos);
     let arr = [];
+    let x = 0;
 
     datos.forEach((element, index) => {
-      let obj = [
-        { type: 'text', value: element.ncolegiado },
-        { type: 'text', value: element.apellidos1 + " " + element.apellidos2 + ", " + element.nombre },
-        { type: 'text', value: element.numerodesignacion },
-        { type: 'text', value: element.fechadesigna },
-        { type: 'text', value: element.observaciones },
-        { type: 'text', value: element.observaciones },
-        { type: 'text', value: element.fechaalta },
-        { type: 'text', value: element.fecharenunciasolicita },
-        { type: 'text', value: element.fecharenunciaefectiva }
-      ];
-      let superObj = {
-        id: index,
-        row: obj
-      };
-
-      arr.push(superObj);
+      if(x == 0){
+        let obj = [
+          { type: 'datePicker', value: element.fechaDesigna },
+          { type: 'input', value: element.numerodesignacion },
+          { type: 'text', value: element.nColegiado },
+          { type: 'text', value: element.apellido1 + " " + element.apellido2 + ", " + element.nombre },
+          { type: 'text', value: element.motivosRenuncia },
+          { type: 'text', value: element.observaciones },
+          { type: 'datePicker', value: element.fecharenunciasolicita },
+          { type: 'text', value: element.fechabaja }
+        ];
+        let superObj = {
+          id: index,
+          row: obj
+        };
+  
+        arr.push(superObj);
+        x=1;
+      }else{
+        let obj = [
+          { type: 'text', value: element.fechaDesigna },
+          { type: 'text', value: element.numerodesignacion },
+          { type: 'text', value: element.nColegiado },
+          { type: 'text', value: element.apellido1 + " " + element.apellido2 + ", " + element.nombre },
+          { type: 'text', value: element.motivosRenuncia },
+          { type: 'text', value: element.observaciones },
+          { type: 'text', value: element.fecharenunciasolicita },
+          { type: 'text', value: element.fechabaja }
+        ];
+        let superObj = {
+          id: index,
+          row: obj
+        };
+  
+        arr.push(superObj);
+      }
     });
     this.rowGroups = this.gbtservice.getTableData(arr);
     this.rowGroupsAux = this.gbtservice.getTableData(arr);
     this.totalRegistros = this.rowGroups.length;
   }
-  /*
-  guardarProcurador(event){
-    let array = [];
-    event.forEach(element => {
-      if(this.datos[element].validado == "Pendiente"){
-        if(this.datos[element].fechadesde != null){
-          this.datos[element].fechadesde=this.transformaFecha(this.datos[element].fechadesde);
-        }
-        if(this.datos[element].fechahasta != null){
-          this.datos[element].fechahasta=this.transformaFecha(this.datos[element].fechahasta);
-        }
-        if(this.datos[element].fechaalta != null){
-          this.datos[element].fechaalta=this.transformaFecha(this.datos[element].fechaalta);
-        }
-        if(this.datos[element].fechabt != null){
-          this.datos[element].fechabt=this.transformaFecha(this.datos[element].fechabt);
-        }
-        if(this.datos[element].fechaestado != null){
-          this.datos[element].fechaestado=this.transformaFecha(this.datos[element].fechaestado);
-        }
-        this.datos[element].validado = "Validada";
-        let tmp = this.datos[element];
-        delete tmp.tiponombre;
-        array.push(tmp);
-      }else{
-        this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("general.message.error.realiza.accion")});
-        this.progressSpinner = false;
-      }
-    });
-    this.updateBaja(array);
+
+  restablecer(){
+    this.selectedArray = [];
+    this.progressSpinner = true;
+    this.rowGroups = [];
+    this.rowGroups = JSON.parse(sessionStorage.getItem("rowGroupsInitProcurador"));
+    this.rowGroupsAux = [];
+    this.rowGroupsAux = JSON.parse(sessionStorage.getItem("rowGroupsInitProcurador"));
+    this.totalRegistros = this.rowGroups.length;
+    this.progressSpinner = false;
+    this.showMessage("success", 'Operación realizada con éxito',  'Los registros han sido restablecidos');
   }
-  */
+
+  nuevo(){
+    sessionStorage.setItem("nuevoProcurador","true");
+    this.router.navigate(["/busquedaGeneral"]);
+  }
+  
+  guardarProcurador(){
+    let array = [];
+    this.procurador.forEach(element => {
+        if(this.procurador[element].fechaDesigna != null){
+          this.procurador[element]=this.transformaFecha(this.procurador[element].fechaDesigna);
+        }
+        let tmp = this.procurador[element];
+        array.push(tmp);
+    });
+    this.updateProcurador(array);
+  }
+  
 
   updateProcurador(event) {
     this.progressSpinner = true;
@@ -860,7 +917,6 @@ nombreTurno: "ZELIMINAR-CIJAECI05 - MATRIMONIAL CONTENCIOSO JAÉN" */
           this.tarjetaContrarios.tabla.sortOrder = 0;
           this.tarjetaContrarios.tabla.sortField = '';
           this.tarjetaContrarios.tabla.reset();
-          this.tarjetaContrarios.buscadores = this.tarjetaContrarios.buscadores.map(it => it = "");
         }
         if (this.tarjetaContrarios != null && this.tarjetaContrarios != undefined) {
           this.tarjetaContrarios.historico = event;
@@ -935,7 +991,6 @@ nombreTurno: "ZELIMINAR-CIJAECI05 - MATRIMONIAL CONTENCIOSO JAÉN" */
           this.tarjetaInteresados.tabla.sortOrder = 0;
           this.tarjetaInteresados.tabla.sortField = '';
           this.tarjetaInteresados.tabla.reset();
-          this.tarjetaInteresados.buscadores = this.tarjetaInteresados.buscadores.map(it => it = "");
         }
       },
       err => {

@@ -141,6 +141,7 @@ export class FichaActuacionComponent implements OnInit {
 
   actuacionDesigna: any;
   isNewActDesig: boolean = false;
+  progressSpinner: boolean = false;
 
   constructor(private location: Location, private sigaServices: SigaServices) { }
 
@@ -154,13 +155,6 @@ export class FichaActuacionComponent implements OnInit {
       if (actuacion.isNew) {
         this.getNewId(actuacion.designaItem);
         this.isNewActDesig = true;
-        this.listaTarjetas.forEach(tarj => {
-          if (tarj.id != 'sjcsDesigActuaOfiDatosGen') {
-            tarj.detalle = false;
-          } else {
-            tarj.opened = true;
-          }
-        });
       }
 
     }
@@ -206,22 +200,37 @@ export class FichaActuacionComponent implements OnInit {
 
   getNewId(designaItem: any) {
 
+    this.progressSpinner = true;
+
     let actuacionRequest = {
-      anio: designaItem.anio,
+      anio: designaItem.ano.toString().split('/')[0].replace('D', ''),
       idTurno: designaItem.idTurno,
-      numero: designaItem.ano.toString().split('/')[0].replace('D', ''),
+      numero: designaItem.codigo,
     };
 
     this.sigaServices.post("actuaciones_designacion_newId", actuacionRequest).subscribe(
       data => {
         const idMax = JSON.parse(data.body).idMax;
 
-        if(idMax != null) {
-          this.actuacionDesigna.numeroAsunto = idMax;
+        if (idMax != null) {
+          this.actuacionDesigna.actuacion.numeroAsunto = idMax;
         }
+        this.progressSpinner = false;
       },
       err => {
+        this.progressSpinner = false;
         console.log(err);
+      },
+      () => {
+        if (this.isNewActDesig) {
+          this.listaTarjetas.forEach(tarj => {
+            if (tarj.id != 'sjcsDesigActuaOfiDatosGen') {
+              tarj.detalle = false;
+            } else {
+              tarj.opened = true;
+            }
+          });
+        }
       }
     );
 

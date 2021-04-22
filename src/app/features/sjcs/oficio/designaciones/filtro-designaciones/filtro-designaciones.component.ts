@@ -22,7 +22,7 @@ export class FiltroDesignacionesComponent implements OnInit {
     numColegiado: '',
     nombreAp: ''
   };
-  private isButtonVisible = true;
+  isButtonVisible = true;
   filtroJustificacion: JustificacionExpressItem = new JustificacionExpressItem();
   datos;
   expanded: boolean = false;
@@ -698,6 +698,11 @@ getComboCalidad() {
       sessionStorage.setItem("nuevaDesigna",  "true");
       this.progressSpinner=false;
       this.router.navigate(["/fichaDesignaciones"]);
+  }
+
+  changeColegiado(event) {
+    this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
+    this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
   }
 
 }
