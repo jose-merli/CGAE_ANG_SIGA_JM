@@ -95,28 +95,6 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 			}
 			/* Procede de search*() */
 			if (sessionStorage.getItem("abogado")) {
-				apellidos: "QVTCYXWA GOYCHV"
-codigoPostal: "23009"
-colegio: "JAÉN"
-correoelectronico: "papelera@redabogacia.org"
-direccion: "CL.PERPETUO SOCORRO, Nº 30"
-domicilio: null
-fax1: null
-fax2: null
-fechaEstado: null
-fechaNacimiento: "05/08/1954"
-fechaNacimientoString: "06/08/1954"
-idActividadProfesional: null
-idEstadoCivil: "1"
-idInstitucion: null
-idPais: "191"
-idPersona: "2035004392"
-idPoblacion: "23050000000"
-idProvincia: "23"
-idTratamiento: "2"
-movil: "666666666"
-naturalDe: "JAEN"
-nif: "25927006A"
 				let data = this.generalBody = JSON.parse(sessionStorage.getItem("abogado"))[0];
 				sessionStorage.removeItem("abogado");
 				this.generalBody.nombreColegio = data.colegio;
