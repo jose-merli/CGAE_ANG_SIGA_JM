@@ -79,11 +79,11 @@ export class FiltroDesignacionesComponent implements OnInit {
 
   ngOnInit(): void {
 
-    let esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
-    this.isColeg.emit(esColegiado);
-    if(!esColegiado){   
+    // let esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
+    // this.isColeg.emit(esColegiado);
+    // if(!esColegiado){   
     this.checkAcceso();
-  }
+  // }
   }
 
   cargaInicial(){
