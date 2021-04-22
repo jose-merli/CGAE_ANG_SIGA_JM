@@ -367,4 +367,7 @@ ultimoAsunto: "A2018/04361" */
     justiciableBusqueda.idinstitucion = this.authenticationService.getInstitucionSession();
     this.callServiceSearch(justiciableBusqueda);
   }
+  contrario(event){
+    this.fromContrario=true;
+  }
 }

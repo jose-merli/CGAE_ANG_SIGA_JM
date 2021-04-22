@@ -54,9 +54,7 @@ export class DatosProcuradorContrarioComponent implements OnInit {
 	@ViewChild('cdRepresentanteAssociate') cdRepresentanteAssociate: Dialog;
 	@ViewChild('cdRepresentanteDisassociate') cdRepresentanteDisassociate: Dialog;
 
-	@Output() newRepresentante = new EventEmitter<JusticiableItem>();
-	@Output() viewRepresentante = new EventEmitter<JusticiableItem>();
-	@Output() createJusticiableByUpdateRepresentante = new EventEmitter<JusticiableItem>();
+	@Output() contrario = new EventEmitter<boolean>();
 
 	confirmationSave: boolean = false;
 	confirmationUpdate: boolean = false;
@@ -102,6 +100,8 @@ export class DatosProcuradorContrarioComponent implements OnInit {
 			sessionStorage.removeItem("procurador");
 			this.generalBody.numColegiado = data.numeroColegiado;
 			this.generalBody.nombre = data.nombre;
+
+			this.contrario.emit(true);
 			this.permisoEscritura = true;
 		}
 		/* Procede de ficha designacion */
@@ -110,6 +110,8 @@ export class DatosProcuradorContrarioComponent implements OnInit {
 			sessionStorage.removeItem("procuradorFicha");
 			this.generalBody.numColegiado = data.split(",")[0];
 			this.generalBody.nombre = data.split(",")[1].concat(",",data.split(",")[2]);
+
+			this.contrario.emit(true);
 			this.permisoEscritura = true;
 		}
 
@@ -128,6 +130,9 @@ export class DatosProcuradorContrarioComponent implements OnInit {
 			this.router.navigate(['/mantenimientoprocuradores']);
 		}
 	}
+
+	
+
 
 	Disassociate() {
 	let designa=JSON.parse(sessionStorage.getItem("designaItemLink"));

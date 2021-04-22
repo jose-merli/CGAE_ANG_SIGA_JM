@@ -18,9 +18,9 @@ import { Dialog } from 'primeng/primeng';
 import { ColegiadoItem } from "../../../../../models/ColegiadoItem";
 
 @Component({
-  selector: 'app-datos-abogado-contrario',
-  templateUrl: './datos-abogado-contrario.component.html',
-  styleUrls: ['./datos-abogado-contrario.component.scss']
+	selector: 'app-datos-abogado-contrario',
+	templateUrl: './datos-abogado-contrario.component.html',
+	styleUrls: ['./datos-abogado-contrario.component.scss']
 })
 export class DatosAbogadoContrarioComponent implements OnInit {
 
@@ -54,169 +54,186 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 	@ViewChild('cdRepresentanteAssociate') cdRepresentanteAssociate: Dialog;
 	@ViewChild('cdRepresentanteDisassociate') cdRepresentanteDisassociate: Dialog;
 
-	@Output() newRepresentante = new EventEmitter<JusticiableItem>();
-	@Output() viewRepresentante = new EventEmitter<JusticiableItem>();
 	@Output() createJusticiableByUpdateRepresentante = new EventEmitter<JusticiableItem>();
+	@Output() contrario = new EventEmitter<boolean>();
 
 	confirmationSave: boolean = false;
 	confirmationUpdate: boolean = false;
 
 	menorEdadJusticiable: boolean = false;
 
-  constructor(
+	constructor(
 		private router: Router,
 		private sigaServices: SigaServices,
 		private persistenceService: PersistenceService,
 		private confirmationService: ConfirmationService,
 		private commonsService: CommonsService, private translateService: TranslateService) { }
 
-		ngOnInit() {
+	ngOnInit() {
 
-			this.progressSpinner = true;
-	
-			/* this.commonsService
-				.checkAcceso(procesos_justiciables.tarjetaAbogadoContrario)
-				.then((respuesta) => {
-					this.permisoEscritura = respuesta;
-	
-					if (this.permisoEscritura == undefined) {
-						this.showTarjetaPermiso = false;
-						this.progressSpinner = false;
-					} else {
-						this.showTarjetaPermiso = true;
-						this.persistenceService.clearFiltrosAux();
-					}
-				})
-				.catch((error) => console.error(error)); */
-	
-			if (this.fromContrario) {
-				this.showTarjetaPermiso = true;
-				this.permisoEscritura = true;
-			}
-			/* Procede de search*() */
-			if (sessionStorage.getItem("abogado")) {
-				let data = this.generalBody = JSON.parse(sessionStorage.getItem("abogado"))[0];
-				sessionStorage.removeItem("abogado");
-				this.generalBody.nombreColegio = data.colegio;
-				this.generalBody.numColegiado = data.numeroColegiado;
-				this.generalBody.estadoColegial = data.situacion;
-				this.generalBody.nombre = data.nombre;
-				this.generalBody.nif = data.nif;
-				
-				this.permisoEscritura = true;
-			}
-			/* Procede de ficha designacion */
-			if (sessionStorage.getItem("abogadoFicha")) {
-				let idabogado = this.generalBody = JSON.parse(sessionStorage.getItem("idabogadoFicha"));
-				sessionStorage.removeItem("abogadoFicha");
-				/* this.sigaServices.post("busquedaJusticiables_searchJusticiables", idabogado).subscribe(
-				this.generalBody.numColegiado = data.split(",")[0];
-				this.generalBody.nombre = data.split(",")[1].concat(",",data.split(",")[2]);
-				this.permisoEscritura = true; 
-				)*/
-			}
+		this.progressSpinner = true;
 
-			this.progressSpinner = false;
+		/* this.commonsService
+			.checkAcceso(procesos_justiciables.tarjetaAbogadoContrario)
+			.then((respuesta) => {
+				this.permisoEscritura = respuesta;
+	
+				if (this.permisoEscritura == undefined) {
+					this.showTarjetaPermiso = false;
+					this.progressSpinner = false;
+				} else {
+					this.showTarjetaPermiso = true;
+					this.persistenceService.clearFiltrosAux();
+				}
+			})
+			.catch((error) => console.error(error)); */
+
+		if (this.fromContrario) {
+			this.showTarjetaPermiso = true;
+			this.permisoEscritura = true;
 		}
-	
-		search() {
-			if (!this.permisoEscritura) {
+		/* Proviene de search() */
+		if (sessionStorage.getItem("abogado")) {
+			let data = this.generalBody = JSON.parse(sessionStorage.getItem("abogado"))[0];
+			sessionStorage.removeItem("abogado");
+			this.generalBody.nombreColegio = data.colegio;
+			this.generalBody.numColegiado = data.numeroColegiado;
+			this.generalBody.estadoColegial = data.situacion;
+			this.generalBody.nombre = data.nombre;
+			this.generalBody.nif = data.nif;
+			this.generalBody.idPersona = data.idPersona;
+
+			this.permisoEscritura = true;
+			this.contrario.emit(true);
+		}
+		/* Procede de ficha designacion */
+		if (sessionStorage.getItem("idabogadoFicha")) {
+			let idabogado = this.generalBody = JSON.parse(sessionStorage.getItem("idabogadoFicha"));
+			sessionStorage.removeItem("idabogadoFicha");
+			this.sigaServices.post("designaciones_searchAbogadoByIdPersona", idabogado).subscribe(
+				n => {
+					let data = JSON.parse(n.body).colegiadoItem;
+					this.generalBody.nombreColegio = data.institucion;
+					this.generalBody.numColegiado = data.numColegiado;
+					this.generalBody.estadoColegial = data.estadoColegial;
+					this.generalBody.nombre = data.nombre;
+					this.generalBody.nif = data.nif;
+					this.generalBody.idPersona = data.idPersona;
+
+					this.contrario.emit(true);
+					this.permisoEscritura = true; 
+				},
+				err => {
+					this.progressSpinner = false;
+					console.log(err);
+				});
+		}
+
+		this.progressSpinner = false;
+	}
+
+	search() {
+		if (!this.permisoEscritura) {
+			this.showMessage(
+				'error',
+				this.translateService.instant('general.message.incorrect'),
+				this.translateService.instant('general.message.noTienePermisosRealizarAccion')
+			);
+		} else {
+			sessionStorage.setItem("origin", "AbogadoContrario");
+			this.router.navigate(['/busquedaGeneral']);
+		}
+	}
+
+	Disassociate() {
+		let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
+		let request = [designa.idInstitucion, sessionStorage.getItem("personaDesigna"), designa.ano, designa.idTurno, designa.numero, "", ""]
+		this.sigaServices.post('designaciones_updateAbogadoContrario', request).subscribe(
+			(n) => {
+				this.progressSpinner = false;
 				this.showMessage(
-					'error',
-					this.translateService.instant('general.message.incorrect'),
-					this.translateService.instant('general.message.noTienePermisosRealizarAccion')
+					'success',
+					this.translateService.instant('general.message.correct'),
+					this.translateService.instant('general.message.accion.realizada')
 				);
-			} else {
-				sessionStorage.setItem("origin", "AbogadoContrario");
-				this.router.navigate(['/busquedaGeneral']);
+				this.persistenceService.setBody(this.generalBody);
+			},
+			(err) => {
+				this.progressSpinner = false;
+				this.translateService.instant('general.message.error.realiza.accion');
 			}
-		}
-	
-		Disassociate() {
-		let designa=JSON.parse(sessionStorage.getItem("designaItemLink"));
-				let request = [ designa.idInstitucion,  sessionStorage.getItem("personaDesigna"), designa.ano,  designa.idTurno, designa.numero, ""]
-				this.sigaServices.post('designaciones_updateAbogadoContrario', request).subscribe(
-					(n) => {
-						this.progressSpinner = false;
-						this.showMessage(
-							'success',
-							this.translateService.instant('general.message.correct'),
-							this.translateService.instant('general.message.accion.realizada')
-						);
-						this.persistenceService.setBody(this.generalBody);
-					},
-					(err) => {
-						this.progressSpinner = false;
-						this.translateService.instant('general.message.error.realiza.accion');
-					}
-				);
+		);
 		this.generalBody = null;
-		}
-	
-		Associate() {
-			let designa=JSON.parse(sessionStorage.getItem("designaItemLink"));
-				let request = [ designa.idInstitucion,  sessionStorage.getItem("personaDesigna"), designa.ano,  designa.idTurno, designa.numero, this.generalBody.nombre]
-				this.sigaServices.post('designaciones_updateAbogadoContrario', request).subscribe(
-					(n) => {
-						this.progressSpinner = false;
-						this.showMessage(
-							'success',
-							this.translateService.instant('general.message.correct'),
-							this.translateService.instant('general.message.accion.realizada')
-						);
-						this.persistenceService.setBody(this.generalBody);
-					},
-					(err) => {
-						this.progressSpinner = false;
-						this.translateService.instant('general.message.error.realiza.accion');
-					}
+	}
+
+	Associate() {
+		let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
+		let request = [designa.idInstitucion, sessionStorage.getItem("personaDesigna"), designa.ano, designa.idTurno, designa.numero, this.generalBody.idPersona, this.generalBody.nombre]
+		this.sigaServices.post('designaciones_updateAbogadoContrario', request).subscribe(
+			(n) => {
+				this.progressSpinner = false;
+				this.showMessage(
+					'success',
+					this.translateService.instant('general.message.correct'),
+					this.translateService.instant('general.message.accion.realizada')
 				);
-		}
-	
-		onHideTarjeta() {
-			this.showTarjeta = !this.showTarjeta;
-		}
-	
-		disabledSave() {
-			if (this.generalBody.numColegiado != undefined && this.generalBody.numColegiado != '') {
-				return false;
-			} else {
-				return true;
+				this.persistenceService.setBody(this.generalBody);
+			},
+			(err) => {
+				this.progressSpinner = false;
+				this.translateService.instant('general.message.error.realiza.accion');
 			}
-		}
+		);
+	}
+
+	navigateToAbogado(){
+
+	}
 	
-		disabledDisassociate() {
-			if (this.generalBody.numColegiado != undefined && this.generalBody.numColegiado != '') {
-				return false;
-			} else {
-				return true;
-			}
+	onHideTarjeta() {
+		this.showTarjeta = !this.showTarjeta;
+	}
+
+	disabledSave() {
+		if (this.generalBody.numColegiado != undefined && this.generalBody.numColegiado != '') {
+			return false;
+		} else {
+			return true;
 		}
-	
-		showMessage(severity, summary, msg) {
-			this.msgs = [];
-			this.msgs.push({
-				severity: severity,
-				summary: summary,
-				detail: msg
-			});
+	}
+
+	disabledDisassociate() {
+		if (this.generalBody.numColegiado != undefined && this.generalBody.numColegiado != '') {
+			return false;
+		} else {
+			return true;
 		}
-	
-		clear() {
-			this.msgs = [];
-		}
-	
-		reject() {
-			this.cdCreateRepresentante.hide();
-		}
-	
-		rejectAssociate() {
-			
-		}
-	
-		rejectDisassociate() {
-			
-		}
-  
-  
+	}
+
+	showMessage(severity, summary, msg) {
+		this.msgs = [];
+		this.msgs.push({
+			severity: severity,
+			summary: summary,
+			detail: msg
+		});
+	}
+
+	clear() {
+		this.msgs = [];
+	}
+
+	reject() {
+		this.cdCreateRepresentante.hide();
+	}
+
+	rejectAssociate() {
+
+	}
+
+	rejectDisassociate() {
+
+	}
+
+
 }
