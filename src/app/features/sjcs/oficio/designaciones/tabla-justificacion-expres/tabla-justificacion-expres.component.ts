@@ -284,11 +284,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
     this.rowGroups = this.trdService.getTableData(resultModified);
     this.rowGroupsAux = this.rowGroups;
     this.totalRegistros = this.rowGroups.length;
-
   }
-  
-  
-
   // notifyAnySelected(event) {
   //   if (event) {
   //     this.isDisabled = false;

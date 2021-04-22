@@ -20,6 +20,7 @@ export class ListaArchivosComponent implements OnInit {
   selectedDatos: any[] = [];
   numSelected: number = 0;
   selectedItem: number = 10;
+  sortO: number = 1;
   
   progressSpinner: boolean = false;
 

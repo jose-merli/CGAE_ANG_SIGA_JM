@@ -1,5 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Message } from 'primeng/components/common/api';
+import { TranslateService } from '../../../../../../commons/translate';
+import { DesignaItem } from '../../../../../../models/sjcs/DesignaItem';
+import { SigaServices } from '../../../../../../_services/siga.service';
 
 @Component({
   selector: 'app-detalle-tarjeta-datos-adicionales-ficha-designacion-oficio',
@@ -9,26 +13,45 @@ import { Message } from 'primeng/components/common/api';
 export class DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent implements OnInit {
 
   msgs: Message[] = [];
-
+  @Input() campos;
+  datosInicial: any;
+  nuevaDesigna: any;
   bloques = [
     {
       datePicker: 'Fecha Oficio Juzgado',
-      textArea: 'Observaciones'
+      valueDatePicker:"",
+      textArea: 'Observaciones',
+      value: ""
     },
     {
       datePicker: 'Fecha Recepción Colegio',
-      textArea: 'Observaciones'
+      valueDatePicker:"",
+      textArea: 'Observaciones',
+      value: ""
     },
     {
       datePicker: 'Fecha Juicio',
+      valueDatePicker:"",
       time: true,
-      textArea: 'Observaciones Defensa Jurídica'
+      textArea: 'Observaciones Defensa Jurídica',
+      value: ""
     }
   ];
 
-  constructor() { }
+  constructor(private sigaServices: SigaServices,  private translateService: TranslateService, private router: Router) { }
 
   ngOnInit() {
+    this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
+    this.datosInicial = this.campos;
+    if(!this.nuevaDesigna){
+        // this.getDatosAdicionales(this.campos);
+        this.bloques[0].value = this.campos.delitos;
+        this.bloques[0].valueDatePicker = this.campos.fechaOficioJuzgado;
+        this.bloques[1].value = this.campos.observaciones;
+        this.bloques[1].valueDatePicker = this.campos.fechaRecepcionColegio;
+        this.bloques[2].value = this.campos.defensaJuridica;
+        this.bloques[2].valueDatePicker = this.campos.fechaJuicio;
+    }
   }
 
   showMsg(severity, summary, detail) {
@@ -38,10 +61,48 @@ export class DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent imple
       summary,
       detail
     });
+
+    if(detail == "Restablecer"){
+      if(!this.nuevaDesigna){
+        // this.getDatosAdicionales(this.campos);
+        this.bloques[0].value = this.datosInicial.delitos;
+        this.bloques[0].valueDatePicker = this.datosInicial.fechaOficioJuzgado;
+        this.bloques[1].value = this.datosInicial.observaciones;
+        this.bloques[1].valueDatePicker = this.datosInicial.fechaRecepcionColegio;
+        this.bloques[2].value = this.datosInicial.defensaJuridica;
+        this.bloques[2].valueDatePicker = this.datosInicial.fechaJuicio;
+      }
+    }
   }
 
   clear() {
     this.msgs = [];
   }
+
+  getDatosAdicionales(datosDesigna) {
+    let desginaAdicionales = new DesignaItem();
+    desginaAdicionales.ano = datosDesigna.ano;
+    desginaAdicionales.numero = datosDesigna.numero;
+    desginaAdicionales.idTurno = datosDesigna.idTurno;
+    this.sigaServices.post("designaciones_getDatosAdicionales",desginaAdicionales).subscribe(
+      n => {
+        console.log(n.body);
+        if(n!=null){
+          this.bloques[0].value = n.body.delitos;
+          this.bloques[0].valueDatePicker = n.body.fechaOficioJuzgado;
+          this.bloques[1].value = n.body.observaciones;
+          this.bloques[1].valueDatePicker = n.body.fechaRecepcionColegio;
+          this.bloques[2].value = n.body.defensaJuridica;
+          this.bloques[2].valueDatePicker = n.body.fechaJuicio;
+        }
+      },
+      err => {
+        console.log(err);
+      }, () => {
+      }
+    );
+  }
+
+
 
 }

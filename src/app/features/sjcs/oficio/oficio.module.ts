@@ -19,6 +19,7 @@ import { ButtonModule, CheckboxModule, RadioButtonModule, DropdownModule, InputT
 import { FormsModule } from '@angular/forms';
 import { MatExpansionModule } from '@angular/material';
 import { BusquedaColegiadoExpressModule } from '../../../commons/busqueda-colegiado-express/busqueda-colegiado-express.module';
+import { FormularioBusquedaComponent } from './cargas-masivas-oficio/formulario-busqueda/formulario-busqueda.component';
 
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/primeng';
@@ -28,7 +29,6 @@ import { Paginador2Module } from './designaciones/ficha-designaciones/paginador2
 import { MatSortModule } from '@angular/material';
 import { DetalleTarjetaProcuradorFichaDesignacionOficioComponent } from './designaciones/ficha-designaciones/detalle-tarjeta-procurador-ficha-designacion-oficio/detalle-tarjeta-procurador-ficha-designacion-oficio.component';
 import { DetalleTarjetaProcuradorFichaDesignaionOficioService } from './designaciones/ficha-designaciones/detalle-tarjeta-procurador-ficha-designacion-oficio/detalle-tarjeta-procurador-ficha-designaion-oficio.service';
-
 
 @NgModule({
         declarations: [],
@@ -44,7 +44,7 @@ import { DetalleTarjetaProcuradorFichaDesignaionOficioService } from './designac
                 GestionBajasTemporalesModule,
                 GrowlModule,
                 RadioButtonModule,
-                DropdownModule, 
+                DropdownModule,
                 InputTextModule,
                 ConfirmDialogModule,
                 PipeTranslationModule,

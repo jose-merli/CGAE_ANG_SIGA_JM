@@ -138,6 +138,11 @@ export class BusquedaGeneralComponent implements OnDestroy {
     this.currentRoute = this.router.url;
     this.getMigaPan();
     this.getInstitucion();
+
+    if (sessionStorage.getItem("nuevoProcurador")) {
+      this.persona = 'f';
+    }
+
     if (sessionStorage.getItem("vuelveForm") != undefined)
       if (sessionStorage.getItem("vuelveForm") == "false") {
         this.router.navigate(["/buscarCursos"]);
@@ -745,7 +750,10 @@ export class BusquedaGeneralComponent implements OnDestroy {
 
         this.router.navigate(['fichaPersonaJuridica']);
       }
-    } else if (
+    }else if(sessionStorage.getItem('nuevoProcurador')){
+      sessionStorage.setItem('datosProcurador',JSON.stringify(id));
+      this.backTo(); 
+  }else if (
       (sessionStorage.getItem('newIntegrante') != null || sessionStorage.getItem('newIntegrante') != undefined) &&
       sessionStorage.getItem('abrirRemitente') != 'true'
     ) {
@@ -972,6 +980,13 @@ export class BusquedaGeneralComponent implements OnDestroy {
       sessionStorage.setItem('nSancion', JSON.stringify(id));
       this.router.navigate(['detalleSancion']);
     }
+
+
+    if (sessionStorage.getItem("Art27Activo") == 'true') {
+        sessionStorage.removeItem("Art27Activo")
+        sessionStorage.setItem("colegiadoGeneralDesigna",JSON.stringify(id));
+        this.location.back();
+      }
   }
 
   tipoIdentificacionPermitido(value: String): boolean {
