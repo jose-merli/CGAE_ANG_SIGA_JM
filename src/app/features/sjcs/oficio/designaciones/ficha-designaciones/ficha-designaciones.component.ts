@@ -125,20 +125,7 @@ export class FichaDesignacionesComponent implements OnInit {
       detalle: true,
       fixed: false,
       opened: false,
-      campos: [
-        {
-          "key": "Nº Colegiado",
-          "value": "6492"
-        },
-        {
-          "key": "Nombre",
-          "value": "MIGUEL HFGSGS AJSKFI"
-        },
-        {
-          "key": "Fecha designación",
-          "value": "02/07/2007"
-        }
-      ],
+      campos: [],
       enlaces: [],
       enlaceCardClosed: { href: '/fichaColegiado', title: 'Ficha colegial' }
     },
@@ -362,6 +349,19 @@ export class FichaDesignacionesComponent implements OnInit {
       //Actualizar para que los campos se rellenen en base a la tabla de la tarjeta interesados
       this.searchInteresados();
       this.searchContrarios(false);
+      //this.searchColegiado();
+      /* {
+        "key": "Nº Colegiado",
+        "value": "6492"
+      },
+      {
+        "key": "Nombre",
+        "value": "MIGUEL HFGSGS AJSKFI"
+      },
+      {
+        "key": "Fecha designación",
+        "value": "02/07/2007"
+      } */
       this.progressSpinner = false;
     } else {
 

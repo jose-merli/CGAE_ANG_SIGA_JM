@@ -76,6 +76,10 @@
                                         (mostrar)="mostrar()" (restablecer)="restablecer()" (nuevo)="nuevo()">
                                         </app-detalle-tarjeta-procurador-ficha-designacion-oficio>
                                     </div>
+                                    <div *ngIf="tarj.nombre == 'Cambio Letrado'">
+                                        <app-detalle-tarjeta-letrados-designa>
+                                        </app-detalle-tarjeta-letrados-designa>
+                                    </div>
                                     <div *ngIf="tarj.nombre == 'Interesados'">
                                         <app-detalle-tarjeta-interesados-ficha-designacion-oficio [interesados]="interesados" (searchInteresados)="searchInteresados($event)">
                                         </app-detalle-tarjeta-interesados-ficha-designacion-oficio>
