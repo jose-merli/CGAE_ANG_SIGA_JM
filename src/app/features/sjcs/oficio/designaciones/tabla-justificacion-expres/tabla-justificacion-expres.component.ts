@@ -482,8 +482,8 @@ actCellToJson(actuacionesCells){
 
 
 desigCellToJson(designacionesCells, codigoDesignacionParam, expedientesDesignacion, clientesDesignacion, estadoDesignacion, actuacionesJson){
-  //pendiente procedimiento(modulo) = designacionesCells[4].value y tipoAcreditacion = designacionesCells[7].value
-
+  
+  let procedimiento = designacionesCells[4].value;
   let actuaciones = actuacionesJson;
   let expedientes = expedientesDesignacion;
   //let idProcedimiento = designacionesCells[x].value;
@@ -564,6 +564,7 @@ desigCellToJson(designacionesCells, codigoDesignacionParam, expedientesDesignaci
       'fechaJustificacion': null,
       'numProcedimiento': numProcedimiento,
       'anioProcedimiento': anioProcedimiento,
+      'procedimiento': procedimiento
     }  );
 
     return designacionesItem;
