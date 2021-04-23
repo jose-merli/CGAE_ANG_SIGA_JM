@@ -32,6 +32,8 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
   searchText = [];
   enableGuardar = false;
   showModal: boolean = false;
+  showModal2: boolean = false;
+  showModal3: boolean = false;
   isLetrado: boolean = false;
   isDisabled: boolean = false;
 
@@ -42,7 +44,7 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
     { label: "Suspensión por sanción", value: "S" }
   ];
   
-  @Output() guardarProcurador = new EventEmitter<any>();
+  @Output() modDatos = new EventEmitter<any>();
   @Output() mostrar = new EventEmitter<any>();
   @Output() restablecer = new EventEmitter<any>();
   @Output() anySelected = new EventEmitter<any>();
@@ -193,7 +195,7 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
   }
  
   checkGuardar(){
-    this.guardarProcurador.emit();
+    this.modDatos.emit(this.rowGroups);
     this.totalRegistros = this.rowGroups.length;
   }
 
@@ -209,6 +211,8 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
 
   cerrarModal(){
     this.showModal = false;
+    this.showModal2 = false;
+    this.showModal3 = false;
   }
 
   restablecerProcurador(){
