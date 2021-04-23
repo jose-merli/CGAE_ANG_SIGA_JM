@@ -44,6 +44,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   to = 10;
   totalRegistros = 0;
 
+  @Input() comboModulos: any [];
+
   constructor(
     private renderer: Renderer2,
     private datepipe: DatePipe
