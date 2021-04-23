@@ -2,7 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Message } from 'primeng/primeng';
-import { RowGroup, TablaResultadoDesplegableJEService } from '../../../../../commons/tabla-resultado-desplegable/tabla-resultado-desplegable-je.service';
+import { Cell, Row, RowGroup, TablaResultadoDesplegableJEService } from '../../../../../commons/tabla-resultado-desplegable/tabla-resultado-desplegable-je.service';
 import { JustificacionExpressItem } from '../../../../../models/sjcs/JustificacionExpressItem';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../_services/siga.service';
@@ -138,6 +138,13 @@ export class TablaJustificacionExpresComponent implements OnInit {
 
   comboModulos: any [];
 
+  actuacionesToDelete = [];
+  actuacionToAdd: Row;
+  dataToUpdate: RowGroup[];
+  actuacionesItem = {};
+  actuacionesToDleteArr = []; // para enviar a backend - ELIMINAR
+  newActuacionItem = {}; // para enviar a backend -  NUEVO
+  dataToUpdateArr = []; // para enviar a backend -  GUARDAR
   constructor(private trdService: TablaResultadoDesplegableJEService, private datepipe: DatePipe,
     private commonsService: CommonsService, private sigaServices: SigaServices) 
   { }
@@ -174,6 +181,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
     let data = [];
     let dataObj = {};
     let expedientes = "";
+    let estados = "";
     let listaCliente = "";
     let listaClienteAct = "";
     let arr1 = [];
@@ -187,23 +195,27 @@ export class TablaJustificacionExpresComponent implements OnInit {
       arr1 = [];
       obj1 = {};
       if (designacion.expedientes != null && designacion.expedientes != []){
-      designacion.expedientes.forEach(exp =>{
+      /*designacion.expedientes.forEach(exp =>{
        // expedientes += '\n' + exp;
        expedientes +=  exp + '\n';
-       })
+       })*/
+       
+      expedientes = Object.keys(designacion.expedientes)[0];
+      estados = Object.values(designacion.expedientes)[0].toString();
       }else{
         expedientes = "";
       }
 
+
       if (designacion.nombreJuzgado != null && designacion.nombreJuzgado != []){
-        designacion.nombreJuzgado.forEach(cliente =>{
-         // expedientes += '\n' + exp;
+        /*designacion.nombreJuzgado.forEach(cliente =>{
          listaCliente +=  cliente + '\n';
-         })
+         })*/
+         listaCliente = designacion.nombreJuzgado;
         }else{
           listaCliente = "";
         }
-      console.log('expedientes: ', expedientes)
+      console.log('expedientes: ', expedientes + estados)
       let id2 = expedientes;
       let id3 = designacion.cliente;
       let moduleSelector =
@@ -213,8 +225,6 @@ export class TablaJustificacionExpresComponent implements OnInit {
           { label: designacion.procedimiento, value: designacion.procedimiento }
         ]
       };
-     // console.log('designacion.fechaActuacion: ', designacion.fechaActuacion)
-      //console.log('this.formatDate(designacion.fechaActuacion): ', this.formatDate(designacion.fechaActuacion))
       let arrDesignacion = 
       [
       // { type: 'checkbox', value: obj.fin },
@@ -228,7 +238,19 @@ export class TablaJustificacionExpresComponent implements OnInit {
       { type: 'text', value: '' , size: 153},
       { type: 'text', value: designacion.tipoAcreditacion , size: 50},
       // { type: 'checkbox', value: obj.val }
-      { type: 'checkbox', value: true, size: 50 }
+      { type: 'checkbox', value: true, size: 50 },
+      { type: 'invisible', value: designacion.anioDesignacion , size: 153},
+      { type: 'invisible', value: designacion.anioProcedimiento , size: 153},
+      { type: 'invisible', value: designacion.art27 , size: 153},
+      { type: 'invisible', value: this.formatDate(designacion.fechaDesignacion) , size: 153},
+      { type: 'invisible', value: designacion.idInstitucion , size: 153},
+      { type: 'invisible', value: designacion.idInstitucionJuzgado , size: 153},
+      { type: 'invisible', value: designacion.idJuzgado , size: 153},
+      { type: 'invisible', value: designacion.idPersona , size: 153},
+      { type: 'invisible', value: designacion.idTurno , size: 153},
+      { type: 'invisible', value: designacion.muestraPendiente , size: 153},
+      { type: 'invisible', value: designacion.numDesignacion , size: 153},
+      { type: 'invisible', value: designacion.resolucionDesignacion , size: 153}
     ];
     let key = letra + 1;
     obj1 =  { [key] : arrDesignacion, position: 'noCollapse'};
@@ -243,10 +265,10 @@ export class TablaJustificacionExpresComponent implements OnInit {
         ]
       };
       if (actuacion.nombreJuzgado != null && actuacion.nombreJuzgado != []){
-        actuacion.nombreJuzgado.forEach(cliente =>{
-         // expedientes += '\n' + exp;
+        /*actuacion.nombreJuzgado.forEach(cliente =>{
          listaClienteAct +=  cliente + '\n';
-         })
+         })*/
+         listaClienteAct = actuacion.nombreJuzgado ;
         }else{
           listaClienteAct = "";
         }
@@ -266,7 +288,29 @@ export class TablaJustificacionExpresComponent implements OnInit {
           // { type: 'checkbox', value: obj.val }
           { type: 'checkbox', value: true, size: 50 },
           { type: 'invisible', value:  actuacion.numActuacion , size: 0},
-          
+          { type: 'invisible', value:  actuacion.idAcreditacion , size: 0},
+          { type: 'invisible', value:  actuacion.descripcion , size: 0},
+          { type: 'invisible', value:  actuacion.idTipoAcreditacion , size: 0},
+          { type: 'invisible', value:  actuacion.porcentaje , size: 0},
+          { type: 'invisible', value:  actuacion.tipoAcreditacion , size: 0},
+          { type: 'invisible', value:  actuacion.categoriaProcedimiento , size: 0},
+          { type: 'invisible', value:  actuacion.idJurisdiccion , size: 0},
+          { type: 'invisible', value:  actuacion.complemento , size: 0},
+          { type: 'invisible', value:  actuacion.permitirAniadirLetrado , size: 0},
+          { type: 'invisible', value:  actuacion.numAsunto , size: 0},
+          { type: 'invisible', value:  actuacion.idProcedimiento , size: 0},
+          { type: 'invisible', value:  actuacion.idJuzgado , size: 0},
+          { type: 'invisible', value:  actuacion.nombreJuzgado , size: 0},
+          { type: 'invisible', value:  actuacion.fechaJustificacion , size: 0},
+          { type: 'invisible', value:  actuacion.validada , size: 0},
+          { type: 'invisible', value:  actuacion.idFacturacion , size: 0},
+          { type: 'invisible', value:  actuacion.anioProcedimiento , size: 0},
+          { type: 'invisible', value:  actuacion.descripcionFacturacion , size: 0},
+          { type: 'invisible', value:  actuacion.docJustificacion , size: 0},
+          { type: 'invisible', value:  actuacion.anulacion , size: 0},
+          { type: 'invisible', value:  actuacion.nigNumProcedimiento , size: 0},
+          { type: 'invisible', value:  actuacion.permitirLetrado , size: 0}
+
         ];
         }else{
           arr1 = 
@@ -284,6 +328,28 @@ export class TablaJustificacionExpresComponent implements OnInit {
           // { type: 'checkbox', value: obj.val }
           { type: 'checkbox', value: true, size: 50 },
           { type: 'invisible', value:  actuacion.numActuacion , size: 0},
+          { type: 'invisible', value:  actuacion.idAcreditacion , size: 0},
+          { type: 'invisible', value:  actuacion.descripcion , size: 0},
+          { type: 'invisible', value:  actuacion.idTipoAcreditacion , size: 0},
+          { type: 'invisible', value:  actuacion.porcentaje , size: 0},
+          { type: 'invisible', value:  actuacion.tipoAcreditacion , size: 0},
+          { type: 'invisible', value:  actuacion.categoriaProcedimiento , size: 0},
+          { type: 'invisible', value:  actuacion.idJurisdiccion , size: 0},
+          { type: 'invisible', value:  actuacion.complemento , size: 0},
+          { type: 'invisible', value:  actuacion.permitirAniadirLetrado , size: 0},
+          { type: 'invisible', value:  actuacion.numAsunto , size: 0},
+          { type: 'invisible', value:  actuacion.idProcedimiento , size: 0},
+          { type: 'invisible', value:  actuacion.idJuzgado , size: 0},
+          { type: 'invisible', value:  actuacion.nombreJuzgado , size: 0},
+          { type: 'invisible', value:  actuacion.fechaJustificacion , size: 0},
+          { type: 'invisible', value:  actuacion.validada , size: 0},
+          { type: 'invisible', value:  actuacion.idFacturacion , size: 0},
+          { type: 'invisible', value:  actuacion.anioProcedimiento , size: 0},
+          { type: 'invisible', value:  actuacion.descripcionFacturacion , size: 0},
+          { type: 'invisible', value:  actuacion.docJustificacion , size: 0},
+          { type: 'invisible', value:  actuacion.anulacion , size: 0},
+          { type: 'invisible', value:  actuacion.nigNumProcedimiento , size: 0},
+          { type: 'invisible', value:  actuacion.permitirLetrado , size: 0}
         ];
       }
 
@@ -331,4 +397,199 @@ export class TablaJustificacionExpresComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
+  getActuacionToAdd(event){
+    this.actuacionToAdd = event;
+    this.tableDataToJson2(this.actuacionToAdd);
+  }
+  tableDataToJson2(actuacionToAdd){
+    let actuacionesCells : Cell[];
+    actuacionesCells = actuacionToAdd.cells;
+    this.newActuacionItem = this.actCellToJson(actuacionesCells);
+}
+  getActuacionesToDelete(event){
+    this.actuacionesToDelete = event;
+    this.tableDataToJson();
+  }
+  tableDataToJson(){
+    this.actuacionesToDelete.forEach(actObj => {
+    let actuacionesCells : Cell[];
+    actuacionesCells = actObj;
+    this.actuacionesItem = this.actCellToJson(actuacionesCells);
+    this.actuacionesToDleteArr.push(this.actuacionesItem);
+  });
+}
+
+
+getDataToUpdate(event){
+this.dataToUpdate = event;
+console.log('GUARDAR this.dataToUpdate: ', this.dataToUpdate)
+  this.dataToUpdate.forEach(rowGroup => {
+    let designa = rowGroup.rows[0];
+    let codigoDesignacion = rowGroup.id;
+    let expedientesDesignacion = rowGroup.id2;
+    let clientesDesignacion =  rowGroup.id3;
+    let estadoDesignacion = rowGroup.estadoDesignacion;
+    let actuaciones = rowGroup.rows.slice(1, rowGroup.rows.length - 1);
+    let actuacionesJson = this.actCellToJson(actuaciones);
+    console.log('actuacionesJson: ', actuacionesJson)
+    let designaToUpdateJSON = this.desigCellToJson(designa, codigoDesignacion, expedientesDesignacion, clientesDesignacion, estadoDesignacion, actuacionesJson);
+    console.log('designaToUpdateJSON: ', designaToUpdateJSON)
+    this.dataToUpdateArr.push(designaToUpdateJSON);
+  })
+
+  console.log('GUARDAR this.dataToUpdateArr: ', this.dataToUpdateArr)
+}
+
+actCellToJson(actuacionesCells){
+  let numActuacion = actuacionesCells[9].value;
+  let idAcreditacion = actuacionesCells[10].value;
+  let descripcion = actuacionesCells[11].value;
+  let idTipoAcreditacion = actuacionesCells[12].value;
+  let porcentaje = actuacionesCells[13].value;
+  let tipoAcreditacion = actuacionesCells[7].value;
+  let procedimiento = actuacionesCells[4].value;
+  let categoriaProcedimiento = actuacionesCells[15].value;
+  let idJurisdiccion = actuacionesCells[16].value;
+  let complemento = actuacionesCells[17].value;
+  let permitirAniadirLetrado = actuacionesCells[18].value;
+  let numAsunto = actuacionesCells[19].value;
+  let idProcedimiento = actuacionesCells[20].value;
+  let idJuzgado = actuacionesCells[21].value;
+  let nombreJuzgado = actuacionesCells[1].value;
+  let fechaJustificacion = actuacionesCells[6].value;
+  let validada = actuacionesCells[8].value;
+  let idFacturacion = actuacionesCells[25].value;
+  let numProcedimiento = actuacionesCells[3].value;
+  let anioProcedimiento = actuacionesCells[26].value;
+  let descripcionFacturacion = actuacionesCells[27].value;
+  let docJustificacion = actuacionesCells[28].value;
+  let anulacion = actuacionesCells[29].value;
+  let nigNumProcedimiento = actuacionesCells[30].value;
+  let nig = actuacionesCells[2].value;
+  let fecha = actuacionesCells[5].value;
+  let permitirLetrado = actuacionesCells[31].value;
+ 
+  this.actuacionesItem = (
+    { 'numActuacion': numActuacion,
+      'idAcreditacion': idAcreditacion,
+      'descripcion': descripcion,
+      'idTipoAcreditacion': idTipoAcreditacion,
+      'porcentaje': porcentaje,
+      'tipoAcreditacion': tipoAcreditacion,
+      'procedimiento': procedimiento,
+      'categoriaProcedimiento': categoriaProcedimiento,
+      'idJurisdiccion': idJurisdiccion,
+      'complemento': complemento,
+      'permitirAniadirLetrado': permitirAniadirLetrado,
+      'numAsunto': numAsunto,
+      'idProcedimiento': idProcedimiento,
+      'idJuzgado': idJuzgado,
+      'nombreJuzgado': nombreJuzgado,
+      'fechaJustificacion': fechaJustificacion,
+      'validada': validada,
+      'idFacturacion': idFacturacion,
+      'numProcedimiento': numProcedimiento,
+      'anioProcedimiento': anioProcedimiento,
+      'descripcionFacturacion': descripcionFacturacion,
+      'docJustificacion': docJustificacion,
+      'anulacion': anulacion,
+      'nigNumProcedimiento': nigNumProcedimiento,
+      'nig': nig,
+      'fecha': fecha,
+      'permitirLetrado': permitirLetrado,
+    }  );
+
+    return this.actuacionesItem;
+}
+
+
+
+desigCellToJson(designacionesCells, codigoDesignacionParam, expedientesDesignacion, clientesDesignacion, estadoDesignacion, actuacionesJson){
+  //pendiente procedimiento(modulo) = designacionesCells[4].value y tipoAcreditacion = designacionesCells[7].value
+
+  let actuaciones = actuacionesJson;
+  let expedientes = expedientesDesignacion;
+  //let idProcedimiento = designacionesCells[x].value;
+  let idPersona = designacionesCells[16].value;//
+  let idTurno = designacionesCells[17].value;//
+  let idInstitucion = designacionesCells[13].value;//
+  let resolucionDesignacion = designacionesCells[20].value;//
+  let fechaDesignacion = designacionesCells[12].value;//
+  let fechaActuacion = designacionesCells[5].value;//
+  //let fechaJustificacion = designacionesCells[x].value;
+  let numProcedimiento = designacionesCells[3].value;//
+  let anioProcedimiento = designacionesCells[10].value;//
+  let idInstitucionJuzgado = designacionesCells[14].value;//
+  let idJuzgado = designacionesCells[15].value;//
+  let nombreJuzgado = designacionesCells[1].value;//
+  let nig = designacionesCells[2].value;//
+  let art27 = designacionesCells[11].value;//
+  let cliente = clientesDesignacion;
+  //let ejgs = designacionesCells[x].value;
+  let codigoDesignacion = codigoDesignacionParam;
+  let numDesignacion = designacionesCells[19].value;//
+  let anioDesignacion = designacionesCells[9].value;//
+  //let designacionHasta = designacionesCells[x].value;
+   //let designacionDesde = designacionesCells[x].value;
+   //let resolucionPTECAJG = designacionesCells[x].value;
+   //let ejgSinResolucion = designacionesCells[x].value;
+   //let conEJGNoFavorables = designacionesCells[x].value;
+   //let sinEJG = designacionesCells[x].value;
+   //let actuacionesValidadas = designacionesCells[x].value;
+  let estado = estadoDesignacion;
+   //let justificacionHasta = designacionesCells[x].value;
+   //let justificacionDesde = designacionesCells[x].value;
+   //let restriccionesVisualizacion = designacionesCells[x].value;
+  let muestraPendiente = designacionesCells[18].value;//
+   //let numEJG = designacionesCells[x].value;
+   //let anioEJG = designacionesCells[x].value;
+   //let apellidos = designacionesCells[x].value;
+   //let nombre = designacionesCells[x].value;
+   //let nColegiado = = designacionesCells[x].value;
+
+  let designacionesItem = (
+    { 'nColegiado': null,
+      'nombre': null,
+      'apellidos': null,
+      'anioEJG': null,
+      'numEJG': null,
+      'muestraPendiente': muestraPendiente,
+      'restriccionesVisualizacion': null,
+      'justificacionDesde': null,
+      'justificacionHasta': null,
+      'estado': estado,
+      'actuacionesValidadas': null,
+      'sinEJG': null,
+      'conEJGNoFavorables': null,
+      'ejgSinResolucion': null,
+      'resolucionPTECAJG': null,
+      'designacionDesde': null,
+      'designacionHasta': null,
+      'anioDesignacion': anioDesignacion,
+      'numDesignacion': numDesignacion,
+      'codigoDesignacion': codigoDesignacion,
+      'ejgs': null,
+      'cliente': cliente,
+      'art27': art27,
+      'nig': nig,
+      'nombreJuzgado': nombreJuzgado,
+      'idJuzgado': idJuzgado,
+      'idInstitucionJuzgado': idInstitucionJuzgado,
+      'actuaciones': actuaciones,
+      'expedientes': expedientes,
+      'idProcedimiento': null,
+      'idPersona': idPersona,
+      'idTurno': idTurno,
+      'idInstitucion': idInstitucion,
+      'resolucionDesignacion': resolucionDesignacion,
+      'fechaDesignacion': fechaDesignacion,
+      'fechaActuacion': fechaActuacion,
+      'fechaJustificacion': null,
+      'numProcedimiento': numProcedimiento,
+      'anioProcedimiento': anioProcedimiento,
+    }  );
+
+    return designacionesItem;
+}
+
 }
