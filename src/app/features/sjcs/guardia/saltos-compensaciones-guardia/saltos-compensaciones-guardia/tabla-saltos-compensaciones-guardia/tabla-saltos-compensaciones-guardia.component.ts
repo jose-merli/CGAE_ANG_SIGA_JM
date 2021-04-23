@@ -237,7 +237,7 @@ export class TablaSaltosCompensacionesGuardiaComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "turno", header: "dato.jgr.guardia.guardias.turno", width: "20%" },
+      { field: "turno", header: "justiciaGratuita.sjcs.designas.DatosIden.turno", width: "20%" },
       { field: "guardia", header: "menu.justiciaGratuita.GuardiaMenu", width: "20%" },
       { field: "nColegiado", header: "censo.nuevaSolicitud.numColegiado", width: "5%" },
       { field: "letrados", header: "justiciaGratuita.oficio.turnos.nletrados", width: "15%" },

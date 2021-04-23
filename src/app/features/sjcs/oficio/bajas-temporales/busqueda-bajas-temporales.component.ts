@@ -53,7 +53,7 @@ export class BajasTemporalesComponent implements OnInit {
   cabeceras = [
     { id: "ncolegiado", name: "facturacionSJCS.facturacionesYPagos.numColegiado" },
     { id: "nombre", name: "busquedaSanciones.detalleSancion.letrado.literal" },
-    { id: "tiponombre", name: "dato.jgr.guardia.guardias.turno" },
+    { id: "tiponombre", name: "justiciaGratuita.sjcs.designas.DatosIden.turno" },
     { id: "descripcion", name: "administracion.auditoriaUsuarios.literal.motivo" },
     { id: "fechadesde", name: "facturacion.seriesFacturacion.literal.fInicio" },
     { id: "fechahasta", name: "censo.consultaDatos.literal.fechaFin" },
