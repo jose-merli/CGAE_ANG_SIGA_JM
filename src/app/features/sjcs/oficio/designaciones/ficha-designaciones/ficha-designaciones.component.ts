@@ -236,7 +236,7 @@ export class FichaDesignacionesComponent implements OnInit {
     private commonsService: CommonsService, private router: Router) { }
 
   ngOnInit() {
-    this.progressSpinner=true;
+    this.progressSpinner = true;
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
     let designaItem = JSON.parse(sessionStorage.getItem("designaItemLink"));
     this.campos = designaItem;
@@ -355,7 +355,7 @@ export class FichaDesignacionesComponent implements OnInit {
       this.listaTarjetas[0].campos = camposGenerales;
       this.listaTarjetas[1].campos = camposDetalle;
 
-      
+
       // this.searchContrarios(false);
       /* this.listaTarjetas[4].enlaces=[{
       id: null,
@@ -368,13 +368,13 @@ export class FichaDesignacionesComponent implements OnInit {
       this.progressSpinner = false;
     } else {
 
-      
+
       /* this.listaTarjetas[4].enlaces=[{
       id: null,
           ref: null,
           nombre: this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.vacio')
       }] */
-     
+
       this.progressSpinner = false;
 
       //NUEVA DESIGNA
@@ -484,7 +484,7 @@ export class FichaDesignacionesComponent implements OnInit {
     }
 
     this.getActuacionesDesigna(false);
-    this.progressSpinner=false;
+    this.progressSpinner = false;
   }
 
   ngOnChanges() {
@@ -703,9 +703,12 @@ export class FichaDesignacionesComponent implements OnInit {
                 "value": total.toString()
               }
             ];
-            console.log("🚀 ~ file: ficha-designaciones.component.ts ~ line 416 ~ FichaDesignacionesComponent ~ getActuacionesDesigna ~ this.actuacionesDesignaItems", this.actuacionesDesignaItems)
           }
+
+          this.tarjetaFija.campos[4].value = total.toString();
+
         }
+
       },
       err => {
         this.progressSpinner = false;
