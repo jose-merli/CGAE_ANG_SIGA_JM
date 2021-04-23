@@ -22,6 +22,9 @@ export class FichaDesignacionesComponent implements OnInit {
 
   designaItem = JSON.parse(sessionStorage.getItem("designaItemLink"));
   procurador;
+  showModal2 = false;
+  showModal3 = false;
+  listaPrueba = [];
 
 
   @ViewChild(DetalleTarjetaContrariosFichaDesignacionOficioComponent) tarjetaContrarios;
@@ -824,32 +827,85 @@ export class FichaDesignacionesComponent implements OnInit {
     sessionStorage.setItem("nuevoProcurador","true");
     this.router.navigate(["/busquedaGeneral"]);
   }
+
+  modDatos(event){
+    console.log(event);
   
-  guardarProcurador(){
     let array = [];
-    this.procurador.forEach(element => {
-        if(this.procurador[element].fechaDesigna != null){
-          this.procurador[element]=this.transformaFecha(this.procurador[element].fechaDesigna);
-        }
-        let tmp = this.procurador[element];
-        array.push(tmp);
+    let array2 = [];
+  
+    event.forEach(element => {
+      element.cells.forEach(dato => {
+        array.push(dato.value);
+      });
+      array2.push(array);
+      array=[];
     });
-    this.updateProcurador(array);
+    this.compruebaProcurador(array2[0]);
+  }
+
+  cerrarModal(){
+    this.showModal2 = false;
+    this.showModal3 = false;
   }
   
-
-  updateProcurador(event) {
+  compruebaProcurador(event) {
     this.progressSpinner = true;
+
+    this.listaPrueba = [];
+
+    this.listaPrueba.push(event[0],event[1],event[2],event[3],event[4],event[5],event[6]);
+
+  this.sigaServices.post("designaciones_comprobarProcurador", event[1]).subscribe(
+    data => {
+
+        if(data.body.procuradorItems != undefined){
+          this.showModal2 = true;
+        }else{
+          this.guardarProcurador(this.listaPrueba);
+        }
+        this.progressSpinner = false;
+  },
+  err => {
+    this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+      this.progressSpinner = false;
+    }
+  );
+  }
+
+  comprobarFechaProcurador(){
+    this.progressSpinner = true;
+
+    this.sigaServices.post("designaciones_comprobarProcurador", event[1]).subscribe(
+      data => {
+          console.log(data);
+          if(data.body.procuradorItems != undefined){
+            this.showModal3 = true;
+          }else{
+            this.guardarProcurador(this.listaPrueba);
+          }
+          this.progressSpinner = false;
+    },
+    err => {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        this.progressSpinner = false;
+      }
+    );
+  }
+  
+  guardarProcurador(event) {
+    this.progressSpinner = true;
+
+    event.push(String(this.campos.idInstitucion));
+    event.push(this.campos.numColegiado);
 
     this.sigaServices.post("designaciones_guardarProcurador", event).subscribe(
       data => {
-        let error = JSON.parse(data.body).error;
-        this.showMessage("info", this.translateService.instant("general.message.correct"), error.description);
-        this.progressSpinner = false;
-      },
-      err => {
-        let error = JSON.parse(err.body).error;
-        this.showMessage("info", this.translateService.instant("general.message.incorrect"), error.description);
+          this.showMessage("succes", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.progressSpinner = false;
+    },
+    err => {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         this.progressSpinner = false;
       }
     );
