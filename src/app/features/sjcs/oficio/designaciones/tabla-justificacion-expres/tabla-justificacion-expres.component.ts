@@ -4,6 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 import { Message } from 'primeng/primeng';
 import { Cell, Row, RowGroup, TablaResultadoDesplegableJEService } from '../../../../../commons/tabla-resultado-desplegable/tabla-resultado-desplegable-je.service';
 import { JustificacionExpressItem } from '../../../../../models/sjcs/JustificacionExpressItem';
+import { CommonsService } from '../../../../../_services/commons.service';
+import { SigaServices } from '../../../../../_services/siga.service';
 
 @Component({
   selector: 'app-tabla-justificacion-expres',
@@ -133,6 +135,9 @@ export class TablaJustificacionExpresComponent implements OnInit {
   inputs1 = [
     "Año Designación", "Número Designación", "Apellidos", "Nombre", "Año EJG", "Número EJG"
   ];
+
+  comboModulos: any [];
+
   actuacionesToDelete = [];
   actuacionToAdd: Row;
   dataToUpdate: RowGroup[];
@@ -140,8 +145,8 @@ export class TablaJustificacionExpresComponent implements OnInit {
   actuacionesToDleteArr = []; // para enviar a backend - ELIMINAR
   newActuacionItem = {}; // para enviar a backend -  NUEVO
   dataToUpdateArr = []; // para enviar a backend -  GUARDAR
-  constructor(private trdService: TablaResultadoDesplegableJEService,
-    private datepipe: DatePipe) 
+  constructor(private trdService: TablaResultadoDesplegableJEService, private datepipe: DatePipe,
+    private commonsService: CommonsService, private sigaServices: SigaServices) 
   { }
 
   ngOnInit(): void {
@@ -151,6 +156,24 @@ export class TablaJustificacionExpresComponent implements OnInit {
     this.datosJustificacionAux = this.datosJustificacion;
 
     this.cargaInicial();
+
+    this.getComboModulos();
+  }
+
+  getComboModulos() {
+    this.progressSpinner = true;
+ 
+    this.sigaServices.get("combo_comboModulosDesignaciones").subscribe(
+      n => {
+        this.comboModulos = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboModulos);
+        this.progressSpinner = false;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      }
+    );
   }
 
   cargaInicial(){
@@ -163,7 +186,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
     let listaClienteAct = "";
     let arr1 = [];
     let obj1 = {};
-    console.log('this.datosJustificacion: ', this.datosJustificacion)
+
     this.datosJustificacion.forEach((designacion, i) =>{
       let letra = (i + 10).toString(36).toUpperCase()
       let arr2 = [];

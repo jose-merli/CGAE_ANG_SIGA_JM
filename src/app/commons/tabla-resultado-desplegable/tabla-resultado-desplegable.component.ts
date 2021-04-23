@@ -47,6 +47,9 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   from = 0;
   to = 10;
   totalRegistros = 0;
+
+  @Input() comboModulos: any [];
+
   dataToUpdateArr: RowGroup[] = [];
   constructor(
     private renderer: Renderer2,
