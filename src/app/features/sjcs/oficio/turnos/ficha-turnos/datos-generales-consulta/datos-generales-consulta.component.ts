@@ -102,7 +102,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
             this.disableAll = true;
           }
           this.modoEdicion = true;
-          this.getCombos();
+          // this.getCombos();
         }
         
       }

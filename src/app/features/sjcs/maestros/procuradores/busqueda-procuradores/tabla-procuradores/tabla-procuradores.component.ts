@@ -42,6 +42,7 @@ export class TablaProcuradoresComponent implements OnInit {
 
   //Resultados de la busqueda
   @Input() datos;
+  @Input() fromProcuradorContrario;
 
   @ViewChild("table") table: DataTable;
 
@@ -137,6 +138,12 @@ export class TablaProcuradoresComponent implements OnInit {
   }
 
   openTab(evento) {
+
+    //Si proviene de una ficha de contrario
+    if(this.fromProcuradorContrario){
+      sessionStorage.setItem('procurador', JSON.stringify(evento));
+      this.router.navigate(['/gestionJusticiables']);
+    }
 
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos();

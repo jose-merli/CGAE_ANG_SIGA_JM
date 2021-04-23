@@ -12,6 +12,8 @@ import { DetalleTarjetaContrariosFichaDesignacionOficioComponent } from './detal
 import { DetalleTarjetaInteresadosFichaDesignacionOficioComponent } from './detalle-tarjeta-interesados-designa/detalle-tarjeta-interesados-ficha-designacion-oficio.component';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { Router } from '@angular/router';
+import { procesos_oficio } from '../../../../../permisos/procesos_oficio';
+import { ColegiadoItem } from '../../../../../models/ColegiadoItem';
 
 @Component({
   selector: 'app-ficha-designaciones',
@@ -22,6 +24,9 @@ export class FichaDesignacionesComponent implements OnInit {
 
   designaItem = JSON.parse(sessionStorage.getItem("designaItemLink"));
   procurador;
+  showModal2 = false;
+  showModal3 = false;
+  listaPrueba = [];
 
 
   @ViewChild(DetalleTarjetaContrariosFichaDesignacionOficioComponent) tarjetaContrarios;
@@ -102,20 +107,20 @@ export class FichaDesignacionesComponent implements OnInit {
       detalle: true,
       fixed: false,
       opened: false,
-     /* campos: [
-        {
-          "key": "Nº Colegiado",
-          "value": this.procurador[0].nColegiado
-        },
-        {
-          "key": "Nombre",
-          "value": this.procurador[0].nombre
-        },
-        {
-          "key": "Fecha designación",
-          "value": this.procurador[0].fechaDesigna
-        }
-      ]*/
+      /* campos: [
+         {
+           "key": "Nº Colegiado",
+           "value": this.procurador[0].nColegiado
+         },
+         {
+           "key": "Nombre",
+           "value": this.procurador[0].nombre
+         },
+         {
+           "key": "Fecha designación",
+           "value": this.procurador[0].fechaDesigna
+         }
+       ]*/
     },
     {
       id: 'sjcsDesigCamb',
@@ -229,21 +234,22 @@ export class FichaDesignacionesComponent implements OnInit {
   actuacionesDesignaItems: ActuacionDesignaItem[] = [];
 
   constructor(private location: Location,
-    private translateService: TranslateService, private sigaServices: SigaServices, private datepipe: DatePipe, 
+    private translateService: TranslateService, private sigaServices: SigaServices, private datepipe: DatePipe,
     private gbtservice: DetalleTarjetaProcuradorFichaDesignaionOficioService,
-    private commonsService: CommonsService,private router: Router) { }
+    private commonsService: CommonsService, private router: Router) { }
 
   ngOnInit() {
+    this.progressSpinner=true;
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
     let designaItem = JSON.parse(sessionStorage.getItem("designaItemLink"));
     this.campos = designaItem;
     this.motivosRenuncia();
 
-    if(sessionStorage.getItem("nuevoProcurador")){​​
+    if (sessionStorage.getItem("nuevoProcurador")) {
       this.listaTarjetas[5].opened = true;
     }
 
-    if(sessionStorage.getItem("buscadorColegiados")){​​
+    if (sessionStorage.getItem("buscadorColegiados")) {
       let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
       // sessionStorage.removeItem("buscadorColegiados");
       this.listaTarjetas[0].opened = true;
@@ -352,41 +358,8 @@ export class FichaDesignacionesComponent implements OnInit {
       this.listaTarjetas[0].campos = camposGenerales;
       this.listaTarjetas[1].campos = camposDetalle;
 
-      //Actualizar para que los campos se rellenen en base a la tabla de la tarjeta contrarios
-      this.listaTarjetas[4].campos = [
-        {
-          "key": null,
-          "value": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.vacio')
-        },
-        {
-          "key": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.identificadorprimero'),
-          "value": designaItem.nombreTurno
-        },
-        {
-          "key": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.apellidosnombreprimero'),
-          "value": designaItem.fechaAlta
-        },
-        {
-          "key": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.abogadoprimero'),
-          "value": "NO"
-        }, {
-          "key": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.procuradorprimero'),
-          "value": designaItem.descripcionTipoDesigna
-        }, {
-          "key": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.ncontrarios'),
-          "value": designaItem.descripcionTipoDesigna
-        }
-      ]
+      
       // this.searchContrarios(false);
-      /* this.listaTarjetas[4].enlaces=[{
-      id: null,
-          ref: null,
-          nombre: this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.vacio')
-      }] */
-      this.progressSpinner = false;
-    } else {
-
-      this.searchContrarios(false);
       /* this.listaTarjetas[4].enlaces=[{
       id: null,
           ref: null,
@@ -394,6 +367,17 @@ export class FichaDesignacionesComponent implements OnInit {
       }] */
       //Actualizar para que los campos se rellenen en base a la tabla de la tarjeta interesados
       this.searchInteresados();
+      this.searchContrarios(false);
+      this.progressSpinner = false;
+    } else {
+
+      
+      /* this.listaTarjetas[4].enlaces=[{
+      id: null,
+          ref: null,
+          nombre: this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.vacio')
+      }] */
+     
       this.progressSpinner = false;
 
       //NUEVA DESIGNA
@@ -501,8 +485,9 @@ export class FichaDesignacionesComponent implements OnInit {
 
       this.progressSpinner = false;
     }
-    this.getActuacionesDesigna(false);
 
+    this.getActuacionesDesigna(false);
+    this.progressSpinner=false;
   }
 
   ngOnChanges() {
@@ -527,14 +512,14 @@ export class FichaDesignacionesComponent implements OnInit {
       this.listaTarjetas[10].detalle = true;
       this.listaTarjetas[11].detalle = true;
     }
-/*
-    if (sessionStorage.getItem("rowGroupsProcurador")) {
-      sessionStorage.removeItem("rowGroupsProcurador");
-    }
-
-    if (this.changes.rowGroups.currentValue) {
-      sessionStorage.setItem("rowGroupsProcurador", JSON.stringify(this.changes.rowGroups.currentValue));
-    }*/
+    /*
+        if (sessionStorage.getItem("rowGroupsProcurador")) {
+          sessionStorage.removeItem("rowGroupsProcurador");
+        }
+    
+        if (this.changes.rowGroups.currentValue) {
+          sessionStorage.setItem("rowGroupsProcurador", JSON.stringify(this.changes.rowGroups.currentValue));
+        }*/
   }
 
   ngAfterViewInit() {
@@ -604,12 +589,17 @@ export class FichaDesignacionesComponent implements OnInit {
 
     this.progressSpinner = true;
 
-    const params = {
+    let params = {
       anio: this.campos.ano.toString().split('/')[0].replace('D', ''),
       idTurno: this.campos.idTurno,
       numero: this.campos.codigo,
-      historico: historico
+      historico: historico,
+      idPersonaColegiado: ''
     };
+
+    // if (!this.permisoEscritura) {
+    //   params.idPersonaColegiado = '';
+    // }
 
     this.sigaServices.post("actuaciones_designacion", params).subscribe(
       data => {
@@ -727,21 +717,21 @@ export class FichaDesignacionesComponent implements OnInit {
     );
   }
 
-  motivosRenuncia(){
-    this.progressSpinner=true;
+  motivosRenuncia() {
+    this.progressSpinner = true;
 
     this.sigaServices.get("designaciones_motivosRenuncia").subscribe(
       n => {
         this.comboRenuncia = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboRenuncia);
-        this.progressSpinner=false;
+        this.progressSpinner = false;
       },
       err => {
         console.log(err);
-        this.progressSpinner=false;
+        this.progressSpinner = false;
       }
     );
-}
+  }
 
   mostrar() {
     let procurador = [this.campos.numColegiado, String(this.campos.idInstitucion)];
@@ -766,7 +756,7 @@ export class FichaDesignacionesComponent implements OnInit {
     let x = 0;
 
     datos.forEach((element, index) => {
-      if(x == 0){
+      if (x == 0) {
         let obj = [
           { type: 'datePicker', value: element.fechaDesigna },
           { type: 'input', value: element.numerodesignacion },
@@ -781,10 +771,10 @@ export class FichaDesignacionesComponent implements OnInit {
           id: index,
           row: obj
         };
-  
+
         arr.push(superObj);
-        x=1;
-      }else{
+        x = 1;
+      } else {
         let obj = [
           { type: 'text', value: element.fechaDesigna },
           { type: 'text', value: element.numerodesignacion },
@@ -799,7 +789,7 @@ export class FichaDesignacionesComponent implements OnInit {
           id: index,
           row: obj
         };
-  
+
         arr.push(superObj);
       }
     });
@@ -808,7 +798,7 @@ export class FichaDesignacionesComponent implements OnInit {
     this.totalRegistros = this.rowGroups.length;
   }
 
-  restablecer(){
+  restablecer() {
     this.selectedArray = [];
     this.progressSpinner = true;
     this.rowGroups = [];
@@ -817,39 +807,92 @@ export class FichaDesignacionesComponent implements OnInit {
     this.rowGroupsAux = JSON.parse(sessionStorage.getItem("rowGroupsInitProcurador"));
     this.totalRegistros = this.rowGroups.length;
     this.progressSpinner = false;
-    this.showMessage("success", 'Operación realizada con éxito',  'Los registros han sido restablecidos');
+    this.showMessage("success", 'Operación realizada con éxito', 'Los registros han sido restablecidos');
   }
 
-  nuevo(){
-    sessionStorage.setItem("nuevoProcurador","true");
+  nuevo() {
+    sessionStorage.setItem("nuevoProcurador", "true");
     this.router.navigate(["/busquedaGeneral"]);
   }
+
+  modDatos(event){
+    console.log(event);
   
-  guardarProcurador(){
     let array = [];
-    this.procurador.forEach(element => {
-        if(this.procurador[element].fechaDesigna != null){
-          this.procurador[element]=this.transformaFecha(this.procurador[element].fechaDesigna);
-        }
-        let tmp = this.procurador[element];
-        array.push(tmp);
+    let array2 = [];
+  
+    event.forEach(element => {
+      element.cells.forEach(dato => {
+        array.push(dato.value);
+      });
+      array2.push(array);
+      array=[];
     });
-    this.updateProcurador(array);
+    this.compruebaProcurador(array2[0]);
+  }
+
+  cerrarModal(){
+    this.showModal2 = false;
+    this.showModal3 = false;
   }
   
-
-  updateProcurador(event) {
+  compruebaProcurador(event) {
     this.progressSpinner = true;
+
+    this.listaPrueba = [];
+
+    this.listaPrueba.push(event[0],event[1],event[2],event[3],event[4],event[5],event[6]);
+
+  this.sigaServices.post("designaciones_comprobarProcurador", event[1]).subscribe(
+    data => {
+
+        if(data.body.procuradorItems != undefined){
+          this.showModal2 = true;
+        }else{
+          this.guardarProcurador(this.listaPrueba);
+        }
+        this.progressSpinner = false;
+  },
+  err => {
+    this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+      this.progressSpinner = false;
+    }
+  );
+  }
+
+  comprobarFechaProcurador(){
+    this.progressSpinner = true;
+
+    this.sigaServices.post("designaciones_comprobarProcurador", event[1]).subscribe(
+      data => {
+          console.log(data);
+          if(data.body.procuradorItems != undefined){
+            this.showModal3 = true;
+          }else{
+            this.guardarProcurador(this.listaPrueba);
+          }
+          this.progressSpinner = false;
+    },
+    err => {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        this.progressSpinner = false;
+      }
+    );
+  }
+  
+  guardarProcurador(event) {
+    this.progressSpinner = true;
+
+    event.push(String(this.campos.idInstitucion));
+    event.push(this.campos.numColegiado);
 
     this.sigaServices.post("designaciones_guardarProcurador", event).subscribe(
       data => {
-        let error = JSON.parse(data.body).error;
-        this.showMessage("info", this.translateService.instant("general.message.correct"), error.description);
-        this.progressSpinner = false;
-      },
-      err => {
-        let error = JSON.parse(err.body).error;
-        this.showMessage("info", this.translateService.instant("general.message.incorrect"), error.description);
+          this.showMessage("succes", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.progressSpinner = false;
+    },
+    err => {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         this.progressSpinner = false;
       }
     );
@@ -861,19 +904,12 @@ export class FichaDesignacionesComponent implements OnInit {
     let designaItem = JSON.parse(data);
 
     let item = [designaItem.idTurno.toString(), designaItem.nombreTurno, designaItem.numero.toString(), designaItem.ano, event];
-    /* ano: "D2021/4330"
-nombreTurno: "ZELIMINAR-CIJAECI05 - MATRIMONIAL CONTENCIOSO JAÉN" */
 
     this.sigaServices.post("designaciones_listaContrarios", item).subscribe(
       n => {
 
         this.contrarios = JSON.parse(n.body);
         let primero = this.contrarios[0];
-        //Columnas a obtener:
-        //Identificador: nif/pasaporte del id persona del contrario. A partir de SCS_CONTRARIOSDESIGNA.IDPERSONA.
-        //Apellido, nombre de dicha persona. A partir de SCS_CONTRARIOSDESIGNA.IDPERSONA.
-        //nº colegiado, apellidos y nombre del abogado del contrario. Extraer de las columnas IDABOGADOCONTRARIO y NOMBREABOGADOCONTRARIO de SCS_CONTRARIOSDESIGNA.
-        //nº colegiado, apellidos y nombre del procurador del contrario. SCS_CONTRARIOSDESIGNA.IDPROCURADOR
 
         let error = JSON.parse(n.body).error;
 

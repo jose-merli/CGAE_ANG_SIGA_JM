@@ -409,7 +409,7 @@ export class GestionGuardiaComponent implements OnInit {
     this.enlacesTarjetaResumen.push(pruebaTarjeta);
     
     pruebaTarjeta = {
-      label: "dato.jgr.guardia.guardias.turno",
+      label: "justiciaGratuita.sjcs.designas.DatosIden.turno",
       value: document.getElementById("turnos"),
       nombre: "turnos",
     };
