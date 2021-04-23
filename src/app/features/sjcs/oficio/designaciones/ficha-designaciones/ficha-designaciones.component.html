@@ -55,7 +55,8 @@
                                         </app-detalle-tarjeta-detalle-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Datos Adicionales'">
-                                        <app-detalle-tarjeta-datos-adicionales-ficha-designacion-oficio [campos]="campos">
+                                        <app-detalle-tarjeta-datos-adicionales-ficha-designacion-oficio
+                                            [campos]="campos">
                                         </app-detalle-tarjeta-datos-adicionales-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Datos Facturación'">
@@ -67,13 +68,16 @@
                                         </app-detalle-tarjeta-documentacion-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Contrarios'">
-                                        <app-detalle-tarjeta-contrarios-ficha-designacion-oficio [contrarios]="contrarios" (searchContrarios)="searchContrarios($event)">
+                                        <app-detalle-tarjeta-contrarios-ficha-designacion-oficio
+                                            [contrarios]="contrarios" (searchContrarios)="searchContrarios($event)">
                                         </app-detalle-tarjeta-contrarios-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Procurador'" id="procurador">
-                                        <app-detalle-tarjeta-procurador-ficha-designacion-oficio [cabeceras]="cabeceras" [totalRegistros]="totalRegistros"
-                                        [seleccionarTodo]="seleccionarTodo" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" (guardarProcurador)="guardarProcurador()" 
-                                        (mostrar)="mostrar()" (restablecer)="restablecer()" (nuevo)="nuevo()">
+                                        <app-detalle-tarjeta-procurador-ficha-designacion-oficio [cabeceras]="cabeceras"
+                                            [totalRegistros]="totalRegistros" [seleccionarTodo]="seleccionarTodo"
+                                            [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups"
+                                            (guardarProcurador)="guardarProcurador()" (mostrar)="mostrar()"
+                                            (restablecer)="restablecer()" (nuevo)="nuevo()">
                                         </app-detalle-tarjeta-procurador-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Cambio Letrado'">
@@ -81,12 +85,14 @@
                                         </app-detalle-tarjeta-letrados-designa>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Interesados'">
-                                        <app-detalle-tarjeta-interesados-ficha-designacion-oficio [interesados]="interesados" (searchInteresados)="searchInteresados($event)">
+                                        <app-detalle-tarjeta-interesados-ficha-designacion-oficio
+                                            [interesados]="interesados" (searchInteresados)="searchInteresados($event)">
                                         </app-detalle-tarjeta-interesados-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Actuaciones'">
                                         <app-detalle-tarjeta-actuaciones-ficha-designacion-oficio [campos]="campos"
                                             [actuacionesDesignaItems]="actuacionesDesignaItems"
+                                            [permisoEscritura]="permisoEscritura"
                                             (buscarEvent)="getActuacionesDesigna($event)">
                                         </app-detalle-tarjeta-actuaciones-ficha-designacion-oficio>
                                     </div>

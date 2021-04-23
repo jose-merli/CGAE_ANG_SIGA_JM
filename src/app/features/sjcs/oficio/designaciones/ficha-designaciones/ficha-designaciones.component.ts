@@ -12,6 +12,8 @@ import { DetalleTarjetaContrariosFichaDesignacionOficioComponent } from './detal
 import { DetalleTarjetaInteresadosFichaDesignacionOficioComponent } from './detalle-tarjeta-interesados-designa/detalle-tarjeta-interesados-ficha-designacion-oficio.component';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { Router } from '@angular/router';
+import { procesos_oficio } from '../../../../../permisos/procesos_oficio';
+import { ColegiadoItem } from '../../../../../models/ColegiadoItem';
 
 @Component({
   selector: 'app-ficha-designaciones',
@@ -102,20 +104,20 @@ export class FichaDesignacionesComponent implements OnInit {
       detalle: true,
       fixed: false,
       opened: false,
-     /* campos: [
-        {
-          "key": "Nº Colegiado",
-          "value": this.procurador[0].nColegiado
-        },
-        {
-          "key": "Nombre",
-          "value": this.procurador[0].nombre
-        },
-        {
-          "key": "Fecha designación",
-          "value": this.procurador[0].fechaDesigna
-        }
-      ]*/
+      /* campos: [
+         {
+           "key": "Nº Colegiado",
+           "value": this.procurador[0].nColegiado
+         },
+         {
+           "key": "Nombre",
+           "value": this.procurador[0].nombre
+         },
+         {
+           "key": "Fecha designación",
+           "value": this.procurador[0].fechaDesigna
+         }
+       ]*/
     },
     {
       id: 'sjcsDesigCamb',
@@ -216,21 +218,22 @@ export class FichaDesignacionesComponent implements OnInit {
   actuacionesDesignaItems: ActuacionDesignaItem[] = [];
 
   constructor(private location: Location,
-    private translateService: TranslateService, private sigaServices: SigaServices, private datepipe: DatePipe, 
+    private translateService: TranslateService, private sigaServices: SigaServices, private datepipe: DatePipe,
     private gbtservice: DetalleTarjetaProcuradorFichaDesignaionOficioService,
-    private commonsService: CommonsService,private router: Router) { }
+    private commonsService: CommonsService, private router: Router) { }
 
   ngOnInit() {
+    this.progressSpinner=true;
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
     let designaItem = JSON.parse(sessionStorage.getItem("designaItemLink"));
     this.campos = designaItem;
     this.motivosRenuncia();
 
-    if(sessionStorage.getItem("nuevoProcurador")){​​
+    if (sessionStorage.getItem("nuevoProcurador")) {
       this.listaTarjetas[5].opened = true;
     }
 
-    if(sessionStorage.getItem("buscadorColegiados")){​​
+    if (sessionStorage.getItem("buscadorColegiados")) {
       let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
       // sessionStorage.removeItem("buscadorColegiados");
       this.listaTarjetas[0].opened = true;
@@ -479,8 +482,9 @@ export class FichaDesignacionesComponent implements OnInit {
 
       this.progressSpinner = false;
     }
-    this.getActuacionesDesigna(false);
 
+    this.getActuacionesDesigna(false);
+    this.progressSpinner=false;
   }
 
   ngOnChanges() {
@@ -505,14 +509,14 @@ export class FichaDesignacionesComponent implements OnInit {
       this.listaTarjetas[10].detalle = true;
       this.listaTarjetas[11].detalle = true;
     }
-/*
-    if (sessionStorage.getItem("rowGroupsProcurador")) {
-      sessionStorage.removeItem("rowGroupsProcurador");
-    }
-
-    if (this.changes.rowGroups.currentValue) {
-      sessionStorage.setItem("rowGroupsProcurador", JSON.stringify(this.changes.rowGroups.currentValue));
-    }*/
+    /*
+        if (sessionStorage.getItem("rowGroupsProcurador")) {
+          sessionStorage.removeItem("rowGroupsProcurador");
+        }
+    
+        if (this.changes.rowGroups.currentValue) {
+          sessionStorage.setItem("rowGroupsProcurador", JSON.stringify(this.changes.rowGroups.currentValue));
+        }*/
   }
 
   ngAfterViewInit() {
@@ -582,12 +586,17 @@ export class FichaDesignacionesComponent implements OnInit {
 
     this.progressSpinner = true;
 
-    const params = {
+    let params = {
       anio: this.campos.ano.toString().split('/')[0].replace('D', ''),
       idTurno: this.campos.idTurno,
       numero: this.campos.codigo,
-      historico: historico
+      historico: historico,
+      idPersonaColegiado: ''
     };
+
+    // if (!this.permisoEscritura) {
+    //   params.idPersonaColegiado = '';
+    // }
 
     this.sigaServices.post("actuaciones_designacion", params).subscribe(
       data => {
@@ -705,21 +714,21 @@ export class FichaDesignacionesComponent implements OnInit {
     );
   }
 
-  motivosRenuncia(){
-    this.progressSpinner=true;
+  motivosRenuncia() {
+    this.progressSpinner = true;
 
     this.sigaServices.get("designaciones_motivosRenuncia").subscribe(
       n => {
         this.comboRenuncia = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboRenuncia);
-        this.progressSpinner=false;
+        this.progressSpinner = false;
       },
       err => {
         console.log(err);
-        this.progressSpinner=false;
+        this.progressSpinner = false;
       }
     );
-}
+  }
 
   mostrar() {
     let procurador = [this.campos.numColegiado, String(this.campos.idInstitucion)];
@@ -744,7 +753,7 @@ export class FichaDesignacionesComponent implements OnInit {
     let x = 0;
 
     datos.forEach((element, index) => {
-      if(x == 0){
+      if (x == 0) {
         let obj = [
           { type: 'datePicker', value: element.fechaDesigna },
           { type: 'input', value: element.numerodesignacion },
@@ -759,10 +768,10 @@ export class FichaDesignacionesComponent implements OnInit {
           id: index,
           row: obj
         };
-  
+
         arr.push(superObj);
-        x=1;
-      }else{
+        x = 1;
+      } else {
         let obj = [
           { type: 'text', value: element.fechaDesigna },
           { type: 'text', value: element.numerodesignacion },
@@ -777,7 +786,7 @@ export class FichaDesignacionesComponent implements OnInit {
           id: index,
           row: obj
         };
-  
+
         arr.push(superObj);
       }
     });
@@ -786,7 +795,7 @@ export class FichaDesignacionesComponent implements OnInit {
     this.totalRegistros = this.rowGroups.length;
   }
 
-  restablecer(){
+  restablecer() {
     this.selectedArray = [];
     this.progressSpinner = true;
     this.rowGroups = [];
@@ -795,26 +804,26 @@ export class FichaDesignacionesComponent implements OnInit {
     this.rowGroupsAux = JSON.parse(sessionStorage.getItem("rowGroupsInitProcurador"));
     this.totalRegistros = this.rowGroups.length;
     this.progressSpinner = false;
-    this.showMessage("success", 'Operación realizada con éxito',  'Los registros han sido restablecidos');
+    this.showMessage("success", 'Operación realizada con éxito', 'Los registros han sido restablecidos');
   }
 
-  nuevo(){
-    sessionStorage.setItem("nuevoProcurador","true");
+  nuevo() {
+    sessionStorage.setItem("nuevoProcurador", "true");
     this.router.navigate(["/busquedaGeneral"]);
   }
-  
-  guardarProcurador(){
+
+  guardarProcurador() {
     let array = [];
     this.procurador.forEach(element => {
-        if(this.procurador[element].fechaDesigna != null){
-          this.procurador[element]=this.transformaFecha(this.procurador[element].fechaDesigna);
-        }
-        let tmp = this.procurador[element];
-        array.push(tmp);
+      if (this.procurador[element].fechaDesigna != null) {
+        this.procurador[element] = this.transformaFecha(this.procurador[element].fechaDesigna);
+      }
+      let tmp = this.procurador[element];
+      array.push(tmp);
     });
     this.updateProcurador(array);
   }
-  
+
 
   updateProcurador(event) {
     this.progressSpinner = true;

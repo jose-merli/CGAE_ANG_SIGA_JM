@@ -47,7 +47,8 @@
                     </app-tarjeta-datos-gen-ficha-act>
                   </div>
                   <div *ngIf="tarj.nombre == 'Justificación'">
-                    <app-tarjeta-jus-ficha-act>
+                    <app-tarjeta-jus-ficha-act [actuacionDesigna]="actuacionDesigna"
+                      (changeDataEvent)="changeDataTarjeta($event)">
                     </app-tarjeta-jus-ficha-act>
                   </div>
                   <div *ngIf="tarj.nombre == 'Datos Facturación'">

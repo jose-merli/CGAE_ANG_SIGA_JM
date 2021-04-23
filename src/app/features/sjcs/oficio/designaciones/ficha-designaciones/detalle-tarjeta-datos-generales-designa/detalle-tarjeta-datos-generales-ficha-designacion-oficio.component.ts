@@ -444,7 +444,9 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
               },
               err => {
                 console.log(err);
+                severity = "error";
                 summary = "No existe cola de letrado de oficio";
+                detail = "";
                 this.msgs.push({
                   severity,
                   summary,
