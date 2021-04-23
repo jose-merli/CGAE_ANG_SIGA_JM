@@ -1,8 +1,9 @@
+import { DatePipe } from '@angular/common';
 import { ElementRef, Renderer2, Output, EventEmitter, SimpleChange } from '@angular/core';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Sort } from '@angular/material/sort';
-import { RowGroup } from './tabla-resultado-desplegable-je.service';
+import { Cell, Row, RowGroup } from './tabla-resultado-desplegable-je.service';
 @Component({
   selector: 'app-tabla-resultado-desplegable',
   templateUrl: './tabla-resultado-desplegable.component.html',
@@ -15,7 +16,11 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   @Input() rowGroupsAux: RowGroup[];
   @Input() seleccionarTodo = false;
   @Input() pantalla: string = '';
+  @Input() s = false;
+  @Input() colegiado;
   @Output() anySelected = new EventEmitter<any>();
+  @Output() designasToDelete = new EventEmitter<any[]>();
+  @Output() actuacionesToDelete = new EventEmitter<any[]>();
   cabecerasMultiselect = [];
   modalStateDisplay = true;
   searchText = [];
@@ -24,6 +29,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   numColumnasChecked = 0;
   selected = false;
   selectedArray = [];
+  selecteChild = [];
   RGid = "inicial";
   down = false;
   @ViewChild('table') table: ElementRef;
@@ -31,6 +37,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   textSelected: string = "{0} visibles";
   columnsSizes = [];
   tamanioTablaResultados = 0;
+  childNumber = 0 ;
 
   numperPage = 10;
   from = 0;
@@ -38,7 +45,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   totalRegistros = 0;
 
   constructor(
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private datepipe: DatePipe
   ) {
     this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
       for (let i = 0; i < this.table.nativeElement.children.length; i++) {
@@ -46,6 +54,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         if (!event.target.classList.contains("selectedRowClass")) {
           this.selected = false;
           this.selectedArray = [];
+          this.selecteChild = [];
         }
       }
     });
@@ -59,8 +68,23 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.totalRegistros = this.rowGroups.length;
   }
 
-  selectRow(rowSelected, rowId) {
+  selectRow(rowSelected, rowId, child) {
+    console.log('rowId: ', rowId)
+    console.log('child: ', child)
     this.selected = true;
+    if (child != undefined){
+      if (this.selecteChild.includes({[rowId] : child})) {
+        const i = this.selecteChild.indexOf({[rowId] : child});
+        this.selecteChild.splice(i, 1);
+      } else {
+        this.selecteChild.push({[rowId] : child});
+      }
+      if (this.selecteChild.length != 0) {
+        this.anySelected.emit(true);
+      } else {
+        this.anySelected.emit(false);
+      }
+    }
     if (this.selectedArray.includes(rowId)) {
       const i = this.selectedArray.indexOf(rowId);
       this.selectedArray.splice(i, 1);
@@ -165,6 +189,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.down = !this.down
     this.RGid = rowGroupId;
     const toggle = rowWrapper;
+    console.log(' rowWrapper.children: ',  rowWrapper.children)
     for (let i = 0; i < rowWrapper.children.length; i++) {
       if (rowWrapper.children[i].className.includes('child')) {
         this.modalStateDisplay = false;
@@ -249,7 +274,9 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   validaCheck(texto) {
     return texto === 'Si';
   }
-
+  fillFecha(event, cell) {
+    cell.value = this.datepipe.transform(event, 'dd/MM/yyyy');
+  }
   ocultarColumna(event) {
 
     let tabla = document.getElementById("tablaResultadoDesplegable");
@@ -437,7 +464,97 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.seleccionarTodo = event;
     // this.isDisabled = !event;
   }
+  colorByStateDesigmacion(state){
+    if ( state == 'V'){
+      return 'green'; // activa
+    }else if ( state == 'F'){
+      return 'blue'; // finalizada
+    }else if ( state == 'A'){
+      return 'red'; // anulada
+    } else {
+      return 'black';
+    }
+  } 
 
+  toDoButton(type, designacion, rowWrapper){
+    if (type == 'Nuevo'){
+
+      this.rowGroups.forEach((rowGroup,i) => {
+        if (rowGroup.id == designacion){
+          let id = Object.keys(rowGroup.rows)[0];
+          console.log('id: ', id)
+          let newArrayCells: Cell[] = [
+            { type: 'checkbox', value: false, size: 50 },
+            { type: 'input', value: '', size: 153 },
+            { type: 'input', value: '', size: 153},
+            { type: 'input', value: '', size: 153 },
+            { type: 'select', value: '', size: 153 }, //modulo
+            { type: 'datePicker', value: '', size: 153 },
+            { type: 'input', value: '' , size: 153},
+            { type: 'input', value: '' , size: 50},
+            // { type: 'checkbox', value: obj.val }
+            { type: 'checkbox', value: false, size: 50 }];
+          
+          let newRow: Row = {cells: newArrayCells, position: 'noCollapse'};
+          rowGroup.rows.push(newRow);
+        }
+      })
+    }
+  }
+
+  colorByStateExpediente(state){
+    if ( state == 'DESFAVORABLE'){
+      return 'red';
+    }else if ( state == 'FAVORABLE'){
+      return 'blue'; 
+    } else {
+      return 'black';
+    }
+  } 
+
+  guardar(){
+    console.log('this.rowGroups: ', this.rowGroups)
+  }
+  eliminar(){
+    let deletedDesig = [];
+    let deletedAct = [];
+    console.log('this.selectedArray: ', this.selectedArray)
+    console.log('this.selecteChild: ', this.selecteChild)
+    this.rowGroups.forEach((rowG, i) => {
+      this.selectedArray.forEach(idToDelete => {
+        console.log('rowG.id: ', rowG.id)
+        console.log('idToDelete: ', idToDelete)
+      if (rowG.id == idToDelete){
+        console.log('delete!!!')
+        this.rowGroups.splice(i, 1);
+        deletedDesig.push(rowG.id)
+        this.designasToDelete.emit(deletedDesig);
+      }
+      });
+
+
+    if(this.selecteChild != []){
+      this.selecteChild.forEach((child, c) => {
+      let rowIdChild = Object.keys(child)[c];
+      let rowId = rowIdChild.slice(0, -1);
+       this.childNumber =  Number(Object.values(child)[c]);
+
+       this.selectedArray.forEach(idToDelete => {
+        if (rowIdChild == idToDelete && rowG.id == rowId){
+          rowG.rows.splice(this.childNumber, 1);
+          deletedAct.push(rowG.rows[this.childNumber].cells[9].value)
+          this.actuacionesToDelete.emit(deletedAct);
+        }
+        });
+      })
+
+    }
+    });
+    this.totalRegistros = this.rowGroups.length;
+    console.log('this.rowGroups delete: ', this.rowGroups)
+    console.log('deletedDesig: ', deletedDesig)
+    console.log('deletedAct: ', deletedAct)
+  }
 }
 function compare(a: number | string, b: number | string, isAsc: boolean) {
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);

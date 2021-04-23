@@ -11,18 +11,20 @@
     <div class="form-row">
 
       <div class="form-group col-lg-6 col-md-6 w-100">
-        <label>{{ datePicker.label }}</label>
-        <app-fecha [utc]="true" [(value)]='datePicker.value'></app-fecha>
+        <label>{{ datos.datePicker.label }}</label>
+        <app-fecha [utc]="true" [(value)]='datos.datePicker.value' [minDate]="fechaEntradaInicioDate"
+          (valueChangeSelected)="fillFecha($event)" (valueChangeInput)="fillFecha($event)">
+        </app-fecha>
       </div>
 
-      <div class="form-group col-lg-6 col-md-6 w-100" *ngFor="let input of inputs1; let i = index;">
+      <div class="form-group col-lg-6 col-md-6 w-100" *ngFor="let input of datos.inputs1; let i = index;">
         <label>{{ input.label }}</label>
         <input type="text" class="form-control" pInputText [(ngModel)]="input.value" readonly>
       </div>
 
       <div class="form-group col-lg-12 col-md-12 w-100">
-        <label>{{ textarea.label }}</label>
-        <textarea class="form-control" pInputTextarea [(ngModel)]="textarea.value" maxlength="4000"></textarea>
+        <label>{{ datos.textarea.label }}</label>
+        <textarea class="form-control" pInputTextarea [(ngModel)]="datos.textarea.value" maxlength="4000"></textarea>
       </div>
 
     </div>
@@ -30,18 +32,18 @@
   <div class="col-lg-8 col-md-8 mb-5">
     <div class="form-row">
       <div class="form-group col-lg-4 col-md-4 w-100">
-        <label>{{ inputNig.label }}</label>
-        <input type="text" class="form-control" pInputText [(ngModel)]="inputNig.value">
+        <label>{{ datos.inputNig.label }}</label>
+        <input type="text" class="form-control" pInputText [(ngModel)]="datos.inputNig.value">
       </div>
       <div class="form-group col-lg-2 col-md-2 w-100">
-        <label>{{ inputNumPro.label }}</label>
-        <input type="text" class="form-control" pInputText [(ngModel)]="inputNumPro.value">
+        <label>{{ datos.inputNumPro.label }}</label>
+        <input type="text" class="form-control" pInputText [(ngModel)]="datos.inputNumPro.value">
       </div>
-      <div class="form-group col-lg-6 col-md-6 w-100" *ngFor="let selector of selectores">
+      <div class="form-group col-lg-6 col-md-6 w-100" *ngFor="let selector of datos.selectores">
         <label>{{ selector.nombre }}</label>
         <p-dropdown class="select-form" [(ngModel)]="selector.value"
           placeholder="{{'general.boton.seleccionar' | translate}}" [options]="selector.opciones" [filter]="true"
-          filterBy="label,labelSinTilde" [showClear]="true">
+          filterBy="label,labelSinTilde" [showClear]="true" [ngClass]="styleObligatorio('selector', selector.obligatorio)">
         </p-dropdown>
       </div>
     </div>
@@ -52,9 +54,7 @@
   <div class="text-right main-button">
     <button pButton type="button" icon="fa fa-paper-plane" iconPos="left" label="Comunicar"
       (click)="showMsg('success', 'Se ha comunicado correctamente', '')"></button>
-    <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer"
-      (click)="showMsg('success', 'Se ha restablecido correctamente', '')"></button>
-    <button pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"
-      (click)="showMsg('success', 'Se ha guardado correctamente', '')" disabled></button>
+    <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer" (click)="restablecer()"></button>
+    <button pButton type="button" icon="far fa-save" iconPos="left" label="Guardar" (click)="guardarAction()"></button>
   </div>
 </div>

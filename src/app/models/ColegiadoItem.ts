@@ -53,6 +53,7 @@ export class ColegiadoItem {
   idTratamiento: String;
   descripcion: String;
   observaciones: String;
+  nombreColegio: String;
 
   situacionResidente: string;
   comunitario: string;

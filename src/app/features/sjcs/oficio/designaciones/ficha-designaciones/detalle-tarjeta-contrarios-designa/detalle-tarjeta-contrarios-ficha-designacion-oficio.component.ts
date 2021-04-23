@@ -2,7 +2,7 @@ import { Component, OnInit, Input, ChangeDetectorRef, ViewChild, SimpleChanges, 
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../../commons/translate';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
-import { Router } from '../../../../../../../../node_modules/@angular/router';
+import { Router } from '@angular/router';
 import { DesignaItem } from '../../../../../../models/sjcs/DesignaItem';
 import { JusticiableBusquedaItem } from '../../../../../../models/sjcs/JusticiableBusquedaItem';
 
@@ -179,6 +179,7 @@ export class DetalleTarjetaContrariosFichaDesignacionOficioComponent implements 
     let contrario = new JusticiableBusquedaItem();
     let datos;
     contrario.idpersona=evento.idPersona;
+    sessionStorage.setItem("personaDesigna",evento.idPersona);
     this.progressSpinner = true;
     this.sigaServices.post("busquedaJusticiables_searchJusticiables", contrario).subscribe(
       n => {
@@ -191,11 +192,17 @@ export class DetalleTarjetaContrariosFichaDesignacionOficioComponent implements 
         }
         this.persistenceService.setDatos(datos[0]);
         this.persistenceService.setFichasPosibles(this.fichasPosibles);
-        sessionStorage.setItem("origin","Designa");
+        sessionStorage.setItem("origin","Contrario");
+        this.persistenceService.clearBody();
 
+        if(evento.abogado!="" && evento.abogado!=null){
+          sessionStorage.setItem("idabogadoFicha",evento.idabogadocontrario);
+        }
+        if(evento.procurador!="" && evento.procurador!=null){
+          sessionStorage.setItem("procuradorFicha",evento.procurador);
+        }
         if(evento.representante!="" && evento.representante!=null){
           let representante = new JusticiableBusquedaItem();
-          let nombre =evento.representante.split(",");
           representante.idpersona=evento.representante;
           this.sigaServices.post("busquedaJusticiables_searchJusticiables", representante).subscribe(
             j =>{

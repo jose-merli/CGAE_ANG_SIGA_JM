@@ -27,6 +27,9 @@ export class ActuacionesJustificacionExpressItem {
 	nig : String;
 	fecha : String;
 	permitirLetrado : String;
+	anio: String;
+	idTurno: String;
+	idInstitucion: String;
 
   constructor() { }
 }

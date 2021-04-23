@@ -2,7 +2,7 @@ import { Component, OnInit, Input, ChangeDetectorRef, ViewChild, SimpleChanges, 
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../../commons/translate';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
-import { Router } from '../../../../../../../../node_modules/@angular/router';
+import { Router } from '@angular/router';
 import { DesignaItem } from '../../../../../../models/sjcs/DesignaItem';
 import { JusticiableBusquedaItem } from '../../../../../../models/sjcs/JusticiableBusquedaItem';
 
@@ -178,6 +178,7 @@ export class DetalleTarjetaInteresadosFichaDesignacionOficioComponent implements
     let interesado = new JusticiableBusquedaItem();
     let datos;
     interesado.idpersona=evento.idPersona;
+    sessionStorage.setItem("personaDesigna",evento.idPersona);
     this.progressSpinner = true;
     this.sigaServices.post("busquedaJusticiables_searchJusticiables", interesado).subscribe(
       n => {
@@ -190,7 +191,9 @@ export class DetalleTarjetaInteresadosFichaDesignacionOficioComponent implements
         }
         this.persistenceService.setDatos(datos[0]);
         this.persistenceService.setFichasPosibles(this.fichasPosibles);
-        sessionStorage.setItem("origin","Designa");
+        sessionStorage.setItem("origin","Interesado");
+        sessionStorage.setItem("designa",JSON.stringify(this.interesados));
+        this.persistenceService.clearBody();
 
         if(evento.representante!="" && evento.representante!=null){
           let representante = new JusticiableBusquedaItem();
