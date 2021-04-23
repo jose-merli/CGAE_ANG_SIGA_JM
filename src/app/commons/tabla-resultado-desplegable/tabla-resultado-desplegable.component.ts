@@ -21,6 +21,9 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   @Output() anySelected = new EventEmitter<any>();
   @Output() designasToDelete = new EventEmitter<any[]>();
   @Output() actuacionesToDelete = new EventEmitter<any[]>();
+  @Output() actuacionToAdd = new EventEmitter<Row>();
+  @Output() dataToUpdate = new EventEmitter<RowGroup[]>();
+  
   cabecerasMultiselect = [];
   modalStateDisplay = true;
   searchText = [];
@@ -38,12 +41,16 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   columnsSizes = [];
   tamanioTablaResultados = 0;
   childNumber = 0 ;
-
+  newActuacionesArr: Row[] = [];
+  rowIdsToUpdate = [];
   numperPage = 10;
   from = 0;
   to = 10;
   totalRegistros = 0;
 
+  @Input() comboModulos: any [];
+
+  dataToUpdateArr: RowGroup[] = [];
   constructor(
     private renderer: Renderer2,
     private datepipe: DatePipe
@@ -79,6 +86,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       } else {
         this.selecteChild.push({[rowId] : child});
       }
+      console.log('this.selecteChild 1: ', this.selecteChild)
       if (this.selecteChild.length != 0) {
         this.anySelected.emit(true);
       } else {
@@ -274,9 +282,22 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   validaCheck(texto) {
     return texto === 'Si';
   }
-  fillFecha(event, cell) {
+  fillFecha(event, cell, rowId) {
     cell.value = this.datepipe.transform(event, 'dd/MM/yyyy');
+    this.rowIdsToUpdate.push(rowId);
   }
+  checkBoxChange(event, rowId){
+    this.rowIdsToUpdate.push(rowId);
+  }
+
+  changeSelect(row, cell, rowId){
+    this.rowIdsToUpdate.push(rowId);
+  }
+
+  inputChange(vent, rowId){
+    this.rowIdsToUpdate.push(rowId);
+  }
+
   ocultarColumna(event) {
 
     let tabla = document.getElementById("tablaResultadoDesplegable");
@@ -490,13 +511,37 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             { type: 'input', value: '', size: 153 },
             { type: 'select', value: '', size: 153 }, //modulo
             { type: 'datePicker', value: '', size: 153 },
-            { type: 'input', value: '' , size: 153},
+            { type: 'datePicker', value: '' , size: 153},
             { type: 'input', value: '' , size: 50},
             // { type: 'checkbox', value: obj.val }
-            { type: 'checkbox', value: false, size: 50 }];
+            { type: 'checkbox', value: false, size: 50 },
+            { type: 'invisible', value:  '' , size: 0},
+            { type: 'invisible', value:  '' , size: 0},
+            { type: 'invisible', value:  '' , size: 0},
+            { type: 'invisible', value:  '' , size: 0},
+            { type: 'invisible', value:  '' , size: 0},
+            { type: 'invisible', value:  '' , size: 0},
+            { type: 'invisible', value:  '' , size: 0},
+            { type: 'invisible', value:  '' , size: 0},
+            { type: 'invisible', value:  '' , size: 0},
+            { type: 'invisible', value:  '' , size: 0},
+            { type: 'invisible', value:  '' , size: 0},
+            { type: 'invisible', value:  '' , size: 0},
+            { type: 'invisible', value:  '' , size: 0},
+            { type: 'invisible', value:  '' , size: 0},
+            { type: 'invisible', value:  '' , size: 0},
+            { type: 'invisible', value:  '' , size: 0},
+            { type: 'invisible', value:  '' , size: 0},
+            { type: 'invisible', value:  '' , size: 0},
+            { type: 'invisible', value:  '' , size: 0},
+            { type: 'invisible', value:  '' , size: 0},
+            { type: 'invisible', value:  '' , size: 0},
+            { type: 'invisible', value:  '' , size: 0},
+            { type: 'invisible', value:  '' , size: 0}];
           
           let newRow: Row = {cells: newArrayCells, position: 'noCollapse'};
           rowGroup.rows.push(newRow);
+         this.newActuacionesArr.push(newRow);
         }
       })
     }
@@ -513,37 +558,55 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   } 
 
   guardar(){
+    //1. Guardar nuevos
     console.log('this.rowGroups: ', this.rowGroups)
+    this.newActuacionesArr.forEach( newAct => {
+      this.actuacionToAdd.emit(newAct);
+    });
+    this.newActuacionesArr = []; //limpiamos
+
+    //2. Actualizar editados
+    let rowIdsToUpdateNOT_REPEATED = new Set(this.rowIdsToUpdate);
+    this.rowIdsToUpdate = [rowIdsToUpdateNOT_REPEATED];
+  console.log('rowIdsToUpdate: ', this.rowIdsToUpdate)
+    this.rowGroups.forEach(row => {
+      console.log('row.id: ', row.id)
+      console.log('this.rowIdsToUpdate.includes(row.id): ', this.rowIdsToUpdate.includes(row.id))
+      if(this.rowIdsToUpdate.includes(row.id.toString())){
+        this.dataToUpdateArr.push(row);
+        console.log('dataToUpdateArr: ', this.dataToUpdateArr)
+      }
+    })
+    console.log('dataToUpdateArr: ', this.dataToUpdateArr)
+    this.dataToUpdate.emit(this.dataToUpdateArr);
+    this.rowIdsToUpdate = []; //limpiamos
+    //this.dataToUpdateArr = []; //limpiamos
   }
+
   eliminar(){
     let deletedDesig = [];
     let deletedAct = [];
-    console.log('this.selectedArray: ', this.selectedArray)
-    console.log('this.selecteChild: ', this.selecteChild)
     this.rowGroups.forEach((rowG, i) => {
+      //1. Eliminamos designaciones
       this.selectedArray.forEach(idToDelete => {
-        console.log('rowG.id: ', rowG.id)
-        console.log('idToDelete: ', idToDelete)
       if (rowG.id == idToDelete){
-        console.log('delete!!!')
-        this.rowGroups.splice(i, 1);
+        /*this.rowGroups.splice(i, 1);
         deletedDesig.push(rowG.id)
-        this.designasToDelete.emit(deletedDesig);
+        this.designasToDelete.emit(deletedDesig);*/
+        //NO SE PUEDEN ELIMINAR DESIGNACIONES!!
       }
       });
-
-
+    //2. Eliminamos actuaciones
     if(this.selecteChild != []){
-      this.selecteChild.forEach((child, c) => {
-      let rowIdChild = Object.keys(child)[c];
+      this.selecteChild.forEach((child) => {
+      let rowIdChild = Object.keys(child)[0];
       let rowId = rowIdChild.slice(0, -1);
-       this.childNumber =  Number(Object.values(child)[c]);
-
+       this.childNumber =  Number(Object.values(child)[0]);
        this.selectedArray.forEach(idToDelete => {
         if (rowIdChild == idToDelete && rowG.id == rowId){
           rowG.rows.splice(this.childNumber, 1);
-          deletedAct.push(rowG.rows[this.childNumber].cells[9].value)
-          this.actuacionesToDelete.emit(deletedAct);
+          deletedAct.push(rowG.rows[this.childNumber].cells)
+         
         }
         });
       })
@@ -551,9 +614,9 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }
     });
     this.totalRegistros = this.rowGroups.length;
-    console.log('this.rowGroups delete: ', this.rowGroups)
-    console.log('deletedDesig: ', deletedDesig)
-    console.log('deletedAct: ', deletedAct)
+
+    console.log('EMIT deletedAct: ', deletedAct)
+    this.actuacionesToDelete.emit(deletedAct);
   }
 }
 function compare(a: number | string, b: number | string, isAsc: boolean) {
