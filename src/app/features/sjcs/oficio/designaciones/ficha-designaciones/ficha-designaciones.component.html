@@ -73,17 +73,9 @@
                                         </app-detalle-tarjeta-contrarios-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Procurador'" id="procurador">
-<<<<<<< HEAD
                                         <app-detalle-tarjeta-procurador-ficha-designacion-oficio [cabeceras]="cabeceras" [totalRegistros]="totalRegistros"
                                         [seleccionarTodo]="seleccionarTodo" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" (modDatos)="modDatos($event)" 
                                         (mostrar)="mostrar()" (restablecer)="restablecer()" (nuevo)="nuevo()">
-=======
-                                        <app-detalle-tarjeta-procurador-ficha-designacion-oficio [cabeceras]="cabeceras"
-                                            [totalRegistros]="totalRegistros" [seleccionarTodo]="seleccionarTodo"
-                                            [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups"
-                                            (guardarProcurador)="guardarProcurador()" (mostrar)="mostrar()"
-                                            (restablecer)="restablecer()" (nuevo)="nuevo()">
->>>>>>> 75420d41055e8f1aeab74c2e3a42fab8ef9cda8c
                                         </app-detalle-tarjeta-procurador-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Interesados'">
@@ -121,20 +113,12 @@
 <!-- Spinner -->
 
   <!--Guardar Procurador-->
-  <p-dialog [(visible)]="showModal2" responsive="true" [draggable]="false" modal="modal" resizable="false"
-    [minWidth]="500">
-    <p-header class="title">
-      <label>{{"justiciaGratuita.oficio.designaciones.guardarProcurador" | translate}}</label>
-    </p-header>
-    <p-footer>
-      <div class="text-right main-button ">
-        <button (click)="comprobarFechaProcurador()" pButton type="button"
-            icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-        <button (click)="cerrarModal()" pButton type="button" icon="fa fa-close"
-            iconPos="left" label="{{ 'general.boton.close' | translate}}"></button>
-      </div>
-    </p-footer>
-  </p-dialog>
+  <p-confirmDialog header="{{ 'justiciaGratuita.oficio.designaciones.guardarProcurador' | translate}}" [(visible)]="showModal2" icon="icon" width="425">
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="comprobarFechaProcurador()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="cerrarModal()"></button>
+  </p-footer>
+</p-confirmDialog>
 
     <!--Guardar Procurador-->
     <p-dialog [(visible)]="showModal3" responsive="true" [draggable]="false" modal="modal" resizable="false"
