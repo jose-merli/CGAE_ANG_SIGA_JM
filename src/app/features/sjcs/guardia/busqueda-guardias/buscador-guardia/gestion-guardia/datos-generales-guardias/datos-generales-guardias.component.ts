@@ -120,13 +120,13 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
   getCols() {
     if (!this.modoEdicion)
       this.cols = [
-        { field: "turno", header: "dato.jgr.guardia.guardias.turno" },
+        { field: "turno", header: "justiciaGratuita.sjcs.designas.DatosIden.turno" },
         { field: "guardia", header: "menu.justiciaGratuita.GuardiaMenu" },
       ];
     else
       this.cols = [
         { field: "vinculacion", header: "justiciaGratuita.guardia.gestion.vinculacion" },
-        { field: "turno", header: "dato.jgr.guardia.guardias.turno" },
+        { field: "turno", header: "justiciaGratuita.sjcs.designas.DatosIden.turno" },
         { field: "guardia", header: "menu.justiciaGratuita.GuardiaMenu" },
       ];
   }
