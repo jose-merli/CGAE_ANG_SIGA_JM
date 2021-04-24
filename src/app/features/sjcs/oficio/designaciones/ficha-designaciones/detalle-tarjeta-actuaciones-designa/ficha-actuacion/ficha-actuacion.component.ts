@@ -2,6 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from "@angular/common";
 import { ActuacionDesignaItem } from '../../../../../../../models/sjcs/ActuacionDesignaItem';
 import { SigaServices } from '../../../../../../../_services/siga.service';
+import { CommonsService } from '../../../../../../../_services/commons.service';
+import { procesos_oficio } from '../../../../../../../permisos/procesos_oficio';
+import { Router } from '@angular/router';
+import { TranslateService } from '../../../../../../../commons/translate/translation.service';
+import { ColegiadoItem } from '../../../../../../../models/ColegiadoItem';
 
 @Component({
   selector: 'app-ficha-actuacion',
@@ -21,20 +26,20 @@ export class FichaActuacionComponent implements OnInit {
     campos: [
       {
         "key": "Año/Número designación",
-        "value": "D2018/00078"
+        "value": ""
       },
       {
         "key": "Letrado",
-        "value": "2131 SDFASFA SDFF, JUAN"
-      },
-      {
-        "key": "Fecha Actuación",
-        "value": "22/09/2018"
+        "value": ""
       },
       {
         "key": "Número Actuación",
-        "value": "4"
+        "value": ""
       },
+      {
+        "key": "Fecha Actuación",
+        "value": ""
+      }
     ],
     enlaces: []
   };
@@ -51,15 +56,15 @@ export class FichaActuacionComponent implements OnInit {
       campos: [
         {
           "key": "Juzgado",
-          "value": "Juzgado de lo social N1 BADAJOZ"
+          "value": ""
         },
         {
           "key": "Módulo",
-          "value": "SSDFXXXXXXXXX XXXX XXXXXXX"
+          "value": ""
         },
         {
           "key": "Acreditación",
-          "value": "VJHBFVJEFR VENVJKRENV VINNIRVE"
+          "value": ""
         },
       ]
     },
@@ -74,11 +79,11 @@ export class FichaActuacionComponent implements OnInit {
       campos: [
         {
           "key": "Fecha Justificación",
-          "value": "12/03/2008"
+          "value": ""
         },
         {
           "key": "Estado",
-          "value": "XXXXXXX"
+          "value": ""
         },
       ]
     },
@@ -93,7 +98,7 @@ export class FichaActuacionComponent implements OnInit {
       campos: [
         {
           "key": "Partida Presupuestaria",
-          "value": "frfr frfrgtg ththth"
+          "value": ""
         },
       ]
     },
@@ -108,7 +113,7 @@ export class FichaActuacionComponent implements OnInit {
       campos: [
         {
           "key": "Número total de Relaciones",
-          "value": "5"
+          "value": ""
         },
       ]
     },
@@ -133,7 +138,7 @@ export class FichaActuacionComponent implements OnInit {
       campos: [
         {
           "key": "Número total de Documentos",
-          "value": "7"
+          "value": ""
         },
       ]
     },
@@ -142,20 +147,59 @@ export class FichaActuacionComponent implements OnInit {
   actuacionDesigna: any;
   isNewActDesig: boolean = false;
   progressSpinner: boolean = false;
+  isAnulada: boolean = false;
+  permisoEscritura;
+  usuarioLogado;
 
-  constructor(private location: Location, private sigaServices: SigaServices) { }
+  constructor(private location: Location, private sigaServices: SigaServices, private commonsService: CommonsService, private router: Router, private translateService: TranslateService) { }
 
   ngOnInit() {
 
     if (sessionStorage.getItem("actuacionDesigna")) {
       let actuacion = JSON.parse(sessionStorage.getItem("actuacionDesigna"));
+      sessionStorage.removeItem("actuacionDesigna");
       this.actuacionDesigna = actuacion;
       console.log("🚀 ~ file: ficha-actuacion.component.ts ~ line 149 ~ FichaActuacionComponent ~ ngOnInit ~ this.actuacionDesigna", this.actuacionDesigna)
 
+      // Se rellenan la tarjeta resumen
+      this.tarjetaFija.campos[0].value = this.actuacionDesigna.designaItem.ano;
+      this.tarjetaFija.campos[1].value = `${this.actuacionDesigna.designaItem.numColegiado} ${this.actuacionDesigna.designaItem.nombreColegiado}`;
+      this.tarjetaFija.campos[2].value = this.actuacionDesigna.actuacion.numeroAsunto;
+      this.tarjetaFija.campos[3].value = this.actuacionDesigna.actuacion.fechaActuacion;
+
+      // Se rellenan los campos de la tarjeta de Datos Generales plegada
+      this.listaTarjetas[0].campos[0].value = this.actuacionDesigna.actuacion.nombreJuzgado;
+      this.listaTarjetas[0].campos[1].value = this.actuacionDesigna.actuacion.modulo;
+      this.listaTarjetas[0].campos[2].value = this.actuacionDesigna.actuacion.acreditacion;
+
+      // Se rellenan los campos de la tarjeta de Justificación plegada
+      this.listaTarjetas[1].campos[0].value = this.actuacionDesigna.actuacion.fechaJustificacion;
+      this.listaTarjetas[1].campos[1].value = this.actuacionDesigna.actuacion.validada ? 'Validada' : 'Pendiente de validar';
+
       if (actuacion.isNew) {
-        this.getNewId(actuacion.designaItem);
+        //this.getNewId(actuacion.designaItem);
         this.isNewActDesig = true;
       }
+      this.progressSpinner = true;
+      this.commonsService.checkAcceso(procesos_oficio.designa)
+        .then(respuesta => {
+          this.permisoEscritura = respuesta;
+
+          if (this.permisoEscritura == undefined) {
+            sessionStorage.setItem("codError", "403");
+            sessionStorage.setItem(
+              "descError",
+              this.translateService.instant("generico.error.permiso.denegado")
+            );
+            this.router.navigate(["/errorAcceso"]);
+          }
+          this.progressSpinner = false;
+          if (!this.permisoEscritura) {
+            this.getDataLoggedUser();
+          }
+
+        })
+        .catch(error => console.error(error));
 
     }
 
@@ -233,6 +277,38 @@ export class FichaActuacionComponent implements OnInit {
         }
       }
     );
+
+  }
+
+  changeDataTarjeta(event) {
+
+    let tarjeta = this.listaTarjetas.find(el => el.id == event.tarjeta);
+
+    if (event.tarjeta == 'sjcsDesigActuaOfiJustifi') {
+      tarjeta.campos[0].value = event.fechaJusti;
+      tarjeta.campos[1].value = event.estado;
+    }
+
+  }
+
+  getDataLoggedUser() {
+
+    this.progressSpinner = true;
+
+    this.sigaServices.get("usuario_logeado").subscribe(n => {
+
+      const usuario = n.usuarioLogeadoItem;
+      const colegiadoItem = new ColegiadoItem();
+      colegiadoItem.nif = usuario[0].dni;
+
+      this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(
+        usr => {
+          this.usuarioLogado = JSON.parse(usr.body).colegiadoItem[0];
+          console.log("🚀 ~ file: ficha-actuacion.component.ts ~ line 307 ~ FichaActuacionComponent ~ this.sigaServices.get ~  this.usuarioLogado", this.usuarioLogado)
+          this.progressSpinner = false;
+        });
+
+    });
 
   }
 

@@ -29,9 +29,12 @@ import { Paginador2Module } from './designaciones/ficha-designaciones/paginador2
 import { MatSortModule } from '@angular/material';
 import { DetalleTarjetaProcuradorFichaDesignacionOficioComponent } from './designaciones/ficha-designaciones/detalle-tarjeta-procurador-designa/detalle-tarjeta-procurador-ficha-designacion-oficio.component';
 import { DetalleTarjetaProcuradorFichaDesignaionOficioService } from './designaciones/ficha-designaciones/detalle-tarjeta-procurador-designa/detalle-tarjeta-procurador-ficha-designaion-oficio.service';
+import { FichaCambioLetradoComponent } from './designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/ficha-cambio-letrado/ficha-cambio-letrado.component';
+import { LetradoSalienteComponent } from './designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/ficha-cambio-letrado/letrado-saliente/letrado-saliente.component';
+import { LetradoEntranteComponent } from './designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/ficha-cambio-letrado/letrado-entrante/letrado-entrante.component';
 
 @NgModule({
-        declarations: [],
+        declarations: [FichaCambioLetradoComponent, LetradoSalienteComponent, LetradoEntranteComponent],
         imports: [
                 TooltipModule,
                 TableModule,

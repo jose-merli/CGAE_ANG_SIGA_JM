@@ -39,6 +39,7 @@ export class JustificacionExpressItem {
 	idTurno: String;
   idPersona: String;
   idProcedimiento: String;
+  procedimiento: String;
   expedientes: [{}];
   actuaciones : ActuacionesJustificacionExpressItem[];
 

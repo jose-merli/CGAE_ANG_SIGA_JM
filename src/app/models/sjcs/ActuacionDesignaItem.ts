@@ -24,4 +24,8 @@ export class ActuacionDesignaItem {
     observaciones: string;
     talonario: string;
     talon: string;
+    idPersonaColegiado: string;
+	nombreJuzgado: string;
+	observacionesJusti: string;
+    idMotivoCambio: string;
 }

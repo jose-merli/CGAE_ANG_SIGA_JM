@@ -55,7 +55,8 @@
                                         </app-detalle-tarjeta-detalle-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Datos Adicionales'">
-                                        <app-detalle-tarjeta-datos-adicionales-ficha-designacion-oficio [campos]="campos">
+                                        <app-detalle-tarjeta-datos-adicionales-ficha-designacion-oficio
+                                            [campos]="campos">
                                         </app-detalle-tarjeta-datos-adicionales-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Datos Facturación'">
@@ -67,22 +68,29 @@
                                         </app-detalle-tarjeta-documentacion-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Contrarios'">
-                                        <app-detalle-tarjeta-contrarios-ficha-designacion-oficio [contrarios]="contrarios" (searchContrarios)="searchContrarios($event)">
+                                        <app-detalle-tarjeta-contrarios-ficha-designacion-oficio
+                                            [contrarios]="contrarios" (searchContrarios)="searchContrarios($event)">
                                         </app-detalle-tarjeta-contrarios-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Procurador'" id="procurador">
                                         <app-detalle-tarjeta-procurador-ficha-designacion-oficio [cabeceras]="cabeceras" [totalRegistros]="totalRegistros"
-                                        [seleccionarTodo]="seleccionarTodo" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" (guardarProcurador)="guardarProcurador()" 
+                                        [seleccionarTodo]="seleccionarTodo" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" (modDatos)="modDatos($event)" 
                                         (mostrar)="mostrar()" (restablecer)="restablecer()" (nuevo)="nuevo()">
                                         </app-detalle-tarjeta-procurador-ficha-designacion-oficio>
                                     </div>
+                                    <div *ngIf="tarj.nombre == 'Cambio Letrado'">
+                                        <app-detalle-tarjeta-letrados-designa>
+                                        </app-detalle-tarjeta-letrados-designa>
+                                    </div>
                                     <div *ngIf="tarj.nombre == 'Interesados'">
-                                        <app-detalle-tarjeta-interesados-ficha-designacion-oficio [interesados]="interesados" (searchInteresados)="searchInteresados($event)">
+                                        <app-detalle-tarjeta-interesados-ficha-designacion-oficio
+                                            [interesados]="interesados" (searchInteresados)="searchInteresados($event)">
                                         </app-detalle-tarjeta-interesados-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Actuaciones'">
                                         <app-detalle-tarjeta-actuaciones-ficha-designacion-oficio [campos]="campos"
                                             [actuacionesDesignaItems]="actuacionesDesignaItems"
+                                            [permisoEscritura]="permisoEscritura"
                                             (buscarEvent)="getActuacionesDesigna($event)">
                                         </app-detalle-tarjeta-actuaciones-ficha-designacion-oficio>
                                     </div>
@@ -107,3 +115,27 @@
     <div class="loader"></div>
 </div>
 <!-- Spinner -->
+
+  <!--Guardar Procurador-->
+  <p-confirmDialog header="{{ 'justiciaGratuita.oficio.designaciones.guardarProcurador' | translate}}" [(visible)]="showModal2" icon="icon" width="425">
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="comprobarFechaProcurador()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="cerrarModal()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+    <!--Guardar Procurador-->
+    <p-dialog [(visible)]="showModal3" responsive="true" [draggable]="false" modal="modal" resizable="false"
+    [minWidth]="500">
+    <p-header class="title">
+      <label>{{"justiciaGratuita.oficio.designaciones.eliminarDesignacion" | translate}}</label>
+    </p-header>
+    <p-footer>
+      <div class="text-right main-button ">
+        <button (click)="checkNuevoProcurador()" pButton type="button"
+            icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="cerrarModal()" pButton type="button" icon="fa fa-close"
+            iconPos="left" label="{{ 'general.boton.close' | translate}}"></button>
+      </div>
+    </p-footer>
+  </p-dialog>
