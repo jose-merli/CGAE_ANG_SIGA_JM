@@ -54,7 +54,7 @@
                     </app-tarjeta-jus-ficha-act>
                   </div>
                   <div *ngIf="tarj.nombre == 'Datos Facturación'">
-                    <app-tarjeta-datos-fact-ficha-act>
+                    <app-tarjeta-datos-fact-ficha-act [isAnulada]="isAnulada" [actuacionDesigna]="actuacionDesigna">
                     </app-tarjeta-datos-fact-ficha-act>
                   </div>
                   <div *ngIf="tarj.nombre == 'Relaciones'">
