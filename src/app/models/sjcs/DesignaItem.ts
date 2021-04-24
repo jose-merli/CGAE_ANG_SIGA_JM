@@ -77,5 +77,8 @@ export class DesignaItem {
 	apellido1Colegiado: String;
 	apellido2Colegiado: String;
 	idTurno: number;
+	idPartidaPresupuestaria: number;
+	nombrePartida: String;
+	validada: String;
     constructor() { }
   }

@@ -269,7 +269,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         var year = today.getFullYear().valueOf();
         newDesigna.ano = year;
         this.checkDatosGenerales();
-        if(this.resaltadoDatos == true){
+        if(this.resaltadoDatos == false){
           this.sigaServices.post("create_NewDesigna", newDesigna).subscribe(
             n => {
               sessionStorage.removeItem("nuevaDesigna");
@@ -304,7 +304,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         var year = today.getFullYear().valueOf();
         newDesigna.ano = year;
         this.checkDatosGenerales();
-        if(this.resaltadoDatos == true){
+        if(this.resaltadoDatos == false){
         this.sigaServices.post("", newDesigna).subscribe(
           n => {
             //MENSAJE DE TODO CORRECTO
@@ -402,7 +402,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     if(!this.nuevaDesigna){
         this.disableCheckArt = false;
     }else{
-      this.disableCheckArt = true;
+      this.disableCheckArt = false;
     }
   }
 

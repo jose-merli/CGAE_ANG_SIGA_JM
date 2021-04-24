@@ -56,14 +56,7 @@ export class DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent imple
 
   showMsg(severity, summary, detail) {
     this.msgs = [];
-    this.msgs.push({
-      severity,
-      summary,
-      detail
-    });
-
     if(detail == "Restablecer"){
-      if(!this.nuevaDesigna){
         // this.getDatosAdicionales(this.campos);
         this.bloques[0].value = this.datosInicial.delitos;
         this.bloques[0].valueDatePicker = this.datosInicial.fechaOficioJuzgado;
@@ -71,8 +64,43 @@ export class DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent imple
         this.bloques[1].valueDatePicker = this.datosInicial.fechaRecepcionColegio;
         this.bloques[2].value = this.datosInicial.defensaJuridica;
         this.bloques[2].valueDatePicker = this.datosInicial.fechaJuicio;
-      }
-    }
+    }else if(detail == "Guardar"){
+      // this.getDatosAdicionales(this.campos);
+      let datosAdicionalesDesigna = new DesignaItem();
+      datosAdicionalesDesigna.delitos = this.bloques[0].textArea;
+      // datosAdicionalesDesigna.fechaOficioJuzgado =this.bloques[0].datePicker;
+      datosAdicionalesDesigna.observaciones = this.bloques[2].textArea;
+      // datosAdicionalesDesigna.fechaRecepcionColegio =this.bloques[0].datePicker
+      datosAdicionalesDesigna.defensaJuridica = this.bloques[2].textArea;
+      // datosAdicionalesDesigna.fechaJuicio =this.bloques[0].datePicker
+      datosAdicionalesDesigna.idTurno = this.campos.idTurno;
+      let anio = this.campos.ano.split("/");
+      datosAdicionalesDesigna.ano = Number(anio[0].substring(1,5));
+      datosAdicionalesDesigna.numero = this.campos.numero;
+      this.sigaServices.post("designaciones_updateDatosAdicionales",datosAdicionalesDesigna).subscribe(
+        n => {
+          console.log(n.body);
+          if(n!=null){
+            this.bloques[0].value = n.body.delitos;
+            this.bloques[0].valueDatePicker = n.body.fechaOficioJuzgado;
+            this.bloques[1].value = n.body.observaciones;
+            this.bloques[1].valueDatePicker = n.body.fechaRecepcionColegio;
+            this.bloques[2].value = n.body.defensaJuridica;
+            this.bloques[2].valueDatePicker = n.body.fechaJuicio;
+            this.msgs.push({
+              severity,
+              summary,
+              detail
+            });
+          }
+        },
+        err => {
+          console.log(err);
+        }, () => {
+        }
+      );
+     
+  }
   }
 
   clear() {

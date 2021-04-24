@@ -8,6 +8,7 @@ import { procesos_oficio } from '../../../../../permisos/procesos_oficio';
 import { TranslateService } from '../../../../../commons/translate';
 import { Message } from 'primeng/components/common/api';
 import { DesignaItem } from '../../../../../models/sjcs/DesignaItem';
+import { DataTable } from 'primeng/primeng';
 
 
 @Component({
@@ -36,7 +37,7 @@ export class GestionDesignacionesComponent implements OnInit {
 
   @Output() busquedaDesignaciones = new EventEmitter<boolean>();
 
-  @ViewChild("table") tabla: Table;
+  @ViewChild("table") tabla: DataTable;
 
   constructor(private persistenceService: PersistenceService, private router: Router,  public sigaServices: SigaServices, private translateService: TranslateService) { }
 
@@ -72,7 +73,7 @@ export class GestionDesignacionesComponent implements OnInit {
       { field: "numColegiado", header: "facturacionSJCS.facturacionesYPagos.numColegiado" },
       { field: "nombreColegiado", header: "administracion.parametrosGenerales.literal.nombre.apellidos" },
       { field: "nombreInteresado", header: "justiciaGratuita.justiciables.literal.interesados" },
-      { field: "validada", header: "Validada" },
+      { field: "validada", header: "justiciaGratuita.oficio.designas.actuaciones.validada" },
     ];
     this.cols.forEach(element => {
       this.buscadores.push("");
@@ -144,9 +145,7 @@ export class GestionDesignacionesComponent implements OnInit {
                 dato.idModulo = datosModulo[0].idModulo;
               }
               
-              sessionStorage.setItem("nuevaDesigna",  "false");
-              sessionStorage.setItem("designaItemLink",  JSON.stringify(dato));
-              this.router.navigate(["/fichaDesignaciones"]);
+             
             },
             err => {
               this.progressSpinner = false;
@@ -163,6 +162,14 @@ export class GestionDesignacionesComponent implements OnInit {
         },() => {
           this.progressSpinner = false;
         });;
+        this.progressSpinner = true;
+        setTimeout(()=>{
+          sessionStorage.setItem("nuevaDesigna",  "false");
+        sessionStorage.setItem("designaItemLink",  JSON.stringify(dato));
+        this.router.navigate(["/fichaDesignaciones"]);
+        this.progressSpinner = true;
+        }, 10);
+        
   }
 
   getComboTipoDesignas() {

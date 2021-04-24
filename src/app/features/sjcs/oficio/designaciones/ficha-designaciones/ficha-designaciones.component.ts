@@ -201,10 +201,7 @@ export class FichaDesignacionesComponent implements OnInit {
       detalle: true,
       opened: false,
       campos: [
-        {
-          "key": "Partida Presupuestaria",
-          "value": "frfr frfrgtg ththth"
-        },
+        
       ]
     },
   ];
@@ -278,7 +275,7 @@ export class FichaDesignacionesComponent implements OnInit {
         },
         {
           "key": "Validado",
-          "value": ""
+          "value": designaItem.validada
         }
       ];
 
@@ -293,7 +290,7 @@ export class FichaDesignacionesComponent implements OnInit {
         },
         {
           "key": "Designación Art. 27-28",
-          "value": "NO"
+          "value": designaItem.art27
         }, {
           "key": "Tipo",
           "value": designaItem.descripcionTipoDesigna
@@ -363,6 +360,7 @@ export class FichaDesignacionesComponent implements OnInit {
       //Actualizar para que los campos se rellenen en base a la tabla de la tarjeta interesados
       this.searchInteresados();
       this.searchContrarios(false);
+      this.getIdPartidaPresupuestaria(this.campos);
       this.progressSpinner = false;
     } else {
 
@@ -444,6 +442,13 @@ export class FichaDesignacionesComponent implements OnInit {
           "value": "No existen observaciones definidas para la designación"
         }
       ];
+
+       let datosFacturacion = [
+        {
+          "key": "Partida Presupuestaria",
+          "value": ""
+        }
+      ];
       let interesadosVacio = [{
         "key": null,
         "value": this.translateService.instant('justiciaGratuita.oficio.designas.interesados.vacio')
@@ -459,7 +464,7 @@ export class FichaDesignacionesComponent implements OnInit {
       this.listaTarjetas[2].campos = datosAdicionales;
       this.listaTarjetas[3].campos = interesadosVacio;
       this.listaTarjetas[4].campos = contrariosVacio;
-
+      this.listaTarjetas[11].campos = datosFacturacion;
       //DESHABILITAMOS TODAS LAS TARJETAS HASTA Q SE CREE LA DESIGNACION
       // this.listaTarjetas[1].detalle = false;
       // this.listaTarjetas[2].detalle = false;
@@ -981,5 +986,34 @@ nombreTurno: "ZELIMINAR-CIJAECI05 - MATRIMONIAL CONTENCIOSO JAÉN" */
       detail: msg
     });
   }
+
+  getIdPartidaPresupuestaria(designaItem) {
+    let facturacionDesigna = new DesignaItem();
+    facturacionDesigna.idTurno = designaItem.idTurno;
+    let aux = String(this.campos.ano);
+    let anio = aux.split("/");
+    facturacionDesigna.ano = Number(anio[0].substring(1,5));
+    facturacionDesigna.numero = designaItem.numero;
+    this.sigaServices.post("designaciones_getDatosFacturacion", facturacionDesigna).subscribe(
+      n => {
+        
+       let a =  JSON.parse(n.body);
+       console.log(a.combooItems);
+        let camposFacturacion = [
+          {
+            "key": "Partida Presupuestaria",
+            "value": n.combooItems[0].label
+          }
+        ];
+        this.listaTarjetas[11].campos = camposFacturacion;
+      },
+      err => {
+        console.log(err);
+      }, () => {
+        // this.arregloTildesCombo(this.selectores[1].opciones);
+      }
+    );
+  }
+
 
 }
