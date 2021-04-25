@@ -28,4 +28,5 @@ export class ActuacionDesignaItem {
 	nombreJuzgado: string;
 	observacionesJusti: string;
     idMotivoCambio: string;
+    idFacturacion: string;
 }
