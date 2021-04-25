@@ -10,7 +10,7 @@
 
     <div class="form-group col-lg-3 col-md-3 w-100" *ngFor="let selector of selectores">
       <!-- <app-selector [i]="0" [selector]="selector" [textoVisible]="estado"></app-selector> -->
-      <app-selector [i]="0" [selector]="selector" (value)='selector.value=$event' (busqueda)="busquedaCombos($event)" (busquedaProcedimiento)="busquedaCombosProcedimiento($event)" (busquedaCombosModulo)="busquedaCombosModulo($event)"></app-selector>
+      <app-selector [i]="0" [selector]="selector"  (value)='selector.value=$event' (refreshDataCombos)="refreshDataCombos($event)" (busqueda)="busquedaCombos($event)" (busquedaProcedimiento)="busquedaCombosProcedimiento($event)" (busquedaCombosModulo)="busquedaCombosModulo($event)"></app-selector>
     </div>
 
     <div class="form-group col-lg-3 col-md-3 w-100" *ngFor="let datePickerTitle of datePickers; let i = index;">
@@ -20,6 +20,13 @@
 
   </div>
 </div>
+
+<p-confirmDialog  header="{{ 'general.cabecera.confirmacion' | translate}}" icon="icon"   key="confirmGuardar" width="425" #confirmGuardar>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="confirmGuardar.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="confirmGuardar.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
 
 <div class="card-footer">
   <div class="text-right main-button">

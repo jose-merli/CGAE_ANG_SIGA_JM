@@ -148,7 +148,7 @@ export class DesignacionesComponent implements OnInit {
               });
               this.actuacionesDesignaItems = resp;
               total = this.actuacionesDesignaItems.length;
-              if(total == validadas){
+              if(total == validadas && total > 0){
                 element.validada = "Si";
               }else{
                 element.validada = "No";

@@ -34,9 +34,9 @@ export class SelectorComponent implements OnInit {
       if(this.textoVisible == "Activo"){
         this.selector.opciones =[ 
           {label:this.selector.opciones[0].label, value:'V'},
-          {label:'Finalizada', value:'F'},
+          {label:'Finalizado', value:'F'},
           {label:'Anulada', value:'A'}];
-      }else if(this.textoVisible == "Finalizada"){
+      }else if(this.textoVisible == "Finalizado"){
         this.selector.opciones =[ 
           {label:'Activo', value:'V'},
           {label:this.selector.opciones[0].label, value:'F'},
@@ -44,7 +44,7 @@ export class SelectorComponent implements OnInit {
       }else if(this.textoVisible == "Anulada"){
         this.selector.opciones =[ 
           {label:'Activo', value:'V'},
-          {label:'Finalizada', value:'F'},
+          {label:'Finalizado', value:'F'},
           {label:this.selector.opciones[0].label, value:'A'}];
       }
       
@@ -58,6 +58,15 @@ export class SelectorComponent implements OnInit {
     }else if(this.selector.nombre == "Juzgado" && this.nuevaDesigna){
       this.opcionSeleccionado = [-1];
       this.getComboJuzgados(this.selector);
+    }
+    if(this.selector.nombre == "Delitos" && !this.nuevaDesigna){
+      // this.textoJuzgado = this.selector.opciones[0].label;
+      this.opcionSeleccionado = [this.selector.opciones[0].value];
+      this.getComboDelitos(this.selector);
+      this.disable = false;
+    }else if(this.selector.nombre == "Delitos" && this.nuevaDesigna){
+      this.opcionSeleccionado = [-1];
+      this.getComboDelitos(this.selector);
     }
     if(this.selector.nombre == "Procedimiento" && !this.nuevaDesigna){
       this.opcionSeleccionado = [this.selector.opciones[0].value];
@@ -74,9 +83,25 @@ export class SelectorComponent implements OnInit {
       this.opcionSeleccionado = [-1];
       
     }
+    if(this.selector.nombre == "Partida Presepuestaria" && !this.nuevaDesigna){
+      // this.textoJuzgado = this.selector.opciones[0].label;setTimeout(() => {
+        setTimeout(() => {
+      this.opcionSeleccionado = [this.selector.opciones[0].value];
+      this.getComboPartidaPresupuestaria(this.selector);
+      this.disable = false;
+    }, 10);
+    }else if(this.selector.nombre == "Partida Presepuestaria" && this.nuevaDesigna){
+      this.opcionSeleccionado = [-1];
+      this.getComboPartidaPresupuestaria(this.selector);
+    }
     if(!this.nuevaDesigna){
       this.cargaCombosDesigna();
     }
+    this.verSeleccion = this.opcionSeleccionado;
+    if(this.selector.nombre == "Estado" || this.selector.nombre == "Delitos"){
+      this.verSeleccion=[this.selector.opciones[0].label];
+    }
+    this.value.emit(this.verSeleccion);
   }
   capturar() {
     // Pasamos el valor seleccionado a la variable verSeleccion
@@ -125,6 +150,36 @@ export class SelectorComponent implements OnInit {
     );
   }
 
+  getComboDelitos(selectorDelitos) {
+
+    this.sigaServices.get("combo_comboDelitos").subscribe(
+      n => {
+        selectorDelitos.opciones = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }, () => {
+        this.arregloTildesCombo(selectorDelitos.opciones);
+      }
+    );
+  }
+
+  getComboPartidaPresupuestaria(selectorFacturacion) {
+    this.progressSpinner = true;
+    this.sigaServices.get("combo_comboFacturacionDesignaciones").subscribe(
+      n => {
+        selectorFacturacion.opciones = n.combooItems;
+        this.progressSpinner = false;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      }, () => {
+        this.arregloTildesCombo(selectorFacturacion.opciones);
+        this.progressSpinner = false;
+      }
+    );
+  }
   arregloTildesCombo(combo) {
     if (combo != undefined)
       combo.map(e => {
@@ -298,4 +353,8 @@ export class SelectorComponent implements OnInit {
         }
       );
     }
+
+    refreshDataCombos(event){
+      this.cargaCombosDesigna();
+   }
 }
