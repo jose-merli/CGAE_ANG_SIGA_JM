@@ -16,7 +16,7 @@ export class LetradoEntranteComponent implements OnInit {
   body;
   datos;
   showTarjeta=true;
-  progressSpiner = false;
+  progressSpinner = false;
 
   @Input() saliente;
 
@@ -70,5 +70,9 @@ export class LetradoEntranteComponent implements OnInit {
   clear() {
     this.msgs=[];
   }
+
+  fillFechaSolRenuncia(){}
+
+  fillFechaDesignacion(){}
 
 }
