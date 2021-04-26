@@ -18,3 +18,18 @@
   <div class="loader"></div>
 </div>
 <!-- Spinner -->
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="deletePlantillaDoc" icon="icon" width="425"
+  #deletePlantillaDoc>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="deletePlantillaDoc.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="deletePlantillaDoc.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+<p-confirmDialog header="'Error'" key="errorPlantillaDoc" icon="icon" width="425"
+  #errorPlantillaDoc>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="OK"></button>
+  </p-footer>
+</p-confirmDialog>

@@ -85,7 +85,6 @@ export class LetradoEntranteComponent implements OnInit {
   fillFechaDesignacion(evento){}
 
   search() {
-
 			sessionStorage.setItem("origin", "AbogadoContrario");
 			this.router.navigate(['/busquedaGeneral']);
   }
