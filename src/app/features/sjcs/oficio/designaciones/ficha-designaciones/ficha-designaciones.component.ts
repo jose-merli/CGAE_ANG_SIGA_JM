@@ -298,15 +298,15 @@ export class FichaDesignacionesComponent implements OnInit {
         },
         {
           "key": "Juzgado",
-          "value": designaItem.idJuzgado
+          "value": designaItem.nombreJuzgado
         },
         {
           "key": "Procedimiento",
-          "value": designaItem.idPretension
+          "value": designaItem.nombreProcedimiento
         },
         {
           "key": "Módulo",
-          "value": designaItem.idProcedimiento
+          "value": designaItem.modulo
         }
       ];
       if ((designaItem.observaciones == null || designaItem.observaciones == undefined || designaItem.observaciones == "")
@@ -848,6 +848,10 @@ export class FichaDesignacionesComponent implements OnInit {
     this.showModal2 = false;
     this.showModal3 = false;
   }
+  
+  compruebaFecha(){
+    
+  } 
 
   compruebaProcurador(event) {
     this.progressSpinner = true;
@@ -1398,4 +1402,16 @@ nombreTurno: "ZELIMINAR-CIJAECI05 - MATRIMONIAL CONTENCIOSO JAÉN" */
       this.progressSpinner = false;
     }
   }
+
+changeDataTarjeta(event) {​​​​​
+// lettarjeta = this.listaTarjetas.find(el=>el.id == event.tarjeta);
+// if (event.tarjeta == 'sjcsDesigActuaOfiJustifi') {​​​​​
+// tarjeta.campos[0].value = event.fechaJusti;
+// tarjeta.campos[1].value = event.estado;
+//     }​​​​​
+// if (event.tarjeta == 'sjcsDesigActuaOfiDatFac') {​​​​​
+// tarjeta.campos[0].value = event.partida;
+//     }​​​​​
+  }​​​​​
+
 }

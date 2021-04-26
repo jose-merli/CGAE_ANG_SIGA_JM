@@ -25,11 +25,14 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
   searchParametrosFormatoNProcedimiento: ParametroDto = new ParametroDto();
   datosBuscar: any[];
   estado: any;
-  disableFinalizar: boolean;
-  disableAnular: boolean;
-  disableReactivar: boolean;
-  disableRestablecer:boolean;
-  disableGuardar:boolean;
+  disableFinalizar: boolean = false;
+  disableAnular: boolean = false;
+  disableReactivar: boolean = false;
+  disableRestablecer:boolean = false;
+  disableGuardar:boolean = false;
+  refresh: any;
+  refreshProcedimiento: any;
+  refreshModulo: any;
   @Input() campos;
   @Output() refreshData = new EventEmitter<DesignaItem>();
   @Output() refreshDataCombos = new EventEmitter<boolean>();
@@ -60,7 +63,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         { label: 'Finalizado', value: 'F' },
         { label: 'Anulada', value: 'A' }
       ],
-      value:"",
+      value:[],
       disable:true
     },
     {
@@ -68,7 +71,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       opciones: [
 
       ],
-      value:"",
+      value:[],
       disable:false
     },
     {
@@ -76,14 +79,14 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       opciones: [
 
       ],
-      value:"",
+      value:[],
       disable:false
     },
     {
       nombre: 'Módulo',
       opciones: [
       ],
-      value:"",
+      value:[],
       disable:false
     },
     {
@@ -91,7 +94,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       opciones: [
 
       ],
-      value:"",
+      value:[],
       disable:false
     }
   ];
@@ -186,7 +189,6 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         }
       }
       this.disableRestablecer = false;
-      this.disableGuardar=false;
     } else {
       this.datePickers[0].value = this.formatDate(new Date());
       this.selectores[0].opciones = [
@@ -197,7 +199,6 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       this.disableFinalizar = true;
       this.disableReactivar = true;
       this.disableRestablecer = false;
-      this.disableGuardar=false;
     }
     
 
@@ -281,11 +282,18 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         designaUpdate.fechaEstado = null;
       }else{
         designaUpdate.fechaEstado = new Date(this.datePickers[0].value);
+        // designaUpdate.fechaEstado = new Date(this.datePickers[0].value);
       }
       if(this.datePickers[1].value == null){
         designaUpdate.fechaFin = null;
       }else{
-        designaUpdate.fechaFin = new Date(this.datePickers[1].value);
+        let fechaCambiada = this.datePickers[1].value.split("/");
+        let dia = fechaCambiada[0];
+        let mes = fechaCambiada[1];
+        let anioFecha = fechaCambiada[2];
+        let fechaCambiadaActual = mes + "/" + dia + "/" + anioFecha;
+        designaUpdate.fechaFin = new Date(fechaCambiadaActual);
+        // designaUpdate.fechaFin = new Date(this.datePickers[1].value);
       }
       
       if(this.selectores[0].value[0] =="Finalizada"){
@@ -359,25 +367,52 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     }
      //RESTABLECER
      if (detail == "Restablecer" ) {
-      this.inputs[0].value = this.datosInicial.nig;
-      this.inputs[1].value = this.datosInicial.numProcedimiento;
-      this.selectores[0].opciones = [{ label: this.datosInicial.estado, value: this.datosInicial.sufijo }];
-      this.selectores[1].opciones = [{ label: this.datosInicial.nombreJuzgado, value: this.datosInicial.idJuzgado }];
-      this.selectores[2].opciones = [{ label: this.datosInicial.nombreProcedimiento, value: this.datosInicial.idProcedimiento}];
-      this.selectores[3].opciones = [{ label: this.datosInicial.modulo, value: this.datosInicial.idModulo }];
-      this.datePickers[0].value = this.datosInicial.fechaEstado;
-      if(this.datosInicial.fechaFin==0){
+       if(!this.nuevaDesigna){
+        this.inputs[0].value = this.datosInicial.nig;
+        this.inputs[1].value = this.datosInicial.numProcedimiento;
+        // this.selectores[0].opciones = [{ label: this.datosInicial.estado, value: this.datosInicial.sufijo }];
+        // this.selectores[1].opciones = [{ label: this.datosInicial.nombreJuzgado, value: this.datosInicial.idJuzgado }];
+        // this.selectores[2].opciones = [{ label: this.datosInicial.nombreProcedimiento, value: this.datosInicial.idProcedimiento}];
+        // this.selectores[3].opciones = [{ label: this.datosInicial.modulo, value: this.datosInicial.idModulo }];
+        this.refresh = [this.datosInicial.idJuzgado];
+        this.refreshProcedimiento = [this.datosInicial.idPretension];
+        this.refreshModulo = [this.datosInicial.idProcedimiento];
+        this.datePickers[0].value = this.datosInicial.fechaEstado;
+        if(this.datosInicial.fechaFin==0){
+          this.datePickers[1].value = null;
+        }else{
+          this.datePickers[1].value = this.datosInicial.fechaFin;
+        }
+        this.getComboJuzgados();
+       }else{
+        this.inputs[0].value = "";
+        this.inputs[1].value = "";
+        // this.selectores[0].opciones = [{ label: this.datosInicial.estado, value: this.datosInicial.sufijo }];
+        // this.selectores[1].opciones = [{ label: this.datosInicial.nombreJuzgado, value: this.datosInicial.idJuzgado }];
+        // this.selectores[2].opciones = [{ label: this.datosInicial.nombreProcedimiento, value: this.datosInicial.idProcedimiento}];
+        // this.selectores[3].opciones = [{ label: this.datosInicial.modulo, value: this.datosInicial.idModulo }];
+        this.selectores[1].value = [-1];
+        this.selectores[2].value =  [-1];
+        this.selectores[3].value =  [-1];
+        this.datePickers[0].value = "";
+        this.datePickers[0].value = "";
         this.datePickers[1].value = null;
-      }else{
-        this.datePickers[1].value = this.datosInicial.fechaFin;
-      }
-      this.getComboJuzgados();
-      this.refreshDataCombos.emit(false);
+        this.getComboJuzgados();
+       }
+     
     } 
   }
 
   clear() {
     this.msgs = [];
+  }
+
+  fillFechaHastaCalendar(event, nombre){
+    if(nombre == "Fecha estado"){
+      this.datePickers[0].value = event;
+    }else if(nombre = "Fecha cierre"){
+      this.datePickers[1].value = event;
+    }
   }
 
   getComboJuzgados() {

@@ -94,7 +94,7 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 		}
 		/* Proviene de search() */
 		if (sessionStorage.getItem("abogado")) {
-			let data = this.generalBody = JSON.parse(sessionStorage.getItem("abogado"))[0];
+			let data = JSON.parse(sessionStorage.getItem("abogado"))[0];
 			sessionStorage.removeItem("abogado");
 			this.generalBody.nombreColegio = data.colegio;
 			this.generalBody.numColegiado = data.numeroColegiado;
@@ -108,7 +108,7 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 		}
 		/* Procede de ficha designacion */
 		if (sessionStorage.getItem("idabogadoFicha")) {
-			let idabogado = this.generalBody = JSON.parse(sessionStorage.getItem("idabogadoFicha"));
+			let idabogado = JSON.parse(sessionStorage.getItem("idabogadoFicha"));
 			sessionStorage.removeItem("idabogadoFicha");
 			this.sigaServices.post("designaciones_searchAbogadoByIdPersona", idabogado).subscribe(
 				n => {
