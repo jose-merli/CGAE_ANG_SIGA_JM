@@ -81,10 +81,10 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     console.log('this.comboModulos 2: ', this.comboModulos)
     console.log('this.comboAcreditacion 2: ', this.comboAcreditacion)
     if (this.comboModulos != undefined && this.comboModulos != []){
-      this.searchNuevo(this.comboModulos, this.comboAcreditacion);
+      this.searchNuevo(this.comboModulos, []);
     }
 
-    if (this.comboAcreditacion != undefined && this.comboAcreditacion != []){
+    if (this.comboModulos != undefined && this.comboModulos != [] && this.comboAcreditacion != undefined && this.comboAcreditacion != []){
       this.searchNuevo(this.comboModulos, this.comboAcreditacion);
     }
     this.cabeceras.forEach(cab => {
@@ -546,8 +546,12 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             cell.combo = comboAcreditacion;
             rowGroupFound = true;
           } 
-        })
 
+        })
+        if (comboModulos != [] && comboAcreditacion != [] && rowGroupFound == true){
+          console.log('????????? NEW ROW: ', rowGroupFound)
+          this.newActuacionesArr.push(row);
+        }
       })
       if (rowGroupFound == true){
         console.log('rowGroup elegida: ', rowGroup)
@@ -603,7 +607,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           
           let newRow: Row = {cells: newArrayCells, position: 'noCollapse'};
           rowGroup.rows.push(newRow);
-         this.newActuacionesArr.push(newRow);
+         
         }
       })
     }
@@ -620,13 +624,18 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   } 
 
   guardar(){
+    console.log('this.newActuacionesArr: ', this.newActuacionesArr)
     //1. Guardar nuevos
+    if (this.newActuacionesArr != []){
     this.newActuacionesArr.forEach( newAct => {
       this.actuacionToAdd.emit(newAct);
     });
+    }
     this.newActuacionesArr = []; //limpiamos
 
     //2. Actualizar editados
+    console.log('this.rowIdsToUpdate: ', this.rowIdsToUpdate)
+    if(this.rowIdsToUpdate != []){
     let rowIdsToUpdateNOT_REPEATED = new Set(this.rowIdsToUpdate);
     this.rowIdsToUpdate = Array.from(rowIdsToUpdateNOT_REPEATED);
     this.rowGroups.forEach(row => {
@@ -635,6 +644,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       }
     })
     this.dataToUpdate.emit(this.dataToUpdateArr);
+  }
     this.rowIdsToUpdate = []; //limpiamos
     //this.dataToUpdateArr = []; //limpiamos
   }
