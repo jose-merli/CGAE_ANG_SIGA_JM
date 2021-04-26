@@ -33,7 +33,7 @@ export class LetradoEntranteComponent implements OnInit {
     },
   ];
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit() {
 
@@ -49,7 +49,16 @@ export class LetradoEntranteComponent implements OnInit {
     this.body.motivoRenuncia = false;
     this.body.observaciones=""; */
 
+    if (sessionStorage.getItem("abogado")) {
+			let data = JSON.parse(sessionStorage.getItem("abogado"))[0];
+			sessionStorage.removeItem("abogado");
+			this.body.numColegiado = data.numeroColegiado;
+			this.body.nombre = data.nombre;
+			this.body.apellidos = data.apellidos1 + " " + data.apellidos2;
+		}
+
   }
+
 
   incluirSalto(){
     this.body.salto=!this.body.salto;
@@ -74,5 +83,15 @@ export class LetradoEntranteComponent implements OnInit {
   fillFechaSolRenuncia(evento){}
 
   fillFechaDesignacion(evento){}
+
+  search() {
+
+			sessionStorage.setItem("origin", "AbogadoContrario");
+			this.router.navigate(['/busquedaGeneral']);
+  }
+
+  rest() {
+    this.body=undefined;
+  }
 
 }
