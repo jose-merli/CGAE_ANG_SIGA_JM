@@ -49,7 +49,7 @@ export class DetalleTarjetaLetradosDesignaComponent implements OnInit {
     let request = [designa.ano,  designa.idTurno, designa.numero];
 
     //Buscamos la designacion en la que estamos para extraer la informacion que falta
-    this.sigaServices.post("designaciones_busquedaDesignacion", request).subscribe(
+    this.sigaServices.post("designaciones_busquedaDesignacionActual", request).subscribe(
       data => {
         this.art27 = JSON.parse(data.body).art27;
       },
