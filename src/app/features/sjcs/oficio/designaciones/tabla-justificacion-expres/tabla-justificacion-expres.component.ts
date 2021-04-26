@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Message } from 'primeng/primeng';
 import { Cell, Row, RowGroup, TablaResultadoDesplegableJEService } from '../../../../../commons/tabla-resultado-desplegable/tabla-resultado-desplegable-je.service';
@@ -93,13 +93,14 @@ export class TablaJustificacionExpresComponent implements OnInit {
   comboJuzgados: any [];
   comboAcreditacionesPorModulo: any [];
   comboJuzgadosPorInstitucion: any [];
-
   idInstitucion: String;
-
   actuacionesToDelete = [];
   actuacionToAdd: Row;
   dataToUpdate: RowGroup[];
   actuacionesItem = {};
+  @Output() actuacionesToDleteArrEmit = new EventEmitter<any[]>(); // para enviar a backend - ELIMINAR
+  @Output() newActuacionItemEmit = new EventEmitter<{}>();// para enviar a backend -  NUEVO
+  @Output() dataToUpdateArrEmit = new EventEmitter<any[]>(); // para enviar a backend -  GUARDAR
   actuacionesToDleteArr = []; // para enviar a backend - ELIMINAR
   newActuacionItem = {}; // para enviar a backend -  NUEVO
   dataToUpdateArr = []; // para enviar a backend -  GUARDAR
@@ -178,6 +179,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
     this.sigaServices.post("combo_comboJuzgadoPorInstitucion", $event).subscribe(
       n => {
         this.comboJuzgadosPorInstitucion = n.combooItems;
+        console.log('this.comboJuzgadosPorInstitucion: ', this.comboJuzgadosPorInstitucion)
         this.commonsService.arregloTildesCombo(this.comboJuzgadosPorInstitucion);
         this.progressSpinner = false;
       },
@@ -430,8 +432,8 @@ console.log('this.datosJustificacion: ', this.datosJustificacion)
     let actuacionesCells : Cell[];
     actuacionesCells = actuacionToAdd.cells;
     this.newActuacionItem = this.actCellToJson(actuacionesCells);
-  }
-  
+    this.newActuacionItemEmit.emit(this.newActuacionItem);
+}
   getActuacionesToDelete(event){
     this.actuacionesToDelete = event;
     this.tableDataToJson();
@@ -444,6 +446,7 @@ console.log('this.datosJustificacion: ', this.datosJustificacion)
     this.actuacionesItem = this.actCellToJson(actuacionesCells);
     this.actuacionesToDleteArr.push(this.actuacionesItem);
   });
+  this.actuacionesToDleteArrEmit.emit(this.actuacionesToDleteArr);
 }
 
 getDataToUpdate(event){
@@ -468,6 +471,7 @@ this.dataToUpdate = event;
   })
 
   console.log('GUARDAR this.dataToUpdateArr: ', this.dataToUpdateArr)
+  this.dataToUpdateArrEmit.emit(this.dataToUpdateArr);
 }
 
 actCellToJson(actuacionesCells){
