@@ -15,8 +15,21 @@ export class LetradoSalienteComponent implements OnInit {
   msgs: Message[] = [];
   body;
   datos;
+  showTarjeta=true;
+  progressSpinner = false;
 
   @Input() saliente;
+
+  motivosRenuncia = [
+    {
+      label: 'V',
+      value: 'V'
+    },
+    {
+      label: 'B',
+      value: 'B'
+    },
+  ];
 
   constructor() { }
 
@@ -43,4 +56,13 @@ export class LetradoSalienteComponent implements OnInit {
   changeMotivo(event){
     this.body.motivoRenuncia = event;
   }
+
+  onHideTarjeta(){
+    this.showTarjeta=!this.showTarjeta;
+  }
+
+  clear() {
+    this.msgs=[];
+  }
+
 }

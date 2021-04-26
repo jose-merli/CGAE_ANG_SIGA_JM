@@ -179,4 +179,8 @@ export class DetalleTarjetaLetradosDesignaComponent implements OnInit {
     }
   }
 
+  NewLetrado(){
+    
+  }
+
 }

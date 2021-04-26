@@ -4,6 +4,9 @@ import { TranslateService } from '../../../../../../../commons/translate';
 import { PersistenceService } from '../../../../../../../_services/persistence.service';
 import { Router } from '@angular/router';
 import { Message } from 'primeng/components/common/api';
+import { flattenStyles } from '@angular/platform-browser/src/dom/dom_renderer';
+import { DatePipe, Location } from '@angular/common';
+import { LetradoEntranteComponent } from "./letrado-entrante/letrado-entrante.component";
 
 @Component({
   selector: 'app-ficha-cambio-letrado',
@@ -13,9 +16,17 @@ import { Message } from 'primeng/components/common/api';
 export class FichaCambioLetradoComponent implements OnInit {
 
   msgs: Message[] = [];
-  datosTarjetaResumen;
 
-  constructor() { }
+  @Output() datosTarjetaResumen;
+
+  progressSpinner = false;
+
+  entrante;
+
+	@ViewChild('entrante') LetradoEntranteComponent;
+  
+
+  constructor(private location: Location) { }
 
   ngOnInit() {
 
@@ -31,4 +42,17 @@ export class FichaCambioLetradoComponent implements OnInit {
     this.datosTarjetaResumen.nombreColegiado;
   }
 
+  clear() {
+    this.msgs=[];
+  }
+
+  backTo() {
+    this.location.back();
+  }
+
+  save(){
+
+    
+    if(this.entrante.body.numColegiado!=null && this.entrante.body.numColegiado!="" && this.entrante.body.art27==false) {}
+  }
 }
