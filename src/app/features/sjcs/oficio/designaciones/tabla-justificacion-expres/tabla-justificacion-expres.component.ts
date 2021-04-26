@@ -112,7 +112,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
   ngOnInit(): void {
 
     
-    this.cargaJuzgadosPorInstitucion("2005");
+    this.cargaJuzgadosPorInstitucion("2005"); //poner variable idInstitucion 
 
     this.progressSpinner=true;
 
@@ -121,7 +121,6 @@ export class TablaJustificacionExpresComponent implements OnInit {
     this.cargaInicial();
 
     this.getJuzgados();
-
     //pruebas
     //this.cargaModulosPorJuzgado("129");
     //this.cargaAcreditacionesPorModulo("");
