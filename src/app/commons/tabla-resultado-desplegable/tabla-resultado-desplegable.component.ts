@@ -18,12 +18,6 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   @Input() pantalla: string = '';
   @Input() s = false;
   @Input() colegiado;
-  @Input() comboJuzgados = [{label: "", value: ""},
-  {label: "", value: ""}];
-  @Input() comboModulo = [{label: "", value: ""},
-  {label: "", value: ""}];
-  @Input() comboAcreditacion = [{label: "", value: ""},
-  {label: "", value: ""}];
   @Output() anySelected = new EventEmitter<any>();
   @Output() designasToDelete = new EventEmitter<any[]>();
   @Output() actuacionesToDelete = new EventEmitter<any[]>();
@@ -54,13 +48,25 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   to = 10;
   totalRegistros = 0;
 
-  @Input() comboModulos: any [];
+  @Input() comboAcreditacionesPorModulo: any [];
+  //@Input() comboJuzgadosPorInstitucion: any [];
 
+  //@Output() cargaJuzgadosPorInstitucion = new EventEmitter<String>();
+  @Output() cargaModulosPorJuzgado = new EventEmitter<String>();
+  @Output() cargaAcreditacionesPorModulo = new EventEmitter<String>();
+
+  @Input() comboJuzgados = [{label: "", value: ""},
+  {label: "", value: ""}];
+  @Input() comboModulos = [{label: "", value: ""},
+  {label: "", value: ""}];
+  @Input() comboAcreditacion = [{label: "", value: ""},
+  {label: "", value: ""}];
   dataToUpdateArr: RowGroup[] = [];
   constructor(
     private renderer: Renderer2,
     private datepipe: DatePipe
   ) {
+
     this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
       for (let i = 0; i < this.table.nativeElement.children.length; i++) {
 

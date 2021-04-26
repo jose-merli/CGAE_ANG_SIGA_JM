@@ -89,42 +89,98 @@ export class TablaJustificacionExpresComponent implements OnInit {
     }
   ];
   
-
   comboModulos: any [];
-
+  comboJuzgados: any [];
+  comboAcreditacionesPorModulo: any [];
+  comboJuzgadosPorInstitucion: any [];
+  idInstitucion: String;
   actuacionesToDelete = [];
   actuacionToAdd: Row;
   dataToUpdate: RowGroup[];
   actuacionesItem = {};
-
-  @Output() actuacionesToDleteArr = []; // para enviar a backend - ELIMINAR
-  @Output() newActuacionItem = {};// para enviar a backend -  NUEVO
-  @Output() dataToUpdateArr = []; // para enviar a backend -  GUARDAR
   @Output() actuacionesToDleteArrEmit = new EventEmitter<any[]>(); // para enviar a backend - ELIMINAR
   @Output() newActuacionItemEmit = new EventEmitter<{}>();// para enviar a backend -  NUEVO
   @Output() dataToUpdateArrEmit = new EventEmitter<any[]>(); // para enviar a backend -  GUARDAR
+  actuacionesToDleteArr = []; // para enviar a backend - ELIMINAR
+  newActuacionItem = {}; // para enviar a backend -  NUEVO
+  dataToUpdateArr = []; // para enviar a backend -  GUARDAR
+
   constructor(private trdService: TablaResultadoDesplegableJEService, private datepipe: DatePipe,
     private commonsService: CommonsService, private sigaServices: SigaServices) 
   { }
 
   ngOnInit(): void {
 
-    this.progressSpinner=false;
+    this.progressSpinner=true;
 
     this.datosJustificacionAux = this.datosJustificacion;
 
     this.cargaInicial();
 
-    this.getComboModulos();
+    this.getJuzgados();
+
+    //pruebas
+    this.cargaModulosPorJuzgado("129");
+    this.cargaJuzgadosPorInstitucion("2005");
+    this.cargaAcreditacionesPorModulo("");
   }
 
-  getComboModulos() {
+  getJuzgados(){
+    this.progressSpinner = true;
+
+    this.sigaServices.get("combo_comboJuzgadoDesignaciones").subscribe(
+      n => {
+        this.comboJuzgados = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboJuzgados);
+        this.progressSpinner = false;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  cargaAcreditacionesPorModulo($event){
+    this.progressSpinner = true;
+
+    this.sigaServices.post("combo_comboAcreditacionesPorModulo", $event).subscribe(
+      n => {
+        this.comboAcreditacionesPorModulo = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboJuzgados);
+        this.progressSpinner = false;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  cargaModulosPorJuzgado($event){
     this.progressSpinner = true;
  
-    this.sigaServices.get("combo_comboModulosDesignaciones").subscribe(
+    this.sigaServices.post("combo_comboModulosConJuzgado", $event).subscribe(
       n => {
-        this.comboModulos = n.combooItems;
-        this.commonsService.arregloTildesCombo(this.comboModulos);
+        this.comboModulos = JSON.parse(n.body).combooItems;
+        this.commonsService.arregloTildesCombo(this.comboJuzgadosPorInstitucion);
+        this.progressSpinner = false;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  cargaJuzgadosPorInstitucion($event){
+    this.progressSpinner = true;
+
+    this.sigaServices.post("combo_comboJuzgadoPorInstitucion", $event).subscribe(
+      n => {
+        this.comboJuzgadosPorInstitucion = n.combooItems;
+        console.log('this.comboJuzgadosPorInstitucion: ', this.comboJuzgadosPorInstitucion)
+        this.commonsService.arregloTildesCombo(this.comboJuzgadosPorInstitucion);
         this.progressSpinner = false;
       },
       err => {
@@ -348,13 +404,6 @@ console.log('this.datosJustificacion: ', this.datosJustificacion)
     this.rowGroupsAux = this.rowGroups;
     this.totalRegistros = this.rowGroups.length;
   }
-  // notifyAnySelected(event) {
-  //   if (event) {
-  //     this.isDisabled = false;
-  //   } else {
-  //     this.isDisabled = true;
-  //   }
-  // }
 
   showMsg(severity, summary, detail) {
     this.msgs = [];
@@ -369,13 +418,16 @@ console.log('this.datosJustificacion: ', this.datosJustificacion)
     const pattern = 'dd/MM/yyyy';
     return this.datepipe.transform(date, pattern);
   }
+
   clear() {
     this.msgs = [];
   }
+  
   getActuacionToAdd(event){
     this.actuacionToAdd = event;
     this.tableDataToJson2(this.actuacionToAdd);
   }
+  
   tableDataToJson2(actuacionToAdd){
     let actuacionesCells : Cell[];
     actuacionesCells = actuacionToAdd.cells;
@@ -386,6 +438,7 @@ console.log('this.datosJustificacion: ', this.datosJustificacion)
     this.actuacionesToDelete = event;
     this.tableDataToJson();
   }
+  
   tableDataToJson(){
     this.actuacionesToDelete.forEach(actObj => {
     let actuacionesCells : Cell[];
@@ -395,7 +448,6 @@ console.log('this.datosJustificacion: ', this.datosJustificacion)
   });
   this.actuacionesToDleteArrEmit.emit(this.actuacionesToDleteArr);
 }
-
 
 getDataToUpdate(event){
 this.dataToUpdate = event;
@@ -573,6 +625,5 @@ desigCellToJson(designacionesCells, codigoDesignacionParam, expedientesDesignaci
     }  );
 
     return designacionesItem;
-}
-
+  }
 }

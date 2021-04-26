@@ -261,7 +261,7 @@ console.log('event param to back: ', event)
     this.colegiado = event;
     console.log('this.colegiado: ', this.colegiado)
   }
- 
+
   actuacionesToDleteArr(event){
     this.eliminacionJustificacionExpres(event);
   }
