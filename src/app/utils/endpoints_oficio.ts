@@ -74,7 +74,7 @@ export let endpoints_oficio: any = {
     combo_comboDelitos: "oficio/designas/comboDelitos",
     combo_comboProcedimientosDesignaciones: "oficio/comboProcedimientos",
     combo_comboProcedimientosConJuzgado: "oficio/comboProcedimientosConJuzgado",
-    combo_comboAcreditacionesPorModulo: "oficio/comboAcreditacionesPorModulo",
+    combo_comboAcreditacionesPorModulo: "combo/comboAcreditacionesPorModulo",
     combo_comboProcedimientosConModulo: "oficio/comboProcedimientosConModulo",
     combo_comboModulosConJuzgado: "oficio/comboModulosConJuzgado",
     combo_comboModulosConProcedimientos: "oficio/comboModulosConProcedimientos",

@@ -1,7 +1,7 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 
 <div class="card mt-3">
-    <div class="card-body p-0">
+    <div *ngIf="!progressSpinner" class="card-body p-0">
         <app-tabla-resultado-desplegable (dataToUpdate)="getDataToUpdate($event)" (actuacionToAdd)="getActuacionToAdd($event)" (actuacionesToDelete)="getActuacionesToDelete($event)" [colegiado]="colegiado" [seleccionarTodo]="seleccionarTodo" [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" [pantalla]="'JE'" [comboModulos]="comboModulos" [comboJuzgados]="comboJuzgadosPorInstitucion"  [comboAcreditacionesPorModulo]="comboAcreditacionesPorModulo"
          (cargaModulosPorJuzgado)="cargaModulosPorJuzgado($event)" (cargaAcreditacionesPorModulo)="cargaAcreditacionesPorModulo($event)"></app-tabla-resultado-desplegable>
     </div>
