@@ -71,8 +71,8 @@ export class LetradoEntranteComponent implements OnInit {
     this.msgs=[];
   }
 
-  fillFechaSolRenuncia(){}
+  fillFechaSolRenuncia(evento){}
 
-  fillFechaDesignacion(){}
+  fillFechaDesignacion(evento){}
 
 }
