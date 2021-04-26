@@ -90,6 +90,11 @@
                                             (buscarEvent)="getActuacionesDesigna($event)">
                                         </app-detalle-tarjeta-actuaciones-ficha-designacion-oficio>
                                     </div>
+                                    <div *ngIf="tarj.nombre == 'Relaciones'">
+                                        <app-detalle-tarjeta-relaciones-designa
+                                            [relaciones]="relaciones" (searchRelaciones)="searchRelaciones()">
+                                        </app-detalle-tarjeta-relaciones-designa>
+                                    </div>
                                 </ng-template>
                             </mat-expansion-panel>
                         </mat-accordion>
@@ -113,25 +118,16 @@
 <!-- Spinner -->
 
   <!--Guardar Procurador-->
-  <p-confirmDialog header="{{ 'justiciaGratuita.oficio.designaciones.guardarProcurador' | translate}}" [(visible)]="showModal2" icon="icon" width="425">
+  <p-confirmDialog header= "{{'justiciaGratuita.oficio.designaciones.guardarProcurador' | translate }}" [(visible)]="showModal2" icon="icon" width="750">
   <p-footer>
-    <button type="button" pButton icon="fa-check" label="Si" (click)="comprobarFechaProcurador()"></button>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="guardarProcuradorEJG()"></button>
     <button type="button" pButton icon="fa-close" label="No" (click)="cerrarModal()"></button>
   </p-footer>
 </p-confirmDialog>
 
-    <!--Guardar Procurador-->
-    <p-dialog [(visible)]="showModal3" responsive="true" [draggable]="false" modal="modal" resizable="false"
-    [minWidth]="500">
-    <p-header class="title">
-      <label>{{"justiciaGratuita.oficio.designaciones.eliminarDesignacion" | translate}}</label>
-    </p-header>
+  <p-confirmDialog header="{{'justiciaGratuita.oficio.designaciones.eliminarDesignacion' | translate}}" [(visible)]="showModal3" icon="icon" width="750">
     <p-footer>
-      <div class="text-right main-button ">
-        <button (click)="checkNuevoProcurador()" pButton type="button"
-            icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-        <button (click)="cerrarModal()" pButton type="button" icon="fa fa-close"
-            iconPos="left" label="{{ 'general.boton.close' | translate}}"></button>
-      </div>
+      <button type="button" pButton icon="fa-check" label="Si" (click)="compruebaFecha()"></button>
+      <button type="button" pButton icon="fa-close" label="No" (click)="cerrarModal()"></button>
     </p-footer>
-  </p-dialog>
+  </p-confirmDialog>

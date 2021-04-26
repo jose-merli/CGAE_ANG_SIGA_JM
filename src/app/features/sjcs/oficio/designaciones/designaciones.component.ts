@@ -166,5 +166,4 @@ export class DesignacionesComponent implements OnInit {
 this.colegiado = event;
 console.log('this.colegiado: ', this.colegiado)
   }
- 
 }

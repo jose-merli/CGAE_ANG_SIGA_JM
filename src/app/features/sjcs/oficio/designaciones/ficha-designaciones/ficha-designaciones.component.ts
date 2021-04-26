@@ -14,6 +14,8 @@ import { CommonsService } from '../../../../../_services/commons.service';
 import { Router } from '@angular/router';
 import { procesos_oficio } from '../../../../../permisos/procesos_oficio';
 import { ColegiadoItem } from '../../../../../models/ColegiadoItem';
+import { DetalleTarjetaRelacionesDesignaComponent } from './detalle-tarjeta-relaciones-designa/detalle-tarjeta-relaciones-designa.component';
+import { RelacionesItem } from '../../../../../models/sjcs/RelacionesItem';
 
 @Component({
   selector: 'app-ficha-designaciones',
@@ -27,10 +29,12 @@ export class FichaDesignacionesComponent implements OnInit {
   showModal2 = false;
   showModal3 = false;
   listaPrueba = [];
+  relaciones:any;
 
 
   @ViewChild(DetalleTarjetaContrariosFichaDesignacionOficioComponent) tarjetaContrarios;
   @ViewChild(DetalleTarjetaInteresadosFichaDesignacionOficioComponent) tarjetaInteresados;
+  @ViewChild(DetalleTarjetaRelacionesDesignaComponent) tarjetaRelaciones;
 
   rutas: string[] = ['SJCS', 'EJGS'];
   campos: DesignaItem = new DesignaItem();
@@ -107,20 +111,7 @@ export class FichaDesignacionesComponent implements OnInit {
       detalle: true,
       fixed: false,
       opened: false,
-      /* campos: [
-         {
-           "key": "Nº Colegiado",
-           "value": this.procurador[0].nColegiado
-         },
-         {
-           "key": "Nombre",
-           "value": this.procurador[0].nombre
-         },
-         {
-           "key": "Fecha designación",
-           "value": this.procurador[0].fechaDesigna
-         }
-       ]*/
+       campos: []
     },
     {
       id: 'sjcsDesigCamb',
@@ -152,7 +143,7 @@ export class FichaDesignacionesComponent implements OnInit {
       nombre: "Relaciones",
       imagen: "",
       icono: "fas fa-link",
-      detalle: false,
+      detalle: true,
       fixed: false,
       opened: false,
       campos: []
@@ -368,6 +359,7 @@ export class FichaDesignacionesComponent implements OnInit {
       //Actualizar para que los campos se rellenen en base a la tabla de la tarjeta interesados
       this.searchInteresados();
       this.searchContrarios(false);
+      this.searchRelaciones();
       this.progressSpinner = false;
     } else {
 
@@ -734,7 +726,7 @@ export class FichaDesignacionesComponent implements OnInit {
   }
 
   mostrar() {
-    let procurador = [this.campos.numColegiado, String(this.campos.idInstitucion)];
+    let procurador = [this.campos.numero, String(this.campos.idInstitucion),this.campos.idTurno];
     this.sigaServices.post("designaciones_busquedaProcurador", procurador).subscribe(
       n => {
         this.procurador = JSON.parse(n.body).procuradorItems;
@@ -762,7 +754,7 @@ export class FichaDesignacionesComponent implements OnInit {
           { type: 'input', value: element.numerodesignacion },
           { type: 'text', value: element.nColegiado },
           { type: 'text', value: element.apellido1 + " " + element.apellido2 + ", " + element.nombre },
-          { type: 'text', value: element.motivosRenuncia },
+          { type: 'select', combo: this.comboRenuncia, value: element.motivosRenuncia },
           { type: 'text', value: element.observaciones },
           { type: 'datePicker', value: element.fecharenunciasolicita },
           { type: 'text', value: element.fechabaja }
@@ -846,7 +838,7 @@ export class FichaDesignacionesComponent implements OnInit {
   this.sigaServices.post("designaciones_comprobarProcurador", event[1]).subscribe(
     data => {
 
-        if(data.body.procuradorItems != undefined){
+        if(JSON.parse(data.body).procuradorItems[0] != undefined){
           this.showModal2 = true;
         }else{
           this.guardarProcurador(this.listaPrueba);
@@ -863,14 +855,28 @@ export class FichaDesignacionesComponent implements OnInit {
   comprobarFechaProcurador(){
     this.progressSpinner = true;
 
-    this.sigaServices.post("designaciones_comprobarProcurador", event[1]).subscribe(
+    this.sigaServices.post("designaciones_comprobarFechaProcurador", this.listaPrueba[1]).subscribe(
       data => {
-          console.log(data);
-          if(data.body.procuradorItems != undefined){
-            this.showModal3 = true;
-          }else{
-            this.guardarProcurador(this.listaPrueba);
-          }
+          this.guardarProcuradorEJG(this.listaPrueba);
+          this.progressSpinner = false;
+    },
+    err => {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  guardarProcuradorEJG(event) {
+    this.progressSpinner = true;
+
+    event.push(String(this.campos.idInstitucion));
+    event.push(this.campos.numero);
+    event.push(this.campos.idTurno);
+
+    this.sigaServices.post("designaciones_guardarProcuradorEJG", event).subscribe(
+      data => {
+          this.showMessage("succes", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.progressSpinner = false;
     },
     err => {
@@ -884,7 +890,8 @@ export class FichaDesignacionesComponent implements OnInit {
     this.progressSpinner = true;
 
     event.push(String(this.campos.idInstitucion));
-    event.push(this.campos.numColegiado);
+    event.push(this.campos.numero);
+    event.push(this.campos.idTurno);
 
     this.sigaServices.post("designaciones_guardarProcurador", event).subscribe(
       data => {
@@ -1027,6 +1034,46 @@ nombreTurno: "ZELIMINAR-CIJAECI05 - MATRIMONIAL CONTENCIOSO JAÉN" */
           this.tarjetaInteresados.tabla.sortOrder = 0;
           this.tarjetaInteresados.tabla.sortField = '';
           this.tarjetaInteresados.tabla.reset();
+        }
+      },
+      err => {
+        this.progressSpinner = false;
+        console.log(err);
+      }
+    );
+
+  }
+
+  searchRelaciones() {
+    this.progressSpinner = true;
+    let data = sessionStorage.getItem("designaItemLink");
+    let designaItem = JSON.parse(data);
+
+    let item = [designaItem.ano, designaItem.idTurno, designaItem.idInstitucion];
+
+    this.sigaServices.post("designacionesBusquedaRelaciones", item).subscribe(
+      n => {
+
+        this.relaciones = JSON.parse(n.body).relacionesItem;
+        let primero = this.relaciones[0];
+        let error = JSON.parse(n.body).error;
+
+        if (error != null && error.description != null) {
+          this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
+        }
+        this.progressSpinner = false;
+
+        if (this.relaciones == null || this.relaciones == undefined ) {
+          this.listaTarjetas[7].campos = [{
+            "key": null,
+            "value": this.translateService.instant('justiciaGratuita.oficio.designas.relaciones.vacio')
+          },]
+        }
+
+        else {
+          this.listaTarjetas[7].campos = [
+           
+          ]
         }
       },
       err => {
