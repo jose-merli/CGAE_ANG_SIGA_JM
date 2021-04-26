@@ -159,7 +159,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
   cargaModulosPorJuzgado($event){
     this.progressSpinner = true;
  
-    this.sigaServices.post("combo_comboProcedimientosConJuzgado", $event).subscribe(
+    this.sigaServices.post("combo_comboModulosConJuzgado", $event).subscribe(
       n => {
         this.comboModulos = JSON.parse(n.body).combooItems;
         this.commonsService.arregloTildesCombo(this.comboJuzgadosPorInstitucion);
