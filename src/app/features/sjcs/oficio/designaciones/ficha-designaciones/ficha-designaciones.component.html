@@ -124,7 +124,7 @@
   <!--Guardar Procurador-->
   <p-confirmDialog header= "{{'justiciaGratuita.oficio.designaciones.guardarProcurador' | translate }}" [(visible)]="showModal2" icon="icon" width="750">
   <p-footer>
-    <button type="button" pButton icon="fa-check" label="Si" (click)="guardarProcuradorEJG()"></button>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="guardarProcuradorEJG(listaPrueba)"></button>
     <button type="button" pButton icon="fa-close" label="No" (click)="cerrarModal()"></button>
   </p-footer>
 </p-confirmDialog>

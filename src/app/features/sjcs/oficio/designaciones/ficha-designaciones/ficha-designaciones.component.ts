@@ -848,6 +848,10 @@ export class FichaDesignacionesComponent implements OnInit {
     this.showModal2 = false;
     this.showModal3 = false;
   }
+  
+  compruebaFecha(){
+    
+  } 
 
   compruebaProcurador(event) {
     this.progressSpinner = true;
