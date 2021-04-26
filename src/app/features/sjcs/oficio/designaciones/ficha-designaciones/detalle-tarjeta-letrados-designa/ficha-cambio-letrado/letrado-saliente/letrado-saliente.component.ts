@@ -65,4 +65,5 @@ export class LetradoSalienteComponent implements OnInit {
     this.msgs=[];
   }
 
+  fillFechaDesignacion(){}
 }
