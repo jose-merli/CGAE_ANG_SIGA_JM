@@ -7,6 +7,7 @@ import { procesos_oficio } from '../../../../../../../permisos/procesos_oficio';
 import { Router } from '@angular/router';
 import { TranslateService } from '../../../../../../../commons/translate/translation.service';
 import { ColegiadoItem } from '../../../../../../../models/ColegiadoItem';
+import { DesignaItem } from '../../../../../../../models/sjcs/DesignaItem';
 
 @Component({
   selector: 'app-ficha-actuacion',
@@ -176,8 +177,9 @@ export class FichaActuacionComponent implements OnInit {
       this.listaTarjetas[1].campos[0].value = this.actuacionDesigna.actuacion.fechaJustificacion;
       this.listaTarjetas[1].campos[1].value = this.actuacionDesigna.actuacion.validada ? 'Validada' : 'Pendiente de validar';
 
+      this.getIdPartidaPresupuestaria();
+
       if (actuacion.isNew) {
-        //this.getNewId(actuacion.designaItem);
         this.isNewActDesig = true;
       }
       this.progressSpinner = true;
@@ -242,44 +244,6 @@ export class FichaActuacionComponent implements OnInit {
     this.location.back();
   }
 
-  getNewId(designaItem: any) {
-
-    this.progressSpinner = true;
-
-    let actuacionRequest = {
-      anio: designaItem.ano.toString().split('/')[0].replace('D', ''),
-      idTurno: designaItem.idTurno,
-      numero: designaItem.codigo,
-    };
-
-    this.sigaServices.post("actuaciones_designacion_newId", actuacionRequest).subscribe(
-      data => {
-        const idMax = JSON.parse(data.body).idMax;
-
-        if (idMax != null) {
-          this.actuacionDesigna.actuacion.numeroAsunto = idMax;
-        }
-        this.progressSpinner = false;
-      },
-      err => {
-        this.progressSpinner = false;
-        console.log(err);
-      },
-      () => {
-        if (this.isNewActDesig) {
-          this.listaTarjetas.forEach(tarj => {
-            if (tarj.id != 'sjcsDesigActuaOfiDatosGen') {
-              tarj.detalle = false;
-            } else {
-              tarj.opened = true;
-            }
-          });
-        }
-      }
-    );
-
-  }
-
   changeDataTarjeta(event) {
 
     let tarjeta = this.listaTarjetas.find(el => el.id == event.tarjeta);
@@ -287,6 +251,10 @@ export class FichaActuacionComponent implements OnInit {
     if (event.tarjeta == 'sjcsDesigActuaOfiJustifi') {
       tarjeta.campos[0].value = event.fechaJusti;
       tarjeta.campos[1].value = event.estado;
+    }
+
+    if (event.tarjeta == 'sjcsDesigActuaOfiDatFac') {
+      tarjeta.campos[0].value = event.partida;
     }
 
   }
@@ -310,6 +278,31 @@ export class FichaActuacionComponent implements OnInit {
 
     });
 
+  }
+
+  getIdPartidaPresupuestaria() {
+
+    this.progressSpinner = true;
+
+    let factAct = new DesignaItem();
+    factAct.idTurno = Number(this.actuacionDesigna.actuacion.idTurno);
+    factAct.ano = Number(this.actuacionDesigna.actuacion.anio);
+    factAct.numero = this.actuacionDesigna.designaItem.numero;
+
+    this.sigaServices.post("designaciones_getDatosFacturacion", factAct).subscribe(
+      n => {
+        let resp = JSON.parse(n.body).combooItems;
+        if (resp.length > 0) {
+          this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiDatFac').campos[0].value = resp[0].label;
+        }
+      },
+      err => {
+        this.progressSpinner = false;
+        console.log(err);
+      }, () => {
+        this.progressSpinner = false;
+      }
+    );
   }
 
 

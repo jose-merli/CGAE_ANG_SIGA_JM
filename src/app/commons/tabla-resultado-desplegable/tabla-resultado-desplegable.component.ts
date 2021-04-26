@@ -48,15 +48,19 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   to = 10;
   totalRegistros = 0;
 
-  @Input() comboModulos: any [];
-  @Input() comboJuzgados: any [];
   @Input() comboAcreditacionesPorModulo: any [];
-  @Input() comboJuzgadosPorInstitucion: any [];
+  //@Input() comboJuzgadosPorInstitucion: any [];
 
-  @Output() cargaJuzgadosPorInstitucion = new EventEmitter<String>();
+  //@Output() cargaJuzgadosPorInstitucion = new EventEmitter<String>();
   @Output() cargaModulosPorJuzgado = new EventEmitter<String>();
   @Output() cargaAcreditacionesPorModulo = new EventEmitter<String>();
 
+  @Input() comboJuzgados = [{label: "", value: ""},
+  {label: "", value: ""}];
+  @Input() comboModulos = [{label: "", value: ""},
+  {label: "", value: ""}];
+  @Input() comboAcreditacion = [{label: "", value: ""},
+  {label: "", value: ""}];
   dataToUpdateArr: RowGroup[] = [];
   constructor(
     private renderer: Renderer2,
@@ -514,13 +518,16 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           console.log('id: ', id)
           let newArrayCells: Cell[] = [
             { type: 'checkbox', value: false, size: 50 , combo: null},
-            { type: 'multiselect', value: '',size: 153 , combo: {}},
+            { type: 'multiselect', value: '',size: 153 , combo: [{label: "", value: ""},
+            {label: "", value: ""}]},
             { type: 'input', value: '', size: 15, combo: null},
             { type: 'input', value: '', size: 153 , combo: null},
-            { type: 'select', value: '', size: 153 , combo: null}, //modulo
+            { type: 'select', value: '', size: 153 , combo: [{label: "", value: ""},
+            {label: "", value: ""}]}, //modulo
             { type: 'datePicker', value: '', size: 153 , combo: null},
             { type: 'datePicker', value: '' , size: 153, combo: null},
-            { type: 'input', value: '' , size: 50, combo: null},
+            { type: 'input', value: '' , size: 50, combo: [{label: "", value: ""},
+            {label: "", value: ""}]},
             // { type: 'checkbox', value: obj.val }
             { type: 'checkbox', value: false, size: 50 , combo: null},
             { type: 'invisible', value:  '' , size: 0, combo: null},
