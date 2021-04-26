@@ -27,9 +27,8 @@
 
 <div class="card-footer">
   <div class="text-right main-button">
-    <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer"
-      (click)="showMsg('success', 'Se ha restablecido correctamente', '')" disabled></button>
-    <button pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"
-      (click)="showMsg('success', 'Se ha guardado correctamente', '')" disabled></button>
+    <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer" (click)="restablecer()"></button>
+    <button pButton type="button" icon="far fa-save" iconPos="left" label="Guardar" (click)="guardar()"
+      [disabled]="selector.value == '' || selector.value == null"></button>
   </div>
 </div>

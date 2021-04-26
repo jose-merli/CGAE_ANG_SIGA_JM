@@ -17,7 +17,7 @@
 
 <div>
     <app-tabla-justificacion-expres *ngIf="muestraTablaJustificacion" [datosJustificacion]="datosJustificacion"
-        id="tablaFoco"></app-tabla-justificacion-expres>
+        id="tablaFoco" (actuacionesToDleteArrEmit)="actuacionesToDleteArr($event)" (newActuacionItemEmit)="newActuacionItem($event)" (dataToUpdateArrEmit)="dataToUpdateArr($event)"></app-tabla-justificacion-expres>
 
 </div>
 <div class="mt-3 text-right main-button ">

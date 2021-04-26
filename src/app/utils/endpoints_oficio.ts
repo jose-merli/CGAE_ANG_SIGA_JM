@@ -56,6 +56,9 @@ export let endpoints_oficio: any = {
 
     //justificacion express
     justificacionExpres_busqueda: "oficio/busquedaJustificacionExpres",
+    justificacionExpres_actualizacion: "oficio/actualizaJustificacionExpres",
+    justificacionExpres_eliminacion: "oficio/eliminaJustificacionExpres",
+    justificacionExpres_insercion: "oficio/insertaJustificacionExpres",
 
     //CARGAS MASIVAS OFICIO
     busquedaGuardia_guardia: "combo/guardias",
@@ -66,10 +69,12 @@ export let endpoints_oficio: any = {
     //DESIGNAS
     designas_tipoDesignas: "oficio/designas/comboTipoDesigna",
     combo_comboJuzgadoDesignaciones: "combo/comboJuzgadoDesignaciones",
+    combo_comboJuzgadoPorInstitucion: "combo/comboJuzgadoPorInstitucion",
     combo_comboModulosDesignaciones: "oficio/comboModulo",
     combo_comboDelitos: "oficio/designas/comboDelitos",
     combo_comboProcedimientosDesignaciones: "oficio/comboProcedimientos",
     combo_comboProcedimientosConJuzgado: "oficio/comboProcedimientosConJuzgado",
+    combo_comboAcreditacionesPorModulo: "oficio/comboAcreditacionesPorModulo",
     combo_comboProcedimientosConModulo: "oficio/comboProcedimientosConModulo",
     combo_comboModulosConJuzgado: "oficio/comboModulosConJuzgado",
     combo_comboModulosConProcedimientos: "oficio/comboModulosConProcedimientos",
@@ -96,25 +101,20 @@ export let endpoints_oficio: any = {
     actuaciones_designacion_reactivar: "oficio/designas/reactivarActDesigna",
     actuaciones_designacion_eliminar: "oficio/designas/eliminarActDesigna",
     actuaciones_designacion_newId: "oficio/designas/getNewIdActuDesigna",
-    actuaciones_designacion_guardar: "oficio/designas/guardarNewActDesigna",
+    actuaciones_designacion_guardar: "oficio/designas/guardarActDesigna",
     actuaciones_designacion_validar: "oficio/designas/validarActDesigna",
     actuaciones_designacion_desvalidar: "oficio/designas/desvalidarActDesigna",
-    actuaciones_designacion_updateJustiActDesigna: "oficio/designas/updateJustiActDesigna",
     combo_prisiones: "oficio/comboPrisiones",
-    combo_motivosCambio_actuDesigna: "oficio/comboMotivosCambioActDesigna",
     designaciones_updateRepresentanteInteresado:"oficio/designas/updateRepresentanteInteresado",
     designaciones_updateRepresentanteContrario:"oficio/designas/updateRepresentanteContrario",
     designaciones_updateAbogadoContrario:"oficio/designas/updateAbogadoContrario",
     designaciones_updateProcuradorContrario:"oficio/designas/updateProcuradorContrario",
     designaciones_updateDetalleDesignacion:"oficio/designas/updateDetalleDesignacion",
     designaciones_searchAbogadoByIdPersona:"oficio/designas/searchAbogadoByIdPersona",
-    designaciones_getDatosFacturacion:"oficio/designas/getPartidaPresupuestariaDesigna",
-    designaciones_updateDatosFacturacion:"oficio/designas/updatePartidaPresupuestaria",
-    designaciones_updateDatosAdicionales: "oficio/designas/updateDatosAdicionales",
-    designaciones_busquedaDesignacion:"oficio/designas/busquedaDesignacion",
+    designacionesBusquedaRelaciones:"oficio/designas/busquedaRelaciones",
+    designaciones_eliminarRelacion:"oficio/designas/eliminarRelacion",
+    designaciones_busquedaDesignacionActual:"oficio/designas/busquedaDesignacionActual",
     designaciones_busquedaLetradosDesignacion:"oficio/designas/busquedaLetradosDesignacion",
-    combo_comboFacturacionDesignaciones:"oficio/designas/comboPartidaPresupuestaria",
-    designaciones_existeDesignaJuzgadoProcedimiento:"oficio/designas/existeDesginaJuzgadoProcedimiento",
 
     //SALTOS Y COMPENSACIONES
     saltosCompensacionesOficio_buscar: "oficio/saltosCompensaciones/buscarSaltosOCompensaciones",

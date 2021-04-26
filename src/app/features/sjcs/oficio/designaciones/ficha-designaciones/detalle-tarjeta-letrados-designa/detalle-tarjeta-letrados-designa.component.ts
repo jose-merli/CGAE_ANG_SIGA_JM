@@ -49,7 +49,7 @@ export class DetalleTarjetaLetradosDesignaComponent implements OnInit {
     let request = [designa.ano,  designa.idTurno, designa.numero];
 
     //Buscamos la designacion en la que estamos para extraer la informacion que falta
-    this.sigaServices.post("designaciones_busquedaDesignacion", request).subscribe(
+    this.sigaServices.post("designaciones_busquedaDesignacionActual", request).subscribe(
       data => {
         this.art27 = JSON.parse(data.body).art27;
       },
@@ -91,41 +91,8 @@ export class DetalleTarjetaLetradosDesignaComponent implements OnInit {
         this.progressSpinner = false;
       }
     );
+    
   }
-
-  /* apellido1Colegiado: "DGZAWNY"
-  apellido1Interesado: "VEUNX"
-  apellido2Colegiado: "ZYGUHDV"
-  apellido2Interesado: "IBOTJ"
-  codigo: "10591"
-  descripcionTipoDesigna: "Civil Automático"
-  estado: "Activo"
-  -factConvenio: 2013
-  fechaAlta: "05/12/2013"
-  fechaEntradaInicio: "05/12/2013"
-  fechaEstado: "05/12/2013"
-  -idInstitucion: 2035
-  idInstitucion_juzg: 0
-  idInstitucion_procur: 0
-  idJuzgado: 26
-  idModulo: "12"
-  idPretension: 422
-  idProcedimiento: 422
-  idProcurador: 0
-  idRol: 0
-  idTipoDesignaColegio: 2
-  -idTurno: 1023
-  modulo: "CI03 - Proceso Verbal"
-  nig: "2305042c20130004881"
-  nombreColegiado: "DGZAWNY ZYGUHDV, BLAS"
-  nombreInteresado: "VEUNX IBOTJ, PEDRO JOSE"
-  nombreJuzgado: "JAEIC1 - Juzgado Instancia nº 1"
-  nombreProcedimiento: "Juicio verbal (Desahucio Falta pago - 250.1.1)"
-  nombreTurno: "CIJAE - CIVIL JAEN"
-  numColegiado: "2048"
-  numProcedimiento: "1048"
-  -numero: 1003
-  observaciones: "DESAHUCIO POR FALTA DE PAGO Y RECLAMACIÓN RENTAS" */
 
   ngOnChanges(changes: SimpleChanges): void {
     //this.datos=this.interesados;
@@ -210,6 +177,10 @@ export class DetalleTarjetaLetradosDesignaComponent implements OnInit {
          this.selectMultiple = true;
        this.selectionMode = "multiple"; */
     }
+  }
+
+  NewLetrado(){
+    
   }
 
 }
