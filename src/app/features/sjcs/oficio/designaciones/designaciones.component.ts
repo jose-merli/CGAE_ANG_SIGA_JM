@@ -3,6 +3,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Message } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../commons/translate';
+import { ActuacionDesignaItem } from '../../../../models/sjcs/ActuacionDesignaItem';
+import { ActuacionDesignaObject } from '../../../../models/sjcs/ActuacionDesignaObject';
 import { DesignaItem } from '../../../../models/sjcs/DesignaItem';
 import { JustificacionExpressItem } from '../../../../models/sjcs/JustificacionExpressItem';
 import { CommonsService } from '../../../../_services/commons.service';
@@ -31,7 +33,8 @@ export class DesignacionesComponent implements OnInit {
   datosJustificacion: JustificacionExpressItem = new JustificacionExpressItem();
   
   msgs: Message[] = [];
-
+  actuacionesDesignaItems: ActuacionDesignaItem[] = [];
+  
   constructor(public sigaServices: OldSigaServices, public sigaServicesNew: SigaServices, private location: Location,  private commonsService: CommonsService, 
     private datePipe: DatePipe, private translateService: TranslateService) {
 
@@ -118,7 +121,46 @@ export class DesignacionesComponent implements OnInit {
          }
          element.nombreColegiado = element.apellido1Colegiado +" "+ element.apellido2Colegiado+", "+element.nombreColegiado;
          element.nombreInteresado = element.apellido1Interesado +" "+ element.apellido2Interesado+", "+element.nombreInteresado;
-        });
+         if(element.art27 == "1"){
+          element.art27 = "Si";
+         }else{
+          element.art27 = "No";
+         }
+         const params = {
+          anio: element.factConvenio,
+          idTurno: element.idTurno,
+          numero: element.codigo,
+          historico: false
+        };
+        this.progressSpinner = false;
+        this.sigaServicesNew.post("actuaciones_designacion", params).subscribe(
+          data => {
+            let object: ActuacionDesignaObject = JSON.parse(data.body);
+            let resp = object.actuacionesDesignaItems;
+              let validadas = 0;
+              let total = 0;
+    
+              resp.forEach(el => {
+
+                if (el.validada) {
+                  validadas += 1;
+                }
+              });
+              this.actuacionesDesignaItems = resp;
+              total = this.actuacionesDesignaItems.length;
+              if(total == validadas && total > 0){
+                element.validada = "Si";
+              }else{
+                element.validada = "No";
+              }
+            });
+            this.progressSpinner = false;
+          },
+          err => {
+            this.progressSpinner = false;
+            console.log(err);
+          }
+        );
         this.progressSpinner=false;
         this.showTablaDesigna(true);
         this.commonsService.scrollTablaFoco("tablaFoco");

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { Message } from 'primeng/components/common/api';
 import { CommonsService } from '../../../../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../../../../_services/siga.service';
@@ -11,13 +11,18 @@ import { TranslateService } from '../../../../../../../../commons/translate';
   templateUrl: './tarjeta-datos-gen-ficha-act.component.html',
   styleUrls: ['./tarjeta-datos-gen-ficha-act.component.scss']
 })
-export class TarjetaDatosGenFichaActComponent implements OnInit {
+export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
 
   comboJuzgados: any[] = [];
   comboProcedimientos: any[] = [];
   comboModulos: any[] = [];
   comboAcreditaciones: any[] = [];
   comboPrisiones: any[] = [];
+  comboMotivosCambio: any[] = [];
+
+  @Input() isAnulada: boolean;
+  @Input() permisoEscritura;
+  @Input() usuarioLogado;
 
   msgs: Message[] = [];
   resaltadoDatos: boolean = false;
@@ -33,7 +38,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit {
         value: null
       },
       {
-        label: 'Letrado',
+        label: 'Letrado (*)',
         value: null
       },
       {
@@ -115,6 +120,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit {
     this.getComboModulos();
     this.getComboAcreditaciones();
     this.getComboPrisiones();
+    this.getComboMotivosCambio();
 
     this.fechaEntradaInicioDate = new Date(this.actuacionDesigna.designaItem.fechaEntradaInicio.split('/').reverse().join('-'));
 
@@ -173,7 +179,6 @@ export class TarjetaDatosGenFichaActComponent implements OnInit {
       }, () => {
         this.progressSpinner = false;
         this.datos.selectores[1].opciones = this.comboProcedimientos;
-        console.log("🚀 ~ file: tarjeta-datos-gen-ficha-act.component.ts ~ line 176 ~ TarjetaDatosGenFichaActComponent ~ getComboProcedimientos ~ this.datos", this.datos)
       }
     );
   }
@@ -193,7 +198,6 @@ export class TarjetaDatosGenFichaActComponent implements OnInit {
       }, () => {
         this.progressSpinner = false;
         this.datos.selectores[3].opciones = this.comboModulos;
-        console.log("🚀 ~ file: tarjeta-datos-gen-ficha-act.component.ts ~ line 196 ~ TarjetaDatosGenFichaActComponent ~ getComboModulos ~ this.datos", this.datos)
       }
     );
   }
@@ -213,7 +217,6 @@ export class TarjetaDatosGenFichaActComponent implements OnInit {
       }, () => {
         this.progressSpinner = false;
         this.datos.selectores[4].opciones = this.comboAcreditaciones;
-        console.log("🚀 ~ file: tarjeta-datos-gen-ficha-act.component.ts ~ line 216 ~ TarjetaDatosGenFichaActComponent ~ getComboAcreditaciones ~ this.datos", this.datos)
       }
     );
   }
@@ -233,21 +236,36 @@ export class TarjetaDatosGenFichaActComponent implements OnInit {
       }, () => {
         this.progressSpinner = false;
         this.datos.selectores[5].opciones = this.comboPrisiones;
-        console.log("🚀 ~ file: tarjeta-datos-gen-ficha-act.component.ts ~ line 236 ~ TarjetaDatosGenFichaActComponent ~ getComboPrisiones ~ this.datos", this.datos)
+      }
+    );
+  }
+
+  getComboMotivosCambio() {
+    this.progressSpinner = true;
+
+    this.sigaServices.get("combo_motivosCambio_actuDesigna").subscribe(
+      n => {
+        this.comboMotivosCambio = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboMotivosCambio);
+        this.progressSpinner = false;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      }, () => {
+        this.progressSpinner = false;
+        this.datos.selectores[2].opciones = this.comboMotivosCambio;
       }
     );
   }
 
   fillFecha(event) {
     this.datos.datePicker.value = event;
-    console.log("🚀 ~ file: tarjeta-datos-gen-ficha-act.component.ts ~ line 243 ~ TarjetaDatosGenFichaActComponent ~ fillFecha ~ this.datos", this.datos)
   }
 
   establecerDatosInicialesNuevaAct() {
     this.datos.inputs1[0].value = this.actuacionDesigna.actuacion.numeroAsunto;
-    console.log("🚀 ~ file: tarjeta-datos-gen-ficha-act.component.ts ~ line 248 ~ TarjetaDatosGenFichaActComponent ~ establecerDatosInicialesNuevaAct ~ this.datos", this.datos)
     this.datos.inputs1[3].value = this.actuacionDesigna.designaItem.ano.replace('D', '');
-    console.log("🚀 ~ file: tarjeta-datos-gen-ficha-act.component.ts ~ line 250 ~ TarjetaDatosGenFichaActComponent ~ establecerDatosInicialesNuevaAct ~ this.datos", this.datos)
     this.datos.inputs1[4].value = this.actuacionDesigna.actuacion.numeroAsunto;
     this.datos.inputNig.value = this.actuacionDesigna.designaItem.nig;
     this.datos.datePicker.value = this.datePipe.transform(new Date(), 'dd/MM/yyyy');
@@ -268,6 +286,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit {
     this.datos.inputNumPro.value = this.actuacionDesigna.actuacion.numProcedimiento;
     this.datos.selectores[0].value = this.actuacionDesigna.actuacion.idJuzgado;
     this.datos.selectores[1].value = this.actuacionDesigna.actuacion.idPretension;
+    this.datos.selectores[2].value = this.actuacionDesigna.actuacion.idMotivoCambio;
     this.datos.selectores[3].value = this.actuacionDesigna.actuacion.idProcedimiento;
     this.datos.selectores[4].value = this.actuacionDesigna.actuacion.idAcreditacion;
     this.datos.selectores[5].value = this.actuacionDesigna.actuacion.idPrision;
@@ -409,8 +428,6 @@ export class TarjetaDatosGenFichaActComponent implements OnInit {
 
   styleObligatorio(resaltado, evento) {
 
-    console.log("🚀 ~ file: tarjeta-datos-gen-ficha-act.component.ts ~ line 422 ~ TarjetaDatosGenFichaActComponent ~ styleObligatorio ~ this.datos", this.datos);
-
     if (evento == true && resaltado == "selector") {
       if (this.datos.selectores[0].obligatorio == true && this.datos.selectores[0].nombre == "Juzgado (*)"
         && (this.datos.selectores[0].value == "" || this.datos.selectores[0].value == undefined)
@@ -428,6 +445,10 @@ export class TarjetaDatosGenFichaActComponent implements OnInit {
     // }
 
 
+  }
+
+  ngOnDestroy(): void {
+    sessionStorage.removeItem("datosIniActuDesignaDatosGen");
   }
 
 

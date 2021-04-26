@@ -2,7 +2,7 @@
 
 <div class="card mt-3">
     <div class="card-body p-0">
-        <app-tabla-resultado-desplegable [colegiado]="colegiado" [seleccionarTodo]="seleccionarTodo" [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" [pantalla]="'JE'"></app-tabla-resultado-desplegable>
+        <app-tabla-resultado-desplegable (dataToUpdate)="getDataToUpdate($event)" (actuacionToAdd)="getActuacionToAdd($event)" (actuacionesToDelete)="getActuacionesToDelete($event)" [colegiado]="colegiado" [seleccionarTodo]="seleccionarTodo" [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" [pantalla]="'JE'" [comboModulos]="comboModulos"></app-tabla-resultado-desplegable>
     </div>
 
     <div class="card-footer">

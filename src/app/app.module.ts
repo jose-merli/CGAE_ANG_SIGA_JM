@@ -197,6 +197,7 @@ import { SolicitudesTurnosGuardiasComponent } from './features/sjcs/oficio/solic
 import { DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-datos-adicionales-designa/detalle-tarjeta-datos-adicionales-ficha-designacion-oficio.component';
 import { DetalleTarjetaContrariosFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-contrarios-designa/detalle-tarjeta-contrarios-ficha-designacion-oficio.component';
 import{ DetalleTarjetaInteresadosFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-interesados-designa/detalle-tarjeta-interesados-ficha-designacion-oficio.component';
+import{ DetalleTarjetaLetradosDesignaComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/detalle-tarjeta-letrados-designa.component';
 
 import { GuardiasSolicitudesTurnosComponent } from './features/sjcs/guardia/solicitudes-turnos/solicitudes-turnos.component';
 import { GuardiasIncompatibilidadesComponent } from './features/sjcs/guardia/guardias-incompatibilidades/guardias-incompatibilidades.component';
@@ -554,6 +555,7 @@ import { DetalleTarjetaRelacionesDesignaComponent } from './features/sjcs/oficio
 		DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent,
 		DetalleTarjetaContrariosFichaDesignacionOficioComponent,
 		DetalleTarjetaInteresadosFichaDesignacionOficioComponent,
+		DetalleTarjetaLetradosDesignaComponent,
 		FichaDesignacionesComponent,
 		DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent,
 		DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent,

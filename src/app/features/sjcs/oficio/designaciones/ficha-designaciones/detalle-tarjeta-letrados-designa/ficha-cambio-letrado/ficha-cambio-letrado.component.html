@@ -1,0 +1,16 @@
+<!-- Alertas -->
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<!-- Alertas -->
+
+<div id="fichaCambioLetrado">
+  <app-tarjeta-resumen-fija class="pb-50" titulo="justiciaGratuita.oficio.turnos.inforesumen"
+  [datos]="datosTarjetaResumen" [icono]="iconoTarjetaResumen" [manuallyOpened]="true"></app-tarjeta-resumen-fija>
+  <app-letrado-saliente [saliente]="datosTaarjetaResumen"></app-letrado-saliente>
+  <app-letrado-entrante></app-letrado-entrante>
+</div>
+
+<!-- Spinner -->
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+</div>
+<!-- Spinner -->

@@ -13,7 +13,7 @@
       <div class="form-group col-lg-6 col-md-6 w-100">
         <label>{{ datos.datePicker.label }}</label>
         <app-fecha [utc]="true" [(value)]='datos.datePicker.value' [minDate]="fechaEntradaInicioDate"
-          (valueChangeSelected)="fillFecha($event)" (valueChangeInput)="fillFecha($event)">
+          (valueChangeSelected)="fillFecha($event)" (valueChangeInput)="fillFecha($event)" [disabled]="isAnulada">
         </app-fecha>
       </div>
 
@@ -24,7 +24,8 @@
 
       <div class="form-group col-lg-12 col-md-12 w-100">
         <label>{{ datos.textarea.label }}</label>
-        <textarea class="form-control" pInputTextarea [(ngModel)]="datos.textarea.value" maxlength="4000"></textarea>
+        <textarea class="form-control" pInputTextarea [(ngModel)]="datos.textarea.value" maxlength="4000"
+          [readonly]="isAnulada"></textarea>
       </div>
 
     </div>
@@ -33,17 +34,18 @@
     <div class="form-row">
       <div class="form-group col-lg-4 col-md-4 w-100">
         <label>{{ datos.inputNig.label }}</label>
-        <input type="text" class="form-control" pInputText [(ngModel)]="datos.inputNig.value">
+        <input type="text" class="form-control" pInputText [(ngModel)]="datos.inputNig.value" [readonly]="isAnulada">
       </div>
       <div class="form-group col-lg-2 col-md-2 w-100">
         <label>{{ datos.inputNumPro.label }}</label>
-        <input type="text" class="form-control" pInputText [(ngModel)]="datos.inputNumPro.value">
+        <input type="text" class="form-control" pInputText [(ngModel)]="datos.inputNumPro.value" [readonly]="isAnulada">
       </div>
       <div class="form-group col-lg-6 col-md-6 w-100" *ngFor="let selector of datos.selectores">
         <label>{{ selector.nombre }}</label>
         <p-dropdown class="select-form" [(ngModel)]="selector.value"
           placeholder="{{'general.boton.seleccionar' | translate}}" [options]="selector.opciones" [filter]="true"
-          filterBy="label,labelSinTilde" [showClear]="true" [ngClass]="styleObligatorio('selector', selector.obligatorio)">
+          filterBy="label,labelSinTilde" [showClear]="true"
+          [ngClass]="styleObligatorio('selector', selector.obligatorio)" [disabled]="isAnulada">
         </p-dropdown>
       </div>
     </div>

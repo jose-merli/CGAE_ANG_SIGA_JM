@@ -43,7 +43,7 @@
                     </div>
 
                     <div *ngIf="!posicionOcultar(-1) && pantalla == 'JE'" class="table-row-header p-2 selectedRowClass">
-                        <span [ngClass]="{'color-red': colorByStateExpediente(rowGroup.estadoExpediente) == 'red', 'color-blue': colorByStateExpediente(rowGroup.estadoExpediente) == 'blue', 'color-black': colorByStateExpediente(rowGroup.estadoExpediente) == 'black'}">  E{{rowGroup.id2}} </span>
+                        <span [ngClass]="{'color-red': colorByStateExpediente(rowGroup.estadoEx) == 'red', 'color-blue': colorByStateExpediente(rowGroup.estadoEx) == 'blue', 'color-black': colorByStateExpediente(rowGroup.estadoEx) == 'black'}">  E{{rowGroup.id2}}</span>
                     </div>
 
                     <div *ngIf="!posicionOcultar(-1) && pantalla == 'JE'" class="table-row-header p-2 selectedRowClass">
@@ -60,12 +60,12 @@
                             <span class="w100 cell-value" *ngIf="cell.type == 'buttom'"><button  (click)="toDoButton(cell.value, rowGroup.id, rowGroupEl)"class="buttomStyle" 
                                     pButton type="button" iconPos="left" [label]="cell.value"></button></span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'checkbox'">
-                                <p-checkbox [disabled]="!colegiado" [(ngModel)]="cell.value" binary="true" >
+                                <p-checkbox (onChange)="checkBoxChange($event, rowGroup.id)" [disabled]="!colegiado" [(ngModel)]="cell.value" binary="true" >
                                 </p-checkbox> 
                             </span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'datePicker'">
-                                <app-fecha [(value)]="cell.value" [utc]="false" (valueChangeSelected)="fillFecha($event, cell)"
-                                (valueChangeInput)="fillFecha($event, cell)">
+                                <app-fecha [(value)]="cell.value" [utc]="false" (valueChangeSelected)="fillFecha($event, cell, rowGroup.id)"
+                                (valueChangeInput)="fillFecha($event, cell, rowGroup.id)">
                               </app-fecha>
                             </span>
                            <!----<span class="w100 cell-value selectWrap" *ngIf="cell.type == 'select'">
@@ -75,7 +75,7 @@
                             
                             <span class="w100 cell-value selectWrap wrapText" *ngIf="cell.type == 'select'">
                                 <p-dropdown autoWidth="false" class="center" [placeholder]="textFilter" [(ngModel)]="cell.value"
-                                [options]="cell.combo" showClear="true" styleClass="widthAll" (onChange)="changeSelect(row, cell)"
+                                [options]="cell.combo" showClear="true" styleClass="widthAll" (onChange)="changeSelect(row, cell, rowGroup.id)"
                                 [disabled]="cell.disabled">
                                 </p-dropdown>
                             </span>
@@ -101,7 +101,7 @@
                             </span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'input'">
                                <input type="text"
-                                    class="form-control" pInputText size="10" [placeholder]="cell.value"></span>
+                                    class="form-control" pInputText size="10" [placeholder]="cell.value" [(ngModel)]="cell.value" (input)="inputChange($event.target.value, rowGroup.id)"></span>
                             <span class="w100 cell-value d-flex" *ngIf="cell.type == 'buttomSelect'">
                                 <div class="main-button" style="width: 40%;">
                                     <button pButton type="button" iconPos="left" [label]="cell.value[0]"
@@ -114,6 +114,11 @@
                             </span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'textTooltip'">
                                 <span [pTooltip]="cell.value[0]" tooltipPosition="right">{{ cell.value[1] }}</span>
+                            </span>
+                            <span class="w100 cell-value" *ngIf="cell.type == 'multiselect'">
+                                <p-multiSelect class="select-form" [(ngModel)]='cell.value' placeholder="Seleccionar" [options]="cell.combo"
+                                [filter]="true" maxSelectedLabels="10" filterBy="label,labelSinTilde" selectionLimit="10" styleClass="widthAll"
+                                defaultLabel="{{ 'general.boton.seleccionar' | translate}}" (onChange)="getCombo($event)" ></p-multiSelect>
                             </span>
                         </div>
                     </div>
@@ -137,12 +142,12 @@
                             <span class="w100 cell-value" *ngIf="cell.type == 'buttom'"><button (click)="toDoButton(cell.value, rowGroup.id, rowGroupEl)" class="buttomStyle" pButton type="button"
                                     iconPos="left" [label]="cell.value"></button></span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'checkbox'">
-                                <p-checkbox [disabled]="!colegiado" [(ngModel)]="cell.value" binary="true" >{{colegiado}}
+                                <p-checkbox (onChange)="checkBoxChange($event, rowGroup.id)" [disabled]="!colegiado" [(ngModel)]="cell.value" binary="true" >{{colegiado}}
                                 </p-checkbox> 
                             </span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'datePicker'">
-                                <app-fecha [(value)]="cell.value" [utc]="false" (valueChangeSelected)="fillFecha($event, cell)"
-                                (valueChangeInput)="fillFecha($event, cell)">
+                                <app-fecha [(value)]="cell.value" [utc]="false" (valueChangeSelected)="fillFecha($event, cell, rowGroup.id)"
+                                (valueChangeInput)="fillFecha($event, cell, rowGroup.id)">
                               </app-fecha>
                             </span>
                             <!--<span class="w100 cell-value selectWrap" *ngIf="cell.type == 'select'">
@@ -152,7 +157,7 @@
                                                         
                             <span class="w100 cell-value selectWrap wrapText" *ngIf="cell.type == 'select'">
                                 <p-dropdown autoWidth="false" class="center" [placeholder]="cell.value" [(ngModel)]="cell.value"
-                                [options]="cell.combo" showClear="true" styleClass="widthAll" (onChange)="changeSelect(row, cell)"
+                                [options]="cell.combo" showClear="true" styleClass="widthAll" (onChange)="changeSelect(row, cell, rowGroup.id)"
                                 [disabled]="cell.disabled">
                                 </p-dropdown>
                             </span>
@@ -191,7 +196,7 @@
                             </span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'input'">
                                 <input type="text"
-                                     class="form-control" pInputText size="10" [placeholder]="cell.value"></span>
+                                     class="form-control" pInputText size="10" [placeholder]="cell.value" [(ngModel)]="cell.value" (input)="inputChange($event.target.value, rowGroup.id)"></span>
                         </div>
                     </div>
                 </div>
