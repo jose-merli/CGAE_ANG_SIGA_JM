@@ -43,7 +43,7 @@
                     </div>
 
                     <div *ngIf="!posicionOcultar(-1) && pantalla == 'JE'" class="table-row-header p-2 selectedRowClass">
-                        <span [ngClass]="{'color-red': colorByStateExpediente(rowGroup.estadoExpediente) == 'red', 'color-blue': colorByStateExpediente(rowGroup.estadoExpediente) == 'blue', 'color-black': colorByStateExpediente(rowGroup.estadoExpediente) == 'black'}">  E{{rowGroup.id2}} </span>
+                        <span [ngClass]="{'color-red': colorByStateExpediente(rowGroup.estadoEx) == 'red', 'color-blue': colorByStateExpediente(rowGroup.estadoEx) == 'blue', 'color-black': colorByStateExpediente(rowGroup.estadoEx) == 'black'}">  E{{rowGroup.id2}}</span>
                     </div>
 
                     <div *ngIf="!posicionOcultar(-1) && pantalla == 'JE'" class="table-row-header p-2 selectedRowClass">
@@ -114,6 +114,11 @@
                             </span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'textTooltip'">
                                 <span [pTooltip]="cell.value[0]" tooltipPosition="right">{{ cell.value[1] }}</span>
+                            </span>
+                            <span class="w100 cell-value" *ngIf="cell.type == 'multiselect'">
+                                <p-multiSelect class="select-form" [(ngModel)]='cell.value' placeholder="Seleccionar" [options]="cell.combo"
+                                [filter]="true" maxSelectedLabels="10" filterBy="label,labelSinTilde" selectionLimit="10" styleClass="widthAll"
+                                defaultLabel="{{ 'general.boton.seleccionar' | translate}}" (onChange)="getCombo($event)" ></p-multiSelect>
                             </span>
                         </div>
                     </div>

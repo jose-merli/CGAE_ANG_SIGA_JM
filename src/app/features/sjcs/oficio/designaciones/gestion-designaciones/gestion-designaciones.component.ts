@@ -8,6 +8,7 @@ import { procesos_oficio } from '../../../../../permisos/procesos_oficio';
 import { TranslateService } from '../../../../../commons/translate';
 import { Message } from 'primeng/components/common/api';
 import { DesignaItem } from '../../../../../models/sjcs/DesignaItem';
+import { DataTable } from 'primeng/primeng';
 
 
 @Component({
@@ -25,7 +26,7 @@ export class GestionDesignacionesComponent implements OnInit {
   selectedItem: number = 10;
   initDatos;
   datosInicial = [];
-  selectedDatos;
+  selectedDatos: any[] = [];
   isLetrado:boolean = false;
   first = 0;
   progressSpinner: boolean = false;
@@ -36,7 +37,7 @@ export class GestionDesignacionesComponent implements OnInit {
 
   @Output() busquedaDesignaciones = new EventEmitter<boolean>();
 
-  @ViewChild("table") tabla: Table;
+  @ViewChild("table") tabla: DataTable;
 
   constructor(private persistenceService: PersistenceService, private router: Router,  public sigaServices: SigaServices, private translateService: TranslateService) { }
 
@@ -72,7 +73,7 @@ export class GestionDesignacionesComponent implements OnInit {
       { field: "numColegiado", header: "facturacionSJCS.facturacionesYPagos.numColegiado" },
       { field: "nombreColegiado", header: "administracion.parametrosGenerales.literal.nombre.apellidos" },
       { field: "nombreInteresado", header: "justiciaGratuita.justiciables.literal.interesados" },
-      { field: "validada", header: "Validada" },
+      { field: "validada", header: "justiciaGratuita.oficio.designas.actuaciones.validada" },
     ];
     this.cols.forEach(element => {
       this.buscadores.push("");
@@ -99,10 +100,10 @@ export class GestionDesignacionesComponent implements OnInit {
   }
 
   openTab(dato){
-    let idProcedimiento = dato.idProcedimiento;;
+    let idProcedimiento = dato.idProcedimiento;
     let datosProcedimiento;
     let datosModulo;
-    if(dato.idTipoDesignaColegio != null && dato.idTipoDesignaColegio != undefined){
+    if(dato.idTipoDesignaColegio != null && dato.idTipoDesignaColegio != undefined && this.comboTipoDesigna != undefined){
       this.comboTipoDesigna.forEach(element => {
        if(element.value == dato.idTipoDesignaColegio){
         dato.descripcionTipoDesigna = element.label;
@@ -143,10 +144,10 @@ export class GestionDesignacionesComponent implements OnInit {
                 dato.modulo = datosModulo[0].modulo;
                 dato.idModulo = datosModulo[0].idModulo;
               }
-              
               sessionStorage.setItem("nuevaDesigna",  "false");
               sessionStorage.setItem("designaItemLink",  JSON.stringify(dato));
               this.router.navigate(["/fichaDesignaciones"]);
+             
             },
             err => {
               this.progressSpinner = false;
@@ -155,7 +156,6 @@ export class GestionDesignacionesComponent implements OnInit {
             },() => {
               this.progressSpinner = false;
             });;
-      
         },
         err => {
           this.progressSpinner = false;
@@ -163,6 +163,7 @@ export class GestionDesignacionesComponent implements OnInit {
         },() => {
           this.progressSpinner = false;
         });;
+        
   }
 
   getComboTipoDesignas() {
@@ -240,9 +241,9 @@ arregloTildesCombo(combo) {
   }
 
   clickFila(event) {
-    if (event.data) { //} && !event.data.fechaBaja) {
-      this.selectedDatos.pop();
-    }
+    // if (event.data) { //} && !event.data.fechaBaja) {
+    //   this.selectedDatos.pop();
+    // }
   }
 
   showMessage(severity, summary, msg) {

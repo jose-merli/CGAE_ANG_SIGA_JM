@@ -2,6 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from "@angular/common";
 import { ActuacionDesignaItem } from '../../../../../../../models/sjcs/ActuacionDesignaItem';
 import { SigaServices } from '../../../../../../../_services/siga.service';
+import { CommonsService } from '../../../../../../../_services/commons.service';
+import { procesos_oficio } from '../../../../../../../permisos/procesos_oficio';
+import { Router } from '@angular/router';
+import { TranslateService } from '../../../../../../../commons/translate/translation.service';
+import { ColegiadoItem } from '../../../../../../../models/ColegiadoItem';
 
 @Component({
   selector: 'app-ficha-actuacion',
@@ -142,13 +147,17 @@ export class FichaActuacionComponent implements OnInit {
   actuacionDesigna: any;
   isNewActDesig: boolean = false;
   progressSpinner: boolean = false;
+  isAnulada: boolean = false;
+  permisoEscritura;
+  usuarioLogado;
 
-  constructor(private location: Location, private sigaServices: SigaServices) { }
+  constructor(private location: Location, private sigaServices: SigaServices, private commonsService: CommonsService, private router: Router, private translateService: TranslateService) { }
 
   ngOnInit() {
 
     if (sessionStorage.getItem("actuacionDesigna")) {
       let actuacion = JSON.parse(sessionStorage.getItem("actuacionDesigna"));
+      sessionStorage.removeItem("actuacionDesigna");
       this.actuacionDesigna = actuacion;
       console.log("🚀 ~ file: ficha-actuacion.component.ts ~ line 149 ~ FichaActuacionComponent ~ ngOnInit ~ this.actuacionDesigna", this.actuacionDesigna)
 
@@ -168,9 +177,29 @@ export class FichaActuacionComponent implements OnInit {
       this.listaTarjetas[1].campos[1].value = this.actuacionDesigna.actuacion.validada ? 'Validada' : 'Pendiente de validar';
 
       if (actuacion.isNew) {
-        this.getNewId(actuacion.designaItem);
+        //this.getNewId(actuacion.designaItem);
         this.isNewActDesig = true;
       }
+      this.progressSpinner = true;
+      this.commonsService.checkAcceso(procesos_oficio.designa)
+        .then(respuesta => {
+          this.permisoEscritura = respuesta;
+
+          if (this.permisoEscritura == undefined) {
+            sessionStorage.setItem("codError", "403");
+            sessionStorage.setItem(
+              "descError",
+              this.translateService.instant("generico.error.permiso.denegado")
+            );
+            this.router.navigate(["/errorAcceso"]);
+          }
+          this.progressSpinner = false;
+          if (!this.permisoEscritura) {
+            this.getDataLoggedUser();
+          }
+
+        })
+        .catch(error => console.error(error));
 
     }
 
@@ -259,6 +288,27 @@ export class FichaActuacionComponent implements OnInit {
       tarjeta.campos[0].value = event.fechaJusti;
       tarjeta.campos[1].value = event.estado;
     }
+
+  }
+
+  getDataLoggedUser() {
+
+    this.progressSpinner = true;
+
+    this.sigaServices.get("usuario_logeado").subscribe(n => {
+
+      const usuario = n.usuarioLogeadoItem;
+      const colegiadoItem = new ColegiadoItem();
+      colegiadoItem.nif = usuario[0].dni;
+
+      this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(
+        usr => {
+          this.usuarioLogado = JSON.parse(usr.body).colegiadoItem[0];
+          console.log("🚀 ~ file: ficha-actuacion.component.ts ~ line 307 ~ FichaActuacionComponent ~ this.sigaServices.get ~  this.usuarioLogado", this.usuarioLogado)
+          this.progressSpinner = false;
+        });
+
+    });
 
   }
 
