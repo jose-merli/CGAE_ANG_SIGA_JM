@@ -265,7 +265,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         newDesigna.numColegiado = this.inputs[0].value;
         newDesigna.nombreColegiado = this.inputs[1].value;
         newDesigna.apellidosNombre = this.inputs[2].value;
-        newDesigna.fechaAlta = this.fechaGenerales;
+        newDesigna.fechaAlta = new Date(this.fechaGenerales);
         var today = new Date();
         var year = today.getFullYear().valueOf();
         newDesigna.ano = year;
@@ -302,7 +302,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         newDesigna.nombreColegiado = this.inputs[1].value;
         newDesigna.apellidosNombre = this.inputs[2].value;
         // newDesigna.fechaAlta = new Date(this.fechaGenerales);
-        newDesigna.fechaAlta = this.fechaGenerales;
+        newDesigna.fechaAlta = new Date(this.fechaGenerales);
         var today = new Date();
         var year = today.getFullYear().valueOf();
         newDesigna.ano = year;
@@ -359,6 +359,10 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     }
 
     return fecha;
+  }
+
+  fillFechaHastaCalendar(event){
+   this.fechaGenerales = event;
   }
 
 
@@ -428,7 +432,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
           newDesigna.numColegiado = this.inputs[0].value;
           newDesigna.nombreColegiado = this.inputs[1].value;
           newDesigna.apellidosNombre = this.inputs[2].value;
-          newDesigna.fechaAlta = this.fechaGenerales;
+          newDesigna.fechaAlta = new Date(this.fechaGenerales);
           var today = new Date();
           var year = today.getFullYear().valueOf();
           newDesigna.ano = year;
@@ -472,7 +476,12 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
           newDesigna.numColegiado = this.inputs[0].value;
           newDesigna.nombreColegiado = this.inputs[1].value;
           newDesigna.apellidosNombre = this.inputs[2].value;
-          newDesigna.fechaAlta = new Date(this.fechaGenerales);
+          let fechaCambiada = this.fechaGenerales.split("/");
+          let dia = fechaCambiada[0];
+          let mes = fechaCambiada[1];
+          let anioFecha = fechaCambiada[2];
+          let fechaCambiadaActual = mes + "/" + dia + "/" + anioFecha;
+          newDesigna.fechaAlta = new Date(fechaCambiadaActual);
           var today = new Date();
           var year = today.getFullYear().valueOf();
           newDesigna.ano = year;

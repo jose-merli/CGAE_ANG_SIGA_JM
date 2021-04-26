@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { ParametroRequestDto } from '../../models/ParametroRequestDto';
 import { SigaServices } from '../../_services/siga.service';
  
@@ -11,6 +11,9 @@ export class SelectorComponent implements OnInit {
   @Input() selector;
   @Input() i;
   @Input() textoVisible = "Seleccionar";
+  @Input() refresh;
+  @Input() refreshModulo;
+  @Input() refreshProcedimiento;
   @Output() busqueda = new EventEmitter<boolean>();
   @Output() busquedaProcedimiento = new EventEmitter<boolean>();
   @Output() busquedaModulo = new EventEmitter<boolean>();
@@ -84,12 +87,10 @@ export class SelectorComponent implements OnInit {
       
     }
     if(this.selector.nombre == "Partida Presepuestaria" && !this.nuevaDesigna){
-      // this.textoJuzgado = this.selector.opciones[0].label;setTimeout(() => {
-        setTimeout(() => {
       this.opcionSeleccionado = [this.selector.opciones[0].value];
-      this.getComboPartidaPresupuestaria(this.selector);
-      this.disable = false;
-    }, 10);
+        this.getComboPartidaPresupuestaria(this.selector);
+        this.disable = false;
+      
     }else if(this.selector.nombre == "Partida Presepuestaria" && this.nuevaDesigna){
       this.opcionSeleccionado = [-1];
       this.getComboPartidaPresupuestaria(this.selector);
@@ -103,9 +104,24 @@ export class SelectorComponent implements OnInit {
     }
     this.value.emit(this.verSeleccion);
   }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if(changes.refresh != undefined){
+      if(changes.refresh.currentValue != undefined && changes.refresh.currentValue != null && changes.refresh.currentValue != ""){
+        this.opcionSeleccionado = changes.refresh.currentValue;
+      }
+      if(changes.refreshProcedimiento.currentValue != undefined && changes.refreshProcedimiento.currentValue != null && changes.refreshProcedimiento.currentValue != ""){
+        this.opcionSeleccionado = changes.refreshProcedimiento.currentValue;
+      }
+      if(changes.refreshModulo.currentValue != undefined && changes.refreshModulo.currentValue != null && changes.refreshModulo.currentValue != ""){
+        this.opcionSeleccionado = changes.refreshModulo.currentValue;
+      }
+    }
+  }
+
   capturar() {
     // Pasamos el valor seleccionado a la variable verSeleccion
-    this.verSeleccion = this.opcionSeleccionado;
+    this.verSeleccion = [Number(this.opcionSeleccionado)];
     // this.value = this.verSeleccion[0];
     this.value.emit(this.verSeleccion);
     if(this.selector.nombre == "Juzgado"){
@@ -131,7 +147,6 @@ export class SelectorComponent implements OnInit {
       );
       this.busquedaModulo.emit(false);
     }
-    
   }
   getComboJuzgados(selectorJuzgado) {
     this.progressSpinner = true;

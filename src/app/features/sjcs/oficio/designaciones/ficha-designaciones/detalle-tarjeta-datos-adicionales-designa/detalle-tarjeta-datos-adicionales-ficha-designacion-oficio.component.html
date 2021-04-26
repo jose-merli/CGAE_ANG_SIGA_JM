@@ -7,7 +7,7 @@
         <div class="form-row w-100">
             <div class="form-group col-lg-8 col-md-8 w-100">
                 <label>{{ bloque.datePicker }}</label>
-                <app-fecha [utc]="true" [(value)]='bloque.valueDatePicker'></app-fecha>
+                <app-fecha [utc]="true" [(value)]='bloque.valueDatePicker' (valueChangeInput)="fillFechaHastaCalendar($event, bloque.datePicker)" (valueChangeSelected)="fillFechaHastaCalendar($event, bloque.datePicker)"></app-fecha>
             </div>
             <div class="form-group col-lg-4 col-md-4 w-100">
                 <div *ngIf="bloque.time" class="row">
