@@ -1,0 +1,15 @@
+<!-- Alertas -->
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<!-- Alertas -->
+
+<div id="fichaDesignacionOficio">
+  <app-letrado-entrante></app-letrado-entrante>
+  <app-letrado-saliente></app-letrado-saliente>
+  <span>Saludos!</span>
+</div>
+
+<!-- Spinner -->
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+</div>
+<!-- Spinner -->
