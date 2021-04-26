@@ -2,10 +2,11 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <!-- Alertas -->
 
-<div id="fichaDesignacionOficio">
+<div id="fichaCambioLetrado">
+  <app-tarjeta-resumen-fija class="pb-50" titulo="justiciaGratuita.oficio.turnos.inforesumen"
+  [datos]="datosTarjetaResumen" [icono]="iconoTarjetaResumen" [manuallyOpened]="true"></app-tarjeta-resumen-fija>
+  <app-letrado-saliente [saliente]="datosTaarjetaResumen"></app-letrado-saliente>
   <app-letrado-entrante></app-letrado-entrante>
-  <app-letrado-saliente></app-letrado-saliente>
-  <span>Saludos!</span>
 </div>
 
 <!-- Spinner -->
