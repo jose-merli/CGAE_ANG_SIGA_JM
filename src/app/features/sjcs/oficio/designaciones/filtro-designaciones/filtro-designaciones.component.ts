@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, HostListener } from '@angular/core';
 import { Message } from "primeng/components/common/api";
 import { TranslateService } from '../../../../../commons/translate';
 import { ColegiadoItem } from '../../../../../models/ColegiadoItem';
@@ -10,6 +10,10 @@ import { Router } from '@angular/router';
 import { procesos_oficio } from '../../../../../permisos/procesos_oficio';
 import { ControlAccesoDto } from '../../../../../models/ControlAccesoDto';
 import { FileAlreadyExistException } from '@angular-devkit/core';
+
+export enum KEY_CODE {
+  ENTER = 13
+}
 
 @Component({
   selector: 'app-filtro-designaciones',
@@ -141,7 +145,7 @@ export class FiltroDesignacionesComponent implements OnInit {
 
   checkAcceso() {
     let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = procesos_oficio.saltosCompensaciones;
+    controlAcceso.idProceso = procesos_oficio.designa;
 
     this.sigaServices.post("acces_control", controlAcceso).subscribe(
       data => {
@@ -715,5 +719,13 @@ getComboCalidad() {
     this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
     this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
   }
+
+    //búsqueda con enter
+    @HostListener("document:keypress", ["$event"])
+    onKeyPress(event: KeyboardEvent) {
+      if (event.keyCode === KEY_CODE.ENTER) {
+        this.buscar();
+      }
+    }
 
 }

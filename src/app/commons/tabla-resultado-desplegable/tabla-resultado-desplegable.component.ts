@@ -49,12 +49,20 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   totalRegistros = 0;
 
   @Input() comboModulos: any [];
+  @Input() comboJuzgados: any [];
+  @Input() comboAcreditacionesPorModulo: any [];
+  @Input() comboJuzgadosPorInstitucion: any [];
+
+  @Output() cargaJuzgadosPorInstitucion = new EventEmitter<String>();
+  @Output() cargaModulosPorJuzgado = new EventEmitter<String>();
+  @Output() cargaAcreditacionesPorModulo = new EventEmitter<String>();
 
   dataToUpdateArr: RowGroup[] = [];
   constructor(
     private renderer: Renderer2,
     private datepipe: DatePipe
   ) {
+
     this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
       for (let i = 0; i < this.table.nativeElement.children.length; i++) {
 
