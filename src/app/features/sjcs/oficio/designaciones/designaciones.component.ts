@@ -73,6 +73,59 @@ export class DesignacionesComponent implements OnInit {
         }, 5);
       });
   }
+
+  actualizacionJustificacionExpres(event){
+   
+console.log('event param to back: ', event)
+    this.sigaServicesNew.post("justificacionExpres_actualizacion", event).subscribe(
+      data => {
+       
+
+        if(data!=undefined && data!=null){
+          let respuesta = JSON.parse(data.body);
+        }
+      },
+      err => {
+        
+
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        console.log(err);
+      },);
+  }
+  eliminacionJustificacionExpres(event){
+   
+
+    this.sigaServicesNew.post("justificacionExpres_eliminacion", event).subscribe(
+      data => {
+       
+
+        if(data!=undefined && data!=null){
+          let respuesta  = JSON.parse(data.body);
+        }
+      },
+      err => {
+       
+
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        console.log(err);
+      },);
+  }
+  insercionJustificacionExpres(event){
+
+    this.sigaServicesNew.post("justificacionExpres_insercion", event).subscribe(
+      data => {
+
+        if(data!=undefined && data!=null){
+          let respuesta  = JSON.parse(data.body);
+        }
+      },
+      err => {
+
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        console.log(err);
+      },);
+  }
+
   
   clear() {
     this.msgs = [];
@@ -205,8 +258,17 @@ export class DesignacionesComponent implements OnInit {
   }
 
   esColegiado(event){
-this.colegiado = event;
-console.log('this.colegiado: ', this.colegiado)
+    this.colegiado = event;
+    console.log('this.colegiado: ', this.colegiado)
   }
  
+  actuacionesToDleteArr(event){
+    this.eliminacionJustificacionExpres(event);
+  }
+  newActuacionItem(event){
+    this.insercionJustificacionExpres(event);
+  }
+  dataToUpdateArr(event){
+    this.actualizacionJustificacionExpres(event);
+  }
 }

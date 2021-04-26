@@ -152,10 +152,10 @@ export class FiltroDesignacionesComponent implements OnInit {
         this.esColegiado=true;
         if (derechoAcceso == 3) { //es colegio
           this.esColegiado = false;
-          this.isColeg.emit(false);
+          //this.isColeg.emit(false);
         } else if (derechoAcceso == 2) {//es colegiado
           this.esColegiado = true;
-          this.isColeg.emit(true);
+          //this.isColeg.emit(true);
         } else {
           sessionStorage.setItem("codError", "403");
           sessionStorage.setItem(

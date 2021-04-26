@@ -19,9 +19,13 @@ export class Cell {
   type: string;
   value: any;
   size: number;
-  combo: {};
+  combo: Combo[];
 }
 
+export class Combo {
+  label: string;
+  value: string;
+}
 export class TablaResultadoDesplegableJEService {
   constructor() { }
 
@@ -32,7 +36,8 @@ export class TablaResultadoDesplegableJEService {
           "": [
             {
               a1: [
-                { type: '', value: '' , size: '', combo: {}},
+                { type: '', value: '' , size: '', combo: [{label: "", value: ""},
+                                                  {label: "", value: ""}]},
               ],
               position: 'collapse'
             }
@@ -47,7 +52,8 @@ export class TablaResultadoDesplegableJEService {
           "": [
             {
               b1: [
-                { type: '', value: '', size: '' , combo: {}},
+                { type: '', value: '', size: '' , combo: [{label: "", value: ""},
+                {label: "", value: ""}]},
               ],
               position: 'collapse'
             

@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Message } from 'primeng/primeng';
 import { Cell, Row, RowGroup, TablaResultadoDesplegableJEService } from '../../../../../commons/tabla-resultado-desplegable/tabla-resultado-desplegable-je.service';
@@ -89,52 +89,6 @@ export class TablaJustificacionExpresComponent implements OnInit {
     }
   ];
   
-  selectores1 = [
-    {
-      nombre: "Estado",
-      opciones: [{ label: 'XXXXXXXXXXX', value: 1 },
-      { label: 'XXXXXXXXXXX', value: 2 },
-      { label: 'XXXXXXXXXXX', value: 3 },]
-    },
-    {
-      nombre: "Actuaciones Validadas",
-      opciones: [{ label: 'XXXXXXXXXXX', value: 1 },
-      { label: 'XXXXXXXXXXX', value: 2 },
-      { label: 'XXXXXXXXXXX', value: 3 },]
-    },
-    {
-      nombre: "Incluir sin EJG",
-      opciones: [{ label: 'XXXXXXXXXXX', value: 1 },
-      { label: 'XXXXXXXXXXX', value: 2 },
-      { label: 'XXXXXXXXXXX', value: 3 },]
-    },
-    {
-      nombre: "Con EJG no favorables",
-      opciones: [{ label: 'XXXXXXXXXXX', value: 1 },
-      { label: 'XXXXXXXXXXX', value: 2 },
-      { label: 'XXXXXXXXXXX', value: 3 },]
-    },
-    {
-      nombre: "EJG's sin resolución",
-      opciones: [{ label: 'XXXXXXXXXXX', value: 1 },
-      { label: 'XXXXXXXXXXX', value: 2 },
-      { label: 'XXXXXXXXXXX', value: 3 },]
-    },
-    {
-      nombre: "EJG's Resolución PTE CAJG",
-      opciones: [{ label: 'XXXXXXXXXXX', value: 1 },
-      { label: 'XXXXXXXXXXX', value: 2 },
-      { label: 'XXXXXXXXXXX', value: 3 },]
-    }
-  ];
-  
-  datePickers1 = ["Fecha de Justificación Desde", "Fecha de Justificación Hasta"];
-  datePickers2 = ["Fecha de Designación Desde", "Fecha de Designación Hasta"];
-  datePickers = [this.datePickers1, this.datePickers2];
-  
-  inputs1 = [
-    "Año Designación", "Número Designación", "Apellidos", "Nombre", "Año EJG", "Número EJG"
-  ];
 
   comboModulos: any [];
 
@@ -142,9 +96,13 @@ export class TablaJustificacionExpresComponent implements OnInit {
   actuacionToAdd: Row;
   dataToUpdate: RowGroup[];
   actuacionesItem = {};
-  actuacionesToDleteArr = []; // para enviar a backend - ELIMINAR
-  newActuacionItem = {}; // para enviar a backend -  NUEVO
-  dataToUpdateArr = []; // para enviar a backend -  GUARDAR
+
+  @Output() actuacionesToDleteArr = []; // para enviar a backend - ELIMINAR
+  @Output() newActuacionItem = {};// para enviar a backend -  NUEVO
+  @Output() dataToUpdateArr = []; // para enviar a backend -  GUARDAR
+  @Output() actuacionesToDleteArrEmit = new EventEmitter<any[]>(); // para enviar a backend - ELIMINAR
+  @Output() newActuacionItemEmit = new EventEmitter<{}>();// para enviar a backend -  NUEVO
+  @Output() dataToUpdateArrEmit = new EventEmitter<any[]>(); // para enviar a backend -  GUARDAR
   constructor(private trdService: TablaResultadoDesplegableJEService, private datepipe: DatePipe,
     private commonsService: CommonsService, private sigaServices: SigaServices) 
   { }
@@ -422,6 +380,7 @@ console.log('this.datosJustificacion: ', this.datosJustificacion)
     let actuacionesCells : Cell[];
     actuacionesCells = actuacionToAdd.cells;
     this.newActuacionItem = this.actCellToJson(actuacionesCells);
+    this.newActuacionItemEmit.emit(this.newActuacionItem);
 }
   getActuacionesToDelete(event){
     this.actuacionesToDelete = event;
@@ -434,6 +393,7 @@ console.log('this.datosJustificacion: ', this.datosJustificacion)
     this.actuacionesItem = this.actCellToJson(actuacionesCells);
     this.actuacionesToDleteArr.push(this.actuacionesItem);
   });
+  this.actuacionesToDleteArrEmit.emit(this.actuacionesToDleteArr);
 }
 
 
@@ -459,6 +419,7 @@ this.dataToUpdate = event;
   })
 
   console.log('GUARDAR this.dataToUpdateArr: ', this.dataToUpdateArr)
+  this.dataToUpdateArrEmit.emit(this.dataToUpdateArr);
 }
 
 actCellToJson(actuacionesCells){

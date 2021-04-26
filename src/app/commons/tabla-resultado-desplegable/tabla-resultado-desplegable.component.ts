@@ -18,6 +18,12 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   @Input() pantalla: string = '';
   @Input() s = false;
   @Input() colegiado;
+  @Input() comboJuzgados = [{label: "", value: ""},
+  {label: "", value: ""}];
+  @Input() comboModulo = [{label: "", value: ""},
+  {label: "", value: ""}];
+  @Input() comboAcreditacion = [{label: "", value: ""},
+  {label: "", value: ""}];
   @Output() anySelected = new EventEmitter<any>();
   @Output() designasToDelete = new EventEmitter<any[]>();
   @Output() actuacionesToDelete = new EventEmitter<any[]>();
@@ -506,13 +512,16 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           console.log('id: ', id)
           let newArrayCells: Cell[] = [
             { type: 'checkbox', value: false, size: 50 , combo: null},
-            { type: 'multiselect', value: '',size: 153 , combo: {}},
+            { type: 'multiselect', value: '',size: 153 , combo: [{label: "", value: ""},
+            {label: "", value: ""}]},
             { type: 'input', value: '', size: 15, combo: null},
             { type: 'input', value: '', size: 153 , combo: null},
-            { type: 'select', value: '', size: 153 , combo: null}, //modulo
+            { type: 'select', value: '', size: 153 , combo: [{label: "", value: ""},
+            {label: "", value: ""}]}, //modulo
             { type: 'datePicker', value: '', size: 153 , combo: null},
             { type: 'datePicker', value: '' , size: 153, combo: null},
-            { type: 'input', value: '' , size: 50, combo: null},
+            { type: 'input', value: '' , size: 50, combo: [{label: "", value: ""},
+            {label: "", value: ""}]},
             // { type: 'checkbox', value: obj.val }
             { type: 'checkbox', value: false, size: 50 , combo: null},
             { type: 'invisible', value:  '' , size: 0, combo: null},
