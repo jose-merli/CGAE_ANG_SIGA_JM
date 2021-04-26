@@ -513,39 +513,39 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           let id = Object.keys(rowGroup.rows)[0];
           console.log('id: ', id)
           let newArrayCells: Cell[] = [
-            { type: 'checkbox', value: false, size: 50 },
-            { type: 'input', value: '', size: 153 },
-            { type: 'input', value: '', size: 153},
-            { type: 'input', value: '', size: 153 },
-            { type: 'select', value: '', size: 153 }, //modulo
-            { type: 'datePicker', value: '', size: 153 },
-            { type: 'datePicker', value: '' , size: 153},
-            { type: 'input', value: '' , size: 50},
+            { type: 'checkbox', value: false, size: 50 , combo: null},
+            { type: 'multiselect', value: '',size: 153 , combo: {}},
+            { type: 'input', value: '', size: 15, combo: null},
+            { type: 'input', value: '', size: 153 , combo: null},
+            { type: 'select', value: '', size: 153 , combo: null}, //modulo
+            { type: 'datePicker', value: '', size: 153 , combo: null},
+            { type: 'datePicker', value: '' , size: 153, combo: null},
+            { type: 'input', value: '' , size: 50, combo: null},
             // { type: 'checkbox', value: obj.val }
-            { type: 'checkbox', value: false, size: 50 },
-            { type: 'invisible', value:  '' , size: 0},
-            { type: 'invisible', value:  '' , size: 0},
-            { type: 'invisible', value:  '' , size: 0},
-            { type: 'invisible', value:  '' , size: 0},
-            { type: 'invisible', value:  '' , size: 0},
-            { type: 'invisible', value:  '' , size: 0},
-            { type: 'invisible', value:  '' , size: 0},
-            { type: 'invisible', value:  '' , size: 0},
-            { type: 'invisible', value:  '' , size: 0},
-            { type: 'invisible', value:  '' , size: 0},
-            { type: 'invisible', value:  '' , size: 0},
-            { type: 'invisible', value:  '' , size: 0},
-            { type: 'invisible', value:  '' , size: 0},
-            { type: 'invisible', value:  '' , size: 0},
-            { type: 'invisible', value:  '' , size: 0},
-            { type: 'invisible', value:  '' , size: 0},
-            { type: 'invisible', value:  '' , size: 0},
-            { type: 'invisible', value:  '' , size: 0},
-            { type: 'invisible', value:  '' , size: 0},
-            { type: 'invisible', value:  '' , size: 0},
-            { type: 'invisible', value:  '' , size: 0},
-            { type: 'invisible', value:  '' , size: 0},
-            { type: 'invisible', value:  '' , size: 0}];
+            { type: 'checkbox', value: false, size: 50 , combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null}];
           
           let newRow: Row = {cells: newArrayCells, position: 'noCollapse'};
           rowGroup.rows.push(newRow);
@@ -575,12 +575,12 @@ export class TablaResultadoDesplegableComponent implements OnInit {
 
     //2. Actualizar editados
     let rowIdsToUpdateNOT_REPEATED = new Set(this.rowIdsToUpdate);
-    this.rowIdsToUpdate = [rowIdsToUpdateNOT_REPEATED];
+    this.rowIdsToUpdate = Array.from(rowIdsToUpdateNOT_REPEATED);
   console.log('rowIdsToUpdate: ', this.rowIdsToUpdate)
     this.rowGroups.forEach(row => {
       console.log('row.id: ', row.id)
-      console.log('this.rowIdsToUpdate.includes(row.id): ', this.rowIdsToUpdate.includes(row.id))
-      if(this.rowIdsToUpdate.includes(row.id.toString())){
+      console.log('this.rowIdsToUpdate.indexOf(row.id.toString()): ', this.rowIdsToUpdate.indexOf(row.id.toString()))
+      if(this.rowIdsToUpdate.indexOf(row.id.toString()) >= 0){
         this.dataToUpdateArr.push(row);
         console.log('dataToUpdateArr: ', this.dataToUpdateArr)
       }

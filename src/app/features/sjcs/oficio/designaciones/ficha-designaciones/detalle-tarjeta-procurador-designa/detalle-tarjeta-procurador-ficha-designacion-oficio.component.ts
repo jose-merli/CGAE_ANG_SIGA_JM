@@ -211,8 +211,6 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
 
   cerrarModal(){
     this.showModal = false;
-    this.showModal2 = false;
-    this.showModal3 = false;
   }
 
   restablecerProcurador(){
@@ -246,6 +244,10 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
       summary: summary,
       detail: msg
     });
+  }
+
+    clear() {
+    this.msgs = [];
   }
 }
 function compare(a: string, b: number | string, isAsc: boolean) {

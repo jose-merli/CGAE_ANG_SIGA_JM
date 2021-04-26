@@ -7,6 +7,7 @@ export class RowGroup {
   id2: string;
   id3: string;
   estadoDesignacion: string;
+  estadoEx: string;
 }
 
 export class Row {
@@ -18,6 +19,7 @@ export class Cell {
   type: string;
   value: any;
   size: number;
+  combo: {};
 }
 
 export class TablaResultadoDesplegableJEService {
@@ -30,7 +32,7 @@ export class TablaResultadoDesplegableJEService {
           "": [
             {
               a1: [
-                { type: '', value: '' , size: ''},
+                { type: '', value: '' , size: '', combo: {}},
               ],
               position: 'collapse'
             }
@@ -38,13 +40,14 @@ export class TablaResultadoDesplegableJEService {
           "1": "",
           "2": "",
           "estadoDesignacion": "",
+          "estadoEx": ""
         },
 
         {
           "": [
             {
               b1: [
-                { type: '', value: '', size: '' },
+                { type: '', value: '', size: '' , combo: {}},
               ],
               position: 'collapse'
             
@@ -53,6 +56,7 @@ export class TablaResultadoDesplegableJEService {
           "1": "",
           "2": "",
           "estadoDesignacion": "",
+          "estadoEx": ""
         },
       ],
     };
@@ -71,6 +75,7 @@ export class TablaResultadoDesplegableJEService {
           cellObject.type = cell['type'];
           cellObject.value = cell['value'];
           cellObject.size = cell['size'];
+          cellObject.combo = cell['combo'];
           cells.push(cellObject);
         });
         rowObject.cells = cells;
@@ -80,8 +85,11 @@ export class TablaResultadoDesplegableJEService {
 
       rowGroupObject.id = Object.keys(rowGroup)[0];
       rowGroupObject.id2 = Object.keys(rowGroup)[1];
+      console.log('rowGroupObject.id2: ', rowGroupObject.id2)
       rowGroupObject.id3 = Object.keys(rowGroup)[2];
       rowGroupObject.estadoDesignacion = Object.keys(rowGroup)[3];
+      rowGroupObject.estadoEx = Object.keys(rowGroup)[4];
+      
       rowGroupObject.rows = rows;
 
       rowGroups.push(rowGroupObject);

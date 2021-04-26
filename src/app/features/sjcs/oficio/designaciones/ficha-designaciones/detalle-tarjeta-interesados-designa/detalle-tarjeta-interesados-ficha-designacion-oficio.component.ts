@@ -5,6 +5,7 @@ import { PersistenceService } from '../../../../../../_services/persistence.serv
 import { Router } from '@angular/router';
 import { DesignaItem } from '../../../../../../models/sjcs/DesignaItem';
 import { JusticiableBusquedaItem } from '../../../../../../models/sjcs/JusticiableBusquedaItem';
+import { Message } from 'primeng/components/common/api';
 
 @Component({
   selector: 'app-detalle-tarjeta-interesados-ficha-designacion-oficio',
@@ -13,7 +14,7 @@ import { JusticiableBusquedaItem } from '../../../../../../models/sjcs/Justiciab
 })
 export class DetalleTarjetaInteresadosFichaDesignacionOficioComponent implements OnInit {
   
-  msgs;
+  msgs:Message[] = [];
 
   @Output() searchInteresados = new EventEmitter<boolean>();
 

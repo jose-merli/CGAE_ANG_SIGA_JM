@@ -27,4 +27,6 @@ export class ActuacionDesignaItem {
     idPersonaColegiado: string;
 	nombreJuzgado: string;
 	observacionesJusti: string;
+    idMotivoCambio: string;
+    idFacturacion: string;
 }

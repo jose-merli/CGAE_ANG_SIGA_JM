@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, HostListener } from '@angular/core';
 import { Message } from "primeng/components/common/api";
 import { TranslateService } from '../../../../../commons/translate';
 import { ColegiadoItem } from '../../../../../models/ColegiadoItem';
@@ -10,6 +10,10 @@ import { Router } from '@angular/router';
 import { procesos_oficio } from '../../../../../permisos/procesos_oficio';
 import { ControlAccesoDto } from '../../../../../models/ControlAccesoDto';
 import { FileAlreadyExistException } from '@angular-devkit/core';
+
+export enum KEY_CODE {
+  ENTER = 13
+}
 
 @Component({
   selector: 'app-filtro-designaciones',
@@ -80,7 +84,6 @@ export class FiltroDesignacionesComponent implements OnInit {
   ngOnInit(): void {
 
     // let esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
-    // this.isColeg.emit(esColegiado);
     // if(!esColegiado){   
     this.checkAcceso();
   // }
@@ -102,7 +105,6 @@ export class FiltroDesignacionesComponent implements OnInit {
     this.showDesignas=true;
     this.showJustificacionExpress=false;
     this. esColegiado = false;
-    this.isColeg.emit(this.esColegiado);
     this.progressSpinner=true;
     this.showDesignas = true;
     this.checkRestricciones = false;
@@ -118,7 +120,6 @@ export class FiltroDesignacionesComponent implements OnInit {
     if (this.esColegiado) {
       this.disabledBusquedaExpress = true;
       this.getDataLoggedUser();
-      this.isColeg.emit(true);
     }else{
       this.disabledBusquedaExpress = false;
       this.filtroJustificacion.ejgSinResolucion="2"; 
@@ -155,8 +156,10 @@ export class FiltroDesignacionesComponent implements OnInit {
         this.esColegiado=true;
         if (derechoAcceso == 3) { //es colegio
           this.esColegiado = false;
+          this.isColeg.emit(false);
         } else if (derechoAcceso == 2) {//es colegiado
           this.esColegiado = true;
+          this.isColeg.emit(true);
         } else {
           sessionStorage.setItem("codError", "403");
           sessionStorage.setItem(
@@ -602,7 +605,6 @@ getComboCalidad() {
         nombreAp: ''
       };
     }
-    this.isColeg.emit(this.esColegiado);
     this.getBuscadorDesignas();
   }
 
@@ -661,7 +663,6 @@ getComboCalidad() {
   getDataLoggedUser() {
     this.progressSpinner = true;
     this.esColegiado = false;
-    this.isColeg.emit(this.esColegiado);
     //si es colegio, valor por defecto para justificacion
     this.filtroJustificacion.ejgSinResolucion="2"; 
     this.filtroJustificacion.sinEJG="2";
@@ -687,7 +688,6 @@ getComboCalidad() {
         this.filtroJustificacion.conEJGNoFavorables="0";
 
         this.esColegiado = true;
-        this.isColeg.emit(this.esColegiado);
         this.checkRestricciones = true;
       },
       err =>{
@@ -719,5 +719,13 @@ getComboCalidad() {
     this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
     this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
   }
+
+    //búsqueda con enter
+    @HostListener("document:keypress", ["$event"])
+    onKeyPress(event: KeyboardEvent) {
+      if (event.keyCode === KEY_CODE.ENTER) {
+        this.buscar();
+      }
+    }
 
 }
