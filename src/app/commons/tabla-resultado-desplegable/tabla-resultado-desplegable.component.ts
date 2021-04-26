@@ -518,16 +518,13 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           console.log('id: ', id)
           let newArrayCells: Cell[] = [
             { type: 'checkbox', value: false, size: 50 , combo: null},
-            { type: 'multiselect', value: '',size: 153 , combo: [{label: "", value: ""},
-            {label: "", value: ""}]},
+            { type: 'multiselect', value: '',size: 153 , combo: this.comboJuzgados},
             { type: 'input', value: '', size: 15, combo: null},
             { type: 'input', value: '', size: 153 , combo: null},
-            { type: 'select', value: '', size: 153 , combo: [{label: "", value: ""},
-            {label: "", value: ""}]}, //modulo
+            { type: 'multiselect', value: '', size: 153 , combo: this.comboModulos}, //modulo
             { type: 'datePicker', value: '', size: 153 , combo: null},
             { type: 'datePicker', value: '' , size: 153, combo: null},
-            { type: 'input', value: '' , size: 50, combo: [{label: "", value: ""},
-            {label: "", value: ""}]},
+            { type: 'multiselect', value: '' , size: 50, combo: this.comboAcreditacion},
             // { type: 'checkbox', value: obj.val }
             { type: 'checkbox', value: false, size: 50 , combo: null},
             { type: 'invisible', value:  '' , size: 0, combo: null},
