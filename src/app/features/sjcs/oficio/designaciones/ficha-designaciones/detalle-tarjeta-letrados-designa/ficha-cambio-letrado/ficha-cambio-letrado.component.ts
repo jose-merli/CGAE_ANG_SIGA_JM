@@ -51,8 +51,7 @@ export class FichaCambioLetradoComponent implements OnInit {
   }
 
   save(){
-
     
-    if(this.entrante.body.numColegiado!=null && this.entrante.body.numColegiado!="" && this.entrante.body.art27==false) {}
+    if(this.entrante.body.numColegiado != undefined && this.entrante.body.numColegiado!="" && this.entrante.body.art27==false) {}
   }
 }
