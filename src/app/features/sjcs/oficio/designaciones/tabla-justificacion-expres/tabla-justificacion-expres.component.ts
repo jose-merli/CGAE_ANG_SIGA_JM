@@ -118,11 +118,6 @@ export class TablaJustificacionExpresComponent implements OnInit {
     this.cargaInicial();
 
     this.getJuzgados();
-
-    //pruebas
-    this.cargaModulosPorJuzgado("129");
-    this.cargaJuzgadosPorInstitucion("2005");
-    this.cargaAcreditacionesPorModulo("");
   }
 
   getJuzgados(){
