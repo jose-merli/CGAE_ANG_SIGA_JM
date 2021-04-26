@@ -111,6 +111,9 @@ export class TablaJustificacionExpresComponent implements OnInit {
 
   ngOnInit(): void {
 
+    
+    this.cargaJuzgadosPorInstitucion("2005");
+
     this.progressSpinner=true;
 
     this.datosJustificacionAux = this.datosJustificacion;
@@ -120,9 +123,8 @@ export class TablaJustificacionExpresComponent implements OnInit {
     this.getJuzgados();
 
     //pruebas
-    this.cargaModulosPorJuzgado("129");
-    this.cargaJuzgadosPorInstitucion("2005");
-    this.cargaAcreditacionesPorModulo("");
+    //this.cargaModulosPorJuzgado("129");
+    //this.cargaAcreditacionesPorModulo("");
   }
 
   getJuzgados(){
@@ -146,8 +148,9 @@ export class TablaJustificacionExpresComponent implements OnInit {
 
     this.sigaServices.post("combo_comboAcreditacionesPorModulo", $event).subscribe(
       n => {
-        this.comboAcreditacionesPorModulo = n.combooItems;
-        this.commonsService.arregloTildesCombo(this.comboJuzgados);
+        this.comboAcreditacionesPorModulo = JSON.parse(n.body).combooItems;
+        console.log('this.comboAcreditacionesPorModulo 1: ', this.comboAcreditacionesPorModulo)
+        this.commonsService.arregloTildesCombo(this.comboAcreditacionesPorModulo);
         this.progressSpinner = false;
       },
       err => {
@@ -159,11 +162,12 @@ export class TablaJustificacionExpresComponent implements OnInit {
 
   cargaModulosPorJuzgado($event){
     this.progressSpinner = true;
- 
+ console.log('juzgado pulsado', $event)
     this.sigaServices.post("combo_comboModulosConJuzgado", $event).subscribe(
       n => {
         this.comboModulos = JSON.parse(n.body).combooItems;
-        this.commonsService.arregloTildesCombo(this.comboJuzgadosPorInstitucion);
+        console.log('this.comboModulos 1: ', this.comboModulos)
+        this.commonsService.arregloTildesCombo(this.comboModulos);
         this.progressSpinner = false;
       },
       err => {
@@ -175,11 +179,10 @@ export class TablaJustificacionExpresComponent implements OnInit {
 
   cargaJuzgadosPorInstitucion($event){
     this.progressSpinner = true;
-
     this.sigaServices.post("combo_comboJuzgadoPorInstitucion", $event).subscribe(
       n => {
-        this.comboJuzgadosPorInstitucion = n.combooItems;
-        console.log('this.comboJuzgadosPorInstitucion: ', this.comboJuzgadosPorInstitucion)
+        this.comboJuzgadosPorInstitucion = JSON.parse(n.body).combooItems;
+        console.log('comboJuzgados 1: ', this.comboJuzgados)
         this.commonsService.arregloTildesCombo(this.comboJuzgadosPorInstitucion);
         this.progressSpinner = false;
       },
