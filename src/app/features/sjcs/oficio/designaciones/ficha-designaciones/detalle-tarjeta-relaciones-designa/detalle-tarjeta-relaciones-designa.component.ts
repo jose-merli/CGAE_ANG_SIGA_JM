@@ -68,11 +68,11 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit {
   getCols() {
     this.cols = [
       { field: "sjcs", header: "justiciaGratuita.oficio.designas.interesados.identificador" },
-      { field: "anio", header: "dato.jgr.guardia.saltcomp.fecha" },
-      { field: "numero", header: "justiciaGratuita.justiciables.literal.turnoGuardia" },
-      { field: "destipo", header: "justiciaGratuita.sjcs.designas.colegiado" },
-      { field: "desturno", header: "justiciaGratuita.sjcs.designas.datosInteresados" },
-      { field: "idletrado", header: "justiciaGratuita.justiciables.literal.datosInteres" }
+      { field: "anio", header: "justiciaGratuita.sjcs.designas.DatosIden.ano" },
+      { field: "numero", header: "gratuita.busquedaAsistencias.literal.numero" },
+      { field: "destipo", header: "censo.nuevaSolicitud.tipoSolicitud" },
+      { field: "desturno", header: "dato.jgr.guardia.guardias.turno" },
+      { field: "idletrado", header: "justiciaGratuita.sjcs.designas.colegiado" }
     ];
 
     this.rowsPerPage = [
@@ -120,15 +120,15 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit {
 
     console.log(this.selectedDatos);
 
-  this.sigaServices.post("designaciones_eliminarRelacion", this.selectedDatos).subscribe(
-    data => {
-        this.showMessage("succes", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+    this.sigaServices.post("designaciones_eliminarRelacion", this.selectedDatos).subscribe(
+      data => {
+          this.showMessage("succes", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.progressSpinner = false;
+    },
+    err => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         this.progressSpinner = false;
-  },
-  err => {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-      this.progressSpinner = false;
-    }
-  );
+      }
+    );
   }
 }
