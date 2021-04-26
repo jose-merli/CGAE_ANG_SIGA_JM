@@ -539,13 +539,11 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.rowGroups.forEach((rowGroup,i) => {
       rowGroup.rows.forEach(row =>{
         row.cells.forEach(cell => {
-          if (cell.value == "Seleccione un juzgado") {
+          if (cell.type == 'multiselect2') {
             cell.combo = comboModulos;
-            cell.value = 'Seleccionar';
             rowGroupFound = true;
-          }else if (cell.value == "Seleccione un modulo") {
+          }else if (cell.type == 'multiselect3') {
             cell.combo = comboAcreditacion;
-            cell.value = 'Seleccionar';
             rowGroupFound = true;
           } 
         })
@@ -570,13 +568,13 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           let id = Object.keys(rowGroup.rows)[0];
           let newArrayCells: Cell[] = [
             { type: 'checkbox', value: false, size: 50 , combo: null},
-            { type: 'multiselect', value: '',size: 153 , combo: this.comboJuzgados},
-            { type: 'input', value: '', size: 15, combo: null},
+            { type: 'multiselect1', value: '',size: 153 , combo: this.comboJuzgados},
+            { type: 'input', value: '', size: 153, combo: null},
             { type: 'input', value: '', size: 153 , combo: null},
-            { type: 'multiselect', value: 'Seleccione un juzgado', size: 153 , combo: this.comboModulos}, //modulo
+            { type: 'multiselect2', value: 'Seleccione un juzgado', size: 153 , combo: this.comboModulos}, //modulo
             { type: 'datePicker', value: '', size: 153 , combo: null},
             { type: 'datePicker', value: '' , size: 153, combo: null},
-            { type: 'multiselect', value: 'Seleccione un modulo' , size: 50, combo: this.comboAcreditacion},
+            { type: 'multiselect3', value: 'Seleccione un modulo' , size: 153, combo: this.comboAcreditacion},
             // { type: 'checkbox', value: obj.val }
             { type: 'checkbox', value: false, size: 50 , combo: null},
             { type: 'invisible', value:  '' , size: 0, combo: null},

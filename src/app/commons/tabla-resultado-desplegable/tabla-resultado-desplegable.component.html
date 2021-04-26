@@ -115,7 +115,7 @@
                             <span class="w100 cell-value" *ngIf="cell.type == 'textTooltip'">
                                 <span [pTooltip]="cell.value[0]" tooltipPosition="right">{{ cell.value[1] }}</span>
                             </span>
-                            <span class="w100 cell-value selectWrap wrapText" *ngIf="cell.type == 'multiselect'">
+                            <span class="w100 cell-value selectWrap wrapText" *ngIf="cell.type == 'multiselect1' || cell.type == 'multiselect2' || cell.type == 'multiselect3'">
                                 <!--<p-multiSelect #{i} autoWidth="false" [(ngModel)]='cell.value' [selectedItemsLabel]="textSelected" [defaultLabel]="textFilter"
                                 [options]="cell.combo" maxSelectedLabels="10"  styleClass="widthAll"
                                 [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeMulti($event, row['id'], cell, z)" >
@@ -201,7 +201,7 @@
                             <span class="w100 cell-value" *ngIf="cell.type == 'input'">
                                 <input type="text"
                                      class="form-control" pInputText size="10" [placeholder]="cell.value" [(ngModel)]="cell.value" (input)="inputChange($event.target.value, rowGroup.id)"></span>
-                                     <span class="w100 cell-value selectWrap wrapText" *ngIf="cell.type == 'multiselect'">
+                                     <span class="w100 cell-value selectWrap wrapText" *ngIf="cell.type == 'multiselect1' || cell.type == 'multiselect2' || cell.type == 'multiselect3'">
                                         <!--<p-multiSelect #{i} autoWidth="false" [(ngModel)]='cell.value' [selectedItemsLabel]="textSelected" [defaultLabel]="textFilter"
                                         [options]="cell.combo" maxSelectedLabels="10"  styleClass="widthAll"
                                         [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeMulti($event, row['id'], cell, z)" >
