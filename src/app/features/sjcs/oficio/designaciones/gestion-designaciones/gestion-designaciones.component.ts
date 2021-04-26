@@ -26,7 +26,7 @@ export class GestionDesignacionesComponent implements OnInit {
   selectedItem: number = 10;
   initDatos;
   datosInicial = [];
-  selectedDatos;
+  selectedDatos: any[] = [];
   isLetrado:boolean = false;
   first = 0;
   progressSpinner: boolean = false;
@@ -100,10 +100,10 @@ export class GestionDesignacionesComponent implements OnInit {
   }
 
   openTab(dato){
-    let idProcedimiento = dato.idProcedimiento;;
+    let idProcedimiento = dato.idProcedimiento;
     let datosProcedimiento;
     let datosModulo;
-    if(dato.idTipoDesignaColegio != null && dato.idTipoDesignaColegio != undefined){
+    if(dato.idTipoDesignaColegio != null && dato.idTipoDesignaColegio != undefined && this.comboTipoDesigna != undefined){
       this.comboTipoDesigna.forEach(element => {
        if(element.value == dato.idTipoDesignaColegio){
         dato.descripcionTipoDesigna = element.label;
@@ -144,7 +144,9 @@ export class GestionDesignacionesComponent implements OnInit {
                 dato.modulo = datosModulo[0].modulo;
                 dato.idModulo = datosModulo[0].idModulo;
               }
-              
+              sessionStorage.setItem("nuevaDesigna",  "false");
+              sessionStorage.setItem("designaItemLink",  JSON.stringify(dato));
+              this.router.navigate(["/fichaDesignaciones"]);
              
             },
             err => {
@@ -154,7 +156,6 @@ export class GestionDesignacionesComponent implements OnInit {
             },() => {
               this.progressSpinner = false;
             });;
-      
         },
         err => {
           this.progressSpinner = false;
@@ -162,13 +163,6 @@ export class GestionDesignacionesComponent implements OnInit {
         },() => {
           this.progressSpinner = false;
         });;
-        this.progressSpinner = true;
-        setTimeout(()=>{
-          sessionStorage.setItem("nuevaDesigna",  "false");
-        sessionStorage.setItem("designaItemLink",  JSON.stringify(dato));
-        this.router.navigate(["/fichaDesignaciones"]);
-        this.progressSpinner = true;
-        }, 10);
         
   }
 
@@ -247,9 +241,9 @@ arregloTildesCombo(combo) {
   }
 
   clickFila(event) {
-    if (event.data) { //} && !event.data.fechaBaja) {
-      this.selectedDatos.pop();
-    }
+    // if (event.data) { //} && !event.data.fechaBaja) {
+    //   this.selectedDatos.pop();
+    // }
   }
 
   showMessage(severity, summary, msg) {

@@ -11,11 +11,13 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 export class DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent implements OnInit {
   datosInicial: any;
   @Input() campos;
-  selector =
+  selector =[
     {
       nombre: "Partida Presepuestaria",
-      opciones: []
-    };
+      opciones: [],
+      value: ""
+    }];
+    
   nuevaDesigna: any;
   msgs: Message[] = [];
 
@@ -25,7 +27,9 @@ export class DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent imple
     this.datosInicial = this.campos;
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
   if(!this.nuevaDesigna){
+    
       this.getIdPartidaPresupuestaria(this.campos);
+     
   }else{
     this.getComboPartidaPresupuestaria();
   }
@@ -54,7 +58,9 @@ export class DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent imple
     facturacionDesigna.numero = designaItem.numero;
     this.sigaServices.post("designaciones_getDatosFacturacion", facturacionDesigna).subscribe(
       n => {
-        console.log(n.combooItems);
+        let a =  JSON.parse(n.body);
+        this.selector[0].opciones = [{label: a.combooItems[0].label, value: a.combooItems[0].value}];
+        this.selector[0].value =  a.combooItems[0].value;
       },
       err => {
         console.log(err);

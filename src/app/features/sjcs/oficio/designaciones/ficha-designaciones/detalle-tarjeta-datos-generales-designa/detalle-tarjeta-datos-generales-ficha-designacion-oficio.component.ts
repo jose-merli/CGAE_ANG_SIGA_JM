@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService, Message } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../../../commons/translate';
@@ -24,6 +24,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
   disableButtons: boolean;
   @Input() campos;
   @Input() selectedValue;
+  @Output() refreshDataGenerales = new EventEmitter<DesignaItem>();
   anio = {
     value: "",
     disable: false
@@ -274,6 +275,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
             n => {
               sessionStorage.removeItem("nuevaDesigna");
               sessionStorage.setItem("nuevaDesigna",  "false");
+              this.refreshDataGenerales.emit(newDesigna);
               //MENSAJE DE TODO CORRECTO
               this.msgs.push({
                 severity,
@@ -299,7 +301,8 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         newDesigna.numColegiado = this.inputs[0].value;
         newDesigna.nombreColegiado = this.inputs[1].value;
         newDesigna.apellidosNombre = this.inputs[2].value;
-        newDesigna.fechaAlta = new Date(this.fechaGenerales);
+        // newDesigna.fechaAlta = new Date(this.fechaGenerales);
+        newDesigna.fechaAlta = this.fechaGenerales;
         var today = new Date();
         var year = today.getFullYear().valueOf();
         newDesigna.ano = year;
@@ -307,6 +310,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         if(this.resaltadoDatos == false){
         this.sigaServices.post("", newDesigna).subscribe(
           n => {
+            this.refreshDataGenerales.emit(newDesigna);
             //MENSAJE DE TODO CORRECTO
             this.msgs.push({
               severity,
@@ -434,6 +438,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
               n => {
                 sessionStorage.removeItem("nuevaDesigna");
                 sessionStorage.setItem("nuevaDesigna",  "false;");
+                this.refreshDataGenerales.emit(newDesigna);
                 //MENSAJE DE TODO CORRECTO
                 this.msgs.push({
                   severity,

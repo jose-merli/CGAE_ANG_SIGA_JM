@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { Message } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../../../commons/translate';
@@ -14,8 +15,13 @@ export class DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent imple
 
   msgs: Message[] = [];
   @Input() campos;
+  @Output() refreshAditionalData = new EventEmitter<DesignaItem>();
   datosInicial: any;
   nuevaDesigna: any;
+  horaInicial;
+  minutoInicial;
+  hora;
+  minuto;
   bloques = [
     {
       datePicker: 'Fecha Oficio Juzgado',
@@ -38,7 +44,7 @@ export class DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent imple
     }
   ];
 
-  constructor(private sigaServices: SigaServices,  private translateService: TranslateService, private router: Router) { }
+  constructor(private sigaServices: SigaServices,  private translateService: TranslateService, private router: Router, private datepipe: DatePipe) { }
 
   ngOnInit() {
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
@@ -46,11 +52,19 @@ export class DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent imple
     if(!this.nuevaDesigna){
         // this.getDatosAdicionales(this.campos);
         this.bloques[0].value = this.campos.delitos;
-        this.bloques[0].valueDatePicker = this.campos.fechaOficioJuzgado;
+        this.bloques[0].valueDatePicker = this.formatDate(this.campos.fechaOficioJuzgado);
         this.bloques[1].value = this.campos.observaciones;
-        this.bloques[1].valueDatePicker = this.campos.fechaRecepcionColegio;
+        this.bloques[1].valueDatePicker = this.formatDate(this.campos.fechaRecepcionColegio);
         this.bloques[2].value = this.campos.defensaJuridica;
-        this.bloques[2].valueDatePicker = this.campos.fechaJuicio;
+        this.bloques[2].valueDatePicker = this.formatDate(this.campos.fechaJuicio);
+        let fecha = this.formatDateHM(this.campos.fechaJuicio);
+        let fecha1 = fecha.split(" ");
+        fecha = fecha1[1];
+        let horaminutos = fecha.split(":");
+        this.horaInicial = horaminutos[0];
+        this.minutoInicial = horaminutos[1];
+        this.hora = this.horaInicial;
+        this.minuto = this.minutoInicial;
     }
   }
 
@@ -59,20 +73,40 @@ export class DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent imple
     if(detail == "Restablecer"){
         // this.getDatosAdicionales(this.campos);
         this.bloques[0].value = this.datosInicial.delitos;
-        this.bloques[0].valueDatePicker = this.datosInicial.fechaOficioJuzgado;
+        this.bloques[0].valueDatePicker = this.formatDate(this.datosInicial.fechaOficioJuzgado);
         this.bloques[1].value = this.datosInicial.observaciones;
-        this.bloques[1].valueDatePicker = this.datosInicial.fechaRecepcionColegio;
+        this.bloques[1].valueDatePicker =  this.formatDate(this.datosInicial.fechaRecepcionColegio);
         this.bloques[2].value = this.datosInicial.defensaJuridica;
-        this.bloques[2].valueDatePicker = this.datosInicial.fechaJuicio;
+        this.bloques[2].valueDatePicker = this.formatDate(this.datosInicial.fechaJuicio);
+        this.hora = this.horaInicial;
+        this.minuto = this.minutoInicial;
     }else if(detail == "Guardar"){
       // this.getDatosAdicionales(this.campos);
       let datosAdicionalesDesigna = new DesignaItem();
-      datosAdicionalesDesigna.delitos = this.bloques[0].textArea;
-      // datosAdicionalesDesigna.fechaOficioJuzgado =this.bloques[0].datePicker;
-      datosAdicionalesDesigna.observaciones = this.bloques[2].textArea;
-      // datosAdicionalesDesigna.fechaRecepcionColegio =this.bloques[0].datePicker
-      datosAdicionalesDesigna.defensaJuridica = this.bloques[2].textArea;
-      // datosAdicionalesDesigna.fechaJuicio =this.bloques[0].datePicker
+      datosAdicionalesDesigna.delitos = this.bloques[0].value;
+      let fechaCambiada = this.bloques[0].valueDatePicker.split("/");
+      let dia = fechaCambiada[0];
+      let mes = fechaCambiada[1];
+      let anioFecha = fechaCambiada[2];
+      let fechaCambiadaActual = mes + "/" + dia + "/" + anioFecha;
+      datosAdicionalesDesigna.fechaOficioJuzgado =new Date(fechaCambiadaActual);
+      datosAdicionalesDesigna.observaciones = this.bloques[1].value;
+      fechaCambiada = this.bloques[1].valueDatePicker.split("/");
+      dia = fechaCambiada[0];
+      mes = fechaCambiada[1];
+      anioFecha = fechaCambiada[2];
+      fechaCambiadaActual = mes + "/" + dia + "/" + anioFecha;
+      datosAdicionalesDesigna.fechaRecepcionColegio =new Date(fechaCambiadaActual);
+      datosAdicionalesDesigna.defensaJuridica = this.bloques[2].value;
+      fechaCambiada = this.bloques[2].valueDatePicker.split("/");
+      dia = fechaCambiada[0];
+      mes = fechaCambiada[1];
+      anioFecha = fechaCambiada[2];
+      fechaCambiadaActual = mes + "/" + dia + "/" + anioFecha;
+      datosAdicionalesDesigna.fechaJuicio =new Date(fechaCambiadaActual);
+      let horaNumber = Number(this.hora);
+      let minutoNumber = Number(this.minuto);
+      datosAdicionalesDesigna.fechaJuicio.setHours(horaNumber,minutoNumber);
       datosAdicionalesDesigna.idTurno = this.campos.idTurno;
       let anio = this.campos.ano.split("/");
       datosAdicionalesDesigna.ano = Number(anio[0].substring(1,5));
@@ -80,19 +114,12 @@ export class DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent imple
       this.sigaServices.post("designaciones_updateDatosAdicionales",datosAdicionalesDesigna).subscribe(
         n => {
           console.log(n.body);
-          if(n!=null){
-            this.bloques[0].value = n.body.delitos;
-            this.bloques[0].valueDatePicker = n.body.fechaOficioJuzgado;
-            this.bloques[1].value = n.body.observaciones;
-            this.bloques[1].valueDatePicker = n.body.fechaRecepcionColegio;
-            this.bloques[2].value = n.body.defensaJuridica;
-            this.bloques[2].valueDatePicker = n.body.fechaJuicio;
+          this.refreshAditionalData.emit(datosAdicionalesDesigna);
             this.msgs.push({
               severity,
               summary,
               detail
             });
-          }
         },
         err => {
           console.log(err);
@@ -105,6 +132,16 @@ export class DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent imple
 
   clear() {
     this.msgs = [];
+  }
+
+  formatDateHM(date) {
+    const pattern = 'yyyy-MM-dd HH:mm:ss-SS';
+    return this.datepipe.transform(date, pattern);
+  }
+
+  formatDate(date) {
+    const pattern = 'dd/MM/yyyy';
+    return this.datepipe.transform(date, pattern);
   }
 
   getDatosAdicionales(datosDesigna) {
