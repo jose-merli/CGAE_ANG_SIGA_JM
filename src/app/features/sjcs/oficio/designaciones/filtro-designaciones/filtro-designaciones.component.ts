@@ -144,7 +144,7 @@ export class FiltroDesignacionesComponent implements OnInit {
 
   checkAcceso() {
     let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = procesos_oficio.saltosCompensaciones;
+    controlAcceso.idProceso = procesos_oficio.designa;
 
     this.sigaServices.post("acces_control", controlAcceso).subscribe(
       data => {

@@ -66,10 +66,12 @@ export let endpoints_oficio: any = {
     //DESIGNAS
     designas_tipoDesignas: "oficio/designas/comboTipoDesigna",
     combo_comboJuzgadoDesignaciones: "combo/comboJuzgadoDesignaciones",
+    combo_comboJuzgadoPorInstitucion: "combo/comboJuzgadoPorInstitucion",
     combo_comboModulosDesignaciones: "oficio/comboModulo",
     combo_comboDelitos: "oficio/designas/comboDelitos",
     combo_comboProcedimientosDesignaciones: "oficio/comboProcedimientos",
     combo_comboProcedimientosConJuzgado: "oficio/comboProcedimientosConJuzgado",
+    combo_comboAcreditacionesPorModulo: "oficio/comboAcreditacionesPorModulo",
     combo_comboProcedimientosConModulo: "oficio/comboProcedimientosConModulo",
     combo_comboModulosConJuzgado: "oficio/comboModulosConJuzgado",
     combo_comboModulosConProcedimientos: "oficio/comboModulosConProcedimientos",
