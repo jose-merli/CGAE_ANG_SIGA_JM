@@ -67,7 +67,15 @@ export class DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent imple
         this.minuto = this.minutoInicial;
     }
   }
-
+  fillFechaHastaCalendar(event, nombre){
+    if(nombre == "Fecha Oficio Juzgado"){
+      this.bloques[0].valueDatePicker = event;
+    }else if(nombre == "Fecha Recepción Colegio"){
+      this.bloques[1].valueDatePicker = event;
+    }else if(nombre == "Fecha Juicio"){
+      this.bloques[2].valueDatePicker = event;
+    }
+  }
   showMsg(severity, summary, detail) {
     this.msgs = [];
     if(detail == "Restablecer"){
@@ -84,26 +92,11 @@ export class DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent imple
       // this.getDatosAdicionales(this.campos);
       let datosAdicionalesDesigna = new DesignaItem();
       datosAdicionalesDesigna.delitos = this.bloques[0].value;
-      let fechaCambiada = this.bloques[0].valueDatePicker.split("/");
-      let dia = fechaCambiada[0];
-      let mes = fechaCambiada[1];
-      let anioFecha = fechaCambiada[2];
-      let fechaCambiadaActual = mes + "/" + dia + "/" + anioFecha;
-      datosAdicionalesDesigna.fechaOficioJuzgado =new Date(fechaCambiadaActual);
+      datosAdicionalesDesigna.fechaOficioJuzgado =new Date(this.bloques[0].valueDatePicker);
       datosAdicionalesDesigna.observaciones = this.bloques[1].value;
-      fechaCambiada = this.bloques[1].valueDatePicker.split("/");
-      dia = fechaCambiada[0];
-      mes = fechaCambiada[1];
-      anioFecha = fechaCambiada[2];
-      fechaCambiadaActual = mes + "/" + dia + "/" + anioFecha;
-      datosAdicionalesDesigna.fechaRecepcionColegio =new Date(fechaCambiadaActual);
+      datosAdicionalesDesigna.fechaRecepcionColegio =new Date(this.bloques[1].valueDatePicker);
       datosAdicionalesDesigna.defensaJuridica = this.bloques[2].value;
-      fechaCambiada = this.bloques[2].valueDatePicker.split("/");
-      dia = fechaCambiada[0];
-      mes = fechaCambiada[1];
-      anioFecha = fechaCambiada[2];
-      fechaCambiadaActual = mes + "/" + dia + "/" + anioFecha;
-      datosAdicionalesDesigna.fechaJuicio =new Date(fechaCambiadaActual);
+      datosAdicionalesDesigna.fechaJuicio =new Date(this.bloques[2].valueDatePicker);
       let horaNumber = Number(this.hora);
       let minutoNumber = Number(this.minuto);
       datosAdicionalesDesigna.fechaJuicio.setHours(horaNumber,minutoNumber);
