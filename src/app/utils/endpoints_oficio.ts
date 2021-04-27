@@ -116,6 +116,9 @@ export let endpoints_oficio: any = {
     designaciones_eliminarRelacion:"oficio/designas/eliminarRelacion",
     designaciones_busquedaDesignacionActual:"oficio/designas/busquedaDesignacionActual",
     designaciones_busquedaLetradosDesignacion:"oficio/designas/busquedaLetradosDesignacion",
+    designaciones_eliminarDesignaciones:"oficio/designas/deleteDesigna",
+    designaciones_updateDesigna:"oficio/designas/updateDesigna",
+    designaciones_busquedaNueva:"oficio/busquedaNuevaDesigna",
 
     //SALTOS Y COMPENSACIONES
     saltosCompensacionesOficio_buscar: "oficio/saltosCompensaciones/buscarSaltosOCompensaciones",

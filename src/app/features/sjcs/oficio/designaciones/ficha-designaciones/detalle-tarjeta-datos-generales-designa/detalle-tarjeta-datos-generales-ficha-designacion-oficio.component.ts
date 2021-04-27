@@ -1,8 +1,10 @@
+import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService, Message } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../../../commons/translate';
 import { ColegiadoItem } from '../../../../../../models/ColegiadoItem';
+import { ActuacionDesignaObject } from '../../../../../../models/sjcs/ActuacionDesignaObject';
 import { DesignaItem } from '../../../../../../models/sjcs/DesignaItem';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
@@ -13,7 +15,7 @@ import { SigaServices } from '../../../../../../_services/siga.service';
   styleUrls: ['./detalle-tarjeta-datos-generales-ficha-designacion-oficio.component.scss']
 })
 export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent implements OnInit {
-
+  @Output() actualizaFicha = new EventEmitter<DesignaItem>();
   busquedaColegiado: any;
   resaltadoDatos: boolean = false;
   msgs: Message[] = [];
@@ -22,9 +24,11 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
   disableCheckArt: boolean;
   initDatos: any;
   disableButtons: boolean;
+  progressSpinner: boolean;
   @Input() campos;
   @Input() selectedValue;
   @Output() refreshDataGenerales = new EventEmitter<DesignaItem>();
+  nuevaDesignaCreada: DesignaItem;
   anio = {
     value: "",
     disable: false
@@ -69,7 +73,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     disable: false
   }];
 
-  constructor(private sigaServices: SigaServices,  private commonsService: CommonsService, private confirmationService: ConfirmationService, private translateService: TranslateService, private router: Router) {
+  constructor(private sigaServices: SigaServices,   private datePipe: DatePipe, private commonsService: CommonsService, private confirmationService: ConfirmationService, private translateService: TranslateService, private router: Router) {
    }
 
   ngOnInit() {
@@ -87,41 +91,6 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       
     }
   
-    //SE COMPRUEBAN LOS PERMISOS PARA EL BOTON GUARDAR
-// export constprocesos_guardia:any= {​​​​​​​​
-//     guardias: "916",
- 
-// // ----------- Tarjetas ----------
-//     resumen: "92E",
-//     turno: "92F",
-//     datos_generales: "91Y",
-//     conf_cola: "92G",
-//     conf_calendario: "92H",
-//     cola_guardia: "91L",
-//     inscripciones: "92I",
-//     baremos: "92J",
-//     incompatibilidades: "919",
-//     calendario: "92K",
-//     saltos_compensaciones: "76S",
- 
-// }​​​​​​​​
-    // this.commonsService.checkAcceso(procesos_guardia.saltos_compensaciones)
-    //   .then(respuesta => {
- 
-    //     this.permisoEscritura = respuesta;
- 
-    //     this.persistenceService.setPermisos(this.permisoEscritura);
- 
-    //     if (this.permisoEscritura == undefined) {
-    //       sessionStorage.setItem("codError", "403");
-    //       sessionStorage.setItem(
-    //         "descError",
-    //         this.translateService.instant("generico.error.permiso.denegado")
-    //       );
-    //       this.router.navigate(["/errorAcceso"]);
-    //     }
-    //   }).catch(error => console.error(error));
-    //EDICION
   }
 
   cargaDatos(datosInicial){
@@ -145,6 +114,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     this.inputs[0].disable = true;
     this.inputs[1].disable = true;
     this.inputs[2].disable = true;
+    this.progressSpinner = true;
     this.sigaServices
     .post("busquedaColegiados_searchColegiado", colegiado)
     .subscribe(
@@ -154,9 +124,11 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         var apellidosNombre = colegiadoItem.colegiadoItem[0].nombre.split(",");
         this.inputs[1].value=apellidosNombre[0];
         this.inputs[2].value=apellidosNombre[1];
+        this.progressSpinner = false;
       },
       err => {
         console.log(err);
+        this.progressSpinner = false;
       },
 
     );
@@ -204,31 +176,35 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
   }
 
   getComboTipoDesignas() {
-
+    this.progressSpinner = true;
     this.sigaServices.get("designas_tipoDesignas").subscribe(
       n => {
         this.selectores[1].opciones = n.combooItems;
+        this.progressSpinner = false;
       },
       err => {
         console.log(err);
+        this.progressSpinner = false;
       }, () => {
         this.arregloTildesCombo(this.selectores[1].opciones);
+        this.progressSpinner = false;
       }
     );
   }
 
 
   getComboTurno() {
-
+    this.progressSpinner = true;
     this.sigaServices.get("combo_turnos").subscribe(
       n => {
         this.selectores[0].opciones = n.combooItems;
       },
       err => {
         console.log(err);
-
+        this.progressSpinner = false;
       }, () => {
         this.arregloTildesCombo(this.selectores[0].opciones);
+        this.progressSpinner = false;
       }
     );
   }
@@ -252,6 +228,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
   }
 
   showMsg(severity, summary, detail) {
+    this.progressSpinner = true;
     this.msgs = [];
     if(detail == "save" && (this.inputs[0].value =="" || this.inputs[0].value ==undefined)){
       this.confirmarActivar(severity, summary, detail);
@@ -271,11 +248,18 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         newDesigna.ano = year;
         this.checkDatosGenerales();
         if(this.resaltadoDatos == false){
+          this.progressSpinner = true;
           this.sigaServices.post("create_NewDesigna", newDesigna).subscribe(
             n => {
+              let newId = JSON.parse(n.body);
               sessionStorage.removeItem("nuevaDesigna");
               sessionStorage.setItem("nuevaDesigna",  "false");
-              this.refreshDataGenerales.emit(newDesigna);
+
+              let newDesignaRfresh = new DesignaItem();
+              newDesignaRfresh.ano =  newDesigna.ano;
+              newDesignaRfresh.codigo = newId.id; 
+              newDesignaRfresh.idTurnos =  [String(newDesigna.idTurno)];
+              this.busquedaDesignaciones(newDesignaRfresh);
               //MENSAJE DE TODO CORRECTO
               this.msgs.push({
                 severity,
@@ -286,8 +270,8 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
             },
             err => {
               console.log(err);
-      
-            }, () => {
+              this.progressSpinner = false;
+            }, () => {this.progressSpinner = false;
             }
           );
         }
@@ -308,7 +292,8 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         newDesigna.ano = year;
         this.checkDatosGenerales();
         if(this.resaltadoDatos == false){
-        this.sigaServices.post("", newDesigna).subscribe(
+          this.progressSpinner = true;
+        this.sigaServices.post("designaciones_updateDesigna", newDesigna).subscribe(
           n => {
             this.refreshDataGenerales.emit(newDesigna);
             //MENSAJE DE TODO CORRECTO
@@ -318,11 +303,12 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
               detail
             });
             console.log(n);
+            this.progressSpinner = false;
           },
           err => {
             console.log(err);
-    
-          }, () => {
+            this.progressSpinner = false;
+          }, () => {this.progressSpinner = false;
           }
         );
         }
@@ -438,11 +424,17 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
           newDesigna.ano = year;
           this.checkDatosGenerales();
           if(this.resaltadoDatos == false){
+            this.progressSpinner = true;
             this.sigaServices.post("create_NewDesigna", newDesigna).subscribe(
               n => {
+                let newId = JSON.parse(n.body);
                 sessionStorage.removeItem("nuevaDesigna");
                 sessionStorage.setItem("nuevaDesigna",  "false;");
-                this.refreshDataGenerales.emit(newDesigna);
+                let newDesignaRfresh = new DesignaItem();
+                newDesignaRfresh.ano =  newDesigna.ano;
+                newDesignaRfresh.codigo = newId.id; 
+                newDesignaRfresh.idTurnos =  [String(newDesigna.idTurno)];
+                this.busquedaDesignaciones(newDesignaRfresh);
                 //MENSAJE DE TODO CORRECTO
                 this.msgs.push({
                   severity,
@@ -462,11 +454,11 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                   detail
                 });
         
-              }, () => {
+              }, () => {this.progressSpinner = false;
               }
             );
           }
-          
+          this.progressSpinner = false;
         }else if(detail == "save" &&  this.anio.value != ""){
           let newDesigna = new DesignaItem();
           var idTurno:number = +this.selectores[0].value;
@@ -487,8 +479,11 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
           newDesigna.ano = year;
           this.checkDatosGenerales();
           if(this.resaltadoDatos == true){
-          this.sigaServices.post("", newDesigna).subscribe(
+            this.progressSpinner = false;
+          this.sigaServices.post("designaciones_updateDesigna", newDesigna).subscribe(
             n => {
+              this.refreshDataGenerales.emit(newDesigna);
+              this.progressSpinner = false;
               //MENSAJE DE TODO CORRECTO
               this.msgs.push({
                 severity,
@@ -496,16 +491,16 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                 detail
               });
               console.log(n);
-              summary = "No existe cola de letrado de oficio";
+              
+            },
+            err => {
+              console.log(err);
+              summary = "No se han podido modificar los datos";
               this.msgs.push({
                 severity,
                 summary,
                 detail
               });
-            },
-            err => {
-              console.log(err);
-      
             }, () => {
             }
           );
@@ -524,5 +519,61 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         ];
       }
     });
+  }
+
+  formatDate(date) {
+    const pattern = 'dd/MM/yyyy';
+    return this.datePipe.transform(date, pattern);
+  }
+
+  busquedaDesignaciones(evendesginaItem) {
+    this.progressSpinner = true;
+    this.sigaServices.post("designaciones_busquedaNueva", evendesginaItem).subscribe(
+      n => {
+        let datos = JSON.parse(n.body);
+         datos.forEach(element => {
+         element.factConvenio = element.ano;
+         element.ano = 'D' +  element.ano + '/' + element.codigo;
+        //  element.fechaEstado = new Date(element.fechaEstado);
+        element.fechaEstado = this.formatDate(element.fechaEstado);
+        element.fechaAlta = this.formatDate(element.fechaAlta);
+        element.fechaEntradaInicio = this.formatDate(element.fechaEntradaInicio);
+         if(element.estado == 'V'){
+           element.sufijo = element.estado;
+          element.estado = 'Activo';
+         }else if(element.estado == 'F'){
+          element.sufijo = element.estado;
+          element.estado = 'Finalizado';
+         }else if(element.estado == 'A'){
+          element.sufijo = element.estado;
+          element.estado = 'Anulada';
+         }
+         element.nombreColegiado = element.apellido1Colegiado +" "+ element.apellido2Colegiado+", "+element.nombreColegiado;
+         if(element.art27 == "1"){
+          element.art27 = "Si";
+         }else{
+          element.art27 = "No";
+         }
+         element.validada = "No";
+         this.nuevaDesignaCreada = element;
+         this.progressSpinner = false;
+          },
+          err => {
+            this.progressSpinner = false;
+            console.log(err);
+          }
+        );
+        this.progressSpinner=false;
+      },
+      err => {
+        this.progressSpinner = false;
+        console.log(err);
+      },() => {
+        this.progressSpinner = false;
+        setTimeout(() => {
+          this.actualizaFicha.emit(this.nuevaDesignaCreada);
+        }, 5);
+      });;
+     
   }
 }

@@ -62,15 +62,6 @@ export class SelectorComponent implements OnInit {
       this.opcionSeleccionado = [-1];
       this.getComboJuzgados(this.selector);
     }
-    if(this.selector.nombre == "Delitos" && !this.nuevaDesigna){
-      // this.textoJuzgado = this.selector.opciones[0].label;
-      this.opcionSeleccionado = [this.selector.opciones[0].value];
-      this.getComboDelitos(this.selector);
-      this.disable = false;
-    }else if(this.selector.nombre == "Delitos" && this.nuevaDesigna){
-      this.opcionSeleccionado = [-1];
-      this.getComboDelitos(this.selector);
-    }
     if(this.selector.nombre == "Procedimiento" && !this.nuevaDesigna){
       this.opcionSeleccionado = [this.selector.opciones[0].value];
       this.getComboProcedimientos(this.selector);
@@ -161,20 +152,6 @@ export class SelectorComponent implements OnInit {
       }, () => {
         this.arregloTildesCombo(selectorJuzgado.opciones);
         this.progressSpinner = false;
-      }
-    );
-  }
-
-  getComboDelitos(selectorDelitos) {
-
-    this.sigaServices.get("combo_comboDelitos").subscribe(
-      n => {
-        selectorDelitos.opciones = n.combooItems;
-      },
-      err => {
-        console.log(err);
-      }, () => {
-        this.arregloTildesCombo(selectorDelitos.opciones);
       }
     );
   }

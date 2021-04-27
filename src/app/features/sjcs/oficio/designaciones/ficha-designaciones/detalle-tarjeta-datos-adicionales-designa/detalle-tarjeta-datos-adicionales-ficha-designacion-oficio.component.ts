@@ -22,6 +22,7 @@ export class DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent imple
   minutoInicial;
   hora;
   minuto;
+  progressSpinner: boolean;
   bloques = [
     {
       datePicker: 'Fecha Oficio Juzgado',

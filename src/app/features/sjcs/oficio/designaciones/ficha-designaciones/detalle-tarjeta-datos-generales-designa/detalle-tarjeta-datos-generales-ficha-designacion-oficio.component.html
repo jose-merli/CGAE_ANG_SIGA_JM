@@ -1,5 +1,7 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
-
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
 <div class="row w-100 m-0 padding-interior">
   <div class="col-lg-12 col-md-12 px-0">
     <div class="form-row">

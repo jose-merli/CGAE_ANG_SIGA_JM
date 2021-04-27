@@ -173,7 +173,9 @@ console.log('event param to back: ', event)
           element.estado = 'Anulada';
          }
          element.nombreColegiado = element.apellido1Colegiado +" "+ element.apellido2Colegiado+", "+element.nombreColegiado;
-         element.nombreInteresado = element.apellido1Interesado +" "+ element.apellido2Interesado+", "+element.nombreInteresado;
+         if(element.nombreInteresado != null){
+          element.nombreInteresado = element.apellido1Interesado +" "+ element.apellido2Interesado+", "+element.nombreInteresado;
+         }
          if(element.art27 == "1"){
           element.art27 = "Si";
          }else{
@@ -226,7 +228,10 @@ console.log('event param to back: ', event)
         console.log(err);
       },() => {
         this.progressSpinner = false;
-        this.commonsService.scrollTablaFoco("tablaFoco");
+        this.progressSpinner = false;
+        setTimeout(() => {
+          this.commonsService.scrollTablaFoco('tablaFoco');
+        }, 5);
       });;
      
   }

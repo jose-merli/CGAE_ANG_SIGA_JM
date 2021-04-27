@@ -221,10 +221,10 @@ export class FichaDesignacionesComponent implements OnInit {
     this.progressSpinner = true;
     this.checkAcceso();
     if (!this.esColegiado) {
-      // this.listaTarjetas[1].detalle = false;
-      // this.listaTarjetas[2].detalle = false;
-      // this.listaTarjetas[3].detalle = false;
-      // this.listaTarjetas[11].detalle = false;
+      this.listaTarjetas[1].detalle = false;
+      this.listaTarjetas[2].detalle = false;
+      this.listaTarjetas[3].detalle = false;
+      this.listaTarjetas[11].detalle = false;
     }
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
     let designaItem = JSON.parse(sessionStorage.getItem("designaItemLink"));
@@ -474,18 +474,18 @@ export class FichaDesignacionesComponent implements OnInit {
       this.listaTarjetas[3].campos = interesadosVacio;
       this.listaTarjetas[4].campos = contrariosVacio;
       this.listaTarjetas[11].campos = datosFacturacion;
-      //DESHABILITAMOS TODAS LAS TARJETAS HASTA Q SE CREE LA DESIGNACION
-      //this.listaTarjetas[1].detalle = false;
-      // this.listaTarjetas[2].detalle = false;
-      // this.listaTarjetas[3].detalle = false;
-      // this.listaTarjetas[4].detalle = false;
-      // this.listaTarjetas[5].detalle = false;
-      // this.listaTarjetas[6].detalle = false;
-      // this.listaTarjetas[7].detalle = false;
-      // this.listaTarjetas[8].detalle = false;
-      // this.listaTarjetas[9].detalle = false;
-      // this.listaTarjetas[10].detalle = false;
-      // this.listaTarjetas[11].detalle = false;
+      this.listaTarjetas[0].opened = true;
+      this.listaTarjetas[1].detalle = false;
+      this.listaTarjetas[2].detalle = false;
+      this.listaTarjetas[3].detalle = false;
+      this.listaTarjetas[4].detalle = false;
+      this.listaTarjetas[5].detalle = false;
+      this.listaTarjetas[6].detalle = false;
+      this.listaTarjetas[7].detalle = false;
+      this.listaTarjetas[8].detalle = false;
+      this.listaTarjetas[9].detalle = false;
+      this.listaTarjetas[10].detalle = false;
+      this.listaTarjetas[11].detalle = false;
       /* this.listaTarjetas[4].enlaces=[{
       id: null,
           ref: null,
@@ -1413,5 +1413,142 @@ changeDataTarjeta(event) {​​​​​
 // tarjeta.campos[0].value = event.partida;
 //     }​​​​​
   }​​​​​
+
+  actualizaFicha(event){
+    this.campos = event;
+    this.progressSpinner = true;
+    let designaItem = this.campos;
+    this.motivosRenuncia();
+
+    if (sessionStorage.getItem("nuevoProcurador")) {
+      this.listaTarjetas[5].opened = true;
+    }
+
+    if (sessionStorage.getItem("buscadorColegiados")) {
+      let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
+      this.listaTarjetas[0].opened = true;
+    } else if (sessionStorage.getItem("colegiadoGeneralDesigna")) {
+      let colegiadoGeneral = JSON.parse(sessionStorage.getItem("colegiadoGeneralDesigna"));
+      this.listaTarjetas[0].opened = true;
+    }
+      this.mostrar();
+      //EDICIÓN DESIGNA
+      let camposResumen = [
+        {
+          "key": "Año/Número",
+          "value": designaItem.ano
+        },
+        {
+          "key": "Letrado",
+          "value": designaItem.numColegiado
+        },
+        {
+          "key": "Estado",
+          "value": designaItem.estado
+        },
+        {
+          "key": "Interesado",
+          "value": designaItem.nombreInteresado
+        },
+        {
+          "key": "Número Actuaciones",
+          "value": ""
+        },
+        {
+          "key": "Validado",
+          "value": designaItem.validada
+        }
+      ];
+
+      let camposGenerales = [
+        {
+          "key": "Turno",
+          "value": designaItem.nombreTurno
+        },
+        {
+          "key": "Fecha",
+          "value": designaItem.fechaEntradaInicio
+        },
+        {
+          "key": "Designación Art. 27-28",
+          "value": designaItem.art27
+        }, {
+          "key": "Tipo",
+          "value": designaItem.descripcionTipoDesigna
+        }
+      ];
+
+      let camposDetalle = [
+        {
+          "key": "Número Procedimiento",
+          "value": designaItem.numProcedimiento
+        },
+        {
+          "key": "Juzgado",
+          "value": designaItem.nombreJuzgado
+        },
+        {
+          "key": "Procedimiento",
+          "value": designaItem.nombreProcedimiento
+        },
+        {
+          "key": "Módulo",
+          "value": designaItem.modulo
+        }
+      ];
+      if ((designaItem.observaciones == null || designaItem.observaciones == undefined || designaItem.observaciones == "")
+        && (designaItem.delitos == null || designaItem.delitos == undefined || designaItem.delitos == "")
+        && (designaItem.defensaJuridica == null || designaItem.defensaJuridica == undefined || designaItem.defensaJuridica == "")
+        && (designaItem.fechaOficioJuzgado == null || designaItem.fechaOficioJuzgado == undefined)
+        && (designaItem.fechaJuicio == null || designaItem.fechaJuicio == undefined)
+        && (designaItem.fechaRecepcionColegio == null || designaItem.fechaRecepcionColegio == undefined)) {
+        let datosAdicionales = [
+          {
+            "key": null,
+            "value": "No existen observaciones definidas para la designación"
+          }
+        ];
+        this.listaTarjetas[2].campos = datosAdicionales;
+      } else {
+        let datosAdicionales = [
+          {
+            "key": "Fecha Oficio Juzgado",
+            "value": this.formatDate(designaItem.fechaOficioJuzgado)
+          },
+          {
+            "key": "Fecha Reecepción Colegio",
+            "value": this.formatDate(designaItem.fechaRecepcionColegio)
+          },
+          {
+            "key": "Fecha Juicio",
+            "value": this.formatDate(designaItem.fechaJuicio)
+          }
+        ];
+        this.listaTarjetas[2].campos = datosAdicionales;
+
+      }
+
+      this.tarjetaFija.campos = camposResumen;
+      this.listaTarjetas[0].campos = camposGenerales;
+      this.listaTarjetas[1].campos = camposDetalle;
+      this.listaTarjetas[1].detalle = true;
+      this.listaTarjetas[2].detalle = true;
+      this.listaTarjetas[3].detalle = true;
+      this.listaTarjetas[4].detalle = true;
+      this.listaTarjetas[5].detalle = true;
+      this.listaTarjetas[6].detalle = true;
+      this.listaTarjetas[7].detalle = true;
+      this.listaTarjetas[8].detalle = true;
+      this.listaTarjetas[9].detalle = true;
+      this.listaTarjetas[10].detalle = true;
+      this.listaTarjetas[11].detalle = true;
+
+      this.searchInteresados();
+      this.searchContrarios(false);
+      this.searchRelaciones();
+      this.getIdPartidaPresupuestaria(this.campos);
+      this.progressSpinner = false;
+
+  }
 
 }
