@@ -4,6 +4,7 @@ import { TranslateService } from '../../../../../../../../commons/translate';
 import { PersistenceService } from '../../../../../../../../_services/persistence.service';
 import { Router } from '@angular/router';
 import { Message } from 'primeng/components/common/api';
+import { CamposCambioLetradoItem } from '../../../../../../../../models/sjcs/CamposCambioLetradoItem';
 
 @Component({
   selector: 'app-letrado-entrante',
@@ -37,17 +38,7 @@ export class LetradoEntranteComponent implements OnInit {
 
   ngOnInit() {
 
-    /* this.body=this.saliente;
-    this.body.fechaDesignacion;
-    this.body.fechaEfecRenuncia=new Date();
-    this.body.fechaSolRenuncia=new Date();
-    this.body.numColegiado;
-    this.body.apellido1Colegiado;
-    this.body.apellido2Colegiado;
-    this.body.nombreColegiado;
-    this.body.compensacion = false;
-    this.body.motivoRenuncia = false;
-    this.body.observaciones=""; */
+    this.body = new CamposCambioLetradoItem();
 
     if (sessionStorage.getItem("abogado")) {
 			let data = JSON.parse(sessionStorage.getItem("abogado"))[0];

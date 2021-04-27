@@ -9,6 +9,7 @@ import { DatePipe, Location } from '@angular/common';
 import { LetradoEntranteComponent } from "./letrado-entrante/letrado-entrante.component";
 import { LetradoSalienteComponent } from "./letrado-saliente/letrado-saliente.component";
 import { ConfirmationService } from '../../../../../../../../../node_modules/primeng/primeng';
+import { CamposCambioLetradoItem } from '../../../../../../../models/sjcs/CamposCambioLetradoItem';
 
 @Component({
   selector: 'app-ficha-cambio-letrado',
@@ -24,8 +25,9 @@ export class FichaCambioLetradoComponent implements OnInit {
   progressSpinner = false;
 
   entrante;
+  body;
 
-	@ViewChild('entrante') LetradoEntranteComponent;
+  @ViewChild('entrante') LetradoEntranteComponent;
   @ViewChild('saliente') LetradoSalienteComponent;
 
   constructor(private location: Location,
@@ -36,7 +38,15 @@ export class FichaCambioLetradoComponent implements OnInit {
 
   ngOnInit() {
 
-    this.datosTarjetaResumen = [];
+    this.body = new CamposCambioLetradoItem();
+
+    let data = JSON.parse(sessionStorage.getItem("letrado"));
+    sessionStorage.removeItem("letrado");
+    this.body.numColegiado = data.numeroColegiado;
+    this.body.nombre = data.nombre;
+    this.body.apellidos = data.apellidos1 + " " + data.apellidos2;
+
+    /* this.datosTarjetaResumen = [];
 
     this.datosTarjetaResumen.designacion;
     this.datosTarjetaResumen.fechaDesignacion;
@@ -45,20 +55,20 @@ export class FichaCambioLetradoComponent implements OnInit {
     this.datosTarjetaResumen.numColegiado;
     this.datosTarjetaResumen.apellido1Colegiado;
     this.datosTarjetaResumen.apellido2Colegiado;
-    this.datosTarjetaResumen.nombreColegiado;
+    this.datosTarjetaResumen.nombreColegiado; */
   }
 
   clear() {
-    this.msgs=[];
+    this.msgs = [];
   }
 
   backTo() {
     this.location.back();
   }
 
-  save(){
-    
-    if(this.entrante.body.numColegiado != undefined && this.entrante.body.numColegiado!="" && this.entrante.body.art27==false) {
+  save() {
+
+    if (this.entrante.body.numColegiado != undefined && this.entrante.body.numColegiado != "" && this.entrante.body.art27 == false) {
       this.confirmationService.confirm({
         key: "deletePlantillaDoc",
         message: "Se va a seleccionar un letrado automáticamente. ¿Desea continuar?",

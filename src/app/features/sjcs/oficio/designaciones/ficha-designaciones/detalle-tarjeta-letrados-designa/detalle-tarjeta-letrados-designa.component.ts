@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { DesignaItem } from '../../../../../../models/sjcs/DesignaItem';
 import { JusticiableBusquedaItem } from '../../../../../../models/sjcs/JusticiableBusquedaItem';
 import { Message } from 'primeng/components/common/api';
+import { DatosColegiadosItem } from '../../../../../../models/DatosColegiadosItem';
 
 
 @Component({
@@ -30,6 +31,7 @@ export class DetalleTarjetaLetradosDesignaComponent implements OnInit {
 
   selectAll: boolean = false;
   progressSpinner: boolean = false;
+  @Input() letrados;
 
   @ViewChild("table") tabla;
 
@@ -42,7 +44,6 @@ export class DetalleTarjetaLetradosDesignaComponent implements OnInit {
 
   ngOnInit() {
     this.getCols();
-    //this.datos=this.interesados;
     let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
     let datos: DesignaItem = designa;
     this.progressSpinner = true;
@@ -68,15 +69,13 @@ export class DetalleTarjetaLetradosDesignaComponent implements OnInit {
 
     this.progressSpinner = true;
 
+    this.datos=this.letrados;
     //Buscamos los letrados asociados a la designacion
-    this.sigaServices.post("designaciones_busquedaLetradosDesignacion", request).subscribe(
+   /*  this.sigaServices.post("designaciones_busquedaLetradosDesignacion", request).subscribe(
       data => {
         let letrados = JSON.parse(data.body);
         if(letrados!=[]){
           this.datos = letrados;
-          /* this.datos.fecharenunciasolicita;
-          this.datos.fecharenuncia;
-          this.datos.motivosrenuncia; */
         }
       },
       err => {
@@ -90,8 +89,94 @@ export class DetalleTarjetaLetradosDesignaComponent implements OnInit {
       () => {
         this.progressSpinner = false;
       }
-    );
+    ); */
     
+  }
+
+  irFichaColegial(){
+
+    let bodyColegiado: DatosColegiadosItem = new DatosColegiadosItem();
+      bodyColegiado.nif = this.letrados[0].nif;
+      bodyColegiado.idInstitucion = this.letrados[0].numeroInstitucion;
+  
+      this.sigaServices
+        .postPaginado(
+          'busquedaCensoGeneral_searchColegiado',
+          '?numPagina=1',
+          bodyColegiado
+        )
+              .subscribe((data) => {
+          let colegiadoSearch = JSON.parse(data['body']);
+          let datosColegiados = colegiadoSearch.colegiadoItem;
+  
+          if (datosColegiados == null || datosColegiados == undefined ||
+            datosColegiados.length == 0) {
+            this.getNoColegiado(this.letrados[0]);
+          } else {
+            sessionStorage.setItem(
+              'personaBody',
+              JSON.stringify(datosColegiados[0])
+            );
+            sessionStorage.setItem(
+              'esColegiado',
+              JSON.stringify(true)
+            );
+            this.router.navigate(['/fichaColegial']);
+          }
+        },
+                  (err) => {
+            this.progressSpinner = false;
+  
+          });
+  }
+
+  getNoColegiado(selectedDatos) {
+    let bodyNoColegiado: DatosColegiadosItem = new DatosColegiadosItem();
+      bodyNoColegiado.nif = this.letrados[0].nif;
+      bodyNoColegiado.idInstitucion = this.letrados[0].numeroInstitucion;
+
+    this.sigaServices
+      .postPaginado(
+        'busquedaNoColegiados_searchNoColegiado',
+        '?numPagina=1',
+        bodyNoColegiado
+      )
+            .subscribe((data) => {
+        this.progressSpinner = false;
+        let noColegiadoSearch = JSON.parse(data['body']);
+        let datosNoColegiados = noColegiadoSearch.noColegiadoItem;
+
+          if (datosNoColegiados[0].fechaNacimiento != null) {
+            datosNoColegiados[0].fechaNacimiento = this.personaBodyFecha(
+              datosNoColegiados[0].fechaNacimiento
+            );
+          }
+
+          sessionStorage.setItem(
+            'esColegiado',
+            JSON.stringify(false)
+          );
+
+          sessionStorage.setItem(
+            'personaBody',
+            JSON.stringify(datosNoColegiados[0])
+          );
+
+          this.router.navigate(['/fichaColegial']);
+      },
+                 (err) => {
+          this.progressSpinner = false;
+
+        });
+  }
+
+  personaBodyFecha(fecha) {
+    let f = fecha.substring(0, 10);
+    let year = f.substring(0, 4);
+    let month = f.substring(5, 7);
+    let day = f.substring(8, 10);
+
+    return day + '/' + month + '/' + year;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -180,7 +265,8 @@ export class DetalleTarjetaLetradosDesignaComponent implements OnInit {
   }
 
   NewLetrado(){
-    
+    sessionStorage.setItem("letrado",  JSON.stringify(this.datos[this.datos.length - 1]));
+    this.router.navigate(["/fichaCambioLetrado"]);
   }
 
 }
