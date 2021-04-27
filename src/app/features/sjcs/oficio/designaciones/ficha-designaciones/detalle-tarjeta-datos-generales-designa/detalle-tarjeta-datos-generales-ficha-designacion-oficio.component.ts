@@ -261,6 +261,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
               newDesignaRfresh.idTurnos =  [String(newDesigna.idTurno)];
               this.busquedaDesignaciones(newDesignaRfresh);
               //MENSAJE DE TODO CORRECTO
+              detail = "";
               this.msgs.push({
                 severity,
                 summary,
@@ -436,6 +437,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                 newDesignaRfresh.idTurnos =  [String(newDesigna.idTurno)];
                 this.busquedaDesignaciones(newDesignaRfresh);
                 //MENSAJE DE TODO CORRECTO
+                detail = "";
                 this.msgs.push({
                   severity,
                   summary,
@@ -485,6 +487,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
               this.refreshDataGenerales.emit(newDesigna);
               this.progressSpinner = false;
               //MENSAJE DE TODO CORRECTO
+              detail = "";
               this.msgs.push({
                 severity,
                 summary,
@@ -533,6 +536,8 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         let datos = JSON.parse(n.body);
          datos.forEach(element => {
          element.factConvenio = element.ano;
+         this.anio.value = element.ano;
+         this.numero.value = element.codigo;
          element.ano = 'D' +  element.ano + '/' + element.codigo;
         //  element.fechaEstado = new Date(element.fechaEstado);
         element.fechaEstado = this.formatDate(element.fechaEstado);
