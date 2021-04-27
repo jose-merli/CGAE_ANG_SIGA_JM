@@ -32,7 +32,8 @@ export class TablaJustificacionExpresComponent implements OnInit {
   totalDesignas = 0;
   totalActuaciones = 0;
   modoBusqueda: string = 'b';
-
+  numDesignasModificadas = 0;
+  numActuacionesModificadas = 0;
   from = 0;
   to = 10;
   numperPage = 10;
@@ -103,7 +104,6 @@ export class TablaJustificacionExpresComponent implements OnInit {
   actuacionesToDleteArr = []; // para enviar a backend - ELIMINAR
   newActuacionItem = {}; // para enviar a backend -  NUEVO
   dataToUpdateArr = []; // para enviar a backend -  GUARDAR
-
   constructor(private trdService: TablaResultadoDesplegableJEService, private datepipe: DatePipe,
     private commonsService: CommonsService, private sigaServices: SigaServices) 
   { }
@@ -388,6 +388,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
 
           let num = index + 2;
           let key = letra + num;
+          this.totalActuaciones = this.totalActuaciones + 1;
           obj1 =  { [key] : arr1, position: 'collapse'};
           arr1 = [];    
         arr2.push(Object.assign({},obj1));
@@ -405,6 +406,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
     this.rowGroups = this.trdService.getTableData(resultModified);
     this.rowGroupsAux = this.rowGroups;
     this.totalRegistros = this.rowGroups.length;
+    this.totalDesignas = this.totalRegistros;
   }
 
   showMsg(severity, summary, detail) {
@@ -635,5 +637,20 @@ desigCellToJson(designacionesCells, codigoDesignacionParam, expedientesDesignaci
     }  );
 
     return designacionesItem;
+  }
+
+  setnumActuacionesModificadas(event){
+    this.numActuacionesModificadas = event;
+    console.log('this.numActuacionesModificadas: ', this.numActuacionesModificadas)
+  }
+  setnumDesignasModificadas(event){
+    this.numDesignasModificadas = event;
+    console.log('this.numDesignasModificadas: ', this.numDesignasModificadas)
+  }
+  settotalActuaciones(event){
+    console.log('sumamos o restamos: ', event)
+    console.log('this.totalActuaciones 1: ', this.totalActuaciones)
+    this.totalActuaciones = this.totalActuaciones + event;
+    console.log('this.totalActuaciones 2: ', this.totalActuaciones)
   }
 }
