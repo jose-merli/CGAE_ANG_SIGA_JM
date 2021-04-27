@@ -104,6 +104,11 @@
                                             (searchRelaciones)="searchRelaciones()">
                                         </app-detalle-tarjeta-relaciones-designa>
                                     </div>
+                                    <div *ngIf="tarj.nombre == 'Comunicaciones'">
+                                        <app-detalle-tarjeta-comunicaciones-designa
+                                            [comunicaciones]="comunicaciones" (searchComunicaciones)="searchComunicaciones()">
+                                        </app-detalle-tarjeta-comunicaciones-designa>
+                                    </div>
                                 </ng-template>
                             </mat-expansion-panel>
                         </mat-accordion>

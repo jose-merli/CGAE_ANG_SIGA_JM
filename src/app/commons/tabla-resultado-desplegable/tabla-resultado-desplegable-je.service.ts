@@ -95,7 +95,6 @@ export class TablaResultadoDesplegableJEService {
 
       rowGroupObject.id = Object.keys(rowGroup)[0];
       rowGroupObject.id2 = Object.keys(rowGroup)[1];
-      console.log('rowGroupObject.id2: ', rowGroupObject.id2)
       rowGroupObject.id3 = Object.keys(rowGroup)[2];
       rowGroupObject.estadoDesignacion = Object.keys(rowGroup)[3];
       rowGroupObject.estadoEx = Object.keys(rowGroup)[4];

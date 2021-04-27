@@ -258,7 +258,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
 
       { type: 'checkbox', value: finalizada, size: 50, combo: null},
       { type: 'text', value: listaCliente, size: 153, combo: null },
-      { type: 'text', value: designacion.nig, size: 153, combo: null},
+      { type: 'input', value: designacion.nig, size: 153, combo: null},
       { type: 'input', value: designacion.numProcedimiento, size: 153 , combo: null},
       { type: 'select', value: designacion.procedimiento, size: 153 , combo: null }, //modulo
       { type: 'datePicker', value: this.formatDate(designacion.fechaActuacion), size: 153 , combo: null},
