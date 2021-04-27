@@ -75,8 +75,7 @@ export class DesignacionesComponent implements OnInit {
   }
 
   actualizacionJustificacionExpres(event){
-   
-console.log('event param to back: ', event)
+
     this.sigaServicesNew.post("justificacionExpres_actualizacion", event).subscribe(
       data => {
        
@@ -92,20 +91,20 @@ console.log('event param to back: ', event)
         console.log(err);
       },);
   }
+
   eliminacionJustificacionExpres(event){
-   
+    this.progressSpinner=true;
 
     this.sigaServicesNew.post("justificacionExpres_eliminacion", event).subscribe(
       data => {
        
-
+        this.progressSpinner=false;
         if(data!=undefined && data!=null){
           let respuesta  = JSON.parse(data.body);
         }
       },
       err => {
-       
-
+        this.progressSpinner=false;
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         console.log(err);
       },);

@@ -30,7 +30,6 @@ export class TablaJustificacionExpresComponent implements OnInit {
   rowGroupsAux: RowGroup[];
   numDesignas = 0;
   totalDesignas = 0;
-  numActuaciones = 0;
   totalActuaciones = 0;
   modoBusqueda: string = 'b';
 
@@ -111,6 +110,9 @@ export class TablaJustificacionExpresComponent implements OnInit {
 
   ngOnInit(): void {
 
+    
+    this.cargaJuzgadosPorInstitucion("2005"); //poner variable idInstitucion 
+
     this.progressSpinner=true;
 
     this.datosJustificacionAux = this.datosJustificacion;
@@ -118,11 +120,9 @@ export class TablaJustificacionExpresComponent implements OnInit {
     this.cargaInicial();
 
     this.getJuzgados();
-
     //pruebas
-    this.cargaModulosPorJuzgado("129");
-    this.cargaJuzgadosPorInstitucion("2005");
-    this.cargaAcreditacionesPorModulo("");
+    //this.cargaModulosPorJuzgado("129");
+    //this.cargaAcreditacionesPorModulo("");
   }
 
   getJuzgados(){
@@ -146,8 +146,8 @@ export class TablaJustificacionExpresComponent implements OnInit {
 
     this.sigaServices.post("combo_comboAcreditacionesPorModulo", $event).subscribe(
       n => {
-        this.comboAcreditacionesPorModulo = n.combooItems;
-        this.commonsService.arregloTildesCombo(this.comboJuzgados);
+        this.comboAcreditacionesPorModulo = JSON.parse(n.body).combooItems;
+        this.commonsService.arregloTildesCombo(this.comboAcreditacionesPorModulo);
         this.progressSpinner = false;
       },
       err => {
@@ -159,11 +159,10 @@ export class TablaJustificacionExpresComponent implements OnInit {
 
   cargaModulosPorJuzgado($event){
     this.progressSpinner = true;
- 
     this.sigaServices.post("combo_comboModulosConJuzgado", $event).subscribe(
       n => {
         this.comboModulos = JSON.parse(n.body).combooItems;
-        this.commonsService.arregloTildesCombo(this.comboJuzgadosPorInstitucion);
+        this.commonsService.arregloTildesCombo(this.comboModulos);
         this.progressSpinner = false;
       },
       err => {
@@ -175,11 +174,9 @@ export class TablaJustificacionExpresComponent implements OnInit {
 
   cargaJuzgadosPorInstitucion($event){
     this.progressSpinner = true;
-
     this.sigaServices.post("combo_comboJuzgadoPorInstitucion", $event).subscribe(
       n => {
-        this.comboJuzgadosPorInstitucion = n.combooItems;
-        console.log('this.comboJuzgadosPorInstitucion: ', this.comboJuzgadosPorInstitucion)
+        this.comboJuzgadosPorInstitucion = JSON.parse(n.body).combooItems;
         this.commonsService.arregloTildesCombo(this.comboJuzgadosPorInstitucion);
         this.progressSpinner = false;
       },
@@ -202,7 +199,6 @@ export class TablaJustificacionExpresComponent implements OnInit {
     let obj1 = {};
     let validada;
     let finalizada;
-console.log('this.datosJustificacion: ', this.datosJustificacion)
     this.datosJustificacion.forEach((designacion, i) =>{
       let letra = (i + 10).toString(36).toUpperCase()
       let arr2 = [];
@@ -262,7 +258,7 @@ console.log('this.datosJustificacion: ', this.datosJustificacion)
 
       { type: 'checkbox', value: finalizada, size: 50, combo: null},
       { type: 'text', value: listaCliente, size: 153, combo: null },
-      { type: 'text', value: designacion.nig, size: 153, combo: null},
+      { type: 'input', value: designacion.nig, size: 153, combo: null},
       { type: 'input', value: designacion.numProcedimiento, size: 153 , combo: null},
       { type: 'select', value: designacion.procedimiento, size: 153 , combo: null }, //modulo
       { type: 'datePicker', value: this.formatDate(designacion.fechaActuacion), size: 153 , combo: null},
@@ -318,7 +314,7 @@ console.log('this.datosJustificacion: ', this.datosJustificacion)
           { type: 'buttom', value: 'Nuevo' , size: 50, combo: null},
           // { type: 'checkbox', value: obj.val }
           { type: 'checkbox', value: validada, size: 50 , combo: null},
-          { type: 'invisible', value:  actuacion.numActuacion , size: 0, combo: null},
+          { type: 'invisible', value:  actuacion.numDesignacion , size: 0, combo: null},
           { type: 'invisible', value:  actuacion.idAcreditacion , size: 0, combo: null},
           { type: 'invisible', value:  actuacion.descripcion , size: 0, combo: null},
           { type: 'invisible', value:  actuacion.idTipoAcreditacion , size: 0, combo: null},
@@ -340,7 +336,10 @@ console.log('this.datosJustificacion: ', this.datosJustificacion)
           { type: 'invisible', value:  actuacion.docJustificacion , size: 0, combo: null},
           { type: 'invisible', value:  actuacion.anulacion , size: 0, combo: null},
           { type: 'invisible', value:  actuacion.nigNumProcedimiento , size: 0, combo: null},
-          { type: 'invisible', value:  actuacion.permitirLetrado , size: 0, combo: null}
+          { type: 'invisible', value:  actuacion.permitirLetrado , size: 0, combo: null},
+          { type: 'invisible', value:  actuacion.anio , size: 0, combo: null},
+          { type: 'invisible', value:  actuacion.idTurno , size: 0, combo: null},
+          { type: 'invisible', value:  actuacion.idInstitucion , size: 0, combo: null}
 
         ];
         }else{
@@ -358,7 +357,7 @@ console.log('this.datosJustificacion: ', this.datosJustificacion)
           { type: 'text', value: actuacion.tipoAcreditacion , size: 50, combo: null},
           // { type: 'checkbox', value: obj.val }
           { type: 'checkbox', value: validada, size: 50 , combo: null },
-          { type: 'invisible', value:  actuacion.numActuacion , size: 0, combo: null},
+          { type: 'invisible', value:  actuacion.numDesignacion , size: 0, combo: null},
           { type: 'invisible', value:  actuacion.idAcreditacion , size: 0, combo: null},
           { type: 'invisible', value:  actuacion.descripcion , size: 0, combo: null},
           { type: 'invisible', value:  actuacion.idTipoAcreditacion , size: 0, combo: null},
@@ -380,7 +379,10 @@ console.log('this.datosJustificacion: ', this.datosJustificacion)
           { type: 'invisible', value:  actuacion.docJustificacion , size: 0, combo: null},
           { type: 'invisible', value:  actuacion.anulacion , size: 0, combo: null},
           { type: 'invisible', value:  actuacion.nigNumProcedimiento , size: 0, combo: null},
-          { type: 'invisible', value:  actuacion.permitirLetrado , size: 0, combo: null}
+          { type: 'invisible', value:  actuacion.permitirLetrado , size: 0, combo: null},
+          { type: 'invisible', value:  actuacion.anio , size: 0, combo: null},
+          { type: 'invisible', value:  actuacion.idTurno , size: 0, combo: null},
+          { type: 'invisible', value:  actuacion.idInstitucion , size: 0, combo: null}
         ];
       }
 
@@ -470,12 +472,11 @@ this.dataToUpdate = event;
     this.dataToUpdateArr.push(designaToUpdateJSON);
   })
 
-  console.log('GUARDAR this.dataToUpdateArr: ', this.dataToUpdateArr)
   this.dataToUpdateArrEmit.emit(this.dataToUpdateArr);
 }
 
 actCellToJson(actuacionesCells){
-  let numActuacion = actuacionesCells[9].value;
+  let numDesignacion = actuacionesCells[9].value;
   let idAcreditacion = actuacionesCells[10].value;
   let descripcion = actuacionesCells[11].value;
   let idTipoAcreditacion = actuacionesCells[12].value;
@@ -502,9 +503,14 @@ actCellToJson(actuacionesCells){
   let nig = actuacionesCells[2].value;
   let fecha = actuacionesCells[5].value;
   let permitirLetrado = actuacionesCells[31].value;
+  let anio = actuacionesCells[32].value;
+  let idTurno = actuacionesCells[33].value;
+  let idInstitucion = actuacionesCells[34].value;
+
+
  
   this.actuacionesItem = (
-    { 'numActuacion': numActuacion,
+    { 'numDesignacion': numDesignacion,
       'idAcreditacion': idAcreditacion,
       'descripcion': descripcion,
       'idTipoAcreditacion': idTipoAcreditacion,
@@ -531,6 +537,10 @@ actCellToJson(actuacionesCells){
       'nig': nig,
       'fecha': fecha,
       'permitirLetrado': permitirLetrado,
+      'anio': anio,
+      'idTurno': idTurno,
+      'idInstitucion': idInstitucion
+
     }  );
 
     return this.actuacionesItem;
