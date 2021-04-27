@@ -1,6 +1,6 @@
 export class ActuacionesJustificacionExpressItem {
   
-  numActuacion : String;
+   	numDesignacion : String;
 	idAcreditacion : String;
 	descripcion : String;
 	idTipoAcreditacion : String;

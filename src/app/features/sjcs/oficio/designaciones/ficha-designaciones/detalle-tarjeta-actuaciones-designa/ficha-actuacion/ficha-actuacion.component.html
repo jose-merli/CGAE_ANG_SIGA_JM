@@ -34,7 +34,8 @@
           <div class="card-body p-0">
             <mat-accordion class="example-headers-align" multi>
               <mat-expansion-panel (opened)="tarj.opened = true" (closed)="tarj.opened = false"
-                [disabled]="tarj.fixed || !tarj.detalle" [expanded]="tarj.opened">
+                [disabled]="tarj.fixed || !tarj.detalle || (isNewActDesig && tarj.id != 'sjcsDesigActuaOfiDatosGen')"
+                [expanded]="tarj.opened">
                 <mat-expansion-panel-header class="h-100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
                   <app-tarjeta [image]="tarj.imagen" [cardTitle]="tarj.nombre" [campos]="tarj.campos"
                     [icon]="tarj.icono" [enlaces]="tarj.enlaces" [cardOpenState]="tarj.opened" [fixed]="tarj.fixed"
@@ -60,7 +61,7 @@
                     </app-tarjeta-datos-fact-ficha-act>
                   </div>
                   <div *ngIf="tarj.nombre == 'Relaciones'">
-                    <app-tarjeta-rel-ficha-act>
+                    <app-tarjeta-rel-ficha-act [relaciones]="relaciones">
                     </app-tarjeta-rel-ficha-act>
                   </div>
                   <div *ngIf="tarj.nombre == 'Histórico'">

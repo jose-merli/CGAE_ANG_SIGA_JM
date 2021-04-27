@@ -3,6 +3,7 @@ import { ElementRef, Renderer2, Output, EventEmitter, SimpleChange } from '@angu
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Sort } from '@angular/material/sort';
+import { Message } from 'primeng/components/common/api';
 import { Cell, Row, RowGroup } from './tabla-resultado-desplegable-je.service';
 @Component({
   selector: 'app-tabla-resultado-desplegable',
@@ -23,7 +24,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   @Output() actuacionesToDelete = new EventEmitter<any[]>();
   @Output() actuacionToAdd = new EventEmitter<Row>();
   @Output() dataToUpdate = new EventEmitter<RowGroup[]>();
-  
+  msgs: Message[] = [];
   cabecerasMultiselect = [];
   modalStateDisplay = true;
   searchText = [];
@@ -77,9 +78,6 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('comboJuzgados 2: ', this.comboJuzgados)
-    console.log('this.comboModulos 2: ', this.comboModulos)
-    console.log('this.comboAcreditacion 2: ', this.comboAcreditacion)
     if (this.comboModulos != undefined && this.comboModulos != []){
       this.searchNuevo(this.comboModulos, []);
     }
@@ -130,6 +128,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }
   }
   sortData(sort: Sort) {
+    console.log('sort.active: ', sort.active)
+    console.log('sort: ', sort)
     let data: RowGroup[] = [];
     this.rowGroups = this.rowGroupsAux.filter((row) => {
       data.push(row);
@@ -140,6 +140,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       return;
     }
     if (sort.active == "anio") {
+      console.log('data anio: ', data)
       this.rowGroups = data.sort((a, b) => {
         const isAsc = sort.direction === 'asc';
         let resultado;
@@ -147,11 +148,14 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         return resultado;
       });
     } else {
+      console.log('data: ', data)
       let j = 0;
       this.rowGroups = data.sort((a, b) => {
         const isAsc = sort.direction === 'asc';
         let resultado;
         for (let i = 0; i < a.rows[j].cells.length; i++) {
+          console.log('a: ', a.rows[j].cells[i].value)
+          console.log('b: ', b.rows[j].cells[i].value)
           resultado = compare(a.rows[j].cells[i].value, b.rows[j].cells[i].value, isAsc);
         }
         j++;
@@ -200,6 +204,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     } else {
       return false;
     }
+    
   }
   iconClickChange(iconrightEl, iconDownEl) {
     this.renderer.addClass(iconrightEl, 'collapse');
@@ -336,7 +341,6 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }
 
     if (event.itemValue != undefined && event.value.length >= 0) {
-
       let ocultar = true;
       event.value.forEach(element => {
         if (element.id == event.itemValue.id) {
@@ -344,7 +348,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         }
       });
 
-      if (ocultar) {
+      if (ocultar && event.itemValue.id != "clientes" && event.itemValue.id != "ejgs") {
         this.renderer.addClass(document.getElementById(event.itemValue.id), "collapse");
         this.itemsaOcultar.push(event.itemValue);
         if(this.columnsSizes.length != 0){
@@ -362,7 +366,6 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         tabla.setAttribute("style", `width: ${tabla.clientWidth + this.columnsSizes.find(el => el.id == event.itemValue.id).size}px !important`);
         }
       }
-
       this.getPosition(this.itemsaOcultar);
 
       if (!ocultar) {
@@ -510,32 +513,21 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   } 
 
   onChangeMulti($event, rowId, cell, z){
-    console.log('event: ', $event)
-    console.log('rowId: ', rowId)
-    console.log('cell: ', cell)
-    console.log('z: ', z)
     if (z == 1) {
-      console.log('comboJuzgados')
       //comboJuzgados
       let juzgado = $event.value;
       this.cargaModulosPorJuzgado.emit(juzgado);
     }else if (z == 4){
       //comboModulos
-      console.log('comboModulos')
       let modulo = $event.value;
       this.cargaAcreditacionesPorModulo.emit(modulo);
     }else if (z == 7){
-      console.log('comboAcreditacion')
       //comboAcreditacion
     }
   }
 
   searchNuevo(comboModulos, comboAcreditacion){
     let rowGroupFound = false;
-    console.log('this.rowgroups: ', this.rowGroups)
-    console.log('******************************* searchNuevo')
-    console.log('comboModulos 3: ', comboModulos)
-    console.log('comboAcreditacion 3: ', comboAcreditacion)
     this.rowGroups.forEach((rowGroup,i) => {
       rowGroup.rows.forEach(row =>{
         row.cells.forEach(cell => {
@@ -549,19 +541,16 @@ export class TablaResultadoDesplegableComponent implements OnInit {
 
         })
         if (comboModulos != [] && comboAcreditacion != [] && rowGroupFound == true){
-          console.log('????????? NEW ROW: ', rowGroupFound)
           this.newActuacionesArr.push(row);
         }
       })
       if (rowGroupFound == true){
-        console.log('rowGroup elegida: ', rowGroup)
         rowGroup.rows.forEach(row =>{
         row.position = 'noCollapse';
         });
       }
       rowGroupFound = false;
     });
-    console.log('this.rowgroups final: ', this.rowGroups)
   }
   toDoButton(type, designacion, rowWrapper){
     if (type == 'Nuevo'){
@@ -579,7 +568,6 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             { type: 'datePicker', value: '', size: 153 , combo: null},
             { type: 'datePicker', value: '' , size: 153, combo: null},
             { type: 'multiselect3', value: 'Seleccione un modulo' , size: 153, combo: this.comboAcreditacion},
-            // { type: 'checkbox', value: obj.val }
             { type: 'checkbox', value: false, size: 50 , combo: null},
             { type: 'invisible', value:  '' , size: 0, combo: null},
             { type: 'invisible', value:  '' , size: 0, combo: null},
@@ -603,7 +591,10 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             { type: 'invisible', value:  '' , size: 0, combo: null},
             { type: 'invisible', value:  '' , size: 0, combo: null},
             { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null}];
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},];
           
           let newRow: Row = {cells: newArrayCells, position: 'noCollapse'};
           rowGroup.rows.push(newRow);
@@ -624,7 +615,6 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   } 
 
   guardar(){
-    console.log('this.newActuacionesArr: ', this.newActuacionesArr)
     //1. Guardar nuevos
     if (this.newActuacionesArr != []){
     this.newActuacionesArr.forEach( newAct => {
@@ -634,7 +624,6 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.newActuacionesArr = []; //limpiamos
 
     //2. Actualizar editados
-    console.log('this.rowIdsToUpdate: ', this.rowIdsToUpdate)
     if(this.rowIdsToUpdate != []){
     let rowIdsToUpdateNOT_REPEATED = new Set(this.rowIdsToUpdate);
     this.rowIdsToUpdate = Array.from(rowIdsToUpdateNOT_REPEATED);
@@ -680,9 +669,20 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }
     });
     this.totalRegistros = this.rowGroups.length;
-
     this.actuacionesToDelete.emit(deletedAct);
   }
+  showMsg(severity, summary, detail) {
+    this.msgs = [];
+    this.msgs.push({
+      severity,
+      summary,
+      detail
+    });
+  }
+  clear() {
+    this.msgs = [];
+  }
+
 }
 function compare(a: number | string, b: number | string, isAsc: boolean) {
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
