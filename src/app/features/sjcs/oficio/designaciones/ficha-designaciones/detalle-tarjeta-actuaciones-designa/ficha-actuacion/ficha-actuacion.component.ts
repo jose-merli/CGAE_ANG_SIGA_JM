@@ -111,14 +111,9 @@ export class FichaActuacionComponent implements OnInit {
       imagen: "",
       icono: 'fas fa-link',
       fixed: false,
-      detalle: false,
+      detalle: true,
       opened: false,
-      campos: [
-        {
-          "key": "Número total de Relaciones",
-          "value": ""
-        },
-      ]
+      campos: []
     },
     {
       id: 'sjcsDesigActuaOfiHist',
@@ -155,6 +150,7 @@ export class FichaActuacionComponent implements OnInit {
   usuarioLogado;
   listaAcciones: AccionItem[] = [];
   msgs: Message[] = [];
+  relaciones: any;
 
   constructor(private location: Location,
     private sigaServices: SigaServices,
@@ -188,6 +184,10 @@ export class FichaActuacionComponent implements OnInit {
 
       this.getIdPartidaPresupuestaria();
       this.getAccionesActuacion();
+
+      if (actuacion.relaciones != null) {
+        this.relaciones = actuacion.relaciones;
+      }
 
       if (actuacion.isNew) {
         this.isNewActDesig = true;
