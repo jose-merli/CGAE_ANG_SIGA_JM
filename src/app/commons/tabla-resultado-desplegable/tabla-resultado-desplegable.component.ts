@@ -3,6 +3,7 @@ import { ElementRef, Renderer2, Output, EventEmitter, SimpleChange } from '@angu
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Sort } from '@angular/material/sort';
+import { Message } from 'primeng/components/common/api';
 import { Cell, Row, RowGroup } from './tabla-resultado-desplegable-je.service';
 @Component({
   selector: 'app-tabla-resultado-desplegable',
@@ -23,7 +24,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   @Output() actuacionesToDelete = new EventEmitter<any[]>();
   @Output() actuacionToAdd = new EventEmitter<Row>();
   @Output() dataToUpdate = new EventEmitter<RowGroup[]>();
-  
+  msgs: Message[] = [];
   cabecerasMultiselect = [];
   modalStateDisplay = true;
   searchText = [];
@@ -127,6 +128,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }
   }
   sortData(sort: Sort) {
+    console.log('sort.active: ', sort.active)
+    console.log('sort: ', sort)
     let data: RowGroup[] = [];
     this.rowGroups = this.rowGroupsAux.filter((row) => {
       data.push(row);
@@ -137,6 +140,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       return;
     }
     if (sort.active == "anio") {
+      console.log('data anio: ', data)
       this.rowGroups = data.sort((a, b) => {
         const isAsc = sort.direction === 'asc';
         let resultado;
@@ -144,11 +148,14 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         return resultado;
       });
     } else {
+      console.log('data: ', data)
       let j = 0;
       this.rowGroups = data.sort((a, b) => {
         const isAsc = sort.direction === 'asc';
         let resultado;
         for (let i = 0; i < a.rows[j].cells.length; i++) {
+          console.log('a: ', a.rows[j].cells[i].value)
+          console.log('b: ', b.rows[j].cells[i].value)
           resultado = compare(a.rows[j].cells[i].value, b.rows[j].cells[i].value, isAsc);
         }
         j++;
@@ -197,6 +204,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     } else {
       return false;
     }
+    
   }
   iconClickChange(iconrightEl, iconDownEl) {
     this.renderer.addClass(iconrightEl, 'collapse');
@@ -333,7 +341,6 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }
 
     if (event.itemValue != undefined && event.value.length >= 0) {
-
       let ocultar = true;
       event.value.forEach(element => {
         if (element.id == event.itemValue.id) {
@@ -341,7 +348,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         }
       });
 
-      if (ocultar) {
+      if (ocultar && event.itemValue.id != "clientes" && event.itemValue.id != "ejgs") {
         this.renderer.addClass(document.getElementById(event.itemValue.id), "collapse");
         this.itemsaOcultar.push(event.itemValue);
         if(this.columnsSizes.length != 0){
@@ -359,7 +366,6 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         tabla.setAttribute("style", `width: ${tabla.clientWidth + this.columnsSizes.find(el => el.id == event.itemValue.id).size}px !important`);
         }
       }
-
       this.getPosition(this.itemsaOcultar);
 
       if (!ocultar) {
@@ -527,11 +533,9 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         row.cells.forEach(cell => {
           if (cell.type == 'multiselect2') {
             cell.combo = comboModulos;
-            cell.value = '';
             rowGroupFound = true;
           }else if (cell.type == 'multiselect3') {
             cell.combo = comboAcreditacion;
-            cell.value = '';
             rowGroupFound = true;
           } 
 
@@ -665,9 +669,20 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }
     });
     this.totalRegistros = this.rowGroups.length;
-console.log('deletedAct: ', deletedAct)
     this.actuacionesToDelete.emit(deletedAct);
   }
+  showMsg(severity, summary, detail) {
+    this.msgs = [];
+    this.msgs.push({
+      severity,
+      summary,
+      detail
+    });
+  }
+  clear() {
+    this.msgs = [];
+  }
+
 }
 function compare(a: number | string, b: number | string, isAsc: boolean) {
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);

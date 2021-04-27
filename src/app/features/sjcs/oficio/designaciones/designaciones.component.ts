@@ -75,8 +75,7 @@ export class DesignacionesComponent implements OnInit {
   }
 
   actualizacionJustificacionExpres(event){
-   
-console.log('event param to back: ', event)
+
     this.sigaServicesNew.post("justificacionExpres_actualizacion", event).subscribe(
       data => {
        
