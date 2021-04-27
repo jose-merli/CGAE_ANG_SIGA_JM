@@ -77,9 +77,6 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('comboJuzgados 2: ', this.comboJuzgados)
-    console.log('this.comboModulos 2: ', this.comboModulos)
-    console.log('this.comboAcreditacion 2: ', this.comboAcreditacion)
     if (this.comboModulos != undefined && this.comboModulos != []){
       this.searchNuevo(this.comboModulos, []);
     }
@@ -510,58 +507,46 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   } 
 
   onChangeMulti($event, rowId, cell, z){
-    console.log('event: ', $event)
-    console.log('rowId: ', rowId)
-    console.log('cell: ', cell)
-    console.log('z: ', z)
     if (z == 1) {
-      console.log('comboJuzgados')
       //comboJuzgados
       let juzgado = $event.value;
       this.cargaModulosPorJuzgado.emit(juzgado);
     }else if (z == 4){
       //comboModulos
-      console.log('comboModulos')
       let modulo = $event.value;
       this.cargaAcreditacionesPorModulo.emit(modulo);
     }else if (z == 7){
-      console.log('comboAcreditacion')
       //comboAcreditacion
     }
   }
 
   searchNuevo(comboModulos, comboAcreditacion){
     let rowGroupFound = false;
-    console.log('this.rowgroups: ', this.rowGroups)
-    console.log('******************************* searchNuevo')
-    console.log('comboModulos 3: ', comboModulos)
-    console.log('comboAcreditacion 3: ', comboAcreditacion)
     this.rowGroups.forEach((rowGroup,i) => {
       rowGroup.rows.forEach(row =>{
         row.cells.forEach(cell => {
           if (cell.type == 'multiselect2') {
             cell.combo = comboModulos;
+            cell.value = '';
             rowGroupFound = true;
           }else if (cell.type == 'multiselect3') {
             cell.combo = comboAcreditacion;
+            cell.value = '';
             rowGroupFound = true;
           } 
 
         })
         if (comboModulos != [] && comboAcreditacion != [] && rowGroupFound == true){
-          console.log('????????? NEW ROW: ', rowGroupFound)
           this.newActuacionesArr.push(row);
         }
       })
       if (rowGroupFound == true){
-        console.log('rowGroup elegida: ', rowGroup)
         rowGroup.rows.forEach(row =>{
         row.position = 'noCollapse';
         });
       }
       rowGroupFound = false;
     });
-    console.log('this.rowgroups final: ', this.rowGroups)
   }
   toDoButton(type, designacion, rowWrapper){
     if (type == 'Nuevo'){
@@ -579,7 +564,6 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             { type: 'datePicker', value: '', size: 153 , combo: null},
             { type: 'datePicker', value: '' , size: 153, combo: null},
             { type: 'multiselect3', value: 'Seleccione un modulo' , size: 153, combo: this.comboAcreditacion},
-            // { type: 'checkbox', value: obj.val }
             { type: 'checkbox', value: false, size: 50 , combo: null},
             { type: 'invisible', value:  '' , size: 0, combo: null},
             { type: 'invisible', value:  '' , size: 0, combo: null},
@@ -603,7 +587,10 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             { type: 'invisible', value:  '' , size: 0, combo: null},
             { type: 'invisible', value:  '' , size: 0, combo: null},
             { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null}];
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},];
           
           let newRow: Row = {cells: newArrayCells, position: 'noCollapse'};
           rowGroup.rows.push(newRow);
@@ -624,7 +611,6 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   } 
 
   guardar(){
-    console.log('this.newActuacionesArr: ', this.newActuacionesArr)
     //1. Guardar nuevos
     if (this.newActuacionesArr != []){
     this.newActuacionesArr.forEach( newAct => {
@@ -634,7 +620,6 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.newActuacionesArr = []; //limpiamos
 
     //2. Actualizar editados
-    console.log('this.rowIdsToUpdate: ', this.rowIdsToUpdate)
     if(this.rowIdsToUpdate != []){
     let rowIdsToUpdateNOT_REPEATED = new Set(this.rowIdsToUpdate);
     this.rowIdsToUpdate = Array.from(rowIdsToUpdateNOT_REPEATED);
@@ -680,7 +665,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }
     });
     this.totalRegistros = this.rowGroups.length;
-
+console.log('deletedAct: ', deletedAct)
     this.actuacionesToDelete.emit(deletedAct);
   }
 }

@@ -79,7 +79,11 @@ export class TablaResultadoDesplegableJEService {
         Array.from(Object.values(row)[0]).forEach((cell) => {
           let cellObject: Cell = new Cell();
           cellObject.type = cell['type'];
-          cellObject.value = cell['value'];
+          if (cell['value'] != null && cell['value'] != 'null'){
+            cellObject.value = cell['value'];
+          } else {
+            cellObject.value = '';
+          }
           cellObject.size = cell['size'];
           cellObject.combo = cell['combo'];
           cells.push(cellObject);

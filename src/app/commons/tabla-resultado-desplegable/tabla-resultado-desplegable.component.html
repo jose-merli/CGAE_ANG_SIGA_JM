@@ -74,7 +74,7 @@
                                 </span>-->
                             
                             <span class="w100 cell-value selectWrap wrapText" *ngIf="cell.type == 'select'">
-                                <p-dropdown autoWidth="false" class="center" [placeholder]="textFilter" [(ngModel)]="cell.value"
+                                <p-dropdown autoWidth="false" class="center" [placeholder]="'Seleccionar'" [(ngModel)]="cell.value"
                                 [options]="cell.combo" showClear="true" styleClass="widthAll" (onChange)="changeSelect(row, cell, rowGroup.id)"
                                 [disabled]="cell.disabled">
                                 </p-dropdown>
@@ -120,7 +120,7 @@
                                 [options]="cell.combo" maxSelectedLabels="10"  styleClass="widthAll"
                                 [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeMulti($event, row['id'], cell, z)" >
                                 </p-multiSelect>-->
-                                <p-dropdown autoWidth="false" class="inputWidth" [placeholder]="cell.value" [ngModelOptions]="cell.combo"
+                                <p-dropdown autoWidth="false" class="inputWidth" [placeholder]="'Seleccionar'" [ngModelOptions]="cell.combo"
                                 [(ngModel)]='cell.value' filterBy="label,labelSinTilde" [filter] = "true" [options]="cell.combo" showClear="true" (onChange)="onChangeMulti($event, row['id'], cell, z)" class="select-form">
                                 </p-dropdown>
                             </span>
@@ -160,7 +160,7 @@
                             </span>-->
                                                         
                             <span class="w100 cell-value selectWrap wrapText" *ngIf="cell.type == 'select'">
-                                <p-dropdown autoWidth="false" class="center" [placeholder]="cell.value" [(ngModel)]="cell.value"
+                                <p-dropdown autoWidth="false" class="center" [placeholder]="'Seleccionar'" [(ngModel)]="cell.value"
                                 [options]="cell.combo" showClear="true" styleClass="widthAll" (onChange)="changeSelect(row, cell, rowGroup.id)"
                                 [disabled]="cell.disabled">
                                 </p-dropdown>
@@ -206,7 +206,7 @@
                                         [options]="cell.combo" maxSelectedLabels="10"  styleClass="widthAll"
                                         [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeMulti($event, row['id'], cell, z)" >
                                         </p-multiSelect>-->
-                                        <p-dropdown autoWidth="false" class="inputWidth" [placeholder]="cell.value" [ngModelOptions]="cell.combo"
+                                        <p-dropdown autoWidth="false" class="inputWidth" [placeholder]="'Seleccionar'" [ngModelOptions]="cell.combo"
                                 [(ngModel)]='cell.value' filterBy="label,labelSinTilde" [filter] = "true" [options]="cell.combo" showClear="true" (onChange)="onChangeMulti($event, row['id'], cell, z)" class="select-form">
                                 </p-dropdown>
                                     </span>
