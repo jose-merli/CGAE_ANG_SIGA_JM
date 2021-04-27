@@ -75,8 +75,16 @@ export class DesignacionesComponent implements OnInit {
   }
 
   actualizacionJustificacionExpres(event){
+    let datos = [];
+    let item: JustificacionExpressItem;
+    
+    for(let i=0; i<event.length; i++){
+      item = event[i];
 
-    this.sigaServicesNew.post("justificacionExpres_actualizacion", event).subscribe(
+      datos.push(item);
+    }
+
+    this.sigaServicesNew.post("justificacionExpres_actualizacion", datos).subscribe(
       data => {
        
 
