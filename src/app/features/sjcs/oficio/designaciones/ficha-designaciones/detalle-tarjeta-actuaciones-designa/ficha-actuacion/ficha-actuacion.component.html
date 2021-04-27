@@ -60,7 +60,7 @@
                     </app-tarjeta-datos-fact-ficha-act>
                   </div>
                   <div *ngIf="tarj.nombre == 'Relaciones'">
-                    <app-tarjeta-rel-ficha-act>
+                    <app-tarjeta-rel-ficha-act [relaciones]="relaciones">
                     </app-tarjeta-rel-ficha-act>
                   </div>
                   <div *ngIf="tarj.nombre == 'Histórico'">

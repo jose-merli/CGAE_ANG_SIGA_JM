@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-tarjeta-rel-ficha-act',
@@ -6,6 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./tarjeta-rel-ficha-act.component.scss']
 })
 export class TarjetaRelFichaActComponent implements OnInit {
+
+  @Input() relaciones: any;
 
   constructor() { }
 
