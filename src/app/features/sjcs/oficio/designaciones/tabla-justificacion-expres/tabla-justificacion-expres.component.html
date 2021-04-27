@@ -2,15 +2,15 @@
 
 <div class="card mt-3">
     <div *ngIf="!progressSpinner" class="card-body p-0">
-        <app-tabla-resultado-desplegable (dataToUpdate)="getDataToUpdate($event)" (actuacionToAdd)="getActuacionToAdd($event)" (actuacionesToDelete)="getActuacionesToDelete($event)" [colegiado]="colegiado" [seleccionarTodo]="seleccionarTodo" [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" [pantalla]="'JE'" [comboModulos]="comboModulos" [comboJuzgados]="comboJuzgadosPorInstitucion"  [comboAcreditacionesPorModulo]="comboAcreditacionesPorModulo"
+        <app-tabla-resultado-desplegable (dataToUpdate)="getDataToUpdate($event)" (actuacionToAdd)="getActuacionToAdd($event)" (actuacionesToDelete)="getActuacionesToDelete($event)" [colegiado]="colegiado" [seleccionarTodo]="seleccionarTodo" [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" [pantalla]="'JE'" [comboModulos]="comboModulos" [comboJuzgados]="comboJuzgadosPorInstitucion"  [comboAcreditacion]="comboAcreditacionesPorModulo"
          (cargaModulosPorJuzgado)="cargaModulosPorJuzgado($event)" (cargaAcreditacionesPorModulo)="cargaAcreditacionesPorModulo($event)"></app-tabla-resultado-desplegable>
     </div>
 
     <div class="card-footer">
         <div class="row inline ajustar">
             <div class="left col-lg-6 col-md-3">
-                <span>Cambio Designas {{numDesignas}}/{{totalDesignas}}</span>
-                <span class="ml-3">Cambio Actuaciones {{numActuaciones}}/{{totalActuaciones}}</span>
+                <!-- <span>Cambio Designas {{numDesignas}}/{{totalDesignas}}</span>
+                <span class="ml-3">Cambio Actuaciones {{numActuaciones}}/{{totalActuaciones}}</span> -->
             </div>
 
             <div class="center col-lg-4 col-md-4 ajustar">
