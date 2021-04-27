@@ -34,7 +34,8 @@
           <div class="card-body p-0">
             <mat-accordion class="example-headers-align" multi>
               <mat-expansion-panel (opened)="tarj.opened = true" (closed)="tarj.opened = false"
-                [disabled]="tarj.fixed || !tarj.detalle" [expanded]="tarj.opened">
+                [disabled]="tarj.fixed || !tarj.detalle || (isNewActDesig && tarj.id != 'sjcsDesigActuaOfiDatosGen')"
+                [expanded]="tarj.opened">
                 <mat-expansion-panel-header class="h-100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
                   <app-tarjeta [image]="tarj.imagen" [cardTitle]="tarj.nombre" [campos]="tarj.campos"
                     [icon]="tarj.icono" [enlaces]="tarj.enlaces" [cardOpenState]="tarj.opened" [fixed]="tarj.fixed"
@@ -50,7 +51,8 @@
                   <div *ngIf="tarj.nombre == 'Justificación'">
                     <app-tarjeta-jus-ficha-act [actuacionDesigna]="actuacionDesigna"
                       [permisoEscritura]="permisoEscritura" [usuarioLogado]="usuarioLogado"
-                      (changeDataEvent)="changeDataTarjeta($event)" (isAnuladaEvent)="isAnulada = $event">
+                      (changeDataEvent)="changeDataTarjeta($event)" (isAnuladaEvent)="isAnulada = $event"
+                      (buscarActuacionEvent)="getAccionesActuacion()">
                     </app-tarjeta-jus-ficha-act>
                   </div>
                   <div *ngIf="tarj.nombre == 'Datos Facturación'">
@@ -59,11 +61,11 @@
                     </app-tarjeta-datos-fact-ficha-act>
                   </div>
                   <div *ngIf="tarj.nombre == 'Relaciones'">
-                    <app-tarjeta-rel-ficha-act>
+                    <app-tarjeta-rel-ficha-act [relaciones]="relaciones">
                     </app-tarjeta-rel-ficha-act>
                   </div>
                   <div *ngIf="tarj.nombre == 'Histórico'">
-                    <app-tarjeta-his-ficha-act>
+                    <app-tarjeta-his-ficha-act [listaAcciones]="listaAcciones">
                     </app-tarjeta-his-ficha-act>
                   </div>
                   <div *ngIf="tarj.nombre == 'Documentación'">
@@ -89,6 +91,10 @@
   </div>
 
 </div>
+
+<!-- Alertas -->
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<!-- Alertas -->
 
 <!-- Spinner -->
 <div *ngIf="progressSpinner" class="overlay-spinner">

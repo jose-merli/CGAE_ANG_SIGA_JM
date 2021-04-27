@@ -19,6 +19,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
   comboAcreditaciones: any[] = [];
   comboPrisiones: any[] = [];
   comboMotivosCambio: any[] = [];
+  institucionActual: string = '';
 
   @Input() isAnulada: boolean;
   @Input() permisoEscritura;
@@ -115,6 +116,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
+    this.getInstitucionActual();
     this.getComboJuzgados();
     this.getComboProcedimientos();
     this.getComboModulos();
@@ -129,6 +131,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
     } else {
       this.establecerDatosInicialesEditAct();
     }
+    this.getLetradoActuacion();
     sessionStorage.setItem("datosIniActuDesignaDatosGen", JSON.stringify(this.actuacionDesigna));
   }
 
@@ -261,6 +264,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
 
   fillFecha(event) {
     this.datos.datePicker.value = event;
+    this.getLetradoActuacion();
   }
 
   establecerDatosInicialesNuevaAct() {
@@ -305,15 +309,16 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
 
   guardarEvent() {
     if (!this.compruebaCamposObligatorios()) {
+      console.log("HA IDO BIEN");
 
-      this.sigaServices.post("actuaciones_designacion_guardar", this.actuacionDesigna).subscribe(
-        data => {
-          console.log("🚀 ~ file: tarjeta-datos-gen-ficha-act.component.ts ~ line 280 ~ TarjetaDatosGenFichaActComponent ~ guardarEvent ~ data", data)
-        },
-        err => {
+      // this.sigaServices.post("actuaciones_designacion_guardar", this.actuacionDesigna).subscribe(
+      //   data => {
+      //     console.log("🚀 ~ file: tarjeta-datos-gen-ficha-act.component.ts ~ line 280 ~ TarjetaDatosGenFichaActComponent ~ guardarEvent ~ data", data)
+      //   },
+      //   err => {
 
-        }
-      );
+      //   }
+      // );
 
     }
   }
@@ -365,31 +370,28 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
 
   validarNig(nig) {
     //Esto es para la validacion de CADECA
-    let institucionActual;
+
     let response;
 
-    this.sigaServices.get("institucionActual").subscribe(n => {
-      institucionActual = n.value;
-
-      if (institucionActual == "2008" || institucionActual == "2015" || institucionActual == "2029" || institucionActual == "2033" || institucionActual == "2036" ||
-        institucionActual == "2043" || institucionActual == "2006" || institucionActual == "2021" || institucionActual == "2035" || institucionActual == "2046" || institucionActual == "2066") {
-        if (nig != '') {
-          var objRegExp = /^[0-9]{7}[S,C,P,O,I,V,M,6,8,1,2,3,4]{1}(19|20)\d{2}[0-9]{7}$/;
-          var ret = objRegExp.test(nig);
-          response = ret;
-        }
-        else
-          response = true;
-      } else {
-        if (nig.length == 19) {
-          var objRegExp = /^([a-zA-Z0-9]{19})?$/;
-          var ret = objRegExp.test(nig);
-          response = ret;
-        } else {
-          response = true;
-        }
+    if (this.institucionActual == "2008" || this.institucionActual == "2015" || this.institucionActual == "2029" || this.institucionActual == "2033" || this.institucionActual == "2036" ||
+      this.institucionActual == "2043" || this.institucionActual == "2006" || this.institucionActual == "2021" || this.institucionActual == "2035" || this.institucionActual == "2046" || this.institucionActual == "2066") {
+      if (nig != '') {
+        var objRegExp = /^[0-9]{7}[S,C,P,O,I,V,M,6,8,1,2,3,4]{1}(19|20)\d{2}[0-9]{7}$/;
+        var ret = objRegExp.test(nig);
+        response = ret;
       }
-    });
+      else
+        response = true;
+    } else {
+      if (nig.length == 19) {
+        var objRegExp = /^([a-zA-Z0-9]{19})?$/;
+        var ret = objRegExp.test(nig);
+        response = ret;
+      } else {
+        response = true;
+      }
+    }
+
 
     return response;
 
@@ -397,30 +399,28 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
 
   validarNProcedimiento(nProcedimiento) {
     //Esto es para la validacion de CADECA
-    let institucionActual;
-    let response;
-    this.sigaServices.get("institucionActual").subscribe(n => {
-      institucionActual = n.value;
 
-      if (institucionActual == "2008" || institucionActual == "2015" || institucionActual == "2029" || institucionActual == "2033" || institucionActual == "2036" ||
-        institucionActual == "2043" || institucionActual == "2006" || institucionActual == "2021" || institucionActual == "2035" || institucionActual == "2046" || institucionActual == "2066") {
-        if (nProcedimiento != '') {
-          var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{5}[\.]{1}[0-9]{2}$/;
-          var ret = objRegExp.test(nProcedimiento);
-          response = ret;
-        }
-        else
-          response = true;
-      } else {
-        if (nProcedimiento.length == 19) {
-          var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{7}[/]$/;
-          var ret = objRegExp.test(nProcedimiento);
-          response = ret;
-        } else {
-          response = true;
-        }
+    let response;
+
+    if (this.institucionActual == "2008" || this.institucionActual == "2015" || this.institucionActual == "2029" || this.institucionActual == "2033" || this.institucionActual == "2036" ||
+      this.institucionActual == "2043" || this.institucionActual == "2006" || this.institucionActual == "2021" || this.institucionActual == "2035" || this.institucionActual == "2046" || this.institucionActual == "2066") {
+      if (nProcedimiento != '') {
+        var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{5}[\.]{1}[0-9]{2}$/;
+        var ret = objRegExp.test(nProcedimiento);
+        response = ret;
       }
-    });
+      else
+        response = true;
+    } else {
+      if (nProcedimiento.length == 19) {
+        var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{7}[/]$/;
+        var ret = objRegExp.test(nProcedimiento);
+        response = ret;
+      } else {
+        response = true;
+      }
+    }
+
 
     return response;
 
@@ -445,6 +445,47 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
     // }
 
 
+  }
+
+  getInstitucionActual() {
+    this.sigaServices.get("institucionActual").subscribe(n => { this.institucionActual = n.value });
+  }
+
+  getLetradoActuacion() {
+    this.progressSpinner = true;
+
+    let params = {
+      anio: this.actuacionDesigna.designaItem.ano.split('/')[0].replace('D', ''),
+      numero: this.actuacionDesigna.designaItem.numero,
+      clave: this.actuacionDesigna.designaItem.idTurno,
+      fechaDesigna: this.datePipe.transform(this.datos.datePicker.value, 'dd/MM/yyyy')
+    };
+
+    this.sigaServices.post("actuaciones_designacion_getLetradoDesigna", params).subscribe(
+      data => {
+        let resp = JSON.parse(data.body);
+
+        if (resp.error != null && resp.error.descripcion != null) {
+          this.showMsg('error', 'Error', this.translateService.instant(resp.error.descripcion));
+        } else {
+          if (resp.listaLetradosDesignaItem.length) {
+            this.datos.inputs1[1].value = resp.listaLetradosDesignaItem[0].numeroColegiado;
+            this.datos.inputs1[2].value = resp.listaLetradosDesignaItem[0].colegiado;
+          } else {
+            this.datos.inputs1[1].value = '';
+            this.datos.inputs1[2].value = '';
+          }
+        }
+
+      },
+      err => {
+        this.progressSpinner = false;
+        console.log(err);
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
   }
 
   ngOnDestroy(): void {

@@ -17,6 +17,7 @@ export class TarjetaJusFichaActComponent implements OnInit, OnDestroy {
   isAnulada: boolean = false;
   @Output() isAnuladaEvent = new EventEmitter<boolean>();
   @Output() changeDataEvent = new EventEmitter<any>();
+  @Output() buscarActuacionEvent = new EventEmitter<any>();
   @Input() actuacionDesigna: Actuacion;
   @Input() permisoEscritura;
   @Input() usuarioLogado;
@@ -73,11 +74,12 @@ export class TarjetaJusFichaActComponent implements OnInit, OnDestroy {
 
           sessionStorage.setItem("datosIniActuDesignaJust", JSON.stringify(this.actuacionDesigna));
           this.changeDataEvent.emit({ tarjeta: 'sjcsDesigActuaOfiJustifi', fechaJusti: this.actuacionDesigna.actuacion.fechaJustificacion, estado: this.estado });
+          this.buscarActuacionEvent.emit();
           this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
         }
 
         if (resp.error != null && resp.error.descripcion != null) {
-          this.showMsg('error', 'Error', resp.error.descripcion);
+          this.showMsg('error', 'Error', this.translateService.instant(resp.error.descripcion));
         }
 
       },
@@ -110,11 +112,12 @@ export class TarjetaJusFichaActComponent implements OnInit, OnDestroy {
           this.estado = '';
           sessionStorage.setItem("datosIniActuDesignaJust", JSON.stringify(this.actuacionDesigna));
           this.changeDataEvent.emit({ tarjeta: 'sjcsDesigActuaOfiJustifi', fechaJusti: this.actuacionDesigna.actuacion.fechaJustificacion, estado: 'Pendiente de validar' });
+          this.buscarActuacionEvent.emit();
           this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
         }
 
         if (resp.error != null && resp.error.descripcion != null) {
-          this.showMsg('error', 'Error', resp.error.descripcion);
+          this.showMsg('error', 'Error', this.translateService.instant(resp.error.descripcion));
         }
 
       },
@@ -174,7 +177,7 @@ export class TarjetaJusFichaActComponent implements OnInit, OnDestroy {
         }
 
         if (resp.error != null && resp.error.descripcion != null) {
-          this.showMsg('error', 'Error', resp.error.descripcion);
+          this.showMsg('error', 'Error', this.translateService.instant(resp.error.descripcion));
         }
 
       },
@@ -211,7 +214,7 @@ export class TarjetaJusFichaActComponent implements OnInit, OnDestroy {
         }
 
         if (resp.error != null && resp.error.descripcion != null) {
-          this.showMsg('error', 'Error', resp.error.descripcion);
+          this.showMsg('error', 'Error', this.translateService.instant(resp.error.descripcion));
         }
 
       },
@@ -227,12 +230,17 @@ export class TarjetaJusFichaActComponent implements OnInit, OnDestroy {
 
     this.progressSpinner = true;
 
+    let fechaJustiRequest = '';
+    if (this.fechaJusti != null && this.fechaJusti != '') {
+      fechaJustiRequest = this.datePipe.transform(new Date(this.fechaJusti), 'dd/MM/yyyy');
+    }
+
     const actuacionesRequest = {
       numero: this.actuacionDesigna.actuacion.numero,
       numeroAsunto: this.actuacionDesigna.actuacion.numeroAsunto,
       idTurno: this.actuacionDesigna.actuacion.idTurno,
       anio: this.actuacionDesigna.actuacion.anio,
-      fechaJustificacion: this.fechaJusti,
+      fechaJustificacion: fechaJustiRequest,
       observacionesJusti: this.observaciones
     };
 
@@ -246,11 +254,12 @@ export class TarjetaJusFichaActComponent implements OnInit, OnDestroy {
           this.actuacionDesigna.actuacion.fechaJustificacion = this.fechaJusti;
           sessionStorage.setItem("datosIniActuDesignaJust", JSON.stringify(this.actuacionDesigna));
           this.changeDataEvent.emit({ tarjeta: 'sjcsDesigActuaOfiJustifi', fechaJusti: this.actuacionDesigna.actuacion.fechaJustificacion, estado: this.actuacionDesigna.actuacion.validada ? 'Validada' : 'Pendiente de validar' });
+          this.buscarActuacionEvent.emit();
           this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
         }
 
         if (resp.error != null && resp.error.descripcion != null) {
-          this.showMsg('error', 'Error', resp.error.descripcion);
+          this.showMsg('error', 'Error', this.translateService.instant(resp.error.descripcion));
         }
 
       },

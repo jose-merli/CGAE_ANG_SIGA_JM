@@ -14,7 +14,8 @@ export interface Col {
 export interface Actuacion {
   isNew: boolean,
   designaItem: any,
-  actuacion: ActuacionDesignaItem
+  actuacion: ActuacionDesignaItem,
+  relaciones: any
 }
 
 @Component({
@@ -27,6 +28,7 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
   @Input() campos;
   @Input() actuacionesDesignaItems: ActuacionDesignaItem[];
   @Input() permisoEscritura;
+  @Input() relaciones: any;
 
   @Output() buscarEvent = new EventEmitter<boolean>();
 
@@ -149,7 +151,7 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
           }
 
           if (resp.error != null && resp.error.descripcion != null) {
-            this.showMessage({ severity: 'error', summary: 'Error', detail: resp.error.descripcion });
+            this.showMessage({ severity: 'error', summary: 'Error', detail: this.translateService.instant(resp.error.descripcion) });
           }
 
         },
@@ -194,7 +196,7 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
           }
 
           if (resp.error != null && resp.error.descripcion != null) {
-            this.showMessage({ severity: 'error', summary: 'Error', detail: resp.error.descripcion });
+            this.showMessage({ severity: 'error', summary: 'Error', detail: this.translateService.instant(resp.error.descripcion) });
           }
 
         },
@@ -239,7 +241,7 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
 
           if (resp.error != null && resp.error.descripcion != null) {
 
-            if (resp.error.code == '500') this.showMessage({ severity: 'error', summary: 'Error', detail: resp.error.descripcion });
+            if (resp.error.code == '500') this.showMessage({ severity: 'error', summary: 'Error', detail: this.translateService.instant(resp.error.descripcion) });
             if (resp.error.code == '200') this.showMessage({ severity: 'success', summary: 'Correcto', detail: this.translateService.instant(resp.error.descripcion) });
 
           }
@@ -260,7 +262,8 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
     let actuacion: Actuacion = {
       isNew: true,
       designaItem: this.campos,
-      actuacion: new ActuacionDesignaItem()
+      actuacion: new ActuacionDesignaItem(),
+      relaciones: null
     }
 
     sessionStorage.setItem("actuacionDesigna", JSON.stringify(actuacion));
@@ -272,7 +275,8 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
     let actuacion: Actuacion = {
       isNew: false,
       designaItem: this.campos,
-      actuacion: act
+      actuacion: act,
+      relaciones: this.relaciones
     };
 
     sessionStorage.setItem("actuacionDesigna", JSON.stringify(actuacion));

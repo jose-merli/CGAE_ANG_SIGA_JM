@@ -3,6 +3,7 @@ import { ElementRef, Renderer2, Output, EventEmitter, SimpleChange } from '@angu
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Sort } from '@angular/material/sort';
+import { Message } from 'primeng/components/common/api';
 import { Cell, Row, RowGroup } from './tabla-resultado-desplegable-je.service';
 @Component({
   selector: 'app-tabla-resultado-desplegable',
@@ -18,12 +19,16 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   @Input() pantalla: string = '';
   @Input() s = false;
   @Input() colegiado;
+
   @Output() anySelected = new EventEmitter<any>();
   @Output() designasToDelete = new EventEmitter<any[]>();
   @Output() actuacionesToDelete = new EventEmitter<any[]>();
   @Output() actuacionToAdd = new EventEmitter<Row>();
   @Output() dataToUpdate = new EventEmitter<RowGroup[]>();
-  
+  @Output() totalActuaciones = new EventEmitter<Number>();
+  @Output() numDesignasModificadas = new EventEmitter<Number>();
+  @Output() numActuacionesModificadas = new EventEmitter<Number>();
+  msgs: Message[] = [];
   cabecerasMultiselect = [];
   modalStateDisplay = true;
   searchText = [];
@@ -55,12 +60,9 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   @Output() cargaModulosPorJuzgado = new EventEmitter<String>();
   @Output() cargaAcreditacionesPorModulo = new EventEmitter<String>();
 
-  @Input() comboJuzgados = [{label: "", value: ""},
-  {label: "", value: ""}];
-  @Input() comboModulos = [{label: "", value: ""},
-  {label: "", value: ""}];
-  @Input() comboAcreditacion = [{label: "", value: ""},
-  {label: "", value: ""}];
+  @Input() comboJuzgados = [];
+  @Input() comboModulos = [];
+  @Input() comboAcreditacion = [];
   dataToUpdateArr: RowGroup[] = [];
   constructor(
     private renderer: Renderer2,
@@ -80,16 +82,24 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (this.comboModulos != undefined && this.comboModulos != []){
+      this.searchNuevo(this.comboModulos, []);
+    }
+
+    if (this.comboModulos != undefined && this.comboModulos != [] && this.comboAcreditacion != undefined && this.comboAcreditacion != []){
+      this.searchNuevo(this.comboModulos, this.comboAcreditacion);
+    }
     this.cabeceras.forEach(cab => {
       this.selectedHeader.push(cab);
       this.cabecerasMultiselect.push(cab.name);
     });
     this.totalRegistros = this.rowGroups.length;
+
+    console.log("COMBO ACREDITACIONES: "+this.comboAcreditacion);
   }
 
   selectRow(rowSelected, rowId, child) {
-    console.log('rowId: ', rowId)
-    console.log('child: ', child)
+
     this.selected = true;
     if (child != undefined){
       if (this.selecteChild.includes({[rowId] : child})) {
@@ -98,7 +108,6 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       } else {
         this.selecteChild.push({[rowId] : child});
       }
-      console.log('this.selecteChild 1: ', this.selecteChild)
       if (this.selecteChild.length != 0) {
         this.anySelected.emit(true);
       } else {
@@ -141,16 +150,39 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         resultado = compare(a.id, b.id, isAsc);
         return resultado;
       });
+    }else if (this.pantalla == 'JE' && sort.active == "ejgs") {
+      this.rowGroups = data.sort((a, b) => {
+        const isAsc = sort.direction === 'asc';
+        let resultado;
+        resultado = compare(a.id2, b.id2, isAsc);
+        return resultado;
+      });
+    }else if (this.pantalla == 'JE' && sort.active == "clientes") {
+      this.rowGroups = data.sort((a, b) => {
+        const isAsc = sort.direction === 'asc';
+        let resultado;
+        resultado = compare(a.id3, b.id3, isAsc);
+        return resultado;
+      });
     } else {
       let j = 0;
       this.rowGroups = data.sort((a, b) => {
         const isAsc = sort.direction === 'asc';
         let resultado;
-        for (let i = 0; i < a.rows[j].cells.length; i++) {
-          resultado = compare(a.rows[j].cells[i].value, b.rows[j].cells[i].value, isAsc);
+        let arr = [];
+
+        if (a.rows.length - 1 < j){
+          arr = b.rows;
+        } else {
+          arr = a.rows;
         }
-        j++;
-        return resultado;
+        if ( j <= a.rows.length - 1 && j <= b.rows.length - 1 ){
+          for (let i = 0; i < arr[j].cells.length; i++) {
+            resultado = compare(a.rows[j].cells[i].value, b.rows[j].cells[i].value, isAsc);
+          }
+          j++;
+          return resultado;
+        }
       });
       this.rowGroupsAux = this.rowGroups;
     }
@@ -195,6 +227,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     } else {
       return false;
     }
+    
   }
   iconClickChange(iconrightEl, iconDownEl) {
     this.renderer.addClass(iconrightEl, 'collapse');
@@ -209,7 +242,6 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.down = !this.down
     this.RGid = rowGroupId;
     const toggle = rowWrapper;
-    console.log(' rowWrapper.children: ',  rowWrapper.children)
     for (let i = 0; i < rowWrapper.children.length; i++) {
       if (rowWrapper.children[i].className.includes('child')) {
         this.modalStateDisplay = false;
@@ -228,17 +260,24 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }
   }
   searchChange(j: any) {
-    if (j == 0) {
+    if ((this.pantalla != 'JE' && j == 0) ||  (this.pantalla == 'JE' && (j == 0 || j == 1 || j == 2))) {
+      let rowIdent;
+
       let isReturn = true;
       let isReturnArr = [];
-      console.log('this.rowGroupsAux 1: ', this.rowGroupsAux)
       this.rowGroups = this.rowGroupsAux.filter((row) => {
-        console.log('row 1: ', row)
+        if (j == 0){
+          rowIdent = row.id;
+        } else if (j == 1){
+          rowIdent = row.id2;
+        }else if (j == 2){
+          rowIdent = row.id3;
+        }
         row.rows.forEach(cell => {
           for (let i = 0; i < cell.cells.length; i++) {
             if (
               this.searchText[j] != " " &&
-              this.searchText[j] != undefined && !row.id.toString().toLowerCase().includes(this.searchText[j].toLowerCase())
+              this.searchText[j] != undefined && !rowIdent.toString().toLowerCase().includes(this.searchText[j].toLowerCase())
             ) {
               isReturn = false;
             } else {
@@ -311,6 +350,9 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   }
 
   ocultarColumna(event) {
+    if (this.pantalla == 'JE' && event.itemValue.id == "clientes" || event.itemValue.id == "ejgs"){
+      
+    }else{
 
     let tabla = document.getElementById("tablaResultadoDesplegable");
 
@@ -334,22 +376,33 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }
 
     if (event.itemValue != undefined && event.value.length >= 0) {
-
       let ocultar = true;
       event.value.forEach(element => {
         if (element.id == event.itemValue.id) {
           ocultar = false;
         }
       });
-
+      if (this.pantalla == 'JE' ){
+        /*if (event.itemValue.id == "ejgs" || event.itemValue.id == "clientes"){
+          event.itemValue.id = "anio";
+        }
+        console.log('event.itemValue.id: ', event.itemValue.id)
+        if (ocultar && event.itemValue.id == "anio"){
+          console.log('si ocultamos anio, ocultamos clientes y ejgs porque son la misma columna')
+          this.ocultarItem("clientes");
+          this.ocultarItem("ejgs");
+        }else if (!ocultar && event.itemValue.id == "anio"){
+          this.mostrarItem("clientes");
+          this.mostrarItem("ejgs");
+        }*/
+      }
       if (ocultar) {
-        console.log('(event.itemValue.id: ', event.itemValue.id)
         this.renderer.addClass(document.getElementById(event.itemValue.id), "collapse");
         this.itemsaOcultar.push(event.itemValue);
-        console.log(' this.columnsSizes: ',  this.columnsSizes)
         if(this.columnsSizes.length != 0){
           tabla.setAttribute("style", `width: ${tabla.clientWidth - this.columnsSizes.find(el => el.id == event.itemValue.id).size}px !important`);
         }
+        
        
       } else {
         this.renderer.removeClass(document.getElementById(event.itemValue.id), "collapse");
@@ -362,7 +415,6 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         tabla.setAttribute("style", `width: ${tabla.clientWidth + this.columnsSizes.find(el => el.id == event.itemValue.id).size}px !important`);
         }
       }
-
       this.getPosition(this.itemsaOcultar);
 
       if (!ocultar) {
@@ -371,8 +423,28 @@ export class TablaResultadoDesplegableComponent implements OnInit {
 
     }
     this.totalRegistros = this.rowGroups.length;
+    }
   }
-
+    mostrarItem(id){
+      let tabla = document.getElementById("tablaResultadoDesplegable");
+      this.renderer.removeClass(document.getElementById(id), "collapse");
+      this.itemsaOcultar.forEach((element, index) => {
+        if (element.id == id) {
+          this.itemsaOcultar.splice(index, 1);
+        }
+      });
+      if(this.columnsSizes.length != 0){ 
+      tabla.setAttribute("style", `width: ${tabla.clientWidth + this.columnsSizes.find(el => el.id == id).size}px !important`);
+      }
+    }
+  ocultarItem(id){
+    let tabla = document.getElementById("tablaResultadoDesplegable");
+    this.renderer.addClass(document.getElementById(id), "collapse");
+        //this.itemsaOcultar.push(event.itemValue);
+        if(this.columnsSizes.length != 0){
+          tabla.setAttribute("style", `width: ${tabla.clientWidth - this.columnsSizes.find(el => el.id == id).size}px !important`);
+        }
+  }
   setTamanioPrimerRegistroGrupo() {
     if (this.pantalla == 'AE' || this.pantalla == '') {
       let self = this;
@@ -509,23 +581,62 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }
   } 
 
+  onChangeMulti($event, rowId, cell, z){
+    if (z == 1) {
+      //comboJuzgados
+      let juzgado = $event.value;
+      this.cargaModulosPorJuzgado.emit(juzgado);
+    }else if (z == 4){
+      //comboModulos
+      let modulo = $event.value;
+      this.cargaAcreditacionesPorModulo.emit(modulo);
+    }else if (z == 7){
+      //comboAcreditacion
+    }
+  }
+
+  searchNuevo(comboModulos, comboAcreditacion){
+    let rowGroupFound = false;
+    this.rowGroups.forEach((rowGroup,i) => {
+      rowGroup.rows.forEach(row =>{
+        row.cells.forEach(cell => {
+          if (cell.type == 'multiselect2') {
+            cell.combo = comboModulos;
+            rowGroupFound = true;
+          }else if (cell.type == 'multiselect3') {
+            cell.combo = comboAcreditacion;
+            rowGroupFound = true;
+          } 
+
+        })
+        if (comboModulos != [] && comboAcreditacion != [] && rowGroupFound == true){
+          this.newActuacionesArr.push(row);
+        }
+      })
+      if (rowGroupFound == true){
+        rowGroup.rows.forEach(row =>{
+        row.position = 'noCollapse';
+        });
+      }
+      rowGroupFound = false;
+    });
+  }
   toDoButton(type, designacion, rowWrapper){
     if (type == 'Nuevo'){
-
+      this.comboModulos = [];
+      this.comboAcreditacion = [];
       this.rowGroups.forEach((rowGroup,i) => {
         if (rowGroup.id == designacion){
           let id = Object.keys(rowGroup.rows)[0];
-          console.log('id: ', id)
           let newArrayCells: Cell[] = [
             { type: 'checkbox', value: false, size: 50 , combo: null},
-            { type: 'multiselect', value: '',size: 153 , combo: this.comboJuzgados},
-            { type: 'input', value: '', size: 15, combo: null},
+            { type: 'multiselect1', value: '',size: 153 , combo: this.comboJuzgados},
+            { type: 'input', value: '', size: 153, combo: null},
             { type: 'input', value: '', size: 153 , combo: null},
-            { type: 'multiselect', value: '', size: 153 , combo: this.comboModulos}, //modulo
+            { type: 'multiselect2', value: 'Seleccione un juzgado', size: 153 , combo: this.comboModulos}, //modulo
             { type: 'datePicker', value: '', size: 153 , combo: null},
             { type: 'datePicker', value: '' , size: 153, combo: null},
-            { type: 'multiselect', value: '' , size: 50, combo: this.comboAcreditacion},
-            // { type: 'checkbox', value: obj.val }
+            { type: 'multiselect3', value: 'Seleccione un modulo' , size: 153, combo: this.comboAcreditacion},
             { type: 'checkbox', value: false, size: 50 , combo: null},
             { type: 'invisible', value:  '' , size: 0, combo: null},
             { type: 'invisible', value:  '' , size: 0, combo: null},
@@ -549,11 +660,14 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             { type: 'invisible', value:  '' , size: 0, combo: null},
             { type: 'invisible', value:  '' , size: 0, combo: null},
             { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null}];
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},];
           
           let newRow: Row = {cells: newArrayCells, position: 'noCollapse'};
           rowGroup.rows.push(newRow);
-         this.newActuacionesArr.push(newRow);
+         
         }
       })
     }
@@ -570,27 +684,30 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   } 
 
   guardar(){
+    let actuaciones;
     //1. Guardar nuevos
-    console.log('this.rowGroups: ', this.rowGroups)
+    if (this.newActuacionesArr != []){
     this.newActuacionesArr.forEach( newAct => {
       this.actuacionToAdd.emit(newAct);
+      this.totalActuaciones.emit(this.newActuacionesArr.length);
     });
+    }
     this.newActuacionesArr = []; //limpiamos
 
     //2. Actualizar editados
+    if(this.rowIdsToUpdate != []){
     let rowIdsToUpdateNOT_REPEATED = new Set(this.rowIdsToUpdate);
     this.rowIdsToUpdate = Array.from(rowIdsToUpdateNOT_REPEATED);
-  console.log('rowIdsToUpdate: ', this.rowIdsToUpdate)
     this.rowGroups.forEach(row => {
-      console.log('row.id: ', row.id)
-      console.log('this.rowIdsToUpdate.indexOf(row.id.toString()): ', this.rowIdsToUpdate.indexOf(row.id.toString()))
       if(this.rowIdsToUpdate.indexOf(row.id.toString()) >= 0){
         this.dataToUpdateArr.push(row);
-        console.log('dataToUpdateArr: ', this.dataToUpdateArr)
+        actuaciones = row.rows.slice(1, row.rows.length - 1);
       }
     })
-    console.log('dataToUpdateArr: ', this.dataToUpdateArr)
     this.dataToUpdate.emit(this.dataToUpdateArr);
+    this.numDesignasModificadas.emit(this.rowIdsToUpdate.length);
+    this.numActuacionesModificadas.emit(actuaciones.length);
+  }
     this.rowIdsToUpdate = []; //limpiamos
     //this.dataToUpdateArr = []; //limpiamos
   }
@@ -618,6 +735,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         if (rowIdChild == idToDelete && rowG.id == rowId){
           rowG.rows.splice(this.childNumber, 1);
           deletedAct.push(rowG.rows[this.childNumber].cells)
+          this.totalActuaciones.emit(-1);
          
         }
         });
@@ -626,10 +744,20 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }
     });
     this.totalRegistros = this.rowGroups.length;
-
-    console.log('EMIT deletedAct: ', deletedAct)
     this.actuacionesToDelete.emit(deletedAct);
   }
+  showMsg(severity, summary, detail) {
+    this.msgs = [];
+    this.msgs.push({
+      severity,
+      summary,
+      detail
+    });
+  }
+  clear() {
+    this.msgs = [];
+  }
+
 }
 function compare(a: number | string, b: number | string, isAsc: boolean) {
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);

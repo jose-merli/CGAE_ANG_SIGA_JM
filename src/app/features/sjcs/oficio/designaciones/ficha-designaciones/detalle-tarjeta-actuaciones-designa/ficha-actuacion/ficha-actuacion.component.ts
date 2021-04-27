@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Location } from "@angular/common";
+import { Location, DatePipe } from '@angular/common';
 import { ActuacionDesignaItem } from '../../../../../../../models/sjcs/ActuacionDesignaItem';
 import { SigaServices } from '../../../../../../../_services/siga.service';
 import { CommonsService } from '../../../../../../../_services/commons.service';
@@ -8,6 +8,8 @@ import { Router } from '@angular/router';
 import { TranslateService } from '../../../../../../../commons/translate/translation.service';
 import { ColegiadoItem } from '../../../../../../../models/ColegiadoItem';
 import { DesignaItem } from '../../../../../../../models/sjcs/DesignaItem';
+import { AccionItem } from './tarjeta-his-ficha-act/tarjeta-his-ficha-act.component';
+import { Message } from 'primeng/components/common/api';
 
 @Component({
   selector: 'app-ficha-actuacion',
@@ -109,14 +111,9 @@ export class FichaActuacionComponent implements OnInit {
       imagen: "",
       icono: 'fas fa-link',
       fixed: false,
-      detalle: false,
+      detalle: true,
       opened: false,
-      campos: [
-        {
-          "key": "Número total de Relaciones",
-          "value": ""
-        },
-      ]
+      campos: []
     },
     {
       id: 'sjcsDesigActuaOfiHist',
@@ -136,12 +133,7 @@ export class FichaActuacionComponent implements OnInit {
       fixed: false,
       detalle: false,
       opened: false,
-      campos: [
-        {
-          "key": "Número total de Documentos",
-          "value": ""
-        },
-      ]
+      campos: []
     },
   ];
 
@@ -151,8 +143,16 @@ export class FichaActuacionComponent implements OnInit {
   isAnulada: boolean = false;
   permisoEscritura;
   usuarioLogado;
+  listaAcciones: AccionItem[] = [];
+  msgs: Message[] = [];
+  relaciones: any;
 
-  constructor(private location: Location, private sigaServices: SigaServices, private commonsService: CommonsService, private router: Router, private translateService: TranslateService) { }
+  constructor(private location: Location,
+    private sigaServices: SigaServices,
+    private commonsService: CommonsService,
+    private router: Router,
+    private translateService: TranslateService,
+    private datePipe: DatePipe) { }
 
   ngOnInit() {
 
@@ -174,14 +174,22 @@ export class FichaActuacionComponent implements OnInit {
       this.listaTarjetas[0].campos[2].value = this.actuacionDesigna.actuacion.acreditacion;
 
       // Se rellenan los campos de la tarjeta de Justificación plegada
-      this.listaTarjetas[1].campos[0].value = this.actuacionDesigna.actuacion.fechaJustificacion;
-      this.listaTarjetas[1].campos[1].value = this.actuacionDesigna.actuacion.validada ? 'Validada' : 'Pendiente de validar';
+      if (!actuacion.isNew) {
+        this.listaTarjetas[1].campos[0].value = this.actuacionDesigna.actuacion.fechaJustificacion;
+        this.listaTarjetas[1].campos[1].value = this.actuacionDesigna.actuacion.validada ? 'Validada' : 'Pendiente de validar';
+      }
 
-      this.getIdPartidaPresupuestaria();
+      if (actuacion.relaciones != null) {
+        this.relaciones = actuacion.relaciones;
+      }
 
       if (actuacion.isNew) {
         this.isNewActDesig = true;
+      } else {
+        this.getIdPartidaPresupuestaria();
+        this.getAccionesActuacion();
       }
+
       this.progressSpinner = true;
       this.commonsService.checkAcceso(procesos_oficio.designa)
         .then(respuesta => {
@@ -305,5 +313,133 @@ export class FichaActuacionComponent implements OnInit {
     );
   }
 
+  showMsg(severity, summary, detail) {
+    this.msgs = [];
+    this.msgs.push({
+      severity,
+      summary,
+      detail
+    });
+  }
 
+  clear() {
+    this.msgs = [];
+  }
+
+  getAccionesActuacion() {
+
+    this.progressSpinner = true;
+    this.listaAcciones = [];
+
+    let params = {
+      anio: this.actuacionDesigna.actuacion.anio,
+      idTurno: this.actuacionDesigna.actuacion.idTurno,
+      numero: this.actuacionDesigna.actuacion.numero,
+      numeroAsunto: this.actuacionDesigna.actuacion.numeroAsunto,
+      idPersonaColegiado: '',
+      historico: false
+    };
+
+    this.sigaServices.post("actuaciones_designacion_getHistorioAccionesActDesigna", params).subscribe(
+      data => {
+        let accion = JSON.parse(data.body);
+        this.procesaAccion(accion);
+      },
+      err => {
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  procesaAccion(accion: ActuacionDesignaItem) {
+
+    let registroCreacion = new AccionItem();
+    let registroJustificacion = new AccionItem();
+    let registroValidacion = new AccionItem();
+    let fechas = [];
+
+    let anadirCreacion = false;
+    let anadirJustificacion = false;
+    let anadirValidacion = false;
+
+    registroCreacion.accion = 'Crear';
+    registroJustificacion.accion = 'Justificar';
+    registroValidacion.accion = 'Validar';
+
+    if (accion.fechaCreacion != undefined && accion.fechaCreacion != null && accion.fechaCreacion != '') {
+      registroCreacion.fecha = this.datePipe.transform(new Date(accion.fechaCreacion), 'dd/MM/yyyy');
+      fechas.push(accion.fechaCreacion);
+      anadirCreacion = true;
+    }
+
+    if (accion.usuCreacion != undefined && accion.usuCreacion != null && accion.usuCreacion != '') {
+      registroCreacion.usuario = accion.usuCreacion;
+      anadirCreacion = true;
+    }
+
+    if (accion.observaciones != undefined && accion.observaciones != null && accion.observaciones != '') {
+      registroCreacion.observaciones = accion.observaciones;
+      anadirJustificacion = true;
+    }
+
+    if (accion.fechaUsuJustificacion != undefined && accion.fechaUsuJustificacion != null && accion.fechaUsuJustificacion != '') {
+      registroJustificacion.fecha = this.datePipe.transform(new Date(accion.fechaUsuJustificacion), 'dd/MM/yyyy');
+      fechas.push(accion.fechaUsuJustificacion);
+      anadirJustificacion = true;
+    }
+
+    if (accion.usuJustificacion != undefined && accion.usuJustificacion != null && accion.usuJustificacion != '') {
+      registroJustificacion.usuario = accion.usuJustificacion;
+      anadirJustificacion = true;
+    }
+
+    if (accion.observacionesJusti != undefined && accion.observacionesJusti != null && accion.observacionesJusti != '') {
+      registroJustificacion.observaciones = accion.observacionesJusti;
+      anadirJustificacion = true;
+    }
+
+    if (accion.fechaValidacion != undefined && accion.fechaValidacion != null && accion.fechaValidacion != '') {
+      registroValidacion.fecha = this.datePipe.transform(new Date(accion.fechaValidacion), 'dd/MM/yyyy');
+      fechas.push(accion.fechaValidacion);
+      anadirValidacion = true;
+    }
+
+    if (accion.usuValidacion != undefined && accion.usuValidacion != null && accion.usuValidacion != '') {
+      registroValidacion.usuario = accion.usuValidacion;
+      anadirValidacion = true;
+    }
+
+    if (anadirCreacion) {
+      this.listaAcciones.push(registroCreacion);
+    }
+
+    if (anadirJustificacion) {
+      this.listaAcciones.push(registroJustificacion);
+    }
+
+    if (anadirValidacion) {
+      this.listaAcciones.push(registroValidacion);
+    }
+
+    if (this.listaAcciones.length > 0 && fechas.length > 0) {
+      this.listaAcciones.sort((a, b) => {
+        let aF = new Date(a.fecha);
+        let bF = new Date(b.fecha);
+        return (aF < bF ? -1 : 1 * (-1));
+      });
+    }
+
+    if (this.listaAcciones.length > 0) {
+      let tarj = this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiHist');
+
+      tarj.campos = [];
+      tarj.campos.push({ key: 'Fecha', value: this.listaAcciones[0].fecha });
+      tarj.campos.push({ key: 'Acción', value: this.listaAcciones[0].accion });
+      tarj.campos.push({ key: 'Usuario', value: this.listaAcciones[0].usuario });
+    }
+
+  }
 }

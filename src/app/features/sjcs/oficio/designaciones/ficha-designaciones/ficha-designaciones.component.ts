@@ -31,6 +31,7 @@ export class FichaDesignacionesComponent implements OnInit {
   showModal3 = false;
   listaPrueba = [];
   relaciones:any;
+  comunicaciones:any;
 
   esColegiado: boolean = false;
 
@@ -147,12 +148,7 @@ export class FichaDesignacionesComponent implements OnInit {
       detalle: true,
       fixed: false,
       opened: false,
-      campos: [
-        {
-          "key": "Nº total de Comunicaciones",
-          "value": "54"
-        }
-      ]
+      campos: []
     },
     {
       id: 'sjcsDesigDoc',
@@ -244,7 +240,6 @@ export class FichaDesignacionesComponent implements OnInit {
       this.listaTarjetas[0].opened = true;
     }
     if (!this.nuevaDesigna) {
-      this.mostrar();
       //EDICIÓN DESIGNA
       let camposResumen = [
         {
@@ -742,6 +737,9 @@ export class FichaDesignacionesComponent implements OnInit {
       err => {
         console.log(err);
         this.progressSpinner = false;
+      },
+      ()=>{
+        this.mostrar();
       }
     );
   }
@@ -755,6 +753,31 @@ export class FichaDesignacionesComponent implements OnInit {
           element.fechaDesigna = this.formatDate(element.fechaDesigna);
           element.fecharenunciasolicita = this.formatDate(element.fecharenunciasolicita);
         });
+
+        if(this.procurador != undefined){
+          this.listaTarjetas[5].campos=[  {
+            "key": this.translateService.instant('censo.resultadosSolicitudesModificacion.literal.nColegiado'),
+            "value": this.procurador[0].nColegiado
+          },
+          {
+            "key": this.translateService.instant('censo.usuario.nombre'),
+            "value": this.procurador[0].nombre + " " + this.procurador[0].apellido1 + " " + this.procurador[0].apellido2
+          },
+          {
+            "key": this.translateService.instant('justiciaGratuita.oficio.designaciones.fechaDesignacion'),
+            "value": this.procurador[0].fechaDesigna
+          }
+        ]
+        }else{
+          this.listaTarjetas[5].campos = [
+            {
+              "key": null,
+              "value": this.translateService.instant('justiciaGratuita.oficio.designas.procuradores.vacio')
+            }
+          ]
+        }
+
+       
         this.jsonToRow(this.procurador);
         this.progressSpinner = false;
       },
@@ -901,7 +924,7 @@ export class FichaDesignacionesComponent implements OnInit {
 
     this.sigaServices.post("designaciones_guardarProcuradorEJG", event).subscribe(
       data => {
-          this.showMessage("succes", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.progressSpinner = false;
     },
     err => {
@@ -920,7 +943,7 @@ export class FichaDesignacionesComponent implements OnInit {
 
     this.sigaServices.post("designaciones_guardarProcurador", event).subscribe(
       data => {
-        this.showMessage("succes", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
       err => {
@@ -1088,17 +1111,71 @@ nombreTurno: "ZELIMINAR-CIJAECI05 - MATRIMONIAL CONTENCIOSO JAÉN" */
         }
         this.progressSpinner = false;
 
-        if (this.relaciones == null || this.relaciones == undefined ) {
-          this.listaTarjetas[7].campos = [{
+        if(this.relaciones.length == 1){
+          this.listaTarjetas[7].campos=[  {
+            "key": this.translateService.instant('justiciaGratuita.oficio.justificacionExpres.numeroEJG'),
+            "value": this.relaciones[0].numero
+          }
+        ]
+        }else if(this.relaciones.length == 0 || this.relaciones == undefined){
+          this.listaTarjetas[7].campos=[  {
             "key": null,
             "value": this.translateService.instant('justiciaGratuita.oficio.designas.relaciones.vacio')
-          },]
+          }
+        ]
+        }else{
+          this.listaTarjetas[7].campos=[  {
+            "key": this.translateService.instant('justiciaGratuita.oficio.designas.relaciones.total'),
+            "value": this.relaciones.length
+          }
+        ]
         }
+      },
+      err => {
+        this.progressSpinner = false;
+        console.log(err);
+      }
+    );
 
-        else {
-          this.listaTarjetas[7].campos = [
-           
-          ]
+  }
+
+  searchComunicaciones() {
+    this.progressSpinner = true;
+    let data = sessionStorage.getItem("designaItemLink");
+    let designaItem = JSON.parse(data);
+
+    let item = [designaItem.ano, designaItem.idTurno, designaItem.numero];
+
+    this.sigaServices.post("designacionesBusquedaComunicaciones", item).subscribe(
+      n => {
+
+        this.relaciones = JSON.parse(n.body).relacionesItem;
+        let primero = this.relaciones[0];
+        let error = JSON.parse(n.body).error;
+
+        if (error != null && error.description != null) {
+          this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
+        }
+        this.progressSpinner = false;
+
+        if(this.relaciones.length == 1){
+          this.listaTarjetas[7].campos=[  {
+            "key": this.translateService.instant('justiciaGratuita.oficio.justificacionExpres.numeroEJG'),
+            "value": this.relaciones[0].numero
+          }
+        ]
+        }else if(this.relaciones == undefined){
+          this.listaTarjetas[7].campos=[  {
+            "key": null,
+            "value": this.translateService.instant('justiciaGratuita.oficio.designas.relaciones.vacio')
+          }
+        ]
+        }else{
+          this.listaTarjetas[7].campos=[  {
+            "key": this.translateService.instant('justiciaGratuita.oficio.designas.relaciones.total'),
+            "value": this.relaciones.length
+          }
+        ]
         }
       },
       err => {

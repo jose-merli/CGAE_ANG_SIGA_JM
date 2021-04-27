@@ -51,7 +51,8 @@
                                         </app-detalle-tarjeta-datos-generales-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Detalle Designación'">
-                                        <app-detalle-tarjeta-detalle-ficha-designacion-oficio [campos]="campos" (refreshData)="refreshData($event)">
+                                        <app-detalle-tarjeta-detalle-ficha-designacion-oficio [campos]="campos"
+                                            (refreshData)="refreshData($event)">
                                         </app-detalle-tarjeta-detalle-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Datos Adicionales'">
@@ -60,7 +61,8 @@
                                         </app-detalle-tarjeta-datos-adicionales-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Datos Facturación'">
-                                        <app-detalle-tarjeta-datos-facturacion-ficha-designacion-oficio (changeDataTarjeta)="changeDataTarjeta($event)" [campos]="campos">
+                                        <app-detalle-tarjeta-datos-facturacion-ficha-designacion-oficio
+                                            (changeDataTarjeta)="changeDataTarjeta($event)" [campos]="campos">
                                         </app-detalle-tarjeta-datos-facturacion-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Documentación'">
@@ -73,9 +75,11 @@
                                         </app-detalle-tarjeta-contrarios-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Procurador'" id="procurador">
-                                        <app-detalle-tarjeta-procurador-ficha-designacion-oficio [cabeceras]="cabeceras" [totalRegistros]="totalRegistros"
-                                        [seleccionarTodo]="seleccionarTodo" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" (modDatos)="modDatos($event)" 
-                                        (mostrar)="mostrar()" (restablecer)="restablecer()" (nuevo)="nuevo()">
+                                        <app-detalle-tarjeta-procurador-ficha-designacion-oficio [cabeceras]="cabeceras"
+                                            [totalRegistros]="totalRegistros" [seleccionarTodo]="seleccionarTodo"
+                                            [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups"
+                                            (modDatos)="modDatos($event)" (mostrar)="mostrar()"
+                                            (restablecer)="restablecer()" (nuevo)="nuevo()">
                                         </app-detalle-tarjeta-procurador-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Cambio Letrado'">
@@ -90,14 +94,19 @@
                                     <div *ngIf="tarj.nombre == 'Actuaciones'">
                                         <app-detalle-tarjeta-actuaciones-ficha-designacion-oficio [campos]="campos"
                                             [actuacionesDesignaItems]="actuacionesDesignaItems"
-                                            [permisoEscritura]="permisoEscritura"
+                                            [relaciones]="relaciones" [permisoEscritura]="permisoEscritura"
                                             (buscarEvent)="getActuacionesDesigna($event)">
                                         </app-detalle-tarjeta-actuaciones-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Relaciones'">
-                                        <app-detalle-tarjeta-relaciones-designa
-                                            [relaciones]="relaciones" (searchRelaciones)="searchRelaciones()">
+                                        <app-detalle-tarjeta-relaciones-designa [relaciones]="relaciones"
+                                            (searchRelaciones)="searchRelaciones()">
                                         </app-detalle-tarjeta-relaciones-designa>
+                                    </div>
+                                    <div *ngIf="tarj.nombre == 'Comunicaciones'">
+                                        <app-detalle-tarjeta-comunicaciones-designa
+                                            [comunicaciones]="comunicaciones" (searchComunicaciones)="searchComunicaciones()">
+                                        </app-detalle-tarjeta-comunicaciones-designa>
                                     </div>
                                 </ng-template>
                             </mat-expansion-panel>
@@ -121,17 +130,19 @@
 </div>
 <!-- Spinner -->
 
-  <!--Guardar Procurador-->
-  <p-confirmDialog header= "{{'justiciaGratuita.oficio.designaciones.guardarProcurador' | translate }}" [(visible)]="showModal2" icon="icon" width="750">
-  <p-footer>
-    <button type="button" pButton icon="fa-check" label="Si" (click)="guardarProcuradorEJG(listaPrueba)"></button>
-    <button type="button" pButton icon="fa-close" label="No" (click)="cerrarModal()"></button>
-  </p-footer>
+<!--Guardar Procurador-->
+<p-confirmDialog header="{{'justiciaGratuita.oficio.designaciones.guardarProcurador' | translate }}"
+    [(visible)]="showModal2" icon="icon" width="750">
+    <p-footer>
+        <button type="button" pButton icon="fa-check" label="Si" (click)="guardarProcuradorEJG(listaPrueba)"></button>
+        <button type="button" pButton icon="fa-close" label="No" (click)="cerrarModal()"></button>
+    </p-footer>
 </p-confirmDialog>
 
-  <p-confirmDialog header="{{'justiciaGratuita.oficio.designaciones.eliminarDesignacion' | translate}}" [(visible)]="showModal3" icon="icon" width="750">
+<p-confirmDialog header="{{'justiciaGratuita.oficio.designaciones.eliminarDesignacion' | translate}}"
+    [(visible)]="showModal3" icon="icon" width="750">
     <p-footer>
-      <button type="button" pButton icon="fa-check" label="Si" (click)="compruebaFecha()"></button>
-      <button type="button" pButton icon="fa-close" label="No" (click)="cerrarModal()"></button>
+        <button type="button" pButton icon="fa-check" label="Si" (click)="compruebaFecha()"></button>
+        <button type="button" pButton icon="fa-close" label="No" (click)="cerrarModal()"></button>
     </p-footer>
-  </p-confirmDialog>
+</p-confirmDialog>
