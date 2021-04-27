@@ -131,6 +131,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
     } else {
       this.establecerDatosInicialesEditAct();
     }
+    this.getLetradoActuacion();
     sessionStorage.setItem("datosIniActuDesignaDatosGen", JSON.stringify(this.actuacionDesigna));
   }
 
@@ -263,6 +264,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
 
   fillFecha(event) {
     this.datos.datePicker.value = event;
+    this.getLetradoActuacion();
   }
 
   establecerDatosInicialesNuevaAct() {
@@ -447,6 +449,43 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
 
   getInstitucionActual() {
     this.sigaServices.get("institucionActual").subscribe(n => { this.institucionActual = n.value });
+  }
+
+  getLetradoActuacion() {
+    this.progressSpinner = true;
+
+    let params = {
+      anio: this.actuacionDesigna.designaItem.ano.split('/')[0].replace('D', ''),
+      numero: this.actuacionDesigna.designaItem.numero,
+      clave: this.actuacionDesigna.designaItem.idTurno,
+      fechaDesigna: this.datePipe.transform(this.datos.datePicker.value, 'dd/MM/yyyy')
+    };
+
+    this.sigaServices.post("actuaciones_designacion_getLetradoDesigna", params).subscribe(
+      data => {
+        let resp = JSON.parse(data.body);
+
+        if (resp.error != null && resp.error.descripcion != null) {
+          this.showMsg('error', 'Error', this.translateService.instant(resp.error.descripcion));
+        } else {
+          if (resp.listaLetradosDesignaItem.length) {
+            this.datos.inputs1[1].value = resp.listaLetradosDesignaItem[0].numeroColegiado;
+            this.datos.inputs1[2].value = resp.listaLetradosDesignaItem[0].colegiado;
+          } else {
+            this.datos.inputs1[1].value = '';
+            this.datos.inputs1[2].value = '';
+          }
+        }
+
+      },
+      err => {
+        this.progressSpinner = false;
+        console.log(err);
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
   }
 
   ngOnDestroy(): void {
