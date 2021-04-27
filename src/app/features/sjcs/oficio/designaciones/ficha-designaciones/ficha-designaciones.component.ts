@@ -755,6 +755,31 @@ export class FichaDesignacionesComponent implements OnInit {
           element.fechaDesigna = this.formatDate(element.fechaDesigna);
           element.fecharenunciasolicita = this.formatDate(element.fecharenunciasolicita);
         });
+
+        if(this.procurador != undefined){
+          this.listaTarjetas[6].campos=[  {
+            "key": this.translateService.instant('censo.resultadosSolicitudesModificacion.literal.nColegiado'),
+            "value": this.procurador[0].nColegiado
+          },
+          {
+            "key": this.translateService.instant('censo.usuario.nombre'),
+            "value": this.procurador[0].nombre + " " + this.procurador[0].apellido1 + " " + this.procurador[0].apellido2
+          },
+          {
+            "key": this.translateService.instant('justiciaGratuita.oficio.designaciones.fechaDesignacion'),
+            "value": this.procurador[0].fechaDesigna
+          }
+        ]
+        }else{
+          this.listaTarjetas[6].campos = [
+            {
+              "key": null,
+              "value": this.translateService.instant('justiciaGratuita.oficio.designas.procuradores.vacio')
+            }
+          ]
+        }
+
+       
         this.jsonToRow(this.procurador);
         this.progressSpinner = false;
       },
@@ -848,6 +873,10 @@ export class FichaDesignacionesComponent implements OnInit {
     this.showModal2 = false;
     this.showModal3 = false;
   }
+  
+  compruebaFecha(){
+    
+  } 
 
   compruebaProcurador(event) {
     this.progressSpinner = true;
@@ -1084,17 +1113,24 @@ nombreTurno: "ZELIMINAR-CIJAECI05 - MATRIMONIAL CONTENCIOSO JAÉN" */
         }
         this.progressSpinner = false;
 
-        if (this.relaciones == null || this.relaciones == undefined ) {
-          this.listaTarjetas[7].campos = [{
+        if(this.relaciones.length == 1){
+          this.listaTarjetas[8].campos=[  {
+            "key": this.translateService.instant('justiciaGratuita.oficio.justificacionExpres.numeroEJG'),
+            "value": this.relaciones[0].numero
+          }
+        ]
+        }else if(this.relaciones.length > 1){
+          this.listaTarjetas[8].campos=[  {
+            "key": this.translateService.instant('justiciaGratuita.oficio.designas.relaciones.total'),
+            "value": this.relaciones.length
+          }
+        ]
+        }else{
+          this.listaTarjetas[8].campos=[  {
             "key": null,
             "value": this.translateService.instant('justiciaGratuita.oficio.designas.relaciones.vacio')
-          },]
-        }
-
-        else {
-          this.listaTarjetas[7].campos = [
-           
-          ]
+          }
+        ]
         }
       },
       err => {

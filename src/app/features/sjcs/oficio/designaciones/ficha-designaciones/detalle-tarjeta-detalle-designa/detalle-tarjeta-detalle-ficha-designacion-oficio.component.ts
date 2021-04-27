@@ -25,10 +25,11 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
   searchParametrosFormatoNProcedimiento: ParametroDto = new ParametroDto();
   datosBuscar: any[];
   estado: any;
-  disableFinalizar: boolean;
-  disableAnular: boolean;
-  disableReactivar: boolean;
-  disableRestablecer:boolean;
+  disableFinalizar: boolean = false;
+  disableAnular: boolean = false;
+  disableReactivar: boolean = false;
+  disableRestablecer:boolean = false;
+  disableGuardar:boolean = false;
   refresh: any;
   refreshProcedimiento: any;
   refreshModulo: any;
