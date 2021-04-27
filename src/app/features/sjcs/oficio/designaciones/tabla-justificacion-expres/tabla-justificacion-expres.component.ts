@@ -149,6 +149,8 @@ export class TablaJustificacionExpresComponent implements OnInit {
         this.comboAcreditacionesPorModulo = JSON.parse(n.body).combooItems;
         this.commonsService.arregloTildesCombo(this.comboAcreditacionesPorModulo);
         this.progressSpinner = false;
+
+        console.log("COMBO tabla justificacion: "+this.comboAcreditacionesPorModulo);
       },
       err => {
         console.log(err);
@@ -622,7 +624,7 @@ desigCellToJson(designacionesCells, codigoDesignacionParam, expedientesDesignaci
       'idJuzgado': idJuzgado,
       'idInstitucionJuzgado': idInstitucionJuzgado,
       'actuaciones': actuaciones,
-      'expedientes': expedientes,
+      //'expedientes': expedientes,
       'idProcedimiento': null,
       'idPersona': idPersona,
       'idTurno': idTurno,

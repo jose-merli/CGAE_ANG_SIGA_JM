@@ -94,6 +94,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       this.cabecerasMultiselect.push(cab.name);
     });
     this.totalRegistros = this.rowGroups.length;
+
+    console.log("COMBO ACREDITACIONES: "+this.comboAcreditacion);
   }
 
   selectRow(rowSelected, rowId, child) {

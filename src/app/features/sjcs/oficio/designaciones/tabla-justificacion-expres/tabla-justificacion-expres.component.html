@@ -4,6 +4,8 @@
     <div *ngIf="!progressSpinner" class="card-body p-0">
         <app-tabla-resultado-desplegable (dataToUpdate)="getDataToUpdate($event)" (actuacionToAdd)="getActuacionToAdd($event)" (actuacionesToDelete)="getActuacionesToDelete($event)" [colegiado]="colegiado" [seleccionarTodo]="seleccionarTodo" [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" [pantalla]="'JE'" [comboModulos]="comboModulos" [comboJuzgados]="comboJuzgadosPorInstitucion"  [comboAcreditacion]="comboAcreditacionesPorModulo"
          (cargaModulosPorJuzgado)="cargaModulosPorJuzgado($event)" (cargaAcreditacionesPorModulo)="cargaAcreditacionesPorModulo($event)" (numActuacionesModificadas)="setnumActuacionesModificadas($event)" (numDesignasModificadas)="setnumDesignasModificadas($event)" (totalActuaciones)="settotalActuaciones($event)"></app-tabla-resultado-desplegable>
+
+
     </div>
 
     <div class="card-footer">
