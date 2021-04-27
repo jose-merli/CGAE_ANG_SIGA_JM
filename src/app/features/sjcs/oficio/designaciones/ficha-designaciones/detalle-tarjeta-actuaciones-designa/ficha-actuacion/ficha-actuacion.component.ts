@@ -133,12 +133,7 @@ export class FichaActuacionComponent implements OnInit {
       fixed: false,
       detalle: false,
       opened: false,
-      campos: [
-        {
-          "key": "Número total de Documentos",
-          "value": ""
-        },
-      ]
+      campos: []
     },
   ];
 
@@ -179,11 +174,10 @@ export class FichaActuacionComponent implements OnInit {
       this.listaTarjetas[0].campos[2].value = this.actuacionDesigna.actuacion.acreditacion;
 
       // Se rellenan los campos de la tarjeta de Justificación plegada
-      this.listaTarjetas[1].campos[0].value = this.actuacionDesigna.actuacion.fechaJustificacion;
-      this.listaTarjetas[1].campos[1].value = this.actuacionDesigna.actuacion.validada ? 'Validada' : 'Pendiente de validar';
-
-      this.getIdPartidaPresupuestaria();
-      this.getAccionesActuacion();
+      if (!actuacion.isNew) {
+        this.listaTarjetas[1].campos[0].value = this.actuacionDesigna.actuacion.fechaJustificacion;
+        this.listaTarjetas[1].campos[1].value = this.actuacionDesigna.actuacion.validada ? 'Validada' : 'Pendiente de validar';
+      }
 
       if (actuacion.relaciones != null) {
         this.relaciones = actuacion.relaciones;
@@ -191,7 +185,11 @@ export class FichaActuacionComponent implements OnInit {
 
       if (actuacion.isNew) {
         this.isNewActDesig = true;
+      } else {
+        this.getIdPartidaPresupuestaria();
+        this.getAccionesActuacion();
       }
+
       this.progressSpinner = true;
       this.commonsService.checkAcceso(procesos_oficio.designa)
         .then(respuesta => {
@@ -444,6 +442,4 @@ export class FichaActuacionComponent implements OnInit {
     }
 
   }
-
-
 }
