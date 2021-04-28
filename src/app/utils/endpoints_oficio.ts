@@ -124,6 +124,7 @@ export let endpoints_oficio: any = {
     designaciones_updateDesigna:"oficio/designas/updateDesigna",
     designaciones_busquedaNueva:"oficio/busquedaNuevaDesigna",
     designacionesBusquedaComunicaciones: "oficio/designas/busquedaComunicaciones",
+    designaciones_updateDatosFacturacion: "oficio/designas/updatePartidaPresupuestaria",
 
     //SALTOS Y COMPENSACIONES
     saltosCompensacionesOficio_buscar: "oficio/saltosCompensaciones/buscarSaltosOCompensaciones",
