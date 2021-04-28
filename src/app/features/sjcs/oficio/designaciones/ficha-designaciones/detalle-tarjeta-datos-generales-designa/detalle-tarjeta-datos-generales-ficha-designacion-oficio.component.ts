@@ -590,6 +590,9 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
             element.sufijo = element.estado;
             element.estado = 'Anulada';
           }
+          this.inputs[0].value =  element.nombreColegiado;
+          this.inputs[1].value =  element.apellido1Colegiado + " " + element.apellido2Colegiado;
+          this.inputs[2].value = element.nombreColegiado;
           element.nombreColegiado = element.apellido1Colegiado + " " + element.apellido2Colegiado + ", " + element.nombreColegiado;
           if (element.art27 == "1") {
             element.art27 = "Si";
