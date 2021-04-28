@@ -75,17 +75,14 @@ export class DesignacionesComponent implements OnInit {
   }
 
   actualizacionJustificacionExpres(event){
+    this.progressSpinner = true;
+
     this.sigaServicesNew.post("justificacionExpres_actualizacion", event).subscribe(
       data => {
-       
-
-        if(data!=undefined && data!=null){
-          let respuesta = JSON.parse(data.body);
-        }
+        this.progressSpinner = false;
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
       },
       err => {
-        
-
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         console.log(err);
       },);
@@ -96,11 +93,8 @@ export class DesignacionesComponent implements OnInit {
 
     this.sigaServicesNew.post("justificacionExpres_eliminacion", event).subscribe(
       data => {
-       
         this.progressSpinner=false;
-        if(data!=undefined && data!=null){
-          let respuesta  = JSON.parse(data.body);
-        }
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
       },
       err => {
         this.progressSpinner=false;
@@ -108,17 +102,16 @@ export class DesignacionesComponent implements OnInit {
         console.log(err);
       },);
   }
-  insercionJustificacionExpres(event){
 
+  insercionJustificacionExpres(event){
+    this.progressSpinner = true;
     this.sigaServicesNew.post("justificacionExpres_insercion", event).subscribe(
       data => {
-
-        if(data!=undefined && data!=null){
-          let respuesta  = JSON.parse(data.body);
-        }
+        this.progressSpinner = false;
+       this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
       },
       err => {
-
+        this.progressSpinner = false;
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         console.log(err);
       },);
