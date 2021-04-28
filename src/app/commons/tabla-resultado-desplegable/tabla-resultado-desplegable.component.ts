@@ -707,7 +707,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.numActuacionesModificadas.emit(actuaciones.length);
   }
     this.rowIdsToUpdate = []; //limpiamos
-    //this.dataToUpdateArr = []; //limpiamos
+    this.dataToUpdateArr = []; //limpiamos
   }
 
   eliminar(){

@@ -24,7 +24,7 @@ import { filter } from 'rxjs/operator/filter';
 })
 export class DatosGeneralesTurnosComponent implements OnInit {
   // datos;
-  openFicha: boolean = true;
+  openFicha: boolean = false;
   body: TurnosItems = new TurnosItems();
   bodyInicial;
   progressSpinner: boolean = false;
@@ -91,31 +91,31 @@ export class DatosGeneralesTurnosComponent implements OnInit {
     private commonsService: CommonsService) { }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (this.turnosItem != undefined) {
-      if (this.turnosItem.idturno != undefined) {
-        this.body = this.turnosItem;
-        this.checkDatosGenerales();
-        if (this.body.idturno == undefined) {
-          this.modoEdicion = false;
-        } else {
-          if (this.turnosItem.fechabaja != undefined) {
-            this.disableAll = true;
+    if(changes.turnosItem != undefined && (changes.turnosItem.currentValue != null || changes.turnosItem.currentValue != undefined)){
+      this.turnosItem = changes.turnosItem.currentValue;
+      if (this.turnosItem != undefined) {
+        if (this.turnosItem.idturno != undefined) {
+          this.body = this.turnosItem;
+          if (this.body.idturno == undefined) {
+            this.modoEdicion = false;
+          } else {
+            if (this.turnosItem.fechabaja != undefined) {
+              this.disableAll = true;
+            }
+            this.modoEdicion = true;
+            // this.getCombos();
           }
-          this.modoEdicion = true;
-          // this.getCombos();
         }
-        
+      } else {
+        this.partidoJudicial = "";
+        this.turnosItem = new TurnosItems();
       }
-    } else {
-      this.partidoJudicial = "";
-      this.turnosItem = new TurnosItems();
     }
-
-    // if (this.openGen == true) {
-    //   if (this.openFicha == false) {
-    //     this.abreCierraFicha('datosGenerales')
-    //   }
-    // }
+    if (this.openGen == true) {
+      if (this.openFicha == false) {
+        this.abreCierraFicha('datosGenerales')
+      }
+    }
   }
 
   abreCierraFicha(key) {
@@ -137,6 +137,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
   }
   
   ngOnInit() {
+    this.checkDatosGenerales();
     this.actualizarFichaResumen();
     this.resaltadoDatosGenerales = true;
     // this.abreCierraFicha('datosGenerales');
@@ -850,7 +851,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
   }
 
   checkDatosGenerales() {
-    if (this.body.abreviatura != "" && this.body.abreviatura != undefined && this.body.abreviatura != null 
+    if (!(this.body.abreviatura != "" && this.body.abreviatura != undefined && this.body.abreviatura != null 
         && this.body.nombre != "" && this.body.nombre != "" && this.body.nombre != "" != null
         && this.body.idpartidapresupuestaria != undefined && this.body.idpartidapresupuestaria != "" && this.body.idpartidapresupuestaria != null
         && this.body.grupofacturacion != undefined &&  this.body.grupofacturacion != "" &&  this.body.grupofacturacion != null
@@ -859,9 +860,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
         && this.body.idmateria != null && this.body.idmateria != undefined && this.body.idmateria != ""
         && this.body.idsubzona != null && this.body.idsubzona != undefined && this.body.idsubzona != ""
         && this.body.idzona != null && this.body.idzona != undefined && this.body.idzona != ""
-    ) {
-      this.abreCierraFicha('datosGenerales');
-    } else {
+    )) {
       this.abreCierraFicha('datosGenerales');
     }
   }
