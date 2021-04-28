@@ -6,6 +6,7 @@ import { HttpBackend, HttpClient } from "@angular/common/http";
 import { ControlAccesoDto } from "../models/ControlAccesoDto";
 import { SigaServices } from "./siga.service";
 import { TranslateService } from '../commons/translate/translation.service';
+import { ComboItem } from "../models/ComboItem";
 
 @Injectable()
 export class CommonsService {
@@ -128,6 +129,24 @@ export class CommonsService {
       }
     });
   }
+
+  getLetrado() {
+		let isLetrado: ComboItem;
+		this.sigaServices.get('getLetrado').subscribe(
+			(data) => {
+				isLetrado = data;
+				if (isLetrado.value == 'S') {
+					return true;
+				} else {
+					return false;
+				}
+			},
+			(err) => {
+				console.log(err);
+        return false;
+			}
+		);
+	}
 
   checkAcceso = (idProceso) => {
     let activacionEditar = undefined;

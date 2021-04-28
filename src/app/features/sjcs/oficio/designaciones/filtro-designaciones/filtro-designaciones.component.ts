@@ -605,6 +605,7 @@ getComboCalidad() {
         nombreAp: ''
       };
     }
+    this.body = new DesignaItem();
     this.getBuscadorDesignas();
   }
 
@@ -711,8 +712,8 @@ getComboCalidad() {
   nuevo(){
       this.progressSpinner=true
       sessionStorage.setItem("nuevaDesigna",  "true");
-      this.progressSpinner=false;
       this.router.navigate(["/fichaDesignaciones"]);
+      this.progressSpinner=false;
   }
 
   changeColegiado(event) {
