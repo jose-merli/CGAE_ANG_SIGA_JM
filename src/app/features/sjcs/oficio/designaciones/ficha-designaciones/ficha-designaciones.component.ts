@@ -763,7 +763,7 @@ export class FichaDesignacionesComponent implements OnInit {
           element.fecharenunciasolicita = this.formatDate(element.fecharenunciasolicita);
         });
 
-        if(this.procurador != undefined){
+        if(this.procurador.length != 0){
           this.listaTarjetas[5].campos=[  {
             "key": this.translateService.instant('censo.resultadosSolicitudesModificacion.literal.nColegiado'),
             "value": this.procurador[0].nColegiado
