@@ -59,13 +59,16 @@ export class DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent imple
         this.bloques[2].value = this.campos.defensaJuridica;
         this.bloques[2].valueDatePicker = this.formatDate(this.campos.fechaJuicio);
         let fecha = this.formatDateHM(this.campos.fechaJuicio);
-        let fecha1 = fecha.split(" ");
-        fecha = fecha1[1];
-        let horaminutos = fecha.split(":");
-        this.horaInicial = horaminutos[0];
-        this.minutoInicial = horaminutos[1];
-        this.hora = this.horaInicial;
-        this.minuto = this.minutoInicial;
+        if(fecha != null){
+          let fecha1 = fecha.split(" ");
+          fecha = fecha1[1];
+          let horaminutos = fecha.split(":");
+          this.horaInicial = horaminutos[0];
+          this.minutoInicial = horaminutos[1];
+          this.hora = this.horaInicial;
+          this.minuto = this.minutoInicial;
+        }
+        
     }
   }
   fillFechaHastaCalendar(event, nombre){
@@ -93,14 +96,23 @@ export class DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent imple
       // this.getDatosAdicionales(this.campos);
       let datosAdicionalesDesigna = new DesignaItem();
       datosAdicionalesDesigna.delitos = this.bloques[0].value;
-      datosAdicionalesDesigna.fechaOficioJuzgado =new Date(this.bloques[0].valueDatePicker);
-      datosAdicionalesDesigna.observaciones = this.bloques[1].value;
-      datosAdicionalesDesigna.fechaRecepcionColegio =new Date(this.bloques[1].valueDatePicker);
-      datosAdicionalesDesigna.defensaJuridica = this.bloques[2].value;
-      datosAdicionalesDesigna.fechaJuicio =new Date(this.bloques[2].valueDatePicker);
-      let horaNumber = Number(this.hora);
+      if(this.bloques[0].valueDatePicker!= null){
+        datosAdicionalesDesigna.fechaOficioJuzgado =new Date(this.bloques[0].valueDatePicker);
+      }
+      if(this.bloques[1].valueDatePicker!= null){
+        datosAdicionalesDesigna.fechaRecepcionColegio =new Date(this.bloques[1].valueDatePicker);
+      }
+      if(this.bloques[2].valueDatePicker!= null){
+        datosAdicionalesDesigna.fechaJuicio =new Date(this.bloques[2].valueDatePicker);
+        let horaNumber = Number(this.hora);
       let minutoNumber = Number(this.minuto);
       datosAdicionalesDesigna.fechaJuicio.setHours(horaNumber,minutoNumber);
+      }
+      datosAdicionalesDesigna.observaciones = this.bloques[1].value;
+      // datosAdicionalesDesigna.fechaRecepcionColegio =new Date(this.bloques[1].valueDatePicker);
+      datosAdicionalesDesigna.defensaJuridica = this.bloques[2].value;
+      // datosAdicionalesDesigna.fechaJuicio =new Date(this.bloques[2].valueDatePicker);
+      
       datosAdicionalesDesigna.idTurno = this.campos.idTurno;
       let anio = this.campos.ano.split("/");
       datosAdicionalesDesigna.ano = Number(anio[0].substring(1,5));
