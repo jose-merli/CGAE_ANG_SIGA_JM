@@ -312,6 +312,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         var today = new Date();
         var year = today.getFullYear().valueOf();
         newDesigna.ano = year;
+        newDesigna.numero = Number(this.numero.value);
         this.checkDatosGenerales();
         if (this.resaltadoDatos == false) {
           this.progressSpinner = true;
@@ -505,6 +506,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
             var today = new Date();
             var year = today.getFullYear().valueOf();
             newDesigna.ano = year;
+            newDesigna.numero = Number(this.numero.value);
             this.checkDatosGenerales();
             if (this.resaltadoDatos == true) {
               this.progressSpinner = false;
