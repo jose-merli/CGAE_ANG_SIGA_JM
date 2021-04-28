@@ -47,7 +47,9 @@
                                 </mat-expansion-panel-header>
                                 <ng-template matExpansionPanelContent>
                                     <div *ngIf="tarj.nombre == 'Datos Generales'">
-                                        <app-detalle-tarjeta-datos-generales-ficha-designacion-oficio [campos]="campos" (actualizaFicha)="actualizaFicha($event)" (refreshData)="refreshDataGenerales($event)">
+                                        <app-detalle-tarjeta-datos-generales-ficha-designacion-oficio [campos]="campos"
+                                            (actualizaFicha)="actualizaFicha($event)"
+                                            (refreshData)="refreshDataGenerales($event)">
                                         </app-detalle-tarjeta-datos-generales-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Datos Interes'">
@@ -108,8 +110,8 @@
                                         </app-detalle-tarjeta-relaciones-designa>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Comunicaciones'">
-                                        <app-detalle-tarjeta-comunicaciones-designa
-                                            [comunicaciones]="comunicaciones" (searchComunicaciones)="searchComunicaciones()">
+                                        <app-detalle-tarjeta-comunicaciones-designa [comunicaciones]="comunicaciones"
+                                            (searchComunicaciones)="searchComunicaciones()">
                                         </app-detalle-tarjeta-comunicaciones-designa>
                                     </div>
                                 </ng-template>

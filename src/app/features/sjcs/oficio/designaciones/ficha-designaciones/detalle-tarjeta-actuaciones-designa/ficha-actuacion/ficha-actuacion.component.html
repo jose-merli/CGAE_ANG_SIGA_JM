@@ -45,7 +45,8 @@
                 <ng-template matExpansionPanelContent>
                   <div *ngIf="tarj.nombre == 'Datos Generales'">
                     <app-tarjeta-datos-gen-ficha-act [actuacionDesigna]="actuacionDesigna" [isAnulada]="isAnulada"
-                      [permisoEscritura]="permisoEscritura" [usuarioLogado]="usuarioLogado">
+                      [permisoEscritura]="permisoEscritura" [usuarioLogado]="usuarioLogado"
+                      [institucionActual]="institucionActual">
                     </app-tarjeta-datos-gen-ficha-act>
                   </div>
                   <div *ngIf="tarj.nombre == 'Justificación'">

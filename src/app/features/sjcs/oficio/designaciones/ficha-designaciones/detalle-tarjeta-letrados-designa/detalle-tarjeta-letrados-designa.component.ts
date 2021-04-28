@@ -26,7 +26,7 @@ export class DetalleTarjetaLetradosDesignaComponent implements OnInit {
   selectMultiple: boolean = false;
   selectionMode: string = "single";
   numSelected = 0;
-  art27: String;
+  art27: Boolean = false;
 
   selectedDatos: any = [];
 
@@ -48,53 +48,14 @@ export class DetalleTarjetaLetradosDesignaComponent implements OnInit {
     this.getCols();
     let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
     let datos: DesignaItem = designa;
-    this.progressSpinner = true;
-    let request = [designa.ano,  designa.idTurno, designa.numero];
-
-    //Buscamos la designacion en la que estamos para extraer la informacion que falta
-    this.sigaServices.post("designaciones_busquedaDesignacionActual", request).subscribe(
-      data => {
-        this.art27 = JSON.parse(data.body).art27;
-      },
-      err => {
-        if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-      }
-    );
-
-    this.progressSpinner = true;
+    if(designa.art27!="No") this.art27=true;
+    this.art27=true;
 
     this.datos=this.letrados;
     this.datos.forEach(element => {
       element.fechaDesignacion = this.datepipe.transform(element.fechaDesignacion, 'dd/MM/yyyy');
     });
-    //Buscamos los letrados asociados a la designacion
-   /*  this.sigaServices.post("designaciones_busquedaLetradosDesignacion", request).subscribe(
-      data => {
-        let letrados = JSON.parse(data.body);
-        if(letrados!=[]){
-          this.datos = letrados;
-        }
-      },
-      err => {
-        if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-      }
-    ); */
+    
     
   }
 
