@@ -1314,15 +1314,15 @@ nombreTurno: "ZELIMINAR-CIJAECI05 - MATRIMONIAL CONTENCIOSO JAÉN" */
       },
       {
         "key": "Juzgado",
-        "value": event.idJuzgado
+        "value": event.nombreJuzgado
       },
       {
         "key": "Procedimiento",
-        "value": event.idPretension
+        "value": event.nombreProcedimiento
       },
       {
         "key": "Módulo",
-        "value": event.idProcedimiento
+        "value": event.modulo
       }
     ];
     this.tarjetaFija.campos = camposResumen;

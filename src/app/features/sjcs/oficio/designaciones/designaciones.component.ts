@@ -151,6 +151,7 @@ export class DesignacionesComponent implements OnInit {
          element.ano = 'D' +  element.ano + '/' + element.codigo;
         //  element.fechaEstado = new Date(element.fechaEstado);
         element.fechaEstado = this.formatDate(element.fechaEstado);
+        element.fechaFin = this.formatDate(element.fechaFin);
         element.fechaAlta = this.formatDate(element.fechaAlta);
         element.fechaEntradaInicio = this.formatDate(element.fechaEntradaInicio);
          if(element.estado == 'V'){

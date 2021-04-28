@@ -83,6 +83,7 @@ export class DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent imple
   showMsg(severity, summary, detail) {
     this.msgs = [];
     if(detail == "Restablecer"){
+      this.progressSpinner=true;
         // this.getDatosAdicionales(this.campos);
         this.bloques[0].value = this.datosInicial.delitos;
         this.bloques[0].valueDatePicker = this.formatDate(this.datosInicial.fechaOficioJuzgado);
@@ -92,7 +93,9 @@ export class DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent imple
         this.bloques[2].valueDatePicker = this.formatDate(this.datosInicial.fechaJuicio);
         this.hora = this.horaInicial;
         this.minuto = this.minutoInicial;
+        this.progressSpinner=false;
     }else if(detail == "Guardar"){
+      this.progressSpinner=true;
       // this.getDatosAdicionales(this.campos);
       let datosAdicionalesDesigna = new DesignaItem();
       datosAdicionalesDesigna.delitos = this.bloques[0].value;
@@ -119,6 +122,7 @@ export class DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent imple
       datosAdicionalesDesigna.numero = this.campos.numero;
       this.sigaServices.post("designaciones_updateDatosAdicionales",datosAdicionalesDesigna).subscribe(
         n => {
+          this.progressSpinner=false;
           console.log(n.body);
           this.refreshAditionalData.emit(datosAdicionalesDesigna);
             this.msgs.push({
@@ -128,8 +132,10 @@ export class DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent imple
             });
         },
         err => {
+          this.progressSpinner=false;
           console.log(err);
         }, () => {
+          this.progressSpinner=false;
         }
       );
      
@@ -151,12 +157,14 @@ export class DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent imple
   }
 
   getDatosAdicionales(datosDesigna) {
+    this.progressSpinner=true;
     let desginaAdicionales = new DesignaItem();
     desginaAdicionales.ano = datosDesigna.ano;
     desginaAdicionales.numero = datosDesigna.numero;
     desginaAdicionales.idTurno = datosDesigna.idTurno;
     this.sigaServices.post("designaciones_getDatosAdicionales",desginaAdicionales).subscribe(
       n => {
+        this.progressSpinner=false;
         console.log(n.body);
         if(n!=null){
           this.bloques[0].value = n.body.delitos;
@@ -168,8 +176,10 @@ export class DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent imple
         }
       },
       err => {
+        this.progressSpinner=false;
         console.log(err);
       }, () => {
+        this.progressSpinner=false;
       }
     );
   }

@@ -124,14 +124,14 @@ export class DatosGeneralesTurnosComponent implements OnInit {
     let fichaPosible = this.getFichaPosibleByKey(key);
     if (
       key == "datosGenerales" &&
-      !this.newTurno
+      !this.modoEdicion
     ) {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
-    if (this.newTurno) {
+    if (this.modoEdicion) {
       fichaPosible.activa = !fichaPosible.activa;
-      this.openFicha = true;
+      this.openFicha = !this.openFicha;
     }
     this.opened.emit(this.openFicha);
     this.idOpened.emit(key);
