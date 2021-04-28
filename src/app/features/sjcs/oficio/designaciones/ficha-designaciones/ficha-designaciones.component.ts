@@ -225,10 +225,10 @@ export class FichaDesignacionesComponent implements OnInit {
 
     this.checkAcceso();
     if (!this.esColegiado) {
-      this.listaTarjetas[1].detalle = false;
-      this.listaTarjetas[2].detalle = false;
-      this.listaTarjetas[3].detalle = false;
-      this.listaTarjetas[11].detalle = false;
+      // this.listaTarjetas[1].detalle = false;
+      // this.listaTarjetas[2].detalle = false;
+      // this.listaTarjetas[3].detalle = false;
+      // this.listaTarjetas[11].detalle = false;
     }
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
     let designaItem = JSON.parse(sessionStorage.getItem("designaItemLink"));

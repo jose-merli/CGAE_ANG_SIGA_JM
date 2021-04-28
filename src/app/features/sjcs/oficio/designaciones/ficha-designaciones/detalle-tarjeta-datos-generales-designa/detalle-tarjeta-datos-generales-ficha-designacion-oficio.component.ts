@@ -106,7 +106,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     this.selectores[0].disable = true;
     this.selectores[1].opciones = [{ label: datosInicial.descripcionTipoDesigna, value: datosInicial.idTipoDesignaColegio }];
     this.selectores[1].value = datosInicial.idTipoDesignaColegio;
-    this.selectores[1].disable = true;
+    this.selectores[1].disable = false;
     var anioAnterior = datosInicial.ano.split("/");
     this.anio.value = anioAnterior[0].slice(1);
     this.anio.disable = true;
@@ -254,6 +254,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       this.confirmarActivar(severity, summary, detail);
     } else {
       if (detail == "save" && this.anio.value == "") {
+        detail = "Guardar";
         let newDesigna = new DesignaItem();
         var idTurno: number = +this.selectores[0].value;
         newDesigna.idTurno = idTurno;
@@ -299,6 +300,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         }
 
       } else if (detail == "save" && this.anio.value != "") {
+        detail = "Guardar";
         let newDesigna = new DesignaItem();
         var idTurno: number = +this.selectores[0].value;
         newDesigna.idTurno = idTurno;
@@ -439,6 +441,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         icon: icon,
         accept: () => {
           if (detail == "save" && this.anio.value == "") {
+            detail = "Guardar";
             let newDesigna = new DesignaItem();
             var idTurno: number = +this.selectores[0].value;
             newDesigna.idTurno = idTurno;
@@ -490,6 +493,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
             }
             this.progressSpinner = false;
           } else if (detail == "save" && this.anio.value != "") {
+            detail = "Guardar";
             let newDesigna = new DesignaItem();
             var idTurno: number = +this.selectores[0].value;
             newDesigna.idTurno = idTurno;
