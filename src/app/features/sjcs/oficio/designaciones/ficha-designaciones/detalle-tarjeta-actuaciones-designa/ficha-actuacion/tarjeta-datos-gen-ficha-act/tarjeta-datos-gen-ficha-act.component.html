@@ -44,8 +44,9 @@
         <label>{{ selector.nombre }}</label>
         <p-dropdown class="select-form" [(ngModel)]="selector.value"
           placeholder="{{'general.boton.seleccionar' | translate}}" [options]="selector.opciones" [filter]="true"
-          filterBy="label,labelSinTilde" [showClear]="true"
-          [ngClass]="styleObligatorio('selector', selector.obligatorio)" [disabled]="isAnulada">
+          filterBy="label,labelSinTilde" [showClear]="true" (onChange)="onChangeSelector(selector)"
+          [ngClass]="{'camposObligatorios': (selector.obligatorio && (selector.value == '' || selector.value == null))}"
+          [disabled]="isAnulada || selector.disabled">
         </p-dropdown>
       </div>
     </div>

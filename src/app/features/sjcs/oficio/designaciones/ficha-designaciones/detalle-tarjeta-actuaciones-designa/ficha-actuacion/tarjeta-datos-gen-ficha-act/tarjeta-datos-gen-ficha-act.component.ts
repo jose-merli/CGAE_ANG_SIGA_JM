@@ -19,8 +19,8 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
   comboAcreditaciones: any[] = [];
   comboPrisiones: any[] = [];
   comboMotivosCambio: any[] = [];
-  institucionActual: string = '';
 
+  @Input() institucionActual;
   @Input() isAnulada: boolean;
   @Input() permisoEscritura;
   @Input() usuarioLogado;
@@ -65,37 +65,52 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
     },
     selectores: [
       {
+        id: 'juzgado',
         nombre: "Juzgado (*)",
         opciones: [],
         value: null,
+        disabled: false,
         obligatorio: true
       },
       {
+        id: 'procedimiento',
         nombre: "Procedimiento",
         opciones: [],
-        value: null
+        value: null,
+        disabled: false,
+        obligatorio: false
       },
       {
+        id: 'motivoCambio',
         nombre: "Motivo del cambio",
         opciones: [],
-        value: null
+        value: null,
+        disabled: false,
+        obligatorio: false
       },
       {
+        id: 'modulo',
         nombre: "Módulo (*)",
         opciones: [],
         value: null,
+        disabled: false,
         obligatorio: true
       },
       {
+        id: 'acreditacion',
         nombre: "Acreditación (*)",
         opciones: [],
         value: null,
+        disabled: false,
         obligatorio: true
       },
       {
+        id: 'prision',
         nombre: "Prisión",
         opciones: [],
-        value: null
+        value: null,
+        disabled: false,
+        obligatorio: false
       },
     ],
     datePicker: {
@@ -116,14 +131,6 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.getInstitucionActual();
-    this.getComboJuzgados();
-    this.getComboProcedimientos();
-    this.getComboModulos();
-    this.getComboAcreditaciones();
-    this.getComboPrisiones();
-    this.getComboMotivosCambio();
-
     this.fechaEntradaInicioDate = new Date(this.actuacionDesigna.designaItem.fechaEntradaInicio.split('/').reverse().join('-'));
 
     if (this.actuacionDesigna.isNew) {
@@ -132,6 +139,23 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
       this.establecerDatosInicialesEditAct();
     }
     this.getLetradoActuacion();
+    this.getComboJuzgados();
+    this.getComboProcedimientos();
+
+    if (this.datos.selectores[0].value != undefined && this.datos.selectores[0].value != null && this.datos.selectores[0].value != '') {
+      this.cargaModulosPorJuzgado(this.datos.selectores[0].value);
+    } else {
+      this.datos.selectores[3].disabled = true;
+    }
+
+    if (this.datos.selectores[3].value != undefined && this.datos.selectores[3].value != null && this.datos.selectores[3].value != '') {
+      this.cargaAcreditacionesPorModulo(this.datos.selectores[3].value);
+    } else {
+      this.datos.selectores[4].disabled = true;
+    }
+
+    this.getComboPrisiones();
+    this.getComboMotivosCambio();
     sessionStorage.setItem("datosIniActuDesignaDatosGen", JSON.stringify(this.actuacionDesigna));
   }
 
@@ -167,6 +191,25 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
     );
   }
 
+  cargaModulosPorJuzgado($event) {
+    this.progressSpinner = true;
+    this.sigaServices.post("combo_comboModulosConJuzgado", $event).subscribe(
+      n => {
+        this.comboModulos = JSON.parse(n.body).combooItems;
+        this.commonsService.arregloTildesCombo(this.comboModulos);
+        this.progressSpinner = false;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+        this.datos.selectores[3].opciones = this.comboModulos;
+      }
+    );
+  }
+
   getComboProcedimientos() {
     this.progressSpinner = true;
 
@@ -186,29 +229,11 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
     );
   }
 
-  getComboModulos() {
+  cargaAcreditacionesPorModulo($event) {
     this.progressSpinner = true;
+    let idTurno = this.actuacionDesigna.designaItem.idTurno;
 
-    this.sigaServices.get("combo_comboModulosDesignaciones").subscribe(
-      n => {
-        this.comboModulos = n.combooItems;
-        this.commonsService.arregloTildesCombo(this.comboModulos);
-        this.progressSpinner = false;
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner = false;
-      }, () => {
-        this.progressSpinner = false;
-        this.datos.selectores[3].opciones = this.comboModulos;
-      }
-    );
-  }
-
-  getComboAcreditaciones() {
-    this.progressSpinner = true;
-
-    this.sigaServices.get("modulosybasesdecompensacion_comboAcreditaciones").subscribe(
+    this.sigaServices.getParam("combo_comboAcreditacionesPorModulo", `?idModulo=${$event}&idTurno=${idTurno}`).subscribe(
       n => {
         this.comboAcreditaciones = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboAcreditaciones);
@@ -217,7 +242,8 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
       err => {
         console.log(err);
         this.progressSpinner = false;
-      }, () => {
+      },
+      () => {
         this.progressSpinner = false;
         this.datos.selectores[4].opciones = this.comboAcreditaciones;
       }
@@ -272,7 +298,8 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
     this.datos.inputs1[3].value = this.actuacionDesigna.designaItem.ano.replace('D', '');
     this.datos.inputs1[4].value = this.actuacionDesigna.actuacion.numeroAsunto;
     this.datos.inputNig.value = this.actuacionDesigna.designaItem.nig;
-    this.datos.datePicker.value = this.datePipe.transform(new Date(), 'dd/MM/yyyy');
+    // this.datos.datePicker.value = this.datePipe.transform(new Date(), 'dd/MM/yyyy');
+    this.datos.datePicker.value = new Date();
     this.datos.inputNumPro.value = this.actuacionDesigna.designaItem.numProcedimiento;
     this.datos.selectores[0].value = this.actuacionDesigna.designaItem.idJuzgado;
     this.datos.selectores[1].value = this.actuacionDesigna.designaItem.idPretension;
@@ -426,31 +453,6 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
 
   }
 
-  styleObligatorio(resaltado, evento) {
-
-    if (evento == true && resaltado == "selector") {
-      if (this.datos.selectores[0].obligatorio == true && this.datos.selectores[0].nombre == "Juzgado (*)"
-        && (this.datos.selectores[0].value == "" || this.datos.selectores[0].value == undefined)
-        && this.datos.selectores[3].obligatorio == true && this.datos.selectores[3].nombre == "Módulo (*)"
-        && (this.datos.selectores[3].value == "" || this.datos.selectores[3].value == undefined)
-        && this.datos.selectores[4].obligatorio == true && this.datos.selectores[4].nombre == "Acreditación (*)"
-        && (this.datos.selectores[4].value == "" || this.datos.selectores[4].value == undefined)
-      ) {
-        return "camposObligatorios";
-      }
-    }
-
-    // if (this.resaltadoDatos && (evento == "fechaGenerales") && resaltado == "fecha") {
-    //   return this.commonsService.styleObligatorio(evento);
-    // }
-
-
-  }
-
-  getInstitucionActual() {
-    this.sigaServices.get("institucionActual").subscribe(n => { this.institucionActual = n.value });
-  }
-
   getLetradoActuacion() {
     this.progressSpinner = true;
 
@@ -492,5 +494,31 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
     sessionStorage.removeItem("datosIniActuDesignaDatosGen");
   }
 
+  getInstitucionActual() {
+    this.sigaServices.get("institucionActual").subscribe(n => { this.institucionActual = n.value });
+  }
+
+  onChangeSelector(selector) {
+
+    if (selector.id == 'juzgado') {
+      if (selector.value == '' || selector.value == null || selector.value == undefined) {
+        this.datos.selectores.find(el => el.id == 'modulo').disabled = true;
+        this.datos.selectores.find(el => el.id == 'modulo').value = '';
+        this.datos.selectores.find(el => el.id == 'acreditacion').disabled = true;
+        this.datos.selectores.find(el => el.id == 'acreditacion').value = '';
+      } else {
+        this.datos.selectores.find(el => el.id == 'modulo').disabled = false;
+        this.cargaModulosPorJuzgado(this.datos.selectores.find(el => el.id == 'juzgado').value);
+      }
+    } else if (selector.id == 'modulo') {
+      if (selector.value == '' || selector.value == null || selector.value == undefined) {
+        this.datos.selectores.find(el => el.id == 'acreditacion').disabled = true;
+        this.datos.selectores.find(el => el.id == 'acreditacion').value = '';
+      } else {
+        this.datos.selectores.find(el => el.id == 'acreditacion').disabled = false;
+        this.cargaAcreditacionesPorModulo(this.datos.selectores.find(el => el.id == 'modulo').value);
+      }
+    }
+  }
 
 }
