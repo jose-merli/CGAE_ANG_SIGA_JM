@@ -563,6 +563,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
 
   busquedaDesignaciones(evendesginaItem) {
     this.progressSpinner = true;
+    this.numero.disable = false;
     this.sigaServices.post("designaciones_busquedaNueva", evendesginaItem).subscribe(
       n => {
         let datos = JSON.parse(n.body);
@@ -570,7 +571,6 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
           element.factConvenio = element.ano;
           this.anio.value = element.ano;
           this.numero.value = element.codigo;
-          this.numero.disable = false;
           element.ano = 'D' + element.ano + '/' + element.codigo;
           //  element.fechaEstado = new Date(element.fechaEstado);
           element.fechaEstado = this.formatDate(element.fechaEstado);
