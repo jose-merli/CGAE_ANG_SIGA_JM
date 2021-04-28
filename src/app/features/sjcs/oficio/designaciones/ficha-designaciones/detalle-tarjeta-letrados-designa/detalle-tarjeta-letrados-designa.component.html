@@ -25,6 +25,10 @@
         <td class="text-center" *ngFor="let col of columns">
           <div>
             <span>{{dato[col.field]}}</span>
+            <div class="ayuda-btn" *ngIf="col.field == 'motivoRenuncia'" [pTooltip]="dato.Observaciones" tooltipPosition="top">
+              <i class="fa fa-question"></i>
+          </div>
+            <i ></i>
           </div>
           <!-- <div *ngIf="isEliminado(dato)">
             <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
@@ -62,7 +66,8 @@
         </div>
       </div>
     </ng-template>
-    <span *ngIf="art27=='1'">(*) {{"justiciaGratuita.oficio.designas.letrados.aviso" | translate}}</span>
+    <!-- *ngIf="art27=='1'" -->
+    <span>(*) {{"justiciaGratuita.oficio.designas.letrados.aviso" | translate}}</span>
   </p-table>
   <div class="card-footer">
     <div class="text-right main-button">

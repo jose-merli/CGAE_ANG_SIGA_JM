@@ -19,11 +19,15 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   @Input() pantalla: string = '';
   @Input() s = false;
   @Input() colegiado;
+
   @Output() anySelected = new EventEmitter<any>();
   @Output() designasToDelete = new EventEmitter<any[]>();
   @Output() actuacionesToDelete = new EventEmitter<any[]>();
   @Output() actuacionToAdd = new EventEmitter<Row>();
   @Output() dataToUpdate = new EventEmitter<RowGroup[]>();
+  @Output() totalActuaciones = new EventEmitter<Number>();
+  @Output() numDesignasModificadas = new EventEmitter<Number>();
+  @Output() numActuacionesModificadas = new EventEmitter<Number>();
   msgs: Message[] = [];
   cabecerasMultiselect = [];
   modalStateDisplay = true;
@@ -128,8 +132,6 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }
   }
   sortData(sort: Sort) {
-    console.log('sort.active: ', sort.active)
-    console.log('sort: ', sort)
     let data: RowGroup[] = [];
     this.rowGroups = this.rowGroupsAux.filter((row) => {
       data.push(row);
@@ -140,26 +142,45 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       return;
     }
     if (sort.active == "anio") {
-      console.log('data anio: ', data)
       this.rowGroups = data.sort((a, b) => {
         const isAsc = sort.direction === 'asc';
         let resultado;
         resultado = compare(a.id, b.id, isAsc);
         return resultado;
       });
+    }else if (this.pantalla == 'JE' && sort.active == "ejgs") {
+      this.rowGroups = data.sort((a, b) => {
+        const isAsc = sort.direction === 'asc';
+        let resultado;
+        resultado = compare(a.id2, b.id2, isAsc);
+        return resultado;
+      });
+    }else if (this.pantalla == 'JE' && sort.active == "clientes") {
+      this.rowGroups = data.sort((a, b) => {
+        const isAsc = sort.direction === 'asc';
+        let resultado;
+        resultado = compare(a.id3, b.id3, isAsc);
+        return resultado;
+      });
     } else {
-      console.log('data: ', data)
       let j = 0;
       this.rowGroups = data.sort((a, b) => {
         const isAsc = sort.direction === 'asc';
         let resultado;
-        for (let i = 0; i < a.rows[j].cells.length; i++) {
-          console.log('a: ', a.rows[j].cells[i].value)
-          console.log('b: ', b.rows[j].cells[i].value)
-          resultado = compare(a.rows[j].cells[i].value, b.rows[j].cells[i].value, isAsc);
+        let arr = [];
+
+        if (a.rows.length - 1 < j){
+          arr = b.rows;
+        } else {
+          arr = a.rows;
         }
-        j++;
-        return resultado;
+        if ( j <= a.rows.length - 1 && j <= b.rows.length - 1 ){
+          for (let i = 0; i < arr[j].cells.length; i++) {
+            resultado = compare(a.rows[j].cells[i].value, b.rows[j].cells[i].value, isAsc);
+          }
+          j++;
+          return resultado;
+        }
       });
       this.rowGroupsAux = this.rowGroups;
     }
@@ -237,15 +258,24 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }
   }
   searchChange(j: any) {
-    if (j == 0) {
+    if ((this.pantalla != 'JE' && j == 0) ||  (this.pantalla == 'JE' && (j == 0 || j == 1 || j == 2))) {
+      let rowIdent;
+
       let isReturn = true;
       let isReturnArr = [];
       this.rowGroups = this.rowGroupsAux.filter((row) => {
+        if (j == 0){
+          rowIdent = row.id;
+        } else if (j == 1){
+          rowIdent = row.id2;
+        }else if (j == 2){
+          rowIdent = row.id3;
+        }
         row.rows.forEach(cell => {
           for (let i = 0; i < cell.cells.length; i++) {
             if (
               this.searchText[j] != " " &&
-              this.searchText[j] != undefined && !row.id.toString().toLowerCase().includes(this.searchText[j].toLowerCase())
+              this.searchText[j] != undefined && !rowIdent.toString().toLowerCase().includes(this.searchText[j].toLowerCase())
             ) {
               isReturn = false;
             } else {
@@ -318,6 +348,9 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   }
 
   ocultarColumna(event) {
+    if (this.pantalla == 'JE' && event.itemValue.id == "clientes" || event.itemValue.id == "ejgs"){
+      this.showMsg('error', "Clientes y EJG's pertenecen a la columna Año/Número Designación, no pueden ocultarse/mostrarse por sí solas", '')
+    }else{
 
     let tabla = document.getElementById("tablaResultadoDesplegable");
 
@@ -347,13 +380,27 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           ocultar = false;
         }
       });
-
-      if (ocultar && event.itemValue.id != "clientes" && event.itemValue.id != "ejgs") {
+      if (this.pantalla == 'JE' ){
+        /*if (event.itemValue.id == "ejgs" || event.itemValue.id == "clientes"){
+          event.itemValue.id = "anio";
+        }
+        console.log('event.itemValue.id: ', event.itemValue.id)*/
+        if (ocultar && event.itemValue.id == "anio"){
+          console.log('si ocultamos anio, ocultamos clientes y ejgs porque son la misma columna')
+          this.ocultarItem("clientes");
+          this.ocultarItem("ejgs");
+        }else if (!ocultar && event.itemValue.id == "anio"){
+          this.mostrarItem("clientes");
+          this.mostrarItem("ejgs");
+        }
+      }
+      if (ocultar) {
         this.renderer.addClass(document.getElementById(event.itemValue.id), "collapse");
         this.itemsaOcultar.push(event.itemValue);
         if(this.columnsSizes.length != 0){
           tabla.setAttribute("style", `width: ${tabla.clientWidth - this.columnsSizes.find(el => el.id == event.itemValue.id).size}px !important`);
         }
+        
        
       } else {
         this.renderer.removeClass(document.getElementById(event.itemValue.id), "collapse");
@@ -374,8 +421,28 @@ export class TablaResultadoDesplegableComponent implements OnInit {
 
     }
     this.totalRegistros = this.rowGroups.length;
+    }
   }
-
+    mostrarItem(id){
+      let tabla = document.getElementById("tablaResultadoDesplegable");
+      this.renderer.removeClass(document.getElementById(id), "collapse");
+      this.itemsaOcultar.forEach((element, index) => {
+        if (element.id == id) {
+          this.itemsaOcultar.splice(index, 1);
+        }
+      });
+      if(this.columnsSizes.length != 0){ 
+      tabla.setAttribute("style", `width: ${tabla.clientWidth + this.columnsSizes.find(el => el.id == id).size}px !important`);
+      }
+    }
+  ocultarItem(id){
+    let tabla = document.getElementById("tablaResultadoDesplegable");
+    this.renderer.addClass(document.getElementById(id), "collapse");
+        //this.itemsaOcultar.push(event.itemValue);
+        if(this.columnsSizes.length != 0){
+          tabla.setAttribute("style", `width: ${tabla.clientWidth - this.columnsSizes.find(el => el.id == id).size}px !important`);
+        }
+  }
   setTamanioPrimerRegistroGrupo() {
     if (this.pantalla == 'AE' || this.pantalla == '') {
       let self = this;
@@ -615,10 +682,12 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   } 
 
   guardar(){
+    let actuaciones;
     //1. Guardar nuevos
     if (this.newActuacionesArr != []){
     this.newActuacionesArr.forEach( newAct => {
       this.actuacionToAdd.emit(newAct);
+      this.totalActuaciones.emit(this.newActuacionesArr.length);
     });
     }
     this.newActuacionesArr = []; //limpiamos
@@ -630,12 +699,15 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.rowGroups.forEach(row => {
       if(this.rowIdsToUpdate.indexOf(row.id.toString()) >= 0){
         this.dataToUpdateArr.push(row);
+        actuaciones = row.rows.slice(1, row.rows.length - 1);
       }
     })
     this.dataToUpdate.emit(this.dataToUpdateArr);
+    this.numDesignasModificadas.emit(this.rowIdsToUpdate.length);
+    this.numActuacionesModificadas.emit(actuaciones.length);
   }
     this.rowIdsToUpdate = []; //limpiamos
-    //this.dataToUpdateArr = []; //limpiamos
+    this.dataToUpdateArr = []; //limpiamos
   }
 
   eliminar(){
@@ -661,6 +733,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         if (rowIdChild == idToDelete && rowG.id == rowId){
           rowG.rows.splice(this.childNumber, 1);
           deletedAct.push(rowG.rows[this.childNumber].cells)
+          this.totalActuaciones.emit(-1);
          
         }
         });

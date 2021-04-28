@@ -122,8 +122,11 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
       const isAsc = sort.direction === 'asc';
       let resultado;
       for (let i = 0; i < a.cells.length; i++) {
+        console.log('a: ', a.cells[i].value)
+        console.log('b: ', b.cells[i].value)
         resultado = compare(a.cells[i].value, b.cells[i].value, isAsc);
       }
+      console.log('resulyado: ', resultado)
       return resultado;
     });
     this.rowGroupsAux = this.rowGroups;

@@ -10,6 +10,7 @@ import { CargasMasivasOficioComponent } from './cargas-masivas-oficio/cargas-mas
 import { FichaDesignacionesComponent } from './designaciones/ficha-designaciones/ficha-designaciones.component';
 import { SaltosCompensacionesOficioComponent } from './saltos-compensaciones-oficio/saltos-compensaciones-oficio.component';
 import { FichaActuacionComponent } from './designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-designa/ficha-actuacion/ficha-actuacion.component';
+import { FichaCambioLetradoComponent } from './designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/ficha-cambio-letrado/ficha-cambio-letrado.component';
 
 
 const routesOficio: Routes = [
@@ -46,6 +47,11 @@ const routesOficio: Routes = [
   {
 		path: 'fichaDesignaciones',
 		component: FichaDesignacionesComponent,
+		canActivate: [ AuthGuard ]
+	},
+  {
+		path: 'fichaCambioLetrado',
+		component: FichaCambioLetradoComponent,
 		canActivate: [ AuthGuard ]
 	},
   {

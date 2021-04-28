@@ -79,7 +79,7 @@ export class TarjetaJusFichaActComponent implements OnInit, OnDestroy {
         }
 
         if (resp.error != null && resp.error.descripcion != null) {
-          this.showMsg('error', 'Error', resp.error.descripcion);
+          this.showMsg('error', 'Error', this.translateService.instant(resp.error.descripcion));
         }
 
       },
@@ -117,7 +117,7 @@ export class TarjetaJusFichaActComponent implements OnInit, OnDestroy {
         }
 
         if (resp.error != null && resp.error.descripcion != null) {
-          this.showMsg('error', 'Error', resp.error.descripcion);
+          this.showMsg('error', 'Error', this.translateService.instant(resp.error.descripcion));
         }
 
       },
@@ -177,7 +177,7 @@ export class TarjetaJusFichaActComponent implements OnInit, OnDestroy {
         }
 
         if (resp.error != null && resp.error.descripcion != null) {
-          this.showMsg('error', 'Error', resp.error.descripcion);
+          this.showMsg('error', 'Error', this.translateService.instant(resp.error.descripcion));
         }
 
       },
@@ -214,7 +214,7 @@ export class TarjetaJusFichaActComponent implements OnInit, OnDestroy {
         }
 
         if (resp.error != null && resp.error.descripcion != null) {
-          this.showMsg('error', 'Error', resp.error.descripcion);
+          this.showMsg('error', 'Error', this.translateService.instant(resp.error.descripcion));
         }
 
       },
@@ -259,7 +259,7 @@ export class TarjetaJusFichaActComponent implements OnInit, OnDestroy {
         }
 
         if (resp.error != null && resp.error.descripcion != null) {
-          this.showMsg('error', 'Error', resp.error.descripcion);
+          this.showMsg('error', 'Error', this.translateService.instant(resp.error.descripcion));
         }
 
       },

@@ -57,66 +57,65 @@
         <!-- info identificacion -->
         <div class="col-lg-12 col-md-12">
           <div class="row">
-            <label>{{ "justiciaGratuita.oficio.designaciones.fechaDesignacion" | translate}}</label>
-            <app-fecha [(value)]="body.fechaDesignacion"
-              (valueChangeSelected)="fillFechaDesignacion($event)">
-            </app-fecha>
+            <div class="form-group col-lg-2 col-md-2">
+              <label>{{ "justiciaGratuita.oficio.designaciones.fechaDesignacion" | translate}}</label>
+               <input disabled [(value)]="body.fechaDesignacion" (valueChangeSelected)="fillFechaDesignacion($event)"/> 
+            </div>
           </div>
           <div class="row">
             <div class="form-group col-lg-2 col-md-2">
-              <label>{{ "administracion.parametrosGenerales.literal.numColegiado" | translate }} 
+              <label>{{ "censo.resultadosSolicitudesModificacion.literal.nColegiado" | translate }}
               </label>
               <input [(ngModel)]="body.numColegiado" name="nombre" type="text" class="form-control" [maxLength]="95"
-                 pInputText disabled />
+                pInputText disabled />
             </div>
             <div class="form-group col-lg-4 col-md-4">
-              <label>{{ "censo.busquedaClientes.literal.apellidos" | translate }}
+              <label>{{ "gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate }}
               </label>
-              <input [(ngModel)]="body.apellido1Colegiado" name="apellido1" type="text" class="form-control" [maxLength]="95"
-                 pInputText disabled />
+              <input [(ngModel)]="body.apellidos" name="apellidos" type="text" class="form-control"
+                [maxLength]="95" pInputText disabled />
             </div>
 
             <div class="form-group col-lg-4 col-md-4">
               <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}
               </label>
               <input [(ngModel)]="body.nombre" name="nombre" type="text" class="form-control" [maxLength]="95"
-                 pInputText disabled />
+                pInputText disabled />
             </div>
           </div>
           <div class="row">
             <div class="form-group col-lg-2 col-md-2">
               <label>{{ "justiciaGratuita.oficio.designas.letrados.fechaSolicitudRenuncia" | translate}}</label>
-              <app-fecha [(value)]="body.fechaSolRenuncia"
-                (valueChangeSelected)="fillFechaSolRenuncia($event)">
+              <app-fecha [(value)]="body.fechaSolRenuncia" (valueChangeSelected)="fillFechaSolRenuncia($event)">
               </app-fecha>
             </div>
-            <div class="form-group col-lg-2 col-md-2">
+            <!-- <div class="form-group col-lg-2 col-md-2">
               <label>{{ "justiciaGratuita.oficio.designas.letrados.fechaRenunciaEfectiva" | translate}}</label>
-              <app-fecha [(value)]="body.fechaEfecRenuncia"
-                (valueChangeSelected)="fillFechaSolRenuncia($event)" disabled>
+              <app-fecha [(value)]="body.fechaEfecRenuncia" (valueChangeSelected)="fillFechaSolRenuncia($event)"
+                disabled>
               </app-fecha>
-            </div>
+            </div> -->
             <div class="form-group col-lg-2 col-md-2">
               <p-checkbox (onChange)="incluirCompensacion()" [(ngModel)]="body.compensacion" binary="true"
-              label="'Incluir compensación'" name="groupname">
+                label="Incluir compensación" name="groupname">
               </p-checkbox>
             </div>
             <div class="form-group col-lg-2 col-md-2">
               <label>{{ "justiciaGratuita.oficio.designas.letrados.motivoRenuncia" | translate}} (*)</label>
               <p-dropdown [(ngModel)]='body.motivoRenuncia' placeholder="{{ 'general.boton.seleccionar' | translate }}"
-                (onChange)="changeMotivo($event)">
+                (onChange)="changeMotivo($event)" [options]="comboRenuncia" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
               </p-dropdown>
-            <!-- <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+              <!-- <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}"
                 [(ngModel)]='body.idprovincia' [showClear]="true" (onChange)="onChangeProvincia()" [filter]="true"
                 filterBy="label,labelSinTilde" [options]="comboProvincia"
                 [disabled]="isDisabledProvincia || !permisoEscritura">
               </p-dropdown> -->
             </div>
             <div class="form-group col-lg-4 col-md-4">
-              <label>{{ "administracion.parametrosGenerales.literal.observaciones" | translate }}
+              <label>{{ "justiciaGratuita.Calendarios.Observaciones" | translate }}
               </label>
-              <input [(ngModel)]="body.observaciones" name="observaciones" type="text" class="form-control" [maxLength]="95"
-                 pInputText />
+              <input [(ngModel)]="body.observaciones" name="observaciones" type="text" class="form-control"
+                [maxLength]="95" pInputText />
             </div>
           </div>
         </div>

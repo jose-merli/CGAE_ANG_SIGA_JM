@@ -151,7 +151,7 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
           }
 
           if (resp.error != null && resp.error.descripcion != null) {
-            this.showMessage({ severity: 'error', summary: 'Error', detail: resp.error.descripcion });
+            this.showMessage({ severity: 'error', summary: 'Error', detail: this.translateService.instant(resp.error.descripcion) });
           }
 
         },
@@ -196,7 +196,7 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
           }
 
           if (resp.error != null && resp.error.descripcion != null) {
-            this.showMessage({ severity: 'error', summary: 'Error', detail: resp.error.descripcion });
+            this.showMessage({ severity: 'error', summary: 'Error', detail: this.translateService.instant(resp.error.descripcion) });
           }
 
         },
@@ -241,7 +241,7 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
 
           if (resp.error != null && resp.error.descripcion != null) {
 
-            if (resp.error.code == '500') this.showMessage({ severity: 'error', summary: 'Error', detail: resp.error.descripcion });
+            if (resp.error.code == '500') this.showMessage({ severity: 'error', summary: 'Error', detail: this.translateService.instant(resp.error.descripcion) });
             if (resp.error.code == '200') this.showMessage({ severity: 'success', summary: 'Correcto', detail: this.translateService.instant(resp.error.descripcion) });
 
           }

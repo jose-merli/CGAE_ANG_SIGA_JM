@@ -101,12 +101,12 @@ export let endpoints_oficio: any = {
     actuaciones_designacion_anular: "oficio/designas/anularActDesigna",
     actuaciones_designacion_reactivar: "oficio/designas/reactivarActDesigna",
     actuaciones_designacion_eliminar: "oficio/designas/eliminarActDesigna",
-    actuaciones_designacion_newId: "oficio/designas/getNewIdActuDesigna",
     actuaciones_designacion_guardar: "oficio/designas/guardarActDesigna",
     actuaciones_designacion_validar: "oficio/designas/validarActDesigna",
     actuaciones_designacion_desvalidar: "oficio/designas/desvalidarActDesigna",
     actuaciones_designacion_updateJustiActDesigna: "oficio/designas/updateJustiActDesigna",
     actuaciones_designacion_getHistorioAccionesActDesigna: "oficio/designas/getHistorioAccionesActDesigna",
+    actuaciones_designacion_getLetradoDesigna: "oficio/designas/getLetradoDesigna",
     combo_motivosCambio_actuDesigna: "oficio/comboMotivosCambioActDesigna",
     combo_prisiones: "oficio/comboPrisiones",
     designaciones_updateRepresentanteInteresado:"oficio/designas/updateRepresentanteInteresado",
@@ -119,6 +119,9 @@ export let endpoints_oficio: any = {
     designaciones_eliminarRelacion:"oficio/designas/eliminarRelacion",
     designaciones_busquedaDesignacionActual:"oficio/designas/busquedaDesignacionActual",
     designaciones_busquedaLetradosDesignacion:"oficio/designas/busquedaLetradosDesignacion",
+    designaciones_eliminarDesignaciones:"oficio/designas/deleteDesigna",
+    designaciones_updateDesigna:"oficio/designas/updateDesigna",
+    designaciones_busquedaNueva:"oficio/busquedaNuevaDesigna",
     designacionesBusquedaComunicaciones: "oficio/designas/busquedaComunicaciones",
 
     //SALTOS Y COMPENSACIONES
