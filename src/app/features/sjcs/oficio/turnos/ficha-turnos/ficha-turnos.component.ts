@@ -47,6 +47,7 @@ export class FichaTurnosComponent implements OnInit {
 	tarjetaGuardias: string;
 	tarjetaColaGuardias: string;
 	tarjetaInscripciones: string;
+	newTurno: boolean = true;
 
 	constructor(private route: ActivatedRoute, private sigaServices: SigaServices, private location: Location, private persistenceService: PersistenceService,private commonsService: CommonsService) { }
 
@@ -68,6 +69,7 @@ export class FichaTurnosComponent implements OnInit {
 				console.log(params);
 			});
 		if (this.idTurno != undefined) {
+			this.newTurno = false;
 			this.searchTurnos();
 		}
 
