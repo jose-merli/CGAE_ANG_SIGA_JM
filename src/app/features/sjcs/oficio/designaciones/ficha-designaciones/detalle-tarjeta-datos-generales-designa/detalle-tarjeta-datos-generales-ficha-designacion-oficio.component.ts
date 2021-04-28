@@ -402,6 +402,8 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
   }
 
   confirmarActivar(severity, summary, detail) {
+    this.checkDatosGenerales();
+    if(this.resaltadoDatos == false){
     let mess = "Se va a seleccionar un letrado automaticamente. ¿Desea continuar?";
     let icon = "fa fa-question-circle";
     let keyConfirmation = "confirmGuardar";
@@ -423,7 +425,6 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
           var today = new Date();
           var year = today.getFullYear().valueOf();
           newDesigna.ano = year;
-          this.checkDatosGenerales();
           if(this.resaltadoDatos == false){
             this.progressSpinner = true;
             this.sigaServices.post("create_NewDesigna", newDesigna).subscribe(
@@ -522,6 +523,9 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         ];
       }
     });
+  }else{
+    this.progressSpinner = false;
+  }
   }
 
   formatDate(date) {
