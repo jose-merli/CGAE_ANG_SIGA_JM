@@ -12,4 +12,19 @@ export class ServicioInteresComponent implements OnInit {
   ngOnInit() {
   }
 
+  irFacturacion()
+  {
+
+  }
+  
+  irAuditoria()
+  {
+
+  }
+  
+  irComunicaciones()
+  {
+    
+  }
+
 }
