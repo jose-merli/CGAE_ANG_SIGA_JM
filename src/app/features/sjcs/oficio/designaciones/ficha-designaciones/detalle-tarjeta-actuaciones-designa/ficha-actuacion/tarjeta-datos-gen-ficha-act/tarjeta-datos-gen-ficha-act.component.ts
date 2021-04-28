@@ -22,8 +22,8 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
 
   @Input() institucionActual;
   @Input() isAnulada: boolean;
-  @Input() permisoEscritura;
   @Input() usuarioLogado;
+  @Input() isColegiado: boolean;
 
   msgs: Message[] = [];
   resaltadoDatos: boolean = false;
@@ -32,36 +32,37 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
     inputs1: [
       {
         label: 'Número Actuación',
-        value: null
+        value: ''
       },
       {
         label: 'Nº Colegiado',
-        value: null
+        value: '',
+        value2: ''
       },
       {
         label: 'Letrado (*)',
-        value: null
+        value: ''
       },
       {
         label: 'Talonario',
-        value: null
+        value: ''
       },
       {
         label: 'Talón',
-        value: null
+        value: ''
       }
     ],
     inputNig: {
       label: 'NIG',
-      value: null
+      value: ''
     },
     inputNumPro: {
       label: 'Nº Procedimiento',
-      value: null
+      value: ''
     },
     textarea: {
       label: 'Observaciones',
-      value: null
+      value: ''
     },
     selectores: [
       {
@@ -140,7 +141,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
       this.establecerDatosInicialesEditAct();
     }
 
-    if(sessionStorage.getItem('isLetrado') == 'true') {
+    if (sessionStorage.getItem('isLetrado') == 'true') {
       this.fechaMaxima = new Date();
     }
 
@@ -295,8 +296,16 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
   }
 
   fillFecha(event) {
+
     this.datos.datePicker.value = event;
-    this.getLetradoActuacion();
+
+    if (event == undefined || event == null || event == '') {
+      this.datos.inputs1[1].value = '';
+      this.datos.inputs1[1].value2 = '';
+      this.datos.inputs1[2].value = '';
+    } else {
+      this.getLetradoActuacion();
+    }
   }
 
   establecerDatosInicialesNuevaAct() {
@@ -366,6 +375,10 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
 
     let error = false;
 
+    let juzgado = this.datos.selectores.find(el => el.id == 'juzgado');
+    let modulo = this.datos.selectores.find(el => el.id == 'modulo');
+    let acreditacion = this.datos.selectores.find(el => el.id == 'acreditacion');
+
     if (!this.validarNig(this.datos.inputNig.value)) {
       this.showMsg('error', this.translateService.instant('general.message.incorrect'), 'Formato del campo NIG inválido');
       error = true;
@@ -376,8 +389,23 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
       error = true;
     }
 
-    if (!error && (this.datos.datePicker.value == undefined || this.datos.datePicker.value == null || this.datos.datePicker.value.trim() == '')) {
+    if (!error && (this.datos.datePicker.value == undefined || this.datos.datePicker.value == null)) {
+      this.showMsg('error', this.translateService.instant('general.message.incorrect'), this.translateService.instant('general.message.camposObligatorios'));
+      error = true;
+    }
 
+    if (!error && (juzgado.value == undefined || juzgado.value == null || juzgado.value == '')) {
+      this.showMsg('error', this.translateService.instant('general.message.incorrect'), this.translateService.instant('general.message.camposObligatorios'));
+      error = true;
+    }
+
+    if (!error && (modulo.value == undefined || modulo.value == null || modulo.value == '')) {
+      this.showMsg('error', this.translateService.instant('general.message.incorrect'), this.translateService.instant('general.message.camposObligatorios'));
+      error = true;
+    }
+
+    if (!error && (acreditacion.value == undefined || acreditacion.value == null || acreditacion.value == '')) {
+      this.showMsg('error', this.translateService.instant('general.message.incorrect'), this.translateService.instant('general.message.camposObligatorios'));
       error = true;
     }
 
@@ -408,7 +436,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
 
     if (this.institucionActual == "2008" || this.institucionActual == "2015" || this.institucionActual == "2029" || this.institucionActual == "2033" || this.institucionActual == "2036" ||
       this.institucionActual == "2043" || this.institucionActual == "2006" || this.institucionActual == "2021" || this.institucionActual == "2035" || this.institucionActual == "2046" || this.institucionActual == "2066") {
-      if (nig != '') {
+      if (nig != '' && nig != null) {
         var objRegExp = /^[0-9]{7}[S,C,P,O,I,V,M,6,8,1,2,3,4]{1}(19|20)\d{2}[0-9]{7}$/;
         var ret = objRegExp.test(nig);
         response = ret;
@@ -416,7 +444,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
       else
         response = true;
     } else {
-      if (nig.length == 19) {
+      if (nig != '' && nig != null && nig.length == 19) {
         var objRegExp = /^([a-zA-Z0-9]{19})?$/;
         var ret = objRegExp.test(nig);
         response = ret;
@@ -437,7 +465,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
 
     if (this.institucionActual == "2008" || this.institucionActual == "2015" || this.institucionActual == "2029" || this.institucionActual == "2033" || this.institucionActual == "2036" ||
       this.institucionActual == "2043" || this.institucionActual == "2006" || this.institucionActual == "2021" || this.institucionActual == "2035" || this.institucionActual == "2046" || this.institucionActual == "2066") {
-      if (nProcedimiento != '') {
+      if (nProcedimiento != '' && nProcedimiento != null) {
         var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{5}[\.]{1}[0-9]{2}$/;
         var ret = objRegExp.test(nProcedimiento);
         response = ret;
@@ -445,7 +473,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
       else
         response = true;
     } else {
-      if (nProcedimiento.length == 19) {
+      if (nProcedimiento != '' && nProcedimiento != null && nProcedimiento.length == 19) {
         var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{7}[/]$/;
         var ret = objRegExp.test(nProcedimiento);
         response = ret;
@@ -460,44 +488,55 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
   }
 
   getLetradoActuacion() {
-    this.progressSpinner = true;
 
-    let params = {
-      anio: this.actuacionDesigna.designaItem.ano.split('/')[0].replace('D', ''),
-      numero: this.actuacionDesigna.designaItem.numero,
-      clave: this.actuacionDesigna.designaItem.idTurno,
-      fechaDesigna: this.datePipe.transform(this.datos.datePicker.value, 'dd/MM/yyyy')
-    };
+    if (this.datos.datePicker.value != undefined && this.datos.datePicker.value != null && this.datos.datePicker.value != '') {
 
-    this.sigaServices.post("actuaciones_designacion_getLetradoDesigna", params).subscribe(
-      data => {
-        let resp = JSON.parse(data.body);
+      this.progressSpinner = true;
 
-        if (resp.error != null && resp.error.descripcion != null) {
-          this.showMsg('error', 'Error', this.translateService.instant(resp.error.descripcion));
-        } else {
-          if (resp.listaLetradosDesignaItem.length > 0) {
+      let params = {
+        anio: this.actuacionDesigna.designaItem.ano.split('/')[0].replace('D', ''),
+        numero: this.actuacionDesigna.designaItem.numero,
+        clave: this.actuacionDesigna.designaItem.idTurno,
+      };
 
-            if(sessionStorage.getItem('isLetrado') == 'true' && resp.listaLetradosDesignaItem[0].numeroColegiado == this.usuarioLogado.numColegiado) {
-              
-            }
-            this.datos.inputs1[1].value = resp.listaLetradosDesignaItem[0].numeroColegiado;
-            this.datos.inputs1[2].value = resp.listaLetradosDesignaItem[0].colegiado;
+      this.sigaServices.post("actuaciones_designacion_getLetradoDesigna", params).subscribe(
+        data => {
+          let resp = JSON.parse(data.body);
+
+          if (resp.error != null && resp.error.descripcion != null) {
+            this.showMsg('error', 'Error', this.translateService.instant(resp.error.descripcion));
           } else {
-            this.datos.inputs1[1].value = '';
-            this.datos.inputs1[2].value = '';
-          }
-        }
+            if (resp.listaLetradosDesignaItem.length > 0) {
 
-      },
-      err => {
-        this.progressSpinner = false;
-        console.log(err);
-      },
-      () => {
-        this.progressSpinner = false;
-      }
-    );
+              if ((this.isColegiado && resp.listaLetradosDesignaItem[0].numeroColegiado == this.usuarioLogado.numColegiado) || !this.isColegiado) {
+                this.datos.inputs1[1].value = resp.listaLetradosDesignaItem[0].numeroColegiado;
+                this.datos.inputs1[1].value2 = resp.listaLetradosDesignaItem[0].idPersona;
+                this.datos.inputs1[2].value = resp.listaLetradosDesignaItem[0].colegiado;
+              } else {
+                this.datos.inputs1[1].value = '';
+                this.datos.inputs1[1].value2 = '';
+                this.datos.inputs1[2].value = '';
+                this.datos.datePicker.value = '';
+                this.showMsg('error', 'Error', '');
+              }
+
+            } else {
+              this.datos.inputs1[1].value = '';
+              this.datos.inputs1[1].value2 = '';
+              this.datos.inputs1[2].value = '';
+            }
+          }
+
+        },
+        err => {
+          this.progressSpinner = false;
+          console.log(err);
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+    }
   }
 
   ngOnDestroy(): void {

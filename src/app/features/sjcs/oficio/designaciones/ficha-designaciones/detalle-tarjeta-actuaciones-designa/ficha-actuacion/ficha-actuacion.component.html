@@ -45,15 +45,14 @@
                 <ng-template matExpansionPanelContent>
                   <div *ngIf="tarj.nombre == 'Datos Generales'">
                     <app-tarjeta-datos-gen-ficha-act [actuacionDesigna]="actuacionDesigna" [isAnulada]="isAnulada"
-                      [permisoEscritura]="permisoEscritura" [usuarioLogado]="usuarioLogado"
+                      [isColegiado]="isColegiado" [usuarioLogado]="usuarioLogado"
                       [institucionActual]="institucionActual">
                     </app-tarjeta-datos-gen-ficha-act>
                   </div>
                   <div *ngIf="tarj.nombre == 'Justificación'">
-                    <app-tarjeta-jus-ficha-act [actuacionDesigna]="actuacionDesigna"
-                      [permisoEscritura]="permisoEscritura" [usuarioLogado]="usuarioLogado"
-                      (changeDataEvent)="changeDataTarjeta($event)" (isAnuladaEvent)="isAnulada = $event"
-                      (buscarActuacionEvent)="getAccionesActuacion()">
+                    <app-tarjeta-jus-ficha-act [actuacionDesigna]="actuacionDesigna" [isColegiado]="isColegiado"
+                      [usuarioLogado]="usuarioLogado" (changeDataEvent)="changeDataTarjeta($event)"
+                      (isAnuladaEvent)="isAnulada = $event" (buscarActuacionEvent)="getAccionesActuacion()">
                     </app-tarjeta-jus-ficha-act>
                   </div>
                   <div *ngIf="tarj.nombre == 'Datos Facturación'">
