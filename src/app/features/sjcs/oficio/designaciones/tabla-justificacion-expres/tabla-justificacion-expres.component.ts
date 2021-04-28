@@ -109,20 +109,12 @@ export class TablaJustificacionExpresComponent implements OnInit {
   { }
 
   ngOnInit(): void {
-
-    
-    this.cargaJuzgadosPorInstitucion("2005"); //poner variable idInstitucion 
-
     this.progressSpinner=true;
 
     this.datosJustificacionAux = this.datosJustificacion;
 
     this.cargaInicial();
-
     this.getJuzgados();
-    //pruebas
-    //this.cargaModulosPorJuzgado("129");
-    //this.cargaAcreditacionesPorModulo("");
   }
 
   getJuzgados(){
@@ -149,8 +141,6 @@ export class TablaJustificacionExpresComponent implements OnInit {
         this.comboAcreditacionesPorModulo = JSON.parse(n.body).combooItems;
         this.commonsService.arregloTildesCombo(this.comboAcreditacionesPorModulo);
         this.progressSpinner = false;
-
-        console.log("COMBO tabla justificacion: "+this.comboAcreditacionesPorModulo);
       },
       err => {
         console.log(err);
@@ -233,7 +223,6 @@ export class TablaJustificacionExpresComponent implements OnInit {
       }else{
         expedientes = "";
       }
-
 
       if (designacion.nombreJuzgado != null && designacion.nombreJuzgado != []){
         /*designacion.nombreJuzgado.forEach(cliente =>{
@@ -456,6 +445,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
 }
 
 getDataToUpdate(event){
+
 this.dataToUpdate = event;
   this.dataToUpdate.forEach(rowGroup => {
     let designa = rowGroup.rows[0].cells;
@@ -463,7 +453,8 @@ this.dataToUpdate = event;
     let expedientesDesignacion = rowGroup.id2;
     let clientesDesignacion =  rowGroup.id3;
     let estadoDesignacion = rowGroup.estadoDesignacion;
-    let actuaciones = rowGroup.rows.slice(1, rowGroup.rows.length - 1);
+    let actuaciones = rowGroup.rows.slice(1);
+
     let actJsonArr = [];
     actuaciones.forEach(act =>{
       let actuacionesJson = this.actCellToJson(act.cells);
@@ -477,6 +468,7 @@ this.dataToUpdate = event;
   })
 
   this.dataToUpdateArrEmit.emit(this.dataToUpdateArr);
+  this.dataToUpdateArr = [];
 }
 
 actCellToJson(actuacionesCells){
@@ -550,8 +542,6 @@ actCellToJson(actuacionesCells){
     return this.actuacionesItem;
 }
 
-
-
 desigCellToJson(designacionesCells, codigoDesignacionParam, expedientesDesignacion, clientesDesignacion, estadoDesignacion, actuacionesJson){
   
   let procedimiento = designacionesCells[4].value;
@@ -595,6 +585,12 @@ desigCellToJson(designacionesCells, codigoDesignacionParam, expedientesDesignaci
    //let nombre = designacionesCells[x].value;
    //let nColegiado = = designacionesCells[x].value;
 
+  let fecha = fechaDesignacion;
+  let fechaDes = new Date(fecha);
+
+  fecha = fechaActuacion;
+  let fechaAct = new Date(fecha);
+  
   let designacionesItem = (
     { 'nColegiado': null,
       'nombre': null,
@@ -626,12 +622,12 @@ desigCellToJson(designacionesCells, codigoDesignacionParam, expedientesDesignaci
       'actuaciones': actuaciones,
       //'expedientes': expedientes,
       'idProcedimiento': null,
-      'idPersona': idPersona,
+      'idPersona': idPersona, 
       'idTurno': idTurno,
       'idInstitucion': idInstitucion,
       'resolucionDesignacion': resolucionDesignacion,
-      'fechaDesignacion': fechaDesignacion,
-      'fechaActuacion': fechaActuacion,
+      'fechaDesignacion': fechaDes,
+      'fechaActuacion': fechaAct,
       'fechaJustificacion': null,
       'numProcedimiento': numProcedimiento,
       'anioProcedimiento': anioProcedimiento,
