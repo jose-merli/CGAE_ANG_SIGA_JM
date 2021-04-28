@@ -50,6 +50,10 @@
                                         <app-detalle-tarjeta-datos-generales-ficha-designacion-oficio [campos]="campos" (actualizaFicha)="actualizaFicha($event)" (refreshData)="refreshDataGenerales($event)">
                                         </app-detalle-tarjeta-datos-generales-ficha-designacion-oficio>
                                     </div>
+                                    <div *ngIf="tarj.nombre == 'Datos Interes'">
+                                        <app-servicio-interes>
+                                        </app-servicio-interes>
+                                    </div>
                                     <div *ngIf="tarj.nombre == 'Detalle Designación'">
                                         <app-detalle-tarjeta-detalle-ficha-designacion-oficio [campos]="campos"
                                             (refreshData)="refreshData($event)">
