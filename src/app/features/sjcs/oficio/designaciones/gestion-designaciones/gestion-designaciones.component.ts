@@ -1,4 +1,4 @@
-import { Component, OnInit,Input, Output, ViewChild, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, ViewChild, EventEmitter } from '@angular/core';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { Table } from 'primeng/table';
 import { Router } from '@angular/router';
@@ -6,9 +6,11 @@ import { SigaServices } from '../../../../../_services/siga.service';
 import { ControlAccesoDto } from '../../../../../models/ControlAccesoDto';
 import { procesos_oficio } from '../../../../../permisos/procesos_oficio';
 import { TranslateService } from '../../../../../commons/translate';
-import { Message } from 'primeng/components/common/api';
+import { ConfirmationService, Message } from 'primeng/components/common/api';
 import { DesignaItem } from '../../../../../models/sjcs/DesignaItem';
 import { DataTable } from 'primeng/primeng';
+import { SaltoCompItem } from '../../../../../models/guardia/SaltoCompItem';
+import { DatePipe } from '@angular/common';
 
 
 @Component({
@@ -27,22 +29,24 @@ export class GestionDesignacionesComponent implements OnInit {
   initDatos;
   datosInicial = [];
   selectedDatos: any[] = [];
-  isLetrado:boolean = false;
+  isLetrado: boolean = false;
   first = 0;
   progressSpinner: boolean = false;
   comboTipoDesigna: any[];
   //Resultados de la busqueda
   @Input() datos;
   numSelected: number = 0;
-
-  @Output() busquedaDesignaciones = new EventEmitter<boolean>();
-
+  esColegio: boolean = false;
+  disableDelete: boolean = false;
+  @Output() busqueda = new EventEmitter<boolean>();
+  tieneLetradoAsignado: boolean = false;
   @ViewChild("table") tabla: DataTable;
 
-  constructor(private persistenceService: PersistenceService, private router: Router,  public sigaServices: SigaServices, private translateService: TranslateService) { }
+  constructor( private datepipe: DatePipe, private persistenceService: PersistenceService, private confirmationService: ConfirmationService, private router: Router, public sigaServices: SigaServices, private translateService: TranslateService) { }
 
   ngOnInit() {
     this.getComboTipoDesignas();
+    this.checkAcceso();
     if (
       sessionStorage.getItem("isLetrado") != null &&
       sessionStorage.getItem("isLetrado") != undefined
@@ -63,7 +67,7 @@ export class GestionDesignacionesComponent implements OnInit {
     this.progressSpinner = false;
   }
 
-  getCols(){
+  getCols() {
 
     this.cols = [
       { field: "nombreTurno", header: "justiciaGratuita.sjcs.designas.DatosIden.turno" },
@@ -99,91 +103,91 @@ export class GestionDesignacionesComponent implements OnInit {
     ];
   }
 
-  openTab(dato){
+  openTab(dato) {
     let idProcedimiento = dato.idProcedimiento;
     let datosProcedimiento;
     let datosModulo;
-    if(dato.idTipoDesignaColegio != null && dato.idTipoDesignaColegio != undefined && this.comboTipoDesigna != undefined){
+    if (dato.idTipoDesignaColegio != null && dato.idTipoDesignaColegio != undefined && this.comboTipoDesigna != undefined) {
       this.comboTipoDesigna.forEach(element => {
-       if(element.value == dato.idTipoDesignaColegio){
-        dato.descripcionTipoDesigna = element.label;
-       }
-       });
-      }
-      let designaProcedimiento = new DesignaItem();
-      let data = sessionStorage.getItem("designaItem");
-      let dataProcedimiento = JSON.parse(data);
-      dataProcedimiento.idPretension = dato.idPretension;
-      dataProcedimiento.idTurno = dato.idTurno;
-      dataProcedimiento.ano = dato.factConvenio;
-      dataProcedimiento.numero = dato.numero
-      this.sigaServices.post("designaciones_busquedaProcedimiento", dataProcedimiento).subscribe(
-        n => {
-          datosProcedimiento = JSON.parse(n.body);
-          if(datosProcedimiento.length == 0){
-            dato.nombreProcedimiento = "";
-            dato.idProcedimiento = "";
-          }else{
-            dato.nombreProcedimiento = datosProcedimiento[0].nombreProcedimiento;
-            dato.idProcedimiento = dataProcedimiento.idPretension;
-          }
-          
-          let designaModulo = new DesignaItem();
-          let dataModulo = JSON.parse(data);
-          dataModulo.idProcedimiento = idProcedimiento;
-          dataModulo.idTurno = dato.idTurno;
-          dataModulo.ano = dato.factConvenio;
-          dataModulo.numero = dato.numero
-          this.sigaServices.post("designaciones_busquedaModulo", dataModulo).subscribe(
-            n => {
-              datosModulo = JSON.parse(n.body);
-              if(datosModulo.length == 0){
-                dato.modulo = "";
-                dato.idModulo = "";
-              }else{
-                dato.modulo = datosModulo[0].modulo;
-                dato.idModulo = datosModulo[0].idModulo;
-              }
-              sessionStorage.setItem("nuevaDesigna",  "false");
-              sessionStorage.setItem("designaItemLink",  JSON.stringify(dato));
-              this.router.navigate(["/fichaDesignaciones"]);
-             
-            },
-            err => {
-              this.progressSpinner = false;
-      
-              console.log(err);
-            },() => {
-              this.progressSpinner = false;
-            });;
-        },
-        err => {
-          this.progressSpinner = false;
-          console.log(err);
-        },() => {
-          this.progressSpinner = false;
-        });;
-        
+        if (element.value == dato.idTipoDesignaColegio) {
+          dato.descripcionTipoDesigna = element.label;
+        }
+      });
+    }
+    let designaProcedimiento = new DesignaItem();
+    let data = sessionStorage.getItem("designaItem");
+    let dataProcedimiento = JSON.parse(data);
+    dataProcedimiento.idPretension = dato.idPretension;
+    dataProcedimiento.idTurno = dato.idTurno;
+    dataProcedimiento.ano = dato.factConvenio;
+    dataProcedimiento.numero = dato.numero
+    this.sigaServices.post("designaciones_busquedaProcedimiento", dataProcedimiento).subscribe(
+      n => {
+        datosProcedimiento = JSON.parse(n.body);
+        if (datosProcedimiento.length == 0) {
+          dato.nombreProcedimiento = "";
+          dato.idProcedimiento = "";
+        } else {
+          dato.nombreProcedimiento = datosProcedimiento[0].nombreProcedimiento;
+          dato.idProcedimiento = dataProcedimiento.idPretension;
+        }
+
+        let designaModulo = new DesignaItem();
+        let dataModulo = JSON.parse(data);
+        dataModulo.idProcedimiento = idProcedimiento;
+        dataModulo.idTurno = dato.idTurno;
+        dataModulo.ano = dato.factConvenio;
+        dataModulo.numero = dato.numero
+        this.sigaServices.post("designaciones_busquedaModulo", dataModulo).subscribe(
+          n => {
+            datosModulo = JSON.parse(n.body);
+            if (datosModulo.length == 0) {
+              dato.modulo = "";
+              dato.idModulo = "";
+            } else {
+              dato.modulo = datosModulo[0].modulo;
+              dato.idModulo = datosModulo[0].idModulo;
+            }
+            sessionStorage.setItem("nuevaDesigna", "false");
+            sessionStorage.setItem("designaItemLink", JSON.stringify(dato));
+            this.router.navigate(["/fichaDesignaciones"]);
+
+          },
+          err => {
+            this.progressSpinner = false;
+
+            console.log(err);
+          }, () => {
+            this.progressSpinner = false;
+          });;
+      },
+      err => {
+        this.progressSpinner = false;
+        console.log(err);
+      }, () => {
+        this.progressSpinner = false;
+      });;
+
   }
 
   getComboTipoDesignas() {
-    this.progressSpinner=true;
+    this.progressSpinner = true;
 
     this.sigaServices.get("designas_tipoDesignas").subscribe(
       n => {
         this.comboTipoDesigna = n.combooItems;
-        this.progressSpinner=false;
+        this.progressSpinner = false;
       },
       err => {
         console.log(err);
-        this.progressSpinner=false;
+        this.progressSpinner = false;
       }, () => {
         this.arregloTildesCombo(this.comboTipoDesigna);
       }
     );
   }
 
-arregloTildesCombo(combo) {
+  arregloTildesCombo(combo) {
     if (combo != undefined)
       combo.map(e => {
         let accents =
@@ -201,40 +205,42 @@ arregloTildesCombo(combo) {
       });
   }
 
-    checkAcceso() {
-        this.progressSpinner = true;
-        let controlAcceso = new ControlAccesoDto();
-        controlAcceso.idProceso = procesos_oficio.designa;
-    
-        this.sigaServices.post("acces_control", controlAcceso).subscribe(
-          data => {
-            const permisos = JSON.parse(data.body);
-            const permisosArray = permisos.permisoItems;
-            const derechoAcceso = permisosArray[0].derechoacceso;
-    
-            if (derechoAcceso == 3) {// es un colegio
-    //           this.activacionEditar = true;
-            } else if (derechoAcceso == 2) { //es un colegiado
-    //           this.activacionEditar = false;
-            } else {
-              sessionStorage.setItem("codError", "403");
-              sessionStorage.setItem(
-                "descError",
-                this.translateService.instant("generico.error.permiso.denegado")
-              );
-              this.router.navigate(["/errorAcceso"]);
-            }
-          },
-          err => {
-            this.progressSpinner = false;
-            console.log(err);
-          },
-          () => {
-            this.progressSpinner = false;
-          }
-        );
-    
-      } 
+  checkAcceso() {
+    this.progressSpinner = true;
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = procesos_oficio.designa;
+
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        const permisos = JSON.parse(data.body);
+        const permisosArray = permisos.permisoItems;
+        const derechoAcceso = permisosArray[0].derechoacceso;
+
+        if (derechoAcceso == 3) {// es un colegio
+          this.esColegio = true;
+          this.disableDelete = false;
+        } else if (derechoAcceso == 2) { //es un colegiado
+          this.esColegio = false;
+          this.disableDelete = true;
+        } else {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
+      },
+      err => {
+        this.progressSpinner = false;
+        console.log(err);
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+
+  }
 
   actualizaSeleccionados(selectedDatos) {
     this.numSelected = selectedDatos.length;
@@ -280,12 +286,167 @@ arregloTildesCombo(combo) {
     this.msgs = [];
   }
 
-  delete(){
+  delete() {
+    console.log(this.selectedDatos);
+    let designaToDelete = [];
+    let designaToDeleteCompensacion = [];
+    let designaToDeleteSinCompensacion = [];
+    let request;
+    let resquetLetrado;
+    this.selectedDatos.forEach((element, i) => {
+    request = new DesignaItem();
+    request.ano = element.ano;
+    request.idTurno = element.idTurno;
+    request.numero = element.numero;
+    request.idPersona = element.idPersona;
+    this.tieneLetradoAsignado = false;
+    resquetLetrado = [element.ano, element.idTurno, element.numero];
+    this.tieneLetrado(resquetLetrado,designaToDelete, request, i);
+    });
+  }
+
+  comunicar() {
 
   }
 
-  comunicar(){
+  tieneLetrado(requestLetrado, designaToDelete, request, indice) {
+    //Buscamos los letrados asociados a la designacion
+    let institucionActual;
+    this.sigaServices.post("designaciones_busquedaLetradosDesignacion", requestLetrado).subscribe(
+      data => {
+        let letrados = JSON.parse(data.body);
+        if (letrados.length > 0) {
+          this.tieneLetradoAsignado = true;
+          designaToDelete.push(request);
+          requestLetrado.push(letrados[0].idPersona);
+        }
+        if(designaToDelete.length ==(indice + 1)){
+          let mess = "¿Se desea añadir una compensación al letrado designado?";
+          let icon = "fa fa-question-circle";
+          let keyConfirmation = "confirmGuardar";
+          this.confirmationService.confirm({
+            key: keyConfirmation,
+            message: mess,
+            icon: icon,
+            accept: () => {
+              let saltos = [];
+              designaToDelete.forEach(element => {
+                let salto = new SaltoCompItem();
+                salto.fecha = this.formatDate(new Date());
+                salto.idPersona = element.idPersona;
+                salto.idTurno = element.idTurno;
+                salto.motivo = "";
+                salto.saltoCompensacion = "C";
+                saltos.push(salto);
+              });
+              this.sigaServices.post("saltosCompensacionesOficio_guardar", saltos).subscribe(
+                result => {
     
+                  const resp = JSON.parse(result.body);
+    
+                  if (resp.status == 'KO' || (resp.error != undefined && resp.error != null)) {
+                    this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+                  }
+    
+                  if (resp.status == 'OK') {
+                    let listDesignas = [];
+                    this.sigaServices.get("institucionActual").subscribe(n => {
+                      institucionActual = n.value;
+                      designaToDelete.forEach(element => {
+                        // element.push(institucionActual);
+                        let designa = new DesignaItem();
+                        designa.idInstitucion = Number(institucionActual);
+                        let anio = element.ano.split("/");
+                        element.ano = Number(anio[0].substring(1, 5));
+                        designa.ano = element.ano;
+                        designa.idTurno = element.idTurno;
+                        designa.numero = element.numero;
+                        listDesignas.push(designa);
+                      });
+                      this.deleteDesigna(listDesignas);
+                    });
+    
+                  }
+    
+                },
+                error => {
+                  this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+                }
+              );
+            },
+            reject: () => {
+              //BORRAMOS DESIGNAS SIN AÑADIR COMPENSACION
+              let listDesignas = [];
+              this.sigaServices.get("institucionActual").subscribe(n => {
+                institucionActual = n.value;
+                designaToDelete.forEach(element => {
+                  let designa = new DesignaItem();
+                  designa.idInstitucion = Number(institucionActual);
+                  let anio = element.ano.split("/");
+                  element.ano = Number(anio[0].substring(1, 5));
+                  designa.ano = element.ano;
+                  designa.idTurno = element.idTurno;
+                  designa.numero = element.numero;
+                  listDesignas.push(designa);
+                });
+                this.deleteDesigna(listDesignas);
+              });
+            }
+          });
+        }else{
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+      },
+      err => {
+        if (err != undefined && JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
   }
 
+  deleteDesigna(designas) {
+    //Buscamos los letrados asociados a la designacion
+    this.sigaServices.post("designaciones_eliminarDesignaciones", designas).subscribe(
+      data => {
+        const resp = JSON.parse(data.body);
+
+        if (resp.status == 'KO' || (resp.error != undefined && resp.error != null)) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        }
+
+        if (resp.status == 'OK') {
+          this.showMessage("success", 'Operación realizada con éxito', 'Los registros seleccionados han sido eliminados');
+          this.busqueda.emit(false);
+        }
+      },
+      err => {
+        if (err != undefined && JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  formatDate(date) {
+    const pattern = 'dd/MM/yyyy';
+    return this.datepipe.transform(date, pattern);
+  }
+  
+  actualizaFicha(event){
+    sessionStorage.removeItem("designaItemLink");
+    this.openTab(event);
+  }
 }

@@ -75,8 +75,16 @@ export class DesignacionesComponent implements OnInit {
   }
 
   actualizacionJustificacionExpres(event){
+    let datos = [];
+    let item: JustificacionExpressItem;
+    
+    for(let i=0; i<event.length; i++){
+      item = event[i];
 
-    this.sigaServicesNew.post("justificacionExpres_actualizacion", event).subscribe(
+      datos.push(item);
+    }
+
+    this.sigaServicesNew.post("justificacionExpres_actualizacion", datos).subscribe(
       data => {
        
 
@@ -172,7 +180,9 @@ export class DesignacionesComponent implements OnInit {
           element.estado = 'Anulada';
          }
          element.nombreColegiado = element.apellido1Colegiado +" "+ element.apellido2Colegiado+", "+element.nombreColegiado;
-         element.nombreInteresado = element.apellido1Interesado +" "+ element.apellido2Interesado+", "+element.nombreInteresado;
+         if(element.nombreInteresado != null){
+          element.nombreInteresado = element.apellido1Interesado +" "+ element.apellido2Interesado+", "+element.nombreInteresado;
+         }
          if(element.art27 == "1"){
           element.art27 = "Si";
          }else{
@@ -225,7 +235,10 @@ export class DesignacionesComponent implements OnInit {
         console.log(err);
       },() => {
         this.progressSpinner = false;
-        this.commonsService.scrollTablaFoco("tablaFoco");
+        this.progressSpinner = false;
+        setTimeout(() => {
+          this.commonsService.scrollTablaFoco('tablaFoco');
+        }, 5);
       });;
      
   }

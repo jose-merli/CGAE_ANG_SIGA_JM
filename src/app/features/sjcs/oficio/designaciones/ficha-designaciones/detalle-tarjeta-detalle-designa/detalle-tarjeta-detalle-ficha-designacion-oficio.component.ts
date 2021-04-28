@@ -33,6 +33,9 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
   refresh: any;
   refreshProcedimiento: any;
   refreshModulo: any;
+  initDelitos: any;
+  delitosValue: any;
+  delitosOpciones: any;
   @Input() campos;
   @Output() refreshData = new EventEmitter<DesignaItem>();
   @Output() refreshDataCombos = new EventEmitter<boolean>();
@@ -88,14 +91,6 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       ],
       value:[],
       disable:false
-    },
-    {
-      nombre: 'Delitos',
-      opciones: [
-
-      ],
-      value:[],
-      disable:false
     }
   ];
 
@@ -103,6 +98,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
 
   ngOnInit() {
     this.datosInicial = this.campos;
+    this.initDelitos = this.delitosValue;
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
     let parametro = new ParametroRequestDto();
     parametro.idInstitucion = this.campos.idInstitucion;
@@ -277,7 +273,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       designaUpdate.idJuzgado = Number(this.selectores[1].value[0]);
       designaUpdate.idPretension = Number(this.selectores[2].value[0]);
       designaUpdate.idProcedimiento = Number(this.selectores[3].value[0]);
-      designaUpdate.delitos = this.selectores[1].value[0];
+      designaUpdate.delitos = this.delitosValue;
       if(this.datePickers[0].value == null){
         designaUpdate.fechaEstado = null;
       }else{
@@ -378,6 +374,8 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         this.refreshProcedimiento = [this.datosInicial.idPretension];
         this.refreshModulo = [this.datosInicial.idProcedimiento];
         this.datePickers[0].value = this.datosInicial.fechaEstado;
+        this.delitosValue = this.initDelitos;
+        this.getComboDelitos();
         if(this.datosInicial.fechaFin==0){
           this.datePickers[1].value = null;
         }else{
@@ -394,6 +392,8 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         this.selectores[1].value = [-1];
         this.selectores[2].value =  [-1];
         this.selectores[3].value =  [-1];
+        this.delitosValue = "";
+        this.getComboDelitos();
         this.datePickers[0].value = "";
         this.datePickers[0].value = "";
         this.datePickers[1].value = null;
@@ -461,12 +461,12 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
 
     this.sigaServices.get("combo_comboDelitos").subscribe(
       n => {
-        this.selectores[4].opciones = n.combooItems;
+        this.delitosOpciones = n.combooItems;
       },
       err => {
         console.log(err);
       }, () => {
-        this.arregloTildesCombo(this.selectores[4].opciones);
+        this.arregloTildesCombo(this.delitosOpciones);
       }
     );
   }

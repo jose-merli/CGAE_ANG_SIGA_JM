@@ -80,5 +80,6 @@ export class DesignaItem {
 	idPartidaPresupuestaria: number;
 	nombrePartida: String;
 	validada: String;
+	idPersona: String;
     constructor() { }
   }
