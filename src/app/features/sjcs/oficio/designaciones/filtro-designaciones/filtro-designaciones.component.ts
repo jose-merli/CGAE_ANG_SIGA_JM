@@ -605,6 +605,7 @@ getComboCalidad() {
         nombreAp: ''
       };
     }
+    this.body = new DesignaItem();
     this.getBuscadorDesignas();
   }
 
