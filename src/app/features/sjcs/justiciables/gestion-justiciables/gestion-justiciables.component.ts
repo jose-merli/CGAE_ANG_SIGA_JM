@@ -95,42 +95,9 @@ export class GestionJusticiablesComponent implements OnInit {
             this.fichasPosibles = this.persistenceService.getFichasPosibles();
             this.fromJusticiable = this.fichasPosibles[0].activa;
         
-/* 1: {key: "generales", activa: true}
-2: {key: "personales", activa: true}
-3: {key: "solicitud", activa: true}
-4: {key: "representante", activa: true}
-5: {key: "asuntos", activa: true}
-6: {key: "abogado", activa: true}
-7: {key: "procurador", activa: true} */
 
-            /* if(sessionStorage.getItem("origin")=="contrario"){
-              sessionStorage.removeItem('origin');
-              this.fichasPosibles[5].activa=true;
-              this.fichasPosibles[6].activa=true;
-            } */
           }
 
-          /* anio: "2021"
-apellidosnombre: "SNNSIQKHX ZGSC, ROSA ADRIANA"
-direccion: "FERNANDO III EL SANTO"
-idInstitucion: "2035"
-idPersona: "364615"
-idTurno: "953"
-nif: "Y6350085Y"
-numero: "4330"
-representante: null */
-/* 
-apellidos: "GOTXHWQY XSPLXX"
-asuntos: "A2018/04361, A2018/03027, E2018/05914, D2014/05807, A2014/02602, E2014/04073, A2013/06557, A2013/00942, A2012/02256, D2012/06445, E2012/02980, D2012/06443, E2012/02979, A2012/02259"
-codigoPostal: null
-fechaModificacion: 1618903405000
-idinstitucion: "2035"
-idpersona: "264424"
-nif: "77344405M"
-nombre: "GOTXHWQY XSPLXX, PABLO"
-nombreSolo: "PABLO"
-numeroAsuntos: "14"
-ultimoAsunto: "A2018/04361" */
           //Carga de la persistencia 
           if (this.persistenceService.getDatos() != null && !this.modoRepresentante) {
             this.justiciableBusquedaItem = this.persistenceService.getDatos();

@@ -744,7 +744,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
     // En caso que venga de una ficha de contrario
     if(this.fromAbogadoContrario){
       sessionStorage.setItem('abogado', JSON.stringify(id));
-      this.router.navigate(['/gestionJusticiables']);
+      this.location.back();
     }
     // ir a ficha de notario
     let colegioSelec = this.colegios_seleccionados[0].idInstitucion;

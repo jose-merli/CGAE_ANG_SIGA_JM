@@ -46,6 +46,7 @@ export class FichaDesignacionesComponent implements OnInit {
   progressSpinner: boolean = false;
   contrarios: any;
   interesados: any;
+  letrados: any;
   totalActuacionesDesigna;
   refreshDesigna;
   msgs;
@@ -128,7 +129,7 @@ export class FichaDesignacionesComponent implements OnInit {
       opened: false,
       campos: [],
       enlaces: [],
-      enlaceCardClosed: { href: '/fichaColegiado', title: 'Ficha colegial' }
+      enlaceCardClosed: {  }
     },
     {
       id: 'sjcsDesigRel',
@@ -351,6 +352,7 @@ export class FichaDesignacionesComponent implements OnInit {
       this.searchInteresados();
       this.searchContrarios(false);
       this.searchRelaciones();
+      this.searchLetrados();
       this.getIdPartidaPresupuestaria(this.campos);
       //this.searchColegiado();
       /* {
@@ -1441,6 +1443,50 @@ nombreTurno: "ZELIMINAR-CIJAECI05 - MATRIMONIAL CONTENCIOSO JAÉN" */
         this.progressSpinner = false;
       });;
 
+  }
+
+  searchLetrados(){
+
+    let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
+    let datos: DesignaItem = designa;
+    this.progressSpinner = true;
+    let request = [designa.ano,  designa.idTurno, designa.numero];
+
+     //Buscamos los letrados asociados a la designacion
+     this.sigaServices.post("designaciones_busquedaLetradosDesignacion", request).subscribe(
+      data => {
+        let datos = JSON.parse(data.body);
+        if(datos!=[]){
+          this.letrados = datos;
+          /* this.datos.fecharenunciasolicita;
+          this.datos.fecharenuncia;
+          this.datos.motivosrenuncia; */
+
+          this.listaTarjetas[6].campos = [
+            {
+              "key": this.translateService.instant('censo.resultadosSolicitudesModificacion.literal.nColegiado'),
+              "value": this.letrados[0].nColegiado
+            },
+            {
+              "key": this.translateService.instant('justiciaGratuita.justiciables.literal.colegiado'),
+              "value": this.letrados[0].apellidosNombre
+            }
+          ]
+          this.listaTarjetas[6].enlaceCardClosed = { click: 'irFechaColegial()', title: 'Ficha colegial' }
+        }
+      },
+      err => {
+        if (err != undefined && JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
   }
 
   refreshAditionalData(event) {
