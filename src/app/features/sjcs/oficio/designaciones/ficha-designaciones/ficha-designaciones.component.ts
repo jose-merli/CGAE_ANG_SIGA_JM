@@ -355,8 +355,8 @@ export class FichaDesignacionesComponent implements OnInit {
           ref: null,
           nombre: this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.vacio')
       }] */
-      //Actualizar para que los campos se rellenen en base a la tabla de la tarjeta interesados
-      this.searchInteresados();
+      let data = JSON.parse(sessionStorage.getItem("designaItemLink"));
+      if (data.idTurno != null) this.searchInteresados();
       this.searchContrarios(false);
       this.searchRelaciones();
       this.searchLetrados();
@@ -1689,7 +1689,8 @@ nombreTurno: "ZELIMINAR-CIJAECI05 - MATRIMONIAL CONTENCIOSO JAÉN" */
     this.listaTarjetas[10].detalle = true;
     this.listaTarjetas[11].detalle = true;
 
-    this.searchInteresados();
+    let data = JSON.parse(sessionStorage.getItem("designaItemLink"));
+    if (data.idTurno != null) this.searchInteresados();
     this.searchContrarios(false);
     this.searchRelaciones();
     this.getIdPartidaPresupuestaria(this.campos);

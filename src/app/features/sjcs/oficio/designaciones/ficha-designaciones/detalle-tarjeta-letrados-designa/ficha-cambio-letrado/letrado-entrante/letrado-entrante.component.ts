@@ -36,15 +36,16 @@ export class LetradoEntranteComponent implements OnInit {
 			this.body.apellidos = data.apellidos1 + " " + data.apellidos2;
 		}
 
+    let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
+    if(designa.art27!="No") this.incluirArt();
+
   }
 
 
   incluirSalto(){
-    this.body.salto=!this.body.salto;
   }
 
   incluirArt(){
-    this.body.art27=!this.body.art27;
     if(this.body.art27){
       this.body.fechaDesignacion = this.saliente.fechaDesignacion;
       this.disableFechaDesignacion=true;
@@ -74,7 +75,7 @@ export class LetradoEntranteComponent implements OnInit {
 
   search() {
 			sessionStorage.setItem("origin", "AbogadoContrario");
-      sessionStorage.setItem("letrado",  JSON.stringify(this.saliente));
+      sessionStorage.setItem("Oldletrado",  JSON.stringify(this.saliente));
 			this.router.navigate(['/busquedaGeneral']);
   }
 
