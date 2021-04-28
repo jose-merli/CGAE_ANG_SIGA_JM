@@ -440,6 +440,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         message: mess,
         icon: icon,
         accept: () => {
+          this.progressSpinner = true;
           if (detail == "save" && this.anio.value == "") {
             detail = "Guardar";
             let newDesigna = new DesignaItem();
