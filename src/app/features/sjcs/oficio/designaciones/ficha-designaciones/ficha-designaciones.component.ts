@@ -1667,6 +1667,9 @@ nombreTurno: "ZELIMINAR-CIJAECI05 - MATRIMONIAL CONTENCIOSO JAÉN" */
         }
       ];
       this.listaTarjetas[2].campos = datosAdicionales;
+      this.tarjetaFija.campos = camposResumen;
+      this.listaTarjetas[0].campos = camposGenerales;
+      this.listaTarjetas[2].campos = camposDetalle;
     } else {
       let datosAdicionales = [
         {
@@ -1682,38 +1685,7 @@ nombreTurno: "ZELIMINAR-CIJAECI05 - MATRIMONIAL CONTENCIOSO JAÉN" */
           "value": this.formatDate(designaItem.fechaJuicio)
         }
       ];
-      if ((designaItem.observaciones == null || designaItem.observaciones == undefined || designaItem.observaciones == "")
-        && (designaItem.delitos == null || designaItem.delitos == undefined || designaItem.delitos == "")
-        && (designaItem.defensaJuridica == null || designaItem.defensaJuridica == undefined || designaItem.defensaJuridica == "")
-        && (designaItem.fechaOficioJuzgado == null || designaItem.fechaOficioJuzgado == undefined)
-        && (designaItem.fechaJuicio == null || designaItem.fechaJuicio == undefined)
-        && (designaItem.fechaRecepcionColegio == null || designaItem.fechaRecepcionColegio == undefined)) {
-        let datosAdicionales = [
-          {
-            "key": null,
-            "value": "No existen observaciones definidas para la designación"
-          }
-        ];
-        this.listaTarjetas[3].campos = datosAdicionales;
-      } else {
-        let datosAdicionales = [
-          {
-            "key": "Fecha Oficio Juzgado",
-            "value": this.formatDate(designaItem.fechaOficioJuzgado)
-          },
-          {
-            "key": "Fecha Reecepción Colegio",
-            "value": this.formatDate(designaItem.fechaRecepcionColegio)
-          },
-          {
-            "key": "Fecha Juicio",
-            "value": this.formatDate(designaItem.fechaJuicio)
-          }
-        ];
-        this.listaTarjetas[3].campos = datosAdicionales;
-
-      }
-
+    }
       this.tarjetaFija.campos = camposResumen;
       this.listaTarjetas[0].campos = camposGenerales;
       this.listaTarjetas[2].campos = camposDetalle;
@@ -1729,21 +1701,6 @@ nombreTurno: "ZELIMINAR-CIJAECI05 - MATRIMONIAL CONTENCIOSO JAÉN" */
       this.listaTarjetas[11].detalle = true;
       this.listaTarjetas[12].detalle = true;
 
-    this.tarjetaFija.campos = camposResumen;
-    this.listaTarjetas[0].campos = camposGenerales;
-    this.listaTarjetas[1].campos = camposDetalle;
-    this.listaTarjetas[1].detalle = true;
-    this.listaTarjetas[2].detalle = true;
-    this.listaTarjetas[3].detalle = true;
-    this.listaTarjetas[4].detalle = true;
-    this.listaTarjetas[5].detalle = true;
-    this.listaTarjetas[6].detalle = true;
-    this.listaTarjetas[7].detalle = true;
-    this.listaTarjetas[8].detalle = true;
-    this.listaTarjetas[9].detalle = true;
-    this.listaTarjetas[10].detalle = true;
-    this.listaTarjetas[11].detalle = true;
-
     let data = JSON.parse(sessionStorage.getItem("designaItemLink"));
     if (data.idTurno != null) this.searchInteresados();
     this.searchContrarios(false);
@@ -1752,6 +1709,6 @@ nombreTurno: "ZELIMINAR-CIJAECI05 - MATRIMONIAL CONTENCIOSO JAÉN" */
     this.progressSpinner = false;
 
   }
-}
+
 
 }
