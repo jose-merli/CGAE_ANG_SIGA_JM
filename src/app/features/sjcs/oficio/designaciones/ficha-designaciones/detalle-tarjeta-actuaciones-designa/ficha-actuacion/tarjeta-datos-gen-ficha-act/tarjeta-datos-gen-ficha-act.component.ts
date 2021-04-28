@@ -5,6 +5,7 @@ import { SigaServices } from '../../../../../../../../_services/siga.service';
 import { Actuacion } from '../../detalle-tarjeta-actuaciones-designa.component';
 import { DatePipe } from '@angular/common';
 import { TranslateService } from '../../../../../../../../commons/translate';
+import { ActuacionDesignaItem } from '../../../../../../../../models/sjcs/ActuacionDesignaItem';
 
 @Component({
   selector: 'app-tarjeta-datos-gen-ficha-act',
@@ -25,6 +26,8 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
   @Input() usuarioLogado;
   @Input() isColegiado: boolean;
 
+  idPersonaColegiado: string;
+
   msgs: Message[] = [];
   resaltadoDatos: boolean = false;
 
@@ -32,24 +35,28 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
     inputs1: [
       {
         label: 'Número Actuación',
-        value: ''
+        value: '',
+        obligatorio: false
       },
       {
         label: 'Nº Colegiado',
         value: '',
-        value2: ''
+        obligatorio: true
       },
       {
         label: 'Letrado (*)',
-        value: ''
+        value: '',
+        obligatorio: true
       },
       {
         label: 'Talonario',
-        value: ''
+        value: '',
+        obligatorio: false
       },
       {
         label: 'Talón',
-        value: ''
+        value: '',
+        obligatorio: false
       }
     ],
     inputNig: {
@@ -301,7 +308,6 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
 
     if (event == undefined || event == null || event == '') {
       this.datos.inputs1[1].value = '';
-      this.datos.inputs1[1].value2 = '';
       this.datos.inputs1[2].value = '';
     } else {
       this.getLetradoActuacion();
@@ -351,16 +357,41 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
 
   guardarEvent() {
     if (!this.compruebaCamposObligatorios()) {
-      console.log("HA IDO BIEN");
 
-      // this.sigaServices.post("actuaciones_designacion_guardar", this.actuacionDesigna).subscribe(
-      //   data => {
-      //     console.log("🚀 ~ file: tarjeta-datos-gen-ficha-act.component.ts ~ line 280 ~ TarjetaDatosGenFichaActComponent ~ guardarEvent ~ data", data)
-      //   },
-      //   err => {
+      this.progressSpinner = true;
 
-      //   }
-      // );
+      let params = new ActuacionDesignaItem();
+
+      params.idTurno = this.actuacionDesigna.designaItem.idTurno;
+      params.anio = this.actuacionDesigna.designaItem.ano.split('/')[0].replace('D', '');
+      params.numero = this.actuacionDesigna.designaItem.numero;
+      params.fechaActuacion = this.datePipe.transform(new Date(this.datos.datePicker.value), 'dd/MM/yyyy');
+      params.idJuzgado = this.datos.selectores.find(el => el.id == 'juzgado').value;
+      params.idProcedimiento = this.datos.selectores.find(el => el.id == 'modulo').value;
+      params.observaciones = this.datos.textarea.value;
+      params.talonario = this.datos.inputs1[3].value;
+      params.talon = this.datos.inputs1[4].value;
+      params.nig = this.datos.inputNig.value;
+      params.numProcedimiento = this.datos.inputNumPro.value;
+      params.idPretension = this.datos.selectores.find(el => el.id == 'procedimiento').value;
+      params.idMotivoCambio = this.datos.selectores.find(el => el.id == 'motivoCambio').value;
+      params.idAcreditacion = this.datos.selectores.find(el => el.id == 'acreditacion').value;
+      params.idPrision = this.datos.selectores.find(el => el.id == 'prision').value;
+      params.idPersonaColegiado = this.idPersonaColegiado;
+
+      this.sigaServices.post("actuaciones_designacion_guardar", params).subscribe(
+        data => {
+          let resp = data;
+          console.log("🚀 ~ file: tarjeta-datos-gen-ficha-act.component.ts ~ line 379 ~ TarjetaDatosGenFichaActComponent ~ guardarEvent ~ resp", resp);
+        },
+        err => {
+          this.progressSpinner = false;
+          console.log(err);
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
 
     }
   }
@@ -405,6 +436,11 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
     }
 
     if (!error && (acreditacion.value == undefined || acreditacion.value == null || acreditacion.value == '')) {
+      this.showMsg('error', this.translateService.instant('general.message.incorrect'), this.translateService.instant('general.message.camposObligatorios'));
+      error = true;
+    }
+
+    if (!error && (this.datos.inputs1[1].value == undefined || this.datos.inputs1[1].value == null || this.datos.inputs1[1].value == '')) {
       this.showMsg('error', this.translateService.instant('general.message.incorrect'), this.translateService.instant('general.message.camposObligatorios'));
       error = true;
     }
@@ -510,11 +546,10 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
 
               if ((this.isColegiado && resp.listaLetradosDesignaItem[0].numeroColegiado == this.usuarioLogado.numColegiado) || !this.isColegiado) {
                 this.datos.inputs1[1].value = resp.listaLetradosDesignaItem[0].numeroColegiado;
-                this.datos.inputs1[1].value2 = resp.listaLetradosDesignaItem[0].idPersona;
                 this.datos.inputs1[2].value = resp.listaLetradosDesignaItem[0].colegiado;
+                this.idPersonaColegiado = resp.listaLetradosDesignaItem[0].idPersona;
               } else {
                 this.datos.inputs1[1].value = '';
-                this.datos.inputs1[1].value2 = '';
                 this.datos.inputs1[2].value = '';
                 this.datos.datePicker.value = '';
                 this.showMsg('error', 'Error', '');
@@ -522,7 +557,6 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
 
             } else {
               this.datos.inputs1[1].value = '';
-              this.datos.inputs1[1].value2 = '';
               this.datos.inputs1[2].value = '';
             }
           }
