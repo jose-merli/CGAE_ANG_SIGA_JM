@@ -176,7 +176,7 @@ export class DesignacionesComponent implements OnInit {
          const params = {
           anio: element.factConvenio,
           idTurno: element.idTurno,
-          numero: element.codigo,
+          numero: element.numero,
           historico: false
         };
         this.progressSpinner = false;

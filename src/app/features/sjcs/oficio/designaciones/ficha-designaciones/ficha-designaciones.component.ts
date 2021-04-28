@@ -605,7 +605,7 @@ export class FichaDesignacionesComponent implements OnInit {
     let params = {
       anio: this.campos.ano.toString().split('/')[0].replace('D', ''),
       idTurno: this.campos.idTurno,
-      numero: this.campos.codigo,
+      numero: this.campos.numero,
       historico: historico,
       idPersonaColegiado: ''
     };
@@ -1378,7 +1378,7 @@ nombreTurno: "ZELIMINAR-CIJAECI05 - MATRIMONIAL CONTENCIOSO JAÉN" */
           const params = {
             anio: element.factConvenio,
             idTurno: element.idTurno,
-            numero: element.codigo,
+            numero: element.numero,
             historico: false
           };
           this.progressSpinner = false;
