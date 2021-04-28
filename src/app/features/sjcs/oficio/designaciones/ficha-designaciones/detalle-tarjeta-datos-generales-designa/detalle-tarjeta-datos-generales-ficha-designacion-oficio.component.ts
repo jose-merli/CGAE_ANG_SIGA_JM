@@ -595,7 +595,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
           this.inputs[2].value = element.nombreColegiado;
           this.inputs[0].disable = true;
           this.inputs[1].disable = true;
-          this.inputs[3].disable = true;
+          this.inputs[2].disable = true;
           element.nombreColegiado = element.apellido1Colegiado + " " + element.apellido2Colegiado + ", " + element.nombreColegiado;
           if (element.art27 == "1") {
             element.art27 = "Si";

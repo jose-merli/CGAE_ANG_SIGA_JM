@@ -1667,9 +1667,6 @@ nombreTurno: "ZELIMINAR-CIJAECI05 - MATRIMONIAL CONTENCIOSO JAÉN" */
         }
       ];
       this.listaTarjetas[2].campos = datosAdicionales;
-      this.tarjetaFija.campos = camposResumen;
-      this.listaTarjetas[0].campos = camposGenerales;
-      this.listaTarjetas[2].campos = camposDetalle;
     } else {
       let datosAdicionales = [
         {
@@ -1685,10 +1682,12 @@ nombreTurno: "ZELIMINAR-CIJAECI05 - MATRIMONIAL CONTENCIOSO JAÉN" */
           "value": this.formatDate(designaItem.fechaJuicio)
         }
       ];
+      this.listaTarjetas[2].campos = datosAdicionales;
     }
       this.tarjetaFija.campos = camposResumen;
       this.listaTarjetas[0].campos = camposGenerales;
       this.listaTarjetas[2].campos = camposDetalle;
+      
       this.listaTarjetas[2].detalle = true;
       this.listaTarjetas[3].detalle = true;
       this.listaTarjetas[4].detalle = true;

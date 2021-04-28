@@ -265,7 +265,6 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     designaUpdate.numColegiado = this.campos.numColegiado;
     designaUpdate.validada = this.campos.validada;
     //Guardar
-    // if (detail == "Guardar" && this.validarNig(this.inputs[0].value) && this.validarNProcedimiento(this.inputs[1].value)) {
       if (detail == "Guardar") {
       designaUpdate.estado = "";
       let validaNIG = true;
@@ -280,18 +279,11 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         designaUpdate.fechaEstado = null;
       }else{
         designaUpdate.fechaEstado = new Date(this.datePickers[0].value);
-        // designaUpdate.fechaEstado = new Date(this.datePickers[0].value);
       }
       if(this.datePickers[1].value == null){
         designaUpdate.fechaFin = null;
       }else{
-        let fechaCambiada = this.datePickers[1].value.split("/");
-        let dia = fechaCambiada[0];
-        let mes = fechaCambiada[1];
-        let anioFecha = fechaCambiada[2];
-        let fechaCambiadaActual = mes + "/" + dia + "/" + anioFecha;
-        designaUpdate.fechaFin = new Date(fechaCambiadaActual);
-        // designaUpdate.fechaFin = new Date(this.datePickers[1].value);
+        designaUpdate.fechaFin = new Date(this.datePickers[1].value);
       }
       
       if(this.selectores[0].value[0] =="Finalizada"){
