@@ -32,6 +32,8 @@ export class FichaDesignacionesComponent implements OnInit {
   listaPrueba = [];
   relaciones:any;
   comunicaciones:any;
+  isLetrado: boolean = false;
+  usuarioLogado;
 
   esColegiado: boolean = false;
 
@@ -46,6 +48,7 @@ export class FichaDesignacionesComponent implements OnInit {
   progressSpinner: boolean = false;
   contrarios: any;
   interesados: any;
+  letrados: any;
   totalActuacionesDesigna;
   refreshDesigna;
   msgs;
@@ -128,7 +131,7 @@ export class FichaDesignacionesComponent implements OnInit {
       opened: false,
       campos: [],
       enlaces: [],
-      enlaceCardClosed: { href: '/fichaColegiado', title: 'Ficha colegial' }
+      enlaceCardClosed: {  }
     },
     {
       id: 'sjcsDesigRel',
@@ -215,6 +218,11 @@ export class FichaDesignacionesComponent implements OnInit {
 
   ngOnInit() {
     this.progressSpinner = true;
+    this.getDataLoggedUser();
+    if (sessionStorage.getItem("isLetrado") != null && sessionStorage.getItem("isLetrado") != undefined) {
+      this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
+    }
+
     this.checkAcceso();
     if (!this.esColegiado) {
       // this.listaTarjetas[1].detalle = false;
@@ -351,6 +359,7 @@ export class FichaDesignacionesComponent implements OnInit {
       this.searchInteresados();
       this.searchContrarios(false);
       this.searchRelaciones();
+      this.searchLetrados();
       this.getIdPartidaPresupuestaria(this.campos);
       //this.searchColegiado();
       /* {
@@ -1139,51 +1148,63 @@ nombreTurno: "ZELIMINAR-CIJAECI05 - MATRIMONIAL CONTENCIOSO JAÉN" */
 
   }
 
+  getDataLoggedUser() {
+
+    this.progressSpinner = true;
+
+    this.sigaServices.get("usuario_logeado").subscribe(n => {
+
+      const usuario = n.usuarioLogeadoItem;
+      const colegiadoItem = new ColegiadoItem();
+      colegiadoItem.nif = usuario[0].dni;
+
+      this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(
+        usr => {
+          this.usuarioLogado = JSON.parse(usr.body).colegiadoItem[0];
+          this.progressSpinner = false;
+          this.searchComunicaciones();
+        });
+
+    });
+
+  }
+
   searchComunicaciones() {
     this.progressSpinner = true;
     let data = sessionStorage.getItem("designaItemLink");
     let designaItem = JSON.parse(data);
+    let item;
 
-    let item = [designaItem.ano, designaItem.idTurno, designaItem.numero];
+    if(this.isLetrado){
+      item = [designaItem.ano, designaItem.idTurno, this.isLetrado, this.usuarioLogado.idPersona];
+    }else{
+      item = [designaItem.ano, designaItem.idTurno, this.isLetrado];
+    }
 
-    this.sigaServices.post("designacionesBusquedaComunicaciones", item).subscribe(
-      n => {
+      this.sigaServices.post("designacionesBusquedaComunicaciones", item).subscribe(
+        n => {
+          this.comunicaciones = JSON.parse(n.body).comunicacionesItem;
+          let error = JSON.parse(n.body).error;
 
-        this.relaciones = JSON.parse(n.body).relacionesItem;
-        let primero = this.relaciones[0];
-        let error = JSON.parse(n.body).error;
+          this.comunicaciones.forEach(element => {
+            if(element.fechaCreacion != null && element.fechaCreacion != ""){
+              element.fechaCreacion = this.formatDate(element.fechaCreacion);
+            }
+            if(element.fechaProgramacion != null && element.fechaProgramacion != ""){
+              element.fechaProgramacion = this.formatDate(element.fechaProgramacion);
+            }
+          });
 
-        if (error != null && error.description != null) {
-          this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
+          if (error != null && error.description != null) {
+            this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
+          }
+          this.progressSpinner = false;
+        },
+        err => {
+          this.progressSpinner = false;
+          console.log(err);
         }
-        this.progressSpinner = false;
-
-        if(this.relaciones.length == 1){
-          this.listaTarjetas[7].campos=[  {
-            "key": this.translateService.instant('justiciaGratuita.oficio.justificacionExpres.numeroEJG'),
-            "value": this.relaciones[0].numero
-          }
-        ]
-        }else if(this.relaciones == undefined){
-          this.listaTarjetas[7].campos=[  {
-            "key": null,
-            "value": this.translateService.instant('justiciaGratuita.oficio.designas.relaciones.vacio')
-          }
-        ]
-        }else{
-          this.listaTarjetas[7].campos=[  {
-            "key": this.translateService.instant('justiciaGratuita.oficio.designas.relaciones.total'),
-            "value": this.relaciones.length
-          }
-        ]
-        }
-      },
-      err => {
-        this.progressSpinner = false;
-        console.log(err);
-      }
-    );
-
+      );
   }
 
   showMessage(severity, summary, msg) {
@@ -1441,6 +1462,50 @@ nombreTurno: "ZELIMINAR-CIJAECI05 - MATRIMONIAL CONTENCIOSO JAÉN" */
         this.progressSpinner = false;
       });;
 
+  }
+
+  searchLetrados(){
+
+    let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
+    let datos: DesignaItem = designa;
+    this.progressSpinner = true;
+    let request = [designa.ano,  designa.idTurno, designa.numero];
+
+     //Buscamos los letrados asociados a la designacion
+     this.sigaServices.post("designaciones_busquedaLetradosDesignacion", request).subscribe(
+      data => {
+        let datos = JSON.parse(data.body);
+        if(datos!=[]){
+          this.letrados = datos;
+          /* this.datos.fecharenunciasolicita;
+          this.datos.fecharenuncia;
+          this.datos.motivosrenuncia; */
+
+          this.listaTarjetas[6].campos = [
+            {
+              "key": this.translateService.instant('censo.resultadosSolicitudesModificacion.literal.nColegiado'),
+              "value": this.letrados[0].nColegiado
+            },
+            {
+              "key": this.translateService.instant('justiciaGratuita.justiciables.literal.colegiado'),
+              "value": this.letrados[0].apellidosNombre
+            }
+          ]
+          this.listaTarjetas[6].enlaceCardClosed = { click: 'irFechaColegial()', title: 'Ficha colegial' }
+        }
+      },
+      err => {
+        if (err != undefined && JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
   }
 
   refreshAditionalData(event) {

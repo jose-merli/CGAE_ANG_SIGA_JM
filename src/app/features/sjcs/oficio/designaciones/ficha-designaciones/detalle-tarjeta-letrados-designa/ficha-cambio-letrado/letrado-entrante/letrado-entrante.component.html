@@ -59,24 +59,25 @@
           <div class="row">
             <div class="form-group col-lg-2 col-md-2">
               <label>{{ "justiciaGratuita.oficio.designaciones.fechaDesignacion" | translate}} (*)</label>
-              <app-fecha [(value)]="body.fechaDesignacion" (valueChangeSelected)="fillFechaDesignacion($event)">
+              <app-fecha [(value)]="body.fechaDesignacion" (valueChangeSelected)="fillFechaDesignacion($event)"
+              [disabled]="disableFechaDesignacion">
               </app-fecha>
             </div>
-            <div class="form-group col-lg-1 col-md-1">
-              <p-checkbox (onChange)="incluirSalto()" [(ngModel)]="body.salto" binary="true" label="'Incluir salto'"
+            <div class="form-group col-lg-2 col-md-2">
+              <p-checkbox (onChange)="incluirSalto()" [(ngModel)]="body.salto" binary="true" label="Incluir salto"
                 name="groupname">
               </p-checkbox>
             </div>
           </div>
           <div class="row">
             <div class="form-group col-lg-2 col-md-2">
-              <label>{{ "administracion.parametrosGenerales.literal.numColegiado" | translate }}
+              <label>{{ "censo.resultadosSolicitudesModificacion.literal.nColegiado" | translate }}
               </label>
               <input [(ngModel)]="body.numColegiado" name="nombre" type="text" class="form-control" [maxLength]="95"
                 pInputText disabled />
             </div>
             <div class="form-group col-lg-4 col-md-4">
-              <label>{{ "censo.busquedaClientes.literal.apellidos" | translate }}
+              <label>{{ "gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate }}
               </label>
               <input [(ngModel)]="body.apellidos" name="apellido1" type="text" class="form-control"
                 [maxLength]="95" pInputText disabled />
@@ -95,7 +96,7 @@
             <div class="form-group col-lg-1 col-md-1">
               <button (click)="search()" pButton type="button" icon="fa fa-search"
                 iconPos="center" ></button>
-              <button (click)="rest()" pButton type="button" icon="fa fa-undo"
+              <button (click)="rest()" pButton type="button" icon="fa fa-eraser"
                 iconPos="center" ></button>
             </div>
           </div>
