@@ -11,7 +11,9 @@
       <div class="d-flex justify-content-start">
         <label class="mr-auto titulo-tarjeta">{{ cardTitle }}</label>
         <div *ngIf="enlaceCardClosed !== undefined && enlaceCardClosed !== null" class="right">
-          <a [routerLink]="enlaceCardClosed.href" class="enlace"> <i class="fas fa-external-link-alt mr-2 icono-enlace"
+          <a *ngIf="enlaceCardClosed.href !== undefined && enlaceCardClosed.href !== null" [routerLink]="enlaceCardClosed.href" class="enlace"> <i class="fas fa-external-link-alt mr-2 icono-enlace"
+              aria-hidden="true"></i>{{ enlaceCardClosed.title }}</a>
+          <a *ngIf="(enlaceCardClosed.href === undefined || enlaceCardClosed.href === null) && (enlaceCardClosed.click !== undefined && enlaceCardClosed.click !== null) " (click)="enlaceCardClosed.click" class="enlace"> <i (click)="enlaceCardClosed.click" class="fas fa-external-link-alt mr-2 icono-enlace"
               aria-hidden="true"></i>{{ enlaceCardClosed.title }}</a>
         </div>
       </div>

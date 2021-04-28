@@ -75,16 +75,7 @@ export class DesignacionesComponent implements OnInit {
   }
 
   actualizacionJustificacionExpres(event){
-    let datos = [];
-    let item: JustificacionExpressItem;
-    
-    for(let i=0; i<event.length; i++){
-      item = event[i];
-
-      datos.push(item);
-    }
-
-    this.sigaServicesNew.post("justificacionExpres_actualizacion", datos).subscribe(
+    this.sigaServicesNew.post("justificacionExpres_actualizacion", event).subscribe(
       data => {
        
 
@@ -271,7 +262,6 @@ export class DesignacionesComponent implements OnInit {
 
   esColegiado(event){
     this.colegiado = event;
-    console.log('this.colegiado: ', this.colegiado)
   }
 
   actuacionesToDleteArr(event){

@@ -60,8 +60,12 @@
                             <span class="w100 cell-value selectWrap" *ngIf="cell.type == 'text'">{{cell.value}}</span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'buttom'"><button  (click)="toDoButton(cell.value, rowGroup.id, rowGroupEl)"class="buttomStyle" 
                                     pButton type="button" iconPos="left" [label]="cell.value"></button></span>
+                            <span class="w100 cell-value" *ngIf="cell.type == 'checkboxPermisos'">
+                                <p-checkbox (onChange)="checkBoxChange($event, rowGroup.id)" [disabled]="colegiado" [(ngModel)]="cell.value" binary="true" >
+                                </p-checkbox> 
+                            </span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'checkbox'">
-                                <p-checkbox (onChange)="checkBoxChange($event, rowGroup.id)" [disabled]="!colegiado" [(ngModel)]="cell.value" binary="true" >
+                                <p-checkbox (onChange)="checkBoxChange($event, rowGroup.id)" [(ngModel)]="cell.value" binary="true" >
                                 </p-checkbox> 
                             </span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'datePicker'">
@@ -146,8 +150,12 @@
                             <span class="w100 cell-value selectWrap" *ngIf="cell.type == 'text'">{{cell.value}}</span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'buttom'"><button (click)="toDoButton(cell.value, rowGroup.id, rowGroupEl)" class="buttomStyle" pButton type="button"
                                     iconPos="left" [label]="cell.value"></button></span>
+                            <span class="w100 cell-value" *ngIf="cell.type == 'checkboxPermisos'">
+                                <p-checkbox (onChange)="checkBoxChange($event, rowGroup.id)" [disabled]="colegiado" [(ngModel)]="cell.value" binary="true" >
+                                </p-checkbox> 
+                            </span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'checkbox'">
-                                <p-checkbox (onChange)="checkBoxChange($event, rowGroup.id)" [disabled]="!colegiado" [(ngModel)]="cell.value" binary="true" >{{colegiado}}
+                                <p-checkbox (onChange)="checkBoxChange($event, rowGroup.id)" [(ngModel)]="cell.value" binary="true" >
                                 </p-checkbox> 
                             </span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'datePicker'">

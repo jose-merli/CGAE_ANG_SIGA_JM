@@ -94,8 +94,6 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       this.cabecerasMultiselect.push(cab.name);
     });
     this.totalRegistros = this.rowGroups.length;
-
-    console.log("COMBO ACREDITACIONES: "+this.comboAcreditacion);
   }
 
   selectRow(rowSelected, rowId, child) {
@@ -351,7 +349,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
 
   ocultarColumna(event) {
     if (this.pantalla == 'JE' && event.itemValue.id == "clientes" || event.itemValue.id == "ejgs"){
-      
+      this.showMsg('error', "Clientes y EJG's pertenecen a la columna Año/Número Designación, no pueden ocultarse/mostrarse por sí solas", '')
     }else{
 
     let tabla = document.getElementById("tablaResultadoDesplegable");
@@ -386,7 +384,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         /*if (event.itemValue.id == "ejgs" || event.itemValue.id == "clientes"){
           event.itemValue.id = "anio";
         }
-        console.log('event.itemValue.id: ', event.itemValue.id)
+        console.log('event.itemValue.id: ', event.itemValue.id)*/
         if (ocultar && event.itemValue.id == "anio"){
           console.log('si ocultamos anio, ocultamos clientes y ejgs porque son la misma columna')
           this.ocultarItem("clientes");
@@ -394,7 +392,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         }else if (!ocultar && event.itemValue.id == "anio"){
           this.mostrarItem("clientes");
           this.mostrarItem("ejgs");
-        }*/
+        }
       }
       if (ocultar) {
         this.renderer.addClass(document.getElementById(event.itemValue.id), "collapse");
@@ -709,7 +707,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.numActuacionesModificadas.emit(actuaciones.length);
   }
     this.rowIdsToUpdate = []; //limpiamos
-    //this.dataToUpdateArr = []; //limpiamos
+    this.dataToUpdateArr = []; //limpiamos
   }
 
   eliminar(){
