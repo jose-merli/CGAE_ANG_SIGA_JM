@@ -42,6 +42,8 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
   datosInicial: any;
   esColegiado: boolean = false;
   anio: any;
+  textFilter: string = "Seleccionar";
+  textSelected: String = "{0} delitos seleccionados";
   inputs = [
     { nombre: 'NIG', value: "" },
     { nombre: 'Nº Procedimiento', value: "" }

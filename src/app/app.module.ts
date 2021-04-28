@@ -429,7 +429,6 @@ import { TarjetaRelFichaActComponent } from './features/sjcs/oficio/designacione
 import { DetalleTarjetaRelacionesDesignaComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-relaciones-designa/detalle-tarjeta-relaciones-designa.component';
 import { DetalleTarjetaComunicacionesDesignaComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-comunicaciones-designa/detalle-tarjeta-comunicaciones-designa.component';
 
-
 @NgModule({
 	declarations: [
 		TablaResultadoDesplegableComponent,

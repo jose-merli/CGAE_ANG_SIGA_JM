@@ -67,12 +67,12 @@ export class DetalleTarjetaComunicacionesDesignaComponent implements OnInit {
 
   getCols() {
     this.cols = [
-      { field: "sjcs", header: "informesycomunicaciones.comunicaciones.busqueda.claseComunicacion" },
-      { field: "anio", header: "informesycomunicaciones.comunicaciones.busqueda.destinatario" },
-      { field: "numero", header: "informesycomunicaciones.enviosMasivos.fechaCreacion" },
-      { field: "destipo", header: "informesycomunicaciones.comunicaciones.busqueda.fechaProgramada" },
-      { field: "desturno", header: "informesycomunicaciones.comunicaciones.busqueda.tipoEnvio" },
-      { field: "idletrado", header: "censo.nuevaSolicitud.estado" }
+      { field: "claseComunicacion", header: "informesycomunicaciones.comunicaciones.busqueda.claseComunicacion" },
+      { field: "destinatario", header: "informesycomunicaciones.comunicaciones.busqueda.destinatario" },
+      { field: "fechaCreacion", header: "informesycomunicaciones.enviosMasivos.fechaCreacion" },
+      { field: "fechaProgramacion", header: "informesycomunicaciones.comunicaciones.busqueda.fechaProgramada" },
+      { field: "tipoEnvio", header: "informesycomunicaciones.comunicaciones.busqueda.tipoEnvio" },
+      { field: "estado", header: "censo.nuevaSolicitud.estado" }
     ];
 
     this.rowsPerPage = [

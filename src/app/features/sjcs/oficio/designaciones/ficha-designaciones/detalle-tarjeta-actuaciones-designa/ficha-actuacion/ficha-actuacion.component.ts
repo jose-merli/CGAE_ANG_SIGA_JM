@@ -137,6 +137,7 @@ export class FichaActuacionComponent implements OnInit {
     },
   ];
 
+  institucionActual: string = '';
   actuacionDesigna: any;
   isNewActDesig: boolean = false;
   progressSpinner: boolean = false;
@@ -155,6 +156,8 @@ export class FichaActuacionComponent implements OnInit {
     private datePipe: DatePipe) { }
 
   ngOnInit() {
+
+    this.getInstitucionActual();
 
     if (sessionStorage.getItem("actuacionDesigna")) {
       let actuacion = JSON.parse(sessionStorage.getItem("actuacionDesigna"));
@@ -185,6 +188,7 @@ export class FichaActuacionComponent implements OnInit {
 
       if (actuacion.isNew) {
         this.isNewActDesig = true;
+        this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiDatosGen').opened = true;
       } else {
         this.getIdPartidaPresupuestaria();
         this.getAccionesActuacion();
@@ -442,4 +446,9 @@ export class FichaActuacionComponent implements OnInit {
     }
 
   }
+
+  getInstitucionActual() {
+    this.sigaServices.get("institucionActual").subscribe(n => { this.institucionActual = n.value });
+  }
+
 }

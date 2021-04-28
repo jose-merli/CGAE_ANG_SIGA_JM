@@ -13,7 +13,9 @@
       <div class="form-group col-lg-6 col-md-6 w-100">
         <label>{{ datos.datePicker.label }}</label>
         <app-fecha [utc]="true" [(value)]='datos.datePicker.value' [minDate]="fechaEntradaInicioDate"
-          (valueChangeSelected)="fillFecha($event)" (valueChangeInput)="fillFecha($event)" [disabled]="isAnulada">
+          [maxDate]="fechaMaxima" (valueChangeSelected)="fillFecha($event)" (valueChangeInput)="fillFecha($event)"
+          [disabled]="isAnulada"
+          [inputStyleClass]="(datos.datePicker.value == null || datos.datePicker.value == '') ? 'camposObligatorios': ''">
         </app-fecha>
       </div>
 
@@ -44,9 +46,13 @@
         <label>{{ selector.nombre }}</label>
         <p-dropdown class="select-form" [(ngModel)]="selector.value"
           placeholder="{{'general.boton.seleccionar' | translate}}" [options]="selector.opciones" [filter]="true"
-          filterBy="label,labelSinTilde" [showClear]="true"
-          [ngClass]="styleObligatorio('selector', selector.obligatorio)" [disabled]="isAnulada">
+          filterBy="label,labelSinTilde" [showClear]="true" (onChange)="onChangeSelector(selector)"
+          [ngClass]="{'camposObligatorios': (selector.obligatorio && (selector.value == '' || selector.value == null))}"
+          [disabled]="isAnulada || selector.disabled">
         </p-dropdown>
+      </div>
+      <div class="form-group col-lg-6 col-md-6 w-100" style="display: flex; align-items: flex-end;">
+        Completar si es complemento por desplazamiento
       </div>
     </div>
   </div>

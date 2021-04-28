@@ -85,6 +85,7 @@ export let endpoints_oficio: any = {
     designaciones_getDatosAdicionales: "oficio/designas/getDatosAdicionales",
     designaciones_comboPartidaPresupuestaria: "oficio/designas/comboPartidaPresupuestaria",
     designaciones_getDatosFacturacion: "oficio/designas/getPartidaPresupuestariaDesigna",
+    designaciones_updateDatosAdicionales: "oficio/designas/updateDatosAdicionales",
     designaciones_busquedaProcedimiento: "oficio/busquedaProcedimientoDesignas",
     designaciones_busquedaModulo: "oficio/busquedaModuloDesignas",
     designaciones_deleteContrario: "oficio/designas/deleteContrario",
@@ -123,6 +124,7 @@ export let endpoints_oficio: any = {
     designaciones_updateDesigna:"oficio/designas/updateDesigna",
     designaciones_busquedaNueva:"oficio/busquedaNuevaDesigna",
     designacionesBusquedaComunicaciones: "oficio/designas/busquedaComunicaciones",
+    designaciones_updateDatosFacturacion: "oficio/designas/updatePartidaPresupuestaria",
 
     //SALTOS Y COMPENSACIONES
     saltosCompensacionesOficio_buscar: "oficio/saltosCompensaciones/buscarSaltosOCompensaciones",

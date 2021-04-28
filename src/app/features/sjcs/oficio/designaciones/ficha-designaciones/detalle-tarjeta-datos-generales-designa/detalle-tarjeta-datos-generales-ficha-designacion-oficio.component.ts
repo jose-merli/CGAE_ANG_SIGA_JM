@@ -106,7 +106,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     this.selectores[0].disable = true;
     this.selectores[1].opciones = [{ label: datosInicial.descripcionTipoDesigna, value: datosInicial.idTipoDesignaColegio }];
     this.selectores[1].value = datosInicial.idTipoDesignaColegio;
-    this.selectores[1].disable = true;
+    this.selectores[1].disable = false;
     var anioAnterior = datosInicial.ano.split("/");
     this.anio.value = anioAnterior[0].slice(1);
     this.anio.disable = true;
@@ -254,6 +254,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       this.confirmarActivar(severity, summary, detail);
     } else {
       if (detail == "save" && this.anio.value == "") {
+        detail = "Guardar";
         let newDesigna = new DesignaItem();
         var idTurno: number = +this.selectores[0].value;
         newDesigna.idTurno = idTurno;
@@ -299,6 +300,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         }
 
       } else if (detail == "save" && this.anio.value != "") {
+        detail = "Guardar";
         let newDesigna = new DesignaItem();
         var idTurno: number = +this.selectores[0].value;
         newDesigna.idTurno = idTurno;
@@ -438,7 +440,9 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         message: mess,
         icon: icon,
         accept: () => {
+          this.progressSpinner = true;
           if (detail == "save" && this.anio.value == "") {
+            detail = "Guardar";
             let newDesigna = new DesignaItem();
             var idTurno: number = +this.selectores[0].value;
             newDesigna.idTurno = idTurno;
@@ -452,7 +456,6 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
             var year = today.getFullYear().valueOf();
             newDesigna.ano = year;
             if (this.resaltadoDatos == false) {
-              this.progressSpinner = true;
               this.sigaServices.post("create_NewDesigna", newDesigna).subscribe(
                 n => {
                   let newId = JSON.parse(n.body);
@@ -490,6 +493,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
             }
             this.progressSpinner = false;
           } else if (detail == "save" && this.anio.value != "") {
+            detail = "Guardar";
             let newDesigna = new DesignaItem();
             var idTurno: number = +this.selectores[0].value;
             newDesigna.idTurno = idTurno;
@@ -586,6 +590,12 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
             element.sufijo = element.estado;
             element.estado = 'Anulada';
           }
+          this.inputs[0].value =  element.nombreColegiado;
+          this.inputs[1].value =  element.apellido1Colegiado + " " + element.apellido2Colegiado;
+          this.inputs[2].value = element.nombreColegiado;
+          this.inputs[0].disable = true;
+          this.inputs[1].disable = true;
+          this.inputs[3].disable = true;
           element.nombreColegiado = element.apellido1Colegiado + " " + element.apellido2Colegiado + ", " + element.nombreColegiado;
           if (element.art27 == "1") {
             element.art27 = "Si";

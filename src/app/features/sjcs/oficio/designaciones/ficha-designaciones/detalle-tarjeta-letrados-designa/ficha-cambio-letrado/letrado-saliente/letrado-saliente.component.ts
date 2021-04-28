@@ -60,11 +60,9 @@ export class LetradoSalienteComponent implements OnInit {
   }
 
   incluirCompensacion(){
-    this.body.compensacion=!this.body.compensacion;
   }
 
   changeMotivo(event){
-    this.body.motivoRenuncia = event;
   }
 
   onHideTarjeta(){

@@ -103,7 +103,7 @@
             <div class="form-group col-lg-2 col-md-2">
               <label>{{ "justiciaGratuita.oficio.designas.letrados.motivoRenuncia" | translate}} (*)</label>
               <p-dropdown [(ngModel)]='body.motivoRenuncia' placeholder="{{ 'general.boton.seleccionar' | translate }}"
-                (onChange)="changeMotivo($event)" [options]="comboRenuncia" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
+                (onChange)="changeMotivo($event)" [options]="comboRenuncia" [filter]="true" filterBy="label,labelSinTilde">
               </p-dropdown>
               <!-- <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}"
                 [(ngModel)]='body.idprovincia' [showClear]="true" (onChange)="onChangeProvincia()" [filter]="true"
