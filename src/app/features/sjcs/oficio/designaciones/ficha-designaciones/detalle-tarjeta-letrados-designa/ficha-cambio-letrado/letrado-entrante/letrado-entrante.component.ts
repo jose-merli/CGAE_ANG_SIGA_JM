@@ -14,31 +14,19 @@ import { CamposCambioLetradoItem } from '../../../../../../../../models/sjcs/Cam
 export class LetradoEntranteComponent implements OnInit {
 
   msgs: Message[] = [];
-  body;
+  body= new CamposCambioLetradoItem();
   datos;
   showTarjeta=true;
   progressSpinner = false;
+  disableFechaDesignacion=false;
 
   @Input() saliente;
 
   @Output() fillEntrante = new EventEmitter<boolean>();
 
-  motivosRenuncia = [
-    {
-      label: 'V',
-      value: 'V'
-    },
-    {
-      label: 'B',
-      value: 'B'
-    },
-  ];
-
   constructor(private router: Router) { }
 
   ngOnInit() {
-
-    this.body = new CamposCambioLetradoItem();
 
     if (sessionStorage.getItem("abogado")) {
 			let data = JSON.parse(sessionStorage.getItem("abogado"))[0];
@@ -57,6 +45,11 @@ export class LetradoEntranteComponent implements OnInit {
 
   incluirArt(){
     this.body.art27=!this.body.art27;
+    if(this.body.art27){
+      this.body.fechaDesignacion = this.saliente.fechaDesignacion;
+      this.disableFechaDesignacion=true;
+    }
+    else  this.disableFechaDesignacion=false;
   }
 
   changeMotivo(event){
@@ -71,17 +64,22 @@ export class LetradoEntranteComponent implements OnInit {
     this.msgs=[];
   }
 
-  fillFechaSolRenuncia(evento){}
+  fillFechaSolRenuncia(evento){
+    this.body.fechaSolRenuncia=evento;
+  }
 
-  fillFechaDesignacion(evento){}
+  fillFechaDesignacion(evento){
+    this.body.fechaDesignacion=evento;
+  }
 
   search() {
 			sessionStorage.setItem("origin", "AbogadoContrario");
+      sessionStorage.setItem("letrado",  JSON.stringify(this.saliente));
 			this.router.navigate(['/busquedaGeneral']);
   }
 
   rest() {
-    this.body=undefined;
+    this.body=null;
   }
 
 }

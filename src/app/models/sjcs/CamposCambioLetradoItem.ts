@@ -8,5 +8,7 @@ export class CamposCambioLetradoItem {
     compensacion:Boolean;
     motivoRenuncia:Boolean;
     observaciones:String; 
+    salto:Boolean;
+    art27:Boolean;
     constructor() { }
   }

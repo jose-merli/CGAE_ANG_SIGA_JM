@@ -42,10 +42,16 @@ export class FichaCambioLetradoComponent implements OnInit {
 
     let data = JSON.parse(sessionStorage.getItem("letrado"));
     sessionStorage.removeItem("letrado");
-    this.body.numColegiado = data.numeroColegiado;
-    this.body.nombre = data.nombre;
-    this.body.apellidos = data.apellidos1 + " " + data.apellidos2;
+    this.body.numColegiado = data.nColegiado;
+    this.body.nombre = data.apellidosNombre.split(", ")[1];
+    this.body.apellidos = data.apellidosNombre.split(", ")[0];
+    this.body.fechaDesignacion = data.fechaDesignacion;
+    if(data.fechaSolRenuncia==null ) this.body.fechaSolRenuncia = new Date();
 
+    let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
+    this.datosTarjetaResumen=[];
+		this.datosTarjetaResumen[0] = {label: "Año/Número de la designación", value: designa.ano};
+		this.datosTarjetaResumen[1] = {label: "Apellidos, Nombre ", value: data.apellidosNombre};
     /* this.datosTarjetaResumen = [];
 
     this.datosTarjetaResumen.designacion;

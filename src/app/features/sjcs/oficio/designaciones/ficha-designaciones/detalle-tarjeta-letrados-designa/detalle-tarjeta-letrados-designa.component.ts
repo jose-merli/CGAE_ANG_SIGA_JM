@@ -7,6 +7,7 @@ import { DesignaItem } from '../../../../../../models/sjcs/DesignaItem';
 import { JusticiableBusquedaItem } from '../../../../../../models/sjcs/JusticiableBusquedaItem';
 import { Message } from 'primeng/components/common/api';
 import { DatosColegiadosItem } from '../../../../../../models/DatosColegiadosItem';
+import { Location, DatePipe } from '@angular/common';
 
 
 @Component({
@@ -40,6 +41,7 @@ export class DetalleTarjetaLetradosDesignaComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private persistenceService: PersistenceService,
     private router: Router,
+    private datepipe: DatePipe
   ) { }
 
   ngOnInit() {
@@ -70,6 +72,9 @@ export class DetalleTarjetaLetradosDesignaComponent implements OnInit {
     this.progressSpinner = true;
 
     this.datos=this.letrados;
+    this.datos.forEach(element => {
+      element.fechaDesignacion = this.datepipe.transform(element.fechaDesignacion, 'dd/MM/yyyy');
+    });
     //Buscamos los letrados asociados a la designacion
    /*  this.sigaServices.post("designaciones_busquedaLetradosDesignacion", request).subscribe(
       data => {
@@ -265,7 +270,7 @@ export class DetalleTarjetaLetradosDesignaComponent implements OnInit {
   }
 
   NewLetrado(){
-    sessionStorage.setItem("letrado",  JSON.stringify(this.datos[this.datos.length - 1]));
+    sessionStorage.setItem("letrado",  JSON.stringify(this.letrados[this.letrados.length - 1]));
     this.router.navigate(["/fichaCambioLetrado"]);
   }
 
