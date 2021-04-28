@@ -429,6 +429,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
   confirmarActivar(severity, summary, detail) {
     this.checkDatosGenerales();
     if (this.resaltadoDatos == false) {
+      this.progressSpinner = false;
       let mess = "Se va a seleccionar un letrado automaticamente. ¿Desea continuar?";
       let icon = "fa fa-question-circle";
       let keyConfirmation = "confirmGuardar";
