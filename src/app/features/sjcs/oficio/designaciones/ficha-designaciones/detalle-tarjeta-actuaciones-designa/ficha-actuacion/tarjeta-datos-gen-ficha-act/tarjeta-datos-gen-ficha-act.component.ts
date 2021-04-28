@@ -123,6 +123,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
   @Input() actuacionDesigna: Actuacion;
   progressSpinner: boolean = false;
   fechaEntradaInicioDate: Date;
+  fechaMaxima: Date;
 
   constructor(private commonsService: CommonsService,
     private sigaServices: SigaServices,
@@ -138,6 +139,11 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
     } else {
       this.establecerDatosInicialesEditAct();
     }
+
+    if(sessionStorage.getItem('isLetrado') == 'true') {
+      this.fechaMaxima = new Date();
+    }
+
     this.getLetradoActuacion();
     this.getComboJuzgados();
     this.getComboProcedimientos();
@@ -470,7 +476,11 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
         if (resp.error != null && resp.error.descripcion != null) {
           this.showMsg('error', 'Error', this.translateService.instant(resp.error.descripcion));
         } else {
-          if (resp.listaLetradosDesignaItem.length) {
+          if (resp.listaLetradosDesignaItem.length > 0) {
+
+            if(sessionStorage.getItem('isLetrado') == 'true' && resp.listaLetradosDesignaItem[0].numeroColegiado == this.usuarioLogado.numColegiado) {
+              
+            }
             this.datos.inputs1[1].value = resp.listaLetradosDesignaItem[0].numeroColegiado;
             this.datos.inputs1[2].value = resp.listaLetradosDesignaItem[0].colegiado;
           } else {
