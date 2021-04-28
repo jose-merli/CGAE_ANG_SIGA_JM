@@ -50,6 +50,7 @@ export class FiltrosInscripciones implements OnInit {
     numColegiado: '',
     nombreAp: ''
   }​​​​​​​​​;
+  usuarioLogado;
 
   textSelected: String = 'general.boton.seleccionar';
   @Input() permisos;
@@ -65,6 +66,7 @@ export class FiltrosInscripciones implements OnInit {
 
   ngOnInit() {  
     
+    this.getDataLoggedUser();
     if (this.persistenceService.getHistorico() != undefined) {
       this.filtros.historico = this.persistenceService.getHistorico();
       // this.isBuscar();
@@ -75,6 +77,11 @@ export class FiltrosInscripciones implements OnInit {
     if (this.persistenceService.getFiltros() != undefined) {
       this.filtros = this.persistenceService.getFiltros();
       this.isBuscar();
+    }
+    
+    if(sessionStorage.getItem("turnoInscrito")){
+      this.usuarioBusquedaExpress.nombreAp=this.usuarioLogado.nombre;
+      this.usuarioBusquedaExpress.numColegiado=this.usuarioLogado.idPersona;
     }
 
     this.sigaServices.get("inscripciones_comboTurnos").subscribe(
@@ -117,6 +124,24 @@ export class FiltrosInscripciones implements OnInit {
 
     this.clearFilters();
     
+  }
+
+    getDataLoggedUser() {
+      this.progressSpinner = true;
+
+      this.sigaServices.get("usuario_logeado").subscribe(n => {
+  
+        const usuario = n.usuarioLogeadoItem;
+        const colegiadoItem = new ColegiadoItem();
+        colegiadoItem.nif = usuario[0].dni;
+  
+        this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(
+          usr => {
+            this.usuarioLogado = JSON.parse(usr.body).colegiadoItem[0];
+            this.progressSpinner = false;
+          });
+  
+      });
   }
 
 
