@@ -83,6 +83,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
   @ViewChild("importe") importe;
   //Resultados de la busqueda
   @Input() turnosItem: TurnosItems;
+  @Input() newTurno: boolean;
   @Input() tarjetaDatosGenerales: string;
 
   constructor(private sigaServices: SigaServices,
@@ -123,12 +124,12 @@ export class DatosGeneralesTurnosComponent implements OnInit {
     let fichaPosible = this.getFichaPosibleByKey(key);
     if (
       key == "datosGenerales" &&
-      !this.modoEdicion
+      !this.newTurno
     ) {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
-    if (this.modoEdicion) {
+    if (this.newTurno) {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
