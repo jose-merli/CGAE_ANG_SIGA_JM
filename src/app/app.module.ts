@@ -428,8 +428,6 @@ import { TarjetaHisFichaActComponent } from './features/sjcs/oficio/designacione
 import { TarjetaRelFichaActComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-designa/ficha-actuacion/tarjeta-rel-ficha-act/tarjeta-rel-ficha-act.component';
 import { DetalleTarjetaRelacionesDesignaComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-relaciones-designa/detalle-tarjeta-relaciones-designa.component';
 import { DetalleTarjetaComunicacionesDesignaComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-comunicaciones-designa/detalle-tarjeta-comunicaciones-designa.component';
-import { ServicioInteresComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/servicio-interes/servicio-interes.component';
-
 
 @NgModule({
 	declarations: [
@@ -780,7 +778,6 @@ import { ServicioInteresComponent } from './features/sjcs/oficio/designaciones/f
 		TarjetaHisFichaActComponent,
 		DetalleTarjetaRelacionesDesignaComponent,
 		DetalleTarjetaComunicacionesDesignaComponent,
-		ServicioInteresComponent,
 
 	],
 	imports: [
