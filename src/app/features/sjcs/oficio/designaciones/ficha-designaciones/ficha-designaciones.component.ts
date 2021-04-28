@@ -1550,16 +1550,16 @@ nombreTurno: "ZELIMINAR-CIJAECI05 - MATRIMONIAL CONTENCIOSO JAÉN" */
     }
   }
 
-  changeDataTarjeta(event) {
-    // lettarjeta = this.listaTarjetas.find(el=>el.id == event.tarjeta);
-    // if (event.tarjeta == 'sjcsDesigActuaOfiJustifi') {​​​​​
-    // tarjeta.campos[0].value = event.fechaJusti;
-    // tarjeta.campos[1].value = event.estado;
-    //     }​​​​​
-    // if (event.tarjeta == 'sjcsDesigActuaOfiDatFac') {​​​​​
-    // tarjeta.campos[0].value = event.partida;
-    //     }​​​​​
-  }
+changeDataTarjeta(event) {​​​​​
+// lettarjeta = this.listaTarjetas.find(el=>el.id == event.tarjeta);
+// if (event.tarjeta == 'sjcsDesigActuaOfiJustifi') {​​​​​
+// tarjeta.campos[0].value = event.fechaJusti;
+// tarjeta.campos[1].value = event.estado;
+//     }​​​​​
+// if (event.tarjeta == 'sjcsDesigActuaOfiDatFac') {​​​​​
+// tarjeta.campos[0].value = event.partida;
+//     }​​​​​
+  }​​​​​
 
   actualizaFicha(event) {
     this.campos = event;
@@ -1695,7 +1695,6 @@ nombreTurno: "ZELIMINAR-CIJAECI05 - MATRIMONIAL CONTENCIOSO JAÉN" */
     this.searchRelaciones();
     this.getIdPartidaPresupuestaria(this.campos);
     this.progressSpinner = false;
-
   }
 
 }
