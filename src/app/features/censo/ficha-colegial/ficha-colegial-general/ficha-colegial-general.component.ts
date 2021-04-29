@@ -519,24 +519,24 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
 
     }
 
-    if(!this.idPersona){
-      this.sigaServices.get("usuario_logeado").subscribe(n => {
-        let usuario = n.usuarioLogeadoItem;
-        this.sigaServices
-         .post("busquedaColegiados_searchColegiado", usuario[0].dni).subscribe(
-          data => {
-            let colegiadoItem = JSON.parse(data.body);
-            this.idPersona = JSON.stringify(colegiadoItem.colegiadoItem[0].idPersona)
-          },
-          err => {
-            console.log(err);
-          },
-         );
-      },
-      err => {
-        console.log(err);
-      });
-    }
+    // if(!this.idPersona){
+    //   this.sigaServices.get("usuario_logeado").subscribe(n => {
+    //     let usuario = n.usuarioLogeadoItem;
+    //     this.sigaServices
+    //      .post("busquedaColegiados_searchColegiado", usuario[0].dni).subscribe(
+    //       data => {
+    //         let colegiadoItem = JSON.parse(data.body);
+    //         this.idPersona = JSON.stringify(colegiadoItem.colegiadoItem[0].idPersona)
+    //       },
+    //       err => {
+    //         console.log(err);
+    //       },
+    //      );
+    //   },
+    //   err => {
+    //     console.log(err);
+    //   });
+    // }
 
     if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
       this.generalBody.idTipoIdentificacion = "10";
