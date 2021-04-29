@@ -51,6 +51,7 @@ export class FiltrosInscripciones implements OnInit {
     nombreAp: ''
   }​​​​​​​​​;
   usuarioLogado;
+  isLetrado:boolean = false;
 
   textSelected: String = 'general.boton.seleccionar';
   @Input() permisos;
@@ -65,8 +66,10 @@ export class FiltrosInscripciones implements OnInit {
     private persistenceService: PersistenceService) { }
 
   ngOnInit() {  
-    
-    this.getDataLoggedUser();
+    if (sessionStorage.getItem("isLetrado") != null && sessionStorage.getItem("isLetrado") != undefined) {
+      this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
+    }
+
     if (this.persistenceService.getHistorico() != undefined) {
       this.filtros.historico = this.persistenceService.getHistorico();
       // this.isBuscar();
@@ -79,9 +82,8 @@ export class FiltrosInscripciones implements OnInit {
       this.isBuscar();
     }
     
-    if(sessionStorage.getItem("turnoInscrito")){
-      this.usuarioBusquedaExpress.nombreAp=this.usuarioLogado.nombre;
-      this.usuarioBusquedaExpress.numColegiado=this.usuarioLogado.idPersona;
+    if(this.isLetrado){
+      this.getDataLoggedUser();
     }
 
     this.sigaServices.get("inscripciones_comboTurnos").subscribe(
@@ -137,11 +139,22 @@ export class FiltrosInscripciones implements OnInit {
   
         this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(
           usr => {
+            const { numColegiado, nombre } = JSON.parse(usr.body).colegiadoItem[0];
+            this.usuarioBusquedaExpress.numColegiado = numColegiado;
+            this.usuarioBusquedaExpress.nombreAp = nombre.replace(/,/g,"");
+
             this.usuarioLogado = JSON.parse(usr.body).colegiadoItem[0];
             this.progressSpinner = false;
+           }, err =>{
+            this.progressSpinner = false;
+          },
+          ()=>{
+            this.progressSpinner = false;
+            setTimeout(()=>{
+              this.isBuscar();
+            }, 5);
           });
-  
-      });
+        });
   }
 
 

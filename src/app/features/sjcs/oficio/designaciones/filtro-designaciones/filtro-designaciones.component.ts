@@ -78,6 +78,8 @@ export class FiltroDesignacionesComponent implements OnInit {
   @Output() showTablaDesigna = new EventEmitter<boolean>();
   @Output() showTablaJustificacionExpres = new EventEmitter<boolean>();
   @Output() busqueda = new EventEmitter<boolean>();
+  
+  isLetrado:boolean = false;
 
   constructor(private translateService: TranslateService, private sigaServices: SigaServices,  private location: Location, private router: Router) { }
 
@@ -87,8 +89,14 @@ export class FiltroDesignacionesComponent implements OnInit {
     // if(!esColegiado){   
     this.checkAcceso();
   // }
+
+
   }
   cargaInicial(){
+    if (sessionStorage.getItem("isLetrado") != null && sessionStorage.getItem("isLetrado") != undefined) {
+      this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
+    }
+
     if(!this.esColegiado){
       this.isButtonVisible = true;
     }else{
@@ -116,6 +124,10 @@ export class FiltroDesignacionesComponent implements OnInit {
 
     //Inicializamos buscador designas
     this.getBuscadorDesignas();
+
+    if(this.isLetrado){
+      this.getDataLoggedUser();
+    }
 
     if (this.esColegiado) {
       this.disabledBusquedaExpress = true;
@@ -679,7 +691,7 @@ getComboCalidad() {
       this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(usr => {
         const { numColegiado, nombre } = JSON.parse(usr.body).colegiadoItem[0];
         this.usuarioBusquedaExpress.numColegiado = numColegiado;
-        this.usuarioBusquedaExpress.nombreAp = nombre;
+        this.usuarioBusquedaExpress.nombreAp = nombre.replace(/,/g,"");
         this.showColegiado = true;
 
         //es colegiado, filtro por defecto para justificacion
@@ -696,6 +708,7 @@ getComboCalidad() {
       },
       ()=>{
         this.progressSpinner = false;
+        this.buscar();
       });
 
     },

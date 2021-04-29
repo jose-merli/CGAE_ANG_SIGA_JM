@@ -173,17 +173,12 @@ export class ServiciosInteresFichaColegialComponent implements OnInit, OnChanges
   }
 
   turnoInscrito(){
-    if(this.isLetrado){
-      sessionStorage.setItem("turnoInscrito","true");
       this.router.navigate(["/inscripciones"]);
-    }else{
-      this.router.navigate(["/inscripciones"]);
-    }
   }
   designas(){
-    this.router.navigate(["/designaciones"]);
+      this.router.navigate(["/designaciones"]);
   }
   bajasTemporales(){
-    this.router.navigate(["/bajasTemporales"]);
+      this.router.navigate(["/bajasTemporales"]);
   }
 }
