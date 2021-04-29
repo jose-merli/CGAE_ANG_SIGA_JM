@@ -1046,9 +1046,9 @@ export class FichaDesignacionesComponent implements OnInit {
     let data = sessionStorage.getItem("designaItemLink");
     let designaItem = JSON.parse(data);
 
+    if(designaItem.idTurno!=null){
+
     let item = [designaItem.idTurno.toString(), designaItem.nombreTurno, designaItem.numero.toString(), designaItem.ano];
-    /* ano: "D2021/4330"
-nombreTurno: "ZELIMINAR-CIJAECI05 - MATRIMONIAL CONTENCIOSO JAÉN" */
 
     this.sigaServices.post("designaciones_listaInteresados", item).subscribe(
       n => {
@@ -1111,7 +1111,7 @@ nombreTurno: "ZELIMINAR-CIJAECI05 - MATRIMONIAL CONTENCIOSO JAÉN" */
         console.log(err);
       }
     );
-
+    }
   }
 
   searchRelaciones() {

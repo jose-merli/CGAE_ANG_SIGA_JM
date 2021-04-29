@@ -25,6 +25,8 @@ export class FichaCambioLetradoComponent implements OnInit {
   progressSpinner = false;
 
   body;
+  disableSave: Boolean = false;
+
   tarjetaFija = {
     nombre: this.translateService.instant("justiciaGratuita.oficio.turnos.inforesumen"),
     icono: 'fas fa-clipboard',
@@ -118,28 +120,39 @@ export class FichaCambioLetradoComponent implements OnInit {
 
   clickSave() {
 
-    if (this.entrante.body.numColegiado != undefined && this.entrante.body.numColegiado != "" && this.entrante.body.art27 == false) {
-      this.confirmationService.confirm({
-        key: "deletePlantillaDoc",
-        message: "Se va a seleccionar un letrado automáticamente. ¿Desea continuar?",
-        icon: "fa fa-save",
-        accept: () => {
-          this.progressSpinner = true;
-          this.save();
-        },
-        reject: () => {
-          this.msgs = [
-            {
-              severity: "info",
-              summary: "Cancel",
-              detail: this.translateService.instant(
-                "general.message.accion.cancelada"
-              )
+    //Campos obligatorios rellenados?
+    if (this.entrante.body.fechaDesignacion != null || this.entrante.body.fechaDesignacion != undefined ||
+      this.saliente.body.motivoRenuncia != undefined || this.saliente.body.motivoRenuncia != null) {
+        //Comprobar requisitos según art 27
+        if ((this.entrante.body.numColegiado == undefined || this.entrante.body.numColegiado == "") && this.entrante.body.art27 == false) {
+          this.confirmationService.confirm({
+            key: "deletePlantillaDoc",
+            message: "Se va a seleccionar un letrado automáticamente. ¿Desea continuar?",
+            icon: "fa fa-save",
+            accept: () => {
+              this.save();
+            },
+            reject: () => {
+              this.msgs = [
+                {
+                  severity: "info",
+                  summary: "Cancel",
+                  detail: this.translateService.instant(
+                    "general.message.accion.cancelada"
+                  )
+                }
+              ];
+  
             }
-          ];
-
+          });
         }
-      });
+        else if((this.entrante.body.numColegiado != undefined && this.entrante.body.numColegiado != "") && this.entrante.body.art27 == true){
+          this.save()
+        }
+        else this.showMessage("error", "Cancel", this.translateService.instant("general.message.camposObligatorios"))
+    }
+    else {
+      this.showMessage("error", "Cancel", this.translateService.instant("general.message.camposObligatorios"))
     }
   }
 
@@ -159,11 +172,13 @@ export class FichaCambioLetradoComponent implements OnInit {
 
     let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
 
-    
 
-    let request = [designa.anio, designa.idTurno, designa.numero, 
-      this.saliente.body.idPersona,  this.saliente.body.observaciones, this.saliente.body.motivoRenuncia, this.saliente.body.fechaDesigna,
-      this.entrante.body.fechaDesigna, this.entrante.body.idPersona];
+
+    let request = [designa.ano, designa.idTurno, designa.numero,
+    this.body.idPersona, this.saliente.body.observaciones, this.saliente.body.motivoRenuncia, this.saliente.body.fechaDesignacion,
+    this.entrante.body.fechaDesignacion, this.entrante.body.idPersona];
+
+    this.progressSpinner = true;
 
     this.sigaServices.post("designaciones_updateLetradoDesignacion", request).subscribe(
       n => {
@@ -173,6 +188,8 @@ export class FichaCambioLetradoComponent implements OnInit {
         else{
           this.router.navigate(['/busquedaGeneral']);
         } */
+
+        this.router.navigate(['/busquedaGeneral']);
       },
       err => {
         if (err != undefined && JSON.parse(err.error).error.description != "") {
@@ -186,6 +203,7 @@ export class FichaCambioLetradoComponent implements OnInit {
         this.progressSpinner = false;
       }
     );
+    this.progressSpinner = false;
   }
 
   showMessage(severity, summary, msg) {
