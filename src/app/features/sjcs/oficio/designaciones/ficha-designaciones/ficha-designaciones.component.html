@@ -1,13 +1,19 @@
 <!-- Alertas -->
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <!-- Alertas -->
-
 <div id="fichaDesignacionOficio">
 
     <div>
         <div id="top"></div>
         <app-migas-de-pan [rutas]="rutas"></app-migas-de-pan>
-
+        <div class="info-limit mb-2" *ngIf="mostrarAnularCompensacion">
+            <img src="./assets/images/icons/warning.png">
+            <div class="d-inline-block">
+                <div>
+                    <span class="pr-2 text-left">Recuerde que si introdujo una compensación debería anularla</span>
+                </div>
+            </div>
+      </div>
         <div class="tarjetaFija" *ngIf="tarjetaFija !== null">
 
             <div class="card" style="z-index: 2;">

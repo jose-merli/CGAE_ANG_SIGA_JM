@@ -41,7 +41,7 @@ export class FichaDesignacionesComponent implements OnInit {
   @ViewChild(DetalleTarjetaContrariosFichaDesignacionOficioComponent) tarjetaContrarios;
   @ViewChild(DetalleTarjetaInteresadosFichaDesignacionOficioComponent) tarjetaInteresados;
   @ViewChild(DetalleTarjetaRelacionesDesignaComponent) tarjetaRelaciones;
-
+  mostrarAnularCompensacion: boolean = false;
   rutas: string[] = ['SJCS', 'EJGS'];
   campos: DesignaItem = new DesignaItem();
   comboRenuncia: any;
@@ -1286,7 +1286,18 @@ export class FichaDesignacionesComponent implements OnInit {
 
   refreshData(event) {
     this.progressSpinner = true;
+    this.campos=event;
     this.getActuacionesDesigna(false);
+    if (event.estado == 'V') {
+      event.sufijo = event.estado;
+      event.estado = 'Activo';
+    } else if (event.estado == 'F') {
+      event.sufijo = event.estado;
+      event.estado = 'Finalizado';
+    } else if (event.estado == 'A') {
+      event.sufijo = event.estado;
+      event.estado = 'Anulada';
+    }
     let camposResumen = [
       {
         "key": "Año/Número",
@@ -1334,6 +1345,9 @@ export class FichaDesignacionesComponent implements OnInit {
     ];
     this.tarjetaFija.campos = camposResumen;
     this.listaTarjetas[1].campos = camposDetalle;
+    if(event.rol[0] == "A"){
+      this.mostrarAnularCompensacion  = true
+    }
     this.progressSpinner = false;
   }
   refreshDataGenerales(event) {
@@ -1585,6 +1599,16 @@ changeDataTarjeta(event) {​​​​​
       this.listaTarjetas[0].opened = true;
     }
     this.mostrar();
+    if (designaItem.estado == 'V') {
+      designaItem.sufijo = designaItem.estado;
+      designaItem.estado = 'Activo';
+    } else if (designaItem.estado == 'F') {
+      designaItem.sufijo = designaItem.estado;
+      designaItem.estado = 'Finalizado';
+    } else if (designaItem.estado == 'A') {
+      designaItem.sufijo = designaItem.estado;
+      designaItem.estado = 'Anulada';
+    }
     //EDICIÓN DESIGNA
     let camposResumen = [
       {
