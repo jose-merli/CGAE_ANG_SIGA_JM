@@ -6,6 +6,7 @@ import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { BajasTemporalesItem } from '../../../../../models/sjcs/BajasTemporalesItem';
 import { CommonsService } from '../../../../../_services/commons.service';
+import { ColegiadoItem } from '../../../../../models/ColegiadoItem';
 
 
 @Component({
@@ -43,6 +44,8 @@ export class FiltrosBajasTemporales implements OnInit {
   /*Éste método es útil cuando queremos queremos informar de cambios en los datos desde el hijo,
     por ejemplo, si tenemos un boStón en el componente hijo y queremos actualizar los datos del padre.*/
   @Output() busqueda = new EventEmitter<boolean>();
+  isLetrado: boolean = false;
+  usuarioLogado;
 
   constructor(private router: Router,
     private sigaServices: SigaServices,
@@ -51,6 +54,10 @@ export class FiltrosBajasTemporales implements OnInit {
     private commonsService: CommonsService) { }
 
   ngOnInit() {   
+
+    if (sessionStorage.getItem("isLetrado") != null && sessionStorage.getItem("isLetrado") != undefined) {
+      this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
+    }
 
     this.getComboEstado();
 
@@ -77,7 +84,42 @@ export class FiltrosBajasTemporales implements OnInit {
     if(sessionStorage.getItem("buscadorColegiados")){
       this.isBuscar();
     }
+
+    if(this.isLetrado){
+      this.getDataLoggedUser();
+    }
   }
+
+  getDataLoggedUser() {
+    this.progressSpinner = true;
+
+    this.sigaServices.get("usuario_logeado").subscribe(n => {
+
+      const usuario = n.usuarioLogeadoItem;
+      const colegiadoItem = new ColegiadoItem();
+      colegiadoItem.nif = usuario[0].dni;
+
+      this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(
+        usr => {
+          const { numColegiado, nombre } = JSON.parse(usr.body).colegiadoItem[0];
+          this.usuarioBusquedaExpress.numColegiado = numColegiado;
+          this.usuarioBusquedaExpress.nombreAp = nombre.replace(/,/g,"");
+
+          this.usuarioLogado = JSON.parse(usr.body).colegiadoItem[0];
+          this.progressSpinner = false;
+
+          this.usuarioBusquedaExpress.numColegiado=this.usuarioLogado.numColegiado;
+          this.usuarioBusquedaExpress.nombreAp = nombre.replace(/,/g,"");
+
+         }, err =>{
+          this.progressSpinner = false;
+        },
+        ()=>{
+          this.progressSpinner = false;
+          this.isBuscar();
+        });
+      });
+}
 
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;

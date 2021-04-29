@@ -10,7 +10,7 @@ import { procesos_oficio } from '../../../../permisos/procesos_oficio';
 import { FiltrosBajasTemporales } from './filtros-inscripciones/filtros-bajas-temporales.component';
 import { GestionBajasTemporalesComponent } from './gestion-bajas-temporales/gestion-bajas-temporales.component';
 import { Row, GestionBajasTemporalesService } from './gestion-bajas-temporales/gestion-bajas-temporales.service';
-import { DatePipe } from '@angular/common';
+import { DatePipe, Location } from '@angular/common';
 import { BajasTemporalesItem } from '../../../../models/sjcs/BajasTemporalesItem';
 
 @Component({
@@ -68,7 +68,8 @@ export class BajasTemporalesComponent implements OnInit {
     private persistenceService: PersistenceService,
     private router: Router,
     private gbtservice : GestionBajasTemporalesService,
-    private datePipe: DatePipe) { }
+    private datePipe: DatePipe,
+    private location: Location) { }
 
 
   ngOnInit() {
@@ -396,6 +397,10 @@ anular(event){
     }
   });
   this.updateBaja(array);
+}
+
+backTo() {
+  this.location.back();
 }
 
 guardar(event) {

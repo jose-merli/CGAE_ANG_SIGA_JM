@@ -15,6 +15,7 @@ import { procesos_oficio } from '../../../../permisos/procesos_oficio';
 import { TablaInscripcionesComponent } from './gestion-inscripciones/gestion-inscripciones.component';
 import { FiltrosInscripciones } from './filtros-inscripciones/filtros-inscripciones.component';
 import { InscripcionesItems } from '../../../../models/sjcs/InscripcionesItems';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-inscripciones',
@@ -46,7 +47,8 @@ export class InscripcionesComponent implements OnInit {
     private sigaServices: SigaServices,
     private commonsService: CommonsService,
     private persistenceService: PersistenceService,
-    private router: Router) { }
+    private router: Router,
+    private location: Location) { }
 
 
   ngOnInit() {
@@ -79,6 +81,9 @@ export class InscripcionesComponent implements OnInit {
   //   this.searchAreas();
   // }
 
+  backTo() {
+    this.location.back();
+  }
 
   searchPartidas(event) {
     this.filtros.filtroAux = new InscripcionesItems();
