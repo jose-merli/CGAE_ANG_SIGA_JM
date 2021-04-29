@@ -66,7 +66,7 @@ export class TarjetaDatosFactFichaActComponent implements OnInit, OnDestroy {
         let resp = JSON.parse(n.body).combooItems;
         if (resp.length > 0) {
           this.selector.value = resp[0].value;
-          this.changeDataEvent.emit({ tarjeta: 'sjcsDesigActuaOfiDatFac', partida: resp.label });
+          this.changeDataEvent.emit({ tarjeta: 'sjcsDesigActuaOfiDatFac', partida: resp[0].label });
           sessionStorage.setItem("datosIniActuDesignaDatosFact", JSON.stringify(resp[0]));
         }
       },
