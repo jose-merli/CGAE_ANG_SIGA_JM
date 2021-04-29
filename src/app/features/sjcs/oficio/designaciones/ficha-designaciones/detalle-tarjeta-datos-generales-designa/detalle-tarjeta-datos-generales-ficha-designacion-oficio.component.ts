@@ -332,6 +332,13 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
             },
             err => {
               console.log(err);
+                  summary = "No se han podido modificar los datos";
+                  this.msgs.push({
+                    severity,
+                    summary,
+                    detail
+                  });
+              console.log(err);
               this.progressSpinner = false;
             }, () => {
               this.progressSpinner = false;

@@ -4,8 +4,11 @@ import { truncate, truncateSync } from 'fs';
 import { ConfirmationService, Message } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../../../commons/translate/translation.service';
 import { ControlAccesoDto } from '../../../../../../models/ControlAccesoDto';
+import { SaltoCompItem } from '../../../../../../models/guardia/SaltoCompItem';
 import { ParametroDto } from '../../../../../../models/ParametroDto';
 import { ParametroRequestDto } from '../../../../../../models/ParametroRequestDto';
+import { ActuacionDesignaItem } from '../../../../../../models/sjcs/ActuacionDesignaItem';
+import { ActuacionDesignaObject } from '../../../../../../models/sjcs/ActuacionDesignaObject';
 import { DesignaItem } from '../../../../../../models/sjcs/DesignaItem';
 import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
 import { CommonsService } from '../../../../../../_services/commons.service';
@@ -26,12 +29,16 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
   searchParametrosFormatoNProcedimiento: ParametroDto = new ParametroDto();
   datosBuscar: any[];
   estado: any;
+  tieneLetradoAsignado: boolean = false;
+  actuacionesNoFacturada: ActuacionDesignaItem[] = [];
+  actuacionDesigna: ActuacionDesignaItem[] = [];
   disableFinalizar: boolean = false;
   disableAnular: boolean = false;
   disableReactivar: boolean = false;
   disableRestablecer:boolean = false;
   disableGuardar:boolean = false;
   refresh: any;
+  estadoAnterior: any;
   refreshProcedimiento: any;
   refreshModulo: any;
   initDelitos: any;
@@ -161,27 +168,31 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       this.datePickers[0].value = this.campos.fechaEstado;
       this.datePickers[1].value = this.campos.fechaFin;
       this.checkAcceso();
-      if(this.campos.estado = 'Activo'){
-        if(!this.esColegiado){
+      if(this.campos.estado == 'Activo'){
+        if(this.esColegiado){
           this.disableAnular = true;
+          this.disableFinalizar = true;
         }else{
-          this.disableAnular = false;
+          this.disableFinalizar = false;
+          if(this.ningunaActuacionesFacturada(this.campos)){
+            this.disableAnular = false;
+          }else{
+            this.disableAnular = true;
+          }
         }
-        this.disableFinalizar = true;
         this.disableReactivar = true;
-      }else if(this.campos.estado = 'Finalizado'){
-        if(!this.esColegiado){
-          this.disableAnular = true;
+      }else if(this.campos.estado == 'Finalizado'){
+        if(this.esColegiado){
           this.disableReactivar = true;
         }else{
-          this.disableAnular = false;
           this.disableReactivar = false;
         }
         this.disableFinalizar = true;
-      }else if(this.campos.estado = 'Anulada'){
+        this.disableAnular = true;
+      }else if(this.campos.estado == 'Anulada'){
         this.disableAnular = true;
         this.disableFinalizar = true;
-        if(!this.esColegiado){
+        if(this.esColegiado){
           this.disableReactivar = true;
         }else{
           this.disableReactivar = false;
@@ -306,9 +317,10 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         designaUpdate.fechaAnulacion = new Date();
         this.checkDesignaJuzgadoProcedimiento(designaUpdate);
       }else{
+        this.progressSpinner = false;
         let severity = "error";
           let summary = "No se ha podido guardar el detalle de la designación";
-          let detail = ""
+          let detail = "";
           this.msgs.push({
             severity,
             summary,
@@ -318,6 +330,10 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     } 
     //ANULAR
     if (detail == "Anular" ) {
+      this.progressSpinner = false;
+      designaUpdate.estado = "A";
+      designaUpdate.fechaAnulacion = null;
+      designaUpdate.fechaEstado = new Date();
       let mess = "Está seguro de querer Anular la designación. Las actuaciones asociadas también serán anuladas de forma automática.¿Desea continuar?";
       let icon = "fa fa-question-circle";
       let keyConfirmation = "confirmAnular";
@@ -326,10 +342,8 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         message: mess,
         icon: icon,
         accept: () => {
-          designaUpdate.estado = "A";
-          designaUpdate.fechaEstado = new Date();
-          designaUpdate.fechaAnulacion = null;
-          this.updateDetalle(designaUpdate);
+          this.progressSpinner = true;
+          this.tieneLetrado(this.campos, designaUpdate);
         },
         reject: () => {
           this.progressSpinner = false;
@@ -349,13 +363,16 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     if (detail == "Finalizar" ) {
       designaUpdate.estado = "F";
       designaUpdate.fechaAnulacion = null;
+      designaUpdate.fechaEstado = new Date();
       this.updateDetalle(designaUpdate);
     } 
     //REACTIVAR
     if (detail == "Reactivar") {
+      this.estadoAnterior = this.selectores[0].value[0];
       designaUpdate.estado = "V";
       designaUpdate.fechaEstado = new Date();
-          designaUpdate.fechaAnulacion = null;
+      designaUpdate.fechaAnulacion = null;
+      this.ningunaActuacionesFacturada(this.campos);
       this.updateDetalle(designaUpdate);
     }
      //RESTABLECER
@@ -637,6 +654,66 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
             detail
           });
           updateDetalle.ano = this.campos.ano;
+          this.selectores[0].value = [updateDetalle.estado];
+          this.datePickers[0].value = this.formatDate(updateDetalle.fechaEstado);
+          updateDetalle.nig = this.inputs[0].value;
+          updateDetalle.numProcedimiento = this.inputs[1].value;
+          let aux = this.selectores[1].value[0];
+          if(aux != null && aux != undefined && aux != ""){
+            this.selectores[1].opciones.forEach(el => {
+              if(el.value ==aux ){
+                updateDetalle.nombreJuzgado = el.label;
+              }
+          });
+          }
+          aux = this.selectores[2].value[0];
+          if(aux != null && aux != undefined && aux != ""){
+            this.selectores[2].opciones.forEach(el => {
+              if(el.value ==aux ){
+                updateDetalle.nombreProcedimiento = el.label;
+              }
+          });
+          } 
+          aux = this.selectores[3].value[0];
+           if(aux != null && aux != undefined && aux != ""){
+            this.selectores[3].opciones.forEach(el => {
+              if(el.value ==aux ){
+                updateDetalle.modulo = el.label;
+              }
+          });
+          }  
+          if(this.campos.estado == 'Activo'){
+            if(this.esColegiado){
+              this.disableAnular = true;
+              this.disableFinalizar = true;
+            }else{
+              this.disableFinalizar = false;
+              if(this.ningunaActuacionesFacturada(this.campos)){
+                this.disableAnular = false;
+              }else{
+                this.disableAnular = true;
+              }
+            }
+            this.disableReactivar = true;
+          }else if(this.campos.estado == 'Finalizado'){
+            if(this.esColegiado){
+              this.disableReactivar = true;
+            }else{
+              this.disableReactivar = false;
+            }
+            this.disableFinalizar = true;
+            this.disableAnular = true;
+          }else if(this.campos.estado == 'Anulada'){
+            this.disableAnular = true;
+            this.disableFinalizar = true;
+            if(this.esColegiado){
+              this.disableReactivar = true;
+            }else{
+              this.disableReactivar = false;
+            }
+          }
+          this.disableRestablecer = false;
+          updateDetalle.rol = [this.estadoAnterior];
           this.refreshData.emit(updateDetalle);
         },
         err => {
@@ -725,5 +802,168 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       this.progressSpinner = false;
     });;
  }
+
+ ningunaActuacionesFacturada(element): boolean{
+   let resultado: boolean = false;
+  const params = {
+    anio: element.factConvenio,
+    idTurno: element.idTurno,
+    numero: element.numero,
+    historico: false
+  };
+  this.progressSpinner = false;
+  this.sigaServices.post("actuaciones_designacion", params).subscribe(
+    data => {
+      let object: ActuacionDesignaObject = JSON.parse(data.body);
+      let resp = object.actuacionesDesignaItems;
+        let facturadas = 0;
+        resp.forEach(el => {
+          this.actuacionDesigna.push(el);
+          if (el.facturado) {
+            facturadas += 1;
+          }else if(!el.facturado){
+            this.actuacionesNoFacturada.push(el);
+          }
+        });
+        this.activarActuaciones(this.actuacionDesigna);
+        if(facturadas == 0){
+          resultado = true;
+        }else{
+          resultado = false;
+        }
+      },
+      err => {
+        resultado = false;
+        this.progressSpinner = false;
+        console.log(err);
+      }
+    );
+
+    return resultado;
+ }
+
+ tieneLetrado(element,designaUpdate) {
+  designaUpdate.estado = "A";
+  designaUpdate.fechaEstado = new Date();
+  designaUpdate.fechaAnulacion = null;
+  //Buscamos los letrados asociados a la designacion
+  this.progressSpinner = true;
+  let institucionActual;
+  let  resquestLetrado = [element.factConvenio, element.idTurno, element.numero];
+  this.sigaServices.post("designaciones_busquedaLetradosDesignacion", resquestLetrado).subscribe(
+    data => {
+      this.progressSpinner = false;
+      let letrados = JSON.parse(data.body);
+      if (letrados.length > 0) {
+        this.tieneLetradoAsignado = true;
+        let mess = "Si desea introducir una compensación al letrado designado pulse Aceptar, en caso contrario Cancelar";
+        let icon = "fa fa-question-circle";
+        let keyConfirmation = "confirmGuardarCompensacion";
+        this.confirmationService.confirm({
+          key: keyConfirmation,
+          message: mess,
+          icon: icon,
+          accept: () => {
+            let saltos = [];
+              let salto = new SaltoCompItem();
+              salto.fecha = this.formatDate(new Date());
+              salto.idPersona = element.idPersona;
+              salto.idTurno = element.idTurno;
+              salto.motivo = "";
+              salto.saltoCompensacion = "C";
+              saltos.push(salto);
+            this.sigaServices.post("saltosCompensacionesOficio_guardar", saltos).subscribe(
+              result => {
+  
+                const resp = JSON.parse(result.body);
+  
+                if (resp.status == 'KO' || (resp.error != undefined && resp.error != null)) {
+                  this.showMsg("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+                }
+  
+                if (resp.status == 'OK') {
+                  if(this.actuacionesNoFacturada.length > 0){
+                    this.eliminarActuacionesNoFacturadas(this.actuacionesNoFacturada, designaUpdate);
+                  }else{
+                  this.updateDetalle(designaUpdate);
+                  } 
+                }
+              },
+              error => {
+                this.showMsg("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+              }
+            );
+          },
+          reject: () => {
+            if(this.actuacionesNoFacturada.length > 0){
+              this.eliminarActuacionesNoFacturadas(this.actuacionesNoFacturada, designaUpdate);
+          }else{
+            this.updateDetalle(designaUpdate);
+          }
+          }
+        });
+      
+      }else{
+        if(this.actuacionesNoFacturada.length > 0){
+            this.eliminarActuacionesNoFacturadas(this.actuacionesNoFacturada, designaUpdate);
+        }else{
+          this.updateDetalle(designaUpdate);
+        }
+      }
+      
+    },
+    err => {
+        this.showMsg("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+      this.progressSpinner = false;
+    },
+    () => {
+      this.progressSpinner = false;
+    }
+  );
+}
+
+eliminarActuacionesNoFacturadas(actuacionesRequest, designaUpdate){
+  this.sigaServices.post("actuaciones_designacion_eliminar", actuacionesRequest).subscribe(
+    data => {
+      this.progressSpinner = false;
+      const resp = JSON.parse(data.body);
+
+      if (resp.status == 'OK') {
+        this.updateDetalle(designaUpdate);
+      }
+
+      if (resp.error != null && resp.error.descripcion != null) {
+
+        if (resp.error.code == '500') this.showMsg('error',  'Error', this.translateService.instant(resp.error.descripcion) );
+
+      }
+
+    },
+    err => {
+      this.progressSpinner = false;
+      console.log(err);
+    }
+  );
+}
+  activarActuaciones(actuacionesRequest) {
+    this.sigaServices.post("actuaciones_designacion_reactivar", actuacionesRequest).subscribe(
+      data => {
+        this.progressSpinner = false;
+        const resp = JSON.parse(data.body);
+
+        if (resp.status == 'OK') {
+        }
+
+        if (resp.error != null && resp.error.descripcion != null) {
+          this.showMsg('error', 'Error',  this.translateService.instant(resp.error.descripcion));
+        }
+
+      },
+      err => {
+        this.progressSpinner = false;
+        console.log(err);
+      }
+    );
+  }
 
 }

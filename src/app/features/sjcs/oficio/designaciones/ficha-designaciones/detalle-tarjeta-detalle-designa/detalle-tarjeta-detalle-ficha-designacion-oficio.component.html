@@ -36,6 +36,22 @@
   </p-footer>
 </p-confirmDialog>
 
+<p-confirmDialog  header="{{ 'general.cabecera.confirmacion' | translate}}" icon="icon"   key="confirmAnular" width="425" #confirmAnular>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="confirmAnular.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="confirmAnular.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+
+<p-confirmDialog  header="{{ 'general.cabecera.confirmacion' | translate}}" icon="icon"   key="confirmGuardarCompensacion" width="425" #confirmGuardarCompensacion>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Aceptar" (click)="confirmGuardarCompensacion.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="Cancelar" (click)="confirmGuardarCompensacion.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+
 <div class="card-footer">
   <div class="text-right main-button">
     <button pButton type="button" icon="" iconPos="left" label="Finalizar" [disabled] ="disableFinalizar"
