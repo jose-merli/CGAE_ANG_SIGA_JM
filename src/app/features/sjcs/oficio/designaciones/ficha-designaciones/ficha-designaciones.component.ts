@@ -34,6 +34,7 @@ export class FichaDesignacionesComponent implements OnInit {
   comunicaciones: any;
   isLetrado: boolean = false;
   usuarioLogado;
+  nombreInteresado = "";
 
   esColegiado: boolean = false;
 
@@ -248,6 +249,7 @@ export class FichaDesignacionesComponent implements OnInit {
       this.listaTarjetas[0].opened = true;
     }
     if (!this.nuevaDesigna) {
+      
       //EDICIÓN DESIGNA
       let camposResumen = [
         {
@@ -264,7 +266,7 @@ export class FichaDesignacionesComponent implements OnInit {
         },
         {
           "key": "Interesado",
-          "value": designaItem.nombreInteresado
+          "value": this.nombreInteresado
         },
         {
           "key": "Número Actuaciones",
@@ -355,7 +357,7 @@ export class FichaDesignacionesComponent implements OnInit {
           ref: null,
           nombre: this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.vacio')
       }] */
-      //Actualizar para que los campos se rellenen en base a la tabla de la tarjeta interesados
+      //Actualizar para que las tarjetas se rellenen
       this.searchInteresados();
       this.searchContrarios(false);
       this.searchRelaciones();
@@ -1035,9 +1037,9 @@ export class FichaDesignacionesComponent implements OnInit {
     let data = sessionStorage.getItem("designaItemLink");
     let designaItem = JSON.parse(data);
 
+    if(designaItem.idTurno!=null){
+
     let item = [designaItem.idTurno.toString(), designaItem.nombreTurno, designaItem.numero.toString(), designaItem.ano];
-    /* ano: "D2021/4330"
-nombreTurno: "ZELIMINAR-CIJAECI05 - MATRIMONIAL CONTENCIOSO JAÉN" */
 
     this.sigaServices.post("designaciones_listaInteresados", item).subscribe(
       n => {
@@ -1063,6 +1065,8 @@ nombreTurno: "ZELIMINAR-CIJAECI05 - MATRIMONIAL CONTENCIOSO JAÉN" */
             "key": null,
             "value": this.translateService.instant('justiciaGratuita.oficio.designas.interesados.vacio')
           },]
+          this.tarjetaFija.campos[3].value="";
+          this.nombreInteresado="";
         }
 
         else {
@@ -1088,6 +1092,8 @@ nombreTurno: "ZELIMINAR-CIJAECI05 - MATRIMONIAL CONTENCIOSO JAÉN" */
               "value": this.interesados.length
             }
           ]
+          this.tarjetaFija.campos[3].value=primero.apellidosnombre;
+          this.nombreInteresado=primero.apellidosnombre;
         }
         if (this.tarjetaInteresados != undefined) {
           this.tarjetaInteresados.tabla.sortOrder = 0;
@@ -1100,7 +1106,7 @@ nombreTurno: "ZELIMINAR-CIJAECI05 - MATRIMONIAL CONTENCIOSO JAÉN" */
         console.log(err);
       }
     );
-
+    }
   }
 
   searchRelaciones() {
@@ -1306,7 +1312,7 @@ nombreTurno: "ZELIMINAR-CIJAECI05 - MATRIMONIAL CONTENCIOSO JAÉN" */
       },
       {
         "key": "Interesado",
-        "value": event.nombreInteresado
+        "value": this.nombreInteresado
       },
       {
         "key": "Número Actuaciones",
@@ -1439,7 +1445,7 @@ nombreTurno: "ZELIMINAR-CIJAECI05 - MATRIMONIAL CONTENCIOSO JAÉN" */
           },
           {
             "key": "Interesado",
-            "value": this.refreshDesigna.nombreInteresado
+            "value": this.nombreInteresado
           },
           {
             "key": "Número Actuaciones",
@@ -1618,7 +1624,7 @@ changeDataTarjeta(event) {​​​​​
       },
       {
         "key": "Interesado",
-        "value": designaItem.nombreInteresado
+        "value": this.nombreInteresado
       },
       {
         "key": "Número Actuaciones",

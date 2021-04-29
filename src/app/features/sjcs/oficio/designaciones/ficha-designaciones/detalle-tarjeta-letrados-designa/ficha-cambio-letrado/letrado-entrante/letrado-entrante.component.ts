@@ -14,7 +14,7 @@ import { CamposCambioLetradoItem } from '../../../../../../../../models/sjcs/Cam
 export class LetradoEntranteComponent implements OnInit {
 
   msgs: Message[] = [];
-  body= new CamposCambioLetradoItem();
+  body;
   datos;
   showTarjeta=true;
   progressSpinner = false;
@@ -34,6 +34,7 @@ export class LetradoEntranteComponent implements OnInit {
 			this.body.numColegiado = data.numeroColegiado;
 			this.body.nombre = data.nombre;
 			this.body.apellidos = data.apellidos1 + " " + data.apellidos2;
+      this.body.idPersona = data.idPersona;
 		}
 
     let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
