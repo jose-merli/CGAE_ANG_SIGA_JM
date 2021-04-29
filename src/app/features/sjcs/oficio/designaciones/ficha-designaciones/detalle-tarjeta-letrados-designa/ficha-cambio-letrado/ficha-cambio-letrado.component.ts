@@ -10,6 +10,7 @@ import { LetradoEntranteComponent } from "./letrado-entrante/letrado-entrante.co
 import { LetradoSalienteComponent } from "./letrado-saliente/letrado-saliente.component";
 import { ConfirmationService } from '../../../../../../../../../node_modules/primeng/primeng';
 import { CamposCambioLetradoItem } from '../../../../../../../models/sjcs/CamposCambioLetradoItem';
+import { SaltoCompItem } from '../../../../../../../models/guardia/SaltoCompItem';
 
 @Component({
   selector: 'app-ficha-cambio-letrado',
@@ -43,7 +44,8 @@ export class FichaCambioLetradoComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
     private sigaServices: SigaServices,
-    private router: Router) { }
+    private router: Router,
+    private datepipe: DatePipe) { }
 
   ngOnInit() {
 
@@ -123,33 +125,33 @@ export class FichaCambioLetradoComponent implements OnInit {
     //Campos obligatorios rellenados?
     if (this.entrante.body.fechaDesignacion != null || this.entrante.body.fechaDesignacion != undefined ||
       this.saliente.body.motivoRenuncia != undefined || this.saliente.body.motivoRenuncia != null) {
-        //Comprobar requisitos según art 27
-        if ((this.entrante.body.numColegiado == undefined || this.entrante.body.numColegiado == "") && this.entrante.body.art27 == false) {
-          this.confirmationService.confirm({
-            key: "deletePlantillaDoc",
-            message: "Se va a seleccionar un letrado automáticamente. ¿Desea continuar?",
-            icon: "fa fa-save",
-            accept: () => {
-              this.save();
-            },
-            reject: () => {
-              this.msgs = [
-                {
-                  severity: "info",
-                  summary: "Cancel",
-                  detail: this.translateService.instant(
-                    "general.message.accion.cancelada"
-                  )
-                }
-              ];
-  
-            }
-          });
-        }
-        else if((this.entrante.body.numColegiado != undefined && this.entrante.body.numColegiado != "") && this.entrante.body.art27 == true){
-          this.save()
-        }
-        else this.showMessage("error", "Cancel", this.translateService.instant("general.message.camposObligatorios"))
+      //Comprobar requisitos según art 27
+      if ((this.entrante.body.numColegiado == undefined || this.entrante.body.numColegiado == "") && this.entrante.body.art27 == false) {
+        this.confirmationService.confirm({
+          key: "deletePlantillaDoc",
+          message: "Se va a seleccionar un letrado automáticamente. ¿Desea continuar?",
+          icon: "fa fa-save",
+          accept: () => {
+            this.save();
+          },
+          reject: () => {
+            this.msgs = [
+              {
+                severity: "info",
+                summary: "Cancel",
+                detail: this.translateService.instant(
+                  "general.message.accion.cancelada"
+                )
+              }
+            ];
+
+          }
+        });
+      }
+      else if ((this.entrante.body.numColegiado != undefined && this.entrante.body.numColegiado != "") && this.entrante.body.art27 == true) {
+        this.save()
+      }
+      else this.showMessage("error", "Cancel", this.translateService.instant("general.message.camposObligatorios"))
     }
     else {
       this.showMessage("error", "Cancel", this.translateService.instant("general.message.camposObligatorios"))
@@ -172,6 +174,13 @@ export class FichaCambioLetradoComponent implements OnInit {
 
     let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
 
+    if (this.saliente.body.compensacion) {
+      this.compensacion();
+    }
+
+    if (this.entrante.body.salto) {
+      this.salto();
+    }
 
 
     let request = [designa.ano, designa.idTurno, designa.numero,
@@ -204,6 +213,62 @@ export class FichaCambioLetradoComponent implements OnInit {
       }
     );
     this.progressSpinner = false;
+  }
+
+  compensacion() {
+    let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
+
+    let salto = new SaltoCompItem();
+
+    salto.fecha = this.formatDate(new Date());
+    salto.idPersona = this.body.idPersona;
+    salto.idTurno = designa.idTurno;
+    salto.motivo = "";
+    salto.saltoCompensacion = "C";
+    this.sigaServices.post("saltosCompensacionesOficio_guardar", salto).subscribe(
+      result => {
+
+        const resp = JSON.parse(result.body);
+
+        if (resp.status == 'KO' || (resp.error != undefined && resp.error != null)) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        }
+
+      },
+      error => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
+  }
+
+  salto() {
+    let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
+
+    let salto = new SaltoCompItem();
+
+    salto.fecha = this.formatDate(new Date());
+    salto.idPersona = this.body.idPersona;
+    salto.idTurno = designa.idTurno;
+    salto.motivo = "";
+    salto.saltoCompensacion = "S";
+    this.sigaServices.post("saltosCompensacionesOficio_guardar", salto).subscribe(
+      result => {
+
+        const resp = JSON.parse(result.body);
+
+        if (resp.status == 'KO' || (resp.error != undefined && resp.error != null)) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        }
+
+      },
+      error => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
+  }
+  formatDate(date) {
+    const pattern = 'dd/MM/yyyy';
+    return this.datepipe.transform(date, pattern);
   }
 
   showMessage(severity, summary, msg) {

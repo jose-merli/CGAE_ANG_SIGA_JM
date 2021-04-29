@@ -34,6 +34,7 @@ export class FichaDesignacionesComponent implements OnInit {
   comunicaciones: any;
   isLetrado: boolean = false;
   usuarioLogado;
+  nombreInteresado = "";
 
   esColegiado: boolean = false;
 
@@ -248,6 +249,7 @@ export class FichaDesignacionesComponent implements OnInit {
       this.listaTarjetas[0].opened = true;
     }
     if (!this.nuevaDesigna) {
+      
       //EDICIÓN DESIGNA
       let camposResumen = [
         {
@@ -264,7 +266,7 @@ export class FichaDesignacionesComponent implements OnInit {
         },
         {
           "key": "Interesado",
-          "value": designaItem.nombreInteresado
+          "value": this.nombreInteresado
         },
         {
           "key": "Número Actuaciones",
@@ -355,7 +357,7 @@ export class FichaDesignacionesComponent implements OnInit {
           ref: null,
           nombre: this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.vacio')
       }] */
-      //Actualizar para que los campos se rellenen en base a la tabla de la tarjeta interesados
+      //Actualizar para que las tarjetas se rellenen
       this.searchInteresados();
       this.searchContrarios(false);
       this.searchRelaciones();
@@ -1063,6 +1065,8 @@ export class FichaDesignacionesComponent implements OnInit {
             "key": null,
             "value": this.translateService.instant('justiciaGratuita.oficio.designas.interesados.vacio')
           },]
+          this.tarjetaFija.campos[3].value="";
+          this.nombreInteresado="";
         }
 
         else {
@@ -1088,6 +1092,8 @@ export class FichaDesignacionesComponent implements OnInit {
               "value": this.interesados.length
             }
           ]
+          this.tarjetaFija.campos[3].value=primero.apellidosnombre;
+          this.nombreInteresado=primero.apellidosnombre;
         }
         if (this.tarjetaInteresados != undefined) {
           this.tarjetaInteresados.tabla.sortOrder = 0;
@@ -1295,7 +1301,7 @@ export class FichaDesignacionesComponent implements OnInit {
       },
       {
         "key": "Interesado",
-        "value": event.nombreInteresado
+        "value": this.nombreInteresado
       },
       {
         "key": "Número Actuaciones",
@@ -1425,7 +1431,7 @@ export class FichaDesignacionesComponent implements OnInit {
           },
           {
             "key": "Interesado",
-            "value": this.refreshDesigna.nombreInteresado
+            "value": this.nombreInteresado
           },
           {
             "key": "Número Actuaciones",
@@ -1566,6 +1572,7 @@ changeDataTarjeta(event) {​​​​​
     this.progressSpinner = true;
     let designaItem = this.campos;
     this.motivosRenuncia();
+    
 
     if (sessionStorage.getItem("nuevoProcurador")) {
       this.listaTarjetas[5].opened = true;
@@ -1595,7 +1602,7 @@ changeDataTarjeta(event) {​​​​​
       },
       {
         "key": "Interesado",
-        "value": designaItem.nombreInteresado
+        "value": this.nombreInteresado
       },
       {
         "key": "Número Actuaciones",
