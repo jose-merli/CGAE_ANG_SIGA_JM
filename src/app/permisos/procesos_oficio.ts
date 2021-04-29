@@ -1,6 +1,8 @@
 export const procesos_oficio: any = {
     turnos: "913",
     colaDeOficio: "91M",
+    configuracionColaOficio: "91N",
+    configuracionTurnos: "91S",
     datosGenerales: "91Z",
     tarjetaGuardia: "91L",
     colaDeGuardia: "916",

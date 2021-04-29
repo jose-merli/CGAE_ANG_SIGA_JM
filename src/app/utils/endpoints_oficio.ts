@@ -102,7 +102,7 @@ export let endpoints_oficio: any = {
     actuaciones_designacion_anular: "oficio/designas/anularActDesigna",
     actuaciones_designacion_reactivar: "oficio/designas/reactivarActDesigna",
     actuaciones_designacion_eliminar: "oficio/designas/eliminarActDesigna",
-    actuaciones_designacion_guardar: "oficio/designas/guardarActDesigna",
+    actuaciones_designacion_guardar: "oficio/designas/guardarNewActDesigna",
     actuaciones_designacion_validar: "oficio/designas/validarActDesigna",
     actuaciones_designacion_desvalidar: "oficio/designas/desvalidarActDesigna",
     actuaciones_designacion_updateJustiActDesigna: "oficio/designas/updateJustiActDesigna",
@@ -125,6 +125,7 @@ export let endpoints_oficio: any = {
     designaciones_busquedaNueva:"oficio/busquedaNuevaDesigna",
     designacionesBusquedaComunicaciones: "oficio/designas/busquedaComunicaciones",
     designaciones_updateLetradoDesignacion:"oficio/designas/updateLetradoDesigna",
+    designaciones_updateDatosFacturacion: "oficio/designas/updatePartidaPresupuestaria",
 
     //SALTOS Y COMPENSACIONES
     saltosCompensacionesOficio_buscar: "oficio/saltosCompensaciones/buscarSaltosOCompensaciones",
@@ -132,4 +133,8 @@ export let endpoints_oficio: any = {
     saltosCompensacionesOficio_anular: "oficio/saltosCompensaciones/anularSaltosCompensaciones",
     saltosCompensacionesOficio_borrar: "oficio/saltosCompensaciones/borrarSaltosCompensaciones",
     saltosCompensacionesOficio_comboColegiados: "oficio/saltosCompensaciones/searchLetradosTurno",
+
+
+
+    designaciones_existeDesignaJuzgadoProcedimiento:"oficio/designas/existeDesginaJuzgadoProcedimiento"
 }

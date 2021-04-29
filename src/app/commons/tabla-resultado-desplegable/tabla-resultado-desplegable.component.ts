@@ -54,9 +54,6 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   totalRegistros = 0;
 
   @Input() comboAcreditacionesPorModulo: any [];
-  //@Input() comboJuzgadosPorInstitucion: any [];
-
-  //@Output() cargaJuzgadosPorInstitucion = new EventEmitter<String>();
   @Output() cargaModulosPorJuzgado = new EventEmitter<String>();
   @Output() cargaAcreditacionesPorModulo = new EventEmitter<String>();
 
@@ -611,6 +608,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           this.newActuacionesArr.push(row);
         }
       })
+      
       if (rowGroupFound == true){
         rowGroup.rows.forEach(row =>{
         row.position = 'noCollapse';
@@ -619,8 +617,11 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       rowGroupFound = false;
     });
   }
-  toDoButton(type, designacion, rowWrapper){
+  toDoButton(type, designacion, rowGroup, rowWrapper){
+
     if (type == 'Nuevo'){
+      let desig = rowGroup.rows[0].cells;
+      console.log('desig: ', desig)
       this.comboModulos = [];
       this.comboAcreditacion = [];
       this.rowGroups.forEach((rowGroup,i) => {
@@ -636,6 +637,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             { type: 'datePicker', value: '' , size: 153, combo: null},
             { type: 'multiselect3', value: 'Seleccione un modulo' , size: 153, combo: this.comboAcreditacion},
             { type: 'checkbox', value: false, size: 50 , combo: null},
+            { type: 'invisible', value:  desig[19].value , size: 0, combo: null},//numDesig
             { type: 'invisible', value:  '' , size: 0, combo: null},
             { type: 'invisible', value:  '' , size: 0, combo: null},
             { type: 'invisible', value:  '' , size: 0, combo: null},
@@ -658,11 +660,10 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             { type: 'invisible', value:  '' , size: 0, combo: null},
             { type: 'invisible', value:  '' , size: 0, combo: null},
             { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  desig[9].value , size: 0, combo: null},//anio
+            { type: 'invisible', value:  desig[17].value, size: 0, combo: null},//idturno
             { type: 'invisible', value:  '' , size: 0, combo: null},];
-          
+          console.log('newArrayCells: ', newArrayCells)
           let newRow: Row = {cells: newArrayCells, position: 'noCollapse'};
           rowGroup.rows.push(newRow);
          
@@ -686,6 +687,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     //1. Guardar nuevos
     if (this.newActuacionesArr != []){
     this.newActuacionesArr.forEach( newAct => {
+      console.log('newAct: ', newAct)
       this.actuacionToAdd.emit(newAct);
       this.totalActuaciones.emit(this.newActuacionesArr.length);
     });

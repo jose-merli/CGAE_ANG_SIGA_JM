@@ -19,7 +19,7 @@ export class TarjetaJusFichaActComponent implements OnInit, OnDestroy {
   @Output() changeDataEvent = new EventEmitter<any>();
   @Output() buscarActuacionEvent = new EventEmitter<any>();
   @Input() actuacionDesigna: Actuacion;
-  @Input() permisoEscritura;
+  @Input() isColegiado;
   @Input() usuarioLogado;
 
   fechaActuacion: Date;
@@ -134,7 +134,7 @@ export class TarjetaJusFichaActComponent implements OnInit, OnDestroy {
     //this.fechaJusti = this.actuacionDesigna.actuacion.fechaJustificacion;
     this.observaciones = this.actuacionDesigna.actuacion.observacionesJusti;
 
-    if (!this.permisoEscritura) {
+    if (!this.isColegiado) {
       this.fechaJusti = this.datePipe.transform(new Date(), 'dd/MM/yyyy');
     } else {
       this.fechaJusti = '';

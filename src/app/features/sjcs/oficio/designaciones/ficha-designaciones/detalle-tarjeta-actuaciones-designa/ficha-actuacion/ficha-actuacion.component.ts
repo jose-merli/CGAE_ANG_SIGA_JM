@@ -142,11 +142,11 @@ export class FichaActuacionComponent implements OnInit {
   isNewActDesig: boolean = false;
   progressSpinner: boolean = false;
   isAnulada: boolean = false;
-  permisoEscritura;
   usuarioLogado;
   listaAcciones: AccionItem[] = [];
   msgs: Message[] = [];
   relaciones: any;
+  isColegiado;
 
   constructor(private location: Location,
     private sigaServices: SigaServices,
@@ -156,6 +156,11 @@ export class FichaActuacionComponent implements OnInit {
     private datePipe: DatePipe) { }
 
   ngOnInit() {
+
+    this.isColegiado = sessionStorage.getItem('isLetrado') == 'true';
+    if (this.isColegiado) {
+      this.getDataLoggedUser();
+    }
 
     this.getInstitucionActual();
 
@@ -193,28 +198,6 @@ export class FichaActuacionComponent implements OnInit {
         this.getIdPartidaPresupuestaria();
         this.getAccionesActuacion();
       }
-
-      this.progressSpinner = true;
-      this.commonsService.checkAcceso(procesos_oficio.designa)
-        .then(respuesta => {
-          this.permisoEscritura = respuesta;
-
-          if (this.permisoEscritura == undefined) {
-            sessionStorage.setItem("codError", "403");
-            sessionStorage.setItem(
-              "descError",
-              this.translateService.instant("generico.error.permiso.denegado")
-            );
-            this.router.navigate(["/errorAcceso"]);
-          }
-          this.progressSpinner = false;
-          if (!this.permisoEscritura) {
-            this.getDataLoggedUser();
-          }
-
-        })
-        .catch(error => console.error(error));
-
     }
 
   }
