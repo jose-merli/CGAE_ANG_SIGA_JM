@@ -34,7 +34,7 @@ export class FichaDesignacionesComponent implements OnInit {
   comunicaciones: any;
   isLetrado: boolean = false;
   usuarioLogado;
-  nombreInteresado = "";
+  nombreInteresado = this.translateService.instant('justiciaGratuita.oficio.designas.interesados.vacio');
 
   esColegiado: boolean = false;
 
@@ -404,7 +404,7 @@ export class FichaDesignacionesComponent implements OnInit {
         },
         {
           "key": "Interesado",
-          "value": ""
+          "value": this.translateService.instant('justiciaGratuita.oficio.designas.interesados.vacio')
         },
         {
           "key": "Número Actuaciones",
@@ -1065,8 +1065,8 @@ export class FichaDesignacionesComponent implements OnInit {
             "key": null,
             "value": this.translateService.instant('justiciaGratuita.oficio.designas.interesados.vacio')
           },]
-          this.tarjetaFija.campos[3].value="";
-          this.nombreInteresado="";
+          this.tarjetaFija.campos[3].value=this.translateService.instant('justiciaGratuita.oficio.designas.interesados.vacio');
+          this.nombreInteresado=this.translateService.instant('justiciaGratuita.oficio.designas.interesados.vacio');
         }
 
         else {

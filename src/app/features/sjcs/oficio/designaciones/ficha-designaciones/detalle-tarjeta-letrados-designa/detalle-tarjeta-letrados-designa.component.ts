@@ -54,8 +54,8 @@ export class DetalleTarjetaLetradosDesignaComponent implements OnInit {
     this.datos=this.letrados;
     this.datos.forEach(element => {
       element.fechaDesignacion = this.datepipe.transform(element.fechaDesignacion, 'dd/MM/yyyy');
-      if(element.fechaEfecRenuncia!=null) this.datepipe.transform(element.fechaEfecRenuncia, 'dd/MM/yyyy');
-      if(element.fechaEfecRenuncia!=null) this.datepipe.transform(element.fechaEfecRenuncia, 'dd/MM/yyyy');
+      if(element.fechaEfecRenuncia!=null) element.fechaEfecRenuncia = this.datepipe.transform(element.fechaEfecRenuncia, 'dd/MM/yyyy');
+      if(element.fechaSolRenuncia!=null) element.fechaSolRenuncia = this.datepipe.transform(element.fechaSolRenuncia, 'dd/MM/yyyy');
     });
     
     

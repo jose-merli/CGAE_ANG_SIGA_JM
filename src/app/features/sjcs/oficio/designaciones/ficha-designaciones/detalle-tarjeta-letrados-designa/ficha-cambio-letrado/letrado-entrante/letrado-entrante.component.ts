@@ -18,7 +18,6 @@ export class LetradoEntranteComponent implements OnInit {
   datos;
   showTarjeta=true;
   progressSpinner = false;
-  disableFechaDesignacion=false;
 
   @Input() saliente;
 
@@ -38,20 +37,15 @@ export class LetradoEntranteComponent implements OnInit {
 		}
 
     let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
-    if(designa.art27!="No") this.incluirArt();
+    if(designa.art27=="Si") {
+      this.body.art27=true;
+      this.body.fechaDesignacion = this.saliente.fechaDesignacion;
+    }
 
   }
 
 
   incluirSalto(){
-  }
-
-  incluirArt(){
-    if(this.body.art27){
-      this.body.fechaDesignacion = this.saliente.fechaDesignacion;
-      this.disableFechaDesignacion=true;
-    }
-    else  this.disableFechaDesignacion=false;
   }
 
   changeMotivo(event){

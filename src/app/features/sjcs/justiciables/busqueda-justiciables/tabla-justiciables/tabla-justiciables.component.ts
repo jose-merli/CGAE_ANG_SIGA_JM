@@ -125,7 +125,7 @@ export class TablaJusticiablesComponent implements OnInit {
     else{
       //Comprobamos que el justiciable no esta ya en la designacion
       interesados.forEach(element => {
-        if(element.idPersona == justiciable.idPersona) exist = true;
+        if(element.idPersona == justiciable.idpersona) exist = true;
       });
     }
 
@@ -168,7 +168,7 @@ export class TablaJusticiablesComponent implements OnInit {
     else{
       //Comprobamos que el justiciable no esta ya en la designacion
       contrarios.forEach(element => {
-        if(element.idPersona == justiciable.idPersona) exist = true;
+        if(element.idPersona == justiciable.idpersona) exist = true;
       });
     }
 
