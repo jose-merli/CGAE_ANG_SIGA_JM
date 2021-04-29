@@ -1571,7 +1571,6 @@ changeDataTarjeta(event) {​​​​​
     this.campos = event;
     this.progressSpinner = true;
     let designaItem = this.campos;
-    this.motivosRenuncia();
 
     if (sessionStorage.getItem("nuevoProcurador")) {
       this.listaTarjetas[5].opened = true;
