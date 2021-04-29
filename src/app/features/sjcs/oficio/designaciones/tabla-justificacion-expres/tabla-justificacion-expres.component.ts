@@ -139,9 +139,9 @@ export class TablaJustificacionExpresComponent implements OnInit {
   cargaAcreditacionesPorModulo($event){
     this.progressSpinner = true;
 
-    this.sigaServices.post("combo_comboAcreditacionesPorModulo", $event).subscribe(
+    this.sigaServices.getParam("combo_comboAcreditacionesPorModulo", `?idModulo=${$event[0]}&idTurno=${$event[1]}`).subscribe(
       n => {
-        this.comboAcreditacionesPorModulo = JSON.parse(n.body).combooItems;
+        this.comboAcreditacionesPorModulo = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboAcreditacionesPorModulo);
         this.progressSpinner = false;
       },
