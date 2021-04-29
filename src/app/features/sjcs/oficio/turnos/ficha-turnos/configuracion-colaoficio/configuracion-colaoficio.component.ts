@@ -133,7 +133,7 @@ export class ConfiguracionColaOficioComponent implements OnInit {
     if (this.persistenceService.getPermisos() != true) {
       this.disableAll = true;
     }
-    this.commonsService.checkAcceso(procesos_oficio.datosGenerales)
+    this.commonsService.checkAcceso(procesos_oficio.configuracionColaOficio)
       .then(respuesta => {
         this.permisosTarjeta = respuesta;
         if (this.permisosTarjeta != true) {

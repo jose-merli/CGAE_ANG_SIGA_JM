@@ -1,5 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import { truncate, truncateSync } from 'fs';
 import { ConfirmationService, Message } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../../../commons/translate/translation.service';
 import { ControlAccesoDto } from '../../../../../../models/ControlAccesoDto';
@@ -255,6 +256,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
   }
 
   showMsg(severity, summary, detail) {
+    this.progressSpinner = true;
     this.msgs = [];
     let designaUpdate = new DesignaItem();
     let anio = this.campos.ano.split("/");
@@ -265,7 +267,6 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     designaUpdate.numColegiado = this.campos.numColegiado;
     designaUpdate.validada = this.campos.validada;
     //Guardar
-    // if (detail == "Guardar" && this.validarNig(this.inputs[0].value) && this.validarNProcedimiento(this.inputs[1].value)) {
       if (detail == "Guardar") {
       designaUpdate.estado = "";
       let validaNIG = true;
@@ -280,18 +281,11 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         designaUpdate.fechaEstado = null;
       }else{
         designaUpdate.fechaEstado = new Date(this.datePickers[0].value);
-        // designaUpdate.fechaEstado = new Date(this.datePickers[0].value);
       }
       if(this.datePickers[1].value == null){
         designaUpdate.fechaFin = null;
       }else{
-        let fechaCambiada = this.datePickers[1].value.split("/");
-        let dia = fechaCambiada[0];
-        let mes = fechaCambiada[1];
-        let anioFecha = fechaCambiada[2];
-        let fechaCambiadaActual = mes + "/" + dia + "/" + anioFecha;
-        designaUpdate.fechaFin = new Date(fechaCambiadaActual);
-        // designaUpdate.fechaFin = new Date(this.datePickers[1].value);
+        designaUpdate.fechaFin = new Date(this.datePickers[1].value);
       }
       
       if(this.selectores[0].value[0] =="Finalizada"){
@@ -338,6 +332,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
           this.updateDetalle(designaUpdate);
         },
         reject: () => {
+          this.progressSpinner = false;
           this.msgs = [
             {
               severity: "info",
@@ -418,112 +413,137 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
   }
 
   getComboJuzgados() {
-
+    this.progressSpinner = true;
     this.sigaServices.get("combo_comboJuzgadoDesignaciones").subscribe(
       n => {
         this.selectores[1].opciones = n.combooItems;
+        this.progressSpinner=false;
       },
       err => {
         console.log(err);
+        this.progressSpinner=false;
       }, () => {
         this.arregloTildesCombo(this.selectores[1].opciones);
+        this.progressSpinner=false;
       }
     );
   }
 
   getComboProcedimientos() {
-
+    this.progressSpinner=true;
     this.sigaServices.get("combo_comboProcedimientosDesignaciones").subscribe(
       n => {
         this.selectores[2].opciones = n.combooItems;
+        this.progressSpinner=false;
       },
       err => {
         console.log(err);
+        this.progressSpinner=false;
       }, () => {
         this.arregloTildesCombo(this.selectores[2].opciones);
+        this.progressSpinner=false;
       }
     );
   }
 
   getComboModulos() {
-
+    this.progressSpinner=true;
     this.sigaServices.get("combo_comboModulosDesignaciones").subscribe(
       n => {
         this.selectores[3].opciones = n.combooItems;
+        this.progressSpinner=false;
       },
       err => {
         console.log(err);
+        this.progressSpinner=false;
       }, () => {
         this.arregloTildesCombo(this.selectores[3].opciones);
+        this.progressSpinner=false;
       }
     );
   }
 
   getComboDelitos() {
-
+    this.progressSpinner=true;
     this.sigaServices.get("combo_comboDelitos").subscribe(
       n => {
         this.delitosOpciones = n.combooItems;
+        this.progressSpinner=false;
       },
       err => {
         console.log(err);
+        this.progressSpinner=false;
       }, () => {
         this.arregloTildesCombo(this.delitosOpciones);
+        this.progressSpinner=false;
       }
     );
   }
 
   getComboProcedimientosConJuzgado(idJuzgado) {
+    this.progressSpinner=true;
     this.sigaServices.post("combo_comboProcedimientosConJuzgado", idJuzgado).subscribe(
       n => {
         this.selectores[2].opciones = JSON.parse(n.body).combooItems;
+        this.progressSpinner=false;
       },
       err => {
         console.log(err);
+        this.progressSpinner=false;
       }, () => {
         this.arregloTildesCombo(this.selectores[2].opciones);
+        this.progressSpinner=false;
       }
     );
   }
 
   getComboProcedimientosConModulo(idProcedimiento) {
-
+    this.progressSpinner=true;
     this.sigaServices.post("combo_comboProcedimientosConModulo", idProcedimiento).subscribe(
       n => {
         this.selectores[2].opciones = JSON.parse(n.body).combooItems;
+        this.progressSpinner=false;
       },
       err => {
         console.log(err);
+        this.progressSpinner=false;
       }, () => {
         this.arregloTildesCombo(this.selectores[2].opciones);
+        this.progressSpinner=false;
       }
     );
   }
 
   getComboModulosConJuzgado(idJuzgado) {
-
+    this.progressSpinner=true;
     this.sigaServices.post("combo_comboModulosConJuzgado", idJuzgado).subscribe(
       n => {
         this.selectores[3].opciones = JSON.parse(n.body).combooItems;
+        this.progressSpinner=false;
       },
       err => {
         console.log(err);
+        this.progressSpinner=false;
       }, () => {
         this.arregloTildesCombo(this.selectores[3].opciones);
+        this.progressSpinner=false;
       }
     );
   }
 
   getcCmboModulosConProcedimientos(idPretension) {
-
+    this.progressSpinner=true;
     this.sigaServices.post("combo_comboModulosConProcedimientos", idPretension).subscribe(
       n => {
         this.selectores[3].opciones = JSON.parse(n.body).combooItems;
+        this.progressSpinner=false;
       },
       err => {
         console.log(err);
+        this.progressSpinner=false;
       }, () => {
         this.arregloTildesCombo(this.selectores[3].opciones);
+        this.progressSpinner=false;
       }
     );
   }
@@ -603,6 +623,9 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
 
   updateDetalle(updateDetalle){
     this.progressSpinner = true;
+    if(updateDetalle.idPretension == 0){
+      updateDetalle.idPretension = null;
+    }
     this.sigaServices.post("designaciones_updateDetalleDesignacion", updateDetalle).subscribe(
         n => {
           let severity = "success";
@@ -662,9 +685,9 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
  }
 
  checkDesignaJuzgadoProcedimiento(designaItem){
-   this.progressSpinner = true;
   this.sigaServices.post("designaciones_existeDesignaJuzgadoProcedimiento", designaItem).subscribe(
     n => {
+      this.progressSpinner = false;
       if(JSON.parse(n.body).existeDesignaJuzgadoProcedimiento>0){
         let mess = "Atención: Ya existe una designación con el mismo número de prodecimiento y juzgado.¿Desea continuar?";
         let icon = "fa fa-question-circle";
@@ -674,9 +697,11 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
           message: mess,
           icon: icon,
           accept: () => {
+            this.progressSpinner = true;
             this.updateDetalle(designaItem);
           },
           reject: () => {
+            this.progressSpinner = false;
             this.msgs = [
               {
                 severity: "info",
