@@ -477,7 +477,7 @@ export class FichaDesignacionesComponent implements OnInit {
       this.listaTarjetas[2].campos = datosAdicionales;
       this.listaTarjetas[3].campos = interesadosVacio;
       this.listaTarjetas[4].campos = contrariosVacio;
-      this.listaTarjetas[12].campos = datosFacturacion;
+      this.listaTarjetas[11].campos = datosFacturacion;
       this.listaTarjetas[0].opened = true;
       this.listaTarjetas[1].detalle = false;
       this.listaTarjetas[2].detalle = false;
@@ -1239,7 +1239,7 @@ nombreTurno: "ZELIMINAR-CIJAECI05 - MATRIMONIAL CONTENCIOSO JAÉN" */
             "value": a.combooItems[0].label
           }
         ];
-        this.listaTarjetas[12].campos = camposFacturacion;
+        this.listaTarjetas[11].campos = camposFacturacion;
       },
       err => {
         console.log(err);
@@ -1565,7 +1565,6 @@ changeDataTarjeta(event) {​​​​​
     this.campos = event;
     this.progressSpinner = true;
     let designaItem = this.campos;
-    this.motivosRenuncia();
 
     if (sessionStorage.getItem("nuevoProcurador")) {
       this.listaTarjetas[5].opened = true;
@@ -1690,9 +1689,6 @@ changeDataTarjeta(event) {​​​​​
     this.listaTarjetas[10].detalle = true;
     this.listaTarjetas[11].detalle = true;
 
-    this.searchInteresados();
-    this.searchContrarios(false);
-    this.searchRelaciones();
     this.getIdPartidaPresupuestaria(this.campos);
     this.progressSpinner = false;
   }

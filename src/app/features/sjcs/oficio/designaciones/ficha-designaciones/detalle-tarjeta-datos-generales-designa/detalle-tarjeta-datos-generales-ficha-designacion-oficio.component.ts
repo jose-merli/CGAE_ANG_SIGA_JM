@@ -460,7 +460,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                 n => {
                   let newId = JSON.parse(n.body);
                   sessionStorage.removeItem("nuevaDesigna");
-                  sessionStorage.setItem("nuevaDesigna", "false;");
+                  sessionStorage.setItem("nuevaDesigna", "false");
                   let newDesignaRfresh = new DesignaItem();
                   newDesignaRfresh.ano = newDesigna.ano;
                   newDesignaRfresh.codigo = newId.id;
