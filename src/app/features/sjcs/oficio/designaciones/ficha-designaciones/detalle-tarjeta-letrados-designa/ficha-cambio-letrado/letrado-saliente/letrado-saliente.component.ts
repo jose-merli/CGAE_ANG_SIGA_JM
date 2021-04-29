@@ -5,6 +5,7 @@ import { PersistenceService } from '../../../../../../../../_services/persistenc
 import { Router } from '@angular/router';
 import { Message } from 'primeng/components/common/api';
 import { CommonsService } from '../../../../../../../../_services/commons.service';
+import {CamposCambioLetradoItem } from '../../../../../../../../models/sjcs/CamposCambioLetradoItem';
 
 @Component({
   selector: 'app-letrado-saliente',
@@ -14,7 +15,7 @@ import { CommonsService } from '../../../../../../../../_services/commons.servic
 export class LetradoSalienteComponent implements OnInit {
 
   msgs: Message[] = [];
-  body;
+  body = new CamposCambioLetradoItem();
   datos;
   showTarjeta=true;
   progressSpinner = false;

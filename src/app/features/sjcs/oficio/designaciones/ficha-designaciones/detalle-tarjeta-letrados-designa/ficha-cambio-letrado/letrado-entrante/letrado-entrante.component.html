@@ -60,11 +60,12 @@
             <div class="form-group col-lg-2 col-md-2">
               <label>{{ "justiciaGratuita.oficio.designaciones.fechaDesignacion" | translate}} (*)</label>
               <app-fecha [(value)]="body.fechaDesignacion" (valueChangeSelected)="fillFechaDesignacion($event)"
-              [disabled]="disableFechaDesignacion">
+                [disabled]="disableFechaDesignacion">
               </app-fecha>
             </div>
             <div class="form-group col-lg-2 col-md-2">
-              <p-checkbox (onChange)="incluirSalto()" [(ngModel)]="body.salto" binary="true" label="{{ 'justiciaGratuita.oficio.designas.letrados.salto' | translate }}"
+              <p-checkbox (onChange)="incluirSalto()" [(ngModel)]="body.salto" binary="true"
+                label="{{ 'justiciaGratuita.oficio.designas.letrados.salto' | translate}}" 
                 name="salto">
               </p-checkbox>
             </div>
@@ -79,8 +80,8 @@
             <div class="form-group col-lg-4 col-md-4">
               <label>{{ "gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate }}
               </label>
-              <input [(ngModel)]="body.apellidos" name="apellido1" type="text" class="form-control"
-                [maxLength]="95" pInputText disabled />
+              <input [(ngModel)]="body.apellidos" name="apellidos" type="text" class="form-control" [maxLength]="95"
+                pInputText disabled />
             </div>
             <div class="form-group col-lg-4 col-md-4">
               <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}
@@ -89,15 +90,12 @@
                 pInputText disabled />
             </div>
             <div class="form-group col-lg-1 col-md-1">
-              <p-checkbox [(ngModel)]="body.art27" binary="true"
-                label="Designación Art 27-28" name="art27" disabled>
+              <p-checkbox [(ngModel)]="body.art27" binary="true" label="{{ 'justiciaGratuita.oficio.designas.letrados.art27' | translate}}" name="art27" disabled>
               </p-checkbox>
             </div>
             <div class="form-group col-lg-1 col-md-1">
-              <button (click)="search()" pButton type="button" icon="fa fa-search"
-                iconPos="center" ></button>
-              <button (click)="rest()" pButton type="button" icon="fa fa-eraser"
-                iconPos="center" ></button>
+              <button (click)="search()" pButton type="button" icon="fa fa-search" iconPos="center"></button>
+              <button (click)="rest()" pButton type="button" icon="fa fa-eraser" iconPos="center"></button>
             </div>
           </div>
         </div>

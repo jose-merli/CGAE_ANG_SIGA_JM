@@ -10,5 +10,6 @@ export class CamposCambioLetradoItem {
     observaciones:String; 
     salto:Boolean;
     art27:Boolean;
+    idPersona:String;
     constructor() { }
   }

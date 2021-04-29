@@ -980,7 +980,7 @@ export class FichaDesignacionesComponent implements OnInit {
         let primero = this.contrarios[0];
 
         let error = JSON.parse(n.body).error;
-
+        // if(sessionStorage.getItem("contrarios" &&)!=null)this.router.navigate(["/justiciables"]);
         if (error != null && error.description != null) {
           this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
         }
@@ -1030,6 +1030,7 @@ export class FichaDesignacionesComponent implements OnInit {
         this.progressSpinner = false;
         console.log(err);
       });
+    
   }
 
   searchInteresados() {

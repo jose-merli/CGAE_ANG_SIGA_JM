@@ -49,6 +49,24 @@ export class FichaCambioLetradoComponent implements OnInit {
 
   ngOnInit() {
 
+    //Para saber si el usuario es un letrado o no
+    /* getLetrado() {
+      let isLetrado: ComboItem;
+      this.sigaServices.get('getLetrado').subscribe(
+          (data) => {
+              isLetrado = data;
+              if (isLetrado.value == 'S') {
+                  return true;
+              } else {
+                  return false;
+              }
+          },
+          (err) => {
+              console.log(err);
+      return false;
+          }
+      );
+  } */
 
     this.body = new CamposCambioLetradoItem();
     let data;
@@ -148,7 +166,7 @@ export class FichaCambioLetradoComponent implements OnInit {
           }
         });
       }
-      else if ((this.entrante.body.numColegiado != undefined && this.entrante.body.numColegiado != "") && this.entrante.body.art27 == true) {
+      else if (this.entrante.body.numColegiado != undefined && this.entrante.body.numColegiado != "") {
         this.save()
       }
       else this.showMessage("error", "Cancel", this.translateService.instant("general.message.camposObligatorios"))
@@ -197,7 +215,6 @@ export class FichaCambioLetradoComponent implements OnInit {
         else{
           this.router.navigate(['/busquedaGeneral']);
         } */
-
         this.router.navigate(['/busquedaGeneral']);
       },
       err => {
@@ -245,13 +262,15 @@ export class FichaCambioLetradoComponent implements OnInit {
     let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
 
     let salto = new SaltoCompItem();
-
+    let saltos =[];
     salto.fecha = this.formatDate(new Date());
     salto.idPersona = this.body.idPersona;
     salto.idTurno = designa.idTurno;
     salto.motivo = "";
     salto.saltoCompensacion = "S";
-    this.sigaServices.post("saltosCompensacionesOficio_guardar", salto).subscribe(
+    saltos.push(salto);
+    
+    this.sigaServices.post("saltosCompensacionesOficio_guardar", saltos).subscribe(
       result => {
 
         const resp = JSON.parse(result.body);
