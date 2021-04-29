@@ -28,10 +28,14 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
 
   msgs;
   @Output() colegiado = new EventEmitter<any>();
+  isLetrado: boolean = false;
 
   constructor(private router: Router, private sigaServices: SigaServices, private translateService: TranslateService, private PpersistenceService: PersistenceService) { }
 
   ngOnInit() {
+    if (sessionStorage.getItem("isLetrado") != null && sessionStorage.getItem("isLetrado") != undefined) {
+      this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
+    }
 
     if (this.numColegiado) {
       this.colegiadoForm.get('numColegiado').setValue(this.numColegiado);
@@ -44,6 +48,9 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
     this.colegiadoForm.controls['nombreAp'].disable();
 
     if (this.disabled) {
+      this.colegiadoForm.controls['numColegiado'].disable();
+    }
+    if(this.isLetrado){
       this.colegiadoForm.controls['numColegiado'].disable();
     }
 

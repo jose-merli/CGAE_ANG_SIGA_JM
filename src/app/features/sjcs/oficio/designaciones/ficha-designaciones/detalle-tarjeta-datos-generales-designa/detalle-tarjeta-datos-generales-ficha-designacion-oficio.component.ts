@@ -291,6 +291,13 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
               console.log(n);
             },
             err => {
+              severity = "error";
+                  summary = "No se han podido modificar los datos";
+                  this.msgs.push({
+                    severity,
+                    summary,
+                    detail
+                  });
               console.log(err);
               this.progressSpinner = false;
             }, () => {
@@ -331,6 +338,13 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
               this.progressSpinner = false;
             },
             err => {
+                  severity = "error";
+                  summary = "No se han podido modificar los datos";
+                  this.msgs.push({
+                    severity,
+                    summary,
+                    detail
+                  });
               console.log(err);
               this.progressSpinner = false;
             }, () => {
@@ -343,7 +357,10 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     }
 
     if (detail == "Restablecer") {
-      if (!this.nuevaDesigna) {
+      this.nuevaDesigna = sessionStorage.getItem("nuevaDesigna");
+
+      this.initDatos =  this.campos;
+      if (this.nuevaDesigna=="false") {
         //EDICION
         this.cargaDatos(this.initDatos);
 
@@ -460,7 +477,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                 n => {
                   let newId = JSON.parse(n.body);
                   sessionStorage.removeItem("nuevaDesigna");
-                  sessionStorage.setItem("nuevaDesigna", "false;");
+                  sessionStorage.setItem("nuevaDesigna", "false");
                   let newDesignaRfresh = new DesignaItem();
                   newDesignaRfresh.ano = newDesigna.ano;
                   newDesignaRfresh.codigo = newId.id;
@@ -531,6 +548,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                 },
                 err => {
                   console.log(err);
+                  severity = "error";
                   summary = "No se han podido modificar los datos";
                   this.msgs.push({
                     severity,

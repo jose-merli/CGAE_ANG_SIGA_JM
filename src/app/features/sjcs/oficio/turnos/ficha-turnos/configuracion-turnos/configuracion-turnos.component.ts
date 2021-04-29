@@ -156,7 +156,7 @@ export class ConfiguracionTurnosComponent implements OnInit {
 
   ngOnInit() {
     
-    this.commonsService.checkAcceso(procesos_oficio.datosGenerales)
+    this.commonsService.checkAcceso(procesos_oficio.configuracionTurnos)
       .then(respuesta => {
         this.permisosTarjeta = respuesta;
         if (this.permisosTarjeta != true) {

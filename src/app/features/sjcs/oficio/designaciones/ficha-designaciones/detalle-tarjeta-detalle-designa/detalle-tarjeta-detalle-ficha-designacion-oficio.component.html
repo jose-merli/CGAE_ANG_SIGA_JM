@@ -10,16 +10,49 @@
       <input type="text" [(ngModel)]="inputTitle.value" class="form-control" pInputText>
     </div>
 
-    <div class="form-group col-lg-3 col-md-3 w-100" *ngFor="let selector of selectores">
-      <!-- <app-selector [i]="0" [selector]="selector" [textoVisible]="estado"></app-selector> -->
-      <app-selector [i]="0" [selector]="selector"  [refresh] = "refresh" [refreshProcedimiento] = "refreshProcedimiento"  [refreshModulo] = "refreshModulo" (value)='selector.value=$event' (refreshDataCombos)="refreshDataCombos($event)" (busqueda)="busquedaCombos($event)" (busquedaProcedimiento)="busquedaCombosProcedimiento($event)" (busquedaCombosModulo)="busquedaCombosModulo($event)"></app-selector>
+    <!-- <div class="form-group col-lg-3 col-md-3 w-100" *ngFor="let selector of selectores">
+      <app-selector [i]="0" [selector]="selector" [textoVisible]="estado"></app-selector> -->
+      <!-- <app-selector [i]="0" [selector]="selector"  [refresh] = "refresh" [refreshProcedimiento] = "refreshProcedimiento"  [refreshModulo] = "refreshModulo" (value)='selector.value=$event' (refreshDataCombos)="refreshDataCombos($event)" (busqueda)="busquedaCombos($event)" (busquedaProcedimiento)="busquedaCombosProcedimiento($event)" (busquedaCombosModulo)="busquedaCombosModulo($event)"></app-selector>
+    </div>  -->
+    <div class="form-group col-lg-3 col-md-3 w-100">
+      <!-- <app-selector [i]="0" [selector]="selector"></app-selector> -->
+      <label>Estado</label>
+      <p-dropdown class="select-form" [(ngModel)]="estadoValue"
+              placeholder="{{'general.boton.seleccionar' | translate}}" [disabled]="disableEstado"
+              [options]="estadosOpciones" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
+            </p-dropdown>
+    </div>
+    <div class="form-group col-lg-3 col-md-3 w-100">
+      <!-- <app-selector [i]="0" [selector]="selector"></app-selector> -->
+      <label>Juzgado</label>
+      <p-dropdown class="select-form" [(ngModel)]="juzgadoValue"
+              placeholder="{{'general.boton.seleccionar' | translate}}" 
+              [options]="juzgadoOpciones" [filter]="true" (onChange)="changeJuzgado()" filterBy="label,labelSinTilde" [showClear]="true">
+            </p-dropdown>
+          </div>
+    <div class="form-group col-lg-3 col-md-3 w-100">
+      <!-- <app-selector [i]="0" [selector]="selector"></app-selector> -->
+      <label>Procedimiento</label>
+      <p-dropdown class="select-form" [(ngModel)]="procedimientoValue"
+              placeholder="{{'general.boton.seleccionar' | translate}}" 
+              [options]="procedimientoOpciones" [filter]="true" (onChange)="changeProcedimiento()" filterBy="label,labelSinTilde" [showClear]="true">
+            </p-dropdown>
+    </div>
+    <div class="form-group col-lg-3 col-md-3 w-100">
+      <!-- <app-selector [i]="0" [selector]="selector"></app-selector> -->
+      <label>Módulo</label>
+      <p-dropdown class="select-form" [(ngModel)]="moduloValue"
+              placeholder="{{'general.boton.seleccionar' | translate}}" 
+              [options]="moduloOpciones" [filter]="true" (onChange)="changeModulo()" filterBy="label,labelSinTilde" [showClear]="true">
+            </p-dropdown>
     </div>
     <div class="form-group col-lg-3 col-md-3 w-100">
       <!-- <app-selector [i]="0" [selector]="selector"></app-selector> -->
       <label>Delitos</label>
-      <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [options]="delitosOpciones"
-      [selectedItemsLabel]="textSelected" maxSelectedLabels="10" styleClass="widthAll"
-      filterBy="label, labelSinTilde" [(ngModel)]='delitosValue'></p-multiSelect>
+      <p-dropdown class="select-form" [(ngModel)]="delitosValue"
+              placeholder="{{'general.boton.seleccionar' | translate}}" 
+              [options]="delitosOpciones" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
+            </p-dropdown>
     </div>
     <div class="form-group col-lg-3 col-md-3 w-100" *ngFor="let datePickerTitle of datePickers; let i = index;">
       <label>{{ datePickerTitle.nombre }}</label>
@@ -35,6 +68,22 @@
     <button type="button" pButton icon="fa-close" label="No" (click)="confirmGuardar.reject()"></button>
   </p-footer>
 </p-confirmDialog>
+
+<p-confirmDialog  header="{{ 'general.cabecera.confirmacion' | translate}}" icon="icon"   key="confirmAnular" width="425" #confirmAnular>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="confirmAnular.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="confirmAnular.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+
+<p-confirmDialog  header="{{ 'general.cabecera.confirmacion' | translate}}" icon="icon"   key="confirmGuardarCompensacion" width="425" #confirmGuardarCompensacion>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Aceptar" (click)="confirmGuardarCompensacion.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="Cancelar" (click)="confirmGuardarCompensacion.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
+
 
 <div class="card-footer">
   <div class="text-right main-button">

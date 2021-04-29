@@ -55,7 +55,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
 
   @Input() comboAcreditacionesPorModulo: any [];
   @Output() cargaModulosPorJuzgado = new EventEmitter<String>();
-  @Output() cargaAcreditacionesPorModulo = new EventEmitter<String>();
+  @Output() cargaAcreditacionesPorModulo = new EventEmitter<String[]>();
 
   @Input() comboJuzgados = [];
   @Input() comboModulos = [];
@@ -584,7 +584,12 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }else if (z == 4){
       //comboModulos
       let modulo = $event.value;
-      this.cargaAcreditacionesPorModulo.emit(modulo);
+      let data: String[] = [];
+
+      data.push(modulo);
+      data.push(this.newActuacionesArr[0].cells[33].value);
+      
+      this.cargaAcreditacionesPorModulo.emit(data);
     }else if (z == 7){
       //comboAcreditacion
     }
@@ -597,9 +602,11 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         row.cells.forEach(cell => {
           if (cell.type == 'multiselect2') {
             cell.combo = comboModulos;
+            cell.value= "Seleccionar...";
             rowGroupFound = true;
           }else if (cell.type == 'multiselect3') {
             cell.combo = comboAcreditacion;
+            cell.value= "Seleccionar...";
             rowGroupFound = true;
           } 
 
@@ -621,7 +628,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
 
     if (type == 'Nuevo'){
       let desig = rowGroup.rows[0].cells;
-      console.log('desig: ', desig)
+      
       this.comboModulos = [];
       this.comboAcreditacion = [];
       this.rowGroups.forEach((rowGroup,i) => {
@@ -629,7 +636,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           let id = Object.keys(rowGroup.rows)[0];
           let newArrayCells: Cell[] = [
             { type: 'checkbox', value: false, size: 50 , combo: null},
-            { type: 'multiselect1', value: '',size: 153 , combo: this.comboJuzgados},
+            { type: 'multiselect1', value: 'Seleccionar...',size: 153 , combo: this.comboJuzgados},
             { type: 'input', value: '', size: 153, combo: null},
             { type: 'input', value: '', size: 153 , combo: null},
             { type: 'multiselect2', value: 'Seleccione un juzgado', size: 153 , combo: this.comboModulos}, //modulo
@@ -686,6 +693,10 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     let actuaciones;
     //1. Guardar nuevos
     if (this.newActuacionesArr != []){
+
+      let newActuacionesArrNOT_REPEATED = new Set(this.newActuacionesArr);
+      this.newActuacionesArr = Array.from(newActuacionesArrNOT_REPEATED);
+
     this.newActuacionesArr.forEach( newAct => {
       console.log('newAct: ', newAct)
       this.actuacionToAdd.emit(newAct);
