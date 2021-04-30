@@ -215,20 +215,20 @@ export class FichaCambioLetradoComponent implements OnInit {
         else{
           this.router.navigate(['/busquedaGeneral']);
         } */
-        if(n.status == 'KO'){
-          this.confirmationService.confirm({
-            key: "errorPlantillaDoc",
-            message: this.translateService.instant("general.message.incorrect"),
-            icon: "fa fa-save",
-            accept: () => {
-            }
-          });
-        }
-        else this.router.navigate(['/fichaDesignaciones']);
+         this.router.navigate(['/fichaDesignaciones']);
       },
       err => {
         if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          if(JSON.parse(err.error).error.code == 100){
+            this.confirmationService.confirm({
+              key: "errorPlantillaDoc",
+              message: this.translateService.instant("justiciaGratuita.oficio.designas.letrados.nocolaletrado"),
+              icon: "fa fa-save",
+              accept: () => {
+              }
+            });
+          }
+          else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
