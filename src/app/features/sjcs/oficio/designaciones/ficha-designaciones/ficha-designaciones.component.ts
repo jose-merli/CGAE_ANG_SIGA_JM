@@ -34,7 +34,7 @@ export class FichaDesignacionesComponent implements OnInit {
   comunicaciones: any;
   isLetrado: boolean = false;
   usuarioLogado;
-  nombreInteresado = "";
+  nombreInteresado = this.translateService.instant('justiciaGratuita.oficio.designas.interesados.vacio');
 
   esColegiado: boolean = false;
 
@@ -404,7 +404,7 @@ export class FichaDesignacionesComponent implements OnInit {
         },
         {
           "key": "Interesado",
-          "value": ""
+          "value": this.translateService.instant('justiciaGratuita.oficio.designas.interesados.vacio')
         },
         {
           "key": "Número Actuaciones",
@@ -980,7 +980,7 @@ export class FichaDesignacionesComponent implements OnInit {
         let primero = this.contrarios[0];
 
         let error = JSON.parse(n.body).error;
-
+        // if(sessionStorage.getItem("contrarios" &&)!=null)this.router.navigate(["/justiciables"]);
         if (error != null && error.description != null) {
           this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
         }
@@ -1030,6 +1030,7 @@ export class FichaDesignacionesComponent implements OnInit {
         this.progressSpinner = false;
         console.log(err);
       });
+    
   }
 
   searchInteresados() {
@@ -1065,8 +1066,8 @@ export class FichaDesignacionesComponent implements OnInit {
             "key": null,
             "value": this.translateService.instant('justiciaGratuita.oficio.designas.interesados.vacio')
           },]
-          this.tarjetaFija.campos[3].value="";
-          this.nombreInteresado="";
+          this.tarjetaFija.campos[3].value=this.translateService.instant('justiciaGratuita.oficio.designas.interesados.vacio');
+          this.nombreInteresado=this.translateService.instant('justiciaGratuita.oficio.designas.interesados.vacio');
         }
 
         else {
@@ -1516,7 +1517,7 @@ export class FichaDesignacionesComponent implements OnInit {
               "value": this.letrados[0].apellidosNombre
             }
           ]
-          this.listaTarjetas[6].enlaceCardClosed = { click: 'irFechaColegial()', title: 'Ficha colegial' }
+          this.listaTarjetas[6].enlaceCardClosed = { click: 'irFechaColegial()', title: this.translateService.instant('informesycomunicaciones.comunicaciones.fichaColegial') }
         }
       },
       err => {

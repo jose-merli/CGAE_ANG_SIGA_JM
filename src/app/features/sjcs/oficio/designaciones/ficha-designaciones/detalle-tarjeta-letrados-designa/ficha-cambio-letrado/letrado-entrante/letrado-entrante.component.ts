@@ -14,11 +14,11 @@ import { CamposCambioLetradoItem } from '../../../../../../../../models/sjcs/Cam
 export class LetradoEntranteComponent implements OnInit {
 
   msgs: Message[] = [];
-  body;
+  body = new CamposCambioLetradoItem();
   datos;
   showTarjeta=true;
   progressSpinner = false;
-  disableFechaDesignacion=false;
+  disableFechaDesignacion;
 
   @Input() saliente;
 
@@ -28,30 +28,34 @@ export class LetradoEntranteComponent implements OnInit {
 
   ngOnInit() {
 
+    this.body.art27=false;
+    if (sessionStorage.getItem("NewLetrado")) {
+			let data = JSON.parse(sessionStorage.getItem("NewLetrado"));
+			sessionStorage.removeItem("NewLetrado");
+      this.body=data;
+    }
     if (sessionStorage.getItem("abogado")) {
 			let data = JSON.parse(sessionStorage.getItem("abogado"))[0];
 			sessionStorage.removeItem("abogado");
+      /* this.body=data; */
 			this.body.numColegiado = data.numeroColegiado;
 			this.body.nombre = data.nombre;
-			this.body.apellidos = data.apellidos1 + " " + data.apellidos2;
+			/* this.body.apellidos = data.apellidos1 + " " + data.apellidos2; */
+      this.body.apellidos = data.apellidos;
       this.body.idPersona = data.idPersona;
 		}
 
     let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
-    if(designa.art27!="No") this.incluirArt();
-
+    if(designa.art27=="Si") {
+      this.body.art27=true;
+      this.body.fechaDesignacion = this.saliente.fechaDesignacion;
+      this.disableFechaDesignacion=true;
+    }
+    
   }
 
 
   incluirSalto(){
-  }
-
-  incluirArt(){
-    if(this.body.art27){
-      this.body.fechaDesignacion = this.saliente.fechaDesignacion;
-      this.disableFechaDesignacion=true;
-    }
-    else  this.disableFechaDesignacion=false;
   }
 
   changeMotivo(event){
@@ -77,11 +81,14 @@ export class LetradoEntranteComponent implements OnInit {
   search() {
 			sessionStorage.setItem("origin", "AbogadoContrario");
       sessionStorage.setItem("Oldletrado",  JSON.stringify(this.saliente));
+      sessionStorage.setItem("Newletrado",  JSON.stringify(this.body));
 			this.router.navigate(['/busquedaGeneral']);
   }
 
   rest() {
-    this.body=null;
+    this.body.nombre="";
+    this.body.numColegiado="";
+    this.body.apellidos="";
   }
 
 }

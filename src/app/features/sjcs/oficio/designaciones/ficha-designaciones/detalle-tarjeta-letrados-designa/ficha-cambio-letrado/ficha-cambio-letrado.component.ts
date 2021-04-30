@@ -49,6 +49,24 @@ export class FichaCambioLetradoComponent implements OnInit {
 
   ngOnInit() {
 
+    //Para saber si el usuario es un letrado o no
+    /* getLetrado() {
+      let isLetrado: ComboItem;
+      this.sigaServices.get('getLetrado').subscribe(
+          (data) => {
+              isLetrado = data;
+              if (isLetrado.value == 'S') {
+                  return true;
+              } else {
+                  return false;
+              }
+          },
+          (err) => {
+              console.log(err);
+      return false;
+          }
+      );
+  } */
 
     this.body = new CamposCambioLetradoItem();
     let data;
@@ -148,7 +166,7 @@ export class FichaCambioLetradoComponent implements OnInit {
           }
         });
       }
-      else if ((this.entrante.body.numColegiado != undefined && this.entrante.body.numColegiado != "") && this.entrante.body.art27 == true) {
+      else if (this.entrante.body.numColegiado != undefined && this.entrante.body.numColegiado != "") {
         this.save()
       }
       else this.showMessage("error", "Cancel", this.translateService.instant("general.message.camposObligatorios"))
@@ -184,7 +202,7 @@ export class FichaCambioLetradoComponent implements OnInit {
 
 
     let request = [designa.ano, designa.idTurno, designa.numero,
-    this.body.idPersona, this.saliente.body.observaciones, this.saliente.body.motivoRenuncia, this.saliente.body.fechaDesignacion,
+    this.body.idPersona, this.saliente.body.observaciones, this.saliente.body.motivoRenuncia, this.saliente.body.fechaDesignacion, this.saliente.body.fechaSolRenuncia,
     this.entrante.body.fechaDesignacion, this.entrante.body.idPersona];
 
     this.progressSpinner = true;
@@ -197,12 +215,20 @@ export class FichaCambioLetradoComponent implements OnInit {
         else{
           this.router.navigate(['/busquedaGeneral']);
         } */
-
-        this.router.navigate(['/busquedaGeneral']);
+         this.router.navigate(['/fichaDesignaciones']);
       },
       err => {
         if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          if(JSON.parse(err.error).error.code == 100){
+            this.confirmationService.confirm({
+              key: "errorPlantillaDoc",
+              message: this.translateService.instant("justiciaGratuita.oficio.designas.letrados.nocolaletrado"),
+              icon: "fa fa-save",
+              accept: () => {
+              }
+            });
+          }
+          else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
@@ -218,14 +244,15 @@ export class FichaCambioLetradoComponent implements OnInit {
   compensacion() {
     let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
 
-    let salto = new SaltoCompItem();
-
-    salto.fecha = this.formatDate(new Date());
-    salto.idPersona = this.body.idPersona;
-    salto.idTurno = designa.idTurno;
-    salto.motivo = "";
-    salto.saltoCompensacion = "C";
-    this.sigaServices.post("saltosCompensacionesOficio_guardar", salto).subscribe(
+    let compensacion = new SaltoCompItem();
+    let compensaciones =[];
+    compensacion.fecha = this.formatDate(new Date());
+    compensacion.idPersona = this.body.idPersona;
+    compensacion.idTurno = designa.idTurno;
+    compensacion.motivo = "";
+    compensacion.saltoCompensacion = "C";
+    compensaciones.push(compensacion);
+    this.sigaServices.post("saltosCompensacionesOficio_guardar", compensaciones).subscribe(
       result => {
 
         const resp = JSON.parse(result.body);
@@ -245,13 +272,15 @@ export class FichaCambioLetradoComponent implements OnInit {
     let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
 
     let salto = new SaltoCompItem();
-
+    let saltos =[];
     salto.fecha = this.formatDate(new Date());
     salto.idPersona = this.body.idPersona;
     salto.idTurno = designa.idTurno;
     salto.motivo = "";
     salto.saltoCompensacion = "S";
-    this.sigaServices.post("saltosCompensacionesOficio_guardar", salto).subscribe(
+    saltos.push(salto);
+
+    this.sigaServices.post("saltosCompensacionesOficio_guardar", saltos).subscribe(
       result => {
 
         const resp = JSON.parse(result.body);
