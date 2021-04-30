@@ -1,5 +1,5 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { Message } from 'primeng/components/common/api';
+import { Component, Input, OnInit, OnDestroy, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Message, SelectItem } from 'primeng/components/common/api';
 import { CommonsService } from '../../../../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../../../../_services/siga.service';
 import { Actuacion } from '../../detalle-tarjeta-actuaciones-designa.component';
@@ -12,19 +12,21 @@ import { ActuacionDesignaItem } from '../../../../../../../../models/sjcs/Actuac
   templateUrl: './tarjeta-datos-gen-ficha-act.component.html',
   styleUrls: ['./tarjeta-datos-gen-ficha-act.component.scss']
 })
-export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
+export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDestroy {
 
-  comboJuzgados: any[] = [];
-  comboProcedimientos: any[] = [];
-  comboModulos: any[] = [];
-  comboAcreditaciones: any[] = [];
-  comboPrisiones: any[] = [];
-  comboMotivosCambio: any[] = [];
+  comboJuzgados: SelectItem[] = [];
+  comboProcedimientos: SelectItem[] = [];
+  comboModulos: SelectItem[] = [];
+  comboAcreditaciones: SelectItem[] = [];
+  comboPrisiones: SelectItem[] = [];
+  comboMotivosCambio: SelectItem[] = [];
 
   @Input() institucionActual;
   @Input() isAnulada: boolean;
   @Input() usuarioLogado;
   @Input() isColegiado: boolean;
+
+  @Output() buscarActEvent = new EventEmitter<string>();
 
   idPersonaColegiado: string;
 
@@ -201,6 +203,9 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
       }, () => {
         this.progressSpinner = false;
         this.datos.selectores[0].opciones = this.comboJuzgados;
+        if (this.comboJuzgados.find(el => el.value == this.datos.selectores.find(el => el.id == 'juzgado').value) == undefined) {
+          this.datos.selectores.find(el => el.id == 'juzgado').value = '';
+        }
       }
     );
   }
@@ -220,6 +225,10 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
       () => {
         this.progressSpinner = false;
         this.datos.selectores[3].opciones = this.comboModulos;
+        if (this.comboModulos.find(el => el.value == this.datos.selectores.find(el => el.id == 'modulo').value) == undefined) {
+          this.datos.selectores.find(el => el.id == 'modulo').value = '';
+          this.datos.selectores.find(el => el.id == 'acreditacion').disabled = true;
+        }
       }
     );
   }
@@ -239,6 +248,9 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
       }, () => {
         this.progressSpinner = false;
         this.datos.selectores[1].opciones = this.comboProcedimientos;
+        if (this.comboProcedimientos.find(el => el.value == this.datos.selectores.find(el => el.id == 'procedimiento').value) == undefined) {
+          this.datos.selectores.find(el => el.id == 'procedimiento').value = '';
+        }
       }
     );
   }
@@ -260,6 +272,9 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
       () => {
         this.progressSpinner = false;
         this.datos.selectores[4].opciones = this.comboAcreditaciones;
+        if (this.comboAcreditaciones.find(el => el.value == this.datos.selectores.find(el => el.id == 'acreditacion').value) == undefined) {
+          this.datos.selectores.find(el => el.id == 'acreditacion').value = '';
+        }
       }
     );
   }
@@ -279,6 +294,9 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
       }, () => {
         this.progressSpinner = false;
         this.datos.selectores[5].opciones = this.comboPrisiones;
+        if (this.comboPrisiones.find(el => el.value == this.datos.selectores.find(el => el.id == 'prision').value) == undefined) {
+          this.datos.selectores.find(el => el.id == 'prision').value = '';
+        }
       }
     );
   }
@@ -298,6 +316,9 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
       }, () => {
         this.progressSpinner = false;
         this.datos.selectores[2].opciones = this.comboMotivosCambio;
+        if (this.comboMotivosCambio.find(el => el.value == this.datos.selectores.find(el => el.id == 'motivoCambio').value) == undefined) {
+          this.datos.selectores.find(el => el.id == 'motivoCambio').value = '';
+        }
       }
     );
   }
@@ -316,22 +337,22 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
 
   establecerDatosInicialesNuevaAct() {
     this.datos.inputs1[0].value = this.actuacionDesigna.actuacion.numeroAsunto;
-    this.datos.inputs1[3].value = this.actuacionDesigna.designaItem.ano.replace('D', '');
+    this.datos.inputs1[3].value = this.actuacionDesigna.designaItem.ano.replace('D', '').replace('/', '');
     this.datos.inputs1[4].value = this.actuacionDesigna.actuacion.numeroAsunto;
     this.datos.inputNig.value = this.actuacionDesigna.designaItem.nig;
-    // this.datos.datePicker.value = this.datePipe.transform(new Date(), 'dd/MM/yyyy');
     this.datos.datePicker.value = new Date();
     this.datos.inputNumPro.value = this.actuacionDesigna.designaItem.numProcedimiento;
     this.datos.selectores[0].value = this.actuacionDesigna.designaItem.idJuzgado;
     this.datos.selectores[1].value = this.actuacionDesigna.designaItem.idPretension;
     this.datos.selectores[3].value = this.actuacionDesigna.designaItem.idProcedimiento;
+    this.comprobacionesCombos();
   }
 
   establecerDatosInicialesEditAct() {
     this.datos.inputs1[0].value = this.actuacionDesigna.actuacion.numeroAsunto;
     this.datos.inputs1[3].value = this.actuacionDesigna.designaItem.ano.replace('D', '').replace('/', '');
     this.datos.inputs1[4].value = this.actuacionDesigna.actuacion.numeroAsunto;
-    this.datos.datePicker.value = this.datePipe.transform(new Date(), 'dd/MM/yyyy');
+    this.datos.datePicker.value = new Date(this.actuacionDesigna.actuacion.fechaActuacion.split('/').reverse().join('-'));
     this.datos.inputs1[1].value = this.actuacionDesigna.actuacion.numColegiado;
     this.datos.inputs1[2].value = this.actuacionDesigna.actuacion.letrado;
     this.datos.inputNig.value = this.actuacionDesigna.actuacion.nig;
@@ -343,6 +364,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
     this.datos.selectores[4].value = this.actuacionDesigna.actuacion.idAcreditacion;
     this.datos.selectores[5].value = this.actuacionDesigna.actuacion.idPrision;
     this.datos.textarea.value = this.actuacionDesigna.actuacion.observaciones;
+    this.comprobacionesCombos();
   }
 
   guardarAction() {
@@ -381,12 +403,23 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
 
       this.sigaServices.post("actuaciones_designacion_guardar", params).subscribe(
         data => {
-          let resp = data;
-          console.log("🚀 ~ file: tarjeta-datos-gen-ficha-act.component.ts ~ line 379 ~ TarjetaDatosGenFichaActComponent ~ guardarEvent ~ resp", resp);
+          let resp = JSON.parse(data.body);
+
+          if (resp.status == 'OK' || (resp.status == 'KO' && resp.error != null && resp.error.code == 400)) {
+            this.buscarActEvent.emit(resp.id);
+          }
+
+          if (resp.status == 'KO' && resp.error != null && resp.error.description != null) {
+            this.showMsg('error', 'Error', this.translateService.instant(resp.error.description.toString()));
+          } else {
+            this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
+          }
+
         },
         err => {
           this.progressSpinner = false;
           console.log(err);
+          this.showMsg('error', 'Error', this.translateService.instant('general.mensaje.error.bbdd'));
         },
         () => {
           this.progressSpinner = false;
@@ -398,6 +431,53 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
 
   editarEvent() {
     if (!this.compruebaCamposObligatorios()) {
+
+      this.progressSpinner = true;
+
+      let params = new ActuacionDesignaItem();
+
+      params.idTurno = this.actuacionDesigna.designaItem.idTurno;
+      params.anio = this.actuacionDesigna.designaItem.ano.split('/')[0].replace('D', '');
+      params.numero = this.actuacionDesigna.designaItem.numero;
+      params.fechaActuacion = this.datePipe.transform(new Date(this.datos.datePicker.value), 'dd/MM/yyyy');
+      params.idJuzgado = this.datos.selectores.find(el => el.id == 'juzgado').value;
+      params.idProcedimiento = this.datos.selectores.find(el => el.id == 'modulo').value;
+      params.observaciones = this.datos.textarea.value;
+      params.talonario = this.datos.inputs1[3].value;
+      params.talon = this.datos.inputs1[4].value;
+      params.nig = this.datos.inputNig.value;
+      params.numProcedimiento = this.datos.inputNumPro.value;
+      params.idPretension = this.datos.selectores.find(el => el.id == 'procedimiento').value;
+      params.idMotivoCambio = this.datos.selectores.find(el => el.id == 'motivoCambio').value;
+      params.idAcreditacion = this.datos.selectores.find(el => el.id == 'acreditacion').value;
+      params.idPrision = this.datos.selectores.find(el => el.id == 'prision').value;
+      params.idPersonaColegiado = this.idPersonaColegiado;
+      params.numeroAsunto = this.actuacionDesigna.actuacion.numeroAsunto;
+
+      this.sigaServices.post("actuaciones_designacion_editar", params).subscribe(
+        data => {
+          let resp = JSON.parse(data.body);
+
+          if (resp.status == 'OK' || (resp.status == 'KO' && resp.error != null && resp.error.code == 400)) {
+            this.buscarActEvent.emit(resp.id);
+          }
+
+          if (resp.status == 'KO' && resp.error != null && resp.error.description != null) {
+            this.showMsg('error', 'Error', this.translateService.instant(resp.error.description.toString()));
+          } else {
+            this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
+          }
+
+        },
+        err => {
+          this.progressSpinner = false;
+          console.log(err);
+          this.showMsg('error', 'Error', this.translateService.instant('general.mensaje.error.bbdd'));
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
 
     }
   }
@@ -533,6 +613,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
         anio: this.actuacionDesigna.designaItem.ano.split('/')[0].replace('D', ''),
         numero: this.actuacionDesigna.designaItem.numero,
         clave: this.actuacionDesigna.designaItem.idTurno,
+        fechaActuacion: this.datePipe.transform(new Date(this.datos.datePicker.value), 'dd/MM/yyyy')
       };
 
       this.sigaServices.post("actuaciones_designacion_getLetradoDesigna", params).subscribe(
@@ -552,7 +633,8 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
                 this.datos.inputs1[1].value = '';
                 this.datos.inputs1[2].value = '';
                 this.datos.datePicker.value = '';
-                this.showMsg('error', 'Error', '');
+                this.idPersonaColegiado = '';
+                this.showMsg('error', 'Error', 'Debe seleccionar un fecha en la que sea letrado');
               }
 
             } else {
@@ -586,22 +668,51 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnDestroy {
     if (selector.id == 'juzgado') {
       if (selector.value == '' || selector.value == null || selector.value == undefined) {
         this.datos.selectores.find(el => el.id == 'modulo').disabled = true;
-        this.datos.selectores.find(el => el.id == 'modulo').value = '';
         this.datos.selectores.find(el => el.id == 'acreditacion').disabled = true;
-        this.datos.selectores.find(el => el.id == 'acreditacion').value = '';
       } else {
         this.datos.selectores.find(el => el.id == 'modulo').disabled = false;
         this.cargaModulosPorJuzgado(this.datos.selectores.find(el => el.id == 'juzgado').value);
       }
+      this.datos.selectores.find(el => el.id == 'modulo').value = '';
+      this.datos.selectores.find(el => el.id == 'acreditacion').value = '';
     } else if (selector.id == 'modulo') {
       if (selector.value == '' || selector.value == null || selector.value == undefined) {
         this.datos.selectores.find(el => el.id == 'acreditacion').disabled = true;
-        this.datos.selectores.find(el => el.id == 'acreditacion').value = '';
       } else {
         this.datos.selectores.find(el => el.id == 'acreditacion').disabled = false;
         this.cargaAcreditacionesPorModulo(this.datos.selectores.find(el => el.id == 'modulo').value);
       }
+      this.datos.selectores.find(el => el.id == 'acreditacion').value = '';
     }
+  }
+
+  comprobacionesCombos() {
+
+    let juzgado = this.datos.selectores.find(el => el.id == 'juzgado');
+    let modulo = this.datos.selectores.find(el => el.id == 'modulo');
+    let acreditacion = this.datos.selectores.find(el => el.id == 'acreditacion');
+
+    if (juzgado.value == undefined || juzgado.value == null || juzgado.value == '') {
+      modulo.disabled = true;
+      acreditacion.disabled = true;
+    } else if (modulo.value == undefined || modulo.value == null || modulo.value == '') {
+      acreditacion.disabled = true;
+    }
+
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+
+    if (changes.actuacionDesigna != undefined && changes.actuacionDesigna.currentValue) {
+
+      sessionStorage.setItem("datosIniActuDesignaDatosGen", JSON.stringify(this.actuacionDesigna));
+
+      if (!this.actuacionDesigna.isNew) {
+        this.establecerDatosInicialesEditAct();
+      }
+
+    }
+
   }
 
 }

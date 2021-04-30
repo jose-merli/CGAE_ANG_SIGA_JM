@@ -6,7 +6,7 @@
 
     <app-migas-de-pan [rutas]="rutas"></app-migas-de-pan>
 
-    <div class="tarjetaFija" *ngIf="!isNewActDesig">
+    <div class="tarjetaFija">
 
       <div class="card">
         <div class="card-body p-0">
@@ -46,7 +46,7 @@
                   <div *ngIf="tarj.nombre == 'Datos Generales'">
                     <app-tarjeta-datos-gen-ficha-act [actuacionDesigna]="actuacionDesigna" [isAnulada]="isAnulada"
                       [isColegiado]="isColegiado" [usuarioLogado]="usuarioLogado"
-                      [institucionActual]="institucionActual">
+                      [institucionActual]="institucionActual" (buscarActEvent)="getActuacionDesigna($event)">
                     </app-tarjeta-datos-gen-ficha-act>
                   </div>
                   <div *ngIf="tarj.nombre == 'Justificación'">
@@ -69,7 +69,7 @@
                     </app-tarjeta-his-ficha-act>
                   </div>
                   <div *ngIf="tarj.nombre == 'Documentación'">
-                    <app-tarjeta-doc-ficha-act>
+                    <app-tarjeta-doc-ficha-act [actuacionDesigna]="actuacionDesigna" [documentos]="documentos">
                     </app-tarjeta-doc-ficha-act>
                   </div>
                 </ng-template>

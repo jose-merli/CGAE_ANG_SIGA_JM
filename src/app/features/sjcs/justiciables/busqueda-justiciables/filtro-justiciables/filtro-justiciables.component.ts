@@ -6,6 +6,7 @@ import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { KEY_CODE } from '../../../../administracion/parametros/parametros-generales/parametros-generales.component';
+import { DatePipe, Location } from '@angular/common';
 
 @Component({
   selector: 'app-filtro-justiciables',
@@ -35,7 +36,7 @@ export class FiltroJusticiablesComponent implements OnInit {
   comboRoles = [];
 
   constructor(private router: Router, private translateService: TranslateService, private sigaServices: SigaServices,
-    private persistenceService: PersistenceService, private commonsService: CommonsService) { }
+    private persistenceService: PersistenceService, private commonsService: CommonsService, private location: Location) { }
 
   ngOnInit() {
 
@@ -80,6 +81,10 @@ export class FiltroJusticiablesComponent implements OnInit {
       this.showAsuntos = true;
     }
 
+  }
+
+  backTo() {
+    this.location.back();
   }
 
   getComboRoles() {
