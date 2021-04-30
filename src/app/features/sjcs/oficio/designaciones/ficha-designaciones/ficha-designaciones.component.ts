@@ -1517,7 +1517,7 @@ export class FichaDesignacionesComponent implements OnInit {
               "value": this.letrados[0].apellidosNombre
             }
           ]
-          this.listaTarjetas[6].enlaceCardClosed = { click: 'irFechaColegial()', title: 'Ficha colegial' }
+          this.listaTarjetas[6].enlaceCardClosed = { click: 'irFechaColegial()', title: this.translateService.instant('informesycomunicaciones.comunicaciones.fichaColegial') }
         }
       },
       err => {

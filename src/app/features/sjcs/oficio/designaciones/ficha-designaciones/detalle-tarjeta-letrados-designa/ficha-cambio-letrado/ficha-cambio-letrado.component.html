@@ -62,6 +62,6 @@
 
 <p-confirmDialog header="'Error'" key="errorPlantillaDoc" icon="icon" width="425" #errorPlantillaDoc>
   <p-footer>
-    <button type="button" pButton icon="fa-check" label="OK"></button>
+    <button type="button" pButton icon="fa-check" label="OK" (click)="errorPlantillaDoc.accept()"></button>
   </p-footer>
 </p-confirmDialog>

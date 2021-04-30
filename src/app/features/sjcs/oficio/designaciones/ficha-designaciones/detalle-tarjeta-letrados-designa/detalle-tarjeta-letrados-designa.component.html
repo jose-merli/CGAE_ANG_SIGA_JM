@@ -25,7 +25,7 @@
         <td class="text-center" *ngFor="let col of columns">
           <div>
             <span>{{dato[col.field]}}   </span>
-            <div class="ayuda-btn" *ngIf="col.field == 'motivoRenuncia'" [pTooltip]="dato.Observaciones" 
+            <div class="ayuda-btn" *ngIf="col.field == 'motivoRenuncia'" [pTooltip]="dato.observaciones" 
             tooltipPosition="top">
               <i class="fa fa-question"></i>
           </div>

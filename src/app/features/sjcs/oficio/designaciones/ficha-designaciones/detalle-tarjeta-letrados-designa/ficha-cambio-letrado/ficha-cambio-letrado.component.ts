@@ -202,7 +202,7 @@ export class FichaCambioLetradoComponent implements OnInit {
 
 
     let request = [designa.ano, designa.idTurno, designa.numero,
-    this.body.idPersona, this.saliente.body.observaciones, this.saliente.body.motivoRenuncia, this.saliente.body.fechaDesignacion,
+    this.body.idPersona, this.saliente.body.observaciones, this.saliente.body.motivoRenuncia, this.saliente.body.fechaDesignacion, this.saliente.body.fechaSolRenuncia,
     this.entrante.body.fechaDesignacion, this.entrante.body.idPersona];
 
     this.progressSpinner = true;
@@ -215,7 +215,16 @@ export class FichaCambioLetradoComponent implements OnInit {
         else{
           this.router.navigate(['/busquedaGeneral']);
         } */
-        this.router.navigate(['/busquedaGeneral']);
+        if(n.status == 'KO'){
+          this.confirmationService.confirm({
+            key: "errorPlantillaDoc",
+            message: this.translateService.instant("general.message.incorrect"),
+            icon: "fa fa-save",
+            accept: () => {
+            }
+          });
+        }
+        else this.router.navigate(['/fichaDesignaciones']);
       },
       err => {
         if (err != undefined && JSON.parse(err.error).error.description != "") {
@@ -235,14 +244,15 @@ export class FichaCambioLetradoComponent implements OnInit {
   compensacion() {
     let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
 
-    let salto = new SaltoCompItem();
-
-    salto.fecha = this.formatDate(new Date());
-    salto.idPersona = this.body.idPersona;
-    salto.idTurno = designa.idTurno;
-    salto.motivo = "";
-    salto.saltoCompensacion = "C";
-    this.sigaServices.post("saltosCompensacionesOficio_guardar", salto).subscribe(
+    let compensacion = new SaltoCompItem();
+    let compensaciones =[];
+    compensacion.fecha = this.formatDate(new Date());
+    compensacion.idPersona = this.body.idPersona;
+    compensacion.idTurno = designa.idTurno;
+    compensacion.motivo = "";
+    compensacion.saltoCompensacion = "C";
+    compensaciones.push(compensacion);
+    this.sigaServices.post("saltosCompensacionesOficio_guardar", compensaciones).subscribe(
       result => {
 
         const resp = JSON.parse(result.body);
@@ -269,7 +279,7 @@ export class FichaCambioLetradoComponent implements OnInit {
     salto.motivo = "";
     salto.saltoCompensacion = "S";
     saltos.push(salto);
-    
+
     this.sigaServices.post("saltosCompensacionesOficio_guardar", saltos).subscribe(
       result => {
 
