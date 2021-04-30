@@ -367,7 +367,9 @@ export class DatosIntegrantesComponent implements OnInit {
           console.log(err);
           this.progressSpinner = false;
         },
-        () => { }
+        () => { 
+          this.progressSpinner = false;
+        }
       );
   }
 
