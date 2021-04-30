@@ -113,11 +113,16 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
             this.datePickers[1].value = this.campos.fechaFin;
             if (this.valorParametro == 1) {
               this.getComboProcedimientosConJuzgado(this.juzgadoValue);
-              this.getcCmboModulosConProcedimientos(this.procedimientoValue);
+              if(this.procedimientoValue != null && this.procedimientoValue != "" && this.procedimientoValue != undefined){
+                this.getcCmboModulosConProcedimientos(this.procedimientoValue);
+              }
+             
             }
             if (this.valorParametro == 2) {
               this.getComboModulosConJuzgado(this.juzgadoValue);
-              this.getComboProcedimientosConModulo(this.moduloValue);
+              if(this.moduloValue != null && this.moduloValue != "" && this.moduloValue != undefined){
+                this.getComboProcedimientosConModulo(this.moduloValue);
+              }
             }
             if (this.valorParametro == 3) {
               this.getComboModulosConJuzgado(this.juzgadoValue);
@@ -173,7 +178,9 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
             this.disableRestablecer = false;
           }
           let designaUpdate = new DesignaItem();
-          designaUpdate.ano =designaUpdate.factConvenio;
+          designaUpdate.ano =this.campos.factConvenio;
+          designaUpdate.idTurno = this.campos.idTurno;
+          designaUpdate.numero = this.campos.numero;
           this.getComboDelitos(designaUpdate);
       
         },
@@ -214,14 +221,19 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
   }
 
   changeJuzgado() {
-      if (this.valorParametro == 1) {
-        this.getComboProcedimientosConJuzgado(this.juzgadoValue);
+    if (this.valorParametro == 1) {
+      this.getComboProcedimientosConJuzgado(this.juzgadoValue);
+      if(this.procedimientoValue != null && this.procedimientoValue != "" && this.procedimientoValue != undefined){
         this.getcCmboModulosConProcedimientos(this.procedimientoValue);
       }
-      if (this.valorParametro == 2) {
-        this.getComboModulosConJuzgado(this.juzgadoValue);
+     
+    }
+    if (this.valorParametro == 2) {
+      this.getComboModulosConJuzgado(this.juzgadoValue);
+      if(this.moduloValue != null && this.moduloValue != "" && this.moduloValue != undefined){
         this.getComboProcedimientosConModulo(this.moduloValue);
       }
+    }
       if (this.valorParametro == 3) {
         this.getComboModulosConJuzgado(this.juzgadoValue);
         this.getComboProcedimientos();
@@ -367,10 +379,11 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         this.inputs[1].value = this.datosInicial.numProcedimiento;
         this.datePickers[0].value = this.datosInicial.fechaEstado;
         this.delitosValue = this.initDelitos;
-        let designaUpdate = this.datosInicial;
-          let anio = designaUpdate.ano.split("/");
-          designaUpdate.ano = Number(anio[0].substring(1,5));
-        this.getComboDelitos(designaUpdate);
+        let designaUpdate = new DesignaItem();
+          designaUpdate.ano =this.datosInicial.factConvenio;
+          designaUpdate.idTurno = this.datosInicial.idTurno;
+          designaUpdate.numero = this.datosInicial.numero;
+          this.getComboDelitos(designaUpdate);
         if(this.datosInicial.fechaFin==0){
           this.datePickers[1].value = null;
         }else{
@@ -395,9 +408,10 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
             this.disableReactivar = true;
             this.disableRestablecer = false;
             this.getComboJuzgados();
-            let designaUpdate = this.datosInicial;
-            let anio = designaUpdate.ano.split("/");
-            designaUpdate.ano = Number(anio[0].substring(1,5));
+            let designaUpdate = new DesignaItem();
+            designaUpdate.ano =this.datosInicial.factConvenio;
+            designaUpdate.idTurno = this.datosInicial.idTurno;
+            designaUpdate.numero = this.datosInicial.numero;
             this.getComboDelitos(designaUpdate);
             this.delitosValue = "";
             this.estadosOpciones = [
