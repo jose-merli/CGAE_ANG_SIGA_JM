@@ -264,6 +264,11 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         newDesigna.nombreColegiado = this.inputs[1].value;
         newDesigna.apellidosNombre = this.inputs[2].value;
         newDesigna.fechaAlta = new Date(this.fechaGenerales);
+        if(this.checkArt == false){
+          newDesigna.art27 ="0";
+        }else{
+          newDesigna.art27 = "1";
+        }
         var today = new Date();
         var year = today.getFullYear().valueOf();
         newDesigna.ano = year;
@@ -468,6 +473,11 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
             newDesigna.numColegiado = this.inputs[0].value;
             newDesigna.nombreColegiado = this.inputs[1].value;
             newDesigna.apellidosNombre = this.inputs[2].value;
+            if(this.checkArt == false){
+              newDesigna.art27 ="0";
+            }else{
+              newDesigna.art27 = "1";
+            }
             newDesigna.fechaAlta = new Date(this.fechaGenerales);
             var today = new Date();
             var year = today.getFullYear().valueOf();
