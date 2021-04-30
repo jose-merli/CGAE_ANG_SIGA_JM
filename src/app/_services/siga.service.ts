@@ -28,6 +28,8 @@ import { endpoints_oficio } from "../utils/endpoints_oficio";
 
 import { endpoints_componentes } from "../utils/endpoints_components";
 import { endpoints_generales } from "../utils/endpoints_generales";
+import { Documento } from '../features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-designa/ficha-actuacion/tarjeta-doc-ficha-act/tarjeta-doc-ficha-act.component';
+import { ActuacionDesignaItem } from '../models/sjcs/ActuacionDesignaItem';
 
 @Injectable()
 export class SigaServices {
@@ -381,10 +383,10 @@ export class SigaServices {
     // GENERAL
     solicitudModificacion_searchModificationRequest: 'solicitudModificacion/searchModificationRequest',
     solicitudModificacion_processGeneralModificationRequest:
-        'solicitudModificacion/processGeneralModificationRequest',
+      'solicitudModificacion/processGeneralModificationRequest',
     solicitudModificacion_denyGeneralModificationRequest: 'solicitudModificacion/denyGeneralModificationRequest',
     solicitudModificacion_insertGeneralModificationRequest:
-        'solicitudModificacion/insertGeneralModificationRequest',
+      'solicitudModificacion/insertGeneralModificationRequest',
     // ESPECÍFICA
     solicitudModificacion_searchSolModif: 'solicitudModificacion/searchSolModif',
     solicitudModificacion_processSolModif: 'solicitudModificacion/processSolModif',
@@ -393,21 +395,21 @@ export class SigaServices {
     solicitudModificacion_searchSolModifDatosCambiarFoto: 'solicitudModificacion/searchSolModifDatosCambiarFoto',
     solicitudModificacion_searchDatosBancariosDetail: 'solicitudModificacion/searchDatosBancariosDetail',
     solicitudModificacion_searchSolModifDatosBancariosDetail:
-        'solicitudModificacion/searchSolModifDatosBancariosDetail',
+      'solicitudModificacion/searchSolModifDatosBancariosDetail',
     solicitudModificacion_processSolModifDatosBancarios: 'solicitudModificacion/processSolModifDatosBancarios',
     solicitudModificacion_denySolModifDatosBancarios: 'solicitudModificacion/denySolModifDatosBancarios',
     solicitudModificacion_searchSolModifDatosCurriculares: 'solicitudModificacion/searchSolModifDatosCurriculares',
     solicitudModificacion_searchDatosCurricularesDetail: 'solicitudModificacion/searchDatosCurricularesDetail',
     solicitudModificacion_searchSolModifDatosCurricularesDetail:
-        'solicitudModificacion/searchSolModifDatosCurricularesDetail',
+      'solicitudModificacion/searchSolModifDatosCurricularesDetail',
     solicitudModificacion_processSolModifDatosCurriculares:
-        'solicitudModificacion/processSolModifDatosCurriculares',
+      'solicitudModificacion/processSolModifDatosCurriculares',
     solicitudModificacion_denySolModifDatosCurriculares: 'solicitudModificacion/denySolModifDatosCurriculares',
     // SOL. DIRECCIONES
     solicitudModificacion_searchSolModifDatosDirecciones: 'solicitudModificacion/searchSolModifDatosDirecciones',
     solicitudModificacion_searchDirecciones: 'solicitudModificacion/searchDirecciones',
     solicitudModificacion_searchSolModifDatosDireccionesDetail:
-        'solicitudModificacion/searchSolModifDatosDireccionesDetail',
+      'solicitudModificacion/searchSolModifDatosDireccionesDetail',
     solicitudModificacion_processSolModifDatosDirecciones: 'solicitudModificacion/processSolModifDatosDirecciones',
     solicitudModificacion_denySolModifDatosDirecciones: 'solicitudModificacion/denySolModifDatosDirecciones',
     solicitudModificacion_searchSolModifDatosExpedientes: 'solicitudModificacion/searchSolModifDatosExpedientes',
@@ -420,15 +422,15 @@ export class SigaServices {
     solicitudModificacion_processSolModifDatosGenerales: 'solicitudModificacion/processSolModifDatosGenerales',
     solicitudModificacion_denySolModifDatosGenerales: 'solicitudModificacion/denySolModifDatosGenerales',
     solicitudModificacion_searchSolModifDatosGeneralesDetail:
-        'solicitudModificacion/searchSolModifDatosGeneralesDetail',
+      'solicitudModificacion/searchSolModifDatosGeneralesDetail',
     solicitudModificacion_searchSolModifDatosCambiarFotoDetail:
-        'solicitudModificacion/searchSolModifDatosCambiarFotoDetail',
+      'solicitudModificacion/searchSolModifDatosCambiarFotoDetail',
     solicitudModificacion_searchDatosGeneralesDetail: 'solicitudModificacion/searchDatosGeneralesDetail',
     // FOTO
     solicitudModificacion_searchSolModifDatosUseFoto: 'solicitudModificacion/searchSolModifDatosUseFoto',
     solicitudModificacion_searchDatosUseFotoDetail: 'solicitudModificacion/searchDatosUseFotoDetail',
     solicitudModificacion_searchSolModifDatosUseFotoDetail:
-        'solicitudModificacion/searchSolModifDatosUseFotoDetail',
+      'solicitudModificacion/searchSolModifDatosUseFotoDetail',
     solicitudModificacion_processSolModifDatosUseFoto: 'solicitudModificacion/processSolModifDatosUseFoto',
     solicitudModificacion_processSolModifDatosCambiarFoto: 'solicitudModificacion/processSolModifDatosCambiarFoto',
     solicitudModificacion_denySolModifDatosUseFoto: 'solicitudModificacion/denySolModifDatosUseFoto',
@@ -475,12 +477,12 @@ export class SigaServices {
     fichaDatosDirecciones_solicitudCreate: 'fichaDatosDirecciones/solicitudCreate',
     fichaDatosDirecciones_solicitudUpdate: 'fichaDatosDirecciones/solicitudUpdate',
     fichaDatosGenerales_datosGeneralesSolicitudModificación:
-        '/fichaDatosGenerales/datosGeneralesSolicitudModificación',
+      '/fichaDatosGenerales/datosGeneralesSolicitudModificación',
     personaJuridica_solicitudUploadFotografia: 'personaJuridica/solicitudUploadFotografia',
     busquedaPerJuridica_datosBancariosInsert: 'busquedaPerJuridica/datosBancariosInsert',
     busquedaPerJuridica_solicitudInsertBanksData: 'busquedaPerJuridica/solicitudInsertBanksData',
     fichaDatosColegiales_datosColegialesUpdate: '/fichaDatosColegiales/datosColegialesUpdate',
-    fichaDatosColegiales_datosColegialesUpdateMasivo:'/fichaDatosColegiales/datosColegialesUpdateMasivo',
+    fichaDatosColegiales_datosColegialesUpdateMasivo: '/fichaDatosColegiales/datosColegialesUpdateMasivo',
     fichaDatosColegiales_datosColegialesInsertEstado: '/fichaDatosColegiales/datosColegialesInsertEstado',
     fichaDatosColegiales_datosColegialesUpdateEstados: '/fichaDatosColegiales/datosColegialesUpdateEstados',
     fichaDatosColegiales_datosColegialesDeleteEstado: '/fichaDatosColegiales/datosColegialesDeleteEstado',
@@ -635,7 +637,7 @@ export class SigaServices {
   private sendFechaBaja = new Subject<any>();
   private sendSelectedDatos = new Subject<any>();
   private sendDatosRedy = new Subject<any>();
- 
+
 
   menuToggled$ = this.menuToggled.asObservable();
   iframeRemove$ = this.iframeRemove.asObservable();
@@ -669,19 +671,19 @@ export class SigaServices {
 
   get(service: string): Observable<any> {
     return this.http.get(environment.newSigaUrl + this.endpoints[service]).map((response) => {
-        return response;
+      return response;
     });
   }
 
   getParam(service: string, body: any): Observable<any> {
     return this.http.get(environment.newSigaUrl + this.endpoints[service] + body).map((response) => {
-        return response;
+      return response;
     });
   }
 
   getBackend(service: string): Observable<any> {
     return this.httpbackend.get(environment.newSigaUrl + this.endpoints[service]).map((response) => {
-        return response;
+      return response;
     });
   }
 
@@ -699,50 +701,50 @@ export class SigaServices {
 
   getPerfil(service: string, institucion: string): Observable<any> {
     return this.httpbackend
-        .get(environment.newSigaUrl + this.endpoints[service] + '?institucion=' + institucion)
-        .map((response) => {
-            return response;
-        });
+      .get(environment.newSigaUrl + this.endpoints[service] + '?institucion=' + institucion)
+      .map((response) => {
+        return response;
+      });
   }
 
   postBackend(service: string, body: any): Observable<any> {
     let headers = new HttpHeaders({
-        'Content-Type': 'application/json'
+      'Content-Type': 'application/json'
     });
     return this.httpbackend
-        .post(environment.newSigaUrl + this.endpoints[service], body, {
-            headers: headers,
-            observe: 'response',
-            responseType: 'text'
-        })
-        .map((response) => {
-            return response;
-        });
+      .post(environment.newSigaUrl + this.endpoints[service], body, {
+        headers: headers,
+        observe: 'response',
+        responseType: 'text'
+      })
+      .map((response) => {
+        return response;
+      });
   }
 
   post(service: string, body: any): Observable<any> {
     let headers = new HttpHeaders({
-        'Content-Type': 'application/json'
+      'Content-Type': 'application/json'
     });
     return this.http
-        .post(environment.newSigaUrl + this.endpoints[service], body, {
-            headers: headers,
-            observe: 'response',
-            responseType: 'text'
-        })
-        .map((response) => {
-            return response;
-        });
+      .post(environment.newSigaUrl + this.endpoints[service], body, {
+        headers: headers,
+        observe: 'response',
+        responseType: 'text'
+      })
+      .map((response) => {
+        return response;
+      });
   }
 
   parseErrorBlob(err: HttpErrorResponse): Observable<any> {
     const reader: FileReader = new FileReader();
 
     const obs = Observable.create((observer: any) => {
-        reader.onloadend = (e) => {
-            observer.error(JSON.parse(reader.result as string));
-            observer.complete();
-        };
+      reader.onloadend = (e) => {
+        observer.error(JSON.parse(reader.result as string));
+        observer.complete();
+      };
     });
     reader.readAsText(err.error);
     return obs;
@@ -750,26 +752,26 @@ export class SigaServices {
 
   postDownloadFiles(service: string, body: any): Observable<any> {
     let headers = new HttpHeaders({
-        'Content-Type': 'application/json'
+      'Content-Type': 'application/json'
     });
     return this.http
-        .post(environment.newSigaUrl + this.endpoints[service], body, {
-            headers: headers,
-            observe: 'body', // si observe: "response" no sirve. Si se quita el observe sirve
-            responseType: 'blob'
-        })
-        .map((response) => {
-            return response;
-        })
-        .catch((response) => {
-            return this.parseErrorBlob(response);
-        });
+      .post(environment.newSigaUrl + this.endpoints[service], body, {
+        headers: headers,
+        observe: 'body', // si observe: "response" no sirve. Si se quita el observe sirve
+        responseType: 'blob'
+      })
+      .map((response) => {
+        return response;
+      })
+      .catch((response) => {
+        return this.parseErrorBlob(response);
+      });
   }
 
   postSendContent(service: string, file: any): Observable<any> {
     let formData: FormData = new FormData();
     if (file != undefined) {
-        formData.append('uploadFile', file, file.name);
+      formData.append('uploadFile', file, file.name);
     }
     let headers = new HttpHeaders();
 
@@ -777,18 +779,18 @@ export class SigaServices {
     headers.append('Accept', 'application/json');
 
     return this.http
-        .post(environment.newSigaUrl + this.endpoints[service], formData, {
-            headers: headers
-        })
-        .map((response) => {
-            return response;
-        });
+      .post(environment.newSigaUrl + this.endpoints[service], formData, {
+        headers: headers
+      })
+      .map((response) => {
+        return response;
+      });
   }
 
   postSendFileAndParameters(service: string, file: any, idPersona: any): Observable<any> {
     let formData: FormData = new FormData();
     if (file != undefined) {
-        formData.append('uploadFile', file, file.name);
+      formData.append('uploadFile', file, file.name);
     }
 
     // pasar parametros por la request
@@ -800,18 +802,18 @@ export class SigaServices {
     headers.append('Accept', 'application/json');
 
     return this.http
-        .post(environment.newSigaUrl + this.endpoints[service], formData, {
-            headers: headers
-        })
-        .map((response) => {
-            return response;
-        });
+      .post(environment.newSigaUrl + this.endpoints[service], formData, {
+        headers: headers
+      })
+      .map((response) => {
+        return response;
+      });
   }
 
   postSendFileAndBody(service: string, file: any, idPersona: any, motivo: any): Observable<any> {
     let formData: FormData = new FormData();
     if (file != undefined) {
-        formData.append('uploadFile', file, file.name);
+      formData.append('uploadFile', file, file.name);
     }
 
     // pasar parametros por la request
@@ -825,25 +827,49 @@ export class SigaServices {
     headers.append('Accept', 'application/json');
 
     return this.http
-        .post(environment.newSigaUrl + this.endpoints[service], formData, {
-            headers: headers
-        })
-        .map((response) => {
-            return response;
-        });
+      .post(environment.newSigaUrl + this.endpoints[service], formData, {
+        headers: headers
+      })
+      .map((response) => {
+        return response;
+      });
   }
 
-  postSendFileAndActuacion(service: string, file: any, anio: string, numero: string, idActuacion: string, observaciones: string): Observable<any> {
+  postSendFileAndActuacion(service: string, documentos: Documento[], actuacion: ActuacionDesignaItem): Observable<any> {
     let formData: FormData = new FormData();
-    if (file != undefined) {
-        formData.append('uploadFile', file, file.name);
-    }
 
-    // pasar parametros por la request
-    formData.append('anio', anio);
-    formData.append('numero', numero);
-    formData.append('idActuacion', idActuacion);
-    formData.append('observaciones', observaciones);
+    let documentosActualizar = [];
+
+    documentos.forEach((el, i) => {
+
+      if (el.file != undefined && el.file != null) {
+        formData.append(`uploadFile${i}`, el.file, el.file.name + ';' + JSON.stringify({
+          anio: actuacion.anio,
+          numero: actuacion.numero,
+          idActuacion: actuacion.numeroAsunto,
+          observaciones: el.observaciones
+        }));
+      } else {
+        documentosActualizar.push({
+          idDocumentacionasi: el.idDocumentacionasi,
+          idTipoDocumento: el.idTipoDocumento,
+          nombreTipoDocumento: el.nombreTipoDocumento,
+          idFichero: el.idFichero,
+          idInstitucion: el.idInstitucion,
+          usuModificacion: el.usuModificacion,
+          fechaModificacion: el.fechaModificacion,
+          fechaEntrada: el.fechaEntrada,
+          anio: el.anio,
+          numero: el.numero,
+          idActuacion: el.idActuacion,
+          observaciones: el.observaciones,
+          nombreFichero: el.nombreFichero,
+          asociado: el.asociado
+        });
+      }
+    });
+
+    formData.append('documentosActualizar', JSON.stringify(documentosActualizar));
 
     let headers = new HttpHeaders();
 
@@ -851,12 +877,12 @@ export class SigaServices {
     headers.append('Accept', 'application/json');
 
     return this.http
-        .post(environment.newSigaUrl + this.endpoints[service], formData, {
-            headers: headers
-        })
-        .map((response) => {
-            return response;
-        });
+      .post(environment.newSigaUrl + this.endpoints[service], formData, {
+        headers: headers
+      })
+      .map((response) => {
+        return response;
+      });
   }
 
   postSendFileAndParametersDataBank(
@@ -870,7 +896,7 @@ export class SigaServices {
   ): Observable<any> {
     let formData: FormData = new FormData();
     if (file != undefined) {
-        formData.append('uploadFile', file, file.name);
+      formData.append('uploadFile', file, file.name);
     }
 
     // pasar parametros por la request
@@ -886,12 +912,12 @@ export class SigaServices {
     headers.append('Accept', 'application/json');
 
     return this.http
-        .post(environment.newSigaUrl + this.endpoints[service], formData, {
-            headers: headers
-        })
-        .map((response) => {
-            return response;
-        });
+      .post(environment.newSigaUrl + this.endpoints[service], formData, {
+        headers: headers
+      })
+      .map((response) => {
+        return response;
+      });
   }
 
   postSendFileAndParametersComprobantePago(
@@ -902,7 +928,7 @@ export class SigaServices {
   ): Observable<any> {
     let formData: FormData = new FormData();
     if (file != undefined) {
-        formData.append('uploadFile', file, file.name);
+      formData.append('uploadFile', file, file.name);
     }
 
     // pasar parametros por la request
@@ -915,27 +941,27 @@ export class SigaServices {
     headers.append('Accept', 'application/json');
 
     return this.http
-        .post(environment.newSigaUrl + this.endpoints[service], formData, {
-            headers: headers
-        })
-        .map((response) => {
-            return response;
-        });
+      .post(environment.newSigaUrl + this.endpoints[service], formData, {
+        headers: headers
+      })
+      .map((response) => {
+        return response;
+      });
   }
 
   postPaginado(service: string, param: string, body: any): Observable<any> {
     let headers = new HttpHeaders({
-        'Content-Type': 'application/json'
+      'Content-Type': 'application/json'
     });
     return this.http
-        .post(environment.newSigaUrl + this.endpoints[service] + param, body, {
-            headers: headers,
-            observe: 'response',
-            responseType: 'text'
-        })
-        .map((response) => {
-            return response;
-        });
+      .post(environment.newSigaUrl + this.endpoints[service] + param, body, {
+        headers: headers,
+        observe: 'response',
+        responseType: 'text'
+      })
+      .map((response) => {
+        return response;
+      });
   }
 
   notifyMenuToggled() {
@@ -1009,7 +1035,7 @@ export class SigaServices {
   ): Observable<any> {
     let formData: FormData = new FormData();
     if (file != undefined) {
-        formData.append('uploadFile', file, file.name);
+      formData.append('uploadFile', file, file.name);
     }
     let headers = new HttpHeaders();
 
@@ -1017,11 +1043,11 @@ export class SigaServices {
     headers.append('Accept', 'application/json');
 
     return this.http
-        .post(environment.newSigaUrl + this.endpoints[service] + param, formData, {
-            headers: headers
-        })
-        .map((response) => {
-            return response;
-        });
+      .post(environment.newSigaUrl + this.endpoints[service] + param, formData, {
+        headers: headers
+      })
+      .map((response) => {
+        return response;
+      });
   }
 }

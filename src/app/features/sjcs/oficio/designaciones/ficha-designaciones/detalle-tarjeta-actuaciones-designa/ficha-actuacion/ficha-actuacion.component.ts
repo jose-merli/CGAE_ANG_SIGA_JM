@@ -2,16 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { Location, DatePipe } from '@angular/common';
 import { ActuacionDesignaItem } from '../../../../../../../models/sjcs/ActuacionDesignaItem';
 import { SigaServices } from '../../../../../../../_services/siga.service';
-import { CommonsService } from '../../../../../../../_services/commons.service';
-import { procesos_oficio } from '../../../../../../../permisos/procesos_oficio';
-import { Router } from '@angular/router';
 import { TranslateService } from '../../../../../../../commons/translate/translation.service';
 import { ColegiadoItem } from '../../../../../../../models/ColegiadoItem';
 import { DesignaItem } from '../../../../../../../models/sjcs/DesignaItem';
 import { AccionItem } from './tarjeta-his-ficha-act/tarjeta-his-ficha-act.component';
 import { Message } from 'primeng/components/common/api';
 import { ActuacionDesignaObject } from '../../../../../../../models/sjcs/ActuacionDesignaObject';
-import { Actuacion } from '../detalle-tarjeta-actuaciones-designa.component';
+import { DocumentoActDesignaObject } from '../../../../../../../models/sjcs/DocumentoActDesignaObject';
+import { DocumentoActDesignaItem } from '../../../../../../../models/sjcs/DocumentoActDesignaItem';
 
 @Component({
   selector: 'app-ficha-actuacion',
@@ -149,20 +147,10 @@ export class FichaActuacionComponent implements OnInit {
   msgs: Message[] = [];
   relaciones: any;
   isColegiado;
-  documentos = [
-    {
-      fecha: '29/04/2021',
-      asociado: 'Prueba de asociado',
-      tipodocumentacion: 'Justificación Actuación',
-      nombre: '',
-      observaciones: 'Prueba de observaciones'
-    }
-  ];
+  documentos: DocumentoActDesignaItem[] = [];
 
   constructor(private location: Location,
     private sigaServices: SigaServices,
-    private commonsService: CommonsService,
-    private router: Router,
     private translateService: TranslateService,
     private datePipe: DatePipe) { }
 
@@ -506,6 +494,35 @@ export class FichaActuacionComponent implements OnInit {
 
     this.getIdPartidaPresupuestaria();
     this.getAccionesActuacion();
+    this.getDocumentosPorActDesigna();
+  }
+
+  getDocumentosPorActDesigna() {
+
+    this.progressSpinner = true;
+
+    let params = {
+      anio: this.actuacionDesigna.actuacion.anio,
+      numero: this.actuacionDesigna.actuacion.numero,
+      idActuacion: this.actuacionDesigna.actuacion.numeroAsunto
+    };
+
+    this.sigaServices.post("actuaciones_designacion_getDocumentosPorActDesigna", params).subscribe(
+      data => {
+
+        console.log("🚀 ~ file: ficha-actuacion.component.ts ~ line 512 ~ FichaActuacionComponent ~ getDocumentosPorActDesigna ~ data", data);
+        let resp: DocumentoActDesignaObject = JSON.parse(data.body);
+        this.documentos = resp.listaDocumentoActDesignaItem;
+      },
+      err => {
+        this.progressSpinner = false;
+        console.log(err);
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+
   }
 
 }

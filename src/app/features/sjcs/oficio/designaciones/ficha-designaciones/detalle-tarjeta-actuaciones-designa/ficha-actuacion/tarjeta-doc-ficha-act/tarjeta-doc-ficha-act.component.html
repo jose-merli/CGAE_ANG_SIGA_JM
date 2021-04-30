@@ -1,3 +1,5 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
 <!-- Spinner -->
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
@@ -5,7 +7,10 @@
 <!-- Spinner -->
 
 <!-- Tabla de documentación -->
-<p-table [value]="documentos" [columns]="cols" [responsive]="true" #table class="tabla-listado">
+<p-table [value]="documentos2" [columns]="cols" [responsive]="true" #table class="tabla-listado" [paginator]="true"
+  paginatorPosition="both" [rows]="selectedItem" [selectionMode]="selectionMode"
+  (onRowSelect)="actualizaSeleccionados($event)" (onRowUnselect)="actualizaSeleccionados()"
+  [(selection)]="selectedDatos">
 
   <ng-template pTemplate="colgroup" let-columns>
     <colgroup>
@@ -34,12 +39,14 @@
           <textarea class="form-control" pInputTextarea [(ngModel)]="dato[col.field]"></textarea>
         </span>
 
-        <span *ngIf="col.field == 'nombre'">
+        <span *ngIf="col.field == 'nombreFichero' && dato.nuevo" class="text-center">
           <p-fileUpload #pUploadFile name="file" mode="basic" accept=".doc,.docx,.pdf,.jpg,.png,.rtf,.txt"
-             class="edit my-0 mx-auto main-button" auto="true" (onSelect)="getFile($event)"></p-fileUpload>
+            chooseLabel="{{ 'general.boton.adjuntarFichero' | translate }}"  class="edit my-0 mx-auto main-button"
+            auto="true" (onSelect)="getFile(dato, pUploadFile, $event)"></p-fileUpload>
         </span>
 
-        <span *ngIf="col.field != 'observaciones' && col.field != 'nombre'">{{dato[col.field]}}</span>
+        <span
+          *ngIf="col.field != 'observaciones' || (col.field == 'nombreFichero' && !dato.nuevo)">{{dato[col.field]}}</span>
 
       </td>
     </tr>
@@ -53,17 +60,38 @@
     </tr>
   </ng-template>
 
+  <ng-template pTemplate="paginatorleft">
+    <div class="mostrar d-flex text-right justify-content-end">
+      <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' |
+        translate }}{{table.first + 1}} al {{table.first
+        + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }}
+        {{table.totalRecords}}</label>
+      <label class="pr-3 numSeleccionados">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' |
+        translate }}: {{numSelected}}
+      </label>
+      <label>{{"general.message.mostrar" | translate}}</label>
+      <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
+      </p-dropdown>
+      <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+      <div class="ml-3 selectAll">
+        <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true"
+          label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname">
+        </p-checkbox>
+      </div>
+    </div>
+  </ng-template>
+
 </p-table>
 <!-- Tabla de documentación -->
 
 <div class="card-footer">
   <div class="text-right main-button">
-    <button pButton type="button" icon="fa fa-trash" iconPos="left"
-      label="{{ 'general.boton.eliminar' | translate}}"></button>
-    <button pButton type="button" icon="fa fa-download" iconPos="left"
-      label="{{'general.boton.download' | translate}}"></button>
-    <button pButton type="button" icon="fa fa-plus" iconPos="left"
-      label="{{ 'general.boton.new' | translate}}"></button>
+    <button pButton type="button" icon="fa fa-trash" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"
+      [disabled]="selectedDatos.length == 0"></button>
+    <button pButton type="button" icon="fa fa-download" iconPos="left" label="{{'general.boton.download' | translate}}"
+      [disabled]="selectedDatos.length == 0" (click)="descargarArchivos()"></button>
+    <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"
+      (click)="nuevo()"></button>
     <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"
       (click)="uploadFile()"></button>
   </div>
