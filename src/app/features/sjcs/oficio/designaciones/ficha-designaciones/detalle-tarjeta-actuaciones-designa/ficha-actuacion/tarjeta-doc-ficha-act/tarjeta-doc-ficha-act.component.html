@@ -1,3 +1,70 @@
-<p>
-  tarjeta-documentacion-ficha-act works!
-</p>
+<!-- Spinner -->
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+<!-- Spinner -->
+
+<!-- Tabla de documentación -->
+<p-table [value]="documentos" [columns]="cols" [responsive]="true" #table class="tabla-listado">
+
+  <ng-template pTemplate="colgroup" let-columns>
+    <colgroup>
+      <col *ngFor="let col of cols" [style.width]="col.width">
+    </colgroup>
+  </ng-template>
+
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+      <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+        {{col.header}}
+        <p-sortIcon [field]="col.field"></p-sortIcon>
+        <input class="filtros" placeholder="{{'general.boton.search' | translate}}" pDroppable="false"
+          (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="table.filter($event.target.value,
+            col.field, 'contains')">
+      </th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+    <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+
+      <td class="text-center" *ngFor="let col of columns">
+
+        <span *ngIf="col.field == 'observaciones'">
+          <textarea class="form-control" pInputTextarea [(ngModel)]="dato[col.field]"></textarea>
+        </span>
+
+        <span *ngIf="col.field == 'nombre'">
+          <p-fileUpload #pUploadFile name="file" mode="basic" accept=".doc,.docx,.pdf,.jpg,.png,.rtf,.txt"
+             class="edit my-0 mx-auto main-button" auto="true" (onSelect)="getFile($event)"></p-fileUpload>
+        </span>
+
+        <span *ngIf="col.field != 'observaciones' && col.field != 'nombre'">{{dato[col.field]}}</span>
+
+      </td>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="emptymessage" let-columns>
+    <tr>
+      <td [attr.colspan]="columns.length">
+        {{ 'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}.
+      </td>
+    </tr>
+  </ng-template>
+
+</p-table>
+<!-- Tabla de documentación -->
+
+<div class="card-footer">
+  <div class="text-right main-button">
+    <button pButton type="button" icon="fa fa-trash" iconPos="left"
+      label="{{ 'general.boton.eliminar' | translate}}"></button>
+    <button pButton type="button" icon="fa fa-download" iconPos="left"
+      label="{{'general.boton.download' | translate}}"></button>
+    <button pButton type="button" icon="fa fa-plus" iconPos="left"
+      label="{{ 'general.boton.new' | translate}}"></button>
+    <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"
+      (click)="uploadFile()"></button>
+  </div>
+</div>

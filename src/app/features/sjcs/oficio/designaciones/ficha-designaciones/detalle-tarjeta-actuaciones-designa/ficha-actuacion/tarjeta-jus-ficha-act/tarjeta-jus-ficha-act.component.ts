@@ -134,7 +134,7 @@ export class TarjetaJusFichaActComponent implements OnInit, OnDestroy {
     //this.fechaJusti = this.actuacionDesigna.actuacion.fechaJustificacion;
     this.observaciones = this.actuacionDesigna.actuacion.observacionesJusti;
 
-    if (!this.isColegiado) {
+    if (this.isColegiado) {
       this.fechaJusti = this.datePipe.transform(new Date(), 'dd/MM/yyyy');
     } else {
       this.fechaJusti = '';

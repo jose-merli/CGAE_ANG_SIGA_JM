@@ -10,6 +10,8 @@ import { ColegiadoItem } from '../../../../../../../models/ColegiadoItem';
 import { DesignaItem } from '../../../../../../../models/sjcs/DesignaItem';
 import { AccionItem } from './tarjeta-his-ficha-act/tarjeta-his-ficha-act.component';
 import { Message } from 'primeng/components/common/api';
+import { ActuacionDesignaObject } from '../../../../../../../models/sjcs/ActuacionDesignaObject';
+import { Actuacion } from '../detalle-tarjeta-actuaciones-designa.component';
 
 @Component({
   selector: 'app-ficha-actuacion',
@@ -131,7 +133,7 @@ export class FichaActuacionComponent implements OnInit {
       imagen: "",
       icono: 'fa fa-briefcase',
       fixed: false,
-      detalle: false,
+      detalle: true,
       opened: false,
       campos: []
     },
@@ -147,6 +149,15 @@ export class FichaActuacionComponent implements OnInit {
   msgs: Message[] = [];
   relaciones: any;
   isColegiado;
+  documentos = [
+    {
+      fecha: '29/04/2021',
+      asociado: 'Prueba de asociado',
+      tipodocumentacion: 'Justificación Actuación',
+      nombre: '',
+      observaciones: 'Prueba de observaciones'
+    }
+  ];
 
   constructor(private location: Location,
     private sigaServices: SigaServices,
@@ -170,34 +181,21 @@ export class FichaActuacionComponent implements OnInit {
       this.actuacionDesigna = actuacion;
       console.log("🚀 ~ file: ficha-actuacion.component.ts ~ line 149 ~ FichaActuacionComponent ~ ngOnInit ~ this.actuacionDesigna", this.actuacionDesigna)
 
-      // Se rellenan la tarjeta resumen
-      this.tarjetaFija.campos[0].value = this.actuacionDesigna.designaItem.ano;
-      this.tarjetaFija.campos[1].value = `${this.actuacionDesigna.designaItem.numColegiado} ${this.actuacionDesigna.designaItem.nombreColegiado}`;
-      this.tarjetaFija.campos[2].value = this.actuacionDesigna.actuacion.numeroAsunto;
-      this.tarjetaFija.campos[3].value = this.actuacionDesigna.actuacion.fechaActuacion;
-
-      // Se rellenan los campos de la tarjeta de Datos Generales plegada
-      this.listaTarjetas[0].campos[0].value = this.actuacionDesigna.actuacion.nombreJuzgado;
-      this.listaTarjetas[0].campos[1].value = this.actuacionDesigna.actuacion.modulo;
-      this.listaTarjetas[0].campos[2].value = this.actuacionDesigna.actuacion.acreditacion;
-
-      // Se rellenan los campos de la tarjeta de Justificación plegada
-      if (!actuacion.isNew) {
-        this.listaTarjetas[1].campos[0].value = this.actuacionDesigna.actuacion.fechaJustificacion;
-        this.listaTarjetas[1].campos[1].value = this.actuacionDesigna.actuacion.validada ? 'Validada' : 'Pendiente de validar';
-      }
-
-      if (actuacion.relaciones != null) {
-        this.relaciones = actuacion.relaciones;
-      }
-
       if (actuacion.isNew) {
+
         this.isNewActDesig = true;
         this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiDatosGen').opened = true;
       } else {
-        this.getIdPartidaPresupuestaria();
-        this.getAccionesActuacion();
+
+        this.establecerValoresIniciales();
       }
+
+      if (actuacion.relaciones != null) {
+
+        this.relaciones = actuacion.relaciones;
+
+      }
+
     }
 
   }
@@ -250,6 +248,10 @@ export class FichaActuacionComponent implements OnInit {
 
     if (event.tarjeta == 'sjcsDesigActuaOfiDatFac') {
       tarjeta.campos[0].value = event.partida;
+    }
+
+    if (event.tarjeta == 'sjcsDesigActuaOfiRela') {
+      this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiRela').campos = event.campos;
     }
 
   }
@@ -369,7 +371,7 @@ export class FichaActuacionComponent implements OnInit {
 
     if (accion.observaciones != undefined && accion.observaciones != null && accion.observaciones != '') {
       registroCreacion.observaciones = accion.observaciones;
-      anadirJustificacion = true;
+      anadirCreacion = true;
     }
 
     if (accion.fechaUsuJustificacion != undefined && accion.fechaUsuJustificacion != null && accion.fechaUsuJustificacion != '') {
@@ -432,6 +434,78 @@ export class FichaActuacionComponent implements OnInit {
 
   getInstitucionActual() {
     this.sigaServices.get("institucionActual").subscribe(n => { this.institucionActual = n.value });
+  }
+
+  getActuacionDesigna(event) {
+
+    this.progressSpinner = true;
+
+    let params = {
+      anio: this.actuacionDesigna.designaItem.ano.split('/')[0].replace('D', ''),
+      idTurno: this.actuacionDesigna.designaItem.idTurno,
+      numero: this.actuacionDesigna.designaItem.numero,
+      historico: false,
+      idPersonaColegiado: '',
+      numeroAsunto: event
+    };
+
+    this.sigaServices.post("actuaciones_designacion", params).subscribe(
+      data => {
+
+        let object: ActuacionDesignaObject = JSON.parse(data.body);
+
+        if (object.error != null && object.error.description != null) {
+          this.showMsg('error', 'Error', this.translateService.instant(object.error.description.toString()));
+        } else {
+          let resp = object.actuacionesDesignaItems[0];
+          this.actuacionDesigna.actuacion = resp;
+          this.actuacionDesigna.isNew = false;
+          this.isNewActDesig = false;
+          this.establecerValoresIniciales();
+        }
+      },
+      err => {
+        this.progressSpinner = false;
+        console.log(err);
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  establecerValoresIniciales() {
+
+    // Se rellenan la tarjeta resumen
+    this.tarjetaFija.campos[0].value = this.actuacionDesigna.designaItem.ano;
+    this.tarjetaFija.campos[1].value = `${this.actuacionDesigna.designaItem.numColegiado} ${this.actuacionDesigna.designaItem.nombreColegiado}`;
+    this.tarjetaFija.campos[2].value = this.actuacionDesigna.actuacion.numeroAsunto;
+    this.tarjetaFija.campos[3].value = this.datePipe.transform(new Date(this.actuacionDesigna.actuacion.fechaActuacion.split('/').reverse().join('-')), 'dd/MM/yyyy');
+
+    // Se rellenan los campos de la tarjeta de Datos Generales plegada
+    this.listaTarjetas[0].campos[0].value = this.actuacionDesigna.actuacion.nombreJuzgado;
+    this.listaTarjetas[0].campos[1].value = this.actuacionDesigna.actuacion.modulo;
+    this.listaTarjetas[0].campos[2].value = this.actuacionDesigna.actuacion.acreditacion;
+
+    // Se rellenan los campos de la tarjeta de Justificación plegada
+
+    this.listaTarjetas[1].campos[0].value = this.actuacionDesigna.actuacion.fechaJustificacion;
+    this.listaTarjetas[1].campos[1].value = this.actuacionDesigna.actuacion.validada ? 'Validada' : 'Pendiente de validar';
+
+    if (this.relaciones == undefined || this.relaciones == null || this.relaciones.length == 0) {
+      this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiRela').campos = [{
+        "key": "Nº total",
+        "value": 'No existen relaciones asociadas a la actuación'
+      }];
+    } else {
+      this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiRela').campos = [{
+        "key": "Nº total",
+        "value": this.relaciones.length
+      }];
+    }
+
+    this.getIdPartidaPresupuestaria();
+    this.getAccionesActuacion();
   }
 
 }

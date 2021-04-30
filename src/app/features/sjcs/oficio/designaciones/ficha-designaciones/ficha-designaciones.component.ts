@@ -642,7 +642,7 @@ export class FichaDesignacionesComponent implements OnInit {
               facturadas += 1;
             }
 
-            if (el.fechaJustificacion != '') {
+            if (el.fechaJustificacion != undefined && el.fechaJustificacion != null && el.fechaJustificacion != '') {
               justificadas += 1;
             }
 
@@ -1571,16 +1571,16 @@ export class FichaDesignacionesComponent implements OnInit {
     }
   }
 
-changeDataTarjeta(event) {​​​​​
-// lettarjeta = this.listaTarjetas.find(el=>el.id == event.tarjeta);
-// if (event.tarjeta == 'sjcsDesigActuaOfiJustifi') {​​​​​
-// tarjeta.campos[0].value = event.fechaJusti;
-// tarjeta.campos[1].value = event.estado;
-//     }​​​​​
-// if (event.tarjeta == 'sjcsDesigActuaOfiDatFac') {​​​​​
-// tarjeta.campos[0].value = event.partida;
-//     }​​​​​
-  }​​​​​
+  changeDataTarjeta(event) {
+    // lettarjeta = this.listaTarjetas.find(el=>el.id == event.tarjeta);
+    // if (event.tarjeta == 'sjcsDesigActuaOfiJustifi') {​​​​​
+    // tarjeta.campos[0].value = event.fechaJusti;
+    // tarjeta.campos[1].value = event.estado;
+    //     }​​​​​
+    // if (event.tarjeta == 'sjcsDesigActuaOfiDatFac') {​​​​​
+    // tarjeta.campos[0].value = event.partida;
+    //     }​​​​​
+  }
 
   actualizaFicha(event) {
     this.campos = event;
