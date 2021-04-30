@@ -139,8 +139,8 @@ export class FiltrosBajasTemporales implements OnInit {
           this.filtros.fechadesde == undefined )&&
       (this.filtros.nombre == null ||
           this.filtros.nombre == undefined ) &&
-      ((<HTMLInputElement>document.getElementById("nombreAp")).value == null ||
-      (<HTMLInputElement>document.getElementById("nombreAp")).value == undefined )){
+      (this.usuarioBusquedaExpress.nombreAp  == null ||
+        this.usuarioBusquedaExpress.nombreAp  == undefined )){
         this.showSearchIncorrect();
         return false;
       } else {
@@ -158,7 +158,6 @@ export class FiltrosBajasTemporales implements OnInit {
   }
 
   isBuscar() {
-
     if(this.usuarioBusquedaExpress.nombreAp != undefined && this.usuarioBusquedaExpress.nombreAp  != ""){
       this.filtros.nombre = this.usuarioBusquedaExpress.nombreAp;
       if(this.usuarioBusquedaExpress.numColegiado!= null && this.usuarioBusquedaExpress.numColegiado  != ""){
@@ -173,7 +172,7 @@ export class FiltrosBajasTemporales implements OnInit {
     if (this.checkFilters()) {
         this.persistenceService.setFiltros(this.filtros);
         this.persistenceService.setFiltrosAux(this.filtros);
-        this.filtroAux = this.persistenceService.getFiltrosAux();
+        this.filtroAux = this.filtros;
         this.busqueda.emit(false);
         this.nuevaBaja = false
     }
@@ -280,6 +279,7 @@ export class FiltrosBajasTemporales implements OnInit {
           this.progressSpinner=false;
         },
         err => {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
           console.log(err);
           this.progressSpinner=false;
         }
@@ -292,7 +292,8 @@ export class FiltrosBajasTemporales implements OnInit {
   }
   
   nuevaBajaTemporal(){
-    if((<HTMLInputElement>document.getElementById("numColegiado")).value != undefined){
+    if(this.usuarioBusquedaExpress.numColegiado!= undefined && this.usuarioBusquedaExpress.nombreAp != null 
+      && this.usuarioBusquedaExpress.numColegiado.trim.length>0){
       sessionStorage.setItem("nuevo","true");
       this.isBuscar();
     }else{

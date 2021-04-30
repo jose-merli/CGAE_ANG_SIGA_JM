@@ -94,7 +94,7 @@ export class BajasTemporalesComponent implements OnInit {
   ngAfterViewInit() {
   }
 
-  searchPartidas(event) {
+  search(event) {
     this.filtros.filtroAux = this.persistenceService.getFiltrosAux()
     this.filtros.filtroAux.historico = event;
     this.persistenceService.setHistorico(event);
@@ -145,6 +145,7 @@ export class BajasTemporalesComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         console.log(err);
       }, () => {
         setTimeout(() => {
@@ -155,7 +156,7 @@ export class BajasTemporalesComponent implements OnInit {
   }
 
   searchHistorico(event){
-    this.searchPartidas(event);
+    this.search(event);
   }
 
   formatDate(date) {
@@ -164,7 +165,6 @@ export class BajasTemporalesComponent implements OnInit {
   }
 
 jsonToRow(datos){
-  console.log(datos);
   let arr = [];
 
   datos.forEach((element, index) => {
@@ -234,17 +234,15 @@ modDatos(event){
     array2.push(array);
     array=[];
   });
-  console.log(array);
-  console.log(array2);
   this.guardar(array2);
 }
 
-  showMessage(event) {
+  showMessage(severity, summary, msg) {
     this.msgs = [];
     this.msgs.push({
-      severity: event.severity,
-      summary: event.summary,
-      detail: event.msg
+      severity: severity,
+      summary: summary,
+      detail: msg
     });
   }
 
@@ -294,16 +292,16 @@ modDatos(event){
     this.sigaServices.post("bajasTemporales_deleteBajaTemporal", array).subscribe(
       data => {
         array = [];
-        this.showMessage({ severity: "success", summary: this.translateService.instant("general.message.correct"), msg: this.translateService.instant("general.message.accion.realizada")});
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
       err => {
-        this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("general.message.error.realiza.accion")});
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         
         this.progressSpinner = false;
       }
     );
-    this.searchPartidas(this.filtros.filtroAux.historico);
+    this.search(this.filtros.filtroAux.historico);
   }
 
 denegar(event){
@@ -330,7 +328,7 @@ denegar(event){
       delete tmp.tiponombre;
       array.push(tmp);
     }else{
-      this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("general.message.error.realiza.accion")});
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
       this.progressSpinner = false;
     }
   });
@@ -361,7 +359,7 @@ validar(event){
       delete tmp.tiponombre;
       array.push(tmp);
     }else{
-      this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("general.message.error.realiza.accion")});
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
       this.progressSpinner = false;
     }
   });
@@ -392,7 +390,7 @@ anular(event){
       delete tmp.tiponombre;
       array.push(tmp);
     }else{
-      this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("general.message.error.realiza.accion")});
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
       this.progressSpinner = false;
     }
   });
@@ -469,12 +467,12 @@ if(nuevaBaja.length != 0){
   
   this.sigaServices.post("bajasTemporales_nuevaBajaTemporal", nuevaBaja).subscribe(
     data => {
-        this.showMessage({ severity: "success", summary: this.translateService.instant("general.message.correct"), msg: this.translateService.instant("general.message.accion.realizada")});
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
-        this.searchPartidas(this.filtros.filtroAux);
+        this.search(this.filtros.filtroAux);
   },
   err => {
-      this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("general.message.error.realiza.accion")});
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
       this.progressSpinner = false;
     }
   );
@@ -509,12 +507,12 @@ if(listaPrueba.length != 0){
 
     this.sigaServices.post("bajasTemporales_saveBajaTemporal", listaPrueba).subscribe(
       data => {
-          this.showMessage({ severity: "success", summary: this.translateService.instant("general.message.correct"), msg: this.translateService.instant("general.message.accion.realizada")});
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.progressSpinner = false;
-          this.searchPartidas(this.filtros.filtroAux);
+          this.search(this.filtros.filtroAux);
     },
     err => {
-        this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("general.message.error.realiza.accion")});
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         this.progressSpinner = false;
       }
     );
@@ -539,15 +537,14 @@ if(listaPrueba.length != 0){
     
       this.sigaServices.post("bajasTemporales_updateBajaTemporal", event).subscribe(
         data => {
-            this.showMessage({ severity: "success", summary: this.translateService.instant("general.message.correct"), msg: this.translateService.instant("general.message.accion.realizada")});
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
             this.progressSpinner = false;
       },
       err => {
-          this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("general.message.error.realiza.accion")});
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
           this.progressSpinner = false;
         }
       );
-      this.searchPartidas(this.filtros.filtroAux.historico);
+      this.search(this.filtros.filtroAux.historico);
   }
-
 }
