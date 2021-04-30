@@ -4,7 +4,7 @@ import { PersistenceService } from '../../../../../../_services/persistence.serv
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { TranslateService } from '../../../../../../commons/translate';
-import { Row, TablaResultadoMixIncompService } from '../../../../../../commons/tabla-resultado-mix/tabla-resultado-mix-incompatib.service';
+import { Cell, Row, TablaResultadoOrderCGService } from '../../../../../../commons/tabla-resultado-order/tabla-resultado-order-cg.service';
 
 
 @Component({
@@ -21,10 +21,26 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
   @Input() permisoEscritura: boolean;
   @Output() modoEdicionSend = new EventEmitter<any>();
   @Input() tarjetaDatosGenerales;
-
+  @Input() datosTarjetaGuardiasCalendario = {
+                                              'duplicar': false,
+                                              'tabla': [],
+                                              'turno':'',
+                                              'nombre': '',
+                                              'generado': '',
+                                              'numGuardias': '',
+                                              'listaGuarias': {},
+                                              'fechaDesde': '',
+                                              'fechaHasta': '',
+                                              'fechaProgramacion': '',
+                                              'estado': '',
+                                              'observaciones': '',
+                                              'idCalendarioProgramado': '',
+                                              'idTurno': '',
+                                              'idGuardia': '',
+                                            };
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
-
+  dataReady = false;
   tipoGuardiaResumen = {
     label: "",
     value: "",
@@ -43,6 +59,7 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
   rowGroups: Row[];
   rowGroupsAux: Row[];
   totalRegistros = 0;
+  selectedRow: Row;
   cabeceras = [
     {
       id: "turno",
@@ -64,16 +81,18 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
   allSelected = false;
   isDisabled = true;
   seleccionarTodo = false;
-
+  duplicar = false;
   constructor(private persistenceService: PersistenceService,
     private sigaService: SigaServices,
     private commonServices: CommonsService,
     private translateService: TranslateService,
-    private trmService: TablaResultadoMixIncompService,) { }
+    private trmService: TablaResultadoOrderCGService,) { }
 
 
   ngOnInit() {
-    this.jsonToRow(); //PROVISIONAL
+      this.jsonToRow(); //PROVISIONAL
+ 
+    this.duplicar = this.datosTarjetaGuardiasCalendario.duplicar;
 
 
 
@@ -118,6 +137,9 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
       });
   }
 
+  checkSelectedRow(selected) {
+    this.selectedRow = selected;
+  }
   styleObligatorio(evento){
     if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
       return this.commonServices.styleObligatorio(evento);
@@ -335,43 +357,26 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
 
 jsonToRow(){
   console.log('jsonToRow')
-  let arr = [];
-  let responseObject = 
-    {
-      'turno': "turnoANA",
-      'guardia': "guardiaANA",
-      'generado': "generadoANA",
-      'numGuardias': "numGuardiasANA"
-    };
-  let respuestaCalendario = [];
-  respuestaCalendario.push(responseObject);
-  console.log('respuestaCalendario: ', respuestaCalendario)
-  respuestaCalendario.forEach((res, i) => {
-    let objCells = [
-    { type: 'text', value: res.turno },
-    { type: 'text', value: res.guardia },
-    { type: 'text', value: res.generado},
-    { type: 'text', value: res.numGuardias }
-    ];
+  console.log('this.datosTarjetaGuardiasCalendario: ', this.datosTarjetaGuardiasCalendario)
+  let arr: Row[] = [];
 
-    let obj = {id: i, cells: objCells};
+    let i = 0;
+    let objCells:Cell[] = [
+    { type: 'text', value: this.datosTarjetaGuardiasCalendario.turno , combo: null},
+    { type: 'text', value: this.datosTarjetaGuardiasCalendario.nombre , combo: null},
+    { type: 'text', value: this.datosTarjetaGuardiasCalendario.generado, combo: null},
+    { type: 'text', value: this.datosTarjetaGuardiasCalendario.numGuardias , combo: null}
+    ];
+console.log('objCells: ', objCells)
+    let obj:Row = {cells: objCells};
     arr.push(obj);
-  })
-
-  let objSelect = [
-    { type: 'select', value: '' },
-    { type: 'select', value: ''},
-    { type: 'select', value: ''},
-    { type: 'text', value: ''}
-    ];
-    let objS = {id: arr.length, cells: objSelect};
-  arr.push(objS);
 console.log('ar: ', arr)
    this.rowGroups = [];
   this.rowGroups = this.trmService.getTableData(arr);
   this.rowGroupsAux = [];
   this.rowGroupsAux = this.trmService.getTableData(arr);
   this.totalRegistros = this.rowGroups.length;
+  this.dataReady = true;
   console.log('rowGroups: ', this.rowGroups)
 }
 

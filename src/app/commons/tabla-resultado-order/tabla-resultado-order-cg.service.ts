@@ -8,28 +8,30 @@ export class Row {
 export class Cell {
   type: string;
   value: any;
+  combo [];
 }
 export class TablaResultadoOrderCGService {
 
 constructor() {}
 
 public getTableData(result) {
-  if ( result != undefined){
-let finalRows: Row[] = [];
-result.forEach((rows) => {    
-let rowObject: Row = new Row();
-let cells: Cell[] = [];
-rows.forEach((cell) => {
-  let cellObject: Cell = new Cell();
-  cellObject.type = cell['type'];
-  cellObject.value = cell['value'];
-  cells.push(cellObject);
-});
-rowObject.cells = cells;
-finalRows.push(rowObject);
-});
-return finalRows;
-}
-}
+      if ( result != undefined){
+    let finalRows: Row[] = [];
+    result.forEach((rows) => {    
+    let rowObject: Row = new Row();
+    let cells: Cell[] = [];
+    rows.cells.forEach((cell) => {
+      let cellObject: Cell = new Cell();
+      cellObject.type = cell['type'];
+      cellObject.value = cell['value'];
+      cellObject.combo = cell['combo'];
+      cells.push(cellObject);
+    });
+    rowObject.cells = cells;
+    finalRows.push(rowObject);
+    });
+    return finalRows;
+    }
+  }  
 }
 

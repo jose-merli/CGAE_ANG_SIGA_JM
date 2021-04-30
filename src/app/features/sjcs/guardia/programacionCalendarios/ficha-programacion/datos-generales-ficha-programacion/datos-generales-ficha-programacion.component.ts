@@ -19,11 +19,47 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
   @Input() modoEdicion: boolean = false;
   @Input() permisoEscritura: boolean;
   @Output() modoEdicionSend = new EventEmitter<any>();
+  @Output() dataToDuplicate = new EventEmitter<any>();
   @Input() tarjetaDatosGenerales;
+  @Input() datosGeneralesIniciales = {
+    'duplicar' : '',
+    'tabla': [],
+    'turno':'',
+    'nombre': '',
+    'generado': '',
+    'numGuardias': '',
+    'listaGuarias': {},
+    'fechaDesde': '',
+    'fechaHasta': '',
+    'fechaProgramacion': '',
+    'estado': '',
+    'observaciones': '',
+    'idCalendarioProgramado': '',
+    'idTurno': '',
+    'idGuardia': '',
+  };
+ 
+  @Input() datosGenerales = {
+    'duplicar' : '',
+    'tabla': [],
+    'turno':'',
+    'nombre': '',
+    'generado': '',
+    'numGuardias': '',
+    'listaGuarias': {},
+    'fechaDesde': '',
+    'fechaHasta': '',
+    'fechaProgramacion': '',
+    'estado': '',
+    'observaciones': '',
+    'idCalendarioProgramado': '',
+    'idTurno': '',
+    'idGuardia': '',
+  };
+  
 
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
-
   tipoGuardiaResumen = {
     label: "",
     value: "",
@@ -40,7 +76,7 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
   msgs;
   resaltadoDatos: boolean = false;
   comboListaGuardias = [];
-
+  comboConjuntoGuardias = [];
   constructor(private persistenceService: PersistenceService,
     private sigaService: SigaServices,
     private commonServices: CommonsService,
@@ -49,6 +85,7 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
 
   ngOnInit() {
     this.getComboListaGuardia();
+    this.getComboConjuntouardia();
     this.resaltadoDatos=true;
 
     this.getCols();
@@ -89,6 +126,23 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
       });
   }
 
+  fillFechaCalendarioDesde(event) {
+    this.datosGenerales.fechaDesde = this.changeDateFormat(event.toString());
+  }
+  fillFechaCalendarioHasta(event) {
+    this.datosGenerales.fechaHasta = this.changeDateFormat(event.toString());
+  }
+  fillFechaProgramada(event) {
+    this.datosGenerales.fechaProgramacion = this.changeDateFormat(event.toString());
+  }
+  changeDateFormat(date1){
+    console.log('date1: ', date1)
+    let year = date1.substring(0, 4)
+    let month = date1.substring(5,7)
+    let day = date1.substring(8, 10)
+    let date2 = day + '/' + month + '/' + year;
+    return date2;
+  }
   getComboListaGuardia() {
     let idTurno;
     this.sigaService.getParam(
@@ -96,6 +150,20 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
         data => {
           this.comboListaGuardias = data.combooItems;
           this.commonServices.arregloTildesCombo(this.comboListaGuardias);
+        },
+        err => {
+          console.log(err);
+        }
+      )
+
+  }
+
+  getComboConjuntouardia() {
+    this.sigaService.get(
+      "busquedaGuardia_conjuntoGuardia").subscribe(
+        data => {
+          this.comboConjuntoGuardias = data.combooItems;
+          this.commonServices.arregloTildesCombo(this.comboConjuntoGuardias);
         },
         err => {
           console.log(err);
@@ -206,7 +274,8 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
   }
 
   rest() {
-    this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    console.log('Reestablecer: ', this.datosGeneralesIniciales)
+    this.datosGenerales = Object.assign(this.datosGeneralesIniciales, {});
   }
 
 
@@ -252,6 +321,12 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
   }
 
   save() {
+    console.log('DUPLICAR: ', this.datosGenerales.duplicar)
+    if (this.datosGenerales.duplicar){
+      this.dataToDuplicate.emit(this.datosGenerales);
+
+//TO DO
+    }
     if(!this.disabledSave()){
       if (this.permisoEscritura && !this.historico) {
         this.progressSpinner = true;

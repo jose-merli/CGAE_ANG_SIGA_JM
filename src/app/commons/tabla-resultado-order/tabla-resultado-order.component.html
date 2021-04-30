@@ -20,15 +20,22 @@
             </div>
         </div>
     </div> 
-    
     <div *ngFor='let row of rowGroups| slice:from:to; let i = index' class="table-row child">
      
               <div (click)="selectRow(i, row)" class="table-row-wrapper hoverBlue" [ngClass]="{'hoverBlue2': isSelected(i), 'fixedBlue': seleccionarTodo, 'fixedRed': selectWrong(i)}">
             
             <div *ngFor="let cell of row['cells'] | slice:0:9; let z = index " class="table-cell p-2 selectedRowClass" [ngClass]="{'borders-child': isPar(i)}" #cellSelected>
                 <div class="breakWord cell-wrapper selectedRowClass">
-                    <span class="w100 cell-value" *ngIf="cell.type != 'text'"><input type="text"  (change)="valueChange(i, z, $event)" class="form-control mt-2" pInputText  [(ngModel)]="cell.value" [placeholder]="cell.value"></span>
+                    <span class="w100 cell-value" *ngIf="cell.type != 'text' && cell.type != 'select' && cell.type != 'selectDependency'"><input type="text"  (change)="valueChange(i, z, $event)" class="form-control mt-2" pInputText  [(ngModel)]="cell.value" [placeholder]="cell.value"></span>
                     <span class="w100 cell-value" *ngIf="cell.type == 'text'">{{cell.value}}</span> 
+                    <span class="w100 cell-value" *ngIf="cell.type == 'selectDependency'"><p-dropdown class="select-form"  [filter]="true" [(ngModel)]="cell.value" (onChange)="onChangeTurno(cell.value)"
+                                                                                    [options]="comboTurno" filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
+                                                                                    [showClear]="true">
+                                                                                </p-dropdown></span>
+                    <span class="w100 cell-value" *ngIf="cell.type == 'select'"><p-dropdown class="select-form"  [filter]="true" [(ngModel)]="cell.value" 
+                                                                                    [options]="cell.combo" filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
+                                                                                    [showClear]="true">
+                                                                                </p-dropdown></span>
                     <!--<span class="w100 cell-value" *ngIf="cell.type == 'buttom'"><button pButton type="button"  iconPos="left"></button></span> 
                     <span class="w100 cell-value" *ngIf="cell.type == 'checkbox'"> <p-checkbox [ngModel]="validaCheck(cell.value)" binary="true">
                     </p-checkbox></span> 
@@ -80,5 +87,11 @@
                   (click)="anadirLetrado()"></button>
             <button *ngIf="calendarios" pButton type="button" icon="far fa-save" iconPos="left" label="Eliminar" [disabled]="isDisabled"
                   (click)="eliminar()"></button>
+            <button *ngIf="calendarios" pButton type="button" icon="far fa-save" iconPos="left" label="Nuevo" [disabled]="isDisabled"
+                  (click)="nuevo()"></button>
         </div>
 </div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+  </div>

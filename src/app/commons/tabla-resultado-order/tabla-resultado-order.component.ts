@@ -1,9 +1,12 @@
-import { ElementRef, Renderer2, Output, EventEmitter } from '@angular/core';
+import { ElementRef, Renderer2, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { Message } from 'primeng/components/common/api';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Sort } from '@angular/material/sort';
 import { Row, Cell } from './tabla-resultado-order-cg.service';
+import { SigaServices } from '../../_services/siga.service';
+import { CommonsService } from '../../_services/commons.service';
+import { eventInstanceToEventRange } from 'fullcalendar';
 @Component({
   selector: 'app-tabla-resultado-order',
   templateUrl: './tabla-resultado-order.component.html',
@@ -53,9 +56,14 @@ export class TablaResultadoOrderComponent implements OnInit {
   numperPage = 10;
   @ViewChild('table') table: ElementRef;
   @Output() delete = new EventEmitter<any>();
-  
+  comboTurno = [];
+  comboGuardia = [];
+  progressSpinner = false;
   constructor(
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private sigaServices: SigaServices,
+    private commonServices: CommonsService,
+    private cd: ChangeDetectorRef
   ) {
     this.renderer.listen('window', 'click',(event: { target: HTMLInputElement; })=>{
       for (let i = 0; i < this.table.nativeElement.children.length; i++) {
@@ -125,6 +133,7 @@ export class TablaResultadoOrderComponent implements OnInit {
   }
 
   guardar(){
+
     this.wrongPositionArr = [];
       this.ordenarGrupos();
       this.orderByOrder();
@@ -483,6 +492,8 @@ this.totalRegistros = this.rowGroups.length;
       return numero % 2 === 0;
     }
     restablecer(){
+      console.log('this.rowGroupsAux: ', this.rowGroupsAux)
+      this.rowGroups = this.rowGroupsAux;
       this.rest.emit(true);
     }
     duplicar(){
@@ -504,6 +515,79 @@ this.totalRegistros = this.rowGroups.length;
       this.rowGroupsAux = this.rowGroups;
       //this.to = this.totalRegistros;
       }
+      nuevo(){
+        this.getComboTurno();
+        let newCells: Cell[] = [
+          { type: 'selectDependency', value: '' , combo: this.comboTurno},
+          { type: 'select', value: '', combo: this.comboGuardia},
+          { type: 'text', value: '', combo: null},
+          { type: 'text', value: '', combo: null}
+          ];
+          let rowObject: Row = new Row();
+          rowObject.cells = newCells;
+          this.rowGroups.push(rowObject);
+          this.totalRegistros = this.rowGroups.length;
+          console.log('this.rowGroups NUEVO: ', this.rowGroups)
+          console.log('this.totalRegistros NUEVO: ', this.totalRegistros)
+          this.to = this.totalRegistros;
+          this.cd.detectChanges();
+      }
+
+    getComboTurno() {
+      this.progressSpinner = true;
+    this.sigaServices.get("busquedaGuardia_turno").subscribe(
+      n => {
+        this.progressSpinner = false;
+        this.comboTurno = n.combooItems;
+        console.log('this.comboTurno : ', this.comboTurno )
+        this.cd.detectChanges();
+        this.commonServices.arregloTildesCombo(this.comboTurno);
+      },
+      err => {
+        this.progressSpinner = false;
+        console.log(err);
+      }
+    );
+  }
+  
+  onChangeTurno(idTurno) {
+    this.getComboGuardia(idTurno);
+    console.log('idTurno: ', idTurno)
+    this.comboGuardia = [];
+      
+
+  }
+  
+  setCombouardia(){
+    this.rowGroups.forEach((row, r) => {
+      row.cells.forEach((cell, c) => {
+        if (cell.type == 'select'){
+          
+          console.log('this.comboGuardia: ', this.comboGuardia)
+          this.rowGroups[r].cells[c].combo = this.comboGuardia;
+          console.log('row.cells: ', row.cells)
+        }
+      })
+    })
+  }
+  
+    getComboGuardia(idTurno) {
+      this.progressSpinner = true;
+    this.sigaServices.getParam(
+      "busquedaGuardia_guardia", "?idTurno=" + idTurno).subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.comboGuardia = data.combooItems;
+          this.setCombouardia();
+          this.commonServices.arregloTildesCombo(this.comboGuardia);
+        },
+        err => {
+          this.progressSpinner = false;
+          console.log(err);
+        }
+      )
+
+  }
   
 }
 function compare(a: number | string, b: number | string, isAsc: boolean) {

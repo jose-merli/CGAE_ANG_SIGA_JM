@@ -1,7 +1,7 @@
 import { ViewChild } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Row, TablaResultadoMixIncompService } from '../../../../commons/tabla-resultado-mix/tabla-resultado-mix-incompatib.service';
+import { Cell, Row, TablaResultadoMixIncompService } from '../../../../commons/tabla-resultado-mix/tabla-resultado-mix-incompatib.service';
 import { TranslateService } from '../../../../commons/translate';
 import { CalendarioProgramadoItem } from '../../../../models/guardia/CalendarioProgramadoItem';
 import { GuardiaItem } from '../../../../models/guardia/GuardiaItem';
@@ -50,6 +50,7 @@ export class ProgramacionCalendariosComponent implements OnInit {
   seleccionarTodo = false;
   comboIncompatibilidadesDatosEntradaItem: ComboIncompatibilidadesDatosEntradaItem;
   comboIncompatibilidadesRes: ComboIncompatibilidadesRes;
+  dataToDuplicate;
   cabeceras = [
     {
       id: "turno",
@@ -107,6 +108,35 @@ export class ProgramacionCalendariosComponent implements OnInit {
     }
 
     ngOnInit() {
+      
+      if (this.persistenceService.getDatos() != undefined && this.persistenceService.getDatos().duplicar) {
+        console.log('¿duplicar?: ', this.persistenceService.getDatos().duplicar)
+        this.dataToDuplicate = this.persistenceService.getDatos();
+        console.log('DATA TO DUPLICATE 2', this.dataToDuplicate)
+        this.rowGroups = this.dataToDuplicate.tabla;
+        
+        let objCells: Cell[] = [
+          { type: 'text', value: this.dataToDuplicate.turno, combo: null },
+          { type: 'text', value: this.dataToDuplicate.nombre, combo: null },
+          { type: 'text', value: this.dataToDuplicate.fechaDesde, combo: null},
+          { type: 'text', value: this.dataToDuplicate.fechaHasta , combo: null},
+          { type: 'text', value: this.dataToDuplicate.fechaProgramacion , combo: null},
+          { type: 'label', value: this.dataToDuplicate.listaGuarias, combo: null},
+          { type: 'text', value: this.dataToDuplicate.observaciones , combo: null},
+          { type: 'text', value: this.dataToDuplicate.estado , combo: null},
+          { type: 'text', value: this.dataToDuplicate.generado, combo: null },
+          { type: 'text', value: this.dataToDuplicate.numGuardias, combo: null},
+          { type: 'invisible', value: this.dataToDuplicate.idCalendarioProgramado, combo: null},
+          { type: 'invisible', value: this.dataToDuplicate.idTurno, combo: null},
+          { type: 'invisible', value: this.dataToDuplicate.idGuardia, combo: null},
+          
+          ];
+      
+          let obj: Row = {id: this.rowGroups.length, cells: objCells};
+          this.rowGroups.push(obj);
+          console.log('this.rowGroups: ', this.rowGroups)
+        this.buscar = true;
+      }
   this.commonsService.checkAcceso(procesos_guardia.guardias)
       .then(respuesta => {
 
@@ -234,10 +264,10 @@ jsonToRow(){
     let objCells = [
     { type: 'text', value: res.turno },
     { type: 'text', value: res.guardia },
-    { type: 'text', value: res.fechaDesde},
-    { type: 'text', value: res.fechaHasta },
-    { type: 'text', value: res.fechaProgramacion },
-    { type: 'text', value: res.listaGuardias },
+    { type: 'text', value: this.changeDateFormat(res.fechaDesde)},
+    { type: 'text', value: this.changeDateFormat(res.fechaHasta) },
+    { type: 'text', value: this.changeDateFormat(res.fechaProgramacion) },
+    { type: 'label', value: {label: res.listaGuardias, value: this.filtrosValues.listaGuardias },
     { type: 'text', value: res.observaciones },
     { type: 'text', value: res.estado },
     { type: 'text', value: res.generado },
@@ -252,43 +282,7 @@ jsonToRow(){
     arr.push(obj);
   })
   console.log('arr: ', arr)
-  //BORRAR!!!!******arr
-  /*arr = [
-    { id: 1,
-      cells: 
-      [
-        { type: 'text', value: '28/08/2007' },
-        { type: 'text', value: 'Designación' },
-        { type: 'multiselect', combo: [{label: "Fact Ayto. Alicante - As. Joven", value: "1"},
-                                      {label: "Fact Ayto. Alicante - As. Joven", value: "2"}] },
-        { type: 'input', value: 'documentoX.txt' },
-        { type: 'input', value: 'Euskara ResultadoConsulta' }
-      ],
-    },
-    { id: 2,
-      cells: 
-      [
-        { type: 'text', value: '28/08/2007' },
-        { type: 'text', value: 'Designación' },
-        { type: 'multiselect', combo: [{label: "Fact Ayto. Alicante - As. Joven", value: "1"},
-                                      {label: "Fact Ayto. Alicante - As. Joven", value: "2"}]},
-        { type: 'input', value: 'documentoX.txt' },
-        { type: 'input', value: 'Euskara ResultadoConsulta' }
-      ],
-    },
-    { id: 3,
-      cells: 
-      [
-        { type: 'text', value: '28/08/2007' },
-        { type: 'text', value: 'Designación' },
-        { type: 'multiselect', combo: [{label: "Fact Ayto. Alicante - As. Joven", value: "1"},
-                                      {label: "Fact Ayto. Alicante - As. Joven", value: "2"}] },
-        { type: 'input', value: 'documentoX.txt' },
-        { type: 'input', value: 'Euskara ResultadoConsulta' }
-      ]
-    },
-  ];*/
-   //*****BORRAR!!!!
+
    this.rowGroups = [];
   this.rowGroups = this.trmService.getTableData(arr);
   this.rowGroupsAux = [];
@@ -297,7 +291,13 @@ jsonToRow(){
   console.log('rowGroups: ', this.rowGroups)
   this.buscar = true;
 }
-
+changeDateFormat(date1){
+  let year = date1.substring(0, 4)
+  let month = date1.substring(5,7)
+  let day = date1.substring(8, 10)
+  let date2 = day + '/' + month + '/' + year;
+  return date2;
+}
 save(event){
   let idTurnoIncompatible;
   let idGuardiaIncompatible;

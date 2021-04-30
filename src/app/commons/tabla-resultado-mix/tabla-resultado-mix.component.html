@@ -18,9 +18,10 @@
         <div (click)="selectRow(row['id'], row['cells'])" class="table-row-wrapper hoverBlue" [ngClass]="{'hoverBlue2': isSelected(row['id']), 'fixedBlue': seleccionarTodo}" #rowSelected>
             <div *ngFor="let cell of row['cells'] | slice:0:10; let z = index" class="table-cell p-2 selectedRowClass" [ngClass]="{'borders-child': isPar(row['id'])}" #cellSelected>
                 <div class="cell-wrapper selectedRowClass">
-                    <span class="w100 cell-value" *ngIf="cell.type == 'text' && calendarios" class="enlace" (click)="openTab(dato)">{{cell.value}}</span> 
+                    <span class="w100 cell-value" *ngIf="cell.type == 'text' && calendarios" class="enlace" (click)="openTab(row)">{{cell.value}}</span> 
                     <span class="w100 cell-value" *ngIf="cell.type == 'input'"><input type="text" class="form-control mt-2" pInputText [(ngModel)]="cell.value"  (change) ="inputChange($event, row['id'], z, cell)"></span>
                     <span class="w100 cell-value" *ngIf="cell.type == 'text'  && !calendarios">{{cell.value}}</span> 
+                    <span class="w100 cell-value" *ngIf="cell.type == 'label'  && calendarios">{{cell.value.label}}</span> 
                     <span class="w100 cell-value" *ngIf="cell.type == 'buttom'"><button pButton type="button"  iconPos="left" [label]="cell.value"></button></span> 
                     <span class="w100 cell-value" *ngIf="cell.type == 'checkbox'"> <p-checkbox [ngModel]="validaCheck(cell.value)" binary="true">
                     </p-checkbox></span> 

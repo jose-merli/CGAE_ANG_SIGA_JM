@@ -9,9 +9,9 @@
   <div>
     <app-tarjeta-resumen-fija  class="pb-50" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="infoResumen" [enlaces]="enlacesTarjetaResumen" icono="iconoTarjetaResumen" (modoEdicionSend)="modoEdicionSend($event)" (isOpen)="isOpenReceive($event)" [manuallyOpened]="manuallyOpened"></app-tarjeta-resumen-fija>
 
-    <app-datos-generales-ficha-programacion [openFicha]="openGen" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaDatosGenerales]="tarjetaDatosGenerales" [permisoEscritura]="permisoEscrituraDatosGenerales" [modoEdicion]="modoEdicion" (modoEdicionSend)="modoEdicionSend($event)"></app-datos-generales-ficha-programacion>
+    <app-datos-generales-ficha-programacion [openFicha]="openGen" (opened)="manuallyOpened = $event" (dataToDuplicate)="getdataToDuplicate($event)" (idOpened)="isCloseReceive($event)" [datosGeneralesIniciales] = "datosGeneralesIniciales" [datosGenerales] = "datosGenerales"  [tarjetaDatosGenerales]="tarjetaDatosGenerales" [permisoEscritura]="permisoEscrituraDatosGenerales" [modoEdicion]="modoEdicion" (modoEdicionSend)="modoEdicionSend($event)"></app-datos-generales-ficha-programacion>
 
-    <app-guardias-calendario-ficha-programacion [openFicha]="openGen" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaDatosGenerales]="tarjetaDatosGenerales" [permisoEscritura]="permisoEscrituraDatosGenerales" [modoEdicion]="modoEdicion" (modoEdicionSend)="modoEdicionSend($event)"></app-guardias-calendario-ficha-programacion>
+    <app-guardias-calendario-ficha-programacion [openFicha]="openGen" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [datosTarjetaGuardiasCalendario] = "datosTarjetaGuardiasCalendario"  [tarjetaDatosGenerales]="tarjetaDatosGenerales" [permisoEscritura]="permisoEscrituraDatosGenerales" [modoEdicion]="modoEdicion" (modoEdicionSend)="modoEdicionSend($event)"></app-guardias-calendario-ficha-programacion>
 
     
   </div>

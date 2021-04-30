@@ -15,7 +15,7 @@
           </div>
           <div class="d-flex justify-content-between sub">
             <label>{{'administracion.parametrosGenerales.literal.nombre' | translate}}:
-              <strong>{{body.nombre}}</strong>
+              <strong>{{datosGenerales.nombre}}</strong>
             </label>
             <label>{{'administracion.parametrosGenerales.literal.descripcion' | translate}}:
               <strong> {{body.descripcion}}</strong>
@@ -42,56 +42,54 @@
     <div *ngIf="openFicha" class="card-body card-body-ficha">
       <div class="row col-12">
         <div class="form-group col-lg-12 col-md-12">
-          <label style="text-align:center; font-weight: bold;">{{ "general.message.datos.generales" | translate }}</label>
-        </div>
-        <div class="form-group col-lg-6 col-md-6">
           <label>Solo generar vacios</label>
           <input type="checkbox" id="checkedchecky" name="checkedchecky" checked="checked" />
         </div>
+
         <div class="form-group col-lg-3 col-md-3">
           <label>
             {{ "menu.justiciaGratuita.calendarios.ListaGuardias" | translate }} (*)
           </label>
-          <p-dropdown class="select-form"  [filter]="true" [(ngModel)]="filtros.listaGuardias"
-          [options]="comboListaGuardias" filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
+          <p-dropdown class="select-form"  [filter]="true" [(ngModel)]="datosGenerales.listaGuarias.value"
+          [options]="comboConjuntoGuardias" filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
           [showClear]="true">
         </p-dropdown>
         </div>
-        <!-- Nombre -->
+        <!-- FechaDesde -->
         <div class="form-group col-lg-3 col-md-3">
           <label>
             {{ "justiciaGratuita.Calendarios.FechaDesde" | translate }} (*)
           </label>
-          <app-fecha [(value)]="filtros.fechaCalendarioDesde" [minDate]="getFechaCalendarioDesde(filtros.fechaCalendarioDesde,filtros.fechaCalendarioHasta)"
+          <app-fecha [(value)]="datosGenerales.fechaDesde" 
             (valueChangeSelected)="fillFechaCalendarioDesde($event)"  (valueChangeInput)="fillFechaCalendarioDesde($event)"></app-fecha>
         </div>
 
-        <!-- Descripcion -->
+        <!-- fechsHasta -->
         <div class="form-group col-lg-3 col-md-3">
           <label>
             {{"justiciaGratuita.Calendarios.FechaHasta" | translate}} (*)
           </label>
-          <app-fecha [(value)]="filtros.fechaCalendarioDesde" [minDate]="getFechaCalendarioDesde(filtros.fechaCalendarioDesde,filtros.fechaCalendarioHasta)"
-            (valueChangeSelected)="fillFechaCalendarioDesde($event)"  (valueChangeInput)="fillFechaCalendarioDesde($event)"></app-fecha>
+          <app-fecha [(value)]="datosGenerales.fechaHasta" 
+            (valueChangeSelected)="fillFechaCalendarioHasta($event)"  (valueChangeInput)="fillFechaCalendarioHasta($event)"></app-fecha>
         </div>
 
-        <!-- Tipo Guardia -->
+        <!-- fechaProgramada -->
         <div class="form-group col-lg-3 col-md-3">
           <label>
             {{"justiciaGratuita.Calendarios.FechaProgramada" | translate}}
           </label>
-          <app-fecha [(value)]="filtros.fechaCalendarioDesde" [minDate]="getFechaCalendarioDesde(filtros.fechaCalendarioDesde,filtros.fechaCalendarioHasta)"
-          (valueChangeSelected)="fillFechaCalendarioDesde($event)"  (valueChangeInput)="fillFechaCalendarioDesde($event)"></app-fecha>
+          <app-fecha [(value)]="datosGenerales.fechaProgramacion" 
+          (valueChangeSelected)="fillFechaProgramada($event)"  (valueChangeInput)="fillFechaProgramada($event)"></app-fecha>
         </div>
 
         <div class="row col-6" id="div1">
-          <!-- Descripcion Facturacion -->
+          <!-- Observaciones -->
           <div class="form-group col-lg-6 col-md-6" id="desFact">
             <label>
               {{"justiciaGratuita.Calendarios.Observaciones" | translate}} 
             </label>
-            <textarea name="textoEnPlantilla" [disabled]="historico || !permisoEscritura" class="form-control ui-inputtext" pInputTextarea
-              [(ngModel)]="body.descripcionFacturacion" autoResize="autoResize" maxlength="3999"></textarea>
+            <textarea [placeholder] = "datosGenerales.observaciones" name="textoEnPlantilla" [disabled]="historico || !permisoEscritura" class="form-control ui-inputtext" pInputTextarea
+              [(ngModel)]="datosGenerales.observaciones" autoResize="autoResize" maxlength="3999"></textarea>
           </div>
         </div>
 

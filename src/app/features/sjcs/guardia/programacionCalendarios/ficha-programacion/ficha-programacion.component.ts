@@ -6,6 +6,8 @@ import { procesos_guardia } from '../../../../../permisos/procesos_guarida';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
+import { Router } from '@angular/router';
+import { Row } from '../../../../../commons/tabla-resultado-mix/tabla-resultado-mix-incompatib.service';
 
 
 
@@ -57,17 +59,27 @@ export class FichaProgramacionComponent implements OnInit {
   tarjetaInscripcionesGuardias: string;
   tarjetaTurnoGuardias: string;
   persistenciaGuardia: GuardiaItem;
-
+  datosTarjetaGuardiasCalendario = {};
+  datosGenerales = {};
+  datosGeneralesIniciales = {};
+  rowGroupsSaved: Row[];
   constructor(private persistenceService: PersistenceService,
     private location: Location, private sigaServices: SigaServices,
     private commonService: CommonsService,
-    private translateService: TranslateService) { }
+    private translateService: TranslateService,
+    private router: Router) { }
 
 
   ngOnInit() {
+    console.log('this.persistenceService.getDatos(): ', this.persistenceService.getDatos())
     this.infoResumen = [];
     if (this.persistenceService.getDatos() != undefined) {
-      this.search();
+      this.datosTarjetaGuardiasCalendario = this.persistenceService.getDatos();
+      this.rowGroupsSaved = this.persistenceService.getDatos().tabla;
+      console.log('rowGroupsSaved: ', this.rowGroupsSaved)
+      this.datosGenerales = this.persistenceService.getDatos();
+      this.datosGeneralesIniciales = this.persistenceService.getDatos();
+      //this.search();
       this.modoEdicion = true;
     } else {
       this.modoEdicion = false;
@@ -404,6 +416,16 @@ export class FichaProgramacionComponent implements OnInit {
           break;
       }
     }
+  }
+
+  getdataToDuplicate(event){
+    console.log('DATA TO DUPLICATE: ', event)
+    console.log('this.rowGroupsSaved: ', this.rowGroupsSaved)
+    event.tabla = this.rowGroupsSaved; // lo cogemos en el oninit si duplicar = true!!!!!!
+    console.log('DATA TO DUPLICATE *: ', event)
+//TO DO: pasar los datos event al servicio global para obtenerlos desde tabla-mix
+  this.persistenceService.setDatos(event);
+  this.router.navigate(["/programacionCalendarios"]);
   }
 
 }

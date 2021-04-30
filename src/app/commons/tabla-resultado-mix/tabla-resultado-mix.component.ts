@@ -23,6 +23,8 @@ export class TablaResultadoMixComponent implements OnInit {
   @Input() seleccionarTodo = false;
   @Input() comboGuardiasIncompatibles;
   @Input() calendarios;
+  @Input() dataToDuplicate;
+
   @Output() anySelected = new EventEmitter<any>();
   @Output() save = new EventEmitter<Row[]>();
   @Output() delete = new EventEmitter<any>();
@@ -71,6 +73,7 @@ export class TablaResultadoMixComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log('AÑADIR DATA TO DUPLICATE: ', this.dataToDuplicate)
 console.log('this.rowGroups: tabla ', this.rowGroups)
     let values = [];
     let labels = [];
@@ -281,7 +284,7 @@ console.log('this.rowGroups: tabla ', this.rowGroups)
   }
 
   descargarLOG
-  duplicar(){
+  duplicar2(){
     if (this.selectedRowValue.length != 0){
       console.log('this.selectedRowValue', this.selectedRowValue)
     this.enableGuardar = true;
@@ -306,19 +309,35 @@ console.log('this.rowGroups: tabla ', this.rowGroups)
     }
   }
 
-  openTab(evento) {
+  openTab(row) {
 
    /* if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos();
     }*/
+    let dataToSend = {
+      'duplicar': false,
+      'tabla': [],
+      'turno':row.cells[0].value,
+      'nombre': row.cells[1].value,
+      'generado': row.cells[8].value,
+      'numGuardias': row.cells[9].value,
+      'listaGuarias': row.cells[5].value,
+      'fechaDesde': row.cells[2].value,
+      'fechaHasta': row.cells[3].value,
+      'fechaProgramacion': row.cells[4].value,
+      'estado': row.cells[7].value,
+      'observaciones': row.cells[6].value,
+      'idCalendarioProgramado': row.cells[10].value,
+      'idTurno': row.cells[11].value,
+      'idGuardia': row.cells[12].value
+    }
 
+
+    //2012-01-02 00:00:00.0 to 2012-01-02
     if (!this.seleccionarTodo && this.selectedArray.length <= 1) {
-      /*this.progressSpinner = true;
-      this.datos = new GuardiaItem();
-      this.datos.idGuardia = evento.idGuardia;
-      this.datos.idTurno = evento.idTurno;
-      this.persistenceService.setDatos(this.datos);
-      this.persistenceService.setHistorico(evento.fechabaja ? true : false);*/
+      //this.progressSpinner = true;
+      this.persistenceService.setDatos(dataToSend);
+      //this.persistenceService.setHistorico(evento.fechabaja ? true : false);
       this.router.navigate(["/fichaProgramacion"]);
 
     } else {
@@ -327,6 +346,45 @@ console.log('this.rowGroups: tabla ', this.rowGroups)
       }*/
     }
   }
+
+  duplicar(){
+    console.log('duplicar this.selectedRowValue: ', this.selectedRowValue)
+       /* if (this.persistenceService.getPermisos() != undefined) {
+      this.permisoEscritura = this.persistenceService.getPermisos();
+    }*/
+    let dataToSend = {
+      'duplicar': true,
+      'tabla': this.rowGroups,
+      'turno':this.selectedRowValue[0].value,
+      'nombre': this.selectedRowValue[1].value,
+      'generado': this.selectedRowValue[8].value,
+      'numGuardias': this.selectedRowValue[9].value,
+      'listaGuarias': this.selectedRowValue[5].value,
+      'fechaDesde': '',
+      'fechaHasta': '',
+      'fechaProgramacion': this.selectedRowValue[4].value,
+      'estado': this.selectedRowValue[7].value,
+      'observaciones': this.selectedRowValue[6].value,
+      'idCalendarioProgramado': this.selectedRowValue[10].value,
+      'idTurno': this.selectedRowValue[11].value,
+      'idGuardia': this.selectedRowValue[12].value
+    }
+
+
+    //2012-01-02 00:00:00.0 to 2012-01-02
+    if (!this.seleccionarTodo && this.selectedArray.length <= 1) {
+      //this.progressSpinner = true;
+      this.persistenceService.setDatos(dataToSend);
+      //this.persistenceService.setHistorico(evento.fechabaja ? true : false);
+      this.router.navigate(["/fichaProgramacion"]);
+
+    } else {
+      /*if (evento.fechabaja == undefined && this.historico) {
+        this.selectedDatos.pop();
+      }*/
+    }
+  }
+
   nuevo(){
         /*{ type: 'text', value: res.nombreTurno },
     { type: 'text', value: res.nombreGuardia },
