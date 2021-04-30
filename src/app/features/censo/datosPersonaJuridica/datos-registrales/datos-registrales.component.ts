@@ -111,6 +111,7 @@ export class DatosRegistralesComponent implements OnInit {
   prefijoSSPPInicial;
   sufijoSSPPInicial;
   contadorSSPPInicial;
+  colapsarTarjeta: boolean = true;
 
   @ViewChild('someDropdown') someDropdown: MultiSelect;
 
@@ -476,7 +477,7 @@ export class DatosRegistralesComponent implements OnInit {
   }
 
   guardar() {
-
+    this.colapsarTarjeta = false;
     if (!this.desactivadoGuardar()) {
       this.progressSpinner = true;
       this.arreglarFechas();
@@ -771,10 +772,11 @@ export class DatosRegistralesComponent implements OnInit {
     }
     // si no se esta creando una nueva sociedad && sessionStorage.getItem("crearnuevo") == null
     if (
-      (this.tarjeta == '2' || this.tarjeta == '3') && sessionStorage.getItem("nuevoRegistro") == null
+      (this.tarjeta == '2' || this.tarjeta == '3') && sessionStorage.getItem("nuevoRegistro") == null && this.colapsarTarjeta
     ) {
       fichaPosible.activa = !fichaPosible.activa;
     }
+    this.colapsarTarjeta = true;
   }
 
   esFichaActiva(key) {
