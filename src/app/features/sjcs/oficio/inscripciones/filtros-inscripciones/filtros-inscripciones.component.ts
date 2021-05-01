@@ -315,6 +315,13 @@ export class FiltrosInscripciones implements OnInit {
     this.filtros.afechade = undefined;
     this.disabledestado = false;
     this.disabledFechaHasta = true;
+    if(sessionStorage.getItem("isLetrado")=="true"){
+      this.usuarioBusquedaExpress = {​​​​​​​​​
+        numColegiado: "",
+        nombreAp: ""
+      }​​​​​​​​​;
+    }
+   
   }
 
   //búsqueda con enter
