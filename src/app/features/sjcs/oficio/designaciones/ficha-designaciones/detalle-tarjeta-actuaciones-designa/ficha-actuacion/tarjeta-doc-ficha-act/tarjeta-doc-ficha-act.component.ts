@@ -176,12 +176,21 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
 
     this.progressSpinner = true;
 
-    this.sigaServices.postDownloadFiles("actuaciones_designacion_descargarDocumentosActDesigna", this.selectedDatos[0]).subscribe(
+    this.sigaServices.postDownloadFiles("actuaciones_designacion_descargarDocumentosActDesigna", this.selectedDatos).subscribe(
       data => {
 
-        // const blob = new Blob([data], { type: "text/*" });
-        const blob = new Blob([data], { type: "application/zip" });
-        saveAs(blob, "documentos.zip");
+        let blob = null;
+
+        if (this.selectedDatos.length == 1) {
+
+          let mime = this.getMimeType(this.selectedDatos[0].extension);
+          blob = new Blob([data], { type: mime });
+          saveAs(blob, this.selectedDatos[0].nombreFichero);
+        } else {
+
+          blob = new Blob([data], { type: "application/zip" });
+          saveAs(blob, "documentos.zip");
+        }
         this.progressSpinner = false;
       },
       err => {
@@ -190,6 +199,7 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
       },
       () => {
         this.progressSpinner = false;
+        this.selectedDatos = [];
       }
     );
 
@@ -266,6 +276,38 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
       this.selectedDatos = [];
       this.numSelected = 0;
     }
+  }
+
+  getMimeType(extension: string): string {
+
+    let mime: string = "";
+
+    switch (extension.toLowerCase()) {
+
+      case "doc":
+        mime = "application/msword";
+        break;
+      case "docx":
+        mime = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+        break;
+      case "pdf":
+        mime = "application/pdf";
+        break;
+      case "jpg":
+        mime = "image/jpeg";
+        break;
+      case "png":
+        mime = "image/png";
+        break;
+      case "rtf":
+        mime = "application/rtf";
+        break;
+      case "txt":
+        mime = "text/plain";
+        break;
+    }
+
+    return mime;
   }
 
 }
