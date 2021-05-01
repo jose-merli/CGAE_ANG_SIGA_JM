@@ -108,6 +108,8 @@ export let endpoints_oficio: any = {
     actuaciones_designacion_desvalidar: "oficio/designas/desvalidarActDesigna",
     actuaciones_designacion_updateJustiActDesigna: "oficio/designas/updateJustiActDesigna",
     actuaciones_designacion_getHistorioAccionesActDesigna: "oficio/designas/getHistorioAccionesActDesigna",
+    actuaciones_designacion_getDocumentosPorActDesigna: "oficio/designas/getDocumentosPorActDesigna",
+    actuaciones_designacion_descargarDocumentosActDesigna: "oficio/designas/descargarDocumentosActDesigna",
     actuaciones_designacion_getLetradoDesigna: "oficio/designas/getLetradoDesigna",
     actuaciones_designacion_subirDocumentoActDesigna: "oficio/designas/subirDocumentoActDesigna",
     combo_motivosCambio_actuDesigna: "oficio/comboMotivosCambioActDesigna",
