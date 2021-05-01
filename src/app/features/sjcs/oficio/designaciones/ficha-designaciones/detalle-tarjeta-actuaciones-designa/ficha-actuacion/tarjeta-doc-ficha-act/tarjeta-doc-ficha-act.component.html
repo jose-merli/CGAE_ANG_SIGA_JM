@@ -9,7 +9,7 @@
 <!-- Tabla de documentación -->
 <p-table [value]="documentos2" [columns]="cols" [responsive]="true" #table class="tabla-listado" [paginator]="true"
   paginatorPosition="both" [rows]="selectedItem" [selectionMode]="selectionMode"
-  (onRowSelect)="actualizaSeleccionados($event)" (onRowUnselect)="actualizaSeleccionados()"
+  (onRowSelect)="actualizaSeleccionados($event)" (onRowUnselect)="actualizaSeleccionados($event)"
   [(selection)]="selectedDatos">
 
   <ng-template pTemplate="colgroup" let-columns>
