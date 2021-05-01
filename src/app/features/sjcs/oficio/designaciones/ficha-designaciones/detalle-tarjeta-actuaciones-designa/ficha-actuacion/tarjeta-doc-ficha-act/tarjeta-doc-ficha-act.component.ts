@@ -123,7 +123,9 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
               this.showMsg('error', 'Error', this.translateService.instant('general.message.error.realiza.accion'));
             }
           } else if (resp.status == 'OK') {
+            this.progressSpinner = false;
             this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
+            this.selectedDatos = [];
             this.buscarDocumentosEvent.emit();
           }
 
@@ -147,6 +149,7 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
     doc.file = null;
     doc.nuevo = true;
     doc.nombreTipoDocumento = 'Justificante Actuacion';
+    doc.fechaEntrada = this.datePipe.transform(new Date(), 'dd/MM/yyyy');
     doc.asociado = `${this.actuacionDesigna.actuacion.numeroAsunto} ${this.actuacionDesigna.actuacion.acreditacion} ${this.actuacionDesigna.actuacion.modulo}`;
     doc.anio = this.actuacionDesigna.actuacion.anio;
     doc.numero = this.actuacionDesigna.actuacion.numero;
@@ -203,6 +206,39 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
       }
     );
 
+  }
+
+  eliminarArchivos() {
+
+    this.progressSpinner = true;
+
+    this.sigaServices.post("actuaciones_designacion_eliminarDocumentosActDesigna", this.selectedDatos).subscribe(
+      data => {
+        let resp = JSON.parse(data.body);
+
+        if (resp.status == 'KO') {
+          if (resp.error != null && resp.error.description != null && resp.error.description != '') {
+            this.showMsg('error', 'Error', this.translateService.instant(resp.error.description));
+          } else {
+            this.showMsg('error', 'Error', this.translateService.instant('general.message.error.realiza.accion'));
+          }
+        } else if (resp.status == 'OK') {
+          this.progressSpinner = false;
+          this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
+          this.selectedDatos = [];
+          this.buscarDocumentosEvent.emit();
+        }
+
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+        this.showMsg('error', 'Error', this.translateService.instant('general.mensaje.error.bbdd'));
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
   }
 
   showMsg(severity, summary, detail) {
