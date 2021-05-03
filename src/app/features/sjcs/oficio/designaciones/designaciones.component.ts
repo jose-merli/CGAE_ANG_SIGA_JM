@@ -173,12 +173,14 @@ export class DesignacionesComponent implements OnInit {
          }else{
           element.art27 = "No";
          }
+         this.getDatosAdicionales(element);
          const params = {
           anio: element.factConvenio,
           idTurno: element.idTurno,
           numero: element.numero,
           historico: false
         };
+        
         this.progressSpinner = false;
         this.sigaServicesNew.post("actuaciones_designacion", params).subscribe(
           data => {
@@ -226,6 +228,37 @@ export class DesignacionesComponent implements OnInit {
         }, 5);
       });;
      
+  }
+
+  getDatosAdicionales(element) {
+    this.progressSpinner = true;
+    let desginaAdicionales = new DesignaItem();
+    let anio = element.ano.split("/");
+    desginaAdicionales.ano = Number(anio[0].substring(1, 5));
+    desginaAdicionales.numero = element.numero;
+    desginaAdicionales.idTurno = element.idTurno;
+    this.sigaServicesNew.post("designaciones_getDatosAdicionales", desginaAdicionales).subscribe(
+      n => {
+       
+        console.log(n.body);
+        let datosAdicionales = JSON.parse(n.body);
+        if (n != null) {
+          element.delitos = datosAdicionales[0].delitos;
+          element.fechaOficioJuzgado =datosAdicionales[0].fechaOficioJuzgado;
+          element.observaciones = datosAdicionales[0].observaciones;
+          element.fechaRecepcionColegio = datosAdicionales[0].fechaRecepcionColegio;
+          element.defensaJuridica = datosAdicionales[0].defensaJuridica;
+          element.fechaJuicio = datosAdicionales[0].fechaJuicio;
+        }
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+        console.log(err);
+      }, () => {
+        this.progressSpinner = false;
+      }
+    );
   }
 
   backTo() {
