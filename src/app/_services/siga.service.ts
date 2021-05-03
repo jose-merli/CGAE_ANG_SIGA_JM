@@ -30,6 +30,7 @@ import { endpoints_componentes } from "../utils/endpoints_components";
 import { endpoints_generales } from "../utils/endpoints_generales";
 import { Documento } from '../features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-designa/ficha-actuacion/tarjeta-doc-ficha-act/tarjeta-doc-ficha-act.component';
 import { ActuacionDesignaItem } from '../models/sjcs/ActuacionDesignaItem';
+import { DocumentoDesignaItem } from '../models/sjcs/DocumentoDesignaItem';
 
 @Injectable()
 export class SigaServices {
@@ -866,6 +867,50 @@ export class SigaServices {
           nombreFichero: el.nombreFichero,
           asociado: el.asociado
         });
+      }
+    });
+
+    formData.append('documentosActualizar', JSON.stringify(documentosActualizar));
+
+    let headers = new HttpHeaders();
+
+    headers.append('Content-Type', 'multipart/form-data');
+    headers.append('Accept', 'application/json');
+
+    return this.http
+      .post(environment.newSigaUrl + this.endpoints[service], formData, {
+        headers: headers
+      })
+      .map((response) => {
+        return response;
+      });
+  }
+
+  postSendFileAndDesigna(service: string, documentos: any[], designa): Observable<any> {
+    let formData: FormData = new FormData();
+
+    let documentosActualizar = [];
+
+    documentos.forEach((el, i) => {
+
+      if (el.cells[5].value && el.cells[3].value != undefined && el.cells[3].value != null) {
+        let doc = new DocumentoDesignaItem();
+        doc.anio = designa.ano;
+        doc.numero = designa.numero;
+        doc.idTurno = designa.idTurno;
+        doc.observaciones = el.cells[4].value;
+        doc.idTipodocumento = el.cells[2].value;
+
+        formData.append(`uploadFile${i}`, el.cells[3].value, el.cells[3].value.name + ';' + JSON.stringify(doc));
+      } else {
+        let doc = new DocumentoDesignaItem();
+        doc.anio = designa.ano;
+        doc.numero = designa.numero;
+        doc.idTurno = designa.idTurno;
+        doc.observaciones = el.cells[4].value;
+        doc.idTipodocumento = el.cells[2].value;
+        doc.idDocumentaciondes = el.cells[6].value;
+        documentosActualizar.push(doc);
       }
     });
 
