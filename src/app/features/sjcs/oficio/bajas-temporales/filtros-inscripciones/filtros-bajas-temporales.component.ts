@@ -140,7 +140,8 @@ export class FiltrosBajasTemporales implements OnInit {
       (this.filtros.nombre == null ||
           this.filtros.nombre == undefined ) &&
       (this.usuarioBusquedaExpress.nombreAp  == null ||
-        this.usuarioBusquedaExpress.nombreAp  == undefined )){
+        this.usuarioBusquedaExpress.nombreAp  == undefined ||
+        this.usuarioBusquedaExpress.nombreAp  == "" )){
         this.showSearchIncorrect();
         return false;
       } else {
