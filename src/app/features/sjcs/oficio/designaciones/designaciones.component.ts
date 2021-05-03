@@ -242,7 +242,7 @@ export class DesignacionesComponent implements OnInit {
        
         console.log(n.body);
         let datosAdicionales = JSON.parse(n.body);
-        if (n != null) {
+        if (datosAdicionales[0] != null && datosAdicionales[0] != undefined) {
           element.delitos = datosAdicionales[0].delitos;
           element.fechaOficioJuzgado =datosAdicionales[0].fechaOficioJuzgado;
           element.observaciones = datosAdicionales[0].observaciones;
