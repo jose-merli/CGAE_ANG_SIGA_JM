@@ -151,6 +151,8 @@ export class BajasTemporalesComponent implements OnInit {
         setTimeout(() => {
           this.tablapartida.tablaFoco.nativeElement.scrollIntoView();
         }, 5);
+        
+        this.progressSpinner = false;
       }
     );
   }
@@ -222,8 +224,6 @@ jsonToRow(datos){
 }
 
 modDatos(event){
-  console.log(event);
-
   let array = [];
   let array2 = [];
 
@@ -294,6 +294,7 @@ modDatos(event){
         array = [];
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
+        this.search(this.filtros.filtroAux.historico);
       },
       err => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
@@ -301,7 +302,6 @@ modDatos(event){
         this.progressSpinner = false;
       }
     );
-    this.search(this.filtros.filtroAux.historico);
   }
 
 denegar(event){

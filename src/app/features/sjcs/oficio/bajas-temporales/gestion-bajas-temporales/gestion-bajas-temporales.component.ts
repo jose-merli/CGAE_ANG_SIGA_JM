@@ -71,6 +71,7 @@ export class GestionBajasTemporalesComponent implements OnInit {
   historico: boolean = false;
   isLetrado: boolean = false;
   isDisabled: boolean = false;
+  sinDatos: boolean = false;
 
   comboTipo = [
     { label: "Vacaciones", value: "V" },

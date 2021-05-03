@@ -167,7 +167,6 @@ export class FichaActuacionComponent implements OnInit {
       let actuacion = JSON.parse(sessionStorage.getItem("actuacionDesigna"));
       sessionStorage.removeItem("actuacionDesigna");
       this.actuacionDesigna = actuacion;
-      console.log("🚀 ~ file: ficha-actuacion.component.ts ~ line 149 ~ FichaActuacionComponent ~ ngOnInit ~ this.actuacionDesigna", this.actuacionDesigna)
 
       if (actuacion.isNew) {
 
@@ -257,7 +256,6 @@ export class FichaActuacionComponent implements OnInit {
       this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(
         usr => {
           this.usuarioLogado = JSON.parse(usr.body).colegiadoItem[0];
-          console.log("🚀 ~ file: ficha-actuacion.component.ts ~ line 307 ~ FichaActuacionComponent ~ this.sigaServices.get ~  this.usuarioLogado", this.usuarioLogado)
           this.progressSpinner = false;
         });
 
@@ -510,9 +508,29 @@ export class FichaActuacionComponent implements OnInit {
     this.sigaServices.post("actuaciones_designacion_getDocumentosPorActDesigna", params).subscribe(
       data => {
 
-        console.log("🚀 ~ file: ficha-actuacion.component.ts ~ line 512 ~ FichaActuacionComponent ~ getDocumentosPorActDesigna ~ data", data);
         let resp: DocumentoActDesignaObject = JSON.parse(data.body);
         this.documentos = resp.listaDocumentoActDesignaItem;
+
+        if (this.documentos != undefined && this.documentos != null) {
+
+          let tarj = this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiDoc');
+
+          if (this.documentos.length == 0) {
+
+            tarj.campos = [];
+            tarj.campos.push({
+              key: null,
+              value: 'No existe documentación asociada a la actuación'
+            });
+          } else {
+
+            tarj.campos = [];
+            tarj.campos.push({
+              key: 'Número total de Documentos',
+              value: this.documentos.length.toString()
+            });
+          }
+        }
       },
       err => {
         this.progressSpinner = false;
