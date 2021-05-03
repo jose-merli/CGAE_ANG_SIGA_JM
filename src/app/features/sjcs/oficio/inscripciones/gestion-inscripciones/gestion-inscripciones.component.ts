@@ -535,6 +535,7 @@ export class TablaInscripcionesComponent implements OnInit {
 
   denegar(selectedDatos) {
     this.progressSpinner = true;
+    this.body = new InscripcionesObject();
     this.body.inscripcionesItem = selectedDatos
     this.body.inscripcionesItem.forEach(element => {
       element.fechaActual = this.datos.fechaActual;
@@ -573,6 +574,7 @@ export class TablaInscripcionesComponent implements OnInit {
     let fechaActual2 = this.datepipe.transform(this.datos.fechaActual,'dd/MM/yyyy')
     if(fechaActual2 != fechaHoy){
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.inscripciones.mensajesolicitarbaja"));
+      this.progressSpinner = false;
     }else{
       let vb = 0;
       this.body = new InscripcionesObject();

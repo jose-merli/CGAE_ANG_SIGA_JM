@@ -104,7 +104,8 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     this.selectores[0].opciones = [{ label: datosInicial.nombreTurno, value: datosInicial.idTurno }];
     this.selectores[0].value = datosInicial.idTurno;
     this.selectores[0].disable = true;
-    this.selectores[1].opciones = [{ label: datosInicial.descripcionTipoDesigna, value: datosInicial.idTipoDesignaColegio }];
+    // this.selectores[1].opciones = [{ label: datosInicial.descripcionTipoDesigna, value: datosInicial.idTipoDesignaColegio }];
+    this.getComboTipoDesignas();
     this.selectores[1].value = datosInicial.idTipoDesignaColegio;
     this.selectores[1].disable = false;
     var anioAnterior = datosInicial.ano.split("/");
@@ -306,7 +307,6 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
               console.log(err);
               this.progressSpinner = false;
             }, () => {
-              this.progressSpinner = false;
             }
           );
         }
@@ -514,11 +514,9 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                   });
 
                 }, () => {
-                  this.progressSpinner = false;
                 }
               );
             }
-            this.progressSpinner = false;
           } else if (detail == "save" && this.anio.value != "") {
             detail = "Guardar";
             let newDesigna = new DesignaItem();

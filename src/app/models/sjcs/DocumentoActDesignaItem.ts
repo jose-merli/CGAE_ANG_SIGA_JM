@@ -13,4 +13,6 @@ export class DocumentoActDesignaItem {
     observaciones: string;
     nombreFichero: string;
     asociado: string;
+    idPersona: string;
+    numColegiado: string;
 }
