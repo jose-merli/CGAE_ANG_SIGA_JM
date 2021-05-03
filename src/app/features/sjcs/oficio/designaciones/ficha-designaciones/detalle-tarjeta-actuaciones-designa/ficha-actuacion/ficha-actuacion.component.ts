@@ -159,9 +159,15 @@ export class FichaActuacionComponent implements OnInit {
     this.isColegiado = sessionStorage.getItem('isLetrado') == 'true';
     if (this.isColegiado) {
       this.getDataLoggedUser();
+    } else {
+      this.cargaInicial();
     }
 
     this.getInstitucionActual();
+
+  }
+
+  cargaInicial() {
 
     if (sessionStorage.getItem("actuacionDesigna")) {
       let actuacion = JSON.parse(sessionStorage.getItem("actuacionDesigna"));
@@ -184,7 +190,6 @@ export class FichaActuacionComponent implements OnInit {
       }
 
     }
-
   }
 
   ngAfterViewInit() {
@@ -257,6 +262,7 @@ export class FichaActuacionComponent implements OnInit {
         usr => {
           this.usuarioLogado = JSON.parse(usr.body).colegiadoItem[0];
           this.progressSpinner = false;
+          this.cargaInicial();
         });
 
     });

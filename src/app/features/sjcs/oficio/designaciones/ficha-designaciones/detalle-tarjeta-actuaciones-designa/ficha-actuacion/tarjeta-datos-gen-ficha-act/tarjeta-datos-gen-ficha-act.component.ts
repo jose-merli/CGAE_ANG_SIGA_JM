@@ -158,13 +158,13 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     this.getComboJuzgados();
     this.getComboProcedimientos();
 
-    if (this.datos.selectores[0].value != undefined && this.datos.selectores[0].value != null && this.datos.selectores[0].value != '') {
+    if (this.datos.selectores[0].value != undefined && this.datos.selectores[0].value != null || (typeof this.datos.selectores[0].value == 'string' && this.datos.selectores[0].value != '')) {
       this.cargaModulosPorJuzgado(this.datos.selectores[0].value);
     } else {
       this.datos.selectores[3].disabled = true;
     }
 
-    if (this.datos.selectores[3].value != undefined && this.datos.selectores[3].value != null && this.datos.selectores[3].value != '') {
+    if (this.datos.selectores[3].value != undefined && this.datos.selectores[3].value != null || (typeof this.datos.selectores[3].value == 'string' && this.datos.selectores[3].value != '')) {
       this.cargaAcreditacionesPorModulo(this.datos.selectores[3].value);
     } else {
       this.datos.selectores[4].disabled = true;
@@ -505,17 +505,17 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
       error = true;
     }
 
-    if (!error && (juzgado.value == undefined || juzgado.value == null || juzgado.value == '')) {
+    if (!error && (juzgado.value == undefined || juzgado.value == null || (typeof juzgado.value == 'string' && juzgado.value == ''))) {
       this.showMsg('error', this.translateService.instant('general.message.incorrect'), this.translateService.instant('general.message.camposObligatorios'));
       error = true;
     }
 
-    if (!error && (modulo.value == undefined || modulo.value == null || modulo.value == '')) {
+    if (!error && (modulo.value == undefined || modulo.value == null || (typeof modulo.value == 'string' && modulo.value == ''))) {
       this.showMsg('error', this.translateService.instant('general.message.incorrect'), this.translateService.instant('general.message.camposObligatorios'));
       error = true;
     }
 
-    if (!error && (acreditacion.value == undefined || acreditacion.value == null || acreditacion.value == '')) {
+    if (!error && (acreditacion.value == undefined || acreditacion.value == null || (typeof acreditacion.value == 'string' && acreditacion.value == ''))) {
       this.showMsg('error', this.translateService.instant('general.message.incorrect'), this.translateService.instant('general.message.camposObligatorios'));
       error = true;
     }
@@ -666,7 +666,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
   onChangeSelector(selector) {
 
     if (selector.id == 'juzgado') {
-      if (selector.value == '' || selector.value == null || selector.value == undefined) {
+      if (selector.value == undefined || selector.value == null || (typeof selector.value == 'string' && selector.value == '')) {
         this.datos.selectores.find(el => el.id == 'modulo').disabled = true;
         this.datos.selectores.find(el => el.id == 'acreditacion').disabled = true;
       } else {
@@ -676,7 +676,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
       this.datos.selectores.find(el => el.id == 'modulo').value = '';
       this.datos.selectores.find(el => el.id == 'acreditacion').value = '';
     } else if (selector.id == 'modulo') {
-      if (selector.value == '' || selector.value == null || selector.value == undefined) {
+      if (selector.value == undefined || selector.value == null || (typeof selector.value == 'string' && selector.value == '')) {
         this.datos.selectores.find(el => el.id == 'acreditacion').disabled = true;
       } else {
         this.datos.selectores.find(el => el.id == 'acreditacion').disabled = false;
@@ -692,10 +692,10 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     let modulo = this.datos.selectores.find(el => el.id == 'modulo');
     let acreditacion = this.datos.selectores.find(el => el.id == 'acreditacion');
 
-    if (juzgado.value == undefined || juzgado.value == null || juzgado.value == '') {
+    if (juzgado.value == undefined || juzgado.value == null || (typeof juzgado.value == 'string' && juzgado.value == '')) {
       modulo.disabled = true;
       acreditacion.disabled = true;
-    } else if (modulo.value == undefined || modulo.value == null || modulo.value == '') {
+    } else if (modulo.value == undefined || modulo.value == null || (typeof modulo.value == 'string' && modulo.value == '')) {
       acreditacion.disabled = true;
     }
 
@@ -713,6 +713,17 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
 
     }
 
+  }
+
+  marcaObligatorio(selector) {
+
+    let resp = false;
+
+    if (selector.obligatorio && (selector.value == undefined || selector.value == null || (typeof selector.value == 'string' && selector.value == ''))) {
+      resp = true;
+    }
+
+    return resp;
   }
 
 }

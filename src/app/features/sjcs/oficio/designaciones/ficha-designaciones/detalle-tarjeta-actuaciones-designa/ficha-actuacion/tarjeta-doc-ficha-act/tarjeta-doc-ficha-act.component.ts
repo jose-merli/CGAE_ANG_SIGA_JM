@@ -22,6 +22,9 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
 
   @Input() documentos: DocumentoActDesignaItem[];
   @Input() actuacionDesigna: Actuacion;
+  @Input() usuarioLogado;
+  @Input() isColegiado;
+  @Input() isAnulada;
   @Output() buscarDocumentosEvent = new EventEmitter<any>();
   documentos2: Documento[];
   cols: Col[] = [
@@ -106,6 +109,20 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
   }
 
   uploadFile() {
+
+    let error = false;
+    this.selectedDatos.forEach((el, i) => {
+
+      if (!el.nuevo && this.isColegiado && !(this.usuarioLogado.idPersona == el.idPersona && this.usuarioLogado.numColegiado == el.numColegiado)) {
+        this.selectedDatos.splice(i, 1);
+        error = true;
+      }
+
+    });
+
+    if (error) {
+      this.showMsg('info', this.translateService.instant("general.message.informacion"), 'Alguno de los registros no puedo ser editado porque no es usted su creador');
+    }
 
     if (!this.hayErrorCamposObligatorios()) {
 
@@ -210,6 +227,20 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
 
   eliminarArchivos() {
 
+    let error = false;
+    this.selectedDatos.forEach((el, i) => {
+
+      if (this.isColegiado && !(this.usuarioLogado.idPersona == el.idPersona && this.usuarioLogado.numColegiado == el.numColegiado)) {
+        this.selectedDatos.splice(i, 1);
+        error = true;
+      }
+
+    });
+
+    if (error) {
+      this.showMsg('info', this.translateService.instant("general.message.informacion"), 'Alguno de los registros no puedo ser eliminado porque no es usted su creador');
+    }
+
     this.progressSpinner = true;
 
     this.sigaServices.post("actuaciones_designacion_eliminarDocumentosActDesigna", this.selectedDatos).subscribe(
@@ -279,6 +310,8 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
       doc.nuevo = false;
       doc.asociado = `${this.actuacionDesigna.actuacion.numeroAsunto} ${this.actuacionDesigna.actuacion.acreditacion} ${this.actuacionDesigna.actuacion.modulo}`;
       doc.extension = el.nombreFichero.substring(el.nombreFichero.lastIndexOf("."), el.nombreFichero.length);
+      doc.idPersona = el.idPersona;
+      doc.numColegiado = el.numColegiado;
       this.documentos2.push(doc);
     });
   }
