@@ -19,6 +19,7 @@ export class LetradoEntranteComponent implements OnInit {
   showTarjeta=true;
   progressSpinner = false;
   disableFechaDesignacion;
+  disableCheck=false;
 
   @Input() saliente;
 
@@ -51,6 +52,8 @@ export class LetradoEntranteComponent implements OnInit {
       this.body.fechaDesignacion = this.saliente.fechaDesignacion;
       this.disableFechaDesignacion=true;
     }
+
+    if(sessionStorage.getItem("isLetrado")=="true") this.disableCheck=true;
     
   }
 
