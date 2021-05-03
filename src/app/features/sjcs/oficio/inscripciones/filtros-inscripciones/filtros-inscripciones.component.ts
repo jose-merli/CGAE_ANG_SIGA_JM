@@ -283,8 +283,8 @@ export class FiltrosInscripciones implements OnInit {
       this.filtros.afechade = this.transformaFecha(event);
       // Ignora el error provocado por la estructura de datos de InscripcionesItem
       // @ts-ignore
-      this.filtros.estado = ["1","2"];
-      this.disabledestado = true;
+      // this.filtros.estado = ["1","2"];
+      // this.disabledestado = true;
     }else{
       this.filtros.afechade = undefined;
       this.disabledestado = false;
@@ -315,7 +315,7 @@ export class FiltrosInscripciones implements OnInit {
     this.filtros.afechade = undefined;
     this.disabledestado = false;
     this.disabledFechaHasta = true;
-    if(sessionStorage.getItem("isLetrado")=="true"){
+    if(sessionStorage.getItem("isLetrado")=="false"){
       this.usuarioBusquedaExpress = {​​​​​​​​​
         numColegiado: "",
         nombreAp: ""

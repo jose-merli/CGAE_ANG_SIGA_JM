@@ -19,6 +19,7 @@ export class LetradoSalienteComponent implements OnInit {
   datos;
   showTarjeta=true;
   progressSpinner = false;
+  disableCheck=false;
 
   @Input() saliente;
 
@@ -44,6 +45,8 @@ export class LetradoSalienteComponent implements OnInit {
     this.body.fechaSolRenuncia = new Date();
     
     this.motivosRenuncia();
+
+    if(sessionStorage.getItem("isLetrado")=="true") this.disableCheck=true;
   }
 
   motivosRenuncia() {
