@@ -2,11 +2,15 @@
 
 <div class="padding-interior">
     <div class="form-group-interlineado">
-        <p-radioButton [(ngModel)]='radioTarjeta' name="tarj" value="designas" (click)="changeFilters('designas')"
-            label="{{ 'justiciaGratuita.oficio.designas' | translate }}" class="mr-4"></p-radioButton>
-        <p-radioButton [(ngModel)]='radioTarjeta' name="tarj" value="justificacion"
+        <span class="mr-4">
+            <p-radioButton [(ngModel)]='radioTarjeta' name="tarj" value="designas" (click)="changeFilters('designas')"
+            label="{{ 'justiciaGratuita.oficio.designas' | translate }}"></p-radioButton>
+        </span>
+        <span class="mr-4">
+            <p-radioButton [(ngModel)]='radioTarjeta' name="tarj" value="justificacion"
             (click)="changeFilters('justificacion')"
-            label="{{ 'justiciaGratuita.oficio.justificacionExpres' | translate}}" class="mr-4"></p-radioButton>
+            label="{{ 'justiciaGratuita.oficio.justificacionExpres' | translate}}"></p-radioButton>
+        </span>
     </div>
 
     <!-- FILTRO DESIGNAS -->

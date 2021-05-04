@@ -48,7 +48,7 @@ export class DesignacionesComponent implements OnInit {
     this.muestraTablaJustificacion=event;
   }
 
-  busquedaJustificacionExpres(event){
+  busquedaJustificacionExpres(){
     this.progressSpinner=true;
 
     this.sigaServicesNew.post("justificacionExpres_busqueda", this.filtros.filtroJustificacion).subscribe(
@@ -75,10 +75,13 @@ export class DesignacionesComponent implements OnInit {
   }
 
   actualizacionJustificacionExpres(event){
+    this.muestraTablaJustificacion=false;
     this.progressSpinner = true;
 
     this.sigaServicesNew.post("justificacionExpres_actualizacion", event).subscribe(
       data => {
+        //refrescamos tabla
+        this.busquedaJustificacionExpres();
         this.progressSpinner = false;
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
       },
@@ -89,14 +92,17 @@ export class DesignacionesComponent implements OnInit {
   }
 
   eliminacionJustificacionExpres(event){
+    this.muestraTablaJustificacion=false;
     this.progressSpinner=true;
-
     this.sigaServicesNew.post("justificacionExpres_eliminacion", event).subscribe(
       data => {
+           //refrescamos tabla
+        this.busquedaJustificacionExpres();
         this.progressSpinner=false;
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
       },
       err => {
+        this.muestraTablaJustificacion=true;
         this.progressSpinner=false;
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         console.log(err);
@@ -104,13 +110,17 @@ export class DesignacionesComponent implements OnInit {
   }
 
   insercionJustificacionExpres(event){
+    this.muestraTablaJustificacion=false;
     this.progressSpinner = true;
     this.sigaServicesNew.post("justificacionExpres_insercion", event).subscribe(
       data => {
+        //refrescamos tabla
+        this.busquedaJustificacionExpres();
         this.progressSpinner = false;
        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
       },
       err => {
+        this.muestraTablaJustificacion=true;
         this.progressSpinner = false;
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         console.log(err);
@@ -267,4 +277,6 @@ export class DesignacionesComponent implements OnInit {
   dataToUpdateArr(event){
     this.actualizacionJustificacionExpres(event);
   }
+
+
 }
