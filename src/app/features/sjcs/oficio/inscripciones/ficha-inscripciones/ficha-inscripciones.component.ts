@@ -141,10 +141,10 @@ export class FichaInscripcionesComponent implements OnInit {
 		];
 		this.actualizarBotones();
 
-		/* if(sessionStorage.getItem("Inscripciones")!=null){
+		if(sessionStorage.getItem("Inscripciones")!=null){
 			this.datos = JSON.parse(sessionStorage.getItem("Inscripciones"));
 			sessionStorage.removeItem("Inscripciones");
-		} */
+		}
 
 			// this.filtros.filtroAux = this.persistenceService.getFiltrosAux()
 			// this.filtros.filtroAux.historico = event;
@@ -211,6 +211,9 @@ export class FichaInscripcionesComponent implements OnInit {
 		this.location.back();
 	}
 
+	comunicar(selectedDatos){
+
+	}
 
 	showMessage(severity, summary, msg) {
 		this.msgs = [];

@@ -577,7 +577,7 @@ export class TarjetaInscripcion implements OnInit {
   }
   openTab(evento, turnoGuardia: String) {
     if (!this.selectAll && !this.selectMultiple) {
-      /* sessionStorage.setItem("Inscripciones",  JSON.stringify(this.datos)); */
+      sessionStorage.setItem("Inscripciones",  JSON.stringify(this.datos));
       if(turnoGuardia != null && turnoGuardia.indexOf('Guardia') != -1 ){
         this.progressSpinner = true;
         let guardiaItem = new GuardiaItem();
