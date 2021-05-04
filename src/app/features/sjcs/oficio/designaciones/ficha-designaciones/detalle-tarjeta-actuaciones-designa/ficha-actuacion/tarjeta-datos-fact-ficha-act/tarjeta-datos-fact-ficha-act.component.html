@@ -27,8 +27,9 @@
 
 <div class="card-footer">
   <div class="text-right main-button">
-    <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer" (click)="restablecer()"></button>
+    <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer" (click)="restablecer()"
+      [disabled]="isAnulada"></button>
     <button pButton type="button" icon="far fa-save" iconPos="left" label="Guardar" (click)="guardar()"
-      [disabled]="selector.value == '' || selector.value == null"></button>
+      [disabled]="selector.value == '' || selector.value == null || isAnulada"></button>
   </div>
 </div>

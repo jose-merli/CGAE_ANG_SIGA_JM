@@ -83,18 +83,33 @@ export class DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent imple
       // this.getDatosAdicionales(this.campos);
       let datosAdicionalesDesigna = new DesignaItem();
       datosAdicionalesDesigna.delitos = this.bloques[0].value;
-      if (this.bloques[0].valueDatePicker != null) {
-        datosAdicionalesDesigna.fechaOficioJuzgado = new Date(this.bloques[0].valueDatePicker.split('/').reverse().join('-'));
+      if(this.bloques[0].valueDatePicker != null && typeof(this.bloques[0].valueDatePicker) == "string"){
+          datosAdicionalesDesigna.fechaOficioJuzgado = new Date(this.bloques[0].valueDatePicker.split('/').reverse().join('-'));
+      }else{
+        datosAdicionalesDesigna.fechaOficioJuzgado = new Date(this.bloques[0].valueDatePicker);
       }
-      if (this.bloques[1].valueDatePicker != null) {
+      if(this.bloques[1].valueDatePicker != null && typeof(this.bloques[1].valueDatePicker) == "string"){
         datosAdicionalesDesigna.fechaRecepcionColegio = new Date(this.bloques[1].valueDatePicker.split('/').reverse().join('-'));
-      }
-      if (this.bloques[2].valueDatePicker != null) {
-        datosAdicionalesDesigna.fechaJuicio =new Date(this.bloques[2].valueDatePicker.split('/').reverse().join('-'));
-        let horaNumber = Number(this.hora);
-        let minutoNumber = Number(this.minuto);
-        datosAdicionalesDesigna.fechaJuicio.setHours(horaNumber, minutoNumber);
-      }
+    }else{
+      datosAdicionalesDesigna.fechaRecepcionColegio = new Date(this.bloques[1].valueDatePicker);
+    }
+    if(this.bloques[2].valueDatePicker != null && typeof(this.bloques[2].valueDatePicker) == "string"){
+      datosAdicionalesDesigna.fechaJuicio = new Date(this.bloques[2].valueDatePicker.split('/').reverse().join('-'));
+    }else{
+    datosAdicionalesDesigna.fechaJuicio = new Date(this.bloques[0].valueDatePicker);
+    }
+    let horaNumber = Number(this.hora);
+    let minutoNumber = Number(this.minuto);
+    datosAdicionalesDesigna.fechaJuicio.setHours(horaNumber, minutoNumber);
+      // if (this.bloques[1].valueDatePicker != null) {
+      //   datosAdicionalesDesigna.fechaRecepcionColegio = new Date(this.bloques[1].valueDatePicker.split('/').reverse().join('-'));
+      // }
+      // if (this.bloques[2].valueDatePicker != null) {
+      //   datosAdicionalesDesigna.fechaJuicio =new Date(this.bloques[2].valueDatePicker.split('/').reverse().join('-'));
+      //   let horaNumber = Number(this.hora);
+      //   let minutoNumber = Number(this.minuto);
+      //   datosAdicionalesDesigna.fechaJuicio.setHours(horaNumber, minutoNumber);
+      // }
       datosAdicionalesDesigna.observaciones = this.bloques[1].value;
       // datosAdicionalesDesigna.fechaRecepcionColegio =new Date(this.bloques[1].valueDatePicker);
       datosAdicionalesDesigna.defensaJuridica = this.bloques[2].value;
@@ -107,7 +122,6 @@ export class DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent imple
       this.sigaServices.post("designaciones_updateDatosAdicionales", datosAdicionalesDesigna).subscribe(
         n => {
           this.progressSpinner = false;
-          console.log(n.body);
           this.refreshAditionalData.emit(datosAdicionalesDesigna);
           this.msgs.push({
             severity,
@@ -151,7 +165,7 @@ export class DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent imple
       n => {
         console.log(n.body);
         let datosAdicionales = JSON.parse(n.body);
-        if (n != null) {
+        if (datosAdicionales[0] != null && datosAdicionales[0]!=undefined) {
           this.campos.delitos = datosAdicionales[0].delitos;
           this.campos.fechaOficioJuzgado = datosAdicionales[0].fechaOficioJuzgado;
           this.campos.observaciones = datosAdicionales[0].observaciones;
