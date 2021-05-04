@@ -47,7 +47,7 @@
         </div>
         <div class="card-footer h50 pt-5">
             <div class="text-right main-button butBottom mt10">
-                <button pButton (click)="checkAnular()"  [disabled]="isLetrado || historico" type="button" iconPos="left" label="{{ 'general.boton.anular' | translate}}"></button>
+                <button pButton (click)="checkAnular()"  [disabled]="isLetrado || historico || !isAnySelected()" type="button" iconPos="left" label="{{ 'general.boton.anular' | translate}}"></button>
       
                 <button pButton (click)="checkValidar()"  [disabled]="isLetrado || historico" type="button" iconPos="left" label="{{ 'general.boton.validar' | translate}}"></button>
                 
