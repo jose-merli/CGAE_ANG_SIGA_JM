@@ -56,11 +56,13 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   totalRegistros = 0;
   disableDelete = false;
   idTurno = "";
+  rowIdWithNewActuacion = "";
   //@Input() comboAcreditacionesPorModulo: any [];
   @Output() cargaModulosPorJuzgado2 = new EventEmitter<String>();
   @Output() cargaAcreditacionesPorModulo2 = new EventEmitter<String[]>();
   //@Output() cargaJuzgados = new EventEmitter<boolean>();
   progressSpinner: boolean = false;
+  rowValidadas = [];
 comboJuzgados = [];
   @Input() comboModulos = [];
   @Input()comboAcreditacion = [];
@@ -339,24 +341,48 @@ comboJuzgados = [];
   validaCheck(texto) {
     return texto === 'Si';
   }
-  fillFecha(event, cell, rowId) {
+  fillFecha(event, cell, rowId, row) {
+    this.rowValidadas = [];
+    if (row.cells[8].value != true){
     cell.value = this.datepipe.transform(event, 'dd/MM/yyyy');
     this.rowIdsToUpdate.push(rowId);
-  }
-  checkBoxChange(event, rowId, cell){
-    this.rowIdsToUpdate.push(rowId);
-    if (cell != undefined){
-      cell.value = event;
+    } else{
+      this.rowValidadas.push(row);
+      this.showMsg('error', "No se pueden actualizar actuaciones validadas", '')
     }
+  }
+  checkBoxChange(event, rowId, cell, row){
+    this.rowValidadas = [];
+    if (row.cells[8].value  != true){
+      this.rowIdsToUpdate.push(rowId);
+      if (cell != undefined){
+        cell.value = event;
+      }
+    }else{
+      this.rowValidadas.push(row);
+      this.showMsg('error', "No se pueden actualizar actuaciones validadas", '')
+    }
+
  
   }
 
   changeSelect(row, cell, rowId){
+    if (row.cells[8].value  != true){
     this.rowIdsToUpdate.push(rowId);
+    }else{
+      this.rowValidadas.push(row);
+      this.showMsg('error', "No se pueden actualizar actuaciones validadas", '')
+    }
   }
 
-  inputChange(vent, rowId){
+  inputChange(vent, rowId, row){
+    this.rowValidadas = [];
+    if (row.cells[8].value  != true){
     this.rowIdsToUpdate.push(rowId);
+    } else{
+      this.rowValidadas.push(row);
+      this.showMsg('error', "No se pueden actualizar actuaciones validadas", '')
+    }
   }
 
   ocultarColumna(event) {
@@ -640,7 +666,7 @@ comboJuzgados = [];
   toDoButton(type, designacion, rowGroup, rowWrapper){
 
     if (type == 'Nuevo'){
-     
+     this.rowIdWithNewActuacion = rowGroup.id;
       let desig = rowGroup.rows[0].cells;
       //this.getJuzgados(desig[17].value);
 
@@ -691,22 +717,40 @@ comboJuzgados = [];
     
 
     //2. Actualizar editados
+    
+    let rowValidadasNOT_REPEATED = new Set(this.rowValidadas);
+    this.rowValidadas = Array.from(rowValidadasNOT_REPEATED);
+
     if(this.rowIdsToUpdate != [] && this.newActuacionesArr.length == 0){
     let rowIdsToUpdateNOT_REPEATED = new Set(this.rowIdsToUpdate);
     this.rowIdsToUpdate = Array.from(rowIdsToUpdateNOT_REPEATED);
     this.rowGroups.forEach(row => {
       if(this.rowIdsToUpdate.indexOf(row.id.toString()) >= 0){
-        this.dataToUpdateArr.push(row);
+        let rowGroupToUpdate = row;
         actuaciones = row.rows.slice(1, row.rows.length - 1);
+          this.rowValidadas.forEach(rowValid => {
+            if (rowGroupToUpdate.rows.includes(rowValid)){
+            }
+          })
+          this.rowValidadas = [];
+        
+
+
+        this.dataToUpdateArr.push(row);
       }
     })
+    if (this.dataToUpdateArr.length != 0){
     this.dataToUpdate.emit(this.dataToUpdateArr);
     this.numDesignasModificadas.emit(this.rowIdsToUpdate.length);
     this.numActuacionesModificadas.emit(actuaciones.length);
+    }
+
+
   }
     this.rowIdsToUpdate = []; //limpiamos
     this.dataToUpdateArr = []; //limpiamos
     this.newActuacionesArr = []; //limpiamos
+    this.rowValidadas = [];
   }
 
   eliminar(){
@@ -731,7 +775,12 @@ comboJuzgados = [];
        this.selectedArray.forEach(idToDelete => {
         if (rowIdChild == idToDelete && rowG.id == rowId){
           //rowG.rows.splice(this.childNumber, 1);
-          deletedAct.push(rowG.rows[this.childNumber + 1].cells)
+          if (rowG.rows[this.childNumber + 1].cells[8].value == false){
+            deletedAct.push(rowG.rows[this.childNumber + 1].cells)
+          } else {
+            this.showMsg('error', "No se pueden eliminar actuaciones validadas", '')
+          }
+         
           this.totalActuaciones.emit(-1);
          
         }
@@ -742,10 +791,12 @@ comboJuzgados = [];
     });
     this.totalRegistros = this.rowGroups.length;
 
+    if (deletedAct.length != 0){
+      let deletedActNOT_REPEATED = new Set(deletedAct);
+      deletedAct = Array.from(deletedActNOT_REPEATED);
+      this.actuacionesToDelete.emit(deletedAct);
+    }
     
-    let deletedActNOT_REPEATED = new Set(deletedAct);
-    deletedAct = Array.from(deletedActNOT_REPEATED);
-    this.actuacionesToDelete.emit(deletedAct);
     deletedAct = [];
   }
   showMsg(severity, summary, detail) {

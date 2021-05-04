@@ -6,10 +6,12 @@ import { DesignaItem } from '../../../../../models/sjcs/DesignaItem';
 import { JustificacionExpressItem } from '../../../../../models/sjcs/JustificacionExpressItem';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { Location } from '@angular/common';
-import { Router } from '@angular/router';
+import { ActivationEnd, Router } from '@angular/router';
 import { procesos_oficio } from '../../../../../permisos/procesos_oficio';
 import { ControlAccesoDto } from '../../../../../models/ControlAccesoDto';
 import { FileAlreadyExistException } from '@angular-devkit/core';
+import { ParametroRequestDto } from '../../../../../models/ParametroRequestDto';
+import { ParametroDto } from '../../../../../models/ParametroDto';
 
 export enum KEY_CODE {
   ENTER = 13
@@ -81,7 +83,13 @@ export class FiltroDesignacionesComponent implements OnInit {
   @Output() busqueda = new EventEmitter<boolean>();
   
   isLetrado:boolean = false;
-
+  sinEjg;
+  ejgSinResolucion;
+  ejgPtecajg;
+  ejgNoFavorable;
+  valorParametro: AnalyserNode;
+  datosBuscar: any[];
+  searchParametros: ParametroDto = new ParametroDto();
   constructor(private translateService: TranslateService, private sigaServices: SigaServices,  private location: Location, private router: Router) { }
 
   ngOnInit(): void {
@@ -89,10 +97,45 @@ export class FiltroDesignacionesComponent implements OnInit {
     // let esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
     // if(!esColegiado){   
     this.checkAcceso();
+    this.getParamsEJG();
   // }
 
-
   }
+
+  getParamsEJG(){  
+    this.sinEjg = this.getParams("JUSTIFICACION_INCLUIR_SIN_EJG");
+    this.ejgSinResolucion = this.getParams("JUSTIFICACION_INCLUIR_EJG_SIN_RESOLUCION");
+    this.ejgPtecajg = this.getParams("JUSTIFICACION_INCLUIR_EJG_PTECAJG");
+    this.ejgNoFavorable = this.getParams("JUSTIFICACION_INCLUIR_EJG_NOFAVORABLE");}
+  getParams(param){
+    let parametro = new ParametroRequestDto();
+    let institucionActual;
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      institucionActual = n.value;
+      parametro.idInstitucion = institucionActual;
+      parametro.modulo = "SCS";
+      parametro.parametrosGenerales = param;
+      this.sigaServices
+        .postPaginado("parametros_search", "?numPagina=1", parametro)
+        .subscribe(
+          data => {
+            this.searchParametros = JSON.parse(data["body"]);
+            this.datosBuscar = this.searchParametros.parametrosItems;
+            this.datosBuscar.forEach(element => {
+              if (element.parametro == param && (element.idInstitucion == 0 || element.idInstitucion == element.idinstitucionActual)) {
+                this.valorParametro = element.valor;
+                return this.valorParametro;
+              }
+          });
+      });
+  });
+
+
+    /*escolegio sin check 2 y editabe¡le. es colegiado o colegio y actuvo el check disable y sin valores. Tiene que coger valores del paramero 
+    check solo visible para colegiados y activado
+    colegio desactivado*/
+
+}
   cargaInicial(){
     if (sessionStorage.getItem("isLetrado") != null && sessionStorage.getItem("isLetrado") != undefined) {
       this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
@@ -117,6 +160,7 @@ export class FiltroDesignacionesComponent implements OnInit {
     this.progressSpinner=true;
     this.showDesignas = true;
     this.checkRestricciones = false;
+
 
     // this.checkLastRoute();
 
@@ -679,6 +723,7 @@ getComboCalidad() {
   }
 
   getDataLoggedUser() {
+   
     this.progressSpinner = true;
     this.esColegiado = false;
     //si es colegio, valor por defecto para justificacion
@@ -700,10 +745,10 @@ getComboCalidad() {
         this.showColegiado = true;
 
         //es colegiado, filtro por defecto para justificacion
-        this.filtroJustificacion.ejgSinResolucion="0";
-        this.filtroJustificacion.sinEJG="0";
-        this.filtroJustificacion.resolucionPTECAJG="0";
-        this.filtroJustificacion.conEJGNoFavorables="0";
+        this.filtroJustificacion.ejgSinResolucion = this.ejgSinResolucion;
+        this.filtroJustificacion.sinEJG= this.sinEjg;
+        this.filtroJustificacion.resolucionPTECAJG= this.ejgPtecajg;
+        this.filtroJustificacion.conEJGNoFavorables= this.ejgNoFavorable;
 
         this.esColegiado = true;
         this.checkRestricciones = true;

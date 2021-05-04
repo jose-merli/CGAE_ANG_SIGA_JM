@@ -341,7 +341,7 @@
                             <label>{{ 'justiciaGratuita.oficio.justificacionExpres.incluirSinEJG' | translate }}</label>
                             <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde"
                                 [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
-                                [(ngModel)]='filtroJustificacion.sinEJG' [options]="comboSinEJG"
+                                [(ngModel)]='filtroJustificacion.sinEJG' [options]="comboEJGSinResolucion"
                                 [(disabled)]="disableRestricciones">
                             </p-dropdown>
                         </div>
@@ -359,7 +359,7 @@
                                 }}</label>
                             <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde"
                                 [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
-                                [(ngModel)]='filtroJustificacion.ejgSinResolucion' [options]="comboEJGSinResolucion"
+                                [(ngModel)]='filtroJustificacion.ejgSinResolucion' [options]="comboSinEJG"
                                 [(disabled)]="disableRestricciones">
                             </p-dropdown>
                         </div>
