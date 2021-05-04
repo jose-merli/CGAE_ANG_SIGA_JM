@@ -4,6 +4,8 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Sort } from '@angular/material/sort';
 import { Message } from 'primeng/components/common/api';
+import { CommonsService } from '../../_services/commons.service';
+import { SigaServices } from '../../_services/siga.service';
 import { Cell, Row, RowGroup } from './tabla-resultado-desplegable-je.service';
 @Component({
   selector: 'app-tabla-resultado-desplegable',
@@ -52,18 +54,22 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   from = 0;
   to = 10;
   totalRegistros = 0;
-
-  @Input() comboAcreditacionesPorModulo: any [];
-  @Output() cargaModulosPorJuzgado = new EventEmitter<String>();
-  @Output() cargaAcreditacionesPorModulo = new EventEmitter<String[]>();
-
-  @Input() comboJuzgados = [];
+  disableDelete = false;
+  idTurno = "";
+  //@Input() comboAcreditacionesPorModulo: any [];
+  @Output() cargaModulosPorJuzgado2 = new EventEmitter<String>();
+  @Output() cargaAcreditacionesPorModulo2 = new EventEmitter<String[]>();
+  //@Output() cargaJuzgados = new EventEmitter<boolean>();
+  progressSpinner: boolean = false;
+comboJuzgados = [];
   @Input() comboModulos = [];
-  @Input() comboAcreditacion = [];
+  @Input()comboAcreditacion = [];
   dataToUpdateArr: RowGroup[] = [];
   constructor(
     private renderer: Renderer2,
-    private datepipe: DatePipe
+    private datepipe: DatePipe,
+    private sigaServices: SigaServices,
+    private commonsService: CommonsService
   ) {
 
     this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
@@ -79,6 +85,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    //this.cargaJuzgados.emit(false);
     if (this.comboModulos != undefined && this.comboModulos != []){
       this.searchNuevo(this.comboModulos, []);
     }
@@ -94,7 +101,11 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   }
 
   selectRow(rowSelected, rowId, child) {
-
+    if (child == undefined){
+      this.disableDelete = true;
+    }else{
+      this.disableDelete = false;
+    }
     this.selected = true;
     if (child != undefined){
       if (this.selecteChild.includes({[rowId] : child})) {
@@ -332,8 +343,12 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     cell.value = this.datepipe.transform(event, 'dd/MM/yyyy');
     this.rowIdsToUpdate.push(rowId);
   }
-  checkBoxChange(event, rowId){
+  checkBoxChange(event, rowId, cell){
     this.rowIdsToUpdate.push(rowId);
+    if (cell != undefined){
+      cell.value = event;
+    }
+ 
   }
 
   changeSelect(row, cell, rowId){
@@ -383,7 +398,6 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         }
         console.log('event.itemValue.id: ', event.itemValue.id)*/
         if (ocultar && event.itemValue.id == "anio"){
-          console.log('si ocultamos anio, ocultamos clientes y ejgs porque son la misma columna')
           this.ocultarItem("clientes");
           this.ocultarItem("ejgs");
         }else if (!ocultar && event.itemValue.id == "anio"){
@@ -580,7 +594,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     if (z == 1) {
       //comboJuzgados
       let juzgado = $event.value;
-      this.cargaModulosPorJuzgado.emit(juzgado);
+      this.cargaModulosPorJuzgado2.emit(juzgado);
     }else if (z == 4){
       //comboModulos
       let modulo = $event.value;
@@ -588,25 +602,24 @@ export class TablaResultadoDesplegableComponent implements OnInit {
 
       data.push(modulo);
       data.push(this.newActuacionesArr[0].cells[33].value);
-      
-      this.cargaAcreditacionesPorModulo.emit(data);
+      this.cargaAcreditacionesPorModulo2.emit(data);
     }else if (z == 7){
       //comboAcreditacion
     }
   }
 
-  searchNuevo(comboModulos, comboAcreditacion){
+  searchNuevo(comboModulos, comboAcreditacion ){
     let rowGroupFound = false;
     this.rowGroups.forEach((rowGroup,i) => {
       rowGroup.rows.forEach(row =>{
         row.cells.forEach(cell => {
           if (cell.type == 'multiselect2') {
             cell.combo = comboModulos;
-            cell.value= "Seleccionar...";
+            cell.value= comboModulos[0].value;
             rowGroupFound = true;
-          }else if (cell.type == 'multiselect3') {
+          }else if (cell.type == 'multiselect3'&& comboAcreditacion[0] != undefined) {
             cell.combo = comboAcreditacion;
-            cell.value= "Seleccionar...";
+            cell.value= comboAcreditacion[0].value;
             rowGroupFound = true;
           } 
 
@@ -627,55 +640,28 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   toDoButton(type, designacion, rowGroup, rowWrapper){
 
     if (type == 'Nuevo'){
+     
       let desig = rowGroup.rows[0].cells;
-      
-      this.comboModulos = [];
-      this.comboAcreditacion = [];
-      this.rowGroups.forEach((rowGroup,i) => {
-        if (rowGroup.id == designacion){
-          let id = Object.keys(rowGroup.rows)[0];
-          let newArrayCells: Cell[] = [
-            { type: 'checkbox', value: false, size: 50 , combo: null},
-            { type: 'multiselect1', value: 'Seleccionar...',size: 153 , combo: this.comboJuzgados},
-            { type: 'input', value: '', size: 153, combo: null},
-            { type: 'input', value: '', size: 153 , combo: null},
-            { type: 'multiselect2', value: 'Seleccione un juzgado', size: 153 , combo: this.comboModulos}, //modulo
-            { type: 'datePicker', value: '', size: 153 , combo: null},
-            { type: 'datePicker', value: '' , size: 153, combo: null},
-            { type: 'multiselect3', value: 'Seleccione un modulo' , size: 153, combo: this.comboAcreditacion},
-            { type: 'checkbox', value: false, size: 50 , combo: null},
-            { type: 'invisible', value:  desig[19].value , size: 0, combo: null},//numDesig
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  desig[9].value , size: 0, combo: null},//anio
-            { type: 'invisible', value:  desig[17].value, size: 0, combo: null},//idturno
-            { type: 'invisible', value:  '' , size: 0, combo: null},];
-          console.log('newArrayCells: ', newArrayCells)
-          let newRow: Row = {cells: newArrayCells, position: 'noCollapse'};
-          rowGroup.rows.push(newRow);
-         
+      //this.getJuzgados(desig[17].value);
+
+      this.idTurno = desig[17].value;
+      this.progressSpinner = true;
+
+      this.sigaServices.get("combo_comboJuzgadoDesignaciones").subscribe(
+        n => {
+          this.comboJuzgados = n.combooItems;
+          this.commonsService.arregloTildesCombo(this.comboJuzgados);
+          this.progressSpinner = false;
+          this.cargaModulosPorJuzgado(this.comboJuzgados[0].value, designacion, rowGroup);
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
         }
-      })
+      );
+
+
+
     }
   }
 
@@ -692,21 +678,20 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   guardar(){
     let actuaciones;
     //1. Guardar nuevos
-    if (this.newActuacionesArr != []){
+    if (this.newActuacionesArr.length != 0){
 
       let newActuacionesArrNOT_REPEATED = new Set(this.newActuacionesArr);
       this.newActuacionesArr = Array.from(newActuacionesArrNOT_REPEATED);
 
     this.newActuacionesArr.forEach( newAct => {
-      console.log('newAct: ', newAct)
       this.actuacionToAdd.emit(newAct);
       this.totalActuaciones.emit(this.newActuacionesArr.length);
     });
     }
-    this.newActuacionesArr = []; //limpiamos
+    
 
     //2. Actualizar editados
-    if(this.rowIdsToUpdate != []){
+    if(this.rowIdsToUpdate != [] && this.newActuacionesArr.length == 0){
     let rowIdsToUpdateNOT_REPEATED = new Set(this.rowIdsToUpdate);
     this.rowIdsToUpdate = Array.from(rowIdsToUpdateNOT_REPEATED);
     this.rowGroups.forEach(row => {
@@ -721,6 +706,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   }
     this.rowIdsToUpdate = []; //limpiamos
     this.dataToUpdateArr = []; //limpiamos
+    this.newActuacionesArr = []; //limpiamos
   }
 
   eliminar(){
@@ -744,8 +730,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
        this.childNumber =  Number(Object.values(child)[0]);
        this.selectedArray.forEach(idToDelete => {
         if (rowIdChild == idToDelete && rowG.id == rowId){
-          rowG.rows.splice(this.childNumber, 1);
-          deletedAct.push(rowG.rows[this.childNumber].cells)
+          //rowG.rows.splice(this.childNumber, 1);
+          deletedAct.push(rowG.rows[this.childNumber + 1].cells)
           this.totalActuaciones.emit(-1);
          
         }
@@ -755,7 +741,12 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }
     });
     this.totalRegistros = this.rowGroups.length;
+
+    
+    let deletedActNOT_REPEATED = new Set(deletedAct);
+    deletedAct = Array.from(deletedActNOT_REPEATED);
     this.actuacionesToDelete.emit(deletedAct);
+    deletedAct = [];
   }
   showMsg(severity, summary, detail) {
     this.msgs = [];
@@ -767,6 +758,92 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   }
   clear() {
     this.msgs = [];
+  }
+  cargaAcreditacionesPorModulo($event, designacion, rowGroup){
+
+    this.progressSpinner = true;
+    let desig = rowGroup.rows[0].cells;
+    this.idTurno = desig[17].value;
+    this.sigaServices.getParam("combo_comboAcreditacionesPorModulo", `?idModulo=${$event[0]}&idTurno=${this.idTurno}`).subscribe(
+      n => {
+        this.comboAcreditacion = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboAcreditacion);
+        this.progressSpinner = false;
+                        //this.cargaJuzgados.emit(true);
+      //this.comboModulos = [];
+      //this.comboAcreditacion = [];
+      this.rowGroups.forEach((rowGroup,i) => {
+        if (rowGroup.id == designacion){
+          let id = Object.keys(rowGroup.rows)[0];
+          let newArrayCells: Cell[] = [
+            { type: 'checkbox', value: false, size: 50 , combo: null},
+            { type: 'multiselect1', value: this.comboJuzgados[0].value, size: 153 , combo: this.comboJuzgados},
+            { type: 'input', value: '', size: 153, combo: null},
+            { type: 'input', value: '', size: 153 , combo: null},//numProc
+            { type: 'multiselect2', value: this.comboModulos[0].value, size: 153 , combo: this.comboModulos}, //modulo
+            { type: 'datePicker', value: '', size: 153 , combo: null},
+            { type: 'datePicker', value: '' , size: 153, combo: null},
+            { type: 'multiselect3', value: this.comboAcreditacion[0].value , size: 153, combo: this.comboAcreditacion},
+            { type: 'checkbox', value: false, size: 50 , combo: null},
+            { type: 'invisible', value:  desig[19].value , size: 0, combo: null},//numDesig
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  desig[15].value , size: 0, combo: null},//idJuzgado   
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  '' , size: 0, combo: null},
+            { type: 'invisible', value:  desig[9].value , size: 0, combo: null},//anio
+            { type: 'invisible', value:  desig[17].value, size: 0, combo: null},//idturno
+            { type: 'invisible', value:  desig[13].value , size: 0, combo: null}];//idInstitucion
+          let newRow: Row = {cells: newArrayCells, position: 'noCollapse'};
+          rowGroup.rows.push(newRow);
+          this.newActuacionesArr.push(newRow);
+         
+        }
+      })
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  cargaModulosPorJuzgado($event, designacion, rowGroup){
+    this.progressSpinner = true;
+    this.sigaServices.post("combo_comboModulosConJuzgado", $event).subscribe(
+      n => {
+        this.comboModulos = JSON.parse(n.body).combooItems;
+        this.commonsService.arregloTildesCombo(this.comboModulos);
+        let data: String[] = [];
+        let desig = rowGroup.rows[0].cells;
+        this.idTurno = desig[17].value;
+        data.push(this.comboModulos[0].value);
+        data.push(this.idTurno);
+        this.cargaAcreditacionesPorModulo(data, designacion, rowGroup); 
+        this.progressSpinner = false;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      }
+    );
   }
 
 }
