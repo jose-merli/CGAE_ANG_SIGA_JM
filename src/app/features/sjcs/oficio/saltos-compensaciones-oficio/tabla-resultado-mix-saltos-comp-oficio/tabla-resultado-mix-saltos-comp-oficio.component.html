@@ -22,9 +22,8 @@
         <div (click)="selectRow(row['id'], row['cells'])" class="table-row-wrapper hoverBlue"
           [ngClass]="{'hoverBlue2': isSelected(row['id']), 'fixedBlue': seleccionarTodo && ((!historico && !isNew(row)) || (historico && isSelectableInHistorical(row)))}"
           #rowSelected>
-          <div *ngFor="let cell of row['cells'] | slice:0:7"
-            class="table-cell p-2 selectedRowClass"
-            [ngClass]="{'borders-child': isPar(i), 'justify-content-start': emptyResults}" #cellSelected>
+          <div *ngFor="let cell of row['cells'] | slice:0:7" class="table-cell p-2 selectedRowClass"
+            [ngClass]="{'borders-child': isPar(i), 'text-left': emptyResults}" #cellSelected>
             <div class="cell-wrapper selectedRowClass">
 
               <span class="w100 cell-value" *ngIf="cell.type == 'text'"

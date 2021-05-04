@@ -75,7 +75,7 @@
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Documentación'">
                                         <app-detalle-tarjeta-documentacion-ficha-designacion-oficio
-                                            [documentos]="documentos" [campos]="campos"
+                                            [documentos]="documentos" [campos]="campos" [isLetrado]="isLetrado"
                                             (buscarDocDesignaEvent)="getDocumentosDesigna()">
                                         </app-detalle-tarjeta-documentacion-ficha-designacion-oficio>
                                     </div>
@@ -104,8 +104,7 @@
                                     <div *ngIf="tarj.nombre == 'Actuaciones'">
                                         <app-detalle-tarjeta-actuaciones-ficha-designacion-oficio [campos]="campos"
                                             [actuacionesDesignaItems]="actuacionesDesignaItems"
-                                            [relaciones]="relaciones" [permisoEscritura]="permisoEscritura"
-                                            (buscarEvent)="getActuacionesDesigna($event)">
+                                            [relaciones]="relaciones" (buscarEvent)="getActuacionesDesigna($event)">
                                         </app-detalle-tarjeta-actuaciones-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Relaciones'">

@@ -611,9 +611,6 @@ export class FichaDesignacionesComponent implements OnInit {
       idPersonaColegiado: ''
     };
 
-    // if (!this.permisoEscritura) {
-    //   params.idPersonaColegiado = '';
-    // }
 
     this.sigaServices.post("actuaciones_designacion", params).subscribe(
       data => {
