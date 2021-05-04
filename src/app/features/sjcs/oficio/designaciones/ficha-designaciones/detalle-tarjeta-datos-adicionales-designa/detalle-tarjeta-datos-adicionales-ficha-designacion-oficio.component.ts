@@ -22,6 +22,7 @@ export class DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent imple
   minutoInicial;
   hora;
   minuto;
+  minDateCierre: Date;
   progressSpinner: boolean;
   bloques = [
     {
@@ -48,6 +49,7 @@ export class DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent imple
   constructor(private sigaServices: SigaServices, private translateService: TranslateService, private router: Router, private datepipe: DatePipe) { }
 
   ngOnInit() {
+    this.minDateCierre = new Date("1990-01-01");
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
     this.datosInicial = this.campos;
     if (!this.nuevaDesigna) {
@@ -96,24 +98,13 @@ export class DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent imple
     if(this.bloques[2].valueDatePicker != null && typeof(this.bloques[2].valueDatePicker) == "string"){
       datosAdicionalesDesigna.fechaJuicio = new Date(this.bloques[2].valueDatePicker.split('/').reverse().join('-'));
     }else{
-    datosAdicionalesDesigna.fechaJuicio = new Date(this.bloques[0].valueDatePicker);
+    datosAdicionalesDesigna.fechaJuicio = new Date(this.bloques[2].valueDatePicker);
     }
     let horaNumber = Number(this.hora);
     let minutoNumber = Number(this.minuto);
     datosAdicionalesDesigna.fechaJuicio.setHours(horaNumber, minutoNumber);
-      // if (this.bloques[1].valueDatePicker != null) {
-      //   datosAdicionalesDesigna.fechaRecepcionColegio = new Date(this.bloques[1].valueDatePicker.split('/').reverse().join('-'));
-      // }
-      // if (this.bloques[2].valueDatePicker != null) {
-      //   datosAdicionalesDesigna.fechaJuicio =new Date(this.bloques[2].valueDatePicker.split('/').reverse().join('-'));
-      //   let horaNumber = Number(this.hora);
-      //   let minutoNumber = Number(this.minuto);
-      //   datosAdicionalesDesigna.fechaJuicio.setHours(horaNumber, minutoNumber);
-      // }
       datosAdicionalesDesigna.observaciones = this.bloques[1].value;
-      // datosAdicionalesDesigna.fechaRecepcionColegio =new Date(this.bloques[1].valueDatePicker);
       datosAdicionalesDesigna.defensaJuridica = this.bloques[2].value;
-      // datosAdicionalesDesigna.fechaJuicio =new Date(this.bloques[2].valueDatePicker);
 
       datosAdicionalesDesigna.idTurno = this.campos.idTurno;
       let anio = this.campos.ano.split("/");

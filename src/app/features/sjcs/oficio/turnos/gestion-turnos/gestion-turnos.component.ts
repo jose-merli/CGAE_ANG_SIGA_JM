@@ -573,9 +573,9 @@ export class TablaTurnosComponent implements OnInit {
   }
 
   clickFila(event) {
-    if(event.data && event.data.fechabaja == null && this.historico){
-      this.selectedDatos.pop();
-    }
+    // if(event.data && event.data.fechabaja == null && this.historico){
+    //   this.selectedDatos.pop();
+    // }
   }
 
 }
