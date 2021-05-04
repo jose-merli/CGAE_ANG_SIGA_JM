@@ -2,7 +2,8 @@
 
 <div class="padding-interior w-100" id="paginador">
   <app-paginador2 (perPage)="perPage($event)" (seleccionarTodo)="selectedAll($event)" (fromReg)="fromReg($event)"
-    (toReg)="toReg($event)" [totalRegistros]="totalRegistros"></app-paginador2>
+    (toReg)="toReg($event)" [totalRegistros]="totalRegistros" [deseleccionarTodo]="deseleccionarTodo"
+    (deseleccionarTodoEvent)="deseleccionarTodoFuntion($event)"></app-paginador2>
 </div>
 
 <div class="table" matSort (matSortChange)="sortData($event)" #table>
@@ -17,9 +18,9 @@
   </div>
   <div *ngFor="let row of rowGroups | slice:from:to; let i = index" class="table-row child">
     <div (click)="selectRow(row['id'], row['cells'])" class="table-row-wrapper hoverBlue"
-      [ngClass]="{'hoverBlue2': isSelected(row['id']), 'fixedBlue': seleccionarTodo}" #rowSelected>
+      [ngClass]="{'hoverBlue2': isSelected(row['id'])}" #rowSelected>
       <div *ngFor="let cell of row['cells'] | slice:0:5" class="table-cell p-2 selectedRowClass"
-        [ngClass]="{'borders-child': isPar(i), 'justify-content-start': emptyResults}" #cellSelected>
+        [ngClass]="{'borders-child': isPar(i), 'text-left': emptyResults}" #cellSelected>
         <div class="cell-wrapper selectedRowClass w-100">
 
           <span class="w100 cell-value" *ngIf="cell.type == 'text'">{{cell.value}}</span>

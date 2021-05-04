@@ -24,7 +24,7 @@
       <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
         <td class="text-center" *ngFor="let col of columns">
           <div>
-            <a class="enlace" (click)="openTab(dato)"><span>{{dato[col.field]}}</span></a>
+            <a class="enlace" (click)="navigateTo([dato])"><span>{{dato[col.field]}}</span></a>
           </div>
         </td>
       </tr>

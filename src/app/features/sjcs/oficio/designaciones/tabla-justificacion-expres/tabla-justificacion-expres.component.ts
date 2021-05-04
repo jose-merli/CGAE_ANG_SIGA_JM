@@ -17,11 +17,11 @@ export class TablaJustificacionExpresComponent implements OnInit {
 
   progressSpinner: boolean = false;
   seleccionarTodo: boolean = false;
-
+  dataReady = false;
   @Input() datosJustificacion;
   @Input() colegiado;
   totalRegistros = 0;
-
+  
   datosJustificacionAux: JustificacionExpressItem = new JustificacionExpressItem();
 
   rutas = ['SJCS', 'Designaciones'];
@@ -117,9 +117,14 @@ export class TablaJustificacionExpresComponent implements OnInit {
     this.datosJustificacionAux = this.datosJustificacion;
 
     this.cargaInicial();
-    this.getJuzgados();
+   this.getJuzgados();
+    
   }
-
+  /*loadJuzgados(event){
+    if (event == true){
+      this.getJuzgados();
+    }
+  }*/
   getJuzgados(){
     this.progressSpinner = true;
 
@@ -128,6 +133,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
         this.comboJuzgados = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboJuzgados);
         this.progressSpinner = false;
+        //this.cargaModulosPorJuzgado(this.comboJuzgados[0].value);
       },
       err => {
         console.log(err);
@@ -144,6 +150,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
         this.comboAcreditacionesPorModulo = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboAcreditacionesPorModulo);
         this.progressSpinner = false;
+        
       },
       err => {
         console.log(err);
@@ -158,6 +165,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
       n => {
         this.comboModulos = JSON.parse(n.body).combooItems;
         this.commonsService.arregloTildesCombo(this.comboModulos);
+        this.cargaAcreditacionesPorModulo(this.comboModulos[0].value); //mal
         this.progressSpinner = false;
       },
       err => {
@@ -183,6 +191,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
   }
 
   cargaInicial(){
+    this.dataReady = false;
     let resultModified = {};
     let data = [];
     let dataObj = {};
@@ -298,6 +307,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
     arrDesignacion = [];
 
     designacion.actuaciones.forEach((actuacion, index) =>{
+      let validaAct = false;
       let moduleSelector =
       {
         nombre: actuacion.procedimiento,
@@ -305,6 +315,11 @@ export class TablaJustificacionExpresComponent implements OnInit {
           { label: actuacion.procedimiento, value: actuacion.procedimiento }
         ]
       };
+        if (actuacion.validada == "1"){
+          validaAct = true;
+        }else {
+          validaAct = false;
+        }
 
         if (actuacion.permitirAniadirLetrado == "1"){ 
           arr1 = 
@@ -313,11 +328,11 @@ export class TablaJustificacionExpresComponent implements OnInit {
           { type: 'text', value: actuacion.nombreJuzgado, size: 153 , combo: null},
           { type: 'input', value: actuacion.nig, size: 153, combo: null},
           { type: 'input', value: actuacion.numProcedimiento, size: 153 , combo: null},
-          { type: 'select', value: actuacion.procedimiento, size: 153 , combo: null}, //modulo
+          { type: 'text', value: actuacion.procedimiento, size: 153 , combo: null}, //modulo
           { type: 'datePicker', value:  this.formatDate(actuacion.fecha), size: 153 , combo: null},
           { type: 'datePicker', value:  actuacion.fechaJustificacion , size: 153, combo: null},
           { type: 'buttom', value: 'Nuevo' , size: 50, combo: null},
-          { type: 'checkbox', value: validada, size: 50 , combo: null},
+          { type: 'checkbox', value: validaAct, size: 50 , combo: null},
           { type: 'invisible', value:  actuacion.numDesignacion , size: 0, combo: null},
           { type: 'invisible', value:  actuacion.idAcreditacion , size: 0, combo: null},
           { type: 'invisible', value:  actuacion.tipoAcreditacion , size: 0, combo: null},
@@ -353,11 +368,11 @@ export class TablaJustificacionExpresComponent implements OnInit {
           { type: 'text', value: actuacion.nombreJuzgado, size: 153 , combo: null},
           { type: 'input', value: actuacion.nig, size: 153, combo: null},
           { type: 'input', value: actuacion.numProcedimiento, size: 153 , combo: null},
-          { type: 'select', value: actuacion.procedimiento, size: 153 , combo: null}, //modulo
+          { type: 'text', value: actuacion.procedimiento, size: 153 , combo: null}, //modulo
           { type: 'datePicker', value:  this.formatDate(actuacion.fecha), size: 153 , combo: null},
           { type: 'datePicker', value:  actuacion.fechaJustificacion , size: 153, combo: null},
           { type: 'text', value: actuacion.descripcion , size: 50, combo: null},
-          { type: 'checkbox', value: validada, size: 50 , combo: null },
+          { type: 'checkbox', value: validaAct, size: 50 , combo: null },
           { type: 'invisible', value:  actuacion.numDesignacion , size: 0, combo: null},
           { type: 'invisible', value:  actuacion.idAcreditacion , size: 0, combo: null},
           { type: 'invisible', value:  actuacion.tipoAcreditacion , size: 0, combo: null},
@@ -408,7 +423,8 @@ export class TablaJustificacionExpresComponent implements OnInit {
     this.rowGroupsAux = this.rowGroups;
     this.totalRegistros = this.rowGroups.length;
     this.totalDesignas = this.totalRegistros;
-  }
+    this.dataReady = true;
+    }
 
   showMsg(severity, summary, detail) {
     this.msgs = [];
@@ -431,6 +447,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
   getActuacionToAdd(event){
     this.actuacionToAdd = event;
     this.tableDataToJson2(this.actuacionToAdd);
+    
   }
   
   tableDataToJson2(actuacionToAdd){
@@ -482,6 +499,7 @@ this.dataToUpdate = event;
 }
 
 actCellToJson(actuacionesCells){
+  let validada = "0";
   let numDesignacion = actuacionesCells[9].value;
   let idAcreditacion = actuacionesCells[10].value;
   let descripcion = actuacionesCells[7].value;
@@ -498,7 +516,12 @@ actCellToJson(actuacionesCells){
   let idJuzgado = actuacionesCells[21].value;
   let nombreJuzgado = actuacionesCells[1].value;
   let fechaJustificacion = actuacionesCells[6].value;
-  let validada = actuacionesCells[8].value;
+  if (actuacionesCells[8].value == true){
+    validada = "1";
+  }else{
+    validada = "0";
+  }
+ 
   let idFacturacion = actuacionesCells[25].value;
   let numProcedimiento = actuacionesCells[3].value;
   let anioProcedimiento = actuacionesCells[26].value;
@@ -644,7 +667,7 @@ desigCellToJson(designacionesCells, codigoDesignacionParam, expedientesDesignaci
     return designacionesItem;
   }
 
-  setnumActuacionesModificadas(event){
+  setNumActuacionesModificadas(event){
     this.numActuacionesModificadas = event;
   }
 
@@ -655,4 +678,6 @@ desigCellToJson(designacionesCells, codigoDesignacionParam, expedientesDesignaci
   settotalActuaciones(event){
     this.totalActuaciones = this.totalActuaciones + event;
   }
+
+  
 }

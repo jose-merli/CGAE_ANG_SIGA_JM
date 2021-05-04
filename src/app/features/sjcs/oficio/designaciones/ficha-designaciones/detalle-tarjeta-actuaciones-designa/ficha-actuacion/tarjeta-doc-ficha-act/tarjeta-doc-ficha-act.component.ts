@@ -110,25 +110,28 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
 
   uploadFile() {
 
-    let error = false;
-    this.selectedDatos.forEach((el, i) => {
-
-      if (!el.nuevo && this.isColegiado && !(this.usuarioLogado.idPersona == el.idPersona && this.usuarioLogado.numColegiado == el.numColegiado)) {
-        this.selectedDatos.splice(i, 1);
-        error = true;
-      }
-
-    });
-
-    if (error) {
-      this.showMsg('info', this.translateService.instant("general.message.informacion"), 'Alguno de los registros no puedo ser editado porque no es usted su creador');
-    }
-
     if (!this.hayErrorCamposObligatorios()) {
+
+      let error = false;
+
+      let copiaDocumentos2: Documento[] = this.documentos2.slice();
+
+      copiaDocumentos2.forEach((el, i) => {
+
+        if (!el.nuevo && this.isColegiado && !(this.usuarioLogado.idPersona == el.idPersona && this.usuarioLogado.numColegiado == el.numColegiado)) {
+          copiaDocumentos2.splice(i, 1);
+          error = true;
+        }
+
+      });
+
+      if (error) {
+        this.showMsg('info', this.translateService.instant("general.message.informacion"), 'Alguno de los registros no puedo ser editado porque no es usted su creador');
+      }
 
       this.progressSpinner = true;
 
-      this.sigaServices.postSendFileAndActuacion("actuaciones_designacion_subirDocumentoActDesigna", this.documentos2, this.actuacionDesigna.actuacion).subscribe(
+      this.sigaServices.postSendFileAndActuacion("actuaciones_designacion_subirDocumentoActDesigna", copiaDocumentos2, this.actuacionDesigna.actuacion).subscribe(
         data => {
 
           let resp = data;
@@ -176,6 +179,9 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
   }
 
   hayErrorCamposObligatorios() {
+
+    this.progressSpinner = true;
+
     let error = false;
 
     let elementosNuevos: Documento[] = this.documentos2.filter(el => el.nuevo);
@@ -188,6 +194,8 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
       }
 
     });
+
+    this.progressSpinner = false;
 
     return error;
   }

@@ -2,8 +2,8 @@
 
 <div class="card mt-3">
     <div *ngIf="!progressSpinner" class="card-body p-0">
-        <app-tabla-resultado-desplegable (dataToUpdate)="getDataToUpdate($event)" (actuacionToAdd)="getActuacionToAdd($event)" (actuacionesToDelete)="getActuacionesToDelete($event)" [colegiado]="colegiado" [seleccionarTodo]="seleccionarTodo" [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" [pantalla]="'JE'" [comboModulos]="comboModulos" [comboJuzgados]="comboJuzgados"  [comboAcreditacion]="comboAcreditacionesPorModulo"
-         (cargaModulosPorJuzgado)="cargaModulosPorJuzgado($event)" (cargaAcreditacionesPorModulo)="cargaAcreditacionesPorModulo($event)" (numActuacionesModificadas)="setnumActuacionesModificadas($event)" (numDesignasModificadas)="setnumDesignasModificadas($event)" (totalActuaciones)="settotalActuaciones($event)"></app-tabla-resultado-desplegable>
+        <app-tabla-resultado-desplegable *ngIf="dataReady" (dataToUpdate)="getDataToUpdate($event)" (actuacionToAdd)="getActuacionToAdd($event)" (actuacionesToDelete)="getActuacionesToDelete($event)" [colegiado]="colegiado" [seleccionarTodo]="seleccionarTodo" [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" [pantalla]="'JE'" [comboModulos]="comboModulos" [comboAcreditacion]="comboAcreditacionesPorModulo"
+         (cargaModulosPorJuzgado2)="cargaModulosPorJuzgado($event)" (cargaAcreditacionesPorModulo2)="cargaAcreditacionesPorModulo($event)"   (numActuacionesModificadas)="setNumActuacionesModificadas($event)" (numDesignasModificadas)="setnumDesignasModificadas($event)" (totalActuaciones)="settotalActuaciones($event)" ></app-tabla-resultado-desplegable>
 
 
     </div>
