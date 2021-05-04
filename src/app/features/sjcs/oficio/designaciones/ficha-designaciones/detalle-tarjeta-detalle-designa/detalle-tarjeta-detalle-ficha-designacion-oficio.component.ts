@@ -50,6 +50,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
   moduloValue: any;
   moduloOpciones: any;
   disableEstado:boolean= false;
+  institucionActual: String;
   @Input() campos;
   @Output() refreshData = new EventEmitter<DesignaItem>();
   datosInicial: any;
@@ -213,6 +214,9 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         }
       );
     
+      this.sigaServices.get("institucionActual").subscribe(n => {
+        this.institucionActual = n.value;
+      });
   }
 
   formatDate(date) {
@@ -591,40 +595,33 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
   validarNig(nig) {
     //Esto es para la validacion de CADECA
     let ret = false;
-    let institucionActual
-    this.sigaServices.get("institucionActual").subscribe(n => {
-      institucionActual = n.value;
-      if (institucionActual == "2008" || institucionActual == "2015" || institucionActual == "2029" || institucionActual == "2033" || institucionActual == "2036" ||
-      institucionActual == "2043" || institucionActual == "2006" || institucionActual == "2021" || institucionActual == "2035" || institucionActual == "2046" || institucionActual == "2066") {
-      if (nig != '') {
-        var objRegExp = /^[0-9]{7}[S,C,P,O,I,V,M,6,8,1,2,3,4]{1}(19|20)\d{2}[0-9]{7}$/;
-        ret = objRegExp.test(nig);
-        
-      }
-      else
-        ret = true;
-    } else {
-      if (nig.length == 19) {
-        var objRegExp = /^([a-zA-Z0-9]{19})?$/;
-        ret = objRegExp.test(nig);
-      } else {
-        ret = true;
-      }
+    
+    if (this.institucionActual == "2008" || this.institucionActual == "2015" || this.institucionActual == "2029" || this.institucionActual == "2033" || this.institucionActual == "2036" ||
+    this.institucionActual == "2043" || this.institucionActual == "2006" || this.institucionActual == "2021" || this.institucionActual == "2035" || this.institucionActual == "2046" || this.institucionActual == "2066") {
+    if (nig != '') {
+      var objRegExp = /^[0-9]{7}[S,C,P,O,I,V,M,6,8,1,2,3,4]{1}(19|20)\d{2}[0-9]{7}$/;
+      ret = objRegExp.test(nig);
+      
     }
-    });
+    else
+      ret = true;
+  } else {
+    if (nig.length == 19) {
+      var objRegExp = /^([a-zA-Z0-9]{19})?$/;
+      ret = objRegExp.test(nig);
+    } else {
+      ret = true;
+    }
+  }
 
     return ret;
   }
 
   validarNProcedimiento(nProcedimiento) {
     //Esto es para la validacion de CADECA
-    let institucionActual
-    this.sigaServices.get("institucionActual").subscribe(n => {
-      institucionActual = n.value;
-    });
 
-    if (institucionActual == "2008" || institucionActual == "2015" || institucionActual == "2029" || institucionActual == "2033" || institucionActual == "2036" ||
-      institucionActual == "2043" || institucionActual == "2006" || institucionActual == "2021" || institucionActual == "2035" || institucionActual == "2046" || institucionActual == "2066") {
+    if (this.institucionActual == "2008" || this.institucionActual == "2015" || this.institucionActual == "2029" || this.institucionActual == "2033" || this.institucionActual == "2036" ||
+    this.institucionActual == "2043" || this.institucionActual == "2006" || this.institucionActual == "2021" || this.institucionActual == "2035" || this.institucionActual == "2046" || this.institucionActual == "2066") {
       if (nProcedimiento != '') {
         var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{5}[\.]{1}[0-9]{2}$/;
         var ret = objRegExp.test(nProcedimiento);
