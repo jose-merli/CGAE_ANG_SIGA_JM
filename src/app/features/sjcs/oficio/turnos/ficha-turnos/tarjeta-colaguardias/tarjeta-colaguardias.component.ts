@@ -772,4 +772,67 @@ export class TarjetaColaGuardias implements OnInit {
   onHideTarjeta() {
     this.showTarjeta = !this.showTarjeta;
   }
+
+  confirmUltimo() {
+    let mess = this.translateService.instant(
+      "justiciaGratuita.oficio.turnos.messageultletrado"
+    );
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      key: "confirmDialogColaOficio",
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.marcarUltimo();
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
+
+  marcarUltimo() {
+    this.progressSpinner=true;
+
+    let dato = new TurnosItems();
+    dato = this.selectedDatos[0];
+    dato.idguardias=this.turnosItem.idcomboguardias;
+
+    this.sigaServices.post("turnos_updateUltimoGuardias", dato).subscribe(
+      data => {
+
+        var ultimaPosicion = this.datos[this.datos.length - 1];
+        this.datos[this.datos.length - 1] = this.selectedDatos[0];
+        this.selectedDatos[0] = ultimaPosicion;
+        this.nuevo = false;
+        this.selectedDatos = [];
+        this.selectAll = false;
+
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        
+        this.progressSpinner = false;
+        this.getColaGuardias();
+      },
+      err => {
+        if (err != undefined && JSON.parse(err.error).error.description != "") {
+          if (JSON.parse(err.error).error.description == "areasmaterias.materias.ficha.materiaEnUso") {
+            this.showMessage("warn", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          }
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      }
+    );
+  }
 }
