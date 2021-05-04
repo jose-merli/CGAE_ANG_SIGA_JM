@@ -51,6 +51,7 @@ export class FichaInscripcionesComponent implements OnInit {
 	permisosTarjetaCola: boolean = true;
 	openLetrado : Boolean = false;
 	turno: any;
+	historico: boolean = false;
 	constructor(public datepipe: DatePipe, private translateService: TranslateService, private route: ActivatedRoute, 
 		 private sigaServices: SigaServices, private location: Location, private persistenceService: PersistenceService,
 		 private router: Router, private commonsService: CommonsService, private confirmationService: ConfirmationService) { }
