@@ -91,6 +91,11 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
 
     sessionStorage.removeItem("nuevoProcurador");
   }
+
+  isAnySelected() {
+    return this.selectedArray != null;
+  }
+
   mostrarDatos(){
     this.mostrar.emit();
   }

@@ -121,7 +121,7 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit {
 
   
   isAnySelected() {
-    return this.selectedDatos.length > 0;
+    return this.selectedDatos != "";
   }
 
   eliminarRelacion(){

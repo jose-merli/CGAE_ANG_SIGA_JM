@@ -1,3 +1,4 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div>
   <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [selectionMode]="selectionMode"
     [responsive]="true" #table class="tabla-listado" [paginator]="true" [rows]="selectedItem"
@@ -24,7 +25,7 @@
       <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
         <td class="text-center" *ngFor="let col of columns">
           <div>
-            <a class="enlace" (click)="openTab(dato)"><span>{{dato[col.field]}}</span></a>
+            <a><span>{{dato[col.field]}}</span></a>
           </div>
         </td>
       </tr>

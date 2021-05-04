@@ -465,7 +465,6 @@ if(nuevaBaja.length != 0){
 
     element.fechabt = new Date();
   });
-
   
   this.sigaServices.post("bajasTemporales_nuevaBajaTemporal", nuevaBaja).subscribe(
     data => {
@@ -478,7 +477,6 @@ if(nuevaBaja.length != 0){
       this.progressSpinner = false;
     }
   );
-
 
 }
 
@@ -518,7 +516,6 @@ if(listaPrueba.length != 0){
         this.progressSpinner = false;
       }
     );
-
   }
 }
 
