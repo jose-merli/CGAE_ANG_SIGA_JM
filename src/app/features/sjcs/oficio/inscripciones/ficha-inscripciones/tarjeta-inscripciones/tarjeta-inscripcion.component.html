@@ -39,9 +39,9 @@
               <td *ngFor="let col of columns">   
                 <div class= "displayFlex">
                   <div *ngIf="col.field =='nombre_turno'">       
-                  <p-checkbox [(ngModel)]='rowData.selectedBooleanPadre' [disabled]="disableAll" (onChange)="seleccionarPadre(rowData,$event)" binary="true"></p-checkbox>      
+                  <p-checkbox [(ngModel)]='rowData.selectedBooleanPadre' [disabled]="disableAll || rowData.fechaSolicitud!=null" (onChange)="seleccionarPadre(rowData,$event)" binary="true"></p-checkbox>      
                   </div>                     
-                <a href="#" [pRowToggler]="rowData">
+                <!-- <a href="#" [pRowToggler]="rowData"> -->
                    
                   <div class="text-center" *ngIf="col.field =='nombre_turno'">                       
                       <i
@@ -49,7 +49,7 @@
                       <a (click)="openTab(rowData, 'Turno')"><span>{{rowData[col.field]}}</span></a>
                   </div>
                 
-                </a>
+                <!-- </a> -->
               </div>
                 <div class="text-center"
                   *ngIf="col.field !='nombre_turno' && col.field !='descripcion_tipo_guardia'">

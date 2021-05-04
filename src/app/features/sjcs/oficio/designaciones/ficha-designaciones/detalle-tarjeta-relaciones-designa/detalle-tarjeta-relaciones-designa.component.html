@@ -60,11 +60,11 @@
   </p-table>
   <div class="card-footer">
     <div class="text-right main-button">
-      <button pButton type="button" iconPos="left" label="{{'general.boton.AsociarAsistencia' | translate}}"></button>
-      <button pButton type="button" iconPos="left" label="{{ 'general.boton.asociarSOJ' | translate}}"></button>
-      <button pButton type="button" iconPos="left" label="{{ 'general.boton.asociarEJG' | translate}}"></button>
-      <button pButton type="button" iconPos="left" label="{{'general.boton.crearEJG' | translate}}"></button>
-      <button pButton type="button" (click)="eliminarRelacion()" icon="fa fa-trash" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
+      <button pButton type="button" iconPos="left" (click)="porhacer()" label="{{'general.boton.AsociarAsistencia' | translate}}"></button>
+      <button pButton type="button" iconPos="left" (click)="porhacer()" label="{{ 'general.boton.asociarSOJ' | translate}}"></button>
+      <button pButton type="button" iconPos="left" (click)="porhacer()" label="{{ 'general.boton.asociarEJG' | translate}}"></button>
+      <button pButton type="button" iconPos="left" (click)="porhacer()" label="{{'general.boton.crearEJG' | translate}}"></button>
+      <button pButton type="button" [disabled]="disabled" (click)="eliminarRelacion()" icon="fa fa-trash" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
     </div>
   </div>
 </div>

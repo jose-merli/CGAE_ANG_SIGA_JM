@@ -125,13 +125,12 @@ export class BuscadorColegiadosComponent implements OnInit {
       //sessionStorage.setItem("turno", JSON.stringify(event));
       sessionStorage.setItem("origin","newInscrip");
       this.router.navigate(["/gestionInscripciones"]);
-    }
-    else{
-    sessionStorage.setItem("buscadorColegiados", JSON.stringify(event));
+    } else{
+      sessionStorage.setItem("buscadorColegiados", JSON.stringify(event));
 
-    sessionStorage.getItem('nuevo');
-    
-    this.location.back();
+      sessionStorage.getItem('nuevo');
+      
+      this.location.back();
     }
   }
 

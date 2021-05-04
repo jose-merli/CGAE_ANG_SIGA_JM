@@ -1,4 +1,4 @@
-import { ElementRef, Renderer2, Output, EventEmitter} from '@angular/core';
+import { ElementRef, Renderer2, Output, EventEmitter, SimpleChanges} from '@angular/core';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Sort } from '@angular/material/sort';
@@ -70,7 +70,6 @@ export class GestionBajasTemporalesComponent implements OnInit {
   @ViewChild('table') table: ElementRef;
   historico: boolean = false;
   isLetrado: boolean = false;
-  isDisabled: boolean = false;
 
   comboTipo = [
     { label: "Vacaciones", value: "V" },
@@ -79,8 +78,6 @@ export class GestionBajasTemporalesComponent implements OnInit {
     { label: "Suspensión por sanción", value: "S" }
   ];
   @ViewChild("tablaFoco") tablaFoco: ElementRef;
-  array = sessionStorage.getItem("buscadorColegiados");
-  nuevaBaja = sessionStorage.getItem("nuevo");
 
   usuarioBusquedaExpress = {​​​​​​​​​
     numColegiado: '',
@@ -105,33 +102,27 @@ export class GestionBajasTemporalesComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-
-    if(this.nuevaBaja == "true"){
-      this.nuevo();
-    }
-
+  ngOnInit() {
     this.totalRegistros = this.rowGroups.length;
 
     this.numCabeceras = this.cabeceras.length;
 
     this.numColumnas = this.numCabeceras;
 
-    sessionStorage.removeItem("nuevo");
-
     // Si es un colegiado y es un letrado, no podrá guardar/restablecer datos de la inscripcion/personales
-    if (
-      sessionStorage.getItem("isLetrado") != null &&
-      sessionStorage.getItem("isLetrado") != undefined
-    ) {
+    if (sessionStorage.getItem("isLetrado") != null && sessionStorage.getItem("isLetrado") != undefined) {
       this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
     }
-    
+  }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if(sessionStorage.getItem("nuevo")){
+      this.nuevo();
+    }
+    sessionStorage.removeItem("nuevo");
   }
 
   onChangeMulti(event, rowPosition, cell){
-    console.log('cell: ', cell)
     let deseleccionado;
    
     let selected = event.itemValue;
@@ -367,7 +358,14 @@ export class GestionBajasTemporalesComponent implements OnInit {
       this.usuarioBusquedaExpress.nombreAp=busquedaColegiado.apellidos+", "+busquedaColegiado.nombre;
 
       this.usuarioBusquedaExpress.numColegiado=busquedaColegiado.nColegiado;
-    }​​
+    }​​else{
+      this.usuarioBusquedaExpress.nombreAp=sessionStorage.getItem("nombCol");
+
+      this.usuarioBusquedaExpress.numColegiado=sessionStorage.getItem("nCol");
+    }
+
+    sessionStorage.removeItem("nombCol");
+    sessionStorage.removeItem("nCol");
 
     if(this.usuarioBusquedaExpress.nombreAp != "" || this.usuarioBusquedaExpress.numColegiado != ""){
       this.enableGuardar = true;
@@ -408,7 +406,7 @@ export class GestionBajasTemporalesComponent implements OnInit {
       this.rowGroups.unshift(row);
       this.rowGroupsAux = this.rowGroups;
       this.totalRegistros = this.rowGroups.length;
-      console.log('this.rowGroups: ', this.rowGroups);
+      sessionStorage.removeItem("nuevo");
     }
 }
   inputChange(event, i, z){

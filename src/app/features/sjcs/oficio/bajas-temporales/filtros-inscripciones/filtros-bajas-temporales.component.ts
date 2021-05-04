@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, HostListener, Output, EventEmitter} from '@angular/core';
+import { Component, OnInit, Input, HostListener, Output, EventEmitter, SimpleChanges} from '@angular/core';
 import { TranslateService } from '../../../../../commons/translate';
 import { KEY_CODE } from '../../../../censo/busqueda-no-colegiados/busqueda-no-colegiados.component';
 import { Router } from '../../../../../../../node_modules/@angular/router';
@@ -108,9 +108,6 @@ export class FiltrosBajasTemporales implements OnInit {
           this.usuarioLogado = JSON.parse(usr.body).colegiadoItem[0];
           this.progressSpinner = false;
 
-          this.usuarioBusquedaExpress.numColegiado=this.usuarioLogado.numColegiado;
-          this.usuarioBusquedaExpress.nombreAp = nombre.replace(/,/g,"");
-
          }, err =>{
           this.progressSpinner = false;
         },
@@ -140,7 +137,8 @@ export class FiltrosBajasTemporales implements OnInit {
       (this.filtros.nombre == null ||
           this.filtros.nombre == undefined ) &&
       (this.usuarioBusquedaExpress.nombreAp  == null ||
-        this.usuarioBusquedaExpress.nombreAp  == undefined )){
+        this.usuarioBusquedaExpress.nombreAp  == undefined ||
+        this.usuarioBusquedaExpress.nombreAp  == "" )){
         this.showSearchIncorrect();
         return false;
       } else {
@@ -247,6 +245,7 @@ export class FiltrosBajasTemporales implements OnInit {
   }
 
   clearFilters() {
+  if(this.isLetrado){
     this.filtros.validado = undefined;
     this.filtros.fechadesde = undefined;
     this.filtros.fechahasta = undefined;
@@ -255,6 +254,18 @@ export class FiltrosBajasTemporales implements OnInit {
     this.filtros.tipo = undefined;
     this.disabledFechaHasta = true;
     this.disabledFechaSolicitudHasta = true;
+  }else{
+    this.filtros.validado = undefined;
+    this.filtros.fechadesde = undefined;
+    this.filtros.fechahasta = undefined;
+    this.filtros.fechasolicituddesde = undefined;
+    this.filtros.fechasolicitudhasta = undefined;
+    this.filtros.tipo = undefined;
+    this.disabledFechaHasta = true;
+    this.disabledFechaSolicitudHasta = true;
+    this.usuarioBusquedaExpress.nombreAp = null;
+    this.usuarioBusquedaExpress.numColegiado = null;
+  }
   }
 
   //búsqueda con enter
@@ -293,8 +304,11 @@ export class FiltrosBajasTemporales implements OnInit {
   
   nuevaBajaTemporal(){
     if(this.usuarioBusquedaExpress.numColegiado!= undefined && this.usuarioBusquedaExpress.nombreAp != null 
-      && this.usuarioBusquedaExpress.numColegiado.trim.length>0){
+      && this.usuarioBusquedaExpress.numColegiado != ""){
       sessionStorage.setItem("nuevo","true");
+      sessionStorage.setItem("nCol",this.usuarioBusquedaExpress.numColegiado);
+      sessionStorage.setItem("nombCol",this.usuarioBusquedaExpress.nombreAp);
+      sessionStorage.removeItem("buscadorColegiados");
       this.isBuscar();
     }else{
       this.router.navigate(["/buscadorColegiados"]);
