@@ -502,6 +502,33 @@ export class FichaDesignacionesComponent implements OnInit {
 
     this.getActuacionesDesigna(false);
     this.getDocumentosDesigna();
+
+    if(sessionStorage.getItem('refreshDataAct')) {
+      let dataRefresh: ActuacionDesignaItem = JSON.parse(sessionStorage.getItem('refreshDataAct'));
+
+      if(this.campos.nig == undefined || this.campos.nig == null || this.campos.nig.trim().length == 0) {
+        this.campos.nig = dataRefresh.nig;
+      }
+
+      if(this.campos.numProcedimiento == undefined || this.campos.numProcedimiento == null || this.campos.numProcedimiento.trim().length == 0) {
+        this.campos.numProcedimiento = dataRefresh.numProcedimiento;
+      }
+
+      if(this.campos.idJuzgado == undefined || this.campos.idJuzgado == null) {
+        this.campos.idJuzgado = Number(dataRefresh.idJuzgado);
+      }
+
+      if(this.campos.idModulo == undefined || this.campos.idModulo == null) {
+        this.campos.idModulo = [dataRefresh.idProcedimiento];
+      }
+
+      if(this.campos.idProcedimiento == undefined || this.campos.idProcedimiento == null) {
+        this.campos.idProcedimiento = Number(dataRefresh.idPretension);
+      }
+
+      sessionStorage.removeItem('refreshDataAct');
+    }
+
     this.progressSpinner = false;
   }
 

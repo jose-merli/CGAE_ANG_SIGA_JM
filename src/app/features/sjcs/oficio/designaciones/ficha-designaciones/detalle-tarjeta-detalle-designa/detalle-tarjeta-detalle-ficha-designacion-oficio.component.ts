@@ -660,6 +660,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
             detail
           });
           updateDetalle.ano = this.campos.ano;
+          updateDetalle.fechaEntradaInicio = this.campos.fechaEntradaInicio;
           this.estadoValue = [updateDetalle.estado];
           this.datePickers[0].value = this.formatDate(updateDetalle.fechaEstado);
           updateDetalle.nig = this.inputs[0].value;

@@ -407,6 +407,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
 
           if (resp.status == 'OK' || (resp.status == 'KO' && resp.error != null && resp.error.code == 400)) {
             this.buscarActEvent.emit(resp.id);
+            sessionStorage.setItem("refreshDataAct", JSON.stringify(params));
           }
 
           if (resp.status == 'KO' && resp.error != null && resp.error.description != null) {
@@ -460,6 +461,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
 
           if (resp.status == 'OK' || (resp.status == 'KO' && resp.error != null && resp.error.code == 400)) {
             this.buscarActEvent.emit(resp.id);
+            sessionStorage.setItem("refreshDataAct", JSON.stringify(params));
           }
 
           if (resp.status == 'KO' && resp.error != null && resp.error.description != null) {
