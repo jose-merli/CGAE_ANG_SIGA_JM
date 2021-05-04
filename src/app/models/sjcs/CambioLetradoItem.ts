@@ -1,11 +1,11 @@
 export class CambioLetradoItem {
     ano: String;
-    idTurno: String; 
-    numero: String;
+    idTurno: number; 
+    numero: number;
     idPersonaSaliente: String;
     observaciones: String; 
     motivoRenuncia: String; 
-    fechaDesignacionSaliente : Date; 
+    fechaDesignacionSaliente : String; 
     fechaSolRenuncia: Date;
     fechaDesignacionEntrante: Date; 
     idPersonaEntrante: String;

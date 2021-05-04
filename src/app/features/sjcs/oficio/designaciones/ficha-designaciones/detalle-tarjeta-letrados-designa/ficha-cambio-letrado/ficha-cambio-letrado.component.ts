@@ -11,6 +11,7 @@ import { LetradoSalienteComponent } from "./letrado-saliente/letrado-saliente.co
 import { ConfirmationService } from '../../../../../../../../../node_modules/primeng/primeng';
 import { CamposCambioLetradoItem } from '../../../../../../../models/sjcs/CamposCambioLetradoItem';
 import { SaltoCompItem } from '../../../../../../../models/guardia/SaltoCompItem';
+import { CambioLetradoItem } from '../../../../../../../models/sjcs/CambioLetradoItem';
 
 @Component({
   selector: 'app-ficha-cambio-letrado',
@@ -23,10 +24,10 @@ export class FichaCambioLetradoComponent implements OnInit {
 
   @Output() datosTarjetaResumen;
 
-  progressSpinner = false;
+  progressSpinner: boolean = false;
 
   body;
-  disableSave: Boolean = false;
+  disableSave: boolean = false;
 
   tarjetaFija = {
     nombre: this.translateService.instant("justiciaGratuita.oficio.turnos.inforesumen"),
@@ -140,6 +141,7 @@ export class FichaCambioLetradoComponent implements OnInit {
 
   clickSave() {
 
+    
     //Campos obligatorios rellenados?
     if (this.entrante.body.fechaDesignacion != null || this.entrante.body.fechaDesignacion != undefined ||
       this.saliente.body.motivoRenuncia != undefined || this.saliente.body.motivoRenuncia != null) {
@@ -200,10 +202,24 @@ export class FichaCambioLetradoComponent implements OnInit {
       this.salto();
     }
 
+    /* let item = new CambioLetradoItem(); */
 
     let request = [designa.ano, designa.idTurno, designa.numero,
-    this.body.idPersona, this.saliente.body.observaciones, this.saliente.body.motivoRenuncia, this.saliente.body.fechaDesignacion, this.saliente.body.fechaSolRenuncia,
-    this.entrante.body.fechaDesignacion, this.entrante.body.idPersona];
+      this.body.idPersona, this.saliente.body.observaciones, this.saliente.body.motivoRenuncia, this.saliente.body.fechaDesignacion, this.saliente.body.fechaSolRenuncia,
+      this.entrante.body.fechaDesignacion, this.entrante.body.idPersona];
+
+    /* item.ano=request[0];
+    item.idTurno=request[1];
+    item.numero=request[2];
+    item.idPersonaSaliente=request[3];
+    item.observaciones=request[4];
+    item.motivoRenuncia=request[5];
+    item.fechaDesignacionSaliente=request[6];
+    item.fechaSolRenuncia=request[7];
+    item.fechaDesignacionEntrante=request[8];
+    item.idPersonaEntrante=request[9]; */
+
+    
 
     this.progressSpinner = true;
 
@@ -218,7 +234,9 @@ export class FichaCambioLetradoComponent implements OnInit {
          this.router.navigate(['/fichaDesignaciones']);
       },
       err => {
-        if (err != undefined && JSON.parse(err.error).error.description != "") {
+        if (err.error!=null 
+          /* || err != undefined && JSON.parse(err.error).error.description != "" */
+          ) {
           if(JSON.parse(err.error).error.code == 100){
             this.confirmationService.confirm({
               key: "errorPlantillaDoc",
