@@ -119,6 +119,11 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit {
     }
   }
 
+  
+  isAnySelected() {
+    return this.selectedDatos.length > 0;
+  }
+
   eliminarRelacion(){
     this.progressSpinner = true;
 

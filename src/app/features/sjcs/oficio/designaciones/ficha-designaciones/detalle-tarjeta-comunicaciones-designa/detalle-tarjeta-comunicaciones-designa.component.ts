@@ -105,6 +105,11 @@ export class DetalleTarjetaComunicacionesDesignaComponent implements OnInit {
   }
 
   
+  navigateTo(dato) {
+      this.router.navigate(["/fichaRegistroComunicacion"]);
+      sessionStorage.setItem("comunicacionesSearch", JSON.stringify(dato[0]));
+  }
+  
   onChangeSelectAll() {
     if (this.selectAll === true) {
       this.selectedDatos = this.datos;
