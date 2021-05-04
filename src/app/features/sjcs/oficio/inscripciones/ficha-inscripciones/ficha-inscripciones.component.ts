@@ -141,6 +141,11 @@ export class FichaInscripcionesComponent implements OnInit {
 		];
 		this.actualizarBotones();
 
+		/* if(sessionStorage.getItem("Inscripciones")!=null){
+			this.datos = JSON.parse(sessionStorage.getItem("Inscripciones"));
+			sessionStorage.removeItem("Inscripciones");
+		} */
+
 			// this.filtros.filtroAux = this.persistenceService.getFiltrosAux()
 			// this.filtros.filtroAux.historico = event;
 			// this.persistenceService.setHistorico(event);

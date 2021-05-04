@@ -577,6 +577,7 @@ export class TarjetaInscripcion implements OnInit {
   }
   openTab(evento, turnoGuardia: String) {
     if (!this.selectAll && !this.selectMultiple) {
+      /* sessionStorage.setItem("Inscripciones",  JSON.stringify(this.datos)); */
       if(turnoGuardia != null && turnoGuardia.indexOf('Guardia') != -1 ){
         this.progressSpinner = true;
         let guardiaItem = new GuardiaItem();
@@ -727,6 +728,12 @@ export class TarjetaInscripcion implements OnInit {
       if (rowData.tipoguardias == "Todas o ninguna") {
         this.disabledGuardias = false;
         rowData.selectedBooleanPadre = true;
+        this.inscripcionesItem.forEach(element => {
+          if (element.idturno == rowData.idturno) {
+            element.selectedBoolean = true;
+            this.inscripcionesSelected.push(element);
+          }
+        });
       }
       if(rowData.tipoguardias == "A elegir"){
         this.disabledGuardias = false;
