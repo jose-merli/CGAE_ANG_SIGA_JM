@@ -13,7 +13,7 @@
                     <span class="pr-2 text-left">Recuerde que si introdujo una compensación debería anularla</span>
                 </div>
             </div>
-      </div>
+        </div>
         <div class="tarjetaFija" *ngIf="tarjetaFija !== null">
 
             <div class="card" style="z-index: 2;">
@@ -53,7 +53,9 @@
                                 </mat-expansion-panel-header>
                                 <ng-template matExpansionPanelContent>
                                     <div *ngIf="tarj.nombre == 'Datos Generales'">
-                                        <app-detalle-tarjeta-datos-generales-ficha-designacion-oficio [campos]="campos" (actualizaFicha)="actualizaFicha($event)" (refreshData)="refreshDataGenerales($event)">
+                                        <app-detalle-tarjeta-datos-generales-ficha-designacion-oficio [campos]="campos"
+                                            (actualizaFicha)="actualizaFicha($event)"
+                                            (refreshData)="refreshDataGenerales($event)">
                                         </app-detalle-tarjeta-datos-generales-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Detalle Designación'">
@@ -72,7 +74,9 @@
                                         </app-detalle-tarjeta-datos-facturacion-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Documentación'">
-                                        <app-detalle-tarjeta-documentacion-ficha-designacion-oficio>
+                                        <app-detalle-tarjeta-documentacion-ficha-designacion-oficio
+                                            [documentos]="documentos" [campos]="campos"
+                                            (buscarDocDesignaEvent)="getDocumentosDesigna()">
                                         </app-detalle-tarjeta-documentacion-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Contrarios'">
@@ -110,8 +114,8 @@
                                         </app-detalle-tarjeta-relaciones-designa>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Comunicaciones'">
-                                        <app-detalle-tarjeta-comunicaciones-designa
-                                            [comunicaciones]="comunicaciones" (searchComunicaciones)="searchComunicaciones()">
+                                        <app-detalle-tarjeta-comunicaciones-designa [comunicaciones]="comunicaciones"
+                                            (searchComunicaciones)="searchComunicaciones()">
                                         </app-detalle-tarjeta-comunicaciones-designa>
                                     </div>
                                 </ng-template>

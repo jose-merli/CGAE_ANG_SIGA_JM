@@ -115,6 +115,7 @@ export let endpoints_oficio: any = {
     actuaciones_designacion_subirDocumentoActDesigna: "oficio/designas/subirDocumentoActDesigna",
     combo_motivosCambio_actuDesigna: "oficio/comboMotivosCambioActDesigna",
     combo_prisiones: "oficio/comboPrisiones",
+    combo_comboTipoDocDocumentacionDesigna: "combo/comboTipoDocumentacionDesigna",
     designaciones_updateRepresentanteInteresado:"oficio/designas/updateRepresentanteInteresado",
     designaciones_updateRepresentanteContrario:"oficio/designas/updateRepresentanteContrario",
     designaciones_updateAbogadoContrario:"oficio/designas/updateAbogadoContrario",
@@ -131,6 +132,10 @@ export let endpoints_oficio: any = {
     designacionesBusquedaComunicaciones: "oficio/designas/busquedaComunicaciones",
     designaciones_updateLetradoDesignacion:"oficio/designas/updateLetradoDesigna",
     designaciones_updateDatosFacturacion: "oficio/designas/updatePartidaPresupuestaria",
+    designacion_getDocumentosPorDesigna: "oficio/designas/getDocumentosPorDesigna",
+    designacion_subirDocumentoDesigna: "oficio/designas/subirDocumentoDesigna",
+    designacion_eliminarDocumentosDesigna: "oficio/designas/eliminarDocumentosDesigna",
+    designacion_descargarDocumentosDesigna: "oficio/designas/descargarDocumentosDesigna",
 
     //SALTOS Y COMPENSACIONES
     saltosCompensacionesOficio_buscar: "oficio/saltosCompensaciones/buscarSaltosOCompensaciones",

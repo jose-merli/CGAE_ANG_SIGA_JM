@@ -428,6 +428,7 @@ import { TarjetaHisFichaActComponent } from './features/sjcs/oficio/designacione
 import { TarjetaRelFichaActComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-designa/ficha-actuacion/tarjeta-rel-ficha-act/tarjeta-rel-ficha-act.component';
 import { DetalleTarjetaRelacionesDesignaComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-relaciones-designa/detalle-tarjeta-relaciones-designa.component';
 import { DetalleTarjetaComunicacionesDesignaComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-comunicaciones-designa/detalle-tarjeta-comunicaciones-designa.component';
+import { TablaResultadoMixDocDesigService } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-documentacion-designa/tabla-resultado-mix-doc-desig.service';
 
 @NgModule({
 	declarations: [
@@ -868,6 +869,7 @@ import { DetalleTarjetaComunicacionesDesignaComponent } from './features/sjcs/of
 		TrimPipePipe,
 		TablaResultadoDesplegableJEService,
 		TablaResultadoDesplegableAEService,
+		TablaResultadoMixDocDesigService,
 
 		AuthGuard,
 		{

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Output, EventEmitter, Input, SimpleChanges } from '@angular/core';
 import { TranslateService } from '../../../../commons/translate';
 import { SigaServices } from '../../../../_services/siga.service';
 import { CommonsService } from '../../../../_services/commons.service';
@@ -61,6 +61,8 @@ export class BajasTemporalesComponent implements OnInit {
     { id: "validado", name: "censo.busquedaSolicitudesModificacion.literal.estado" },
     { id: "fechaestado", name: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaEstado" },
   ];
+
+  @Output() nuevo = new EventEmitter<any>();
 
   constructor(private translateService: TranslateService,
     private sigaServices: SigaServices,
@@ -146,7 +148,6 @@ export class BajasTemporalesComponent implements OnInit {
       err => {
         this.progressSpinner = false;
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        console.log(err);
       }, () => {
         setTimeout(() => {
           this.tablapartida.tablaFoco.nativeElement.scrollIntoView();
@@ -402,9 +403,10 @@ backTo() {
 }
 
 guardar(event) {
-let listaPrueba = [];
-let nuevaBaja = [];
-let bajaTemporal = new BajasTemporalesItem();
+  this.progressSpinner = true;
+  let listaPrueba = [];
+  let nuevaBaja = [];
+  let bajaTemporal = new BajasTemporalesItem();
 
     event.forEach(element => {
       if(element.length != 10){
@@ -469,7 +471,7 @@ if(nuevaBaja.length != 0){
     data => {
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
-        this.search(this.filtros.filtroAux);
+        this.search(this.filtros.filtroAux.historico);
   },
   err => {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
@@ -509,7 +511,7 @@ if(listaPrueba.length != 0){
       data => {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.progressSpinner = false;
-          this.search(this.filtros.filtroAux);
+          this.search(this.filtros.filtroAux.historico);
     },
     err => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
