@@ -27,7 +27,6 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
 
   @Input() campos;
   @Input() actuacionesDesignaItems: ActuacionDesignaItem[];
-  @Input() permisoEscritura;
   @Input() relaciones: any;
 
   @Output() buscarEvent = new EventEmitter<boolean>();

@@ -60,6 +60,7 @@ export class FiltroDesignacionesComponent implements OnInit {
   comboEJGnoFavorable: any [];
   disabledFechaAHasta:boolean = true;
   disabledfechaJustificacion:boolean = true;
+  disableRestricciones: boolean = true;
   comboTipoDesigna: any[];
   comboTurno: any[];
   actuacionesV: any[];
@@ -132,7 +133,9 @@ export class FiltroDesignacionesComponent implements OnInit {
     if (this.esColegiado) {
       this.disabledBusquedaExpress = true;
       this.getDataLoggedUser();
+      this.disableRestricciones=true;
     }else{
+      this.disableRestricciones=false;
       this.disabledBusquedaExpress = false;
       this.filtroJustificacion.ejgSinResolucion="2"; 
       this.filtroJustificacion.sinEJG="2";
@@ -634,13 +637,15 @@ getComboCalidad() {
 
   onChangeCheckRestricciones(event) {
     this.checkRestricciones = event;
-
+    
     if(!event){
+      this.disableRestricciones=false;
       this.filtroJustificacion.ejgSinResolucion="2"; 
       this.filtroJustificacion.sinEJG="2";
       this.filtroJustificacion.resolucionPTECAJG="2";
       this.filtroJustificacion.conEJGNoFavorables="2";
     }else{
+      this.disableRestricciones=true;
       this.filtroJustificacion.ejgSinResolucion="0"; 
       this.filtroJustificacion.sinEJG="0";
       this.filtroJustificacion.resolucionPTECAJG="0";
