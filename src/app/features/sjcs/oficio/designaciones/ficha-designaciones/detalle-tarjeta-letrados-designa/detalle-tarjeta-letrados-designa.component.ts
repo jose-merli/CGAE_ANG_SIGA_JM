@@ -52,6 +52,7 @@ export class DetalleTarjetaLetradosDesignaComponent implements OnInit {
     this.art27=true;
 
     this.datos=this.letrados;
+    sessionStorage.setItem("FDSaliente",this.letrados[0].fechaDesignacion);
     this.datos.forEach(element => {
       element.fechaDesignacion = this.datepipe.transform(element.fechaDesignacion, 'dd/MM/yyyy');
       if(element.fechaEfecRenuncia!=null) element.fechaEfecRenuncia = this.datepipe.transform(element.fechaEfecRenuncia, 'dd/MM/yyyy');

@@ -78,7 +78,7 @@ export class TablaJusticiablesComponent implements OnInit {
 
     if(this.nuevoInteresado){
       if(this.checkInteresado(evento))      this.insertInteresado(evento);
-      else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.designas.contrarios.existente"))
+      else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.designas.interesados.existente"))
       
     }
     else if(this.nuevoContrario){

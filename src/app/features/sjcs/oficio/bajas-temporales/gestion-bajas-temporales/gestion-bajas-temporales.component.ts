@@ -221,6 +221,11 @@ export class GestionBajasTemporalesComponent implements OnInit {
       return false;
     }
   }
+
+  isAnySelected() {
+    return this.selectedArray != null;
+  }
+
   sortData(sort: Sort) {
     let data: Row[] = [];
     this.rowGroups = this.rowGroupsAux.filter((row) => {
