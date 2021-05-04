@@ -15,6 +15,7 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit {
   msgs;
 
   @Output() searchRelaciones = new EventEmitter<boolean>();
+  @Output() relacion = new EventEmitter<any>();
 
   @Input() relaciones;
 
@@ -32,6 +33,7 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit {
   progressSpinner: boolean = false;
 
   @ViewChild("table") tabla;
+  disabled: boolean = false;
 
   constructor(private sigaServices: SigaServices, 
     private  translateService: TranslateService,
@@ -57,9 +59,11 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit {
 
   actualizaSeleccionados(){
     if (this.selectedDatos == undefined) {
-      this.selectedDatos = []
+      this.selectedDatos = [];
+      this.disabled = true;
     }
     if (this.selectedDatos != undefined) {
+      this.disabled = false;
       if(this.selectedDatos.length ==undefined) this.numSelected=1;
       else this.numSelected = this.selectedDatos.length;
     }
@@ -115,20 +119,28 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit {
     }
   }
 
+  
+  isAnySelected() {
+    return this.selectedDatos.length > 0;
+  }
+
   eliminarRelacion(){
     this.progressSpinner = true;
 
-    console.log(this.selectedDatos);
-
     this.sigaServices.post("designaciones_eliminarRelacion", this.selectedDatos).subscribe(
       data => {
-          this.showMessage("succes", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.progressSpinner = false;
+          this.relacion.emit();
     },
     err => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         this.progressSpinner = false;
       }
     );
+  }
+
+  porhacer(){
+    this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
   }
 }

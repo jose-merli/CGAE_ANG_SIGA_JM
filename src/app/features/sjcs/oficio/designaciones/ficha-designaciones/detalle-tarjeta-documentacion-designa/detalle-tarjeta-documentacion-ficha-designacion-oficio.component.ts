@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer2, SimpleChanges, ViewChild, OnChanges } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild, OnChanges, ChangeDetectorRef } from '@angular/core';
 import { Sort } from '@angular/material';
 import { Message } from 'primeng/components/common/api';
 import { DesignaItem } from '../../../../../../models/sjcs/DesignaItem';
@@ -9,6 +9,7 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 import { Cell, Row, TablaResultadoMixDocDesigService } from './tabla-resultado-mix-doc-desig.service';
 import { TranslateService } from '../../../../../../commons/translate/translation.service';
 import { saveAs } from "file-saver/FileSaver";
+import { ColegiadoItem } from '../../../../../../models/ColegiadoItem';
 
 interface Cabecera {
   id: string,
@@ -23,8 +24,11 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
 
   @Input() documentos: DocumentoDesignaItem[];
   @Input() campos: DesignaItem;
+  @Input() isLetrado: boolean;
+  usuarioLogado: any;
   @Output() buscarDocDesignaEvent = new EventEmitter<any>();
   @ViewChild('table') table: ElementRef;
+  deseleccionarTodo: boolean = false;
   cabeceras: Cabecera[] = [
     {
       id: "fecha",
@@ -49,11 +53,9 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
   ];
   rowGroups: Row[];
   rowGroupsAux: Row[];
-  seleccionarTodo: boolean = false;
   totalRegistros = 0;
   progressSpinner: boolean = false;
   msgs: Message[] = [];
-  selected = false;
   selectedArray = [];
   from = 0;
   to = 10;
@@ -66,26 +68,19 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
   textFilter: string = "Seleccionar";
 
   constructor(
-    private renderer: Renderer2,
     private datepipe: DatePipe,
     private sigaServices: SigaServices,
     private commonsService: CommonsService,
     private trmDoc: TablaResultadoMixDocDesigService,
-    private translateService: TranslateService
-  ) {
-
-    this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
-      for (let i = 0; i < this.table.nativeElement.children.length; i++) {
-
-        if (!event.target.classList.contains("selectedRowClass")) {
-          this.selected = false;
-          this.selectedArray = [];
-        }
-      }
-    });
-  }
+    private translateService: TranslateService,
+    private cdRef: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
+
+    if (this.isLetrado) {
+      this.getDataLoggedUser();
+    }
 
     this.getComboTiposDoc();
 
@@ -155,10 +150,10 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
 
 
   selectedAll(event) {
-    this.seleccionarTodo = event;
     this.selectedArray = [];
 
     if (event) {
+
       this.rowGroups.forEach(row => {
         if (row.cells[5].value != null && !row.cells[5].value) {
           this.selectedArray.push(row.id);
@@ -203,8 +198,6 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
       const isAsc = sort.direction === 'asc';
       let resultado;
       for (let i = 0; i < a.cells.length; i++) {
-        console.log('a: ', a.cells[i].value)
-        console.log('b: ', b.cells[i].value)
         resultado = compare(a.cells[i].value, b.cells[i].value, isAsc);
       }
       return resultado;
@@ -284,8 +277,10 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
         console.log(err);
         this.progressSpinner = false;
       }, () => {
-        this.cargaInicial();
         this.progressSpinner = false;
+        if (!this.isLetrado) {
+          this.cargaInicial();
+        }
       }
     );
   }
@@ -348,40 +343,63 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
 
   guardar() {
 
-    this.progressSpinner = true;
+    if (!this.hayErrorCamposObligatorios(this.rowGroups)) {
 
-    let designa = {
-      ano: this.campos.ano.toString().split('/')[0].replace('D', ''),
-      numero: this.campos.numero,
-      idTurno: this.campos.idTurno
-    }
+      let error = false;
 
-    this.sigaServices.postSendFileAndDesigna("designacion_subirDocumentoDesigna", this.rowGroups, designa).subscribe(
-      data => {
-        let resp = data;
+      let copiaRowGroups: Row[] = this.rowGroups.slice();
 
-        if (resp.status == 'KO') {
-          if (resp.error != null && resp.error.description != null && resp.error.description != '') {
-            this.showMsg('error', 'Error', this.translateService.instant(resp.error.description));
-          } else {
-            this.showMsg('error', 'Error', this.translateService.instant('general.message.error.realiza.accion'));
-          }
-        } else if (resp.status == 'OK') {
-          this.progressSpinner = false;
-          this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
-          this.selectedArray = [];
-          this.buscarDocDesignaEvent.emit();
+      copiaRowGroups.forEach((el, i) => {
+
+        if (!el.cells[5].value && this.isLetrado && !(this.usuarioLogado.idPersona == el.cells[12].value && this.usuarioLogado.numColegiado == el.cells[13].value)) {
+          copiaRowGroups.splice(i, 1);
+          error = true;
         }
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner = false;
-        this.showMsg('error', 'Error', this.translateService.instant('general.mensaje.error.bbdd'));
-      },
-      () => {
-        this.progressSpinner = false;
+
+      });
+
+      if (error) {
+        this.showMsg('info', this.translateService.instant("general.message.informacion"), 'Alguno de los registros no puedo ser editado porque no es usted su creador');
       }
-    );
+
+      this.progressSpinner = true;
+
+      let designa = {
+        ano: this.campos.ano.toString().split('/')[0].replace('D', ''),
+        numero: this.campos.numero,
+        idTurno: this.campos.idTurno
+      }
+
+      this.sigaServices.postSendFileAndDesigna("designacion_subirDocumentoDesigna", copiaRowGroups, designa).subscribe(
+        data => {
+          let resp = data;
+
+          if (resp.status == 'KO') {
+            if (resp.error != null && resp.error.description != null && resp.error.description != '') {
+              this.showMsg('error', 'Error', this.translateService.instant(resp.error.description));
+            } else {
+              this.showMsg('error', 'Error', this.translateService.instant('general.message.error.realiza.accion'));
+            }
+          } else if (resp.status == 'OK') {
+            this.progressSpinner = false;
+            this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
+            this.selectedArray = [];
+            this.deseleccionarTodo = true;
+            this.buscarDocDesignaEvent.emit();
+          }
+
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+          this.showMsg('error', 'Error', this.translateService.instant('general.mensaje.error.bbdd'));
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+
+    }
   }
 
   eliminarArchivos() {
@@ -390,16 +408,27 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
 
     let docAeliminar = [];
 
-    this.selectedArray.forEach(el => {
+    let error = false;
+
+    this.selectedArray.forEach((el, i) => {
       let row: Row = this.rowGroups.slice(el, el + 1)[0];
 
-      let doc = new DocumentoDesignaItem();
-      doc.idDocumentaciondes = row.cells[6].value;
-      doc.nombreFichero = row.cells[3].value;
-      doc.idFichero = row.cells[7].value;
+      if (!row.cells[5].value && this.isLetrado && !(this.usuarioLogado.idPersona == row.cells[12].value && this.usuarioLogado.numColegiado == row.cells[13].value)) {
+        error = true;
+      } else {
 
-      docAeliminar.push(doc);
+        let doc = new DocumentoDesignaItem();
+        doc.idDocumentaciondes = row.cells[6].value;
+        doc.nombreFichero = row.cells[3].value;
+        doc.idFichero = row.cells[7].value;
+
+        docAeliminar.push(doc);
+      }
     });
+
+    if (error) {
+      this.showMsg('info', this.translateService.instant("general.message.informacion"), 'Alguno de los registros no puedo ser editado porque no es usted su creador');
+    }
 
     this.sigaServices.post("designacion_eliminarDocumentosDesigna", docAeliminar).subscribe(
       data => {
@@ -415,6 +444,7 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
           this.progressSpinner = false;
           this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
           this.selectedArray = [];
+          this.deseleccionarTodo = true;
           this.buscarDocDesignaEvent.emit();
         }
 
@@ -462,6 +492,8 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
           blob = new Blob([data], { type: "application/zip" });
           saveAs(blob, "documentos.zip");
         }
+        this.selectedArray = [];
+        this.deseleccionarTodo = true;
         this.progressSpinner = false;
       },
       err => {
@@ -470,7 +502,6 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
       },
       () => {
         this.progressSpinner = false;
-        this.selectedArray = [];
       }
     );
 
@@ -506,6 +537,57 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
     }
 
     return mime;
+  }
+
+  hayErrorCamposObligatorios(documentos: Row[]) {
+
+    this.progressSpinner = true;
+
+    let error = false;
+
+    documentos.forEach(doc => {
+
+      if ((doc.cells[2].value == undefined || doc.cells[2].value == null || (typeof doc.cells[2].value == 'string' && doc.cells[2].value.trim() == ''))) {
+        error = true;
+        this.showMsg('error', this.translateService.instant('general.message.incorrect'), this.translateService.instant('general.message.camposObligatorios'));
+      }
+
+      if (!error && (doc.cells[5].value && (doc.cells[3].value == undefined || doc.cells[3].value == null))) {
+        error = true;
+        this.showMsg('error', 'Error', this.translateService.instant('general.boton.adjuntarFichero'));
+      }
+
+    });
+
+    this.progressSpinner = false;
+
+    return error;
+  }
+
+  getDataLoggedUser() {
+
+    this.progressSpinner = true;
+
+    this.sigaServices.get("usuario_logeado").subscribe(n => {
+
+      const usuario = n.usuarioLogeadoItem;
+      const colegiadoItem = new ColegiadoItem();
+      colegiadoItem.nif = usuario[0].dni;
+
+      this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(
+        usr => {
+          this.usuarioLogado = JSON.parse(usr.body).colegiadoItem[0];
+          this.progressSpinner = false;
+          this.cargaInicial();
+        });
+
+    });
+
+  }
+
+  deseleccionarTodoFuntion(event) {
+    this.deseleccionarTodo = event;
+    this.cdRef.detectChanges();
   }
 
   ngOnChanges(changes: SimpleChanges): void {

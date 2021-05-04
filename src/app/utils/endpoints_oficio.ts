@@ -28,6 +28,7 @@ export let endpoints_oficio: any = {
     turnos_busquedaGuardias: "oficio/turnos/busquedaGuardias",
     turnos_eliminateGuardia: "oficio/turnos/eliminateGuardia",
     turnos_updateUltimo: "oficio/turnos/updateUltimo",
+    turnos_updateUltimoGuardias: "oficio/turnos/updateUltimoGuardias",
     turno_changeRequisitoGuardias: "oficio/turnos/changeRequisitoGuardias",
     //FIN DE TURNOS
 

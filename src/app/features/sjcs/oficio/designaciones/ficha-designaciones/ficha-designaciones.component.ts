@@ -361,6 +361,7 @@ export class FichaDesignacionesComponent implements OnInit {
       this.searchRelaciones();
       this.searchLetrados();
       this.getIdPartidaPresupuestaria(this.campos);
+      this.searchComunicaciones();
       //this.searchColegiado();
       /* {
         "key": "Nº Colegiado",
@@ -611,9 +612,6 @@ export class FichaDesignacionesComponent implements OnInit {
       idPersonaColegiado: ''
     };
 
-    // if (!this.permisoEscritura) {
-    //   params.idPersonaColegiado = '';
-    // }
 
     this.sigaServices.post("actuaciones_designacion", params).subscribe(
       data => {
@@ -1135,7 +1133,7 @@ export class FichaDesignacionesComponent implements OnInit {
               "value": this.relaciones[0].numero
             }
             ]
-          } else if (this.relaciones.length == 0 || this.relaciones == undefined) {
+          } else if (this.relaciones.length == 0 || this.relaciones == undefined || this.relaciones == null) {
             this.listaTarjetas[7].campos = [{
               "key": null,
               "value": this.translateService.instant('justiciaGratuita.oficio.designas.relaciones.vacio')
@@ -1157,6 +1155,10 @@ export class FichaDesignacionesComponent implements OnInit {
     }
   }
 
+  relacion(){
+    this.searchRelaciones();
+  }
+
   getDataLoggedUser() {
     if (this.isLetrado) {
       this.progressSpinner = true;
@@ -1171,7 +1173,6 @@ export class FichaDesignacionesComponent implements OnInit {
           usr => {
             this.usuarioLogado = JSON.parse(usr.body).colegiadoItem[0];
             this.progressSpinner = false;
-            this.searchComunicaciones();
           });
 
       });
@@ -1204,11 +1205,19 @@ export class FichaDesignacionesComponent implements OnInit {
               element.fechaProgramacion = this.formatDate(element.fechaProgramacion);
             }
           });
-
-          if (error != null && error.description != null) {
-            this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
-          }
           this.progressSpinner = false;
+          if (this.comunicaciones.length == 0 || this.comunicaciones == undefined || this.comunicaciones == null) {
+            this.listaTarjetas[8].campos = [{
+              "key": null,
+              "value": this.translateService.instant('justiciaGratuita.designas.comunicaciones.vacio')
+            }]
+          } else {
+            this.listaTarjetas[8].campos = [{
+              "key": this.translateService.instant('justiciaGratuita.designas.comunicaciones.total'),
+              "value": this.comunicaciones.length
+            }
+            ]
+          }
         },
         err => {
           this.progressSpinner = false;
