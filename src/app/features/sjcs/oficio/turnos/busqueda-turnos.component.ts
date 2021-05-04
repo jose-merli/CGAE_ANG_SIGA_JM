@@ -98,8 +98,8 @@ export class TurnosComponent implements OnInit {
       let idZonaAux = this.filtros.filtroAux.idzona.toString();
       this.filtros.filtroAux.idzona = idZonaAux;
     }
-    if(this.filtros.filtroAux.idzubzona != undefined){
-      let idZubZonaAux = this.filtros.filtroAux.idzubzona.toString();
+    if(this.filtros.filtroAux.idsubzona != undefined){
+      let idZubZonaAux = this.filtros.filtroAux.idsubzona.toString();
       this.filtros.filtroAux.idzubzona = idZubZonaAux;
     }
     if(this.filtros.filtroAux.jurisdiccion != undefined){
@@ -113,6 +113,7 @@ export class TurnosComponent implements OnInit {
     this.filtros.filtroAux.historico = event;
     this.persistenceService.setHistorico(event);
     this.progressSpinner = true;
+    this.filtros.filtroAux.idsubzona = "";
     this.sigaServices.post("turnos_busquedaTurnos", this.filtros.filtroAux).subscribe(
       n => {
         this.datos = JSON.parse(n.body).turnosItem;
