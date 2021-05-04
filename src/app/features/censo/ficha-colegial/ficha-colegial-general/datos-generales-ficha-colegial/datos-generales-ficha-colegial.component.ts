@@ -2408,7 +2408,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
     } else if (this.colegialesBody.situacion != undefined) {
       this.situacionPersona = "De baja";
     } else {
-      this.situacionPersona = "No Colegiado";
+      this.situacionPersona = "";
     }
     if (this.esColegiado) {
       this.datosTarjetaResumen = [
