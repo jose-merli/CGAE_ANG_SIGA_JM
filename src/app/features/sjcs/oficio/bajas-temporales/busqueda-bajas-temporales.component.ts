@@ -75,7 +75,7 @@ export class BajasTemporalesComponent implements OnInit {
 
 
   ngOnInit() {
-    this.commonsService.checkAcceso(procesos_oficio.inscripciones)
+    this.commonsService.checkAcceso(procesos_oficio.bajastemporales)
       .then(respuesta => {
         this.permisoEscritura = respuesta;
 

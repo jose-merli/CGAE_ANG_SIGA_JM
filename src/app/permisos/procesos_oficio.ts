@@ -20,6 +20,9 @@ export const procesos_oficio: any = {
     tarjetaResumenCola:"93P",
     //FIN INSCRIPCIONES TURNO
 
+    bajastemporales:"9Z5",
+    //FIN BAJAS TEMPORALES
+
     cargasMasivasOficio:"97M",
     //FIN CARGAS MASIVAS
 
