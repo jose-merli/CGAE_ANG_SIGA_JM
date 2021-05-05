@@ -99,6 +99,7 @@ export let endpoints_oficio: any = {
     designaciones_guardarProcurador: "oficio/designas/guardarProcurador",
     designaciones_comprobarProcurador: "oficio/designas/compruebaProcurador",
     designaciones_comprobarFechaProcurador: "oficio/designas/compruebaFechaProcurador",
+    designaciones_guardarProcuradorEJG: "oficio/designas/guardarProcuradorEJG",
     designaciones_actualizarProcurador: "oficio/designas/actualizarProcurador",
     designaciones_nuevoProcurador: "oficio/designas/nuevoProcurador",
     designaciones_motivosRenuncia: "oficio/designas/comboTipoMotivo",

@@ -788,6 +788,7 @@ export class FichaDesignacionesComponent implements OnInit {
           this.procurador.forEach(element => {
             element.fechaDesigna = this.formatDate(element.fechaDesigna);
             element.fecharenunciasolicita = this.formatDate(element.fecharenunciasolicita);
+            element.fechabaja = this.formatDate(element.fechabaja);
           });
 
           if (this.procurador.length != 0) {
@@ -812,8 +813,6 @@ export class FichaDesignacionesComponent implements OnInit {
               }
             ]
           }
-
-
           this.jsonToRow(this.procurador);
           this.progressSpinner = false;
         },
@@ -908,10 +907,6 @@ export class FichaDesignacionesComponent implements OnInit {
     this.showModal3 = false;
   }
 
-  compruebaFecha() {
-
-  }
-
   compruebaProcurador(event) {
     this.progressSpinner = true;
 
@@ -959,7 +954,7 @@ export class FichaDesignacionesComponent implements OnInit {
   actualizarProcurador() {
     this.progressSpinner = true;
 
-    this.sigaServices.post("designaciones_actualizarProcurador", this.listaPrueba[1]).subscribe(
+    this.sigaServices.post("designaciones_actualizarProcurador", this.listaPrueba).subscribe(
       data => {
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
@@ -1653,7 +1648,6 @@ export class FichaDesignacionesComponent implements OnInit {
       let colegiadoGeneral = JSON.parse(sessionStorage.getItem("colegiadoGeneralDesigna"));
       this.listaTarjetas[0].opened = true;
     }
-    this.mostrar();
     if (designaItem.estado == 'V') {
       designaItem.sufijo = designaItem.estado;
       designaItem.estado = 'Activo';
