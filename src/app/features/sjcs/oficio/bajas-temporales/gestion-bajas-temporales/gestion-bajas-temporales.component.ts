@@ -223,7 +223,7 @@ export class GestionBajasTemporalesComponent implements OnInit {
   }
 
   isAnySelected() {
-    return this.selectedArray != null;
+    return this.selectedArray.length > 0;
   }
 
   sortData(sort: Sort) {
