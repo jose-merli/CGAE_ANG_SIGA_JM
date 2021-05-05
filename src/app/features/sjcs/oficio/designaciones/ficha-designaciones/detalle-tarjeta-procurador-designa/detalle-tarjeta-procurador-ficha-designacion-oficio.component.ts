@@ -82,18 +82,11 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
     this.numColumnas = this.numCabeceras;
 
         // Si es un colegiado y es un letrado, no podrá guardar/restablecer datos de la inscripcion/personales
-        if (
-          sessionStorage.getItem("isLetrado") != null &&
-          sessionStorage.getItem("isLetrado") != undefined
-        ) {
+        if (sessionStorage.getItem("isLetrado") != null && sessionStorage.getItem("isLetrado") != undefined) {
           this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
         }
 
     sessionStorage.removeItem("nuevoProcurador");
-  }
-
-  isAnySelected() {
-    return this.selectedArray != null;
   }
 
   mostrarDatos(){

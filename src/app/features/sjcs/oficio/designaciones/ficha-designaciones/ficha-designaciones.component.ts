@@ -925,7 +925,7 @@ export class FichaDesignacionesComponent implements OnInit {
         if (JSON.parse(data.body).procuradorItems[0] != undefined) {
           this.showModal2 = true;
         } else {
-          this.guardarProcurador(this.listaPrueba);
+          this.comprobarFechaProcurador();
         }
         this.progressSpinner = false;
       },
@@ -939,9 +939,29 @@ export class FichaDesignacionesComponent implements OnInit {
   comprobarFechaProcurador() {
     this.progressSpinner = true;
 
-    this.sigaServices.post("designaciones_comprobarFechaProcurador", this.listaPrueba[1]).subscribe(
+    this.sigaServices.post("designaciones_comprobarFechaProcurador", this.listaPrueba).subscribe(
       data => {
-        this.guardarProcuradorEJG(this.listaPrueba);
+        
+        if (JSON.parse(data.body).procuradorItems[0] != undefined) {
+          this.showModal3 = true;
+        } else {
+          this.guardarProcurador(this.listaPrueba);
+        }
+        this.progressSpinner = false;
+      },
+      err => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  actualizarProcurador() {
+    this.progressSpinner = true;
+
+    this.sigaServices.post("designaciones_actualizarProcurador", this.listaPrueba[1]).subscribe(
+      data => {
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
       err => {

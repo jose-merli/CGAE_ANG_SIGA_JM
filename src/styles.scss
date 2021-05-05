@@ -1408,7 +1408,7 @@ p-footer .main-button {
 }
 
 .ui-table .ui-table-tbody > tr > td {
-  text-align: left !important;
+  text-align:left !important;
 }
 
 .form-group-interlineado {
@@ -1471,8 +1471,6 @@ tr:hover {
     border: 1px solid red !important;
   }
 
-  
-
 .pointer {
 	cursor: pointer !important;
 }
@@ -1520,12 +1518,15 @@ div[class*="header-ficha-open"] {
 	cursor: pointer !important;
 }
 
-.tarjetaFija {
-	position: sticky;
-	top: 0px;
-	z-index: 2;
-	}
+.ui-dropdown:not(.ui-state-disabled):hover {
+    background: #FFFFFF !important; 
+}
 
+.tarjetaFija {
+    position: sticky;
+    top: 0px;
+    z-index: 2;
+}
 
   
 

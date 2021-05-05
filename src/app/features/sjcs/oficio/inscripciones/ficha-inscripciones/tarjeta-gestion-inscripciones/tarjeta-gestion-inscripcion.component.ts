@@ -17,6 +17,7 @@ import { PartidasObject } from '../../../../../../models/sjcs/PartidasObject';
 import { MultiSelect } from '../../../../../../../../node_modules/primeng/primeng';
 import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
 import { InscripcionesItems } from '../../../../../../models/sjcs/InscripcionesItems';
+import { TarjetaGestionInscripcionItem } from '../../../../../../models/sjcs/TarjetaGestionInscripcionItem';
 import { TreeNode } from 'primeng/api';
 import { findIndex } from 'rxjs/operators';
 import { Table } from 'primeng/table';
@@ -56,6 +57,7 @@ export class TarjetaGestionInscripcion implements OnInit {
   msgs;
   permisosTarjeta: boolean = true;
   body;
+  filas: TarjetaGestionInscripcionItem[] = [];
   inscripcionesItem;
   nuevo: boolean = false;
   datosInicial = [];
@@ -124,7 +126,43 @@ export class TarjetaGestionInscripcion implements OnInit {
     if (this.persistenceService.getPermisos() != true) {
       this.disableAll = true
     }
+
+    //this.persistenceService.getDatos();
+    this.processDatos();
+
   }
+
+  processDatos(){
+    if(this.datos.fechasolicitud!=null){
+      let fila = new TarjetaGestionInscripcionItem();
+      fila.accion= "Solicitud Alta";
+      fila.fecha= this.datos.fechasolicitud;
+      fila.observaciones = this.datos.observacionessolicitud;
+      this.filas.push(fila);
+    }
+    if(this.datos.fechavalidacion!=null){
+      let fila = new TarjetaGestionInscripcionItem();
+      fila.accion= "Validacion Alta";
+      fila.fecha= this.datos.fechavalidacion;
+      fila.observaciones = this.datos.observacionesvalidacion;
+      this.filas.push(fila);
+    }
+    if(this.datos.fechasolicitudbaja!=null){
+      let fila = new TarjetaGestionInscripcionItem();
+      fila.accion= "Solicitud Baja";
+      fila.fecha= this.datos.fechasolicitudbaja;
+      fila.observaciones = this.datos.observacionesbaja;
+      this.filas.push(fila);
+    }
+    if(this.datos.fechabaja!=null){
+      let fila = new TarjetaGestionInscripcionItem();
+      fila.accion= "Validacion Baja";
+      fila.fecha= this.datos.fechabaja;
+      fila.observaciones = this.datos.observacionesvalbaja;
+      this.filas.push(fila);
+    }
+  }
+
   transformaFecha(fecha) {
     if (fecha != null) {
       let jsonDate = JSON.stringify(fecha);
@@ -590,85 +628,5 @@ export class TarjetaGestionInscripcion implements OnInit {
 
   onHideTarjeta() {
     this.showTarjeta = !this.showTarjeta;
-  }
-  seleccionarFila(rowData, event) {
-
-    /* comprobar el estado que viene y cambiarlo.
-             si viene a false:
-                - se debe de eliminar del selected datos, por lo que hay que buscarlo en este y eliminarlo del array
-            si viene a true: 
-                - se debe de añadir a selecteddatos.
-    */
-    if (event == true) {
-      rowData.selectedBoolean = true;
-      if (rowData.tipoguardias == "Todas o ninguna") {
-        this.inscripcionesItem.forEach(element => {
-          if (element.idturno == rowData.idturno) {
-            element.selectedBoolean = true;
-            this.selectedDatos.push(element);
-          }
-        });
-      }
-      else {
-        this.selectedDatos.push(rowData);
-      }
-
-    } else {
-      if (rowData.tipoguardias == "Todas o ninguna") {
-        rowData.selectedBoolean = false;
-        this.inscripcionesItem.forEach(element => {
-          if (element.idturno == rowData.idturno) {
-            element.selectedBoolean = false;
-            let findDato = this.selectedDatos.find(item => item.idguardia == element.idguardia);
-            if (findDato != undefined) {
-              this.selectedDatos.splice(this.selectedDatos.indexOf(findDato), 1);
-            }
-          }
-        });
-      } else {
-        rowData.selectedBoolean = false;
-        let findDato = this.selectedDatos.find(item => item.idguardia == rowData.idguardia);
-        if (findDato != undefined) {
-          this.selectedDatos.splice(this.selectedDatos.indexOf(findDato), 1);
-        }
-      }
-    }
-
-  }
-
-  seleccionarPadre(rowData, event) {
-    if (event == true) {
-      if (rowData.tipoguardias == "Obligatorias") {
-        this.disabledGuardias = true;
-        rowData.selectedBooleanPadre = true;
-        this.inscripcionesItem.forEach(element => {
-          if (element.idturno == rowData.idturno) {
-            element.selectedBoolean = true;
-            this.selectedDatos.push(element);
-          }
-        });
-      }
-      if (rowData.tipoguardias == "Todas o ninguna") {
-        this.disabledGuardias = false;
-        rowData.selectedBooleanPadre = true;
-      }
-      if (rowData.tipoguardias == "A elegir") {
-        this.disabledGuardias = false;
-        rowData.selectedBooleanPadre = true;
-      }
-    } else {
-      this.disabledGuardias = true;
-      rowData.selectedBooleanPadre = false;
-      this.inscripcionesItem.forEach(element => {
-        if (element.idturno == rowData.idturno) {
-          element.selectedBoolean = false;
-          let findDato = this.selectedDatos.find(item => item.idguardia == element.idguardia);
-          if (findDato != undefined) {
-            this.selectedDatos.splice(this.selectedDatos.indexOf(findDato), 1);
-          }
-        }
-      });
-
-    }
   }
 }

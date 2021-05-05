@@ -4,6 +4,7 @@ import { TranslateService } from '../../../../../../commons/translate';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { Router } from '@angular/router';
 import { DesignaItem } from '../../../../../../models/sjcs/DesignaItem';
+import { Message } from 'primeng/primeng';
 
 @Component({
   selector: 'app-detalle-tarjeta-relaciones-designa',
@@ -12,7 +13,7 @@ import { DesignaItem } from '../../../../../../models/sjcs/DesignaItem';
 })
 export class DetalleTarjetaRelacionesDesignaComponent implements OnInit {
   
-  msgs;
+  msgs: Message[] = [];
 
   @Output() searchRelaciones = new EventEmitter<boolean>();
   @Output() relacion = new EventEmitter<any>();
@@ -117,6 +118,10 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit {
       this.selectedDatos = [];
       this.numSelected = 0;
     }
+  }
+
+  clear() {
+    this.msgs = [];
   }
 
   
