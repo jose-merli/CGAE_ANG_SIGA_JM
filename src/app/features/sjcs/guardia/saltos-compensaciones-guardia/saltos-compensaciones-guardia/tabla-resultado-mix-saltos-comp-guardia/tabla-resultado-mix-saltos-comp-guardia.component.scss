@@ -242,6 +242,7 @@
 
     .table-header {
         border: none;
+        display: none !important;
 
         .table-header-child {
             width: 50%;
@@ -287,6 +288,7 @@
 
 @media (max-width: 378px) {
     .table-header {
+
         .table-header-child {
             width: 100%;
         }
@@ -511,13 +513,19 @@
         text-decoration: line-through;
     }
 
-    .padding-paginador {
-        padding-bottom: 3.311rem !important;
+    .paginador-bottom {
+        height: 3.547rem;
+        width: 100%;
+        background-color: white;
+        border-top: 1px solid #D5D5D5;
     }
 
-    div.toBottomLeft,
-    .toBottomRight {
-        bottom: 66px !important;
+    #paginador {
+
+        .toBottomLeft,
+        .toBottomRight {
+            bottom: 78px !important;
+        }
     }
 
     #notSelectAll {

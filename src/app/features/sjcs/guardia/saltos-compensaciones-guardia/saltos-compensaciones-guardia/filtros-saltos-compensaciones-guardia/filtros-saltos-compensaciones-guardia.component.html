@@ -30,7 +30,7 @@
           <p-multiSelect #someDropdown1 [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtros.idGuardia'
             [options]="comboGuardias" maxSelectedLabels="10" [selectedItemsLabel]="textSelected" styleClass="widthAll"
             [filter]="true" filterBy="label,labelSinTilde" [disabled]="isDisabledGuardia"
-            (onPanelShow)="focusInputField(someDropdown)" (onChange)="onChangeTurno()">
+            (onPanelShow)="focusInputField(someDropdown)">
           </p-multiSelect>
         </div>
 

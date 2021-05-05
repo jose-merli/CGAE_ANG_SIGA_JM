@@ -267,7 +267,7 @@ jsonToRow(){
     { type: 'text', value: this.changeDateFormat(res.fechaDesde)},
     { type: 'text', value: this.changeDateFormat(res.fechaHasta) },
     { type: 'text', value: this.changeDateFormat(res.fechaProgramacion) },
-    { type: 'label', value: {label: res.listaGuardias, value: this.filtrosValues.listaGuardias },
+    { type: 'label', value: {label: res.listaGuardias, value: this.filtrosValues.listaGuardias }},
     { type: 'text', value: res.observaciones },
     { type: 'text', value: res.estado },
     { type: 'text', value: res.generado },

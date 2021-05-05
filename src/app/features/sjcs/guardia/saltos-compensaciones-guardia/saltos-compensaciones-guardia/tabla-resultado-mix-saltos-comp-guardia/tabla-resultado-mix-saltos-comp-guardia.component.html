@@ -3,14 +3,15 @@
 <div class="card mt-3">
   <div class="card-body p-0 padding-paginador" #tablaFoco>
 
-    <div class="padding-interior w-100">
+    <div class="padding-interior w-100" id="paginador">
       <app-paginador (perPage)="perPage($event)" (seleccionarTodo)="selectedAll($event)" (fromReg)="fromReg($event)"
         (toReg)="toReg($event)" [totalRegistros]="totalRegistros"></app-paginador>
     </div>
 
     <div class="table" matSort (matSortChange)="sortData($event)" #table>
-      <div class="table-header ">
-        <div class="table-header-child p-2" *ngFor="let cabecera of cabeceras; let j = index" #BorderedHeader>
+      <div class="table-header">
+        <div class="table-header-child p-2" *ngFor="let cabecera of cabeceras; let j = index" #BorderedHeader
+          [style.minWidth]="cabecera.width">
           <div>
             <div [mat-sort-header]=cabecera.id>{{cabecera.name | translate}}</div>
             <input type="text" class="form-control" pInputTex [(ngModel)]="searchText[j]"
@@ -22,11 +23,18 @@
         <div (click)="selectRow(row['id'])" class="table-row-wrapper hoverBlue"
           [ngClass]="{'hoverBlue2': isSelected(i), 'fixedBlue': seleccionarTodo}" #rowSelected>
           <div *ngFor="let cell of row['cells'] | slice:0:8; let z = index; trackBy:trackByIdx"
-            class="table-cell p-2 selectedRowClass" [ngClass]="{'borders-child': isPar(i)}" #cellSelected>
-            <div class="cell-wrapper selectedRowClass">
+            class="table-cell p-2 selectedRowClass" [ngClass]="{'borders-child': isPar(i)}" #cellSelected
+            [style.minWidth]="getTamanioColumn(cell.header)">
+            <div class="cell-wrapper selectedRowClass w-100">
 
               <span class="w100 cell-value" *ngIf="cell.type == 'text'"
                 [ngClass]="{'setItalic': row.italic}">{{cell.value}}</span>
+
+              <span class="w100 cell-value" *ngIf="cell.type == 'arrayText'">
+                <p *ngFor="let item of cell.value" [ngClass]="{'setItalic': row.italic}">
+                  {{item}}
+                </p>
+              </span>
 
 
               <span class="w100 cell-value" *ngIf="cell.type == 'datePicker'">
@@ -61,6 +69,8 @@
     </div>
 
   </div>
+
+  <div class="padding-interior paginador-bottom"></div>
 
   <div class="card-footer">
     <div class="text-right main-button butBottom mt10">

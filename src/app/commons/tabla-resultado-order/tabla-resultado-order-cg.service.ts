@@ -8,7 +8,7 @@ export class Row {
 export class Cell {
   type: string;
   value: any;
-  combo [];
+  combo: any [];
 }
 export class TablaResultadoOrderCGService {
 

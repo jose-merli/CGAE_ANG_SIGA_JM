@@ -3,6 +3,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Message, SelectItem } from 'primeng/api';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { TranslateService } from '../../../../../commons/translate/translation.service';
+import { SaltoCompItem } from '../../../../../models/guardia/SaltoCompItem';
 import { procesos_guardia } from '../../../../../permisos/procesos_guarida';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
@@ -10,6 +11,13 @@ import { SigaServices } from '../../../../../_services/siga.service';
 import { FiltrosSaltosCompensacionesGuardiaComponent } from './filtros-saltos-compensaciones-guardia/filtros-saltos-compensaciones-guardia.component';
 import { TablaResultadoMixSaltosCompGuardiaComponent } from './tabla-resultado-mix-saltos-comp-guardia/tabla-resultado-mix-saltos-comp-guardia.component';
 import { Row, TablaResultadoMixSaltosCompService } from './tabla-resultado-mix-saltos-comp-guardia/tabla-resultado-mix-saltos-comp.service';
+
+export interface Cabecera {
+  id: string;
+  name: string;
+  width: string
+}
+
 @Component({
   selector: 'app-saltos-compensaciones-guardia',
   templateUrl: './saltos-compensaciones-guardia.component.html',
@@ -24,38 +32,46 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
   rowGroupsAux: Row[];
   rowGroupsInit: Row[];
   selectedRow: Row;
-  cabeceras = [
+  cabeceras: Cabecera[] = [
     {
       id: "turno",
-      name: "dato.jgr.guardia.saltcomp.turno"
+      name: "dato.jgr.guardia.saltcomp.turno",
+      width: '15%'
     },
     {
       id: "guardia",
-      name: "dato.jgr.guardia.saltcomp.guardia"
+      name: "dato.jgr.guardia.saltcomp.guardia",
+      width: '15%'
     },
     {
       id: "nColegiado",
-      name: "dato.jgr.guardia.saltcomp.ncolegiadoGrupo"
+      name: "dato.jgr.guardia.saltcomp.ncolegiadoGrupo",
+      width: '15%'
     },
     {
       id: "letrado",
-      name: "dato.jgr.guardia.saltcomp.letrados"
+      name: "dato.jgr.guardia.saltcomp.letrados",
+      width: '15%'
     },
     {
       id: "saltoCompensacion",
-      name: "dato.jgr.guardia.saltcomp.tipo"
+      name: "dato.jgr.guardia.saltcomp.tipo",
+      width: '10%'
     },
     {
       id: "fecha",
-      name: "dato.jgr.guardia.saltcomp.fecha"
+      name: "dato.jgr.guardia.saltcomp.fecha",
+      width: '7.5%'
     },
     {
       id: "motivo",
-      name: "dato.jgr.guardia.saltcomp.motivos"
+      name: "dato.jgr.guardia.saltcomp.motivos",
+      width: '15%'
     },
     {
       id: "fechaUso",
-      name: "dato.jgr.guardia.saltcomp.fechauso"
+      name: "dato.jgr.guardia.saltcomp.fechauso",
+      width: '7.5%'
     }
   ];
   comboTurnos: SelectItem[];
@@ -67,6 +83,16 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
     },
     {
       label: 'Compensación',
+      value: 'C'
+    }
+  ];
+  comboTiposGrupo = [
+    {
+      label: 'Salto para grupo',
+      value: 'S'
+    },
+    {
+      label: 'Compensación para grupo',
       value: 'C'
     }
   ];
@@ -133,8 +159,27 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
     this.filtros.filtroAux = this.persistenceService.getFiltrosAux()
     this.filtros.filtroAux.historico = event;
     this.persistenceService.setHistorico(event);
+
+    let filtrosModificados: SaltoCompItem = Object.assign({}, this.filtros.filtroAux);
+
+    if (Array.isArray(filtrosModificados.idTurno)) {
+      if (filtrosModificados.idTurno.length == 0) {
+        delete filtrosModificados.idTurno;
+      } else {
+        filtrosModificados.idTurno = filtrosModificados.idTurno.toString();
+      }
+    }
+
+    if (Array.isArray(filtrosModificados.idGuardia)) {
+      if (filtrosModificados.idGuardia.length == 0) {
+        delete filtrosModificados.idGuardia;
+      } else {
+        filtrosModificados.idGuardia = filtrosModificados.idGuardia.toString();
+      }
+    }
+
     this.progressSpinner = true;
-    this.sigaServices.postPaginado("saltosCompensacionesGuardia_buscar", "?numPagina=1", this.filtros.filtroAux).subscribe(
+    this.sigaServices.postPaginado("saltosCompensacionesGuardia_buscar", "?numPagina=1", filtrosModificados).subscribe(
       n => {
 
         this.datos = JSON.parse(n.body).saltosCompItems;
@@ -218,12 +263,12 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
     }
 
     if (dato.grupo != undefined && dato.grupo != null) {
-      dato.nColegiado = dato.grupo;
-      dato.letrado = '';
+      dato.nColegiado = `${dato.letradosGrupo[0].colegiado}/${dato.grupo}`;
+      dato.letrado = [];
 
       if (dato.letradosGrupo != undefined && dato.letradosGrupo != null) {
         dato.letradosGrupo.forEach(element => {
-          dato.letrado += element + '\n';
+          dato.letrado.push(element.letrado);
         });
       }
 
@@ -244,11 +289,11 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
       let italic = (element.fechaUso != null || element.fechaAnulacion != null);
 
       let obj = [
-        { type: 'select', combo: this.comboTurnos, value: element.idTurno, header: this.cabeceras[0].id, disabled: false },
-        { type: 'select', combo: element.comboGuardia, value: element.idGuardia, header: this.cabeceras[1].id, disabled: false },
-        { type: element.grupo == null ? 'select' : 'multiselect', combo: element.comboColegiados, value: element.grupo == null ? element.nColegiado : [element.nColegiado], header: this.cabeceras[2].id, disabled: false },
-        { type: 'text', value: element.letrado, header: this.cabeceras[3].id, disabled: false },
-        { type: 'select', combo: this.comboTipos, value: element.saltoCompensacion, header: this.cabeceras[4].id, disabled: false },
+        { type: 'text', value: element.turno, header: this.cabeceras[0].id, disabled: false },
+        { type: 'text', value: element.guardia, header: this.cabeceras[1].id, disabled: false },
+        { type: 'text', value: element.nColegiado, header: this.cabeceras[2].id, disabled: false },
+        { type: element.grupo == null ? 'text' : 'arrayText', value: element.letrado, header: this.cabeceras[3].id, disabled: false },
+        { type: 'select', combo: element.grupo == null ? this.comboTipos : this.comboTiposGrupo, value: element.saltoCompensacion, header: this.cabeceras[4].id, disabled: false },
         { type: 'datePicker', value: element.fecha, header: this.cabeceras[5].id, disabled: false },
         { type: 'textarea', value: element.motivo, header: this.cabeceras[6].id, disabled: false },
         { type: 'text', value: element.fechaUso, header: this.cabeceras[7].id, disabled: false }

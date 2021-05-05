@@ -8,7 +8,8 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 import { CommonsService } from '../../../../../../_services/commons.service';
 interface Cabecera {
   id: string,
-  name: string
+  name: string,
+  width: string;
 }
 @Component({
   selector: 'app-tabla-resultado-mix-saltos-comp-guardia',
@@ -321,6 +322,10 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
           this.rowGroups[row.id].cells[1].combo = this.comboGuardias;
         }
       );
+  }
+
+  getTamanioColumn(cabecera: string) {
+    return this.cabeceras.find(el => el.id == cabecera).width;
   }
 
 }
