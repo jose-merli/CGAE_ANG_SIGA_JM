@@ -52,6 +52,7 @@ export class TablaEjgComponent implements OnInit {
   @Output() searchHistoricalSend = new EventEmitter<boolean>();
   @Output() busqueda = new EventEmitter<boolean>();
   @ViewChild("cd") cdCambioEstado: Dialog;
+  @ViewChild("cd2") cdAñadirRemesa: Dialog;
 
 
   showModalCambioEstado = false;
@@ -69,6 +70,7 @@ export class TablaEjgComponent implements OnInit {
     }
 
     this.selectedDatos = [];
+
 
     this.showModalCambioEstado = false;
     this.fechaEstado = new Date();
@@ -203,6 +205,7 @@ export class TablaEjgComponent implements OnInit {
       icon: icon,
       accept: () => {
         this.cambiarEstados();
+        this.cdCambioEstado.hide();
       },
       reject: () => {
         this.msgs = [{
@@ -212,6 +215,7 @@ export class TablaEjgComponent implements OnInit {
         }];
 
         this.cancelaCambiarEstados();
+        this.cdCambioEstado.hide();
       }
     });
   }
@@ -241,7 +245,6 @@ export class TablaEjgComponent implements OnInit {
         this.progressSpinner=false;
         this.busqueda.emit(false);
         this.showModalCambioEstado = false;
-        this.cdCambioEstado.hide();
         this.selectedDatos = [];
       }
     );
@@ -369,6 +372,7 @@ export class TablaEjgComponent implements OnInit {
       icon: icon,
       accept: () => {
         this.anadirRemesa();
+        this.cdCambioEstado.hide();
       },
       reject: () => {
         this.msgs = [{
@@ -376,6 +380,7 @@ export class TablaEjgComponent implements OnInit {
           summary: "Cancel",
           detail: this.translateService.instant("general.message.accion.cancelada")
         }];
+        this.cdCambioEstado.hide();
       }
     });
   }
