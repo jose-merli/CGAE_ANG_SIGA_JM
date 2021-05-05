@@ -113,7 +113,8 @@ export class FiltrosInscripciones implements OnInit {
         }
       }
     );
-
+    this.clearFilters();
+    
     if(sessionStorage.getItem("buscadorColegiados")){​​
 
       let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
@@ -122,9 +123,10 @@ export class FiltrosInscripciones implements OnInit {
 
       this.usuarioBusquedaExpress.numColegiado=busquedaColegiado.nColegiado;
 
+      sessionStorage.removeItem("buscadorColegiados");
     }​​
 
-    this.clearFilters();
+    
     
   }
 
@@ -334,6 +336,11 @@ export class FiltrosInscripciones implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  changeColegiado(event) {
+    this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
+    this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
   }
 
 }

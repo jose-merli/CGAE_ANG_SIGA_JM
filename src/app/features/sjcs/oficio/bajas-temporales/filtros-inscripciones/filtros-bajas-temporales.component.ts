@@ -79,11 +79,11 @@ export class FiltrosBajasTemporales implements OnInit {
       this.usuarioBusquedaExpress.nombreAp=busquedaColegiado.nombre+" "+busquedaColegiado.apellidos;
 
       this.usuarioBusquedaExpress.numColegiado=busquedaColegiado.nColegiado;
-    }​​
 
-    if(sessionStorage.getItem("buscadorColegiados")){
       this.isBuscar();
-    }
+
+      sessionStorage.removeItem("buscadorColegiados")
+    }​​
 
     if(this.isLetrado){
       this.getDataLoggedUser();

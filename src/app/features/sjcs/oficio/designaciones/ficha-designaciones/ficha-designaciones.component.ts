@@ -240,7 +240,7 @@ export class FichaDesignacionesComponent implements OnInit {
 
     if (sessionStorage.getItem("buscadorColegiados")) {
       let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
-      // sessionStorage.removeItem("buscadorColegiados");
+      sessionStorage.removeItem("buscadorColegiados");
       this.listaTarjetas[0].opened = true;
     } else if (sessionStorage.getItem("colegiadoGeneralDesigna")) {
       let colegiadoGeneral = JSON.parse(sessionStorage.getItem("colegiadoGeneralDesigna"));

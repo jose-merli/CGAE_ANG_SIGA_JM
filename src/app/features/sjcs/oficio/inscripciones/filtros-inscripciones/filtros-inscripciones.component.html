@@ -48,7 +48,7 @@
     <div *ngIf="showDatosGenerales" class="module vista-avanzada">
       <div class="form-row">
         <div class="form-group col-lg-12 col-md-12">
-          <app-busqueda-colegiado-express [pantalla]="'ejg'" [numColegiado]="usuarioBusquedaExpress.numColegiado" [nombreAp]="usuarioBusquedaExpress.nombreAp"></app-busqueda-colegiado-express>
+          <app-busqueda-colegiado-express [pantalla]="'ejg'" [numColegiado]="usuarioBusquedaExpress.numColegiado" [nombreAp]="usuarioBusquedaExpress.nombreAp" (colegiado)="changeColegiado($event)"></app-busqueda-colegiado-express>
         </div>
       </div>
     </div>

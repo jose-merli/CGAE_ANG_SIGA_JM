@@ -144,7 +144,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     this.progressSpinner = true;
     if (sessionStorage.getItem("buscadorColegiados")) {
       this.busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
-      // sessionStorage.removeItem("buscadorColegiados");
+      sessionStorage.removeItem("buscadorColegiados");
       let apellidosExpress = this.busquedaColegiado.apellidos.split(" ");
       this.inputs[0].value = this.busquedaColegiado.nColegiado;
       this.inputs[1].value = this.busquedaColegiado.apellidos;

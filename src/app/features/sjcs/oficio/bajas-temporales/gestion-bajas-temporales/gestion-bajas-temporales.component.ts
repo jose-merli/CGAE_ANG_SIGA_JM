@@ -363,6 +363,8 @@ export class GestionBajasTemporalesComponent implements OnInit {
       this.usuarioBusquedaExpress.nombreAp=busquedaColegiado.apellidos+", "+busquedaColegiado.nombre;
 
       this.usuarioBusquedaExpress.numColegiado=busquedaColegiado.nColegiado;
+      
+      sessionStorage.removeItem("buscadorColegiados")
     }​​else{
       this.usuarioBusquedaExpress.nombreAp=sessionStorage.getItem("nombCol");
 
