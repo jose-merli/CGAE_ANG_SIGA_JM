@@ -15,7 +15,7 @@
           <div class="d-flex justify-content-between default">
               <label *ngIf="nRelaciones > 0">{{'justiciaGratuita.ejg.datosGenerales.numero.Relaciones' | translate }}: <span *ngIf="nRelaciones > 0">{{nRelaciones}}</span></label>
               <label  *ngIf="nRelaciones > 0">{{ "justiciaGratuita.ejg.datosGenerales.numero.Relaciones" | translate }}: <span *ngIf="nRelaciones == 0">{{ "general.message.no.registros" | translate }}</span></label>
-            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('relaciones')"></i>
+            <i class="fa fa-angle-down ml-auto" (click)="abreCierraFicha('relaciones')"></i>
           </div>
         </div>
       </div>

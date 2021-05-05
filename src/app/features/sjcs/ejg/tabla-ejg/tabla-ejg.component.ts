@@ -52,7 +52,6 @@ export class TablaEjgComponent implements OnInit {
   @Output() searchHistoricalSend = new EventEmitter<boolean>();
   @Output() busqueda = new EventEmitter<boolean>();
   @ViewChild("cd") cdCambioEstado: Dialog;
-  @ViewChild("cd2") cdAñadirRemesa: Dialog;
 
 
   showModalCambioEstado = false;
