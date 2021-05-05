@@ -361,7 +361,9 @@ export class FichaDesignacionesComponent implements OnInit {
       this.searchRelaciones();
       this.searchLetrados();
       this.getIdPartidaPresupuestaria(this.campos);
-      this.searchComunicaciones();
+      if(!this.isLetrado){
+        this.searchComunicaciones();
+      }
       //this.searchColegiado();
       /* {
         "key": "Nº Colegiado",
@@ -1215,6 +1217,7 @@ export class FichaDesignacionesComponent implements OnInit {
           usr => {
             this.usuarioLogado = JSON.parse(usr.body).colegiadoItem[0];
             this.progressSpinner = false;
+            this.searchComunicaciones();
           });
 
       });

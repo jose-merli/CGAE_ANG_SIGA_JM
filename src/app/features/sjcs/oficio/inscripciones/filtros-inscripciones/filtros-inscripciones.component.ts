@@ -86,6 +86,14 @@ export class FiltrosInscripciones implements OnInit {
       this.getDataLoggedUser();
     }
 
+    if(sessionStorage.getItem("colegiadoRelleno")){
+      const { numColegiado, nombre } = JSON.parse(sessionStorage.getItem("datosColegiado"));
+      this.usuarioBusquedaExpress.numColegiado = numColegiado;
+      this.usuarioBusquedaExpress.nombreAp = nombre.replace(/,/g,"");
+
+      this.isBuscar();
+    }
+
     this.sigaServices.get("inscripciones_comboTurnos").subscribe(
       n => {
         this.turnos = n.combooItems;

@@ -99,7 +99,13 @@ export class FiltroDesignacionesComponent implements OnInit {
     this.checkAcceso();
     this.getParamsEJG();
   // }
+    if(sessionStorage.getItem("colegiadoRelleno")){
+      const { numColegiado, nombre } = JSON.parse(sessionStorage.getItem("datosColegiado"));
+      this.usuarioBusquedaExpress.numColegiado = numColegiado;
+      this.usuarioBusquedaExpress.nombreAp = nombre.replace(/,/g,"");
 
+      this.buscar();
+    }
   }
 
   getParamsEJG(){  
