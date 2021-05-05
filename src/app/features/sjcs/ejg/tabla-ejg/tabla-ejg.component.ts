@@ -6,6 +6,8 @@ import { SigaServices } from '../../../../_services/siga.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { EJGItem } from '../../../../models/sjcs/EJGItem';
 import { CommonsService } from '../../../../_services/commons.service';
+import { DatePipe } from '../../../../../../node_modules/@angular/common';
+import { Dialog } from 'primeng/primeng';
 
 @Component({
   selector: 'app-tabla-ejg',
@@ -49,12 +51,15 @@ export class TablaEjgComponent implements OnInit {
   @ViewChild("table") table: DataTable;
   @Output() searchHistoricalSend = new EventEmitter<boolean>();
   @Output() busqueda = new EventEmitter<boolean>();
+  @ViewChild("cd") cdCambioEstado: Dialog;
 
 
   showModalCambioEstado = false;
 
   constructor(private translateService: TranslateService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
-    private sigaServices: SigaServices, private persistenceService: PersistenceService, private confirmationService: ConfirmationService, private commonServices: CommonsService) {
+    private sigaServices: SigaServices, private persistenceService: PersistenceService, 
+    private confirmationService: ConfirmationService, private commonServices: CommonsService,
+    private datepipe: DatePipe) {
 
   }
 
@@ -226,18 +231,17 @@ export class TablaEjgComponent implements OnInit {
 
     this.sigaServices.post("gestionejg_cambioEstadoMasivo", data).subscribe(
       n => {
-        this.progressSpinner=false;
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.busqueda.emit(false);
-        this.showModalCambioEstado = false;
-        this.selectedDatos = [];
       },
       err => {
         console.log(err);
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      },
+      () =>{
         this.progressSpinner=false;
         this.busqueda.emit(false);
         this.showModalCambioEstado = false;
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        this.cdCambioEstado.hide();
         this.selectedDatos = [];
       }
     );
