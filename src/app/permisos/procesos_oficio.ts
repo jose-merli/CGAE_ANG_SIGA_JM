@@ -30,5 +30,6 @@ export const procesos_oficio: any = {
     saltosCompensaciones: "93N",
 
     //DESIGNAS
-    designa:"959"
+    designa:"959",
+    pestañaProximaDesignaciones: "9S5"
 }

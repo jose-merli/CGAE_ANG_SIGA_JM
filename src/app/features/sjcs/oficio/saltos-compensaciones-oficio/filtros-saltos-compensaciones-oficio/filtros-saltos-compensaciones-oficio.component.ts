@@ -71,6 +71,7 @@ export class FiltrosSaltosCompensacionesOficioComponent implements OnInit {
       this.usuarioBusquedaExpress.numColegiado = nColegiado;
       this.showColegiado = true;
 
+      sessionStorage.removeItem('buscadorColegiados');
     }
 
   }

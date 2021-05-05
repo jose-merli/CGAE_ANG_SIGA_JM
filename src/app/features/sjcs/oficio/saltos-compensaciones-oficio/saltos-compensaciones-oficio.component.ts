@@ -1,4 +1,4 @@
-import { DatePipe } from '@angular/common';
+import { DatePipe, Location } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Message, SelectItem } from 'primeng/api';
@@ -88,7 +88,8 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
     private datepipe: DatePipe,
     private trmService: TablaResultadoMixSaltosCompOficioService,
     private activatedRoute: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private location: Location
   ) { }
 
   ngOnInit() {
@@ -578,5 +579,10 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
     );
 
   }
+
+  backTo() {
+    this.location.back();
+  }
+  
 
 }

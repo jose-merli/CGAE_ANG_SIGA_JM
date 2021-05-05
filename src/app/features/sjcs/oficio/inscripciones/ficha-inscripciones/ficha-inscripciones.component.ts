@@ -208,10 +208,6 @@ export class FichaInscripcionesComponent implements OnInit {
 		this.datos3 = event;
 	}
 	
-	backTo() {
-		this.location.back();
-	}
-
 	comunicar(selectedDatos){
 
 	}
@@ -623,4 +619,7 @@ export class FichaInscripcionesComponent implements OnInit {
 		this.actualizarBotones();
 	}
 	  
+	backTo() {
+		this.location.back();
+	}
 }

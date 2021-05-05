@@ -89,7 +89,9 @@ export class FiltrosBajasTemporales implements OnInit {
       this.usuarioBusquedaExpress.nombreAp = nombre.replace(/,/g,"");
 
       this.isBuscar();
-    }
+
+      sessionStorage.removeItem("buscadorColegiados")
+    }​​
 
     if(this.isLetrado){
       this.getDataLoggedUser();
