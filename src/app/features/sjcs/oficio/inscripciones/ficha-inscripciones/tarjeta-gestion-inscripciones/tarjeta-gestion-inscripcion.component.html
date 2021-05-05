@@ -26,7 +26,7 @@
     </div>
     <!--cuerpo datos generales-->
     <div *ngIf="openFicha" class="card-body card-body-ficha">
-      <p-table [value]="datos2" [columns]="cols" [(selection)]="selectedDatos" [selectionMode]="selectionMode" [responsive]="true"
+      <p-table [value]="filas" [columns]="cols" [(selection)]="selectedDatos" [selectionMode]="selectionMode" [responsive]="true"
         #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="actualizaSeleccionados()" (onRowUnselect)="actualizaSeleccionados()"
         [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">
         <ng-template pTemplate="colgroup" let-columns>
