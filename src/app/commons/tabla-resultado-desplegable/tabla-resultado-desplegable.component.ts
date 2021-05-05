@@ -67,6 +67,7 @@ comboJuzgados = [];
   @Input() comboModulos = [];
   @Input()comboAcreditacion = [];
   dataToUpdateArr: RowGroup[] = [];
+  rowGroupWithNew = "";
   constructor(
     private renderer: Renderer2,
     private datepipe: DatePipe,
@@ -666,6 +667,7 @@ comboJuzgados = [];
   toDoButton(type, designacion, rowGroup, rowWrapper){
 
     if (type == 'Nuevo'){
+      this.rowGroupWithNew = rowGroup.id;
      this.rowIdWithNewActuacion = rowGroup.id;
       let desig = rowGroup.rows[0].cells;
       //this.getJuzgados(desig[17].value);
@@ -700,8 +702,41 @@ comboJuzgados = [];
       return 'black';
     }
   } 
-
+  searchActuacionwithSameNumDesig(idAcreditacionNew, rowGroupWithNew){
+    let esPosibleCrearNuevo = true;
+    let nameAcreditacionArr = [];
+    let idAcreditacionArr = [];
+    this.rowGroups.forEach(rowGroup => {
+        if (rowGroup.id == rowGroupWithNew){
+          let actuaciones = rowGroup.rows.slice(1, rowGroup.rows.length - 1);
+          actuaciones.forEach(rowAct => {
+            let idAcre = rowAct.cells[14].value;
+            nameAcreditacionArr.push(idAcre);
+          })
+      }
+    })
+    nameAcreditacionArr.forEach(nameA =>{
+      if (nameA == 'Inic.-Fin'){
+        idAcreditacionArr.push('1,0')
+      }else if(nameA == 'Inic.'){
+        idAcreditacionArr.push('2,0')
+      }else if(nameA == 'Fin'){
+        idAcreditacionArr.push('3,0')
+      }else if(nameA == 'Inic.<2005'){
+        idAcreditacionArr.push('10,0')
+      }else if(nameA == 'Fin<2005'){
+        idAcreditacionArr.push('11,0')
+      }else if(nameA == 'Fin sin Inic.'){
+        idAcreditacionArr.push('15,0')
+      }
+    });
+    if (idAcreditacionArr.includes(idAcreditacionNew)){
+      esPosibleCrearNuevo = false;
+    }
+    return esPosibleCrearNuevo;
+  }
   guardar(){
+    let esPosibleCrearNuevo = true;
     let actuaciones;
     //1. Guardar nuevos
     if (this.newActuacionesArr.length != 0){
@@ -710,8 +745,15 @@ comboJuzgados = [];
       this.newActuacionesArr = Array.from(newActuacionesArrNOT_REPEATED);
 
     this.newActuacionesArr.forEach( newAct => {
-      this.actuacionToAdd.emit(newAct);
-      this.totalActuaciones.emit(this.newActuacionesArr.length);
+      let idAcreditacionNew = newAct.cells[7].value;
+      esPosibleCrearNuevo = this.searchActuacionwithSameNumDesig(idAcreditacionNew, this.rowGroupWithNew);
+      console.log('esPosibleCrearNuevo: ', esPosibleCrearNuevo)
+      if(esPosibleCrearNuevo){
+        this.actuacionToAdd.emit(newAct);
+        this.totalActuaciones.emit(this.newActuacionesArr.length);
+      } else{
+        this.showMsg('error', "No es posible crear otra actuación con valor de acreditación Inicio/Fin", '')
+      }
     });
     }
     
