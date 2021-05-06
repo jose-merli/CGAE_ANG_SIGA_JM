@@ -429,6 +429,7 @@ import { TarjetaRelFichaActComponent } from './features/sjcs/oficio/designacione
 import { DetalleTarjetaRelacionesDesignaComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-relaciones-designa/detalle-tarjeta-relaciones-designa.component';
 import { DetalleTarjetaComunicacionesDesignaComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-comunicaciones-designa/detalle-tarjeta-comunicaciones-designa.component';
 import { TablaResultadoMixDocDesigService } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-documentacion-designa/tabla-resultado-mix-doc-desig.service';
+import { SigaStorageService } from './siga-storage.service';
 
 @NgModule({
 	declarations: [
@@ -860,6 +861,7 @@ import { TablaResultadoMixDocDesigService } from './features/sjcs/oficio/designa
 		OldSigaServices,
 		SigaServices,
 		CommonsService,
+		SigaStorageService,
 		cardService,
 		HeaderGestionEntidadService,
 		MessageService,
