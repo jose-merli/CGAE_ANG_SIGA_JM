@@ -14,6 +14,7 @@ import { TurnosItems } from '../../../../../../models/sjcs/TurnosItems';
 import { ModulosItem } from '../../../../../../models/sjcs/ModulosItem';
 import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
 import { filter } from 'rxjs/operator/filter';
+import { Router } from '@angular/router';
 
 // Tiene un problema ya que como esta implementado no se abre mediante la tarjeta fija
 @Component({
@@ -89,7 +90,8 @@ export class DatosGeneralesTurnosComponent implements OnInit {
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
     private persistenceService: PersistenceService,
-    private commonsService: CommonsService) { }
+    private commonsService: CommonsService,
+    private router: Router) { }
 
   ngOnChanges(changes: SimpleChanges) {
     if(changes.turnosItem != undefined && (changes.turnosItem.currentValue != null || changes.turnosItem.currentValue != undefined)){
@@ -145,16 +147,19 @@ export class DatosGeneralesTurnosComponent implements OnInit {
     this.commonsService.checkAcceso(procesos_oficio.datosGenerales)
       .then(respuesta => {
         this.permisosTarjeta = respuesta;
-        if (this.permisosTarjeta != true) {
-          this.permisosTarjeta = false;
-        } else {
-          this.permisosTarjeta = true;
+        this.persistenceService.setPermisos(this.permisosTarjeta);
+        if (this.permisosTarjeta == undefined) {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }else if(this.persistenceService.getPermisos() != true){
+          this.disableAll = true;
         }
-      }).catch(error => console.error(error));
-      
-    if (this.persistenceService.getPermisos() != true) {
-      this.disableAll = true;
-    }
+      }
+      ).catch(error => console.error(error));
 
     if (this.turnosItem != undefined) {
       this.body = this.turnosItem;
