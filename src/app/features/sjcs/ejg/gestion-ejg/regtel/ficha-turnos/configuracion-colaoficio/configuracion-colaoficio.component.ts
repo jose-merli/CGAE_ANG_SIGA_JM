@@ -1,18 +1,11 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, EventEmitter, Output, Input, SimpleChanges, ViewEncapsulation } from '@angular/core';
-import { DataTable } from "primeng/datatable";
-import { Location } from "@angular/common";
-import { Message } from "primeng/components/common/api";
-import { MultiSelect, ConfirmationService } from '../../../../../../../../node_modules/primeng/primeng';
-import { Subject } from "rxjs/Subject";
-import { DatosGeneralesConsultaItem } from '../../../../../../models/DatosGeneralesConsultaItem';
-import { DestinatariosItem } from '../../../../../../models/DestinatariosItem';
-import { PersistenceService } from '../../../../../../_services/persistence.service';
-import { SigaServices } from '../../../../../../_services/siga.service';
-import { TranslateService } from '../../../../../../commons/translate';
-import { CommonsService } from '../../../../../../_services/commons.service';
-import { PrisionItem } from '../../../../../../models/sjcs/PrisionItem';
-import { TurnosItems } from '../../../../../../models/sjcs/TurnosItems';
-import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
+import { Component, OnInit, ViewChild, EventEmitter, Output, Input, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { ConfirmationService } from '../../../../../../../../../node_modules/primeng/primeng';
+import { PersistenceService } from '../../../../../../../_services/persistence.service';
+import { SigaServices } from '../../../../../../../_services/siga.service';
+import { TranslateService } from '../../../../../../../commons/translate';
+import { CommonsService } from '../../../../../../../_services/commons.service';
+import { TurnosItems } from '../../../../../../../models/sjcs/TurnosItems';
+import { procesos_oficio } from '../../../../../../../permisos/procesos_oficio';
 
 @Component({
   selector: "app-configuracion-colaoficio",

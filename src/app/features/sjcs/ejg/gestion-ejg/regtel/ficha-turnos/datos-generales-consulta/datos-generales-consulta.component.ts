@@ -1,19 +1,10 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, EventEmitter, Output, Input, SimpleChanges,ViewEncapsulation } from '@angular/core';
-import { DataTable } from "primeng/datatable";
-import { Location } from "@angular/common";
-import { Message, ConfirmationService } from "primeng/components/common/api";
-import { Subject } from "rxjs/Subject";
-import { DatosGeneralesConsultaItem } from '../../../../../../models/DatosGeneralesConsultaItem';
-import { DestinatariosItem } from '../../../../../../models/DestinatariosItem';
-import { PersistenceService } from '../../../../../../_services/persistence.service';
-import { SigaServices } from '../../../../../../_services/siga.service';
-import { TranslateService } from '../../../../../../commons/translate';
-import { CommonsService } from '../../../../../../_services/commons.service';
-import { PrisionItem } from '../../../../../../models/sjcs/PrisionItem';
-import { TurnosItems } from '../../../../../../models/sjcs/TurnosItems';
-import { ModulosItem } from '../../../../../../models/sjcs/ModulosItem';
-import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
-import { filter } from 'rxjs/operator/filter';
+import { Component, OnInit, ViewChild, EventEmitter, Output, Input, SimpleChanges,ViewEncapsulation } from '@angular/core';
+import { PersistenceService } from '../../../../../../../_services/persistence.service';
+import { SigaServices } from '../../../../../../../_services/siga.service';
+import { TranslateService } from '../../../../../../../commons/translate';
+import { CommonsService } from '../../../../../../../_services/commons.service';
+import { TurnosItems } from '../../../../../../../models/sjcs/TurnosItems';
+import { procesos_oficio } from '../../../../../../../permisos/procesos_oficio';
 
 // Tiene un problema ya que como esta implementado no se abre mediante la tarjeta fija
 @Component({

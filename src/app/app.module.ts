@@ -209,7 +209,7 @@ import { GuardiasAsistenciasComponent } from './features/sjcs/guardia/guardias-a
 import { GuardiasCentralitaComponent } from './features/sjcs/guardia/guardias-centralita/guardias-centralita.component';
 import { VolanteExpresComponent } from './features/sjcs/guardia/volante-expres/volante-expres.component';
 import { SOJComponent } from './features/sjcs/soj/soj.component';
-import { EJGComponent } from './features/sjcs/ejg/ejg.component';
+// import { EJGComponent } from './features/sjcs/ejg/ejg.component';
 import { GestionActasComponent } from './features/sjcs/gestion-actas/gestion-actas.component';
 import { MantenimientoFacturacionComponent } from './features/sjcs/facturacionSJCS/mantenimiento-facturacion/mantenimiento-facturacion.component';
 import { PrevisionesComponent } from './features/sjcs/facturacionSJCS/previsiones/previsiones.component';
@@ -573,7 +573,7 @@ import { TablaResultadoMixDocDesigService } from './features/sjcs/oficio/designa
 		GuardiasCentralitaComponent,
 		VolanteExpresComponent,
 		SOJComponent,
-		EJGComponent,
+		// EJGComponent,
 		GestionActasComponent,
 		MantenimientoFacturacionComponent,
 		PrevisionesComponent,
