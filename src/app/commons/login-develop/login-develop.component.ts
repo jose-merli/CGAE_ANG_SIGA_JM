@@ -1,12 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
-import { AuthenticationService } from '../../_services/authentication.service';
-import { SigaServices } from '../../_services/siga.service';
-import { Router } from '@angular/router';
-import { LoginCombo } from './login-develop.combo';
-import { ListboxModule } from 'primeng/listbox';
-import { ButtonModule } from 'primeng/button';
+import { Component, OnInit, HostListener } from "@angular/core";
+import { FormGroup, FormBuilder, FormControl } from "@angular/forms";
+import { AuthenticationService } from "../../_services/authentication.service";
+import { SigaServices } from "../../_services/siga.service";
+import { Router } from "@angular/router";
+import { LoginCombo } from "./login-develop.combo";
+import { ListboxModule } from "primeng/listbox";
+import { ButtonModule } from "primeng/button";
 
+
+export enum KEY_CODE {
+  ENTER = 13
+}
 
 @Component({
 	selector: 'app-login-develop',
@@ -197,7 +201,13 @@ para poder filtrar el dato con o sin estos caracteres*/
 		//});
 	}
 
-	
+	@HostListener("document:keypress", ["$event"])
+  	onKeyPress(event: KeyboardEvent) {
+    	if (event.keyCode === KEY_CODE.ENTER) {
+      		this.submit();
+    	}
+  	}
+
 	isHabilitadoEntrar() {
 		if (
 			this.form.controls['tmpLoginPerfil'].value == '' ||

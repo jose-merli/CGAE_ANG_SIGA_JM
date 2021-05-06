@@ -27,6 +27,14 @@
       <!-- createJusticiableByUpdateSolicitud: Funcion para indicar a las demás tarjetas que se ha creado un nuevo justiciable al cambiar los datos de solicitud
       y no querer actualizar el justiciable propio-->
 
+      <app-datos-personales *ngSwitchCase="'personales'" [showTarjeta]="ficha.activa" [body]="body" (notifySearchJusticiableByNif)="searchJusticiableByNif($event)"
+        (newJusticiable)="newJusticiable($event)" (searchJusticiableOverwritten)="searchJusticiableOverwritten($event)"></app-datos-personales>
+
+      <!-- showTarjeta: variable indica si se muestra o no la tarjeta -->
+      <!-- body: variable donde se le pasa la informacion de un justiciable -->
+      <!-- createJusticiableByUpdateSolicitud: Funcion para indicar a las demás tarjetas que se ha creado un nuevo justiciable al cambiar los datos de solicitud
+      y no querer actualizar el justiciable propio-->
+
       <app-datos-solicitud *ngSwitchCase="'solicitud'" [showTarjeta]="ficha.activa" [body]="body" (createJusticiableByUpdateSolicitud)="createJusticiableByUpdateSolicitud($event)"></app-datos-solicitud>
 
       <!-- showTarjeta: variable indica si se muestra o no la tarjeta -->
@@ -41,15 +49,27 @@
 
       <app-datos-representante *ngSwitchCase="'representante'" [showTarjeta]="ficha.activa" [body]="body" [modoEdicion]="modoEdicion"
         [checkedViewRepresentante]="checkedViewRepresentante" (newRepresentante)="newRepresentante($event)" (viewRepresentante)="viewRepresentante($event)"
-        (createJusticiableByUpdateRepresentante)="createJusticiableByUpdateRepresentante($event)" [navigateToJusticiable]="navigateToJusticiable"></app-datos-representante>
+        (createJusticiableByUpdateRepresentante)="createJusticiableByUpdateRepresentante($event)" [navigateToJusticiable]="navigateToJusticiable" 
+        [fromContrario]="fromContrario" [fromInteresado]="fromInteresado"></app-datos-representante>
 
       <!-- showTarjeta: variable indica si se muestra o no la tarjeta -->
       <!-- body: variable donde se le pasa la informacion de un justiciable -->
       <!-- fromJusticiable: variable indica desde donde se accede a la ficha justiciables -->
       <!-- modoEdicion: variable indica si estamos en modo edicion o nuevo -->
 
-      <app-asuntos *ngSwitchCase="'asuntos'" [showTarjeta]="ficha.activa" [body]="body" [fromJusticiable]="fromJusticiable" [modoEdicion]="modoEdicion"></app-asuntos>
+      <app-asuntos *ngSwitchCase="'asuntos'" [showTarjeta]="ficha.activa" [body]="body" [fromJusticiable]="fromJusticiable" [modoEdicion]="modoEdicion" ></app-asuntos>
 
+      <!-- showTarjeta: variable indica si se muestra o no la tarjeta -->
+      <!-- body: variable donde se le pasa la informacion de un justiciable -->
+      <!-- modoEdicion: variable indica si estamos en modo edicion o nuevo -->
+
+       <app-datos-abogado-contrario *ngSwitchCase="'abogado'" (contrario)="contrario($event)" [showTarjetaPermiso]="ficha.activa" [body]="body"  [modoEdicion]="modoEdicion" [fromContrario]="fromContrario"></app-datos-abogado-contrario> 
+    
+      <!-- showTarjeta: variable indica si se muestra o no la tarjeta -->
+      <!-- body: variable donde se le pasa la informacion de un justiciable -->
+      <!-- modoEdicion: variable indica si estamos en modo edicion o nuevo -->
+
+       <app-datos-procurador-contrario *ngSwitchCase="'procurador'" (contrario)="contrario($event)" [showTarjetaPermiso]="ficha.activa" [body]="body" [modoEdicion]="modoEdicion" [fromContrario]="fromContrario"></app-datos-procurador-contrario> 
     </div>
   </div>
 </div>

@@ -10,12 +10,11 @@ import {
 import { ControlAccesoDto } from "../models/ControlAccesoDto";
 import { SigaServices } from "./siga.service";
 import { TranslateService } from '../commons/translate/translation.service';
+import { ComboItem } from "../models/ComboItem";
 
 @Injectable()
 export class CommonsService {
-
   DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
-
   constructor(
     private http: HttpClient,
     handler: HttpBackend,
@@ -134,6 +133,24 @@ export class CommonsService {
     });
   }
 
+  getLetrado() {
+		let isLetrado: ComboItem;
+		this.sigaServices.get('getLetrado').subscribe(
+			(data) => {
+				isLetrado = data;
+				if (isLetrado.value == 'S') {
+					return true;
+				} else {
+					return false;
+				}
+			},
+			(err) => {
+				console.log(err);
+        return false;
+			}
+		);
+	}
+
   checkAcceso = (idProceso) => {
     let activacionEditar = undefined;
     let controlAcceso = new ControlAccesoDto();
@@ -180,9 +197,8 @@ export class CommonsService {
     }
 
   }
-
+  
   scrollTop() {
-
     let top = document.getElementById('mainContainer');
     if (top !== null) {
       top.scrollIntoView();
@@ -190,51 +206,6 @@ export class CommonsService {
     }
   }
 
-  getLabelbyFilter(string): string {
-    /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-	para poder filtrar el dato con o sin estos caracteres*/
-    let labelSinTilde = string;
-    let accents =
-      "ÀÁÂÃÄÅAàáâãäåÒÓÔÕÕÖOØòóôõöøEÈÉÊËèéêëðCÇçÐDÌÍÎÏIìíîïUÙÚÛÜùúûüÑñSŠšŸYÿýŽžZ";
-    let accentsOut =
-      "aaaaaaaaaaaaaooooooooooooooeeeeeeeeeecccddiiiiiiiiiuuuuuuuuunnsssyyyyzzz";
-    let i;
-    let x;
-    for (i = 0; i < labelSinTilde.length; i++) {
-      if ((x = accents.indexOf(labelSinTilde.charAt(i))) != -1) {
-        labelSinTilde = labelSinTilde.replace(
-          labelSinTilde.charAt(i),
-          accentsOut[x]
-        );
-      }
-    }
-
-    return labelSinTilde;
-  }
-
-  getLabelsSinTilde(array) {
-    // Recorremos un array (combos) y le ponemos el labelSinTilde para los filtros.
-    for (let i in array) {
-      array[i].labelSinTilde = this.getLabelbyFilter(array[i].label);
-    }
-    return array;
-  }
-
-
-
-  scrollTablaFoco(idFoco)  {
-    let top = document.getElementById(idFoco);
-    if (top !== null) {
-      top.scrollIntoView();
-      top = null;
-    }
-  }
-
-  styleObligatorio(evento) {
-    if (evento == null || evento == undefined || evento == "") {
-      return "camposObligatorios";
-    }
-  }
   isValidPassport(dni: String): boolean {
     return (
       dni && typeof dni === "string" && /^[a-z]{3}[0-9]{6}[a-z]?$/i.test(dni)
@@ -329,5 +300,51 @@ export class CommonsService {
 		}
 	
 		return fecha;
-	  }
+  }
+
+  getLabelbyFilter(string): string {
+    /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+	para poder filtrar el dato con o sin estos caracteres*/
+    let labelSinTilde = string;
+    let accents =
+      'ÀÁÂÃÄÅAàáâãäåÒÓÔÕÕÖOØòóôõöøEÈÉÊËèéêëðCÇçÐDÌÍÎÏIìíîïUÙÚÛÜùúûüÑñSŠšŸYÿýŽžZ';
+    let accentsOut =
+      'aaaaaaaaaaaaaooooooooooooooeeeeeeeeeecccddiiiiiiiiiuuuuuuuuunnsssyyyyzzz';
+    let i;
+    let x;
+    for (i = 0; i < labelSinTilde.length; i++) {
+      if ((x = accents.indexOf(labelSinTilde.charAt(i))) != -1) {
+        labelSinTilde = labelSinTilde.replace(
+          labelSinTilde.charAt(i),
+          accentsOut[x]
+        );
+      }
+    }
+
+    return labelSinTilde;
+  }
+
+  getLabelsSinTilde(array) {
+    // Recorremos un array (combos) y le ponemos el labelSinTilde para los filtros.
+    for (let i in array) {
+      array[i].labelSinTilde = this.getLabelbyFilter(array[i].label);
+    }
+    return array;
+  }
+
+
+
+  scrollTablaFoco(idFoco)  {
+    let top = document.getElementById(idFoco);
+    if (top !== null) {
+      top.scrollIntoView();
+      top = null;
+    }
+  }
+
+  styleObligatorio(evento) {
+    if (evento == null || evento == undefined || evento == '') {
+      return 'camposObligatorios';
+    }
+  }
 }

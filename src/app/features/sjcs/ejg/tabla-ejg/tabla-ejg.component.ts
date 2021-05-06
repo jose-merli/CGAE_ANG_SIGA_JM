@@ -397,4 +397,9 @@ export class TablaEjgComponent implements OnInit {
       }
     );
   }
+
+  actualizaSeleccionados(selectedDatos) {
+    this.numSelected = selectedDatos.length;
+    this.seleccion = false;
+  }
 }

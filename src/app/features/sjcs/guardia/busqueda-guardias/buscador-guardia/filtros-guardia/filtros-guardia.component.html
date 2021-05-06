@@ -1,0 +1,119 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="card">
+  <div class="card-body">
+    <p class="title-module"> {{ 'general.message.datos.generales' | translate }}
+      <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+      <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+    </p>
+
+    <!-- CAMPOS COMPONEN FILTROS BUSQUEDA-->
+    <div class="module vista-simple">
+      <div class="form-row">
+
+        <!-- TURNO -->
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{"justiciaGratuita.sjcs.designas.DatosIden.turno" | translate}}</label>
+          <p-dropdown class="select-form" [(ngModel)]="filtros.idTurno" [options]="comboTurno" [filter]="true" filterMatchMode="contains"
+            placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true">
+          </p-dropdown>
+        </div>
+
+        <!-- NOMBRE -->
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
+          <input type="text" name="nombre" class="box" [(ngModel)]="filtros.nombre" class="form-control" pInputText>
+        </div>
+
+        <!-- AREAS -->
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{"menu.justiciaGratuita.maestros.Area" | translate}}</label>
+          <p-dropdown class="select-form" (onChange)="onChangeArea()" [filter]="true" [(ngModel)]="filtros.area" [options]="comboArea"
+            filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true">
+          </p-dropdown>
+        </div>
+
+        <!-- MATERIA -->
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{"menu.justiciaGratuita.maestros.Materia" | translate}}</label>
+          <p-dropdown class="select-form" [(ngModel)]="filtros.materia" [options]="comboMateria" [filter]="true" filterMatchMode="contains"
+            placeholder="{{'general.boton.seleccionar' | translate}}" [(disabled)]="isDisabledMateria" (input)="buscarMateria($event)"
+            [showClear]="true" [emptyFilterMessage]="resultadosAreas">
+          </p-dropdown>
+        </div>
+
+        <!-- GRUPOZONA -->
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{"justiciaGratuita.maestros.zonasYSubzonas.grupoZona.cabecera" | translate}}</label>
+          <p-dropdown class="select-form" [(ngModel)]='filtros.grupoZona' placeholder="{{'general.boton.seleccionar' | translate}}"
+            [options]="comboGrupoZona" [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeZona()" [showClear]="true"></p-dropdown>
+        </div>
+
+        <!-- ZONA -->
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{"justiciaGratuita.maestros.zonasYSubzonas.zona" | translate}}</label>
+          <p-dropdown class="select-form" [(ngModel)]='filtros.zona' [filter]="true" filterMatchMode="contains" filterBy="label,labelSinTilde"
+            [(disabled)]="isDisabledZona" [options]="comboZona" (onChange)="onChangeSubZona()" (input)="buscarZona($event)"
+            placeholder="{{'general.boton.seleccionar' | translate}}" [emptyFilterMessage]="resultadosZonas" [showClear]="true">
+          </p-dropdown>
+        </div>
+
+        <!-- PARTIDO JUDICIAL -->
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{"agenda.fichaEvento.tarjetaGenerales.partidoJudicial" | translate}}</label>
+          <input type="text" name="nombre" class="box" [disabled]="true" [(ngModel)]="filtros.partidoJudicial" class="form-control"
+            pInputText/>
+        </div>
+
+        <!-- JURISDICCION -->
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{"menu.justiciaGratuita.maestros.Jurisdiccion" | translate}}</label>
+          <p-dropdown class="select-form" [(ngModel)]="filtros.jurisdiccion" [options]="comboJurisdicciones" [filter]="true" filterMatchMode="contains"
+            placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true">
+          </p-dropdown>
+        </div>
+
+        <!-- GRUPO FACTURACION -->
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{"justiciaGratuita.oficio.turnos.grupofacturacion" | translate}}</label>
+          <p-dropdown class="select-form" [(ngModel)]="filtros.grupoFacturacion" [options]="comboGrupoFacturacion" [filter]="true"
+            filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true">
+          </p-dropdown>
+        </div>
+
+        <!-- PARTIDA PRESUPUESTARIA -->
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{"dato.jgr.guardia.guardias.partidaPresupuestaria" | translate}}</label>
+          <p-dropdown class="select-form" [(ngModel)]="filtros.partidaPresupuestaria" [options]="comboPartidasPresupuestarias" [filter]="true"
+            filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true">
+          </p-dropdown>
+        </div>
+
+        <!-- TIPO TURNO -->
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{"justiciaGratuita.oficio.turnos.tipoturno" | translate}}</label>
+          <p-dropdown class="select-form" [(ngModel)]="filtros.tipoTurno" [options]="comboTipoTurno" [filter]="true" filterMatchMode="contains"
+            placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true">
+          </p-dropdown>
+        </div>
+
+        <!-- TIPO GUARDIA -->
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{"dato.jgr.guardia.guardias.tipoGuardia" | translate}}</label>
+          <p-dropdown class="select-form" [filter]="true" [(ngModel)]="filtros.idTipoGuardia" [options]="comboTipoGuardia" filterMatchMode="contains"
+            placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true">
+          </p-dropdown>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div class="card-footer">
+    <!-- BOTONES TARJETA -->
+    <div class="text-right main-button">
+      <button pButton (click)="rest()" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate}}"></button>
+      <button pButton (click)="search()" type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"></button>
+      <button pButton (click)="nuevo()" type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+    </div>
+  </div>
+</div>

@@ -19,4 +19,4 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
   declarations: [BusquedaColegiadoExpressComponent],
   exports: [BusquedaColegiadoExpressComponent]
 })
-export class BusquedaColegiadoExpressModule {}
+export class BusquedaColegiadoExpressModule { }

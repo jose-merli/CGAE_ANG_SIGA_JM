@@ -1,0 +1,32 @@
+::ng-deep {
+
+    .bloque {
+        border-right: 1px solid #c6c7c8;
+    }
+    
+    .padding-interior {
+        padding-right: 1.25rem !important;
+        padding-left: 1.25rem !important;
+    }
+
+    .camposObligatorios{
+        border-color: red !important;
+      }
+    
+      .camposObligatorios > div{
+        border-color: red !important;
+      }
+    
+      .camposObligatorios > input{
+        border-color: red !important;
+      }
+    
+      .camposObligatorios > div .ui-multiselect{
+        border: 1px solid red !important;
+      }
+    
+      .ui-inputtext .camposObligatorios{
+        border: 1px solid red !important;
+      }
+
+}

@@ -1,0 +1,232 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+
+<div class="busqueda-container" id="datosGenerales">
+  <div class="card">
+    <div class="card-header header-ficha">
+      <div *ngIf="!openFicha" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('generales')">
+          <div class="img-colegiado">
+            <i class="fas fa-user icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10 cabeza">
+          <div class="d-flex justify-content-end mb-1" (click)="abreCierraFicha('generales')">
+            <label class="mr-auto title-ficha">{{'administracion.catalogos.titulo.datos.generales' | translate}}</label>
+          </div>
+          <div class="d-flex justify-content-between sub">
+            <label>{{'administracion.parametrosGenerales.literal.nombre' | translate}}:
+              <strong>{{body.nombre}}</strong>
+            </label>
+            <label>{{'administracion.parametrosGenerales.literal.descripcion' | translate}}:
+              <strong> {{body.descripcion}}</strong>
+            </label>
+            <label>{{'dato.jgr.guardia.guardias.tipoGuardia' | translate}}:
+              <strong>{{tipoGuardiaResumen.label}}</strong>
+            </label>
+            <label>{{'justiciaGratuita.guardia.gestion.sincCentralGuardias' | translate}}:
+              <strong *ngIf="!body.sincCentralGuardias">No</strong>
+              <strong *ngIf="body.sincCentralGuardias">Sí</strong>
+            </label>
+            <i (click)="abreCierraFicha('generales')" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha}"></i>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center" (click)="abreCierraFicha('generales')">
+        <div class="img-colegiado">
+          <i class="fas fa-user icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{'administracion.catalogos.titulo.datos.generales' | translate}}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+    <div *ngIf="openFicha" class="card-body card-body-ficha">
+      <div class="row col-12">
+        <div class="form-group col-lg-12 col-md-12">
+          <label style="text-align:center; font-weight: bold;">{{ "general.message.datos.generales" | translate }}</label>
+        </div>
+        <!-- TURNO -->
+        <div class="form-group col-12">
+          <label>
+            {{"justiciaGratuita.sjcs.designas.DatosIden.turno" | translate}} (*)
+          </label>
+          <div class="p-0 col-6 form-group">
+            <p-dropdown [ngClass]="styleObligatorio(body.idTurno)" class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]='body.idTurno' [filter]="true"
+              filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="comboTurno" [disabled]="historico || !permisoEscritura || modoEdicion"
+              [showClear]="true">
+            </p-dropdown>
+          </div>
+        </div>
+        <!-- Nombre -->
+        <div class="form-group col-lg-3 col-md-3">
+          <label>
+            {{ "administracion.parametrosGenerales.literal.nombre" | translate }} (*)
+          </label>
+          <input [ngClass]="styleObligatorio(body.nombre)" [(ngModel)]="body.nombre" maxlength="30" [disabled]="!permisoEscritura || historico" type="text" class="form-control"
+            [maxLength]="200" pInputText>
+        </div>
+
+        <!-- Descripcion -->
+        <div class="form-group col-lg-3 col-md-3">
+          <label>
+            {{"general.description" | translate}} (*)
+          </label>
+          <input [ngClass]="styleObligatorio(body.descripcion)" [(ngModel)]="body.descripcion" [disabled]="!permisoEscritura || historico" type="text" class="form-control" [maxLength]="500"
+            pInputText>
+        </div>
+
+        <!-- Tipo Guardia -->
+        <div class="form-group col-lg-3 col-md-3">
+          <label>
+            {{"dato.jgr.guardia.guardias.tipoGuardia" | translate}}
+          </label>
+          <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]='body.idTipoGuardia'
+            [filter]="true" filterBy="label,labelSinTilde" [options]="comboTipoGuardia" [disabled]="historico || !permisoEscritura"
+            [showClear]="true">
+          </p-dropdown>
+        </div>
+
+
+        <!-- Sincronizar Centralita Guardias -->
+        <div class="form-group col-3 row p-0" id="tipoCentDiv">
+          <div class="col-9 p-0">
+            <label class="lab">
+              <strong>{{"justiciaGratuita.guardia.gestion.sincCentralGuardias" | translate}}</strong>
+            </label>
+          </div>
+          <div class="col-3 p-0">
+            <p-checkbox [(ngModel)]="body.envioCentralita" id="checkMovil" binary="true" [disabled]="historico || !permisoEscritura"></p-checkbox>
+          </div>
+        </div>
+
+        <div class="row col-6" id="div1">
+          <!-- Descripcion Facturacion -->
+          <div class="form-group col-lg-6 col-md-6" id="desFact">
+            <label>
+              {{"general.description" | translate}} {{"menu.facturacion" | translate}}
+            </label>
+            <textarea name="textoEnPlantilla" [disabled]="historico || !permisoEscritura" class="form-control ui-inputtext" pInputTextarea
+              [(ngModel)]="body.descripcionFacturacion" autoResize="autoResize" maxlength="3999"></textarea>
+          </div>
+
+          <!-- Descripcion Pago -->
+          <div class="form-group col-lg-6 col-md-6" id="desPago">
+            <label>
+              {{"general.description" | translate}} {{"justiciaGratuita.guardia.gestion.pago" | translate}}
+            </label>
+            <textarea name="textoEnPlantilla" [disabled]="historico || !permisoEscritura" class="form-control ui-inputtext" pInputTextarea
+              [(ngModel)]="body.descripcionPago" autoResize="autoResize" maxlength="3999"></textarea>
+          </div>
+        </div>
+
+        <!-- MODO CREACION -->
+        <div class="row col-6" id="div2" *ngIf="!modoEdicion">
+          <!-- Vincular con -->
+          <div class="form-group col-lg-6">
+            <label>
+              {{"justiciaGratuita.guardia.gestion.vincularCon" | translate}}
+            </label>
+            <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" (onChange)="onChangeTurno()" [filter]="true"
+              filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="comboTurno" [(ngModel)]='body.idTurnoPrincipal'
+              [disabled]="historico || !permisoEscritura" disabled="true" [showClear]="true">
+            </p-dropdown>
+          </div>
+          <div class="col-6" style="margin-top: 20px">
+            <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]='body.idGuardiaPrincipal'
+              [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="comboGuardia" [disabled]="historico || !permisoEscritura || isDisabledGuardia"
+              [showClear]="true"></p-dropdown>
+          </div>
+
+          <!--TABLA-->
+
+          <div class="form-group col-lg-12 col-md-12">
+            <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="single" [responsive]="true" #table
+              class="tabla-listado" [rows]="selectedItem" [ngClass]="{ 'customCursor': selectMultiple}">
+              <ng-template pTemplate="colgroup" let-columns>
+                <colgroup>
+                  <col *ngFor="let col of cols" [style.width]="col.width">
+                </colgroup>
+              </ng-template>
+              <ng-template pTemplate="header" let-columns>
+                <tr>
+                  <th colspan="2">
+                    {{ 'justiciaGratuita.guardia.gestion.guardiaVinculada' | translate}}
+                  </th>
+                </tr>
+                <tr>
+                  <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+                    {{ col.header | translate }}
+                  </th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+                <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+                  <td class="text-center" *ngFor="let col of columns">
+                    <span>{{dato[col.field]}}</span>
+                  </td>
+
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="emptymessage" let-columns>
+                <tr>
+                  <td [attr.colspan]="columns.length">
+                    {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </div>
+
+        <!-- MODO EDICION -->
+        <div class="row col-6" id="div2" *ngIf="modoEdicion">
+          <!--TABLA-->
+
+          <div class="form-group col-lg-12 col-md-12">
+            <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="single" [responsive]="true" #table
+              class="tabla-listado" [rows]="selectedItem" [ngClass]="{ 'customCursor': selectMultiple}">
+              <ng-template pTemplate="colgroup" let-columns>
+                <colgroup>
+                  <col *ngFor="let col of cols" [style.width]="col.width">
+                </colgroup>
+              </ng-template>
+              <ng-template pTemplate="header" let-columns>
+                <tr>
+                  <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+                    {{ col.header | translate }}
+                  </th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+                <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+                  <td class="text-center" *ngFor="let col of columns">
+                    <strong *ngIf="col.field =='vinculacion'">{{dato[col.field]}}</strong>
+                    <span *ngIf="col.field !='vinculacion'">{{dato[col.field]}}</span>
+                  </td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="emptymessage" let-columns>
+                <tr>
+                  <td [attr.colspan]="columns.length">
+                    {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="openFicha" class="card-footer">
+      <div class="text-right main-button">
+        <button (click)="rest()" pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-undo" iconPos="left"
+          label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="save()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

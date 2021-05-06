@@ -18,14 +18,14 @@
       <div class="col-1"></div>
       <div class="col-11 form-row">
         <div class="d-flex flex-wrap" *ngFor="let dato of datos">
-          <label *ngIf="dato.value != null">
+          <label name>
             <b>{{dato.label}}: </b>{{dato.value}}</label>
         </div>
       </div>
       <div class="col-1"></div>
       <div class="col-11 form-row pt-2">
         <div class="d-flex flex-wrap" *ngFor="let enlace of enlaces">
-          <label *ngIf="enlace.label != null">
+          <label name>
             <a (click)="goToCard(enlace.value, enlace.nombre)">
               <span style="color: blue; text-decoration: underline"> {{enlace.label | translate }}
               </span>
