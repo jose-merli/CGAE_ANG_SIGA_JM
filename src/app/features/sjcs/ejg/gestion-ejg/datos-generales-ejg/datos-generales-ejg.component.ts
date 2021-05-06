@@ -75,6 +75,19 @@ export class DatosGeneralesEjgComponent implements OnInit {
         this.nuevo = false;
         this.body = this.persistenceService.getDatos();
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+        /* this.sigaServices.post("gestionejg_datosEJG", selected).subscribe(
+          n => {
+            this.ejgObject = JSON.parse(n.body).ejgItems;
+            this.datosItem = this.ejgObject[0];
+            this.persistenceService.setDatos(this.datosItem);
+            this.consultaUnidadFamiliar(selected);
+            this.commonServices.scrollTop();
+          },
+          err => {
+            console.log(err);
+            this.commonServices.scrollTop();
+          }
+        ); */
         if (this.body.fechalimitepresentacion != undefined)
           this.body.fechalimitepresentacion = new Date(this.body.fechalimitepresentacion);
         if (this.body.fechapresentacion != undefined)
@@ -256,6 +269,10 @@ export class DatosGeneralesEjgComponent implements OnInit {
     this.progressSpinner=true;
 
     if(this.modoEdicion){
+      
+      //Comprobamos las prestaciones rechazadas e introducimos la diferencia en una variable.
+      this.body.prestacionesRechazadas = this.comboPrestaciones.map(it => it.value.toString()).filter(x => this.body.prestacion.indexOf(x) === -1);
+
       //hacer update
       this.sigaServices.post("gestionejg_actualizaDatosGenerales", this.body).subscribe(
         n => {

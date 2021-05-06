@@ -104,7 +104,7 @@
             <div class="form-group col-lg-3 col-md-3 pl-3">
               <label>{{ 'justiciaGratuita.ejg.datosGenerales.TipoExpediente' | translate}}:</label>
               <br>
-              <label *ngIf="showTipoExp">{{tipoExpedienteDes}}</label>
+              <label *ngIf="showTipoExp">{{tipoExpedienteDes | translate}}</label>
               <p-dropdown *ngIf="!showTipoExp" class="select-form" [(ngModel)]='body.idTipoExpediente' placeholder="Seleccionar" [options]="comboTipoExpediente"
                 [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
             </div> 

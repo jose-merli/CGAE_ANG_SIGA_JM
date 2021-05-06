@@ -72,7 +72,8 @@ export class EJGItem {
     apellidosYNombre: string;
     tipoLetrado: string;
     idPersona: string;
-    prestacion: string;
+    prestacion: Array<string>;
+    prestacionesRechazadas: Array<string>;
     turnoDes: string;
     anioexpediente: string;
     numeroexpediente: string;
