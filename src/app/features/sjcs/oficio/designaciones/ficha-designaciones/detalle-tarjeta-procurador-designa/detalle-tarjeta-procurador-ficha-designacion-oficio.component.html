@@ -51,7 +51,7 @@
 
                 <button pButton type="button" icon="fa fa-save"[disabled]="data == undefined" iconPos="left" label="{{ 'general.boton.guardar' | translate}}" (click)="checkGuardar()"></button>
                 
-                <button pButton icon="fa fa-plus" [disabled]="disabled" type="button" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+                <button pButton icon="fa fa-plus" [disabled]="isDisabled" type="button" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
             </div>
         </div>
     </div>
