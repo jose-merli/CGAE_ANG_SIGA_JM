@@ -40,6 +40,7 @@ export class GestionBajasTemporalesComponent implements OnInit {
   @Output() searchHistorico = new EventEmitter<any>();
   @Output() guardar = new EventEmitter<any>();
   @Output() modDatos = new EventEmitter<any>();
+  @Output() estadoPendiente = new EventEmitter<any>();
 
   cabecerasMultiselect = [];
   modalStateDisplay = true;
@@ -70,6 +71,7 @@ export class GestionBajasTemporalesComponent implements OnInit {
   @ViewChild('table') table: ElementRef;
   historico: boolean = false;
   isLetrado: boolean = false;
+  isDisabled: boolean = true;
 
   comboTipo = [
     { label: "Vacaciones", value: "V" },
@@ -208,6 +210,9 @@ export class GestionBajasTemporalesComponent implements OnInit {
     } else {
       this.selectedArray.push(rowId);
     }
+
+    this.estadoPendiente.emit(this.selectedArray);
+    
     if (this.selectedArray.length != 0) {
       this.anySelected.emit(true);
     } else {
