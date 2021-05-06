@@ -791,6 +791,10 @@ export class FichaDesignacionesComponent implements OnInit {
       this.sigaServices.post("designaciones_busquedaProcurador", procurador).subscribe(
         n => {
           this.procurador = JSON.parse(n.body).procuradorItems;
+          if(this.procurador != null){
+            sessionStorage.setItem("compruebaProcurador","true");
+          }
+
           this.procurador.forEach(element => {
             element.fechaDesigna = this.formatDate(element.fechaDesigna);
             element.fecharenunciasolicita = this.formatDate(element.fecharenunciasolicita);
@@ -924,7 +928,7 @@ export class FichaDesignacionesComponent implements OnInit {
       data => {
 
         if (JSON.parse(data.body).procuradorItems[0] != undefined) {
-          this.callConfirmationSave("cdSave");
+          this.showModal2 = true;
         } else {
           this.comprobarFechaProcurador();
         }
@@ -1838,7 +1842,7 @@ export class FichaDesignacionesComponent implements OnInit {
       accept: () => {
         this.confirmationSave = false;
         this.progressSpinner = true;
-        //this.guardarProcuradorEJG();
+        this.guardarProcuradorEJG(this.listaPrueba);
         this.cdSave.hide();
       },
       reject: () => {

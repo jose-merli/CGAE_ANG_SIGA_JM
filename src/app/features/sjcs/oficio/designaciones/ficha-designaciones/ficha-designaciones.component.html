@@ -141,10 +141,10 @@
 
 <!--Guardar Procurador-->
 <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}"
-    key="cdSave" #cdSave icon="icon" width="750">
+    [(visible)]="showModal2" key="cdSave" #cdSave icon="icon" width="425">
     <p-footer>
-        <button type="button" pButton icon="fa-check" label="Si" (click)="cdSave.accept()"></button>
-        <button type="button" pButton icon="fa-close" label="No" (click)="cdSave.reject()"></button>
+        <button type="button" pButton icon="fa-check" label="Si" (click)="guardarProcuradorEJG(listaPrueba)"></button>
+        <button type="button" pButton icon="fa-close" label="No" (click)="cerrarModal()"></button>
     </p-footer>
 </p-confirmDialog>
 

@@ -50,6 +50,7 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
   @Output() nuevo = new EventEmitter<any>();
   datosProcurador: ProcuradorItem = new ProcuradorItem();
   progressSpinner: boolean = false;
+  disabledSave: boolean = true;
 
   constructor(
     private renderer: Renderer2,
@@ -70,6 +71,11 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
       let data =JSON.parse(sessionStorage.getItem("datosProcurador"));
 
       this.datosProcurador=data[0];
+    }
+
+    if(sessionStorage.getItem("compruebaProcurador")){
+      this.disabledSave = false;
+      sessionStorage.removeItem("compruebaProcurador");
     }
 
     if(sessionStorage.getItem("nuevoProcurador")){
