@@ -56,9 +56,9 @@
     <button pButton type="button" icon="fa fa-paper-plane" iconPos="left" label="Comunicar" [disabled]="true"
       (click)="showMsg('success', 'Se ha comunicado correctamente', '')"></button>
     <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer"
-      (click)="showMsg('success', 'Se ha restablecido correctamente', 'Restablecer')" ></button>
+      (click)="showMsg('success', 'Se ha restablecido correctamente', 'Restablecer')"  [disabled]="isLetrado"></button>
     <button pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"
-      (click)="showMsg('success', 'Se ha guardado correctamente', 'save')" ></button>
+      (click)="showMsg('success', 'Se ha guardado correctamente', 'save')" [disabled]="!permisoEscritura"></button>
   </div>
 </div>
 

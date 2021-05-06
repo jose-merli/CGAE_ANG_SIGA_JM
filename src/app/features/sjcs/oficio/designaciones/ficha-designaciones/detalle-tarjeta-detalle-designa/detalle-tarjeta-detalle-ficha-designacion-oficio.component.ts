@@ -51,6 +51,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
   moduloOpciones: any;
   disableEstado:boolean= false;
   institucionActual: String;
+  isLetrado: boolean;
   @Input() campos;
   @Output() refreshData = new EventEmitter<DesignaItem>();
   datosInicial: any;
@@ -217,6 +218,20 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       this.sigaServices.get("institucionActual").subscribe(n => {
         this.institucionActual = n.value;
       });
+
+
+      this.sigaServices.get('getLetrado').subscribe(
+        (data) => {
+          if (data.value == 'S') {
+            this.isLetrado = true;
+          } else {
+            this.isLetrado = false;
+          }
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
   }
 
   formatDate(date) {

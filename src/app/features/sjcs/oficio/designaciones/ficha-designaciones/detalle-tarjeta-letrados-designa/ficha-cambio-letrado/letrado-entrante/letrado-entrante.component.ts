@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { Message } from 'primeng/components/common/api';
 import { CamposCambioLetradoItem } from '../../../../../../../../models/sjcs/CamposCambioLetradoItem';
 
+
 @Component({
   selector: 'app-letrado-entrante',
   templateUrl: './letrado-entrante.component.html',
@@ -20,12 +21,13 @@ export class LetradoEntranteComponent implements OnInit {
   progressSpinner = false;
   disableFechaDesignacion;
   disableCheck=false;
+  isLetrado: boolean;
 
   @Input() saliente;
 
   @Output() fillEntrante = new EventEmitter<boolean>();
 
-  constructor(private router: Router) { }
+  constructor(private router: Router,private sigaServices: SigaServices) { }
 
   ngOnInit() {
 
@@ -55,6 +57,19 @@ export class LetradoEntranteComponent implements OnInit {
 
     if(sessionStorage.getItem("isLetrado")=="true") this.disableCheck=true;
     
+
+    this.sigaServices.get('getLetrado').subscribe(
+      (data) => {
+        if (data.value == 'S') {
+          this.isLetrado = true;
+        } else {
+          this.isLetrado = false;
+        }
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
   }
 
 

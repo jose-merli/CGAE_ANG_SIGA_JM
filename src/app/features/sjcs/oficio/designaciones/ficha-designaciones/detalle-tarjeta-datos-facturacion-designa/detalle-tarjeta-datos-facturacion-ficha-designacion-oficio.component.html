@@ -15,7 +15,7 @@
       <div class="form-group col-lg-4 col-md-4 w-100">
         <p-dropdown class="select-form" [(ngModel)]="selector.value"
           placeholder="{{'general.boton.seleccionar' | translate}}" [options]="selector.opciones" [filter]="true"
-          filterBy="label,labelSinTilde" [showClear]="true" [disabled]="isAnulada">
+          filterBy="label,labelSinTilde" [showClear]="true" [disabled]="isAnulada  || !permisoEscritura">
         </p-dropdown>
       </div>
 
@@ -27,8 +27,8 @@
 
 <div class="card-footer">
   <div class="text-right main-button">
-    <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer" (click)="restablecer()"></button>
+    <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer" (click)="restablecer()" [disabled]="!permisoEscritura"></button>
     <button pButton type="button" icon="far fa-save" iconPos="left" label="Guardar" (click)="guardar()"
-      [disabled]="selector.value == '' || selector.value == null"></button>
+      [disabled]="selector.value == '' || selector.value == null || !permisoEscritura"></button>
   </div>
 </div>

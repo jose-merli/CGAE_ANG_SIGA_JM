@@ -32,5 +32,8 @@ export const procesos_oficio: any = {
 
     //DESIGNAS
     designa:"959",
-    pestañaProximaDesignaciones: "9S5"
+    pestañaProximaDesignaciones: "9S5",
+    designaTarjetaDatosGenerales: "960",
+    designaTarjetaFacturacion: "962",
+    designaTarjetaLetrado: "963"
 }

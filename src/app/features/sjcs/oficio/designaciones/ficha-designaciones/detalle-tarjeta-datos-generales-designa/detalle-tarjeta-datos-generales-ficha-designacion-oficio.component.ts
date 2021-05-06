@@ -8,6 +8,8 @@ import { ActuacionDesignaObject } from '../../../../../../models/sjcs/ActuacionD
 import { DesignaItem } from '../../../../../../models/sjcs/DesignaItem';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
+import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
+import { PersistenceService } from '../../../../../../_services/persistence.service';
 
 @Component({
   selector: 'app-detalle-tarjeta-datos-generales-ficha-designacion-oficio',
@@ -25,6 +27,9 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
   initDatos: any;
   disableButtons: boolean;
   progressSpinner: boolean;
+  permisoEscritura: boolean;
+  isLetrado: boolean;
+  
   @Input() campos;
   @Input() selectedValue;
   @Output() refreshDataGenerales = new EventEmitter<DesignaItem>();
@@ -73,7 +78,13 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     disable: false
   }];
 
-  constructor(private sigaServices: SigaServices, private datePipe: DatePipe, private commonsService: CommonsService, private confirmationService: ConfirmationService, private translateService: TranslateService, private router: Router) {
+  constructor(private sigaServices: SigaServices,
+     private datePipe: DatePipe, 
+     private commonsService: CommonsService, 
+     private confirmationService: ConfirmationService, 
+     private translateService: TranslateService, 
+     private router: Router,
+     private persistenceService: PersistenceService) {
   }
 
   ngOnInit() {
@@ -90,6 +101,36 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       this.cargaDatosNueva();
 
     }
+
+    this.commonsService.checkAcceso(procesos_oficio.designaTarjetaDatosGenerales)
+          .then(respuesta => {
+            this.permisoEscritura = respuesta;
+            this.persistenceService.setPermisos(this.permisoEscritura);
+     
+            if (this.permisoEscritura == undefined) {
+              sessionStorage.setItem("codError", "403");
+              sessionStorage.setItem(
+                "descError",
+                this.translateService.instant("generico.error.permiso.denegado")
+              );
+              this.router.navigate(["/errorAcceso"]);
+            }
+            
+          }
+          ).catch(error => console.error(error)); 
+    
+    this.sigaServices.get('getLetrado').subscribe(
+      (data) => {
+        if (data.value == 'S') {
+          this.isLetrado = true;
+        } else {
+          this.isLetrado = false;
+        }
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
 
   }
 
