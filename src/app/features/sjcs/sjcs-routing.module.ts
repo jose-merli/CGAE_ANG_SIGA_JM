@@ -4,8 +4,6 @@ import { GestionEjgComponent } from './ejg/gestion-ejg/gestion-ejg.component';
 import { AuthGuard } from '../../_guards/auth.guards';
 
 const routesSjcs: Routes = [
-
-	
 	{
 		path: 'zonasYsubzonas',
 		loadChildren: './maestros/maestros.module#MaestrosModule'
@@ -79,6 +77,14 @@ const routesSjcs: Routes = [
 		component: GestionEjgComponent,
 		canActivate: [AuthGuard]
 	},
+	{
+		path: 'turnos',
+		loadChildren: './oficio/turnos/turnos.module#GestionTurnosModule'
+	},
+	{     //GUARDIAS ---------------------------------------------------------------------------------
+		path: "guardias",
+		loadChildren: './guardia/guardia.module#GuardiaModule'
+	}
 ];
 
 @NgModule({

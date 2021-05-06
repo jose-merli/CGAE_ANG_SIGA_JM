@@ -87,6 +87,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
   currentRoute: String;
   idClaseComunicacion: String;
   keys: any[] = [];
+  fromAbogadoContrario: boolean = false;
 
   migaPan: string = '';
   migaPan2: string = '';
@@ -134,10 +135,20 @@ export class BusquedaGeneralComponent implements OnDestroy {
   }
 
   ngOnInit() {
+
+    if(sessionStorage.getItem("origin")=="AbogadoContrario"){
+      sessionStorage.removeItem('origin');
+      this.fromAbogadoContrario=true;
+    }
     this.progressSpinner = true;
     this.currentRoute = this.router.url;
     this.getMigaPan();
     this.getInstitucion();
+
+    if (sessionStorage.getItem("nuevoProcurador")) {
+      this.persona = 'f';
+    }
+
     if (sessionStorage.getItem("vuelveForm") != undefined)
       if (sessionStorage.getItem("vuelveForm") == "false") {
         this.router.navigate(["/buscarCursos"]);
@@ -729,6 +740,12 @@ export class BusquedaGeneralComponent implements OnDestroy {
   }
 
   irFichaColegial(id) {
+
+    // En caso que venga de una ficha de contrario
+    if(this.fromAbogadoContrario){
+      sessionStorage.setItem('abogado', JSON.stringify(id));
+      this.location.back();
+    }
     // ir a ficha de notario
     let colegioSelec = this.colegios_seleccionados[0].idInstitucion;
     if (sessionStorage.getItem('abrirNotario') == 'true' && sessionStorage.getItem('abrirRemitente') != 'true') {
@@ -745,7 +762,10 @@ export class BusquedaGeneralComponent implements OnDestroy {
 
         this.router.navigate(['fichaPersonaJuridica']);
       }
-    } else if (
+    }else if(sessionStorage.getItem('nuevoProcurador')){
+      sessionStorage.setItem('datosProcurador',JSON.stringify(id));
+      this.backTo(); 
+  }else if (
       (sessionStorage.getItem('newIntegrante') != null || sessionStorage.getItem('newIntegrante') != undefined) &&
       sessionStorage.getItem('abrirRemitente') != 'true'
     ) {
@@ -836,7 +856,6 @@ export class BusquedaGeneralComponent implements OnDestroy {
             enviar.correoElectronico = id[0].correoelectronico;
             enviar.codigoPostal = id[0].codigoPostal;
             enviar.nombrePoblacion = id[0].nombrePoblacion;
-
             if (sessionStorage.getItem('nuevoNoColegiadoGen') == 'true') {
               // sessionStorage.setItem('nuevoNoColegiado', JSON.stringify(enviar));
               // sessionStorage.setItem('esColegiado', 'false');
@@ -973,6 +992,13 @@ export class BusquedaGeneralComponent implements OnDestroy {
       sessionStorage.setItem('nSancion', JSON.stringify(id));
       this.router.navigate(['detalleSancion']);
     }
+
+
+    if (sessionStorage.getItem("Art27Activo") == 'true') {
+        sessionStorage.removeItem("Art27Activo")
+        sessionStorage.setItem("colegiadoGeneralDesigna",JSON.stringify(id));
+        this.location.back();
+      }
   }
 
   tipoIdentificacionPermitido(value: String): boolean {

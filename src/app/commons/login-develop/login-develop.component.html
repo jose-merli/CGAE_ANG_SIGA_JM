@@ -19,7 +19,7 @@
                 </p-dropdown>
 
             </td>
-            <button [disabled]="isHabilitadoEntrar()" pButton type="button " (click)='submit()'
+            <button [disabled]="isHabilitadoEntrar()" (keyup.enter)="submit()" pButton type="button " (click)='submit()'
                 title="Entrar con los datos de los combos" label="Entrar"></button>
 
         </tr>

@@ -111,6 +111,7 @@ export class DatosRegistralesComponent implements OnInit {
   prefijoSSPPInicial;
   sufijoSSPPInicial;
   contadorSSPPInicial;
+  colapsarTarjeta: boolean = true;
 
   @ViewChild('someDropdown') someDropdown: MultiSelect;
 
@@ -384,7 +385,11 @@ export class DatosRegistralesComponent implements OnInit {
             }
 
             this.fechaFin = this.body.fechaFin;
-            this.fechaInscripcion = new Date(this.body.fechaInscripcion);
+            if(this.body.fechaInscripcion != null){
+              this.fechaInscripcion = new Date(this.body.fechaInscripcion);
+            } else {
+              this.fechaInscripcion = null;
+            }
 
             if (this.body.sociedadProfesional == "1") {
               this.sociedadProfesional = true;
@@ -472,7 +477,7 @@ export class DatosRegistralesComponent implements OnInit {
   }
 
   guardar() {
-
+    this.colapsarTarjeta = false;
     if (!this.desactivadoGuardar()) {
       this.progressSpinner = true;
       this.arreglarFechas();
@@ -686,11 +691,6 @@ export class DatosRegistralesComponent implements OnInit {
         !this.onlySpaces(this.body.resena) &&
         this.fechaConstitucion != undefined &&
         this.compruebaFechaConstitucion() &&
-        this.fechaInscripcion != undefined &&
-        this.body.numRegistro != undefined &&
-        !this.onlySpaces(this.body.numRegistro) &&
-        this.body.identificacionReg != undefined &&
-        !this.onlySpaces(this.body.identificacionReg) &&
         this.body.contadorNumsspp != undefined &&
         !this.onlySpaces(this.body.contadorNumsspp) &&
         this.contadorNoCorrecto == false &&
@@ -721,16 +721,7 @@ export class DatosRegistralesComponent implements OnInit {
         !this.onlySpaces(this.body.resena)) &&
       (this.fechaConstitucion != undefined &&
         this.compruebaFechaConstitucion()) &&
-      this.fechaInscripcion != undefined &&
-      (this.body.numRegistro != undefined &&
-        this.body.numRegistro != "" &&
-        !this.onlySpaces(this.body.numRegistro)) &&
-      (this.body.identificacionReg != undefined &&
-        this.body.identificacionReg != "" &&
-        !this.onlySpaces(this.body.identificacionReg)) &&
-      (this.body.identificacionReg != undefined &&
-        this.body.identificacionReg != "" &&
-        !this.onlySpaces(this.body.identificacionReg))
+      this.fechaInscripcion != undefined 
     ) {
       return false;
     } else {
@@ -781,10 +772,11 @@ export class DatosRegistralesComponent implements OnInit {
     }
     // si no se esta creando una nueva sociedad && sessionStorage.getItem("crearnuevo") == null
     if (
-      (this.tarjeta == '2' || this.tarjeta == '3') && sessionStorage.getItem("nuevoRegistro") == null
+      (this.tarjeta == '2' || this.tarjeta == '3') && sessionStorage.getItem("nuevoRegistro") == null && this.colapsarTarjeta
     ) {
       fichaPosible.activa = !fichaPosible.activa;
     }
+    this.colapsarTarjeta = true;
   }
 
   esFichaActiva(key) {

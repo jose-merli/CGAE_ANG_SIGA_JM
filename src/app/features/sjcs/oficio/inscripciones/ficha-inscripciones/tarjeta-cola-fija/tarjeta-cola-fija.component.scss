@@ -1,0 +1,26 @@
+#cabeza {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 1;
+}
+.card .header-ficha label {
+    color: black;
+    cursor: pointer;
+}
+.div {
+    cursor: default;
+}
+.card-header.header-ficha {
+    overflow: overlay;
+}
+.d-flex.flex-wrap.ng-star-inserted {
+    padding-right: 2.5em;
+}
+
+// #fijoInscripciones {
+//     position: sticky;
+//     top: 0;
+//     width: 100%;
+//     z-index: 2;
+// }

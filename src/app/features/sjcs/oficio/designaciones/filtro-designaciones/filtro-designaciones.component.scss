@@ -1,0 +1,60 @@
+.borderBottom {
+  border-bottom: 1px solid #595959;
+}
+
+.h100 {
+  height: 100%;
+}
+
+.w100 {
+  width: 100%;
+}
+
+.inputWidth {
+  width: 81%;
+}
+
+.ml-7 {
+  margin-left: 5.7%;
+}
+
+
+::ng-deep {
+
+  #buscaJustiExp, #designas {
+
+    .mat-expansion-panel {
+      box-shadow: none !important;
+    }
+
+    .mat-expansion-panel-header {
+      padding-right: 0px !important;
+      padding-left: 0px !important;
+      border-bottom: 1px solid black;
+    }
+
+    .mat-expansion-panel-body {
+      padding-left: 0px !important;
+      padding-right: 0px !important;
+    }
+
+    div.mat-expansion-panel-content {
+      margin-top: 0.5rem !important;
+    }
+  }
+
+  .padding-interior {
+    padding-left: 1.25rem !important;
+    padding-right: 1.25rem !important;
+    padding-top: 0.6rem !important;
+    padding-bottom: 0.6rem !important;
+  }
+
+}
+
+.vertical-center {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-direction: column;
+}
