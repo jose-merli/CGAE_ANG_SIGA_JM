@@ -92,6 +92,9 @@ export class FiltrosInscripciones implements OnInit {
       this.usuarioBusquedaExpress.nombreAp = nombre.replace(/,/g,"");
 
       this.isBuscar();
+
+      sessionStorage.removeItem("colegiadoRelleno");
+      sessionStorage.removeItem("datosColegiado");
     }
 
     this.sigaServices.get("inscripciones_comboTurnos").subscribe(
@@ -132,10 +135,7 @@ export class FiltrosInscripciones implements OnInit {
       this.usuarioBusquedaExpress.numColegiado=busquedaColegiado.nColegiado;
 
       sessionStorage.removeItem("buscadorColegiados");
-    }​​
-
-    
-    
+    }​
   }
 
     getDataLoggedUser() {

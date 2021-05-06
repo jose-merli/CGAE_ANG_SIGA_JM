@@ -35,7 +35,6 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
   showModal2: boolean = false;
   showModal3: boolean = false;
   isLetrado: boolean = false;
-  isDisabled: boolean = false;
 
   comboMotivo = [
     { label: "Vacaciones", value: "V" },

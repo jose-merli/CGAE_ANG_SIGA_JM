@@ -140,16 +140,16 @@
 </div>
 
 <!--Guardar Procurador-->
-<p-confirmDialog header="{{'justiciaGratuita.oficio.designaciones.guardarProcurador' | translate }}"
-    [(visible)]="showModal2" icon="icon" width="750">
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}"
+    key="cdSave" #cdSave icon="icon" width="750">
     <p-footer>
-        <button type="button" pButton icon="fa-check" label="Si" (click)="guardarProcuradorEJG(listaPrueba)"></button>
-        <button type="button" pButton icon="fa-close" label="No" (click)="cerrarModal()"></button>
+        <button type="button" pButton icon="fa-check" label="Si" (click)="cdSave.accept()"></button>
+        <button type="button" pButton icon="fa-close" label="No" (click)="cdSave.reject()"></button>
     </p-footer>
 </p-confirmDialog>
 
-<p-confirmDialog header="{{'justiciaGratuita.oficio.designaciones.eliminarDesignacion' | translate}}"
-    [(visible)]="showModal3" icon="icon" width="750">
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}"
+    [(visible)]="showModal3" icon="fa fa-question-circle" width="425">
     <p-footer>
         <button type="button" pButton icon="fa-check" label="Si" (click)="actualizarProcurador()"></button>
         <button type="button" pButton icon="fa-close" label="No" (click)="cerrarModal()"></button>

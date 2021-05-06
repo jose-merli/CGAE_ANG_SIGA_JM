@@ -5,7 +5,7 @@ import { TranslateService } from '../../../../../commons/translate';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { ActuacionDesignaItem } from '../../../../../models/sjcs/ActuacionDesignaItem';
 import { ActuacionDesignaObject } from '../../../../../models/sjcs/ActuacionDesignaObject';
-import { Message } from 'primeng/api';
+import { ConfirmationService, Message } from 'primeng/api';
 import { Row, DetalleTarjetaProcuradorFichaDesignaionOficioService } from './detalle-tarjeta-procurador-designa/detalle-tarjeta-procurador-ficha-designaion-oficio.service';
 import { ProcuradorItem } from '../../../../../models/sjcs/ProcuradorItem';
 import { DetalleTarjetaContrariosFichaDesignacionOficioComponent } from './detalle-tarjeta-contrarios-designa/detalle-tarjeta-contrarios-ficha-designacion-oficio.component';
@@ -19,6 +19,7 @@ import { RelacionesItem } from '../../../../../models/sjcs/RelacionesItem';
 import { ControlAccesoDto } from '../../../../../models/ControlAccesoDto';
 import { DocumentoDesignaItem } from '../../../../../models/sjcs/DocumentoDesignaItem';
 import { DocumentoDesignaObject } from '../../../../../models/sjcs/DocumentoDesignaObject';
+import { Dialog } from 'primeng/dialog';
 
 @Component({
   selector: 'app-ficha-designaciones',
@@ -39,10 +40,12 @@ export class FichaDesignacionesComponent implements OnInit {
   nombreInteresado = this.translateService.instant('justiciaGratuita.oficio.designas.interesados.vacio');
 
   esColegiado: boolean = false;
+  confirmationSave:boolean = false;
 
   @ViewChild(DetalleTarjetaContrariosFichaDesignacionOficioComponent) tarjetaContrarios;
   @ViewChild(DetalleTarjetaInteresadosFichaDesignacionOficioComponent) tarjetaInteresados;
   @ViewChild(DetalleTarjetaRelacionesDesignaComponent) tarjetaRelaciones;
+  @ViewChild("cdSave") cdSave: Dialog;
   mostrarAnularCompensacion: boolean = false;
   rutas: string[] = ['SJCS', 'EJGS'];
   campos: DesignaItem = new DesignaItem();
@@ -213,7 +216,8 @@ export class FichaDesignacionesComponent implements OnInit {
   constructor(private location: Location,
     private translateService: TranslateService, private sigaServices: SigaServices, private datepipe: DatePipe,
     private gbtservice: DetalleTarjetaProcuradorFichaDesignaionOficioService,
-    private commonsService: CommonsService, private router: Router) { }
+    private commonsService: CommonsService, private router: Router,
+    private confirmationService: ConfirmationService) { }
 
   ngOnInit() {
     this.progressSpinner = true;
@@ -920,7 +924,7 @@ export class FichaDesignacionesComponent implements OnInit {
       data => {
 
         if (JSON.parse(data.body).procuradorItems[0] != undefined) {
-          this.showModal2 = true;
+          this.callConfirmationSave("cdSave");
         } else {
           this.comprobarFechaProcurador();
         }
@@ -1821,6 +1825,28 @@ export class FichaDesignacionesComponent implements OnInit {
       }
     );
 
+  }
+
+  callConfirmationSave(id) {
+    this.progressSpinner = false;
+    this.confirmationSave = true;
+
+    this.confirmationService.confirm({
+      key: "cdSave",
+      message: this.translateService.instant("justiciaGratuita.oficio.designaciones.guardarProcurador"),
+      icon: "fa fa-search ",
+      accept: () => {
+        this.confirmationSave = false;
+        this.progressSpinner = true;
+        //this.guardarProcuradorEJG();
+        this.cdSave.hide();
+      },
+      reject: () => {
+        this.confirmationSave = false;
+        this.progressSpinner = true;
+        this.cdSave.hide();
+      }
+    });
   }
 
 }

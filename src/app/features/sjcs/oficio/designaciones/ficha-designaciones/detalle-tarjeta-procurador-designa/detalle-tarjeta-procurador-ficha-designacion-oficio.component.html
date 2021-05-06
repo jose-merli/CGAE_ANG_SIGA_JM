@@ -49,7 +49,7 @@
             <div class="text-right main-button butBottom mt10">
                 <button pButton (click)="checkRestablecer()" icon="fa fa-undo" type="button" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
 
-                <button pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}" (click)="checkGuardar()"></button>
+                <button pButton type="button" icon="fa fa-save"[disabled]="data == undefined" iconPos="left" label="{{ 'general.boton.guardar' | translate}}" (click)="checkGuardar()"></button>
                 
                 <button pButton icon="fa fa-plus" [disabled]="disabled" type="button" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
             </div>

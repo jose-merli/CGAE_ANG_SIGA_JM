@@ -90,7 +90,8 @@ export class FiltrosBajasTemporales implements OnInit {
 
       this.isBuscar();
 
-      sessionStorage.removeItem("buscadorColegiados")
+      sessionStorage.removeItem("colegiadoRelleno");
+      sessionStorage.removeItem("datosColegiado");
     }​​
 
     if(this.isLetrado){

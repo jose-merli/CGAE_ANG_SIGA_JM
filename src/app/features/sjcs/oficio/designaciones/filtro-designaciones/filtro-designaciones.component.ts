@@ -103,8 +103,12 @@ export class FiltroDesignacionesComponent implements OnInit {
       const { numColegiado, nombre } = JSON.parse(sessionStorage.getItem("datosColegiado"));
       this.usuarioBusquedaExpress.numColegiado = numColegiado;
       this.usuarioBusquedaExpress.nombreAp = nombre.replace(/,/g,"");
+      this.showColegiado = true;
 
       this.buscar();
+
+      sessionStorage.removeItem("colegiadoRelleno");
+      sessionStorage.removeItem("datosColegiado");
     }
   }
 
