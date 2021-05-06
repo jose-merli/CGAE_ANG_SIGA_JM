@@ -3,7 +3,7 @@
     <app-filtros-bajas-temporales (busqueda)="search($event)" [permisos]="permisoEscritura">
     </app-filtros-bajas-temporales>
     <app-gestion-bajas-temporales *ngIf="buscar" [cabeceras]="cabeceras" [totalRegistros]="totalRegistros"
-        [seleccionarTodo]="seleccionarTodo" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" (delete)="delete($event)" (denegar)="denegar($event)" (validar)="validar($event)" (anular)="anular($event)" (searchHistorico)="searchHistorico($event)" (modDatos)="modDatos($event)">
+        [seleccionarTodo]="seleccionarTodo" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" (delete)="delete($event)" (denegar)="denegar($event)" (validar)="validar($event)" (anular)="anular($event)" (searchHistorico)="searchHistorico($event)" (modDatos)="modDatos($event)" (estadoPendiente)="estadoPendiente($event)">
     </app-gestion-bajas-temporales>
 </div>
 <div class="mt-3 text-right main-button ">

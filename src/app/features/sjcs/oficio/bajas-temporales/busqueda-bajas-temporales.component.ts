@@ -44,7 +44,6 @@ export class BajasTemporalesComponent implements OnInit {
     { label: "Suspensión por sanción", value: "S" }
   ];
 
-  isDisabled;
   seleccionarTodo = false;
   totalRegistros = 0;
   rowGroups: Row[];
@@ -163,7 +162,7 @@ export class BajasTemporalesComponent implements OnInit {
   }
 
   formatDate(date) {
-    const pattern = 'dd/MM/yyyy';
+    const pattern = 'dd/MM/yyyy HH:mm:ss';
     return this.datePipe.transform(date, pattern);
   }
 
@@ -255,37 +254,49 @@ modDatos(event){
     if (fecha != null) {
       let jsonDate = JSON.stringify(fecha);
       let rawDate = jsonDate.slice(1, -1);
-      if (rawDate.length < 14) {
-        let splitDate = rawDate.split("/");
-        let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
-        fecha = new Date((arrayDate += "T00:00:00.001Z"));
-      } else {
-        fecha = new Date(fecha);
-      }
+      if (rawDate.length == 10) {
+        fecha = rawDate += " 00:00:00";
     } else {
       fecha = undefined;
     }
     return fecha;
+    }
+  }
+
+  estadoPendiente(event){
+    let encontrado: boolean = false;
+    event.forEach(element => {
+      if(this.datos[element].validado == "Pendiente"){
+        encontrado = true;
+      }
+    });
+    if(encontrado){
+      this.tablapartida.isDisabled=false;
+    }
+    else{
+      this.tablapartida.isDisabled=true;
+    }
+    
   }
 
   delete(event){
     let array = [];
     event.forEach(element => {
-      if(this.datos[element].fechadesde != null){
-        this.datos[element].fechadesde=this.transformaFecha(this.datos[element].fechadesde);
+     /* if(this.datos[element].fechadesde != null){
+        this.datos[element].fechadesde= this.datos[element].fechadesde //this.transformaFecha(this.datos[element].fechadesde);
       }
       if(this.datos[element].fechahasta != null){
-        this.datos[element].fechahasta=this.transformaFecha(this.datos[element].fechahasta);
+        this.datos[element].fechahasta= this.datos[element].fechahasta //this.transformaFecha(this.datos[element].fechahasta);
       }
       if(this.datos[element].fechaalta != null){
-        this.datos[element].fechaalta=this.transformaFecha(this.datos[element].fechaalta);
+        this.datos[element].fechaalta= this.datos[element].fechaalta //this.transformaFecha(this.datos[element].fechaalta);
       }
       if(this.datos[element].fechabt != null){
-        this.datos[element].fechabt=this.transformaFecha(this.datos[element].fechabt);
+        this.datos[element].fechabt= this.datos[element].fechabt //this.transformaFecha(this.datos[element].fechabt);
       }
       if(this.datos[element].fechaestado != null){
-        this.datos[element].fechaestado=this.transformaFecha(this.datos[element].fechaestado);
-      }
+        this.datos[element].fechaestado= this.datos[element].fechaestado //this.transformaFecha(this.datos[element].fechaestado);
+      }*/
       array.push(this.datos[element]);
     });
     
@@ -309,21 +320,21 @@ denegar(event){
   let array = [];
   event.forEach(element => {
     if(this.datos[element].validado == "Pendiente"){
-      if(this.datos[element].fechadesde != null){
-        this.datos[element].fechadesde=this.transformaFecha(this.datos[element].fechadesde);
+      /*if(this.datos[element].fechadesde != null){
+        this.datos[element].fechadesde= this.datos[element].fechadesde //this.transformaFecha(this.datos[element].fechadesde);
       }
       if(this.datos[element].fechahasta != null){
-        this.datos[element].fechahasta=this.transformaFecha(this.datos[element].fechahasta);
+        this.datos[element].fechahasta= this.datos[element].fechahasta //this.transformaFecha(this.datos[element].fechahasta);
       }
       if(this.datos[element].fechaalta != null){
-        this.datos[element].fechaalta=this.transformaFecha(this.datos[element].fechaalta);
+        this.datos[element].fechaalta= this.datos[element].fechaalta //this.transformaFecha(this.datos[element].fechaalta);
       }
       if(this.datos[element].fechabt != null){
-        this.datos[element].fechabt=this.transformaFecha(this.datos[element].fechabt);
+        this.datos[element].fechabt= this.datos[element].fechabt //this.transformaFecha(this.datos[element].fechabt);
       }
       if(this.datos[element].fechaestado != null){
-        this.datos[element].fechaestado=this.transformaFecha(this.datos[element].fechaestado);
-      }
+        this.datos[element].fechaestado= this.datos[element].fechaestado //this.transformaFecha(this.datos[element].fechaestado);
+      }*/
       this.datos[element].validado = "Denegada";
       let tmp = this.datos[element];
       delete tmp.tiponombre;
@@ -340,21 +351,21 @@ validar(event){
   let array = [];
   event.forEach(element => {
     if(this.datos[element].validado == "Pendiente"){
-      if(this.datos[element].fechadesde != null){
-        this.datos[element].fechadesde=this.transformaFecha(this.datos[element].fechadesde);
+      /*if(this.datos[element].fechadesde != null){
+        this.datos[element].fechadesde= this.datos[element].fechadesde //this.transformaFecha(this.datos[element].fechadesde);
       }
       if(this.datos[element].fechahasta != null){
-        this.datos[element].fechahasta=this.transformaFecha(this.datos[element].fechahasta);
+        this.datos[element].fechahasta= this.datos[element].fechahasta //this.transformaFecha(this.datos[element].fechahasta);
       }
       if(this.datos[element].fechaalta != null){
-        this.datos[element].fechaalta=this.transformaFecha(this.datos[element].fechaalta);
+        this.datos[element].fechaalta= this.datos[element].fechaalta //this.transformaFecha(this.datos[element].fechaalta);
       }
       if(this.datos[element].fechabt != null){
-        this.datos[element].fechabt=this.transformaFecha(this.datos[element].fechabt);
+        this.datos[element].fechabt= this.datos[element].fechabt //this.transformaFecha(this.datos[element].fechabt);
       }
       if(this.datos[element].fechaestado != null){
-        this.datos[element].fechaestado=this.transformaFecha(this.datos[element].fechaestado);
-      }
+        this.datos[element].fechaestado= this.datos[element].fechaestado //this.transformaFecha(this.datos[element].fechaestado);
+      }*/
       this.datos[element].validado = "Validada";
       let tmp = this.datos[element];
       delete tmp.tiponombre;
@@ -371,21 +382,21 @@ anular(event){
   let array = [];
   event.forEach(element => {
     if(this.datos[element].validado == "Pendiente"){
-      if(this.datos[element].fechadesde != null){
-        this.datos[element].fechadesde=this.transformaFecha(this.datos[element].fechadesde);
+      /*if(this.datos[element].fechadesde != null){
+        this.datos[element].fechadesde= this.datos[element].fechadesde //this.transformaFecha(this.datos[element].fechadesde);
       }
       if(this.datos[element].fechahasta != null){
-        this.datos[element].fechahasta=this.transformaFecha(this.datos[element].fechahasta);
+        this.datos[element].fechahasta= this.datos[element].fechahasta //this.transformaFecha(this.datos[element].fechahasta);
       }
       if(this.datos[element].fechaalta != null){
-        this.datos[element].fechaalta=this.transformaFecha(this.datos[element].fechaalta);
+        this.datos[element].fechaalta= this.datos[element].fechaalta //this.transformaFecha(this.datos[element].fechaalta);
       }
       if(this.datos[element].fechabt != null){
-        this.datos[element].fechabt=this.transformaFecha(this.datos[element].fechabt);
+        this.datos[element].fechabt= this.datos[element].fechabt //this.transformaFecha(this.datos[element].fechabt);
       }
       if(this.datos[element].fechaestado != null){
-        this.datos[element].fechaestado =this.transformaFecha(this.datos[element].fechaestado);
-      }
+        this.datos[element].fechaestado = this.datos[element].fechaestado //this.transformaFecha(this.datos[element].fechaestado);
+      }*/
       this.datos[element].validado = "Anulada";
       let tmp = this.datos[element];
       delete tmp.tiponombre;
@@ -414,12 +425,12 @@ guardar(event) {
         bajaTemporal.nombre = element[1];
         bajaTemporal.tipo = element[2];
         bajaTemporal.descripcion = element[3];
-        bajaTemporal.fechadesde = element[4];
-        bajaTemporal.fechahasta = element[5];
-        bajaTemporal.fechaalta = element[6];
+        bajaTemporal.fechadesde = this.transformaFecha(element[4]);
+        bajaTemporal.fechahasta = this.transformaFecha(element[5]);
+        bajaTemporal.fechaalta = this.transformaFecha(element[6]);
         bajaTemporal.validado = element[7];
         bajaTemporal.idpersona = element[9];
-        bajaTemporal.fechabt = element[10];
+        bajaTemporal.fechabt = this.transformaFecha(element[10]);
 
         listaPrueba.push(bajaTemporal);
         bajaTemporal = new BajasTemporalesItem();
@@ -428,9 +439,9 @@ guardar(event) {
         bajaTemporal.nombre = element[1];
         bajaTemporal.tipo = element[2];
         bajaTemporal.descripcion = element[3];
-        bajaTemporal.fechadesde = element[4];
-        bajaTemporal.fechahasta = element[5];
-        bajaTemporal.fechaalta = element[6];
+        bajaTemporal.fechadesde = this.transformaFecha(element[4]);
+        bajaTemporal.fechahasta = this.transformaFecha(element[5]);
+        bajaTemporal.fechaalta = this.transformaFecha(element[6]);
         bajaTemporal.validado = element[7];
 
         nuevaBaja.push(bajaTemporal);
@@ -441,15 +452,15 @@ guardar(event) {
 
 if(nuevaBaja.length != 0){
   nuevaBaja.forEach(element => {
-    if(element.fechadesde != null || element.fechadesde != ""){
-      element.fechadesde=this.transformaFecha(element.fechadesde);
+    /*if(element.fechadesde != null || element.fechadesde != ""){
+      element.fechadesde= element.fechadesde //this.transformaFecha(element.fechadesde);
     }
     if(element.fechahasta != null || element.fechahasta != ""){
-      element.fechahasta=this.transformaFecha(element.fechahasta);
+      element.fechahasta= element.fechahasta //this.transformaFecha(element.fechahasta);
     }
     if(element.fechaalta != null || element.fechaalta != ""){
-      element.fechaalta=this.transformaFecha(element.fechaalta);
-    }
+      element.fechaalta= element.fechaalta //this.transformaFecha(element.fechaalta);
+    }*/
     if (element.validado == "Denegada") {
       element.validado  = "0";
     }
@@ -463,7 +474,6 @@ if(nuevaBaja.length != 0){
       element.validado  = "2";
     }
 
-    element.fechabt = new Date();
   });
   
   this.sigaServices.post("bajasTemporales_nuevaBajaTemporal", nuevaBaja).subscribe(
@@ -482,15 +492,15 @@ if(nuevaBaja.length != 0){
 
 if(listaPrueba.length != 0){
   listaPrueba.forEach(element => {
-  if(element.fechadesde != null){
-    element.fechadesde=this.transformaFecha(element.fechadesde);
+  /*if(element.fechadesde != null){
+    element.fechadesde=element.fechadesde //this.transformaFecha(element.fechadesde);
   }
   if(element.fechahasta != null){
-    element.fechahasta=this.transformaFecha(element.fechahasta);
+    element.fechahasta=element.fechahasta //this.transformaFecha(element.fechahasta);
   }
   if(element.fechaalta != null){
-    element.fechaalta=this.transformaFecha(element.fechaalta);
-  }
+    element.fechaalta=element.fechaalta //this.transformaFecha(element.fechaalta);
+  }*/
   if (element.validado == "Denegada") {
     element.validado  = "0";
   }
@@ -538,12 +548,12 @@ if(listaPrueba.length != 0){
         data => {
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
             this.progressSpinner = false;
+            this.search(this.filtros.filtroAux.historico);
       },
       err => {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
           this.progressSpinner = false;
         }
       );
-      this.search(this.filtros.filtroAux.historico);
   }
 }
