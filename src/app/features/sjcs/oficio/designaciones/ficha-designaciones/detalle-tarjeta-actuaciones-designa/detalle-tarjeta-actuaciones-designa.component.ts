@@ -12,11 +12,11 @@ export interface Col {
   width: string
 }
 
-export interface Actuacion {
-  isNew: boolean,
-  designaItem: any,
-  actuacion: ActuacionDesignaItem,
-  relaciones: any
+export class Actuacion {
+  isNew: boolean;
+  designaItem: any;
+  actuacion: ActuacionDesignaItem;
+  relaciones: any;
 }
 
 @Component({
