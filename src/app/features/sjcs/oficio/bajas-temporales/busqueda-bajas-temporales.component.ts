@@ -54,11 +54,11 @@ export class BajasTemporalesComponent implements OnInit {
     { id: "nombre", name: "busquedaSanciones.detalleSancion.letrado.literal" },
     { id: "tiponombre", name: "justiciaGratuita.sjcs.designas.DatosIden.turno" },
     { id: "descripcion", name: "administracion.auditoriaUsuarios.literal.motivo" },
-    { id: "fechadesde", name: "facturacion.seriesFacturacion.literal.fInicio" },
-    { id: "fechahasta", name: "censo.consultaDatos.literal.fechaFin" },
-    { id: "fechaalta", name: "formacion.busquedaInscripcion.fechaSolicitud" },
+    { id: "fechadesdeSinHora", name: "facturacion.seriesFacturacion.literal.fInicio" },
+    { id: "fechahastaSinHora", name: "censo.consultaDatos.literal.fechaFin" },
+    { id: "fechaaltaSinHora", name: "formacion.busquedaInscripcion.fechaSolicitud" },
     { id: "validado", name: "censo.busquedaSolicitudesModificacion.literal.estado" },
-    { id: "fechaestado", name: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaEstado" },
+    { id: "fechaestadoSinHora", name: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaEstado" },
   ];
 
   @Output() nuevo = new EventEmitter<any>();
@@ -106,10 +106,15 @@ export class BajasTemporalesComponent implements OnInit {
         this.datos = JSON.parse(n.body).bajasTemporalesItem;
         this.datos.forEach(element => {
 
+          element.fechadesdeSinHora = this.formatDateSinHora(element.fechadesde);
+          element.fechahastaSinHora = this.formatDateSinHora(element.fechahasta);
+          element.fechaaltaSinHora = this.formatDateSinHora(element.fechaalta);
           element.fechadesde = this.formatDate(element.fechadesde);
           element.fechahasta = this.formatDate(element.fechahasta);
           element.fechaalta = this.formatDate(element.fechaalta);
           element.fechabt = this.formatDate(element.fechabt);
+          
+          element.fechaestadoSinHora = this.formatDateSinHora(element.fechaestado);
           element.fechaestado = this.formatDate(element.fechaestado);
 
           if (element.tipo == "V") {
@@ -166,6 +171,11 @@ export class BajasTemporalesComponent implements OnInit {
     return this.datePipe.transform(date, pattern);
   }
 
+  formatDateSinHora(date) {
+    const pattern = 'dd/MM/yyyy';
+    return this.datePipe.transform(date, pattern);
+  }
+
 jsonToRow(datos){
   let arr = [];
 
@@ -177,11 +187,11 @@ jsonToRow(datos){
         { type: 'text', value: element.apellidos1 +" "+ element.apellidos2 + ", " + element.nombre},
         { type: 'text', value: element.tiponombre},
         { type: 'text', value: element.descripcion},
-        { type: 'text', value: element.fechadesde},
-        { type: 'text', value: element.fechahasta},
-        { type: 'text', value: element.fechaalta},
+        { type: 'text', value: element.fechadesdeSinHora},
+        { type: 'text', value: element.fechahastaSinHora},
+        { type: 'text', value: element.fechaaltaSinHora},
         { type: 'text', value: element.validado},
-        { type: 'text', value: element.fechaestado},
+        { type: 'text', value: element.fechaestadoSinHora},
         { type: 'text', value: element.idpersona},
         { type: 'text', value: element.fechabt},
         { type: 'text', value: element.nuevo}
@@ -199,11 +209,11 @@ jsonToRow(datos){
         { type: 'text', value: element.apellidos1 +" "+ element.apellidos2 + ", " + element.nombre},
         { type: 'select', combo: this.comboTipo ,value: element.tipo},
         { type: 'input', value: element.descripcion},
-        { type: 'datePicker', value: element.fechadesde},
-        { type: 'datePicker', value: element.fechahasta},
-        { type: 'text', value: element.fechaalta},
+        { type: 'text', value: element.fechadesdeSinHora},
+        { type: 'datePicker', value: element.fechahastaSinHora},
+        { type: 'text', value: element.fechaaltaSinHora},
         { type: 'text', value: element.validado},
-        { type: 'text', value: element.fechaestado},
+        { type: 'text', value: element.fechaestadoSinHora},
         { type: 'text', value: element.idpersona},
         { type: 'text', value: element.fechabt},
         { type: 'text', value: element.nuevo}
@@ -257,7 +267,7 @@ modDatos(event){
       if (rawDate.length == 10) {
         fecha = rawDate += " 00:00:00";
     } else {
-      fecha = undefined;
+      fecha = rawDate;
     }
     return fecha;
     }

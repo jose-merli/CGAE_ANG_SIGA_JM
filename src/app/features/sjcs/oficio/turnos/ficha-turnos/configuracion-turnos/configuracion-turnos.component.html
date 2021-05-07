@@ -1,7 +1,7 @@
 <p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
 
 <div class="busqueda-container" id="configTurnos">
-  <div *ngIf="permisosTarjeta" class="card">
+  <div class="card">
     <div class="card-header header-ficha">
       <div *ngIf="!openFicha" class="form-row">
         <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('configTurnos')">
@@ -77,7 +77,7 @@
 
             <div class="form-group col-lg-4 col-md-4">
               <br>
-              <p-checkbox [disabled]="disableAll" [(ngModel)]="turnosItem.letradoactuacionesCheck" binary="true" label="{{'justiciaGratuita.oficio.turnos.anadiractuacionletrado' | translate }}"
+              <p-checkbox [disabled]="disableAll && !isLetrado" [(ngModel)]="turnosItem.letradoactuacionesCheck" binary="true" label="{{'justiciaGratuita.oficio.turnos.anadiractuacionletrado' | translate }}"
                 name="groupname"></p-checkbox>
             </div>
 

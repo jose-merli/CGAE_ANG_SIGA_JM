@@ -13,6 +13,7 @@ import { CommonsService } from '../../../../../../_services/commons.service';
 import { PrisionItem } from '../../../../../../models/sjcs/PrisionItem';
 import { TurnosItems } from '../../../../../../models/sjcs/TurnosItems';
 import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
+import { Router } from '@angular/router';
 
 @Component({
   selector: "app-configuracion-colaoficio",
@@ -76,6 +77,7 @@ export class ConfiguracionColaOficioComponent implements OnInit {
   faxValido: boolean = true;
   mvlValido: boolean = true;
   edicionEmail: boolean = false;
+  isLetrado: boolean = false;
 
   @ViewChild("mailto") mailto;
 
@@ -94,7 +96,7 @@ export class ConfiguracionColaOficioComponent implements OnInit {
     },
   ];
 
-  constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
+  constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,private router: Router,
     private translateService: TranslateService, private commonsService: CommonsService, private commonsServices: CommonsService, private confirmationService: ConfirmationService) { }
 
 
@@ -133,15 +135,26 @@ export class ConfiguracionColaOficioComponent implements OnInit {
     if (this.persistenceService.getPermisos() != true) {
       this.disableAll = true;
     }
+//   let isLetrado:boolean = false;
+
+//  this.commonsService.getLetrado().then(respuesta => {​​  isLetrado = respuesta;    }​​);
+
     this.commonsService.checkAcceso(procesos_oficio.configuracionColaOficio)
-      .then(respuesta => {
-        this.permisosTarjeta = respuesta;
-        if (this.permisosTarjeta != true) {
-          this.permisosTarjeta = false;
-        } else {
-          this.permisosTarjeta = true;
-        }
-      }).catch(error => console.error(error));
+    .then(respuesta => {
+      this.permisosTarjeta = respuesta;
+      this.persistenceService.setPermisos(this.permisosTarjeta);
+      if (this.permisosTarjeta == undefined) {
+        sessionStorage.setItem("codError", "403");
+        sessionStorage.setItem(
+          "descError",
+          this.translateService.instant("generico.error.permiso.denegado")
+        );
+        this.router.navigate(["/errorAcceso"]);
+      }else if(this.persistenceService.getPermisos() != true){
+        this.disableAll = true;
+      }
+    }
+    ).catch(error => console.error(error));
 
 
     if (this.modoEdicion) {

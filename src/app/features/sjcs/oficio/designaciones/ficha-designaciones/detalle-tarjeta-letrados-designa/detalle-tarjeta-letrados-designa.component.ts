@@ -8,6 +8,8 @@ import { JusticiableBusquedaItem } from '../../../../../../models/sjcs/Justiciab
 import { Message } from 'primeng/components/common/api';
 import { DatosColegiadosItem } from '../../../../../../models/DatosColegiadosItem';
 import { Location, DatePipe } from '@angular/common';
+import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
+import { CommonsService } from '../../../../../../_services/commons.service';
 
 
 @Component({
@@ -27,6 +29,8 @@ export class DetalleTarjetaLetradosDesignaComponent implements OnInit {
   selectionMode: string = "single";
   numSelected = 0;
   art27: Boolean = false;
+  permisoEscritura: boolean;
+  isLetrado: boolean;
 
   selectedDatos: any = [];
 
@@ -41,7 +45,8 @@ export class DetalleTarjetaLetradosDesignaComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private persistenceService: PersistenceService,
     private router: Router,
-    private datepipe: DatePipe
+    private datepipe: DatePipe,
+    private commonsService: CommonsService,
   ) { }
 
   ngOnInit() {
@@ -59,6 +64,18 @@ export class DetalleTarjetaLetradosDesignaComponent implements OnInit {
       if(element.fechaSolRenuncia!=null) element.fechaSolRenuncia = this.datepipe.transform(element.fechaSolRenuncia, 'dd/MM/yyyy');
     });
     
+    this.sigaServices.get('getLetrado').subscribe(
+      (data) => {
+        if (data.value == 'S') {
+          this.isLetrado = true;
+        } else {
+          this.isLetrado = false;
+        }
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
     
   }
 

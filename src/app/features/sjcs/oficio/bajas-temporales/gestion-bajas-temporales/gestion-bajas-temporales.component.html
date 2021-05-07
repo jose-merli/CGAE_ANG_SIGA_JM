@@ -64,3 +64,11 @@
         </div>
     </div>
 </div>
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="deleteTurnosGuardias" icon="icon" width="425"
+  #deleteTurnosGuardias>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="deleteTurnosGuardias.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="deleteTurnosGuardias.reject()"></button>
+  </p-footer>
+</p-confirmDialog>

@@ -4,6 +4,9 @@ import { TranslateService } from '../../../../../../commons/translate';
 import { DesignaItem } from '../../../../../../models/sjcs/DesignaItem';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
+import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
+import { PersistenceService } from '../../../../../../_services/persistence.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-detalle-tarjeta-datos-facturacion-ficha-designacion-oficio',
@@ -20,15 +23,37 @@ export class DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent imple
     };
 
   msgs: Message[] = [];
+  permisoEscritura: boolean;
   @Input() isAnulada: boolean;
   @Input() campos;
   @Output() changeDataEvent = new EventEmitter<any>();
   progressSpinner: boolean = false;
 
-  constructor(private sigaServices: SigaServices, private commonsService: CommonsService, private translateService: TranslateService) { }
+  constructor(private sigaServices: SigaServices,
+     private commonsService: CommonsService,
+    private translateService: TranslateService,
+    private persistenceService: PersistenceService,
+    private router: Router) { }
 
   ngOnInit() {
     this.getComboPartidaPresupuestaria();
+
+    this.commonsService.checkAcceso(procesos_oficio.designaTarjetaFacturacion)
+          .then(respuesta => {
+            this.permisoEscritura = respuesta;
+            this.persistenceService.setPermisos(this.permisoEscritura);
+     
+            if (this.permisoEscritura == undefined) {
+              sessionStorage.setItem("codError", "403");
+              sessionStorage.setItem(
+                "descError",
+                this.translateService.instant("generico.error.permiso.denegado")
+              );
+              this.router.navigate(["/errorAcceso"]);
+            }
+            
+          }
+          ).catch(error => console.error(error)); 
   }
 
   getComboPartidaPresupuestaria() {
