@@ -908,7 +908,15 @@ export class FichaDesignacionesComponent implements OnInit {
         array2.push(array);
         array = [];
       });
-      this.compruebaProcurador(array2[0]);
+      this.checkFilter(array2[0]);
+    }
+  }
+
+  checkFilter(event){
+    if(event[0] == null || event[1] == null || event[4] == null || event[6] == null){
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
+    }else{
+      this.compruebaProcurador(event);
     }
   }
 
@@ -920,17 +928,13 @@ export class FichaDesignacionesComponent implements OnInit {
   compruebaProcurador(event) {
     this.progressSpinner = true;
 
-    this.listaPrueba = [];
-
-    this.listaPrueba.push(event[0], event[1], event[2], event[3], event[4], event[5], event[6]);
-
     this.sigaServices.post("designaciones_comprobarProcurador", event[1]).subscribe(
       data => {
 
         if (JSON.parse(data.body).procuradorItems[0] != undefined) {
           this.showModal2 = true;
         } else {
-          this.comprobarFechaProcurador();
+          this.comprobarFechaProcurador(event);
         }
         this.progressSpinner = false;
       },
@@ -941,16 +945,16 @@ export class FichaDesignacionesComponent implements OnInit {
     );
   }
 
-  comprobarFechaProcurador() {
+  comprobarFechaProcurador(event) {
     this.progressSpinner = true;
 
-    this.sigaServices.post("designaciones_comprobarFechaProcurador", this.listaPrueba).subscribe(
+    this.sigaServices.post("designaciones_comprobarFechaProcurador", event).subscribe(
       data => {
         
         if (JSON.parse(data.body).procuradorItems[0] != undefined) {
           this.showModal3 = true;
         } else {
-          this.guardarProcurador(this.listaPrueba);
+          this.guardarProcurador(event);
         }
         this.progressSpinner = false;
       },
@@ -1830,27 +1834,4 @@ export class FichaDesignacionesComponent implements OnInit {
     );
 
   }
-
-  callConfirmationSave(id) {
-    this.progressSpinner = false;
-    this.confirmationSave = true;
-
-    this.confirmationService.confirm({
-      key: "cdSave",
-      message: this.translateService.instant("justiciaGratuita.oficio.designaciones.guardarProcurador"),
-      icon: "fa fa-search ",
-      accept: () => {
-        this.confirmationSave = false;
-        this.progressSpinner = true;
-        this.guardarProcuradorEJG(this.listaPrueba);
-        this.cdSave.hide();
-      },
-      reject: () => {
-        this.confirmationSave = false;
-        this.progressSpinner = true;
-        this.cdSave.hide();
-      }
-    });
-  }
-
 }
