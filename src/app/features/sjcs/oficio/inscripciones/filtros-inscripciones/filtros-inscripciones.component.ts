@@ -201,7 +201,6 @@ export class FiltrosInscripciones implements OnInit {
           this.persistenceService.setDatos(colegiadoConectado);
           sessionStorage.setItem("origin","newInscrip");
           this.router.navigate(["/gestionInscripciones"]);
-          
         })
       });
     }   
