@@ -16,6 +16,7 @@ import { InscripcionesItems } from '../../../../../models/sjcs/InscripcionesItem
 import { CommonsService } from '../../../../../_services/commons.service';
 import { ConfirmationService } from '../../../../../../../node_modules/primeng/primeng';
 import { TurnosItems } from '../../../../../models/sjcs/TurnosItems';
+import { SigaStorageService } from '../../../../../siga-storage.service';
 
 
 @Component({
@@ -81,16 +82,12 @@ export class TablaInscripcionesComponent implements OnInit {
     private persistenceService: PersistenceService,
     private datepipe: DatePipe,
     private commonsService: CommonsService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private localStorageService: SigaStorageService
   ) { }
 
   ngOnInit() {
-    if (
-      sessionStorage.getItem("isLetrado") != null &&
-      sessionStorage.getItem("isLetrado") != undefined
-    ) {
-      this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
-    }
+    this.isLetrado = this.localStorageService.isLetrado;
     this.selectedDatos = [];
     this.datos.fechaActual = new Date();
     this.getCols();
