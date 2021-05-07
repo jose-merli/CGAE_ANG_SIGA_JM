@@ -3,6 +3,7 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Sort } from '@angular/material/sort';
 import { Message } from 'primeng/components/common/api';
+import { ConfirmationService } from 'primeng/primeng';
 import { Row, Cell } from './gestion-bajas-temporales.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { DatePipe } from '@angular/common';
@@ -91,7 +92,8 @@ export class GestionBajasTemporalesComponent implements OnInit {
     private persistenceService: PersistenceService,
     private pipe : DatePipe,
 		private router: Router,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private confirmationService: ConfirmationService
   ) {
     this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
       for (let i = 0; i < this.table.nativeElement.children.length; i++) {
@@ -439,8 +441,29 @@ export class GestionBajasTemporalesComponent implements OnInit {
   }
 
   checkGuardar(){
+    let keyConfirmation = "deleteTurnosGuardias";
+
     if(this.rowGroups[0].cells[2].value != "" && this.rowGroups[0].cells[3].value != "" && this.rowGroups[0].cells[4].value != "" && this.rowGroups[0].cells[5].value != ""){
-      this.modDatos.emit(this.rowGroups);
+      this.confirmationService.confirm({
+        key: keyConfirmation,
+        message: this.translateService.instant('sjcs.oficio.bajastemporales.nuevo.mensajeConfirmacion'),
+        icon: "fa fa-trash-alt",
+        accept: () => {
+          this.modDatos.emit(this.rowGroups);
+        },
+        reject: () => {
+          this.msgs = [
+            {
+              severity: "info",
+              summary: "info",
+              detail: this.translateService.instant(
+                "general.message.accion.cancelada"
+              )
+            }
+          ];
+        }
+      });
+      
     }else{
       this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("general.message.camposObligatorios")});
     }
