@@ -722,10 +722,7 @@ export class TablaInscripcionesComponent implements OnInit {
       //sessionStorage.setItem("turno", JSON.stringify(evento));
       this.router.navigate(["/gestionInscripciones"]);
     }
-
-
   }
-
 
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;

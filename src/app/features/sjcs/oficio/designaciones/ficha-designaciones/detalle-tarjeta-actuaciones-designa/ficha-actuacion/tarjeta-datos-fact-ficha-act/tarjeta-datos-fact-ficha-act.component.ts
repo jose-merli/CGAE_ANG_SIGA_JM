@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, OnDestroy, SimpleChanges } from '@angular/core';
 import { Message } from 'primeng/components/common/api';
 import { SigaServices } from '../../../../../../../../_services/siga.service';
 import { CommonsService } from '../../../../../../../../_services/commons.service';
@@ -26,11 +26,19 @@ export class TarjetaDatosFactFichaActComponent implements OnInit, OnDestroy {
 
   @Output() changeDataEvent = new EventEmitter<any>();
   progressSpinner: boolean = false;
+  datosMod: boolean = true;
 
   constructor(private sigaServices: SigaServices, private commonsService: CommonsService, private translateService: TranslateService) { }
 
   ngOnInit() {
     this.getComboPartidaPresupuestaria();
+  }
+
+  compararSelector(){
+    let valorIni = JSON.parse(sessionStorage.getItem("datosIniActuDesignaDatosFact"));
+    if(this.selector.value != valorIni.value){
+      this.datosMod = false;
+    }
   }
 
   getComboPartidaPresupuestaria() {
@@ -122,6 +130,7 @@ export class TarjetaDatosFactFichaActComponent implements OnInit, OnDestroy {
       this.changeDataEvent.emit({ tarjeta: 'sjcsDesigActuaOfiDatFac', partida: valorIni.label });
       this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
     }
+    this.compararSelector();
   }
 
   showMsg(severity, summary, detail) {
