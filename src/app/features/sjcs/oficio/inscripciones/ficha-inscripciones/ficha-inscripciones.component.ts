@@ -11,6 +11,9 @@ import { InscripcionesObject } from '../../../../../models/sjcs/InscripcionesObj
 import { TranslateService } from '../../../../../commons/translate/translation.service';
 import { ConfirmationService } from '../../../../../../../node_modules/primeng/primeng';
 import { ColegiadoItem } from '../../../../../models/ColegiadoItem';
+import { ParametroRequestDto } from '../../../../../models/ParametroRequestDto';
+import { ParametroDto } from '../../../../../models/ParametroDto';
+import { SigaStorageService } from '../../../../../siga-storage.service';
 
 @Component({
 	selector: 'app-ficha-inscripciones',
@@ -19,7 +22,11 @@ import { ColegiadoItem } from '../../../../../models/ColegiadoItem';
 	encapsulation: ViewEncapsulation.None
 })
 export class FichaInscripcionesComponent implements OnInit {
+	permisosTarjeta: boolean = true;
+    permisosModificacionDirecciones: boolean = true;
 	idModelo: string;
+	searchParametros: ParametroDto = new ParametroDto();
+	institucionActual: any;
 	fichasPosibles: any[];
 	filtrosConsulta;
 	idPersona: string;
@@ -53,9 +60,11 @@ export class FichaInscripcionesComponent implements OnInit {
 	turno: any;
 	historico: boolean = false;
 	datosColaOficio;
+	valorParametroDirecciones: any;
 	constructor(public datepipe: DatePipe, private translateService: TranslateService, private route: ActivatedRoute, 
 		 private sigaServices: SigaServices, private location: Location, private persistenceService: PersistenceService,
-		 private router: Router, private commonsService: CommonsService, private confirmationService: ConfirmationService) { }
+		 private router: Router, private commonsService: CommonsService, private confirmationService: ConfirmationService,
+		 private localStorageService: SigaStorageService) { }
 
 	ngAfterViewInit(): void {
 		this.enviarEnlacesTarjeta();
@@ -63,14 +72,53 @@ export class FichaInscripcionesComponent implements OnInit {
 	}
 
 	ngOnInit() {
+		this.commonsService.checkAcceso(procesos_oficio.modificacionDirecciones)
+		.then(respuesta => {
+		  this.permisosModificacionDirecciones = respuesta;
+		  this.persistenceService.setPermisos(this.permisosTarjeta);
+		  if (this.permisosModificacionDirecciones == undefined) {
+			sessionStorage.setItem("codError", "403");
+			sessionStorage.setItem(
+			  "descError",
+			  this.translateService.instant("generico.error.permiso.denegado")
+			);
+			this.router.navigate(["/errorAcceso"]);
+		  }else if(this.persistenceService.getPermisos() != true){
+			this.permisosModificacionDirecciones = true;
+		  }
+		}
+		).catch(error => console.error(error));
+		this.sigaServices.get("institucionActual").subscribe(n => {
+		  this.institucionActual = n.value;
+		  let parametro = new ParametroRequestDto();
+		  parametro.idInstitucion = this.institucionActual;
+		  parametro.modulo = "CEN";
+		  parametro.parametrosGenerales = "SOLICITUDES_MODIF_CENSO";
+		  this.sigaServices
+			.postPaginado("parametros_search", "?numPagina=1", parametro)
+			.subscribe(
+			  data => {
+				this.searchParametros = JSON.parse(data["body"]);
+				let datosBuscar = this.searchParametros.parametrosItems;
+				datosBuscar.forEach(element => {
+				  if (element.parametro == "SOLICITUDES_MODIF_CENSO") {
+					this.valorParametroDirecciones = element.valor;
+				  }
+				});
+			
+			  },
+			  err => {
+				console.log(err);
+			  },
+			  () => {
+			  }
+			);
+		});
+
+
 		this.datosTarjetaResumen = [];		
 		
-		if (
-			sessionStorage.getItem("isLetrado") != null &&
-			sessionStorage.getItem("isLetrado") != undefined
-		) {
-			this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
-		}
+		let isLetrado = this.localStorageService.isLetrado;
 
 		if (this.persistenceService.getPermisos()) {
 			this.permisos = true;
@@ -463,6 +511,13 @@ export class FichaInscripcionesComponent implements OnInit {
 		let body = new InscripcionesObject();
 		body.inscripcionesItem= this.inscripcionesSelected.inscripcionesSelected;
         body.inscripcionesItem.forEach(element => {
+		if(this.persistenceService.getPermisos() != true){
+			element.estadonombre = "NoPermisos";// Se crea solicitun sin validar
+		}else{
+			if(this.valorParametroDirecciones=="N"){
+				element.estadonombre = "PendienteDeValidar";
+			}
+		}
         element.idpersona= this.idPersona;
         element.observacionessolicitud = this.datos.observaciones;
       	});

@@ -100,9 +100,9 @@
                   <td *ngFor="let col of columns">
                     <span *ngIf="col.field !='valor'">{{ dato[col.field] | translate }}</span>
                     <!-- <span *ngIf="col.field =='valor' && dato.value== 'tlf'">{{ dato[col.field]}}</span> -->
-                    <input *ngIf="col.field =='valor' && dato.value== 'tlf'" [(ngModel)]="dato.valor" type="text" class="form-control" disabled
+                    <input *ngIf="col.field =='valor' && dato.value== 'tlf'" [(ngModel)]="dato.valor" type="text" class="form-control" [disabled] = "disableDirecciones"
                     pInputText />
-                    <input *ngIf="col.field =='valor' && dato.value== 'mvl'" [(ngModel)]="dato.valor" type="text" class="form-control" disabled
+                    <input *ngIf="col.field =='valor' && dato.value== 'mvl'" [(ngModel)]="dato.valor" type="text" class="form-control" [disabled] = "disableDirecciones"
                     pInputText />
                   </td>
                 </tr>

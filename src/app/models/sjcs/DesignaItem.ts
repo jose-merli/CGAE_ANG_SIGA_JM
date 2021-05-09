@@ -51,7 +51,8 @@ export class DesignaItem {
 	acreditacion: String;
 	idAcreditacion: String[];
 	modulo: String;
-	idModulo: String[];
+	idModulo: String;
+	idModulos: String[];
 	fechaJustificacionDesde: Date;
 	fechaJustificacionHasta: Date;
 	origen: String;

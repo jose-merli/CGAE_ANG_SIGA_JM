@@ -109,7 +109,7 @@
           </label>
           <!-- [disabled]="!permisos || ((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledValidar || !isLetrado)" -->
           <button *ngIf="!historico" pButton
-            [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledValidar || isLetrado)" (click)="validar(selectedDatos)"
+            [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0 || (disabledValidar && isLetrado))" (click)="validar(selectedDatos)"
             type="button" label="{{ 'general.boton.validar' | translate}}"></button>
 
         </div>
@@ -118,21 +118,21 @@
           </label>
           <!-- [disabled]="!permisos || ((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledDenegar || !isLetrado)" -->
           <button *ngIf="!historico" pButton
-            [disabled]="!permisos || ((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledDenegar || isLetrado)" (click)="denegar(selectedDatos)"
+            [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledDenegar || isLetrado)" (click)="denegar(selectedDatos)"
             type="button" label="{{ 'general.boton.denegar' | translate}}"></button>
         </div>
         <div class="form-group">
           <label>
           </label>
           <button *ngIf="!historico" pButton
-            [disabled]="!permisos || ((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledSolicitarBaja)" (click)="solicitarBaja(selectedDatos)"
+            [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledSolicitarBaja)" (click)="solicitarBaja(selectedDatos)"
             type="button" label="{{ 'general.boton.solicitarbaja' | translate}}"></button>
         </div>
         <div class="form-group">
           <label>
           </label>
           <button *ngIf="!historico" pButton
-            [disabled]="!permisos || ((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledCambiarFecha)" (click)="cambiarFecha(selectedDatos)"
+            [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledCambiarFecha || isLetrado)" (click)="cambiarFecha(selectedDatos)"
             type="button" label="{{ 'justiciaGratuita.oficio.inscripciones.cambiarfecha' | translate}}"></button>
         </div>
       </div>

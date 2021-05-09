@@ -524,8 +524,8 @@ export class FichaDesignacionesComponent implements OnInit {
         this.campos.idJuzgado = Number(dataRefresh.idJuzgado);
       }
 
-      if(this.campos.idModulo == undefined || this.campos.idModulo == null) {
-        this.campos.idModulo = [dataRefresh.idProcedimiento];
+      if(this.campos.idModulos == undefined || this.campos.idModulos == null) {
+        this.campos.idModulos = [dataRefresh.idProcedimiento];
       }
 
       if(this.campos.idProcedimiento == undefined || this.campos.idProcedimiento == null) {
