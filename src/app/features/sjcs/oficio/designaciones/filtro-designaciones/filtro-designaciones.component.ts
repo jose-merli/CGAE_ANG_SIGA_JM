@@ -610,7 +610,7 @@ getComboCalidad() {
         designa.numColegiado = this.usuarioBusquedaExpress.numColegiado;
 
         designa.idJuzgados = this.body.idJuzgados;
-        designa.idModulo = this.body.idModulo;
+        designa.idModulos = this.body.idModulos;
         designa.idCalidad = this.body.idCalidad;
         if(this.body.anoProcedimiento != null && this.body.anoProcedimiento != undefined){
           designa.numProcedimiento = this.body.anoProcedimiento.toString();
