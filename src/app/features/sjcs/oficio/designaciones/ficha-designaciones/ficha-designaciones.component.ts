@@ -20,6 +20,7 @@ import { ControlAccesoDto } from '../../../../../models/ControlAccesoDto';
 import { DocumentoDesignaItem } from '../../../../../models/sjcs/DocumentoDesignaItem';
 import { DocumentoDesignaObject } from '../../../../../models/sjcs/DocumentoDesignaObject';
 import { Dialog } from 'primeng/dialog';
+import { SigaStorageService } from '../../../../../siga-storage.service';
 
 @Component({
   selector: 'app-ficha-designaciones',
@@ -217,15 +218,15 @@ export class FichaDesignacionesComponent implements OnInit {
     private translateService: TranslateService, private sigaServices: SigaServices, private datepipe: DatePipe,
     private gbtservice: DetalleTarjetaProcuradorFichaDesignaionOficioService,
     private commonsService: CommonsService, private router: Router,
-    private confirmationService: ConfirmationService) { }
+    private confirmationService: ConfirmationService,
+    private localStorageService: SigaStorageService) { }
 
   ngOnInit() {
     this.progressSpinner = true;
     this.getDataLoggedUser();
-    if (sessionStorage.getItem("isLetrado") != null && sessionStorage.getItem("isLetrado") != undefined) {
-      this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
-    }
-
+    
+    this.isLetrado = this.localStorageService.isLetrado;
+    
     this.checkAcceso();
     if (!this.esColegiado) {
       // this.listaTarjetas[1].detalle = false;
@@ -367,6 +368,21 @@ export class FichaDesignacionesComponent implements OnInit {
       this.getIdPartidaPresupuestaria(this.campos);
       if(!this.isLetrado){
         this.searchComunicaciones();
+      }else{
+        this.sigaServices.get("usuario_logeado").subscribe(n => {
+
+          const usuario = n.usuarioLogeadoItem;
+          const colegiadoItem = new ColegiadoItem();
+          colegiadoItem.nif = usuario[0].dni;
+  
+          this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(
+            usr => {
+              this.usuarioLogado = JSON.parse(usr.body).colegiadoItem[0];
+              this.progressSpinner = false;
+              this.searchComunicaciones();
+            });
+  
+        });
       }
       //this.searchColegiado();
       /* {
