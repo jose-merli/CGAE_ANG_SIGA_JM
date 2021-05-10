@@ -125,7 +125,10 @@ export class DatosGeneralesEjgComponent implements OnInit {
 getPrestacionesRechazadasEJG() {
   this.sigaServices.post("gestionejg_searchPrestacionesRechazadasEJG", this.body).subscribe(
     n => {
-      this.bodyInicial.prestacionesRechazadas = n.body;
+      this.bodyInicial.prestacionesRechazadas = [];
+      JSON.parse(n.body).forEach(element => {
+        this.bodyInicial.prestacionesRechazadas.push(element.idprestacion.toString());
+      });;
       this.bodyInicial.prestacion = this.body.prestacion.filter(x => this.bodyInicial.prestacionesRechazadas.indexOf(x) === -1);
       this.body.prestacion = this.bodyInicial.prestacion;
     },
