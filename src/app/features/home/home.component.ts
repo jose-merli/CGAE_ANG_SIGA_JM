@@ -16,6 +16,7 @@ import { Observable } from 'rxjs/Rx';
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { AuthenticationService } from '../../_services/authentication.service';
 import { SigaStorageService } from '../../siga-storage.service';
+import { ColegiadoItem } from '../../models/ColegiadoItem';
 @Component({
 	selector: 'app-home',
 	templateUrl: './home.component.html',
@@ -46,6 +47,7 @@ export class HomeComponent implements OnInit {
 		this.getColegiadoLogeado();
 		//this.getMantenerSesion();
 		this.oldSigaLogin();
+		this.getDataLoggedUser();
 	}
 
 	oldSigaLogin() {
@@ -139,6 +141,20 @@ export class HomeComponent implements OnInit {
 			if (oldSigaResponse == 200) {
 				return true;
 			}
+		});
+	}
+
+	getDataLoggedUser() {
+		this.sigaServices.get("usuario_logeado").subscribe(n => {
+			const usuario = n.usuarioLogeadoItem;
+			const colegiadoItem = new ColegiadoItem();
+			colegiadoItem.nif = usuario[0].dni;
+			this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(
+				usr => {
+					let usuarioLogado = JSON.parse(usr.body).colegiadoItem[0];
+					this.localStorageService.idPersona = usuarioLogado.idPersona;
+					this.localStorageService.numColegiado = usuarioLogado.numColegiado;
+				});
 		});
 	}
 }
