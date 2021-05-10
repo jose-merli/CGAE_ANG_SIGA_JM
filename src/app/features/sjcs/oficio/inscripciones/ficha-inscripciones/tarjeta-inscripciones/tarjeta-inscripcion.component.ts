@@ -575,7 +575,7 @@ export class TarjetaInscripcion implements OnInit {
       }else if(turnoGuardia != null && turnoGuardia.indexOf('Turno') != -1){
         this.progressSpinner = true;
         let turnoItem = new TurnosItems();
-        turnoItem.idturno = evento.idTurno;
+        turnoItem.idturno = evento.idturno;
         turnoItem.nombre = evento.nombre_turno;
         this.persistenceService.setDatos(turnoItem);
         this.router.navigate(["/gestionTurnos"], { queryParams: { idturno: evento.idturno } });
