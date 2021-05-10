@@ -41,7 +41,7 @@
                   <div *ngIf="col.field =='nombre_turno'">       
                   <p-checkbox [(ngModel)]='rowData.selectedBooleanPadre' [disabled]="disableAll || rowData.fechasolicitud" (onChange)="seleccionarPadre(rowData,$event)" binary="true"></p-checkbox>      
                   </div>                     
-                <a href="#" [pRowToggler]="rowData">
+                <a [pRowToggler]="rowData">
                    
                   <div class="text-center" *ngIf="col.field =='nombre_turno'">                       
                       <i

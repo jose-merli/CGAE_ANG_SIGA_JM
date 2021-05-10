@@ -63,7 +63,7 @@ export class FichaDesignacionesComponent implements OnInit {
   refreshDesigna;
   msgs;
   tarjetaFija = {
-    nombre: "Información Resumen",
+    nombre: this.translateService.instant("justiciaGratuita.oficio.turnos.inforesumen"), 
     icono: 'fas fa-clipboard',
     detalle: false,
     fixed: true,
@@ -141,7 +141,8 @@ export class FichaDesignacionesComponent implements OnInit {
       opened: false,
       campos: [],
       enlaces: [],
-      enlaceCardClosed: {}
+      enlaceCardClosed: {},
+      letrado: {}
     },
     {
       id: 'sjcsDesigRel',
