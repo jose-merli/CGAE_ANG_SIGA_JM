@@ -7,6 +7,12 @@ import { DatePipe } from '@angular/common';
 import { TranslateService } from '../../../../../../../../commons/translate';
 import { ActuacionDesignaItem } from '../../../../../../../../models/sjcs/ActuacionDesignaItem';
 
+export interface ComboItemAcreditacion {
+  label: string;
+  value: any;
+  obligaNigNumPro: boolean;
+}
+
 @Component({
   selector: 'app-tarjeta-datos-gen-ficha-act',
   templateUrl: './tarjeta-datos-gen-ficha-act.component.html',
@@ -17,7 +23,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
   comboJuzgados: SelectItem[] = [];
   comboProcedimientos: SelectItem[] = [];
   comboModulos: SelectItem[] = [];
-  comboAcreditaciones: SelectItem[] = [];
+  comboAcreditaciones: ComboItemAcreditacion[] = [];
   comboPrisiones: SelectItem[] = [];
   comboMotivosCambio: SelectItem[] = [];
 
@@ -63,11 +69,13 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     ],
     inputNig: {
       label: 'NIG',
-      value: ''
+      value: '',
+      obligatorio: false
     },
     inputNumPro: {
       label: 'Nº Procedimiento',
-      value: ''
+      value: '',
+      obligatorio: false
     },
     textarea: {
       label: 'Observaciones',
@@ -271,10 +279,31 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
       },
       () => {
         this.progressSpinner = false;
+        this.comboAcreditaciones.forEach(el => {
+          el.obligaNigNumPro = el.value.split(',')[1] == '0' ? false : true;
+          el.value = el.value.split(',')[0];
+        });
         this.datos.selectores[4].opciones = this.comboAcreditaciones;
         if (this.comboAcreditaciones.find(el => el.value == this.datos.selectores.find(el => el.id == 'acreditacion').value) == undefined) {
           this.datos.selectores.find(el => el.id == 'acreditacion').value = '';
         }
+
+        let comboAcre = this.datos.selectores.find(el => el.id == 'acreditacion');
+
+        if (comboAcre.value != undefined && comboAcre != null || (typeof comboAcre.value == 'string' && comboAcre.value.trim().length > 0)) {
+
+          let obligar = this.datos.selectores.find(el => el.id == 'acreditacion').opciones.find(el => el.value == this.datos.selectores.find(el => el.id == 'acreditacion').value).obligaNigNumPro;
+
+          if (obligar) {
+            this.datos.inputNig.obligatorio = true;
+            this.datos.inputNumPro.obligatorio = true;
+          } else {
+            this.datos.inputNig.obligatorio = false;
+            this.datos.inputNumPro.obligatorio = false;
+          }
+
+        }
+
       }
     );
   }
@@ -354,7 +383,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     this.datos.inputs1[4].value = this.actuacionDesigna.actuacion.numeroAsunto;
     this.datos.datePicker.value = new Date(this.actuacionDesigna.actuacion.fechaActuacion.split('/').reverse().join('-'));
     this.datos.inputs1[1].value = this.actuacionDesigna.actuacion.numColegiado;
-    this.datos.inputs1[2].value = this.actuacionDesigna.actuacion.letrado;
+    this.datos.inputs1[2].value = `${this.actuacionDesigna.actuacion.numColegiado} - ${this.actuacionDesigna.actuacion.letrado}`;
     this.datos.inputNig.value = this.actuacionDesigna.actuacion.nig;
     this.datos.inputNumPro.value = this.actuacionDesigna.actuacion.numProcedimiento;
     this.datos.selectores[0].value = this.actuacionDesigna.actuacion.idJuzgado;
@@ -492,12 +521,12 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     let modulo = this.datos.selectores.find(el => el.id == 'modulo');
     let acreditacion = this.datos.selectores.find(el => el.id == 'acreditacion');
 
-    if (!this.validarNig(this.datos.inputNig.value)) {
+    if (!this.validarNig(this.datos.inputNig.value) || (this.datos.inputNig.obligatorio && this.datos.inputNig.value.trim().length == 0)) {
       this.showMsg('error', this.translateService.instant('general.message.incorrect'), 'Formato del campo NIG inválido');
       error = true;
     }
 
-    if (!error && !this.validarNProcedimiento(this.datos.inputNumPro.value)) {
+    if (!error && !this.validarNProcedimiento(this.datos.inputNumPro.value) || (this.datos.inputNumPro.obligatorio && this.datos.inputNumPro.value.trim().length == 0)) {
       this.showMsg('error', this.translateService.instant('general.message.incorrect'), 'Formato del campo Nº Procedimiento inválido');
       error = true;
     }
@@ -685,6 +714,19 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
         this.cargaAcreditacionesPorModulo(this.datos.selectores.find(el => el.id == 'modulo').value);
       }
       this.datos.selectores.find(el => el.id == 'acreditacion').value = '';
+    } else if (selector.id == 'acreditacion') {
+      if ((selector.value != undefined && selector.value != null) || (typeof selector.value == 'string' && selector.value != '')) {
+        let obligar = this.datos.selectores.find(el => el.id == 'acreditacion').opciones.find(el => el.value == selector.value).obligaNigNumPro;
+
+        if (obligar) {
+          this.datos.inputNig.obligatorio = true;
+          this.datos.inputNumPro.obligatorio = true;
+        } else {
+          this.datos.inputNig.obligatorio = false;
+          this.datos.inputNumPro.obligatorio = false;
+        }
+
+      }
     }
   }
 

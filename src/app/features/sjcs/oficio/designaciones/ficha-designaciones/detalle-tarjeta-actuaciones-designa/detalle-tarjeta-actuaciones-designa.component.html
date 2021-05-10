@@ -61,12 +61,12 @@
       label="{{'general.message.mostrarHistorico' | translate}}" (click)="toogleHistory(true)"></button>
     <button *ngIf="historico" pButton type="button" icon="fa fa-undo" iconPos="left"
       label="{{'general.message.ocultarHistorico' | translate}}" (click)="toogleHistory(false)"></button>
-    <button *ngIf="!historico" [disabled]="!isAnySelected()" pButton type="button" iconPos="left"
+    <button *ngIf="!historico" [disabled]="!isAnySelected() || isLetrado" pButton type="button" iconPos="left"
       label="{{ 'general.boton.anular' | translate}}" (click)="anular()"></button>
-    <button *ngIf="historico" [disabled]="!isAnySelected()" pButton type="button" iconPos="left"
+    <button *ngIf="historico" [disabled]="!isAnySelected() || isLetrado" pButton type="button" iconPos="left"
       label="{{ 'general.boton.reactivar' | translate}}" (click)="reactivar()"></button>
     <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"
-      (click)="nuevo()"></button>
+      (click)="nuevo()"  ></button>
   </div>
 </div>
 <!-- Tabla de actuaciones -->

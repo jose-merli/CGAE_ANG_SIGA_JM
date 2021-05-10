@@ -142,6 +142,13 @@
 <!--Guardar Procurador-->
 <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}"
     [(visible)]="showModal2" key="cdSave" #cdSave icon="icon" width="425">
+    <div class="bloque col-lg-12 col-md-12">
+        <div class="row">
+          <div class="form-group col-lg-6 col-md-6">
+            <label>{{ "justiciaGratuita.oficio.designaciones.guardarProcurador" | translate }} </label>
+         </div>
+        </div>
+      </div>
     <p-footer>
         <button type="button" pButton icon="fa-check" label="Si" (click)="guardarProcuradorEJG(listaPrueba)"></button>
         <button type="button" pButton icon="fa-close" label="No" (click)="cerrarModal()"></button>
@@ -149,7 +156,14 @@
 </p-confirmDialog>
 
 <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}"
-    [(visible)]="showModal3" icon="fa fa-question-circle" width="425">
+    [(visible)]="showModal3" key="cdFecha" #cdFecha icon="fa fa-question-circle" width="425">    
+    <div class="bloque col-lg-12 col-md-12">
+        <div class="row">
+          <div class="form-group col-lg-6 col-md-6">
+            <label>{{ "justiciaGratuita.oficio.designaciones.eliminarDesignacion" | translate }} </label>
+         </div>
+        </div>
+      </div>
     <p-footer>
         <button type="button" pButton icon="fa-check" label="Si" (click)="actualizarProcurador()"></button>
         <button type="button" pButton icon="fa-close" label="No" (click)="cerrarModal()"></button>

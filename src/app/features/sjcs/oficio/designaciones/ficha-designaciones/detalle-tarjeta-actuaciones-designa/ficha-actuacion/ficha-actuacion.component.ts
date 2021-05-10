@@ -10,6 +10,7 @@ import { Message } from 'primeng/components/common/api';
 import { ActuacionDesignaObject } from '../../../../../../../models/sjcs/ActuacionDesignaObject';
 import { DocumentoActDesignaObject } from '../../../../../../../models/sjcs/DocumentoActDesignaObject';
 import { DocumentoActDesignaItem } from '../../../../../../../models/sjcs/DocumentoActDesignaItem';
+import { Actuacion } from '../detalle-tarjeta-actuaciones-designa.component';
 
 @Component({
   selector: 'app-ficha-actuacion',
@@ -138,7 +139,7 @@ export class FichaActuacionComponent implements OnInit {
   ];
 
   institucionActual: string = '';
-  actuacionDesigna: any;
+  actuacionDesigna: Actuacion;
   isNewActDesig: boolean = false;
   progressSpinner: boolean = false;
   isAnulada: boolean = false;
@@ -450,9 +451,20 @@ export class FichaActuacionComponent implements OnInit {
           this.showMsg('error', 'Error', this.translateService.instant(object.error.description.toString()));
         } else {
           let resp = object.actuacionesDesignaItems[0];
+          let relaciones = null;
+
+          if (this.actuacionDesigna.relaciones != null && this.actuacionDesigna.relaciones.length > 0) {
+            relaciones = this.actuacionDesigna.relaciones.slice();
+          }
+
+          let designa = JSON.parse(JSON.stringify(this.actuacionDesigna.designaItem));
+
+          this.actuacionDesigna = new Actuacion();
+          this.actuacionDesigna.designaItem = designa;
           this.actuacionDesigna.actuacion = resp;
           this.actuacionDesigna.isNew = false;
           this.isNewActDesig = false;
+          this.actuacionDesigna.relaciones = relaciones;
           this.establecerValoresIniciales();
         }
       },

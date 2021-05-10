@@ -8,6 +8,8 @@ import { TurnosItems } from '../../../../../models/sjcs/TurnosItems';
 import { InscripcionesItems } from '../../../../../models/sjcs/InscripcionesItems';
 import { CommonsService } from '../../../../../../app/_services/commons.service';
 import { ColegiadoItem } from '../../../../../models/ColegiadoItem';
+import { procesos_oficio } from '../../../../../permisos/procesos_oficio';
+import { SigaStorageService } from '../../../../../siga-storage.service';
 
 @Component({
   selector: 'app-filtrosinscripciones',
@@ -55,6 +57,7 @@ export class FiltrosInscripciones implements OnInit {
 
   textSelected: String = 'general.boton.seleccionar';
   @Input() permisos;
+  permisosTarjeta: boolean = true;
   /*Éste método es útil cuando queremos queremos informar de cambios en los datos desde el hijo,
     por ejemplo, si tenemos un botón en el componente hijo y queremos actualizar los datos del padre.*/
   @Output() busqueda = new EventEmitter<boolean>();
@@ -63,20 +66,34 @@ export class FiltrosInscripciones implements OnInit {
     private sigaServices: SigaServices,
     private translateService: TranslateService,
     private commonsService: CommonsService,
-    private persistenceService: PersistenceService) { }
+    private persistenceService: PersistenceService,
+    private localStorageService: SigaStorageService) { }
 
   ngOnInit() {  
-    if (sessionStorage.getItem("isLetrado") != null && sessionStorage.getItem("isLetrado") != undefined) {
-      this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
-    }
-
+    
+    this.isLetrado = this.localStorageService.isLetrado;
+    
     if (this.persistenceService.getHistorico() != undefined) {
       this.filtros.historico = this.persistenceService.getHistorico();
       // this.isBuscar();
     }
-    if (this.persistenceService.getPermisos() != undefined) {
-      this.permisos = this.persistenceService.getPermisos();
+    this.commonsService.checkAcceso(procesos_oficio.colaDeGuardia)
+    .then(respuesta => {
+      this.permisosTarjeta = respuesta;
+      this.persistenceService.setPermisos(this.permisosTarjeta);
+      if (this.permisosTarjeta == undefined) {
+        sessionStorage.setItem("codError", "403");
+        sessionStorage.setItem(
+          "descError",
+          this.translateService.instant("generico.error.permiso.denegado")
+        );
+        this.router.navigate(["/errorAcceso"]);
+      }else if(this.persistenceService.getPermisos() != true){
+        this.permisos = true;
+      }
     }
+    ).catch(error => console.error(error));
+
     if (this.persistenceService.getFiltros() != undefined) {
       this.filtros = this.persistenceService.getFiltros();
       this.isBuscar();
@@ -169,15 +186,9 @@ export class FiltrosInscripciones implements OnInit {
 
 
   newInscripcion() {
-    this.persistenceService.setFiltros(this.filtros);
-    let isLetrado:boolean = false;
-    if (
-      sessionStorage.getItem("isLetrado") != null &&
-      sessionStorage.getItem("isLetrado") != undefined
-    ) {
-      isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
-    }
+    let isLetrado = this.localStorageService.isLetrado;
     this.progressSpinner = true;
+    this.persistenceService.setFiltros(this.filtros);
     if(isLetrado){
       let colegiadoConectado = new ColegiadoItem();
       this.sigaServices.get("usuario_logeado").subscribe(n => {
@@ -197,6 +208,8 @@ export class FiltrosInscripciones implements OnInit {
       sessionStorage.setItem("origin","newInscrip");
       this.router.navigate(["/buscadorColegiados"]); 
     }
+    
+    
   }
 
   onHideDatosGenerales() {

@@ -16,6 +16,7 @@ import { InscripcionesItems } from '../../../../../models/sjcs/InscripcionesItem
 import { CommonsService } from '../../../../../_services/commons.service';
 import { ConfirmationService } from '../../../../../../../node_modules/primeng/primeng';
 import { TurnosItems } from '../../../../../models/sjcs/TurnosItems';
+import { SigaStorageService } from '../../../../../siga-storage.service';
 
 
 @Component({
@@ -32,7 +33,7 @@ export class TablaInscripcionesComponent implements OnInit {
   msgs;
   partidoJudicial;
   id;
-
+  bodyDirecciones: DatosDireccionesItem;
   datosInicial = [];
   editMode: boolean = false;
   selectedBefore;
@@ -44,12 +45,11 @@ export class TablaInscripcionesComponent implements OnInit {
   disabledCambiarFecha: boolean = false;
   body;
   partidasJudiciales: any[] = [];
-
   selectedItem: number = 10;
   selectAll;
   selectedDatos: any[] = [];
   numSelected = 0;
-  isLetrado:boolean = false;
+  isLetrado: boolean = false;
   selectMultiple: boolean = false;
   seleccion: boolean = false;
   historico: boolean = false;
@@ -62,6 +62,7 @@ export class TablaInscripcionesComponent implements OnInit {
   progressSpinner: boolean = false;
   selectionMode: string = "single";
   first = 0;
+  datosContacto: any;
   //Resultados de la busqueda
   @Input() datos;
 
@@ -69,28 +70,25 @@ export class TablaInscripcionesComponent implements OnInit {
   comboPJ;
 
   @Output() searchPartidas = new EventEmitter<boolean>();
-
+  datosDirecciones: DatosDireccionesItem[] = [];
   @ViewChild("table") tabla: DataTable;
   rows: any;
   sort: (compareFn?: (a: any, b: any) => number) => any[];
+  searchDireccionIdPersona = new DatosDireccionesObject();
 
   constructor(private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private datepipe: DatePipe,
     private commonsService: CommonsService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private localStorageService: SigaStorageService,
+    private datepipe: DatePipe,
   ) { }
 
   ngOnInit() {
-    if (
-      sessionStorage.getItem("isLetrado") != null &&
-      sessionStorage.getItem("isLetrado") != undefined
-    ) {
-      this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
-    }
+    this.isLetrado = this.localStorageService.isLetrado;
     this.selectedDatos = [];
     this.datos.fechaActual = new Date();
     this.getCols();
@@ -101,7 +99,7 @@ export class TablaInscripcionesComponent implements OnInit {
       this.first = paginacion.paginacion;
       this.selectedItem = paginacion.selectedItem;
     }
-    setTimeout(()=>{
+    setTimeout(() => {
       this.commonsService.scrollTablaFoco('tablaFoco');
     }, 5);
   }
@@ -151,7 +149,7 @@ export class TablaInscripcionesComponent implements OnInit {
         evento.data.editable = true;
         this.editMode = true;
 
-        if(evento.data.estado!= 0 || evento.data.estado!= 2)this.disabledDenegar=true;
+        if (evento.data.estado != 0 || evento.data.estado != 2) this.disabledDenegar = true;
 
         this.selectedDatos = [];
         this.selectedDatos.push(evento.data);
@@ -219,9 +217,10 @@ export class TablaInscripcionesComponent implements OnInit {
 
     return fecha;
   }
- 
+
   fillFechaCalendar(event) {
     this.datos.fechaActual = this.transformaFecha(event);
+    this.actualizaBotones(this.selectedDatos);
   }
 
   callSaveService(url) {
@@ -403,19 +402,19 @@ export class TablaInscripcionesComponent implements OnInit {
     //   this.selectionMode = "multiple";
     // }
   }
-  checkTrabajosSJCS(selectedDatos, access){
+  checkTrabajosSJCS(selectedDatos, access) {
     this.sigaServices.post("inscripciones_checkTrabajosSJCS", selectedDatos).subscribe(
       n => {
         let keyConfirmation = "deletePlantillaDoc";
-        if(n.body==true){
+        if (n.body == true) {
           this.progressSpinner = false;
           this.confirmationService.confirm({
             key: keyConfirmation,
             message: this.translateService.instant("justiciaGratuita.oficio.inscripciones.mensajeSJCS"),
             icon: "fa fa-trash-alt",
             accept: () => {
-              if(access==0)this.validar(selectedDatos.inscripcionesItem, 1);
-              else if(access==2)this.solicitarBaja(selectedDatos.inscripcionesItem, 3);
+              if (access == 0) this.validar(selectedDatos.inscripcionesItem, 1);
+              else if (access == 2) this.solicitarBaja(selectedDatos.inscripcionesItem, 3);
             },
             reject: () => {
               this.msgs = [
@@ -430,163 +429,49 @@ export class TablaInscripcionesComponent implements OnInit {
             }
           });
         }
-        if(access==0)this.validar(selectedDatos.inscripcionesItem, 1);
-        else if(access==2)this.solicitarBaja(selectedDatos.inscripcionesItem, 3);
+        if (access == 0) this.validar(selectedDatos.inscripcionesItem, 1);
+        else if (access == 2) this.solicitarBaja(selectedDatos.inscripcionesItem, 3);
       });
     this.progressSpinner = false;
   }
 
-  validar(selectedDatos, access=0) {
-    let vb=0;
+  validar(selectedDatos, access = 0) {
+    let vb = 0;
     this.progressSpinner = true;
     this.body = new InscripcionesObject();
     this.body.inscripcionesItem = selectedDatos
     this.body.inscripcionesItem.forEach(element => {
       element.fechaActual = this.datos.fechaActual;
       element.observaciones = this.datos.observaciones;
-      if(element.estado=="2")vb++;
+      if (element.estado == "2") vb++;
     });
-    if(vb>0 && access==0)this.checkTrabajosSJCS(this.body, access);
-    else{
-      if(vb>0){
+    if (vb > 0 && access == 0) this.checkTrabajosSJCS(this.body, access);
+    else {
+      if (vb > 0) {
         this.sigaServices.post("inscripciones_checkSaltos", this.body).subscribe(
           n => {
-          let keyConfirmation = "deletePlantillaDoc";
-          let ins=new InscripcionesObject();
-          ins.inscripcionesItem=JSON.parse(n.body).inscripcionesItem;
-          if(ins.inscripcionesItem.length>0){
-            this.progressSpinner = false;
-            this.confirmationService.confirm({
-              key: keyConfirmation,
-              message: this.translateService.instant("justiciaGratuita.oficio.inscripciones.mensajeSaltos"),
-              icon: "fa fa-trash-alt",
-              accept: () => { 
-                ins.inscripcionesItem.forEach(element =>{
-                  element.fechaActual = this.datos.fechaActual;
+            let keyConfirmation = "deletePlantillaDoc";
+            let ins = new InscripcionesObject();
+            ins.inscripcionesItem = JSON.parse(n.body).inscripcionesItem;
+            if (ins.inscripcionesItem.length > 0) {
+              this.progressSpinner = false;
+              this.confirmationService.confirm({
+                key: keyConfirmation,
+                message: this.translateService.instant("justiciaGratuita.oficio.inscripciones.mensajeSaltos"),
+                icon: "fa fa-trash-alt",
+                accept: () => {
+                  ins.inscripcionesItem.forEach(element => {
+                    element.fechaActual = this.datos.fechaActual;
+                  }
+                  )
+                  this.sigaServices.post("inscripciones_updateBorrarSaltos", ins).subscribe();
                 }
-                )
-                this.sigaServices.post("inscripciones_updateBorrarSaltos", ins).subscribe();
-              }})
-        }
+              })
+            }
           }
         )
       }
       this.sigaServices.post("inscripciones_updateValidar", this.body).subscribe(
-        data => {
-        this.selectedDatos = [];
-        this.searchPartidas.emit(false);
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
-      },
-      err => {
-        if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-        this.historico = false;
-        this.selectMultiple = false;
-        this.selectAll = false;
-        this.editMode = false;
-        this.nuevo = false;
-      }
-      );
-    }
-  }
-
-  cambiarFecha(selectedDatos) {
-    this.progressSpinner = true;
-    this.body = new InscripcionesObject();
-    this.body.inscripcionesItem = selectedDatos
-    this.body.inscripcionesItem.forEach(element => {
-      element.fechaActual = this.datos.fechaActual;
-      element.observaciones = this.datos.observaciones;
-     // this.sigaServices.post("inscripciones_busquedaInscripciones", element).subscribe();
-    });
-    this.sigaServices.post("inscripciones_updateCambiarFecha", this.body).subscribe(
-      data => {
-        this.selectedDatos = []; 
-        this.searchPartidas.emit(false);
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
-      },
-      err => {
-        if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-        this.historico = false;
-        this.selectMultiple = false;
-        this.selectAll = false;
-        this.editMode = false;
-        this.nuevo = false;
-      }
-    );  
-}
-
-  denegar(selectedDatos) {
-    this.progressSpinner = true;
-    this.body = new InscripcionesObject();
-    this.body.inscripcionesItem = selectedDatos
-    this.body.inscripcionesItem.forEach(element => {
-      element.fechaActual = this.datos.fechaActual;
-      element.observaciones = this.datos.observaciones;
-    });
-    this.sigaServices.post("inscripciones_updateDenegar", this.body).subscribe(
-      data => {
-        this.selectedDatos = []; 
-        this.searchPartidas.emit(false);
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
-      },
-      err => {
-        if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-        this.historico = false;
-        this.selectMultiple = false;
-        this.selectAll = false;
-        this.editMode = false;
-        this.nuevo = false;
-      }
-    );  
-}
-
-  solicitarBaja(selectedDatos, access=2) {
-    this.progressSpinner = true;
-    let fechaDeHoy = new Date();
-    let fechaHoy =this.datepipe.transform(fechaDeHoy, 'dd/MM/yyyy');
-    let fechaActual2 = this.datepipe.transform(this.datos.fechaActual,'dd/MM/yyyy')
-    if(fechaActual2 != fechaHoy){
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.inscripciones.mensajesolicitarbaja"));
-      this.progressSpinner = false;
-    }else{
-      let vb = 0;
-      this.body = new InscripcionesObject();
-      this.body.inscripcionesItem = selectedDatos
-      this.body.inscripcionesItem.forEach(element => {
-        element.fechaActual = this.datos.fechaActual;
-        element.observaciones = this.datos.observaciones;
-        if(element.estado=="2")vb++;
-      });
-      if(vb>0 && access == 2 )this.checkTrabajosSJCS(this.body,access);
-      else{
-      this.sigaServices.post("inscripciones_updateSolicitarBaja", this.body).subscribe(
         data => {
           this.selectedDatos = [];
           this.searchPartidas.emit(false);
@@ -610,8 +495,123 @@ export class TablaInscripcionesComponent implements OnInit {
           this.nuevo = false;
         }
       );
+    }
+  }
+
+  cambiarFecha(selectedDatos) {
+    this.progressSpinner = true;
+    this.body = new InscripcionesObject();
+    this.body.inscripcionesItem = selectedDatos
+    this.body.inscripcionesItem.forEach(element => {
+      element.fechaActual = this.datos.fechaActual;
+      element.observaciones = this.datos.observaciones;
+      // this.sigaServices.post("inscripciones_busquedaInscripciones", element).subscribe();
+    });
+    this.sigaServices.post("inscripciones_updateCambiarFecha", this.body).subscribe(
+      data => {
+        this.selectedDatos = [];
+        this.searchPartidas.emit(false);
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.progressSpinner = false;
+      },
+      err => {
+        if (err != undefined && JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+        this.historico = false;
+        this.selectMultiple = false;
+        this.selectAll = false;
+        this.editMode = false;
+        this.nuevo = false;
       }
-    }  
+    );
+  }
+
+  denegar(selectedDatos) {
+    this.progressSpinner = true;
+    this.body = new InscripcionesObject();
+    this.body.inscripcionesItem = selectedDatos
+    this.body.inscripcionesItem.forEach(element => {
+      element.fechaActual = this.datos.fechaActual;
+      element.observaciones = this.datos.observaciones;
+    });
+    this.sigaServices.post("inscripciones_updateDenegar", this.body).subscribe(
+      data => {
+        this.selectedDatos = [];
+        this.searchPartidas.emit(false);
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.progressSpinner = false;
+      },
+      err => {
+        if (err != undefined && JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+        this.historico = false;
+        this.selectMultiple = false;
+        this.selectAll = false;
+        this.editMode = false;
+        this.nuevo = false;
+      }
+    );
+  }
+
+  solicitarBaja(selectedDatos, access = 2) {
+    this.progressSpinner = true;
+    let fechaDeHoy = new Date();
+    let fechaHoy = this.datepipe.transform(fechaDeHoy, 'dd/MM/yyyy');
+    let fechaActual2 = this.datepipe.transform(this.datos.fechaActual, 'dd/MM/yyyy')
+    if (fechaActual2 != fechaHoy) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.inscripciones.mensajesolicitarbaja"));
+      this.progressSpinner = false;
+    } else {
+      let vb = 0;
+      this.body = new InscripcionesObject();
+      this.body.inscripcionesItem = selectedDatos
+      this.body.inscripcionesItem.forEach(element => {
+        element.fechaActual = this.datos.fechaActual;
+        element.observaciones = this.datos.observaciones;
+        if (element.estado == "2") vb++;
+      });
+      if (vb > 0 && access == 2) this.checkTrabajosSJCS(this.body, access);
+      else {
+        this.sigaServices.post("inscripciones_updateSolicitarBaja", this.body).subscribe(
+          data => {
+            this.selectedDatos = [];
+            this.searchPartidas.emit(false);
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+            this.progressSpinner = false;
+          },
+          err => {
+            if (err != undefined && JSON.parse(err.error).error.description != "") {
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+            } else {
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+            }
+            this.progressSpinner = false;
+          },
+          () => {
+            this.progressSpinner = false;
+            this.historico = false;
+            this.selectMultiple = false;
+            this.selectAll = false;
+            this.editMode = false;
+            this.nuevo = false;
+          }
+        );
+      }
+    }
   }
 
   onChangeSelectAll() {
@@ -677,8 +677,8 @@ export class TablaInscripcionesComponent implements OnInit {
     this.cols = [
       { field: "ncolegiado", header: "facturacionSJCS.facturacionesYPagos.numColegiado" },
       { field: "apellidosnombre", header: "administracion.parametrosGenerales.literal.nombre.apellidos" },
-      { field: "abreviatura", header: "justiciaGratuita.sjcs.designas.DatosIden.turno" },      
-      { field: "fechasolicitud", header: "oficio.busquedaInscripcion.fechaSolicitudAlta" },      
+      { field: "abreviatura", header: "justiciaGratuita.sjcs.designas.DatosIden.turno" },
+      { field: "fechasolicitud", header: "oficio.busquedaInscripcion.fechaSolicitudAlta" },
       { field: "fechavalidacion", header: "oficio.busquedaInscripcion.fechaEfectivaAlta" },
       { field: "fechasolicitudbaja", header: "oficio.busquedaInscripcion.fechaSolicitudBaja" },
       { field: "fechabaja", header: "oficio.busquedaInscripcion.fechaEfectivaBaja" },
@@ -722,10 +722,7 @@ export class TablaInscripcionesComponent implements OnInit {
       //sessionStorage.setItem("turno", JSON.stringify(evento));
       this.router.navigate(["/gestionInscripciones"]);
     }
-
-
   }
-
 
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
@@ -765,35 +762,47 @@ export class TablaInscripcionesComponent implements OnInit {
     // this.volver();
   }
 
+  formatDateSinHora(date) {
+    const pattern = 'dd/MM/yyyy';
+    return this.datepipe.transform(date, pattern);
+  }
 
   actualizaBotones(selectedDatos) {
+    this.selectedDatos = selectedDatos;
     if (this.selectedDatos == undefined) {
       this.selectedDatos = []
     }
-    
-    if (selectedDatos != undefined) {
+
+    if (selectedDatos != null && selectedDatos.length != 0) {
       this.numSelected = selectedDatos.length;
       let findDato = this.selectedDatos.find(item => item.estado != 1);
-      if(findDato != null){
+      let currentDate = new Date();
+      let currentDateString =  this.formatDateSinHora(currentDate);
+      let selectedDate = this.datos.fechaActual
+      let selectedDateString = this.formatDateSinHora(selectedDate);
+      if (findDato != null ) {
         this.disabledSolicitarBaja = true;
       }
-      else{
+      else {
+        if(currentDateString != selectedDateString){
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("sjcs.oficio.inscripciones.gestion.validaFecha"));
+          this.disabledSolicitarBaja = true;
+        }
         this.disabledSolicitarBaja = false;
       }
       let findDato2 = this.selectedDatos.find(item => item.estado != 2 && item.estado != 0);
-      if(findDato2 != null){
-        this.disabledValidar = true;
+      this.validarDirecciones(selectedDatos[0].idpersona, findDato2);
+      if (findDato2 != null) {
         this.disabledDenegar = true;
       }
-      else{
-        this.disabledValidar = false;
+      else {
         this.disabledDenegar = false;
       }
       let findDato3 = this.selectedDatos.find(item => item.estado != 1 && item.estado != 2 && item.estado != 3);
-      if(findDato3 != null){
+      if (findDato3 != null) {
         this.disabledCambiarFecha = true;
       }
-      else{
+      else {
         this.disabledCambiarFecha = false;
       }
     }
@@ -815,4 +824,44 @@ export class TablaInscripcionesComponent implements OnInit {
     return dato.nombrepartidosjudiciales;
   }
 
+  validarDirecciones(idPersona, estado) {
+    this.bodyDirecciones = new DatosDireccionesItem();
+    this.bodyDirecciones.idPersona = idPersona;
+    this.bodyDirecciones.historico = false;
+    if (this.bodyDirecciones.idPersona != undefined && this.bodyDirecciones.idPersona != null) {
+      this.sigaServices
+        .postPaginado(
+          "fichaDatosDirecciones_datosDireccionesSearch",
+          "?numPagina=1",
+          this.bodyDirecciones
+        )
+        .subscribe(
+          data => {
+            this.searchDireccionIdPersona = JSON.parse(data["body"]);
+            this.datosDirecciones = this.searchDireccionIdPersona.datosDireccionesItem;
+            let contador = 0;
+            this.datosDirecciones.forEach(element => {
+
+              if (element.tipoDireccion != undefined) {
+                var index = element.tipoDireccion.indexOf("Guardia");
+                if (index != -1) {
+                  this.datosContacto = element.movil;
+                  if (estado != null && this.datosContacto.length != 9) {
+                    this.disabledValidar = true;
+                  }
+                  else {
+                    this.disabledValidar = false;
+                  }
+                }
+              }
+            });
+            sessionStorage.setItem("numDespacho", JSON.stringify(contador));
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+          },
+        );
+    }
+  }
 }

@@ -20,6 +20,7 @@ import { ControlAccesoDto } from '../../../../../models/ControlAccesoDto';
 import { DocumentoDesignaItem } from '../../../../../models/sjcs/DocumentoDesignaItem';
 import { DocumentoDesignaObject } from '../../../../../models/sjcs/DocumentoDesignaObject';
 import { Dialog } from 'primeng/dialog';
+import { SigaStorageService } from '../../../../../siga-storage.service';
 
 @Component({
   selector: 'app-ficha-designaciones',
@@ -218,15 +219,15 @@ export class FichaDesignacionesComponent implements OnInit {
     private translateService: TranslateService, private sigaServices: SigaServices, private datepipe: DatePipe,
     private gbtservice: DetalleTarjetaProcuradorFichaDesignaionOficioService,
     private commonsService: CommonsService, private router: Router,
-    private confirmationService: ConfirmationService) { }
+    private confirmationService: ConfirmationService,
+    private localStorageService: SigaStorageService) { }
 
   ngOnInit() {
     this.progressSpinner = true;
     this.getDataLoggedUser();
-    if (sessionStorage.getItem("isLetrado") != null && sessionStorage.getItem("isLetrado") != undefined) {
-      this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
-    }
-
+    
+    this.isLetrado = this.localStorageService.isLetrado;
+    
     this.checkAcceso();
     if (!this.esColegiado) {
       // this.listaTarjetas[1].detalle = false;
@@ -368,6 +369,21 @@ export class FichaDesignacionesComponent implements OnInit {
       this.getIdPartidaPresupuestaria(this.campos);
       if(!this.isLetrado){
         this.searchComunicaciones();
+      }else{
+        this.sigaServices.get("usuario_logeado").subscribe(n => {
+
+          const usuario = n.usuarioLogeadoItem;
+          const colegiadoItem = new ColegiadoItem();
+          colegiadoItem.nif = usuario[0].dni;
+  
+          this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(
+            usr => {
+              this.usuarioLogado = JSON.parse(usr.body).colegiadoItem[0];
+              this.progressSpinner = false;
+              this.searchComunicaciones();
+            });
+  
+        });
       }
       //this.searchColegiado();
       /* {
@@ -525,8 +541,8 @@ export class FichaDesignacionesComponent implements OnInit {
         this.campos.idJuzgado = Number(dataRefresh.idJuzgado);
       }
 
-      if(this.campos.idModulo == undefined || this.campos.idModulo == null) {
-        this.campos.idModulo = [dataRefresh.idProcedimiento];
+      if(this.campos.idModulos == undefined || this.campos.idModulos == null) {
+        this.campos.idModulos = [dataRefresh.idProcedimiento];
       }
 
       if(this.campos.idProcedimiento == undefined || this.campos.idProcedimiento == null) {
@@ -909,7 +925,15 @@ export class FichaDesignacionesComponent implements OnInit {
         array2.push(array);
         array = [];
       });
-      this.compruebaProcurador(array2[0]);
+      this.checkFilter(array2[0]);
+    }
+  }
+
+  checkFilter(event){
+    if(event[0] == null || event[1] == null || event[4] == null || event[6] == null){
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
+    }else{
+      this.compruebaProcurador(event);
     }
   }
 
@@ -921,17 +945,13 @@ export class FichaDesignacionesComponent implements OnInit {
   compruebaProcurador(event) {
     this.progressSpinner = true;
 
-    this.listaPrueba = [];
-
-    this.listaPrueba.push(event[0], event[1], event[2], event[3], event[4], event[5], event[6]);
-
     this.sigaServices.post("designaciones_comprobarProcurador", event[1]).subscribe(
       data => {
 
         if (JSON.parse(data.body).procuradorItems[0] != undefined) {
           this.showModal2 = true;
         } else {
-          this.comprobarFechaProcurador();
+          this.comprobarFechaProcurador(event);
         }
         this.progressSpinner = false;
       },
@@ -942,16 +962,16 @@ export class FichaDesignacionesComponent implements OnInit {
     );
   }
 
-  comprobarFechaProcurador() {
+  comprobarFechaProcurador(event) {
     this.progressSpinner = true;
 
-    this.sigaServices.post("designaciones_comprobarFechaProcurador", this.listaPrueba).subscribe(
+    this.sigaServices.post("designaciones_comprobarFechaProcurador", event).subscribe(
       data => {
         
         if (JSON.parse(data.body).procuradorItems[0] != undefined) {
           this.showModal3 = true;
         } else {
-          this.guardarProcurador(this.listaPrueba);
+          this.guardarProcurador(event);
         }
         this.progressSpinner = false;
       },
@@ -1832,27 +1852,4 @@ export class FichaDesignacionesComponent implements OnInit {
     );
 
   }
-
-  callConfirmationSave(id) {
-    this.progressSpinner = false;
-    this.confirmationSave = true;
-
-    this.confirmationService.confirm({
-      key: "cdSave",
-      message: this.translateService.instant("justiciaGratuita.oficio.designaciones.guardarProcurador"),
-      icon: "fa fa-search ",
-      accept: () => {
-        this.confirmationSave = false;
-        this.progressSpinner = true;
-        this.guardarProcuradorEJG(this.listaPrueba);
-        this.cdSave.hide();
-      },
-      reject: () => {
-        this.confirmationSave = false;
-        this.progressSpinner = true;
-        this.cdSave.hide();
-      }
-    });
-  }
-
 }

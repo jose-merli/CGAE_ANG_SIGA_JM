@@ -10,6 +10,7 @@ import { Cell, Row, TablaResultadoMixDocDesigService } from './tabla-resultado-m
 import { TranslateService } from '../../../../../../commons/translate/translation.service';
 import { saveAs } from "file-saver/FileSaver";
 import { ColegiadoItem } from '../../../../../../models/ColegiadoItem';
+import { SigaStorageService } from '../../../../../../siga-storage.service';
 
 interface Cabecera {
   id: string,
@@ -73,11 +74,13 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
     private commonsService: CommonsService,
     private trmDoc: TablaResultadoMixDocDesigService,
     private translateService: TranslateService,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    private localStorageService: SigaStorageService
   ) { }
 
   ngOnInit(): void {
 
+    this.isLetrado = this.localStorageService.isLetrado;
     if (this.isLetrado) {
       this.getDataLoggedUser();
     }
@@ -359,46 +362,46 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
       });
 
       if (error) {
-        this.showMsg('info', this.translateService.instant("general.message.informacion"), 'Alguno de los registros no puedo ser editado porque no es usted su creador');
+        this.showMsg('info', this.translateService.instant("general.message.informacion"), 'Alguno de los registros no puedo ser editado porque no ser usted su creador');
       }
+      if(copiaRowGroups.length>0){
+        this.progressSpinner = true;
 
-      this.progressSpinner = true;
-
-      let designa = {
-        ano: this.campos.ano.toString().split('/')[0].replace('D', ''),
-        numero: this.campos.numero,
-        idTurno: this.campos.idTurno
-      }
-
-      this.sigaServices.postSendFileAndDesigna("designacion_subirDocumentoDesigna", copiaRowGroups, designa).subscribe(
-        data => {
-          let resp = data;
-
-          if (resp.status == 'KO') {
-            if (resp.error != null && resp.error.description != null && resp.error.description != '') {
-              this.showMsg('error', 'Error', this.translateService.instant(resp.error.description));
-            } else {
-              this.showMsg('error', 'Error', this.translateService.instant('general.message.error.realiza.accion'));
-            }
-          } else if (resp.status == 'OK') {
-            this.progressSpinner = false;
-            this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
-            this.selectedArray = [];
-            this.deseleccionarTodo = true;
-            this.buscarDocDesignaEvent.emit();
-          }
-
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-          this.showMsg('error', 'Error', this.translateService.instant('general.mensaje.error.bbdd'));
-        },
-        () => {
-          this.progressSpinner = false;
+        let designa = {
+          ano: this.campos.ano.toString().split('/')[0].replace('D', ''),
+          numero: this.campos.numero,
+          idTurno: this.campos.idTurno
         }
-      );
 
+        this.sigaServices.postSendFileAndDesigna("designacion_subirDocumentoDesigna", copiaRowGroups, designa).subscribe(
+          data => {
+            let resp = data;
+
+            if (resp.status == 'KO') {
+              if (resp.error != null && resp.error.description != null && resp.error.description != '') {
+                this.showMsg('error', 'Error', this.translateService.instant(resp.error.description));
+              } else {
+                this.showMsg('error', 'Error', this.translateService.instant('general.message.error.realiza.accion'));
+              }
+            } else if (resp.status == 'OK') {
+              this.progressSpinner = false;
+              this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
+              this.selectedArray = [];
+              this.deseleccionarTodo = true;
+              this.buscarDocDesignaEvent.emit();
+            }
+
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+            this.showMsg('error', 'Error', this.translateService.instant('general.mensaje.error.bbdd'));
+          },
+          () => {
+            this.progressSpinner = false;
+          }
+        );
+      }
     }
   }
 
@@ -427,37 +430,39 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
     });
 
     if (error) {
-      this.showMsg('info', this.translateService.instant("general.message.informacion"), 'Alguno de los registros no puedo ser editado porque no es usted su creador');
+      this.showMsg('info', this.translateService.instant("general.message.informacion"), 'Alguno de los registros no puede ser editado porque no ser usted su creador');
     }
 
-    this.sigaServices.post("designacion_eliminarDocumentosDesigna", docAeliminar).subscribe(
-      data => {
-        let resp = JSON.parse(data.body);
+    if(docAeliminar.length>0){
+      this.sigaServices.post("designacion_eliminarDocumentosDesigna", docAeliminar).subscribe(
+        data => {
+          let resp = JSON.parse(data.body);
 
-        if (resp.status == 'KO') {
-          if (resp.error != null && resp.error.description != null && resp.error.description != '') {
-            this.showMsg('error', 'Error', this.translateService.instant(resp.error.description));
-          } else {
-            this.showMsg('error', 'Error', this.translateService.instant('general.message.error.realiza.accion'));
+          if (resp.status == 'KO') {
+            if (resp.error != null && resp.error.description != null && resp.error.description != '') {
+              this.showMsg('error', 'Error', this.translateService.instant(resp.error.description));
+            } else {
+              this.showMsg('error', 'Error', this.translateService.instant('general.message.error.realiza.accion'));
+            }
+          } else if (resp.status == 'OK') {
+            this.progressSpinner = false;
+            this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
+            this.selectedArray = [];
+            this.deseleccionarTodo = true;
+            this.buscarDocDesignaEvent.emit();
           }
-        } else if (resp.status == 'OK') {
-          this.progressSpinner = false;
-          this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
-          this.selectedArray = [];
-          this.deseleccionarTodo = true;
-          this.buscarDocDesignaEvent.emit();
-        }
 
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner = false;
-        this.showMsg('error', 'Error', this.translateService.instant('general.mensaje.error.bbdd'));
-      },
-      () => {
-        this.progressSpinner = false;
-      }
-    );
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+          this.showMsg('error', 'Error', this.translateService.instant('general.mensaje.error.bbdd'));
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+    }
   }
 
   descargarArchivos() {

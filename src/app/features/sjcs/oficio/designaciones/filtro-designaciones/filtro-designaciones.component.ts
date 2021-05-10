@@ -12,6 +12,7 @@ import { ControlAccesoDto } from '../../../../../models/ControlAccesoDto';
 import { FileAlreadyExistException } from '@angular-devkit/core';
 import { ParametroRequestDto } from '../../../../../models/ParametroRequestDto';
 import { ParametroDto } from '../../../../../models/ParametroDto';
+import { SigaStorageService } from '../../../../../siga-storage.service';
 
 export enum KEY_CODE {
   ENTER = 13
@@ -90,7 +91,8 @@ export class FiltroDesignacionesComponent implements OnInit {
   valorParametro: AnalyserNode;
   datosBuscar: any[];
   searchParametros: ParametroDto = new ParametroDto();
-  constructor(private translateService: TranslateService, private sigaServices: SigaServices,  private location: Location, private router: Router) { }
+  constructor(private translateService: TranslateService, private sigaServices: SigaServices,  private location: Location, private router: Router,
+    private localStorageService: SigaStorageService) { }
 
   ngOnInit(): void {
 
@@ -147,9 +149,7 @@ export class FiltroDesignacionesComponent implements OnInit {
 
 }
   cargaInicial(){
-    if (sessionStorage.getItem("isLetrado") != null && sessionStorage.getItem("isLetrado") != undefined) {
-      this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
-    }
+    this.isLetrado = this.localStorageService.isLetrado;
 
     if(!this.esColegiado){
       this.isButtonVisible = true;
@@ -610,7 +610,7 @@ getComboCalidad() {
         designa.numColegiado = this.usuarioBusquedaExpress.numColegiado;
 
         designa.idJuzgados = this.body.idJuzgados;
-        designa.idModulo = this.body.idModulo;
+        designa.idModulos = this.body.idModulos;
         designa.idCalidad = this.body.idCalidad;
         if(this.body.anoProcedimiento != null && this.body.anoProcedimiento != undefined){
           designa.numProcedimiento = this.body.anoProcedimiento.toString();
