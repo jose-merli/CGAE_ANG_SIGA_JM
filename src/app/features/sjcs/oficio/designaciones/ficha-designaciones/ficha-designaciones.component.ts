@@ -43,7 +43,7 @@ export class FichaDesignacionesComponent implements OnInit {
   idPersonaLogado: any;
   numColegiadoLogado: any;
   esColegiado: boolean = false;
-  confirmationSave:boolean = false;
+  confirmationSave: boolean = false;
 
   @ViewChild(DetalleTarjetaContrariosFichaDesignacionOficioComponent) tarjetaContrarios;
   @ViewChild(DetalleTarjetaInteresadosFichaDesignacionOficioComponent) tarjetaInteresados;
@@ -63,7 +63,7 @@ export class FichaDesignacionesComponent implements OnInit {
   refreshDesigna;
   msgs;
   tarjetaFija = {
-    nombre: this.translateService.instant("justiciaGratuita.oficio.turnos.inforesumen"), 
+    nombre: this.translateService.instant("justiciaGratuita.oficio.turnos.inforesumen"),
     icono: 'fas fa-clipboard',
     detalle: false,
     fixed: true,
@@ -229,11 +229,11 @@ export class FichaDesignacionesComponent implements OnInit {
   ngOnInit() {
     this.progressSpinner = true;
     this.getDataLoggedUser();
-    
+
     this.isLetrado = this.localStorageService.isLetrado;
     this.idPersonaLogado = this.localStorageService.idPersona;
     this.numColegiadoLogado = this.localStorageService.numColegiado;
-    
+
     this.checkAcceso();
     if (!this.esColegiado) {
       // this.listaTarjetas[1].detalle = false;
@@ -259,25 +259,25 @@ export class FichaDesignacionesComponent implements OnInit {
       this.listaTarjetas[0].opened = true;
     }
     this.commonsService.checkAcceso(procesos_oficio.designaTarjetaLetrado)
-    .then(respuesta => {
-      this.permisosTarjeta = respuesta;
-      let esColegio = this.commonsService.getLetrado();
-      this.persistenceService.setPermisos(this.permisosTarjeta);
-      if (this.permisosTarjeta == undefined) {
-        sessionStorage.setItem("codError", "403");
-        sessionStorage.setItem(
-          "descError",
-          this.translateService.instant("generico.error.permiso.denegado")
-        );
-        this.router.navigate(["/errorAcceso"]);
-      } else if (this.persistenceService.getPermisos() != true) {
-        this.closeLetrado = false;
+      .then(respuesta => {
+        this.permisosTarjeta = respuesta;
+        let esColegio = this.commonsService.getLetrado();
+        this.persistenceService.setPermisos(this.permisosTarjeta);
+        if (this.permisosTarjeta == undefined) {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        } else if (this.persistenceService.getPermisos() != true) {
+          this.closeLetrado = false;
+        }
+        this.listaTarjetas[6].detalle = this.closeLetrado;
       }
-      this.listaTarjetas[6].detalle =  this.closeLetrado;
-    }
-    ).catch(error => console.error(error));
+      ).catch(error => console.error(error));
     if (!this.nuevaDesigna) {
-      
+
       //EDICIÓN DESIGNA
       let camposResumen = [
         {
@@ -391,22 +391,22 @@ export class FichaDesignacionesComponent implements OnInit {
       this.searchRelaciones();
       this.searchLetrados();
       this.getIdPartidaPresupuestaria(this.campos);
-      if(!this.isLetrado){
+      if (!this.isLetrado) {
         this.searchComunicaciones();
-      }else{
+      } else {
         this.sigaServices.get("usuario_logeado").subscribe(n => {
 
           const usuario = n.usuarioLogeadoItem;
           const colegiadoItem = new ColegiadoItem();
           colegiadoItem.nif = usuario[0].dni;
-  
+
           this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(
             usr => {
               this.usuarioLogado = JSON.parse(usr.body).colegiadoItem[0];
               this.progressSpinner = false;
               this.searchComunicaciones();
             });
-  
+
         });
       }
       //this.searchColegiado();
@@ -550,26 +550,26 @@ export class FichaDesignacionesComponent implements OnInit {
     this.getActuacionesDesigna(false);
     this.getDocumentosDesigna();
 
-    if(sessionStorage.getItem('refreshDataAct')) {
+    if (sessionStorage.getItem('refreshDataAct')) {
       let dataRefresh: ActuacionDesignaItem = JSON.parse(sessionStorage.getItem('refreshDataAct'));
 
-      if(this.campos.nig == undefined || this.campos.nig == null || this.campos.nig.trim().length == 0) {
+      if (this.campos.nig == undefined || this.campos.nig == null || this.campos.nig.trim().length == 0) {
         this.campos.nig = dataRefresh.nig;
       }
 
-      if(this.campos.numProcedimiento == undefined || this.campos.numProcedimiento == null || this.campos.numProcedimiento.trim().length == 0) {
+      if (this.campos.numProcedimiento == undefined || this.campos.numProcedimiento == null || this.campos.numProcedimiento.trim().length == 0) {
         this.campos.numProcedimiento = dataRefresh.numProcedimiento;
       }
 
-      if(this.campos.idJuzgado == undefined || this.campos.idJuzgado == null) {
+      if (this.campos.idJuzgado == undefined || this.campos.idJuzgado == null) {
         this.campos.idJuzgado = Number(dataRefresh.idJuzgado);
       }
 
-      if(this.campos.idModulos == undefined || this.campos.idModulos == null) {
+      if (this.campos.idModulos == undefined || this.campos.idModulos == null) {
         this.campos.idModulos = [dataRefresh.idProcedimiento];
       }
 
-      if(this.campos.idProcedimiento == undefined || this.campos.idProcedimiento == null) {
+      if (this.campos.idProcedimiento == undefined || this.campos.idProcedimiento == null) {
         this.campos.idProcedimiento = Number(dataRefresh.idPretension);
       }
 
@@ -678,12 +678,18 @@ export class FichaDesignacionesComponent implements OnInit {
 
     this.progressSpinner = true;
 
+    let idPersonaColegiado = '';
+
+    if (this.isLetrado) {
+      idPersonaColegiado = this.idPersonaLogado;
+    }
+
     let params = {
       anio: this.campos.ano.toString().split('/')[0].replace('D', ''),
       idTurno: this.campos.idTurno,
       numero: this.campos.numero,
       historico: historico,
-      idPersonaColegiado: ''
+      idPersonaColegiado: idPersonaColegiado
     };
 
 
@@ -832,8 +838,8 @@ export class FichaDesignacionesComponent implements OnInit {
       this.sigaServices.post("designaciones_busquedaProcurador", procurador).subscribe(
         n => {
           this.procurador = JSON.parse(n.body).procuradorItems;
-          if(this.procurador != null){
-            sessionStorage.setItem("compruebaProcurador","true");
+          if (this.procurador != null) {
+            sessionStorage.setItem("compruebaProcurador", "true");
           }
 
           this.procurador.forEach(element => {
@@ -953,10 +959,10 @@ export class FichaDesignacionesComponent implements OnInit {
     }
   }
 
-  checkFilter(event){
-    if(event[0] == null || event[1] == null || event[4] == null || event[6] == null){
+  checkFilter(event) {
+    if (event[0] == null || event[1] == null || event[4] == null || event[6] == null) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
-    }else{
+    } else {
       this.compruebaProcurador(event);
     }
   }
@@ -991,7 +997,7 @@ export class FichaDesignacionesComponent implements OnInit {
 
     this.sigaServices.post("designaciones_comprobarFechaProcurador", event).subscribe(
       data => {
-        
+
         if (JSON.parse(data.body).procuradorItems[0] != undefined) {
           this.showModal3 = true;
         } else {
@@ -1124,7 +1130,7 @@ export class FichaDesignacionesComponent implements OnInit {
         this.progressSpinner = false;
         console.log(err);
       });
-    
+
   }
 
   searchInteresados() {
@@ -1132,75 +1138,75 @@ export class FichaDesignacionesComponent implements OnInit {
     let data = sessionStorage.getItem("designaItemLink");
     let designaItem = JSON.parse(data);
 
-    if(designaItem.idTurno!=null){
+    if (designaItem.idTurno != null) {
 
-    let item = [designaItem.idTurno.toString(), designaItem.nombreTurno, designaItem.numero.toString(), designaItem.ano];
+      let item = [designaItem.idTurno.toString(), designaItem.nombreTurno, designaItem.numero.toString(), designaItem.ano];
 
-    this.sigaServices.post("designaciones_listaInteresados", item).subscribe(
-      n => {
+      this.sigaServices.post("designaciones_listaInteresados", item).subscribe(
+        n => {
 
-        this.interesados = JSON.parse(n.body);
-        let primero = this.interesados[0];
-        //Columnas a obtener:
-        //Identificador: Número de identificación correspondiente a la persona (NIF, pasaporte,..)
-        //Apellidos, Nombre: Concatenación de los apellidos y nombre de la persona.
-        //Dirección: Dirección postal (domicilio) registrada para esa persona. 
-        //Representante: Apellidos, Nombre del justiciable representante.
+          this.interesados = JSON.parse(n.body);
+          let primero = this.interesados[0];
+          //Columnas a obtener:
+          //Identificador: Número de identificación correspondiente a la persona (NIF, pasaporte,..)
+          //Apellidos, Nombre: Concatenación de los apellidos y nombre de la persona.
+          //Dirección: Dirección postal (domicilio) registrada para esa persona. 
+          //Representante: Apellidos, Nombre del justiciable representante.
 
 
-        let error = JSON.parse(n.body).error;
+          let error = JSON.parse(n.body).error;
 
-        if (error != null && error.description != null) {
-          this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
+          if (error != null && error.description != null) {
+            this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
+          }
+          this.progressSpinner = false;
+
+          if (this.interesados.length == 0) {
+            this.listaTarjetas[3].campos = [{
+              "key": null,
+              "value": this.translateService.instant('justiciaGratuita.oficio.designas.interesados.vacio')
+            },]
+            this.tarjetaFija.campos[3].value = this.translateService.instant('justiciaGratuita.oficio.designas.interesados.vacio');
+            this.nombreInteresado = this.translateService.instant('justiciaGratuita.oficio.designas.interesados.vacio');
+          }
+
+          else {
+            this.listaTarjetas[3].campos = [
+              {
+                "key": this.translateService.instant('justiciaGratuita.oficio.designas.interesados.identificadorprimero'),
+                "value": primero.nif
+              },
+              {
+                "key": this.translateService.instant('justiciaGratuita.oficio.designas.interesados.apellidosnombreprimero'),
+                "value": primero.apellidosnombre
+              },
+              {
+                "key": this.translateService.instant('justiciaGratuita.oficio.designas.interesados.diccionarioprimero'),
+                "value": primero.diccionario
+              },
+              {
+                "key": this.translateService.instant('justiciaGratuita.oficio.designas.interesados.representanteprimero'),
+                "value": primero.representante
+              },
+              {
+                "key": this.translateService.instant('justiciaGratuita.oficio.designas.interesados.ninteresados'),
+                "value": this.interesados.length
+              }
+            ]
+            this.tarjetaFija.campos[3].value = primero.apellidosnombre;
+            this.nombreInteresado = primero.apellidosnombre;
+          }
+          if (this.tarjetaInteresados != undefined) {
+            this.tarjetaInteresados.tabla.sortOrder = 0;
+            this.tarjetaInteresados.tabla.sortField = '';
+            this.tarjetaInteresados.tabla.reset();
+          }
+        },
+        err => {
+          this.progressSpinner = false;
+          console.log(err);
         }
-        this.progressSpinner = false;
-
-        if (this.interesados.length == 0) {
-          this.listaTarjetas[3].campos = [{
-            "key": null,
-            "value": this.translateService.instant('justiciaGratuita.oficio.designas.interesados.vacio')
-          },]
-          this.tarjetaFija.campos[3].value=this.translateService.instant('justiciaGratuita.oficio.designas.interesados.vacio');
-          this.nombreInteresado=this.translateService.instant('justiciaGratuita.oficio.designas.interesados.vacio');
-        }
-
-        else {
-          this.listaTarjetas[3].campos = [
-            {
-              "key": this.translateService.instant('justiciaGratuita.oficio.designas.interesados.identificadorprimero'),
-              "value": primero.nif
-            },
-            {
-              "key": this.translateService.instant('justiciaGratuita.oficio.designas.interesados.apellidosnombreprimero'),
-              "value": primero.apellidosnombre
-            },
-            {
-              "key": this.translateService.instant('justiciaGratuita.oficio.designas.interesados.diccionarioprimero'),
-              "value": primero.diccionario
-            },
-            {
-              "key": this.translateService.instant('justiciaGratuita.oficio.designas.interesados.representanteprimero'),
-              "value": primero.representante
-            },
-            {
-              "key": this.translateService.instant('justiciaGratuita.oficio.designas.interesados.ninteresados'),
-              "value": this.interesados.length
-            }
-          ]
-          this.tarjetaFija.campos[3].value=primero.apellidosnombre;
-          this.nombreInteresado=primero.apellidosnombre;
-        }
-        if (this.tarjetaInteresados != undefined) {
-          this.tarjetaInteresados.tabla.sortOrder = 0;
-          this.tarjetaInteresados.tabla.sortField = '';
-          this.tarjetaInteresados.tabla.reset();
-        }
-      },
-      err => {
-        this.progressSpinner = false;
-        console.log(err);
-      }
-    );
+      );
     }
   }
 
@@ -1252,7 +1258,7 @@ export class FichaDesignacionesComponent implements OnInit {
     }
   }
 
-  relacion(){
+  relacion() {
     this.searchRelaciones();
   }
 
@@ -1392,7 +1398,7 @@ export class FichaDesignacionesComponent implements OnInit {
 
   refreshData(event) {
     this.progressSpinner = true;
-    this.campos=event;
+    this.campos = event;
     this.getActuacionesDesigna(false);
     if (event.estado == 'V') {
       event.sufijo = event.estado;
@@ -1451,8 +1457,8 @@ export class FichaDesignacionesComponent implements OnInit {
     ];
     this.tarjetaFija.campos = camposResumen;
     this.listaTarjetas[1].campos = camposDetalle;
-    if(event.rol[0] == "A"){
-      this.mostrarAnularCompensacion  = true
+    if (event.rol[0] == "A") {
+      this.mostrarAnularCompensacion = true
     }
     this.progressSpinner = false;
   }

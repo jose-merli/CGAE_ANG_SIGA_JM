@@ -48,6 +48,7 @@ export class HomeComponent implements OnInit {
 		//this.getMantenerSesion();
 		this.oldSigaLogin();
 		this.getDataLoggedUser();
+		this.getInstitucionActual();
 	}
 
 	oldSigaLogin() {
@@ -156,5 +157,9 @@ export class HomeComponent implements OnInit {
 					this.localStorageService.numColegiado = usuarioLogado.numColegiado;
 				});
 		});
+	}
+
+	getInstitucionActual() {
+		this.sigaServices.get("institucionActual").subscribe(n => { this.localStorageService.institucionActual = n.value });
 	}
 }
