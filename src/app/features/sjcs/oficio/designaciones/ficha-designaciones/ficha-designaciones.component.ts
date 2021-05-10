@@ -59,7 +59,7 @@ export class FichaDesignacionesComponent implements OnInit {
   refreshDesigna;
   msgs;
   tarjetaFija = {
-    nombre: "Información Resumen",
+    nombre: this.translateService.instant("justiciaGratuita.oficio.turnos.inforesumen"), 
     icono: 'fas fa-clipboard',
     detalle: false,
     fixed: true,
@@ -137,7 +137,8 @@ export class FichaDesignacionesComponent implements OnInit {
       opened: false,
       campos: [],
       enlaces: [],
-      enlaceCardClosed: {}
+      enlaceCardClosed: {},
+      letrado: {}
     },
     {
       id: 'sjcsDesigRel',
@@ -1578,7 +1579,8 @@ export class FichaDesignacionesComponent implements OnInit {
               "value": this.letrados[0].apellidosNombre
             }
           ]
-          this.listaTarjetas[6].enlaceCardClosed = { click: 'irFechaColegial()', title: this.translateService.instant('informesycomunicaciones.comunicaciones.fichaColegial') }
+          this.listaTarjetas[6].enlaceCardClosed = { click: 'irFichaColegial()', title: this.translateService.instant('informesycomunicaciones.comunicaciones.fichaColegial') }
+          this.listaTarjetas[6].letrado = this.letrados[0];
         }
       },
       err => {

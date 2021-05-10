@@ -29,13 +29,15 @@ export class FichaCambioLetradoComponent implements OnInit {
   body;
   disableSave: boolean = false;
 
-  tarjetaFija = {
-    nombre: this.translateService.instant("justiciaGratuita.oficio.turnos.inforesumen"),
+  tarjetaResumen = {
+    nombre: 'Resumen Cambio Letrado',
     icono: 'fas fa-clipboard',
     detalle: false,
-    fixed: true,
+    fixed: false,
+    opened: false,
     campos: [],
-    enlaces: []
+    enlaceCardClosed: {click: 'irFichaColegial()', title: this.translateService.instant('informesycomunicaciones.comunicaciones.fichaColegial')},
+    letrado: {}
   };
 
   @ViewChild(LetradoEntranteComponent) entrante;
@@ -79,6 +81,8 @@ export class FichaCambioLetradoComponent implements OnInit {
     }
     else {
       data = JSON.parse(sessionStorage.getItem("letrado"));
+      this.tarjetaResumen.letrado = data;
+      console.log("DATOS LETRADO", data);
       sessionStorage.removeItem("letrado");
       this.body.numColegiado = data.nColegiado;
       this.body.nombre = data.apellidosNombre.split(", ")[1];
@@ -91,15 +95,15 @@ export class FichaCambioLetradoComponent implements OnInit {
 
 
     let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
-    this.tarjetaFija.campos = [];
-    this.tarjetaFija.campos[0] = {
-      label: this.translateService.instant(
-        "justiciaGratuita.ejg.datosGenerales.annioNum"
-      ), value: designa.ano
+    this.tarjetaResumen.campos = [];
+    this.tarjetaResumen.campos[0] = {
+      key: this.translateService.instant(
+        "censo.resultadosSolicitudesModificacion.literal.nColegiado"
+      ), value: data.nColegiado
     };
-    this.tarjetaFija.campos[1] = {
-      label: this.translateService.instant(
-        "justiciaGratuita.oficio.designas.interesados.apellidosnombre"
+    this.tarjetaResumen.campos[1] = {
+      key: this.translateService.instant(
+        "justiciaGratuita.justiciables.literal.colegiado"
       ), value: data.apellidosNombre
     };
     /* this.datosTarjetaResumen = [];
