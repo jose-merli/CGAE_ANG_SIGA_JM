@@ -21,6 +21,7 @@ import { DocumentoDesignaItem } from '../../../../../models/sjcs/DocumentoDesign
 import { DocumentoDesignaObject } from '../../../../../models/sjcs/DocumentoDesignaObject';
 import { Dialog } from 'primeng/dialog';
 import { SigaStorageService } from '../../../../../siga-storage.service';
+import { PersistenceService } from '../../../../../_services/persistence.service';
 
 @Component({
   selector: 'app-ficha-designaciones',
@@ -39,7 +40,8 @@ export class FichaDesignacionesComponent implements OnInit {
   isLetrado: boolean = false;
   usuarioLogado;
   nombreInteresado = this.translateService.instant('justiciaGratuita.oficio.designas.interesados.vacio');
-
+  idPersonaLogado: any;
+  numColegiadoLogado: any;
   esColegiado: boolean = false;
   confirmationSave:boolean = false;
 
@@ -56,6 +58,7 @@ export class FichaDesignacionesComponent implements OnInit {
   contrarios: any;
   interesados: any;
   letrados: any;
+  closeLetrado: boolean = true;
   totalActuacionesDesigna;
   refreshDesigna;
   msgs;
@@ -210,7 +213,7 @@ export class FichaDesignacionesComponent implements OnInit {
     { id: "fecharenunciasolicita", name: "formacion.busquedaInscripcion.fechaSolicitud" },
     { id: "fechabaja", name: "administracion.auditoriaUsuarios.literal.fechaEfectiva" },
   ];
-
+  permisosTarjeta: boolean = true;
   actuacionesDesignaItems: ActuacionDesignaItem[] = [];
   documentos: DocumentoDesignaItem[] = [];
 
@@ -219,13 +222,16 @@ export class FichaDesignacionesComponent implements OnInit {
     private gbtservice: DetalleTarjetaProcuradorFichaDesignaionOficioService,
     private commonsService: CommonsService, private router: Router,
     private confirmationService: ConfirmationService,
-    private localStorageService: SigaStorageService) { }
+    private localStorageService: SigaStorageService,
+    private persistenceService: PersistenceService) { }
 
   ngOnInit() {
     this.progressSpinner = true;
     this.getDataLoggedUser();
     
     this.isLetrado = this.localStorageService.isLetrado;
+    this.idPersonaLogado = this.localStorageService.idPersona;
+    this.numColegiadoLogado = this.localStorageService.numColegiado;
     
     this.checkAcceso();
     if (!this.esColegiado) {
@@ -251,6 +257,24 @@ export class FichaDesignacionesComponent implements OnInit {
       let colegiadoGeneral = JSON.parse(sessionStorage.getItem("colegiadoGeneralDesigna"));
       this.listaTarjetas[0].opened = true;
     }
+    this.commonsService.checkAcceso(procesos_oficio.designaTarjetaLetrado)
+    .then(respuesta => {
+      this.permisosTarjeta = respuesta;
+      let esColegio = this.commonsService.getLetrado();
+      this.persistenceService.setPermisos(this.permisosTarjeta);
+      if (this.permisosTarjeta == undefined) {
+        sessionStorage.setItem("codError", "403");
+        sessionStorage.setItem(
+          "descError",
+          this.translateService.instant("generico.error.permiso.denegado")
+        );
+        this.router.navigate(["/errorAcceso"]);
+      } else if (this.persistenceService.getPermisos() != true) {
+        this.closeLetrado = false;
+      }
+      this.listaTarjetas[6].detalle =  this.closeLetrado;
+    }
+    ).catch(error => console.error(error));
     if (!this.nuevaDesigna) {
       
       //EDICIÓN DESIGNA
@@ -1576,43 +1600,92 @@ export class FichaDesignacionesComponent implements OnInit {
     let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
     let datos: DesignaItem = designa;
     this.progressSpinner = true;
-    let request = [designa.ano, designa.idTurno, designa.numero];
+    if (this.isLetrado) {
+      this.sigaServices.get("usuario_logeado").subscribe(n => {
+        const usuario = n.usuarioLogeadoItem;
+        const colegiadoItem = new ColegiadoItem();
+        colegiadoItem.nif = usuario[0].dni;
+        this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(
+          usr => {
+            this.usuarioLogado = JSON.parse(usr.body).colegiadoItem[0];
+            //Buscamos los letrados asociados a la designacion
+            let request = [designa.ano, designa.idTurno, designa.numero, this.usuarioLogado.idPersona];
+            this.sigaServices.post("designaciones_busquedaLetradosDesignacion", request).subscribe(
+              data => {
+                let datos = JSON.parse(data.body);
+                if (datos != []) {
+                  this.letrados = datos;
+                  /* this.datos.fecharenunciasolicita;
+                  this.datos.fecharenuncia;
+                  this.datos.motivosrenuncia; */
 
-    //Buscamos los letrados asociados a la designacion
-    this.sigaServices.post("designaciones_busquedaLetradosDesignacion", request).subscribe(
-      data => {
-        let datos = JSON.parse(data.body);
-        if (datos != []) {
-          this.letrados = datos;
-          /* this.datos.fecharenunciasolicita;
-          this.datos.fecharenuncia;
-          this.datos.motivosrenuncia; */
+                  this.listaTarjetas[6].campos = [
+                    {
+                      "key": this.translateService.instant('censo.resultadosSolicitudesModificacion.literal.nColegiado'),
+                      "value": this.letrados[0].nColegiado
+                    },
+                    {
+                      "key": this.translateService.instant('justiciaGratuita.justiciables.literal.colegiado'),
+                      "value": this.letrados[0].apellidosNombre
+                    }
+                  ]
+                  this.listaTarjetas[6].enlaceCardClosed = { click: 'irFechaColegial()', title: this.translateService.instant('informesycomunicaciones.comunicaciones.fichaColegial') }
+                }
+              },
+              err => {
+                if (err != undefined && JSON.parse(err.error).error.description != "") {
+                  this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+                } else {
+                  this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+                }
+                this.progressSpinner = false;
+              },
+              () => {
+                this.progressSpinner = false;
+              }
+            );
+          });
+      });
+    } else {
+      //Buscamos los letrados asociados a la designacion
+      let request = [designa.ano, designa.idTurno, designa.numero];
+      this.sigaServices.post("designaciones_busquedaLetradosDesignacion", request).subscribe(
+        data => {
+          let datos = JSON.parse(data.body);
+          if (datos != []) {
+            this.letrados = datos;
+            /* this.datos.fecharenunciasolicita;
+            this.datos.fecharenuncia;
+            this.datos.motivosrenuncia; */
 
-          this.listaTarjetas[6].campos = [
-            {
-              "key": this.translateService.instant('censo.resultadosSolicitudesModificacion.literal.nColegiado'),
-              "value": this.letrados[0].nColegiado
-            },
-            {
-              "key": this.translateService.instant('justiciaGratuita.justiciables.literal.colegiado'),
-              "value": this.letrados[0].apellidosNombre
-            }
-          ]
-          this.listaTarjetas[6].enlaceCardClosed = { click: 'irFechaColegial()', title: this.translateService.instant('informesycomunicaciones.comunicaciones.fichaColegial') }
+            this.listaTarjetas[6].campos = [
+              {
+                "key": this.translateService.instant('censo.resultadosSolicitudesModificacion.literal.nColegiado'),
+                "value": this.letrados[0].nColegiado
+              },
+              {
+                "key": this.translateService.instant('justiciaGratuita.justiciables.literal.colegiado'),
+                "value": this.letrados[0].apellidosNombre
+              }
+            ]
+            this.listaTarjetas[6].enlaceCardClosed = { click: 'irFechaColegial()', title: this.translateService.instant('informesycomunicaciones.comunicaciones.fichaColegial') }
+          }
+        },
+        err => {
+          if (err != undefined && JSON.parse(err.error).error.description != "") {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          }
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
         }
-      },
-      err => {
-        if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-      }
-    );
+      );
+    }
+
+
   }
 
   refreshAditionalData(event) {
