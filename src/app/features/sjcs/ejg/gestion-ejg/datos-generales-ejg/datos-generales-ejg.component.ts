@@ -29,7 +29,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
   nuevoBody:EJGItem = new EJGItem();
   msgs = [];
   nuevo;
-  textSelected;
+  textSelected: String = '{0} opciones seleccionadas';
   tipoEJGDesc;
   comboTipoEJG = [];
   comboTipoEJGColegio = [];
@@ -293,7 +293,7 @@ getPrestacionesRechazadasEJG() {
 
     if(this.modoEdicion){
 
-      //Comprobamos si las prestaciones rechazadas iniciales.
+      /* //Comprobamos si las prestaciones rechazadas iniciales.
       let prestacionesRechazadasInicial = this.comboPrestaciones.map(it => it.value.toString()).filter(x => this.bodyInicial.prestacion.indexOf(x) === -1);
       
       //Comprobamos las prestaciones rechazadas actuales.
@@ -305,14 +305,16 @@ getPrestacionesRechazadasEJG() {
         prestacionesRechazadasInicial.every(function(value, index) { return value === prestacionesRechazadasActual[index]})){
           this.body.prestacionesRechazadas = [];
         }
-        else this.body.prestacionesRechazadas = prestacionesRechazadasActual;
+        else this.body.prestacionesRechazadas = prestacionesRechazadasActual; */
 
+      this.body.prestacionesRechazadas = this.comboPrestaciones.map(it => it.value.toString()).filter(x => this.body.prestacion.indexOf(x) === -1);
       //hacer update
       this.sigaServices.post("gestionejg_actualizaDatosGenerales", this.body).subscribe(
         n => {
           this.progressSpinner=false;
 
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          if(n.statusText=="OK") this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
 
         },
         err => {

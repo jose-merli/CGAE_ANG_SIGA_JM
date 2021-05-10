@@ -84,7 +84,7 @@
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "justiciaGratuita.ejg.datosGenerales.Prestaciones" | translate }}</label>
               <p-multiSelect #someDropdown [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='body.prestacion' [options]="comboPrestaciones"
-                [selectedItemsLabel]="textSelected" styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde" maxSelectedLabels="10" (onPanelShow)="focusInputField()" [panelStyle]="{width:'100%'}"></p-multiSelect>
+                [selectedItemsLabel]="textSelected" styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde" maxSelectedLabels="10" selectionLimits="10" (onPanelShow)="focusInputField()" [panelStyle]="{width:'100%'}"></p-multiSelect>
             </div>
           </div>
           <label style="text-align:center; font-weight: bold; padding-bottom: 10px">{{ "justiciaGratuita.ejg.datosGenerales.DatosExpediente" | translate }}</label>
