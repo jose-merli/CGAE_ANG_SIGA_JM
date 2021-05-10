@@ -78,6 +78,7 @@ export class EJGItem {
     anioexpediente: string;
     numeroexpediente: string;
     idTipoExpediente: string;
+    idInstTipoExp: string;
     fechapresentacion: Date;
     fechalimitepresentacion: Date;
     historico: boolean;

@@ -70,10 +70,12 @@ export class DatosGeneralesEjgComponent implements OnInit {
     this.getComboPrestaciones();
     this.getComboTipoExpediente();
 
+
       if (this.persistenceService.getDatos()) {
         this.modoEdicion = true;
         this.nuevo = false;
         this.body = this.persistenceService.getDatos();
+        
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
         /* this.sigaServices.post("gestionejg_datosEJG", selected).subscribe(
           n => {
@@ -96,6 +98,8 @@ export class DatosGeneralesEjgComponent implements OnInit {
           this.body.fechaApertura = new Date(this.body.fechaApertura);
         if (this.body.idTipoExpediente != undefined)
           this.showTipoExp = true;
+        
+        this.getPrestacionesRechazadasEJG();
       }else {
         this.nuevo = true;
         this.modoEdicion = false;
@@ -117,6 +121,21 @@ export class DatosGeneralesEjgComponent implements OnInit {
       }
     }
   }
+
+getPrestacionesRechazadasEJG() {
+  this.sigaServices.post("gestionejg_searchPrestacionesRechazadasEJG", this.body).subscribe(
+    n => {
+      this.bodyInicial.prestacionesRechazadas = n.body;
+      this.bodyInicial.prestacion = this.body.prestacion.filter(x => this.bodyInicial.prestacionesRechazadas.indexOf(x) === -1);
+      this.body.prestacion = this.bodyInicial.prestacion;
+    },
+    err => {
+      console.log(err);
+    }
+  );
+
+  
+}
 
   getComboTipoEJG() {
     this.sigaServices.get("filtrosejg_comboTipoEJG").subscribe(
@@ -166,6 +185,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
         this.comboPrestaciones = n.combooItems;
         this.commonsServices.arregloTildesCombo(this.comboPrestaciones);
         this.body.prestacion = n.combooItems.map(it => it.value.toString());
+        this.bodyInicial.prestacion = this.body.prestacion;
         // this.textSelected = n.combooItems;
       },
       err => {
@@ -269,9 +289,20 @@ export class DatosGeneralesEjgComponent implements OnInit {
     this.progressSpinner=true;
 
     if(this.modoEdicion){
+
+      //Comprobamos si las prestaciones rechazadas iniciales.
+      let prestacionesRechazadasInicial = this.comboPrestaciones.map(it => it.value.toString()).filter(x => this.bodyInicial.prestacion.indexOf(x) === -1);
       
-      //Comprobamos las prestaciones rechazadas e introducimos la diferencia en una variable.
-      this.body.prestacionesRechazadas = this.comboPrestaciones.map(it => it.value.toString()).filter(x => this.body.prestacion.indexOf(x) === -1);
+      //Comprobamos las prestaciones rechazadas actuales.
+      let prestacionesRechazadasActual = this.comboPrestaciones.map(it => it.value.toString()).filter(x => this.body.prestacion.indexOf(x) === -1);
+
+      //Comprobamos la diferencia entre ambas prestaciones rechazadas. SI son iguales se declara con un array vacio. 
+      //En caso contrario, se le asigna los ids de las prestaciones rechazadas.
+      if(prestacionesRechazadasInicial.length === prestacionesRechazadasActual.length && 
+        prestacionesRechazadasInicial.every(function(value, index) { return value === prestacionesRechazadasActual[index]})){
+          this.body.prestacionesRechazadas = [];
+        }
+        else this.body.prestacionesRechazadas = prestacionesRechazadasActual;
 
       //hacer update
       this.sigaServices.post("gestionejg_actualizaDatosGenerales", this.body).subscribe(
@@ -288,6 +319,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         }
       );
+      this.progressSpinner=false;
     }else{
       //hacer insert
       this.body.annio=this.body.fechaApertura.getFullYear().toString();
