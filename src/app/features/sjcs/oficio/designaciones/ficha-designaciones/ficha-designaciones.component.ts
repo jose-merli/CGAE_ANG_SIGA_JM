@@ -812,7 +812,6 @@ export class FichaDesignacionesComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
       }
     );
   }
@@ -827,7 +826,6 @@ export class FichaDesignacionesComponent implements OnInit {
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
         this.progressSpinner = false;
       },
       () => {
@@ -1132,7 +1130,6 @@ export class FichaDesignacionesComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
       });
 
   }
@@ -1208,7 +1205,6 @@ export class FichaDesignacionesComponent implements OnInit {
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
         }
       );
     }
@@ -1256,7 +1252,6 @@ export class FichaDesignacionesComponent implements OnInit {
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
         }
       );
     }
@@ -1329,7 +1324,6 @@ export class FichaDesignacionesComponent implements OnInit {
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
         }
       );
     }
@@ -1365,7 +1359,6 @@ export class FichaDesignacionesComponent implements OnInit {
         this.listaTarjetas[11].campos = camposFacturacion;
       },
       err => {
-        console.log(err);
       }, () => {
         // this.arregloTildesCombo(this.selectores[1].opciones);
       }
@@ -1395,7 +1388,6 @@ export class FichaDesignacionesComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
       }
     );
   }
@@ -1544,7 +1536,6 @@ export class FichaDesignacionesComponent implements OnInit {
         },
           err => {
             this.progressSpinner = false;
-            console.log(err);
           }
         );
         let camposResumen = [
@@ -1598,8 +1589,6 @@ export class FichaDesignacionesComponent implements OnInit {
       err => {
         this.progressSpinner = false;
         // this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-
-        console.log(err);
       }, () => {
         this.progressSpinner = false;
       });;
@@ -1926,7 +1915,6 @@ export class FichaDesignacionesComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
       },
       () => {
         this.progressSpinner = false;

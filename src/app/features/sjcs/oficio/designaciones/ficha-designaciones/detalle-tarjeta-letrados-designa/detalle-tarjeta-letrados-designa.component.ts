@@ -66,8 +66,18 @@ export class DetalleTarjetaLetradosDesignaComponent implements OnInit {
       if(element.fechaSolRenuncia!=null) element.fechaSolRenuncia = this.datepipe.transform(element.fechaSolRenuncia, 'dd/MM/yyyy');
     });
     
+    this.sigaServices.get('getLetrado').subscribe(
+      (data) => {
+        if (data.value == 'S') {
+          this.isLetrado = true;
+        } else {
+          this.isLetrado = false;
+        }
+      },
+      (err) => {
+      }
+    );
     this.isLetrado = this.localStorageService.isLetrado;
-    
   }
 
   irFichaColegial(){

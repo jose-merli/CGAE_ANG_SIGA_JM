@@ -115,18 +115,14 @@ export class FiltroDesignacionesComponent implements OnInit {
   }
 
   getParamsEJG(){  
-    this.sinEjg = this.getParams("JUSTIFICACION_INCLUIR_SIN_EJG");
-    this.ejgSinResolucion = this.getParams("JUSTIFICACION_INCLUIR_EJG_SIN_RESOLUCION");
-    this.ejgPtecajg = this.getParams("JUSTIFICACION_INCLUIR_EJG_PTECAJG");
-    this.ejgNoFavorable = this.getParams("JUSTIFICACION_INCLUIR_EJG_NOFAVORABLE");}
-  getParams(param){
     let parametro = new ParametroRequestDto();
     let institucionActual;
     this.sigaServices.get("institucionActual").subscribe(n => {
       institucionActual = n.value;
       parametro.idInstitucion = institucionActual;
       parametro.modulo = "SCS";
-      parametro.parametrosGenerales = param;
+      //PARAMETRO JUSTIFICACION_INCLUIR_SIN_EJG
+      parametro.parametrosGenerales = "JUSTIFICACION_INCLUIR_SIN_EJG";
       this.sigaServices
         .postPaginado("parametros_search", "?numPagina=1", parametro)
         .subscribe(
@@ -134,9 +130,54 @@ export class FiltroDesignacionesComponent implements OnInit {
             this.searchParametros = JSON.parse(data["body"]);
             this.datosBuscar = this.searchParametros.parametrosItems;
             this.datosBuscar.forEach(element => {
-              if (element.parametro == param && (element.idInstitucion == 0 || element.idInstitucion == element.idinstitucionActual)) {
+              if (element.parametro == parametro.parametrosGenerales && (element.idInstitucion == 0 || element.idInstitucion == element.idinstitucionActual)) {
                 this.valorParametro = element.valor;
-                return this.valorParametro;
+                this.sinEjg = this.valorParametro;
+              }
+          });
+      });
+      //PARAMETRO JUSTIFICACION_INCLUIR_EJG_SIN_RESOLUCION
+      parametro.parametrosGenerales = "JUSTIFICACION_INCLUIR_EJG_SIN_RESOLUCION";
+      this.sigaServices
+        .postPaginado("parametros_search", "?numPagina=1", parametro)
+        .subscribe(
+          data => {
+            this.searchParametros = JSON.parse(data["body"]);
+            this.datosBuscar = this.searchParametros.parametrosItems;
+            this.datosBuscar.forEach(element => {
+              if (element.parametro == parametro.parametrosGenerales && (element.idInstitucion == 0 || element.idInstitucion == element.idinstitucionActual)) {
+                this.valorParametro = element.valor;
+                this.ejgSinResolucion = this.valorParametro;
+              }
+          });
+      });
+      //PARAMETRO JUSTIFICACION_INCLUIR_EJG_PTECAJG
+      parametro.parametrosGenerales = "JUSTIFICACION_INCLUIR_EJG_PTECAJG";
+      this.sigaServices
+        .postPaginado("parametros_search", "?numPagina=1", parametro)
+        .subscribe(
+          data => {
+            this.searchParametros = JSON.parse(data["body"]);
+            this.datosBuscar = this.searchParametros.parametrosItems;
+            this.datosBuscar.forEach(element => {
+              if (element.parametro == parametro.parametrosGenerales && (element.idInstitucion == 0 || element.idInstitucion == element.idinstitucionActual)) {
+                this.valorParametro = element.valor;
+                this.ejgPtecajg = this.valorParametro;
+              }
+          });
+      });
+      //PARAMETRO JUSTIFICACION_INCLUIR_EJG_NOFAVORABLE
+      parametro.parametrosGenerales = "JUSTIFICACION_INCLUIR_EJG_NOFAVORABLE";
+      this.sigaServices
+        .postPaginado("parametros_search", "?numPagina=1", parametro)
+        .subscribe(
+          data => {
+            this.searchParametros = JSON.parse(data["body"]);
+            this.datosBuscar = this.searchParametros.parametrosItems;
+            this.datosBuscar.forEach(element => {
+              if (element.parametro == parametro.parametrosGenerales && (element.idInstitucion == 0 || element.idInstitucion == element.idinstitucionActual)) {
+                this.valorParametro = element.valor;
+                this.ejgNoFavorable = this.valorParametro;
               }
           });
       });

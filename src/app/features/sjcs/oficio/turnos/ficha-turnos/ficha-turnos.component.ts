@@ -67,12 +67,12 @@ export class FichaTurnosComponent implements OnInit {
 			.subscribe(params => {
 				this.idTurno = params.idturno
 				console.log(params);
+			
+				if (this.idTurno != undefined) {
+					this.newTurno = false;
+					this.searchTurnos();
+				}
 			});
-		if (this.idTurno != undefined) {
-			this.newTurno = false;
-			this.searchTurnos();
-		}
-
 		this.fichasPosibles = [
 			{
 				key: 'generales',
@@ -109,9 +109,7 @@ export class FichaTurnosComponent implements OnInit {
       	//PROVISIONAL
       	//cuando se vaya a seguir con el desarrollo de guardias, hay que cambiar esto y la carga de las tarjetas
       	//
-      	setTimeout(() => {
         	this.enviarEnlacesTarjeta();
-		  }, 2000);
 
 		this.goTop();
 	}
