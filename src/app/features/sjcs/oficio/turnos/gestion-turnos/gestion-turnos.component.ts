@@ -367,6 +367,7 @@ export class TablaTurnosComponent implements OnInit {
       message: this.translateService.instant('sjcs.oficio.turnos.eliminar.mensajeConfirmacion'),
       icon: "fa fa-trash-alt",
       accept: () => {
+        this.progressSpinner = true;
         let turnosDelete = new TurnosObject();
         turnosDelete.turnosItem = this.selectedDatos
         this.sigaServices.post("turnos_eliminateTurnos", turnosDelete).subscribe(
@@ -374,7 +375,6 @@ export class TablaTurnosComponent implements OnInit {
             this.selectedDatos = [];
             this.searchPartidas.emit(false);
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-            this.progressSpinner = false;
           },
           err => {
             if (err != undefined && JSON.parse(err.error).error.description != "") {
