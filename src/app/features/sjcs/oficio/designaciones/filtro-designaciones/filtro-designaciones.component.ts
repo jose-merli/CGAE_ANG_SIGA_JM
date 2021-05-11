@@ -101,16 +101,15 @@ export class FiltroDesignacionesComponent implements OnInit {
     this.checkAcceso();
     this.getParamsEJG();
   // }
-    if(sessionStorage.getItem("colegiadoRelleno")){
-      const { numColegiado, nombre } = JSON.parse(sessionStorage.getItem("datosColegiado"));
+    if(sessionStorage.getItem("buscadorColegiados")){
+      const { numColegiado, nombre } = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
       this.usuarioBusquedaExpress.numColegiado = numColegiado;
       this.usuarioBusquedaExpress.nombreAp = nombre.replace(/,/g,"");
       this.showColegiado = true;
 
       this.buscar();
 
-      sessionStorage.removeItem("colegiadoRelleno");
-      sessionStorage.removeItem("datosColegiado");
+      sessionStorage.removeItem("buscadorColegiados");
     }
   }
 
