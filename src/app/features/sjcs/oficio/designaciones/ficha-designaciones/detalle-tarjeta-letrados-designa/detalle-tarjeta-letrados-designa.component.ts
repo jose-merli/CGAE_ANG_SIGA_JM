@@ -73,7 +73,6 @@ export class DetalleTarjetaLetradosDesignaComponent implements OnInit {
         }
       },
       (err) => {
-        console.log(err);
       }
     );
     

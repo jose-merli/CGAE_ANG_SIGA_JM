@@ -63,7 +63,6 @@ export class FichaCambioLetradoComponent implements OnInit {
               }
           },
           (err) => {
-              console.log(err);
       return false;
           }
       );
@@ -218,8 +217,6 @@ export class FichaCambioLetradoComponent implements OnInit {
     item.fechaSolRenuncia=request[7];
     item.fechaDesignacionEntrante=request[8];
     item.idPersonaEntrante=request[9]; */
-
-    
 
     this.progressSpinner = true;
 
