@@ -11,6 +11,7 @@ import { ActuacionDesignaObject } from '../../../../../../../models/sjcs/Actuaci
 import { DocumentoActDesignaObject } from '../../../../../../../models/sjcs/DocumentoActDesignaObject';
 import { DocumentoActDesignaItem } from '../../../../../../../models/sjcs/DocumentoActDesignaItem';
 import { Actuacion } from '../detalle-tarjeta-actuaciones-designa.component';
+import { SigaStorageService } from '../../../../../../../siga-storage.service';
 
 @Component({
   selector: 'app-ficha-actuacion',
@@ -149,26 +150,24 @@ export class FichaActuacionComponent implements OnInit {
   relaciones: any;
   isColegiado;
   documentos: DocumentoActDesignaItem[] = [];
+  modoLectura: boolean = false;
 
   constructor(private location: Location,
     private sigaServices: SigaServices,
     private translateService: TranslateService,
-    private datePipe: DatePipe) { }
+    private datePipe: DatePipe,
+    private sigaStorageService: SigaStorageService) { }
 
   ngOnInit() {
 
-    this.isColegiado = sessionStorage.getItem('isLetrado') == 'true';
+    this.isColegiado = this.sigaStorageService.isLetrado;
+
     if (this.isColegiado) {
-      this.getDataLoggedUser();
-    } else {
-      this.cargaInicial();
+      this.usuarioLogado.idPersona = this.sigaStorageService.idPersona;
+      this.usuarioLogado.numColegiado = this.sigaStorageService.numColegiado;
     }
 
-    this.getInstitucionActual();
-
-  }
-
-  cargaInicial() {
+    this.institucionActual = this.sigaStorageService.institucionActual;
 
     if (sessionStorage.getItem("actuacionDesigna")) {
       let actuacion = JSON.parse(sessionStorage.getItem("actuacionDesigna"));
@@ -176,20 +175,20 @@ export class FichaActuacionComponent implements OnInit {
       this.actuacionDesigna = actuacion;
 
       if (actuacion.isNew) {
-
         this.isNewActDesig = true;
         this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiDatosGen').opened = true;
       } else {
+
+        if(this.isColegiado && this.actuacionDesigna.actuacion.validada) {
+          this.modoLectura = true;
+        }
 
         this.establecerValoresIniciales();
       }
 
       if (actuacion.relaciones != null) {
-
         this.relaciones = actuacion.relaciones;
-
       }
-
     }
   }
 
@@ -246,27 +245,6 @@ export class FichaActuacionComponent implements OnInit {
     if (event.tarjeta == 'sjcsDesigActuaOfiRela') {
       this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiRela').campos = event.campos;
     }
-
-  }
-
-  getDataLoggedUser() {
-
-    this.progressSpinner = true;
-
-    this.sigaServices.get("usuario_logeado").subscribe(n => {
-
-      const usuario = n.usuarioLogeadoItem;
-      const colegiadoItem = new ColegiadoItem();
-      colegiadoItem.nif = usuario[0].dni;
-
-      this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(
-        usr => {
-          this.usuarioLogado = JSON.parse(usr.body).colegiadoItem[0];
-          this.progressSpinner = false;
-          this.cargaInicial();
-        });
-
-    });
 
   }
 
@@ -423,10 +401,6 @@ export class FichaActuacionComponent implements OnInit {
       tarj.campos.push({ key: 'Usuario', value: this.listaAcciones[0].usuario });
     }
 
-  }
-
-  getInstitucionActual() {
-    this.sigaServices.get("institucionActual").subscribe(n => { this.institucionActual = n.value });
   }
 
   getActuacionDesigna(event) {

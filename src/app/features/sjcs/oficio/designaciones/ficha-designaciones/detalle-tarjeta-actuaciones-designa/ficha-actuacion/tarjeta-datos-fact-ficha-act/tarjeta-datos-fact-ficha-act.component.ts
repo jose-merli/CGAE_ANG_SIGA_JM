@@ -31,67 +31,46 @@ export class TarjetaDatosFactFichaActComponent implements OnInit, OnDestroy {
   usuarioLogado: any;
   @Input() isAnulada: boolean;
   @Input() actuacionDesigna: Actuacion;
+  @Input() modoLectura: boolean;
 
   @Output() changeDataEvent = new EventEmitter<any>();
   progressSpinner: boolean = false;
   datosMod: boolean = true;
 
-  constructor(private sigaServices: SigaServices, 
+  constructor(private sigaServices: SigaServices,
     private commonsService: CommonsService,
     private translateService: TranslateService,
     private persistenceService: PersistenceService,
     private router: Router,
-    private localStorageService: SigaStorageService) { }
+    private localStorageService: SigaStorageService) { }
 
   ngOnInit() {
     this.getComboPartidaPresupuestaria();
 
     this.commonsService.checkAcceso(procesos_oficio.designaTarjetaActuacionesFacturacion)
-          .then(respuesta => {
-            this.permisoEscritura = respuesta;
-            this.persistenceService.setPermisos(this.permisoEscritura);
-     
-            if (this.permisoEscritura == undefined) {
-              sessionStorage.setItem("codError", "403");
-              sessionStorage.setItem(
-                "descError",
-                this.translateService.instant("generico.error.permiso.denegado")
-              );
-              this.router.navigate(["/errorAcceso"]);
-            }
-            
-          }
-          ).catch(error => console.error(error)); 
-    
+      .then(respuesta => {
+        this.permisoEscritura = respuesta;
+        this.persistenceService.setPermisos(this.permisoEscritura);
 
-    this.isLetrado = this.localStorageService.isLetrado ;
+        if (this.permisoEscritura == undefined) {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
 
-    // //si isLetrado == true ->>
-    // if(this.isLetrado == true){
+      }
+      ).catch(error => console.error(error));
 
-    // //Obtener usuario logueado
-    //   this.sigaServices.get("usuario_logeado").subscribe(n => {
-    //   const usuario = n.usuarioLogeadoItem;
-    //   const colegiadoItem = new ColegiadoItem();
-    //   colegiadoItem.nif = usuario[0].dni;
-    //   this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(
-    //   usr => {
-    //   this.usuarioLogado = JSON.parse(usr.body).colegiadoItem[0];
-      
-    //    });
-    //    });
-       
-    //   //si la actuacion tiene el mismo usumodificacion que usuario logueado -> isLetrado= false;
-    //   if (this.actuacionDesigna.actuacion.usuModificacion  == this.usuarioLogado.idPersona){
-    //     this.isLetrado = false;
-    //   }
 
-    // }
- }
+    this.isLetrado = this.localStorageService.isLetrado;
+  }
 
-  compararSelector(){
+  compararSelector() {
     let valorIni = JSON.parse(sessionStorage.getItem("datosIniActuDesignaDatosFact"));
-    if(this.selector.value != valorIni.value){
+    if (this.selector.value != valorIni.value) {
       this.datosMod = false;
     }
   }
