@@ -7,6 +7,7 @@ import { Location } from '@angular/common'
 import { CommonsService } from '../../../../_services/commons.service';
 import { TranslateService } from '../../../../commons/translate/translation.service';
 import { procesos_ejg } from '../../../../permisos/procesos_ejg';
+
 @Component({
   selector: 'app-gestion-ejg',
   templateUrl: './gestion-ejg.component.html',
@@ -169,6 +170,11 @@ export class GestionEjgComponent implements OnInit {
     this.modoEdicion = event.modoEdicion;
     this.idEJG = event.idEJG
   }
+
+  guardadoSend(event){
+    this.ngOnInit();
+  }
+
   showMessage(severity, summary, msg) {
     this.msgs = [];
     this.msgs.push({
@@ -177,12 +183,15 @@ export class GestionEjgComponent implements OnInit {
       detail: msg
     });
   }
+
   abreCierraFicha() {
     this.openFicha = !this.openFicha;
   }
+
   onHideTarjeta() {
     this.showTarjeta = !this.showTarjeta;
   }
+  
   backTo() {
     this.location.back();
   }

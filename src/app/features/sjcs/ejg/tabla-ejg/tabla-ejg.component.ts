@@ -107,6 +107,7 @@ export class TablaEjgComponent implements OnInit {
         this.ejgObject = JSON.parse(n.body).ejgItems;
         this.datosItem = this.ejgObject[0];
         this.persistenceService.setDatos(this.datosItem);
+        this.ngOnInit();
         this.consultaUnidadFamiliar(selected);
         this.commonServices.scrollTop();
       },

@@ -70,9 +70,9 @@
           </div>
           <div class="form-row">
             <div class="form-group col-lg-3 col-md-3">
-              <label>{{ "justiciaGratuita.ejg.datosGenerales.TipoEJG" | translate }}</label>
+              <label>{{ "justiciaGratuita.ejg.datosGenerales.TipoEJG" | translate }} (*)</label>
               <p-dropdown *ngIf="nuevo" class="select-form" [(ngModel)]='body.tipoEJG' placeholder="Seleccionar" [options]="comboTipoEJG"
-                [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+                [filter]="true" filterBy="label,labelSinTilde" [ngClass]="styleObligatorio(body.tipoEJG)" [showClear]="true"></p-dropdown>
               <input type="text" *ngIf="!nuevo" [(ngModel)]="tipoEJGDesc" [disabled]="true" class="form-control" (keypress)="numberOnly($event)"
                 pInputText>
             </div>

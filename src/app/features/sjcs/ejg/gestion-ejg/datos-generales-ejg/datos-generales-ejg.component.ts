@@ -20,6 +20,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
   @Input() permisoEscritura;
   @Input() tarjetaDatosGenerales: string;
   @Output() modoEdicionSend = new EventEmitter<any>();
+  @Output() guardadoSend = new EventEmitter<any>();
 
   openFicha: boolean = false;
   textFilter: string = "Seleccionar";
@@ -327,18 +328,29 @@ getPrestacionesRechazadasEJG() {
       this.progressSpinner=false;
     }else{
       //hacer insert
-      this.body.annio=this.body.fechaApertura.getFullYear().toString();
-      this.body.idInstitucion=this.institucionActual;
-      
-      this.sigaServices.post("gestionejg_insertaDatosGenerales", JSON.stringify(this.body)).subscribe(
-        n => {
-          this.progressSpinner=false;
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner=false;
-        }
-      );
+      if(this.body.tipoEJG!= null && this.body.tipoEJG!= undefined && this.body.fechaApertura != null && this.body.fechaApertura != undefined){
+        this.body.annio=this.body.fechaApertura.getFullYear().toString();
+        this.body.idInstitucion=this.institucionActual;
+        
+        this.sigaServices.post("gestionejg_insertaDatosGenerales", JSON.stringify(this.body)).subscribe(
+          n => {
+            this.progressSpinner=false;
+            let ejgObject = JSON.parse(n.body).ejgItems;
+            let datosItem = ejgObject[0];
+            this.persistenceService.setDatos(datosItem);
+            this.guardadoSend.emit(true);
+
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner=false;
+          }
+        );
+      }
+      else {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
+        this.progressSpinner=false;
+      }
     }
   }
 
