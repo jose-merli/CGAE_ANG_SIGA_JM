@@ -2,6 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { ColegiadoItem } from '../../../../../models/ColegiadoItem';
 import { SaltoCompItem } from '../../../../../models/guardia/SaltoCompItem';
+import { SigaStorageService } from '../../../../../siga-storage.service';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 
@@ -31,6 +32,7 @@ export class FiltrosSaltosCompensacionesOficioComponent implements OnInit {
   comboTurnos = [];
   textFilter: string = "Seleccionar";
   textSelected: String = "{0} turnos seleccionados";
+  isLetrado:boolean = false;
 
   @Input() isNewFromOtherPage: boolean = false;
   @Input() activacionEditar: boolean = false;
@@ -40,12 +42,13 @@ export class FiltrosSaltosCompensacionesOficioComponent implements OnInit {
   constructor(
     private sigaServices: SigaServices,
     private commonServices: CommonsService,
-    private datepipe: DatePipe
+    private datepipe: DatePipe,
+    private localStorageService: SigaStorageService
   ) { }
 
   ngOnInit() {
-
-    if (!this.activacionEditar) {
+    this.isLetrado = this.localStorageService.isLetrado;
+    if (this.isLetrado) {
       this.disabledBusquedaExpress = true;
       this.getDataLoggedUser();
     }
