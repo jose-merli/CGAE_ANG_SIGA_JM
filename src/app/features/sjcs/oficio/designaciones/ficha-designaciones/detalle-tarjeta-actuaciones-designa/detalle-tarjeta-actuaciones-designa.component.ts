@@ -104,7 +104,7 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
 
   onRowSelected(event) {
 
-    if (this.historico && !event.data.anulada) {
+    if ((this.historico && !event.data.anulada) || !event.data.permiteModificacion) {
       this.actuacionesSeleccionadas.pop();
     }
 

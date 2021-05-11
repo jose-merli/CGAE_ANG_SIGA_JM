@@ -711,6 +711,10 @@ export class FichaDesignacionesComponent implements OnInit {
 
           resp.forEach(el => {
 
+            if(!this.isLetrado){
+              el.permiteModificacion = true;
+            }
+
             if (el.validada) {
               validadas += 1;
             }
