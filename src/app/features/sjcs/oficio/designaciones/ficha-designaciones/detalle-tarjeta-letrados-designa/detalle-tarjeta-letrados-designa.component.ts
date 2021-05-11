@@ -10,6 +10,7 @@ import { DatosColegiadosItem } from '../../../../../../models/DatosColegiadosIte
 import { Location, DatePipe } from '@angular/common';
 import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
 import { CommonsService } from '../../../../../../_services/commons.service';
+import { SigaStorageService } from '../../../../../../siga-storage.service';
 
 
 @Component({
@@ -47,6 +48,7 @@ export class DetalleTarjetaLetradosDesignaComponent implements OnInit {
     private router: Router,
     private datepipe: DatePipe,
     private commonsService: CommonsService,
+    private localStorageService: SigaStorageService
   ) { }
 
   ngOnInit() {
@@ -75,7 +77,7 @@ export class DetalleTarjetaLetradosDesignaComponent implements OnInit {
       (err) => {
       }
     );
-    
+    this.isLetrado = this.localStorageService.isLetrado;
   }
 
   irFichaColegial(){

@@ -430,6 +430,9 @@ import { DetalleTarjetaRelacionesDesignaComponent } from './features/sjcs/oficio
 import { DetalleTarjetaComunicacionesDesignaComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-comunicaciones-designa/detalle-tarjeta-comunicaciones-designa.component';
 import { TablaResultadoMixDocDesigService } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-documentacion-designa/tabla-resultado-mix-doc-desig.service';
 import { SigaStorageService } from './siga-storage.service';
+import { FichaCambioLetradoComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/ficha-cambio-letrado/ficha-cambio-letrado.component';
+import { LetradoEntranteComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/ficha-cambio-letrado/letrado-entrante/letrado-entrante.component';
+import { LetradoSalienteComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/ficha-cambio-letrado/letrado-saliente/letrado-saliente.component';
 
 @NgModule({
 	declarations: [
@@ -559,6 +562,9 @@ import { SigaStorageService } from './siga-storage.service';
 		DetalleTarjetaInteresadosFichaDesignacionOficioComponent,
 		DetalleTarjetaLetradosDesignaComponent,
 		FichaDesignacionesComponent,
+		FichaCambioLetradoComponent, 
+		LetradoSalienteComponent, 
+		LetradoEntranteComponent,
 		DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent,
 		DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent,
 		DetalleTarjetaDetalleFichaDesignacionOficioComponent,
