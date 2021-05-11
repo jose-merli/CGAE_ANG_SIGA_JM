@@ -64,7 +64,7 @@
     <div class="text-right main-button">
       <button (click)="clearFilters()" pButton type="button" icon="fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate}}"></button>
       <button (click)="isBuscar()" pButton type="button" icon="fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"></button>
-      <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}" (click)="nuevaBajaTemporal()"></button>
+      <button pButton type="button" [disabled]="!permisos" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}" (click)="nuevaBajaTemporal()"></button>
     </div>
   </div>
 </div>
