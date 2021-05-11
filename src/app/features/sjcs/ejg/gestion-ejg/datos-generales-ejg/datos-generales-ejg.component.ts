@@ -338,12 +338,15 @@ getPrestacionesRechazadasEJG() {
             let ejgObject = JSON.parse(n.body).ejgItems;
             let datosItem = ejgObject[0];
             this.persistenceService.setDatos(datosItem);
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+            this.body.numEjg = datosItem.numEjg;
             this.guardadoSend.emit(true);
 
           },
           err => {
             console.log(err);
             this.progressSpinner=false;
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
           }
         );
       }
