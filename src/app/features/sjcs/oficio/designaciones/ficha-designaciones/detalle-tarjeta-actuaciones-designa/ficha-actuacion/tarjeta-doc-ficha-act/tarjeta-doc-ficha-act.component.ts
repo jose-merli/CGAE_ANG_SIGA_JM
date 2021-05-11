@@ -25,7 +25,10 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
   @Input() usuarioLogado;
   @Input() isColegiado;
   @Input() isAnulada;
+  @Input() modoLectura: boolean;
+
   @Output() buscarDocumentosEvent = new EventEmitter<any>();
+  
   documentos2: Documento[];
   cols: Col[] = [
     {

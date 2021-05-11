@@ -14,7 +14,7 @@
         <label>{{ datos.datePicker.label }}</label>
         <app-fecha [utc]="true" [(value)]='datos.datePicker.value' [minDate]="fechaEntradaInicioDate"
           [maxDate]="fechaMaxima" (valueChangeSelected)="fillFecha($event)" (valueChangeInput)="fillFecha($event)"
-          [disabled]="isAnulada"
+          [disabled]="isAnulada || modoLectura"
           [inputStyleClass]="(datos.datePicker.value == null || datos.datePicker.value == '') ? 'camposObligatorios': ''">
         </app-fecha>
       </div>
@@ -28,7 +28,7 @@
       <div class=" form-group col-lg-12 col-md-12 w-100">
         <label>{{ datos.textarea.label }}</label>
         <textarea class="form-control" pInputTextarea [(ngModel)]="datos.textarea.value" maxlength="4000"
-          [readonly]="isAnulada"></textarea>
+          [readonly]="isAnulada || modoLectura"></textarea>
       </div>
 
     </div>
@@ -37,12 +37,14 @@
     <div class="form-row">
       <div class="form-group col-lg-4 col-md-4 w-100">
         <label>{{ datos.inputNig.label }} <span *ngIf="datos.inputNig.obligatorio">(*)</span></label>
-        <input type="text" class="form-control" pInputText [(ngModel)]="datos.inputNig.value" [readonly]="isAnulada"
+        <input type="text" class="form-control" pInputText [(ngModel)]="datos.inputNig.value"
+          [readonly]="isAnulada || modoLectura"
           [ngClass]="{'camposObligatorios': (datos.inputNig.obligatorio && (datos.inputNig.value.trim() == '' || datos.inputNig.value == null))}">
       </div>
       <div class="form-group col-lg-2 col-md-2 w-100">
         <label>{{ datos.inputNumPro.label }} <span *ngIf="datos.inputNumPro.obligatorio">(*)</span></label>
-        <input type="text" class="form-control" pInputText [(ngModel)]="datos.inputNumPro.value" [readonly]="isAnulada"
+        <input type="text" class="form-control" pInputText [(ngModel)]="datos.inputNumPro.value"
+          [readonly]="isAnulada || modoLectura"
           [ngClass]="{'camposObligatorios': (datos.inputNumPro.obligatorio && (datos.inputNumPro.value.trim() == '' || datos.inputNumPro.value == null))}">
       </div>
       <div class="form-group col-lg-6 col-md-6 w-100" *ngFor="let selector of datos.selectores">
@@ -50,7 +52,8 @@
         <p-dropdown class="select-form" [(ngModel)]="selector.value"
           placeholder="{{'general.boton.seleccionar' | translate}}" [options]="selector.opciones" [filter]="true"
           filterBy="label,labelSinTilde" [showClear]="true" (onChange)="onChangeSelector(selector)"
-          [ngClass]="{'camposObligatorios': marcaObligatorio(selector)}" [disabled]="isAnulada || selector.disabled">
+          [ngClass]="{'camposObligatorios': marcaObligatorio(selector)}"
+          [disabled]="isAnulada || selector.disabled || modoLectura">
         </p-dropdown>
       </div>
       <div class="form-group col-lg-6 col-md-6 w-100" style="display: flex; align-items: flex-end;">
@@ -63,10 +66,10 @@
 <div class="card-footer">
   <div class="text-right main-button">
     <button pButton type="button" icon="fa fa-paper-plane" iconPos="left" label="Comunicar"
-      (click)="showMsg('success', 'Se ha comunicado correctamente', '')" [disabled]="isAnulada"></button>
+      (click)="showMsg('success', 'Se ha comunicado correctamente', '')" [disabled]="isAnulada || modoLectura"></button>
     <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer" (click)="restablecer()"
-      [disabled]="isAnulada"></button>
+      [disabled]="isAnulada || modoLectura"></button>
     <button pButton type="button" icon="far fa-save" iconPos="left" label="Guardar" (click)="guardarAction()"
-      [disabled]="isAnulada"></button>
+      [disabled]="isAnulada || modoLectura"></button>
   </div>
 </div>
