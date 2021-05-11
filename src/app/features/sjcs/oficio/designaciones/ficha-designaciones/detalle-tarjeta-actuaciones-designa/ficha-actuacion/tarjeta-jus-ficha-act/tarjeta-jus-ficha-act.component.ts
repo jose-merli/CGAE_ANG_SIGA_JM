@@ -21,6 +21,7 @@ export class TarjetaJusFichaActComponent implements OnInit, OnDestroy {
   @Input() actuacionDesigna: Actuacion;
   @Input() isColegiado;
   @Input() usuarioLogado;
+  @Input() modoLectura: boolean;
 
   fechaActuacion: Date;
 

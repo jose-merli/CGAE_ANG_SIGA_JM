@@ -31,6 +31,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
   @Input() isAnulada: boolean;
   @Input() usuarioLogado;
   @Input() isColegiado: boolean;
+  @Input() modoLectura: boolean;
 
   @Output() buscarActEvent = new EventEmitter<string>();
 
@@ -166,13 +167,13 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     this.getComboJuzgados();
     this.getComboProcedimientos();
 
-    if (this.datos.selectores[0].value != undefined && this.datos.selectores[0].value != null || (typeof this.datos.selectores[0].value == 'string' && this.datos.selectores[0].value != '')) {
+    if (this.datos.selectores[0].value != undefined && this.datos.selectores[0].value != null && this.datos.selectores[0].value != '') {
       this.cargaModulosPorJuzgado(this.datos.selectores[0].value);
     } else {
       this.datos.selectores[3].disabled = true;
     }
 
-    if (this.datos.selectores[3].value != undefined && this.datos.selectores[3].value != null || (typeof this.datos.selectores[3].value == 'string' && this.datos.selectores[3].value != '')) {
+    if (this.datos.selectores[3].value != undefined && this.datos.selectores[3].value != null && this.datos.selectores[3].value != '') {
       this.cargaAcreditacionesPorModulo(this.datos.selectores[3].value);
     } else {
       this.datos.selectores[4].disabled = true;
@@ -290,7 +291,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
 
         let comboAcre = this.datos.selectores.find(el => el.id == 'acreditacion');
 
-        if (comboAcre.value != undefined && comboAcre != null || (typeof comboAcre.value == 'string' && comboAcre.value.trim().length > 0)) {
+        if (comboAcre.value != undefined && comboAcre.value != null && comboAcre.value != '') {
 
           let obligar = this.datos.selectores.find(el => el.id == 'acreditacion').opciones.find(el => el.value == this.datos.selectores.find(el => el.id == 'acreditacion').value).obligaNigNumPro;
 
@@ -715,7 +716,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
       }
       this.datos.selectores.find(el => el.id == 'acreditacion').value = '';
     } else if (selector.id == 'acreditacion') {
-      if ((selector.value != undefined && selector.value != null) || (typeof selector.value == 'string' && selector.value != '')) {
+      if (selector.value != undefined && selector.value != null && selector.value != '') {
         let obligar = this.datos.selectores.find(el => el.id == 'acreditacion').opciones.find(el => el.value == selector.value).obligaNigNumPro;
 
         if (obligar) {
