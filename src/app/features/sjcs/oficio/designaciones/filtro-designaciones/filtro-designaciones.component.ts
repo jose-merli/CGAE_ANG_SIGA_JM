@@ -290,6 +290,7 @@ export class FiltroDesignacionesComponent implements OnInit {
     if(event=='designas'){
       this.showDesignas=true;
       this.showJustificacionExpress=false;
+      this.isButtonVisible=true;
       this.showTablaJustificacionExpres.emit(false);
     }
 
@@ -297,6 +298,7 @@ export class FiltroDesignacionesComponent implements OnInit {
       this.showDesignas=false;
       this.showJustificacionExpress=true;
       this.expanded=true;
+      this.isButtonVisible=false;
       this.showTablaDesigna.emit(false);
     }
   }
