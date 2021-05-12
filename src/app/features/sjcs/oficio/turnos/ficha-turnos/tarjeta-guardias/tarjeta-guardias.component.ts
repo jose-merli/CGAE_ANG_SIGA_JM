@@ -42,7 +42,7 @@ export class TarjetaGuardias implements OnInit {
   cols;
   rowsPerPage;
   historico: boolean = false;
-  datos: any[];
+  datos: any[] = [];
   listaTabla: TurnosItems = new TurnosItems();
   fechaActual;
   disableAll: boolean = false;
