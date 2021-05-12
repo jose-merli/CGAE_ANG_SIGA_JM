@@ -30,7 +30,7 @@
         <div class="form-group-interlineado col-lg-2 col-md-1">
           <label>{{ "oficio.busquedaBajasTemporales.fechaSolicitudHasta" | translate }}
           </label>
-          <app-fecha [(value)]="filtros.fechasolicitudhasta" [disabled]="disabledFechasolicitudhasta" (valueChangeInput)="fillFechaHastaSolicitudCalendar($event)" [minDate]="filtros.fechasolicituddesde" (valueChangeSelected)="fillFechaHastaSolicitudCalendar($event)"></app-fecha>
+          <app-fecha [(value)]="filtros.fechasolicitudhasta" (valueChangeInput)="fillFechaHastaSolicitudCalendar($event)" [minDate]="filtros.fechasolicituddesde" (valueChangeSelected)="fillFechaHastaSolicitudCalendar($event)"></app-fecha>
         </div>
         <div class="form-group-interlineado col-lg-2 col-md-1">
           <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaDesde" | translate }}
@@ -40,7 +40,7 @@
         <div class="form-group-interlineado col-lg-2 col-md-1">
           <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta" | translate }}
           </label>
-          <app-fecha [(value)]="filtros.fechahasta" [disabled]="disabledFechaHasta" [minDate]="filtros.fechadesde" (valueChangeInput)="fillFechaHastaCalendar($event)" (valueChangeSelected)="fillFechaHastaCalendar($event)"></app-fecha>
+          <app-fecha [(value)]="filtros.fechahasta" [minDate]="filtros.fechadesde" (valueChangeInput)="fillFechaHastaCalendar($event)" (valueChangeSelected)="fillFechaHastaCalendar($event)"></app-fecha>
         </div>
 
       </div>
