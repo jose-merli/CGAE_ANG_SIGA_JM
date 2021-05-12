@@ -50,7 +50,7 @@ export class FichaDesignacionesComponent implements OnInit {
   @ViewChild(DetalleTarjetaRelacionesDesignaComponent) tarjetaRelaciones;
   @ViewChild("cdSave") cdSave: Dialog;
   mostrarAnularCompensacion: boolean = false;
-  rutas: string[] = ['SJCS', 'EJGS'];
+  rutas: string[] = ['SJCS', 'Designaciones'];
   campos: DesignaItem = new DesignaItem();
   comboRenuncia: any;
   nuevaDesigna: any;

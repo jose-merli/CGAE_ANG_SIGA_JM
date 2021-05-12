@@ -23,7 +23,7 @@ export class FiltrosSaltosCompensacionesOficioComponent implements OnInit {
   };
   disabledBusquedaExpress: boolean = false;
   showDatosGenerales: boolean = true;
-  showColegiado: boolean = false;
+  showColegiado: boolean = true;
   progressSpinner: boolean = false;
   filtros: SaltoCompItem = new SaltoCompItem();
   filtroAux: SaltoCompItem = new SaltoCompItem();
@@ -75,6 +75,8 @@ export class FiltrosSaltosCompensacionesOficioComponent implements OnInit {
       this.showColegiado = true;
 
       sessionStorage.removeItem('buscadorColegiados');
+
+      this.search();
     }
 
   }

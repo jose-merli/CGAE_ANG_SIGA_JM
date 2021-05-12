@@ -101,17 +101,17 @@ export class FiltroDesignacionesComponent implements OnInit {
     this.checkAcceso();
     this.getParamsEJG();
   // }
-    if(sessionStorage.getItem("colegiadoRelleno")){
-      const { numColegiado, nombre } = JSON.parse(sessionStorage.getItem("datosColegiado"));
-      this.usuarioBusquedaExpress.numColegiado = numColegiado;
-      this.usuarioBusquedaExpress.nombreAp = nombre.replace(/,/g,"");
+    if(sessionStorage.getItem("buscadorColegiados")){
+      const { nombre, apellidos, nColegiado } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
+      this.usuarioBusquedaExpress.nombreAp = `${apellidos}, ${nombre}`;
+      this.usuarioBusquedaExpress.numColegiado = nColegiado;
       this.showColegiado = true;
 
       this.buscar();
 
-      sessionStorage.removeItem("colegiadoRelleno");
-      sessionStorage.removeItem("datosColegiado");
+      sessionStorage.removeItem("buscadorColegiados");
     }
+    
   }
 
   getParamsEJG(){  
@@ -291,6 +291,7 @@ export class FiltroDesignacionesComponent implements OnInit {
     if(event=='designas'){
       this.showDesignas=true;
       this.showJustificacionExpress=false;
+      this.isButtonVisible=true;
       this.showTablaJustificacionExpres.emit(false);
     }
 
@@ -298,6 +299,7 @@ export class FiltroDesignacionesComponent implements OnInit {
       this.showDesignas=false;
       this.showJustificacionExpress=true;
       this.expanded=true;
+      this.isButtonVisible=false;
       this.showTablaDesigna.emit(false);
     }
   }

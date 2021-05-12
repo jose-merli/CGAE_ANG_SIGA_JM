@@ -60,7 +60,6 @@ export class LetradoSalienteComponent implements OnInit {
         }
       },
       (err) => {
-        console.log(err);
       }
     );
   }
@@ -75,7 +74,6 @@ export class LetradoSalienteComponent implements OnInit {
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
         this.progressSpinner = false;
       }
     );

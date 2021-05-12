@@ -81,7 +81,6 @@ export class FichaCambioLetradoComponent implements OnInit {
     else {
       data = JSON.parse(sessionStorage.getItem("letrado"));
       this.tarjetaResumen.letrado = data;
-      console.log("DATOS LETRADO", data);
       sessionStorage.removeItem("letrado");
       this.body.numColegiado = data.nColegiado;
       this.body.nombre = data.apellidosNombre.split(", ")[1];

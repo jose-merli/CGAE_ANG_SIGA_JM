@@ -7,6 +7,7 @@ import { PersistenceService } from '../../../../../_services/persistence.service
 import { BajasTemporalesItem } from '../../../../../models/sjcs/BajasTemporalesItem';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { ColegiadoItem } from '../../../../../models/ColegiadoItem';
+import { SigaStorageService } from '../../../../../siga-storage.service';
 
 
 @Component({
@@ -51,13 +52,12 @@ export class FiltrosBajasTemporales implements OnInit {
     private sigaServices: SigaServices,
     private translateService: TranslateService,
     private persistenceService: PersistenceService,
-    private commonsService: CommonsService) { }
+    private commonsService: CommonsService,
+    private localStorageService: SigaStorageService) { }
 
   ngOnInit() {   
 
-    if (sessionStorage.getItem("isLetrado") != null && sessionStorage.getItem("isLetrado") != undefined) {
-      this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
-    }
+    this.isLetrado = this.localStorageService.isLetrado;
 
     this.getComboEstado();
 

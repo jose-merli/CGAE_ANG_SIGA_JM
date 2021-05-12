@@ -7,6 +7,7 @@ import { ActuacionDesignaItem } from '../../../../models/sjcs/ActuacionDesignaIt
 import { ActuacionDesignaObject } from '../../../../models/sjcs/ActuacionDesignaObject';
 import { DesignaItem } from '../../../../models/sjcs/DesignaItem';
 import { JustificacionExpressItem } from '../../../../models/sjcs/JustificacionExpressItem';
+import { SigaStorageService } from '../../../../siga-storage.service';
 import { CommonsService } from '../../../../_services/commons.service';
 import { OldSigaServices } from '../../../../_services/oldSiga.service';
 import { SigaServices } from '../../../../_services/siga.service';
@@ -36,7 +37,7 @@ export class DesignacionesComponent implements OnInit {
   actuacionesDesignaItems: ActuacionDesignaItem[] = [];
   
   constructor(public sigaServices: OldSigaServices, public sigaServicesNew: SigaServices, private location: Location,  private commonsService: CommonsService, 
-    private datePipe: DatePipe, private translateService: TranslateService) {
+    private datePipe: DatePipe, private translateService: TranslateService, private localStorageService: SigaStorageService) {
 
     this.url = sigaServices.getOldSigaUrl("designaciones");
   }
@@ -50,7 +51,14 @@ export class DesignacionesComponent implements OnInit {
 
   busquedaJustificacionExpres(){
     this.progressSpinner=true;
+    if(sessionStorage.getItem("buscadorColegiados")){​​
 
+      let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
+
+      this.filtros.filtroJustificacion.nColegiado = busquedaColegiado.nColegiado;
+
+    }​
+    
     this.sigaServicesNew.post("justificacionExpres_busqueda", this.filtros.filtroJustificacion).subscribe(
       data => {
         this.progressSpinner=false;
