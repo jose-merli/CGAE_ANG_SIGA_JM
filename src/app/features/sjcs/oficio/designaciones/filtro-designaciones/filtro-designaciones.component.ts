@@ -112,6 +112,7 @@ export class FiltroDesignacionesComponent implements OnInit {
       sessionStorage.removeItem("colegiadoRelleno");
       sessionStorage.removeItem("datosColegiado");
     }
+    
   }
 
   getParamsEJG(){  
