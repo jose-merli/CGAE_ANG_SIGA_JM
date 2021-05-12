@@ -786,7 +786,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
   this.sigaServices.post("designaciones_existeDesignaJuzgadoProcedimiento", designaItem).subscribe(
     n => {
       this.progressSpinner = false;
-      if(JSON.parse(n.body).existeDesignaJuzgadoProcedimiento>0){
+      if(JSON.parse(n.body).existeDesignaJuzgadoProcedimiento>1){
         let mess = "Atención: Ya existe una designación con el mismo número de prodecimiento y juzgado.¿Desea continuar?";
         let icon = "fa fa-question-circle";
         let keyConfirmation = "confirmGuardar";
