@@ -440,6 +440,11 @@ export class TablaEjgComponent implements OnInit {
     this.progressSpinner=true;
 
     //El valor del desplegable del modal se encuentra en la variable valueComboRemesa.
+    this.selectedDatos.forEach(it => {
+      it.numRegRemesa = this.valueComboRemesa;
+    });
+
+    
     this.sigaServices.post("gestionejg_anadirExpedienteARemesa", this.selectedDatos).subscribe(
       n => {
         this.progressSpinner=false;
