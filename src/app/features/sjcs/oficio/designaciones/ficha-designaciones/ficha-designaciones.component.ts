@@ -247,7 +247,6 @@ export class FichaDesignacionesComponent implements OnInit {
     let designaItem = JSON.parse(sessionStorage.getItem("designaItemLink"));
     this.campos = designaItem;
 
-    this.getPermiteTurno();
 
     this.motivosRenuncia();
 
@@ -282,6 +281,8 @@ export class FichaDesignacionesComponent implements OnInit {
       }
       ).catch(error => console.error(error));
     if (!this.nuevaDesigna) {
+
+      this.getPermiteTurno();
 
       //EDICIÓN DESIGNA
       let camposResumen = [
@@ -396,6 +397,8 @@ export class FichaDesignacionesComponent implements OnInit {
       this.searchRelaciones();
       this.searchLetrados();
       this.getIdPartidaPresupuestaria(this.campos);
+      this.getActuacionesDesigna(false);
+      this.getDocumentosDesigna();
       if (!this.isLetrado) {
         this.searchComunicaciones();
       } else {
@@ -551,9 +554,6 @@ export class FichaDesignacionesComponent implements OnInit {
 
       this.progressSpinner = false;
     }
-
-    this.getActuacionesDesigna(false);
-    this.getDocumentosDesigna();
 
     if (sessionStorage.getItem('refreshDataAct')) {
       let dataRefresh: ActuacionDesignaItem = JSON.parse(sessionStorage.getItem('refreshDataAct'));
@@ -716,7 +716,7 @@ export class FichaDesignacionesComponent implements OnInit {
 
           resp.forEach(el => {
 
-            if(!this.isLetrado){
+            if (!this.isLetrado) {
               el.permiteModificacion = true;
             }
 
@@ -1665,7 +1665,7 @@ export class FichaDesignacionesComponent implements OnInit {
 
             for (var val of this.letrados) {
               //Comprobamos el letrado actual, para ello no tiene que tener fecha renunciaEfectiva
-              if(val.fechaRenunciaEfectiva == null){
+              if (val.fechaRenunciaEfectiva == null) {
                 this.listaTarjetas[6].campos = [
                   {
                     "key": this.translateService.instant('censo.resultadosSolicitudesModificacion.literal.nColegiado'),
@@ -1676,8 +1676,8 @@ export class FichaDesignacionesComponent implements OnInit {
                     "value": val.apellidosNombre
                   }
                 ]
+              }
             }
-          }
 
             this.listaTarjetas[6].enlaceCardClosed = { click: 'irFechaColegial()', title: this.translateService.instant('informesycomunicaciones.comunicaciones.fichaColegial') }
           }
@@ -1751,6 +1751,8 @@ export class FichaDesignacionesComponent implements OnInit {
     this.campos = event;
     this.progressSpinner = true;
     let designaItem = this.campos;
+
+    this.getPermiteTurno();
 
     if (sessionStorage.getItem("nuevoProcurador")) {
       this.listaTarjetas[5].opened = true;
