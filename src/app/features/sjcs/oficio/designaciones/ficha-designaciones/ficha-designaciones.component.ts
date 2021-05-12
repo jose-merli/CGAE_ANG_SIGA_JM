@@ -22,6 +22,7 @@ import { DocumentoDesignaObject } from '../../../../../models/sjcs/DocumentoDesi
 import { Dialog } from 'primeng/dialog';
 import { SigaStorageService } from '../../../../../siga-storage.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
+import { TurnosItem } from '../../../../../models/sjcs/TurnosItem';
 
 @Component({
   selector: 'app-ficha-designaciones',
@@ -44,6 +45,7 @@ export class FichaDesignacionesComponent implements OnInit {
   numColegiadoLogado: any;
   esColegiado: boolean = false;
   confirmationSave: boolean = false;
+  permiteTurno: boolean;
 
   @ViewChild(DetalleTarjetaContrariosFichaDesignacionOficioComponent) tarjetaContrarios;
   @ViewChild(DetalleTarjetaInteresadosFichaDesignacionOficioComponent) tarjetaInteresados;
@@ -244,6 +246,9 @@ export class FichaDesignacionesComponent implements OnInit {
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
     let designaItem = JSON.parse(sessionStorage.getItem("designaItemLink"));
     this.campos = designaItem;
+
+    this.getPermiteTurno();
+
     this.motivosRenuncia();
 
     if (sessionStorage.getItem("nuevoProcurador")) {
@@ -1912,6 +1917,29 @@ export class FichaDesignacionesComponent implements OnInit {
             });
           }
         }
+      },
+      err => {
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+
+  }
+
+  getPermiteTurno() {
+
+    this.progressSpinner = true;
+
+    let turnoItem = new TurnosItem();
+    turnoItem.idturno = this.campos.idTurno.toString();
+
+    this.sigaServices.post("turnos_busquedaFichaTurnos", turnoItem).subscribe(
+      data => {
+        let resp: TurnosItem = JSON.parse(data.body).turnosItem[0];
+        this.permiteTurno = resp.letradoactuaciones == "1";
+        this.progressSpinner = false;
       },
       err => {
         this.progressSpinner = false;

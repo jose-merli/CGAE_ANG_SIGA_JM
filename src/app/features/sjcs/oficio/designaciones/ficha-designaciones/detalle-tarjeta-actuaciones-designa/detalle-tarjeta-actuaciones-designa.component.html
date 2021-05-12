@@ -69,7 +69,7 @@
     <button *ngIf="historico" [disabled]="!isAnySelected() || isLetrado" pButton type="button" iconPos="left"
       label="{{ 'general.boton.reactivar' | translate}}" (click)="reactivar()"></button>
     <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"
-      (click)="nuevo()"  ></button>
+      (click)="nuevo()" [disabled]="(isLetrado && !permiteTurno)"></button>
   </div>
 </div>
 <!-- Tabla de actuaciones -->

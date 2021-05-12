@@ -12,6 +12,12 @@ import { DocumentoActDesignaObject } from '../../../../../../../models/sjcs/Docu
 import { DocumentoActDesignaItem } from '../../../../../../../models/sjcs/DocumentoActDesignaItem';
 import { Actuacion } from '../detalle-tarjeta-actuaciones-designa.component';
 import { SigaStorageService } from '../../../../../../../siga-storage.service';
+import { TurnosItem } from '../../../../../../../models/sjcs/TurnosItem';
+
+export class UsuarioLogado {
+  idPersona: string;
+  numColegiado: string;
+}
 
 @Component({
   selector: 'app-ficha-actuacion',
@@ -144,13 +150,14 @@ export class FichaActuacionComponent implements OnInit {
   isNewActDesig: boolean = false;
   progressSpinner: boolean = false;
   isAnulada: boolean = false;
-  usuarioLogado;
+  usuarioLogado: UsuarioLogado;
   listaAcciones: AccionItem[] = [];
   msgs: Message[] = [];
   relaciones: any;
   isColegiado;
   documentos: DocumentoActDesignaItem[] = [];
   modoLectura: boolean = false;
+  permiteTurno: boolean;
 
   constructor(private location: Location,
     private sigaServices: SigaServices,
@@ -163,6 +170,7 @@ export class FichaActuacionComponent implements OnInit {
     this.isColegiado = this.sigaStorageService.isLetrado;
 
     if (this.isColegiado) {
+      this.usuarioLogado = new UsuarioLogado();
       this.usuarioLogado.idPersona = this.sigaStorageService.idPersona;
       this.usuarioLogado.numColegiado = this.sigaStorageService.numColegiado;
     }
@@ -174,21 +182,26 @@ export class FichaActuacionComponent implements OnInit {
       sessionStorage.removeItem("actuacionDesigna");
       this.actuacionDesigna = actuacion;
 
-      if (actuacion.isNew) {
-        this.isNewActDesig = true;
-        this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiDatosGen').opened = true;
-      } else {
+      this.getPermiteTurno();
+    }
+  }
 
-        if (this.isColegiado && this.actuacionDesigna.actuacion.validada) {
-          this.modoLectura = true;
-        }
+  cargaInicial() {
 
-        this.establecerValoresIniciales();
+    if (this.actuacionDesigna.isNew) {
+      this.isNewActDesig = true;
+      this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiDatosGen').opened = true;
+    } else {
+
+      if (this.isColegiado && (this.actuacionDesigna.actuacion.validada || !this.permiteTurno)) {
+        this.modoLectura = true;
       }
 
-      if (actuacion.relaciones != null) {
-        this.relaciones = actuacion.relaciones;
-      }
+      this.establecerValoresIniciales();
+    }
+
+    if (this.actuacionDesigna.relaciones != null) {
+      this.relaciones = this.actuacionDesigna.relaciones;
     }
   }
 
@@ -530,6 +543,30 @@ export class FichaActuacionComponent implements OnInit {
       },
       () => {
         this.progressSpinner = false;
+      }
+    );
+
+  }
+
+  getPermiteTurno() {
+
+    this.progressSpinner = true;
+
+    let turnoItem = new TurnosItem();
+    turnoItem.idturno = this.actuacionDesigna.designaItem.idTurno;
+
+    this.sigaServices.post("turnos_busquedaFichaTurnos", turnoItem).subscribe(
+      data => {
+        let resp: TurnosItem = JSON.parse(data.body).turnosItem[0];
+        this.permiteTurno = resp.letradoactuaciones == "1";
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+        this.cargaInicial();
       }
     );
 
