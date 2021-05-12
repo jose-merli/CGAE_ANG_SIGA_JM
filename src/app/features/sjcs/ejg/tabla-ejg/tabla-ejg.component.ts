@@ -38,6 +38,7 @@ export class TablaEjgComponent implements OnInit {
   nuevo: boolean = false;
   progressSpinner: boolean = false;
   disableAddRemesa: boolean = true;
+  disableBotonAnadir: boolean = true;
 
   ejgObject = [];
   datosFamiliares = [];
@@ -46,11 +47,12 @@ export class TablaEjgComponent implements OnInit {
   comboRemesa = [];
   fechaEstado = new Date();
   valueComboEstado = "";
-  valueComboRemesa = "";
+  valueComboRemesa;
 
   //Resultados de la busqueda
   @Input() datos;
 
+  @Input() tipoEJG;
   @ViewChild("table") table: DataTable;
   @Output() searchHistoricalSend = new EventEmitter<boolean>();
   @Output() busqueda = new EventEmitter<boolean>();
@@ -398,8 +400,11 @@ export class TablaEjgComponent implements OnInit {
     this.showModalAnadirRemesa = true;
   }
 
-  checkValueComboRemesa(){
-    return this.valueComboRemesa != "";
+  checkBotonAnadir(){
+    if(this.valueComboRemesa == null){
+      this.disableBotonAnadir=true;
+    }
+    else this.disableBotonAnadir=false;
   }
 
   checkAnadirRemesa(){
@@ -412,6 +417,8 @@ export class TablaEjgComponent implements OnInit {
       accept: () => {
         this.anadirRemesa();
         this.cdAnadirRemesa.hide();
+        this.cdCambioEstado.hide();
+        this.cancelaAnadirRemesa();
       },
       reject: () => {
         this.msgs = [{
@@ -419,7 +426,9 @@ export class TablaEjgComponent implements OnInit {
           summary: "Cancel",
           detail: this.translateService.instant("general.message.accion.cancelada")
         }];
+        this.cancelaAnadirRemesa();
         this.cdAnadirRemesa.hide();
+        this.cdCambioEstado.hide();
       }
     });
   }
@@ -458,7 +467,7 @@ export class TablaEjgComponent implements OnInit {
   }
 
   checkAddRemesa(selectedDatos){
-    if (selectedDatos != undefined) {
+    /* if (selectedDatos != undefined) {
       //Buscar forma generica parecida a this.translateService.instant() para buscar sus equivalentes en otros idiomas.
       let findDato = this.selectedDatos.find(item => item.estadoEJG != this.comboEstadoEJG[11].label && item.estadoEJG != this.comboEstadoEJG[12].label);
       if(findDato != null){
@@ -467,6 +476,12 @@ export class TablaEjgComponent implements OnInit {
       else{
         this.disableAddRemesa = false;
       }
+    } */
+    if(this.tipoEJG=="7" || this.tipoEJG=="8"){
+      this.disableAddRemesa = false;
+    }
+    else{
+      this.disableAddRemesa = true;
     }
   }
 }
