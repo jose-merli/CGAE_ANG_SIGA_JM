@@ -221,7 +221,6 @@ export class TarjetaColaOficio implements OnInit {
       }
       this.getColaOficio();
     }
-
   }
 
   fillFechaDesdeCalendar(event) {
@@ -280,7 +279,6 @@ export class TarjetaColaOficio implements OnInit {
             // }
           },
           err => {
-            console.log(err);
           }, () => {
             this.turnosItem.idpersonaUltimo = this.turnosItem2.idpersonaUltimo;
             this.getColaOficio();
@@ -306,7 +304,6 @@ export class TarjetaColaOficio implements OnInit {
         // }
       },
       err => {
-        console.log(err);
         this.progressSpinner = false;
       }, () => {
         this.datosInicial = JSON.parse(JSON.stringify(this.datos));
