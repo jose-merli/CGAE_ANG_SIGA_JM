@@ -4,6 +4,10 @@ import { Actuacion } from '../../detalle-tarjeta-actuaciones-designa.component';
 import { SigaServices } from '../../../../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../../../../commons/translate/translation.service';
 import { DatePipe } from '@angular/common';
+import { procesos_oficio } from '../../../../../../../../permisos/procesos_oficio';
+import { CommonsService } from '../../../../../../../../_services/commons.service';
+import { PersistenceService } from '../../../../../../../../_services/persistence.service';
+import { Router } from '@angular/router';
 import { UsuarioLogado } from '../ficha-actuacion.component';
 
 @Component({
@@ -23,14 +27,16 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
   @Input() isColegiado;
   @Input() usuarioLogado: UsuarioLogado;
   @Input() modoLectura: boolean;
-
+  disableAll: boolean = false;
   fechaActuacion: Date;
 
   estado: string = '';
   fechaJusti: any;
   observaciones: string = '';
-
-  constructor(private sigaServices: SigaServices, private translateService: TranslateService, private datePipe: DatePipe) { }
+  permisoEscritura: boolean;
+  
+  constructor(private sigaServices: SigaServices, private translateService: TranslateService,  private commonsService: CommonsService, private router: Router, private datePipe: DatePipe
+  ,private persistenceService: PersistenceService) { }
 
   ngOnInit() {
 
@@ -38,6 +44,26 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
       this.establecerValoresIniciales();
     } else {
       this.establecerDatosInicialesEditAct();
+    }
+
+    this.commonsService.checkAcceso(procesos_oficio.designasActuaciones)
+          .then(respuesta => {
+            this.permisoEscritura = respuesta;
+            this.persistenceService.setPermisos(this.permisoEscritura);
+     
+            if (this.permisoEscritura == undefined) {
+              sessionStorage.setItem("codError", "403");
+              sessionStorage.setItem(
+                "descError",
+                this.translateService.instant("generico.error.permiso.denegado")
+              );
+              this.router.navigate(["/errorAcceso"]);
+            }
+            
+          }
+          ).catch(error => console.error(error));
+    if (this.persistenceService.getPermisos() != true) {
+      this.disableAll = true
     }
 
     sessionStorage.setItem("datosIniActuDesignaJust", JSON.stringify(this.actuacionDesigna));

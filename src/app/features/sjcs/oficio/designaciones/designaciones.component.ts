@@ -29,20 +29,28 @@ export class DesignacionesComponent implements OnInit {
   muestraTablaDesignas: boolean = false;
   comboTipoDesigna: any[];
   colegiado: boolean;
+  isLetrado: boolean = false;
+  idPersonaLogado;
+  numColegiadoLogado;
   @ViewChild(FiltroDesignacionesComponent) filtros;
   
   datosJustificacion: JustificacionExpressItem = new JustificacionExpressItem();
   
   msgs: Message[] = [];
   actuacionesDesignaItems: ActuacionDesignaItem[] = [];
-  
+  permisosFichaAct = false; 
   constructor(public sigaServices: OldSigaServices, public sigaServicesNew: SigaServices, private location: Location,  private commonsService: CommonsService, 
     private datePipe: DatePipe, private translateService: TranslateService, private localStorageService: SigaStorageService) {
+
 
     this.url = sigaServices.getOldSigaUrl("designaciones");
   }
 
   ngOnInit() {
+    sessionStorage.setItem("rowIdsToUpdate", JSON.stringify([]));
+    this.isLetrado = this.localStorageService.isLetrado;
+    this.idPersonaLogado = this.localStorageService.idPersona;
+    this.numColegiadoLogado = this.localStorageService.numColegiado;
   }
 
   showTablaJustificacionExpres(event){
@@ -50,6 +58,7 @@ export class DesignacionesComponent implements OnInit {
   }
 
   busquedaJustificacionExpres(){
+    this.datosJustificacion = new JustificacionExpressItem();
     this.progressSpinner=true;
     if(sessionStorage.getItem("buscadorColegiados")){​​
 
@@ -309,5 +318,7 @@ export class DesignacionesComponent implements OnInit {
     this.actualizacionJustificacionExpres(event);
   }
 
-
+  getpermisosFichaAct(event){
+    this.permisosFichaAct = event;
+  }
 }
