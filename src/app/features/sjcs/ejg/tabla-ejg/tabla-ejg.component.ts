@@ -8,6 +8,7 @@ import { EJGItem } from '../../../../models/sjcs/EJGItem';
 import { CommonsService } from '../../../../_services/commons.service';
 import { DatePipe } from '../../../../../../node_modules/@angular/common';
 import { Dialog } from 'primeng/primeng';
+import { NullTemplateVisitor } from '@angular/compiler';
 
 @Component({
   selector: 'app-tabla-ejg',
@@ -37,24 +38,33 @@ export class TablaEjgComponent implements OnInit {
   datosItem: EJGItem;
   nuevo: boolean = false;
   progressSpinner: boolean = false;
+  disableAddRemesa: boolean = true;
+  disableBotonAnadir: boolean = true;
 
   ejgObject = [];
   datosFamiliares = [];
 
   comboEstadoEJG = [];
+  comboRemesa = [];
   fechaEstado = new Date();
   valueComboEstado = "";
+  valueComboRemesa;
 
   //Resultados de la busqueda
   @Input() datos;
+
+  @Input() filtro;
+  @Input() remesa;
 
   @ViewChild("table") table: DataTable;
   @Output() searchHistoricalSend = new EventEmitter<boolean>();
   @Output() busqueda = new EventEmitter<boolean>();
   @ViewChild("cd") cdCambioEstado: Dialog;
+  @ViewChild("cd1") cdAnadirRemesa: Dialog;
 
 
   showModalCambioEstado = false;
+  showModalAnadirRemesa = false;
 
   constructor(private translateService: TranslateService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
     private sigaServices: SigaServices, private persistenceService: PersistenceService, 
@@ -81,6 +91,26 @@ export class TablaEjgComponent implements OnInit {
     if (this.persistenceService.getHistorico() != undefined) {
       this.historico = this.persistenceService.getHistorico();
     }
+
+    this.getComboEstadoEJG();
+    this.getComboRemesa(); 
+  }
+
+  //Se activara cada vez que los @Input cambien de valor (ahora unicamente datos)
+  ngOnChanges(){
+    this.selectedDatos=[];
+  }
+
+  getComboEstadoEJG() {
+    this.sigaServices.get("filtrosejg_comboEstadoEJG").subscribe(
+      n => {
+        this.comboEstadoEJG = n.combooItems;
+        this.commonServices.arregloTildesCombo(this.comboEstadoEJG);
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
   
   openTab(evento) {
@@ -175,25 +205,13 @@ export class TablaEjgComponent implements OnInit {
       }
     ];
   }
-
-  getComboEstado() {
-    this.progressSpinner=true;
-
-    this.sigaServices.get("filtrosejg_comboEstadoEJG").subscribe(
-      n => {
-        this.comboEstadoEJG = n.combooItems;
-        //this.commonServices.arregloTildesCombo(this.comboEstadoEJG);
-        this.progressSpinner=false;
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner=false;
-      }
-    );
-  }
   
   cancelaCambiarEstados(){
     this.showModalCambioEstado = false;
+  }
+
+  cancelaAnadirRemesa(){
+    this.showModalAnadirRemesa = false;
   }
 
   checkCambiarEstados(){
@@ -339,7 +357,6 @@ export class TablaEjgComponent implements OnInit {
   changeEstado() {
     if (this.selectedDatos != null && this.selectedDatos != undefined && this.selectedDatos.length > 0 && this.checkPermisos()) {
       this.showModalCambioEstado = true;
-      this.getComboEstado();      
     } else {
       this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("censo.datosBancarios.mensaje.seleccionar.almenosUno"));
     }
@@ -368,6 +385,24 @@ export class TablaEjgComponent implements OnInit {
   }
 
   addRemesa() {
+    this.showModalAnadirRemesa = true;
+
+    //Queda pendiente añadir el codigo que gestionaria el desplegable si se accede desde una fecha de remesa.
+    //El desplegable tendria que tener el valor de la remesa de la que procede y además deshabilitar el desplegable para que no pueda cambiar de valor.
+    if(this.remesa!=null){
+      this.valueComboRemesa = this.remesa.descripcion;
+    }
+
+  }
+
+  checkBotonAnadir(){
+    if(this.valueComboRemesa == null){
+      this.disableBotonAnadir=true;
+    }
+    else this.disableBotonAnadir=false;
+  }
+
+  checkAnadirRemesa(){
     let mess = this.translateService.instant("justiciaGratuita.ejg.message.anadirExpedienteARemesa");
     let icon = "fa fa-edit";
 
@@ -376,7 +411,9 @@ export class TablaEjgComponent implements OnInit {
       icon: icon,
       accept: () => {
         this.anadirRemesa();
+        this.cdAnadirRemesa.hide();
         this.cdCambioEstado.hide();
+        this.cancelaAnadirRemesa();
       },
       reject: () => {
         this.msgs = [{
@@ -384,15 +421,30 @@ export class TablaEjgComponent implements OnInit {
           summary: "Cancel",
           detail: this.translateService.instant("general.message.accion.cancelada")
         }];
+        this.cancelaAnadirRemesa();
+        this.cdAnadirRemesa.hide();
         this.cdCambioEstado.hide();
       }
     });
   }
 
+  getComboRemesa() {
+    this.sigaServices.get("filtrosejg_comboRemesa").subscribe(
+      n => {
+        this.comboRemesa = n.combooItems;
+        this.commonServices.arregloTildesCombo(this.comboRemesa);
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
   anadirRemesa(){
     this.progressSpinner=true;
 
-    this.sigaServices.post("gestionejg_anadirExpedienteARemesa", this.selectDatos).subscribe(
+    //El valor del desplegable del modal se encuentra en la variable valueComboRemesa.
+    this.sigaServices.post("gestionejg_anadirExpedienteARemesa", this.selectedDatos).subscribe(
       n => {
         this.progressSpinner=false;
       },
@@ -406,5 +458,25 @@ export class TablaEjgComponent implements OnInit {
   actualizaSeleccionados(selectedDatos) {
     this.numSelected = selectedDatos.length;
     this.seleccion = false;
+    this.checkAddRemesa(selectedDatos);
+  }
+
+  checkAddRemesa(selectedDatos){
+    /* if (selectedDatos != undefined) {
+      //Buscar forma generica parecida a this.translateService.instant() para buscar sus equivalentes en otros idiomas.
+      let findDato = this.selectedDatos.find(item => item.estadoEJG != this.comboEstadoEJG[11].label && item.estadoEJG != this.comboEstadoEJG[12].label);
+      if(findDato != null){
+        this.disableAddRemesa = true;
+      }
+      else{
+        this.disableAddRemesa = false;
+      }
+    } */
+    if(this.filtro.estadoEJG=="7" || this.filtro.estadoEJG=="8"){
+      this.disableAddRemesa = false;
+    }
+    else{
+      this.disableAddRemesa = true;
+    }
   }
 }

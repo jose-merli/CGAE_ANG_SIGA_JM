@@ -397,6 +397,7 @@ export class FiltrosEjgComponent implements OnInit {
       }
     );
   }
+  
   getComboTurno() {
     if (this.body.tipoLetrado == "E") {
       this.tipoLetrado = "2";

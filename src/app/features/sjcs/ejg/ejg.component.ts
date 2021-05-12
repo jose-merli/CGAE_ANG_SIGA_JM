@@ -27,6 +27,7 @@ export class EJGComponent implements OnInit {
   historico: boolean = false;
   progressSpinner: boolean = false;
   buscar: boolean = false;
+  remesa;
 
   permisoEscritura: any;
   
@@ -67,6 +68,16 @@ export class EJGComponent implements OnInit {
         }
       }
       ).catch(error => console.error(error));
+
+      //Preparacion previa para recibir el valor de remesa si se accede a esta pantalla desde una ficha
+      //de remesa.
+      if (sessionStorage.getItem("remesa") != null) {
+        this.remesa = JSON.parse(sessionStorage.getItem("remesa"));
+        sessionStorage.removeItem("remesa");
+      }
+        
+        
+      
   }
 
   searchEJGs(event) {
