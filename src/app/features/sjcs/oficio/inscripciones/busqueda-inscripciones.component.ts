@@ -150,7 +150,6 @@ export class InscripcionesComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
       }, () => {
         this.commonsService.scrollTablaFoco("tablaFoco");
       }

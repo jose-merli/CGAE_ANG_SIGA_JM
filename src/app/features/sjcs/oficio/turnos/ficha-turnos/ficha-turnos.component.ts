@@ -1,4 +1,4 @@
-import { Component, OnInit , SimpleChanges } from '@angular/core';
+import { AfterViewChecked, ChangeDetectorRef, Component, OnInit , SimpleChanges } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { TurnosItems } from '../../../../../models/sjcs/TurnosItems';
@@ -12,7 +12,7 @@ import { procesos_oficio } from '../../../../../permisos/procesos_oficio';
 	templateUrl: './ficha-turnos.component.html',
 	styleUrls: ['./ficha-turnos.component.scss']
 })
-export class FichaTurnosComponent implements OnInit {
+export class FichaTurnosComponent implements OnInit, AfterViewChecked {
 	idModelo: string;
 	fichasPosibles: any[];
 	filtrosConsulta;
@@ -31,7 +31,7 @@ export class FichaTurnosComponent implements OnInit {
 	iconoTarjetaResumen = "clipboard";
 
 	enlacesTarjetaResumen: any[] = [];
-	manuallyOpened:Boolean;
+	manuallyOpened:Boolean = false;
 	openGen: Boolean = false;
 	openConfigTurnos: Boolean = false;
 	openConfigColaOficio: Boolean = false;
@@ -49,7 +49,12 @@ export class FichaTurnosComponent implements OnInit {
 	tarjetaInscripciones: string;
 	newTurno: boolean = true;
 
-	constructor(private route: ActivatedRoute, private sigaServices: SigaServices, private location: Location, private persistenceService: PersistenceService,private commonsService: CommonsService) { }
+	constructor(private route: ActivatedRoute, private sigaServices: SigaServices, private location: Location, private persistenceService: PersistenceService,private commonsService: CommonsService, private changeDetectorRef: ChangeDetectorRef) { }
+
+	ngAfterViewChecked() {
+		this.changeDetectorRef.detectChanges();
+	}
+
 
 	ngOnInit() {
 		

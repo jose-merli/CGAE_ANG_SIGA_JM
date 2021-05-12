@@ -73,7 +73,6 @@ export class DesignacionesComponent implements OnInit {
         this.progressSpinner = false;
 
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        console.log(err);
       },
       ()=>{
         setTimeout(()=>{
@@ -95,7 +94,6 @@ export class DesignacionesComponent implements OnInit {
       },
       err => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        console.log(err);
       },);
   }
 
@@ -113,7 +111,6 @@ export class DesignacionesComponent implements OnInit {
         this.muestraTablaJustificacion=true;
         this.progressSpinner=false;
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        console.log(err);
       },);
   }
 
@@ -131,7 +128,6 @@ export class DesignacionesComponent implements OnInit {
         this.muestraTablaJustificacion=true;
         this.progressSpinner = false;
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        console.log(err);
       },);
   }
 
@@ -225,7 +221,6 @@ export class DesignacionesComponent implements OnInit {
           },
           err => {
             this.progressSpinner = false;
-            console.log(err);
           }
         );
         this.progressSpinner=false;
@@ -235,9 +230,6 @@ export class DesignacionesComponent implements OnInit {
       err => {
         this.progressSpinner = false;
         this.commonsService.scrollTablaFoco("tablaFoco");
-        // this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-
-        console.log(err);
       },() => {
         this.progressSpinner = false;
         this.progressSpinner = false;
@@ -258,7 +250,6 @@ export class DesignacionesComponent implements OnInit {
     this.sigaServicesNew.post("designaciones_getDatosAdicionales", desginaAdicionales).subscribe(
       n => {
        
-        console.log(n.body);
         let datosAdicionales = JSON.parse(n.body);
         if (datosAdicionales[0] != null && datosAdicionales[0] != undefined) {
           element.delitos = datosAdicionales[0].delitos;
@@ -272,7 +263,6 @@ export class DesignacionesComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
       }, () => {
         this.progressSpinner = false;
       }

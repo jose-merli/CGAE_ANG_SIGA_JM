@@ -52,7 +52,7 @@ export class BajasTemporalesComponent implements OnInit {
   cabeceras = [
     { id: "ncolegiado", name: "facturacionSJCS.facturacionesYPagos.numColegiado" },
     { id: "nombre", name: "busquedaSanciones.detalleSancion.letrado.literal" },
-    { id: "tiponombre", name: "justiciaGratuita.sjcs.designas.DatosIden.turno" },
+    { id: "tiponombre", name: "Tipo Baja" },
     { id: "descripcion", name: "administracion.auditoriaUsuarios.literal.motivo" },
     { id: "fechadesdeSinHora", name: "facturacion.seriesFacturacion.literal.fInicio" },
     { id: "fechahastaSinHora", name: "censo.consultaDatos.literal.fechaFin" },
@@ -187,14 +187,25 @@ export class BajasTemporalesComponent implements OnInit {
 
 jsonToRow(datos){
   let arr = [];
+  let nombreApell;
 
   datos.forEach((element, index) => {
     let italic = (element.eliminado == 1);
+    if(element.apellidos1 != null){
+      nombreApell = element.apellidos1;
+    }
+
+    if(element.apellidos2 != null){
+      nombreApell = + " " + element.apellidos2;
+    }
+
+    if(element.nombre != null){
+      nombreApell = + ", " + element.nombre;
+    }
     if(element.eliminado == 1){
       let obj = [
         { type: 'text', value: element.ncolegiado},
-        { type: 'text', value: element.apellidos1 +" "+ element.apellidos2 + ", " + element.nombre},
-        { type: 'text', value: element.tiponombre},
+        { type: 'text', value: nombreApell},
         { type: 'text', value: element.descripcion},
         { type: 'text', value: element.fechadesdeSinHora},
         { type: 'text', value: element.fechahastaSinHora},
@@ -215,7 +226,7 @@ jsonToRow(datos){
     }else{
       let obj = [
         { type: 'text', value: element.ncolegiado},
-        { type: 'text', value: element.apellidos1 +" "+ element.apellidos2 + ", " + element.nombre},
+        { type: 'text', value: nombreApell},
         { type: 'select', combo: this.comboTipo ,value: element.tipo},
         { type: 'input', value: element.descripcion},
         { type: 'text', value: element.fechadesdeSinHora},

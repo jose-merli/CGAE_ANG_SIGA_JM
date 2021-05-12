@@ -280,7 +280,6 @@ export class FiltroDesignacionesComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
       }
     );
   }
@@ -428,7 +427,6 @@ export class FiltroDesignacionesComponent implements OnInit {
         this.progressSpinner=false;
       },
       err => {
-        console.log(err);
         this.progressSpinner=false;
 
       }, () => {
@@ -446,7 +444,6 @@ export class FiltroDesignacionesComponent implements OnInit {
         this.progressSpinner=false;
       },
       err => {
-        console.log(err);
         this.progressSpinner=false;
       }, () => {
         this.arregloTildesCombo(this.comboTipoDesigna);
@@ -493,7 +490,6 @@ getComboCalidad() {
         this.progressSpinner=false;
       },
       err => {
-        console.log(err);
         this.progressSpinner=false;
       }, () => {
         this.arregloTildesCombo(this.comboTurno);
@@ -510,7 +506,6 @@ getComboCalidad() {
         this.progressSpinner=false;
       },
       err => {
-        console.log(err);
         this.progressSpinner=false;
       }, () => {
         this.arregloTildesCombo(this.comboTurno);
@@ -527,7 +522,6 @@ getComboCalidad() {
         this.progressSpinner=false;
       },
       err => {
-        console.log(err);
         this.progressSpinner=false;
       }, () => {
         this.arregloTildesCombo(this.comboProcedimientos);
@@ -555,7 +549,6 @@ getComboCalidad() {
         this.progressSpinner=false;
       },
       err => {
-        console.log(err);
         this.progressSpinner=false;
       }, () => {
         this.arregloTildesCombo(this.comboAcreditaciones);
@@ -819,7 +812,6 @@ getComboCalidad() {
 
     },
     error =>{
-      console.log("ERROR: cargando datos del usuario logado");
       this.progressSpinner=false;
     });
   }

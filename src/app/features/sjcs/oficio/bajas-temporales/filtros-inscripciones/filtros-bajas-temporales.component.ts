@@ -55,6 +55,8 @@ export class FiltrosBajasTemporales implements OnInit {
 
   ngOnInit() {   
 
+    this.clearFilters();
+
     this.isLetrado = this.localStorageService.isLetrado;
 
     this.getComboEstado();
@@ -293,7 +295,6 @@ export class FiltrosBajasTemporales implements OnInit {
         },
         err => {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-          console.log(err);
           this.progressSpinner=false;
         }
       );

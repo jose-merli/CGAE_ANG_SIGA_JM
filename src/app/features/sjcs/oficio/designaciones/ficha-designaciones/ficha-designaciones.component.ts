@@ -1663,16 +1663,22 @@ export class FichaDesignacionesComponent implements OnInit {
             this.datos.fecharenuncia;
             this.datos.motivosrenuncia; */
 
-            this.listaTarjetas[6].campos = [
-              {
-                "key": this.translateService.instant('censo.resultadosSolicitudesModificacion.literal.nColegiado'),
-                "value": this.letrados[0].nColegiado
-              },
-              {
-                "key": this.translateService.instant('justiciaGratuita.justiciables.literal.colegiado'),
-                "value": this.letrados[0].apellidosNombre
-              }
-            ]
+            for (var val of this.letrados) {
+              //Comprobamos el letrado actual, para ello no tiene que tener fecha renunciaEfectiva
+              if(val.fechaRenunciaEfectiva == null){
+                this.listaTarjetas[6].campos = [
+                  {
+                    "key": this.translateService.instant('censo.resultadosSolicitudesModificacion.literal.nColegiado'),
+                    "value": val.nColegiado
+                  },
+                  {
+                    "key": this.translateService.instant('justiciaGratuita.justiciables.literal.colegiado'),
+                    "value": val.apellidosNombre
+                  }
+                ]
+            }
+          }
+
             this.listaTarjetas[6].enlaceCardClosed = { click: 'irFechaColegial()', title: this.translateService.instant('informesycomunicaciones.comunicaciones.fichaColegial') }
           }
         },

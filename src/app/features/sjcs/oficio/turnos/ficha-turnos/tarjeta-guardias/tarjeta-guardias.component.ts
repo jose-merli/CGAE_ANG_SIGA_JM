@@ -670,7 +670,6 @@ export class TarjetaGuardias implements OnInit {
     this.idOpened.emit(key);
   }
   openMultiSelect(dato) {
-    // console.log(this.multiSelect);
     dato.onPanelShow;
     // this.multiSelect.show();
     // dato.overlayVisible = true;

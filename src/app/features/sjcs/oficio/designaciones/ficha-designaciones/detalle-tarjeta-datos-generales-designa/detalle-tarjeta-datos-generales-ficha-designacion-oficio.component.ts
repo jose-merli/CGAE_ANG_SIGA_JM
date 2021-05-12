@@ -553,6 +553,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                     summary,
                     detail
                   });
+                  this.progressSpinner = false;
 
                 }, () => {
                 }
@@ -604,6 +605,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                     summary,
                     detail
                   });
+                  this.progressSpinner = false;
                 }, () => {
                 }
               );
