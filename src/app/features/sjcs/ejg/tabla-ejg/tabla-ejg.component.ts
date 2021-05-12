@@ -352,7 +352,11 @@ export class TablaEjgComponent implements OnInit {
   downloadEEJ() {
     this.progressSpinner=true;
 
-    this.sigaServices.post("gestionejg_descargarExpedientesJG", this.selectDatos).subscribe(
+    let data: EJGItem [] = [];
+
+    data.push(this.selectedDatos[0]);
+
+    this.sigaServices.post("gestionejg_descargarExpedientesJG", this.selectedDatos).subscribe(
       n => {
         this.progressSpinner=false;
       },
