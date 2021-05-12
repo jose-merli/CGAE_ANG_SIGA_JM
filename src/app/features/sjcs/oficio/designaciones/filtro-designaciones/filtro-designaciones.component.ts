@@ -13,6 +13,7 @@ import { FileAlreadyExistException } from '@angular-devkit/core';
 import { ParametroRequestDto } from '../../../../../models/ParametroRequestDto';
 import { ParametroDto } from '../../../../../models/ParametroDto';
 import { SigaStorageService } from '../../../../../siga-storage.service';
+import { CommonsService } from '../../../../../_services/commons.service';
 
 export enum KEY_CODE {
   ENTER = 13
@@ -76,12 +77,13 @@ export class FiltroDesignacionesComponent implements OnInit {
   comboOrigenActuaciones: any[];
   comboRoles: any[];
   comboAcreditaciones: any[];
-
+  permisoEscritura: boolean;
   institucionActual: any;
   @Output() busquedaJustificacionExpres = new EventEmitter<boolean>();
   @Output() showTablaDesigna = new EventEmitter<boolean>();
   @Output() showTablaJustificacionExpres = new EventEmitter<boolean>();
   @Output() busqueda = new EventEmitter<boolean>();
+  @Output() permisosFichaAct= new EventEmitter<boolean>();
   
   isLetrado:boolean = false;
   sinEjg;
@@ -92,13 +94,14 @@ export class FiltroDesignacionesComponent implements OnInit {
   datosBuscar: any[];
   searchParametros: ParametroDto = new ParametroDto();
   constructor(private translateService: TranslateService, private sigaServices: SigaServices,  private location: Location, private router: Router,
-    private localStorageService: SigaStorageService) { }
+    private localStorageService: SigaStorageService,  private commonsService: CommonsService,) { }
 
   ngOnInit(): void {
-
+    sessionStorage.setItem("rowIdsToUpdate", JSON.stringify([]));
     // let esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
     // if(!esColegiado){   
     this.checkAcceso();
+    this.checkAccesoFichaActuacion();
     this.getParamsEJG();
   // }
     if(sessionStorage.getItem("colegiadoRelleno")){
@@ -211,7 +214,26 @@ export class FiltroDesignacionesComponent implements OnInit {
     //combo comun
     this.getComboEstados();
   }
-
+  checkAccesoFichaActuacion(){
+  this.commonsService.checkAcceso(procesos_oficio.designaTarjetaActuacionesFacturacion)
+          .then(respuesta => {
+            this.permisoEscritura = respuesta;
+    this.permisosFichaAct.emit(this.permisoEscritura);
+            //this.persistenceService.setPermisos(this.permisoEscritura);
+     
+            if (this.permisoEscritura == undefined) {
+              sessionStorage.setItem("codError", "403");
+              sessionStorage.setItem(
+                "descError",
+                this.translateService.instant("generico.error.permiso.denegado")
+              );
+              this.router.navigate(["/errorAcceso"]);
+            }
+            
+          }
+          ).catch(error => console.error(error)); 
+    
+  }
   checkAcceso() {
     let controlAcceso = new ControlAccesoDto();
     controlAcceso.idProceso = procesos_oficio.designa;
@@ -571,6 +593,9 @@ getComboCalidad() {
   }
 
   buscar(){
+    if (sessionStorage.getItem('rowIdsToUpdate') != null && sessionStorage.getItem('rowIdsToUpdate') != 'null' && sessionStorage.getItem('rowIdsToUpdate') != '[]'){
+      this.showMessage('info', "Se han realizado modificaciones sin guardar. Pulse Guardar si no desea perder los datos", '')
+    }else{
     //es la busqueda de justificacion
     if(this.showJustificacionExpress){
       if(this.usuarioBusquedaExpress.numColegiado!=undefined && this.usuarioBusquedaExpress.numColegiado!=null
@@ -644,6 +669,7 @@ getComboCalidad() {
         this.busqueda.emit(false);
       }
     }
+  }
   
 
   showMessage(severity, summary, msg) {

@@ -7,6 +7,7 @@ import { ActuacionDesignaItem } from '../../../../models/sjcs/ActuacionDesignaIt
 import { ActuacionDesignaObject } from '../../../../models/sjcs/ActuacionDesignaObject';
 import { DesignaItem } from '../../../../models/sjcs/DesignaItem';
 import { JustificacionExpressItem } from '../../../../models/sjcs/JustificacionExpressItem';
+import { SigaStorageService } from '../../../../siga-storage.service';
 import { CommonsService } from '../../../../_services/commons.service';
 import { OldSigaServices } from '../../../../_services/oldSiga.service';
 import { SigaServices } from '../../../../_services/siga.service';
@@ -28,20 +29,28 @@ export class DesignacionesComponent implements OnInit {
   muestraTablaDesignas: boolean = false;
   comboTipoDesigna: any[];
   colegiado: boolean;
+  isLetrado: boolean = false;
+  idPersonaLogado;
+  numColegiadoLogado;
   @ViewChild(FiltroDesignacionesComponent) filtros;
   
   datosJustificacion: JustificacionExpressItem = new JustificacionExpressItem();
   
   msgs: Message[] = [];
   actuacionesDesignaItems: ActuacionDesignaItem[] = [];
-  
+  permisosFichaAct = false; 
   constructor(public sigaServices: OldSigaServices, public sigaServicesNew: SigaServices, private location: Location,  private commonsService: CommonsService, 
-    private datePipe: DatePipe, private translateService: TranslateService) {
+    private datePipe: DatePipe, private translateService: TranslateService, 
+    private localStorageService: SigaStorageService,) {
 
     this.url = sigaServices.getOldSigaUrl("designaciones");
   }
 
   ngOnInit() {
+    sessionStorage.setItem("rowIdsToUpdate", JSON.stringify([]));
+    this.isLetrado = this.localStorageService.isLetrado;
+    this.idPersonaLogado = this.localStorageService.idPersona;
+    this.numColegiadoLogado = this.localStorageService.numColegiado;
   }
 
   showTablaJustificacionExpres(event){
@@ -49,6 +58,7 @@ export class DesignacionesComponent implements OnInit {
   }
 
   busquedaJustificacionExpres(){
+    this.datosJustificacion = new JustificacionExpressItem();
     this.progressSpinner=true;
 
     this.sigaServicesNew.post("justificacionExpres_busqueda", this.filtros.filtroJustificacion).subscribe(
@@ -250,7 +260,6 @@ export class DesignacionesComponent implements OnInit {
     this.sigaServicesNew.post("designaciones_getDatosAdicionales", desginaAdicionales).subscribe(
       n => {
        
-        console.log(n.body);
         let datosAdicionales = JSON.parse(n.body);
         if (datosAdicionales[0] != null && datosAdicionales[0] != undefined) {
           element.delitos = datosAdicionales[0].delitos;
@@ -311,5 +320,7 @@ export class DesignacionesComponent implements OnInit {
     this.actualizacionJustificacionExpres(event);
   }
 
-
+  getpermisosFichaAct(event){
+    this.permisosFichaAct = event;
+  }
 }
