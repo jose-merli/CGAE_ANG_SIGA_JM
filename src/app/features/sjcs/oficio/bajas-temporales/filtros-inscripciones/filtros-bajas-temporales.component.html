@@ -10,7 +10,7 @@
 <div class="card">
   <div class="card-body">
     <!-- CAMPOS COMPONEN FILTROS BUSQUEDA-->
-    <div *ngIf="showDatosGenerales" class="module vista-avanzada">
+    <div class="module vista-avanzada">
       <div class="form-row">
         <div class="form-group-interlineado col-lg-2 col-md-3">
           <label>{{'censo.busquedaClientesAvanzada.literal.tipoCliente'|translate}}</label>
@@ -42,9 +42,7 @@
           </label>
           <app-fecha [(value)]="filtros.fechahasta" [minDate]="filtros.fechadesde" (valueChangeInput)="fillFechaHastaCalendar($event)" (valueChangeSelected)="fillFechaHastaCalendar($event)"></app-fecha>
         </div>
-
       </div>
-    </div>
     
     <p (click)="onHideDatosGenerales()" class="title-module">{{ "justiciaGratuita.justiciables.literal.colegiado" | translate}}
       <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
@@ -57,8 +55,9 @@
         </div>
       </div>
     </div>
-
   </div>
+  </div>
+
   <div class="card-footer">
     <!-- BOTONES TARJETA -->
     <div class="text-right main-button">

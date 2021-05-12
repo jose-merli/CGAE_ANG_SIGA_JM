@@ -87,12 +87,16 @@
 <div class="card-footer">
   <div class="text-right main-button">
     <button pButton type="button" icon="fa fa-trash" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"
-      [disabled]="selectedDatos.length == 0 || isAnulada || modoLectura" (click)="eliminarArchivos()"></button>
+      [disabled]="selectedDatos.length == 0 || isAnulada || modoLectura || (isColegiado && !permiteSubidDescargaFicheros)"
+      (click)="eliminarArchivos()"></button>
     <button pButton type="button" icon="fa fa-download" iconPos="left" label="{{'general.boton.download' | translate}}"
-      [disabled]="selectedDatos.length == 0 || isAnulada || modoLectura" (click)="descargarArchivos()"></button>
+      [disabled]="selectedDatos.length == 0 || isAnulada || modoLectura || (isColegiado && !permiteSubidDescargaFicheros)"
+      (click)="descargarArchivos()"></button>
     <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"
-      (click)="nuevo()" [disabled]="isAnulada || modoLectura"></button>
+      (click)="nuevo()"
+      [disabled]="isAnulada || modoLectura || (isColegiado && !permiteSubidDescargaFicheros)"></button>
     <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"
-      (click)="uploadFile()" [disabled]="isAnulada || modoLectura"></button>
+      (click)="uploadFile()"
+      [disabled]="isAnulada || modoLectura || (isColegiado && !permiteSubidDescargaFicheros)"></button>
   </div>
 </div>

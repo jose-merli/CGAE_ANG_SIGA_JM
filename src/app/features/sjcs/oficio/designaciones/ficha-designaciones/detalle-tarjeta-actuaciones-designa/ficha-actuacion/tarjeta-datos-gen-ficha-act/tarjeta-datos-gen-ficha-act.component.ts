@@ -9,6 +9,7 @@ import { ActuacionDesignaItem } from '../../../../../../../../models/sjcs/Actuac
 import { ParametroItem } from '../../../../../../../../models/ParametroItem';
 import { ParametroRequestDto } from '../../../../../../../../models/ParametroRequestDto';
 import { SigaStorageService } from '../../../../../../../../siga-storage.service';
+import { UsuarioLogado } from '../ficha-actuacion.component';
 
 export interface ComboItemAcreditacion {
   label: string;
@@ -34,7 +35,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
 
   @Input() institucionActual;
   @Input() isAnulada: boolean;
-  @Input() usuarioLogado;
+  @Input() usuarioLogado: UsuarioLogado;
   @Input() isColegiado: boolean;
   @Input() modoLectura: boolean;
 

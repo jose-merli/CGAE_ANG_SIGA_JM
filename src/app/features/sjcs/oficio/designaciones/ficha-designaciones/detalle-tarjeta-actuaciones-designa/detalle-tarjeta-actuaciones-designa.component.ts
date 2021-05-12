@@ -29,6 +29,7 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
   @Input() campos;
   @Input() actuacionesDesignaItems: ActuacionDesignaItem[];
   @Input() relaciones: any;
+  @Input() permiteTurno: boolean;
 
   @Output() buscarEvent = new EventEmitter<boolean>();
 
@@ -84,7 +85,7 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
     ) { }
 
   ngOnInit() {
-   this.isLetrado =  this.localStorageService.isLetrado;
+    this.isLetrado = this.localStorageService.isLetrado;
   }
 
   toogleHistory(value: boolean) {
@@ -221,7 +222,12 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
       let actuacionesRequest = [];
 
       this.actuacionesSeleccionadas.forEach(el => {
-        if (!el.facturado) {
+
+        if (this.isLetrado && (el.validada || !this.permiteTurno)) {
+          error = true;
+        }
+
+        if (!error && !el.facturado) {
           actuacionesRequest.push(el);
         } else {
           error = true;
@@ -229,7 +235,7 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
       });
 
       if (error) {
-        this.showMessage({ severity: 'error', summary: 'Error', detail: 'Alguno de los elementos seleccionados no puede anularse porque se encuentra facturado' });
+        this.showMessage({ severity: 'error', summary: 'Error', detail: 'Alguno de los elementos seleccionados no puede eliminarse porque se encuentra facturado o validado' });
       }
 
       this.sigaServices.post("actuaciones_designacion_eliminar", actuacionesRequest).subscribe(
@@ -268,7 +274,6 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
       actuacion: new ActuacionDesignaItem(),
       relaciones: null
     }
-
     sessionStorage.setItem("actuacionDesigna", JSON.stringify(actuacion));
     this.router.navigate(['/fichaActDesigna']);
   }

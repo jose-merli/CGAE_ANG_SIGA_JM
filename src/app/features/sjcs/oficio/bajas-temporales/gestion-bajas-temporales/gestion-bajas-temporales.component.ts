@@ -183,8 +183,6 @@ export class GestionBajasTemporalesComponent implements OnInit {
     }
   }
   nuevoFromCombo(turno, guardiaInc, idGuardia, idTurno, idTurnoIncompatible, idGuardiaIncompatible, nombreTurnoInc){
-    console.log('idGuardiaIncompatible: ', idGuardiaIncompatible)
-    console.log('idGuardia: ', idGuardia)
     this.enableGuardar = true;
     let labelSelected = '';
     let row: Row = new Row();
@@ -213,9 +211,6 @@ export class GestionBajasTemporalesComponent implements OnInit {
     if (idGuardia.value != ''){
       this.comboGuardiasIncompatibles.push({ label: labelSelected, value: idGuardia.value})
     }
-    console.log('idGuardia.value: ', idGuardia.value)
-    console.log('this.comboGuardiasIncompatibles: ', this.comboGuardiasIncompatibles)
-    console.log('cellMulti.value: ', cellMulti.value)
     row.cells = [turno, guardiaInc, cellMulti, cell1, cell2, idTurno, idGuardia, idGuardiaIncompatible, idTurnoIncompatible, cellInvisible, cellArr];
     if (idGuardia.value != ''){
     this.rowGroups.unshift(row);

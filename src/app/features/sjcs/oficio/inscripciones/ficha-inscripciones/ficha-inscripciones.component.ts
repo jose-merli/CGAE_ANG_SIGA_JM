@@ -346,7 +346,8 @@ export class FichaInscripcionesComponent implements OnInit {
 					this.progressSpinner = false;
 					//El redireccionamiento es una solucion temporal hasta que se
 					//decida el método de actualización de la ficha.
-					this.router.navigate(["/inscripciones"]);
+					//this.router.navigate(["/inscripciones"]);
+					this.ngOnInit();
 				},
 				err => {
 					if (err != undefined && JSON.parse(err.error).error.description != "") {
@@ -375,7 +376,8 @@ export class FichaInscripcionesComponent implements OnInit {
 				this.progressSpinner = false;
 				//El redireccionamiento es una solucion temporal hasta que se
 				//decida el método de actualización de la ficha.
-				this.router.navigate(["/inscripciones"]);
+				//this.router.navigate(["/inscripciones"]);
+				this.ngOnInit();
 			},
 			err => {
 				if (err != undefined && JSON.parse(err.error).error.description != "") {
@@ -460,7 +462,8 @@ export class FichaInscripcionesComponent implements OnInit {
 					this.progressSpinner = false;
 					//El redireccionamiento es una solucion temporal hasta que se
 					//decida el método de actualización de la ficha.
-					this.router.navigate(["/inscripciones"]);
+					//this.router.navigate(["/inscripciones"]);
+					this.ngOnInit();
 				},
 				err => {
 					if (err != undefined && JSON.parse(err.error).error.description != "") {
@@ -489,7 +492,8 @@ export class FichaInscripcionesComponent implements OnInit {
 				this.progressSpinner = false;
 				//El redireccionamiento es una solucion temporal hasta que se
 				//decida el método de actualización de la ficha.
-				this.router.navigate(["/inscripciones"]);
+				//this.router.navigate(["/inscripciones"]);
+				this.ngOnInit();
 			},
 			err => {
 				if (err != undefined && JSON.parse(err.error).error.description != "") {
@@ -527,7 +531,8 @@ export class FichaInscripcionesComponent implements OnInit {
 				this.progressSpinner = false;
 				//El redireccionamiento es una solucion temporal hasta que se
 				//decida el método de actualización de la ficha.
-				this.router.navigate(["/inscripciones"]);
+				//this.router.navigate(["/inscripciones"]);
+				this.ngOnInit();
 			},
 			err => {
 				if (err != undefined && JSON.parse(err.error).error.description != "") {

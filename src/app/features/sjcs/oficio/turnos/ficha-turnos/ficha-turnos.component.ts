@@ -31,7 +31,7 @@ export class FichaTurnosComponent implements OnInit, AfterViewChecked {
 	iconoTarjetaResumen = "clipboard";
 
 	enlacesTarjetaResumen: any[] = [];
-	manuallyOpened:Boolean;
+	manuallyOpened:Boolean = false;
 	openGen: Boolean = false;
 	openConfigTurnos: Boolean = false;
 	openConfigColaOficio: Boolean = false;

@@ -3,6 +3,8 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Message } from 'primeng/primeng';
 import { Cell, Row, RowGroup, TablaResultadoDesplegableJEService } from '../../../../../commons/tabla-resultado-desplegable/tabla-resultado-desplegable-je.service';
+import { ParametroDto } from '../../../../../models/ParametroDto';
+import { ParametroRequestDto } from '../../../../../models/ParametroRequestDto';
 import { JustificacionExpressItem } from '../../../../../models/sjcs/JustificacionExpressItem';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../_services/siga.service';
@@ -20,6 +22,9 @@ export class TablaJustificacionExpresComponent implements OnInit {
   dataReady = false;
   @Input() datosJustificacion;
   @Input() colegiado;
+  @Input() isLetrado;
+  @Input() permisosFichaAct;
+  fechaFiltro;
   totalRegistros = 0;
   
   datosJustificacionAux: JustificacionExpressItem = new JustificacionExpressItem();
@@ -112,13 +117,25 @@ export class TablaJustificacionExpresComponent implements OnInit {
   { }
 
   ngOnInit(): void {
+    sessionStorage.setItem("rowIdsToUpdate", JSON.stringify([]));
     this.progressSpinner=true;
 
     this.datosJustificacionAux = this.datosJustificacion;
+    this.sigaServices.get("combo_comboModulos").subscribe(
+      n => {
+        this.comboModulos = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboModulos);
+        this.cargaInicial();
+        this.progressSpinner = false;
+       
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      }
+    );
 
-    this.cargaInicial();
-   this.getJuzgados();
-    
+    this.getJuzgados();
   }
   /*loadJuzgados(event){
     if (event == true){
@@ -175,6 +192,23 @@ export class TablaJustificacionExpresComponent implements OnInit {
     );
   }
 
+  cargaAllModulos(event){
+    if (event){
+      this.progressSpinner = true;
+      this.sigaServices.get("combo_comboModulos").subscribe(
+        n => {
+          this.comboModulos = JSON.parse(n.body).combooItems;
+          this.commonsService.arregloTildesCombo(this.comboModulos);
+          this.progressSpinner = false;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        }
+      );
+    }
+  }
+
   cargaJuzgadosPorInstitucion($event){
     this.progressSpinner = true;
     this.sigaServices.post("combo_comboJuzgadoPorInstitucion", $event).subscribe(
@@ -191,6 +225,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
   }
 
   cargaInicial(){
+    this.progressSpinner=true;
     this.dataReady = false;
     let resultModified = {};
     let data = [];
@@ -203,7 +238,6 @@ export class TablaJustificacionExpresComponent implements OnInit {
     let obj1 = {};
     let validada;
     let finalizada;
-
     this.datosJustificacion.forEach((designacion, i) =>{
       
       let letra = (i + 10).toString(36).toUpperCase()
@@ -236,14 +270,19 @@ export class TablaJustificacionExpresComponent implements OnInit {
       }else{
         expedientes = "";
       }
-
+      let listaClienteType = 'text';
+      let listaClienteCombo = null;
       if (designacion.nombreJuzgado != null && designacion.nombreJuzgado != []){
         /*designacion.nombreJuzgado.forEach(cliente =>{
          listaCliente +=  cliente + '\n';
          })*/
         listaCliente = designacion.nombreJuzgado;
+        listaClienteType = 'text';
+        listaClienteCombo = null;
       }else{
-        listaCliente = "";
+        listaCliente = designacion.nombreJuzgado;
+        listaClienteType = 'select';
+        listaClienteCombo = this.comboJuzgados;
       }
       
       let id2 = expedientes;
@@ -257,14 +296,19 @@ export class TablaJustificacionExpresComponent implements OnInit {
           { label: designacion.procedimiento, value: designacion.procedimiento }
         ]
       };
-
+      let numProcType = 'input';
+      if(this.isLetrado){
+        numProcType = 'text';
+      }else{
+        numProcType = 'input';
+      }
       let arrDesignacion = 
       [
       { type: 'checkboxPermisos', value: finalizada, size: 50, combo: null},
-      { type: 'text', value: listaCliente, size: 153, combo: null },
+      { type: listaClienteType, value: listaCliente, size: 153, combo: listaClienteCombo },
       { type: 'input', value: designacion.nig, size: 153, combo: null},
-      { type: 'input', value: designacion.numProcedimiento, size: 153 , combo: null},
-      { type: 'select', value: designacion.procedimiento, size: 153 , combo: null }, //modulo
+      { type: numProcType, value: designacion.numProcedimiento, size: 153 , combo: null},
+      { type: 'select', value: designacion.idProcedimiento, size: 153 , combo: this.comboModulos }, //modulo
       { type: 'datePicker', value: this.formatDate(designacion.fechaActuacion), size: 153 , combo: null},
       { type: 'text', value: '' , size: 153, combo: null},
       { type: 'text', value: designacion.tipoAcreditacion , size: 50, combo: null},
@@ -298,7 +342,8 @@ export class TablaJustificacionExpresComponent implements OnInit {
       { type: 'invisible', value: designacion.anioEJG , size: 0, combo: null},
       { type: 'invisible', value: designacion.apellidos , size: 0, combo: null},
       { type: 'invisible', value: designacion.nombre , size: 0, combo: null},
-      { type: 'invisible', value: designacion.nColegiado , size: 0, combo: null}
+      { type: 'invisible', value: designacion.nColegiado , size: 0, combo: null},
+      { type: 'invisible', value: designacion.validarjustificaciones , size: 0, combo: null}
     ];
 
     let key = letra + 1;
@@ -321,16 +366,26 @@ export class TablaJustificacionExpresComponent implements OnInit {
           validaAct = false;
         }
 
+        let fechaJustType;
+        let fechaJust;
+
+        if(actuacion.fechaJustificacion != null){
+          fechaJust = actuacion.fechaJustificacion;
+          fechaJustType = 'datePicker';
+        } else{
+          fechaJust = false;
+          fechaJustType = 'checkboxDate';
+        }
         if (actuacion.permitirAniadirLetrado == "1"){ 
           arr1 = 
           [
           { type: 'checkboxPermisos', value: finalizada, size: 50, combo: null },
           { type: 'text', value: actuacion.nombreJuzgado, size: 153 , combo: null},
           { type: 'input', value: actuacion.nig, size: 153, combo: null},
-          { type: 'input', value: actuacion.numProcedimiento, size: 153 , combo: null},
+          { type: numProcType, value: actuacion.numProcedimiento, size: 153 , combo: null},
           { type: 'text', value: actuacion.procedimiento, size: 153 , combo: null}, //modulo
           { type: 'datePicker', value:  this.formatDate(actuacion.fecha), size: 153 , combo: null},
-          { type: 'datePicker', value:  actuacion.fechaJustificacion , size: 153, combo: null},
+          { type: fechaJustType, value:  fechaJust , size: 153, combo: null},
           { type: 'buttom', value: 'Nuevo' , size: 50, combo: null},
           { type: 'checkbox', value: validaAct, size: 50 , combo: null},
           { type: 'invisible', value:  actuacion.numDesignacion , size: 0, combo: null},
@@ -367,10 +422,10 @@ export class TablaJustificacionExpresComponent implements OnInit {
           { type: 'checkboxPermisos', value: finalizada, size: 50, combo: null },
           { type: 'text', value: actuacion.nombreJuzgado, size: 153 , combo: null},
           { type: 'input', value: actuacion.nig, size: 153, combo: null},
-          { type: 'input', value: actuacion.numProcedimiento, size: 153 , combo: null},
+          { type: numProcType, value: actuacion.numProcedimiento, size: 153 , combo: null},
           { type: 'text', value: actuacion.procedimiento, size: 153 , combo: null}, //modulo
           { type: 'datePicker', value:  this.formatDate(actuacion.fecha), size: 153 , combo: null},
-          { type: 'datePicker', value:  actuacion.fechaJustificacion , size: 153, combo: null},
+          { type: fechaJustType, value:  fechaJust , size: 153, combo: null},
           { type: 'text', value: actuacion.descripcion , size: 50, combo: null},
           { type: 'checkbox', value: validaAct, size: 50 , combo: null },
           { type: 'invisible', value:  actuacion.numDesignacion , size: 0, combo: null},
@@ -414,16 +469,20 @@ export class TablaJustificacionExpresComponent implements OnInit {
 
       dataObj = { [cod]  : arr2, [id2] : "" , [id3] : "", [estadoDesignacion] : "", [estadoEx] : ""};
       data.push(Object.assign({},dataObj));
+      arr2 = [];
       expedientes = "";
     })
 
     resultModified = Object.assign({},{'data': data});
 
+    this.rowGroups = [];
     this.rowGroups = this.trdService.getTableData(resultModified);
+    this.rowGroupsAux = [];
     this.rowGroupsAux = this.rowGroups;
     this.totalRegistros = this.rowGroups.length;
     this.totalDesignas = this.totalRegistros;
     this.dataReady = true;
+    this.progressSpinner=false;
     }
 
   showMsg(severity, summary, detail) {
@@ -678,6 +737,15 @@ desigCellToJson(designacionesCells, codigoDesignacionParam, expedientesDesignaci
   settotalActuaciones(event){
     this.totalActuaciones = this.totalActuaciones + event;
   }
+  getrefreshData(event){
+    if (event){
+      this.cargaInicial();
+    }
+  }
 
-  
+  fillFechaFiltro(event){
+    this.fechaFiltro = this.formatDate(event);
+    this.cargaInicial();
+  }
+
 }

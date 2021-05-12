@@ -29,20 +29,28 @@ export class DesignacionesComponent implements OnInit {
   muestraTablaDesignas: boolean = false;
   comboTipoDesigna: any[];
   colegiado: boolean;
+  isLetrado: boolean = false;
+  idPersonaLogado;
+  numColegiadoLogado;
   @ViewChild(FiltroDesignacionesComponent) filtros;
   
   datosJustificacion: JustificacionExpressItem = new JustificacionExpressItem();
   
   msgs: Message[] = [];
   actuacionesDesignaItems: ActuacionDesignaItem[] = [];
-  
+  permisosFichaAct = false; 
   constructor(public sigaServices: OldSigaServices, public sigaServicesNew: SigaServices, private location: Location,  private commonsService: CommonsService, 
     private datePipe: DatePipe, private translateService: TranslateService, private localStorageService: SigaStorageService) {
+
 
     this.url = sigaServices.getOldSigaUrl("designaciones");
   }
 
   ngOnInit() {
+    sessionStorage.setItem("rowIdsToUpdate", JSON.stringify([]));
+    this.isLetrado = this.localStorageService.isLetrado;
+    this.idPersonaLogado = this.localStorageService.idPersona;
+    this.numColegiadoLogado = this.localStorageService.numColegiado;
   }
 
   showTablaJustificacionExpres(event){
@@ -50,6 +58,7 @@ export class DesignacionesComponent implements OnInit {
   }
 
   busquedaJustificacionExpres(){
+    this.datosJustificacion = new JustificacionExpressItem();
     this.progressSpinner=true;
     if(sessionStorage.getItem("buscadorColegiados")){​​
 
@@ -73,7 +82,6 @@ export class DesignacionesComponent implements OnInit {
         this.progressSpinner = false;
 
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        console.log(err);
       },
       ()=>{
         setTimeout(()=>{
@@ -95,7 +103,6 @@ export class DesignacionesComponent implements OnInit {
       },
       err => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        console.log(err);
       },);
   }
 
@@ -113,7 +120,6 @@ export class DesignacionesComponent implements OnInit {
         this.muestraTablaJustificacion=true;
         this.progressSpinner=false;
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        console.log(err);
       },);
   }
 
@@ -131,7 +137,6 @@ export class DesignacionesComponent implements OnInit {
         this.muestraTablaJustificacion=true;
         this.progressSpinner = false;
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        console.log(err);
       },);
   }
 
@@ -225,7 +230,6 @@ export class DesignacionesComponent implements OnInit {
           },
           err => {
             this.progressSpinner = false;
-            console.log(err);
           }
         );
         this.progressSpinner=false;
@@ -235,9 +239,6 @@ export class DesignacionesComponent implements OnInit {
       err => {
         this.progressSpinner = false;
         this.commonsService.scrollTablaFoco("tablaFoco");
-        // this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-
-        console.log(err);
       },() => {
         this.progressSpinner = false;
         this.progressSpinner = false;
@@ -258,7 +259,6 @@ export class DesignacionesComponent implements OnInit {
     this.sigaServicesNew.post("designaciones_getDatosAdicionales", desginaAdicionales).subscribe(
       n => {
        
-        console.log(n.body);
         let datosAdicionales = JSON.parse(n.body);
         if (datosAdicionales[0] != null && datosAdicionales[0] != undefined) {
           element.delitos = datosAdicionales[0].delitos;
@@ -272,7 +272,6 @@ export class DesignacionesComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
       }, () => {
         this.progressSpinner = false;
       }
@@ -319,5 +318,7 @@ export class DesignacionesComponent implements OnInit {
     this.actualizacionJustificacionExpres(event);
   }
 
-
+  getpermisosFichaAct(event){
+    this.permisosFichaAct = event;
+  }
 }

@@ -8,6 +8,7 @@ import { procesos_oficio } from '../../../../../../../../permisos/procesos_ofici
 import { CommonsService } from '../../../../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../../../../_services/persistence.service';
 import { Router } from '@angular/router';
+import { UsuarioLogado } from '../ficha-actuacion.component';
 
 @Component({
   selector: 'app-tarjeta-jus-ficha-act',
@@ -24,7 +25,7 @@ export class TarjetaJusFichaActComponent implements OnInit, OnDestroy {
   @Output() buscarActuacionEvent = new EventEmitter<any>();
   @Input() actuacionDesigna: Actuacion;
   @Input() isColegiado;
-  @Input() usuarioLogado;
+  @Input() usuarioLogado: UsuarioLogado;
   @Input() modoLectura: boolean;
   disableAll: boolean = false;
   fechaActuacion: Date;
