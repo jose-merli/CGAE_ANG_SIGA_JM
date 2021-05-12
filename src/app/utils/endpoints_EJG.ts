@@ -2,6 +2,7 @@ export let endpoints_EJG: any = {
     filtrosejg_comboTipoEJG: "ejg/filtros-ejg/comboTipoEJG",
     filtrosejg_comboTipoEJGColegio: "ejg/filtros-ejg/comboTipoEJGColegio",
     filtrosejg_comboEstadoEJG: "ejg/filtros-ejg/comboEstadoEJG",
+    filtrosejg_comboRemesa: "ejg/filtros-ejg/comboRemesa",
     filtrosejg_comboFundamentoCalif: "ejg/filtros-ejg/comboFundamentoCalif",
     filtrosejg_comboResolucion: "ejg/filtros-ejg/comboResolucion",
     filtrosejg_comboFundamentoImpug: "ejg/filtros-ejg/comboFundamentoImpug",

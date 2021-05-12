@@ -43,8 +43,10 @@ export class TablaEjgComponent implements OnInit {
   datosFamiliares = [];
 
   comboEstadoEJG = [];
+  comboRemesa = [];
   fechaEstado = new Date();
   valueComboEstado = "";
+  valueComboRemesa = "";
 
   //Resultados de la busqueda
   @Input() datos;
@@ -53,9 +55,11 @@ export class TablaEjgComponent implements OnInit {
   @Output() searchHistoricalSend = new EventEmitter<boolean>();
   @Output() busqueda = new EventEmitter<boolean>();
   @ViewChild("cd") cdCambioEstado: Dialog;
+  @ViewChild("cd1") cdAnadirRemesa: Dialog;
 
 
   showModalCambioEstado = false;
+  showModalAnadirRemesa = false;
 
   constructor(private translateService: TranslateService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
     private sigaServices: SigaServices, private persistenceService: PersistenceService, 
@@ -84,6 +88,7 @@ export class TablaEjgComponent implements OnInit {
     }
 
     this.getComboEstadoEJG();
+    this.getComboRemesa(); 
   }
 
   //Se activara cada vez que los @Input cambien de valor (ahora unicamente datos)
@@ -198,6 +203,10 @@ export class TablaEjgComponent implements OnInit {
   
   cancelaCambiarEstados(){
     this.showModalCambioEstado = false;
+  }
+
+  cancelaAnadirRemesa(){
+    this.showModalAnadirRemesa = false;
   }
 
   checkCambiarEstados(){
@@ -343,7 +352,6 @@ export class TablaEjgComponent implements OnInit {
   changeEstado() {
     if (this.selectedDatos != null && this.selectedDatos != undefined && this.selectedDatos.length > 0 && this.checkPermisos()) {
       this.showModalCambioEstado = true;
-      this.getComboEstadoEJG();      
     } else {
       this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("censo.datosBancarios.mensaje.seleccionar.almenosUno"));
     }
@@ -368,7 +376,7 @@ export class TablaEjgComponent implements OnInit {
   }
 
   addRemesa() {
-    let mess = this.translateService.instant("justiciaGratuita.ejg.message.anadirExpedienteARemesa");
+    /* let mess = this.translateService.instant("justiciaGratuita.ejg.message.anadirExpedienteARemesa");
     let icon = "fa fa-edit";
 
     this.confirmationService.confirm({
@@ -386,12 +394,52 @@ export class TablaEjgComponent implements OnInit {
         }];
         this.cdCambioEstado.hide();
       }
+    }); */
+    this.showModalAnadirRemesa = true;
+  }
+
+  checkValueComboRemesa(){
+    return this.valueComboRemesa != "";
+  }
+
+  checkAnadirRemesa(){
+    let mess = this.translateService.instant("justiciaGratuita.ejg.message.anadirExpedienteARemesa");
+    let icon = "fa fa-edit";
+
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.anadirRemesa();
+        this.cdAnadirRemesa.hide();
+      },
+      reject: () => {
+        this.msgs = [{
+          severity: "info",
+          summary: "Cancel",
+          detail: this.translateService.instant("general.message.accion.cancelada")
+        }];
+        this.cdAnadirRemesa.hide();
+      }
     });
+  }
+
+  getComboRemesa() {
+    this.sigaServices.get("filtrosejg_comboRemesa").subscribe(
+      n => {
+        this.comboRemesa = n.combooItems;
+        this.commonServices.arregloTildesCombo(this.comboRemesa);
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 
   anadirRemesa(){
     this.progressSpinner=true;
 
+    //El valor del desplegable del modal se encuentra en la variable valueComboRemesa.
     this.sigaServices.post("gestionejg_anadirExpedienteARemesa", this.selectedDatos).subscribe(
       n => {
         this.progressSpinner=false;
