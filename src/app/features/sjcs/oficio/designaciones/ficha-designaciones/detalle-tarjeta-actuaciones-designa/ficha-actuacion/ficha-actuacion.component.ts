@@ -179,7 +179,7 @@ export class FichaActuacionComponent implements OnInit {
         this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiDatosGen').opened = true;
       } else {
 
-        if(this.isColegiado && this.actuacionDesigna.actuacion.validada) {
+        if (this.isColegiado && this.actuacionDesigna.actuacion.validada) {
           this.modoLectura = true;
         }
 
