@@ -206,9 +206,16 @@ export class FichaCambioLetradoComponent implements OnInit {
 
     /* let item = new CambioLetradoItem(); */
 
-    let request = [designa.ano, designa.idTurno, designa.numero,
-      this.body.idPersona, this.saliente.body.observaciones, this.saliente.body.motivoRenuncia, sessionStorage.getItem("FDSaliente"), this.saliente.body.fechaSolRenuncia,
-      this.entrante.body.fechaDesignacion, this.entrante.body.idPersona];
+    let request = [designa.ano, //0
+      designa.idTurno, //1
+      designa.numero,//2
+      this.body.idPersona,//3
+       this.saliente.body.observaciones, //4
+       this.saliente.body.motivoRenuncia, //5
+       sessionStorage.getItem("FDSaliente"), //6
+       this.saliente.body.fechaSolRenuncia, //7
+      this.entrante.body.fechaDesignacion, //8
+       this.entrante.body.idPersona]; //9
 
     /* item.ano=request[0];
     item.idTurno=request[1];
