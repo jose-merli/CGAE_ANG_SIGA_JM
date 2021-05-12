@@ -8,6 +8,7 @@ import { EJGItem } from '../../../../models/sjcs/EJGItem';
 import { CommonsService } from '../../../../_services/commons.service';
 import { DatePipe } from '../../../../../../node_modules/@angular/common';
 import { Dialog } from 'primeng/primeng';
+import { NullTemplateVisitor } from '@angular/compiler';
 
 @Component({
   selector: 'app-tabla-ejg',
@@ -52,7 +53,9 @@ export class TablaEjgComponent implements OnInit {
   //Resultados de la busqueda
   @Input() datos;
 
-  @Input() tipoEJG;
+  @Input() filtro;
+  @Input() remesa;
+
   @ViewChild("table") table: DataTable;
   @Output() searchHistoricalSend = new EventEmitter<boolean>();
   @Output() busqueda = new EventEmitter<boolean>();
@@ -378,26 +381,14 @@ export class TablaEjgComponent implements OnInit {
   }
 
   addRemesa() {
-    /* let mess = this.translateService.instant("justiciaGratuita.ejg.message.anadirExpedienteARemesa");
-    let icon = "fa fa-edit";
-
-    this.confirmationService.confirm({
-      message: mess,
-      icon: icon,
-      accept: () => {
-        this.anadirRemesa();
-        this.cdCambioEstado.hide();
-      },
-      reject: () => {
-        this.msgs = [{
-          severity: "info",
-          summary: "Cancel",
-          detail: this.translateService.instant("general.message.accion.cancelada")
-        }];
-        this.cdCambioEstado.hide();
-      }
-    }); */
     this.showModalAnadirRemesa = true;
+
+    //Queda pendiente añadir el codigo que gestionaria el desplegable si se accede desde una fecha de remesa.
+    //El desplegable tendria que tener el valor de la remesa de la que procede y además deshabilitar el desplegable para que no pueda cambiar de valor.
+    if(this.remesa!=null){
+      this.valueComboRemesa = this.remesa.descripcion;
+    }
+
   }
 
   checkBotonAnadir(){
@@ -477,7 +468,7 @@ export class TablaEjgComponent implements OnInit {
         this.disableAddRemesa = false;
       }
     } */
-    if(this.tipoEJG=="7" || this.tipoEJG=="8"){
+    if(this.filtro.estadoEJG=="7" || this.filtro.estadoEJG=="8"){
       this.disableAddRemesa = false;
     }
     else{
