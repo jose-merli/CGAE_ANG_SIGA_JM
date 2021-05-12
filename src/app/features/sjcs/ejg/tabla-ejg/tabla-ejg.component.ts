@@ -37,6 +37,7 @@ export class TablaEjgComponent implements OnInit {
   datosItem: EJGItem;
   nuevo: boolean = false;
   progressSpinner: boolean = false;
+  disableAddRemesa: boolean = true;
 
   ejgObject = [];
   datosFamiliares = [];
@@ -81,6 +82,25 @@ export class TablaEjgComponent implements OnInit {
     if (this.persistenceService.getHistorico() != undefined) {
       this.historico = this.persistenceService.getHistorico();
     }
+
+    this.getComboEstadoEJG();
+  }
+
+  //Se activara cada vez que los @Input cambien de valor (ahora unicamente datos)
+  ngOnChanges(){
+    this.selectedDatos=[];
+  }
+
+  getComboEstadoEJG() {
+    this.sigaServices.get("filtrosejg_comboEstadoEJG").subscribe(
+      n => {
+        this.comboEstadoEJG = n.combooItems;
+        this.commonServices.arregloTildesCombo(this.comboEstadoEJG);
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
   
   openTab(evento) {
@@ -174,22 +194,6 @@ export class TablaEjgComponent implements OnInit {
         value: 40
       }
     ];
-  }
-
-  getComboEstado() {
-    this.progressSpinner=true;
-
-    this.sigaServices.get("filtrosejg_comboEstadoEJG").subscribe(
-      n => {
-        this.comboEstadoEJG = n.combooItems;
-        //this.commonServices.arregloTildesCombo(this.comboEstadoEJG);
-        this.progressSpinner=false;
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner=false;
-      }
-    );
   }
   
   cancelaCambiarEstados(){
@@ -339,7 +343,7 @@ export class TablaEjgComponent implements OnInit {
   changeEstado() {
     if (this.selectedDatos != null && this.selectedDatos != undefined && this.selectedDatos.length > 0 && this.checkPermisos()) {
       this.showModalCambioEstado = true;
-      this.getComboEstado();      
+      this.getComboEstadoEJG();      
     } else {
       this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("censo.datosBancarios.mensaje.seleccionar.almenosUno"));
     }
@@ -388,7 +392,7 @@ export class TablaEjgComponent implements OnInit {
   anadirRemesa(){
     this.progressSpinner=true;
 
-    this.sigaServices.post("gestionejg_anadirExpedienteARemesa", this.selectDatos).subscribe(
+    this.sigaServices.post("gestionejg_anadirExpedienteARemesa", this.selectedDatos).subscribe(
       n => {
         this.progressSpinner=false;
       },
@@ -402,5 +406,19 @@ export class TablaEjgComponent implements OnInit {
   actualizaSeleccionados(selectedDatos) {
     this.numSelected = selectedDatos.length;
     this.seleccion = false;
+    this.checkAddRemesa(selectedDatos);
+  }
+
+  checkAddRemesa(selectedDatos){
+    if (selectedDatos != undefined) {
+      //Buscar forma generica parecida a this.translateService.instant() para buscar sus equivalentes en otros idiomas.
+      let findDato = this.selectedDatos.find(item => item.estadoEJG != this.comboEstadoEJG[11].label && item.estadoEJG != this.comboEstadoEJG[12].label);
+      if(findDato != null){
+        this.disableAddRemesa = true;
+      }
+      else{
+        this.disableAddRemesa = false;
+      }
+    }
   }
 }
