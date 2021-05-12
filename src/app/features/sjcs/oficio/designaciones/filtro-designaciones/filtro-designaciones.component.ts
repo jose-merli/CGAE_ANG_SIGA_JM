@@ -95,12 +95,10 @@ export class FiltroDesignacionesComponent implements OnInit {
     private localStorageService: SigaStorageService) { }
 
   ngOnInit(): void {
-
-    // let esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
-    // if(!esColegiado){   
+  
     this.checkAcceso();
     this.getParamsEJG();
-  // }
+
     if(sessionStorage.getItem("buscadorColegiados")){
       const { nombre, apellidos, nColegiado } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
       this.usuarioBusquedaExpress.nombreAp = `${apellidos}, ${nombre}`;
@@ -111,6 +109,7 @@ export class FiltroDesignacionesComponent implements OnInit {
 
       sessionStorage.removeItem("buscadorColegiados");
     }
+    
   }
 
   getParamsEJG(){  
@@ -716,6 +715,10 @@ getComboCalidad() {
         nombreAp: ''
       };
     }
+
+    //justificacion expres
+    this.getDataLoggedUser();
+
     this.body = new DesignaItem();
     this.getBuscadorDesignas();
   }
@@ -789,29 +792,30 @@ getComboCalidad() {
       const colegiadoItem = new ColegiadoItem();
       colegiadoItem.nif = usuario[0].dni;
 
-      //cambiar, nullpointer si no es colegiado
-      this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(usr => {
-        const { numColegiado, nombre } = JSON.parse(usr.body).colegiadoItem[0];
-        this.usuarioBusquedaExpress.numColegiado = numColegiado;
-        this.usuarioBusquedaExpress.nombreAp = nombre.replace(/,/g,"");
-        this.showColegiado = true;
+      if(this.isLetrado){
+        this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(usr => {
+          const { numColegiado, nombre } = JSON.parse(usr.body).colegiadoItem[0];
+          this.usuarioBusquedaExpress.numColegiado = numColegiado;
+          this.usuarioBusquedaExpress.nombreAp = nombre.replace(/,/g,"");
+          this.showColegiado = true;
 
-        //es colegiado, filtro por defecto para justificacion
-        this.filtroJustificacion.ejgSinResolucion = this.ejgSinResolucion;
-        this.filtroJustificacion.sinEJG= this.sinEjg;
-        this.filtroJustificacion.resolucionPTECAJG= this.ejgPtecajg;
-        this.filtroJustificacion.conEJGNoFavorables= this.ejgNoFavorable;
+          //es colegiado, filtro por defecto para justificacion
+          this.filtroJustificacion.ejgSinResolucion = this.ejgSinResolucion;
+          this.filtroJustificacion.sinEJG= this.sinEjg;
+          this.filtroJustificacion.resolucionPTECAJG= this.ejgPtecajg;
+          this.filtroJustificacion.conEJGNoFavorables= this.ejgNoFavorable;
 
-        this.esColegiado = true;
-        this.checkRestricciones = true;
-      },
-      err =>{
-        this.progressSpinner = false;
-      },
-      ()=>{
-        this.progressSpinner = false;
-        this.buscar();
-      });
+          this.esColegiado = true;
+          this.checkRestricciones = true;
+        },
+        err =>{
+          this.progressSpinner = false;
+        },
+        ()=>{
+          this.progressSpinner = false;
+          this.buscar();
+        });
+      }
 
     },
     error =>{

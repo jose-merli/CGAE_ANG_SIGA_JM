@@ -103,6 +103,7 @@ export class BajasTemporalesComponent implements OnInit {
 
     this.sigaServices.post("bajasTemporales_busquedaBajasTemporales", this.filtros.filtroAux).subscribe(
       n => {
+        let error = JSON.parse(n.body).error;
         this.datos = JSON.parse(n.body).bajasTemporalesItem;
         this.datos.forEach(element => {
 
@@ -148,6 +149,14 @@ export class BajasTemporalesComponent implements OnInit {
         this.jsonToRow(this.datos);
         this.buscar = true;
         this.progressSpinner = false;
+
+        if (error != null && error.description != null) {
+          this.msgs = [];
+          this.msgs.push({
+            severity:"info", 
+            summary:this.translateService.instant("general.message.informacion"), 
+            detail: error.description});
+        }
       },
       err => {
         this.progressSpinner = false;

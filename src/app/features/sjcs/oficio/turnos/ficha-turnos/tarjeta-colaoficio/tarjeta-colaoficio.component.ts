@@ -137,14 +137,21 @@ export class TarjetaColaOficio implements OnInit {
 
   ngOnInit() {
     this.commonsService.checkAcceso(procesos_oficio.colaDeOficio)
-      .then(respuesta => {
-        this.permisosTarjeta = respuesta;
-        if (this.permisosTarjeta != true) {
-          this.permisosTarjeta = false;
-        } else {
-          this.permisosTarjeta = true;
-        }
-      }).catch(error => console.error(error));
+    .then(respuesta => {
+      this.permisosTarjeta = respuesta;
+      this.persistenceService.setPermisos(this.permisosTarjeta);
+      if (this.permisosTarjeta == undefined) {
+        sessionStorage.setItem("codError", "403");
+        sessionStorage.setItem(
+          "descError",
+          this.translateService.instant("generico.error.permiso.denegado")
+        );
+        this.router.navigate(["/errorAcceso"]);
+      }else if(this.persistenceService.getPermisos() != true){
+        this.disableAll = true;
+      }
+    }
+    ).catch(error => console.error(error));
     this.getCols();
     if (this.idTurno != undefined) {
       this.modoEdicion = true;
