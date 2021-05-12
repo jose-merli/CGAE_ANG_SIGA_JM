@@ -103,33 +103,29 @@ export class FiltroDesignacionesComponent implements OnInit {
     this.checkAcceso();
     this.checkAccesoFichaActuacion();
     this.getParamsEJG();
-  // }
-    if(sessionStorage.getItem("colegiadoRelleno")){
-      const { numColegiado, nombre } = JSON.parse(sessionStorage.getItem("datosColegiado"));
-      this.usuarioBusquedaExpress.numColegiado = numColegiado;
-      this.usuarioBusquedaExpress.nombreAp = nombre.replace(/,/g,"");
+
+    if(sessionStorage.getItem("buscadorColegiados")){
+      const { nombre, apellidos, nColegiado } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
+      this.usuarioBusquedaExpress.nombreAp = `${apellidos}, ${nombre}`;
+      this.usuarioBusquedaExpress.numColegiado = nColegiado;
       this.showColegiado = true;
 
       this.buscar();
 
-      sessionStorage.removeItem("colegiadoRelleno");
-      sessionStorage.removeItem("datosColegiado");
+      sessionStorage.removeItem("buscadorColegiados");
     }
+    
   }
 
   getParamsEJG(){  
-    this.sinEjg = this.getParams("JUSTIFICACION_INCLUIR_SIN_EJG");
-    this.ejgSinResolucion = this.getParams("JUSTIFICACION_INCLUIR_EJG_SIN_RESOLUCION");
-    this.ejgPtecajg = this.getParams("JUSTIFICACION_INCLUIR_EJG_PTECAJG");
-    this.ejgNoFavorable = this.getParams("JUSTIFICACION_INCLUIR_EJG_NOFAVORABLE");}
-  getParams(param){
     let parametro = new ParametroRequestDto();
     let institucionActual;
     this.sigaServices.get("institucionActual").subscribe(n => {
       institucionActual = n.value;
       parametro.idInstitucion = institucionActual;
       parametro.modulo = "SCS";
-      parametro.parametrosGenerales = param;
+      //PARAMETRO JUSTIFICACION_INCLUIR_SIN_EJG
+      parametro.parametrosGenerales = "JUSTIFICACION_INCLUIR_SIN_EJG";
       this.sigaServices
         .postPaginado("parametros_search", "?numPagina=1", parametro)
         .subscribe(
@@ -137,9 +133,54 @@ export class FiltroDesignacionesComponent implements OnInit {
             this.searchParametros = JSON.parse(data["body"]);
             this.datosBuscar = this.searchParametros.parametrosItems;
             this.datosBuscar.forEach(element => {
-              if (element.parametro == param && (element.idInstitucion == 0 || element.idInstitucion == element.idinstitucionActual)) {
+              if (element.parametro == parametro.parametrosGenerales && (element.idInstitucion == 0 || element.idInstitucion == element.idinstitucionActual)) {
                 this.valorParametro = element.valor;
-                return this.valorParametro;
+                this.sinEjg = this.valorParametro;
+              }
+          });
+      });
+      //PARAMETRO JUSTIFICACION_INCLUIR_EJG_SIN_RESOLUCION
+      parametro.parametrosGenerales = "JUSTIFICACION_INCLUIR_EJG_SIN_RESOLUCION";
+      this.sigaServices
+        .postPaginado("parametros_search", "?numPagina=1", parametro)
+        .subscribe(
+          data => {
+            this.searchParametros = JSON.parse(data["body"]);
+            this.datosBuscar = this.searchParametros.parametrosItems;
+            this.datosBuscar.forEach(element => {
+              if (element.parametro == parametro.parametrosGenerales && (element.idInstitucion == 0 || element.idInstitucion == element.idinstitucionActual)) {
+                this.valorParametro = element.valor;
+                this.ejgSinResolucion = this.valorParametro;
+              }
+          });
+      });
+      //PARAMETRO JUSTIFICACION_INCLUIR_EJG_PTECAJG
+      parametro.parametrosGenerales = "JUSTIFICACION_INCLUIR_EJG_PTECAJG";
+      this.sigaServices
+        .postPaginado("parametros_search", "?numPagina=1", parametro)
+        .subscribe(
+          data => {
+            this.searchParametros = JSON.parse(data["body"]);
+            this.datosBuscar = this.searchParametros.parametrosItems;
+            this.datosBuscar.forEach(element => {
+              if (element.parametro == parametro.parametrosGenerales && (element.idInstitucion == 0 || element.idInstitucion == element.idinstitucionActual)) {
+                this.valorParametro = element.valor;
+                this.ejgPtecajg = this.valorParametro;
+              }
+          });
+      });
+      //PARAMETRO JUSTIFICACION_INCLUIR_EJG_NOFAVORABLE
+      parametro.parametrosGenerales = "JUSTIFICACION_INCLUIR_EJG_NOFAVORABLE";
+      this.sigaServices
+        .postPaginado("parametros_search", "?numPagina=1", parametro)
+        .subscribe(
+          data => {
+            this.searchParametros = JSON.parse(data["body"]);
+            this.datosBuscar = this.searchParametros.parametrosItems;
+            this.datosBuscar.forEach(element => {
+              if (element.parametro == parametro.parametrosGenerales && (element.idInstitucion == 0 || element.idInstitucion == element.idinstitucionActual)) {
+                this.valorParametro = element.valor;
+                this.ejgNoFavorable = this.valorParametro;
               }
           });
       });
@@ -263,7 +304,6 @@ export class FiltroDesignacionesComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
       }
     );
   }
@@ -272,6 +312,7 @@ export class FiltroDesignacionesComponent implements OnInit {
     if(event=='designas'){
       this.showDesignas=true;
       this.showJustificacionExpress=false;
+      this.isButtonVisible=true;
       this.showTablaJustificacionExpres.emit(false);
     }
 
@@ -279,6 +320,7 @@ export class FiltroDesignacionesComponent implements OnInit {
       this.showDesignas=false;
       this.showJustificacionExpress=true;
       this.expanded=true;
+      this.isButtonVisible=false;
       this.showTablaDesigna.emit(false);
     }
   }
@@ -409,7 +451,6 @@ export class FiltroDesignacionesComponent implements OnInit {
         this.progressSpinner=false;
       },
       err => {
-        console.log(err);
         this.progressSpinner=false;
 
       }, () => {
@@ -427,7 +468,6 @@ export class FiltroDesignacionesComponent implements OnInit {
         this.progressSpinner=false;
       },
       err => {
-        console.log(err);
         this.progressSpinner=false;
       }, () => {
         this.arregloTildesCombo(this.comboTipoDesigna);
@@ -474,7 +514,6 @@ getComboCalidad() {
         this.progressSpinner=false;
       },
       err => {
-        console.log(err);
         this.progressSpinner=false;
       }, () => {
         this.arregloTildesCombo(this.comboTurno);
@@ -491,7 +530,6 @@ getComboCalidad() {
         this.progressSpinner=false;
       },
       err => {
-        console.log(err);
         this.progressSpinner=false;
       }, () => {
         this.arregloTildesCombo(this.comboTurno);
@@ -508,7 +546,6 @@ getComboCalidad() {
         this.progressSpinner=false;
       },
       err => {
-        console.log(err);
         this.progressSpinner=false;
       }, () => {
         this.arregloTildesCombo(this.comboProcedimientos);
@@ -536,7 +573,6 @@ getComboCalidad() {
         this.progressSpinner=false;
       },
       err => {
-        console.log(err);
         this.progressSpinner=false;
       }, () => {
         this.arregloTildesCombo(this.comboAcreditaciones);
@@ -700,6 +736,10 @@ getComboCalidad() {
         nombreAp: ''
       };
     }
+
+    //justificacion expres
+    this.getDataLoggedUser();
+
     this.body = new DesignaItem();
     this.getBuscadorDesignas();
   }
@@ -773,33 +813,33 @@ getComboCalidad() {
       const colegiadoItem = new ColegiadoItem();
       colegiadoItem.nif = usuario[0].dni;
 
-      //cambiar, nullpointer si no es colegiado
-      this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(usr => {
-        const { numColegiado, nombre } = JSON.parse(usr.body).colegiadoItem[0];
-        this.usuarioBusquedaExpress.numColegiado = numColegiado;
-        this.usuarioBusquedaExpress.nombreAp = nombre.replace(/,/g,"");
-        this.showColegiado = true;
+      if(this.isLetrado){
+        this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(usr => {
+          const { numColegiado, nombre } = JSON.parse(usr.body).colegiadoItem[0];
+          this.usuarioBusquedaExpress.numColegiado = numColegiado;
+          this.usuarioBusquedaExpress.nombreAp = nombre.replace(/,/g,"");
+          this.showColegiado = true;
 
-        //es colegiado, filtro por defecto para justificacion
-        this.filtroJustificacion.ejgSinResolucion = this.ejgSinResolucion;
-        this.filtroJustificacion.sinEJG= this.sinEjg;
-        this.filtroJustificacion.resolucionPTECAJG= this.ejgPtecajg;
-        this.filtroJustificacion.conEJGNoFavorables= this.ejgNoFavorable;
+          //es colegiado, filtro por defecto para justificacion
+          this.filtroJustificacion.ejgSinResolucion = this.ejgSinResolucion;
+          this.filtroJustificacion.sinEJG= this.sinEjg;
+          this.filtroJustificacion.resolucionPTECAJG= this.ejgPtecajg;
+          this.filtroJustificacion.conEJGNoFavorables= this.ejgNoFavorable;
 
-        this.esColegiado = true;
-        this.checkRestricciones = true;
-      },
-      err =>{
-        this.progressSpinner = false;
-      },
-      ()=>{
-        this.progressSpinner = false;
-        this.buscar();
-      });
+          this.esColegiado = true;
+          this.checkRestricciones = true;
+        },
+        err =>{
+          this.progressSpinner = false;
+        },
+        ()=>{
+          this.progressSpinner = false;
+          this.buscar();
+        });
+      }
 
     },
     error =>{
-      console.log("ERROR: cargando datos del usuario logado");
       this.progressSpinner=false;
     });
   }

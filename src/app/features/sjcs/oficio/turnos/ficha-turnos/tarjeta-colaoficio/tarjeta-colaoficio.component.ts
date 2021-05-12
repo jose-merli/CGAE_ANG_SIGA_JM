@@ -137,14 +137,21 @@ export class TarjetaColaOficio implements OnInit {
 
   ngOnInit() {
     this.commonsService.checkAcceso(procesos_oficio.colaDeOficio)
-      .then(respuesta => {
-        this.permisosTarjeta = respuesta;
-        if (this.permisosTarjeta != true) {
-          this.permisosTarjeta = false;
-        } else {
-          this.permisosTarjeta = true;
-        }
-      }).catch(error => console.error(error));
+    .then(respuesta => {
+      this.permisosTarjeta = respuesta;
+      this.persistenceService.setPermisos(this.permisosTarjeta);
+      if (this.permisosTarjeta == undefined) {
+        sessionStorage.setItem("codError", "403");
+        sessionStorage.setItem(
+          "descError",
+          this.translateService.instant("generico.error.permiso.denegado")
+        );
+        this.router.navigate(["/errorAcceso"]);
+      }else if(this.persistenceService.getPermisos() != true){
+        this.disableAll = true;
+      }
+    }
+    ).catch(error => console.error(error));
     this.getCols();
     if (this.idTurno != undefined) {
       this.modoEdicion = true;
@@ -214,7 +221,6 @@ export class TarjetaColaOficio implements OnInit {
       }
       this.getColaOficio();
     }
-
   }
 
   fillFechaDesdeCalendar(event) {
@@ -273,7 +279,6 @@ export class TarjetaColaOficio implements OnInit {
             // }
           },
           err => {
-            console.log(err);
           }, () => {
             this.turnosItem.idpersonaUltimo = this.turnosItem2.idpersonaUltimo;
             this.getColaOficio();
@@ -299,7 +304,6 @@ export class TarjetaColaOficio implements OnInit {
         // }
       },
       err => {
-        console.log(err);
         this.progressSpinner = false;
       }, () => {
         this.datosInicial = JSON.parse(JSON.stringify(this.datos));

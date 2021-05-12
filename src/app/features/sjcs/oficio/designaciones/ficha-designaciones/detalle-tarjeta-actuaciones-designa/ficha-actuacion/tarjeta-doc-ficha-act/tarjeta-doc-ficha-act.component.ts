@@ -6,6 +6,10 @@ import { TranslateService } from '../../../../../../../../commons/translate/tran
 import { DocumentoActDesignaItem } from '../../../../../../../../models/sjcs/DocumentoActDesignaItem';
 import { DatePipe } from '@angular/common';
 import { saveAs } from "file-saver/FileSaver";
+import { UsuarioLogado } from '../ficha-actuacion.component';
+import { ParametroRequestDto } from '../../../../../../../../models/ParametroRequestDto';
+import { SigaStorageService } from '../../../../../../../../siga-storage.service';
+import { ParametroItem } from '../../../../../../../../models/ParametroItem';
 
 export class Documento extends DocumentoActDesignaItem {
   file: File;
@@ -22,10 +26,15 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
 
   @Input() documentos: DocumentoActDesignaItem[];
   @Input() actuacionDesigna: Actuacion;
-  @Input() usuarioLogado;
+  @Input() usuarioLogado: UsuarioLogado;
   @Input() isColegiado;
   @Input() isAnulada;
+  @Input() modoLectura: boolean;
+
   @Output() buscarDocumentosEvent = new EventEmitter<any>();
+
+  permiteSubidDescargaFicheros: boolean;
+
   documentos2: Documento[];
   cols: Col[] = [
     {
@@ -87,11 +96,12 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
     private sigaServices: SigaServices,
     private translateService: TranslateService,
     private datePipe: DatePipe,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private sigaStorageService: SigaStorageService
   ) { }
 
   ngOnInit() {
-    this.convertObject();
+    this.getParametro();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -385,6 +395,30 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
     }
 
     return mime;
+  }
+
+  getParametro() {
+    this.progressSpinner = true;
+
+    let parametro = new ParametroRequestDto();
+    parametro.idInstitucion = this.sigaStorageService.institucionActual;
+    parametro.modulo = "SCS";
+    parametro.parametrosGenerales = "ACTIVAR_SUBIDA_JUSTIFICACION_DESIGNA";
+
+    this.sigaServices.postPaginado("parametros_search", "?numPagina=1", parametro).subscribe(
+      data => {
+        let resp: ParametroItem[] = JSON.parse(data.body).parametrosItems;
+        this.permiteSubidDescargaFicheros = resp.find(el => el.parametro == "ACTIVAR_SUBIDA_JUSTIFICACION_DESIGNA" && (el.idInstitucion == '0' || el.idInstitucion == el.idinstitucionActual)).valor == "1";
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      },
+      () => {
+        this.convertObject();
+        this.progressSpinner = false;
+      }
+    );
   }
 
 }

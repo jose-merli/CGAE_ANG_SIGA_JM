@@ -7,6 +7,7 @@ import { PersistenceService } from '../../../../../_services/persistence.service
 import { BajasTemporalesItem } from '../../../../../models/sjcs/BajasTemporalesItem';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { ColegiadoItem } from '../../../../../models/ColegiadoItem';
+import { SigaStorageService } from '../../../../../siga-storage.service';
 
 
 @Component({
@@ -19,8 +20,6 @@ export class FiltrosBajasTemporales implements OnInit {
   showDatosGenerales: boolean = true;
   buscar: boolean = false;
   filtroAux: BajasTemporalesItem = new BajasTemporalesItem();
-  disabledFechaHasta:boolean = true;
-  disabledFechaSolicitudHasta:boolean = true;
   disabledestado: boolean = false;
   msgs: any[] = [];
   filtros: BajasTemporalesItem = new BajasTemporalesItem();
@@ -51,13 +50,14 @@ export class FiltrosBajasTemporales implements OnInit {
     private sigaServices: SigaServices,
     private translateService: TranslateService,
     private persistenceService: PersistenceService,
-    private commonsService: CommonsService) { }
+    private commonsService: CommonsService,
+    private localStorageService: SigaStorageService) { }
 
   ngOnInit() {   
 
-    if (sessionStorage.getItem("isLetrado") != null && sessionStorage.getItem("isLetrado") != undefined) {
-      this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
-    }
+    this.clearFilters();
+
+    this.isLetrado = this.localStorageService.isLetrado;
 
     this.getComboEstado();
 
@@ -206,20 +206,16 @@ export class FiltrosBajasTemporales implements OnInit {
   fillFechaDesdeCalendar(event) {
     if(event != null){
       this.filtros.fechadesde = this.transformaFecha(event);
-      this.disabledFechaHasta = false;
     }else{
       this.filtros.fechahasta = undefined;
-      this.disabledFechaHasta = true;
     }
   
   }
   fillFechaSolicitudDesdeCalendar(event) {
     if(event != null){
       this.filtros.fechasolicituddesde = this.transformaFecha(event);
-      this.disabledFechaSolicitudHasta = false;
     }else{
       this.filtros.fechasolicitudhasta = undefined;
-      this.disabledFechaSolicitudHasta = true;
     }
   
   }
@@ -254,27 +250,26 @@ export class FiltrosBajasTemporales implements OnInit {
   }
 
   clearFilters() {
-  if(this.isLetrado){
-    this.filtros.validado = undefined;
-    this.filtros.fechadesde = undefined;
-    this.filtros.fechahasta = undefined;
-    this.filtros.fechasolicituddesde = undefined;
-    this.filtros.fechasolicitudhasta = undefined;
-    this.filtros.tipo = undefined;
-    this.disabledFechaHasta = true;
-    this.disabledFechaSolicitudHasta = true;
-  }else{
-    this.filtros.validado = undefined;
-    this.filtros.fechadesde = undefined;
-    this.filtros.fechahasta = undefined;
-    this.filtros.fechasolicituddesde = undefined;
-    this.filtros.fechasolicitudhasta = undefined;
-    this.filtros.tipo = undefined;
-    this.disabledFechaHasta = true;
-    this.disabledFechaSolicitudHasta = true;
-    this.usuarioBusquedaExpress.nombreAp = null;
-    this.usuarioBusquedaExpress.numColegiado = null;
-  }
+    if(this.isLetrado){
+      this.filtros.validado = undefined;
+      this.filtros.fechadesde = undefined;
+      this.filtros.fechahasta = undefined;
+      this.filtros.fechasolicituddesde = undefined;
+      this.filtros.fechasolicitudhasta = undefined;
+      this.filtros.tipo = undefined;
+      this.filtroAux = undefined;
+    }else{
+      this.filtros.validado = undefined;
+      this.filtros.fechadesde = undefined;
+      this.filtros.fechahasta = undefined;
+      this.filtros.fechasolicituddesde = undefined;
+      this.filtros.fechasolicitudhasta = undefined;
+      this.filtros.tipo = undefined;
+      this.filtros.ncolegiado = undefined;
+      this.filtros.nombre = undefined;
+      this.usuarioBusquedaExpress.nombreAp = undefined;
+      this.usuarioBusquedaExpress.numColegiado = undefined;
+    }
   }
 
   //búsqueda con enter
@@ -300,7 +295,6 @@ export class FiltrosBajasTemporales implements OnInit {
         },
         err => {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-          console.log(err);
           this.progressSpinner=false;
         }
       );

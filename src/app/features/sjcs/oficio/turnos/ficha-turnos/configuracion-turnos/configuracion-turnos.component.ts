@@ -132,7 +132,6 @@ export class ConfiguracionTurnosComponent implements OnInit {
 
       },
       err => {
-        console.log(err);
       }, () => {
         if (this.turnosItem.idguardias != undefined) {
           for (let i = 0; i < this.guardias.length; i++) {
@@ -167,7 +166,6 @@ export class ConfiguracionTurnosComponent implements OnInit {
         }
       },
       (err) => {
-        console.log(err);
       }
     );
     this.commonsService.checkAcceso(procesos_oficio.configuracionTurnos)
@@ -241,7 +239,6 @@ export class ConfiguracionTurnosComponent implements OnInit {
             },
             error => {
               this.progressSpinner = false;
-              console.log(error);
               this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
             }
           );
@@ -257,7 +254,6 @@ export class ConfiguracionTurnosComponent implements OnInit {
             },
             error => {
               this.progressSpinner = false;
-              console.log(error);
               this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
             }
           );
@@ -273,9 +269,6 @@ export class ConfiguracionTurnosComponent implements OnInit {
 
 
   confirmGuardar() {
-    console.log(this.requisitosGuardiasDescripcion);
-    console.log(this.requisitoInicial);
-
     let keyConfirmation = "deletePlantillaDoc";
 
     this.confirmationService.confirm({
@@ -321,7 +314,6 @@ export class ConfiguracionTurnosComponent implements OnInit {
 
       },
       err => {
-        console.log(err);
         this.progressSpinner = false;
       }, () => {
       }

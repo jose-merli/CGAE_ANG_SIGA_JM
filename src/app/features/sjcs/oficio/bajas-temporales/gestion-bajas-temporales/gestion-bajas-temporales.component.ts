@@ -9,6 +9,8 @@ import { PersistenceService } from '../../../../../_services/persistence.service
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslateService } from '../../../../../commons/translate/translation.service';
+import { CommonsService } from '../../../../../_services/commons.service';
+import { procesos_oficio } from '../../../../../permisos/procesos_oficio';
 
 interface GuardiaI {
   label: string,
@@ -81,7 +83,8 @@ export class GestionBajasTemporalesComponent implements OnInit {
     { label: "Suspensión por sanción", value: "S" }
   ];
   @ViewChild("tablaFoco") tablaFoco: ElementRef;
-
+  permisosTarjeta: boolean = true;
+  disableAll: boolean = false;
   usuarioBusquedaExpress = {​​​​​​​​​
     numColegiado: '',
     nombreAp: ''
@@ -93,7 +96,8 @@ export class GestionBajasTemporalesComponent implements OnInit {
     private pipe : DatePipe,
 		private router: Router,
     private translateService: TranslateService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private commonsService: CommonsService
   ) {
     this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
       for (let i = 0; i < this.table.nativeElement.children.length; i++) {
@@ -117,6 +121,23 @@ export class GestionBajasTemporalesComponent implements OnInit {
     if (sessionStorage.getItem("isLetrado") != null && sessionStorage.getItem("isLetrado") != undefined) {
       this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
     }
+    this.commonsService.checkAcceso(procesos_oficio.bajastemporales)
+    .then(respuesta => {
+      this.permisosTarjeta = respuesta;
+      this.persistenceService.setPermisos(this.permisosTarjeta);
+      if (this.permisosTarjeta == undefined) {
+        sessionStorage.setItem("codError", "403");
+        sessionStorage.setItem(
+          "descError",
+          this.translateService.instant("generico.error.permiso.denegado")
+        );
+        this.router.navigate(["/errorAcceso"]);
+      } else if (this.persistenceService.getPermisos() != true) {
+        this.disableAll = true;
+        this.isDisabled = true;
+      }
+    }
+    ).catch(error => console.error(error));
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -162,8 +183,6 @@ export class GestionBajasTemporalesComponent implements OnInit {
     }
   }
   nuevoFromCombo(turno, guardiaInc, idGuardia, idTurno, idTurnoIncompatible, idGuardiaIncompatible, nombreTurnoInc){
-    console.log('idGuardiaIncompatible: ', idGuardiaIncompatible)
-    console.log('idGuardia: ', idGuardia)
     this.enableGuardar = true;
     let labelSelected = '';
     let row: Row = new Row();
@@ -192,9 +211,6 @@ export class GestionBajasTemporalesComponent implements OnInit {
     if (idGuardia.value != ''){
       this.comboGuardiasIncompatibles.push({ label: labelSelected, value: idGuardia.value})
     }
-    console.log('idGuardia.value: ', idGuardia.value)
-    console.log('this.comboGuardiasIncompatibles: ', this.comboGuardiasIncompatibles)
-    console.log('cellMulti.value: ', cellMulti.value)
     row.cells = [turno, guardiaInc, cellMulti, cell1, cell2, idTurno, idGuardia, idGuardiaIncompatible, idTurnoIncompatible, cellInvisible, cellArr];
     if (idGuardia.value != ''){
     this.rowGroups.unshift(row);

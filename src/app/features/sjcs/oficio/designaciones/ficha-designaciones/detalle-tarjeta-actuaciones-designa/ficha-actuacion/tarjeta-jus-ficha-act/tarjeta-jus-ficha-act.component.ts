@@ -4,6 +4,7 @@ import { Actuacion } from '../../detalle-tarjeta-actuaciones-designa.component';
 import { SigaServices } from '../../../../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../../../../commons/translate/translation.service';
 import { DatePipe } from '@angular/common';
+import { UsuarioLogado } from '../ficha-actuacion.component';
 
 @Component({
   selector: 'app-tarjeta-jus-ficha-act',
@@ -20,7 +21,8 @@ export class TarjetaJusFichaActComponent implements OnInit, OnDestroy {
   @Output() buscarActuacionEvent = new EventEmitter<any>();
   @Input() actuacionDesigna: Actuacion;
   @Input() isColegiado;
-  @Input() usuarioLogado;
+  @Input() usuarioLogado: UsuarioLogado;
+  @Input() modoLectura: boolean;
 
   fechaActuacion: Date;
 

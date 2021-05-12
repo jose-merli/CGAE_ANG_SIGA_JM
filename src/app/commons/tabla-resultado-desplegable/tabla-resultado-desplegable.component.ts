@@ -67,7 +67,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   from = 0;
   to = 10;
   totalRegistros = 0;
-  disableDelete = false;
+  disableDelete = true;
   idTurno = "";
   rowIdWithNewActuacion = "";
   //@Input() comboAcreditacionesPorModulo: any [];
@@ -160,8 +160,10 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }
     if (this.selectedArray.length != 0) {
       this.anySelected.emit(true);
+      this.disableDelete = false;
     } else {
       this.anySelected.emit(false);
+      this.disableDelete = true;
     }
   }
   isSelected(id) {

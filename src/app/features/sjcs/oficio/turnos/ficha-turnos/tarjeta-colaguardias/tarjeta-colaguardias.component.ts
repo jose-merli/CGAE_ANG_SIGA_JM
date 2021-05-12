@@ -630,9 +630,9 @@ export class TarjetaColaGuardias implements OnInit {
       { field: "orden", header: "administracion.informes.literal.orden" },
       { field: "numerocolegiado", header: "censo.busquedaClientesAvanzada.literal.nColegiado" },
       { field: "nombreguardia", header: "administracion.parametrosGenerales.literal.nombre.apellidos" },
+      { field: "fechavalidacion", header: "justiciaGratuita.oficio.turnos.fechavalidacion" },
       { field: "fechabajaguardia", header: "dato.jgr.guardia.guardias.fechaBaja" },
       // { field: "alfabeticoapellidos", header: "administracion.parametrosGenerales.literal.nombre" },
-      { field: "fechavalidacion", header: "justiciaGratuita.oficio.turnos.fechavalidacion" },
       { field: "saltos", header: "justiciaGratuita.oficio.turnos.saltos" },
       { field: "compensaciones", header: "justiciaGratuita.oficio.turnos.compensaciones" }
     ];

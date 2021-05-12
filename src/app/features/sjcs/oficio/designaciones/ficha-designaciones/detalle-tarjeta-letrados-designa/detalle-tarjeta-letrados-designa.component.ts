@@ -55,8 +55,10 @@ export class DetalleTarjetaLetradosDesignaComponent implements OnInit {
     this.getCols();
     let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
     let datos: DesignaItem = designa;
-    if(designa.art27!="No") this.art27=true;
-    this.art27=true;
+    if(designa.art27!="No"){
+      this.art27=true;
+    } 
+    
 
     this.datos=this.letrados;
     sessionStorage.setItem("FDSaliente",this.letrados[0].fechaDesignacion);
@@ -66,8 +68,18 @@ export class DetalleTarjetaLetradosDesignaComponent implements OnInit {
       if(element.fechaSolRenuncia!=null) element.fechaSolRenuncia = this.datepipe.transform(element.fechaSolRenuncia, 'dd/MM/yyyy');
     });
     
+    this.sigaServices.get('getLetrado').subscribe(
+      (data) => {
+        if (data.value == 'S') {
+          this.isLetrado = true;
+        } else {
+          this.isLetrado = false;
+        }
+      },
+      (err) => {
+      }
+    );
     this.isLetrado = this.localStorageService.isLetrado;
-    
   }
 
   irFichaColegial(){

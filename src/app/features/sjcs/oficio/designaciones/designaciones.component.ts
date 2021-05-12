@@ -40,8 +40,8 @@ export class DesignacionesComponent implements OnInit {
   actuacionesDesignaItems: ActuacionDesignaItem[] = [];
   permisosFichaAct = false; 
   constructor(public sigaServices: OldSigaServices, public sigaServicesNew: SigaServices, private location: Location,  private commonsService: CommonsService, 
-    private datePipe: DatePipe, private translateService: TranslateService, 
-    private localStorageService: SigaStorageService,) {
+    private datePipe: DatePipe, private translateService: TranslateService, private localStorageService: SigaStorageService) {
+
 
     this.url = sigaServices.getOldSigaUrl("designaciones");
   }
@@ -60,7 +60,14 @@ export class DesignacionesComponent implements OnInit {
   busquedaJustificacionExpres(){
     this.datosJustificacion = new JustificacionExpressItem();
     this.progressSpinner=true;
+    if(sessionStorage.getItem("buscadorColegiados")){​​
 
+      let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
+
+      this.filtros.filtroJustificacion.nColegiado = busquedaColegiado.nColegiado;
+
+    }​
+    
     this.sigaServicesNew.post("justificacionExpres_busqueda", this.filtros.filtroJustificacion).subscribe(
       data => {
         this.progressSpinner=false;
@@ -75,7 +82,6 @@ export class DesignacionesComponent implements OnInit {
         this.progressSpinner = false;
 
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        console.log(err);
       },
       ()=>{
         setTimeout(()=>{
@@ -97,7 +103,6 @@ export class DesignacionesComponent implements OnInit {
       },
       err => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        console.log(err);
       },);
   }
 
@@ -115,7 +120,6 @@ export class DesignacionesComponent implements OnInit {
         this.muestraTablaJustificacion=true;
         this.progressSpinner=false;
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        console.log(err);
       },);
   }
 
@@ -133,7 +137,6 @@ export class DesignacionesComponent implements OnInit {
         this.muestraTablaJustificacion=true;
         this.progressSpinner = false;
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        console.log(err);
       },);
   }
 
@@ -227,7 +230,6 @@ export class DesignacionesComponent implements OnInit {
           },
           err => {
             this.progressSpinner = false;
-            console.log(err);
           }
         );
         this.progressSpinner=false;
@@ -237,9 +239,6 @@ export class DesignacionesComponent implements OnInit {
       err => {
         this.progressSpinner = false;
         this.commonsService.scrollTablaFoco("tablaFoco");
-        // this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-
-        console.log(err);
       },() => {
         this.progressSpinner = false;
         this.progressSpinner = false;
@@ -273,7 +272,6 @@ export class DesignacionesComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
       }, () => {
         this.progressSpinner = false;
       }
