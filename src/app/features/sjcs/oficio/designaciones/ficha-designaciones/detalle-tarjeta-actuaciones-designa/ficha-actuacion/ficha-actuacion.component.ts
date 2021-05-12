@@ -247,7 +247,7 @@ export class FichaActuacionComponent implements OnInit {
     let tarjeta = this.listaTarjetas.find(el => el.id == event.tarjeta);
 
     if (event.tarjeta == 'sjcsDesigActuaOfiJustifi') {
-      tarjeta.campos[0].value = event.fechaJusti;
+      tarjeta.campos[0].value = this.datePipe.transform(event.fechaJusti, 'dd/MM/yyyy');
       tarjeta.campos[1].value = event.estado;
     }
 
@@ -471,16 +471,18 @@ export class FichaActuacionComponent implements OnInit {
     this.tarjetaFija.campos[0].value = this.actuacionDesigna.designaItem.ano;
     this.tarjetaFija.campos[1].value = `${this.actuacionDesigna.designaItem.numColegiado} ${this.actuacionDesigna.designaItem.nombreColegiado}`;
     this.tarjetaFija.campos[2].value = this.actuacionDesigna.actuacion.numeroAsunto;
-    this.tarjetaFija.campos[3].value = this.datePipe.transform(new Date(this.actuacionDesigna.actuacion.fechaActuacion.split('/').reverse().join('-')), 'dd/MM/yyyy');
-
+    if (this.actuacionDesigna.actuacion.fechaActuacion != undefined && this.actuacionDesigna.actuacion.fechaActuacion != null && this.actuacionDesigna.actuacion.fechaActuacion != '') {
+      this.tarjetaFija.campos[3].value = this.datePipe.transform(new Date(this.actuacionDesigna.actuacion.fechaActuacion.split('/').reverse().join('-')), 'dd/MM/yyyy');
+    }
     // Se rellenan los campos de la tarjeta de Datos Generales plegada
     this.listaTarjetas[0].campos[0].value = this.actuacionDesigna.actuacion.nombreJuzgado;
     this.listaTarjetas[0].campos[1].value = this.actuacionDesigna.actuacion.modulo;
     this.listaTarjetas[0].campos[2].value = this.actuacionDesigna.actuacion.acreditacion;
 
     // Se rellenan los campos de la tarjeta de Justificación plegada
-
-    this.listaTarjetas[1].campos[0].value = this.actuacionDesigna.actuacion.fechaJustificacion;
+    if (this.actuacionDesigna.actuacion.fechaJustificacion != undefined && this.actuacionDesigna.actuacion.fechaJustificacion != null && this.actuacionDesigna.actuacion.fechaJustificacion != '') {
+      this.listaTarjetas[1].campos[0].value = this.datePipe.transform(new Date(this.actuacionDesigna.actuacion.fechaJustificacion.split('/').reverse().join('-')), 'dd/MM/yyyy');
+    }
     this.listaTarjetas[1].campos[1].value = this.actuacionDesigna.actuacion.validada ? 'Validada' : 'Pendiente de validar';
 
     if (this.relaciones == undefined || this.relaciones == null || this.relaciones.length == 0) {

@@ -12,7 +12,7 @@
 
       <div class="form-group col-lg-6 col-md-6 w-100">
         <label>{{ datos.datePicker.label }}</label>
-        <app-fecha [utc]="true" [(value)]='datos.datePicker.value' [minDate]="fechaEntradaInicioDate"
+        <app-fecha [utc]="false" [(value)]='datos.datePicker.value' [minDate]="fechaEntradaInicioDate"
           [maxDate]="fechaMaxima" (valueChangeSelected)="fillFecha($event)" (valueChangeInput)="fillFecha($event)"
           [disabled]="isAnulada || modoLectura"
           [inputStyleClass]="(datos.datePicker.value == null || datos.datePicker.value == '') ? 'camposObligatorios': ''">
