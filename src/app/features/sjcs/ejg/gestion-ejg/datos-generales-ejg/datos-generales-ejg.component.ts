@@ -97,7 +97,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
           this.body.fechapresentacion = new Date(this.body.fechapresentacion);
         if (this.body.fechaApertura != undefined)
           this.body.fechaApertura = new Date(this.body.fechaApertura);
-        if (this.body.idTipoExpediente != undefined)
+        if (this.body.tipoEJG != undefined)
           this.showTipoExp = true;
         
         this.getPrestacionesRechazadasEJG();
@@ -172,7 +172,7 @@ getPrestacionesRechazadasEJG() {
         this.comboTipoExpediente = n.combooItems;
         this.commonsServices.arregloTildesCombo(this.comboTipoExpediente);
         let tipoExp = this.comboTipoExpediente.find(
-          item => item.value == this.body.idTipoExpediente
+          item => item.value == this.body.tipoEJG
         );
         if(tipoExp != undefined)
           this.tipoExpedienteDes = tipoExp.label;
@@ -375,7 +375,7 @@ getPrestacionesRechazadasEJG() {
         this.body.fechapresentacion = new Date(this.body.fechapresentacion);
       if (this.body.fechaApertura != undefined)
         this.body.fechaApertura = new Date(this.body.fechaApertura);
-      if (this.body.idTipoExpediente != undefined)
+      if (this.body.tipoEJG != undefined)
         this.showTipoExp = true;
     }else{
       this.body = JSON.parse(JSON.stringify(this.nuevoBody));
