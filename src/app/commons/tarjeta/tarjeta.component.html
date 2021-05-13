@@ -17,7 +17,7 @@
               aria-hidden="true"></i>{{ enlaceCardClosed.title }}</a>
         </div>
       </div>
-      <div *ngIf="campos" class="col-12 form-row m-0 p-0 pt-2 justify-content-between">
+      <div onclick="event.stopPropagation()" *ngIf="campos" class="col-12 form-row m-0 p-0 pt-2 justify-content-between">
         <div *ngFor="let campo of campos" class="d-flex flex-wrap campos">
           <label *ngIf="campo.key!=null">
             {{ campo.key }}:
