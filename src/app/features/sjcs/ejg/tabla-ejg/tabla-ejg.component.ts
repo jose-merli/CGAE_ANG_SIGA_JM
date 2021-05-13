@@ -449,13 +449,16 @@ export class TablaEjgComponent implements OnInit {
     });
 
     
-    this.sigaServices.post("gestionejg_anadirExpedienteARemesa", this.selectedDatos).subscribe(
+    this.sigaServices.post("filtrosejg_anadirExpedienteARemesa", this.selectedDatos).subscribe(
       n => {
         this.progressSpinner=false;
+        if(JSON.parse(n.body).status=="OK")this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.busqueda.EjgEnRemesa"));
       },
       err => {
-        console.log(err);
         this.progressSpinner=false;
+        console.log(err);
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }
     );
   }

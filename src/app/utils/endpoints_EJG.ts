@@ -30,7 +30,7 @@ export let endpoints_EJG: any = {
 
     //Busqueda EJG
     gestionejg_descargarExpedientesJG: "ejg/gestion-ejg/descargarExpedientesJG",
-    gestionejg_anadirExpedienteARemesa: "ejg/gestion-ejg/anadirExpedienteARemesa",
+    filtrosejg_anadirExpedienteARemesa: "ejg/filtros-ejg/anadirExpedienteARemesa",
     gestionejg_cambioEstadoMasivo: "ejg/gestion-ejg/cambioEstadoMasivo",
 
     //Datos Generales
