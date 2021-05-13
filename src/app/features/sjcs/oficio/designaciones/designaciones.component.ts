@@ -168,6 +168,7 @@ export class DesignacionesComponent implements OnInit {
     }
     this.sigaServicesNew.post("designaciones_busqueda", designaItem).subscribe(
       n => {
+        let error = JSON.parse(n.body).error;
         this.datos = JSON.parse(n.body);
         this.datos.forEach(element => {
          element.factConvenio = element.ano;
@@ -235,6 +236,13 @@ export class DesignacionesComponent implements OnInit {
         this.progressSpinner=false;
         this.showTablaDesigna(true);
         this.commonsService.scrollTablaFoco("tablaFoco");
+        if (error != null && error.description != null) {
+          this.msgs = [];
+          this.msgs.push({
+            severity:"info", 
+            summary:this.translateService.instant("general.message.informacion"), 
+            detail: error.description});
+        }
       },
       err => {
         this.progressSpinner = false;

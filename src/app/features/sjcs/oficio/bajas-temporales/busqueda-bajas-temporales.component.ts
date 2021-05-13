@@ -52,7 +52,7 @@ export class BajasTemporalesComponent implements OnInit {
   cabeceras = [
     { id: "ncolegiado", name: "facturacionSJCS.facturacionesYPagos.numColegiado" },
     { id: "nombre", name: "busquedaSanciones.detalleSancion.letrado.literal" },
-    { id: "tiponombre", name: "Tipo Baja" },
+    { id: "tiponombre", name: "justiciaGratuita.oficio.bajasTemporales.tipoBaja" },
     { id: "descripcion", name: "administracion.auditoriaUsuarios.literal.motivo" },
     { id: "fechadesdeSinHora", name: "facturacion.seriesFacturacion.literal.fInicio" },
     { id: "fechahastaSinHora", name: "censo.consultaDatos.literal.fechaFin" },
@@ -196,11 +196,11 @@ jsonToRow(datos){
     }
 
     if(element.apellidos2 != null){
-      nombreApell = + " " + element.apellidos2;
+      nombreApell += " " + element.apellidos2;
     }
 
     if(element.nombre != null){
-      nombreApell = + ", " + element.nombre;
+      nombreApell += ", " + element.nombre;
     }
     if(element.eliminado == 1){
       let obj = [
