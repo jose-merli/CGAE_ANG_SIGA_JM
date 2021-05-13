@@ -196,11 +196,11 @@ jsonToRow(datos){
     }
 
     if(element.apellidos2 != null){
-      nombreApell = + " " + element.apellidos2;
+      nombreApell += " " + element.apellidos2;
     }
 
     if(element.nombre != null){
-      nombreApell = + ", " + element.nombre;
+      nombreApell += ", " + element.nombre;
     }
     if(element.eliminado == 1){
       let obj = [

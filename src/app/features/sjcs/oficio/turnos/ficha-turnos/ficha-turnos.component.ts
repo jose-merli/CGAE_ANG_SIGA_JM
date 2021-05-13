@@ -70,8 +70,7 @@ export class FichaTurnosComponent implements OnInit, AfterViewChecked {
 		}).catch(error => console.error(error));
 		this.route.queryParams
 			.subscribe(params => {
-				this.idTurno = params.idturno
-				console.log(params);
+				this.idTurno = params.idturno;
 			
 				if (this.idTurno != undefined) {
 					this.newTurno = false;
@@ -150,7 +149,6 @@ export class FichaTurnosComponent implements OnInit, AfterViewChecked {
 				}
 			},
 			err => {
-				console.log(err);
 			}, () => {
 				this.persistenceService.setDatos(this.turnosItem2);
 				this.progressSpinner = false;
