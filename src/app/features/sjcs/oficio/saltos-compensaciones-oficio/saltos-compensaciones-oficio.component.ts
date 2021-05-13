@@ -11,6 +11,7 @@ import { TablaResultadoMixSaltosCompOficioComponent } from './tabla-resultado-mi
 import { Cell, Row, TablaResultadoMixSaltosCompOficioService } from './tabla-resultado-mix-saltos-comp-oficio/tabla-resultado-mix-saltos-comp-oficio.service';
 import { ControlAccesoDto } from '../../../../models/ControlAccesoDto';
 import { procesos_oficio } from '../../../../permisos/procesos_oficio';
+import { DISABLED } from '@angular/forms/src/model';
 
 @Component({
   selector: 'app-saltos-compensaciones-oficio',
@@ -98,9 +99,17 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
 
     this.getComboTurno();
 
+  }
+
+  async getComboTurno() {
+
+    let asyncResult = await this.sigaServices.get("busquedaGuardia_turno").toPromise();
+
+    this.comboTurnos = asyncResult.combooItems;
+    this.commonsService.arregloTildesCombo(this.comboTurnos);
+
     let params = this.activatedRoute.snapshot.queryParams;
     if (params.idturno) {
-
       let data = {
         idpersona: params.idpersona,
         idturno: params.idturno,
@@ -112,19 +121,6 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
       this.isNewFromOtherPageObject = data;
       this.search(false);
     }
-  }
-
-  getComboTurno() {
-
-    this.sigaServices.get("busquedaGuardia_turno").subscribe(
-      n => {
-        this.comboTurnos = n.combooItems;
-        this.commonsService.arregloTildesCombo(this.comboTurnos);
-      },
-      err => {
-        console.log(err);
-      }
-    );
   }
 
   isBuscar(event) {
@@ -186,7 +182,6 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
         this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("general.mensaje.error.bbdd") });
       },
       () => {
@@ -440,86 +435,85 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
   }
 
   newSalCompFromOtherPage() {
+      let data = this.isNewFromOtherPageObject;
 
-    let data = this.isNewFromOtherPageObject;
+      let row: Row = new Row();
 
-    let row: Row = new Row();
+      let cell1: Cell = new Cell();
+      let cell2: Cell = new Cell();
+      let cell3: Cell = new Cell();
+      let cell4: Cell = new Cell();
+      let cell5: Cell = new Cell();
+      let cell6: Cell = new Cell();
+      let cell7: Cell = new Cell();
+      let cell8: Cell = new Cell();
+      let cell9: Cell = new Cell();
+      let cell10: Cell = new Cell();
 
-    let cell1: Cell = new Cell();
-    let cell2: Cell = new Cell();
-    let cell3: Cell = new Cell();
-    let cell4: Cell = new Cell();
-    let cell5: Cell = new Cell();
-    let cell6: Cell = new Cell();
-    let cell7: Cell = new Cell();
-    let cell8: Cell = new Cell();
-    let cell9: Cell = new Cell();
-    let cell10: Cell = new Cell();
+      cell1.type = 'select';
+      cell1.combo = this.comboTurnos;
+      cell1.value = data.idturno;
+      cell1.header = this.cabeceras[0].id;
+      cell1.disabled = true;
 
-    cell1.type = 'select';
-    cell1.combo = this.comboTurnos;
-    cell1.value = data.idturno;
-    cell1.header = this.cabeceras[0].id;
-    cell1.disabled = false;
+      cell2.type = 'select';
+      cell2.value = data.idpersona;
+      cell2.combo = [];
+      cell2.header = this.cabeceras[1].id;
+      cell2.disabled = false;
 
-    cell2.type = 'select';
-    cell2.value = data.idpersona;
-    cell2.combo = [];
-    cell2.header = this.cabeceras[1].id;
-    cell2.disabled = false;
+      cell3.type = 'text';
+      cell3.value = data.letrado;
+      cell3.header = this.cabeceras[2].id;
+      cell3.disabled = false;
 
-    cell3.type = 'text';
-    cell3.value = data.letrado;
-    cell3.header = this.cabeceras[2].id;
-    cell3.disabled = false;
+      cell4.type = 'select';
+      cell4.combo = this.comboTipos;
+      cell4.value = '';
+      cell4.header = this.cabeceras[3].id;
+      cell4.disabled = false;
 
-    cell4.type = 'select';
-    cell4.combo = this.comboTipos;
-    cell4.value = '';
-    cell4.header = this.cabeceras[3].id;
-    cell4.disabled = false;
+      cell5.type = 'datePicker';
+      cell5.value = this.datepipe.transform(new Date(), 'dd/MM/yyyy');
+      cell5.header = this.cabeceras[4].id;
+      cell5.disabled = false;
 
-    cell5.type = 'datePicker';
-    cell5.value = this.datepipe.transform(new Date(), 'dd/MM/yyyy');
-    cell5.header = this.cabeceras[4].id;
-    cell5.disabled = false;
+      cell6.type = 'textarea';
+      cell6.value = '';
+      cell6.header = this.cabeceras[5].id;
+      cell6.disabled = false;
 
-    cell6.type = 'textarea';
-    cell6.value = '';
-    cell6.header = this.cabeceras[5].id;
-    cell6.disabled = false;
+      cell7.type = 'text';
+      cell7.value = '';
+      cell7.header = this.cabeceras[6].id;
+      cell7.disabled = false;
 
-    cell7.type = 'text';
-    cell7.value = '';
-    cell7.header = this.cabeceras[6].id;
-    cell7.disabled = false;
+      cell8.type = 'invisible';
+      cell8.value = '';
+      cell8.header = 'idSaltosTurno';
 
-    cell8.type = 'invisible';
-    cell8.value = '';
-    cell8.header = 'idSaltosTurno';
+      cell9.type = 'invisible';
+      cell9.value = '';
+      cell9.header = 'idTurno';
 
-    cell9.type = 'invisible';
-    cell9.value = '';
-    cell9.header = 'idTurno';
+      cell10.type = 'invisible';
+      cell10.value = '';
+      cell10.header = 'idPersona';
 
-    cell10.type = 'invisible';
-    cell10.value = '';
-    cell10.header = 'idPersona';
+      row.cells = [cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8, cell9, cell10];
+      row.id = this.totalRegistros == 0 ? 0 : this.totalRegistros;
+      row.italic = false;
+      this.getComboColegiados(row);
 
-    row.cells = [cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8, cell9, cell10];
-    row.id = this.totalRegistros == 0 ? 0 : this.totalRegistros;
-    row.italic = false;
-    this.getComboColegiados(row);
+      if (this.rowGroups != undefined && this.rowGroups != null) {
+        this.rowGroups.unshift(row);
+      } else {
+        this.rowGroups = [row];
+      }
+      this.rowGroupsAux = this.rowGroups;
+      this.totalRegistros = this.rowGroups.length;
 
-    if (this.rowGroups != undefined && this.rowGroups != null) {
-      this.rowGroups.unshift(row);
-    } else {
-      this.rowGroups = [row];
-    }
-    this.rowGroupsAux = this.rowGroups;
-    this.totalRegistros = this.rowGroups.length;
-
-    this.showResults = true;
+      this.showResults = true;
   }
 
   getComboColegiados(row: Row) {
@@ -536,7 +530,6 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
           this.comboColegiados = comboColegiados;
         },
         err => {
-          console.log(err);
         },
         () => {
           this.rowGroups.find(el => el.id == row.id).cells[1].combo = this.comboColegiados;
@@ -570,7 +563,6 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
       },
       () => {
         this.progressSpinner = false;

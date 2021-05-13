@@ -131,7 +131,6 @@ export class TarjetaColaGuardias implements OnInit {
               this.guardias = n.combooItems;
             },
             err => {
-              console.log(err);
 
             }, () => {
               this.guardiasNombre = "";
@@ -224,7 +223,6 @@ export class TarjetaColaGuardias implements OnInit {
             this.guardias = n.combooItems;
           },
           err => {
-            console.log(err);
 
           }, () => {
             this.guardiasNombre = "";
@@ -307,7 +305,6 @@ export class TarjetaColaGuardias implements OnInit {
         // }
       },
       err => {
-        console.log(err);
         this.progressSpinner = false;
       }, () => {
         this.datosInicial = JSON.parse(JSON.stringify(this.datos));

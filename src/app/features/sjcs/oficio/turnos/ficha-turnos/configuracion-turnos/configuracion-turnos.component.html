@@ -47,7 +47,7 @@
         <div class="bloque col-lg-12 col-md-12">
 
           <div class="form-row">
-            <div class="form-group col-lg-3 col-md-3">
+            <div class="form-group col-lg-2 col-md-2">
               <label>
                 {{"justiciaGratuita.oficio.turnos.requisitosguardias" | translate}} (*)
               </label>
@@ -63,7 +63,7 @@
                 name="groupname"></p-checkbox>
             </div>
 
-            <div class="form-group col-lg-4 col-md-4">
+            <div class="form-group col-lg-3 col-md-3">
               <br>
               <p-checkbox [disabled]="disableAll" [(ngModel)]="turnosItem.validarinscripcionesCheck" binary="true" label="{{'justiciaGratuita.oficio.turnos.requeridavalidacionIns' | translate }}"
                 name="groupname"></p-checkbox>
@@ -74,8 +74,13 @@
               <p-checkbox [disabled]="disableAll" [(ngModel)]="turnosItem.letradoasistenciasCheck" binary="true" label="{{'justiciaGratuita.oficio.turnos.anadirasistencialetrado' | translate }}"
                 name="groupname"></p-checkbox>
             </div>
+            </div>
+        </div>
 
-            <div class="form-group col-lg-4 col-md-4">
+            <div class="bloque col-lg-8 col-md-8">
+
+              <div class="form-row">
+            <div class="form-group col-lg-2 col-md-2">
               <br>
               <p-checkbox [disabled]="disableAll && !isLetrado" [(ngModel)]="turnosItem.letradoactuacionesCheck" binary="true" label="{{'justiciaGratuita.oficio.turnos.anadiractuacionletrado' | translate }}"
                 name="groupname"></p-checkbox>
@@ -87,7 +92,7 @@
                 name="groupname"></p-checkbox>
             </div>
 
-            <div class="form-group col-lg-2 col-md-2">
+            <div class="form-group col-lg-3 col-md-3">
               <br>
               <p-checkbox [disabled]="disableAll" [(ngModel)]="turnosItem.visibleMovilCheck" binary="true" label="{{'administracion.informes.literal.visibleMovil' | translate }}"
                 name="groupname"></p-checkbox>
