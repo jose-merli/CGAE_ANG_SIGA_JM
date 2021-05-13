@@ -299,7 +299,7 @@ export class FichaCambioLetradoComponent implements OnInit {
     let salto = new SaltoCompItem();
     let saltos =[];
     salto.fecha = this.formatDate(new Date());
-    salto.idPersona = this.body.idPersona;
+    salto.idPersona = this.entrante.body.idPersona;
     salto.idTurno = designa.idTurno;
     salto.motivo = "";
     salto.saltoCompensacion = "S";
