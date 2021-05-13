@@ -23,7 +23,7 @@ export class LetradoEntranteComponent implements OnInit {
   disableCheck=false;
   isLetrado: boolean;
 
-  @Input() saliente;
+  @Input() entrante;
 
   @Output() fillEntrante = new EventEmitter<boolean>();
 
@@ -51,7 +51,7 @@ export class LetradoEntranteComponent implements OnInit {
     let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
     if(designa.art27=="Si") {
       this.body.art27=true;
-      this.body.fechaDesignacion = this.saliente.fechaDesignacion;
+      this.body.fechaDesignacion = this.entrante.fechaDesignacion;
       this.disableFechaDesignacion=true;
     }
 
@@ -98,7 +98,7 @@ export class LetradoEntranteComponent implements OnInit {
 
   search() {
 			sessionStorage.setItem("origin", "AbogadoContrario");
-      sessionStorage.setItem("Oldletrado",  JSON.stringify(this.saliente));
+      sessionStorage.setItem("Oldletrado",  JSON.stringify(this.entrante));
       sessionStorage.setItem("Newletrado",  JSON.stringify(this.body));
 			this.router.navigate(['/busquedaGeneral']);
   }

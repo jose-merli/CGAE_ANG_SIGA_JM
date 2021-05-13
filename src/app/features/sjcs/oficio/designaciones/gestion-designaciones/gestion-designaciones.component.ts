@@ -104,6 +104,7 @@ export class GestionDesignacionesComponent implements OnInit {
   }
 
   openTab(dato) {
+    this.progressSpinner = true;
     let idProcedimiento = dato.idProcedimiento;
     let datosProcedimiento;
     let datosModulo;

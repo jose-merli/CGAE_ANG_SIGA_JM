@@ -659,7 +659,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
             element.sufijo = element.estado;
             element.estado = 'Anulada';
           }
-          this.inputs[0].value =  element.nombreColegiado;
+          this.inputs[0].value =  element.numColegiado;
           this.inputs[1].value =  element.apellido1Colegiado + " " + element.apellido2Colegiado;
           this.inputs[2].value = element.nombreColegiado;
           this.inputs[0].disable = true;
