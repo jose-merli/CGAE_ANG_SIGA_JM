@@ -98,7 +98,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
           this.searchParametros = JSON.parse(data["body"]);
           this.datosBuscar = this.searchParametros.parametrosItems;
           this.datosBuscar.forEach(element => {
-            if (element.parametro == "CONFIGURAR_COMBO_DESIGNA" && (element.idInstitucion == '0' || element.idInstitucion == element.idinstitucionActual)) {
+            if (element.parametro == "CONFIGURAR_COMBO_DESIGNA" && (element.idInstitucion == element.idinstitucionActual || element.idInstitucion == '0')) {
               this.valorParametro = element.valor;
             }
           });
