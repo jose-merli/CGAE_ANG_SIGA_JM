@@ -98,7 +98,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
           this.searchParametros = JSON.parse(data["body"]);
           this.datosBuscar = this.searchParametros.parametrosItems;
           this.datosBuscar.forEach(element => {
-            if (element.parametro == "CONFIGURAR_COMBO_DESIGNA" && (element.idInstitucion == 0 || element.idInstitucion == element.idinstitucionActual)) {
+            if (element.parametro == "CONFIGURAR_COMBO_DESIGNA" && (element.idInstitucion == '0' || element.idInstitucion == element.idinstitucionActual)) {
               this.valorParametro = element.valor;
             }
           });
@@ -832,7 +832,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     });;
  }
 
- ningunaActuacionesFacturada(element): boolean{
+ async ningunaActuacionesFacturada(element): Promise<boolean>{
    let resultado: boolean = false;
   const params = {
     anio: element.factConvenio,
@@ -841,7 +841,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     historico: false
   };
   this.progressSpinner = false;
-  this.sigaServices.post("actuaciones_designacion", params).subscribe(
+  await this.sigaServices.post("actuaciones_designacion", params).toPromise().then(
     data => {
       let object: ActuacionDesignaObject = JSON.parse(data.body);
       let resp = object.actuacionesDesignaItems;
@@ -860,11 +860,9 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         }else{
           resultado = false;
         }
-      },
-      err => {
-        resultado = false;
+      }
+    ).catch(error => {console.error(error);
         this.progressSpinner = false;
-        console.log(err);
         let severity = "error";
           let summary = "No se ha podido guardar el detalle de la designación";
           let detail = "";
@@ -873,9 +871,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
             summary,
             detail
           });
-      }
-    );
-
+        });
     return resultado;
  }
 
@@ -886,7 +882,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
   //Buscamos los letrados asociados a la designacion
   this.progressSpinner = true;
   let institucionActual;
-  let  resquestLetrado = [element.factConvenio, element.idTurno, element.numero];
+  let  resquestLetrado = [element.ano, element.idTurno, element.numero];
   this.sigaServices.post("designaciones_busquedaLetradosDesignacion", resquestLetrado).subscribe(
     data => {
       this.progressSpinner = false;
