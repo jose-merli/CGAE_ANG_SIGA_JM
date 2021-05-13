@@ -394,6 +394,8 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
      //RESTABLECER
      if (detail == "Restablecer" ) {
        if(!this.nuevaDesigna){
+        this.procedimientoOpciones = [];
+        this.moduloOpciones = []; 
         this.inputs[0].value = this.datosInicial.nig;
         this.inputs[1].value = this.datosInicial.numProcedimiento;
         this.datePickers[0].value = this.datosInicial.fechaEstado;
@@ -415,6 +417,8 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
             this.procedimientoValue = this.datosInicial.idProcedimiento;
             this.moduloValue = this.datosInicial.idModulo;
        }else{
+        this.procedimientoOpciones = [];
+        this.moduloOpciones = []; 
         this.inputs[0].value = "";
         this.inputs[1].value = "";
         this.estadoValue = "";
