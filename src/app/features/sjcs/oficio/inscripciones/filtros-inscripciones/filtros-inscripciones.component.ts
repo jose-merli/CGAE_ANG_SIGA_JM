@@ -94,25 +94,39 @@ export class FiltrosInscripciones implements OnInit {
     }
     ).catch(error => console.error(error));
 
-    if (this.persistenceService.getFiltros() != undefined) {
-      this.filtros = this.persistenceService.getFiltros();
+    if (
+      sessionStorage.getItem("filtrosInscripciones") != null
+    ) {
+      this.filtros = JSON.parse(
+        sessionStorage.getItem("filtrosInscripciones")
+      );
+      if(this.filtros.fechadesde!=undefined && this.filtros.fechadesde != null){
+        this.filtros.fechadesde = new Date(this.filtros.fechadesde);
+      }
+      if(this.filtros.fechahasta!=undefined && this.filtros.fechahasta != null){
+        this.filtros.fechahasta = new Date(this.filtros.fechahasta);
+        this.disabledFechaHasta = false;
+      }
+       if(this.filtros.afechade!=undefined && this.filtros.afechade != null){
+        this.filtros.afechade = new Date(this.filtros.afechade);
+      }
+      if(sessionStorage.getItem("colegiadoRelleno")){
+        const { numColegiado, nombre } = JSON.parse(sessionStorage.getItem("datosColegiado"));
+        this.usuarioBusquedaExpress.numColegiado = numColegiado;
+        this.usuarioBusquedaExpress.nombreAp = nombre.replace(/,/g,"");
+  
+        this.isBuscar();
+  
+        sessionStorage.removeItem("colegiadoRelleno");
+        sessionStorage.removeItem("datosColegiado");
+      }
       this.isBuscar();
     }
-    
     if(this.isLetrado){
       this.getDataLoggedUser();
     }
 
-    if(sessionStorage.getItem("colegiadoRelleno")){
-      const { numColegiado, nombre } = JSON.parse(sessionStorage.getItem("datosColegiado"));
-      this.usuarioBusquedaExpress.numColegiado = numColegiado;
-      this.usuarioBusquedaExpress.nombreAp = nombre.replace(/,/g,"");
-
-      this.isBuscar();
-
-      sessionStorage.removeItem("colegiadoRelleno");
-      sessionStorage.removeItem("datosColegiado");
-    }
+  
 
     this.sigaServices.get("inscripciones_comboTurnos").subscribe(
       n => {
@@ -141,7 +155,6 @@ export class FiltrosInscripciones implements OnInit {
         }
       }
     );
-    this.clearFilters();
     
     if(sessionStorage.getItem("buscadorColegiados")){​​
 
@@ -264,7 +277,10 @@ export class FiltrosInscripciones implements OnInit {
       this.buscar=true;
       this.persistenceService.setFiltros(this.filtros);
       this.persistenceService.setFiltrosAux(this.filtros);
-      this.filtroAux = this.persistenceService.getFiltrosAux()
+      this.filtroAux = this.persistenceService.getFiltrosAux();
+      sessionStorage.setItem(
+        "filtrosInscripciones",
+        JSON.stringify(this.filtros));
       this.busqueda.emit(false);
       this.commonsService.scrollTablaFoco("tablaFoco");
     }

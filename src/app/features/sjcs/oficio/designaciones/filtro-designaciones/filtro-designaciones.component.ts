@@ -104,6 +104,24 @@ export class FiltroDesignacionesComponent implements OnInit {
     this.checkAccesoFichaActuacion();
     this.getParamsEJG();
 
+    if (
+      sessionStorage.getItem("filtroDesignas") != null
+    ) {
+      this.body = JSON.parse(
+        sessionStorage.getItem("filtroDesignas")
+      );
+      this.fechaAperturaDesdeSelect =  new Date(this.body.fechaEntradaInicio);
+	    this.fechaAperturaHastaSelect = new Date(this.body.fechaEntradaFin);
+      if(this.body.fechaJustificacionDesde!=undefined && this.body.fechaJustificacionDesde != null){
+        this.body.fechaJustificacionDesde = new Date(this.body.fechaJustificacionDesde);
+      }
+      if(this.body.fechaJustificacionHasta!=undefined && this.body.fechaJustificacionHasta != null){
+        this.body.fechaJustificacionHasta = new Date(this.body.fechaJustificacionHasta);
+      }
+      this.buscar();
+      sessionStorage.removeItem("filtroDesignas");
+    }
+
     if(sessionStorage.getItem("buscadorColegiados")){
       const { nombre, apellidos, nColegiado } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
       this.usuarioBusquedaExpress.nombreAp = `${apellidos}, ${nombre}`;
@@ -114,6 +132,8 @@ export class FiltroDesignacionesComponent implements OnInit {
 
       sessionStorage.removeItem("buscadorColegiados");
     }
+
+    
     
   }
 
@@ -701,6 +721,13 @@ getComboCalidad() {
         
         sessionStorage.setItem("designaItem", JSON.stringify(designa));
         
+        this.body.fechaEntradaInicio=this.fechaAperturaDesdeSelect;
+        this.body.fechaEntradaFin=this.fechaAperturaHastaSelect;
+
+        sessionStorage.setItem(
+          "filtroDesignas",
+          JSON.stringify(this.body));
+
         this.progressSpinner = false;
         this.busqueda.emit(false);
       }
