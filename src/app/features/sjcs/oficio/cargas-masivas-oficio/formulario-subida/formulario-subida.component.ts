@@ -108,6 +108,7 @@ export class FormularioSubidaComponent implements OnInit {
         .subscribe(
           data => {
             this.progressSpinner = false;
+            let error = JSON.parse(data.body).error;
             let etiquetasSearch = JSON.parse(data["body"]);
             this.datos = etiquetasSearch.cargaMasivaItem;
 
@@ -115,9 +116,15 @@ export class FormularioSubidaComponent implements OnInit {
             //this.numSelected = this.selectedDatos.length;
             this.sendDatos();
             this.sendBuscar();
+            if (error != null && error.description != null) {
+              this.msgs = [];
+              this.msgs.push({
+                severity:"info", 
+                summary:this.translateService.instant("general.message.informacion"), 
+                detail: error.description});
+            }
           },
           err => {
-            console.log(err);
             this.progressSpinner = false;
           },
           () => {
@@ -154,7 +161,6 @@ export class FormularioSubidaComponent implements OnInit {
               }
             },
             error => {
-              console.log(error);
               this.showFail("Se ha producido un error al cargar el fichero, vuelva a intentarlo de nuevo pasados unos minutos");
               this.progressSpinner = false;
             },
@@ -182,7 +188,6 @@ export class FormularioSubidaComponent implements OnInit {
               }
             },
             error => {
-              console.log(error);
               this.showFail("Se ha producido un error al cargar el fichero, vuelva a intentarlo de nuevo pasados unos minutos");
               this.progressSpinner = false;
             },

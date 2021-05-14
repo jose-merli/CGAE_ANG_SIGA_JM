@@ -768,6 +768,10 @@ getComboCalidad() {
     this.getDataLoggedUser();
 
     this.body = new DesignaItem();
+    this.fechaAperturaDesdeSelect = undefined;
+    this.fechaAperturaHastaSelect = undefined;
+    this.fechaJustificacionDesdeSelect = undefined;
+    this.fechaJustificacionHastaSelect = undefined;
     this.getBuscadorDesignas();
   }
 
