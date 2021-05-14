@@ -67,6 +67,9 @@ export class DesignacionesComponent implements OnInit {
       this.filtros.filtroJustificacion.nColegiado = busquedaColegiado.nColegiado;
 
     }​
+
+    let error = null;
+    
     
     this.sigaServicesNew.post("justificacionExpres_busqueda", this.filtros.filtroJustificacion).subscribe(
       data => {
@@ -76,7 +79,19 @@ export class DesignacionesComponent implements OnInit {
           this.datosJustificacion = JSON.parse(data.body);
         }
 
+        if(this.datosJustificacion[0].error != null){
+          error = this.datosJustificacion[0].error;
+        }
+
         this.muestraTablaJustificacion=true;
+
+        if (error != null && error.description != null) {
+          this.msgs = [];
+          this.msgs.push({
+            severity:"info", 
+            summary:this.translateService.instant("general.message.informacion"), 
+            detail: error.description});
+        }
       },
       err => {
         this.progressSpinner = false;
@@ -168,8 +183,13 @@ export class DesignacionesComponent implements OnInit {
     }
     this.sigaServicesNew.post("designaciones_busqueda", designaItem).subscribe(
       n => {
-        let error = JSON.parse(n.body).error;
+        let error = null;
         this.datos = JSON.parse(n.body);
+        
+        if(this.datos[0].error != null){
+          error = this.datos[0].error;
+        }
+
         this.datos.forEach(element => {
          element.factConvenio = element.ano;
          element.ano = 'D' +  element.ano + '/' + element.codigo;
