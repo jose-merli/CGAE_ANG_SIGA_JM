@@ -22,9 +22,9 @@ export class ServiciosTramitacionComponent implements OnInit {
   openFicha: boolean = false;
   textFilter: string = "Seleccionar";
   progressSpinner: boolean = false;
-  buscarDisabled: boolean = false;
   isDisabledGuardia: boolean = true;
   destinatario: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
+  disableBuscar: boolean = false;
 
   body: EJGItem;
   bodyInicial: EJGItem;
@@ -42,6 +42,11 @@ export class ServiciosTramitacionComponent implements OnInit {
     key: "serviciosTramitacion",
     activa: false
   }
+
+  usuarioBusquedaExpress = {​​​​​​​​​
+    numColegiado: '',
+    nombreAp: ''
+  }​​​​​​​​​;
   
   activacionTarjeta: boolean = false;
   @Output() opened = new EventEmitter<Boolean>();
@@ -60,13 +65,50 @@ export class ServiciosTramitacionComponent implements OnInit {
         this.modoEdicion = true;
         this.body = this.persistenceService.getDatos();
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+        this.usuarioBusquedaExpress = {​​​​​​​​​
+          numColegiado: this.body.numColegiado,
+          nombreAp: this.body.apellidosYNombre
+        }​​​​​​​​​;
       }else {
       this.modoEdicion = false;
       this.nuevo = true;
-       this.body = new EJGItem();
+      this.body = new EJGItem();
+
     }
-    this.getComboGuardia();
     this.getComboTurno();
+    
+    if(sessionStorage.getItem("buscadorColegiados")){​​
+
+      let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
+
+      this.usuarioBusquedaExpress.nombreAp=busquedaColegiado.nombre+" "+busquedaColegiado.apellidos;
+
+      this.usuarioBusquedaExpress.numColegiado=busquedaColegiado.nColegiado;
+
+      this.body.apellidosYNombre = busquedaColegiado.apellidos+", "+busquedaColegiado.nombre;
+
+      this.body.numColegiado = busquedaColegiado.nColegiado;
+
+      this.body.idPersona = busquedaColegiado.idPersona;
+      
+      if(sessionStorage.getItem("idTurno")){
+        this.body.idTurno = sessionStorage.getItem("idTurno");
+        sessionStorage.removeItem('idTurno');
+      }
+    }​​
+
+    this.getComboGuardia();
+
+    this.checkBusqueda();
+  }
+
+  checkBusqueda(){
+    if((this.body.idTurno != null &&this.body.idGuardia != null) 
+    /* || (this.body.idTurno == null &&this.body.idGuardia == null) */
+    ){
+      this.disableBuscar= false;
+    }
+    else this.disableBuscar=true;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -145,14 +187,41 @@ export class ServiciosTramitacionComponent implements OnInit {
         col => {
           this.comboGuardia = col.combooItems;
           this.commonServices.arregloTildesCombo(this.comboGuardia);
+          if(sessionStorage.getItem("idGuardia")){
+            this.body.idGuardia = sessionStorage.getItem("idGuardia");
+            sessionStorage.removeItem('idGuardia');
+          }
         },
         err => {
           console.log(err);
         }
       );
   }
+
+  onChangeGuardias(){
+    this.checkBusqueda();
+    //Para prevenir que un colegiado se asigne a turnos y guardias que no son suyos.
+    this.usuarioBusquedaExpress = {​​​​​​​​​
+      numColegiado: '',
+      nombreAp: ''
+    }​​​​​​​​​;
+    this.body.idPersona=null;
+    this.body.apellidosYNombre=null;
+    this.body.numColegiado=null;
+  }
+
   onChangeTurnos() {
+    this.checkBusqueda();
     this.comboGuardia = [];
+    //Para prevenir que un colegiado se asigne a turnos y guardias que no son suyos.
+    this.usuarioBusquedaExpress = {​​​​​​​​​
+      numColegiado: '',
+      nombreAp: ''
+    }​​​​​​​​​;
+    this.body.idPersona=null;
+    this.body.apellidosYNombre=null;
+    this.body.numColegiado=null;
+
     if (this.body.idTurno != undefined) {
       this.isDisabledGuardia = false;
       this.getComboGuardia();
@@ -160,6 +229,7 @@ export class ServiciosTramitacionComponent implements OnInit {
       this.isDisabledGuardia = true;
       this.body.guardia = "";
     }
+
   }
   //busqueda express
   isBuscar() {
@@ -195,7 +265,7 @@ export class ServiciosTramitacionComponent implements OnInit {
       this.body.apellidosYNombre = "";
       // this.body.idPersona = "";
     }
-    this.buscarDisabled = false;
+    this.disableBuscar = false;
   }
 
   isLimpiar() {
@@ -209,7 +279,7 @@ export class ServiciosTramitacionComponent implements OnInit {
       this.msgs = msg;
     } else {
       if (this.disabledSave()) {
-        this.msgs = this.commonServices.checkPermisoAccion();
+        this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
       } else {
         this.save();
       }
@@ -220,16 +290,23 @@ export class ServiciosTramitacionComponent implements OnInit {
 
     //this.body.nuevoEJG=!this.modoEdicion;
 
-    this.sigaServices.post("gestionejg_guardarDatosGenerales", this.body).subscribe(
+
+    this.sigaServices.post("gestionejg_guardarServiciosTramitacion", this.body).subscribe(
       n => {
         this.progressSpinner=false;
+        if(n.statusText=="OK") this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+
       },
       err => {
         console.log(err);
         this.progressSpinner=false;
+
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }
     );
   }
+
   checkPermisosRest() {
     let msg = this.commonServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
@@ -238,26 +315,25 @@ export class ServiciosTramitacionComponent implements OnInit {
       this.rest();
     }
   }
+
   rest(){
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    this.usuarioBusquedaExpress = {​​​​​​​​​
+      numColegiado: this.body.numColegiado,
+      nombreAp: this.body.apellidosYNombre
+    }​​​​​​​​​;
+    this.checkBusqueda();
   }
+
+
   disabledSave() {
-    if (this.nuevo) {
-      if (this.body.fechaApertura != undefined) {
-        return false;
-      } else {
-        return true;
-      }
-    } else {
-      if (this.permisoEscritura) {
-        if (this.body.fechaApertura != undefined) {
-          return false;
-        } else {
-          return true;
-        }
-      } else {
-        return true;
-      }
+    if (this.body.idTurno != null && this.body.idGuardia != null && this.body.apellidosYNombre != null) {
+      return false;
     }
+    else  return true;
+  }
+
+  idPersona(event){
+    this.body.idPersona=event;
   }
 }

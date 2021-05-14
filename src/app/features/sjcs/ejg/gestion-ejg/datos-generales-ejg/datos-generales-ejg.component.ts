@@ -97,7 +97,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
           this.body.fechapresentacion = new Date(this.body.fechapresentacion);
         if (this.body.fechaApertura != undefined)
           this.body.fechaApertura = new Date(this.body.fechaApertura);
-        if (this.body.idTipoExpediente != undefined)
+        if (this.body.tipoEJG != undefined)
           this.showTipoExp = true;
         
         this.getPrestacionesRechazadasEJG();
@@ -130,7 +130,8 @@ getPrestacionesRechazadasEJG() {
       JSON.parse(n.body).forEach(element => {
         this.bodyInicial.prestacionesRechazadas.push(element.idprestacion.toString());
       });;
-      this.bodyInicial.prestacion = this.body.prestacion.filter(x => this.bodyInicial.prestacionesRechazadas.indexOf(x) === -1);
+      //this.bodyInicial.prestacion = this.body.prestacion.filter(x => this.bodyInicial.prestacionesRechazadas.indexOf(x) === -1);
+      this.bodyInicial.prestacion = this.comboPrestaciones.map(it => it.value.toString()).filter(x => this.bodyInicial.prestacionesRechazadas.indexOf(x) === -1);
       this.body.prestacion = this.bodyInicial.prestacion;
     },
     err => {
@@ -172,7 +173,7 @@ getPrestacionesRechazadasEJG() {
         this.comboTipoExpediente = n.combooItems;
         this.commonsServices.arregloTildesCombo(this.comboTipoExpediente);
         let tipoExp = this.comboTipoExpediente.find(
-          item => item.value == this.body.idTipoExpediente
+          item => item.value == this.body.tipoEJG
         );
         if(tipoExp != undefined)
           this.tipoExpedienteDes = tipoExp.label;
@@ -316,7 +317,6 @@ getPrestacionesRechazadasEJG() {
 
           if(n.statusText=="OK") this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-
         },
         err => {
           console.log(err);
@@ -375,7 +375,7 @@ getPrestacionesRechazadasEJG() {
         this.body.fechapresentacion = new Date(this.body.fechapresentacion);
       if (this.body.fechaApertura != undefined)
         this.body.fechaApertura = new Date(this.body.fechaApertura);
-      if (this.body.idTipoExpediente != undefined)
+      if (this.body.tipoEJG != undefined)
         this.showTipoExp = true;
     }else{
       this.body = JSON.parse(JSON.stringify(this.nuevoBody));

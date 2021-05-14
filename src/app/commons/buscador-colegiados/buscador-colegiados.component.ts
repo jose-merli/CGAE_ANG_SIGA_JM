@@ -34,11 +34,14 @@ export class BuscadorColegiadosComponent implements OnInit {
     if (sessionStorage.getItem('usuarioBusquedaExpress')) {
       sessionStorage.removeItem('usuarioBusquedaExpress')
     }
+
     //Comprobar si viene del botón nuevo de busqueda de inscripciones
     if (sessionStorage.getItem("origin") =="newInscrip") {
       sessionStorage.removeItem('origin');
       this.nuevaInscripcion=true;
     }
+
+    
 
   }
 
@@ -130,6 +133,9 @@ export class BuscadorColegiadosComponent implements OnInit {
 
       sessionStorage.getItem('nuevo');
       
+      /* if (sessionStorage.getItem("pantalla") =="gestionEjg" && sessionStorage.getItem("tarjeta") =="ServiciosTramit"){
+        sessionStorage.setItem("idTurno", this.filtro.filtro.)
+      } */
       this.location.back();
     }
   }

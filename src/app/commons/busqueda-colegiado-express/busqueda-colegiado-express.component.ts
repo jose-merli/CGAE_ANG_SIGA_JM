@@ -16,6 +16,8 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
   @Input() tarjeta;
   @Input() pantalla;
   @Input() disabled;
+  @Input() idTurno;
+  @Input() idGuardia;
 
   @Output() idPersona = new EventEmitter<string>();
   progressSpinner: boolean = false;
@@ -113,6 +115,11 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
 
       if (this.tarjeta) {
         sessionStorage.setItem("tarjeta", this.tarjeta);
+      }
+
+      if(this.tarjeta=="ServiciosTramit" && this.pantalla=="gestionEjg"){
+        sessionStorage.setItem("idTurno", this.idTurno);
+        sessionStorage.setItem("idGuardia", this.idGuardia);
       }
 
       if (form.numColegiado == null || form.numColegiado == undefined || form.numColegiado.trim() == "") {

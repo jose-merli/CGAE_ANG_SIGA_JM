@@ -34,33 +34,36 @@
         <div class="form-group col-lg-6 col-md-6">
           <label>{{ "dato.jgr.guardia.guardias.turno" | translate }}</label>
           <p-dropdown class="select-form" (onChange)="onChangeTurnos()" [(ngModel)]='body.idTurno' placeholder="Seleccionar" [options]="comboTurno"
-            [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+            [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" ></p-dropdown>
         </div>
         <div class="form-group col-lg-6 col-md-6">
           <label>{{ "menu.justiciaGratuita.GuardiaMenu" | translate }}</label>
           <p-dropdown class="select-form" [(ngModel)]='body.idGuardia' [(disabled)]="isDisabledGuardia" placeholder="Seleccionar" [options]="comboGuardia"
-            [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+            [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" (onChange)="onChangeGuardias()" ></p-dropdown>
         </div>
-        <div class="form-group col-lg-3 col-md-3">
+        <!-- <div class="form-group col-lg-3 col-md-3">
           <label>{{"censo.resultadoDuplicados.numeroColegiado" | translate}}</label>
           <input type="text" (keypress)="numberOnly($event)" class="form-control" [(ngModel)]="body.idPersona" pInputText />
         </div>
         <div class="form-group col-lg-6 col-md-6">
           <label>{{"administracion.parametrosGenerales.literal.nombre.apellidos" | translate}}</label>
           <input type="text" class="form-control" disabled [(ngModel)]="body.apellidosYNombre" pInputText />
+        </div> -->
+        <div class="form-group col-lg-9 col-md-9">
+          <app-busqueda-colegiado-express [idTurno]="this.body.idTurno" [idGuardia]="this.body.idGuardia" [tarjeta]="'ServiciosTramit'" [pantalla]="'gestionEjg'" [disabled]="disableBuscar" [numColegiado]="usuarioBusquedaExpress.numColegiado" [nombreAp]="usuarioBusquedaExpress.nombreAp"></app-busqueda-colegiado-express>
         </div>
         <div class="form-group col-lg-3 col-md-3 form-row">
+          <!-- Revisar más adelante -->
           <div class="form-group col-lg-6 pt-1 col-md-6">
             <label>{{"menu.justiciaGratuita.designas" | translate}}</label>
-            <p-checkbox [(ngModel)]="visibleMovilValue" (onChange)="cambiaMovil()" [disabled]="!permisoEscritura" binary="true" label="Art 27-28"></p-checkbox>
-
+            <p-checkbox [(ngModel)]="visibleMovilValue"  (onChange)="cambiaMovil()" [disabled]="!permisoEscritura" binary="true" label="Art 27-28" (idPersona)="idPersona($event)"></p-checkbox>
           </div>
-          <div class="form-group col-lg-6 col-md-6 pt-4">
+          <!-- <div class="form-group col-lg-6 col-md-6 pt-4">
             <div id="buttonExpressColegiados" class="text-right main-button">
               <button (click)="isLimpiar()" pButton type="button" icon="fa fa-eraser" iconPos="left"></button>
               <button (click)="isBuscar()" pButton [disabled]="buscarDisabled" type="button" icon="fa fa-search" iconPos="left"></button>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>

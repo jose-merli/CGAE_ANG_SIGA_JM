@@ -92,12 +92,12 @@
             <div class="form-row col-lg-3 col-md-3 pr-1">
               <div class="form-group col-lg-3 col-md-3">
                 <label>{{ 'justiciaGratuita.maestros.calendarioLaboralAgenda.anio' | translate}}</label>
-                <input type="text" [(ngModel)]="body.anioexpediente" [disabled]="true" class="form-control" (keypress)="numberOnly($event)"
+                <input type="text" [(ngModel)]="body.annio" [disabled]="true" class="form-control" (keypress)="numberOnly($event)"
                   maxLength="4" pInputText>
               </div>
               <div class="form-group col-lg-9 col-md-9 pr-0">
                 <label>{{ 'justiciaGratuita.ejg.datosGenerales.NumExpediente' | translate}}</label>
-                <input type="text" [(ngModel)]="body.numeroexpediente" [disabled]="true" class="form-control" (keypress)="numberOnly($event)"
+                <input type="text" [(ngModel)]="body.numejg" [disabled]="true" class="form-control" (keypress)="numberOnly($event)"
                   maxLength="10" pInputText>
               </div>
             </div>
@@ -105,7 +105,7 @@
               <label>{{ 'justiciaGratuita.ejg.datosGenerales.TipoExpediente' | translate}}:</label>
               <br>
               <label *ngIf="showTipoExp">{{tipoExpedienteDes | translate}}</label>
-              <p-dropdown *ngIf="!showTipoExp" class="select-form" [(ngModel)]='body.idTipoExpediente' placeholder="Seleccionar" [options]="comboTipoExpediente"
+              <p-dropdown *ngIf="!showTipoExp" class="select-form" [(ngModel)]='body.tipoEJG' placeholder="Seleccionar" [options]="comboTipoExpediente"
                 [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
             </div> 
           </div>

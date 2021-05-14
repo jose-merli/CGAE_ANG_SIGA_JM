@@ -26,6 +26,8 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
   progressSpinner: boolean = false;
   institucionGeneral: boolean = false;
   disabledEstado: boolean = false;
+  fixedTurn: boolean = false;
+  fixedGuard: boolean = false;
 
   comboColegios: any;
   comboTurno: any;
@@ -67,6 +69,18 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
     // if((datosDesgina != null && datosDesgina != undefined) && (datosDesgina.fechaAlta != null && datosDesgina.fechaAlta != undefined)){
     //   this.filtro.idTurno = datosDesgina.fechaAlta;
     // }
+
+    //Comprobar si proviene de la tarjeta servicio de tramitacion de la ficha EJG
+    if (sessionStorage.getItem("pantalla") =="gestionEjg" && sessionStorage.getItem("tarjeta") =="ServiciosTramit") {
+      if(sessionStorage.getItem("idTurno")){
+        this.filtro.idTurno = [];
+        this.filtro.idTurno.push(sessionStorage.getItem("idTurno"));
+        this.fixedTurn = true;
+        this.getComboguardiaPorTurno({value: this.filtro.idTurno[0]});
+      }
+    }
+
+    
    
   }
 
@@ -121,6 +135,12 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
         n => {
           this.comboguardiaPorTurno = n.combooItems;
           this.progressSpinner = false;
+          if (sessionStorage.getItem("pantalla") =="gestionEjg" && sessionStorage.getItem("tarjeta") =="ServiciosTramit") {
+            if(sessionStorage.getItem("idGuardia")){
+              this.filtro.idGuardia = [];
+              this.filtro.idGuardia.push(sessionStorage.getItem("idGuardia"));
+              this.fixedGuard = true;
+            }}
         },
         err => {
           console.log(err);
