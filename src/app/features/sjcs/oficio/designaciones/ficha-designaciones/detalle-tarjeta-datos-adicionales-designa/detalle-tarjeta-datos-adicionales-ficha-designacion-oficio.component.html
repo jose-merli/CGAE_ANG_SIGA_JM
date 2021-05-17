@@ -1,0 +1,46 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="row w-100 m-0 padding-interior">
+
+    <div class="bloque col-lg-4 col-md-4 mb-3" *ngFor="let bloque of bloques; let i = index;"
+        [ngClass]="{'bloque': i !== 2, 'pl-0': i === 0, 'pr-0': i === 2}">
+        <div class="form-row w-100">
+            <div class="form-group col-lg-8 col-md-8 w-100">
+                <label>{{ bloque.datePicker }}</label>
+                <app-fecha [utc]="true" [(value)]='bloque.valueDatePicker' [minDate]="minDateCierre" (valueChangeInput)="fillFechaHastaCalendar($event, bloque.datePicker)" (valueChangeSelected)="fillFechaHastaCalendar($event, bloque.datePicker)"></app-fecha>
+            </div>
+            <div class="form-group col-lg-4 col-md-4 w-100">
+                <div *ngIf="bloque.time" class="row">
+                    <div class="col-5 pr-0">
+                        <label>Hora</label>
+                        <input type="text" [(ngModel)]="hora" class="form-control"  maxlength="2" pInputText>
+                    </div>
+                    <div class="col-2 px-0 d-flex justify-content-center flex-end">
+                        :
+                    </div>
+                    <div class="col-5 pl-0 d-flex flex-end">
+                        <input type="text" class="form-control" [(ngModel)]="minuto" maxlength="2" pInputText>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-lg-12 col-md-12 w-100">
+                <label>{{ bloque.textArea }}</label>
+                <textarea class="form-control" [(value)]='bloque.value'  [(ngModel)]="bloque.value" pInputTextarea></textarea>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="card-footer">
+    <div class="text-right main-button">
+        <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer"
+            (click)="showMsg('success', 'Se ha restablecido correctamente', 'Restablecer')"></button>
+        <button pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"
+            (click)="showMsg('success', 'Se ha guardado correctamente', 'Guardar')"></button>
+    </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+  </div>

@@ -1,0 +1,42 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="card mt-3" id="tablaFoco">
+  <div class="card-body p-0">
+    <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" pageLinks="4" [responsive]="true" #table
+      class="tabla-listado" [value]="datos" [sortOrder]="sortO" (onRowSelect)="disabledButtons(selectedDatos)"
+      selectionMode="single" [paginator]="activarPaginacion()" [(selection)]="selectedDatos" paginatorPosition="both"
+      [rows]="selectedItem">
+      <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate"
+        filterPlaceholder="{{'general.boton.search' | translate}}" [filter]="true" filterMatchMode="contains">
+      </p-column>
+
+      <ng-template pTemplate="paginatorLeft">
+        <div class="mostrar d-flex text-right justify-content-end">
+          <label
+            class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}}
+            {{table.first + 1}} al {{table.first
+            + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }}
+            {{table.totalRecords}}</label>
+          <label
+            class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}:
+            {{selectedDatos.length}}</label>
+          <label>{{ "general.message.mostrar" | translate}}</label>
+          <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
+          </p-dropdown>
+          <label class="pl-1">{{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+        </div>
+      </ng-template>
+
+      <p-footer>
+        <div class="text-right main-button">
+          <button [disabled]="downloadFileDisable" (click)="downloadLogFile(selectedDatos)" pButton type="button"
+            icon="fa fa-download" iconPos="left" label="{{'general.boton.download' | translate}}"></button>
+        </div>
+      </p-footer>
+    </p-dataTable>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

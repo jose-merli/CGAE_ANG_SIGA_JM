@@ -33,6 +33,9 @@ import { DatosSolicitudComponent } from './gestion-justiciables/datos-solicitud/
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/primeng';
 import { DialogoModule } from '../../../commons/dialog/dialogo.module';
+import { DatosAbogadoContrarioComponent } from './gestion-justiciables/datos-abogado-contrario/datos-abogado-contrario.component';
+import { DatosProcuradorContrarioComponent } from './gestion-justiciables/datos-procurador-contrario/datos-procurador-contrario.component';
+import { DatosPersonalesComponent } from './gestion-justiciables/datos-personales/datos-personales.component';
 
 @NgModule({
   imports: [
@@ -66,7 +69,10 @@ import { DialogoModule } from '../../../commons/dialog/dialogo.module';
     DatosRepresentanteComponent,
     AsuntosComponent,
     DatosSolicitudComponent,
-    DatosDireccionComponent
+    DatosDireccionComponent,
+    DatosAbogadoContrarioComponent,
+    DatosProcuradorContrarioComponent,
+    DatosPersonalesComponent
   ],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },

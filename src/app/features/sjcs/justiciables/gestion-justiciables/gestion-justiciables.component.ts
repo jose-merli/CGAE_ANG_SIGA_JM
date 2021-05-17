@@ -38,6 +38,8 @@ export class GestionJusticiablesComponent implements OnInit {
   justiciableOverwritten: boolean = false;
   justiciableCreateByUpdate: boolean = false;
   permisoEscritura;
+  fromInteresado:boolean=false;
+  fromContrario:boolean=false;
 
   constructor(private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -45,7 +47,8 @@ export class GestionJusticiablesComponent implements OnInit {
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
     private commnosService: CommonsService,
-    private authenticationService: AuthenticationService) { }
+    private authenticationService: AuthenticationService, 
+    private location: Location) { }
 
   ngOnInit() {
 
@@ -55,6 +58,14 @@ export class GestionJusticiablesComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscritura = respuesta;
 
+        if(sessionStorage.getItem("origin")=="Interesado"){
+          sessionStorage.removeItem('origin');
+          this.fromInteresado=true;
+        }
+        if(sessionStorage.getItem("origin")=="Contrario"){
+          sessionStorage.removeItem('origin');
+          this.fromContrario=true;
+        }
         if (this.permisoEscritura == undefined) {
           sessionStorage.setItem("codError", "403");
           sessionStorage.setItem(
@@ -83,6 +94,8 @@ export class GestionJusticiablesComponent implements OnInit {
           if (this.persistenceService.getFichasPosibles() != null && this.persistenceService.getFichasPosibles() != undefined) {
             this.fichasPosibles = this.persistenceService.getFichasPosibles();
             this.fromJusticiable = this.fichasPosibles[0].activa;
+        
+
           }
 
           //Carga de la persistencia 
@@ -120,8 +133,6 @@ export class GestionJusticiablesComponent implements OnInit {
         }
       }
       ).catch(error => console.error(error));
-
-
   }
 
   newJusticiable(event) {
@@ -290,8 +301,12 @@ export class GestionJusticiablesComponent implements OnInit {
       this.commnosService.scrollTop();
       this.navigateToJusticiable = false;
       this.search();
-    } else {
-      this.router.navigate(["/justiciables"]);
+    } else if(this.fromContrario || this.fromInteresado) {
+      this.router.navigate(['/fichaDesignaciones']);
+    }  
+    else {
+      //this.router.navigate(["/justiciables"]);
+      this.location.back();
     }
 
   }
@@ -318,5 +333,8 @@ export class GestionJusticiablesComponent implements OnInit {
     justiciableBusqueda.idpersona = justiciable.idpersona;
     justiciableBusqueda.idinstitucion = this.authenticationService.getInstitucionSession();
     this.callServiceSearch(justiciableBusqueda);
+  }
+  contrario(event){
+    this.fromContrario=true;
   }
 }

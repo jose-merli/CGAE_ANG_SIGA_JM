@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 const routesSjcs: Routes = [
-
 	{
 		path: 'zonasYsubzonas',
 		loadChildren: './maestros/maestros.module#MaestrosModule'
@@ -71,11 +70,15 @@ const routesSjcs: Routes = [
 		path: 'justiciables',
 		loadChildren: './justiciables/justiciables.module#JusticiablesModule'
 	},
+	{
+		path: 'turnos',
+		loadChildren: './oficio/turnos/turnos.module#GestionTurnosModule'
+	},
+
 	{     //GUARDIAS ---------------------------------------------------------------------------------
 		path: "guardias",
 		loadChildren: './guardia/guardia.module#GuardiaModule'
 	}
-
 ];
 
 @NgModule({

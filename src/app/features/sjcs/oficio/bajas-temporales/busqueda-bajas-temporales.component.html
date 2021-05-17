@@ -1,0 +1,16 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div class="busqueda-container">
+    <app-filtros-bajas-temporales (busqueda)="search($event)" [permisos]="permisoEscritura">
+    </app-filtros-bajas-temporales>
+    <app-gestion-bajas-temporales *ngIf="buscar" [cabeceras]="cabeceras" [totalRegistros]="totalRegistros"
+        [seleccionarTodo]="seleccionarTodo" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" (delete)="delete($event)" (denegar)="denegar($event)" (validar)="validar($event)" (anular)="anular($event)" (searchHistorico)="searchHistorico($event)" (modDatos)="modDatos($event)" (estadoPendiente)="estadoPendiente($event)">
+    </app-gestion-bajas-temporales>
+</div>
+<!--<div class="mt-3 text-right main-button ">
+    <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left"
+    label="{{ 'general.boton.volver' | translate}}"></button>
+  </div>-->
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
+    <div class="loader"></div>
+</div>

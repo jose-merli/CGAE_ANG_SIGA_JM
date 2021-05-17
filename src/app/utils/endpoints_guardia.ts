@@ -15,6 +15,7 @@ export let endpoints_guardia: any = {
     busquedaGuardia_listasGuardia: "combo/listasguardias",
     busquedaGuardia_conjuntoGuardia: "combo/conjuntoguardias",
     busquedaGuardia_estado: "combo/estado",
+    busquedaGuardia_comboGuardia_Nogrupo: "combo/guardiasNoGrupo",
 
 
     // Guardias

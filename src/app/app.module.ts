@@ -16,8 +16,11 @@ import { CheckboxModule } from "primeng/checkbox";
 import { ChipsModule } from "primeng/chips";
 
 // Componentes comunes
+import { HomeComponent } from './features/home/home.component';
 import { LoginMultipleComponent } from './commons/login-multiple/login-multiple.component';
 import { LogoutComponent } from './commons/logout/logout.component';
+import { TranslatePipe, TranslateService } from './commons/translate';
+import { Message } from 'primeng/components/common/api';
 import { MessageService } from 'primeng/components/common/messageservice';
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { DataTableModule } from "primeng/datatable";
@@ -35,11 +38,9 @@ import { MultiSelectModule } from "primeng/multiselect";
 import { PanelMenuModule } from 'primeng/panelmenu';
 // import { EditorModule } from "primeng/editor";
 import { PickListModule } from "primeng/picklist";
-import { ColorPickerModule, OverlayPanelModule, SelectButtonModule } from 'primeng/primeng';
 import { ProgressSpinnerModule } from "primeng/progressspinner";
 import { RadioButtonModule } from "primeng/radiobutton";
 //Calendario
-import { ScheduleModule } from 'primeng/schedule';
 import { StepsModule } from 'primeng/steps';
 import { TableModule } from "primeng/table";
 import { TooltipModule } from "primeng/tooltip";
@@ -197,7 +198,6 @@ import { BusquedaInscripcionesComponent } from './features/formacion/busqueda-in
 import { FichaCursoComponent } from './features/formacion/ficha-curso/ficha-curso.component';
 import { FichaInscripcionComponent } from './features/formacion/ficha-inscripcion/ficha-inscripcion.component';
 import { FormacionComponent } from './features/formacion/formacion.component';
-import { HomeComponent } from './features/home/home.component';
 import { ComunicacionesComponent } from './features/informes-comunicaciones/comunicaciones/comunicaciones.component';
 import { ConfiguracionComponent } from './features/informes-comunicaciones/comunicaciones/ficha-registro-comunicacion/configuracion/configuracion.component';
 import { DestinatariosComponent } from './features/informes-comunicaciones/comunicaciones/ficha-registro-comunicacion/destinatarios/destinatarios.component';
@@ -284,6 +284,7 @@ import { InformeFacturacionPersonalizadoComponent } from './features/sjcs/inform
 import { InformeFacturacionComponent } from './features/sjcs/informes/informe-facturacion/informe-facturacion.component';
 import { JustificacionLetradoComponent } from './features/sjcs/informes/justificacion-letrado/justificacion-letrado.component';
 import { JustificacionComponent } from './features/sjcs/justificacion/justificacion.component';
+import { ZonasYSubzonasComponent } from './features/sjcs/maestros/zonas-subzonas/zonas-subzonas.component';
 import { AreasYMateriasComponent } from './features/sjcs/maestros/areas-materias/areas-materias.component';
 import { CalendarioLaboralComponent } from './features/sjcs/maestros/calendarioLaboral/calendarioLaboral.component';
 import { MaestroPJComponent } from './features/sjcs/maestros/maestro-pj/maestro-pj.component';
@@ -291,12 +292,8 @@ import { MantenimientoComisariasComponent } from './features/sjcs/maestros/mante
 import { MantenimientoJuzgadosComponent } from './features/sjcs/maestros/mantenimiento-juzgados/mantenimiento-juzgados.component';
 import { MantenimientoPrisionesComponent } from './features/sjcs/maestros/mantenimiento-prisiones/mantenimiento-prisiones.component';
 import { MantenimientoProcuradoresComponent } from './features/sjcs/maestros/mantenimiento-procuradores/mantenimiento-procuradores.component';
-import { ZonasYSubzonasComponent } from './features/sjcs/maestros/zonas-subzonas/zonas-subzonas.component';
-import { BajasTemporalesComponent } from './features/sjcs/oficio/bajas-temporales/bajas-temporales.component';
 import { DesignacionesComponent } from './features/sjcs/oficio/designaciones/designaciones.component';
-import { SaltosYCompensacionesComponent } from './features/sjcs/oficio/saltos-compensaciones/saltos-compensaciones.component';
 import { SolicitudesTurnosGuardiasComponent } from './features/sjcs/oficio/solicitudesTurnosGuardias/solicitudesTurnosGuardias.component';
-import { TurnosComponent } from './features/sjcs/oficio/turnos/turnos.component';
 import { SjcsModule } from './features/sjcs/sjcs.module';
 import { SOJComponent } from './features/sjcs/soj/soj.component';
 /***NEW modules censo***/
@@ -312,6 +309,27 @@ import { HeaderGestionEntidadService } from './_services/headerGestionEntidad.se
 import { OldSigaServices } from './_services/oldSiga.service';
 import { PersistenceService } from './_services/persistence.service';
 import { SigaServices } from './_services/siga.service';
+import { DestinatariosRetencionesComponent } from './features/sjcs/maestros/destinatarios-retenciones/destinatarios-retenciones.component';
+import { DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-datos-adicionales-designa/detalle-tarjeta-datos-adicionales-ficha-designacion-oficio.component';
+import { DetalleTarjetaContrariosFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-contrarios-designa/detalle-tarjeta-contrarios-ficha-designacion-oficio.component';
+import{ DetalleTarjetaInteresadosFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-interesados-designa/detalle-tarjeta-interesados-ficha-designacion-oficio.component';
+import{ DetalleTarjetaLetradosDesignaComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/detalle-tarjeta-letrados-designa.component';
+
+import { ProgramacionCalendariosComponent } from './features/sjcs/guardia/programacionCalendarios/programacionCalendarios.component';
+import { CargasMasivasOficioComponent } from './features/sjcs/oficio/cargas-masivas-oficio/cargas-masivas-oficio.component';
+
+
+//COOKIES
+import { SelectButtonModule, ColorPickerModule, OverlayPanelModule, PaginatorModule } from 'primeng/primeng';
+
+//Calendario
+import { ScheduleModule } from 'primeng/schedule';
+
+registerLocaleData(es);
+
+import { TurnosComponent } from './features/sjcs/oficio/turnos/busqueda-turnos.component';
+import { OficioModule } from './features/sjcs/oficio/oficio.module';
+
 
 registerLocaleData(es);
 
@@ -335,17 +353,80 @@ import { TarjetaResumenFijaModule } from './commons/tarjeta-resumen-fija/tarjeta
 import { PartidosJudicialesComponent } from './features/sjcs/maestros/partidos-judiciales/partidas-judiciales.component';
 import { MatSortModule } from '@angular/material/sort';
 import { PaginadorModule } from './commons/paginador/paginador.module';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { BuscadorColegiadosComponent } from "./commons/buscador-colegiados/buscador-colegiados.component";
-import { FiltroBuscadorColegiadosComponent } from './commons/buscador-colegiados/filtro-buscador-colegiados/filtro-buscador-colegiados.component';
-import { TablaBuscadorColegiadosComponent } from './commons/buscador-colegiados/tabla-buscador-colegiados/tabla-buscador-colegiados.component';
 import { BusquedaColegiadoExpressModule } from './commons/busqueda-colegiado-express/busqueda-colegiado-express.module';
 
+import { GuardiaModule } from './features/sjcs/guardia/guardia.module';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTableModule } from '@angular/material/table';
+import { MatAccordion, MatExpansionModule } from '@angular/material/expansion';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatInputModule } from '@angular/material/input';
+import { TablaResultadoComponent } from './commons/tabla-resultado/tabla-resultado.component';
+import { BuscadorColegiadosComponent } from './commons/buscador-colegiados/buscador-colegiados.component';
+import { FiltroBuscadorColegiadosComponent } from './commons/buscador-colegiados/filtro-buscador-colegiados/filtro-buscador-colegiados.component';
+import { TablaBuscadorColegiadosComponent } from './commons/buscador-colegiados/tabla-buscador-colegiados/tabla-buscador-colegiados.component';
+import { MigasDePanComponent } from './commons/migas-de-pan/migas-de-pan.component';
+import { FormularioBusquedaComponent } from './features/sjcs/oficio/cargas-masivas-oficio/formulario-busqueda/formulario-busqueda.component';
+import { FormularioSubidaComponent } from './features/sjcs/oficio/cargas-masivas-oficio/formulario-subida/formulario-subida.component';
+import { ListaArchivosComponent } from './features/sjcs/oficio/cargas-masivas-oficio/lista-archivos/lista-archivos.component';
 
+import { DatePickerRangeComponent } from './commons/date-picker-range/date-picker-range.component';
+import { HoraComponent } from './commons/hora/hora.component';
+import { InputDivididoComponent } from './commons/input-dividido/input-dividido.component';
+import { Paginador3Module } from './commons/paginador3/paginador3.module'
+
+//OFICIO
+import { TablaResultadoDesplegableComponent } from './commons/tabla-resultado-desplegable/tabla-resultado-desplegable.component';
+import { TablaResultadoDesplegableAEService } from './commons/tabla-resultado-desplegable/tabla-resultado-desplegable-ae.service';
+import { TablaResultadoDesplegableJEService } from './commons/tabla-resultado-desplegable/tabla-resultado-desplegable-je.service';
+
+//OFICIO > DESIGNACIONES
+import { FichaDesignacionesComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/ficha-designaciones.component';
+import { DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-datos-facturacion-designa/detalle-tarjeta-datos-facturacion-ficha-designacion-oficio.component';
+import { DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-datos-generales-designa/detalle-tarjeta-datos-generales-ficha-designacion-oficio.component';
+import { DetalleTarjetaDetalleFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-detalle-designa/detalle-tarjeta-detalle-ficha-designacion-oficio.component';
+import { DetalleTarjetaDocumentacionFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-documentacion-designa/detalle-tarjeta-documentacion-ficha-designacion-oficio.component';
+import { TablaSimpleComponent } from './commons/tabla-simple/tabla-simple.component';
+import { TarjetaComponent } from './commons/tarjeta/tarjeta.component';
+import { TablaJustificacionExpresComponent } from './features/sjcs/oficio/designaciones/tabla-justificacion-expres/tabla-justificacion-expres.component';
+import { GestionDesignacionesComponent } from './features/sjcs/oficio/designaciones/gestion-designaciones/gestion-designaciones.component'
+import { FiltroDesignacionesComponent } from './features/sjcs/oficio/designaciones/filtro-designaciones/filtro-designaciones.component';
+import { DetalleTarjetaActuacionesFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-designa/detalle-tarjeta-actuaciones-designa.component';
+import { DetalleTarjetaProcuradorFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-procurador-designa/detalle-tarjeta-procurador-ficha-designacion-oficio.component';
+import { Paginador2Module } from './features/sjcs/oficio/designaciones/ficha-designaciones/paginador2/paginador2.module';
+import { FichaActuacionComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-designa/ficha-actuacion/ficha-actuacion.component';
+import { TarjetaDatosGenFichaActComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-designa/ficha-actuacion/tarjeta-datos-gen-ficha-act/tarjeta-datos-gen-ficha-act.component';
+import { TarjetaJusFichaActComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-designa/ficha-actuacion/tarjeta-jus-ficha-act/tarjeta-jus-ficha-act.component';
+import { TarjetaDatosFactFichaActComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-designa/ficha-actuacion/tarjeta-datos-fact-ficha-act/tarjeta-datos-fact-ficha-act.component';
+import { TarjetaDocFichaActComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-designa/ficha-actuacion/tarjeta-doc-ficha-act/tarjeta-doc-ficha-act.component';
+import { TarjetaHisFichaActComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-designa/ficha-actuacion/tarjeta-his-ficha-act/tarjeta-his-ficha-act.component';
+import { TarjetaRelFichaActComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-designa/ficha-actuacion/tarjeta-rel-ficha-act/tarjeta-rel-ficha-act.component';
+import { DetalleTarjetaRelacionesDesignaComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-relaciones-designa/detalle-tarjeta-relaciones-designa.component';
+import { DetalleTarjetaComunicacionesDesignaComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-comunicaciones-designa/detalle-tarjeta-comunicaciones-designa.component';
+import { TablaResultadoMixDocDesigService } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-documentacion-designa/tabla-resultado-mix-doc-desig.service';
+import { SigaStorageService } from './siga-storage.service';
+import { FichaCambioLetradoComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/ficha-cambio-letrado/ficha-cambio-letrado.component';
+import { LetradoEntranteComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/ficha-cambio-letrado/letrado-entrante/letrado-entrante.component';
+import { LetradoSalienteComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/ficha-cambio-letrado/letrado-saliente/letrado-saliente.component';
+import * as $ from 'jquery';
+import { SelectorModule } from './commons/selector/selector.module';
 @NgModule({
 	declarations: [
+		TablaResultadoDesplegableComponent,
+		TablaJustificacionExpresComponent,
+		GestionDesignacionesComponent,
+		FiltroDesignacionesComponent,
+		DesignacionesComponent,
 		AppComponent,
 		ImagePipe,
+		DatePickerRangeComponent,
+		HoraComponent,
+		InputDivididoComponent,
+		TablaSimpleComponent,
+		TarjetaComponent,
 
 		MyIframeComponent,
 		MenuComponent,
@@ -400,10 +481,6 @@ import { BusquedaColegiadoExpressModule } from './commons/busqueda-colegiado-exp
 		FacturacionSociedadesCensoComponent,
 		ComunicacionSociedadesComponent,
 
-		//SJRS
-		DesignacionesComponent,
-		BajasTemporalesComponent,
-
 		//Certificados
 		ComunicacionInterprofesionalComponent,
 		SolicitarCompraComponent,
@@ -457,9 +534,20 @@ import { BusquedaColegiadoExpressModule } from './commons/busqueda-colegiado-exp
 		MantenimientoJuzgadosComponent,
 		MaestroPJComponent,
 		SolicitudesTurnosGuardiasComponent,
-		SaltosYCompensacionesComponent,
+		DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent,
+		DetalleTarjetaContrariosFichaDesignacionOficioComponent,
+		DetalleTarjetaInteresadosFichaDesignacionOficioComponent,
+		DetalleTarjetaLetradosDesignaComponent,
+		FichaDesignacionesComponent,
+		FichaCambioLetradoComponent, 
+		LetradoSalienteComponent, 
+		LetradoEntranteComponent,
+		DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent,
+		DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent,
+		DetalleTarjetaDetalleFichaDesignacionOficioComponent,
+		DetalleTarjetaDocumentacionFichaDesignacionOficioComponent,
+		DetalleTarjetaActuacionesFichaDesignacionOficioComponent,
 		GuardiasSolicitudesTurnosComponent,
-		TurnosComponent,
 		GuardiasBajasTemporalesComponent,
 		GuardiasSaltosCompensacionesComponent,
 		DefinirListasGuardiasComponent,
@@ -497,7 +585,9 @@ import { BusquedaColegiadoExpressModule } from './commons/busqueda-colegiado-exp
 		ComunicaCargaComponent,
 		ComunicaResolucionesComponent,
 		ComunicaDesignacionesComponent,
-		
+		CargasMasivasOficioComponent,
+		DetalleTarjetaProcuradorFichaDesignacionOficioComponent,
+
 		//Consultas
 		RecuperarConsultasComponent,
 		ConsultasListasDinamicasComponent,
@@ -650,15 +740,31 @@ import { BusquedaColegiadoExpressModule } from './commons/busqueda-colegiado-exp
 		MutualidadAbogaciaFichaColegialComponent,
 		DatosColegialesFichaColegialComponent,
 		OtrasColegiacionesFichaColegialComponent,
-		PartidosJudicialesComponent,
 		ServiciosInteresFichaColegialComponent,
+		//TarjetaResumenFijaComponent
 		BuscadorColegiadosComponent,
-		FiltroBuscadorColegiadosComponent,
 		TablaBuscadorColegiadosComponent,
+		FiltroBuscadorColegiadosComponent,
+		TablaResultadoComponent,
+		MigasDePanComponent,
+		FormularioBusquedaComponent,
+		FormularioSubidaComponent,
+		ListaArchivosComponent,
+		FichaActuacionComponent,
+		TarjetaDatosGenFichaActComponent,
+		TarjetaJusFichaActComponent,
+		TarjetaRelFichaActComponent,
+		TarjetaDatosFactFichaActComponent,
+		TarjetaDocFichaActComponent,
+		TarjetaHisFichaActComponent,
+		DetalleTarjetaRelacionesDesignaComponent,
+		DetalleTarjetaComunicacionesDesignaComponent,
+		PartidosJudicialesComponent,
+
 	],
 	imports: [
-		MatSortModule,
-		MatExpansionModule,
+		SelectorModule,
+		Paginador3Module,
 		BrowserModule,
 		BrowserAnimationsModule,
 		HttpClientModule,
@@ -713,9 +819,21 @@ import { BusquedaColegiadoExpressModule } from './commons/busqueda-colegiado-exp
 		ColorPickerModule,
 		// BusquedaAsuntosModule,
 		EditorModule,
-
+		MatExpansionModule,
+		MatCheckboxModule,
+		MatInputModule,
+		MatSortModule,
+		MatSelectModule,
+		MatTableModule,
+		MatPaginatorModule,
+		MatDatepickerModule,
+		MatNativeDateModule,
+		PaginatorModule,
+		GuardiaModule,
 		SjcsModule,
+		OficioModule,
 		BusquedaAsuntosModule,
+		Paginador2Module,
 	],
 
 	exports: [],
@@ -726,15 +844,17 @@ import { BusquedaColegiadoExpressModule } from './commons/busqueda-colegiado-exp
 		OldSigaServices,
 		SigaServices,
 		CommonsService,
+		SigaStorageService,
 		cardService,
 		HeaderGestionEntidadService,
 		MessageService,
 		AuthenticationService,
 		ConfirmationService,
-
 		PersistenceService,
-
 		TrimPipePipe,
+		TablaResultadoDesplegableJEService,
+		TablaResultadoDesplegableAEService,
+		TablaResultadoMixDocDesigService,
 
 		AuthGuard,
 		{
@@ -750,8 +870,6 @@ import { BusquedaColegiadoExpressModule } from './commons/busqueda-colegiado-exp
 		{ provide: LOCALE_ID, useValue: 'es-ES' }
 	],
 
-
 	bootstrap: [AppComponent]
-
 })
 export class AppModule { }

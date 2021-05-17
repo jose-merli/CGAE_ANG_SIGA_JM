@@ -1,0 +1,108 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="card">
+    <div class="card-body p-0">
+        <div class="padding-interior w-100">
+            <app-paginador2 (perPage)="perPage($event)" (seleccionarTodo)="selectedAll($event)"
+                (fromReg)="fromReg($event)" (toReg)="toReg($event)" [totalRegistros]="totalRegistros"></app-paginador2>
+        </div>
+        <div class="table" matSort (matSortChange)="sortData($event)" #table>
+            <div class="table-header ">
+                <div class="table-header-child p-2" *ngFor="let cabecera of cabeceras; let j = index" #BorderedHeader>
+                    <div>
+                        <div [mat-sort-header]=cabecera.id>{{cabecera.name | translate}}</div>
+                        <input type="text" class="form-control" pInputTex [(ngModel)]="searchText[j]"
+                            (ngModelChange)="searchChange(j)" autocomplete="off" placeholder="Buscar">
+                    </div>
+                </div>
+            </div>
+            <div *ngFor="let row of rowGroups | slice:from:to; let i = index;" class="table-row child">
+                <div (click)="selectRow(row['id'])" class="table-row-wrapper hoverBlue" [ngClass]="{'hoverBlue2': isSelected(row['id']), 'fixedBlue': seleccionarTodo}" #rowSelected>
+                    <div *ngFor="let cell of row['cells'] | slice:0:8; let z = index" class="table-cell p-2 selectedRowClass" [ngClass]="{'borders-child': isPar(row['id'])}" #cellSelected>        
+                        <div class="cell-wrapper selectedRowClass">
+                            <span class="w100 cell-value" *ngIf="cell.type == 'newinput'"><input type="text"
+                                    class="form-control mt-2" pInputText [(ngModel)]="this.newInputValue[z]"
+                                    (change)="inputValueChange($event, i, z, cell)"></span>
+                            <span class="w100 cell-value" *ngIf="cell.type == 'input'"><input type="text"
+                                    class="form-control mt-2" pInputText [(ngModel)]="cell.value"
+                                    (change)="inputChange($event, i, z)"></span>
+                            <span class="w100 cell-value" *ngIf="cell.type == 'text'"
+                                [ngClass]="{'setItalic': row.italic}">{{cell.value}}</span>
+                            <span class="w100 cell-value" *ngIf="cell.type == 'datePicker'">
+                                <app-fecha [(value)]="cell.value" [utc]="false"
+                                    (valueChangeSelected)="fillFecha($event, cell)"
+                                    (valueChangeInput)="fillFecha($event, cell)">
+                                </app-fecha>
+                            </span>
+                            <span class="w100 cell-value selectWrap" *ngIf="cell.type == 'select'">
+                                <p-dropdown autoWidth="false" class="center" [placeholder]="textFilter"
+                                    [(ngModel)]="cell.value" [options]="cell.combo" showClear="true"
+                                    styleClass="widthAll">
+                                </p-dropdown>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer h50 pt-5">
+            <div class="text-right main-button butBottom mt10">
+                <button pButton (click)="checkRestablecer()" icon="fa fa-undo" type="button" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+
+                <button pButton type="button" icon="fa fa-save"[disabled]="disabledSave" iconPos="left" label="{{ 'general.boton.guardar' | translate}}" (click)="checkGuardar()"></button>
+                
+                <button pButton icon="fa fa-plus" [disabled]="isDisabled" type="button" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+  <!--NUEVO-->
+  <p-dialog [(visible)]="showModal" responsive="true" [draggable]="false" modal="modal" resizable="false"
+    [minWidth]="500">
+    <p-header class="title">
+      <label>{{"justiciaGratuita.oficio.designaciones.nuevoProcurador" | translate}}</label>
+    </p-header>
+
+    <div class="bloque col-lg-12 col-md-12">
+        <label>{{"justiciaGratuita.oficio.designaciones.nuevoProcurador" | translate}}</label>
+      <div class="row">
+        <div class="form-group col-lg-12 col-md-12">
+            <label>{{"censo.resultadosSolicitudesModificacion.literal.nColegiado" | translate}}</label>
+            <!--{{ datosProcurador.numeroColegiado }}-->
+        </div>
+        <div class="form-group col-lg-12 col-md-12">
+            <label>{{"censo.usuario.nombre" | translate}}</label>
+           <!-- {{ datosProcurador.nombre }} -->
+        </div>
+      </div>
+    </div>
+    <div class="bloque col-lg-12 col-md-12">
+      <div class="row">
+        <div class="form-group col-lg-5 col-md-5">
+            <label>{{"justiciaGratuita.oficio.justificacionExpres.numDesignacion" | translate}} (*)</label>
+            <input type="text" class="form-control" pInputText [(ngModel)]="datosProcurador.numerodesignacion"/>
+        </div>
+        <div class="form-group col-lg-5 col-md-5">
+            <label>{{"justiciaGratuita.oficio.designaciones.fechaDesignacion" | translate}} (*)</label>
+            <app-fecha [utc]="false"></app-fecha>
+        </div>
+        <div class="form-group col-lg-12 col-md-12">
+            <label>{{"censo.nuevaSolicitud.observaciones" | translate}}</label>
+            <textarea pInputTextarea autoResize="autoResize" [(ngModel)]="datosProcurador.observaciones"
+            ></textarea>
+          </div>
+      </div>
+    </div>
+    <p-footer>
+      <div class="text-right main-button ">
+        <button (click)="checkNuevoProcurador()" pButton type="button"
+            icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="restablecerProcurador()" pButton type="button" icon="fa fa-repeat"
+            iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="cerrarModal()" pButton type="button" icon="fa fa-close"
+            iconPos="left" label="{{ 'general.boton.close' | translate}}"></button>
+      </div>
+    </p-footer>
+  </p-dialog>
+

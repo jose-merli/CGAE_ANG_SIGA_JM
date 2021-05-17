@@ -1,0 +1,157 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="ficha-container" id="guardias">
+  <div  class="card">
+    <div class="card-header header-ficha" >
+      <div *ngIf="!openFicha" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('guardias')">
+          <div class="img-colegiado">
+            <i class="fas fa-list-alt icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('guardias')">
+            <label class="mr-auto title-ficha" style="cursor:pointer">{{'menu.justiciaGratuita.guardia.guardias'|translate}}</label>
+          </div>
+          <div class="d-flex justify-content-between" style="cursor:default">
+            <label *ngIf="mostrarVacio">{{ "justiciaGratuita.oficio.turnos.numeroguardias.vacio" | translate }}
+            </label>
+            <label *ngIf="mostrarNumero">{{ "justiciaGratuita.oficio.turnos.numeroguardias" | translate }}
+              <span>{{ numeroGuardias }}</span>
+            </label>
+            <label *ngIf="mostrarDatos">{{ "administracion.parametrosGenerales.literal.nombre" | translate }}
+              <span>{{ nombreGuardia }}</span>
+            </label>
+            <label *ngIf="mostrarDatos">{{ "dato.jgr.guardia.guardias.duracion" | translate }}
+              <span>{{ duracionGuardias }}</span>
+            </label>
+            <label *ngIf="mostrarDatos">{{ "dato.jgr.guardia.guardias.letradosGuardia" | translate }}
+              <span>{{ nletradosGuardias }}</span>
+            </label>
+            <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} " (click)="abreCierraFicha('guardias')"></i>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center" (click)="abreCierraFicha('guardias')">
+        <div class="img-colegiado">
+          <i class="fas fa-list-alt icon-ficha"></i>
+        </div>
+        <label class="title-ficha" style="cursor:pointer">{{"menu.justiciaGratuita.guardia.guardias" | translate}}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+    <!--cuerpo datos generales-->
+    <div *ngIf="openFicha" class="card-body card-body-ficha">
+       <!-- clickFila($event) -->
+      <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [selectionMode]="selectionMode" [responsive]="true" (onRowSelect)="actualizaSeleccionados()"
+        #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowUnselect)="actualizaSeleccionados()"
+        [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">
+        <ng-template pTemplate="colgroup" let-columns>
+          <colgroup>
+            <col *ngFor="let col of cols" [style.width]="col.width">
+          </colgroup>
+        </ng-template>
+        <ng-template pTemplate="header" let-columns>
+          <tr>
+            <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+              {{ col.header | translate }}
+              <p-sortIcon [field]="col.field"></p-sortIcon>
+              <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="
+                table.filter($event.target.value, col.field, 'contains')
+              " />
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+          <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+            <td class="text-center" *ngFor="let col of columns">
+              <div *ngIf="setItalic(dato) && col.field =='nombre'">
+                <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato.alfabeticoapellidos}} {{dato[col.field]}}</span>
+              </div>
+              <div *ngIf="setItalic(dato) && col.field =='fechavalidacion'">
+                <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
+              </div>
+              <div *ngIf="setItalic(dato) && col.field !='nombre' && col.field !='fechavalidacion'">
+                <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
+              </div>
+              <div *ngIf="!setItalic(dato) && col.field !='nombre' && col.field !='fechavalidacion'">
+                <span>{{dato[col.field]}}</span>
+              </div>
+              <div *ngIf="!setItalic(dato) && col.field =='fechavalidacion'">
+                <span>{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
+              </div>
+              <!-- <div *ngIf="!setItalic(dato) && col.field =='nombrepersona'">
+                <span>{{dato.alfabeticoapellidos}} {{dato[col.field]}} </span>
+              </div> -->
+              <div *ngIf="!setItalic(dato) && col.field =='nombre'">            
+                <a class="enlace" (click)="openTab(dato)"><span>{{dato[col.field]}}</span></a>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage" let-columns>
+          <tr>
+            <td [attr.colspan]="columns.length">
+              {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="paginatorleft">
+          <div class="mostrar d-flex text-right justify-content-end">
+            <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }}{{table.first + 1}} al {{table.first
+              + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}</label>
+            <!-- *ngIf="selectedDatos  && selectedDatos.length > 0" -->
+            <label class="pr-3 numSeleccionados" >{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{selectedDatos.length}}
+            </label>
+            <!-- <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: 0
+            </label> -->
+            <label>{{"general.message.mostrar" | translate}}</label>
+            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
+            </p-dropdown>
+            <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+            <div class="ml-3 selectAll">
+              <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true"
+                  label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname">
+              </p-checkbox>
+            </div>
+          </div>
+        </ng-template>
+      </p-table>
+    </div>
+    <div *ngIf="openFicha" class="card-footer">
+      <div class="text-right main-button">
+        <button *ngIf="!historico" (click)="searchHistorical(); selectedDatos=[];selectAll=false; selectMultiple = false" pButton
+          type="button" icon="fa fa-history" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
+
+        <button *ngIf="historico" (click)="searchHistorical(); selectedDatos=[];selectAll=false; selectMultiple = false" pButton
+          type="button" icon="fa fa-undo" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
+
+        <!-- <button *ngIf="!historico" [disabled]="disableAll || historico || (!selectMultiple || !selectAll) && selectedDatos.length == 0"
+          (click)="delete(selectedDatos); selectAll = false; seleccionMultiple = false; selectedDatos =[]" pButton type="button"
+          icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
+
+        <button *ngIf="historico" pButton [disabled]="disableAll || selectedDatos.length == 0 || selectedDatos == undefined" (click)="delete(selectedDatos);selectAll = false; seleccionMultiple = false; selectedDatos =[]"
+          type="button" icon="fa fa-check" iconPos="left" label="{{'general.boton.activar' | translate}}"></button> -->
+
+        <!-- <button [disabled]="disableAll" (click)="rest()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button> -->
+        <!-- <button pButton [disabled]="disableAll || historico || disabledSave()" (click)="save()" type="button" icon="far fa-save"
+          iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button> -->
+
+        <button pButton [disabled]="disableAll || selectAll || historico" type="button" icon="fa fa-plus" iconPos="left"
+          label="{{ 'general.boton.new' | translate}}"></button>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <p-confirmDialog header="Confirmación"  icon="fa fa-question-circle"  width="425"  #cd>
+  <p-footer>
+    <button type="button"  pButton icon="fa-check"  label="Si"  (click)="cd.accept()"></button>
+    <button type="button"  pButton icon="fa-close"  label="No"  (click)="cd.reject()"></button>
+  </p-footer>
+</p-confirmDialog> -->
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

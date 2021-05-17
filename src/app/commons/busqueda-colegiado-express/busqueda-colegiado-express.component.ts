@@ -15,10 +15,9 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
   @Input() nombreAp;
   @Input() tarjeta;
   @Input() pantalla;
-  @Input() disabled: boolean = false;
+  @Input() disabled;
 
   @Output() idPersona = new EventEmitter<string>();
-  @Output() colegiado = new EventEmitter<any>();
   progressSpinner: boolean = false;
   nColegiado: string = "";
   apellidosNombre: string = "";
@@ -28,10 +27,15 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
   });
 
   msgs;
+  @Output() colegiado = new EventEmitter<any>();
+  isLetrado: boolean = false;
 
   constructor(private router: Router, private sigaServices: SigaServices, private translateService: TranslateService, private PpersistenceService: PersistenceService) { }
 
   ngOnInit() {
+    if (sessionStorage.getItem("isLetrado") != null && sessionStorage.getItem("isLetrado") != undefined) {
+      this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
+    }
 
     if (this.numColegiado) {
       this.colegiadoForm.get('numColegiado').setValue(this.numColegiado);
@@ -46,11 +50,15 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
     if (this.disabled) {
       this.colegiadoForm.controls['numColegiado'].disable();
     }
+    if(this.isLetrado){
+      this.colegiadoForm.controls['numColegiado'].disable();
+    }
 
   }
 
   clearForm() {
     this.colegiadoForm.reset();
+    this.changeValue();
   }
 
   isBuscar(form) {
@@ -73,6 +81,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
 
             this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("general.message.colegiadoNoEncontrado"));
           }
+          this.changeValue();
         },
         error => {
           this.progressSpinner = false;
@@ -80,6 +89,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
           form.numColegiado = "";
           this.numColegiado = "";
           this.idPersona.emit("");
+          this.changeValue();
           console.log(error);
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         }
@@ -125,11 +135,12 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
     this.msgs = [];
   }
 
-  changeColegiado() {
-    let colegiado = {
-      nombreAp: this.colegiadoForm.get('nombreAp').value,
-      numColegiado: this.colegiadoForm.get('numColegiado').value
-    };
+  changeValue() {
+    const colegiado = {
+      nColegiado: this.colegiadoForm.get('numColegiado').value,
+      nombreAp: this.colegiadoForm.get('nombreAp').value
+    }
+
     this.colegiado.emit(colegiado);
   }
 }

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
+import { Component, Output, OnInit, EventEmitter, HostListener, Input} from '@angular/core';
 import { ColegiadosSJCSItem } from '../../../models/ColegiadosSJCSItem';
 import { CommonsService } from '../../../_services/commons.service';
 import { SigaServices } from '../../../_services/siga.service';
@@ -21,15 +21,17 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
   msgs;
 
   filtro: ColegiadosSJCSItem = new ColegiadosSJCSItem();
-
+  datosDesgina: any;
   expanded: boolean = true;
   progressSpinner: boolean = false;
   institucionGeneral: boolean = false;
+  disabledEstado: boolean = false;
 
   comboColegios: any;
   comboTurno: any;
   comboguardiaPorTurno: any;
   comboEstadoColegial: any;
+  @Input('nuevaInscripcion') nuevaInscripcion;
 
   @Output() buscar = new EventEmitter<boolean>();
 
@@ -52,6 +54,20 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
       this.getComboTurno();
       this.getComboEstadoColegial();
     });
+    if(this.nuevaInscripcion){
+       this.filtro.idEstado = "20";
+       this.disabledEstado = true;
+    }
+
+    // let articulo27Activo = sessionStorage.getItem('Art27Activo');
+    // sessionStorage.removeItem("Art27Activo");
+    // this.datosDesgina = JSON.parse(sessionStorage.getItem('datosDesgina'));
+    // sessionStorage.removeItem("datosDesgina");
+    
+    // if((datosDesgina != null && datosDesgina != undefined) && (datosDesgina.fechaAlta != null && datosDesgina.fechaAlta != undefined)){
+    //   this.filtro.idTurno = datosDesgina.fechaAlta;
+    // }
+   
   }
 
   getComboColegios() {
@@ -85,6 +101,10 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
         this.comboTurno = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboTurno);
         this.progressSpinner = false;
+        console.log(this.comboTurno);
+        // if((this.datosDesgina != null && this.datosDesgina != undefined) && (this.datosDesgina.idTurno != null && this.datosDesgina.idTurno != undefined)){
+        //   this.filtro.idTurno = [this.datosDesgina.idTurno];
+        // }
       },
       err => {
         console.log(err);
@@ -138,7 +158,9 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
   }
 
   clearFilters() {
+    let colegio = this.filtro.idInstitucion;
     this.filtro = new ColegiadosSJCSItem();
+    this.filtro.idInstitucion = colegio;
   }
 
   busquedaColegiado() {

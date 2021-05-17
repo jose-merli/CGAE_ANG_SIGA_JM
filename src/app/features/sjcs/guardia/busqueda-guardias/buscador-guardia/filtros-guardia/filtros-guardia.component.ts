@@ -87,7 +87,6 @@ export class FiltrosGuardiaComponent implements OnInit {
     } else {
       this.filtros = new GuardiaItem();
     }
-
   }
 
 

@@ -61,6 +61,8 @@ export class ServiciosInteresFichaColegialComponent implements OnInit, OnChanges
 
   @Input() esColegiado: boolean = null;
 
+  isLetrado:boolean = false;
+
 
   constructor(private sigaServices: SigaServices,
     private authenticationService: AuthenticationService,
@@ -68,6 +70,11 @@ export class ServiciosInteresFichaColegialComponent implements OnInit, OnChanges
     private router: Router) { }
 
   ngOnInit() {
+
+    if (sessionStorage.getItem("isLetrado") != null && sessionStorage.getItem("isLetrado") != undefined) {
+      this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
+    }
+
     if (
       sessionStorage.getItem("personaBody") != null &&
       sessionStorage.getItem("personaBody") != undefined &&
@@ -165,5 +172,25 @@ export class ServiciosInteresFichaColegialComponent implements OnInit, OnChanges
     this.router.navigate(["/turnoOficioCenso"]);
   }
 
- 
+  turnoInscrito(){
+    if(!this.isLetrado){
+      sessionStorage.setItem("colegiadoRelleno","true");
+      sessionStorage.setItem("datosColegiado",JSON.stringify(this.generalBody));
+    }
+      this.router.navigate(["/inscripciones"]);
+  }
+  designas(){
+    if(!this.isLetrado){
+      sessionStorage.setItem("colegiadoRelleno","true");
+      sessionStorage.setItem("datosColegiado",JSON.stringify(this.generalBody));
+    }
+      this.router.navigate(["/designaciones"]);
+  }
+  bajasTemporales(){
+    if(!this.isLetrado){
+      sessionStorage.setItem("colegiadoRelleno","true");
+      sessionStorage.setItem("datosColegiado",JSON.stringify(this.generalBody));
+    }
+      this.router.navigate(["/bajasTemporales"]);
+  }
 }

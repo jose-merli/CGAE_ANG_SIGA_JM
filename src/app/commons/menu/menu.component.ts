@@ -2,8 +2,8 @@ import { TranslateService } from "../translate/translation.service";
 import { Component, OnInit, ViewEncapsulation } from "@angular/core";
 import { Router } from "@angular/router";
 import { MenuItem } from "primeng/api";
+import { PanelMenuModule } from "primeng/panelmenu";
 import { SigaServices } from "../../_services/siga.service";
-import { PersistenceService } from '../../_services/persistence.service';
 
 @Component({
   selector: "app-menu",
@@ -27,8 +27,7 @@ export class MenuComponent implements OnInit {
   constructor(
     private router: Router,
     private sigaServices: SigaServices,
-    private translateService: TranslateService,
-    private persistenceService: PersistenceService
+    private translateService: TranslateService
   ) { }
 
   // TODO: Revisar si tiene sentido que las rutas las devuelva el back

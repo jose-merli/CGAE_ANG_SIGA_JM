@@ -11,6 +11,7 @@ import { ColegiadosSJCSItem } from '../../../models/ColegiadosSJCSItem';
 })
 export class TablaBuscadorColegiadosComponent implements OnInit {
   progressSpinner: boolean = false;
+  selectMultiple: boolean = false;
  
   cols;
 
@@ -46,8 +47,9 @@ export class TablaBuscadorColegiadosComponent implements OnInit {
       { field: "apellidos", header: "gratuita.mantenimientoTablasMaestra.literal.apellidos" },
       { field: "abreviatura", header: "censo.busquedaClientesAvanzada.literal.colegio" },
       { field: "nColegiado", header: "censo.busquedaClientesAvanzada.literal.nColegiado" },
-      { field: "descripcion", header: "menu.justiciaGratuita.componentes.estadoColegial" },
-      { field: "residente", header: "censo.busquedaClientes.noResidente" }
+      { field: "tieneGuardia", header: "gratuita.busquedaSJCS.tipoFiltro.inscritosGuardia" },
+      { field: "tieneTurno", header: "gratuita.busquedaSJCS.tipoFiltro.inscritosTurno" },
+      { field: "guardiasPendientes", header: "gratuita.busquedaSJCS.literal.guardiasPendientes" }
     ];
 
     this.cols.forEach(it => this.buscadores.push(""));

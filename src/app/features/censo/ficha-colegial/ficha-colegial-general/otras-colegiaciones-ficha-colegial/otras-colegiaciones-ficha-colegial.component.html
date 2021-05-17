@@ -44,7 +44,7 @@
           </label>
 
           <label *ngIf="mostrarNumero && mostrarOtrasColegiaciones" class="registros-ficha">{{ "censo.nuevaSolicitud.fechaEstado" | translate }}
-            <span *ngIf="mostrarOtrasColegiaciones">{{ DescripcionOtrasColegiaciones.fechaEstadoStr | date: 'dd/MM/yyyy' }}</span>
+            <span *ngIf="mostrarOtrasColegiaciones">{{ DescripcionOtrasColegiaciones.fechaEstadoStr }}</span>
           </label>
 
           <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "censo.datosDireccion.literal.numero.colegiaciones" | translate }}

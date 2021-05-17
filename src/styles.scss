@@ -1517,3 +1517,16 @@ tr:hover {
 div[class*="header-ficha-open"] {
 	cursor: pointer !important;
 }
+
+.ui-dropdown:not(.ui-state-disabled):hover {
+    background: #FFFFFF !important; 
+}
+
+.tarjetaFija {
+    position: sticky;
+    top: 0px;
+    z-index: 2;
+}
+
+  
+
