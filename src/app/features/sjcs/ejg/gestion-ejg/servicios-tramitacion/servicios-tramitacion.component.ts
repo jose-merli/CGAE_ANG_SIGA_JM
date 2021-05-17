@@ -85,7 +85,7 @@ export class ServiciosTramitacionComponent implements OnInit {
       sessionStorage.removeItem('buscadorColegiados');
 
       if(busquedaColegiado.nombreSolo != undefined)this.usuarioBusquedaExpress.nombreAp = busquedaColegiado.apellidos+", "+busquedaColegiado.nombreSolo;
-      else this.usuarioBusquedaExpress.nombreAp=busquedaColegiado.nombre+" "+busquedaColegiado.apellidos;
+      else this.usuarioBusquedaExpress.nombreAp = busquedaColegiado.apellidos + ", " + busquedaColegiado.nombre;
 
       this.usuarioBusquedaExpress.numColegiado=busquedaColegiado.nColegiado;
 
@@ -93,7 +93,7 @@ export class ServiciosTramitacionComponent implements OnInit {
 
       //Preguntar el valor que debe adquirir este campo cuando se aplica el art 27.
       if(busquedaColegiado.nColegiado!=undefined) this.body.numColegiado = busquedaColegiado.nColegiado;
-      else  this.body.numColegiado = busquedaColegiado.nif;
+      //else  this.body.numColegiado = busquedaColegiado.nif;
 
       this.usuarioBusquedaExpress.numColegiado = this.body.numColegiado;
 

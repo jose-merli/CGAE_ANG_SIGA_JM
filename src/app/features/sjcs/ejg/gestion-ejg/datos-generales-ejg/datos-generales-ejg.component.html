@@ -119,7 +119,7 @@
         
         <button (click)="checkPermisosCreateDes()" pButton [disabled]="!permisoEscritura" type="button" icon="fa fa-download" iconPos="left" label="{{ 'general.boton.crearDesignacion' | translate}}"></button>
         
-        <button (click)="checkPermisosAddExp()" pButton [disabled]="!permisoEscritura" type="button" icon="fa fa-plus" iconPos="left"label="{{'justiciaGratuita.ejg.datosGenerales.AddExpediente' | translate }}"></button>
+        <button (click)="checkPermisosAddExp()" pButton [disabled]="!permisoEscritura || isdisabledAddExp" type="button" icon="fa fa-plus" iconPos="left"label="{{'justiciaGratuita.ejg.datosGenerales.AddExpediente' | translate }}"></button>
         
         <button (click)="checkPermisosComunicar()" pButton [disabled]="!permisoEscritura" type="button" icon="fa fa-comment" iconPos="left" label="{{ 'general.boton.comunicar' | translate}}"></button>
         

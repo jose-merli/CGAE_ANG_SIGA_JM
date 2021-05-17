@@ -82,6 +82,8 @@ export class EJGItem {
     observacionesDictamen: String;
     iddictamen: String;
 
+    numDesigna: String;
+
     requiereTurn: boolean;
     bis: boolean;
     fechaPublicacion: Date;
