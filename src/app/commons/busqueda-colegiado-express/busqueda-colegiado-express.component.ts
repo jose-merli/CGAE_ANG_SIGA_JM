@@ -18,6 +18,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
   @Input() disabled;
   @Input() idTurno;
   @Input() idGuardia;
+  @Input() art27;
 
   @Output() idPersona = new EventEmitter<string>();
   progressSpinner: boolean = false;
@@ -52,7 +53,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
     if (this.disabled) {
       this.colegiadoForm.controls['numColegiado'].disable();
     }
-    if(this.isLetrado){
+    if (this.isLetrado) {
       this.colegiadoForm.controls['numColegiado'].disable();
     }
 
@@ -64,69 +65,77 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
   }
 
   isBuscar(form) {
-    if (form.numColegiado != undefined && form.numColegiado != null && form.numColegiado.length != 0) {
-      this.progressSpinner = true;
+    //Se revisa si esta en la pantalla de gestion de Ejg para que revise si se han
+    //rellenado los campos obligatorios o no.
+    if (this.idGuardia && this.tarjeta == "ServiciosTramit" && this.pantalla == "gestionEjg") {
+      if (form.numColegiado != undefined && form.numColegiado != null && form.numColegiado.length != 0) {
+        this.progressSpinner = true;
 
-      this.sigaServices.getParam("componenteGeneralJG_busquedaColegiado", "?colegiadoJGItem=" + form.numColegiado).subscribe(
-        data => {
-          this.progressSpinner = false;
+        this.sigaServices.getParam("componenteGeneralJG_busquedaColegiado", "?colegiadoJGItem=" + form.numColegiado).subscribe(
+          data => {
+            this.progressSpinner = false;
 
-          if (data.colegiadoJGItem.length == 1) {
-            this.apellidosNombre = data.colegiadoJGItem[0].nombre;
-            this.idPersona.emit(data.colegiadoJGItem[0].idPersona);
-            this.colegiadoForm.get("nombreAp").setValue(this.apellidosNombre);
-          } else {
+            if (data.colegiadoJGItem.length == 1) {
+              this.apellidosNombre = data.colegiadoJGItem[0].nombre;
+              this.idPersona.emit(data.colegiadoJGItem[0].idPersona);
+              this.colegiadoForm.get("nombreAp").setValue(this.apellidosNombre);
+            } else {
+              this.apellidosNombre = "";
+              this.numColegiado = ""
+              form.numColegiado = "";
+              this.idPersona.emit("");
+
+              this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("general.message.colegiadoNoEncontrado"));
+            }
+            this.changeValue();
+          },
+          error => {
+            this.progressSpinner = false;
             this.apellidosNombre = "";
-            this.numColegiado = ""
             form.numColegiado = "";
+            this.numColegiado = "";
             this.idPersona.emit("");
-
-            this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("general.message.colegiadoNoEncontrado"));
+            this.changeValue();
+            console.log(error);
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
           }
-          this.changeValue();
-        },
-        error => {
-          this.progressSpinner = false;
-          this.apellidosNombre = "";
-          form.numColegiado = "";
-          this.numColegiado = "";
-          this.idPersona.emit("");
-          this.changeValue();
-          console.log(error);
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        );
+      } else {
+        this.progressSpinner = false;
+        this.apellidosNombre = "";
+        this.idPersona.emit("");
+
+        if (sessionStorage.getItem("tarjeta")) {
+          sessionStorage.removeItem("tarjeta");
         }
-      );
-    } else {
-      this.progressSpinner = false;
-      this.apellidosNombre = "";
-      this.idPersona.emit("");
 
-      if (sessionStorage.getItem("tarjeta")) {
-        sessionStorage.removeItem("tarjeta");
-      }
+        if (sessionStorage.getItem("pantalla")) {
+          sessionStorage.removeItem("pantalla");
+        }
 
-      if (sessionStorage.getItem("pantalla")) {
-        sessionStorage.removeItem("pantalla");
-      }
+        if (this.pantalla) {
+          sessionStorage.setItem("pantalla", this.pantalla);
+        }
 
-      if (this.pantalla) {
-        sessionStorage.setItem("pantalla", this.pantalla);
-      }
+        if (this.tarjeta) {
+          sessionStorage.setItem("tarjeta", this.tarjeta);
+        }
 
-      if (this.tarjeta) {
-        sessionStorage.setItem("tarjeta", this.tarjeta);
-      }
+        if (this.tarjeta == "ServiciosTramit" && this.pantalla == "gestionEjg") {
+          sessionStorage.setItem("idTurno", this.idTurno);
+          sessionStorage.setItem("idGuardia", this.idGuardia);
+        }
 
-      if(this.tarjeta=="ServiciosTramit" && this.pantalla=="gestionEjg"){
-        sessionStorage.setItem("idTurno", this.idTurno);
-        sessionStorage.setItem("idGuardia", this.idGuardia);
-      }
+        if (form.numColegiado == null || form.numColegiado == undefined || form.numColegiado.trim() == "") {
 
-      if (form.numColegiado == null || form.numColegiado == undefined || form.numColegiado.trim() == "") {
-        this.router.navigate(["/buscadorColegiados"]);
+          //Comprobamos el estado del checkbox para el art 27-28
+          if (this.art27) this.router.navigate(["/justiciables"]);
+          else this.router.navigate(["/buscadorColegiados"]);
+        }
       }
+      // this.buscarDisabled=false;
     }
-    // this.buscarDisabled=false;
+    else this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
   }
 
   showMessage(severity, summary, msg) {

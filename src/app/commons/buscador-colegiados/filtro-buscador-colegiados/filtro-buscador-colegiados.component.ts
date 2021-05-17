@@ -56,7 +56,7 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
       this.getComboTurno();
       this.getComboEstadoColegial();
     });
-    if(this.nuevaInscripcion){
+    if(this.nuevaInscripcion || (sessionStorage.getItem("pantalla") =="gestionEjg" && sessionStorage.getItem("tarjeta") =="ServiciosTramit") ){
        this.filtro.idEstado = "20";
        this.disabledEstado = true;
     }

@@ -25,6 +25,7 @@ export class ServiciosTramitacionComponent implements OnInit {
   isDisabledGuardia: boolean = true;
   destinatario: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
   disableBuscar: boolean = false;
+  art27:boolean = false;
 
   body: EJGItem;
   bodyInicial: EJGItem;
@@ -81,15 +82,24 @@ export class ServiciosTramitacionComponent implements OnInit {
 
       let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
 
-      this.usuarioBusquedaExpress.nombreAp=busquedaColegiado.nombre+" "+busquedaColegiado.apellidos;
+      sessionStorage.removeItem('buscadorColegiados');
+
+      if(busquedaColegiado.nombreSolo != undefined)this.usuarioBusquedaExpress.nombreAp = busquedaColegiado.apellidos+", "+busquedaColegiado.nombreSolo;
+      else this.usuarioBusquedaExpress.nombreAp=busquedaColegiado.nombre+" "+busquedaColegiado.apellidos;
 
       this.usuarioBusquedaExpress.numColegiado=busquedaColegiado.nColegiado;
 
-      this.body.apellidosYNombre = busquedaColegiado.apellidos+", "+busquedaColegiado.nombre;
+      this.body.apellidosYNombre = this.usuarioBusquedaExpress.nombreAp;
 
-      this.body.numColegiado = busquedaColegiado.nColegiado;
+      //Preguntar el valor que debe adquirir este campo cuando se aplica el art 27.
+      if(busquedaColegiado.nColegiado!=undefined) this.body.numColegiado = busquedaColegiado.nColegiado;
+      else  this.body.numColegiado = busquedaColegiado.nif;
 
+      this.usuarioBusquedaExpress.numColegiado = this.body.numColegiado;
+
+      //Asignacion de idPersona según el origen de la busqueda.
       this.body.idPersona = busquedaColegiado.idPersona;
+      if(this.body.idPersona==undefined)this.body.idPersona = busquedaColegiado.idpersona;
       
       if(sessionStorage.getItem("idTurno")){
         this.body.idTurno = sessionStorage.getItem("idTurno");
@@ -99,16 +109,16 @@ export class ServiciosTramitacionComponent implements OnInit {
 
     this.getComboGuardia();
 
-    this.checkBusqueda();
+    /* this.checkBusqueda(); */
   }
 
   checkBusqueda(){
     if((this.body.idTurno != null &&this.body.idGuardia != null) 
     /* || (this.body.idTurno == null &&this.body.idGuardia == null) */
     ){
-      this.disableBuscar= false;
+      /* this.disableBuscar= false; */
     }
-    else this.disableBuscar=true;
+    /* else this.disableBuscar=true; */
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -163,7 +173,7 @@ export class ServiciosTramitacionComponent implements OnInit {
     this.msgs = [];
   }
   getComboTurno() {
-    if (this.body.tipoLetrado == "E") {
+   /*  if (this.body.tipoLetrado == "E") {
       this.tipoLetrado = "2";
     } else if (this.body.tipoLetrado == "D" || this.body.tipoLetrado == "A") { this.tipoLetrado = "1"; }
     this.sigaServices.getParam("filtrosejg_comboTurno",
@@ -174,6 +184,21 @@ export class ServiciosTramitacionComponent implements OnInit {
         },
         err => {
           console.log(err);
+        }
+      ); */
+      this.sigaServices.getParam("componenteGeneralJG_comboTurnos", "?pantalla=EJG").subscribe(
+        n => {
+          this.comboTurno = n.combooItems;
+          this.commonServices.arregloTildesCombo(this.comboTurno);
+          this.progressSpinner = false;
+          console.log(this.comboTurno);
+          // if((this.datosDesgina != null && this.datosDesgina != undefined) && (this.datosDesgina.idTurno != null && this.datosDesgina.idTurno != undefined)){
+          //   this.filtro.idTurno = [this.datosDesgina.idTurno];
+          // }
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
         }
       );
 
@@ -199,7 +224,7 @@ export class ServiciosTramitacionComponent implements OnInit {
   }
 
   onChangeGuardias(){
-    this.checkBusqueda();
+    /* this.checkBusqueda(); */
     //Para prevenir que un colegiado se asigne a turnos y guardias que no son suyos.
     this.usuarioBusquedaExpress = {​​​​​​​​​
       numColegiado: '',
@@ -211,7 +236,7 @@ export class ServiciosTramitacionComponent implements OnInit {
   }
 
   onChangeTurnos() {
-    this.checkBusqueda();
+    /* this.checkBusqueda(); */
     this.comboGuardia = [];
     //Para prevenir que un colegiado se asigne a turnos y guardias que no son suyos.
     this.usuarioBusquedaExpress = {​​​​​​​​​
@@ -317,12 +342,12 @@ export class ServiciosTramitacionComponent implements OnInit {
   }
 
   rest(){
-    this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    this.body = this.bodyInicial;
     this.usuarioBusquedaExpress = {​​​​​​​​​
       numColegiado: this.body.numColegiado,
       nombreAp: this.body.apellidosYNombre
     }​​​​​​​​​;
-    this.checkBusqueda();
+    /* this.checkBusqueda(); */
   }
 
 

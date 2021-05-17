@@ -7,6 +7,7 @@ import { DataTable } from 'primeng/primeng';
 import { Router } from '@angular/router';
 import { JusticiableBusquedaObject } from '../../../../../models/sjcs/JusticiableBusquedaObject';
 import { JusticiableBusquedaItem } from '../../../../../models/sjcs/JusticiableBusquedaItem';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-tabla-justiciables',
@@ -36,6 +37,7 @@ export class TablaJusticiablesComponent implements OnInit {
   @Input() modoRepresentante;
   @Input() nuevoInteresado;
   @Input() nuevoContrario;
+  //searchServiciosTransaccion: boolean = false;
 
   @ViewChild("table") tabla: DataTable;
 
@@ -46,7 +48,8 @@ export class TablaJusticiablesComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
     private sigaServices: SigaServices,
-    private persistenceService: PersistenceService
+    private persistenceService: PersistenceService,
+    private location: Location,
   ) { }
 
   ngOnInit() {
@@ -84,7 +87,10 @@ export class TablaJusticiablesComponent implements OnInit {
     else if(this.nuevoContrario){
       if(this.checkContrario(evento))  this.insertContrario(evento);
       else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.designas.contrarios.existente"))
-
+    }
+    else if(sessionStorage.getItem("tarjeta") == "ServiciosTramit" && sessionStorage.getItem("pantalla") == "gestionEjg"){
+      sessionStorage.setItem("buscadorColegiados", JSON.stringify(evento));
+      this.location.back();
     }
     else{
       let filtros: JusticiableBusquedaItem = new JusticiableBusquedaItem();
