@@ -227,10 +227,7 @@ export class TarjetaColaOficio implements OnInit {
     this.turnosItem.fechaActual = this.transformaFecha(event);
     this.getColaOficio();
   }
-  setItalic(dato) {
-    if (dato.fechabajapersona == null) return false;
-    else return true;
-  }
+  
   searchHistorical() {
     this.historico = !this.historico;
     this.persistenceService.setHistorico(this.historico);
@@ -629,7 +626,7 @@ export class TarjetaColaOficio implements OnInit {
       { field: "orden", header: "administracion.informes.literal.orden" },
       { field: "numerocolegiado", header: "censo.busquedaClientesAvanzada.literal.nColegiado" },
       { field: "nombrepersona", header: "administracion.parametrosGenerales.literal.nombre.apellidos" },
-      { field: "fechabaja", header: "justiciaGratuita.oficio.turnos.fechaBaja" },
+      { field: "fechabajapersona", header: "justiciaGratuita.oficio.turnos.fechaBaja" },
       // { field: "alfabeticoapellidos", header: "administracion.parametrosGenerales.literal.nombre" },
       { field: "fechavalidacion", header: "justiciaGratuita.oficio.turnos.fechavalidacion" },
       { field: "saltos", header: "justiciaGratuita.oficio.turnos.saltos" },
