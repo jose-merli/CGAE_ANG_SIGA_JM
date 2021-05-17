@@ -40,7 +40,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
   showTipoExp: boolean = false;
   
   institucionActual;
-  isdisabledAddExp: boolean = true;
+  isdisabledAddExp: boolean = false;
 
   @ViewChild('someDropdown') someDropdown: MultiSelect;
 
@@ -114,8 +114,6 @@ export class DatosGeneralesEjgComponent implements OnInit {
       this.institucionActual = n.value;
     });
 
-    if(this.body.numDesigna!=null) this.isdisabledAddExp=false;
-    else this.isdisabledAddExp=true;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
