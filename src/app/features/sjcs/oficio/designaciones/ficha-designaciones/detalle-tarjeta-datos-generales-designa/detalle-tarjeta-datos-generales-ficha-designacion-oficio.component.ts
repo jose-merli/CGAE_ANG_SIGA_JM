@@ -386,7 +386,11 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
             },
             err => {
                   severity = "error";
-                  summary = "No se han podido modificar los datos";
+                  if(err.status == 400){
+                    summary = this.translateService.instant('justiciaGratuita.oficio.designa.yaexiste');
+                  }else{
+                    summary = "No se han podido modificar los datos";
+                  }
                   this.msgs.push({
                     severity,
                     summary,
