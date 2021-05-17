@@ -196,14 +196,6 @@ export class FichaCambioLetradoComponent implements OnInit {
 
     let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
 
-    if (this.saliente.body.compensacion) {
-      this.compensacion();
-    }
-
-    if (this.entrante.body.salto) {
-      this.salto();
-    }
-
     /* let item = new CambioLetradoItem(); */
 
     let request = [designa.ano, //0
@@ -215,7 +207,10 @@ export class FichaCambioLetradoComponent implements OnInit {
        sessionStorage.getItem("FDSaliente"), //6
        this.saliente.body.fechaSolRenuncia, //7
       this.entrante.body.fechaDesignacion, //8
-       this.entrante.body.idPersona]; //9
+       this.entrante.body.idPersona, //9
+       this.saliente.body.compensacion, //10
+       this.entrante.body.salto //11
+      ]; 
 
     /* item.ano=request[0];
     item.idTurno=request[1];
@@ -226,18 +221,16 @@ export class FichaCambioLetradoComponent implements OnInit {
     item.fechaDesignacionSaliente=request[6];
     item.fechaSolRenuncia=request[7];
     item.fechaDesignacionEntrante=request[8];
-    item.idPersonaEntrante=request[9]; */
+    item.idPersonaEntrante=request[9]; 
+    
+    */
 
     this.progressSpinner = true;
 
     this.sigaServices.post("designaciones_updateLetradoDesignacion", request).subscribe(
       n => {
         this.progressSpinner = false;
-        //Si se comprueba que el turno no tiene cola de oficio
-        /* if()
-        else{
-          this.router.navigate(['/busquedaGeneral']);
-        } */
+
          this.router.navigate(['/fichaDesignaciones']);
       },
       err => {
@@ -266,60 +259,7 @@ export class FichaCambioLetradoComponent implements OnInit {
     this.progressSpinner = false;
   }
 
-  compensacion() {
-    let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
-
-    let compensacion = new SaltoCompItem();
-    let compensaciones =[];
-    compensacion.fecha = this.formatDate(new Date());
-    compensacion.idPersona = this.body.idPersona;
-    compensacion.idTurno = designa.idTurno;
-    compensacion.motivo = "";
-    compensacion.saltoCompensacion = "C";
-    compensaciones.push(compensacion);
-    this.sigaServices.post("saltosCompensacionesOficio_guardar", compensaciones).subscribe(
-      result => {
-
-        const resp = JSON.parse(result.body);
-
-        if (resp.status == 'KO' || (resp.error != undefined && resp.error != null)) {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        }
-
-      },
-      error => {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-      }
-    );
-  }
-
-  salto() {
-    let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
-
-    let salto = new SaltoCompItem();
-    let saltos =[];
-    salto.fecha = this.formatDate(new Date());
-    salto.idPersona = this.entrante.body.idPersona;
-    salto.idTurno = designa.idTurno;
-    salto.motivo = "";
-    salto.saltoCompensacion = "S";
-    saltos.push(salto);
-
-    this.sigaServices.post("saltosCompensacionesOficio_guardar", saltos).subscribe(
-      result => {
-
-        const resp = JSON.parse(result.body);
-
-        if (resp.status == 'KO' || (resp.error != undefined && resp.error != null)) {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        }
-
-      },
-      error => {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-      }
-    );
-  }
+  
   formatDate(date) {
     const pattern = 'dd/MM/yyyy';
     return this.datepipe.transform(date, pattern);
