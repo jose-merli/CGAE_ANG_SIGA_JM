@@ -109,6 +109,7 @@ export class ServiciosTramitacionComponent implements OnInit {
 
     this.getComboGuardia();
 
+    if(this.body.idTurno !=null && this.body.idTurno !=undefined ) this.isDisabledGuardia=false;
     /* this.checkBusqueda(); */
   }
 
