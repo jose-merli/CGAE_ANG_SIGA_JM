@@ -78,11 +78,12 @@ export class DesignacionesComponent implements OnInit {
         if(data!=undefined && data!=null){
           this.datosJustificacion = JSON.parse(data.body);
         }
-
-        if(this.datosJustificacion[0].error != null){
-          error = this.datosJustificacion[0].error;
+        (this.datosJustificacion[0] != null && this.datosJustificacion[0] != undefined){
+          if(this.datosJustificacion[0].error != null){
+            error = this.datosJustificacion[0].error;
+          }
         }
-
+        
         this.muestraTablaJustificacion=true;
 
         if (error != null && error.description != null) {
