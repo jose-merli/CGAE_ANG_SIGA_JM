@@ -128,7 +128,7 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
 
       copiaDocumentos2.forEach((el, i) => {
 
-        if (!el.nuevo && this.isColegiado && !(this.usuarioLogado.idPersona == el.idPersona && this.usuarioLogado.numColegiado == el.numColegiado)) {
+        if (!el.nuevo && this.isColegiado && !(this.usuarioLogado.idPersona == el.idPersona)) {
           copiaDocumentos2.splice(i, 1);
           error = true;
         }
@@ -248,7 +248,7 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
     let error = false;
     this.selectedDatos.forEach((el, i) => {
 
-      if (this.isColegiado && !(this.usuarioLogado.idPersona == el.idPersona && this.usuarioLogado.numColegiado == el.numColegiado)) {
+      if (this.isColegiado && !(this.usuarioLogado.idPersona == el.idPersona)) {
         this.selectedDatos.splice(i, 1);
         error = true;
       }
@@ -329,7 +329,6 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
       doc.asociado = `${this.actuacionDesigna.actuacion.numeroAsunto} ${this.actuacionDesigna.actuacion.acreditacion} ${this.actuacionDesigna.actuacion.modulo}`;
       doc.extension = el.nombreFichero.substring(el.nombreFichero.lastIndexOf("."), el.nombreFichero.length);
       doc.idPersona = el.idPersona;
-      doc.numColegiado = el.numColegiado;
       this.documentos2.push(doc);
     });
   }
