@@ -51,7 +51,7 @@
                         {{rowGroup.id3}}   
                     </div>
 
-                    <div *ngFor="let cell of rowGroup.rows[0]['cells'] | slice:0:9; let z = index"
+                    <div *ngFor="let cell of rowGroup.rows[0]['cells'] | slice:0:10; let z = index"
                         class="table-cell p-2 selectedRowClass" #BorderedCell
                         [ngClass]="{'collapse':posicionOcultar(z + 2)}" #cellSelected>
 
@@ -149,7 +149,7 @@
                     </div>
                     <div *ngIf="!posicionOcultar(-1)" class="table-row-header p-2 hidden selectedRowClass">
                     </div>
-                    <div *ngFor="let cell of row['cells']  | slice:0:9; let z = index" class="table-cell p-2 selectedRowClass"
+                    <div *ngFor="let cell of row['cells']  | slice:0:10; let z = index" class="table-cell p-2 selectedRowClass"
                         [ngClass]="{'collapse':posicionOcultar(z + 2), 'borders-child': isPar(i)}" #cellSelected>
                         <div *ngIf="cell.type != 'invisible'" [ngStyle]="setMyStyles(cell.size)" class="cell-wrapper selectedRowClass w-100">
                             <span class="column-title">{{cabeceras[z+1].name}}</span>
