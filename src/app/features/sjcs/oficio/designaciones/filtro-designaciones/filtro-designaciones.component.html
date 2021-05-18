@@ -265,7 +265,7 @@
                 </mat-expansion-panel-header>
                 <ng-template matExpansionPanelContent>
                     <app-busqueda-colegiado-express class="flexCenter" [pantalla]="'ejg'"
-                        [numColegiado]="usuarioBusquedaExpress.numColegiado"
+                        [numColegiado]="usuarioBusquedaExpress.numColegiado" [obligatorio] = "true"
                         [nombreAp]="usuarioBusquedaExpress.nombreAp" (colegiado)="changeColegiado($event)">
                     </app-busqueda-colegiado-express>
                 </ng-template>

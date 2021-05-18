@@ -16,7 +16,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
   @Input() tarjeta;
   @Input() pantalla;
   @Input() disabled;
-
+  @Input() obligatorio: boolean;
   @Output() idPersona = new EventEmitter<string>();
   progressSpinner: boolean = false;
   nColegiado: string = "";
@@ -25,7 +25,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
     numColegiado: new FormControl(''),
     nombreAp: new FormControl(''),
   });
-
+  styleObligatory: boolean;
   msgs;
   @Output() colegiado = new EventEmitter<any>();
   isLetrado: boolean = false;
@@ -52,6 +52,12 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
     }
     if(this.isLetrado){
       this.colegiadoForm.controls['numColegiado'].disable();
+    }
+
+    if(this.obligatorio && this.colegiadoForm.get('numColegiado').value == ""){
+      this.styleObligatory = true;
+    }else{
+        this.styleObligatory = false;
     }
 
   }
@@ -141,6 +147,15 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
       nombreAp: this.colegiadoForm.get('nombreAp').value
     }
 
+    if(this.obligatorio){
+      if(colegiado.nColegiado == "" || colegiado.nombreAp == ""){
+        this.styleObligatory = true;
+      }else{
+        this.styleObligatory = false;
+      }
+    }
+
     this.colegiado.emit(colegiado);
   }
+
 }
