@@ -13,5 +13,4 @@ export class DocumentoDesignaItem {
     observaciones: string;
     nombreFichero: string;
     idPersona: string;
-    numColegiado: string;
 }

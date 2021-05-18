@@ -115,7 +115,6 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
         { type: 'invisible', value: element.anio, header: 'anio', disabled: false },
         { type: 'invisible', value: element.numero, header: 'numero', disabled: false },
         { type: 'invisible', value: element.idPersona, header: 'idPersona', disabled: false },
-        { type: 'invisible', value: element.numColegiado, header: 'numColegiado', disabled: false }
       ];
 
 
@@ -354,7 +353,7 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
 
       copiaRowGroups.forEach((el, i) => {
 
-        if (!el.cells[5].value && this.isLetrado && !(this.usuarioLogado.idPersona == el.cells[12].value && this.usuarioLogado.numColegiado == el.cells[13].value)) {
+        if (!el.cells[5].value && this.isLetrado && !(this.usuarioLogado.idPersona == el.cells[12].value)) {
           copiaRowGroups.splice(i, 1);
           error = true;
         }
@@ -364,7 +363,7 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
       if (error) {
         this.showMsg('info', this.translateService.instant("general.message.informacion"), 'Alguno de los registros no puedo ser editado porque no ser usted su creador');
       }
-      if(copiaRowGroups.length>0){
+      if (copiaRowGroups.length > 0) {
         this.progressSpinner = true;
 
         let designa = {
@@ -416,7 +415,7 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
     this.selectedArray.forEach((el, i) => {
       let row: Row = this.rowGroups.slice(el, el + 1)[0];
 
-      if (!row.cells[5].value && this.isLetrado && !(this.usuarioLogado.idPersona == row.cells[12].value && this.usuarioLogado.numColegiado == row.cells[13].value)) {
+      if (!row.cells[5].value && this.isLetrado && !(this.usuarioLogado.idPersona == row.cells[12].value)) {
         error = true;
       } else {
 
@@ -433,7 +432,7 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
       this.showMsg('info', this.translateService.instant("general.message.informacion"), 'Alguno de los registros no puede ser editado porque no ser usted su creador');
     }
 
-    if(docAeliminar.length>0){
+    if (docAeliminar.length > 0) {
       this.sigaServices.post("designacion_eliminarDocumentosDesigna", docAeliminar).subscribe(
         data => {
           let resp = JSON.parse(data.body);
