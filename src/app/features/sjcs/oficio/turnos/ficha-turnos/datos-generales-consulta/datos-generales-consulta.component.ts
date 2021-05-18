@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, EventEmitter, Output, Input, SimpleChanges,ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, EventEmitter, Output, Input, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { DataTable } from "primeng/datatable";
 import { Location } from "@angular/common";
 import { Message, ConfirmationService } from "primeng/components/common/api";
@@ -77,7 +77,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
   @Output() datosTarjetaResumenEmit = new EventEmitter<any>();
 
   @Output() modoEdicionSend = new EventEmitter<any>();
-  
+
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
 
@@ -94,7 +94,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
     private router: Router) { }
 
   ngOnChanges(changes: SimpleChanges) {
-    if(changes.turnosItem != undefined && (changes.turnosItem.currentValue != null || changes.turnosItem.currentValue != undefined)){
+    if (changes.turnosItem != undefined && (changes.turnosItem.currentValue != null || changes.turnosItem.currentValue != undefined)) {
       this.turnosItem = changes.turnosItem.currentValue;
       if (this.turnosItem != undefined) {
         if (this.turnosItem.idturno != undefined) {
@@ -138,7 +138,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
     this.opened.emit(this.openFicha);
     this.idOpened.emit(key);
   }
-  
+
   ngOnInit() {
     this.checkDatosGenerales();
     this.actualizarFichaResumen();
@@ -155,7 +155,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
             this.translateService.instant("generico.error.permiso.denegado")
           );
           this.router.navigate(["/errorAcceso"]);
-        }else if(this.persistenceService.getPermisos() != true){
+        } else if (this.persistenceService.getPermisos() != true) {
           this.disableAll = true;
         }
       }
@@ -173,8 +173,8 @@ export class DatosGeneralesTurnosComponent implements OnInit {
       this.modoEdicion = true;
     }
     this.getCombos();
-    
-    }
+
+  }
 
 
   getCombos() {
@@ -540,7 +540,6 @@ export class DatosGeneralesTurnosComponent implements OnInit {
           }
         );
     } else {
-      //this.isDisabledSubZona = true;
       this.partidoJudicial = "";
     }
 
@@ -552,7 +551,6 @@ export class DatosGeneralesTurnosComponent implements OnInit {
         "?idArea=" + this.turnosItem.idarea)
       .subscribe(
         n => {
-          // this.isDisabledPoblacion = false;
           this.materias = n.combooItems;
         },
         error => { },
@@ -571,7 +569,6 @@ export class DatosGeneralesTurnosComponent implements OnInit {
         "?idZona=" + this.turnosItem.idzona)
       .subscribe(
         n => {
-          // this.isDisabledPoblacion = false;
           this.subzonas = n.combooItems;
         },
         error => { },
@@ -600,7 +597,6 @@ export class DatosGeneralesTurnosComponent implements OnInit {
               "?idArea=" + this.turnosItem.idarea)
             .subscribe(
               n => {
-                // this.isDisabledPoblacion = false;
                 this.materias = n.combooItems;
               },
               error => { },
@@ -664,12 +660,10 @@ export class DatosGeneralesTurnosComponent implements OnInit {
               "?idZona=" + this.turnosItem.idzona)
             .subscribe(
               n => {
-                // this.isDisabledPoblacion = false;
                 this.subzonas = n.combooItems;
               },
               error => { },
               () => {
-                // this.partidoJudicial = this.turnosItem.zona + "," + this.turnosItem.subzona;
                 this.body = this.turnosItem;
                 this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
               }
@@ -690,23 +684,24 @@ export class DatosGeneralesTurnosComponent implements OnInit {
   save() {
     //comprobamos si todos los campos obligatorios se han rellenado
     var camposOblig = document.getElementsByClassName('camposObligatorios');
-    if(camposOblig.length>0) {
+    if (camposOblig.length > 0) {
       this.showMessage("error", "Error", this.translateService.instant("general.message.camposObligatorios"));
-    }
-    this.progressSpinner = true;
-    let url = "";
-    if (!this.modoEdicion) {
-      this.nuevo = true;
-      this.persistenceService.setDatos(null);
-      url = "turnos_createnewTurno";
-      this.callSaveService(url);
     } else {
-      url = "turnos_updateDatosGenerales";
-      this.callSaveService(url);
+      this.progressSpinner = true;
+      let url = "";
+      if (!this.modoEdicion) {
+        this.nuevo = true;
+        this.persistenceService.setDatos(null);
+        url = "turnos_createnewTurno";
+        this.callSaveService(url);
+      } else {
+        url = "turnos_updateDatosGenerales";
+        this.callSaveService(url);
+      }
     }
   }
 
-  callSaveService(url) {    
+  callSaveService(url) {
     if (this.turnosItem.codigoext != undefined) {
       this.turnosItem.codigoext = this.turnosItem.codigoext.trim();
     }
@@ -722,7 +717,6 @@ export class DatosGeneralesTurnosComponent implements OnInit {
         if (!this.modoEdicion) {
           this.modoEdicion = true;
           let turnos = JSON.parse(data.body);
-          // this.modulosItem = JSON.parse(data.body);
           this.turnosItem.idturno = turnos.id;
           let send = {
             modoEdicion: this.modoEdicion,
@@ -731,9 +725,6 @@ export class DatosGeneralesTurnosComponent implements OnInit {
           this.sigaServices.post("turnos_busquedaFichaTurnos", this.turnosItem).subscribe(
             n => {
               this.turnosItem2 = JSON.parse(n.body).turnosItem[0];
-              // if (this.turnosItem.fechabaja != undefined || this.persistenceService.getPermisos() != true) {
-              // 	this.turnosItem.historico = true;
-              // }
             },
             err => {
               console.log(err);
@@ -806,7 +797,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
 
   }
 
-  
+
   guardarDatos() {
 
 
@@ -824,18 +815,6 @@ export class DatosGeneralesTurnosComponent implements OnInit {
       detail: msg
     });
   }
-  
-  /* disabledSave() {
-    if (this.turnosItem.nombre != undefined && this.turnosItem.nombre != "" && this.turnosItem.abreviatura != undefined && this.turnosItem.abreviatura != "" && this.turnosItem.idpartidapresupuestaria != null && this.turnosItem.idpartidapresupuestaria != "" && this.turnosItem.idzona != null && this.turnosItem.idzona != "" && this.turnosItem.idsubzona != null && this.turnosItem.idsubzona != "" &&
-      this.turnosItem.idjurisdiccion != null && this.turnosItem.idjurisdiccion != "" && this.turnosItem.idjurisdiccion != "" && this.turnosItem.idgrupofacturacion != null && this.turnosItem.idmateria != null && this.turnosItem.idmateria != "" &&
-      this.turnosItem.idarea != null && this.turnosItem.idarea != "" && this.turnosItem.idtipoturno != null && this.turnosItem.idtipoturno != "" && (JSON.stringify(this.turnosItem) != JSON.stringify(this.bodyInicial))
-    ) {
-      return false;
-    } else {
-      return true;
-    }
-
-  } */
 
   onHideTarjeta() {
     this.showTarjeta = !this.showTarjeta;
@@ -857,15 +836,15 @@ export class DatosGeneralesTurnosComponent implements OnInit {
   }
 
   checkDatosGenerales() {
-    if (!(this.body.abreviatura != "" && this.body.abreviatura != undefined && this.body.abreviatura != null 
-        && this.body.nombre != "" && this.body.nombre != "" && this.body.nombre != "" != null
-        && this.body.idpartidapresupuestaria != undefined && this.body.idpartidapresupuestaria != "" && this.body.idpartidapresupuestaria != null
-        && this.body.grupofacturacion != undefined &&  this.body.grupofacturacion != "" &&  this.body.grupofacturacion != null
-        && this.body.idtipoturno != "" &&  this.body.idtipoturno !=undefined &&  this.body.idtipoturno != null
-        && this.body.idarea != null && this.body.idarea != undefined && this.body.idarea != ""
-        && this.body.idmateria != null && this.body.idmateria != undefined && this.body.idmateria != ""
-        && this.body.idsubzona != null && this.body.idsubzona != undefined && this.body.idsubzona != ""
-        && this.body.idzona != null && this.body.idzona != undefined && this.body.idzona != ""
+    if (!(this.body.abreviatura != "" && this.body.abreviatura != undefined && this.body.abreviatura != null
+      && this.body.nombre != "" && this.body.nombre != "" && this.body.nombre != "" != null
+      && this.body.idpartidapresupuestaria != undefined && this.body.idpartidapresupuestaria != "" && this.body.idpartidapresupuestaria != null
+      && this.body.grupofacturacion != undefined && this.body.grupofacturacion != "" && this.body.grupofacturacion != null
+      && this.body.idtipoturno != "" && this.body.idtipoturno != undefined && this.body.idtipoturno != null
+      && this.body.idarea != null && this.body.idarea != undefined && this.body.idarea != ""
+      && this.body.idmateria != null && this.body.idmateria != undefined && this.body.idmateria != ""
+      && this.body.idsubzona != null && this.body.idsubzona != undefined && this.body.idsubzona != ""
+      && this.body.idzona != null && this.body.idzona != undefined && this.body.idzona != ""
     )) {
       this.abreCierraFicha('datosGenerales');
     }
