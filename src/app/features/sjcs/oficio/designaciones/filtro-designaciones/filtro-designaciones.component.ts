@@ -110,8 +110,13 @@ export class FiltroDesignacionesComponent implements OnInit {
       this.body = JSON.parse(
         sessionStorage.getItem("filtroDesignas")
       );
+
+      if(this.body.fechaEntradaInicio != undefined && this.body.fechaEntradaInicio != null){
       this.fechaAperturaDesdeSelect =  new Date(this.body.fechaEntradaInicio);
+      }
+      if(this.body.fechaEntradaFin != undefined && this.body.fechaEntradaFin != null){
 	    this.fechaAperturaHastaSelect = new Date(this.body.fechaEntradaFin);
+      }
       if(this.body.fechaJustificacionDesde!=undefined && this.body.fechaJustificacionDesde != null){
         this.body.fechaJustificacionDesde = new Date(this.body.fechaJustificacionDesde);
       }
