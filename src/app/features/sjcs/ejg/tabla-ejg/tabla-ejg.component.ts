@@ -119,14 +119,10 @@ export class TablaEjgComponent implements OnInit {
     }
     if (!this.selectAll && !this.selectMultiple) {
       // this.progressSpinner = true;
+      
       this.datosEJG(evento.data);
-
-
-    } else {
-      if (evento.data.fechabaja == undefined && this.historico) {
-        this.selectedDatos.pop();
-      }
-    }
+      
+    } 
   }
 
   datosEJG(selected) {
@@ -137,6 +133,7 @@ export class TablaEjgComponent implements OnInit {
         this.ejgObject = JSON.parse(n.body).ejgItems;
         this.datosItem = this.ejgObject[0];
         this.persistenceService.setDatos(this.datosItem);
+        this.persistenceService.setFiltros(this.filtro);
         this.ngOnInit();
         this.consultaUnidadFamiliar(selected);
         this.commonServices.scrollTop();

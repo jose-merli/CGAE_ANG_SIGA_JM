@@ -75,6 +75,9 @@ export class EJGItem {
     prestacion: Array<string>;
     prestacionesRechazadas: Array<string>;
     turnoDes: string;
+    anioexpInsos: string;
+    numeroexpInsos: string;
+    idTipoExpInsos: string;
     idInstTipoExp: string;
     fechapresentacion: Date;
     fechalimitepresentacion: Date;

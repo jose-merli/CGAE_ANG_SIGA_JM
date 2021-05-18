@@ -6,12 +6,13 @@ import { CommonsService } from '../../../../../_services/commons.service';
 import { TranslateService } from '../../../../../commons/translate';
 import { Router } from '@angular/router';
 import { MultiSelect } from 'primeng/multiselect';
+import { noComponentFactoryError } from '@angular/core/src/linker/component_factory_resolver';
 
 @Component({
   selector: 'app-datos-generales-ejg',
   templateUrl: './datos-generales-ejg.component.html',
   styleUrls: ['./datos-generales-ejg.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None
 })
 export class DatosGeneralesEjgComponent implements OnInit {
   //Resultados de la busqueda
@@ -27,18 +28,18 @@ export class DatosGeneralesEjgComponent implements OnInit {
   progressSpinner: boolean = false;
   body: EJGItem;
   bodyInicial: EJGItem;
-  nuevoBody:EJGItem = new EJGItem();
+  nuevoBody: EJGItem = new EJGItem();
   msgs = [];
   nuevo;
   textSelected: String = '{0} opciones seleccionadas';
-  tipoEJGDesc;
+  tipoEJGDesc = "";
   comboTipoEJG = [];
   comboTipoEJGColegio = [];
   comboPrestaciones = [];
   comboTipoExpediente = [];
   tipoExpedienteDes: string;
   showTipoExp: boolean = false;
-  
+
   institucionActual;
   isdisabledAddExp: boolean = false;
 
@@ -49,12 +50,12 @@ export class DatosGeneralesEjgComponent implements OnInit {
 
   resaltadoDatosGenerales: boolean = false;
   resaltadoDatos: boolean = false;
-  
+
   fichaPosible = {
     key: "datosGenerales",
     activa: false
   }
-  
+
   activacionTarjeta: boolean = false;
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
@@ -66,47 +67,47 @@ export class DatosGeneralesEjgComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit() {
-    this.resaltadoDatos=true;
+    this.resaltadoDatos = true;
     this.getComboTipoEJG();
     this.getComboTipoEJGColegio();
     this.getComboPrestaciones();
     this.getComboTipoExpediente();
 
 
-      if (this.persistenceService.getDatos()) {
-        this.modoEdicion = true;
-        this.nuevo = false;
-        this.body = this.persistenceService.getDatos();
-        
-        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-        /* this.sigaServices.post("gestionejg_datosEJG", selected).subscribe(
-          n => {
-            this.ejgObject = JSON.parse(n.body).ejgItems;
-            this.datosItem = this.ejgObject[0];
-            this.persistenceService.setDatos(this.datosItem);
-            this.consultaUnidadFamiliar(selected);
-            this.commonServices.scrollTop();
-          },
-          err => {
-            console.log(err);
-            this.commonServices.scrollTop();
-          }
-        ); */
-        if (this.body.fechalimitepresentacion != undefined)
-          this.body.fechalimitepresentacion = new Date(this.body.fechalimitepresentacion);
-        if (this.body.fechapresentacion != undefined)
-          this.body.fechapresentacion = new Date(this.body.fechapresentacion);
-        if (this.body.fechaApertura != undefined)
-          this.body.fechaApertura = new Date(this.body.fechaApertura);
-        if (this.body.tipoEJG != undefined)
-          this.showTipoExp = true;
-        
-        this.getPrestacionesRechazadasEJG();
-      }else {
-        this.nuevo = true;
-        this.modoEdicion = false;
-        this.body = new EJGItem();
-        this.showTipoExp = false;
+    if (this.persistenceService.getDatos()) {
+      this.modoEdicion = true;
+      this.nuevo = false;
+      this.body = this.persistenceService.getDatos();
+
+      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+      /* this.sigaServices.post("gestionejg_datosEJG", selected).subscribe(
+        n => {
+          this.ejgObject = JSON.parse(n.body).ejgItems;
+          this.datosItem = this.ejgObject[0];
+          this.persistenceService.setDatos(this.datosItem);
+          this.consultaUnidadFamiliar(selected);
+          this.commonServices.scrollTop();
+        },
+        err => {
+          console.log(err);
+          this.commonServices.scrollTop();
+        }
+      ); */
+      if (this.body.fechalimitepresentacion != undefined)
+        this.body.fechalimitepresentacion = new Date(this.body.fechalimitepresentacion);
+      if (this.body.fechapresentacion != undefined)
+        this.body.fechapresentacion = new Date(this.body.fechapresentacion);
+      if (this.body.fechaApertura != undefined)
+        this.body.fechaApertura = new Date(this.body.fechaApertura);
+      if (this.body.tipoEJG != undefined)
+        this.showTipoExp = true;
+
+      this.getPrestacionesRechazadasEJG();
+    } else {
+      this.nuevo = true;
+      this.modoEdicion = false;
+      this.body = new EJGItem();
+      this.showTipoExp = false;
       // this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     }
 
@@ -125,30 +126,34 @@ export class DatosGeneralesEjgComponent implements OnInit {
     }
   }
 
-getPrestacionesRechazadasEJG() {
-  this.sigaServices.post("gestionejg_searchPrestacionesRechazadasEJG", this.body).subscribe(
-    n => {
-      this.bodyInicial.prestacionesRechazadas = [];
-      JSON.parse(n.body).forEach(element => {
-        this.bodyInicial.prestacionesRechazadas.push(element.idprestacion.toString());
-      });;
-      //this.bodyInicial.prestacion = this.body.prestacion.filter(x => this.bodyInicial.prestacionesRechazadas.indexOf(x) === -1);
-      this.bodyInicial.prestacion = this.comboPrestaciones.map(it => it.value.toString()).filter(x => this.bodyInicial.prestacionesRechazadas.indexOf(x) === -1);
-      this.body.prestacion = this.bodyInicial.prestacion;
-    },
-    err => {
-      console.log(err);
-    }
-  );
+  getPrestacionesRechazadasEJG() {
+    this.sigaServices.post("gestionejg_searchPrestacionesRechazadasEJG", this.body).subscribe(
+      n => {
+        this.bodyInicial.prestacionesRechazadas = [];
+        JSON.parse(n.body).forEach(element => {
+          this.bodyInicial.prestacionesRechazadas.push(element.idprestacion.toString());
+        });;
+        //this.bodyInicial.prestacion = this.body.prestacion.filter(x => this.bodyInicial.prestacionesRechazadas.indexOf(x) === -1);
+        this.bodyInicial.prestacion = this.comboPrestaciones.map(it => it.value.toString()).filter(x => this.bodyInicial.prestacionesRechazadas.indexOf(x) === -1);
+        this.body.prestacion = this.bodyInicial.prestacion;
+      },
+      err => {
+        console.log(err);
+      }
+    );
 
-  
-}
+
+  }
 
   getComboTipoEJG() {
     this.sigaServices.get("filtrosejg_comboTipoEJG").subscribe(
       n => {
         this.comboTipoEJG = n.combooItems;
-        this.tipoEJGDesc = n.combooItems[0].label;
+        if (this.body.tipoEJG != null && this.body.tipoEJG != undefined) {
+          this.comboTipoEJG.forEach(element => {
+            if (element.value == this.body.tipoEJG) this.tipoEJGDesc = element.label;
+          });
+        }
         this.commonsServices.arregloTildesCombo(this.comboTipoEJG);
       },
       err => {
@@ -169,7 +174,7 @@ getPrestacionesRechazadasEJG() {
     );
   }
 
-  getComboTipoExpediente(){
+  getComboTipoExpediente() {
     this.sigaServices.get("gestionejg_comboTipoExpediente").subscribe(
       n => {
         this.comboTipoExpediente = n.combooItems;
@@ -177,7 +182,7 @@ getPrestacionesRechazadasEJG() {
         let tipoExp = this.comboTipoExpediente.find(
           item => item.value == this.body.tipoEJG
         );
-        if(tipoExp != undefined)
+        if (tipoExp != undefined)
           this.tipoExpedienteDes = tipoExp.label;
       },
       err => {
@@ -292,10 +297,10 @@ getPrestacionesRechazadasEJG() {
     }
   }
 
-  save(){
-    this.progressSpinner=true;
+  save() {
+    this.progressSpinner = true;
 
-    if(this.modoEdicion){
+    if (this.modoEdicion) {
 
       /* //Comprobamos si las prestaciones rechazadas iniciales.
       let prestacionesRechazadasInicial = this.comboPrestaciones.map(it => it.value.toString()).filter(x => this.bodyInicial.prestacion.indexOf(x) === -1);
@@ -315,46 +320,54 @@ getPrestacionesRechazadasEJG() {
       //hacer update
       this.sigaServices.post("gestionejg_actualizaDatosGenerales", this.body).subscribe(
         n => {
-          this.progressSpinner=false;
+          this.progressSpinner = false;
 
-          if(n.statusText=="OK") this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          if (n.statusText == "OK") {
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+            this.bodyInicial = this.body;
+          }
           else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         },
         err => {
           console.log(err);
-          this.progressSpinner=false;
+          this.progressSpinner = false;
 
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         }
       );
-      this.progressSpinner=false;
-    }else{
+      this.progressSpinner = false;
+    } else {
       //hacer insert
-      if(this.body.tipoEJG!= null && this.body.tipoEJG!= undefined && this.body.fechaApertura != null && this.body.fechaApertura != undefined){
-        this.body.annio=this.body.fechaApertura.getFullYear().toString();
-        this.body.idInstitucion=this.institucionActual;
-        
+      if (this.body.tipoEJG != null && this.body.tipoEJG != undefined && this.body.fechaApertura != null && this.body.fechaApertura != undefined) {
+        this.body.annio = this.body.fechaApertura.getFullYear().toString();
+        this.body.idInstitucion = this.institucionActual;
+
         this.sigaServices.post("gestionejg_insertaDatosGenerales", JSON.stringify(this.body)).subscribe(
           n => {
-            this.progressSpinner=false;
-            let ejgObject = JSON.parse(n.body).ejgItems;
-            let datosItem = ejgObject[0];
-            this.persistenceService.setDatos(datosItem);
-            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-            this.body.numEjg = datosItem.numEjg;
-            this.guardadoSend.emit(true);
+            this.progressSpinner = false;
+            if(JSON.parse(n.body).error.code==200){
+              let ejgObject = JSON.parse(n.body).ejgItems;
+              let datosItem = ejgObject[0];
+              this.persistenceService.setDatos(datosItem);
+              this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+              this.body.numEjg = datosItem.numEjg;
+              this.body.numero = datosItem.numero;
+              this.guardadoSend.emit(true);
+            }
+            else{
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+            }
 
           },
           err => {
-            console.log(err);
-            this.progressSpinner=false;
+            this.progressSpinner = false;
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
           }
         );
       }
       else {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
-        this.progressSpinner=false;
+        this.progressSpinner = false;
       }
     }
   }
@@ -367,8 +380,8 @@ getPrestacionesRechazadasEJG() {
       this.rest();
     }
   }
-  rest(){
-    if(!this.nuevo){
+  rest() {
+    if (!this.nuevo) {
       this.body = JSON.parse(JSON.stringify(this.bodyInicial));
 
       if (this.body.fechalimitepresentacion != undefined)
@@ -379,11 +392,11 @@ getPrestacionesRechazadasEJG() {
         this.body.fechaApertura = new Date(this.body.fechaApertura);
       if (this.body.tipoEJG != undefined)
         this.showTipoExp = true;
-    }else{
+    } else {
       this.body = JSON.parse(JSON.stringify(this.nuevoBody));
     }
   }
-  checkPermisosComunicar(){
+  checkPermisosComunicar() {
     let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
@@ -391,11 +404,11 @@ getPrestacionesRechazadasEJG() {
       this.comunicar();
     }
   }
-  comunicar(){
+  comunicar() {
     this.persistenceService.clearDatos();
     this.router.navigate(["/gestionEjg"]);
   }
-  checkPermisosAsociarDes(){
+  checkPermisosAsociarDes() {
     let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
@@ -403,11 +416,11 @@ getPrestacionesRechazadasEJG() {
       this.asociarDes();
     }
   }
-  asociarDes(){
+  asociarDes() {
     this.persistenceService.clearDatos();
     this.router.navigate(["/gestionEjg"]);
   }
-  checkPermisosCreateDes(){
+  checkPermisosCreateDes() {
     let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
@@ -415,11 +428,11 @@ getPrestacionesRechazadasEJG() {
       this.createDes();
     }
   }
-  createDes(){
+  createDes() {
     this.persistenceService.clearDatos();
     this.router.navigate(["/gestionEjg"]);
   }
-  checkPermisosAddExp(){
+  checkPermisosAddExp() {
     let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
@@ -427,24 +440,24 @@ getPrestacionesRechazadasEJG() {
       this.addExp();
     }
   }
-  addExp(){
+  addExp() {
     this.persistenceService.clearDatos();
     this.router.navigate(["/gestionEjg"]);
   }
 
-  styleObligatorio(evento){
-    if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
+  styleObligatorio(evento) {
+    if (this.resaltadoDatos && (evento == undefined || evento == null || evento == "")) {
       return this.commonsServices.styleObligatorio(evento);
     }
   }
-  muestraCamposObligatorios(){
-    this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
-    this.resaltadoDatos=true;
+  muestraCamposObligatorios() {
+    this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+    this.resaltadoDatos = true;
   }
 
   focusInputField() {
     setTimeout(() => {
-      this.someDropdown.filterInputChild.nativeElement.focus();  
+      this.someDropdown.filterInputChild.nativeElement.focus();
     }, 300);
   }
 

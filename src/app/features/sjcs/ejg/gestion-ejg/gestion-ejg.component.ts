@@ -61,7 +61,7 @@ export class GestionEjgComponent implements OnInit {
   tarjetaRegtel: string;
   tarjetaComunicaciones: string;
 
-  openTarjetaDatosGenerales: Boolean = false;
+  openTarjetaDatosGenerales: Boolean = true;
   openTarjetaServiciosTramitacion: Boolean = false;
   openTarjetaUnidadFamiliar: Boolean = false;
   openTarjetaExpedientesEconomicos: Boolean = false;

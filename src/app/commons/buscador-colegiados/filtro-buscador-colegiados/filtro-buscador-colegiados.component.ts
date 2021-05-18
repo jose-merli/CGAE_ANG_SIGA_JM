@@ -1,4 +1,4 @@
-import { Component, Output, OnInit, EventEmitter, HostListener, Input} from '@angular/core';
+import { Component, Output, OnInit, EventEmitter, HostListener, Input } from '@angular/core';
 import { ColegiadosSJCSItem } from '../../../models/ColegiadosSJCSItem';
 import { CommonsService } from '../../../_services/commons.service';
 import { SigaServices } from '../../../_services/siga.service';
@@ -33,6 +33,9 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
   comboTurno: any;
   comboguardiaPorTurno: any;
   comboEstadoColegial: any;
+
+  noArt27: boolean = true;
+
   @Input('nuevaInscripcion') nuevaInscripcion;
 
   @Output() buscar = new EventEmitter<boolean>();
@@ -49,39 +52,39 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
       sessionStorage.removeItem('usuarioBusquedaExpress')
     }
 
+    //Bloquear el desplegable del estado de colegiado a ejerciente
+    if (this.nuevaInscripcion || (sessionStorage.getItem("pantalla") == "gestionEjg" && sessionStorage.getItem("tarjeta") == "ServiciosTramit")) {
+      this.filtro.idEstado = "20";
+      this.disabledEstado = true;
+    }
+
+    //Se comprueba si se aplica el articulo 27-28 para la busqueda de colegiados 
+    //fuera de la institucion actual
+    if (sessionStorage.getItem("art27") == "true") {
+      this.noArt27 = false;
+      this.institucionActual = "2000"
+      this.getComboColegios();
+    }
+
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
       this.filtro.idInstitucion = n.value;
-      this.getComboColegios();
+      if(this.noArt27)this.getComboColegios();
       this.getComboTurno();
       this.getComboEstadoColegial();
     });
-    if(this.nuevaInscripcion || (sessionStorage.getItem("pantalla") =="gestionEjg" && sessionStorage.getItem("tarjeta") =="ServiciosTramit") ){
-       this.filtro.idEstado = "20";
-       this.disabledEstado = true;
-    }
 
-    // let articulo27Activo = sessionStorage.getItem('Art27Activo');
-    // sessionStorage.removeItem("Art27Activo");
-    // this.datosDesgina = JSON.parse(sessionStorage.getItem('datosDesgina'));
-    // sessionStorage.removeItem("datosDesgina");
-    
-    // if((datosDesgina != null && datosDesgina != undefined) && (datosDesgina.fechaAlta != null && datosDesgina.fechaAlta != undefined)){
-    //   this.filtro.idTurno = datosDesgina.fechaAlta;
-    // }
-
-    //Comprobar si proviene de la tarjeta servicio de tramitacion de la ficha EJG
-    if (sessionStorage.getItem("pantalla") =="gestionEjg" && sessionStorage.getItem("tarjeta") =="ServiciosTramit") {
-      if(sessionStorage.getItem("idTurno")){
+    //Comprobar si proviene de la tarjeta servicio de tramitacion de la ficha EJG y sin art 27.
+    if (sessionStorage.getItem("pantalla") == "gestionEjg" && sessionStorage.getItem("tarjeta") == "ServiciosTramit" && this.noArt27) {
+      if (sessionStorage.getItem("idTurno")) {
         this.filtro.idTurno = [];
         this.filtro.idTurno.push(sessionStorage.getItem("idTurno"));
         this.fixedTurn = true;
-        this.getComboguardiaPorTurno({value: this.filtro.idTurno[0]});
+        this.getComboguardiaPorTurno({ value: this.filtro.idTurno[0] });
       }
     }
 
-    
-   
+
   }
 
   getComboColegios() {
@@ -115,13 +118,11 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
         this.comboTurno = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboTurno);
         this.progressSpinner = false;
-        console.log(this.comboTurno);
         // if((this.datosDesgina != null && this.datosDesgina != undefined) && (this.datosDesgina.idTurno != null && this.datosDesgina.idTurno != undefined)){
         //   this.filtro.idTurno = [this.datosDesgina.idTurno];
         // }
       },
       err => {
-        console.log(err);
         this.progressSpinner = false;
       }
     );
@@ -135,12 +136,13 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
         n => {
           this.comboguardiaPorTurno = n.combooItems;
           this.progressSpinner = false;
-          if (sessionStorage.getItem("pantalla") =="gestionEjg" && sessionStorage.getItem("tarjeta") =="ServiciosTramit") {
-            if(sessionStorage.getItem("idGuardia")){
+          if (sessionStorage.getItem("pantalla") == "gestionEjg" && sessionStorage.getItem("tarjeta") == "ServiciosTramit" && this.noArt27) {
+            if (sessionStorage.getItem("idGuardia")) {
               this.filtro.idGuardia = [];
               this.filtro.idGuardia.push(sessionStorage.getItem("idGuardia"));
               this.fixedGuard = true;
-            }}
+            }
+          }
         },
         err => {
           console.log(err);

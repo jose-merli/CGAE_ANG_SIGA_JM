@@ -101,10 +101,7 @@ export class FiltrosEjgComponent implements OnInit {
       this.body.fechaPonenteDesd = this.transformDate(this.body.fechaPonenteDesd);
       this.body.fechaPonenteHast = this.transformDate(this.body.fechaPonenteHast);
       
-      if (this.persistenceService.getHistorico() != undefined) {
-        this.historico = this.persistenceService.getHistorico();
-      }
-      
+      this.persistenceService.clearFiltros();
       this.busqueda.emit(this.historico);
 
     } else {
@@ -608,6 +605,7 @@ export class FiltrosEjgComponent implements OnInit {
           this.body.numColegiado=this.usuarioBusquedaExpress.numColegiado;
       }
 
+      
       this.busqueda.emit(false);
       
     }

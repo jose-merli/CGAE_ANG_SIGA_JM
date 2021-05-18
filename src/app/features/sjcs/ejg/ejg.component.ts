@@ -81,26 +81,9 @@ export class EJGComponent implements OnInit {
   }
 
   searchEJGs(event) {
-    // this.filtros.body = this.persistenceService.getFiltros();
-    // this.bodyAux2 = JSON.parse(JSON.stringify(this.filtros.bodyAux));
 
-    // this.filtros.bodyAux.historico = event;
-    // this.persistenceService.setHistorico(event);
-
-    // this.filtros.bodyAux.fechaAperturaDesd = this.transformDate(this.filtros.bodyAux.fechaAperturaDesd);
-    // this.filtros.bodyAux.fechaAperturaHast = this.transformDate(this.filtros.bodyAux.fechaAperturaHast);
-    // this.filtros.bodyAux.fechaEstadoDesd = this.transformDate(this.filtros.bodyAux.fechaEstadoDesd);
-    // this.filtros.bodyAux.fechaEstadoHast = this.transformDate(this.filtros.bodyAux.fechaEstadoHast);
-    // this.filtros.bodyAux.fechaLimiteDesd = this.transformDate(this.filtros.bodyAux.fechaLimiteDesd);
-    // this.filtros.bodyAux.fechaLimiteHast = this.transformDate(this.filtros.bodyAux.fechaLimiteHast);
-    // this.filtros.bodyAux.fechaDictamenDesd = this.transformDate(this.filtros.bodyAux.fechaDictamenDesd);
-    // this.filtros.bodyAux.fechaDictamenHast = this.transformDate(this.filtros.bodyAux.fechaDictamenHast);
-    // this.filtros.bodyAux.fechaImpugnacionDesd = this.transformDate(this.filtros.bodyAux.fechaImpugnacionDesd);
-    // this.filtros.bodyAux.fechaImpugnacionHast = this.transformDate(this.filtros.bodyAux.fechaImpugnacionHast);
-    // this.filtros.bodyAux.fechaPonenteDesd = this.transformDate(this.filtros.bodyAux.fechaPonenteDesd);
-    // this.filtros.bodyAux.fechaPonenteHast = this.transformDate(this.filtros.bodyAux.fechaPonenteHast);
     this.progressSpinner = true;
-    // this.filtros.bodyAux.dictamen.split(",");
+    
     this.sigaServices.post("filtrosejg_busquedaEJG", this.filtros.body).subscribe(
       n => {
         this.datos = JSON.parse(n.body).ejgItems;
