@@ -54,16 +54,9 @@ export class GestionDesignacionesComponent implements OnInit {
       this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
     }
     this.selectedDatos = [];
-    // this.datos.fechaActual = new Date();
-    console.log(this.datos);
     this.getCols();
     this.datosInicial = JSON.parse(JSON.stringify(this.datos));
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
-    // if (this.persistenceService.getPaginacion() != undefined) {
-    //   let paginacion = this.persistenceService.getPaginacion();
-    //   this.first = paginacion.paginacion;
-    //   this.selectedItem = paginacion.selectedItem;
-    // }
     this.progressSpinner = false;
   }
 

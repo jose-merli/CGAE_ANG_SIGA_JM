@@ -24,6 +24,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
   msgs: Message[] = [];
   nuevaDesigna: any;
   valorParametro: any;
+  valorParametroNIG: any;
   valorParametroNProcedimiento: any;
   searchParametros: ParametroDto = new ParametroDto();
   searchParametrosFormatoNProcedimiento: ParametroDto = new ParametroDto();
@@ -322,9 +323,10 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       }else{
         designaUpdate.estado = this.estadoValue[0];
       }
-      if(designaUpdate.nig != "" && designaUpdate.nig!= undefined){
-        validaNIG = this.validarNig(designaUpdate.nig);
-      }
+      // if(designaUpdate.nig != "" && designaUpdate.nig!= undefined){
+      //   this.validarNig(designaUpdate.nig).then(value=>validaNIG = value);
+      //   console.log(this.validarNig(designaUpdate.nig));
+      // }
       if(designaUpdate.numProcedimiento != "" && designaUpdate.numProcedimiento!= undefined){
         validaProcedimiento = this.validarNProcedimiento(designaUpdate.numProcedimiento);
       }
@@ -611,33 +613,47 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       });
   }
 
-  validarNig(nig) {
-    //Esto es para la validacion de CADECA
+  async validarNig(nig) {
     let ret = false;
-    
-    if (this.institucionActual == "2008" || this.institucionActual == "2015" || this.institucionActual == "2029" || this.institucionActual == "2033" || this.institucionActual == "2036" ||
-    this.institucionActual == "2043" || this.institucionActual == "2006" || this.institucionActual == "2021" || this.institucionActual == "2035" || this.institucionActual == "2046" || this.institucionActual == "2066") {
-    if (nig != '') {
-      var objRegExp = /^[0-9]{7}[S,C,P,O,I,V,M,6,8,1,2,3,4]{1}(19|20)\d{2}[0-9]{7}$/;
-      ret = objRegExp.test(nig);
-      
-    }
-    else
-      ret = true;
-  } else {
-    if (nig.length == 19) {
-      var objRegExp = /^([a-zA-Z0-9]{19})?$/;
-      ret = objRegExp.test(nig);
-    } else {
-      ret = true;
-    }
-  }
-
+    let parametro = new ParametroRequestDto();
+    parametro.idInstitucion = this.campos.idInstitucion;
+    parametro.modulo = "SCS";
+    parametro.parametrosGenerales = "NIG_VALIDADOR";
+    await this.sigaServices
+      .postPaginado("parametros_search", "?numPagina=1", parametro)
+      .toPromise().then(
+        data => {
+          this.searchParametros = JSON.parse(data["body"]);
+          this.datosBuscar = this.searchParametros.parametrosItems;
+          this.datosBuscar.forEach(element => {
+            if (element.parametro == "NIG_VALIDADOR" && (element.idInstitucion == element.idinstitucionActual || element.idInstitucion == '0')) {
+              this.valorParametroNIG = element.valor;
+              if (nig != '') {
+                ret = this.valorParametroNIG.test(nig);
+              }
+              else{
+                ret = true;
+              }
+            }
+          });
+        }).catch(error => {
+          this.progressSpinner = false;
+          let severity = "error";
+            let summary = this.translateService.instant("justiciaGratuita.oficio.designa.NIGInvalido");
+            let detail = "";
+            this.msgs.push({
+              severity,
+              summary,
+              detail
+            });
+            ret = false;
+          });
+   
     return ret;
   }
 
   validarNProcedimiento(nProcedimiento) {
-    //Esto es para la validacion de CADECA
+    //Esto es para la validacion de CADENA
 
     if (this.institucionActual == "2008" || this.institucionActual == "2015" || this.institucionActual == "2029" || this.institucionActual == "2033" || this.institucionActual == "2036" ||
     this.institucionActual == "2043" || this.institucionActual == "2006" || this.institucionActual == "2021" || this.institucionActual == "2035" || this.institucionActual == "2046" || this.institucionActual == "2066") {
@@ -665,6 +681,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     if(updateDetalle.idPretension == 0){
       updateDetalle.idPretension = null;
     }
+    updateDetalle.nig = 
     this.sigaServices.post("designaciones_updateDetalleDesignacion", updateDetalle).subscribe(
         n => {
           let severity = "success";
@@ -743,10 +760,14 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
           let severity = "error";
-          let summary = "No se ha podido modificar correctamente";
-          let detail = ""
+          let summary;
+          if(err.status == 400){
+                    summary = this.translateService.instant('justiciaGratuita.oficio.designa.NIGInvalido');
+          }else{
+                    summary = "No se ha podido modificar correctamente";
+          }
+          let detail = "";
           this.msgs.push({
             severity,
             summary,
