@@ -172,6 +172,7 @@ export class FichaTurnosComponent implements OnInit, AfterViewChecked {
 	}
 
 	backTo() {
+		sessionStorage.setItem("volver", 'true');
 		this.location.back();
 	}
 
