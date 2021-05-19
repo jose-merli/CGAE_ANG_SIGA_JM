@@ -30,13 +30,12 @@ export class ServiciosTramitacionComponent implements OnInit {
   disableBuscar: boolean = false;
   art27: boolean = false;
 
-  @ViewChild("busqueda") busqueda: BusquedaColegiadoExpressComponent;
 
   body: EJGItem;
   bodyInicial: EJGItem;
   comboTurno = [];
   comboGuardia = [];
-  institucionActual = 2000;
+  institucionActual;
   comboTipoLetrado = datos_combos.comboTipoLetrado;
   msgs = [];
   nuevo;
@@ -127,18 +126,17 @@ export class ServiciosTramitacionComponent implements OnInit {
 
     //Si el campo de letrado no esta vacio. Comprobamos si el letrado ha sido seleccionado por
     //el articulo 27-28 para rellenar el checkbox.
-    if (this.busqueda.nombreAp != null && this.busqueda.nombreAp != undefined) this.checkArt27();
+    if (this.body.apellidosYNombre != undefined && this.body.apellidosYNombre != null ) this.checkArt27();
 
   }
 
   checkArt27() {
-    this.sigaServices.get("institucionActual").subscribe(n => {
 
       let datos = new ColegiadosSJCSItem();
 
       //Estado "Ejerciente"
       datos.idEstado = "20";
-      datos.idInstitucion = n.value;
+      datos.idInstitucion =  this.institucionActual;
       datos.idGuardia = [];
       datos.idTurno = [];
       datos.idGuardia.push(this.body.idGuardia);
@@ -149,15 +147,17 @@ export class ServiciosTramitacionComponent implements OnInit {
           this.progressSpinner = false;
           let colegiados = JSON.parse(data.body).colegiadosSJCSItem;
 
+          //Se comprueba si el colegiado esta en el turno y guardia seleccionados
           if (colegiados.length > 0) {
+            let presente = false;
             colegiados.forEach(element => {
-              if(this.busqueda.nombreAp == element.apellidos+", "+element.nombre) this.art27=true;
+              if(this.body.apellidosYNombre == element.apellidos+", "+element.nombre) presente=true;
             });
+            if(!presente)this.art27=true;
           }
         }
       );
 
-    });
   }
 
   checkBusqueda() {
@@ -271,7 +271,7 @@ export class ServiciosTramitacionComponent implements OnInit {
       );
   }
 
-  onChangeGuardias() {
+  clearBusqueda() {
     /* this.checkBusqueda(); */
     //Para prevenir que un colegiado se asigne a turnos y guardias que no son suyos.
     this.usuarioBusquedaExpress = {
@@ -306,7 +306,7 @@ export class ServiciosTramitacionComponent implements OnInit {
 
   }
   //busqueda express
-  isBuscar() {
+  /* isBuscar() {
     let objPersona = null;
     if (this.body.idPersona.length != 0) {
       this.progressSpinner = true;
@@ -340,13 +340,13 @@ export class ServiciosTramitacionComponent implements OnInit {
       // this.body.idPersona = "";
     }
     this.disableBuscar = false;
-  }
+  } */
 
-  isLimpiar() {
+  /* isLimpiar() {
     this.body.apellidosYNombre = "";
     this.body.numColegiado = "";
     this.body.idPersona = "";
-  }
+  } */
   checkPermisosSave() {
     let msg = this.commonServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {

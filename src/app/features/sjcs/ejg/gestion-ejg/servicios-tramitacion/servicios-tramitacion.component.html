@@ -39,7 +39,7 @@
         <div class="form-group col-lg-6 col-md-6">
           <label>{{ "menu.justiciaGratuita.GuardiaMenu" | translate }}</label>
           <p-dropdown class="select-form" [(ngModel)]='body.idGuardia' [(disabled)]="isDisabledGuardia" placeholder="Seleccionar" [options]="comboGuardia"
-            [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" (onChange)="onChangeGuardias()" ></p-dropdown>
+            [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" (onChange)="clearBusqueda()" ></p-dropdown>
         </div>
         <!-- <div class="form-group col-lg-3 col-md-3">
           <label>{{"censo.resultadoDuplicados.numeroColegiado" | translate}}</label>
@@ -58,7 +58,7 @@
           <!-- Revisar más adelante -->
           <div class="form-group col-lg-6 pt-1 col-md-6">
             <label>Art 27-28</label>
-            <p-checkbox [(ngModel)]="art27" [disabled]="!permisoEscritura" binary="true"></p-checkbox>
+            <p-checkbox [(ngModel)]="art27" [disabled]="!permisoEscritura" binary="true" (onChange)="clearBusqueda()"></p-checkbox>
           </div>
           <!-- <div class="form-group col-lg-6 col-md-6 pt-4">
             <div id="buttonExpressColegiados" class="text-right main-button">
