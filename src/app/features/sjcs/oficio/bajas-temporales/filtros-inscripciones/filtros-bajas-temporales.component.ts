@@ -54,9 +54,6 @@ export class FiltrosBajasTemporales implements OnInit {
     private localStorageService: SigaStorageService) { }
 
   ngOnInit() {   
-    console.log("primer minDate ngOninit", this.filtros.fechasolicituddesde);
-    console.log("primer minDate ngOninit", this.filtros.fechadesde);
-
     this.clearFilters();
 
     this.isLetrado = this.localStorageService.isLetrado;
@@ -70,26 +67,6 @@ export class FiltrosBajasTemporales implements OnInit {
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisos = this.persistenceService.getPermisos();
     }
-     if (this.persistenceService.getFiltros() != undefined) {
-      this.filtros = this.persistenceService.getFiltros();
-      console.log("Filtros traidos de session storage tras setearlos al darle a buscar", this.filtros)
-
-      if(this.filtros.fechasolicituddesde != null && this.filtros.fechasolicituddesde != undefined){
-        this.filtros.fechasolicituddesde = new Date(this.filtros.fechasolicituddesde);
-      }
-
-      if(this.filtros.fechasolicitudhasta != null && this.filtros.fechasolicitudhasta != undefined){
-        this.filtros.fechasolicitudhasta = new Date(this.filtros.fechasolicitudhasta);
-      }
-
-      if(this.filtros.fechadesde != null && this.filtros.fechadesde != undefined){
-        this.filtros.fechadesde = new Date(this.filtros.fechadesde);
-      }
-
-      if(this.filtros.fechahasta != null && this.filtros.fechahasta != undefined){
-        this.filtros.fechahasta = new Date(this.filtros.fechahasta)
-      }
-    } 
     
     if(sessionStorage.getItem("buscadorColegiados")){​​
 
@@ -196,7 +173,6 @@ export class FiltrosBajasTemporales implements OnInit {
     }
 
     if (this.checkFilters()) {
-        console.log("filtros guardados en el session storage",this.filtros);
         this.persistenceService.setFiltros(this.filtros);
         this.persistenceService.setFiltrosAux(this.filtros);
         this.filtroAux = this.filtros;
@@ -223,42 +199,21 @@ export class FiltrosBajasTemporales implements OnInit {
     return fecha;
   }
 
-  fillFechaDesdeCalendar(event) {
-    if(event != null){
-      this.filtros.fechadesde = this.transformaFecha(event);
-    }else{
-      this.filtros.fechahasta = undefined;
-    }
-    console.log("segundo minDate valueChange", this.filtros.fechadesde);
-  }
-
   fillFechaSolicitudDesdeCalendar(event) {
-    console.log("fecha sol desde antes de transformar",event);
-    if(event != null){
-      this.filtros.fechasolicituddesde = this.transformaFecha(event);
-    }else{
-      this.filtros.fechasolicitudhasta = undefined;
-    }
-    console.log("primer minDate valueChange", this.filtros.fechasolicituddesde);
-  
-  }
-
-  fillAfechaDeCalendar(event) {
-    this.filtros.fechadesde = this.transformaFecha(event);
-    if(this.filtros.fechadesde != undefined){
-      this.filtros.validado = undefined;
-      this.disabledestado = true;
-    }else{
-      this.disabledestado = false;
-    }
-  }
-
-  fillFechaHastaCalendar(event) {
-    this.filtros.fechahasta = this.transformaFecha(event);
+    this.filtros.fechasolicituddesde = this.transformaFecha(event); 
   }
 
   fillFechaHastaSolicitudCalendar(event) {
     this.filtros.fechasolicitudhasta = this.transformaFecha(event);
+  }
+  
+  
+  fillFechaDesdeCalendar(event) {
+    this.filtros.fechadesde = this.transformaFecha(event);
+  }
+
+  fillFechaHastaCalendar(event) {
+    this.filtros.fechahasta = this.transformaFecha(event);
   }
 
   showSearchIncorrect() {
