@@ -67,25 +67,6 @@ export class FiltrosBajasTemporales implements OnInit {
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisos = this.persistenceService.getPermisos();
     }
-     if (this.persistenceService.getFiltros() != undefined) {
-      this.filtros = this.persistenceService.getFiltros();
-
-      if(this.filtros.fechasolicituddesde != null && this.filtros.fechasolicituddesde != undefined){
-        this.filtros.fechasolicituddesde = new Date(this.filtros.fechasolicituddesde);
-      }
-
-      if(this.filtros.fechasolicitudhasta != null && this.filtros.fechasolicitudhasta != undefined){
-        this.filtros.fechasolicitudhasta = new Date(this.filtros.fechasolicitudhasta);
-      }
-
-      if(this.filtros.fechadesde != null && this.filtros.fechadesde != undefined){
-        this.filtros.fechadesde = new Date(this.filtros.fechadesde);
-      }
-
-      if(this.filtros.fechahasta != null && this.filtros.fechahasta != undefined){
-        this.filtros.fechahasta = new Date(this.filtros.fechahasta)
-      }
-    } 
     
     if(sessionStorage.getItem("buscadorColegiados")){​​
 
@@ -218,38 +199,21 @@ export class FiltrosBajasTemporales implements OnInit {
     return fecha;
   }
 
-  fillFechaDesdeCalendar(event) {
-    if(event != null){
-      this.filtros.fechadesde = this.transformaFecha(event);
-    }else{
-      this.filtros.fechahasta = undefined;
-    }
-  }
-
   fillFechaSolicitudDesdeCalendar(event) {
-    if(event != null){
-      this.filtros.fechasolicituddesde = this.transformaFecha(event);
-    }else{
-      this.filtros.fechasolicitudhasta = undefined;
-    }
-  }
-
-  fillAfechaDeCalendar(event) {
-    this.filtros.fechadesde = this.transformaFecha(event);
-    if(this.filtros.fechadesde != undefined){
-      this.filtros.validado = undefined;
-      this.disabledestado = true;
-    }else{
-      this.disabledestado = false;
-    }
-  }
-
-  fillFechaHastaCalendar(event) {
-    this.filtros.fechahasta = this.transformaFecha(event);
+    this.filtros.fechasolicituddesde = this.transformaFecha(event); 
   }
 
   fillFechaHastaSolicitudCalendar(event) {
     this.filtros.fechasolicitudhasta = this.transformaFecha(event);
+  }
+  
+  
+  fillFechaDesdeCalendar(event) {
+    this.filtros.fechadesde = this.transformaFecha(event);
+  }
+
+  fillFechaHastaCalendar(event) {
+    this.filtros.fechahasta = this.transformaFecha(event);
   }
 
   showSearchIncorrect() {

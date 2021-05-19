@@ -51,22 +51,23 @@ export class FiltrosTurnos implements OnInit {
     textFilter: string = "Seleccionar";
 
   ngOnInit() {
-    // this.clearFilters();
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisos = this.persistenceService.getPermisos();
     }
+
     if (this.persistenceService.getFiltros() != undefined) {
-      if (
-        sessionStorage.getItem("filtrosTurnos") != null
-      ) {
+      if (sessionStorage.getItem("filtrosTurnos") != null) {
+        if(sessionStorage.getItem("volver") == 'true'){
         this.filtros = JSON.parse(
           sessionStorage.getItem("filtrosTurnos")
         );
         this.isBuscar();
-        sessionStorage.removeItem("filtrosTurnos");
-  
+        sessionStorage.removeItem("volver");
+        }else{
+          this.filtros = new TurnosItems();
+        }
       }
-    } else {
+    }else{
       this.filtros = new TurnosItems();
     }
 

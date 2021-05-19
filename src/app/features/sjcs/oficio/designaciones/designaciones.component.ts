@@ -186,8 +186,10 @@ export class DesignacionesComponent implements OnInit {
         let error = null;
         this.datos = JSON.parse(n.body);
         
-        if(this.datos[0].error != null){
-          error = this.datos[0].error;
+        if(this.datos[0] != null && this.datos[0] != undefined){
+          if(this.datos[0].error != null){
+            error = this.datos[0].error;
+          }
         }
 
         this.datos.forEach(element => {
