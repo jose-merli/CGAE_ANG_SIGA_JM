@@ -46,7 +46,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
   cabeceras = [
     {
       id: "anio",
-      name: "Año/Número Designación"
+      name: "Designación"
     },
     {
       id: 'ejgs',
@@ -91,9 +91,6 @@ export class TablaJustificacionExpresComponent implements OnInit {
     {
       id: "validar",
       name: "Validar"
-    },{
-      id: "fechaDesignacion",
-      name: "Fecha Designación"
     }
   ];
   
@@ -245,7 +242,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
       
       let letra = (i + 10).toString(36).toUpperCase()
       let arr2 = [];
-      let cod = designacion.codigoDesignacion;
+      let cod = designacion.codigoDesignacion + '\n' + "("+this.formatDate(designacion.fechaDesignacion)+")";
       let estadoDesignacion = designacion.estado;
       
       arr1 = [];
@@ -316,7 +313,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
       { type: 'text', value: '' , size: 153, combo: null},
       { type: 'text', value: designacion.tipoAcreditacion , size: 50, combo: null},
       { type: 'checkbox', value: validada, size: 50 , combo: null},
-      { type: 'text', value: this.formatDate(designacion.fechaDesignacion) , size: 153, combo: null},
+      { type: 'invisible', value: this.formatDate(designacion.fechaDesignacion) , size: 153, combo: null},
       { type: 'invisible', value: designacion.anioDesignacion , size: 0, combo: null},
       { type: 'invisible', value: designacion.anioProcedimiento , size: 0, combo: null},
       { type: 'invisible', value: designacion.art27 , size: 0, combo: null},
@@ -355,7 +352,6 @@ export class TablaJustificacionExpresComponent implements OnInit {
     arrDesignacion = [];
 
     designacion.actuaciones.forEach((actuacion, index) =>{
-      let acreditacionPorcentaje = actuacion.descripcion + " " + actuacion.porcentaje + "%";
       let validaAct = false;
       let moduleSelector =
       {
@@ -430,7 +426,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
           { type: 'text', value: actuacion.procedimiento, size: 153 , combo: null}, //modulo
           { type: 'datePicker', value:  this.formatDate(actuacion.fecha), size: 153 , combo: null},
           { type: fechaJustType, value:  fechaJust , size: 153, combo: null},
-          { type: 'text', value: acreditacionPorcentaje , size: 153, combo: null},
+          { type: 'invisible', value: actuacion.descripcion , size: 153, combo: null},
           { type: 'checkbox', value: validaAct, size: 50 , combo: null },
           { type: 'invisible', value:  actuacion.numDesignacion , size: 0, combo: null},
           { type: 'invisible', value:  actuacion.idAcreditacion , size: 0, combo: null},
