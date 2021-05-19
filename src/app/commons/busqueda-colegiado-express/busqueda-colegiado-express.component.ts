@@ -20,6 +20,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
   @Input() idTurno;
   @Input() idGuardia;
   @Input() art27;
+  @Input() disableNum;
 
   @Output() idPersona = new EventEmitter<string>();
   progressSpinner: boolean = false;
@@ -81,51 +82,55 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
   searchTramitacionEJG(form) {
     if (form.numColegiado != undefined && form.numColegiado != null && form.numColegiado.length != 0) {
       this.progressSpinner = true;
+      //Si se a introducido un num de colegiado y se activo art 27. Se realiza la busqueda por defecto.
+      //Revisar posible limitacion por colegio existente en la busqueda express.
+      if (this.art27) this.defaultsearch(form);
+      else {
+        this.sigaServices.get("institucionActual").subscribe(n => {
 
-      this.sigaServices.get("institucionActual").subscribe(n => {
+          let datos = new ColegiadosSJCSItem();
 
-        let datos = new ColegiadosSJCSItem();
+          //Estado "Ejerciente"
+          datos.idEstado = "20";
+          datos.idInstitucion = n.value;
+          datos.idGuardia = [];
+          datos.idTurno = [];
+          datos.idGuardia.push(this.idGuardia);
+          datos.idTurno.push(this.idTurno);
+          datos.nColegiado = form.numColegiado;
 
-        //Estado "Ejerciente"
-        datos.idEstado = "20";
-        datos.idInstitucion = n.value;
-        datos.idGuardia = [];
-        datos.idTurno = [];
-        datos.idGuardia.push(this.idGuardia);
-        datos.idTurno.push(this.idTurno);
-        datos.nColegiado = form.numColegiado;
+          this.sigaServices.post("componenteGeneralJG_busquedaColegiadoEJG", datos).subscribe(
+            data => {
+              this.progressSpinner = false;
+              let colegiado = JSON.parse(data.body).colegiadosSJCSItem;
 
-        this.sigaServices.post("componenteGeneralJG_busquedaColegiadoEJG", datos).subscribe(
-          data => {
-            this.progressSpinner = false;
-            let colegiado = JSON.parse(data.body).colegiadosSJCSItem;
+              if (colegiado.length > 0) {
+                this.apellidosNombre = colegiado[0].apellidos + ", " + colegiado[0].nombre;
+                this.idPersona.emit(colegiado[0].idPersona);
+                this.colegiadoForm.get("nombreAp").setValue(this.apellidosNombre);
+              } else {
+                this.apellidosNombre = "";
+                this.numColegiado = ""
+                form.numColegiado = "";
+                this.idPersona.emit("");
 
-            if (colegiado.length > 0) {
-              this.apellidosNombre = colegiado[0].apellidos+", "+colegiado[0].nombre;
-              this.idPersona.emit(colegiado[0].idPersona);
-              this.colegiadoForm.get("nombreAp").setValue(this.apellidosNombre);
-            } else {
+                this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("general.message.colegiadoNoEncontrado"));
+              }
+              this.changeValue();
+            },
+            error => {
+              this.progressSpinner = false;
               this.apellidosNombre = "";
-              this.numColegiado = ""
               form.numColegiado = "";
+              this.numColegiado = "";
               this.idPersona.emit("");
-
-              this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("general.message.colegiadoNoEncontrado"));
+              this.changeValue();
+              console.log(error);
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
             }
-            this.changeValue();
-          },
-          error => {
-            this.progressSpinner = false;
-            this.apellidosNombre = "";
-            form.numColegiado = "";
-            this.numColegiado = "";
-            this.idPersona.emit("");
-            this.changeValue();
-            console.log(error);
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-          }
-        );
-      });
+          );
+        });
+      }
     } else {
       this.progressSpinner = false;
       this.apellidosNombre = "";

@@ -141,7 +141,6 @@ export class ServiciosTramitacionComponent implements OnInit {
     this.getComboGuardia();
 
     if (this.body.idTurno != undefined && this.body.idTurno != null) this.isDisabledGuardia = false;
-    /* this.checkBusqueda(); */
 
     //Comprobamos si el colegiado fue seleccionado por art 27 o no. ES uno de los métodos más lentos del inicio
     if (this.body.apellidosYNombre != undefined && this.body.apellidosYNombre != null  && this.art27 == true) this.checkArt27();
@@ -183,15 +182,6 @@ export class ServiciosTramitacionComponent implements OnInit {
       }
     );
 
-  }
-
-  checkBusqueda() {
-    if ((this.body.idTurno != null && this.body.idGuardia != null)
-      /* || (this.body.idTurno == null &&this.body.idGuardia == null) */
-    ) {
-      /* this.disableBuscar= false; */
-    }
-    /* else this.disableBuscar=true; */
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -246,27 +236,11 @@ export class ServiciosTramitacionComponent implements OnInit {
     this.msgs = [];
   }
   getComboTurno() {
-    /*  if (this.body.tipoLetrado == "E") {
-       this.tipoLetrado = "2";
-     } else if (this.body.tipoLetrado == "D" || this.body.tipoLetrado == "A") { this.tipoLetrado = "1"; }
-     this.sigaServices.getParam("filtrosejg_comboTurno",
-       "?idTurno=" + this.tipoLetrado).subscribe(
-         n => {
-           this.comboTurno = n.combooItems;
-           this.commonServices.arregloTildesCombo(this.comboTurno);
-         },
-         err => {
-           console.log(err);
-         }
-       ); */
     this.sigaServices.getParam("componenteGeneralJG_comboTurnos", "?pantalla=EJG").subscribe(
       n => {
         this.comboTurno = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboTurno);
         if (!this.buscandoCol) this.progressSpinner = false;
-        // if((this.datosDesgina != null && this.datosDesgina != undefined) && (this.datosDesgina.idTurno != null && this.datosDesgina.idTurno != undefined)){
-        //   this.filtro.idTurno = [this.datosDesgina.idTurno];
-        // }
       },
       err => {
         if (!this.buscandoCol) this.progressSpinner = false;
@@ -274,6 +248,7 @@ export class ServiciosTramitacionComponent implements OnInit {
     );
 
   }
+
   getComboGuardia() {
     this.progressSpinner = true;
     this.sigaServices.getParam(
@@ -297,7 +272,6 @@ export class ServiciosTramitacionComponent implements OnInit {
   }
 
   clearBusqueda() {
-    /* this.checkBusqueda(); */
     //Para prevenir que un colegiado se asigne a turnos y guardias que no son suyos.
     this.usuarioBusquedaExpress = {
       numColegiado: '',
@@ -309,7 +283,6 @@ export class ServiciosTramitacionComponent implements OnInit {
   }
 
   onChangeTurnos() {
-    /* this.checkBusqueda(); */
     this.comboGuardia = [];
     this.body.idGuardia = null;
     //Para prevenir que un colegiado se asigne a turnos y guardias que no son suyos.
@@ -330,48 +303,7 @@ export class ServiciosTramitacionComponent implements OnInit {
     }
 
   }
-  //busqueda express
-  /* isBuscar() {
-    let objPersona = null;
-    if (this.body.idPersona.length != 0) {
-      this.progressSpinner = true;
-      objPersona = {
-        idPersona: this.body.idPersona,
-        idInstitucion: this.institucionActual
-      }
-      this.sigaServices.post("busquedaPer_institucion", objPersona).subscribe(
-        data => {
-          let persona = JSON.parse(data["body"]);
-          if (persona && persona.colegiadoItem) {
-            this.destinatario = persona.colegiadoItem[0];
-          } else if (persona && persona.noColegiadoItem) {
-            this.destinatario = persona.noColegiadoItem[0];
-          }
-          if (this.destinatario)
-            this.body.apellidosYNombre = this.destinatario.apellidos1 + " " + this.destinatario.apellidos2 + ", " + this.destinatario.soloNombre;
-          this.progressSpinner = false;
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = true;
-        },
-        () => {
-          //this.buscar();
-        }
-      );
-    } else {
-      this.progressSpinner = false;
-      this.body.apellidosYNombre = "";
-      // this.body.idPersona = "";
-    }
-    this.disableBuscar = false;
-  } */
 
-  /* isLimpiar() {
-    this.body.apellidosYNombre = "";
-    this.body.numColegiado = "";
-    this.body.idPersona = "";
-  } */
   checkPermisosSave() {
     let msg = this.commonServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
@@ -384,6 +316,7 @@ export class ServiciosTramitacionComponent implements OnInit {
       }
     }
   }
+
   save() {
     this.progressSpinner = true;
 
@@ -425,7 +358,6 @@ export class ServiciosTramitacionComponent implements OnInit {
       nombreAp: this.body.apellidosYNombre
     };
     this.art27 = this.initArt27;
-    /* this.checkBusqueda(); */
   }
 
 

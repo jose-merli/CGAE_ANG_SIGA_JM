@@ -63,6 +63,7 @@ export class EJGItem {
     nombre: string;
     nombreApeSolicitante: string;
     rol: string;
+    idPersonajg: string;
 
     turno: string;
     idTurno: string;
