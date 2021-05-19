@@ -29,7 +29,11 @@ export class ServiciosTramitacionComponent implements OnInit {
   destinatario: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
   disableBuscar: boolean = false;
   art27: boolean = false;
-
+  //Guarda el valor inicila de art27.
+  initArt27;
+  //Variable para que se utiliza para notificar que la busqueda de colegiado sigue en proceso 
+  //y que no se debe eliminar el progressSpiner.
+  buscandoCol: boolean = false;
 
   body: EJGItem;
   bodyInicial: EJGItem;
@@ -104,59 +108,80 @@ export class ServiciosTramitacionComponent implements OnInit {
       if (this.body.idPersona == undefined) this.body.idPersona = busquedaColegiado.idpersona;
     }
 
+    //Se comprueba si vueleve de una busqueda de colegiado
     if (sessionStorage.getItem("idTurno")) {
       this.body.idTurno = sessionStorage.getItem("idTurno");
       sessionStorage.removeItem('idTurno');
     }
 
+    //Se comprueba si vueleve de una busqueda de colegiado
     if (sessionStorage.getItem("idGuardia")) {
       this.body.idGuardia = sessionStorage.getItem("idGuardia");
       sessionStorage.removeItem('idGuardia');
     }
 
+    //Se comprueba si vueleve de una busqueda de colegiado con art 27
     if (sessionStorage.getItem('art27')) {
       sessionStorage.removeItem('art27');
       this.art27 = true;
     }
 
+    //Se comprueba si vueleve de una busqueda de colegiado
+    if (sessionStorage.getItem('tarjeta') == 'ServiciosTramit') {
+      this.abreCierraFicha('serviciosTramitacion');
+      let top = document.getElementById("serviciosTramitacion");
+      if (top) {
+        top.scrollIntoView();
+        top = null;
+      }
+      sessionStorage.removeItem('tarjeta');
+      sessionStorage.removeItem('pantalla');
+    }
+
     this.getComboGuardia();
 
-    if (this.body.idTurno != null && this.body.idTurno != undefined) this.isDisabledGuardia = false;
+    if (this.body.idTurno != undefined && this.body.idTurno != null) this.isDisabledGuardia = false;
     /* this.checkBusqueda(); */
 
-    //Si el campo de letrado no esta vacio. Comprobamos si el letrado ha sido seleccionado por
-    //el articulo 27-28 para rellenar el checkbox.
-    if (this.body.apellidosYNombre != undefined && this.body.apellidosYNombre != null ) this.checkArt27();
+    //Comprobamos si el colegiado fue seleccionado por art 27 o no. ES uno de los métodos más lentos del inicio
+    if (this.body.apellidosYNombre != undefined && this.body.apellidosYNombre != null  && this.art27 == true) this.checkArt27();
+
 
   }
 
   checkArt27() {
 
-      let datos = new ColegiadosSJCSItem();
+    let datos = new ColegiadosSJCSItem();
 
-      //Estado "Ejerciente"
-      datos.idEstado = "20";
-      datos.idInstitucion =  this.institucionActual;
-      datos.idGuardia = [];
-      datos.idTurno = [];
-      datos.idGuardia.push(this.body.idGuardia);
-      datos.idTurno.push(this.body.idTurno);
+    this.progressSpinner = true;
+    //Estado "Ejerciente"
+    datos.idEstado = "20";
+    datos.idInstitucion = this.institucionActual;
+    datos.idGuardia = [];
+    datos.idTurno = [];
+    datos.idGuardia.push(this.body.idGuardia);
+    datos.idTurno.push(this.body.idTurno);
 
-      this.sigaServices.post("componenteGeneralJG_busquedaColegiadoEJG", datos).subscribe(
-        data => {
-          this.progressSpinner = false;
-          let colegiados = JSON.parse(data.body).colegiadosSJCSItem;
+    this.buscandoCol = true;
 
-          //Se comprueba si el colegiado esta en el turno y guardia seleccionados
-          if (colegiados.length > 0) {
-            let presente = false;
-            colegiados.forEach(element => {
-              if(this.body.apellidosYNombre == element.apellidos+", "+element.nombre) presente=true;
-            });
-            if(!presente)this.art27=true;
-          }
+    this.sigaServices.post("componenteGeneralJG_busquedaColegiadoEJG", datos).subscribe(
+      data => {
+
+        let colegiados = JSON.parse(data.body).colegiadosSJCSItem;
+
+        //Se comprueba si el colegiado esta en el turno y guardia seleccionados
+        if (colegiados.length > 0) {
+          let presente = false;
+          colegiados.forEach(element => {
+            if (this.body.apellidosYNombre == element.apellidos + ", " + element.nombre) presente = true;
+          });
+          if (!presente) this.art27 = true;
         }
-      );
+        this.progressSpinner = false;
+        this.buscandoCol = false;
+        this.initArt27 = this.art27;
+      }
+    );
 
   }
 
@@ -238,20 +263,19 @@ export class ServiciosTramitacionComponent implements OnInit {
       n => {
         this.comboTurno = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboTurno);
-        this.progressSpinner = false;
-        console.log(this.comboTurno);
+        if (!this.buscandoCol) this.progressSpinner = false;
         // if((this.datosDesgina != null && this.datosDesgina != undefined) && (this.datosDesgina.idTurno != null && this.datosDesgina.idTurno != undefined)){
         //   this.filtro.idTurno = [this.datosDesgina.idTurno];
         // }
       },
       err => {
-        console.log(err);
-        this.progressSpinner = false;
+        if (!this.buscandoCol) this.progressSpinner = false;
       }
     );
 
   }
   getComboGuardia() {
+    this.progressSpinner = true;
     this.sigaServices.getParam(
       "combo_guardiaPorTurno",
       "?idTurno=" + this.body.idTurno
@@ -264,9 +288,10 @@ export class ServiciosTramitacionComponent implements OnInit {
             this.body.idGuardia = sessionStorage.getItem("idGuardia");
             sessionStorage.removeItem('idGuardia');
           }
+          if (!this.buscandoCol) this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          if (!this.buscandoCol) this.progressSpinner = false;
         }
       );
   }
@@ -371,12 +396,12 @@ export class ServiciosTramitacionComponent implements OnInit {
         if (n.statusText == "OK") {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.bodyInicial = this.body;
+          this.initArt27 = this.art27;
         }
         else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
 
       },
       err => {
-        console.log(err);
         this.progressSpinner = false;
 
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
@@ -399,6 +424,7 @@ export class ServiciosTramitacionComponent implements OnInit {
       numColegiado: this.body.numColegiado,
       nombreAp: this.body.apellidosYNombre
     };
+    this.art27 = this.initArt27;
     /* this.checkBusqueda(); */
   }
 
