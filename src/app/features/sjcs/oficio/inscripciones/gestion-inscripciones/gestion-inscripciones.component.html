@@ -109,7 +109,7 @@
           </label>
           <!-- [disabled]="!permisos || ((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledValidar || !isLetrado)" -->
           <button *ngIf="!historico" pButton
-            [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0 || (disabledValidar && isLetrado))" (click)="validar(selectedDatos)"
+            [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledValidar || isLetrado)" (click)="validar(selectedDatos)"
             type="button" label="{{ 'general.boton.validar' | translate}}"></button>
 
         </div>

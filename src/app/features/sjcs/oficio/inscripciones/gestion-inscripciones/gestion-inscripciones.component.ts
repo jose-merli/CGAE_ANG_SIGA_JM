@@ -505,7 +505,6 @@ export class TablaInscripcionesComponent implements OnInit {
     this.body.inscripcionesItem.forEach(element => {
       element.fechaActual = this.datos.fechaActual;
       element.observaciones = this.datos.observaciones;
-      // this.sigaServices.post("inscripciones_busquedaInscripciones", element).subscribe();
     });
     this.sigaServices.post("inscripciones_updateCambiarFecha", this.body).subscribe(
       data => {
@@ -775,7 +774,7 @@ export class TablaInscripcionesComponent implements OnInit {
 
     if (selectedDatos != null && selectedDatos.length != 0) {
       this.numSelected = selectedDatos.length;
-      let findDato = this.selectedDatos.find(item => item.estado != 1);
+      let findDato = this.selectedDatos.find(item => item.estado != "1");
       let currentDate = new Date();
       let currentDateString =  this.formatDateSinHora(currentDate);
       let selectedDate = this.datos.fechaActual
@@ -790,15 +789,20 @@ export class TablaInscripcionesComponent implements OnInit {
         }
         this.disabledSolicitarBaja = false;
       }
-      let findDato2 = this.selectedDatos.find(item => item.estado != 2 && item.estado != 0);
-      this.validarDirecciones(selectedDatos[0].idpersona, findDato2);
+      let findDato2 = this.selectedDatos.filter(this.esAltaOpendienteBaja);
+      if(findDato2.length == 0){
+        this.disabledValidar = true;
+      }else{
+        this.validarDirecciones(selectedDatos[0].idpersona, findDato2);
+      }
+      
       if (findDato2 != null) {
         this.disabledDenegar = true;
       }
       else {
         this.disabledDenegar = false;
       }
-      let findDato3 = this.selectedDatos.find(item => item.estado != 1 && item.estado != 2 && item.estado != 3);
+      let findDato3 = this.selectedDatos.find(item => item.estado != "1" && item.estado != 2 && item.estado != "3");
       if (findDato3 != null) {
         this.disabledCambiarFecha = true;
       }
@@ -806,6 +810,12 @@ export class TablaInscripcionesComponent implements OnInit {
         this.disabledCambiarFecha = false;
       }
     }
+  }
+
+  esAltaOpendienteBaja(item) {
+
+   return item.estado == "2" || item.estado == "1";
+
   }
 
   showMessage(severity, summary, msg) {
@@ -846,7 +856,7 @@ export class TablaInscripcionesComponent implements OnInit {
                 var index = element.tipoDireccion.indexOf("Guardia");
                 if (index != -1) {
                   this.datosContacto = element.movil;
-                  if (estado != null && this.datosContacto.length != 9) {
+                  if (this.datosContacto.length != 9) {
                     this.disabledValidar = true;
                   }
                   else {
