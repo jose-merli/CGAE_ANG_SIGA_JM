@@ -1,6 +1,7 @@
 export class DocumentoDesignaItem {
     idDocumentaciondes: string;
     idTipodocumento: string;
+    nombreTipoDocumento: string;
     idFichero: string;
     idInstitucion: string;
     idTurno: string;

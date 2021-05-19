@@ -3,16 +3,15 @@ import { Location, DatePipe } from '@angular/common';
 import { ActuacionDesignaItem } from '../../../../../../../models/sjcs/ActuacionDesignaItem';
 import { SigaServices } from '../../../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../../../commons/translate/translation.service';
-import { ColegiadoItem } from '../../../../../../../models/ColegiadoItem';
 import { DesignaItem } from '../../../../../../../models/sjcs/DesignaItem';
 import { AccionItem } from './tarjeta-his-ficha-act/tarjeta-his-ficha-act.component';
 import { Message } from 'primeng/components/common/api';
 import { ActuacionDesignaObject } from '../../../../../../../models/sjcs/ActuacionDesignaObject';
-import { DocumentoActDesignaObject } from '../../../../../../../models/sjcs/DocumentoActDesignaObject';
-import { DocumentoActDesignaItem } from '../../../../../../../models/sjcs/DocumentoActDesignaItem';
 import { Actuacion } from '../detalle-tarjeta-actuaciones-designa.component';
 import { SigaStorageService } from '../../../../../../../siga-storage.service';
 import { TurnosItem } from '../../../../../../../models/sjcs/TurnosItem';
+import { DocumentoDesignaItem } from '../../../../../../../models/sjcs/DocumentoDesignaItem';
+import { DocumentoDesignaObject } from '../../../../../../../models/sjcs/DocumentoDesignaObject';
 
 export class UsuarioLogado {
   idPersona: string;
@@ -155,7 +154,7 @@ export class FichaActuacionComponent implements OnInit {
   msgs: Message[] = [];
   relaciones: any;
   isColegiado;
-  documentos: DocumentoActDesignaItem[] = [];
+  documentos: DocumentoDesignaItem[] = [];
   modoLectura: boolean = false;
   permiteTurno: boolean;
 
@@ -509,14 +508,15 @@ export class FichaActuacionComponent implements OnInit {
     let params = {
       anio: this.actuacionDesigna.actuacion.anio,
       numero: this.actuacionDesigna.actuacion.numero,
+      idTurno: this.actuacionDesigna.actuacion.idTurno,
       idActuacion: this.actuacionDesigna.actuacion.numeroAsunto
     };
 
-    this.sigaServices.post("actuaciones_designacion_getDocumentosPorActDesigna", params).subscribe(
+    this.sigaServices.post("designacion_getDocumentosPorDesigna", params).subscribe(
       data => {
 
-        let resp: DocumentoActDesignaObject = JSON.parse(data.body);
-        this.documentos = resp.listaDocumentoActDesignaItem;
+        let resp: DocumentoDesignaObject = JSON.parse(data.body);
+        this.documentos = resp.listaDocumentoDesignaItem;
 
         if (this.documentos != undefined && this.documentos != null) {
 
