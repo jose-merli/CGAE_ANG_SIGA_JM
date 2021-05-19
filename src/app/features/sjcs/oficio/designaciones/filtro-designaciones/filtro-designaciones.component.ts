@@ -754,7 +754,8 @@ getComboCalidad() {
       && this.usuarioBusquedaExpress.numColegiado.trim().length!=0){
       return true;
     }else{
-      this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.oficio.justificacionExpres.message.ncolegiadoObligatorio"));
+      this.showMessage("error", "Error",
+       this.translateService.instant("general.message.camposObligatorios"));
       return false;
     }
   }

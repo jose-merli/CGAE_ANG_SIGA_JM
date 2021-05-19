@@ -83,7 +83,6 @@ export class DesignacionesComponent implements OnInit {
             error = this.datosJustificacion[0].error;
           }
         }
-
         this.muestraTablaJustificacion=true;
 
         if (error != null && error.description != null) {
