@@ -196,8 +196,8 @@ import { DestinatariosRetencionesComponent } from './features/sjcs/maestros/dest
 import { SolicitudesTurnosGuardiasComponent } from './features/sjcs/oficio/solicitudesTurnosGuardias/solicitudesTurnosGuardias.component';
 import { DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-datos-adicionales-designa/detalle-tarjeta-datos-adicionales-ficha-designacion-oficio.component';
 import { DetalleTarjetaContrariosFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-contrarios-designa/detalle-tarjeta-contrarios-ficha-designacion-oficio.component';
-import{ DetalleTarjetaInteresadosFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-interesados-designa/detalle-tarjeta-interesados-ficha-designacion-oficio.component';
-import{ DetalleTarjetaLetradosDesignaComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/detalle-tarjeta-letrados-designa.component';
+import { DetalleTarjetaInteresadosFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-interesados-designa/detalle-tarjeta-interesados-ficha-designacion-oficio.component';
+import { DetalleTarjetaLetradosDesignaComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/detalle-tarjeta-letrados-designa.component';
 
 import { GuardiasSolicitudesTurnosComponent } from './features/sjcs/guardia/solicitudes-turnos/solicitudes-turnos.component';
 import { GuardiasIncompatibilidadesComponent } from './features/sjcs/guardia/guardias-incompatibilidades/guardias-incompatibilidades.component';
@@ -429,6 +429,21 @@ import { TarjetaRelFichaActComponent } from './features/sjcs/oficio/designacione
 import { DetalleTarjetaRelacionesDesignaComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-relaciones-designa/detalle-tarjeta-relaciones-designa.component';
 import { DetalleTarjetaComunicacionesDesignaComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-comunicaciones-designa/detalle-tarjeta-comunicaciones-designa.component';
 import { TablaResultadoMixDocDesigService } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-documentacion-designa/tabla-resultado-mix-doc-desig.service';
+import { ImpugnacionComponent } from './features/sjcs/ejg/gestion-ejg/impugnacion/impugnacion.component';
+import { ResolucionComponent } from './features/sjcs/ejg/gestion-ejg/resolucion/resolucion.component';
+import { InformeCalificacionComponent } from './features/sjcs/ejg/gestion-ejg/informe-calificacion/informe-calificacion.component';
+import { DocumentacionComponent } from './features/sjcs/ejg/gestion-ejg/documentacion/documentacion.component';
+import { EstadosComponent } from './features/sjcs/ejg/gestion-ejg/estados/estados.component';
+import { RelacionesComponent } from './features/sjcs/ejg/gestion-ejg/relaciones/relaciones.component';
+import { ExpedientesEconomicosComponent } from './features/sjcs/ejg/gestion-ejg/expedientes-economicos/expedientes-economicos.component';
+import { ServiciosTramitacionComponent } from './features/sjcs/ejg/gestion-ejg/servicios-tramitacion/servicios-tramitacion.component';
+import { UnidadFamiliarComponent } from './features/sjcs/ejg/gestion-ejg/unidad-familiar/unidad-familiar.component';
+import { DatosGeneralesEjgComponent } from './features/sjcs/ejg/gestion-ejg/datos-generales-ejg/datos-generales-ejg.component';
+import { EJGComponent } from './features/sjcs/ejg/ejg.component';
+import { TablaEjgComponent } from './features/sjcs/ejg/tabla-ejg/tabla-ejg.component';
+import { FiltrosEjgComponent } from './features/sjcs/ejg/filtros-busqueda-ejg/filtros-ejg.component';
+import { GestionEjgComponent } from './features/sjcs/ejg/gestion-ejg/gestion-ejg.component';
+import { AddExpedienteComponent } from './features/sjcs/ejg/gestion-ejg/datos-generales-ejg/add-expediente/add-expediente.component';
 
 @NgModule({
 	declarations: [
@@ -573,7 +588,26 @@ import { TablaResultadoMixDocDesigService } from './features/sjcs/oficio/designa
 		GuardiasCentralitaComponent,
 		VolanteExpresComponent,
 		SOJComponent,
+		//EJG
 		// EJGComponent,
+		FiltrosEjgComponent,
+		TablaEjgComponent,
+		EJGComponent,
+		GestionEjgComponent,
+		DatosGeneralesEjgComponent,
+		ServiciosTramitacionComponent,
+		UnidadFamiliarComponent,
+		ExpedientesEconomicosComponent,
+		RelacionesComponent,
+		EstadosComponent,
+		DocumentacionComponent,
+		InformeCalificacionComponent,
+		ResolucionComponent,
+		ImpugnacionComponent,
+		/* RegtelComponent, */
+		ComunicacionesComponent,
+		AddExpedienteComponent,
+		
 		GestionActasComponent,
 		MantenimientoFacturacionComponent,
 		PrevisionesComponent,

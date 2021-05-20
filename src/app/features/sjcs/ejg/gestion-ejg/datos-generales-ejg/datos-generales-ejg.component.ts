@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { MultiSelect } from 'primeng/multiselect';
 import { noComponentFactoryError } from '@angular/core/src/linker/component_factory_resolver';
 
+
 @Component({
   selector: 'app-datos-generales-ejg',
   templateUrl: './datos-generales-ejg.component.html',
@@ -31,6 +32,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
   nuevoBody: EJGItem = new EJGItem();
   msgs = [];
   nuevo;
+  url=null;
   textSelected: String = '{0} opciones seleccionadas';
   tipoEJGDesc = "";
   comboTipoEJG = [];
@@ -114,6 +116,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
     });
+    if(this.body.anioexpInsos!= null && this.body.anioexpInsos != undefined) this.isdisabledAddExp = true;
 
   }
 
@@ -416,10 +419,12 @@ export class DatosGeneralesEjgComponent implements OnInit {
       this.asociarDes();
     }
   }
+
   asociarDes() {
     this.persistenceService.clearDatos();
     this.router.navigate(["/gestionEjg"]);
   }
+
   checkPermisosCreateDes() {
     let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
@@ -428,21 +433,42 @@ export class DatosGeneralesEjgComponent implements OnInit {
       this.createDes();
     }
   }
+
   createDes() {
     this.persistenceService.clearDatos();
     this.router.navigate(["/gestionEjg"]);
   }
+
   checkPermisosAddExp() {
     let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
     } else {
+      //Comprobamos si el EJG tiene una designacion asociada
+      //if(this.body.numDesigna != undefined && this.body.numDesigna != null) this.addExp();
+      //else this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('justiciaGratuita.ejg.datosGenerales.noDesignaEjg') }];
       this.addExp();
     }
   }
+
+
   addExp() {
-    this.persistenceService.clearDatos();
-    this.router.navigate(["/gestionEjg"]);
+    let us = undefined;
+      us =
+        this.sigaServices.getOldSigaUrl() +
+        "JGR_MantenimientoEJG.do?codigoDesignaNumEJG="+this.body.numEjg+"&numeroEJG="+this.body.numEjg+"&idTipoEJG="+this.body.tipoEJG+
+        "&idInstitucionEJG="+this.body.idInstitucion+"&anioEJG="+this.body.annio+"&actionE=/JGR_InteresadoEJG.do&" +
+        "localizacionE=gratuita.busquedaEJG.localizacion&tituloE=pestana.justiciagratuitaejg.solicitante&idInstitucionJG="+this.institucionActual+"&idPersonaJG="+this.body.idPersonajg+"&conceptoE=EJG&"+
+        "NUMERO="+this.body.numero+"&ejgNumEjg="+this.body.numEjg+"&IDTIPOEJG="+this.body.tipoEJG+"&ejgAnio="+this.body.annio+"&accionE=editar&IDINSTITUCION="+this.institucionActual+"&solicitante=JOSE%20LUIS%20ALGBJL%20ZVQNDSMF&ANIO="+this.body.annio+"";
+    
+
+    sessionStorage.setItem("url", JSON.stringify(us));
+    sessionStorage.removeItem("reload");
+    sessionStorage.setItem("reload", "si");
+    //sessionStorage.setItem("idInstitucionFichaColegial", this.body.idInstitucion);
+
+    this.url="";
+    this.router.navigate(["/addExp"]);
   }
 
   styleObligatorio(evento) {

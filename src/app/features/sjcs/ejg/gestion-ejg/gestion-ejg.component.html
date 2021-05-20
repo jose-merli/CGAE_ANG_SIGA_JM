@@ -38,12 +38,13 @@
         <app-impugnacion *ngIf="permisoEscrituraImpugnacion != undefined && body != undefined" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaImpugnacion]="tarjetaImpugnacion" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraImpugnacion" (modoEdicionSend)="modoEdicionSend($event)" [openTarjetaImpugnacion]="openTarjetaImpugnacion">
         </app-impugnacion>
         
-        <app-regtel *ngIf="permisoEscrituraRegtel != undefined && body != undefined"(opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaRegtel]="tarjetaRegtel"  [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraRegtel" (modoEdicionSend)="modoEdicionSend($event)" [openTarjetaRegtel]="openTarjetaRegtel">
-        </app-regtel>
+        <!-- <app-regtel *ngIf="permisoEscrituraRegtel != undefined && body != undefined"(opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaRegtel]="tarjetaRegtel"  [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraRegtel" (modoEdicionSend)="modoEdicionSend($event)" [openTarjetaRegtel]="openTarjetaRegtel">
+        </app-regtel> -->
         
-        <app-comunicaciones *ngIf="permisoEscrituraComunicaciones != undefined && body != undefined" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaComunicaciones]="tarjetaComunicaciones" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraComunicaciones" (modoEdicionSend)="modoEdicionSend($event)">
-        </app-comunicaciones>
+        <!-- <app-comunicaciones *ngIf="permisoEscrituraComunicaciones != undefined && body != undefined" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaComunicaciones]="tarjetaComunicaciones" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraComunicaciones" (modoEdicionSend)="modoEdicionSend($event)">
+        </app-comunicaciones> -->
     </div>
+
 </div>
 <div class="mt-3 text-right main-button" id="down">
     <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate }}"></button>

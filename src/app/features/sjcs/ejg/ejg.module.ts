@@ -35,7 +35,7 @@ import { DocumentacionComponent } from './gestion-ejg/documentacion/documentacio
 import { InformeCalificacionComponent } from './gestion-ejg/informe-calificacion/informe-calificacion.component';
 import { ResolucionComponent } from './gestion-ejg/resolucion/resolucion.component';
 import { ImpugnacionComponent } from './gestion-ejg/impugnacion/impugnacion.component';
-import { RegtelComponent } from './gestion-ejg/regtel/regtel.component';
+/* import { RegtelComponent } from './gestion-ejg/regtel/regtel.component'; */
 import { ComunicacionesComponent } from './gestion-ejg/comunicaciones/comunicaciones.component';
 import { DialogModule } from 'primeng/dialog';
 
@@ -63,7 +63,7 @@ import { DialogModule } from 'primeng/dialog';
 
   ],
   declarations: [
-    FiltrosEjgComponent,
+    /* FiltrosEjgComponent,
     TablaEjgComponent,
     EJGComponent,
     GestionEjgComponent,
@@ -78,7 +78,7 @@ import { DialogModule } from 'primeng/dialog';
     ResolucionComponent,
     ImpugnacionComponent,
     RegtelComponent,
-    ComunicacionesComponent
+    ComunicacionesComponent */
   ],
   providers: [
     ImagePipe,

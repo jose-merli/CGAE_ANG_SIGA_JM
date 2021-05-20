@@ -139,7 +139,6 @@ export class TablaEjgComponent implements OnInit {
         this.commonServices.scrollTop();
       },
       err => {
-        console.log(err);
         this.commonServices.scrollTop();
       }
     );

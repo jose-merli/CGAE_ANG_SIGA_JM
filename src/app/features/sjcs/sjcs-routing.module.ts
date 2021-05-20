@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { GestionEjgComponent } from './ejg/gestion-ejg/gestion-ejg.component';
 import { AuthGuard } from '../../_guards/auth.guards';
+import{ AddExpedienteComponent } from './ejg/gestion-ejg/datos-generales-ejg/add-expediente/add-expediente.component';
 
 const routesSjcs: Routes = [
 	{
@@ -75,6 +76,11 @@ const routesSjcs: Routes = [
 	{
 		path: 'gestionEjg',
 		component: GestionEjgComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'addExp',
+		component: AddExpedienteComponent,
 		canActivate: [AuthGuard]
 	},
 	{
