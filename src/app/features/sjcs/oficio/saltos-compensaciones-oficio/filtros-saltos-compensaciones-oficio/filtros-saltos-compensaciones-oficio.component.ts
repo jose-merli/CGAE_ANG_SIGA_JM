@@ -55,15 +55,17 @@ export class FiltrosSaltosCompensacionesOficioComponent implements OnInit {
 
     this.getComboTurno();
 
-    if (sessionStorage.getItem("filtrosSaltosCompOficio") && !this.isNewFromOtherPage) {
+    if (sessionStorage.getItem("filtrosSaltosCompOficio") && sessionStorage.getItem("volver") == 'true') {
 
       this.filtros = JSON.parse(sessionStorage.getItem("filtrosSaltosCompOficio"));
+      this.usuarioBusquedaExpress.numColegiado = sessionStorage.getItem("numColegiado");
 
       if (sessionStorage.getItem("historicoSaltosCompOficio")) {
         this.historico = "true" == sessionStorage.getItem("historicoSaltosCompOficio");
       }
       this.isBuscar.emit(this.historico)
-
+      sessionStorage.removeItem("volver");
+      sessionStorage.removeItem("numColegiado");
     }
 
     if (sessionStorage.getItem('buscadorColegiados')) {
