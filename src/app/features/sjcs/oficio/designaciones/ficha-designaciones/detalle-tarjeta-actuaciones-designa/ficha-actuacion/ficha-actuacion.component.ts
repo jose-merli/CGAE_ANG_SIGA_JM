@@ -188,6 +188,7 @@ export class FichaActuacionComponent implements OnInit {
   cargaInicial() {
 
     if (this.actuacionDesigna.isNew) {
+      this.tarjetaFija.campos[0].value = this.actuacionDesigna.designaItem.ano;
       this.isNewActDesig = true;
       this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiDatosGen').opened = true;
     } else {
