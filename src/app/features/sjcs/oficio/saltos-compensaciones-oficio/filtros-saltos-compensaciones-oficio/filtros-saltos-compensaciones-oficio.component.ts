@@ -118,6 +118,7 @@ export class FiltrosSaltosCompensacionesOficioComponent implements OnInit {
 
   search() {
     this.filtros.colegiadoGrupo = this.usuarioBusquedaExpress.numColegiado;
+    sessionStorage.setItem("numColegiado", this.usuarioBusquedaExpress.numColegiado);
 
     if (this.filtros.fechaDesde != undefined && this.filtros.fechaDesde != null && this.filtros.fechaDesde != '') {
       this.filtros.fechaDesde = this.formatDate(this.filtros.fechaDesde);

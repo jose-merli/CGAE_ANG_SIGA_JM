@@ -719,6 +719,7 @@ export class FichaInscripcionesComponent implements OnInit {
 	}
 	  
 	backTo() {
+		sessionStorage.setItem("volver", "true");
 		this.location.back();
 	}
 }

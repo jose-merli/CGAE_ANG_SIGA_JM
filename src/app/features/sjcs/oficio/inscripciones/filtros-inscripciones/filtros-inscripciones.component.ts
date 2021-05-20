@@ -95,11 +95,16 @@ export class FiltrosInscripciones implements OnInit {
     ).catch(error => console.error(error));
 
     if (
-      sessionStorage.getItem("filtrosInscripciones") != null
+      sessionStorage.getItem("filtrosInscripciones") != null && sessionStorage.getItem("volver") == "true"
     ) {
       this.filtros = JSON.parse(
         sessionStorage.getItem("filtrosInscripciones")
       );
+      this.usuarioBusquedaExpress.numColegiado = sessionStorage.getItem("numColegiado");
+
+      sessionStorage.removeItem("volver");
+      sessionStorage.removeItem("numColegiado");
+
       if(this.filtros.fechadesde!=undefined && this.filtros.fechadesde != null){
         this.filtros.fechadesde = new Date(this.filtros.fechadesde);
       }
@@ -277,6 +282,7 @@ export class FiltrosInscripciones implements OnInit {
       this.buscar=true;
       this.persistenceService.setFiltros(this.filtros);
       this.persistenceService.setFiltrosAux(this.filtros);
+      sessionStorage.setItem("numColegiado", this.usuarioBusquedaExpress.numColegiado);
       this.filtroAux = this.persistenceService.getFiltrosAux();
       sessionStorage.setItem(
         "filtrosInscripciones",
