@@ -70,6 +70,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
   isBuscar(form) {
     if (form.numColegiado != undefined && form.numColegiado != null && form.numColegiado.length != 0) {
       this.progressSpinner = true;
+      sessionStorage.setItem("numColegiado", form.numColegiado);
 
       this.sigaServices.getParam("componenteGeneralJG_busquedaColegiado", "?colegiadoJGItem=" + form.numColegiado).subscribe(
         data => {
