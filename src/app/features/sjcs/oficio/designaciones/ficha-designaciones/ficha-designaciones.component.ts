@@ -237,16 +237,50 @@ export class FichaDesignacionesComponent implements OnInit {
     this.numColegiadoLogado = this.localStorageService.numColegiado;
 
     this.checkAcceso();
-    if (!this.esColegiado) {
-      // this.listaTarjetas[1].detalle = false;
-      // this.listaTarjetas[2].detalle = false;
-      // this.listaTarjetas[3].detalle = false;
-      // this.listaTarjetas[11].detalle = false;
-    }
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
     let designaItem = JSON.parse(sessionStorage.getItem("designaItemLink"));
-    this.campos = designaItem;
+    if(designaItem == null){
+      this.campos = new DesignaItem();
+    }else{
+      this.campos = designaItem;
+    }
+    if (sessionStorage.getItem('refreshDataAct')) {
+      let dataRefresh: ActuacionDesignaItem = JSON.parse(sessionStorage.getItem('refreshDataAct'));
 
+      if (this.campos.nig == undefined || this.campos.nig == null || this.campos.nig.trim().length == 0) {
+        this.campos.nig = dataRefresh.nig;
+      }
+
+      if (this.campos.numProcedimiento == undefined || this.campos.numProcedimiento == null || this.campos.numProcedimiento.trim().length == 0) {
+        this.campos.numProcedimiento = dataRefresh.numProcedimiento;
+      }
+
+      if (this.campos.idJuzgado == undefined || this.campos.idJuzgado == null || this.campos.idJuzgado == 0) {
+        this.campos.idJuzgado = Number(dataRefresh.idJuzgado);
+      }
+
+      if (this.campos.idModulos == undefined || this.campos.idModulos == null) {
+        this.campos.idModulo = dataRefresh.idProcedimiento;
+      }
+
+      if (this.campos.idProcedimiento == undefined || this.campos.idProcedimiento == null || this.campos.idProcedimiento == 0) {
+        this.campos.idProcedimiento = Number(dataRefresh.idPretension);
+      }
+
+      if (this.campos.nombreJuzgado == undefined || this.campos.nombreJuzgado == null || this.campos.nombreJuzgado.trim().length == 0) {
+        this.campos.nombreJuzgado = dataRefresh.nombreJuzgado;
+      }
+
+      if (this.campos.nombreProcedimiento == undefined || this.campos.nombreProcedimiento == null || this.campos.nombreProcedimiento.trim().length == 0) {
+        this.campos.nombreProcedimiento = dataRefresh.nombreProcedimiento;
+      }
+
+      if (this.campos.modulo == undefined || this.campos.modulo == null || this.campos.modulo.trim().length == 0) {
+        this.campos.modulo = dataRefresh.nombreModulo;
+      }
+
+      sessionStorage.removeItem('refreshDataAct');
+    }
 
     this.motivosRenuncia();
 
@@ -554,33 +588,7 @@ export class FichaDesignacionesComponent implements OnInit {
 
       this.progressSpinner = false;
     }
-
-    if (sessionStorage.getItem('refreshDataAct')) {
-      let dataRefresh: ActuacionDesignaItem = JSON.parse(sessionStorage.getItem('refreshDataAct'));
-
-      if (this.campos.nig == undefined || this.campos.nig == null || this.campos.nig.trim().length == 0) {
-        this.campos.nig = dataRefresh.nig;
-      }
-
-      if (this.campos.numProcedimiento == undefined || this.campos.numProcedimiento == null || this.campos.numProcedimiento.trim().length == 0) {
-        this.campos.numProcedimiento = dataRefresh.numProcedimiento;
-      }
-
-      if (this.campos.idJuzgado == undefined || this.campos.idJuzgado == null) {
-        this.campos.idJuzgado = Number(dataRefresh.idJuzgado);
-      }
-
-      if (this.campos.idModulos == undefined || this.campos.idModulos == null) {
-        this.campos.idModulos = [dataRefresh.idProcedimiento];
-      }
-
-      if (this.campos.idProcedimiento == undefined || this.campos.idProcedimiento == null) {
-        this.campos.idProcedimiento = Number(dataRefresh.idPretension);
-      }
-
-      sessionStorage.removeItem('refreshDataAct');
-    }
-
+    
     this.progressSpinner = false;
   }
 

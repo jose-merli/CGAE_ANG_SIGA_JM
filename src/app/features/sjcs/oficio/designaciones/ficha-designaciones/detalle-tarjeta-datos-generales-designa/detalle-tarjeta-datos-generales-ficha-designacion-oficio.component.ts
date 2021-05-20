@@ -698,6 +698,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       }, () => {
         this.progressSpinner = false;
         setTimeout(() => {
+          sessionStorage.setItem("designaItemLink", JSON.stringify(this.nuevaDesignaCreada));
           this.actualizaFicha.emit(this.nuevaDesignaCreada);
         }, 5);
       });;
