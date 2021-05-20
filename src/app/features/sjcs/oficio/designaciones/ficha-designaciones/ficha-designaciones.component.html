@@ -77,6 +77,7 @@
                                     <div *ngIf="tarj.nombre == 'Documentación'">
                                         <app-detalle-tarjeta-documentacion-ficha-designacion-oficio
                                             [documentos]="documentos" [campos]="campos" [isLetrado]="isLetrado"
+                                            [actuacionesDesignaItems]="actuacionesDesignaItems"
                                             (buscarDocDesignaEvent)="getDocumentosDesigna()">
                                         </app-detalle-tarjeta-documentacion-ficha-designacion-oficio>
                                     </div>

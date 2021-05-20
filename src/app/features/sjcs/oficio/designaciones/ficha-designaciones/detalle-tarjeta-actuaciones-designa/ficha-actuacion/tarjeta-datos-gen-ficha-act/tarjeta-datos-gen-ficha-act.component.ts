@@ -544,7 +544,9 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     this.datos.inputNumPro.value = this.actuacionDesigna.designaItem.numProcedimiento;
     this.datos.selectores[0].value = this.actuacionDesigna.designaItem.idJuzgado.toString();
     this.datos.selectores[1].value = this.actuacionDesigna.designaItem.idPretension.toString();
-    this.datos.selectores[3].value = this.actuacionDesigna.designaItem.idProcedimiento.toString();
+    if (this.actuacionDesigna.designaItem.idProcedimiento != null) {
+      this.datos.selectores[3].value = this.actuacionDesigna.designaItem.idProcedimiento.toString();
+    }
   }
 
   establecerDatosInicialesEditAct() {

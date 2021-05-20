@@ -33,7 +33,7 @@
   <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
     <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
 
-      <td class="text-center" *ngFor="let col of columns">
+      <td style="text-align: center !important;" *ngFor="let col of columns">
 
         <span *ngIf="col.field == 'observaciones'">
           <textarea class="form-control" pInputTextarea [(ngModel)]="dato[col.field]"></textarea>
