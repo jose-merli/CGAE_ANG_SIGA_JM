@@ -10,6 +10,7 @@ import { ParametroItem } from '../../../../../../../../models/ParametroItem';
 import { ParametroRequestDto } from '../../../../../../../../models/ParametroRequestDto';
 import { SigaStorageService } from '../../../../../../../../siga-storage.service';
 import { UsuarioLogado } from '../ficha-actuacion.component';
+import { DesignaItem } from '../../../../../../../../models/sjcs/DesignaItem';
 
 export interface ComboItemAcreditacion {
   label: string;
@@ -149,6 +150,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
   progressSpinner: boolean = false;
   fechaEntradaInicioDate: Date;
   fechaMaxima: Date;
+  designaItem: DesignaItem;
 
   constructor(private commonsService: CommonsService,
     private sigaServices: SigaServices,
@@ -158,6 +160,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
 
   ngOnInit() {
     this.getParametro();
+    this.designaItem = JSON.parse(sessionStorage.getItem("designaItemLink"));
   }
 
   cargaInicial() {
@@ -568,7 +571,6 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
   }
 
   guardarAction() {
-
     if (this.actuacionDesigna.isNew) {
       this.guardarEvent();
     } else {
@@ -600,6 +602,15 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
       params.idAcreditacion = this.datos.selectores.find(el => el.id == 'acreditacion').value;
       params.idPrision = this.datos.selectores.find(el => el.id == 'prision').value;
       params.idPersonaColegiado = this.idPersonaColegiado;
+      if(params.idJuzgado != undefined && params.idJuzgado != null ){
+        params.nombreJuzgado = this.datos.selectores[0].opciones.find(el => el.value == params.idJuzgado).label;
+      }
+      if(params.idPretension != undefined && params.idPretension != null ){
+        params.nombreProcedimiento = this.datos.selectores[1].opciones.find(el => el.value == params.idPretension).label;
+      }
+      if(params.idProcedimiento != undefined && params.idProcedimiento != null ){
+        params.nombreModulo = this.datos.selectores[3].opciones.find(el => el.value == params.idProcedimiento).label;
+      }
 
       this.sigaServices.post("actuaciones_designacion_guardar", params).subscribe(
         data => {
@@ -654,7 +665,15 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
       params.idPrision = this.datos.selectores.find(el => el.id == 'prision').value;
       params.idPersonaColegiado = this.idPersonaColegiado;
       params.numeroAsunto = this.actuacionDesigna.actuacion.numeroAsunto;
-
+      if(params.idJuzgado != undefined && params.idJuzgado != null ){
+        params.nombreJuzgado = this.datos.selectores[0].opciones.find(el => el.value == params.idJuzgado).label;
+      }
+      if(params.idPretension != undefined && params.idPretension != null ){
+        params.nombreProcedimiento = this.datos.selectores[1].opciones.find(el => el.value == params.idPretension).label;
+      }
+      if(params.idProcedimiento != undefined && params.idProcedimiento != null ){
+        params.nombreModulo = this.datos.selectores[3].opciones.find(el => el.value == params.idProcedimiento).label;
+      }
       this.sigaServices.post("actuaciones_designacion_editar", params).subscribe(
         data => {
           let resp = JSON.parse(data.body);
