@@ -21,6 +21,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
   @Input() modoEdicion;
   @Input() permisoEscritura;
   @Input() tarjetaDatosGenerales: string;
+  @Input() art27;
   @Output() modoEdicionSend = new EventEmitter<any>();
   @Output() guardadoSend = new EventEmitter<any>();
 
@@ -421,8 +422,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
   }
 
   asociarDes() {
-    this.persistenceService.clearDatos();
-    this.router.navigate(["/gestionEjg"]);
+    this.router.navigate(["/busquedaAsuntos"]);
   }
 
   checkPermisosCreateDes() {
@@ -435,8 +435,10 @@ export class DatosGeneralesEjgComponent implements OnInit {
   }
 
   createDes() {
-    this.persistenceService.clearDatos();
-    this.router.navigate(["/gestionEjg"]);
+    sessionStorage.setItem("EJG",  JSON.stringify(this.body));
+    sessionStorage.setItem("nuevaDesigna",  "true");
+    if(this.art27) sessionStorage.setItem("Art27",  "true");
+    this.router.navigate(["/fichaDesignaciones"]);
   }
 
   checkPermisosAddExp() {

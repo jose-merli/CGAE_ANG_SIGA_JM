@@ -8,6 +8,8 @@ import { ActuacionDesignaObject } from '../../../../../../models/sjcs/ActuacionD
 import { DesignaItem } from '../../../../../../models/sjcs/DesignaItem';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
+import { PersistenceService } from '../../../../../../_services/persistence.service';
+import { EJGItem } from '../../../../../../models/sjcs/EJGItem';
 
 @Component({
   selector: 'app-detalle-tarjeta-datos-generales-ficha-designacion-oficio',
@@ -25,6 +27,8 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
   initDatos: any;
   disableButtons: boolean;
   progressSpinner: boolean;
+  datosEJG: EJGItem;
+
   @Input() campos;
   @Input() selectedValue;
   @Output() refreshDataGenerales = new EventEmitter<DesignaItem>();
@@ -73,7 +77,9 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     disable: false
   }];
 
-  constructor(private sigaServices: SigaServices, private datePipe: DatePipe, private commonsService: CommonsService, private confirmationService: ConfirmationService, private translateService: TranslateService, private router: Router) {
+  constructor(private sigaServices: SigaServices, private datePipe: DatePipe, private commonsService: CommonsService, 
+    private confirmationService: ConfirmationService, private translateService: TranslateService, private router: Router,
+    private persistenceService: PersistenceService) {
   }
 
   ngOnInit() {
@@ -181,6 +187,46 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     if (this.selectores[1].value = "") {
       this.selectores[1].value = "";
     }
+    //Se comprueba si se procede de la pantalla de gestion de EJG
+    if (sessionStorage.getItem("EJG")) {
+      this.datosEJG =JSON.parse(sessionStorage.getItem("EJG"));
+      
+
+      //Datos de la tarjeta datos generales
+      //Comprobar art 27.
+      if(sessionStorage.getItem("Art27")){
+        this.checkArt = true;
+        sessionStorage.removeItem("Art27");
+      }
+      if(this.inputs[0].value == undefined){
+        this.inputs[0].value = "";
+        this.inputs[1].value = "";
+        this.inputs[2].value = "";
+      }
+      if(this.datosEJG.apellidosYNombre!=undefined && this.datosEJG.apellidosYNombre!=null) {
+        if(!this.checkArt){
+        this.sigaServices.post("designaciones_searchAbogadoByIdPersona", this.datosEJG.idPersona).subscribe(
+          n => {
+            let data = JSON.parse(n.body).colegiadoItem;
+            this.inputs[0].value = data.numColegiado;
+          },
+          err => {
+            this.progressSpinner = false;
+          });
+        }
+          let colegiado = this.datosEJG.apellidosYNombre.split(", ")
+            this.inputs[1].value = colegiado[0];
+            this.inputs[2].value = colegiado[1];
+      }
+      
+      //Los valores y bloqueo del turno y del tipo se determinan en los combos correspondientes.
+
+      //Comprobar que fechaapertura es lo mismo que fechagenerales.
+      this.fechaGenerales = new Date(this.datosEJG.fechaApertura);
+      /* this.anio.value = this.datosEJG.annio;
+      this.numero.value = this.datosEJG.numEjg; */
+     
+    }
     this.getComboTurno();
     this.getComboTipoDesignas();
   }
@@ -194,6 +240,14 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         if (datosGeneralesDesigna != null && datosGeneralesDesigna != undefined) {
           this.selectores[1].value = datosGeneralesDesigna[1];
         }
+        //Condicion pensada para que se aplique cuando se crea una designacion desde EJG
+        if(this.datosEJG != undefined && this.datosEJG != null){
+          if(this.datosEJG.tipoEJGColegio !=null){
+            this.selectores[1].value = this.datosEJG.tipoEJGColegio;
+            this.selectores[1].disable = true;
+          }
+          else this.selectores[1].value="";
+        }
         this.progressSpinner = false;
       },
       err => {
@@ -205,7 +259,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       }
     );
   }
-
+  
 
   getComboTurno() {
     this.progressSpinner = true;
@@ -216,6 +270,14 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         if (datosGeneralesDesigna != null && datosGeneralesDesigna != undefined) {
           this.selectores[0].value = datosGeneralesDesigna[0];
           this.checkArt = datosGeneralesDesigna[2];
+        }
+        //Condicion pensada para que se aplique cuandose crea una designacion desde EJG
+        if(this.datosEJG != undefined && this.datosEJG != null){
+          if(this.datosEJG.idTurno !=null){
+            this.selectores[0].value = this.datosEJG.idTurno;
+            this.selectores[0].disable = true;
+          }
+          else this.selectores[0].value="";
         }
         this.progressSpinner = false;
       },
@@ -254,7 +316,8 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     if (detail == "save" && (this.inputs[0].value == "" || this.inputs[0].value == undefined)) {
       this.confirmarActivar(severity, summary, detail);
     } else {
-      if (detail == "save" && this.anio.value == "") {
+      
+      if (detail == "save" && (this.anio.value == "") ) {
         detail = "Guardar";
         let newDesigna = new DesignaItem();
         var idTurno: number = +this.selectores[0].value;
@@ -286,6 +349,33 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
               newDesignaRfresh.ano = newDesigna.ano;
               newDesignaRfresh.codigo = newId.id;
               newDesignaRfresh.idTurnos = [String(newDesigna.idTurno)];
+
+              //Introducimos aqui la asocion con EJG en el caso que venga de una ficha EJG
+              if(this.datosEJG != null && this.datosEJG != undefined){
+
+                //Realizamos un a peticion con un array strings sin determinar un objeto a medida ya que se considera que  
+                //el uso puntual de este servicio lo justufica.
+                let request= [newDesigna.ano.toString(), this.datosEJG.annio, this.datosEJG.tipoEJG, newDesigna.idTurno.toString(), newId.id, this.datosEJG.numero];
+                
+                this.sigaServices.post("designacion_asociarEjgDesigna", request).subscribe(
+                  m => {
+                    
+                    if(JSON.parse(m.body).error.code==200)this.msgs = [{ severity: "success", summary: "Asociación con EJG realizada correctamente", detail: this.translateService.instant( JSON.parse(m.body).error.description) }];
+                    else this.msgs = [{ severity: "error", summary: "Asociación con EJG fallida", detail: this.translateService.instant( JSON.parse(m.body).error.description) }];
+                    sessionStorage.removeItem("EJG");
+                  },
+                  err => {
+                    severity = "error";
+                        summary = "No se ha asociado el EJG correctamente";
+                        this.msgs.push({
+                          severity,
+                          summary,
+                          detail
+                        });
+                    this.progressSpinner = false;
+                  }
+                );
+              }
               this.busquedaDesignaciones(newDesignaRfresh);
               //MENSAJE DE TODO CORRECTO
               detail = "";
@@ -304,14 +394,12 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                     summary,
                     detail
                   });
-              console.log(err);
               this.progressSpinner = false;
             }, () => {
             }
           );
         }
-
-      } else if (detail == "save" && this.anio.value != "") {
+      } else if (detail == "save" && this.anio.value != "" ) {
         detail = "Guardar";
         let newDesigna = new DesignaItem();
         var idTurno: number = +this.selectores[0].value;
@@ -584,6 +672,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     } else {
       this.progressSpinner = false;
     }
+    this.progressSpinner = false;
   }
 
   formatDate(date) {

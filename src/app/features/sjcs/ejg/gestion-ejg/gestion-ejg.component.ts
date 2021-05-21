@@ -1,4 +1,4 @@
-import { Component, OnInit, SimpleChanges, Input, HostListener, Output } from '@angular/core';
+import { Component, OnInit, SimpleChanges, Input, HostListener, Output, ViewChild } from '@angular/core';
 import { SigaServices } from '../../../../_services/siga.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { EJGItem } from '../../../../models/sjcs/EJGItem';
@@ -7,6 +7,7 @@ import { Location } from '@angular/common'
 import { CommonsService } from '../../../../_services/commons.service';
 import { TranslateService } from '../../../../commons/translate/translation.service';
 import { procesos_ejg } from '../../../../permisos/procesos_ejg';
+import { ServiciosTramitacionComponent } from './servicios-tramitacion/servicios-tramitacion.component';
 
 @Component({
   selector: 'app-gestion-ejg',
@@ -75,6 +76,8 @@ export class GestionEjgComponent implements OnInit {
   openTarjetaComunicaciones: Boolean = false;
 
   enlacesTarjetaResumen = [];
+
+  @ViewChild(ServiciosTramitacionComponent) tramitacion;
 
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,

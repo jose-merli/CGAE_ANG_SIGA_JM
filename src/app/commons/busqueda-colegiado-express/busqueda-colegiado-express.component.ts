@@ -20,7 +20,6 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
   @Input() idTurno;
   @Input() idGuardia;
   @Input() art27;
-  @Input() disableNum;
 
   @Output() idPersona = new EventEmitter<string>();
   progressSpinner: boolean = false;
@@ -82,9 +81,13 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
   searchTramitacionEJG(form) {
     if (form.numColegiado != undefined && form.numColegiado != null && form.numColegiado.length != 0) {
       this.progressSpinner = true;
-      //Si se a introducido un num de colegiado y se activo art 27. Se realiza la busqueda por defecto.
-      //Revisar posible limitacion por colegio existente en la busqueda express.
-      if (this.art27) this.defaultsearch(form);
+      //Si se a introducido un num de colegiado y se activo art 27. 
+      //Al revisar que la busqueda express se realiza con limitacion de colegio
+      //ya que los numeros de colegiado no son unicos, se decide devolver un mensaje de negativa.
+      if (this.art27){
+         this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('justiciaGratuita.ejg.tramitacion.noExpressArt') }];
+         this.progressSpinner = false;
+      }
       else {
         this.sigaServices.get("institucionActual").subscribe(n => {
 

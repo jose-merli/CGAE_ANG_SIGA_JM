@@ -22,6 +22,7 @@ export class ServiciosTramitacionComponent implements OnInit {
 
   @Output() modoEdicionSend = new EventEmitter<any>();
 
+  disableNum = false;
   openFicha: boolean = false;
   textFilter: string = "Seleccionar";
   progressSpinner: boolean = false;
@@ -315,6 +316,11 @@ export class ServiciosTramitacionComponent implements OnInit {
         this.save();
       }
     }
+  }
+
+  onChange27(){
+    this.disableNum=this.art27;
+    this.clearBusqueda();
   }
 
   save() {
