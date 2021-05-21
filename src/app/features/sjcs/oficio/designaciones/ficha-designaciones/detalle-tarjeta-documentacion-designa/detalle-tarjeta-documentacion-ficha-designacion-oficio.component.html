@@ -8,7 +8,8 @@
 
 <div class="table" matSort (matSortChange)="sortData($event)" #table>
   <div class="table-header">
-    <div class="table-header-child p-2" *ngFor="let cabecera of cabeceras; let j = index" #BorderedHeader>
+    <div class="table-header-child p-2" *ngFor="let cabecera of cabeceras; let j = index" #BorderedHeader
+      [style.minWidth]="cabecera.width">
       <div>
         <div [mat-sort-header]=cabecera.id>{{cabecera.name}}</div>
         <input type="text" class="form-control" pInputTex [(ngModel)]="searchText[j]" (ngModelChange)="searchChange(j)"
@@ -20,14 +21,15 @@
     <div (click)="selectRow(row['id'], row['cells'])" class="table-row-wrapper hoverBlue"
       [ngClass]="{'hoverBlue2': isSelected(row['id'])}" #rowSelected>
       <div *ngFor="let cell of row['cells'] | slice:0:5" class="table-cell p-2 selectedRowClass"
-        [ngClass]="{'borders-child': isPar(i), 'text-left': emptyResults}" #cellSelected>
+        [ngClass]="{'borders-child': isPar(i), 'text-left': emptyResults}" #cellSelected
+        [style.minWidth]="getTamanioColumn(cell)">
         <div class="cell-wrapper selectedRowClass w-100">
 
           <span class="w100 cell-value" *ngIf="cell.type == 'text'">{{cell.value}}</span>
 
           <span class="w100 cell-value selectWrap" *ngIf="cell.type == 'select'">
             <p-dropdown autoWidth="false" class="center" [placeholder]="textFilter" [(ngModel)]="cell.value"
-              [options]="cell.combo" showClear="true" styleClass="widthAll" [disabled]="cell.disabled">
+              [options]="cell.combo" showClear="true" styleClass="widthAll" [disabled]="cell.disabled" (onChange)="changeSelect(row, cell)">
             </p-dropdown>
           </span>
 

@@ -516,7 +516,33 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
         let url = "gestionJusticiables_updateJusticiable";
         this.validateCampos(url);
       },
-      reject: () => { }
+      reject: () => { 
+        if (this.confirmationUpdate) {
+          this.confirmationUpdate = false;
+          this.progressSpinner = true;
+          this.modoEdicion = false;
+          let url = "gestionJusticiables_createJusticiable";
+          this.body.asuntos = undefined;
+          this.body.datosAsuntos = [];
+          this.body.numeroAsuntos = undefined;
+          this.body.ultimoAsunto = undefined;
+          //Ya estavalidada la repeticion y puede crear al justiciable
+          this.body.validacionRepeticion = true;
+          this.body.asociarRepresentante = true;
+          this.validateCampos(url);
+          this.cdGeneralesUpdate.hide();
+        } else if (this.confirmationSave) {
+          this.confirmationSave = false;
+    
+          this.progressSpinner = true;
+          let url = "gestionJusticiables_createJusticiable";
+          //Ya esta validada la repeticion y puede crear al justiciable
+          this.body.validacionRepeticion = true;
+          this.body.asociarRepresentante = true;
+          this.callSaveService(url);
+          this.cdGeneralesSave.hide();
+        }
+       }
     });
   }
 

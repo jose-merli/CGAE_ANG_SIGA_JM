@@ -44,7 +44,6 @@ export class BajasTemporalesComponent implements OnInit {
     { label: "Suspensión por sanción", value: "S" }
   ];
 
-  isDisabled;
   seleccionarTodo = false;
   totalRegistros = 0;
   rowGroups: Row[];
@@ -53,13 +52,13 @@ export class BajasTemporalesComponent implements OnInit {
   cabeceras = [
     { id: "ncolegiado", name: "facturacionSJCS.facturacionesYPagos.numColegiado" },
     { id: "nombre", name: "busquedaSanciones.detalleSancion.letrado.literal" },
-    { id: "tiponombre", name: "justiciaGratuita.sjcs.designas.DatosIden.turno" },
+    { id: "tiponombre", name: "justiciaGratuita.oficio.bajasTemporales.tipoBaja" },
     { id: "descripcion", name: "administracion.auditoriaUsuarios.literal.motivo" },
-    { id: "fechadesde", name: "facturacion.seriesFacturacion.literal.fInicio" },
-    { id: "fechahasta", name: "censo.consultaDatos.literal.fechaFin" },
-    { id: "fechaalta", name: "formacion.busquedaInscripcion.fechaSolicitud" },
+    { id: "fechadesdeSinHora", name: "facturacion.seriesFacturacion.literal.fInicio" },
+    { id: "fechahastaSinHora", name: "censo.consultaDatos.literal.fechaFin" },
+    { id: "fechaaltaSinHora", name: "formacion.busquedaInscripcion.fechaSolicitud" },
     { id: "validado", name: "censo.busquedaSolicitudesModificacion.literal.estado" },
-    { id: "fechaestado", name: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaEstado" },
+    { id: "fechaestadoSinHora", name: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaEstado" },
   ];
 
   @Output() nuevo = new EventEmitter<any>();
@@ -104,13 +103,19 @@ export class BajasTemporalesComponent implements OnInit {
 
     this.sigaServices.post("bajasTemporales_busquedaBajasTemporales", this.filtros.filtroAux).subscribe(
       n => {
+        let error = JSON.parse(n.body).error;
         this.datos = JSON.parse(n.body).bajasTemporalesItem;
         this.datos.forEach(element => {
 
+          element.fechadesdeSinHora = this.formatDateSinHora(element.fechadesde);
+          element.fechahastaSinHora = this.formatDateSinHora(element.fechahasta);
+          element.fechaaltaSinHora = this.formatDateSinHora(element.fechaalta);
           element.fechadesde = this.formatDate(element.fechadesde);
           element.fechahasta = this.formatDate(element.fechahasta);
           element.fechaalta = this.formatDate(element.fechaalta);
           element.fechabt = this.formatDate(element.fechabt);
+          
+          element.fechaestadoSinHora = this.formatDateSinHora(element.fechaestado);
           element.fechaestado = this.formatDate(element.fechaestado);
 
           if (element.tipo == "V") {
@@ -144,6 +149,14 @@ export class BajasTemporalesComponent implements OnInit {
         this.jsonToRow(this.datos);
         this.buscar = true;
         this.progressSpinner = false;
+
+        if (error != null && error.description != null) {
+          this.msgs = [];
+          this.msgs.push({
+            severity:"info", 
+            summary:this.translateService.instant("general.message.informacion"), 
+            detail: error.description});
+        }
       },
       err => {
         this.progressSpinner = false;
@@ -163,26 +176,42 @@ export class BajasTemporalesComponent implements OnInit {
   }
 
   formatDate(date) {
+    const pattern = 'dd/MM/yyyy HH:mm:ss';
+    return this.datePipe.transform(date, pattern);
+  }
+
+  formatDateSinHora(date) {
     const pattern = 'dd/MM/yyyy';
     return this.datePipe.transform(date, pattern);
   }
 
 jsonToRow(datos){
   let arr = [];
+  let nombreApell;
 
   datos.forEach((element, index) => {
     let italic = (element.eliminado == 1);
+    if(element.apellidos1 != null){
+      nombreApell = element.apellidos1;
+    }
+
+    if(element.apellidos2 != null){
+      nombreApell += " " + element.apellidos2;
+    }
+
+    if(element.nombre != null){
+      nombreApell += ", " + element.nombre;
+    }
     if(element.eliminado == 1){
       let obj = [
         { type: 'text', value: element.ncolegiado},
-        { type: 'text', value: element.apellidos1 +" "+ element.apellidos2 + ", " + element.nombre},
-        { type: 'text', value: element.tiponombre},
+        { type: 'text', value: nombreApell},
         { type: 'text', value: element.descripcion},
-        { type: 'text', value: element.fechadesde},
-        { type: 'text', value: element.fechahasta},
-        { type: 'text', value: element.fechaalta},
+        { type: 'text', value: element.fechadesdeSinHora},
+        { type: 'text', value: element.fechahastaSinHora},
+        { type: 'text', value: element.fechaaltaSinHora},
         { type: 'text', value: element.validado},
-        { type: 'text', value: element.fechaestado},
+        { type: 'text', value: element.fechaestadoSinHora},
         { type: 'text', value: element.idpersona},
         { type: 'text', value: element.fechabt},
         { type: 'text', value: element.nuevo}
@@ -197,14 +226,14 @@ jsonToRow(datos){
     }else{
       let obj = [
         { type: 'text', value: element.ncolegiado},
-        { type: 'text', value: element.apellidos1 +" "+ element.apellidos2 + ", " + element.nombre},
+        { type: 'text', value: nombreApell},
         { type: 'select', combo: this.comboTipo ,value: element.tipo},
         { type: 'input', value: element.descripcion},
-        { type: 'datePicker', value: element.fechadesde},
-        { type: 'datePicker', value: element.fechahasta},
-        { type: 'text', value: element.fechaalta},
+        { type: 'text', value: element.fechadesdeSinHora},
+        { type: 'datePicker', value: element.fechahastaSinHora},
+        { type: 'text', value: element.fechaaltaSinHora},
         { type: 'text', value: element.validado},
-        { type: 'text', value: element.fechaestado},
+        { type: 'text', value: element.fechaestadoSinHora},
         { type: 'text', value: element.idpersona},
         { type: 'text', value: element.fechabt},
         { type: 'text', value: element.nuevo}
@@ -255,37 +284,49 @@ modDatos(event){
     if (fecha != null) {
       let jsonDate = JSON.stringify(fecha);
       let rawDate = jsonDate.slice(1, -1);
-      if (rawDate.length < 14) {
-        let splitDate = rawDate.split("/");
-        let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
-        fecha = new Date((arrayDate += "T00:00:00.001Z"));
-      } else {
-        fecha = new Date(fecha);
-      }
+      if (rawDate.length == 10) {
+        fecha = rawDate += " 00:00:00";
     } else {
-      fecha = undefined;
+      fecha = rawDate;
     }
     return fecha;
+    }
+  }
+
+  estadoPendiente(event){
+    let encontrado: boolean = false;
+    event.forEach(element => {
+      if(this.datos[element].validado == "Pendiente"){
+        encontrado = true;
+      }
+    });
+    if(encontrado){
+      this.tablapartida.isDisabled=false;
+    }
+    else{
+      this.tablapartida.isDisabled=true;
+    }
+    
   }
 
   delete(event){
     let array = [];
     event.forEach(element => {
-      if(this.datos[element].fechadesde != null){
-        this.datos[element].fechadesde=this.transformaFecha(this.datos[element].fechadesde);
+     /* if(this.datos[element].fechadesde != null){
+        this.datos[element].fechadesde= this.datos[element].fechadesde //this.transformaFecha(this.datos[element].fechadesde);
       }
       if(this.datos[element].fechahasta != null){
-        this.datos[element].fechahasta=this.transformaFecha(this.datos[element].fechahasta);
+        this.datos[element].fechahasta= this.datos[element].fechahasta //this.transformaFecha(this.datos[element].fechahasta);
       }
       if(this.datos[element].fechaalta != null){
-        this.datos[element].fechaalta=this.transformaFecha(this.datos[element].fechaalta);
+        this.datos[element].fechaalta= this.datos[element].fechaalta //this.transformaFecha(this.datos[element].fechaalta);
       }
       if(this.datos[element].fechabt != null){
-        this.datos[element].fechabt=this.transformaFecha(this.datos[element].fechabt);
+        this.datos[element].fechabt= this.datos[element].fechabt //this.transformaFecha(this.datos[element].fechabt);
       }
       if(this.datos[element].fechaestado != null){
-        this.datos[element].fechaestado=this.transformaFecha(this.datos[element].fechaestado);
-      }
+        this.datos[element].fechaestado= this.datos[element].fechaestado //this.transformaFecha(this.datos[element].fechaestado);
+      }*/
       array.push(this.datos[element]);
     });
     
@@ -309,21 +350,21 @@ denegar(event){
   let array = [];
   event.forEach(element => {
     if(this.datos[element].validado == "Pendiente"){
-      if(this.datos[element].fechadesde != null){
-        this.datos[element].fechadesde=this.transformaFecha(this.datos[element].fechadesde);
+      /*if(this.datos[element].fechadesde != null){
+        this.datos[element].fechadesde= this.datos[element].fechadesde //this.transformaFecha(this.datos[element].fechadesde);
       }
       if(this.datos[element].fechahasta != null){
-        this.datos[element].fechahasta=this.transformaFecha(this.datos[element].fechahasta);
+        this.datos[element].fechahasta= this.datos[element].fechahasta //this.transformaFecha(this.datos[element].fechahasta);
       }
       if(this.datos[element].fechaalta != null){
-        this.datos[element].fechaalta=this.transformaFecha(this.datos[element].fechaalta);
+        this.datos[element].fechaalta= this.datos[element].fechaalta //this.transformaFecha(this.datos[element].fechaalta);
       }
       if(this.datos[element].fechabt != null){
-        this.datos[element].fechabt=this.transformaFecha(this.datos[element].fechabt);
+        this.datos[element].fechabt= this.datos[element].fechabt //this.transformaFecha(this.datos[element].fechabt);
       }
       if(this.datos[element].fechaestado != null){
-        this.datos[element].fechaestado=this.transformaFecha(this.datos[element].fechaestado);
-      }
+        this.datos[element].fechaestado= this.datos[element].fechaestado //this.transformaFecha(this.datos[element].fechaestado);
+      }*/
       this.datos[element].validado = "Denegada";
       let tmp = this.datos[element];
       delete tmp.tiponombre;
@@ -340,21 +381,21 @@ validar(event){
   let array = [];
   event.forEach(element => {
     if(this.datos[element].validado == "Pendiente"){
-      if(this.datos[element].fechadesde != null){
-        this.datos[element].fechadesde=this.transformaFecha(this.datos[element].fechadesde);
+      /*if(this.datos[element].fechadesde != null){
+        this.datos[element].fechadesde= this.datos[element].fechadesde //this.transformaFecha(this.datos[element].fechadesde);
       }
       if(this.datos[element].fechahasta != null){
-        this.datos[element].fechahasta=this.transformaFecha(this.datos[element].fechahasta);
+        this.datos[element].fechahasta= this.datos[element].fechahasta //this.transformaFecha(this.datos[element].fechahasta);
       }
       if(this.datos[element].fechaalta != null){
-        this.datos[element].fechaalta=this.transformaFecha(this.datos[element].fechaalta);
+        this.datos[element].fechaalta= this.datos[element].fechaalta //this.transformaFecha(this.datos[element].fechaalta);
       }
       if(this.datos[element].fechabt != null){
-        this.datos[element].fechabt=this.transformaFecha(this.datos[element].fechabt);
+        this.datos[element].fechabt= this.datos[element].fechabt //this.transformaFecha(this.datos[element].fechabt);
       }
       if(this.datos[element].fechaestado != null){
-        this.datos[element].fechaestado=this.transformaFecha(this.datos[element].fechaestado);
-      }
+        this.datos[element].fechaestado= this.datos[element].fechaestado //this.transformaFecha(this.datos[element].fechaestado);
+      }*/
       this.datos[element].validado = "Validada";
       let tmp = this.datos[element];
       delete tmp.tiponombre;
@@ -371,21 +412,21 @@ anular(event){
   let array = [];
   event.forEach(element => {
     if(this.datos[element].validado == "Pendiente"){
-      if(this.datos[element].fechadesde != null){
-        this.datos[element].fechadesde=this.transformaFecha(this.datos[element].fechadesde);
+      /*if(this.datos[element].fechadesde != null){
+        this.datos[element].fechadesde= this.datos[element].fechadesde //this.transformaFecha(this.datos[element].fechadesde);
       }
       if(this.datos[element].fechahasta != null){
-        this.datos[element].fechahasta=this.transformaFecha(this.datos[element].fechahasta);
+        this.datos[element].fechahasta= this.datos[element].fechahasta //this.transformaFecha(this.datos[element].fechahasta);
       }
       if(this.datos[element].fechaalta != null){
-        this.datos[element].fechaalta=this.transformaFecha(this.datos[element].fechaalta);
+        this.datos[element].fechaalta= this.datos[element].fechaalta //this.transformaFecha(this.datos[element].fechaalta);
       }
       if(this.datos[element].fechabt != null){
-        this.datos[element].fechabt=this.transformaFecha(this.datos[element].fechabt);
+        this.datos[element].fechabt= this.datos[element].fechabt //this.transformaFecha(this.datos[element].fechabt);
       }
       if(this.datos[element].fechaestado != null){
-        this.datos[element].fechaestado =this.transformaFecha(this.datos[element].fechaestado);
-      }
+        this.datos[element].fechaestado = this.datos[element].fechaestado //this.transformaFecha(this.datos[element].fechaestado);
+      }*/
       this.datos[element].validado = "Anulada";
       let tmp = this.datos[element];
       delete tmp.tiponombre;
@@ -414,12 +455,12 @@ guardar(event) {
         bajaTemporal.nombre = element[1];
         bajaTemporal.tipo = element[2];
         bajaTemporal.descripcion = element[3];
-        bajaTemporal.fechadesde = element[4];
-        bajaTemporal.fechahasta = element[5];
-        bajaTemporal.fechaalta = element[6];
+        bajaTemporal.fechadesde = this.transformaFecha(element[4]);
+        bajaTemporal.fechahasta = this.transformaFecha(element[5]);
+        bajaTemporal.fechaalta = this.transformaFecha(element[6]);
         bajaTemporal.validado = element[7];
         bajaTemporal.idpersona = element[9];
-        bajaTemporal.fechabt = element[10];
+        bajaTemporal.fechabt = this.transformaFecha(element[10]);
 
         listaPrueba.push(bajaTemporal);
         bajaTemporal = new BajasTemporalesItem();
@@ -428,9 +469,9 @@ guardar(event) {
         bajaTemporal.nombre = element[1];
         bajaTemporal.tipo = element[2];
         bajaTemporal.descripcion = element[3];
-        bajaTemporal.fechadesde = element[4];
-        bajaTemporal.fechahasta = element[5];
-        bajaTemporal.fechaalta = element[6];
+        bajaTemporal.fechadesde = this.transformaFecha(element[4]);
+        bajaTemporal.fechahasta = this.transformaFecha(element[5]);
+        bajaTemporal.fechaalta = this.transformaFecha(element[6]);
         bajaTemporal.validado = element[7];
 
         nuevaBaja.push(bajaTemporal);
@@ -441,15 +482,15 @@ guardar(event) {
 
 if(nuevaBaja.length != 0){
   nuevaBaja.forEach(element => {
-    if(element.fechadesde != null || element.fechadesde != ""){
-      element.fechadesde=this.transformaFecha(element.fechadesde);
+    /*if(element.fechadesde != null || element.fechadesde != ""){
+      element.fechadesde= element.fechadesde //this.transformaFecha(element.fechadesde);
     }
     if(element.fechahasta != null || element.fechahasta != ""){
-      element.fechahasta=this.transformaFecha(element.fechahasta);
+      element.fechahasta= element.fechahasta //this.transformaFecha(element.fechahasta);
     }
     if(element.fechaalta != null || element.fechaalta != ""){
-      element.fechaalta=this.transformaFecha(element.fechaalta);
-    }
+      element.fechaalta= element.fechaalta //this.transformaFecha(element.fechaalta);
+    }*/
     if (element.validado == "Denegada") {
       element.validado  = "0";
     }
@@ -463,7 +504,6 @@ if(nuevaBaja.length != 0){
       element.validado  = "2";
     }
 
-    element.fechabt = new Date();
   });
   
   this.sigaServices.post("bajasTemporales_nuevaBajaTemporal", nuevaBaja).subscribe(
@@ -482,15 +522,15 @@ if(nuevaBaja.length != 0){
 
 if(listaPrueba.length != 0){
   listaPrueba.forEach(element => {
-  if(element.fechadesde != null){
-    element.fechadesde=this.transformaFecha(element.fechadesde);
+  /*if(element.fechadesde != null){
+    element.fechadesde=element.fechadesde //this.transformaFecha(element.fechadesde);
   }
   if(element.fechahasta != null){
-    element.fechahasta=this.transformaFecha(element.fechahasta);
+    element.fechahasta=element.fechahasta //this.transformaFecha(element.fechahasta);
   }
   if(element.fechaalta != null){
-    element.fechaalta=this.transformaFecha(element.fechaalta);
-  }
+    element.fechaalta=element.fechaalta //this.transformaFecha(element.fechaalta);
+  }*/
   if (element.validado == "Denegada") {
     element.validado  = "0";
   }
@@ -538,12 +578,12 @@ if(listaPrueba.length != 0){
         data => {
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
             this.progressSpinner = false;
+            this.search(this.filtros.filtroAux.historico);
       },
       err => {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
           this.progressSpinner = false;
         }
       );
-      this.search(this.filtros.filtroAux.historico);
   }
 }

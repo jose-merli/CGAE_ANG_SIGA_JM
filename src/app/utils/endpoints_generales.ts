@@ -12,7 +12,7 @@ export let endpoints_generales: any = {
     combo_comboTipoSOJ: "combo/comboTipoSOJ",
     combo_comboComisaria: "combo/comboComisaria",
     combo_comboJuzgado: "combo/comboJuzgado",
-
+ 
 
     gestionJusticiables_busquedaClaveAsuntosEJG: "gestionJusticiables/busquedaClaveAsuntosEJG",
     gestionJusticiables_busquedaClaveAsuntosAsistencias: "gestionJusticiables/busquedaClaveAsuntosAsistencias",

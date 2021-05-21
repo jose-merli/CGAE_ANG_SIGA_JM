@@ -7,6 +7,7 @@ import { ActuacionDesignaItem } from '../../../../models/sjcs/ActuacionDesignaIt
 import { ActuacionDesignaObject } from '../../../../models/sjcs/ActuacionDesignaObject';
 import { DesignaItem } from '../../../../models/sjcs/DesignaItem';
 import { JustificacionExpressItem } from '../../../../models/sjcs/JustificacionExpressItem';
+import { SigaStorageService } from '../../../../siga-storage.service';
 import { CommonsService } from '../../../../_services/commons.service';
 import { OldSigaServices } from '../../../../_services/oldSiga.service';
 import { SigaServices } from '../../../../_services/siga.service';
@@ -28,20 +29,28 @@ export class DesignacionesComponent implements OnInit {
   muestraTablaDesignas: boolean = false;
   comboTipoDesigna: any[];
   colegiado: boolean;
+  isLetrado: boolean = false;
+  idPersonaLogado;
+  numColegiadoLogado;
   @ViewChild(FiltroDesignacionesComponent) filtros;
   
   datosJustificacion: JustificacionExpressItem = new JustificacionExpressItem();
   
   msgs: Message[] = [];
   actuacionesDesignaItems: ActuacionDesignaItem[] = [];
-  
+  permisosFichaAct = false; 
   constructor(public sigaServices: OldSigaServices, public sigaServicesNew: SigaServices, private location: Location,  private commonsService: CommonsService, 
-    private datePipe: DatePipe, private translateService: TranslateService) {
+    private datePipe: DatePipe, private translateService: TranslateService, private localStorageService: SigaStorageService) {
+
 
     this.url = sigaServices.getOldSigaUrl("designaciones");
   }
 
   ngOnInit() {
+    sessionStorage.setItem("rowIdsToUpdate", JSON.stringify([]));
+    this.isLetrado = this.localStorageService.isLetrado;
+    this.idPersonaLogado = this.localStorageService.idPersona;
+    this.numColegiadoLogado = this.localStorageService.numColegiado;
   }
 
   showTablaJustificacionExpres(event){
@@ -49,8 +58,19 @@ export class DesignacionesComponent implements OnInit {
   }
 
   busquedaJustificacionExpres(){
+    this.datosJustificacion = new JustificacionExpressItem();
     this.progressSpinner=true;
+    if(sessionStorage.getItem("buscadorColegiados")){​​
 
+      let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
+
+      this.filtros.filtroJustificacion.nColegiado = busquedaColegiado.nColegiado;
+
+    }​
+
+    let error = null;
+    
+    
     this.sigaServicesNew.post("justificacionExpres_busqueda", this.filtros.filtroJustificacion).subscribe(
       data => {
         this.progressSpinner=false;
@@ -58,14 +78,25 @@ export class DesignacionesComponent implements OnInit {
         if(data!=undefined && data!=null){
           this.datosJustificacion = JSON.parse(data.body);
         }
-
+        if(this.datosJustificacion[0] != null && this.datosJustificacion[0] != undefined){
+          if(this.datosJustificacion[0].error != null){
+            error = this.datosJustificacion[0].error;
+          }
+        }
         this.muestraTablaJustificacion=true;
+
+        if (error != null && error.description != null) {
+          this.msgs = [];
+          this.msgs.push({
+            severity:"info", 
+            summary:this.translateService.instant("general.message.informacion"), 
+            detail: error.description});
+        }
       },
       err => {
         this.progressSpinner = false;
 
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        console.log(err);
       },
       ()=>{
         setTimeout(()=>{
@@ -87,7 +118,6 @@ export class DesignacionesComponent implements OnInit {
       },
       err => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        console.log(err);
       },);
   }
 
@@ -105,7 +135,6 @@ export class DesignacionesComponent implements OnInit {
         this.muestraTablaJustificacion=true;
         this.progressSpinner=false;
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        console.log(err);
       },);
   }
 
@@ -123,7 +152,6 @@ export class DesignacionesComponent implements OnInit {
         this.muestraTablaJustificacion=true;
         this.progressSpinner = false;
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        console.log(err);
       },);
   }
 
@@ -155,7 +183,15 @@ export class DesignacionesComponent implements OnInit {
     }
     this.sigaServicesNew.post("designaciones_busqueda", designaItem).subscribe(
       n => {
+        let error = null;
         this.datos = JSON.parse(n.body);
+        
+        if(this.datos[0] != null && this.datos[0] != undefined){
+          if(this.datos[0].error != null){
+            error = this.datos[0].error;
+          }
+        }
+
         this.datos.forEach(element => {
          element.factConvenio = element.ano;
          element.ano = 'D' +  element.ano + '/' + element.codigo;
@@ -217,19 +253,22 @@ export class DesignacionesComponent implements OnInit {
           },
           err => {
             this.progressSpinner = false;
-            console.log(err);
           }
         );
         this.progressSpinner=false;
         this.showTablaDesigna(true);
         this.commonsService.scrollTablaFoco("tablaFoco");
+        if (error != null && error.description != null) {
+          this.msgs = [];
+          this.msgs.push({
+            severity:"info", 
+            summary:this.translateService.instant("general.message.informacion"), 
+            detail: error.description});
+        }
       },
       err => {
         this.progressSpinner = false;
         this.commonsService.scrollTablaFoco("tablaFoco");
-        // this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-
-        console.log(err);
       },() => {
         this.progressSpinner = false;
         this.progressSpinner = false;
@@ -250,7 +289,6 @@ export class DesignacionesComponent implements OnInit {
     this.sigaServicesNew.post("designaciones_getDatosAdicionales", desginaAdicionales).subscribe(
       n => {
        
-        console.log(n.body);
         let datosAdicionales = JSON.parse(n.body);
         if (datosAdicionales[0] != null && datosAdicionales[0] != undefined) {
           element.delitos = datosAdicionales[0].delitos;
@@ -264,7 +302,6 @@ export class DesignacionesComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
       }, () => {
         this.progressSpinner = false;
       }
@@ -311,5 +348,7 @@ export class DesignacionesComponent implements OnInit {
     this.actualizacionJustificacionExpres(event);
   }
 
-
+  getpermisosFichaAct(event){
+    this.permisosFichaAct = event;
+  }
 }

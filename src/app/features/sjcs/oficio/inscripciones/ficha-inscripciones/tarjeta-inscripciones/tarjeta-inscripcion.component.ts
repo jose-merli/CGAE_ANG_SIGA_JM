@@ -271,9 +271,6 @@ export class TarjetaInscripcion implements OnInit {
     );
   }
 
-
-
-
   save() {
     this.progressSpinner = true;
     let url = "";
@@ -288,19 +285,15 @@ export class TarjetaInscripcion implements OnInit {
       this.body.areasItems = this.updateAreas;
       this.callSaveService(url);
     }
-
   }
 
   callSaveService(url) {
-
     this.sigaServices.post(url, this.body).subscribe(
       data => {
-
         if (this.nuevo) {
           this.nuevo = false;
           this.datosInicial = JSON.parse(JSON.stringify(this.datos));
         }
-
         // this.getColaOficio();
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
@@ -347,7 +340,6 @@ export class TarjetaInscripcion implements OnInit {
   }
 
   disabledSave() {
-
     if (this.selectMultiple || this.selectAll) {
       return true;
     }
@@ -357,9 +349,7 @@ export class TarjetaInscripcion implements OnInit {
       } else {
         return true;
       }
-
     } else {
-
       if ((this.updateAreas != undefined && this.updateAreas.length > 0)) {
         return false;
       } else {
@@ -371,12 +361,9 @@ export class TarjetaInscripcion implements OnInit {
   editarMateria(dato) {
 
     let findDato = this.datosInicial.find(item => item.idMateria == dato.idMateria && item.idArea == dato.idArea);
-
     if (findDato != undefined) {
       if ((dato.nombreMateria != findDato.nombreMateria) || (dato.contenido != findDato.contenido)) {
-
         let findUpdate = this.updateAreas.find(item => item.idMateria == dato.idMateria && item.idArea == dato.idArea);
-
         if (findUpdate == undefined) {
           let dato2 = dato;
           dato2.jurisdicciones = "";
@@ -384,7 +371,6 @@ export class TarjetaInscripcion implements OnInit {
         }
       }
     }
-
   }
 
   editJurisdicciones(dato) {
@@ -589,7 +575,7 @@ export class TarjetaInscripcion implements OnInit {
       }else if(turnoGuardia != null && turnoGuardia.indexOf('Turno') != -1){
         this.progressSpinner = true;
         let turnoItem = new TurnosItems();
-        turnoItem.idturno = evento.idTurno;
+        turnoItem.idturno = evento.idturno;
         turnoItem.nombre = evento.nombre_turno;
         this.persistenceService.setDatos(turnoItem);
         this.router.navigate(["/gestionTurnos"], { queryParams: { idturno: evento.idturno } });

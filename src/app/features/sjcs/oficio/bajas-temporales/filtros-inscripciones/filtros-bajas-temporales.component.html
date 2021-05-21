@@ -10,7 +10,7 @@
 <div class="card">
   <div class="card-body">
     <!-- CAMPOS COMPONEN FILTROS BUSQUEDA-->
-    <div *ngIf="showDatosGenerales" class="module vista-avanzada">
+    <div class="module vista-avanzada">
       <div class="form-row">
         <div class="form-group-interlineado col-lg-2 col-md-3">
           <label>{{'censo.busquedaClientesAvanzada.literal.tipoCliente'|translate}}</label>
@@ -30,7 +30,7 @@
         <div class="form-group-interlineado col-lg-2 col-md-1">
           <label>{{ "oficio.busquedaBajasTemporales.fechaSolicitudHasta" | translate }}
           </label>
-          <app-fecha [(value)]="filtros.fechasolicitudhasta" [disabled]="disabledFechasolicitudhasta" (valueChangeInput)="fillFechaHastaSolicitudCalendar($event)" [minDate]="filtros.fechasolicituddesde" (valueChangeSelected)="fillFechaHastaSolicitudCalendar($event)"></app-fecha>
+          <app-fecha [(value)]="filtros.fechasolicitudhasta" (valueChangeInput)="fillFechaHastaSolicitudCalendar($event)" [minDate]="filtros.fechasolicituddesde" (valueChangeSelected)="fillFechaHastaSolicitudCalendar($event)"></app-fecha>
         </div>
         <div class="form-group-interlineado col-lg-2 col-md-1">
           <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaDesde" | translate }}
@@ -40,11 +40,9 @@
         <div class="form-group-interlineado col-lg-2 col-md-1">
           <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta" | translate }}
           </label>
-          <app-fecha [(value)]="filtros.fechahasta" [disabled]="disabledFechaHasta" [minDate]="filtros.fechadesde" (valueChangeInput)="fillFechaHastaCalendar($event)" (valueChangeSelected)="fillFechaHastaCalendar($event)"></app-fecha>
+          <app-fecha [(value)]="filtros.fechahasta" [minDate]="filtros.fechadesde" (valueChangeInput)="fillFechaHastaCalendar($event)" (valueChangeSelected)="fillFechaHastaCalendar($event)"></app-fecha>
         </div>
-
       </div>
-    </div>
     
     <p (click)="onHideDatosGenerales()" class="title-module">{{ "justiciaGratuita.justiciables.literal.colegiado" | translate}}
       <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
@@ -57,14 +55,15 @@
         </div>
       </div>
     </div>
-
   </div>
+  </div>
+
   <div class="card-footer">
     <!-- BOTONES TARJETA -->
     <div class="text-right main-button">
       <button (click)="clearFilters()" pButton type="button" icon="fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate}}"></button>
       <button (click)="isBuscar()" pButton type="button" icon="fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"></button>
-      <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}" (click)="nuevaBajaTemporal()"></button>
+      <button pButton type="button" [disabled]="!permisos" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}" (click)="nuevaBajaTemporal()"></button>
     </div>
   </div>
 </div>

@@ -79,7 +79,7 @@ export class DatosPersonalesComponent implements OnInit {
   selectionMode = "";
 
   @ViewChild("provincia") checkbox: Checkbox;
-  @ViewChild("cdGeneralesUpdate") cdGeneralesUpdate: Dialog;
+  @ViewChild("cdPersonalesUpdate") cdPersonalesUpdate: Dialog;
   @ViewChild("cdGeneralesSave") cdGeneralesSave: Dialog;
   @ViewChild("cdPreferenteSms") cdPreferenteSms: Dialog;
   @ViewChild("table") tabla;
@@ -502,7 +502,7 @@ export class DatosPersonalesComponent implements OnInit {
     this.confirmationUpdate = true;
 
     this.confirmationService.confirm({
-      key: "cdGeneralesUpdate",
+      key: "cdPersonalesUpdate",
       message: this.translateService.instant("gratuita.personaJG.mensaje.actualizarJusticiableParaTodosAsuntos"),
       icon: "fa fa-search ",
       accept: () => {
@@ -530,7 +530,7 @@ export class DatosPersonalesComponent implements OnInit {
       this.body.validacionRepeticion = true;
       this.body.asociarRepresentante = true;
       this.validateCampos(url);
-      this.cdGeneralesUpdate.hide();
+      this.cdPersonalesUpdate.hide();
     } else if (this.confirmationSave) {
       this.confirmationSave = false;
 

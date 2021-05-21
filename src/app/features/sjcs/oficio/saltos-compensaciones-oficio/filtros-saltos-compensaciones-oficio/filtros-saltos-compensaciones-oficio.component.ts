@@ -2,6 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { ColegiadoItem } from '../../../../../models/ColegiadoItem';
 import { SaltoCompItem } from '../../../../../models/guardia/SaltoCompItem';
+import { SigaStorageService } from '../../../../../siga-storage.service';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 
@@ -22,7 +23,7 @@ export class FiltrosSaltosCompensacionesOficioComponent implements OnInit {
   };
   disabledBusquedaExpress: boolean = false;
   showDatosGenerales: boolean = true;
-  showColegiado: boolean = false;
+  showColegiado: boolean = true;
   progressSpinner: boolean = false;
   filtros: SaltoCompItem = new SaltoCompItem();
   filtroAux: SaltoCompItem = new SaltoCompItem();
@@ -31,6 +32,7 @@ export class FiltrosSaltosCompensacionesOficioComponent implements OnInit {
   comboTurnos = [];
   textFilter: string = "Seleccionar";
   textSelected: String = "{0} turnos seleccionados";
+  isLetrado:boolean = false;
 
   @Input() isNewFromOtherPage: boolean = false;
   @Input() activacionEditar: boolean = false;
@@ -40,27 +42,30 @@ export class FiltrosSaltosCompensacionesOficioComponent implements OnInit {
   constructor(
     private sigaServices: SigaServices,
     private commonServices: CommonsService,
-    private datepipe: DatePipe
+    private datepipe: DatePipe,
+    private localStorageService: SigaStorageService
   ) { }
 
   ngOnInit() {
-
-    if (!this.activacionEditar) {
+    this.isLetrado = this.localStorageService.isLetrado;
+    if (this.isLetrado) {
       this.disabledBusquedaExpress = true;
       this.getDataLoggedUser();
     }
 
     this.getComboTurno();
 
-    if (sessionStorage.getItem("filtrosSaltosCompOficio") && !this.isNewFromOtherPage) {
+    if (sessionStorage.getItem("filtrosSaltosCompOficio") && sessionStorage.getItem("volver") == 'true') {
 
       this.filtros = JSON.parse(sessionStorage.getItem("filtrosSaltosCompOficio"));
+      this.usuarioBusquedaExpress.numColegiado = sessionStorage.getItem("numColegiado");
 
       if (sessionStorage.getItem("historicoSaltosCompOficio")) {
         this.historico = "true" == sessionStorage.getItem("historicoSaltosCompOficio");
       }
       this.isBuscar.emit(this.historico)
-
+      sessionStorage.removeItem("volver");
+      sessionStorage.removeItem("numColegiado");
     }
 
     if (sessionStorage.getItem('buscadorColegiados')) {
@@ -71,6 +76,9 @@ export class FiltrosSaltosCompensacionesOficioComponent implements OnInit {
       this.usuarioBusquedaExpress.numColegiado = nColegiado;
       this.showColegiado = true;
 
+      sessionStorage.removeItem('buscadorColegiados');
+
+      this.search();
     }
 
   }
@@ -110,6 +118,7 @@ export class FiltrosSaltosCompensacionesOficioComponent implements OnInit {
 
   search() {
     this.filtros.colegiadoGrupo = this.usuarioBusquedaExpress.numColegiado;
+    sessionStorage.setItem("numColegiado", this.usuarioBusquedaExpress.numColegiado);
 
     if (this.filtros.fechaDesde != undefined && this.filtros.fechaDesde != null && this.filtros.fechaDesde != '') {
       this.filtros.fechaDesde = this.formatDate(this.filtros.fechaDesde);

@@ -161,6 +161,13 @@ export class TarjetaGestionInscripcion implements OnInit {
       fila.observaciones = this.datos.observacionesvalbaja;
       this.filas.push(fila);
     }
+     if(this.datos.fechadenegacion!=null){
+      let fila = new TarjetaGestionInscripcionItem();
+      fila.accion= "Denegación";
+      fila.fecha= this.datos.fechadenegacion;
+      fila.observaciones = this.datos.observacionesdenegacion;
+      this.filas.push(fila);
+    }
   }
 
   transformaFecha(fecha) {

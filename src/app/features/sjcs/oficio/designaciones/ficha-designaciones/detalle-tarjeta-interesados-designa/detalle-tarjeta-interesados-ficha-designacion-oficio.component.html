@@ -72,7 +72,7 @@
         (click)="NewInteresado()" pButton type="button" icon="fa fa-plus" iconPos="left"
         label="{{ 'general.boton.new' | translate}}"></button>
       <button pButton type="button"
-        (click)="Eliminar()" icon="fa fa-trash-alt" iconPos="left" disabled="selectedDatos.length != 1"
+        (click)="Eliminar()" icon="fa fa-trash-alt" iconPos="left" [disabled]="selectedDatos.length == 0"
         label="{{ 'general.boton.eliminar' | translate}}"></button>
     </div>
   </div>

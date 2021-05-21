@@ -1,6 +1,6 @@
 <p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
 <div class="busqueda-container" id="datosGenerales">
-  <div *ngIf="permisosTarjeta" class="card">
+  <div class="card">
     <div class="card-header header-ficha" >
       <div *ngIf="!openFicha" class="form-row">
         <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('datosGenerales')">
@@ -96,10 +96,10 @@
 
             <div class="form-group col-lg-6 col-md-6">
               <label>
-                {{"justiciaGratuita.oficio.turnos.tipoturno" | translate}} (*)
+                {{"justiciaGratuita.oficio.turnos.tipoturno" | translate}}
               </label>
               <p-dropdown class="select-form" [disabled]="disableAll || historico" [(ngModel)]='turnosItem.idtipoturno' [filter]="true"
-                filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="tiposturno" [ngClass]="styleObligatorio('datosGenerales', turnosItem.idtipoturno)" placeholder="{{'general.boton.seleccionar' | translate}}"
+                filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="tiposturno"  placeholder="{{'general.boton.seleccionar' | translate}}"
                 [showClear]="true">
               </p-dropdown>
             </div>
@@ -176,10 +176,10 @@
 
             <div class="form-group col-lg-6 col-md-6">
               <label>
-                {{"menu.justiciaGratuita.maestros.Jurisdiccion" | translate}} (*)
+                {{"menu.justiciaGratuita.maestros.Jurisdiccion" | translate}}
               </label>
               <p-dropdown class="select-form" [disabled]="disableAll || historico" [(ngModel)]='turnosItem.idjurisdiccion' [filter]="true"
-                filterBy="label,labelSinTilde" filterMatchMode="contains" [ngClass]="styleObligatorio('datosGenerales', turnosItem.idjurisdiccion)" [options]="jurisdicciones" placeholder="{{'general.boton.seleccionar' | translate}}"
+                filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="jurisdicciones" placeholder="{{'general.boton.seleccionar' | translate}}"
                 [showClear]="true">
               </p-dropdown>
             </div>
@@ -217,7 +217,7 @@
     <div *ngIf="openFicha" class="card-footer ">
       <div class="text-right main-button ">
         <button (click)="rest()" pButton [disabled]="disableAll || historico" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="save()" pButton  type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="save()" pButton [disabled]="!permisosTarjeta" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
   </div>

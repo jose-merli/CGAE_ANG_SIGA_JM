@@ -66,7 +66,7 @@
             <div *ngIf="!disableCheck" class="form-group col-lg-2 col-md-2">
               <p-checkbox (onChange)="incluirSalto()" [(ngModel)]="body.salto" binary="true"
                 label="{{ 'justiciaGratuita.oficio.designas.letrados.salto' | translate}}" 
-                name="salto">
+                name="salto" [hidden]="isLetrado" >
               </p-checkbox>
             </div>
           </div>

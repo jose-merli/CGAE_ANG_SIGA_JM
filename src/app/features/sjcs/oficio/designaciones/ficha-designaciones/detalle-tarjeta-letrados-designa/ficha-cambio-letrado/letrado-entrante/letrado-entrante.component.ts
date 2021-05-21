@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { Message } from 'primeng/components/common/api';
 import { CamposCambioLetradoItem } from '../../../../../../../../models/sjcs/CamposCambioLetradoItem';
 
+
 @Component({
   selector: 'app-letrado-entrante',
   templateUrl: './letrado-entrante.component.html',
@@ -20,12 +21,13 @@ export class LetradoEntranteComponent implements OnInit {
   progressSpinner = false;
   disableFechaDesignacion;
   disableCheck=false;
+  isLetrado: boolean;
 
-  @Input() saliente;
+  @Input() entrante;
 
   @Output() fillEntrante = new EventEmitter<boolean>();
 
-  constructor(private router: Router) { }
+  constructor(private router: Router,private sigaServices: SigaServices) { }
 
   ngOnInit() {
 
@@ -49,12 +51,25 @@ export class LetradoEntranteComponent implements OnInit {
     let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
     if(designa.art27=="Si") {
       this.body.art27=true;
-      this.body.fechaDesignacion = this.saliente.fechaDesignacion;
+      this.body.fechaDesignacion = this.entrante.fechaDesignacion;
       this.disableFechaDesignacion=true;
     }
 
     if(sessionStorage.getItem("isLetrado")=="true") this.disableCheck=true;
     
+
+    this.sigaServices.get('getLetrado').subscribe(
+      (data) => {
+        if (data.value == 'S') {
+          this.isLetrado = true;
+        } else {
+          this.isLetrado = false;
+        }
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
   }
 
 
@@ -83,7 +98,7 @@ export class LetradoEntranteComponent implements OnInit {
 
   search() {
 			sessionStorage.setItem("origin", "AbogadoContrario");
-      sessionStorage.setItem("Oldletrado",  JSON.stringify(this.saliente));
+      sessionStorage.setItem("Oldletrado",  JSON.stringify(this.entrante));
       sessionStorage.setItem("Newletrado",  JSON.stringify(this.body));
 			this.router.navigate(['/busquedaGeneral']);
   }

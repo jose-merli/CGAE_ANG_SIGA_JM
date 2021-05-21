@@ -10,6 +10,7 @@ import { CommonsService } from '../../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { EJGItem } from '../../../../../../models/sjcs/EJGItem';
+import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
 
 @Component({
   selector: 'app-detalle-tarjeta-datos-generales-ficha-designacion-oficio',
@@ -29,6 +30,9 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
   progressSpinner: boolean;
   datosEJG: EJGItem;
 
+  permisoEscritura: boolean;
+  isLetrado: boolean;
+  
   @Input() campos;
   @Input() selectedValue;
   @Output() refreshDataGenerales = new EventEmitter<DesignaItem>();
@@ -77,9 +81,13 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     disable: false
   }];
 
-  constructor(private sigaServices: SigaServices, private datePipe: DatePipe, private commonsService: CommonsService, 
-    private confirmationService: ConfirmationService, private translateService: TranslateService, private router: Router,
-    private persistenceService: PersistenceService) {
+  constructor(private sigaServices: SigaServices,
+     private datePipe: DatePipe, 
+     private commonsService: CommonsService, 
+     private confirmationService: ConfirmationService, 
+     private translateService: TranslateService, 
+     private router: Router,
+     private persistenceService: PersistenceService) {
   }
 
   ngOnInit() {
@@ -96,6 +104,36 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       this.cargaDatosNueva();
 
     }
+
+    this.commonsService.checkAcceso(procesos_oficio.designaTarjetaDatosGenerales)
+          .then(respuesta => {
+            this.permisoEscritura = respuesta;
+            this.persistenceService.setPermisos(this.permisoEscritura);
+     
+            if (this.permisoEscritura == undefined) {
+              sessionStorage.setItem("codError", "403");
+              sessionStorage.setItem(
+                "descError",
+                this.translateService.instant("generico.error.permiso.denegado")
+              );
+              this.router.navigate(["/errorAcceso"]);
+            }
+            
+          }
+          ).catch(error => console.error(error)); 
+    
+    this.sigaServices.get('getLetrado').subscribe(
+      (data) => {
+        if (data.value == 'S') {
+          this.isLetrado = true;
+        } else {
+          this.isLetrado = false;
+        }
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
 
   }
 
@@ -150,7 +188,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     this.progressSpinner = true;
     if (sessionStorage.getItem("buscadorColegiados")) {
       this.busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
-      // sessionStorage.removeItem("buscadorColegiados");
+      sessionStorage.removeItem("buscadorColegiados");
       let apellidosExpress = this.busquedaColegiado.apellidos.split(" ");
       this.inputs[0].value = this.busquedaColegiado.nColegiado;
       this.inputs[1].value = this.busquedaColegiado.apellidos;
@@ -414,7 +452,12 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         var today = new Date();
         var year = today.getFullYear().valueOf();
         newDesigna.ano = year;
-        newDesigna.numero = Number(this.numero.value);
+        if(this.nuevaDesignaCreada != undefined){
+          newDesigna.numero = Number(this.nuevaDesignaCreada.numero);
+        }else if (this.initDatos != undefined) {
+          newDesigna.numero = Number(this.initDatos.numero);
+        }
+        newDesigna.codigo = this.numero.value;
         this.checkDatosGenerales();
         if (this.resaltadoDatos == false) {
           this.progressSpinner = true;
@@ -432,7 +475,11 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
             },
             err => {
                   severity = "error";
-                  summary = "No se han podido modificar los datos";
+                  if(err.status == 400){
+                    summary = this.translateService.instant('justiciaGratuita.oficio.designa.yaexiste');
+                  }else{
+                    summary = "No se han podido modificar los datos";
+                  }
                   this.msgs.push({
                     severity,
                     summary,
@@ -600,6 +647,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                     summary,
                     detail
                   });
+                  this.progressSpinner = false;
 
                 }, () => {
                 }
@@ -624,7 +672,8 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
             var today = new Date();
             var year = today.getFullYear().valueOf();
             newDesigna.ano = year;
-            newDesigna.numero = Number(this.numero.value);
+            newDesigna.numero = Number(this.initDatos.numero);
+            newDesigna.codigo = this.numero.value;
             this.checkDatosGenerales();
             if (this.resaltadoDatos == true) {
               this.progressSpinner = false;
@@ -651,6 +700,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                     summary,
                     detail
                   });
+                  this.progressSpinner = false;
                 }, () => {
                 }
               );
@@ -705,7 +755,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
             element.sufijo = element.estado;
             element.estado = 'Anulada';
           }
-          this.inputs[0].value =  element.nombreColegiado;
+          this.inputs[0].value =  element.numColegiado;
           this.inputs[1].value =  element.apellido1Colegiado + " " + element.apellido2Colegiado;
           this.inputs[2].value = element.nombreColegiado;
           this.inputs[0].disable = true;
@@ -734,6 +784,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       }, () => {
         this.progressSpinner = false;
         setTimeout(() => {
+          sessionStorage.setItem("designaItemLink", JSON.stringify(this.nuevaDesignaCreada));
           this.actualizaFicha.emit(this.nuevaDesignaCreada);
         }, 5);
       });;

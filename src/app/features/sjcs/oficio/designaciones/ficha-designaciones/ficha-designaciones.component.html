@@ -48,7 +48,8 @@
                                 <mat-expansion-panel-header [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
                                     <app-tarjeta [image]="tarj.imagen" [cardTitle]="tarj.nombre" [campos]="tarj.campos"
                                         [icon]="tarj.icono" [enlaces]="tarj.enlaces" [cardOpenState]="tarj.opened"
-                                        [fixed]="tarj.fixed" class="w-100" [enlaceCardClosed]="tarj.enlaceCardClosed">
+                                        [fixed]="tarj.fixed" class="w-100" [enlaceCardClosed]="tarj.enlaceCardClosed"
+                                        [datosLetrado]="tarj.letrado">
                                     </app-tarjeta>
                                 </mat-expansion-panel-header>
                                 <ng-template matExpansionPanelContent>
@@ -76,6 +77,7 @@
                                     <div *ngIf="tarj.nombre == 'Documentación'">
                                         <app-detalle-tarjeta-documentacion-ficha-designacion-oficio
                                             [documentos]="documentos" [campos]="campos" [isLetrado]="isLetrado"
+                                            [actuacionesDesignaItems]="actuacionesDesignaItems"
                                             (buscarDocDesignaEvent)="getDocumentosDesigna()">
                                         </app-detalle-tarjeta-documentacion-ficha-designacion-oficio>
                                     </div>
@@ -104,7 +106,8 @@
                                     <div *ngIf="tarj.nombre == 'Actuaciones'">
                                         <app-detalle-tarjeta-actuaciones-ficha-designacion-oficio [campos]="campos"
                                             [actuacionesDesignaItems]="actuacionesDesignaItems"
-                                            [relaciones]="relaciones" (buscarEvent)="getActuacionesDesigna($event)">
+                                            [relaciones]="relaciones" (buscarEvent)="getActuacionesDesigna($event)"
+                                            [permiteTurno]="permiteTurno">
                                         </app-detalle-tarjeta-actuaciones-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Relaciones'">
@@ -136,20 +139,34 @@
 <!-- Spinner -->
 <div class="mt-3 text-right main-button ">
     <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left"
-    label="{{ 'general.boton.volver' | translate}}"></button>
+        label="{{ 'general.boton.volver' | translate}}"></button>
 </div>
 
 <!--Guardar Procurador-->
-<p-confirmDialog header="{{'justiciaGratuita.oficio.designaciones.guardarProcurador' | translate }}"
-    [(visible)]="showModal2" icon="icon" width="750">
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" [(visible)]="showModal2" key="cdSave"
+    #cdSave icon="icon" width="425">
+    <div class="bloque col-lg-12 col-md-12">
+        <div class="row">
+            <div class="form-group col-lg-6 col-md-6">
+                <label>{{ "justiciaGratuita.oficio.designaciones.guardarProcurador" | translate }} </label>
+            </div>
+        </div>
+    </div>
     <p-footer>
         <button type="button" pButton icon="fa-check" label="Si" (click)="guardarProcuradorEJG(listaPrueba)"></button>
         <button type="button" pButton icon="fa-close" label="No" (click)="cerrarModal()"></button>
     </p-footer>
 </p-confirmDialog>
 
-<p-confirmDialog header="{{'justiciaGratuita.oficio.designaciones.eliminarDesignacion' | translate}}"
-    [(visible)]="showModal3" icon="icon" width="750">
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" [(visible)]="showModal3" key="cdFecha"
+    #cdFecha icon="fa fa-question-circle" width="425">
+    <div class="bloque col-lg-12 col-md-12">
+        <div class="row">
+            <div class="form-group col-lg-6 col-md-6">
+                <label>{{ "justiciaGratuita.oficio.designaciones.eliminarDesignacion" | translate }} </label>
+            </div>
+        </div>
+    </div>
     <p-footer>
         <button type="button" pButton icon="fa-check" label="Si" (click)="actualizarProcurador()"></button>
         <button type="button" pButton icon="fa-close" label="No" (click)="cerrarModal()"></button>

@@ -137,14 +137,21 @@ export class TarjetaColaOficio implements OnInit {
 
   ngOnInit() {
     this.commonsService.checkAcceso(procesos_oficio.colaDeOficio)
-      .then(respuesta => {
-        this.permisosTarjeta = respuesta;
-        if (this.permisosTarjeta != true) {
-          this.permisosTarjeta = false;
-        } else {
-          this.permisosTarjeta = true;
-        }
-      }).catch(error => console.error(error));
+    .then(respuesta => {
+      this.permisosTarjeta = respuesta;
+      this.persistenceService.setPermisos(this.permisosTarjeta);
+      if (this.permisosTarjeta == undefined) {
+        sessionStorage.setItem("codError", "403");
+        sessionStorage.setItem(
+          "descError",
+          this.translateService.instant("generico.error.permiso.denegado")
+        );
+        this.router.navigate(["/errorAcceso"]);
+      }else if(this.persistenceService.getPermisos() != true){
+        this.disableAll = true;
+      }
+    }
+    ).catch(error => console.error(error));
     this.getCols();
     if (this.idTurno != undefined) {
       this.modoEdicion = true;
@@ -214,17 +221,13 @@ export class TarjetaColaOficio implements OnInit {
       }
       this.getColaOficio();
     }
-
   }
 
   fillFechaDesdeCalendar(event) {
     this.turnosItem.fechaActual = this.transformaFecha(event);
     this.getColaOficio();
   }
-  setItalic(dato) {
-    if (dato.fechabajapersona == null) return false;
-    else return true;
-  }
+  
   searchHistorical() {
     this.historico = !this.historico;
     this.persistenceService.setHistorico(this.historico);
@@ -273,7 +276,6 @@ export class TarjetaColaOficio implements OnInit {
             // }
           },
           err => {
-            console.log(err);
           }, () => {
             this.turnosItem.idpersonaUltimo = this.turnosItem2.idpersonaUltimo;
             this.getColaOficio();
@@ -299,7 +301,6 @@ export class TarjetaColaOficio implements OnInit {
         // }
       },
       err => {
-        console.log(err);
         this.progressSpinner = false;
       }, () => {
         this.datosInicial = JSON.parse(JSON.stringify(this.datos));
@@ -625,7 +626,7 @@ export class TarjetaColaOficio implements OnInit {
       { field: "orden", header: "administracion.informes.literal.orden" },
       { field: "numerocolegiado", header: "censo.busquedaClientesAvanzada.literal.nColegiado" },
       { field: "nombrepersona", header: "administracion.parametrosGenerales.literal.nombre.apellidos" },
-      { field: "fechabaja", header: "justiciaGratuita.oficio.turnos.fechaBaja" },
+      { field: "fechabajapersona", header: "justiciaGratuita.oficio.turnos.fechaBaja" },
       // { field: "alfabeticoapellidos", header: "administracion.parametrosGenerales.literal.nombre" },
       { field: "fechavalidacion", header: "justiciaGratuita.oficio.turnos.fechavalidacion" },
       { field: "saltos", header: "justiciaGratuita.oficio.turnos.saltos" },

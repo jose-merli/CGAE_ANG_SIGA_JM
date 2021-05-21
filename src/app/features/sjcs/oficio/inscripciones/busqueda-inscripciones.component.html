@@ -3,10 +3,6 @@
     <app-filtrosinscripciones (busqueda)="searchPartidas($event)" [permisos]="permisoEscritura"></app-filtrosinscripciones>
     <app-gestion-inscripciones *ngIf="buscar" [datos]="datos" (searchPartidas)="searchPartidas($event)" id="tablaFoco"></app-gestion-inscripciones>
 </div>
-<div class="mt-3 text-right main-button ">
-    <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left"
-        label="{{ 'general.boton.volver' | translate}}"></button>
-</div>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">
     <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
