@@ -34,7 +34,7 @@ import { LetradoSalienteComponent } from './designaciones/ficha-designaciones/de
 import { LetradoEntranteComponent } from './designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/ficha-cambio-letrado/letrado-entrante/letrado-entrante.component';
 
 @NgModule({
-        declarations: [FichaCambioLetradoComponent, LetradoSalienteComponent, LetradoEntranteComponent],
+        declarations: [],
         imports: [
                 TooltipModule,
                 TableModule,

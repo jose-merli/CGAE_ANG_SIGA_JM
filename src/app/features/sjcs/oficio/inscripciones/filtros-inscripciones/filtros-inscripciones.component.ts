@@ -8,6 +8,8 @@ import { TurnosItems } from '../../../../../models/sjcs/TurnosItems';
 import { InscripcionesItems } from '../../../../../models/sjcs/InscripcionesItems';
 import { CommonsService } from '../../../../../../app/_services/commons.service';
 import { ColegiadoItem } from '../../../../../models/ColegiadoItem';
+import { procesos_oficio } from '../../../../../permisos/procesos_oficio';
+import { SigaStorageService } from '../../../../../siga-storage.service';
 
 @Component({
   selector: 'app-filtrosinscripciones',
@@ -55,6 +57,7 @@ export class FiltrosInscripciones implements OnInit {
 
   textSelected: String = 'general.boton.seleccionar';
   @Input() permisos;
+  permisosTarjeta: boolean = true;
   /*Éste método es útil cuando queremos queremos informar de cambios en los datos desde el hijo,
     por ejemplo, si tenemos un botón en el componente hijo y queremos actualizar los datos del padre.*/
   @Output() busqueda = new EventEmitter<boolean>();
@@ -63,28 +66,72 @@ export class FiltrosInscripciones implements OnInit {
     private sigaServices: SigaServices,
     private translateService: TranslateService,
     private commonsService: CommonsService,
-    private persistenceService: PersistenceService) { }
+    private persistenceService: PersistenceService,
+    private localStorageService: SigaStorageService) { }
 
   ngOnInit() {  
-    if (sessionStorage.getItem("isLetrado") != null && sessionStorage.getItem("isLetrado") != undefined) {
-      this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
-    }
-
+    
+    this.isLetrado = this.localStorageService.isLetrado;
+    
     if (this.persistenceService.getHistorico() != undefined) {
       this.filtros.historico = this.persistenceService.getHistorico();
       // this.isBuscar();
     }
-    if (this.persistenceService.getPermisos() != undefined) {
-      this.permisos = this.persistenceService.getPermisos();
+    this.commonsService.checkAcceso(procesos_oficio.colaDeGuardia)
+    .then(respuesta => {
+      this.permisosTarjeta = respuesta;
+      this.persistenceService.setPermisos(this.permisosTarjeta);
+      if (this.permisosTarjeta == undefined) {
+        sessionStorage.setItem("codError", "403");
+        sessionStorage.setItem(
+          "descError",
+          this.translateService.instant("generico.error.permiso.denegado")
+        );
+        this.router.navigate(["/errorAcceso"]);
+      }else if(this.persistenceService.getPermisos() != true){
+        this.permisos = true;
+      }
     }
-    if (this.persistenceService.getFiltros() != undefined) {
-      this.filtros = this.persistenceService.getFiltros();
+    ).catch(error => console.error(error));
+
+    if (
+      sessionStorage.getItem("filtrosInscripciones") != null && sessionStorage.getItem("volver") == "true"
+    ) {
+      this.filtros = JSON.parse(
+        sessionStorage.getItem("filtrosInscripciones")
+      );
+      this.usuarioBusquedaExpress.numColegiado = sessionStorage.getItem("numColegiado");
+
+      sessionStorage.removeItem("volver");
+      sessionStorage.removeItem("numColegiado");
+
+      if(this.filtros.fechadesde!=undefined && this.filtros.fechadesde != null){
+        this.filtros.fechadesde = new Date(this.filtros.fechadesde);
+      }
+      if(this.filtros.fechahasta!=undefined && this.filtros.fechahasta != null){
+        this.filtros.fechahasta = new Date(this.filtros.fechahasta);
+        this.disabledFechaHasta = false;
+      }
+       if(this.filtros.afechade!=undefined && this.filtros.afechade != null){
+        this.filtros.afechade = new Date(this.filtros.afechade);
+      }
+      if(sessionStorage.getItem("colegiadoRelleno")){
+        const { numColegiado, nombre } = JSON.parse(sessionStorage.getItem("datosColegiado"));
+        this.usuarioBusquedaExpress.numColegiado = numColegiado;
+        this.usuarioBusquedaExpress.nombreAp = nombre.replace(/,/g,"");
+  
+        this.isBuscar();
+  
+        sessionStorage.removeItem("colegiadoRelleno");
+        sessionStorage.removeItem("datosColegiado");
+      }
       this.isBuscar();
     }
-    
     if(this.isLetrado){
       this.getDataLoggedUser();
     }
+
+  
 
     this.sigaServices.get("inscripciones_comboTurnos").subscribe(
       n => {
@@ -113,7 +160,7 @@ export class FiltrosInscripciones implements OnInit {
         }
       }
     );
-
+    
     if(sessionStorage.getItem("buscadorColegiados")){​​
 
       let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
@@ -122,10 +169,8 @@ export class FiltrosInscripciones implements OnInit {
 
       this.usuarioBusquedaExpress.numColegiado=busquedaColegiado.nColegiado;
 
-    }​​
-
-    this.clearFilters();
-    
+      sessionStorage.removeItem("buscadorColegiados");
+    }​
   }
 
     getDataLoggedUser() {
@@ -159,15 +204,9 @@ export class FiltrosInscripciones implements OnInit {
 
 
   newInscripcion() {
-    this.persistenceService.setFiltros(this.filtros);
-    let isLetrado:boolean = false;
-    if (
-      sessionStorage.getItem("isLetrado") != null &&
-      sessionStorage.getItem("isLetrado") != undefined
-    ) {
-      isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
-    }
+    let isLetrado = this.localStorageService.isLetrado;
     this.progressSpinner = true;
+    this.persistenceService.setFiltros(this.filtros);
     if(isLetrado){
       let colegiadoConectado = new ColegiadoItem();
       this.sigaServices.get("usuario_logeado").subscribe(n => {
@@ -187,6 +226,8 @@ export class FiltrosInscripciones implements OnInit {
       sessionStorage.setItem("origin","newInscrip");
       this.router.navigate(["/buscadorColegiados"]); 
     }
+    
+    
   }
 
   onHideDatosGenerales() {
@@ -241,7 +282,11 @@ export class FiltrosInscripciones implements OnInit {
       this.buscar=true;
       this.persistenceService.setFiltros(this.filtros);
       this.persistenceService.setFiltrosAux(this.filtros);
-      this.filtroAux = this.persistenceService.getFiltrosAux()
+      sessionStorage.setItem("numColegiado", this.usuarioBusquedaExpress.numColegiado);
+      this.filtroAux = this.persistenceService.getFiltrosAux();
+      sessionStorage.setItem(
+        "filtrosInscripciones",
+        JSON.stringify(this.filtros));
       this.busqueda.emit(false);
       this.commonsService.scrollTablaFoco("tablaFoco");
     }
@@ -334,6 +379,11 @@ export class FiltrosInscripciones implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  changeColegiado(event) {
+    this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
+    this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
   }
 
 }

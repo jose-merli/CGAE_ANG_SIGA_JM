@@ -59,7 +59,7 @@
           (click)="validar(selectedDatos)" type="button" icon="fa fa-trash-alt" iconPos="left"
           label="{{ 'general.boton.validar' | translate}}"></button> -->
         <button pButton
-          [disabled]="!permisos  || modoEdicion || disabledSolicitarAlta"
+          [disabled]="modoEdicion || disabledSolicitarAlta"
           (click)="solicitarAlta()" type="button" 
           label="{{ 'general.boton.solicitaralta' | translate}}"></button>
   
@@ -73,7 +73,7 @@
           (click)="validar(selectedDatos)" type="button" icon="fa fa-trash-alt" iconPos="left"
           label="{{ 'general.boton.validar' | translate}}"></button> -->
         <button pButton
-          [disabled]="!permisos || isLetrado || disabledValidar "
+          [disabled]="isLetrado || disabledValidar "
           (click)="validar()" type="button" 
           label="{{ 'general.boton.validar' | translate}}"></button>
 
@@ -86,7 +86,7 @@
           (click)="denegar(selectedDatos)" type="button" icon="fa fa-trash-alt" iconPos="left"
           label="{{ 'general.boton.denegar' | translate}}"></button> -->
         <button pButton
-          [disabled]="!permisos || isLetrado || disabledDenegar "
+          [disabled]="isLetrado || disabledDenegar "
           (click)="denegar()" type="button"
           label="{{ 'general.boton.denegar' | translate}}"></button>
       </div>
@@ -98,7 +98,7 @@
           (click)="solicitarBaja(selectedDatos)" type="button" icon="fa fa-trash-alt" iconPos="left"
           label="{{ 'general.boton.solicitarbaja' | translate}}"></button> -->
         <button pButton
-          [disabled]="!permisos || disabledSolicitarBaja"
+          [disabled]="disabledSolicitarBaja"
           (click)="solicitarBaja()" type="button" 
           label="{{ 'general.boton.solicitarbaja' | translate}}"></button>
       </div>
@@ -106,7 +106,7 @@
         <label>
         </label>
         <button pButton
-          [disabled]="!permisos || disabledCambiarFecha"
+          [disabled]="disabledCambiarFecha || isLetrado"
           (click)="cambiarFecha()" type="button" 
           label="{{ 'justiciaGratuita.oficio.inscripciones.cambiarfecha' | translate}}"></button>
       </div>
@@ -119,6 +119,10 @@
       </div>
     </div>
   </div>
+</div>
+<div class="mt-3 text-right main-button ">
+  <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left"
+  label="{{ 'general.boton.volver' | translate}}"></button>
 </div>
 <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="deletePlantillaDoc" icon="icon" width="425"
   #deletePlantillaDoc>

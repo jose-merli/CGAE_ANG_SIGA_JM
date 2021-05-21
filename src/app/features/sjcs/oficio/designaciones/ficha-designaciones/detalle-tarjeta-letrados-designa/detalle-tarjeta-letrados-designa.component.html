@@ -74,7 +74,7 @@
     <div class="text-right main-button">
       <button 
         (click)="NewLetrado()" pButton type="button" icon="fa fa-plus" iconPos="left"
-        label="{{ 'general.boton.new' | translate}}"></button>
+        label="{{ 'general.boton.new' | translate}}" [disabled]="isLetrado"></button>
     </div>
   </div>
 </div>

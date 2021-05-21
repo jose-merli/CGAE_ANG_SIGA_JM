@@ -133,22 +133,27 @@ export class CommonsService {
     });
   }
 
-  getLetrado() {
+  getLetrado = () => {
 		let isLetrado: ComboItem;
-		this.sigaServices.get('getLetrado').subscribe(
-			(data) => {
-				isLetrado = data;
-				if (isLetrado.value == 'S') {
-					return true;
-				} else {
-					return false;
-				}
-			},
-			(err) => {
-				console.log(err);
-        return false;
-			}
-		);
+    let respuesta = undefined;
+
+    respuesta = new Promise((resolve, reject) => {
+      this.sigaServices.get('getLetrado').subscribe(
+        (data) => {
+          isLetrado = data;
+          if (isLetrado.value == 'S') {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        },
+        (err) => {
+          console.log(err);
+          reject(undefined);
+        }
+        );
+    });
+    return respuesta;
 	}
 
   checkAcceso = (idProceso) => {

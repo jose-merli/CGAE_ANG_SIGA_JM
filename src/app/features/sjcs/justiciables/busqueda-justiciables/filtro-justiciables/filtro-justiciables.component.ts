@@ -39,36 +39,30 @@ export class FiltroJusticiablesComponent implements OnInit {
     private persistenceService: PersistenceService, private commonsService: CommonsService, private location: Location) { }
 
   ngOnInit() {
-
     this.getComboProvincias();
     this.getComboRoles();
 
     if (this.modoRepresentante) {
-
       if (this.persistenceService.getFiltrosAux() != undefined) {
         this.filtros = this.persistenceService.getFiltrosAux();
         this.isOpen.emit(false)
         this.configuracionFiltros();
-
       } else {
         this.filtros = new JusticiableBusquedaItem();
       }
-
     } else {
       if (this.persistenceService.getFiltros() != undefined) {
         this.filtros = this.persistenceService.getFiltros();
         this.isOpen.emit(false)
         this.configuracionFiltros();
-
       } else {
         this.filtros = new JusticiableBusquedaItem();
       }
     }
-
+    this.clearFilters();
   }
 
   configuracionFiltros() {
-
     if ((this.filtros.idProvincia != undefined && this.filtros.idProvincia != null) ||
       (this.filtros.idPoblacion != undefined && this.filtros.idPoblacion != null) ||
       (this.filtros.codigoPostal != undefined && this.filtros.codigoPostal != null)) {
@@ -80,7 +74,6 @@ export class FiltroJusticiablesComponent implements OnInit {
       (this.filtros.idRol != undefined && this.filtros.idRol != null)) {
       this.showAsuntos = true;
     }
-
   }
 
   backTo() {
@@ -112,16 +105,13 @@ export class FiltroJusticiablesComponent implements OnInit {
   }
 
   onChangeProvincia() {
-
     this.filtros.idPoblacion = "";
     this.comboPoblacion = [];
-
     if (this.filtros.idProvincia != undefined && this.filtros.idProvincia != "") {
       this.isDisabledPoblacion = false;
     } else {
       this.isDisabledPoblacion = true;
     }
-
   }
 
   buscarPoblacion(e) {
@@ -150,7 +140,6 @@ export class FiltroJusticiablesComponent implements OnInit {
           this.isDisabledPoblacion = false;
           this.comboPoblacion = n.combooItems;
           this.commonsService.arregloTildesCombo(this.comboPoblacion);
-
         },
         error => { },
         () => { }
@@ -170,9 +159,7 @@ export class FiltroJusticiablesComponent implements OnInit {
   }
 
   search() {
-
     if (this.checkFilters()) {
-
       if (this.modoRepresentante) {
         this.persistenceService.setFiltrosAux(this.filtros);
         this.isOpen.emit(false)
@@ -180,9 +167,7 @@ export class FiltroJusticiablesComponent implements OnInit {
         this.persistenceService.setFiltros(this.filtros);
         this.isOpen.emit(false)
       }
-
     }
-
   }
 
   checkPermisosNuevo() {

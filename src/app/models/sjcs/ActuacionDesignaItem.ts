@@ -37,4 +37,8 @@ export class ActuacionDesignaItem {
     fechaUsuJustificacion: string;
     usuValidacion: string;
     fechaValidacion: string;
+    permiteModificacion: boolean;
+    validarJustificacion: string;
+    nombreProcedimiento: string;
+    nombreModulo: string;
 }

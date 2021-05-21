@@ -21,6 +21,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
   @Input() idGuardia;
   @Input() art27;
 
+  @Input() obligatorio: boolean;
   @Output() idPersona = new EventEmitter<string>();
   progressSpinner: boolean = false;
   nColegiado: string = "";
@@ -29,7 +30,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
     numColegiado: new FormControl(''),
     nombreAp: new FormControl(''),
   });
-
+  styleObligatory: boolean;
   msgs;
   @Output() colegiado = new EventEmitter<any>();
   isLetrado: boolean = false;
@@ -56,6 +57,12 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
     }
     if (this.isLetrado) {
       this.colegiadoForm.controls['numColegiado'].disable();
+    }
+
+    if(this.obligatorio && this.colegiadoForm.get('numColegiado').value == ""){
+      this.styleObligatory = true;
+    }else{
+        this.styleObligatory = false;
     }
 
   }
@@ -173,6 +180,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
   defaultsearch(form) {
     if (form.numColegiado != undefined && form.numColegiado != null && form.numColegiado.length != 0) {
       this.progressSpinner = true;
+      sessionStorage.setItem("numColegiado", form.numColegiado);
 
       this.sigaServices.getParam("componenteGeneralJG_busquedaColegiado", "?colegiadoJGItem=" + form.numColegiado).subscribe(
         data => {
@@ -251,6 +259,15 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
       nombreAp: this.colegiadoForm.get('nombreAp').value
     }
 
+    if(this.obligatorio){
+      if(colegiado.nColegiado == "" || colegiado.nombreAp == ""){
+        this.styleObligatory = true;
+      }else{
+        this.styleObligatory = false;
+      }
+    }
+
     this.colegiado.emit(colegiado);
   }
+
 }

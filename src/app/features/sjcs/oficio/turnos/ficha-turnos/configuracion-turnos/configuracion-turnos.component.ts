@@ -12,6 +12,7 @@ import { CommonsService } from '../../../../../../_services/commons.service';
 import { PrisionItem } from '../../../../../../models/sjcs/PrisionItem';
 import { TurnosItems } from '../../../../../../models/sjcs/TurnosItems';
 import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
+import { Router } from '@angular/router';
 @Component({
   selector: "app-configuracion-turnos",
   templateUrl: "./configuracion-turnos.component.html",
@@ -26,7 +27,7 @@ export class ConfiguracionTurnosComponent implements OnInit {
   @Output() modoEdicionSend = new EventEmitter<any>();
   @Input() tarjetaConfiguracionTurnos: string;
   @Input() openConfigTurnos;
-  
+
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
 
@@ -36,6 +37,7 @@ export class ConfiguracionTurnosComponent implements OnInit {
 
   provinciaSelecionada: string;
   permisosTarjeta: boolean = true;
+  permisoCheck: boolean = false;
   body: TurnosItems;
   bodyInicial: TurnosItems;
   idPrision;
@@ -67,6 +69,7 @@ export class ConfiguracionTurnosComponent implements OnInit {
   mvlValido: boolean = true;
   edicionEmail: boolean = false;
   requisitoInicial: any;
+  isLetrado: boolean = false;
 
   @ViewChild("mailto") mailto;
 
@@ -81,7 +84,7 @@ export class ConfiguracionTurnosComponent implements OnInit {
     },
   ];
 
-  constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
+  constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices, private router: Router,
     private translateService: TranslateService, private commonsService: CommonsService, private commonsServices: CommonsService, private confirmationService: ConfirmationService) { }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -129,7 +132,6 @@ export class ConfiguracionTurnosComponent implements OnInit {
 
       },
       err => {
-        console.log(err);
       }, () => {
         if (this.turnosItem.idguardias != undefined) {
           for (let i = 0; i < this.guardias.length; i++) {
@@ -155,20 +157,35 @@ export class ConfiguracionTurnosComponent implements OnInit {
   }
 
   ngOnInit() {
-    
-    this.commonsService.checkAcceso(procesos_oficio.configuracionTurnos)
-      .then(respuesta => {
-        this.permisosTarjeta = respuesta;
-        if (this.permisosTarjeta != true) {
-          this.permisosTarjeta = false;
+    this.sigaServices.get('getLetrado').subscribe(
+      (data) => {
+        if (data.value == 'S') {
+          this.isLetrado = true;
         } else {
-          this.permisosTarjeta = true;
+          this.isLetrado = false;
         }
-      }).catch(error => console.error(error));
-    if (this.persistenceService.getPermisos() != true) {
-      this.disableAll = true
+      },
+      (err) => {
+      }
+    );
+    this.commonsService.checkAcceso(procesos_oficio.configuracionTurnos)
+    .then(respuesta => {
+      this.permisosTarjeta = respuesta;
+      let esColegio = this.commonsService.getLetrado();
+      this.persistenceService.setPermisos(this.permisosTarjeta);
+      if (this.permisosTarjeta == undefined) {
+        sessionStorage.setItem("codError", "403");
+        sessionStorage.setItem(
+          "descError",
+          this.translateService.instant("generico.error.permiso.denegado")
+        );
+        this.router.navigate(["/errorAcceso"]);
+      } else if (this.persistenceService.getPermisos() != true) {
+        this.disableAll = true;
+      }
     }
-
+    ).catch(error => console.error(error));
+    
     if (this.modoEdicion) {
       this.body = this.turnosItem;
       this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
@@ -211,34 +228,32 @@ export class ConfiguracionTurnosComponent implements OnInit {
   onChangeRequisitosGuardias() {
     for (let i = 0; i < this.guardias.length; i++) {
       if (this.guardias[i].value == this.turnosItem.idguardias) {
-        if(this.requisitosGuardiasDescripcion == "Todas o ninguna" && this.guardias[i].label == "Obligatorias"){
+        if (this.requisitosGuardiasDescripcion == "Todas o ninguna" && this.guardias[i].label == "Obligatorias") {
           this.sigaServices.post("turno_changeRequisitoGuardias", this.body).subscribe(
             data => {
               this.progressSpinner = false;
-               let error = JSON.parse(data.body).error;
+              let error = JSON.parse(data.body).error;
               if (error != null && error.description != null) {
                 this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
               }
             },
             error => {
               this.progressSpinner = false;
-              console.log(error);
               this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
             }
           );
         }
-        if(this.requisitosGuardiasDescripcion == "A elegir" && this.guardias[i].label == "Obligatorias"){
+        if (this.requisitosGuardiasDescripcion == "A elegir" && this.guardias[i].label == "Obligatorias") {
           this.sigaServices.post("turno_changeRequisitoGuardias", this.body).subscribe(
             data => {
               this.progressSpinner = false;
-               let error = JSON.parse(data.body).error;
+              let error = JSON.parse(data.body).error;
               if (error != null && error.description != null) {
                 this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
               }
             },
             error => {
               this.progressSpinner = false;
-              console.log(error);
               this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
             }
           );
@@ -254,10 +269,7 @@ export class ConfiguracionTurnosComponent implements OnInit {
 
 
   confirmGuardar() {
-      console.log(this.requisitosGuardiasDescripcion);
-      console.log(this.requisitoInicial);
-    
-   let keyConfirmation = "deletePlantillaDoc";
+    let keyConfirmation = "deletePlantillaDoc";
 
     this.confirmationService.confirm({
       key: keyConfirmation,
@@ -265,22 +277,22 @@ export class ConfiguracionTurnosComponent implements OnInit {
       message: this.translateService.instant('justiciaGratuita.oficio.turnos.confirmguardarturnos'),
       icon: "fa fa-trash-alt",
       accept: () => {
-          this.save()
-        },
-        reject: () => {
-          this.msgs = [
-            {
-              severity: "info",
-              summary: "Cancel",
-              detail: this.translateService.instant(
-                "general.message.accion.cancelada"
-              )
-            }
-          ];
-        }
-      });
-    }
-    
+        this.save()
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
+
   getFichaPosibleByKey(key): any {
     let fichaPosible = this.fichasPosibles.filter(elto => {
       return elto.key === key;
@@ -302,7 +314,6 @@ export class ConfiguracionTurnosComponent implements OnInit {
 
       },
       err => {
-        console.log(err);
         this.progressSpinner = false;
       }, () => {
       }
@@ -331,7 +342,7 @@ export class ConfiguracionTurnosComponent implements OnInit {
           }
           this.modoEdicionSend.emit(send);
         }
-        
+
         if (this.turnosItem.validarjustificaciones == 'S') {
           this.validJustificacion = "SI";
         } else {
@@ -390,16 +401,16 @@ export class ConfiguracionTurnosComponent implements OnInit {
     let correo = dato.email;
     this.commonsServices.openOutlook(correo);
   }
-/* 
-  abrirFicha(key) {
-    let fichaPosible = this.getFichaPosibleByKey(key);
-    fichaPosible.activa = true;
-  }
-
-  cerrarFicha(key) {
-    let fichaPosible = this.getFichaPosibleByKey(key);
-    fichaPosible.activa = false;
-  } */
+  /* 
+    abrirFicha(key) {
+      let fichaPosible = this.getFichaPosibleByKey(key);
+      fichaPosible.activa = true;
+    }
+  
+    cerrarFicha(key) {
+      let fichaPosible = this.getFichaPosibleByKey(key);
+      fichaPosible.activa = false;
+    } */
   abreCierraFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
     if (

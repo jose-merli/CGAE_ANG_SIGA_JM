@@ -42,7 +42,7 @@ export class TarjetaGuardias implements OnInit {
   cols;
   rowsPerPage;
   historico: boolean = false;
-  datos: any[];
+  datos: any[] = [];
   listaTabla: TurnosItems = new TurnosItems();
   fechaActual;
   disableAll: boolean = false;
@@ -205,7 +205,6 @@ export class TarjetaGuardias implements OnInit {
         // });
       },
       err => {
-        console.log(err);
         this.progressSpinner = false;
       }, () => {
         if (this.datos != undefined && this.datos.length > 1) {
@@ -257,19 +256,15 @@ export class TarjetaGuardias implements OnInit {
       this.body.areasItems = this.updateAreas;
       this.callSaveService(url);
     }
-
   }
 
   callSaveService(url) {
-
     this.sigaServices.post(url, this.body).subscribe(
       data => {
-
         if (this.nuevo) {
           this.nuevo = false;
           this.datosInicial = JSON.parse(JSON.stringify(this.datos));
         }
-
         this.getColaOficio();
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
@@ -289,7 +284,6 @@ export class TarjetaGuardias implements OnInit {
         this.progressSpinner = false;
       }
     );
-
   }
 
   newMateria() {
@@ -620,10 +614,8 @@ export class TarjetaGuardias implements OnInit {
       guardiaItem.idTurno = evento.idTurno;
       this.persistenceService.setDatos(guardiaItem);
       this.persistenceService.setHistorico(evento.fechabaja ? true : false);
-      this.router.navigate(["/gestionGuardias"]);
-      // this.router.navigate(["/gestionTurnos"], { queryParams: { idturno: evento.data.idturno } });
+      this.router.navigate(["/gestionGuardias"], { queryParams: { idturno: evento.data.idturno } });
     } else {
-
       if (evento.data.fechabaja == undefined && this.historico) {
         this.selectedDatos.pop();
       }
@@ -678,7 +670,6 @@ export class TarjetaGuardias implements OnInit {
     this.idOpened.emit(key);
   }
   openMultiSelect(dato) {
-    // console.log(this.multiSelect);
     dato.onPanelShow;
     // this.multiSelect.show();
     // dato.overlayVisible = true;

@@ -67,6 +67,7 @@ export class BuscadorColegiadosComponent implements OnInit {
   }
 
   goBack() {
+    sessionStorage.setItem("volver", "true");
     this.location.back();
   }
 

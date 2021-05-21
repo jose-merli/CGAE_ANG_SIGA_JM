@@ -8,6 +8,9 @@ import { JusticiableBusquedaItem } from '../../../../../../models/sjcs/Justiciab
 import { Message } from 'primeng/components/common/api';
 import { DatosColegiadosItem } from '../../../../../../models/DatosColegiadosItem';
 import { Location, DatePipe } from '@angular/common';
+import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
+import { CommonsService } from '../../../../../../_services/commons.service';
+import { SigaStorageService } from '../../../../../../siga-storage.service';
 
 
 @Component({
@@ -27,6 +30,8 @@ export class DetalleTarjetaLetradosDesignaComponent implements OnInit {
   selectionMode: string = "single";
   numSelected = 0;
   art27: Boolean = false;
+  permisoEscritura: boolean;
+  isLetrado: boolean;
 
   selectedDatos: any = [];
 
@@ -41,15 +46,19 @@ export class DetalleTarjetaLetradosDesignaComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private persistenceService: PersistenceService,
     private router: Router,
-    private datepipe: DatePipe
+    private datepipe: DatePipe,
+    private commonsService: CommonsService,
+    private localStorageService: SigaStorageService
   ) { }
 
   ngOnInit() {
     this.getCols();
     let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
     let datos: DesignaItem = designa;
-    if(designa.art27!="No") this.art27=true;
-    this.art27=true;
+    if(designa.art27!="No"){
+      this.art27=true;
+    } 
+    
 
     this.datos=this.letrados;
     sessionStorage.setItem("FDSaliente",this.letrados[0].fechaDesignacion);
@@ -59,7 +68,18 @@ export class DetalleTarjetaLetradosDesignaComponent implements OnInit {
       if(element.fechaSolRenuncia!=null) element.fechaSolRenuncia = this.datepipe.transform(element.fechaSolRenuncia, 'dd/MM/yyyy');
     });
     
-    
+    this.sigaServices.get('getLetrado').subscribe(
+      (data) => {
+        if (data.value == 'S') {
+          this.isLetrado = true;
+        } else {
+          this.isLetrado = false;
+        }
+      },
+      (err) => {
+      }
+    );
+    this.isLetrado = this.localStorageService.isLetrado;
   }
 
   irFichaColegial(){

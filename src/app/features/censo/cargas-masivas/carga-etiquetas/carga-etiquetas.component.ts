@@ -204,11 +204,20 @@ export class CargaEtiquetasComponent implements OnInit {
       .postPaginado("cargasMasivas_searchEtiquetas", "?numPagina=1", this.body)
       .subscribe(
         data => {
+          let error = JSON.parse(data.body).error;
           this.progressSpinner = false;
           this.etiquetasSearch = JSON.parse(data["body"]);
           this.datos = this.etiquetasSearch.cargaMasivaItem;
           this.table.reset();
           this.numSelected = this.selectedDatos.length;
+
+          if (error != null && error.description != null) {
+            this.msgs = [];
+            this.msgs.push({
+              severity:"info", 
+              summary:this.translateService.instant("general.message.informacion"), 
+              detail: error.description});
+          }
         },
         err => {
           console.log(err);

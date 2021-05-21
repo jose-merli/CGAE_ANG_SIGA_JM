@@ -23,8 +23,8 @@
               <b>{{dato.label}}: </b>{{dato.value}}</label>             
           </div>
           <div class="d-flex flex-wrap">
-            <label *ngIf="datosVacio != undefined" name>
-              {{datosVacio}}</label>
+            <label *ngIf="datos == undefined" name>
+              <b>{{dato.label}}</b></label>
           </div>
         </div>
       </div>

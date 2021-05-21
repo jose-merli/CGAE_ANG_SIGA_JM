@@ -51,16 +51,23 @@ export class FiltrosTurnos implements OnInit {
     textFilter: string = "Seleccionar";
 
   ngOnInit() {
-    this.clearFilters();
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisos = this.persistenceService.getPermisos();
     }
+
     if (this.persistenceService.getFiltros() != undefined) {
-      this.filtros = this.persistenceService.getFiltros();
-      if (this.persistenceService.getHistorico() != undefined) {
-        // this.busqueda.emit(this.persistenceService.getHistorico());
+      if (sessionStorage.getItem("filtrosTurnos") != null) {
+        if(sessionStorage.getItem("volver") == 'true'){
+        this.filtros = JSON.parse(
+          sessionStorage.getItem("filtrosTurnos")
+        );
+        this.isBuscar();
+        sessionStorage.removeItem("volver");
+        }else{
+          this.filtros = new TurnosItems();
+        }
       }
-    } else {
+    }else{
       this.filtros = new TurnosItems();
     }
 
@@ -213,7 +220,6 @@ export class FiltrosTurnos implements OnInit {
       }
     );
     this.partidoJudicial = "";
-    this.clearFilters();
   }
 
 
@@ -405,6 +411,9 @@ export class FiltrosTurnos implements OnInit {
       if(this.filtros.idmateria == null || this.filtros.idmateria == undefined){
         this.filtros.idmateria = "";
       }
+      sessionStorage.setItem(
+        "filtrosTurnos",
+        JSON.stringify(this.filtros));
       this.busqueda.emit(false);
       this.commonsService.scrollTablaFoco('tablaFoco');
     }

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, HostListener } from '@angular/core';
-import { Message } from "primeng/components/common/api";
+import { ConfirmationService, Message } from "primeng/components/common/api";
 import { TranslateService } from '../../../../../commons/translate';
 import { ColegiadoItem } from '../../../../../models/ColegiadoItem';
 import { DesignaItem } from '../../../../../models/sjcs/DesignaItem';
@@ -12,6 +12,8 @@ import { ControlAccesoDto } from '../../../../../models/ControlAccesoDto';
 import { FileAlreadyExistException } from '@angular-devkit/core';
 import { ParametroRequestDto } from '../../../../../models/ParametroRequestDto';
 import { ParametroDto } from '../../../../../models/ParametroDto';
+import { SigaStorageService } from '../../../../../siga-storage.service';
+import { CommonsService } from '../../../../../_services/commons.service';
 
 export enum KEY_CODE {
   ENTER = 13
@@ -31,6 +33,7 @@ export class FiltroDesignacionesComponent implements OnInit {
   isButtonVisible = true;
   filtroJustificacion: JustificacionExpressItem = new JustificacionExpressItem();
   datos;
+  closeDialog:boolean = false;
   expanded: boolean = false;
   textSelected: String = "{0} etiquetas seleccionadas";
   progressSpinner: boolean = true;
@@ -75,12 +78,13 @@ export class FiltroDesignacionesComponent implements OnInit {
   comboOrigenActuaciones: any[];
   comboRoles: any[];
   comboAcreditaciones: any[];
-
+  permisoEscritura: boolean;
   institucionActual: any;
   @Output() busquedaJustificacionExpres = new EventEmitter<boolean>();
   @Output() showTablaDesigna = new EventEmitter<boolean>();
   @Output() showTablaJustificacionExpres = new EventEmitter<boolean>();
   @Output() busqueda = new EventEmitter<boolean>();
+  @Output() permisosFichaAct= new EventEmitter<boolean>();
   
   isLetrado:boolean = false;
   sinEjg;
@@ -90,31 +94,64 @@ export class FiltroDesignacionesComponent implements OnInit {
   valorParametro: AnalyserNode;
   datosBuscar: any[];
   searchParametros: ParametroDto = new ParametroDto();
-  constructor(private translateService: TranslateService, private sigaServices: SigaServices,  private location: Location, private router: Router) { }
+  constructor(private translateService: TranslateService, private sigaServices: SigaServices,  private location: Location, private router: Router,
+    private localStorageService: SigaStorageService,  private commonsService: CommonsService,private confirmationService: ConfirmationService,) { }
 
   ngOnInit(): void {
-
+    sessionStorage.setItem("rowIdsToUpdate", JSON.stringify([]));
     // let esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
     // if(!esColegiado){   
     this.checkAcceso();
+    this.checkAccesoFichaActuacion();
     this.getParamsEJG();
-  // }
 
+    if (
+      sessionStorage.getItem("filtroDesignas") != null
+    ) {
+      this.body = JSON.parse(
+        sessionStorage.getItem("filtroDesignas")
+      );
+
+      if(this.body.fechaEntradaInicio != undefined && this.body.fechaEntradaInicio != null){
+      this.fechaAperturaDesdeSelect =  new Date(this.body.fechaEntradaInicio);
+      }
+      if(this.body.fechaEntradaFin != undefined && this.body.fechaEntradaFin != null){
+	    this.fechaAperturaHastaSelect = new Date(this.body.fechaEntradaFin);
+      }
+      if(this.body.fechaJustificacionDesde!=undefined && this.body.fechaJustificacionDesde != null){
+        this.body.fechaJustificacionDesde = new Date(this.body.fechaJustificacionDesde);
+      }
+      if(this.body.fechaJustificacionHasta!=undefined && this.body.fechaJustificacionHasta != null){
+        this.body.fechaJustificacionHasta = new Date(this.body.fechaJustificacionHasta);
+      }
+      this.buscar();
+      sessionStorage.removeItem("filtroDesignas");
+    }
+
+    if(sessionStorage.getItem("buscadorColegiados")){
+      const { nombre, apellidos, nColegiado } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
+      this.usuarioBusquedaExpress.nombreAp = `${apellidos}, ${nombre}`;
+      this.usuarioBusquedaExpress.numColegiado = nColegiado;
+      this.showColegiado = true;
+
+      this.buscar();
+
+      sessionStorage.removeItem("buscadorColegiados");
+    }
+
+    
+    
   }
 
   getParamsEJG(){  
-    this.sinEjg = this.getParams("JUSTIFICACION_INCLUIR_SIN_EJG");
-    this.ejgSinResolucion = this.getParams("JUSTIFICACION_INCLUIR_EJG_SIN_RESOLUCION");
-    this.ejgPtecajg = this.getParams("JUSTIFICACION_INCLUIR_EJG_PTECAJG");
-    this.ejgNoFavorable = this.getParams("JUSTIFICACION_INCLUIR_EJG_NOFAVORABLE");}
-  getParams(param){
     let parametro = new ParametroRequestDto();
     let institucionActual;
     this.sigaServices.get("institucionActual").subscribe(n => {
       institucionActual = n.value;
       parametro.idInstitucion = institucionActual;
       parametro.modulo = "SCS";
-      parametro.parametrosGenerales = param;
+      //PARAMETRO JUSTIFICACION_INCLUIR_SIN_EJG
+      parametro.parametrosGenerales = "JUSTIFICACION_INCLUIR_SIN_EJG";
       this.sigaServices
         .postPaginado("parametros_search", "?numPagina=1", parametro)
         .subscribe(
@@ -122,9 +159,54 @@ export class FiltroDesignacionesComponent implements OnInit {
             this.searchParametros = JSON.parse(data["body"]);
             this.datosBuscar = this.searchParametros.parametrosItems;
             this.datosBuscar.forEach(element => {
-              if (element.parametro == param && (element.idInstitucion == 0 || element.idInstitucion == element.idinstitucionActual)) {
+              if (element.parametro == parametro.parametrosGenerales && (element.idInstitucion == 0 || element.idInstitucion == element.idinstitucionActual)) {
                 this.valorParametro = element.valor;
-                return this.valorParametro;
+                this.sinEjg = this.valorParametro;
+              }
+          });
+      });
+      //PARAMETRO JUSTIFICACION_INCLUIR_EJG_SIN_RESOLUCION
+      parametro.parametrosGenerales = "JUSTIFICACION_INCLUIR_EJG_SIN_RESOLUCION";
+      this.sigaServices
+        .postPaginado("parametros_search", "?numPagina=1", parametro)
+        .subscribe(
+          data => {
+            this.searchParametros = JSON.parse(data["body"]);
+            this.datosBuscar = this.searchParametros.parametrosItems;
+            this.datosBuscar.forEach(element => {
+              if (element.parametro == parametro.parametrosGenerales && (element.idInstitucion == 0 || element.idInstitucion == element.idinstitucionActual)) {
+                this.valorParametro = element.valor;
+                this.ejgSinResolucion = this.valorParametro;
+              }
+          });
+      });
+      //PARAMETRO JUSTIFICACION_INCLUIR_EJG_PTECAJG
+      parametro.parametrosGenerales = "JUSTIFICACION_INCLUIR_EJG_PTECAJG";
+      this.sigaServices
+        .postPaginado("parametros_search", "?numPagina=1", parametro)
+        .subscribe(
+          data => {
+            this.searchParametros = JSON.parse(data["body"]);
+            this.datosBuscar = this.searchParametros.parametrosItems;
+            this.datosBuscar.forEach(element => {
+              if (element.parametro == parametro.parametrosGenerales && (element.idInstitucion == 0 || element.idInstitucion == element.idinstitucionActual)) {
+                this.valorParametro = element.valor;
+                this.ejgPtecajg = this.valorParametro;
+              }
+          });
+      });
+      //PARAMETRO JUSTIFICACION_INCLUIR_EJG_NOFAVORABLE
+      parametro.parametrosGenerales = "JUSTIFICACION_INCLUIR_EJG_NOFAVORABLE";
+      this.sigaServices
+        .postPaginado("parametros_search", "?numPagina=1", parametro)
+        .subscribe(
+          data => {
+            this.searchParametros = JSON.parse(data["body"]);
+            this.datosBuscar = this.searchParametros.parametrosItems;
+            this.datosBuscar.forEach(element => {
+              if (element.parametro == parametro.parametrosGenerales && (element.idInstitucion == 0 || element.idInstitucion == element.idinstitucionActual)) {
+                this.valorParametro = element.valor;
+                this.ejgNoFavorable = this.valorParametro;
               }
           });
       });
@@ -137,9 +219,7 @@ export class FiltroDesignacionesComponent implements OnInit {
 
 }
   cargaInicial(){
-    if (sessionStorage.getItem("isLetrado") != null && sessionStorage.getItem("isLetrado") != undefined) {
-      this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
-    }
+    this.isLetrado = this.localStorageService.isLetrado;
 
     if(!this.esColegiado){
       this.isButtonVisible = true;
@@ -201,7 +281,26 @@ export class FiltroDesignacionesComponent implements OnInit {
     //combo comun
     this.getComboEstados();
   }
-
+  checkAccesoFichaActuacion(){
+  this.commonsService.checkAcceso(procesos_oficio.designaTarjetaActuacionesFacturacion)
+          .then(respuesta => {
+            this.permisoEscritura = respuesta;
+    this.permisosFichaAct.emit(this.permisoEscritura);
+            //this.persistenceService.setPermisos(this.permisoEscritura);
+     
+            if (this.permisoEscritura == undefined) {
+              sessionStorage.setItem("codError", "403");
+              sessionStorage.setItem(
+                "descError",
+                this.translateService.instant("generico.error.permiso.denegado")
+              );
+              this.router.navigate(["/errorAcceso"]);
+            }
+            
+          }
+          ).catch(error => console.error(error)); 
+    
+  }
   checkAcceso() {
     let controlAcceso = new ControlAccesoDto();
     controlAcceso.idProceso = procesos_oficio.designa;
@@ -231,7 +330,6 @@ export class FiltroDesignacionesComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
       }
     );
   }
@@ -240,6 +338,7 @@ export class FiltroDesignacionesComponent implements OnInit {
     if(event=='designas'){
       this.showDesignas=true;
       this.showJustificacionExpress=false;
+      this.isButtonVisible=true;
       this.showTablaJustificacionExpres.emit(false);
     }
 
@@ -247,6 +346,7 @@ export class FiltroDesignacionesComponent implements OnInit {
       this.showDesignas=false;
       this.showJustificacionExpress=true;
       this.expanded=true;
+      this.isButtonVisible=false;
       this.showTablaDesigna.emit(false);
     }
   }
@@ -377,7 +477,6 @@ export class FiltroDesignacionesComponent implements OnInit {
         this.progressSpinner=false;
       },
       err => {
-        console.log(err);
         this.progressSpinner=false;
 
       }, () => {
@@ -395,7 +494,6 @@ export class FiltroDesignacionesComponent implements OnInit {
         this.progressSpinner=false;
       },
       err => {
-        console.log(err);
         this.progressSpinner=false;
       }, () => {
         this.arregloTildesCombo(this.comboTipoDesigna);
@@ -442,7 +540,6 @@ getComboCalidad() {
         this.progressSpinner=false;
       },
       err => {
-        console.log(err);
         this.progressSpinner=false;
       }, () => {
         this.arregloTildesCombo(this.comboTurno);
@@ -459,7 +556,6 @@ getComboCalidad() {
         this.progressSpinner=false;
       },
       err => {
-        console.log(err);
         this.progressSpinner=false;
       }, () => {
         this.arregloTildesCombo(this.comboTurno);
@@ -476,7 +572,6 @@ getComboCalidad() {
         this.progressSpinner=false;
       },
       err => {
-        console.log(err);
         this.progressSpinner=false;
       }, () => {
         this.arregloTildesCombo(this.comboProcedimientos);
@@ -504,7 +599,6 @@ getComboCalidad() {
         this.progressSpinner=false;
       },
       err => {
-        console.log(err);
         this.progressSpinner=false;
       }, () => {
         this.arregloTildesCombo(this.comboAcreditaciones);
@@ -561,6 +655,20 @@ getComboCalidad() {
   }
 
   buscar(){
+    let keyConfirmation = "confirmacionGuardarJustificacionExpress";
+    if (sessionStorage.getItem('rowIdsToUpdate') != null && sessionStorage.getItem('rowIdsToUpdate') != 'null' && sessionStorage.getItem('rowIdsToUpdate') != '[]'){
+      this.confirmationService.confirm({
+        key: keyConfirmation,
+        message: this.translateService.instant('justiciaGratuita.oficio.justificacion.reestablecer'),
+        icon: "fa fa-trash-alt",
+        accept: () => {
+          this.showTablaJustificacionExpres.emit(false);
+          this.busquedaJustificacionExpres.emit(true);
+        },
+        reject: () => {
+        }
+      });
+    }else{
     //es la busqueda de justificacion
     if(this.showJustificacionExpress){
       if(this.usuarioBusquedaExpress.numColegiado!=undefined && this.usuarioBusquedaExpress.numColegiado!=null
@@ -600,7 +708,7 @@ getComboCalidad() {
         designa.numColegiado = this.usuarioBusquedaExpress.numColegiado;
 
         designa.idJuzgados = this.body.idJuzgados;
-        designa.idModulo = this.body.idModulo;
+        designa.idModulos = this.body.idModulos;
         designa.idCalidad = this.body.idCalidad;
         if(this.body.anoProcedimiento != null && this.body.anoProcedimiento != undefined){
           designa.numProcedimiento = this.body.anoProcedimiento.toString();
@@ -630,10 +738,18 @@ getComboCalidad() {
         
         sessionStorage.setItem("designaItem", JSON.stringify(designa));
         
+        this.body.fechaEntradaInicio=this.fechaAperturaDesdeSelect;
+        this.body.fechaEntradaFin=this.fechaAperturaHastaSelect;
+
+        sessionStorage.setItem(
+          "filtroDesignas",
+          JSON.stringify(this.body));
+
         this.progressSpinner = false;
         this.busqueda.emit(false);
       }
     }
+  }
   
 
   showMessage(severity, summary, msg) {
@@ -650,7 +766,8 @@ getComboCalidad() {
       && this.usuarioBusquedaExpress.numColegiado.trim().length!=0){
       return true;
     }else{
-      this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.oficio.justificacionExpres.message.ncolegiadoObligatorio"));
+      this.showMessage("error", "Error",
+       this.translateService.instant("general.message.camposObligatorios"));
       return false;
     }
   }
@@ -664,7 +781,15 @@ getComboCalidad() {
         nombreAp: ''
       };
     }
+
+    //justificacion expres
+    this.getDataLoggedUser();
+
     this.body = new DesignaItem();
+    this.fechaAperturaDesdeSelect = undefined;
+    this.fechaAperturaHastaSelect = undefined;
+    this.fechaJustificacionDesdeSelect = undefined;
+    this.fechaJustificacionHastaSelect = undefined;
     this.getBuscadorDesignas();
   }
 
@@ -737,33 +862,33 @@ getComboCalidad() {
       const colegiadoItem = new ColegiadoItem();
       colegiadoItem.nif = usuario[0].dni;
 
-      //cambiar, nullpointer si no es colegiado
-      this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(usr => {
-        const { numColegiado, nombre } = JSON.parse(usr.body).colegiadoItem[0];
-        this.usuarioBusquedaExpress.numColegiado = numColegiado;
-        this.usuarioBusquedaExpress.nombreAp = nombre.replace(/,/g,"");
-        this.showColegiado = true;
+      if(this.isLetrado){
+        this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(usr => {
+          const { numColegiado, nombre } = JSON.parse(usr.body).colegiadoItem[0];
+          this.usuarioBusquedaExpress.numColegiado = numColegiado;
+          this.usuarioBusquedaExpress.nombreAp = nombre.replace(/,/g,"");
+          this.showColegiado = true;
 
-        //es colegiado, filtro por defecto para justificacion
-        this.filtroJustificacion.ejgSinResolucion = this.ejgSinResolucion;
-        this.filtroJustificacion.sinEJG= this.sinEjg;
-        this.filtroJustificacion.resolucionPTECAJG= this.ejgPtecajg;
-        this.filtroJustificacion.conEJGNoFavorables= this.ejgNoFavorable;
+          //es colegiado, filtro por defecto para justificacion
+          this.filtroJustificacion.ejgSinResolucion = this.ejgSinResolucion;
+          this.filtroJustificacion.sinEJG= this.sinEjg;
+          this.filtroJustificacion.resolucionPTECAJG= this.ejgPtecajg;
+          this.filtroJustificacion.conEJGNoFavorables= this.ejgNoFavorable;
 
-        this.esColegiado = true;
-        this.checkRestricciones = true;
-      },
-      err =>{
-        this.progressSpinner = false;
-      },
-      ()=>{
-        this.progressSpinner = false;
-        this.buscar();
-      });
+          this.esColegiado = true;
+          this.checkRestricciones = true;
+        },
+        err =>{
+          this.progressSpinner = false;
+        },
+        ()=>{
+          this.progressSpinner = false;
+          this.buscar();
+        });
+      }
 
     },
     error =>{
-      console.log("ERROR: cargando datos del usuario logado");
       this.progressSpinner=false;
     });
   }

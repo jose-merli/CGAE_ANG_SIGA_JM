@@ -4,6 +4,7 @@ import { ActuacionDesignaItem } from '../../../../../../models/sjcs/ActuacionDes
 import { Message } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../../../commons/translate/translation.service';
 import { Router } from '@angular/router';
+import { SigaStorageService } from '../../../../../../siga-storage.service';
 
 export interface Col {
   field: string,
@@ -11,11 +12,11 @@ export interface Col {
   width: string
 }
 
-export interface Actuacion {
-  isNew: boolean,
-  designaItem: any,
-  actuacion: ActuacionDesignaItem,
-  relaciones: any
+export class Actuacion {
+  isNew: boolean;
+  designaItem: any;
+  actuacion: ActuacionDesignaItem;
+  relaciones: any;
 }
 
 @Component({
@@ -28,6 +29,7 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
   @Input() campos;
   @Input() actuacionesDesignaItems: ActuacionDesignaItem[];
   @Input() relaciones: any;
+  @Input() permiteTurno: boolean;
 
   @Output() buscarEvent = new EventEmitter<boolean>();
 
@@ -72,15 +74,18 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
   progressSpinner: boolean = false;
   actuacionesSeleccionadas: ActuacionDesignaItem[] = [];
   msgs: Message[] = [];
+  isLetrado: boolean;
 
   constructor
     (
       private sigaServices: SigaServices,
       private translateService: TranslateService,
-      private router: Router
+      private router: Router,
+      private localStorageService: SigaStorageService
     ) { }
 
   ngOnInit() {
+    this.isLetrado = this.localStorageService.isLetrado;
   }
 
   toogleHistory(value: boolean) {
@@ -100,7 +105,7 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
 
   onRowSelected(event) {
 
-    if (this.historico && !event.data.anulada) {
+    if ((this.historico && !event.data.anulada) || !event.data.permiteModificacion) {
       this.actuacionesSeleccionadas.pop();
     }
 
@@ -217,7 +222,12 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
       let actuacionesRequest = [];
 
       this.actuacionesSeleccionadas.forEach(el => {
-        if (!el.facturado) {
+
+        if (this.isLetrado && (el.validada || !this.permiteTurno)) {
+          error = true;
+        }
+
+        if (!error && !el.facturado) {
           actuacionesRequest.push(el);
         } else {
           error = true;
@@ -225,7 +235,7 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
       });
 
       if (error) {
-        this.showMessage({ severity: 'error', summary: 'Error', detail: 'Alguno de los elementos seleccionados no puede anularse porque se encuentra facturado' });
+        this.showMessage({ severity: 'error', summary: 'Error', detail: 'Alguno de los elementos seleccionados no puede eliminarse porque se encuentra facturado o validado' });
       }
 
       this.sigaServices.post("actuaciones_designacion_eliminar", actuacionesRequest).subscribe(
@@ -264,7 +274,6 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
       actuacion: new ActuacionDesignaItem(),
       relaciones: null
     }
-
     sessionStorage.setItem("actuacionDesigna", JSON.stringify(actuacion));
     this.router.navigate(['/fichaActDesigna']);
   }

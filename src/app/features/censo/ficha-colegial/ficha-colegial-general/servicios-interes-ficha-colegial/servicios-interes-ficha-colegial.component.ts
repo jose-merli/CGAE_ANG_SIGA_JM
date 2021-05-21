@@ -173,12 +173,24 @@ export class ServiciosInteresFichaColegialComponent implements OnInit, OnChanges
   }
 
   turnoInscrito(){
+    if(!this.isLetrado){
+      sessionStorage.setItem("colegiadoRelleno","true");
+      sessionStorage.setItem("datosColegiado",JSON.stringify(this.generalBody));
+    }
       this.router.navigate(["/inscripciones"]);
   }
   designas(){
+    if(!this.isLetrado){
+      sessionStorage.setItem("colegiadoRelleno","true");
+      sessionStorage.setItem("datosColegiado",JSON.stringify(this.generalBody));
+    }
       this.router.navigate(["/designaciones"]);
   }
   bajasTemporales(){
+    if(!this.isLetrado){
+      sessionStorage.setItem("colegiadoRelleno","true");
+      sessionStorage.setItem("datosColegiado",JSON.stringify(this.generalBody));
+    }
       this.router.navigate(["/bajasTemporales"]);
   }
 }

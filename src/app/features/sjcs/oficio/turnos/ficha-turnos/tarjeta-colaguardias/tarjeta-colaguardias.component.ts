@@ -131,7 +131,6 @@ export class TarjetaColaGuardias implements OnInit {
               this.guardias = n.combooItems;
             },
             err => {
-              console.log(err);
 
             }, () => {
               this.guardiasNombre = "";
@@ -175,14 +174,21 @@ export class TarjetaColaGuardias implements OnInit {
 
   ngOnInit() {
     this.commonsService.checkAcceso(procesos_oficio.colaDeGuardia)
-      .then(respuesta => {
-        this.permisosTarjeta = respuesta;
-        if (this.permisosTarjeta != true) {
-          this.permisosTarjeta = false;
-        } else {
-          this.permisosTarjeta = true;
-        }
-      }).catch(error => console.error(error));
+    .then(respuesta => {
+      this.permisosTarjeta = respuesta;
+      this.persistenceService.setPermisos(this.permisosTarjeta);
+      if (this.permisosTarjeta == undefined) {
+        sessionStorage.setItem("codError", "403");
+        sessionStorage.setItem(
+          "descError",
+          this.translateService.instant("generico.error.permiso.denegado")
+        );
+        this.router.navigate(["/errorAcceso"]);
+      }else if(this.persistenceService.getPermisos() != true){
+        this.disableAll = true;
+      }
+    }
+    ).catch(error => console.error(error));
     this.getCols();
     if (this.idTurno != undefined) {
       this.modoEdicion = true;
@@ -217,7 +223,6 @@ export class TarjetaColaGuardias implements OnInit {
             this.guardias = n.combooItems;
           },
           err => {
-            console.log(err);
 
           }, () => {
             this.guardiasNombre = "";
@@ -300,7 +305,6 @@ export class TarjetaColaGuardias implements OnInit {
         // }
       },
       err => {
-        console.log(err);
         this.progressSpinner = false;
       }, () => {
         this.datosInicial = JSON.parse(JSON.stringify(this.datos));
@@ -623,9 +627,9 @@ export class TarjetaColaGuardias implements OnInit {
       { field: "orden", header: "administracion.informes.literal.orden" },
       { field: "numerocolegiado", header: "censo.busquedaClientesAvanzada.literal.nColegiado" },
       { field: "nombreguardia", header: "administracion.parametrosGenerales.literal.nombre.apellidos" },
+      { field: "fechavalidacion", header: "justiciaGratuita.oficio.turnos.fechavalidacion" },
       { field: "fechabajaguardia", header: "dato.jgr.guardia.guardias.fechaBaja" },
       // { field: "alfabeticoapellidos", header: "administracion.parametrosGenerales.literal.nombre" },
-      { field: "fechavalidacion", header: "justiciaGratuita.oficio.turnos.fechavalidacion" },
       { field: "saltos", header: "justiciaGratuita.oficio.turnos.saltos" },
       { field: "compensaciones", header: "justiciaGratuita.oficio.turnos.compensaciones" }
     ];

@@ -3,11 +3,14 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Sort } from '@angular/material/sort';
 import { Message } from 'primeng/components/common/api';
+import { ConfirmationService } from 'primeng/primeng';
 import { Row, Cell } from './gestion-bajas-temporales.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslateService } from '../../../../../commons/translate/translation.service';
+import { CommonsService } from '../../../../../_services/commons.service';
+import { procesos_oficio } from '../../../../../permisos/procesos_oficio';
 
 interface GuardiaI {
   label: string,
@@ -40,6 +43,7 @@ export class GestionBajasTemporalesComponent implements OnInit {
   @Output() searchHistorico = new EventEmitter<any>();
   @Output() guardar = new EventEmitter<any>();
   @Output() modDatos = new EventEmitter<any>();
+  @Output() estadoPendiente = new EventEmitter<any>();
 
   cabecerasMultiselect = [];
   modalStateDisplay = true;
@@ -70,6 +74,7 @@ export class GestionBajasTemporalesComponent implements OnInit {
   @ViewChild('table') table: ElementRef;
   historico: boolean = false;
   isLetrado: boolean = false;
+  isDisabled: boolean = true;
 
   comboTipo = [
     { label: "Vacaciones", value: "V" },
@@ -78,7 +83,8 @@ export class GestionBajasTemporalesComponent implements OnInit {
     { label: "Suspensión por sanción", value: "S" }
   ];
   @ViewChild("tablaFoco") tablaFoco: ElementRef;
-
+  permisosTarjeta: boolean = true;
+  disableAll: boolean = false;
   usuarioBusquedaExpress = {​​​​​​​​​
     numColegiado: '',
     nombreAp: ''
@@ -89,7 +95,9 @@ export class GestionBajasTemporalesComponent implements OnInit {
     private persistenceService: PersistenceService,
     private pipe : DatePipe,
 		private router: Router,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private confirmationService: ConfirmationService,
+    private commonsService: CommonsService
   ) {
     this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
       for (let i = 0; i < this.table.nativeElement.children.length; i++) {
@@ -113,6 +121,23 @@ export class GestionBajasTemporalesComponent implements OnInit {
     if (sessionStorage.getItem("isLetrado") != null && sessionStorage.getItem("isLetrado") != undefined) {
       this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
     }
+    this.commonsService.checkAcceso(procesos_oficio.bajastemporales)
+    .then(respuesta => {
+      this.permisosTarjeta = respuesta;
+      this.persistenceService.setPermisos(this.permisosTarjeta);
+      if (this.permisosTarjeta == undefined) {
+        sessionStorage.setItem("codError", "403");
+        sessionStorage.setItem(
+          "descError",
+          this.translateService.instant("generico.error.permiso.denegado")
+        );
+        this.router.navigate(["/errorAcceso"]);
+      } else if (this.persistenceService.getPermisos() != true) {
+        this.disableAll = true;
+        this.isDisabled = true;
+      }
+    }
+    ).catch(error => console.error(error));
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -158,8 +183,6 @@ export class GestionBajasTemporalesComponent implements OnInit {
     }
   }
   nuevoFromCombo(turno, guardiaInc, idGuardia, idTurno, idTurnoIncompatible, idGuardiaIncompatible, nombreTurnoInc){
-    console.log('idGuardiaIncompatible: ', idGuardiaIncompatible)
-    console.log('idGuardia: ', idGuardia)
     this.enableGuardar = true;
     let labelSelected = '';
     let row: Row = new Row();
@@ -188,9 +211,6 @@ export class GestionBajasTemporalesComponent implements OnInit {
     if (idGuardia.value != ''){
       this.comboGuardiasIncompatibles.push({ label: labelSelected, value: idGuardia.value})
     }
-    console.log('idGuardia.value: ', idGuardia.value)
-    console.log('this.comboGuardiasIncompatibles: ', this.comboGuardiasIncompatibles)
-    console.log('cellMulti.value: ', cellMulti.value)
     row.cells = [turno, guardiaInc, cellMulti, cell1, cell2, idTurno, idGuardia, idGuardiaIncompatible, idTurnoIncompatible, cellInvisible, cellArr];
     if (idGuardia.value != ''){
     this.rowGroups.unshift(row);
@@ -208,6 +228,9 @@ export class GestionBajasTemporalesComponent implements OnInit {
     } else {
       this.selectedArray.push(rowId);
     }
+
+    this.estadoPendiente.emit(this.selectedArray);
+    
     if (this.selectedArray.length != 0) {
       this.anySelected.emit(true);
     } else {
@@ -363,6 +386,8 @@ export class GestionBajasTemporalesComponent implements OnInit {
       this.usuarioBusquedaExpress.nombreAp=busquedaColegiado.apellidos+", "+busquedaColegiado.nombre;
 
       this.usuarioBusquedaExpress.numColegiado=busquedaColegiado.nColegiado;
+      
+      sessionStorage.removeItem("buscadorColegiados")
     }​​else{
       this.usuarioBusquedaExpress.nombreAp=sessionStorage.getItem("nombCol");
 
@@ -432,8 +457,29 @@ export class GestionBajasTemporalesComponent implements OnInit {
   }
 
   checkGuardar(){
+    let keyConfirmation = "deleteTurnosGuardias";
+
     if(this.rowGroups[0].cells[2].value != "" && this.rowGroups[0].cells[3].value != "" && this.rowGroups[0].cells[4].value != "" && this.rowGroups[0].cells[5].value != ""){
-      this.modDatos.emit(this.rowGroups);
+      this.confirmationService.confirm({
+        key: keyConfirmation,
+        message: this.translateService.instant('sjcs.oficio.bajastemporales.nuevo.mensajeConfirmacion'),
+        icon: "fa fa-trash-alt",
+        accept: () => {
+          this.modDatos.emit(this.rowGroups);
+        },
+        reject: () => {
+          this.msgs = [
+            {
+              severity: "info",
+              summary: "info",
+              detail: this.translateService.instant(
+                "general.message.accion.cancelada"
+              )
+            }
+          ];
+        }
+      });
+      
     }else{
       this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("general.message.camposObligatorios")});
     }

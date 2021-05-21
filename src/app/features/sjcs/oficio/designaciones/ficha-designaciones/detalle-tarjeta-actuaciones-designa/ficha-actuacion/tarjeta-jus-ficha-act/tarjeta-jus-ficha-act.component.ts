@@ -1,16 +1,21 @@
-import { Component, Input, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 import { Message } from 'primeng/components/common/api';
 import { Actuacion } from '../../detalle-tarjeta-actuaciones-designa.component';
 import { SigaServices } from '../../../../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../../../../commons/translate/translation.service';
 import { DatePipe } from '@angular/common';
+import { procesos_oficio } from '../../../../../../../../permisos/procesos_oficio';
+import { CommonsService } from '../../../../../../../../_services/commons.service';
+import { PersistenceService } from '../../../../../../../../_services/persistence.service';
+import { Router } from '@angular/router';
+import { UsuarioLogado } from '../ficha-actuacion.component';
 
 @Component({
   selector: 'app-tarjeta-jus-ficha-act',
   templateUrl: './tarjeta-jus-ficha-act.component.html',
   styleUrls: ['./tarjeta-jus-ficha-act.component.scss']
 })
-export class TarjetaJusFichaActComponent implements OnInit, OnDestroy {
+export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy {
 
   msgs: Message[] = [];
   progressSpinner: boolean = false;
@@ -20,19 +25,47 @@ export class TarjetaJusFichaActComponent implements OnInit, OnDestroy {
   @Output() buscarActuacionEvent = new EventEmitter<any>();
   @Input() actuacionDesigna: Actuacion;
   @Input() isColegiado;
-  @Input() usuarioLogado;
-
+  @Input() usuarioLogado: UsuarioLogado;
+  @Input() modoLectura: boolean;
+  disableAll: boolean = false;
   fechaActuacion: Date;
 
   estado: string = '';
   fechaJusti: any;
   observaciones: string = '';
-
-  constructor(private sigaServices: SigaServices, private translateService: TranslateService, private datePipe: DatePipe) { }
+  permisoEscritura: boolean;
+  
+  constructor(private sigaServices: SigaServices, private translateService: TranslateService,  private commonsService: CommonsService, private router: Router, private datePipe: DatePipe
+  ,private persistenceService: PersistenceService) { }
 
   ngOnInit() {
 
-    this.establecerValoresIniciales();
+    if (this.actuacionDesigna.isNew) {
+      this.establecerValoresIniciales();
+    } else {
+      this.establecerDatosInicialesEditAct();
+    }
+
+    this.commonsService.checkAcceso(procesos_oficio.designasActuaciones)
+          .then(respuesta => {
+            this.permisoEscritura = respuesta;
+            this.persistenceService.setPermisos(this.permisoEscritura);
+     
+            if (this.permisoEscritura == undefined) {
+              sessionStorage.setItem("codError", "403");
+              sessionStorage.setItem(
+                "descError",
+                this.translateService.instant("generico.error.permiso.denegado")
+              );
+              this.router.navigate(["/errorAcceso"]);
+            }
+            
+          }
+          ).catch(error => console.error(error));
+    if (this.persistenceService.getPermisos() != true) {
+      this.disableAll = true
+    }
+
     sessionStorage.setItem("datosIniActuDesignaJust", JSON.stringify(this.actuacionDesigna));
   }
 
@@ -46,9 +79,14 @@ export class TarjetaJusFichaActComponent implements OnInit, OnDestroy {
 
     let fechaTarjetaPlegada = null;
 
+    let fechaJustiRequest = null;
+
     if (this.fechaJusti == undefined || this.fechaJusti == null || this.fechaJusti.length == 0) {
-      this.fechaJusti = this.datePipe.transform(new Date(), 'dd/MM/yyyy');
+      this.fechaJusti = new Date();
+      fechaJustiRequest = this.datePipe.transform(new Date(), 'dd/MM/yyyy');
       fechaTarjetaPlegada = this.datePipe.transform(new Date(), 'dd/MM/yyyy');;
+    } else {
+      fechaJustiRequest = this.datePipe.transform(this.fechaJusti, 'dd/MM/yyyy');
     }
 
     const actuacionesRequest = {
@@ -56,7 +94,7 @@ export class TarjetaJusFichaActComponent implements OnInit, OnDestroy {
       numeroAsunto: this.actuacionDesigna.actuacion.numeroAsunto,
       idTurno: this.actuacionDesigna.actuacion.idTurno,
       anio: this.actuacionDesigna.actuacion.anio,
-      fechaJustificacion: this.fechaJusti
+      fechaJustificacion: fechaJustiRequest
     };
 
     this.sigaServices.post("actuaciones_designacion_validar", actuacionesRequest).subscribe(
@@ -72,8 +110,6 @@ export class TarjetaJusFichaActComponent implements OnInit, OnDestroy {
             this.actuacionDesigna.actuacion.fechaJustificacion = fechaTarjetaPlegada;
           }
 
-          sessionStorage.setItem("datosIniActuDesignaJust", JSON.stringify(this.actuacionDesigna));
-          this.changeDataEvent.emit({ tarjeta: 'sjcsDesigActuaOfiJustifi', fechaJusti: this.actuacionDesigna.actuacion.fechaJustificacion, estado: this.estado });
           this.buscarActuacionEvent.emit();
           this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
         }
@@ -110,8 +146,6 @@ export class TarjetaJusFichaActComponent implements OnInit, OnDestroy {
         if (resp.status == 'OK') {
           this.actuacionDesigna.actuacion.validada = false;
           this.estado = '';
-          sessionStorage.setItem("datosIniActuDesignaJust", JSON.stringify(this.actuacionDesigna));
-          this.changeDataEvent.emit({ tarjeta: 'sjcsDesigActuaOfiJustifi', fechaJusti: this.actuacionDesigna.actuacion.fechaJustificacion, estado: 'Pendiente de validar' });
           this.buscarActuacionEvent.emit();
           this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
         }
@@ -131,22 +165,36 @@ export class TarjetaJusFichaActComponent implements OnInit, OnDestroy {
 
   establecerValoresIniciales() {
     this.estado = this.actuacionDesigna.actuacion.validada ? 'Validada' : '';
-    //this.fechaJusti = this.actuacionDesigna.actuacion.fechaJustificacion;
+
     this.observaciones = this.actuacionDesigna.actuacion.observacionesJusti;
 
     if (this.isColegiado) {
-      this.fechaJusti = this.datePipe.transform(new Date(), 'dd/MM/yyyy');
+      this.fechaJusti = new Date();
     } else {
       this.fechaJusti = '';
       this.fechaActuacion = new Date(this.actuacionDesigna.actuacion.fechaActuacion.split('/').reverse().join('-'));
     }
   }
 
+  establecerDatosInicialesEditAct() {
+    this.estado = this.actuacionDesigna.actuacion.validada ? 'Validada' : '';
+    this.observaciones = this.actuacionDesigna.actuacion.observacionesJusti;
+    if (this.actuacionDesigna.actuacion.fechaJustificacion != undefined && this.actuacionDesigna.actuacion.fechaJustificacion != null && this.actuacionDesigna.actuacion.fechaJustificacion != '') {
+      this.fechaJusti = new Date(this.actuacionDesigna.actuacion.fechaJustificacion.split('/').reverse().join('-'));
+    }
+
+    this.fechaActuacion = new Date(this.actuacionDesigna.actuacion.fechaActuacion.split('/').reverse().join('-'));
+  }
+
   restablecer() {
 
     if (sessionStorage.getItem("datosIniActuDesignaJust")) {
       this.actuacionDesigna = JSON.parse(sessionStorage.getItem("datosIniActuDesignaJust"));
-      this.establecerValoresIniciales();
+      if (this.actuacionDesigna.isNew) {
+        this.establecerValoresIniciales();
+      } else {
+        this.establecerDatosInicialesEditAct();
+      }
       this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
 
     }
@@ -252,8 +300,6 @@ export class TarjetaJusFichaActComponent implements OnInit, OnDestroy {
         if (resp.status == 'OK') {
           this.actuacionDesigna.actuacion.observacionesJusti = this.observaciones;
           this.actuacionDesigna.actuacion.fechaJustificacion = this.fechaJusti;
-          sessionStorage.setItem("datosIniActuDesignaJust", JSON.stringify(this.actuacionDesigna));
-          this.changeDataEvent.emit({ tarjeta: 'sjcsDesigActuaOfiJustifi', fechaJusti: this.actuacionDesigna.actuacion.fechaJustificacion, estado: this.actuacionDesigna.actuacion.validada ? 'Validada' : 'Pendiente de validar' });
           this.buscarActuacionEvent.emit();
           this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
         }
@@ -283,6 +329,20 @@ export class TarjetaJusFichaActComponent implements OnInit, OnDestroy {
 
   clear() {
     this.msgs = [];
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+
+    if (changes.actuacionDesigna != undefined && changes.actuacionDesigna.currentValue) {
+
+      sessionStorage.setItem("datosIniActuDesignaJust", JSON.stringify(this.actuacionDesigna));
+
+      if (!this.actuacionDesigna.isNew) {
+        this.establecerDatosInicialesEditAct();
+      }
+
+    }
+
   }
 
   ngOnDestroy(): void {

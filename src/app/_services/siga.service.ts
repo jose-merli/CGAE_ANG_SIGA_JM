@@ -847,29 +847,30 @@ export class SigaServices {
     documentos.forEach((el, i) => {
 
       if (el.file != undefined && el.file != null) {
-        formData.append(`uploadFile${i}`, el.file, el.file.name + ';' + JSON.stringify({
-          anio: actuacion.anio,
-          numero: actuacion.numero,
-          idActuacion: actuacion.numeroAsunto,
-          observaciones: el.observaciones
-        }));
+        let doc = new DocumentoDesignaItem();
+
+        doc.anio = el.anio;
+        doc.numero = el.numero;
+        doc.idTurno = el.idTurno;
+        doc.idActuacion = el.idActuacion;
+        doc.observaciones = el.observaciones;
+        doc.idTipodocumento = '1';
+
+        formData.append(`uploadFile${i}`, el.file, el.file.name + ';' + JSON.stringify(doc));
       } else {
-        documentosActualizar.push({
-          idDocumentacionasi: el.idDocumentacionasi,
-          idTipoDocumento: el.idTipoDocumento,
-          nombreTipoDocumento: el.nombreTipoDocumento,
-          idFichero: el.idFichero,
-          idInstitucion: el.idInstitucion,
-          usuModificacion: el.usuModificacion,
-          fechaModificacion: el.fechaModificacion,
-          fechaEntrada: el.fechaEntrada,
-          anio: el.anio,
-          numero: el.numero,
-          idActuacion: el.idActuacion,
-          observaciones: el.observaciones,
-          nombreFichero: el.nombreFichero,
-          asociado: el.asociado
-        });
+        let doc = new DocumentoDesignaItem();
+
+        doc.idDocumentaciondes = el.idDocumentaciondes;
+        doc.idTipodocumento = '1';
+        doc.idFichero = el.idFichero;
+        doc.idInstitucion = el.idInstitucion;
+        doc.anio = el.anio;
+        doc.numero = el.numero;
+        doc.idTurno = el.idTurno;
+        doc.idActuacion = el.idActuacion;
+        doc.observaciones = el.observaciones;
+
+        documentosActualizar.push(doc);
       }
     });
 
@@ -889,7 +890,7 @@ export class SigaServices {
       });
   }
 
-  postSendFileAndDesigna(service: string, documentos: any[], designa): Observable<any> {
+  postSendFileAndDesigna(service: string, documentos: any[], designa: any): Observable<any> {
     let formData: FormData = new FormData();
 
     let documentosActualizar = [];
@@ -901,6 +902,7 @@ export class SigaServices {
         doc.anio = designa.ano;
         doc.numero = designa.numero;
         doc.idTurno = designa.idTurno;
+        doc.idActuacion = el.cells[1].value == '0' ? null : el.cells[1].value;
         doc.observaciones = el.cells[4].value;
         doc.idTipodocumento = el.cells[2].value;
 
@@ -911,7 +913,6 @@ export class SigaServices {
         doc.numero = designa.numero;
         doc.idTurno = designa.idTurno;
         doc.observaciones = el.cells[4].value;
-        doc.idTipodocumento = el.cells[2].value;
         doc.idDocumentaciondes = el.cells[6].value;
         documentosActualizar.push(doc);
       }

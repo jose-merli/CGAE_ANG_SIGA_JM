@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 import { Message } from 'primeng/components/common/api';
 import { CommonsService } from '../../../../../../../../_services/commons.service';
 import {CamposCambioLetradoItem } from '../../../../../../../../models/sjcs/CamposCambioLetradoItem';
+import { procesos_oficio } from '../../../../../../../../permisos/procesos_oficio';
+
 
 @Component({
   selector: 'app-letrado-saliente',
@@ -20,13 +22,14 @@ export class LetradoSalienteComponent implements OnInit {
   showTarjeta=true;
   progressSpinner = false;
   disableCheck=false;
+  isLetrado: boolean;
 
   @Input() saliente;
 
   comboRenuncia;
 
   constructor(private sigaServices: SigaServices,
-    private commonsService: CommonsService) { }
+    private commonsService: CommonsService, private persistenceService: PersistenceService,private translateService: TranslateService, private router: Router) { }
 
   ngOnInit() {
 
@@ -47,6 +50,18 @@ export class LetradoSalienteComponent implements OnInit {
     this.motivosRenuncia();
 
     if(sessionStorage.getItem("isLetrado")=="true") this.disableCheck=true;
+
+    this.sigaServices.get('getLetrado').subscribe(
+      (data) => {
+        if (data.value == 'S') {
+          this.isLetrado = true;
+        } else {
+          this.isLetrado = false;
+        }
+      },
+      (err) => {
+      }
+    );
   }
 
   motivosRenuncia() {
@@ -59,7 +74,6 @@ export class LetradoSalienteComponent implements OnInit {
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
         this.progressSpinner = false;
       }
     );

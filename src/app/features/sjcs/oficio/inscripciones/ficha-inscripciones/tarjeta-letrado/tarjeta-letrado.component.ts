@@ -18,6 +18,8 @@ import { Router } from '@angular/router';
 import { ColegiadoItem } from '../../../../../../models/ColegiadoItem';
 import { DatosDireccionesItem } from '../../../../../../models/DatosDireccionesItem';
 import { DatosDireccionesObject } from '../../../../../../models/DatosDireccionesObject';
+import { ParametroRequestDto } from '../../../../../../models/ParametroRequestDto';
+import { ParametroDto } from '../../../../../../models/ParametroDto';
 @Component({
   selector: "app-tarjeta-letrado",
   templateUrl: "./tarjeta-letrado.component.html",
@@ -42,10 +44,12 @@ export class TarjetaLetradoComponent implements OnInit {
   textSelected: String = "{label}";
   disableAll: boolean = false;
   jurisdicciones: any[] = [];
+  institucionActual: any;
   areas: any[] = [];
   tiposturno: any[] = [];
   turnosItem2;
   permisosTarjeta: boolean = true;
+  permisosModificacionDirecciones: boolean = true;
   permisosTarjetaResumen: boolean = true;
   zonas: any[] = [];
   rowsPerPage: any = [];
@@ -56,7 +60,6 @@ export class TarjetaLetradoComponent implements OnInit {
   grupofacturacion: any[] = [];
   partidasJudiciales: any[] = [];
   isDisabledMateria: boolean = false;
-  datosColaOficio;
   comboPJ
   datos2;
   datos3;
@@ -70,6 +73,9 @@ export class TarjetaLetradoComponent implements OnInit {
   bodyDirecciones: DatosDireccionesItem;
   searchDireccionIdPersona = new DatosDireccionesObject();
   datosDirecciones: DatosDireccionesItem[] = [];
+  disableDirecciones: boolean = true;
+  searchParametros: ParametroDto = new ParametroDto();
+  valorParametroDirecciones: any;
   fichasPosibles = [
     {
       key: "generales",
@@ -129,6 +135,12 @@ export class TarjetaLetradoComponent implements OnInit {
   }
 
   ngOnInit() {
+    
+   let origen =  sessionStorage.getItem("origin");
+   if(origen == "newInscrip"){
+    this.disableDirecciones = false;
+   }
+   sessionStorage.removeItem("origin");
     this.commonsService.checkAcceso(procesos_oficio.tarjetaLetrado)
       .then(respuesta => {
         this.permisosTarjeta = respuesta;
@@ -138,6 +150,49 @@ export class TarjetaLetradoComponent implements OnInit {
           this.permisosTarjeta = true;
         }
       }).catch(error => console.error(error));
+
+      this.commonsService.checkAcceso(procesos_oficio.modificacionDirecciones)
+      .then(respuesta => {
+        this.permisosModificacionDirecciones = respuesta;
+        this.persistenceService.setPermisos(this.permisosTarjeta);
+        if (this.permisosModificacionDirecciones == undefined) {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }else if(this.persistenceService.getPermisos() != true){
+          this.permisosModificacionDirecciones = true;
+        }
+      }
+      ).catch(error => console.error(error));
+      this.sigaServices.get("institucionActual").subscribe(n => {
+        this.institucionActual = n.value;
+        let parametro = new ParametroRequestDto();
+        parametro.idInstitucion = this.institucionActual;
+        parametro.modulo = "CEN";
+        parametro.parametrosGenerales = "SOLICITUDES_MODIF_CENSO";
+        this.sigaServices
+          .postPaginado("parametros_search", "?numPagina=1", parametro)
+          .subscribe(
+            data => {
+              this.searchParametros = JSON.parse(data["body"]);
+              let datosBuscar = this.searchParametros.parametrosItems;
+              datosBuscar.forEach(element => {
+                if (element.parametro == "SOLICITUDES_MODIF_CENSO") {
+                  this.valorParametroDirecciones = element.valor;
+                }
+              });
+          
+            },
+            err => {
+              console.log(err);
+            },
+            () => {
+            }
+          );
+      });
       this.cols = [
         {
           field: "tipo",
@@ -313,56 +368,9 @@ export class TarjetaLetradoComponent implements OnInit {
 
   }
 
-  getColaOficio() {
-    this.datos.historico = this.historico;
-    this.progressSpinner = true;
-    this.sigaServices.post("inscripciones_TarjetaColaOficio", this.datos).subscribe(
-      n => {
-        // this.datos = n.turnosItem;
-        this.datosColaOficio = JSON.parse(n.body).inscripcionesItem;
-        this.datosColaOficio.forEach(element => {
-          element.orden = +element.orden;
-        });
-        // if (this.turnosItem.fechabaja != undefined || this.persistenceService.getPermisos() != true) {
-        //   this.turnosItem.historico = true;
-        // }
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner = false;
-      }, () => {
-        this.progressSpinner = false;
-        let prueba:String = this.datos.ncolegiado.toString();
-        let findDato = this.datosColaOficio.find(item => item.numerocolegiado == prueba);
-        if(findDato != undefined){
-          this.datos3 = [
-            {
-              label: "Posición actual en la cola",
-              value: findDato.orden
-            },
-            {
-              label: "Número total de letrados apuntados",
-              value: this.datosColaOficio.length
-            },
-          ]
-          this.datosSend2.emit(this.datos3);
-        }else{
-          // this.datos3 = [
-          //   {
-          //     value:"Sin información disponible",
-          //   }
-          // ]
-          // this.datosSend2.emit(this.datos3);
-        }
-      }
-    );
-  }
-
-
   cargarTarjetaResumen() {
     if (this.modoEdicion) {
       this.partidoJudiciales();
-      this.getColaOficio();
     }
   }
   actualizarFichaResumen() {

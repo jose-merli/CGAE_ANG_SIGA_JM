@@ -13,11 +13,11 @@
         <div *ngIf="enlaceCardClosed !== undefined && enlaceCardClosed !== null" class="right">
           <a *ngIf="enlaceCardClosed.href !== undefined && enlaceCardClosed.href !== null" [routerLink]="enlaceCardClosed.href" class="enlace"> <i class="fas fa-external-link-alt mr-2 icono-enlace"
               aria-hidden="true"></i>{{ enlaceCardClosed.title }}</a>
-          <a *ngIf="(enlaceCardClosed.href === undefined || enlaceCardClosed.href === null) && (enlaceCardClosed.click !== undefined && enlaceCardClosed.click !== null) " (click)="irFechaColegial()" class="enlace"> <i (click)="enlaceCardClosed.click" class="fas fa-external-link-alt mr-2 icono-enlace"
+          <a *ngIf="(enlaceCardClosed.href === undefined || enlaceCardClosed.href === null) && (enlaceCardClosed.click !== undefined && enlaceCardClosed.click !== null) " (click)="irFichaColegial()" class="enlace"> <i (click)="enlaceCardClosed.click" class="fas fa-external-link-alt mr-2 icono-enlace"
               aria-hidden="true"></i>{{ enlaceCardClosed.title }}</a>
         </div>
       </div>
-      <div *ngIf="campos" class="col-12 form-row m-0 p-0 pt-2 justify-content-between">
+      <div onclick="event.stopPropagation()" *ngIf="campos" class="col-12 form-row m-0 p-0 pt-2 justify-content-between">
         <div *ngFor="let campo of campos" class="d-flex flex-wrap campos">
           <label *ngIf="campo.key!=null">
             {{ campo.key }}:
@@ -132,5 +132,9 @@
   <!-- <div class="col-12 text-right click">
     <i class="fas fa-thumbtack"></i>
   </div> -->
-
+  
 </div>
+  <!-- Spinner -->
+  <div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+  </div>
