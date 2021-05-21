@@ -602,13 +602,14 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
       params.idAcreditacion = this.datos.selectores.find(el => el.id == 'acreditacion').value;
       params.idPrision = this.datos.selectores.find(el => el.id == 'prision').value;
       params.idPersonaColegiado = this.idPersonaColegiado;
-      if(params.idJuzgado != undefined && params.idJuzgado != null ){
+      
+      if(params.idJuzgado != undefined && params.idJuzgado != null && params.idJuzgado !== ''){
         params.nombreJuzgado = this.datos.selectores[0].opciones.find(el => el.value == params.idJuzgado).label;
       }
-      if(params.idPretension != undefined && params.idPretension != null ){
+      if(params.idPretension != undefined && params.idPretension != null && params.idPretension !== ''){
         params.nombreProcedimiento = this.datos.selectores[1].opciones.find(el => el.value == params.idPretension).label;
       }
-      if(params.idProcedimiento != undefined && params.idProcedimiento != null ){
+      if(params.idProcedimiento != undefined && params.idProcedimiento != null && params.idProcedimiento !== ''){
         params.nombreModulo = this.datos.selectores[3].opciones.find(el => el.value == params.idProcedimiento).label;
       }
 
@@ -665,15 +666,17 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
       params.idPrision = this.datos.selectores.find(el => el.id == 'prision').value;
       params.idPersonaColegiado = this.idPersonaColegiado;
       params.numeroAsunto = this.actuacionDesigna.actuacion.numeroAsunto;
-      if(params.idJuzgado != undefined && params.idJuzgado != null ){
+
+      if(params.idJuzgado != undefined && params.idJuzgado != null && params.idJuzgado !== ''){
         params.nombreJuzgado = this.datos.selectores[0].opciones.find(el => el.value == params.idJuzgado).label;
       }
-      if(params.idPretension != undefined && params.idPretension != null ){
+      if(params.idPretension != undefined && params.idPretension != null && params.idPretension !== ''){
         params.nombreProcedimiento = this.datos.selectores[1].opciones.find(el => el.value == params.idPretension).label;
       }
-      if(params.idProcedimiento != undefined && params.idProcedimiento != null ){
+      if(params.idProcedimiento != undefined && params.idProcedimiento != null && params.idProcedimiento !== ''){
         params.nombreModulo = this.datos.selectores[3].opciones.find(el => el.value == params.idProcedimiento).label;
       }
+
       this.sigaServices.post("actuaciones_designacion_editar", params).subscribe(
         data => {
           let resp = JSON.parse(data.body);
