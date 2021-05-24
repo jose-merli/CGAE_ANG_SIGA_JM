@@ -320,7 +320,12 @@ export class GestionBajasTemporalesComponent implements OnInit {
   }
 
   fillFecha(event, cell) {
-    cell.value = this.pipe.transform(event, 'dd/MM/yyyy');
+    if(cell.value[0] != undefined){
+      cell.value[0] = this.pipe.transform(event, 'dd/MM/yyyy');
+    }else{
+      cell.value = this.pipe.transform(event, 'dd/MM/yyyy');
+    }
+   
   }
  
   inputValueChange(event, i , z, cell){
@@ -422,8 +427,8 @@ export class GestionBajasTemporalesComponent implements OnInit {
       cell4.value = '';
       cell5.type = 'datePicker';
       cell5.value = '';
-      cell6.type = 'datePicker';
-      cell6.value = '';
+      cell6.type = 'datePickerFin';
+      cell6.value = [];
       cell7.type = 'text';
       cell7.value = myFormattedDate;
       cell8.type = 'text';
@@ -511,3 +516,5 @@ export class GestionBajasTemporalesComponent implements OnInit {
 function compare(a: string, b: number | string, isAsc: boolean) {
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }
+
+
