@@ -31,7 +31,13 @@
                             <span class="w100 cell-value" *ngIf="cell.type == 'datePicker'">
                                 <app-fecha [(value)]="cell.value" [utc]="false"
                                     (valueChangeSelected)="fillFecha($event, cell)"
-                                    (valueChangeInput)="fillFecha($event, cell)">
+                                    (valueChangeInput)="fillFecha($event, cell)" >
+                                </app-fecha>
+                            </span>
+                            <span class="w100 cell-value" *ngIf="cell.type == 'datePickerFin'">
+                                <app-fecha [(value)]="cell.value[0]" [utc]="false"
+                                    (valueChangeSelected)="fillFecha($event, cell)"
+                                    (valueChangeInput)="fillFecha($event, cell)" [minDate]="cell.value[1]" >
                                 </app-fecha>
                             </span>
                             <span class="w100 cell-value selectWrap" *ngIf="cell.type == 'select'">

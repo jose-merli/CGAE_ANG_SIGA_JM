@@ -195,6 +195,8 @@ export class FichaInscripcionesComponent implements OnInit {
 			this.datos = JSON.parse(sessionStorage.getItem("Inscripciones"));
 			sessionStorage.removeItem("Inscripciones");
 		}
+		
+		this.getColaOficio();
 
 			// this.filtros.filtroAux = this.persistenceService.getFiltrosAux()
 			// this.filtros.filtroAux.historico = event;
@@ -236,7 +238,7 @@ export class FichaInscripcionesComponent implements OnInit {
 			//   }, () => {
 			//   }
 			// );
-			//this.getColaOficio();
+			
 	}
 
 	ngOnChanges(changes: SimpleChanges) {

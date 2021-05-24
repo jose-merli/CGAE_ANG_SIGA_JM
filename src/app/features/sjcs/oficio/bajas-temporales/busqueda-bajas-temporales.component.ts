@@ -107,7 +107,7 @@ export class BajasTemporalesComponent implements OnInit {
         this.datos = JSON.parse(n.body).bajasTemporalesItem;
         this.datos.forEach(element => {
 
-          element.fechadesdeSinHora = this.formatDateSinHora(element.fechadesde);
+          element.fechadesdeSinHora = element.fechadesde;
           element.fechahastaSinHora = this.formatDateSinHora(element.fechahasta);
           element.fechaaltaSinHora = this.formatDateSinHora(element.fechaalta);
           element.fechadesde = this.formatDate(element.fechadesde);
@@ -229,8 +229,8 @@ jsonToRow(datos){
         { type: 'text', value: nombreApell},
         { type: 'select', combo: this.comboTipo ,value: element.tipo},
         { type: 'input', value: element.descripcion},
-        { type: 'text', value: element.fechadesdeSinHora},
-        { type: 'datePicker', value: element.fechahastaSinHora},
+        { type: 'text', value: this.formatDateSinHora(element.fechadesdeSinHora)},
+        { type: 'datePickerFin', value:  [element.fechahastaSinHora,new Date(element.fechadesdeSinHora)] },
         { type: 'text', value: element.fechaaltaSinHora},
         { type: 'text', value: element.validado},
         { type: 'text', value: element.fechaestadoSinHora},

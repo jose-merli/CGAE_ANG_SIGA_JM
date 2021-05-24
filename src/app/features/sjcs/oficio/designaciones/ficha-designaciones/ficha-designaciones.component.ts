@@ -1642,7 +1642,8 @@ export class FichaDesignacionesComponent implements OnInit {
                       "value": this.letrados[0].apellidosNombre
                     }
                   ]
-                  this.listaTarjetas[6].enlaceCardClosed = { click: 'irFechaColegial()', title: this.translateService.instant('informesycomunicaciones.comunicaciones.fichaColegial') }
+                  this.listaTarjetas[6].enlaceCardClosed = { click: 'irFechaColegial()', title: this.translateService.instant('informesycomunicaciones.comunicaciones.fichaColegial') };
+                  this.listaTarjetas[6].letrado = datos[0];
                 }
               },
               err => {
@@ -1688,6 +1689,7 @@ export class FichaDesignacionesComponent implements OnInit {
             }
 
             this.listaTarjetas[6].enlaceCardClosed = { click: 'irFechaColegial()', title: this.translateService.instant('informesycomunicaciones.comunicaciones.fichaColegial') }
+            this.listaTarjetas[6].letrado = datos[0];
           }
         },
         err => {
