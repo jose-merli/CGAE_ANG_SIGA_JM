@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, HostListener } from '@angular/core';
-import { Message } from "primeng/components/common/api";
+import { ConfirmationService, Message } from "primeng/components/common/api";
 import { TranslateService } from '../../../../../commons/translate';
 import { ColegiadoItem } from '../../../../../models/ColegiadoItem';
 import { DesignaItem } from '../../../../../models/sjcs/DesignaItem';
@@ -33,6 +33,7 @@ export class FiltroDesignacionesComponent implements OnInit {
   isButtonVisible = true;
   filtroJustificacion: JustificacionExpressItem = new JustificacionExpressItem();
   datos;
+  closeDialog:boolean = false;
   expanded: boolean = false;
   textSelected: String = "{0} etiquetas seleccionadas";
   progressSpinner: boolean = true;
@@ -94,7 +95,7 @@ export class FiltroDesignacionesComponent implements OnInit {
   datosBuscar: any[];
   searchParametros: ParametroDto = new ParametroDto();
   constructor(private translateService: TranslateService, private sigaServices: SigaServices,  private location: Location, private router: Router,
-    private localStorageService: SigaStorageService,  private commonsService: CommonsService,) { }
+    private localStorageService: SigaStorageService,  private commonsService: CommonsService,private confirmationService: ConfirmationService,) { }
 
   ngOnInit(): void {
     sessionStorage.setItem("rowIdsToUpdate", JSON.stringify([]));
@@ -654,8 +655,19 @@ getComboCalidad() {
   }
 
   buscar(){
+    let keyConfirmation = "confirmacionGuardarJustificacionExpress";
     if (sessionStorage.getItem('rowIdsToUpdate') != null && sessionStorage.getItem('rowIdsToUpdate') != 'null' && sessionStorage.getItem('rowIdsToUpdate') != '[]'){
-      this.showMessage('info', "Se han realizado modificaciones sin guardar. Pulse Guardar si no desea perder los datos", '')
+      this.confirmationService.confirm({
+        key: keyConfirmation,
+        message: this.translateService.instant('justiciaGratuita.oficio.justificacion.reestablecer'),
+        icon: "fa fa-trash-alt",
+        accept: () => {
+          this.showTablaJustificacionExpres.emit(false);
+          this.busquedaJustificacionExpres.emit(true);
+        },
+        reject: () => {
+        }
+      });
     }else{
     //es la busqueda de justificacion
     if(this.showJustificacionExpress){
