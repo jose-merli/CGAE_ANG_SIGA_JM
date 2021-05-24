@@ -74,7 +74,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
 
   isBuscar(form) {
     //Se revisa si esta en la pantalla de gestion de Ejg y la tarjeta de servicios de tramitación
-    if (this.tarjeta == "ServiciosTramit" && this.pantalla == "gestionEjg") {
+    if (this.tarjeta == "ServiciosTramit" && this.pantalla == "EJG") {
       //Se comprueba que se han rellenado los campos de turno y guardia
       if (this.idGuardia != null && this.idGuardia != undefined &&
         this.idTurno != null && this.idTurno != undefined) {
@@ -96,50 +96,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
          this.progressSpinner = false;
       }
       else {
-        this.sigaServices.get("institucionActual").subscribe(n => {
-
-          let datos = new ColegiadosSJCSItem();
-
-          //Estado "Ejerciente"
-          datos.idEstado = "20";
-          datos.idInstitucion = n.value;
-          datos.idGuardia = [];
-          datos.idTurno = [];
-          datos.idGuardia.push(this.idGuardia);
-          datos.idTurno.push(this.idTurno);
-          datos.nColegiado = form.numColegiado;
-
-          this.sigaServices.post("componenteGeneralJG_busquedaColegiadoEJG", datos).subscribe(
-            data => {
-              this.progressSpinner = false;
-              let colegiado = JSON.parse(data.body).colegiadosSJCSItem;
-
-              if (colegiado.length > 0) {
-                this.apellidosNombre = colegiado[0].apellidos + ", " + colegiado[0].nombre;
-                this.idPersona.emit(colegiado[0].idPersona);
-                this.colegiadoForm.get("nombreAp").setValue(this.apellidosNombre);
-              } else {
-                this.apellidosNombre = "";
-                this.numColegiado = ""
-                form.numColegiado = "";
-                this.idPersona.emit("");
-
-                this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("general.message.colegiadoNoEncontrado"));
-              }
-              this.changeValue();
-            },
-            error => {
-              this.progressSpinner = false;
-              this.apellidosNombre = "";
-              form.numColegiado = "";
-              this.numColegiado = "";
-              this.idPersona.emit("");
-              this.changeValue();
-              console.log(error);
-              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-            }
-          );
-        });
+        this.defaultsearch(form)
       }
     } else {
       this.progressSpinner = false;
@@ -162,17 +119,16 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
         sessionStorage.setItem("tarjeta", this.tarjeta);
       }
 
-      if (this.tarjeta == "ServiciosTramit" && this.pantalla == "gestionEjg") {
-        sessionStorage.setItem("idTurno", this.idTurno);
-        sessionStorage.setItem("idGuardia", this.idGuardia);
-      }
-
       if (form.numColegiado == null || form.numColegiado == undefined || form.numColegiado.trim() == "") {
 
         //Comprobamos el estado del checkbox para el art 27-28
         if (this.art27) sessionStorage.setItem("art27", "true");
 
-        this.router.navigate(["/buscadorColegiados"]);
+        if (this.art27){
+          sessionStorage.setItem("Art27Activo", "true");
+          this.router.navigate(["/busquedaGeneral"]);
+        }
+        else this.router.navigate(["/buscadorColegiados"]);
       }
     }
   }

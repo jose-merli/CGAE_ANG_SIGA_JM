@@ -34,8 +34,7 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
   comboguardiaPorTurno: any;
   comboEstadoColegial: any;
 
-  noArt27: boolean = true;
-
+ 
   @Input('nuevaInscripcion') nuevaInscripcion;
 
   @Output() buscar = new EventEmitter<boolean>();
@@ -53,36 +52,18 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
     }
 
     //Bloquear el desplegable del estado de colegiado a ejerciente
-    if (this.nuevaInscripcion || (sessionStorage.getItem("pantalla") == "gestionEjg" && sessionStorage.getItem("tarjeta") == "ServiciosTramit")) {
+    if (this.nuevaInscripcion || (sessionStorage.getItem("pantalla") == "EJG" && sessionStorage.getItem("tarjeta") == "ServiciosTramit")) {
       this.filtro.idEstado = "20";
       this.disabledEstado = true;
-    }
-
-    //Se comprueba si se aplica el articulo 27-28 para la busqueda de colegiados 
-    //fuera de la institucion actual
-    if (sessionStorage.getItem("art27") == "true") {
-      this.noArt27 = false;
-      this.institucionActual = "2000"
-      this.getComboColegios();
     }
 
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
       this.filtro.idInstitucion = n.value;
-      if(this.noArt27)this.getComboColegios();
+      this.getComboColegios();
       this.getComboTurno();
       this.getComboEstadoColegial();
     });
-
-    //Comprobar si proviene de la tarjeta servicio de tramitacion de la ficha EJG y sin art 27.
-    if (sessionStorage.getItem("pantalla") == "gestionEjg" && sessionStorage.getItem("tarjeta") == "ServiciosTramit" && this.noArt27) {
-      if (sessionStorage.getItem("idTurno")) {
-        this.filtro.idTurno = [];
-        this.filtro.idTurno.push(sessionStorage.getItem("idTurno"));
-        this.fixedTurn = true;
-        this.getComboguardiaPorTurno({ value: this.filtro.idTurno[0] });
-      }
-    }
 
 
   }
@@ -136,13 +117,6 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
         n => {
           this.comboguardiaPorTurno = n.combooItems;
           this.progressSpinner = false;
-          if (sessionStorage.getItem("pantalla") == "gestionEjg" && sessionStorage.getItem("tarjeta") == "ServiciosTramit" && this.noArt27) {
-            if (sessionStorage.getItem("idGuardia")) {
-              this.filtro.idGuardia = [];
-              this.filtro.idGuardia.push(sessionStorage.getItem("idGuardia"));
-              this.fixedGuard = true;
-            }
-          }
         },
         err => {
           console.log(err);

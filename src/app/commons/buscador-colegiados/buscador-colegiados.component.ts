@@ -134,9 +134,6 @@ export class BuscadorColegiadosComponent implements OnInit {
 
       sessionStorage.getItem('nuevo');
       
-      /* if (sessionStorage.getItem("pantalla") =="gestionEjg" && sessionStorage.getItem("tarjeta") =="ServiciosTramit"){
-        sessionStorage.setItem("idTurno", this.filtro.filtro.)
-      } */
       this.location.back();
     }
   }

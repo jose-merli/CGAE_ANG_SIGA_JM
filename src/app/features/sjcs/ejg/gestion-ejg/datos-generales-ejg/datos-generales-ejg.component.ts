@@ -21,7 +21,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
   @Input() modoEdicion;
   @Input() permisoEscritura;
   @Input() tarjetaDatosGenerales: string;
-  @Input() art27;
+  @Input() art27: boolean = false;
   @Output() modoEdicionSend = new EventEmitter<any>();
   @Output() guardadoSend = new EventEmitter<any>();
 
@@ -33,7 +33,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
   nuevoBody: EJGItem = new EJGItem();
   msgs = [];
   nuevo;
-  url=null;
+  url = null;
   textSelected: String = '{0} opciones seleccionadas';
   tipoEJGDesc = "";
   comboTipoEJG = [];
@@ -117,7 +117,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
     });
-    if(this.body.anioexpInsos!= null && this.body.anioexpInsos != undefined) this.isdisabledAddExp = true;
+    if (this.body.anioexpInsos != null && this.body.anioexpInsos != undefined) this.isdisabledAddExp = true;
 
   }
 
@@ -349,7 +349,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
         this.sigaServices.post("gestionejg_insertaDatosGenerales", JSON.stringify(this.body)).subscribe(
           n => {
             this.progressSpinner = false;
-            if(JSON.parse(n.body).error.code==200){
+            if (JSON.parse(n.body).error.code == 200) {
               let ejgObject = JSON.parse(n.body).ejgItems;
               let datosItem = ejgObject[0];
               this.persistenceService.setDatos(datosItem);
@@ -358,7 +358,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
               this.body.numero = datosItem.numero;
               this.guardadoSend.emit(true);
             }
-            else{
+            else {
               this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
             }
 
@@ -422,6 +422,10 @@ export class DatosGeneralesEjgComponent implements OnInit {
   }
 
   asociarDes() {
+    this.body = this.persistenceService.getDatos();
+    this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+    //Utilizamos el bodyInicial para no tener en cuenta cambios que no se hayan guardado.
+    sessionStorage.setItem("EJG", JSON.stringify(this.bodyInicial));
     this.router.navigate(["/busquedaAsuntos"]);
   }
 
@@ -435,9 +439,15 @@ export class DatosGeneralesEjgComponent implements OnInit {
   }
 
   createDes() {
-    sessionStorage.setItem("EJG",  JSON.stringify(this.body));
-    sessionStorage.setItem("nuevaDesigna",  "true");
-    if(this.art27) sessionStorage.setItem("Art27",  "true");
+    this.progressSpinner = true;
+    //Recogemos los datos de nuevo de la capa de persistencia para captar posibles cambios realizados en el resto de tarjetas
+    this.body = this.persistenceService.getDatos();
+    this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+    //Utilizamos el bodyInicial para no tener en cuenta cambios que no se hayan guardado.
+    sessionStorage.setItem("EJG", JSON.stringify(this.bodyInicial));
+    sessionStorage.setItem("nuevaDesigna", "true");
+    if (this.art27) sessionStorage.setItem("Art27", "true");
+    this.progressSpinner = false;
     this.router.navigate(["/fichaDesignaciones"]);
   }
 
@@ -456,20 +466,20 @@ export class DatosGeneralesEjgComponent implements OnInit {
 
   addExp() {
     let us = undefined;
-      us =
-        this.sigaServices.getOldSigaUrl() +
-        "JGR_MantenimientoEJG.do?codigoDesignaNumEJG="+this.body.numEjg+"&numeroEJG="+this.body.numEjg+"&idTipoEJG="+this.body.tipoEJG+
-        "&idInstitucionEJG="+this.body.idInstitucion+"&anioEJG="+this.body.annio+"&actionE=/JGR_InteresadoEJG.do&" +
-        "localizacionE=gratuita.busquedaEJG.localizacion&tituloE=pestana.justiciagratuitaejg.solicitante&idInstitucionJG="+this.institucionActual+"&idPersonaJG="+this.body.idPersonajg+"&conceptoE=EJG&"+
-        "NUMERO="+this.body.numero+"&ejgNumEjg="+this.body.numEjg+"&IDTIPOEJG="+this.body.tipoEJG+"&ejgAnio="+this.body.annio+"&accionE=editar&IDINSTITUCION="+this.institucionActual+"&solicitante=JOSE%20LUIS%20ALGBJL%20ZVQNDSMF&ANIO="+this.body.annio+"";
-    
+    us =
+      this.sigaServices.getOldSigaUrl() +
+      "JGR_MantenimientoEJG.do?codigoDesignaNumEJG=" + this.body.numEjg + "&numeroEJG=" + this.body.numEjg + "&idTipoEJG=" + this.body.tipoEJG +
+      "&idInstitucionEJG=" + this.body.idInstitucion + "&anioEJG=" + this.body.annio + "&actionE=/JGR_InteresadoEJG.do&" +
+      "localizacionE=gratuita.busquedaEJG.localizacion&tituloE=pestana.justiciagratuitaejg.solicitante&idInstitucionJG=" + this.institucionActual + "&idPersonaJG=" + this.body.idPersonajg + "&conceptoE=EJG&" +
+      "NUMERO=" + this.body.numero + "&ejgNumEjg=" + this.body.numEjg + "&IDTIPOEJG=" + this.body.tipoEJG + "&ejgAnio=" + this.body.annio + "&accionE=editar&IDINSTITUCION=" + this.institucionActual + "&solicitante=JOSE%20LUIS%20ALGBJL%20ZVQNDSMF&ANIO=" + this.body.annio + "";
+
 
     sessionStorage.setItem("url", JSON.stringify(us));
     sessionStorage.removeItem("reload");
     sessionStorage.setItem("reload", "si");
     //sessionStorage.setItem("idInstitucionFichaColegial", this.body.idInstitucion);
 
-    this.url="";
+    this.url = "";
     this.router.navigate(["/addExp"]);
   }
 

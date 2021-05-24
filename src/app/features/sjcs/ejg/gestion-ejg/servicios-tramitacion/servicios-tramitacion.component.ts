@@ -100,13 +100,34 @@ export class ServiciosTramitacionComponent implements OnInit {
 
       this.body.apellidosYNombre = this.usuarioBusquedaExpress.nombreAp;
 
-      if (busquedaColegiado.nColegiado != undefined) this.body.numColegiado = busquedaColegiado.nColegiado;
+      if (busquedaColegiado.nColegiado != undefined){
+        this.body.numColegiado = busquedaColegiado.nColegiado;
 
-      this.usuarioBusquedaExpress.numColegiado = this.body.numColegiado;
+        this.usuarioBusquedaExpress.numColegiado = this.body.numColegiado;
+      }
 
       //Asignacion de idPersona según el origen de la busqueda.
       this.body.idPersona = busquedaColegiado.idPersona;
       if (this.body.idPersona == undefined) this.body.idPersona = busquedaColegiado.idpersona;
+    }
+
+    //Cuando vuelve de la busqueda general SJCS
+    if(sessionStorage.getItem("colegiadoGeneralDesigna")){
+      let persona = JSON.parse(sessionStorage.getItem("colegiadoGeneralDesigna"))[0];
+
+      sessionStorage.removeItem('colegiadoGeneralDesigna');
+
+      this.usuarioBusquedaExpress.nombreAp = persona.apellidos + ", " + persona.nombre;
+
+      this.usuarioBusquedaExpress.numColegiado = persona.numeroColegiado;
+
+      this.body.apellidosYNombre = this.usuarioBusquedaExpress.nombreAp;
+
+      this.body.numColegiado = persona.numeroColegiado;
+
+      this.body.idPersona = persona.idPersona;
+
+
     }
 
     //Se comprueba si vueleve de una busqueda de colegiado
@@ -286,14 +307,6 @@ export class ServiciosTramitacionComponent implements OnInit {
   onChangeTurnos() {
     this.comboGuardia = [];
     this.body.idGuardia = null;
-    //Para prevenir que un colegiado se asigne a turnos y guardias que no son suyos.
-    this.usuarioBusquedaExpress = {
-      numColegiado: '',
-      nombreAp: ''
-    };
-    this.body.idPersona = null;
-    this.body.apellidosYNombre = null;
-    this.body.numColegiado = null;
 
     if (this.body.idTurno != undefined) {
       this.isDisabledGuardia = false;
@@ -331,11 +344,26 @@ export class ServiciosTramitacionComponent implements OnInit {
 
     this.sigaServices.post("gestionejg_guardarServiciosTramitacion", this.body).subscribe(
       n => {
-        this.progressSpinner = false;
+        
         if (n.statusText == "OK") {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.bodyInicial = this.body;
           this.initArt27 = this.art27;
+          //Actualizamos la informacion en el body de la pantalla
+          this.sigaServices.post("gestionejg_datosEJG", this.bodyInicial).subscribe(
+            n => {
+              let ejgObject = JSON.parse(n.body).ejgItems;
+              let datosItem = ejgObject[0];
+              
+              this.persistenceService.setDatos(datosItem);
+              this.body = this.persistenceService.getDatos();
+              this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+              this.progressSpinner = false;
+            },
+            err => {
+              this.progressSpinner = false;
+            }
+          );
         }
         else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
 
