@@ -226,23 +226,16 @@ export class FiltroDesignacionesComponent implements OnInit {
     }else{
       this.isButtonVisible = true;// DEBE SER FALSE
     }
-    this.sigaServices.get("institucionActual").subscribe(n => {
-      this.institucionActual = n.value;});
-      if(this.institucionActual == "2003"){
-        this.isButtonVisible = false;
-      }
-    
+    if(this.localStorageService.institucionActual == "2003"){
+      this.isButtonVisible = false;
+    }
     this.filtroJustificacion = new JustificacionExpressItem();
-
     this.showDesignas=true;
     this.showJustificacionExpress=false;
     this. esColegiado = false;
     this.progressSpinner=true;
     this.showDesignas = true;
     this.checkRestricciones = false;
-
-
-    // this.checkLastRoute();
 
     //justificacion expres
     this.cargaCombosJustificacion();
