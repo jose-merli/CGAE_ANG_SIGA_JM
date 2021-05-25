@@ -280,19 +280,6 @@ modDatos(event){
     this.msgs = [];
   }
 
-  transformaFecha(fecha) {
-    if (fecha != null) {
-      let jsonDate = JSON.stringify(fecha);
-      let rawDate = jsonDate.slice(1, -1);
-      if (rawDate.length == 10) {
-        fecha = rawDate += " 00:00:00";
-    } else {
-      fecha = rawDate;
-    }
-    return fecha;
-    }
-  }
-
   estadoPendiente(event){
     let encontrado: boolean = false;
     event.forEach(element => {
@@ -441,6 +428,19 @@ anular(event){
 
 backTo() {
   this.location.back();
+}
+
+transformaFecha(fecha) {
+  if (fecha != null) {
+    let jsonDate = JSON.stringify(fecha);
+    let rawDate = jsonDate.slice(1, -1);
+    if (rawDate.length == 10) {
+      fecha = rawDate += " 00:00:00";
+  } else {
+    fecha = rawDate;
+  }
+  return fecha;
+  }
 }
 
 guardar(event) {
