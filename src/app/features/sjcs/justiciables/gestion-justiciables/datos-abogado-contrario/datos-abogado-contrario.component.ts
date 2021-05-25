@@ -125,7 +125,6 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 				},
 				err => {
 					this.progressSpinner = false;
-					console.log(err);
 				});
 		}
 

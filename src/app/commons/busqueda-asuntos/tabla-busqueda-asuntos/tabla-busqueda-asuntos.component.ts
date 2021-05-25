@@ -8,6 +8,8 @@ import { ProcuradoresItem } from '../../../models/sjcs/ProcuradoresItem';
 import { ProcuradoresObject } from '../../../models/sjcs/ProcuradoresObject';
 import { JusticiableItem } from '../../../models/sjcs/JusticiableItem';
 import { CommonsService } from '../../../_services/commons.service';
+import { Location } from '@angular/common';
+import { EJGItem } from '../../../models/sjcs/EJGItem';
 
 @Component({
   selector: 'app-tabla-busqueda-asuntos',
@@ -36,16 +38,21 @@ export class TablaBusquedaAsuntosComponent implements OnInit {
   showTarjetaPermiso: boolean = true;
 
 
+
+
+
   @ViewChild("table") table: DataTable;
   @Input() showTarjeta;
   @Input() body;
   @Input() modoEdicion;
   @Input() fromJusticiable;
+  @Input() datosEJG: EJGItem = null;
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
     private commonsService: CommonsService,
-    private persistenceService: PersistenceService) { }
+    private persistenceService: PersistenceService,
+    private location: Location) { }
 
   ngOnInit() {
 
@@ -60,10 +67,10 @@ export class TablaBusquedaAsuntosComponent implements OnInit {
     //       this.showTarjetaPermiso = true;
     this.getCols();
 
+
     //     }
     //   }
     //   ).catch(error => console.error(error));
-
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -121,6 +128,7 @@ export class TablaBusquedaAsuntosComponent implements OnInit {
     //     this.progressSpinner = false;
     //     console.log(err);
     //   });
+
   }
 
   onChangeRowsPerPages(event) {
@@ -144,5 +152,40 @@ export class TablaBusquedaAsuntosComponent implements OnInit {
 
   openTab() {
 
+  }
+
+  getAsunto(event) {
+    if (this.datosEJG != null) {
+
+      let asunto = event.data.asunto.split("/");
+
+      let anoDesigna = asunto[0].split("D")[1];
+
+      let turno = event.data.turnoGuardia.split("/")[0];
+
+      let request = [anoDesigna, this.datosEJG.annio, this.datosEJG.tipoEJG,
+        //, newDesigna.idTurno.toString(), newId.id, this.datosEJG.numero
+        turno, asunto[1], this.datosEJG.numero
+      ];
+
+      this.sigaServices.post("designacion_asociarEjgDesigna", request).subscribe(
+        m => {
+
+          if (JSON.parse(m.body).error.code == 200) this.showMessage("success", "Asociación con EJG realizada correctamente", "" );
+          else this.showMessage("error", "Asociación con EJG fallida",  "" );
+          sessionStorage.removeItem("EJG");
+          this.location.back();
+        },
+        err => {
+          this.showMessage("error",
+            "No se ha asociado el EJG correctamente",
+            ""
+          );
+          this.progressSpinner = false;
+        }
+      );
+
+      
+    }
   }
 }

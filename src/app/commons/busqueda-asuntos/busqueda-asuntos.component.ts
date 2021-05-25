@@ -29,6 +29,7 @@ import { Location } from '@angular/common'
 import { PersistenceService } from '../../_services/persistence.service';
 import { FiltrosBusquedaAsuntosComponent } from "./filtros-busqueda-asuntos/filtros-busqueda-asuntos.component";
 import { TablaBusquedaAsuntosComponent } from "./tabla-busqueda-asuntos/tabla-busqueda-asuntos.component";
+import { EJGItem } from "../../models/sjcs/EJGItem";
 export enum KEY_CODE {
   ENTER = 13
 }
@@ -87,8 +88,14 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
   @ViewChild("table")
   table: DataTable;
   selectedDatos;
+  datosEJG: EJGItem;
 
   ngOnInit() {
+
+    if (sessionStorage.getItem('EJG')) {
+      this.datosEJG = JSON.parse(sessionStorage.getItem('EJG'));
+      sessionStorage.removeItem('EJG');
+    }
 
     // this.commonsService.checkAcceso()
     //   .then(respuesta => {
@@ -110,7 +117,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
   }
 
 
-  isOpenReceive(event) {
+  searchEvent(event) {
     this.search(event);
   }
 

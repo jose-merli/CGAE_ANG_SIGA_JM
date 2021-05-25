@@ -294,7 +294,7 @@ export class ServiciosTramitacionComponent implements OnInit {
   }
 
   clearBusqueda() {
-    //Para prevenir que un colegiado se asigne a turnos y guardias que no son suyos.
+    //Para prevenir que un colegiado se asigne como art 27 de forma erronea.
     this.usuarioBusquedaExpress = {
       numColegiado: '',
       nombreAp: ''

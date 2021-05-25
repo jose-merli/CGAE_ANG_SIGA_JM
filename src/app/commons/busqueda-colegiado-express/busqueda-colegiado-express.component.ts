@@ -119,6 +119,9 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
         sessionStorage.setItem("tarjeta", this.tarjeta);
       }
 
+      sessionStorage.setItem("idTurno", this.idTurno);
+      sessionStorage.setItem("idGuardia", this.idGuardia);
+
       if (form.numColegiado == null || form.numColegiado == undefined || form.numColegiado.trim() == "") {
 
         //Comprobamos el estado del checkbox para el art 27-28

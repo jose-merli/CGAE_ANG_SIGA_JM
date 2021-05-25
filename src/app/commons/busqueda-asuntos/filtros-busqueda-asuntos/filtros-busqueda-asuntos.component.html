@@ -7,12 +7,12 @@
             <div class="form-row">
                 <div class="col-12">
                     <p-radioButton value="ejg" name="tarj" (click)="changeFilters()" label="{{ 'justiciaGratuita.ejg.datosGenerales.EJG' | translate}}"
-                        [(ngModel)]='radioTarjeta'></p-radioButton>
+                        [(ngModel)]='radioTarjeta' [disabled]="fromEJG" ></p-radioButton>
                     <p-radioButton value="des" name="tarj" (click)="changeFilters()" label="{{'menu.justiciaGratuita.designas' | translate}}"
-                        [(ngModel)]='radioTarjeta'></p-radioButton>
-                    <p-radioButton value="soj" name="tarj" label="SOJ" [(ngModel)]='radioTarjeta' (click)="changeFilters()"></p-radioButton>
+                        [(ngModel)]='radioTarjeta' [disabled]="fromEJG"></p-radioButton>
+                    <p-radioButton value="soj" name="tarj" label="SOJ" [(ngModel)]='radioTarjeta' (click)="changeFilters()" [disabled]="fromEJG"></p-radioButton>
                     <p-radioButton value="asi" name="tarj" (click)="changeFilters()" label="{{'menu.justiciaGratuita.asistencia' | translate}}"
-                        [(ngModel)]='radioTarjeta'></p-radioButton>
+                        [(ngModel)]='radioTarjeta' [disabled]="fromEJG"></p-radioButton>
                 </div>
             </div>
             <p (click)="onHideDatosGenerales()" class="title-module">{{ "censo.consultaDatosGenerales.cabecera" | translate}}
@@ -48,13 +48,13 @@
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{ 'justiciaGratuita.sjcs.designas.DatosIden.turno' | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='filtros.idTurno' (onChange)="filtros.idGuardia = undefined; getComboguardiaPorTurno($event)"
+                        <p-dropdown class="select-form" [(ngModel)]='filtros.idTurno' (onChange)="getComboguardiaPorTurno($event)"
                             placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboTurno" [filter]="true"
                             filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
-                        <label>{{"menu.justiciaGratuita.GuardiaMenu" | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='filtros.idGuardia' [disabled]="comboguardiaPorTurno.length == 0 || radioTarjeta == 'des'"
+                        <label>{{"menu.justiciaGratuita.GuardiaMenu" | translate}}</label><!-- || radioTarjeta == 'des' -->
+                        <p-dropdown class="select-form" [(ngModel)]='filtros.idGuardia' [disabled]="comboguardiaPorTurno.length == 0 "
                             placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboguardiaPorTurno" [filter]="true"
                             filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
                     </div>

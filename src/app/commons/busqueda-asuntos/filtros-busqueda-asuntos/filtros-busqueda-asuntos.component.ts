@@ -28,6 +28,8 @@ import { DialogoComunicacionesItem } from "../../../models/DialogoComunicacionIt
 import { ModelosComunicacionesItem } from "../../../models/ModelosComunicacionesItem";
 import { AsistenciasItem } from "../../../models/sjcs/AsistenciasItem";
 import { PersistenceService } from "../../../_services/persistence.service";
+import { CommonsService } from '../../../_services/commons.service';
+import { EJGItem } from "../../../models/sjcs/EJGItem";
 
 export enum KEY_CODE {
   ENTER = 13
@@ -102,8 +104,9 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
 
   @Input() permisoEscritura;
   @Input() idPersona;
+  @Input() datosEJG: EJGItem = null;
 
-  @Output() isOpen = new EventEmitter<boolean>();
+  @Output() search = new EventEmitter<boolean>();
 
   institucionActual: any;
   deshabilitarCombCol: boolean = false;
@@ -121,7 +124,8 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
-    private persistenceService: PersistenceService
+    private persistenceService: PersistenceService,
+    private commonService: CommonsService,
   ) {
     super(USER_VALIDATIONS);
     this.formBusqueda = this.formBuilder.group({
@@ -144,6 +148,12 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
     let fecha;
     fecha = new Date();
     this.filtros.anio = fecha.getFullYear();
+
+    //Se asignan los valores de los filtros cuando procede de EJG y se fijan
+    if (this.datosEJG != null) {
+      this.radioTarjeta = 'des';
+
+    }
   }
 
   changeFilters() {
@@ -390,32 +400,54 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
     );
   }
   getComboTurno() {
-    this.sigaServices.get("combo_turnos").subscribe(
-      n => {
-        this.comboTurno = n.combooItems;
-      },
-      err => {
-        console.log(err);
-
-      }, () => {
-        this.arregloTildesCombo(this.comboTurno);
-      }
-    );
+    this.progressSpinner = true;
+    if (this.datosEJG != null) {
+      this.sigaServices.getParam("componenteGeneralJG_comboTurnos", "?pantalla=EJG").subscribe(
+        n => {
+          this.comboTurno = n.combooItems;
+          this.commonService.arregloTildesCombo(this.comboTurno);
+          this.progressSpinner = false;
+        },
+        err => {
+          this.progressSpinner = false;
+        }
+      );
+    }
+    else {
+      this.sigaServices.get("combo_turnos").subscribe(
+        n => {
+          this.comboTurno = n.combooItems;
+          this.commonService.arregloTildesCombo(this.comboTurno);
+          this.progressSpinner = false;
+        },
+        err => {
+          this.progressSpinner = false;
+        }
+      );
+    }
   }
   getComboguardiaPorTurno(evento) {
     this.filtros.idTurno = evento.value;
-    if (evento.value != undefined)
-      this.sigaServices.getParam("combo_guardiaPorTurno", "?idTurno=" + evento.value).subscribe(
-        n => {
-          this.comboguardiaPorTurno = n.combooItems;
-        },
-        err => {
-          console.log(err);
 
-        }, () => {
-          this.arregloTildesCombo(this.comboguardiaPorTurno);
-        }
-      );
+    this.filtros.idGuardia = undefined;
+
+    if (evento.value != undefined) {
+      this.progressSpinner = true;
+      if (evento.value == null) this.comboguardiaPorTurno = [];
+      else {
+        this.sigaServices.getParam("combo_guardiaPorTurno", "?idTurno=" + evento.value).subscribe(
+          n => {
+            this.comboguardiaPorTurno = n.combooItems;
+            this.arregloTildesCombo(this.comboguardiaPorTurno);
+            this.progressSpinner = false;
+          },
+          err => {
+            this.progressSpinner = false;
+          }
+        );
+      }
+    }
+
   }
 
   getIdPersona(evento) {
@@ -472,19 +504,19 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
   }
 
   isBuscar() {
-    if (this.comprobarCamposCompuestos()) {
-      this.filtrosTrim();
-      this.filtros.radioTarjeta = this.radioTarjeta;
-      if (this.idPersona != undefined && this.idPersona != "")
-        this.filtros.idPersonaColegiado = this.idPersona;
-      this.persistenceService.setFiltros(this.filtros);
-      this.persistenceService.setFiltrosAux(this.filtros);
-      this.filtroAux = this.persistenceService.getFiltrosAux()
-      this.isOpen.emit(false)
+    //if (this.comprobarCamposCompuestos()) {
+    this.filtrosTrim();
+    this.filtros.radioTarjeta = this.radioTarjeta;
+    if (this.idPersona != undefined && this.idPersona != "")
+      this.filtros.idPersonaColegiado = this.idPersona;
+    this.persistenceService.setFiltros(this.filtros);
+    this.persistenceService.setFiltrosAux(this.filtros);
+    this.filtroAux = this.persistenceService.getFiltrosAux()
+    this.search.emit(false)
 
-    } else {
+    /* } else {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(this.customError));
-    }
+    } */
   }
 
   showMessage(severity, summary, msg) {
