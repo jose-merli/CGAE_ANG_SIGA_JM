@@ -8,7 +8,7 @@ import { EJGItem } from '../../../../models/sjcs/EJGItem';
 import { CommonsService } from '../../../../_services/commons.service';
 import { DatePipe } from '../../../../../../node_modules/@angular/common';
 import { Dialog } from 'primeng/primeng';
-import { NullTemplateVisitor } from '@angular/compiler';
+import { saveAs } from "file-saver/FileSaver";
 
 @Component({
   selector: 'app-tabla-ejg',
@@ -365,19 +365,48 @@ export class TablaEjgComponent implements OnInit {
   downloadEEJ() {
     this.progressSpinner=true;
 
-    let data: EJGItem [] = [];
+    this.sigaServices.postDownloadFiles("gestionejg_descargarExpedientesJG", this.selectedDatos).subscribe(
+      data => {
 
-    data.push(this.selectedDatos[0]);
+        let blob = null;
 
-    this.sigaServices.post("gestionejg_descargarExpedientesJG", this.selectedDatos).subscribe(
-      n => {
-        this.progressSpinner=false;
+          let mime = "application/pdf";
+          blob = new Blob([data], { type: mime });
+          saveAs(blob, "eejg_2005_2018-01200_45837302G_20210525_131611.pdf");
+      
       },
       err => {
+        this.progressSpinner = false;
         console.log(err);
-        this.progressSpinner=false;
+      },
+      () => {
+        this.progressSpinner = false;
       }
     );
+
+
+
+    // this.sigaServices.post("", ).subscribe(
+    //   n => {
+    //     this.progressSpinner=false;
+    //     let dato: Error = JSON.parse(n.body); 
+
+    //     if(dato.code=='200'){
+    //       this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+    //     }else{
+    //       if(dato.description == "noExiste"){
+    //         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.mensaje.noExistePeticiones"));
+    //       }else{
+    //         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+    //       }
+    //     }
+    //   },
+    //   err => {
+    //     console.log(err);
+    //     this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+    //     this.progressSpinner=false;
+    //   }
+    // );
   }
 
   addRemesa() {
