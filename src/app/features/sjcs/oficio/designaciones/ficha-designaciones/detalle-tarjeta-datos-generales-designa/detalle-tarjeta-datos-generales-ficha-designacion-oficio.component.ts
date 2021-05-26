@@ -11,6 +11,7 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { EJGItem } from '../../../../../../models/sjcs/EJGItem';
 import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-detalle-tarjeta-datos-generales-ficha-designacion-oficio',
@@ -87,7 +88,8 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
      private confirmationService: ConfirmationService, 
      private translateService: TranslateService, 
      private router: Router,
-     private persistenceService: PersistenceService) {
+     private persistenceService: PersistenceService,
+     private location: Location) {
   }
 
   ngOnInit() {
@@ -401,6 +403,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                     if(JSON.parse(m.body).error.code==200)this.msgs = [{ severity: "success", summary: "Asociación con EJG realizada correctamente", detail: this.translateService.instant( JSON.parse(m.body).error.description) }];
                     else this.msgs = [{ severity: "error", summary: "Asociación con EJG fallida", detail: this.translateService.instant( JSON.parse(m.body).error.description) }];
                     sessionStorage.removeItem("EJG");
+                    this.location.back();
                   },
                   err => {
                     severity = "error";

@@ -36,6 +36,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
   url = null;
   textSelected: String = '{0} opciones seleccionadas';
   tipoEJGDesc = "";
+  tipoEJGColDesc = "";
   comboTipoEJG = [];
   comboTipoEJGColegio = [];
   comboPrestaciones = [];
@@ -106,6 +107,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
         this.showTipoExp = true;
 
       this.getPrestacionesRechazadasEJG();
+      this.checkEJGDesignas();
     } else {
       this.nuevo = true;
       this.modoEdicion = false;
@@ -117,8 +119,8 @@ export class DatosGeneralesEjgComponent implements OnInit {
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
     });
-    if (this.body.anioexpInsos != null && this.body.anioexpInsos != undefined) this.isdisabledAddExp = true;
-
+    //if (this.body.anioexpInsos != null && this.body.anioexpInsos != undefined) this.isdisabledAddExp = true;
+    
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -128,6 +130,16 @@ export class DatosGeneralesEjgComponent implements OnInit {
         this.openFicha = !this.openFicha;
       }
     }
+  }
+
+  checkEJGDesignas(){
+    this.sigaServices.post("gestionejg_getEjgDesigna", this.bodyInicial).subscribe(
+      n => {
+        let ejgDesignas = JSON.parse(n.body).ejgDesignaItems;
+        if(ejgDesignas.length==0) this.isdisabledAddExp = true;
+        else this.isdisabledAddExp = false;
+      }
+    );
   }
 
   getPrestacionesRechazadasEJG() {
@@ -153,6 +165,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
     this.sigaServices.get("filtrosejg_comboTipoEJG").subscribe(
       n => {
         this.comboTipoEJG = n.combooItems;
+        //Determina el valor en la cabecera del campo tipo ejg 
         if (this.body.tipoEJG != null && this.body.tipoEJG != undefined) {
           this.comboTipoEJG.forEach(element => {
             if (element.value == this.body.tipoEJG) this.tipoEJGDesc = element.label;
@@ -171,6 +184,13 @@ export class DatosGeneralesEjgComponent implements OnInit {
       n => {
         this.comboTipoEJGColegio = n.combooItems;
         this.commonsServices.arregloTildesCombo(this.comboTipoEJGColegio);
+
+        //Determina el valor en la cabecera del campo tipo ejg colegio
+        if (this.body.tipoEJGColegio != null && this.body.tipoEJGColegio != undefined) {
+          this.comboTipoEJGColegio.forEach(element => {
+            if (element.value == this.body.tipoEJGColegio) this.tipoEJGColDesc = element.label;
+          });
+        }
       },
       err => {
         console.log(err);
@@ -457,9 +477,9 @@ export class DatosGeneralesEjgComponent implements OnInit {
       this.msgs = msg;
     } else {
       //Comprobamos si el EJG tiene una designacion asociada
-      //if(this.body.numDesigna != undefined && this.body.numDesigna != null) this.addExp();
-      //else this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('justiciaGratuita.ejg.datosGenerales.noDesignaEjg') }];
-      this.addExp();
+      if(!this.isdisabledAddExp) this.addExp();
+      else this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('justiciaGratuita.ejg.datosGenerales.noDesignaEjg') }];
+      
     }
   }
 
