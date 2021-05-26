@@ -48,7 +48,8 @@
           </div>
           <div class="form-group col-lg-2 col-md-2">
           <label>Fecha Estado</label>
-        <app-fecha [(value)]='filtro.fechaestado' [utc]="true"></app-fecha>
+        <app-fecha [(value)]="filtro.fechaestado" (valueChangeSelected)="fillFechaEstado($event)"
+        (valueChangeInput)="fillFechaEstado($event)"></app-fecha>
         </div>
         </div>
       </ng-template>
