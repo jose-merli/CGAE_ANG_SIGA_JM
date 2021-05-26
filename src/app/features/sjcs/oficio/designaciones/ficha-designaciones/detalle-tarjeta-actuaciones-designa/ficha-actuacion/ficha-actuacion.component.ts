@@ -180,7 +180,7 @@ export class FichaActuacionComponent implements OnInit {
       let actuacion = JSON.parse(sessionStorage.getItem("actuacionDesigna"));
       sessionStorage.removeItem("actuacionDesigna");
       this.actuacionDesigna = actuacion;
-
+console.log('actuacion from session: ', actuacion)
       this.getPermiteTurno();
     }
   }
@@ -557,6 +557,7 @@ export class FichaActuacionComponent implements OnInit {
 
     let turnoItem = new TurnosItem();
     turnoItem.idturno = this.actuacionDesigna.designaItem.idTurno;
+    console.log('this.actuacionDesigna.designaItem: ', this.actuacionDesigna.designaItem)
 
     this.sigaServices.post("turnos_busquedaFichaTurnos", turnoItem).subscribe(
       data => {
