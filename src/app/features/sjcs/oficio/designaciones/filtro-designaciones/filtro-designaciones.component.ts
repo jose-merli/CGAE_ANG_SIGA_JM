@@ -85,7 +85,7 @@ export class FiltroDesignacionesComponent implements OnInit {
   @Output() showTablaJustificacionExpres = new EventEmitter<boolean>();
   @Output() busqueda = new EventEmitter<boolean>();
   @Output() permisosFichaAct= new EventEmitter<boolean>();
-  
+  @Output() checkRestriccionesasLetrado = new EventEmitter<boolean>();
   isLetrado:boolean = false;
   sinEjg;
   ejgSinResolucion;
@@ -328,14 +328,33 @@ export class FiltroDesignacionesComponent implements OnInit {
   }
 
   changeFilters(event) {
+    
     if(event=='designas'){
-      this.showDesignas=true;
-      this.showJustificacionExpress=false;
-      this.isButtonVisible=true;
-      this.showTablaJustificacionExpres.emit(false);
+      let keyConfirmation = "confirmacionGuardarJustificacionExpress";
+      if (sessionStorage.getItem('rowIdsToUpdate') != null && sessionStorage.getItem('rowIdsToUpdate') != 'null' && sessionStorage.getItem('rowIdsToUpdate') != '[]'){
+        this.confirmationService.confirm({
+          key: keyConfirmation,
+          message: this.translateService.instant('justiciaGratuita.oficio.justificacion.reestablecer'),
+          icon: "fa fa-trash-alt",
+          accept: () => {
+            this.showDesignas=true;
+            this.showJustificacionExpress=false;
+            this.isButtonVisible=true;
+            this.showTablaJustificacionExpres.emit(false);
+          },
+          reject: () => {
+          }
+        });
+      }else{
+        this.showDesignas=true;
+        this.showJustificacionExpress=false;
+        this.isButtonVisible=true;
+        this.showTablaJustificacionExpres.emit(false);
+      }
     }
 
     if(event=='justificacion'){
+      sessionStorage.setItem("rowIdsToUpdate", JSON.stringify([]));
       this.showDesignas=false;
       this.showJustificacionExpress=true;
       this.expanded=true;
@@ -801,17 +820,21 @@ getComboCalidad() {
     this.checkRestricciones = event;
     
     if(!event){
+      this.checkRestriccionesasLetrado.emit(false);
       this.disableRestricciones=false;
-      this.filtroJustificacion.ejgSinResolucion="2"; 
+      /*this.filtroJustificacion.ejgSinResolucion="2"; 
       this.filtroJustificacion.sinEJG="2";
       this.filtroJustificacion.resolucionPTECAJG="2";
-      this.filtroJustificacion.conEJGNoFavorables="2";
+      this.filtroJustificacion.conEJGNoFavorables="2";*/
+
     }else{
+      this.checkRestriccionesasLetrado.emit(true);
       this.disableRestricciones=true;
-      this.filtroJustificacion.ejgSinResolucion="0"; 
+      /*this.filtroJustificacion.ejgSinResolucion="0"; 
       this.filtroJustificacion.sinEJG="0";
       this.filtroJustificacion.resolucionPTECAJG="0";
       this.filtroJustificacion.conEJGNoFavorables="0";
+      */
     }
   }
 
