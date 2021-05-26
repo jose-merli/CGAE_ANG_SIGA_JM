@@ -183,6 +183,17 @@ export class FichaActuacionComponent implements OnInit {
 
       this.getPermiteTurno();
     }
+
+
+    if (sessionStorage.getItem("actuacionDesignaJE")) {
+      let actuacionJE = JSON.parse(sessionStorage.getItem("actuacionDesignaJE"));
+      sessionStorage.removeItem("actuacionDesignaJE");
+      actuacionJE.designaItem.ano = "D" + actuacionJE.designaItem.ano;
+      this.actuacionDesigna = actuacionJE;
+      this.getActuacionDesigna('0', actuacionJE);
+
+    }
+
   }
 
   cargaInicial() {
@@ -416,18 +427,31 @@ export class FichaActuacionComponent implements OnInit {
 
   }
 
-  getActuacionDesigna(event) {
+  getActuacionDesigna(event, actuacionJE?: Actuacion) {
 
     this.progressSpinner = true;
 
-    let params = {
-      anio: this.actuacionDesigna.designaItem.ano.split('/')[0].replace('D', ''),
-      idTurno: this.actuacionDesigna.designaItem.idTurno,
-      numero: this.actuacionDesigna.designaItem.numero,
-      historico: false,
-      idPersonaColegiado: '',
-      numeroAsunto: event
-    };
+    let params = {};
+
+    if (actuacionJE) {
+      params = {
+        anio: actuacionJE.actuacion.anio,
+        idTurno: actuacionJE.actuacion.idTurno,
+        numero: actuacionJE.designaItem.numero,
+        numeroAsunto: actuacionJE.actuacion.numeroAsunto,
+        historico: false,
+        idPersonaColegiado: ''
+      };
+    } else {
+      params = {
+        anio: this.actuacionDesigna.designaItem.ano.split('/')[0].replace('D', ''),
+        idTurno: this.actuacionDesigna.designaItem.idTurno,
+        numero: this.actuacionDesigna.designaItem.numero,
+        numeroAsunto: event,
+        historico: false,
+        idPersonaColegiado: ''
+      };
+    }
 
     this.sigaServices.post("actuaciones_designacion", params).subscribe(
       data => {
@@ -438,21 +462,30 @@ export class FichaActuacionComponent implements OnInit {
           this.showMsg('error', 'Error', this.translateService.instant(object.error.description.toString()));
         } else {
           let resp = object.actuacionesDesignaItems[0];
+          let designa = JSON.parse(JSON.stringify(this.actuacionDesigna.designaItem));
+          this.actuacionDesigna = new Actuacion();
           let relaciones = null;
 
-          if (this.actuacionDesigna.relaciones != null && this.actuacionDesigna.relaciones.length > 0) {
-            relaciones = this.actuacionDesigna.relaciones.slice();
+          if (!actuacionJE) {
+
+            if (this.actuacionDesigna.relaciones != null && this.actuacionDesigna.relaciones.length > 0) {
+              relaciones = this.actuacionDesigna.relaciones.slice();
+            }
+
+            this.actuacionDesigna.relaciones = relaciones;
           }
 
-          let designa = JSON.parse(JSON.stringify(this.actuacionDesigna.designaItem));
-
-          this.actuacionDesigna = new Actuacion();
           this.actuacionDesigna.designaItem = designa;
           this.actuacionDesigna.actuacion = resp;
           this.actuacionDesigna.isNew = false;
           this.isNewActDesig = false;
-          this.actuacionDesigna.relaciones = relaciones;
-          this.establecerValoresIniciales();
+
+          if (actuacionJE) {
+            this.getPermiteTurno();
+          } else {
+            this.establecerValoresIniciales();
+          }
+
         }
       },
       err => {
@@ -469,7 +502,7 @@ export class FichaActuacionComponent implements OnInit {
 
     // Se rellenan la tarjeta resumen
     this.tarjetaFija.campos[0].value = this.actuacionDesigna.designaItem.ano;
-    this.tarjetaFija.campos[1].value = `${this.actuacionDesigna.designaItem.numColegiado} ${this.actuacionDesigna.designaItem.nombreColegiado}`;
+    this.tarjetaFija.campos[1].value = `${this.actuacionDesigna.actuacion.numColegiado} ${this.actuacionDesigna.actuacion.letrado}`;
     this.tarjetaFija.campos[2].value = this.actuacionDesigna.actuacion.numeroAsunto;
     if (this.actuacionDesigna.actuacion.fechaActuacion != undefined && this.actuacionDesigna.actuacion.fechaActuacion != null && this.actuacionDesigna.actuacion.fechaActuacion != '') {
       this.tarjetaFija.campos[3].value = this.datePipe.transform(new Date(this.actuacionDesigna.actuacion.fechaActuacion.split('/').reverse().join('-')), 'dd/MM/yyyy');

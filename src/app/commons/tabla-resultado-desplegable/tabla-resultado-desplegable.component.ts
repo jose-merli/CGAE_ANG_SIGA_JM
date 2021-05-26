@@ -13,6 +13,7 @@ import { DesignaItem } from '../../models/sjcs/DesignaItem';
 import { CommonsService } from '../../_services/commons.service';
 import { SigaServices } from '../../_services/siga.service';
 import { Cell, Row, RowGroup } from './tabla-resultado-desplegable-je.service';
+import { TranslateService } from '../translate/translation.service';
 @Component({
   selector: 'app-tabla-resultado-desplegable',
   templateUrl: './tabla-resultado-desplegable.component.html',
@@ -91,7 +92,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     private datepipe: DatePipe,
     private sigaServices: SigaServices,
     private commonsService: CommonsService,
-    private router: Router
+    private router: Router,
+    private translateService: TranslateService
   ) {
 
     this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
@@ -1207,7 +1209,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         if (this.permisosFichaAct){
 
         let des: DesignaItem = new DesignaItem();
-        des.ano = rowGroup.rows[0].cells[9].value;
+        des.ano = rowGroup.id.split('\n')[0];
         des.idTurno = rowGroup.rows[0].cells[17].value;
         des.numero = rowGroup.rows[0].cells[19].value;
         des.idInstitucion = rowGroup.rows[0].cells[13].value;
@@ -1216,6 +1218,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         des.idJuzgado = rowGroup.rows[0].cells[15].value;
         des.idProcedimiento = rowGroup.rows[0].cells[21].value;
         des.numColegiado = rowGroup.rows[0].cells[38].value;
+        des.fechaEntradaInicio = rowGroup.rows[0].cells[9].value;
         
          let act: ActuacionDesignaItem = new ActuacionDesignaItem();
          act.idTurno = row.cells[33].value;
@@ -1228,18 +1231,47 @@ export class TablaResultadoDesplegableComponent implements OnInit {
          act.idAcreditacion = row.cells[10].value;
          act.numeroAsunto = row.cells[19].value;
 
+         let actuacion: Actuacion = {
+          isNew: false,
+          designaItem: des,
+          actuacion: act,
+          relaciones: null
+        };
 
-          let actuacion: Actuacion = {
-            isNew: false,
-            designaItem: des,
-            actuacion: act,
-            relaciones: ""
-          };
-      
-          sessionStorage.setItem("actuacionDesigna", JSON.stringify(actuacion));
-          this.router.navigate(['/fichaActDesigna']);
+         this.searchRelaciones(actuacion);
         }
       }
+    }
+
+    searchRelaciones(actuacion: Actuacion) {
+
+        this.progressSpinner = true;
+  
+        let item = [actuacion.designaItem.ano, actuacion.designaItem.idTurno, actuacion.designaItem.idInstitucion];
+  
+        this.sigaServices.post("designacionesBusquedaRelaciones", item).subscribe(
+          n => {
+  
+            let relaciones = JSON.parse(n.body).relacionesItem;
+            let error = JSON.parse(n.body).error;
+  
+            if (error != null && error.description != null) {
+              this.showMsg('info', this.translateService.instant("general.message.informacion"), error.description);
+            } else {
+              actuacion.relaciones = relaciones;
+            }
+            this.progressSpinner = false;
+            
+          },
+          err => {
+            this.progressSpinner = false;
+          },
+          () => {
+            this.progressSpinner = false;
+            sessionStorage.setItem("actuacionDesignaJE", JSON.stringify(actuacion));
+            this.router.navigate(['/fichaActDesigna']);
+          }
+        );
     }
   }
 function compare(a: number | string, b: number | string, isAsc: boolean) {
