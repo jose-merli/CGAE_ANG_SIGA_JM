@@ -429,6 +429,8 @@ import { TarjetaRelFichaActComponent } from './features/sjcs/oficio/designacione
 import { DetalleTarjetaRelacionesDesignaComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-relaciones-designa/detalle-tarjeta-relaciones-designa.component';
 import { DetalleTarjetaComunicacionesDesignaComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-comunicaciones-designa/detalle-tarjeta-comunicaciones-designa.component';
 import { TablaResultadoMixDocDesigService } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-documentacion-designa/tabla-resultado-mix-doc-desig.service';
+
+//EJG
 import { ImpugnacionComponent } from './features/sjcs/ejg/gestion-ejg/impugnacion/impugnacion.component';
 import { ResolucionComponent } from './features/sjcs/ejg/gestion-ejg/resolucion/resolucion.component';
 import { InformeCalificacionComponent } from './features/sjcs/ejg/gestion-ejg/informe-calificacion/informe-calificacion.component';
@@ -444,6 +446,8 @@ import { TablaEjgComponent } from './features/sjcs/ejg/tabla-ejg/tabla-ejg.compo
 import { FiltrosEjgComponent } from './features/sjcs/ejg/filtros-busqueda-ejg/filtros-ejg.component';
 import { GestionEjgComponent } from './features/sjcs/ejg/gestion-ejg/gestion-ejg.component';
 import { AddExpedienteComponent } from './features/sjcs/ejg/gestion-ejg/datos-generales-ejg/add-expediente/add-expediente.component';
+import { ComunicacionesEJGComponent } from './features/sjcs/ejg/gestion-ejg/comunicaciones/comunicaciones-ejg.component';
+
 import { SigaStorageService } from './siga-storage.service';
 import { FichaCambioLetradoComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/ficha-cambio-letrado/ficha-cambio-letrado.component';
 import { LetradoEntranteComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/ficha-cambio-letrado/letrado-entrante/letrado-entrante.component';
@@ -614,6 +618,7 @@ import { LetradoSalienteComponent } from './features/sjcs/oficio/designaciones/f
 		/* RegtelComponent, */
 		ComunicacionesComponent,
 		AddExpedienteComponent,
+		ComunicacionesEJGComponent,
 		
 		GestionActasComponent,
 		MantenimientoFacturacionComponent,

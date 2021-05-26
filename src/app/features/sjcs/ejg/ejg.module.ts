@@ -18,25 +18,8 @@ import { environment } from '../../../../environments/environment';
 import { HTTP_INTERCEPTORS } from '../../../../../node_modules/@angular/common/http';
 import { JwtInterceptor } from '../../../_interceptor/jwt.interceptor';
 import { CookieService } from '../../../../../node_modules/ngx-cookie-service';
-import { FiltrosEjgComponent } from './filtros-busqueda-ejg/filtros-ejg.component';
-import { TablaEjgComponent } from './tabla-ejg/tabla-ejg.component';
-// import { EJGComponent } from './ejg.component';
 import { BusquedaColegiadoExpressModule } from '../../../commons/busqueda-colegiado-express/busqueda-colegiado-express.module';
 import { TarjetaResumenFijaModule } from '../../../commons/tarjeta-resumen-fija/tarjeta-resumen-fija.module';
-import { GestionEjgComponent } from './gestion-ejg/gestion-ejg.component';
-import { DatosGeneralesEjgComponent } from './gestion-ejg/datos-generales-ejg/datos-generales-ejg.component';
-import { ServiciosTramitacionComponent } from './gestion-ejg/servicios-tramitacion/servicios-tramitacion.component';
-import { EJGComponent } from './ejg.component';
-import { UnidadFamiliarComponent } from './gestion-ejg/unidad-familiar/unidad-familiar.component';
-import { ExpedientesEconomicosComponent } from './gestion-ejg/expedientes-economicos/expedientes-economicos.component';
-import { RelacionesComponent } from './gestion-ejg/relaciones/relaciones.component';
-import { EstadosComponent } from './gestion-ejg/estados/estados.component';
-import { DocumentacionComponent } from './gestion-ejg/documentacion/documentacion.component';
-import { InformeCalificacionComponent } from './gestion-ejg/informe-calificacion/informe-calificacion.component';
-import { ResolucionComponent } from './gestion-ejg/resolucion/resolucion.component';
-import { ImpugnacionComponent } from './gestion-ejg/impugnacion/impugnacion.component';
-/* import { RegtelComponent } from './gestion-ejg/regtel/regtel.component'; */
-import { ComunicacionesComponent } from './gestion-ejg/comunicaciones/comunicaciones.component';
 import { DialogModule } from 'primeng/dialog';
 
 @NgModule({
@@ -59,26 +42,8 @@ import { DialogModule } from 'primeng/dialog';
     ConfirmDialogModule,
     BusquedaColegiadoExpressModule,
     TarjetaResumenFijaModule,
-    // FichaGrupoZonaModule
-
   ],
   declarations: [
-    /* FiltrosEjgComponent,
-    TablaEjgComponent,
-    EJGComponent,
-    GestionEjgComponent,
-    DatosGeneralesEjgComponent,
-    ServiciosTramitacionComponent,
-    UnidadFamiliarComponent,
-    ExpedientesEconomicosComponent,
-    RelacionesComponent,
-    EstadosComponent,
-    DocumentacionComponent,
-    InformeCalificacionComponent,
-    ResolucionComponent,
-    ImpugnacionComponent,
-    RegtelComponent,
-    ComunicacionesComponent */
   ],
   providers: [
     ImagePipe,

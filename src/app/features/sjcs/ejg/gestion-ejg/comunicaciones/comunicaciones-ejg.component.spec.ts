@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ComunicacionesComponent } from './comunicaciones.component';
+import { ComunicacionesEJGComponent } from './comunicaciones-ejg.component';
 
-describe('ComunicacionesComponent', () => {
-  let component: ComunicacionesComponent;
-  let fixture: ComponentFixture<ComunicacionesComponent>;
+describe('ComunicacionesEJGComponent', () => {
+  let component: ComunicacionesEJGComponent;
+  let fixture: ComponentFixture<ComunicacionesEJGComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ComunicacionesComponent ]
+      declarations: [ ComunicacionesEJGComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ComunicacionesComponent);
+    fixture = TestBed.createComponent(ComunicacionesEJGComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
