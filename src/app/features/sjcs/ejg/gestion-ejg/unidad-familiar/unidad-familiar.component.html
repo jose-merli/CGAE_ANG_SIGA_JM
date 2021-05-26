@@ -118,7 +118,8 @@
               (click)="checkPermisosConfirmDelete()" type="button" icon="fa fa-trash" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
             <button *ngIf="historico" pButton [disabled]="!permisoEscritura || ((!selectMultiple || !selectAll) && selectedDatos.length == 0)"
               (click)="checkPermisosActivate()" type="button" iconPos="left" label="{{'general.boton.activar' | translate}}"></button>
-            <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="checkPermisosAsociar()"
+              <!-- [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" -->
+            <button pButton  (click)="checkPermisosAsociar()"
               type="button" icon="fa fa-plus" iconPos="left" label="{{'justiciaGratuita.ejg.datosGenerales.Asociar' | translate }}"></button>
           </div>
         </div>

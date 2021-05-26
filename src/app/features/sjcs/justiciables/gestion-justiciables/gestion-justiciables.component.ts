@@ -307,6 +307,8 @@ export class GestionJusticiablesComponent implements OnInit {
   }
 
   backTo() {
+    //Revisar. Actualmente se produce un bucle si se accede a la ficha para la creacion de un justiciable desde la pantalla de busqueda.
+    //Para solucionarlo se recomienda que se eliminen los else if.
     this.persistenceService.clearFiltrosAux();
     //Si estamos en vista representante o en la creacion de nuevo representante, al volver buscamos el justiciable asociado a ese representante
     if (this.navigateToJusticiable || this.checkedViewRepresentante || this.nuevoRepresentante) {
