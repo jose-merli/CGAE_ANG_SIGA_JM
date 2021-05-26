@@ -69,45 +69,19 @@ export class UnidadFamiliarComponent implements OnInit {
       this.nuevo = false;
       this.modoEdicion = true;
       this.body = this.persistenceService.getDatos();
-      this.datosFamiliares = this.persistenceService.getBodyAux();
-      let nombresol = this.body.nombreApeSolicitante;
+      //this.datosFamiliares = this.persistenceService.getBodyAux();
       
-      this.datosFamiliares.forEach(element => {
-        element.nombreApeSolicitante = nombresol;
-        if (element.estado == 30) {
-          element.estadoDes = "Denegada";
-        } else if (element.estado == 40) {
-          element.estadoDes = "Suspendida";
-        } else if (element.estado == 50) {
-          element.estadoDes = "Aprobada";
-        } else if (element.estado == 10) {
-          element.estadoDes = "Pendiente documentación";
-        } else if (element.estado == 20) {
-          element.estadoDes = "Pendiente aprobación";
-        }
-
-        if (element.estadoDes != undefined && element.fechaSolicitud != undefined) {
-          element.expedienteEconom = element.estadoDes + " * " + element.fechaSolicitud;
-        } else if (element.estadoDes != undefined && element.fechaSolicitud == undefined) {
-          element.expedienteEconom = element.estadoDes + " * ";
-        } else if (element.estadoDes == undefined && element.fechaSolicitud != undefined) {
-          element.expedienteEconom = " * " + element.fechaSolicitud;
-        } else if (element.estadoDes == undefined && element.fechaSolicitud == undefined) {
-          element.expedienteEconom = "  ";
-        }
-      });
+      this.consultaUnidadFamiliar(this.body);
+      
     } else {
       this.nuevo = true;
       this.modoEdicion = false;
       // this.body = new EJGItem();
     }
 
-    if(this.datosFamiliares != undefined){
-    this.datosFamiliaresActivos = this.datosFamiliares.filter(
-      (dato) => /*dato.fechaBaja != undefined && */ dato.fechaBaja == null);
-    this.getCols();
-    }
+    
   }
+  
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.openTarjetaUnidadFamiliar == true) {
@@ -116,6 +90,52 @@ export class UnidadFamiliarComponent implements OnInit {
         this.openFicha = !this.openFicha;
       }
     }
+  }
+
+  consultaUnidadFamiliar(selected) {
+    this.progressSpinner = true;
+
+    let nombresol = this.body.nombreApeSolicitante;
+
+    this.sigaServices.post("gestionejg_unidadFamiliarEJG", selected).subscribe(
+      n => {
+        this.datosFamiliares = JSON.parse(n.body).unidadFamiliarEJGItems;
+        this.persistenceService.setBodyAux(this.datosFamiliares);
+        this.progressSpinner = false;
+        this.datosFamiliares.forEach(element => {
+          element.nombreApeSolicitante = nombresol;
+          if (element.estado == 30) {
+            element.estadoDes = "Denegada";
+          } else if (element.estado == 40) {
+            element.estadoDes = "Suspendida";
+          } else if (element.estado == 50) {
+            element.estadoDes = "Aprobada";
+          } else if (element.estado == 10) {
+            element.estadoDes = "Pendiente documentación";
+          } else if (element.estado == 20) {
+            element.estadoDes = "Pendiente aprobación";
+          }
+  
+          if (element.estadoDes != undefined && element.fechaSolicitud != undefined) {
+            element.expedienteEconom = element.estadoDes + " * " + element.fechaSolicitud;
+          } else if (element.estadoDes != undefined && element.fechaSolicitud == undefined) {
+            element.expedienteEconom = element.estadoDes + " * ";
+          } else if (element.estadoDes == undefined && element.fechaSolicitud != undefined) {
+            element.expedienteEconom = " * " + element.fechaSolicitud;
+          } else if (element.estadoDes == undefined && element.fechaSolicitud == undefined) {
+            element.expedienteEconom = "  ";
+          }
+          if(this.datosFamiliares != undefined){
+            this.datosFamiliaresActivos = this.datosFamiliares.filter(
+              (dato) => /*dato.fechaBaja != undefined && */ dato.fechaBaja == null);
+            this.getCols();
+            }
+        });
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 
   esFichaActiva(key) {
@@ -139,8 +159,8 @@ export class UnidadFamiliarComponent implements OnInit {
     this.idOpened.emit(key);
   }
 
-  setItalic(dato) {
-    if (dato.fechabaja == null) return false;
+  isEliminado(dato) {
+    if (dato.fechaBaja == null) return false;
     else return true;
   }
   openTab(evento) {
@@ -200,6 +220,7 @@ export class UnidadFamiliarComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
     this.table.reset();
   }
+
   onChangeSelectAll() {
     if (this.permisoEscritura) {
       if (!this.historico) {
@@ -285,6 +306,7 @@ export class UnidadFamiliarComponent implements OnInit {
       n => {
         this.progressSpinner=false;
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.consultaUnidadFamiliar(this.body);
       },
       err => {
         console.log(err);
@@ -383,7 +405,10 @@ export class UnidadFamiliarComponent implements OnInit {
     }
   }
   asociar() {
-    this.persistenceService.clearDatos();
-    this.router.navigate(["/gestionEjg"]);
+    sessionStorage.setItem("origin","uniFamiliar");
+    sessionStorage.setItem("datosFamiliares",JSON.stringify(this.datosFamiliares));
+    sessionStorage.setItem("EJG",JSON.stringify(this.body));
+    //this.searchContrarios.emit(true);
+    this.router.navigate(["/justiciables"]);
   }
 }

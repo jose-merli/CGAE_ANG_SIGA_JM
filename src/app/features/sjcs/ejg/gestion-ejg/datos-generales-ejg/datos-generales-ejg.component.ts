@@ -187,15 +187,19 @@ export class DatosGeneralesEjgComponent implements OnInit {
 
         //Determina el valor en la cabecera del campo tipo ejg colegio
         if (this.body.tipoEJGColegio != null && this.body.tipoEJGColegio != undefined) {
-          this.comboTipoEJGColegio.forEach(element => {
-            if (element.value == this.body.tipoEJGColegio) this.tipoEJGColDesc = element.label;
-          });
+          this.changeTipoEJGColegio();
         }
       },
       err => {
         console.log(err);
       }
     );
+  }
+
+  changeTipoEJGColegio(){
+    this.comboTipoEJGColegio.forEach(element => {
+      if (element.value == this.body.tipoEJGColegio) this.tipoEJGColDesc = element.label;
+    });
   }
 
   getComboTipoExpediente() {
@@ -349,6 +353,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
           if (n.statusText == "OK") {
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
             this.bodyInicial = this.body;
+            this.changeTipoEJGColegio();
           }
           else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         },
