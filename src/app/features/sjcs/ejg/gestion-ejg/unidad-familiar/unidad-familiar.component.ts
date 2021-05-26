@@ -159,8 +159,8 @@ export class UnidadFamiliarComponent implements OnInit {
     this.idOpened.emit(key);
   }
 
-  setItalic(dato) {
-    if (dato.fechabaja == null) return false;
+  isEliminado(dato) {
+    if (dato.fechaBaja == null) return false;
     else return true;
   }
   openTab(evento) {
@@ -306,6 +306,7 @@ export class UnidadFamiliarComponent implements OnInit {
       n => {
         this.progressSpinner=false;
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.consultaUnidadFamiliar(this.body);
       },
       err => {
         console.log(err);
