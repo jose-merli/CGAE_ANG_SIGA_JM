@@ -515,7 +515,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     this.progressSpinner=true;
     this.sigaServices.post("combo_comboDelitos", designaItem).subscribe(
       n => {
-        this.delitosOpciones = n.combooItems;
+        this.delitosOpciones = JSON.parse(n.body).combooItems;
         this.progressSpinner=false;
       },
       err => {
