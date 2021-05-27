@@ -1433,7 +1433,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
          }
 
           let actuacion: Actuacion = {
-            isNew: false,
+            isNew: (row == null),
             designaItem: des,
             actuacion: act,
             relaciones: null

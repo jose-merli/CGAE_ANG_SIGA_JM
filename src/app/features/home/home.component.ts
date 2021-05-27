@@ -153,8 +153,10 @@ export class HomeComponent implements OnInit {
 			this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(
 				usr => {
 					let usuarioLogado = JSON.parse(usr.body).colegiadoItem[0];
-					this.localStorageService.idPersona = usuarioLogado.idPersona;
-					this.localStorageService.numColegiado = usuarioLogado.numColegiado;
+					if(usuarioLogado) {
+						this.localStorageService.idPersona = usuarioLogado.idPersona;
+						this.localStorageService.numColegiado = usuarioLogado.numColegiado;
+					}
 				});
 		});
 	}

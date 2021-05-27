@@ -272,7 +272,7 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
       isNew: true,
       designaItem: this.campos,
       actuacion: new ActuacionDesignaItem(),
-      relaciones: null
+      relaciones: this.relaciones
     }
     sessionStorage.setItem("actuacionDesigna", JSON.stringify(actuacion));
     this.router.navigate(['/fichaActDesigna']);

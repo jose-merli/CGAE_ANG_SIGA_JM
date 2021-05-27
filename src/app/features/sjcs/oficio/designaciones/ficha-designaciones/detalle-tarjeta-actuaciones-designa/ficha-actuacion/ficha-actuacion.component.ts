@@ -176,22 +176,25 @@ export class FichaActuacionComponent implements OnInit {
 
     this.institucionActual = this.sigaStorageService.institucionActual;
 
-    if (sessionStorage.getItem("actuacionDesigna")) {
-      let actuacion = JSON.parse(sessionStorage.getItem("actuacionDesigna"));
-      sessionStorage.removeItem("actuacionDesigna");
-      this.actuacionDesigna = actuacion;
-console.log('actuacion from session: ', actuacion)
-      this.getPermiteTurno();
-    }
-
-
     if (sessionStorage.getItem("actuacionDesignaJE")) {
       let actuacionJE = JSON.parse(sessionStorage.getItem("actuacionDesignaJE"));
       sessionStorage.removeItem("actuacionDesignaJE");
       actuacionJE.designaItem.ano = "D" + actuacionJE.designaItem.ano;
       this.actuacionDesigna = actuacionJE;
-      this.getActuacionDesigna('0', actuacionJE);
 
+      if(this.actuacionDesigna.isNew) {
+        this.getPermiteTurno();
+      } else {
+        this.getActuacionDesigna('0', actuacionJE);
+      }
+
+    }
+
+    if (sessionStorage.getItem("actuacionDesigna")) {
+      let actuacion = JSON.parse(sessionStorage.getItem("actuacionDesigna"));
+      sessionStorage.removeItem("actuacionDesigna");
+      this.actuacionDesigna = actuacion;
+      this.getPermiteTurno();
     }
 
   }
