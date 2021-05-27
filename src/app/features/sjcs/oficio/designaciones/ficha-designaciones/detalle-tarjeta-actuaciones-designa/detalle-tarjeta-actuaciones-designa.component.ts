@@ -5,6 +5,8 @@ import { Message } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../../../commons/translate/translation.service';
 import { Router } from '@angular/router';
 import { SigaStorageService } from '../../../../../../siga-storage.service';
+import { CommonsService } from '../../../../../../_services/commons.service';
+import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
 
 export interface Col {
   field: string,
@@ -75,16 +77,30 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
   actuacionesSeleccionadas: ActuacionDesignaItem[] = [];
   msgs: Message[] = [];
   isLetrado: boolean;
+  modoLectura: boolean = false;
 
   constructor
     (
       private sigaServices: SigaServices,
       private translateService: TranslateService,
       private router: Router,
-      private localStorageService: SigaStorageService
+      private localStorageService: SigaStorageService,
+      private commonsService: CommonsService
     ) { }
 
   ngOnInit() {
+    
+    this.commonsService.checkAcceso(procesos_oficio.designasActuaciones)
+    .then(respuesta => {
+      let permisoEscritura = respuesta;
+      
+      if (permisoEscritura == undefined || !permisoEscritura) {
+        this.modoLectura = true;
+      }
+
+    })
+    .catch(err => console.log(err));
+    
     this.isLetrado = this.localStorageService.isLetrado;
   }
 

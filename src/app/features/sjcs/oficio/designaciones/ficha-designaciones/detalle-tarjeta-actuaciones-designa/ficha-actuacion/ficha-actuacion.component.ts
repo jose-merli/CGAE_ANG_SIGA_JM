@@ -12,6 +12,8 @@ import { SigaStorageService } from '../../../../../../../siga-storage.service';
 import { TurnosItem } from '../../../../../../../models/sjcs/TurnosItem';
 import { DocumentoDesignaItem } from '../../../../../../../models/sjcs/DocumentoDesignaItem';
 import { DocumentoDesignaObject } from '../../../../../../../models/sjcs/DocumentoDesignaObject';
+import { CommonsService } from '../../../../../../../_services/commons.service';
+import { procesos_oficio } from '../../../../../../../permisos/procesos_oficio';
 
 export class UsuarioLogado {
   idPersona: string;
@@ -162,40 +164,52 @@ export class FichaActuacionComponent implements OnInit {
     private sigaServices: SigaServices,
     private translateService: TranslateService,
     private datePipe: DatePipe,
-    private sigaStorageService: SigaStorageService) { }
+    private sigaStorageService: SigaStorageService,
+    private commonsService: CommonsService) { }
 
   ngOnInit() {
 
-    this.isColegiado = this.sigaStorageService.isLetrado;
+    this.commonsService.checkAcceso(procesos_oficio.designasActuaciones)
+      .then(respuesta => {
+        let permisoEscritura = respuesta;
 
-    if (this.isColegiado) {
-      this.usuarioLogado = new UsuarioLogado();
-      this.usuarioLogado.idPersona = this.sigaStorageService.idPersona;
-      this.usuarioLogado.numColegiado = this.sigaStorageService.numColegiado;
-    }
+        if (permisoEscritura == undefined || !permisoEscritura) {
+          this.modoLectura = true;
+        }
 
-    this.institucionActual = this.sigaStorageService.institucionActual;
+        this.isColegiado = this.sigaStorageService.isLetrado;
 
-    if (sessionStorage.getItem("actuacionDesignaJE")) {
-      let actuacionJE = JSON.parse(sessionStorage.getItem("actuacionDesignaJE"));
-      sessionStorage.removeItem("actuacionDesignaJE");
-      actuacionJE.designaItem.ano = "D" + actuacionJE.designaItem.ano;
-      this.actuacionDesigna = actuacionJE;
+        if (this.isColegiado) {
+          this.usuarioLogado = new UsuarioLogado();
+          this.usuarioLogado.idPersona = this.sigaStorageService.idPersona;
+          this.usuarioLogado.numColegiado = this.sigaStorageService.numColegiado;
+        }
 
-      if(this.actuacionDesigna.isNew) {
-        this.getPermiteTurno();
-      } else {
-        this.getActuacionDesigna('0', actuacionJE);
+        this.institucionActual = this.sigaStorageService.institucionActual;
+
+        if (sessionStorage.getItem("actuacionDesignaJE")) {
+          let actuacionJE = JSON.parse(sessionStorage.getItem("actuacionDesignaJE"));
+          sessionStorage.removeItem("actuacionDesignaJE");
+          actuacionJE.designaItem.ano = "D" + actuacionJE.designaItem.ano;
+          this.actuacionDesigna = actuacionJE;
+
+          if (this.actuacionDesigna.isNew) {
+            this.getPermiteTurno();
+          } else {
+            this.getActuacionDesigna('0', actuacionJE);
+          }
+
+        }
+
+        if (sessionStorage.getItem("actuacionDesigna")) {
+          let actuacion = JSON.parse(sessionStorage.getItem("actuacionDesigna"));
+          sessionStorage.removeItem("actuacionDesigna");
+          this.actuacionDesigna = actuacion;
+          this.getPermiteTurno();
+        }
+
       }
-
-    }
-
-    if (sessionStorage.getItem("actuacionDesigna")) {
-      let actuacion = JSON.parse(sessionStorage.getItem("actuacionDesigna"));
-      sessionStorage.removeItem("actuacionDesigna");
-      this.actuacionDesigna = actuacion;
-      this.getPermiteTurno();
-    }
+      ).catch(error => console.error(error));
 
   }
 
