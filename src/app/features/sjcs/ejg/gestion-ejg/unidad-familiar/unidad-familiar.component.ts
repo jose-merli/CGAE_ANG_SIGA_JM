@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { UnidadFamiliarEJGItem } from '../../../../../models/sjcs/UnidadFamiliarEJGItem';
 import { PersistenceService } from '../../../../../_services/persistence.service';
@@ -8,6 +8,7 @@ import { TranslateService } from '../../../../../commons/translate/translation.s
 import { ConfirmationService } from 'primeng/api';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 import { SigaServices } from '../../../../../_services/siga.service';
+import { Dialog } from 'primeng/primeng';
 
 @Component({
   selector: 'app-unidad-familiar',
@@ -54,6 +55,8 @@ export class UnidadFamiliarComponent implements OnInit {
   @Output() opened = new EventEmitter<boolean>();
   @Output() idOpened = new EventEmitter<boolean>();
 
+  @ViewChild("cd") cdDelete: Dialog;
+
   fichaPosible = {
     key: "unidadFamiliar",
     activa: false
@@ -65,6 +68,7 @@ export class UnidadFamiliarComponent implements OnInit {
     private sigaServices: SigaServices ) { }
 
   ngOnInit() {
+    this.getCols();
     if (this.persistenceService.getDatos()) {
       this.nuevo = false;
       this.modoEdicion = true;
@@ -79,7 +83,15 @@ export class UnidadFamiliarComponent implements OnInit {
       // this.body = new EJGItem();
     }
 
-    
+    if (sessionStorage.getItem('tarjeta') == 'unidadFamiliar') {
+      this.abreCierraFicha('unidadFamiliar');
+      let top = document.getElementById("unidadFamiliar");
+      if (top) {
+        top.scrollIntoView();
+        top = null;
+      }
+      sessionStorage.removeItem('tarjeta');
+    }
   }
   
 
@@ -128,7 +140,7 @@ export class UnidadFamiliarComponent implements OnInit {
           if(this.datosFamiliares != undefined){
             this.datosFamiliaresActivos = this.datosFamiliares.filter(
               (dato) => /*dato.fechaBaja != undefined && */ dato.fechaBaja == null);
-            this.getCols();
+              
             }
         });
       },
@@ -275,6 +287,7 @@ export class UnidadFamiliarComponent implements OnInit {
       icon: icon,
       accept: () => {
         this.delete()
+        this.cdDelete.hide();
       },
       reject: () => {
         this.msgs = [
@@ -286,6 +299,7 @@ export class UnidadFamiliarComponent implements OnInit {
             )
           }
         ];
+        this.cdDelete.hide();
       }
     });
   }

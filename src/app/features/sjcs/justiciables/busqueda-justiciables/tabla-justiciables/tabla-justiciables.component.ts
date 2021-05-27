@@ -184,7 +184,7 @@ export class TablaJusticiablesComponent implements OnInit {
     else{
       //Comprobamos que el justiciable no esta ya en la designacion
       datosFamiliares.forEach(element => {
-        if(element.idPersona == justiciable.idpersona) exist = true;
+        if(element.uf_idPersona == justiciable.idpersona) exist = true;
       });
     }
 
@@ -201,6 +201,7 @@ export class TablaJusticiablesComponent implements OnInit {
       data => {
         sessionStorage.removeItem('origin');
         sessionStorage.removeItem('EJG');
+        sessionStorage.setItem('tarjeta','unidadFamiliar');
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
         this.router.navigate(["/gestionEjg"]);
