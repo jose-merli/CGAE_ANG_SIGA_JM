@@ -32,6 +32,8 @@ export class DesignacionesComponent implements OnInit {
   isLetrado: boolean = false;
   idPersonaLogado;
   numColegiadoLogado;
+  usuarioBusquedaExpressFromFicha = {numColegiado: '',
+                            nombreAp: ''};
   @ViewChild(FiltroDesignacionesComponent) filtros;
   
   datosJustificacion: JustificacionExpressItem = new JustificacionExpressItem();
@@ -47,6 +49,13 @@ export class DesignacionesComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    if (sessionStorage.getItem("colegiadoRelleno") == "true"){
+      const { numColegiado, nombre } = JSON.parse(sessionStorage.getItem("datosColegiado"));
+        this.usuarioBusquedaExpressFromFicha.numColegiado = numColegiado; //pasar al filtro
+        this.usuarioBusquedaExpressFromFicha.nombreAp = nombre.replace(/,/g,""); //pasar al filtro
+    }
+
     sessionStorage.setItem("rowIdsToUpdate", JSON.stringify([]));
     this.isLetrado = this.localStorageService.isLetrado;
     this.idPersonaLogado = this.localStorageService.idPersona;

@@ -252,6 +252,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
   }
 
   cargaInicial(){
+    console.log('datosJustificacion', this.datosJustificacion)
     this.progressSpinner=true;
     this.dataReady = false;
     let resultModified = {};
