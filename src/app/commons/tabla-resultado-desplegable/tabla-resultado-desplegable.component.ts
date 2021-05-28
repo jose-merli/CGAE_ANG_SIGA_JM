@@ -314,36 +314,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }
   }
   searchChange(j: any) {
-    if ((this.pantalla != 'JE' && j == 0) ||  (this.pantalla == 'JE' && (j == 0 || j == 1 || j == 2))) {
-      let rowIdent;
-
-      let isReturn = true;
-      let isReturnArr = [];
-      this.rowGroups = this.rowGroupsAux.filter((row) => {
-        if (j == 0){
-          rowIdent = row.id;
-        } else if (j == 1){
-          rowIdent = row.id2;
-        }else if (j == 2){
-          rowIdent = row.id3;
-        }
-        row.rows.forEach(cell => {
-          for (let i = 0; i < cell.cells.length; i++) {
-            if (
-              this.searchText[j] != " " &&
-              this.searchText[j] != undefined && !rowIdent.toString().toLowerCase().includes(this.searchText[j].toLowerCase())
-            ) {
-              isReturn = false;
-            } else {
-              isReturn = true;
-            }
-          }
-        })
-        if (isReturn) {
-          return row;
-        }
-      });
-    } else {
+    if (this.pantalla == 'JE') {
       let isReturn = true;
       let isReturnArr = [];
       this.rowGroups = this.rowGroupsAux.filter((row) => {
@@ -351,25 +322,33 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   
           for (let r = 0; r < row.rows.length; r++) {
           for (let i = 0; i < row.rows[r].cells.length; i++) {
-            if (row.rows[r].cells[i].value != null){
-            if (
-              this.searchText[j] != " " &&
-              this.searchText[j] != undefined &&
-              this.searchText[j] != null &&
-              !row.rows[r].cells[i].value.toString().toLowerCase().includes(this.searchText[j].toLowerCase())
-            ) {
-              isReturn = false;
-            } else {
-              isReturn = true;
-            }
+            if (row.rows[r].cells[i].value != null && i <= 8){
+
+              //this.searchText.forEach(sT => {
+          
+                  if ( 
+                    (i == 0 && this.searchText[i] != undefined && !row.id.toLowerCase().includes(this.searchText[0].toLowerCase())) ||
+                    (i == 1 && this.searchText[i] != undefined && !row.id2.toLowerCase().includes(this.searchText[1].toLowerCase())) ||
+                    (i == 2 && this.searchText[i] != undefined && !row.id3.toLowerCase().includes(this.searchText[2].toLowerCase())) ||
+                   
+                    (this.searchText[i + 3] != " " &&
+                    this.searchText[i] + 3 != undefined &&
+                    this.searchText[i + 3] != null &&
+                    !row.rows[0].cells[i].value.toString().toLowerCase().includes(this.searchText[i + 3].toLowerCase()))
+                  ) {
+                    isReturn = false;
+                  } else {
+                    isReturn = true;
+                  }
+                //});
             isReturnArr.push(isReturn);
           }
          }
-    
-        }
-        if (isReturnArr.includes(true)) {
+         if (!isReturnArr.includes(false)) {
           return row;
         }
+        }
+    
       });
     }
     //let self = this;
@@ -378,6 +357,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       self.setTamanioPrimerRegistroGrupo();
     }, 1);*/
     this.totalRegistros = this.rowGroups.length;
+    
   }
 
   isPar(numero): boolean {
@@ -1257,6 +1237,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       this.rowGroups.forEach((rowGroup,i) => {
         if (rowGroup.id == designacion){
           let id = Object.keys(rowGroup.rows)[0];
+
           let newArrayCells: Cell[] = [
             { type: 'checkbox', value: false, size: 50 , combo: null},
             { type: 'multiselect1', value: this.comboJuzgados[0].value, size: 153 , combo: this.comboJuzgados},
@@ -1264,7 +1245,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             { type: 'input', value: desig[3].value, size: 153 , combo: null},//numProc
             { type: 'multiselect2', value: this.comboModulos[0].value, size: 153 , combo: this.comboModulos}, //modulo
             { type: 'datePicker', value: this.formatDate(new Date()), size: 153 , combo: null},
-            { type: 'checkbox', value: false , size: 153, combo: null},
+            { type: 'checkbox', value: this.formatDate(new Date()) , size: 153, combo: null},
             { type: 'multiselect3', value: this.comboAcreditacion[0].value , size: 153, combo: this.comboAcreditacion},
             { type: 'checkbox', value: validacion, size: 50 , combo: null},
             { type: 'invisible', value:  desig[19].value , size: 0, combo: null},//numDesig
@@ -1290,7 +1271,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             { type: 'invisible', value:  '' , size: 0, combo: null},
             { type: 'invisible', value:  '' , size: 0, combo: null},
             { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  desig[9].value , size: 0, combo: null},//anio
+            { type: 'invisible', value:  desig[10].value , size: 0, combo: null},//anio
             { type: 'invisible', value:  desig[17].value, size: 0, combo: null},//idturno
             { type: 'invisible', value:  desig[13].value , size: 0, combo: null}];//idInstitucion
 

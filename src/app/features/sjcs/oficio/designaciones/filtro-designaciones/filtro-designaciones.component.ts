@@ -94,6 +94,8 @@ export class FiltroDesignacionesComponent implements OnInit {
   valorParametro: AnalyserNode;
   datosBuscar: any[];
   searchParametros: ParametroDto = new ParametroDto();
+  @Input() usuarioBusquedaExpressFromFicha = {numColegiado: '',
+                            nombreAp: ''};
   constructor(private translateService: TranslateService, private sigaServices: SigaServices,  private location: Location, private router: Router,
     private localStorageService: SigaStorageService,  private commonsService: CommonsService,private confirmationService: ConfirmationService,) { }
 
@@ -127,7 +129,7 @@ export class FiltroDesignacionesComponent implements OnInit {
       this.buscar();
       sessionStorage.removeItem("filtroDesignas");
     }
-
+    console.log('this.usuarioBusquedaExpressFromFicha*********', this.usuarioBusquedaExpressFromFicha)
     if(sessionStorage.getItem("buscadorColegiados")){
       const { nombre, apellidos, nColegiado } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
       this.usuarioBusquedaExpress.nombreAp = `${apellidos}, ${nombre}`;
@@ -137,6 +139,10 @@ export class FiltroDesignacionesComponent implements OnInit {
       this.buscar();
 
       sessionStorage.removeItem("buscadorColegiados");
+    } else if (this.usuarioBusquedaExpressFromFicha != undefined){
+      this.usuarioBusquedaExpress.nombreAp = this.usuarioBusquedaExpressFromFicha.nombreAp;
+      this.usuarioBusquedaExpress.numColegiado = this.usuarioBusquedaExpressFromFicha.numColegiado;
+
     }
 
     
@@ -357,7 +363,7 @@ export class FiltroDesignacionesComponent implements OnInit {
       sessionStorage.setItem("rowIdsToUpdate", JSON.stringify([]));
       this.showDesignas=false;
       this.showJustificacionExpress=true;
-      this.expanded=true;
+      this.expanded=false;
       this.isButtonVisible=false;
       this.showTablaDesigna.emit(false);
     }
@@ -786,7 +792,8 @@ getComboCalidad() {
 
   limpiar(){
     this.filtroJustificacion = new JustificacionExpressItem();
-    
+    this.checkMostrarPendientes = false;
+    this.checkRestricciones = false;
     if(!this.esColegiado){
       this.usuarioBusquedaExpress = {
         numColegiado: '',

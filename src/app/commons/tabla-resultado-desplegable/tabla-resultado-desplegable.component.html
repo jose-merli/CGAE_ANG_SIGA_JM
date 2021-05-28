@@ -1,16 +1,16 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 
-<div class="padding-interior padding-superior">
+<div>
     <app-paginador3 (perPage)="perPage($event)" (seleccionarTodo)="selectedAll($event)" (fromReg)="fromReg($event)" (toReg)="toReg($event)" [totalRegistros]="totalRegistros"></app-paginador3>
 </div>
 
-<div class="center mb-3">
+<div class="center sameLine">
     <p-multiSelect #mySelect [formControl]="info" [(ngModel)]='selectedHeader' [options]="cabeceras" optionLabel="name"
         optionValue="id" (onChange)="ocultarColumna($event)" defaultLabel="0 visibles" maxSelectedLabels="0"
         [selectedItemsLabel]="textSelected">
     </p-multiSelect> Columnas
 </div>
-<div style="padding-left: 2.25rem;padding-right: 1.25rem;">
+<div style="padding-left: 2.25rem">
     <div class="table w-100" matSort (matSortChange)="sortData($event)" #table id="tablaResultadoDesplegable">
         <div class="table-header ">
             <div class="table-header-child p-2" *ngFor="let cabecera of cabeceras; let j = index" #BorderedHeader
@@ -246,7 +246,7 @@
 
 
 <div *ngIf="pantalla == 'JE' && permisoEscritura" class="right col-lg-12 col-md-6 ajustar marginButtons">
-    <div class="inline-block text-right main-button">
+    <div class="inline-block text-right main-button setPosition">
         <button [disabled]="disableDelete" pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="Eliminar" (click)="eliminar()">
         </button>
 
