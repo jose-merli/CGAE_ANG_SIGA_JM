@@ -1,9 +1,6 @@
-import { Component, OnInit, Input, ChangeDetectorRef, ViewChild, SimpleChanges, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectorRef, ViewChild, SimpleChanges, EventEmitter, Output, OnChanges } from '@angular/core';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../../commons/translate';
-import { PersistenceService } from '../../../../../../_services/persistence.service';
-import { Router } from '@angular/router';
-import { DesignaItem } from '../../../../../../models/sjcs/DesignaItem';
 import { Message } from 'primeng/primeng';
 
 @Component({
@@ -11,14 +8,14 @@ import { Message } from 'primeng/primeng';
   templateUrl: './detalle-tarjeta-relaciones-designa.component.html',
   styleUrls: ['./detalle-tarjeta-relaciones-designa.component.scss']
 })
-export class DetalleTarjetaRelacionesDesignaComponent implements OnInit {
+export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChanges {
   
   msgs: Message[] = [];
 
+  @Input() relaciones;
+
   @Output() searchRelaciones = new EventEmitter<boolean>();
   @Output() relacion = new EventEmitter<any>();
-
-  @Input() relaciones;
 
   selectedItem: number = 10;
   datos;
@@ -38,46 +35,39 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit {
 
   constructor(private sigaServices: SigaServices, 
     private  translateService: TranslateService,
-    private changeDetectorRef: ChangeDetectorRef,
-    private persistenceService: PersistenceService,
-    private router: Router,
+    private changeDetectorRef: ChangeDetectorRef
     ) { }
 
   ngOnInit() {
     this.getCols(); 
-    this.datos=this.relaciones;
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    this.datos=this.relaciones;
-  }
-
-  onChangeRowsPerPages(event) {
-    this.selectedItem = event.value;
-    this.changeDetectorRef.detectChanges();
-    this.tabla.reset();
-  }
-
-  actualizaSeleccionados(){
-    if (this.selectedDatos == undefined) {
-      this.selectedDatos = [];
-      this.disabled = true;
-    }
-    if (this.selectedDatos != undefined) {
-      this.disabled = false;
-      if(this.selectedDatos.length ==undefined) this.numSelected=1;
-      else this.numSelected = this.selectedDatos.length;
+  ngOnChanges(changes: SimpleChanges) {
+    for (const inputName in changes) {
+      if (changes.hasOwnProperty(inputName)) {
+        let change = changes[inputName];
+        switch (inputName) {
+          case 'relaciones': {
+            this.datos= change.currentValue;
+          }
+        }
+      }
     }
   }
 
   getCols() {
+    console.table(this.datos);
     this.cols = [
       { field: "sjcs", header: "justiciaGratuita.oficio.designas.interesados.identificador" },
       { field: "anio", header: "justiciaGratuita.sjcs.designas.DatosIden.ano" },
-      { field: "numero", header: "gratuita.busquedaAsistencias.literal.numero" },
-      { field: "destipo", header: "censo.nuevaSolicitud.tipoSolicitud" },
       { field: "desturno", header: "dato.jgr.guardia.guardias.turno" },
-      { field: "idletrado", header: "justiciaGratuita.sjcs.designas.colegiado" }
+      { field: "letrado", header: "justiciaGratuita.sjcs.designas.colegiado" },
+
+     /*  { field: no aparece en los resultados actuales de la sql, header: "justiciaGratuita.sjcs.designas.datosInteresados"},//Interesados
+      { field: no aparece en los resultados actuales de la sql, header: "justiciaGratuita.justiciables.literal.datosInteres"} //Datos de interes */
+
+     /*  { field: "numero", header: "gratuita.busquedaAsistencias.literal.numero" },
+      { field: "destipo", header: "censo.nuevaSolicitud.tipoSolicitud" } */
     ];
 
     this.rowsPerPage = [
@@ -99,6 +89,26 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit {
       }
     ];
   }
+
+
+  onChangeRowsPerPages(event) {
+    this.selectedItem = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.tabla.reset();
+  }
+
+  actualizaSeleccionados(){
+    if (this.selectedDatos == undefined) {
+      this.selectedDatos = [];
+      this.disabled = true;
+    }
+    if (this.selectedDatos != undefined) {
+      this.disabled = false;
+      if(this.selectedDatos.length ==undefined) this.numSelected=1;
+      else this.numSelected = this.selectedDatos.length;
+    }
+  }
+
   
   showMessage(severity, summary, msg) {
     this.msgs = [];
