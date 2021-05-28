@@ -34,11 +34,34 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
   fechaJusti: any;
   observaciones: string = '';
   permisoEscritura: boolean;
-  
-  constructor(private sigaServices: SigaServices, private translateService: TranslateService,  private commonsService: CommonsService, private router: Router, private datePipe: DatePipe
-  ,private persistenceService: PersistenceService) { }
+
+  constructor(private sigaServices: SigaServices, private translateService: TranslateService, private commonsService: CommonsService, private router: Router, private datePipe: DatePipe
+    , private persistenceService: PersistenceService) { }
 
   ngOnInit() {
+
+    this.commonsService.checkAcceso(procesos_oficio.designasActuaciones)
+      .then(respuesta => {
+        this.permisoEscritura = respuesta;
+        this.persistenceService.setPermisos(this.permisoEscritura);
+
+        if (this.permisoEscritura == undefined) {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
+
+        this.cargaInicial();
+
+      }
+      ).catch(error => console.error(error));
+
+  }
+
+  cargaInicial() {
 
     if (this.actuacionDesigna.isNew) {
       this.establecerValoresIniciales();
@@ -46,22 +69,6 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
       this.establecerDatosInicialesEditAct();
     }
 
-    this.commonsService.checkAcceso(procesos_oficio.designasActuaciones)
-          .then(respuesta => {
-            this.permisoEscritura = respuesta;
-            this.persistenceService.setPermisos(this.permisoEscritura);
-     
-            if (this.permisoEscritura == undefined) {
-              sessionStorage.setItem("codError", "403");
-              sessionStorage.setItem(
-                "descError",
-                this.translateService.instant("generico.error.permiso.denegado")
-              );
-              this.router.navigate(["/errorAcceso"]);
-            }
-            
-          }
-          ).catch(error => console.error(error));
     if (this.persistenceService.getPermisos() != true) {
       this.disableAll = true
     }
