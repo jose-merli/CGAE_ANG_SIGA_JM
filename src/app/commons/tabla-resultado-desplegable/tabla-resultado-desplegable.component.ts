@@ -1376,9 +1376,9 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       if (this.pantalla == 'JE'){
        // if (this.permisosFichaAct){
           
-            let des: DesignaItem = new DesignaItem();
+          let des: DesignaItem = new DesignaItem();
           if (rowGroup != null){
-            des.ano = rowGroup.rows[0].cells[9].value;
+            des.ano = rowGroup.id.split('\n')[0];
             des.idTurno = rowGroup.rows[0].cells[17].value;
             des.numero = rowGroup.rows[0].cells[19].value;
             des.idInstitucion = rowGroup.rows[0].cells[13].value;
@@ -1387,6 +1387,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             des.idJuzgado = rowGroup.rows[0].cells[15].value;
             des.idProcedimiento = rowGroup.rows[0].cells[21].value;
             des.numColegiado = rowGroup.rows[0].cells[38].value;
+            des.fechaEntradaInicio = rowGroup.rows[0].cells[9].value;
           }
         
          let act: ActuacionDesignaItem = new ActuacionDesignaItem();
@@ -1413,17 +1414,46 @@ export class TablaResultadoDesplegableComponent implements OnInit {
          }
 
           let actuacion: Actuacion = {
-            isNew: false,
+            isNew: (row == null),
             designaItem: des,
             actuacion: act,
-            relaciones: ""
+            relaciones: null
           };
-          console.log('act: ', act)
-      
-          sessionStorage.setItem("actuacionDesigna", JSON.stringify(actuacion));
-          this.router.navigate(['/fichaActDesigna']);
+          
+          this.searchRelaciones(actuacion);
         //}
       }
+    }
+
+    searchRelaciones(actuacion: Actuacion) {
+
+        this.progressSpinner = true;
+  
+        let item = [actuacion.designaItem.ano, actuacion.designaItem.idTurno, actuacion.designaItem.idInstitucion];
+  
+        this.sigaServices.post("designacionesBusquedaRelaciones", item).subscribe(
+          n => {
+  
+            let relaciones = JSON.parse(n.body).relacionesItem;
+            let error = JSON.parse(n.body).error;
+  
+            if (error != null && error.description != null) {
+              this.showMsg('info', this.translateService.instant("general.message.informacion"), error.description);
+            } else {
+              actuacion.relaciones = relaciones;
+            }
+            this.progressSpinner = false;
+            
+          },
+          err => {
+            this.progressSpinner = false;
+          },
+          () => {
+            this.progressSpinner = false;
+            sessionStorage.setItem("actuacionDesignaJE", JSON.stringify(actuacion));
+            this.router.navigate(['/fichaActDesigna']);
+          }
+        );
     }
   }
 function compare(a: number | string, b: number | string, isAsc: boolean) {
