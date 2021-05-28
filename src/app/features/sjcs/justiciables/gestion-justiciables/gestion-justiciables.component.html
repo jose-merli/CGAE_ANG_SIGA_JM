@@ -70,7 +70,10 @@
       <!-- modoEdicion: variable indica si estamos en modo edicion o nuevo -->
 
        <app-datos-procurador-contrario *ngSwitchCase="'procurador'" (contrario)="contrario($event)" [showTarjetaPermiso]="ficha.activa" [body]="body" [modoEdicion]="modoEdicion" [fromContrario]="fromContrario"></app-datos-procurador-contrario> 
-    </div>
+    
+       <app-datos-unidad-familiar *ngSwitchCase="'unidadFamiliar'"  [showTarjetaPermiso]="ficha.activa" [body]="body" [modoEdicion]="modoEdicion" [fromUniFamiliar]="fromUniFamiliar"></app-datos-unidad-familiar> 
+    
+      </div>
   </div>
 </div>
 <div class="mt-3 text-right main-button ">

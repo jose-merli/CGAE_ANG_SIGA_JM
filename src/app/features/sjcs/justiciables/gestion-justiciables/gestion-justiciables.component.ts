@@ -40,6 +40,7 @@ export class GestionJusticiablesComponent implements OnInit {
   permisoEscritura;
   fromInteresado:boolean=false;
   fromContrario:boolean=false;
+  fromUniFamiliar:boolean=false;
 
   constructor(private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -65,6 +66,11 @@ export class GestionJusticiablesComponent implements OnInit {
         if(sessionStorage.getItem("origin")=="Contrario"){
           sessionStorage.removeItem('origin');
           this.fromContrario=true;
+        }
+
+        if(sessionStorage.getItem("origin")=="UnidadFamiliar"){
+          sessionStorage.removeItem('origin');
+          this.fromUniFamiliar=true;
         }
         if (this.permisoEscritura == undefined) {
           sessionStorage.setItem("codError", "403");
@@ -324,6 +330,7 @@ export class GestionJusticiablesComponent implements OnInit {
       this.router.navigate(['/fichaDesignaciones']);
     } else {
       //this.router.navigate(["/justiciables"]);
+      if(this.fromUniFamiliar) sessionStorage.setItem('tarjeta','unidadFamiliar');
       this.location.back();
     }
 

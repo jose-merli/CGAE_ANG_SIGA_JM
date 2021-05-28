@@ -87,6 +87,7 @@ export class ServiciosTramitacionComponent implements OnInit {
     }
     this.getComboTurno();
 
+    //Proveniente de la busqueda de colegiado sin art 27
     if (sessionStorage.getItem("buscadorColegiados")) {
 
       let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
@@ -148,7 +149,8 @@ export class ServiciosTramitacionComponent implements OnInit {
       this.art27 = true;
     }
 
-    //Se comprueba si vueleve de una busqueda de colegiado
+    //Se comprueba si vuelve de una busqueda de colegiado
+    //para que se abra la tarjeta y se haga scroll
     if (sessionStorage.getItem('tarjeta') == 'ServiciosTramit') {
       this.abreCierraFicha('serviciosTramitacion');
       let top = document.getElementById("serviciosTramitacion");
@@ -162,12 +164,11 @@ export class ServiciosTramitacionComponent implements OnInit {
 
     this.getComboGuardia();
 
-    if (this.body.idTurno != undefined && this.body.idTurno != null) this.isDisabledGuardia = false;
+    //Se desbloquea el desplegable de guardia si hay un turno seleccionado al inciar la tarjeta
+    //if (this.body.idTurno != undefined && this.body.idTurno != null) this.isDisabledGuardia = false;
 
     //Comprobamos si el colegiado fue seleccionado por art 27 o no. ES uno de los métodos más lentos del inicio
     if (this.body.apellidosYNombre != undefined && this.body.apellidosYNombre != null  && this.art27 == true) this.checkArt27();
-
-
   }
 
   checkArt27() {
@@ -304,6 +305,7 @@ export class ServiciosTramitacionComponent implements OnInit {
     this.body.numColegiado = null;
   }
 
+  //Cada vez que se cambia el valor del desplegable de turnos
   onChangeTurnos() {
     this.comboGuardia = [];
     this.body.idGuardia = null;
@@ -315,9 +317,9 @@ export class ServiciosTramitacionComponent implements OnInit {
       this.isDisabledGuardia = true;
       this.body.guardia = "";
     }
-
   }
 
+  //COmprobacion de permisos y condiciones cuando se presiona el boton de guardar.
   checkPermisosSave() {
     let msg = this.commonServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {

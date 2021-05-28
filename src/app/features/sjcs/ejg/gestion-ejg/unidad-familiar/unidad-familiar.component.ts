@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, Simp
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { UnidadFamiliarEJGItem } from '../../../../../models/sjcs/UnidadFamiliarEJGItem';
 import { PersistenceService } from '../../../../../_services/persistence.service';
-import { fichasPosibles_unidadFamiliar } from '../../../../../utils/fichasPosibles_justiciables';
+//import { fichasPosibles_unidadFamiliar } from '../../../../../utils/fichasPosibles_justiciables';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { TranslateService } from '../../../../../commons/translate/translation.service';
 import { ConfirmationService } from 'primeng/api';
@@ -45,6 +45,45 @@ export class UnidadFamiliarComponent implements OnInit {
   historico: boolean = false;
   resaltadoDatosGenerales: boolean = false;
   activacionTarjeta: boolean = false;
+
+  fichasPosibles = [
+    {
+      origen: "justiciables",
+      activa: false
+    },
+    {
+      key: "generales",
+      activa: true
+    },
+    {
+      key: "personales",
+      activa: true
+    },
+    {
+      key: "solicitud",
+      activa: true
+    },
+    {
+      key: "representante",
+      activa: true
+    },
+    {
+      key: "asuntos",
+      activa: true
+    },
+    {
+      key: "abogado",
+      activa: false
+    },
+    {
+      key: "procurador",
+      activa: false
+    },
+    {
+      key: "unidadFamiliar",
+      activa: true
+    }
+  ];
 
   @Input() modoEdicion;
   @Input() tarjetaUnidadFamiliar: string;
@@ -177,11 +216,17 @@ export class UnidadFamiliarComponent implements OnInit {
   }
   openTab(evento) {
 
-    this.persistenceService.setBody(evento);
-    this.persistenceService.setFichasPosibles(fichasPosibles_unidadFamiliar);
-    this.router.navigate(["/gestionJusticiables"], { queryParams: { fr: "u" } });
+    //this.persistenceService.setBody(evento);
+    //this.persistenceService.setFichasPosibles(fichasPosibles_unidadFamiliar);
+    //this.router.navigate(["/gestionJusticiables"], { queryParams: { fr: "u" } });
+
+    this.persistenceService.setFichasPosibles(this.fichasPosibles);
+    sessionStorage.setItem("origin","UnidadFamiliar");
+    sessionStorage.setItem("Familiar", JSON.stringify(evento));
+    this.router.navigate(["/gestionJusticiables"]);
 
   }
+
   getCols() {
     this.cols = [
       { field: "pjg_nif", header: "administracion.usuarios.literal.NIF", width: "10%" },
@@ -213,6 +258,7 @@ export class UnidadFamiliarComponent implements OnInit {
       }
     ];
   }
+
   isSelectMultiple() {
     this.selectAll = false;
     if (this.permisoEscritura) {
@@ -227,6 +273,7 @@ export class UnidadFamiliarComponent implements OnInit {
       }
     }
   }
+
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
@@ -260,6 +307,7 @@ export class UnidadFamiliarComponent implements OnInit {
       }
     }
   }
+
   actualizaSeleccionados(selectedDatos) {
     this.numSelected = selectedDatos.length;
     this.seleccion = false;
@@ -277,6 +325,7 @@ export class UnidadFamiliarComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
+
   confirmDelete() {
     let mess = this.translateService.instant(
       "justiciaGratuita.ejg.message.eliminarFamiliar"
@@ -303,6 +352,7 @@ export class UnidadFamiliarComponent implements OnInit {
       }
     });
   }
+
   delete() {
     this.progressSpinner=true;
 
@@ -329,9 +379,11 @@ export class UnidadFamiliarComponent implements OnInit {
       }
     );
   }
+
   activate() {
 
   }
+
   searchHistorical() {
     this.datosFamiliares.historico = !this.datosFamiliares.historico;
     this.historico = !this.historico;
@@ -350,6 +402,7 @@ export class UnidadFamiliarComponent implements OnInit {
     this.persistenceService.setHistorico(this.historico);
 
   }
+
   checkPermisosDownloadEEJ(){
     let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
@@ -358,6 +411,7 @@ export class UnidadFamiliarComponent implements OnInit {
       this.downloadEEJ();
     }
   }
+
   downloadEEJ(){
     this.progressSpinner=true;
 
@@ -371,6 +425,7 @@ export class UnidadFamiliarComponent implements OnInit {
       }
     );
   }
+
   checkPermisosSolicitarEEJ(){
     let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
@@ -379,9 +434,11 @@ export class UnidadFamiliarComponent implements OnInit {
       this.solicitarEEJ();
     }
   }
+
   solicitarEEJ() {
 
   }
+
   checkPermisosComunicar(datos) {
     let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
@@ -390,10 +447,12 @@ export class UnidadFamiliarComponent implements OnInit {
       this.comunicar(datos);
     }
   }
+
   comunicar(datos) {
     this.persistenceService.clearDatos();
     this.router.navigate(["/gestionEjg"]);
   }
+
   checkPermisosConfirmDelete() {
     let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
@@ -402,6 +461,7 @@ export class UnidadFamiliarComponent implements OnInit {
       this.confirmDelete();
     }
   }
+
   checkPermisosActivate() {
     let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
@@ -410,6 +470,7 @@ export class UnidadFamiliarComponent implements OnInit {
       this.activate();
     }
   }
+
   checkPermisosAsociar() {
     let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
@@ -418,6 +479,7 @@ export class UnidadFamiliarComponent implements OnInit {
       this.asociar();
     }
   }
+
   asociar() {
     sessionStorage.setItem("origin","uniFamiliar");
     sessionStorage.setItem("datosFamiliares",JSON.stringify(this.datosFamiliares));

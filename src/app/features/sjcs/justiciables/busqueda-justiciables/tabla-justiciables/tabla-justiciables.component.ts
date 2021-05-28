@@ -93,7 +93,7 @@ export class TablaJusticiablesComponent implements OnInit {
     else if(this.nuevaUniFamiliar){
       //Falta añadir un mensaje adecuado de error para unidad familiar
       if(this.checkUniFamiliar(evento))  this.insertUniFamiliar(evento);
-      else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.designas.contrarios.existente"))
+      else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.uniFamiliar.existente"))
     
       //this.location.back();
     }
