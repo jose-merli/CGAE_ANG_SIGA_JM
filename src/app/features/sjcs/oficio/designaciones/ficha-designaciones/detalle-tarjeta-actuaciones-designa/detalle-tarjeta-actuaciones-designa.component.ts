@@ -34,6 +34,7 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
   @Input() permiteTurno: boolean;
 
   @Output() buscarEvent = new EventEmitter<boolean>();
+  @Output() buscarDocumentosEvent = new EventEmitter<boolean>();
 
   cols: Col[] = [
     {
@@ -268,6 +269,7 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
           if (resp.status == 'OK') {
             this.actuacionesSeleccionadas = [];
             this.buscarEvent.emit(false);
+            this.buscarDocumentosEvent.emit(true);
           }
 
           if (resp.error != null && resp.error.descripcion != null) {

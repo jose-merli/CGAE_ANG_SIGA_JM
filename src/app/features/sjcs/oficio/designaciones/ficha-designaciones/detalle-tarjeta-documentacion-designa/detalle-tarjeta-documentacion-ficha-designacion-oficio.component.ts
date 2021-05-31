@@ -96,8 +96,12 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
       this.usuarioLogado.numColegiado = this.localStorageService.numColegiado;
     }
 
-    this.getComboTiposDoc();
     this.getComboAsociado();
+
+    if (this.comboTipoDoc == undefined || this.comboTipoDoc == null || this.comboTipoDoc.length == 0) {
+      this.getComboTiposDoc();
+    }
+
   }
 
   cargaInicial() {
@@ -608,7 +612,13 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.documentos && changes.documentos.currentValue) {
-      this.cargaInicial();
+
+      if (this.comboTipoDoc != undefined && this.comboTipoDoc != null && this.comboTipoDoc.length > 0) {
+        this.cargaInicial();
+      } else {
+        this.getComboTiposDoc();
+      }
+
     }
   }
 

@@ -107,7 +107,8 @@
                                         <app-detalle-tarjeta-actuaciones-ficha-designacion-oficio [campos]="campos"
                                             [actuacionesDesignaItems]="actuacionesDesignaItems"
                                             [relaciones]="relaciones" (buscarEvent)="getActuacionesDesigna($event)"
-                                            [permiteTurno]="permiteTurno">
+                                            [permiteTurno]="permiteTurno"
+                                            (buscarDocumentosEvent)="getDocumentosDesigna()">
                                         </app-detalle-tarjeta-actuaciones-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Relaciones'">
