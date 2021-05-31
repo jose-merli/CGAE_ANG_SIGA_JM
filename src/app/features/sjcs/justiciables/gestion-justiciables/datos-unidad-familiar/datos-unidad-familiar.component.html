@@ -123,8 +123,8 @@
               <input type="text" [(ngModel)]="generalBody.descrIngrAnuales" [maxLength]="60" class="form-control" pInputText>
             </div>
             <div class="form-group col-lg-2 col-md-2">
-              <input type='number' step='0.01' placeholder='0.00' [(ngModel)]="generalBody.impIngrAnuales"  [maxLength]="10"class="form-control"
-                (keypress)="numberOnly($event)" pInputText >
+              <input type='number'  value="{{ value | number:'1.2-2' }}" placeholder='0.00' [(ngModel)]="generalBody.impIngrAnuales"  [maxLength]="10" 
+              class="form-control" (keypress)="numberOnly($event)" pInputText >
             </div> €
           </div>
           <div class="form-row col-lg-12 col-md-12">
@@ -135,7 +135,7 @@
               <input type="text" [(ngModel)]="generalBody.bienesInmu" [maxLength]="60" class="form-control" pInputText>
             </div>
             <div class="form-group col-lg-2 col-md-2">
-              <input type='number' step='0.01' placeholder='0.00' [(ngModel)]="generalBody.impBienesInmu" [maxLength]="10" class="form-control"
+              <input type='number'  placeholder='0.00' [(ngModel)]="generalBody.impBienesInmu" [maxLength]="10" class="form-control"
                 (keypress)="numberOnly($event)" pInputText>
             </div> €
           </div>
@@ -147,7 +147,7 @@
               <input type="text" [(ngModel)]="generalBody.bienesMu" [maxLength]="60" class="form-control" pInputText>
             </div>
             <div class="form-group col-lg-2 col-md-2">
-              <input type='number' step='0.01' placeholder='0.00' [(ngModel)]="generalBody.impBienesMu" [maxLength]="10" class="form-control"
+              <input type='number' placeholder='0.00' [(ngModel)]="generalBody.impBienesMu" [maxLength]="10" class="form-control"
                 (keypress)="numberOnly($event)" pInputText>
             </div> €
           </div>

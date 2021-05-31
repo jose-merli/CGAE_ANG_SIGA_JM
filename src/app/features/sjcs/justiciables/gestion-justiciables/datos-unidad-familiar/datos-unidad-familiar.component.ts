@@ -68,7 +68,9 @@ export class DatosUnidadFamiliarComponent implements OnInit {
       let data = JSON.parse(sessionStorage.getItem("Familiar"));
       sessionStorage.removeItem("Familiar");
       this.generalBody = data;
-      this.initialBody = data;
+      //Se realiza la asignacion de esta manera para evitar que la variable cambie los valores
+      //igual que la variable generalBody.
+      this.initialBody = JSON.parse(JSON.stringify(data));
 
       //Le asignamos valores a las cajas (checks).
       this.fillBoxes();
@@ -140,7 +142,9 @@ export class DatosUnidadFamiliarComponent implements OnInit {
   }
 
   rest() {
-    this.generalBody = this.initialBody;
+    //Se realiza la asignacion de esta manera para evitar que la variable cambie los valores
+    //igual que la variable generalBody.
+    this.generalBody = JSON.parse(JSON.stringify(this.initialBody));
     this.fillBoxes();
 
   }
