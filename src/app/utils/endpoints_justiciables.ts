@@ -20,4 +20,5 @@ export let endpoints_justiciables: any = {
     gestionJusticiables_comboGruposLaborales: "justiciables/gestionJusticiables/comboGruposLaborales",
     gestionJusticiables_comboParentesco: "justiciables/gestionJusticiables/comboParentesco",
     gestionJusticiables_comboTiposIngresos: "justiciables/gestionJusticiables/comboTiposIngresos",
+    gestionJusticiables_updateUnidadFamiliar: "justiciables/gestionJusticiables/updateUnidadFamiliar",
 }

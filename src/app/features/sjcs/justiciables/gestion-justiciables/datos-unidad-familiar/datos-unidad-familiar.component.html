@@ -36,12 +36,12 @@
           <div class="row">
             <div class="col-5">
               <label>{{ "justiciaGratuita.justiciables.unidadFamiliar.solicitantePrincipal" | translate }}
-                <span>{{ solicitantePrincipal }}</span>
+                <span>{{ solicitanteCabecera }}</span>
               </label>
             </div>
             <div class="col-5">
               <label>{{ "informes.solicitudAsistencia.parentesco" | translate }}
-                <span></span>
+                <span>{{ parentescoCabecera }}</span>
               </label>
             </div>
             <div class="col-2">
@@ -68,7 +68,7 @@
                 <label>{{ "justiciaGratuita.justiciables.unidadFamiliar.incapacitado" | translate }}</label>
               </div>
               <div class="form-row col-lg-6 col-md-6">
-                <p-checkbox [(ngModel)]="incapacitado" [disabled]="!permisoEscritura" binary="true"></p-checkbox>
+                <p-checkbox [(ngModel)]="incapacitadoBox" [disabled]="!permisoEscritura" binary="true"></p-checkbox>
               </div>
             </div>
             <div class="form-row col-lg-4 col-md-4">
@@ -77,7 +77,7 @@
                   }}</label>
               </div>
               <div class="form-row col-lg-6 col-md-6">
-                <p-checkbox [(ngModel)]="cirExcep" [disabled]="!permisoEscritura" binary="true"></p-checkbox>
+                <p-checkbox [(ngModel)]="cirExcepBox" [disabled]="!permisoEscritura" binary="true"></p-checkbox>
               </div>
             </div>
           </div>
@@ -85,18 +85,18 @@
             <div class="form-row col-lg-6 col-md-6">
               <span>{{ "justiciaGratuita.justiciables.unidadFamiliar.grupoLaboral" | translate }}</span>
             </div>
-            <div class="form-group col-lg-6 col-md-6">
-              <p-dropdown class="select-group" [(ngModel)]='selectedGrupoL' placeholder="Seleccionar"
+            <div class="form-group col-lg5 col-md-5">
+              <p-dropdown class="select-form" [(ngModel)]='generalBody.idTipoGrupoLab' placeholder="Seleccionar"
                 [options]="comboGrupoLaboral" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
               </p-dropdown>
             </div>
           </div>
           <div class="form-row col-lg-12 col-md-12">
             <div class="form-row col-lg-6 col-md-6">
-              <span>{{ "informes.solicitudAsistencia.parentesco" | translate }}</span>
+              <span>{{ "informes.solicitudAsistencia.parentesco" | translate }} *</span>
             </div>
-            <div class="form-group col-lg-6 col-md-6">
-              <p-dropdown class="select-form" [(ngModel)]='selectedParentesco' placeholder="Seleccionar"
+            <div class="form-group col-lg-5 col-md-5">
+              <p-dropdown class="select-form" [(ngModel)]='generalBody.idParentesco' placeholder="Seleccionar"
                 [options]="comboParentesco" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
               </p-dropdown>
             </div>
@@ -110,7 +110,7 @@
               <label>{{ "justiciaGratuita.justiciables.unidadFamiliar.tipoIngresos" | translate }}</label>
             </div>
             <div class="form-group col-lg-6 col-md-6">
-              <p-dropdown class="select-form" [(ngModel)]='selectedTipoIng' placeholder="Seleccionar"
+              <p-dropdown class="select-form" [(ngModel)]='generalBody.idTipoIngreso' placeholder="Seleccionar"
                 [options]="comboTipoIng" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
               </p-dropdown>
             </div>
@@ -119,35 +119,35 @@
             <div class="form-row col-lg-3 col-md-3">
               <span>{{ "justiciaGratuita.justiciables.unidadFamiliar.ingresos" | translate }}</span>
             </div>
-            <div class="form-row col-lg-7 col-md-7">
-              <input type="text" [(ngModel)]="body.annio" [disabled]="true" class="form-control" >
+            <div class="form-group col-lg-7 col-md-7">
+              <input type="text" [(ngModel)]="generalBody.descrIngrAnuales" [maxLength]="60" class="form-control" pInputText>
             </div>
-            <div class="form-row col-lg-2 col-md-2">
-              <input type="text" [(ngModel)]="body.annio" [disabled]="true" class="form-control"
-                (keypress)="numberOnly($event)" >
+            <div class="form-group col-lg-2 col-md-2">
+              <input type='number' step='0.01' placeholder='0.00' [(ngModel)]="generalBody.impIngrAnuales"  [maxLength]="10"class="form-control"
+                (keypress)="numberOnly($event)" pInputText >
             </div> €
           </div>
           <div class="form-row col-lg-12 col-md-12">
             <div class="form-row col-lg-3 col-md-3">
               <span>{{ "justiciaGratuita.justiciables.unidadFamiliar.bienesInmuebles" | translate }}</span>
             </div>
-            <div class="form-row col-lg-7 col-md-7">
-              <input type="text" [(ngModel)]="body.annio" [disabled]="true" class="form-control" >
+            <div class="form-group col-lg-7 col-md-7">
+              <input type="text" [(ngModel)]="generalBody.bienesInmu" [maxLength]="60" class="form-control" pInputText>
             </div>
-            <div class="form-row col-lg-2 col-md-2">
-              <input type="text" [(ngModel)]="body.annio" [disabled]="true" class="form-control"
-                (keypress)="numberOnly($event)" >
+            <div class="form-group col-lg-2 col-md-2">
+              <input type='number' step='0.01' placeholder='0.00' [(ngModel)]="generalBody.impBienesInmu" [maxLength]="10" class="form-control"
+                (keypress)="numberOnly($event)" pInputText>
             </div> €
           </div>
           <div class="form-row col-lg-12 col-md-12">
             <div class="form-row col-lg-3 col-md-3">
               <span>{{ "justiciaGratuita.justiciables.unidadFamiliar.bienesMobiliarios" | translate }}</span>
             </div>
-            <div class="form-row col-lg-7 col-md-7">
-              <input type="text" [(ngModel)]="body.annio" [disabled]="true" class="form-control" pInputText>
+            <div class="form-group col-lg-7 col-md-7">
+              <input type="text" [(ngModel)]="generalBody.bienesMu" [maxLength]="60" class="form-control" pInputText>
             </div>
-            <div class="form-row col-lg-2 col-md-2">
-              <input type="text" [(ngModel)]="body.annio" [disabled]="true" class="form-control"
+            <div class="form-group col-lg-2 col-md-2">
+              <input type='number' step='0.01' placeholder='0.00' [(ngModel)]="generalBody.impBienesMu" [maxLength]="10" class="form-control"
                 (keypress)="numberOnly($event)" pInputText>
             </div> €
           </div>
@@ -155,8 +155,8 @@
             <div class="form-row col-lg-3 col-md-3">
               <span>{{ "justiciaGratuita.Calendarios.Observaciones" | translate }}</span>
             </div>
-            <div class="form-row col-lg-9 col-md-9">
-              <input type="text" [(ngModel)]="body.annio" [disabled]="true" class="form-control" pInputText>
+            <div class="form-group col-lg-9 col-md-9">
+              <input type="text" [(ngModel)]="generalBody.observaciones"  [maxLength]="60" class="form-control" pInputText>
             </div>
           </div>
           <!-- <div class="form-row">
