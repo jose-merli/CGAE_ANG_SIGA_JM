@@ -2,6 +2,7 @@ import { Component, OnInit, Input, ChangeDetectorRef, ViewChild, SimpleChanges, 
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../../commons/translate';
 import { Message } from 'primeng/primeng';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-detalle-tarjeta-relaciones-designa',
@@ -9,7 +10,7 @@ import { Message } from 'primeng/primeng';
   styleUrls: ['./detalle-tarjeta-relaciones-designa.component.scss']
 })
 export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChanges {
-  
+
   msgs: Message[] = [];
 
   @Input() relaciones;
@@ -24,22 +25,34 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
   selectMultiple: boolean = false;
   selectionMode: string = "single";
   numSelected = 0;
-  
+
   selectedDatos: any = [];
 
-  selectAll: boolean= false;
+  selectAll: boolean = false;
   progressSpinner: boolean = false;
 
   @ViewChild("table") tabla;
   disabled: boolean = false;
 
-  constructor(private sigaServices: SigaServices, 
-    private  translateService: TranslateService,
-    private changeDetectorRef: ChangeDetectorRef
-    ) { }
+  constructor(private sigaServices: SigaServices,
+    private translateService: TranslateService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private datepipe: DatePipe
+  ) { }
+
+
+  formatDate(date) {
+    const pattern = 'dd/MM/yyyy';
+    return this.datepipe.transform(date, pattern);
+  }
 
   ngOnInit() {
-    this.getCols(); 
+    this.datos.forEach(element => {
+      if (element.sjcs.charAt(0) != 'A') {
+        element.centrodetencion = 'Dictamen: ' + element.dictamen + ' Fecha Dictamen: ' + element.fechadictamen + ' Resolucion: ' + this.formatDate(element.resolucion) + ' Fecha Resolucion: ' + this.formatDate(element.fecharesolucion)
+      }
+    });
+    this.getCols();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -48,7 +61,7 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
         let change = changes[inputName];
         switch (inputName) {
           case 'relaciones': {
-            this.datos= change.currentValue;
+            this.datos = change.currentValue;
           }
         }
       }
@@ -56,18 +69,13 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
   }
 
   getCols() {
-    console.table(this.datos);
     this.cols = [
       { field: "sjcs", header: "justiciaGratuita.oficio.designas.interesados.identificador" },
       { field: "anio", header: "justiciaGratuita.sjcs.designas.DatosIden.ano" },
-      { field: "desturno", header: "dato.jgr.guardia.guardias.turno" },
+      { field: "descturno", header: "justiciaGratuita.justiciables.literal.turnoGuardia" },
       { field: "letrado", header: "justiciaGratuita.sjcs.designas.colegiado" },
-
-     /*  { field: no aparece en los resultados actuales de la sql, header: "justiciaGratuita.sjcs.designas.datosInteresados"},//Interesados
-      { field: no aparece en los resultados actuales de la sql, header: "justiciaGratuita.justiciables.literal.datosInteres"} //Datos de interes */
-
-     /*  { field: "numero", header: "gratuita.busquedaAsistencias.literal.numero" },
-      { field: "destipo", header: "censo.nuevaSolicitud.tipoSolicitud" } */
+      { field: "interesado", header: "justiciaGratuita.sjcs.designas.datosInteresados" },
+      { field: "centrodetencion", header: "justiciaGratuita.justiciables.literal.datosInteres" }
     ];
 
     this.rowsPerPage = [
@@ -97,19 +105,19 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
     this.tabla.reset();
   }
 
-  actualizaSeleccionados(){
+  actualizaSeleccionados() {
     if (this.selectedDatos == undefined) {
       this.selectedDatos = [];
       this.disabled = true;
     }
     if (this.selectedDatos != undefined) {
       this.disabled = false;
-      if(this.selectedDatos.length ==undefined) this.numSelected=1;
+      if (this.selectedDatos.length == undefined) this.numSelected = 1;
       else this.numSelected = this.selectedDatos.length;
     }
   }
 
-  
+
   showMessage(severity, summary, msg) {
     this.msgs = [];
     this.msgs.push({
@@ -119,7 +127,7 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
     });
   }
 
-  
+
   onChangeSelectAll() {
     if (this.selectAll === true) {
       this.selectedDatos = this.datos;
@@ -134,28 +142,28 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
     this.msgs = [];
   }
 
-  
+
   isAnySelected() {
     return this.selectedDatos != "";
   }
 
-  eliminarRelacion(){
+  eliminarRelacion() {
     this.progressSpinner = true;
 
     this.sigaServices.post("designaciones_eliminarRelacion", this.selectedDatos).subscribe(
       data => {
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.progressSpinner = false;
-          this.relacion.emit();
-    },
-    err => {
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.progressSpinner = false;
+        this.relacion.emit();
+      },
+      err => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         this.progressSpinner = false;
       }
     );
   }
 
-  porhacer(){
+  porhacer() {
     this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
   }
 }
