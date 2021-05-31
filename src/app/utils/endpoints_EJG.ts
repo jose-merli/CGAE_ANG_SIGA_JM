@@ -69,5 +69,8 @@ export let endpoints_EJG: any = {
     gestionejg_asociarDesignacion: "ejg/gestion-ejg/asociarDesignacion",
     gestionejg_asociarSOJ: "ejg/gestion-ejg/asociarSOJ",
     gestionejg_asociarAsistencia: "ejg/gestion-ejg/asociarAsistencia",
-    gestionejg_consultEditRelacion: "ejg/gestion-ejg/consultEditRelacion"
+    gestionejg_consultEditRelacion: "ejg/gestion-ejg/consultEditRelacion",
+
+    //comunicaciones
+    gestionejg_getComunicaciones: "ejg/gestion-ejg/getComunicaciones"
 }

@@ -77,6 +77,8 @@ export class GestionEjgComponent implements OnInit {
 
   enlacesTarjetaResumen = [];
 
+  comunicaciones;
+
   @ViewChild(ServiciosTramitacionComponent) tramitacion;
 
   constructor(private sigaServices: SigaServices,
@@ -397,14 +399,14 @@ export class GestionEjgComponent implements OnInit {
 
     this.enlacesTarjetaResumen.push(pruebaTarjeta);
 
-    //por hacer
-    // pruebaTarjeta ={
-    //   label: "",
-    //   value: document.getElementById("comunicaciones"),
-    //   nombre: "comunicaciones",
-    // };
+  
+    pruebaTarjeta ={
+    label: "menu.enviosAGrupos",
+    value: document.getElementById("comunicaciones"),
+     nombre: "comunicaciones",
+     };
 
-    // this.enlacesTarjetaResumen.push(pruebaTarjeta);
+     this.enlacesTarjetaResumen.push(pruebaTarjeta);
   }
 
   isCloseReceive(event) {
@@ -493,4 +495,5 @@ export class GestionEjgComponent implements OnInit {
       }
     }
   }
+
 }

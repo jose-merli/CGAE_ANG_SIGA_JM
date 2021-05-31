@@ -85,7 +85,7 @@ export class FiltroDesignacionesComponent implements OnInit {
   @Output() showTablaJustificacionExpres = new EventEmitter<boolean>();
   @Output() busqueda = new EventEmitter<boolean>();
   @Output() permisosFichaAct= new EventEmitter<boolean>();
-  
+  @Output() checkRestriccionesasLetrado = new EventEmitter<boolean>();
   isLetrado:boolean = false;
   sinEjg;
   ejgSinResolucion;
@@ -94,6 +94,8 @@ export class FiltroDesignacionesComponent implements OnInit {
   valorParametro: AnalyserNode;
   datosBuscar: any[];
   searchParametros: ParametroDto = new ParametroDto();
+  @Input() usuarioBusquedaExpressFromFicha = {numColegiado: '',
+                            nombreAp: ''};
   constructor(private translateService: TranslateService, private sigaServices: SigaServices,  private location: Location, private router: Router,
     private localStorageService: SigaStorageService,  private commonsService: CommonsService,private confirmationService: ConfirmationService,) { }
 
@@ -127,7 +129,7 @@ export class FiltroDesignacionesComponent implements OnInit {
       this.buscar();
       sessionStorage.removeItem("filtroDesignas");
     }
-
+    console.log('this.usuarioBusquedaExpressFromFicha*********', this.usuarioBusquedaExpressFromFicha)
     if(sessionStorage.getItem("buscadorColegiados")){
       const { nombre, apellidos, nColegiado } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
       this.usuarioBusquedaExpress.nombreAp = `${apellidos}, ${nombre}`;
@@ -137,6 +139,10 @@ export class FiltroDesignacionesComponent implements OnInit {
       this.buscar();
 
       sessionStorage.removeItem("buscadorColegiados");
+    } else if (this.usuarioBusquedaExpressFromFicha != undefined){
+      this.usuarioBusquedaExpress.nombreAp = this.usuarioBusquedaExpressFromFicha.nombreAp;
+      this.usuarioBusquedaExpress.numColegiado = this.usuarioBusquedaExpressFromFicha.numColegiado;
+
     }
 
     
@@ -226,23 +232,16 @@ export class FiltroDesignacionesComponent implements OnInit {
     }else{
       this.isButtonVisible = true;// DEBE SER FALSE
     }
-    this.sigaServices.get("institucionActual").subscribe(n => {
-      this.institucionActual = n.value;});
-      if(this.institucionActual == "2003"){
-        this.isButtonVisible = false;
-      }
-    
+    if(this.localStorageService.institucionActual == "2003"){
+      this.isButtonVisible = false;
+    }
     this.filtroJustificacion = new JustificacionExpressItem();
-
     this.showDesignas=true;
     this.showJustificacionExpress=false;
     this. esColegiado = false;
     this.progressSpinner=true;
     this.showDesignas = true;
     this.checkRestricciones = false;
-
-
-    // this.checkLastRoute();
 
     //justificacion expres
     this.cargaCombosJustificacion();
@@ -335,17 +334,36 @@ export class FiltroDesignacionesComponent implements OnInit {
   }
 
   changeFilters(event) {
+    
     if(event=='designas'){
-      this.showDesignas=true;
-      this.showJustificacionExpress=false;
-      this.isButtonVisible=true;
-      this.showTablaJustificacionExpres.emit(false);
+      let keyConfirmation = "confirmacionGuardarJustificacionExpress";
+      if (sessionStorage.getItem('rowIdsToUpdate') != null && sessionStorage.getItem('rowIdsToUpdate') != 'null' && sessionStorage.getItem('rowIdsToUpdate') != '[]'){
+        this.confirmationService.confirm({
+          key: keyConfirmation,
+          message: this.translateService.instant('justiciaGratuita.oficio.justificacion.reestablecer'),
+          icon: "fa fa-trash-alt",
+          accept: () => {
+            this.showDesignas=true;
+            this.showJustificacionExpress=false;
+            this.isButtonVisible=true;
+            this.showTablaJustificacionExpres.emit(false);
+          },
+          reject: () => {
+          }
+        });
+      }else{
+        this.showDesignas=true;
+        this.showJustificacionExpress=false;
+        this.isButtonVisible=true;
+        this.showTablaJustificacionExpres.emit(false);
+      }
     }
 
     if(event=='justificacion'){
+      sessionStorage.setItem("rowIdsToUpdate", JSON.stringify([]));
       this.showDesignas=false;
       this.showJustificacionExpress=true;
-      this.expanded=true;
+      this.expanded=false;
       this.isButtonVisible=false;
       this.showTablaDesigna.emit(false);
     }
@@ -774,7 +792,8 @@ getComboCalidad() {
 
   limpiar(){
     this.filtroJustificacion = new JustificacionExpressItem();
-    
+    this.checkMostrarPendientes = false;
+    this.checkRestricciones = false;
     if(!this.esColegiado){
       this.usuarioBusquedaExpress = {
         numColegiado: '',
@@ -808,17 +827,21 @@ getComboCalidad() {
     this.checkRestricciones = event;
     
     if(!event){
+      this.checkRestriccionesasLetrado.emit(false);
       this.disableRestricciones=false;
-      this.filtroJustificacion.ejgSinResolucion="2"; 
+      /*this.filtroJustificacion.ejgSinResolucion="2"; 
       this.filtroJustificacion.sinEJG="2";
       this.filtroJustificacion.resolucionPTECAJG="2";
-      this.filtroJustificacion.conEJGNoFavorables="2";
+      this.filtroJustificacion.conEJGNoFavorables="2";*/
+
     }else{
+      this.checkRestriccionesasLetrado.emit(true);
       this.disableRestricciones=true;
-      this.filtroJustificacion.ejgSinResolucion="0"; 
+      /*this.filtroJustificacion.ejgSinResolucion="0"; 
       this.filtroJustificacion.sinEJG="0";
       this.filtroJustificacion.resolucionPTECAJG="0";
       this.filtroJustificacion.conEJGNoFavorables="0";
+      */
     }
   }
 

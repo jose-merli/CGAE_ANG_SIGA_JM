@@ -239,9 +239,9 @@ export class FichaDesignacionesComponent implements OnInit {
     this.checkAcceso();
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
     let designaItem = JSON.parse(sessionStorage.getItem("designaItemLink"));
-    if(designaItem == null){
+    if (designaItem == null) {
       this.campos = new DesignaItem();
-    }else{
+    } else {
       this.campos = designaItem;
     }
     if (sessionStorage.getItem('refreshDataAct')) {
@@ -588,7 +588,7 @@ export class FichaDesignacionesComponent implements OnInit {
 
       this.progressSpinner = false;
     }
-    
+
     this.progressSpinner = false;
   }
 
@@ -1229,11 +1229,11 @@ export class FichaDesignacionesComponent implements OnInit {
       let data = sessionStorage.getItem("designaItemLink");
       let designaItem = JSON.parse(data);
 
-      let item = [designaItem.ano, designaItem.idTurno, designaItem.idInstitucion];
+      let item = [designaItem.ano, designaItem.idTurno, designaItem.idInstitucion, designaItem.numero];
 
       this.sigaServices.post("designacionesBusquedaRelaciones", item).subscribe(
         n => {
-
+          console.log("OBJETO BUSQUEDARELACIONES", n);
           this.relaciones = JSON.parse(n.body).relacionesItem;
           let primero = this.relaciones[0];
           let error = JSON.parse(n.body).error;
@@ -1244,11 +1244,25 @@ export class FichaDesignacionesComponent implements OnInit {
           this.progressSpinner = false;
 
           if (this.relaciones.length == 1) {
-            this.listaTarjetas[7].campos = [{
-              "key": this.translateService.instant('justiciaGratuita.oficio.justificacionExpres.numeroEJG'),
-              "value": this.relaciones[0].numero
+            console.log("RELACIONES", this.relaciones[0]);
+            if (this.relacion[0].sjcs.charAt(0) == 'E') {
+              this.listaTarjetas[7].campos = [{
+                "key": this.translateService.instant('justiciaGratuita.oficio.justificacionExpres.numeroEJG'),
+                "value": this.relaciones[0].sjcs
+              },
+
+              ]
+            } else if (this.relacion[0].sjcs.charAt(0) == 'A') {
+              this.listaTarjetas[7].campos = [{
+                "key": this.translateService.instant('justiciaGratuita.oficio.justificacionExpres.numeroEJG'),
+                "value": this.relaciones[0].sjcs
+              },
+              {
+                "key": "Letrado",//Sustituir por literal de GEN_DICCIONARIO
+                "value": this.relaciones[0].letrado
+              }
+              ]
             }
-            ]
           } else if (this.relaciones.length == 0 || this.relaciones == undefined || this.relaciones == null) {
             this.listaTarjetas[7].campos = [{
               "key": null,
@@ -1642,7 +1656,8 @@ export class FichaDesignacionesComponent implements OnInit {
                       "value": this.letrados[0].apellidosNombre
                     }
                   ]
-                  this.listaTarjetas[6].enlaceCardClosed = { click: 'irFechaColegial()', title: this.translateService.instant('informesycomunicaciones.comunicaciones.fichaColegial') }
+                  this.listaTarjetas[6].enlaceCardClosed = { click: 'irFechaColegial()', title: this.translateService.instant('informesycomunicaciones.comunicaciones.fichaColegial') };
+                  this.listaTarjetas[6].letrado = datos[0];
                 }
               },
               err => {
@@ -1688,6 +1703,7 @@ export class FichaDesignacionesComponent implements OnInit {
             }
 
             this.listaTarjetas[6].enlaceCardClosed = { click: 'irFechaColegial()', title: this.translateService.instant('informesycomunicaciones.comunicaciones.fichaColegial') }
+            this.listaTarjetas[6].letrado = datos[0];
           }
         },
         err => {

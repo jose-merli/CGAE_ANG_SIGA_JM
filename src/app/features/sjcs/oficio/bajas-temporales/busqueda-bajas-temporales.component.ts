@@ -107,7 +107,7 @@ export class BajasTemporalesComponent implements OnInit {
         this.datos = JSON.parse(n.body).bajasTemporalesItem;
         this.datos.forEach(element => {
 
-          element.fechadesdeSinHora = this.formatDateSinHora(element.fechadesde);
+          element.fechadesdeSinHora = element.fechadesde;
           element.fechahastaSinHora = this.formatDateSinHora(element.fechahasta);
           element.fechaaltaSinHora = this.formatDateSinHora(element.fechaalta);
           element.fechadesde = this.formatDate(element.fechadesde);
@@ -229,8 +229,8 @@ jsonToRow(datos){
         { type: 'text', value: nombreApell},
         { type: 'select', combo: this.comboTipo ,value: element.tipo},
         { type: 'input', value: element.descripcion},
-        { type: 'text', value: element.fechadesdeSinHora},
-        { type: 'datePicker', value: element.fechahastaSinHora},
+        { type: 'text', value: this.formatDateSinHora(element.fechadesdeSinHora)},
+        { type: 'datePickerFin', value:  [element.fechahastaSinHora,new Date(element.fechadesdeSinHora)] },
         { type: 'text', value: element.fechaaltaSinHora},
         { type: 'text', value: element.validado},
         { type: 'text', value: element.fechaestadoSinHora},
@@ -278,19 +278,6 @@ modDatos(event){
 
   clear() {
     this.msgs = [];
-  }
-
-  transformaFecha(fecha) {
-    if (fecha != null) {
-      let jsonDate = JSON.stringify(fecha);
-      let rawDate = jsonDate.slice(1, -1);
-      if (rawDate.length == 10) {
-        fecha = rawDate += " 00:00:00";
-    } else {
-      fecha = rawDate;
-    }
-    return fecha;
-    }
   }
 
   estadoPendiente(event){
@@ -441,6 +428,19 @@ anular(event){
 
 backTo() {
   this.location.back();
+}
+
+transformaFecha(fecha) {
+  if (fecha != null) {
+    let jsonDate = JSON.stringify(fecha);
+    let rawDate = jsonDate.slice(1, -1);
+    if (rawDate.length == 10) {
+      fecha = rawDate += " 00:00:00";
+  } else {
+    fecha = rawDate;
+  }
+  return fecha;
+  }
 }
 
 guardar(event) {
