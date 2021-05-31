@@ -117,7 +117,7 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
             this.actuacionDesigna.actuacion.fechaJustificacion = fechaTarjetaPlegada;
           }
 
-          this.buscarActuacionEvent.emit();
+          this.buscarActuacionEvent.emit(this.actuacionDesigna.actuacion.numeroAsunto);
           this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
         }
 
@@ -153,7 +153,7 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
         if (resp.status == 'OK') {
           this.actuacionDesigna.actuacion.validada = false;
           this.estado = '';
-          this.buscarActuacionEvent.emit();
+          this.buscarActuacionEvent.emit(this.actuacionDesigna.actuacion.numeroAsunto);
           this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
         }
 
@@ -188,6 +188,8 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
     this.observaciones = this.actuacionDesigna.actuacion.observacionesJusti;
     if (this.actuacionDesigna.actuacion.fechaJustificacion != undefined && this.actuacionDesigna.actuacion.fechaJustificacion != null && this.actuacionDesigna.actuacion.fechaJustificacion != '') {
       this.fechaJusti = new Date(this.actuacionDesigna.actuacion.fechaJustificacion.split('/').reverse().join('-'));
+    } else {
+      this.fechaJusti = null;
     }
 
     this.fechaActuacion = new Date(this.actuacionDesigna.actuacion.fechaActuacion.split('/').reverse().join('-'));
@@ -307,7 +309,7 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
         if (resp.status == 'OK') {
           this.actuacionDesigna.actuacion.observacionesJusti = this.observaciones;
           this.actuacionDesigna.actuacion.fechaJustificacion = this.fechaJusti;
-          this.buscarActuacionEvent.emit();
+          this.buscarActuacionEvent.emit(this.actuacionDesigna.actuacion.numeroAsunto);
           this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
         }
 
