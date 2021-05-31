@@ -5,6 +5,8 @@ import { Message } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../../../commons/translate/translation.service';
 import { Router } from '@angular/router';
 import { SigaStorageService } from '../../../../../../siga-storage.service';
+import { CommonsService } from '../../../../../../_services/commons.service';
+import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
 
 export interface Col {
   field: string,
@@ -75,16 +77,39 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
   actuacionesSeleccionadas: ActuacionDesignaItem[] = [];
   msgs: Message[] = [];
   isLetrado: boolean;
+  modoLectura: boolean = false;
 
   constructor
     (
       private sigaServices: SigaServices,
       private translateService: TranslateService,
       private router: Router,
-      private localStorageService: SigaStorageService
+      private localStorageService: SigaStorageService,
+      private commonsService: CommonsService
     ) { }
 
   ngOnInit() {
+
+    this.commonsService.checkAcceso(procesos_oficio.designasActuaciones)
+      .then(respuesta => {
+        let permisoEscritura = respuesta;
+
+        if (permisoEscritura == undefined) {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
+
+        if (!permisoEscritura) {
+          this.modoLectura = true;
+        }
+
+      })
+      .catch(err => console.log(err));
+
     this.isLetrado = this.localStorageService.isLetrado;
   }
 
@@ -105,7 +130,7 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
 
   onRowSelected(event) {
 
-    if ((this.historico && !event.data.anulada) || !event.data.permiteModificacion) {
+    if ((this.historico && !event.data.anulada)) {
       this.actuacionesSeleccionadas.pop();
     }
 
@@ -223,15 +248,12 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
 
       this.actuacionesSeleccionadas.forEach(el => {
 
-        if (this.isLetrado && (el.validada || !this.permiteTurno)) {
+        if (el.facturado || (this.isLetrado && el.validada && (!this.permiteTurno || !el.permiteModificacion))) {
           error = true;
+        } else {
+          actuacionesRequest.push(el);
         }
 
-        if (!error && !el.facturado) {
-          actuacionesRequest.push(el);
-        } else {
-          error = true;
-        }
       });
 
       if (error) {
@@ -272,7 +294,7 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
       isNew: true,
       designaItem: this.campos,
       actuacion: new ActuacionDesignaItem(),
-      relaciones: null
+      relaciones: this.relaciones
     }
     sessionStorage.setItem("actuacionDesigna", JSON.stringify(actuacion));
     this.router.navigate(['/fichaActDesigna']);

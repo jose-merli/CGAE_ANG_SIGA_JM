@@ -1,12 +1,15 @@
 import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Message } from 'primeng/primeng';
 import { Cell, Row, RowGroup, TablaResultadoDesplegableJEService } from '../../../../../commons/tabla-resultado-desplegable/tabla-resultado-desplegable-je.service';
+import { TranslateService } from '../../../../../commons/translate';
 import { ParametroDto } from '../../../../../models/ParametroDto';
 import { ParametroRequestDto } from '../../../../../models/ParametroRequestDto';
 import { JustificacionExpressItem } from '../../../../../models/sjcs/JustificacionExpressItem';
+import { procesos_oficio } from '../../../../../permisos/procesos_oficio';
 import { CommonsService } from '../../../../../_services/commons.service';
+import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 
 @Component({
@@ -103,7 +106,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
   actuacionToAdd: Row;
   dataToUpdate: RowGroup[];
   actuacionesItem = {};
-
+  arrNuevo = [];
   @Output() actuacionesToDleteArrEmit = new EventEmitter<any[]>(); // para enviar a backend - ELIMINAR
   @Output() newActuacionItemEmit = new EventEmitter<{}>();// para enviar a backend -  NUEVO
   @Output() dataToUpdateArrEmit = new EventEmitter<any[]>(); // para enviar a backend -  GUARDAR
@@ -111,9 +114,13 @@ export class TablaJustificacionExpresComponent implements OnInit {
   actuacionesToDleteArr = []; // para enviar a backend - ELIMINAR
   newActuacionItem = {}; // para enviar a backend -  NUEVO
   dataToUpdateArr = []; // para enviar a backend -  GUARDAR
+  permisoEscritura;
 
   constructor(private trdService: TablaResultadoDesplegableJEService, private datepipe: DatePipe,
-    private commonsService: CommonsService, private sigaServices: SigaServices) 
+    private commonsService: CommonsService, private sigaServices: SigaServices,
+    private persistenceService: PersistenceService,
+		private router: Router,
+    private translateService: TranslateService,) 
   { }
 
   ngOnInit(): void {
@@ -136,6 +143,26 @@ export class TablaJustificacionExpresComponent implements OnInit {
     );
 
     this.getJuzgados();
+    this.checkPermisos();
+  }
+
+  checkPermisos(){
+    this.commonsService.checkAcceso(procesos_oficio.designa)
+      .then(respuesta => {
+        this.permisoEscritura = respuesta;
+        console.log('JE  this.permisoEscritura: ',  this.permisoEscritura)
+        this.persistenceService.setPermisos(this.permisoEscritura);
+ 
+        if (this.permisoEscritura == undefined) {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
+      }
+      ).catch(error => console.error(error));
   }
   /*loadJuzgados(event){
     if (event == true){
@@ -225,6 +252,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
   }
 
   cargaInicial(){
+    console.log('datosJustificacion', this.datosJustificacion)
     this.progressSpinner=true;
     this.dataReady = false;
     let resultModified = {};
@@ -309,9 +337,9 @@ export class TablaJustificacionExpresComponent implements OnInit {
       { type: 'input', value: designacion.nig, size: 153, combo: null},
       { type: numProcType, value: designacion.numProcedimiento, size: 153 , combo: null},
       { type: 'select', value: designacion.idProcedimiento, size: 153 , combo: this.comboModulos }, //modulo
-      { type: 'datePicker', value: this.formatDate(designacion.fechaActuacion), size: 153 , combo: null},
-      { type: 'text', value: '' , size: 153, combo: null},
-      { type: 'text', value: designacion.tipoAcreditacion , size: 50, combo: null},
+      { type: 'invisible', value: this.formatDate(designacion.fechaActuacion), size: 153 , combo: null},
+      { type: 'invisible', value: '' , size: 153, combo: null},
+      { type: 'invisible', value: designacion.tipoAcreditacion , size: 50, combo: null},
       { type: 'checkbox', value: validada, size: 50 , combo: null},
       { type: 'invisible', value: this.formatDate(designacion.fechaDesignacion) , size: 153, combo: null},
       { type: 'invisible', value: designacion.anioDesignacion , size: 0, combo: null},
@@ -376,24 +404,24 @@ export class TablaJustificacionExpresComponent implements OnInit {
           fechaJust = false;
           fechaJustType = 'checkboxDate';
         }
-        if (actuacion.permitirAniadirLetrado == "1"){ 
-          arr1 = 
+        
+         arr1 = 
           [
-          { type: 'checkboxPermisos', value: finalizada, size: 50, combo: null },
+          { type: 'checkboxPermisos', value: [finalizada, actuacion.numAsunto], size: 50, combo: null },
           { type: 'text', value: actuacion.nombreJuzgado, size: 153 , combo: null},
           { type: 'input', value: actuacion.nig, size: 153, combo: null},
           { type: numProcType, value: actuacion.numProcedimiento, size: 153 , combo: null},
           { type: 'text', value: actuacion.procedimiento, size: 153 , combo: null}, //modulo
           { type: 'datePicker', value:  this.formatDate(actuacion.fecha), size: 153 , combo: null},
           { type: fechaJustType, value:  fechaJust , size: 153, combo: null},
-          { type: 'buttom', value: 'Nuevo' , size: 153, combo: null},
-          { type: 'checkbox', value: validaAct, size: 50 , combo: null},
+          { type: 'invisible', value: actuacion.descripcion , size: 153, combo: null},
+          { type: 'checkbox', value: validaAct, size: 50 , combo: null },
           { type: 'invisible', value:  actuacion.numDesignacion , size: 0, combo: null},
           { type: 'invisible', value:  actuacion.idAcreditacion , size: 0, combo: null},
           { type: 'invisible', value:  actuacion.tipoAcreditacion , size: 0, combo: null},
           { type: 'invisible', value:  actuacion.idTipoAcreditacion , size: 0, combo: null},
           { type: 'invisible', value:  actuacion.porcentaje , size: 0, combo: null},
-          { type: 'invisible', value:  actuacion.descripcion , size: 0, combo: null},
+          { type: 'invisible', value:  actuacion.tipoAcreditacion , size: 0, combo: null},
           { type: 'invisible', value:  actuacion.categoriaProcedimiento , size: 0, combo: null},
           { type: 'invisible', value:  actuacion.idJurisdiccion , size: 0, combo: null},
           { type: 'invisible', value:  actuacion.complemento , size: 0, combo: null},
@@ -414,9 +442,10 @@ export class TablaJustificacionExpresComponent implements OnInit {
           { type: 'invisible', value:  actuacion.anio , size: 0, combo: null},
           { type: 'invisible', value:  actuacion.idTurno , size: 0, combo: null},
           { type: 'invisible', value:  actuacion.idInstitucion , size: 0, combo: null}
-
         ];
-        }else{
+
+        
+       /* }else{
           arr1 = 
           [
           { type: 'checkboxPermisos', value: finalizada, size: 50, combo: null },
@@ -455,7 +484,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
           { type: 'invisible', value:  actuacion.idTurno , size: 0, combo: null},
           { type: 'invisible', value:  actuacion.idInstitucion , size: 0, combo: null}
         ];
-      }
+      }*/
 
           let num = index + 2;
           let key = letra + num;
@@ -466,7 +495,66 @@ export class TablaJustificacionExpresComponent implements OnInit {
         obj1 = null;
        
      })
+console.log('designacion.actuaciones: ', designacion.actuaciones)
+    // if (actuacion.permitirAniadirLetrado == "1"){ 
+      if (designacion.actuaciones.length != 0){
+      let numProcType2 = 'input';
+      if(this.isLetrado){
+        numProcType2 = 'text';
+      }else{
+        numProcType2 = 'input';
+      }
+      this.arrNuevo = 
+      [
+      { type: 'checkboxPermisos', value: [false, 'Nuevo'], size: 50, combo: null },
+      { type: 'invisible', value: '', size: 153 , combo: null},
+      { type: 'invisible', value: '', size: 153, combo: null},
+      { type: 'invisible', value: '', size: 153 , combo: null},
+      { type: 'invisible', value: '', size: 153 , combo: null}, //modulo
+      { type: 'invisible', value:  '', size: 153 , combo: null},
+      { type: 'invisible', value:  false , size: 153, combo: null},
+      { type: 'invisible', value: '' , size: 153, combo: null},
+      { type: 'invisible', value: false, size: 50 , combo: null},
+      { type: 'invisible', value:  '' , size: 0, combo: null},
+      { type: 'invisible', value:  '' , size: 0, combo: null},
+      { type: 'invisible', value:  '' , size: 0, combo: null},
+      { type: 'invisible', value:  '' , size: 0, combo: null},
+      { type: 'invisible', value:  '' , size: 0, combo: null},
+      { type: 'invisible', value:  '' , size: 0, combo: null},
+      { type: 'invisible', value:  '' , size: 0, combo: null},
+      { type: 'invisible', value:  '' , size: 0, combo: null},
+      { type: 'invisible', value:  '' , size: 0, combo: null},
+      { type: 'invisible', value:  '' , size: 0, combo: null},
+      { type: 'invisible', value:  '' , size: 0, combo: null},
+      { type: 'invisible', value:  '' , size: 0, combo: null},
+      { type: 'invisible', value:  '' , size: 0, combo: null},
+      { type: 'invisible', value:  '' , size: 0, combo: null},
+      { type: 'invisible', value:  '' , size: 0, combo: null},
+      { type: 'invisible', value:  '' , size: 0, combo: null},
+      { type: 'invisible', value:  '' , size: 0, combo: null},
+      { type: 'invisible', value:  '' , size: 0, combo: null},
+      { type: 'invisible', value:  '' , size: 0, combo: null},
+      { type: 'invisible', value:  '' , size: 0, combo: null},
+      { type: 'invisible', value:  '' , size: 0, combo: null},
+      { type: 'invisible', value:  '' , size: 0, combo: null},
+      { type: 'invisible', value:  '' , size: 0, combo: null},
+      { type: 'invisible', value:  '' , size: 0, combo: null},
+      { type: 'invisible', value:  '' , size: 0, combo: null},
+      { type: 'invisible', value:  '' , size: 0, combo: null}
+  ];
 
+     let lastNum = designacion.actuaciones.length + 2;
+     this.totalActuaciones = this.totalActuaciones + 1;
+     let lastKey = letra + lastNum;
+     let objnew =  { [lastKey] : this.arrNuevo, position: 'collapse'};
+     console.log('objnew: ', objnew)
+     arr2.push(Object.assign({},objnew));
+     objnew = null;
+   // }
+  }
+
+
+     //arr2.push(Object.assign({},obj1));
       dataObj = { [cod]  : arr2, [id2] : "" , [id3] : "", [estadoDesignacion] : "", [estadoEx] : ""};
       data.push(Object.assign({},dataObj));
       arr2 = [];
@@ -474,7 +562,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
     })
 
     resultModified = Object.assign({},{'data': data});
-
+console.log('resultModified: ', resultModified)
     this.rowGroups = [];
     this.rowGroups = this.trdService.getTableData(resultModified);
     this.rowGroupsAux = [];
@@ -516,8 +604,10 @@ export class TablaJustificacionExpresComponent implements OnInit {
     this.newActuacionItemEmit.emit(this.newActuacionItem);
 }
   getActuacionesToDelete(event){
+    this.progressSpinner=true;
     this.actuacionesToDelete = event;
     this.tableDataToJson();
+    this.progressSpinner=false;
   }
   
   tableDataToJson(){
@@ -727,11 +817,23 @@ desigCellToJson(designacionesCells, codigoDesignacionParam, expedientesDesignaci
   }
 
   setNumActuacionesModificadas(event){
-    this.numActuacionesModificadas = event;
+    if (event == true){
+      this.numActuacionesModificadas = Number(this.numActuacionesModificadas) + 1;
+    }else if (event == false){
+      this.numActuacionesModificadas = Number(this.numActuacionesModificadas) - Number(1);
+    }else{
+      this.numActuacionesModificadas = event;
+    }
   }
 
   setnumDesignasModificadas(event){
-    this.numDesignasModificadas = event;
+    if (event == true){
+      this.numDesignasModificadas = Number(this.numDesignasModificadas) + 1;
+    }else if (event == false){
+      this.numDesignasModificadas = Number(this.numDesignasModificadas) - Number(1);
+    }else{
+      this.numDesignasModificadas = event;
+    }
   }
 
   settotalActuaciones(event){

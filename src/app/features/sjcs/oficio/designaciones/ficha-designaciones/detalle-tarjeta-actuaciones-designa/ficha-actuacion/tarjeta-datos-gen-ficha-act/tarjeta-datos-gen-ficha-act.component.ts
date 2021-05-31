@@ -187,7 +187,11 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
         this.getComboProcedimientosConJuzgado(this.datos.selectores[0].value);
         if (this.datos.selectores[1].value != undefined && this.datos.selectores[1].value != null && this.datos.selectores[1].value != '') {
           this.getComboModulosConProcedimientos(this.datos.selectores[1].value);
+        } else {
+          this.datos.selectores[3].value = '';
         }
+      } else {
+        this.datos.selectores[1].value = '';
       }
     }
 
@@ -198,7 +202,11 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
 
         if (this.datos.selectores[3].value != undefined && this.datos.selectores[3].value != null && this.datos.selectores[3].value != '') {
           this.getComboProcedimientosConModulo(this.datos.selectores[3].value);
+        } else {
+          this.datos.selectores[1].value = '';
         }
+      } else {
+        this.datos.selectores[3].value = '';
       }
     }
 
@@ -206,6 +214,8 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     if (this.parametroConfigCombos.valor == '3') {
       if (this.datos.selectores[0].value != undefined && this.datos.selectores[0].value != null && this.datos.selectores[0].value != '') {
         this.getComboModulosPorJuzgado(this.datos.selectores[0].value);
+      } else {
+        this.datos.selectores[3].value = '';
       }
 
       this.getComboProcedimientos();
@@ -215,6 +225,8 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     if (this.parametroConfigCombos.valor == '4') {
       if (this.datos.selectores[0].value != undefined && this.datos.selectores[0].value != null && this.datos.selectores[0].value != '') {
         this.getComboProcedimientosConJuzgado(this.datos.selectores[0].value);
+      } else {
+        this.datos.selectores[1].value = '';
       }
 
       this.getComboModulos();
@@ -545,8 +557,12 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     this.datos.inputNig.value = this.actuacionDesigna.designaItem.nig;
     this.datos.datePicker.value = new Date();
     this.datos.inputNumPro.value = this.actuacionDesigna.designaItem.numProcedimiento;
-    this.datos.selectores[0].value = this.actuacionDesigna.designaItem.idJuzgado.toString();
-    this.datos.selectores[1].value = this.actuacionDesigna.designaItem.idPretension.toString();
+    if (this.actuacionDesigna.designaItem.idJuzgado) {
+      this.datos.selectores[0].value = this.actuacionDesigna.designaItem.idJuzgado.toString();
+    }
+    if (this.actuacionDesigna.designaItem.idPretension) {
+      this.datos.selectores[1].value = this.actuacionDesigna.designaItem.idPretension.toString();
+    }
     if (this.actuacionDesigna.designaItem.idProcedimiento != null) {
       this.datos.selectores[3].value = this.actuacionDesigna.designaItem.idProcedimiento.toString();
     }
@@ -602,13 +618,14 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
       params.idAcreditacion = this.datos.selectores.find(el => el.id == 'acreditacion').value;
       params.idPrision = this.datos.selectores.find(el => el.id == 'prision').value;
       params.idPersonaColegiado = this.idPersonaColegiado;
-      if(params.idJuzgado != undefined && params.idJuzgado != null ){
+
+      if (params.idJuzgado != undefined && params.idJuzgado != null && params.idJuzgado !== '') {
         params.nombreJuzgado = this.datos.selectores[0].opciones.find(el => el.value == params.idJuzgado).label;
       }
-      if(params.idPretension != undefined && params.idPretension != null ){
+      if (params.idPretension != undefined && params.idPretension != null && params.idPretension !== '') {
         params.nombreProcedimiento = this.datos.selectores[1].opciones.find(el => el.value == params.idPretension).label;
       }
-      if(params.idProcedimiento != undefined && params.idProcedimiento != null ){
+      if (params.idProcedimiento != undefined && params.idProcedimiento != null && params.idProcedimiento !== '') {
         params.nombreModulo = this.datos.selectores[3].opciones.find(el => el.value == params.idProcedimiento).label;
       }
 
@@ -665,15 +682,17 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
       params.idPrision = this.datos.selectores.find(el => el.id == 'prision').value;
       params.idPersonaColegiado = this.idPersonaColegiado;
       params.numeroAsunto = this.actuacionDesigna.actuacion.numeroAsunto;
-      if(params.idJuzgado != undefined && params.idJuzgado != null ){
+
+      if (params.idJuzgado != undefined && params.idJuzgado != null && params.idJuzgado !== '') {
         params.nombreJuzgado = this.datos.selectores[0].opciones.find(el => el.value == params.idJuzgado).label;
       }
-      if(params.idPretension != undefined && params.idPretension != null ){
+      if (params.idPretension != undefined && params.idPretension != null && params.idPretension !== '') {
         params.nombreProcedimiento = this.datos.selectores[1].opciones.find(el => el.value == params.idPretension).label;
       }
-      if(params.idProcedimiento != undefined && params.idProcedimiento != null ){
+      if (params.idProcedimiento != undefined && params.idProcedimiento != null && params.idProcedimiento !== '') {
         params.nombreModulo = this.datos.selectores[3].opciones.find(el => el.value == params.idProcedimiento).label;
       }
+
       this.sigaServices.post("actuaciones_designacion_editar", params).subscribe(
         data => {
           let resp = JSON.parse(data.body);
@@ -710,11 +729,6 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     let juzgado = this.datos.selectores.find(el => el.id == 'juzgado');
     let modulo = this.datos.selectores.find(el => el.id == 'modulo');
     let acreditacion = this.datos.selectores.find(el => el.id == 'acreditacion');
-
-    if (!this.validarNig(this.datos.inputNig.value) || (this.datos.inputNig.obligatorio && this.datos.inputNig.value.trim().length == 0)) {
-      this.showMsg('error', this.translateService.instant('general.message.incorrect'), 'Formato del campo NIG inválido');
-      error = true;
-    }
 
     if (!error && !this.validarNProcedimiento(this.datos.inputNumPro.value) || (this.datos.inputNumPro.obligatorio && this.datos.inputNumPro.value.trim().length == 0)) {
       this.showMsg('error', this.translateService.instant('general.message.incorrect'), 'Formato del campo Nº Procedimiento inválido');
@@ -764,35 +778,6 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
       this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
 
     }
-  }
-
-  validarNig(nig) {
-    //Esto es para la validacion de CADECA
-
-    let response;
-
-    if (this.institucionActual == "2008" || this.institucionActual == "2015" || this.institucionActual == "2029" || this.institucionActual == "2033" || this.institucionActual == "2036" ||
-      this.institucionActual == "2043" || this.institucionActual == "2006" || this.institucionActual == "2021" || this.institucionActual == "2035" || this.institucionActual == "2046" || this.institucionActual == "2066") {
-      if (nig != '' && nig != null) {
-        var objRegExp = /^[0-9]{7}[S,C,P,O,I,V,M,6,8,1,2,3,4]{1}(19|20)\d{2}[0-9]{7}$/;
-        var ret = objRegExp.test(nig);
-        response = ret;
-      }
-      else
-        response = true;
-    } else {
-      if (nig != '' && nig != null && nig.length == 19) {
-        var objRegExp = /^([a-zA-Z0-9]{19})?$/;
-        var ret = objRegExp.test(nig);
-        response = ret;
-      } else {
-        response = true;
-      }
-    }
-
-
-    return response;
-
   }
 
   validarNProcedimiento(nProcedimiento) {
@@ -1036,7 +1021,11 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     this.sigaServices.postPaginado("parametros_search", "?numPagina=1", parametro).subscribe(
       data => {
         let resp: ParametroItem[] = JSON.parse(data.body).parametrosItems;
-        this.parametroConfigCombos = resp.find(el => el.parametro == "CONFIGURAR_COMBO_DESIGNA" && (el.idInstitucion == '0' || el.idInstitucion == el.idinstitucionActual));
+        resp.forEach(element => {
+          if (element.parametro == "CONFIGURAR_COMBO_DESIGNA" && (element.idInstitucion == element.idinstitucionActual || element.idInstitucion == '0')) {
+            this.parametroConfigCombos = element;
+          }
+        });
       },
       err => {
         console.log(err);
