@@ -11,6 +11,8 @@ import { ParametroRequestDto } from '../../../../../../../../models/ParametroReq
 import { SigaStorageService } from '../../../../../../../../siga-storage.service';
 import { UsuarioLogado } from '../ficha-actuacion.component';
 import { DesignaItem } from '../../../../../../../../models/sjcs/DesignaItem';
+import { procesos_oficio } from '../../../../../../../../permisos/procesos_oficio';
+import { Router } from '@angular/router';
 
 export interface ComboItemAcreditacion {
   label: string;
@@ -38,7 +40,6 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
   @Input() isAnulada: boolean;
   @Input() usuarioLogado: UsuarioLogado;
   @Input() isColegiado: boolean;
-  @Input() modoLectura: boolean;
 
   @Output() buscarActEvent = new EventEmitter<string>();
 
@@ -46,6 +47,8 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
 
   msgs: Message[] = [];
   resaltadoDatos: boolean = false;
+
+  modoLectura: boolean;
 
   datos = {
     inputs1: [
@@ -156,11 +159,33 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     private sigaServices: SigaServices,
     private datePipe: DatePipe,
     private translateService: TranslateService,
-    private sigaStorageService: SigaStorageService) { }
+    private sigaStorageService: SigaStorageService,
+    private router: Router) { }
 
   ngOnInit() {
-    this.getParametro();
-    this.designaItem = JSON.parse(sessionStorage.getItem("designaItemLink"));
+
+    this.commonsService.checkAcceso(procesos_oficio.designaTarjetaActuacionesDatosGenerales)
+      .then(respuesta => {
+        let permisoEscritura = respuesta;
+
+        if (permisoEscritura == undefined) {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
+
+        if (!permisoEscritura) {
+          this.modoLectura = true;
+        }
+
+        this.getParametro();
+        this.designaItem = JSON.parse(sessionStorage.getItem("designaItemLink"));
+
+      })
+      .catch(err => console.log(err));
   }
 
   cargaInicial() {

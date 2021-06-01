@@ -26,32 +26,38 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
   @Input() actuacionDesigna: Actuacion;
   @Input() isColegiado;
   @Input() usuarioLogado: UsuarioLogado;
-  @Input() modoLectura: boolean;
+  modoLectura: boolean;
   disableAll: boolean = false;
   fechaActuacion: Date;
 
   estado: string = '';
   fechaJusti: any;
   observaciones: string = '';
-  permisoEscritura: boolean;
 
-  constructor(private sigaServices: SigaServices, private translateService: TranslateService, private commonsService: CommonsService, private router: Router, private datePipe: DatePipe
-    , private persistenceService: PersistenceService) { }
+  constructor(private sigaServices: SigaServices,
+    private translateService: TranslateService,
+    private commonsService: CommonsService,
+    private router: Router,
+    private datePipe: DatePipe,
+    private persistenceService: PersistenceService) { }
 
   ngOnInit() {
 
-    this.commonsService.checkAcceso(procesos_oficio.designasActuaciones)
+    this.commonsService.checkAcceso(procesos_oficio.designaTarjetaActuacionesJustificacion)
       .then(respuesta => {
-        this.permisoEscritura = respuesta;
-        this.persistenceService.setPermisos(this.permisoEscritura);
+        let permisoEscritura = respuesta;
 
-        if (this.permisoEscritura == undefined) {
+        if (permisoEscritura == undefined) {
           sessionStorage.setItem("codError", "403");
           sessionStorage.setItem(
             "descError",
             this.translateService.instant("generico.error.permiso.denegado")
           );
           this.router.navigate(["/errorAcceso"]);
+        }
+
+        if (!permisoEscritura) {
+          this.modoLectura = true;
         }
 
         this.cargaInicial();

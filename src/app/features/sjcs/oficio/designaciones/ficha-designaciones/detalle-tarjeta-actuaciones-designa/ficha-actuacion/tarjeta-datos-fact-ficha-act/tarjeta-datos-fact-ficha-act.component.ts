@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output, EventEmitter, OnDestroy, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { Message } from 'primeng/components/common/api';
 import { SigaServices } from '../../../../../../../../_services/siga.service';
 import { CommonsService } from '../../../../../../../../_services/commons.service';
@@ -6,10 +6,8 @@ import { Actuacion } from '../../detalle-tarjeta-actuaciones-designa.component';
 import { DesignaItem } from '../../../../../../../../models/sjcs/DesignaItem';
 import { TranslateService } from '../../../../../../../../commons/translate/translation.service';
 import { procesos_oficio } from '../../../../../../../../permisos/procesos_oficio';
-import { PersistenceService } from '../../../../../../../../_services/persistence.service';
 import { Router } from '@angular/router';
 import { SigaStorageService } from '../../../../../../../../siga-storage.service';
-import { ColegiadoItem } from '../../../../../../../../models/ColegiadoItem';
 
 @Component({
   selector: 'app-tarjeta-datos-fact-ficha-act',
@@ -26,12 +24,11 @@ export class TarjetaDatosFactFichaActComponent implements OnInit, OnDestroy {
     };
 
   msgs: Message[] = [];
-  permisoEscritura: boolean;
   isLetrado: boolean;
   usuarioLogado: any;
   @Input() isAnulada: boolean;
   @Input() actuacionDesigna: Actuacion;
-  @Input() modoLectura: boolean;
+  modoLectura: boolean;
 
   @Output() changeDataEvent = new EventEmitter<any>();
   progressSpinner: boolean = false;
@@ -40,19 +37,16 @@ export class TarjetaDatosFactFichaActComponent implements OnInit, OnDestroy {
   constructor(private sigaServices: SigaServices,
     private commonsService: CommonsService,
     private translateService: TranslateService,
-    private persistenceService: PersistenceService,
     private router: Router,
     private localStorageService: SigaStorageService) { }
 
   ngOnInit() {
-    this.getComboPartidaPresupuestaria();
 
     this.commonsService.checkAcceso(procesos_oficio.designaTarjetaActuacionesFacturacion)
       .then(respuesta => {
-        this.permisoEscritura = respuesta;
-        this.persistenceService.setPermisos(this.permisoEscritura);
+        let permisoEscritura = respuesta;
 
-        if (this.permisoEscritura == undefined) {
+        if (permisoEscritura == undefined) {
           sessionStorage.setItem("codError", "403");
           sessionStorage.setItem(
             "descError",
@@ -61,11 +55,15 @@ export class TarjetaDatosFactFichaActComponent implements OnInit, OnDestroy {
           this.router.navigate(["/errorAcceso"]);
         }
 
+        if (!permisoEscritura) {
+          this.modoLectura = true;
+        }
+
+        this.getComboPartidaPresupuestaria();
+        this.isLetrado = this.localStorageService.isLetrado;
+
       }
       ).catch(error => console.error(error));
-
-
-    this.isLetrado = this.localStorageService.isLetrado;
   }
 
   compararSelector() {
