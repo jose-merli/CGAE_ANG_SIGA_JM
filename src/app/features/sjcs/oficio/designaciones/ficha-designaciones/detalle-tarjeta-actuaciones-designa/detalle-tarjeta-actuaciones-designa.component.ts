@@ -108,10 +108,11 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
           this.modoLectura = true;
         }
 
+        this.isLetrado = this.localStorageService.isLetrado;
+
       })
       .catch(err => console.log(err));
 
-    this.isLetrado = this.localStorageService.isLetrado;
   }
 
   toogleHistory(value: boolean) {

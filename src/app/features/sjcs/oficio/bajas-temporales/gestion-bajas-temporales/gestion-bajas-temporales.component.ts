@@ -462,7 +462,7 @@ export class GestionBajasTemporalesComponent implements OnInit {
       cell5.type = 'datePicker';
       cell5.value = '';
       cell6.type = 'datePickerFin';
-      cell6.value = [];
+      cell6.value = ['',''];
       cell7.type = 'text';
       cell7.value = myFormattedDate;
       cell8.type = 'text';
@@ -472,6 +472,7 @@ export class GestionBajasTemporalesComponent implements OnInit {
       cell10.type = 'invisible';
       cell10.value = true;
       row.cells = [cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8, cell9, cell10];
+      row.id = 0;
       this.rowGroups.unshift(row);
       this.rowGroupsAux = this.rowGroups;
       this.totalRegistros = this.rowGroups.length;
