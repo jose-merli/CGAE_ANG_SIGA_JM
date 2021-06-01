@@ -5,6 +5,8 @@ import { RouterModule, Routes } from "../../../../../node_modules/@angular/route
 import { GestionGuardiaComponent } from "./busqueda-guardias/buscador-guardia/gestion-guardia/gestion-guardia.component";
 import { SaltosCompensacionesGuardiaComponent } from "./saltos-compensaciones-guardia/saltos-compensaciones-guardia/saltos-compensaciones-guardia.component";
 import { FichaProgramacionComponent } from "./programacionCalendarios/ficha-programacion/ficha-programacion.component";
+import { AsistenciaExpresComponent } from "./guardias-asistencias/asistencia-expres/asistencia-expres.component";
+
 
 const routesGuardia: Routes = [
     {
@@ -28,6 +30,11 @@ const routesGuardia: Routes = [
         component: FichaProgramacionComponent,
         canActivate: [AuthGuard]
     },
+    {
+		path: 'guardiasAsistencias',
+		component: AsistenciaExpresComponent,
+		canActivate: [AuthGuard]
+	},
 ];
 
 @NgModule({

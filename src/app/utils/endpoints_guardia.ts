@@ -57,4 +57,12 @@ export let endpoints_guardia: any = {
     guardiaCalendario_buscar : "guardia/buscarCalendariosProgramados",
     guardiaCalendario_eliminar : "guardia/eliminarCalendariosProgramados",
     guardiaCalendario_guardar : "guardia/guardarCalendariosProgramados",
+
+    //Asistencia
+    busquedaGuardias_getTurnosByColegiadoFecha: "asistencia/turnosByColegiadoFecha",
+    busquedaGuardias_getTiposAsistencia: "asistencia/getTiposAsistencia",
+    busquedaGuardias_getLetradosGuardiaDia: "asistencia/getColegiadosGuardiaDia",
+    busquedaGuardias_buscarAsistencias: "asistencia/buscarAsistencias",
+    busquedaGuardias_getComisarias: "asistencia/getComisarias",
+    busquedaGuardias_getJuzgados: "asistencia/getJuzgados"
 }

@@ -413,6 +413,9 @@ import { LetradoEntranteComponent } from './features/sjcs/oficio/designaciones/f
 import { LetradoSalienteComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/ficha-cambio-letrado/letrado-saliente/letrado-saliente.component';
 import * as $ from 'jquery';
 import { SelectorModule } from './commons/selector/selector.module';
+import { AsistenciaExpresComponent } from './features/sjcs/guardia/guardias-asistencias/asistencia-expres/asistencia-expres.component';
+import { BuscadorAsistenciaExpresComponent } from './features/sjcs/guardia/guardias-asistencias/asistencia-expres/buscador-asistencia-expres/buscador-asistencia-expres.component';
+import { ResultadoAsistenciaExpresComponent } from './features/sjcs/guardia/guardias-asistencias/resultado-asistencia-expres/resultado-asistencia-expres.component';
 @NgModule({
 	declarations: [
 		TablaResultadoDesplegableComponent,
@@ -553,6 +556,9 @@ import { SelectorModule } from './commons/selector/selector.module';
 		DefinirListasGuardiasComponent,
 		GuardiasAsistenciasComponent,
 		GuardiasCentralitaComponent,
+		AsistenciaExpresComponent,
+		BuscadorAsistenciaExpresComponent,
+		ResultadoAsistenciaExpresComponent,
 		VolanteExpresComponent,
 		SOJComponent,
 		EJGComponent,

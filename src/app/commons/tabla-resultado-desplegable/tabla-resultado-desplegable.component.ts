@@ -112,18 +112,19 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       this.dataToUpdateArr = []; //limpiamos
       this.newActuacionesArr = []; //limpiamos
       this.rowValidadas = [];
-    sessionStorage.setItem("rowIdsToUpdate", JSON.stringify(this.rowIdsToUpdate));
-      this.getParams("JUSTIFICACION_EDITAR_DESIGNA_LETRADOS");
-      this.getParams("CONFIGURAR_COMBO_DESIGNA");
-          }
-    
-    //this.cargaJuzgados.emit(false);
-    if (this.comboModulos != undefined && this.comboModulos != []){
-      this.searchNuevo(this.comboModulos, []);
-    }
+      sessionStorage.setItem("rowIdsToUpdate", JSON.stringify(this.rowIdsToUpdate));
+        this.getParams("JUSTIFICACION_EDITAR_DESIGNA_LETRADOS");
+        this.getParams("CONFIGURAR_COMBO_DESIGNA");
+            
+      
+      //this.cargaJuzgados.emit(false);
+      if (this.comboModulos != undefined && this.comboModulos !== []){
+        this.searchNuevo(this.comboModulos, []);
+      }
 
-    if (this.comboModulos != undefined && this.comboModulos != [] && this.comboAcreditacion != undefined && this.comboAcreditacion != []){
-      this.searchNuevo(this.comboModulos, this.comboAcreditacion);
+      if (this.comboModulos != undefined && this.comboModulos !== [] && this.comboAcreditacion !== undefined && this.comboAcreditacion !== []){
+        this.searchNuevo(this.comboModulos, this.comboAcreditacion);
+      }
     }
     this.cabeceras.forEach(cab => {
       this.selectedHeader.push(cab);

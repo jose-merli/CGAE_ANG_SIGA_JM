@@ -110,7 +110,6 @@ import { ProgramacionCalendariosComponent } from './features/sjcs/guardia/progra
 import { GuardiasBajasTemporalesComponent } from './features/sjcs/guardia/guardias-bajas-temporales/guardias-bajas-temporales.component';
 import { GuardiasSaltosCompensacionesComponent } from './features/sjcs/guardia/guardias-saltos-compensaciones/guardias-saltos-compensaciones.component';
 import { DefinirListasGuardiasComponent } from './features/sjcs/guardia/definir-listas-guardias/definir-listas-guardias.component';
-import { GuardiasAsistenciasComponent } from './features/sjcs/guardia/guardias-asistencias/guardias-asistencias.component';
 import { GuardiasCentralitaComponent } from './features/sjcs/guardia/guardias-centralita/guardias-centralita.component';
 import { VolanteExpresComponent } from './features/sjcs/guardia/volante-expres/volante-expres.component';
 import { SOJComponent } from './features/sjcs/soj/soj.component';
@@ -235,6 +234,7 @@ import { BajasTemporalesComponent } from "./features/sjcs/oficio/bajas-temporale
 import { TurnosComponent } from "./features/sjcs/oficio/turnos/busqueda-turnos.component";
 import { BuscadorColegiadosComponent } from "./commons/buscador-colegiados/buscador-colegiados.component";
 import { BuscadorGuardiaIncompatibilidadesComponent } from "./features/sjcs/guardia/guardias-incompatibilidades/buscador-guardia-incompatibilidades/buscador-guardia-incompatibilidades.component";
+import { AsistenciaExpresComponent } from "./features/sjcs/guardia/guardias-asistencias/asistencia-expres/asistencia-expres.component";
 
 const appRoutes: Routes = [
 	{ path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
@@ -816,11 +816,6 @@ const appRoutes: Routes = [
 	{
 		path: 'definirListasGuardias',
 		component: DefinirListasGuardiasComponent,
-		canActivate: [AuthGuard]
-	},
-	{
-		path: 'guardiasAsistencias',
-		component: GuardiasAsistenciasComponent,
 		canActivate: [AuthGuard]
 	},
 	{

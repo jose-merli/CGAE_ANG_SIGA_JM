@@ -1,0 +1,51 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<app-migas-de-pan [rutas]="rutas"></app-migas-de-pan>
+<div class="card">
+    <div class="card-body">
+        <div>
+            <p-radioButton *ngFor="let radio of radios" [(ngModel)]='modoBusqueda' (click)="hideResponse()" class="mr-4"
+                name="modo" [value]="radio.value" [label]="radio.label"></p-radioButton>
+        </div>
+        <app-buscador-asistencia-expres [modoBusqueda]="modoBusqueda"></app-buscador-asistencia-expres>
+    </div>
+    <div class="card-footer">
+        <div class="text-right main-button">
+            <button pButton type="button"  icon="fa fa-eraser"  iconPos="left"
+                label="{{ 'general.boton.clear' | translate}}" (click)="hideResponse();clearForm();"
+                [disabled]="isDisabled()"></button>
+            <button type="submit" pButton icon="fa fa-search" iconPos="left"
+                label="{{'general.boton.search' | translate}}"
+                (click)="validateForm();checkSustitutoCheckBox()"
+                [disabled]="isDisabled()"></button>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="show">
+    <div class="card mt-3">
+        <div class="card-body p-0">
+            <app-resultado-asistencia-expres [rowGroups] = "rowGroups" [rowGroupsAux] = "rowGroupsAux"></app-resultado-asistencia-expres>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+</div>
+
+<p-dialog [(visible)]="showSustitutoDialog" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
+    <p-header>
+        <label>Confirmación</label>
+    </p-header>
+    <div class="row">
+        <div class="form-group col-lg-8 col-md-8">
+        {{mensajeSustitutoDialog}}
+        </div>
+    </div>
+    <p-footer>
+        <div class="text-right main-button ">
+        <button (click)="cancelar()" pButton type="button" icon="fa fa-close " iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
+        <button (click)="confirmarSustituto()" type="button" icon="fa fa-check" iconPos="left" label="{{'general.boton.submit' | translate}}" pButton></button>
+        </div>
+    </p-footer>
+</p-dialog>

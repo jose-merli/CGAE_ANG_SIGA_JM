@@ -95,20 +95,21 @@
                             <span class="w100 cell-value" *ngIf="cell.type == '5InputSelector'"
                                 [ngClass]="{'column-d-flex': changeDisplay() == true}">
                                 <input type="text" class="form-control " pInputText size="10"
-                                    [placeholder]="cell.value[0]">
+                                    [value]="cell.value[0]">
                                 <input type="text" class="form-control " pInputText size="10"
-                                    [placeholder]="cell.value[1]">
+                                    [value]="cell.value[1]">
                                 <input type="text" class="form-control " pInputText size="10"
-                                    [placeholder]="cell.value[2]">
+                                    [value]="cell.value[2]">
                                 <input type="text" class="form-control " pInputText size="10"
-                                    [placeholder]="cell.value[3]">
-                                <app-selector [textoVisible]="cell.value[4]" [i]="0" [selector]="cell.value">
-                                </app-selector>
+                                    [value]="cell.value[3]">
+                                <p-dropdown autoWidth="false" class="center" [(ngModel)]="cell.value[4]" [placeholder] = "'Sexo'"
+                                [options]="cell.combo" showClear="true" styleClass="widthAll" (onChange)="changeSelect(row, cell, rowGroup.id, row, rowGroup)"></p-dropdown>
                             </span>
                             <span class="w100 cell-value" *ngIf="cell.type == '2SelectorInput'"
                                 [ngClass]="{'column-d-flex': changeDisplay() == true}">
-                                <app-selector [i]="0" [selector]="cell.value"></app-selector>
-                                <input type="text" class="form-control" pInputText size="10" [placeholder]="cell.value">
+                                <p-dropdown autoWidth="false" class="center" [(ngModel)]="cell.value[0]" [placeholder] = "'Delitos'"
+                                    [options]="cell.combo" showClear="true" styleClass="widthAll" (onChange)="changeSelect(row, cell, rowGroup.id, row, rowGroup)"></p-dropdown>
+                                <input type="text" class="form-control" pInputText size="10" [value]="cell.value[1]">
                             </span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'input'">
                                <input type="text"
@@ -190,20 +191,21 @@
                             <span class="w100 cell-value" *ngIf="cell.type == '5InputSelector'"
                                 [ngClass]="{'column-d-flex': changeDisplay() == true}">
                                 <input type="text" class="form-control " pInputText size="10"
-                                    [placeholder]="cell.value[0]">
+                                    [value]="cell.value[0]">
                                 <input type="text" class="form-control " pInputText size="10"
-                                    [placeholder]="cell.value[1]">
+                                    [value]="cell.value[1]">
                                 <input type="text" class="form-control " pInputText size="10"
-                                    [placeholder]="cell.value[2]">
+                                    [value]="cell.value[2]">
                                 <input type="text" class="form-control " pInputText size="10"
-                                    [placeholder]="cell.value[3]">
-                                <app-selector [textoVisible]="cell.value[4]" [i]="0" [selector]="cell.value">
-                                </app-selector>
+                                    [value]="cell.value[3]">
+                                    <p-dropdown autoWidth="false" class="center" [(ngModel)]="cell.value" [placeholder] = "'Sexo'"
+                                    [options]="cell.combo" showClear="true" styleClass="widthAll" (onChange)="changeSelect(row, cell, rowGroup.id, row, rowGroup)"></p-dropdown>
                             </span>
                             <span class="w100 cell-value" *ngIf="cell.type == '2SelectorInput'"
                                 [ngClass]="{'column-d-flex': changeDisplay() == true}">
-                                <app-selector [i]="0" [selector]="cell.value"></app-selector>
-                                <input type="text" class="form-control" pInputText [placeholder]="cell.value">
+                                <p-dropdown autoWidth="false" class="center" [(ngModel)]="cell.value[0]" [placeholder] = "'Delitos'"
+                                    [options]="cell.combo" showClear="true" styleClass="widthAll" (onChange)="changeSelect(row, cell, rowGroup.id, row, rowGroup)"></p-dropdown>
+                                <input type="text" class="form-control" pInputText [value]="cell.value[1]">
                             </span>
                             <span class="w100 cell-value d-flex" *ngIf="cell.type == 'buttomSelect'">
                                 <div class="main-button" style="width: 40%;">

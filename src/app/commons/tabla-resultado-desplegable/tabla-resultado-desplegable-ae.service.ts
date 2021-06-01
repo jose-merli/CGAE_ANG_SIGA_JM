@@ -11,6 +11,12 @@ export class Row {
 export class Cell {
   type: string;
   value: string;
+  combo: Combo[];
+}
+
+export class Combo {
+  label: string;
+  value: string;
 }
 @Injectable()
 export class TablaResultadoDesplegableAEService {
@@ -117,9 +123,9 @@ export class TablaResultadoDesplegableAEService {
   };
   constructor() { }
 
-  public getTableData() {
+  public getTableData(resultModified) {
     let rowGroups: RowGroup[] = [];
-
+    this.result = resultModified;
     this.result.data.forEach((rowGroup, index) => {
       let rowGroupObject: RowGroup = new RowGroup();
       let rows: Row[] = [];
@@ -130,6 +136,9 @@ export class TablaResultadoDesplegableAEService {
           let cellObject: Cell = new Cell();
           cellObject.type = cell['type'];
           cellObject.value = cell['value'];
+          if(cell['combo'] != null && cell['combo'] != undefined){
+            cellObject.combo = cell['combo'];
+          }
           cells.push(cellObject);
         });
         rowObject.cells = cells;
