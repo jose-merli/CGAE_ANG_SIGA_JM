@@ -48,10 +48,12 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
 
   ngOnInit() {
     this.datos.forEach(element => {
-      if (element.sjcs.charAt(0) != 'A') {
+      /* if (element.sjcs.charAt(0) != 'A') {
         element.centrodetencion = 'Dictamen: ' + element.dictamen + ' Fecha Dictamen: ' + element.fechadictamen + ' Resolucion: ' + this.formatDate(element.resolucion) + ' Fecha Resolucion: ' + this.formatDate(element.fecharesolucion)
-      }
+      } */
+      element.fechaasunto = this.formatDate(element.fechaasunto);
     });
+
     this.getCols();
   }
 
@@ -70,12 +72,14 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
 
   getCols() {
     this.cols = [
-      { field: "sjcs", header: "justiciaGratuita.oficio.designas.interesados.identificador" },
-      { field: "anio", header: "justiciaGratuita.sjcs.designas.DatosIden.ano" },
+      { field: "sjcs", header: "justiciaGratuita.oficio.designas.interesados.identificador", width: '6%' },
+      { field: "fechaasunto", header: "dato.jgr.guardia.saltcomp.fecha", width: '6%' },
       { field: "descturno", header: "justiciaGratuita.justiciables.literal.turnoGuardia" },
       { field: "letrado", header: "justiciaGratuita.sjcs.designas.colegiado" },
       { field: "interesado", header: "justiciaGratuita.sjcs.designas.datosInteresados" },
-      { field: "centrodetencion", header: "justiciaGratuita.justiciables.literal.datosInteres" }
+      { field: "dilnigproc", header: "sjcs.oficio.designaciones.relaciones.numDiligNigNproc" },
+      { field: "resolucion", header: "justiciaGratuita.maestros.fundamentosResolucion.resolucion" }
+
     ];
 
     this.rowsPerPage = [
