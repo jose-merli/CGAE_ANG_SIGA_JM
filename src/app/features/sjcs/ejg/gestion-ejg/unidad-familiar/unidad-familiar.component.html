@@ -14,12 +14,14 @@
               }}</label>
           </div>
           <div class="d-flex justify-content-between default">
-            <label name>{{ "censo.fichaCliente.literal.identificacion" | translate }}: <span>{{body.nif}}</span></label>
-            <label name>{{ "gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate }}:
-              <span>{{body.apellidos}}</span></label>
-            <label name>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}:
-              <span>{{body.nombre}}</span></label>
-            <label name>{{ "justiciaGratuita.ejg.datosGenerales.EstadoEJG" | translate }}:
+            <label *ngIf="nExpedientes == 0">{{ "justiciaGratuita.ejg.datosGenerales.numero.Expedientes" | translate }}: <span>{{ "general.message.no.registros" | translate }}</span></label>
+            <label *ngIf="nExpedientes > 0">{{ "justiciaGratuita.ejg.datosGenerales.numero.Expedientes" | translate }}: <span>{{nExpedientes}}</span></label>
+            <label *ngIf="nExpedientes > 0" name>{{ "censo.fichaCliente.literal.identificacion" | translate }}: <span>{{solicitante.pjg_nif}}</span></label>
+            <label *ngIf="nExpedientes > 0" name>{{ "gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate }}:
+              <span>{{apellidosCabecera}}</span></label>
+            <label *ngIf="nExpedientes > 0" name>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}:
+              <span>{{solicitante.pjg_nombre}}</span></label>
+            <label *ngIf="nExpedientes > 0" name>{{ "justiciaGratuita.ejg.datosGenerales.EstadoEJG" | translate }}:
               <span>{{body.estadoEJG}}</span></label>
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('unidadFamiliar')"></i>
           </div>

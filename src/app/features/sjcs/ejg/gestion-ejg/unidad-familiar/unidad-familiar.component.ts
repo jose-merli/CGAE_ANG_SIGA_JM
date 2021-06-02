@@ -19,17 +19,20 @@ export class UnidadFamiliarComponent implements OnInit {
 
   [x : string]: any;
 
+  solicitante: UnidadFamiliarEJGItem = new UnidadFamiliarEJGItem(); 
+
   rowsPerPage: any = [];
   selectedDatos = [];
   buscadores = [];
 
   nuevo: boolean;
-  body: UnidadFamiliarEJGItem = new UnidadFamiliarEJGItem();
+  body: EJGItem = new EJGItem();
   selectAll;
   cols;
   msgs;
   datosFamiliares;
   datosFamiliaresActivos;
+  apellidosCabecera: string = "";
   
   selectionMode;
   editMode;
@@ -138,15 +141,21 @@ export class UnidadFamiliarComponent implements OnInit {
           } else if (element.estadoDes == undefined && element.fechaSolicitud == undefined) {
             element.expedienteEconom = "  ";
           }
+          
           if(this.datosFamiliares != undefined){
+            //Se buscan los familiares activos
             this.datosFamiliaresActivos = this.datosFamiliares.filter(
               (dato) => /*dato.fechaBaja != undefined && */ dato.fechaBaja == null);
-              
-            }
+            this.solicitante = this.datosFamiliaresActivos.filter(
+                (dato) => dato.uf_solicitante == "1")[0];
+            this.nExpedientes = this.datosFamiliaresActivos.length;
+          }
+          if(this.solicitante==undefined) this.solicitante = new UnidadFamiliarEJGItem();
+          if(this.solicitante.pjg_nombrecompleto != undefined) this.apellidosCabecera = this.solicitante.pjg_nombrecompleto.split(",")[0];
+          else this.apellidosCabecera = "";
         });
       },
       err => {
-        console.log(err);
       }
     );
   }
@@ -300,8 +309,9 @@ export class UnidadFamiliarComponent implements OnInit {
       message: mess,
       icon: icon,
       accept: () => {
-        this.delete()
         this.cdDelete.hide();
+        this.delete()
+        
       },
       reject: () => {
         this.msgs = [
@@ -340,7 +350,6 @@ export class UnidadFamiliarComponent implements OnInit {
 
       },
       err => {
-        console.log(err);
         this.progressSpinner=false;
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }
@@ -352,7 +361,7 @@ export class UnidadFamiliarComponent implements OnInit {
   }
 
   searchHistorical() {
-    this.datosFamiliares.historico = !this.datosFamiliares.historico;
+    //this.datosFamiliares.historico = !this.datosFamiliares.historico;
     this.historico = !this.historico;
     if (this.historico) {
       this.editMode = false;

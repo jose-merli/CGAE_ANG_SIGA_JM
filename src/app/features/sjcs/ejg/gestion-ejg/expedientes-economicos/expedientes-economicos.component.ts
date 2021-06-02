@@ -1,8 +1,10 @@
-import { Component, OnInit, Input,Output,SimpleChanges,EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, SimpleChanges, EventEmitter } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { CommonsService } from '../../../../../_services/commons.service';
+import { saveAs } from "file-saver/FileSaver";
+import { UnidadFamiliarEJGItem } from '../../../../../models/sjcs/UnidadFamiliarEJGItem';
 
 @Component({
   selector: 'app-expedientes-economicos',
@@ -29,22 +31,21 @@ export class ExpedientesEconomicosComponent implements OnInit {
   buscadores = [];
   numSelected = 0;
   selectMultiple: boolean = false;
-  seleccion: boolean = false;
   item: EJGItem;
   nExpedientes;
   progressSpinner: boolean = false;
 
-  datosFamiliares : any;
+  datosFamiliares: any;
 
   selectDatos: EJGItem = new EJGItem();
   resaltadoDatosGenerales: boolean = false;
   resaltadoDatos: boolean = false;
-  
+
   fichaPosible = {
     key: "expedientesEconomicos",
     activa: false
   }
-  
+
   activacionTarjeta: boolean = false;
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
@@ -53,17 +54,17 @@ export class ExpedientesEconomicosComponent implements OnInit {
   constructor(
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private commonsService: CommonsService ) { }
+    private commonsService: CommonsService) { }
 
   ngOnInit() {
-      if (this.persistenceService.getDatos()) {
-        this.nuevo = false;
-        this.modoEdicion = true;
-        this.body = this.persistenceService.getDatos();
-        this.item = this.body;
-        this.getExpedientesEconomicos(this.item);
-        this.getCols();
-      }else {
+    if (this.persistenceService.getDatos()) {
+      this.nuevo = false;
+      this.modoEdicion = true;
+      this.body = this.persistenceService.getDatos();
+      this.item = this.body;
+      this.getExpedientesEconomicos(this.item);
+      this.getCols();
+    } else {
       this.nuevo = true;
       this.modoEdicion = false;
       this.body = new EJGItem();
@@ -96,8 +97,28 @@ export class ExpedientesEconomicosComponent implements OnInit {
       this.fichaPosible.activa = !this.fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
+    //Comprobamos si hay un solicitante y rellenamos la columna de justiciable
+    this.getColJusticiable();
+
     this.opened.emit(this.openFicha);
     this.idOpened.emit(key);
+  }
+
+  getColJusticiable() {
+    let justiciable = "";
+    let datosFamiliares = this.persistenceService.getBodyAux();
+    //Comprobamos si hay un solicitante
+    if (datosFamiliares != undefined) {
+      //Se buscan los familiares activos
+      let datosFamiliaresActivos = datosFamiliares.filter(
+        (dato) => dato.fechaBaja == null);
+      let solicitante: UnidadFamiliarEJGItem[] = datosFamiliaresActivos.filter(
+        (dato) => dato.uf_solicitante == "1")[0];
+      if (solicitante[0] != undefined) justiciable = solicitante[0].pjg_nombrecompleto;
+    }
+    this.expedientesEcon.forEach(element => {
+      element.justiciable = justiciable;
+    });
   }
 
   getExpedientesEconomicos(selected) {
@@ -105,35 +126,25 @@ export class ExpedientesEconomicosComponent implements OnInit {
     this.sigaServices.post("gestionejg_getExpedientesEconomicos", selected).subscribe(
       n => {
         this.expedientesEcon = JSON.parse(n.body).expEconItems;
-        if(n.body)
+        /*if(n.body) 
+        //Se asigna a la columna justiciable el solicitante actual del ejg
           this.expedientesEcon.forEach(element => {
             element.justiciable = JSON.parse(JSON.stringify(selected.nombreApeSolicitante));
-          });
+          }); */
+          
         this.nExpedientes = this.expedientesEcon.length;
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
       }
     );
   }
+
   setItalic(dato) {
     if (dato.fechabaja == null) return false;
     else return true;
   }
-  openTab(evento) {
-    if (this.persistenceService.getPermisos() != undefined) {
-      this.permisoEscritura = this.persistenceService.getPermisos();
-    }
-    if (!this.selectAll && !this.selectMultiple) {
-      // this.progressSpinner = true;
-      // this.datosEJG();
-    } else {
-      if (evento.data.fechabaja == undefined && this.historico) {
-        this.selectedDatos.pop();
-      }
-    }
-  }
+
   getCols() {
     this.cols = [
       { field: "justiciable", header: "menu.justiciaGratuita.justiciable", width: "30%" },
@@ -162,6 +173,7 @@ export class ExpedientesEconomicosComponent implements OnInit {
       }
     ];
   }
+
   isSelectMultiple() {
     this.selectAll = false;
     if (this.permisoEscritura) {
@@ -176,11 +188,13 @@ export class ExpedientesEconomicosComponent implements OnInit {
       }
     }
   }
+
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
     this.table.reset();
   }
+
   onChangeSelectAll() {
     if (this.permisoEscritura) {
       if (!this.historico) {
@@ -208,9 +222,9 @@ export class ExpedientesEconomicosComponent implements OnInit {
       }
     }
   }
+
   actualizaSeleccionados(selectedDatos) {
     this.numSelected = selectedDatos.length;
-    this.seleccion = false;
   }
 
   showMessage(severity, summary, msg) {
@@ -225,7 +239,8 @@ export class ExpedientesEconomicosComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
-  checkPermisosDownloadEEJ(){
+
+  checkPermisosDownloadEEJ() {
     let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
@@ -233,16 +248,28 @@ export class ExpedientesEconomicosComponent implements OnInit {
       this.downloadEEJ();
     }
   }
-  downloadEEJ(){
-    this.progressSpinner=true;
+  downloadEEJ() {
+    this.progressSpinner = true;
 
-    this.sigaServices.post("gestionejg_descargarExpedientesJG", this.selectDatos).subscribe(
-      n => {
-        this.progressSpinner=false;
+    let ejg: any[] = [];
+
+    ejg.push(this.body);
+
+    this.sigaServices.postDownloadFiles("gestionejg_descargarExpedientesJG", ejg).subscribe(
+      data => {
+
+        let blob = null;
+
+        let mime = "application/pdf";
+        blob = new Blob([data], { type: mime });
+        saveAs(blob, "eejg_2005_2018-01200_45837302G_20210525_131611.pdf");
+
       },
       err => {
-        console.log(err);
-        this.progressSpinner=false;
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
       }
     );
   }
