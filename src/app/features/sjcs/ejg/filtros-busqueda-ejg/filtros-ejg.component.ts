@@ -112,10 +112,13 @@ export class FiltrosEjgComponent implements OnInit {
 
     if(sessionStorage.getItem("tarjeta")){
       this.showTramitador=true;
+      sessionStorage.removeItem("tarjeta");
     }
 
     if(sessionStorage.getItem("buscadorColegiados")){
       let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
+      sessionStorage.removeItem("buscadorColegiados");
+
       this.usuarioBusquedaExpress.nombreAp=busquedaColegiado.nombre+" "+busquedaColegiado.apellidos;
       this.usuarioBusquedaExpress.numColegiado=busquedaColegiado.nColegiado;
     }
