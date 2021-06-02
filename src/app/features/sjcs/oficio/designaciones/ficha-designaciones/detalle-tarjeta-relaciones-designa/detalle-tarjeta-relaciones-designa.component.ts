@@ -48,9 +48,11 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
 
   ngOnInit() {
     this.datos.forEach(element => {
-      /* if (element.sjcs.charAt(0) != 'A') {
-        element.centrodetencion = 'Dictamen: ' + element.dictamen + ' Fecha Dictamen: ' + element.fechadictamen + ' Resolucion: ' + this.formatDate(element.resolucion) + ' Fecha Resolucion: ' + this.formatDate(element.fecharesolucion)
-      } */
+      if (element.sjcs.charAt(0) == 'E') {
+        if (element.impugnacion != null) {
+          element.resolucion = element.impugnacion;
+        }
+      }
       element.fechaasunto = this.formatDate(element.fechaasunto);
     });
 

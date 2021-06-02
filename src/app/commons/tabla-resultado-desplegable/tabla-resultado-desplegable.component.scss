@@ -183,6 +183,10 @@
   margin-top: 0.5rem !important;
 }
 
+::ng-deep .ui-dropdown-items {
+  width: 200px;
+}
+
 .vertical-center {
   display: flex;
   justify-content: center;
@@ -556,4 +560,19 @@ color: green;
 .setPosition{
   position: relative;
     top: 65px;
+}
+.wrapName2{
+    word-wrap: break-word;
+    max-width: 125px;
+}
+.enlace {
+  color: #0000EE !important;
+  text-decoration: underline;
+  cursor: pointer !important;
+}
+
+.hoverToClick :hover {
+  background-color: rgb(141, 175, 220) !important;
+  border: 1px solid #004375;
+  cursor: pointer;
 }
