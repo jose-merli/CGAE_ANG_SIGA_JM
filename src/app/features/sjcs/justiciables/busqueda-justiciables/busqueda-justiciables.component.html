@@ -8,7 +8,7 @@
 </div>
 
 <div class="busqueda-container">
-  <app-filtro-justiciables (isOpen)="isOpenReceive($event)" [permisoEscritura]="permisoEscritura" [modoRepresentante]="modoRepresentante"></app-filtro-justiciables>
+  <app-filtro-justiciables (isOpen)="isOpenReceive($event)" [permisoEscritura]="permisoEscritura" [modoRepresentante]="modoRepresentante" [nuevaUniFamiliar]="nuevaUniFamiliar"></app-filtro-justiciables>
   <app-tabla-justiciables *ngIf="buscar" [datos]="datos" [nuevoInteresado]="nuevoInteresado" [nuevoContrario]="nuevoContrario" [nuevaUniFamiliar]="nuevaUniFamiliar"
   (searchHistoricalSend)="search($event)" [modoRepresentante]="modoRepresentante"></app-tabla-justiciables>
 </div>

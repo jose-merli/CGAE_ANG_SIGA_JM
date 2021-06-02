@@ -99,9 +99,12 @@ export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
       this.nuevoContrario=true;
     }
 
-    if(sessionStorage.getItem("origin")=="uniFamiliar"){
+    if(sessionStorage.getItem("origin")=="UnidadFamiliar"){
       this.nuevaUniFamiliar=true;
+      sessionStorage.removeItem("origin");
     }
+
+    
 
     this.persistenceService.setFichasPosibles(this.fichasPosibles);
 

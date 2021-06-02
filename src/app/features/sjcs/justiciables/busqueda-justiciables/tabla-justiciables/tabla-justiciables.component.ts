@@ -25,6 +25,7 @@ export class TablaJusticiablesComponent implements OnInit {
   selectedDatos = [];
   numSelected = 0;
   historico: boolean = false;
+  nuevoRepresentante: boolean = false;
 
   initDatos;
   progressSpinner: boolean = false;
@@ -41,6 +42,8 @@ export class TablaJusticiablesComponent implements OnInit {
   @Input() nuevaUniFamiliar;
   //searchServiciosTransaccion: boolean = false;
 
+  
+
   @ViewChild("table") tabla: DataTable;
 
   @Output() searchHistoricalSend = new EventEmitter<boolean>();
@@ -55,6 +58,10 @@ export class TablaJusticiablesComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+
+    if(sessionStorage.getItem("origin")=="newRepresentante"){
+      this.nuevoRepresentante=true;
+    }
 
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos();
@@ -96,6 +103,13 @@ export class TablaJusticiablesComponent implements OnInit {
       else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.uniFamiliar.existente"))
     
       //this.location.back();
+    }
+    else if(this.nuevoRepresentante){
+      this.persistenceService.clearBody();
+      this.persistenceService.setBody(evento);
+      //sessionStorage.setItem("newRepresentante",JSON.stringify(evento));
+      //this.router.navigate(["/gestionJusticiables"]);
+      this.location.back();
     }
     else{
       let filtros: JusticiableBusquedaItem = new JusticiableBusquedaItem();
@@ -152,7 +166,8 @@ export class TablaJusticiablesComponent implements OnInit {
         sessionStorage.removeItem('origin');
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
-        this.router.navigate(["/fichaDesignaciones"]);
+        //this.router.navigate(["/fichaDesignaciones"]);
+        this.location.back();
     },
     err => {
       if (err != undefined && JSON.parse(err.error).error.description != "") {
@@ -194,17 +209,22 @@ export class TablaJusticiablesComponent implements OnInit {
   insertUniFamiliar(justiciable){
     this.progressSpinner = true;
 
-    let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJG"));
+    let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
+
 
     let request = [ejg.idInstitucion,  justiciable.idpersona, ejg.annio, ejg.tipoEJG, ejg.numero]
     this.sigaServices.post("gestionejg_insertFamiliarEJG", request).subscribe(
       data => {
         sessionStorage.removeItem('origin');
-        sessionStorage.removeItem('EJG');
+        //Para que se abra la tarjeta de unidad familiar y se haga scroll a ella
         sessionStorage.setItem('tarjeta','unidadFamiliar');
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
-        this.router.navigate(["/gestionEjg"]);
+        //this.router.navigate(["/gestionEjg"]);
+        //Para prevenir que se vaya a una ficha en blanco despues de que se haya creado un justiciable
+        this.persistenceService.setDatos(JSON.parse(sessionStorage.getItem("EJGItem")));
+        sessionStorage.removeItem("EJGItem");
+        this.location.back();
     },
     err => {
       if (err != undefined && JSON.parse(err.error).error != null) {
@@ -248,7 +268,8 @@ export class TablaJusticiablesComponent implements OnInit {
         sessionStorage.removeItem('origin');
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
-        this.router.navigate(["/fichaDesignaciones"]);
+        //this.router.navigate(["/fichaDesignaciones"]);
+        this.location.back();
     },
     err => {
       if (err != undefined && JSON.parse(err.error).error.description != "") {

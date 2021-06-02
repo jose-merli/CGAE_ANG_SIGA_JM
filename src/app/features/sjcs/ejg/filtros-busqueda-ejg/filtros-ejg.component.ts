@@ -664,7 +664,12 @@ export class FiltrosEjgComponent implements OnInit {
     }
   }
   isNuevo() {
+    if(sessionStorage.getItem("EJGItem")){
+      sessionStorage.removeItem("EJGItem");
+    }
+
     this.persistenceService.clearDatos();
+    sessionStorage.setItem("Nuevo", "true");
     this.router.navigate(["/gestionEjg"]);
   }
   clear() {

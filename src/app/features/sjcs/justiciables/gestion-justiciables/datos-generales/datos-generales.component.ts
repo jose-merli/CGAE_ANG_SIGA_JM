@@ -16,6 +16,7 @@ import { procesos_maestros } from '../../../../../permisos/procesos_maestros';
 import { procesos_justiciables } from '../../../../../permisos/procesos_justiciables';
 import { Checkbox, ConfirmDialog } from '../../../../../../../node_modules/primeng/primeng';
 import { Dialog } from 'primeng/primeng';
+import { UnidadFamiliarEJGItem } from '../../../../../models/sjcs/UnidadFamiliarEJGItem';
 
 @Component({
   selector: 'app-datos-generales',
@@ -91,6 +92,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
   @Input() showTarjeta;
   @Input() fromJusticiable;
+  @Input() fromUniFamiliar:boolean = false;
   @Input() body: JusticiableItem;
   @Input() modoRepresentante;
   @Input() checkedViewRepresentante;
@@ -306,6 +308,9 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       }
     }
   }
+
+  
+
 
   validateCampos(url) {
 

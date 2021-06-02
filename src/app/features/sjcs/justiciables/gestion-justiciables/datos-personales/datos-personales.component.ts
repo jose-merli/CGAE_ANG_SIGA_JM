@@ -16,6 +16,7 @@ import { procesos_maestros } from '../../../../../permisos/procesos_maestros';
 import { procesos_justiciables } from '../../../../../permisos/procesos_justiciables';
 import { Checkbox, ConfirmDialog } from '../../../../../../../node_modules/primeng/primeng';
 import { Dialog } from 'primeng/primeng';
+import { UnidadFamiliarEJGItem } from '../../../../../models/sjcs/UnidadFamiliarEJGItem';
 
 @Component({
   selector: 'app-datos-personales',
@@ -29,7 +30,6 @@ export class DatosPersonalesComponent implements OnInit {
   progressSpinner: boolean = false;
 
   edadAdulta: number = 18;
-  modoEdicion: boolean = false;
   msgs;
   comboTipoIdentificacion;
   comboSexo;
@@ -90,10 +90,13 @@ export class DatosPersonalesComponent implements OnInit {
   @Output() searchJusticiableOverwritten = new EventEmitter<any>();
 
   @Input() showTarjeta;
-  @Input() fromJusticiable;
+  @Input() fromJusticiable: boolean = false;
+  @Input() fromUniFamiliar: boolean = false;
   @Input() body: JusticiableItem;
   @Input() modoRepresentante;
   @Input() checkedViewRepresentante;
+
+  modoEdicion: boolean = false;
 
   confirmationSave: boolean = false;
   confirmationUpdate: boolean = false;
@@ -137,6 +140,7 @@ export class DatosPersonalesComponent implements OnInit {
           if (this.body.idpersona == undefined) {
             this.modoEdicion = false;
             this.body.fechaalta = new Date();
+            
           } else {
             this.modoEdicion = true;
 
@@ -179,9 +183,6 @@ export class DatosPersonalesComponent implements OnInit {
       this.body = new JusticiableItem();
       this.progressSpinner = false;
     }
-
-    //Obligatorio pais españa
-    this.body.idpaisdir1 = "191";
 
     if (this.body.idpersona == undefined) {
       this.modoEdicion = false;
@@ -584,6 +585,7 @@ export class DatosPersonalesComponent implements OnInit {
       }
     ];
   }
+
 
   getDatosContacto() {
     this.datos = [];

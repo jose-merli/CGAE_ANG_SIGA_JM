@@ -46,45 +46,6 @@ export class UnidadFamiliarComponent implements OnInit {
   resaltadoDatosGenerales: boolean = false;
   activacionTarjeta: boolean = false;
 
-  fichasPosibles = [
-    {
-      origen: "justiciables",
-      activa: false
-    },
-    {
-      key: "generales",
-      activa: true
-    },
-    {
-      key: "personales",
-      activa: true
-    },
-    {
-      key: "solicitud",
-      activa: true
-    },
-    {
-      key: "representante",
-      activa: true
-    },
-    {
-      key: "asuntos",
-      activa: true
-    },
-    {
-      key: "abogado",
-      activa: false
-    },
-    {
-      key: "procurador",
-      activa: false
-    },
-    {
-      key: "unidadFamiliar",
-      activa: true
-    }
-  ];
-
   @Input() modoEdicion;
   @Input() tarjetaUnidadFamiliar: string;
   @Input() permisoEscritura;
@@ -107,6 +68,7 @@ export class UnidadFamiliarComponent implements OnInit {
     private sigaServices: SigaServices ) { }
 
   ngOnInit() {
+    
     this.getCols();
     if (this.persistenceService.getDatos()) {
       this.nuevo = false;
@@ -220,9 +182,12 @@ export class UnidadFamiliarComponent implements OnInit {
     //this.persistenceService.setFichasPosibles(fichasPosibles_unidadFamiliar);
     //this.router.navigate(["/gestionJusticiables"], { queryParams: { fr: "u" } });
 
-    this.persistenceService.setFichasPosibles(this.fichasPosibles);
+    //this.persistenceService.setFichasPosibles(this.fichasPosibles);
+    
     sessionStorage.setItem("origin","UnidadFamiliar");
     sessionStorage.setItem("Familiar", JSON.stringify(evento));
+    //Se utiliza para rellenar los campos de las tarjetas de datos generales y de datos personales
+    //this.persistenceService.setBody(evento);
     this.router.navigate(["/gestionJusticiables"]);
 
   }
@@ -370,7 +335,9 @@ export class UnidadFamiliarComponent implements OnInit {
       n => {
         this.progressSpinner=false;
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.historico =false;
         this.consultaUnidadFamiliar(this.body);
+
       },
       err => {
         console.log(err);
@@ -481,9 +448,9 @@ export class UnidadFamiliarComponent implements OnInit {
   }
 
   asociar() {
-    sessionStorage.setItem("origin","uniFamiliar");
+    sessionStorage.setItem("origin","UnidadFamiliar");
     sessionStorage.setItem("datosFamiliares",JSON.stringify(this.datosFamiliares));
-    sessionStorage.setItem("EJG",JSON.stringify(this.body));
+    sessionStorage.setItem("EJGItem",JSON.stringify(this.persistenceService.getDatos()));
     //this.searchContrarios.emit(true);
     this.router.navigate(["/justiciables"]);
   }

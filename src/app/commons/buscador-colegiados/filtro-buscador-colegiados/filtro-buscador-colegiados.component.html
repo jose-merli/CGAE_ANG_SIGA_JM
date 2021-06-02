@@ -27,7 +27,7 @@
           <div class="form-group-interlineado col-lg-1 col-md-1">
             <label>{{ "censo.busquedaClientesAvanzada.literal.colegio" | translate }}</label>
             <p-dropdown class="select-form" [(ngModel)]="filtro.idInstitucion"
-              placeholder="{{'general.boton.seleccionar' | translate}}" [disabled]="institucionActual!=2000 && noArt27"
+              placeholder="{{'general.boton.seleccionar' | translate}}" [disabled]="institucionActual!=2000"
               [options]="comboColegios" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" (onChange)="getComboTurno()">
             </p-dropdown>
           </div>

@@ -18,7 +18,7 @@
       <!-- newJusticiable: Funcion para indicar a las demás tarjetas que se ha creado un nuevo justiciable -->
       <!-- searchJusticiableOverwritten: Funcion para indicar que se ha sobrescrito un justiciable al añadir en modo nuevo un nif registrado y pulsar que se quiere sobreescribir -->
 
-      <app-datos-generales *ngSwitchCase="'generales'" [showTarjeta]="ficha.activa" [body]="body" [fromJusticiable]="fromJusticiable"
+      <app-datos-generales *ngSwitchCase="'generales'" [showTarjeta]="ficha.activa" [body]="body" [fromJusticiable]="fromJusticiable" [fromUniFamiliar]="fromUniFamiliar"
         [modoRepresentante]="modoRepresentante" [checkedViewRepresentante]="checkedViewRepresentante" (notifySearchJusticiableByNif)="searchJusticiableByNif($event)"
         (newJusticiable)="newJusticiable($event)" (searchJusticiableOverwritten)="searchJusticiableOverwritten($event)"></app-datos-generales>
 
@@ -27,7 +27,7 @@
       <!-- createJusticiableByUpdateSolicitud: Funcion para indicar a las demás tarjetas que se ha creado un nuevo justiciable al cambiar los datos de solicitud
       y no querer actualizar el justiciable propio-->
 
-      <app-datos-personales *ngSwitchCase="'personales'" [showTarjeta]="ficha.activa" [body]="body" (notifySearchJusticiableByNif)="searchJusticiableByNif($event)"
+      <app-datos-personales *ngSwitchCase="'personales'" [showTarjeta]="ficha.activa" [body]="body" [fromUniFamiliar]="fromUniFamiliar" (notifySearchJusticiableByNif)="searchJusticiableByNif($event)"
         (newJusticiable)="newJusticiable($event)" (searchJusticiableOverwritten)="searchJusticiableOverwritten($event)"></app-datos-personales>
 
       <!-- showTarjeta: variable indica si se muestra o no la tarjeta -->
@@ -71,7 +71,8 @@
 
        <app-datos-procurador-contrario *ngSwitchCase="'procurador'" (contrario)="contrario($event)" [showTarjetaPermiso]="ficha.activa" [body]="body" [modoEdicion]="modoEdicion" [fromContrario]="fromContrario"></app-datos-procurador-contrario> 
     
-       <app-datos-unidad-familiar *ngSwitchCase="'unidadFamiliar'"  [showTarjetaPermiso]="ficha.activa" [body]="body" [modoEdicion]="modoEdicion" [fromUniFamiliar]="fromUniFamiliar"></app-datos-unidad-familiar> 
+       <app-datos-unidad-familiar *ngSwitchCase="'unidadFamiliar'"  [showTarjetaPermiso]="ficha.activa" [solicitante]="solicitante" 
+       [body]="body" [modoEdicion]="modoEdicion" [fromUniFamiliar]="fromUniFamiliar"></app-datos-unidad-familiar> 
     
       </div>
   </div>
