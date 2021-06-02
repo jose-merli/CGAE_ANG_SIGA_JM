@@ -204,11 +204,13 @@ jsonToRow(datos){
       nombreApell += ", " + element.nombre;
     }
     if(element.eliminado == 1){
+      let descripcionTipoBaja = this.getDescripcionTipoBaja(element.tipo);
       let obj = [
         { type: 'text', value: element.ncolegiado},
         { type: 'text', value: nombreApell},
+        { type: 'text', value: descripcionTipoBaja},
         { type: 'text', value: element.descripcion},
-        { type: 'text', value: element.fechadesdeSinHora},
+        { type: 'text', value: this.formatDateSinHora(element.fechadesdeSinHora)},
         { type: 'text', value: element.fechahastaSinHora},
         { type: 'text', value: element.fechaaltaSinHora},
         { type: 'text', value: element.validado},
@@ -594,5 +596,16 @@ if(listaPrueba.length != 0){
           this.progressSpinner = false;
         }
       );
+  }
+
+  getDescripcionTipoBaja(tipo){
+
+    let descripcion;
+    this.comboTipo.forEach((comboItem)=>{
+      if(comboItem.value == tipo){
+        descripcion = comboItem.label;
+      }
+    });
+    return descripcion;
   }
 }

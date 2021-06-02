@@ -288,7 +288,7 @@ export class FiltroDesignacionesComponent implements OnInit {
     this.getComboEstados();
   }
   checkAccesoFichaActuacion() {
-    this.commonsService.checkAcceso(procesos_oficio.designaTarjetaActuacionesFacturacion)
+    this.commonsService.checkAcceso(procesos_oficio.designasActuaciones)
       .then(respuesta => {
         this.permisoEscritura = respuesta;
         this.permisosFichaAct.emit(this.permisoEscritura);
@@ -318,12 +318,12 @@ export class FiltroDesignacionesComponent implements OnInit {
         const derechoAcceso = permisosArray[0].derechoacceso;
 
         this.esColegiado = true;
-        if (derechoAcceso == 3) { //es colegio
+        if (derechoAcceso == 3) { //es colegio y escritura
           this.esColegiado = false;
-          //this.isColeg.emit(false);
-        } else if (derechoAcceso == 2) {//es colegiado
+          this.isColeg.emit(false);
+        } else if (derechoAcceso == 2) {//es colegiado y solo lectura
           this.esColegiado = true;
-          //this.isColeg.emit(true);
+          this.isColeg.emit(true);
         } else {
           sessionStorage.setItem("codError", "403");
           sessionStorage.setItem(
@@ -803,8 +803,8 @@ export class FiltroDesignacionesComponent implements OnInit {
     this.checkRestricciones = false;
     if (!this.esColegiado) {
       this.usuarioBusquedaExpress = {
-        numColegiado: '',
-        nombreAp: ''
+        numColegiado: "",
+        nombreAp: ""
       };
     }
 

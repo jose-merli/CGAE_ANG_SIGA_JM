@@ -32,23 +32,26 @@
                     <span class="collapse" (click)="iconClickChange2(iconrightEl, icondownEl)" #icondownEl><i
                             class="fas fa-chevron-down"></i></span>
                 </span>
-                <div (click)="selectRow(rowSelected, rowGroup.id, i)" class="table-row-wrapper hoverBlue"
+                <div (click)="selectRow(rowSelected, rowGroup.id, i); rowGroupArrowClick(rowGroupEl, rowGroup.id)" class="table-row-wrapper hoverBlue"
                     [ngClass]="{'hoverBlue2': isSelected(rowGroup.id), 'fixedBlue': seleccionarTodo}" 
                     #rowSelected>
 
-                    <div *ngIf="!posicionOcultar(-1) && pantalla != 'JE'" class="table-row-header p-2 selectedRowClass" [id]="rowGroup.id">
+                    <div *ngIf="!posicionOcultar(-1) && pantalla != 'JE'" class="table-row-header p-2 selectedRowClass"  [ngClass]="{'hoverToClick': rowGroup.rows.length > 1}" [id]="rowGroup.id">
                         {{rowGroup.id}}   
                     </div>
-                    <div *ngIf="!posicionOcultar(-1) && pantalla == 'JE'" class="table-row-header p-2 selectedRowClass" [id]="rowGroup.id">
+                    <!--<div *ngIf="!posicionOcultar(-1) && pantalla == 'JE'" class="table-row-header p-2 selectedRowClass" [id]="rowGroup.id">
                         <span [ngClass]="{'color-red': colorByStateDesigmacion(rowGroup.estadoDesignacion) == 'red', 'color-blue': colorByStateDesigmacion(rowGroup.estadoDesignacion) == 'blue', 'color-green': colorByStateDesigmacion(rowGroup.estadoDesignacion) == 'green', 'color-black': colorByStateDesigmacion(rowGroup.estadoDesignacion) == 'black'}">D{{rowGroup.id}} </span>
+                    </div>-->
+                    <div *ngIf="!posicionOcultar(-1) && pantalla == 'JE'" class="table-row-header p-2 selectedRowClass" [id]="rowGroup.id">
+                        <span>D{{rowGroup.id}} </span>
                     </div>
 
                     <div *ngIf="!posicionOcultar(-1) && pantalla == 'JE'" class="table-row-header p-2 selectedRowClass" [id]="rowGroup.id2">
                         <span [ngClass]="{'color-red': colorByStateExpediente(rowGroup.estadoEx) == 'red', 'color-blue': colorByStateExpediente(rowGroup.estadoEx) == 'blue', 'color-black': colorByStateExpediente(rowGroup.estadoEx) == 'black'}">  <span *ngIf="rowGroup.id2 != ''" >E</span>{{rowGroup.id2}}</span>
                     </div>
 
-                    <div *ngIf="!posicionOcultar(-1) && pantalla == 'JE'" class="table-row-header p-2 selectedRowClass" [id]="rowGroup.id3">
-                        {{rowGroup.id3}}   
+                    <div *ngIf="!posicionOcultar(-1) && pantalla == 'JE'" class="table-row-header p-2 selectedRowClass wrapName" [id]="rowGroup.id3">
+                        <span class="wrapName2">{{rowGroup.id3}}</span>  
                     </div>
 
                     <div *ngFor="let cell of rowGroup.rows[0]['cells'] | slice:0:9; let z = index"
@@ -65,10 +68,11 @@
                                 </p-checkbox> 
                                 <div *ngIf="cell.value[1] == 'Nuevo'"><button (click)="toDoButton(cell.value[1], rowGroup.id, rowGroup, rowGroupEl)" class="buttomStyle" pButton type="button"
                                     iconPos="left" [label]="cell.value[1]"></button></div>
-                                <div *ngIf="cell.value[1] != 'Nuevo'">{{cell.value[1]}}</div>
+                                <div *ngIf="cell.value[1] != 'Nuevo' && permisosFichaAct"><a (click)="linkFichaActIfPermis(row, rowGroup)" class="enlace">{{cell.value[1]}}</a></div>
+                                <div *ngIf="cell.value[1] != 'Nuevo' && !permisosFichaAct">{{cell.value[1]}}</div>
                             </span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'checkbox'">
-                                <p-checkbox (onChange)="checkBoxChange($event, rowGroup.id, cell, row, rowGroup, true, z)" [(ngModel)]="cell.value" binary="true" >
+                                <p-checkbox (onChange)="checkBoxChange2($event, rowGroup.id, cell, row, rowGroup, true, z)" [(ngModel)]="cell.value" binary="true" >
                                 </p-checkbox> 
                             </span>
 
@@ -94,7 +98,7 @@
                                 </p-dropdown>
                             </span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'number'">{{cell.value}}</span>
-                            <span class="w100 cell-value" *ngIf="cell.type == 'link'"><a>{{cell.value}}</a></span>
+                            <span class="w100 cell-value enlace" *ngIf="cell.type == 'link'"><a class="enlace">{{cell.value}}</a></span>
                             <span class="w100 cell-value" *ngIf="cell.type == '5InputSelector'"
                                 [ngClass]="{'column-d-flex': changeDisplay() == true}">
                                 <input type="text" class="form-control " pInputText size="10"
@@ -156,7 +160,7 @@
                         [ngClass]="{'collapse':posicionOcultar(z + 2), 'borders-child': isPar(i)}" #cellSelected>
                         <div *ngIf="cell.type != 'invisible'" [ngStyle]="setMyStyles(cell.size)" class="cell-wrapper selectedRowClass w-100">
                             <span class="column-title">{{cabeceras[z+1].name}}</span>
-                            <span class="w100 cell-value selectWrap" *ngIf="cell.type == 'text'" (click)="linkFichaActIfPermis(row, rowGroup)">{{cell.value}}</span>
+                            <span class="w100 cell-value selectWrap" *ngIf="cell.type == 'text'">{{cell.value}}</span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'buttom'"><button (click)="toDoButton(cell.value, rowGroup.id, rowGroup, rowGroupEl)" class="buttomStyle" pButton type="button"
                                     iconPos="left" [label]="cell.value"></button></span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'checkboxPermisos'">
@@ -164,10 +168,11 @@
                                 </p-checkbox> 
                                 <div *ngIf="cell.value[1] == 'Nuevo'"><button (click)="toDoButton(cell.value[1], rowGroup.id, rowGroup, rowGroupEl)" class="buttomStyle" pButton type="button"
                                     iconPos="left" [label]="cell.value[1]"></button></div>
-                                <div *ngIf="cell.value[1] != 'Nuevo'">{{cell.value[1]}}</div>
+                                    <div *ngIf="cell.value[1] != 'Nuevo' && permisosFichaAct"><a (click)="linkFichaActIfPermis(row, rowGroup)" class="enlace">{{cell.value[1]}}</a></div>
+                                    <div *ngIf="cell.value[1] != 'Nuevo' && !permisosFichaAct">{{cell.value[1]}}</div>
                             </span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'checkbox'">
-                                <p-checkbox (onChange)="checkBoxChange($event, rowGroup.id, cell, row, rowGroup, false, i)" [(ngModel)]="cell.value" binary="true" >
+                                <p-checkbox (onChange)="checkBoxChange2($event, rowGroup.id, cell, row, rowGroup, false, i)" [(ngModel)]="cell.value" binary="true" >
                                 </p-checkbox> 
                             </span>
                             
@@ -192,7 +197,7 @@
                                 </p-dropdown>
                             </span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'number'">{{cell.value}}</span>
-                            <span class="w100 cell-value" *ngIf="cell.type == 'link'"><a>{{cell.value}}</a></span>
+                            <span class="w100 cell-value enlace" *ngIf="cell.type == 'link'"><a (click)="linkFichaActIfPermis(row, rowGroup)">{{cell.value}}</a></span>
                             <span class="w100 cell-value" *ngIf="cell.type == '5InputSelector'"
                                 [ngClass]="{'column-d-flex': changeDisplay() == true}">
                                 <input type="text" class="form-control " pInputText size="10"
@@ -232,7 +237,7 @@
                                         [options]="cell.combo" maxSelectedLabels="10"  styleClass="widthAll"
                                         [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeMulti($event, row['id'], cell, z)" >
                                         </p-multiSelect>-->
-                                        <p-dropdown autoWidth="false" class="inputWidth" [ngModelOptions]="cell.combo"
+                                        <p-dropdown autoWidth="false" class="inputWidth" [ngModelOptions]="cell.combo"  [autoWidth]="false"
                                 [(ngModel)]='cell.value' filterBy="label,labelSinTilde" [filter] = "true" [options]="cell.combo" showClear="true" (onChange)="onChangeMulti($event, row['id'], cell, z, false, i)" class="select-form">
                                 </p-dropdown>
                                     </span>
