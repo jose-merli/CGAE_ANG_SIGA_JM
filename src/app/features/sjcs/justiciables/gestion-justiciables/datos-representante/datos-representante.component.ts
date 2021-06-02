@@ -91,6 +91,11 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 				this.validateShowEnlaceepresentante();
 			})
 			.catch((error) => console.error(error));
+
+		/* if (sessionStorage.getItem("newRepresentante")) {
+			let data = JSON.parse(sessionStorage.getItem("newRepresentante"));
+			this.generalBody = data;
+		} */
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
@@ -254,6 +259,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 			);
 		} else {
 			this.persistenceService.clearBody();
+			sessionStorage.setItem("origin", "newRepresentante");
 			this.router.navigate(['/justiciables'], { queryParams: { rp: '1' } });
 		}
 	}
@@ -295,7 +301,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 	}
 
 	searchRepresentanteByIdPersona() {
-		if(this.generalBody.idpersona!=undefined){
+		if (this.generalBody.idpersona != undefined) {
 			if (this.generalBody.idpersona.trim() != undefined && this.generalBody.idpersona.trim() != '') {
 				this.progressSpinner = true;
 				let bodyBusqueda = new JusticiableBusquedaItem();
@@ -451,9 +457,9 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 	callServiceAssociate() {
 		this.progressSpinner = true;
 
-		if(this.fromInteresado){
-			let designa=JSON.parse(sessionStorage.getItem("designaItemLink"));
-			let request = [ designa.idInstitucion,  sessionStorage.getItem("personaDesigna"), designa.ano,  designa.idTurno, designa.numero, this.generalBody.apellidos.concat(",",this.generalBody.nombre)]
+		if (this.fromInteresado) {
+			let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
+			let request = [designa.idInstitucion, sessionStorage.getItem("personaDesigna"), designa.ano, designa.idTurno, designa.numero, this.generalBody.apellidos.concat(",", this.generalBody.nombre)]
 			this.sigaServices.post('designaciones_updateRepresentanteInteresado', request).subscribe(
 				(n) => {
 					this.progressSpinner = false;
@@ -470,9 +476,9 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 				}
 			);
 		}
-		else if(this.fromContrario){
-			let designa=JSON.parse(sessionStorage.getItem("designaItemLink"));
-			let request = [ designa.idInstitucion, sessionStorage.getItem("personaDesigna"), designa.ano,  designa.idTurno, designa.numero, this.generalBody.apellidos.concat(",",this.generalBody.nombre)]
+		else if (this.fromContrario) {
+			let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
+			let request = [designa.idInstitucion, sessionStorage.getItem("personaDesigna"), designa.ano, designa.idTurno, designa.numero, this.generalBody.apellidos.concat(",", this.generalBody.nombre)]
 			this.sigaServices.post('designaciones_updateRepresentanteContrario', request).subscribe(
 				(n) => {
 					this.progressSpinner = false;
@@ -488,8 +494,8 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 					this.translateService.instant('general.message.error.realiza.accion');
 				}
 			);
-		} 
-		else{
+		}
+		else {
 			this.sigaServices.post('gestionJusticiables_associateRepresentante', this.body).subscribe(
 				(n) => {
 					this.progressSpinner = false;
@@ -506,7 +512,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 					this.translateService.instant('general.message.error.realiza.accion');
 				}
 			);
-			}
+		}
 	}
 
 	checkPermisosDisassociate() {
@@ -549,9 +555,9 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 	callServiceDisassociate() {
 		this.progressSpinner = true;
 
-		if(this.fromInteresado){
-			let designa=JSON.parse(sessionStorage.getItem("designaItemLink"));
-			let request = [ designa.idInstitucion,  sessionStorage.getItem("personaDesigna"), designa.ano,  designa.idTurno, designa.numero, ""]
+		if (this.fromInteresado) {
+			let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
+			let request = [designa.idInstitucion, sessionStorage.getItem("personaDesigna"), designa.ano, designa.idTurno, designa.numero, ""]
 			this.sigaServices.post('designaciones_updateRepresentanteInteresado', request).subscribe(
 				(n) => {
 					this.progressSpinner = false;
@@ -569,9 +575,9 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 			);
 			this.generalBody = null;
 		}
-		else if(this.fromContrario){
-			let designa=JSON.parse(sessionStorage.getItem("designaItemLink"));
-			let request = [ designa.idInstitucion,  sessionStorage.getItem("personaDesigna"), designa.ano,  designa.idTurno, designa.numero, ""]
+		else if (this.fromContrario) {
+			let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
+			let request = [designa.idInstitucion, sessionStorage.getItem("personaDesigna"), designa.ano, designa.idTurno, designa.numero, ""]
 			this.sigaServices.post('designaciones_updateRepresentanteContrario', request).subscribe(
 				(n) => {
 					this.progressSpinner = false;
@@ -588,8 +594,8 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 				}
 			);
 			this.generalBody = null;
-		} 
-		else{
+		}
+		else {
 			this.sigaServices.post('gestionJusticiables_disassociateRepresentante', this.body).subscribe(
 				(n) => {
 					this.showMessage(

@@ -30,6 +30,7 @@ export class FiltroJusticiablesComponent implements OnInit {
   @Input() permisoEscritura;
   @Output() isOpen = new EventEmitter<boolean>();
   @Input() modoRepresentante;
+  @Input() nuevaUniFamiliar;
 
   comboProvincias = [];
   comboPoblacion = [];
@@ -77,6 +78,10 @@ export class FiltroJusticiablesComponent implements OnInit {
   }
 
   backTo() {
+    if(sessionStorage.getItem("EJGItem") && this.nuevaUniFamiliar){
+       this.persistenceService.setDatos(JSON.parse(sessionStorage.getItem("EJGItem")));
+       sessionStorage.removeItem("EJGItem");
+    }
     this.location.back();
   }
 
@@ -186,6 +191,10 @@ export class FiltroJusticiablesComponent implements OnInit {
     } else {
       this.persistenceService.clearDatos();
       this.persistenceService.clearBody();
+      if(this.nuevaUniFamiliar){
+         sessionStorage.setItem("origin","UnidadFamiliar");
+         sessionStorage.setItem("Nuevo","true");
+      }
       this.router.navigate(["/gestionJusticiables"]);
     }
   }

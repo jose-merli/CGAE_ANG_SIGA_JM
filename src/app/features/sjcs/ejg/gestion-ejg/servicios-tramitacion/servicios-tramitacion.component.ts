@@ -164,8 +164,8 @@ export class ServiciosTramitacionComponent implements OnInit {
 
     this.getComboGuardia();
 
-    //Se desbloquea el desplegable de guardia si hay un turno seleccionado al inciar la tarjeta
-    //if (this.body.idTurno != undefined && this.body.idTurno != null) this.isDisabledGuardia = false;
+    //Se desbloquea el desplegable de guardia si hay un turno seleccionado al inciar la tarjeta.
+    if (this.body.idTurno != undefined && this.body.idTurno != null) this.isDisabledGuardia = false;
 
     //Comprobamos si el colegiado fue seleccionado por art 27 o no. ES uno de los métodos más lentos del inicio
     if (this.body.apellidosYNombre != undefined && this.body.apellidosYNombre != null  && this.art27 == true) this.checkArt27();

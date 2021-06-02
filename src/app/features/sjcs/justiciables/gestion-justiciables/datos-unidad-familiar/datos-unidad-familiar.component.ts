@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '../../../../../commons/translate';
 import { JusticiableItem } from '../../../../../models/sjcs/JusticiableItem';
@@ -21,9 +21,8 @@ export class DatosUnidadFamiliarComponent implements OnInit {
   solicitanteBox: boolean = false;
   incapacitadoBox: boolean = false;
   cirExcepBox: boolean = false;
-  selectedGrupoL: String = null;
-  selectedParentesco: String = null;
-  selectedTipoIng: String = null;
+  
+  disableSol: boolean = false;
 
   comboGrupoLaboral: any = [];
   comboParentesco: any = [];
@@ -43,12 +42,14 @@ export class DatosUnidadFamiliarComponent implements OnInit {
   @Input() checkedViewRepresentante;
   @Input() navigateToJusticiable: boolean = false;
   @Input() fromUniFamiliar: boolean = false;
+  @Input() solicitante: JusticiableItem = null;
 
 
   constructor(private router: Router,
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private commonsService: CommonsService, private translateService: TranslateService) { }
+    private commonsService: CommonsService, private translateService: TranslateService,
+    ) { }
 
   ngOnInit() {
     this.progressSpinner = true;
@@ -66,7 +67,19 @@ export class DatosUnidadFamiliarComponent implements OnInit {
     //Familiar que se ha seleccionado en el EJG
     if (sessionStorage.getItem("Familiar")) {
       let data = JSON.parse(sessionStorage.getItem("Familiar"));
-      sessionStorage.removeItem("Familiar");
+      
+      this.generalBody = data;
+      //Se realiza la asignacion de esta manera para evitar que la variable cambie los valores
+      //igual que la variable generalBody.
+      this.initialBody = JSON.parse(JSON.stringify(data));
+
+      //Le asignamos valores a las cajas (checks).
+      this.fillBoxes();
+    }
+    else {
+
+      let data = new UnidadFamiliarEJGItem();
+      
       this.generalBody = data;
       //Se realiza la asignacion de esta manera para evitar que la variable cambie los valores
       //igual que la variable generalBody.
@@ -75,14 +88,30 @@ export class DatosUnidadFamiliarComponent implements OnInit {
       //Le asignamos valores a las cajas (checks).
       this.fillBoxes();
 
-      this.permisoEscritura = true;
-      //this.contrario.emit(true);
     }
+
+    if(this.solicitante != null && this.solicitante.idpersona != this.generalBody.uf_idPersona)this.disableSol = true;
     this.progressSpinner = false;
+
+  }
+
+  ngOnChanges(simpleChanges: SimpleChanges){
+    if(this.solicitante != null && this.solicitante.idpersona != this.generalBody.uf_idPersona)this.disableSol = true;
   }
 
   onHideTarjeta() {
     this.showTarjeta = !this.showTarjeta;
+  }
+
+  checkSave(){
+    //Parentesco hija
+    if(this.generalBody.idParentesco==3) {
+      //Si tiene fecha determinada, se continua con el guardado.
+      if(this.body.fechanacimiento != null) this.save();
+      else this.showMessage("error", this.translateService.instant('general.message.incorrect'),
+      this.translateService.instant('justiciaGratuita.justiciables.unidadFamiliar.errorHijo'));
+    }
+    else this.save();
   }
 
   save() {
@@ -105,7 +134,11 @@ export class DatosUnidadFamiliarComponent implements OnInit {
 
         if (JSON.parse(n.body).error.code == 200) {
           this.showMessage("success", this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
-          this.initialBody = this.generalBody;
+          //Se actualiza el familiar guardado en la sessionstorage para que presente los valores correctos si se realiza una busqueda despues de guardar cambios.
+          sessionStorage.setItem("Familiar", JSON.stringify(this.generalBody));
+          //Se realiza la asignacion de esta manera para evitar que la variable cambie los valores
+          //igual que la variable generalBody.
+          this.initialBody = JSON.parse(JSON.stringify(this.generalBody));
           //Se comprueba si se debe cambiar el valor de parentesco de la cabecera 
           if (this.generalBody.idParentesco != null && this.generalBody.idParentesco != undefined) {
             this.comboParentesco.forEach(element => {
@@ -170,6 +203,7 @@ export class DatosUnidadFamiliarComponent implements OnInit {
 
   }
 
+
   fillBoxes() {
     if (this.generalBody.uf_solicitante == "1") {
       this.solicitanteCabecera = "SI";
@@ -221,7 +255,8 @@ export class DatosUnidadFamiliarComponent implements OnInit {
         }
         //Si no tiene idParentesco, se le asigna el valor por defecto "No informado". 
         //Actualmente, el combo no devuelve ningún elemento con esa etiqueta.
-        //else this.generalBody.idParentesco = 
+        //Se escoge la etiqueta añadida de "No informado" con valor -1.
+        //else this.generalBody.idParentesco = -1;
       },
       err => {
         this.progressSpinner = false;

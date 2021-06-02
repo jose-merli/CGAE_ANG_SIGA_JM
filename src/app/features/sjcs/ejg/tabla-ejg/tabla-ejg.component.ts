@@ -151,6 +151,11 @@ export class TablaEjgComponent implements OnInit {
       n => {
         this.datosFamiliares = JSON.parse(n.body).unidadFamiliarEJGItems;
         this.persistenceService.setBodyAux(this.datosFamiliares);
+
+        if(sessionStorage.getItem("EJGItem")){
+          sessionStorage.removeItem("EJGItem");
+        }
+
         this.router.navigate(['/gestionEjg']);
         this.progressSpinner = false;
         this.commonServices.scrollTop();
