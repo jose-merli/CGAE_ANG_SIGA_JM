@@ -657,6 +657,7 @@ export class FichaDesignacionesComponent implements OnInit {
     }
   }
   backTo() {
+    sessionStorage.setItem("volver", 'true');
     this.location.back();
   }
 
