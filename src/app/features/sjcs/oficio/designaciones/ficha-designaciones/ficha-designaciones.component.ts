@@ -1243,55 +1243,21 @@ export class FichaDesignacionesComponent implements OnInit {
           }
           this.progressSpinner = false;
 
-          if (this.relaciones.length == 1) {
-            console.log("RELACIONES", this.relaciones[0]);
-            if (this.relaciones[0].sjcs.charAt(0) == 'E') {
-              this.listaTarjetas[7].campos = [{
-                "key": this.translateService.instant('justiciaGratuita.oficio.justificacionExpres.numeroEJG'),
-                "value": this.relaciones[0].sjcs
-              },
-              {
-                "key": this.translateService.instant('justiciaGratuita.ejg.datosGenerales.Dictamen'),
-                "value": this.relaciones[0].dictamen
-              },
-              {
-                "key": this.translateService.instant('dato.jgr.guardia.saltcomp.fecha') + ' ' + this.translateService.instant('justiciaGratuita.ejg.datosGenerales.Dictamen'),
-                "value": this.formatDate(this.relaciones[0].fechadictamen)
-              },
-              {
-                "key": this.translateService.instant('justiciaGratuita.maestros.fundamentosResolucion.resolucion'),
-                "value": this.relaciones[0].resolucion
-              },
-              {
-                "key": this.translateService.instant('dato.jgr.guardia.saltcomp.fecha') + ' ' + this.translateService.instant('justiciaGratuita.maestros.fundamentosResolucion.resolucion'),
-                "value": this.formatDate(this.relaciones[0].fecharesolucion)
-              }
-              ]
-            } else if (this.relaciones[0].sjcs.charAt(0) == 'A') {
-              this.listaTarjetas[7].campos = [{
-                "key": this.translateService.instant('justiciaGratuita.oficio.justificacionExpres.numeroEJG'),
-                "value": this.relaciones[0].sjcs
-              },
-              {
-                "key": this.translateService.instant('dato.jgr.guardia.inscripciones.guardia'),
-                "value": this.relaciones[0].descturno
-              },
-              {
-                "key": this.translateService.instant('justiciaGratuita.sjcs.designas.colegiado'),
-                "value": this.relaciones[0].letrado
-              }
-              ]
+          if (this.relaciones.length > 0) {
+            this.listaTarjetas[7].campos = [{
+              "key": this.translateService.instant('justiciaGratuita.oficio.justificacionExpres.numeroEJG'),
+              "value": this.relaciones[0].sjcs
+            },
+            {
+              "key": this.translateService.instant('justiciaGratuita.oficio.designas.relaciones.total'),
+              "value": this.relaciones.length
             }
+            ]
+
           } else if (this.relaciones.length == 0 || this.relaciones == undefined || this.relaciones == null) {
             this.listaTarjetas[7].campos = [{
               "key": null,
               "value": this.translateService.instant('justiciaGratuita.oficio.designas.relaciones.vacio')
-            }
-            ]
-          } else {
-            this.listaTarjetas[7].campos = [{
-              "key": this.translateService.instant('justiciaGratuita.oficio.designas.relaciones.total'),
-              "value": this.relaciones.length
             }
             ]
           }
