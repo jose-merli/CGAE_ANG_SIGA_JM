@@ -34,6 +34,7 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
   @Input() permiteTurno: boolean;
 
   @Output() buscarEvent = new EventEmitter<boolean>();
+  @Output() buscarDocumentosEvent = new EventEmitter<boolean>();
 
   cols: Col[] = [
     {
@@ -89,19 +90,29 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
     ) { }
 
   ngOnInit() {
-    
-    this.commonsService.checkAcceso(procesos_oficio.designasActuaciones)
-    .then(respuesta => {
-      let permisoEscritura = respuesta;
-      
-      if (permisoEscritura == undefined || !permisoEscritura) {
-        this.modoLectura = true;
-      }
 
-    })
-    .catch(err => console.log(err));
-    
-    this.isLetrado = this.localStorageService.isLetrado;
+    this.commonsService.checkAcceso(procesos_oficio.designasActuaciones)
+      .then(respuesta => {
+        let permisoEscritura = respuesta;
+
+        if (permisoEscritura == undefined) {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
+
+        if (!permisoEscritura) {
+          this.modoLectura = true;
+        }
+
+        this.isLetrado = this.localStorageService.isLetrado;
+
+      })
+      .catch(err => console.log(err));
+
   }
 
   toogleHistory(value: boolean) {
@@ -121,7 +132,7 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
 
   onRowSelected(event) {
 
-    if ((this.historico && !event.data.anulada) || !event.data.permiteModificacion) {
+    if ((this.historico && !event.data.anulada)) {
       this.actuacionesSeleccionadas.pop();
     }
 
@@ -239,15 +250,12 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
 
       this.actuacionesSeleccionadas.forEach(el => {
 
-        if (this.isLetrado && (el.validada || !this.permiteTurno)) {
+        if (el.facturado || (this.isLetrado && el.validada && (!this.permiteTurno || !el.permiteModificacion))) {
           error = true;
+        } else {
+          actuacionesRequest.push(el);
         }
 
-        if (!error && !el.facturado) {
-          actuacionesRequest.push(el);
-        } else {
-          error = true;
-        }
       });
 
       if (error) {
@@ -262,6 +270,7 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
           if (resp.status == 'OK') {
             this.actuacionesSeleccionadas = [];
             this.buscarEvent.emit(false);
+            this.buscarDocumentosEvent.emit(true);
           }
 
           if (resp.error != null && resp.error.descripcion != null) {

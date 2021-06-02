@@ -26,32 +26,38 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
   @Input() actuacionDesigna: Actuacion;
   @Input() isColegiado;
   @Input() usuarioLogado: UsuarioLogado;
-  @Input() modoLectura: boolean;
+  modoLectura: boolean;
   disableAll: boolean = false;
   fechaActuacion: Date;
 
   estado: string = '';
   fechaJusti: any;
   observaciones: string = '';
-  permisoEscritura: boolean;
 
-  constructor(private sigaServices: SigaServices, private translateService: TranslateService, private commonsService: CommonsService, private router: Router, private datePipe: DatePipe
-    , private persistenceService: PersistenceService) { }
+  constructor(private sigaServices: SigaServices,
+    private translateService: TranslateService,
+    private commonsService: CommonsService,
+    private router: Router,
+    private datePipe: DatePipe,
+    private persistenceService: PersistenceService) { }
 
   ngOnInit() {
 
-    this.commonsService.checkAcceso(procesos_oficio.designasActuaciones)
+    this.commonsService.checkAcceso(procesos_oficio.designaTarjetaActuacionesJustificacion)
       .then(respuesta => {
-        this.permisoEscritura = respuesta;
-        this.persistenceService.setPermisos(this.permisoEscritura);
+        let permisoEscritura = respuesta;
 
-        if (this.permisoEscritura == undefined) {
+        if (permisoEscritura == undefined) {
           sessionStorage.setItem("codError", "403");
           sessionStorage.setItem(
             "descError",
             this.translateService.instant("generico.error.permiso.denegado")
           );
           this.router.navigate(["/errorAcceso"]);
+        }
+
+        if (!permisoEscritura) {
+          this.modoLectura = true;
         }
 
         this.cargaInicial();
@@ -117,7 +123,7 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
             this.actuacionDesigna.actuacion.fechaJustificacion = fechaTarjetaPlegada;
           }
 
-          this.buscarActuacionEvent.emit();
+          this.buscarActuacionEvent.emit(this.actuacionDesigna.actuacion.numeroAsunto);
           this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
         }
 
@@ -153,7 +159,7 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
         if (resp.status == 'OK') {
           this.actuacionDesigna.actuacion.validada = false;
           this.estado = '';
-          this.buscarActuacionEvent.emit();
+          this.buscarActuacionEvent.emit(this.actuacionDesigna.actuacion.numeroAsunto);
           this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
         }
 
@@ -188,6 +194,8 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
     this.observaciones = this.actuacionDesigna.actuacion.observacionesJusti;
     if (this.actuacionDesigna.actuacion.fechaJustificacion != undefined && this.actuacionDesigna.actuacion.fechaJustificacion != null && this.actuacionDesigna.actuacion.fechaJustificacion != '') {
       this.fechaJusti = new Date(this.actuacionDesigna.actuacion.fechaJustificacion.split('/').reverse().join('-'));
+    } else {
+      this.fechaJusti = null;
     }
 
     this.fechaActuacion = new Date(this.actuacionDesigna.actuacion.fechaActuacion.split('/').reverse().join('-'));
@@ -307,7 +315,7 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
         if (resp.status == 'OK') {
           this.actuacionDesigna.actuacion.observacionesJusti = this.observaciones;
           this.actuacionDesigna.actuacion.fechaJustificacion = this.fechaJusti;
-          this.buscarActuacionEvent.emit();
+          this.buscarActuacionEvent.emit(this.actuacionDesigna.actuacion.numeroAsunto);
           this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
         }
 

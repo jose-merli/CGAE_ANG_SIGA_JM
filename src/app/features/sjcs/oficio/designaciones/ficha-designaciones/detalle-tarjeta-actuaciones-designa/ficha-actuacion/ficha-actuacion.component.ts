@@ -14,6 +14,7 @@ import { DocumentoDesignaItem } from '../../../../../../../models/sjcs/Documento
 import { DocumentoDesignaObject } from '../../../../../../../models/sjcs/DocumentoDesignaObject';
 import { CommonsService } from '../../../../../../../_services/commons.service';
 import { procesos_oficio } from '../../../../../../../permisos/procesos_oficio';
+import { Router } from '@angular/router';
 
 export class UsuarioLogado {
   idPersona: string;
@@ -165,7 +166,8 @@ export class FichaActuacionComponent implements OnInit {
     private translateService: TranslateService,
     private datePipe: DatePipe,
     private sigaStorageService: SigaStorageService,
-    private commonsService: CommonsService) { }
+    private commonsService: CommonsService,
+    private router: Router) { }
 
   ngOnInit() {
 
@@ -173,7 +175,16 @@ export class FichaActuacionComponent implements OnInit {
       .then(respuesta => {
         let permisoEscritura = respuesta;
 
-        if (permisoEscritura == undefined || !permisoEscritura) {
+        if (permisoEscritura == undefined) {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
+
+        if (!permisoEscritura) {
           this.modoLectura = true;
         }
 
@@ -221,7 +232,7 @@ export class FichaActuacionComponent implements OnInit {
       this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiDatosGen').opened = true;
     } else {
 
-      if ((this.isColegiado && (this.actuacionDesigna.actuacion.validada || !this.permiteTurno)) || (this.actuacionDesigna.actuacion.facturado)) {
+      if ((this.isColegiado && this.actuacionDesigna.actuacion.validada && (!this.permiteTurno || !this.actuacionDesigna.actuacion.permiteModificacion)) || (this.actuacionDesigna.actuacion.facturado)) {
         this.modoLectura = true;
       }
 
@@ -532,6 +543,8 @@ export class FichaActuacionComponent implements OnInit {
     // Se rellenan los campos de la tarjeta de Justificación plegada
     if (this.actuacionDesigna.actuacion.fechaJustificacion != undefined && this.actuacionDesigna.actuacion.fechaJustificacion != null && this.actuacionDesigna.actuacion.fechaJustificacion != '') {
       this.listaTarjetas[1].campos[0].value = this.datePipe.transform(new Date(this.actuacionDesigna.actuacion.fechaJustificacion.split('/').reverse().join('-')), 'dd/MM/yyyy');
+    } else {
+      this.listaTarjetas[1].campos[0].value = null;
     }
     this.listaTarjetas[1].campos[1].value = this.actuacionDesigna.actuacion.validada ? 'Validada' : 'Pendiente de validar';
 
@@ -607,7 +620,6 @@ export class FichaActuacionComponent implements OnInit {
 
     let turnoItem = new TurnosItem();
     turnoItem.idturno = this.actuacionDesigna.designaItem.idTurno;
-    console.log('this.actuacionDesigna.designaItem: ', this.actuacionDesigna.designaItem)
 
     this.sigaServices.post("turnos_busquedaFichaTurnos", turnoItem).subscribe(
       data => {
