@@ -657,6 +657,7 @@ export class FichaDesignacionesComponent implements OnInit {
     }
   }
   backTo() {
+    sessionStorage.setItem("volver", 'true');
     this.location.back();
   }
 
@@ -1243,42 +1244,30 @@ export class FichaDesignacionesComponent implements OnInit {
           }
           this.progressSpinner = false;
 
-          if (this.relaciones.length == 1) {
-            console.log("RELACIONES", this.relaciones[0]);
-            if (this.relacion[0].sjcs.charAt(0) == 'E') {
-              this.listaTarjetas[7].campos = [{
-                "key": this.translateService.instant('justiciaGratuita.oficio.justificacionExpres.numeroEJG'),
-                "value": this.relaciones[0].sjcs
-              },
-
-              ]
-            } else if (this.relacion[0].sjcs.charAt(0) == 'A') {
-              this.listaTarjetas[7].campos = [{
-                "key": this.translateService.instant('justiciaGratuita.oficio.justificacionExpres.numeroEJG'),
-                "value": this.relaciones[0].sjcs
-              },
-              {
-                "key": "Letrado",//Sustituir por literal de GEN_DICCIONARIO
-                "value": this.relaciones[0].letrado
-              }
-              ]
+          if (this.relaciones.length > 0) {
+            this.listaTarjetas[7].campos = [{
+              "key": this.translateService.instant('justiciaGratuita.oficio.justificacionExpres.numeroEJG'),
+              "value": this.relaciones[0].sjcs
+            },
+            {
+              "key": this.translateService.instant('justiciaGratuita.oficio.designas.relaciones.total'),
+              "value": this.relaciones.length
             }
+            ]
+
           } else if (this.relaciones.length == 0 || this.relaciones == undefined || this.relaciones == null) {
             this.listaTarjetas[7].campos = [{
               "key": null,
               "value": this.translateService.instant('justiciaGratuita.oficio.designas.relaciones.vacio')
             }
             ]
-          } else {
-            this.listaTarjetas[7].campos = [{
-              "key": this.translateService.instant('justiciaGratuita.oficio.designas.relaciones.total'),
-              "value": this.relaciones.length
-            }
-            ]
           }
         },
         err => {
           this.progressSpinner = false;
+        },
+        () => {
+
         }
       );
     }

@@ -543,6 +543,8 @@ export class FichaActuacionComponent implements OnInit {
     // Se rellenan los campos de la tarjeta de Justificación plegada
     if (this.actuacionDesigna.actuacion.fechaJustificacion != undefined && this.actuacionDesigna.actuacion.fechaJustificacion != null && this.actuacionDesigna.actuacion.fechaJustificacion != '') {
       this.listaTarjetas[1].campos[0].value = this.datePipe.transform(new Date(this.actuacionDesigna.actuacion.fechaJustificacion.split('/').reverse().join('-')), 'dd/MM/yyyy');
+    } else {
+      this.listaTarjetas[1].campos[0].value = null;
     }
     this.listaTarjetas[1].campos[1].value = this.actuacionDesigna.actuacion.validada ? 'Validada' : 'Pendiente de validar';
 

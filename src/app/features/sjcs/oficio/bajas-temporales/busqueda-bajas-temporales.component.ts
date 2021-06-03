@@ -100,6 +100,7 @@ export class BajasTemporalesComponent implements OnInit {
     this.filtros.filtroAux.historico = event;
     this.persistenceService.setHistorico(event);
     this.progressSpinner = true;
+    this.buscar = false;
 
     this.sigaServices.post("bajasTemporales_busquedaBajasTemporales", this.filtros.filtroAux).subscribe(
       n => {
@@ -203,11 +204,13 @@ jsonToRow(datos){
       nombreApell += ", " + element.nombre;
     }
     if(element.eliminado == 1){
+      let descripcionTipoBaja = this.getDescripcionTipoBaja(element.tipo);
       let obj = [
         { type: 'text', value: element.ncolegiado},
         { type: 'text', value: nombreApell},
+        { type: 'text', value: descripcionTipoBaja},
         { type: 'text', value: element.descripcion},
-        { type: 'text', value: element.fechadesdeSinHora},
+        { type: 'text', value: this.formatDateSinHora(element.fechadesdeSinHora)},
         { type: 'text', value: element.fechahastaSinHora},
         { type: 'text', value: element.fechaaltaSinHora},
         { type: 'text', value: element.validado},
@@ -283,7 +286,7 @@ modDatos(event){
   estadoPendiente(event){
     let encontrado: boolean = false;
     event.forEach(element => {
-      if(this.datos[element].validado == "Pendiente"){
+      if(this.datos[element] == undefined || this.datos[element].validado == "Pendiente"){
         encontrado = true;
       }
     });
@@ -456,7 +459,11 @@ guardar(event) {
         bajaTemporal.tipo = element[2];
         bajaTemporal.descripcion = element[3];
         bajaTemporal.fechadesde = this.transformaFecha(element[4]);
-        bajaTemporal.fechahasta = this.transformaFecha(element[5]);
+        if(Array.isArray(element[5])){
+          bajaTemporal.fechahasta = this.transformaFecha(element[5][0]);
+        }else{
+          bajaTemporal.fechahasta = this.transformaFecha(element[5]);
+        }
         bajaTemporal.fechaalta = this.transformaFecha(element[6]);
         bajaTemporal.validado = element[7];
         bajaTemporal.idpersona = element[9];
@@ -470,7 +477,11 @@ guardar(event) {
         bajaTemporal.tipo = element[2];
         bajaTemporal.descripcion = element[3];
         bajaTemporal.fechadesde = this.transformaFecha(element[4]);
-        bajaTemporal.fechahasta = this.transformaFecha(element[5]);
+        if(Array.isArray(element[5])){
+          bajaTemporal.fechahasta = this.transformaFecha(element[5][0]);
+        }else{
+          bajaTemporal.fechahasta = this.transformaFecha(element[5]);
+        }
         bajaTemporal.fechaalta = this.transformaFecha(element[6]);
         bajaTemporal.validado = element[7];
 
@@ -585,5 +596,16 @@ if(listaPrueba.length != 0){
           this.progressSpinner = false;
         }
       );
+  }
+
+  getDescripcionTipoBaja(tipo){
+
+    let descripcion;
+    this.comboTipo.forEach((comboItem)=>{
+      if(comboItem.value == tipo){
+        descripcion = comboItem.label;
+      }
+    });
+    return descripcion;
   }
 }
