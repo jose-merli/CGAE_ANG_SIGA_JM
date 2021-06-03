@@ -90,6 +90,7 @@ export let endpoints_oficio: any = {
     designaciones_updateDatosAdicionales: "oficio/designas/updateDatosAdicionales",
     designaciones_busquedaProcedimiento: "oficio/busquedaProcedimientoDesignas",
     designaciones_busquedaModulo: "oficio/busquedaModuloDesignas",
+    designaciones_busquedaJuzgado: "oficio/busquedaJuzgadoDesignas",
     designaciones_deleteContrario: "oficio/designas/deleteContrario",
     designaciones_deleteInteresado: "oficio/designas/deleteInteresado",
     designaciones_insertInteresado: "oficio/designas/insertInteresado",

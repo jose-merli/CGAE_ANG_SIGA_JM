@@ -3,7 +3,7 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Sort } from '@angular/material/sort';
 import { Message } from 'primeng/components/common/api';
-import { ConfirmationService } from 'primeng/primeng';
+import { ConfirmationService } from "primeng/api";
 import { Row, Cell } from './gestion-bajas-temporales.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { DatePipe } from '@angular/common';
@@ -462,13 +462,14 @@ export class GestionBajasTemporalesComponent implements OnInit {
   }
 
   checkGuardar(){
-    let keyConfirmation = "deleteTurnosGuardias";
-
     if(this.rowGroups[0].cells[2].value != "" && this.rowGroups[0].cells[3].value != "" && this.rowGroups[0].cells[4].value != "" && this.rowGroups[0].cells[5].value != ""){
+      let mess = this.translateService.instant('sjcs.oficio.bajastemporales.nuevo.mensajeConfirmacion');
+      let icon = "fa fa-question-circle";
+      let keyConfirmation = "deleteTurnosGuardias";
       this.confirmationService.confirm({
         key: keyConfirmation,
-        message: this.translateService.instant('sjcs.oficio.bajastemporales.nuevo.mensajeConfirmacion'),
-        icon: "fa fa-trash-alt",
+        message: mess,
+        icon: icon,
         accept: () => {
           this.modDatos.emit(this.rowGroups);
         },
