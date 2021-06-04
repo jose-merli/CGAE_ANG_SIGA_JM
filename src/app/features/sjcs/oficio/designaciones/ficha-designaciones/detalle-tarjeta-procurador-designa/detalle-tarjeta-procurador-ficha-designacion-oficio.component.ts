@@ -7,6 +7,7 @@ import { ProcuradoresItem } from '../../../../../../models/sjcs/ProcuradoresItem
 import { ProcuradorItem } from '../../../../../../models/sjcs/ProcuradorItem';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../../commons/translate';
+import { CommonsService } from '../../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-detalle-tarjeta-procurador-ficha-designacion-oficio',
@@ -56,7 +57,8 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
   constructor(
     private renderer: Renderer2,
     private pipe: DatePipe, private sigaServices: SigaServices,
-    private translateService: TranslateService) { 
+    private translateService: TranslateService,
+    private commonServices: CommonsService) { 
     this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
     for (let i = 0; i < this.table.nativeElement.children.length; i++) {
 

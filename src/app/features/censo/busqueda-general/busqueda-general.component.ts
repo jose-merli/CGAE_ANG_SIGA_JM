@@ -264,6 +264,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
       },
       (error) => { }
     );
+
   }
 
   ngOnDestroy() {
@@ -332,7 +333,9 @@ export class BusquedaGeneralComponent implements OnDestroy {
               } else {
                 this.addDestinatarioIndv = false;
               }
-
+              if(sessionStorage.getItem("nuevaDesigna")!=undefined && sessionStorage.getItem("nuevaDesigna")!=null){
+                this.addDestinatarioIndv = true;
+              }
               this.colegioDisabled = false;
               this.progressSpinner = false;
             }

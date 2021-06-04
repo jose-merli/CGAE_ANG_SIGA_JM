@@ -789,7 +789,7 @@ export class TablaInscripcionesComponent implements OnInit {
         }
         this.disabledSolicitarBaja = false;
       }
-      let findDato2 = this.selectedDatos.filter(this.esAltaOpendienteBaja);
+      let findDato2 = this.selectedDatos.filter(this.esPendienteAltaOpendienteBaja);
       if(findDato2.length == 0){
         this.disabledValidar = true;
       }else{
@@ -812,9 +812,9 @@ export class TablaInscripcionesComponent implements OnInit {
     }
   }
 
-  esAltaOpendienteBaja(item) {
+  esPendienteAltaOpendienteBaja(item) {
 
-   return item.estado == "2" || item.estado == "1";
+   return item.estado == "0" || item.estado == "2";
 
   }
 
