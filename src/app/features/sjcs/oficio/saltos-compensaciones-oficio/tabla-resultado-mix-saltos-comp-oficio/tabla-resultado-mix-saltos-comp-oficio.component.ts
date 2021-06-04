@@ -244,6 +244,13 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
     this.rowGroupsAux = this.rowGroups;
     this.totalRegistros = this.rowGroups.length;
     this.tablaFoco.nativeElement.scrollIntoView();
+
+
+    if (this.emptyResults) {
+      this.rowGroups.pop();
+      this.emptyResults = false;
+    }
+
   }
 
   guardar() {
@@ -313,6 +320,27 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
     this.progressSpinner = false;
     this.showMsg({ severity: "success", summary: 'Operación realizada con éxito', detail: 'Los registros ha sido restablecidos' });
     this.tablaFoco.nativeElement.scrollIntoView();
+
+    if (this.rowGroups.length == 0 || (this.rowGroups.length == 1 && this.rowGroups[0].cells[0].type == 'empty')) {
+      this.emptyResults = true;
+      this.rowGroups = [
+        {
+          id: 0,
+          cells: [
+            {
+              type: 'empty',
+              value: "No hay resultados",
+              combo: null,
+              disabled: false,
+              header: null
+            }
+          ],
+          italic: false
+        }
+      ];
+    } else {
+      this.emptyResults = false;
+    }
   }
 
   anular() {
