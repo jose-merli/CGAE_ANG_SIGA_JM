@@ -64,6 +64,8 @@ export class FichaDesignacionesComponent implements OnInit {
   totalActuacionesDesigna;
   refreshDesigna;
   msgs;
+  msjEliminarDesignacion;
+  msjGuardarProcurador;
   tarjetaFija = {
     nombre: this.translateService.instant("justiciaGratuita.oficio.turnos.inforesumen"),
     icono: 'fas fa-clipboard',
@@ -235,6 +237,9 @@ export class FichaDesignacionesComponent implements OnInit {
     this.isLetrado = this.localStorageService.isLetrado;
     this.idPersonaLogado = this.localStorageService.idPersona;
     this.numColegiadoLogado = this.localStorageService.numColegiado;
+
+    this.msjEliminarDesignacion = this.translateService.instant("justiciaGratuita.oficio.designaciones.eliminarDesignacion");
+    this.msjGuardarProcurador = this.translateService.instant("justiciaGratuita.oficio.designaciones.guardarProcurador");
 
     this.checkAcceso();
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
@@ -850,7 +855,7 @@ export class FichaDesignacionesComponent implements OnInit {
 
   mostrar() {
     if (!this.nuevaDesigna) {
-      let procurador = [this.campos.numero, String(this.campos.idInstitucion), this.campos.idTurno];
+      let procurador = [this.campos.numero, String(this.campos.idInstitucion), this.campos.idTurno, this.campos.ano];
       this.sigaServices.post("designaciones_busquedaProcurador", procurador).subscribe(
         n => {
           this.procurador = JSON.parse(n.body).procuradorItems;
@@ -1032,8 +1037,14 @@ export class FichaDesignacionesComponent implements OnInit {
 
   actualizarProcurador() {
     this.progressSpinner = true;
+    let array = [];
 
-    this.sigaServices.post("designaciones_actualizarProcurador", this.listaPrueba).subscribe(
+    if (!this.nuevaDesigna) {
+      this.rowGroups[0].cells.forEach(dato => {
+          array.push(dato.value);
+        });
+    }
+    this.sigaServices.post("designaciones_actualizarProcurador", array).subscribe(
       data => {
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
