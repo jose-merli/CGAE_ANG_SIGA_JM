@@ -64,6 +64,8 @@ export class FichaDesignacionesComponent implements OnInit {
   totalActuacionesDesigna;
   refreshDesigna;
   msgs;
+  msjEliminarDesignacion;
+  msjGuardarProcurador;
   tarjetaFija = {
     nombre: this.translateService.instant("justiciaGratuita.oficio.turnos.inforesumen"),
     icono: 'fas fa-clipboard',
@@ -235,6 +237,9 @@ export class FichaDesignacionesComponent implements OnInit {
     this.isLetrado = this.localStorageService.isLetrado;
     this.idPersonaLogado = this.localStorageService.idPersona;
     this.numColegiadoLogado = this.localStorageService.numColegiado;
+
+    this.msjEliminarDesignacion = this.translateService.instant("justiciaGratuita.oficio.designaciones.eliminarDesignacion");
+    this.msjGuardarProcurador = this.translateService.instant("justiciaGratuita.oficio.designaciones.guardarProcurador");
 
     this.checkAcceso();
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
@@ -850,7 +855,7 @@ export class FichaDesignacionesComponent implements OnInit {
 
   mostrar() {
     if (!this.nuevaDesigna) {
-      let procurador = [this.campos.numero, String(this.campos.idInstitucion), this.campos.idTurno];
+      let procurador = [this.campos.numero, String(this.campos.idInstitucion), this.campos.idTurno, this.campos.ano];
       this.sigaServices.post("designaciones_busquedaProcurador", procurador).subscribe(
         n => {
           this.procurador = JSON.parse(n.body).procuradorItems;
@@ -903,13 +908,13 @@ export class FichaDesignacionesComponent implements OnInit {
     datos.forEach((element, index) => {
       if (x == 0) {
         let obj = [
-          { type: 'datePicker', value: element.fechaDesigna },
+          { type: 'datePicker', value: element.fechaDesigna},
           { type: 'input', value: element.numerodesignacion },
           { type: 'text', value: element.nColegiado },
           { type: 'text', value: element.apellido1 + " " + element.apellido2 + ", " + element.nombre },
           { type: 'select', combo: this.comboRenuncia, value: element.motivosRenuncia },
-          { type: 'text', value: element.observaciones },
-          { type: 'datePicker', value: element.fecharenunciasolicita },
+          { type: 'input', value: element.observaciones },
+          { type: 'datePicker', value: element.fecharenunciasolicita},
           { type: 'text', value: element.fechabaja }
         ];
         let superObj = {
@@ -976,8 +981,10 @@ export class FichaDesignacionesComponent implements OnInit {
   }
 
   checkFilter(event) {
-    if (event[0] == null || event[1] == null || event[4] == null || event[6] == null) {
+    if (event[0] == null || event[5] == null || event[6] == null) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
+    }else if(!event[1].match("([0-9]+)/([0-9])")){
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El campo Año/Numero no tiene el formato correcto");
     } else {
       this.compruebaProcurador(event);
     }
@@ -1030,8 +1037,14 @@ export class FichaDesignacionesComponent implements OnInit {
 
   actualizarProcurador() {
     this.progressSpinner = true;
+    let array = [];
 
-    this.sigaServices.post("designaciones_actualizarProcurador", this.listaPrueba).subscribe(
+    if (!this.nuevaDesigna) {
+      this.rowGroups[0].cells.forEach(dato => {
+          array.push(dato.value);
+        });
+    }
+    this.sigaServices.post("designaciones_actualizarProcurador", array).subscribe(
       data => {
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
