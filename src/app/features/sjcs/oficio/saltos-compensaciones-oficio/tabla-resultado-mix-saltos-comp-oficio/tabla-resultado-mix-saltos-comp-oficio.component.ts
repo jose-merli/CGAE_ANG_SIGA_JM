@@ -244,6 +244,8 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
     this.rowGroupsAux = this.rowGroups;
     this.totalRegistros = this.rowGroups.length;
     this.tablaFoco.nativeElement.scrollIntoView();
+
+    this.emptyResults = false;
   }
 
   guardar() {

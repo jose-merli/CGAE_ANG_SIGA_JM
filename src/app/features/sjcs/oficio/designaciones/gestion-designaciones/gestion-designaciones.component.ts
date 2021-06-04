@@ -152,7 +152,10 @@ export class GestionDesignacionesComponent implements OnInit {
               },
               err => {
                 this.progressSpinner = false;
-    
+                dato.nombreJuzgado = "";
+                sessionStorage.setItem("nuevaDesigna", "false");
+                sessionStorage.setItem("designaItemLink", JSON.stringify(dato));
+                this.router.navigate(["/fichaDesignaciones"]);
                 console.log(err);
               }, () => {
                 this.progressSpinner = false;

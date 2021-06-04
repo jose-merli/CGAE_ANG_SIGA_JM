@@ -23,7 +23,7 @@ export class LetradoSalienteComponent implements OnInit {
   progressSpinner = false;
   disableCheck=false;
   isLetrado: boolean;
-
+  resaltadoDatos: boolean = false;
   @Input() saliente;
 
   comboRenuncia;
@@ -32,7 +32,7 @@ export class LetradoSalienteComponent implements OnInit {
     private commonsService: CommonsService, private persistenceService: PersistenceService,private translateService: TranslateService, private router: Router) { }
 
   ngOnInit() {
-
+    this.resaltadoDatos = true;
     this.body=this.saliente;
     /* this.body.fechaDesignacion;
     this.body.fechaEfecRenuncia=new Date();
@@ -95,5 +95,14 @@ export class LetradoSalienteComponent implements OnInit {
 
   fillFechaDesignacion(event){}
 
-  fillFechaSolRenuncia(event){}
+  fillFechaSolRenuncia(event){
+    this.body.fechaSolRenuncia = event;
+  }
+
+
+  styleObligatorio(resaltado) {
+      if (this.body.motivoRenuncia == undefined || this.body.motivoRenuncia == null || this.body.motivoRenuncia == "" ) {
+        return "camposObligatorios";
+      }
+  }
 }
