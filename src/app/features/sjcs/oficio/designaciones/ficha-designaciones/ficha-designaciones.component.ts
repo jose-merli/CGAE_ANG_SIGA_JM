@@ -903,13 +903,13 @@ export class FichaDesignacionesComponent implements OnInit {
     datos.forEach((element, index) => {
       if (x == 0) {
         let obj = [
-          { type: 'datePicker', value: element.fechaDesigna },
+          { type: 'datePicker', value: element.fechaDesigna},
           { type: 'input', value: element.numerodesignacion },
           { type: 'text', value: element.nColegiado },
           { type: 'text', value: element.apellido1 + " " + element.apellido2 + ", " + element.nombre },
           { type: 'select', combo: this.comboRenuncia, value: element.motivosRenuncia },
-          { type: 'text', value: element.observaciones },
-          { type: 'datePicker', value: element.fecharenunciasolicita },
+          { type: 'input', value: element.observaciones },
+          { type: 'datePicker', value: element.fecharenunciasolicita},
           { type: 'text', value: element.fechabaja }
         ];
         let superObj = {
@@ -976,8 +976,10 @@ export class FichaDesignacionesComponent implements OnInit {
   }
 
   checkFilter(event) {
-    if (event[0] == null || event[1] == null || event[4] == null || event[6] == null) {
+    if (event[0] == null || event[5] == null || event[6] == null) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
+    }else if(!event[1].match("([0-9]+)/([0-9])")){
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El campo Año/Numero no tiene el formato correcto");
     } else {
       this.compruebaProcurador(event);
     }
