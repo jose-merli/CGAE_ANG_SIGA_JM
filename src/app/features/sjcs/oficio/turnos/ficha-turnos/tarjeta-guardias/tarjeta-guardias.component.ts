@@ -210,6 +210,7 @@ export class TarjetaGuardias implements OnInit {
         if (this.datos != undefined && this.datos.length > 1) {
           this.mostrarNumero = true;
           this.numeroGuardias = this.datos.length;
+          this.mostrarVacio= false;
         }
         else if (this.datos != undefined && this.datos.length == 1) {
           this.mostrarDatos = true;

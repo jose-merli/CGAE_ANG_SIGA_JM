@@ -142,10 +142,24 @@ export class GestionDesignacionesComponent implements OnInit {
               dato.modulo = datosModulo[0].modulo;
               dato.idModulo = datosModulo[0].idModulo;
             }
-            sessionStorage.setItem("nuevaDesigna", "false");
-            sessionStorage.setItem("designaItemLink", JSON.stringify(dato));
-            this.router.navigate(["/fichaDesignaciones"]);
-
+            this.sigaServices.post("designaciones_busquedaJuzgado", dato.idJuzgado).subscribe(
+              n => {
+                dato.nombreJuzgado = n.body;
+                sessionStorage.setItem("nuevaDesigna", "false");
+                sessionStorage.setItem("designaItemLink", JSON.stringify(dato));
+                this.router.navigate(["/fichaDesignaciones"]);
+    
+              },
+              err => {
+                this.progressSpinner = false;
+                dato.nombreJuzgado = "";
+                sessionStorage.setItem("nuevaDesigna", "false");
+                sessionStorage.setItem("designaItemLink", JSON.stringify(dato));
+                this.router.navigate(["/fichaDesignaciones"]);
+                console.log(err);
+              }, () => {
+                this.progressSpinner = false;
+              });
           },
           err => {
             this.progressSpinner = false;
@@ -153,15 +167,14 @@ export class GestionDesignacionesComponent implements OnInit {
             console.log(err);
           }, () => {
             this.progressSpinner = false;
-          });;
+          });
       },
       err => {
         this.progressSpinner = false;
         console.log(err);
       }, () => {
         this.progressSpinner = false;
-      });;
-
+      });
   }
 
   getComboTipoDesignas() {

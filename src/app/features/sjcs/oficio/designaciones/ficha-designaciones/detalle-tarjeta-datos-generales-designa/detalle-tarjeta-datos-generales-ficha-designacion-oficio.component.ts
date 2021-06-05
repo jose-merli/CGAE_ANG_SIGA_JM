@@ -29,7 +29,11 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
   progressSpinner: boolean;
   permisoEscritura: boolean;
   isLetrado: boolean;
-  
+  nif: any;
+  nombreColegiado: any;
+  apellido1Colegiado: any;
+  apellido2Colegiado: any;
+  institucionColegiado: any;
   @Input() campos;
   @Input() selectedValue;
   @Output() refreshDataGenerales = new EventEmitter<DesignaItem>();
@@ -155,13 +159,11 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     this.numero.value = datosInicial.codigo;
     this.numero.disable = false;
     this.fechaGenerales = datosInicial.fechaEntradaInicio;
-    let colegiado = new ColegiadoItem();
-    colegiado.numColegiado = datosInicial.numColegiado;
-    colegiado.idInstitucion = datosInicial.idInstitucion;
-    this.inputs[0].disable = true;
-    this.inputs[1].disable = true;
-    this.inputs[2].disable = true;
-    this.sigaServices
+    if(datosInicial.numColegiado != null || datosInicial.numColegiado != undefined){
+      let colegiado = new ColegiadoItem();
+      colegiado.numColegiado = datosInicial.numColegiado;
+      colegiado.idInstitucion = datosInicial.idInstitucion;
+      this.sigaServices
       .post("busquedaColegiados_searchColegiado", colegiado)
       .subscribe(
         data => {
@@ -178,6 +180,16 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         },
 
       );
+    }else{
+      let colegiadoInscrito = this.campos.nombreColegiado.split(',');
+      // this.inputs[0].value = colegiadoItem.colegiadoItem[0].numColegiado;
+      this.inputs[1].value = this.campos.apellido1Colegiado + " " + this.campos.apellido2Colegiado;
+      this.inputs[2].value = colegiadoInscrito[1];
+    }
+    
+    this.inputs[0].disable = true;
+    this.inputs[1].disable = true;
+    this.inputs[2].disable = true;
   }
 
   cargaDatosNueva() {
@@ -199,6 +211,12 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       this.inputs[0].value = colegiadoGeneral[0].numeroColegiado;
       this.inputs[1].value = colegiadoGeneral[0].apellidos;
       this.inputs[2].value = colegiadoGeneral[0].nombre;
+      this.nif = colegiadoGeneral[0].nif;
+      this.nombreColegiado = colegiadoGeneral[0].nombre;
+      let apellidos =  colegiadoGeneral[0].apellidos.split(' ');
+      this.apellido1Colegiado = apellidos[0];
+      this.apellido2Colegiado = apellidos[1];
+      this.institucionColegiado = colegiadoGeneral[0].numeroInstitucion;
       sessionStorage.removeItem("colegiadoGeneralDesigna");
     } else {
       this.inputs[0].value = "";
@@ -306,6 +324,11 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         newDesigna.nombreColegiado = this.inputs[1].value;
         newDesigna.apellidosNombre = this.inputs[2].value;
         newDesigna.fechaAlta = new Date(this.fechaGenerales);
+        newDesigna.nif = this.nif;
+        newDesigna.nombreColegiado = this.nombreColegiado;
+        newDesigna.apellido1Colegiado = this.apellido1Colegiado;
+        newDesigna.apellido2Colegiado = this.apellido2Colegiado;
+        newDesigna.idInstitucion = this.institucionColegiado;
         if(this.checkArt == false){
           newDesigna.art27 ="0";
         }else{
@@ -327,7 +350,9 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
               newDesignaRfresh.ano = newDesigna.ano;
               newDesignaRfresh.codigo = newId.id;
               newDesignaRfresh.idTurnos = [String(newDesigna.idTurno)];
+              this.progressSpinner = false;
               this.busquedaDesignaciones(newDesignaRfresh);
+              this.progressSpinner = false;
               //MENSAJE DE TODO CORRECTO
               detail = "";
               this.msgs.push({
@@ -336,6 +361,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                 detail
               });
               console.log(n);
+              this.progressSpinner = false;
             },
             err => {
               severity = "error";
@@ -348,6 +374,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
               console.log(err);
               this.progressSpinner = false;
             }, () => {
+              this.progressSpinner = false;
             }
           );
         }
@@ -378,6 +405,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
           this.progressSpinner = true;
           this.sigaServices.post("designaciones_updateDesigna", newDesigna).subscribe(
             n => {
+              this.progressSpinner = false;
               this.refreshDataGenerales.emit(newDesigna);
               //MENSAJE DE TODO CORRECTO
               this.msgs.push({
@@ -485,6 +513,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     datosDesigna.fechaAlta = this.fechaGenerales;
     sessionStorage.setItem("datosDesgina", JSON.stringify(datosDesigna));
     if (this.nuevaDesigna && this.checkArt) {//BUSQUEDA GENERAL
+      sessionStorage.setItem("nuevaDesigna", "true");
       this.router.navigate(["/busquedaGeneral"]);
     } else if (this.nuevaDesigna && !this.checkArt) {//BUSQUEDA SJCS
       this.router.navigate(["/buscadorColegiados"]);
@@ -542,6 +571,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                   newDesignaRfresh.ano = newDesigna.ano;
                   newDesignaRfresh.codigo = newId.id;
                   newDesignaRfresh.idTurnos = [String(newDesigna.idTurno)];
+                  this.progressSpinner = false;
                   this.busquedaDesignaciones(newDesignaRfresh);
                   //MENSAJE DE TODO CORRECTO
                   detail = "";
@@ -594,6 +624,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
               this.progressSpinner = false;
               this.sigaServices.post("designaciones_updateDesigna", newDesigna).subscribe(
                 n => {
+                  this.progressSpinner = false;
                   this.refreshDataGenerales.emit(newDesigna);
                   this.progressSpinner = false;
                   //MENSAJE DE TODO CORRECTO
