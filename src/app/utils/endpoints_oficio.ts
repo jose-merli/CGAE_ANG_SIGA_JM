@@ -119,6 +119,7 @@ export let endpoints_oficio: any = {
     actuaciones_designacion_eliminarDocumentosActDesigna: "oficio/designas/eliminarDocumentosActDesigna",
     actuaciones_designacion_getLetradoDesigna: "oficio/designas/getLetradoDesigna",
     actuaciones_designacion_subirDocumentoActDesigna: "oficio/designas/subirDocumentoActDesigna",
+    actuaciones_designacion_actualizarPartidaPresupuestariaActDesigna: "oficio/designas/actualizarPartidaPresupuestariaActDesigna",
     combo_motivosCambio_actuDesigna: "oficio/comboMotivosCambioActDesigna",
     combo_prisiones: "oficio/comboPrisiones",
     combo_comboTipoDocDocumentacionDesigna: "combo/comboTipoDocumentacionDesigna",

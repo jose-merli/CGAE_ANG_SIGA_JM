@@ -40,6 +40,8 @@ export class FichaCambioLetradoComponent implements OnInit {
     letrado: {}
   };
 
+  resaltadoDatos: boolean = false;
+
   @ViewChild(LetradoEntranteComponent) entrante;
   @ViewChild(LetradoSalienteComponent) saliente;
 
@@ -51,7 +53,7 @@ export class FichaCambioLetradoComponent implements OnInit {
     private datepipe: DatePipe) { }
 
   ngOnInit() {
-
+    this.resaltadoDatos = true;
     //Para saber si el usuario es un letrado o no
     /* getLetrado() {
       let isLetrado: ComboItem;
@@ -184,19 +186,7 @@ export class FichaCambioLetradoComponent implements OnInit {
     this.progressSpinner = true;
     //Definir parametros y construir servicio
 
-    /* setAnio(designa.getAnio());
-          key.setIdturno(designa.getIdturno());
-          key.setNumero(designa.getNumero());
-          key.setIdpersona(letradoSaliente.getIdpersona());
-          key.setFechadesigna(letradoSaliente.getFechadesigna());
-          oldLetrado.setObservaciones(letradoSaliente.getObservaciones());
-          oldLetrado.setMotivosrenuncia(letradoSaliente.getMotivosrenuncia() 
-          letradoEntrante.getFechadesigna()
-          letradoEntrante.getIdpersona()*/
-
     let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
-
-    /* let item = new CambioLetradoItem(); */
 
     let request = [designa.ano, //0
     designa.idTurno, //1
@@ -211,19 +201,6 @@ export class FichaCambioLetradoComponent implements OnInit {
     this.saliente.body.compensacion, //10
     this.entrante.body.salto //11
     ];
-
-    /* item.ano=request[0];
-    item.idTurno=request[1];
-    item.numero=request[2];
-    item.idPersonaSaliente=request[3];
-    item.observaciones=request[4];
-    item.motivoRenuncia=request[5];
-    item.fechaDesignacionSaliente=request[6];
-    item.fechaSolRenuncia=request[7];
-    item.fechaDesignacionEntrante=request[8];
-    item.idPersonaEntrante=request[9]; 
-    
-    */
 
     this.progressSpinner = true;
 
@@ -273,6 +250,16 @@ export class FichaCambioLetradoComponent implements OnInit {
       detail: msg
     });
   }
+
+  checkDatosGenerales() {
+    if ((this.entrante.body.fechaDesignacion != null || this.entrante.body.fechaDesignacion != undefined) &&
+      (this.saliente.body.motivoRenuncia != undefined || this.saliente.body.motivoRenuncia != null)) {
+      this.resaltadoDatos = false;
+    } else {
+      this.resaltadoDatos = true;
+    }
+  }
+
 
 
 }
