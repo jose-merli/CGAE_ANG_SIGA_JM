@@ -139,6 +139,13 @@
             (click)="cambiarFecha(selectedDatos)" type="button"
             label="{{ 'justiciaGratuita.oficio.inscripciones.cambiarfecha' | translate}}"></button>
         </div>
+        <div class="form-group">
+          <label>
+          </label>
+          <button *ngIf="permisos && selectedDatos && selectedDatos.length > 0" (click)="navigateComunicar(selectedDatos)"
+          pButton type="button" icon="fa fa-comment" iconPos="left"
+          label="{{'general.boton.comunicar' | translate }}"></button>
+        </div>
       </div>
 
     </div>
