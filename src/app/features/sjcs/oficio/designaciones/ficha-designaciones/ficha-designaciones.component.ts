@@ -1375,20 +1375,29 @@ export class FichaDesignacionesComponent implements OnInit {
     facturacionDesigna.numero = designaItem.numero;
     this.sigaServices.post("designaciones_getDatosFacturacion", facturacionDesigna).subscribe(
       n => {
-        let a = JSON.parse(n.body);
-        this.campos.idPartidaPresupuestaria = a.combooItems[0].value;
-        this.campos.nombrePartida = a.combooItems[0].label;
-        let camposFacturacion = [
-          {
-            "key": "Partida Presupuestaria",
-            "value": a.combooItems[0].label
-          }
-        ];
-        this.listaTarjetas[11].campos = camposFacturacion;
-      },
-      err => {
-      }, () => {
-        // this.arregloTildesCombo(this.selectores[1].opciones);
+        let a = JSON.parse(n.body).combooItems;
+        if (a.length > 0 && a[0] != null) {
+          this.campos.idPartidaPresupuestaria = a[0].value;
+          this.campos.nombrePartida = a[0].label;
+          let camposFacturacion = [
+            {
+              "key": "Partida Presupuestaria",
+              "value": a[0].label
+            }
+          ];
+          this.listaTarjetas[11].campos = camposFacturacion;
+        } else {
+          this.campos.idPartidaPresupuestaria = null;
+          this.campos.nombrePartida = '';
+          let camposFacturacion = [
+            {
+              "key": "Partida Presupuestaria",
+              "value": ''
+            }
+          ];
+          this.listaTarjetas[11].campos = camposFacturacion;
+        }
+
       }
     );
   }
@@ -1974,5 +1983,15 @@ export class FichaDesignacionesComponent implements OnInit {
       }
     );
 
+  }
+
+  changeDataDatosFacEvent(event) {
+    let camposFacturacion = [
+      {
+        "key": "Partida Presupuestaria",
+        "value": this.campos.nombrePartida
+      }
+    ];
+    this.listaTarjetas[11].campos = camposFacturacion;
   }
 }
