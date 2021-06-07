@@ -135,7 +135,7 @@
                         </div>
                         <div class="form-group-interlineado col-lg-2 col-md-2">
                             <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.numAno" | translate}}</label>
-                            <input type="text" maxLength="10" class="form-control" [(ngModel)]="body.anoProcedimiento"
+                            <input type="text" maxLength="10" class="form-control" [(ngModel)]="body.anoProcedimiento" (ngModelChange)="changeNumAno($event)"
                                 pInputText>
                         </div>
                         <div class="form-group-interlineado col-lg-6 col-md-6">
@@ -146,7 +146,7 @@
                         </div>
                         <div class="form-group-interlineado col-lg-2 col-md-2">
                             <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.NIG" | translate}}</label>
-                            <input type="text" maxLength="10" class="form-control" [(ngModel)]="body.nig" pInputText>
+                            <input type="number" maxLength="10" class="form-control" [(ngModel)]="body.nig" pInputText>
                         </div>
                         <div class="form-group-interlineado col-lg-2 col-md-2">
                             <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.asunto" | translate}}</label>

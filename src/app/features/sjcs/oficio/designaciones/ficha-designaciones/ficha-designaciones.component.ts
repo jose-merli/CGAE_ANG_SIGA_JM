@@ -1247,7 +1247,6 @@ export class FichaDesignacionesComponent implements OnInit {
 
       this.sigaServices.post("designacionesBusquedaRelaciones", item).subscribe(
         n => {
-          console.log("OBJETO BUSQUEDARELACIONES", n);
           this.relaciones = JSON.parse(n.body).relacionesItem;
           let primero = this.relaciones[0];
           let error = JSON.parse(n.body).error;
@@ -1693,25 +1692,17 @@ export class FichaDesignacionesComponent implements OnInit {
           let datos = JSON.parse(data.body);
           if (datos != []) {
             this.letrados = datos;
-            /* this.datos.fecharenunciasolicita;
-            this.datos.fecharenuncia;
-            this.datos.motivosrenuncia; */
 
-            for (var val of this.letrados) {
-              //Comprobamos el letrado actual, para ello no tiene que tener fecha renunciaEfectiva
-              if (val.fechaRenunciaEfectiva == null) {
-                this.listaTarjetas[6].campos = [
-                  {
-                    "key": this.translateService.instant('censo.resultadosSolicitudesModificacion.literal.nColegiado'),
-                    "value": val.nColegiado
-                  },
-                  {
-                    "key": this.translateService.instant('justiciaGratuita.justiciables.literal.colegiado'),
-                    "value": val.apellidosNombre
-                  }
-                ]
+            this.listaTarjetas[6].campos = [
+              {
+                "key": this.translateService.instant('censo.resultadosSolicitudesModificacion.literal.nColegiado'),
+                "value": this.letrados[0].nColegiado
+              },
+              {
+                "key": this.translateService.instant('justiciaGratuita.justiciables.literal.colegiado'),
+                "value": this.letrados[0].apellidosNombre
               }
-            }
+            ]
 
             this.listaTarjetas[6].enlaceCardClosed = { click: 'irFechaColegial()', title: this.translateService.instant('informesycomunicaciones.comunicaciones.fichaColegial') }
             this.listaTarjetas[6].letrado = datos[0];

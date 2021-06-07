@@ -947,4 +947,13 @@ export class FiltroDesignacionesComponent implements OnInit {
     }
   }
 
+
+  changeNumAno(numAnio){
+    var objRegExp = /^\d+\/\d+$/;
+    var ret = objRegExp.test(numAnio);
+    if (!ret){
+      this.body.anoProcedimiento = null;
+    }
+  }
+
 }

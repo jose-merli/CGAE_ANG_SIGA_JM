@@ -746,13 +746,10 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       else
         return true;
     } else {
-      if (nProcedimiento.length == 19) {
-        var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{7}[/]$/;
+       // var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{7}[/]$/;
+       var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{7}$/;
         var ret = objRegExp.test(nProcedimiento);
         return ret;
-      } else {
-        return true;
-      }
     }
 
   }
