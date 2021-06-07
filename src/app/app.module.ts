@@ -452,6 +452,9 @@ import { SigaStorageService } from './siga-storage.service';
 import { FichaCambioLetradoComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/ficha-cambio-letrado/ficha-cambio-letrado.component';
 import { LetradoEntranteComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/ficha-cambio-letrado/letrado-entrante/letrado-entrante.component';
 import { LetradoSalienteComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/ficha-cambio-letrado/letrado-saliente/letrado-saliente.component';
+import { EjgComisionComponent } from './features/sjcs/ejg-comision/ejg-comision.component';
+import { EjgComisionBusquedaComponent } from './features/sjcs/ejg-comision/ejg-comision-busqueda/ejg-comision-busqueda.component';
+import { TablaEjgComisionComponent } from './tabla-ejg-comision/tabla-ejg-comision.component';
 
 @NgModule({
 	declarations: [
@@ -615,6 +618,7 @@ import { LetradoSalienteComponent } from './features/sjcs/oficio/designaciones/f
 		InformeCalificacionComponent,
 		ResolucionComponent,
 		ImpugnacionComponent,
+		EjgComisionComponent,
 		/* RegtelComponent, */
 		ComunicacionesComponent,
 		AddExpedienteComponent,
@@ -825,6 +829,8 @@ import { LetradoSalienteComponent } from './features/sjcs/oficio/designaciones/f
 		TarjetaHisFichaActComponent,
 		DetalleTarjetaRelacionesDesignaComponent,
 		DetalleTarjetaComunicacionesDesignaComponent,
+		EjgComisionBusquedaComponent,
+		TablaEjgComisionComponent,
 
 	],
 	imports: [
