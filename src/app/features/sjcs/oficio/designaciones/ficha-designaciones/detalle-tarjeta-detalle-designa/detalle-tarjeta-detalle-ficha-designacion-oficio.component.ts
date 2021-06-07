@@ -492,9 +492,17 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       n => {
         this.procedimientoOpciones = n.combooItems;
         if(this.campos.nombreProcedimiento != ""){
-          this.procedimientoOpciones.push({label: this.campos.nombreProcedimiento, value:this.campos.idPretension});
+          this.procedimientoOpciones.push({label: this.campos.nombreProcedimiento, value:String(this.campos.idPretension)});
         }
-        console.log(this.procedimientoOpciones);
+        let uniqueArrayValue = [];
+        let uniqueArray = [];
+        this.procedimientoOpciones.forEach((c) => {
+          if (!uniqueArrayValue.includes(c.value)) {
+            uniqueArrayValue.push(c.value);
+            uniqueArray.push(c);
+          }
+        });
+        this.procedimientoOpciones = uniqueArray;
         this.progressSpinner=false;
       },
       err => {
@@ -515,7 +523,15 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         if(this.campos.modulo != ""){
           this.moduloOpciones.push({label: this.campos.modulo, value:this.campos.idModulo});
         }
-        console.log(this.moduloOpciones);
+        let uniqueArrayValue = [];
+        let uniqueArray = [];
+        this.moduloOpciones.forEach((c) => {
+          if (!uniqueArrayValue.includes(c.value)) {
+            uniqueArrayValue.push(c.value);
+            uniqueArray.push(c);
+          }
+        });
+        this.moduloOpciones = uniqueArray;
         this.progressSpinner=false;
       },
       err => {
@@ -551,8 +567,17 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       n => {
         this.procedimientoOpciones = JSON.parse(n.body).combooItems;
         if(this.campos.nombreProcedimiento != ""){
-          this.procedimientoOpciones.push({label: this.campos.nombreProcedimiento, value:this.campos.idPretension});
+          this.procedimientoOpciones.push({label: this.campos.nombreProcedimiento, value:String(this.campos.idPretension)});
         }
+        let uniqueArrayValue = [];
+        let uniqueArray = [];
+        this.procedimientoOpciones.forEach((c) => {
+          if (!uniqueArrayValue.includes(c.value)) {
+            uniqueArrayValue.push(c.value);
+            uniqueArray.push(c);
+          }
+        });
+        this.procedimientoOpciones = uniqueArray;
         this.progressSpinner=false;
       },
       err => {
@@ -573,6 +598,15 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         if(this.campos.nombreProcedimiento != ""){
           this.procedimientoOpciones.push({label: this.campos.nombreProcedimiento, value:this.campos.idPretension});
         }
+        let uniqueArrayValue = [];
+        let uniqueArray = [];
+        this.procedimientoOpciones.forEach((c) => {
+          if (!uniqueArrayValue.includes(c.value)) {
+            uniqueArrayValue.push(c.value);
+            uniqueArray.push(c);
+          }
+        });
+        this.procedimientoOpciones = uniqueArray;
         this.progressSpinner=false;
       },
       err => {
@@ -593,6 +627,15 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         if(this.campos.modulo != ""){
           this.moduloOpciones.push({label: this.campos.modulo, value:this.campos.idModulo});
         }        
+        let uniqueArrayValue = [];
+        let uniqueArray = [];
+        this.moduloOpciones.forEach((c) => {
+          if (!uniqueArrayValue.includes(c.value)) {
+            uniqueArrayValue.push(c.value);
+            uniqueArray.push(c);
+          }
+        });
+        this.moduloOpciones = uniqueArray;
         this.progressSpinner=false;
       },
       err => {
@@ -613,6 +656,15 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         if(this.campos.modulo != ""){
           this.moduloOpciones.push({label: this.campos.modulo, value:this.campos.idModulo});
         }
+        let uniqueArrayValue = [];
+        let uniqueArray = [];
+        this.moduloOpciones.forEach((c) => {
+          if (!uniqueArrayValue.includes(c.value)) {
+            uniqueArrayValue.push(c.value);
+            uniqueArray.push(c);
+          }
+        });
+        this.moduloOpciones = uniqueArray;
         this.progressSpinner=false;
       },
       err => {
