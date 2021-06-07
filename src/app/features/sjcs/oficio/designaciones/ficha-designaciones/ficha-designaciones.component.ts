@@ -908,13 +908,13 @@ export class FichaDesignacionesComponent implements OnInit {
     datos.forEach((element, index) => {
       if (x == 0) {
         let obj = [
-          { type: 'datePicker', value: element.fechaDesigna},
+          { type: 'datePicker', value: element.fechaDesigna },
           { type: 'input', value: element.numerodesignacion },
           { type: 'text', value: element.nColegiado },
           { type: 'text', value: element.apellido1 + " " + element.apellido2 + ", " + element.nombre },
           { type: 'select', combo: this.comboRenuncia, value: element.motivosRenuncia },
           { type: 'input', value: element.observaciones },
-          { type: 'datePicker', value: element.fecharenunciasolicita},
+          { type: 'datePicker', value: element.fecharenunciasolicita },
           { type: 'text', value: element.fechabaja }
         ];
         let superObj = {
@@ -983,7 +983,7 @@ export class FichaDesignacionesComponent implements OnInit {
   checkFilter(event) {
     if (event[0] == null || event[5] == null || event[6] == null) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
-    }else if(!event[1].match("([0-9]+)/([0-9])")){
+    } else if (!event[1].match("([0-9]+)/([0-9])")) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El campo Año/Numero no tiene el formato correcto");
     } else {
       this.compruebaProcurador(event);
@@ -1041,8 +1041,8 @@ export class FichaDesignacionesComponent implements OnInit {
 
     if (!this.nuevaDesigna) {
       this.rowGroups[0].cells.forEach(dato => {
-          array.push(dato.value);
-        });
+        array.push(dato.value);
+      });
     }
     this.sigaServices.post("designaciones_actualizarProcurador", array).subscribe(
       data => {
@@ -1376,20 +1376,29 @@ export class FichaDesignacionesComponent implements OnInit {
     facturacionDesigna.numero = designaItem.numero;
     this.sigaServices.post("designaciones_getDatosFacturacion", facturacionDesigna).subscribe(
       n => {
-        let a = JSON.parse(n.body);
-        this.campos.idPartidaPresupuestaria = a.combooItems[0].value;
-        this.campos.nombrePartida = a.combooItems[0].label;
-        let camposFacturacion = [
-          {
-            "key": "Partida Presupuestaria",
-            "value": a.combooItems[0].label
-          }
-        ];
-        this.listaTarjetas[11].campos = camposFacturacion;
-      },
-      err => {
-      }, () => {
-        // this.arregloTildesCombo(this.selectores[1].opciones);
+        let a = JSON.parse(n.body).combooItems;
+        if (a.length > 0 && a[0] != null) {
+          this.campos.idPartidaPresupuestaria = a[0].value;
+          this.campos.nombrePartida = a[0].label;
+          let camposFacturacion = [
+            {
+              "key": "Partida Presupuestaria",
+              "value": a[0].label
+            }
+          ];
+          this.listaTarjetas[11].campos = camposFacturacion;
+        } else {
+          this.campos.idPartidaPresupuestaria = null;
+          this.campos.nombrePartida = '';
+          let camposFacturacion = [
+            {
+              "key": "Partida Presupuestaria",
+              "value": ''
+            }
+          ];
+          this.listaTarjetas[11].campos = camposFacturacion;
+        }
+
       }
     );
   }
@@ -1983,5 +1992,15 @@ export class FichaDesignacionesComponent implements OnInit {
       }
     );
 
+  }
+
+  changeDataDatosFacEvent(event) {
+    let camposFacturacion = [
+      {
+        "key": "Partida Presupuestaria",
+        "value": this.campos.nombrePartida
+      }
+    ];
+    this.listaTarjetas[11].campos = camposFacturacion;
   }
 }

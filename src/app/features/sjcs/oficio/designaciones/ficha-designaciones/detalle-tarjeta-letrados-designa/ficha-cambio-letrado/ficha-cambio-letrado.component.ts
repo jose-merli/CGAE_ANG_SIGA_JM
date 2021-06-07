@@ -36,7 +36,7 @@ export class FichaCambioLetradoComponent implements OnInit {
     fixed: false,
     opened: false,
     campos: [],
-    enlaceCardClosed: {click: 'irFichaColegial()', title: this.translateService.instant('informesycomunicaciones.comunicaciones.fichaColegial')},
+    enlaceCardClosed: { click: 'irFichaColegial()', title: this.translateService.instant('informesycomunicaciones.comunicaciones.fichaColegial') },
     letrado: {}
   };
 
@@ -53,7 +53,7 @@ export class FichaCambioLetradoComponent implements OnInit {
     private datepipe: DatePipe) { }
 
   ngOnInit() {
-  this.resaltadoDatos = true;
+    this.resaltadoDatos = true;
     //Para saber si el usuario es un letrado o no
     /* getLetrado() {
       let isLetrado: ComboItem;
@@ -145,10 +145,8 @@ export class FichaCambioLetradoComponent implements OnInit {
 
   clickSave() {
 
-    
     //Campos obligatorios rellenados?
-    if ((this.entrante.body.fechaDesignacion != null || this.entrante.body.fechaDesignacion != undefined) &&
-      (this.saliente.body.motivoRenuncia != undefined || this.saliente.body.motivoRenuncia != null)) {
+    if ((this.entrante.body.fechaDesignacion != null || this.entrante.body.fechaDesignacion != undefined) && (this.saliente.body.motivoRenuncia != undefined || this.saliente.body.motivoRenuncia != null)) {
       //Comprobar requisitos según art 27
       if ((this.entrante.body.numColegiado == undefined || this.entrante.body.numColegiado == "") && this.entrante.body.art27 == false) {
         this.confirmationService.confirm({
@@ -189,18 +187,18 @@ export class FichaCambioLetradoComponent implements OnInit {
     let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
 
     let request = [designa.ano, //0
-      designa.idTurno, //1
-      designa.numero,//2
-      this.body.idPersona,//3
-       this.saliente.body.observaciones, //4
-       this.saliente.body.motivoRenuncia, //5
-       sessionStorage.getItem("FDSaliente"), //6
-       this.saliente.body.fechaSolRenuncia, //7
-      this.entrante.body.fechaDesignacion, //8
-       this.entrante.body.idPersona, //9
-       this.saliente.body.compensacion, //10
-       this.entrante.body.salto //11
-      ]; 
+    designa.idTurno, //1
+    designa.numero,//2
+    this.body.idPersona,//3
+    this.saliente.body.observaciones, //4
+    this.saliente.body.motivoRenuncia, //5
+    sessionStorage.getItem("FDSaliente"), //6
+    this.saliente.body.fechaSolRenuncia, //7
+    this.entrante.body.fechaDesignacion, //8
+    this.entrante.body.idPersona, //9
+    this.saliente.body.compensacion, //10
+    this.entrante.body.salto //11
+    ];
 
     this.progressSpinner = true;
 
@@ -208,13 +206,13 @@ export class FichaCambioLetradoComponent implements OnInit {
       n => {
         this.progressSpinner = false;
 
-         this.router.navigate(['/fichaDesignaciones']);
+        this.router.navigate(['/fichaDesignaciones']);
       },
       err => {
-        if (err.error!=null 
+        if (err.error != null
           /* || err != undefined && JSON.parse(err.error).error.description != "" */
-          ) {
-          if(JSON.parse(err.error).error.code == 100){
+        ) {
+          if (JSON.parse(err.error).error.code == 100) {
             this.confirmationService.confirm({
               key: "errorPlantillaDoc",
               message: this.translateService.instant("justiciaGratuita.oficio.designas.letrados.nocolaletrado"),
@@ -236,7 +234,7 @@ export class FichaCambioLetradoComponent implements OnInit {
     this.progressSpinner = false;
   }
 
-  
+
   formatDate(date) {
     const pattern = 'dd/MM/yyyy';
     return this.datepipe.transform(date, pattern);
@@ -251,7 +249,7 @@ export class FichaCambioLetradoComponent implements OnInit {
     });
   }
 
-   checkDatosGenerales() {
+  checkDatosGenerales() {
     if ((this.entrante.body.fechaDesignacion != null || this.entrante.body.fechaDesignacion != undefined) &&
       (this.saliente.body.motivoRenuncia != undefined || this.saliente.body.motivoRenuncia != null)) {
       this.resaltadoDatos = false;
