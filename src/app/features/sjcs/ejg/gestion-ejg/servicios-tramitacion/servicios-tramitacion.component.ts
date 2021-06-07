@@ -22,6 +22,7 @@ export class ServiciosTramitacionComponent implements OnInit {
 
   @Output() modoEdicionSend = new EventEmitter<any>();
 
+  resaltadoDatos: boolean = false;
   disableNum = false;
   openFicha: boolean = false;
   textFilter: string = "Seleccionar";
@@ -45,8 +46,6 @@ export class ServiciosTramitacionComponent implements OnInit {
   msgs = [];
   nuevo;
   tipoLetrado;
-
-  resaltadoDatosGenerales: boolean = false;
 
   fichaPosible = {
     key: "serviciosTramitacion",
@@ -207,6 +206,18 @@ export class ServiciosTramitacionComponent implements OnInit {
 
   }
 
+  styleObligatorio(evento) {
+    if (this.resaltadoDatos && (evento == undefined || evento == null || evento == "")) {
+      return this.commonServices.styleObligatorio(evento);
+    }
+  }
+
+  styleObligatorioCole(evento) {
+    if (this.resaltadoDatos && (evento == undefined || evento == null || evento == "")) {
+      return "border: 1px solid red !important";
+    }
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (this.openTarjetaServiciosTramitacion == true) {
       if (this.openFicha == false) {
@@ -221,7 +232,7 @@ export class ServiciosTramitacionComponent implements OnInit {
     return this.fichaPosible.activa;
   }
   abreCierraFicha(key) {
-    this.resaltadoDatosGenerales = true;
+    this.resaltadoDatos = true;
     if (
       key == "serviciosTramitacion" &&
       !this.activacionTarjeta
@@ -327,6 +338,7 @@ export class ServiciosTramitacionComponent implements OnInit {
     } else {
       if (this.disabledSave()) {
         this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+        this.resaltadoDatos = true;
       } else {
         this.save();
       }

@@ -4,6 +4,7 @@ import { SigaServices } from '../../../../_services/siga.service';
 import { SelectItem } from 'primeng/api';
 import {FormularioBusquedaComponent} from './formulario-busqueda/formulario-busqueda.component';
 import { FormularioSubidaComponent } from './formulario-subida/formulario-subida.component';
+import { Message } from 'primeng/components/common/api';
 
 @Component({
   selector: 'app-cargas-masivas-oficio',
@@ -12,7 +13,7 @@ import { FormularioSubidaComponent } from './formulario-subida/formulario-subida
 })
 export class CargasMasivasOficioComponent implements OnInit {
 
-  msgs: any[];
+  msgs: Message[];
 
   tipo:string = null;
   datos:any[];

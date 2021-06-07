@@ -369,6 +369,10 @@ export class RelacionesComponent implements OnInit {
     }
   }
 
+  navigateToFichaPre(){
+    this.router.navigate(["/ficha-pre-designacion"]);
+  }
+
   asociarAsistencia(){
     this.persistenceService.clearDatos();
     this.router.navigate(["/gestionEjg"]);

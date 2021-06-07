@@ -120,12 +120,13 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
   getComboguardiaPorTurno(evento) {
     this.progressSpinner = true;
 
-    if (evento.value != undefined) {
+    if (evento.value != undefined && evento.value.length != 0) {
       this.sigaServices.getParam("combo_guardiaPorTurno", "?idTurno=" + evento.value).subscribe(
         n => {
           this.comboguardiaPorTurno = n.combooItems;
           this.progressSpinner = false;
-          if (sessionStorage.getItem("pantalla") == "gestionEjg" && sessionStorage.getItem("tarjeta") == "ServiciosTramit") {
+          if (this.comboguardiaPorTurno == []) this.filtro.idGuardia = [];
+          else if (sessionStorage.getItem("pantalla") == "gestionEjg" && sessionStorage.getItem("tarjeta") == "ServiciosTramit") {
             if (sessionStorage.getItem("idGuardia")) {
               this.filtro.idGuardia = [];
               this.filtro.idGuardia.push(sessionStorage.getItem("idGuardia"));
@@ -133,11 +134,11 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
           }
         },
         err => {
-          console.log(err);
           this.progressSpinner = false;
         }
       );
     } else {
+      this.filtro.idGuardia = [];
       this.progressSpinner = false;
     }
   }

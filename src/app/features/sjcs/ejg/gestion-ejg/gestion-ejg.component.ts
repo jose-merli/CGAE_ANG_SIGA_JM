@@ -3,11 +3,12 @@ import { SigaServices } from '../../../../_services/siga.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { EJGItem } from '../../../../models/sjcs/EJGItem';
 import { ActivatedRoute, Router } from '../../../../../../node_modules/@angular/router';
-import { Location } from '@angular/common'
+import { Location } from '@angular/common';
 import { CommonsService } from '../../../../_services/commons.service';
 import { TranslateService } from '../../../../commons/translate/translation.service';
 import { procesos_ejg } from '../../../../permisos/procesos_ejg';
 import { ServiciosTramitacionComponent } from './servicios-tramitacion/servicios-tramitacion.component';
+import { Message } from 'primeng/components/common/api';
 
 @Component({
   selector: 'app-gestion-ejg',
@@ -21,7 +22,7 @@ export class GestionEjgComponent implements OnInit {
   permisos;
   nuevo;
   icono = "clipboard";
-  msgs;
+  msgs: Message[];
   body: EJGItem = new EJGItem();
   prueba: EJGItem = new EJGItem();
   datosFamiliares: any;
