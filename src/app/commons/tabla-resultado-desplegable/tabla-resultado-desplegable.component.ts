@@ -756,7 +756,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.lastChange = "changeSelect";
   }
 
-  inputChange(vent, rowId, row, rowGroup, padre, index){
+  inputChange(event, rowId, row, rowGroup, padre, index){
     if ((this.lastChangePadre == rowId && padre) || ( this.lastChangeHijo == index && !padre)){
       if (this.lastChange == "inputChange"){
         this.sumar = !this.sumar;
@@ -792,11 +792,9 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           }
         }
       }else{
-        if (this.sumar){
+      
           this.rowIdsToUpdate.push(rowId);
-        }else{
-          this.rowIdsToUpdate = []; //limpiamos
-        }
+     
       }
     }else{
       //actuacion

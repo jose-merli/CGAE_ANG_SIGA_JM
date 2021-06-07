@@ -75,6 +75,7 @@ export class TablaInscripcionesComponent implements OnInit {
   rows: any;
   sort: (compareFn?: (a: any, b: any) => number) => any[];
   searchDireccionIdPersona = new DatosDireccionesObject();
+  checkValidarInscripciones: boolean = false;
 
   constructor(private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -776,26 +777,26 @@ export class TablaInscripcionesComponent implements OnInit {
       this.numSelected = selectedDatos.length;
       let findDato = this.selectedDatos.find(item => item.estado != "1");
       let currentDate = new Date();
-      let currentDateString =  this.formatDateSinHora(currentDate);
+      let currentDateString = this.formatDateSinHora(currentDate);
       let selectedDate = this.datos.fechaActual
       let selectedDateString = this.formatDateSinHora(selectedDate);
-      if (findDato != null ) {
+      if (findDato != null) {
         this.disabledSolicitarBaja = true;
       }
       else {
-        if(currentDateString != selectedDateString){
+        if (currentDateString != selectedDateString) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("sjcs.oficio.inscripciones.gestion.validaFecha"));
           this.disabledSolicitarBaja = true;
         }
         this.disabledSolicitarBaja = false;
       }
       let findDato2 = this.selectedDatos.filter(this.esPendienteAltaOpendienteBaja);
-      if(findDato2.length == 0){
+      if (findDato2.length == 0) {
         this.disabledValidar = true;
-      }else{
+      } else {
         this.validarDirecciones(selectedDatos[0].idpersona, findDato2);
       }
-      
+
       if (findDato2 != null) {
         this.disabledDenegar = true;
       }
@@ -810,11 +811,21 @@ export class TablaInscripcionesComponent implements OnInit {
         this.disabledCambiarFecha = false;
       }
     }
+
+    if (this.selectedDatos && this.selectedDatos != null) {
+      this.checkValidarInscripciones = false;
+      this.selectedDatos.forEach(el => {
+        if (this.isLetrado && el.validarinscripciones && el.validarinscripciones != null && el.validarinscripciones.toUpperCase() == 'S') {
+          this.checkValidarInscripciones = true;
+        }
+      });
+    }
+
   }
 
   esPendienteAltaOpendienteBaja(item) {
 
-   return item.estado == "0" || item.estado == "2";
+    return item.estado == "0" || item.estado == "2";
 
   }
 

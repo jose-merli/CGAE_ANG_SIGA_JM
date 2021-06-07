@@ -351,7 +351,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
       }else{
         numProcType = 'input';
         moduloType = 'select';
-        moduloValue = designacion.numProcedimiento;
+        moduloValue = designacion.idProcedimiento;
         moduloCombo = this.comboModulos;
       }
       let arrDesignacion = [];
@@ -503,7 +503,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
           moduloCombo2 = actuacion.procedimiento;
           
         }else{
-          moduloValue2 = actuacion.numProcedimiento;
+          moduloValue2 = actuacion.idProcedimiento;
           moduloCombo2 = this.comboModulos;
         }
         if (!this.colegiado){
@@ -516,7 +516,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
           { type: moduloType, value: moduloValue2, size: 400 , combo: moduloCombo2 }, //modulo
           { type: fechaActType, value:  this.formatDate(actuacion.fecha), size: 200 , combo: null},
           { type: fechaJustType, value:  fechaJust , size: 200, combo: null},
-          { type: linkOrText, value: actuacion.descripcion , size: 200, combo: null},
+          { type: linkOrText, value: acreditacionPorcentaje , size: 200, combo: null},
           { type: 'checkbox', value: validaAct, size: 80 , combo: null },
           { type: 'invisible', value:  actuacion.numDesignacion , size: 0, combo: null},
           { type: 'invisible', value:  actuacion.idAcreditacion , size: 0, combo: null},
@@ -557,7 +557,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
         { type: 'tooltip', value: actuacion.categoriaProcedimiento, size: 400 , combo: actuacion.procedimiento,}, //modulo
         { type: fechaActType, value:  this.formatDate(actuacion.fecha), size: 200 , combo: null},
         { type: fechaJustType, value:  fechaJust , size: 200, combo: null},
-        { type: linkOrText, value: actuacion.descripcion , size: 200, combo: null},
+        { type: linkOrText, value: acreditacionPorcentaje , size: 200, combo: null},
         { type: 'checkbox', value: validaAct, size: 80 , combo: null },
         { type: 'invisible', value:  actuacion.numDesignacion , size: 0, combo: null},
         { type: 'invisible', value:  actuacion.idAcreditacion , size: 0, combo: null},
