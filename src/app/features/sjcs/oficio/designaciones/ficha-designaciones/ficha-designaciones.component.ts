@@ -908,13 +908,13 @@ export class FichaDesignacionesComponent implements OnInit {
     datos.forEach((element, index) => {
       if (x == 0) {
         let obj = [
-          { type: 'datePicker', value: element.fechaDesigna},
+          { type: 'datePicker', value: element.fechaDesigna },
           { type: 'input', value: element.numerodesignacion },
           { type: 'text', value: element.nColegiado },
           { type: 'text', value: element.apellido1 + " " + element.apellido2 + ", " + element.nombre },
           { type: 'select', combo: this.comboRenuncia, value: element.motivosRenuncia },
           { type: 'input', value: element.observaciones },
-          { type: 'datePicker', value: element.fecharenunciasolicita},
+          { type: 'datePicker', value: element.fecharenunciasolicita },
           { type: 'text', value: element.fechabaja }
         ];
         let superObj = {
@@ -983,7 +983,7 @@ export class FichaDesignacionesComponent implements OnInit {
   checkFilter(event) {
     if (event[0] == null || event[5] == null || event[6] == null) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
-    }else if(!event[1].match("([0-9]+)/([0-9])")){
+    } else if (!event[1].match("([0-9]+)/([0-9])")) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El campo Año/Numero no tiene el formato correcto");
     } else {
       this.compruebaProcurador(event);
@@ -1041,8 +1041,8 @@ export class FichaDesignacionesComponent implements OnInit {
 
     if (!this.nuevaDesigna) {
       this.rowGroups[0].cells.forEach(dato => {
-          array.push(dato.value);
-        });
+        array.push(dato.value);
+      });
     }
     this.sigaServices.post("designaciones_actualizarProcurador", array).subscribe(
       data => {
@@ -1247,7 +1247,6 @@ export class FichaDesignacionesComponent implements OnInit {
 
       this.sigaServices.post("designacionesBusquedaRelaciones", item).subscribe(
         n => {
-          console.log("OBJETO BUSQUEDARELACIONES", n);
           this.relaciones = JSON.parse(n.body).relacionesItem;
           let primero = this.relaciones[0];
           let error = JSON.parse(n.body).error;
@@ -1684,25 +1683,17 @@ export class FichaDesignacionesComponent implements OnInit {
           let datos = JSON.parse(data.body);
           if (datos != []) {
             this.letrados = datos;
-            /* this.datos.fecharenunciasolicita;
-            this.datos.fecharenuncia;
-            this.datos.motivosrenuncia; */
 
-            for (var val of this.letrados) {
-              //Comprobamos el letrado actual, para ello no tiene que tener fecha renunciaEfectiva
-              if (val.fechaRenunciaEfectiva == null) {
-                this.listaTarjetas[6].campos = [
-                  {
-                    "key": this.translateService.instant('censo.resultadosSolicitudesModificacion.literal.nColegiado'),
-                    "value": val.nColegiado
-                  },
-                  {
-                    "key": this.translateService.instant('justiciaGratuita.justiciables.literal.colegiado'),
-                    "value": val.apellidosNombre
-                  }
-                ]
+            this.listaTarjetas[6].campos = [
+              {
+                "key": this.translateService.instant('censo.resultadosSolicitudesModificacion.literal.nColegiado'),
+                "value": this.letrados[0].nColegiado
+              },
+              {
+                "key": this.translateService.instant('justiciaGratuita.justiciables.literal.colegiado'),
+                "value": this.letrados[0].apellidosNombre
               }
-            }
+            ]
 
             this.listaTarjetas[6].enlaceCardClosed = { click: 'irFechaColegial()', title: this.translateService.instant('informesycomunicaciones.comunicaciones.fichaColegial') }
             this.listaTarjetas[6].letrado = datos[0];
