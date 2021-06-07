@@ -28,6 +28,7 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
   disabledEstado: boolean = false;
   fixedTurn: boolean = false;
   fixedGuard: boolean = false;
+  nuevo: boolean = true;
 
   comboColegios: any;
   comboTurno: any;
@@ -126,10 +127,11 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
           this.comboguardiaPorTurno = n.combooItems;
           this.progressSpinner = false;
           if (this.comboguardiaPorTurno == []) this.filtro.idGuardia = [];
-          else if (sessionStorage.getItem("pantalla") == "gestionEjg" && sessionStorage.getItem("tarjeta") == "ServiciosTramit") {
+          else if (sessionStorage.getItem("pantalla") == "gestionEjg" && sessionStorage.getItem("tarjeta") == "ServiciosTramit" && this.nuevo) {
             if (sessionStorage.getItem("idGuardia")) {
               this.filtro.idGuardia = [];
               this.filtro.idGuardia.push(sessionStorage.getItem("idGuardia"));
+              this.nuevo = false;
             }
           }
         },
