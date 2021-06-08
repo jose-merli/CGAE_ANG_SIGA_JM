@@ -40,6 +40,10 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
   @Input() isAnulada: boolean;
   @Input() usuarioLogado: UsuarioLogado;
   @Input() isColegiado: boolean;
+  // Este modo lectura se produce cuando:
+  // - Es colegiado y la actuación está validada y el turno no permite la modificación o la actuación no pertenece al colegiado
+  // - La actuación está facturada
+  @Input() modoLectura2: boolean = false;
 
   @Output() buscarActEvent = new EventEmitter<string>();
 
