@@ -1325,17 +1325,18 @@ export class FichaDesignacionesComponent implements OnInit {
 
       this.sigaServices.post("designacionesBusquedaComunicaciones", item).subscribe(
         n => {
-          this.comunicaciones = JSON.parse(n.body).comunicacionesItem;
+          this.comunicaciones = JSON.parse(n.body).enviosMasivosItem;
           let error = JSON.parse(n.body).error;
 
-          this.comunicaciones.forEach(element => {
-            if (element.fechaCreacion != null && element.fechaCreacion != "") {
-              element.fechaCreacion = this.formatDate(element.fechaCreacion);
-            }
-            if (element.fechaProgramacion != null && element.fechaProgramacion != "") {
-              element.fechaProgramacion = this.formatDate(element.fechaProgramacion);
-            }
-          });
+          // this.comunicaciones.forEach(element => {
+          //   if (element.fechaProgramada != null && element.fechaProgramada != "") {
+          //     element.fechaProgramada = this.formatDate(element.fechaProgramada);
+          //   }
+
+          //   if (element.fechaCreacion != null && element.fechaCreacion != "") {
+          //     element.fechaCreacion = this.formatDate(element.fechaCreacion);
+          //   }
+          // });
           this.progressSpinner = false;
           if (this.comunicaciones.length == 0 || this.comunicaciones == undefined || this.comunicaciones == null) {
             this.listaTarjetas[8].campos = [{
