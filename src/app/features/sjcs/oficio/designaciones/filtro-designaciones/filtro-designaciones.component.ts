@@ -46,7 +46,8 @@ export class FiltroDesignacionesComponent implements OnInit {
   showColegiado: boolean = false;
 
   esColegiado: boolean = false;
-  @Output() isColeg = new EventEmitter<boolean>();
+  @Output() isColegJE = new EventEmitter<boolean>();
+  @Output() isColegDesig = new EventEmitter<boolean>();
   radioTarjeta: string = 'designas';
 
   //Variables busqueda designas
@@ -105,7 +106,7 @@ export class FiltroDesignacionesComponent implements OnInit {
     sessionStorage.setItem("rowIdsToUpdate", JSON.stringify([]));
     // let esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
     // if(!esColegiado){   
-    this.checkAcceso();
+    this.checkAccesoDesigna();
     this.checkAccesoFichaActuacion();
     this.getParamsEJG();
 
@@ -287,6 +288,59 @@ export class FiltroDesignacionesComponent implements OnInit {
     //combo comun
     this.getComboEstados();
   }
+
+  cargaInicialJE() {
+    this.isLetrado = this.localStorageService.isLetrado;
+
+    if (!this.esColegiado) {
+      this.isButtonVisible = true;
+    } else {
+      this.isButtonVisible = true;// DEBE SER FALSE
+    }
+    if (this.localStorageService.institucionActual == "2003") {
+      this.isButtonVisible = false;
+    }
+    this.filtroJustificacion = new JustificacionExpressItem();
+    this.showJustificacionExpress = true;
+    this.esColegiado = false;
+    this.progressSpinner = true;
+    this.checkRestricciones = false;
+
+    //justificacion expres
+    this.cargaCombosJustificacion();
+
+    if (this.isLetrado) {
+      this.getDataLoggedUser();
+    }
+
+    if (this.esColegiado) {
+      this.disabledBusquedaExpress = true;
+      this.getDataLoggedUser();
+      this.disableRestricciones = true;
+    } else {
+      this.disableRestricciones = false;
+      this.disabledBusquedaExpress = false;
+      this.filtroJustificacion.ejgSinResolucion = "2";
+      this.filtroJustificacion.sinEJG = "2";
+      this.filtroJustificacion.resolucionPTECAJG = "2";
+      this.filtroJustificacion.conEJGNoFavorables = "2";
+    }
+
+    //viene de buscador express
+    if (sessionStorage.getItem('buscadorColegiados')) {
+      const { nombre, apellidos, nColegiado } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
+
+      sessionStorage.removeItem("buscadorColegiados");
+
+      this.usuarioBusquedaExpress.nombreAp = `${apellidos}, ${nombre}`;
+      this.usuarioBusquedaExpress.numColegiado = nColegiado;
+      this.showColegiado = true;
+    }
+
+    //combo comun
+    this.getComboEstados();
+    this.progressSpinner = false;
+  }
   checkAccesoFichaActuacion() {
     this.commonsService.checkAcceso(procesos_oficio.designasActuaciones)
       .then(respuesta => {
@@ -307,7 +361,7 @@ export class FiltroDesignacionesComponent implements OnInit {
       ).catch(error => console.error(error));
 
   }
-  checkAcceso() {
+  checkAccesoDesigna() {
     let controlAcceso = new ControlAccesoDto();
     controlAcceso.idProceso = procesos_oficio.designa;
 
@@ -320,10 +374,10 @@ export class FiltroDesignacionesComponent implements OnInit {
         this.esColegiado = true;
         if (derechoAcceso == 3) { //es colegio y escritura
           this.esColegiado = false;
-          this.isColeg.emit(false);
+          this.isColegDesig.emit(false);
         } else if (derechoAcceso == 2) {//es colegiado y solo lectura
           this.esColegiado = true;
-          this.isColeg.emit(true);
+          this.isColegDesig.emit(true);
         } else {
           sessionStorage.setItem("codError", "403");
           sessionStorage.setItem(
@@ -340,9 +394,42 @@ export class FiltroDesignacionesComponent implements OnInit {
     );
   }
 
+  checkAccesoJE() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = procesos_oficio.je;
+
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        const permisos = JSON.parse(data.body);
+        const permisosArray = permisos.permisoItems;
+        const derechoAcceso = permisosArray[0].derechoacceso;
+
+        this.esColegiado = true;
+        if (derechoAcceso == 3) { //es colegio y escritura
+          this.esColegiado = false;
+          this.isColegJE.emit(false);
+        } else if (derechoAcceso == 2) {//es colegiado y solo lectura
+          this.esColegiado = true;
+          this.isColegJE.emit(true);
+        } else {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
+        this.cargaInicialJE();
+      },
+      err => {
+        this.progressSpinner = false;
+      }
+    );
+  }
   changeFilters(event) {
 
     if (event == 'designas') {
+      this.checkAccesoDesigna();
       let keyConfirmation = "confirmacionGuardarJustificacionExpress";
       if (sessionStorage.getItem('rowIdsToUpdate') != null && sessionStorage.getItem('rowIdsToUpdate') != 'null' && sessionStorage.getItem('rowIdsToUpdate') != '[]') {
         this.confirmationService.confirm({
@@ -367,12 +454,14 @@ export class FiltroDesignacionesComponent implements OnInit {
     }
 
     if (event == 'justificacion') {
+      this.checkAccesoJE();
       sessionStorage.setItem("rowIdsToUpdate", JSON.stringify([]));
       this.showDesignas = false;
       this.showJustificacionExpress = true;
       this.expanded = false;
       this.isButtonVisible = false;
       this.showTablaDesigna.emit(false);
+     
     }
   }
 

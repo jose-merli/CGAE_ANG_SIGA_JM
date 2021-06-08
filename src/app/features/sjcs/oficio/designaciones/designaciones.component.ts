@@ -28,7 +28,8 @@ export class DesignacionesComponent implements OnInit {
   muestraTablaJustificacion: boolean = false;
   muestraTablaDesignas: boolean = false;
   comboTipoDesigna: any[];
-  colegiado: boolean;
+  colegiadoJE: boolean;
+  colegiadoDesig: boolean;
   isLetrado: boolean = false;
   idPersonaLogado;
   numColegiadoLogado;
@@ -240,27 +241,28 @@ export class DesignacionesComponent implements OnInit {
         };
         
         this.progressSpinner = false;
-        // this.sigaServicesNew.post("actuaciones_designacion", params).subscribe(
-        //   data => {
-        //     let object: ActuacionDesignaObject = JSON.parse(data.body);
-        //     let resp = object.actuacionesDesignaItems;
-        //       let validadas = 0;
-        //       let total = 0;
+        this.sigaServicesNew.post("actuaciones_designacion", params).subscribe(
+          data => {
+            let object: ActuacionDesignaObject = JSON.parse(data.body);
+            let resp = object.actuacionesDesignaItems;
+              let validadas = 0;
+              let total = 0;
     
-        //       resp.forEach(el => {
+              resp.forEach(el => {
 
-        //         if (el.validada) {
-        //           validadas += 1;
-        //         }
-        //       });
-        //       this.actuacionesDesignaItems = resp;
-        //       total = this.actuacionesDesignaItems.length;
-        //       if(total == validadas && total > 0){
-        //         element.validada = "Si";
-        //       }else{
-        //         element.validada = "No";
-        //       }
-        //     });
+                if (el.validada) {
+                  validadas += 1;
+                }
+              });
+              this.actuacionesDesignaItems = resp;
+              total = this.actuacionesDesignaItems.length;
+              if(total == validadas && total > 0){
+                element.validada = "Si";
+              }else{
+                element.validada = "No";
+              }
+            });
+            this.progressSpinner = false;
           },
           err => {
             this.progressSpinner = false;
@@ -345,8 +347,12 @@ export class DesignacionesComponent implements OnInit {
     return this.datePipe.transform(date, pattern);
   }
 
-  esColegiado(event){
-    this.colegiado = event;
+  esColegiadoJE(event){
+    this.colegiadoJE = event;
+  }
+
+  esColegiadoDesig(event){
+    this.colegiadoDesig = event;
   }
 
   actuacionesToDleteArr(event){
