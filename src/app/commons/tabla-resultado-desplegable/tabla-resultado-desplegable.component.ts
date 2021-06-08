@@ -1590,7 +1590,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
 
         this.progressSpinner = true;
   
-        let item = [actuacion.designaItem.ano, actuacion.designaItem.idTurno, actuacion.designaItem.idInstitucion];
+        let item = ["D" + actuacion.designaItem.ano, actuacion.designaItem.idTurno, actuacion.designaItem.idInstitucion, actuacion.designaItem.numero];
   
         this.sigaServices.post("designacionesBusquedaRelaciones", item).subscribe(
           n => {
