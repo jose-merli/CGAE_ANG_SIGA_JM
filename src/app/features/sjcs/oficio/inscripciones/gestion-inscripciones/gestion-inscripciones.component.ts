@@ -909,6 +909,68 @@ export class TablaInscripcionesComponent implements OnInit {
     );
   }
 
+  customSort(event: SortEvent) {
+    event.data.sort((data1, data2) => {
+        let value1 = data1[event.field];
+        let value2 = data2[event.field];
+        let result = null;
+
+        if (value1!=null && value2!=null){
+          if(isNaN(parseInt(value1))){ //Checked for numeric
+            const dayA = value1.substr(0, 2) ;
+            const monthA = value1.substr(3, 2);
+            const yearA = value1.substr(6, 10);
+            //console.log("fecha a:"+ yearA+","+monthA+","+dayA);
+            var dt=new Date(yearA, monthA, dayA);
+            if(!isNaN(dt.getTime())){ //Checked for date
+              result = this.compareDate(value1, value2);
+              return (event.order * result);
+            }
+          }
+        }
+
+        if (value1 == null && value2 != null){
+            result = -1;
+        }else if (value1 != null && value2 == null){
+            result = 1;
+        }else if (value1 == null && value2 == null){
+            result = 0;
+        }else if (typeof value1 === 'string' && typeof value2 === 'string'){
+            result = value1.localeCompare(value2);
+        }else{
+            result = (value1 < value2) ? -1 : (value1 > value2) ? 1 : 0;
+        }
+        return (event.order * result);
+    });
+}
+
+compareDate (fechaA:  any, fechaB:  any){
+
+  let dateA = null;
+  let dateB = null;
+  if (fechaA!=null){
+    const dayA = fechaA.substr(0, 2) ;
+    const monthA = fechaA.substr(3, 2);
+    const yearA = fechaA.substr(6, 10);
+    console.log("fecha a:"+ yearA+","+monthA+","+dayA);
+    dateA = new Date(yearA, monthA, dayA);
+  }
+
+  if (fechaB!=null){
+    const dayB = fechaB.substr(0, 2) ;
+    const monthB = fechaB.substr(3, 2);
+    const yearB = fechaB.substr(6, 10);
+    console.log("fecha b:"+ yearB+","+monthB+","+dayB);
+    dateB = new Date(yearB, monthB, dayB);
+  }
+
+
+  return (dateA < dateB ? -1 : 1);
+
+
+}
+
+
   getDatosComunicar() {
     let datosSeleccionados = [];
     let rutaClaseComunicacion = this.currentRoute.toString();
