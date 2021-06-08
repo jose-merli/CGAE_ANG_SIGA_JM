@@ -42,7 +42,7 @@ export class DefensaJuridicaComponent implements OnInit {
     this.getComboPreceptivo();
     this.getComboRenuncia();
     this.getComboSituaciones();
-    this.getComboComisaria();
+    this.getComboCDetencion();
 
     this.body = this.persistenceService.getDatos();
 
@@ -131,8 +131,8 @@ export class DefensaJuridicaComponent implements OnInit {
     );
   }
 
-  getComboComisaria() {
-    this.sigaServices.get("combo_comboComisaria").subscribe(
+  getComboCDetencion() {
+    this.sigaServices.get("gestionejg_comboCDetencion").subscribe(
       n => {
         this.comboComisaria = n.combooItems;
         this.commonsServices.arregloTildesCombo(this.comboComisaria);

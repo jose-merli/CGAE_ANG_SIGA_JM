@@ -134,31 +134,14 @@ export class ExpedientesEconomicosComponent implements OnInit {
     this.sigaServices.post("gestionejg_getExpedientesEconomicos", selected).subscribe(
       n => {
         this.expedientesEcon = JSON.parse(n.body).expEconItems;
-        if (n.body) {
-          let bodyBusqueda = new JusticiableBusquedaItem();
-          bodyBusqueda.idpersona = this.body.idPersonajg;
-          bodyBusqueda.idinstitucion = this.authenticationService.getInstitucionSession();
-          //Se recoge y se gestiona el solicitante de esta manera para evitar cambios inadecuados si se elimina el solicitante 
-          //de la tabla de unidad familiar 
-          this.sigaServices.post('gestionJusticiables_getJusticiableByIdPersona', bodyBusqueda).subscribe(
-            (n) => {
-              this.solicitante = JSON.parse(n.body).justiciable;
+        /* if (n.body) {
+          this.expedientesEcon.forEach(element => {
+            //element.justiciable = JSON.parse(JSON.stringify(selected.nombreApeSolicitante));
+            element.justiciable = this.expedientesEcon.apellidos+", "+this.expedientesEcon.nombre+" "+this.expedientesEcon.nif;
+          }); 
 
-              //Se asigna a la columna justiciable el solicitante actual del ejg
-              this.expedientesEcon.forEach(element => {
-                //element.justiciable = JSON.parse(JSON.stringify(selected.nombreApeSolicitante));
-                element.justiciable = this.solicitante.apellidos+", "+this.solicitante.nombre+" "+this.solicitante.nif;
-              });
-
-              this.progressSpinner = false;
-            },
-            (err) => {
-              this.progressSpinner = false;
-            }
-          );
-
-        }
-        this.nExpedientes = this.expedientesEcon.length;
+        } */
+        if(this.expedientesEcon != null)this.nExpedientes = this.expedientesEcon.length;
         this.progressSpinner = false;
       },
       err => {

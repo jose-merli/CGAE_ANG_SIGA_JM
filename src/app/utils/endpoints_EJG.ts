@@ -28,7 +28,8 @@ export let endpoints_EJG: any = {
     gestionejg_getResolucion: "ejg/gestion-ejg/getResolucion",
     gestionejg_comboTipoExpediente: "ejg/gestion-ejg/comboTipoExpediente",
     gestionejg_comboSituaciones: "ejg/gestion-ejg/comboSituaciones",
-
+    gestionejg_comboCDetencion: "ejg/gestion-ejg/comboCDetencion",
+    
     //Busqueda EJG
     gestionejg_descargarExpedientesJG: "ejg/gestion-ejg/descargarExpedientesJG",
     filtrosejg_anadirExpedienteARemesa: "ejg/filtros-ejg/anadirExpedienteARemesa",
