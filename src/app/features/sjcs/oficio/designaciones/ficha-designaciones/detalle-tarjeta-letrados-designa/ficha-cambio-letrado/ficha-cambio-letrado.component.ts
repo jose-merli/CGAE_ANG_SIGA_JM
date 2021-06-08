@@ -205,7 +205,8 @@ export class FichaCambioLetradoComponent implements OnInit {
     this.sigaServices.post("designaciones_updateLetradoDesignacion", request).subscribe(
       n => {
         this.progressSpinner = false;
-
+        //Mostrar mensaje todo correcto
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.router.navigate(['/fichaDesignaciones']);
       },
       err => {
