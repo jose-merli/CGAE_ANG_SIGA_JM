@@ -139,8 +139,7 @@ export class DetalleTarjetaInteresadosFichaDesignacionOficioComponent implements
 
     this.confirmationService.confirm({
       key: keyConfirmation,
-      //message: this.translateService.instant('sjcs.oficio.turnos.eliminar.mensajeConfirmacion'),
-      message: "¿Está seguro de querer eliminar el interesado?", //PROVISIONAL
+      message: this.translateService.instant('messages.deleteConfirmation'),
       icon: "fa fa-trash-alt",
       accept: () => {
         this.progressSpinner = true;
