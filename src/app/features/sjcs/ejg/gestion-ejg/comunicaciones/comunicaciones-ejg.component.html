@@ -52,11 +52,11 @@
             <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
               <td class="text-center" *ngFor="let col of columns">
 
-                <div *ngIf="col.field=='claseComunicacion'">
+                <div *ngIf="col.field=='destinatario'">
                   <span class="enlace" (click)="navigateTo([dato])">{{dato[col.field]}}</span>
                 </div>
 
-                <div *ngIf="col.field!='claseComunicacion'">
+                <div *ngIf="col.field!='destinatario'">
                   <span>{{dato[col.field]}}</span>
                 </div>
               </td>

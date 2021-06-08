@@ -6,6 +6,7 @@ import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../commons/translate';
 import { DataTable } from 'primeng/primeng';
+import { EnviosMasivosItem } from '../../../../../models/EnviosMasivosItem';
 
 @Component({
   selector: 'app-comunicaciones-ejg',
@@ -35,7 +36,7 @@ export class ComunicacionesEJGComponent implements OnInit {
   rowsPerPage: any = [];
   selectedItem: number = 10;
   item: EJGItem;
-  comunicaciones: ComunicacionesSearchItem[] = [];
+  comunicaciones: EnviosMasivosItem[] = [];
   numComunicaciones=0;
   progressSpinner: boolean = false;
 
@@ -105,9 +106,9 @@ export class ComunicacionesEJGComponent implements OnInit {
       { field: "claseComunicacion", header: "informesycomunicaciones.comunicaciones.busqueda.claseComunicacion" },
       { field: "destinatario", header: "informesycomunicaciones.comunicaciones.busqueda.destinatario" },
       { field: "fechaCreacion", header: "informesycomunicaciones.enviosMasivos.fechaCreacion" },
-      { field: "fechaProgramacion", header: "informesycomunicaciones.comunicaciones.busqueda.fechaProgramada" },
+      { field: "fechaProgramada", header: "informesycomunicaciones.comunicaciones.busqueda.fechaProgramada" },
       { field: "tipoEnvio", header: "informesycomunicaciones.comunicaciones.busqueda.tipoEnvio" },
-      { field: "estado", header: "censo.nuevaSolicitud.estado" }
+      { field: "estadoEnvio", header: "censo.nuevaSolicitud.estado" }
     ];
 
     this.cols.forEach(it => this.buscadores.push(""));
@@ -160,7 +161,7 @@ export class ComunicacionesEJGComponent implements OnInit {
 
     this.sigaServices.post("gestionejg_getComunicaciones", this.item).subscribe(
       n => {
-        this.comunicaciones = JSON.parse(n.body).comunicacionesItem;
+        this.comunicaciones = JSON.parse(n.body).enviosMasivosItem;
 
         this.numComunicaciones = this.comunicaciones.length;
         this.progressSpinner = false;
