@@ -315,7 +315,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     this.sigaServices.get("combo_comboModulosDesignaciones").subscribe(
       n => {
         this.comboModulos = n.combooItems;
-        if(this.actuacionDesigna.actuacion.idProcedimiento != ""){
+        if(this.actuacionDesigna.actuacion.idProcedimiento != "" && this.actuacionDesigna.actuacion.idProcedimiento != null && this.actuacionDesigna.actuacion.idProcedimiento != undefined){
           this.comboModulos.push({label:this.actuacionDesigna.actuacion.modulo, value:this.actuacionDesigna.actuacion.idProcedimiento});
         }
         let uniqueArrayValue = [];
@@ -347,7 +347,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     this.sigaServices.post("combo_comboModulosConJuzgado", $event).subscribe(
       n => {
         this.comboModulos = JSON.parse(n.body).combooItems;
-        if(this.actuacionDesigna.actuacion.idProcedimiento != ""){
+        if(this.actuacionDesigna.actuacion.idProcedimiento != "" && this.actuacionDesigna.actuacion.idProcedimiento != null && this.actuacionDesigna.actuacion.idProcedimiento != undefined){
           this.comboModulos.push({label:this.actuacionDesigna.actuacion.modulo, value:this.actuacionDesigna.actuacion.idProcedimiento});
         }
         let uniqueArrayValue = [];
@@ -380,7 +380,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     this.sigaServices.post("combo_comboModulosConProcedimientos", idPretension).subscribe(
       n => {
         this.comboModulos = JSON.parse(n.body).combooItems;
-        if(this.actuacionDesigna.actuacion.idProcedimiento != ""){
+        if(this.actuacionDesigna.actuacion.idProcedimiento != "" && this.actuacionDesigna.actuacion.idProcedimiento != null && this.actuacionDesigna.actuacion.idProcedimiento != undefined){
           this.comboModulos.push({label:this.actuacionDesigna.actuacion.modulo, value:this.actuacionDesigna.actuacion.idProcedimiento});
         }
         let uniqueArrayValue = [];
@@ -415,7 +415,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     this.sigaServices.get("combo_comboProcedimientosDesignaciones").subscribe(
       n => {
         this.comboProcedimientos = n.combooItems;
-        if(this.actuacionDesigna.actuacion.nombreProcedimiento != null && this.actuacionDesigna.actuacion.idPretension != ""){
+        if(this.actuacionDesigna.actuacion.nombreProcedimiento != null && this.actuacionDesigna.actuacion.idPretension != "" && this.actuacionDesigna.actuacion.nombreProcedimiento != undefined){
           this.comboProcedimientos.push({label:this.actuacionDesigna.actuacion.nombreProcedimiento, value:this.actuacionDesigna.actuacion.idPretension});
         }
         let uniqueArrayValue = [];
@@ -447,7 +447,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     this.sigaServices.post("combo_comboProcedimientosConJuzgado", idJuzgado).subscribe(
       n => {
         this.comboProcedimientos = JSON.parse(n.body).combooItems;
-        if(this.actuacionDesigna.actuacion.nombreProcedimiento != null && this.actuacionDesigna.actuacion.idPretension != ""){
+        if(this.actuacionDesigna.actuacion.nombreProcedimiento != null && this.actuacionDesigna.actuacion.idPretension != "" && this.actuacionDesigna.actuacion.nombreProcedimiento != undefined){
           this.comboProcedimientos.push({label:this.actuacionDesigna.actuacion.nombreProcedimiento, value:this.actuacionDesigna.actuacion.idPretension});
         }
         let uniqueArrayValue = [];
@@ -479,7 +479,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     this.sigaServices.post("combo_comboProcedimientosConModulo", idProcedimiento).subscribe(
       n => {
         this.comboProcedimientos = JSON.parse(n.body).combooItems;
-        if(this.actuacionDesigna.actuacion.nombreProcedimiento != null && this.actuacionDesigna.actuacion.idPretension != ""){
+        if(this.actuacionDesigna.actuacion.nombreProcedimiento != null && this.actuacionDesigna.actuacion.idPretension != "" && this.actuacionDesigna.actuacion.nombreProcedimiento != undefined){
           this.comboProcedimientos.push({label:this.actuacionDesigna.actuacion.nombreProcedimiento, value:this.actuacionDesigna.actuacion.idPretension});
         }
         let uniqueArrayValue = [];
