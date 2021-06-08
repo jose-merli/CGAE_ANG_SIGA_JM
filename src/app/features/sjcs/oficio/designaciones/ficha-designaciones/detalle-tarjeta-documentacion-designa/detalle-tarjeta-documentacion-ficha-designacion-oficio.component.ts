@@ -12,6 +12,8 @@ import { saveAs } from "file-saver/FileSaver";
 import { SigaStorageService } from '../../../../../../siga-storage.service';
 import { UsuarioLogado } from '../detalle-tarjeta-actuaciones-designa/ficha-actuacion/ficha-actuacion.component';
 import { ActuacionDesignaItem } from '../../../../../../models/sjcs/ActuacionDesignaItem';
+import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
+import { Router } from '@angular/router';
 
 interface Cabecera {
   id: string;
@@ -76,6 +78,7 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
   comboTipoDoc = [];
   textFilter: string = "Seleccionar";
   comboAsociado = [];
+  modoLectura: boolean = false;
 
   constructor(
     private datepipe: DatePipe,
@@ -84,23 +87,44 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
     private trmDoc: TablaResultadoMixDocDesigService,
     private translateService: TranslateService,
     private cdRef: ChangeDetectorRef,
-    private localStorageService: SigaStorageService
+    private localStorageService: SigaStorageService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
 
-    this.isLetrado = this.localStorageService.isLetrado;
+    this.commonsService.checkAcceso(procesos_oficio.designasDocumentacion)
+      .then(respuesta => {
+        let permisoEscritura = respuesta;
 
-    if (this.isLetrado) {
-      this.usuarioLogado.idPersona = this.localStorageService.idPersona;
-      this.usuarioLogado.numColegiado = this.localStorageService.numColegiado;
-    }
+        if (permisoEscritura == undefined) {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
 
-    this.getComboAsociado();
+        if (!permisoEscritura) {
+          this.modoLectura = true;
+        }
 
-    if (this.comboTipoDoc == undefined || this.comboTipoDoc == null || this.comboTipoDoc.length == 0) {
-      this.getComboTiposDoc();
-    }
+        this.isLetrado = this.localStorageService.isLetrado;
+
+        if (this.isLetrado) {
+          this.usuarioLogado.idPersona = this.localStorageService.idPersona;
+          this.usuarioLogado.numColegiado = this.localStorageService.numColegiado;
+        }
+
+        this.getComboAsociado();
+
+        if (this.comboTipoDoc == undefined || this.comboTipoDoc == null || this.comboTipoDoc.length == 0) {
+          this.getComboTiposDoc();
+        }
+
+      })
+      .catch(err => console.log(err));
 
   }
 
