@@ -34,23 +34,40 @@
       </div>
     </div>
     <div *ngIf="openDef" class="card-body card-body-ficha">
-      <div class="row">
-        <label>{{'justiciaGratuita.ejg.datosGenerales.Perceptivo'|translate}}</label>
-        <p-dropdown class="select-form" [(ngModel)]='body.perceptivo' placeholder="Seleccionar"
-          [options]="comboPreceptivo" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
-        </p-dropdown>
-        <label>{{'justiciaGratuita.ejg.datosGenerales.Renuncia'|translate}}</label>
-        <p-dropdown class="select-form" [(ngModel)]='body.renuncia' placeholder="Seleccionar" [options]="comboRenuncia"
-          [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
-        </p-dropdown>
-        <label>{{'censo.fichaCliente.situacion.cabecera'|translate}}</label>
-        <p-dropdown class="select-form" [(ngModel)]='body.renuncia' placeholder="Seleccionar" [options]="comboSituacion"
-          [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
-        </p-dropdown>
-        <label>{{"gratuita.volantesExpres.literal.centroDetencion" | translate}}</label>
-        <p-dropdown class="select-form" [(ngModel)]='body.renuncia'
-          placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboComisaria" [filter]="true"
-          filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+      <div class="form-row">
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{'justiciaGratuita.ejg.datosGenerales.Perceptivo'|translate}}</label>
+          <p-dropdown class="select-form" [(ngModel)]='body.perceptivo' placeholder="Seleccionar"
+            [options]="comboPreceptivo" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
+          </p-dropdown>
+          <label>{{'justiciaGratuita.ejg.datosGenerales.Renuncia'|translate}}</label>
+          <p-dropdown class="select-form" [(ngModel)]='body.renuncia' placeholder="Seleccionar"
+            [options]="comboRenuncia" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
+          </p-dropdown>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{'censo.fichaCliente.situacion.cabecera'|translate}}</label>
+          <p-dropdown class="select-form" [(ngModel)]='body.renuncia' placeholder="Seleccionar"
+            [options]="comboSituacion" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
+          </p-dropdown>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{'gratuita.mantAsistencias.literal.numeroDiligenciasolo'|translate}}</label>
+          <input type="text" [(ngModel)]="body.annio" class="form-control" (keypress)="numberOnly($event)"
+            maxLength="10" pInputText>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{"gratuita.volantesExpres.literal.centroDetencion" | translate}}</label>
+          <p-dropdown class="select-form" [(ngModel)]='body.renuncia'
+            placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboComisaria" [filter]="true"
+            filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{"justiciaGratuita.ejg.datosGenerales.calidad" | translate}}</label>
+          <p-dropdown class="select-form" [(ngModel)]='body.renuncia'
+            placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboCalidad" [filter]="true"
+            filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+        </div>
         <!-- <app-input-dividido [anio]="anio" [numero]="numero" titulo="Año / Número"></app-input-dividido> -->
       </div>
     </div>
@@ -74,7 +91,8 @@
 </div>
 
 <div class="mt-3 text-right main-button" id="down">
-  <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate }}"></button>
+  <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left"
+    label="{{ 'general.boton.volver' | translate }}"></button>
 </div>
 
 <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" icon="icon" key="confirmGuardar" width="425"

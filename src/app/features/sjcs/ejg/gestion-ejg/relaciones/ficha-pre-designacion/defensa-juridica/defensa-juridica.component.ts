@@ -26,6 +26,7 @@ export class DefensaJuridicaComponent implements OnInit {
   comboRenuncia;
   comboSituacion;
   comboComisaria;
+  comboCalidad;
 
   openDef: boolean = false;
 
@@ -43,6 +44,7 @@ export class DefensaJuridicaComponent implements OnInit {
     this.getComboRenuncia();
     this.getComboSituaciones();
     this.getComboCDetencion();
+    this.getComboCalidad();
 
     this.body = this.persistenceService.getDatos();
 
@@ -140,6 +142,28 @@ export class DefensaJuridicaComponent implements OnInit {
       err => {
       }
     );
+  }
+
+  getComboCalidad() {
+    this.sigaServices.get("gestionejg_comboTipoencalidad").subscribe(
+      n => {
+        this.comboCalidad = n.combooItems;
+        this.commonsServices.arregloTildesCombo(this.comboComisaria);
+      },
+      err => {
+      }
+    );
+  }
+
+  numberOnly(event): boolean {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode >= 48 && charCode <= 57) {
+      return true;
+    }
+    else {
+      return false;
+
+    }
   }
 
   backTo() {
