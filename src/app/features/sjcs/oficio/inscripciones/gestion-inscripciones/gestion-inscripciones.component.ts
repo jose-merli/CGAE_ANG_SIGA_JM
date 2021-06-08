@@ -75,6 +75,11 @@ export class TablaInscripcionesComponent implements OnInit {
   rows: any;
   sort: (compareFn?: (a: any, b: any) => number) => any[];
   searchDireccionIdPersona = new DatosDireccionesObject();
+  checkValidarInscripciones: boolean = false;
+  currentRoute: String;
+  idClasesComunicacionArray: string[] = [];
+  idClaseComunicacion: String;
+  keys: any[] = [];
 
   constructor(private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -88,6 +93,7 @@ export class TablaInscripcionesComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.currentRoute = this.router.url;
     this.isLetrado = this.localStorageService.isLetrado;
     this.selectedDatos = [];
     this.datos.fechaActual = new Date();
@@ -776,26 +782,26 @@ export class TablaInscripcionesComponent implements OnInit {
       this.numSelected = selectedDatos.length;
       let findDato = this.selectedDatos.find(item => item.estado != "1");
       let currentDate = new Date();
-      let currentDateString =  this.formatDateSinHora(currentDate);
+      let currentDateString = this.formatDateSinHora(currentDate);
       let selectedDate = this.datos.fechaActual
       let selectedDateString = this.formatDateSinHora(selectedDate);
-      if (findDato != null ) {
+      if (findDato != null) {
         this.disabledSolicitarBaja = true;
       }
       else {
-        if(currentDateString != selectedDateString){
+        if (currentDateString != selectedDateString) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("sjcs.oficio.inscripciones.gestion.validaFecha"));
           this.disabledSolicitarBaja = true;
         }
         this.disabledSolicitarBaja = false;
       }
       let findDato2 = this.selectedDatos.filter(this.esPendienteAltaOpendienteBaja);
-      if(findDato2.length == 0){
+      if (findDato2.length == 0) {
         this.disabledValidar = true;
-      }else{
+      } else {
         this.validarDirecciones(selectedDatos[0].idpersona, findDato2);
       }
-      
+
       if (findDato2 != null) {
         this.disabledDenegar = true;
       }
@@ -810,11 +816,21 @@ export class TablaInscripcionesComponent implements OnInit {
         this.disabledCambiarFecha = false;
       }
     }
+
+    if (this.selectedDatos && this.selectedDatos != null) {
+      this.checkValidarInscripciones = false;
+      this.selectedDatos.forEach(el => {
+        if (this.isLetrado && el.validarinscripciones && el.validarinscripciones != null && el.validarinscripciones.toUpperCase() == 'S') {
+          this.checkValidarInscripciones = true;
+        }
+      });
+    }
+
   }
 
   esPendienteAltaOpendienteBaja(item) {
 
-   return item.estado == "0" || item.estado == "2";
+    return item.estado == "0" || item.estado == "2";
 
   }
 
@@ -873,5 +889,66 @@ export class TablaInscripcionesComponent implements OnInit {
           },
         );
     }
+  }
+  navigateComunicar(dato) {
+    sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
+    //IDMODULO de SJCS es 10
+    sessionStorage.setItem("idModulo", '10');
+    
+    this.getDatosComunicar();
+  }
+  
+  getKeysClaseComunicacion() {
+    this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
+      data => {
+        this.keys = JSON.parse(data["body"]);
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  getDatosComunicar() {
+    let datosSeleccionados = [];
+    let rutaClaseComunicacion = this.currentRoute.toString();
+
+    this.sigaServices
+      .post("dialogo_claseComunicacion", rutaClaseComunicacion)
+      .subscribe(
+        data => {
+          this.idClaseComunicacion = JSON.parse(
+            data["body"]
+          ).clasesComunicaciones[0].idClaseComunicacion;
+          this.sigaServices
+            .post("dialogo_keys", this.idClaseComunicacion)
+            .subscribe(
+              data => {
+                this.keys = JSON.parse(data["body"]).keysItem;
+                this.selectedDatos.forEach(element => {
+                  let keysValues = [];
+                  this.keys.forEach(key => {
+                    if (element[key.nombre.toLowerCase()] != undefined) {
+                      keysValues.push(element[key.nombre.toLowerCase()]);
+                    }
+                  });
+                  datosSeleccionados.push(keysValues);
+                });
+
+                sessionStorage.setItem(
+                  "datosComunicar",
+                  JSON.stringify(datosSeleccionados)
+                );
+                this.router.navigate(["/dialogoComunicaciones"]);
+              },
+              err => {
+                console.log(err);
+              }
+            );
+        },
+        err => {
+          console.log(err);
+        }
+      );
   }
 }

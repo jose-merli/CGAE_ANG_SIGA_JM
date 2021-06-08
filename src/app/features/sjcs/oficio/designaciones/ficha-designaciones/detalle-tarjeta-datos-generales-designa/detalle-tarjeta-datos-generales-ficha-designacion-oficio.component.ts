@@ -392,8 +392,8 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         // newDesigna.fechaAlta = new Date(this.fechaGenerales);
         newDesigna.fechaAlta = new Date(this.fechaGenerales);
         var today = new Date();
-        var year = today.getFullYear().valueOf();
-        newDesigna.ano = year;
+        // var year = today.getFullYear().valueOf();
+        newDesigna.ano = Number(this.anio.value);
         if(this.nuevaDesignaCreada != undefined){
           newDesigna.numero = Number(this.nuevaDesignaCreada.numero);
         }else if (this.initDatos != undefined) {
