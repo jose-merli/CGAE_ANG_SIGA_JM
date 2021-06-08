@@ -881,8 +881,11 @@ export class FichaDesignacionesComponent implements OnInit {
             {
               "key": this.translateService.instant('justiciaGratuita.oficio.designaciones.fechaDesignacion'),
               "value": this.procurador[0].fechaDesigna
-            }
-            ]
+            },
+            {
+              "key": this.translateService.instant('justiciaGratuita.oficio.designaciones.numerototalprocuradores'),
+              "value": this.procurador[0].numeroTotalProcuradores
+            }]
           } else {
             this.listaTarjetas[5].campos = [
               {

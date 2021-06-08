@@ -61,7 +61,7 @@
               <label>{{ "justiciaGratuita.oficio.designaciones.fechaDesignacion" | translate}} (*)</label>
               <app-fecha [inputStyleClass]="(body.fechaDesignacion == null) ? 'camposObligatorios': ''" [(value)]="body.fechaDesignacion"
                (valueChangeSelected)="fillFechaDesignacion($event)" (valueChangeInput)="fillFechaDesignacion($event)"
-                [disabled]="disableFechaDesignacion">
+                [disabled]="disableFechaDesignacion"  [minDate]="minDateDesigna">
               </app-fecha>
             </div>
             <div *ngIf="!disableCheck" class="form-group col-lg-2 col-md-2">

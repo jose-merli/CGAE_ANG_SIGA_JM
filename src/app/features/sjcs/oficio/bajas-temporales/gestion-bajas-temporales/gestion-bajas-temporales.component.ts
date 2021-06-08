@@ -250,8 +250,9 @@ export class GestionBajasTemporalesComponent implements OnInit {
   }
 
   sortData(sort: Sort) {
+    console.log("entro en el método Sort con valor:"+ sort.active+","+sort.direction);
     let data: Row[] = [];
-    this.rowGroups = this.rowGroupsAux.filter((row) => {
+    this.rowGroups = this.rowGroups.filter((row) => {
       data.push(row);
     });
     data = data.slice();
@@ -259,38 +260,88 @@ export class GestionBajasTemporalesComponent implements OnInit {
       this.rowGroups = data;
       return;
     }
+
     this.rowGroups = data.sort((a, b) => {
       const isAsc = sort.direction === 'asc';
-      let resultado;
-      for (let i = 0; i < a.cells.length; i++) {
-        resultado = compare(a.cells[i].value, b.cells[i].value, isAsc);
+
+      for (let i = 0; i < this.cabeceras.length; i++) {
+        let nombreCabecera = this.cabeceras[i].id;
+        if (nombreCabecera == sort.active){
+          console.log("a.cells["+i+"].type:"+a.cells[i].type);
+
+          if (a.cells[i].type=='datePickerFin' && b.cells[i].type=='datePickerFin'){
+            return compareDate(a.cells[i].value[0], b.cells[i].value[0], isAsc);
+          }
+
+          let valorA = a.cells[i].value;
+          let valorB = b.cells[i].value;
+          if (valorA!=null && valorB!=null){
+            if(isNaN(valorA)){ //Checked for numeric
+              const dayA = valorA.substr(0, 2) ;
+              const monthA = valorA.substr(3, 2);
+              const yearA = valorA.substr(6, 10);
+              console.log("fecha a:"+ yearA+","+monthA+","+dayA);
+              var dt=new Date(yearA, monthA, dayA);
+              if(!isNaN(dt.getTime())){ //Checked for date
+                return compareDate(a.cells[i].value, b.cells[i].value, isAsc);
+              }else{
+              }
+            } else{
+            }
+          }
+
+          return compare(a.cells[i].value, b.cells[i].value, isAsc);
+          
+        }
       }
-      return resultado;
+ 
     });
-    this.rowGroupsAux = this.rowGroups;
-    this.totalRegistros = this.rowGroups.length;
 
   }
 
-  searchChange(j: any) {
-    let isReturn = true;
+  getComboLabel(key: string){
+    for (let i = 0; i < this.comboTipo.length; i++){
+      if (this.comboTipo[i].value == key){
+        return this.comboTipo[i].label;
+      }
+    }
+    return "";
+  }
+
+
+  searchChange(x: any) {
     let isReturnArr = [];
     this.rowGroups = this.rowGroupsAux.filter((row) => {
-      if (
-        this.searchText[j] != " " &&
-        this.searchText[j] != undefined &&
-        !row.cells[j].value.toString().toLowerCase().includes(this.searchText[j].toLowerCase())
-      ) {
-        isReturn = false;
-      } else {
-        isReturn = true;
+      let isReturn = true;
+      for(let j=0; j<this.cabeceras.length;j++){
+        if (this.searchText[j] != " " &&  this.searchText[j] != undefined){
+          if (row.cells[j].value){
+            console.log("tipo de celda:"+row.cells[j].type);
+            if(row.cells[j].type == 'select'){
+              let labelCombo = this.getComboLabel(row.cells[j].value);
+              console.log("valor de celda:"+labelCombo);
+              if (!labelCombo.toLowerCase().includes(this.searchText[j].toLowerCase())){
+                isReturn = false;
+                break;
+              }
+            } else if (!row.cells[j].value.toString().toLowerCase().includes(this.searchText[j].toLowerCase())){
+              isReturn = false;
+              break;
+            }
+          }else{
+              if (this.searchText[j]!=""){
+                isReturn = false;
+                break;
+              }
+          }
+        }
       }
-      if (isReturn) {
+      if (isReturn){
         return row;
       }
+
     });
     this.totalRegistros = this.rowGroups.length;
-    this.rowGroupsAux = this.rowGroups;
   }
 
   showMessage(event) {
@@ -526,7 +577,52 @@ export class GestionBajasTemporalesComponent implements OnInit {
     this.seleccionarTodo = evento;
   }
 }
-function compare(a: string, b: number | string, isAsc: boolean) {
+
+function compareDate (fechaA:  any, fechaB:  any, isAsc: boolean){
+
+  let dateA = null;
+  let dateB = null;
+  if (fechaA!=null){
+    const dayA = fechaA.substr(0, 2) ;
+    const monthA = fechaA.substr(3, 2);
+    const yearA = fechaA.substr(6, 10);
+    console.log("fecha a:"+ yearA+","+monthA+","+dayA);
+    dateA = new Date(yearA, monthA, dayA);
+  }
+
+  if (fechaB!=null){
+    const dayB = fechaB.substr(0, 2) ;
+    const monthB = fechaB.substr(3, 2);
+    const yearB = fechaB.substr(6, 10);
+    console.log("fecha b:"+ yearB+","+monthB+","+dayB);
+    dateB = new Date(yearB, monthB, dayB);
+  }
+
+  console.log("comparacionDate isAsc:"+ isAsc+";");
+
+  return compare(dateA, dateB, isAsc);
+
+
+}
+
+function compare(a: number | string | Date, b: number | string | Date, isAsc: boolean) {
+  console.log("comparacion  a:"+ a+"; b:"+ b);
+
+  if (typeof a === "string" && typeof b === "string") {
+    console.log("comparacion  de cadenas");
+    a = a.toLowerCase();
+    b = b.toLowerCase();
+  }
+
+  console.log("compare isAsc:"+ isAsc+";");
+
+  if (a==null && b!=null){
+    return ( 1 ) * (isAsc ? 1 : -1);
+  }
+  if (a!=null && b==null){
+    return ( -1 ) * (isAsc ? 1 : -1);
+  }
+
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }
 
