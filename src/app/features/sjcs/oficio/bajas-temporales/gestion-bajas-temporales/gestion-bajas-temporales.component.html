@@ -6,11 +6,11 @@
             <app-paginador2 (perPage)="perPage($event)" (seleccionarTodo)="selectedAll($event)"
                 (fromReg)="fromReg($event)" (toReg)="toReg($event)" [totalRegistros]="totalRegistros"></app-paginador2>
         </div>
-        <div class="table" matSort (matSortChange)="sortData($event)" #table>
+        <div class="table" matSort (matSortChange)="sortData($event)"  matSortDirection="asc" #table>
             <div class="table-header ">
                 <div class="table-header-child p-2" *ngFor="let cabecera of cabeceras; let j = index" #BorderedHeader>
                     <div>
-                        <div [mat-sort-header]=cabecera.id>{{cabecera.name | translate}}</div>
+                        <div [mat-sort-header]=cabecera.id disableClear>{{cabecera.name | translate}}</div>
                         <input type="text" class="form-control" pInputTex [(ngModel)]="searchText[j]"
                             (ngModelChange)="searchChange(j)" autocomplete="off" placeholder="Buscar">
                     </div>
