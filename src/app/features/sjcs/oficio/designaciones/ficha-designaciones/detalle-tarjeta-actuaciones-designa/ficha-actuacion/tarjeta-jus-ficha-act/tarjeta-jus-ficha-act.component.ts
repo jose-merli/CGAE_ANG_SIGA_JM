@@ -26,6 +26,10 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
   @Input() actuacionDesigna: Actuacion;
   @Input() isColegiado;
   @Input() usuarioLogado: UsuarioLogado;
+  // Este modo lectura se produce cuando:
+  // - Es colegiado y la actuación está validada y el turno no permite la modificación o la actuación no pertenece al colegiado
+  // - La actuación está facturada
+  @Input() modoLectura2: boolean = false;
   modoLectura: boolean;
   disableAll: boolean = false;
   fechaActuacion: Date;
