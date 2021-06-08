@@ -179,9 +179,9 @@ export class FichaActuacionComponent implements OnInit {
           this.router.navigate(["/errorAcceso"]);
         }
 
-        if (!permisoEscritura) {
-          this.modoLectura = true;
-        }
+        // if (!permisoEscritura) {
+        //   this.modoLectura = true;
+        // }
 
         this.isColegiado = this.sigaStorageService.isLetrado;
 
