@@ -454,6 +454,8 @@ import { SigaStorageService } from './siga-storage.service';
 import { FichaCambioLetradoComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/ficha-cambio-letrado/ficha-cambio-letrado.component';
 import { LetradoEntranteComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/ficha-cambio-letrado/letrado-entrante/letrado-entrante.component';
 import { LetradoSalienteComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/ficha-cambio-letrado/letrado-saliente/letrado-saliente.component';
+import { ProcuradorPreDesignacionComponent } from './features/sjcs/ejg/gestion-ejg/relaciones/ficha-pre-designacion/procurador-pre-designacion/procurador-pre-designacion.component';
+import { ContrariosPreDesignacionComponent } from './features/sjcs/ejg/gestion-ejg/relaciones/ficha-pre-designacion/contrarios-pre-designacion/contrarios-pre-designacion.component';
 
 @NgModule({
 	declarations: [
@@ -623,6 +625,8 @@ import { LetradoSalienteComponent } from './features/sjcs/oficio/designaciones/f
 		ComunicacionesComponent,
 		AddExpedienteComponent,
 		ComunicacionesEJGComponent,
+		ProcuradorPreDesignacionComponent,
+ 		ContrariosPreDesignacionComponent,
 		
 		GestionActasComponent,
 		MantenimientoFacturacionComponent,

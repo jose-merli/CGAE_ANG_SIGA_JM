@@ -28,6 +28,9 @@ export class DefensaJuridicaComponent implements OnInit {
   comboComisaria;
   comboCalidad;
 
+  ComisariaCabecera;
+  CalidadCabecera;
+
   openDef: boolean = false;
 
   msgs: Message[] = [];
@@ -49,6 +52,19 @@ export class DefensaJuridicaComponent implements OnInit {
     this.body = this.persistenceService.getDatos();
 
     this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+
+  }
+
+  getCabecera(){
+    //Valor de la cabecera para la comisaria
+    this.comboComisaria.forEach(element => {
+      if(element.value==this.bodyInicial.comisaria)this.ComisariaCabecera=element.label;
+    });
+    //Valor de la cabecera para en calidad de
+    this.comboCalidad.forEach(element => {
+      if(element.value==this.bodyInicial.calidad)this.CalidadCabecera=element.label;
+    });
+
   }
 
   abreCierra(){
@@ -107,6 +123,7 @@ export class DefensaJuridicaComponent implements OnInit {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.bodyInicial = this.body;
           this.persistenceService.setDatos(this.body);
+          this.getCabecera();
         }
         else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         this.progressSpinner = false;
@@ -157,6 +174,11 @@ export class DefensaJuridicaComponent implements OnInit {
       n => {
         this.comboComisaria = n.combooItems;
         this.commonsServices.arregloTildesCombo(this.comboComisaria);
+        if(this.bodyInicial.comisaria!=null){
+        this.comboComisaria.forEach(element => {
+          if(element.value==this.bodyInicial.comisaria)this.ComisariaCabecera=element.label;
+        });
+      }
       },
       err => {
       }
@@ -168,6 +190,13 @@ export class DefensaJuridicaComponent implements OnInit {
       n => {
         this.comboCalidad = n.combooItems;
         this.commonsServices.arregloTildesCombo(this.comboCalidad);
+        if(this.bodyInicial.calidad!=null){
+          //Valor de la cabecera para en calidad de
+          this.comboCalidad.forEach(element => {
+            if(element.value==this.bodyInicial.calidad)this.CalidadCabecera=element.label;
+          });
+        }
+          
       },
       err => {
       }
@@ -192,9 +221,5 @@ export class DefensaJuridicaComponent implements OnInit {
       summary: summary,
       detail: msg
     });
-  }
-
-  backTo() {
-    this.location.back();
   }
 }
