@@ -145,6 +145,8 @@
             [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura"
             (click)="checkPermisosConsultEdiRelacion()" type="button" iconPos="left"
             label="{{'general.boton.consultEditRelacion' | translate}}"></button>
+            <button pButton (click)="navigateToFichaPre()"
+                type="button" iconPos="left" label="Ficha Pre-designacion"></button>
         </div>
       </div>
       <p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" #cd>

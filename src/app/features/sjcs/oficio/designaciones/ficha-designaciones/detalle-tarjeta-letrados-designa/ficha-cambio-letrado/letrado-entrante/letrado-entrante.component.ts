@@ -22,7 +22,7 @@ export class LetradoEntranteComponent implements OnInit {
   disableFechaDesignacion;
   disableCheck=false;
   isLetrado: boolean;
-
+  minDateDesigna: any;
   @Input() entrante;
 
   @Output() fillEntrante = new EventEmitter<boolean>();
@@ -49,6 +49,7 @@ export class LetradoEntranteComponent implements OnInit {
 		}
 
     let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
+    this.minDateDesigna = new Date(designa.fechaAlta.split('/').reverse().join('-'));
     if(designa.art27=="Si") {
       this.body.art27=true;
       this.body.fechaDesignacion = this.entrante.fechaDesignacion;
@@ -71,7 +72,6 @@ export class LetradoEntranteComponent implements OnInit {
       }
     );
   }
-
 
   incluirSalto(){
   }

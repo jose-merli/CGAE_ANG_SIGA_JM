@@ -6,19 +6,22 @@
             <app-paginador2 (perPage)="perPage($event)" (seleccionarTodo)="selectedAll($event)"
                 (fromReg)="fromReg($event)" (toReg)="toReg($event)" [totalRegistros]="totalRegistros"></app-paginador2>
         </div>
-        <div class="table" matSort (matSortChange)="sortData($event)" #table>
+        <div class="table" matSort (matSortChange)="sortData($event)"  matSortDirection="asc" #table>
             <div class="table-header ">
                 <div class="table-header-child p-2" *ngFor="let cabecera of cabeceras; let j = index" #BorderedHeader>
                     <div>
-                        <div [mat-sort-header]=cabecera.id>{{cabecera.name | translate}}</div>
+                        <div [mat-sort-header]=cabecera.id disableClear>{{cabecera.name | translate}}</div>
                         <input type="text" class="form-control" pInputTex [(ngModel)]="searchText[j]"
                             (ngModelChange)="searchChange(j)" autocomplete="off" placeholder="Buscar">
                     </div>
                 </div>
             </div>
             <div *ngFor="let row of rowGroups | slice:from:to; let i = index;" class="table-row child">
-                <div (click)="selectRow(row['id'])" class="table-row-wrapper hoverBlue" [ngClass]="{'hoverBlue2': isSelected(row['id']), 'fixedBlue': seleccionarTodo}" #rowSelected>
-                    <div *ngFor="let cell of row['cells'] | slice:0:9; let z = index" class="table-cell p-2 selectedRowClass" [ngClass]="{'borders-child': isPar(row['id'])}" #cellSelected>        
+                <div (click)="selectRow(row['id'])" class="table-row-wrapper hoverBlue"
+                    [ngClass]="{'hoverBlue2': isSelected(row['id']), 'fixedBlue': seleccionarTodo}" #rowSelected>
+                    <div *ngFor="let cell of row['cells'] | slice:0:9; let z = index"
+                        class="table-cell p-2 selectedRowClass" [ngClass]="{'borders-child': isPar(row['id'])}"
+                        #cellSelected>
                         <div class="cell-wrapper selectedRowClass">
                             <span class="w100 cell-value" *ngIf="cell.type == 'newinput'"><input type="text"
                                     class="form-control mt-2" pInputText [(ngModel)]="this.newInputValue[z]"
@@ -30,14 +33,14 @@
                                 [ngClass]="{'setItalic': row.italic}">{{cell.value}}</span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'datePicker'">
                                 <app-fecha [(value)]="cell.value" [utc]="false"
-                                    (valueChangeSelected)="fillFecha($event, cell)"
-                                    (valueChangeInput)="fillFecha($event, cell)" >
+                                    (valueChangeSelected)="fillFecha($event, cell, row)"
+                                    (valueChangeInput)="fillFecha($event, cell, row)">
                                 </app-fecha>
                             </span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'datePickerFin'">
                                 <app-fecha [(value)]="cell.value[0]" [utc]="false"
-                                    (valueChangeSelected)="fillFecha($event, cell)"
-                                    (valueChangeInput)="fillFecha($event, cell)" [minDate]="cell.value[1]" >
+                                    (valueChangeSelected)="fillFecha2($event, cell, row)"
+                                    (valueChangeInput)="fillFecha2($event, cell, row)" [minDate]="cell.value[1]">
                                 </app-fecha>
                             </span>
                             <span class="w100 cell-value selectWrap" *ngIf="cell.type == 'select'">
@@ -53,28 +56,41 @@
         </div>
         <div class="card-footer h50 pt-5">
             <div class="text-right main-button butBottom mt10">
-                <button pButton (click)="checkAnular()"  [disabled]="isLetrado || historico || !isAnySelected() || isDisabled" type="button" iconPos="left" label="{{ 'general.boton.anular' | translate}}"></button>
-      
-                <button pButton (click)="checkValidar()"  [disabled]="isLetrado || historico || !isAnySelected() || isDisabled" type="button" iconPos="left" label="{{ 'general.boton.validar' | translate}}"></button>
-                
-                <button pButton (click)="checkDenegar()"  [disabled]="isLetrado || historico || !isAnySelected() || isDisabled" type="button" iconPos="left" label="{{ 'general.boton.denegar' | translate}}"></button>
-                
-                <button *ngIf="!historico" (click)="searchHistorical()" pButton type="button" icon="fa fa-history" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
+                <button pButton (click)="checkAnular()"
+                    [disabled]="isLetrado || historico || !isAnySelected() || isDisabled" type="button" iconPos="left"
+                    label="{{ 'general.boton.anular' | translate}}"></button>
 
-                <button *ngIf="historico" (click)="searchHistorical()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
+                <button pButton (click)="checkValidar()"
+                    [disabled]="isLetrado || historico || !isAnySelected() || isDisabled" type="button" iconPos="left"
+                    label="{{ 'general.boton.validar' | translate}}"></button>
 
-                <button pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}" [disabled]="historico || disableAll" (click)="checkGuardar()"></button>
+                <button pButton (click)="checkDenegar()"
+                    [disabled]="isLetrado || historico || !isAnySelected() || isDisabled" type="button" iconPos="left"
+                    label="{{ 'general.boton.denegar' | translate}}"></button>
 
-                <button pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}" [disabled]="historico || isLetrado || !isAnySelected()  || disableAll" (click)="eliminar()"></button>
+                <button *ngIf="!historico" (click)="searchHistorical()" pButton type="button" icon="fa fa-history"
+                    iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
+
+                <button *ngIf="historico" (click)="searchHistorical()" pButton type="button" icon="fa fa-undo"
+                    iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
+
+                <button pButton type="button" icon="fa fa-save" iconPos="left"
+                    label="{{ 'general.boton.guardar' | translate}}" [disabled]="historico || disableAll"
+                    (click)="checkGuardar()"></button>
+
+                <button pButton type="button" icon="fa fa-trash-alt" iconPos="left"
+                    label="{{ 'general.boton.eliminar' | translate}}"
+                    [disabled]="historico || isLetrado || !isAnySelected()  || disableAll"
+                    (click)="eliminar()"></button>
             </div>
         </div>
     </div>
 </div>
 
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="deleteTurnosGuardias" icon="icon" width="425"
-  #deleteTurnosGuardias>
-  <p-footer>
-    <button type="button" pButton icon="fa-check" label="Si" (click)="deleteTurnosGuardias.accept()"></button>
-    <button type="button" pButton icon="fa-close" label="No" (click)="deleteTurnosGuardias.reject()"></button>
-  </p-footer>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="deleteTurnosGuardias" icon="icon"
+    width="425" #deleteTurnosGuardias>
+    <p-footer>
+        <button type="button" pButton icon="fa-check" label="Si" (click)="deleteTurnosGuardias.accept()"></button>
+        <button type="button" pButton icon="fa-close" label="No" (click)="deleteTurnosGuardias.reject()"></button>
+    </p-footer>
 </p-confirmDialog>

@@ -28,7 +28,8 @@ export class DesignacionesComponent implements OnInit {
   muestraTablaJustificacion: boolean = false;
   muestraTablaDesignas: boolean = false;
   comboTipoDesigna: any[];
-  colegiado: boolean;
+  colegiadoJE: boolean;
+  colegiadoDesig: boolean;
   isLetrado: boolean = false;
   idPersonaLogado;
   numColegiadoLogado;
@@ -346,8 +347,12 @@ export class DesignacionesComponent implements OnInit {
     return this.datePipe.transform(date, pattern);
   }
 
-  esColegiado(event){
-    this.colegiado = event;
+  esColegiadoJE(event){
+    this.colegiadoJE = event;
+  }
+
+  esColegiadoDesig(event){
+    this.colegiadoDesig = event;
   }
 
   actuacionesToDleteArr(event){

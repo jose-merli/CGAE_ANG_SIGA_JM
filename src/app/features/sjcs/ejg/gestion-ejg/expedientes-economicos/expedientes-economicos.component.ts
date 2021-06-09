@@ -1,10 +1,15 @@
-import { Component, OnInit, Input, Output, SimpleChanges, EventEmitter } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Input, Output, SimpleChanges, EventEmitter, ViewChild } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { saveAs } from "file-saver/FileSaver";
 import { UnidadFamiliarEJGItem } from '../../../../../models/sjcs/UnidadFamiliarEJGItem';
+import { JusticiableBusquedaItem } from '../../../../../models/sjcs/JusticiableBusquedaItem';
+import { JusticiableItem } from '../../../../../models/sjcs/JusticiableItem';
+import { SolicitudIncorporacionItem } from '../../../../../models/SolicitudIncorporacionItem';
+import { AuthenticationService } from '../../../../../_services/authentication.service';
+import { DataTable } from 'primeng/primeng';
 
 @Component({
   selector: 'app-expedientes-economicos',
@@ -16,8 +21,9 @@ export class ExpedientesEconomicosComponent implements OnInit {
   @Input() permisoEscritura;
   @Input() tarjetaExpedientesEconomicos: string;
 
-  [x : string] : any;
-
+  @ViewChild("table") table: DataTable;
+  expedientesEcon: any;
+  solicitante: JusticiableItem = new JusticiableItem();
   openFicha: boolean = false;
   nuevo;
   body: EJGItem;
@@ -32,7 +38,7 @@ export class ExpedientesEconomicosComponent implements OnInit {
   numSelected = 0;
   selectMultiple: boolean = false;
   item: EJGItem;
-  nExpedientes;
+  nExpedientes = 0;
   progressSpinner: boolean = false;
 
   datosFamiliares: any;
@@ -52,8 +58,10 @@ export class ExpedientesEconomicosComponent implements OnInit {
   @Input() openTarjetaExpedientesEconomicos;
 
   constructor(
+    private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
+    private authenticationService: AuthenticationService,
     private commonsService: CommonsService) { }
 
   ngOnInit() {
@@ -98,13 +106,13 @@ export class ExpedientesEconomicosComponent implements OnInit {
       this.openFicha = !this.openFicha;
     }
     //Comprobamos si hay un solicitante y rellenamos la columna de justiciable
-    this.getColJusticiable();
+    //this.getColJusticiable();
 
     this.opened.emit(this.openFicha);
     this.idOpened.emit(key);
   }
 
-  getColJusticiable() {
+  /* getColJusticiable() {
     let justiciable = "";
     let datosFamiliares = this.persistenceService.getBodyAux();
     //Comprobamos si hay un solicitante
@@ -119,20 +127,21 @@ export class ExpedientesEconomicosComponent implements OnInit {
     this.expedientesEcon.forEach(element => {
       element.justiciable = justiciable;
     });
-  }
+  } */
 
   getExpedientesEconomicos(selected) {
     this.progressSpinner = true;
     this.sigaServices.post("gestionejg_getExpedientesEconomicos", selected).subscribe(
       n => {
         this.expedientesEcon = JSON.parse(n.body).expEconItems;
-        /*if(n.body) 
-        //Se asigna a la columna justiciable el solicitante actual del ejg
+        /* if (n.body) {
           this.expedientesEcon.forEach(element => {
-            element.justiciable = JSON.parse(JSON.stringify(selected.nombreApeSolicitante));
-          }); */
-          
-        this.nExpedientes = this.expedientesEcon.length;
+            //element.justiciable = JSON.parse(JSON.stringify(selected.nombreApeSolicitante));
+            element.justiciable = this.expedientesEcon.apellidos+", "+this.expedientesEcon.nombre+" "+this.expedientesEcon.nif;
+          }); 
+
+        } */
+        if(this.expedientesEcon != null)this.nExpedientes = this.expedientesEcon.length;
         this.progressSpinner = false;
       },
       err => {
@@ -197,7 +206,6 @@ export class ExpedientesEconomicosComponent implements OnInit {
 
   onChangeSelectAll() {
     if (this.permisoEscritura) {
-      if (!this.historico) {
         if (this.selectAll) {
           this.selectMultiple = true;
           this.selectedDatos = this.datosFamiliares;
@@ -207,19 +215,6 @@ export class ExpedientesEconomicosComponent implements OnInit {
           this.numSelected = 0;
           this.selectMultiple = false;
         }
-      } else {
-        if (this.selectAll) {
-          this.selectMultiple = true;
-          this.selectedDatos = this.datosFamiliares.filter(
-            (dato) => dato.fechaBaja != undefined && dato.fechaBaja != null
-          );
-          this.numSelected = this.selectedDatos.length;
-        } else {
-          this.selectedDatos = [];
-          this.numSelected = 0;
-          this.selectMultiple = false;
-        }
-      }
     }
   }
 

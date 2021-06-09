@@ -7,6 +7,7 @@ import { TranslateService } from '../../../../../commons/translate';
 import { Router } from '@angular/router';
 import { MultiSelect } from 'primeng/multiselect';
 import { noComponentFactoryError } from '@angular/core/src/linker/component_factory_resolver';
+import { Message } from 'primeng/components/common/api';
 
 
 @Component({
@@ -31,7 +32,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
   body: EJGItem;
   bodyInicial: EJGItem;
   nuevoBody: EJGItem = new EJGItem();
-  msgs = [];
+  msgs: Message[] = [];
   nuevo;
   url = null;
   textSelected: String = '{0} opciones seleccionadas';
@@ -358,7 +359,6 @@ export class DatosGeneralesEjgComponent implements OnInit {
           else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         },
         err => {
-          console.log(err);
           this.progressSpinner = false;
 
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));

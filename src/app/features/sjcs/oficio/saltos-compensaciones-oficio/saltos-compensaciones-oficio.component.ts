@@ -533,6 +533,15 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
         },
         () => {
           this.rowGroups.find(el => el.id == row.id).cells[1].combo = this.comboColegiados;
+          if(this.isNewFromOtherPage){
+            this.comboColegiados.forEach(comboItem =>{
+              if(comboItem.label.includes(this.isNewFromOtherPageObject.numerocolegiado)){
+                this.rowGroups.find(el => el.id == row.id).cells[1].value = comboItem.value;
+                let letrado = comboItem.label.split(')')[1].trim();
+                this.rowGroups.find(el => el.id == row.id).cells[2].value = letrado;
+              }
+            });
+          }
         }
       );
   }

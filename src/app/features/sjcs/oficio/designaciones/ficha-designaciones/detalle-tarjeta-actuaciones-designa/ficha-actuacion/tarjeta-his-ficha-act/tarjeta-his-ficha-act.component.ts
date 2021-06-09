@@ -1,5 +1,9 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { procesos_oficio } from '../../../../../../../../permisos/procesos_oficio';
 import { Col } from '../../detalle-tarjeta-actuaciones-designa.component';
+import { CommonsService } from '../../../../../../../../_services/commons.service';
+import { TranslateService } from '../../../../../../../../commons/translate/translation.service';
+import { Router } from '@angular/router';
 
 export class AccionItem {
   fecha: string;
@@ -39,9 +43,25 @@ export class TarjetaHisFichaActComponent implements OnInit {
     }
   ];
 
-  constructor() { }
+  constructor(private commonsService: CommonsService, private translateService: TranslateService, private router: Router) { }
 
   ngOnInit() {
+
+    this.commonsService.checkAcceso(procesos_oficio.designaTarjetaActuacionesHistorico)
+      .then(respuesta => {
+        let permisoEscritura = respuesta;
+
+        if (permisoEscritura == undefined) {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
+
+      }
+      ).catch(error => console.error(error));
   }
 
 }

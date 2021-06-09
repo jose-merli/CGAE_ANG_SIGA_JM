@@ -7,6 +7,8 @@ import { CommonsService } from '../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { Message } from 'primeng/components/common/api';
+import { EJGItem } from '../../../../../models/sjcs/EJGItem';
+import { datos_combos } from '../../../../../utils/datos_combos';
 
 @Component({
   selector: 'app-datos-unidad-familiar',
@@ -148,6 +150,22 @@ export class DatosUnidadFamiliarComponent implements OnInit {
           else this.parentescoCabecera = "";
           //Se comprueba si se debe cambiar el valor de solicitante de la cabecera
           this.fillBoxes();
+
+          //Si se ha actualizado o añadido un solicitante, se actualizan los datos del ejg asociado
+          if(this.generalBody.uf_solicitante == "1") {
+            //Si estamos en la creacion de una nueva unidad familiar 
+              if(sessionStorage.getItem("EJGItem")){
+                let ejg: EJGItem = JSON.parse(sessionStorage.get("EJGItem"));
+                ejg.idPersonajg = this.generalBody.uf_idPersona;
+                sessionStorage.set("EJGItem",JSON.stringify(ejg));
+              }
+              //Si se esta editando una unidad familiar desde su tarjeta en ejg
+              else if(this.persistenceService.getDatos()){
+                let ejg: EJGItem = this.persistenceService.getDatos();
+                ejg.idPersonajg = this.generalBody.uf_idPersona;
+                this.persistenceService.setDatos(ejg);
+              }
+          } 
         } else {
           this.showMessage("error", this.translateService.instant('general.message.incorrect'),
             this.translateService.instant('general.message.error.realiza.accion'));

@@ -8,7 +8,8 @@ import { TranslateService } from '../../../../../commons/translate/translation.s
 import { ConfirmationService } from 'primeng/api';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 import { SigaServices } from '../../../../../_services/siga.service';
-import { Dialog } from 'primeng/primeng';
+import { DataTable, Dialog } from 'primeng/primeng';
+import { Location, DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-unidad-familiar',
@@ -17,13 +18,14 @@ import { Dialog } from 'primeng/primeng';
 })
 export class UnidadFamiliarComponent implements OnInit {
 
-  [x : string]: any;
+  @ViewChild("table") table: DataTable;
 
   solicitante: UnidadFamiliarEJGItem = new UnidadFamiliarEJGItem(); 
 
   rowsPerPage: any = [];
   selectedDatos = [];
   buscadores = [];
+  nExpedientes = 0;
 
   nuevo: boolean;
   body: EJGItem = new EJGItem();
@@ -67,6 +69,7 @@ export class UnidadFamiliarComponent implements OnInit {
 
   constructor(private changeDetectorRef: ChangeDetectorRef, private confirmationService: ConfirmationService,
     private persistenceService: PersistenceService, private router: Router,
+    private datepipe: DatePipe,
     private commonsService: CommonsService, private translateService: TranslateService,
     private sigaServices: SigaServices ) { }
 
@@ -133,11 +136,11 @@ export class UnidadFamiliarComponent implements OnInit {
           }
   
           if (element.estadoDes != undefined && element.fechaSolicitud != undefined) {
-            element.expedienteEconom = element.estadoDes + " * " + element.fechaSolicitud;
+            element.expedienteEconom = element.estadoDes + " * " + this.datepipe.transform(element.fechaSolicitud, 'dd/MM/yyyy');
           } else if (element.estadoDes != undefined && element.fechaSolicitud == undefined) {
             element.expedienteEconom = element.estadoDes + " * ";
           } else if (element.estadoDes == undefined && element.fechaSolicitud != undefined) {
-            element.expedienteEconom = " * " + element.fechaSolicitud;
+            element.expedienteEconom = " * " + this.datepipe.transform(element.fechaSolicitud, 'dd/MM/yyyy');
           } else if (element.estadoDes == undefined && element.fechaSolicitud == undefined) {
             element.expedienteEconom = "  ";
           }
@@ -336,8 +339,8 @@ export class UnidadFamiliarComponent implements OnInit {
 
     for(let i=0; this.selectedDatos.length>i; i++){
       ejg = this.selectedDatos[i];
-      ejg.fechaEstadoNew=this.fechaEstado;
-      ejg.estadoNew=this.valueComboEstado;
+      /* ejg.fechaEstadoNew=this.fechaEstado;
+      ejg.estadoNew=this.valueComboEstado; */
 
       data.push(ejg);
     }

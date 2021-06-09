@@ -23,7 +23,6 @@ import { SigaStorageService } from '../../../../../siga-storage.service';
 })
 export class FichaInscripcionesComponent implements OnInit {
 	permisosTarjeta: boolean = true;
-    permisosModificacionDirecciones: boolean = true;
 	idModelo: string;
 	searchParametros: ParametroDto = new ParametroDto();
 	institucionActual: any;
@@ -72,22 +71,6 @@ export class FichaInscripcionesComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.commonsService.checkAcceso(procesos_oficio.modificacionDirecciones)
-		.then(respuesta => {
-		  this.permisosModificacionDirecciones = respuesta;
-		  this.persistenceService.setPermisos(this.permisosTarjeta);
-		  if (this.permisosModificacionDirecciones == undefined) {
-			sessionStorage.setItem("codError", "403");
-			sessionStorage.setItem(
-			  "descError",
-			  this.translateService.instant("generico.error.permiso.denegado")
-			);
-			this.router.navigate(["/errorAcceso"]);
-		  }else if(this.persistenceService.getPermisos() != true){
-			this.permisosModificacionDirecciones = true;
-		  }
-		}
-		).catch(error => console.error(error));
 		this.sigaServices.get("institucionActual").subscribe(n => {
 		  this.institucionActual = n.value;
 		  let parametro = new ParametroRequestDto();
@@ -197,47 +180,6 @@ export class FichaInscripcionesComponent implements OnInit {
 		}
 		
 		this.getColaOficio();
-
-			// this.filtros.filtroAux = this.persistenceService.getFiltrosAux()
-			// this.filtros.filtroAux.historico = event;
-			// this.persistenceService.setHistorico(event);
-			// this.progressSpinner = true;
-			// this.sigaServices.post("inscripciones_busquedaInscripciones", this.filtros.filtroAux).subscribe(
-			//   n => {
-			// 	this.datos = JSON.parse(n.body).inscripcionesItem;
-			// 	this.datos.forEach(element => {
-			// 	  if(element.estado == "0"){
-			// 		element.estadonombre = "Pendiente de Alta";
-			// 	  }
-			// 	  if(element.estado == "1"){
-			// 		element.estadonombre = "Alta";
-			// 	  }
-			// 	  if(element.estado == "2"){
-			// 		element.estadonombre = "Pendiente de Baja";
-			// 	  }
-			// 	  if(element.estado == "3"){
-			// 		element.estadonombre = "Baja";
-			// 	  }
-			// 	  if(element.estado == "4"){
-			// 		element.estadonombre = "Denegada";
-			// 	  }
-			// 	  element.ncolegiado = +element.ncolegiado;
-			// 	});
-			// 	this.buscar = true;
-			// 	this.progressSpinner = false;
-			// 	if (this.tablapartida != undefined) {
-			// 	  this.tablapartida.tabla.sortOrder = 0;
-			// 	  this.tablapartida.tabla.sortField = '';
-			// 	  this.tablapartida.tabla.reset();
-			// 	  this.tablapartida.buscadores = this.tablapartida.buscadores.map(it => it = "");
-			// 	}
-			//   },
-			//   err => {
-			// 	this.progressSpinner = false;
-			// 	console.log(err);
-			//   }, () => {
-			//   }
-			// );
 			
 	}
 

@@ -27,7 +27,10 @@ export let endpoints_EJG: any = {
     gestionejg_comboActaAnnio: "ejg/gestion-ejg/comboActaAnnio",
     gestionejg_getResolucion: "ejg/gestion-ejg/getResolucion",
     gestionejg_comboTipoExpediente: "ejg/gestion-ejg/comboTipoExpediente",
-
+    gestionejg_comboSituaciones: "ejg/gestion-ejg/comboSituaciones",
+    gestionejg_comboCDetencion: "ejg/gestion-ejg/comboCDetencion",
+    gestionejg_comboTipoencalidad: "ejg/gestion-ejg/comboTipoencalidad",
+    
     //Busqueda EJG
     gestionejg_descargarExpedientesJG: "ejg/gestion-ejg/descargarExpedientesJG",
     filtrosejg_anadirExpedienteARemesa: "ejg/filtros-ejg/anadirExpedienteARemesa",
@@ -71,6 +74,7 @@ export let endpoints_EJG: any = {
     gestionejg_asociarAsistencia: "ejg/gestion-ejg/asociarAsistencia",
     gestionejg_consultEditRelacion: "ejg/gestion-ejg/consultEditRelacion",
     gestionejg_getRelaciones: "ejg/gestion-ejg/getRelaciones",
+    gestionejg_updateDatosJuridicos: "ejg/gestion-ejg/updateDatosJuridicos",
 
     //comunicaciones
     gestionejg_getComunicaciones: "ejg/gestion-ejg/getComunicaciones"

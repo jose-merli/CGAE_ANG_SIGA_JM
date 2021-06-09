@@ -447,6 +447,8 @@ import { FiltrosEjgComponent } from './features/sjcs/ejg/filtros-busqueda-ejg/fi
 import { GestionEjgComponent } from './features/sjcs/ejg/gestion-ejg/gestion-ejg.component';
 import { AddExpedienteComponent } from './features/sjcs/ejg/gestion-ejg/datos-generales-ejg/add-expediente/add-expediente.component';
 import { ComunicacionesEJGComponent } from './features/sjcs/ejg/gestion-ejg/comunicaciones/comunicaciones-ejg.component';
+import { FichaPreDesignacionComponent } from './features/sjcs/ejg/gestion-ejg/relaciones/ficha-pre-designacion/ficha-pre-designacion.component';
+import { DefensaJuridicaComponent } from './features/sjcs/ejg/gestion-ejg/relaciones/ficha-pre-designacion/defensa-juridica/defensa-juridica.component';
 
 import { SigaStorageService } from './siga-storage.service';
 import { FichaCambioLetradoComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/ficha-cambio-letrado/ficha-cambio-letrado.component';
@@ -610,6 +612,8 @@ import { LetradoSalienteComponent } from './features/sjcs/oficio/designaciones/f
 		UnidadFamiliarComponent,
 		ExpedientesEconomicosComponent,
 		RelacionesComponent,
+		FichaPreDesignacionComponent,
+  		DefensaJuridicaComponent,
 		EstadosComponent,
 		DocumentacionComponent,
 		InformeCalificacionComponent,

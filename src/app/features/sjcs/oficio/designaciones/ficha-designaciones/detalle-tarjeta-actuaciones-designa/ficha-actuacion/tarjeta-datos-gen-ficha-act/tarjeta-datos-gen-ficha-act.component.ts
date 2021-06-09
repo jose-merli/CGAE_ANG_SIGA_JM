@@ -11,6 +11,8 @@ import { ParametroRequestDto } from '../../../../../../../../models/ParametroReq
 import { SigaStorageService } from '../../../../../../../../siga-storage.service';
 import { UsuarioLogado } from '../ficha-actuacion.component';
 import { DesignaItem } from '../../../../../../../../models/sjcs/DesignaItem';
+import { procesos_oficio } from '../../../../../../../../permisos/procesos_oficio';
+import { Router } from '@angular/router';
 
 export interface ComboItemAcreditacion {
   label: string;
@@ -38,7 +40,10 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
   @Input() isAnulada: boolean;
   @Input() usuarioLogado: UsuarioLogado;
   @Input() isColegiado: boolean;
-  @Input() modoLectura: boolean;
+  // Este modo lectura se produce cuando:
+  // - Es colegiado y la actuación está validada y el turno no permite la modificación o la actuación no pertenece al colegiado
+  // - La actuación está facturada
+  @Input() modoLectura2: boolean = false;
 
   @Output() buscarActEvent = new EventEmitter<string>();
 
@@ -46,6 +51,8 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
 
   msgs: Message[] = [];
   resaltadoDatos: boolean = false;
+
+  modoLectura: boolean;
 
   datos = {
     inputs1: [
@@ -156,11 +163,33 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     private sigaServices: SigaServices,
     private datePipe: DatePipe,
     private translateService: TranslateService,
-    private sigaStorageService: SigaStorageService) { }
+    private sigaStorageService: SigaStorageService,
+    private router: Router) { }
 
   ngOnInit() {
-    this.getParametro();
-    this.designaItem = JSON.parse(sessionStorage.getItem("designaItemLink"));
+
+    this.commonsService.checkAcceso(procesos_oficio.designaTarjetaActuacionesDatosGenerales)
+      .then(respuesta => {
+        let permisoEscritura = respuesta;
+
+        if (permisoEscritura == undefined) {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
+
+        if (!permisoEscritura) {
+          this.modoLectura = true;
+        }
+
+        this.getParametro();
+        this.designaItem = JSON.parse(sessionStorage.getItem("designaItemLink"));
+
+      })
+      .catch(err => console.log(err));
   }
 
   cargaInicial() {
@@ -290,6 +319,26 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     this.sigaServices.get("combo_comboModulosDesignaciones").subscribe(
       n => {
         this.comboModulos = n.combooItems;
+
+        if (this.actuacionDesigna.isNew) {
+          if (this.actuacionDesigna.designaItem.idProcedimiento != "" && this.actuacionDesigna.designaItem.idProcedimiento != null && this.actuacionDesigna.designaItem.idProcedimiento != undefined) {
+            this.comboModulos.push({ label: this.actuacionDesigna.designaItem.modulo, value: this.actuacionDesigna.designaItem.idProcedimiento });
+          }
+        } else {
+          if (this.actuacionDesigna.actuacion.idProcedimiento != "" && this.actuacionDesigna.actuacion.idProcedimiento != null && this.actuacionDesigna.actuacion.idProcedimiento != undefined) {
+            this.comboModulos.push({ label: this.actuacionDesigna.actuacion.modulo, value: this.actuacionDesigna.actuacion.idProcedimiento });
+          }
+        }
+
+        let uniqueArrayValue = [];
+        let uniqueArray = [];
+        this.comboModulos.forEach((c) => {
+          if (!uniqueArrayValue.includes(c.value)) {
+            uniqueArrayValue.push(c.value);
+            uniqueArray.push(c);
+          }
+        });
+        this.comboModulos = uniqueArray;
         if (this.comboModulos) {
           this.commonsService.arregloTildesCombo(this.comboModulos);
         }
@@ -301,12 +350,6 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
       }, () => {
         this.progressSpinner = false;
         this.datos.selectores[3].opciones = this.comboModulos;
-
-        let modulo = this.datos.selectores.find(el => el.id == 'modulo');
-
-        if (this.comboModulos != undefined && this.comboModulos != null && this.comboModulos.find(el => el.value == modulo.value) == undefined) {
-          modulo.value = '';
-        }
       }
     );
   }
@@ -316,6 +359,26 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     this.sigaServices.post("combo_comboModulosConJuzgado", $event).subscribe(
       n => {
         this.comboModulos = JSON.parse(n.body).combooItems;
+
+        if (this.actuacionDesigna.isNew) {
+          if (this.actuacionDesigna.designaItem.idProcedimiento != "" && this.actuacionDesigna.designaItem.idProcedimiento != null && this.actuacionDesigna.designaItem.idProcedimiento != undefined) {
+            this.comboModulos.push({ label: this.actuacionDesigna.designaItem.modulo, value: this.actuacionDesigna.designaItem.idProcedimiento });
+          }
+        } else {
+          if (this.actuacionDesigna.actuacion.idProcedimiento != "" && this.actuacionDesigna.actuacion.idProcedimiento != null && this.actuacionDesigna.actuacion.idProcedimiento != undefined) {
+            this.comboModulos.push({ label: this.actuacionDesigna.actuacion.modulo, value: this.actuacionDesigna.actuacion.idProcedimiento });
+          }
+        }
+
+        let uniqueArrayValue = [];
+        let uniqueArray = [];
+        this.comboModulos.forEach((c) => {
+          if (!uniqueArrayValue.includes(c.value)) {
+            uniqueArrayValue.push(c.value);
+            uniqueArray.push(c);
+          }
+        });
+        this.comboModulos = uniqueArray;
         if (this.comboModulos) {
           this.commonsService.arregloTildesCombo(this.comboModulos);
         }
@@ -328,12 +391,6 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
       () => {
         this.progressSpinner = false;
         this.datos.selectores[3].opciones = this.comboModulos;
-
-        let modulo = this.datos.selectores.find(el => el.id == 'modulo');
-
-        if (this.comboModulos != undefined && this.comboModulos != null && this.comboModulos.find(el => el.value == modulo.value) == undefined) {
-          modulo.value = '';
-        }
       }
     );
   }
@@ -343,6 +400,26 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     this.sigaServices.post("combo_comboModulosConProcedimientos", idPretension).subscribe(
       n => {
         this.comboModulos = JSON.parse(n.body).combooItems;
+
+        if (this.actuacionDesigna.isNew) {
+          if (this.actuacionDesigna.designaItem.idProcedimiento != "" && this.actuacionDesigna.designaItem.idProcedimiento != null && this.actuacionDesigna.designaItem.idProcedimiento != undefined) {
+            this.comboModulos.push({ label: this.actuacionDesigna.designaItem.modulo, value: this.actuacionDesigna.designaItem.idProcedimiento });
+          }
+        } else {
+          if (this.actuacionDesigna.actuacion.idProcedimiento != "" && this.actuacionDesigna.actuacion.idProcedimiento != null && this.actuacionDesigna.actuacion.idProcedimiento != undefined) {
+            this.comboModulos.push({ label: this.actuacionDesigna.actuacion.modulo, value: this.actuacionDesigna.actuacion.idProcedimiento });
+          }
+        }
+
+        let uniqueArrayValue = [];
+        let uniqueArray = [];
+        this.comboModulos.forEach((c) => {
+          if (!uniqueArrayValue.includes(c.value)) {
+            uniqueArrayValue.push(c.value);
+            uniqueArray.push(c);
+          }
+        });
+        this.comboModulos = uniqueArray;
         if (this.comboModulos) {
           this.commonsService.arregloTildesCombo(this.comboModulos);
         }
@@ -354,12 +431,6 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
       }, () => {
         this.progressSpinner = false;
         this.datos.selectores[3].opciones = this.comboModulos;
-
-        let modulo = this.datos.selectores.find(el => el.id == 'modulo');
-
-        if (this.comboModulos != undefined && this.comboModulos != null && this.comboModulos.find(el => el.value == modulo.value) == undefined) {
-          modulo.value = '';
-        }
       }
     );
   }
@@ -372,6 +443,26 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     this.sigaServices.get("combo_comboProcedimientosDesignaciones").subscribe(
       n => {
         this.comboProcedimientos = n.combooItems;
+
+        if (this.actuacionDesigna.isNew) {
+          if (this.actuacionDesigna.designaItem.idPretension != "" && this.actuacionDesigna.designaItem.idPretension != null && this.actuacionDesigna.designaItem.idPretension != undefined) {
+            this.comboProcedimientos.push({ label: this.actuacionDesigna.designaItem.nombreProcedimiento, value: this.actuacionDesigna.designaItem.idPretension });
+          }
+        } else {
+          if (this.actuacionDesigna.actuacion.nombreProcedimiento != null && this.actuacionDesigna.actuacion.nombreProcedimiento != undefined && this.actuacionDesigna.actuacion.idPretension != undefined && this.actuacionDesigna.actuacion.idPretension != "" && this.actuacionDesigna.actuacion.idPretension != null) {
+            this.comboProcedimientos.push({ label: this.actuacionDesigna.actuacion.nombreProcedimiento, value: this.actuacionDesigna.actuacion.idPretension });
+          }
+        }
+
+        let uniqueArrayValue = [];
+        let uniqueArray = [];
+        this.comboProcedimientos.forEach((c) => {
+          if (!uniqueArrayValue.includes(c.value)) {
+            uniqueArrayValue.push(c.value);
+            uniqueArray.push(c);
+          }
+        });
+        this.comboProcedimientos = uniqueArray;
         if (this.comboProcedimientos) {
           this.commonsService.arregloTildesCombo(this.comboProcedimientos);
         }
@@ -383,9 +474,6 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
       }, () => {
         this.progressSpinner = false;
         this.datos.selectores[1].opciones = this.comboProcedimientos;
-        if (this.comboProcedimientos != undefined && this.comboProcedimientos != null && this.comboProcedimientos.find(el => el.value == this.datos.selectores.find(el => el.id == 'procedimiento').value) == undefined) {
-          this.datos.selectores.find(el => el.id == 'procedimiento').value = '';
-        }
       }
     );
   }
@@ -395,6 +483,26 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     this.sigaServices.post("combo_comboProcedimientosConJuzgado", idJuzgado).subscribe(
       n => {
         this.comboProcedimientos = JSON.parse(n.body).combooItems;
+
+        if (this.actuacionDesigna.isNew) {
+          if (this.actuacionDesigna.designaItem.idPretension != "" && this.actuacionDesigna.designaItem.idPretension != null && this.actuacionDesigna.designaItem.idPretension != undefined) {
+            this.comboProcedimientos.push({ label: this.actuacionDesigna.designaItem.nombreProcedimiento, value: this.actuacionDesigna.designaItem.idPretension });
+          }
+        } else {
+          if (this.actuacionDesigna.actuacion.nombreProcedimiento != null && this.actuacionDesigna.actuacion.nombreProcedimiento != undefined && this.actuacionDesigna.actuacion.idPretension != undefined && this.actuacionDesigna.actuacion.idPretension != "" && this.actuacionDesigna.actuacion.idPretension != null) {
+            this.comboProcedimientos.push({ label: this.actuacionDesigna.actuacion.nombreProcedimiento, value: this.actuacionDesigna.actuacion.idPretension });
+          }
+        }
+
+        let uniqueArrayValue = [];
+        let uniqueArray = [];
+        this.comboProcedimientos.forEach((c) => {
+          if (!uniqueArrayValue.includes(c.value)) {
+            uniqueArrayValue.push(c.value);
+            uniqueArray.push(c);
+          }
+        });
+        this.comboProcedimientos = uniqueArray;
         if (this.comboProcedimientos) {
           this.commonsService.arregloTildesCombo(this.comboProcedimientos);
         }
@@ -406,9 +514,6 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
       }, () => {
         this.progressSpinner = false;
         this.datos.selectores[1].opciones = this.comboProcedimientos;
-        if (this.comboProcedimientos != undefined && this.comboProcedimientos != null && this.comboProcedimientos.find(el => el.value == this.datos.selectores.find(el => el.id == 'procedimiento').value) == undefined) {
-          this.datos.selectores.find(el => el.id == 'procedimiento').value = '';
-        }
       }
     );
   }
@@ -418,6 +523,26 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     this.sigaServices.post("combo_comboProcedimientosConModulo", idProcedimiento).subscribe(
       n => {
         this.comboProcedimientos = JSON.parse(n.body).combooItems;
+
+        if (this.actuacionDesigna.isNew) {
+          if (this.actuacionDesigna.designaItem.idPretension != "" && this.actuacionDesigna.designaItem.idPretension != null && this.actuacionDesigna.designaItem.idPretension != undefined) {
+            this.comboProcedimientos.push({ label: this.actuacionDesigna.designaItem.nombreProcedimiento, value: this.actuacionDesigna.designaItem.idPretension });
+          }
+        } else {
+          if (this.actuacionDesigna.actuacion.nombreProcedimiento != null && this.actuacionDesigna.actuacion.nombreProcedimiento != undefined && this.actuacionDesigna.actuacion.idPretension != undefined && this.actuacionDesigna.actuacion.idPretension != "" && this.actuacionDesigna.actuacion.idPretension != null) {
+            this.comboProcedimientos.push({ label: this.actuacionDesigna.actuacion.nombreProcedimiento, value: this.actuacionDesigna.actuacion.idPretension });
+          }
+        }
+
+        let uniqueArrayValue = [];
+        let uniqueArray = [];
+        this.comboProcedimientos.forEach((c) => {
+          if (!uniqueArrayValue.includes(c.value)) {
+            uniqueArrayValue.push(c.value);
+            uniqueArray.push(c);
+          }
+        });
+        this.comboProcedimientos = uniqueArray;
         if (this.comboProcedimientos) {
           this.commonsService.arregloTildesCombo(this.comboProcedimientos);
         }
@@ -429,9 +554,6 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
       }, () => {
         this.progressSpinner = false;
         this.datos.selectores[1].opciones = this.comboProcedimientos;
-        if (this.comboProcedimientos != undefined && this.comboProcedimientos != null && this.comboProcedimientos.find(el => el.value == this.datos.selectores.find(el => el.id == 'procedimiento').value) == undefined) {
-          this.datos.selectores.find(el => el.id == 'procedimiento').value = '';
-        }
       }
     );
   }
@@ -890,7 +1012,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     if (this.parametroConfigCombos.valor == '1') {
 
       procedimiento.opciones = [];
-      procedimiento.value = '';
+      procedimiento.opciones = [{ label: this.actuacionDesigna.actuacion.nombreProcedimiento, value: this.actuacionDesigna.actuacion.idPretension }];
 
       if (selector.value != undefined && selector.value != null && selector.value != '') {
         this.getComboProcedimientosConJuzgado(selector.value);
@@ -900,7 +1022,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     if (this.parametroConfigCombos.valor == '2') {
 
       modulo.opciones = [];
-      modulo.value = '';
+      modulo.opciones = [{ label: this.actuacionDesigna.actuacion.modulo, value: this.actuacionDesigna.actuacion.idProcedimiento }];
 
       if (selector.value != undefined && selector.value != null && selector.value != '') {
         this.getComboModulosPorJuzgado(selector.value);
@@ -910,7 +1032,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     if (this.parametroConfigCombos.valor == '3') {
 
       modulo.opciones = [];
-      modulo.value = '';
+      modulo.opciones = [{ label: this.actuacionDesigna.actuacion.modulo, value: this.actuacionDesigna.actuacion.idProcedimiento }];
 
       if (selector.value != undefined && selector.value != null && selector.value != '') {
         this.getComboModulosPorJuzgado(selector.value);
@@ -920,7 +1042,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     if (this.parametroConfigCombos.valor == '4') {
 
       procedimiento.opciones = [];
-      procedimiento.value = '';
+      procedimiento.opciones = [{ label: this.actuacionDesigna.actuacion.nombreProcedimiento, value: this.actuacionDesigna.actuacion.idPretension }];
 
       if (selector.value != undefined && selector.value != null && selector.value != '') {
         this.getComboProcedimientosConJuzgado(selector.value);
@@ -938,7 +1060,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     if (this.parametroConfigCombos.valor == '2') {
 
       procedimiento.opciones = [];
-      procedimiento.value = '';
+      procedimiento.opciones = [{ label: this.actuacionDesigna.actuacion.nombreProcedimiento, value: this.actuacionDesigna.actuacion.idPretension }];
 
       if (selector.value != undefined && selector.value != null && selector.value != '') {
         this.getComboProcedimientosConModulo(selector.value);
@@ -960,7 +1082,8 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     if (this.parametroConfigCombos.valor == '1') {
 
       modulo.opciones = [];
-      modulo.value = '';
+      modulo.opciones = [{ label: this.actuacionDesigna.actuacion.modulo, value: this.actuacionDesigna.actuacion.idProcedimiento }];
+      // modulo.value = this.actuacionDesigna.actuacion.idProcedimiento;
 
       if (selector.value != undefined && selector.value != null && selector.value != '') {
         this.getComboModulosConProcedimientos(selector.value);
