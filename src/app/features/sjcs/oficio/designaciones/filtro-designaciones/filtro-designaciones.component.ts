@@ -293,9 +293,9 @@ export class FiltroDesignacionesComponent implements OnInit {
     this.isLetrado = this.localStorageService.isLetrado;
 
     if (!this.esColegiado) {
-      this.isButtonVisible = true;
+      this.isButtonVisible = false;
     } else {
-      this.isButtonVisible = true;// DEBE SER FALSE
+      this.isButtonVisible = false;// DEBE SER FALSE
     }
     if (this.localStorageService.institucionActual == "2003") {
       this.isButtonVisible = false;
