@@ -451,7 +451,7 @@
             (click)="limpiar()">
         </button>
 
-        <button *ngIf="this.isButtonVisible" (click)="nuevo()" pButton type="button" icon="fa fa-plus"  iconPos="left" label="Nuevo"></button>
+        <button *ngIf="this.isButtonVisible && this.showDesignas" (click)="nuevo()" pButton type="button" icon="fa fa-plus"  iconPos="left" label="Nuevo"></button>
 
         <button pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"
             (click)="buscar()">

@@ -24,13 +24,11 @@ export class LetradoEntranteComponent implements OnInit {
   isLetrado: boolean;
   minDateDesigna: any;
   @Input() entrante;
-
   @Output() fillEntrante = new EventEmitter<boolean>();
 
   constructor(private router: Router,private sigaServices: SigaServices) { }
 
   ngOnInit() {
-
     this.body.art27=false;
     if (sessionStorage.getItem("NewLetrado")) {
 			let data = JSON.parse(sessionStorage.getItem("NewLetrado"));
