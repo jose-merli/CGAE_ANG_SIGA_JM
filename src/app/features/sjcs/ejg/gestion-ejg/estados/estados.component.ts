@@ -272,6 +272,7 @@ export class EstadosComponent implements OnInit {
       }
     );
   }
+
   activate() {
 
   }
@@ -295,7 +296,7 @@ export class EstadosComponent implements OnInit {
   changeEstado() {
     if (this.selectedDatos != null && this.selectedDatos != undefined && this.selectedDatos.length > 0 ) {
       this.showModalAnadirEstado = true;
-      this.getComboEstado();      
+      this.getComboEstado();     
     } else {
       this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("censo.datosBancarios.mensaje.seleccionar.almenosUno"));
     }
@@ -314,6 +315,7 @@ export class EstadosComponent implements OnInit {
       icon: icon,
       accept: () => {
         this.anadirEstado();
+        
       },
       reject: () => {
         this.msgs = [{
@@ -372,6 +374,8 @@ export class EstadosComponent implements OnInit {
      this.selectionMode = "single";
     this.persistenceService.setHistorico(this.historico);
     this.getEstados(this.item);
+ 
+
   }
 
   esFichaActiva(key) {

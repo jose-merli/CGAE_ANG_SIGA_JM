@@ -7,6 +7,7 @@ import { TranslateService } from '../../../../../commons/translate/translation.s
 import { DataTable } from 'primeng/datatable';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { Router } from '@angular/router';
+import { RelacionesItem } from '../../../../../models/sjcs/RelacionesItem';
 
 @Component({
   selector: 'app-relaciones',
@@ -32,12 +33,13 @@ export class RelacionesComponent implements OnInit {
   numSelected = 0;
   selectMultiple: boolean = false;
   seleccion: boolean = false;
-  relaciones: EJGItem; //cambiar item
-  nRelaciones;
+  relaciones: RelacionesItem[]=[];
+  nRelaciones:number;
   progressSpinner: boolean;
   historico: boolean;
   resaltadoDatosGenerales: boolean = false;
   datosFamiliares: any;
+  tipoRelacion:String;
   
   @ViewChild("table") table: DataTable;
 
@@ -68,7 +70,7 @@ export class RelacionesComponent implements OnInit {
         this.body = this.persistenceService.getDatos();
         this.nuevo = false;
         this.modoEdicion = true;
-        this.getRelaciones(this.body);
+        this.getRelaciones();
       }else {
       this.nuevo = true;       
       this.modoEdicion = true;
@@ -106,13 +108,17 @@ export class RelacionesComponent implements OnInit {
     this.idOpened.emit(key);
   }
 
-  getRelaciones(selected) {
-    //ojo esta a estados para probar a espera de back relaciones
-    this.relaciones = this.persistenceService.getDatos();
+  getRelaciones() {
     this.progressSpinner = true;
-    this.sigaServices.post("gestionejg_getEstados", selected).subscribe(
+    
+    this.sigaServices.post("gestionejg_getRelaciones", this.body).subscribe(
       n => {
-        this.relaciones = JSON.parse(n.body).estadoEjgItems;
+        this.relaciones = JSON.parse(n.body).relacionesItem;
+        this.nRelaciones = this.relaciones.length;
+        //obtiene el tipo en caso de devolver solo 1.
+        if(this.relaciones.length == 1){
+          this.tipoRelacion = this.relaciones[0].sjcs; 
+        } 
         // this.nExpedientes = this.expedientesEcon.length;
         // this.persistenceService.setFiltrosAux(this.expedientesEcon);
         // this.router.navigate(['/gestionEjg']);
@@ -120,6 +126,8 @@ export class RelacionesComponent implements OnInit {
       },
       err => {
         console.log(err);
+        this.progressSpinner = false;
+        this.showMessage("error", this.translateServices.instant("general.message.incorrect"), this.translateServices.instant("general.mensaje.error.bbdd"));
       }
     );
   }
@@ -143,12 +151,13 @@ export class RelacionesComponent implements OnInit {
   }
   getCols() {
     this.cols = [
-      { field: "asunto", header: "justiciaGratuita.justiciables.literal.asuntos", width: "5%" },
-      { field: "fecha", header: "censo.resultadosSolicitudesModificacion.literal.fecha", width: "5%" },
-      { field: "turnoGuardia", header: "justiciaGratuita.justiciables.literal.turnoGuardia", width: "10%" },
-      { field: "letrado", header: "justiciaGratuita.justiciables.literal.colegiado", width: "15%" },
-      { field: "interesado", header: "justiciaGratuita.justiciables.literal.interesados", width: "20%" },
-      { field: "datosInteres", header: "justiciaGratuita.justiciables.literal.datosInteres", width: "20%" }
+      { field: "sjcs", header: "menu.justiciaGratuita", width: "5%" },
+      { field: "anio" , header:"justiciaGratuita.maestros.calendarioLaboralAgenda.anio", width:"3%"},
+      { field: "numero" , header:"justiciaGratuita.sjcs.designas.DatosIden.numero", width:"3%"},
+      { field: "desturno", header: "justiciaGratuita.justiciables.literal.turnoGuardia", width: "10%" },
+      { field: "letrado", header: "justiciaGratuita.sjcs.designas.colegiado", width: "10%" },
+      { field: "interesado", header: "justiciaGratuita.justiciables.literal.interesados", width: "10%" },
+      { field: "datosinteres", header: "justiciaGratuita.justiciables.literal.datosInteres", width: "10%" },
     ];
     this.cols.forEach(it => this.buscadores.push(""));
 
