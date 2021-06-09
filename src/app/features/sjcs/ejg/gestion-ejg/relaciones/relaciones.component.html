@@ -16,9 +16,9 @@
           <div class="d-flex justify-content-between default">
             <label>{{'justiciaGratuita.ejg.datosGenerales.numero.Relaciones' | translate }}:
               <span *ngIf="nRelaciones > 0">{{nRelaciones}}</span>
-              <span *ngIf="nRelaciones == 0">{{ "general.message.no.registros" | translate }}</span></label>
+              <span *ngIf="nRelaciones == 0 || nRelaciones == undefined || nRelaciones == null">{{ "general.message.no.registros" | translate }}</span></label>
              
-                <label *ngIf="nRelaciones == 1 && tipoRelacion == 'ASISTENCIA'">{{justiciaGratuita.oficio.designas.interesados.identificador | translate}}
+                <label *ngIf="nRelaciones == 1 && tipoRelacion == 'ASISTENCIA'">{{gratuita.busquedaAsistencias.literal.numero | translate}}
                   <span *ngIf="nRelaciones == 1 && tipoRelacion == 'ASISTENCIA'">{{ relaciones[0].idsjcs}}</span>
                 </label>
                 <label *ngIf="nRelaciones == 1 && tipoRelacion == 'ASISTENCIA'">{{menu.justiciaGratuita.GuardiaMenu | translate}}
@@ -28,24 +28,24 @@
                   <span *ngIf="nRelaciones == 1 && tipoRelacion == 'ASISTENCIA'">{{ relaciones[0].letrado}}</span>
                 </label>
               
-                <label *ngIf="nRelaciones == 1 && tipoRelacion == 'SOJ'">{{justiciaGratuita.oficio.designas.interesados.identificador | translate}}
+                <label *ngIf="nRelaciones == 1 && tipoRelacion == 'SOJ'">{{gratuita.busquedaAsistencias.literal.numero | translate}}
                   <span *ngIf="nRelaciones == 1 && tipoRelacion == 'SOJ'">{{ relaciones[0].idsjcs}}</span>
                 </label>
                 <label *ngIf="nRelaciones == 1 && tipoRelacion == 'SOJ'">{{dato.jgr.guardia.saltcomp.tipo | translate}}
                   <span *ngIf="nRelaciones == 1 && tipoRelacion == 'SOJ'">{{ relaciones[0].destipo}}</span>
                 </label>
               
-                <label *ngIf="nRelaciones == 1 && tipoRelacion == 'DESIGNACIÓN'">{{justiciaGratuita.oficio.designas.interesados.identificador | translate}}
+                <label *ngIf="nRelaciones == 1 && tipoRelacion == 'DESIGNACIÓN'">{{justiciaGratuita.oficio.justificacionExpres.numDesignacion | translate}}
                   <span *ngIf="nRelaciones == 1 && tipoRelacion == 'DESIGNACIÓN'">{{ relaciones[0].idsjcs}}</span>
                 </label>
                 <label *ngIf="nRelaciones == 1 && tipoRelacion == 'DESIGNACIÓN'">{{menu.justiciaGratuita.oficio.comboturno  | translate}}
                   <span *ngIf="nRelaciones == 1 && tipoRelacion == 'DESIGNACIÓN'">{{ relaciones[0].desturno}}</span>
                 </label>
-                <label *ngIf="nRelaciones == 1 && tipoRelacion == 'DESIGNACIÓN'">{{justiciaGratuita.sjcs.designas.colegiado | translate}}
+                <label *ngIf="nRelaciones == 1 && tipoRelacion == 'DESIGNACIÓN'">{{justiciaGratuita.oficio.justificacionExpres.numDesignacion | translate}}
                   <span *ngIf="nRelaciones == 1 && tipoRelacion == 'DESIGNACIÓN'">{{ relaciones[0].letrado}}</span>
                 </label>
               
-                <label *ngIf="nRelaciones == 1 && tipoRelacion == 'EXPEDIENTE'">{{justiciaGratuita.oficio.designas.interesados.identificador | translate}}
+                <label *ngIf="nRelaciones == 1 && tipoRelacion == 'EXPEDIENTE'">{{justiciaGratuita.ejg.datosGenerales.NumExpediente | translate}}
                   <span *ngIf="nRelaciones == 1 && tipoRelacion == 'EXPEDIENTE'">{{ relaciones[0].idsjcs}}</span>
                 </label>
                 <label *ngIf="nRelaciones == 1 && tipoRelacion == 'EXPEDIENTE'">{{dato.jgr.guardia.saltcomp.tipo | translate}}

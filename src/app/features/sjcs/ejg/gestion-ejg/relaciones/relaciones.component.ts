@@ -154,7 +154,7 @@ export class RelacionesComponent implements OnInit {
       { field: "sjcs", header: "menu.justiciaGratuita", width: "5%" },
       { field: "anio" , header:"justiciaGratuita.maestros.calendarioLaboralAgenda.anio", width:"3%"},
       { field: "numero" , header:"justiciaGratuita.sjcs.designas.DatosIden.numero", width:"3%"},
-      { field: "desturno", header: "justiciaGratuita.justiciables.literal.turnoGuardia", width: "10%" },
+      { field: "descturno", header: "justiciaGratuita.justiciables.literal.turnoGuardia", width: "10%" },
       { field: "letrado", header: "justiciaGratuita.sjcs.designas.colegiado", width: "10%" },
       { field: "interesado", header: "justiciaGratuita.justiciables.literal.interesados", width: "10%" },
       { field: "datosinteres", header: "justiciaGratuita.justiciables.literal.datosInteres", width: "10%" },
