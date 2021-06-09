@@ -7,9 +7,6 @@ import { PersistenceService } from '../../../_services/persistence.service';
 import { Router } from '../../../../../node_modules/@angular/router';
 import { TablaEjgComponent } from './tabla-ejg/tabla-ejg.component';
 import { FiltrosEjgComponent } from './filtros-busqueda-ejg/filtros-ejg.component';
-import * as moment from "moment";
-import { DatePipe } from '../../../../../node_modules/@angular/common';
-import { EJGItem } from '../../../models/sjcs/EJGItem';
 
 @Component({
   selector: 'app-ejg',

@@ -454,7 +454,7 @@ import { LetradoEntranteComponent } from './features/sjcs/oficio/designaciones/f
 import { LetradoSalienteComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/ficha-cambio-letrado/letrado-saliente/letrado-saliente.component';
 import { EjgComisionComponent } from './features/sjcs/ejg-comision/ejg-comision.component';
 import { EjgComisionBusquedaComponent } from './features/sjcs/ejg-comision/ejg-comision-busqueda/ejg-comision-busqueda.component';
-import { TablaEjgComisionComponent } from './tabla-ejg-comision/tabla-ejg-comision.component';
+import { TablaEjgComisionComponent } from './features/sjcs/ejg-comision/tabla-ejg-comision/tabla-ejg-comision.component';
 
 @NgModule({
 	declarations: [
@@ -830,7 +830,7 @@ import { TablaEjgComisionComponent } from './tabla-ejg-comision/tabla-ejg-comisi
 		DetalleTarjetaRelacionesDesignaComponent,
 		DetalleTarjetaComunicacionesDesignaComponent,
 		EjgComisionBusquedaComponent,
-		TablaEjgComisionComponent,
+		TablaEjgComisionComponent
 
 	],
 	imports: [

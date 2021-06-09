@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, HostListener,ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, HostListener, ElementRef, ViewChild } from '@angular/core';
 import { Router } from '../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../_services/siga.service';
 import { TranslateService } from '../../../../commons/translate';
@@ -23,10 +23,10 @@ export class EjgComisionBusquedaComponent implements OnInit {
   nuevo: boolean = true;
   inst2000: boolean;
   permisoEscritura: boolean = false;
-  showdatosIdentificacion: boolean = true;
+  showdatosIdentificacion: boolean = false;
   showDatosGeneralesEJG: boolean = false;
   showDatosDefensa: boolean = false;
-  showCAJG: boolean = false;
+  showCAJG: boolean = true;
   showSolicitante: boolean = false;
   showTramitador: boolean = false;
   comboProcedimiento = [];
@@ -36,7 +36,7 @@ export class EjgComisionBusquedaComponent implements OnInit {
   comboDictamen = [];
   comboFundamentoCalif = [];
   comboResolucion = [];
- // comboFundamentosResolucion = [];
+  // comboFundamentosResolucion = [];
   comboFundamentoJurid = [];
   comboImpugnacion = [];
   comboFundamentoImpug = [];
@@ -65,13 +65,13 @@ export class EjgComisionBusquedaComponent implements OnInit {
   por ejemplo, si tenemos un botón en el componente hijo y queremos actualizar los datos del padre.*/
   @Output() busqueda = new EventEmitter<boolean>();
 
-  
+
   @ViewChild('inputNumero') inputNumero: ElementRef;
 
-  usuarioBusquedaExpress = {​​
+  usuarioBusquedaExpress = {
     numColegiado: '',
     nombreAp: ''
-  }​​;
+  };
 
   constructor(private router: Router,
     private sigaServices: SigaServices,
@@ -87,7 +87,7 @@ export class EjgComisionBusquedaComponent implements OnInit {
     }
     if (this.persistenceService.getFiltros() != undefined) {
       this.body = this.persistenceService.getFiltros();
-     
+
       this.body.fechaAperturaDesd = this.transformDate(this.body.fechaAperturaDesd);
       this.body.fechaAperturaHast = this.transformDate(this.body.fechaAperturaHast);
       this.body.fechaEstadoDesd = this.transformDate(this.body.fechaEstadoDesd);
@@ -100,28 +100,28 @@ export class EjgComisionBusquedaComponent implements OnInit {
       this.body.fechaImpugnacionHast = this.transformDate(this.body.fechaImpugnacionHast);
       this.body.fechaPonenteDesd = this.transformDate(this.body.fechaPonenteDesd);
       this.body.fechaPonenteHast = this.transformDate(this.body.fechaPonenteHast);
-      
+
       this.persistenceService.clearFiltros();
       this.busqueda.emit(this.historico);
 
     } else {
       this.body = new EJGItem();
-      this.body.annio = new Date().getFullYear().toString();      
-    }
-    
-
-    if(sessionStorage.getItem("tarjeta")){
-      this.showTramitador=true;
+      this.body.annio = new Date().getFullYear().toString();
     }
 
-    if(sessionStorage.getItem("buscadorColegiados")){
+
+    if (sessionStorage.getItem("tarjeta")) {
+      this.showTramitador = true;
+    }
+
+    if (sessionStorage.getItem("buscadorColegiados")) {
       let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
-      this.usuarioBusquedaExpress.nombreAp=busquedaColegiado.nombre+" "+busquedaColegiado.apellidos;
-      this.usuarioBusquedaExpress.numColegiado=busquedaColegiado.nColegiado;
+      this.usuarioBusquedaExpress.nombreAp = busquedaColegiado.nombre + " " + busquedaColegiado.apellidos;
+      this.usuarioBusquedaExpress.numColegiado = busquedaColegiado.nColegiado;
     }
 
     setTimeout(() => {
-      this.inputNumero.nativeElement.focus();  
+      this.inputNumero.nativeElement.focus();
     }, 300);
   }
 
@@ -290,7 +290,7 @@ export class EjgComisionBusquedaComponent implements OnInit {
   getComboFundamentoJurid() {
     this.sigaServices
       .getParam(
-        "filtrosejg_comboFundamentoJurid",
+        "filtrosejg_comboFundamentoJuridComision",
         "?resolucion=" + this.body.resolucion
       )
       .subscribe(
@@ -327,7 +327,7 @@ export class EjgComisionBusquedaComponent implements OnInit {
     );
   }
   getComboPonente() {
-    this.sigaServices.get("filtrosejg_comboPonente").subscribe(
+    this.sigaServices.get("filtrosejg_comboComision").subscribe(
       n => {
         this.comboPonente = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboPonente);
@@ -372,7 +372,7 @@ export class EjgComisionBusquedaComponent implements OnInit {
     );
   }
   getComboTipoEJGColegio() {
-    this.sigaServices.get("filtrosejg_comboTipoEJGColegio").subscribe(
+    this.sigaServices.get("filtrosejg_comboTipoEJGColegioComision").subscribe(
       n => {
         this.comboTipoEJGColegio = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboTipoEJGColegio);
@@ -384,7 +384,7 @@ export class EjgComisionBusquedaComponent implements OnInit {
   }
 
   getComboEstadoEJG() {
-    this.sigaServices.get("filtrosejg_comboEstadoEJG").subscribe(
+    this.sigaServices.get("filtrosejg_comboEstadoEJGComision").subscribe(
       n => {
         this.comboEstadoEJG = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboEstadoEJG);
@@ -394,7 +394,7 @@ export class EjgComisionBusquedaComponent implements OnInit {
       }
     );
   }
-  
+
   getComboTurno() {
     if (this.body.tipoLetrado == "E") {
       this.tipoLetrado = "2";
@@ -600,14 +600,14 @@ export class EjgComisionBusquedaComponent implements OnInit {
       //this.persistenceService.setFiltros(this.body);
       // this.persistenceService.setFiltrosAux(this.body);
 
-      if(this.usuarioBusquedaExpress.numColegiado!=undefined && this.usuarioBusquedaExpress.numColegiado!=null 
-        && this.usuarioBusquedaExpress.numColegiado.trim()!=""){
-          this.body.numColegiado=this.usuarioBusquedaExpress.numColegiado;
+      if (this.usuarioBusquedaExpress.numColegiado != undefined && this.usuarioBusquedaExpress.numColegiado != null
+        && this.usuarioBusquedaExpress.numColegiado.trim() != "") {
+        this.body.numColegiado = this.usuarioBusquedaExpress.numColegiado;
       }
 
-      
+
       this.busqueda.emit(false);
-      
+
     }
   }
   showMessage(severity, summary, msg) {
@@ -632,7 +632,7 @@ export class EjgComisionBusquedaComponent implements OnInit {
     this.body.annio = new Date().getFullYear().toString();
 
     this.getComboColegio();
-      
+
     this.showdatosIdentificacion = true;
     this.showDatosGeneralesEJG = false;
     this.showDatosDefensa = false;
@@ -652,7 +652,7 @@ export class EjgComisionBusquedaComponent implements OnInit {
 
   }
 
-  checkPermisosIsNuevo(){
+  checkPermisosIsNuevo() {
     let msg = this.commonServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, Output, EventEmitter, ChangeDetectorRef, Input } from '@angular/core';
 import { DataTable, ConfirmationService } from '../../../../../../node_modules/primeng/primeng';
 import { TranslateService } from '../../../../commons/translate';
 import { Router } from '../../../../../../node_modules/@angular/router';
@@ -52,7 +52,6 @@ export class TablaEjgComisionComponent implements OnInit {
 
   //Resultados de la busqueda
   @Input() datos;
-
   @Input() filtro;
   @Input() remesa;
 

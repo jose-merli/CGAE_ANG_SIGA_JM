@@ -14,9 +14,9 @@ import { EjgComisionBusquedaComponent } from './ejg-comision-busqueda/ejg-comisi
 })
 export class EjgComisionComponent implements OnInit {
   url;
-  datos;
+  datos = "";
   msgs;
-  institucionActual;
+  institucionActual;pac
 
   historico: boolean = false;
   progressSpinner: boolean = false;
@@ -25,7 +25,6 @@ export class EjgComisionComponent implements OnInit {
 
   permisoEscritura: any;
   
-
   //Mediante esta sentencia el padre puede acceder a los datos y atributos del hijo
   // la particularidad de éste método es que tenemos que esperar a que la vista esté totalmente 
   // cargada para acceder a los atributos del hijo. Para ello creamos un método de Angular llamado
@@ -76,6 +75,7 @@ export class EjgComisionComponent implements OnInit {
 
   searchEJGs(event) {
 
+    console.log("hola mundo ***************");
     this.progressSpinner = true;
     
     this.sigaServices.post("filtrosejg_busquedaEJG", this.filtros.body).subscribe(

@@ -1,6 +1,3 @@
-<p>
-  ejg-comision works!
-</p>
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="busqueda-container">
   <div class="header-title">
@@ -20,7 +17,7 @@
         <i *ngIf="!showdatosIdentificacion" class="fa fa-angle-down float-right"></i>
       </p>
       <div *ngIf="showdatosIdentificacion" class="form-row">
-        <div class="form-group-interlineado col-lg-3 col-md-3" style="display: none;">
+        <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ "censo.busquedaClientesAvanzada.literal.colegio" | translate }}</label>
           <p-dropdown class="select-form" [(ngModel)]='body.colegio' placeholder="Seleccionar" [disabled]="inst2000"
             [options]="comboColegio" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
