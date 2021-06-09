@@ -412,7 +412,7 @@ export class FichaDesignacionesComponent implements OnInit {
           },
           {
             "key": "Fecha Juicio",
-            "value": this.formatDate(designaItem.fechaJuicio)
+            "value": this.formatDateWithHours(designaItem.fechaJuicio)
           }
         ];
         this.listaTarjetas[2].campos = datosAdicionales;
@@ -686,6 +686,12 @@ export class FichaDesignacionesComponent implements OnInit {
 
   formatDate(date) {
     const pattern = 'dd/MM/yyyy';
+    return this.datepipe.transform(date, pattern);
+  }
+
+  formatDateWithHours(date)
+  {
+    const pattern = 'dd/MM/yyyy hh:mm';
     return this.datepipe.transform(date, pattern);
   }
 
@@ -1894,7 +1900,7 @@ export class FichaDesignacionesComponent implements OnInit {
         },
         {
           "key": "Fecha Juicio",
-          "value": this.formatDate(designaItem.fechaJuicio)
+          "value": this.formatDateWithHours(designaItem.fechaJuicio)
         }
       ];
       this.listaTarjetas[2].campos = datosAdicionales;
