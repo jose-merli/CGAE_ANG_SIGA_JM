@@ -47,24 +47,24 @@
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{'censo.fichaCliente.situacion.cabecera'|translate}}</label>
-          <p-dropdown class="select-form" [(ngModel)]='body.renuncia' placeholder="Seleccionar"
+          <p-dropdown class="select-form" [(ngModel)]='body.idsituacion' placeholder="Seleccionar"
             [options]="comboSituacion" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
           </p-dropdown>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{'gratuita.mantAsistencias.literal.numeroDiligenciasolo'|translate}}</label>
-          <input type="text" [(ngModel)]="body.annio" class="form-control" (keypress)="numberOnly($event)"
+          <input type="text" [(ngModel)]="body.numerodiligencia" class="form-control" (keypress)="numberOnly($event)"
             maxLength="10" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{"gratuita.volantesExpres.literal.centroDetencion" | translate}}</label>
-          <p-dropdown class="select-form" [(ngModel)]='body.renuncia'
+          <p-dropdown class="select-form" [(ngModel)]='body.comisaria'
             placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboComisaria" [filter]="true"
             filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{"justiciaGratuita.ejg.datosGenerales.calidad" | translate}}</label>
-          <p-dropdown class="select-form" [(ngModel)]='body.renuncia'
+          <p-dropdown class="select-form" [(ngModel)]='body.calidad'
             placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboCalidad" [filter]="true"
             filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
         </div>
@@ -74,10 +74,10 @@
 
     <div *ngIf="openDef" class="card-footer">
       <div class="text-right main-button ">
-        <button (click)="checkPermisosAsociarDes()" pButton [disabled]="!permisoEscritura" type="button"
+        <button (click)="checkPermisosAsociarDes()" pButton type="button"
           icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.AsociarDesignacion' | translate}}"></button>
 
-        <button (click)="checkPermisosCreateDes()" pButton [disabled]="!permisoEscritura" type="button"
+        <button (click)="checkPermisosCreateDes()" pButton type="button"
           icon="fa fa-download" iconPos="left" label="{{ 'general.boton.crearDesignacion' | translate}}"></button>
 
         <button (click)="rest()" pButton type="button" icon="fa fa-undo" iconPos="left"

@@ -359,7 +359,6 @@ export class DatosGeneralesEjgComponent implements OnInit {
           else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         },
         err => {
-          console.log(err);
           this.progressSpinner = false;
 
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));

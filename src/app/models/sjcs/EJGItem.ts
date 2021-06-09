@@ -45,6 +45,9 @@ export class EJGItem {
     numAnnioProcedimiento: string;
     procedimiento: string;
     nig: string;
+    idsituacion: number;
+	numerodiligencia: string;
+	comisaria: number;
 
     annioCAJG: string;
     numCAJG: string;

@@ -98,7 +98,26 @@ export class DefensaJuridicaComponent implements OnInit {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
   }
 
-  save() {}
+  save() {
+    this.progressSpinner = true;
+
+    this.sigaServices.post("gestionejg_updateDatosJuridicos", this.body).subscribe(
+      n => {
+        if (n.statusText == "OK") {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.bodyInicial = this.body;
+          this.persistenceService.setDatos(this.body);
+        }
+        else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
+  }
 
   getComboPreceptivo() {
     this.sigaServices.get("filtrosejg_comboPreceptivo").subscribe(
@@ -148,7 +167,7 @@ export class DefensaJuridicaComponent implements OnInit {
     this.sigaServices.get("gestionejg_comboTipoencalidad").subscribe(
       n => {
         this.comboCalidad = n.combooItems;
-        this.commonsServices.arregloTildesCombo(this.comboComisaria);
+        this.commonsServices.arregloTildesCombo(this.comboCalidad);
       },
       err => {
       }
@@ -164,6 +183,15 @@ export class DefensaJuridicaComponent implements OnInit {
       return false;
 
     }
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
   }
 
   backTo() {
