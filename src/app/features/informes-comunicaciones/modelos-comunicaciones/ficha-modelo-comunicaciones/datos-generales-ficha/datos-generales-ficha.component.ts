@@ -462,6 +462,10 @@ para poder filtrar el dato con o sin estos caracteres*/
         data => {
           this.body.tipoEnvio = JSON.parse(data["body"]).tipoEnvio;
           this.body.idTipoEnvio = JSON.parse(data["body"]).idTipoEnvios;
+          if (JSON.parse(data["body"]).idPersona ==null){
+            this.showFail(this.translateService.instant(
+              "general.message.datos.generales.remitente"));
+          }
         },
         err => {
           console.log(err);
