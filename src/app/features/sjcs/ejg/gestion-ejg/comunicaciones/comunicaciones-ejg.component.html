@@ -56,8 +56,12 @@
                   <span class="enlace" (click)="navigateTo([dato])">{{dato[col.field]}}</span>
                 </div>
 
-                <div *ngIf="col.field!='destinatario'">
+                <div *ngIf="col.field!='destinatario' && col.field !='fechaProgramada' && col.field!='fechaCreacion'">
                   <span>{{dato[col.field]}}</span>
+                </div>
+
+                <div *ngIf="col.field=='fechaProgramada' || col.field=='fechaCreacion'">
+                  <span>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</span>
                 </div>
               </td>
             </tr>
