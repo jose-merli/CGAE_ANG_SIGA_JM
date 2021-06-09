@@ -141,9 +141,8 @@ export class FiltrosInscripciones implements OnInit {
         let turnoInscripcion = JSON.parse(sessionStorage.getItem("idTurno"));
         if (turnoInscripcion != null && turnoInscripcion != undefined) {
           this.turnos.forEach(turnoCombo => {
-            if (turnoCombo.value == turnoInscripcion) {
-              this.filtros.idturno = turnoCombo;
-
+            if (turnoCombo.value == turnoInscripcion.toString()) {
+              this.filtros.idturno = turnoCombo.value;
             }
           });
         }
@@ -154,9 +153,9 @@ export class FiltrosInscripciones implements OnInit {
         console.log(err);
       }, () => {
         if (sessionStorage.getItem("idTurno") != undefined) {
-          this.filtros.idturno = JSON.parse(
+          this.filtros.idturno = [JSON.parse(
             sessionStorage.getItem("idTurno")
-          );
+          ).toString()];
           this.isBuscar();
           sessionStorage.setItem("idTurno", undefined);
         }

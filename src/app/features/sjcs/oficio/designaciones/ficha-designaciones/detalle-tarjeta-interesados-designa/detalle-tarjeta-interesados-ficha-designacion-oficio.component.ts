@@ -261,4 +261,8 @@ export class DetalleTarjetaInteresadosFichaDesignacionOficioComponent implements
        this.selectionMode = "multiple"; */
     }
   }
+
+  clear() {
+    this.msgs = [];
+  }
 }

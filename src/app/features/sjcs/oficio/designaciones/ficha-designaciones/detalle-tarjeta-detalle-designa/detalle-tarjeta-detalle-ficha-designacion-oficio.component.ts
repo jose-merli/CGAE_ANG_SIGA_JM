@@ -169,7 +169,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
                 this.disableReactivar = false;
               }
               this.disableFinalizar = true;
-              this.disableAnular = true;
+              //this.disableAnular = true;
             }else if(this.campos.estado == 'Anulada'){
               this.disableAnular = true;
               this.disableFinalizar = true;
@@ -820,7 +820,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
               this.disableReactivar = false;
             }
             this.disableFinalizar = true;
-            this.disableAnular = true;
+            //this.disableAnular = true;
           }else if(this.estadoValue == 'A'){
             this.disableAnular = true;
             this.disableFinalizar = true;
@@ -991,6 +991,9 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       this.progressSpinner = false;
       let letrados = JSON.parse(data.body);
       if (letrados.length > 0) {
+        if(!element.idPersona){
+          element.idPersona = letrados[0].idPersona;
+        }
         this.tieneLetradoAsignado = true;
         let mess = "Si desea introducir una compensación al letrado designado pulse Aceptar, en caso contrario Cancelar";
         let icon = "fa fa-question-circle";
