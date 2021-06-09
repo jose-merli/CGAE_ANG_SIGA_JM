@@ -71,7 +71,8 @@
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Datos Facturación'">
                                         <app-detalle-tarjeta-datos-facturacion-ficha-designacion-oficio
-                                            (changeDataTarjeta)="changeDataTarjeta($event)" [campos]="campos">
+                                            (changeDataDatosFacEvent)="changeDataDatosFacEvent($event)"
+                                            [campos]="campos">
                                         </app-detalle-tarjeta-datos-facturacion-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Documentación'">
@@ -107,7 +108,8 @@
                                         <app-detalle-tarjeta-actuaciones-ficha-designacion-oficio [campos]="campos"
                                             [actuacionesDesignaItems]="actuacionesDesignaItems"
                                             [relaciones]="relaciones" (buscarEvent)="getActuacionesDesigna($event)"
-                                            [permiteTurno]="permiteTurno">
+                                            [permiteTurno]="permiteTurno"
+                                            (buscarDocumentosEvent)="getDocumentosDesigna()">
                                         </app-detalle-tarjeta-actuaciones-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Relaciones'">
@@ -148,7 +150,7 @@
     <div class="bloque col-lg-12 col-md-12">
         <div class="row">
             <div class="form-group col-lg-6 col-md-6">
-                <label>{{ "justiciaGratuita.oficio.designaciones.guardarProcurador" | translate }} </label>
+                <label>{{ msjGuardarProcurador }} </label>
             </div>
         </div>
     </div>
@@ -163,7 +165,7 @@
     <div class="bloque col-lg-12 col-md-12">
         <div class="row">
             <div class="form-group col-lg-6 col-md-6">
-                <label>{{ "justiciaGratuita.oficio.designaciones.eliminarDesignacion" | translate }} </label>
+                <label>{{ msjEliminarDesignacion }} </label>
             </div>
         </div>
     </div>

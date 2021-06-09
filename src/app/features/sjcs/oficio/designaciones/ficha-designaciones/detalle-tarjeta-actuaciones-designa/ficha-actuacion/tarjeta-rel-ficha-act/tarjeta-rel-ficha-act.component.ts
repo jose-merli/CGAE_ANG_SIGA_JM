@@ -1,4 +1,8 @@
 import { Component, Input, OnInit, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
+import { TranslateService } from '../../../../../../../../commons/translate/translation.service';
+import { procesos_oficio } from '../../../../../../../../permisos/procesos_oficio';
+import { CommonsService } from '../../../../../../../../_services/commons.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tarjeta-rel-ficha-act',
@@ -10,9 +14,26 @@ export class TarjetaRelFichaActComponent implements OnInit, OnChanges {
   @Input() relaciones: any;
   @Output() changeDataEvent = new EventEmitter<any>();
 
-  constructor() { }
+  constructor(private commonsService: CommonsService, private translateService: TranslateService, private router: Router) { }
 
   ngOnInit() {
+
+    this.commonsService.checkAcceso(procesos_oficio.designaTarjetaActuacionesRelaciones)
+      .then(respuesta => {
+        let permisoEscritura = respuesta;
+
+        if (permisoEscritura == undefined) {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
+
+      }
+      ).catch(error => console.error(error));
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {

@@ -108,12 +108,7 @@ export class FichaActuacionComponent implements OnInit {
       fixed: false,
       detalle: true,
       opened: false,
-      campos: [
-        {
-          "key": "Partida Presupuestaria",
-          "value": ""
-        },
-      ]
+      campos: []
     },
     {
       id: 'sjcsDesigActuaOfiRela',
@@ -184,9 +179,9 @@ export class FichaActuacionComponent implements OnInit {
           this.router.navigate(["/errorAcceso"]);
         }
 
-        if (!permisoEscritura) {
-          this.modoLectura = true;
-        }
+        // if (!permisoEscritura) {
+        //   this.modoLectura = true;
+        // }
 
         this.isColegiado = this.sigaStorageService.isLetrado;
 
@@ -226,6 +221,10 @@ export class FichaActuacionComponent implements OnInit {
 
   cargaInicial() {
 
+    if (this.actuacionDesigna.relaciones != null) {
+      this.relaciones = this.actuacionDesigna.relaciones;
+    }
+
     if (this.actuacionDesigna.isNew) {
       this.tarjetaFija.campos[0].value = this.actuacionDesigna.designaItem.ano;
       this.isNewActDesig = true;
@@ -237,10 +236,6 @@ export class FichaActuacionComponent implements OnInit {
       }
 
       this.establecerValoresIniciales();
-    }
-
-    if (this.actuacionDesigna.relaciones != null) {
-      this.relaciones = this.actuacionDesigna.relaciones;
     }
   }
 
@@ -263,7 +258,7 @@ export class FichaActuacionComponent implements OnInit {
   isOpenReceive(event) {
     let tarjTemp = this.listaTarjetas.find(tarj => tarj.id == event);
 
-    if (tarjTemp.detalle) {
+    if (!this.isNewActDesig && tarjTemp.detalle) {
       tarjTemp.opened = true;
     }
 
@@ -298,31 +293,6 @@ export class FichaActuacionComponent implements OnInit {
       this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiRela').campos = event.campos;
     }
 
-  }
-
-  getIdPartidaPresupuestaria() {
-
-    this.progressSpinner = true;
-
-    let factAct = new DesignaItem();
-    factAct.idTurno = Number(this.actuacionDesigna.actuacion.idTurno);
-    factAct.ano = Number(this.actuacionDesigna.actuacion.anio);
-    factAct.numero = this.actuacionDesigna.designaItem.numero;
-
-    this.sigaServices.post("designaciones_getDatosFacturacion", factAct).subscribe(
-      n => {
-        let resp = JSON.parse(n.body).combooItems;
-        if (resp.length > 0) {
-          this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiDatFac').campos[0].value = resp[0].label;
-        }
-      },
-      err => {
-        this.progressSpinner = false;
-        console.log(err);
-      }, () => {
-        this.progressSpinner = false;
-      }
-    );
   }
 
   showMsg(severity, summary, detail) {
@@ -501,6 +471,12 @@ export class FichaActuacionComponent implements OnInit {
             }
 
             this.actuacionDesigna.relaciones = relaciones;
+          } else {
+            if (actuacionJE.relaciones != undefined && actuacionJE.relaciones != null && actuacionJE.relaciones.length > 0) {
+              this.actuacionDesigna.relaciones = actuacionJE.relaciones.slice();
+            } else {
+              this.actuacionDesigna.relaciones = null;
+            }
           }
 
           this.actuacionDesigna.designaItem = designa;
@@ -543,22 +519,43 @@ export class FichaActuacionComponent implements OnInit {
     // Se rellenan los campos de la tarjeta de Justificación plegada
     if (this.actuacionDesigna.actuacion.fechaJustificacion != undefined && this.actuacionDesigna.actuacion.fechaJustificacion != null && this.actuacionDesigna.actuacion.fechaJustificacion != '') {
       this.listaTarjetas[1].campos[0].value = this.datePipe.transform(new Date(this.actuacionDesigna.actuacion.fechaJustificacion.split('/').reverse().join('-')), 'dd/MM/yyyy');
+    } else {
+      this.listaTarjetas[1].campos[0].value = null;
     }
     this.listaTarjetas[1].campos[1].value = this.actuacionDesigna.actuacion.validada ? 'Validada' : 'Pendiente de validar';
 
+    // Se rellenan los campos de la tarjeta Relaciones plegada
     if (this.relaciones == undefined || this.relaciones == null || this.relaciones.length == 0) {
       this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiRela').campos = [{
-        "key": "Nº total",
-        "value": 'No existen relaciones asociadas a la actuación'
+        "key": null,
+        "value": this.translateService.instant('justiciaGratuita.oficio.designas.relaciones.vacio')
       }];
-    } else {
+    } else if (this.relaciones.length > 0) {
       this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiRela').campos = [{
-        "key": "Nº total",
+        "key": this.translateService.instant('justiciaGratuita.oficio.justificacionExpres.numeroEJG'),
+        "value": this.relaciones[0].sjcs
+      },
+      {
+        "key": this.translateService.instant('justiciaGratuita.oficio.designas.relaciones.total'),
         "value": this.relaciones.length
       }];
     }
 
-    this.getIdPartidaPresupuestaria();
+    // Se rellenan los campos de la tarjeta Datos Facturación plegada
+    if (this.actuacionDesigna.actuacion.idPartidaPresupuestaria == undefined || this.actuacionDesigna.actuacion.idPartidaPresupuestaria == null || this.actuacionDesigna.actuacion.idPartidaPresupuestaria == '') {
+      let campos = [{
+        "key": "Partida Presupuestaria",
+        "value": ""
+      }];
+      this.listaTarjetas[2].campos = campos;
+    } else {
+      let campos = [{
+        "key": "Partida Presupuestaria",
+        "value": this.actuacionDesigna.actuacion.partidaPresupuestaria
+      }];
+      this.listaTarjetas[2].campos = campos;
+    }
+
     this.getAccionesActuacion();
     this.getDocumentosPorActDesigna();
   }

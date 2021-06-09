@@ -6,7 +6,7 @@ export class CamposCambioLetradoItem {
     apellidos:String;
     nombre:String;
     compensacion:Boolean;
-    motivoRenuncia:Boolean;
+    motivoRenuncia:any;
     observaciones:String; 
     salto:Boolean;
     art27:Boolean;

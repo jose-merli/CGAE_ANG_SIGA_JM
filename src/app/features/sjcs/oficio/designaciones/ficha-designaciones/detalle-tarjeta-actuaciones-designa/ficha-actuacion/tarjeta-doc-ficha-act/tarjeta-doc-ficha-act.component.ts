@@ -10,6 +10,9 @@ import { ParametroRequestDto } from '../../../../../../../../models/ParametroReq
 import { SigaStorageService } from '../../../../../../../../siga-storage.service';
 import { ParametroItem } from '../../../../../../../../models/ParametroItem';
 import { DocumentoDesignaItem } from '../../../../../../../../models/sjcs/DocumentoDesignaItem';
+import { CommonsService } from '../../../../../../../../_services/commons.service';
+import { procesos_oficio } from '../../../../../../../../permisos/procesos_oficio';
+import { Router } from '@angular/router';
 
 export class Documento extends DocumentoDesignaItem {
   file: File;
@@ -30,10 +33,14 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
   @Input() usuarioLogado: UsuarioLogado;
   @Input() isColegiado;
   @Input() isAnulada;
-  @Input() modoLectura: boolean;
+  // Este modo lectura se produce cuando:
+  // - Es colegiado y la actuación está validada y el turno no permite la modificación o la actuación no pertenece al colegiado
+  // - La actuación está facturada
+  @Input() modoLectura2: boolean = false;
 
   @Output() buscarDocumentosEvent = new EventEmitter<any>();
 
+  modoLectura: boolean;
   permiteSubidDescargaFicheros: boolean;
 
   documentos2: Documento[];
@@ -98,11 +105,35 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
     private translateService: TranslateService,
     private datePipe: DatePipe,
     private changeDetectorRef: ChangeDetectorRef,
-    private sigaStorageService: SigaStorageService
+    private sigaStorageService: SigaStorageService,
+    private commonsService: CommonsService,
+    private router: Router
   ) { }
 
   ngOnInit() {
-    this.getParametro();
+
+    this.commonsService.checkAcceso(procesos_oficio.designaTarjetaActuacionesDocumentacion)
+      .then(respuesta => {
+        let permisoEscritura = respuesta;
+
+        if (permisoEscritura == undefined) {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
+
+        if (!permisoEscritura) {
+          this.modoLectura = true;
+        }
+
+        this.getParametro();
+
+      }
+      ).catch(error => console.error(error));
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {

@@ -64,6 +64,8 @@ export class FichaDesignacionesComponent implements OnInit {
   totalActuacionesDesigna;
   refreshDesigna;
   msgs;
+  msjEliminarDesignacion;
+  msjGuardarProcurador;
   tarjetaFija = {
     nombre: this.translateService.instant("justiciaGratuita.oficio.turnos.inforesumen"),
     icono: 'fas fa-clipboard',
@@ -235,6 +237,9 @@ export class FichaDesignacionesComponent implements OnInit {
     this.isLetrado = this.localStorageService.isLetrado;
     this.idPersonaLogado = this.localStorageService.idPersona;
     this.numColegiadoLogado = this.localStorageService.numColegiado;
+
+    this.msjEliminarDesignacion = this.translateService.instant("justiciaGratuita.oficio.designaciones.eliminarDesignacion");
+    this.msjGuardarProcurador = this.translateService.instant("justiciaGratuita.oficio.designaciones.guardarProcurador");
 
     this.checkAcceso();
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
@@ -657,6 +662,7 @@ export class FichaDesignacionesComponent implements OnInit {
     }
   }
   backTo() {
+    sessionStorage.setItem("volver", 'true');
     this.location.back();
   }
 
@@ -849,7 +855,7 @@ export class FichaDesignacionesComponent implements OnInit {
 
   mostrar() {
     if (!this.nuevaDesigna) {
-      let procurador = [this.campos.numero, String(this.campos.idInstitucion), this.campos.idTurno];
+      let procurador = [this.campos.numero, String(this.campos.idInstitucion), this.campos.idTurno, this.campos.ano];
       this.sigaServices.post("designaciones_busquedaProcurador", procurador).subscribe(
         n => {
           this.procurador = JSON.parse(n.body).procuradorItems;
@@ -875,8 +881,11 @@ export class FichaDesignacionesComponent implements OnInit {
             {
               "key": this.translateService.instant('justiciaGratuita.oficio.designaciones.fechaDesignacion'),
               "value": this.procurador[0].fechaDesigna
-            }
-            ]
+            },
+            {
+              "key": this.translateService.instant('justiciaGratuita.oficio.designaciones.numerototalprocuradores'),
+              "value": this.procurador[0].numeroTotalProcuradores
+            }]
           } else {
             this.listaTarjetas[5].campos = [
               {
@@ -907,7 +916,7 @@ export class FichaDesignacionesComponent implements OnInit {
           { type: 'text', value: element.nColegiado },
           { type: 'text', value: element.apellido1 + " " + element.apellido2 + ", " + element.nombre },
           { type: 'select', combo: this.comboRenuncia, value: element.motivosRenuncia },
-          { type: 'text', value: element.observaciones },
+          { type: 'input', value: element.observaciones },
           { type: 'datePicker', value: element.fecharenunciasolicita },
           { type: 'text', value: element.fechabaja }
         ];
@@ -975,8 +984,10 @@ export class FichaDesignacionesComponent implements OnInit {
   }
 
   checkFilter(event) {
-    if (event[0] == null || event[1] == null || event[4] == null || event[6] == null) {
+    if (event[0] == null || event[5] == null || event[6] == null) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
+    } else if (!event[1].match("([0-9]+)/([0-9])")) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El campo Año/Numero no tiene el formato correcto");
     } else {
       this.compruebaProcurador(event);
     }
@@ -1029,8 +1040,14 @@ export class FichaDesignacionesComponent implements OnInit {
 
   actualizarProcurador() {
     this.progressSpinner = true;
+    let array = [];
 
-    this.sigaServices.post("designaciones_actualizarProcurador", this.listaPrueba).subscribe(
+    if (!this.nuevaDesigna) {
+      this.rowGroups[0].cells.forEach(dato => {
+        array.push(dato.value);
+      });
+    }
+    this.sigaServices.post("designaciones_actualizarProcurador", array).subscribe(
       data => {
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
@@ -1233,7 +1250,6 @@ export class FichaDesignacionesComponent implements OnInit {
 
       this.sigaServices.post("designacionesBusquedaRelaciones", item).subscribe(
         n => {
-          console.log("OBJETO BUSQUEDARELACIONES", n);
           this.relaciones = JSON.parse(n.body).relacionesItem;
           let primero = this.relaciones[0];
           let error = JSON.parse(n.body).error;
@@ -1243,42 +1259,30 @@ export class FichaDesignacionesComponent implements OnInit {
           }
           this.progressSpinner = false;
 
-          if (this.relaciones.length == 1) {
-            console.log("RELACIONES", this.relaciones[0]);
-            if (this.relacion[0].sjcs.charAt(0) == 'E') {
-              this.listaTarjetas[7].campos = [{
-                "key": this.translateService.instant('justiciaGratuita.oficio.justificacionExpres.numeroEJG'),
-                "value": this.relaciones[0].sjcs
-              },
-
-              ]
-            } else if (this.relacion[0].sjcs.charAt(0) == 'A') {
-              this.listaTarjetas[7].campos = [{
-                "key": this.translateService.instant('justiciaGratuita.oficio.justificacionExpres.numeroEJG'),
-                "value": this.relaciones[0].sjcs
-              },
-              {
-                "key": "Letrado",//Sustituir por literal de GEN_DICCIONARIO
-                "value": this.relaciones[0].letrado
-              }
-              ]
+          if (this.relaciones.length > 0) {
+            this.listaTarjetas[7].campos = [{
+              "key": this.translateService.instant('justiciaGratuita.oficio.justificacionExpres.numeroEJG'),
+              "value": this.relaciones[0].sjcs
+            },
+            {
+              "key": this.translateService.instant('justiciaGratuita.oficio.designas.relaciones.total'),
+              "value": this.relaciones.length
             }
+            ]
+
           } else if (this.relaciones.length == 0 || this.relaciones == undefined || this.relaciones == null) {
             this.listaTarjetas[7].campos = [{
               "key": null,
               "value": this.translateService.instant('justiciaGratuita.oficio.designas.relaciones.vacio')
             }
             ]
-          } else {
-            this.listaTarjetas[7].campos = [{
-              "key": this.translateService.instant('justiciaGratuita.oficio.designas.relaciones.total'),
-              "value": this.relaciones.length
-            }
-            ]
           }
         },
         err => {
           this.progressSpinner = false;
+        },
+        () => {
+
         }
       );
     }
@@ -1324,17 +1328,18 @@ export class FichaDesignacionesComponent implements OnInit {
 
       this.sigaServices.post("designacionesBusquedaComunicaciones", item).subscribe(
         n => {
-          this.comunicaciones = JSON.parse(n.body).comunicacionesItem;
+          this.comunicaciones = JSON.parse(n.body).enviosMasivosItem;
           let error = JSON.parse(n.body).error;
 
-          this.comunicaciones.forEach(element => {
-            if (element.fechaCreacion != null && element.fechaCreacion != "") {
-              element.fechaCreacion = this.formatDate(element.fechaCreacion);
-            }
-            if (element.fechaProgramacion != null && element.fechaProgramacion != "") {
-              element.fechaProgramacion = this.formatDate(element.fechaProgramacion);
-            }
-          });
+          // this.comunicaciones.forEach(element => {
+          //   if (element.fechaProgramada != null && element.fechaProgramada != "") {
+          //     element.fechaProgramada = this.formatDate(element.fechaProgramada);
+          //   }
+
+          //   if (element.fechaCreacion != null && element.fechaCreacion != "") {
+          //     element.fechaCreacion = this.formatDate(element.fechaCreacion);
+          //   }
+          // });
           this.progressSpinner = false;
           if (this.comunicaciones.length == 0 || this.comunicaciones == undefined || this.comunicaciones == null) {
             this.listaTarjetas[8].campos = [{
@@ -1374,20 +1379,29 @@ export class FichaDesignacionesComponent implements OnInit {
     facturacionDesigna.numero = designaItem.numero;
     this.sigaServices.post("designaciones_getDatosFacturacion", facturacionDesigna).subscribe(
       n => {
-        let a = JSON.parse(n.body);
-        this.campos.idPartidaPresupuestaria = a.combooItems[0].value;
-        this.campos.nombrePartida = a.combooItems[0].label;
-        let camposFacturacion = [
-          {
-            "key": "Partida Presupuestaria",
-            "value": a.combooItems[0].label
-          }
-        ];
-        this.listaTarjetas[11].campos = camposFacturacion;
-      },
-      err => {
-      }, () => {
-        // this.arregloTildesCombo(this.selectores[1].opciones);
+        let a = JSON.parse(n.body).combooItems;
+        if (a.length > 0 && a[0] != null) {
+          this.campos.idPartidaPresupuestaria = a[0].value;
+          this.campos.nombrePartida = a[0].label;
+          let camposFacturacion = [
+            {
+              "key": "Partida Presupuestaria",
+              "value": a[0].label
+            }
+          ];
+          this.listaTarjetas[11].campos = camposFacturacion;
+        } else {
+          this.campos.idPartidaPresupuestaria = null;
+          this.campos.nombrePartida = '';
+          let camposFacturacion = [
+            {
+              "key": "Partida Presupuestaria",
+              "value": ''
+            }
+          ];
+          this.listaTarjetas[11].campos = camposFacturacion;
+        }
+
       }
     );
   }
@@ -1682,25 +1696,17 @@ export class FichaDesignacionesComponent implements OnInit {
           let datos = JSON.parse(data.body);
           if (datos != []) {
             this.letrados = datos;
-            /* this.datos.fecharenunciasolicita;
-            this.datos.fecharenuncia;
-            this.datos.motivosrenuncia; */
 
-            for (var val of this.letrados) {
-              //Comprobamos el letrado actual, para ello no tiene que tener fecha renunciaEfectiva
-              if (val.fechaRenunciaEfectiva == null) {
-                this.listaTarjetas[6].campos = [
-                  {
-                    "key": this.translateService.instant('censo.resultadosSolicitudesModificacion.literal.nColegiado'),
-                    "value": val.nColegiado
-                  },
-                  {
-                    "key": this.translateService.instant('justiciaGratuita.justiciables.literal.colegiado'),
-                    "value": val.apellidosNombre
-                  }
-                ]
+            this.listaTarjetas[6].campos = [
+              {
+                "key": this.translateService.instant('censo.resultadosSolicitudesModificacion.literal.nColegiado'),
+                "value": this.letrados[0].nColegiado
+              },
+              {
+                "key": this.translateService.instant('justiciaGratuita.justiciables.literal.colegiado'),
+                "value": this.letrados[0].apellidosNombre
               }
-            }
+            ]
 
             this.listaTarjetas[6].enlaceCardClosed = { click: 'irFechaColegial()', title: this.translateService.instant('informesycomunicaciones.comunicaciones.fichaColegial') }
             this.listaTarjetas[6].letrado = datos[0];
@@ -1981,5 +1987,15 @@ export class FichaDesignacionesComponent implements OnInit {
       }
     );
 
+  }
+
+  changeDataDatosFacEvent(event) {
+    let camposFacturacion = [
+      {
+        "key": "Partida Presupuestaria",
+        "value": this.campos.nombrePartida
+      }
+    ];
+    this.listaTarjetas[11].campos = camposFacturacion;
   }
 }

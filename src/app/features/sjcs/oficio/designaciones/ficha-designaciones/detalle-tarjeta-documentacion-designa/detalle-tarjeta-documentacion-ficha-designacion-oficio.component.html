@@ -29,7 +29,8 @@
 
           <span class="w100 cell-value selectWrap" *ngIf="cell.type == 'select'">
             <p-dropdown autoWidth="false" class="center" [placeholder]="textFilter" [(ngModel)]="cell.value"
-              [options]="cell.combo" showClear="true" styleClass="widthAll" [disabled]="cell.disabled" (onChange)="changeSelect(row, cell)">
+              [options]="cell.combo" showClear="true" styleClass="widthAll" [disabled]="cell.disabled"
+              (onChange)="changeSelect(row, cell)">
             </p-dropdown>
           </span>
 
@@ -59,13 +60,13 @@
   <div class="text-right main-button butBottom">
 
     <button pButton type="button" icon="fa fa-trash" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"
-      [disabled]="selectedArray.length == 0" (click)="eliminarArchivos()"></button>
+      [disabled]="selectedArray.length == 0 || modoLectura" (click)="eliminarArchivos()"></button>
     <button pButton type="button" icon="fa fa-download" iconPos="left" label="{{'general.boton.download' | translate}}"
-      [disabled]="selectedArray.length == 0" (click)="descargarArchivos()"></button>
+      [disabled]="selectedArray.length == 0 || modoLectura" (click)="descargarArchivos()"></button>
     <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"
-      (click)="nuevo()"></button>
+      (click)="nuevo()" [disabled]="modoLectura"></button>
     <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"
-      (click)="guardar()"></button>
+      (click)="guardar()" [disabled]="modoLectura"></button>
   </div>
 </div>
 

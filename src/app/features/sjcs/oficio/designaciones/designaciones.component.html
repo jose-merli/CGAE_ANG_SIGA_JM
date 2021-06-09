@@ -2,12 +2,11 @@
 <div>
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="card">
-    <div class="card-body p-0">
-        <app-filtro-designaciones (permisosFichaAct)="getpermisosFichaAct($event)" (isColeg)="esColegiado($event)"
-            (busquedaJustificacionExpres)="busquedaJustificacionExpres()"
-            (busqueda)="busquedaDesignaciones($event)" (showTablaDesigna)="showTablaDesigna($event)"
-            (showTablaJustificacionExpres)="showTablaJustificacionExpres($event)" (checkRestriccionesasLetrado)="checkRestriccionesasLetrado($event)" [usuarioBusquedaExpressFromFicha]="usuarioBusquedaExpressFromFicha"></app-filtro-designaciones>
-    </div>
+    <app-filtro-designaciones (permisosFichaAct)="getpermisosFichaAct($event)" (isColegDesig)="esColegiadoDesig($event)" (isColegJE)="esColegiadoJE($event)"
+    (busquedaJustificacionExpres)="busquedaJustificacionExpres()"
+    (busqueda)="busquedaDesignaciones($event)" (showTablaDesigna)="showTablaDesigna($event)"
+    (showTablaJustificacionExpres)="showTablaJustificacionExpres($event)" (checkRestriccionesasLetrado)="checkRestriccionesasLetrado($event)" [usuarioBusquedaExpressFromFicha]="usuarioBusquedaExpressFromFicha"></app-filtro-designaciones>
+
 </div>
 
 <div>
@@ -15,7 +14,7 @@
 </div>
 
 <div>
-    <app-tabla-justificacion-expres *ngIf="muestraTablaJustificacion" [datosJustificacion]="datosJustificacion" [isLetrado]="isLetrado" [permisosFichaAct]="permisosFichaAct"
+    <app-tabla-justificacion-expres *ngIf="muestraTablaJustificacion" [datosJustificacion]="datosJustificacion" [isLetrado]="isLetrado" [permisosFichaAct]="permisosFichaAct" [colegiado]="colegiadoJE"
         id="tablaFoco" (actuacionesToDleteArrEmit)="actuacionesToDleteArr($event)" (newActuacionItemEmit)="newActuacionItem($event)" (dataToUpdateArrEmit)="dataToUpdateArr($event)" ></app-tabla-justificacion-expres>
 
 </div>
