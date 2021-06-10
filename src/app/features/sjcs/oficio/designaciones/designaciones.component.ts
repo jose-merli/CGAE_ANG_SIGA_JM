@@ -207,6 +207,7 @@ export class DesignacionesComponent implements OnInit {
 
         this.datos.forEach(element => {
          element.factConvenio = element.ano;
+         element.anio = element.ano;
          element.ano = 'D' +  element.ano + '/' + element.codigo;
         //  element.fechaEstado = new Date(element.fechaEstado);
         element.fechaEstado = this.formatDate(element.fechaEstado);
