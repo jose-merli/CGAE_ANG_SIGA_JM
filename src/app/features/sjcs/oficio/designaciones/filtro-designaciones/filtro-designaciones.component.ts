@@ -832,11 +832,11 @@ export class FiltroDesignacionesComponent implements OnInit {
         designa.asunto = this.body.asunto;
 
         designa.idJuzgadoActu = this.body.idJuzgadoActu;
-        if (designa.idJuzgadoActu != null) {
-          designa.nombreJuzgadoActu = this.comboJuzgados.find(
-            item => item.value == designa.idJuzgadoActu
-          ).label;
-        }
+        // if (designa.idJuzgadoActu != null) {
+        //   designa.nombreJuzgadoActu = this.comboJuzgados.find(
+        //     item => item.value == designa.idJuzgadoActu
+        //   ).label;
+        // }
         if (this.body.idAcreditacion != undefined) {
           designa.idAcreditacion = this.body.idAcreditacion;
         }
