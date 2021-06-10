@@ -344,19 +344,13 @@ export class FiltroDesignacionesComponent implements OnInit {
   checkAccesoFichaActuacion() {
     this.commonsService.checkAcceso(procesos_oficio.designasActuaciones)
       .then(respuesta => {
-        this.permisoEscritura = respuesta;
-        this.permisosFichaAct.emit(this.permisoEscritura);
-        //this.persistenceService.setPermisos(this.permisoEscritura);
-
         if (this.permisoEscritura == undefined) {
-          sessionStorage.setItem("codError", "403");
-          sessionStorage.setItem(
-            "descError",
-            this.translateService.instant("generico.error.permiso.denegado")
-          );
-          this.router.navigate(["/errorAcceso"]);
+          this.permisoEscritura = false;
+        }else{
+          this.permisoEscritura = respuesta;
+          this.permisosFichaAct.emit(this.permisoEscritura);
         }
-
+        //this.persistenceService.setPermisos(this.permisoEscritura);
       }
       ).catch(error => console.error(error));
 
