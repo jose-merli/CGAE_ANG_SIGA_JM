@@ -47,9 +47,9 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
   juzgadoValue: any;
   juzgadoOpciones: any;
   procedimientoValue: any;
-  procedimientoOpciones: any;
+  procedimientoOpciones: any[] = [];;
   moduloValue: any;
-  moduloOpciones: any;
+  moduloOpciones: any[] = [];;
   disableEstado: boolean = false;
   institucionActual: String;
   isLetrado: boolean;
@@ -122,13 +122,16 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
               this.getComboProcedimientosConJuzgado(this.juzgadoValue);
               if (this.procedimientoValue != null && this.procedimientoValue != "" && this.procedimientoValue != undefined) {
                 this.getcCmboModulosConProcedimientos(this.procedimientoValue);
+              }else if(this.campos.modulo != "" && this.campos.modulo != null && this.campos.modulo != undefined){
+                this.moduloOpciones.push({ label: this.campos.modulo, value: this.campos.idModulo });
               }
-
             }
             if (this.valorParametro == 2) {
               this.getComboModulosConJuzgado(this.juzgadoValue);
               if (this.moduloValue != null && this.moduloValue != "" && this.moduloValue != undefined) {
                 this.getComboProcedimientosConModulo(this.moduloValue);
+              }else if(this.campos.nombreProcedimiento != "" && this.campos.nombreProcedimiento != null && this.campos.nombreProcedimiento != undefined){
+                this.procedimientoOpciones.push({ label: this.campos.nombreProcedimiento, value: this.campos.idPretension });
               }
             }
             if (this.valorParametro == 3) {
