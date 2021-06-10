@@ -16,14 +16,16 @@ import { Message } from 'primeng/components/common/api';
 })
 export class ContrariosPreDesignacionComponent implements OnInit {
   msgs: Message[];
-  openCon:boolean = false;
+  openCon: boolean = false;
 
   @Output() searchContrarios = new EventEmitter<boolean>();
 
-  contrariosEJG;
-  historicoContrario:boolean = false;
+  contrariosEJG = [];
+  historicoContrario: boolean = false;
 
-  ejg : EJGItem;
+  ejg: EJGItem;
+
+  primero;
 
   selectedItem: number = 10;
   datos;
@@ -32,65 +34,34 @@ export class ContrariosPreDesignacionComponent implements OnInit {
   selectMultiple: boolean = false;
   selectionMode: string = "single";
   numSelected = 0;
-  
+
   selectedDatos: any = [];
 
-  selectAll: boolean= false;
+  selectAll: boolean = false;
   progressSpinner: boolean = false;
-  
-  fichasPosibles = [
-    {
-      origen: "justiciables",
-      activa: false
-    },
-    {
-      key: "generales",
-      activa: true
-    },
-    {
-      key: "personales",
-      activa: true
-    },
-    {
-      key: "solicitud",
-      activa: true
-    },
-    {
-      key: "representante",
-      activa: true
-    },
-    {
-      key: "asuntos",
-      activa: true
-    },
-    {
-      key: "abogado",
-      activa: true
-    },
-    {
-      key: "procurador",
-      activa: true
-    }
-
-  ];
 
   @ViewChild("table") tabla;
 
-  constructor(private sigaServices: SigaServices, 
-    private  translateService: TranslateService,
+  constructor(private sigaServices: SigaServices,
+    private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
     private persistenceService: PersistenceService,
     private router: Router,
-    ) { }
+  ) { }
 
   ngOnInit() {
-    this.getCols(); 
+    this.getCols();
     this.ejg = this.persistenceService.getDatos();
+
+    sessionStorage.removeItem("origin");
     
+
+    this.searchContrariosEJG();
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.datos=this.contrariosEJG;
+    this.datos = this.contrariosEJG;
   }
 
   onChangeRowsPerPages(event) {
@@ -99,12 +70,12 @@ export class ContrariosPreDesignacionComponent implements OnInit {
     this.tabla.reset();
   }
 
-  actualizaSeleccionados(){
+  actualizaSeleccionados() {
     if (this.selectedDatos == undefined) {
       this.selectedDatos = []
     }
     if (this.selectedDatos != undefined) {
-      if(this.selectedDatos.length ==undefined) this.numSelected=1;
+      if (this.selectedDatos.length == undefined) this.numSelected = 1;
       else this.numSelected = this.selectedDatos.length;
     }
   }
@@ -138,13 +109,13 @@ export class ContrariosPreDesignacionComponent implements OnInit {
     ];
   }
 
-  Eliminar(){
+  Eliminar() {
     this.progressSpinner = true;
-    let request = [ this.selectedDatos.idInstitucion,  this.selectedDatos.idPersona, this.selectedDatos.anio,  this.selectedDatos.idTurno, this.selectedDatos.numero]
-    this.sigaServices.post("designaciones_deleteContrario", request).subscribe(
+    let request = [this.selectedDatos.idPersona, this.selectedDatos.anio, this.selectedDatos.numero, this.selectedDatos.idtipoejg]
+    this.sigaServices.post("gestionejg_deleteContrarioEJG", request).subscribe(
       data => {
         this.selectedDatos = [];
-        this.searchContrarios.emit(false);
+        this.searchContrariosEJG();
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
         this.historicoContrario = false;
@@ -164,7 +135,7 @@ export class ContrariosPreDesignacionComponent implements OnInit {
       }
     );
   }
-  
+
 
   showMessage(severity, summary, msg) {
     this.msgs = [];
@@ -175,7 +146,7 @@ export class ContrariosPreDesignacionComponent implements OnInit {
     });
   }
 
-  searchContrariosEJG(){
+  searchContrariosEJG() {
     this.progressSpinner = true;
     let data = sessionStorage.getItem("designaItemLink");
     let designaItem = JSON.parse(data);
@@ -187,7 +158,7 @@ export class ContrariosPreDesignacionComponent implements OnInit {
       //Contrarios segun el valor de historico
       this.contrariosEJG = JSON.parse(n.body);
       //Primer contrario para la cabecera
-      let primero = this.contrariosEJG[0];
+      this.primero = this.contrariosEJG[0];
       //Datos para la tabla
       this.datos = this.contrariosEJG;
 
@@ -198,14 +169,16 @@ export class ContrariosPreDesignacionComponent implements OnInit {
       }
       this.progressSpinner = false;
     },
-    err => {
-      this.progressSpinner = false;
-    });
+      err => {
+        this.progressSpinner = false;
+      });
   }
 
-  NewContrario(){
-    sessionStorage.setItem("origin","newContrario");
-    sessionStorage.setItem("contrarios",JSON.stringify(this.contrariosEJG));
+  NewContrario() {
+    sessionStorage.setItem("origin", "newContrarioEJG");
+    sessionStorage.setItem("contrariosEJG", JSON.stringify(this.contrariosEJG));
+    this.ejg = this.persistenceService.getDatos();
+    sessionStorage.setItem("EJGItem", JSON.stringify(this.ejg));
     //this.searchContrarios.emit(true);
     this.router.navigate(["/justiciables"]);
   }
@@ -213,8 +186,8 @@ export class ContrariosPreDesignacionComponent implements OnInit {
   openTab(evento) {
     let contrario = new JusticiableBusquedaItem();
     let datos;
-    contrario.idpersona=evento.idPersona;
-    sessionStorage.setItem("personaDesigna",evento.idPersona);
+    contrario.idpersona = evento.idPersona;
+    sessionStorage.setItem("personaDesigna", evento.idPersona);
     this.progressSpinner = true;
     this.sigaServices.post("busquedaJusticiables_searchJusticiables", contrario).subscribe(
       n => {
@@ -225,27 +198,29 @@ export class ContrariosPreDesignacionComponent implements OnInit {
         if (error != null && error.description != null) {
           this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
         }
+
+        this.ejg = this.persistenceService.getDatos();
+        sessionStorage.setItem("EJGItem", JSON.stringify(this.ejg));
         this.persistenceService.setDatos(datos[0]);
-        this.persistenceService.setFichasPosibles(this.fichasPosibles);
-        sessionStorage.setItem("origin","Contrario");
+        sessionStorage.setItem("origin", "ContrarioEJG");
         this.persistenceService.clearBody();
 
-        if(evento.abogado!="" && evento.abogado!=null){
-          sessionStorage.setItem("idabogadoFicha",evento.idabogadocontrario);
+        if (evento.abogado != "" && evento.abogado != null) {
+          sessionStorage.setItem("idabogadoFicha", evento.idabogadocontrario);
         }
-        if(evento.procurador!="" && evento.procurador!=null){
-          sessionStorage.setItem("procuradorFicha",evento.procurador);
+        if (evento.procurador != "" && evento.procurador != null) {
+          sessionStorage.setItem("procuradorFicha", evento.procurador);
         }
-        if(evento.representante!="" && evento.representante!=null){
+        if (evento.representante != "" && evento.representante != null) {
           let representante = new JusticiableBusquedaItem();
-          representante.idpersona=evento.representante;
+          representante.idpersona = evento.representante;
           this.sigaServices.post("busquedaJusticiables_searchJusticiables", representante).subscribe(
-            j =>{
+            j => {
               this.persistenceService.setBody(JSON.parse(j.body).justiciableBusquedaItems[0]);
               this.router.navigate(["/gestionJusticiables"]);
             })
         }
-        else{
+        else {
           this.router.navigate(["/gestionJusticiables"]);
         }
       },
@@ -255,22 +230,22 @@ export class ContrariosPreDesignacionComponent implements OnInit {
       });
   }
 
-  abreCierra(){
+  abreCierra() {
     this.openCon = !this.openCon;
   }
 
   searchHistorical() {
 
     this.historicoContrario = !this.historicoContrario;
-    this.searchContrarios.emit(this.historicoContrario);
     this.selectAll = false;
-    this.selectedDatos=[];
+    this.selectedDatos = [];
+    this.searchContrariosEJG();
   }
 
-  isEliminado(dato){
-    return dato.fechaBaja!=null;
+  isEliminado(dato) {
+    return dato.fechaBaja != null;
   }
-  
+
   onChangeSelectAll() {
     if (this.selectAll === true) {
       /* if (this.historico) {
@@ -278,18 +253,18 @@ export class ContrariosPreDesignacionComponent implements OnInit {
         this.selectMultiple = true;
         this.selectionMode = "single";
       } else { */
-        this.selectedDatos = this.datos;
-        /* this.selectMultiple = false;
-        this.selectionMode = "single";
-      }
-      this.selectionMode = "multiple"; */
+      this.selectedDatos = this.datos;
+      /* this.selectMultiple = false;
+      this.selectionMode = "single";
+    }
+    this.selectionMode = "multiple"; */
       this.numSelected = this.datos.length;
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
-     /*  if (this.historico)
-        this.selectMultiple = true;
-      this.selectionMode = "multiple"; */
+      /*  if (this.historico)
+         this.selectMultiple = true;
+       this.selectionMode = "multiple"; */
     }
   }
 }

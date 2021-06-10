@@ -20,6 +20,7 @@ import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaConstants } from '../../../../../utils/SigaConstants';
 import { procesos_justiciables } from '../../../../../permisos/procesos_justiciables';
 import { Dialog } from 'primeng/primeng';
+import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 
 @Component({
 	selector: 'app-datos-representante',
@@ -41,6 +42,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 	@Input() navigateToJusticiable: boolean = false;
 	@Input() fromInteresado;
 	@Input() fromContrario;
+	@Input() fromContrarioEJG;
 
 	searchRepresentanteGeneral: boolean = false;
 	showEnlaceRepresentante: boolean = false;
@@ -232,7 +234,6 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 			},
 			(err) => {
 				this.progressSpinner = false;
-				console.log(err);
 			}
 		);
 	}
@@ -294,7 +295,6 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 				},
 				(err) => {
 					this.progressSpinner = false;
-					console.log(err);
 				}
 			);
 		}
@@ -316,7 +316,6 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 					},
 					(err) => {
 						this.progressSpinner = false;
-						console.log(err);
 					}
 				);
 			}
@@ -495,6 +494,25 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 				}
 			);
 		}
+		else if (this.fromContrarioEJG) {
+			let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
+			let request = [sessionStorage.getItem("personaDesigna"), ejg.annio, ejg.numero, ejg.tipoEJG, this.generalBody.apellidos.concat(",", this.generalBody.nombre)]
+			this.sigaServices.post('gestionejg_updateRepresentanteContrarioEJG', request).subscribe(
+				(n) => {
+					this.progressSpinner = false;
+					this.showMessage(
+						'success',
+						this.translateService.instant('general.message.correct'),
+						this.translateService.instant('general.message.accion.realizada')
+					);
+					this.persistenceService.setBody(this.generalBody);
+				},
+				(err) => {
+					this.progressSpinner = false;
+					this.translateService.instant('general.message.error.realiza.accion');
+				}
+			);
+		}
 		else {
 			this.sigaServices.post('gestionJusticiables_associateRepresentante', this.body).subscribe(
 				(n) => {
@@ -594,6 +612,25 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 				}
 			);
 			this.generalBody = null;
+		}
+		else if (this.fromContrarioEJG) {
+			let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
+			let request = [sessionStorage.getItem("personaDesigna"), ejg.annio, ejg.numero, ejg.tipoEJG, ""]
+			this.sigaServices.post('gestionejg_updateRepresentanteContrarioEJG', request).subscribe(
+				(n) => {
+					this.progressSpinner = false;
+					this.showMessage(
+						'success',
+						this.translateService.instant('general.message.correct'),
+						this.translateService.instant('general.message.accion.realizada')
+					);
+					this.persistenceService.setBody(this.generalBody);
+				},
+				(err) => {
+					this.progressSpinner = false;
+					this.translateService.instant('general.message.error.realiza.accion');
+				}
+			);
 		}
 		else {
 			this.sigaServices.post('gestionJusticiables_disassociateRepresentante', this.body).subscribe(

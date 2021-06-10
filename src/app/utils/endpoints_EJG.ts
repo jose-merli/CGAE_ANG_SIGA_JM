@@ -78,6 +78,9 @@ export let endpoints_EJG: any = {
     gestionejg_deleteContrarioEJG: "ejg/gestion-ejg/deleteContrarioEJG",
     gestionejg_busquedaListaContrariosEJG: "ejg/gestion-ejg/busquedaListaContrariosEJG",
     gestionejg_insertContrarioEJG: "ejg/gestion-ejg/insertContrarioEJG",
+    gestionejg_updateRepresentanteContrarioEJG: "ejg/gestion-ejg/updateRepresentanteContrarioEJG",
+    gestionejg_updateAbogadoContrarioEJG: "ejg/gestion-ejg/updateAbogadoContrarioEJG",
+    gestionejg_updateProcuradorContrarioEJG: "ejg/gestion-ejg/updateProcuradorContrarioEJG",
 
     //comunicaciones
     gestionejg_getComunicaciones: "ejg/gestion-ejg/getComunicaciones"

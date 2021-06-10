@@ -27,11 +27,19 @@ export class DefensaJuridicaComponent implements OnInit {
   comboSituacion;
   comboComisaria;
   comboCalidad;
+  comboJuzgado;
+  comboProcedimiento;
 
-  ComisariaCabecera;
-  CalidadCabecera;
+  comisariaCabecera;
+  calidadCabecera;
+  juzgadoCabecera;
+  procedimientoCabecera;
 
   openDef: boolean = false;
+  
+  initDelitos: any;
+  delitosValue: any;
+  delitosOpciones: any;
 
   msgs: Message[] = [];
 
@@ -42,29 +50,40 @@ export class DefensaJuridicaComponent implements OnInit {
     private location: Location) { }
 
   ngOnInit() {
+    //Los valores de la cabecera se actualizan en cada combo y al en el metodo getCabecera()
+    //Se asignan al iniciar la tarjeta y al guardar.
 
     this.getComboPreceptivo();
     this.getComboRenuncia();
     this.getComboSituaciones();
     this.getComboCDetencion();
     this.getComboCalidad();
-
+    this.getComboJuzgado();
+    this.getComboProcedimiento();
     this.body = this.persistenceService.getDatos();
 
     this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+    this.initDelitos = this.delitosValue;
 
   }
 
   getCabecera(){
     //Valor de la cabecera para la comisaria
     this.comboComisaria.forEach(element => {
-      if(element.value==this.bodyInicial.comisaria)this.ComisariaCabecera=element.label;
+      if(element.value==this.bodyInicial.comisaria)this.comisariaCabecera=element.label;
     });
     //Valor de la cabecera para en calidad de
     this.comboCalidad.forEach(element => {
-      if(element.value==this.bodyInicial.calidad)this.CalidadCabecera=element.label;
+      if(element.value==this.bodyInicial.calidad)this.calidadCabecera=element.label;
     });
-
+    //Valor de la cabecera para juzagado
+    this.comboJuzgado.forEach(element => {
+      if(element.value==this.bodyInicial.juzgado)this.juzgadoCabecera=element.label;
+    });
+    //Valor de la cabecera para procedimiento
+    this.comboProcedimiento.forEach(element => {
+      if(element.value==this.bodyInicial.procedimiento)this.procedimientoCabecera=element.label;
+    });
   }
 
   abreCierra(){
@@ -176,7 +195,7 @@ export class DefensaJuridicaComponent implements OnInit {
         this.commonsServices.arregloTildesCombo(this.comboComisaria);
         if(this.bodyInicial.comisaria!=null){
         this.comboComisaria.forEach(element => {
-          if(element.value==this.bodyInicial.comisaria)this.ComisariaCabecera=element.label;
+          if(element.value==this.bodyInicial.comisaria)this.comisariaCabecera=element.label;
         });
       }
       },
@@ -193,7 +212,7 @@ export class DefensaJuridicaComponent implements OnInit {
         if(this.bodyInicial.calidad!=null){
           //Valor de la cabecera para en calidad de
           this.comboCalidad.forEach(element => {
-            if(element.value==this.bodyInicial.calidad)this.CalidadCabecera=element.label;
+            if(element.value==this.bodyInicial.calidad)this.calidadCabecera=element.label;
           });
         }
           
@@ -201,6 +220,39 @@ export class DefensaJuridicaComponent implements OnInit {
       err => {
       }
     );
+  }
+
+  getComboJuzgado() {
+    this.sigaServices.get("filtrosejg_comboJuzgados").subscribe(
+      n => {
+        this.comboJuzgado = n.combooItems;
+        this.commonsServices.arregloTildesCombo(this.comboJuzgado);
+        //Valor de la cabecera para juzagado
+        this.comboJuzgado.forEach(element => {
+          if(element.value==this.bodyInicial.juzgado)this.juzgadoCabecera=element.label;
+        });
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  getComboProcedimiento() {
+    this.sigaServices
+      .get("busquedaProcedimientos_procedimientos")
+      .subscribe(
+        n => {
+          this.comboProcedimiento = n.combooItems;
+          this.commonsServices.arregloTildesCombo(this.comboProcedimiento);
+          //Valor de la cabecera para procedimiento
+          this.comboProcedimiento.forEach(element => {
+            if(element.value==this.bodyInicial.procedimiento)this.procedimientoCabecera=element.label;
+          });
+        },
+        err => {
+        }
+      );
   }
 
   numberOnly(event): boolean {

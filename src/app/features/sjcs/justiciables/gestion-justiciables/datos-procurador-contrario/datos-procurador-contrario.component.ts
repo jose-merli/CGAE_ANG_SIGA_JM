@@ -16,6 +16,7 @@ import { procesos_justiciables } from '../../../../../permisos/procesos_justicia
 import { Checkbox, ConfirmDialog } from '../../../../../../../node_modules/primeng/primeng';
 import { Dialog } from 'primeng/primeng';
 import { ColegiadoItem } from "../../../../../models/ColegiadoItem";
+import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 
 
 @Component({
@@ -37,6 +38,7 @@ export class DatosProcuradorContrarioComponent implements OnInit {
 	@Input() checkedViewRepresentante;
 	@Input() navigateToJusticiable: boolean = false;
 	@Input() fromContrario;
+	@Input() fromContrarioEJG;
 
 	searchRepresentanteGeneral: boolean = false;
 	showEnlaceRepresentante: boolean = false;
@@ -55,6 +57,7 @@ export class DatosProcuradorContrarioComponent implements OnInit {
 	@ViewChild('cdRepresentanteDisassociate') cdRepresentanteDisassociate: Dialog;
 
 	@Output() contrario = new EventEmitter<boolean>();
+	@Output() contrarioEJG = new EventEmitter<boolean>();
 
 	confirmationSave: boolean = false;
 	confirmationUpdate: boolean = false;
@@ -90,7 +93,7 @@ export class DatosProcuradorContrarioComponent implements OnInit {
 			})
 			.catch((error) => console.error(error)); */
 
-		if (this.fromContrario) {
+		if (this.fromContrario || this.fromContrarioEJG) {
 			this.showTarjetaPermiso = true;
 			this.permisoEscritura = true;
 		}
@@ -101,7 +104,8 @@ export class DatosProcuradorContrarioComponent implements OnInit {
 			this.generalBody.numColegiado = data.numeroColegiado;
 			this.generalBody.nombre = data.nombre;
 
-			this.contrario.emit(true);
+			if (sessionStorage.getItem("EJGItem")) this.contrarioEJG.emit(true);
+			else this.contrario.emit(true);
 			this.permisoEscritura = true;
 		}
 		/* Procede de ficha designacion */
@@ -109,8 +113,9 @@ export class DatosProcuradorContrarioComponent implements OnInit {
 			let data = this.generalBody = JSON.parse(sessionStorage.getItem("procuradorFicha"));
 			sessionStorage.removeItem("procuradorFicha");
 			this.generalBody.numColegiado = data.split(",")[0];
-			this.generalBody.nombre = data.split(",")[1].concat(",",data.split(",")[2]);
+			this.generalBody.nombre = data.split(",")[1].concat(",", data.split(",")[2]);
 
+			if (sessionStorage.getItem("EJGItem")) this.contrarioEJG.emit(true);
 			this.contrario.emit(true);
 			this.permisoEscritura = true;
 		}
@@ -131,12 +136,13 @@ export class DatosProcuradorContrarioComponent implements OnInit {
 		}
 	}
 
-	
+
 
 
 	Disassociate() {
-	let designa=JSON.parse(sessionStorage.getItem("designaItemLink"));
-			let request = [ designa.idInstitucion,  sessionStorage.getItem("personaDesigna"), designa.ano,  designa.idTurno, designa.numero, ""]
+		if (!sessionStorage.getItem("EJGItem")) {
+			let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
+			let request = [designa.idInstitucion, sessionStorage.getItem("personaDesigna"), designa.ano, designa.idTurno, designa.numero, ""]
 			this.sigaServices.post('designaciones_updateProcuradorContrario', request).subscribe(
 				(n) => {
 					this.progressSpinner = false;
@@ -152,12 +158,34 @@ export class DatosProcuradorContrarioComponent implements OnInit {
 					this.translateService.instant('general.message.error.realiza.accion');
 				}
 			);
-	this.generalBody = null;
+			this.generalBody = null;
+		}
+		else {
+			let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
+			let request = [sessionStorage.getItem("personaDesigna"), ejg.annio, ejg.numero, ejg.tipoEJG, ""];
+			this.sigaServices.post('gestionejg_updateProcuradorContrarioEJG', request).subscribe(
+				(n) => {
+					this.progressSpinner = false;
+					this.showMessage(
+						'success',
+						this.translateService.instant('general.message.correct'),
+						this.translateService.instant('general.message.accion.realizada')
+					);
+					this.persistenceService.setBody(this.generalBody);
+				},
+				(err) => {
+					this.progressSpinner = false;
+					this.translateService.instant('general.message.error.realiza.accion');
+				}
+			);
+			this.generalBody = null;
+		}
 	}
 
 	Associate() {
-		let designa=JSON.parse(sessionStorage.getItem("designaItemLink"));
-			let request = [ designa.idInstitucion,  sessionStorage.getItem("personaDesigna"), designa.ano,  designa.idTurno, designa.numero, this.generalBody.nombre]
+		if (!sessionStorage.getItem("EJGItem")) {
+			let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
+			let request = [designa.idInstitucion, sessionStorage.getItem("personaDesigna"), designa.ano, designa.idTurno, designa.numero, this.generalBody.nombre]
 			this.sigaServices.post('designaciones_updateProcuradorContrario', request).subscribe(
 				(n) => {
 					this.progressSpinner = false;
@@ -173,6 +201,27 @@ export class DatosProcuradorContrarioComponent implements OnInit {
 					this.translateService.instant('general.message.error.realiza.accion');
 				}
 			);
+		}
+		else {
+			let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
+			let request = [sessionStorage.getItem("personaDesigna"), ejg.annio, ejg.numero, ejg.tipoEJG, this.generalBody.nombre];
+			this.sigaServices.post('gestionejg_updateProcuradorContrarioEJG', request).subscribe(
+				(n) => {
+					this.progressSpinner = false;
+					this.showMessage(
+						'success',
+						this.translateService.instant('general.message.correct'),
+						this.translateService.instant('general.message.accion.realizada')
+					);
+					this.persistenceService.setBody(this.generalBody);
+				},
+				(err) => {
+					this.progressSpinner = false;
+					this.translateService.instant('general.message.error.realiza.accion');
+				}
+			);
+			this.generalBody = null;
+		}
 	}
 
 	onHideTarjeta() {
@@ -213,10 +262,10 @@ export class DatosProcuradorContrarioComponent implements OnInit {
 	}
 
 	rejectAssociate() {
-		
+
 	}
 
 	rejectDisassociate() {
-		
+
 	}
 }
