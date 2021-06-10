@@ -321,7 +321,7 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
 
   }
 
-  navigateComunicar(dato) {
+  navigateComunicar() {
     sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
     //IDMODULO de SJCS es 10
     sessionStorage.setItem("idModulo", '10');
