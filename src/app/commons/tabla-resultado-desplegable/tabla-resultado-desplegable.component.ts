@@ -119,7 +119,6 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   ngOnInit(): void {
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos();
-      console.log(' this.permisoEscritura: ',  this.permisoEscritura)
     }
     if (this.pantalla == 'JE'){
       this.rowIdsToUpdate = []; //limpiamos
@@ -1538,8 +1537,6 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   }
   
     linkFichaActIfPermis(row, rowGroup){
-      console.log('this.permisosFichaAct: ', this.permisosFichaAct)
-      console.log('this.pantalla: ', this.pantalla)
       if (this.pantalla == 'JE'){
        if (this.permisosFichaAct){
           
@@ -1596,7 +1593,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
 
         this.progressSpinner = true;
   
-        let item = [actuacion.designaItem.ano, actuacion.designaItem.idTurno, actuacion.designaItem.idInstitucion];
+        let item = ["D" + actuacion.designaItem.ano, actuacion.designaItem.idTurno, actuacion.designaItem.idInstitucion, actuacion.designaItem.numero];
   
         this.sigaServices.post("designacionesBusquedaRelaciones", item).subscribe(
           n => {

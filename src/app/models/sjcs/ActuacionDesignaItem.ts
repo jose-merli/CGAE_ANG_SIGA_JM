@@ -43,4 +43,5 @@ export class ActuacionDesignaItem {
     nombreModulo: string;
     idPartidaPresupuestaria: string;
     partidaPresupuestaria: string;
+    idInstitucion: string;
 }

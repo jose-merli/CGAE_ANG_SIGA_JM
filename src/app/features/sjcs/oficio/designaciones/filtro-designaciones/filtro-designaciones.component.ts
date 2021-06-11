@@ -130,8 +130,8 @@ export class FiltroDesignacionesComponent implements OnInit {
         if (this.body.fechaJustificacionHasta != undefined && this.body.fechaJustificacionHasta != null) {
           this.body.fechaJustificacionHasta = new Date(this.body.fechaJustificacionHasta);
         }
-        this.buscar();
         sessionStorage.removeItem("filtroDesignas");
+        this.buscar();
         sessionStorage.removeItem("volver");
       } else {
         this.body = new DesignaItem();
@@ -293,9 +293,9 @@ export class FiltroDesignacionesComponent implements OnInit {
     this.isLetrado = this.localStorageService.isLetrado;
 
     if (!this.esColegiado) {
-      this.isButtonVisible = true;
+      this.isButtonVisible = false;
     } else {
-      this.isButtonVisible = true;// DEBE SER FALSE
+      this.isButtonVisible = false;// DEBE SER FALSE
     }
     if (this.localStorageService.institucionActual == "2003") {
       this.isButtonVisible = false;
@@ -344,19 +344,12 @@ export class FiltroDesignacionesComponent implements OnInit {
   checkAccesoFichaActuacion() {
     this.commonsService.checkAcceso(procesos_oficio.designasActuaciones)
       .then(respuesta => {
-        this.permisoEscritura = respuesta;
-        this.permisosFichaAct.emit(this.permisoEscritura);
-        //this.persistenceService.setPermisos(this.permisoEscritura);
-
-        if (this.permisoEscritura == undefined) {
-          sessionStorage.setItem("codError", "403");
-          sessionStorage.setItem(
-            "descError",
-            this.translateService.instant("generico.error.permiso.denegado")
-          );
-          this.router.navigate(["/errorAcceso"]);
+        if (respuesta == undefined) {
+          this.permisoEscritura = false;
+        }else{
+          this.permisoEscritura = respuesta;
         }
-
+        this.permisosFichaAct.emit(this.permisoEscritura);
       }
       ).catch(error => console.error(error));
 
@@ -837,11 +830,11 @@ export class FiltroDesignacionesComponent implements OnInit {
         designa.asunto = this.body.asunto;
 
         designa.idJuzgadoActu = this.body.idJuzgadoActu;
-        if (designa.idJuzgadoActu != null) {
-          designa.nombreJuzgadoActu = this.comboJuzgados.find(
-            item => item.value == designa.idJuzgadoActu
-          ).label;
-        }
+        // if (designa.idJuzgadoActu != null) {
+        //   designa.nombreJuzgadoActu = this.comboJuzgados.find(
+        //     item => item.value == designa.idJuzgadoActu
+        //   ).label;
+        // }
         if (this.body.idAcreditacion != undefined) {
           designa.idAcreditacion = this.body.idAcreditacion;
         }

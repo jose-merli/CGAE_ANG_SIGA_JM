@@ -262,8 +262,7 @@
         
         <button [disabled]="colegiado" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"  (click)="guardar()">
         </button>
-
-        <button pButton [disabled]="selectedArray.length != 1 || colegiado" type="button" icon="fa fa-plus" iconPos="left" label="Nuevo"  (click)="newFromSelected()">
+        <button pButton [disabled]="selectedArray.length != 1 || !permisosFichaAct || colegiado" type="button" icon="fa fa-plus" iconPos="left" label="Nuevo"  (click)="newFromSelected()">
         </button>
     </div>
 </div>

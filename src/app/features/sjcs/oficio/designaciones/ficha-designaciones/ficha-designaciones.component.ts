@@ -412,7 +412,7 @@ export class FichaDesignacionesComponent implements OnInit {
           },
           {
             "key": "Fecha Juicio",
-            "value": this.formatDate(designaItem.fechaJuicio)
+            "value": this.formatDateWithHours(designaItem.fechaJuicio)
           }
         ];
         this.listaTarjetas[2].campos = datosAdicionales;
@@ -663,7 +663,7 @@ export class FichaDesignacionesComponent implements OnInit {
   }
   backTo() {
     sessionStorage.setItem("volver", 'true');
-    this.location.back();
+    this.router.navigate(['/designaciones']);
   }
 
   transformaFecha(fecha) {
@@ -686,6 +686,12 @@ export class FichaDesignacionesComponent implements OnInit {
 
   formatDate(date) {
     const pattern = 'dd/MM/yyyy';
+    return this.datepipe.transform(date, pattern);
+  }
+
+  formatDateWithHours(date)
+  {
+    const pattern = 'dd/MM/yyyy hh:mm';
     return this.datepipe.transform(date, pattern);
   }
 
@@ -881,8 +887,11 @@ export class FichaDesignacionesComponent implements OnInit {
             {
               "key": this.translateService.instant('justiciaGratuita.oficio.designaciones.fechaDesignacion'),
               "value": this.procurador[0].fechaDesigna
-            }
-            ]
+            },
+            {
+              "key": this.translateService.instant('justiciaGratuita.oficio.designaciones.numerototalprocuradores'),
+              "value": this.procurador[0].numeroTotalProcuradores
+            }]
           } else {
             this.listaTarjetas[5].campos = [
               {
@@ -1325,17 +1334,18 @@ export class FichaDesignacionesComponent implements OnInit {
 
       this.sigaServices.post("designacionesBusquedaComunicaciones", item).subscribe(
         n => {
-          this.comunicaciones = JSON.parse(n.body).comunicacionesItem;
+          this.comunicaciones = JSON.parse(n.body).enviosMasivosItem;
           let error = JSON.parse(n.body).error;
 
-          this.comunicaciones.forEach(element => {
-            if (element.fechaCreacion != null && element.fechaCreacion != "") {
-              element.fechaCreacion = this.formatDate(element.fechaCreacion);
-            }
-            if (element.fechaProgramacion != null && element.fechaProgramacion != "") {
-              element.fechaProgramacion = this.formatDate(element.fechaProgramacion);
-            }
-          });
+          // this.comunicaciones.forEach(element => {
+          //   if (element.fechaProgramada != null && element.fechaProgramada != "") {
+          //     element.fechaProgramada = this.formatDate(element.fechaProgramada);
+          //   }
+
+          //   if (element.fechaCreacion != null && element.fechaCreacion != "") {
+          //     element.fechaCreacion = this.formatDate(element.fechaCreacion);
+          //   }
+          // });
           this.progressSpinner = false;
           if (this.comunicaciones.length == 0 || this.comunicaciones == undefined || this.comunicaciones == null) {
             this.listaTarjetas[8].campos = [{
@@ -1779,7 +1789,7 @@ export class FichaDesignacionesComponent implements OnInit {
     let designaItem = this.campos;
 
     this.getPermiteTurno();
-
+    this.searchLetrados();
     if (sessionStorage.getItem("nuevoProcurador")) {
       this.listaTarjetas[5].opened = true;
     }
@@ -1890,7 +1900,7 @@ export class FichaDesignacionesComponent implements OnInit {
         },
         {
           "key": "Fecha Juicio",
-          "value": this.formatDate(designaItem.fechaJuicio)
+          "value": this.formatDateWithHours(designaItem.fechaJuicio)
         }
       ];
       this.listaTarjetas[2].campos = datosAdicionales;

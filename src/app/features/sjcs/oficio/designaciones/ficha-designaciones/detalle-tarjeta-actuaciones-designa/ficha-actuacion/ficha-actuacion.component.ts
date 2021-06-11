@@ -179,9 +179,9 @@ export class FichaActuacionComponent implements OnInit {
           this.router.navigate(["/errorAcceso"]);
         }
 
-        if (!permisoEscritura) {
-          this.modoLectura = true;
-        }
+        // if (!permisoEscritura) {
+        //   this.modoLectura = true;
+        // }
 
         this.isColegiado = this.sigaStorageService.isLetrado;
 
@@ -221,6 +221,10 @@ export class FichaActuacionComponent implements OnInit {
 
   cargaInicial() {
 
+    if (this.actuacionDesigna.relaciones != null) {
+      this.relaciones = this.actuacionDesigna.relaciones;
+    }
+
     if (this.actuacionDesigna.isNew) {
       this.tarjetaFija.campos[0].value = this.actuacionDesigna.designaItem.ano;
       this.isNewActDesig = true;
@@ -232,10 +236,6 @@ export class FichaActuacionComponent implements OnInit {
       }
 
       this.establecerValoresIniciales();
-    }
-
-    if (this.actuacionDesigna.relaciones != null) {
-      this.relaciones = this.actuacionDesigna.relaciones;
     }
   }
 
@@ -258,7 +258,7 @@ export class FichaActuacionComponent implements OnInit {
   isOpenReceive(event) {
     let tarjTemp = this.listaTarjetas.find(tarj => tarj.id == event);
 
-    if (tarjTemp.detalle) {
+    if (!this.isNewActDesig && tarjTemp.detalle) {
       tarjTemp.opened = true;
     }
 
@@ -471,6 +471,12 @@ export class FichaActuacionComponent implements OnInit {
             }
 
             this.actuacionDesigna.relaciones = relaciones;
+          } else {
+            if (actuacionJE.relaciones != undefined && actuacionJE.relaciones != null && actuacionJE.relaciones.length > 0) {
+              this.actuacionDesigna.relaciones = actuacionJE.relaciones.slice();
+            } else {
+              this.actuacionDesigna.relaciones = null;
+            }
           }
 
           this.actuacionDesigna.designaItem = designa;

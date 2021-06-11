@@ -171,12 +171,14 @@ export class FichaCambioLetradoComponent implements OnInit {
         });
       }
       else if (this.entrante.body.numColegiado != undefined && this.entrante.body.numColegiado != "") {
-        this.save()
+        this.save();
       }
-      else this.showMessage("error", "Cancel", this.translateService.instant("general.message.camposObligatorios"))
+      else{
+        this.showMessage("error", "Cancel", this.translateService.instant("general.message.camposObligatorios"));
+      } 
     }
     else {
-      this.showMessage("error", "Cancel", this.translateService.instant("general.message.camposObligatorios"))
+      this.showMessage("error", "Cancel", this.translateService.instant("general.message.camposObligatorios"));
     }
   }
 
@@ -194,7 +196,7 @@ export class FichaCambioLetradoComponent implements OnInit {
     this.saliente.body.motivoRenuncia, //5
     sessionStorage.getItem("FDSaliente"), //6
     this.saliente.body.fechaSolRenuncia, //7
-    this.entrante.body.fechaDesignacion, //8
+    this.datepipe.transform(this.entrante.body.fechaDesignacion, 'dd/MM/yyyy'),//8
     this.entrante.body.idPersona, //9
     this.saliente.body.compensacion, //10
     this.entrante.body.salto //11
@@ -205,8 +207,11 @@ export class FichaCambioLetradoComponent implements OnInit {
     this.sigaServices.post("designaciones_updateLetradoDesignacion", request).subscribe(
       n => {
         this.progressSpinner = false;
-
-        this.router.navigate(['/fichaDesignaciones']);
+        //Mostrar mensaje todo correcto
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        setTimeout(() => {
+          this.router.navigate(['/fichaDesignaciones']);
+        }, 400);
       },
       err => {
         if (err.error != null
