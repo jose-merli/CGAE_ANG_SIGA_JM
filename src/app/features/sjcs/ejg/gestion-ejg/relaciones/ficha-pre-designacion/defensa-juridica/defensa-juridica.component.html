@@ -14,12 +14,13 @@
             <label class="mr-auto title-ficha pointer">{{ 'justiciaGratuita.ejg.preDesigna.defensaJuridica' | translate }}</label>
           </div>
           <div class="d-flex justify-content-between default">
-            <label *ngIf="body.procedimiento!=null">{{ "gratuita.busquedaDesignas.literal.numProcedimiento" | translate }}: <span>{{bodyInicial.numAnnioProcedimiento}}</span></label>
-            <label *ngIf="body.procedimiento==null">{{ "gratuita.mantAsistencias.literal.numeroDiligenciasolo" | translate }}: <span>{{bodyInicial.numerodiligencia}}</span></label>
-            <label *ngIf="body.juzgado!=null">{{ "gratuita.mantAsistencias.literal.numeroDiligenciasolo" | translate }}: <span>{{bodyInicial.numerodiligencia}}</span></label>
-            <label *ngIf="body.juzgado==null">{{ "gratuita.volantesExpres.literal.centroDetencion" | translate }}: <span>{{ComisariaCabecera}}</span></label>
-            <label>{{ "justiciaGratuita.maestros.Procedimiento" | translate }}: <span>{{body.procedimiento}}</span></label>
-            <label>{{ "justiciaGratuita.ejg.datosGenerales.calidad" | translate }}: <span>{{CalidadCabecera}}</span></label>
+            <label *ngIf="bodyInicial.numAnnioProcedimiento!=null">{{ "gratuita.busquedaDesignas.literal.numProcedimiento" | translate }}: <span>{{bodyInicial.numAnnioProcedimiento}}</span></label>
+            <label *ngIf="bodyInicial.numAnnioProcedimiento==null">{{ "gratuita.mantAsistencias.literal.numeroDiligenciasolo" | translate }}: <span>{{bodyInicial.numerodiligencia}}</span></label>
+            <label *ngIf="bodyInicial.juzgado!=null">{{ "justiciaGratuita.ejg.datosGenerales.Juzgado" | translate }}: <span>{{juzgadoCabecera}}</span></label>
+            <label *ngIf="bodyInicial.juzgado==null">{{ "gratuita.volantesExpres.literal.centroDetencion" | translate }}: <span>{{comisariaCabecera}}</span></label>
+            <label>{{ "justiciaGratuita.maestros.Procedimiento" | translate }}: <span>{{procedimientoCabecera}}</span></label>
+            <label>{{ "justiciaGratuita.ejg.datosGenerales.calidad" | translate }}: <span>{{calidadCabecera}}</span></label>
+            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha()"></i>
           </div>
         </div>
       </div>
@@ -34,6 +35,39 @@
       </div>
     </div>
     <div *ngIf="openDef" class="card-body card-body-ficha">
+      <div class="form-row">
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{'justiciaGratuita.ejg.datosGenerales.numAnnioProcedimiento'|translate}}</label>
+          <input type="text" class="form-control" maxLength="4" (keypress)="numberOnly($event)" pInputText
+            [(ngModel)]="body.numAnnioProcedimiento">
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{'justiciaGratuita.ejg.datosGenerales.NIG'|translate}}</label>
+          <input type="text" class="form-control" maxLength="49" pInputText [(ngModel)]="body.NIG">
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ 'justiciaGratuita.ejg.datosGenerales.Juzgado' | translate}}</label>
+          <p-dropdown class="select-form" [(ngModel)]='body.juzgado' placeholder="Seleccionar"
+            [options]="comboJuzgado" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{'justiciaGratuita.maestros.Procedimiento'|translate}}</label>
+          <p-dropdown class="select-form" [(ngModel)]='body.procedimiento' placeholder="Seleccionar"
+            [options]="comboProcedimiento" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
+          </p-dropdown>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{"enviosMasivos.literal.asunto" | translate}}</label>
+          <input type="text" class="form-control" maxLength="1023" pInputText [(ngModel)]="body.asunto">
+        </div>
+        <div class="form-group col-lg-3 col-md-3 w-100">
+          <label>Delitos</label>
+          <p-dropdown class="select-form" [(ngModel)]="delitosValue"
+                  placeholder="{{'general.boton.seleccionar' | translate}}" 
+                  [options]="delitosOpciones" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
+                </p-dropdown>
+        </div>
+      </div>
       <div class="form-row">
         <div class="form-group col-lg-3 col-md-3">
           <label>{{'justiciaGratuita.ejg.datosGenerales.Perceptivo'|translate}}</label>

@@ -40,6 +40,7 @@ export class TablaJusticiablesComponent implements OnInit {
   @Input() nuevoInteresado;
   @Input() nuevoContrario;
   @Input() nuevaUniFamiliar;
+  @Input() nuevoContrarioEJG;
   //searchServiciosTransaccion: boolean = false;
 
   
@@ -95,6 +96,10 @@ export class TablaJusticiablesComponent implements OnInit {
     }
     else if(this.nuevoContrario){
       if(this.checkContrario(evento))  this.insertContrario(evento);
+      else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.designas.contrarios.existente"))
+    }
+    else if(this.nuevoContrarioEJG){
+      if(this.checkContrarioEJG(evento))  this.insertContrarioEJG(evento);
       else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.designas.contrarios.existente"))
     }
     else if(this.nuevaUniFamiliar){
@@ -284,6 +289,53 @@ export class TablaJusticiablesComponent implements OnInit {
     }
   );
   }
+
+  checkContrarioEJG(justiciable){
+
+    let contrarios : any = sessionStorage.getItem("contrariosEJG");
+    let exist = false;
+    if(contrarios!="") contrarios = JSON.parse(contrarios);
+
+    if(contrarios=="") exist = false;
+    else{
+      //Comprobamos que el justiciable no esta ya en la designacion
+      contrarios.forEach(element => {
+        if(element.idPersona == justiciable.idpersona) exist = true;
+      });
+    }
+
+    return !exist;
+  }
+
+  insertContrarioEJG(justiciable){
+    this.progressSpinner = true;
+
+    let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
+
+
+    let request = [justiciable.idpersona, ejg.annio, ejg.tipoEJG, ejg.numero]
+    this.sigaServices.post("gestionejg_insertContrarioEJG", request).subscribe(
+      data => {
+        sessionStorage.removeItem('origin');
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.progressSpinner = false;
+        //this.router.navigate(["/fichaDesignaciones"]);
+        this.location.back();
+    },
+    err => {
+      if (err != undefined && JSON.parse(err.error).error.description != "") {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+      } else {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+      }
+      this.progressSpinner = false;
+    },
+    () => {
+      this.progressSpinner = false;
+    }
+  );
+  }
+
   getCols() {
 
     this.cols = [

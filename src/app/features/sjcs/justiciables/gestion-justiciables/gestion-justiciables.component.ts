@@ -40,9 +40,11 @@ export class GestionJusticiablesComponent implements OnInit {
   justiciableOverwritten: boolean = false;
   justiciableCreateByUpdate: boolean = false;
   permisoEscritura;
+
   fromInteresado: boolean = false;
   fromContrario: boolean = false;
   fromUniFamiliar: boolean = false;
+  fromContrarioEJG: boolean = false;
 
   constructor(private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -68,6 +70,47 @@ export class GestionJusticiablesComponent implements OnInit {
         if (sessionStorage.getItem("origin") == "Contrario") {
           //sessionStorage.removeItem('origin');
           this.fromContrario = true;
+        }
+
+        if (sessionStorage.getItem("origin") == "ContrarioEJG") {
+          //sessionStorage.removeItem('origin');
+          this.fromContrarioEJG = true;
+          let fichasPosiblesContrariosEJG = [
+            {
+              origen: "justiciables",
+              activa: false
+            },
+            {
+              key: "generales",
+              activa: true
+            },
+            {
+              key: "personales",
+              activa: true
+            },
+            {
+              key: "solicitud",
+              activa: true
+            },
+            {
+              key: "representante",
+              activa: true
+            },
+            {
+              key: "asuntos",
+              activa: true
+            },
+            {
+              key: "abogado",
+              activa: true
+            },
+            {
+              key: "procurador",
+              activa: true
+            }
+        
+          ];
+          this.persistenceService.setFichasPosibles(fichasPosiblesContrariosEJG);
         }
 
         if (sessionStorage.getItem("origin") == "UnidadFamiliar") {
@@ -498,5 +541,9 @@ export class GestionJusticiablesComponent implements OnInit {
 
   contrario(event) {
     this.fromContrario = true;
+  }
+
+  contrarioEJG(event) {
+    this.fromContrarioEJG = true;
   }
 }

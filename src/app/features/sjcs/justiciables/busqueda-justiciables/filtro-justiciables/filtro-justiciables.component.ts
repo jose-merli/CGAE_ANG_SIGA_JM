@@ -31,6 +31,7 @@ export class FiltroJusticiablesComponent implements OnInit {
   @Output() isOpen = new EventEmitter<boolean>();
   @Input() modoRepresentante;
   @Input() nuevaUniFamiliar;
+  @Input() nuevoContrarioEJG;
 
   comboProvincias = [];
   comboPoblacion = [];

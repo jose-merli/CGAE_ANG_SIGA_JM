@@ -55,7 +55,12 @@ export class FichaPreDesignacionComponent implements OnInit {
     //Comprobar si el ejg tiene alguna designacion asignada.
     //Si es asi, esta ficha sera unicamente de consulta, no edicion.
     //if()
-    this.body = this.persistenceService.getDatos();
+    if (sessionStorage.getItem("EJGItem")) {
+      this.body = JSON.parse(sessionStorage.getItem("EJGItem"));
+      sessionStorage.removeItem("EJGItem");
+      this.persistenceService.setDatos(this.body);
+    }
+    else this.body = this.persistenceService.getDatos();
     this.datos = [
       {
         label: "Año/Numero EJG",
@@ -87,6 +92,8 @@ export class FichaPreDesignacionComponent implements OnInit {
         value: this.body.impugnacion
       },
     ];
+
+    
   }
 
   backTo() {

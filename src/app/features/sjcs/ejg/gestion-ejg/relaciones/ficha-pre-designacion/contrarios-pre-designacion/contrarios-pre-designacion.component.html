@@ -6,29 +6,30 @@
         <div class="col-lg-1 col-md-2" (click)="abreCierra()">
           <!-- (click)="" -->
           <div class="img-colegiado">
-            <i class="far fa-user icon-ficha pointer"></i>
+            <i class="fa fa-users icon-ficha pointer"></i>
           </div>
         </div>
-        <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mb-1" (click)="abreCierra()">
-            <label class="mr-auto title-ficha pointer">{{ 'justiciaGratuita.ejg.preDesigna.defensaJuridica' | translate
+        <div class="col-lg-11 col-md-10" (click)="abreCierra()">
+          <div class="d-flex justify-content-start mb-1" >
+            <label class="mr-auto title-ficha pointer">{{ 'justiciaGratuita.ejg.preDesigna.contrarios' | translate
               }}</label>
           </div>
           <div class="d-flex justify-content-between default">
-            <label *ngIf="contrariosEJG.length == 0">{{ "'justiciaGratuita.oficio.designas.contrarios.ncontrarios'" |
+            <label *ngIf="contrariosEJG.length == 0">{{ "justiciaGratuita.oficio.designas.contrarios.ncontrarios" |
               translate
-              }}: <span>{{'justiciaGratuita.oficio.designas.contrarios.vacio'}}</span></label>
-            <label *ngIf="contrariosEJG.length > 0">{{ "'justiciaGratuita.oficio.designas.contrarios.ncontrarios'" |
+              }}: <span>{{"justiciaGratuita.oficio.designas.contrarios.vacio" | translate}}</span></label>
+            <label *ngIf="contrariosEJG.length > 0">{{ "justiciaGratuita.oficio.designas.contrarios.ncontrarios" |
               translate }}: <span>{{contrariosEJG.length}}</span></label>
-            <label *ngIf="contrariosEJG.length > 0">{{ "'justiciaGratuita.oficio.designas.contrarios.identificadorprimero'" |
+            <label *ngIf="contrariosEJG.length > 0">{{ "justiciaGratuita.oficio.designas.contrarios.identificadorprimero" |
               translate }}:
               <span>{{primero.nif}}</span></label>
-            <label *ngIf="contrariosEJG.length > 0">{{ "'justiciaGratuita.oficio.designas.contrarios.apellidosnombreprimero'" | translate }}:
+            <label *ngIf="contrariosEJG.length > 0">{{ "justiciaGratuita.oficio.designas.contrarios.apellidosnombreprimero" | translate }}:
               <span>{{primero.apellidosnombre}}</span></label>
-            <label *ngIf="contrariosEJG.length > 0">{{ "'justiciaGratuita.oficio.designas.contrarios.abogadoprimero'" | translate }}:
+            <label *ngIf="contrariosEJG.length > 0">{{ "justiciaGratuita.oficio.designas.contrarios.abogadoprimero" | translate }}:
               <span>{{primero.abogado}}</span></label>
-            <label *ngIf="contrariosEJG.length > 0">{{ "'justiciaGratuita.oficio.designas.contrarios.procuradorprimero'" | translate }}:
+            <label *ngIf="contrariosEJG.length > 0">{{ "justiciaGratuita.oficio.designas.contrarios.procuradorprimero" | translate }}:
               <span>{{primero.procurador}}</span></label>
+              <i class="fa fa-angle-down float-right" (click)="abreCierraFicha()"></i>
           </div>
         </div>
       </div>
@@ -36,13 +37,13 @@
         (click)="abreCierra()">
         <!-- (click)="" -->
         <div class="img-colegiado">
-          <i class="far fa-user icon-ficha"></i>
+          <i class="fa fa-users icon-ficha"></i>
         </div>
-        <label class="title-ficha pointer">{{ 'justiciaGratuita.ejg.preDesigna.defensaJuridica' | translate }}</label>
+        <label class="title-ficha pointer">{{ 'justiciaGratuita.ejg.preDesigna.contrarios' | translate }}</label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
-    <div>
+    <div *ngIf="openCon">
       <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [selectionMode]="selectionMode"
         [responsive]="true" #table class="tabla-listado" [paginator]="true" [rows]="selectedItem"
         (onRowSelect)="actualizaSeleccionados()" (onRowUnselect)="actualizaSeleccionados()"
@@ -68,7 +69,7 @@
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
               <div *ngIf="!isEliminado(dato)">
-                <a class="enlace" (click)="openTab(dato)"><span>{{dato[col.field]}}</span></a>
+                <span class="enlace" (click)="openTab(dato)">{{dato[col.field]}}</span>
               </div>
               <div *ngIf="isEliminado(dato)">
                 <span
