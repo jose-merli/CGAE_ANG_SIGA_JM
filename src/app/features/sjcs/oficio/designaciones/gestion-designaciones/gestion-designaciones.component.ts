@@ -161,7 +161,6 @@ export class GestionDesignacionesComponent implements OnInit {
                 sessionStorage.setItem("nuevaDesigna", "false");
                 sessionStorage.setItem("designaItemLink", JSON.stringify(dato));
                 this.router.navigate(["/fichaDesignaciones"]);
-                console.log(err);
               }, () => {
                 this.progressSpinner = false;
               });

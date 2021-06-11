@@ -119,7 +119,6 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   ngOnInit(): void {
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos();
-      console.log(' this.permisoEscritura: ',  this.permisoEscritura)
     }
     if (this.pantalla == 'JE'){
       this.rowIdsToUpdate = []; //limpiamos
@@ -562,7 +561,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             this.rowIdsToUpdate = []; //limpiamos
           }
           if (cell != undefined){
-            cell.value = event;
+            cell.value[0] = event;
           }
         }
       }else{
@@ -572,7 +571,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           this.rowIdsToUpdate = []; //limpiamos
         }
           if (cell != undefined){
-            cell.value = event;
+            cell.value[0] = event;
           }
       }
     }else{
@@ -586,7 +585,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             this.rowIdsToUpdate = []; //limpiamos
           }
           if (cell != undefined){
-            cell.value = event;
+            cell.value[0] = event;
           }
         }else{
           this.rowValidadas.push(row);
@@ -603,7 +602,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   }
 
   checkBoxChange2(event, rowId, cell, row, rowGroup, padre, index){
-    if (cell.value == false && row.cells[35].value == "1"){
+    if (cell.value == false && row != undefined && row.cells[35].value == "1"){
       cell.value = !cell.value;
       this.showMsg('error', "No puede desvalidar actuaciones facturadas", '')
     }else{
@@ -659,7 +658,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         //actuacion
         this.turnoAllow = rowGroup.rows[0].cells[39].value;
         if((this.isLetrado && row.cells[8].value == true && this.turnoAllow) || (!this.isLetrado)){
-          if (row.cells[8].value  == true){
+          /*if (row.cells[8].value  == true){*/
             if (this.sumar){
               this.rowIdsToUpdate.push(rowId);
             }else{
@@ -668,11 +667,11 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             /*if (cell != undefined){
               cell.value = !cell.value;
             }*/
-          }else{
+          /*}else{
             this.rowValidadas.push(row);
             cell.value = !cell.value;
             this.showMsg('error', "No se pueden actualizar actuaciones validadas", '')
-          }
+          }*/
         }else{
           cell.value = !cell.value;
           this.showMsg('error', "No tiene permiso para actualizar datos de una actuación", '')
@@ -684,11 +683,16 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       this.lastChange = "checkBoxChange2";
 
       if (cell.value == true){
-        row.cells[6].type = 'text';
-        row.cells[5].type = 'text';
+        if (row != undefined){
+          row.cells[6].type = 'text';
+          row.cells[5].type = 'text';
+        }
+        
       }else{
+        if (row != undefined){
         row.cells[6].type = 'datePicker';
         row.cells[5].type = 'datePicker';
+        }
       }
     }
   }
@@ -1128,6 +1132,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   }
 
   newFromSelected(){
+    console.log('sessionStorage.getItem('rowIdsToUpdate') ', sessionStorage.getItem('rowIdsToUpdate') )
     if (sessionStorage.getItem('rowIdsToUpdate') != null && sessionStorage.getItem('rowIdsToUpdate') != 'null' && sessionStorage.getItem('rowIdsToUpdate') != '[]'){
       let keyConfirmation = "confirmacionGuardarJustificacionExpress";
         this.confirmationService.confirm({
@@ -1532,8 +1537,6 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   }
   
     linkFichaActIfPermis(row, rowGroup){
-      console.log('this.permisosFichaAct: ', this.permisosFichaAct)
-      console.log('this.pantalla: ', this.pantalla)
       if (this.pantalla == 'JE'){
        if (this.permisosFichaAct){
           

@@ -130,8 +130,8 @@ export class FiltroDesignacionesComponent implements OnInit {
         if (this.body.fechaJustificacionHasta != undefined && this.body.fechaJustificacionHasta != null) {
           this.body.fechaJustificacionHasta = new Date(this.body.fechaJustificacionHasta);
         }
-        this.buscar();
         sessionStorage.removeItem("filtroDesignas");
+        this.buscar();
         sessionStorage.removeItem("volver");
       } else {
         this.body = new DesignaItem();
@@ -344,13 +344,12 @@ export class FiltroDesignacionesComponent implements OnInit {
   checkAccesoFichaActuacion() {
     this.commonsService.checkAcceso(procesos_oficio.designasActuaciones)
       .then(respuesta => {
-        if (this.permisoEscritura == undefined) {
+        if (respuesta == undefined) {
           this.permisoEscritura = false;
         }else{
           this.permisoEscritura = respuesta;
-          this.permisosFichaAct.emit(this.permisoEscritura);
         }
-        //this.persistenceService.setPermisos(this.permisoEscritura);
+        this.permisosFichaAct.emit(this.permisoEscritura);
       }
       ).catch(error => console.error(error));
 
@@ -423,7 +422,8 @@ export class FiltroDesignacionesComponent implements OnInit {
   changeFilters(event) {
 
     if (event == 'designas') {
-      this.checkAccesoDesigna();
+      this.radioTarjeta = 'justificacion';
+      
       let keyConfirmation = "confirmacionGuardarJustificacionExpress";
       if (sessionStorage.getItem('rowIdsToUpdate') != null && sessionStorage.getItem('rowIdsToUpdate') != 'null' && sessionStorage.getItem('rowIdsToUpdate') != '[]') {
         this.confirmationService.confirm({
@@ -431,6 +431,8 @@ export class FiltroDesignacionesComponent implements OnInit {
           message: this.translateService.instant('justiciaGratuita.oficio.justificacion.reestablecer'),
           icon: "fa fa-trash-alt",
           accept: () => {
+            this.checkAccesoDesigna();
+            this.radioTarjeta = 'designas';
             this.showDesignas = true;
             this.showJustificacionExpress = false;
             this.isButtonVisible = true;
@@ -440,6 +442,8 @@ export class FiltroDesignacionesComponent implements OnInit {
           }
         });
       } else {
+        this.checkAccesoDesigna();
+        this.radioTarjeta = 'designas';
         this.showDesignas = true;
         this.showJustificacionExpress = false;
         this.isButtonVisible = true;
