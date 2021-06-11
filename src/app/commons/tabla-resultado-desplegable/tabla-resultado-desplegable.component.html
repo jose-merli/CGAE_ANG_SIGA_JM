@@ -16,7 +16,7 @@
             <div class="table-header-child p-2" *ngFor="let cabecera of cabeceras; let j = index" [ngStyle]="setMyStyles(cabecera.size)" #BorderedHeader
                 [id]="cabecera.id">
                 <div class="ajustarCabecera" [ngStyle]="setMyStyles(cabecera.size)">
-                    <div [mat-sort-header]=cabecera.id [pTooltip]="cabecera.nameComplete" tooltipPosition="top">
+                    <div [mat-sort-header]=cabecera.id [pTooltip]="cabecera.nameComplete" tooltipPosition="top" disableClear>
                         {{cabecera.name}}</div>
                     <input type="text" class="form-control ajustarBuscador" pInputTex [(ngModel)]="searchText[j]"
                         (ngModelChange)="searchChange(j)" autocomplete="off" placeholder="Buscar">
