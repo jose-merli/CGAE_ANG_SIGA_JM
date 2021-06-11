@@ -263,7 +263,7 @@
         <button pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"  (click)="guardar()">
         </button>
 
-        <button pButton [disabled]="selectedArray.length != 1" type="button" icon="far fa-save" iconPos="left" label="Nuevo"  (click)="newFromSelected()">
+        <button pButton [disabled]="selectedArray.length != 1 || !permisosFichaAct" type="button" icon="far fa-save" iconPos="left" label="Nuevo"  (click)="newFromSelected()">
         </button>
     </div>
 </div>

@@ -344,13 +344,12 @@ export class FiltroDesignacionesComponent implements OnInit {
   checkAccesoFichaActuacion() {
     this.commonsService.checkAcceso(procesos_oficio.designasActuaciones)
       .then(respuesta => {
-        if (this.permisoEscritura == undefined) {
+        if (respuesta == undefined) {
           this.permisoEscritura = false;
         }else{
           this.permisoEscritura = respuesta;
-          this.permisosFichaAct.emit(this.permisoEscritura);
         }
-        //this.persistenceService.setPermisos(this.permisoEscritura);
+        this.permisosFichaAct.emit(this.permisoEscritura);
       }
       ).catch(error => console.error(error));
 
