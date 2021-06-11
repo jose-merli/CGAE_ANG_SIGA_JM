@@ -11,10 +11,10 @@
 .row {
   margin: 0;
 }
-
+/*
 ::ng-deep .mat-sort-header-arrow {
   opacity: 1 !important;
-}
+}*/
 
 .column-title {
   display: none;
@@ -621,4 +621,8 @@ color: green;
 .tooltip:hover .tooltiptext {
   visibility: visible;
   opacity: 1;
+}
+.setDiv{
+    width: fit-content;
+    margin: 0 auto;
 }
