@@ -429,7 +429,8 @@ export class FiltroDesignacionesComponent implements OnInit {
   changeFilters(event) {
 
     if (event == 'designas') {
-      this.checkAccesoDesigna();
+      this.radioTarjeta = 'justificacion';
+      
       let keyConfirmation = "confirmacionGuardarJustificacionExpress";
       if (sessionStorage.getItem('rowIdsToUpdate') != null && sessionStorage.getItem('rowIdsToUpdate') != 'null' && sessionStorage.getItem('rowIdsToUpdate') != '[]') {
         this.confirmationService.confirm({
@@ -437,6 +438,8 @@ export class FiltroDesignacionesComponent implements OnInit {
           message: this.translateService.instant('justiciaGratuita.oficio.justificacion.reestablecer'),
           icon: "fa fa-trash-alt",
           accept: () => {
+            this.checkAccesoDesigna();
+            this.radioTarjeta = 'designas';
             this.showDesignas = true;
             this.showJustificacionExpress = false;
             this.isButtonVisible = true;
@@ -446,6 +449,8 @@ export class FiltroDesignacionesComponent implements OnInit {
           }
         });
       } else {
+        this.checkAccesoDesigna();
+        this.radioTarjeta = 'designas';
         this.showDesignas = true;
         this.showJustificacionExpress = false;
         this.isButtonVisible = true;
