@@ -1132,7 +1132,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   }
 
   newFromSelected(){
-    console.log('sessionStorage.getItem('rowIdsToUpdate') ', sessionStorage.getItem('rowIdsToUpdate') )
+    console.log('sessionStorage.getItem(rowIdsToUpdate) ', sessionStorage.getItem('rowIdsToUpdate') );
     if (sessionStorage.getItem('rowIdsToUpdate') != null && sessionStorage.getItem('rowIdsToUpdate') != 'null' && sessionStorage.getItem('rowIdsToUpdate') != '[]'){
       let keyConfirmation = "confirmacionGuardarJustificacionExpress";
         this.confirmationService.confirm({
