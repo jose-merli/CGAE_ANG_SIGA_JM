@@ -663,7 +663,7 @@ export class FichaDesignacionesComponent implements OnInit {
   }
   backTo() {
     sessionStorage.setItem("volver", 'true');
-    this.location.back();
+    this.router.navigate(['/designaciones']);
   }
 
   transformaFecha(fecha) {
