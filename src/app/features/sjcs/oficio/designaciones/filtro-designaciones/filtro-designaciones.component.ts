@@ -130,8 +130,8 @@ export class FiltroDesignacionesComponent implements OnInit {
         if (this.body.fechaJustificacionHasta != undefined && this.body.fechaJustificacionHasta != null) {
           this.body.fechaJustificacionHasta = new Date(this.body.fechaJustificacionHasta);
         }
-        this.buscar();
         sessionStorage.removeItem("filtroDesignas");
+        this.buscar();
         sessionStorage.removeItem("volver");
       } else {
         this.body = new DesignaItem();
