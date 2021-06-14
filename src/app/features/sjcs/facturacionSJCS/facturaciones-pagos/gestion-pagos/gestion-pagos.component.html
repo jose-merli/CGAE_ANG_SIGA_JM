@@ -3,21 +3,23 @@
 <div class="datos-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
-    <p>SJCS <i class="fa fa-angle-right"></i>{{'facturacionSJCS.facturacionesYPagos.fichaPago' | translate}}</p>
+    <p>SJCS &nbsp;<i class="fa fa-angle-right"></i>{{'facturacionSJCS.facturacionesYPagos.fichaPago' | translate}}</p>
   </div>
-  
-  <app-datos-pagos [numCriterios]="numCriterios" [cerrada]="cerrada" [idEstadoPago]="idEstadoPago" [idPago]="idPago" [modoEdicion]="modoEdicion" [permisos]="permisos"></app-datos-pagos>
-  
+
+  <app-datos-pagos [numCriterios]="numCriterios" [cerrada]="cerrada" [idEstadoPago]="idEstadoPago" [idPago]="idPago"
+    [modoEdicion]="modoEdicion" [permisos]="permisos"></app-datos-pagos>
+
   <app-conceptos-pagos [permisos]="permisos"></app-conceptos-pagos>
-  
+
   <app-configuracion-ficheros [permisos]="permisos"></app-configuracion-ficheros>
-  
+
   <app-detalle-pago [permisos]="permisos"></app-detalle-pago>
-  
+
   <app-compensacion-factura></app-compensacion-factura>
 
   <div class="text-right main-button">
-    <button (click)="volver()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
+    <button (click)="volver()" pButton type="button" icon="fa fa-angle-left" iconPos="left"
+      label="{{ 'general.boton.volver' | translate}}"></button>
   </div>
 </div>
 

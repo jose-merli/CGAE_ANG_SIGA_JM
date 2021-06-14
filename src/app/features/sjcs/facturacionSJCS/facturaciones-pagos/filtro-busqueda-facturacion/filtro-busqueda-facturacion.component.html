@@ -2,83 +2,117 @@
 
 <div class="busqueda-container">
   <div class="card">
-    <div class="card-body">   
+    <div class="card-body">
       <div class="form-row">
         <div class="col-4">
-          <p-radioButton name="filtroBusquedaFacturacion" value="facturacion" label="{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.facturacion' | translate}}" [(ngModel)]="selectedValue" (click)="cambiaFiltro()"></p-radioButton>
-          <p-radioButton name="filtroBusquedaPagos" (click)="cambiaFiltro()" value="pagos" label="{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.pago' | translate}}" [(ngModel)]="selectedValue"></p-radioButton>  
+          <p-radioButton name="filtroBusquedaFacturacion" value="facturacion"
+            label="{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.facturacion' | translate}}"
+            [(ngModel)]="selectedValue" (click)="cambiaFiltro()"></p-radioButton>
+          <p-radioButton name="filtroBusquedaPagos" (click)="cambiaFiltro()" value="pagos"
+            label="{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.pago' | translate}}"
+            [(ngModel)]="selectedValue"></p-radioButton>
         </div>
-      </div>      
-      <p class="title-module" (click)="onHideDatosGenerales()"> 
-        {{ 'general.message.datos.generales' | translate }}      
+      </div>
+      <p class="title-module" (click)="onHideDatosGenerales()">
+        {{ 'general.message.datos.generales' | translate }}
         <i *ngIf="showFicha" class="fa fa-angle-up float-right"></i>
         <i *ngIf="!showFicha" class="fa fa-angle-down float-right"></i>
       </p>
       <div *ngIf="showFicha" class="module vista-avanzada">
         <div class="form-row">
-          <div class="form-group col-lg-6 col-md-6">   
+          <div class="form-group-interlineado col-lg-6 col-md-6">
             <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.nombre' | translate}}</label>
-          
-            <input type="text"  maxlength="95"  name="nombre" class="form-control" [(ngModel)]='filtrosFacturacion.nombre' *ngIf="selectedValue=='facturacion'" pInputText />
-          
-            <input type="text"  maxlength="95"  name="nombre" class="form-control" [(ngModel)]='filtrosPagos.nombre' *ngIf="selectedValue=='pagos'" pInputText />
-          </div>  
-          
-          <div  class="form-group col-lg-3 col-md-3">   
-            <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado' | translate}}</label>
-          
-            <p-dropdown class="select-form" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde" [showClear]="true" [(ngModel)]='filtrosFacturacion.idEstado' [options]="estadoFacturas" *ngIf="selectedValue=='facturacion'"></p-dropdown>
-            
-            <p-dropdown class="select-form" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde" [showClear]="true" [(ngModel)]='filtrosPagos.idEstado' [options]="estadoPagos" *ngIf="selectedValue=='pagos'"></p-dropdown>
-          </div>   
-          
-          <div class="form-row col-lg-3 col-md-3">
-            <div class="form-group col-lg-6 col-md-6">
-              <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaDesde' | translate}}</label>
-            
-              <app-fecha [utc]="false" (valueChangeSelected)="fillFechaDesde($event)" (valueChangeInput)="fillFechaDesde($event)" [(value)]="filtrosFacturacion.fechaDesde" *ngIf="selectedValue=='facturacion'"></app-fecha>
-              
-              <app-fecha [utc]="false" (valueChangeSelected)="fillFechaDesde($event)" (valueChangeInput)="fillFechaDesde($event)" [(value)]="filtrosPagos.fechaDesde" *ngIf="selectedValue=='pagos'"></app-fecha>
-            </div>
-            <div class="form-group col-lg-6 col-md-6">
-              <label>{{'gratuita.personaJG.literal.hasta' | translate}}</label>
-              
-              <app-fecha [utc]="false" (valueChangeSelected)="fillFechaHasta($event)" (valueChangeInput)="fillFechaHasta($event)" [(value)]="filtrosFacturacion.fechaHasta" [minDate]="filtrosFacturacion.fechaDesde" *ngIf="selectedValue=='facturacion'"></app-fecha>
 
-              <app-fecha [utc]="false" (valueChangeSelected)="fillFechaHasta($event)" (valueChangeInput)="fillFechaHasta($event)" [(value)]="filtrosPagos.fechaHasta" [minDate]="filtrosPagos.fechaDesde" *ngIf="selectedValue=='pagos'"></app-fecha>
+            <input type="text" maxlength="95" name="nombre" class="form-control" [(ngModel)]='filtrosFacturacion.nombre'
+              *ngIf="selectedValue=='facturacion'" pInputText />
+
+            <input type="text" maxlength="95" name="nombre" class="form-control" [(ngModel)]='filtrosPagos.nombre'
+              *ngIf="selectedValue=='pagos'" pInputText />
+          </div>
+
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado' | translate}}</label>
+
+            <p-dropdown class="select-form" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
+              filterBy="label,labelSinTilde" [showClear]="true" [(ngModel)]='filtrosFacturacion.idEstado'
+              [options]="estadoFacturas" *ngIf="selectedValue=='facturacion'"></p-dropdown>
+
+            <p-dropdown class="select-form" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
+              filterBy="label,labelSinTilde" [showClear]="true" [(ngModel)]='filtrosPagos.idEstado'
+              [options]="estadoPagos" *ngIf="selectedValue=='pagos'"></p-dropdown>
+          </div>
+
+          <div class="form-row col-lg-3 col-md-3">
+            <div class="form-group-interlineado col-lg-6 col-md-6">
+              <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaDesde' | translate}}</label>
+
+              <app-fecha [utc]="false" (valueChangeSelected)="fillFechaDesde($event)"
+                (valueChangeInput)="fillFechaDesde($event)" [(value)]="filtrosFacturacion.fechaDesde"
+                *ngIf="selectedValue=='facturacion'"></app-fecha>
+
+              <app-fecha [utc]="false" (valueChangeSelected)="fillFechaDesde($event)"
+                (valueChangeInput)="fillFechaDesde($event)" [(value)]="filtrosPagos.fechaDesde"
+                *ngIf="selectedValue=='pagos'"></app-fecha>
             </div>
-          </div>  
+            <div class="form-group-interlineado col-lg-6 col-md-6">
+              <label>{{'gratuita.personaJG.literal.hasta' | translate}}</label>
+
+              <app-fecha [utc]="false" (valueChangeSelected)="fillFechaHasta($event)"
+                (valueChangeInput)="fillFechaHasta($event)" [(value)]="filtrosFacturacion.fechaHasta"
+                [minDate]="filtrosFacturacion.fechaDesde" *ngIf="selectedValue=='facturacion'"></app-fecha>
+
+              <app-fecha [utc]="false" (valueChangeSelected)="fillFechaHasta($event)"
+                (valueChangeInput)="fillFechaHasta($event)" [(value)]="filtrosPagos.fechaHasta"
+                [minDate]="filtrosPagos.fechaDesde" *ngIf="selectedValue=='pagos'"></app-fecha>
+            </div>
+          </div>
         </div>
         <div class="form-row">
-          <div class="form-group col-lg-3 col-md-3">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.conceptosyservicios' | translate}}</label>
-            
-            <p-dropdown class="select-form" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde" [showClear]="true" [options]="conceptos" [(ngModel)]='filtrosFacturacion.idConcepto' *ngIf="selectedValue=='facturacion'"></p-dropdown> 
-            
-            <p-dropdown class="select-form" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde" [showClear]="true" [options]="conceptos" [(ngModel)]='filtrosPagos.idConcepto' *ngIf="selectedValue=='pagos'"></p-dropdown> 
-          </div>            
-          <div class="form-group col-lg-3 col-md-3">
+
+            <p-dropdown class="select-form" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
+              filterBy="label,labelSinTilde" [showClear]="true" [options]="conceptos"
+              [(ngModel)]='filtrosFacturacion.idConcepto' *ngIf="selectedValue=='facturacion'"></p-dropdown>
+
+            <p-dropdown class="select-form" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
+              filterBy="label,labelSinTilde" [showClear]="true" [options]="conceptos"
+              [(ngModel)]='filtrosPagos.idConcepto' *ngIf="selectedValue=='pagos'"></p-dropdown>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.grupoTurnos' | translate}}</label>
-            
-            <p-dropdown class="select-form" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde" [showClear]="true" [options]="grupoTurnos" [(ngModel)]='filtrosFacturacion.idFacturacion' *ngIf="selectedValue=='facturacion'"></p-dropdown>   
-            
-            <p-dropdown class="select-form" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde" [showClear]="true" [options]="grupoTurnos" [(ngModel)]='filtrosPagos.idFacturacion' *ngIf="selectedValue=='pagos'"></p-dropdown>   
-          </div>  
-          <div class="form-group col-lg-3 col-md-3">
+
+            <p-dropdown class="select-form" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
+              filterBy="label,labelSinTilde" [showClear]="true" [options]="grupoTurnos"
+              [(ngModel)]='filtrosFacturacion.idFacturacion' *ngIf="selectedValue=='facturacion'"></p-dropdown>
+
+            <p-dropdown class="select-form" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
+              filterBy="label,labelSinTilde" [showClear]="true" [options]="grupoTurnos"
+              [(ngModel)]='filtrosPagos.idFacturacion' *ngIf="selectedValue=='pagos'"></p-dropdown>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.partidaPresupuestaria' | translate}}</label>
-            
-            <p-dropdown class="select-form" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde" [showClear]="true" [options]="partidaPresupuestaria" [(ngModel)]='filtrosFacturacion.idPartidaPresupuestaria' *ngIf="selectedValue=='facturacion'"></p-dropdown>   
-            
-            <p-dropdown class="select-form" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde" [showClear]="true" [options]="partidaPresupuestaria" [(ngModel)]='filtrosPagos.idPartidaPresupuestaria' *ngIf="selectedValue=='pagos'"></p-dropdown>  
-          </div>  
+
+            <p-dropdown class="select-form" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
+              filterBy="label,labelSinTilde" [showClear]="true" [options]="partidaPresupuestaria"
+              [(ngModel)]='filtrosFacturacion.idPartidaPresupuestaria' *ngIf="selectedValue=='facturacion'">
+            </p-dropdown>
+
+            <p-dropdown class="select-form" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
+              filterBy="label,labelSinTilde" [showClear]="true" [options]="partidaPresupuestaria"
+              [(ngModel)]='filtrosPagos.idPartidaPresupuestaria' *ngIf="selectedValue=='pagos'"></p-dropdown>
+          </div>
         </div>
       </div>
     </div>
     <div class="card-footer">
       <div class="text-right main-button">
-          <button pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate }}" (click)="restablecer()"></button>
-          <button pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}" (click)="isBuscar()"></button>
-          <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate }}" [disabled]="!permisos" (click)="nuevo()"></button>
+        <button pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate }}"
+          (click)="restablecer()"></button>
+        <button pButton type="button" icon="fa fa-search" iconPos="left"
+          label="{{ 'general.boton.search' | translate }}" (click)="isBuscar()"></button>
+        <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate }}"
+          [disabled]="!permisos" (click)="nuevo()"></button>
       </div>
     </div>
   </div>

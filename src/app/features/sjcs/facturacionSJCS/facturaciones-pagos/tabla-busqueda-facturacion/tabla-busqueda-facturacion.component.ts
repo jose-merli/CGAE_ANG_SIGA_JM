@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ChangeDetectorRef, Output, EventEmitter, ElementRef } from '@angular/core';
 import { TranslateService } from '../../../../../commons/translate';
 import { Router } from '@angular/router';
 import { SigaServices } from '../../../../../_services/siga.service';
@@ -36,6 +36,7 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
   @Output() delete = new EventEmitter<String>();
   
   @ViewChild("tabla") tabla;
+  @ViewChild("tablaFoco") tablaFoco: ElementRef;
   
   constructor(private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,

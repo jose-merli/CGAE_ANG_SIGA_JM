@@ -53,7 +53,7 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 
 	filtrosFacturacion: FacturacionItem = new FacturacionItem();
 	filtrosPagos: PagosjgItem = new PagosjgItem();
-	
+
 	progressSpinnerFiltro: boolean = false;
 
 	constructor(private router: Router,
@@ -85,45 +85,45 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 		if (undefined != this.persistenceService.getFiltros()) {
 			let datos = this.persistenceService.getFiltros();
 
-			if(undefined!=datos.selectedValue){
-				this.selectedValue=datos.selectedValue;
+			if (undefined != datos.selectedValue) {
+				this.selectedValue = datos.selectedValue;
 			}
 
-			if(this.selectedValue=="facturacion"){
+			if (this.selectedValue == "facturacion") {
 				this.filtrosFacturacion = datos;
 
-				if(this.filtrosFacturacion.fechaDesde != undefined){
+				if (this.filtrosFacturacion.fechaDesde != undefined) {
 					this.filtrosFacturacion.fechaDesde = this.commonsService.arreglarFecha(this.filtrosFacturacion.fechaDesde);
 				}
 
-				if(this.filtrosFacturacion.fechaHasta != undefined){
+				if (this.filtrosFacturacion.fechaHasta != undefined) {
 					this.filtrosFacturacion.fechaHasta = this.commonsService.arreglarFecha(this.filtrosFacturacion.fechaHasta);
 				}
 
 				if ((undefined != this.filtrosFacturacion.idEstado) || (undefined != this.filtrosFacturacion.fechaDesde) || (undefined != this.filtrosFacturacion.fechaHasta) ||
-				(undefined != this.filtrosFacturacion.idConcepto) || (undefined != this.filtrosFacturacion.idFacturacion) || (undefined != this.filtrosFacturacion.idPartidaPresupuestaria) ||
-				(undefined != this.filtrosFacturacion.nombre && this.filtrosFacturacion.nombre.trim() != "")) {
+					(undefined != this.filtrosFacturacion.idConcepto) || (undefined != this.filtrosFacturacion.idFacturacion) || (undefined != this.filtrosFacturacion.idPartidaPresupuestaria) ||
+					(undefined != this.filtrosFacturacion.nombre && this.filtrosFacturacion.nombre.trim() != "")) {
 					this.isBuscar();
 				}
-			}else if(this.selectedValue=="pagos"){
+			} else if (this.selectedValue == "pagos") {
 				this.filtrosPagos = datos;
 
-				if(this.filtrosPagos.fechaDesde != undefined){
+				if (this.filtrosPagos.fechaDesde != undefined) {
 					this.filtrosPagos.fechaDesde = this.commonsService.arreglarFecha(this.filtrosPagos.fechaDesde);
 				}
 
-				if(this.filtrosPagos.fechaHasta != undefined){
+				if (this.filtrosPagos.fechaHasta != undefined) {
 					this.filtrosPagos.fechaHasta = this.commonsService.arreglarFecha(this.filtrosPagos.fechaHasta);
 				}
 
 				if ((undefined != this.filtrosPagos.idEstado) || (undefined != this.filtrosPagos.fechaDesde) || (undefined != this.filtrosPagos.fechaHasta) ||
-				(undefined != this.filtrosPagos.idConcepto) || (undefined != this.filtrosPagos.idFacturacion) || (undefined != this.filtrosPagos.idPartidaPresupuestaria) ||
-				(undefined != this.filtrosPagos.nombre && this.filtrosPagos.nombre.trim() != "")) {
+					(undefined != this.filtrosPagos.idConcepto) || (undefined != this.filtrosPagos.idFacturacion) || (undefined != this.filtrosPagos.idPartidaPresupuestaria) ||
+					(undefined != this.filtrosPagos.nombre && this.filtrosPagos.nombre.trim() != "")) {
 					this.isBuscar();
 				}
 			}
 		} else {
-			this.selectedValue="facturacion";
+			this.selectedValue = "facturacion";
 			this.filtrosFacturacion = new FacturacionItem();
 			this.filtrosPagos = new PagosjgItem();
 		}
@@ -131,18 +131,18 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 
 	nuevo() {
 		let datos;
-		
-		if(this.selectedValue=="facturacion"){
-			datos = this.filtrosFacturacion;  
-			datos.selectedValue=this.selectedValue;
-  
+
+		if (this.selectedValue == "facturacion") {
+			datos = this.filtrosFacturacion;
+			datos.selectedValue = this.selectedValue;
+
 			this.persistenceService.clearDatos();
 			this.persistenceService.setFiltros(datos);
-		
+
 			this.router.navigate(["/fichaFacturacion"]);
-		}else if(this.selectedValue=="pagos"){
+		} else if (this.selectedValue == "pagos") {
 			datos = this.filtrosPagos;
-			datos.selectedValue=this.selectedValue;
+			datos.selectedValue = this.selectedValue;
 
 			this.persistenceService.clearDatos();
 			this.persistenceService.setFiltros(datos);
@@ -172,8 +172,8 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 		this.calendar.onClearButtonClick("");
 	}
 
-	cambiaFiltro(){
-		this.filtrosFacturacion=new FacturacionItem();
+	cambiaFiltro() {
+		this.filtrosFacturacion = new FacturacionItem();
 		this.filtrosPagos = new PagosjgItem();
 		this.cambiaBuscar.emit(false);
 
@@ -316,12 +316,12 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 	}
 
 	fillFechaDesde(event) {
-		if(this.selectedValue=="facturacion"){
+		if (this.selectedValue == "facturacion") {
 			this.filtrosFacturacion.fechaDesde = event;
 			if (this.filtrosFacturacion.fechaHasta < this.filtrosFacturacion.fechaDesde) {
 				this.filtrosFacturacion.fechaHasta = undefined;
 			}
-		}else if(this.selectedValue=="pagos"){
+		} else if (this.selectedValue == "pagos") {
 			this.filtrosPagos.fechaDesde = event;
 			if (this.filtrosPagos.fechaHasta < this.filtrosPagos.fechaDesde) {
 				this.filtrosPagos.fechaHasta = undefined;
@@ -330,9 +330,9 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 	}
 
 	fillFechaHasta(event) {
-		if(this.selectedValue=="facturacion"){
+		if (this.selectedValue == "facturacion") {
 			this.filtrosFacturacion.fechaHasta = event;
-		}else if(this.selectedValue=="pagos"){
+		} else if (this.selectedValue == "pagos") {
 			this.filtrosPagos.fechaHasta = event;
 		}
 	}
@@ -341,22 +341,22 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 		if (this.checkFilters()) {
 			let filtros;
 
-			if(this.selectedValue=="facturacion"){
+			if (this.selectedValue == "facturacion") {
 				filtros = this.filtrosFacturacion;
-			}else if(this.selectedValue=="pagos"){
+			} else if (this.selectedValue == "pagos") {
 				filtros = this.filtrosPagos;
 			}
-			filtros.selectedValue=this.selectedValue;
+			filtros.selectedValue = this.selectedValue;
 
 			this.persistenceService.setFiltrosAux(filtros);
 			this.persistenceService.setFiltros(filtros);
-			
+
 			this.busqueda.emit(this.selectedValue);
 		}
 	}
 
 	checkFilters() {
-		if(this.selectedValue=="facturacion"){
+		if (this.selectedValue == "facturacion") {
 			if ((undefined != this.filtrosFacturacion.idEstado) || (undefined != this.filtrosFacturacion.fechaDesde) || (undefined != this.filtrosFacturacion.fechaHasta) ||
 				(undefined != this.filtrosFacturacion.idConcepto) || (undefined != this.filtrosFacturacion.idFacturacion) || (undefined != this.filtrosFacturacion.idPartidaPresupuestaria) ||
 				(undefined != this.filtrosFacturacion.nombre && this.filtrosFacturacion.nombre.trim() != "")) {
@@ -374,7 +374,7 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 				this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
 				return false;
 			}
-		}else if(this.selectedValue=="pagos"){
+		} else if (this.selectedValue == "pagos") {
 			if ((undefined != this.filtrosPagos.idEstado) || (undefined != this.filtrosPagos.fechaDesde) || (undefined != this.filtrosPagos.fechaHasta) ||
 				(undefined != this.filtrosPagos.idConcepto) || (undefined != this.filtrosPagos.idFacturacion) || (undefined != this.filtrosPagos.idPartidaPresupuestaria) ||
 				(undefined != this.filtrosPagos.nombre && this.filtrosPagos.nombre.trim() != "")) {

@@ -1,7 +1,7 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 
 <div class="card mt-3">
-    <div class="card-body p-0">
+    <div class="card-body p-0" #tablaFoco>
       <!-- TABLA RESULTADOS -->  
       <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [selectionMode]="selectionMode" [responsive]="true" #tabla
         class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="seleccionaFila($event)" (onRowUnselect)="desSeleccionaFila()" [first]="first"

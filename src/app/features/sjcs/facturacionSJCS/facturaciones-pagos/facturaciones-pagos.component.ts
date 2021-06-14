@@ -4,15 +4,16 @@ import { SigaServices } from "../../../../_services/siga.service";
 import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { TranslateService } from '../../../../commons/translate';
-import { procesos_facturacionSJCS} from '../../../../permisos/procesos_facturacion';
+import { procesos_facturacionSJCS } from '../../../../permisos/procesos_facturacion';
 import { FiltroBusquedaFacturacionComponent } from "./filtro-busqueda-facturacion/filtro-busqueda-facturacion.component";
 import { TablaBusquedaFacturacionComponent } from "./tabla-busqueda-facturacion/tabla-busqueda-facturacion.component";
 import { FacturacionItem } from '../../../../models/sjcs/FacturacionItem';
+import { ErrorItem } from '../../../../models/ErrorItem';
 
 @Component({
-  selector: 'app-facturaciones-pagos',
-  templateUrl: './facturaciones-pagos.component.html',
-  styleUrls: ['./facturaciones-pagos.component.scss']
+	selector: 'app-facturaciones-pagos',
+	templateUrl: './facturaciones-pagos.component.html',
+	styleUrls: ['./facturaciones-pagos.component.scss']
 })
 
 export class FacturacionesYPagosComponent implements OnInit {
@@ -24,79 +25,88 @@ export class FacturacionesYPagosComponent implements OnInit {
 	msgs: any[] = [];
 	filtroSeleccionado: String;
 
-	@ViewChild(FiltroBusquedaFacturacionComponent) filtros;
-	@ViewChild(TablaBusquedaFacturacionComponent) tabla;
+	@ViewChild(FiltroBusquedaFacturacionComponent) filtros: FiltroBusquedaFacturacionComponent;
+	@ViewChild(TablaBusquedaFacturacionComponent) tabla: TablaBusquedaFacturacionComponent;
 
-  	constructor(private translateService: TranslateService,
+	constructor(private translateService: TranslateService,
 		private sigaServices: SigaServices,
 		private commonsService: CommonsService,
 		private persistenceService: PersistenceService,
 		private router: Router) { }
-  
-  	ngOnInit() { 
+
+	ngOnInit() {
 		this.buscar = this.filtros.buscar;
 
 		this.commonsService.checkAcceso(procesos_facturacionSJCS.facturacionYpagos).then(respuesta => {
-        	this.permisoEscritura = respuesta;
+			this.permisoEscritura = respuesta;
 
-        	this.persistenceService.setPermisos(this.permisoEscritura);
+			this.persistenceService.setPermisos(this.permisoEscritura);
 
 			if (this.permisoEscritura == undefined) {
 				sessionStorage.setItem("codError", "403");
-				sessionStorage.setItem("descError",	this.translateService.instant("generico.error.permiso.denegado"));
+				sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
 				this.router.navigate(["/errorAcceso"]);
 			}
 		}).catch(error => console.error(error));
 	}
 
-  	busqueda(event){
-		this.datosFiltros=this.persistenceService.getFiltrosAux();
-    	this.progressSpinner = true;
-		this.filtroSeleccionado=event;
+	busqueda(event) {
+		this.datosFiltros = this.persistenceService.getFiltrosAux();
+		this.progressSpinner = true;
+		this.filtroSeleccionado = event;
 
-		if(this.filtroSeleccionado=="facturacion"){
-			this.sigaServices.post("facturacionsjcs_buscarfacturaciones",this.datosFiltros).subscribe(
+		if (this.filtroSeleccionado == "facturacion") {
+			this.sigaServices.post("facturacionsjcs_buscarfacturaciones", this.datosFiltros).subscribe(
 				data => {
 					this.datos = JSON.parse(data.body).facturacionItem;
 					this.buscar = true;
-					
-					if (this.datos != undefined){
+					let error = JSON.parse(data.body).error;
+
+					if (error != undefined && error != null && error.description != null) {
+						if (error.code == '200') {
+							this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant(error.description));
+						} else {
+							this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+						}
+					}
+
+					if (this.datos != undefined) {
 						this.datos.forEach(element => {
-							if(element.importeTotal!=undefined){
+							if (element.importeTotal != undefined) {
 								element.importeTotalFormat = element.importeTotal.replace(".", ",");
-							
-								if (element.importeTotalFormat[0] == '.' || element.importeTotalFormat[0] == ','){
+
+								if (element.importeTotalFormat[0] == '.' || element.importeTotalFormat[0] == ',') {
 									element.importeTotalFormat = "0".concat(element.importeTotalFormat)
 								}
-							}else{
+							} else {
 								element.importeTotalFormat = 0;
-							}	
-							
-							if(element.importePagado!=undefined){
+							}
+
+							if (element.importePagado != undefined) {
 								element.importePagadoFormat = element.importePagado.replace(".", ",");
-								
-								if (element.importePagadoFormat[0] == '.' || element.importePagadoFormat[0] == ','){
+
+								if (element.importePagadoFormat[0] == '.' || element.importePagadoFormat[0] == ',') {
 									element.importePagadoFormat = "0".concat(element.importePagadoFormat)
 								}
-							}else{
+							} else {
 								element.importePagadoFormat = 0;
-							}					
+							}
 
-							if(element.importePendiente!=undefined){
+							if (element.importePendiente != undefined) {
 								element.importePendienteFormat = element.importePendiente.replace(".", ",");
-								
-								if (element.importePendienteFormat[0] == '.' || element.importePendienteFormat[0] == ','){
+
+								if (element.importePendienteFormat[0] == '.' || element.importePendienteFormat[0] == ',') {
 									element.importePendienteFormat = "0".concat(element.importePendienteFormat)
 								}
-							}else{
+							} else {
 								element.importePendienteFormat = 0;
 							}
 						});
 					}
-					
+
 					this.resetSelect();
 					this.progressSpinner = false;
-				},	  
+				},
 				err => {
 					if (err != undefined && JSON.parse(err.error).error.description != "") {
 						this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
@@ -105,31 +115,45 @@ export class FacturacionesYPagosComponent implements OnInit {
 					}
 
 					this.progressSpinner = false;
+				},
+				() => {
+					setTimeout(() => {
+						this.tabla.tablaFoco.nativeElement.scrollIntoView();
+					}, 5);
 				}
 			);
-		}else if(this.filtroSeleccionado=="pagos"){
-			this.sigaServices.post("facturacionsjcs_buscarPagos",this.datosFiltros).subscribe(
+		} else if (this.filtroSeleccionado == "pagos") {
+			this.sigaServices.post("facturacionsjcs_buscarPagos", this.datosFiltros).subscribe(
 				data => {
 					this.datos = JSON.parse(data.body).pagosjgItem;
 					this.buscar = true;
-					
-					if (this.datos != undefined){
+					let error = JSON.parse(data.body).error;
+
+					if (error != undefined && error != null && error.description != null) {
+						if (error.code == '200') {
+							this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant(error.description));
+						} else {
+							this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+						}
+					}
+
+					if (this.datos != undefined) {
 						this.datos.forEach(element => {
-							if(element.cantidad!=undefined){
+							if (element.cantidad != undefined) {
 								element.cantidadFormat = element.cantidad.replace(".", ",");
-							
-								if (element.cantidadFormat[0] == '.' || element.cantidadFormat[0] == ','){
+
+								if (element.cantidadFormat[0] == '.' || element.cantidadFormat[0] == ',') {
 									element.cantidadFormat = "0".concat(element.cantidadFormat)
 								}
-							}else{
+							} else {
 								element.cantidadFormat = 0;
-							}	
+							}
 						});
 					}
-					
+
 					this.resetSelect();
 					this.progressSpinner = false;
-				},	  
+				},
 				err => {
 					if (err != undefined && JSON.parse(err.error).error.description != "") {
 						this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
@@ -138,35 +162,40 @@ export class FacturacionesYPagosComponent implements OnInit {
 					}
 
 					this.progressSpinner = false;
+				},
+				() => {
+					setTimeout(() => {
+						this.tabla.tablaFoco.nativeElement.scrollIntoView();
+					}, 5);
 				}
 			);
 		}
 	}
-	
-	cambiaBuscar(event){
-		this.buscar=event;
+
+	cambiaBuscar(event) {
+		this.buscar = event;
 	}
 
 	resetSelect() {
 		if (this.tabla != undefined) {
-		  this.tabla.selectedDatos = [];
-		  this.tabla.numSelected = 0;
-		  this.tabla.selectMultiple = false;
-		  this.tabla.selectAll = false;
-		  if (this.tabla.tabla!=undefined) {
-			this.tabla.tabla.sortOrder = 0;
-			this.tabla.tabla.sortField = '';
-			this.tabla.tabla.reset();
-			this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
-		  }
+			this.tabla.selectedDatos = [];
+			this.tabla.numSelected = 0;
+			this.tabla.selectMultiple = false;
+			this.tabla.selectAll = false;
+			if (this.tabla.tabla != undefined) {
+				this.tabla.tabla.sortOrder = 0;
+				this.tabla.tabla.sortField = '';
+				this.tabla.tabla.reset();
+				this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
+			}
 		}
 	}
 
 	delete(event) {
 		this.progressSpinner = true;
 
-		if(this.filtroSeleccionado=="facturacion"){
-			this.sigaServices.post("facturacionsjcs_eliminarFacturacion",event).subscribe(
+		if (this.filtroSeleccionado == "facturacion") {
+			this.sigaServices.post("facturacionsjcs_eliminarFacturacion", event).subscribe(
 				data => {
 					console.log(data);
 					this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("messages.deleted.success"));
@@ -178,7 +207,7 @@ export class FacturacionesYPagosComponent implements OnInit {
 					this.progressSpinner = false;
 				}
 			);
-		}else if(this.filtroSeleccionado=="pagos"){
+		} else if (this.filtroSeleccionado == "pagos") {
 
 		}
 	}
@@ -186,14 +215,14 @@ export class FacturacionesYPagosComponent implements OnInit {
 	showMessage(severity, summary, msg) {
 		this.msgs = [];
 		this.msgs.push({
-		  severity: severity,
-		  summary: summary,
-		  detail: msg
+			severity: severity,
+			summary: summary,
+			detail: msg
 		});
-	  }
-	
+	}
+
 
 	clear() {
 		this.msgs = [];
-	  }
+	}
 }

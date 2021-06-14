@@ -2,14 +2,16 @@
 
 <div class="header-title">
     <i class="fa fa-square"></i>
-    <p>SJCS
-      <i class="fa fa-angle-right"></i> {{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.titulo' | translate}}
+    <p>SJCS&nbsp;
+        <i class="fa fa-angle-right"></i> {{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.titulo' | translate}}
     </p>
 </div>
 
 <div class="busqueda-container">
-    <app-filtro-busqueda-facturacion (busqueda)="busqueda($event)" [permisos]="permisoEscritura" (cambiaBuscar)="cambiaBuscar($event)"></app-filtro-busqueda-facturacion>
-    <app-tabla-busqueda-facturacion *ngIf="buscar" [datos]="datos" [permisos]="permisoEscritura" [filtroSeleccionado]="filtroSeleccionado" (delete)="delete($event)" ></app-tabla-busqueda-facturacion>
+    <app-filtro-busqueda-facturacion (busqueda)="busqueda($event)" [permisos]="permisoEscritura"
+        (cambiaBuscar)="cambiaBuscar($event)"></app-filtro-busqueda-facturacion>
+    <app-tabla-busqueda-facturacion *ngIf="buscar" [datos]="datos" [permisos]="permisoEscritura"
+        [filtroSeleccionado]="filtroSeleccionado" (delete)="delete($event)"></app-tabla-busqueda-facturacion>
 </div>
 
 <div *ngIf="progressSpinner || filtros.progressSpinnerFiltro" class="overlay-spinner">

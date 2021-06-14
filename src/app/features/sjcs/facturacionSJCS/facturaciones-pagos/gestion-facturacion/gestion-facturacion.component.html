@@ -3,21 +3,31 @@
 <div class="datos-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
-    <p>SJCS<i class="fa fa-angle-right"></i>{{'facturacionSJCS.facturacionesYPagos.fichaFacturacion' | translate}}</p>
+    <p>SJCS &nbsp;<i class="fa fa-angle-right"></i>{{'facturacionSJCS.facturacionesYPagos.fichaFacturacion' |
+      translate}}</p>
   </div>
-  
-  <app-datos-facturacion [insertConcept]="insertConcept" [numCriterios]="numCriterios" [cerrada]="cerrada" [idEstadoFacturacion]="idEstadoFacturacion" [idFacturacion]="idFacturacion" [modoEdicion]="modoEdicion" [permisos]="permisos" (changeModoEdicion)="changeModoEdicion($event)" (changeEstadoFacturacion)="changeEstadoFacturacion($event)" (changeCerrada)="changeCerrada($event)" (changeIdFacturacion)="changeIdFacturacion($event)"></app-datos-facturacion>
-  
-  <app-conceptos-facturacion [idEstadoFacturacion]="idEstadoFacturacion" [idFacturacion]="idFacturacion" [modoEdicion]="modoEdicion" [permisos]="permisos" [cerrada]="cerrada" (newConcept)="newConcept($event)" (changeNumCriterios)="changeNumCriterios($event)"></app-conceptos-facturacion>
-  
+
+  <app-datos-facturacion [insertConcept]="insertConcept" [numCriterios]="numCriterios" [cerrada]="cerrada"
+    [idEstadoFacturacion]="idEstadoFacturacion" [idFacturacion]="idFacturacion" [modoEdicion]="modoEdicion"
+    [permisos]="permisos" (changeModoEdicion)="changeModoEdicion($event)"
+    (changeEstadoFacturacion)="changeEstadoFacturacion($event)" (changeCerrada)="changeCerrada($event)"
+    (changeIdFacturacion)="changeIdFacturacion($event)"></app-datos-facturacion>
+
+  <app-conceptos-facturacion [idEstadoFacturacion]="idEstadoFacturacion" [idFacturacion]="idFacturacion"
+    [modoEdicion]="modoEdicion" [permisos]="permisos" [cerrada]="cerrada" (newConcept)="newConcept($event)"
+    (changeNumCriterios)="changeNumCriterios($event)"></app-conceptos-facturacion>
+
   <app-baremos [idFacturacion]="idFacturacion" [idEstadoFacturacion]="idEstadoFacturacion"></app-baremos>
-  
-  <app-pagos [idEstadoFacturacion]="idEstadoFacturacion" [idFacturacion]="idFacturacion" [modoEdicion]="modoEdicion" [permisos]="permisos" [cerrada]="cerrada"></app-pagos>
-  
-  <app-cartas-facturacion [idFacturacion]="idFacturacion" [idEstadoFacturacion]="idEstadoFacturacion"></app-cartas-facturacion>
+
+  <app-pagos [idEstadoFacturacion]="idEstadoFacturacion" [idFacturacion]="idFacturacion" [modoEdicion]="modoEdicion"
+    [permisos]="permisos" [cerrada]="cerrada"></app-pagos>
+
+  <app-cartas-facturacion [idFacturacion]="idFacturacion" [idEstadoFacturacion]="idEstadoFacturacion">
+  </app-cartas-facturacion>
 
   <div class="text-right main-button">
-    <button (click)="volver()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
+    <button (click)="volver()" pButton type="button" icon="fa fa-angle-left" iconPos="left"
+      label="{{ 'general.boton.volver' | translate}}"></button>
   </div>
 </div>
 
