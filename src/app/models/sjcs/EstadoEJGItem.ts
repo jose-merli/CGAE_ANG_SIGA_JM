@@ -7,7 +7,7 @@ export class EstadoEJGItem {
     automatico: String;
     propietario: String;
     user: String;
-
+    idinstitucion:String;
     idtipoejg:String;
     anio:String;
     numero:String;

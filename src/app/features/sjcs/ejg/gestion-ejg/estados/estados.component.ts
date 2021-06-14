@@ -38,6 +38,7 @@ export class EstadosComponent implements OnInit {
 
   comboEstadoEJG = [];
   valueComboEstado = "";
+  observaciones:string;
   fechaEstado = new Date();
   showModalAnadirEstado: boolean;
 
@@ -61,7 +62,7 @@ export class EstadosComponent implements OnInit {
   @Output() busqueda = new EventEmitter<boolean>();
 
   @ViewChild("table")
-  table;
+  table: DataTable;
 
   //[x: string]: any;
 
@@ -276,7 +277,6 @@ export class EstadosComponent implements OnInit {
         }
       );
     }
-    
     
 
   
