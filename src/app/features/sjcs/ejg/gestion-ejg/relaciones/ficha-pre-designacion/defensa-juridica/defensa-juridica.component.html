@@ -6,7 +6,7 @@
         <div class="col-lg-1 col-md-2" (click)="abreCierra()">
           <!-- (click)="" -->
           <div class="img-colegiado">
-            <i class="far fa-user icon-ficha pointer"></i>
+            <i class="fa fa-user icon-ficha pointer"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
@@ -28,7 +28,7 @@
         (click)="abreCierra()">
         <!-- (click)="" -->
         <div class="img-colegiado">
-          <i class="far fa-user icon-ficha"></i>
+          <i class="fa fa-user icon-ficha"></i>
         </div>
         <label class="title-ficha pointer">{{ 'justiciaGratuita.ejg.preDesigna.defensaJuridica' | translate }}</label>
         <i class="fa fa-angle-up ml-auto"></i>
@@ -37,35 +37,36 @@
     <div *ngIf="openDef" class="card-body card-body-ficha">
       <div class="form-row">
         <div class="form-group-interlineado col-lg-3 col-md-3">
-          <label>{{'justiciaGratuita.ejg.datosGenerales.numAnnioProcedimiento'|translate}}</label>
+          <label>{{'justiciaGratuita.ejg.datosGenerales.annioNum' |translate}}</label>
           <input type="text" class="form-control" maxLength="4" (keypress)="numberOnly($event)" pInputText
             [(ngModel)]="body.numAnnioProcedimiento">
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{'justiciaGratuita.ejg.datosGenerales.NIG'|translate}}</label>
-          <input type="text" class="form-control" maxLength="49" pInputText [(ngModel)]="body.NIG">
+          <input type="text" class="form-control" maxLength="49" pInputText [(ngModel)]="body.nig">
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ 'justiciaGratuita.ejg.datosGenerales.Juzgado' | translate}}</label>
           <p-dropdown class="select-form" [(ngModel)]='body.juzgado' placeholder="Seleccionar"
-            [options]="comboJuzgado" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+            [options]="comboJuzgado" (onChange)="onChangeJuzgado()" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{'justiciaGratuita.maestros.Procedimiento'|translate}}</label>
-          <p-dropdown class="select-form" [(ngModel)]='body.procedimiento' placeholder="Seleccionar"
-            [options]="comboProcedimiento" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
+          <p-dropdown class="select-form" [(ngModel)]='body.idPretension' placeholder="Seleccionar"
+            [options]="comboProcedimiento" [(disabled)]="isDisabledProcedimiento" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
           </p-dropdown>
         </div>
+
         <div class="form-group-interlineado col-lg-3 col-md-3">
-          <label>{{"enviosMasivos.literal.asunto" | translate}}</label>
-          <input type="text" class="form-control" maxLength="1023" pInputText [(ngModel)]="body.asunto">
+          <label>{{"justiciaGratuita.Calendarios.Observaciones" | translate}}</label>
+          <input type="text" class="form-control" maxLength="1023" pInputText [(ngModel)]="body.observaciones">
         </div>
         <div class="form-group col-lg-3 col-md-3 w-100">
-          <label>Delitos</label>
-          <p-dropdown class="select-form" [(ngModel)]="delitosValue"
-                  placeholder="{{'general.boton.seleccionar' | translate}}" 
-                  [options]="delitosOpciones" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
-                </p-dropdown>
+          <label>{{"justiciaGratuita.ejg.preDesigna.delitos" | translate}}</label>
+          <p-multiSelect #someDropdown [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='delitosValue'
+                [options]="comboDelitos" [selectedItemsLabel]="textSelected" styleClass="widthAll" [filter]="true"
+                filterBy="label,labelSinTilde" maxSelectedLabels="10" selectionLimits="10"
+                [panelStyle]="{width:'100%'}"></p-multiSelect>
         </div>
       </div>
       <div class="form-row">
@@ -119,7 +120,7 @@
         <button (click)="rest()" pButton type="button" icon="fa fa-undo" iconPos="left"
           label="{{ 'general.boton.restablecer' | translate}}"></button>
 
-        <button (click)="save()" pButton type="button" icon="fa fa-save" iconPos="left"
+        <button (click)="checkSave()" pButton type="button" icon="fa fa-save" iconPos="left"
           label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>

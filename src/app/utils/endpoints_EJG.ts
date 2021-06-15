@@ -30,6 +30,7 @@ export let endpoints_EJG: any = {
     gestionejg_comboSituaciones: "ejg/gestion-ejg/comboSituaciones",
     gestionejg_comboCDetencion: "ejg/gestion-ejg/comboCDetencion",
     gestionejg_comboTipoencalidad: "ejg/gestion-ejg/comboTipoencalidad",
+    gestionejg_comboDelitos: "ejg/gestion-ejg/comboDelitos",
     
     //Busqueda EJG
     gestionejg_descargarExpedientesJG: "ejg/gestion-ejg/descargarExpedientesJG",
@@ -81,6 +82,12 @@ export let endpoints_EJG: any = {
     gestionejg_updateRepresentanteContrarioEJG: "ejg/gestion-ejg/updateRepresentanteContrarioEJG",
     gestionejg_updateAbogadoContrarioEJG: "ejg/gestion-ejg/updateAbogadoContrarioEJG",
     gestionejg_updateProcuradorContrarioEJG: "ejg/gestion-ejg/updateProcuradorContrarioEJG",
+    gestionejg_busquedaProcuradorEJG: "ejg/gestion-ejg/busquedaProcuradorEJG",
+    gestionejg_guardarProcuradorEJG: "ejg/gestion-ejg/guardarProcuradorEJG",
+    gestionejg_nuevoProcuradorEJG: "ejg/gestion-ejg/nuevoProcuradorEJG",
+    gestionejg_getDelitosEJG: "ejg/gestion-ejg/getDelitosEJG",
+    gestionejg_actualizarDelitosEJG: "ejg/gestion-ejg/actualizarDelitosEJG",
+
 
     //comunicaciones
     gestionejg_getComunicaciones: "ejg/gestion-ejg/getComunicaciones"

@@ -122,6 +122,9 @@ export class RelacionesComponent implements OnInit {
         // this.nExpedientes = this.expedientesEcon.length;
         // this.persistenceService.setFiltrosAux(this.expedientesEcon);
         // this.router.navigate(['/gestionEjg']);
+        let pre = new RelacionesItem();
+        pre.sjcs="PRE-DESIGNACION";
+        this.relaciones.push(pre);
         this.progressSpinner = false;
       },
       err => {
@@ -135,6 +138,11 @@ export class RelacionesComponent implements OnInit {
     if (dato.fechabaja == null) return false;
     else return true;
   }
+
+  checkPre(dato){
+    if (dato.sjcs == "PRE-DESIGNACION") return true;
+    else return false;
+  }
   openTab(evento) {
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos();
@@ -142,6 +150,9 @@ export class RelacionesComponent implements OnInit {
     if (!this.selectAll && !this.selectMultiple) {
       // this.progressSpinner = true;
       // this.datosEJG();
+      if(evento.sjcs=="PRE-DESIGNACION"){
+        this.router.navigate(["/ficha-pre-designacion"]);
+      }
 
     } else {
       if (evento.data.fechabaja == undefined && this.historico) {
@@ -379,6 +390,10 @@ export class RelacionesComponent implements OnInit {
   }
 
   navigateToFichaPre(){
+    //Comprobamos si entre la relaciones hay una designacion
+    this.relaciones.forEach(element => {
+      if(element.sjcs=="DESIGNACIÓN")sessionStorage.setItem("Designa", JSON.stringify(element));
+    });
     this.router.navigate(["/ficha-pre-designacion"]);
   }
 

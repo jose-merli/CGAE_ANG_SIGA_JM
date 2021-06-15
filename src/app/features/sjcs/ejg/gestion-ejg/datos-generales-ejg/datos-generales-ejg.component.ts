@@ -155,7 +155,6 @@ export class DatosGeneralesEjgComponent implements OnInit {
         this.body.prestacion = this.bodyInicial.prestacion;
       },
       err => {
-        console.log(err);
       }
     );
 

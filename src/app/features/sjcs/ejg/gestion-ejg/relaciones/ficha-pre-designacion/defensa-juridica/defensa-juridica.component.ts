@@ -9,6 +9,10 @@ import { MultiSelect } from 'primeng/multiselect';
 import { noComponentFactoryError } from '@angular/core/src/linker/component_factory_resolver';
 import { Message } from 'primeng/components/common/api';
 import { Location } from '@angular/common';
+import { DesignaItem } from '../../../../../../../models/sjcs/DesignaItem';
+import { AuthenticationService } from "../../../../../../../_services/authentication.service";
+import { flattenStyles } from '@angular/platform-browser/src/dom/dom_renderer';
+import { ParametroRequestDto } from '../../../../../../../models/ParametroRequestDto';
 
 @Component({
   selector: 'app-defensa-juridica',
@@ -19,16 +23,23 @@ export class DefensaJuridicaComponent implements OnInit {
 
   progressSpinner: boolean = false;
   body: EJGItem = new EJGItem();
+  designa: DesignaItem = new DesignaItem();
   bodyInicial: EJGItem;
   permisoEscritura: boolean = false;
 
-  comboPreceptivo;
-  comboRenuncia;
-  comboSituacion;
-  comboComisaria;
-  comboCalidad;
-  comboJuzgado;
-  comboProcedimiento;
+  isDisabledProcedimiento: boolean = true;
+
+  textFilter: string = "Seleccionar";
+  textSelected: String = '{0} opciones seleccionadas';
+
+  comboPreceptivo = [];
+  comboRenuncia = [];
+  comboSituacion = [];
+  comboComisaria = [];
+  comboCalidad = [];
+  comboJuzgado = [];
+  comboProcedimiento = [];
+  comboDelitos = [];
 
   comisariaCabecera;
   calidadCabecera;
@@ -37,9 +48,8 @@ export class DefensaJuridicaComponent implements OnInit {
 
   openDef: boolean = false;
   
-  initDelitos: any;
-  delitosValue: any;
-  delitosOpciones: any;
+  delitosValueInicial: any;
+  delitosValue: any = [];
 
   msgs: Message[] = [];
 
@@ -47,23 +57,93 @@ export class DefensaJuridicaComponent implements OnInit {
     private commonsServices: CommonsService,
     private translateService: TranslateService,
     private router: Router,
+    private authenticationService: AuthenticationService,
     private location: Location) { }
 
   ngOnInit() {
     //Los valores de la cabecera se actualizan en cada combo y al en el metodo getCabecera()
     //Se asignan al iniciar la tarjeta y al guardar.
 
+    //if(sessionStorage.getItem("Designa"))this.getDesigna();
     this.getComboPreceptivo();
     this.getComboRenuncia();
     this.getComboSituaciones();
     this.getComboCDetencion();
     this.getComboCalidad();
     this.getComboJuzgado();
-    this.getComboProcedimiento();
+    if(this.body.juzgado!=null)this.getComboProcedimiento();
+    this.getComboDelitos();
     this.body = this.persistenceService.getDatos();
 
     this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-    this.initDelitos = this.delitosValue;
+
+    if (this.body.juzgado != undefined && this.body.juzgado != null) this.isDisabledProcedimiento = false;
+
+  }
+
+  //Codigo copiado de la tarjeta detalles de la ficha de designaciones
+  async validarNig(nig) {
+    let ret = false;
+    let parametro = new ParametroRequestDto();
+    parametro.idInstitucion = this.body.idInstitucion;
+    parametro.modulo = "SCS";
+    parametro.parametrosGenerales = "NIG_VALIDADOR";
+    await this.sigaServices
+      .postPaginado("parametros_search", "?numPagina=1", parametro)
+      .toPromise().then(
+        data => {
+          let searchParametros = JSON.parse(data["body"]);
+          let datosBuscar = searchParametros.parametrosItems;
+          datosBuscar.forEach(element => {
+            if (element.parametro == "NIG_VALIDADOR" && (element.idInstitucion == element.idinstitucionActual || element.idInstitucion == '0')) {
+              let valorParametroNIG = element.valor;
+              if (nig != '') {
+                ret = valorParametroNIG.test(nig);
+                if(ret) this.save();
+              }
+              else{
+                this.save();
+              }
+            }
+          });
+        }).catch(error => {
+          this.progressSpinner = false;
+          let severity = "error";
+            let summary = this.translateService.instant("justiciaGratuita.oficio.designa.NIGInvalido");
+            let detail = "";
+            this.msgs.push({
+              severity,
+              summary,
+              detail
+            });
+            ret = false;
+          });
+   
+    if(ret) this.save();
+  }
+
+  validarNProcedimiento(nProcedimiento) {
+    //Esto es para la validacion de CADENA
+
+    //Obtenemos la institucion actual
+    let idInstitucion = this.body.idInstitucion;
+
+    //Codigo copiado de la tarjeta detalles de la ficha de designaciones
+    if (idInstitucion == "2008" || idInstitucion == "2015" || idInstitucion == "2029" || idInstitucion == "2033" || idInstitucion == "2036" ||
+    idInstitucion == "2043" || idInstitucion == "2006" || idInstitucion == "2021" || idInstitucion == "2035" || idInstitucion == "2046" || idInstitucion == "2066") {
+      if (nProcedimiento != '') {
+        var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{5}[\.]{1}[0-9]{2}$/;
+        var ret = objRegExp.test(nProcedimiento);
+        return ret;
+      }
+      else
+        return true;
+    } else {
+       // var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{7}[/]$/;
+       var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{7}$/;
+        var ret = objRegExp.test(nProcedimiento);
+        return ret;
+    }
 
   }
 
@@ -131,10 +211,28 @@ export class DefensaJuridicaComponent implements OnInit {
 
   rest() {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    this.delitosValue = this.delitosValueInicial;
+  }
+
+  checkSave(){
+    //Comprobamos que el numero de procedimiento tiene el formato adecuado según la institucion
+    if(this.validarNProcedimiento(this.body.numAnnioProcedimiento))this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.preDesigna.errorNumProc"));
+    //Comprobamos el formato del NIG y al ser un servicio siga, a llamada del metodo de guardado estar en su interior.
+    else this.validarNig(this.body.nig)
   }
 
   save() {
     this.progressSpinner = true;
+
+    this.body.delitos = null;
+    this.delitosValue.forEach(delitoEJG => {
+      this.comboDelitos.forEach(delito => {
+        if(delitoEJG==delito.value){
+          if(this.body.delitos==null)this.body.delitos = delito.label;
+          else this.body.delitos = this.body.delitos+", "+delito.label;
+        }
+      })
+    });
 
     this.sigaServices.post("gestionejg_updateDatosJuridicos", this.body).subscribe(
       n => {
@@ -143,6 +241,28 @@ export class DefensaJuridicaComponent implements OnInit {
           this.bodyInicial = this.body;
           this.persistenceService.setDatos(this.body);
           this.getCabecera();
+          this.actualizarDelitosEJG();
+        }
+        else{
+           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+          this.progressSpinner = false;
+        }
+      },
+      err => {
+        this.progressSpinner = false;
+
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
+  }
+
+  actualizarDelitosEJG(){
+    let peticionDelitos: EJGItem = this.body;
+    if( peticionDelitos.delitos!=null) peticionDelitos.delitos = this.delitosValue.toString();
+    this.sigaServices.post("gestionejg_actualizarDelitosEJG", peticionDelitos).subscribe(
+      n => {
+        if (n.statusText == "OK") {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         }
         else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         this.progressSpinner = false;
@@ -204,6 +324,19 @@ export class DefensaJuridicaComponent implements OnInit {
     );
   }
 
+  getComboDelitos() {
+    this.sigaServices.get("gestionejg_comboDelitos").subscribe(
+      n => {
+        this.comboDelitos = n.combooItems;
+        this.commonsServices.arregloTildesCombo(this.comboDelitos);
+        this.getDelitosEJG();
+      },
+      err => {
+      }, () => {
+      }
+    );
+  }
+
   getComboCalidad() {
     this.sigaServices.get("gestionejg_comboTipoencalidad").subscribe(
       n => {
@@ -233,17 +366,15 @@ export class DefensaJuridicaComponent implements OnInit {
         });
       },
       err => {
-        console.log(err);
       }
     );
   }
 
   getComboProcedimiento() {
-    this.sigaServices
-      .get("busquedaProcedimientos_procedimientos")
+    this.sigaServices.post("combo_comboProcedimientosConJuzgado",this.body.juzgado)//combo_comboProcedimientosConJuzgado
       .subscribe(
         n => {
-          this.comboProcedimiento = n.combooItems;
+          this.comboProcedimiento = JSON.parse(n.body).combooItems;
           this.commonsServices.arregloTildesCombo(this.comboProcedimiento);
           //Valor de la cabecera para procedimiento
           this.comboProcedimiento.forEach(element => {
@@ -253,6 +384,35 @@ export class DefensaJuridicaComponent implements OnInit {
         err => {
         }
       );
+  }
+
+  getDelitosEJG() {
+    this.sigaServices.post("gestionejg_getDelitosEJG",this.body)
+      .subscribe(
+        n => {
+          let delitosEjg = JSON.parse(n.body).delitosEjgItem;
+          delitosEjg.forEach(element => {
+            this.delitosValue.push(element.iddelito);
+          });
+          this.delitosValueInicial = this.delitosValue;
+        },
+        err => {
+        }
+      );
+  }
+
+  //Cada vez que se cambia el valor del desplegable de turnos
+  onChangeJuzgado() {
+    this.comboProcedimiento = [];
+    this.body.procedimiento = null;
+
+    if (this.body.juzgado != undefined) {
+      this.isDisabledProcedimiento = false;
+      this.getComboProcedimiento();
+    } else {
+      this.isDisabledProcedimiento = true;
+      //this.body.procedimiento = "";
+    }
   }
 
   numberOnly(event): boolean {
@@ -265,6 +425,8 @@ export class DefensaJuridicaComponent implements OnInit {
 
     }
   }
+  
+  
 
   showMessage(severity, summary, msg) {
     this.msgs = [];

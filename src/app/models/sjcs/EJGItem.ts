@@ -37,6 +37,7 @@ export class EJGItem {
     fechaImpugnacionDesd: Date;
     fechaImpugnacionHast: Date;
 
+    //Defensa juridica
     juzgado: string;
     asunto: string;
     calidad: string;
@@ -48,6 +49,9 @@ export class EJGItem {
     idsituacion: number;
 	numerodiligencia: string;
 	comisaria: number;
+    delitos: string;
+    idPretension: number;
+    observaciones: string;
 
     annioCAJG: string;
     numCAJG: string;
@@ -102,6 +106,9 @@ export class EJGItem {
 
     fechaEstadoNew: Date;
     estadoNew: String;
+
+    idProcurador: string;
+    idInstitucionProc: number;
 
     constructor() { }
 }
