@@ -15,23 +15,40 @@ import {
 import { Observable } from 'rxjs/Rx';
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { AuthenticationService } from '../../_services/authentication.service';
+import { SigaStorageService } from '../../siga-storage.service';
+import { ColegiadoItem } from '../../models/ColegiadoItem';
 @Component({
 	selector: 'app-home',
 	templateUrl: './home.component.html',
 	styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-	constructor(private sigaServices: SigaServices, private oldSigaServices: OldSigaServices,private authenticationService: AuthenticationService, handler: HttpBackend) {
+	constructor(private sigaServices: SigaServices, private oldSigaServices: OldSigaServices,private authenticationService: AuthenticationService, handler: HttpBackend,
+		private localStorageService: SigaStorageService) {
 		this.http = new HttpClient(handler);
 		this.oldSigaServices = oldSigaServices;
 	}
 	generalBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
 	private http: HttpClient;
 	ngOnInit() {
+		this.sigaServices.get('getLetrado').subscribe(
+			(data) => {
+				if (data.value == 'S') {
+					this.localStorageService.isLetrado = true;
+				} else {
+					this.localStorageService.isLetrado = false;
+				}
+			},
+			(err) => {
+				console.log(err);
+			}
+		);
 		this.getLetrado();
 		this.getColegiadoLogeado();
 		//this.getMantenerSesion();
 		this.oldSigaLogin();
+		this.getDataLoggedUser();
+		this.getInstitucionActual();
 	}
 
 	oldSigaLogin() {
@@ -106,5 +123,25 @@ export class HomeComponent implements OnInit {
 				return true;
 			}
 		});
+	}
+
+	getDataLoggedUser() {
+		this.sigaServices.get("usuario_logeado").subscribe(n => {
+			const usuario = n.usuarioLogeadoItem;
+			const colegiadoItem = new ColegiadoItem();
+			colegiadoItem.nif = usuario[0].dni;
+			this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(
+				usr => {
+					let usuarioLogado = JSON.parse(usr.body).colegiadoItem[0];
+					if(usuarioLogado) {
+						this.localStorageService.idPersona = usuarioLogado.idPersona;
+						this.localStorageService.numColegiado = usuarioLogado.numColegiado;
+					}
+				});
+		});
+	}
+
+	getInstitucionActual() {
+		this.sigaServices.get("institucionActual").subscribe(n => { this.localStorageService.institucionActual = n.value });
 	}
 }

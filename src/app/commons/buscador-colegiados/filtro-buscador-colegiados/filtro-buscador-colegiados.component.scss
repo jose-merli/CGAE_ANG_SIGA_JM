@@ -1,0 +1,30 @@
+::ng-deep {
+
+    #buscadorColegiados {
+        .mat-expansion-panel {
+            box-shadow: none !important;
+        }
+
+        .mat-expansion-panel-header {
+            padding-right: 0px !important;
+            padding-left: 0px !important;
+            border-bottom: 1px solid black;
+        }
+
+        .mat-expansion-panel-body {
+            padding-left: 0px !important;
+            padding-right: 0px !important;
+        }
+
+        div.mat-expansion-panel-content {
+            margin-top: 0.5rem !important;
+        }
+
+        .padding-interior {
+            padding-left: 1.25rem !important;
+            padding-right: 1.25rem !important;
+            padding-top: 0.6rem !important;
+        }
+    }
+
+}

@@ -43,17 +43,17 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
 
     if (this.persistenceService.getFiltros() != undefined) {
       this.filtros = this.persistenceService.getFiltros();
-      if(this.filtros.modoBusqueda != undefined){
+      if (this.filtros.modoBusqueda != undefined) {
         this.modoBusqueda = this.filtros.modoBusqueda;
 
-        if(this.modoBusqueda == "f"){
+        if (this.modoBusqueda == "f") {
           this.modoBusquedaFacturacion = true;
-        }else{
+        } else {
           this.modoBusquedaFacturacion = false;
         }
       }
 
-      if(this.checkFiltersInit()){
+      if (this.checkFiltersInit()) {
         this.emitSearch.emit(this.modoBusqueda)
       }
 
@@ -162,12 +162,20 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
 
   recuperarColegiado(event) {
     if (event != undefined) {
-      this.filtros.apellidosNombre = event.nombre;
+      this.filtros.apellidosNombre = event.nombreAp;
       this.filtros.ncolegiado = event.nColegiado;
       this.filtros.idPersona = event.idPersona;
     } else {
       this.filtros.apellidosNombre = undefined;
       this.filtros.ncolegiado = undefined;
+      this.filtros.idPersona = undefined;
+    }
+  }
+
+  recuperarIdPersona(event) {
+    if (event != undefined && event != '') {
+      this.filtros.idPersona = event;
+    } else {
       this.filtros.idPersona = undefined;
     }
   }
@@ -179,24 +187,24 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
       (this.filtros.idTurno == null || this.filtros.idTurno == undefined))) {
 
 
-        if (this.modoBusquedaFacturacion){
-          if(this.filtros.idFacturacion == null || this.filtros.idFacturacion == undefined){
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
-            return false;
+      if (this.modoBusquedaFacturacion) {
+        if (this.filtros.idFacturacion == null || this.filtros.idFacturacion == undefined) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
+          return false;
 
-          }else{
-            return true;
-          }
-        }else{
-          if(this.filtros.idPago == null || this.filtros.idPago == undefined){
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
-            return false;
+        } else {
+          return true;
+        }
+      } else {
+        if (this.filtros.idPago == null || this.filtros.idPago == undefined) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
+          return false;
 
-          }else{
-            return true;
-          }
-        } 
-  
+        } else {
+          return true;
+        }
+      }
+
     } else {
       return true;
     }
@@ -209,22 +217,22 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
       (this.filtros.idTurno == null || this.filtros.idTurno == undefined))) {
 
 
-        if (this.modoBusquedaFacturacion){
-          if(this.filtros.idFacturacion == null || this.filtros.idFacturacion == undefined){
-            return false;
+      if (this.modoBusquedaFacturacion) {
+        if (this.filtros.idFacturacion == null || this.filtros.idFacturacion == undefined) {
+          return false;
 
-          }else{
-            return true;
-          }
-        }else{
-          if(this.filtros.idPago == null || this.filtros.idPago == undefined){
-            return false;
+        } else {
+          return true;
+        }
+      } else {
+        if (this.filtros.idPago == null || this.filtros.idPago == undefined) {
+          return false;
 
-          }else{
-            return true;
-          }
-        } 
-  
+        } else {
+          return true;
+        }
+      }
+
     } else {
       return true;
     }

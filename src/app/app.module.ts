@@ -354,6 +354,7 @@ import { ResumenPagosComponent } from './features/sjcs/facturacionSJCS/resumen-p
 import { RetencionesJudicialesComponent } from './features/sjcs/facturacionSJCS/retenciones-judiciales/retenciones-judiciales.component';
 import { TramosLECComponent } from './features/sjcs/facturacionSJCS/tramos-lec/tramos-lec.component';
 
+import { SigaStorageService } from './siga-storage.service';
 
 @NgModule({
 	declarations: [
@@ -718,6 +719,7 @@ import { TramosLECComponent } from './features/sjcs/facturacionSJCS/tramos-lec/t
 		OldSigaServices,
 		SigaServices,
 		CommonsService,
+		SigaStorageService,
 		cardService,
 		HeaderGestionEntidadService,
 		MessageService,
