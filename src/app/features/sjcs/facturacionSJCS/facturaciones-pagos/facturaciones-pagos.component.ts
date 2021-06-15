@@ -55,6 +55,39 @@ export class FacturacionesYPagosComponent implements OnInit {
 		this.progressSpinner = true;
 		this.filtroSeleccionado = event;
 
+		// Modificaciones para pasar de select a multiselect por usabilidad
+		if (undefined != this.datosFiltros.idEstado) {
+			if (this.datosFiltros.idEstado.length == 0) {
+				this.datosFiltros.idEstado = undefined;
+			} else {
+				this.datosFiltros.idEstado = this.datosFiltros.idEstado.toString();
+			}
+		}
+
+		if (undefined != this.datosFiltros.idPartidaPresupuestaria) {
+			if (this.datosFiltros.idPartidaPresupuestaria.length == 0) {
+				this.datosFiltros.idPartidaPresupuestaria = undefined;
+			} else {
+				this.datosFiltros.idPartidaPresupuestaria = this.datosFiltros.idPartidaPresupuestaria.toString();
+			}
+		}
+
+		if (undefined != this.datosFiltros.idConcepto) {
+			if (this.datosFiltros.idConcepto.length == 0) {
+				this.datosFiltros.idConcepto = undefined;
+			} else {
+				this.datosFiltros.idConcepto = this.datosFiltros.idConcepto.toString();
+			}
+		}
+
+		if (undefined != this.datosFiltros.idFacturacion) {
+			if (this.datosFiltros.idFacturacion.length == 0) {
+				this.datosFiltros.idFacturacion = undefined;
+			} else {
+				this.datosFiltros.idFacturacion = this.datosFiltros.idFacturacion.toString();
+			}
+		}
+
 		if (this.filtroSeleccionado == "facturacion") {
 			this.sigaServices.post("facturacionsjcs_buscarfacturaciones", this.datosFiltros).subscribe(
 				data => {

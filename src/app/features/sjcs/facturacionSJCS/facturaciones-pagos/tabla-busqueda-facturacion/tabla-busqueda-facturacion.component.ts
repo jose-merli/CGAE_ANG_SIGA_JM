@@ -17,8 +17,8 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
   msgs;
   buscadores = [];
   selectedItem: number = 10;
-  selectionMode: String= "single";
- 
+  selectionMode: String = "multiple";
+
   selectedDatos = [];
   numSelected = 0;
   selectMultiple: boolean = false;
@@ -34,16 +34,16 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
   @Input() permisos;
 
   @Output() delete = new EventEmitter<String>();
-  
+
   @ViewChild("tabla") tabla;
   @ViewChild("tablaFoco") tablaFoco: ElementRef;
-  
+
   constructor(private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private confirmationService: ConfirmationService) {}
+    private confirmationService: ConfirmationService) { }
 
   ngOnInit() {
     if (this.persistenceService.getPaginacion() != undefined) {
@@ -57,47 +57,74 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
     this.getCols();
 
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
-    
-    this.selectionMode="single";
   }
 
   desSeleccionaFila() {
-    if(this.filtroSeleccionado=='facturacion'){
-      this.numSelected=0;
-    }else if(this.filtroSeleccionado=='pagos'){
-      this.numSelected = this.selectedDatos.length;
-    }
+    // if (this.filtroSeleccionado == 'facturacion') {
+    //   this.numSelected = 0;
+    // } else if (this.filtroSeleccionado == 'pagos') {
+    //   this.numSelected = this.selectedDatos.length;
+    // }
+    this.numSelected = this.selectedDatos.length;
   }
-  
+
   seleccionaFila(evento) {
-    if (!this.selectMultiple) {
+    // if (!this.selectMultiple) {
 
-      let paginacion = {
-        paginacion: this.tabla.first,
-        selectedItem: this.selectedItem
-      };
+    //   let paginacion = {
+    //     paginacion: this.tabla.first,
+    //     selectedItem: this.selectedItem
+    //   };
 
-      this.persistenceService.setPaginacion(paginacion);
-      
-      let datos = evento.data;
-      datos.filtroSeleccionado=this.filtroSeleccionado;
+    //   this.persistenceService.setPaginacion(paginacion);
 
-      this.persistenceService.setDatos(datos);
+    //   let datos = evento.data;
+    //   datos.filtroSeleccionado = this.filtroSeleccionado;
 
-      if(this.filtroSeleccionado=="facturacion"){
-        this.router.navigate(["/fichaFacturacion"]);
-      }
-      
-      if(this.filtroSeleccionado=="pagos"){
-        this.router.navigate(["/fichaPagos"]);
-      }
-    }else{
-      if(this.filtroSeleccionado=='facturacion'){
-        this.numSelected=1;
-      }else if(this.filtroSeleccionado=='pagos'){
-        this.numSelected = this.selectedDatos.length;
-      }
-    } 
+    //   this.persistenceService.setDatos(datos);
+
+    //   if (this.filtroSeleccionado == "facturacion") {
+    //     this.router.navigate(["/fichaFacturacion"]);
+    //   }
+
+    //   if (this.filtroSeleccionado == "pagos") {
+    //     this.router.navigate(["/fichaPagos"]);
+    //   }
+    // } else {
+    //   if (this.filtroSeleccionado == 'facturacion') {
+    //     this.numSelected = 1;
+    //   } else if (this.filtroSeleccionado == 'pagos') {
+    //     this.numSelected = this.selectedDatos.length;
+    //   }
+    // }
+
+
+
+    let paginacion = {
+      paginacion: this.tabla.first,
+      selectedItem: this.selectedItem
+    };
+
+    this.persistenceService.setPaginacion(paginacion);
+
+    let datos = evento.data;
+    datos.filtroSeleccionado = this.filtroSeleccionado;
+
+    this.persistenceService.setDatos(datos);
+
+    this.numSelected = this.selectedDatos.length;
+  }
+
+  openFicha() {
+
+    if (this.filtroSeleccionado == "facturacion") {
+      this.router.navigate(["/fichaFacturacion"]);
+    }
+
+    if (this.filtroSeleccionado == "pagos") {
+      this.router.navigate(["/fichaPagos"]);
+    }
+
   }
 
   onChangeRowsPerPages(event) {
@@ -106,32 +133,12 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
     this.tabla.reset();
   }
 
-  isSelectMultiple() {
-    if (this.permisos) {
-      this.selectMultiple = !this.selectMultiple;
-      this.selectAll=false;
-      this.numSelected = 0;
-      this.selectAll = false;
-      this.selectedDatos = [];
-
-      if (!this.selectMultiple) {
-        this.selectionMode="single";
-      } else {
-        if(this.filtroSeleccionado=='facturacion'){
-          this.selectionMode="single";
-        }else if(this.filtroSeleccionado=='pagos'){
-          this.selectionMode="multiple";
-        }
-      }
-    }
-  }
-
   onChangeSelectAll() {
     if (this.selectAll === true) {
       this.selectMultiple = false;
       this.selectedDatos = this.datos;
       this.numSelected = this.datos.length;
-      this.selectMultiple=false;
+      this.selectMultiple = false;
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
@@ -173,7 +180,7 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
   }
 
   getCols() {
-    if(this.filtroSeleccionado=="facturacion"){
+    if (this.filtroSeleccionado == "facturacion") {
       this.cols = [
         { field: "fechaDesde", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaDesde", width: "10%" },
         { field: "fechaHasta", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaHasta", width: "10%" },
@@ -185,7 +192,7 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
         { field: "fechaEstado", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaEstado", width: "10%" },
         { field: "desEstado", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado", width: "10%" }
       ];
-    }else if(this.filtroSeleccionado=="pagos"){
+    } else if (this.filtroSeleccionado == "pagos") {
       this.cols = [
         { field: "fechaDesde", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaDesde", width: "10%" },
         { field: "fechaHasta", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaHasta", width: "10%" },
@@ -197,7 +204,7 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
         { field: "desEstado", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado", width: "15%" }
       ];
     }
-    
+
     this.cols.forEach(it => this.buscadores.push(""));
     this.rowsPerPage = [
       {
@@ -219,25 +226,25 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
     ];
   }
 
-  checkDelete(selectedDatos){
+  checkDelete(selectedDatos) {
     let encontrado = false;
 
-    if(selectedDatos.idEstado!='30'){
-      encontrado=true;
-      for(let i=0; i<this.datos.length; i++){
-        if(this.datos[i].idFacturacion==selectedDatos.idFacturacion && this.datos[i].idInstitucion==selectedDatos.idInstitucion &&
-          this.datos[i].fechaEstado>selectedDatos.fechaEstado){
-            encontrado=false;
-            break;
-          }
+    if (selectedDatos.idEstado != '30') {
+      encontrado = true;
+      for (let i = 0; i < this.datos.length; i++) {
+        if (this.datos[i].idFacturacion == selectedDatos.idFacturacion && this.datos[i].idInstitucion == selectedDatos.idInstitucion &&
+          this.datos[i].fechaEstado > selectedDatos.fechaEstado) {
+          encontrado = false;
+          break;
+        }
       }
     }
     return encontrado;
   }
 
-  confirmDelete(selectedDatos) {     
-    if(undefined!=selectedDatos.idFacturacion || null!=selectedDatos.idFacturacion){
-      if(this.checkDelete(selectedDatos)){
+  confirmDelete(selectedDatos) {
+    if (undefined != selectedDatos.idFacturacion || null != selectedDatos.idFacturacion) {
+      if (this.checkDelete(selectedDatos)) {
         let mess = this.translateService.instant(
           "messages.deleteConfirmation"
         );
@@ -253,16 +260,16 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
             this.showMessage("info", "Info", this.translateService.instant("general.message.accion.cancelada"));
           }
         });
-      }else{
+      } else {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.mensajeErrorEliminar"));
       }
     }
   }
 
-  disabledEliminar(){
-    if(undefined!=this.selectedDatos && (!this.selectMultiple || this.selectedDatos.length == 0)){
+  disabledEliminar() {
+    if (undefined != this.selectedDatos && (!this.selectMultiple || this.selectedDatos.length == 0)) {
       return true;
-    }else{
+    } else {
       return false;
     }
   }

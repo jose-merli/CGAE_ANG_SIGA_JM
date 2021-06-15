@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FacturacionesYPagosComponent } from "./facturaciones-pagos.component";
-import { InputTextModule, ButtonModule, RadioButtonModule, DropdownModule, GrowlModule, CalendarModule, DataTableModule, CheckboxModule, ConfirmDialogModule } from "primeng/primeng";
+import { InputTextModule, ButtonModule, RadioButtonModule, DropdownModule, GrowlModule, CalendarModule, DataTableModule, CheckboxModule, ConfirmDialogModule, MultiSelectModule } from "primeng/primeng";
 import { TableModule } from '../../../../../../node_modules/primeng/table';
 import { PipeTranslationModule } from "../../../../commons/translate/pipe-translation.module";
 import { FormsModule } from "@angular/forms";
@@ -40,7 +40,8 @@ import { ConceptosPagosComponent } from './gestion-pagos/conceptos-pagos/concept
     DataTableModule,
     GrowlModule, 
     TableModule,
-    FechaModule
+    FechaModule,
+    MultiSelectModule,
   ],
   declarations: [FacturacionesYPagosComponent, FiltroBusquedaFacturacionComponent, TablaBusquedaFacturacionComponent, GestionFacturacionComponent, DatosFacturacionComponent, ConceptosFacturacionComponent, BaremosComponent, PagosComponent, CartasFacturacionComponent, GestionPagosComponent, DatosPagosComponent, ConfiguracionFicherosComponent, DetallePagoComponent, CompensacionFacturaComponent, ConceptosPagosComponent],
   exports: [FacturacionesYPagosComponent]

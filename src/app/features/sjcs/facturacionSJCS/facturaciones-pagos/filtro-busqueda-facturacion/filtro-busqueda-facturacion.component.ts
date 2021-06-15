@@ -12,6 +12,7 @@ import { TranslateService } from '../../../../../commons/translate';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { KEY_CODE } from '../../../../../commons/login-develop/login-develop.component';
 import { PagosjgItem } from '../../../../../models/sjcs/PagosjgItem';
+import { MultiSelect } from 'primeng/multiselect';
 
 @Component({
 	selector: 'app-filtro-busqueda-facturacion',
@@ -418,6 +419,24 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 	onKeyPress(event: KeyboardEvent) {
 		if (event.keyCode === KEY_CODE.ENTER) {
 			this.isBuscar();
+		}
+	}
+
+	focusInputField(someMultiselect: MultiSelect) {
+		setTimeout(() => {
+			someMultiselect.filterInputChild.nativeElement.focus();
+		}, 300);
+	}
+
+	onChangeMultiSelectFact(event, filtro) {
+		if (undefined != event.value && event.value.length == 0) {
+			this.filtrosFacturacion[filtro] = undefined;
+		}
+	}
+
+	onChangeMultiSelectPagos(event, filtro) {
+		if (undefined != event.value && event.value.length == 0) {
+			this.filtrosPagos[filtro] = undefined;
 		}
 	}
 }

@@ -33,13 +33,19 @@
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado' | translate}}</label>
 
-            <p-dropdown class="select-form" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
-              filterBy="label,labelSinTilde" [showClear]="true" [(ngModel)]='filtrosFacturacion.idEstado'
-              [options]="estadoFacturas" *ngIf="selectedValue=='facturacion'"></p-dropdown>
+            <p-multiSelect #estadoMultiselect class="select-form" [(ngModel)]='filtrosFacturacion.idEstado'
+              defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="estadoFacturas" [filter]="true"
+              maxSelectedLabels="10" [selectedItemsLabel]="'{0} estados seleccionados'" filterBy="label,labelSinTilde"
+              styleClass="widthAll" (onPanelShow)="focusInputField(estadoMultiselect)"
+              *ngIf="selectedValue=='facturacion'" (onChange)="onChangeMultiSelectFact($event, 'idEstado')">
+            </p-multiSelect>
 
-            <p-dropdown class="select-form" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
-              filterBy="label,labelSinTilde" [showClear]="true" [(ngModel)]='filtrosPagos.idEstado'
-              [options]="estadoPagos" *ngIf="selectedValue=='pagos'"></p-dropdown>
+            <p-multiSelect #estadoPagosMultiselect class="select-form" [(ngModel)]='filtrosPagos.idEstado'
+              defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="estadoPagos" [filter]="true"
+              maxSelectedLabels="10" [selectedItemsLabel]="'{0} estados seleccionados'" filterBy="label,labelSinTilde"
+              styleClass="widthAll" (onPanelShow)="focusInputField(estadoPagosMultiselect)"
+              *ngIf="selectedValue=='pagos'" (onChange)="onChangeMultiSelectPagos($event, 'idEstado')">
+            </p-multiSelect>
           </div>
 
           <div class="form-row col-lg-3 col-md-3">
@@ -71,36 +77,57 @@
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.conceptosyservicios' | translate}}</label>
 
-            <p-dropdown class="select-form" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
-              filterBy="label,labelSinTilde" [showClear]="true" [options]="conceptos"
-              [(ngModel)]='filtrosFacturacion.idConcepto' *ngIf="selectedValue=='facturacion'"></p-dropdown>
+            <p-multiSelect #conceptoMultiselect class="select-form" [(ngModel)]='filtrosFacturacion.idConcepto'
+              defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="conceptos" [filter]="true"
+              maxSelectedLabels="10" [selectedItemsLabel]="'{0} conceptos seleccionados'" filterBy="label,labelSinTilde"
+              styleClass="widthAll" (onPanelShow)="focusInputField(conceptoMultiselect)"
+              *ngIf="selectedValue=='facturacion'" (onChange)="onChangeMultiSelectFact($event, 'idConcepto')">
+            </p-multiSelect>
 
-            <p-dropdown class="select-form" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
-              filterBy="label,labelSinTilde" [showClear]="true" [options]="conceptos"
-              [(ngModel)]='filtrosPagos.idConcepto' *ngIf="selectedValue=='pagos'"></p-dropdown>
+            <p-multiSelect #conceptoPagosMultiselect class="select-form" [(ngModel)]='filtrosPagos.idConcepto'
+              defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="conceptos" [filter]="true"
+              maxSelectedLabels="10" [selectedItemsLabel]="'{0} conceptos seleccionados'" filterBy="label,labelSinTilde"
+              styleClass="widthAll" (onPanelShow)="focusInputField(conceptoPagosMultiselect)"
+              *ngIf="selectedValue=='pagos'" (onChange)="onChangeMultiSelectPagos($event, 'idConcepto')">
+            </p-multiSelect>
           </div>
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.grupoTurnos' | translate}}</label>
 
-            <p-dropdown class="select-form" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
-              filterBy="label,labelSinTilde" [showClear]="true" [options]="grupoTurnos"
-              [(ngModel)]='filtrosFacturacion.idFacturacion' *ngIf="selectedValue=='facturacion'"></p-dropdown>
+            <p-multiSelect #facturacionMultiselect class="select-form" [(ngModel)]='filtrosFacturacion.idFacturacion'
+              defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="grupoTurnos" [filter]="true"
+              maxSelectedLabels="10" [selectedItemsLabel]="'{0} grupos seleccionados'" filterBy="label,labelSinTilde"
+              styleClass="widthAll" (onPanelShow)="focusInputField(facturacionMultiselect)"
+              *ngIf="selectedValue=='facturacion'" (onChange)="onChangeMultiSelectFact($event, 'idFacturacion')">
+            </p-multiSelect>
 
-            <p-dropdown class="select-form" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
-              filterBy="label,labelSinTilde" [showClear]="true" [options]="grupoTurnos"
-              [(ngModel)]='filtrosPagos.idFacturacion' *ngIf="selectedValue=='pagos'"></p-dropdown>
+            <p-multiSelect #facturacionPagosMultiselect class="select-form" [(ngModel)]='filtrosPagos.idFacturacion'
+              defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="grupoTurnos" [filter]="true"
+              maxSelectedLabels="10" [selectedItemsLabel]="'{0} grupos seleccionados'" filterBy="label,labelSinTilde"
+              styleClass="widthAll" (onPanelShow)="focusInputField(facturacionPagosMultiselect)"
+              *ngIf="selectedValue=='pagos'" (onChange)="onChangeMultiSelectPagos($event, 'idFacturacion')">
+            </p-multiSelect>
           </div>
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.partidaPresupuestaria' | translate}}</label>
 
-            <p-dropdown class="select-form" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
-              filterBy="label,labelSinTilde" [showClear]="true" [options]="partidaPresupuestaria"
-              [(ngModel)]='filtrosFacturacion.idPartidaPresupuestaria' *ngIf="selectedValue=='facturacion'">
-            </p-dropdown>
+            <p-multiSelect #partidaMultiselect class="select-form"
+              [(ngModel)]='filtrosFacturacion.idPartidaPresupuestaria'
+              defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="partidaPresupuestaria"
+              [filter]="true" maxSelectedLabels="10" [selectedItemsLabel]="'{0} partidas seleccionadas'"
+              filterBy="label,labelSinTilde" styleClass="widthAll" (onPanelShow)="focusInputField(partidaMultiselect)"
+              *ngIf="selectedValue=='facturacion'"
+              (onChange)="onChangeMultiSelectFact($event, 'idPartidaPresupuestaria')">
+            </p-multiSelect>
 
-            <p-dropdown class="select-form" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
-              filterBy="label,labelSinTilde" [showClear]="true" [options]="partidaPresupuestaria"
-              [(ngModel)]='filtrosPagos.idPartidaPresupuestaria' *ngIf="selectedValue=='pagos'"></p-dropdown>
+            <p-multiSelect #partidanPagosMultiselect class="select-form"
+              [(ngModel)]='filtrosPagos.idPartidaPresupuestaria'
+              defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="partidaPresupuestaria"
+              [filter]="true" maxSelectedLabels="10" [selectedItemsLabel]="'{0} partidas seleccionados'"
+              filterBy="label,labelSinTilde" styleClass="widthAll"
+              (onPanelShow)="focusInputField(partidanPagosMultiselect)" *ngIf="selectedValue=='pagos'"
+              (onChange)="onChangeMultiSelectPagos($event, 'idPartidaPresupuestaria')">
+            </p-multiSelect>
           </div>
         </div>
       </div>
