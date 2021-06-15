@@ -158,6 +158,10 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
   fechaEntradaInicioDate: Date;
   fechaMaxima: Date;
   designaItem: DesignaItem;
+  currentRoute: String;
+  idClasesComunicacionArray: string[] = [];
+  idClaseComunicacion: String;
+  keys: any[] = [];
 
   constructor(private commonsService: CommonsService,
     private sigaServices: SigaServices,
@@ -167,7 +171,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     private router: Router) { }
 
   ngOnInit() {
-
+    this.currentRoute = this.router.url;
     this.commonsService.checkAcceso(procesos_oficio.designaTarjetaActuacionesDatosGenerales)
       .then(respuesta => {
         let permisoEscritura = respuesta;
@@ -1159,6 +1163,70 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
         this.cargaInicial();
       }
     );
+  }
+
+  navigateComunicar() {
+    sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
+    //IDMODULO de SJCS es 10
+    sessionStorage.setItem("idModulo", '10');
+    
+    this.getDatosComunicar();
+  }
+  
+  getKeysClaseComunicacion() {
+    this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
+      data => {
+        this.keys = JSON.parse(data["body"]);
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  getDatosComunicar() {
+    let datosSeleccionados = [];
+    let rutaClaseComunicacion = this.currentRoute.toString();
+
+    this.sigaServices
+      .post("dialogo_claseComunicacion", rutaClaseComunicacion)
+      .subscribe(
+        data => {
+          this.idClaseComunicacion = JSON.parse(
+            data["body"]
+          ).clasesComunicaciones[0].idClaseComunicacion;
+          this.sigaServices
+            .post("dialogo_keys", this.idClaseComunicacion)
+            .subscribe(
+              data => {
+                this.keys = JSON.parse(data["body"]).keysItem;
+            //    this.actuacionesSeleccionadas.forEach(element => {
+                  let keysValues = [];
+                  this.keys.forEach(key => {
+                    if (this.actuacionDesigna.actuacion[key.nombre] != undefined) {
+                      keysValues.push(this.actuacionDesigna.actuacion[key.nombre]);
+                    }else if(key.nombre == "num" && this.actuacionDesigna.actuacion["numero"] != undefined){
+                      keysValues.push(this.actuacionDesigna.actuacion["numero"]);
+                    }
+                  });
+                  datosSeleccionados.push(keysValues);
+             //   });
+
+                sessionStorage.setItem(
+                  "datosComunicar",
+                  JSON.stringify(datosSeleccionados)
+                );
+                this.router.navigate(["/dialogoComunicaciones"]);
+              },
+              err => {
+                console.log(err);
+              }
+            );
+        },
+        err => {
+          console.log(err);
+        }
+      );
   }
 
 }

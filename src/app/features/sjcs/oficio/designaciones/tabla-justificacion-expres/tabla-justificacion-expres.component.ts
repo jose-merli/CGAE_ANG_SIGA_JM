@@ -773,7 +773,7 @@ this.dataToUpdate = event;
     let expedientesDesignacion = rowGroup.id2;
     let clientesDesignacion =  rowGroup.id3;
     let state;
-    if (rowGroup.rows[0].cells[0].value == true){
+    if (rowGroup.rows[0].cells[0].value[0] == true){
       state = "F";
     }else{
       state = rowGroup.estadoDesignacion;

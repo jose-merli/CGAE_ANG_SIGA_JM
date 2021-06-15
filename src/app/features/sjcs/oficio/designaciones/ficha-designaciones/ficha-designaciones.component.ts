@@ -663,7 +663,7 @@ export class FichaDesignacionesComponent implements OnInit {
   }
   backTo() {
     sessionStorage.setItem("volver", 'true');
-    this.location.back();
+    this.router.navigate(['/designaciones']);
   }
 
   transformaFecha(fecha) {
@@ -1789,7 +1789,7 @@ export class FichaDesignacionesComponent implements OnInit {
     let designaItem = this.campos;
 
     this.getPermiteTurno();
-
+    this.searchLetrados();
     if (sessionStorage.getItem("nuevoProcurador")) {
       this.listaTarjetas[5].opened = true;
     }

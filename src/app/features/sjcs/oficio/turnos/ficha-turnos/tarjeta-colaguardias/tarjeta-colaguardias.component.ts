@@ -311,9 +311,9 @@ export class TarjetaColaGuardias implements OnInit {
         this.progressSpinner = false;
         if (this.datos != undefined && this.datos.length > 0) {
           this.primerLetrado = this.datos[0].numerocolegiado;
-          this.nombreApellidosPrimerLetrado = this.datos[0].alfabeticoapellidos + "," + this.datos[0].nombreguardia;
+          this.nombreApellidosPrimerLetrado = this.datos[0].alfabeticoapellidos + ", " + this.datos[0].nombreguardia;
           this.ultimoLetrado = this.datos[this.datos.length - 1].numerocolegiado;
-          this.apeyNombreUltimo = this.datos[this.datos.length - 1].alfabeticoapellidos + "," + this.datos[this.datos.length - 1].nombreguardia;
+          this.apeyNombreUltimo = this.datos[this.datos.length - 1].alfabeticoapellidos + ", " + this.datos[this.datos.length - 1].nombreguardia;
         }
       }
     );
