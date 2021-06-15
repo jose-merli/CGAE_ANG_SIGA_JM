@@ -621,7 +621,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     this.checkDatosGenerales();
     if (this.resaltadoDatos == false) {
       this.progressSpinner = false;
-      let mess = "Se va a seleccionar un letrado automaticamente. ¿Desea continuar?";
+      let mess = this.translateService.instant("justiciaGratuita.oficio.designas.nuevaCola");
       let icon = "fa fa-question-circle";
       let keyConfirmation = "confirmGuardar";
       this.confirmationService.confirm({
@@ -673,7 +673,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                 err => {
                   console.log(err);
                   severity = "error";
-                  summary = "No existe cola de letrado de oficio";
+                  summary = this.translateService.instant("justiciaGratuita.oficio.designas.errorNuevaCola");
                   detail = "";
                   this.msgs.push({
                     severity,
@@ -728,7 +728,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                 err => {
                   console.log(err);
                   severity = "error";
-                  summary = "No se han podido modificar los datos";
+                  summary = this.translateService.instant("justiciaGratuita.oficio.designas.error2NuevaCola");
                   this.msgs.push({
                     severity,
                     summary,

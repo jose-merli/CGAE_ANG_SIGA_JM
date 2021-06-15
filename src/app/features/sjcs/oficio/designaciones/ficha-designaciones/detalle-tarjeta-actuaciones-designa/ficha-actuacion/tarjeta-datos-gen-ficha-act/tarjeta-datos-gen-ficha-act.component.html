@@ -80,9 +80,8 @@
 
 <div class="card-footer">
   <div class="text-right main-button">
-    <button pButton type="button" icon="fa fa-paper-plane" iconPos="left" label="Comunicar"
-      (click)="showMsg('success', 'Se ha comunicado correctamente', '')"
-      [disabled]="isAnulada || modoLectura || modoLectura2"></button>
+    <button pButton type="button" icon="fa fa-comment" iconPos="left" label="{{'general.boton.comunicar' | translate }}"
+      (click)="navigateComunicar()" [disabled]="isAnulada || modoLectura || modoLectura2"></button>
     <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer" (click)="restablecer()"
       [disabled]="isAnulada || modoLectura || modoLectura2"></button>
     <button pButton type="button" icon="far fa-save" iconPos="left" label="Guardar" (click)="guardarAction()"
