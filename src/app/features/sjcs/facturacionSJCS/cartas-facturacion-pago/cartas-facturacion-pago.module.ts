@@ -5,7 +5,7 @@ import { FiltroCartasFacturacionPagoComponent } from './filtro-cartas-facturacio
 import { TablaCartasFacturacionPagoComponent } from './tabla-cartas-facturacion-pago/tabla-cartas-facturacion-pago.component';
 import { PipeTranslationModule } from '../../../../commons/translate/pipe-translation.module';
 import { FormsModule } from '../../../../../../node_modules/@angular/forms';
-import { InputTextModule, CheckboxModule, ConfirmDialogModule, ButtonModule, RadioButtonModule, DropdownModule, CalendarModule, DataTableModule, GrowlModule } from '../../../../../../node_modules/primeng/primeng';
+import { InputTextModule, CheckboxModule, ConfirmDialogModule, ButtonModule, RadioButtonModule, DropdownModule, CalendarModule, DataTableModule, GrowlModule, MultiSelectModule } from '../../../../../../node_modules/primeng/primeng';
 import { PipeNumberModule } from '../../../../commons/number-pipe/number-pipe.module';
 import { TableModule } from '../../../../../../node_modules/primeng/table';
 import { FechaModule } from '../../../../commons/fecha/fecha.module';
@@ -28,7 +28,8 @@ import { BusquedaColegiadoExpressComponent } from '../../../../commons/busqueda-
     DataTableModule,
     GrowlModule,
     TableModule,
-    BusquedaColegiadoExpressModule
+    BusquedaColegiadoExpressModule,
+    MultiSelectModule,
   ],
   declarations: [CartasFacturacionPagoComponent, FiltroCartasFacturacionPagoComponent, TablaCartasFacturacionPagoComponent]
 })

@@ -5,6 +5,7 @@ import { PersistenceService } from '../../../../../_services/persistence.service
 import { CartasFacturacionPagosItem } from '../../../../../models/sjcs/CartasFacturacionPagosItem';
 import { KEY_CODE } from '../../../../../commons/login-develop/login-develop.component';
 import { TranslateService } from '../../../../../commons/translate/translation.service';
+import { MultiSelect } from 'primeng/primeng';
 
 @Component({
   selector: 'app-filtro-cartas-facturacion-pago',
@@ -281,7 +282,7 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
         this.commonsService.arregloTildesCombo(this.comboFacturacion);
 
         if (undefined == this.filtros.idFacturacion || null == this.filtros.idFacturacion) {
-          this.filtros.idFacturacion = this.comboFacturacion[0].value;
+          this.filtros.idFacturacion = [this.comboFacturacion[0].value];
         }
       },
       err => {
@@ -372,6 +373,18 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
   onKeyPress(event: KeyboardEvent) {
     if (event.keyCode === KEY_CODE.ENTER) {
       this.search();
+    }
+  }
+
+  focusInputField(someMultiselect: MultiSelect) {
+    setTimeout(() => {
+      someMultiselect.filterInputChild.nativeElement.focus();
+    }, 300);
+  }
+
+  onChangeMultiSelect(event, filtro) {
+    if (undefined != event.value && event.value.length == 0) {
+      this.filtros[filtro] = undefined;
     }
   }
 
