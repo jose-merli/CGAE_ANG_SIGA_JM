@@ -9,6 +9,7 @@ import { CommonsService } from '../../../../_services/commons.service';
 import { DatePipe } from '../../../../../../node_modules/@angular/common';
 import { Dialog } from 'primeng/primeng';
 import { saveAs } from "file-saver/FileSaver";
+import moment = require('moment');
 
 @Component({
   selector: 'app-tabla-ejg',
@@ -375,9 +376,21 @@ export class TablaEjgComponent implements OnInit {
 
         let blob = null;
 
-          let mime = "application/pdf";
-          blob = new Blob([data], { type: mime });
-          saveAs(blob, "eejg_2005_2018-01200_45837302G_20210525_131611.pdf");
+        let now = new Date();
+        let month = now.getMonth()+1;
+        let nombreFichero = "eejg_"+now.getFullYear();
+
+        if(month<10){
+          nombreFichero = nombreFichero+"0"+month;
+        }else{
+          nombreFichero += month;
+        }
+
+        nombreFichero += now.getDate()+"_"+now.getHours()+""+now.getMinutes();
+
+        let mime = data.type;
+        blob = new Blob([data], { type: mime });
+        saveAs(blob, nombreFichero);
       
       },
       err => {
