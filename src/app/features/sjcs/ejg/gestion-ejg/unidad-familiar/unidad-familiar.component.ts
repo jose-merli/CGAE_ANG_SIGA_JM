@@ -157,8 +157,10 @@ export class UnidadFamiliarComponent implements OnInit {
           if(this.solicitante.pjg_nombrecompleto != undefined) this.apellidosCabecera = this.solicitante.pjg_nombrecompleto.split(",")[0];
           else this.apellidosCabecera = "";
         });
+        this.progressSpinner = false;
       },
       err => {
+        this.progressSpinner = false;
       }
     );
   }
