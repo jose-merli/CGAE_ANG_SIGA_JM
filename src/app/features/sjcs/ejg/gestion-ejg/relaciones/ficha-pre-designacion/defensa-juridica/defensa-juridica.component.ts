@@ -23,9 +23,9 @@ export class DefensaJuridicaComponent implements OnInit {
 
   progressSpinner: boolean = false;
   body: EJGItem = new EJGItem();
-  designa: DesignaItem = new DesignaItem();
+  designa = null;
   bodyInicial: EJGItem;
-  permisoEscritura: boolean = false;
+  @Input() permisoEscritura: boolean = true;
 
   isDisabledProcedimiento: boolean = true;
 
@@ -63,8 +63,41 @@ export class DefensaJuridicaComponent implements OnInit {
   ngOnInit() {
     //Los valores de la cabecera se actualizan en cada combo y al en el metodo getCabecera()
     //Se asignan al iniciar la tarjeta y al guardar.
+    //Se obtiene la designacion si hay una designacion entre las relaciones
+    if(sessionStorage.getItem("Designa")) this.designa = JSON.parse(sessionStorage.getItem("Designa"));
 
-    //if(sessionStorage.getItem("Designa"))this.getDesigna();
+    this.body = this.persistenceService.getDatos();
+
+    //Se sobreescribe la informacion de pre designacion (Primera mitad de la tarjeta) 
+    //en this.body en el caso de que haya una designacion
+    if(this.designa!=null) {
+      //this.body = this.designa;
+      this.body.numAnnioProcedimiento = this.designa.ano;
+      this.body.nig = this.designa.nig;
+      this.body.observaciones = this.designa.observaciones;
+      this.body.calidad = this.designa.idCalidad;
+      this.body.idPretension = this.designa.idPretension;
+      this.body.juzgado = this.designa.idJuzgado;
+
+      //Variables de designacion que nos interesa representar
+      /* ano: "D2021/42"
+        delitos: null
+        idCalidad: null
+        idJuzgado: 0
+        idJuzgados: null
+        idPretension: 0
+        idProcedimiento: ""
+        idProcedimientos: null
+        idRol: 0
+        nig: null
+        nombreJuzgado: ""
+        nombreProcedimiento: ""
+        observaciones  */
+    }
+    //Valor inicial a reestablecer
+    this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+
+    
     this.getComboPreceptivo();
     this.getComboRenuncia();
     this.getComboSituaciones();
@@ -73,9 +106,6 @@ export class DefensaJuridicaComponent implements OnInit {
     this.getComboJuzgado();
     if(this.body.juzgado!=null)this.getComboProcedimiento();
     this.getComboDelitos();
-    this.body = this.persistenceService.getDatos();
-
-    this.bodyInicial = JSON.parse(JSON.stringify(this.body));
 
     if (this.body.juzgado != undefined && this.body.juzgado != null) this.isDisabledProcedimiento = false;
 
@@ -96,10 +126,20 @@ export class DefensaJuridicaComponent implements OnInit {
           let datosBuscar = searchParametros.parametrosItems;
           datosBuscar.forEach(element => {
             if (element.parametro == "NIG_VALIDADOR" && (element.idInstitucion == element.idinstitucionActual || element.idInstitucion == '0')) {
-              let valorParametroNIG = element.valor;
+              let valorParametroNIG: RegExp = new RegExp(element.valor);
               if (nig != '') {
                 ret = valorParametroNIG.test(nig);
                 if(ret) this.save();
+                else{
+                  let severity = "error";
+                  let summary = this.translateService.instant("justiciaGratuita.oficio.designa.NIGInvalido");
+                  let detail = "";
+                  this.msgs.push({
+                    severity,
+                    summary,
+                    detail
+                  });
+                }
               }
               else{
                 this.save();
@@ -119,7 +159,7 @@ export class DefensaJuridicaComponent implements OnInit {
             ret = false;
           });
    
-    if(ret) this.save();
+    if(!ret) this.save();
   }
 
   validarNProcedimiento(nProcedimiento) {
@@ -165,6 +205,7 @@ export class DefensaJuridicaComponent implements OnInit {
       if(element.value==this.bodyInicial.procedimiento)this.procedimientoCabecera=element.label;
     });
   }
+
 
   abreCierra(){
     this.openDef = !this.openDef;
@@ -329,7 +370,7 @@ export class DefensaJuridicaComponent implements OnInit {
       n => {
         this.comboDelitos = n.combooItems;
         this.commonsServices.arregloTildesCombo(this.comboDelitos);
-        this.getDelitosEJG();
+        if(this.designa==null)this.getDelitosEJG();
       },
       err => {
       }, () => {

@@ -34,11 +34,10 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 
 	ejg: EJGItem;
 
-	@Input() modoEdicion = true;
+	@Input() permisoEscritura = true;
 
 	esMenorEdad: boolean = false;
 	idPersona;
-	permisoEscritura;
 	openPro: boolean = false;
 	representanteValido: boolean = false;
 	confirmationAssociate: boolean = false;

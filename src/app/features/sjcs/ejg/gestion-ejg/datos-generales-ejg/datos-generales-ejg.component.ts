@@ -46,7 +46,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
   showTipoExp: boolean = false;
 
   institucionActual;
-  isdisabledAddExp: boolean = false;
+  isAssociated: boolean = false;
 
   @ViewChild('someDropdown') someDropdown: MultiSelect;
 
@@ -120,7 +120,6 @@ export class DatosGeneralesEjgComponent implements OnInit {
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
     });
-    //if (this.body.anioexpInsos != null && this.body.anioexpInsos != undefined) this.isdisabledAddExp = true;
     
   }
 
@@ -137,8 +136,8 @@ export class DatosGeneralesEjgComponent implements OnInit {
     this.sigaServices.post("gestionejg_getEjgDesigna", this.bodyInicial).subscribe(
       n => {
         let ejgDesignas = JSON.parse(n.body).ejgDesignaItems;
-        if(ejgDesignas.length==0) this.isdisabledAddExp = true;
-        else this.isdisabledAddExp = false;
+        if(ejgDesignas.length==0) this.isAssociated = true;
+        else this.isAssociated = false;
       }
     );
   }
@@ -481,7 +480,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
       this.msgs = msg;
     } else {
       //Comprobamos si el EJG tiene una designacion asociada
-      if(!this.isdisabledAddExp) this.addExp();
+      if(!this.isAssociated) this.addExp();
       else this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('justiciaGratuita.ejg.datosGenerales.noDesignaEjg') }];
       
     }
