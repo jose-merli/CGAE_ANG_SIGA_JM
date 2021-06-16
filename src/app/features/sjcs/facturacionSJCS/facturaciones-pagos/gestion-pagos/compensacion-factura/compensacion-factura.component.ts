@@ -11,25 +11,23 @@ export class CompensacionFacturaComponent implements OnInit {
   buscadores = [];
   selectedDatos = [];
   numSelected = 0;
-  selectMultiple: boolean = false;
-  seleccion: boolean = false;
   showFicha: boolean = false;
   selectAll: boolean = false;
   progressSpinnerCompensacion: boolean = false;
 
-  selectionMode: String = "single";
+  selectionMode: String = "multiple";
 
-  cols; 
+  cols;
   msgs;
 
   @ViewChild("tabla") tabla;
 
   @Input() permisos;
-  
+
   constructor(private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit() {
-    this.progressSpinnerCompensacion=false;
+    this.progressSpinnerCompensacion = false;
     this.getCols();
   }
 
@@ -42,7 +40,7 @@ export class CompensacionFacturaComponent implements OnInit {
     this.cols = [
       { field: "descConcepto", header: "facturacionSJCS.facturacionesYPagos.conceptos" },
       { field: "importeTotal", header: "facturacionSJCS.facturacionesYPagos.importe" },
-      { field: "importePendiente", header: "facturacionSJCS.facturacionesYPagos.importePendiente" },      
+      { field: "importePendiente", header: "facturacionSJCS.facturacionesYPagos.importePendiente" },
       { field: "descGrupo", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.grupoTurnos" }
     ];
 
@@ -67,32 +65,17 @@ export class CompensacionFacturaComponent implements OnInit {
     ];
   }
 
-  seleccionaFila(evento){
-    this.numSelected = evento.length;
-    this.seleccion = true;
+  seleccionaFila(evento) {
+    this.numSelected = this.selectedDatos.length;
   }
 
   onChangeSelectAll() {
-    this.selectMultiple = false;
-    //this.selectedDatos = this.body;
-    //this.numSelected = this.body.length;
-    this.selectedDatos = [];
-    this.numSelected = 0;
-  }
-
-  isSelectMultiple() {
-    this.selectMultiple = !this.selectMultiple;
-    
-    if (!this.selectMultiple) {
-      this.selectAll = false;
-      this.selectedDatos = [];
-      this.numSelected = 0;
-      this.selectionMode="single";
+    if (this.selectAll === true) {
+      // this.selectedDatos = this.datos;
+      this.numSelected = this.selectedDatos.length;
     } else {
-      this.selectAll = false;
       this.selectedDatos = [];
       this.numSelected = 0;
-      this.selectionMode="multiple";
     }
   }
 
