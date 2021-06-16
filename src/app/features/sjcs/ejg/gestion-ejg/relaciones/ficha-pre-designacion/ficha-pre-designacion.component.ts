@@ -42,7 +42,7 @@ export class FichaPreDesignacionComponent implements OnInit {
   //comboPartidosJudiciales
 
   msgs: Message[];
-  permisoEscritura: any;
+  permisoEscritura: boolean = true;
 
   constructor(private translateService: TranslateService,
     private sigaServices: SigaServices,
@@ -93,7 +93,7 @@ export class FichaPreDesignacionComponent implements OnInit {
       },
     ];
 
-    
+    this.checkEJGDesignas();
   }
 
   backTo() {
@@ -107,6 +107,16 @@ export class FichaPreDesignacionComponent implements OnInit {
       summary: event.summary,
       detail: event.msg
     });
+  }
+
+  checkEJGDesignas(){
+    this.sigaServices.post("gestionejg_getEjgDesigna", this.body).subscribe(
+      n => {
+        let ejgDesignas = JSON.parse(n.body).ejgDesignaItems;
+        if(ejgDesignas.length==0) this.permisoEscritura = true;
+        else this.permisoEscritura = false;
+      }
+    );
   }
 
   clear() {

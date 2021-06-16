@@ -119,7 +119,7 @@
                   <span>{{dato[col.field]}}</span>
                 </div>
                 <div *ngIf="checkPre(dato)">
-                  <span clas="enlace" (click)="navigateToFichaPre()">{{dato[col.field]}}</span>
+                  <span class ="enlace" (click)="navigateToFichaPre()">{{dato[col.field]}}</span>
                 </div>
                 <div *ngIf="col.field == 'datosinteres'">
                   <div [innerHTML]="dato[col.field]"></div>
@@ -197,4 +197,8 @@
       </p-confirmDialog>
     </div>
   </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
 </div>

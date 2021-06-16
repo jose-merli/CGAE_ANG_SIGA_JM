@@ -10,7 +10,7 @@
           </div>
         </div>
         <div class="col-lg-11 col-md-10" (click)="abreCierra()">
-          <div class="d-flex justify-content-start mb-1" >
+          <div class="d-flex justify-content-start mb-1">
             <label class="mr-auto title-ficha pointer">{{ 'justiciaGratuita.ejg.preDesigna.contrarios' | translate
               }}</label>
           </div>
@@ -20,17 +20,23 @@
               }}: <span>{{"justiciaGratuita.oficio.designas.contrarios.vacio" | translate}}</span></label>
             <label *ngIf="contrariosEJG.length > 0">{{ "justiciaGratuita.oficio.designas.contrarios.ncontrarios" |
               translate }}: <span>{{contrariosEJG.length}}</span></label>
-            <label *ngIf="contrariosEJG.length > 0">{{ "justiciaGratuita.oficio.designas.contrarios.identificadorprimero" |
+            <label *ngIf="contrariosEJG.length > 0">{{
+              "justiciaGratuita.oficio.designas.contrarios.identificadorprimero" |
               translate }}:
               <span>{{primero.nif}}</span></label>
-            <label *ngIf="contrariosEJG.length > 0">{{ "justiciaGratuita.oficio.designas.contrarios.apellidosnombreprimero" | translate }}:
+            <label *ngIf="contrariosEJG.length > 0">{{
+              "justiciaGratuita.oficio.designas.contrarios.apellidosnombreprimero" | translate }}:
               <span>{{primero.apellidosnombre}}</span></label>
-            <label *ngIf="contrariosEJG.length > 0">{{ "justiciaGratuita.oficio.designas.contrarios.abogadoprimero" | translate }}:
-              <span>{{primero.abogado}}</span></label>
-            <label *ngIf="contrariosEJG.length > 0">{{ "justiciaGratuita.oficio.designas.contrarios.procuradorprimero" | translate }}:
-              <span>{{primero.procurador}}</span></label>
-              <i class="fa fa-angle-down float-right" (click)="abreCierraFicha()"></i>
           </div>
+          <div class="d-flex justify-content-between default">
+            <label *ngIf="contrariosEJG.length > 0">{{ "justiciaGratuita.oficio.designas.contrarios.abogadoprimero" |
+              translate }}:
+              <span>{{primero.abogado}}</span></label>
+            <label *ngIf="contrariosEJG.length > 0">{{ "justiciaGratuita.oficio.designas.contrarios.procuradorprimero" |
+              translate }}:
+              <span>{{primero.procurador}}</span></label>
+          </div>
+          <i class="fa fa-angle-down float-right" (click)="abreCierraFicha()"></i>
         </div>
       </div>
       <div *ngIf="openCon" class=" header-ficha-open d-flex justify-content-start align-items-center"
@@ -119,12 +125,12 @@
           <button *ngIf="historicoContrario" (click)="searchHistorical()" pButton type="button" icon="fa fa-undo"
             iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
           <button *ngIf="!historicoContrario" (click)="NewContrario()" pButton type="button" icon="fa fa-plus"
-            iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
-          <button *ngIf="!historicoContrario" pButton [disabled]="selectedDatos.length == 0" type="button"
-            (click)="Eliminar()" icon="fa fa-trash-alt" iconPos="left"
+            iconPos="left" label="{{ 'general.boton.new' | translate}}" [disabled]="!permisoEscritura"></button>
+          <button *ngIf="!historicoContrario" pButton [disabled]="selectedDatos.length == 0 || !permisoEscritura" type="button"
+            (click)="Eliminar()" icon="fa fa-trash-alt" iconPos="left" 
             label="{{ 'general.boton.eliminar' | translate}}"></button>
-          <button *ngIf="historicoContrario" pButton [disabled]="selectedDatos.length == 0" type="button"
-            (click)="Eliminar()" icon="fa fa-plus" iconPos="left"
+          <button *ngIf="historicoContrario" pButton [disabled]="selectedDatos.length == 0 || !permisoEscritura" type="button"
+            (click)="Eliminar()" icon="fa fa-plus" iconPos="left" 
             label="{{ 'general.boton.reactivar' | translate}}"></button>
         </div>
       </div>
