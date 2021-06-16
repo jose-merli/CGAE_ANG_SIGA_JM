@@ -5,9 +5,8 @@
     <!-- TABLA RESULTADOS -->
     <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [selectionMode]="selectionMode"
       [responsive]="true" #tabla class="tabla-listado" [paginator]="true" [rows]="selectedItem"
-      (onRowSelect)="seleccionaFila($event)" (onRowUnselect)="desSeleccionaFila()" [first]="first"
-      [ngClass]="{ 'customCursor': selectMultiple}" (sortFunction)="customSort($event)" [customSort]="true"
-      paginatorPosition="both">
+      (onRowSelect)="selectDesSelectFila()" (onRowUnselect)="selectDesSelectFila()" [first]="first"
+      (sortFunction)="customSort($event)" [customSort]="true" paginatorPosition="both">
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
           <col *ngFor="let col of cols" [style.width]="col.width">
@@ -51,7 +50,7 @@
               <label>{{dato[col.field]}}%</label>
             </div>
             <div *ngIf="col.field =='nombre'">
-              <a class="enlace" (click)="openFicha()"><span>{{dato[col.field]}}</span></a>
+              <a class="enlace" (click)="openFicha(dato)"><span>{{dato[col.field]}}</span></a>
             </div>
           </td>
         </tr>
@@ -77,14 +76,11 @@
           </p-dropdown>
           <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
 
-          <div class="ml-3 selectAll" *ngIf="filtroSeleccionado=='pagos'">
+          <div class="ml-3 selectAll">
             <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true"
               label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname" [(disabled)]='!permisos'>
             </p-checkbox>
           </div>
-
-          <!-- <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
-              <i class="pr-2 fa fa-mouse-pointer"></i>{{"general.message.seleccion.multiple" | translate}}</label> -->
         </div>
       </ng-template>
     </p-table>

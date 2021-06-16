@@ -59,46 +59,11 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
   }
 
-  desSeleccionaFila() {
-    // if (this.filtroSeleccionado == 'facturacion') {
-    //   this.numSelected = 0;
-    // } else if (this.filtroSeleccionado == 'pagos') {
-    //   this.numSelected = this.selectedDatos.length;
-    // }
+  selectDesSelectFila() {
     this.numSelected = this.selectedDatos.length;
   }
 
-  seleccionaFila(evento) {
-    // if (!this.selectMultiple) {
-
-    //   let paginacion = {
-    //     paginacion: this.tabla.first,
-    //     selectedItem: this.selectedItem
-    //   };
-
-    //   this.persistenceService.setPaginacion(paginacion);
-
-    //   let datos = evento.data;
-    //   datos.filtroSeleccionado = this.filtroSeleccionado;
-
-    //   this.persistenceService.setDatos(datos);
-
-    //   if (this.filtroSeleccionado == "facturacion") {
-    //     this.router.navigate(["/fichaFacturacion"]);
-    //   }
-
-    //   if (this.filtroSeleccionado == "pagos") {
-    //     this.router.navigate(["/fichaPagos"]);
-    //   }
-    // } else {
-    //   if (this.filtroSeleccionado == 'facturacion') {
-    //     this.numSelected = 1;
-    //   } else if (this.filtroSeleccionado == 'pagos') {
-    //     this.numSelected = this.selectedDatos.length;
-    //   }
-    // }
-
-
+  openFicha(datos) {
 
     let paginacion = {
       paginacion: this.tabla.first,
@@ -107,15 +72,9 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
 
     this.persistenceService.setPaginacion(paginacion);
 
-    let datos = evento.data;
     datos.filtroSeleccionado = this.filtroSeleccionado;
 
     this.persistenceService.setDatos(datos);
-
-    this.numSelected = this.selectedDatos.length;
-  }
-
-  openFicha() {
 
     if (this.filtroSeleccionado == "facturacion") {
       this.router.navigate(["/fichaFacturacion"]);
@@ -135,10 +94,8 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
 
   onChangeSelectAll() {
     if (this.selectAll === true) {
-      this.selectMultiple = false;
       this.selectedDatos = this.datos;
       this.numSelected = this.datos.length;
-      this.selectMultiple = false;
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
@@ -267,7 +224,7 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
   }
 
   disabledEliminar() {
-    if (undefined != this.selectedDatos && (!this.selectMultiple || this.selectedDatos.length == 0)) {
+    if (undefined != this.selectedDatos && this.selectedDatos.length == 0) {
       return true;
     } else {
       return false;

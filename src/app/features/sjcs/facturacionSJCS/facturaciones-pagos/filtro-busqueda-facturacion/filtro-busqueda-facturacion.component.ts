@@ -141,6 +141,7 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 			this.persistenceService.setFiltros(datos);
 
 			this.router.navigate(["/fichaFacturacion"]);
+
 		} else if (this.selectedValue == "pagos") {
 			datos = this.filtrosPagos;
 			datos.selectedValue = this.selectedValue;

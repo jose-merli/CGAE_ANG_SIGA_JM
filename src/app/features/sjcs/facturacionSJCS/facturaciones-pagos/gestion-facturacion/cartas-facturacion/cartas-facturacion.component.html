@@ -1,5 +1,5 @@
 <div class="cartasFacturacion-container">
-  <div>
+  <div id="facSJCSFichaFactCartasFac">
     <div class="card">
       <div class="card-header header-ficha">
         <div class="form-row">
@@ -10,19 +10,24 @@
           </div>
           <div class="col-lg-11 col-md-10">
             <div class="d-flex justify-content-start mb-1">
-              <label class="mr-auto title-ficha">{{ "facturacionSJCS.facturacionesYPagos.cartasFacturacion" | translate }}
+              <label class="mr-auto title-ficha">{{ "facturacionSJCS.facturacionesYPagos.cartasFacturacion" | translate
+                }}
               </label>
             </div>
             <div class="d-flex justify-content-between">
-              <label>{{ "facturacionSJCS.facturacionesYPagos.apuntes" | translate }}: <span>{{ numApuntes }}</span></label>
+              <label>{{ "facturacionSJCS.facturacionesYPagos.apuntes" | translate }}: <span>{{ numApuntes
+                  }}</span></label>
               <label *ngIf="!disableEnlaceCartas()">
-                  <i class="fas fa-edit icon-enlace"></i>
-                  <span style="color: blue; text-decoration: underline; cursor: pointer;" (click)="linkCartasFacturacion()">{{ "facturacionSJCS.facturacionesYPagos.cartasFacturacion" | translate }}
-                  </span>
+                <i class="fas fa-edit icon-enlace"></i>
+                <span style="color: blue; text-decoration: underline; cursor: pointer;"
+                  (click)="linkCartasFacturacion()">{{ "facturacionSJCS.facturacionesYPagos.cartasFacturacion" |
+                  translate }}
+                </span>
               </label>
               <label *ngIf="disableEnlaceCartas()">
                 <i class="fas fa-edit icon-enlace"></i>
-                <span style="color: rgb(167, 184, 170); text-decoration: underline; cursor: pointer;">{{ "facturacionSJCS.facturacionesYPagos.cartasFacturacion" | translate }}
+                <span style="color: rgb(167, 184, 170); text-decoration: underline; cursor: pointer;">{{
+                  "facturacionSJCS.facturacionesYPagos.cartasFacturacion" | translate }}
                 </span>
               </label>
               <i class="float-right"></i>
