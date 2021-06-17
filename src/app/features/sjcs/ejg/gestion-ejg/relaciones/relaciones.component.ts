@@ -394,6 +394,7 @@ export class RelacionesComponent implements OnInit {
 
   navigateToFichaPre() {
     let found = false;
+    sessionStorage.removeItem("Designa");
     this.progressSpinner = true;
     //Comprobamos si entre la relaciones hay una designacion
     this.relaciones.forEach(element => {

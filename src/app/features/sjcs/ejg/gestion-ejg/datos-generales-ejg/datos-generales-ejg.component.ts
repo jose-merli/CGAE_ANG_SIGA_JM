@@ -136,8 +136,8 @@ export class DatosGeneralesEjgComponent implements OnInit {
     this.sigaServices.post("gestionejg_getEjgDesigna", this.bodyInicial).subscribe(
       n => {
         let ejgDesignas = JSON.parse(n.body).ejgDesignaItems;
-        if(ejgDesignas.length==0) this.isAssociated = true;
-        else this.isAssociated = false;
+        if(ejgDesignas.length==0) this.isAssociated = false;
+        else this.isAssociated = true;
       }
     );
   }
