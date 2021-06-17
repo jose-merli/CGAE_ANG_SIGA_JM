@@ -18,12 +18,11 @@ export class TablaCartasFacturacionPagoComponent implements OnInit {
   selectAll;
   selectedDatos = [];
   numSelected = 0;
-  selectMultiple: boolean = false;
 
   progressSpinner: boolean = false;
   permisoEscritura: boolean = false;
   modoBusqueda;
-  modoSeleccion="single";
+  modoSeleccion = "multiple";
 
   @ViewChild("table") tabla: Table;
   @Input() datos = [];
@@ -36,22 +35,22 @@ export class TablaCartasFacturacionPagoComponent implements OnInit {
       this.permisoEscritura = this.persistenceService.getPermisos();
     }
 
-    if(this.persistenceService.getFiltros() != undefined){
+    if (this.persistenceService.getFiltros() != undefined) {
       this.modoBusqueda = this.persistenceService.getFiltros().modoBusqueda;
     }
 
     this.getCols();
- 
+
   }
 
-  getCols(){
+  getCols() {
 
-    if(this.modoBusqueda == "f"){
+    if (this.modoBusqueda == "f") {
       this.getColsFacturacion();
-    }else if(this.modoBusqueda == "p"){
+    } else if (this.modoBusqueda == "p") {
       this.getColsPago();
-    }else{
-      this.modoBusqueda="f";
+    } else {
+      this.modoBusqueda = "f";
       this.getColsFacturacion();
     }
 
@@ -75,7 +74,7 @@ export class TablaCartasFacturacionPagoComponent implements OnInit {
     ];
   }
 
- 
+
   getColsFacturacion() {
 
     this.cols = [
@@ -88,7 +87,7 @@ export class TablaCartasFacturacionPagoComponent implements OnInit {
       { field: "importeSoj", header: "censo.busquedaClientes.noResidente", width: "10%" },
       { field: "importeTotal", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.total", width: "10%" }
 
-    ];   
+    ];
   }
 
   getColsPago() {
@@ -108,7 +107,7 @@ export class TablaCartasFacturacionPagoComponent implements OnInit {
     ];
 
   }
-  
+
   clear() {
     this.msgs = [];
   }
@@ -119,39 +118,24 @@ export class TablaCartasFacturacionPagoComponent implements OnInit {
     this.tabla.reset();
   }
 
-  isSelectMultiple() {
-    this.selectMultiple = !this.selectMultiple;
-    if (!this.selectMultiple) {
-      this.selectedDatos = [];
-      this.numSelected = 0;
-      this.modoSeleccion="single";
-    } else {
-      this.selectAll = false;
-      this.selectedDatos = [];
-      this.numSelected = 0;
-      this.modoSeleccion="multiple";
-    }
-  }
-
-  actualizaSeleccionados(selectedDatos) {
-		this.numSelected = selectedDatos.length;
+  actualizaSeleccionados() {
+    this.numSelected = this.selectedDatos.length;
   }
 
   onChangeSelectAll() {
-		if (this.permisoEscritura) {
-			if (this.selectAll === true) {
-				this.selectMultiple = false;
-				this.selectedDatos = this.datos;
-				this.numSelected = this.datos.length;
-				
-			} else {
-				this.selectedDatos = [];
-				this.numSelected = 0;
-			}
+    if (this.permisoEscritura) {
+      if (this.selectAll === true) {
+        this.selectedDatos = this.datos;
+        this.numSelected = this.datos.length;
 
-		}
+      } else {
+        this.selectedDatos = [];
+        this.numSelected = 0;
+      }
+
+    }
   }
-  
+
   checkPermisosComunicar() {
     let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
 
@@ -162,7 +146,7 @@ export class TablaCartasFacturacionPagoComponent implements OnInit {
     }
   }
 
-  comunicar(){
+  comunicar() {
 
   }
 

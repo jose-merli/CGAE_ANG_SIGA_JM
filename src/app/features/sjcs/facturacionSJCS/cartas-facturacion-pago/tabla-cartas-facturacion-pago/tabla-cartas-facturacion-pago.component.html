@@ -3,8 +3,9 @@
 <div class="card mt-3">
   <div class="card-body p-0">
 
-    <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [selectionMode]="modoSeleccion" [responsive]="true"
-      #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" paginatorPosition="both">
+    <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [selectionMode]="modoSeleccion"
+      [responsive]="true" #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" paginatorPosition="both"
+      (onRowSelect)="actualizaSeleccionados()" (onRowUnselect)="actualizaSeleccionados()">
 
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
@@ -24,10 +25,12 @@
       <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
         <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
           <td class="text-center" *ngFor="let col of columns">
-            <div *ngIf="col.field == 'ncolegiado' || col.field == 'nombreCol' || col.field == 'nombreFac' || col.field == 'nombrePago' || col.field == 'nombreDest'">
+            <div
+              *ngIf="col.field == 'ncolegiado' || col.field == 'nombreCol' || col.field == 'nombreFac' || col.field == 'nombrePago' || col.field == 'nombreDest'">
               <span>{{dato[col.field]}}</span>
             </div>
-            <div *ngIf="col.field == 'importeOficio' || col.field == 'importeGuardia' || col.field == 'importeEjg' || col.field == 'totalImportesjcs' || col.field == 'importeTotalMovimientos' || col.field == 'totalImporteBruto'
+            <div
+              *ngIf="col.field == 'importeOficio' || col.field == 'importeGuardia' || col.field == 'importeEjg' || col.field == 'totalImportesjcs' || col.field == 'importeTotalMovimientos' || col.field == 'totalImporteBruto'
             || col.field == 'totalImporteIrpf' || col.field == 'importeTotalRetenciones' || col.field == 'importeTotal' || col.field == 'importeSoj'">
               <span>{{dato[col.field] | numberPipe }} €</span>
             </div>
@@ -43,17 +46,17 @@
       </ng-template>
       <ng-template pTemplate="paginatorleft">
         <div class="mostrar d-flex text-right justify-content-end">
-          <label
-            class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }}{{table.first + 1}}
+          <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' |
+            translate }}{{table.first + 1}}
             al {{table.first
             + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }}
             {{table.totalRecords}}</label>
-          <label class="pr-3 numSeleccionados"
-            *ngIf="selectedDatos  && selectedDatos.length >= 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}:
+          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length >= 0">{{
+            'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}:
             {{selectedDatos.length}}
           </label>
-          <label class="pr-3 numSeleccionados"
-            *ngIf="selectedDatos && selectedDatos.length == undefined">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}:
+          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length == undefined">{{
+            'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}:
             1
           </label>
           <label>{{"general.message.mostrar" | translate}}</label>
@@ -65,9 +68,6 @@
               label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname"
               [disabled]="!permisoEscritura"></p-checkbox>
           </div>
-          <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}"
-            (click)="isSelectMultiple()">
-            <i class="pr-2 fa fa-mouse-pointer"></i>{{"general.message.seleccion.multiple" | translate}}</label>
         </div>
       </ng-template>
     </p-table>
@@ -76,7 +76,8 @@
   <div class="card-footer">
     <div class="text-right main-button">
       <button pButton [disabled]="selectedDatos.length == 0 || selectedDatos == undefined" type="button"
-        icon="fa fa-comment" iconPos="left" label="{{ 'general.boton.comunicar' | translate}}" (click)="checkPermisosComunicar()"></button>
+        icon="fa fa-comment" iconPos="left" label="{{ 'general.boton.comunicar' | translate}}"
+        (click)="checkPermisosComunicar()"></button>
     </div>
   </div>
 </div>

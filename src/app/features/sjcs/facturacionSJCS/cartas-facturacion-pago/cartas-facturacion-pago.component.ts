@@ -99,40 +99,43 @@ export class CartasFacturacionPagoComponent implements OnInit, OnDestroy {
 
     this.progressSpinner = true;
 
+    // Hacemos una copia de los filtros para no modificar el original
+    let filtersCopy = JSON.parse(JSON.stringify(this.filtros.filtros));
+
     // Modificaciones para pasar de select a multiselect por usabilidad
-    if (undefined != this.filtros.filtros.idFacturacion) {
-      if (this.filtros.filtros.idFacturacion.length == 0) {
-        this.filtros.filtros.idFacturacion = undefined;
+    if (undefined != filtersCopy.idFacturacion) {
+      if (filtersCopy.idFacturacion.length == 0) {
+        filtersCopy.idFacturacion = undefined;
       } else {
-        this.filtros.filtros.idFacturacion = this.filtros.filtros.idFacturacion.toString();
+        filtersCopy.idFacturacion = filtersCopy.idFacturacion.toString();
       }
     }
 
-    if (undefined != this.filtros.filtros.idConcepto) {
-      if (this.filtros.filtros.idConcepto.length == 0) {
-        this.filtros.filtros.idConcepto = undefined;
+    if (undefined != filtersCopy.idConcepto) {
+      if (filtersCopy.idConcepto.length == 0) {
+        filtersCopy.idConcepto = undefined;
       } else {
-        this.filtros.filtros.idConcepto = this.filtros.filtros.idConcepto.toString();
+        filtersCopy.idConcepto = filtersCopy.idConcepto.toString();
       }
     }
 
-    if (undefined != this.filtros.filtros.idTurno) {
-      if (this.filtros.filtros.idTurno.length == 0) {
-        this.filtros.filtros.idTurno = undefined;
+    if (undefined != filtersCopy.idTurno) {
+      if (filtersCopy.idTurno.length == 0) {
+        filtersCopy.idTurno = undefined;
       } else {
-        this.filtros.filtros.idTurno = this.filtros.filtros.idTurno.toString();
+        filtersCopy.idTurno = filtersCopy.idTurno.toString();
       }
     }
 
-    if (undefined != this.filtros.filtros.idPartidaPresupuestaria) {
-      if (this.filtros.filtros.idPartidaPresupuestaria.length == 0) {
-        this.filtros.filtros.idPartidaPresupuestaria = undefined;
+    if (undefined != filtersCopy.idPartidaPresupuestaria) {
+      if (filtersCopy.idPartidaPresupuestaria.length == 0) {
+        filtersCopy.idPartidaPresupuestaria = undefined;
       } else {
-        this.filtros.filtros.idPartidaPresupuestaria = this.filtros.filtros.idPartidaPresupuestaria.toString();
+        filtersCopy.idPartidaPresupuestaria = filtersCopy.idPartidaPresupuestaria.toString();
       }
     }
 
-    this.sigaServices.post("facturacionsjcs_buscarCartasfacturacion", this.filtros.filtros).subscribe(
+    this.sigaServices.post("facturacionsjcs_buscarCartasfacturacion", filtersCopy).subscribe(
       data => {
 
         let datos = JSON.parse(data["body"]);
@@ -169,40 +172,43 @@ export class CartasFacturacionPagoComponent implements OnInit, OnDestroy {
 
     this.progressSpinner = true;
 
+    // Hacemos una copia de los filtros para no modificar el original
+    let filtersCopy = JSON.parse(JSON.stringify(this.filtros.filtros));
+
     // Modificaciones para pasar de select a multiselect por usabilidad
-    if (undefined != this.filtros.filtros.idPago) {
-      if (this.filtros.filtros.idPago.length == 0) {
-        this.filtros.filtros.idPago = undefined;
+    if (undefined != filtersCopy.idPago) {
+      if (filtersCopy.idPago.length == 0) {
+        filtersCopy.idPago = undefined;
       } else {
-        this.filtros.filtros.idPago = this.filtros.filtros.idPago.toString();
+        filtersCopy.idPago = filtersCopy.idPago.toString();
       }
     }
 
-    if (undefined != this.filtros.filtros.idConcepto) {
-      if (this.filtros.filtros.idConcepto.length == 0) {
-        this.filtros.filtros.idConcepto = undefined;
+    if (undefined != filtersCopy.idConcepto) {
+      if (filtersCopy.idConcepto.length == 0) {
+        filtersCopy.idConcepto = undefined;
       } else {
-        this.filtros.filtros.idConcepto = this.filtros.filtros.idConcepto.toString();
+        filtersCopy.idConcepto = filtersCopy.idConcepto.toString();
       }
     }
 
-    if (undefined != this.filtros.filtros.idTurno) {
-      if (this.filtros.filtros.idTurno.length == 0) {
-        this.filtros.filtros.idTurno = undefined;
+    if (undefined != filtersCopy.idTurno) {
+      if (filtersCopy.idTurno.length == 0) {
+        filtersCopy.idTurno = undefined;
       } else {
-        this.filtros.filtros.idTurno = this.filtros.filtros.idTurno.toString();
+        filtersCopy.idTurno = filtersCopy.idTurno.toString();
       }
     }
 
-    if (undefined != this.filtros.filtros.idPartidaPresupuestaria) {
-      if (this.filtros.filtros.idPartidaPresupuestaria.length == 0) {
-        this.filtros.filtros.idPartidaPresupuestaria = undefined;
+    if (undefined != filtersCopy.idPartidaPresupuestaria) {
+      if (filtersCopy.idPartidaPresupuestaria.length == 0) {
+        filtersCopy.idPartidaPresupuestaria = undefined;
       } else {
-        this.filtros.filtros.idPartidaPresupuestaria = this.filtros.filtros.idPartidaPresupuestaria.toString();
+        filtersCopy.idPartidaPresupuestaria = filtersCopy.idPartidaPresupuestaria.toString();
       }
     }
 
-    this.sigaServices.post("facturacionsjcs_buscarCartaspago", this.filtros.filtros).subscribe(
+    this.sigaServices.post("facturacionsjcs_buscarCartaspago", filtersCopy).subscribe(
       data => {
         let datos = JSON.parse(data["body"]);
         let error = JSON.parse(data.body).error;
