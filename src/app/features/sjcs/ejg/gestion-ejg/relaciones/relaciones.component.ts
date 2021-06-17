@@ -393,10 +393,12 @@ export class RelacionesComponent implements OnInit {
   }
 
   navigateToFichaPre() {
+    let found = false;
     this.progressSpinner = true;
     //Comprobamos si entre la relaciones hay una designacion
     this.relaciones.forEach(element => {
       if (element.sjcs == "DESIGNACIÓN") {
+        found = true;
         sessionStorage.setItem("Designa", JSON.stringify(element));
         let designaItem: DesignaItem = new DesignaItem();
         //designaItem.idInstitucion = parseInt(element.idinstitucion.toString());
@@ -463,6 +465,7 @@ export class RelacionesComponent implements OnInit {
         );
       }
     });
+    if(found==false)    this.router.navigate(["/ficha-pre-designacion"]);
   }
 
 
