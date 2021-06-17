@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, Input, ElementRef } from '@angular/core';
 import { Table } from '../../../../../../../node_modules/primeng/table';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { CommonsService } from '../../../../../_services/commons.service';
@@ -25,6 +25,7 @@ export class TablaCartasFacturacionPagoComponent implements OnInit {
   modoSeleccion = "multiple";
 
   @ViewChild("table") tabla: Table;
+  @ViewChild("tablaFoco") tablaFoco: ElementRef;
   @Input() datos = [];
 
   constructor(private changeDetectorRef: ChangeDetectorRef, private persistenceService: PersistenceService, private commonsService: CommonsService) { }

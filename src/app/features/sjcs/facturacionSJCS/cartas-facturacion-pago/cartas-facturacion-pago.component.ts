@@ -163,6 +163,9 @@ export class CartasFacturacionPagoComponent implements OnInit, OnDestroy {
       },
       () => {
         this.progressSpinner = false;
+        setTimeout(() => {
+          this.tabla.tablaFoco.nativeElement.scrollIntoView();
+        }, 5);
       }
     );
 
@@ -232,6 +235,9 @@ export class CartasFacturacionPagoComponent implements OnInit, OnDestroy {
       },
       () => {
         this.progressSpinner = false;
+        setTimeout(() => {
+          this.tabla.tablaFoco.nativeElement.scrollIntoView();
+        }, 5);
       }
     );
 
