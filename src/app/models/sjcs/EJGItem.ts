@@ -93,7 +93,9 @@ export class EJGItem {
     observacionesDictamen: String;
     iddictamen: String;
 
+    //Procurador
     numDesigna: String;
+    fechaDesProc: Date;
 
     requiereTurn: boolean;
     bis: boolean;

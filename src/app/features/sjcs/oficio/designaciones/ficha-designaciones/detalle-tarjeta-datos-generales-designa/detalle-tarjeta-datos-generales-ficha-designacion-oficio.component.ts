@@ -417,12 +417,12 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
               if(this.datosEJG != null && this.datosEJG != undefined){
 
                 //Realizamos un a peticion con un array strings sin determinar un objeto a medida ya que se considera que  
-                //el uso puntual de este servicio lo justufica.
+                //el uso puntual de este servicio lo justifica.
                 let request= [newDesigna.ano.toString(), this.datosEJG.annio, this.datosEJG.tipoEJG, newDesigna.idTurno.toString(), newId.id, this.datosEJG.numero];
                 
                 this.sigaServices.post("designacion_asociarEjgDesigna", request).subscribe(
                   m => {
-                    
+                    //Se debe añadir a la base de datos estos mensajes
                     if(JSON.parse(m.body).error.code==200)this.msgs = [{ severity: "success", summary: "Asociación con EJG realizada correctamente", detail: this.translateService.instant( JSON.parse(m.body).error.description) }];
                     else this.msgs = [{ severity: "error", summary: "Asociación con EJG fallida", detail: this.translateService.instant( JSON.parse(m.body).error.description) }];
                     sessionStorage.removeItem("EJG");

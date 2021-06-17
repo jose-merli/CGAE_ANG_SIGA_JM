@@ -25,7 +25,10 @@ import { ProcuradorItem } from '../../../../../../../models/sjcs/ProcuradorItem'
 	styleUrls: ['./procurador-pre-designacion.component.scss']
 })
 export class ProcuradorPreDesignacionComponent implements OnInit {
+
 	generalBody: ProcuradorItem = new ProcuradorItem();
+
+	//generalBody: EJGItem = new EJGItem();
 
 	tipoIdentificacion;
 	progressSpinner: boolean = false;
@@ -64,13 +67,13 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 		/* Procede de ficha ejg */
 		if (this.ejg.idInstitucionProc != null) {
 
-			this.generalBody.idInstitucion = this.ejg.idInstitucionProc.toString();
-			this.progressSpinner = true;
-			let procurador = new JusticiableBusquedaItem();
-			procurador.idpersona = this.generalBody.idProcurador.toString();
-			this.sigaServices.post("busquedaJusticiables_searchJusticiables", procurador).subscribe(
+			this.generalBody.fechaDesigna = this.ejg.fechaDesProc.toString();
+			this.generalBody.numerodesignacion = this.ejg.numDesigna;
+			this.sigaServices.post("gestionejg_busquedaProcuradorEJG", this.ejg).subscribe(
 				n => {
-					this.generalBody = JSON.parse(n.body).justiciableBusquedaItems;
+					let data = JSON.parse(n.body).justiciableBusquedaItems;
+					this.generalBody.nColegiado = data.nColegiado;
+					this.generalBody.nombre = data.apellidos1+" "+data.apellidos2+", "+data.nombre;
 					this.progressSpinner = false;
 				},
 				err => {
@@ -82,15 +85,17 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 
 		/* Procede de search*() */
 		if (sessionStorage.getItem("procurador")) {
-			let data = this.generalBody = JSON.parse(sessionStorage.getItem("procurador"))[0];
+			let data = JSON.parse(sessionStorage.getItem("procurador"))[0];
 			sessionStorage.removeItem("procurador");
+
 			this.generalBody.nColegiado = data.numeroColegiado;
 			this.generalBody.nombre = data.nombre;
-			this.permisoEscritura = true;
+			this.generalBody.fechaDesigna = this.ejg.fechaDesProc.toString();
+			this.generalBody.numerodesignacion = this.ejg.numDesigna;
+			this.ejg.idProcurador = data.idPersona;
+			this.ejg.idInstitucionProc = data.idInstitucion;
 		}
 		this.progressSpinner = false;
-
-		this.permisoEscritura = true;
 	}
 
 	search() {
@@ -142,7 +147,7 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 	Associate() {
 		this.ejg.idProcurador = this.generalBody.idProcurador.toString();
 		this.ejg.idInstitucionProc = parseInt(this.generalBody.idInstitucion.toString());
-		this.sigaServices.post('designaciones_guardarProcuradorEJG', this.ejg).subscribe(
+		this.sigaServices.post('gestionejg_guardarProcuradorEJG', this.ejg).subscribe(
 			//Añadir gestion de KO
 			(n) => {
 				this.progressSpinner = false;
