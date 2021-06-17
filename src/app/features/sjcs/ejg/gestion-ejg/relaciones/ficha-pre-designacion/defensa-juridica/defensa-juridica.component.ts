@@ -372,6 +372,8 @@ export class DefensaJuridicaComponent implements OnInit {
       n => {
         this.comboDelitos = n.combooItems;
         this.commonsServices.arregloTildesCombo(this.comboDelitos);
+        //Hay un problema con angular que por algún motivo parece que
+        //los delitos asociados no se muestran de forma consistente (a veces si, a veces no).
         if (this.designa == null) this.getDelitosEJG();
       },
       err => {

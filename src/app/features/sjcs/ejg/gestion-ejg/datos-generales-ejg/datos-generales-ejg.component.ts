@@ -113,6 +113,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
       this.nuevo = true;
       this.modoEdicion = false;
       this.body = new EJGItem();
+      this.bodyInicial = new EJGItem();
       this.showTipoExp = false;
       // this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     }
