@@ -427,6 +427,8 @@ export class SigaServices {
     solicitudModificacion_searchSolModifDatosCambiarFotoDetail:
       'solicitudModificacion/searchSolModifDatosCambiarFotoDetail',
     solicitudModificacion_searchDatosGeneralesDetail: 'solicitudModificacion/searchDatosGeneralesDetail',
+    //PRODUCTOS Y SERVICIOS
+    tiposProductos_searchListadoProductos: 'pys/listadoTipoProducto',
     // FOTO
     solicitudModificacion_searchSolModifDatosUseFoto: 'solicitudModificacion/searchSolModifDatosUseFoto',
     solicitudModificacion_searchDatosUseFotoDetail: 'solicitudModificacion/searchDatosUseFotoDetail',
@@ -1096,4 +1098,5 @@ export class SigaServices {
         return response;
       });
   }
+
 }

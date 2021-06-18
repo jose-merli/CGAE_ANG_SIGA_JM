@@ -1,4 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { TiposProductosObject } from '../../../../models/TiposProductosObject';
+import { SigaServices } from '../../../../_services/siga.service';
 
 @Component({
   selector: 'app-tipos-productos',
@@ -8,21 +10,23 @@ import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 export class TiposProductosComponent implements OnInit {
   //Variables generales app
   msgs = []; //Para mostrar los mensajes p-growl
+  progressSpinner: boolean = false; //Para mostrar/no mostrar el spinner de carga
 
   //Variables p-datatable
+  @ViewChild("productsTable") productsTable; //Referencia a la tabla de productos del html
+  colsProducts: any = []; //Columnas tabla productos
+  productData: any[]; //Datos de la tabla any provisional
+  selectedRows; //Datos de las filas seleccionadas.
+  numSelectedRows: number = 0; //Se usa para mostrar visualmente el numero de filas seleccionadas
   selectMultipleRows: boolean = false; //Seleccion multiples filas de la tabla
   selectAllRows: boolean = false; //Selecciona todas las filas de la pagina actual de la tabla
-  @ViewChild("productsTable") productsTable; //Referencia a la tabla de productos del html
-  productData: any[]; //Datos de la tabla any provisional
   rowsPerPage: number = 10; //Define el numero de filas mostradas por pagina
   rowsPerPageSelectValues; //Valores del combo Mostar X registros
   edit: boolean = true; //?
-  numSelectedRows: number = 0; //Se usa para mostrar visualmente el numero de filas seleccionadas
-  selectedRows; //Datos de las filas seleccionadas.
-  colsProducts: any = []; //Columnas tabla productos
 
-
-  constructor(private changeDetectorRef: ChangeDetectorRef) { }
+  constructor(private changeDetectorRef: ChangeDetectorRef, private sigaServices: SigaServices) {
+    this.getListaProductos();
+  }
 
   ngOnInit() {
     this.initColsProducts();
@@ -50,21 +54,22 @@ export class TiposProductosComponent implements OnInit {
       }
     ];
   }
+
   //Define las columnas
   initColsProducts() {
     this.colsProducts = [
       {
-        field: "categoria",
-        //value: "idInstitucion",
-        //header: "general.codeext"
+        field: "descripciontipo",//Campo interfaz TiposProductosItem
+        header: "facturacion.maestros.tiposproductos.categoria" //Titulo columna
       },
       {
         field: "descripcion",
-        //value: "idInstitucion",
-        //header: "general.description"
+        //value: "idInstitucion",//??
+        header: "facturacion.maestros.tiposservicios.nombre"
       }
     ];
   }
+
   //Activa/Desactiva la paginacion dependiendo de si el array viene vacio o no.
   enablePagination() {
     if (!this.productData || this.productData.length == 0) return false;
@@ -126,7 +131,7 @@ export class TiposProductosComponent implements OnInit {
   } */
 
   //Metodo que guarda la edicion del campo de la tabla editado.
-  productsToEdit;
+  productsToEdit = [];
   originalProducts; //Productos traidos de la busqueda/carga inicial
   //MODIFICAR CONDICIONES
   changeTableField(row) {
@@ -171,6 +176,44 @@ export class TiposProductosComponent implements OnInit {
     this.productsTable.reset();
   }
   //FIN METODOS P-DATABLE
+
+  //INICIO METODOS SERVICIOS
+
+  tiposProductosObject: TiposProductosObject;
+  //Metodo para obtener los datos de la tabla productos
+  getListaProductos() {
+    this.numSelectedRows = 0;
+    this.selectedRows = [];
+    this.progressSpinner = true;
+    //this.nuevo = false;
+    this.edit = false;
+    //this.historico = false;
+
+    this.selectAllRows = false;
+    this.selectMultipleRows = false;
+
+    this.sigaServices.get("tiposProductos_searchListadoProductos").subscribe(
+      tiposProductosObject => {
+        this.progressSpinner = false;
+        //this.tiposProductosObject = tiposProductosObject;
+        this.tiposProductosObject = JSON.parse(tiposProductosObject["body"]);
+        this.productData = this.tiposProductosObject.tiposProductosItems;
+
+
+        /*  if (error != null && error.description != null) {​​​}​​​
+      */
+        this.productsTable.paginator = true;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+  //FIN METODOS SERVICIOS
 
   //Borra el mensaje de notificacion p-growl mostrado en la esquina superior derecha cuando pasas el puntero del raton sobre el
   clear() {

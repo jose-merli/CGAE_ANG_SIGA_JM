@@ -1,3 +1,6 @@
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 
 <!-- Titulo pantalla: Facturacion > Maestros > Tipos Productos -->
@@ -23,7 +26,7 @@
         selectionMode="multiple" [(selection)]="selectedRows" (onRowSelect)="onRowSelect(selectedRows)"
         (onRowUnselect)="onRowUnselect(selectedRows)">
 
-        <p-column [style]="{'width': '20%'}" [sortable]="true" field="categoria"
+        <p-column [style]="{'width': '20%'}" [sortable]="true" field="descripciontipo"
           filterPlaceholder="{{'general.boton.search' | translate}}" [header]="colsProducts[0].header | translate"
           [filter]="true" filterMatchMode="contains">
           <ng-template let-row="rowData" pTemplate="body">
@@ -32,7 +35,7 @@
 
         </p-column>
 
-        <p-column [sortable]="true" field="nombre" [header]="colsProducts[1].header | translate" [filter]="true"
+        <p-column [sortable]="true" field="descripcion" [header]="colsProducts[1].header | translate" [filter]="true"
           filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
           <ng-template let-row="rowData" pTemplate="body">
             <span>
@@ -44,9 +47,10 @@
         <ng-template pTemplate="paginatorLeft">
           <div class="mostrar d-flex text-right justify-content-end">
             <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' |
-              translate}} {{table.first
-              + 1}} al {{table.first + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
-              | translate }} {{table.totalRecords}}</label>
+              translate}} {{productsTable.first
+              + 1}} al {{productsTable.first + productsTable.rows}} {{
+              'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+              | translate }} {{productsTable.totalRecords}}</label>
             <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' |
               translate }}: {{numSelected}}
             </label>
@@ -93,7 +97,7 @@
         (onRowSelect)="onRowSelectTipos(selectedRows)" (onRowUnselect)="actualizaSeleccionados(selectedRows)"
         [metaKeySelection]="false">
 
-        <p-column [style]="{'width': '20%'}" [sortable]="true" field="categoria"
+        <p-column [style]="{'width': '20%'}" [sortable]="true" field="descripciontipo"
           filterPlaceholder="{{'general.boton.search' | translate}}" [header]="colsProducts[0].header | translate"
           [filter]="true" filterMatchMode="contains">
           <ng-template let-row="rowData" pTemplate="body">
@@ -103,7 +107,7 @@
           </ng-template>
         </p-column>
 
-        <p-column [sortable]="true" field="nombre" [header]="colsProducts[1].header | translate" [filter]="true"
+        <p-column [sortable]="true" field="descripcion" [header]="colsProducts[1].header | translate" [filter]="true"
           filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
           <ng-template let-row="rowData" pTemplate="body">
             <span *ngIf="!row.isMod">
@@ -116,9 +120,10 @@
         <ng-template pTemplate="paginatorLeft">
           <div class="mostrar d-flex text-right justify-content-end">
             <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' |
-              translate}} {{table.first
-              + 1}} al {{table.first + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
-              | translate }} {{table.totalRecords}}</label>
+              translate}} {{productsTable.first
+              + 1}} al {{productsTable.first + productsTable.rows}} {{
+              'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+              | translate }} {{productsTable.totalRecords}}</label>
             <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' |
               translate }}: {{numSelected}}
             </label>
@@ -140,17 +145,17 @@
         <p-footer>
 
           <div class="text-right main-button">
-            <button [disabled]="datosEditar != ''" (click)="getHistory(); selectedRows=[];" pButton type="button"
+            <button [disabled]="productsToEdit != ''" (click)="getHistory(); selectedRows=[];" pButton type="button"
               icon="fa fa-history " iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
             <button [disabled]="!selectMultipleRows && !selectAllRows" pButton type="button" icon="fa fa-close "
               iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
-            <button (click)="return();" [disabled]="datosEditar.length == 0" pButton type="button" icon="fa fa-undo"
+            <button (click)="return();" [disabled]="productsToEdit.length == 0" pButton type="button" icon="fa fa-undo"
               iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
             <button [disabled]="selectedRows == ''" (click)="confirmToRemove(selectedRows)" pButton type="button"
               icon="fa fa-trash-alt " iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
-            <button (click)="confirmEditAction();" [disabled]="datosEditar.length == 0" pButton type="button"
+            <button (click)="confirmEditAction();" [disabled]="productsToEdit.length == 0" pButton type="button"
               icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-            <button (click)="newElement();" [disabled]="datosEditar.length != 0" pButton type="button"
+            <button (click)="newElement();" [disabled]="productsToEdit.length != 0" pButton type="button"
               icon="fa fa-plus  " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
           </div>
 
