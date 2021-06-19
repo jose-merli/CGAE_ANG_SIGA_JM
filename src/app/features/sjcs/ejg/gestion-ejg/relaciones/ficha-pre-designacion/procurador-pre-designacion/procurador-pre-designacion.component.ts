@@ -68,12 +68,14 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 		if (this.ejg.idInstitucionProc != null) {
 
 			this.generalBody.fechaDesigna = this.ejg.fechaDesProc.toString();
-			this.generalBody.numerodesignacion = this.ejg.numDesigna;
+			this.generalBody.numerodesignacion = this.ejg.numerodesignaproc;
+			this.generalBody.idInstitucion = this.ejg.idInstitucionProc.toString();
+			this.generalBody.idProcurador = this.ejg.idProcurador;
 			this.sigaServices.post("gestionejg_busquedaProcuradorEJG", this.ejg).subscribe(
 				n => {
-					let data = JSON.parse(n.body).justiciableBusquedaItems;
+					let data = JSON.parse(n.body).procuradorItems[0];
 					this.generalBody.nColegiado = data.nColegiado;
-					this.generalBody.nombre = data.apellidos1+" "+data.apellidos2+", "+data.nombre;
+					this.generalBody.nombre = data.apellido1 + " " + data.apellido2 + ", " + data.nombre;
 					this.progressSpinner = false;
 				},
 				err => {
@@ -81,19 +83,20 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 				});
 		}
 
-		
+
 
 		/* Procede de search*() */
 		if (sessionStorage.getItem("procurador")) {
 			let data = JSON.parse(sessionStorage.getItem("procurador"))[0];
 			sessionStorage.removeItem("procurador");
 
-			this.generalBody.nColegiado = data.numeroColegiado;
-			this.generalBody.nombre = data.nombre;
-			this.generalBody.fechaDesigna = this.ejg.fechaDesProc.toString();
-			this.generalBody.numerodesignacion = this.ejg.numDesigna;
-			this.ejg.idProcurador = data.idPersona;
-			this.ejg.idInstitucionProc = data.idInstitucion;
+			this.generalBody.idProcurador = data.idProcurador;
+			this.generalBody.nColegiado = data.nColegiado;
+			this.generalBody.nombre = data.nombreApe;
+			if (this.ejg.idInstitucionProc != null) this.generalBody.fechaDesigna = this.ejg.fechaDesProc.toString();
+			this.generalBody.numerodesignacion = this.ejg.numerodesignaproc;
+			this.generalBody.idInstitucion = data.idInstitucion;
+			this.generalBody.idProcurador = data.idProcurador;
 		}
 		this.progressSpinner = false;
 	}
@@ -106,7 +109,7 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 				this.translateService.instant('general.message.noTienePermisosRealizarAccion')
 			);
 		} else {
-			sessionStorage.setItem("origin", "procuradorEJG");
+			sessionStorage.setItem("nuevoProcurador", "true");
 			this.router.navigate(['/busquedaGeneral']);
 		}
 	}
@@ -122,19 +125,30 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 
 
 	Disassociate() {
-		let ejg: EJGItem = this.persistenceService.getDatos();
-		ejg.idProcurador = null;
-		ejg.idInstitucionProc = null;
-		this.sigaServices.post('gestionejg_guardarProcuradorEJG', ejg).subscribe(
-			//Añadir gestion de estatus KO 
+		let ejgPeticion: EJGItem = this.persistenceService.getDatos();
+		ejgPeticion.idProcurador = null;
+		ejgPeticion.idInstitucionProc = null;
+		ejgPeticion.fechaDesProc = null;
+		ejgPeticion.numerodesignaproc = null;
+		this.sigaServices.post('gestionejg_guardarProcuradorEJG', ejgPeticion).subscribe(
 			(n) => {
-
-				this.showMessage(
-					'success',
-					this.translateService.instant('general.message.correct'),
-					this.translateService.instant('general.message.accion.realizada')
-				);
-				this.generalBody = new ProcuradorItem();
+				if (n.statusText == "OK") {
+					this.showMessage(
+						'success',
+						this.translateService.instant('general.message.correct'),
+						this.translateService.instant('general.message.accion.realizada')
+					);
+					this.generalBody = new ProcuradorItem();
+					this.persistenceService.setDatos(ejgPeticion);
+					this.ejg = ejgPeticion;
+				}
+				else {
+					this.showMessage(
+						'error',
+						this.translateService.instant('general.message.incorrect'),
+						this.translateService.instant('general.mensaje.error.bbdd')
+					);
+				}
 				this.progressSpinner = false;
 			},
 			(err) => {
@@ -145,18 +159,31 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 	}
 
 	Associate() {
-		this.ejg.idProcurador = this.generalBody.idProcurador.toString();
-		this.ejg.idInstitucionProc = parseInt(this.generalBody.idInstitucion.toString());
-		this.sigaServices.post('gestionejg_guardarProcuradorEJG', this.ejg).subscribe(
-			//Añadir gestion de KO
+		let ejgPeticion = this.persistenceService.getDatos();
+		ejgPeticion.idProcurador = this.generalBody.idProcurador.toString();
+		ejgPeticion.idInstitucionProc = parseInt(this.generalBody.idInstitucion.toString());
+		ejgPeticion.fechaDesProc = this.generalBody.fechaDesigna;
+		ejgPeticion.numerodesignaproc = this.generalBody.numerodesignacion;
+		this.sigaServices.post('gestionejg_guardarProcuradorEJG', ejgPeticion).subscribe(
 			(n) => {
 				this.progressSpinner = false;
-				this.showMessage(
-					'success',
-					this.translateService.instant('general.message.correct'),
-					this.translateService.instant('general.message.accion.realizada')
-				);
-				this.persistenceService.setBody(this.generalBody);
+				if (n.statusText == "OK") {
+					this.showMessage(
+						'success',
+						this.translateService.instant('general.message.correct'),
+						this.translateService.instant('general.message.accion.realizada')
+					);
+
+					this.ejg = ejgPeticion;
+					this.persistenceService.setDatos(this.ejg);
+				}
+				else {
+					this.showMessage(
+						'error',
+						this.translateService.instant('general.message.incorrect'),
+						this.translateService.instant('general.mensaje.error.bbdd')
+					);
+				}
 			},
 			(err) => {
 				this.progressSpinner = false;
@@ -170,7 +197,7 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 	}
 
 	disabledSave() {
-		if (this.generalBody.nColegiado != undefined && this.generalBody.nColegiado != '') {
+		if (this.generalBody.idProcurador != undefined && this.generalBody.idProcurador != '') {
 			return false;
 		} else {
 			return true;
@@ -178,7 +205,7 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 	}
 
 	disabledDisassociate() {
-		if (this.generalBody.nColegiado != undefined && this.generalBody.nColegiado != '') {
+		if (this.ejg.idProcurador != undefined && this.ejg.idProcurador != '') {
 			return false;
 		} else {
 			return true;
