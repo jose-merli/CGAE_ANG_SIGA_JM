@@ -429,6 +429,7 @@ export class SigaServices {
     solicitudModificacion_searchDatosGeneralesDetail: 'solicitudModificacion/searchDatosGeneralesDetail',
     //PRODUCTOS Y SERVICIOS
     tiposProductos_searchListadoProductos: 'pys/listadoTipoProducto',
+    tiposProductos_activarDesactivarProducto: 'pys/activarDesactivarProducto',
     // FOTO
     solicitudModificacion_searchSolModifDatosUseFoto: 'solicitudModificacion/searchSolModifDatosUseFoto',
     solicitudModificacion_searchDatosUseFotoDetail: 'solicitudModificacion/searchDatosUseFotoDetail',

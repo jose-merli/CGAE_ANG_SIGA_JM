@@ -12,155 +12,100 @@
   </p>
 </div>
 
-<p>
-  tipos-productos works!
-</p>
-
-
 <div class="card mt-3">
   <div class="card-body p-0">
-    <div *ngIf="selectMultipleRows || selectAllRows">
-      <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" pageLinks="4" [responsive]="true"
-        #productsTable class="tabla-listado" [ngClass]="{'customCursor': selectMultipleRows}" [value]="productData"
-        sortOrder="-1" [paginator]="enablePagination()" paginatorPosition="both" [rows]="rowsPerPage"
-        selectionMode="multiple" [(selection)]="selectedRows" (onRowSelect)="onRowSelect(selectedRows)"
-        (onRowUnselect)="onRowUnselect(selectedRows)">
+    <p-table #productsTable [value]="productData" [columns]="colsProducts" [(selection)]="selectedRows"
+      selectionMode="multiple" [responsive]="true" class="tabla-listado" [paginator]="true" [rows]="rowsPerPage"
+      (onRowSelect)="onRowSelect()" (onRowUnselect)="onRowUnselect()" [first]="first"
+      (sortFunction)="customSort($event)" [customSort]="true" paginatorPosition="both">
 
-        <p-column [style]="{'width': '20%'}" [sortable]="true" field="descripciontipo"
-          filterPlaceholder="{{'general.boton.search' | translate}}" [header]="colsProducts[0].header | translate"
-          [filter]="true" filterMatchMode="contains">
-          <ng-template let-row="rowData" pTemplate="body">
-            <span>{{row[colsProducts[0].field]}}</span>
-          </ng-template>
+      <ng-template pTemplate="colgroup" let-columns>
+        <colgroup>
+          <col *ngFor="let col of colsProducts" [style.width]="col.width">
+        </colgroup>
+      </ng-template>
 
-        </p-column>
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+            {{ col.header | translate}}
+            <p-sortIcon [field]="col.field"></p-sortIcon>
+            <input pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()"
+              *ngSwitchCase="col.field" pInputText type="text"
+              (input)="productsTable.filter($event.target.value, col.field, 'contains')" />
+          </th>
+        </tr>
+      </ng-template>
 
-        <p-column [sortable]="true" field="descripcion" [header]="colsProducts[1].header | translate" [filter]="true"
-          filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
-          <ng-template let-row="rowData" pTemplate="body">
-            <span>
-              {{row[colsProducts[1].field]}}</span>
-          </ng-template>
-        </p-column>
-
-
-        <ng-template pTemplate="paginatorLeft">
-          <div class="mostrar d-flex text-right justify-content-end">
-            <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' |
-              translate}} {{productsTable.first
-              + 1}} al {{productsTable.first + productsTable.rows}} {{
-              'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
-              | translate }} {{productsTable.totalRecords}}</label>
-            <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' |
-              translate }}: {{numSelected}}
-            </label>
-            <label>{{ "general.message.mostrar" | translate}}</label>
-            <p-dropdown [(ngModel)]="rowsPerPage" [options]="rowsPerPageSelectValues"
-              (onChange)="onChangeRowsPerPages($event)">
-            </p-dropdown>
-            <label class="pl-1">
-              {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-            <div class="ml-3 selectAll">
-              <p-checkbox (onChange)="onChangeSelectAllRows()" [(ngModel)]="selectAllRows" binary="true"
-                label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname">
-              </p-checkbox>
+      <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+        <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+          <td class="text-center" *ngFor="let col of columns">
+            <div *ngIf="col.field == 'descripciontipo'">
+              <label>{{ rowData[col.field]}}</label>
             </div>
-          </div>
-        </ng-template>
-
-
-        <p-footer>
-          <div class="text-right main-button">
-            <button [disabled]="selectMultipleRows || selectAllRows" pButton type="button" icon="fa fa-history "
-              iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
-            <button [disabled]="selectMultipleRows || selectAllRows" pButton type="button" icon="fa fa-close "
-              iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
-            <button [disabled]="selectMultipleRows || selectAllRows" pButton type="button" icon="fa fa-undo"
-              iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-            <button [disabled]="selectedRows ==''" (click)="confirmToRemove(selectedRows)" pButton type="button"
-              icon="fa fa-trash-alt " iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
-            <button [disabled]="selectMultipleRows || selectAllRows" pButton type="button" icon="far fa-save"
-              iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-            <button [disabled]="selectMultipleRows || selectAllRows" pButton type="button" icon="fa fa-plus"
-              iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
-          </div>
-        </p-footer>
-      </p-dataTable>
-    </div>
-
-    <!--REVISANDO DESDE AQUI HACIA ABAJO-->
-    <div *ngIf="!selectMultipleRows && !selectAllRows">
-      <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" pageLinks="4" [responsive]="true"
-        #productsTable class="tabla-listado" [ngClass]="{'customCursor': selectMultipleRows}" [value]="productData"
-        sortOrder="-1" [paginator]="enablePagination()" paginatorPosition="both" [rows]="rowsPerPage"
-        [editable]="editable" selectionMode="multiple" [(selection)]="selectedRows" [sortField]="sortF"
-        (onRowSelect)="onRowSelectTipos(selectedRows)" (onRowUnselect)="actualizaSeleccionados(selectedRows)"
-        [metaKeySelection]="false">
-
-        <p-column [style]="{'width': '20%'}" [sortable]="true" field="descripciontipo"
-          filterPlaceholder="{{'general.boton.search' | translate}}" [header]="colsProducts[0].header | translate"
-          [filter]="true" filterMatchMode="contains">
-          <ng-template let-row="rowData" pTemplate="body">
-            <span *ngIf="!row.isMod">
-              {{dato[colsProducts[0].field]}}</span>
-            <input *ngIf="row.isMod" [(ngModel)]="row[colsProducts[0].field]" type="text" pInputText />
-          </ng-template>
-        </p-column>
-
-        <p-column [sortable]="true" field="descripcion" [header]="colsProducts[1].header | translate" [filter]="true"
-          filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
-          <ng-template let-row="rowData" pTemplate="body">
-            <span *ngIf="!row.isMod">
-              {{row[colsProducts[1].field]}}</span>
-            <input *ngIf="row.isMod" [(ngModel)]="row[colsProducts[1].field]" (input)="changeTableField(row)"
-              type="text" pInputText />
-          </ng-template>
-        </p-column>
-
-        <ng-template pTemplate="paginatorLeft">
-          <div class="mostrar d-flex text-right justify-content-end">
-            <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' |
-              translate}} {{productsTable.first
-              + 1}} al {{productsTable.first + productsTable.rows}} {{
-              'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
-              | translate }} {{productsTable.totalRecords}}</label>
-            <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' |
-              translate }}: {{numSelected}}
-            </label>
-            <label>{{ "general.message.mostrar" | translate}}</label>
-            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
-            </p-dropdown>
-            <label class="pl-1">
-              {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-            <div class="ml-3 selectAll">
-              <p-checkbox (onChange)="onChangeSelectAllRows()" [(ngModel)]="selectAllRows" binary="true"
-                label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname">
-              </p-checkbox>
+            <div *ngIf="col.field == 'descripcion'">
+              <label>{{ rowData[col.field]}}</label>
             </div>
-            <!-- <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultipleRows}" (click)="isSelectMultiple(); selectedDatos=false">
-                          <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label> -->
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage" let-columns>
+        <tr>
+          <td [attr.colspan]="columns.length">
+            {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="paginatorleft">
+        <div class="mostrar d-flex text-right justify-content-end">
+          <label class="pr-3 registros-totales">Mostrando registros del {{productsTable.first + 1}} al
+            {{productsTable.first +
+            productsTable.rows}} de un total de {{productsTable.totalRecords}}</label>
+          <div>
+            <label class="pr-3 numSeleccionados">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' |
+              translate }}: {{numSelectedRows}}
+            </label>
           </div>
-        </ng-template>
+          <label>{{"general.message.mostrar" | translate}}</label>
+          <p-dropdown [(ngModel)]="rowsPerPage" [options]="rowsPerPageSelectValues"
+            (onChange)="onChangeRowsPerPages($event)">
+          </p-dropdown>
+          <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
 
-        <p-footer>
-
-          <div class="text-right main-button">
-            <button [disabled]="productsToEdit != ''" (click)="getHistory(); selectedRows=[];" pButton type="button"
-              icon="fa fa-history " iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
-            <button [disabled]="!selectMultipleRows && !selectAllRows" pButton type="button" icon="fa fa-close "
-              iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
-            <button (click)="return();" [disabled]="productsToEdit.length == 0" pButton type="button" icon="fa fa-undo"
-              iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-            <button [disabled]="selectedRows == ''" (click)="confirmToRemove(selectedRows)" pButton type="button"
-              icon="fa fa-trash-alt " iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
-            <button (click)="confirmEditAction();" [disabled]="productsToEdit.length == 0" pButton type="button"
-              icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-            <button (click)="newElement();" [disabled]="productsToEdit.length != 0" pButton type="button"
-              icon="fa fa-plus  " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+          <div class="ml-3 selectAll">
+            <p-checkbox (onChange)="onChangeSelectAllRows()" [(ngModel)]="selectAllRows" binary="true"
+              label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname">
+            </p-checkbox>
           </div>
+        </div>
+      </ng-template>
+    </p-table>
 
-        </p-footer>
-      </p-dataTable>
-    </div>
+    <p-footer>
+      <div class="text-right main-button">
+        <button [disabled]="productsToEdit != ''" (click)="getHistory(); selectedRows=[];" pButton type="button"
+          icon="fa fa-history " iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
+
+        <button [disabled]="selectedRows == ''" (click)="activarDesactivar(selectedRows)" pButton type="button"
+          icon="fa fa-trash-alt " iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
+
+        <button (click)="confirmEditAction();" [disabled]="productsToEdit.length == 0" pButton type="button"
+          icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+
+        <button (click)="newElement();" [disabled]="productsToEdit.length != 0" pButton type="button"
+          icon="fa fa-plus  " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+      </div>
+    </p-footer>
+
   </div>
 </div>
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="deletePlantillaDoc" icon="icon"
+  width="425" #deletePlantillaDoc>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="deletePlantillaDoc.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="deletePlantillaDoc.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
