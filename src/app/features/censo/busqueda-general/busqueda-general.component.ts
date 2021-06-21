@@ -221,11 +221,11 @@ export class BusquedaGeneralComponent implements OnDestroy {
     ];
 
     this.colsProcs = [
-      { field: 'nombre', header: "administracion.parametrosGenerales.literal.nombre" },
-      { field: 'apellidos', header: "gratuita.mantenimientoTablasMaestra.literal.apellidos" },
-      { field: 'nombreColProcurador', header: "censo.busquedaClientesAvanzada.literal.colegio" },
-      { field: 'nColegiado', header: "censo.resultadosSolicitudesModificacion.literal.nColegiado" },
-      { field: 'fechaModificacion', header: "censo.datosDireccion.literal.fechaModificacion" }
+      { field: 'nombre', header: this.translateService.instant("administracion.parametrosGenerales.literal.nombre") },
+      { field: 'apellidos', header: this.translateService.instant("gratuita.mantenimientoTablasMaestra.literal.apellidos") },
+      { field: 'nombreColProcurador', header: this.translateService.instant("censo.busquedaClientesAvanzada.literal.colegio") },
+      { field: 'nColegiado', header: this.translateService.instant("censo.resultadosSolicitudesModificacion.literal.nColegiado") },
+      { field: 'fechaModificacion', header: this.translateService.instant("censo.datosDireccion.literal.fechaModificacion") }
     ];
 
     this.rowsPerPage = [

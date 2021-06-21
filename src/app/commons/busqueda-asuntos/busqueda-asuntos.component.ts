@@ -58,6 +58,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
   selectMultiple: boolean = false;
   textFilter: string = "Seleccionar";
   buscar: boolean = false;
+  fromEJG: boolean = false;
 
   es: any = esCalendar;
   permisoEscritura: any;
@@ -94,6 +95,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
 
     if (sessionStorage.getItem('EJG')) {
       this.datosEJG = JSON.parse(sessionStorage.getItem('EJG'));
+      this.fromEJG = true;
       sessionStorage.removeItem('EJG');
     }
 
