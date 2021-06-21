@@ -9,6 +9,7 @@ import { FiltroBusquedaFacturacionComponent } from "./filtro-busqueda-facturacio
 import { TablaBusquedaFacturacionComponent } from "./tabla-busqueda-facturacion/tabla-busqueda-facturacion.component";
 import { FacturacionItem } from '../../../../models/sjcs/FacturacionItem';
 import { ErrorItem } from '../../../../models/ErrorItem';
+import { FacturacionDeleteDTO } from '../../../../models/sjcs/FacturacionDeleteDTO';
 
 @Component({
 	selector: 'app-facturaciones-pagos',
@@ -230,9 +231,17 @@ export class FacturacionesYPagosComponent implements OnInit {
 		if (this.filtroSeleccionado == "facturacion") {
 			this.sigaServices.post("facturacionsjcs_eliminarFacturacion", event).subscribe(
 				data => {
-					console.log(data);
-					this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("messages.deleted.success"));
-					this.busqueda(this.filtroSeleccionado);
+
+					const resp: FacturacionDeleteDTO = JSON.parse(data.body);
+					const error = resp.error;
+
+					if (resp.status == 'KO' && error != null && error.description != null) {
+						this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.description.toString()));
+					} else {
+						this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("messages.deleted.success"));
+						this.busqueda(this.filtroSeleccionado);
+					}
+
 					this.progressSpinner = false;
 				},
 				err => {

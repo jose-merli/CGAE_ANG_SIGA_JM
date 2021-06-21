@@ -1,13 +1,11 @@
 import { Component, OnInit, EventEmitter, ViewChild, Input, Output } from '@angular/core';
 import { FacturacionItem } from '../../../../../../models/sjcs/FacturacionItem';
 import { ComboItem } from '../../../../../../models/ComboItem';
-import { esCalendar, catCalendar, euCalendar, glCalendar } from '../../../../../../utils/calendar';
 import { USER_VALIDATIONS } from '../../../../../../properties/val-properties';
 import { CommonsService } from '../../../../../../_services/commons.service';
-import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { SigaWrapper } from "../../../../../../wrapper/wrapper.class";
-import { Calendar, ConfirmationService } from 'primeng/primeng';
+import { ConfirmationService } from 'primeng/primeng';
 import { TranslateService } from '../../../../../../commons/translate';
 
 @Component({
@@ -16,19 +14,6 @@ import { TranslateService } from '../../../../../../commons/translate';
   styleUrls: ['./datos-facturacion.component.scss']
 })
 export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
-  //FECHAS
-  value: Date;
-  valueChangeSelected = new EventEmitter();
-  valueChangeInput = new EventEmitter();
-  valueFocus = new EventEmitter();
-  es: any = esCalendar;
-  fechaSelectedFromCalendar: boolean = false;
-  currentLang;
-  yearRange: string;
-  minDate: Date;
-  maxDate: Date;
-  showTime: boolean;
-  calendar: Calendar;
 
   @Input() cerrada;
   @Input() idFacturacion;
@@ -50,6 +35,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
   checkRegularizarInicial: boolean = false;
   checkVisibleInicial: boolean = false;
   selectedItem: number = 10;
+  minDate: Date;
 
   body: FacturacionItem = new FacturacionItem();
   bodyAux: FacturacionItem = new FacturacionItem();
@@ -69,7 +55,6 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
   }
 
   ngOnInit() {
-    this.getRangeYear();
 
     this.comboPartidasPresupuestarias();
 
@@ -202,13 +187,6 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
         this.progressSpinnerDatos = false;
       }
     );
-  }
-
-  borrarFecha() {
-    this.value = null;
-    this.valueChangeInput.emit(this.value);
-    this.fechaSelectedFromCalendar = true;
-    this.calendar.onClearButtonClick("");
   }
 
   save() {
@@ -512,42 +490,8 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
   getCols() {
     this.cols = [
       { field: "fechaEstado", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaEstado" },
-      { field: "desEstado", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado" }
+      { field: "desEstado", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado" },
     ];
-  }
-
-  getLenguage() {
-    this.sigaService.get('usuario').subscribe((response) => {
-      this.currentLang = response.usuarioItem[0].idLenguaje;
-
-      switch (this.currentLang) {
-        case '1':
-          this.es = esCalendar;
-          break;
-        case '2':
-          this.es = catCalendar;
-          break;
-        case '3':
-          this.es = euCalendar;
-          break;
-        case '4':
-          this.es = glCalendar;
-          break;
-        default:
-          this.es = esCalendar;
-          break;
-      }
-    });
-  }
-
-  ngAfterViewInit(): void {
-    this.getLenguage();
-  }
-
-  getRangeYear() {
-    let today = new Date();
-    let year = today.getFullYear();
-    this.yearRange = year - 80 + ':' + (year + 20);
   }
 
   onHideDatosGenerales() {
@@ -579,27 +523,22 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
     this.body.fechaHasta = event;
   }
 
-  change(newValue) {
-    //evento que cambia el value de la fecha
-    if (!this.showTime) {
-      this.fechaSelectedFromCalendar = true;
-      this.value = new Date(newValue);
-      let year = this.value.getFullYear();
-      if (year >= year - 80 && year <= year + 20) {
-        if (this.minDate) {
-          if (this.value >= this.minDate) {
-            this.valueChangeSelected.emit(this.value);
-          } else {
-            this.borrarFecha();
-          }
-        } else {
-          this.valueChangeSelected.emit(this.value);
-        }
-      } else {
-        this.borrarFecha();
-      }
-    } else {
-      this.valueChangeSelected.emit(this.value);
+  marcarObligatorio(tipoCampo: string, valor) {
+    let resp = false;
+
+    if (tipoCampo == 'input' && (valor == undefined || valor == null || valor.trim().length == 0)) {
+      resp = true;
     }
+
+    if (tipoCampo == 'select' && (valor == undefined || valor == null)) {
+      resp = true;
+    }
+
+    if (tipoCampo == 'datePicker' && (valor == undefined || valor == null || valor == '')) {
+      resp = true;
+    }
+
+    return resp;
   }
+
 }

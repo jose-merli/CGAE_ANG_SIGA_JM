@@ -37,7 +37,8 @@
             <div>
               <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.nombre' | translate}} (*)</label>
               <input type="text" maxlength="95" name="nombre" class="form-control" [(disabled)]='cerrada || !permisos'
-                [(ngModel)]='body.nombre' pInputText />
+                [(ngModel)]='body.nombre' pInputText
+                [ngClass]="{'camposObligatorios': marcarObligatorio('input', body.nombre)}" />
             </div>
             <div style="margin-top: 1em; margin-bottom: 1em;">
               <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.partidaPresupuestaria' | translate}}
@@ -45,19 +46,25 @@
               <p-dropdown class="select-form" [(ngModel)]='body.idPartidaPresupuestaria'
                 [options]="partidaPresupuestaria" [filter]="true"
                 placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde"
-                [showClear]="true" [(disabled)]='cerrada || !permisos'></p-dropdown>
+                [showClear]="true" [(disabled)]='cerrada || !permisos'
+                [ngClass]="{'camposObligatorios': marcarObligatorio('select', body.idPartidaPresupuestaria)}">
+              </p-dropdown>
             </div>
             <div style="display: flex;">
               <div class="form-group col-lg-6 col-md-6" style="margin-left: -1em;">
                 <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaDesde' | translate}} (*)</label>
                 <app-fecha [utc]="false" [(value)]="body.fechaDesde" (valueChangeSelected)="fillFechaDesde($event)"
-                  (valueChangeInput)="fillFechaDesde($event)" [(disabled)]='cerrada || !permisos'></app-fecha>
+                  (valueChangeInput)="fillFechaDesde($event)" [(disabled)]='cerrada || !permisos'
+                  [inputStyleClass]="marcarObligatorio('datePicker', body.fechaDesde) ? 'camposObligatorios': ''">
+                </app-fecha>
               </div>
               <div class="form-group col-lg-6 col-md-6" style="margin-left: 2em;">
                 <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaHasta' | translate}} (*)</label>
                 <app-fecha [utc]="false" [(value)]="body.fechaHasta" [minDate]="minDate"
                   (valueChangeSelected)="fillFechaHasta($event)" (valueChangeInput)="fillFechaHasta($event)"
-                  [(disabled)]='cerrada || !permisos'></app-fecha>
+                  [(disabled)]='cerrada || !permisos'
+                  [inputStyleClass]="marcarObligatorio('datePicker', body.fechaHasta) ? 'camposObligatorios': ''">
+                </app-fecha>
               </div>
             </div>
             <div style="display: flex;">
@@ -93,7 +100,9 @@
                 <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
                   <td class="text-center" *ngFor="let col of columns">
                     <div *ngIf="col.field == 'fechaEstado'" [pTooltip]="dato.observaciones" tooltipPosition="top">
-                      <label>{{ dato[col.field] | date: 'dd/MM/yyyy H:mm'}}</label>
+                      <label>{{ dato[col.field] | date: 'dd/MM/yyyy H:mm'}} <label
+                          *ngIf="dato['nombreUsuModificacion'] && dato['nombreUsuModificacion'] != null && dato['nombreUsuModificacion'].length > 0">-
+                          {{dato['nombreUsuModificacion']}}</label></label>
                     </div>
                     <div *ngIf="col.field != 'fechaEstado'" [pTooltip]="dato.observaciones" tooltipPosition="top">
                       <span>{{dato[col.field]}}</span>

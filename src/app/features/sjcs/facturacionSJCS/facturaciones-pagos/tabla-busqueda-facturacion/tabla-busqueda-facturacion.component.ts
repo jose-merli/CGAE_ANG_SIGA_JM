@@ -5,6 +5,7 @@ import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { ConfirmationService } from 'primeng/primeng';
 import { SortEvent } from '../../../../../../../node_modules/primeng/api';
+import { FacturacionItem } from '../../../../../models/sjcs/FacturacionItem';
 
 @Component({
   selector: 'app-tabla-busqueda-facturacion',
@@ -33,7 +34,7 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
   @Input() filtroSeleccionado;
   @Input() permisos;
 
-  @Output() delete = new EventEmitter<String>();
+  @Output() delete = new EventEmitter<FacturacionItem>();
 
   @ViewChild("tabla") tabla;
   @ViewChild("tablaFoco") tablaFoco: ElementRef;
@@ -183,48 +184,47 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
     ];
   }
 
-  checkDelete(selectedDatos) {
-    let encontrado = false;
+  // checkDelete(selectedDatos) {
+  //   let encontrado = false;
 
-    if (selectedDatos.idEstado != '30') {
-      encontrado = true;
-      for (let i = 0; i < this.datos.length; i++) {
-        if (this.datos[i].idFacturacion == selectedDatos.idFacturacion && this.datos[i].idInstitucion == selectedDatos.idInstitucion &&
-          this.datos[i].fechaEstado > selectedDatos.fechaEstado) {
-          encontrado = false;
-          break;
-        }
-      }
-    }
-    return encontrado;
-  }
+  //   if (selectedDatos.idEstado != '30') {
+  //     encontrado = true;
+  //     for (let i = 0; i < this.datos.length; i++) {
+  //       if (this.datos[i].idFacturacion == selectedDatos.idFacturacion && this.datos[i].idInstitucion == selectedDatos.idInstitucion &&
+  //         this.datos[i].fechaEstado > selectedDatos.fechaEstado) {
+  //         encontrado = false;
+  //         break;
+  //       }
+  //     }
+  //   }
+  //   return encontrado;
+  // }
 
   confirmDelete(selectedDatos) {
     if (undefined != selectedDatos.idFacturacion || null != selectedDatos.idFacturacion) {
-      if (this.checkDelete(selectedDatos)) {
-        let mess = this.translateService.instant(
-          "messages.deleteConfirmation"
-        );
-        let icon = "fa fa-edit";
-        this.confirmationService.confirm({
-          message: mess,
-          icon: icon,
-          accept: () => {
-            //this.delete(selectedDatos)
-            this.delete.emit(selectedDatos.idFacturacion);
-          },
-          reject: () => {
-            this.showMessage("info", "Info", this.translateService.instant("general.message.accion.cancelada"));
-          }
-        });
-      } else {
+      // if (this.checkDelete(selectedDatos)) {
+      let mess = this.translateService.instant(
+        "messages.deleteConfirmation"
+      );
+      let icon = "fa fa-edit";
+      this.confirmationService.confirm({
+        message: mess,
+        icon: icon,
+        accept: () => {
+          this.delete.emit(selectedDatos);
+        },
+        reject: () => {
+          this.showMessage("info", "Info", this.translateService.instant("general.message.accion.cancelada"));
+        }
+      });
+      /*} else {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.mensajeErrorEliminar"));
-      }
+      }*/
     }
   }
 
   disabledEliminar() {
-    if (undefined != this.selectedDatos && this.selectedDatos.length == 0) {
+    if (undefined != this.selectedDatos && this.selectedDatos.length != 1) {
       return true;
     } else {
       return false;
