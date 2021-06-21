@@ -23,9 +23,9 @@ export class DefensaJuridicaComponent implements OnInit {
 
   progressSpinner: boolean = false;
   body: EJGItem = new EJGItem();
-  designa: DesignaItem = new DesignaItem();
+  designa = null;
   bodyInicial: EJGItem;
-  permisoEscritura: boolean = false;
+  @Input() permisoEscritura: boolean = true;
 
   isDisabledProcedimiento: boolean = true;
 
@@ -47,7 +47,7 @@ export class DefensaJuridicaComponent implements OnInit {
   procedimientoCabecera;
 
   openDef: boolean = false;
-  
+
   delitosValueInicial: any;
   delitosValue: any = [];
 
@@ -63,19 +63,49 @@ export class DefensaJuridicaComponent implements OnInit {
   ngOnInit() {
     //Los valores de la cabecera se actualizan en cada combo y al en el metodo getCabecera()
     //Se asignan al iniciar la tarjeta y al guardar.
+    //Se obtiene la designacion si hay una designacion entre las relaciones
+    if (sessionStorage.getItem("Designa")) this.designa = JSON.parse(sessionStorage.getItem("Designa"));
 
-    //if(sessionStorage.getItem("Designa"))this.getDesigna();
+    this.body = this.persistenceService.getDatos();
+
+    //Se sobreescribe la informacion de pre designacion (Primera mitad de la tarjeta) 
+    //en this.body en el caso de que haya una designacion
+    if (this.designa != null) {
+      //this.body = this.designa;
+      this.body.numAnnioProcedimiento = this.designa.ano;
+      this.body.nig = this.designa.nig;
+      this.body.observaciones = this.designa.observaciones;
+      this.body.calidad = this.designa.idCalidad;
+      this.body.idPretension = this.designa.idPretension;
+      this.body.juzgado = this.designa.idJuzgado;
+
+      //Variables de designacion que nos interesa representar
+      /* ano: "D2021/42"
+        delitos: null
+        idCalidad: null
+        idJuzgado: 0
+        idJuzgados: null
+        idPretension: 0
+        idProcedimiento: ""
+        idProcedimientos: null
+        idRol: 0
+        nig: null
+        nombreJuzgado: ""
+        nombreProcedimiento: ""
+        observaciones  */
+    }
+    //Valor inicial a reestablecer
+    this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+
+
     this.getComboPreceptivo();
     this.getComboRenuncia();
     this.getComboSituaciones();
     this.getComboCDetencion();
     this.getComboCalidad();
     this.getComboJuzgado();
-    if(this.body.juzgado!=null)this.getComboProcedimiento();
+    if (this.body.juzgado != null) this.getComboProcedimiento();
     this.getComboDelitos();
-    this.body = this.persistenceService.getDatos();
-
-    this.bodyInicial = JSON.parse(JSON.stringify(this.body));
 
     if (this.body.juzgado != undefined && this.body.juzgado != null) this.isDisabledProcedimiento = false;
 
@@ -88,27 +118,38 @@ export class DefensaJuridicaComponent implements OnInit {
     parametro.idInstitucion = this.body.idInstitucion;
     parametro.modulo = "SCS";
     parametro.parametrosGenerales = "NIG_VALIDADOR";
-    await this.sigaServices
-      .postPaginado("parametros_search", "?numPagina=1", parametro)
-      .toPromise().then(
-        data => {
-          let searchParametros = JSON.parse(data["body"]);
-          let datosBuscar = searchParametros.parametrosItems;
-          datosBuscar.forEach(element => {
-            if (element.parametro == "NIG_VALIDADOR" && (element.idInstitucion == element.idinstitucionActual || element.idInstitucion == '0')) {
-              let valorParametroNIG = element.valor;
-              if (nig != '') {
-                ret = valorParametroNIG.test(nig);
-                if(ret) this.save();
+    if (nig != null && nig != '') {
+      await this.sigaServices
+        .postPaginado("parametros_search", "?numPagina=1", parametro)
+        .toPromise().then(
+          data => {
+            let searchParametros = JSON.parse(data["body"]);
+            let datosBuscar = searchParametros.parametrosItems;
+            datosBuscar.forEach(element => {
+              if (element.parametro == "NIG_VALIDADOR" && (element.idInstitucion == element.idinstitucionActual || element.idInstitucion == '0')) {
+                let valorParametroNIG: RegExp = new RegExp(element.valor);
+                if (nig != '') {
+                  ret = valorParametroNIG.test(nig);
+                  if (ret) this.save();
+                  else {
+                    let severity = "error";
+                    let summary = this.translateService.instant("justiciaGratuita.oficio.designa.NIGInvalido");
+                    let detail = "";
+                    this.msgs.push({
+                      severity,
+                      summary,
+                      detail
+                    });
+                  }
+                }
+                else {
+                  this.save();
+                }
               }
-              else{
-                this.save();
-              }
-            }
-          });
-        }).catch(error => {
-          this.progressSpinner = false;
-          let severity = "error";
+            });
+          }).catch(error => {
+            this.progressSpinner = false;
+            let severity = "error";
             let summary = this.translateService.instant("justiciaGratuita.oficio.designa.NIGInvalido");
             let detail = "";
             this.msgs.push({
@@ -118,8 +159,9 @@ export class DefensaJuridicaComponent implements OnInit {
             });
             ret = false;
           });
-   
-    if(ret) this.save();
+    }
+
+    if (!ret) this.save();
   }
 
   validarNProcedimiento(nProcedimiento) {
@@ -130,7 +172,7 @@ export class DefensaJuridicaComponent implements OnInit {
 
     //Codigo copiado de la tarjeta detalles de la ficha de designaciones
     if (idInstitucion == "2008" || idInstitucion == "2015" || idInstitucion == "2029" || idInstitucion == "2033" || idInstitucion == "2036" ||
-    idInstitucion == "2043" || idInstitucion == "2006" || idInstitucion == "2021" || idInstitucion == "2035" || idInstitucion == "2046" || idInstitucion == "2066") {
+      idInstitucion == "2043" || idInstitucion == "2006" || idInstitucion == "2021" || idInstitucion == "2035" || idInstitucion == "2046" || idInstitucion == "2066") {
       if (nProcedimiento != '') {
         var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{5}[\.]{1}[0-9]{2}$/;
         var ret = objRegExp.test(nProcedimiento);
@@ -139,34 +181,35 @@ export class DefensaJuridicaComponent implements OnInit {
       else
         return true;
     } else {
-       // var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{7}[/]$/;
-       var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{7}$/;
-        var ret = objRegExp.test(nProcedimiento);
-        return ret;
+      // var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{7}[/]$/;
+      var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{7}$/;
+      var ret = objRegExp.test(nProcedimiento);
+      return ret;
     }
 
   }
 
-  getCabecera(){
+  getCabecera() {
     //Valor de la cabecera para la comisaria
     this.comboComisaria.forEach(element => {
-      if(element.value==this.bodyInicial.comisaria)this.comisariaCabecera=element.label;
+      if (element.value == this.bodyInicial.comisaria) this.comisariaCabecera = element.label;
     });
     //Valor de la cabecera para en calidad de
     this.comboCalidad.forEach(element => {
-      if(element.value==this.bodyInicial.calidad)this.calidadCabecera=element.label;
+      if (element.value == this.bodyInicial.calidad) this.calidadCabecera = element.label;
     });
     //Valor de la cabecera para juzagado
     this.comboJuzgado.forEach(element => {
-      if(element.value==this.bodyInicial.juzgado)this.juzgadoCabecera=element.label;
+      if (element.value == this.bodyInicial.juzgado) this.juzgadoCabecera = element.label;
     });
     //Valor de la cabecera para procedimiento
     this.comboProcedimiento.forEach(element => {
-      if(element.value==this.bodyInicial.procedimiento)this.procedimientoCabecera=element.label;
+      if (element.value == this.bodyInicial.procedimiento) this.procedimientoCabecera = element.label;
     });
   }
 
-  abreCierra(){
+
+  abreCierra() {
     this.openDef = !this.openDef;
   }
 
@@ -214,9 +257,9 @@ export class DefensaJuridicaComponent implements OnInit {
     this.delitosValue = this.delitosValueInicial;
   }
 
-  checkSave(){
+  checkSave() {
     //Comprobamos que el numero de procedimiento tiene el formato adecuado según la institucion
-    if(this.validarNProcedimiento(this.body.numAnnioProcedimiento))this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.preDesigna.errorNumProc"));
+    if (this.validarNProcedimiento(this.body.numAnnioProcedimiento)) this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.preDesigna.errorNumProc"));
     //Comprobamos el formato del NIG y al ser un servicio siga, a llamada del metodo de guardado estar en su interior.
     else this.validarNig(this.body.nig)
   }
@@ -227,9 +270,9 @@ export class DefensaJuridicaComponent implements OnInit {
     this.body.delitos = null;
     this.delitosValue.forEach(delitoEJG => {
       this.comboDelitos.forEach(delito => {
-        if(delitoEJG==delito.value){
-          if(this.body.delitos==null)this.body.delitos = delito.label;
-          else this.body.delitos = this.body.delitos+", "+delito.label;
+        if (delitoEJG == delito.value) {
+          if (this.body.delitos == null) this.body.delitos = delito.label;
+          else this.body.delitos = this.body.delitos + ", " + delito.label;
         }
       })
     });
@@ -243,8 +286,8 @@ export class DefensaJuridicaComponent implements OnInit {
           this.getCabecera();
           this.actualizarDelitosEJG();
         }
-        else{
-           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
           this.progressSpinner = false;
         }
       },
@@ -256,9 +299,9 @@ export class DefensaJuridicaComponent implements OnInit {
     );
   }
 
-  actualizarDelitosEJG(){
+  actualizarDelitosEJG() {
     let peticionDelitos: EJGItem = this.body;
-    if( peticionDelitos.delitos!=null) peticionDelitos.delitos = this.delitosValue.toString();
+    if (peticionDelitos.delitos != null) peticionDelitos.delitos = this.delitosValue.toString();
     this.sigaServices.post("gestionejg_actualizarDelitosEJG", peticionDelitos).subscribe(
       n => {
         if (n.statusText == "OK") {
@@ -313,11 +356,11 @@ export class DefensaJuridicaComponent implements OnInit {
       n => {
         this.comboComisaria = n.combooItems;
         this.commonsServices.arregloTildesCombo(this.comboComisaria);
-        if(this.bodyInicial.comisaria!=null){
-        this.comboComisaria.forEach(element => {
-          if(element.value==this.bodyInicial.comisaria)this.comisariaCabecera=element.label;
-        });
-      }
+        if (this.bodyInicial.comisaria != null) {
+          this.comboComisaria.forEach(element => {
+            if (element.value == this.bodyInicial.comisaria) this.comisariaCabecera = element.label;
+          });
+        }
       },
       err => {
       }
@@ -329,7 +372,9 @@ export class DefensaJuridicaComponent implements OnInit {
       n => {
         this.comboDelitos = n.combooItems;
         this.commonsServices.arregloTildesCombo(this.comboDelitos);
-        this.getDelitosEJG();
+        //Hay un problema con angular que por algún motivo parece que
+        //los delitos asociados no se muestran de forma consistente (a veces si, a veces no).
+        if (this.designa == null) this.getDelitosEJG();
       },
       err => {
       }, () => {
@@ -342,13 +387,13 @@ export class DefensaJuridicaComponent implements OnInit {
       n => {
         this.comboCalidad = n.combooItems;
         this.commonsServices.arregloTildesCombo(this.comboCalidad);
-        if(this.bodyInicial.calidad!=null){
+        if (this.bodyInicial.calidad != null) {
           //Valor de la cabecera para en calidad de
           this.comboCalidad.forEach(element => {
-            if(element.value==this.bodyInicial.calidad)this.calidadCabecera=element.label;
+            if (element.value == this.bodyInicial.calidad) this.calidadCabecera = element.label;
           });
         }
-          
+
       },
       err => {
       }
@@ -362,7 +407,7 @@ export class DefensaJuridicaComponent implements OnInit {
         this.commonsServices.arregloTildesCombo(this.comboJuzgado);
         //Valor de la cabecera para juzagado
         this.comboJuzgado.forEach(element => {
-          if(element.value==this.bodyInicial.juzgado)this.juzgadoCabecera=element.label;
+          if (element.value == this.bodyInicial.juzgado) this.juzgadoCabecera = element.label;
         });
       },
       err => {
@@ -371,14 +416,14 @@ export class DefensaJuridicaComponent implements OnInit {
   }
 
   getComboProcedimiento() {
-    this.sigaServices.post("combo_comboProcedimientosConJuzgado",this.body.juzgado)//combo_comboProcedimientosConJuzgado
+    this.sigaServices.post("combo_comboProcedimientosConJuzgado", this.body.juzgado)//combo_comboProcedimientosConJuzgado
       .subscribe(
         n => {
           this.comboProcedimiento = JSON.parse(n.body).combooItems;
           this.commonsServices.arregloTildesCombo(this.comboProcedimiento);
           //Valor de la cabecera para procedimiento
           this.comboProcedimiento.forEach(element => {
-            if(element.value==this.bodyInicial.procedimiento)this.procedimientoCabecera=element.label;
+            if (element.value == this.bodyInicial.procedimiento) this.procedimientoCabecera = element.label;
           });
         },
         err => {
@@ -387,7 +432,7 @@ export class DefensaJuridicaComponent implements OnInit {
   }
 
   getDelitosEJG() {
-    this.sigaServices.post("gestionejg_getDelitosEJG",this.body)
+    this.sigaServices.post("gestionejg_getDelitosEJG", this.body)
       .subscribe(
         n => {
           let delitosEjg = JSON.parse(n.body).delitosEjgItem;
@@ -425,8 +470,8 @@ export class DefensaJuridicaComponent implements OnInit {
 
     }
   }
-  
-  
+
+
 
   showMessage(severity, summary, msg) {
     this.msgs = [];

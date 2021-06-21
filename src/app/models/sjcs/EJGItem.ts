@@ -92,8 +92,14 @@ export class EJGItem {
     historico: boolean;
     observacionesDictamen: String;
     iddictamen: String;
-
     numDesigna: String;
+
+    //Procurador
+    
+    fechaDesProc: Date;
+    idProcurador: string;
+    idInstitucionProc: number;
+    numerodesignaproc: string;
 
     requiereTurn: boolean;
     bis: boolean;
@@ -107,8 +113,7 @@ export class EJGItem {
     fechaEstadoNew: Date;
     estadoNew: String;
 
-    idProcurador: string;
-    idInstitucionProc: number;
+    
 
     constructor() { }
 }

@@ -417,16 +417,34 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
               if(this.datosEJG != null && this.datosEJG != undefined){
 
                 //Realizamos un a peticion con un array strings sin determinar un objeto a medida ya que se considera que  
-                //el uso puntual de este servicio lo justufica.
+                //el uso puntual de este servicio lo justifica.
                 let request= [newDesigna.ano.toString(), this.datosEJG.annio, this.datosEJG.tipoEJG, newDesigna.idTurno.toString(), newId.id, this.datosEJG.numero];
                 
                 this.sigaServices.post("designacion_asociarEjgDesigna", request).subscribe(
                   m => {
-                    
+                    //Se debe añadir a la base de datos estos mensajes
                     if(JSON.parse(m.body).error.code==200)this.msgs = [{ severity: "success", summary: "Asociación con EJG realizada correctamente", detail: this.translateService.instant( JSON.parse(m.body).error.description) }];
                     else this.msgs = [{ severity: "error", summary: "Asociación con EJG fallida", detail: this.translateService.instant( JSON.parse(m.body).error.description) }];
                     sessionStorage.removeItem("EJG");
-                    this.location.back();
+
+                    //Una vez se han asociado el ejg y la designa, procedemos a traer los posibles datos de pre-designacion
+                    this.sigaServices.post("gestionejg_getEjgDesigna", this.datosEJG).subscribe(
+                      x => {
+                        let ejgDesignas = JSON.parse(x.body).ejgDesignaItems;
+                        this.sigaServices.post("designacion_getPreDesignaEJG", ejgDesignas[0]).subscribe(
+                          y => {
+                            if (y.statusText == "OK") this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+                            else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+                            this.progressSpinner = false;
+                            this.location.back();
+                          }
+                        );
+                      },
+                      err => {
+                        this.location.back();
+                      }
+                    );
+                    
                   },
                   err => {
                     severity = "error";
@@ -437,6 +455,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                           detail
                         });
                     this.progressSpinner = false;
+                    this.location.back();
                   }
                 );
               }
@@ -542,6 +561,16 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     }
 
   }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+
 
   transformaFecha(fecha) {
     if (fecha != null) {

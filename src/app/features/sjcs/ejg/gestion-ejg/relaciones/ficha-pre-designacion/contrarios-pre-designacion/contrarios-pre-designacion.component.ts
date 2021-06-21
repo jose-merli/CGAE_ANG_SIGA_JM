@@ -18,8 +18,6 @@ export class ContrariosPreDesignacionComponent implements OnInit {
   msgs: Message[];
   openCon: boolean = false;
 
-  @Output() searchContrarios = new EventEmitter<boolean>();
-
   contrariosEJG = [];
   historicoContrario: boolean = false;
 
@@ -39,6 +37,8 @@ export class ContrariosPreDesignacionComponent implements OnInit {
 
   selectAll: boolean = false;
   progressSpinner: boolean = false;
+
+  @Input() permisoEscritura: boolean = true;
 
   @ViewChild("table") tabla;
 
@@ -85,8 +85,10 @@ export class ContrariosPreDesignacionComponent implements OnInit {
     this.cols = [
       { field: "nif", header: "justiciaGratuita.oficio.designas.contrarios.identificador" },
       { field: "apellidosnombre", header: "administracion.parametrosGenerales.literal.nombre.apellidos" },
-      { field: "abogado", header: "justiciaGratuita.oficio.designas.contrarios.abogado" },
-      { field: "procurador", header: "justiciaGratuita.oficio.designas.contrarios.procurador" }
+      /* { field: "abogado", header: "justiciaGratuita.oficio.designas.contrarios.abogado" },
+      { field: "procurador", header: "justiciaGratuita.oficio.designas.contrarios.procurador" } */
+      { field: "direccion", header: "censo.consultaDirecciones.literal.direccion" },
+      { field: "rol", header: "administracion.usuarios.literal.rol" }
     ];
 
     this.rowsPerPage = [
@@ -148,8 +150,6 @@ export class ContrariosPreDesignacionComponent implements OnInit {
 
   searchContrariosEJG() {
     this.progressSpinner = true;
-    let data = sessionStorage.getItem("designaItemLink");
-    let designaItem = JSON.parse(data);
 
     let item = [this.ejg.numero.toString(), this.ejg.annio, this.ejg.tipoEJG, this.historicoContrario];
 
@@ -161,6 +161,11 @@ export class ContrariosPreDesignacionComponent implements OnInit {
       this.primero = this.contrariosEJG[0];
       //Datos para la tabla
       this.datos = this.contrariosEJG;
+
+      //Le asignamos a la columna de rol valor CONTRARIO
+      this.datos.forEach(element => {
+        element.rol = "CONTRARIO";
+      }); 
 
       let error = JSON.parse(n.body).error;
       // if(sessionStorage.getItem("contrarios" &&)!=null)this.router.navigate(["/justiciables"]);

@@ -17,14 +17,15 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">{{ 'justiciaGratuita.oficio.designas.contrarios.procurador' | translate }}
+            <label class="mr-auto title-ficha">{{ 'justiciaGratuita.oficio.designas.contrarios.procurador' | translate
+              }}
             </label>
             <!-- <label class="registros-ficha">(0 registros)</label> -->
           </div>
           <div class="row">
             <div class="col-3">
               <label>{{ 'censo.resultadosSolicitudesModificacion.literal.nColegiado' | translate }}
-                <span>{{ generalBody.numColegiado }}</span>
+                <span>{{ generalBody.nColegiado }}</span>
               </label>
             </div>
             <div class="col-3">
@@ -39,13 +40,18 @@
           </div>
         </div>
       </div>
-    </div>
-    <div [hidden]="!openPro" class="card-body card-body-ficha">
-      <div class="col-lg-1 col-md-2">
+      <div *ngIf="openPro" class=" header-ficha-open d-flex justify-content-start align-items-center"
+        ><!-- (click)="abreCierra()" -->
+        <!-- (click)="" -->
         <div class="img-colegiado">
           <i class="fa fa-user icon-ficha"></i>
         </div>
+        <label class="title-ficha pointer">{{ 'justiciaGratuita.oficio.designas.contrarios.procurador' | translate
+        }}</label>
+      <i class="fa fa-angle-up ml-auto"></i>
       </div>
+    </div>
+    <div *ngIf="openPro" class="card-body card-body-ficha">
       <div class="row">
         <div class="bloque col-lg-2 col-md-2 col-sm-2 p-2">
           <div class="positionUpload img-colegiado text-center my-0 mx-auto">
@@ -75,25 +81,25 @@
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "censo.resultadosSolicitudesModificacion.literal.nColegiado" | translate }}
               </label>
-              <input [(ngModel)]="generalBody.nColegiado" type="text" disabled class="form-control" [maxLength]="100" [disabled]="true"
-                pInputText/>
+              <input [(ngModel)]="generalBody.nColegiado" type="text" disabled class="form-control" [maxLength]="100"
+                pInputText />
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "justiciaGratuita.oficio.designas.interesados.apellidosnombre" | translate }}
               </label>
-              <input [(ngModel)]="generalBody.nombre" type="text" disabled class="form-control" [maxLength]="100" [disabled]="true"
+              <input [(ngModel)]="generalBody.nombre" type="text" disabled class="form-control" [maxLength]="100"
                 pInputText />
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "justiciaGratuita.oficio.justificacionExpres.numDesignacion" | translate }}
               </label>
-              <input [(ngModel)]="generalBody.numerodesignacion" type="text" disabled class="form-control" [maxLength]="100" [disabled]="!permisoEscritura"
-                pInputText/>
+              <input [(ngModel)]="generalBody.numerodesignacion" type="text" class="form-control"
+                [maxLength]="100" [disabled]="!permisoEscritura" pInputText />
             </div>
             <div class="form-group-interlineado col-lg-6 col-md-6">
               <label>{{ "justiciaGratuita.oficio.designaciones.fechaDesignacion" | translate }}
               </label>
-              <app-fecha [(value)]="generalBody.fechaDesigna"
+              <app-fecha [(value)]="generalBody.fechaDesigna" [disabled]="!permisoEscritura"
                 (valueChangeSelected)="fillFechaDesigna($event)" (valueChangeInput)="fillFechaDesigna($event)">
               </app-fecha>
             </div>
@@ -102,13 +108,15 @@
       </div>
     </div>
 
-    <div [hidden]="!openPro" class="card-footer">
+    <div *ngIf="openPro" class="card-footer">
       <div class="text-right main-button">
-        <button pButton (click)="Disassociate()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'censo.tipoCuenta.cargo.desasociar' | translate }}"
+        <button pButton (click)="Disassociate()" type="button" icon="fa fa-undo" iconPos="left"
+          label="{{ 'censo.tipoCuenta.cargo.desasociar' | translate }}"
           [disabled]="!permisoEscritura ||  disabledDisassociate()"></button>
-        <button pButton (click)="search()" type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"></button>
-        <button pButton (click)="Associate()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"
-          [disabled]="!permisoEscritura || disabledSave()"></button>
+        <button pButton (click)="search()" type="button" icon="fa fa-search" iconPos="left"
+          [disabled]="!permisoEscritura" label="{{ 'general.boton.search' | translate}}"></button>
+        <button pButton (click)="Associate()" type="button" icon="far fa-save" iconPos="left"
+          label="{{ 'general.boton.guardar' | translate}}" [disabled]="!permisoEscritura || disabledSave()"></button>
       </div>
     </div>
   </div>

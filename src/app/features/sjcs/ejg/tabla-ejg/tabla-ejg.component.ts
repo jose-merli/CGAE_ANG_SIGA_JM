@@ -9,6 +9,7 @@ import { CommonsService } from '../../../../_services/commons.service';
 import { DatePipe } from '../../../../../../node_modules/@angular/common';
 import { Dialog } from 'primeng/primeng';
 import { saveAs } from "file-saver/FileSaver";
+import moment = require('moment');
 
 @Component({
   selector: 'app-tabla-ejg',
@@ -375,9 +376,21 @@ export class TablaEjgComponent implements OnInit {
 
         let blob = null;
 
-          let mime = "application/pdf";
-          blob = new Blob([data], { type: mime });
-          saveAs(blob, "eejg_2005_2018-01200_45837302G_20210525_131611.pdf");
+        let now = new Date();
+        let month = now.getMonth()+1;
+        let nombreFichero = "eejg_"+now.getFullYear();
+
+        if(month<10){
+          nombreFichero = nombreFichero+"0"+month;
+        }else{
+          nombreFichero += month;
+        }
+
+        nombreFichero += now.getDate()+"_"+now.getHours()+""+now.getMinutes();
+
+        let mime = data.type;
+        blob = new Blob([data], { type: mime });
+        saveAs(blob, nombreFichero);
       
       },
       err => {
@@ -417,7 +430,7 @@ export class TablaEjgComponent implements OnInit {
   addRemesa() {
     this.showModalAnadirRemesa = true;
 
-    //Queda pendiente añadir el codigo que gestionaria el desplegable si se accede desde una fecha de remesa.
+    //Queda pendiente añadir el codigo que gestionaria el desplegable si se accede desde una ficha de remesa.
     //El desplegable tendria que tener el valor de la remesa de la que procede y además deshabilitar el desplegable para que no pueda cambiar de valor.
     if(this.remesa!=null){
       this.valueComboRemesa = this.remesa.descripcion;
@@ -510,6 +523,16 @@ export class TablaEjgComponent implements OnInit {
         this.disableAddRemesa = false;
       }
     } */
+    //Actualmente depende de los valores seleccionados en el filtro. 
+    //Esto se debe cambiar al valor de los datos seleccionados adquiriendo las etiquetas que corresponden a los valores 7 y 8 del combo de estadosEJG.
+    //Concretamente, se comprobaria si alguno de los ejgs seleccionados tienen un estado ejg distinto a ese y se bloquearia si asi fuera.
+
+    /* this.disableAddRemesa = false;
+
+    selectedDatos.array.forEach(element => {
+      if(selectedDatos.estadoEJG!="Listo remitir Comisión" && selectedDatos.estadoEJG!="Listo remitir Comisión act. designación") this.disableAddRemesa = true;
+    }); */
+
     if(this.filtro.estadoEJG=="7" || this.filtro.estadoEJG=="8"){
       this.disableAddRemesa = false;
     }
