@@ -10,6 +10,7 @@ import { JusticiableItem } from '../../../../../models/sjcs/JusticiableItem';
 import { SolicitudIncorporacionItem } from '../../../../../models/SolicitudIncorporacionItem';
 import { AuthenticationService } from '../../../../../_services/authentication.service';
 import { DataTable } from 'primeng/primeng';
+import { TranslateService } from '../../../../../commons/translate';
 
 @Component({
   selector: 'app-expedientes-economicos',
@@ -61,7 +62,7 @@ export class ExpedientesEconomicosComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private authenticationService: AuthenticationService,
+    private translateService: TranslateService,
     private commonsService: CommonsService) { }
 
   ngOnInit() {
@@ -235,37 +236,48 @@ export class ExpedientesEconomicosComponent implements OnInit {
     this.msgs = [];
   }
 
-  checkPermisosDownloadEEJ() {
+  downloadEEJ() {
     let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
     if (msg != undefined) {
       this.msgs = msg;
     } else {
-      this.downloadEEJ();
+      let datos = [];
+
+      let item: EJGItem = new EJGItem();
+      datos.push(this.body);
+
+      this.progressSpinner=true;
+
+      this.sigaServices.postDownloadFiles("gestionejg_descargarExpedientesJG", this.selectedDatos).subscribe(
+        data => {
+          if(data.size==0){
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+          }else{
+            let blob = null;
+
+            let now = new Date();
+            let month = now.getMonth()+1;
+            let nombreFichero = "eejg_"+now.getFullYear();
+
+            if(month<10){
+              nombreFichero = nombreFichero+"0"+month;
+            }else{
+              nombreFichero += month;
+            }
+
+            nombreFichero += now.getDate()+"_"+now.getHours()+""+now.getMinutes();
+
+            let mime = data.type;
+            blob = new Blob([data], { type: mime });
+            saveAs(blob, nombreFichero);
+          }
+        },
+        err => {
+          this.progressSpinner = false;
+          console.log(err);
+        }
+      );
     }
-  }
-  downloadEEJ() {
-    this.progressSpinner = true;
-
-    let ejg: any[] = [];
-
-    ejg.push(this.body);
-
-    this.sigaServices.postDownloadFiles("gestionejg_descargarExpedientesJG", ejg).subscribe(
-      data => {
-
-        let blob = null;
-
-        let mime = "application/pdf";
-        blob = new Blob([data], { type: mime });
-        saveAs(blob, "eejg_2005_2018-01200_45837302G_20210525_131611.pdf");
-
-      },
-      err => {
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-      }
-    );
   }
 }
