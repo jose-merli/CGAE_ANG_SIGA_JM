@@ -161,7 +161,8 @@ export class ServiciosTramitacionComponent implements OnInit {
       sessionStorage.removeItem('pantalla');
     }
 
-    this.getComboGuardia();
+    //Para evitar que se realice una busqueda innecesaria y lance errores por consola cuando no haya ningun turno seleccionado.
+    if(this.body.idTurno!=undefined && this.body.idTurno!=null)this.getComboGuardia();
 
     //Se desbloquea el desplegable de guardia si hay un turno seleccionado al inciar la tarjeta.
     if (this.body.idTurno != undefined && this.body.idTurno != null) this.isDisabledGuardia = false;

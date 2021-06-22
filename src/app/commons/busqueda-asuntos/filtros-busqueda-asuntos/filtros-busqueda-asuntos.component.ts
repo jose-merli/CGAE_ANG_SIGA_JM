@@ -105,6 +105,7 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
   @Input() permisoEscritura;
   @Input() idPersona;
   @Input() datosEJG: EJGItem = null;
+  @Input() fromEJG: boolean = false;
 
   @Output() search = new EventEmitter<boolean>();
 
