@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@ang
 import { ConfirmationService, SortEvent } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '../../../../commons/translate';
+import { ComboObject } from '../../../../models/ComboObject';
 import { TiposProductosObject } from '../../../../models/TiposProductosObject';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
@@ -26,7 +27,10 @@ export class TiposProductosComponent implements OnInit, OnDestroy {
   selectAllRows: boolean = false; //Selecciona todas las filas de la pagina actual de la tabla
   rowsPerPage: number = 10; //Define el numero de filas mostradas por pagina
   rowsPerPageSelectValues: any[]; //Valores del combo Mostar X registros
+  historico: boolean = false; //Indica si se estan mostrando historicos o no para por ejemplo ocultar/mostrar los botones de historico.
   edit: boolean = true; //?
+  numSelectedAbleRegisters: number = 0;
+  numSelectedDisableRegisters: number = 0;
 
 
   first = 0;
@@ -34,6 +38,8 @@ export class TiposProductosComponent implements OnInit, OnDestroy {
 
   //Suscripciones
   subscriptionProductsList: Subscription;
+  subscriptionEnableUnableProducts: Subscription;
+  subscriptionProductTypeSelectValues: Subscription;
 
   constructor(private changeDetectorRef: ChangeDetectorRef, private sigaServices: SigaServices, private persistenceService: PersistenceService, private translateService: TranslateService, private confirmationService: ConfirmationService) {
 
@@ -51,6 +57,7 @@ export class TiposProductosComponent implements OnInit, OnDestroy {
     this.getListaProductos();
     this.initrowsPerPageSelect();
     this.initColsProducts();
+    this.getComboTiposProductos();
   }
 
   customSort(event: SortEvent) {
@@ -77,6 +84,8 @@ export class TiposProductosComponent implements OnInit, OnDestroy {
   //Necesario para liberar memoria
   ngOnDestroy() {
     this.subscriptionProductsList.unsubscribe();
+    this.subscriptionEnableUnableProducts.unsubscribe();
+    this.subscriptionProductTypeSelectValues.unsubscribe();
   }
 
   //INICIO METODOS P-DATABLE
@@ -129,38 +138,100 @@ export class TiposProductosComponent implements OnInit, OnDestroy {
     if (this.selectAllRows === true) {
       this.selectedRows = this.productData;
       this.numSelectedRows = this.productData.length;
+
+      this.numSelectedAbleRegisters = 0;
+      this.numSelectedDisableRegisters = 0;
+      this.selectedRows.forEach(rows => {
+        if (rows.fechabaja == null) {
+          this.numSelectedAbleRegisters++;
+        } else {
+          this.numSelectedDisableRegisters++;
+        }
+      });
     } else {
       this.selectedRows = [];
       this.numSelectedRows = 0;
+      this.numSelectedAbleRegisters = 0;
+      this.numSelectedDisableRegisters = 0;
     }
   }
 
   //Metodo para aplicar logica al seleccionar filas
   onRowSelect() {
+    this.numSelectedAbleRegisters = 0;
+    this.numSelectedDisableRegisters = 0;
     this.numSelectedRows = this.selectedRows.length;
+    this.selectedRows.forEach(rows => {
+      if (rows.fechabaja == null) {
+        this.numSelectedAbleRegisters++;
+      } else {
+        this.numSelectedDisableRegisters++;
+      }
+    });
   }
 
   //Metodo para aplicar logica al deseleccionar filas
   onRowUnselect() {
+    this.numSelectedAbleRegisters = 0;
+    this.numSelectedDisableRegisters = 0;
     this.numSelectedRows = this.selectedRows.length;
+    this.selectedRows.forEach(rows => {
+      if (rows.fechabaja == null) {
+        this.numSelectedAbleRegisters++;
+      } else {
+        this.numSelectedDisableRegisters++;
+      }
+    });
+  }
+
+  //Metodo para añadir una fila para crear un nuevo producto
+  newRegister() {
+    this.numSelectedRows = 0;
+    this.selectedRows = [];
+    this.selectAllRows = false;
+    this.selectMultipleRows = false;
+
+    let nuevoDato = {
+      descripciontipo: "",
+      descripcion: ""
+    };
+
+    this.productData = [...this.productData, nuevoDato];
+
+    /* let otherArray = this.productsTable.concat([newRow]);
+    this.productsTable = otherArray;
+ */
+    /*   console.log("PRODUCTDATA", this.productData);
+      let nuevoDato = {
+        descripciontipo: "",
+        descripcion: ""
+      };
+      let value = this.productsTable.first; */
+    //this.nuevo = true;
+    //this.editar = false;
+
+    // cambie datosNuevos por datos
+    //this.datosNuevos = [nuevoDato, ...this.productData];
+
+    /*  this.productData.unshift();
+     //this.productsTable.unshift(nuevoDato);
+     this.productsTable.reset(); */
   }
 
   //Metodo que guarda la edicion del campo de la tabla editado.
   productsToEdit = [];
-  originalProducts; //Productos traidos de la busqueda/carga inicial
-  //MODIFICAR CONDICIONES
+  //originalProducts; //Productos traidos de la busqueda/carga inicial ?????
   changeTableField(row) {
     this.edit = true;
 
-    let id = this.productData.findIndex(x => x.idTipoCV == row.idTipoCV && x.idTipoCvSubtipo1 ==
-      row.idTipoCvSubtipo1 && x.idInstitucion == row.idInstitucion);
+    let id = this.productData.findIndex(producto => producto.idproducto == row.idproducto && producto.idTipoProducto ==
+      row.idTipoProducto);
     this.productData[id].editar = true;
 
-    if (row.idInstitucion != '2000' && (row.codigoExterno != this.originalProducts[id].codigoExterno) ||
-      (row.descripcion != this.originalProducts[id].descripcion)) {
+    if (row.descripcion != this.productData[id].descripcion || row.descripciontipo != this.productData[id].descripciontipo) {
 
-      let idEdit = this.productsToEdit.findIndex(x => x.idTipoCV == row.idTipoCV && x.idTipoCvSubtipo1 ==
-        row.idTipoCvSubtipo1 && x.idInstitucion == row.idInstitucion);
+      let idEdit = this.productsToEdit.findIndex(producto => producto.idproducto == row.idproducto && producto.idTipoProducto ==
+        row.idTipoProducto);
 
       if (idEdit == -1) {
         this.productsToEdit.push(this.productData[id]);
@@ -168,6 +239,15 @@ export class TiposProductosComponent implements OnInit, OnDestroy {
         this.productsToEdit[idEdit] = this.productData[id];
       }
     }
+  }
+
+  //Metodo que reestablece la informacion original de la tabla al haber editado algun dato.
+  resetToOriginalData() {
+    this.edit = false;
+    this.productsToEdit = [];
+    this.selectedRows = [];
+    this.numSelectedRows = 0;
+    this.getListaProductos();
   }
 
   //Metodo para cambiar el numero de registros mostrados por pantalla 
@@ -189,7 +269,7 @@ export class TiposProductosComponent implements OnInit, OnDestroy {
     this.progressSpinner = true;
     //this.nuevo = false;
     this.edit = false;
-    //this.historico = false;
+    this.historico = false;
 
     this.selectAllRows = false;
     this.selectMultipleRows = false;
@@ -217,6 +297,78 @@ export class TiposProductosComponent implements OnInit, OnDestroy {
     );
   }
 
+  getListaProductosHistorico() {
+    this.historico = true;
+    this.persistenceService.setHistorico(this.historico);
+    this.selectMultipleRows = false;
+    this.selectAllRows = false
+    this.selectedRows = [];
+    this.productsToEdit = [];
+    this.edit = false;
+    this.numSelectedRows = 0;
+
+    this.subscriptionProductsList = this.sigaServices.get("tiposProductos_searchListadoProductosHistorico").subscribe(
+      tiposProductosObject => {
+        this.progressSpinner = false;
+
+        this.tiposProductosObject = tiposProductosObject;
+        this.productData = this.tiposProductosObject.tiposProductosItems;
+
+        let error = this.tiposProductosObject.error;
+        if (error != null && error.description != null) {
+        }
+
+        this.productsTable.paginator = true;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      },
+      () => {
+        let thereIsHistoricalRegister;
+        console.log("PRODUCTDATA", this.productData);
+        this.productData.forEach(product => {
+          if (product.fechabaja != null) {
+            thereIsHistoricalRegister = true;
+          }
+        });
+        if (thereIsHistoricalRegister != true) {
+          this.historico = false;
+          //Mensaje informativo en caso de que no haya registros eliminados.
+          this.showMessage("info", this.translateService.instant("general.message.informacion"), "No existen registros historicos");
+
+        }
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  //Metodo para obtener los valores del como de tipos de productos (columna categoria)
+  comboObject: ComboObject;
+  getComboTiposProductos() {
+    this.progressSpinner = true;
+
+    this.subscriptionProductTypeSelectValues = this.sigaServices.get("tiposProductos_comboProducto").subscribe(
+      ProductTypeSelectValues => {
+        this.progressSpinner = false;
+
+        this.comboObject = ProductTypeSelectValues;
+
+        let error = this.comboObject.error;
+        if (error != null && error.description != null) {
+        }
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+
   //Metodo para activar/desactivar productos
   activarDesactivar(selectedRows) {
     let keyConfirmation = "deletePlantillaDoc";
@@ -224,12 +376,11 @@ export class TiposProductosComponent implements OnInit, OnDestroy {
     this.confirmationService.confirm({
       key: keyConfirmation,
       message: this.translateService.instant("messages.deleteConfirmation"),
-      //message: this.translateService.instant('sjcs.oficio.turnos.eliminar.mensajeConfirmacion'),
       icon: "fa fa-trash-alt",
       accept: () => {
         this.progressSpinner = true;
         let tiposProductosObject = new TiposProductosObject();
-        tiposProductosObject.tiposProductosItems = this.selectedRows
+        tiposProductosObject.tiposProductosItems = selectedRows
         this.sigaServices.post("tiposProductos_activarDesactivarProducto", tiposProductosObject).subscribe(
           data => {
             this.selectedRows = [];
@@ -246,7 +397,7 @@ export class TiposProductosComponent implements OnInit, OnDestroy {
           },
           () => {
             this.progressSpinner = false;
-            //this.historico = false;
+            this.historico = false;
             this.selectMultipleRows = false;
             this.selectAllRows = false;
             this.edit = false;
