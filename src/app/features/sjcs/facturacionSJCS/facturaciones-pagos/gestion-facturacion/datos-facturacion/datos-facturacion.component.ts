@@ -491,6 +491,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
     this.cols = [
       { field: "fechaEstado", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaEstado" },
       { field: "desEstado", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado" },
+      { field: "nombreUsuModificacion", header: "facturacionSJCS.facturacionesYPagos.usuario" },
     ];
   }
 

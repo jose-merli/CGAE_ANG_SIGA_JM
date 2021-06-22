@@ -100,9 +100,7 @@
                 <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
                   <td class="text-center" *ngFor="let col of columns">
                     <div *ngIf="col.field == 'fechaEstado'" [pTooltip]="dato.observaciones" tooltipPosition="top">
-                      <label>{{ dato[col.field] | date: 'dd/MM/yyyy H:mm'}} <label
-                          *ngIf="dato['nombreUsuModificacion'] && dato['nombreUsuModificacion'] != null && dato['nombreUsuModificacion'].length > 0">-
-                          {{dato['nombreUsuModificacion']}}</label></label>
+                      <label>{{ dato[col.field] | date: 'dd/MM/yyyy H:mm'}}</label>
                     </div>
                     <div *ngIf="col.field != 'fechaEstado'" [pTooltip]="dato.observaciones" tooltipPosition="top">
                       <span>{{dato[col.field]}}</span>
