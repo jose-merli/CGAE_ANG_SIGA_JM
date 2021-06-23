@@ -685,6 +685,12 @@ export class SigaServices {
     });
   }
 
+  getParams(service: string, body: any, param: any): Observable<any> {
+    return this.http.get(environment.newSigaUrl + this.endpoints[service] + body + param).map((response) => {
+      return response;
+    });
+  }
+
   getBackend(service: string): Observable<any> {
     return this.httpbackend.get(environment.newSigaUrl + this.endpoints[service]).map((response) => {
       return response;

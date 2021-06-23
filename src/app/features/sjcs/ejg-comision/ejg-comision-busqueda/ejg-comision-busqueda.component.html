@@ -20,7 +20,7 @@
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ "censo.busquedaClientesAvanzada.literal.colegio" | translate }}</label>
           <p-dropdown class="select-form" [(ngModel)]='body.colegio' placeholder="Seleccionar" [disabled]="inst2000"
-            [options]="comboColegio" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+            [options]="comboColegio" (onChange)="cargarComboComision()" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <div class="form-row">
@@ -308,13 +308,13 @@
 
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ 'justiciaGratuita.ejg.datosGenerales.AnnioActa' | translate}}</label>
-            <input type="text" class="form-control" (keypress)="numberOnly($event)" maxLength="4" pInputText
+            <input type="text" class="form-control" required (keypress)="numberOnly($event)" maxLength="4" pInputText
               [(ngModel)]="body.annioActa">
           </div>
 
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ 'justiciaGratuita.ejg.datosGenerales.numActa' | translate}}</label>
-            <input type="text" class="form-control" maxLength="10" (keypress)="numberOnly($event)" pInputText
+            <input type="text" class="form-control"  maxLength="10" (keypress)="numberOnly($event)" pInputText
               [(ngModel)]="body.numActa">
           </div>
 
@@ -437,8 +437,6 @@
            label="{{ 'general.boton.clear' | translate}}"></button>
         <button (click)="isBuscar()" pButton type="button" icon="fa fa-search" iconPos="left"
           label="{{'general.boton.search' | translate}}"></button>
-        <button (click)="isNuevo()" pButton type="button"  icon="fa fa-plus"  iconPos="left"
-           label="{{ 'general.boton.new' | translate}}"></button>
       </div>
     </div>
   </div>

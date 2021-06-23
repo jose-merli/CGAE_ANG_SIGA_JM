@@ -45,10 +45,15 @@ export class TablaEjgComisionComponent implements OnInit {
   datosFamiliares = [];
 
   comboEstadoEJG = [];
+  comboAnioActa = [];
+  comboPonente = [];
   comboRemesa = [];
+  comboFundamento = [];
+  comboResolucion = [];
   fechaEstado = new Date();
   valueComboEstado = "";
   valueComboRemesa;
+  valueComboAnioRemesa;
 
   //Resultados de la busqueda
   @Input() datos;
@@ -60,10 +65,13 @@ export class TablaEjgComisionComponent implements OnInit {
   @Output() busqueda = new EventEmitter<boolean>();
   @ViewChild("cd") cdCambioEstado: Dialog;
   @ViewChild("cd1") cdAnadirRemesa: Dialog;
+  @ViewChild("cd2") cdEditarSeleccionados: Dialog;
 
 
   showModalCambioEstado = false;
   showModalAnadirRemesa = false;
+  showModalEditarSeleccionados = false;
+  fechaPrueba: any;
 
   constructor(private translateService: TranslateService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
     private sigaServices: SigaServices, private persistenceService: PersistenceService, 
@@ -92,6 +100,8 @@ export class TablaEjgComisionComponent implements OnInit {
     }
 
     this.getComboEstadoEJG();
+    this.getComboAnioActa();
+    this.getComboPonente();
     this.getComboRemesa(); 
   }
 
@@ -111,7 +121,51 @@ export class TablaEjgComisionComponent implements OnInit {
       }
     );
   }
+
+  getComboAnioActa() {
+    this.sigaServices.getParam("filtrosejg_comboAnioActaComision", "2502").subscribe(
+      n => {
+        this.comboAnioActa = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
   
+  getComboPonente() {
+    this.sigaServices.getParam("filtrosejg_comboPonenteComision", "2502").subscribe(
+      n => {
+        this.comboPonente = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  getComboResolucion() {
+    this.sigaServices.getParam("filtrosejg_comboResolucionComision", "2502").subscribe(
+      n => {
+        this.comboResolucion = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  getComboFundamento() {
+    this.sigaServices.getParam("filtrosejg_comboFundamentoComision", "2502").subscribe(
+      n => {
+        this.comboFundamento = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
   openTab(evento) {
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos();
@@ -229,6 +283,32 @@ export class TablaEjgComisionComponent implements OnInit {
 
         this.cancelaCambiarEstados();
         this.cdCambioEstado.hide();
+      }
+    });
+  }
+
+  checkEditarSeleccionados(){
+    //cambiar
+    let mess = this.translateService.instant("justiciaGratuita.ejg.message.cambiarEstado");
+    let icon = "fa fa-edit";
+
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.editarSeleccionados();
+        this.cdEditarSeleccionados.hide();
+      },
+      reject: () => {
+        this.msgs = [{
+          severity: "info",
+          summary: "Cancel",
+          //cambiar
+          detail: this.translateService.instant("general.message.accion.cancelada")
+        }];
+
+        this.editarSeleccionados();
+        this.cdEditarSeleccionados.hide();
       }
     });
   }
@@ -419,6 +499,10 @@ export class TablaEjgComisionComponent implements OnInit {
 
   }
 
+  editarSeleccionados() {
+    this.showModalEditarSeleccionados = true;
+  }
+
   checkBotonAnadir(){
     if(this.valueComboRemesa == null){
       this.disableBotonAnadir=true;
@@ -510,6 +594,11 @@ export class TablaEjgComisionComponent implements OnInit {
     else{
       this.disableAddRemesa = true;
     }
+  }
+
+  fillFechaPrueba(event) {
+
+    this.fechaPrueba = event;
   }
 
 }
