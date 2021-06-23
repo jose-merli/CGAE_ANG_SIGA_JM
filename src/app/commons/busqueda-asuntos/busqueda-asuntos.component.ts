@@ -1,13 +1,9 @@
 import {
-  ChangeDetectorRef,
   Component,
-  HostListener,
   OnInit,
   ViewChild,
   ViewEncapsulation
 } from "@angular/core";
-import { Router } from "@angular/router";
-import { ConfirmationService } from "primeng/api";
 import { DataTable } from "primeng/datatable";
 import {
   FormBuilder,
@@ -15,21 +11,16 @@ import {
   FormGroup,
   Validators
 } from "../../../../node_modules/@angular/forms";
-import { TranslateService } from "../../commons/translate/translation.service";
-import { SubtipoCurricularItem } from "../../models/SubtipoCurricularItem";
 import { USER_VALIDATIONS } from "../../properties/val-properties";
 import { SigaWrapper } from "../../wrapper/wrapper.class";
 import { esCalendar } from "./../../utils/calendar";
 import { SigaServices } from "./../../_services/siga.service";
-import { DialogoComunicacionesItem } from "../../models/DialogoComunicacionItem";
-import { ModelosComunicacionesItem } from "../../models/ModelosComunicacionesItem";
-import { CommonsService } from '../../_services/commons.service';
 import { Location } from '@angular/common'
 
 import { PersistenceService } from '../../_services/persistence.service';
 import { FiltrosBusquedaAsuntosComponent } from "./filtros-busqueda-asuntos/filtros-busqueda-asuntos.component";
 import { TablaBusquedaAsuntosComponent } from "./tabla-busqueda-asuntos/tabla-busqueda-asuntos.component";
-import { EJGItem } from "../../models/sjcs/EJGItem";
+import { AsuntosJusticiableItem } from "../../models/sjcs/AsuntosJusticiableItem";
 export enum KEY_CODE {
   ENTER = 13
 }
@@ -58,7 +49,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
   selectMultiple: boolean = false;
   textFilter: string = "Seleccionar";
   buscar: boolean = false;
-  fromEJG: boolean = false;
+  from: boolean = false;
 
   es: any = esCalendar;
   permisoEscritura: any;
@@ -68,12 +59,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
   //Diálogo de comunicación
   constructor(
     private sigaServices: SigaServices,
-    private router: Router,
     private formBuilder: FormBuilder,
-    private changeDetectorRef: ChangeDetectorRef,
-    private confirmationService: ConfirmationService,
-    private translateService: TranslateService,
-    private commonsService: CommonsService,
     private persistenceService: PersistenceService,
     private location: Location
   ) {
@@ -89,13 +75,13 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
   @ViewChild("table")
   table: DataTable;
   selectedDatos;
-  datosEJG: EJGItem;
+  datos: AsuntosJusticiableItem;
 
   ngOnInit() {
 
     if (sessionStorage.getItem('EJG')) {
-      this.datosEJG = JSON.parse(sessionStorage.getItem('EJG'));
-      this.fromEJG = true;
+      this.datos = JSON.parse(sessionStorage.getItem('EJG'));
+      this.from = true;
       sessionStorage.removeItem('EJG');
     }
 
@@ -118,7 +104,6 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
 
   }
 
-
   searchEvent(event) {
     this.search(event);
   }
@@ -127,12 +112,9 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
     this.search(event)
   }
 
-
-
   backTo() {
     this.location.back();
   }
-
 
   search(event) {
     this.filtros.filtroAux = this.persistenceService.getFiltrosAux()
@@ -146,6 +128,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
     this.selectedDatos = "";
     this.progressSpinner = true;
     this.buscar = true;
+
     if (this.filtros.radioTarjeta == 'ejg') {
       this.sigaServices
         .postPaginado(
@@ -184,9 +167,6 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
           },
           err => {
             console.log(err);
-            this.progressSpinner = false;
-          },
-          () => {
             this.progressSpinner = false;
           }
         );
@@ -237,8 +217,6 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
           }
         );
     }
-
-
   }
 
   showMessage(event) {
@@ -249,10 +227,8 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
       detail: event.msg
     });
   }
+
   clear() {
     this.msgs = [];
   }
-
-
-
 }

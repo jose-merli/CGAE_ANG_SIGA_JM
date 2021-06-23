@@ -10,7 +10,6 @@ import {
   EventEmitter
 } from "@angular/core";
 import { Router } from "@angular/router";
-import { ConfirmationService } from "primeng/api";
 import { DataTable } from "primeng/datatable";
 import {
   FormBuilder,
@@ -25,11 +24,10 @@ import { SigaWrapper } from "../../../wrapper/wrapper.class";
 import { esCalendar } from "../../../utils/calendar";
 import { SigaServices } from "../../../_services/siga.service";
 import { DialogoComunicacionesItem } from "../../../models/DialogoComunicacionItem";
-import { ModelosComunicacionesItem } from "../../../models/ModelosComunicacionesItem";
 import { AsistenciasItem } from "../../../models/sjcs/AsistenciasItem";
 import { PersistenceService } from "../../../_services/persistence.service";
 import { CommonsService } from '../../../_services/commons.service';
-import { EJGItem } from "../../../models/sjcs/EJGItem";
+import { AsuntosJusticiableItem } from "../../../models/sjcs/AsuntosJusticiableItem";
 
 export enum KEY_CODE {
   ENTER = 13
@@ -104,8 +102,8 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
 
   @Input() permisoEscritura;
   @Input() idPersona;
-  @Input() datosEJG: EJGItem = null;
-  @Input() fromEJG: boolean = false;
+  @Input() data: AsuntosJusticiableItem = null;
+  @Input() from: boolean = false;
 
   @Output() search = new EventEmitter<boolean>();
 
@@ -118,12 +116,12 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
   showAsistencias: boolean = true;
   comboEstadoDesignacion: { label: string; value: string; }[];
   filtroAux: any;
+
   constructor(
     private sigaServices: SigaServices,
     private router: Router,
     private formBuilder: FormBuilder,
     private changeDetectorRef: ChangeDetectorRef,
-    private confirmationService: ConfirmationService,
     private translateService: TranslateService,
     private persistenceService: PersistenceService,
     private commonService: CommonsService,
@@ -151,7 +149,7 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
     this.filtros.anio = fecha.getFullYear();
 
     //Se asignan los valores de los filtros cuando procede de EJG y se fijan
-    if (this.datosEJG != null) {
+    if (this.data != null) {
       this.radioTarjeta = 'des';
 
     }
@@ -402,7 +400,7 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
   }
   getComboTurno() {
     this.progressSpinner = true;
-    if (this.datosEJG != null) {
+    if (this.data != null) {
       this.sigaServices.getParam("componenteGeneralJG_comboTurnos", "?pantalla=EJG").subscribe(
         n => {
           this.comboTurno = n.combooItems;
