@@ -112,7 +112,7 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
   institucionActual: any;
   deshabilitarCombCol: boolean = false;
   colegiosSeleccionados: any[] = [];
-  radioTarjeta: String = 'ejg';
+  radioTarjeta: String = 'des';
   showDesignacion: boolean = true;
   showSOJ: boolean = true;
   showAsistencias: boolean = true;
