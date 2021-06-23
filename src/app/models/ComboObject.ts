@@ -4,7 +4,7 @@ import { Error } from "./Error";
 
 export class ComboObject {
     error: Error;
-    comboItems: ComboItem[] = [];
+    combooItems: ComboItem[] = [];
 
     constructor() { }
 }
