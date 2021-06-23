@@ -69,8 +69,7 @@ export class TablaEjgComponent implements OnInit {
 
   constructor(private translateService: TranslateService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
     private sigaServices: SigaServices, private persistenceService: PersistenceService, 
-    private confirmationService: ConfirmationService, private commonServices: CommonsService,
-    private datepipe: DatePipe) {
+    private confirmationService: ConfirmationService, private commonServices: CommonsService) {
 
   }
 
@@ -369,62 +368,43 @@ export class TablaEjgComponent implements OnInit {
   }
 
   downloadEEJ() {
-    this.progressSpinner=true;
+    let msg = this.commonServices.checkPermisos(this.permisoEscritura, undefined);
 
-    this.sigaServices.postDownloadFiles("gestionejg_descargarExpedientesJG", this.selectedDatos).subscribe(
-      data => {
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.progressSpinner=true;
 
-        let blob = null;
+      this.sigaServices.postDownloadFiles("gestionejg_descargarExpedientesJG", this.selectedDatos).subscribe(
+        data => {
+          if(data.size==0){
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+          }else{
+            let blob = null;
 
-        let now = new Date();
-        let month = now.getMonth()+1;
-        let nombreFichero = "eejg_"+now.getFullYear();
+            let now = new Date();
+            let month = now.getMonth()+1;
+            let nombreFichero = "eejg_"+now.getFullYear();
 
-        if(month<10){
-          nombreFichero = nombreFichero+"0"+month;
-        }else{
-          nombreFichero += month;
+            if(month<10){
+              nombreFichero = nombreFichero+"0"+month;
+            }else{
+              nombreFichero += month;
+            }
+
+            nombreFichero += now.getDate()+"_"+now.getHours()+""+now.getMinutes();
+
+            let mime = data.type;
+            blob = new Blob([data], { type: mime });
+            saveAs(blob, nombreFichero);
+          }
+        },
+        err => {
+          this.progressSpinner = false;
+          console.log(err);
         }
-
-        nombreFichero += now.getDate()+"_"+now.getHours()+""+now.getMinutes();
-
-        let mime = data.type;
-        blob = new Blob([data], { type: mime });
-        saveAs(blob, nombreFichero);
-      
-      },
-      err => {
-        this.progressSpinner = false;
-        console.log(err);
-      },
-      () => {
-        this.progressSpinner = false;
-      }
-    );
-
-
-
-    // this.sigaServices.post("", ).subscribe(
-    //   n => {
-    //     this.progressSpinner=false;
-    //     let dato: Error = JSON.parse(n.body); 
-
-    //     if(dato.code=='200'){
-    //       this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-    //     }else{
-    //       if(dato.description == "noExiste"){
-    //         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.mensaje.noExistePeticiones"));
-    //       }else{
-    //         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-    //       }
-    //     }
-    //   },
-    //   err => {
-    //     console.log(err);
-    //     this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-    //     this.progressSpinner=false;
-    //   }
-    // );
+      );
+    }
   }
 
   addRemesa() {
