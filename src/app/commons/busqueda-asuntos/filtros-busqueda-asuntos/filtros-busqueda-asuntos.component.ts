@@ -65,7 +65,7 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
 
   editar: boolean = true;
   noResultsSubtipos: boolean = true;
-  filtros: AsistenciasItem = new AsistenciasItem;
+  filtros: AsuntosJusticiableItem = new AsuntosJusticiableItem;
   comboTipoEjg: any[];
   comboTipoEjgColegio: any[];
   comboEstadoEjg: any[] = [];
@@ -156,18 +156,18 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
   }
 
   changeFilters() {
-    let filtrosNuevos = new AsistenciasItem;
+    let filtrosNuevos = new AsuntosJusticiableItem;
     filtrosNuevos.anio = this.filtros.anio;
     filtrosNuevos.numero = this.filtros.numero;
-    filtrosNuevos.fechadesde = this.filtros.fechadesde;
-    filtrosNuevos.fechahasta = this.filtros.fechahasta;
+    filtrosNuevos.fechaAperturaDesde = this.filtros.fechaAperturaDesde;
+    filtrosNuevos.fechaAperturaHasta = this.filtros.fechaAperturaHasta;
     filtrosNuevos.idTurno = this.filtros.idTurno;
     filtrosNuevos.idGuardia = undefined;
     filtrosNuevos.nif = this.filtros.nif;
     filtrosNuevos.apellidos = this.filtros.apellidos;
     filtrosNuevos.nombre = this.filtros.nombre;
 
-    this.filtros = new AsistenciasItem;
+    this.filtros = new AsuntosJusticiableItem;
     this.filtros = filtrosNuevos;
   }
   onHideDatosGenerales() {
@@ -455,7 +455,7 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
 
   comprobarCamposCompuestos() {
     let continuar = true;
-    if ((this.filtros.anio == undefined || this.filtros.anio == "") && (this.filtros.numero != undefined && this.filtros.undefined != "")) {
+    if ((this.filtros.anio == undefined || this.filtros.anio == "") && (this.filtros.numero != undefined && this.filtros != undefined)) {
       continuar = false;
       this.customError = "scs.busquedaasuntos.error.campoanio";
     }
@@ -503,19 +503,10 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
   }
 
   isBuscar() {
-    //if (this.comprobarCamposCompuestos()) {
-    this.filtrosTrim();
-    this.filtros.radioTarjeta = this.radioTarjeta;
-    if (this.idPersona != undefined && this.idPersona != "")
-      this.filtros.idPersonaColegiado = this.idPersona;
     this.persistenceService.setFiltros(this.filtros);
     this.persistenceService.setFiltrosAux(this.filtros);
     this.filtroAux = this.persistenceService.getFiltrosAux()
     this.search.emit(false)
-
-    /* } else {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(this.customError));
-    } */
   }
 
   showMessage(severity, summary, msg) {
@@ -544,76 +535,11 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
   }
 
   isLimpiar() {
-    this.filtros = new AsistenciasItem();
+    this.filtros = new AsuntosJusticiableItem();
 
     if (!this.deshabilitarCombCol) {
       this.colegiosSeleccionados = [];
     }
-  }
-
-  //Elimina los espacios en blancos finales e iniciales de los inputs de los filtros
-  filtrosTrim() {
-    if (this.filtros.nif != null) {
-      this.filtros.nif = this.filtros.nif.trim();
-    }
-    if (this.filtros.apellidos != null) {
-      this.filtros.apellidos = this.filtros.apellidos.trim();
-    }
-    if (this.filtros.nombre != null) {
-      this.filtros.nombre = this.filtros.nombre.trim();
-    }
-    if (this.filtros.anioRegistro != null) {
-      this.filtros.anioRegistro = this.filtros.anioRegistro.trim();
-    }
-    if (this.filtros.numero != null) {
-      this.filtros.numero = this.filtros.numero.trim();
-    }
-    if (this.filtros.idInstitucion != null) {
-      this.filtros.idInstitucion = this.filtros.idInstitucion.trim();
-    }
-    if (this.filtros.idTurno != null) {
-      this.filtros.idTurno = this.filtros.idTurno.trim();
-    }
-    if (this.filtros.idGuardia != null) {
-      this.filtros.idGuardia = this.filtros.idGuardia.trim();
-    }
-    if (this.filtros.nig != null) {
-      this.filtros.nig = this.filtros.nig.trim();
-    }
-    if (this.filtros.idTipoEjg != null) {
-      this.filtros.idTipoEjg = this.filtros.idTipoEjg.trim();
-    }
-    if (this.filtros.idTipoEjColegio != null) {
-      this.filtros.idTipoEjColegio = this.filtros.idTipoEjColegio.trim();
-    }
-    if (this.filtros.idEstadoPorEjg != null) {
-      this.filtros.idEstadoPorEjg = this.filtros.idEstadoPorEjg.trim();
-    }
-    if (this.filtros.idTipoDesignacion != null) {
-      this.filtros.idTipoDesignacion = this.filtros.idTipoDesignacion.trim();
-    }
-    if (this.filtros.anioProcedimiento != null) {
-      this.filtros.anioProcedimiento = this.filtros.anioProcedimiento.trim();
-    }
-    if (this.filtros.numProcedimiento != null) {
-      this.filtros.numProcedimiento = this.filtros.numProcedimiento.trim();
-    }
-    if (this.filtros.numProcedimientoRegistro != null) {
-      this.filtros.numProcedimientoRegistro = this.filtros.numProcedimientoRegistro.trim();
-    }
-    if (this.filtros.idJuzgado != null) {
-      this.filtros.idJuzgado = this.filtros.idJuzgado.trim();
-    }
-    if (this.filtros.numeroDiligencia != null) {
-      this.filtros.numeroDiligencia = this.filtros.numeroDiligencia.trim();
-    }
-    if (this.filtros.asunto != null) {
-      this.filtros.asunto = this.filtros.asunto.trim();
-    }
-    if (this.filtros.comisaria != null) {
-      this.filtros.comisaria = this.filtros.comisaria.trim();
-    }
-
   }
 
   getColsResults() {
@@ -651,14 +577,6 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
         "cen.busqueda.error.busquedageneral"
       )
     });
-  }
-
-  isDisabledCombos() {
-    if (this.filtros.tipoCV != "" && this.filtros.tipoCV != null) {
-      return false;
-    } else {
-      return true;
-    }
   }
 
   //búsqueda con enter

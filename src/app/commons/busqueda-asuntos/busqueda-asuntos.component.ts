@@ -117,9 +117,6 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
   }
 
   search(event) {
-    this.filtros.filtroAux = this.persistenceService.getFiltrosAux()
-    this.filtros.filtroAux.historico = event;
-    this.persistenceService.setHistorico(event);
     this.progressSpinner = true;
     this.selectAll = false;
     this.buscar = true;
@@ -129,12 +126,11 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
     this.progressSpinner = true;
     this.buscar = true;
 
-    if (this.filtros.radioTarjeta == 'ejg') {
+    if (event == 'ejg') {
       this.sigaServices
-        .postPaginado(
+        .post(
           "gestionJusticiables_busquedaClaveAsuntosEJG",
-          "?numPagina=1",
-          this.filtros.filtroAux
+          this.filtros.filtros
         )
         .subscribe(
           data => {
@@ -154,10 +150,9 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
 
     if (this.filtros.radioTarjeta == 'des') {
       this.sigaServices
-        .postPaginado(
+        .post(
           "gestionJusticiables_busquedaClaveAsuntosDesignaciones",
-          "?numPagina=1",
-          this.filtros.filtroAux
+          this.filtros.filtros
         )
         .subscribe(
           data => {
@@ -172,12 +167,11 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
         );
     }
 
-    if (this.filtros.radioTarjeta == 'soj') {
+    if (event == 'soj') {
       this.sigaServices
-        .postPaginado(
+        .post(
           "gestionJusticiables_busquedaClaveAsuntosSOJ",
-          "?numPagina=1",
-          this.filtros.filtroAux
+          this.filtros.filtros
         )
         .subscribe(
           data => {
@@ -195,12 +189,11 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
         );
     }
 
-    if (this.filtros.radioTarjeta == 'asi') {
+    if (event == 'asi') {
       this.sigaServices
-        .postPaginado(
+        .post(
           "gestionJusticiables_busquedaClaveAsuntosAsistencias",
-          "?numPagina=1",
-          this.filtros.filtroAux
+          this.filtros.filtros
         )
         .subscribe(
           data => {

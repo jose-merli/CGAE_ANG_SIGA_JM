@@ -11,15 +11,13 @@
                         label="{{'menu.justiciaGratuita.designas' | translate}}" [(ngModel)]='radioTarjeta'
                         [disabled]="fromEJG"></p-radioButton> -->
                     <p-radioButton value="des" name="tarj" (click)="changeFilters()" label="Designaciones"
-                        [(ngModel)]='radioTarjeta' [disabled]="fromEJG"></p-radioButton>
+                        [(ngModel)]='radioTarjeta'></p-radioButton>
                     <p-radioButton value="soj" name="tarj" label="SOJ" [(ngModel)]='radioTarjeta'
-                        (click)="changeFilters()" [disabled]="fromEJG"></p-radioButton>
+                        (click)="changeFilters()"></p-radioButton>
                     <p-radioButton value="asi" name="tarj" (click)="changeFilters()"
-                        label="{{'menu.justiciaGratuita.asistencia' | translate}}" [(ngModel)]='radioTarjeta'
-                        [disabled]="fromEJG"></p-radioButton>
+                        label="{{'menu.justiciaGratuita.asistencia' | translate}}" [(ngModel)]='radioTarjeta'></p-radioButton>
                     <p-radioButton value="ejg" name="tarj" (click)="changeFilters()"
-                        label="{{ 'justiciaGratuita.ejg.datosGenerales.EJG' | translate}}" [(ngModel)]='radioTarjeta'
-                        [disabled]="fromEJG"></p-radioButton>
+                        label="{{ 'justiciaGratuita.ejg.datosGenerales.EJG' | translate}}" [(ngModel)]='radioTarjeta'></p-radioButton>
                 </div>
             </div>
             <p (click)="onHideDatosGenerales()" class="title-module">{{ "censo.consultaDatosGenerales.cabecera" |
@@ -368,28 +366,6 @@
             </div>
         </div>
     </div>
-    <!--FIN CARD-->
-    <div *ngIf="buscar == true" class="card mt-3">
-        <div class="card-body p-0">
-            <!-- TABLE -->
-        </div>
-
-        <div *ngIf="buscar == true" class="card-footer">
-            <div class="text-right main-button ">
-                <!-- <button (click)="isCancelar()" [disabled]="!isEditable" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button> -->
-                <!--<button (click)="confirmarBorrar(selectedDatos)" pButton type="button" icon="fa fa-send" iconPos="left" label="{{'general.boton.comunicar' | translate }}"
-                    disabled></button>-->
-                <!-- <button (click)="isCrear()" [disabled]="isEditable" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.new' | translate}}"></button> -->
-                <button *ngIf="selectedDatos && selectedDatos.length > 0" (click)="navigateComunicar(selectedDatos)"
-                    pButton type="button" icon="fa fa-comment" iconPos="left"
-                    label="{{'general.boton.comunicar' | translate }}"></button>
-
-            </div>
-        </div>
-
-    </div>
-    <!--FIN DE PRINCIPAL-->
-    <!-- <app-dialog></app-dialog> -->
 </div>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">
