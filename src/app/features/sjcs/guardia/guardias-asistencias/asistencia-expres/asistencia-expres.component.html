@@ -15,7 +15,7 @@
                 [disabled]="isDisabled()"></button>
             <button type="submit" pButton icon="fa fa-search" iconPos="left"
                 label="{{'general.boton.search' | translate}}"
-                (click)="validateForm();checkSustitutoCheckBox()"
+                (click)="checkSustitutoCheckBox()"
                 [disabled]="isDisabled()"></button>
         </div>
     </div>
@@ -24,7 +24,9 @@
 <div *ngIf="show">
     <div class="card mt-3">
         <div class="card-body p-0">
-            <app-resultado-asistencia-expres [rowGroups] = "rowGroups" [rowGroupsAux] = "rowGroupsAux"></app-resultado-asistencia-expres>
+            <app-resultado-asistencia-expres [rowGroups] = "rowGroups" [rowGroupsAux] = "rowGroupsAux"  [initialRowGroups] = "initialRowGroups" (refreshInitialRowGroup) = "refreshInitialRowGroup($event)"
+            [comboJuzgadosAE]="comboJuzgados" [comboComisarias]="comboComisarias" [comboDelitos]="comboDelitos" [comboSexo] = "comboSexo"
+            (saveTableData)="saveTableData($event)"></app-resultado-asistencia-expres>
         </div>
     </div>
 </div>

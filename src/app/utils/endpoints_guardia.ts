@@ -64,5 +64,6 @@ export let endpoints_guardia: any = {
     busquedaGuardias_getLetradosGuardiaDia: "asistencia/getColegiadosGuardiaDia",
     busquedaGuardias_buscarAsistencias: "asistencia/buscarAsistencias",
     busquedaGuardias_getComisarias: "asistencia/getComisarias",
-    busquedaGuardias_getJuzgados: "asistencia/getJuzgados"
+    busquedaGuardias_getJuzgados: "asistencia/getJuzgados",
+    busquedaGuardias_guardarAsistencias: "asistencia/guardarAsistencias"
 }

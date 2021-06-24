@@ -6,12 +6,15 @@ export class RowGroup {
 
 export class Row {
   cells: Cell[];
+  position: string;
 }
 
 export class Cell {
   type: string;
-  value: string;
+  value: any;
   combo: Combo[];
+  size : number;
+  showTime : boolean;
 }
 
 export class Combo {
@@ -131,6 +134,7 @@ export class TablaResultadoDesplegableAEService {
       let rows: Row[] = [];
       Array.from(Object.values(rowGroup)[0]).forEach((row) => {
         let rowObject: Row = new Row();
+        rowObject.position = 'collapse';
         let cells: Cell[] = [];
         Array.from(Object.values(row)[0]).forEach((cell) => {
           let cellObject: Cell = new Cell();
@@ -138,6 +142,12 @@ export class TablaResultadoDesplegableAEService {
           cellObject.value = cell['value'];
           if(cell['combo'] != null && cell['combo'] != undefined){
             cellObject.combo = cell['combo'];
+          }
+          if(cell['showTime']){
+            cellObject.showTime = cell['showTime'];
+          }
+          if(cell['size']){
+            cellObject.size = cell['size'];
           }
           cells.push(cellObject);
         });

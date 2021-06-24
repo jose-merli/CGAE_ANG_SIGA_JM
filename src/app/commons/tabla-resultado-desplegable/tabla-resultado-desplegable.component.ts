@@ -10,8 +10,10 @@ import { ParametroDto } from '../../models/ParametroDto';
 import { ParametroRequestDto } from '../../models/ParametroRequestDto';
 import { ActuacionDesignaItem } from '../../models/sjcs/ActuacionDesignaItem';
 import { DesignaItem } from '../../models/sjcs/DesignaItem';
+import { JusticiableBusquedaItem } from '../../models/sjcs/JusticiableBusquedaItem';
 import { CommonsService } from '../../_services/commons.service';
 import { SigaServices } from '../../_services/siga.service';
+import { TranslateService } from '../translate';
 import { Cell, Row, RowGroup } from './tabla-resultado-desplegable-je.service';
 @Component({
   selector: 'app-tabla-resultado-desplegable',
@@ -91,7 +93,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     private datepipe: DatePipe,
     private sigaServices: SigaServices,
     private commonsService: CommonsService,
-    private router: Router
+    private router: Router,
+    private translateService: TranslateService
   ) {
 
     this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
@@ -279,22 +282,29 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.renderer.addClass(iconDownEl, 'collapse');
 
   }
-  rowGroupArrowClick(rowWrapper, rowGroupId) {
+  rowGroupArrowClick(rowWrapper, rowGroupId, uncollapse? : boolean) {
     this.down = !this.down
     this.RGid = rowGroupId;
     const toggle = rowWrapper;
     for (let i = 0; i < rowWrapper.children.length; i++) {
       if (rowWrapper.children[i].className.includes('child')) {
-        this.modalStateDisplay = false;
-        rowWrapper.children[i].className.includes('collapse')
-          ? this.renderer.removeClass(
-            rowWrapper.children[i],
-            'collapse'
-          )
-          : this.renderer.addClass(
-            rowWrapper.children[i],
-            'collapse'
-          );
+          this.modalStateDisplay = false;
+          if(uncollapse === undefined){
+            rowWrapper.children[i].className.includes('collapse')
+              ? this.renderer.removeClass(
+                rowWrapper.children[i],
+                'collapse'
+              )
+              : this.renderer.addClass(
+                rowWrapper.children[i],
+                'collapse'
+              );
+          } else if (rowWrapper.children[i].className.includes('collapse')){
+            this.renderer.removeClass(
+              rowWrapper.children[i],
+              'collapse'
+            )
+          }
       } else {
         this.modalStateDisplay = true;
       }
@@ -387,11 +397,14 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           cell.value = this.datepipe.transform(event, 'dd/MM/yyyy');
           this.rowIdsToUpdate.push(rowId);
         }
-      }else{
+      }else if(this.pantalla == 'JE'){
         cell.value = this.datepipe.transform(event, 'dd/MM/yyyy');
         this.rowIdsToUpdate.push(rowId);
+      }else {
+        cell.value = event;
+        this.rowIdsToUpdate.push(rowId);
       }
-    }else{
+    }else if(this.pantalla == 'JE'){
       //actuacion
       this.turnoAllow = rowGroup.rows[0].cells[39].value;
       if((this.isLetrado && row.cells[8].value != true && this.turnoAllow) || (!this.isLetrado)){
@@ -406,6 +419,9 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         this.showMsg('error', "No tiene permiso para actualizar datos de una actuación", '')
         this.refreshData.emit(true);
       }
+    }else{
+      cell.value = event;
+      this.rowIdsToUpdate.push(rowId);
     }
 
     sessionStorage.setItem("rowIdsToUpdate", JSON.stringify(this.rowIdsToUpdate));
@@ -512,7 +528,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       }else{
         this.rowIdsToUpdate.push(rowId);
       }
-    }else{
+    }else if(this.pantalla == 'JE'){
       //actuacion
       this.turnoAllow = rowGroup.rows[0].cells[39].value;
       if((this.isLetrado && row.cells[8].value != true && this.turnoAllow) || (!this.isLetrado)){
@@ -526,6 +542,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         this.showMsg('error', "No tiene permiso para actualizar datos de una actuación", '')
         this.refreshData.emit(true);
       }
+    }else{
+      this.rowIdsToUpdate.push(rowId);
     }
     sessionStorage.setItem("rowIdsToUpdate", JSON.stringify(this.rowIdsToUpdate));
   }
@@ -543,7 +561,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       }else{
         this.rowIdsToUpdate.push(rowId);
       }
-    }else{
+    }else if(this.pantalla == 'JE'){
       //actuacion
       this.turnoAllow = rowGroup.rows[0].cells[39].value;
       if((this.isLetrado && row.cells[8].value != true && this.turnoAllow) || (!this.isLetrado)){
@@ -557,7 +575,20 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         this.showMsg('error', "No tiene permiso para actualizar datos de una actuación", '')
         this.refreshData.emit(true);
       }
+    }else{
+      this.rowIdsToUpdate.push(rowId);
     }
+    sessionStorage.setItem("rowIdsToUpdate", JSON.stringify(this.rowIdsToUpdate));
+  }
+  onChangeSelector(event, row, cell, rowId, rowGroup){
+
+    this.rowIdsToUpdate.push(rowId);
+    if(event){
+      cell.value[5] = event[0];
+    }else{
+      cell.value[5] = 0;
+    }
+    
     sessionStorage.setItem("rowIdsToUpdate", JSON.stringify(this.rowIdsToUpdate));
   }
 
@@ -670,7 +701,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    this.setTamanios();
+    //this.setTamanios();
     this.tamanioTablaResultados = document.getElementById("tablaResultadoDesplegable").clientWidth;
   }
 
@@ -1202,6 +1233,37 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       });
     });
   }
+
+  onChangeNifJg(value, rowGroupId, row : Row, rowGroup : RowGroup){
+
+    if(value){
+      let justiciableItem : JusticiableBusquedaItem = new JusticiableBusquedaItem();
+      justiciableItem.nif = value;
+
+      this.sigaServices.post("gestionJusticiables_getJusticiableByNif", justiciableItem).subscribe(
+        n => {
+          let justiciableDTO = JSON.parse(n["body"]);
+          let justiciableItem = justiciableDTO.justiciable;
+          if(justiciableItem){
+
+            rowGroup.rows[0].cells[0].value[0] = justiciableItem.nif;
+            rowGroup.rows[0].cells[0].value[1] = justiciableItem.apellido1;
+            rowGroup.rows[0].cells[0].value[2] = justiciableItem.apellido2;
+            rowGroup.rows[0].cells[0].value[3] = justiciableItem.nombre;
+            rowGroup.rows[0].cells[0].value[4] = justiciableItem.sexo;
+
+          }
+        },
+        err => {
+          console.log(err);
+        },
+        () =>{
+          this.progressSpinner = false;
+        }
+      );
+
+    }
+  }
   
     linkFichaActIfPermis(row, rowGroup){
       if (this.pantalla == 'JE'){
@@ -1242,6 +1304,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         }
       }
     }
+
   }
 function compare(a: number | string, b: number | string, isAsc: boolean) {
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
