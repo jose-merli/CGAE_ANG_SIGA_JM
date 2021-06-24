@@ -60,36 +60,22 @@
               <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
                 <td class="text-center" *ngFor="let col of columns">
                   <div *ngIf="col.field == 'descConcepto'">
-                    <div *ngIf='dato.editable'>
-                      <p-dropdown class="select-form" [(ngModel)]='dato.idConcepto' (onChange)="changeCombo(dato)"
-                        [options]="conceptos" [filter]="true" filterBy="label,labelSinTilde"
-                        placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true"></p-dropdown>
-                    </div>
-                    <div *ngIf="!dato.editable">
-                      {{ dato[col.field] }}
-                    </div>
+                    <p-dropdown class="select-form" [(ngModel)]='dato.idConcepto' (onChange)="changeCombo(dato)"
+                      [options]="conceptos" [filter]="true" filterBy="label,labelSinTilde"
+                      placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true"></p-dropdown>
                   </div>
 
                   <div *ngIf="col.field == 'descGrupo'">
-                    <div *ngIf='dato.editable'>
-                      <p-dropdown class="select-form" [(ngModel)]='dato.idGrupo' (onChange)="changeCombo(dato)"
-                        [options]="grupoTurnos" [filter]="true" filterBy="label,labelSinTilde"
-                        placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true"></p-dropdown>
-                    </div>
-                    <div *ngIf='!dato.editable'>
-                      {{ dato[col.field] }}
-                    </div>
+                    <p-dropdown class="select-form" [(ngModel)]='dato.idGrupo' (onChange)="changeCombo(dato)"
+                      [options]="grupoTurnos" [filter]="true" filterBy="label,labelSinTilde"
+                      placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true"></p-dropdown>
                   </div>
                   <div *ngIf="col.field == 'importeTotal'">
-                    <div *ngIf='!dato.editable'>
-                      {{ dato.importeTotalFormat | numberPipe }} €
-                    </div>
+                    {{ dato.importeTotalFormat | numberPipe }} €
                   </div>
 
                   <div *ngIf="col.field == 'importePendiente'">
-                    <div *ngIf='!dato.editable'>
-                      {{ dato.importePendienteFormat | numberPipe }} €
-                    </div>
+                    {{ dato.importePendienteFormat | numberPipe }} €
                   </div>
                 </td>
               </tr>

@@ -17,6 +17,18 @@
             <label>{{ "facturacionSJCS.facturacionesYPagos.buscarFacturacion.nombre" | translate }}:
               <span>{{ body.nombre }}</span>
             </label>
+            <label>{{ "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaDesde" | translate }}:
+              <span>{{ body.fechaDesde | date: 'dd/MM/yyyy' }}</span>
+            </label>
+            <label>{{ "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaHasta" | translate }}:
+              <span>{{ body.fechaHasta | date: 'dd/MM/yyyy' }}</span>
+            </label>
+            <label>{{ "facturacionSJCS.facturacionesYPagos.buscarFacturacion.regularizada" | translate }}:
+              <span>{{ checkRegularizar == true ? 'Sí': 'No' }}</span>
+            </label>
+            <label>{{ "facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado" | translate }}:
+              <span>{{ getTextEstadoFac() }}</span>
+            </label>
             <i *ngIf="!showFichaFacturacion" class="fa fa-angle-down float-right" (click)="onHideDatosGenerales()"></i>
           </div>
         </div>

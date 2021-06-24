@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, ViewChild, Input, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, ViewChild, Input, Output, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { FacturacionItem } from '../../../../../../models/sjcs/FacturacionItem';
 import { ComboItem } from '../../../../../../models/ComboItem';
 import { USER_VALIDATIONS } from '../../../../../../properties/val-properties';
@@ -20,8 +20,8 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
   @Input() idEstadoFacturacion;
   @Input() modoEdicion;
   @Input() permisos;
-  @Input() insertConcept;
   @Input() numCriterios;
+  @Input() editingConceptos: boolean;
 
   @Output() changeCerrada = new EventEmitter<boolean>();
   @Output() changeModoEdicion = new EventEmitter<boolean>();
@@ -50,7 +50,8 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
   constructor(private sigaService: SigaServices,
     private translateService: TranslateService,
     private confirmationService: ConfirmationService,
-    private commonsService: CommonsService) {
+    private commonsService: CommonsService,
+    private changeDetectorRef: ChangeDetectorRef) {
     super(USER_VALIDATIONS);
   }
 
@@ -377,7 +378,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
     );
   }
   disabledSimular() {
-    if (this.modoEdicion && this.idEstadoFacturacion == "10" && !this.insertConcept && this.disabledRestablecer()) {
+    if (this.modoEdicion && this.idEstadoFacturacion == "10" && !this.editingConceptos && this.disabledRestablecer()) {
       return false;
     } else {
       return true;
@@ -393,12 +394,8 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
   }
 
   disabledEjecutar() {
-    if (((this.modoEdicion && this.idEstadoFacturacion == "10") || (this.modoEdicion && this.idEstadoFacturacion == "20")) && this.disabledRestablecer()) {
-      if (!this.insertConcept) {
-        return false;
-      } else {
-        return true;
-      }
+    if (((this.modoEdicion && this.idEstadoFacturacion == "10") || (this.modoEdicion && this.idEstadoFacturacion == "20")) && !this.editingConceptos && this.disabledRestablecer()) {
+      return false;
     } else {
       return true;
     }
@@ -540,6 +537,48 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
     }
 
     return resp;
+  }
+
+  getTextEstadoFac(): string {
+
+    let resp: string;
+
+    switch (this.idEstadoFacturacion) {
+      case '10':
+        resp = this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado.abierta");
+        break;
+      case '20':
+        resp = this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado.ejecutada");
+        break;
+      case '30':
+        resp = this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado.cerrada");
+        break;
+      case '40':
+        resp = this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado.ejecucion");
+        break;
+      case '50':
+        resp = this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado.programada");
+        break;
+      case '60':
+        resp = this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado.valnocorrecta");
+        break;
+      case '70':
+        resp = this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado.envnoaceptado");
+        break;
+      case '80':
+        resp = this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado.envnodisponible");
+        break;
+      case '90':
+        resp = this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado.envenproceso");
+        break;
+      default: resp = '';
+    }
+
+    return resp;
+  }
+
+  ngAfterViewInit() {
+    this.changeDetectorRef.detectChanges();
   }
 
 }

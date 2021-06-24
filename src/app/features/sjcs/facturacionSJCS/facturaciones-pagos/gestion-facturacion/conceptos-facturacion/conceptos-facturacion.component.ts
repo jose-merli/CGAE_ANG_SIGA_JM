@@ -7,6 +7,7 @@ import { USER_VALIDATIONS } from '../../../../../../properties/val-properties';
 import { SigaWrapper } from '../../../../../../wrapper/wrapper.class';
 import { ComboItem } from '../../../../../../models/ComboItem';
 import { ConfirmationService } from 'primeng/primeng';
+import { Error } from '../../../../../../models/Error';
 
 @Component({
   selector: 'app-conceptos-facturacion',
@@ -14,6 +15,7 @@ import { ConfirmationService } from 'primeng/primeng';
   styleUrls: ['./conceptos-facturacion.component.scss']
 })
 export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit {
+
   progressSpinnerConceptos: boolean = false;
   cols;
   msgs;
@@ -24,18 +26,12 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
   selectedDatos = [];
   numSelected = 0;
   selectAll: boolean = false;
-  nuevoConcepto: boolean = false;
-  modificaConcepto: boolean = false;
   selectionMode: string = "multiple";
-  idConcepto: string = undefined;
-  idGrupo: string = undefined;
-  idConceptoOld: string = undefined;
-  idGrupoOld: string = undefined;
   numCriterios: number = 0;
 
   body = [];
-  bodyUpdate;
   bodyAux = [];
+  bodyUpdate = new Set();
 
   //COMBOS
   conceptos: ComboItem;
@@ -47,8 +43,8 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
   @Input() modoEdicion;
   @Input() permisos;
 
-  @Output() newConcept = new EventEmitter<boolean>();
   @Output() changeNumCriterios = new EventEmitter<number>();
+  @Output() editing = new EventEmitter<boolean>();
 
   @ViewChild("tabla") tabla;
 
@@ -62,12 +58,11 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
   }
 
   ngOnInit() {
+
     this.progressSpinnerConceptos = false;
     this.comboConceptos();
     this.comboGruposTurnos();
-
     this.cargaDatos();
-
     this.getCols();
   }
 
@@ -132,11 +127,15 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
               } else {
                 element.importePendienteFormat = 0;
               }
+
+              element.idGrupoOld = element.idGrupo;
+              element.idConceptoOld = element.idConcepto;
             });
           }
 
           this.body = JSON.parse(JSON.stringify(datos));
           this.bodyAux = JSON.parse(JSON.stringify(datos));
+          this.bodyUpdate = new Set();
           this.numCriterios = datos.length;
           this.changeNumCriterios.emit(this.numCriterios);
           this.progressSpinnerConceptos = false;
@@ -150,24 +149,13 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
   }
 
   seleccionaFila(evento) {
-    if (undefined != evento.data.idConcepto && undefined != evento.data.idGrupo && this.idEstadoFacturacion == '10' && !this.nuevoConcepto) {
-      this.body.forEach(element => {
-        element.editable = false;
 
-        if (undefined == this.idConceptoOld) {
-          this.idConceptoOld = evento.data.idConcepto;
-        }
-
-        if (undefined == this.idGrupoOld) {
-          this.idGrupoOld = evento.data.idGrupo;
-        }
-      });
-
-      this.numSelected = this.selectedDatos.length;
-      this.modificaConcepto = true;
-      evento.data.editable = true;
-      this.newConcept.emit(true);
+    if (undefined == evento.data.idConcepto || undefined == evento.data.idGrupo || null == evento.data.idConcepto || null == evento.data.idGrupo || this.idEstadoFacturacion != '10' || (undefined != evento.data.nuevo && evento.data.nuevo)) {
+      this.selectedDatos.pop()
     }
+
+    this.numSelected = this.selectedDatos.length;
+
   }
 
   disabled() {
@@ -205,15 +193,27 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
     if (undefined != this.selectedDatos && this.selectedDatos.length > 0) {
       this.sigaService.post("facturacionsjcs_deleteConceptosFac", this.selectedDatos).subscribe(
         data => {
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+
+          this.progressSpinnerConceptos = false;
+
+          const resp = JSON.parse(data.body);
+          const error: Error = resp.error;
+
+          if (resp.status == 'KO') {
+
+            if (undefined != error && null != error && null != error.description != null) {
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.description.toString()));
+            } else {
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+            }
+
+          } else if (resp.status == 'OK') {
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          }
 
           this.selectedDatos = [];
           this.selectAll = false;
-          this.idGrupo = undefined;
-          this.idConcepto = undefined;
           this.cargaDatos();
-          this.idConceptoOld = undefined;
-          this.idGrupoOld = undefined;
           this.progressSpinnerConceptos = false;
         },
         err => {
@@ -230,7 +230,7 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
 
   disabledEliminar() {
     if (this.modoEdicion && this.idEstadoFacturacion == '10') {
-      if (!this.nuevoConcepto && !this.modificaConcepto && (this.selectedDatos.length > 0 || this.selectAll)) {
+      if (!this.hayModificaciones() && (this.selectedDatos.length > 0 || this.selectAll)) {
         return false;
       } else {
         return true;
@@ -241,16 +241,9 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
   }
 
   restablecer() {
-    if (this.modoEdicion && this.idEstadoFacturacion == '10' && (this.nuevoConcepto || this.modificaConcepto)) {
+    if (this.modoEdicion && this.idEstadoFacturacion == '10' && this.hayModificaciones()) {
       this.body = JSON.parse(JSON.stringify(this.bodyAux));
-      this.bodyUpdate = [];
-      this.modificaConcepto = false;
-      this.nuevoConcepto = false;
-      this.idGrupo = undefined;
-      this.idConcepto = undefined;
-      this.idGrupoOld = undefined;
-      this.idConceptoOld = undefined;
-      this.newConcept.emit(false);
+      this.bodyUpdate = new Set();
 
       this.tabla.sortOrder = 0;
       this.tabla.sortField = '';
@@ -264,7 +257,7 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
   }
 
   disabledRestablecer() {
-    if (this.modoEdicion && this.idEstadoFacturacion == '10' && (this.nuevoConcepto || this.modificaConcepto)) {
+    if (this.modoEdicion && this.idEstadoFacturacion == '10' && this.hayModificaciones()) {
       return false;
     } else {
       return true;
@@ -272,53 +265,79 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
   }
 
   guardar() {
-    this.bodyUpdate = {
-      idConcepto: undefined,
-      idGrupo: undefined,
-      importeTotal: undefined,
-      importePendiente: undefined,
-      idFacturacion: undefined,
-      idConceptoOld: undefined,
-      idGrupoOld: undefined
-    };
 
-    if (!this.cerrada && undefined != this.idConcepto && undefined != this.idGrupo) {
-      this.bodyUpdate.idConcepto = this.idConcepto;
-      this.bodyUpdate.idGrupo = this.idGrupo;
-      this.bodyUpdate.idFacturacion = this.idFacturacion;
+    let error = false;
+    let nuevos = this.body.filter(el => undefined != el.nuevo && el.nuevo);
+    let arrayNews = [];
+    let arrayUpdate = [];
 
-      if (this.modificaConcepto) {
-        this.bodyUpdate.idConceptoOld = this.idConceptoOld;
-        this.bodyUpdate.idGrupoOld = this.idGrupoOld;
-        this.callServiceGuardar("facturacionsjcs_updateConceptosFac");
+    // Comprobamos que los datos obligatorios de los nuevos registros esten completados
+    if (nuevos) {
+
+      if (Array.isArray(nuevos)) {
+        arrayNews = nuevos.slice();
       } else {
-        this.callServiceGuardar("facturacionsjcs_saveConceptosFac");
+        arrayNews.push(JSON.parse(JSON.stringify(nuevos)));
       }
+
+      arrayNews.forEach(element => {
+        if (undefined == element.idConcepto || null == element.idConcepto || undefined == element.idGrupo || null == element.idGrupo) {
+          error = true;
+        }
+      });
+    }
+
+    // Comprobamos que los datos obligatorios de los registros editados esten completados
+    if (!error && this.bodyUpdate) {
+      arrayUpdate = Array.from(this.bodyUpdate);
+
+      if (arrayUpdate) {
+        arrayUpdate.forEach(element => {
+          if (undefined == element.idConcepto || null == element.idConcepto || undefined == element.idGrupo || null == element.idGrupo) {
+            error = true;
+          }
+        });
+      }
+    }
+
+    if (error) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.facturacionesYPagos.fichaFac.error.criterios"));
     } else {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+
+      if (arrayNews.length > 0) {
+        this.callServiceGuardar("facturacionsjcs_saveConceptosFac", arrayNews);
+      }
+
+      if (arrayUpdate.length > 0) {
+        this.callServiceGuardar("facturacionsjcs_updateConceptosFac", arrayUpdate);
+      }
+
     }
   }
 
-  callServiceGuardar(url) {
+  callServiceGuardar(url, data) {
     this.progressSpinnerConceptos = true;
 
-    this.sigaService.post(url, this.bodyUpdate).subscribe(
+    this.sigaService.post(url, data).subscribe(
       data => {
-        this.body.push(this.bodyUpdate);
 
-        this.bodyAux = JSON.parse(JSON.stringify(this.body));
+        const resp = JSON.parse(data.body);
+        const error: Error = resp.error;
 
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        if (resp.status == 'KO') {
 
-        this.bodyUpdate = [];
-        this.modificaConcepto = false;
-        this.nuevoConcepto = false;
-        this.idGrupo = undefined;
-        this.idConcepto = undefined;
+          if (undefined != error && null != error && null != error.description != null) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.description.toString()));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          }
+
+        } else if (resp.status == 'OK') {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        }
+
         this.cargaDatos();
-        this.idConceptoOld = undefined;
-        this.idGrupoOld = undefined;
-        this.newConcept.emit(false);
+
         this.progressSpinnerConceptos = false;
       },
       err => {
@@ -333,12 +352,8 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
   }
 
   disabledGuardar() {
-    if (this.modoEdicion && this.idEstadoFacturacion == '10' && (this.nuevoConcepto || this.modificaConcepto)) {
-      if (undefined != this.idConcepto && undefined != this.idGrupo) {
-        return false;
-      } else {
-        return true;
-      }
+    if (this.modoEdicion && this.idEstadoFacturacion == '10' && this.hayModificaciones()) {
+      return false;
     } else {
       return true;
     }
@@ -346,40 +361,29 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
 
   nuevo() {
     if (this.modoEdicion && this.idEstadoFacturacion == '10') {
-      if (!this.nuevoConcepto || this.modificaConcepto || this.selectAll) {
-        this.tabla.sortOrder = 0;
-        this.tabla.sortField = '';
-        this.tabla.reset();
-        this.nuevoConcepto = true;
-        this.modificaConcepto = false;
-        this.newConcept.emit(true);
+      this.tabla.sortOrder = 0;
+      this.tabla.sortField = '';
+      this.tabla.reset();
 
-        if (undefined == this.body || null == this.body || this.body.length < 1) {
-          this.body = [];
-        } else {
-          this.body.forEach(element => {
-            element.editable = false;
-          });
-        }
-
-        let concepto = {
-          idConcepto: undefined,
-          idGrupo: undefined,
-          importeTotal: "0",
-          importePendiente: "0",
-          editable: true,
-          idConceptoOld: undefined,
-          idGrupoOld: undefined
-        };
-
-        if (this.body.length == 0) {
-          this.body.push(concepto);
-        } else {
-          this.body = [concepto, ...this.body];
-        }
-      } else {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+      if (undefined == this.body || null == this.body || this.body.length < 1) {
+        this.body = [];
       }
+
+      let concepto = {
+        idConcepto: undefined,
+        idGrupo: undefined,
+        importeTotal: "0",
+        importePendiente: "0",
+        nuevo: true,
+        idFacturacion: this.idFacturacion
+      };
+
+      if (this.body.length == 0) {
+        this.body.push(concepto);
+      } else {
+        this.body = [concepto, ...this.body];
+      }
+
     } else {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     }
@@ -387,23 +391,16 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
 
   disabledNuevo() {
     if (this.modoEdicion && this.idEstadoFacturacion == '10') {
-      if (this.nuevoConcepto || this.modificaConcepto || this.selectAll) {
-        return true;
-      } else {
-        return false;
-      }
+      return false;
     } else {
       return true;
     }
   }
 
   changeCombo(dato) {
-    if (undefined != dato.idConcepto && null != dato.idConcepto) {
-      this.idConcepto = dato.idConcepto;
-    }
 
-    if (undefined != dato.idGrupo && null != dato.idGrupo) {
-      this.idGrupo = dato.idGrupo;
+    if (undefined == dato.nuevo) {
+      this.bodyUpdate.add(dato);
     }
   }
 
@@ -424,7 +421,7 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
   }
 
   onChangeSelectAll() {
-    if (this.selectAll === true && !this.disabled() && !this.modificaConcepto && !this.nuevoConcepto) {
+    if (this.selectAll === true && !this.disabled()) {
       this.selectedDatos = this.body;
       this.numSelected = this.body.length;
     } else {
@@ -479,4 +476,15 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
       }
     ];
   }
+
+  hayModificaciones() {
+
+    if (JSON.stringify(this.body) === JSON.stringify(this.bodyAux)) {
+      this.editing.emit(false);
+      return false;
+    }
+    this.editing.emit(true);
+    return true;
+  }
+
 }

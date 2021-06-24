@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { Location } from "@angular/common";
 import { USER_VALIDATIONS } from '../../../../../properties/val-properties';
 import { SigaWrapper } from "../../../../../wrapper/wrapper.class";
@@ -9,14 +9,13 @@ import { BaremosComponent } from './baremos/baremos.component';
 import { CartasFacturacionComponent } from './cartas-facturacion/cartas-facturacion.component';
 import { ConceptosFacturacionComponent } from './conceptos-facturacion/conceptos-facturacion.component';
 import { DatosFacturacionComponent } from './datos-facturacion/datos-facturacion.component';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-gestion-facturacion',
   templateUrl: './gestion-facturacion.component.html',
   styleUrls: ['./gestion-facturacion.component.scss']
 })
-export class GestionFacturacionComponent extends SigaWrapper implements OnInit {
+export class GestionFacturacionComponent extends SigaWrapper implements OnInit, AfterViewChecked {
   progressSpinner: boolean = false;
   datos: FacturacionItem = new FacturacionItem();
 
@@ -26,7 +25,7 @@ export class GestionFacturacionComponent extends SigaWrapper implements OnInit {
   modoEdicion;
   permisos;
   msgs;
-  insertConcept;
+  editingConceptos: boolean;
   numCriterios;
 
   @ViewChild(PagosComponent) pagos;
@@ -35,88 +34,93 @@ export class GestionFacturacionComponent extends SigaWrapper implements OnInit {
   @ViewChild(ConceptosFacturacionComponent) conceptos;
   @ViewChild(DatosFacturacionComponent) datosFac;
 
-  constructor(private location: Location, private persistenceService: PersistenceService) { 
+  constructor(private location: Location, private persistenceService: PersistenceService, private changeDetectorRef: ChangeDetectorRef) {
     super(USER_VALIDATIONS);
   }
 
   ngOnInit() {
     if (undefined != this.persistenceService.getPermisos()) {
-			this.permisos = this.persistenceService.getPermisos();
+      this.permisos = this.persistenceService.getPermisos();
     }
-    
-    if (null !=this.persistenceService.getDatos()) {
+
+    if (null != this.persistenceService.getDatos()) {
       this.datos = this.persistenceService.getDatos();
-      this.idFacturacion=this.datos.idFacturacion;
-      this.idEstadoFacturacion=this.datos.idEstado;
+      this.idFacturacion = this.datos.idFacturacion;
+      this.idEstadoFacturacion = this.datos.idEstado;
     }
 
     if (undefined == this.idFacturacion) {
       this.modoEdicion = false;
-      this.cerrada=false;
+      this.cerrada = false;
     } else {
-      if(undefined!=this.idEstadoFacturacion){
-        if(this.idEstadoFacturacion=='10'){
-          this.cerrada=false;
-        }else{
-          this.cerrada=true;
+      if (undefined != this.idEstadoFacturacion) {
+        if (this.idEstadoFacturacion == '10') {
+          this.cerrada = false;
+        } else {
+          this.cerrada = true;
         }
       }
 
       this.modoEdicion = true;
-    } 
-    this.insertConcept=false;   
-    this.numCriterios=0;
+    }
+    this.numCriterios = 0;
+    this.editingConceptos = false;
   }
 
-  volver(){
+  volver() {
     this.location.back();
   }
 
-  changeNumCriterios(event){
-    this.numCriterios=event;
+  changeNumCriterios(event) {
+    this.numCriterios = event;
   }
 
-  changeModoEdicion(event){
-    this.modoEdicion=event;
+  changeEditingConceptos(event) {
+    this.editingConceptos = event;
   }
 
-  changeEstadoFacturacion(event){
-    this.idEstadoFacturacion=event;
+  changeModoEdicion(event) {
+    this.modoEdicion = event;
   }
 
-  changeCerrada(event){
-    this.cerrada=event;
+  changeEstadoFacturacion(event) {
+    this.idEstadoFacturacion = event;
   }
 
-  changeIdFacturacion(event){
-    this.idFacturacion=event;
+  changeCerrada(event) {
+    this.cerrada = event;
   }
 
-  newConcept(event){
-    this.insertConcept=event;
+  changeIdFacturacion(event) {
+    this.idFacturacion = event;
   }
-  
-  spinnerGlobal(){
-    if(this.modoEdicion){
-      if(this.conceptos != undefined || this.baremos != undefined || this.pagos != undefined || this.cartas != undefined){
-        if(this.datosFac.progressSpinnerDatos || this.conceptos.progressSpinnerConceptos || this.baremos.progressSpinnerBaremos || this.pagos.progressSpinnerPagos || this.cartas.progressSpinnerCartas){
+
+  spinnerGlobal() {
+    if (this.modoEdicion) {
+      if (this.conceptos != undefined || this.baremos != undefined || this.pagos != undefined || this.cartas != undefined) {
+        if (this.datosFac.progressSpinnerDatos || this.conceptos.progressSpinnerConceptos || this.baremos.progressSpinnerBaremos || this.pagos.progressSpinnerPagos || this.cartas.progressSpinnerCartas) {
           return true;
-        }else{
+        } else {
           return false;
         }
-      }else{
+      } else {
         return true;
       }
 
-    }else{
-      if(this.datosFac.progressSpinnerDatos){
+    } else {
+      if (this.datosFac.progressSpinnerDatos) {
         return true;
-      }else{
+      } else {
         return false;
       }
     }
   }
   clear() {
-		this.msgs = [];
-	}
+    this.msgs = [];
+  }
+
+  ngAfterViewChecked() {
+    this.changeDetectorRef.detectChanges();
+  }
+
 }
