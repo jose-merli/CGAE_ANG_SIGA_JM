@@ -105,7 +105,7 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
   @Input() data: AsuntosJusticiableItem = null;
   @Input() from: boolean = false;
 
-  @Output() search = new EventEmitter<boolean>();
+  @Output() search = new EventEmitter<String>();
 
   institucionActual: any;
   deshabilitarCombCol: boolean = false;
@@ -506,7 +506,7 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
     this.persistenceService.setFiltros(this.filtros);
     this.persistenceService.setFiltrosAux(this.filtros);
     this.filtroAux = this.persistenceService.getFiltrosAux()
-    this.search.emit(false)
+    this.search.emit(this.radioTarjeta)
   }
 
   showMessage(severity, summary, msg) {
