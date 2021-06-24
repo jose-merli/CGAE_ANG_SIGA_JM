@@ -540,4 +540,8 @@ export class TablaEjgComponent implements OnInit {
       this.disableAddRemesa = true;
     }
   }
+
+  fillFechaEstado(event){
+    this.fechaEstado=event;
+  }
 }
