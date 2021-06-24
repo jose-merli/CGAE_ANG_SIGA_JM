@@ -67,6 +67,13 @@ export let endpoints_EJG: any = {
 
     //Documentacion
     gestionejg_descargarDocumentacion: "ejg/gestion-ejg/descargarDocumentacion",
+    gestionejg_comboPresentadores: "ejg/gestion-ejg/comboPresentadores",
+    gestionejg_comboTipoDocumentacion: "ejg/gestion-ejg/comboTipoDocumentacion",
+    gestionejg_comboDocumentos: "ejg/gestion-ejg/comboDocumentos",
+    gestionejg_subirDocumentoEjg: "ejg/gestion-ejg/subirDocumentoEjg",
+    gestionejg_crearDocumentacionEjg: "ejg/gestion-ejg/crearDocumentacionEjg",
+    gestionejg_actualizarDocumentacionEjg: "ejg/gestion-ejg/actualizarDocumentacionEjg",
+    gestionejg_eliminarDocumentosEjg: "ejg/gestion-ejg/eliminarDocumentosEjg",
 
     //Relaciones
     gestionejg_borrarRelacion: "ejg/gestion-ejg/borrarRelacion",
@@ -89,6 +96,7 @@ export let endpoints_EJG: any = {
     gestionejg_getDelitosEJG: "ejg/gestion-ejg/getDelitosEJG",
     gestionejg_actualizarDelitosEJG: "ejg/gestion-ejg/actualizarDelitosEJG",
     gestionejg_busquedaProcuradores: "ejg/gestion-ejg/busquedaProcuradores",
+    
 
     //comunicaciones
     gestionejg_getComunicaciones: "ejg/gestion-ejg/getComunicaciones"
