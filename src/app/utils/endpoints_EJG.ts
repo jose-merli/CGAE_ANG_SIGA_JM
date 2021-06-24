@@ -53,6 +53,7 @@ export let endpoints_EJG: any = {
     //Estado
     gestionejg_borrarEstado: "ejg/gestion-ejg/borrarEstado",
     gestionejg_nuevoEstado: "ejg/gestion-ejg/nuevoEstado",
+    gestionejg_editarEstado: "ejg/gestion-ejg/editarEstado",
 
     //Resolucion
     gestionejg_guardarResolucion: "ejg/gestion-ejg/guardarResolucion",

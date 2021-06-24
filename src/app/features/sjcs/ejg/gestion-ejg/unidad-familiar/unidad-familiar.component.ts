@@ -2,14 +2,14 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, Simp
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { UnidadFamiliarEJGItem } from '../../../../../models/sjcs/UnidadFamiliarEJGItem';
 import { PersistenceService } from '../../../../../_services/persistence.service';
-//import { fichasPosibles_unidadFamiliar } from '../../../../../utils/fichasPosibles_justiciables';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { TranslateService } from '../../../../../commons/translate/translation.service';
 import { ConfirmationService } from 'primeng/api';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { DataTable, Dialog } from 'primeng/primeng';
-import { Location, DatePipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
+import { saveAs } from "file-saver/FileSaver";
 
 @Component({
   selector: 'app-unidad-familiar',
@@ -384,27 +384,50 @@ export class UnidadFamiliarComponent implements OnInit {
 
   }
 
-  checkPermisosDownloadEEJ(){
+  downloadEEJ() {
+    this.progressSpinner=true;
+
     let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
     } else {
-      this.downloadEEJ();
+      
+      let datos = [];
+      datos.push(this.body);
+
+      this.sigaServices.postDownloadFiles("gestionejg_descargarExpedientesJG", datos).subscribe(
+        data => {
+          this.progressSpinner = false;
+
+          if(data.size==0){
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+          }else{
+            let blob = null;
+
+            let now = new Date();
+            let month = now.getMonth()+1;
+            let nombreFichero = "eejg_"+now.getFullYear();
+
+            if(month<10){
+              nombreFichero = nombreFichero+"0"+month;
+            }else{
+              nombreFichero += month;
+            }
+
+            nombreFichero += now.getDate()+"_"+now.getHours()+""+now.getMinutes();
+
+            let mime = data.type;
+            blob = new Blob([data], { type: mime });
+            saveAs(blob, nombreFichero);
+          }
+        },
+        err => {
+          this.progressSpinner = false;
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+          console.log(err);
+        }
+      );
     }
-  }
-
-  downloadEEJ(){
-    this.progressSpinner=true;
-
-    this.sigaServices.post("gestionejg_descargarExpedientesJG", this.selectDatos).subscribe(
-      n => {
-        this.progressSpinner=false;
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner=false;
-      }
-    );
   }
 
   checkPermisosSolicitarEEJ(){

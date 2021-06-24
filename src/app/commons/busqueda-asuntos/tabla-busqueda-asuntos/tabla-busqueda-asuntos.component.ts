@@ -1,17 +1,12 @@
-import { Component, OnInit, Input, ViewChild, Output, EventEmitter, ChangeDetectorRef, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ChangeDetectorRef, SimpleChanges } from '@angular/core';
 import { DataTable } from '../../../../../node_modules/primeng/primeng';
-import { TranslateService } from '../../translate';
-import { Router } from '../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../_services/siga.service';
 import { PersistenceService } from '../../../_services/persistence.service';
-import { ProcuradoresItem } from '../../../models/sjcs/ProcuradoresItem';
-import { ProcuradoresObject } from '../../../models/sjcs/ProcuradoresObject';
-import { JusticiableItem } from '../../../models/sjcs/JusticiableItem';
+import { AsuntosJusticiableItem } from '../../../models/sjcs/AsuntosJusticiableItem';
 import { CommonsService } from '../../../_services/commons.service';
 import { Location } from '@angular/common';
-import { EJGItem } from '../../../models/sjcs/EJGItem';
 
-@Component({
+@Component({ 
   selector: 'app-tabla-busqueda-asuntos',
   templateUrl: './tabla-busqueda-asuntos.component.html',
   styleUrls: ['./tabla-busqueda-asuntos.component.scss']
@@ -31,28 +26,20 @@ export class TablaBusquedaAsuntosComponent implements OnInit {
   seleccion: boolean = false;
 
   permisoEscritura: boolean = true;
-  datos = [];
   datosInicio: boolean = false;
-
+  datos=[];
   idPersona;
   showTarjetaPermiso: boolean = true;
-
-
-
-
 
   @ViewChild("table") table: DataTable;
   @Input() showTarjeta;
   @Input() body;
   @Input() modoEdicion;
   @Input() fromJusticiable;
-  @Input() datosEJG: EJGItem = null;
+  @Input() data: AsuntosJusticiableItem = null;
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
-    private sigaServices: SigaServices,
-    private commonsService: CommonsService,
-    private persistenceService: PersistenceService,
-    private location: Location) { }
+    private persistenceService: PersistenceService) { }
 
   ngOnInit() {
 
@@ -84,12 +71,12 @@ export class TablaBusquedaAsuntosComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "asunto", header: "justiciaGratuita.justiciables.literal.asuntos", width: "5%" },
-      { field: "fecha", header: "censo.resultadosSolicitudesModificacion.literal.fecha", width: "5%" },
-      { field: "turnoGuardia", header: "justiciaGratuita.justiciables.literal.turnoGuardia", width: "10%" },
-      { field: "letrado", header: "justiciaGratuita.justiciables.literal.colegiado", width: "15%" },
+      { field: "asunto", header: "justiciaGratuita.justiciables.literal.asuntos", width: "10%" },
+      { field: "fecha", header: "censo.resultadosSolicitudesModificacion.literal.fecha", width: "10%" },
+      { field: "turnoGuardia", header: "justiciaGratuita.justiciables.literal.turnoGuardia", width: "25%" },
+      { field: "letrado", header: "justiciaGratuita.justiciables.literal.colegiado", width: "20%" },
       { field: "interesado", header: "justiciaGratuita.justiciables.literal.interesados", width: "20%" },
-      { field: "datosInteres", header: "justiciaGratuita.justiciables.literal.datosInteres", width: "20%" }
+      { field: "datosInteres", header: "justiciaGratuita.justiciables.literal.datosInteres", width: "15%" }
 
     ];
 
@@ -154,38 +141,38 @@ export class TablaBusquedaAsuntosComponent implements OnInit {
 
   }
 
-  getAsunto(event) {
-    if (this.datosEJG != null) {
+  // getAsunto(event) {
+  //   if (this.datos != null) {
 
-      let asunto = event.data.asunto.split("/");
+  //     let asunto = event.data.asunto.split("/");
 
-      let anoDesigna = asunto[0].split("D")[1];
+  //     let anoDesigna = asunto[0].split("D")[1];
 
-      let turno = event.data.turnoGuardia.split("/")[0];
+  //     let turno = event.data.turnoGuardia.split("/")[0];
 
-      let request = [anoDesigna, this.datosEJG.annio, this.datosEJG.tipoEJG,
-        //, newDesigna.idTurno.toString(), newId.id, this.datosEJG.numero
-        turno, asunto[1], this.datosEJG.numero
-      ];
+  //     let request = [anoDesigna, this.datos.annio, this.datos.tipoEJG,
+  //       //, newDesigna.idTurno.toString(), newId.id, this.datosEJG.numero
+  //       turno, asunto[1], this.datos.numero
+  //     ];
 
-      this.sigaServices.post("designacion_asociarEjgDesigna", request).subscribe(
-        m => {
+  //     this.sigaServices.post("designacion_asociarEjgDesigna", request).subscribe(
+  //       m => {
 
-          if (JSON.parse(m.body).error.code == 200) this.showMessage("success", "Asociación con EJG realizada correctamente", "" );
-          else this.showMessage("error", "Asociación con EJG fallida",  "" );
-          sessionStorage.removeItem("EJG");
-          this.location.back();
-        },
-        err => {
-          this.showMessage("error",
-            "No se ha asociado el EJG correctamente",
-            ""
-          );
-          this.progressSpinner = false;
-        }
-      );
+  //         if (JSON.parse(m.body).error.code == 200) this.showMessage("success", "Asociación con EJG realizada correctamente", "" );
+  //         else this.showMessage("error", "Asociación con EJG fallida",  "" );
+  //         sessionStorage.removeItem("EJG");
+  //         this.location.back();
+  //       },
+  //       err => {
+  //         this.showMessage("error",
+  //           "No se ha asociado el EJG correctamente",
+  //           ""
+  //         );
+  //         this.progressSpinner = false;
+  //       }
+  //     );
 
       
-    }
-  }
+  //   }
+  // }
 }
