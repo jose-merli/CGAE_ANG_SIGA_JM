@@ -19,6 +19,12 @@
             <label>{{ "facturacionSJCS.facturacionesYPagos.numeroCriterios" | translate }}:
               <span>{{ numCriterios }}</span>
             </label>
+            <label>{{ "facturacionSJCS.facturacionesYPagos.importeTotal" | translate }}:
+              <span>{{ importeTotal | number }} €</span>
+            </label>
+            <label>{{ "facturacionSJCS.facturacionesYPagos.importePendiente" | translate }}:
+              <span>{{ importePendiente | number }} €</span>
+            </label>
             <i *ngIf="!showFichaConceptos" class="fa fa-angle-down float-right" (click)="onHideDatosGenerales()"></i>
           </div>
         </div>
@@ -60,15 +66,29 @@
               <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
                 <td class="text-center" *ngFor="let col of columns">
                   <div *ngIf="col.field == 'descConcepto'">
-                    <p-dropdown class="select-form" [(ngModel)]='dato.idConcepto' (onChange)="changeCombo(dato)"
-                      [options]="conceptos" [filter]="true" filterBy="label,labelSinTilde"
-                      placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true"></p-dropdown>
+
+                    <p-dropdown *ngIf="idEstadoFacturacion == '10'" class="select-form" [(ngModel)]='dato.idConcepto'
+                      (onChange)="changeCombo(dato)" [options]="conceptos" [filter]="true"
+                      filterBy="label,labelSinTilde" placeholder="{{'general.boton.seleccionar' | translate}}"
+                      [showClear]="true"></p-dropdown>
+
+                    <span *ngIf="idEstadoFacturacion != '10'">
+                      {{ dato[col.field] }}
+                    </span>
+
                   </div>
 
                   <div *ngIf="col.field == 'descGrupo'">
-                    <p-dropdown class="select-form" [(ngModel)]='dato.idGrupo' (onChange)="changeCombo(dato)"
-                      [options]="grupoTurnos" [filter]="true" filterBy="label,labelSinTilde"
-                      placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true"></p-dropdown>
+
+                    <p-dropdown *ngIf="idEstadoFacturacion == '10'" class="select-form" [(ngModel)]='dato.idGrupo'
+                      (onChange)="changeCombo(dato)" [options]="grupoTurnos" [filter]="true"
+                      filterBy="label,labelSinTilde" placeholder="{{'general.boton.seleccionar' | translate}}"
+                      [showClear]="true"></p-dropdown>
+
+                    <span *ngIf="idEstadoFacturacion != '10'">
+                      {{ dato[col.field] }}
+                    </span>
+
                   </div>
                   <div *ngIf="col.field == 'importeTotal'">
                     {{ dato.importeTotalFormat | numberPipe }} €

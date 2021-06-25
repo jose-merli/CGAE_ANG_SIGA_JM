@@ -33,6 +33,9 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
   bodyAux = [];
   bodyUpdate = new Set();
 
+  importeTotal;
+  importePendiente;
+
   //COMBOS
   conceptos: ComboItem;
   grupoTurnos: ComboItem;
@@ -105,8 +108,11 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
       this.sigaService.getParam("facturacionsjcs_tarjetaConceptosfac", "?idFacturacion=" + this.idFacturacion).subscribe(
         data => {
           let datos = data.facturacionItem;
+          let importeTotal = 0;
+          let importePendiente = 0;
 
           if (undefined != data.facturacionItem && data.facturacionItem.length > 0) {
+
             datos.forEach(element => {
               if (element.importeTotal != undefined) {
                 element.importeTotalFormat = element.importeTotal.replace(".", ",");
@@ -130,6 +136,15 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
 
               element.idGrupoOld = element.idGrupo;
               element.idConceptoOld = element.idConcepto;
+
+              if (element.importeTotal && element.importeTotal.length > 0) {
+                importeTotal += parseFloat(element.importeTotal);
+              }
+
+              if (element.importePendiente && element.importePendiente.length > 0) {
+                importePendiente += parseFloat(element.importePendiente);
+              }
+
             });
           }
 
@@ -137,6 +152,8 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
           this.bodyAux = JSON.parse(JSON.stringify(datos));
           this.bodyUpdate = new Set();
           this.numCriterios = datos.length;
+          this.importeTotal = importeTotal;
+          this.importePendiente = importePendiente;
           this.changeNumCriterios.emit(this.numCriterios);
           this.progressSpinnerConceptos = false;
         },
