@@ -17,9 +17,9 @@
             <label *ngIf="nDocumentos > 3">{{ "justiciaGratuita.ejg.datosGenerales.numero.Documentos" | translate }}:
               <span>{{nDocumentos}}</span></label>
             <label
-              *ngIf="nDocumentos <= 3 && nDocumentos > 0 && documentos != undefined && documentos[0] != undefined && documentos[1] != undefined && documentos[2] != undefined">{{
+              *ngIf="nDocumentos <= 3 && nDocumentos > 0 ">{{
               "enviosMasivos.literal.documentos" | translate }}:
-              <span>{{documentos[0].documentoDesc}},{{documentos[1].documentoDesc}},{{documentos[2].documentoDesc}}</span></label>
+              <span>{{tiposCabecera}}</span></label>
             <label *ngIf="nDocumentos == 0">{{ "justiciaGratuita.ejg.datosGenerales.numero.Documentos" | translate }}:
               <span>{{ "general.message.no.registros" | translate }}</span></label>
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('documentacion')"></i>
@@ -141,7 +141,7 @@
             label="{{ 'general.boton.consultar' | translate}}/{{ 'general.boton.edit' | translate}}"></button>
           <button [disabled]="!permisoEscritura || selectedDatos.length != 0" (click)="openModal()" pButton
             type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
-          <button [disabled]="selectedDatos.length != 1 || !permisoEscritura"
+          <button [disabled]="selectedDatos.length == 0 || !permisoEscritura"
             (click)="download()" pButton type="button" icon="fa fa-download" iconPos="left"
             label="{{ 'agenda.fichaEventos.datosAsistencia.descargar' | translate}}"></button>
           <button [disabled]="selectedDatos.length == 0 || !permisoEscritura"
@@ -201,12 +201,13 @@
       <label>{{ "justiciaGratuita.ejg.documentacion.tipoDoc" | translate }}(*)</label>
       <p-dropdown [(ngModel)]='body.idTipoDocumento' class="select-form" placeholder="Seleccionar"
         [options]="comboTipoDocumentacion" [disabled]="body.idDocumentacion!=null" [filter]="true"
+        (onChange)="getComboDocumentos()"
         filterBy="label,labelSinTilde" [showClear]="true" [ngClass]="styleObligatorio(body.idTipoDocumento)">
       </p-dropdown>
     </div>
     <div class="form-group-interlineado col-lg-6 col-md-6">
       <label>{{ "justiciaGratuita.ejg.documentacion.Documento" | translate }}(*)</label>
-      <p-dropdown [(ngModel)]='body.idDocumento' [disabled]="body.idDocumentacion!=null" class="select-form"
+      <p-dropdown [(ngModel)]='body.idDocumento' [disabled]="body.idDocumentacion!=null || body.idTipoDocumento == null" class="select-form"
         placeholder="Seleccionar" [options]="comboDocumentos" [filter]="true" filterBy="label,labelSinTilde"
         [showClear]="true" [ngClass]="styleObligatorio(body.idDocumento)"></p-dropdown>
     </div>

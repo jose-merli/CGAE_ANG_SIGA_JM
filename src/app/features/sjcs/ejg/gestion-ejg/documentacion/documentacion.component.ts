@@ -38,6 +38,7 @@ export class DocumentacionComponent implements OnInit {
   seleccion: boolean = false;
   nDocumentos;
   documentos: DocumentacionEjgItem[] = [];
+  tiposCabecera: string = "";
 
   colsModal = [
     { field: 'fecha', header: "dato.jgr.guardia.saltcomp.fecha" },
@@ -75,14 +76,13 @@ export class DocumentacionComponent implements OnInit {
 
   ngOnInit() {
     if (this.persistenceService.getDatos()) {
+      this.getComboPresentador();
       this.resaltadoDatos = true;
       this.nuevo = false;
       this.modoEdicion = true;
       this.item = this.persistenceService.getDatos();
       this.getCols();
-      this.getComboPresentador();
       this.getComboTipoDocumentacion();
-      this.getComboDocumentos();
       this.getDocumentos(this.item);
     } else {
       this.nuevo = true;
@@ -128,6 +128,7 @@ export class DocumentacionComponent implements OnInit {
       n => {
         this.documentos = JSON.parse(n.body).ejgDocItems;
         if (this.documentos != null && this.documentos != undefined) {
+          this.tiposCabecera = "";
           this.documentos.forEach(element => {
             if (!element.presentador && element.parentesco) {
               element.presentador_persona = element.presentador_persona + " (" + element.parentesco + " )";
@@ -140,9 +141,10 @@ export class DocumentacionComponent implements OnInit {
                 if (pres.value == element.presentador) element.presentador_persona = pres.label;
               });
             }
-            this.comboDocumentos.forEach(doc => {
-              if (doc.value == element.idDocumentacion) element.labelDocumento = doc.label;
-            });
+            if(this.documentos.length<=3 && this.documentos.length>0){
+              if(this.tiposCabecera!="")this.tiposCabecera += ", ";
+              this.tiposCabecera += element.labelDocumento;
+            }
           });
         }
         this.nDocumentos = this.documentos.length;
@@ -160,28 +162,12 @@ export class DocumentacionComponent implements OnInit {
     else return true;
   }
 
-  openTab(evento) {
-    if (this.persistenceService.getPermisos() != undefined) {
-      this.permisoEscritura = this.persistenceService.getPermisos();
-    }
-    if (!this.selectAll && !this.selectMultiple) {
-      // this.progressSpinner = true;
-      // this.datosEJG();
-
-    } else {
-      if (evento.data.fechabaja == undefined && this.historico) {
-        this.selectedDatos.pop();
-      }
-    }
-  }
-
   getCols() {
-    //docuemntos o recorrer el array?
     //if(this.documentos != undefined && this.documentos.presentador != undefined){
     this.cols = [
       { field: "flimite_presentacion", header: "justiciaGratuita.ejg.datosGenerales.FechaLimPresentacion" },
       { field: "presentador_persona", header: "justiciaGratuita.ejg.documentacion.Presentador" },
-      { field: "descripcionDoc", header: "justiciaGratuita.ejg.documentacion.Documento" },
+      { field: "labelDocumento", header: "justiciaGratuita.ejg.documentacion.Documento" },
       { field: "regEntrada", header: "justiciaGratuita.ejg.documentacion.RegistroEntrada" },
       { field: "regSalida", header: "justiciaGratuita.ejg.documentacion.RegistroSalida" },
       { field: "f_presentacion", header: "censo.consultaDatosGenerales.literal.fechaPresentacion" },
@@ -260,6 +246,7 @@ export class DocumentacionComponent implements OnInit {
   actualizaSeleccionados(selectedDatos) {
     this.numSelected = selectedDatos.length;
     this.seleccion = false;
+    this.selectAll = false;
   }
 
   showMessage(severity, summary, msg) {
@@ -299,12 +286,10 @@ export class DocumentacionComponent implements OnInit {
 
       },
       err => {
-        console.log(err);
         this.progressSpinner = false;
         this.showMsg('error', 'Error', this.translateService.instant('general.mensaje.error.bbdd'));
       },
       () => {
-        this.progressSpinner = false;
       }
     );
   }
@@ -414,26 +399,27 @@ export class DocumentacionComponent implements OnInit {
 
     //this.body.nuevoEJG=!this.modoEdicion;
 
-    this.sigaServices.post("gestionejg_descargarDocumentosEjg", this.selectedDatos).subscribe(
+    this.sigaServices.postDownloadFiles("gestionejg_descargarDocumentosEjg", this.selectedDatos).subscribe(
       data => {
         let blob = null;
 
-        if (data.status == 200) {
-          if (this.selectedDatos.length == 1) {
-            if (this.selectedDatos[0].nombreFichero != null) {
-              let mime = this.getMimeType(this.selectedDatos[0].nombreFichero.substring(this.selectedDatos[0].nombreFichero.lastIndexOf("."), this.selectedDatos[0].nombreFichero.length));
-              blob = new Blob([data], { type: mime });
-              saveAs(blob, this.selectedDatos[0].nombreFichero);
-            }
-            else this.showMessage("error", "Información", "La documentación seleccionada no tiene un fichero asociado");
-
-          } else {
-
-            blob = new Blob([data], { type: "application/zip" });
-            saveAs(blob, "documentos.zip");
+        // if (data.status == 200) {
+        if (this.selectedDatos.length == 1) {
+          if (this.selectedDatos[0].nombreFichero != null) {
+            let mime = this.getMimeType(this.selectedDatos[0].nombreFichero.substring(this.selectedDatos[0].nombreFichero.lastIndexOf("."), this.selectedDatos[0].nombreFichero.length));
+            blob = new Blob([data], { type: mime });
+            saveAs(blob, this.selectedDatos[0].nombreFichero);
           }
+          else this.showMessage("error", "Información", "La documentación seleccionada no tiene un fichero asociado");
+
+        } else {
+
+          blob = new Blob([data], { type: "application/zip" });
+          saveAs(blob, "documentos.zip");
         }
-        else this.showMsg('error', 'Error', this.translateService.instant('general.message.error.realiza.accion'));
+        // }
+        // else this.showMsg('error', 'Error', this.translateService.instant('general.message.error.realiza.accion'));
+
         this.selectedDatos = [];
         this.progressSpinner = false;
       },
@@ -643,22 +629,25 @@ export class DocumentacionComponent implements OnInit {
   }
 
   getComboDocumentos() {
+    if(this.body.idTipoDocumento != null && this.body.idTipoDocumento != undefined){
     this.progressSpinner = true;
 
-    this.sigaServices.get("gestionejg_comboDocumentos").subscribe(
+    this.sigaServices.getParam("gestionejg_comboDocumentos", "?idTipoDocumentacion="+this.body.idTipoDocumento).subscribe(
       n => {
         this.comboDocumentos = n.combooItems;
         this.commonsServices.arregloTildesCombo(this.comboDocumentos);
         //añadimos el elemento "Todos" que hara que se añadan todos los elementos del combo.
-        //Se tendria que cambia en un futuro por una etiqueta que se tradujera segun el lenguaje.
-        //general.boton.marcarTodos
-        this.comboDocumentos.push({ label: "Todos", value: "-1" });
+        if(this.comboDocumentos.length>0) this.comboDocumentos.push({ label: this.translateService.instant('justiciaGratuita.ejg.documentacion.todosDoc'), value: "-1" });
         this.progressSpinner = false;
       },
       err => {
         this.progressSpinner = false;
       }
     );
+    }
+    else{
+      this.comboDocumentos=[];
+    }
   }
 
   consultaUnidadFamiliar() {
