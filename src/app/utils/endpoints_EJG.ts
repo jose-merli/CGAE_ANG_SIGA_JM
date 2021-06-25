@@ -66,13 +66,14 @@ export let endpoints_EJG: any = {
     gestionejg_descargarInformeCalificacion: "ejg/gestion-ejg/descargarInformeCalificacion",
 
     //Documentacion
-    gestionejg_descargarDocumentacion: "ejg/gestion-ejg/descargarDocumentacion",
+    gestionejg_descargarDocumentosEjg: "ejg/gestion-ejg/descargarDocumentosEjg",
     gestionejg_comboPresentadores: "ejg/gestion-ejg/comboPresentadores",
     gestionejg_comboTipoDocumentacion: "ejg/gestion-ejg/comboTipoDocumentacion",
     gestionejg_comboDocumentos: "ejg/gestion-ejg/comboDocumentos",
     gestionejg_subirDocumentoEjg: "ejg/gestion-ejg/subirDocumentoEjg",
     gestionejg_crearDocumentacionEjg: "ejg/gestion-ejg/crearDocumentacionEjg",
     gestionejg_actualizarDocumentacionEjg: "ejg/gestion-ejg/actualizarDocumentacionEjg",
+    gestionejg_eliminarDocumentacionEjg: "ejg/gestion-ejg/eliminarDocumentacionEjg",
     gestionejg_eliminarDocumentosEjg: "ejg/gestion-ejg/eliminarDocumentosEjg",
 
     //Relaciones

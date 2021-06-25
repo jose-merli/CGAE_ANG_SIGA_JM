@@ -9,6 +9,7 @@ import { DataTable } from 'primeng/datatable';
 import { DocumentacionEjgItem } from '../../../../../models/sjcs/DocumentacionEjgItem';
 import { saveAs } from "file-saver/FileSaver";
 import { UnidadFamiliarEJGItem } from '../../../../../models/sjcs/UnidadFamiliarEJGItem';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-documentacion',
@@ -37,14 +38,15 @@ export class DocumentacionComponent implements OnInit {
   seleccion: boolean = false;
   nDocumentos;
   documentos: DocumentacionEjgItem[] = [];
+  tiposCabecera: string = "";
 
   colsModal = [
-    { field: 'tipo', header: "censo.busquedaClientesAvanzada.literal.tipoCliente" },
-    { field: 'numeroTelefono', header: "administracion.parametrosGenerales.literal.valor" }
+    { field: 'fecha', header: "dato.jgr.guardia.saltcomp.fecha" },
+    { field: 'nombre', header: "censo.cargaMasivaDatosCurriculares.literal.nombreFichero" }
   ];
 
   progressSpinner: boolean;
-  @ViewChild("table") table: DataTable;
+  @ViewChild("tableDocumentacion") tableDocumentacion: DataTable;
   historico: boolean;
   solicitantes: UnidadFamiliarEJGItem[] = [];
 
@@ -69,19 +71,19 @@ export class DocumentacionComponent implements OnInit {
 
   constructor(private sigaServices: SigaServices, private persistenceService: PersistenceService,
     private translateService: TranslateService, private confirmationService: ConfirmationService,
-    private commonsServices: CommonsService, private changeDetectorRef: ChangeDetectorRef) { }
+    private commonsServices: CommonsService, private changeDetectorRef: ChangeDetectorRef,
+    private datepipe: DatePipe,) { }
 
   ngOnInit() {
     if (this.persistenceService.getDatos()) {
+      this.getComboPresentador();
       this.resaltadoDatos = true;
       this.nuevo = false;
       this.modoEdicion = true;
       this.item = this.persistenceService.getDatos();
-      this.getDocumentos(this.item);
       this.getCols();
-      this.getComboPresentador();
       this.getComboTipoDocumentacion();
-      this.getComboDocumentos();
+      this.getDocumentos(this.item);
     } else {
       this.nuevo = true;
       this.modoEdicion = false;
@@ -125,18 +127,32 @@ export class DocumentacionComponent implements OnInit {
     this.sigaServices.post("gestionejg_getDocumentos", selected).subscribe(
       n => {
         this.documentos = JSON.parse(n.body).ejgDocItems;
-        if (this.documentos) {
+        if (this.documentos != null && this.documentos != undefined) {
+          this.tiposCabecera = "";
           this.documentos.forEach(element => {
             if (!element.presentador && element.parentesco) {
               element.presentador_persona = element.presentador_persona + " (" + element.parentesco + " )";
+            }
+            //Cuando el presentador seleccionado no es un solicitante
+            if (!element.presentador && element.idMaestroPresentador) {
+              element.presentador = element.idMaestroPresentador.toString();
+              //Valor de la columna presentador
+              this.comboPresentador.forEach(pres => {
+                if (pres.value == element.presentador) element.presentador_persona = pres.label;
+              });
+            }
+            if(this.documentos.length<=3 && this.documentos.length>0){
+              if(this.tiposCabecera!="")this.tiposCabecera += ", ";
+              this.tiposCabecera += element.labelDocumento;
             }
           });
         }
         this.nDocumentos = this.documentos.length;
         this.progressSpinner = false;
+        if (this.tableDocumentacion != undefined) this.tableDocumentacion.reset();
       },
       err => {
-        console.log(err);
+        this.progressSpinner = false;
       }
     );
   }
@@ -145,27 +161,13 @@ export class DocumentacionComponent implements OnInit {
     if (dato.fechabaja == null) return false;
     else return true;
   }
-  openTab(evento) {
-    if (this.persistenceService.getPermisos() != undefined) {
-      this.permisoEscritura = this.persistenceService.getPermisos();
-    }
-    if (!this.selectAll && !this.selectMultiple) {
-      // this.progressSpinner = true;
-      // this.datosEJG();
 
-    } else {
-      if (evento.data.fechabaja == undefined && this.historico) {
-        this.selectedDatos.pop();
-      }
-    }
-  }
   getCols() {
-    //docuemntos o recorrer el array?
     //if(this.documentos != undefined && this.documentos.presentador != undefined){
     this.cols = [
       { field: "flimite_presentacion", header: "justiciaGratuita.ejg.datosGenerales.FechaLimPresentacion" },
-      { field: "presentador", header: "justiciaGratuita.ejg.documentacion.Presentador" },
-      { field: "descripcionDoc", header: "justiciaGratuita.ejg.documentacion.Documento" },
+      { field: "presentador_persona", header: "justiciaGratuita.ejg.documentacion.Presentador" },
+      { field: "labelDocumento", header: "justiciaGratuita.ejg.documentacion.Documento" },
       { field: "regEntrada", header: "justiciaGratuita.ejg.documentacion.RegistroEntrada" },
       { field: "regSalida", header: "justiciaGratuita.ejg.documentacion.RegistroSalida" },
       { field: "f_presentacion", header: "censo.consultaDatosGenerales.literal.fechaPresentacion" },
@@ -222,7 +224,7 @@ export class DocumentacionComponent implements OnInit {
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
-    this.table.reset();
+    this.tableDocumentacion.reset();
   }
 
   onChangeSelectAll() {
@@ -244,6 +246,7 @@ export class DocumentacionComponent implements OnInit {
   actualizaSeleccionados(selectedDatos) {
     this.numSelected = selectedDatos.length;
     this.seleccion = false;
+    this.selectAll = false;
   }
 
   showMessage(severity, summary, msg) {
@@ -259,34 +262,10 @@ export class DocumentacionComponent implements OnInit {
     this.msgs = [];
   }
 
-  confirmDelete() {
-    let mess = this.translateService.instant(
-      "messages.deleteConfirmation"
-    );
-    let icon = "fa fa-edit";
-    this.confirmationService.confirm({
-      message: mess,
-      icon: icon,
-      accept: () => {
-        this.delete()
-      },
-      reject: () => {
-        this.msgs = [
-          {
-            severity: "info",
-            summary: "Cancelar",
-            detail: this.translateService.instant(
-              "general.message.accion.cancelada"
-            )
-          }
-        ];
-      }
-    });
-  }
-  delete() {
-  this.progressSpinner = true;
+  deleteDocumentacion() {
+    this.progressSpinner = true;
 
-    this.sigaServices.post("gestionejg_eliminarDocumentosEjg", this.selectedDatos).subscribe(
+    this.sigaServices.post("gestionejg_eliminarDocumentacionEjg", this.selectedDatos).subscribe(
       data => {
         let resp = data;
         let error = JSON.parse(data.body).error;
@@ -297,7 +276,44 @@ export class DocumentacionComponent implements OnInit {
           this.selectedDatos = [];
           //this.deseleccionarTodo = true;
           this.getDocumentos(this.item);
-          this.showModal = false;
+        } else {
+          if (error != null && error.description != null && error.description != '') {
+            this.showMsg('error', 'Error', this.translateService.instant(error.description));
+          } else {
+            this.showMsg('error', 'Error', this.translateService.instant('general.message.error.realiza.accion'));
+          }
+        }
+
+      },
+      err => {
+        this.progressSpinner = false;
+        this.showMsg('error', 'Error', this.translateService.instant('general.mensaje.error.bbdd'));
+      },
+      () => {
+      }
+    );
+  }
+
+
+  deleteDocumentos() {
+    this.progressSpinner = true;
+
+    this.sigaServices.post("gestionejg_eliminarDocumentosEjg", this.bodyInicial).subscribe(
+      data => {
+        let resp = data;
+        let error = JSON.parse(data.body).error;
+
+        if (resp.statusText == 'OK') {
+          this.progressSpinner = false;
+          this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
+          //this.selectedDatos = [];
+          //this.deseleccionarTodo = true;
+          this.getDocumentos(this.item);
+          // this.showModal = false;
+          this.body.idFichero = null;
+          this.body.nombreFichero = null;
+          this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+          this.ficheros = [];
         } else {
           if (error != null && error.description != null && error.description != '') {
             this.showMsg('error', 'Error', this.translateService.instant(error.description));
@@ -333,17 +349,37 @@ export class DocumentacionComponent implements OnInit {
 
   subirFichero(event: any) {
 
+    this.progressSpinner = true;
+
     let fileList: FileList = event.files;
     let file: File = fileList[0];
 
     this.sigaServices
-      .postSendFileAndParameters("gestionEjg_uploadFile", file, this.body.idDocumentacion)
+      .postSendFileAndParameters("gestionejg_subirDocumentoEjg", file, this.body.idDocumentacion)
       .subscribe(
         data => {
           this.progressSpinner = false;
 
           if (data["error"].code == 200) {
             this.showMessage("success", "Correcto", data["error"].message);
+            this.getDocumentos(this.item);
+            this.selectedDatos = [];
+            this.numSelected = 0;
+            this.showModal = false;
+            //this.body.idDocumento = 
+            //   this.body.nombreFichero = file.get
+            // this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+            //   if(this.bodyInicial.f_presentacion!=null && this.bodyInicial.f_presentacion!=undefined){
+            //     this.ficheros=[{
+            //       "fecha": this.datepipe.transform(this.bodyInicial.f_presentacion, 'dd/MM/yyyy'),
+            //       "nombre": this.bodyInicial.nombreFichero
+            //     }]
+            //     }else{
+            //       this.ficheros=[{
+            //         "fecha": this.translateService.instant("justiciaGratuita.ejg.documentacion.noFechaPre"),
+            //         "nombre": this.bodyInicial.nombreFichero
+            //       }]
+            //     }
           } else if (data["error"].code == null) {
             this.showMessage("info", "Información", data["error"].message);
           }
@@ -358,37 +394,41 @@ export class DocumentacionComponent implements OnInit {
       );
   }
 
-  checkPermisosDownload() {
-    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
-    if (msg != undefined) {
-      this.msgs = msg;
-    } else {
-      this.download();
-    }
-  }
   download() {
     this.progressSpinner = true;
 
     //this.body.nuevoEJG=!this.modoEdicion;
 
-    this.sigaServices.post("gestionejg_descargarDocumentacion", this.body).subscribe(
-      n => {
+    this.sigaServices.postDownloadFiles("gestionejg_descargarDocumentosEjg", this.selectedDatos).subscribe(
+      data => {
+        let blob = null;
+
+        // if (data.status == 200) {
+        if (this.selectedDatos.length == 1) {
+          if (this.selectedDatos[0].nombreFichero != null) {
+            let mime = this.getMimeType(this.selectedDatos[0].nombreFichero.substring(this.selectedDatos[0].nombreFichero.lastIndexOf("."), this.selectedDatos[0].nombreFichero.length));
+            blob = new Blob([data], { type: mime });
+            saveAs(blob, this.selectedDatos[0].nombreFichero);
+          }
+          else this.showMessage("error", "Información", "La documentación seleccionada no tiene un fichero asociado");
+
+        } else {
+
+          blob = new Blob([data], { type: "application/zip" });
+          saveAs(blob, "documentos.zip");
+        }
+        // }
+        // else this.showMsg('error', 'Error', this.translateService.instant('general.message.error.realiza.accion'));
+
+        this.selectedDatos = [];
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
         this.progressSpinner = false;
       }
     );
   }
-  checkPermisosConfirmDelete() {
-    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
-    if (msg != undefined) {
-      this.msgs = msg;
-    } else {
-      this.confirmDelete();
-    }
-  }
+
   checkPermisosPrint() {
     let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
@@ -438,7 +478,7 @@ export class DocumentacionComponent implements OnInit {
           this.selectedDatos = [];
           //this.deseleccionarTodo = true;
           this.getDocumentos(this.item);
-          this.showModal = false;
+          this.bodyInicial = JSON.parse(JSON.stringify(this.body));
         } else {
           if (error != null && error.description != null && error.description != '') {
             this.showMsg('error', 'Error', this.translateService.instant(error.description));
@@ -459,6 +499,7 @@ export class DocumentacionComponent implements OnInit {
   }
   newDoc() {
     //this.showModal = true;
+    this.progressSpinner = true;
 
     let peticion: DocumentacionEjgItem = this.body;
     peticion.anio = Number(this.item.annio);
@@ -467,11 +508,11 @@ export class DocumentacionComponent implements OnInit {
 
     this.sigaServices.post("gestionejg_crearDocumentacionEjg", peticion).subscribe(
       data => {
+        this.progressSpinner = false;
         let resp = data;
         let error = JSON.parse(data.body).error;
 
         if (resp.statusText == 'OK') {
-          this.progressSpinner = false;
           this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
           this.selectedDatos = [];
           //this.deseleccionarTodo = true;
@@ -522,6 +563,20 @@ export class DocumentacionComponent implements OnInit {
       if (this.body.f_presentacion != undefined && this.body.f_presentacion != null)
         this.body.f_presentacion = new Date(this.body.f_presentacion);
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+      if (this.bodyInicial.idFichero) {
+        if (this.bodyInicial.f_presentacion != null && this.bodyInicial.f_presentacion != undefined) {
+          this.ficheros = [{
+            "fecha": this.datepipe.transform(this.bodyInicial.f_presentacion, 'dd/MM/yyyy'),
+            "nombre": this.bodyInicial.nombreFichero
+          }]
+        } else {
+          this.ficheros = [{
+            "fecha": this.translateService.instant("justiciaGratuita.ejg.documentacion.noFechaPre"),
+            "nombre": this.bodyInicial.nombreFichero
+          }]
+        }
+      }
+      else this.ficheros = [];
     }
     else {
       this.body = new DocumentacionEjgItem();
@@ -574,22 +629,25 @@ export class DocumentacionComponent implements OnInit {
   }
 
   getComboDocumentos() {
+    if(this.body.idTipoDocumento != null && this.body.idTipoDocumento != undefined){
     this.progressSpinner = true;
 
-    this.sigaServices.get("gestionejg_comboDocumentos").subscribe(
+    this.sigaServices.getParam("gestionejg_comboDocumentos", "?idTipoDocumentacion="+this.body.idTipoDocumento).subscribe(
       n => {
         this.comboDocumentos = n.combooItems;
         this.commonsServices.arregloTildesCombo(this.comboDocumentos);
         //añadimos el elemento "Todos" que hara que se añadan todos los elementos del combo.
-        //Se tendria que cambia en un futuro por una etiqueta que se tradujera segun el lenguaje.
-        //general.boton.marcarTodos
-        this.comboDocumentos.push({ label: "Todos", value: "-1" });
+        if(this.comboDocumentos.length>0) this.comboDocumentos.push({ label: this.translateService.instant('justiciaGratuita.ejg.documentacion.todosDoc'), value: "-1" });
         this.progressSpinner = false;
       },
       err => {
         this.progressSpinner = false;
       }
     );
+    }
+    else{
+      this.comboDocumentos=[];
+    }
   }
 
   consultaUnidadFamiliar() {

@@ -237,20 +237,32 @@ export class ExpedientesEconomicosComponent implements OnInit {
   }
 
   downloadEEJ() {
+    this.progressSpinner=true;
+
     let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
 
     if (msg != undefined) {
       this.msgs = msg;
+      this.progressSpinner=false;
     } else {
-      let datos = [];
+      let data = [];
 
-      let item: EJGItem = new EJGItem();
-      datos.push(this.body);
+      this.selectedDatos.forEach(element => {
+        let ejgData: EJGItem = new EJGItem();
 
-      this.progressSpinner=true;
+        ejgData.annio = this.body.annio;
+        ejgData.idInstitucion = this.body.idInstitucion;
+        ejgData.numEjg = this.body.numEjg;
+        ejgData.tipoEJG = this.body.tipoEJG;
+        ejgData.observaciones=element.csv;
+        
+        data.push(ejgData);
+      });
 
-      this.sigaServices.postDownloadFiles("gestionejg_descargarExpedientesJG", this.selectedDatos).subscribe(
+      this.sigaServices.postDownloadFiles("gestionejg_descargarExpedientesJG", data).subscribe(
         data => {
+          this.progressSpinner=false;
+
           if(data.size==0){
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
           }else{

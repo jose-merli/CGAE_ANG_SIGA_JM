@@ -390,12 +390,24 @@ export class UnidadFamiliarComponent implements OnInit {
     let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
+      this.progressSpinner=false;
     } else {
       
-      let datos = [];
-      datos.push(this.body);
+      let datosToCall = [];
 
-      this.sigaServices.postDownloadFiles("gestionejg_descargarExpedientesJG", datos).subscribe(
+      this.selectedDatos.forEach(element => {
+        let ejgData: EJGItem = new EJGItem();
+
+        ejgData.annio = this.body.annio;
+        ejgData.idInstitucion = this.body.idInstitucion;
+        ejgData.numEjg = this.body.numEjg;
+        ejgData.tipoEJG = this.body.tipoEJG;
+        ejgData.nif=element.pjg_nif;
+
+        datosToCall.push(ejgData);
+      });
+
+      this.sigaServices.postDownloadFiles("gestionejg_descargarExpedientesJG", datosToCall).subscribe(
         data => {
           this.progressSpinner = false;
 

@@ -375,11 +375,20 @@ export class TablaEjgComponent implements OnInit {
     } else {
       this.progressSpinner=true;
 
+      let datos = this.selectedDatos;
+
+      datos.forEach(element => {
+        element.nif = undefined;
+      });
+
       this.sigaServices.postDownloadFiles("gestionejg_descargarExpedientesJG", this.selectedDatos).subscribe(
         data => {
           if(data.size==0){
+            this.progressSpinner = false;
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
           }else{
+            this.progressSpinner = false;
+            
             let blob = null;
 
             let now = new Date();
