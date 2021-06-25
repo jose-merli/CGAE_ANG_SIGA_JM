@@ -10,13 +10,13 @@
                     <!-- <p-radioButton value="des" name="tarj" (click)="changeFilters()"
                         label="{{'menu.justiciaGratuita.designas' | translate}}" [(ngModel)]='radioTarjeta'
                         [disabled]="fromEJG"></p-radioButton> -->
-                    <p-radioButton value="des" name="tarj" (click)="changeFilters()" label="Designaciones"
+                    <p-radioButton value="des" name="tarj" (click)="changeFilters($event)" label="Designaciones"
                         [(ngModel)]='radioTarjeta'></p-radioButton>
                     <p-radioButton value="soj" name="tarj" label="SOJ" [(ngModel)]='radioTarjeta'
-                        (click)="changeFilters()"></p-radioButton>
-                    <p-radioButton value="asi" name="tarj" (click)="changeFilters()"
+                        (click)="changeFilters($event)"></p-radioButton>
+                    <p-radioButton value="asi" name="tarj" (click)="changeFilters($event)"
                         label="{{'menu.justiciaGratuita.asistencia' | translate}}" [(ngModel)]='radioTarjeta'></p-radioButton>
-                    <p-radioButton value="ejg" name="tarj" (click)="changeFilters()"
+                    <p-radioButton value="ejg" name="tarj" (click)="changeFilters($event)"
                         label="{{ 'justiciaGratuita.ejg.datosGenerales.EJG' | translate}}" [(ngModel)]='radioTarjeta'></p-radioButton>
                 </div>
             </div>
@@ -26,62 +26,60 @@
                 <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
             </p>
 
-            <!-- Datos generales Designaciones -->
+            <!-- Datos generales -->
             <div *ngIf="showDatosGenerales" class="module vista-avanzada">
                 <div class="form-row">
 
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{"justiciaGratuita.maestros.calendarioLaboralAgenda.anio" | translate}} /
                             {{"gratuita.busquedaAsistencias.literal.numero"
                             | translate}}</label>
                         <div>
                             <input type="text" oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')" maxLength="4"
-                                class="form-group col-lg-5 col-md-5" [(ngModel)]='filtros.anio' pInputText> /
+                                class="form-group-interlineado col-lg-5 col-md-5" [(ngModel)]='filtros.anio' pInputText> /
                             <input type="text" oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')" maxLength="9"
-                                class="form-group col-lg-5 col-md-5" [(ngModel)]='filtros.numero' pInputText>
+                                class="form-group-interlineado col-lg-5 col-md-5" [(ngModel)]='filtros.numero' pInputText>
                         </div>
 
                     </div>
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
                      <label>{{"gratuita.busquedaEJG.literal.fechaAperturaDesde" | translate}}</label>
                                 <app-fecha [(value)]='filtros.fechaAperturaDesde'
                                     (valueChangeSelected)="fillFechaAperturaDesde($event)"
                                     (valueChangeInput)="fillFechaAperturaDesde($event)"></app-fecha>
                     </div>     
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
                                 <label>{{"gratuita.busquedaEJG.literal.fechaAperturaHasta" | translate}}</label>
                                 <app-fecha [minDate]="filtros.fechaAperturaDesde" [(value)]='filtros.fechaAperturaHasta'
                                     (valueChangeSelected)="fillFechaAperturaHasta($event)"
                                     (valueChangeInput)="fillFechaAperturaHasta($event)"></app-fecha>
                     </div>
-                        
-                    
-                    <div  class="form-group col-lg-3 col-md-3">
-                        <div *ngIf="radioTarjeta == 'des'" class="form-group col-lg-12 col-md-12">
+                       
+                        <div *ngIf="radioTarjeta == 'des'" class="form-group-interlineado col-lg-3 col-md-3">
                             <label>{{"gratuita.busquedaDesignas.literal.tipoDesigna" | translate}}</label>
                             <p-dropdown class="select-form" [(ngModel)]='filtros.idTipoDesigna'
                                 placeholder="{{'general.boton.seleccionar' | translate}}" [options]="TipoDesignacion"
                                 [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
                         </div>
-                        <div *ngIf="radioTarjeta == 'soj'" class="form-group col-lg-12 col-md-12">
+                        <div *ngIf="radioTarjeta == 'soj'" class="form-group-interlineado col-lg-3 col-md-3">
                             <label>{{"gratuita.busquedaDesignas.literal.tipoSOJ" | translate}}</label>
                             <p-dropdown class="select-form" [(ngModel)]='filtros.idTipoSoj'
                                 placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboTipoSOJ"
                                 [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
                         </div>
-                        <div *ngIf="radioTarjeta == 'asi'" class="form-group col-lg-12 col-md-12">
+                        <div *ngIf="radioTarjeta == 'asi'" class="form-group-interlineado col-lg-3 col-md-3">
                             <label>{{"menu.justiciaGratuita.tipoAsistencia" | translate}}</label>
                             <p-dropdown class="select-form" [(ngModel)]='filtros.idTipoAsistencia'
                                 placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboTiposAsitencia"
                                 [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
                         </div>
-                        <div *ngIf="radioTarjeta == 'ejg'" class="form-group col-lg-12 col-md-12">
+                        <div *ngIf="radioTarjeta == 'ejg'" class="form-group-interlineado col-lg-3 col-md-3">
                             <label>{{"justiciaGratuita.ejg.datosGenerales.TipoEJG" | translate}}</label>
                             <p-dropdown class="select-form" [(ngModel)]='filtros.idTipoEjg'
                                 placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboTipoEjg"
                                 [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
                         </div>
-                    </div>
+                    
                     <!--  <div class="form-group col-lg-3 col-md-3">
                         <label>{{ 'justiciaGratuita.sjcs.designas.DatosIden.turno' | translate}}</label>
                         <p-dropdown class="select-form" [(ngModel)]='filtros.idTurno'
@@ -101,23 +99,23 @@
                 <div *ngIf="radioTarjeta == 'des' || radioTarjeta == 'asi' " class="form-row">
 
                    
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{"gratuita.busquedaDesignas.literal.numProcedimiento" | translate}}</label>
                         <input type="text" class="form-control" maxlength="9" [(ngModel)]='filtros.numProcedimiento'
                             pInputText>
                     </div>
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{"justiciaGratuita.ejg.datosGenerales.Juzgado" | translate}}</label>
                         <p-dropdown class="select-form" [(ngModel)]='filtros.idJuzgado'
                             placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboJuzgado"
                             [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
                     </div>
-                    <div *ngIf="radioTarjeta == 'des'" class="form-group col-lg-3 col-md-3">
+                    <div *ngIf="radioTarjeta == 'des'" class="form-group-interlineado col-lg-3 col-md-3">
                         <label>NIG</label>
                         <input maxlength="50" type="text" class="form-control" [maxLength]="5" [(ngModel)]='filtros.nig'
                             pInputText>
                     </div>
-                    <div *ngIf="radioTarjeta == 'des'" class="form-group col-lg-3 col-md-3">
+                    <div *ngIf="radioTarjeta == 'des'" class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{"gratuita.busquedaDesignas.literal.estadoDesigna" | translate}}</label>
                         <p-dropdown class="select-form" [(ngModel)]='filtros.idEstadoDesigna' [filter]="true"
                             filterMatchMode="contains" [options]="comboEstadoDesignacion"
@@ -125,7 +123,7 @@
                             emptyFilterMessage="{{'resultadosPoblaciones' | translate}}" [showClear]="true">
                         </p-dropdown>
                     </div>
-                    <div *ngIf="radioTarjeta == 'asi'" class="form-group col-lg-3 col-md-3">
+                    <div *ngIf="radioTarjeta == 'asi'" class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{"gratuita.mantAsistencias.literal.numeroDiligenciasolo" | translate}}</label>
                         <!-- / {{"gratuita.mantActuacion.literal.nasunto"
                         | translate}} -->
@@ -135,7 +133,7 @@
                         <!-- / <input type="text" oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')" class="form-group col-lg-6 col-md-6" [(ngModel)]='filtros.asunto'
                                 pInputText> -->
                     </div>
-                    <div *ngIf="radioTarjeta == 'asi'" class="form-group col-lg-3 col-md-3">
+                    <div *ngIf="radioTarjeta == 'asi'" class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{"gratuita.volantesExpres.literal.centroDetencion" | translate}}</label>
                         <p-dropdown class="select-form" [(ngModel)]='filtros.comisaria'
                             placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboComisaria"
@@ -154,17 +152,17 @@
             <div *ngIf="showJusticiable" class="module vista-avanzada">
                 <div class="form-row">
 
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{"censo.fichaCliente.literal.identificacion" | translate}}</label>
                         <input type="text" maxlength="20" name="nif" class="form-control" [(ngModel)]='filtros.nif'
                             pInputText>
                     </div>
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{"gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate}}</label>
                         <input type="text" maxlength="100" name="apellidos" class="form-control"
                             [(ngModel)]='filtros.apellidos' pInputText>
                     </div>
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
                         <input type="text" maxlength="100" name="nombre" class="form-control"
                             [(ngModel)]='filtros.nombre' pInputText>
@@ -183,26 +181,31 @@
                 <i *ngIf="!showDatosColegiales" class="fa fa-angle-down float-right"></i>
             </p>
 
-            <div class="form-row">
-                <div class="form-group col-lg-6 col-md-6">
-                    <label>{{ 'justiciaGratuita.sjcs.designas.DatosIden.turno' | translate}}</label>
-                    <p-dropdown class="select-form" [(ngModel)]='filtros.idTurno'
-                        (onChange)="getComboguardiaPorTurno($event)"
-                        placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboTurno" [filter]="true"
-                        filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
-                </div>
-                <div class="form-group col-lg-6 col-md-6">
-                    <label>{{"menu.justiciaGratuita.GuardiaMenu" | translate}}</label>
-                    <!-- || radioTarjeta == 'des' -->
-                    <p-dropdown class="select-form" [(ngModel)]='filtros.idGuardia'
-                        [disabled]="comboguardiaPorTurno.length == 0 "
-                        placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboguardiaPorTurno"
-                        [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
-                </div>
-
-            </div>
+            
             <div *ngIf="showDatosColegiales" class="module vista-avanzada">
-                <app-busqueda-colegiado-express (idPersona)="getIdPersona($event)"></app-busqueda-colegiado-express>
+                <div class="form-row">
+                    <div class="form-group-interlineado col-lg-6 col-md-6">
+                        <label>{{ 'justiciaGratuita.sjcs.designas.DatosIden.turno' | translate}}</label>
+                        <p-dropdown class="select-form" [(ngModel)]='filtros.idTurno'
+                            (onChange)="getComboguardiaPorTurno($event)"
+                            placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboTurno" [filter]="true"
+                            filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+                    </div>
+                    <div class="form-group-interlineado col-lg-6 col-md-6">
+                        <label>{{"menu.justiciaGratuita.GuardiaMenu" | translate}}</label>
+                        <!-- || radioTarjeta == 'des' -->
+                          
+                        <p-dropdown class="select-form" [(ngModel)]='filtros.idGuardia'
+                        [disabled]="comboguardiaPorTurno.length == 0 "
+                            placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboguardiaPorTurno"
+                            [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+                    </div>
+    
+                </div>
+                <app-busqueda-colegiado-express (idPersona)="getIdPersona($event)" 
+                [numColegiado]="usuarioBusquedaExpress.numColegiado"
+                [nombreAp]="usuarioBusquedaExpress.nombreAp"
+                ></app-busqueda-colegiado-express>
             </div>
 
 

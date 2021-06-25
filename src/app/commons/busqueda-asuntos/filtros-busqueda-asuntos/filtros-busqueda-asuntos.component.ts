@@ -106,6 +106,7 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
   @Input() from: boolean = false;
 
   @Output() search = new EventEmitter<String>();
+  @Output() resetTable = new EventEmitter<Boolean>();
 
   institucionActual: any;
   deshabilitarCombCol: boolean = false;
@@ -116,6 +117,10 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
   showAsistencias: boolean = true;
   comboEstadoDesignacion: { label: string; value: string; }[];
   filtroAux: any;
+  usuarioBusquedaExpress = {
+    numColegiado: '',
+    nombreAp: ''
+  };
 
   constructor(
     private sigaServices: SigaServices,
@@ -151,13 +156,58 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
     //Se asignan los valores de los filtros cuando procede de EJG y se fijan
     if (this.data != null) {
       this.radioTarjeta = 'des';
-
+      
+    }else{
+      if(sessionStorage.getItem("radioTajertaValue")){
+        this.radioTarjeta=sessionStorage.getItem("radioTajertaValue")
+      }else{
+        this.radioTarjeta = 'des';
+        sessionStorage.setItem("radioTajertaValue",""+this.radioTarjeta);
+      }
     }
+    
+    if (sessionStorage.getItem("buscadorColegiados")) {
+
+      let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
+
+      sessionStorage.removeItem('buscadorColegiados');
+
+      if (busquedaColegiado.nombreSolo != undefined) this.usuarioBusquedaExpress.nombreAp = busquedaColegiado.apellidos + ", " + busquedaColegiado.nombreSolo;
+      else this.usuarioBusquedaExpress.nombreAp = busquedaColegiado.apellidos + ", " + busquedaColegiado.nombre;
+
+      this.usuarioBusquedaExpress.numColegiado = busquedaColegiado.nColegiado;
+      this.filtros.nColegiado = this.usuarioBusquedaExpress.numColegiado;
+
+      //Asignacion de idPersona según el origen de la busqueda.
+      this.idPersona = busquedaColegiado.idPersona;
+      if (this.idPersona == undefined) this.idPersona = busquedaColegiado.idpersona;
+    }
+  //Se comprueba si vueleve de una busqueda de colegiado
+  if (sessionStorage.getItem("idTurno")) {
+    this.data.idTurno = sessionStorage.getItem("idTurno");
+    sessionStorage.removeItem('idTurno');
+  }
+
+  //Se comprueba si vueleve de una busqueda de colegiado
+  if (sessionStorage.getItem("idGuardia")) {
+    this.data.idGuardia = sessionStorage.getItem("idGuardia");
+    sessionStorage.removeItem('idGuardia');
+  }
+  
+     
   }
 
   changeFilters() {
-    let filtrosNuevos = new AsuntosJusticiableItem;
-    filtrosNuevos.anio = this.filtros.anio;
+    sessionStorage.removeItem("radioTajertaValue");
+    sessionStorage.setItem("radioTajertaValue",""+this.radioTarjeta);
+    sessionStorage.removeItem('buscadorColegiados');
+    sessionStorage.removeItem('idGuardia');
+    sessionStorage.removeItem('idTurno');
+    this.usuarioBusquedaExpress.nombreAp='';
+    this.usuarioBusquedaExpress.numColegiado='';
+    this.resetTable.emit(true);
+    /* let filtrosNuevos = new AsuntosJusticiableItem;
+     filtrosNuevos.anio = this.filtros.anio;
     filtrosNuevos.numero = this.filtros.numero;
     filtrosNuevos.fechaAperturaDesde = this.filtros.fechaAperturaDesde;
     filtrosNuevos.fechaAperturaHasta = this.filtros.fechaAperturaHasta;
@@ -166,9 +216,12 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
     filtrosNuevos.nif = this.filtros.nif;
     filtrosNuevos.apellidos = this.filtros.apellidos;
     filtrosNuevos.nombre = this.filtros.nombre;
+    filtrosNuevos.nColegiado = this.filtros.nColegiado;
+    filtrosNuevos.numProcedimiento = this.filtros.numProcedimiento;
+    filtrosNuevos.numeroDiligencia = this.filtros.numeroDiligencia;
 
     this.filtros = new AsuntosJusticiableItem;
-    this.filtros = filtrosNuevos;
+    this.filtros = filtrosNuevos; */
   }
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;

@@ -108,6 +108,12 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
     this.search(event);
   }
 
+  resetTableEvent(event){
+    if(event == true){
+      this.body = [];
+    }
+  }
+
   searchHistorico(event) {
     this.search(event)
   }
@@ -115,6 +121,8 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
   backTo() {
     this.location.back();
   }
+
+
 
   search(event) {
     this.progressSpinner = true;
@@ -210,6 +218,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
           }
         );
     }
+    this.goToView();
   }
 
   showMessage(event) {
@@ -220,7 +229,13 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
       detail: event.msg
     });
   }
-
+  goToView() {
+    let view = document.getElementById("tablaBusqueda");
+    if (view) {
+      view.scrollIntoView();
+      view = null;
+    }
+  }
   clear() {
     this.msgs = [];
   }

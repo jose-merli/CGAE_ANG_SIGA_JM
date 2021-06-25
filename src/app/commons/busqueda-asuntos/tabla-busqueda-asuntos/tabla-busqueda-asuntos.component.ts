@@ -38,6 +38,7 @@ export class TablaBusquedaAsuntosComponent implements OnInit {
   @Input() fromJusticiable;
   @Input() data: AsuntosJusticiableItem = null;
 
+
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private persistenceService: PersistenceService) { }
 
@@ -132,7 +133,7 @@ export class TablaBusquedaAsuntosComponent implements OnInit {
       detail: msg
     });
   }
-
+ 
   clear() {
     this.msgs = [];
   }
@@ -140,6 +141,7 @@ export class TablaBusquedaAsuntosComponent implements OnInit {
   openTab() {
 
   }
+
 
   // getAsunto(event) {
   //   if (this.datos != null) {
