@@ -101,7 +101,7 @@
                    
                     <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{"gratuita.busquedaDesignas.literal.numProcedimiento" | translate}}</label>
-                        <input type="text" class="form-control" maxlength="9" [(ngModel)]='filtros.numProcedimiento'
+                        <input type="text" class="form-control" maxlength="20" [(ngModel)]='filtros.numeroProcedimiento'
                             pInputText>
                     </div>
                     <div class="form-group-interlineado col-lg-3 col-md-3">
@@ -128,8 +128,7 @@
                         <!-- / {{"gratuita.mantActuacion.literal.nasunto"
                         | translate}} -->
                         <input type="text" class="form-control"
-                            oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')" maxlength="20"
-                            [(ngModel)]='filtros.numeroDiligencia' pInputText>
+                            maxlength="20" [(ngModel)]='filtros.numeroDiligencia' pInputText>
                         <!-- / <input type="text" oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')" class="form-group col-lg-6 col-md-6" [(ngModel)]='filtros.asunto'
                                 pInputText> -->
                     </div>

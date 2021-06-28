@@ -205,6 +205,7 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
     sessionStorage.removeItem('idTurno');
     this.usuarioBusquedaExpress.nombreAp='';
     this.usuarioBusquedaExpress.numColegiado='';
+    this.filtros = new AsuntosJusticiableItem;
     this.resetTable.emit(true);
     /* let filtrosNuevos = new AsuntosJusticiableItem;
      filtrosNuevos.anio = this.filtros.anio;
@@ -589,7 +590,10 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
 
   isLimpiar() {
     this.filtros = new AsuntosJusticiableItem();
-
+    
+    this.usuarioBusquedaExpress.nombreAp='';
+    this.usuarioBusquedaExpress.numColegiado='';
+    
     if (!this.deshabilitarCombCol) {
       this.colegiosSeleccionados = [];
     }
