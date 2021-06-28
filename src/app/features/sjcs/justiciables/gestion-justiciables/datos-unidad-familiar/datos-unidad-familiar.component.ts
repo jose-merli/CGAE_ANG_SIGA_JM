@@ -20,7 +20,7 @@ export class DatosUnidadFamiliarComponent implements OnInit {
   solicitanteCabecera: String = "";
   parentescoCabecera: String = "";
 
-  solicitanteBox: boolean = false;
+  //solicitanteBox: boolean = false;
   incapacitadoBox: boolean = false;
   cirExcepBox: boolean = false;
   
@@ -29,6 +29,11 @@ export class DatosUnidadFamiliarComponent implements OnInit {
   comboGrupoLaboral: any = [];
   comboParentesco: any = [];
   comboTipoIng: any = [];
+  comboRol: any[] = [
+    {label: this.translateService.instant('justiciaGratuita.justiciables.rol.unidadFamiliar'), value: "1"},
+    {label: this.translateService.instant('justiciaGratuita.justiciables.rol.solicitante'), value: "2"},
+    {label: this.translateService.instant('justiciaGratuita.justiciables.unidadFamiliar.solicitantePrincipal'), value: "3"},
+];
 
   progressSpinner: boolean = false;
   permisoEscritura: boolean = false;
@@ -106,26 +111,52 @@ export class DatosUnidadFamiliarComponent implements OnInit {
   }
 
   checkSave(){
+    let pass = true;
     //Parentesco hija
     if(this.generalBody.idParentesco==3) {
-      //Si tiene fecha determinada, se continua con el guardado.
-      if(this.body.fechanacimiento != null) this.save();
-      else this.showMessage("error", this.translateService.instant('general.message.incorrect'),
+      //Si no tiene fecha determinada, no se continua con el guardado.
+      if(this.body.fechanacimiento == null) {
+        this.showMessage("error", this.translateService.instant('general.message.incorrect'),
       this.translateService.instant('justiciaGratuita.justiciables.unidadFamiliar.errorHijo'));
+      pass = false;
+      }
     }
-    else this.save();
+    //Se comprueba el campo de rol y si ya hay un solicitante principal si se introduce dicho valor
+    if(this.generalBody.uf_enCalidad=="3"){
+      let ejg: EJGItem = new EJGItem();
+      //Comprobamos el solicitante principal asociado
+      //Si estamos en la creacion de una nueva unidad familiar 
+      if(sessionStorage.getItem("EJGItem")){
+        ejg = JSON.parse(sessionStorage.get("EJGItem"));
+      }
+      //Si se esta editando una unidad familiar desde su tarjeta en ejg
+      else if(this.persistenceService.getDatos()){
+        ejg = this.persistenceService.getDatos();
+      }
+      //Si la persona que selecciona el rol de solicitante principal es diferente a una ya designada, salta un error
+      if(ejg.idPersonajg != this.generalBody.uf_idPersona && ejg.idPersonajg != null){
+        this.showMessage("error", this.translateService.instant('general.message.incorrect'),
+        this.translateService.instant('justiciaGratuita.justiciables.unidadFamiliar.errorSolPrinc'));
+        pass=false;
+      }
+    }
+    if(pass)this.save();
   }
 
   save() {
     this.progressSpinner = true;
 
     //Introducimos los valores que tienen los checkbox al objeto.
-    if (this.solicitanteBox) this.generalBody.uf_solicitante = "1";
-    else this.generalBody.uf_solicitante = "0";
+    // if (this.solicitanteBox) this.generalBody.uf_solicitante = "1";
+    // else this.generalBody.uf_solicitante = "0";
 
+    
+
+    //Valor de la casilla "Incapacitado"
     if (this.incapacitadoBox) this.generalBody.incapacitado = 1;
     else this.generalBody.incapacitado = 0;
 
+    //Valor de la casilla "Circunstacias Excepcionales"
     if (this.cirExcepBox) this.generalBody.circunsExcep = 1;
     else this.generalBody.circunsExcep = 0;
 
@@ -151,8 +182,21 @@ export class DatosUnidadFamiliarComponent implements OnInit {
           //Se comprueba si se debe cambiar el valor de solicitante de la cabecera
           this.fillBoxes();
 
-          //Si se ha actualizado o añadido un solicitante, se actualizan los datos del ejg asociado
-          if(this.generalBody.uf_solicitante == "1") {
+          //Si se selecciona el valor "Unidad Familiar" en el desplegable "Rol/Solicitante"
+          if(this.generalBody.uf_enCalidad == "1"){
+            this.generalBody.uf_solicitante = "0"
+          }
+          //Si se selecciona el valor "Solicitante" en el desplegable "Rol/Solicitante"
+          if(this.generalBody.uf_enCalidad == "2"){
+            this.generalBody.uf_solicitante = "1"
+          }
+          //Si se selecciona el valor "Solicitante principal" en el desplegable "Rol/Solicitante"
+          if(this.generalBody.uf_enCalidad == "3"){
+            this.generalBody.uf_solicitante = "1"
+          }
+
+          //Si se ha actualizado o añadido un solicitante principal, se actualizan los datos del ejg asociado
+          if(this.generalBody.uf_enCalidad == "3") {
             //Si estamos en la creacion de una nueva unidad familiar 
               if(sessionStorage.getItem("EJGItem")){
                 let ejg: EJGItem = JSON.parse(sessionStorage.get("EJGItem"));
@@ -223,21 +267,21 @@ export class DatosUnidadFamiliarComponent implements OnInit {
 
 
   fillBoxes() {
-    if (this.generalBody.uf_solicitante == "1") {
+    if (this.initialBody.uf_enCalidad == "3") {
       this.solicitanteCabecera = "SI";
-      this.solicitanteBox = true;
+      //this.solicitanteBox = true;
     }
     else {
       this.solicitanteCabecera = "NO";
-      this.solicitanteBox = false;
+      //this.solicitanteBox = false;
     }
 
-    if (this.generalBody.circunsExcep == 1) {
+    if (this.initialBody.circunsExcep == 1) {
       this.cirExcepBox = true;
     }
     else this.cirExcepBox = false;
 
-    if (this.generalBody.incapacitado == 1) {
+    if (this.initialBody.incapacitado == 1) {
       this.incapacitadoBox = true;
     }
     else this.incapacitadoBox = false;
