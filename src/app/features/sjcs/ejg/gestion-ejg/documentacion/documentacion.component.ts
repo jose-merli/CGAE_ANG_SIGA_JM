@@ -10,6 +10,7 @@ import { DocumentacionEjgItem } from '../../../../../models/sjcs/DocumentacionEj
 import { saveAs } from "file-saver/FileSaver";
 import { UnidadFamiliarEJGItem } from '../../../../../models/sjcs/UnidadFamiliarEJGItem';
 import { DatePipe } from '@angular/common';
+import { elementEnd } from '@angular/core/src/render3/instructions';
 
 @Component({
   selector: 'app-documentacion',
@@ -136,6 +137,14 @@ export class DocumentacionComponent implements OnInit {
             //Cuando el presentador seleccionado no es un solicitante
             if (!element.presentador && element.idMaestroPresentador) {
               element.presentador = element.idMaestroPresentador.toString();
+              //Valor de la columna presentador
+              this.comboPresentador.forEach(pres => {
+                if (pres.value == element.presentador) element.presentador_persona = pres.label;
+              });
+            }
+            //Cuando el `presentador es un solicitante
+            if(element.presentador){
+              element.presentador = "S_" + element.presentador;
               //Valor de la columna presentador
               this.comboPresentador.forEach(pres => {
                 if (pres.value == element.presentador) element.presentador_persona = pres.label;
@@ -606,6 +615,41 @@ export class DocumentacionComponent implements OnInit {
         this.comboPresentador = n.combooItems;
         this.commonsServices.arregloTildesCombo(this.comboPresentador);
         this.progressSpinner = false;
+        //Se buscan los solicitantes del EJG
+        this.sigaServices.post("gestionejg_unidadFamiliarEJG", this.item).subscribe(
+          n => {
+    
+            let familiares = JSON.parse(n.body).unidadFamiliarEJGItems;
+            this.progressSpinner = false;
+    
+            if (familiares != undefined) {
+              //Se buscan los solicitantes
+              this.solicitantes = familiares.filter(
+                (dato) => dato.uf_solicitante == "1");
+
+              //Se añaden los solicitantes de la unidad familiar
+              this.solicitantes.forEach(element => {
+                //En el caso que sea un solicitante normal
+                if(element.uf_enCalidad=="2"){
+                this.comboPresentador.push({
+                  label: element.pjg_nombrecompleto+ " ("+this.translateService.instant('justiciaGratuita.justiciables.rol.solicitante')+")", 
+                  value: "S_"+element.uf_idPersona});
+                }
+                //En el caso que sea el solicitante pprincipal
+                else{
+                  this.comboPresentador.push({
+                    label: element.pjg_nombrecompleto+ " ("+this.translateService.instant('justiciaGratuita.justiciables.unidadFamiliar.solicitantePrincipal')+")", 
+                    value: "S_"+element.uf_idPersona});
+                }
+              })
+            }
+            this.progressSpinner = false;
+          },
+          err => {
+            this.progressSpinner = false;
+          }
+        );
+        
       },
       err => {
         this.progressSpinner = false;
@@ -650,48 +694,9 @@ export class DocumentacionComponent implements OnInit {
     }
   }
 
-  consultaUnidadFamiliar() {
-    this.progressSpinner = true;
-
-    //let nombresol = this.body.nombreApeSolicitante;
-
-    this.sigaServices.post("gestionejg_unidadFamiliarEJG", this.item).subscribe(
-      n => {
-
-        let familiares = JSON.parse(n.body).unidadFamiliarEJGItems;
-        this.progressSpinner = false;
-
-        if (familiares != undefined) {
-          //Se buscan los familiares activos
-          let familiaresActivos = familiares.filter(
-            (dato) => /*dato.fechaBaja != undefined && */ dato.fechaBaja == null);
-          this.solicitantes.push(familiaresActivos.filter(
-            (dato) => dato.uf_solicitante == "1")[0]);
-        }
-        this.progressSpinner = false;
-      },
-      err => {
-        this.progressSpinner = false;
-      }
-    );
-  }
-
   descargarArchivos() {
 
     this.progressSpinner = true;
-
-    /* let docADescargar = [];
-
-    this.selectedDatos.forEach(el => {
-      let row: Row = this.rowGroups.slice(el, el + 1)[0];
-
-      let doc = new DocumentacionEjgItem();
-      doc.idDocumentacionejg = row.cells[6].value;
-      doc.nombreFichero = row.cells[3].value;
-      doc.idFichero = row.cells[7].value;
-
-      docADescargar.push(doc);
-    }); */
 
     this.sigaServices.postDownloadFiles("designacion_descargarDocumentosDesigna", this.selectedDatos).subscribe(
       data => {

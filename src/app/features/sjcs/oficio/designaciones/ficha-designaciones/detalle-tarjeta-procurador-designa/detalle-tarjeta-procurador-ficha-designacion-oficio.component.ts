@@ -222,7 +222,7 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
   restablecerProcurador(){
     this.datosProcurador.observaciones = "";
     this.datosProcurador.numerodesignacion = "";
-    this.datosProcurador.fechaDesigna = "";
+    this.datosProcurador.fechaDesigna = null;
   }
 
   checkNuevoProcurador(){

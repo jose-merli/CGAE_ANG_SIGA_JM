@@ -67,7 +67,7 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 		/* Procede de ficha ejg */
 		if (this.ejg.idInstitucionProc != null) {
 
-			this.generalBody.fechaDesigna = this.ejg.fechaDesProc.toString();
+			this.generalBody.fechaDesigna = new Date(this.ejg.fechaDesProc);
 			this.generalBody.numerodesignacion = this.ejg.numerodesignaproc;
 			this.generalBody.idInstitucion = this.ejg.idInstitucionProc.toString();
 			this.generalBody.idProcurador = this.ejg.idProcurador;
@@ -93,7 +93,7 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 			this.generalBody.idProcurador = data.idProcurador;
 			this.generalBody.nColegiado = data.nColegiado;
 			this.generalBody.nombre = data.nombreApe;
-			if (this.ejg.idInstitucionProc != null) this.generalBody.fechaDesigna = this.ejg.fechaDesProc.toString();
+			if (this.ejg.idInstitucionProc != null) this.generalBody.fechaDesigna = new Date(this.ejg.fechaDesProc);
 			this.generalBody.numerodesignacion = this.ejg.numerodesignaproc;
 			this.generalBody.idInstitucion = data.idInstitucion;
 			this.generalBody.idProcurador = data.idProcurador;

@@ -7,6 +7,9 @@ export class UnidadFamiliarEJGItem {
     uf_idPersona: string;
     uf_solicitante: string;
     uf_enCalidad: string;
+    //variable con la que se mostrara el valor de uf_enCalidad
+    //1: "Unidad Familiar", 2: "Solicitante", 3: "Solicitante Principal"
+    labelEnCalidad: string;
     pjg_nif: string;
     //pjg_nombre: string;
     //pjg_ape1: string;

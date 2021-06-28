@@ -20,7 +20,7 @@ export class UnidadFamiliarComponent implements OnInit {
 
   @ViewChild("table") table: DataTable;
 
-  solicitante: UnidadFamiliarEJGItem = new UnidadFamiliarEJGItem(); 
+  solicitanteP: UnidadFamiliarEJGItem = new UnidadFamiliarEJGItem(); 
 
   rowsPerPage: any = [];
   selectedDatos = [];
@@ -144,19 +144,33 @@ export class UnidadFamiliarComponent implements OnInit {
           } else if (element.estadoDes == undefined && element.fechaSolicitud == undefined) {
             element.expedienteEconom = "  ";
           }
-          
-          if(this.datosFamiliares != undefined){
-            //Se buscan los familiares activos
-            this.datosFamiliaresActivos = this.datosFamiliares.filter(
-              (dato) => /*dato.fechaBaja != undefined && */ dato.fechaBaja == null);
-            this.solicitante = this.datosFamiliaresActivos.filter(
-                (dato) => dato.uf_solicitante == "1")[0];
-            this.nExpedientes = this.datosFamiliaresActivos.length;
+
+          //Se traduce el valor del back a su idioma y rol correspondientes
+          //Si se selecciona el valor "Unidad Familiar" en el desplegable "Rol/Solicitante"
+          if(element.uf_enCalidad == "1"){
+            element.labelEnCalidad = this.translateService.instant('justiciaGratuita.justiciables.rol.unidadFamiliar');
           }
-          if(this.solicitante==undefined) this.solicitante = new UnidadFamiliarEJGItem();
-          if(this.solicitante.pjg_nombrecompleto != undefined) this.apellidosCabecera = this.solicitante.pjg_nombrecompleto.split(",")[0];
-          else this.apellidosCabecera = "";
+          //Si se selecciona el valor "Solicitante" en el desplegable "Rol/Solicitante"
+          if(element.uf_enCalidad == "2"){
+            element.labelEnCalidad = this.translateService.instant('justiciaGratuita.justiciables.rol.solicitante');
+          }
+          //Si se selecciona el valor "Solicitante principal" en el desplegable "Rol/Solicitante"
+          if(element.uf_enCalidad == "3"){
+            element.labelEnCalidad = this.translateService.instant('justiciaGratuita.justiciables.unidadFamiliar.solicitantePrincipal');
+          }
         });
+        if(this.datosFamiliares != undefined){
+          //Se buscan los familiares activos
+          this.datosFamiliaresActivos = this.datosFamiliares.filter(
+            (dato) => /*dato.fechaBaja != undefined && */ dato.fechaBaja == null);
+          //Obtenemos el solicitante principal
+          this.solicitanteP = this.datosFamiliaresActivos.filter(
+              (dato) => dato.uf_enCalidad == "3")[0];
+          this.nExpedientes = this.datosFamiliaresActivos.length;
+        }
+        if(this.solicitanteP==undefined) this.solicitanteP = new UnidadFamiliarEJGItem();
+        if(this.solicitanteP.pjg_nombrecompleto != undefined) this.apellidosCabecera = this.solicitanteP.pjg_nombrecompleto.split(",")[0];
+        else this.apellidosCabecera = "";
         this.progressSpinner = false;
       },
       err => {
@@ -211,7 +225,7 @@ export class UnidadFamiliarComponent implements OnInit {
       { field: "pjg_nif", header: "administracion.usuarios.literal.NIF", width: "10%" },
       { field: "pjg_nombrecompleto", header: "administracion.parametrosGenerales.literal.nombre.apellidos", width: "20%" },
       { field: "pjg_direccion", header: "censo.consultaDirecciones.literal.direccion", width: "15%" },
-      { field: "uf_enCalidad", header: "administracion.usuarios.literal.rol", width: "10%" },
+      { field: "labelEnCalidad", header: "administracion.usuarios.literal.rol", width: "10%" },
       { field: "nombreApeSolicitante", header: "justiciaGratuita.ejg.datosGenerales.RelacionadoCon", width: "20%" },
       { field: "pd_descripcion", header: "informes.solicitudAsistencia.parentesco", width: "15%" },
       { field: "expedienteEconom", header: "justiciaGratuita.ejg.datosGenerales.ExpedienteEcon", width: "20%" },
@@ -349,13 +363,20 @@ export class UnidadFamiliarComponent implements OnInit {
     this.sigaServices.post("gestionejg_borrarFamiliar", data).subscribe(
       n => {
         this.progressSpinner=false;
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.selectedDatos = [];
+        
+        if (n.statusText == 'OK') {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.historico =false;
         this.consultaUnidadFamiliar(this.body);
+        } else {
+          this.showMessage('error', 'Error', this.translateService.instant('general.message.error.realiza.accion'));
+        }
 
       },
       err => {
         this.progressSpinner=false;
+        this.selectedDatos = [];
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }
     );
@@ -368,6 +389,7 @@ export class UnidadFamiliarComponent implements OnInit {
   searchHistorical() {
     //this.datosFamiliares.historico = !this.datosFamiliares.historico;
     this.historico = !this.historico;
+    this.selectedDatos = [];
     if (this.historico) {
       this.editMode = false;
       this.nuevo = false;

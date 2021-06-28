@@ -24,7 +24,7 @@
     nombreApe: String;
     numero: String;
     numerodesignacion: String;
-    fechaDesigna: String;
+    fechaDesigna: Date;
     observaciones: String;
     motivosRenuncia: String;
     fecharenunciasolicita: String;

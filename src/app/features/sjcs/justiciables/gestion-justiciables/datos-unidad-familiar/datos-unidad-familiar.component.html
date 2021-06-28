@@ -56,11 +56,19 @@
         <div class="bloque col-lg-6 col-md-6">
           <div class="form-row">
             <div class="form-row col-lg-4 col-md-4">
-              <div class="form-row col-lg-6 col-md-6">
+              <!-- <div class="form-row col-lg-6 col-md-6">
                 <label>{{ "justiciaGratuita.justiciables.rol.solicitante" | translate }}</label>
               </div>
               <div class="form-row col-lg-6 col-md-6">
                 <p-checkbox [(ngModel)]="solicitanteBox" [disabled]="!permisoEscritura || disableSol" binary="true"></p-checkbox>
+              </div> -->
+              <div class="form-row col-lg-5 col-md-5">
+                <label>{{ "administracion.usuarios.literal.rol" | translate }}/{{ "justiciaGratuita.justiciables.rol.solicitante" | translate }}</label>
+              </div>
+              <div class="form-row col-lg-7 col-md-7">
+                <p-dropdown class="select-form" [(ngModel)]='generalBody.uf_enCalidad' placeholder="Seleccionar"
+                [options]="comboRol" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
+              </p-dropdown>
               </div>
             </div>
             <div class="form-row col-lg-4 col-md-4">
