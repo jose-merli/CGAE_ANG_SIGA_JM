@@ -22,6 +22,7 @@ import { ConfiguracionFicherosComponent } from './gestion-pagos/configuracion-fi
 import { DetallePagoComponent } from './gestion-pagos/detalle-pago/detalle-pago.component';
 import { CompensacionFacturaComponent } from './gestion-pagos/compensacion-factura/compensacion-factura.component';
 import { ConceptosPagosComponent } from './gestion-pagos/conceptos-pagos/conceptos-pagos.component';
+import { MatExpansionModule } from '@angular/material';
 
 @NgModule({
   imports: [
@@ -38,12 +39,13 @@ import { ConceptosPagosComponent } from './gestion-pagos/conceptos-pagos/concept
     CalendarModule,
     PipeNumberModule,
     DataTableModule,
-    GrowlModule, 
+    GrowlModule,
     TableModule,
     FechaModule,
     MultiSelectModule,
+    MatExpansionModule,
   ],
   declarations: [FacturacionesYPagosComponent, FiltroBusquedaFacturacionComponent, TablaBusquedaFacturacionComponent, GestionFacturacionComponent, DatosFacturacionComponent, ConceptosFacturacionComponent, BaremosComponent, PagosComponent, CartasFacturacionComponent, GestionPagosComponent, DatosPagosComponent, ConfiguracionFicherosComponent, DetallePagoComponent, CompensacionFacturaComponent, ConceptosPagosComponent],
   exports: [FacturacionesYPagosComponent]
 })
-export class FacturacionesYPagosModule {}
+export class FacturacionesYPagosModule { }

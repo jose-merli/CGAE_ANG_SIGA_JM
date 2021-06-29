@@ -1,55 +1,69 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 
-<div class="datos-container">
-  <div class="header-title">
-    <i class="fa fa-square"></i>
-    <p>SJCS &nbsp;<i class="fa fa-angle-right"></i>{{'facturacionSJCS.facturacionesYPagos.fichaFacturacion' |
-      translate}}</p>
-  </div>
+<div id="fichaFacSJCS">
 
-  <div class="tarjetaFija">
+  <div>
 
-    <div class="card">
-      <div class="card-body p-0">
-        <mat-accordion class="example-headers-align" multi>
-          <mat-expansion-panel [disabled]="true">
-            <mat-expansion-panel-header class="h-100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
-              <app-tarjeta [image]="tarjetaFija.imagen" [cardTitle]="tarjetaFija.nombre" [campos]="tarjetaFija.campos"
-                [icon]="tarjetaFija.icono" [enlaces]="tarjetaFija.enlaces" [fixed]="tarjetaFija.fixed" class="w-100"
-                (isOpen)="isOpenReceive($event)">
-              </app-tarjeta>
-            </mat-expansion-panel-header>
-            <ng-template matExpansionPanelContent>
-            </ng-template>
-          </mat-expansion-panel>
-        </mat-accordion>
+    <div id="top"></div>
+
+    <div class="datos-container">
+      <div class="header-title">
+        <i class="fa fa-square"></i>
+        <p>SJCS &nbsp;<i class="fa fa-angle-right"></i>{{'facturacionSJCS.facturacionesYPagos.fichaFacturacion' |
+          translate}}</p>
+      </div>
+
+      <!-- <div class="tarjetaFija">
+
+        <div class="card">
+          <div class="card-body p-0">
+            <mat-accordion class="example-headers-align" multi>
+              <mat-expansion-panel [disabled]="true">
+                <mat-expansion-panel-header class="h-100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+                  <app-tarjeta [image]="tarjetaFija.imagen" [cardTitle]="tarjetaFija.nombre"
+                    [campos]="tarjetaFija.campos" [icon]="tarjetaFija.icono" [enlaces]="tarjetaFija.enlaces"
+                    [fixed]="tarjetaFija.fixed" class="w-100" (isOpen)="isOpenReceive($event)">
+                  </app-tarjeta>
+                </mat-expansion-panel-header>
+                <ng-template matExpansionPanelContent>
+                </ng-template>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </div>
+        </div>
+
+      </div> -->
+
+      <app-datos-facturacion [numCriterios]="numCriterios" [cerrada]="cerrada"
+        [idEstadoFacturacion]="idEstadoFacturacion" [editingConceptos]="editingConceptos"
+        [idFacturacion]="idFacturacion" [modoEdicion]="modoEdicion" (changeModoEdicion)="changeModoEdicion($event)"
+        (changeEstadoFacturacion)="changeEstadoFacturacion($event)" (changeCerrada)="changeCerrada($event)"
+        (changeIdFacturacion)="changeIdFacturacion($event)">
+      </app-datos-facturacion>
+
+      <app-conceptos-facturacion [idEstadoFacturacion]="idEstadoFacturacion" [idFacturacion]="idFacturacion"
+        [modoEdicion]="modoEdicion" [cerrada]="cerrada" (changeNumCriterios)="changeNumCriterios($event)"
+        (editing)="changeEditingConceptos($event)">
+      </app-conceptos-facturacion>
+
+      <app-baremos [idFacturacion]="idFacturacion" [idEstadoFacturacion]="idEstadoFacturacion"></app-baremos>
+
+      <app-pagos [idEstadoFacturacion]="idEstadoFacturacion" [idFacturacion]="idFacturacion" [modoEdicion]="modoEdicion"
+        [cerrada]="cerrada"></app-pagos>
+
+      <app-cartas-facturacion [idFacturacion]="idFacturacion" [idEstadoFacturacion]="idEstadoFacturacion">
+      </app-cartas-facturacion>
+
+      <div class="text-right main-button">
+        <button (click)="volver()" pButton type="button" icon="fa fa-angle-left" iconPos="left"
+          label="{{ 'general.boton.volver' | translate}}"></button>
       </div>
     </div>
 
+    <div id="down"></div>
+
   </div>
 
-  <app-datos-facturacion [numCriterios]="numCriterios" [cerrada]="cerrada" [idEstadoFacturacion]="idEstadoFacturacion"
-    [editingConceptos]="editingConceptos" [idFacturacion]="idFacturacion" [modoEdicion]="modoEdicion"
-    (changeModoEdicion)="changeModoEdicion($event)" (changeEstadoFacturacion)="changeEstadoFacturacion($event)"
-    (changeCerrada)="changeCerrada($event)" (changeIdFacturacion)="changeIdFacturacion($event)"></app-datos-facturacion>
-
-  <app-conceptos-facturacion [idEstadoFacturacion]="idEstadoFacturacion" [idFacturacion]="idFacturacion"
-    [modoEdicion]="modoEdicion" [cerrada]="cerrada" (changeNumCriterios)="changeNumCriterios($event)"
-    (editing)="changeEditingConceptos($event)">
-  </app-conceptos-facturacion>
-
-  <app-baremos [idFacturacion]="idFacturacion" [idEstadoFacturacion]="idEstadoFacturacion"></app-baremos>
-
-  <app-pagos [idEstadoFacturacion]="idEstadoFacturacion" [idFacturacion]="idFacturacion" [modoEdicion]="modoEdicion"
-    [cerrada]="cerrada"></app-pagos>
-
-  <app-cartas-facturacion [idFacturacion]="idFacturacion" [idEstadoFacturacion]="idEstadoFacturacion">
-  </app-cartas-facturacion>
-
-  <div class="text-right main-button">
-    <button (click)="volver()" pButton type="button" icon="fa fa-angle-left" iconPos="left"
-      label="{{ 'general.boton.volver' | translate}}"></button>
-  </div>
 </div>
 
 <div *ngIf="progressSpinner || spinnerGlobal()" class="overlay-spinner">
