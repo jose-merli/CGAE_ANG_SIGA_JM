@@ -10,9 +10,9 @@
                     <!-- <p-radioButton value="des" name="tarj" (click)="changeFilters()"
                         label="{{'menu.justiciaGratuita.designas' | translate}}" [(ngModel)]='radioTarjeta'
                         [disabled]="fromEJG"></p-radioButton> -->
-                    <p-radioButton value="des" name="tarj" (click)="changeFilters($event)" label="Designaciones"
+                    <p-radioButton value="des" name="tarj" (click)="changeFilters($event)" label="{{'justiciaGratuita.ejg.busquedaAsuntos.designaciones' | translate}}"
                         [(ngModel)]='radioTarjeta'></p-radioButton>
-                    <p-radioButton value="soj" name="tarj" label="SOJ" [(ngModel)]='radioTarjeta'
+                    <p-radioButton value="soj" name="tarj" label="{{'justiciaGratuita.ejg.busquedaAsuntos.SOJ' | translate}}" [(ngModel)]='radioTarjeta'
                         (click)="changeFilters($event)"></p-radioButton>
                     <p-radioButton value="asi" name="tarj" (click)="changeFilters($event)"
                         label="{{'menu.justiciaGratuita.asistencia' | translate}}" [(ngModel)]='radioTarjeta'></p-radioButton>
@@ -101,7 +101,7 @@
                    
                     <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{"gratuita.busquedaDesignas.literal.numProcedimiento" | translate}}</label>
-                        <input type="text" class="form-control" maxlength="9" [(ngModel)]='filtros.numProcedimiento'
+                        <input type="text" class="form-control" maxlength="20" [(ngModel)]='filtros.numeroProcedimiento'
                             pInputText>
                     </div>
                     <div class="form-group-interlineado col-lg-3 col-md-3">
@@ -111,7 +111,7 @@
                             [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
                     </div>
                     <div *ngIf="radioTarjeta == 'des'" class="form-group-interlineado col-lg-3 col-md-3">
-                        <label>NIG</label>
+                        <label>{{"justiciaGratuita.ejg.busquedaAsuntos.NIG" | translate}}</label>
                         <input maxlength="50" type="text" class="form-control" [maxLength]="5" [(ngModel)]='filtros.nig'
                             pInputText>
                     </div>
@@ -128,8 +128,7 @@
                         <!-- / {{"gratuita.mantActuacion.literal.nasunto"
                         | translate}} -->
                         <input type="text" class="form-control"
-                            oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')" maxlength="20"
-                            [(ngModel)]='filtros.numeroDiligencia' pInputText>
+                            maxlength="20" [(ngModel)]='filtros.numeroDiligencia' pInputText>
                         <!-- / <input type="text" oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')" class="form-group col-lg-6 col-md-6" [(ngModel)]='filtros.asunto'
                                 pInputText> -->
                     </div>
@@ -143,7 +142,7 @@
             </div>
           
             <!-- Interesado -->
-            <p (click)="onHideJusticiable()" class="title-module">{{"justiciaGratuita.justiciables.literal.interesado" |
+            <p (click)="onHideJusticiable()" class="title-module">{{"justiciaGratuita.ejg.busquedaAsuntos.interesado" |
                 translate}}
                 <i *ngIf="showJusticiable" class="fa fa-angle-up float-right"></i>
                 <i *ngIf="!showJusticiable" class="fa fa-angle-down float-right"></i>
@@ -176,7 +175,7 @@
                 <i *ngIf="showDatosColegiales" class="fa fa-angle-up float-right"></i>
                 <i *ngIf="!showDatosColegiales" class="fa fa-angle-down float-right"></i>
             </p> -->
-            <p (click)="onHideDatosColegiales()" class="title-module">Tramitación
+            <p (click)="onHideDatosColegiales()" class="title-module">{{"justiciaGratuita.ejg.busquedaAsuntos.tramitacion" | translate}}
                 <i *ngIf="showDatosColegiales" class="fa fa-angle-up float-right"></i>
                 <i *ngIf="!showDatosColegiales" class="fa fa-angle-down float-right"></i>
             </p>
