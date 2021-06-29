@@ -69,20 +69,13 @@ export class PagosComponent implements OnInit {
           if (undefined != data.pagosjgItem && data.pagosjgItem.length > 0) {
             let datos = data.pagosjgItem;
 
-            datos.forEach(element => {
-              if (element.importePagado != undefined) {
-                element.importePagadoFormat = element.importePagado.replace(".", ",");
+            datos.forEach(el => {
 
-                if (element.importePagadoFormat[0] == '.' || element.importePagadoFormat[0] == ',') {
-                  element.importePagadoFormat = "0".concat(element.importePagadoFormat)
-                }
+              let importeHito = el[this.getImporteHito(el.idHitoGeneral)];
+              importePagado += parseFloat(importeHito);
 
-                importePagado += parseFloat(element.importePagado);
-
-              } else {
-                element.importePagadoFormat = 0;
-              }
             });
+
             this.body = JSON.parse(JSON.stringify(datos));
             this.numPagos = datos.length;
             this.importePagado = importePagado;
@@ -132,6 +125,30 @@ export class PagosComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  getImporteHito(idHito: string): string {
+
+    let importe = '';
+
+    switch (idHito) {
+      case '10':
+        importe = 'importeOficio';
+        break;
+      case '20':
+        importe = 'importeGuardia';
+        break;
+      case '30':
+        importe = 'importesOJ';
+        break;
+      case '40':
+        importe = 'importeEJG';
+        break;
+      default:
+        importe = 'importePagado';
+    }
+
+    return importe;
   }
 
   getCols() {

@@ -9,8 +9,9 @@ export class PagosjgItem {
 	importeRepartir: String;
 	importePagado: String;
 	fechaEstado: Date;
-	desEstado: String;	
+	desEstado: String;
 	desConcepto: String;
+	idHitoGeneral: string;
 	porcentaje: String;
 	idEstado: String;
 	idPartidaPresupuestaria: String;
@@ -22,6 +23,6 @@ export class PagosjgItem {
 	abreviatura: String;
 	cantidad: String;
 	codBanco: String;
-	
-  	constructor() {}
-}  
+
+	constructor() { }
+}

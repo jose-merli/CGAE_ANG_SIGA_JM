@@ -365,6 +365,21 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
+import { FacturacionesYPagosComponent } from './features/sjcs/facturacionSJCS/facturaciones-pagos/facturaciones-pagos.component';
+import { FiltroBusquedaFacturacionComponent } from './features/sjcs/facturacionSJCS/facturaciones-pagos/filtro-busqueda-facturacion/filtro-busqueda-facturacion.component';
+import { TablaBusquedaFacturacionComponent } from './features/sjcs/facturacionSJCS/facturaciones-pagos/tabla-busqueda-facturacion/tabla-busqueda-facturacion.component';
+import { GestionFacturacionComponent } from './features/sjcs/facturacionSJCS/facturaciones-pagos/gestion-facturacion/gestion-facturacion.component';
+import { DatosFacturacionComponent } from './features/sjcs/facturacionSJCS/facturaciones-pagos/gestion-facturacion/datos-facturacion/datos-facturacion.component';
+import { ConceptosFacturacionComponent } from './features/sjcs/facturacionSJCS/facturaciones-pagos/gestion-facturacion/conceptos-facturacion/conceptos-facturacion.component';
+import { BaremosComponent } from './features/sjcs/facturacionSJCS/facturaciones-pagos/gestion-facturacion/baremos/baremos.component';
+import { PagosComponent } from './features/sjcs/facturacionSJCS/facturaciones-pagos/gestion-facturacion/pagos/pagos.component';
+import { CartasFacturacionComponent } from './features/sjcs/facturacionSJCS/facturaciones-pagos/gestion-facturacion/cartas-facturacion/cartas-facturacion.component';
+import { GestionPagosComponent } from './features/sjcs/facturacionSJCS/facturaciones-pagos/gestion-pagos/gestion-pagos.component';
+import { DatosPagosComponent } from './features/sjcs/facturacionSJCS/facturaciones-pagos/gestion-pagos/datos-pagos/datos-pagos.component';
+import { ConfiguracionFicherosComponent } from './features/sjcs/facturacionSJCS/facturaciones-pagos/gestion-pagos/configuracion-ficheros/configuracion-ficheros.component';
+import { DetallePagoComponent } from './features/sjcs/facturacionSJCS/facturaciones-pagos/gestion-pagos/detalle-pago/detalle-pago.component';
+import { CompensacionFacturaComponent } from './features/sjcs/facturacionSJCS/facturaciones-pagos/gestion-pagos/compensacion-factura/compensacion-factura.component';
+import { ConceptosPagosComponent } from './features/sjcs/facturacionSJCS/facturaciones-pagos/gestion-pagos/conceptos-pagos/conceptos-pagos.component';
 
 @NgModule({
 	declarations: [
@@ -660,8 +675,23 @@ import { MatInputModule } from '@angular/material/input';
 		MutualidadAbogaciaFichaColegialComponent,
 		DatosColegialesFichaColegialComponent,
 		OtrasColegiacionesFichaColegialComponent,
-		ServiciosInteresFichaColegialComponent//,
+		ServiciosInteresFichaColegialComponent,
 		//TarjetaResumenFijaComponent
+		FacturacionesYPagosComponent,
+		FiltroBusquedaFacturacionComponent,
+		TablaBusquedaFacturacionComponent,
+		GestionFacturacionComponent,
+		DatosFacturacionComponent,
+		ConceptosFacturacionComponent,
+		BaremosComponent,
+		PagosComponent,
+		CartasFacturacionComponent,
+		GestionPagosComponent,
+		DatosPagosComponent,
+		ConfiguracionFicherosComponent,
+		DetallePagoComponent,
+		CompensacionFacturaComponent,
+		ConceptosPagosComponent,
 	],
 	imports: [
 		BrowserModule,

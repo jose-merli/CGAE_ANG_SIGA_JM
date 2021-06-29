@@ -1,4 +1,4 @@
-import { AfterViewChecked, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, ChangeDetectorRef, Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { Location } from "@angular/common";
 import { USER_VALIDATIONS } from '../../../../../properties/val-properties';
 import { SigaWrapper } from "../../../../../wrapper/wrapper.class";
@@ -19,7 +19,7 @@ import { Router } from '@angular/router';
   templateUrl: './gestion-facturacion.component.html',
   styleUrls: ['./gestion-facturacion.component.scss']
 })
-export class GestionFacturacionComponent extends SigaWrapper implements OnInit, AfterViewChecked {
+export class GestionFacturacionComponent extends SigaWrapper implements OnInit, AfterViewChecked, AfterViewInit {
   progressSpinner: boolean = false;
   datos: FacturacionItem = new FacturacionItem();
 
@@ -32,31 +32,27 @@ export class GestionFacturacionComponent extends SigaWrapper implements OnInit, 
   editingConceptos: boolean;
   numCriterios;
   tarjetaFija = {
-    nombre: "Resumen Actuación",
+    nombre: 'facturacionSJCS.facturacionesYPagos.inforesumen',
     icono: 'fas fa-clipboard',
     imagen: '',
     detalle: false,
     fixed: true,
     campos: [
-      {
-        "key": "Año/Número designación",
-        "value": ""
-      },
-      {
-        "key": "Letrado",
-        "value": ""
-      },
-      {
-        "key": "Número Actuación",
-        "value": ""
-      },
-      {
-        "key": "Fecha Actuación",
-        "value": ""
-      }
+      // {
+      //   "key": "",
+      //   "value": ""
+      // },
     ],
     enlaces: []
   };
+
+  listaTarjetas = [
+    { id: 'facSJCSFichaFactDatosFac', nombre: this.translateService.instant('facturacionSJCS.facturacionesYPagos.datosFacturacion') },
+    { id: 'facSJCSFichaFactConceptosFac', nombre: this.translateService.instant('facturacionSJCS.facturacionesYPagos.fichaConceptosFacturacion') },
+    { id: 'facSJCSFichaFactBaremosFac', nombre: this.translateService.instant('facturacionSJCS.facturacionesYPagos.baremos') },
+    { id: 'facSJCSFichaFactPagosFac', nombre: this.translateService.instant('facturacionSJCS.facturacionesYPagos.pagos') },
+    { id: 'facSJCSFichaFactCartasFac', nombre: this.translateService.instant('facturacionSJCS.facturacionesYPagos.cartasFacturacion') }
+  ];
 
   @ViewChild(PagosComponent) pagos;
   @ViewChild(BaremosComponent) baremos;
@@ -160,8 +156,49 @@ export class GestionFacturacionComponent extends SigaWrapper implements OnInit, 
       }
     }
   }
+
   clear() {
     this.msgs = [];
+  }
+
+  isOpenReceive(event) {
+
+    switch (event) {
+      case 'facSJCSFichaFactDatosFac':
+        this.datosFac.showFichaFacturacion = true;
+        break;
+      case 'facSJCSFichaFactConceptosFac':
+        this.conceptos.showFichaConceptos = true;
+        break;
+      case 'facSJCSFichaFactPagosFac':
+        this.pagos.showFichaPagos = true;
+        break;
+    }
+
+  }
+
+  ngAfterViewInit() {
+
+    this.goTop();
+
+    this.listaTarjetas.forEach(tarj => {
+      let tarjTmp = {
+        id: tarj.id,
+        ref: document.getElementById(tarj.id),
+        nombre: tarj.nombre
+      };
+
+      this.tarjetaFija.enlaces.push(tarjTmp);
+    });
+
+  }
+
+  goTop() {
+    let top = document.getElementById("top");
+    if (top) {
+      top.scrollIntoView();
+      top = null;
+    }
   }
 
   ngAfterViewChecked() {

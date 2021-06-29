@@ -16,7 +16,7 @@
           </div>
           <div class="d-flex justify-content-between">
             <label>{{ "facturacionSJCS.facturacionesYPagos.importeTotal" | translate }}:
-              <span>{{ importePagado }} €</span>
+              <span>{{ importePagado | number }} €</span>
             </label>
             <i *ngIf="!showFichaPagos" class="fa fa-angle-down float-right" (click)="onHideDatosGenerales()"></i>
           </div>
@@ -57,7 +57,7 @@
               <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
                 <td class="text-center" *ngFor="let col of columns">
                   <div *ngIf="col.field == 'importePagado'">
-                    {{ dato.importePagadoFormat | numberPipe }} €
+                    {{ dato[getImporteHito(dato.idHitoGeneral)] | number }} €
                   </div>
 
                   <div *ngIf="col.field=='fechaEstado'">
@@ -72,6 +72,7 @@
                   <div *ngIf="col.field != 'porcentaje' && col.field!='fechaEstado' && col.field != 'importePagado'">
                     {{ dato[col.field] }}
                   </div>
+
                 </td>
               </tr>
             </ng-template>

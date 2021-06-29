@@ -13,14 +13,14 @@
           translate}}</p>
       </div>
 
-      <!-- <div class="tarjetaFija">
+      <div class="tarjetaFija">
 
         <div class="card">
           <div class="card-body p-0">
             <mat-accordion class="example-headers-align" multi>
               <mat-expansion-panel [disabled]="true">
                 <mat-expansion-panel-header class="h-100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
-                  <app-tarjeta [image]="tarjetaFija.imagen" [cardTitle]="tarjetaFija.nombre"
+                  <app-tarjeta [image]="tarjetaFija.imagen" cardTitle="{{tarjetaFija.nombre | translate}}"
                     [campos]="tarjetaFija.campos" [icon]="tarjetaFija.icono" [enlaces]="tarjetaFija.enlaces"
                     [fixed]="tarjetaFija.fixed" class="w-100" (isOpen)="isOpenReceive($event)">
                   </app-tarjeta>
@@ -32,7 +32,7 @@
           </div>
         </div>
 
-      </div> -->
+      </div>
 
       <app-datos-facturacion [numCriterios]="numCriterios" [cerrada]="cerrada"
         [idEstadoFacturacion]="idEstadoFacturacion" [editingConceptos]="editingConceptos"
