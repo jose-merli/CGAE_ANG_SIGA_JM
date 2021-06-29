@@ -8,6 +8,8 @@ import { SigaWrapper } from '../../../../../../wrapper/wrapper.class';
 import { ComboItem } from '../../../../../../models/ComboItem';
 import { ConfirmationService } from 'primeng/primeng';
 import { Error } from '../../../../../../models/Error';
+import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacion';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-conceptos-facturacion',
@@ -36,6 +38,8 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
   importeTotal;
   importePendiente;
 
+  permisos;
+
   //COMBOS
   conceptos: ComboItem;
   grupoTurnos: ComboItem;
@@ -44,7 +48,6 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
   @Input() idFacturacion;
   @Input() idEstadoFacturacion;
   @Input() modoEdicion;
-  @Input() permisos;
 
   @Output() changeNumCriterios = new EventEmitter<number>();
   @Output() editing = new EventEmitter<boolean>();
@@ -56,17 +59,32 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
     private changeDetectorRef: ChangeDetectorRef,
     private commonsService: CommonsService,
     private confirmationService: ConfirmationService,
-    private persistenceService: PersistenceService) {
+    private persistenceService: PersistenceService,
+    private router: Router) {
     super(USER_VALIDATIONS);
   }
 
   ngOnInit() {
 
     this.progressSpinnerConceptos = false;
-    this.comboConceptos();
-    this.comboGruposTurnos();
-    this.cargaDatos();
-    this.getCols();
+
+    this.commonsService.checkAcceso(procesos_facturacionSJCS.fichaFacTarjetaConceptosFac).then(respuesta => {
+
+      this.permisos = respuesta;
+
+      if (this.permisos == undefined) {
+        sessionStorage.setItem("codError", "403");
+        sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+        this.router.navigate(["/errorAcceso"]);
+      }
+
+      this.comboConceptos();
+      this.comboGruposTurnos();
+      this.cargaDatos();
+      this.getCols();
+
+    }).catch(error => console.error(error));
+
   }
 
   comboConceptos() {

@@ -39,9 +39,8 @@ export class FacturacionesYPagosComponent implements OnInit {
 		this.buscar = this.filtros.buscar;
 
 		this.commonsService.checkAcceso(procesos_facturacionSJCS.facturacionYpagos).then(respuesta => {
-			this.permisoEscritura = respuesta;
 
-			this.persistenceService.setPermisos(this.permisoEscritura);
+			this.permisoEscritura = respuesta;
 
 			if (this.permisoEscritura == undefined) {
 				sessionStorage.setItem("codError", "403");

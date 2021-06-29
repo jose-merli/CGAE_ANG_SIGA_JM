@@ -355,6 +355,16 @@ import { RetencionesJudicialesComponent } from './features/sjcs/facturacionSJCS/
 import { TramosLECComponent } from './features/sjcs/facturacionSJCS/tramos-lec/tramos-lec.component';
 
 import { SigaStorageService } from './siga-storage.service';
+import { TarjetaComponent } from './commons/tarjeta/tarjeta.component';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
+import { MatAccordion, MatExpansionModule } from '@angular/material/expansion';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
 	declarations: [
@@ -369,6 +379,7 @@ import { SigaStorageService } from './siga-storage.service';
 		LogoutComponent,
 		HeaderComponent,
 		HomeComponent,
+		TarjetaComponent,
 		// Censo
 		AuditoriaComponent,
 		AccesoFichaPersonaComponent,
@@ -708,7 +719,16 @@ import { SigaStorageService } from './siga-storage.service';
 		EditorModule,
 
 		SjcsModule,
-		BusquedaAsuntosModule
+		BusquedaAsuntosModule,
+		MatExpansionModule,
+		MatCheckboxModule,
+		MatInputModule,
+		MatSortModule,
+		MatSelectModule,
+		MatTableModule,
+		MatPaginatorModule,
+		MatDatepickerModule,
+		MatNativeDateModule,
 	],
 
 	exports: [],

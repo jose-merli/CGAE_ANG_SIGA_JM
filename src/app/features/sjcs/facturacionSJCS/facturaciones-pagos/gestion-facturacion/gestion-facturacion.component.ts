@@ -9,6 +9,10 @@ import { BaremosComponent } from './baremos/baremos.component';
 import { CartasFacturacionComponent } from './cartas-facturacion/cartas-facturacion.component';
 import { ConceptosFacturacionComponent } from './conceptos-facturacion/conceptos-facturacion.component';
 import { DatosFacturacionComponent } from './datos-facturacion/datos-facturacion.component';
+import { CommonsService } from '../../../../../_services/commons.service';
+import { procesos_facturacionSJCS } from '../../../../../permisos/procesos_facturacion';
+import { TranslateService } from '../../../../../commons/translate';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-gestion-facturacion',
@@ -27,6 +31,32 @@ export class GestionFacturacionComponent extends SigaWrapper implements OnInit, 
   msgs;
   editingConceptos: boolean;
   numCriterios;
+  tarjetaFija = {
+    nombre: "Resumen Actuación",
+    icono: 'fas fa-clipboard',
+    imagen: '',
+    detalle: false,
+    fixed: true,
+    campos: [
+      {
+        "key": "Año/Número designación",
+        "value": ""
+      },
+      {
+        "key": "Letrado",
+        "value": ""
+      },
+      {
+        "key": "Número Actuación",
+        "value": ""
+      },
+      {
+        "key": "Fecha Actuación",
+        "value": ""
+      }
+    ],
+    enlaces: []
+  };
 
   @ViewChild(PagosComponent) pagos;
   @ViewChild(BaremosComponent) baremos;
@@ -34,37 +64,52 @@ export class GestionFacturacionComponent extends SigaWrapper implements OnInit, 
   @ViewChild(ConceptosFacturacionComponent) conceptos;
   @ViewChild(DatosFacturacionComponent) datosFac;
 
-  constructor(private location: Location, private persistenceService: PersistenceService, private changeDetectorRef: ChangeDetectorRef) {
+  constructor(private location: Location,
+    private persistenceService: PersistenceService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private commonsService: CommonsService,
+    private translateService: TranslateService,
+    private router: Router) {
     super(USER_VALIDATIONS);
   }
 
   ngOnInit() {
-    if (undefined != this.persistenceService.getPermisos()) {
-      this.permisos = this.persistenceService.getPermisos();
-    }
 
-    if (null != this.persistenceService.getDatos()) {
-      this.datos = this.persistenceService.getDatos();
-      this.idFacturacion = this.datos.idFacturacion;
-      this.idEstadoFacturacion = this.datos.idEstado;
-    }
+    this.commonsService.checkAcceso(procesos_facturacionSJCS.facturacionYpagos).then(respuesta => {
 
-    if (undefined == this.idFacturacion) {
-      this.modoEdicion = false;
-      this.cerrada = false;
-    } else {
-      if (undefined != this.idEstadoFacturacion) {
-        if (this.idEstadoFacturacion == '10') {
-          this.cerrada = false;
-        } else {
-          this.cerrada = true;
-        }
+      this.permisos = respuesta;
+
+      if (this.permisos == undefined) {
+        sessionStorage.setItem("codError", "403");
+        sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+        this.router.navigate(["/errorAcceso"]);
       }
 
-      this.modoEdicion = true;
-    }
-    this.numCriterios = 0;
-    this.editingConceptos = false;
+      if (null != this.persistenceService.getDatos()) {
+        this.datos = this.persistenceService.getDatos();
+        this.idFacturacion = this.datos.idFacturacion;
+        this.idEstadoFacturacion = this.datos.idEstado;
+      }
+
+      if (undefined == this.idFacturacion) {
+        this.modoEdicion = false;
+        this.cerrada = false;
+      } else {
+        if (undefined != this.idEstadoFacturacion) {
+          if (this.idEstadoFacturacion == '10') {
+            this.cerrada = false;
+          } else {
+            this.cerrada = true;
+          }
+        }
+
+        this.modoEdicion = true;
+      }
+      this.numCriterios = 0;
+      this.editingConceptos = false;
+
+    }).catch(error => console.error(error));
+
   }
 
   volver() {

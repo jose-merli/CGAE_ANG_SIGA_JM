@@ -7,6 +7,8 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 import { SigaWrapper } from "../../../../../../wrapper/wrapper.class";
 import { ConfirmationService } from 'primeng/primeng';
 import { TranslateService } from '../../../../../../commons/translate';
+import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacion';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-datos-facturacion',
@@ -19,7 +21,6 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
   @Input() idFacturacion;
   @Input() idEstadoFacturacion;
   @Input() modoEdicion;
-  @Input() permisos;
   @Input() numCriterios;
   @Input() editingConceptos: boolean;
 
@@ -28,6 +29,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
   @Output() changeEstadoFacturacion = new EventEmitter<String>();
   @Output() changeIdFacturacion = new EventEmitter<String>();
 
+  permisos;
   showFichaFacturacion: boolean = true;
   progressSpinnerDatos: boolean = false;
   checkRegularizar: boolean = false;
@@ -51,24 +53,37 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
     private translateService: TranslateService,
     private confirmationService: ConfirmationService,
     private commonsService: CommonsService,
-    private changeDetectorRef: ChangeDetectorRef) {
+    private changeDetectorRef: ChangeDetectorRef,
+    private router: Router) {
     super(USER_VALIDATIONS);
   }
 
   ngOnInit() {
 
-    this.comboPartidasPresupuestarias();
-
-    if (undefined == this.idFacturacion) {
-      this.body = new FacturacionItem();
-      this.bodyAux = new FacturacionItem();
-      this.showFichaFacturacion = true;
-    } else {
-      this.cargaDatos();
-      this.showFichaFacturacion = false;
-    }
-
     this.getCols();
+
+    this.commonsService.checkAcceso(procesos_facturacionSJCS.fichaFacTarjetaDatosFac).then(respuesta => {
+
+      this.permisos = respuesta;
+
+      if (this.permisos == undefined) {
+        sessionStorage.setItem("codError", "403");
+        sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+        this.router.navigate(["/errorAcceso"]);
+      }
+
+      this.comboPartidasPresupuestarias();
+
+      if (undefined == this.idFacturacion) {
+        this.body = new FacturacionItem();
+        this.bodyAux = new FacturacionItem();
+        this.showFichaFacturacion = true;
+      } else {
+        this.cargaDatos();
+        this.showFichaFacturacion = false;
+      }
+
+    }).catch(error => console.error(error));
   }
 
   cargaDatos() {
