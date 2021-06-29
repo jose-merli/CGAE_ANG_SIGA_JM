@@ -435,6 +435,7 @@ import { LetradoEntranteComponent } from './features/sjcs/oficio/designaciones/f
 import { LetradoSalienteComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/ficha-cambio-letrado/letrado-saliente/letrado-saliente.component';
 import { TiposProductosComponent } from './features/facturacion/maestros/tipos-productos/tipos-productos.component';
 import { TiposServiciosComponent } from './features/facturacion/maestros/tipos-servicios/tipos-servicios.component';
+import { ProductosComponent } from './features/facturacion/productos/productos.component';
 
 @NgModule({
 	declarations: [
@@ -790,6 +791,7 @@ import { TiposServiciosComponent } from './features/facturacion/maestros/tipos-s
 		DetalleTarjetaComunicacionesDesignaComponent,
 		TiposProductosComponent,
 		TiposServiciosComponent,
+		ProductosComponent,
 
 	],
 	imports: [

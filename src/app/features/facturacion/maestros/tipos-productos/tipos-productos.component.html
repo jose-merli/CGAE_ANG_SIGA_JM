@@ -51,10 +51,10 @@
 
             </div>
             <div *ngIf="col.field == 'descripcion'">
-              <label *ngIf="!edit && rowData.nuevo == undefined" [ngClass]="{'historico': rowData.fechabaja != null}">{{
+              <label *ngIf="!edit || historico" [ngClass]="{'historico': rowData.fechabaja != null}">{{
                 rowData[col.field]}}</label>
 
-              <input *ngIf="edit" [ngClass]="{'historico': rowData.fechabaja != null}" type="text"
+              <input *ngIf="edit && !historico" [ngClass]="{'historico': rowData.fechabaja != null}" type="text"
                 class="form-control mt-2" pInputText [(ngModel)]="rowData[col.field]"
                 (keydown)="changeTableField(rowData)">
             </div>
@@ -103,33 +103,28 @@
         <button *ngIf="historico" (click)="getListaProductos(); selectedRows=[]" pButton type="button" icon="fa fa-undo"
           iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
 
-        <button (click)="resetToOriginalData();" [disabled]="productsToEditCreate.length == 0" pButton type="button"
-          icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="resetToOriginalData();" [disabled]="productsToEditCreate.length == 0 || nuevo" pButton
+          type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate}}"></button>
 
         <button
           [disabled]="(selectedRows == '') || (numSelectedAbleRegisters > 0 && numSelectedDisableRegisters > 0) || newRegisterRow"
-          *ngIf="numSelectedAbleRegisters == 0 || numSelectedDisableRegisters == 0"
-          (click)="activarDesactivar(selectedRows)" pButton type="button" icon="fa fa-trash-alt " iconPos="left"
-          label="{{'general.boton.eliminar' | translate}}"></button>
-
-        <button
-          [disabled]="(selectedRows == '') || (numSelectedAbleRegisters > 0 && numSelectedDisableRegisters > 0) || newRegisterRow"
-          *ngIf="numSelectedAbleRegisters > 0 && numSelectedDisableRegisters > 0"
+          *ngIf="(numSelectedAbleRegisters > 0 && numSelectedDisableRegisters > 0) || (numSelectedAbleRegisters >= 0 && numSelectedDisableRegisters == 0)"
           (click)="activarDesactivar(selectedRows)" pButton type="button" icon="fa fa-trash-alt " iconPos="left"
           label="{{'general.boton.eliminar' | translate}}"></button>
 
         <button [disabled]="(selectedRows == '')" (click)="activarDesactivar(selectedRows)"
           *ngIf="numSelectedAbleRegisters == 0 && numSelectedDisableRegisters > 0" pButton type="button"
-          icon="fa fa-trash-alt " iconPos="left" label="Reactivar"></button>
+          icon="fa fa-undo " iconPos="left"
+          label="{{'facturacion.maestros.tiposproductosservicios.reactivar' | translate}}"></button>
 
         <button (click)="removeNewRegister()" *ngIf="newRegisterRow" pButton type="button" icon="fa fa-close "
           iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
 
-        <button (click)="guardar();" [disabled]="productsToEditCreate.length == 0" pButton type="button"
-          icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="guardar();" [disabled]="productsToEditCreate.length == 0 || emptyDescripcion" pButton
+          type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
 
-        <button (click)="newRegister();" [disabled]="newRegisterRow" pButton type="button" icon="fa fa-plus  "
-          iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+        <button (click)="newRegister();" [disabled]="newRegisterRow || historico" pButton type="button"
+          icon="fa fa-plus  " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
       </div>
     </p-footer>
 
