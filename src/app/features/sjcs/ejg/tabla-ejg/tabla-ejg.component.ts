@@ -45,7 +45,6 @@ export class TablaEjgComponent implements OnInit {
   ejgObject = [];
   datosFamiliares = [];
 
-  comboEstadoEJG = [];
   comboRemesa = [];
   fechaEstado = new Date();
   valueComboEstado = "";
@@ -56,6 +55,7 @@ export class TablaEjgComponent implements OnInit {
 
   @Input() filtro;
   @Input() remesa;
+  @Input() comboEstadoEJG;
 
   @ViewChild("table") table: DataTable;
   @Output() searchHistoricalSend = new EventEmitter<boolean>();
@@ -92,25 +92,12 @@ export class TablaEjgComponent implements OnInit {
       this.historico = this.persistenceService.getHistorico();
     }
 
-    this.getComboEstadoEJG();
     this.getComboRemesa(); 
   }
 
   //Se activara cada vez que los @Input cambien de valor (ahora unicamente datos)
   ngOnChanges(){
     this.selectedDatos=[];
-  }
-
-  getComboEstadoEJG() {
-    this.sigaServices.get("filtrosejg_comboEstadoEJG").subscribe(
-      n => {
-        this.comboEstadoEJG = n.combooItems;
-        this.commonServices.arregloTildesCombo(this.comboEstadoEJG);
-      },
-      err => {
-        console.log(err);
-      }
-    );
   }
   
   openTab(evento) {
@@ -516,18 +503,28 @@ export class TablaEjgComponent implements OnInit {
     //Esto se debe cambiar al valor de los datos seleccionados adquiriendo las etiquetas que corresponden a los valores 7 y 8 del combo de estadosEJG.
     //Concretamente, se comprobaria si alguno de los ejgs seleccionados tienen un estado ejg distinto a ese y se bloquearia si asi fuera.
 
-    /* this.disableAddRemesa = false;
+    this.disableAddRemesa = false;
+    let LRC;
+    let LRCAD;
 
-    selectedDatos.array.forEach(element => {
-      if(selectedDatos.estadoEJG!="Listo remitir Comisión" && selectedDatos.estadoEJG!="Listo remitir Comisión act. designación") this.disableAddRemesa = true;
-    }); */
+    //Buscamos las etiquetas correspondientes a los valores 7 y 8 
+    //que equivaldrian respectivamente a "Listo remitir comisión" y "Listo remitir comisión act. designación" respectivamente 
+    this.comboEstadoEJG.forEach(element => {
+      if(element.value=="7") LRC = element.label;
+      else if(element.value=="8")LRCAD = element.label;
+    });
 
-    if(this.filtro.estadoEJG=="7" || this.filtro.estadoEJG=="8"){
+    selectedDatos.forEach(element => {
+      if(element.estadoEJG!=LRC && element.estadoEJG!=LRCAD) this.disableAddRemesa = true;
+    });
+
+    /* if(this.filtro.estadoEJG=="7" || this.filtro.estadoEJG=="8"){
       this.disableAddRemesa = false;
     }
     else{
       this.disableAddRemesa = true;
-    }
+    } */
+    
   }
 
   fillFechaEstado(event){
