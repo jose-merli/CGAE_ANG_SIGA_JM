@@ -16,7 +16,7 @@ import { SigaWrapper } from "../../wrapper/wrapper.class";
 import { esCalendar } from "./../../utils/calendar";
 import { SigaServices } from "./../../_services/siga.service";
 import { Location } from '@angular/common'
-
+import { TranslateService } from '../translate';
 import { PersistenceService } from '../../_services/persistence.service';
 import { FiltrosBusquedaAsuntosComponent } from "./filtros-busqueda-asuntos/filtros-busqueda-asuntos.component";
 import { TablaBusquedaAsuntosComponent } from "./tabla-busqueda-asuntos/tabla-busqueda-asuntos.component";
@@ -61,7 +61,8 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
     private sigaServices: SigaServices,
     private formBuilder: FormBuilder,
     private persistenceService: PersistenceService,
-    private location: Location
+    private location: Location,
+    private translateService: TranslateService
   ) {
     super(USER_VALIDATIONS);
     this.formBusqueda = this.formBuilder.group({
@@ -143,8 +144,12 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
         .subscribe(
           data => {
             this.body = JSON.parse(data.body).asuntosJusticiableItems;
+            let error = JSON.parse(data.body).error;
             this.buscar = true;
             this.progressSpinner = false;
+            if (error != null && error.description != null) {
+              this.showMesg("info", this.translateService.instant("general.message.informacion"), error.description);
+            }
           },
           err => {
             console.log(err);
@@ -165,8 +170,12 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
         .subscribe(
           data => {
             this.body = JSON.parse(data.body).asuntosJusticiableItems;
+            let error = JSON.parse(data.body).error;
             this.buscar = true;
             this.progressSpinner = false;
+            if (error != null && error.description != null) {
+              this.showMesg("info", this.translateService.instant("general.message.informacion"), error.description);
+            }
           },
           err => {
             console.log(err);
@@ -184,8 +193,12 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
         .subscribe(
           data => {
             this.body = JSON.parse(data.body).asuntosJusticiableItems;
+            let error = JSON.parse(data.body).error;
             this.buscar = true;
             this.progressSpinner = false;
+            if (error != null && error.description != null) {
+              this.showMesg("info", this.translateService.instant("general.message.informacion"), error.description);
+            }
           },
           err => {
             console.log(err);
@@ -206,8 +219,12 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
         .subscribe(
           data => {
             this.body = JSON.parse(data.body).asuntosJusticiableItems;
+            let error = JSON.parse(data.body).error;
             this.buscar = true;
             this.progressSpinner = false;
+            if (error != null && error.description != null) {
+              this.showMesg("info", this.translateService.instant("general.message.informacion"), error.description);
+            }
           },
           err => {
             console.log(err);
@@ -227,6 +244,15 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
       severity: event.severity,
       summary: event.summary,
       detail: event.msg
+    });
+  }
+
+  showMesg(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
     });
   }
   goToView() {
