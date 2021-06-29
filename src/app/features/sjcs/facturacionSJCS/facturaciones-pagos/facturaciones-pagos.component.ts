@@ -142,12 +142,20 @@ export class FacturacionesYPagosComponent implements OnInit {
 					this.progressSpinner = false;
 				},
 				err => {
-					if (err != undefined && JSON.parse(err.error).error.description != "") {
-						this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-					} else {
-						this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+					if(err.status == '403' || err.status == 403){
+						sessionStorage.setItem("codError", "403");
+						sessionStorage.setItem(
+						  "descError",
+						  this.translateService.instant("generico.error.permiso.denegado")
+						);
+						this.router.navigate(["/errorAcceso"]);
+					}else{
+						if (err != undefined && JSON.parse(err.error).error.description != "") {
+							this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+						} else {
+							this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+						}
 					}
-
 					this.progressSpinner = false;
 				},
 				() => {
