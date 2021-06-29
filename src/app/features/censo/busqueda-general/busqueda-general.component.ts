@@ -879,7 +879,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
 
     //En caso que se este seleccionando un nuevo porcurador
     if (this.nuevoProcurador) {
-      sessionStorage.setItem('procurador', JSON.stringify(id));
+      sessionStorage.setItem('datosProcurador', JSON.stringify(id));
       this.location.back();
     }
 
@@ -899,10 +899,12 @@ export class BusquedaGeneralComponent implements OnDestroy {
 
         this.router.navigate(['fichaPersonaJuridica']);
       }
-    } else if (sessionStorage.getItem('nuevoProcurador')) {
-      sessionStorage.setItem('datosProcurador', JSON.stringify(id));
-      this.backTo();
-    } else if (
+    } 
+    // else if (sessionStorage.getItem('nuevoProcurador')) {
+    //   sessionStorage.setItem('datosProcurador', JSON.stringify(id));
+    //   this.backTo();
+    // }
+     else if (
       (sessionStorage.getItem('newIntegrante') != null || sessionStorage.getItem('newIntegrante') != undefined) &&
       sessionStorage.getItem('abrirRemitente') != 'true'
     ) {

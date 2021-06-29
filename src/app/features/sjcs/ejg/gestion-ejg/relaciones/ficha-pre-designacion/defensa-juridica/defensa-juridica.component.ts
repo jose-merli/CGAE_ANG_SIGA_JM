@@ -269,12 +269,15 @@ export class DefensaJuridicaComponent implements OnInit {
 
     this.body.delitos = null;
     this.delitosValue.forEach(delitoEJG => {
-      this.comboDelitos.forEach(delito => {
-        if (delitoEJG == delito.value) {
-          if (this.body.delitos == null) this.body.delitos = delito.label;
-          else this.body.delitos = this.body.delitos + ", " + delito.label;
-        }
-      })
+      // this.comboDelitos.forEach(delito => {
+      //   if (delitoEJG == delito.value) {
+      //     if (this.body.delitos == null) this.body.delitos = delito.label;
+      //     else this.body.delitos = this.body.delitos + ", " + delito.label;
+      //   }
+      // })
+      if (this.body.delitos == null) this.body.delitos = delitoEJG.toString();
+           else this.body.delitos = this.body.delitos+","+ delitoEJG.toString();
+         
     });
 
     this.sigaServices.post("gestionejg_updateDatosJuridicos", this.body).subscribe(
@@ -284,7 +287,8 @@ export class DefensaJuridicaComponent implements OnInit {
           this.bodyInicial = this.body;
           this.persistenceService.setDatos(this.body);
           this.getCabecera();
-          this.actualizarDelitosEJG();
+          //this.actualizarDelitosEJG();
+          this.progressSpinner = false;
         }
         else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
