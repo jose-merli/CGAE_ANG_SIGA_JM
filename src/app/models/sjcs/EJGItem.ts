@@ -100,6 +100,7 @@ export class EJGItem {
     idProcurador: string;
     idInstitucionProc: number;
     numerodesignaproc: string;
+    nombreApProcurador: string;
 
     requiereTurn: boolean;
     bis: boolean;
