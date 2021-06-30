@@ -184,25 +184,9 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
     ];
   }
 
-  // checkDelete(selectedDatos) {
-  //   let encontrado = false;
-
-  //   if (selectedDatos.idEstado != '30') {
-  //     encontrado = true;
-  //     for (let i = 0; i < this.datos.length; i++) {
-  //       if (this.datos[i].idFacturacion == selectedDatos.idFacturacion && this.datos[i].idInstitucion == selectedDatos.idInstitucion &&
-  //         this.datos[i].fechaEstado > selectedDatos.fechaEstado) {
-  //         encontrado = false;
-  //         break;
-  //       }
-  //     }
-  //   }
-  //   return encontrado;
-  // }
-
   confirmDelete(selectedDatos) {
     if (undefined != selectedDatos.idFacturacion || null != selectedDatos.idFacturacion) {
-      // if (this.checkDelete(selectedDatos)) {
+
       let mess = this.translateService.instant(
         "messages.deleteConfirmation"
       );
@@ -217,9 +201,7 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
           this.showMessage("info", "Info", this.translateService.instant("general.message.accion.cancelada"));
         }
       });
-      /*} else {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.mensajeErrorEliminar"));
-      }*/
+
     }
   }
 

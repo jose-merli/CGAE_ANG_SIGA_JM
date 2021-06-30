@@ -141,14 +141,14 @@ export class FacturacionesYPagosComponent implements OnInit {
 					this.progressSpinner = false;
 				},
 				err => {
-					if(err.status == '403' || err.status == 403){
+					if (err.status == '403' || err.status == 403) {
 						sessionStorage.setItem("codError", "403");
 						sessionStorage.setItem(
-						  "descError",
-						  this.translateService.instant("generico.error.permiso.denegado")
+							"descError",
+							this.translateService.instant("generico.error.permiso.denegado")
 						);
 						this.router.navigate(["/errorAcceso"]);
-					}else{
+					} else {
 						if (err != undefined && JSON.parse(err.error).error.description != "") {
 							this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
 						} else {
@@ -252,8 +252,17 @@ export class FacturacionesYPagosComponent implements OnInit {
 					this.progressSpinner = false;
 				},
 				err => {
-					this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.mensajeErrorEliminar"));
 					this.progressSpinner = false;
+					if (err.status == '403' || err.status == 403) {
+						sessionStorage.setItem("codError", "403");
+						sessionStorage.setItem(
+							"descError",
+							this.translateService.instant("generico.error.permiso.denegado")
+						);
+						this.router.navigate(["/errorAcceso"]);
+					} else {
+						this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.mensajeErrorEliminar"));
+					}
 				}
 			);
 		} else if (this.filtroSeleccionado == "pagos") {
