@@ -194,14 +194,15 @@ export class DetalleTarjetaContrariosFichaDesignacionOficioComponent implements 
         this.persistenceService.setDatos(datos[0]);
         this.persistenceService.setFichasPosibles(this.fichasPosibles);
         sessionStorage.setItem("origin","Contrario");
+        sessionStorage.setItem("contrarioDesigna", JSON.stringify(evento));
         this.persistenceService.clearBody();
 
         if(evento.abogado!="" && evento.abogado!=null){
           sessionStorage.setItem("idabogadoFicha",evento.idabogadocontrario);
         }
-        if(evento.procurador!="" && evento.procurador!=null){
-          sessionStorage.setItem("procuradorFicha",evento.procurador);
-        }
+        // if(evento.procurador!="" && evento.procurador!=null){
+        //   sessionStorage.setItem("procuradorFicha",evento.procurador);
+        // }
         if(evento.representante!="" && evento.representante!=null){
           let representante = new JusticiableBusquedaItem();
           representante.idpersona=evento.representante;

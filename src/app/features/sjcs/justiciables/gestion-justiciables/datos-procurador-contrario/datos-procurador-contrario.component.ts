@@ -134,13 +134,15 @@ export class DatosProcuradorContrarioComponent implements OnInit {
 			//sessionStorage.removeItem("procuradorFicha");
 		else if (sessionStorage.getItem("contrarioEJG")) {
 			let data = JSON.parse(sessionStorage.getItem("contrarioEJG"));
-			this.generalBody.nColegiado = data.procurador.split(",")[0];
-			this.generalBody.nombre = data.procurador.split(",")[1].concat(",", data.procurador.split(",")[2]);
-			this.generalBody.idProcurador = data.idprocurador;
-			this.generalBody.idInstitucion = data.idInstitucionProc;
+			if(data.idprocurador!=null){
+				this.generalBody.nColegiado = data.procurador.split(",")[0];
+				this.generalBody.nombre = data.procurador.split(",")[1].concat(",", data.procurador.split(",")[2]);
+				this.generalBody.idProcurador = data.idprocurador;
+				this.generalBody.idInstitucion = data.idInstitucionProc;
+			}
 
-			if (sessionStorage.getItem("EJGItem")) this.contrarioEJG.emit(true);
-			this.contrario.emit(true);
+			this.contrarioEJG.emit(true);
+			
 			this.permisoEscritura = true;
 
 			this.nColegiadoCabecera = this.generalBody.nColegiado;
@@ -160,16 +162,21 @@ export class DatosProcuradorContrarioComponent implements OnInit {
 			// 	err => {
 			// 		this.progressSpinner = false;
 			// 	});
-			
-		}else if (sessionStorage.getItem("procuradorFicha")) {
-				let data = sessionStorage.getItem("procuradorFicha");
-				sessionStorage.removeItem("procuradorFicha");
-				this.generalBody.nColegiado = data.split(",")[0];
-				this.generalBody.nombre = data.split(",")[1].concat(",", data.split(",")[2]);
+		//Procede de gicha designacion
+		}else if (sessionStorage.getItem("contrarioDesigna")) {
+				let data = JSON.parse(sessionStorage.getItem("contrarioDesigna"));
+				// sessionStorage.removeItem("contrarioDesigna");
+				// this.generalBody.nColegiado = data.split(",")[0];
+				// this.generalBody.nombre = data.split(",")[1].concat(",", data.split(",")[2]);
 				// this.generalBody.idProcurador = data.idprocurador;
 				// this.generalBody.idInstitucion = data.idInstitucionProc;
+				if(data.idprocurador!=null){
+					this.generalBody.nColegiado = data.procurador.split(",")[0];
+					this.generalBody.nombre = data.procurador.split(",")[1].concat(",", data.procurador.split(",")[2]);
+					this.generalBody.idProcurador = data.idprocurador;
+					this.generalBody.idInstitucion = data.idInstitucionProc;
+				}
 	
-				if (sessionStorage.getItem("EJGItem")) this.contrarioEJG.emit(true);
 				this.contrario.emit(true);
 				this.permisoEscritura = true;
 	
@@ -370,7 +377,7 @@ export class DatosProcuradorContrarioComponent implements OnInit {
 	}
 
 	disabledDisassociate() {
-		if (this.generalBody.idProcurador != undefined && this.generalBody.idProcurador != null) {
+		if (this.nColegiadoCabecera != undefined && this.nColegiadoCabecera != null) {
 			return false;
 		} else {
 			return true;
