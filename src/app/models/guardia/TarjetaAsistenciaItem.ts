@@ -18,4 +18,8 @@ export class TarjetaAsistenciaItem{
       apellido2 : string;
       nif  : string;
 	  filtro : FiltroAsistenciaItem;
+	  numeroColegiado : string;
+	  nombreColegiado : string;
+	  descripcionGuardia : string;
+	  fechaGuardia : string;
 }

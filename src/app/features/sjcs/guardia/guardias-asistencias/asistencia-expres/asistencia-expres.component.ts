@@ -8,12 +8,13 @@ import { Cell, Row, RowGroup, TablaResultadoDesplegableAEService } from '../../.
 import { CommonsService } from '../../../../../_services/commons.service';
 import { TarjetaAsistenciaItem } from '../../../../../models/guardia/TarjetaAsistenciaItem';
 import { ActuacionAsistenciaItem } from '../../../../../models/guardia/ActuacionAsistenciaItem';
-import { SigaStorageService } from '../../../../../siga-storage.service';
 import { DatePipe } from '@angular/common';
-import { procesos_guardia } from '../../../../../permisos/procesos_guarida';
+
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { TranslateService } from '../../../../../commons/translate';
 import moment = require('moment');
+import { procesos_guardia } from '../../../../../permisos/procesos_guarida';
+import { SigaStorageService } from '../../../../../siga-storage.service';
 
 @Component({
   selector: 'app-asistencia-expres',
@@ -187,6 +188,9 @@ export class AsistenciaExpresComponent implements OnInit {
         },
         err => {
           console.log(err);
+        },
+        () =>{
+          this.progressSpinner = false;
         }
       );
   }

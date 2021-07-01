@@ -269,7 +269,7 @@ import { GestionActasComponent } from './features/sjcs/gestion-actas/gestion-act
 import { DefinirListasGuardiasComponent } from './features/sjcs/guardia/definir-listas-guardias/definir-listas-guardias.component';
 import { GuardiasAsistenciasComponent } from './features/sjcs/guardia/guardias-asistencias/guardias-asistencias.component';
 import { GuardiasBajasTemporalesComponent } from './features/sjcs/guardia/guardias-bajas-temporales/guardias-bajas-temporales.component';
-import { GuardiasCentralitaComponent } from './features/sjcs/guardia/guardias-centralita/guardias-centralita.component';
+import { GuardiasSolicitudesCentralitaComponent } from './features/sjcs/guardia/guardias-solicitudes-centralita/guardias-solicitudes-centralita.component';
 import { GuardiasSaltosCompensacionesComponent } from './features/sjcs/guardia/guardias-saltos-compensaciones/guardias-saltos-compensaciones.component';
 import { GuardiasSolicitudesTurnosComponent } from './features/sjcs/guardia/solicitudes-turnos/solicitudes-turnos.component';
 import { VolanteExpresComponent } from './features/sjcs/guardia/volante-expres/volante-expres.component';
@@ -416,6 +416,11 @@ import { SelectorModule } from './commons/selector/selector.module';
 import { AsistenciaExpresComponent } from './features/sjcs/guardia/guardias-asistencias/asistencia-expres/asistencia-expres.component';
 import { BuscadorAsistenciaExpresComponent } from './features/sjcs/guardia/guardias-asistencias/asistencia-expres/buscador-asistencia-expres/buscador-asistencia-expres.component';
 import { ResultadoAsistenciaExpresComponent } from './features/sjcs/guardia/guardias-asistencias/resultado-asistencia-expres/resultado-asistencia-expres.component';
+import { BuscadorSolicitudesCentralitaComponent } from './features/sjcs/guardia/guardias-solicitudes-centralita/buscador-solicitudes-centralita/buscador-solicitudes-centralita.component';
+import { ResultadoSolicitudesCentralitaComponent } from './features/sjcs/guardia/guardias-solicitudes-centralita/resultado-solicitudes-centralita/resultado-solicitudes-centralita.component';
+import { FichaPreasistenciasComponent } from './features/sjcs/guardia/guardias-solicitudes-centralita/ficha-preasistencias/ficha-preasistencias.component';
+import { AsistenciasFichaPreasistenciasComponent } from './features/sjcs/guardia/guardias-solicitudes-centralita/ficha-preasistencias/asistencias-ficha-preasistencias/asistencias-ficha-preasistencias.component';
+
 @NgModule({
 	declarations: [
 		TablaResultadoDesplegableComponent,
@@ -555,7 +560,7 @@ import { ResultadoAsistenciaExpresComponent } from './features/sjcs/guardia/guar
 		GuardiasSaltosCompensacionesComponent,
 		DefinirListasGuardiasComponent,
 		GuardiasAsistenciasComponent,
-		GuardiasCentralitaComponent,
+		GuardiasSolicitudesCentralitaComponent,
 		AsistenciaExpresComponent,
 		BuscadorAsistenciaExpresComponent,
 		ResultadoAsistenciaExpresComponent,
@@ -766,6 +771,10 @@ import { ResultadoAsistenciaExpresComponent } from './features/sjcs/guardia/guar
 		DetalleTarjetaRelacionesDesignaComponent,
 		DetalleTarjetaComunicacionesDesignaComponent,
 		PartidosJudicialesComponent,
+		BuscadorSolicitudesCentralitaComponent,
+		ResultadoSolicitudesCentralitaComponent,
+		FichaPreasistenciasComponent,
+		AsistenciasFichaPreasistenciasComponent
 
 	],
 	imports: [

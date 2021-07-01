@@ -1,6 +1,8 @@
 export let endpoints_generales: any = {
     combo_turnos: "combo/turnos",
+    combo_turnos_inscritos: "combo/turnosInscritos",
     combo_guardiaPorTurno: "combo/guardias",
+    combo_guardiaPorTurnoInscritos: "combo/guardiasInscritas",
     componenteGeneralJG_busquedaGeneralSJCS: "componenteGeneralJG/busquedaGeneralSJCS",
     componenteGeneralJG_busquedaColegiadoEJG: "componenteGeneralJG/busquedaColegiadoEJG",
     componenteGeneralJG_comboTurnos:"componenteGeneralJG/comboTurnos",
@@ -12,6 +14,8 @@ export let endpoints_generales: any = {
     combo_comboTipoSOJ: "combo/comboTipoSOJ",
     combo_comboComisaria: "combo/comboComisaria",
     combo_comboJuzgado: "combo/comboJuzgado",
+    combo_comboComisariaCdgoExt: "combo/comboComisariaCdgoExt",
+    combo_comboJuzgadoCdgoExt: "combo/comboJuzgadoCdgoExt",
  
 
     gestionJusticiables_busquedaClaveAsuntosEJG: "gestionJusticiables/busquedaClaveAsuntosEJG",

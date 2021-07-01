@@ -65,5 +65,11 @@ export let endpoints_guardia: any = {
     busquedaGuardias_buscarAsistencias: "asistencia/buscarAsistencias",
     busquedaGuardias_getComisarias: "asistencia/getComisarias",
     busquedaGuardias_getJuzgados: "asistencia/getJuzgados",
-    busquedaGuardias_guardarAsistencias: "asistencia/guardarAsistencias"
+    busquedaGuardias_guardarAsistencias: "asistencia/guardarAsistencias",
+    busquedaGuardias_buscarAsistenciasAsociadas: "asistencia/buscarAsistenciasByIdSolicitud",
+
+    //Preasistencias
+    busquedaPreasistencias_buscarPreasistencias: "preasistencia/buscarPreAsistencias",
+    busquedaPreasistencias_denegarPreasistencias: "preasistencia/denegarPreAsistencias",
+    busquedaPreasistencias_activarPreasistenciasDenegadas: "preasistencia/activarPreAsistenciasDenegadas",
 }
