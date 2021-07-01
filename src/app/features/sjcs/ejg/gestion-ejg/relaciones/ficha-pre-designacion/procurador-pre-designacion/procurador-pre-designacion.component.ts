@@ -18,6 +18,7 @@ import { Dialog } from 'primeng/primeng';
 import { ColegiadoItem } from "../../../../../../../models/ColegiadoItem";
 import { EJGItem } from '../../../../../../../models/sjcs/EJGItem';
 import { ProcuradorItem } from '../../../../../../../models/sjcs/ProcuradorItem';
+import { DatePipe } from '@angular/common';
 
 @Component({
 	selector: 'app-procurador-pre-designacion',
@@ -37,9 +38,11 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 
 	ejg: EJGItem;
 
+	fechaCabecera: string = "";
+	nombreCabecera: string = "";
+
 	@Input() permisoEscritura = true;
 
-	esMenorEdad: boolean = false;
 	idPersona;
 	openPro: boolean = false;
 	representanteValido: boolean = false;
@@ -56,7 +59,8 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 		private confirmationService: ConfirmationService,
 		private authenticationService: AuthenticationService,
 		private router: Router,
-		private changeDetectorRef: ChangeDetectorRef) { }
+		private changeDetectorRef: ChangeDetectorRef,
+		private datepipe: DatePipe) { }
 
 	ngOnInit() {
 
@@ -64,8 +68,28 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 
 		this.ejg = this.persistenceService.getDatos();
 
+		/* Procede de search*() */
+		if (sessionStorage.getItem("datosProcurador")) {
+			let data = JSON.parse(sessionStorage.getItem("datosProcurador"))[0];
+			sessionStorage.removeItem("datosProcurador");
+
+			this.abreCierra();
+			let top = document.getElementById("procuradorPreDesigna");
+			if (top) {
+				top.scrollIntoView();
+				top = null;
+			}
+
+			this.generalBody.idProcurador = data.idProcurador;
+			this.generalBody.nColegiado = data.nColegiado;
+			this.generalBody.nombre = data.nombreApe;
+			if (this.ejg.idInstitucionProc != null) this.generalBody.fechaDesigna = new Date(this.ejg.fechaDesProc);
+			this.generalBody.numerodesignacion = this.ejg.numerodesignaproc;
+			this.generalBody.idInstitucion = data.idInstitucion;
+			this.generalBody.idProcurador = data.idProcurador;
+		}
 		/* Procede de ficha ejg */
-		if (this.ejg.idInstitucionProc != null) {
+		else if (this.ejg.idInstitucionProc != null) {
 
 			this.generalBody.fechaDesigna = new Date(this.ejg.fechaDesProc);
 			this.generalBody.numerodesignacion = this.ejg.numerodesignaproc;
@@ -76,28 +100,16 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 					let data = JSON.parse(n.body).procuradorItems[0];
 					this.generalBody.nColegiado = data.nColegiado;
 					this.generalBody.nombre = data.apellido1 + " " + data.apellido2 + ", " + data.nombre;
+					this.nombreCabecera = this.generalBody.nombre;
 					this.progressSpinner = false;
 				},
 				err => {
 					this.progressSpinner = false;
 				});
+			this.fechaCabecera = this.datepipe.transform(this.generalBody.fechaDesigna, 'dd/MM/yyyy');
 		}
 
-
-
-		/* Procede de search*() */
-		if (sessionStorage.getItem("procurador")) {
-			let data = JSON.parse(sessionStorage.getItem("procurador"))[0];
-			sessionStorage.removeItem("procurador");
-
-			this.generalBody.idProcurador = data.idProcurador;
-			this.generalBody.nColegiado = data.nColegiado;
-			this.generalBody.nombre = data.nombreApe;
-			if (this.ejg.idInstitucionProc != null) this.generalBody.fechaDesigna = new Date(this.ejg.fechaDesProc);
-			this.generalBody.numerodesignacion = this.ejg.numerodesignaproc;
-			this.generalBody.idInstitucion = data.idInstitucion;
-			this.generalBody.idProcurador = data.idProcurador;
-		}
+		
 		this.progressSpinner = false;
 	}
 
@@ -123,6 +135,16 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 		});
 	}
 
+	numberOnly(event): boolean {
+		const charCode = (event.which) ? event.which : event.keyCode;
+		if (charCode >= 48 && charCode <= 57) {
+			return true;
+		}
+		else {
+			return false;
+
+		}
+	}
 
 	Disassociate() {
 		let ejgPeticion: EJGItem = this.persistenceService.getDatos();
@@ -130,6 +152,7 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 		ejgPeticion.idInstitucionProc = null;
 		ejgPeticion.fechaDesProc = null;
 		ejgPeticion.numerodesignaproc = null;
+		ejgPeticion.nombreApProcurador = null;
 		this.sigaServices.post('gestionejg_guardarProcuradorEJG', ejgPeticion).subscribe(
 			(n) => {
 				if (n.statusText == "OK") {
@@ -139,6 +162,8 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 						this.translateService.instant('general.message.accion.realizada')
 					);
 					this.generalBody = new ProcuradorItem();
+					this.fechaCabecera = "";
+					this.nombreCabecera = "";
 					this.persistenceService.setDatos(ejgPeticion);
 					this.ejg = ejgPeticion;
 				}
@@ -160,10 +185,11 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 
 	Associate() {
 		let ejgPeticion = this.persistenceService.getDatos();
-		ejgPeticion.idProcurador = this.generalBody.idProcurador.toString();
-		ejgPeticion.idInstitucionProc = parseInt(this.generalBody.idInstitucion.toString());
+		ejgPeticion.idProcurador = this.generalBody.idProcurador;
+		ejgPeticion.idInstitucionProc = parseInt(this.generalBody.idInstitucion);
 		ejgPeticion.fechaDesProc = this.generalBody.fechaDesigna;
 		ejgPeticion.numerodesignaproc = this.generalBody.numerodesignacion;
+		ejgPeticion.nombreApProcurador = this.generalBody.nombre;
 		this.sigaServices.post('gestionejg_guardarProcuradorEJG', ejgPeticion).subscribe(
 			(n) => {
 				this.progressSpinner = false;
@@ -175,6 +201,8 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 					);
 
 					this.ejg = ejgPeticion;
+					this.fechaCabecera = this.datepipe.transform(this.generalBody.fechaDesigna, 'dd/MM/yyyy');
+					this.nombreCabecera = this.generalBody.nombre;
 					this.persistenceService.setDatos(this.ejg);
 				}
 				else {

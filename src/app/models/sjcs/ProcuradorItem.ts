@@ -1,33 +1,33 @@
   export class ProcuradorItem {
-    idProcurador: String;
-    nombre: String;
-    apellido1: String;
-    apellido2: String;
-    nColegiado: String;
-    idColProcurador: String;
-    domicilio: String;
-    idInstitucion: String;
+    idProcurador: string;
+    nombre: string;
+    apellido1: string;
+    apellido2: string;
+    nColegiado: string;
+    idColProcurador: string;
+    domicilio: string;
+    idInstitucion: string;
     usuModificacion: number;
     fechaModificacion: Date;
-    codigoPostal: String;
-    idPoblacion: String;
-    idProvincia: String;
+    codigoPostal: string;
+    idPoblacion: string;
+    idProvincia: string;
     historico: boolean;
     fechabaja: Date;
-    fax1: String;
-    telefono1: String;
-    telefono2: String;
-    codigoExt: String;
-    email: String;
-    nombrePoblacion: String;
-    nombreProvincia: String;
-    nombreApe: String;
-    numero: String;
-    numerodesignacion: String;
+    fax1: string;
+    telefono1: string;
+    telefono2: string;
+    codigoExt: string;
+    email: string;
+    nombrePoblacion: string;
+    nombreProvincia: string;
+    nombreApe: string;
+    numero: string;
+    numerodesignacion: string;
     fechaDesigna: Date;
-    observaciones: String;
-    motivosRenuncia: String;
-    fecharenunciasolicita: String;
+    observaciones: string;
+    motivosRenuncia: string;
+    fecharenunciasolicita: string;
 
     constructor() { }
 }

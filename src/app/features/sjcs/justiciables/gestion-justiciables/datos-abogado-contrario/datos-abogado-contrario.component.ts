@@ -111,8 +111,8 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 			else this.contrario.emit(true);
 		}
 		/* Procede de ficha designacion */
-		if (sessionStorage.getItem("idabogadoFicha")) {
-			let idabogado = JSON.parse(sessionStorage.getItem("idabogadoFicha"));
+		else if (sessionStorage.getItem("idabogadoFicha")) {
+			let idabogado = sessionStorage.getItem("idabogadoFicha");
 			sessionStorage.removeItem("idabogadoFicha");
 			this.sigaServices.post("designaciones_searchAbogadoByIdPersona", idabogado).subscribe(
 				n => {

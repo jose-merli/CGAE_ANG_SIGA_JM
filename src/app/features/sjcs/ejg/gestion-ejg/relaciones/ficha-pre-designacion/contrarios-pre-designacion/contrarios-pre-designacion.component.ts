@@ -54,6 +54,8 @@ export class ContrariosPreDesignacionComponent implements OnInit {
     this.ejg = this.persistenceService.getDatos();
 
     sessionStorage.removeItem("origin");
+    sessionStorage.removeItem("procuradorFicha");
+    sessionStorage.removeItem("contrarioEJG");
     
 
     this.searchContrariosEJG();
@@ -209,13 +211,14 @@ export class ContrariosPreDesignacionComponent implements OnInit {
         this.persistenceService.setDatos(datos[0]);
         sessionStorage.setItem("origin", "ContrarioEJG");
         this.persistenceService.clearBody();
-
+        sessionStorage.setItem("contrarioEJG", JSON.stringify(evento));
         if (evento.abogado != "" && evento.abogado != null) {
           sessionStorage.setItem("idabogadoFicha", evento.idabogadocontrario);
         }
-        if (evento.procurador != "" && evento.procurador != null) {
-          sessionStorage.setItem("procuradorFicha", evento.procurador);
-        }
+        // if (evento.procurador != "" && evento.procurador != null) {
+        //   sessionStorage.setItem("procuradorFicha", evento.procurador);
+        // }
+
         if (evento.representante != "" && evento.representante != null) {
           let representante = new JusticiableBusquedaItem();
           representante.idpersona = evento.representante;

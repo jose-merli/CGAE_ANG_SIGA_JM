@@ -1,5 +1,5 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
-<div class="ficha-container">
+<div class="ficha-container" id="procuradorPreDesigna">
   <div class="card">
     <div class="card-header header-ficha" (click)="abreCierra()">
       <div *ngIf="showTarjeta" class="header-ficha-open d-flex justify-content-start align-items-center">
@@ -20,17 +20,16 @@
             <label class="mr-auto title-ficha">{{ 'justiciaGratuita.oficio.designas.contrarios.procurador' | translate
               }}
             </label>
-            <!-- <label class="registros-ficha">(0 registros)</label> -->
           </div>
           <div class="row">
             <div class="col-3">
-              <label>{{ 'censo.resultadosSolicitudesModificacion.literal.nColegiado' | translate }}
-                <span>{{ generalBody.nColegiado }}</span>
+              <label>{{ 'justiciaGratuita.oficio.designaciones.fechaDesignacion' | translate }}
+                <span>{{ fechaCabecera }}</span>
               </label>
             </div>
             <div class="col-3">
               <label>{{ 'administracion.parametrosGenerales.literal.nombre.apellidos' | translate }}
-                <span>{{ generalBody.nombre }}</span>
+                <span>{{ nombreCabecera}}</span>
               </label>
             </div>
             <div class="col-3"></div>
@@ -94,7 +93,7 @@
               <label>{{ "justiciaGratuita.oficio.justificacionExpres.numDesignacion" | translate }}
               </label>
               <input [(ngModel)]="generalBody.numerodesignacion" type="text" class="form-control"
-                [maxLength]="100" [disabled]="!permisoEscritura" pInputText />
+                [maxLength]="100" [disabled]="!permisoEscritura" (keypress)="numberOnly($event)" pInputText />
             </div>
             <div class="form-group-interlineado col-lg-6 col-md-6">
               <label>{{ "justiciaGratuita.oficio.designaciones.fechaDesignacion" | translate }}
