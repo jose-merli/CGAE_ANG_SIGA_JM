@@ -49,6 +49,8 @@ export let endpoints_EJG: any = {
     //Unidad Familiar
     gestionejg_borrarFamiliar: "ejg/gestion-ejg/borrarFamiliar",
     gestionejg_insertFamiliarEJG: "ejg/gestion-ejg/insertFamiliarEJG",
+    gestionejg_solicitarEEJG: "ejg/gestion-ejg/solicitarEEJG",
+    gestionejg_volverSolicitarEEJG: "ejg/gestion-ejg/volverSolicitarEEJG",
 
     //Estado
     gestionejg_borrarEstado: "ejg/gestion-ejg/borrarEstado",

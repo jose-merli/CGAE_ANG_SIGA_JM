@@ -43,7 +43,7 @@ export class UnidadFamiliarComponent implements OnInit {
 
   numSelected:number = 0;
   selectedItem: number = 10;
-
+  volverSolicitarEejg: boolean = false;
   selectMultiple: boolean = false;
   seleccion: boolean = false;
   openFicha: boolean = false;
@@ -474,7 +474,34 @@ export class UnidadFamiliarComponent implements OnInit {
   }
 
   solicitarEEJ() {
+    this.sigaServices.post("gestionejg_solicitarEEJG", this.selectedDatos[0]).subscribe(
+      n => {
+        this.progressSpinner = false;
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+        this.selectDatos=[];
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
+  }
 
+  volverSolicitarEEJ() {
+    this.sigaServices.post("gestionejg_volverSolicitarEEJG", this.selectedDatos[0]).subscribe(
+      n => {
+        this.progressSpinner = false;
+        this.selectDatos=[];
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+        this.selectDatos=[];
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
   }
 
   checkPermisosComunicar(datos) {
