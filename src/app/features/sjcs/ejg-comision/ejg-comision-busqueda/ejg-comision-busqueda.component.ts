@@ -130,9 +130,9 @@ export class EjgComisionBusquedaComponent implements OnInit {
     // this.getComboCalidad();
     this.getComboPerceptivo();
     this.getComboRenuncia();
-    this.getComboRenuncia();
     this.getComboImpugnacion();
     this.getComboTipoEJG();
+    this.getComboPonenteComision();
     // this.getComboCreadoDesde();
     this.getComboEstadoEJG();
     this.getComboColegioComision();
@@ -283,8 +283,8 @@ export class EjgComisionBusquedaComponent implements OnInit {
 
   getComboFundamentoJuridComision() {
     this.sigaServices
-      .get(
-        "filtrosejg_comboFundamentoJuridComision"
+      .getParam(
+        "filtrosejg_comboFundamentoJuridComision","?idTurno=" + this.body.resolucion
       )
       .subscribe(
         n => {
@@ -370,12 +370,10 @@ export class EjgComisionBusquedaComponent implements OnInit {
 
   cargarComboComision() {
     console.log("*****************************************************cargarComboComision************************************************************");
-    this.getComboPonenteComision();
     this.getComboJuzgadoComision();
     this.getComboDictamenComision();
     this.getComboResolucionComision();
     this.getComboTipoEJGColegioComision();
-    this.getComboTurnoComision();
   }
 
   getComboEstadoEJG() {

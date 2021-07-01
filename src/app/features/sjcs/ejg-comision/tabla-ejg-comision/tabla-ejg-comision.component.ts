@@ -3,12 +3,14 @@ import { DataTable, ConfirmationService } from '../../../../../../node_modules/p
 import { TranslateService } from '../../../../commons/translate';
 import { Router } from '../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../_services/siga.service';
+import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { EJGItem } from '../../../../models/sjcs/EJGItem';
-import { CommonsService } from '../../../../_services/commons.service';
 import { DatePipe } from '../../../../../../node_modules/@angular/common';
 import { Dialog } from 'primeng/primeng';
 import { saveAs } from "file-saver/FileSaver";
+
+
 
 @Component({
   selector: 'app-tabla-ejg-comision',
@@ -19,12 +21,16 @@ export class TablaEjgComisionComponent implements OnInit {
 
   rowsPerPage: any = [];
 
-
   cols;
   msgs;
-  
+
+  ponenteCompleto: boolean = false;
+  fechaPonenteCompleto: boolean = false;
   selectedItem: number = 10;
   selectAll;
+  selectAnioActa;
+  selectPonente = false;
+  selectResolucionFundamento = false;
   selectedDatos = [];
   selectDatos: EJGItem = new EJGItem();
   numSelected = 0;
@@ -72,9 +78,22 @@ export class TablaEjgComisionComponent implements OnInit {
   showModalAnadirRemesa = false;
   showModalEditarSeleccionados = false;
   fechaPrueba: any;
+  valueAnioActa: any;
+  valuePonente: any;
+  valueFechaPrueba: any;
+  valueResolucion: any;
+  valueFundamento: any;
+  valueFechaPonente: any;
+  resaltadoDatosFechaPonente: boolean = false;
+  resaltadoDatosPonente: boolean;
+  cambiarResaltarDatos: boolean = false;
+  resaltadoDatosFundamento: boolean;
+  resaltadoDatosResolucion: boolean;
+  obligatoriedadResolucion: any;
+
 
   constructor(private translateService: TranslateService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
-    private sigaServices: SigaServices, private persistenceService: PersistenceService, 
+    private sigaServices: SigaServices, private persistenceService: PersistenceService,
     private confirmationService: ConfirmationService, private commonServices: CommonsService,
     private datepipe: DatePipe) {
 
@@ -87,7 +106,6 @@ export class TablaEjgComisionComponent implements OnInit {
 
     this.selectedDatos = [];
 
-
     this.showModalCambioEstado = false;
     this.fechaEstado = new Date();
     this.valueComboEstado = "";
@@ -99,15 +117,113 @@ export class TablaEjgComisionComponent implements OnInit {
       this.historico = this.persistenceService.getHistorico();
     }
 
+
+
     this.getComboEstadoEJG();
     this.getComboAnioActa();
     this.getComboPonente();
-    this.getComboRemesa(); 
+    this.getComboFundamento();
+    this.getComboResolucion();
+    this.getComboRemesa();
+  }
+
+
+  styleObligatorioFechaPonente(event) {
+    if (this.resaltadoDatosFechaPonente && (event == null || event == "")) {
+      console.log("styleObligatorioFechaPonente");
+      return this.commonServices.styleObligatorio(event);
+    }
+  }
+
+  muestraCampoObligatorioFechaPonente() {
+    console.log("muestraCampoObligatorioFechaPonente");
+    this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+    this.resaltadoDatosFechaPonente = true;
+  }
+
+
+
+  styleObligatorioPonente(event) {
+    if (this.resaltadoDatosPonente && (event == null || event == "")) {
+      console.log("styleObligatorioPonente");
+      return this.commonServices.styleObligatorio(event);
+    }
+  }
+
+  muestraCampoObligatorioPonente() {
+    console.log("muestraCampoObligatorioPonente");
+    this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+    this.resaltadoDatosPonente = true;
+
+  }
+
+
+  styleObligatorioResolucion(event) {
+    if (this.resaltadoDatosResolucion && (event == null || event == "")) {
+      console.log("styleObligatorioResolucion");
+      return this.commonServices.styleObligatorio(event);
+    }
+  }
+
+  muestraCampoObligatorioResolucion() {
+    console.log("muestraCampoObligatorioResolucion");
+    this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+    this.resaltadoDatosResolucion = true;
+
+  }
+
+  styleObligatorioFundamento(event) {
+    if (this.resaltadoDatosFundamento && (event == null || event == "")) {
+      console.log("styleObligatorioFundamento");
+      return this.commonServices.styleObligatorio(event);
+    }
+  }
+
+  muestraCampoObligatorioFundamento() {
+    console.log("muestraCampoObligatorioFundamento");
+    this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+    this.resaltadoDatosFundamento = true;
+
+  }
+
+
+  checkPonente() {
+    console.log("********************************checkPonente");
+    console.log(this.valuePonente);
+    if (this.valuePonente != null && this.valueFechaPonente == null) {
+      this.muestraCampoObligatorioFechaPonente();
+    }
+  }
+
+  checkResolucion() {
+    console.log("********************************checkResolucion");
+    console.log(this.valueResolucion);
+    this.getObligatoriedadResolucion();
+    if (this.valueResolucion != null && this.valueFundamento == null && this.obligatoriedadResolucion) {
+      this.muestraCampoObligatorioFundamento();
+    }
+  }
+
+  checkFundamento() {
+    console.log("********************************checkFundamento");
+    console.log(this.valueFundamento);
+    if (this.valueFundamento != null && this.valueResolucion == null) {
+      this.muestraCampoObligatorioResolucion();
+    }
+  }
+
+  fillFechaPrueba(event) {
+    console.log("********************************fillFechaPrueba");
+    console.log(event);
+    this.valueFechaPonente = event;
+    if (this.valueFechaPonente != null && this.valuePonente == null) {
+      this.muestraCampoObligatorioPonente();
+    }
   }
 
   //Se activara cada vez que los @Input cambien de valor (ahora unicamente datos)
-  ngOnChanges(){
-    this.selectedDatos=[];
+  ngOnChanges() {
+    this.selectedDatos = [];
   }
 
   getComboEstadoEJG() {
@@ -122,8 +238,22 @@ export class TablaEjgComisionComponent implements OnInit {
     );
   }
 
+  getObligatoriedadResolucion() {
+    this.sigaServices.get("obligatoriedadResolucion").subscribe(
+      n => {
+        this.obligatoriedadResolucion = n.combooItems;
+        console.log("****************************************" + this.obligatoriedadResolucion);
+        this.commonServices.arregloTildesCombo(this.comboEstadoEJG);
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+
   getComboAnioActa() {
-    this.sigaServices.getParam("filtrosejg_comboAnioActaComision", "2502").subscribe(
+    this.sigaServices.get("filtrosejg_comboAnioActaComision").subscribe(
       n => {
         this.comboAnioActa = n.combooItems;
       },
@@ -132,9 +262,9 @@ export class TablaEjgComisionComponent implements OnInit {
       }
     );
   }
-  
+
   getComboPonente() {
-    this.sigaServices.getParam("filtrosejg_comboPonenteComision", "2502").subscribe(
+    this.sigaServices.get("filtrosejg_comboPonenteComision").subscribe(
       n => {
         this.comboPonente = n.combooItems;
       },
@@ -145,20 +275,10 @@ export class TablaEjgComisionComponent implements OnInit {
   }
 
   getComboResolucion() {
+    console.log("******************************************getComboResolucion");
     this.sigaServices.getParam("filtrosejg_comboResolucionComision", "2502").subscribe(
       n => {
         this.comboResolucion = n.combooItems;
-      },
-      err => {
-        console.log(err);
-      }
-    );
-  }
-
-  getComboFundamento() {
-    this.sigaServices.getParam("filtrosejg_comboFundamentoComision", "2502").subscribe(
-      n => {
-        this.comboFundamento = n.combooItems;
       },
       err => {
         console.log(err);
@@ -172,15 +292,15 @@ export class TablaEjgComisionComponent implements OnInit {
     }
     if (!this.selectAll && !this.selectMultiple) {
       // this.progressSpinner = true;
-      
+
       this.datosEJG(evento.data);
-      
-    } 
+
+    }
   }
 
   datosEJG(selected) {
     this.progressSpinner = true;
-    
+
     this.sigaServices.post("gestionejg_datosEJG", selected).subscribe(
       n => {
         this.ejgObject = JSON.parse(n.body).ejgItems;
@@ -215,9 +335,9 @@ export class TablaEjgComisionComponent implements OnInit {
   }
 
   setItalic(dato) {
-    if (dato.fechabaja == null){
+    if (dato.fechabaja == null) {
       return false;
-    }else{
+    } else {
       return true;
     }
   }
@@ -254,16 +374,16 @@ export class TablaEjgComisionComponent implements OnInit {
       }
     ];
   }
-  
-  cancelaCambiarEstados(){
+
+  cancelaCambiarEstados() {
     this.showModalCambioEstado = false;
   }
 
-  cancelaAnadirRemesa(){
+  cancelaAnadirRemesa() {
     this.showModalAnadirRemesa = false;
   }
 
-  checkCambiarEstados(){
+  checkCambiarEstados() {
     let mess = this.translateService.instant("justiciaGratuita.ejg.message.cambiarEstado");
     let icon = "fa fa-edit";
 
@@ -287,7 +407,8 @@ export class TablaEjgComisionComponent implements OnInit {
     });
   }
 
-  checkEditarSeleccionados(){
+
+  checkEditarSeleccionados() {
     //cambiar
     let mess = this.translateService.instant("justiciaGratuita.ejg.message.cambiarEstado");
     let icon = "fa fa-edit";
@@ -313,15 +434,68 @@ export class TablaEjgComisionComponent implements OnInit {
     });
   }
 
-  cambiarEstados(){
-    this.progressSpinner=true;
+  actualizarEJGActa() {
     let data = [];
     let ejg: EJGItem;
 
-    for(let i=0; this.selectedDatos.length>i; i++){
+
+    for (let i = 0; this.selectedDatos.length > i; i++) {
       ejg = this.selectedDatos[i];
-      ejg.fechaEstadoNew=this.fechaEstado;
-      ejg.estadoNew=this.valueComboEstado;
+      console.log("NumActa " + ejg.numActa, ", Annio Acta ", ejg.annioActa, ", Institucion ejg ", ejg.idInstitucion, ", FundamentoJurid" + ejg.fundamentoJuridico + " , ratificaciones " + ejg.tipoEJG + " , numero ejg" + ejg.numero + " , anio ejg" + ejg.annio)
+      data.push(ejg);
+    }
+
+    if (this.selectAnioActa != false) {
+      this.valueAnioActa = "";
+      this.deleteAnioActa(data);
+    } else {
+      this.postAnioActa(data, this.valueAnioActa);
+    }
+
+    if (this.selectPonente != false) {
+      this.valuePonente = "";
+      this.deletePonente(data);
+    } else {
+      this.postPonente(data, this.valuePonente);
+    }
+
+    if (this.selectResolucionFundamento != false) {
+      this.valueFundamento = "";
+      this.valueResolucion = "";
+      this.deleteResolucionFundamento(data);
+    } else {
+      this.postResolucionFundamento(data, this.valueResolucion, this.valueFundamento);
+    }
+
+  }
+  postResolucionFundamento(data: any[], valueResolucion: any, valueFundamento: any) {
+    throw new Error('Method not implemented.');
+  }
+  deleteResolucionFundamento(data: any[]) {
+    throw new Error('Method not implemented.');
+  }
+  postPonente(data: any[], valuePonente: any) {
+    throw new Error('Method not implemented.');
+  }
+  deletePonente(data: any[]) {
+    throw new Error('Method not implemented.');
+  }
+  postAnioActa(data: any[], valuePonente: any) {
+    throw new Error('Method not implemented.');
+  }
+  deleteAnioActa(data: any[]) {
+    throw new Error('Method not implemented.');
+  }
+
+  cambiarEstados() {
+    this.progressSpinner = true;
+    let data = [];
+    let ejg: EJGItem;
+
+    for (let i = 0; this.selectedDatos.length > i; i++) {
+      ejg = this.selectedDatos[i];
+      ejg.fechaEstadoNew = this.fechaEstado;
+      ejg.estadoNew = this.valueComboEstado;
 
       data.push(ejg);
     }
@@ -334,8 +508,8 @@ export class TablaEjgComisionComponent implements OnInit {
         console.log(err);
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       },
-      () =>{
-        this.progressSpinner=false;
+      () => {
+        this.progressSpinner = false;
         this.busqueda.emit(false);
         this.showModalCambioEstado = false;
         this.selectedDatos = [];
@@ -348,7 +522,7 @@ export class TablaEjgComisionComponent implements OnInit {
 
     if (this.permisoEscritura) {
       this.selectMultiple = !this.selectMultiple;
-      
+
       if (!this.selectMultiple) {
         this.selectedDatos = [];
         this.numSelected = 0;
@@ -365,12 +539,12 @@ export class TablaEjgComisionComponent implements OnInit {
     this.persistenceService.setHistorico(this.historico);
     this.searchHistoricalSend.emit(this.historico);
     this.selectAll = false;
-    
+
     if (this.selectMultiple) {
       this.selectMultiple = false;
     }
   }
-  
+
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
@@ -401,6 +575,28 @@ export class TablaEjgComisionComponent implements OnInit {
         }
       }
     }
+  }
+
+
+  onChangeBorrarAnioActa(event: any) {
+    this.valueAnioActa = null;
+    this.styleObligatorioPonente(event);
+    this.styleObligatorioFechaPonente(event);
+    console.log(this.selectAnioActa);
+  }
+
+
+
+  onChangeBorrarPonenteFecha(event: any) {
+    this.valueFechaPonente = null;
+    this.valuePonente = null;
+    console.log(this.selectPonente);
+  }
+
+  onChangeBorrarResolucionFundamento(event: any) {
+    this.valueResolucion = null;
+    this.valueFundamento = null;
+    console.log(this.selectResolucionFundamento);
   }
 
   showMessage(severity, summary, msg) {
@@ -442,17 +638,17 @@ export class TablaEjgComisionComponent implements OnInit {
   }
 
   downloadEEJ() {
-    this.progressSpinner=true;
+    this.progressSpinner = true;
 
     this.sigaServices.postDownloadFiles("gestionejg_descargarExpedientesJG", this.selectedDatos).subscribe(
       data => {
 
         let blob = null;
 
-          let mime = "application/pdf";
-          blob = new Blob([data], { type: mime });
-          saveAs(blob, "eejg_2005_2018-01200_45837302G_20210525_131611.pdf");
-      
+        let mime = "application/pdf";
+        blob = new Blob([data], { type: mime });
+        saveAs(blob, "eejg_2005_2018-01200_45837302G_20210525_131611.pdf");
+
       },
       err => {
         this.progressSpinner = false;
@@ -493,7 +689,7 @@ export class TablaEjgComisionComponent implements OnInit {
 
     //Queda pendiente añadir el codigo que gestionaria el desplegable si se accede desde una fecha de remesa.
     //El desplegable tendria que tener el valor de la remesa de la que procede y además deshabilitar el desplegable para que no pueda cambiar de valor.
-    if(this.remesa!=null){
+    if (this.remesa != null) {
       this.valueComboRemesa = this.remesa.descripcion;
     }
 
@@ -503,14 +699,16 @@ export class TablaEjgComisionComponent implements OnInit {
     this.showModalEditarSeleccionados = true;
   }
 
-  checkBotonAnadir(){
-    if(this.valueComboRemesa == null){
-      this.disableBotonAnadir=true;
+  checkBotonAnadir() {
+    if (this.valueComboRemesa == null) {
+      this.disableBotonAnadir = true;
     }
-    else this.disableBotonAnadir=false;
+    else this.disableBotonAnadir = false;
   }
 
-  checkAnadirRemesa(){
+
+
+  checkAnadirRemesa() {
     let mess = this.translateService.instant("justiciaGratuita.ejg.message.anadirExpedienteARemesa");
     let icon = "fa fa-edit";
 
@@ -548,23 +746,41 @@ export class TablaEjgComisionComponent implements OnInit {
     );
   }
 
-  anadirRemesa(){
-    this.progressSpinner=true;
+  getComboFundamento() {
+    console.log("******************************************getComboFundamento");
+    this.sigaServices
+      .getParam(
+        "filtrosejg_comboFundamentoJuridComision", "?idTurno=" + this.filtro.resolucion
+      )
+      .subscribe(
+        n => {
+          this.comboFundamento = n.combooItems;
+          this.commonServices.arregloTildesCombo(this.comboFundamento);
+        },
+        error => { },
+        () => { }
+      );
+  }
+
+
+
+  anadirRemesa() {
+    this.progressSpinner = true;
 
     //El valor del desplegable del modal se encuentra en la variable valueComboRemesa.
     this.selectedDatos.forEach(it => {
       it.numRegRemesa = this.valueComboRemesa;
     });
 
-    
+
     this.sigaServices.post("filtrosejg_anadirExpedienteARemesa", this.selectedDatos).subscribe(
       n => {
-        this.progressSpinner=false;
-        if(JSON.parse(n.body).status=="OK")this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.progressSpinner = false;
+        if (JSON.parse(n.body).status == "OK") this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.busqueda.EjgEnRemesa"));
       },
       err => {
-        this.progressSpinner=false;
+        this.progressSpinner = false;
         console.log(err);
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }
@@ -577,28 +793,21 @@ export class TablaEjgComisionComponent implements OnInit {
     this.checkAddRemesa(selectedDatos);
   }
 
-  checkAddRemesa(selectedDatos){
-    /* if (selectedDatos != undefined) {
-      //Buscar forma generica parecida a this.translateService.instant() para buscar sus equivalentes en otros idiomas.
-      let findDato = this.selectedDatos.find(item => item.estadoEJG != this.comboEstadoEJG[11].label && item.estadoEJG != this.comboEstadoEJG[12].label);
-      if(findDato != null){
-        this.disableAddRemesa = true;
-      }
-      else{
-        this.disableAddRemesa = false;
-      }
-    } */
-    if(this.filtro.estadoEJG=="7" || this.filtro.estadoEJG=="8"){
+  checkAddRemesa(selectedDatos) {
+    if (this.filtro.estadoEJG == "7" || this.filtro.estadoEJG == "8") {
       this.disableAddRemesa = false;
     }
-    else{
+    else {
       this.disableAddRemesa = true;
     }
   }
 
-  fillFechaPrueba(event) {
 
-    this.fechaPrueba = event;
-  }
 
 }
+
+
+function guardarEditados() {
+  throw new Error('Function not implemented.');
+}
+

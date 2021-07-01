@@ -75,10 +75,9 @@ export class EjgComisionComponent implements OnInit {
 
   searchEJGs(event) {
 
-    console.log("hola mundo ***************");
     this.progressSpinner = true;
     
-    this.sigaServices.post("filtrosejg_busquedaEJG", this.filtros.body).subscribe(
+    this.sigaServices.post("filtrosejg_busquedaEJGComision", this.filtros.body).subscribe(
       n => {
         this.datos = JSON.parse(n.body).ejgItems;
         let error = JSON.parse(n.body).error;
