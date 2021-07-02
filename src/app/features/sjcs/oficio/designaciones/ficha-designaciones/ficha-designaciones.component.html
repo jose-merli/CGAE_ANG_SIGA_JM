@@ -87,12 +87,13 @@
                                             [contrarios]="contrarios" (searchContrarios)="searchContrarios($event)">
                                         </app-detalle-tarjeta-contrarios-ficha-designacion-oficio>
                                     </div>
-                                    <div *ngIf="tarj.nombre == 'Procurador'" id="procurador">
+                                    <div *ngIf="tarj.nombre == 'Procurador'" >
                                         <app-detalle-tarjeta-procurador-ficha-designacion-oficio [cabeceras]="cabeceras"
                                             [totalRegistros]="totalRegistros" [seleccionarTodo]="seleccionarTodo"
                                             [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups"
+                                            [procuradores]="procurador"
                                             (modDatos)="modDatos($event)" (mostrar)="mostrar()"
-                                            (restablecer)="restablecer()" (nuevo)="nuevo()">
+                                            (restablecer)="restablecer()">
                                         </app-detalle-tarjeta-procurador-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Cambio Letrado'">
