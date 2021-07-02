@@ -441,6 +441,9 @@ export class SigaServices {
     tiposServicios_crearServicio: 'pys/crearServicio',
     tiposServicios_modificarServicio: 'pys/modificarServicio',
     tiposServicios_comboServicios: 'combo/tipoServicios',
+
+    productosBusqueda_comboIva: 'combo/tipoIva',
+    productosBusqueda_comboFormaPago: 'combo/tipoFormaPago',
     // FOTO
     solicitudModificacion_searchSolModifDatosUseFoto: 'solicitudModificacion/searchSolModifDatosUseFoto',
     solicitudModificacion_searchDatosUseFotoDetail: 'solicitudModificacion/searchDatosUseFotoDetail',

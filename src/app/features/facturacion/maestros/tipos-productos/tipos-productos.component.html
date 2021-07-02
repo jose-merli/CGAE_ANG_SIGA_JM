@@ -46,7 +46,8 @@
 
               <p-dropdown *ngIf="rowData.nuevo != undefined" [ngClass]="{'historico': rowData.fechabaja != null}"
                 autoWidth="false" class="center" [placeholder]="textFilter" [(ngModel)]="rowData.idtipoproducto"
-                [options]="comboItem" showClear="true" styleClass="widthAll" (keydown)="changeTableField(rowData)">
+                [options]="comboItem" showClear="true" styleClass="widthAll" (keydown)="changeTableField(rowData)"
+                placeholder="{{ 'general.boton.seleccionar' | translate }}">
               </p-dropdown>
 
             </div>

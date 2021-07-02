@@ -68,11 +68,16 @@ export class TiposProductosComponent implements OnInit, OnDestroy {
 
   //Necesario para liberar memoria
   ngOnDestroy() {
-    this.subscriptionProductsList.unsubscribe();
-    this.subscriptionEnableUnableProducts.unsubscribe();
-    this.subscriptionProductTypeSelectValues.unsubscribe();
-    this.subscriptionCreateAProduct.unsubscribe();
-    this.subscriptionEditAProduct.unsubscribe();
+    if (this.subscriptionProductsList)
+      this.subscriptionProductsList.unsubscribe();
+    if (this.subscriptionEnableUnableProducts)
+      this.subscriptionEnableUnableProducts.unsubscribe();
+    if (this.subscriptionProductTypeSelectValues)
+      this.subscriptionProductTypeSelectValues.unsubscribe();
+    if (this.subscriptionCreateAProduct)
+      this.subscriptionCreateAProduct.unsubscribe();
+    if (this.subscriptionEditAProduct)
+      this.subscriptionEditAProduct.unsubscribe();
   }
 
   //INICIO METODOS P-TABLE
@@ -103,11 +108,11 @@ export class TiposProductosComponent implements OnInit, OnDestroy {
     this.colsProducts = [
       {
         field: "descripciontipo", //Campo productData (array con los datos de la tabla) que deberia ser el mismo que en la interfaz TiposProductosItem de la tabla
-        header: "facturacion.maestros.tiposproductos.categoria" //Titulo columna
+        header: "facturacion.maestros.tiposproductosservicios.categoria" //Titulo columna
       },
       {
         field: "descripcion",
-        header: "facturacion.maestros.tiposservicios.nombre"
+        header: "facturacion.maestros.tiposproductosservicios.nombre"
       }
     ];
 

@@ -196,8 +196,8 @@ import { DestinatariosRetencionesComponent } from './features/sjcs/maestros/dest
 import { SolicitudesTurnosGuardiasComponent } from './features/sjcs/oficio/solicitudesTurnosGuardias/solicitudesTurnosGuardias.component';
 import { DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-datos-adicionales-designa/detalle-tarjeta-datos-adicionales-ficha-designacion-oficio.component';
 import { DetalleTarjetaContrariosFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-contrarios-designa/detalle-tarjeta-contrarios-ficha-designacion-oficio.component';
-import{ DetalleTarjetaInteresadosFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-interesados-designa/detalle-tarjeta-interesados-ficha-designacion-oficio.component';
-import{ DetalleTarjetaLetradosDesignaComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/detalle-tarjeta-letrados-designa.component';
+import { DetalleTarjetaInteresadosFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-interesados-designa/detalle-tarjeta-interesados-ficha-designacion-oficio.component';
+import { DetalleTarjetaLetradosDesignaComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/detalle-tarjeta-letrados-designa.component';
 
 import { GuardiasSolicitudesTurnosComponent } from './features/sjcs/guardia/solicitudes-turnos/solicitudes-turnos.component';
 import { GuardiasIncompatibilidadesComponent } from './features/sjcs/guardia/guardias-incompatibilidades/guardias-incompatibilidades.component';
@@ -436,6 +436,10 @@ import { LetradoSalienteComponent } from './features/sjcs/oficio/designaciones/f
 import { TiposProductosComponent } from './features/facturacion/maestros/tipos-productos/tipos-productos.component';
 import { TiposServiciosComponent } from './features/facturacion/maestros/tipos-servicios/tipos-servicios.component';
 import { ProductosComponent } from './features/facturacion/productos/productos.component';
+import { FiltrosProductosComponent } from './features/facturacion/productos/filtros-productos/filtros-productos.component';
+import { GestionProductosComponent } from './features/facturacion/productos/gestion-productos/gestion-productos.component';
+import { FichaProductosComponent } from './features/facturacion/productos/ficha-productos/ficha-productos.component';
+import { DigitDecimaNumberDirective } from './commons/directives/digit-decima-number.directive';
 
 @NgModule({
 	declarations: [
@@ -565,8 +569,8 @@ import { ProductosComponent } from './features/facturacion/productos/productos.c
 		DetalleTarjetaInteresadosFichaDesignacionOficioComponent,
 		DetalleTarjetaLetradosDesignaComponent,
 		FichaDesignacionesComponent,
-		FichaCambioLetradoComponent, 
-		LetradoSalienteComponent, 
+		FichaCambioLetradoComponent,
+		LetradoSalienteComponent,
 		LetradoEntranteComponent,
 		DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent,
 		DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent,
@@ -792,7 +796,11 @@ import { ProductosComponent } from './features/facturacion/productos/productos.c
 		TiposProductosComponent,
 		TiposServiciosComponent,
 		ProductosComponent,
-
+		FiltrosProductosComponent,
+		GestionProductosComponent,
+		FichaProductosComponent,
+		//Otros
+		DigitDecimaNumberDirective
 	],
 	imports: [
 		Paginador3Module,
@@ -865,7 +873,7 @@ import { ProductosComponent } from './features/facturacion/productos/productos.c
 		Paginador2Module,
 	],
 
-	exports: [],
+	exports: [DigitDecimaNumberDirective],
 	providers: [
 		// { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
 		ImagePipe,

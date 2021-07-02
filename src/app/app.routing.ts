@@ -237,6 +237,7 @@ import { TurnosComponent } from "./features/sjcs/oficio/turnos/busqueda-turnos.c
 import { BuscadorColegiadosComponent } from "./commons/buscador-colegiados/buscador-colegiados.component";
 import { TiposProductosComponent } from "./features/facturacion/maestros/tipos-productos/tipos-productos.component";
 import { TiposServiciosComponent } from "./features/facturacion/maestros/tipos-servicios/tipos-servicios.component";
+import { ProductosComponent } from "./features/facturacion/productos/productos.component";
 
 const appRoutes: Routes = [
 	{ path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
@@ -1305,6 +1306,12 @@ const appRoutes: Routes = [
 	{
 		path: 'tiposServicios',
 		component: TiposServiciosComponent,
+		canActivate: [AuthGuard]
+	},
+
+	{
+		path: 'productos',
+		component: ProductosComponent,
 		canActivate: [AuthGuard]
 	},
 
