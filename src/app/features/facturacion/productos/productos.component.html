@@ -7,10 +7,11 @@
 <div>
   <!-- Buscador de productos -->
   <div class="card">
-    <app-filtros-productos></app-filtros-productos>
+    <app-filtros-productos (busqueda)="busquedaProductos($event)"></app-filtros-productos>
   </div>
   <!-- Listado de productos -->
   <div>
-    <app-gestion-productos></app-gestion-productos>
+    <app-gestion-productos *ngIf="muestraTablaProductos" [productData]="productData" id="tablaProductos">
+    </app-gestion-productos>
   </div>
 </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ComboItem } from '../../../../models/ComboItem';
 import { ComboObject } from '../../../../models/ComboObject';
@@ -21,9 +21,11 @@ export class FiltrosProductosComponent implements OnInit {
   tiposObject: ComboObject = new ComboObject();
   ivasObject: ComboObject = new ComboObject();
   formasPagoObject: ComboObject = new ComboObject();
+  @Output() busqueda = new EventEmitter<boolean>();
 
   //Suscripciones
-  subscriptionProductTypeSelectValues: Subscription;
+  subscriptionCategorySelectValues: Subscription;
+  subscriptionTypeSelectValues: Subscription;
   subscriptionIvaTypeSelectValues: Subscription;
   subscriptionPayMethodTypeSelectValues: Subscription;
 
@@ -37,8 +39,10 @@ export class FiltrosProductosComponent implements OnInit {
 
   //Necesario para liberar memoria
   ngOnDestroy() {
-    if (this.subscriptionProductTypeSelectValues)
-      this.subscriptionProductTypeSelectValues.unsubscribe();
+    if (this.subscriptionCategorySelectValues)
+      this.subscriptionCategorySelectValues.unsubscribe();
+    if (this.subscriptionTypeSelectValues)
+      this.subscriptionTypeSelectValues.unsubscribe();
     if (this.subscriptionIvaTypeSelectValues)
       this.subscriptionIvaTypeSelectValues.unsubscribe();
     if (this.subscriptionPayMethodTypeSelectValues)
@@ -49,12 +53,25 @@ export class FiltrosProductosComponent implements OnInit {
   prueba() {
     console.log(Number(this.filtrosProductos.precioHasta) < Number(this.filtrosProductos.precioDesde));
   }
-  prueba2() {
-    console.log(this.filtrosProductos.categoria);
+
+  //Metodo que se lanza al cambiar de valir el combo de categorias, se usa para cargar el combo tipos dependiendo el valor de categorias
+  valueChangeCategoria() {
+    if (this.filtrosProductos.categoria != null) {
+      this.getComboTipo();
+    }
   }
 
   limpiar() {
     this.filtrosProductos = new FiltrosProductos();
+  }
+
+  buscar() {
+    if ((Number(this.filtrosProductos.precioHasta) < Number(this.filtrosProductos.precioDesde)) == false) {
+      sessionStorage.setItem("filtrosProductos", JSON.stringify(this.filtrosProductos));
+      this.busqueda.emit(true);
+    } else {
+      console.log("ERROR PRECIO HASTA MENOR QUE PRECIO DESDE");
+    }
   }
   //FIN METODOS BUSCADOR
 
@@ -63,13 +80,37 @@ export class FiltrosProductosComponent implements OnInit {
   getComboCategoria() {
     this.progressSpinner = true;
 
-    this.subscriptionProductTypeSelectValues = this.sigaServices.get("tiposProductos_comboProducto").subscribe(
-      ProductTypeSelectValues => {
+    this.subscriptionCategorySelectValues = this.sigaServices.get("tiposProductos_comboProducto").subscribe(
+      CategorySelectValues => {
         this.progressSpinner = false;
 
-        this.categoriasObject = ProductTypeSelectValues;
+        this.categoriasObject = CategorySelectValues;
 
         let error = this.categoriasObject.error;
+        if (error != null && error.description != null) {
+        }
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  //Metodo para obtener los valores del combo Tipo segun el combo Categoria
+  getComboTipo() {
+    this.progressSpinner = true;
+
+    this.subscriptionCategorySelectValues = this.sigaServices.getParam("productosBusqueda_comboTipos", "?idCategoria=" + this.filtrosProductos.categoria).subscribe(
+      TipoSelectValues => {
+        this.progressSpinner = false;
+
+        this.tiposObject = TipoSelectValues;
+
+        let error = this.tiposObject.error;
         if (error != null && error.description != null) {
         }
       },
@@ -93,7 +134,7 @@ export class FiltrosProductosComponent implements OnInit {
 
         this.ivasObject = IvaTypeSelectValues;
 
-        let error = this.categoriasObject.error;
+        let error = this.ivasObject.error;
         if (error != null && error.description != null) {
         }
       },
@@ -117,7 +158,7 @@ export class FiltrosProductosComponent implements OnInit {
 
         this.formasPagoObject = PayMethodSelectValues;
 
-        let error = this.categoriasObject.error;
+        let error = this.formasPagoObject.error;
         if (error != null && error.description != null) {
         }
       },
