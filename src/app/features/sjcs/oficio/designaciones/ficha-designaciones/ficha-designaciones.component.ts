@@ -968,6 +968,10 @@ export class FichaDesignacionesComponent implements OnInit {
         arr.push(superObj);
         x = 1;
       } else {
+        let comboValue;
+        this.comboRenuncia.forEach(renun => {
+          if(renun.value==element.motivosRenuncia)element.motivosRenuncia = renun.label;
+        });
         let obj = [
           { type: 'text', value: element.fechaDesigna },
           { type: 'text', value: element.numerodesignacion },
