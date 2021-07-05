@@ -129,9 +129,10 @@ export class TablaEjgComisionComponent implements OnInit {
 
 
   styleObligatorioFechaPonente(event) {
-    if (this.resaltadoDatosFechaPonente && (event == null || event == "")) {
+    console.log("styleObligatorioFechaPonente datos" + this.resaltadoDatosFechaPonente +" "+ event );
+    if (this.resaltadoDatosFechaPonente && this.valuePonente != null) {
       console.log("styleObligatorioFechaPonente");
-      return this.commonServices.styleObligatorio(event);
+      return this.commonServices.styleObligatorio(event); 
     }
   }
 
@@ -144,7 +145,7 @@ export class TablaEjgComisionComponent implements OnInit {
 
 
   styleObligatorioPonente(event) {
-    if (this.resaltadoDatosPonente && (event == null || event == "")) {
+    if (this.resaltadoDatosPonente && this.valueFechaPonente != null) {
       console.log("styleObligatorioPonente");
       return this.commonServices.styleObligatorio(event);
     }
@@ -159,7 +160,7 @@ export class TablaEjgComisionComponent implements OnInit {
 
 
   styleObligatorioResolucion(event) {
-    if (this.resaltadoDatosResolucion && (event == null || event == "")) {
+    if (this.resaltadoDatosResolucion && this.valueFundamento != null) {
       console.log("styleObligatorioResolucion");
       return this.commonServices.styleObligatorio(event);
     }
@@ -173,7 +174,7 @@ export class TablaEjgComisionComponent implements OnInit {
   }
 
   styleObligatorioFundamento(event) {
-    if (this.resaltadoDatosFundamento && (event == null || event == "")) {
+    if (this.resaltadoDatosFundamento && this.valueResolucion != null) {
       console.log("styleObligatorioFundamento");
       return this.commonServices.styleObligatorio(event);
     }
@@ -197,9 +198,8 @@ export class TablaEjgComisionComponent implements OnInit {
 
   checkResolucion() {
     console.log("********************************checkResolucion");
-    console.log(this.valueResolucion);
     this.getObligatoriedadResolucion();
-    if (this.valueResolucion != null && this.valueFundamento == null && this.obligatoriedadResolucion) {
+    if (this.valueResolucion != null && this.valueFundamento == null && this.obligatoriedadResolucion != null) {
       this.muestraCampoObligatorioFundamento();
     }
   }

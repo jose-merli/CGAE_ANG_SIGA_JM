@@ -1,0 +1,40 @@
+.flex-container-registro{
+display:flex;
+flex-direction: row;
+align-items: center;
+}
+
+.flex-container-registro input{
+    text-align: center;
+    width: 100%;
+    }
+
+.flex-container-registro label{
+        margin-right: 5px;
+ }
+
+ .registro-control{
+    margin-right: 10px;
+ }
+
+
+ .flex-container-anionumero{
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+    
+    }
+
+    .flex-container-descripcion{
+        display:flex;
+        flex-direction: row;
+        align-items: center;        
+    }
+
+
+    .registro{
+        display:flex;
+        align-items: center; 
+        height: 40%;
+        margin-top: 20px;       
+    }
