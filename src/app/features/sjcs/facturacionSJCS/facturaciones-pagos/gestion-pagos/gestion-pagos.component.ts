@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { USER_VALIDATIONS } from '../../../../../properties/val-properties';
-import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaWrapper } from '../../../../../wrapper/wrapper.class';
 import { Location } from "@angular/common";
 
@@ -27,8 +26,6 @@ export class GestionPagosComponent extends SigaWrapper implements OnInit {
   progressSpinner: boolean = false;
   datos: PagosjgItem = new PagosjgItem();
   cerrada;
-  idPago;
-  idEstadoPago;
   modoEdicion;
   numCriterios;
 
@@ -39,7 +36,6 @@ export class GestionPagosComponent extends SigaWrapper implements OnInit {
   @ViewChild(DetallePagoComponent) detallePagos;
 
   constructor(private location: Location,
-    private persistenceService: PersistenceService,
     private commonsService: CommonsService,
     private router: Router,
     private translateService: TranslateService) {
@@ -49,7 +45,7 @@ export class GestionPagosComponent extends SigaWrapper implements OnInit {
   ngOnInit() {
 
 
-    this.commonsService.checkAcceso(procesos_facturacionSJCS.facturacionYpagos).then(respuesta => {
+    this.commonsService.checkAcceso(procesos_facturacionSJCS.busquedaPag).then(respuesta => {
 
       this.permisos = respuesta;
 
@@ -59,27 +55,29 @@ export class GestionPagosComponent extends SigaWrapper implements OnInit {
         this.router.navigate(["/errorAcceso"]);
       }
 
-      if (null != this.persistenceService.getDatos()) {
-        this.datos = this.persistenceService.getDatos();
-        this.idPago = this.datos.idPagosjg;
-        this.idEstadoPago = this.datos.idEstado;
+      const paramsPago = JSON.parse(sessionStorage.getItem("paramsPago"));
+
+      if (paramsPago && null != paramsPago) {
+        this.datosPagos.idPago = paramsPago.idPago;
+        this.datosPagos.idEstadoPago = paramsPago.idEstado;
+        sessionStorage.removeItem("paramsPago");
       }
 
-      if (undefined == this.idPago) {
-        this.modoEdicion = false;
-        this.cerrada = false;
+      if (undefined == paramsPago.idPago) {
+        this.datosPagos.modoEdicion = false;
+        this.datosPagos.cerrada = false;
       } else {
-        if (undefined != this.idEstadoPago) {
-          if (this.idEstadoPago == '30') {
-            this.cerrada = true;
+        if (undefined != paramsPago.idEstadoPago) {
+          if (paramsPago == '30') {
+            this.datosPagos.cerrada = true;
           } else {
-            this.cerrada = false;
+            this.datosPagos.cerrada = false;
           }
         }
 
-        this.modoEdicion = true;
+        this.datosPagos.modoEdicion = true;
       }
-      this.numCriterios = 0;
+      this.datosPagos.numCriterios = 0;
 
     });
   }
@@ -111,4 +109,5 @@ export class GestionPagosComponent extends SigaWrapper implements OnInit {
   clear() {
     this.msgs = [];
   }
+
 }

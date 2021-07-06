@@ -1,4 +1,8 @@
 import { Component, OnInit, ViewChild, Input, ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
+import { TranslateService } from '../../../../../../commons/translate';
+import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacion';
+import { CommonsService } from '../../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-compensacion-factura',
@@ -19,16 +23,32 @@ export class CompensacionFacturaComponent implements OnInit {
 
   cols;
   msgs;
+  permisos;
 
   @ViewChild("tabla") tabla;
 
-  @Input() permisos;
-
-  constructor(private changeDetectorRef: ChangeDetectorRef) { }
+  constructor(private changeDetectorRef: ChangeDetectorRef,
+    private commonsService: CommonsService,
+    private translateService: TranslateService,
+    private router: Router) { }
 
   ngOnInit() {
-    this.progressSpinnerCompensacion = false;
-    this.getCols();
+
+    this.commonsService.checkAcceso(procesos_facturacionSJCS.fichaPagosTarjetaCompFac).then(respuesta => {
+
+      this.permisos = respuesta;
+
+      if (this.permisos == undefined) {
+        sessionStorage.setItem("codError", "403");
+        sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+        this.router.navigate(["/errorAcceso"]);
+      }
+
+      this.progressSpinnerCompensacion = false;
+      this.getCols();
+
+    }).catch(error => console.error(error));
+
   }
 
   onChangeRowsPerPages(event) {

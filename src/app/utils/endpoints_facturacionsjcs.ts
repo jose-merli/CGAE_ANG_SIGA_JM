@@ -25,5 +25,6 @@ export let endpoints_facturacionsjcs: any = {
     facturacionsjcs_datospagos: "facturacionsjcs/datospagos",
     facturacionsjcs_numApuntes: "facturacionsjcs/numApuntes",
     facturacionsjcs_buscarPagos: "facturacionsjcs/buscarPagos",
-    facturacionsjcs_datosGeneralesPago: "facturacionsjcs/datosGeneralesPago"
+    facturacionsjcs_datosGeneralesPago: "facturacionsjcs/datosGeneralesPago",
+    facturacionsjcs_historicoPago: "/facturacionsjcs/historicoPagos",
 }

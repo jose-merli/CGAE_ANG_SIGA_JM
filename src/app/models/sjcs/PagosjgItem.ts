@@ -1,7 +1,9 @@
 export class PagosjgItem {
+
 	idPagosjg: String;
 	idFacturacion: String;
 	nombre: String;
+	nombreFac: String;
 	importeEJG: String;
 	importeGuardia: String;
 	importeOficio: String;

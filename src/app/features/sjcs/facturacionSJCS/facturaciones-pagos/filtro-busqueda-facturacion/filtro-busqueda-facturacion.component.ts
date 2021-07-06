@@ -50,7 +50,8 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 	@Output() busqueda = new EventEmitter<String>();
 	@Output() cambiaBuscar = new EventEmitter<boolean>();
 
-	@Input() permisos;
+	@Input() permisoEscrituraFac;
+	@Input() permisoEscrituraPag;
 
 	filtrosFacturacion: FacturacionItem = new FacturacionItem();
 	filtrosPagos: PagosjgItem = new PagosjgItem();
@@ -67,10 +68,6 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 
 	ngOnInit() {
 		this.progressSpinnerFiltro = true;
-
-		if (undefined != this.persistenceService.getPermisos()) {
-			this.permisos = this.persistenceService.getPermisos();
-		}
 
 		this.getRangeYear();
 		this.comboFactEstados();
@@ -439,5 +436,10 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 		if (undefined != event.value && event.value.length == 0) {
 			this.filtrosPagos[filtro] = undefined;
 		}
+	}
+
+	disabledNuevo(): boolean {
+
+		return ((this.selectedValue == 'facturacion' && !this.permisoEscrituraFac) || (this.selectedValue == 'pagos' && !this.permisoEscrituraPag));
 	}
 }

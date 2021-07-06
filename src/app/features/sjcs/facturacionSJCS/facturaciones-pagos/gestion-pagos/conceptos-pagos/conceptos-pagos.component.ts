@@ -1,4 +1,8 @@
 import { Component, OnInit, ChangeDetectorRef, ViewChild, Input } from '@angular/core';
+import { Router } from '@angular/router';
+import { TranslateService } from '../../../../../../commons/translate';
+import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacion';
+import { CommonsService } from '../../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-conceptos-pagos',
@@ -8,23 +12,36 @@ import { Component, OnInit, ChangeDetectorRef, ViewChild, Input } from '@angular
 export class ConceptosPagosComponent implements OnInit {
   showFichaCriterios: boolean = false;
   progressSpinnerCriterios: boolean = false;
-  
+
   selectedItem: number = 10;
   rowsPerPage: any = [];
   buscadores = [];
-  
-  cols;  
+
+  cols;
   msgs;
+  permisos;
 
   @ViewChild("tabla") tabla;
 
-  @Input() permisos;
-  
-  constructor(private changeDetectorRef: ChangeDetectorRef) { }
+  constructor(private changeDetectorRef: ChangeDetectorRef, private router: Router, private commonsService: CommonsService, private translateService: TranslateService) { }
 
   ngOnInit() {
-    this.progressSpinnerCriterios=false;
-    this.getCols();
+
+    this.commonsService.checkAcceso(procesos_facturacionSJCS.fichaPagosTarjetaConPagos).then(respuesta => {
+
+      this.permisos = respuesta;
+
+      if (this.permisos == undefined) {
+        sessionStorage.setItem("codError", "403");
+        sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+        this.router.navigate(["/errorAcceso"]);
+      }
+
+      this.progressSpinnerCriterios = false;
+      this.getCols();
+
+    }).catch(error => console.error(error));
+
   }
 
   onChangeRowsPerPages(event) {
@@ -36,7 +53,7 @@ export class ConceptosPagosComponent implements OnInit {
     this.cols = [
       { field: "descConcepto", header: "facturacionSJCS.facturacionesYPagos.conceptos" },
       { field: "importeTotal", header: "facturacionSJCS.facturacionesYPagos.importe" },
-      { field: "importePendiente", header: "facturacionSJCS.facturacionesYPagos.importePendiente" },      
+      { field: "importePendiente", header: "facturacionSJCS.facturacionesYPagos.importePendiente" },
       { field: "descGrupo", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.grupoTurnos" }
     ];
 

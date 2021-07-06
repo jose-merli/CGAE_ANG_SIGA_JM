@@ -71,7 +71,7 @@ export class GestionFacturacionComponent extends SigaWrapper implements OnInit, 
 
   ngOnInit() {
 
-    this.commonsService.checkAcceso(procesos_facturacionSJCS.facturacionYpagos).then(respuesta => {
+    this.commonsService.checkAcceso(procesos_facturacionSJCS.busquedaFac).then(respuesta => {
 
       this.permisos = respuesta;
 

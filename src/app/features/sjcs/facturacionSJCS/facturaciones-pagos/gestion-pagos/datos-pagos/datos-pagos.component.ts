@@ -4,6 +4,8 @@ import { ComboItem } from '../../../../../administracion/parametros/parametros-g
 import { TranslateService } from '../../../../../../commons/translate/translation.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { CommonsService } from '../../../../../../_services/commons.service';
+import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacion';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-datos-pagos',
@@ -11,79 +13,110 @@ import { CommonsService } from '../../../../../../_services/commons.service';
   styleUrls: ['./datos-pagos.component.scss']
 })
 export class DatosPagosComponent implements OnInit {
-  showFicha: boolean = true;
+  showFicha: boolean = false;
   progressSpinnerDatosPagos: boolean = false;
   cols;
   msgs;
 
   body: PagosjgItem = new PagosjgItem();
   bodyAux: PagosjgItem = new PagosjgItem();
-  
+
   histEstados = [];
-  facturaciones: ComboItem;
+  facturaciones: ComboItem[];
+  permisos;
+  idEstadoPago;
+  idPago;
+  numCriterios;
+  cerrada;
+  modoEdicion;
 
   @ViewChild("tabla") tabla;
 
-  @Input() permisos;
-  @Input() numCriterios;
-  @Input() cerrada;
-  @Input() idEstadoPago;
-  @Input() idPago;
-  @Input() modoEdicion;
+  constructor(private translateService: TranslateService, private sigaService: SigaServices,
+    private commonsService: CommonsService, private router: Router) { }
 
-  constructor(private translateService: TranslateService, private sigaService: SigaServices, 
-    private commonsService: CommonsService) { }
-
-  ngOnInit() {    
-    this.comboFacturacion();
-
-    if (undefined == this.idPago) {
-      this.body = new PagosjgItem();
-      this.bodyAux = new PagosjgItem();
-      this.showFicha = true;
-    } else {
-      this.cargaDatos();
-      this.showFicha = false;
-    }
+  ngOnInit() {
 
     this.getCols();
+
+    this.commonsService.checkAcceso(procesos_facturacionSJCS.fichaPagosTarjetaDatosGen).then(respuesta => {
+
+      this.permisos = respuesta;
+
+      if (this.permisos == undefined) {
+        sessionStorage.setItem("codError", "403");
+        sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+        this.router.navigate(["/errorAcceso"]);
+      }
+
+      this.comboFacturacion();
+
+    }).catch(error => console.error(error));
+
   }
 
-  comboFacturacion(){
+  comboFacturacion() {
     this.progressSpinnerDatosPagos = true;
 
     this.sigaService.get("combo_comboFacturaciones").subscribe(
       data => {
         this.facturaciones = data.combooItems;
-				this.commonsService.arregloTildesCombo(this.facturaciones);
-				this.progressSpinnerDatosPagos = false;
+        this.commonsService.arregloTildesCombo(this.facturaciones);
+        this.progressSpinnerDatosPagos = false;
       },
       err => {
         if (null != err.error) {
           console.log(err.error);
         }
         this.progressSpinnerDatosPagos = false;
+      },
+      () => {
+        this.progressSpinnerDatosPagos = false;
+        if (undefined == this.idPago) {
+          this.body = new PagosjgItem();
+          this.bodyAux = new PagosjgItem();
+          this.showFicha = true;
+        } else {
+          this.cargaDatos();
+          this.showFicha = false;
+        }
       }
     );
   }
 
-  cargaDatos(){
-      if(undefined!=this.idPago){
+  cargaDatos() {
+    if (undefined != this.idPago) {
       this.progressSpinnerDatosPagos = true;
 
-      //datos de la facturación
+      //datos del pago
       this.sigaService.getParam("facturacionsjcs_datosGeneralesPago", "?idPago=" + this.idPago).subscribe(
         data => {
-          this.body = new PagosjgItem();
-
-          if (undefined != data) {
-            this.body = JSON.parse(JSON.stringify(data));
-
-            this.bodyAux = new PagosjgItem();
-            this.bodyAux = JSON.parse(JSON.stringify(data));
-          }
 
           this.progressSpinnerDatosPagos = false;
+
+          const resp = data.pagosjgItem[0];
+          const error = data.error;
+
+          if (error && null != error && null != error.description) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.description));
+          } else {
+            this.body = new PagosjgItem();
+
+            if (undefined != resp) {
+
+              if (undefined != this.idPago) {
+                this.facturaciones.unshift({
+                  label: resp.nombreFac,
+                  value: resp.idFacturacion
+                });
+              }
+
+              this.body = JSON.parse(JSON.stringify(resp));
+
+              this.bodyAux = new PagosjgItem();
+              this.bodyAux = JSON.parse(JSON.stringify(resp));
+            }
+          }
         },
         err => {
           if (null != err.error) {
@@ -109,7 +142,7 @@ export class DatosPagosComponent implements OnInit {
     if (undefined != idPago) {
       this.progressSpinnerDatosPagos = true;
 
-      this.sigaService.getParam("facturacionsjcs_historicoPago", "?idPago=" + idPago).subscribe(
+      this.sigaService.getParam("facturacionsjcs_historicoPago", `?idPago=${idPago}`).subscribe(
         data => {
           this.histEstados = data.facturacionItem;
           this.progressSpinnerDatosPagos = false;
@@ -123,10 +156,10 @@ export class DatosPagosComponent implements OnInit {
       );
     }
   }
-  
+
   disabledSave() {
     if (this.modoEdicion) {
-      if ((JSON.stringify(this.body) != JSON.stringify(this.bodyAux)) && (undefined != this.body.nombre && this.body.nombre.trim() != "") && (undefined != this.body.codBanco && this.body.codBanco.trim() != "") && (undefined != this.body.idFacturacion) && (this.idEstadoPago == "10")){
+      if ((JSON.stringify(this.body) != JSON.stringify(this.bodyAux)) && (undefined != this.body.nombre && this.body.nombre.trim() != "") && (undefined != this.body.codBanco && this.body.codBanco.trim() != "") && (undefined != this.body.idFacturacion) && (this.idEstadoPago == "10")) {
         return false;
       } else {
         return true;
@@ -140,13 +173,13 @@ export class DatosPagosComponent implements OnInit {
     }
   }
 
-  guardar(){
+  guardar() {
 
   }
 
   disabledRestablecer() {
     if (this.modoEdicion) {
-      if(JSON.stringify(this.body) != JSON.stringify(this.bodyAux) && this.idEstadoPago == "10"){
+      if (JSON.stringify(this.body) != JSON.stringify(this.bodyAux) && this.idEstadoPago == "10") {
         return false;
       } else {
         return true;
@@ -186,19 +219,19 @@ export class DatosPagosComponent implements OnInit {
     }
   }
 
-  ejecutar(){
+  ejecutar() {
 
   }
 
-  disabledCerrar(){
-    if(this.modoEdicion && this.idEstadoPago == "20" && this.disabledRestablecer()){
+  disabledCerrar() {
+    if (this.modoEdicion && this.idEstadoPago == "20" && this.disabledRestablecer()) {
       return false;
     } else {
       return true;
     }
   }
 
-  cerrar(){
+  cerrar() {
 
   }
 
@@ -210,7 +243,7 @@ export class DatosPagosComponent implements OnInit {
     }
   }
 
-  reabrir(){
+  reabrir() {
 
   }
 

@@ -18,7 +18,8 @@ import { FacturacionDeleteDTO } from '../../../../models/sjcs/FacturacionDeleteD
 })
 
 export class FacturacionesYPagosComponent implements OnInit {
-	permisoEscritura: any;
+	permisoEscrituraFac: boolean;
+	permisoEscrituraPag: boolean;
 	buscar: boolean = false;
 	datos;
 	datosFiltros: FacturacionItem;
@@ -38,11 +39,22 @@ export class FacturacionesYPagosComponent implements OnInit {
 	ngOnInit() {
 		this.buscar = this.filtros.buscar;
 
-		this.commonsService.checkAcceso(procesos_facturacionSJCS.facturacionYpagos).then(respuesta => {
+		this.commonsService.checkAcceso(procesos_facturacionSJCS.busquedaFac).then(respuesta => {
 
-			this.permisoEscritura = respuesta;
+			this.permisoEscrituraFac = respuesta;
 
-			if (this.permisoEscritura == undefined) {
+			if (this.permisoEscrituraFac == undefined) {
+				sessionStorage.setItem("codError", "403");
+				sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+				this.router.navigate(["/errorAcceso"]);
+			}
+		}).catch(error => console.error(error));
+
+		this.commonsService.checkAcceso(procesos_facturacionSJCS.busquedaPag).then(respuesta => {
+
+			this.permisoEscrituraPag = respuesta;
+
+			if (this.permisoEscrituraPag == undefined) {
 				sessionStorage.setItem("codError", "403");
 				sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
 				this.router.navigate(["/errorAcceso"]);

@@ -6,14 +6,13 @@
     <p>SJCS &nbsp;<i class="fa fa-angle-right"></i>{{'facturacionSJCS.facturacionesYPagos.fichaPago' | translate}}</p>
   </div>
 
-  <app-datos-pagos [numCriterios]="numCriterios" [cerrada]="cerrada" [idEstadoPago]="idEstadoPago" [idPago]="idPago"
-    [modoEdicion]="modoEdicion" [permisos]="permisos"></app-datos-pagos>
+  <app-datos-pagos></app-datos-pagos>
 
-  <app-conceptos-pagos [permisos]="permisos"></app-conceptos-pagos>
+  <app-conceptos-pagos></app-conceptos-pagos>
 
-  <app-configuracion-ficheros [permisos]="permisos"></app-configuracion-ficheros>
+  <app-configuracion-ficheros></app-configuracion-ficheros>
 
-  <app-detalle-pago [permisos]="permisos"></app-detalle-pago>
+  <app-detalle-pago></app-detalle-pago>
 
   <app-compensacion-factura></app-compensacion-factura>
 

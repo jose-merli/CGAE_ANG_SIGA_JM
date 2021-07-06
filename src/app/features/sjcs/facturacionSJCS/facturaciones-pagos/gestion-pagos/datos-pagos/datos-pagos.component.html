@@ -43,13 +43,13 @@
             </div>
             <div style="margin-top: 1em; margin-bottom: 1em;">
               <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.nombre' | translate }} (*)</label>
-              <input pInputText class="form-control" type="text" maxlength="95" name="nombre"
+              <input pInputText class="form-control" type="text" maxlength="100" name="nombre"
                 [(disabled)]='cerrada || !permisos' [(ngModel)]='body.nombre' />
             </div>
             <div>
               <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.nombreAbonoBanco' | translate }}
                 (*)</label>
-              <input pInputText class="form-control" type="text" maxlength="95" name="Banco"
+              <input pInputText class="form-control" type="text" maxlength="36" name="Banco"
                 [(disabled)]='cerrada || !permisos' [(ngModel)]='body.codBanco' />
             </div>
           </div>

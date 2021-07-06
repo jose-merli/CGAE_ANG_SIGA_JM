@@ -1,7 +1,8 @@
 export const procesos_facturacionSJCS: any = {
 
     // Permiso para buscador de facturación y pagos
-    facturacionYpagos: "600",
+    busquedaFac: "600",
+    busquedaPag: "603",
 
     // Permisos para ficha de facturación
     fichaFacTarjetaDatosFac: "601",
@@ -11,11 +12,11 @@ export const procesos_facturacionSJCS: any = {
     fichaFacTarjetaCartasFac: "60E",
 
     // Permisos para ficha de pagos
-    fichaPagosTarjetaDatosGen: "610",
-    fichaPagosTarjetaConPagos: "61B",
-    fichaPagosTarjetaConfigFichAbonos: "61C",
-    fichaPagosTarjetaCartasPagos: "61D",
-    fichaPagosTarjetaCompFac: "61D",
+    fichaPagosTarjetaDatosGen: "604",
+    fichaPagosTarjetaConPagos: "61A",
+    fichaPagosTarjetaConfigFichAbonos: "622",
+    fichaPagosTarjetaCartasPagos: "607",
+    fichaPagosTarjetaCompFac: "61E",
 
     // Permiso para cartas de facturación y pagos
     cartasFacturacionPago: "620"

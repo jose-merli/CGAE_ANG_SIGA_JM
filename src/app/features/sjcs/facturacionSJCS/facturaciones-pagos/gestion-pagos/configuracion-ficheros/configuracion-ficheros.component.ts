@@ -1,4 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { TranslateService } from '../../../../../../commons/translate';
+import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacion';
+import { CommonsService } from '../../../../../../_services/commons.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-configuracion-ficheros',
@@ -8,15 +12,27 @@ import { Component, OnInit, Input } from '@angular/core';
 export class ConfiguracionFicherosComponent implements OnInit {
   showFicha: boolean = false;
   progressSpinnerConfiguracionFic: boolean = false;
-
   msgs;
+  permisos;
 
-  @Input() permisos;
-
-  constructor() { }
+  constructor(private commonsService: CommonsService, private translateService: TranslateService, private router: Router) { }
 
   ngOnInit() {
-    this.progressSpinnerConfiguracionFic=false;
+
+    this.commonsService.checkAcceso(procesos_facturacionSJCS.fichaPagosTarjetaConfigFichAbonos).then(respuesta => {
+
+      this.permisos = respuesta;
+
+      if (this.permisos == undefined) {
+        sessionStorage.setItem("codError", "403");
+        sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+        this.router.navigate(["/errorAcceso"]);
+      }
+
+      this.progressSpinnerConfiguracionFic = false;
+
+    }).catch(error => console.error(error));
+
   }
 
   onHideFicha() {
