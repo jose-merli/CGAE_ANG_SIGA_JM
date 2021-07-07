@@ -99,7 +99,7 @@
               [paginator]="true" [rows]="selectedItem" paginatorPosition="both">
               <ng-template pTemplate="colgroup" let-columns>
                 <colgroup>
-                  <col *ngFor="let col of cols" [style.width]="col.width">
+                  <col *ngFor="let col of cols">
                 </colgroup>
               </ng-template>
               <ng-template pTemplate="header" let-columns>
