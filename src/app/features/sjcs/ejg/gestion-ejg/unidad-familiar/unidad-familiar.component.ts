@@ -205,17 +205,9 @@ export class UnidadFamiliarComponent implements OnInit {
     else return true;
   }
   openTab(evento) {
-
-    //this.persistenceService.setBody(evento);
-    //this.persistenceService.setFichasPosibles(fichasPosibles_unidadFamiliar);
-    //this.router.navigate(["/gestionJusticiables"], { queryParams: { fr: "u" } });
-
-    //this.persistenceService.setFichasPosibles(this.fichasPosibles);
-    
     sessionStorage.setItem("origin","UnidadFamiliar");
     sessionStorage.setItem("Familiar", JSON.stringify(evento));
-    //Se utiliza para rellenar los campos de las tarjetas de datos generales y de datos personales
-    //this.persistenceService.setBody(evento);
+    
     this.router.navigate(["/gestionJusticiables"]);
 
   }

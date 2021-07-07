@@ -103,17 +103,18 @@ export class TablaJusticiablesComponent implements OnInit {
       else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.designas.contrarios.existente"))
     }
     else if(this.nuevaUniFamiliar){
-      //Falta añadir un mensaje adecuado de error para unidad familiar
       if(this.checkUniFamiliar(evento))  this.insertUniFamiliar(evento);
       else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.uniFamiliar.existente"))
-    
-      //this.location.back();
     }
     else if(this.nuevoRepresentante){
       this.persistenceService.clearBody();
       this.persistenceService.setBody(evento);
       //sessionStorage.setItem("newRepresentante",JSON.stringify(evento));
       //this.router.navigate(["/gestionJusticiables"]);
+      if(sessionStorage.getItem("fichaJust") != null){
+          sessionStorage.setItem("origin",sessionStorage.getItem("fichaJust"));
+          sessionStorage.removeItem("fichaJust");
+      }
       this.location.back();
     }
     else{
