@@ -62,6 +62,9 @@
                   <label>{{"gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate}}:
                     <span>{{destinatario.apellidos1}} {{destinatario.apellidos2}} </span>
                   </label>
+                  <label>{{"censo.datosDireccion.literal.correo" | translate}}:
+                    <span>{{destinatario.correoElectronico}}</span>
+                  </label>
 
                   <label class="mr-3">
                     <i (click)="navigateTo(destinatario);$event.stopPropagation();"
