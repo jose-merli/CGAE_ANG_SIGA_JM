@@ -22,6 +22,7 @@ export class DatosPagosComponent implements OnInit {
   bodyAux: PagosjgItem = new PagosjgItem();
 
   histEstados = [];
+  selectedItem: number = 10;
   facturaciones: ComboItem[];
   permisos;
   idEstadoPago;
@@ -126,25 +127,18 @@ export class DatosPagosComponent implements OnInit {
         }
       );
 
-      //this.historicoEstados();
+      this.historicoEstados();
     }
   }
 
   historicoEstados() {
-    let idPago;
 
-    if (this.modoEdicion) {
-      idPago = this.idPago;
-    } else if (!this.modoEdicion && undefined != this.body.idPagosjg) {
-      idPago = this.body.idFacturacion;
-    }
-
-    if (undefined != idPago) {
+    if (undefined != this.idPago) {
       this.progressSpinnerDatosPagos = true;
 
-      this.sigaService.getParam("facturacionsjcs_historicoPago", `?idPago=${idPago}`).subscribe(
+      this.sigaService.getParam("facturacionsjcs_historicoPago", `?idPago=${this.idPago}`).subscribe(
         data => {
-          this.histEstados = data.facturacionItem;
+          this.histEstados = data.pagosjgItem;
           this.progressSpinnerDatosPagos = false;
         },
         err => {
@@ -250,7 +244,8 @@ export class DatosPagosComponent implements OnInit {
   getCols() {
     this.cols = [
       { field: "fechaEstado", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaEstado" },
-      { field: "desEstado", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado" }
+      { field: "desEstado", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado" },
+      { field: "nombreUsuModificacion", header: "facturacionSJCS.facturacionesYPagos.usuario" }
     ];
   }
 
