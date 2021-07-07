@@ -18,16 +18,13 @@ export class EJGItem {
     fechaLimiteHast: Date;
 
     idInstitucion: string;
-
-
-    dictamen: string;
+    
     dictamenSing: string;
-    fundamentoCalif: string;
     fundamentoCalifDes: string;
 
     fechaDictamenDesd: Date;
     fechaDictamenHast: Date;
-    fechaDictamen: Date;
+    
     resolucion: string;
     fundamentoJuridico: string;
     fechaResolucionDesd: Date;
@@ -91,7 +88,7 @@ export class EJGItem {
     fechalimitepresentacion: Date;
     historico: boolean;
     observacionesDictamen: String;
-    iddictamen: String;
+    
     numDesigna: String;
 
     //Procurador
@@ -101,6 +98,16 @@ export class EJGItem {
     idInstitucionProc: number;
     numerodesignaproc: string;
     nombreApProcurador: string;
+
+    //Dictamen
+
+    iddictamen: number;
+    fechaDictamen: Date;
+    idTipoDictamen: number;
+    fundamentoCalif: number;
+    //el atributo dictamen hace referencia al texto de observaciones de la pestaña de dictamen
+    dictamen: string;
+    
 
     requiereTurn: boolean;
     bis: boolean;

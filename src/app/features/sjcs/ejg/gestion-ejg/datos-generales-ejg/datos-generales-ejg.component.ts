@@ -353,6 +353,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
           if (n.statusText == "OK") {
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
             this.bodyInicial = this.body;
+            this.persistenceService.setDatos(this.bodyInicial);
             this.changeTipoEJGColegio();
           }
           else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
