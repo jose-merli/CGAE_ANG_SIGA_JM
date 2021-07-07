@@ -720,8 +720,7 @@ export class DatosRegistralesComponent implements OnInit {
         this.body.resena != "" &&
         !this.onlySpaces(this.body.resena)) &&
       (this.fechaConstitucion != undefined &&
-        this.compruebaFechaConstitucion()) &&
-      this.fechaInscripcion != undefined 
+        this.compruebaFechaConstitucion())
     ) {
       return false;
     } else {
