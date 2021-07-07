@@ -23,13 +23,16 @@
         <app-relaciones *ngIf="permisoEscrituraRelaciones != undefined && modoEdicion" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaRelaciones]="tarjetaRelaciones" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraRelaciones" (modoEdicionSend)="modoEdicionSend($event)" [openTarjetaRelaciones]="openTarjetaRelaciones">
         </app-relaciones>
         
-        <app-estados *ngIf="permisoEscrituraEstados != undefined && modoEdicion" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaEstados]="tarjetaEstados" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraEstados" (modoEdicionSend)="modoEdicionSend($event)" [openTarjetaEstados]="openTarjetaEstados">
+        <app-estados *ngIf="permisoEscrituraEstados != undefined && modoEdicion" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" 
+        [tarjetaEstados]="tarjetaEstados" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraEstados" 
+        (modoEdicionSend)="modoEdicionSend($event)" [openTarjetaEstados]="openTarjetaEstados" #tarjetaEstadosEJG>
         </app-estados>
         
         <app-documentacion *ngIf="permisoEscrituraDocumentacion != undefined && modoEdicion" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaDocumentacion]="tarjetaDocumentacion" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraDocumentacion" (modoEdicionSend)="modoEdicionSend($event)" [openTarjetaDocumentacion]="openTarjetaDocumentacion">
         </app-documentacion>
         
-        <app-informe-calificacion *ngIf="permisoEscrituraInformeCalif != undefined&& modoEdicion" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaInformeCalificacion]="tarjetaInformeCalificacion" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraInformeCalif" (modoEdicionSend)="modoEdicionSend($event)" [openTarjetaInformeCalificacion]="openTarjetaInformeCalificacion">
+        <app-informe-calificacion *ngIf="permisoEscrituraInformeCalif != undefined&& modoEdicion" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaInformeCalificacion]="tarjetaInformeCalificacion" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraInformeCalif" (modoEdicionSend)="modoEdicionSend($event)" 
+        (newEstado)="newEstado()"  [openTarjetaInformeCalificacion]="openTarjetaInformeCalificacion">
         </app-informe-calificacion>
         
         <app-resolucion *ngIf="permisoEscrituraResolucion != undefined && modoEdicion" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaResolucion]="tarjetaResolucion" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraResolucion" (modoEdicionSend)="modoEdicionSend($event)" [openTarjetaResolucion]="openTarjetaResolucion">

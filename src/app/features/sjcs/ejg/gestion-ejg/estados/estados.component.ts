@@ -473,7 +473,6 @@ export class EstadosComponent implements OnInit {
     }
     this.opened.emit(this.openFicha);
     this.idOpened.emit(key);
-    this.getEstados(this.item);
   }
   checkPermisosDelete() {
     let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);

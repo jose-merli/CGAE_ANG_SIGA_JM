@@ -47,7 +47,9 @@ export class InformeCalificacionComponent implements OnInit {
   activacionTarjeta: boolean = false;
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
+  @Output() newEstado = new EventEmitter();
   @Input() openTarjetaInformeCalificacion;
+
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
     private commonServices: CommonsService, private translateService: TranslateService, private confirmationService: ConfirmationService) { }
@@ -195,6 +197,8 @@ export class InformeCalificacionComponent implements OnInit {
           
 
           if (n.statusText == "OK") {
+
+            this.newEstado.emit(null);
             
             //En el caso que se cree un nuevo dictamen, se debe extraer del back
             if(this.dictamen.iddictamen == null){
