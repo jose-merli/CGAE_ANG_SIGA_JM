@@ -120,11 +120,11 @@
                 <label>{{"censo.consultaDatosRegistrales.literal.numRegistro.siga" | translate}} (*)</label>
               </div>
               <div class="form-group col-lg-4 col-md-4">
-                <input [ngClass]="styleObligatorio(body.prefijoNumsspp)" (ngModelChange)="desactivadoGuardar()" [disabled]="noEditable || !sociedadProfesional || camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.prefijoNumsspp"
+                <input [ngClass]="sociedadProfesional ? styleObligatorio(body.prefijoNumsspp) : ''" (ngModelChange)="desactivadoGuardar()" [disabled]="noEditable || !sociedadProfesional || camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.prefijoNumsspp"
                   type="text" maxlength="8" class="form-control" pInputText>
               </div>
               <div class="form-group col-lg-4 col-md-4">
-                <input [ngClass]="styleObligatorio(body.contadorNumsspp)" (ngModelChange)="desactivadoGuardar()" [disabled]="noEditable || !sociedadProfesional || camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.contadorNumsspp"
+                <input [ngClass]="sociedadProfesional ? styleObligatorio(body.contadorNumsspp) : ''" (ngModelChange)="desactivadoGuardar()" [disabled]="noEditable || !sociedadProfesional || camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.contadorNumsspp"
                   type="text" class="form-control" (ngModelChange)="compruebaRegistro()" [maxlength]="longitudcontador"
                   pInputText>
                 <div *ngIf="contadorNoCorrecto == true">
