@@ -32,10 +32,10 @@
       <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
         <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
           <td class="text-center" *ngFor="let col of columns">
-            <div *ngIf="col.field !='producto'">
+            <div *ngIf="col.field !='descripcion'">
               <span>{{rowData[col.field]}}</span>
             </div>
-            <div *ngIf="col.field =='producto'">
+            <div *ngIf="col.field =='descripcion'">
               <a class="enlace" (click)="openTab(rowData)"><span>{{rowData[col.field]}}</span></a>
             </div>
           </td>
@@ -79,6 +79,10 @@
       <div class="text-right main-button">
         <button *ngIf="selectedRows && selectedRows.length > 0" (click)="navigateComunicar(selectedRows)" pButton
           type="button" icon="fa fa-comment" iconPos="left" label="{{'general.boton.comunicar' | translate }}"></button>
+
+        <button *ngIf="selectedRows && selectedRows.length > 0" (click)="navigateComunicar(selectedRows)" pButton
+          type="button" icon="fa-shopping-basket" iconPos="left"
+          label="{{'facturacion.productos.comprar' | translate }}"></button>
 
         <button *ngIf="!historico" (click)="getListaProductosHistorico(); selectedRows=[]" pButton type="button"
           icon="fa fa-history" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>

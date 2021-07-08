@@ -311,6 +311,7 @@ export class TiposProductosComponent implements OnInit, OnDestroy {
       tiposProductosObject => {
         this.progressSpinner = false;
 
+        console.log(tiposProductosObject);
         this.tiposProductosObject = tiposProductosObject;
         this.productData = this.tiposProductosObject.tiposProductosItems;
 

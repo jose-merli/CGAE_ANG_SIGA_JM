@@ -11,7 +11,9 @@
   </div>
   <!-- Listado de productos -->
   <div>
-    <app-gestion-productos *ngIf="muestraTablaProductos" [productData]="productData" id="tablaProductos">
+    <app-gestion-productos *ngIf="muestraTablaProductos" [productData]="productData"
+      [productDataConHistorico]="productDataConHistorico" [productDataSinHistorico]="productDataSinHistorico"
+      (busqueda)="busquedaProductos($event)" id="tablaProductos">
     </app-gestion-productos>
   </div>
 </div>

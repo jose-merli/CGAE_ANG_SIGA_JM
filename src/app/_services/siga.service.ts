@@ -446,6 +446,7 @@ export class SigaServices {
     productosBusqueda_comboFormaPago: 'combo/tipoFormaPago',
     productosBusqueda_comboTipos: 'pys/listadoTipoProductoByIdCategoria',
     productosBusqueda_busqueda: 'pys/buscarProductos',
+    productosBusqueda_activarDesactivar: 'pys/ReactivarBorradoFisicoLogicoProductos',
     // FOTO
     solicitudModificacion_searchSolModifDatosUseFoto: 'solicitudModificacion/searchSolModifDatosUseFoto',
     solicitudModificacion_searchDatosUseFotoDetail: 'solicitudModificacion/searchDatosUseFotoDetail',

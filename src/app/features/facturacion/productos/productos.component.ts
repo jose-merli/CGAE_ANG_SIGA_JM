@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { TranslateService } from '../../../commons/translate';
+import { ListaProductosDTO } from '../../../models/ListaProductosDTO';
+import { ListaProductosItems } from '../../../models/ListaProductosItems';
 import { CommonsService } from '../../../_services/commons.service';
 import { SigaServices } from '../../../_services/siga.service';
 
@@ -14,33 +17,65 @@ export class ProductosComponent implements OnInit {
   progressSpinner: boolean = false; //Para mostrar/no mostrar el spinner de carga
 
   //Variables busqueda
-  productData;
+  productData: any[] = [];
   muestraTablaProductos: boolean = false;
+
+  //Suscripciones
+  subscriptionProductosBusqueda: Subscription;
 
   constructor(public sigaServices: SigaServices, private commonsService: CommonsService, private translateService: TranslateService) { }
 
   ngOnInit() {
   }
 
+  ngOnDestroy() {
+    if (this.subscriptionProductosBusqueda)
+      this.subscriptionProductosBusqueda.unsubscribe();
+  }
+
+  //INICIO SERVICIOS
+  listaProductosDTO: ListaProductosDTO;
+  productDataConHistorico: any[] = [];
+  productDataSinHistorico: any[] = [];
   busquedaProductos(event) {
     this.progressSpinner = true;
-    //let data = sessionStorage.getItem("filtrosProductos");
     let filtrosProductos = JSON.parse(sessionStorage.getItem("filtrosProductos"));
+    let error = null;
+    this.subscriptionProductosBusqueda = this.sigaServices.post("productosBusqueda_busqueda", filtrosProductos).subscribe(
+      listaProductosDTO => {
 
-    this.sigaServices.post("productosBusqueda_busqueda", filtrosProductos).subscribe(
-      n => {
-        let error = null;
-        this.productData = JSON.parse(n.body);
-
-        if (this.productData[0] != null && this.productData[0] != undefined) {
-          if (this.productData[0].error != null) {
-            error = this.productData[0].error;
-          }
-        }
+        this.listaProductosDTO = JSON.parse(listaProductosDTO.body);
 
         this.progressSpinner = false;
         this.showTablaProductos(true);
+        this.productDataSinHistorico = [];
         this.commonsService.scrollTablaFoco("tablaProductos");
+
+      },
+      err => {
+        this.progressSpinner = false;
+        this.commonsService.scrollTablaFoco("tablaProductos");
+      }, () => {
+        this.productDataConHistorico = this.listaProductosDTO.listaProductosItems;
+
+        if (this.productDataConHistorico) {
+          this.productDataConHistorico.forEach(producto => {
+            if (producto.fechabaja == null) {
+              this.productDataSinHistorico.push(producto);
+            }
+          });
+        }
+
+        this.productData = this.productDataSinHistorico;
+
+        if (this.productData) {
+          if (this.productData[0] != null && this.productData[0] != undefined) {
+            if (this.productData[0].error != null) {
+              error = this.productData[0].error;
+            }
+          }
+        }
+
         if (error != null && error.description != null) {
           this.msgs = [];
           this.msgs.push({
@@ -49,11 +84,7 @@ export class ProductosComponent implements OnInit {
             detail: error.description
           });
         }
-      },
-      err => {
-        this.progressSpinner = false;
-        this.commonsService.scrollTablaFoco("tablaProductos");
-      }, () => {
+
         this.progressSpinner = false;
         this.progressSpinner = false;
         setTimeout(() => {
@@ -61,9 +92,12 @@ export class ProductosComponent implements OnInit {
         }, 5);
       });;
   }
+  //FIN SERVICIOS
 
+  //INICIO METODOS
   showTablaProductos(mostrar) {
     this.muestraTablaProductos = mostrar;
   }
+  //FIN METODOS
 
 }

@@ -1,5 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { TranslateService } from '../../../../commons/translate';
 import { ComboItem } from '../../../../models/ComboItem';
 import { ComboObject } from '../../../../models/ComboObject';
 import { FiltrosProductos } from '../../../../models/FiltrosProductos';
@@ -29,7 +30,7 @@ export class FiltrosProductosComponent implements OnInit {
   subscriptionIvaTypeSelectValues: Subscription;
   subscriptionPayMethodTypeSelectValues: Subscription;
 
-  constructor(private sigaServices: SigaServices) { }
+  constructor(private sigaServices: SigaServices, private translateService: TranslateService) { }
 
   ngOnInit() {
     this.getComboCategoria();
@@ -58,6 +59,8 @@ export class FiltrosProductosComponent implements OnInit {
   valueChangeCategoria() {
     if (this.filtrosProductos.categoria != null) {
       this.getComboTipo();
+    } else if (this.filtrosProductos.categoria == null) {
+      this.filtrosProductos.tipo = null;
     }
   }
 
@@ -71,7 +74,19 @@ export class FiltrosProductosComponent implements OnInit {
       this.busqueda.emit(true);
     } else {
       console.log("ERROR PRECIO HASTA MENOR QUE PRECIO DESDE");
+      //Aviso en caso de que el precioHasta sea menos que el precioDesde
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.productos.errorpreciodesdehasta"));
     }
+  }
+
+  //Inicializa las propiedades necesarias para el dialogo de confirmacion
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
   }
   //FIN METODOS BUSCADOR
 
