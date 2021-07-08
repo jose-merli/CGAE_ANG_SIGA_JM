@@ -187,6 +187,7 @@ export class UnidadFamiliarComponent implements OnInit {
               representante.labelEnCalidad = this.translateService.instant('justiciaGratuita.justiciables.rol.representante');
               representante.relacionadoCon = element.pjg_nombrecompleto;
               representante.fechaBaja = null;
+              representante.isRepresentante = true;
 
               representantes.push(representante);
             }

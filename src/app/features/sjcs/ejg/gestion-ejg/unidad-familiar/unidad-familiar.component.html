@@ -68,8 +68,11 @@
               <div *ngIf="isEliminado(dato) && (col.field == 'pjg_nif' || col.field == 'pjg_nombrecompleto')">
                 <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
               </div>
-              <div *ngIf="!isEliminado(dato) && (col.field == 'pjg_nif' || col.field == 'pjg_nombrecompleto')">
+              <div *ngIf="!isEliminado(dato) && (col.field == 'pjg_nif' || col.field == 'pjg_nombrecompleto') && dato.isRepresentante != true">
                 <span class="enlace" (click)="openTab(dato)">{{dato[col.field]}}</span>
+              </div>
+              <div *ngIf="!isEliminado(dato) && (col.field == 'pjg_nif' || col.field == 'pjg_nombrecompleto') && dato.isRepresentante == true">
+                <span>{{dato[col.field]}}</span>
               </div>
 
               <!-- RESTO COLUMNAS -->

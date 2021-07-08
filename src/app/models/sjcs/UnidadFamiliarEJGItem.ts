@@ -47,6 +47,8 @@ export class UnidadFamiliarEJGItem {
     
     observaciones: string;
 
+    isRepresentante: boolean;
+
     relacionadoCon: string;
     constructor() { }
 }
