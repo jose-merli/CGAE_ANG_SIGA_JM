@@ -8,6 +8,7 @@ import { CommonsService } from '../../../../_services/commons.service';
 import { TranslateService } from '../../../../commons/translate/translation.service';
 import { procesos_ejg } from '../../../../permisos/procesos_ejg';
 import { ServiciosTramitacionComponent } from './servicios-tramitacion/servicios-tramitacion.component';
+import { EstadosComponent } from './estados/estados.component';
 import { Message } from 'primeng/components/common/api';
 
 @Component({
@@ -81,6 +82,7 @@ export class GestionEjgComponent implements OnInit {
   comunicaciones;
 
   @ViewChild(ServiciosTramitacionComponent) tramitacion;
+  @ViewChild(EstadosComponent) tarjetaEstadosEJG;
 
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
@@ -193,6 +195,10 @@ export class GestionEjgComponent implements OnInit {
 
   guardadoSend(event){
     this.ngOnInit();
+  }
+
+  newEstado(){
+    this.tarjetaEstadosEJG.getEstados(this.body);
   }
 
   showMessage(severity, summary, msg) {

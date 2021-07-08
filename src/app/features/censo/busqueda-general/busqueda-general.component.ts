@@ -555,8 +555,9 @@ export class BusquedaGeneralComponent implements OnDestroy {
         this.bodyProc.apellido1.trim().length < 3) &&
       /* (this.bodyProc.apellido2 == null ||
         this.bodyProc.apellido2.trim().length < 3) && */
-      (this.bodyProc.nColegiado == null ||
-        this.bodyProc.nColegiado.trim().length < 3) &&
+      (this.bodyProc.nColegiado == null 
+      //  || this.bodyProc.nColegiado.trim().length < 3 
+      ) &&
       (this.bodyProc.idColProcurador == undefined ||
         this.bodyProc.idColProcurador == null ||
         this.bodyProc.idColProcurador.length < 1)

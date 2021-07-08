@@ -179,8 +179,8 @@ export class FiltrosEjgComponent implements OnInit {
 
     } else {
       this.isDisabledFundamentosCalif = true;
-      this.body.fundamentoCalif = "";
-
+      //this.body.fundamentoCalif = "";
+      this.body.fundamentoCalif = null;
     }
   }
   onChangeImpugnacion() {

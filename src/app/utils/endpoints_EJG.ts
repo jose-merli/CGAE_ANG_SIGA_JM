@@ -64,7 +64,7 @@ export let endpoints_EJG: any = {
     gestionejg_guardarImpugnacion: "ejg/gestion-ejg/guardarImpugnacion",
 
     //Informe Calificacion
-    gestionejg_guardarInformeCalfiacion: "ejg/gestion-ejg/guardarInformeCalificacion",
+    gestionejg_actualizarInformeCalificacionEjg: "ejg/gestion-ejg/actualizarInformeCalificacionEjg",
     gestionejg_descargarInformeCalificacion: "ejg/gestion-ejg/descargarInformeCalificacion",
 
     //Documentacion
