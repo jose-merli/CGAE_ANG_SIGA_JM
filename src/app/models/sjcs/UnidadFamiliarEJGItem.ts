@@ -7,7 +7,7 @@ export class UnidadFamiliarEJGItem {
     uf_idPersona: string;
     uf_solicitante: string;
     uf_enCalidad: string;
-    //variable con la que se mostrara el valor de uf_enCalidad
+    //Variable con la que se mostrara el valor de uf_enCalidad
     //1: "Unidad Familiar", 2: "Solicitante", 3: "Solicitante Principal"
     labelEnCalidad: string;
     pjg_nif: string;
@@ -16,6 +16,9 @@ export class UnidadFamiliarEJGItem {
     //pjg_ape2: string;
     pjg_nombrecompleto: string;
     pjg_direccion: string;
+    representante: string;
+    direccionRepresentante: string;
+    nifRepresentante: string;
     // nombrePrincipal: string;
     // apellido1Principal: string;
     // apellido2Principal: string;
@@ -43,5 +46,7 @@ export class UnidadFamiliarEJGItem {
     impOtrosBienes: number;
     
     observaciones: string;
+
+    relacionadoCon: string;
     constructor() { }
 }
