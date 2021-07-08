@@ -10,13 +10,13 @@
                     <!-- <p-radioButton value="des" name="tarj" (click)="changeFilters()"
                         label="{{'menu.justiciaGratuita.designas' | translate}}" [(ngModel)]='radioTarjeta'
                         [disabled]="fromEJG"></p-radioButton> -->
-                    <p-radioButton value="des" name="tarj" (click)="changeFilters($event)" label="{{'justiciaGratuita.ejg.busquedaAsuntos.designaciones' | translate}}"
+                    <p-radioButton value="des" name="tarj" (click)="changeFilters($event)" [disabled]="disableRadio" label="{{'justiciaGratuita.ejg.busquedaAsuntos.designaciones' | translate}}"
                         [(ngModel)]='radioTarjeta'></p-radioButton>
                     <p-radioButton value="soj" name="tarj" label="{{'justiciaGratuita.ejg.busquedaAsuntos.SOJ' | translate}}" [(ngModel)]='radioTarjeta'
-                        (click)="changeFilters($event)"></p-radioButton>
-                    <p-radioButton value="asi" name="tarj" (click)="changeFilters($event)"
+                        (click)="changeFilters($event)" [disabled]="disableRadio"></p-radioButton>
+                    <p-radioButton value="asi" name="tarj" (click)="changeFilters($event)" [disabled]="disableRadio"
                         label="{{'menu.justiciaGratuita.asistencia' | translate}}" [(ngModel)]='radioTarjeta'></p-radioButton>
-                    <p-radioButton value="ejg" name="tarj" (click)="changeFilters($event)"
+                    <p-radioButton value="ejg" name="tarj" (click)="changeFilters($event)" [disabled]="disableRadio"
                         label="{{ 'justiciaGratuita.ejg.datosGenerales.EJG' | translate}}" [(ngModel)]='radioTarjeta'></p-radioButton>
                 </div>
             </div>
