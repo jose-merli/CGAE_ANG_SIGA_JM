@@ -99,6 +99,7 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
   idClaseComunicacion: String;
   keys: any[] = [];
   comboTiposAsitencia: any[];
+  disableRadio: boolean = false;
 
   @Input() permisoEscritura;
   @Input() idPersona;
@@ -154,17 +155,19 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
     this.filtros.anio = fecha.getFullYear();
 
     //Se asignan los valores de los filtros cuando procede de EJG y se fijan
-    if (this.data != null) {
+    /* if (this.data != null) {
       this.radioTarjeta = 'des';
       
-    }else{
+    }else{ */
       if(sessionStorage.getItem("radioTajertaValue")){
         this.radioTarjeta=sessionStorage.getItem("radioTajertaValue")
+        this.disableRadio = true;
+        //sessionStorage.removeItem("radioTajertaValue");
       }else{
         this.radioTarjeta = 'des';
         sessionStorage.setItem("radioTajertaValue",""+this.radioTarjeta);
       }
-    }
+    //}
     
     if (sessionStorage.getItem("buscadorColegiados")) {
 

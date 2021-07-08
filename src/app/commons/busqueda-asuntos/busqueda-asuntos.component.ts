@@ -21,6 +21,7 @@ import { PersistenceService } from '../../_services/persistence.service';
 import { FiltrosBusquedaAsuntosComponent } from "./filtros-busqueda-asuntos/filtros-busqueda-asuntos.component";
 import { TablaBusquedaAsuntosComponent } from "./tabla-busqueda-asuntos/tabla-busqueda-asuntos.component";
 import { AsuntosJusticiableItem } from "../../models/sjcs/AsuntosJusticiableItem";
+import { EJGItem } from "../../models/sjcs/EJGItem";
 export enum KEY_CODE {
   ENTER = 13
 }
@@ -50,6 +51,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
   textFilter: string = "Seleccionar";
   buscar: boolean = false;
   from: boolean = false;
+  datosAsociar;
 
   es: any = esCalendar;
   permisoEscritura: any;
@@ -76,7 +78,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
   @ViewChild("table")
   table: DataTable;
   selectedDatos;
-  datos: AsuntosJusticiableItem;
+  datos: EJGItem;
 
   ngOnInit() {
 
@@ -85,6 +87,19 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
       this.from = true;
       sessionStorage.removeItem('EJG');
     }
+  /*   if (sessionStorage.getItem('EJGSoj')) {
+      this.datos = JSON.parse(sessionStorage.getItem('EJGSoj'));
+      this.from = true;
+      sessionStorage.removeItem('EJGSoj');
+    }
+    if (sessionStorage.getItem('EJGAsistencia')) {
+      this.datos = JSON.parse(sessionStorage.getItem('EJGAsistencia'));
+      this.from = true;
+      sessionStorage.removeItem('EJGAsistencia');
+    } */
+    
+    
+
 
     // this.commonsService.checkAcceso()
     //   .then(respuesta => {
@@ -104,7 +119,12 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
     //   ).catch(error => console.error(error));
 
   }
-
+  asociarElement(event){
+    if(!(event == null || event == undefined)){
+      this.datosAsociar = event;
+      this.asociarEJG(this.datosAsociar);
+    }
+  }
   searchEvent(event) {
     this.search(event);
   }
@@ -120,10 +140,93 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
   }
 
   backTo() {
+    sessionStorage.removeItem("radioTajertaValue");
     this.location.back();
   }
 
+asociarEJG(data){
+   if (this.datos != null) {
+      let radioValue = sessionStorage.getItem("radioTajertaValue");
+      switch (radioValue) {
+        case 'des':
+          let datos = [ data.idinstitucion,data.anio,data.numero,
+            data.idTipoDesigna,this.datos.tipoEJG,this.datos.annio,this.datos.numero, data.turnoGuardia
+           ];
+          this.sigaServices.post("gestionejg_asociarDesignacion", datos).subscribe(
+            m => {
+              this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+                sessionStorage.removeItem("radioTajertaValue");
+                this.progressSpinner = false;
+                this.location.back();
+            },
+            err => {
+              this.showMesg("error",
+                "No se ha asociado el EJG correctamente",
+                ""
+              );
+              this.location.back();
+              this.progressSpinner = false;
+            }
+          );
+       
+          
+          break;
+        case 'asi':
+         
+            let requestAsistencia = [data.idinstitucion,data.anio,data.numero,this.datos.tipoEJG,this.datos.annio,this.datos.numero
+             
+            ];
+            
+          this.sigaServices.post("gestionejg_asociarAsistencia", requestAsistencia).subscribe(
+            m => {
+              this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+                sessionStorage.removeItem("radioTajertaValue");
+                this.progressSpinner = false;
+                this.location.back();
+            },
+            err => {
+              this.showMesg("error",
+                "No se ha asociado el EJG correctamente",
+                ""
+              );
+              this.location.back();
+              this.progressSpinner = false;
+            }
+          ); 
+          
+          
+          break;
+        case 'soj':
+         
+            let requestSoj = [
+              data.idinstitucion,data.anio,data.numero,
+              data.idTipoSoj,this.datos.tipoEJG,this.datos.annio,this.datos.numero
+             
+            ];
+            
+          this.sigaServices.post("gestionejg_asociarSOJ", requestSoj).subscribe(
+            m => {
+              
+              this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+              sessionStorage.removeItem("radioTajertaValue");
+              this.progressSpinner = false;
+              this.location.back();
+            },
+            err => {
+              this.showMesg("error",
+                "No se ha asociado el EJG correctamente",
+                ""
+              );
+              this.location.back();
+              this.progressSpinner = false;
+            }
+          ); 
+          
+          break;
+      }
+    }
 
+}
 
   search(event) {
     this.progressSpinner = true;
@@ -135,7 +238,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
     this.progressSpinner = true;
     this.buscar = true;
 
-    if (event == 'ejg') {
+    if (event == "ejg") {
       this.sigaServices
         .post(
           "gestionJusticiables_busquedaClaveAsuntosEJG",
@@ -161,7 +264,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
         );
     }
 
-    if (this.filtros.radioTarjeta == 'des') {
+    if (event == "des") {
       this.sigaServices
         .post(
           "gestionJusticiables_busquedaClaveAsuntosDesignaciones",
@@ -184,7 +287,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
         );
     }
 
-    if (event == 'soj') {
+    if (event == "soj") {
       this.sigaServices
         .post(
           "gestionJusticiables_busquedaClaveAsuntosSOJ",
@@ -210,7 +313,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
         );
     }
 
-    if (event == 'asi') {
+    if (event == "asi") {
       this.sigaServices
         .post(
           "gestionJusticiables_busquedaClaveAsuntosAsistencias",

@@ -164,15 +164,15 @@
       <div class="card-footer">
         <div class="text-right main-button">
           <button pButton
-            [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura"
+            [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura"
             (click)="checkPermisosAsociarAsistencia()" type="button" iconPos="left"
             label="{{ 'general.boton.AsociarAsistencia' | translate }}"></button>
           <button pButton
-            [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura"
+            [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura"
             (click)="checkPermisosAsociarSOJ()" type="button" iconPos="left"
             label="{{'general.boton.asociarSOJ' | translate}}"></button>
           <button pButton
-            [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura"
+            [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura"
             (click)="checkPermisosAsociarDesignacion()" type="button" iconPos="left"
             label="{{'general.boton.AsociarDesignacion' | translate}}"></button>
           <button pButton

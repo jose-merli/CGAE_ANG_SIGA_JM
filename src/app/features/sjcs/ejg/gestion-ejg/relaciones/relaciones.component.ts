@@ -42,6 +42,7 @@ export class RelacionesComponent implements OnInit {
   resaltadoDatosGenerales: boolean = false;
   datosFamiliares: any;
   tipoRelacion: String;
+  radioTarjetaValue: String;
 
   @ViewChild("table") table: DataTable;
 
@@ -163,8 +164,9 @@ export class RelacionesComponent implements OnInit {
       }
     }
   }
+
   getCols() {
-    this.cols = [
+    /* this.cols = [
       { field: "sjcs", header: "menu.justiciaGratuita", width: "5%" },
       { field: "anio", header: "justiciaGratuita.maestros.calendarioLaboralAgenda.anio", width: "3%" },
       { field: "numero", header: "justiciaGratuita.sjcs.designas.DatosIden.numero", width: "3%" },
@@ -172,6 +174,16 @@ export class RelacionesComponent implements OnInit {
       { field: "letrado", header: "justiciaGratuita.sjcs.designas.colegiado", width: "10%" },
       { field: "interesado", header: "justiciaGratuita.justiciables.literal.interesados", width: "10%" },
       { field: "datosinteres", header: "justiciaGratuita.justiciables.literal.datosInteres", width: "10%" },
+    ]; */
+    this.cols = [
+      { field: "sjcs", header: "justiciaGratuita.oficio.designas.interesados.identificador", width: '6%' },
+      { field: "fechaasunto", header: "dato.jgr.guardia.saltcomp.fecha", width: '6%' },
+      { field: "descturno", header: "justiciaGratuita.justiciables.literal.turnoGuardia" },
+      { field: "letrado", header: "justiciaGratuita.sjcs.designas.colegiado" },
+      { field: "interesado", header: "justiciaGratuita.sjcs.designas.datosInteresados" },
+      { field: "dilnigproc", header: "sjcs.oficio.designaciones.relaciones.numDiligNigNproc" },
+      { field: "resolucion", header: "justiciaGratuita.maestros.fundamentosResolucion.resolucion" }
+
     ];
     this.cols.forEach(it => this.buscadores.push(""));
 
@@ -366,8 +378,12 @@ export class RelacionesComponent implements OnInit {
     }
   }
   asociarDesignacion() {
-    this.persistenceService.clearDatos();
-    this.router.navigate(["/gestionEjg"]);
+    //this.persistenceService.clearDatos();
+    sessionStorage.setItem("radioTajertaValue",'des');
+    let ejgItem = JSON.stringify(this.body);
+    sessionStorage.setItem("EJG",ejgItem);
+    this.router.navigate(["/busquedaAsuntos"]);
+    
   }
 
   checkPermisosAsociarSOJ() {
@@ -379,8 +395,12 @@ export class RelacionesComponent implements OnInit {
     }
   }
   asociarSOJ() {
-    this.persistenceService.clearDatos();
-    this.router.navigate(["/gestionEjg"]);
+    //this.persistenceService.clearDatos();
+    sessionStorage.setItem("radioTajertaValue",'soj');
+    let ejgItem = JSON.stringify(this.body);
+    sessionStorage.setItem("EJG",ejgItem);
+    this.router.navigate(["/busquedaAsuntos"]);
+    
   }
 
   checkPermisosAsociarAsistencia() {
@@ -390,6 +410,14 @@ export class RelacionesComponent implements OnInit {
     } else {
       this.asociarAsistencia();
     }
+  }
+  
+  asociarAsistencia() {
+    //this.persistenceService.clearDatos();
+    sessionStorage.setItem("radioTajertaValue",'asi');
+    let ejgItem = JSON.stringify(this.body);
+    sessionStorage.setItem("EJG",ejgItem);
+    this.router.navigate(["/busquedaAsuntos"]);
   }
 
   navigateToFichaPre() {
@@ -580,8 +608,4 @@ export class RelacionesComponent implements OnInit {
     return this.datePipe.transform(date, pattern);
   }
 
-  asociarAsistencia() {
-    this.persistenceService.clearDatos();
-    this.router.navigate(["/gestionEjg"]);
-  }
 }

@@ -267,6 +267,19 @@ export class UnidadFamiliarComponent implements OnInit {
     }
   }
 
+  isVolverSolicitarEEJG(datos){
+     if(datos.length != 1){
+      this.volverSolicitarEejg = false
+     }else{
+      if((datos[0].expedienteEconom == "" || datos[0].expedienteEconom == undefined || datos[0].expedienteEconom == null)
+       && (datos[0].estado != "30" || datos[0].estado != "40" || datos[0].estado != "50") ){
+        this.volverSolicitarEejg = false
+      }else{
+        this.volverSolicitarEejg = true
+      }
+    }  
+  } 
+
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
@@ -301,7 +314,8 @@ export class UnidadFamiliarComponent implements OnInit {
     }
   }
 
-  actualizaSeleccionados(selectedDatos) {
+  actualizaSeleccionados(selectedDatos) { 
+    this.isVolverSolicitarEEJG(selectedDatos);
     this.numSelected = selectedDatos.length;
     this.seleccion = false;
   }
@@ -475,21 +489,6 @@ export class UnidadFamiliarComponent implements OnInit {
 
   solicitarEEJ() {
     this.sigaServices.post("gestionejg_solicitarEEJG", this.selectedDatos[0]).subscribe(
-      n => {
-        this.progressSpinner = false;
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner = false;
-        this.selectDatos=[];
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-      }
-    );
-  }
-
-  volverSolicitarEEJ() {
-    this.sigaServices.post("gestionejg_volverSolicitarEEJG", this.selectedDatos[0]).subscribe(
       n => {
         this.progressSpinner = false;
         this.selectDatos=[];
