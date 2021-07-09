@@ -49,6 +49,7 @@ export class UnidadFamiliarComponent implements OnInit {
   seleccion: boolean = false;
   openFicha: boolean = false;
   historico: boolean = false;
+  isRepresentante: boolean = false;
   resaltadoDatosGenerales: boolean = false;
   activacionTarjeta: boolean = false;
 
@@ -340,6 +341,12 @@ export class UnidadFamiliarComponent implements OnInit {
     this.isVolverSolicitarEEJG(selectedDatos);
     this.numSelected = selectedDatos.length;
     this.seleccion = false;
+    let repre = this.selectedDatos.find(
+      item => item.isRepresentante == true
+    );
+    if (repre != undefined)
+      this.isRepresentante = true;
+    else this.isRepresentante = false;
   }
 
   showMessage(severity, summary, msg) {

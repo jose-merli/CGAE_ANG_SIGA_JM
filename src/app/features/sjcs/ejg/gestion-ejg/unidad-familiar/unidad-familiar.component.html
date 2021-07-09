@@ -41,7 +41,7 @@
       <!-- TABLA RESULTADOS -->
       <p-table [value]="datosFamiliaresActivos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple"
         [responsive]="true" #table class="tabla-listado" [paginator]="true" [rows]="selectedItem"
-        (onRowSelect)="actualizaSeleccionados(selectedDatos)" [ngClass]="{ 'customCursor': selectMultiple}"
+        (onRowSelect)="actualizaSeleccionados(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)" [ngClass]="{ 'customCursor': selectMultiple}"
         selectionMode="multiple" paginatorPosition="both">
         <ng-template pTemplate="colgroup" let-columns>
           <colgroup>
@@ -122,14 +122,14 @@
             (click)="checkPermisosSolicitarEEJ()" type="button"
             label="{{'general.boton.volver.solicitudEejg' | translate}}"></button>
           <button pButton
-            [disabled]="!permisoEscritura || selectedDatos.length==0"
+            [disabled]="!permisoEscritura || selectedDatos.length==0 || isRepresentante"
             (click)="downloadEEJ()" type="button" icon="fa fa-download" iconPos="left"
             label="{{'justiciaGratuita.ejg.datosGenerales.DescargarEEJ' | translate}}"></button>
           <button pButton
-            [disabled]="(((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura)"
+            [disabled]="(((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura) || isRepresentante"
             (click)="checkPermisosSolicitarEEJ()" type="button"
             label="{{'general.boton.solicitudEejg' | translate}}"></button>
-          <button [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura"
+          <button [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura  || isRepresentante"
             (click)="checkPermisosComunicar(selectedDatos)" pButton type="button" icon="fa fa-comment" iconPos="left"
             label="{{'general.boton.comunicar' | translate }}"></button>
           <button *ngIf="!historico" (click)="searchHistorical(); selectedDatos=[]" pButton type="button" iconPos="left"
@@ -137,7 +137,7 @@
           <button *ngIf="historico" (click)="searchHistorical(); selectedDatos=[]" pButton type="button"
             icon="fa fa-history" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
           <button pButton *ngIf="!historico"
-            [disabled]="!permisoEscritura || ((!selectMultiple || !selectAll) && selectedDatos.length == 0)"
+            [disabled]="!permisoEscritura || ((!selectMultiple || !selectAll) && selectedDatos.length == 0) || isRepresentante"
             (click)="checkPermisosConfirmDelete()" type="button" icon="fa fa-trash" iconPos="left"
             label="{{ 'general.boton.eliminar' | translate}}"></button>
           <button *ngIf="historico" pButton
