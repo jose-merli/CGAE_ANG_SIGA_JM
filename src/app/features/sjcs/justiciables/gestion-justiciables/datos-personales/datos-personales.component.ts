@@ -448,7 +448,7 @@ export class DatosPersonalesComponent implements OnInit {
       err => {
 
         if (JSON.parse(err.error).error.description != "") {
-          if (JSON.parse(err.error).error.code == "600") {
+          if (err.error != undefined && JSON.parse(err.error).error.code == "600") {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
           } else {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));

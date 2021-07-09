@@ -83,6 +83,7 @@ export class FiltroJusticiablesComponent implements OnInit {
        this.persistenceService.setDatos(JSON.parse(sessionStorage.getItem("EJGItem")));
        sessionStorage.removeItem("EJGItem");
     }
+    sessionStorage.removeItem("fichaJust");
     this.location.back();
   }
 
