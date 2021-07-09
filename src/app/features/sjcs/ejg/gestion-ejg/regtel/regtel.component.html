@@ -32,7 +32,7 @@
     <div *ngIf="esFichaActiva('regtel')" class="px-0 pt-0 pb-0 card-body card-body-ficha">
           <!-- TABLA RESULTADOS -->
           <p-table [value]="regtel" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple" [responsive]="true"
-            #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowUnSelect)="actualizaSeleccionados(selectedDatos)" [ngClass]="{ 'customCursor': selectMultiple}"
+            #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowUnselect)="actualizaSeleccionados(selectedDatos)" [ngClass]="{ 'customCursor': selectMultiple}"
             selectionMode="multiple" paginatorPosition="both">
             <ng-template pTemplate="colgroup" let-columns>
               <colgroup>

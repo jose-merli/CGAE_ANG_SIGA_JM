@@ -217,7 +217,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
     this.numSelected = this.selectedDatos.length;
     return (dato[0].selected = true);
   }
-  onRowUnSelect(dato) {
+  onRowUnselect(dato) {
     this.numSelected = this.selectedDatos.length;
 
     // if (this.selectMultiple && !dato[0].nueva) {
