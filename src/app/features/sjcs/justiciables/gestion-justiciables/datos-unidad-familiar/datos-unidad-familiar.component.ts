@@ -42,6 +42,7 @@ export class DatosUnidadFamiliarComponent implements OnInit {
   initialBody: UnidadFamiliarEJGItem;
 
   showTarjeta: boolean = false;
+  resaltadoDatos: boolean = false;
 
   @Input() modoEdicion;
   @Input() showTarjetaPermiso;
@@ -97,6 +98,9 @@ export class DatosUnidadFamiliarComponent implements OnInit {
 
     }
 
+    //Asignacion del parentesco de "No informado" por defecto en el caso que no este definido
+    if(this.generalBody.idParentesco == null) this.generalBody.idParentesco = -1;
+
     if(this.solicitante != null && this.solicitante.idpersona != this.generalBody.uf_idPersona)this.disableSol = true;
     this.progressSpinner = false;
 
@@ -112,8 +116,13 @@ export class DatosUnidadFamiliarComponent implements OnInit {
 
   checkSave(){
     let pass = true;
+    //En el caso que no se haya rellenado el campo de parentesco
+    if(this.generalBody.idParentesco==null){
+      this.muestraCamposObligatorios();
+      pass = false;
+    }
     //Parentesco hija
-    if(this.generalBody.idParentesco==3) {
+    else if(this.generalBody.idParentesco==3) {
       //Si no tiene fecha determinada, no se continua con el guardado.
       if(this.body.fechanacimiento == null) {
         this.showMessage("error", this.translateService.instant('general.message.incorrect'),
@@ -340,4 +349,14 @@ export class DatosUnidadFamiliarComponent implements OnInit {
     );
   }
 
+  styleObligatorio(evento) {
+    if (this.resaltadoDatos && (evento == undefined || evento == null || evento == "")) {
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+
+  muestraCamposObligatorios() {
+    this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+    this.resaltadoDatos = true;
+  }
 }

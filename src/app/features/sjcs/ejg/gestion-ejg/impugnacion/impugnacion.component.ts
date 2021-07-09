@@ -47,7 +47,7 @@ export class ImpugnacionComponent implements OnInit {
 
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
-    private commonServices: CommonsService, private translateService: TranslateService, private confirmationService: ConfirmationService) { }
+    private commonsService: CommonsService, private translateService: TranslateService, private confirmationService: ConfirmationService) { }
 
   ngOnInit() {
     // this.getComboSentidoAuto();
@@ -103,7 +103,7 @@ export class ImpugnacionComponent implements OnInit {
     this.sigaServices.get("filtrosejg_comboImpugnacion").subscribe(
       n => {
         this.comboImpugnacion = n.combooItems;
-        this.commonServices.arregloTildesCombo(this.comboImpugnacion);
+        this.commonsService.arregloTildesCombo(this.comboImpugnacion);
         let impug = this.comboImpugnacion.find(
           item => item.value == this.impugnacion.autoResolutorio
         );
@@ -129,7 +129,7 @@ export class ImpugnacionComponent implements OnInit {
     this.sigaServices.get("filtrosejg_comboFundamentoImpug").subscribe(
       n => {
         this.comboFundamentoImpug = n.combooItems;
-        this.commonServices.arregloTildesCombo(this.comboFundamentoImpug);
+        this.commonsService.arregloTildesCombo(this.comboFundamentoImpug);
         let fundImpug = this.comboFundamentoImpug.find(
           item => item.value == this.impugnacion.sentidoAuto
         );
@@ -181,7 +181,7 @@ export class ImpugnacionComponent implements OnInit {
   }
 
   checkPermisosConfirmRest() {
-    let msg = this.commonServices.checkPermisos(this.permisoEscritura, undefined);
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
     } else {
@@ -217,12 +217,12 @@ export class ImpugnacionComponent implements OnInit {
     this.impugnacion = JSON.parse(JSON.stringify(this.bodyInicial));
   }
   checkPermisosSave() {
-    let msg = this.commonServices.checkPermisos(this.permisoEscritura, undefined);
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
     }
     else if (this.disabledSave()) {
-      //this.msgs = this.commonServices.checkPermisoAccion();
+      //this.msgs = this.commonsService.checkPermisoAccion();
       this.muestraCamposObligatorios()
     }
     else this.save();
@@ -250,7 +250,7 @@ export class ImpugnacionComponent implements OnInit {
 
   styleObligatorio(evento) {
     if (this.resaltadoDatos && (evento == undefined || evento == null || evento == "")) {
-      return this.commonServices.styleObligatorio(evento);
+      return this.commonsService.styleObligatorio(evento);
     }
   }
   muestraCamposObligatorios() {
