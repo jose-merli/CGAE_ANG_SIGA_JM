@@ -59,11 +59,11 @@ export class GestionPagosComponent extends SigaWrapper implements OnInit {
 
       if (paramsPago && null != paramsPago) {
         this.datosPagos.idPago = paramsPago.idPago;
-        this.datosPagos.idEstadoPago = paramsPago.idEstado;
+        this.datosPagos.idEstadoPago = paramsPago.idEstadoPago;
         sessionStorage.removeItem("paramsPago");
       }
 
-      if (undefined == paramsPago.idPago) {
+      if (paramsPago == undefined || paramsPago == null || undefined == paramsPago.idPago) {
         this.datosPagos.modoEdicion = false;
         this.datosPagos.cerrada = false;
       } else {

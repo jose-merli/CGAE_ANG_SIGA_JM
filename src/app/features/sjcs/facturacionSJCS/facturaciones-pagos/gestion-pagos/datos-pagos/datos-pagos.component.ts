@@ -105,7 +105,7 @@ export class DatosPagosComponent implements OnInit {
 
             if (undefined != resp) {
 
-              if (undefined != this.idPago) {
+              if (undefined != this.idPago && this.facturaciones.find(el => el.value == resp.idFacturacion) == undefined) {
                 this.facturaciones.unshift({
                   label: resp.nombreFac,
                   value: resp.idFacturacion
@@ -153,13 +153,13 @@ export class DatosPagosComponent implements OnInit {
 
   disabledSave() {
     if (this.modoEdicion) {
-      if ((JSON.stringify(this.body) != JSON.stringify(this.bodyAux)) && (undefined != this.body.nombre && this.body.nombre.trim() != "") && (undefined != this.body.codBanco && this.body.codBanco.trim() != "") && (undefined != this.body.idFacturacion) && (this.idEstadoPago == "10")) {
+      if ((JSON.stringify(this.body) != JSON.stringify(this.bodyAux)) && (undefined != this.body.nombre && this.body.nombre.trim() != "") && (undefined != this.body.abreviatura && this.body.abreviatura.trim() != "") && (undefined != this.body.idFacturacion) && (this.idEstadoPago == "10")) {
         return false;
       } else {
         return true;
       }
     } else {
-      if ((undefined != this.body.nombre && this.body.nombre.trim() != "") && (undefined != this.body.idFacturacion) && (undefined != this.body.codBanco && this.body.codBanco.trim() != "")) {
+      if ((undefined != this.body.nombre && this.body.nombre.trim() != "") && (undefined != this.body.idFacturacion) && (undefined != this.body.abreviatura && this.body.abreviatura.trim() != "")) {
         return false;
       } else {
         return true;
@@ -169,17 +169,85 @@ export class DatosPagosComponent implements OnInit {
 
   guardar() {
 
+    this.progressSpinnerDatosPagos = true;
+
+    if (!this.modoEdicion) {
+
+      const labelFac = this.facturaciones.find(el => el.value == this.body.idFacturacion).label;
+      const fechaDesde = labelFac.split("-")[0].trim().split("/").reverse().join("-");
+      const fechaHasta = labelFac.split("-")[1].trim().split("/").reverse().join("-");
+
+      const copyBody: PagosjgItem = JSON.parse(JSON.stringify(this.body));
+      copyBody.fechaDesde = new Date(fechaDesde);
+      copyBody.fechaHasta = new Date(fechaHasta);
+
+      this.sigaService.post("facturacionsjcs_savePago", copyBody).subscribe(
+        data => {
+
+          this.progressSpinnerDatosPagos = false;
+
+          const resp = JSON.parse(data.body);
+          const error = resp.error;
+
+          if (error && null != error && null != error.description) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.description));
+          } else if (resp.status == 'OK') {
+            this.idPago = resp.id;
+            this.idEstadoPago = '10';
+            this.modoEdicion = true;
+            this.bodyAux = new PagosjgItem();
+            this.bodyAux = JSON.parse(JSON.stringify(this.body));
+          }
+
+        },
+        err => {
+          this.progressSpinnerDatosPagos = false;
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        },
+        () => {
+          this.progressSpinnerDatosPagos = false;
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.historicoEstados();
+        }
+      );
+
+    } else {
+
+      this.sigaService.post("facturacionsjcs_updatePago", this.body).subscribe(
+        data => {
+
+          this.progressSpinnerDatosPagos = false;
+
+          const resp = JSON.parse(data.body);
+          const error = resp.error;
+
+          if (error && null != error && null != error.description) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.description));
+          } else if (resp.status == 'OK') {
+            this.bodyAux = new PagosjgItem();
+            this.bodyAux = JSON.parse(JSON.stringify(this.body));
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          }
+        },
+        err => {
+          this.progressSpinnerDatosPagos = false;
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+      );
+
+    }
+
   }
 
   disabledRestablecer() {
     if (this.modoEdicion) {
-      if (JSON.stringify(this.body) != JSON.stringify(this.bodyAux) && this.idEstadoPago == "10") {
+      if (JSON.stringify(this.body) != JSON.stringify(this.bodyAux) && (this.idEstadoPago == "10" || this.idEstadoPago == "20")) {
         return false;
       } else {
         return true;
       }
     } else {
-      if ((undefined != this.body.nombre && this.body.nombre.trim() != "") || (undefined != this.body.idFacturacion) || (undefined != this.body.codBanco && this.body.codBanco.trim() != "")) {
+      if ((undefined != this.body.nombre && this.body.nombre.trim() != "") || (undefined != this.body.idFacturacion) || (undefined != this.body.abreviatura && this.body.abreviatura.trim() != "")) {
         return false;
       } else {
         return true;
@@ -265,4 +333,24 @@ export class DatosPagosComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
+
+
+  marcarObligatorio(tipoCampo: string, valor) {
+    let resp = false;
+
+    if (tipoCampo == 'input' && (valor == undefined || valor == null || valor.trim().length == 0)) {
+      resp = true;
+    }
+
+    if (tipoCampo == 'select' && (valor == undefined || valor == null)) {
+      resp = true;
+    }
+
+    if (tipoCampo == 'datePicker' && (valor == undefined || valor == null || valor == '')) {
+      resp = true;
+    }
+
+    return resp;
+  }
+
 }
