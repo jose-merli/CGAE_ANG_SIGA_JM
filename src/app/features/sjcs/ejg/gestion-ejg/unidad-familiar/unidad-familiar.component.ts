@@ -62,7 +62,7 @@ export class UnidadFamiliarComponent implements OnInit {
   @Output() opened = new EventEmitter<boolean>();
   @Output() idOpened = new EventEmitter<boolean>();
 
-  @ViewChild("cd") cdDelete: Dialog;
+  @ViewChild("cdDelete") cdDelete: Dialog;
 
   fichaPosible = {
     key: "unidadFamiliar",
@@ -368,6 +368,7 @@ export class UnidadFamiliarComponent implements OnInit {
     );
     let icon = "fa fa-edit";
     this.confirmationService.confirm({
+      key: "cdDelete",
       message: mess,
       icon: icon,
       accept: () => {
