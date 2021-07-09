@@ -50,7 +50,8 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
   selectMultiple: boolean = false;
   textFilter: string = "Seleccionar";
   buscar: boolean = false;
-  from: boolean = false;
+  fromEJG: boolean = false;
+  fromDES: boolean = false;
   datosAsociar;
 
   es: any = esCalendar;
@@ -82,11 +83,21 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
 
   ngOnInit() {
 
+    //asociar desde EJG
     if (sessionStorage.getItem('EJG')) {
       this.datos = JSON.parse(sessionStorage.getItem('EJG'));
-      this.from = true;
+      this.fromEJG = true;
       sessionStorage.removeItem('EJG');
     }
+
+    //Asociar desde designacion
+   /*  if (sessionStorage.getItem('Designacion')) {
+      this.datos = JSON.parse(sessionStorage.getItem('Designacion'));
+      this.fromDES = true;
+      sessionStorage.removeItem('Designacion');
+    } */
+
+
   /*   if (sessionStorage.getItem('EJGSoj')) {
       this.datos = JSON.parse(sessionStorage.getItem('EJGSoj'));
       this.from = true;
@@ -122,7 +133,8 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
   asociarElement(event){
     if(!(event == null || event == undefined)){
       this.datosAsociar = event;
-      this.asociarEJG(this.datosAsociar);
+      if(this.fromEJG)this.asociarEJG(this.datosAsociar);
+      //else if(this.fromDES)this.asociarDES(this.datosAsociar);
     }
   }
   searchEvent(event) {
@@ -164,7 +176,7 @@ asociarEJG(data){
                 "No se ha asociado el EJG correctamente",
                 ""
               );
-              this.location.back();
+             // this.location.back();
               this.progressSpinner = false;
             }
           );
@@ -189,7 +201,7 @@ asociarEJG(data){
                 "No se ha asociado el EJG correctamente",
                 ""
               );
-              this.location.back();
+              //this.location.back();
               this.progressSpinner = false;
             }
           ); 
@@ -217,7 +229,7 @@ asociarEJG(data){
                 "No se ha asociado el EJG correctamente",
                 ""
               );
-              this.location.back();
+             // this.location.back();
               this.progressSpinner = false;
             }
           ); 
