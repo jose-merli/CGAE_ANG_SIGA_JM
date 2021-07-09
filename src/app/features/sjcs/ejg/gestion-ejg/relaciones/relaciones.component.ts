@@ -20,6 +20,7 @@ export class RelacionesComponent implements OnInit {
   @Input() modoEdicion;
   @Input() permisoEscritura;
   @Input() tarjetaRelaciones: string;
+  @Input() art27: boolean = false;
 
   openFicha: boolean = false;
   nuevo;
@@ -43,6 +44,10 @@ export class RelacionesComponent implements OnInit {
   datosFamiliares: any;
   tipoRelacion: String;
   radioTarjetaValue: String;
+  noAsociaSOJ: boolean = false;
+  noAsociaASI: boolean = false;
+  noAsociaDES: boolean = false;
+  noCreaDes: boolean = false;
 
   @ViewChild("table") table: DataTable;
 
@@ -59,6 +64,7 @@ export class RelacionesComponent implements OnInit {
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
   @Input() openTarjetaRelaciones;
+  
 
   constructor(private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
@@ -75,6 +81,7 @@ export class RelacionesComponent implements OnInit {
       this.nuevo = false;
       this.modoEdicion = true;
       this.getRelaciones();
+
     } else {
       this.nuevo = true;
       this.modoEdicion = true;
@@ -120,6 +127,30 @@ export class RelacionesComponent implements OnInit {
         this.relaciones = JSON.parse(n.body).relacionesItem;
         this.nRelaciones = this.relaciones.length;
         //obtiene el tipo en caso de devolver solo 1.
+        //deshabilitacion de botones en caso de obtener una relacion de cada tipo
+      //ya que solo puede haber una sola relacion
+      this.relaciones.forEach(relacion => {
+        relacion.sjcs
+        switch (relacion.sjcs) {
+          case 'ASISTENCIA':
+            this.noAsociaASI = true;
+            break;
+          case 'SOJ':
+            this.noAsociaSOJ = true;
+            break;
+          case 'DESIGNACIÓN':
+            //en caso de designacion, si ya esta relacionado no se podra crear una nueva designacion para ese EJG
+            this.noAsociaDES = true;
+            this.noCreaDes = true;
+            break;
+            default:
+            this.noAsociaASI = false;
+            this.noAsociaSOJ = false;
+            this.noAsociaDES = false;
+            this.noCreaDes = false;
+            break;
+        }
+      })
         if (this.relaciones.length == 1) {
           this.tipoRelacion = this.relaciones[0].sjcs;
         }
@@ -365,8 +396,18 @@ export class RelacionesComponent implements OnInit {
     }
   }
   crearDesignacion() {
-    this.persistenceService.clearDatos();
-    this.router.navigate(["/gestionEjg"]);
+    /* this.persistenceService.clearDatos();
+    this.router.navigate(["/fichaDesignaciones"]); */
+    this.progressSpinner = true;
+    //Recogemos los datos de nuevo de la capa de persistencia para captar posibles cambios realizados en el resto de tarjetas
+    this.body = this.persistenceService.getDatos();
+    this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+    //Utilizamos el bodyInicial para no tener en cuenta cambios que no se hayan guardado.
+    sessionStorage.setItem("EJG", JSON.stringify(this.bodyInicial));
+    sessionStorage.setItem("nuevaDesigna", "true");
+    if (this.art27) sessionStorage.setItem("Art27", "true");
+    this.progressSpinner = false;
+    this.router.navigate(["/fichaDesignaciones"]);
   }
 
   checkPermisosAsociarDesignacion() {
@@ -379,11 +420,11 @@ export class RelacionesComponent implements OnInit {
   }
   asociarDesignacion() {
     //this.persistenceService.clearDatos();
-    sessionStorage.setItem("radioTajertaValue",'des');
+    sessionStorage.setItem("radioTajertaValue", 'des');
     let ejgItem = JSON.stringify(this.body);
-    sessionStorage.setItem("EJG",ejgItem);
+    sessionStorage.setItem("EJG", ejgItem);
     this.router.navigate(["/busquedaAsuntos"]);
-    
+
   }
 
   checkPermisosAsociarSOJ() {
@@ -396,11 +437,11 @@ export class RelacionesComponent implements OnInit {
   }
   asociarSOJ() {
     //this.persistenceService.clearDatos();
-    sessionStorage.setItem("radioTajertaValue",'soj');
+    sessionStorage.setItem("radioTajertaValue", 'soj');
     let ejgItem = JSON.stringify(this.body);
-    sessionStorage.setItem("EJG",ejgItem);
+    sessionStorage.setItem("EJG", ejgItem);
     this.router.navigate(["/busquedaAsuntos"]);
-    
+
   }
 
   checkPermisosAsociarAsistencia() {
@@ -411,12 +452,12 @@ export class RelacionesComponent implements OnInit {
       this.asociarAsistencia();
     }
   }
-  
+
   asociarAsistencia() {
     //this.persistenceService.clearDatos();
-    sessionStorage.setItem("radioTajertaValue",'asi');
+    sessionStorage.setItem("radioTajertaValue", 'asi');
     let ejgItem = JSON.stringify(this.body);
-    sessionStorage.setItem("EJG",ejgItem);
+    sessionStorage.setItem("EJG", ejgItem);
     this.router.navigate(["/busquedaAsuntos"]);
   }
 
@@ -494,7 +535,7 @@ export class RelacionesComponent implements OnInit {
         );
       }
     });
-    if(found==false)    this.router.navigate(["/ficha-pre-designacion"]);
+    if (found == false) this.router.navigate(["/ficha-pre-designacion"]);
   }
 
 
@@ -555,7 +596,7 @@ export class RelacionesComponent implements OnInit {
 
         let designaModulo = new DesignaItem();
         /* let dataModulo = JSON.parse(data); */
-        let dataModulo  = new DesignaItem();
+        let dataModulo = new DesignaItem();
         dataModulo.idProcedimiento = item.idProcedimiento;
         dataModulo.idTurno = item.idTurno;
         dataModulo.ano = item.factConvenio;
@@ -583,7 +624,7 @@ export class RelacionesComponent implements OnInit {
                 sessionStorage.setItem("Designa", JSON.stringify(item));
                 this.router.navigate(["/ficha-pre-designacion"]);
               }, () => {
-                
+
               });
           },
           err => {
