@@ -1,8 +1,10 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { ConfirmationService, SortEvent } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '../../../../commons/translate';
 import { ListaProductosDTO } from '../../../../models/ListaProductosDTO';
+import { ListaProductosItems } from '../../../../models/ListaProductosItems';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
 
@@ -41,7 +43,7 @@ export class GestionProductosComponent implements OnInit {
   //Suscripciones
   subscriptionActivarDesactivarProductos: Subscription;
 
-  constructor(private changeDetectorRef: ChangeDetectorRef, private persistenceService: PersistenceService, private translateService: TranslateService, private confirmationService: ConfirmationService, private sigaServices: SigaServices) { }
+  constructor(private changeDetectorRef: ChangeDetectorRef, private persistenceService: PersistenceService, private translateService: TranslateService, private confirmationService: ConfirmationService, private sigaServices: SigaServices, private router: Router) { }
 
   ngOnInit() {
     if (this.persistenceService.getPaginacion() != undefined) {
@@ -250,6 +252,13 @@ export class GestionProductosComponent implements OnInit {
       this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("facturacion.maestros.tiposproductosservicios.nohistorico"));
 
     }
+  }
+
+  openTab(selectedRow) {
+    this.progressSpinner = true;
+    let productoItem: ListaProductosItems = selectedRow;
+    sessionStorage.setItem("productoBuscador", JSON.stringify(productoItem));
+    this.router.navigate(["/fichaProductos"]);
   }
 
   //Borra el mensaje de notificacion p-growl mostrado en la esquina superior derecha cuando pasas el puntero del raton sobre el

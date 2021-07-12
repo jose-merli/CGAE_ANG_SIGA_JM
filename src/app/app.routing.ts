@@ -238,6 +238,7 @@ import { BuscadorColegiadosComponent } from "./commons/buscador-colegiados/busca
 import { TiposProductosComponent } from "./features/facturacion/maestros/tipos-productos/tipos-productos.component";
 import { TiposServiciosComponent } from "./features/facturacion/maestros/tipos-servicios/tipos-servicios.component";
 import { ProductosComponent } from "./features/facturacion/productos/productos.component";
+import { FichaProductosComponent } from "./features/facturacion/productos/ficha-productos/ficha-productos.component";
 
 const appRoutes: Routes = [
 	{ path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
@@ -1312,6 +1313,12 @@ const appRoutes: Routes = [
 	{
 		path: 'productos',
 		component: ProductosComponent,
+		canActivate: [AuthGuard]
+	},
+
+	{
+		path: 'fichaProductos',
+		component: FichaProductosComponent,
 		canActivate: [AuthGuard]
 	},
 

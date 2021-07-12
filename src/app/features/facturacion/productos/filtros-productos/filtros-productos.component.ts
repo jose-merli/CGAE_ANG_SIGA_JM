@@ -51,10 +51,6 @@ export class FiltrosProductosComponent implements OnInit {
   }
 
   //INICIO METODOS BUSCADOR
-  prueba() {
-    console.log(Number(this.filtrosProductos.precioHasta) < Number(this.filtrosProductos.precioDesde));
-  }
-
   //Metodo que se lanza al cambiar de valir el combo de categorias, se usa para cargar el combo tipos dependiendo el valor de categorias
   valueChangeCategoria() {
     if (this.filtrosProductos.categoria != null) {
@@ -69,12 +65,19 @@ export class FiltrosProductosComponent implements OnInit {
   }
 
   buscar() {
-    if ((Number(this.filtrosProductos.precioHasta) < Number(this.filtrosProductos.precioDesde)) == false) {
+    console.log("PRECIODESDE", this.filtrosProductos.precioDesde);
+    console.log("PRECIOHASTA", this.filtrosProductos.precioHasta);
+    if ((this.filtrosProductos.precioDesde != null && this.filtrosProductos.precioDesde != undefined && this.filtrosProductos.precioDesde != "" && Number(this.filtrosProductos.precioDesde) != 0) && (this.filtrosProductos.precioHasta != null && this.filtrosProductos.precioHasta != undefined && this.filtrosProductos.precioHasta != "" && Number(this.filtrosProductos.precioHasta) != 0)) {
+      if ((Number(this.filtrosProductos.precioHasta) < Number(this.filtrosProductos.precioDesde)) == false) {
+        sessionStorage.setItem("filtrosProductos", JSON.stringify(this.filtrosProductos));
+        this.busqueda.emit(true);
+      } else {
+        //Aviso en caso de que el precioHasta sea menos que el precioDesde
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.productos.errorpreciodesdehasta"));
+      }
+    } else {
       sessionStorage.setItem("filtrosProductos", JSON.stringify(this.filtrosProductos));
       this.busqueda.emit(true);
-    } else {
-      //Aviso en caso de que el precioHasta sea menos que el precioDesde
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.productos.errorpreciodesdehasta"));
     }
   }
 

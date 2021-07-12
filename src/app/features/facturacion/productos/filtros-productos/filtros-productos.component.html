@@ -39,15 +39,13 @@
   <!-- Precio Desde -->
   <div class="form-group-interlineado col-lg-3 col-md-3">
     <label>{{ "facturacion.productos.preciodesde" | translate}}</label>
-    <input (keydown)="prueba()" DigitDecimaNumber type="text" class="form-control"
-      [(ngModel)]='filtrosProductos.precioDesde' pInputText>
+    <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]='filtrosProductos.precioDesde' pInputText>
   </div>
 
   <!-- Precio hasta -->
   <div class="form-group-interlineado col-lg-3 col-md-3">
     <label>{{ "facturacion.productos.preciohasta" | translate}}</label>
-    <input (keydown)="prueba()" DigitDecimaNumber type="text" class="form-control"
-      [(ngModel)]='filtrosProductos.precioHasta' pInputText>
+    <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]='filtrosProductos.precioHasta' pInputText>
   </div>
 
   <!-- IVA -->
