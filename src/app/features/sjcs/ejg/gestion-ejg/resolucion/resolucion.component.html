@@ -37,24 +37,26 @@
     </div>
 
     <div *ngIf="esFichaActiva('resolucion')" class="card-body card-body-ficha">
-        <div class="form-group col-lg-12 col-md-12">
-          <div class="row">
-            <div class="form-group col-lg-4 col-md-4">
-              <label style="text-align:center; font-weight: bold; padding-bottom: 10px"> {{
-                "justiciaGratuita.ejg.gestionejg.DatosResolucion" | translate}} </label>
-            </div>
-            <div class="form-group col-lg-4 col-md-4">
-              <label style="text-align:center; font-weight: bold; padding-bottom: 10px"> {{
-                "censo.nuevaSolicitud.observaciones" | translate}} </label>
-            </div>
-            <div class="form-group col-lg-4 col-md-4">
-              <label style="text-align:center; font-weight: bold; padding-bottom: 10px"> {{
-                "justiciaGratuita.ejg.gestionejg.otrosDatos" | translate}} </label>
-            </div>
+      <!-- <div class="form-group col-lg-12 col-md-12">
+        <div class="row">
+          <div class="form-group col-lg-4 col-md-4">
+            <label style="text-align:center; font-weight: bold; padding-bottom: 10px"> {{
+              "justiciaGratuita.ejg.gestionejg.DatosResolucion" | translate}} </label>
+          </div>
+          <div class="form-group col-lg-4 col-md-4">
+            <label style="text-align:center; font-weight: bold; padding-bottom: 10px"> {{
+              "censo.nuevaSolicitud.observaciones" | translate}} </label>
+          </div>
+          <div class="form-group col-lg-4 col-md-4">
+            <label style="text-align:center; font-weight: bold; padding-bottom: 10px"> {{
+              "justiciaGratuita.ejg.gestionejg.otrosDatos" | translate}} </label>
           </div>
         </div>
-        <div class="row">
+      </div> -->
+      <div class="row">
         <div class="form-group col-lg-4 col-md-4">
+          <label style="font-weight: bold; padding-bottom: 5px"> {{
+            "justiciaGratuita.ejg.gestionejg.DatosResolucion" | translate}} </label>
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "justiciaGratuita.ejg.datosGenerales.AnnioActa" | translate }} -- {{
@@ -81,18 +83,21 @@
                 filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
-                <label>{{ 'justiciaGratuita.ejg.datosGenerales.CAJG' | translate}} {{
-                  'justiciaGratuita.ejg.datosGenerales.annioNum' | translate}}</label>
-                <input type="text" class="form-control" maxLength="50" pInputText [(ngModel)]="resolucion.anioCAJG">
-              </div>
-              <div class="form-group col-lg-6 col-md-6">
-                <label> / </label>
-                <input type="text" class="form-control" maxLength="50" pInputText [(ngModel)]="resolucion.numeroCAJG">
+              <!-- <label>{{ 'justiciaGratuita.ejg.datosGenerales.CAJG' | translate}} {{
+                'justiciaGratuita.ejg.datosGenerales.annioNum' | translate}}</label> -->
+                <label>{{ 'justiciaGratuita.ejg.datosGenerales.annioCAJG' | translate}}</label>
+              <input type="text" class="form-control" maxLength="50" pInputText [(ngModel)]="resolucion.anioCAJG">
             </div>
-            
+            <div class="form-group col-lg-6 col-md-6">
+              <label> / {{'justiciaGratuita.ejg.datosGenerales.annioNum' | translate}}</label>
+              <input type="text" class="form-control" maxLength="50" pInputText [(ngModel)]="resolucion.numeroCAJG">
+            </div>
+
           </div>
         </div>
         <div class="col-lg-4 col-md-4 bordes">
+          <label style="font-weight: bold; padding-bottom: 5px"> {{
+            "censo.nuevaSolicitud.observaciones" | translate}} </label>
           <div class="row">
             <div class="form-group col-lg-12 col-md-12">
               <label>{{ "censo.nuevaSolicitud.observaciones" | translate }}</label>
@@ -108,12 +113,15 @@
           </div>
         </div>
         <div class="form-group col-lg-4 col-md-4">
+          <label style="font-weight: bold; padding-bottom: 5px"> {{
+            "justiciaGratuita.ejg.gestionejg.otrosDatos" | translate}} </label>
           <div class="row">
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"justiciaGratuita.ejg.datosGenerales.Ponente" | translate}}</label>
               <p-dropdown class="select-form" [(ngModel)]='resolucion.idPonente' placeholder="Seleccionar"
                 [options]="comboPonente" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
             </div>
+            
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"justiciaGratuita.ejg.datosGenerales.FechaPresPonente" | translate}}</label>
               <app-fecha [(value)]="resolucion.fechaPresentacionPonente"
@@ -133,16 +141,23 @@
               <app-fecha [(value)]="resolucion.fechaRatificacion" (valueChangeSelected)="fillFechaResFirme($event)"
                 (valueChangeInput)="fillFechaResFirme($event)"></app-fecha>
             </div>
-            <div class="form-group col-lg-5 col-md-5">
+
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{"menu.expediente.sanciones.busquedaPorSanciones.origen.literal" | translate}}</label>
+              <p-dropdown class="select-form" [(ngModel)]='resolucion.idOrigencajg' placeholder="Seleccionar"
+                [options]="comboOrigen" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+            </div>
+
+            <div class="form-group col-lg-6 col-md-6">
               <label>{{ "justiciaGratuita.ejg.datosGenerales.RefaAuto" | translate }}</label>
               <input type="text" class="form-control" pInputText [(ngModel)]="resolucion.refAuto">
             </div>
-            <div class="form-group col-lg-7 col-md-7">
+            <div class="form-group col-lg-6 col-md-6">
               <p-checkbox (onClick)="onChangeCheckT($event)" [(ngModel)]="resolucion.turnadoRatificacion" binary="true"
                 label="{{ 'justiciaGratuita.ejg.datosGenerales.RequiereTurnado' | translate }}" name="groupname"
                 [disabled]="!permisoEscritura"></p-checkbox>
             </div>
-            <div class="form-group col-lg-7 col-md-7">
+            <div class="form-group col-lg-6 col-md-6">
               <p-checkbox (onClick)="onChangeCheckR($event)" [(ngModel)]="resolucion.requiereNotificarProc"
                 binary="true" label="{{ 'justiciaGratuita.ejg.datosGenerales.NotificarProcurador' | translate }}"
                 name="groupname" [disabled]="!permisoEscritura"></p-checkbox>
@@ -154,8 +169,8 @@
         <div class="text-right main-button ">
           <button (click)="checkPermisosOpenActa()" pButton [disabled]="!permisoEscritura" type="button"
             label="{{ 'general.boton.abrirActa' | translate}}"></button>
-          <button (click)="checkPermisosConfirmRest()" pButton [disabled]="!permisoEscritura" type="button" icon="fa fa-undo"
-            iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+          <button (click)="checkPermisosConfirmRest()" pButton [disabled]="!permisoEscritura" type="button"
+            icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
           <button (click)="checkPermisosSave()" pButton [disabled]="!permisoEscritura || disabledSave()" type="button"
             icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
         </div>

@@ -107,7 +107,9 @@ export class EJGItem {
     fundamentoCalif: number;
     //el atributo dictamen hace referencia al texto de observaciones de la pestaña de dictamen
     dictamen: string;
-    
+
+    //REGTEL
+    identificadords: string;
 
     requiereTurn: boolean;
     bis: boolean;
