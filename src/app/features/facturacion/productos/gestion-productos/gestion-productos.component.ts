@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ConfirmationService, SortEvent } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '../../../../commons/translate';
@@ -15,6 +15,7 @@ export class GestionProductosComponent implements OnInit {
   //Variables generales app
   msgs = []; //Para mostrar los mensajes p-growl y dialogos de confirmacion
   progressSpinner: boolean = false; //Para mostrar/no mostrar el spinner de carga
+  @Output() busqueda = new EventEmitter<boolean>();
 
   //Variables p-table
   @ViewChild("productsTable") productsTable; //Referencia a la tabla de productos del html
@@ -304,6 +305,7 @@ export class GestionProductosComponent implements OnInit {
             this.historico = false;
             this.selectMultipleRows = false;
             this.selectAllRows = false;
+            this.busqueda.emit(true);
           }
         );
       },

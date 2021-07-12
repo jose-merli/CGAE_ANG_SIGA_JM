@@ -73,7 +73,6 @@ export class FiltrosProductosComponent implements OnInit {
       sessionStorage.setItem("filtrosProductos", JSON.stringify(this.filtrosProductos));
       this.busqueda.emit(true);
     } else {
-      console.log("ERROR PRECIO HASTA MENOR QUE PRECIO DESDE");
       //Aviso en caso de que el precioHasta sea menos que el precioDesde
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.productos.errorpreciodesdehasta"));
     }
