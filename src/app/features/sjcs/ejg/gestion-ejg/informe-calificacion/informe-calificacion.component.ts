@@ -131,7 +131,10 @@ export class InformeCalificacionComponent implements OnInit {
         //Craear entrada en la base de datos
         // this.comboDictamen.push({ label: "Indiferente", value: "-1" });
         this.comboDictamen.forEach(pres => {
-          if (pres.value == this.dictamen.idTipoDictamen) this.dictamenCabecera = pres.label;
+          if (pres.value == this.dictamen.idTipoDictamen) {
+            //this.dictamenCabecera = pres.label;
+            this.dictamen.dictamenSing = pres.label;
+          }
         });
       },
       err => {
@@ -225,15 +228,18 @@ export class InformeCalificacionComponent implements OnInit {
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
             this.bodyInicial = this.dictamen;
 
-            this.persistenceService.setDatos(this.bodyInicial);
-
             //Revisamos la cabecera de la tarjeta
             this.comboFundamentoCalif.forEach(pres => {
               if (pres.value == this.dictamen.fundamentoCalif) this.fundamentoCalifCabecera = pres.label;
             });
             this.comboDictamen.forEach(pres => {
-              if (pres.value == this.dictamen.idTipoDictamen) this.dictamenCabecera = pres.label;
+              if (pres.value == this.dictamen.idTipoDictamen) {
+                //this.dictamenCabecera = pres.label;
+                this.dictamen.dictamenSing = pres.label;
+              }
             });
+
+            this.persistenceService.setDatos(this.bodyInicial);
 
             this.progressSpinner = false;
             }
@@ -321,10 +327,11 @@ export class InformeCalificacionComponent implements OnInit {
           
           this.bodyInicial = dictamenPeticion;
           this.dictamen = dictamenPeticion;
+          this.dictamen.dictamenSing = "";
           this.persistenceService.setDatos(this.bodyInicial);
 
           this.fundamentoCalifCabecera = "";
-          this.dictamenCabecera = "";
+          //this.dictamenCabecera = "";
         }
         else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       },
