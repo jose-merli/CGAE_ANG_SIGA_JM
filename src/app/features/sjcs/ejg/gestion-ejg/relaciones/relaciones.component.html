@@ -115,14 +115,11 @@
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
               <div>
-                <div *ngIf="!checkPre(dato) && col.field != 'datosinteres'">
+                <div *ngIf="!checkPre(dato) ">
                   <span>{{dato[col.field]}}</span>
                 </div>
                 <div *ngIf="checkPre(dato)">
                   <span class ="enlace" (click)="navigateToFichaPre()">{{dato[col.field]}}</span>
-                </div>
-                <div *ngIf="col.field == 'datosinteres'">
-                  <div [innerHTML]="dato[col.field]"></div>
                 </div>
               </div>
 

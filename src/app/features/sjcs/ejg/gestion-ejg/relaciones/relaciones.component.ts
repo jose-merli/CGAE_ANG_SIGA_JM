@@ -36,7 +36,7 @@ export class RelacionesComponent implements OnInit {
   numSelected = 0;
   selectMultiple: boolean = false;
   seleccion: boolean = false;
-  relaciones: RelacionesItem[] = [];
+  relaciones = [];
   nRelaciones: number;
   progressSpinner: boolean;
   historico: boolean;
@@ -86,6 +86,7 @@ export class RelacionesComponent implements OnInit {
       this.nuevo = true;
       this.modoEdicion = true;
     }
+    
     this.getCols();
   }
 
@@ -97,6 +98,8 @@ export class RelacionesComponent implements OnInit {
       }
     }
   }
+
+  
 
   esFichaActiva(key) {
 
@@ -130,7 +133,7 @@ export class RelacionesComponent implements OnInit {
         //deshabilitacion de botones en caso de obtener una relacion de cada tipo
       //ya que solo puede haber una sola relacion
       this.relaciones.forEach(relacion => {
-        relacion.sjcs
+        relacion.fechaasunto = this.formatDate(relacion.fechaasunto);
         switch (relacion.sjcs) {
           case 'ASISTENCIA':
             this.noAsociaASI = true;
