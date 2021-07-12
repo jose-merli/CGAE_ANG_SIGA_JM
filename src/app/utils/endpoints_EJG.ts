@@ -99,7 +99,10 @@ export let endpoints_EJG: any = {
     gestionejg_getDelitosEJG: "ejg/gestion-ejg/getDelitosEJG",
     gestionejg_actualizarDelitosEJG: "ejg/gestion-ejg/actualizarDelitosEJG",
     gestionejg_busquedaProcuradores: "ejg/gestion-ejg/busquedaProcuradores",
-    
+
+    //REGTEL
+    gestionejg_searchListDocEjg: 'ejg/gestion-ejg/searchListDocEjg',
+	gestionejg_insertCollectionEjg: 'ejg/gestion-ejg/insertCollectionEjg',
 
     //comunicaciones
     gestionejg_getComunicaciones: "ejg/gestion-ejg/getComunicaciones"
