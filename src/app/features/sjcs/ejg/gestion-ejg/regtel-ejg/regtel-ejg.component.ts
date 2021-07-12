@@ -8,11 +8,11 @@ import { DocushareItem } from '../../../../../models/DocushareItem';
 import { DataTable } from "primeng/datatable";
 
 @Component({
-  selector: 'app-regtel',
-  templateUrl: './regtel.component.html',
-  styleUrls: ['./regtel.component.scss']
+  selector: 'app-regtel-ejg',
+  templateUrl: './regtel-ejg.component.html',
+  styleUrls: ['./regtel-ejg.component.scss']
 })
-export class RegtelComponent implements OnInit {
+export class RegtelEjgComponent implements OnInit {
   @Input() modoEdicion;
   @Input() permisoEscritura;
   @Input() tarjetaRegtel: string;
@@ -33,6 +33,7 @@ export class RegtelComponent implements OnInit {
   selectMultiple: boolean = false;
   seleccion: boolean = false;
   nRegtel;
+  regtel;
 
   resaltadoDatosGenerales: boolean = false;
   progressSpinner: boolean;
@@ -106,17 +107,32 @@ export class RegtelComponent implements OnInit {
   getRegtel(selected) {
   //CAMBIAR
     this.progressSpinner = true;
-    this.sigaServices.post("gestionejg_getDocumentos", selected).subscribe(
-    n => {
-         let regtel = JSON.parse(n.body).ejgDocItems;
-        // this.nRegtel = this.documentos.length;
-        this.nRegtel = regtel.length;
-        this.progressSpinner = false;
-      },
-      err => {
-       console.log(err);
-      }
-    );
+    if(selected.idPersona){
+    this.sigaServices
+        .postPaginado(
+          'fichaColegialRegTel_searchListDoc',
+          '?numPagina=1',
+          this.idPersona
+        )
+        .subscribe(
+          data => {
+            let bodySearchRegTel = JSON.parse(data['body']);
+            this.regtel = bodySearchRegTel.docuShareObjectVO;
+            //this.generalBody.identificadords = bodySearchRegTel.identificadorDS;
+            // this.bodyRegTel.forEach(element => {
+            //   element.fechaModificacion = this.arreglarFechaRegtel(
+            //     JSON.stringify(new Date(element.fechaModificacion))
+            //   );
+            // });
+          },
+          err => {
+            this.progressSpinner = false;
+            this.regtel = [];
+          },
+      );
+    } else {
+      this.regtel = [];
+    }
   }
 
   openTab(evento) {
