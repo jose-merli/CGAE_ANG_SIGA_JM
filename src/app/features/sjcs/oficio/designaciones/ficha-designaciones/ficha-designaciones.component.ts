@@ -33,8 +33,6 @@ export class FichaDesignacionesComponent implements OnInit {
 
   designaItem = JSON.parse(sessionStorage.getItem("designaItemLink"));
   procurador;
-  showModal2 = false;
-  showModal3 = false;
   listaPrueba = [];
   relaciones: any;
   comunicaciones: any;
@@ -1010,17 +1008,6 @@ export class FichaDesignacionesComponent implements OnInit {
     this.progressSpinner = false;
     this.showMessage("success", 'Operación realizada con éxito', 'Los registros han sido restablecidos');
   }
-
-  
-
-  cerrarModal() {
-    this.showModal2 = false;
-    this.showModal3 = false;
-  }
-
-  
-
-  
 
   searchContrarios(event) {
     this.progressSpinner = true;

@@ -36,9 +36,6 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
   to = 10;
   searchText = [];
   enableGuardar = false;
-  showModal: boolean = false;
-  showModal2: boolean = false;
-  showModal3: boolean = false;
   isLetrado: boolean = false;
 
   nuevoProcurador: boolean = false;
@@ -352,10 +349,6 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
     this.router.navigate(['/busquedaGeneral']);
   }
 
-  cerrarModal() {
-    this.showModal = false;
-  }
-
   styleObligatorio(evento) {
     if (evento == undefined || evento == null || evento == "") {
       return this.commonsService.styleObligatorio(evento);
@@ -408,42 +401,6 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
   clear() {
     this.msgs = [];
   }
-
-  // modDatos(event) {
-  //   let array = [];
-  //   let array2 = [];
-  //     event.forEach(element => {
-  //       element.cells.forEach(dato => {
-  //         array.push(dato.value);
-  //       });
-  //       array2.push(array);
-  //       array = [];
-  //     });
-  //     this.compruebaProcurador(array2[0]);
-
-  // }
-
-  // compruebaProcurador(event) {
-  //   this.progressSpinner = true;
-
-
-
-  //   this.sigaServices.post("designaciones_comprobarProcurador", procuradorPeticion).subscribe(
-  //     data => {
-
-  //       if (JSON.parse(data.body).procuradorItems[0] != undefined) {
-  //         this.showModal2 = true;
-  //       } else {
-  //         this.comprobarFechaProcurador();
-  //       }
-  //       this.progressSpinner = false;
-  //     },
-  //     err => {
-  //       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-  //       this.progressSpinner = false;
-  //     }
-  //   );
-  // }
 
   checkEJGDesignas() {
     let designa = JSON.parse(sessionStorage.getItem("designaItemLink"))

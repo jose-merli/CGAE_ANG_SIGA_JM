@@ -275,4 +275,8 @@ export class ContrariosPreDesignacionComponent implements OnInit {
        this.selectionMode = "multiple"; */
     }
   }
+
+  clear() {
+    this.msgs = [];
+  }
 }

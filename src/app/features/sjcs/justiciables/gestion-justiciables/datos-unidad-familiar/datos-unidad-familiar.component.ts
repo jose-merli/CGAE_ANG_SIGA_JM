@@ -359,4 +359,8 @@ export class DatosUnidadFamiliarComponent implements OnInit {
     this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
     this.resaltadoDatos = true;
   }
+
+  clear() {
+    this.msgs = [];
+  }
 }
