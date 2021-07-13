@@ -9,7 +9,7 @@ import { CommonsService } from '../../../../_services/commons.service';
 import { DatePipe } from '../../../../../../node_modules/@angular/common';
 import { Dialog } from 'primeng/primeng';
 import { saveAs } from "file-saver/FileSaver";
-import moment = require('moment');
+//import moment = require('moment');
 
 @Component({
   selector: 'app-tabla-ejg',
