@@ -43,6 +43,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 	@Input() fromInteresado;
 	@Input() fromContrario;
 	@Input() fromContrarioEJG;
+	@Input() fromUniFamiliar;
 
 	searchRepresentanteGeneral: boolean = false;
 	showEnlaceRepresentante: boolean = false;
@@ -261,6 +262,10 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 		} else {
 			this.persistenceService.clearBody();
 			sessionStorage.setItem("origin", "newRepresentante");
+			if(this.fromUniFamiliar)sessionStorage.setItem("fichaJust", "UnidadFamiliar");
+			// if(this.fromInteresado)sessionStorage.setItem("fichaJust", "Interesado");
+			// if(this.fromContrario)sessionStorage.setItem("fichaJust", "Contrario");
+			// if(this.fromContrarioEJG)sessionStorage.setItem("fichaJust", "ContrarioEJG");
 			this.router.navigate(['/justiciables'], { queryParams: { rp: '1' } });
 		}
 	}

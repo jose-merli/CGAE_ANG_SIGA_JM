@@ -449,6 +449,8 @@ import { AddExpedienteComponent } from './features/sjcs/ejg/gestion-ejg/datos-ge
 import { ComunicacionesEJGComponent } from './features/sjcs/ejg/gestion-ejg/comunicaciones/comunicaciones-ejg.component';
 import { FichaPreDesignacionComponent } from './features/sjcs/ejg/gestion-ejg/relaciones/ficha-pre-designacion/ficha-pre-designacion.component';
 import { DefensaJuridicaComponent } from './features/sjcs/ejg/gestion-ejg/relaciones/ficha-pre-designacion/defensa-juridica/defensa-juridica.component';
+import { RegtelEjgComponent } from './features/sjcs/ejg/gestion-ejg/regtel-ejg/regtel-ejg.component';
+
 
 import { SigaStorageService } from './siga-storage.service';
 import { FichaCambioLetradoComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/ficha-cambio-letrado/ficha-cambio-letrado.component';
@@ -621,12 +623,12 @@ import { ContrariosPreDesignacionComponent } from './features/sjcs/ejg/gestion-e
 		InformeCalificacionComponent,
 		ResolucionComponent,
 		ImpugnacionComponent,
-		/* RegtelComponent, */
 		ComunicacionesComponent,
 		AddExpedienteComponent,
 		ComunicacionesEJGComponent,
 		ProcuradorPreDesignacionComponent,
  		ContrariosPreDesignacionComponent,
+		RegtelEjgComponent,
 		
 		GestionActasComponent,
 		MantenimientoFacturacionComponent,

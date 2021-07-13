@@ -871,22 +871,20 @@ export class BusquedaGeneralComponent implements OnDestroy {
   }
 
   irFichaColegial(id) {
-
+    
+    //let colegioSelec = this.colegios_seleccionados[0].idInstitucion;
     // En caso que venga de una ficha de contrario
     if (this.fromAbogadoContrario) {
       sessionStorage.setItem('abogado', JSON.stringify(id));
       this.location.back();
     }
-
     //En caso que se este seleccionando un nuevo porcurador
-    if (this.nuevoProcurador) {
+    else if (this.nuevoProcurador) {
       sessionStorage.setItem('datosProcurador', JSON.stringify(id));
       this.location.back();
     }
-
     // ir a ficha de notario
-    let colegioSelec = this.colegios_seleccionados[0].idInstitucion;
-    if (sessionStorage.getItem('abrirNotario') == 'true' && sessionStorage.getItem('abrirRemitente') != 'true') {
+    else if (sessionStorage.getItem('abrirNotario') == 'true' && sessionStorage.getItem('abrirRemitente') != 'true') {
       if (!this.selectMultiple && !this.selectAll) {
         if (sessionStorage.getItem('notario') != null || sessionStorage.getItem('notario') != undefined) {
           sessionStorage.removeItem('notario');

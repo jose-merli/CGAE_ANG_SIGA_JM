@@ -13,8 +13,8 @@
             <label class="mr-auto title-ficha pointer">{{ "censo.regtel.literal.titulo" | translate }}</label>
           </div>
           <div class="d-flex justify-content-between default">
-            <label *ngIf="nRegtel == 0">{{ "censo.regtel.literal.numero.directorios" | translate }}: <span>{{ "general.message.no.registros" | translate }}</span></label>
-            <label *ngIf="nRegtel > 0">{{ "censo.regtel.literal.numero.directorios" | translate }}: <span>{{nRegtel}}</span></label>
+            <label *ngIf="nRegtel == 0">{{ "censo.regtel.literal.numero.directorios" | translate }} <span>{{ "general.message.no.registros" | translate }}</span></label>
+            <label *ngIf="nRegtel > 0">{{ "censo.regtel.literal.numero.directorios" | translate }} <span>{{nRegtel}}</span></label>
             <label></label>
              <!-- <label *ngIf="nDocumentos > 3 && documentos != undefined && documentos[0] != undefined && documentos[1] != undefined && documentos[2] != undefined">{{ "enviosMasivos.literal.documentos" | translate }}: <span>{{documentos[0].documentoDesc}},{{documentos[1].documentoDesc}},{{documentos[2].documentoDesc}}</span></label>-->
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('regtel')"></i>
@@ -32,7 +32,7 @@
     <div *ngIf="esFichaActiva('regtel')" class="px-0 pt-0 pb-0 card-body card-body-ficha">
           <!-- TABLA RESULTADOS -->
           <p-table [value]="regtel" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple" [responsive]="true"
-            #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowUnSelect)="actualizaSeleccionados(selectedDatos)" [ngClass]="{ 'customCursor': selectMultiple}"
+            #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowUnselect)="actualizaSeleccionados(selectedDatos)" [ngClass]="{ 'customCursor': selectMultiple}"
             selectionMode="multiple" paginatorPosition="both">
             <ng-template pTemplate="colgroup" let-columns>
               <colgroup>
@@ -122,12 +122,17 @@
               
           </div>
         </div>
-        <p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" #cd>
-          <p-footer>
-            <button type="button" pButton icon="fa-check" label="Si" (click)="cd.accept()"></button>
-            <button type="button" pButton icon="fa-close" label="No" (click)="cd.reject()"></button>
-          </p-footer>
-        </p-confirmDialog>
     </div>
   </div>
+</div>
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="regtelFicha" icon="icon" width="425" #regtelFicha>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="regtelFicha.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="regtelFicha.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
 </div>

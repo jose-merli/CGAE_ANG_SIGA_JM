@@ -42,7 +42,7 @@
       <!-- TABLA RESULTADOS -->
       <p-table [value]="documentos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple"
         [responsive]="true" #tableDocumentacion class="tabla-listado" [paginator]="true" [rows]="selectedItem"
-        (onRowUnSelect)="actualizaSeleccionados(selectedDatos)" [ngClass]="{ 'customCursor': selectMultiple}"
+        (onRowUnselect)="actualizaSeleccionados(selectedDatos)" [ngClass]="{ 'customCursor': selectMultiple}"
         selectionMode="multiple" paginatorPosition="both">
         <ng-template pTemplate="colgroup" let-columns>
           <colgroup>

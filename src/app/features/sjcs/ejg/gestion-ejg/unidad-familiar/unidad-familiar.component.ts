@@ -10,6 +10,7 @@ import { SigaServices } from '../../../../../_services/siga.service';
 import { DataTable, Dialog } from 'primeng/primeng';
 import { DatePipe } from '@angular/common';
 import { saveAs } from "file-saver/FileSaver";
+import { JusticiableBusquedaItem } from '../../../../../models/sjcs/JusticiableBusquedaItem';
 
 @Component({
   selector: 'app-unidad-familiar',
@@ -48,6 +49,7 @@ export class UnidadFamiliarComponent implements OnInit {
   seleccion: boolean = false;
   openFicha: boolean = false;
   historico: boolean = false;
+  isRepresentante: boolean = false;
   resaltadoDatosGenerales: boolean = false;
   activacionTarjeta: boolean = false;
 
@@ -60,7 +62,7 @@ export class UnidadFamiliarComponent implements OnInit {
   @Output() opened = new EventEmitter<boolean>();
   @Output() idOpened = new EventEmitter<boolean>();
 
-  @ViewChild("cd") cdDelete: Dialog;
+  @ViewChild("cdDelete") cdDelete: Dialog;
 
   fichaPosible = {
     key: "unidadFamiliar",
@@ -123,6 +125,7 @@ export class UnidadFamiliarComponent implements OnInit {
         this.progressSpinner = false;
         this.datosFamiliares.forEach(element => {
           element.nombreApeSolicitante = nombresol;
+          //Introducir entrada en la base de datos
           if (element.estado == 30) {
             element.estadoDes = "Denegada";
           } else if (element.estado == 40) {
@@ -167,7 +170,35 @@ export class UnidadFamiliarComponent implements OnInit {
           this.solicitanteP = this.datosFamiliaresActivos.filter(
               (dato) => dato.uf_enCalidad == "3")[0];
           this.nExpedientes = this.datosFamiliaresActivos.length;
-        }
+
+          if(this.solicitanteP != undefined){
+            this.datosFamiliaresActivos.forEach(familiar =>{
+            if(familiar.uf_enCalidad != "3") familiar.relacionadoCon = this.solicitanteP.pjg_nombrecompleto;
+            })
+          }
+          let representantes = [];
+          //Introducimos las entradas de los representantes de los familiares introducidos
+          this.datosFamiliaresActivos.forEach(element => {
+            if(element.representante != undefined && element.representante!=null){
+              let representante = new UnidadFamiliarEJGItem();
+
+              representante.pjg_nombrecompleto = element.representante;
+              representante.pjg_direccion = element.direccionRepresentante;
+              representante.pjg_nif = element.nifRepresentante;
+              representante.labelEnCalidad = this.translateService.instant('justiciaGratuita.justiciables.rol.representante');
+              representante.relacionadoCon = element.pjg_nombrecompleto;
+              representante.fechaBaja = null;
+              representante.isRepresentante = true;
+
+              representantes.push(representante);
+            }
+          });
+          //Hacemos esto para no introducir los representantes en mitad de la lectura del array DatosFamiliaresActivos
+          if(representantes.length > 0)representantes.forEach(element => {
+            this.datosFamiliaresActivos.push(element);
+          }
+          );
+         }
         if(this.solicitanteP==undefined) this.solicitanteP = new UnidadFamiliarEJGItem();
         if(this.solicitanteP.pjg_nombrecompleto != undefined) this.apellidosCabecera = this.solicitanteP.pjg_nombrecompleto.split(",")[0];
         else this.apellidosCabecera = "";
@@ -205,17 +236,9 @@ export class UnidadFamiliarComponent implements OnInit {
     else return true;
   }
   openTab(evento) {
-
-    //this.persistenceService.setBody(evento);
-    //this.persistenceService.setFichasPosibles(fichasPosibles_unidadFamiliar);
-    //this.router.navigate(["/gestionJusticiables"], { queryParams: { fr: "u" } });
-
-    //this.persistenceService.setFichasPosibles(this.fichasPosibles);
-    
     sessionStorage.setItem("origin","UnidadFamiliar");
     sessionStorage.setItem("Familiar", JSON.stringify(evento));
-    //Se utiliza para rellenar los campos de las tarjetas de datos generales y de datos personales
-    //this.persistenceService.setBody(evento);
+    
     this.router.navigate(["/gestionJusticiables"]);
 
   }
@@ -226,7 +249,7 @@ export class UnidadFamiliarComponent implements OnInit {
       { field: "pjg_nombrecompleto", header: "administracion.parametrosGenerales.literal.nombre.apellidos", width: "20%" },
       { field: "pjg_direccion", header: "censo.consultaDirecciones.literal.direccion", width: "15%" },
       { field: "labelEnCalidad", header: "administracion.usuarios.literal.rol", width: "10%" },
-      { field: "nombreApeSolicitante", header: "justiciaGratuita.ejg.datosGenerales.RelacionadoCon", width: "20%" },
+      { field: "relacionadoCon", header: "justiciaGratuita.ejg.datosGenerales.RelacionadoCon", width: "20%" },
       { field: "pd_descripcion", header: "informes.solicitudAsistencia.parentesco", width: "15%" },
       { field: "expedienteEconom", header: "justiciaGratuita.ejg.datosGenerales.ExpedienteEcon", width: "20%" },
     ];
@@ -267,6 +290,19 @@ export class UnidadFamiliarComponent implements OnInit {
     }
   }
 
+  isVolverSolicitarEEJG(datos){
+     if(datos.length != 1){
+      this.volverSolicitarEejg = false
+     }else{
+      if((datos[0].expedienteEconom == "" || datos[0].expedienteEconom == undefined || datos[0].expedienteEconom == null)
+       && (datos[0].estado != "30" || datos[0].estado != "40" || datos[0].estado != "50") ){
+        this.volverSolicitarEejg = false
+      }else{
+        this.volverSolicitarEejg = true
+      }
+    }  
+  } 
+
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
@@ -301,9 +337,16 @@ export class UnidadFamiliarComponent implements OnInit {
     }
   }
 
-  actualizaSeleccionados(selectedDatos) {
+  actualizaSeleccionados(selectedDatos) { 
+    this.isVolverSolicitarEEJG(selectedDatos);
     this.numSelected = selectedDatos.length;
     this.seleccion = false;
+    let repre = this.selectedDatos.find(
+      item => item.isRepresentante == true
+    );
+    if (repre != undefined)
+      this.isRepresentante = true;
+    else this.isRepresentante = false;
   }
 
   showMessage(severity, summary, msg) {
@@ -325,6 +368,7 @@ export class UnidadFamiliarComponent implements OnInit {
     );
     let icon = "fa fa-edit";
     this.confirmationService.confirm({
+      key: "cdDelete",
       message: mess,
       icon: icon,
       accept: () => {
@@ -475,21 +519,6 @@ export class UnidadFamiliarComponent implements OnInit {
 
   solicitarEEJ() {
     this.sigaServices.post("gestionejg_solicitarEEJG", this.selectedDatos[0]).subscribe(
-      n => {
-        this.progressSpinner = false;
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner = false;
-        this.selectDatos=[];
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-      }
-    );
-  }
-
-  volverSolicitarEEJ() {
-    this.sigaServices.post("gestionejg_volverSolicitarEEJG", this.selectedDatos[0]).subscribe(
       n => {
         this.progressSpinner = false;
         this.selectDatos=[];

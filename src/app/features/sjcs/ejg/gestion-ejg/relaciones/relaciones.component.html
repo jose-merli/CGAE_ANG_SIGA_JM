@@ -115,14 +115,11 @@
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
               <div>
-                <div *ngIf="!checkPre(dato) && col.field != 'datosinteres'">
+                <div *ngIf="!checkPre(dato) ">
                   <span>{{dato[col.field]}}</span>
                 </div>
                 <div *ngIf="checkPre(dato)">
                   <span class ="enlace" (click)="navigateToFichaPre()">{{dato[col.field]}}</span>
-                </div>
-                <div *ngIf="col.field == 'datosinteres'">
-                  <div [innerHTML]="dato[col.field]"></div>
                 </div>
               </div>
 
@@ -164,19 +161,19 @@
       <div class="card-footer">
         <div class="text-right main-button">
           <button pButton
-            [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura"
+            [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura || noAsociaASI"
             (click)="checkPermisosAsociarAsistencia()" type="button" iconPos="left"
             label="{{ 'general.boton.AsociarAsistencia' | translate }}"></button>
           <button pButton
-            [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura"
+            [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura || noAsociaSOJ"
             (click)="checkPermisosAsociarSOJ()" type="button" iconPos="left"
             label="{{'general.boton.asociarSOJ' | translate}}"></button>
           <button pButton
-            [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura"
+            [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura || noAsociaDES"
             (click)="checkPermisosAsociarDesignacion()" type="button" iconPos="left"
             label="{{'general.boton.AsociarDesignacion' | translate}}"></button>
           <button pButton
-            [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura"
+            [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura || noCreaDes"
             (click)="checkPermisosCrearDesignacion()" type="button" iconPos="left"
             label="{{'general.boton.crearDesignacion' | translate}}"></button>
           <button pButton

@@ -6,13 +6,15 @@ import { CommonsService } from '../../../../../_services/commons.service';
 import { saveAs } from 'file-saver/FileSaver';
 import { DocushareItem } from '../../../../../models/DocushareItem';
 import { DataTable } from "primeng/datatable";
+import { TranslateService } from '../../../../../commons/translate';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
-  selector: 'app-regtel',
-  templateUrl: './regtel.component.html',
-  styleUrls: ['./regtel.component.scss']
+  selector: 'app-regtel-ejg',
+  templateUrl: './regtel-ejg.component.html',
+  styleUrls: ['./regtel-ejg.component.scss']
 })
-export class RegtelComponent implements OnInit {
+export class RegtelEjgComponent implements OnInit {
   @Input() modoEdicion;
   @Input() permisoEscritura;
   @Input() tarjetaRegtel: string;
@@ -32,7 +34,8 @@ export class RegtelComponent implements OnInit {
   numSelected = 0;
   selectMultiple: boolean = false;
   seleccion: boolean = false;
-  nRegtel;
+  nRegtel = 0;
+  regtel = [];
 
   resaltadoDatosGenerales: boolean = false;
   progressSpinner: boolean;
@@ -56,7 +59,9 @@ export class RegtelComponent implements OnInit {
   constructor(private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
     private commonsServices: CommonsService,
-    private changeDetectorRef: ChangeDetectorRef) { }
+    private translateService: TranslateService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private confirmationService: ConfirmationService) { }
 
   ngOnInit() {
     if (this.persistenceService.getDatos()) {
@@ -64,7 +69,8 @@ export class RegtelComponent implements OnInit {
       this.modoEdicion = true;
       this.body = this.persistenceService.getDatos();
       this.item = this.body;
-      this.getRegtel(this.item);
+      //Se comprueba que se tiene una carpeta DocuShare creada mediante el atributo "identificadords"
+      if(this.item.identificadords != null) this.getRegtel();
       this.getCols();
     }else {
     this.nuevo = true;
@@ -78,6 +84,9 @@ export class RegtelComponent implements OnInit {
       if (this.openFicha == false) {
         this.fichaPosible.activa = !this.fichaPosible.activa;
         this.openFicha = !this.openFicha;
+        //Si se cancela la creacion de una coleccion cuando se abra la tarjeta por primera vez,
+        //se le pregunta cada vez que la abra de nuevo.
+        if(this.openFicha && this.item!= undefined && this.item.identificadords == null) this.callConfirmationServiceRegtel();
       }
     }
   }
@@ -99,28 +108,92 @@ export class RegtelComponent implements OnInit {
       this.fichaPosible.activa = !this.fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
+    
     this.opened.emit(this.openFicha);
     this.idOpened.emit(key);
+    //Si se cancela la creacion de una coleccion cuando se abra la tarjeta por primera vez,
+    //se le pregunta cada vez que la abra de nuevo.
+    if(this.openFicha && this.item!= undefined && this.item.identificadords == null) this.callConfirmationServiceRegtel();
   }
 
-  getRegtel(selected) {
-  //CAMBIAR
+  getRegtel() {
     this.progressSpinner = true;
-    this.sigaServices.post("gestionejg_getDocumentos", selected).subscribe(
-    n => {
-         let regtel = JSON.parse(n.body).ejgDocItems;
-        // this.nRegtel = this.documentos.length;
-        this.nRegtel = regtel.length;
-        this.progressSpinner = false;
-      },
-      err => {
-       console.log(err);
-      }
-    );
+    
+    this.sigaServices
+        .getParam(
+          'gestionejg_searchListDocEjg',
+          '?anio='+this.item.annio+'&numero='+this.item.numero+'&idTipoEJG='+this.item.tipoEJG+'&identificadords='+this.item.identificadords
+        )
+        .subscribe(
+          data => {
+            let bodySearchRegTel = JSON.parse(data['body']);
+            this.regtel = bodySearchRegTel.docuShareObjectVO;
+            //this.generalBody.identificadords = bodySearchRegTel.identificadorDS;
+            // this.bodyRegTel.forEach(element => {
+            //   element.fechaModificacion = this.arreglarFechaRegtel(
+            //     JSON.stringify(new Date(element.fechaModificacion))
+            //   );
+            // });
+            this.nRegtel = this.regtel.length;
+          },
+          err => {
+            this.progressSpinner = false;
+            this.regtel = [];
+            this.nRegtel = 0;
+          },
+      );
+  }
+
+  insertColl(){
+    this.progressSpinner = true;
+    this.sigaServices
+        .post(
+          'gestionejg_insertCollectionEjg',
+          this.item
+        )
+        .subscribe(
+          data => {
+            this.progressSpinner = false;
+            this.item.identificadords = data.body;
+            let mess = this.translateService.instant("messages.collectionCreated");
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          },
+          err => {
+            this.progressSpinner = false;
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+          },
+      );
   }
 
   openTab(evento) {
   }
+
+  callConfirmationServiceRegtel() {
+    let mess = this.translateService.instant("messages.creaCollection");
+    let icon = "fa fa-edit";
+    let keyConfirmation = "regtelFicha";
+
+    this.confirmationService.confirm({
+      key: keyConfirmation,
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.insertColl();
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
+
   getCols() {
       this.cols = [
         { field: "flimite_presentacion", header: "informesycomunicaciones.comunicaciones.documento.nombre", width: "25%" },

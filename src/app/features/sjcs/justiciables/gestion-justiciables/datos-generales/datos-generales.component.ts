@@ -456,7 +456,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       },
       err => {
 
-        if (JSON.parse(err.error).error.description != "") {
+        if (err.error != undefined && JSON.parse(err.error).error.description != "") {
           if (JSON.parse(err.error).error.code == "600") {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
           } else {

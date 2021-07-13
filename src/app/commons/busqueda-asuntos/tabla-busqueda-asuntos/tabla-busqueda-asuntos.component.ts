@@ -1,12 +1,15 @@
-import { Component, OnInit, Input, ViewChild, ChangeDetectorRef, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ChangeDetectorRef, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { DataTable } from '../../../../../node_modules/primeng/primeng';
 import { SigaServices } from '../../../_services/siga.service';
 import { PersistenceService } from '../../../_services/persistence.service';
 import { AsuntosJusticiableItem } from '../../../models/sjcs/AsuntosJusticiableItem';
 import { CommonsService } from '../../../_services/commons.service';
 import { Location } from '@angular/common';
+import { DesignaItem } from '../../../models/sjcs/DesignaItem';
+import { EJGItem } from '../../../models/sjcs/EJGItem';
 
-@Component({ 
+
+@Component({
   selector: 'app-tabla-busqueda-asuntos',
   templateUrl: './tabla-busqueda-asuntos.component.html',
   styleUrls: ['./tabla-busqueda-asuntos.component.scss']
@@ -20,14 +23,15 @@ export class TablaBusquedaAsuntosComponent implements OnInit {
 
   selectedItem: number = 10;
   selectAll;
-  selectedDatos = [];
+  selectedDatos:any[] = [];
   numSelected = 0;
   selectMultiple: boolean = false;
   seleccion: boolean = false;
+ 
 
   permisoEscritura: boolean = true;
   datosInicio: boolean = false;
-  datos=[];
+  datos = [];
   idPersona;
   showTarjetaPermiso: boolean = true;
 
@@ -37,10 +41,12 @@ export class TablaBusquedaAsuntosComponent implements OnInit {
   @Input() modoEdicion;
   @Input() fromJusticiable;
   @Input() data: AsuntosJusticiableItem = null;
+  @Output() elementoAsociado = new EventEmitter<String[]>();
+
 
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
-    private persistenceService: PersistenceService) { }
+    private persistenceService: PersistenceService, private location: Location, private sigaServices: SigaServices) { }
 
   ngOnInit() {
 
@@ -54,7 +60,7 @@ export class TablaBusquedaAsuntosComponent implements OnInit {
     //     } else {
     //       this.showTarjetaPermiso = true;
     this.getCols();
-
+    
 
     //     }
     //   }
@@ -133,48 +139,48 @@ export class TablaBusquedaAsuntosComponent implements OnInit {
       detail: msg
     });
   }
- 
+
   clear() {
     this.msgs = [];
   }
 
-  openTab() {
+   openTab(event) {
+     this.elementoAsociado.emit(event.data);
+  } 
 
-  }
+
+  /* getAsunto(event) {
+    if (this.datos != null) {
+
+      let asunto = event.data.asunto.split("/");
+
+      let anoDesigna = asunto[0].split("D")[1];
+
+      let turno = event.data.turnoGuardia.split("/")[0];
+
+      //     let request = [anoDesigna, this.datos.annio, this.datos.tipoEJG,
+      //       //, newDesigna.idTurno.toString(), newId.id, this.datosEJG.numero
+      //       turno, asunto[1], this.datos.numero
+      //     ];
+
+      this.sigaServices.post("designacion_asociarEjgDesigna", request).subscribe(
+        m => {
+
+          if (JSON.parse(m.body).error.code == 200) this.showMessage("success", "Asociación con EJG realizada correctamente", "");
+          else this.showMessage("error", "Asociación con EJG fallida", "");
+          sessionStorage.removeItem("EJG");
+          this.location.back();
+        },
+        err => {
+          this.showMessage("error",
+            "No se ha asociado el EJG correctamente",
+            ""
+          );
+          this.progressSpinner = false;
+        }
+      );
 
 
-  // getAsunto(event) {
-  //   if (this.datos != null) {
-
-  //     let asunto = event.data.asunto.split("/");
-
-  //     let anoDesigna = asunto[0].split("D")[1];
-
-  //     let turno = event.data.turnoGuardia.split("/")[0];
-
-  //     let request = [anoDesigna, this.datos.annio, this.datos.tipoEJG,
-  //       //, newDesigna.idTurno.toString(), newId.id, this.datosEJG.numero
-  //       turno, asunto[1], this.datos.numero
-  //     ];
-
-  //     this.sigaServices.post("designacion_asociarEjgDesigna", request).subscribe(
-  //       m => {
-
-  //         if (JSON.parse(m.body).error.code == 200) this.showMessage("success", "Asociación con EJG realizada correctamente", "" );
-  //         else this.showMessage("error", "Asociación con EJG fallida",  "" );
-  //         sessionStorage.removeItem("EJG");
-  //         this.location.back();
-  //       },
-  //       err => {
-  //         this.showMessage("error",
-  //           "No se ha asociado el EJG correctamente",
-  //           ""
-  //         );
-  //         this.progressSpinner = false;
-  //       }
-  //     );
-
-      
-  //   }
-  // }
+    }
+  } */
 }

@@ -197,7 +197,6 @@ export class ResolucionComponent implements OnInit {
           this.commonsServices.arregloTildesCombo(this.comboOrigen);
       },
       err => {
-        console.log(err);
       }
     );
   }
