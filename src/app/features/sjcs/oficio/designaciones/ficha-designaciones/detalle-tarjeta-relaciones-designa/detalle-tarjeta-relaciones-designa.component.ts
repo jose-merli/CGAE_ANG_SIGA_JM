@@ -3,6 +3,9 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../../commons/translate';
 import { Message } from 'primeng/primeng';
 import { DatePipe } from '@angular/common';
+import { Router } from '@angular/router';
+import { PersistenceService } from '../../../../../../_services/persistence.service';
+import { DesignaItem } from '../../../../../../models/sjcs/DesignaItem';
 
 @Component({
   selector: 'app-detalle-tarjeta-relaciones-designa',
@@ -25,7 +28,7 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
   selectMultiple: boolean = false;
   selectionMode: string = "single";
   numSelected = 0;
-
+  body;
   selectedDatos: any = [];
 
   selectAll: boolean = false;
@@ -33,11 +36,14 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
 
   @ViewChild("table") tabla;
   disabled: boolean = false;
+  nuevo: boolean;
 
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
-    private datepipe: DatePipe
+    private datepipe: DatePipe,
+    private router: Router,
+    private persistenceService: PersistenceService,
   ) { }
 
 
@@ -58,7 +64,7 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
         }
         element.fechaasunto = this.formatDate(element.fechaasunto);
       });
-
+      this.body = sessionStorage.getItem("designaItemLink");
     }
 
     this.getCols();
@@ -176,5 +182,75 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
 
   porhacer() {
     this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+  }
+
+  checkPermisosAsociarSOJ() {
+    // let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+     //if (msg != undefined) {
+       //this.msgs = msg;
+     //} else {
+       this.asociarSOJ();
+     //}
+   }
+
+  asociarSOJ() {
+    //this.persistenceService.clearDatos();
+    sessionStorage.setItem("radioTajertaValue", 'soj');
+    let desItem = JSON.stringify(this.body);
+    sessionStorage.setItem("Designacion", desItem);
+    this.router.navigate(["/busquedaAsuntos"]);
+
+  }
+  checkPermisosAsociarEJG() {
+    // let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+     //if (msg != undefined) {
+       //this.msgs = msg;
+     //} else {
+       this.asociarEJG();
+     //}
+   }
+  asociarEJG() {
+    //this.persistenceService.clearDatos();
+    sessionStorage.setItem("radioTajertaValue", 'ejg');
+    let desItem = JSON.stringify(this.body);
+    sessionStorage.setItem("Designacion", desItem);
+    this.router.navigate(["/busquedaAsuntos"]);
+
+  }
+  checkPermisosAsociarAsistencia() {
+    // let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+     //if (msg != undefined) {
+       //this.msgs = msg;
+     //} else {
+       this.asociarAsistencia();
+     //}
+   }
+  asociarAsistencia() {
+    //this.persistenceService.clearDatos();
+    sessionStorage.setItem("radioTajertaValue", 'asi');
+    //let desItem = JSON.stringify(this.body);
+    sessionStorage.setItem("Designacion", this.body);
+    this.router.navigate(["/busquedaAsuntos"]);
+  }
+  checkPermisosCrearEJG() {
+   // let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    //if (msg != undefined) {
+      //this.msgs = msg;
+    //} else {
+      this.crearEJG();
+    //}
+  }
+  crearEJG() {
+ 
+   /*  this.progressSpinner = true;
+    //Recogemos los datos de nuevo de la capa de persistencia para captar posibles cambios realizados en el resto de tarjetas
+    this.body = this.persistenceService.getDatos();
+    this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+    //Utilizamos el bodyInicial para no tener en cuenta cambios que no se hayan guardado.
+    sessionStorage.setItem("EJG", JSON.stringify(this.bodyInicial));
+    sessionStorage.setItem("nuevaDesigna", "true");
+    if (this.art27) sessionStorage.setItem("Art27", "true");
+    this.progressSpinner = false; */
+    this.router.navigate(["/gestionEjg"]);
   }
 }

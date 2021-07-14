@@ -20,8 +20,10 @@ import { TranslateService } from '../translate';
 import { PersistenceService } from '../../_services/persistence.service';
 import { FiltrosBusquedaAsuntosComponent } from "./filtros-busqueda-asuntos/filtros-busqueda-asuntos.component";
 import { TablaBusquedaAsuntosComponent } from "./tabla-busqueda-asuntos/tabla-busqueda-asuntos.component";
+import { ConfirmationService } from 'primeng/api';
 import { AsuntosJusticiableItem } from "../../models/sjcs/AsuntosJusticiableItem";
 import { EJGItem } from "../../models/sjcs/EJGItem";
+import { DesignaItem } from "../../models/sjcs/DesignaItem";
 export enum KEY_CODE {
   ENTER = 13
 }
@@ -53,6 +55,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
   fromEJG: boolean = false;
   fromDES: boolean = false;
   datosAsociar;
+  datosDesigna;
 
   es: any = esCalendar;
   permisoEscritura: any;
@@ -65,7 +68,8 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
     private formBuilder: FormBuilder,
     private persistenceService: PersistenceService,
     private location: Location,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private confirmationService: ConfirmationService,
   ) {
     super(USER_VALIDATIONS);
     this.formBusqueda = this.formBuilder.group({
@@ -79,7 +83,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
   @ViewChild("table")
   table: DataTable;
   selectedDatos;
-  datos: EJGItem;
+  datos;
 
   ngOnInit() {
 
@@ -91,25 +95,25 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
     }
 
     //Asociar desde designacion
-   /*  if (sessionStorage.getItem('Designacion')) {
-      this.datos = JSON.parse(sessionStorage.getItem('Designacion'));
+    if (sessionStorage.getItem('Designacion')) {
+      this.datosDesigna = JSON.parse(sessionStorage.getItem('Designacion'));
       this.fromDES = true;
       sessionStorage.removeItem('Designacion');
-    } */
-
-
-  /*   if (sessionStorage.getItem('EJGSoj')) {
-      this.datos = JSON.parse(sessionStorage.getItem('EJGSoj'));
-      this.from = true;
-      sessionStorage.removeItem('EJGSoj');
     }
-    if (sessionStorage.getItem('EJGAsistencia')) {
-      this.datos = JSON.parse(sessionStorage.getItem('EJGAsistencia'));
-      this.from = true;
-      sessionStorage.removeItem('EJGAsistencia');
-    } */
-    
-    
+
+
+    /*   if (sessionStorage.getItem('EJGSoj')) {
+        this.datos = JSON.parse(sessionStorage.getItem('EJGSoj'));
+        this.from = true;
+        sessionStorage.removeItem('EJGSoj');
+      }
+      if (sessionStorage.getItem('EJGAsistencia')) {
+        this.datos = JSON.parse(sessionStorage.getItem('EJGAsistencia'));
+        this.from = true;
+        sessionStorage.removeItem('EJGAsistencia');
+      } */
+
+
 
 
     // this.commonsService.checkAcceso()
@@ -130,19 +134,19 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
     //   ).catch(error => console.error(error));
 
   }
-  asociarElement(event){
-    if(!(event == null || event == undefined)){
+  asociarElement(event) {
+    if (!(event == null || event == undefined)) {
       this.datosAsociar = event;
-      if(this.fromEJG)this.asociarEJG(this.datosAsociar);
-      //else if(this.fromDES)this.asociarDES(this.datosAsociar);
+      if (this.fromEJG) this.confirmAsociarEJG(this.datosAsociar);
+      else if (this.fromDES) this.confirmAsociarDES(this.datosAsociar);
     }
   }
   searchEvent(event) {
     this.search(event);
   }
 
-  resetTableEvent(event){
-    if(event == true){
+  resetTableEvent(event) {
+    if (event == true) {
       this.body = [];
     }
   }
@@ -155,70 +159,41 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
     sessionStorage.removeItem("radioTajertaValue");
     this.location.back();
   }
+  confirmAsociarEJG(data) {
+    let mess = this.translateService.instant(
+      "general.message.aceptar"
+    );
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      key: "asoc",
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.asociarEJG(data);
 
-asociarEJG(data){
-   if (this.datos != null) {
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancelar",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];      }
+    });
+  }
+  asociarEJG(data) {
+    if (this.datos != null) {
       let radioValue = sessionStorage.getItem("radioTajertaValue");
       switch (radioValue) {
         case 'des':
-          let datos = [ data.idinstitucion,data.anio,data.numero,
-            data.idTipoDesigna,this.datos.tipoEJG,this.datos.annio,this.datos.numero, data.turnoGuardia
-           ];
+          let datos = [data.idinstitucion, data.anio, data.numero,
+          data.idTipoDesigna, this.datos.tipoEJG, this.datos.annio, this.datos.numero, data.turnoGuardia
+          ];
           this.sigaServices.post("gestionejg_asociarDesignacion", datos).subscribe(
             m => {
-              this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-                sessionStorage.removeItem("radioTajertaValue");
-                this.progressSpinner = false;
-                this.location.back();
-            },
-            err => {
-              this.showMesg("error",
-                "No se ha asociado el EJG correctamente",
-                ""
-              );
-             // this.location.back();
-              this.progressSpinner = false;
-            }
-          );
-       
-          
-          break;
-        case 'asi':
-         
-            let requestAsistencia = [data.idinstitucion,data.anio,data.numero,this.datos.tipoEJG,this.datos.annio,this.datos.numero
-             
-            ];
-            
-          this.sigaServices.post("gestionejg_asociarAsistencia", requestAsistencia).subscribe(
-            m => {
-              this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-                sessionStorage.removeItem("radioTajertaValue");
-                this.progressSpinner = false;
-                this.location.back();
-            },
-            err => {
-              this.showMesg("error",
-                "No se ha asociado el EJG correctamente",
-                ""
-              );
-              //this.location.back();
-              this.progressSpinner = false;
-            }
-          ); 
-          
-          
-          break;
-        case 'soj':
-         
-            let requestSoj = [
-              data.idinstitucion,data.anio,data.numero,
-              data.idTipoSoj,this.datos.tipoEJG,this.datos.annio,this.datos.numero
-             
-            ];
-            
-          this.sigaServices.post("gestionejg_asociarSOJ", requestSoj).subscribe(
-            m => {
-              
               this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
               sessionStorage.removeItem("radioTajertaValue");
               this.progressSpinner = false;
@@ -229,16 +204,184 @@ asociarEJG(data){
                 "No se ha asociado el EJG correctamente",
                 ""
               );
-             // this.location.back();
+              // this.location.back();
               this.progressSpinner = false;
             }
-          ); 
-          
+          );
+
+
+          break;
+        case 'asi':
+
+          let requestAsistencia = [data.idinstitucion, data.anio, data.numero, this.datos.tipoEJG, this.datos.annio, this.datos.numero
+
+          ];
+
+          this.sigaServices.post("gestionejg_asociarAsistencia", requestAsistencia).subscribe(
+            m => {
+              this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+              sessionStorage.removeItem("radioTajertaValue");
+              this.progressSpinner = false;
+              this.location.back();
+            },
+            err => {
+              this.showMesg("error",
+                "No se ha asociado el EJG correctamente",
+                ""
+              );
+              //this.location.back();
+              this.progressSpinner = false;
+            }
+          );
+
+
+          break;
+        case 'soj':
+
+          let requestSoj = [
+            data.idinstitucion, data.anio, data.numero,
+            data.idTipoSoj, this.datos.tipoEJG, this.datos.annio, this.datos.numero
+
+          ];
+
+          this.sigaServices.post("gestionejg_asociarSOJ", requestSoj).subscribe(
+            m => {
+
+              this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+              sessionStorage.removeItem("radioTajertaValue");
+              this.progressSpinner = false;
+              this.location.back();
+            },
+            err => {
+              this.showMesg("error",
+                "No se ha asociado el EJG correctamente",
+                ""
+              );
+              // this.location.back();
+              this.progressSpinner = false;
+            }
+          );
+
           break;
       }
     }
 
-}
+  }
+
+  confirmAsociarDES(data) {
+    let mess = this.translateService.instant(
+      "justiciaGratuita.ejg.message.eliminarEstado"
+    );
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.asociarDES(data);
+
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancelar",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];      }
+    });
+  }
+  asociarDES(data) {
+
+    let asunto = this.datosDesigna.ano.split("/");
+
+    let anoDesigna = this.datosDesigna.anio;
+
+    let turno = this.datosDesigna.idTurno;
+
+    if (this.datosDesigna != null) {
+      let radioValue = sessionStorage.getItem("radioTajertaValue");
+      switch (radioValue) {
+
+        case 'ejg':
+          let request = [anoDesigna, data.anio, data.tipoEJG,
+            //       //, newDesigna.idTurno.toString(), newId.id, this.datosEJG.numero
+            turno, asunto[1], data.numero
+          ];
+          /*
+                this.sigaServices.post("designacion_asociarEjgDesigna", request).subscribe(
+                  m => {
+          
+                    this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+                    sessionStorage.removeItem("radioTajertaValue");
+                    this.progressSpinner = false;
+                    this.location.back();
+                  },
+                  err => {
+                    this.showMesg("error",
+                    "No se ha asociado el EJG correctamente",
+                    ""
+                  );
+                    this.progressSpinner = false;
+                  }
+                );
+                */
+
+          break;
+        case 'asi':
+
+          let requestAsistencia = [anoDesigna, this.datosDesigna.idTurno, asunto[1],data.idinstitucion,data.anio, data.numero];
+          
+        this.sigaServices.post("designacion_asociarAsistenciaDesigna", requestAsistencia).subscribe(
+          m => {
+            this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+              sessionStorage.removeItem("radioTajertaValue");
+              this.progressSpinner = false;
+              this.location.back();
+          },
+          err => {
+            this.showMesg("error",
+              "No se ha asociado el EJG correctamente",
+              ""
+            );
+            //this.location.back();
+            this.progressSpinner = false;
+          }
+        ); 
+         
+
+          break;
+        case 'soj':
+
+          /*  let requestSoj = [
+             data.idinstitucion,data.anio,data.numero,
+             data.idTipoSoj,this.datos.tipoEJG,this.datos.annio,this.datos.numero
+            
+           ];
+           
+         this.sigaServices.post("gestionejg_asociarSOJ", requestSoj).subscribe(
+           m => {
+             
+             this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+             sessionStorage.removeItem("radioTajertaValue");
+             this.progressSpinner = false;
+             this.location.back();
+           },
+           err => {
+             this.showMesg("error",
+               "No se ha asociado el EJG correctamente",
+               ""
+             );
+            // this.location.back();
+             this.progressSpinner = false;
+           }
+         ); */
+
+          break;
+      }
+    }
+  }
 
   search(event) {
     this.progressSpinner = true;

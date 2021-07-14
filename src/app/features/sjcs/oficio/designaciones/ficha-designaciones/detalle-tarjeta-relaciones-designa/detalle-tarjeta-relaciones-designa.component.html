@@ -61,11 +61,12 @@
   </p-table>
   <div class="card-footer">
     <div class="text-right main-button">
-      <button pButton type="button" iconPos="left" (click)="porhacer()" label="{{'general.boton.AsociarAsistencia' | translate}}"></button>
-      <button pButton type="button" iconPos="left" (click)="porhacer()" label="{{ 'general.boton.asociarSOJ' | translate}}"></button>
-      <button pButton type="button" iconPos="left" (click)="porhacer()" label="{{ 'general.boton.asociarEJG' | translate}}"></button>
-      <button pButton type="button" iconPos="left" (click)="porhacer()" label="{{'general.boton.crearEJG' | translate}}"></button>
+      <button pButton type="button" iconPos="left" (click)="checkPermisosAsociarAsistencia()" label="{{'general.boton.AsociarAsistencia' | translate}}"></button>
+      <button pButton type="button" iconPos="left" (click)="checkPermisosAsociarSOJ()" label="{{ 'general.boton.asociarSOJ' | translate}}"></button>
+      <button pButton type="button" iconPos="left" (click)="checkPermisosAsociarEJG()" label="{{ 'general.boton.asociarEJG' | translate}}"></button>
+      <button pButton type="button" iconPos="left" (click)="checkPermisosCrearEJG()" label="{{'general.boton.crearEJG' | translate}}"></button>
       <button pButton type="button" [disabled]="!isAnySelected()" (click)="eliminarRelacion()" icon="fa fa-trash" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
+      <button pButton [disabled]="!isAnySelected()" (click)="porhacer()" type="button" iconPos="left" label="{{'general.boton.consultEditRelacion' | translate}}"></button>
     </div>
   </div>
 </div>
