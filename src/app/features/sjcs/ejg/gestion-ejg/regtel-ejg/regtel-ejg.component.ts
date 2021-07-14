@@ -77,12 +77,12 @@ export class RegtelEjgComponent implements OnInit {
       this.item = this.body;
       //Se comprueba que se tiene una carpeta DocuShare creada mediante el atributo "identificadords"
       if(this.item.identificadords != null) this.getRegtel();
-      this.getCols();
+        this.getCols();
     }else {
-    this.nuevo = true;
-    this.modoEdicion = false;
-    this.item = new EJGItem();
-  }
+      this.nuevo = true;
+      this.modoEdicion = false;
+      this.item = new EJGItem();
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -186,7 +186,7 @@ export class RegtelEjgComponent implements OnInit {
                 'general.message.no.registros'
               );
             }
-            
+
           },
           err => {
             if (this.nRegtel != 0) {
@@ -293,7 +293,7 @@ export class RegtelEjgComponent implements OnInit {
     selectedRegtel.fechaModificacion = undefined;
     this.sigaServices
       .postDownloadFiles(
-        "gestionejg_downloadDocRegTelEjg",
+        "fichaColegialRegTel_downloadDoc",
         selectedRegtel
       )
       .subscribe(

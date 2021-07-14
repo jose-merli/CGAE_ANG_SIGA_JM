@@ -21,7 +21,7 @@ export class UnidadFamiliarComponent implements OnInit {
 
   @ViewChild("table") table: DataTable;
 
-  solicitanteP: UnidadFamiliarEJGItem = new UnidadFamiliarEJGItem(); 
+  solicitanteP: UnidadFamiliarEJGItem = new UnidadFamiliarEJGItem();
 
   rowsPerPage: any = [];
   selectedDatos = [];
@@ -36,13 +36,13 @@ export class UnidadFamiliarComponent implements OnInit {
   datosFamiliares;
   datosFamiliaresActivos;
   apellidosCabecera: string = "";
-  
+
   selectionMode;
   editMode;
   progressSpinner: boolean = false;
   selectDatos;
 
-  numSelected:number = 0;
+  numSelected: number = 0;
   selectedItem: number = 10;
   volverSolicitarEejg: boolean = false;
   selectMultiple: boolean = false;
@@ -73,19 +73,19 @@ export class UnidadFamiliarComponent implements OnInit {
     private persistenceService: PersistenceService, private router: Router,
     private datepipe: DatePipe,
     private commonsService: CommonsService, private translateService: TranslateService,
-    private sigaServices: SigaServices ) { }
+    private sigaServices: SigaServices) { }
 
   ngOnInit() {
-    
+
     this.getCols();
     if (this.persistenceService.getDatos()) {
       this.nuevo = false;
       this.modoEdicion = true;
       this.body = this.persistenceService.getDatos();
       //this.datosFamiliares = this.persistenceService.getBodyAux();
-      
+
       this.consultaUnidadFamiliar(this.body);
-      
+
     } else {
       this.nuevo = true;
       this.modoEdicion = false;
@@ -102,7 +102,7 @@ export class UnidadFamiliarComponent implements OnInit {
       sessionStorage.removeItem('tarjeta');
     }
   }
-  
+
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.openTarjetaUnidadFamiliar == true) {
@@ -137,7 +137,7 @@ export class UnidadFamiliarComponent implements OnInit {
           } else if (element.estado == 20) {
             element.estadoDes = "Pendiente aprobación";
           }
-  
+
           if (element.estadoDes != undefined && element.fechaSolicitud != undefined) {
             element.expedienteEconom = element.estadoDes + " * " + this.datepipe.transform(element.fechaSolicitud, 'dd/MM/yyyy');
           } else if (element.estadoDes != undefined && element.fechaSolicitud == undefined) {
@@ -150,36 +150,36 @@ export class UnidadFamiliarComponent implements OnInit {
 
           //Se traduce el valor del back a su idioma y rol correspondientes
           //Si se selecciona el valor "Unidad Familiar" en el desplegable "Rol/Solicitante"
-          if(element.uf_enCalidad == "1"){
+          if (element.uf_enCalidad == "1") {
             element.labelEnCalidad = this.translateService.instant('justiciaGratuita.justiciables.rol.unidadFamiliar');
           }
           //Si se selecciona el valor "Solicitante" en el desplegable "Rol/Solicitante"
-          if(element.uf_enCalidad == "2"){
+          if (element.uf_enCalidad == "2") {
             element.labelEnCalidad = this.translateService.instant('justiciaGratuita.justiciables.rol.solicitante');
           }
           //Si se selecciona el valor "Solicitante principal" en el desplegable "Rol/Solicitante"
-          if(element.uf_enCalidad == "3"){
+          if (element.uf_enCalidad == "3") {
             element.labelEnCalidad = this.translateService.instant('justiciaGratuita.justiciables.unidadFamiliar.solicitantePrincipal');
           }
         });
-        if(this.datosFamiliares != undefined){
+        if (this.datosFamiliares != undefined) {
           //Se buscan los familiares activos
           this.datosFamiliaresActivos = this.datosFamiliares.filter(
             (dato) => /*dato.fechaBaja != undefined && */ dato.fechaBaja == null);
           //Obtenemos el solicitante principal
           this.solicitanteP = this.datosFamiliaresActivos.filter(
-              (dato) => dato.uf_enCalidad == "3")[0];
+            (dato) => dato.uf_enCalidad == "3")[0];
           this.nExpedientes = this.datosFamiliaresActivos.length;
 
-          if(this.solicitanteP != undefined){
-            this.datosFamiliaresActivos.forEach(familiar =>{
-            if(familiar.uf_enCalidad != "3") familiar.relacionadoCon = this.solicitanteP.pjg_nombrecompleto;
+          if (this.solicitanteP != undefined) {
+            this.datosFamiliaresActivos.forEach(familiar => {
+              if (familiar.uf_enCalidad != "3") familiar.relacionadoCon = this.solicitanteP.pjg_nombrecompleto;
             })
           }
           let representantes = [];
           //Introducimos las entradas de los representantes de los familiares introducidos
           this.datosFamiliaresActivos.forEach(element => {
-            if(element.representante != undefined && element.representante!=null){
+            if (element.representante != undefined && element.representante != null) {
               let representante = new UnidadFamiliarEJGItem();
 
               representante.pjg_nombrecompleto = element.representante;
@@ -194,13 +194,13 @@ export class UnidadFamiliarComponent implements OnInit {
             }
           });
           //Hacemos esto para no introducir los representantes en mitad de la lectura del array DatosFamiliaresActivos
-          if(representantes.length > 0)representantes.forEach(element => {
+          if (representantes.length > 0) representantes.forEach(element => {
             this.datosFamiliaresActivos.push(element);
           }
           );
-         }
-        if(this.solicitanteP==undefined) this.solicitanteP = new UnidadFamiliarEJGItem();
-        if(this.solicitanteP.pjg_nombrecompleto != undefined) this.apellidosCabecera = this.solicitanteP.pjg_nombrecompleto.split(",")[0];
+        }
+        if (this.solicitanteP == undefined) this.solicitanteP = new UnidadFamiliarEJGItem();
+        if (this.solicitanteP.pjg_nombrecompleto != undefined) this.apellidosCabecera = this.solicitanteP.pjg_nombrecompleto.split(",")[0];
         else this.apellidosCabecera = "";
         this.progressSpinner = false;
       },
@@ -236,9 +236,9 @@ export class UnidadFamiliarComponent implements OnInit {
     else return true;
   }
   openTab(evento) {
-    sessionStorage.setItem("origin","UnidadFamiliar");
+    sessionStorage.setItem("origin", "UnidadFamiliar");
     sessionStorage.setItem("Familiar", JSON.stringify(evento));
-    
+
     this.router.navigate(["/gestionJusticiables"]);
 
   }
@@ -290,18 +290,18 @@ export class UnidadFamiliarComponent implements OnInit {
     }
   }
 
-  isVolverSolicitarEEJG(datos){
-     if(datos.length != 1){
+  isVolverSolicitarEEJG(datos) {
+    if (datos.length != 1) {
       this.volverSolicitarEejg = false
-     }else{
-      if((datos[0].expedienteEconom == "" || datos[0].expedienteEconom == undefined || datos[0].expedienteEconom == null)
-       && (datos[0].estado != "30" || datos[0].estado != "40" || datos[0].estado != "50") ){
+    } else {
+      if ((datos[0].expedienteEconom == "" || datos[0].expedienteEconom == undefined || datos[0].expedienteEconom == null)
+        && (datos[0].estado != "30" || datos[0].estado != "40" || datos[0].estado != "50")) {
         this.volverSolicitarEejg = false
-      }else{
+      } else {
         this.volverSolicitarEejg = true
       }
-    }  
-  } 
+    }
+  }
 
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
@@ -337,7 +337,7 @@ export class UnidadFamiliarComponent implements OnInit {
     }
   }
 
-  actualizaSeleccionados(selectedDatos) { 
+  actualizaSeleccionados(selectedDatos) {
     this.isVolverSolicitarEEJG(selectedDatos);
     this.numSelected = selectedDatos.length;
     this.seleccion = false;
@@ -374,7 +374,7 @@ export class UnidadFamiliarComponent implements OnInit {
       accept: () => {
         this.cdDelete.hide();
         this.delete()
-        
+
       },
       reject: () => {
         this.msgs = [
@@ -392,12 +392,12 @@ export class UnidadFamiliarComponent implements OnInit {
   }
 
   delete() {
-    this.progressSpinner=true;
+    this.progressSpinner = true;
 
     let data = [];
     let ejg: EJGItem;
 
-    for(let i=0; this.selectedDatos.length>i; i++){
+    for (let i = 0; this.selectedDatos.length > i; i++) {
       ejg = this.selectedDatos[i];
       /* ejg.fechaEstadoNew=this.fechaEstado;
       ejg.estadoNew=this.valueComboEstado; */
@@ -406,20 +406,20 @@ export class UnidadFamiliarComponent implements OnInit {
     }
     this.sigaServices.post("gestionejg_borrarFamiliar", data).subscribe(
       n => {
-        this.progressSpinner=false;
+        this.progressSpinner = false;
         this.selectedDatos = [];
-        
+
         if (n.statusText == 'OK') {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.historico =false;
-        this.consultaUnidadFamiliar(this.body);
+          this.historico = false;
+          this.consultaUnidadFamiliar(this.body);
         } else {
           this.showMessage('error', 'Error', this.translateService.instant('general.message.error.realiza.accion'));
         }
 
       },
       err => {
-        this.progressSpinner=false;
+        this.progressSpinner = false;
         this.selectedDatos = [];
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }
@@ -444,6 +444,30 @@ export class UnidadFamiliarComponent implements OnInit {
       this.datosFamiliaresActivos = this.datosFamiliares.filter(
         (dato) =>  /*dato.fechaBaja != undefined && */dato.fechaBaja == null);
     }
+    let representantes = [];
+
+    //Introducimos las entradas de los representantes de los familiares introducidos
+    this.datosFamiliaresActivos.forEach(element => {
+      if (element.representante != undefined && element.representante != null) {
+        let representante = new UnidadFamiliarEJGItem();
+
+        representante.pjg_nombrecompleto = element.representante;
+        representante.pjg_direccion = element.direccionRepresentante;
+        representante.pjg_nif = element.nifRepresentante;
+        representante.labelEnCalidad = this.translateService.instant('justiciaGratuita.justiciables.rol.representante');
+        representante.relacionadoCon = element.pjg_nombrecompleto;
+        representante.fechaBaja = null;
+        representante.isRepresentante = true;
+
+        representantes.push(representante);
+      }
+    });
+
+    //Hacemos esto para no introducir los representantes en mitad de la lectura del array DatosFamiliaresActivos
+    if (representantes.length > 0) representantes.forEach(element => {
+      this.datosFamiliaresActivos.push(element);
+    });
+    
     this.selectMultiple = false;
     this.selectionMode = "single";
     this.persistenceService.setHistorico(this.historico);
@@ -451,14 +475,14 @@ export class UnidadFamiliarComponent implements OnInit {
   }
 
   downloadEEJ() {
-    this.progressSpinner=true;
+    this.progressSpinner = true;
 
     let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
-      this.progressSpinner=false;
+      this.progressSpinner = false;
     } else {
-      
+
       let datosToCall = [];
 
       this.selectedDatos.forEach(element => {
@@ -468,7 +492,7 @@ export class UnidadFamiliarComponent implements OnInit {
         ejgData.idInstitucion = this.body.idInstitucion;
         ejgData.numEjg = this.body.numEjg;
         ejgData.tipoEJG = this.body.tipoEJG;
-        ejgData.nif=element.pjg_nif;
+        ejgData.nif = element.pjg_nif;
 
         datosToCall.push(ejgData);
       });
@@ -477,22 +501,22 @@ export class UnidadFamiliarComponent implements OnInit {
         data => {
           this.progressSpinner = false;
 
-          if(data.size==0){
+          if (data.size == 0) {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-          }else{
+          } else {
             let blob = null;
 
             let now = new Date();
-            let month = now.getMonth()+1;
-            let nombreFichero = "eejg_"+now.getFullYear();
+            let month = now.getMonth() + 1;
+            let nombreFichero = "eejg_" + now.getFullYear();
 
-            if(month<10){
-              nombreFichero = nombreFichero+"0"+month;
-            }else{
+            if (month < 10) {
+              nombreFichero = nombreFichero + "0" + month;
+            } else {
               nombreFichero += month;
             }
 
-            nombreFichero += now.getDate()+"_"+now.getHours()+""+now.getMinutes();
+            nombreFichero += now.getDate() + "_" + now.getHours() + "" + now.getMinutes();
 
             let mime = data.type;
             blob = new Blob([data], { type: mime });
@@ -508,7 +532,7 @@ export class UnidadFamiliarComponent implements OnInit {
     }
   }
 
-  checkPermisosSolicitarEEJ(){
+  checkPermisosSolicitarEEJ() {
     let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
@@ -521,13 +545,13 @@ export class UnidadFamiliarComponent implements OnInit {
     this.sigaServices.post("gestionejg_solicitarEEJG", this.selectedDatos[0]).subscribe(
       n => {
         this.progressSpinner = false;
-        this.selectDatos=[];
+        this.selectDatos = [];
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
       },
       err => {
         console.log(err);
         this.progressSpinner = false;
-        this.selectDatos=[];
+        this.selectDatos = [];
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }
     );
@@ -575,9 +599,9 @@ export class UnidadFamiliarComponent implements OnInit {
   }
 
   asociar() {
-    sessionStorage.setItem("origin","UnidadFamiliar");
-    sessionStorage.setItem("datosFamiliares",JSON.stringify(this.datosFamiliares));
-    sessionStorage.setItem("EJGItem",JSON.stringify(this.persistenceService.getDatos()));
+    sessionStorage.setItem("origin", "UnidadFamiliar");
+    sessionStorage.setItem("datosFamiliares", JSON.stringify(this.datosFamiliares));
+    sessionStorage.setItem("EJGItem", JSON.stringify(this.persistenceService.getDatos()));
     //this.searchContrarios.emit(true);
     this.router.navigate(["/justiciables"]);
   }
