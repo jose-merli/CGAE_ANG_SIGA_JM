@@ -13,9 +13,12 @@
             <label class="mr-auto title-ficha pointer">{{ "censo.regtel.literal.titulo" | translate }}</label>
           </div>
           <div class="d-flex justify-content-between default">
-            <label *ngIf="nRegtel == 0">{{ "censo.regtel.literal.numero.directorios" | translate }} <span>{{ "general.message.no.registros" | translate }}</span></label>
+            <!-- <label *ngIf="nRegtel == 0">{{ "censo.regtel.literal.numero.directorios" | translate }} <span>{{ "general.message.no.registros" | translate }}</span></label>
             <label *ngIf="nRegtel > 0">{{ "censo.regtel.literal.numero.directorios" | translate }} <span>{{nRegtel}}</span></label>
-            <label></label>
+            <label></label> -->
+            <label>{{ "censo.regtel.literal.numero.directorios" | translate }}
+              <span>{{ messageRegtel }}</span>
+            </label>
              <!-- <label *ngIf="nDocumentos > 3 && documentos != undefined && documentos[0] != undefined && documentos[1] != undefined && documentos[2] != undefined">{{ "enviosMasivos.literal.documentos" | translate }}: <span>{{documentos[0].documentoDesc}},{{documentos[1].documentoDesc}},{{documentos[2].documentoDesc}}</span></label>-->
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('regtel')"></i>
           </div>
@@ -31,9 +34,9 @@
     </div>
     <div *ngIf="esFichaActiva('regtel')" class="px-0 pt-0 pb-0 card-body card-body-ficha">
           <!-- TABLA RESULTADOS -->
-          <p-table [value]="regtel" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple" [responsive]="true"
+          <p-table [value]="regtel" [columns]="cols" [(selection)]="selectedDatos" selectionMode="single" [responsive]="true"
             #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowUnselect)="actualizaSeleccionados(selectedDatos)" [ngClass]="{ 'customCursor': selectMultiple}"
-            selectionMode="multiple" paginatorPosition="both">
+            selectionMode="single" paginatorPosition="both">
             <ng-template pTemplate="colgroup" let-columns>
               <colgroup>
                 <col *ngFor="let col of cols" [style.width]="col.width">
@@ -88,7 +91,8 @@
             <ng-template pTemplate="emptymessage" let-columns>
               <tr>
                 <td [attr.colspan]="columns.length">
-                  {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
+                  <!-- {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }} -->
+                  {{ messageRegtel }}
                 </td>
               </tr>
             </ng-template>
@@ -115,7 +119,9 @@
 
         <div class="card-footer">
           <div class="text-right main-button">
-            <button [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="checkPermisosShowFolder()"
+            <button [disabled]="buttonVisibleRegtelAtras " (click)="onClickAtrasRegtel()" pButton type="button" icon="fa fa-undo"
+          iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
+            <button [disabled]="buttonVisibleRegtelCarpeta || ((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="checkPermisosShowFolder()"
               pButton type="button" icon="fa fa-history" iconPos="left" label="{{ 'censo.regtel.literal.vercarpeta' | translate}}"></button>
               <button [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="checkPermisosDownload()"
               pButton type="button" icon="fa fa-download" iconPos="left" label="{{ 'agenda.fichaEventos.datosAsistencia.descargar' | translate}}"></button>
