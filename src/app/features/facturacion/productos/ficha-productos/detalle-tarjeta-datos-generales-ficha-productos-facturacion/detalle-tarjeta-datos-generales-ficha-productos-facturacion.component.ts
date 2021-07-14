@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '../../../../../commons/translate';
 import { ComboObject } from '../../../../../models/ComboObject';
+import { ListaProductosItems } from '../../../../../models/ListaProductosItems';
 import { ProductoDetalleItem } from '../../../../../models/ProductoDetalleItem';
 import { SigaServices } from '../../../../../_services/siga.service';
 
@@ -17,7 +18,8 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
 
   //Variables tarjeta datos generales
   producto: ProductoDetalleItem = new ProductoDetalleItem(); //Guarda los valores seleccionados/escritos en los campos
-  productoOriginal: ProductoDetalleItem; //En caso de que entre en modo editar este objeto sera el que contenga los datos originales conseguidos gracias al servicio detalleProducto.
+  productoDelBuscador: ListaProductosItems = new ListaProductosItems(); //Producto obtenido de la fila del buscador de productos en la cual pulsamos el enlace a la ficha productos.
+  productoOriginal: ProductoDetalleItem = new ProductoDetalleItem(); //En caso de que entre en modo editar este objeto sera el que contenga los datos originales conseguidos gracias al servicio detalleProducto.
   categoriasObject: ComboObject = new ComboObject(); //Modelo con la lista opciones + atributo error
   tiposObject: ComboObject = new ComboObject();
   tipoCertificadoObject: ComboObject = new ComboObject();
@@ -28,6 +30,7 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
   //Suscripciones
   subscriptionCategorySelectValues: Subscription;
   subscriptionTypeSelectValues: Subscription;
+  subscriptionCrearProductoInstitucion: Subscription;
 
   constructor(private sigaServices: SigaServices, private translateService: TranslateService) { }
 
@@ -41,26 +44,28 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
       this.subscriptionCategorySelectValues.unsubscribe();
     if (this.subscriptionTypeSelectValues)
       this.subscriptionTypeSelectValues.unsubscribe();
+    if (this.subscriptionCrearProductoInstitucion)
+      this.subscriptionCrearProductoInstitucion.unsubscribe();
   }
 
   //INICIO METODOS TARJETA DATOS GENERALES
   //Metodo que se lanza al cambiar de valor el combo de categorias, se usa para cargar el combo tipos dependiendo el valor de categorias
   valueChangeCategoria() {
-    /*  console.log(this.producto.categoria);
- 
-     if (this.producto.categoria != null) {
-       this.getComboTipo();
-     } else if (this.producto.categoria == null) {
-       this.producto.tipo = null;
-     } */
+    console.log(this.producto.categoria);
+
+    if (this.producto.categoria != null) {
+      this.getComboTipo();
+    } else if (this.producto.categoria == null) {
+      this.producto.tipo = null;
+    }
   }
 
   onChangeSolicitudInternet() {
-
+    console.log(this.producto.solicitaralta);
   }
 
   onChangesolicitudAnulacionInternet() {
-
+    console.log(this.producto.solicitarbaja);
   }
 
   restablecer() {
@@ -73,11 +78,11 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
 
   guardar() {
     this.aGuardar = true;
-    /* if (this.producto.categoria != null && this.producto.tipo != null && this.producto.descripcion != '') {
-      console.log("GUARDAR PRODUCTO")
+    if (this.producto.categoria != null && this.producto.tipo != null && this.producto.descripcion != '') {
+      this.guardarProducto();
     } else {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
-    } */
+    }
   }
 
   //Borra el mensaje de notificacion p-growl mostrado en la esquina superior derecha cuando pasas el puntero del raton sobre el
@@ -122,27 +127,51 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
   }
 
   //Metodo para obtener los valores del combo Tipo segun el combo Categoria
-  /*  getComboTipo() {
-     this.progressSpinner = true;
- 
-     this.subscriptionCategorySelectValues = this.sigaServices.getParam("productosBusqueda_comboTipos", "?idCategoria=" + this.producto.categoria).subscribe(
-       TipoSelectValues => {
-         this.progressSpinner = false;
- 
-         this.tiposObject = TipoSelectValues;
- 
-         let error = this.tiposObject.error;
-         if (error != null && error.description != null) {
-         }
-       },
-       err => {
-         console.log(err);
-         this.progressSpinner = false;
-       },
-       () => {
-         this.progressSpinner = false;
-       }
-     );
-   } */
+  getComboTipo() {
+    this.progressSpinner = true;
+
+    this.subscriptionCategorySelectValues = this.sigaServices.getParam("productosBusqueda_comboTipos", "?idCategoria=" + this.producto.categoria).subscribe(
+      TipoSelectValues => {
+        this.progressSpinner = false;
+
+        this.tiposObject = TipoSelectValues;
+
+        let error = this.tiposObject.error;
+        if (error != null && error.description != null) {
+        }
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  guardarProducto() {
+    this.progressSpinner = true;
+
+    this.subscriptionCrearProductoInstitucion = this.sigaServices.post("fichaProducto_crearProducto", this.producto).subscribe(
+      response => {
+        this.progressSpinner = false;
+
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+      },
+      err => {
+        if (err != undefined && JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+        //Si se ha guardado se habilita la tarjeta forma pago
+      }
+    );
+  }
   //FIN SERVICIOS DATOS GENERALES
 }
