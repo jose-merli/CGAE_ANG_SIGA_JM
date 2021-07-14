@@ -265,8 +265,8 @@
   </div>
   <!--</div> -->
   <div class="text-right main-button col-lg-12 col-md-12">
-    <button (click)="rest()" pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="disableBotonAnadir"
-      label="{{'general.boton.restablecer' | translate}}"></button>
+    <button (click)="rest()" pButton type="button" icon="fa fa-undo" iconPos="left" 
+      label="{{'general.boton.restablecer' | translate}}"></button><!-- [disabled]="disableBotonAnadir" -->
     <button *ngIf="body.idDocumentacion==null" (click)="checkNewDoc()" pButton type="button" icon="fa fa-save"
       iconPos="left" label="{{'general.boton.guardar' | translate}}"></button>
     <button *ngIf="body.idDocumentacion!=null" (click)="actualizar()" pButton type="button" icon="fa fa-save"

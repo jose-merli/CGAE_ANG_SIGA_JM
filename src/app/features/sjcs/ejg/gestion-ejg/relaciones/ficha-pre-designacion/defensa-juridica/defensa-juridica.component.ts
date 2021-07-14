@@ -475,8 +475,6 @@ export class DefensaJuridicaComponent implements OnInit {
     }
   }
 
-
-
   showMessage(severity, summary, msg) {
     this.msgs = [];
     this.msgs.push({
@@ -484,5 +482,9 @@ export class DefensaJuridicaComponent implements OnInit {
       summary: summary,
       detail: msg
     });
+  }
+
+  clear() {
+    this.msgs = [];
   }
 }
