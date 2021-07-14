@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { ListaProductosItems } from '../../../../models/ListaProductosItems';
 
 @Component({
@@ -8,17 +8,29 @@ import { ListaProductosItems } from '../../../../models/ListaProductosItems';
   styleUrls: ['./ficha-productos.component.scss']
 })
 export class FichaProductosComponent implements OnInit {
-  //Variables generales app
-  producto: ListaProductosItems;
+  //Array con los valores con cada tarjeta para mediante ngFor recorrerlo en el html y replicar acordeones, etc.
+  listaTarjetas = [
+    {
+      id: 'productosDatosGenerales',
+      nombre: "Datos Generales",
+      imagen: "",
+      icono: 'far fa-address-book',
+      fixed: false,
+      detalle: true,
+      opened: true,
+      campos: []
+    },
+  ];
 
-  constructor(private dataRoute: ActivatedRoute) { }
+  constructor(private router: Router) { }
 
   ngOnInit() {
-    /*    this.producto = JSON.parse(this.dataRoute.snapshot.params['productoItem']);
-       console.log("PRODUCTO ENVIADO DESDE GESTION PRODUCTOS", this.producto); */
 
-    this.producto = JSON.parse(sessionStorage.getItem("productoBuscador"));
-    console.log("PRODUCTO ENVIADO DESDE GESTION PRODUCTOS", this.producto);
+  }
+
+  backTo() {
+    sessionStorage.setItem("volver", 'true');
+    this.router.navigate(['/productos']);
   }
 
 }

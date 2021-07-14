@@ -440,6 +440,7 @@ import { FiltrosProductosComponent } from './features/facturacion/productos/filt
 import { GestionProductosComponent } from './features/facturacion/productos/gestion-productos/gestion-productos.component';
 import { FichaProductosComponent } from './features/facturacion/productos/ficha-productos/ficha-productos.component';
 import { DigitDecimaNumberDirective } from './commons/directives/digit-decima-number.directive';
+import { DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent } from './features/facturacion/productos/ficha-productos/detalle-tarjeta-datos-generales-ficha-productos-facturacion/detalle-tarjeta-datos-generales-ficha-productos-facturacion.component';
 
 @NgModule({
 	declarations: [
@@ -800,7 +801,8 @@ import { DigitDecimaNumberDirective } from './commons/directives/digit-decima-nu
 		GestionProductosComponent,
 		FichaProductosComponent,
 		//Otros
-		DigitDecimaNumberDirective
+		DigitDecimaNumberDirective,
+		DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent
 	],
 	imports: [
 		Paginador3Module,

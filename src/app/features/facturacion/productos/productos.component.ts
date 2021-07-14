@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewChecked, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '../../../commons/translate';
 import { ListaProductosDTO } from '../../../models/ListaProductosDTO';
@@ -11,7 +11,7 @@ import { SigaServices } from '../../../_services/siga.service';
   templateUrl: './productos.component.html',
   styleUrls: ['./productos.component.scss']
 })
-export class ProductosComponent implements OnInit {
+export class ProductosComponent implements OnInit, OnDestroy, AfterViewChecked {
   //Variables generales app
   msgs = []; //Para mostrar los mensajes p-growl y dialogos de confirmacion
   progressSpinner: boolean = false; //Para mostrar/no mostrar el spinner de carga
@@ -23,9 +23,13 @@ export class ProductosComponent implements OnInit {
   //Suscripciones
   subscriptionProductosBusqueda: Subscription;
 
-  constructor(public sigaServices: SigaServices, private commonsService: CommonsService, private translateService: TranslateService) { }
+  constructor(public sigaServices: SigaServices, private commonsService: CommonsService, private translateService: TranslateService, private cdRef: ChangeDetectorRef) { }
 
   ngOnInit() {
+  }
+
+  ngAfterViewChecked() {
+    this.cdRef.detectChanges();
   }
 
   ngOnDestroy() {

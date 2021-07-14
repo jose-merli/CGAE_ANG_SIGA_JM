@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '../../../../commons/translate';
 import { ComboItem } from '../../../../models/ComboItem';
@@ -11,7 +11,7 @@ import { SigaServices } from '../../../../_services/siga.service';
   templateUrl: './filtros-productos.component.html',
   styleUrls: ['./filtros-productos.component.scss']
 })
-export class FiltrosProductosComponent implements OnInit {
+export class FiltrosProductosComponent implements OnInit, OnDestroy {
   //Variables generales app
   msgs = []; //Para mostrar los mensajes p-growl y dialogos de confirmacion
   progressSpinner: boolean = false; //Para mostrar/no mostrar el spinner de carga
@@ -33,6 +33,17 @@ export class FiltrosProductosComponent implements OnInit {
   constructor(private sigaServices: SigaServices, private translateService: TranslateService) { }
 
   ngOnInit() {
+    //Reestablece los datos de busqueda anteriormente usados si se viene desde el boton volver de la ficha de productos.
+    if (sessionStorage.getItem("volver") == 'true') {
+      this.filtrosProductos = JSON.parse(sessionStorage.getItem("filtrosProductos"));
+      sessionStorage.removeItem("filtrosProductos");
+      sessionStorage.removeItem("volver");
+
+      this.buscar();
+    } else {
+      this.filtrosProductos = new FiltrosProductos();
+    }
+
     this.getComboCategoria();
     this.getComboTipoIva();
     this.getComboFormaPago();
@@ -51,7 +62,7 @@ export class FiltrosProductosComponent implements OnInit {
   }
 
   //INICIO METODOS BUSCADOR
-  //Metodo que se lanza al cambiar de valir el combo de categorias, se usa para cargar el combo tipos dependiendo el valor de categorias
+  //Metodo que se lanza al cambiar de valor el combo de categorias, se usa para cargar el combo tipos dependiendo el valor de categorias
   valueChangeCategoria() {
     if (this.filtrosProductos.categoria != null) {
       this.getComboTipo();
@@ -65,8 +76,6 @@ export class FiltrosProductosComponent implements OnInit {
   }
 
   buscar() {
-    console.log("PRECIODESDE", this.filtrosProductos.precioDesde);
-    console.log("PRECIOHASTA", this.filtrosProductos.precioHasta);
     if ((this.filtrosProductos.precioDesde != null && this.filtrosProductos.precioDesde != undefined && this.filtrosProductos.precioDesde != "" && Number(this.filtrosProductos.precioDesde) != 0) && (this.filtrosProductos.precioHasta != null && this.filtrosProductos.precioHasta != undefined && this.filtrosProductos.precioHasta != "" && Number(this.filtrosProductos.precioHasta) != 0)) {
       if ((Number(this.filtrosProductos.precioHasta) < Number(this.filtrosProductos.precioDesde)) == false) {
         sessionStorage.setItem("filtrosProductos", JSON.stringify(this.filtrosProductos));

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConfirmationService, SortEvent } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '../../../../commons/translate';
@@ -13,7 +13,7 @@ import { SigaServices } from '../../../../_services/siga.service';
   templateUrl: './tipos-servicios.component.html',
   styleUrls: ['./tipos-servicios.component.scss']
 })
-export class TiposServiciosComponent implements OnInit {
+export class TiposServiciosComponent implements OnInit, OnDestroy {
   //Variables generales app
   msgs = []; //Para mostrar los mensajes p-growl y dialogos de confirmacion
   progressSpinner: boolean = false; //Para mostrar/no mostrar el spinner de carga

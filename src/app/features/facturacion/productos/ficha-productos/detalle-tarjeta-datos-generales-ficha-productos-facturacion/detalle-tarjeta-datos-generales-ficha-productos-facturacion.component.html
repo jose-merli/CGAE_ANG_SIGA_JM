@@ -1,0 +1,90 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+
+<div class="form-row p-lg-3 p-md-3">
+
+  <!-- Categoria -->
+  <div class="form-group-interlineado col-lg-3 col-md-3 pb-lg-2 pb-md-2">
+    <label>{{ "facturacion.productos.categoria" | translate}}(*)</label>
+    <p-dropdown (onChange)="valueChangeCategoria()" [filter]="true" styleClass="widthAll" [showClear]="true"
+      placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='producto.categoria'
+      [options]="categoriasObject.combooItems"
+      [ngClass]="{'camposObligatorios': aGuardar && producto.categoria == null}">
+    </p-dropdown>
+  </div>
+
+  <!-- Tipo -->
+  <div class="form-group-interlineado col-lg-3 col-md-3 pb-lg-2 pb-md-2">
+    <label>{{ "facturacion.productos.tipo" | translate}}(*)</label>
+    <p-dropdown [disabled]="producto.categoria == null" [filter]="true" styleClass="widthAll" [showClear]="true"
+      placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='producto.tipo'
+      [options]="tiposObject.combooItems" [ngClass]="{'camposObligatorios': aGuardar && producto.tipo == null}">
+    </p-dropdown>
+  </div>
+
+  <!-- Producto -->
+  <div class="form-group-interlineado col-lg-3 col-md-3 pb-lg-2 pb-md-2">
+    <label>{{ "facturacion.productos.producto" | translate}}(*)</label>
+    <input type="text" class="form-control" [(ngModel)]='producto.descripcion'
+      [ngClass]="{'camposObligatorios': aGuardar && (producto.descripcion == '' || producto.descripcion == undefined)}"
+      pInputText>
+  </div>
+
+  <!-- Codigo -->
+  <div class="form-group-interlineado col-lg-3 col-md-3 pb-lg-2 pb-md-2">
+    <label>{{ "facturacion.productos.codigo" | translate}}</label>
+    <input type="text" class="form-control" [(ngModel)]='producto.codigoExt' pInputText>
+  </div>
+
+  <!-- Solicitar por internet -->
+  <div class="form-group-interlineado col-lg-3 col-md-3">
+    <p-checkbox binary="true" label="Solicitar por internet" [(ngModel)]="producto.solicitudInternet"
+      (onChange)="onChangeSolicitudInternet()"></p-checkbox>
+  </div>
+
+  <!-- Solicitar anulacion por internet -->
+  <div class="form-group-interlineado col-lg-3 col-md-3">
+    <div class="d-flex align-items-baseline justify-content-between">
+      <p-checkbox binary="true" label="Solicitar anulacion por internet"
+        [(ngModel)]="producto.solicitudAnulacionInternet" (onChange)="onChangesolicitudAnulacionInternet()">
+      </p-checkbox>
+    </div>
+  </div>
+
+  <!-- Cuenta contable -->
+  <div class="form-group-interlineado col-lg-3 col-md-3">
+    <label>Cuenta contable</label>
+    <!--Provisional, insertan en gen_diccionario-->
+    <input type="text" class="form-control" [(ngModel)]='producto.cuentaContable' pInputText>
+  </div>
+
+  <!-- Tipo de certificado -->
+  <div class="form-group-interlineado col-lg-3 col-md-3">
+    <label>Tipo de certificado</label>
+    <!--Provisional, insertan en gen_diccionario-->
+    <p-dropdown [filter]="true" styleClass="widthAll" [showClear]="true"
+      placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='producto.tipoCertificado'
+      [options]="tipoCertificadoObject.combooItems">
+    </p-dropdown>
+  </div>
+
+</div>
+
+<!-- Botones -->
+<div class="card-footer">
+  <div class="text-right main-button">
+    <!-- Restablecer -->
+    <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left"
+      label="{{'general.boton.restablecer' | translate}}"></button>
+
+    <!-- Eliminar -->
+    <button (click)="eliminar()" pButton type="button" icon="fa fa-trash-alt " iconPos="left"
+      label="{{'general.boton.eliminar' | translate}}"></button>
+
+    <!-- Guardar -->
+    <button (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left"
+      label="{{ 'general.boton.guardar' | translate}}"></button>
+  </div>
+</div>

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService, SortEvent } from 'primeng/api';
 import { Subscription } from 'rxjs';
@@ -13,7 +13,7 @@ import { SigaServices } from '../../../../_services/siga.service';
   templateUrl: './gestion-productos.component.html',
   styleUrls: ['./gestion-productos.component.scss']
 })
-export class GestionProductosComponent implements OnInit {
+export class GestionProductosComponent implements OnInit, OnDestroy {
   //Variables generales app
   msgs = []; //Para mostrar los mensajes p-growl y dialogos de confirmacion
   progressSpinner: boolean = false; //Para mostrar/no mostrar el spinner de carga
