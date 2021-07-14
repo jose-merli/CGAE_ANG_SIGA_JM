@@ -4,6 +4,9 @@ import { FiltroAsistenciaItem } from "./FiltroAsistenciaItem";
 export class TarjetaAsistenciaItem{
       anio : string;
 	  numero: string;
+	  fechaAsistencia : string;
+	  idTurno : string;
+	  idGuardia : string;
 	  anioNumero: string;
 	  asistido: string;
 	  idDelito: string;

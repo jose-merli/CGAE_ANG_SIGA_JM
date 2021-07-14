@@ -420,6 +420,8 @@ import { BuscadorSolicitudesCentralitaComponent } from './features/sjcs/guardia/
 import { ResultadoSolicitudesCentralitaComponent } from './features/sjcs/guardia/guardias-solicitudes-centralita/resultado-solicitudes-centralita/resultado-solicitudes-centralita.component';
 import { FichaPreasistenciasComponent } from './features/sjcs/guardia/guardias-solicitudes-centralita/ficha-preasistencias/ficha-preasistencias.component';
 import { AsistenciasFichaPreasistenciasComponent } from './features/sjcs/guardia/guardias-solicitudes-centralita/ficha-preasistencias/asistencias-ficha-preasistencias/asistencias-ficha-preasistencias.component';
+import { FichaAsistenciaComponent } from './features/sjcs/guardia/guardias-asistencias/ficha-asistencia/ficha-asistencia.component';
+import { FichaAsistenciaTarjetaDatosGeneralesComponent } from './features/sjcs/guardia/guardias-asistencias/ficha-asistencia/ficha-asistencia-tarjeta-datos-generales/ficha-asistencia-tarjeta-datos-generales.component';
 
 @NgModule({
 	declarations: [
@@ -774,7 +776,9 @@ import { AsistenciasFichaPreasistenciasComponent } from './features/sjcs/guardia
 		BuscadorSolicitudesCentralitaComponent,
 		ResultadoSolicitudesCentralitaComponent,
 		FichaPreasistenciasComponent,
-		AsistenciasFichaPreasistenciasComponent
+		AsistenciasFichaPreasistenciasComponent,
+		FichaAsistenciaComponent,
+		FichaAsistenciaTarjetaDatosGeneralesComponent
 
 	],
 	imports: [
