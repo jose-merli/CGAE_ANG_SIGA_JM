@@ -273,6 +273,8 @@ export class DatosIntegrantesComponent implements OnInit {
             this.progressSpinner = false;
            }
         );
+    }else{
+      this.progressSpinner = false;
     }
   }
 

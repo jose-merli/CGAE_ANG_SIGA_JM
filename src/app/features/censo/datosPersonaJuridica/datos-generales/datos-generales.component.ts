@@ -433,7 +433,6 @@ export class DatosGenerales implements OnInit {
         }
 
       );
-
   }
 
   getTipo(event) {
@@ -653,7 +652,7 @@ export class DatosGenerales implements OnInit {
         }
       );
     }
-
+    this.progressSpinner = false;
     //sessionStorage.removeItem("crearnuevo");
 }
   restablecer() {
