@@ -12,6 +12,7 @@ import { SigaServices } from '../../../../../_services/siga.service';
   styleUrls: ['./detalle-tarjeta-datos-generales-ficha-productos-facturacion.component.scss']
 })
 export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent implements OnInit, OnDestroy {
+
   //Variables generales app
   msgs = []; //Para mostrar los mensajes p-growl y dialogos de confirmacion
   progressSpinner: boolean = false; //Para mostrar/no mostrar el spinner de carga
@@ -23,6 +24,8 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
   categoriasObject: ComboObject = new ComboObject(); //Modelo con la lista opciones + atributo error
   tiposObject: ComboObject = new ComboObject();
   tipoCertificadoObject: ComboObject = new ComboObject();
+  checkBoxSolicitarPorInternet: boolean = false;
+  checkboxSolicitarAnulacionPorInterent: boolean = false;
 
   //variables de control
   aGuardar: boolean; //Usada en condiciones que validan la obligatoriedad, definida al hacer click en el boton guardar
@@ -35,6 +38,9 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
   constructor(private sigaServices: SigaServices, private translateService: TranslateService) { }
 
   ngOnInit() {
+    if (sessionStorage.getItem('productoBuscador')) {
+      this.productoDelBuscador = JSON.parse(sessionStorage.getItem('productoBuscador'));
+    }
     this.getComboCategoria();
   }
 
@@ -60,11 +66,23 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
     }
   }
 
+  //Metodo que se lanza al marcar/desmarcar el checkbox Solicitar por internet
   onChangeSolicitudInternet() {
+    if (this.checkBoxSolicitarPorInternet) {
+      this.producto.solicitaralta = '1';
+    } else {
+      this.producto.solicitaralta = '0';
+    }
     console.log(this.producto.solicitaralta);
   }
 
+  //Metodo que se lanza al marcar/desmarcar el checkbox Solicitar anulacion por internet
   onChangesolicitudAnulacionInternet() {
+    if (this.checkboxSolicitarAnulacionPorInterent) {
+      this.producto.solicitarbaja = '1';
+    } else {
+      this.producto.solicitarbaja = '0';
+    }
     console.log(this.producto.solicitarbaja);
   }
 
@@ -151,27 +169,36 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
   }
 
   guardarProducto() {
+    this.producto.idtipoproducto = Number(this.producto.categoria);
+    this.producto.idproducto = Number(this.producto.tipo);
     this.progressSpinner = true;
 
-    this.subscriptionCrearProductoInstitucion = this.sigaServices.post("fichaProducto_crearProducto", this.producto).subscribe(
-      response => {
-        this.progressSpinner = false;
+    if (!sessionStorage.getItem('productoBuscador')) {
+      this.subscriptionCrearProductoInstitucion = this.sigaServices.post("fichaProducto_crearProducto", this.producto).subscribe(
+        response => {
+          this.progressSpinner = false;
+          console.log(response);
 
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-      },
-      err => {
-        if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        },
+        err => {
+          if (err != undefined && JSON.parse(err.error).error.description != "") {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          }
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+          //Si se ha guardado se habilita la tarjeta forma pago
         }
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-        //Si se ha guardado se habilita la tarjeta forma pago
-      }
-    );
+      );
+    } else if (sessionStorage.getItem('productoBuscador')) {
+      this.progressSpinner = false;
+      console.log("EDITAR PRODUCTO");
+      //EDITAR
+    }
   }
   //FIN SERVICIOS DATOS GENERALES
 }

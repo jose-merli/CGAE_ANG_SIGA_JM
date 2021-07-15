@@ -1,8 +1,10 @@
 import { ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '../../../../commons/translate';
 import { ComboItem } from '../../../../models/ComboItem';
 import { ComboObject } from '../../../../models/ComboObject';
+import { ControlAccesoDto } from '../../../../models/ControlAccesoDto';
 import { FiltrosProductos } from '../../../../models/FiltrosProductos';
 import { SigaServices } from '../../../../_services/siga.service';
 
@@ -30,7 +32,7 @@ export class FiltrosProductosComponent implements OnInit, OnDestroy {
   subscriptionIvaTypeSelectValues: Subscription;
   subscriptionPayMethodTypeSelectValues: Subscription;
 
-  constructor(private sigaServices: SigaServices, private translateService: TranslateService) { }
+  constructor(private sigaServices: SigaServices, private translateService: TranslateService, private router: Router) { }
 
   ngOnInit() {
     //Reestablece los datos de busqueda anteriormente usados si se viene desde el boton volver de la ficha de productos.
@@ -89,6 +91,44 @@ export class FiltrosProductosComponent implements OnInit, OnDestroy {
       this.busqueda.emit(true);
     }
   }
+
+  nuevo() {
+    sessionStorage.removeItem("productoBuscador");
+    this.router.navigate(["/fichaProductos"]);
+  }
+
+  /* checkAccesoFichaProductos() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = procesos_oficio.designa;
+ 
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        const permisos = JSON.parse(data.body);
+        const permisosArray = permisos.permisoItems;
+        const derechoAcceso = permisosArray[0].derechoacceso;
+ 
+        this.esColegiado = true;
+        if (derechoAcceso == 3) { //es colegio y escritura
+          this.esColegiado = false;
+          this.isColegDesig.emit(false);
+        } else if (derechoAcceso == 2) {//es colegiado y solo lectura
+          this.esColegiado = true;
+          this.isColegDesig.emit(true);
+        } else {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
+        this.cargaInicial();
+      },
+      err => {
+        this.progressSpinner = false;
+      }
+    );
+   } */
 
   //Inicializa las propiedades necesarias para el dialogo de confirmacion
   showMessage(severity, summary, msg) {

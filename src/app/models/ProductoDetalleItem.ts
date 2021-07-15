@@ -1,6 +1,6 @@
 export class ProductoDetalleItem {
-    idproducto: number;
-    idtipoproducto: number;
+    idproducto: number; //Tipo
+    idtipoproducto: number; //Categoria
     idproductoinstitucion: number;
     idcontador: string;
     descripcion: string;
@@ -9,8 +9,8 @@ export class ProductoDetalleItem {
     idtipoiva: number;
     momentocargo: string;
     fechabaja: Date;
-    solicitarbaja: string;
-    solicitaralta: string;
+    solicitarbaja: string = "0";
+    solicitaralta: string = "0";
     tipocertificado: string;
     nofacturable: string;
     categoria: string;
