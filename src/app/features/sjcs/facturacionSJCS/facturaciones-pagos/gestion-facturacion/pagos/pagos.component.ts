@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { Router } from '@angular/router';
-import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacion';
+import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacionSJCS';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { TranslateService } from '../../../../../../commons/translate';
 

@@ -7,7 +7,7 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 import { SigaWrapper } from "../../../../../../wrapper/wrapper.class";
 import { ConfirmationService } from 'primeng/primeng';
 import { TranslateService } from '../../../../../../commons/translate';
-import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacion';
+import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacionSJCS';
 import { Router } from '@angular/router';
 
 @Component({

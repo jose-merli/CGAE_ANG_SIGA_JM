@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, Input, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '../../../../../../commons/translate';
-import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacion';
+import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacionSJCS';
 import { CommonsService } from '../../../../../../_services/commons.service';
 
 @Component({
@@ -17,7 +17,7 @@ export class CompensacionFacturaComponent implements OnInit {
   numSelected = 0;
   showFicha: boolean = false;
   selectAll: boolean = false;
-  progressSpinnerCompensacion: boolean = false;
+  progressSpinner: boolean = false;
 
   selectionMode: String = "multiple";
 
@@ -44,7 +44,7 @@ export class CompensacionFacturaComponent implements OnInit {
         this.router.navigate(["/errorAcceso"]);
       }
 
-      this.progressSpinnerCompensacion = false;
+      this.progressSpinner = false;
       this.getCols();
 
     }).catch(error => console.error(error));

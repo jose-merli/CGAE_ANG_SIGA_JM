@@ -129,3 +129,7 @@
     <button type="button"  pButton icon="fa-close"  label="No"  (click)="cd.reject()"></button>
   </p-footer>
 </p-confirmDialog>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

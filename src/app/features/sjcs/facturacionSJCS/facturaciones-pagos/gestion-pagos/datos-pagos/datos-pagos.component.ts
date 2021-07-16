@@ -4,7 +4,7 @@ import { ComboItem } from '../../../../../administracion/parametros/parametros-g
 import { TranslateService } from '../../../../../../commons/translate/translation.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { CommonsService } from '../../../../../../_services/commons.service';
-import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacion';
+import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacionSJCS';
 import { Router } from '@angular/router';
 
 @Component({
@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
 })
 export class DatosPagosComponent implements OnInit {
   showFicha: boolean = false;
-  progressSpinnerDatosPagos: boolean = false;
+  progressSpinner: boolean = false;
   cols;
   msgs;
 
@@ -25,12 +25,12 @@ export class DatosPagosComponent implements OnInit {
   selectedItem: number = 10;
   facturaciones: ComboItem[];
   permisos;
-  idEstadoPago;
-  idPago;
-  numCriterios;
-  cerrada;
-  modoEdicion;
 
+  @Input() numCriterios;
+  @Input() cerrada;
+  @Input() modoEdicion;
+  @Input() idPago;
+  @Input() idEstadoPago;
   @ViewChild("tabla") tabla;
 
   constructor(private translateService: TranslateService, private sigaService: SigaServices,
@@ -57,22 +57,22 @@ export class DatosPagosComponent implements OnInit {
   }
 
   comboFacturacion() {
-    this.progressSpinnerDatosPagos = true;
+    this.progressSpinner = true;
 
     this.sigaService.get("combo_comboFacturaciones").subscribe(
       data => {
         this.facturaciones = data.combooItems;
         this.commonsService.arregloTildesCombo(this.facturaciones);
-        this.progressSpinnerDatosPagos = false;
+        this.progressSpinner = false;
       },
       err => {
         if (null != err.error) {
           console.log(err.error);
         }
-        this.progressSpinnerDatosPagos = false;
+        this.progressSpinner = false;
       },
       () => {
-        this.progressSpinnerDatosPagos = false;
+        this.progressSpinner = false;
         if (undefined == this.idPago) {
           this.body = new PagosjgItem();
           this.bodyAux = new PagosjgItem();
@@ -87,13 +87,13 @@ export class DatosPagosComponent implements OnInit {
 
   cargaDatos() {
     if (undefined != this.idPago) {
-      this.progressSpinnerDatosPagos = true;
+      this.progressSpinner = true;
 
       //datos del pago
-      this.sigaService.getParam("facturacionsjcs_datosGeneralesPago", "?idPago=" + this.idPago).subscribe(
+      this.sigaService.getParam("pagosjcs_datosGeneralesPago", "?idPago=" + this.idPago).subscribe(
         data => {
 
-          this.progressSpinnerDatosPagos = false;
+          this.progressSpinner = false;
 
           const resp = data.pagosjgItem[0];
           const error = data.error;
@@ -123,7 +123,7 @@ export class DatosPagosComponent implements OnInit {
           if (null != err.error) {
             console.log(err.error);
           }
-          this.progressSpinnerDatosPagos = false;
+          this.progressSpinner = false;
         }
       );
 
@@ -134,18 +134,18 @@ export class DatosPagosComponent implements OnInit {
   historicoEstados() {
 
     if (undefined != this.idPago) {
-      this.progressSpinnerDatosPagos = true;
+      this.progressSpinner = true;
 
-      this.sigaService.getParam("facturacionsjcs_historicoPago", `?idPago=${this.idPago}`).subscribe(
+      this.sigaService.getParam("pagosjcs_historicoPago", `?idPago=${this.idPago}`).subscribe(
         data => {
           this.histEstados = data.pagosjgItem;
-          this.progressSpinnerDatosPagos = false;
+          this.progressSpinner = false;
         },
         err => {
           if (null != err.error) {
             console.log(err.error);
           }
-          this.progressSpinnerDatosPagos = false;
+          this.progressSpinner = false;
         }
       );
     }
@@ -169,7 +169,7 @@ export class DatosPagosComponent implements OnInit {
 
   guardar() {
 
-    this.progressSpinnerDatosPagos = true;
+    this.progressSpinner = true;
 
     if (!this.modoEdicion) {
 
@@ -181,10 +181,10 @@ export class DatosPagosComponent implements OnInit {
       copyBody.fechaDesde = new Date(fechaDesde);
       copyBody.fechaHasta = new Date(fechaHasta);
 
-      this.sigaService.post("facturacionsjcs_savePago", copyBody).subscribe(
+      this.sigaService.post("pagosjcs_savePago", copyBody).subscribe(
         data => {
 
-          this.progressSpinnerDatosPagos = false;
+          this.progressSpinner = false;
 
           const resp = JSON.parse(data.body);
           const error = resp.error;
@@ -201,11 +201,11 @@ export class DatosPagosComponent implements OnInit {
 
         },
         err => {
-          this.progressSpinnerDatosPagos = false;
+          this.progressSpinner = false;
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         },
         () => {
-          this.progressSpinnerDatosPagos = false;
+          this.progressSpinner = false;
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.historicoEstados();
         }
@@ -213,10 +213,10 @@ export class DatosPagosComponent implements OnInit {
 
     } else {
 
-      this.sigaService.post("facturacionsjcs_updatePago", this.body).subscribe(
+      this.sigaService.post("pagosjcs_updatePago", this.body).subscribe(
         data => {
 
-          this.progressSpinnerDatosPagos = false;
+          this.progressSpinner = false;
 
           const resp = JSON.parse(data.body);
           const error = resp.error;
@@ -230,7 +230,7 @@ export class DatosPagosComponent implements OnInit {
           }
         },
         err => {
-          this.progressSpinnerDatosPagos = false;
+          this.progressSpinner = false;
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
       );

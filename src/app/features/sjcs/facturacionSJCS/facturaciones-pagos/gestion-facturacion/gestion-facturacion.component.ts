@@ -10,7 +10,7 @@ import { CartasFacturacionComponent } from './cartas-facturacion/cartas-facturac
 import { ConceptosFacturacionComponent } from './conceptos-facturacion/conceptos-facturacion.component';
 import { DatosFacturacionComponent } from './datos-facturacion/datos-facturacion.component';
 import { CommonsService } from '../../../../../_services/commons.service';
-import { procesos_facturacionSJCS } from '../../../../../permisos/procesos_facturacion';
+import { procesos_facturacionSJCS } from '../../../../../permisos/procesos_facturacionSJCS';
 import { TranslateService } from '../../../../../commons/translate';
 import { Router } from '@angular/router';
 

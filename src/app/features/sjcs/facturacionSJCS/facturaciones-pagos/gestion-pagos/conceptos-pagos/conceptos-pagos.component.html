@@ -35,9 +35,8 @@
     <div *ngIf="showFichaCriterios" class="card-body">
       <div class="module vista-avanzada">
         <div class="form-row">
-          <p-table [value]="body" [columns]="cols" [selectionMode]="single" [responsive]="true" #tabla
-            class="tabla-listado" [paginator]="true" [rows]="selectedItem" [ngClass]="{ 'customCursor': selectMultiple}"
-            paginatorPosition="both">
+          <p-table [value]="body" [columns]="cols" [responsive]="true" #tabla class="tabla-listado" [paginator]="true"
+            [rows]="selectedItem" paginatorPosition="both">
             <ng-template pTemplate="colgroup" let-columns>
               <colgroup>
                 <col *ngFor="let col of cols" [style.width]="col.width">
@@ -57,20 +56,25 @@
             <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
               <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
                 <td class="text-center" *ngFor="let col of columns">
-                  <!--<div *ngIf="col.field == 'descGrupo'">
-                  {{ dato[col.field] }}
-                </div>
-                <div *ngIf="col.field == 'importeTotal'">
-                  <div *ngIf='!dato.editable'>
-                      {{ dato.importeTotalFormat | numberPipe }} €
+                  <div *ngIf="col.field == 'desConcepto'">
+                    {{ dato[col.field] }}
                   </div>
-                </div>
-
-                <div *ngIf="col.field == 'importePendiente'">
-                  <div *ngIf='!dato.editable'>
-                      {{ dato.importePendienteFormat | numberPipe }} €
+                  <div *ngIf="col.field == 'importeFacturado'">
+                    {{ dato[col.field] | currency:'EUR' }}
                   </div>
-                </div>-->
+                  <div *ngIf="col.field == 'importePendiente'">
+                    {{ dato[col.field] | currency:'EUR' }} {{ dato['porcentajePagado'] }} <span>%</span>
+                  </div>
+                  <div *ngIf="col.field == 'porcentajeApagar'">
+                    <div class="ui-inputgroup">
+                      <input type="number" min="0" max="100" step="0.01" pInputText [(ngModel)]="dato[col.field]"
+                        (blur)="modificaPorcentaje(dato[col.field], dato)" />
+                      <span class="ui-inputgroup-addon">%</span>
+                    </div>
+                  </div>
+                  <div *ngIf="col.field == 'cantidadApagar'">
+                    <input type="text" pInputText [(ngModel)]="dato[col.field]" />
+                  </div>
                 </td>
               </tr>
             </ng-template>
@@ -96,11 +100,18 @@
         </div>
       </div>
     </div>
+    <div class="card-footer" *ngIf="showFichaCriterios">
+      <div class="text-right main-button">
+        <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left"
+          label="{{ 'general.boton.restablecer' | translate }}"
+          [(disabled)]='disabledRestablecer() || !permisos'></button>
+        <button (click)="guardar()" pButton type="button" icon="fa fa-save" iconPos="left"
+          label="{{ 'general.boton.guardar' | translate }}" [(disabled)]='disabledGuardar() || !permisos'></button>
+      </div>
+    </div>
   </div>
 </div>
-<p-confirmDialog header="Confirmación"  icon="fa fa-question-circle"  width="425"  #cd>
-  <p-footer>
-    <button type="button"  pButton icon="fa-check"  label="Si"  (click)="cd.accept()"></button>
-    <button type="button"  pButton icon="fa-close"  label="No"  (click)="cd.reject()"></button>
-  </p-footer>
-</p-confirmDialog>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

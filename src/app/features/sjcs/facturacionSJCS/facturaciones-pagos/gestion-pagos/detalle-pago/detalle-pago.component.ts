@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '../../../../../../commons/translate';
-import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacion';
+import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacionSJCS';
 import { CommonsService } from '../../../../../../_services/commons.service';
 
 @Component({
@@ -11,7 +11,7 @@ import { CommonsService } from '../../../../../../_services/commons.service';
 })
 export class DetallePagoComponent implements OnInit {
   numPagos: number = 0;
-  progressSpinnerDetallePagos: boolean = false;
+  progressSpinner: boolean = false;
   permisos;
 
   @ViewChild("tabla") tabla;
@@ -30,7 +30,7 @@ export class DetallePagoComponent implements OnInit {
         this.router.navigate(["/errorAcceso"]);
       }
 
-      this.progressSpinnerDetallePagos = false;
+      this.progressSpinner = false;
 
     }).catch(error => console.error(error));
 

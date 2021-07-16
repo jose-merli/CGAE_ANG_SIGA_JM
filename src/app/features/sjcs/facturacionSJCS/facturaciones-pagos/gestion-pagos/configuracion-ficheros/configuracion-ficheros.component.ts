@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { TranslateService } from '../../../../../../commons/translate';
-import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacion';
+import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacionSJCS';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { Router } from '@angular/router';
 
@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 })
 export class ConfiguracionFicherosComponent implements OnInit {
   showFicha: boolean = false;
-  progressSpinnerConfiguracionFic: boolean = false;
+  progressSpinner: boolean = false;
   msgs;
   permisos;
 
@@ -29,7 +29,7 @@ export class ConfiguracionFicherosComponent implements OnInit {
         this.router.navigate(["/errorAcceso"]);
       }
 
-      this.progressSpinnerConfiguracionFic = false;
+      this.progressSpinner = false;
 
     }).catch(error => console.error(error));
 

@@ -82,7 +82,7 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
     }
 
     if (this.filtroSeleccionado == "pagos") {
-      sessionStorage.setItem("paramsPago", JSON.stringify({ idPago: datos.idPagosjg, idEstadoPago: datos.idEstado }));
+      sessionStorage.setItem("paramsPago", JSON.stringify({ idPago: datos.idPagosjg, idEstadoPago: datos.idEstado, idFacturacion: datos.idFacturacion }));
       this.router.navigate(["/fichaPagos"]);
     }
 

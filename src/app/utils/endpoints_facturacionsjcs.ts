@@ -1,4 +1,5 @@
 export let endpoints_facturacionsjcs: any = {
+
     combo_comboFactEstados: "combo/comboFactEstados",
     combo_comboPagoEstados: "combo/comboPagoEstados",
     combo_partidasPresupuestarias: "combo/partidasPresupuestarias",
@@ -7,6 +8,9 @@ export let endpoints_facturacionsjcs: any = {
     combo_comboFactColegio: "combo/comboFactColegio",
     combo_comboPagosColegio: "combo/comboPagosColegio",
     combo_comboFacturaciones: "combo/comboFacturaciones",
+
+    /* Endpoints FACTURACIONSJCS */
+
     facturacionsjcs_buscarfacturaciones: "facturacionsjcs/buscarfacturaciones",
     facturacionsjcs_eliminarFacturacion: "facturacionsjcs/eliminarFacturacion",
     facturacionsjcs_datosfacturacion: "facturacionsjcs/datosfacturacion",
@@ -24,9 +28,14 @@ export let endpoints_facturacionsjcs: any = {
     facturacionsjcs_deleteConceptosFac: "facturacionsjcs/deleteConceptosFac",
     facturacionsjcs_datospagos: "facturacionsjcs/datospagos",
     facturacionsjcs_numApuntes: "facturacionsjcs/numApuntes",
-    facturacionsjcs_buscarPagos: "facturacionsjcs/buscarPagos",
-    facturacionsjcs_datosGeneralesPago: "facturacionsjcs/datosGeneralesPago",
-    facturacionsjcs_historicoPago: "/facturacionsjcs/historicoPagos",
-    facturacionsjcs_savePago: "/facturacionsjcs/savePago",
-    facturacionsjcs_updatePago: "/facturacionsjcs/updatePago",
+
+    /* Endpoints PAGOSJCS */
+
+    pagosjcs_buscarPagos: "pagosjcs/buscarPagos",
+    pagosjcs_datosGeneralesPago: "pagosjcs/datosGeneralesPago",
+    pagosjcs_historicoPago: "pagosjcs/historicoPagos",
+    pagosjcs_savePago: "pagosjcs/savePago",
+    pagosjcs_updatePago: "pagosjcs/updatePago",
+    pagosjcs_getConceptosPago: "pagosjcs/getConceptosPago",
+    pagosjcs_saveConceptoPago: "pagosjcs/saveConceptoPago",
 }

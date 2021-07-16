@@ -9,7 +9,7 @@ import { DatosPagosComponent } from './datos-pagos/datos-pagos.component';
 import { DetallePagoComponent } from './detalle-pago/detalle-pago.component';
 import { PagosjgItem } from '../../../../../models/sjcs/PagosjgItem';
 import { ConceptosPagosComponent } from './conceptos-pagos/conceptos-pagos.component';
-import { procesos_facturacionSJCS } from '../../../../../permisos/procesos_facturacion';
+import { procesos_facturacionSJCS } from '../../../../../permisos/procesos_facturacionSJCS';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { TranslateService } from '../../../../../commons/translate';
 import { Router } from '@angular/router';
@@ -23,11 +23,14 @@ export class GestionPagosComponent extends SigaWrapper implements OnInit {
 
   msgs;
   permisos;
-  progressSpinner: boolean = false;
   datos: PagosjgItem = new PagosjgItem();
   cerrada;
   modoEdicion;
   numCriterios;
+  idPago;
+  idEstadoPago;
+  idFacturacion;
+  showCards: boolean = false;
 
   @ViewChild(CompensacionFacturaComponent) compensacion;
   @ViewChild(ConfiguracionFicherosComponent) configuracionFic;
@@ -58,52 +61,33 @@ export class GestionPagosComponent extends SigaWrapper implements OnInit {
       const paramsPago = JSON.parse(sessionStorage.getItem("paramsPago"));
 
       if (paramsPago && null != paramsPago) {
-        this.datosPagos.idPago = paramsPago.idPago;
-        this.datosPagos.idEstadoPago = paramsPago.idEstadoPago;
+        this.idPago = paramsPago.idPago;
+        this.idEstadoPago = paramsPago.idEstadoPago;
+        this.idFacturacion = paramsPago.idFacturacion;
         sessionStorage.removeItem("paramsPago");
       }
 
       if (paramsPago == undefined || paramsPago == null || undefined == paramsPago.idPago) {
-        this.datosPagos.modoEdicion = false;
-        this.datosPagos.cerrada = false;
+        this.modoEdicion = false;
+        this.cerrada = false;
       } else {
         if (undefined != paramsPago.idEstadoPago) {
           if (paramsPago == '30') {
-            this.datosPagos.cerrada = true;
+            this.cerrada = true;
           } else {
-            this.datosPagos.cerrada = false;
+            this.cerrada = false;
           }
         }
 
-        this.datosPagos.modoEdicion = true;
+        this.modoEdicion = true;
       }
-      this.datosPagos.numCriterios = 0;
-
+      this.numCriterios = 0;
+      this.showCards = true;
     });
   }
 
   volver() {
     this.location.back();
-  }
-
-  spinnerGlobal() {
-    if (this.modoEdicion) {
-      if (this.conceptos != undefined || this.compensacion != undefined || this.configuracionFic != undefined || this.datosPagos != undefined || this.detallePagos != undefined) {
-        if (this.conceptos.progressSpinnerCriterios || this.compensacion.progressSpinnerCompensacion || this.configuracionFic.progressSpinnerConfiguracionFic || this.datosPagos.progressSpinnerDatosPagos || this.detallePagos.progressSpinnerDetallePagos) {
-          return true;
-        } else {
-          return false;
-        }
-      } else {
-        return true;
-      }
-    } else {
-      if (this.datosPagos.progressSpinnerDatosPagos) {
-        return true;
-      } else {
-        return false;
-      }
-    }
   }
 
   clear() {

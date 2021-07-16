@@ -8,7 +8,7 @@ import { SigaWrapper } from '../../../../../../wrapper/wrapper.class';
 import { ComboItem } from '../../../../../../models/ComboItem';
 import { ConfirmationService } from 'primeng/primeng';
 import { Error } from '../../../../../../models/Error';
-import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacion';
+import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacionSJCS';
 import { Router } from '@angular/router';
 
 @Component({

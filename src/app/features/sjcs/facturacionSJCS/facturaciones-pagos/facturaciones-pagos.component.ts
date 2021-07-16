@@ -4,7 +4,7 @@ import { SigaServices } from "../../../../_services/siga.service";
 import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { TranslateService } from '../../../../commons/translate';
-import { procesos_facturacionSJCS } from '../../../../permisos/procesos_facturacion';
+import { procesos_facturacionSJCS } from '../../../../permisos/procesos_facturacionSJCS';
 import { FiltroBusquedaFacturacionComponent } from "./filtro-busqueda-facturacion/filtro-busqueda-facturacion.component";
 import { TablaBusquedaFacturacionComponent } from "./tabla-busqueda-facturacion/tabla-busqueda-facturacion.component";
 import { FacturacionItem } from '../../../../models/sjcs/FacturacionItem';
@@ -176,7 +176,7 @@ export class FacturacionesYPagosComponent implements OnInit {
 				}
 			);
 		} else if (this.filtroSeleccionado == "pagos") {
-			this.sigaServices.post("facturacionsjcs_buscarPagos", this.datosFiltros).subscribe(
+			this.sigaServices.post("pagosjcs_buscarPagos", this.datosFiltros).subscribe(
 				data => {
 					this.datos = JSON.parse(data.body).pagosjgItem;
 					this.buscar = true;

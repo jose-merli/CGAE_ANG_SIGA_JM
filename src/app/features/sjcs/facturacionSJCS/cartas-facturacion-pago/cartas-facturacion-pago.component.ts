@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { procesos_facturacionSJCS } from '../../../../permisos/procesos_facturacion';
+import { procesos_facturacionSJCS } from '../../../../permisos/procesos_facturacionSJCS';
 import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { TranslateService } from '../../../../commons/translate';
