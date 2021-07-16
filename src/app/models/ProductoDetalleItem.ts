@@ -5,6 +5,7 @@ export class ProductoDetalleItem {
     idcontador: string;
     descripcion: string;
     cuentacontable: string;
+    codigoext: string;
     valor: string;
     idtipoiva: number;
     momentocargo: string;

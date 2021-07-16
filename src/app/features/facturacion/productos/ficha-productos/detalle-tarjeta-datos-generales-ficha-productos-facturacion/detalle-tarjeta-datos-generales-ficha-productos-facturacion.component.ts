@@ -23,7 +23,27 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
   productoOriginal: ProductoDetalleItem = new ProductoDetalleItem(); //En caso de que entre en modo editar este objeto sera el que contenga los datos originales conseguidos gracias al servicio detalleProducto.
   categoriasObject: ComboObject = new ComboObject(); //Modelo con la lista opciones + atributo error
   tiposObject: ComboObject = new ComboObject();
-  tipoCertificadoObject: ComboObject = new ComboObject();
+  tiposCertificadosItems = [{
+    label: this.translateService.instant("certificados.tipocertificado.literal.certificado"),
+    value: "C"
+  },
+  {
+    label: this.translateService.instant("certificados.tipocertificado.literal.comunicacion"),
+    value: "M"
+  },
+  {
+    label: this.translateService.instant("certificados.tipocertificado.literal.diligencia"),
+    value: "D"
+  },
+  {
+    label: this.translateService.instant("certificados.tipocertificado.literal.comunicacion"),
+    value: "B"
+  },
+  {
+    label: this.translateService.instant("certificados.tipocertificado.literal.gratuito"),
+    value: "G"
+  },
+  ]
   checkBoxSolicitarPorInternet: boolean = false;
   checkboxSolicitarAnulacionPorInterent: boolean = false;
 
@@ -34,14 +54,19 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
   subscriptionCategorySelectValues: Subscription;
   subscriptionTypeSelectValues: Subscription;
   subscriptionCrearProductoInstitucion: Subscription;
+  subscriptionProductDetail: Subscription;
 
-  constructor(private sigaServices: SigaServices, private translateService: TranslateService) { }
-
-  ngOnInit() {
+  constructor(private sigaServices: SigaServices, private translateService: TranslateService) {
     if (sessionStorage.getItem('productoBuscador')) {
       this.productoDelBuscador = JSON.parse(sessionStorage.getItem('productoBuscador'));
+      this.detalleProducto();
     }
+  }
+
+  ngOnInit() {
     this.getComboCategoria();
+
+
   }
 
   //Necesario para liberar memoria
@@ -52,6 +77,8 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
       this.subscriptionTypeSelectValues.unsubscribe();
     if (this.subscriptionCrearProductoInstitucion)
       this.subscriptionCrearProductoInstitucion.unsubscribe();
+    if (this.subscriptionProductDetail)
+      this.subscriptionProductDetail.unsubscribe();
   }
 
   //INICIO METODOS TARJETA DATOS GENERALES
@@ -148,7 +175,7 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
   getComboTipo() {
     this.progressSpinner = true;
 
-    this.subscriptionCategorySelectValues = this.sigaServices.getParam("productosBusqueda_comboTipos", "?idCategoria=" + this.producto.categoria).subscribe(
+    this.subscriptionCategorySelectValues = this.sigaServices.getParam("productosBusqueda_comboTipos", "?idCategoria=" + this.producto.idtipoproducto).subscribe(
       TipoSelectValues => {
         this.progressSpinner = false;
 
@@ -166,6 +193,32 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
         this.progressSpinner = false;
       }
     );
+  }
+
+  //Metodo para que en caso de que se haya accedido a traves del enlace de la columna producto se consiga toda la informacion restante del producto seleccionado para completar los campos a editar
+  detalleProducto() {
+    this.progressSpinner = true;
+
+    this.subscriptionProductDetail = this.sigaServices.getParam("fichaProducto_detalleProducto", "?idTipoProducto=" + this.productoDelBuscador.idtipoproducto +
+      "&idProducto=" + this.productoDelBuscador.idproducto + "&idProductoInstitucion=" + this.productoDelBuscador.idproductoinstitucion).subscribe(
+        producto => {
+          this.progressSpinner = false;
+
+          this.productoOriginal = producto;
+          this.producto = producto;
+
+          /* let error = this.tiposObject.error;
+          if (error != null && error.description != null) {
+          } */
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
   }
 
   guardarProducto() {

@@ -38,7 +38,6 @@ export class FiltrosProductosComponent implements OnInit, OnDestroy {
     //Reestablece los datos de busqueda anteriormente usados si se viene desde el boton volver de la ficha de productos.
     if (sessionStorage.getItem("volver") == 'true') {
       this.filtrosProductos = JSON.parse(sessionStorage.getItem("filtrosProductos"));
-      sessionStorage.removeItem("filtrosProductos");
       sessionStorage.removeItem("volver");
 
       this.buscar();

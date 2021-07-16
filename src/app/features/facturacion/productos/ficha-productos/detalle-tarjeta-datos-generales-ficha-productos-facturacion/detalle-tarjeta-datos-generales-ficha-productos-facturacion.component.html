@@ -9,7 +9,7 @@
   <div class="form-group-interlineado col-lg-3 col-md-3 pb-lg-2 pb-md-2">
     <label>{{ "facturacion.productos.categoria" | translate}}(*)</label>
     <p-dropdown (onChange)="valueChangeCategoria()" [filter]="true" styleClass="widthAll" [showClear]="true"
-      placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='producto.categoria'
+      placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='producto.idtipoproducto'
       [options]="categoriasObject.combooItems"
       [ngClass]="{'camposObligatorios': aGuardar && producto.categoria == null}">
     </p-dropdown>
@@ -19,7 +19,7 @@
   <div class="form-group-interlineado col-lg-3 col-md-3 pb-lg-2 pb-md-2">
     <label>{{ "facturacion.productos.tipo" | translate}}(*)</label>
     <p-dropdown [disabled]="producto.categoria == null" [filter]="true" styleClass="widthAll" [showClear]="true"
-      placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='producto.tipo'
+      placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='producto.idproducto'
       [options]="tiposObject.combooItems" [ngClass]="{'camposObligatorios': aGuardar && producto.tipo == null}">
     </p-dropdown>
   </div>
@@ -66,7 +66,7 @@
     <!--Provisional, insertan en gen_diccionario-->
     <p-dropdown [filter]="true" styleClass="widthAll" [showClear]="true"
       placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='producto.tipoCertificado'
-      [options]="tipoCertificadoObject.combooItems">
+      [options]="tiposCertificadosItems">
     </p-dropdown>
   </div>
 

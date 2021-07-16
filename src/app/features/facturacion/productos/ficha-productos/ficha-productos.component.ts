@@ -30,6 +30,7 @@ export class FichaProductosComponent implements OnInit {
 
   backTo() {
     sessionStorage.setItem("volver", 'true');
+    sessionStorage.removeItem('productoBuscador');
     this.router.navigate(['/productos']);
   }
 
