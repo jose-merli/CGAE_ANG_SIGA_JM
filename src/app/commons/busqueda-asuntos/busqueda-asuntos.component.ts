@@ -305,12 +305,9 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
       switch (radioValue) {
 
         case 'ejg':
-          let request = [anoDesigna, data.anio, data.tipoEJG,
-            //       //, newDesigna.idTurno.toString(), newId.id, this.datosEJG.numero
-            turno, asunto[1], data.numero
-          ];
-          /*
-                this.sigaServices.post("designacion_asociarEjgDesigna", request).subscribe(
+          let request = [anoDesigna,data.anio,data.idTipoEjg, turno, asunto[1], data.numero];
+          
+                 this.sigaServices.post("designacion_asociarEjgDesigna", request).subscribe(
                   m => {
           
                     this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
@@ -326,7 +323,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
                     this.progressSpinner = false;
                   }
                 );
-                */
+                  
 
           break;
         case 'asi':
