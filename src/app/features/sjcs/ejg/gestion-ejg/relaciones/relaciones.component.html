@@ -186,10 +186,10 @@
             label="{{'general.boton.consultEditRelacion' | translate}}"></button>
         </div>
       </div>
-      <p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" #cd>
+      <p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" key="delRelacion" #delRelacion>
         <p-footer>
-          <button type="button" pButton icon="fa-check" label="Si" (click)="cd.accept()"></button>
-          <button type="button" pButton icon="fa-close" label="No" (click)="cd.reject()"></button>
+          <button type="button" pButton icon="fa-check" label="Si" (click)="delRelacion.accept()"></button>
+          <button type="button" pButton icon="fa-close" label="No" (click)="delRelacion.reject()"></button>
         </p-footer>
       </p-confirmDialog>
     </div>

@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { RelacionesItem } from '../../../../../models/sjcs/RelacionesItem';
 import { DesignaItem } from '../../../../../models/sjcs/DesignaItem';
 import { DatePipe } from '@angular/common';
+import { AsistenciasItem } from '../../../../../models/sjcs/AsistenciasItem';
 
 @Component({
   selector: 'app-relaciones',
@@ -293,6 +294,7 @@ export class RelacionesComponent implements OnInit {
     );
     let icon = "fa fa-edit";
     this.confirmationService.confirm({
+      key: "delRelacion",
       message: mess,
       icon: icon,
       accept: () => {
@@ -315,7 +317,7 @@ export class RelacionesComponent implements OnInit {
     this.progressSpinner = true;
 
     //this.relaciones.nuevoEJG=!this.modoEdicion;
-    let data = [];
+    /* let data = [];
     let ejg: EJGItem;
 
     for (let i = 0; this.selectedDatos.length > i; i++) {
@@ -324,18 +326,93 @@ export class RelacionesComponent implements OnInit {
       ejg.estadoNew = this.valueComboEstado;
 
       data.push(ejg);
-    }
+    } 
     this.sigaServices.post("gestionejg_borrarRelacion", data).subscribe(
       n => {
         this.progressSpinner = false;
         this.showMessage("success", this.translateServices.instant("general.message.correct"), this.translateServices.instant("general.message.accion.realizada"));
+        this.getRelaciones();
       },
       err => {
         console.log(err);
         this.progressSpinner = false;
         this.showMessage("error", this.translateServices.instant("general.message.incorrect"), this.translateServices.instant("general.mensaje.error.bbdd"));
       }
-    );
+    );*/
+
+    for( let dato of this.selectedDatos){
+      let data:any = dato;
+      let identificador = data.sjcs;
+
+      switch (identificador) {
+        case 'ASISTENCIA':
+          
+          this.sigaServices.post("gestionejg_borrarRelacionAsistenciaEJG", data).subscribe(
+            n => {
+              this.progressSpinner = false;
+              this.showMessage("success", this.translateServices.instant("general.message.correct"), this.translateServices.instant("general.message.accion.realizada"));
+              this.getRelaciones();
+            },
+            err => {
+              console.log(err);
+              this.progressSpinner = false;
+              this.showMessage("error", this.translateServices.instant("general.message.incorrect"), this.translateServices.instant("general.mensaje.error.bbdd"));
+            }
+          );
+          break;
+          case 'SOJ':
+            this.sigaServices.post("gestionejg_borrarRelacionSojEJG", dato).subscribe(
+              n => {
+                this.progressSpinner = false;
+                this.showMessage("success", this.translateServices.instant("general.message.correct"), this.translateServices.instant("general.message.accion.realizada"));
+                this.getRelaciones();
+              },
+              err => {
+                console.log(err);
+                this.progressSpinner = false;
+                this.showMessage("error", this.translateServices.instant("general.message.incorrect"), this.translateServices.instant("general.mensaje.error.bbdd"));
+              }
+            );
+          break;
+          case 'DESIGNACIÓN':
+            
+            this.sigaServices.post("gestionejg_borrarRelacion", dato).subscribe(
+              n => {
+                this.progressSpinner = false;
+                this.showMessage("success", this.translateServices.instant("general.message.correct"), this.translateServices.instant("general.message.accion.realizada"));
+                this.getRelaciones();
+              },
+              err => {
+                console.log(err);
+                this.progressSpinner = false;
+                this.showMessage("error", this.translateServices.instant("general.message.incorrect"), this.translateServices.instant("general.mensaje.error.bbdd"));
+              }
+            );
+            
+          break;
+      
+        default:
+          this.showMessage("error", this.translateServices.instant("general.message.incorrect"), "No se puede realizar la accion de eliminar. Tipo de Asunto incorrecto.");
+          break;
+      }
+      
+    }
+
+    /* let identificador = this.selectedDatos[0].sjcs
+    let data: RelacionesItem[];
+    data = this.selectedDatos;
+    this.sigaServices.post("gestionejg_borrarRelacion", data).subscribe(
+      n => {
+        this.progressSpinner = false;
+        this.showMessage("success", this.translateServices.instant("general.message.correct"), this.translateServices.instant("general.message.accion.realizada"));
+        this.getRelaciones();
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+        this.showMessage("error", this.translateServices.instant("general.message.incorrect"), this.translateServices.instant("general.mensaje.error.bbdd"));
+      }
+    ); */
   }
 
   onChangeRowsPerPages(event) {

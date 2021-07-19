@@ -6,6 +6,7 @@ import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { DesignaItem } from '../../../../../../models/sjcs/DesignaItem';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'app-detalle-tarjeta-relaciones-designa',
@@ -44,6 +45,7 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
     private datepipe: DatePipe,
     private router: Router,
     private persistenceService: PersistenceService,
+    private confirmationService: ConfirmationService,
   ) { }
 
 
@@ -164,8 +166,34 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
     return this.selectedDatos != "";
   }
 
+  confirmDelete() {
+    let mess = this.translateService.instant(
+      "justiciaGratuita.ejg.message.eliminarRelacion"
+    );
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      key: "delRelacionDes",
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.eliminarRelacion()
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancelar",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
+
   eliminarRelacion() {
-    this.progressSpinner = true;
+    /* this.progressSpinner = true;
 
     this.sigaServices.post("designaciones_eliminarRelacion", this.selectedDatos).subscribe(
       data => {
@@ -177,14 +205,57 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         this.progressSpinner = false;
       }
-    );
+    ); */
+
+    for( let dato of this.selectedDatos){
+      let data:any = dato;
+      let identificador = data.sjcs;
+
+      switch (identificador) {
+        case 'ASISTENCIA':
+          
+          this.sigaServices.post("designaciones_eliminarRelacionAsistenciaDes", data).subscribe(
+            n => {
+              this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.progressSpinner = false;
+        this.relacion.emit();
+            },
+            err => {
+              console.log(err);
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+              this.progressSpinner = false;
+            }
+          );
+          break;
+          case 'DESIGNACIÓN':
+            
+            this.sigaServices.post("esignaciones_eliminarRelacion", data).subscribe(
+              n => {
+                this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+                this.progressSpinner = false;
+                this.relacion.emit();
+              },
+              err => {
+                console.log(err);
+                this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+                this.progressSpinner = false;
+              }
+            );
+            
+          break;
+      
+        default:
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No se puede realizar la accion de eliminar. Tipo de Asunto incorrecto.");
+          break;
+      }
+    }
   }
 
   porhacer() {
     this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
   }
 
-  checkPermisosAsociarSOJ() {
+ /*  checkPermisosAsociarSOJ() {
     // let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
      //if (msg != undefined) {
        //this.msgs = msg;
@@ -200,7 +271,7 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
     sessionStorage.setItem("Designacion", desItem);
     this.router.navigate(["/busquedaAsuntos"]);
 
-  }
+  } */
   checkPermisosAsociarEJG() {
     // let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
      //if (msg != undefined) {
@@ -212,8 +283,8 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
   asociarEJG() {
     //this.persistenceService.clearDatos();
     sessionStorage.setItem("radioTajertaValue", 'ejg');
-    let desItem = JSON.stringify(this.body);
-    sessionStorage.setItem("Designacion", desItem);
+    //let desItem = JSON.stringify(this.body);
+    sessionStorage.setItem("Designacion", this.body);
     this.router.navigate(["/busquedaAsuntos"]);
 
   }
