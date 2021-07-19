@@ -194,13 +194,6 @@ export class TablaJusticiablesComponent implements OnInit {
     if(datosFamiliares!="") datosFamiliares = JSON.parse(datosFamiliares);
     let exist = false;
 
-    let filtros: JusticiableBusquedaItem = new JusticiableBusquedaItem();
-
-    if(this.persistenceService.getFiltrosAux() !=undefined){
-      filtros = this.persistenceService.getFiltrosAux();
-    }
-    else filtros = this.persistenceService.getFiltros();
-
     if(datosFamiliares=="" ) exist = false;
     else{
       //Comprobamos que el justiciable no esta ya en la designacion
