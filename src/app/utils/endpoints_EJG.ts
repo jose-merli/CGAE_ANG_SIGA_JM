@@ -59,6 +59,7 @@ export let endpoints_EJG: any = {
 
     //Resolucion
     gestionejg_guardarResolucion: "ejg/gestion-ejg/guardarResolucion",
+    gestionejg_getHabilitarActa: "ejg/gestion-ejg/getHabilitarActa",
 
     //Impugnacion
     gestionejg_guardarImpugnacion: "ejg/gestion-ejg/guardarImpugnacion",
