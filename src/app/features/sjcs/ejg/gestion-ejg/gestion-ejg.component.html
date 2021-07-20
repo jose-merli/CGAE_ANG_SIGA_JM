@@ -35,7 +35,8 @@
         (newEstado)="newEstado()"  [openTarjetaInformeCalificacion]="openTarjetaInformeCalificacion">
         </app-informe-calificacion>
         
-        <app-resolucion *ngIf="permisoEscrituraResolucion != undefined && modoEdicion" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaResolucion]="tarjetaResolucion" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraResolucion" (modoEdicionSend)="modoEdicionSend($event)" [openTarjetaResolucion]="openTarjetaResolucion">
+        <app-resolucion *ngIf="permisoEscrituraResolucion != undefined && modoEdicion" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaResolucion]="tarjetaResolucion" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraResolucion" (modoEdicionSend)="modoEdicionSend($event)" [openTarjetaResolucion]="openTarjetaResolucion"
+        (newEstado)="newEstado()">
         </app-resolucion>
         
         <app-impugnacion *ngIf="permisoEscrituraImpugnacion != undefined && modoEdicion" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaImpugnacion]="tarjetaImpugnacion" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraImpugnacion" (modoEdicionSend)="modoEdicionSend($event)" [openTarjetaImpugnacion]="openTarjetaImpugnacion">
