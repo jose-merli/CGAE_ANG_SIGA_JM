@@ -34,6 +34,7 @@ export class ResolucionComponent implements OnInit {
   fundamentoJuridicoDesc: String;
   ResolDesc: String;
   progressSpinner: boolean = false;
+  habilitarActas: boolean = false;
 
   resaltadoDatosGenerales: boolean = false;
   
@@ -57,6 +58,7 @@ export class ResolucionComponent implements OnInit {
         this.nuevo = false;
         this.body = this.persistenceService.getDatos();
         this.getResolucion(this.body);
+        this.getHabilitarActasComision();
       }else {
       this.modoEdicion = false;
       this.nuevo = true;
@@ -114,6 +116,9 @@ export class ResolucionComponent implements OnInit {
       this.getComboActaAnnio();
       this.getComboFundamentoJurid();
       this.getComboResolucion();
+
+      //Se desbloquea el desplegable de fundamento juridico si hay una resolucion seleccionada al inciar la tarjeta.
+      if (this.resolucion.idTiporatificacionEJG != undefined && this.resolucion.idTiporatificacionEJG != null) this.isDisabledFundamentosJurid = false;
       this.progressSpinner = false;
       },
       err => {
@@ -137,6 +142,7 @@ export class ResolucionComponent implements OnInit {
       }
     );
   }
+
   getComboActaAnnio() {
     this.sigaServices.get("gestionejg_comboActaAnnio").subscribe(
       n => {
@@ -144,18 +150,28 @@ export class ResolucionComponent implements OnInit {
         this.commonsServices.arregloTildesCombo(this.comboActaAnnio);
       },
       err => {
-        console.log(err);
       }
     );
   }
+
+  getHabilitarActasComision(){
+    this.sigaServices.get("gestionejg_getHabilitarActa").subscribe(
+      n => {
+        this.habilitarActas = n;
+      },
+      err => {
+      }
+    )
+  }
+
   onChangeResolucion() {
     this.comboFundamentoJurid = [];
-    if (this.resolucion.idTiporatificacionEJG != undefined && this.resolucion.idTiporatificacionEJG != "") {
+    if (this.resolucion.idTiporatificacionEJG != undefined && this.resolucion.idTiporatificacionEJG != null) {
       this.isDisabledFundamentosJurid = false;
       this.getComboFundamentoJurid();
     } else {
       this.isDisabledFundamentosJurid = true;
-      this.resolucion.idFundamentoJuridico = "";
+      this.resolucion.idFundamentoJuridico = null;
     }
   }
   getComboFundamentoJurid() {
@@ -200,6 +216,22 @@ export class ResolucionComponent implements OnInit {
       }
     );
   }
+
+  setCabecera(){
+    let resol = this.comboResolucion.find(
+      item => item.value == this.resolucion.idTiporatificacionEJG
+    );
+    if(resol != undefined){
+      this.ResolDesc = resol.label;
+    }
+
+    let fJuridico = this.comboFundamentoJurid.find(
+      item => item.value == this.resolucion.idFundamentoJuridico
+    );
+    if(fJuridico != undefined)
+      this.fundamentoJuridicoDesc = fJuridico.label;
+  }
+
   disabledSave() {
     if (this.nuevo) {
       /*if (this.resolucion.fechaApertura != undefined) { 
@@ -239,13 +271,24 @@ export class ResolucionComponent implements OnInit {
 
     //this.body.nuevoEJG=!this.modoEdicion;
 
-    this.sigaServices.post("gestionejg_guardarResolucion", this.body).subscribe(
+    this.resolucion.anio = Number(this.body.annio);
+    this.resolucion.idTipoEJG = Number(this.body.tipoEJG);
+    this.resolucion.numero = Number(this.body.numero);
+
+    this.sigaServices.post("gestionejg_guardarResolucion", this.resolucion).subscribe(
       n => {
         this.progressSpinner=false;
+        if (n.statusText == 'OK') {
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.bodyInicial = JSON.parse(JSON.stringify(this.resolucion));
+        this.setCabecera();
+      } else {
+        this.showMessage('error', 'Error', this.translateService.instant('general.message.error.realiza.accion'));
+      }
       },
       err => {
-        console.log(err);
         this.progressSpinner=false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }
     );
   }
@@ -281,9 +324,11 @@ export class ResolucionComponent implements OnInit {
       }
     });
   }
+
   rest(){
     this.resolucion = JSON.parse(JSON.stringify(this.bodyInicial));
   }
+
   checkPermisosOpenActa() {
     let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
@@ -292,27 +337,56 @@ export class ResolucionComponent implements OnInit {
       this.openActa();
     }
   }
+
+  numberOnly(event): boolean {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode >= 48 && charCode <= 57) {
+      return true;
+    }
+    else {
+      return false;
+
+    }
+  }
+
   openActa(){
   }
+
   clear() {
     this.msgs = [];
   }
+
   fillFechaPresPonente(event) {
     this.resolucion.fechaPresentacionPonente = event; 
   }
+
   fillFechaResCAJG(event){
     this.resolucion.fechaResolucionCAJG = event; 
   }
+
   fillFechaNotif(event){
     this.resolucion.fechaNotificacion = event;
   }
+
   fillFechaResFirme(event){
     this.resolucion.fechaRatificacion = event; 
   }
+
   onChangeCheckT(event) {
     this.resolucion.turnadoRatificacion = event;
   }
+
   onChangeCheckR(event) {
     this.resolucion.requiereNotificarProc = event;
   }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+  
 }

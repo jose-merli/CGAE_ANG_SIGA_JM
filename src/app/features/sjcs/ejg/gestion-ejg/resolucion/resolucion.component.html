@@ -62,7 +62,8 @@
               <label>{{ "justiciaGratuita.ejg.datosGenerales.AnnioActa" | translate }} -- {{
                 "justiciaGratuita.ejg.datosGenerales.FechaResolucion" | translate }}</label>
               <p-dropdown class="select-form" [(ngModel)]='resolucion.idAnnioActa' placeholder="Seleccionar"
-                [options]="comboActaAnnio" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
+                [options]="comboActaAnnio" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"
+                [disabled]="!habilitarActas">
               </p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
@@ -86,11 +87,12 @@
               <!-- <label>{{ 'justiciaGratuita.ejg.datosGenerales.CAJG' | translate}} {{
                 'justiciaGratuita.ejg.datosGenerales.annioNum' | translate}}</label> -->
                 <label>{{ 'justiciaGratuita.ejg.datosGenerales.annioCAJG' | translate}}</label>
-              <input type="text" class="form-control" maxLength="50" pInputText [(ngModel)]="resolucion.anioCAJG">
+              <input type="text" class="form-control" maxLength="50" pInputText [(ngModel)]="resolucion.anioCAJG"
+              (keypress)="numberOnly($event)" maxlength="4">
             </div>
             <div class="form-group col-lg-6 col-md-6">
-              <label> / {{'justiciaGratuita.ejg.datosGenerales.annioNum' | translate}}</label>
-              <input type="text" class="form-control" maxLength="50" pInputText [(ngModel)]="resolucion.numeroCAJG">
+              <label> / {{'justiciaGratuita.sjcs.designas.DatosIden.numero' | translate}}</label>
+              <input type="text" class="form-control" maxLength="20" pInputText [(ngModel)]="resolucion.numeroCAJG">
             </div>
 
           </div>
@@ -168,7 +170,7 @@
       <div *ngIf="esFichaActiva('resolucion')" class="card-footer">
         <div class="text-right main-button ">
           <button (click)="checkPermisosOpenActa()" pButton [disabled]="!permisoEscritura" type="button"
-            label="{{ 'general.boton.abrirActa' | translate}}"></button>
+            label="{{ 'general.boton.iralaActa' | translate}}"></button>
           <button (click)="checkPermisosConfirmRest()" pButton [disabled]="!permisoEscritura" type="button"
             icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
           <button (click)="checkPermisosSave()" pButton [disabled]="!permisoEscritura || disabledSave()" type="button"
