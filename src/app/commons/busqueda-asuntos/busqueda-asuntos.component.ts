@@ -137,8 +137,8 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
   asociarElement(event) {
     if (!(event == null || event == undefined)) {
       this.datosAsociar = event;
-      if (this.fromEJG) this.confirmAsociarEJG(this.datosAsociar);
-      else if (this.fromDES) this.confirmAsociarDES(this.datosAsociar);
+      if (this.fromEJG) this.asociarEJG(this.datosAsociar);
+      else if (this.fromDES) this.asociarDES(this.datosAsociar);
     }
   }
   searchEvent(event) {
@@ -275,6 +275,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
     let icon = "fa fa-edit";
     this.confirmationService.confirm({
       message: mess,
+      key: "asoc",
       icon: icon,
       accept: () => {
         this.asociarDES(data);

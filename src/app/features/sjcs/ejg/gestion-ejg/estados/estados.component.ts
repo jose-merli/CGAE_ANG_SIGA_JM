@@ -240,6 +240,7 @@ export class EstadosComponent implements OnInit {
     );
     let icon = "fa fa-edit";
     this.confirmationService.confirm({
+      key:'delEstado',
       message: mess,
       icon: icon,
       accept: () => {
