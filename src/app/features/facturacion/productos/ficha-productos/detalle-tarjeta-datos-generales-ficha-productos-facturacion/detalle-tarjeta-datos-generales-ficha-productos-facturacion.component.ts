@@ -1,7 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { ConfirmationService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '../../../../../commons/translate';
 import { ComboObject } from '../../../../../models/ComboObject';
+import { ListaProductosDTO } from '../../../../../models/ListaProductosDTO';
 import { ListaProductosItems } from '../../../../../models/ListaProductosItems';
 import { ProductoDetalleItem } from '../../../../../models/ProductoDetalleItem';
 import { SigaServices } from '../../../../../_services/siga.service';
@@ -36,7 +39,7 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
     value: "D"
   },
   {
-    label: this.translateService.instant("certificados.tipocertificado.literal.comunicacion"),
+    label: this.translateService.instant("certificados.tipocertificado.literal.comisionbancaria"),
     value: "B"
   },
   {
@@ -45,28 +48,34 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
   },
   ]
   checkBoxSolicitarPorInternet: boolean = false;
-  checkboxSolicitarAnulacionPorInterent: boolean = false;
+  checkboxSolicitarAnulacionPorInternet: boolean = false;
 
   //variables de control
-  aGuardar: boolean; //Usada en condiciones que validan la obligatoriedad, definida al hacer click en el boton guardar
+  aGuardar: boolean = false; //Usada en condiciones que validan la obligatoriedad, definida al hacer click en el boton guardar
+  desactivarBotonEliminar: boolean = false; //Para activar el boton eliminar/reactivar dependiendo de si estamos en edicion o en creacion de un nuevo producto pero ya hemos guardado.
 
   //Suscripciones
   subscriptionCategorySelectValues: Subscription;
   subscriptionTypeSelectValues: Subscription;
   subscriptionCrearProductoInstitucion: Subscription;
+  subscriptionEditarProductoInstitucion: Subscription;
+  subscriptionActivarDesactivarProductos: Subscription;
   subscriptionProductDetail: Subscription;
 
-  constructor(private sigaServices: SigaServices, private translateService: TranslateService) {
-    if (sessionStorage.getItem('productoBuscador')) {
-      this.productoDelBuscador = JSON.parse(sessionStorage.getItem('productoBuscador'));
-      this.detalleProducto();
-    }
+  constructor(private sigaServices: SigaServices, private translateService: TranslateService, private confirmationService: ConfirmationService, private router: Router) {
+
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    if (sessionStorage.getItem('productoBuscador')) {
+      this.productoDelBuscador = JSON.parse(sessionStorage.getItem('productoBuscador'));
+      await this.detalleProducto();
+      this.desactivarBotonEliminar = false;
+    } else {
+      this.desactivarBotonEliminar = true;
+    }
+
     this.getComboCategoria();
-
-
   }
 
   //Necesario para liberar memoria
@@ -77,19 +86,23 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
       this.subscriptionTypeSelectValues.unsubscribe();
     if (this.subscriptionCrearProductoInstitucion)
       this.subscriptionCrearProductoInstitucion.unsubscribe();
+    if (this.subscriptionEditarProductoInstitucion)
+      this.subscriptionEditarProductoInstitucion.unsubscribe();
     if (this.subscriptionProductDetail)
       this.subscriptionProductDetail.unsubscribe();
+    if (this.subscriptionActivarDesactivarProductos)
+      this.subscriptionActivarDesactivarProductos.unsubscribe;
   }
 
   //INICIO METODOS TARJETA DATOS GENERALES
-  //Metodo que se lanza al cambiar de valor el combo de categorias, se usa para cargar el combo tipos dependiendo el valor de categorias
+  //Metodo que se lanza al cambiar de valor el combo de categorias, se usa para cargar el combo tipos dependiendo el valor de categorias IDTIPOPRODUCTO = CATEGORIA, IDPRODUCTO = TIPO, IDPRODUCTOINSTITUCION = PRODUCTO.
   valueChangeCategoria() {
-    console.log(this.producto.categoria);
+    console.log(this.producto.idtipoproducto);
 
-    if (this.producto.categoria != null) {
+    if (this.producto.idtipoproducto != null) {
       this.getComboTipo();
-    } else if (this.producto.categoria == null) {
-      this.producto.tipo = null;
+    } else if (this.producto.idtipoproducto == null) {
+      this.producto.idproducto = null;
     }
   }
 
@@ -105,7 +118,7 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
 
   //Metodo que se lanza al marcar/desmarcar el checkbox Solicitar anulacion por internet
   onChangesolicitudAnulacionInternet() {
-    if (this.checkboxSolicitarAnulacionPorInterent) {
+    if (this.checkboxSolicitarAnulacionPorInternet) {
       this.producto.solicitarbaja = '1';
     } else {
       this.producto.solicitarbaja = '0';
@@ -117,13 +130,70 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
     this.producto = this.productoOriginal;
   }
 
-  eliminar() {
+  //Metodo para activar/desactivar productos mediante borrado logico (es decir fechabaja == null esta activo lo contrario inactivo) en caso de que tengan una transaccion pendiente de compra o compras ya existentes, en caso contrario se hara borrado fisico (DELETE)
+  eliminarReactivar() {
+    let keyConfirmation = "deletePlantillaDoc";
+    let mensaje;
+    if (this.producto.fechabaja != null) {
+      mensaje = this.translateService.instant("facturacion.maestros.tiposproductosservicios.reactivarconfirm");
+    } else if (this.producto.fechabaja == null) {
+      mensaje = this.translateService.instant("messages.deleteConfirmation");
+    }
 
+    this.confirmationService.confirm({
+      key: keyConfirmation,
+      message: mensaje,
+      icon: "fa fa-trash-alt",
+      accept: () => {
+        this.progressSpinner = true;
+
+        let listaProductosDTO = new ListaProductosDTO();
+        listaProductosDTO.listaProductosItems.push(this.productoDelBuscador);
+
+        this.subscriptionActivarDesactivarProductos = this.sigaServices.post("productosBusqueda_activarDesactivar", listaProductosDTO).subscribe(
+          response => {
+            console.log(response);
+            if (JSON.parse(response.body).error.code == 500) {
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+            } else {
+              this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+              this.desactivarBotonEliminar = false;
+              //Si se ha guardado se habilita la tarjeta forma pago
+            }
+          },
+          err => {
+            if (err != undefined && JSON.parse(err.error).error.description != "") {
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+            } else {
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+            }
+            this.progressSpinner = false;
+          },
+          () => {
+            this.progressSpinner = false;
+            sessionStorage.setItem("volver", 'true');
+            sessionStorage.removeItem('productoBuscador');
+            this.router.navigate(['/productos']);
+          }
+        );
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "info",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
   }
 
   guardar() {
     this.aGuardar = true;
-    if (this.producto.categoria != null && this.producto.tipo != null && this.producto.descripcion != '') {
+    if (this.producto.idtipoproducto != null && this.producto.idproducto != null && this.producto.descripcion != '') {
       this.guardarProducto();
     } else {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
@@ -166,6 +236,8 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
         this.progressSpinner = false;
       },
       () => {
+        if (this.productoDelBuscador)
+          this.getComboTipo();
         this.progressSpinner = false;
       }
     );
@@ -196,16 +268,28 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
   }
 
   //Metodo para que en caso de que se haya accedido a traves del enlace de la columna producto se consiga toda la informacion restante del producto seleccionado para completar los campos a editar
-  detalleProducto() {
+  async detalleProducto() {
     this.progressSpinner = true;
 
-    this.subscriptionProductDetail = this.sigaServices.getParam("fichaProducto_detalleProducto", "?idTipoProducto=" + this.productoDelBuscador.idtipoproducto +
+    this.subscriptionProductDetail = await this.sigaServices.getParam("fichaProducto_detalleProducto", "?idTipoProducto=" + this.productoDelBuscador.idtipoproducto +
       "&idProducto=" + this.productoDelBuscador.idproducto + "&idProductoInstitucion=" + this.productoDelBuscador.idproductoinstitucion).subscribe(
         producto => {
           this.progressSpinner = false;
 
           this.productoOriginal = producto;
           this.producto = producto;
+
+          if (producto.solicitaralta == "1") {
+            this.checkBoxSolicitarPorInternet = true;
+          } else if (producto.solicitaralta == "0") {
+            this.checkBoxSolicitarPorInternet = false;
+          }
+
+          if (producto.solicitarbaja == "1") {
+            this.checkboxSolicitarAnulacionPorInternet = true;
+          } else if (producto.solicitarbaja == "0") {
+            this.checkboxSolicitarAnulacionPorInternet = false;
+          }
 
           /* let error = this.tiposObject.error;
           if (error != null && error.description != null) {
@@ -222,17 +306,20 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
   }
 
   guardarProducto() {
-    this.producto.idtipoproducto = Number(this.producto.categoria);
-    this.producto.idproducto = Number(this.producto.tipo);
     this.progressSpinner = true;
 
     if (!sessionStorage.getItem('productoBuscador')) {
       this.subscriptionCrearProductoInstitucion = this.sigaServices.post("fichaProducto_crearProducto", this.producto).subscribe(
         response => {
           this.progressSpinner = false;
-          console.log(response);
 
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          if (JSON.parse(response.body).error.code == 500) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          } else {
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+            this.desactivarBotonEliminar = false;
+            //Si se ha guardado se habilita la tarjeta forma pago
+          }
         },
         err => {
           if (err != undefined && JSON.parse(err.error).error.description != "") {
@@ -244,13 +331,32 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
         },
         () => {
           this.progressSpinner = false;
-          //Si se ha guardado se habilita la tarjeta forma pago
         }
       );
     } else if (sessionStorage.getItem('productoBuscador')) {
-      this.progressSpinner = false;
-      console.log("EDITAR PRODUCTO");
-      //EDITAR
+      this.subscriptionEditarProductoInstitucion = this.sigaServices.post("fichaProducto_editarProducto", this.producto).subscribe(
+        response => {
+          this.progressSpinner = false;
+          console.log(response);
+
+          if (JSON.parse(response.body).error.code == 500) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          } else if (JSON.parse(response.body).error.code == 200) {
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          }
+        },
+        err => {
+          if (err != undefined && JSON.parse(err.error).error.description != "") {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          }
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
     }
   }
   //FIN SERVICIOS DATOS GENERALES

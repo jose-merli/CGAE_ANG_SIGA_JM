@@ -47,8 +47,15 @@ export class ProductosComponent implements OnInit, OnDestroy, AfterViewChecked {
     let error = null;
     this.subscriptionProductosBusqueda = this.sigaServices.post("productosBusqueda_busqueda", filtrosProductos).subscribe(
       listaProductosDTO => {
+        console.log(listaProductosDTO);
 
         this.listaProductosDTO = JSON.parse(listaProductosDTO.body);
+
+        if (JSON.parse(listaProductosDTO.body).error.code == 500) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        } else {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        }
 
         this.progressSpinner = false;
         this.showTablaProductos(true);
@@ -72,23 +79,6 @@ export class ProductosComponent implements OnInit, OnDestroy, AfterViewChecked {
 
         this.productData = this.productDataSinHistorico;
 
-        if (this.productData) {
-          if (this.productData[0] != null && this.productData[0] != undefined) {
-            if (this.productData[0].error != null) {
-              error = this.productData[0].error;
-            }
-          }
-        }
-
-        if (error != null && error.description != null) {
-          this.msgs = [];
-          this.msgs.push({
-            severity: "info",
-            summary: this.translateService.instant("general.message.informacion"),
-            detail: error.description
-          });
-        }
-
         this.progressSpinner = false;
         this.progressSpinner = false;
         setTimeout(() => {
@@ -101,6 +91,21 @@ export class ProductosComponent implements OnInit, OnDestroy, AfterViewChecked {
   //INICIO METODOS
   showTablaProductos(mostrar) {
     this.muestraTablaProductos = mostrar;
+  }
+
+  //Borra el mensaje de notificacion p-growl mostrado en la esquina superior derecha cuando pasas el puntero del raton sobre el
+  clear() {
+    this.msgs = [];
+  }
+
+  //Inicializa las propiedades necesarias para el dialogo de confirmacion
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
   }
   //FIN METODOS
 

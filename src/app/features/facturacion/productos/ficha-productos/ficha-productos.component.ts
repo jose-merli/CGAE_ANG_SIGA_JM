@@ -20,6 +20,15 @@ export class FichaProductosComponent implements OnInit {
       opened: true,
       campos: []
     },
+    {
+      id: 'productosFormasDePago',
+      nombre: "Forma de pago",
+      imagen: "",
+      fixed: false,
+      detalle: true,
+      opened: true,
+      campos: []
+    }
   ];
 
   constructor(private router: Router) { }

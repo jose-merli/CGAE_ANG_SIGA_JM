@@ -1,9 +1,9 @@
 export class ProductoDetalleItem {
-    idproducto: number; //Tipo
-    idtipoproducto: number; //Categoria
-    idproductoinstitucion: number;
+    idproducto: number; //Valor Tipo
+    idtipoproducto: number; //Valor Categoria
+    idproductoinstitucion: number; //Valor Producto
     idcontador: string;
-    descripcion: string;
+    descripcion: string;//Descripcion producto
     cuentacontable: string;
     codigoext: string;
     valor: string;
@@ -14,9 +14,9 @@ export class ProductoDetalleItem {
     solicitaralta: string = "0";
     tipocertificado: string;
     nofacturable: string;
-    categoria: string;
+    categoria: string; //Descripcion categoria
     valoriva: number;
-    tipo: string;
+    tipo: string; //Descripcion tipo
 
     constructor() { }
 }

@@ -11,16 +11,16 @@
     <p-dropdown (onChange)="valueChangeCategoria()" [filter]="true" styleClass="widthAll" [showClear]="true"
       placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='producto.idtipoproducto'
       [options]="categoriasObject.combooItems"
-      [ngClass]="{'camposObligatorios': aGuardar && producto.categoria == null}">
+      [ngClass]="{'camposObligatorios': aGuardar && producto.idtipoproducto == null}">
     </p-dropdown>
   </div>
 
   <!-- Tipo -->
   <div class="form-group-interlineado col-lg-3 col-md-3 pb-lg-2 pb-md-2">
     <label>{{ "facturacion.productos.tipo" | translate}}(*)</label>
-    <p-dropdown [disabled]="producto.categoria == null" [filter]="true" styleClass="widthAll" [showClear]="true"
+    <p-dropdown [disabled]="producto.idtipoproducto == null" [filter]="true" styleClass="widthAll" [showClear]="true"
       placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='producto.idproducto'
-      [options]="tiposObject.combooItems" [ngClass]="{'camposObligatorios': aGuardar && producto.tipo == null}">
+      [options]="tiposObject.combooItems" [ngClass]="{'camposObligatorios': aGuardar && producto.idproducto == null}">
     </p-dropdown>
   </div>
 
@@ -35,7 +35,7 @@
   <!-- Codigo -->
   <div class="form-group-interlineado col-lg-3 col-md-3 pb-lg-2 pb-md-2">
     <label>{{ "facturacion.productos.codigo" | translate}}</label>
-    <input type="text" class="form-control" [(ngModel)]='producto.codigoExt' pInputText>
+    <input type="text" class="form-control" [(ngModel)]='producto.codigoext' pInputText>
   </div>
 
   <!-- Solicitar por internet -->
@@ -48,7 +48,7 @@
   <div class="form-group-interlineado col-lg-3 col-md-3">
     <div class="d-flex align-items-baseline justify-content-between">
       <p-checkbox binary="true" label="Solicitar anulacion por internet"
-        [(ngModel)]="checkboxSolicitarAnulacionPorInterent" (onChange)="onChangesolicitudAnulacionInternet()">
+        [(ngModel)]="checkboxSolicitarAnulacionPorInternet" (onChange)="onChangesolicitudAnulacionInternet()">
       </p-checkbox>
     </div>
   </div>
@@ -57,7 +57,7 @@
   <div class="form-group-interlineado col-lg-3 col-md-3">
     <label>Cuenta contable</label>
     <!--Provisional, insertan en gen_diccionario-->
-    <input type="text" class="form-control" [(ngModel)]='producto.cuentaContable' pInputText>
+    <input type="text" class="form-control" [(ngModel)]='producto.cuentacontable' pInputText>
   </div>
 
   <!-- Tipo de certificado -->
@@ -65,7 +65,7 @@
     <label>Tipo de certificado</label>
     <!--Provisional, insertan en gen_diccionario-->
     <p-dropdown [filter]="true" styleClass="widthAll" [showClear]="true"
-      placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='producto.tipoCertificado'
+      placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='producto.tipocertificado'
       [options]="tiposCertificadosItems">
     </p-dropdown>
   </div>
@@ -80,11 +80,24 @@
       label="{{'general.boton.restablecer' | translate}}"></button>
 
     <!-- Eliminar -->
-    <button (click)="eliminar()" pButton type="button" icon="fa fa-trash-alt " iconPos="left"
+    <button [disabled]="desactivarBotonEliminar" *ngIf="producto.fechabaja == null" (click)="eliminarReactivar()"
+      pButton type="button" icon="fa fa-trash-alt " iconPos="left"
       label="{{'general.boton.eliminar' | translate}}"></button>
+
+    <!-- Reactivar -->
+    <button (click)="eliminarReactivar()" *ngIf="producto.fechabaja != null" pButton type="button" icon="fa fa-undo "
+      iconPos="left" label="{{'facturacion.maestros.tiposproductosservicios.reactivar' | translate}}"></button>
 
     <!-- Guardar -->
     <button (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left"
       label="{{ 'general.boton.guardar' | translate}}"></button>
   </div>
 </div>
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="deletePlantillaDoc" icon="icon"
+  width="425" #deletePlantillaDoc>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="deletePlantillaDoc.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="deletePlantillaDoc.reject()"></button>
+  </p-footer>
+</p-confirmDialog>

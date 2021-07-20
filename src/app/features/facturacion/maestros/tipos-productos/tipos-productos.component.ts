@@ -311,18 +311,16 @@ export class TiposProductosComponent implements OnInit, OnDestroy {
       tiposProductosObject => {
         this.progressSpinner = false;
 
-        console.log(tiposProductosObject);
         this.tiposProductosObject = tiposProductosObject;
         this.productData = this.tiposProductosObject.tiposProductosItems;
 
-        let error = this.tiposProductosObject.error;
-        if (error != null && error.description != null) {
+        if (tiposProductosObject.error.code == 500) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
 
         this.productsTable.paginator = true;
       },
       err => {
-        console.log(err);
         this.progressSpinner = false;
       },
       () => {
@@ -351,16 +349,13 @@ export class TiposProductosComponent implements OnInit, OnDestroy {
         this.tiposProductosObject = tiposProductosObject;
         this.productData = this.tiposProductosObject.tiposProductosItems;
 
-        //REVISAR
-        let error = this.tiposProductosObject.error;
-        if (error != null && error.description != null) {
+        if (tiposProductosObject.error.code == 500) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
-        //REVISAR
 
         this.productsTable.paginator = true;
       },
       err => {
-        console.log(err);
         this.progressSpinner = false;
       },
       () => {
@@ -393,13 +388,8 @@ export class TiposProductosComponent implements OnInit, OnDestroy {
 
         this.comboObject = ProductTypeSelectValues;
         this.comboItem = this.comboObject.combooItems;
-
-        let error = this.comboObject.error;
-        if (error != null && error.description != null) {
-        }
       },
       err => {
-        console.log(err);
         this.progressSpinner = false;
       },
       () => {
@@ -414,8 +404,12 @@ export class TiposProductosComponent implements OnInit, OnDestroy {
     let tiposProductosObject = new TiposProductosObject();
     tiposProductosObject.tiposProductosItems = productsToEditCreate;
     this.subscriptionCreateAProduct = this.sigaServices.post("tiposProductos_crearProducto", tiposProductosObject).subscribe(
-      data => {
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+      response => {
+        if (JSON.parse(response.body).error.code == 500) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        } else {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        }
       },
       err => {
         if (err != undefined && JSON.parse(err.error).error.description != "") {
@@ -445,8 +439,12 @@ export class TiposProductosComponent implements OnInit, OnDestroy {
     let tiposProductosObject = new TiposProductosObject();
     tiposProductosObject.tiposProductosItems = productsToEditCreate;
     this.subscriptionEditAProduct = this.sigaServices.post("tiposProductos_modificarProducto", tiposProductosObject).subscribe(
-      data => {
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+      response => {
+        if (JSON.parse(response.body).error.code == 500) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        } else {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        }
       },
       err => {
         if (err != undefined && JSON.parse(err.error).error.description != "") {
@@ -490,8 +488,12 @@ export class TiposProductosComponent implements OnInit, OnDestroy {
         let tiposProductosObject = new TiposProductosObject();
         tiposProductosObject.tiposProductosItems = selectedRows
         this.subscriptionEnableUnableProducts = this.sigaServices.post("tiposProductos_activarDesactivarProducto", tiposProductosObject).subscribe(
-          data => {
-            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          response => {
+            if (JSON.parse(response.body).error.code == 500) {
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+            } else {
+              this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+            }
           },
           err => {
             if (err != undefined && JSON.parse(err.error).error.description != "") {
