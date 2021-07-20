@@ -184,12 +184,16 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 	}
 
 	Associate() {
+
+		this.progressSpinner = true;
+
 		let ejgPeticion = this.persistenceService.getDatos();
 		ejgPeticion.idProcurador = this.generalBody.idProcurador;
 		ejgPeticion.idInstitucionProc = parseInt(this.generalBody.idInstitucion);
 		ejgPeticion.fechaDesProc = this.generalBody.fechaDesigna;
 		ejgPeticion.numerodesignaproc = this.generalBody.numerodesignacion;
 		ejgPeticion.nombreApProcurador = this.generalBody.nombre;
+		
 		this.sigaServices.post('gestionejg_guardarProcuradorEJG', ejgPeticion).subscribe(
 			(n) => {
 				this.progressSpinner = false;

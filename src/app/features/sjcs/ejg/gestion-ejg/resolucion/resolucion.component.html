@@ -63,7 +63,7 @@
                 "justiciaGratuita.ejg.datosGenerales.FechaResolucion" | translate }}</label>
               <p-dropdown class="select-form" [(ngModel)]='resolucion.idAnnioActa' placeholder="Seleccionar"
                 [options]="comboActaAnnio" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"
-                [disabled]="!habilitarActas">
+                [disabled]="!habilitarActas" (onChange)="fillFechaResCAJGActa($event)">
               </p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
@@ -152,7 +152,7 @@
 
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "justiciaGratuita.ejg.datosGenerales.RefaAuto" | translate }}</label>
-              <input type="text" class="form-control" pInputText [(ngModel)]="resolucion.refAuto">
+              <input type="text" class="form-control" pInputText [(ngModel)]="resolucion.refAuto" maxLength="250">
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <p-checkbox (onClick)="onChangeCheckT($event)" [(ngModel)]="resolucion.turnadoRatificacion" binary="true"

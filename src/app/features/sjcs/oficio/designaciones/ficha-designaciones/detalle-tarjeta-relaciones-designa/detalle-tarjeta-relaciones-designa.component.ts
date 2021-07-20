@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { DesignaItem } from '../../../../../../models/sjcs/DesignaItem';
 import { ConfirmationService } from 'primeng/api';
+import { RelacionesItem } from '../../../../../../models/sjcs/RelacionesItem';
 
 @Component({
   selector: 'app-detalle-tarjeta-relaciones-designa',
@@ -30,7 +31,7 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
   selectionMode: string = "single";
   numSelected = 0;
   body;
-  selectedDatos: any = [];
+  selectedDatos: any[] = [];
 
   selectAll: boolean = false;
   progressSpinner: boolean = false;
@@ -44,7 +45,6 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
     private changeDetectorRef: ChangeDetectorRef,
     private datepipe: DatePipe,
     private router: Router,
-    private persistenceService: PersistenceService,
     private confirmationService: ConfirmationService,
   ) { }
 
@@ -163,7 +163,9 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
 
 
   isAnySelected() {
-    return this.selectedDatos != "";
+
+    return this.selectedDatos.length != 0 ? true : false;
+
   }
 
   confirmDelete() {
@@ -206,44 +208,58 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
         this.progressSpinner = false;
       }
     ); */
+    for (let dato of this.selectedDatos) {
 
-    for( let dato of this.selectedDatos){
-      let data:any = dato;
-      let identificador = data.sjcs;
+      let identificador = dato.sjcs.charAt(0);
 
       switch (identificador) {
-        case 'ASISTENCIA':
-          
-          this.sigaServices.post("designaciones_eliminarRelacionAsistenciaDes", data).subscribe(
+        case 'A':
+          let relacion: RelacionesItem = new RelacionesItem();
+
+          relacion.idinstitucion = dato.idinstitucion;
+          relacion.numero = dato.numero;
+          relacion.anio = dato.anio;
+
+          this.sigaServices.post("designaciones_eliminarRelacionAsistenciaDes", relacion).subscribe(
             n => {
               this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
-        this.relacion.emit();
+              this.progressSpinner = false;
+              this.selectedDatos = [];
+              this.relacion.emit();
             },
             err => {
               console.log(err);
               this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+              this.selectedDatos = [];
               this.progressSpinner = false;
             }
           );
           break;
-          case 'DESIGNACIÓN':
-            
-            this.sigaServices.post("esignaciones_eliminarRelacion", data).subscribe(
-              n => {
-                this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-                this.progressSpinner = false;
-                this.relacion.emit();
-              },
-              err => {
-                console.log(err);
-                this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-                this.progressSpinner = false;
-              }
-            );
-            
+        case 'E':
+          let relacionEjg: RelacionesItem = new RelacionesItem();
+
+          relacionEjg.idinstitucion = dato.idinstitucion;
+          relacionEjg.numero = dato.numero;
+          relacionEjg.anio = dato.anio;
+          relacionEjg.idturno = dato.idturno;
+
+          this.sigaServices.post("designaciones_eliminarRelacion", relacionEjg).subscribe(
+            n => {
+              this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+              this.progressSpinner = false;
+              this.selectedDatos = [];
+              this.relacion.emit();
+            },
+            err => {
+              console.log(err);
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+              this.selectedDatos = [];
+              this.progressSpinner = false;
+            }
+          );
+
           break;
-      
+
         default:
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No se puede realizar la accion de eliminar. Tipo de Asunto incorrecto.");
           break;
@@ -255,31 +271,31 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
     this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
   }
 
- /*  checkPermisosAsociarSOJ() {
-    // let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
-     //if (msg != undefined) {
-       //this.msgs = msg;
-     //} else {
-       this.asociarSOJ();
-     //}
-   }
-
-  asociarSOJ() {
-    //this.persistenceService.clearDatos();
-    sessionStorage.setItem("radioTajertaValue", 'soj');
-    let desItem = JSON.stringify(this.body);
-    sessionStorage.setItem("Designacion", desItem);
-    this.router.navigate(["/busquedaAsuntos"]);
-
-  } */
+  /*  checkPermisosAsociarSOJ() {
+     // let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+      //if (msg != undefined) {
+        //this.msgs = msg;
+      //} else {
+        this.asociarSOJ();
+      //}
+    }
+ 
+   asociarSOJ() {
+     //this.persistenceService.clearDatos();
+     sessionStorage.setItem("radioTajertaValue", 'soj');
+     let desItem = JSON.stringify(this.body);
+     sessionStorage.setItem("Designacion", desItem);
+     this.router.navigate(["/busquedaAsuntos"]);
+ 
+   } */
   checkPermisosAsociarEJG() {
     // let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
-     //if (msg != undefined) {
-       //this.msgs = msg;
-     //} else {
-       this.asociarEJG();
-     //}
-   }
+    //if (msg != undefined) {
+    //this.msgs = msg;
+    //} else {
+    this.asociarEJG();
+    //}
+  }
   asociarEJG() {
     //this.persistenceService.clearDatos();
     sessionStorage.setItem("radioTajertaValue", 'ejg');
@@ -290,12 +306,12 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
   }
   checkPermisosAsociarAsistencia() {
     // let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
-     //if (msg != undefined) {
-       //this.msgs = msg;
-     //} else {
-       this.asociarAsistencia();
-     //}
-   }
+    //if (msg != undefined) {
+    //this.msgs = msg;
+    //} else {
+    this.asociarAsistencia();
+    //}
+  }
   asociarAsistencia() {
     //this.persistenceService.clearDatos();
     sessionStorage.setItem("radioTajertaValue", 'asi');
@@ -304,24 +320,24 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
     this.router.navigate(["/busquedaAsuntos"]);
   }
   checkPermisosCrearEJG() {
-   // let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    // let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
     //if (msg != undefined) {
-      //this.msgs = msg;
+    //this.msgs = msg;
     //} else {
-      this.crearEJG();
+    this.crearEJG();
     //}
   }
   crearEJG() {
- 
-   /*  this.progressSpinner = true;
-    //Recogemos los datos de nuevo de la capa de persistencia para captar posibles cambios realizados en el resto de tarjetas
-    this.body = this.persistenceService.getDatos();
-    this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-    //Utilizamos el bodyInicial para no tener en cuenta cambios que no se hayan guardado.
-    sessionStorage.setItem("EJG", JSON.stringify(this.bodyInicial));
-    sessionStorage.setItem("nuevaDesigna", "true");
-    if (this.art27) sessionStorage.setItem("Art27", "true");
-    this.progressSpinner = false; */
+
+    /*  this.progressSpinner = true;
+     //Recogemos los datos de nuevo de la capa de persistencia para captar posibles cambios realizados en el resto de tarjetas
+     this.body = this.persistenceService.getDatos();
+     this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+     //Utilizamos el bodyInicial para no tener en cuenta cambios que no se hayan guardado.
+     sessionStorage.setItem("EJG", JSON.stringify(this.bodyInicial));
+     sessionStorage.setItem("nuevaDesigna", "true");
+     if (this.art27) sessionStorage.setItem("Art27", "true");
+     this.progressSpinner = false; */
     this.router.navigate(["/gestionEjg"]);
   }
 }

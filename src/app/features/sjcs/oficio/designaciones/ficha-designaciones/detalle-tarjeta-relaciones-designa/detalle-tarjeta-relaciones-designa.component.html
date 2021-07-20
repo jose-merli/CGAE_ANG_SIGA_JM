@@ -1,6 +1,6 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div>
-  <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [selectionMode]="selectionMode"
+  <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple"
     [responsive]="true" #table class="tabla-listado" [paginator]="true" [rows]="selectedItem"
     (onRowSelect)="actualizaSeleccionados()" (onRowUnselect)="actualizaSeleccionados()"
     [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">
