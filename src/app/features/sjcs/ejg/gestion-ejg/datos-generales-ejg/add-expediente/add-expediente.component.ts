@@ -19,7 +19,7 @@ import { Router } from '@angular/router';
 
     constructor(public oldSigaServices: OldSigaServices, private sigaServices: SigaServices,
       private location: Location, private persistenceService: PersistenceService) {
-        this.url = oldSigaServices.getOldSigaUrl("url");
+        this.url = "google.es"//oldSigaServices.getOldSigaUrl("url");
       }
 
     ngOnInit() {

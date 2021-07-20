@@ -126,7 +126,7 @@
             (click)="downloadEEJ()" type="button" icon="fa fa-download" iconPos="left"
             label="{{'justiciaGratuita.ejg.datosGenerales.DescargarEEJ' | translate}}"></button>
           <button pButton
-            [disabled]="(((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura) || isRepresentante"
+            [disabled]="!permisoEscritura || isRepresentante || selectedDatos.length!=1"
             (click)="checkPermisosSolicitarEEJ()" type="button"
             label="{{'general.boton.solicitudEejg' | translate}}"></button>
           <button [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura  || isRepresentante"
