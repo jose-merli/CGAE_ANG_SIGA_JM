@@ -32,7 +32,7 @@ export class RelacionesComponent implements OnInit {
   msgs;
   selectedItem: number = 10;
   selectAll;
-  selectedDatos = [];
+  selectedDatos:any[] = [];
   buscadores = [];
   numSelected = 0;
   selectMultiple: boolean = false;
@@ -341,51 +341,72 @@ export class RelacionesComponent implements OnInit {
     );*/
 
     for( let dato of this.selectedDatos){
-      let data:any = dato;
-      let identificador = data.sjcs;
+     
+      let identificador = dato.sjcs;
 
       switch (identificador) {
         case 'ASISTENCIA':
-          
-          this.sigaServices.post("gestionejg_borrarRelacionAsistenciaEJG", data).subscribe(
+          let relacion:RelacionesItem = new RelacionesItem();
+     
+     relacion.idinstitucion = dato.idinstitucion;
+     relacion.numero = dato.numero;
+     relacion.anio = dato.anio;
+          this.sigaServices.post("gestionejg_borrarRelacionAsistenciaEJG", relacion).subscribe(
             n => {
               this.progressSpinner = false;
               this.showMessage("success", this.translateServices.instant("general.message.correct"), this.translateServices.instant("general.message.accion.realizada"));
+             
               this.getRelaciones();
             },
             err => {
               console.log(err);
               this.progressSpinner = false;
               this.showMessage("error", this.translateServices.instant("general.message.incorrect"), this.translateServices.instant("general.mensaje.error.bbdd"));
+              
             }
           );
           break;
           case 'SOJ':
-            this.sigaServices.post("gestionejg_borrarRelacionSojEJG", dato).subscribe(
+            let relacionSOJ:RelacionesItem = new RelacionesItem();
+     
+            relacionSOJ.idinstitucion = dato.idinstitucion;
+            relacionSOJ.numero = dato.numero;
+            relacionSOJ.anio = dato.anio;
+            relacionSOJ.idtipo = dato.idtipo;
+            this.sigaServices.post("gestionejg_borrarRelacionSojEJG", relacionSOJ).subscribe(
               n => {
                 this.progressSpinner = false;
                 this.showMessage("success", this.translateServices.instant("general.message.correct"), this.translateServices.instant("general.message.accion.realizada"));
+                
                 this.getRelaciones();
               },
               err => {
                 console.log(err);
                 this.progressSpinner = false;
                 this.showMessage("error", this.translateServices.instant("general.message.incorrect"), this.translateServices.instant("general.mensaje.error.bbdd"));
+                
               }
             );
           break;
           case 'DESIGNACIÓN':
-            
-            this.sigaServices.post("gestionejg_borrarRelacion", dato).subscribe(
+            let relacionDes:RelacionesItem = new RelacionesItem();
+     
+            relacionDes.idinstitucion = dato.idinstitucion;
+            relacionDes.numero = dato.numero;
+            relacionDes.anio = dato.anio;
+            relacionDes.idturno = dato.idturno;
+            this.sigaServices.post("gestionejg_borrarRelacion", relacionDes).subscribe(
               n => {
                 this.progressSpinner = false;
                 this.showMessage("success", this.translateServices.instant("general.message.correct"), this.translateServices.instant("general.message.accion.realizada"));
+                
                 this.getRelaciones();
               },
               err => {
                 console.log(err);
                 this.progressSpinner = false;
                 this.showMessage("error", this.translateServices.instant("general.message.incorrect"), this.translateServices.instant("general.mensaje.error.bbdd"));
+                
               }
             );
             

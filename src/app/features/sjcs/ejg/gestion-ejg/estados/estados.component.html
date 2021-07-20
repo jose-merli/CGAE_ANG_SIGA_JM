@@ -218,6 +218,12 @@
       </div>
     </div>
   </div>
+  <p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" key="delEstado" #delEstado>
+    <p-footer>
+      <button type="button" pButton icon="fa-check" label="Si" (click)="delEstado.accept()"></button>
+      <button type="button" pButton icon="fa-close" label="No" (click)="delEstado.reject()"></button>
+    </p-footer>
+  </p-confirmDialog>
 </div>
 
 <!--DIALOG ANADIR ESTADO-->
