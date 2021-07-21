@@ -1,4 +1,5 @@
 import { APP_BASE_HREF, CommonModule, DatePipe, registerLocaleData } from '@angular/common';
+import * as $ from 'jquery';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import es from '@angular/common/locales/es';
 import { LOCALE_ID, NgModule } from '@angular/core';
@@ -47,6 +48,7 @@ import { TooltipModule } from "primeng/tooltip";
 import { TreeModule } from 'primeng/tree';
 import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
+
 // Componentes comunes
 import { routing } from './app.routing';
 import { BuscadorProcuradoresComponent } from './commons/buscador-procuradores/buscador-procuradores.component';
@@ -411,7 +413,6 @@ import { SigaStorageService } from './siga-storage.service';
 import { FichaCambioLetradoComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/ficha-cambio-letrado/ficha-cambio-letrado.component';
 import { LetradoEntranteComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/ficha-cambio-letrado/letrado-entrante/letrado-entrante.component';
 import { LetradoSalienteComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/ficha-cambio-letrado/letrado-saliente/letrado-saliente.component';
-import * as $ from 'jquery';
 import { SelectorModule } from './commons/selector/selector.module';
 import { AsistenciaExpresComponent } from './features/sjcs/guardia/guardias-asistencias/asistencia-expres/asistencia-expres.component';
 import { BuscadorAsistenciaExpresComponent } from './features/sjcs/guardia/guardias-asistencias/asistencia-expres/buscador-asistencia-expres/buscador-asistencia-expres.component';
@@ -422,6 +423,7 @@ import { FichaPreasistenciasComponent } from './features/sjcs/guardia/guardias-s
 import { AsistenciasFichaPreasistenciasComponent } from './features/sjcs/guardia/guardias-solicitudes-centralita/ficha-preasistencias/asistencias-ficha-preasistencias/asistencias-ficha-preasistencias.component';
 import { FichaAsistenciaComponent } from './features/sjcs/guardia/guardias-asistencias/ficha-asistencia/ficha-asistencia.component';
 import { FichaAsistenciaTarjetaDatosGeneralesComponent } from './features/sjcs/guardia/guardias-asistencias/ficha-asistencia/ficha-asistencia-tarjeta-datos-generales/ficha-asistencia-tarjeta-datos-generales.component';
+
 
 @NgModule({
 	declarations: [
