@@ -62,8 +62,14 @@
                   <label>{{"gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate}}:
                     <span>{{destinatario.apellidos1}} {{destinatario.apellidos2}} </span>
                   </label>
-                  <label>{{"censo.datosDireccion.literal.correo" | translate}}:
+                  <label *ngIf="body.idTipoEnvios == 1">{{"censo.datosDireccion.literal.correo" | translate}}:
                     <span>{{destinatario.correoElectronico}}</span>
+                  </label>
+                  <label *ngIf="body.idTipoEnvios == 2">{{"censo.datosDireccion.literal.direccion" | translate}}:
+                    <span>{{destinatario.domicilio}}</span>
+                  </label>
+                  <label *ngIf="body.idTipoEnvios == 4 || body.idTipoEnvios == 5">{{"censo.datosDireccion.literal.telefonoMovil" | translate}}:
+                    <span>{{destinatario.movil}}</span>
                   </label>
 
                   <label class="mr-3">
