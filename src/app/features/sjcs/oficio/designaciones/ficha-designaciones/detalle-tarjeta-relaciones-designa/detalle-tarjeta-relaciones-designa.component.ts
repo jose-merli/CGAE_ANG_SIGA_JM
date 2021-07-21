@@ -340,4 +340,37 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
      this.progressSpinner = false; */
     this.router.navigate(["/gestionEjg"]);
   }
-}
+
+  checkPermisosEditar(){
+     // let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    //if (msg != undefined) {
+    //this.msgs = msg;
+    //} else {
+      this.consultarEditar();
+      //}
+  }
+  consultarEditar() {
+    
+
+      let identificador = this.selectedDatos[0].sjcs.charAt(0);
+
+      switch (identificador) {
+        case 'A':
+          /**
+         * TODO: enlazar una vez este creada la pagina.
+         */
+
+        this.router.navigate(['/rutaSinDefinir']);
+          break;
+        case 'E':
+
+          this.router.navigate(["/gestionEjg"]);
+          break;
+
+        default:
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No se puede realizar la accion de eliminar. Tipo de Asunto incorrecto.");
+          break;
+      }
+    }
+  }
+

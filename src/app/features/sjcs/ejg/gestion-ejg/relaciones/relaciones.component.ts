@@ -468,7 +468,7 @@ export class RelacionesComponent implements OnInit {
 
     //this.body.nuevoEJG=!this.modoEdicion;
 
-    this.sigaServices.post("gestionejg_consultEditRelacion", this.body).subscribe(
+ /*    this.sigaServices.post("gestionejg_consultEditRelacion", this.body).subscribe(
       n => {
         this.progressSpinner = false;
       },
@@ -476,7 +476,56 @@ export class RelacionesComponent implements OnInit {
         console.log(err);
         this.progressSpinner = false;
       }
-    );
+    ); */
+    let identificador = this.selectedDatos[0].sjcs;
+
+    switch (identificador) {
+      case 'ASISTENCIA':
+        /**
+         * TODO: enlazar una vez este creada la pagina.
+         */
+
+        this.router.navigate(['/rutaSinDefinir']);
+
+        break;
+        case 'SOJ':
+          /**
+         * TODO: enlazar una vez este creada la pagina.
+         */
+
+          this.router.navigate(['/soj']);
+        break;
+        case 'DESIGNACIÓN':
+          let desItem = new DesignaItem(); 
+          let ape = this.selectedDatos[0].letrado.split(',')[0];
+          desItem.ano = this.selectedDatos[0].anio;
+          desItem.numero = this.selectedDatos[0].numero;
+          desItem.idInstitucion = this.selectedDatos[0].idinstitucion;
+          desItem.idTurno = this.selectedDatos[0].idturno;
+          desItem.codigo = this.selectedDatos[0].codigo;
+          desItem.descripcionTipoDesigna = this.selectedDatos[0].destipo
+          desItem.fechaEntradaInicio = this.selectedDatos[0].fechaasunto;
+          desItem.nombreTurno = this.selectedDatos[0].descturno;
+          desItem.nombreProcedimiento = this.selectedDatos[0].dilnigproc.split('-')[2];
+          desItem.nombreColegiado = this.selectedDatos[0].letrado;
+          desItem.apellido1Colegiado =ape.split(' ')[0];
+          desItem.apellido2Colegiado =ape.split(' ')[1];
+
+          if (this.art27) sessionStorage.setItem("Art27", "true");
+          sessionStorage.setItem('designaItemLink',JSON.stringify(desItem));
+          sessionStorage.setItem("nuevaDesigna", "false");
+          this.router.navigate(['/fichaDesignaciones']);
+        break;
+        case 'PRE-DESIGNACION':
+
+          this.router.navigate(['/ficha-pre-designacion']);
+        break;
+    
+      default:
+        this.showMessage("error", this.translateServices.instant("general.message.incorrect"), "No se puede realizar la accion de eliminar. Tipo de Asunto incorrecto.");
+        break;
+    }
+
   }
 
   checkPermisosDelete() {
