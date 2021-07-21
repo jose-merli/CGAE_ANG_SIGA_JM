@@ -8,6 +8,8 @@ import { FichaProgramacionComponent } from "./programacionCalendarios/ficha-prog
 import { AsistenciaExpresComponent } from "./guardias-asistencias/asistencia-expres/asistencia-expres.component";
 import { FichaPreasistenciasComponent } from "./guardias-solicitudes-centralita/ficha-preasistencias/ficha-preasistencias.component";
 
+import { GuardiasInscripcionesComponent } from "./guardias-inscripciones/guardias-inscripciones.component";
+
 
 const routesGuardia: Routes = [
     {
@@ -41,6 +43,12 @@ const routesGuardia: Routes = [
 		component: FichaPreasistenciasComponent,
 		canActivate: [AuthGuard]
 	},
+
+    {
+        path: "inscripcionesGuardia",
+        component: GuardiasInscripcionesComponent,
+        canActivate: [AuthGuard]
+    },
 ];
 
 @NgModule({

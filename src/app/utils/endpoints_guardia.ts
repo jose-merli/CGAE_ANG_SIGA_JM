@@ -72,4 +72,6 @@ export let endpoints_guardia: any = {
     busquedaPreasistencias_buscarPreasistencias: "preasistencia/buscarPreAsistencias",
     busquedaPreasistencias_denegarPreasistencias: "preasistencia/denegarPreAsistencias",
     busquedaPreasistencias_activarPreasistenciasDenegadas: "preasistencia/activarPreAsistenciasDenegadas",
+    //Inscripciones
+    guardiasInscripciones_buscarInscripciones : "guardia/busquedainscripciones",
 }

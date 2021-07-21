@@ -1,0 +1,17 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div class="card">
+    <div class="busqueda-container" class="card-body card-body-ficha">
+        <app-guardias-inscripciones-filtros (filtrosValues)="getFiltrosValues($event)" [permisos]="permisoEscritura"></app-guardias-inscripciones-filtros>
+
+        <app-tabla-resultado-mix *ngIf="buscar" [inscripciones]="true" [totalRegistros] = "totalRegistros" [seleccionarTodo]="seleccionarTodo" [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux"
+        [rowGroups]="rowGroups" (anySelected)="notifyAnySelected($event)" (selectedRow)="checkSelectedRow($event)" (infoParaElPadre)="BotonesInfo($event)" ></app-tabla-resultado-mix>
+    
+    </div>
+    <div class="mt-3 text-right main-button ">
+        <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
+    </div>
+
+    <div *ngIf="progressSpinner" class="overlay-spinner">
+        <div class="loader"></div>
+    </div>
+</div>

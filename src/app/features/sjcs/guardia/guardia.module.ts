@@ -8,6 +8,7 @@ import { TablaResultadoOrderCGService } from "../../../commons/tabla-resultado-o
 import { GlobalGuardiasService } from "./guardiasGlobal.service";
 import { BusquedaGuardiasIncompatibilidadesModule } from "./guardias-incompatibilidades/busqueda-guardias-incompatibilidades.module";
 import { ProgramacionCalendariosModule } from "./programacionCalendarios/programacionCalendarios.module";
+import { InscripcionesGuardiaModule } from "./guardias-inscripciones/guardias-inscripciones.module";
 
 @NgModule({
     declarations: [],
@@ -18,7 +19,8 @@ import { ProgramacionCalendariosModule } from "./programacionCalendarios/program
         SaltosCompensacionesGuardiaModule,
         TablaResultadoOrderModule,
         BusquedaGuardiasIncompatibilidadesModule,
-        ProgramacionCalendariosModule
+        ProgramacionCalendariosModule,
+        InscripcionesGuardiaModule
     ],
 
     providers: [
