@@ -235,6 +235,7 @@ import { TurnosComponent } from "./features/sjcs/oficio/turnos/busqueda-turnos.c
 import { BuscadorColegiadosComponent } from "./commons/buscador-colegiados/buscador-colegiados.component";
 import { BuscadorGuardiaIncompatibilidadesComponent } from "./features/sjcs/guardia/guardias-incompatibilidades/buscador-guardia-incompatibilidades/buscador-guardia-incompatibilidades.component";
 import { AsistenciaExpresComponent } from "./features/sjcs/guardia/guardias-asistencias/asistencia-expres/asistencia-expres.component";
+import { FichaAsistenciaComponent } from "./features/sjcs/guardia/guardias-asistencias/ficha-asistencia/ficha-asistencia.component";
 
 const appRoutes: Routes = [
 	{ path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
@@ -821,6 +822,11 @@ const appRoutes: Routes = [
 	{
 		path: 'guardiasSolicitudesCentralita',
 		component: GuardiasSolicitudesCentralitaComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'fichaAsistencia',
+		component: FichaAsistenciaComponent,
 		canActivate: [AuthGuard]
 	},
 	{

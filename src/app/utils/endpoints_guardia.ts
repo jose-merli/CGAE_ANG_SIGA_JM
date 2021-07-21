@@ -11,7 +11,8 @@ export let endpoints_guardia: any = {
     busquedaGuardia_materia: "combo/materias",
     busquedaGuardia_tipoTurno: "combo/tipoTurno",
     busquedaGuardia_tiposGuardia: "combo/tipoGuardia",
-    busquedaGuardia_guardia: "combo/guardias",
+    busquedaGuardia_grupo: "combo/guardiasGrupo",
+    busquedaGuardia_noGrupo: "combo/guardiasNoGrupo",
     busquedaGuardia_listasGuardia: "combo/listasguardias",
     busquedaGuardia_conjuntoGuardia: "combo/conjuntoguardias",
     busquedaGuardia_estado: "combo/estado",
@@ -46,6 +47,8 @@ export let endpoints_guardia: any = {
     saltosCompensacionesGuardia_guardar: "guardia/saltosCompensaciones/guardarSaltosCompensaciones",
     saltosCompensacionesGuardia_anular: "guardia/saltosCompensaciones/anularSaltosCompensaciones",
     saltosCompensacionesGuardia_borrar: "guardia/saltosCompensaciones/borrarSaltosCompensaciones",
+    saltosCompensacionesGuardia_comboColegiados: "guardia/letradosGuardia",
+    saltosCompensacionesGuardia_esGuardia: "guardia/saltosCompensaciones/isGrupo",
 
     //Incompatibilidades
     guardiasIncompatibilidades_buscarIncompatibilidades : "guardia/buscarIncompatibilidades",

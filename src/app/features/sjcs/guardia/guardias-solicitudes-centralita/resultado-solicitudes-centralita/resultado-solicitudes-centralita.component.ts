@@ -128,13 +128,16 @@ export class ResultadoSolicitudesCentralitaComponent implements OnInit {
       this.confirmable = true;
     }
 
-    if(this.table.selectionMode == 'single'){
+    if(this.table.selectionMode == 'single'){       //Redirigimos a tarjeta de Preasistencia
       this.numSeleccionado = 1;
       sessionStorage.setItem("preasistenciaItemLink", JSON.stringify(data));
       this.router.navigate(["/fichaPreasistencia"]);
-      //Redirigimos a tarjeta de Preasistencia
     }else{
       this.numSeleccionado = this.selectedDatos.length;
+    }
+
+    if(data && data.estado == '0' && this.numSeleccionado > 1){ // Solo se confirman de una en una
+      this.confirmable = false;
     }
   }
 
@@ -246,6 +249,19 @@ export class ResultadoSolicitudesCentralitaComponent implements OnInit {
   }
 
   confirmarSolicitud(){
+
+    let selectedData;
+
+    if(Array.isArray(this.selectedDatos)
+        && this.selectedDatos.length > 0){
+      selectedData = this.selectedDatos[0];
+    }else{
+      selectedData = this.selectedDatos;
+    }
+
+    //Redirigimos a la ficha de asistencia para crear la asistencia y posteriormente confirmar la preasistencia
+    sessionStorage.setItem("preasistenciaItemLink", JSON.stringify(selectedData));
+    this.router.navigate(["/fichaAsistencia"]);
 
   }
 

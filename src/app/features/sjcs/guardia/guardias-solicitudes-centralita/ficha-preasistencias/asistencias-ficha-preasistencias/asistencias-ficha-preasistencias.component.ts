@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { ConfirmationService, DataTable, Message } from 'primeng/primeng';
 import { TranslateService } from '../../../../../../commons/translate';
 import { PreAsistenciaItem } from '../../../../../../models/guardia/PreAsistenciaItem';
@@ -35,7 +36,8 @@ export class AsistenciasFichaPreasistenciasComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private sigaServices : SigaServices,
     private confirmationService : ConfirmationService,
-    private sigaStorageService : SigaStorageService) { }
+    private sigaStorageService : SigaStorageService,
+    private router : Router) { }
 
   ngOnInit() {
     this.columnas = [
@@ -235,6 +237,12 @@ export class AsistenciasFichaPreasistenciasComponent implements OnInit {
   }
 
   confirmarSolicitud(){
+
+    let preasistenciaItem  : PreAsistenciaItem = JSON.parse(sessionStorage.getItem("preasistenciaItemLink"));
+
+    //Redirigimos a la ficha de asistencia para crear la asistencia y posteriormente confirmar la preasistencia
+    sessionStorage.setItem("preasistenciaItemLink", JSON.stringify(preasistenciaItem));
+    this.router.navigate(["/fichaAsistencia"]);
 
   }
 
