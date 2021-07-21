@@ -778,8 +778,7 @@ import { FichaAsistenciaTarjetaDatosGeneralesComponent } from './features/sjcs/g
 		FichaPreasistenciasComponent,
 		AsistenciasFichaPreasistenciasComponent,
 		FichaAsistenciaComponent,
-		FichaAsistenciaTarjetaDatosGeneralesComponent
-
+		FichaAsistenciaTarjetaDatosGeneralesComponent,
 	],
 	imports: [
 		SelectorModule,

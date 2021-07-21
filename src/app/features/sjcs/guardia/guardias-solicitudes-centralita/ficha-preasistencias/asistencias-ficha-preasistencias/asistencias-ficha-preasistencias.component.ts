@@ -94,6 +94,13 @@ export class AsistenciasFichaPreasistenciasComponent implements OnInit {
 
     }
 
+    if(sessionStorage.getItem("creadaFromPreasistencia") == "true"){
+      this.activable = false;
+      this.denegable = false;
+      this.confirmable = false;
+      sessionStorage.removeItem("creadaFromPreasistencia");
+    }
+
   }
   onChangeRowsPerPages(event) {
     this.rows = event.value;

@@ -3,6 +3,8 @@ import { Message } from 'primeng/api';
 import { TranslateService } from '../../../../../commons/translate';
 import { DatePipe, Location } from '@angular/common';
 import { PreAsistenciaItem } from '../../../../../models/guardia/PreAsistenciaItem';
+import { SigaServices } from '../../../../../_services/siga.service';
+import { TarjetaAsistenciaItem } from '../../../../../models/guardia/TarjetaAsistenciaItem';
 
 @Component({
   selector: 'app-ficha-asistencia',
@@ -25,7 +27,8 @@ export class FichaAsistenciaComponent implements OnInit {
     enlaces: []
   };
   constructor(private location : Location,
-    private translateService : TranslateService,) { }
+    private translateService : TranslateService,
+    private sigaServices : SigaServices) { }
 
   ngOnInit() {
 
@@ -113,6 +116,44 @@ export class FichaAsistenciaComponent implements OnInit {
       summary: summaryParam,
       detail: detailParam
     });
+  }
+
+  refreshDatosGenerales(event){
+
+    this.progressSpinner = true;
+    this.sigaServices.getParam("busquedaGuardias_buscarTarjetaAsistencia", "?anioNumero="+event).subscribe(
+      n => {
+        this.clear();
+        if(n.error !== null
+          && n.error.code === 500){
+          this.showMsg("error", "Error", n.error.description.toString());
+        }else{
+          let newAsistenciaData : TarjetaAsistenciaItem = n.tarjetaAsistenciaItems[0];
+
+          this.tarjetaFija.campos[0]["value"] = newAsistenciaData.anioNumero;
+          this.tarjetaFija.campos[1]["value"] = newAsistenciaData.fechaAsistencia.substr(0,11);
+          this.tarjetaFija.campos[2]["value"] = newAsistenciaData.numeroColegiado + " - " + newAsistenciaData.nombreColegiado;
+          this.tarjetaFija.campos[3]["value"] = newAsistenciaData.asistido;
+          this.tarjetaFija.campos[4]["value"] = newAsistenciaData.descripcionEstado.toUpperCase();
+          this.tarjetaFija.campos[5]["value"] = newAsistenciaData.numeroActuaciones;
+          this.tarjetaFija.campos[6]["value"] = newAsistenciaData.validada;
+
+          this.listaTarjetas[0].campos[0]["value"] = newAsistenciaData.descripcionTurno;
+          this.listaTarjetas[0].campos[1]["value"] = newAsistenciaData.descripcionGuardia;
+          this.listaTarjetas[0].campos[2]["value"] = newAsistenciaData.descripcionTipoAsistenciaColegio;
+          this.listaTarjetas[0].campos[3]["value"] = newAsistenciaData.fechaAsistencia;
+
+
+        }
+      },
+      err => {
+        console.log(err);
+      },
+      () =>{
+        this.progressSpinner = false;
+      }
+    );
+
   }
 
   backTo(){

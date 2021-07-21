@@ -3,24 +3,46 @@
   <div class="loader"></div>
 </div>
 <div class="row w-100 m-0 padding-interior">
-  <div class="col-lg-12 col-md-12 px-0">
     <div class="form-row">
 
-      <div class="form-group-interlineado col-lg-2 col-md-2">
+      <div class="form-group-interlineado col-lg-3 col-md-3">
         <label>{{'justiciaGratuita.sjcs.designas.DatosIden.ano' | translate}}(*)</label>
         <input type="text" pKeyFilter="int" class="form-control" pInputText [disabled]="isNuevaAsistencia" [(ngModel)]="asistencia.anio" size="4"/>
       </div>
-      <div class="form-group-interlineado col-lg-2 col-md-2">
+      <div class="form-group-interlineado col-lg-3 col-md-3">
         <label>{{'facturacionSJCS.facturacionesYPagos.numero' | translate}}(*)</label>
         <input type="text" pKeyFilter="int" class="form-control" pInputText [disabled]="isNuevaAsistencia"  [(ngModel)]="asistencia.numero"/>
       </div>
-      <div class="form-group-interlineado col-lg-2 col-md-2">
+      <div class="form-group-interlineado col-lg-3 col-md-3">
+        <label>{{'censo.fichaIntegrantes.literal.estado' | translate}}</label>
+        <p-dropdown class="select-form"
+            placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
+            [showClear]="true" [(ngModel)]="asistencia.estado" [disabled] = "true"
+            [ngModelOptions]="{standalone: true}" [options]="comboEstadosAsistencia">
+        </p-dropdown>
+      </div>
+      <div class="form-group-interlineado col-lg-3 col-md-3">
+        <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaEstado' | translate}}</label>
+        <app-fecha [(value)]="asistencia.fechaEstado" (valueChangeSelected)="fillFechaEstado($event)" [disabled]="true"
+        (valueChangeInput)="fillFechaEstado($event)"></app-fecha>
+      </div>
+      <div class="form-group-interlineado col-lg-3 col-md-3">
+        <label>Fecha Cierre</label>
+        <app-fecha [(value)]="asistencia.fechaCierre" (valueChangeSelected)="fillFechaCierre($event)"
+        (valueChangeInput)="fillFechaCierre($event)"></app-fecha>
+      </div>
+      <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{'censo.resultadosSolicitudesModificacion.literal.fecha' | translate}} {{'agenda.fichaEventos.datosAsistencia.asistencia' | translate}}(*)</label>
           <app-fecha [(value)]="asistencia.fechaAsistencia" (valueChangeSelected)="fillFechaAsistencia($event)"
           (valueChangeInput)="fillFechaAsistencia($event)" [showTime]="true"
           [inputStyleClass]="styleObligatorio(asistencia.fechaAsistencia)"></app-fecha>
       </div>
-      <div class="form-group-interlineado col-lg-2 col-md-2">
+      <div class="form-group-interlineado col-lg-3 col-md-3">
+        <label>{{'formacion.busquedaInscripcion.fechaSolicitud' | translate}}</label>
+        <app-fecha [(value)]="asistencia.fechaSolicitud" (valueChangeSelected)="fillFechaSolicitud($event)"
+        (valueChangeInput)="fillFechaSolicitud($event)" [showTime]="true"></app-fecha>
+      </div>
+      <div class="form-group-interlineado col-lg-3 col-md-3">
         <label>{{"dato.jgr.guardia.guardias.turno" | translate}}(*)</label>
         <p-dropdown class="select-form"
             placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
@@ -29,24 +51,47 @@
             (onChange)="onChangeTurno()" [ngClass]="styleObligatorio(asistencia.idTurno)">
         </p-dropdown>
       </div>
-      <div class="form-group-interlineado col-lg-2 col-md-2">
-          <label>{{"menu.justiciaGratuita.GuardiaMenu" | translate}}(*)</label>
-          <p-dropdown class="select-form"
-              placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
-              [showClear]="true" [(ngModel)]="asistencia.idGuardia"
-              [ngModelOptions]="{standalone: true}" [options]="comboGuardias"
-              [ngClass]="styleObligatorio(asistencia.idGuardia)">
-          </p-dropdown>
+      <div class="form-group-interlineado col-lg-3 col-md-3">
+        <label>{{"menu.justiciaGratuita.GuardiaMenu" | translate}}(*)</label>
+        <p-dropdown class="select-form"
+            placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
+            [showClear]="true" [(ngModel)]="asistencia.idGuardia"
+            (onChange)="onChangeGuardia()"
+            [ngModelOptions]="{standalone: true}" [options]="comboGuardias"
+            [ngClass]="styleObligatorio(asistencia.idGuardia)">
+        </p-dropdown>
+      </div>
+      <div class="form-group-interlineado col-lg-3 col-md-3">
+        <label>{{"sjcs.guardia.asistencia.tipoasistenciacolegio" | translate}}(*)</label>
+        <p-dropdown class="select-form"
+            placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
+            [showClear]="true" [(ngModel)]="asistencia.idTipoAsistenciaColegio"
+            [ngModelOptions]="{standalone: true}" [options]="comboTipoAsistenciaColegio"
+            [ngClass]="styleObligatorio(asistencia.idTipoAsistenciaColegio)">
+        </p-dropdown>
+      </div>
+      <div class="form-group-interlineado col-lg-3 col-md-3">
+        <label>{{"sjcs.guardia.asistencia.letradoguardia" | translate}}</label>
+        <p-dropdown class="select-form"
+            placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
+            [showClear]="true" [(ngModel)]="asistencia.idLetradoGuardia"
+            [ngModelOptions]="{standalone: true}" [options]="comboLetradoGuardia">
+        </p-dropdown>
+      </div>
+      <div class="form-group col-lg-12 col-md-12">
+        <app-busqueda-colegiado-express [numColegiado]="usuarioBusquedaExpress.numColegiado"
+                                    [pantalla]="'guardia'"
+                                    [nombreAp]="usuarioBusquedaExpress.nombreAp" (colegiado)="changeColegiado($event)">
+        </app-busqueda-colegiado-express>
       </div>
     </div>
-  </div>
 </div>
 
 <div class="card-footer">
   <div class="text-right main-button">
     <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer"
-      (click)="showMsg('success', 'Se ha restablecido correctamente', 'Restablecer')"></button>
-    <button pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"
-      (click)="showMsg('success', 'Se ha guardado correctamente', 'save')"></button>
+      (click)="resetDatosGenerales();"></button>
+    <button pButton type="button" icon="far fa-save" iconPos="left" label="Guardar" [disabled] = "saveDisabled"
+      (click)="saveAsistencia();"></button>
   </div>
 </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { DatePipe, Location } from '@angular/common';
 import { TranslateService } from '../../../../../commons/translate';
 import { Message } from 'primeng/api';
@@ -8,6 +8,7 @@ import { procesos_guardia } from '../../../../../permisos/procesos_guarida';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { Router } from '@angular/router';
 import { PersistenceService } from '../../../../../_services/persistence.service';
+import { AsistenciasFichaPreasistenciasComponent } from './asistencias-ficha-preasistencias/asistencias-ficha-preasistencias.component';
 @Component({
   selector: 'app-ficha-preasistencias',
   templateUrl: './ficha-preasistencias.component.html',
@@ -28,6 +29,7 @@ export class FichaPreasistenciasComponent implements OnInit {
   progressSpinner : boolean = false;
   listaTarjetas = [];
   permisoEscritura : boolean = false;
+  @ViewChild(AsistenciasFichaPreasistenciasComponent) asistencias;
   constructor(private location : Location,
     private translateService : TranslateService,
     private sigaServices : SigaServices,
@@ -90,6 +92,11 @@ export class FichaPreasistenciasComponent implements OnInit {
         }
       ];
       this.tarjetaFija.campos = camposSolicitud;
+
+      //Si hemos pulsado volver después de crear la asistencia desde una preasistencia, ponemos la preasistencia como 
+      if(sessionStorage.getItem("creadaFromPreasistencia") == "true"){
+        this.tarjetaFija.campos[1]["value"] = "CONFIRMADA";
+      }
     }
 
     let tarjetaAsistencias ={
@@ -109,6 +116,7 @@ export class FichaPreasistenciasComponent implements OnInit {
 
   backTo() {
     sessionStorage.setItem("volver", "true");
+    sessionStorage.removeItem("preasistenciaItemLink");
     this.location.back();
   }
 

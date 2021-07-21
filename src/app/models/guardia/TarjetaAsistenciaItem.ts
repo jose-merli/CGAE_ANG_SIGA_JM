@@ -5,6 +5,18 @@ export class TarjetaAsistenciaItem{
       anio : string;
 	  numero: string;
 	  fechaAsistencia : string;
+	  fechaEstado: string;
+	  fechaSolicitud : string;
+	  fechaCierre : string;
+	  idTipoAsistenciaColegio : string;
+	  idLetradoGuardia : string;
+	  idSolicitudCentralita : string;
+	  descripcionEstado : string;
+	  descripcionTurno : string;
+	  descripcionTipoAsistenciaColegio : string;
+	  validada : string;
+	  numeroActuaciones : string;
+	  estado : string;
 	  idTurno : string;
 	  idGuardia : string;
 	  anioNumero: string;
