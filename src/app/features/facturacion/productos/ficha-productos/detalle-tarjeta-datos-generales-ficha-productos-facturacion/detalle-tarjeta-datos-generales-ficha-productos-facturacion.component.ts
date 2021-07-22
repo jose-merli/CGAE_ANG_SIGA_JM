@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
 import { Subscription } from 'rxjs';
@@ -21,9 +21,9 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
   progressSpinner: boolean = false; //Para mostrar/no mostrar el spinner de carga
 
   //Variables tarjeta datos generales
-  producto: ProductoDetalleItem = new ProductoDetalleItem(); //Guarda los valores seleccionados/escritos en los campos
-  productoDelBuscador: ListaProductosItems = new ListaProductosItems(); //Producto obtenido de la fila del buscador de productos en la cual pulsamos el enlace a la ficha productos.
+  @Input() producto: ProductoDetalleItem; //Guarda los valores seleccionados/escritos en los campos
   productoOriginal: ProductoDetalleItem = new ProductoDetalleItem(); //En caso de que entre en modo editar este objeto sera el que contenga los datos originales conseguidos gracias al servicio detalleProducto.
+  @Input() productoDelBuscador: ListaProductosItems;
   categoriasObject: ComboObject = new ComboObject(); //Modelo con la lista opciones + atributo error
   tiposObject: ComboObject = new ComboObject();
   tiposCertificadosItems = [{
@@ -49,6 +49,7 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
   ]
   checkBoxSolicitarPorInternet: boolean = false;
   checkboxSolicitarAnulacionPorInternet: boolean = false;
+  @Output() mostrarTarjetaFormaPagos = new EventEmitter<boolean>();
 
   //variables de control
   aGuardar: boolean = false; //Usada en condiciones que validan la obligatoriedad, definida al hacer click en el boton guardar
@@ -60,18 +61,33 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
   subscriptionCrearProductoInstitucion: Subscription;
   subscriptionEditarProductoInstitucion: Subscription;
   subscriptionActivarDesactivarProductos: Subscription;
-  subscriptionProductDetail: Subscription;
+
 
   constructor(private sigaServices: SigaServices, private translateService: TranslateService, private confirmationService: ConfirmationService, private router: Router) {
 
   }
 
-  async ngOnInit() {
+  ngOnInit() {
     if (sessionStorage.getItem('productoBuscador')) {
-      this.productoDelBuscador = JSON.parse(sessionStorage.getItem('productoBuscador'));
-      await this.detalleProducto();
+      this.productoOriginal = this.producto;
+
+      if (this.producto.solicitaralta == "1") {
+        this.checkBoxSolicitarPorInternet = true;
+      } else if (this.producto.solicitaralta == "0") {
+        this.checkBoxSolicitarPorInternet = false;
+      }
+
+      if (this.producto.solicitarbaja == "1") {
+        this.checkboxSolicitarAnulacionPorInternet = true;
+      } else if (this.producto.solicitarbaja == "0") {
+        this.checkboxSolicitarAnulacionPorInternet = false;
+      }
+
       this.desactivarBotonEliminar = false;
+      this.mostrarTarjetaFormaPagos.emit(true);
+
     } else {
+      this.mostrarTarjetaFormaPagos.emit(false);
       this.desactivarBotonEliminar = true;
     }
 
@@ -88,8 +104,6 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
       this.subscriptionCrearProductoInstitucion.unsubscribe();
     if (this.subscriptionEditarProductoInstitucion)
       this.subscriptionEditarProductoInstitucion.unsubscribe();
-    if (this.subscriptionProductDetail)
-      this.subscriptionProductDetail.unsubscribe();
     if (this.subscriptionActivarDesactivarProductos)
       this.subscriptionActivarDesactivarProductos.unsubscribe;
   }
@@ -97,8 +111,6 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
   //INICIO METODOS TARJETA DATOS GENERALES
   //Metodo que se lanza al cambiar de valor el combo de categorias, se usa para cargar el combo tipos dependiendo el valor de categorias IDTIPOPRODUCTO = CATEGORIA, IDPRODUCTO = TIPO, IDPRODUCTOINSTITUCION = PRODUCTO.
   valueChangeCategoria() {
-    console.log(this.producto.idtipoproducto);
-
     if (this.producto.idtipoproducto != null) {
       this.getComboTipo();
     } else if (this.producto.idtipoproducto == null) {
@@ -113,17 +125,15 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
     } else {
       this.producto.solicitaralta = '0';
     }
-    console.log(this.producto.solicitaralta);
   }
 
   //Metodo que se lanza al marcar/desmarcar el checkbox Solicitar anulacion por internet
-  onChangesolicitudAnulacionInternet() {
+  onChangeSolicitudAnulacionInternet() {
     if (this.checkboxSolicitarAnulacionPorInternet) {
       this.producto.solicitarbaja = '1';
     } else {
       this.producto.solicitarbaja = '0';
     }
-    console.log(this.producto.solicitarbaja);
   }
 
   restablecer() {
@@ -152,13 +162,11 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
 
         this.subscriptionActivarDesactivarProductos = this.sigaServices.post("productosBusqueda_activarDesactivar", listaProductosDTO).subscribe(
           response => {
-            console.log(response);
             if (JSON.parse(response.body).error.code == 500) {
               this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
             } else {
               this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
               this.desactivarBotonEliminar = false;
-              //Si se ha guardado se habilita la tarjeta forma pago
             }
           },
           err => {
@@ -172,6 +180,7 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
           () => {
             this.progressSpinner = false;
             sessionStorage.setItem("volver", 'true');
+            sessionStorage.removeItem('productoDetalle');
             sessionStorage.removeItem('productoBuscador');
             this.router.navigate(['/productos']);
           }
@@ -227,17 +236,14 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
 
         this.categoriasObject = CategorySelectValues;
 
-        let error = this.categoriasObject.error;
-        if (error != null && error.description != null) {
-        }
       },
       err => {
-        console.log(err);
         this.progressSpinner = false;
       },
       () => {
-        if (this.productoDelBuscador)
+        if (sessionStorage.getItem('productoBuscador')) {
           this.getComboTipo();
+        }
         this.progressSpinner = false;
       }
     );
@@ -253,56 +259,14 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
 
         this.tiposObject = TipoSelectValues;
 
-        let error = this.tiposObject.error;
-        if (error != null && error.description != null) {
-        }
       },
       err => {
-        console.log(err);
         this.progressSpinner = false;
       },
       () => {
         this.progressSpinner = false;
       }
     );
-  }
-
-  //Metodo para que en caso de que se haya accedido a traves del enlace de la columna producto se consiga toda la informacion restante del producto seleccionado para completar los campos a editar
-  async detalleProducto() {
-    this.progressSpinner = true;
-
-    this.subscriptionProductDetail = await this.sigaServices.getParam("fichaProducto_detalleProducto", "?idTipoProducto=" + this.productoDelBuscador.idtipoproducto +
-      "&idProducto=" + this.productoDelBuscador.idproducto + "&idProductoInstitucion=" + this.productoDelBuscador.idproductoinstitucion).subscribe(
-        producto => {
-          this.progressSpinner = false;
-
-          this.productoOriginal = producto;
-          this.producto = producto;
-
-          if (producto.solicitaralta == "1") {
-            this.checkBoxSolicitarPorInternet = true;
-          } else if (producto.solicitaralta == "0") {
-            this.checkBoxSolicitarPorInternet = false;
-          }
-
-          if (producto.solicitarbaja == "1") {
-            this.checkboxSolicitarAnulacionPorInternet = true;
-          } else if (producto.solicitarbaja == "0") {
-            this.checkboxSolicitarAnulacionPorInternet = false;
-          }
-
-          /* let error = this.tiposObject.error;
-          if (error != null && error.description != null) {
-          } */
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        },
-        () => {
-          this.progressSpinner = false;
-        }
-      );
   }
 
   guardarProducto() {
@@ -318,7 +282,7 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
           } else {
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
             this.desactivarBotonEliminar = false;
-            //Si se ha guardado se habilita la tarjeta forma pago
+            this.mostrarTarjetaFormaPagos.emit(true);
           }
         },
         err => {
@@ -337,7 +301,6 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
       this.subscriptionEditarProductoInstitucion = this.sigaServices.post("fichaProducto_editarProducto", this.producto).subscribe(
         response => {
           this.progressSpinner = false;
-          console.log(response);
 
           if (JSON.parse(response.body).error.code == 500) {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));

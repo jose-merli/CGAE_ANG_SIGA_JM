@@ -1,10 +1,10 @@
 <div *ngFor="let tarj of listaTarjetas; let i = index;">
-  <div class="card" [id]="tarj.id">
+  <div class="card" [id]="tarj.id"
+    *ngIf="tarj.id != 'productosFormasDePago' || (mostrarTarjPagos && tarj.id == 'productosFormasDePago')">
     <div class="card-body p-0">
       <mat-accordion class="example-headers-align" multi>
         <mat-expansion-panel (opened)="tarj.opened = true" (closed)="tarj.opened = false"
           [disabled]="tarj.fixed || !tarj.detalle" [expanded]="tarj.opened">
-          <!-- class="h-100" -->
           <mat-expansion-panel-header [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
             <app-tarjeta [image]="tarj.imagen" [cardTitle]="tarj.nombre" [campos]="tarj.campos" [icon]="tarj.icono"
               [cardOpenState]="tarj.opened" [fixed]="tarj.fixed" class="w-100">
@@ -12,11 +12,13 @@
           </mat-expansion-panel-header>
           <ng-template matExpansionPanelContent>
             <div *ngIf="tarj.id == 'productosDatosGenerales'">
-              <app-detalle-tarjeta-datos-generales-ficha-productos-facturacion>
+              <app-detalle-tarjeta-datos-generales-ficha-productos-facturacion
+                (mostrarTarjetaFormaPagos)="mostrarTarjetaFormaPagos($event)" [producto]="producto"
+                [productoDelBuscador]="productoDelBuscador">
               </app-detalle-tarjeta-datos-generales-ficha-productos-facturacion>
             </div>
             <div *ngIf="tarj.id == 'productosFormasDePago'">
-              <app-detalle-tarjeta-formas-pagos-ficha-producto-facturacion>
+              <app-detalle-tarjeta-formas-pagos-ficha-producto-facturacion [producto]="producto">
               </app-detalle-tarjeta-formas-pagos-ficha-producto-facturacion>
             </div>
           </ng-template>

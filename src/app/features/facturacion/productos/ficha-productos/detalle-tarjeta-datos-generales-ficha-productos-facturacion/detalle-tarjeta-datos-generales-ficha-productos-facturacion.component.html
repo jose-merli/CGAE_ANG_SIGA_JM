@@ -40,15 +40,17 @@
 
   <!-- Solicitar por internet -->
   <div class="form-group-interlineado col-lg-3 col-md-3">
-    <p-checkbox binary="true" label="Solicitar por internet" [(ngModel)]="checkBoxSolicitarPorInternet"
-      (onChange)="onChangeSolicitudInternet()"></p-checkbox>
+    <div class="d-flex align-items-baseline justify-content-between alineacionCheckboxes">
+      <p-checkbox binary="true" label="Solicitar por internet" [(ngModel)]="checkBoxSolicitarPorInternet"
+        (onChange)="onChangeSolicitudInternet()"></p-checkbox>
+    </div>
   </div>
 
   <!-- Solicitar anulacion por internet -->
   <div class="form-group-interlineado col-lg-3 col-md-3">
-    <div class="d-flex align-items-baseline justify-content-between">
+    <div class="d-flex align-items-baseline justify-content-between alineacionCheckboxes">
       <p-checkbox binary="true" label="Solicitar anulacion por internet"
-        [(ngModel)]="checkboxSolicitarAnulacionPorInternet" (onChange)="onChangesolicitudAnulacionInternet()">
+        [(ngModel)]="checkboxSolicitarAnulacionPorInternet" (onChange)="onChangeSolicitudAnulacionInternet()">
       </p-checkbox>
     </div>
   </div>

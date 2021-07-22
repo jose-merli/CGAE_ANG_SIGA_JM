@@ -1,3 +1,62 @@
-<p>
-  detalle-tarjeta-formas-pagos-ficha-producto-facturacion works!
-</p>
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+
+<div class="form-row p-lg-3 p-md-3">
+
+  <!-- No Facturable -->
+  <div class="form-group-interlineado col-lg-3 col-md-3">
+    <div class="d-flex align-items-baseline justify-content-between alineacionCheckboxes">
+      <p-checkbox binary="true" label="No Facturable" [(ngModel)]="checkboxNoFacturable"
+        (onChange)="onChangeNoFacturable()">
+      </p-checkbox>
+    </div>
+  </div>
+
+  <!-- Precio -->
+  <div class="form-group-interlineado col-lg-3 col-md-3">
+    <!-- <label>{{ "facturacion.productos.preciodesde" | translate}}</label> -->
+    <label>Precio</label>
+    <!--PROVISIONAL-->
+    <input [disabled]="checkboxNoFacturable" DigitDecimaNumber type="text" class="form-control"
+      [(ngModel)]='producto.valor' [ngClass]="{'camposObligatorios': aGuardar && obligatorio && producto.valor == ''}"
+      pInputText>
+  </div>
+
+  <!-- IVA -->
+  <div class="form-group-interlineado col-lg-3 col-md-3">
+    <label>IVA</label>
+    <!--Provisional, insertan en gen_diccionario-->
+    <p-dropdown [disabled]="checkboxNoFacturable" [filter]="true" styleClass="widthAll" [showClear]="true"
+      placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='producto.idtipoiva'
+      [ngClass]="{'camposObligatorios': aGuardar && obligatorio && producto.idtipoiva != null}"
+      [options]="ivasNoDerogablesObject.combooItems">
+    </p-dropdown>
+  </div>
+
+  <!-- Formas de pago aceptadas por internet -->
+  <div class="form-group-interlineado col-lg-3 col-md-3 pb-lg-2 pb-md-2">
+    <label>Formas de pago aceptadas por internet</label>
+    <p-multiSelect [defaultLabel]="defaultLabelCombosMultiSelect" autoWidth="false"
+      [options]="internetPayMethodsObject.combooItems" styleClass="widthAll" filterBy="label, labelSinTilde"
+      [(ngModel)]='producto.formasdepagointernet'></p-multiSelect>
+  </div>
+
+  <!-- Formas de pago aceptadas en secretaria -->
+  <div class="form-group-interlineado col-lg-3 col-md-3">
+    <label>Formas de pago aceptadas en Secretaria</label>
+    <p-multiSelect [defaultLabel]="defaultLabelCombosMultiSelect" autoWidth="false"
+      [options]="secretaryPayMethodsObject.combooItems" styleClass="widthAll" filterBy="label, labelSinTilde"
+      [(ngModel)]='producto.formasdepagosecretaria'></p-multiSelect>
+  </div>
+</div>
+
+<!-- Botones -->
+<div class="card-footer">
+  <div class="text-right main-button">
+    <!-- Guardar -->
+    <button (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left"
+      label="{{ 'general.boton.guardar' | translate}}"></button>
+  </div>
+</div>

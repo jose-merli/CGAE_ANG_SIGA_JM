@@ -13,10 +13,13 @@ export class ProductoDetalleItem {
     solicitarbaja: string = "0";
     solicitaralta: string = "0";
     tipocertificado: string;
-    nofacturable: string;
+    nofacturable: string = "0";
     categoria: string; //Descripcion categoria
     valoriva: number;
     tipo: string; //Descripcion tipo
+
+    formasdepagointernet: number[];
+    formasdepagosecretaria: number[];
 
     constructor() { }
 }
