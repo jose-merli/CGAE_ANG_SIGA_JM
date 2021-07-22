@@ -4,9 +4,13 @@ export class ConceptoPagoItem {
     idFacturacion: string;
     idConcepto: string;
     desConcepto: string;
-    importeFacturado: Number;
-    importePendiente: Number;
-    porcentajePagado: Number;
-    porcentajeApagar: Number | string;
-    cantidadApagar: Number;
+    idGrupoFacturacion: string;
+    importeFacturado: number;
+    importePendiente: number;
+    porcentajePendiente: number;
+    porcentajeApagar: number | string;
+    cantidadApagar: number;
+    nuevo: boolean;
+    cantidadRestante: number;
+    porcentajeRestante: number | string;
 }

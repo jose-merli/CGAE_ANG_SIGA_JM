@@ -36,7 +36,8 @@
       <div class="module vista-avanzada">
         <div class="form-row">
           <p-table [value]="body" [columns]="cols" [responsive]="true" #tabla class="tabla-listado" [paginator]="true"
-            [rows]="selectedItem" paginatorPosition="both">
+            [rows]="selectedItem" paginatorPosition="both" [(selection)]="selectedDatos" [selectionMode]="selectionMode"
+            (onRowSelect)="seleccionaFila($event)">
             <ng-template pTemplate="colgroup" let-columns>
               <colgroup>
                 <col *ngFor="let col of cols" [style.width]="col.width">
@@ -56,24 +57,50 @@
             <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
               <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
                 <td class="text-center" *ngFor="let col of columns">
-                  <div *ngIf="col.field == 'desConcepto'">
+                  <div *ngIf="col.field == 'desConcepto' && !dato.nuevo">
                     {{ dato[col.field] }}
+                  </div>
+                  <div *ngIf="col.field == 'desConcepto' && dato.nuevo">
+                    <p-dropdown [options]="comboConceptos" [(ngModel)]="dato.idConcepto" class="select-form"
+                      [filter]="true" filterBy="label,labelSinTilde"
+                      placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true"
+                      (onChange)="cambioConcepto($event, dato)">
+                    </p-dropdown>
                   </div>
                   <div *ngIf="col.field == 'importeFacturado'">
                     {{ dato[col.field] | currency:'EUR' }}
                   </div>
                   <div *ngIf="col.field == 'importePendiente'">
-                    {{ dato[col.field] | currency:'EUR' }} {{ dato['porcentajePagado'] }} <span>%</span>
+                    {{ dato[col.field] | currency:'EUR' }} <span
+                      *ngIf="dato['porcentajePendiente'] && null != dato['porcentajePendiente']">({{
+                      dato['porcentajePendiente']
+                      }}%)</span>
                   </div>
-                  <div *ngIf="col.field == 'porcentajeApagar'">
+                  <div
+                    *ngIf="col.field == 'porcentajeApagar' && dato.nuevo && dato.idConcepto && null != dato.idConcepto">
                     <div class="ui-inputgroup">
                       <input type="number" min="0" max="100" step="0.01" pInputText [(ngModel)]="dato[col.field]"
                         (blur)="modificaPorcentaje(dato[col.field], dato)" />
                       <span class="ui-inputgroup-addon">%</span>
                     </div>
                   </div>
-                  <div *ngIf="col.field == 'cantidadApagar'">
-                    <input type="text" pInputText [(ngModel)]="dato[col.field]" />
+                  <div *ngIf="col.field == 'porcentajeApagar' && !dato.nuevo">
+                    {{ dato[col.field] }}%
+                  </div>
+                  <div
+                    *ngIf="col.field == 'cantidadApagar' && dato.nuevo && dato.idConcepto && null != dato.idConcepto">
+                    <div class="ui-inputgroup">
+                      <input type="text" pInputText [(ngModel)]="dato[col.field]"
+                        (blur)="changePorcentajeApagar(dato[col.field], dato)" />
+                      <span class="ui-inputgroup-addon">€</span>
+                    </div>
+                  </div>
+                  <div *ngIf="col.field == 'cantidadApagar' && !dato.nuevo">
+                    {{ dato[col.field] }} €
+                  </div>
+                  <div *ngIf="col.field == 'cantidadRestante'">
+                    {{ dato[col.field] }} € <span
+                      *ngIf="dato['porcentajeRestante'] && null != dato['porcentajeRestante']">({{dato['porcentajeRestante']}}%)</span>
                   </div>
                 </td>
               </tr>
@@ -102,11 +129,15 @@
     </div>
     <div class="card-footer" *ngIf="showFichaCriterios">
       <div class="text-right main-button">
+        <button (click)="nuevo()" pButton type="button" icon="fa fa-plus" iconPos="left"
+          label="{{ 'general.boton.new' | translate }}" [disabled]='disabledNuevo() || !permisos'></button>
+        <button (click)="eliminar()" pButton type="button" icon="fa fa-trash-alt" iconPos="left"
+          label="{{ 'general.boton.eliminar' | translate}}" [disabled]='disabledEliminar() || !permisos'></button>
         <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left"
           label="{{ 'general.boton.restablecer' | translate }}"
-          [(disabled)]='disabledRestablecer() || !permisos'></button>
+          [disabled]='disabledRestablecer() || !permisos'></button>
         <button (click)="guardar()" pButton type="button" icon="fa fa-save" iconPos="left"
-          label="{{ 'general.boton.guardar' | translate }}" [(disabled)]='disabledGuardar() || !permisos'></button>
+          label="{{ 'general.boton.guardar' | translate }}" [disabled]='disabledGuardar() || !permisos'></button>
       </div>
     </div>
   </div>

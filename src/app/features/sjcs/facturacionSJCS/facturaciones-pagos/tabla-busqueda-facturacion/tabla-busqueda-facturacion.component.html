@@ -47,7 +47,7 @@
               <label>{{ dato.cantidadFormat | numberPipe}} €</label>
             </div>
             <div *ngIf="col.field == 'porcentaje'">
-              <label>{{dato[col.field] | percent}}</label>
+              <label>{{dato[col.field]}} %</label>
             </div>
             <div *ngIf="col.field =='nombre'">
               <a class="enlace" (click)="openFicha(dato)"><span>{{dato[col.field]}}</span></a>

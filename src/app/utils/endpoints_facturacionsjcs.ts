@@ -36,6 +36,8 @@ export let endpoints_facturacionsjcs: any = {
     pagosjcs_historicoPago: "pagosjcs/historicoPagos",
     pagosjcs_savePago: "pagosjcs/savePago",
     pagosjcs_updatePago: "pagosjcs/updatePago",
+    pagosjcs_comboConceptoPago: "pagosjcs/comboConceptosPago",
     pagosjcs_getConceptosPago: "pagosjcs/getConceptosPago",
     pagosjcs_saveConceptoPago: "pagosjcs/saveConceptoPago",
+    pagosjcs_deleteConceptoPago: "pagosjcs/deleteConceptoPago",
 }
