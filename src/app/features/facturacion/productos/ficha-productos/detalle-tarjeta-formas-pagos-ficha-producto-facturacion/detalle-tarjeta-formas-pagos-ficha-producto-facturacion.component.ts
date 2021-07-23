@@ -33,6 +33,8 @@ export class DetalleTarjetaFormasPagosFichaProductoFacturacionComponent implemen
   subscriptionIvasNoDerogablesSelectValues: Subscription;
   subscriptionInternetPayMethodsSelectValues: Subscription;
   subscriptionSecretaryPayMethodsSelectValues: Subscription;
+  subscriptionCrearFormasDePago: Subscription;
+
 
   constructor(private sigaServices: SigaServices, private translateService: TranslateService) {
 
@@ -41,6 +43,10 @@ export class DetalleTarjetaFormasPagosFichaProductoFacturacionComponent implemen
   ngOnInit() {
     if (sessionStorage.getItem('productoBuscador')) {
       this.productoOriginal = this.producto;
+
+      this.producto.editar = true;
+      this.producto.formasdepagointernetoriginales = this.productoOriginal.formasdepagointernet;
+      this.producto.formasdepagosecretariaoriginales = this.productoOriginal.formasdepagosecretaria;
 
       if (this.producto.nofacturable == "1") {
         this.checkboxNoFacturable = true;
@@ -62,6 +68,8 @@ export class DetalleTarjetaFormasPagosFichaProductoFacturacionComponent implemen
       this.subscriptionInternetPayMethodsSelectValues.unsubscribe();
     if (this.subscriptionSecretaryPayMethodsSelectValues)
       this.subscriptionSecretaryPayMethodsSelectValues.unsubscribe();
+    if (this.subscriptionCrearFormasDePago)
+      this.subscriptionCrearFormasDePago.unsubscribe();
   }
 
   //INICIO METODOS APP
@@ -70,30 +78,50 @@ export class DetalleTarjetaFormasPagosFichaProductoFacturacionComponent implemen
     if (this.checkboxNoFacturable) {
       this.obligatorio = false;
       this.producto.nofacturable = '1';
+
       this.producto.valor = "0";
       this.producto.idtipoiva = null;
       this.producto.formasdepagointernet = null;
       this.producto.formasdepagosecretaria = null;
 
-      //FALTAN LAS FORMAS DE PAGO
     } else {
       this.obligatorio = true;
-
-      if (this.productoOriginal.valor != null || this.productoOriginal.valor != "")
-        this.producto.valor = this.productoOriginal.valor;
-
-      if (this.productoOriginal.idtipoiva != null || this.productoOriginal != undefined)
-        this.producto.idtipoiva = this.productoOriginal.idtipoiva;
-
-      if (this.productoOriginal.formasdepagointernet != null || this.productoOriginal.formasdepagointernet != undefined)
-        this.producto.formasdepagointernet = this.productoOriginal.formasdepagointernet;
-
-      if (this.productoOriginal.formasdepagosecretaria != null || this.productoOriginal.formasdepagosecretaria != undefined)
-        this.producto.formasdepagosecretaria = this.productoOriginal.formasdepagosecretaria;
-
-      //FALTAN LAS FORMAS DE PAGO
       this.producto.nofacturable = '0';
+
+      this.producto.valor = this.productoOriginal.valor;
+      this.producto.idtipoiva = this.productoOriginal.idtipoiva;
+      this.producto.formasdepagointernet = this.productoOriginal.formasdepagointernet;
+      this.producto.formasdepagosecretaria = this.productoOriginal.formasdepagosecretaria;
+
     }
+  }
+
+  guardar() {
+    this.aGuardar = true;
+    if (this.obligatorio) {
+      if (this.producto.valor != "" && this.producto.idtipoiva != null && this.producto.idtipoiva != undefined) {
+        this.guardarFormaPago();
+      } else {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
+      }
+    } else {
+      this.guardarFormaPago();
+    }
+  }
+
+  //Borra el mensaje de notificacion p-growl mostrado en la esquina superior derecha cuando pasas el puntero del raton sobre el
+  clear() {
+    this.msgs = [];
+  }
+
+  //Inicializa las propiedades necesarias para el dialogo de confirmacion
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
   }
   //FIN METODOS APP
 
@@ -155,7 +183,26 @@ export class DetalleTarjetaFormasPagosFichaProductoFacturacionComponent implemen
     );
   }
 
-  guardar() {
+  guardarFormaPago() {
+    this.progressSpinner = true;
+
+    this.subscriptionCrearFormasDePago = this.sigaServices.post("fichaProducto_crearFormaDePago", this.producto).subscribe(
+      response => {
+        this.progressSpinner = false;
+
+        if (JSON.parse(response.body).error.code == 500) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        } else {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        }
+      },
+      err => {
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
 
   }
   //FIN SERVICIOS

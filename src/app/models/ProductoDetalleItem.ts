@@ -20,6 +20,9 @@ export class ProductoDetalleItem {
 
     formasdepagointernet: number[];
     formasdepagosecretaria: number[];
+    formasdepagointernetoriginales: number[];
+    formasdepagosecretariaoriginales: number[];
+    editar: boolean = false;
 
     constructor() { }
 }

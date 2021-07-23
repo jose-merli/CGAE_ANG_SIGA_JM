@@ -453,6 +453,7 @@ export class SigaServices {
     fichaProducto_comboIvaNoDerogados: 'combo/tipoIvaNoDerogados',
     fichaProducto_comboFormasDePagoInternet: 'combo/pagoInternet',
     fichaProducto_comboFormasDePagoSecretaria: 'combo/comboPagoSecretaria',
+    fichaProducto_crearFormaDePago: 'pys/formasPagoProducto',
     // FOTO
     solicitudModificacion_searchSolModifDatosUseFoto: 'solicitudModificacion/searchSolModifDatosUseFoto',
     solicitudModificacion_searchDatosUseFotoDetail: 'solicitudModificacion/searchDatosUseFotoDetail',

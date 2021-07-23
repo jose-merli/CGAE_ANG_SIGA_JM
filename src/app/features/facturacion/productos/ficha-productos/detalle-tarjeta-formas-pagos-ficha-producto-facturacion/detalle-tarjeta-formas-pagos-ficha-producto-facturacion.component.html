@@ -17,7 +17,7 @@
   <!-- Precio -->
   <div class="form-group-interlineado col-lg-3 col-md-3">
     <!-- <label>{{ "facturacion.productos.preciodesde" | translate}}</label> -->
-    <label>Precio</label>
+    <label>Precio</label><span *ngIf="obligatorio">(*)</span>
     <!--PROVISIONAL-->
     <input [disabled]="checkboxNoFacturable" DigitDecimaNumber type="text" class="form-control"
       [(ngModel)]='producto.valor' [ngClass]="{'camposObligatorios': aGuardar && obligatorio && producto.valor == ''}"
@@ -26,7 +26,7 @@
 
   <!-- IVA -->
   <div class="form-group-interlineado col-lg-3 col-md-3">
-    <label>IVA</label>
+    <label>IVA</label><span *ngIf="obligatorio">(*)</span>
     <!--Provisional, insertan en gen_diccionario-->
     <p-dropdown [disabled]="checkboxNoFacturable" [filter]="true" styleClass="widthAll" [showClear]="true"
       placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='producto.idtipoiva'
