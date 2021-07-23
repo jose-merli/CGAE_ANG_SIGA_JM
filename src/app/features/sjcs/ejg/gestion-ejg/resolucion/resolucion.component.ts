@@ -366,6 +366,13 @@ export class ResolucionComponent implements OnInit {
   }
 
   openActa() {
+    this.msgs = [
+      {
+        severity: "info",
+        summary: "En proceso",
+        detail: "Boton no funcional actualmente"
+      }
+    ];
   }
 
   clear() {
