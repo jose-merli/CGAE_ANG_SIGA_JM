@@ -157,19 +157,19 @@ export class ComunicacionesEJGComponent implements OnInit {
   }
 
   searchComunicaciones() {
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
 
     this.sigaServices.post("gestionejg_getComunicaciones", this.item).subscribe(
       n => {
         this.comunicaciones = JSON.parse(n.body).enviosMasivosItem;
 
         this.numComunicaciones = this.comunicaciones.length;
-        this.progressSpinner = false;
+       // this.progressSpinner = false;
 
       },
       err => {
         console.log(err);
-        this.progressSpinner = false;
+       // this.progressSpinner = false;
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         
       }

@@ -92,7 +92,7 @@ export class GestionEjgComponent implements OnInit {
     private commonsService: CommonsService) { }
 
   ngOnInit() {
-    this.progressSpinner = true;
+   // this.progressSpinner = true;
 
     this.commonsService.checkAcceso(procesos_ejg.ejg)
       .then(respuesta => {
@@ -104,7 +104,7 @@ export class GestionEjgComponent implements OnInit {
             "descError",
             this.translateService.instant("generico.error.permiso.denegado")
           );
-          this.progressSpinner = false;
+         // this.progressSpinner = false;
           this.router.navigate(["/errorAcceso"]);
         } else {
           //El padre de todas las tarjetas se encarga de enviar a sus hijos el objeto nuevo del EJG que se quiere mostrar
