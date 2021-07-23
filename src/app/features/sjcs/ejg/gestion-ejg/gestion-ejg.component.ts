@@ -109,28 +109,37 @@ export class GestionEjgComponent implements OnInit {
         } else {
           //El padre de todas las tarjetas se encarga de enviar a sus hijos el objeto nuevo del EJG que se quiere mostrar
           //Para indicar que estamos en modo de creacion de representante
-          this.body = this.persistenceService.getDatos();
-          if (this.body != undefined && this.body != null) {
+          if(sessionStorage.getItem("EJGItemDesigna")){
+            //obtiene un EJG desde la tarjeta relaciones de la ficha designacion
+            this.body = JSON.parse(sessionStorage.getItem("EJGItemDesigna"));
+            this.persistenceService.setDatos(this.body);
             this.modoEdicion = true;
-            //  if (this.dato.fechabaja != null) {
-            //    this.modoEdicion = true;
-            //  }
-          } else {
-            //hemos pulsado nuevo 
-            if(sessionStorage.getItem("Nuevo")){
-              sessionStorage.removeItem("Nuevo");
-              this.body = new EJGItem();
-              this.modoEdicion = false;
-            }
-            //vuelve de asociar una unidad familiar
-            else{
-              this.body = JSON.parse(sessionStorage.getItem("EJGItem"));
-              sessionStorage.removeItem("EJGItem");
-              this.persistenceService.setDatos(this.body);
+            sessionStorage.removeItem("EJGItemDesigna")
+          }else{
+            this.body = this.persistenceService.getDatos();
+            if (this.body != undefined && this.body != null) {
               this.modoEdicion = true;
+              //  if (this.dato.fechabaja != null) {
+              //    this.modoEdicion = true;
+              //  }
+            } else {
+              //hemos pulsado nuevo 
+              if(sessionStorage.getItem("Nuevo")){
+                sessionStorage.removeItem("Nuevo");
+                this.body = new EJGItem();
+                this.modoEdicion = false;
+              }
+              //vuelve de asociar una unidad familiar
+              else{
+                this.body = JSON.parse(sessionStorage.getItem("EJGItem"));
+                sessionStorage.removeItem("EJGItem");
+                this.persistenceService.setDatos(this.body);
+                this.modoEdicion = true;
+              }
+  
             }
-
           }
+          
 
           sessionStorage.removeItem("EJGItem");
           this.datos = [
