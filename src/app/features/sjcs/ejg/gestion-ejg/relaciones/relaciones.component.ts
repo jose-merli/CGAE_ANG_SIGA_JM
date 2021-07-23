@@ -212,12 +212,14 @@ export class RelacionesComponent implements OnInit {
     ]; */
     this.cols = [
       { field: "sjcs", header: "justiciaGratuita.oficio.designas.interesados.identificador", width: '6%' },
+      { field: "anio", header: "justiciaGratuita.maestros.calendarioLaboralAgenda.anio", width: "3%" },
+      { field: "numero", header: "justiciaGratuita.sjcs.designas.DatosIden.numero", width: "3%" },
       { field: "fechaasunto", header: "dato.jgr.guardia.saltcomp.fecha", width: '6%' },
-      { field: "descturno", header: "justiciaGratuita.justiciables.literal.turnoGuardia" },
-      { field: "letrado", header: "justiciaGratuita.sjcs.designas.colegiado" },
-      { field: "interesado", header: "justiciaGratuita.sjcs.designas.datosInteresados" },
-      { field: "dilnigproc", header: "sjcs.oficio.designaciones.relaciones.numDiligNigNproc" },
-      { field: "resolucion", header: "justiciaGratuita.maestros.fundamentosResolucion.resolucion" }
+      { field: "descturno", header: "justiciaGratuita.justiciables.literal.turnoGuardia" , width: '6%'},
+      { field: "letrado", header: "justiciaGratuita.sjcs.designas.colegiado" , width: '6%'},
+      { field: "interesado", header: "justiciaGratuita.sjcs.designas.datosInteresados" , width: '6%'},
+      { field: "dilnigproc", header: "sjcs.oficio.designaciones.relaciones.numDiligNigNproc", width: '6%' },
+      { field: "resolucion", header: "justiciaGratuita.maestros.fundamentosResolucion.resolucion" , width: '6%'}
 
     ];
     this.cols.forEach(it => this.buscadores.push(""));
@@ -455,15 +457,15 @@ export class RelacionesComponent implements OnInit {
     this.msgs = [];
   }
 
-  checkPermisosConsultEditRelacion() {
+  checkPermisosConsultEditRelacion(dato) {
     let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
     } else {
-      this.consultEditRelacion();
+      this.consultEditRelacion(dato);
     }
   }
-  consultEditRelacion() {
+  consultEditRelacion(dato) {
     this.progressSpinner = true;
 
     //this.body.nuevoEJG=!this.modoEdicion;
@@ -477,7 +479,7 @@ export class RelacionesComponent implements OnInit {
         this.progressSpinner = false;
       }
     ); */
-    let identificador = this.selectedDatos[0].sjcs;
+    let identificador = dato.sjcs;
 
     switch (identificador) {
       case 'ASISTENCIA':

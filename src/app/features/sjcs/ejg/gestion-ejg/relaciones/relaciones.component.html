@@ -118,6 +118,9 @@
                 <div *ngIf="!checkPre(dato) ">
                   <span>{{dato[col.field]}}</span>
                 </div>
+                <div *ngIf="col.field == 'sjcs' ">
+                  <span class="enlace" (click) = "checkPermisosConsultEditRelacion(dato)">{{dato[col.field]}}</span>
+                </div>
                 <div *ngIf="checkPre(dato)">
                   <span class ="enlace" (click)="navigateToFichaPre()">{{dato[col.field]}}</span>
                 </div>
@@ -180,10 +183,10 @@
             [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura"
             (click)="checkPermisosDelete()" type="button" iconPos="left"
             label="{{'general.boton.eliminar' | translate}}"></button>
-          <button pButton
+          <!-- <button pButton
             [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura"
             (click)="checkPermisosConsultEditRelacion()" type="button" iconPos="left"
-            label="{{'general.boton.consultEditRelacion' | translate}}"></button>
+            label="{{'general.boton.consultEditRelacion' | translate}}"></button> -->
         </div>
       </div>
       <p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" key="delRelacion" #delRelacion>

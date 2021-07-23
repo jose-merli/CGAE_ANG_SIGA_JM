@@ -8,6 +8,7 @@ import { PersistenceService } from '../../../../../../_services/persistence.serv
 import { DesignaItem } from '../../../../../../models/sjcs/DesignaItem';
 import { ConfirmationService } from 'primeng/api';
 import { RelacionesItem } from '../../../../../../models/sjcs/RelacionesItem';
+import { EJGItem } from '../../../../../../models/sjcs/EJGItem';
 
 @Component({
   selector: 'app-detalle-tarjeta-relaciones-designa',
@@ -341,18 +342,17 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
     this.router.navigate(["/gestionEjg"]);
   }
 
-  checkPermisosEditar(){
+  checkPermisosEditar(dato){
      // let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
     //if (msg != undefined) {
     //this.msgs = msg;
     //} else {
-      this.consultarEditar();
+      this.consultarEditar(dato);
       //}
   }
-  consultarEditar() {
+  consultarEditar(dato) {
     
-
-      let identificador = this.selectedDatos[0].sjcs.charAt(0);
+      let identificador = dato.sjcs.charAt(0);
 
       switch (identificador) {
         case 'A':
@@ -363,6 +363,21 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
         this.router.navigate(['/rutaSinDefinir']);
           break;
         case 'E':
+
+        let ejgItem = new EJGItem();
+        ejgItem.annio = this.selectedDatos[0].anio;
+        ejgItem.numero = this.selectedDatos[0].numero;
+        ejgItem.idInstitucion = this.selectedDatos[0].idinstitucion;
+        ejgItem.turnoDes = this.selectedDatos[0].desturno;
+        ejgItem.tipoEJG = this.selectedDatos[0].idtipo;
+        ejgItem.idTurno = this.selectedDatos[0].idturno;
+        ejgItem.numDesigna = this.selectedDatos[0].iddesigna;
+        ejgItem.fechaApertura = this.selectedDatos[0].fechaasunto;
+        ejgItem.numAnnioProcedimiento = this.selectedDatos[0].dilnigproc.split(' - ')[2];
+        ejgItem.numerodiligencia = this.selectedDatos[0].dilnigproc.split(' - ')[0];
+        ejgItem.nig = this.selectedDatos[0].dilnigproc.split(' - ')[1];
+
+        sessionStorage.setItem("EJGItemDesigna",JSON.stringify(ejgItem));
 
           this.router.navigate(["/gestionEjg"]);
           break;

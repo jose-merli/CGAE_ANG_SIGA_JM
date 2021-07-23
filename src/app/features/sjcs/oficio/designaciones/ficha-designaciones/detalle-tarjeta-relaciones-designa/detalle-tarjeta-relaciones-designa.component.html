@@ -24,8 +24,11 @@
     <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
       <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
         <td class="text-center" *ngFor="let col of columns">
-          <div>
-            <a><span>{{dato[col.field]}}</span></a>
+          <div *ngIf="col.field == 'sjcs'">
+            <span class="enlace" (click) = "checkPermisosEditar(dato)">{{dato[col.field]}}</span>
+          </div>
+          <div *ngIf="col.field != 'sjcs'">
+            <span>{{dato[col.field]}}</span>
           </div>
         </td>
       </tr>
@@ -66,8 +69,8 @@
       <button pButton type="button" iconPos="left" (click)="checkPermisosAsociarEJG()" label="{{ 'general.boton.asociarEJG' | translate}}"></button>
       <button pButton type="button" iconPos="left" (click)="checkPermisosCrearEJG()" label="{{'general.boton.crearEJG' | translate}}"></button>
       <button pButton type="button" [disabled]="!isAnySelected()" (click)="confirmDelete()" icon="fa fa-trash" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
-      <button pButton [disabled]="!isAnySelected()" (click)="porhacer()" type="button" iconPos="left" label="{{'general.boton.consultEditRelacion' | translate}}"></button>
-    </div>
+<!--       <button pButton [disabled]="!isAnySelected()" (click)="checkPermisosEditar()" type="button" iconPos="left" label="{{'general.boton.consultEditRelacion' | translate}}"></button>
+ -->    </div>
   </div>
   <p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" key="delRelacionDes" #delRelacionDes>
     <p-footer>
