@@ -116,7 +116,7 @@ export class ResolucionComponent implements OnInit {
           this.resolucion.fechaNotificacion = new Date(this.resolucion.fechaNotificacion);
 
         this.getComboActaAnnio();
-        this.getComboFundamentoJurid();
+        if(this.resolucion.idTiporatificacionEJG != undefined)this.getComboFundamentoJurid();
         this.getComboResolucion();
 
         //Se desbloquea el desplegable de fundamento juridico si hay una resolucion seleccionada al inciar la tarjeta.

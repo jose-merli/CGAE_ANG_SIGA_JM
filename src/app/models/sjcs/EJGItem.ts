@@ -25,8 +25,7 @@ export class EJGItem {
     fechaDictamenDesd: Date;
     fechaDictamenHast: Date;
     
-    resolucion: string;
-    fundamentoJuridico: string;
+    
     fechaResolucionDesd: Date;
     fechaResolucionHast: Date;
     impugnacion: string;
@@ -34,7 +33,7 @@ export class EJGItem {
     fechaImpugnacionDesd: Date;
     fechaImpugnacionHast: Date;
 
-    //Defensa juridica
+    //Defensa juridica (Ficha pre-designacion)
     juzgado: string;
     asunto: string;
     calidad: string;
@@ -50,11 +49,7 @@ export class EJGItem {
     idPretension: number;
     observaciones: string;
 
-    annioCAJG: string;
-    numCAJG: string;
-    annioActa: string;
-    numActa: string;
-    ponente: string;
+    
     fechaPonenteDesd: Date;
     fechaPonenteHast: Date;
     numRegRemesa: string;
@@ -91,7 +86,7 @@ export class EJGItem {
     
     numDesigna: String;
 
-    //Procurador
+    //Procurador (Ficha pre-designacion)
     
     fechaDesProc: Date;
     idProcurador: string;
@@ -109,7 +104,19 @@ export class EJGItem {
     dictamen: string;
 
     //REGTEL
+
     identificadords: string;
+
+    //Resolucion
+
+    annioActa: string;
+    numActa: string;
+    annioCAJG: string;
+    numCAJG: string;
+    
+    ponente: string;
+    resolucion: string;
+    fundamentoJuridico: string;
 
     requiereTurn: boolean;
     bis: boolean;

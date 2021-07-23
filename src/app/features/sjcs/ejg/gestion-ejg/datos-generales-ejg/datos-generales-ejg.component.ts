@@ -23,8 +23,10 @@ export class DatosGeneralesEjgComponent implements OnInit {
   @Input() permisoEscritura;
   @Input() tarjetaDatosGenerales: string;
   @Input() art27: boolean = false;
+
   @Output() modoEdicionSend = new EventEmitter<any>();
   @Output() guardadoSend = new EventEmitter<any>();
+  @Output() newEstado = new EventEmitter();
 
   openFicha: boolean = false;
   textFilter: string = "Seleccionar";
@@ -352,6 +354,8 @@ export class DatosGeneralesEjgComponent implements OnInit {
 
           if (n.statusText == "OK") {
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+            //Se actualiza la tarjeta de estados en el caso que se actualice el estado inicial por cambiar la fecha de apertura
+            if(this.body.fechaApertura != this.bodyInicial.fechaApertura) this.newEstado.emit(null);
             this.bodyInicial = this.body;
             this.persistenceService.setDatos(this.bodyInicial);
             this.changeTipoEJGColegio();
