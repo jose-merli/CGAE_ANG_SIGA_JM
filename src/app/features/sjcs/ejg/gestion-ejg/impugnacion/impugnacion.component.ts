@@ -43,6 +43,7 @@ export class ImpugnacionComponent implements OnInit {
   activacionTarjeta: boolean = false;
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
+  @Output() newEstado = new EventEmitter();
   @Input() openTarjetaImpugnacion;
 
 
@@ -151,6 +152,8 @@ export class ImpugnacionComponent implements OnInit {
       n => {
         this.progressSpinner = false;
         if (JSON.parse(n.body).error.code == 200) {
+          //Para que se actualicen los estados presentados en la tarjeta de estados
+          this.newEstado.emit(null);
           this.bodyInicial = JSON.parse(JSON.stringify(this.impugnacion));
           this.persistenceService.setDatos(this.impugnacion);
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
