@@ -37,6 +37,8 @@ export class InformeCalificacionComponent implements OnInit {
   valueComboEstado = "";
   fechaEstado = new Date();
 
+  fechaDictCabecera: Date = null;
+
   estados;
 
   fichaPosible = {
@@ -59,7 +61,10 @@ export class InformeCalificacionComponent implements OnInit {
       if (this.persistenceService.getDatos()) {
         this.nuevo = false;
         this.dictamen = this.persistenceService.getDatos();
-        this.dictamen.fechaDictamen = new Date(this.dictamen.fechaDictamen);
+        if(this.dictamen.fechaDictamen != null){
+          this.dictamen.fechaDictamen = new Date(this.dictamen.fechaDictamen);
+          this.fechaDictCabecera = this.dictamen.fechaDictamen;
+        }
         // this.getDictamen(this.item);
         //Comprobamos el campo de fundamentos para que se asigne en caso de que haya un valor asignado
         //al tipo de dictamen
@@ -199,6 +204,8 @@ export class InformeCalificacionComponent implements OnInit {
                 this.dictamen = datosItem;
                 //Para que se presente la fecha correctamente
                 this.dictamen.fechaDictamen = new Date(this.dictamen.fechaDictamen);
+                this.fechaDictCabecera = this.dictamen.fechaDictamen;
+                this.progressSpinner = false;
               },
               err => {
                 this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
@@ -221,6 +228,8 @@ export class InformeCalificacionComponent implements OnInit {
                 this.dictamen.dictamenSing = pres.label;
               }
             });
+
+            this.fechaDictCabecera = this.dictamen.fechaDictamen;
 
             this.persistenceService.setDatos(this.bodyInicial);
 
@@ -313,6 +322,8 @@ export class InformeCalificacionComponent implements OnInit {
           this.dictamen.dictamenSing = "";
           this.persistenceService.setDatos(this.bodyInicial);
 
+          this.fechaDictCabecera = this.dictamen.fechaDictamen;
+
           this.fundamentoCalifCabecera = "";
           //this.dictamenCabecera = "";
         }
@@ -341,7 +352,6 @@ export class InformeCalificacionComponent implements OnInit {
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
           this.progressSpinner = false;
         }
       );
@@ -356,9 +366,11 @@ export class InformeCalificacionComponent implements OnInit {
       detail: msg
     });
   }
+
   clear() {
     this.msgs = [];
   }
+
   checkPermisosConfirmDelete() {
     let msg = this.commonServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
@@ -374,12 +386,12 @@ export class InformeCalificacionComponent implements OnInit {
         let estados = JSON.parse(n.body).estadoEjgItems;
         this.progressSpinner = false;
 
-        estados.forEach(element => {
-          //Introducir mensaje en la base de datos
-          if(element.propietario == "CAJG" && element.fechaInicio > this.dictamen.fechaDictamen) this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No se admite borrar el dictamen ya que hay un estado visible por la comisión que se ha dado de alta con posterioridad al dictamen");
-        
-        });
-        this.confirmDelete();
+        let estadoCAJG = estados.find(
+          item => item.propietario == "1" && item.fechaInicio > this.dictamen.fechaDictamen
+        );
+        //Introducir mensaje en la base de datos
+        if (estadoCAJG != undefined)  this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No se admite borrar el dictamen ya que hay un estado visible por la comisión que se ha dado de alta con posterioridad al dictamen");
+        else this.confirmDelete();
       },
       err => {
         this.progressSpinner = false;
