@@ -179,6 +179,19 @@ export class InformeCalificacionComponent implements OnInit {
     this.dictamen.fechaDictamen = event;
   }
 
+  getEstados() {
+    //this.progressSpinner = true;
+    this.sigaServices.post("gestionejg_getEstados", this.dictamen).subscribe(
+      n => {
+        this.estados = JSON.parse(n.body).estadoEjgItems;
+        //this.progressSpinner = false;
+      },
+      err => {
+        //this.progressSpinner = false;
+      }
+    );
+  }
+
   save() {
     // if (this.disabledSave()) {
       this.progressSpinner = true;

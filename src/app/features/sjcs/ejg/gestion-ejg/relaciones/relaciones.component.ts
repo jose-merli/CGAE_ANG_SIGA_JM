@@ -124,7 +124,7 @@ export class RelacionesComponent implements OnInit {
   }
 
   getRelaciones() {
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
 
     this.sigaServices.post("gestionejg_getRelaciones", this.body).subscribe(
       n => {
@@ -164,11 +164,11 @@ export class RelacionesComponent implements OnInit {
         let pre = new RelacionesItem();
         pre.sjcs = "PRE-DESIGNACION";
         this.relaciones.push(pre);
-        this.progressSpinner = false;
+       // this.progressSpinner = false;
       },
       err => {
         console.log(err);
-        this.progressSpinner = false;
+       // this.progressSpinner = false;
         this.showMessage("error", this.translateServices.instant("general.message.incorrect"), this.translateServices.instant("general.mensaje.error.bbdd"));
       }
     );

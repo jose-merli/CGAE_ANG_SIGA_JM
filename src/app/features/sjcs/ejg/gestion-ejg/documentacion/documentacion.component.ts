@@ -124,7 +124,7 @@ export class DocumentacionComponent implements OnInit {
   }
 
   getDocumentos(selected) {
-    this.progressSpinner = true;
+   // this.progressSpinner = true;
     this.sigaServices.post("gestionejg_getDocumentos", selected).subscribe(
       n => {
         this.documentos = JSON.parse(n.body).ejgDocItems;
@@ -166,11 +166,11 @@ export class DocumentacionComponent implements OnInit {
             }
         }
         this.nDocumentos = this.documentos.length;
-        this.progressSpinner = false;
+       // this.progressSpinner = false;
         if (this.tableDocumentacion != undefined) this.tableDocumentacion.reset();
       },
       err => {
-        this.progressSpinner = false;
+        //this.progressSpinner = false;
       }
     );
   }
@@ -621,13 +621,13 @@ export class DocumentacionComponent implements OnInit {
   }
 
   getComboPresentador() {
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
 
     this.sigaServices.get("gestionejg_comboPresentadores").subscribe(
       n => {
         this.comboPresentador = n.combooItems;
         this.commonsServices.arregloTildesCombo(this.comboPresentador);
-        this.progressSpinner = false;
+        //this.progressSpinner = false;
         //Se buscan los solicitantes del EJG
         this.sigaServices.post("gestionejg_unidadFamiliarEJG", this.item).subscribe(
           n => {
@@ -656,31 +656,31 @@ export class DocumentacionComponent implements OnInit {
                 }
               })
             }
-            this.progressSpinner = false;
+           // this.progressSpinner = false;
           },
           err => {
-            this.progressSpinner = false;
+           // this.progressSpinner = false;
           }
         );
         
       },
       err => {
-        this.progressSpinner = false;
+       // this.progressSpinner = false;
       }
     );
   }
 
   getComboTipoDocumentacion() {
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
 
     this.sigaServices.get("gestionejg_comboTipoDocumentacion").subscribe(
       n => {
         this.comboTipoDocumentacion = n.combooItems;
         this.commonsServices.arregloTildesCombo(this.comboTipoDocumentacion);
-        this.progressSpinner = false;
+       // this.progressSpinner = false;
       },
       err => {
-        this.progressSpinner = false;
+       // this.progressSpinner = false;
       }
     );
   }
