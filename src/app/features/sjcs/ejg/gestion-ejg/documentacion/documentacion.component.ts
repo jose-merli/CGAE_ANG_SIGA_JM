@@ -135,7 +135,8 @@ export class DocumentacionComponent implements OnInit {
               element.presentador_persona = element.presentador_persona + " (" + element.parentesco + " )";
             }
             //Cuando el presentador seleccionado no es un solicitante
-            if (!element.presentador && element.idMaestroPresentador) {
+            // if (!element.presentador && element.idMaestroPresentador) {
+            if (element.idMaestroPresentador) {
               element.presentador = element.idMaestroPresentador.toString();
               //Valor de la columna presentador
               this.comboPresentador.forEach(pres => {
@@ -143,18 +144,26 @@ export class DocumentacionComponent implements OnInit {
               });
             }
             //Cuando el `presentador es un solicitante
-            if(element.presentador){
+            else if(element.presentador){
               element.presentador = "S_" + element.presentador;
               //Valor de la columna presentador
               this.comboPresentador.forEach(pres => {
                 if (pres.value == element.presentador) element.presentador_persona = pres.label;
               });
             }
+            //Se escribe los tipos de documento presentados en la cabecera
             if(this.documentos.length<=3 && this.documentos.length>0){
               if(this.tiposCabecera!="")this.tiposCabecera += ", ";
               this.tiposCabecera += element.labelDocumento;
             }
           });
+           //Si se esta actualizando los documentos cuando se ha introducido un nuevo documento
+            //se añade el iddocumentacion al body actual
+            if(this.showModal && this.body.idDocumentacion == null){
+              //Actualmente, el ultimo documento introducido conincide con el ultimo documento de la lista
+              //Se asigna el valor de iddocumentacion para que se pueda asignar ficheros
+              this.body.idDocumentacion = this.documentos[this.documentos.length-1].idDocumentacion;
+            }
         }
         this.nDocumentos = this.documentos.length;
         this.progressSpinner = false;
@@ -526,7 +535,7 @@ export class DocumentacionComponent implements OnInit {
           this.selectedDatos = [];
           //this.deseleccionarTodo = true;
           this.getDocumentos(this.item);
-          this.showModal = false;
+          //this.showModal = false;
         } else {
           if (error != null && error.description != null && error.description != '') {
             this.showMsg('error', 'Error', this.translateService.instant(error.description));
@@ -539,10 +548,11 @@ export class DocumentacionComponent implements OnInit {
       err => {
         this.progressSpinner = false;
         this.showMsg('error', 'Error', this.translateService.instant('general.mensaje.error.bbdd'));
-      },
-      () => {
-        this.progressSpinner = false;
       }
+      // ,
+      // () => {
+      //   this.progressSpinner = false;
+      // }
     );
   }
 
@@ -563,10 +573,12 @@ export class DocumentacionComponent implements OnInit {
     this.showModal = false;
   }
 
-  openModal() {
+  openModal(datos) {
     this.showModal = true;
-    if (this.selectedDatos.length > 0) {
-      this.body = this.selectedDatos[0];
+    if (datos != null) {
+      this.selectedDatos = [];
+      this.body = datos;
+      this.getComboDocumentos();
       if (this.body.flimite_presentacion != undefined && this.body.flimite_presentacion != null)
         this.body.flimite_presentacion = new Date(this.body.flimite_presentacion);
       if (this.body.f_presentacion != undefined && this.body.f_presentacion != null)
@@ -588,6 +600,7 @@ export class DocumentacionComponent implements OnInit {
       else this.ficheros = [];
     }
     else {
+      this.getComboPresentador();
       this.body = new DocumentacionEjgItem();
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     }
@@ -681,7 +694,7 @@ export class DocumentacionComponent implements OnInit {
         this.comboDocumentos = n.combooItems;
         this.commonsServices.arregloTildesCombo(this.comboDocumentos);
         //añadimos el elemento "Todos" que hara que se añadan todos los elementos del combo.
-        if(this.comboDocumentos.length>0) this.comboDocumentos.push({ label: this.translateService.instant('justiciaGratuita.ejg.documentacion.todosDoc'), value: "-1" });
+        if(this.comboDocumentos.length>1) this.comboDocumentos.push({ label: this.translateService.instant('justiciaGratuita.ejg.documentacion.todosDoc'), value: "-1" });
         this.progressSpinner = false;
       },
       err => {

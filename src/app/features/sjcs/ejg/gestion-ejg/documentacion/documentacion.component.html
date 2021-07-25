@@ -80,7 +80,7 @@
                     [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
                 </div>
                 <div *ngIf="!setItalic(dato)">
-                  <span>{{dato[col.field]}}</span>
+                  <span class="enlace" (click)="openModal(dato)">{{dato[col.field]}}</span>
                 </div>
               </div>
               <div *ngIf="col.field == 'propietario'">
@@ -136,10 +136,10 @@
 
       <div class="card-footer">
         <div class="text-right main-button">
-          <button [disabled]="selectedDatos.length != 1 || !permisoEscritura"
+          <!-- <button [disabled]="selectedDatos.length != 1 || !permisoEscritura"
             (click)="openModal()" pButton type="button"
-            label="{{ 'general.boton.consultar' | translate}}/{{ 'general.boton.edit' | translate}}"></button>
-          <button [disabled]="!permisoEscritura || selectedDatos.length != 0" (click)="openModal()" pButton
+            label="{{ 'general.boton.consultar' | translate}}/{{ 'general.boton.edit' | translate}}"></button> -->
+          <button [disabled]="!permisoEscritura || selectedDatos.length != 0" (click)="openModal(null)" pButton
             type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
           <button [disabled]="selectedDatos.length == 0 || !permisoEscritura"
             (click)="download()" pButton type="button" icon="fa fa-download" iconPos="left"
