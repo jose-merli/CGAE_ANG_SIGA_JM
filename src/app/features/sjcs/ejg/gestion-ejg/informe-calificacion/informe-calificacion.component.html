@@ -13,7 +13,7 @@
             <label class="mr-auto title-ficha pointer">{{ 'justiciaGratuita.ejg.datosGenerales.InformeCalificacion' | translate }}</label>
           </div>
           <div class="d-flex justify-content-between default">
-              <label>{{ "censo.resultadosSolicitudesModificacion.literal.fecha" | translate }}: <span *ngIf="dictamen">{{dictamen.fechaDictamen | date: 'dd/MM/yyyy'}}</span></label>
+              <label>{{ "censo.resultadosSolicitudesModificacion.literal.fecha" | translate }}: <span *ngIf="dictamen">{{fechaDictCabecera | date: 'dd/MM/yyyy'}}</span></label>
               <label>{{ "justiciaGratuita.maestros.fundamentosCalificacion.datosGenerales.dictamen" | translate }}: <span *ngIf="dictamen">{{dictamen.dictamenSing}}</span></label>
               <label>{{ "justiciaGratuita.ejg.datosGenerales.Fundamento" | translate }}: <span *ngIf="dictamen">{{fundamentoCalifCabecera}}</span></label>
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('informeCalificacion')"></i>

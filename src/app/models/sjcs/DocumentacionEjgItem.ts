@@ -28,5 +28,7 @@ export class DocumentacionEjgItem {
   idTipoEjg: number;
 	anio: number;
 	numero: number;
+  propietario: string;
+  propietarioDes: string;
   constructor() { }
 }

@@ -175,7 +175,7 @@ export class ServiciosTramitacionComponent implements OnInit {
 
     let datos = new ColegiadosSJCSItem();
 
-    this.progressSpinner = true;
+   // this.progressSpinner = true;
     //Estado "Ejerciente"
     datos.idEstado = "20";
     datos.idInstitucion = this.institucionActual;
@@ -199,7 +199,7 @@ export class ServiciosTramitacionComponent implements OnInit {
           });
           if (!presente) this.art27 = true;
         }
-        this.progressSpinner = false;
+        //this.progressSpinner = false;
         this.buscandoCol = false;
         this.initArt27 = this.art27;
       }
@@ -275,17 +275,17 @@ export class ServiciosTramitacionComponent implements OnInit {
       n => {
         this.comboTurno = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboTurno);
-        if (!this.buscandoCol) this.progressSpinner = false;
+        //if (!this.buscandoCol) this.progressSpinner = false;
       },
       err => {
-        if (!this.buscandoCol) this.progressSpinner = false;
+       // if (!this.buscandoCol) this.progressSpinner = false;
       }
     );
 
   }
 
   getComboGuardia() {
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
     this.sigaServices.getParam(
       "combo_guardiaPorTurno",
       "?idTurno=" + this.body.idTurno
@@ -298,10 +298,10 @@ export class ServiciosTramitacionComponent implements OnInit {
             this.body.idGuardia = sessionStorage.getItem("idGuardia");
             sessionStorage.removeItem('idGuardia');
           }
-          if (!this.buscandoCol) this.progressSpinner = false;
+          //if (!this.buscandoCol) this.progressSpinner = false;
         },
         err => {
-          if (!this.buscandoCol) this.progressSpinner = false;
+          //if (!this.buscandoCol) this.progressSpinner = false;
         }
       );
   }

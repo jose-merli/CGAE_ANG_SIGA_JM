@@ -131,7 +131,7 @@ export class ExpedientesEconomicosComponent implements OnInit {
   } */
 
   getExpedientesEconomicos(selected) {
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
     this.sigaServices.post("gestionejg_getExpedientesEconomicos", selected).subscribe(
       n => {
         this.expedientesEcon = JSON.parse(n.body).expEconItems;
@@ -143,7 +143,7 @@ export class ExpedientesEconomicosComponent implements OnInit {
 
         } */
         if(this.expedientesEcon != null)this.nExpedientes = this.expedientesEcon.length;
-        this.progressSpinner = false;
+        //this.progressSpinner = false;
       },
       err => {
       }

@@ -106,7 +106,7 @@ export class EstadosComponent implements OnInit {
   }
 
   getEstados(selected) {
-    this.progressSpinner = true;
+   // this.progressSpinner = true;
     this.sigaServices.post("gestionejg_getEstados", selected).subscribe(
       n => {
         this.estados = JSON.parse(n.body).estadoEjgItems;
@@ -115,7 +115,7 @@ export class EstadosComponent implements OnInit {
         // this.persistenceService.setFiltrosAux(this.expedientesEcon);
         // this.router.navigate(['/gestionEjg']);
         this.checkEstados = JSON.parse(JSON.stringify(this.estados));
-        this.progressSpinner = false;
+        //this.progressSpinner = false;
       },
       err => {
         console.log(err);

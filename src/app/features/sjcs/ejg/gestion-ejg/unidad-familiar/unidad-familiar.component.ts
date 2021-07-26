@@ -114,7 +114,7 @@ export class UnidadFamiliarComponent implements OnInit {
   }
 
   consultaUnidadFamiliar(selected) {
-    this.progressSpinner = true;
+   // this.progressSpinner = true;
 
     let nombresol = this.body.nombreApeSolicitante;
 
@@ -122,7 +122,7 @@ export class UnidadFamiliarComponent implements OnInit {
       n => {
         this.datosFamiliares = JSON.parse(n.body).unidadFamiliarEJGItems;
         this.persistenceService.setBodyAux(this.datosFamiliares);
-        this.progressSpinner = false;
+       // this.progressSpinner = false;
         this.datosFamiliares.forEach(element => {
           element.nombreApeSolicitante = nombresol;
           //Introducir entrada en la base de datos
@@ -202,10 +202,10 @@ export class UnidadFamiliarComponent implements OnInit {
         if (this.solicitanteP == undefined) this.solicitanteP = new UnidadFamiliarEJGItem();
         if (this.solicitanteP.pjg_nombrecompleto != undefined) this.apellidosCabecera = this.solicitanteP.pjg_nombrecompleto.split(",")[0];
         else this.apellidosCabecera = "";
-        this.progressSpinner = false;
+       // this.progressSpinner = false;
       },
       err => {
-        this.progressSpinner = false;
+       // this.progressSpinner = false;
       }
     );
   }

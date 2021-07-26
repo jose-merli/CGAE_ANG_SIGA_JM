@@ -37,6 +37,8 @@ export class InformeCalificacionComponent implements OnInit {
   valueComboEstado = "";
   fechaEstado = new Date();
 
+  fechaDictCabecera: Date = null;
+
   estados;
 
   fichaPosible = {
@@ -59,12 +61,14 @@ export class InformeCalificacionComponent implements OnInit {
       if (this.persistenceService.getDatos()) {
         this.nuevo = false;
         this.dictamen = this.persistenceService.getDatos();
-        this.dictamen.fechaDictamen = new Date(this.dictamen.fechaDictamen);
+        if(this.dictamen.fechaDictamen != null){
+          this.dictamen.fechaDictamen = new Date(this.dictamen.fechaDictamen);
+          this.fechaDictCabecera = this.dictamen.fechaDictamen;
+        }
         // this.getDictamen(this.item);
         //Comprobamos el campo de fundamentos para que se asigne en caso de que haya un valor asignado
         //al tipo de dictamen
-        this.onChangeDictamen()
-        this.getEstados();
+        this.onChangeDictamen();
         this.getComboTipoDictamen();
       }
     } else {
@@ -85,7 +89,6 @@ export class InformeCalificacionComponent implements OnInit {
 
 
   esFichaActiva(key) {
-
     return this.fichaPosible.activa;
   }
   abreCierraFicha(key) {
@@ -177,14 +180,14 @@ export class InformeCalificacionComponent implements OnInit {
   }
 
   getEstados() {
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
     this.sigaServices.post("gestionejg_getEstados", this.dictamen).subscribe(
       n => {
         this.estados = JSON.parse(n.body).estadoEjgItems;
-        this.progressSpinner = false;
+        //this.progressSpinner = false;
       },
       err => {
-        this.progressSpinner = false;
+        //this.progressSpinner = false;
       }
     );
   }
@@ -214,8 +217,8 @@ export class InformeCalificacionComponent implements OnInit {
                 this.dictamen = datosItem;
                 //Para que se presente la fecha correctamente
                 this.dictamen.fechaDictamen = new Date(this.dictamen.fechaDictamen);
-
-                this.getEstados();
+                this.fechaDictCabecera = this.dictamen.fechaDictamen;
+                this.progressSpinner = false;
               },
               err => {
                 this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
@@ -238,6 +241,8 @@ export class InformeCalificacionComponent implements OnInit {
                 this.dictamen.dictamenSing = pres.label;
               }
             });
+
+            this.fechaDictCabecera = this.dictamen.fechaDictamen;
 
             this.persistenceService.setDatos(this.bodyInicial);
 
@@ -330,6 +335,8 @@ export class InformeCalificacionComponent implements OnInit {
           this.dictamen.dictamenSing = "";
           this.persistenceService.setDatos(this.bodyInicial);
 
+          this.fechaDictCabecera = this.dictamen.fechaDictamen;
+
           this.fundamentoCalifCabecera = "";
           //this.dictamenCabecera = "";
         }
@@ -358,7 +365,6 @@ export class InformeCalificacionComponent implements OnInit {
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
           this.progressSpinner = false;
         }
       );
@@ -373,25 +379,39 @@ export class InformeCalificacionComponent implements OnInit {
       detail: msg
     });
   }
+
   clear() {
     this.msgs = [];
   }
+
   checkPermisosConfirmDelete() {
     let msg = this.commonServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
-    } else if(this.checkFechaEstadoComision()){
-      this.confirmDelete();
-    }
-    //Introducir mensaje en la base de datos
-    else this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No se admite borrar el dictamen ya que hay un estado visible por la comisión que se ha dado de alta con posterioridad al dictamen");
+    } 
+    else this.checkFechaEstadoComision()
   }
 
   checkFechaEstadoComision(){
-    this.estados.forEach(element => {
-      if(element.propietario == "CAJG" && element.fechaInicio > this.dictamen.fechaDictamen) return false;
-    });
-    return true;
+    this.progressSpinner = true;
+    this.sigaServices.post("gestionejg_getEstados", this.dictamen).subscribe(
+      n => {
+        let estados = JSON.parse(n.body).estadoEjgItems;
+        this.progressSpinner = false;
+
+        let estadoCAJG = estados.find(
+          item => item.propietario == "1" && item.fechaInicio > this.dictamen.fechaDictamen
+        );
+        //Introducir mensaje en la base de datos
+        if (estadoCAJG != undefined)  this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No se admite borrar el dictamen ya que hay un estado visible por la comisión que se ha dado de alta con posterioridad al dictamen");
+        else this.confirmDelete();
+      },
+      err => {
+        this.progressSpinner = false;
+
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
   }
   
   checkPermisosSave() {
