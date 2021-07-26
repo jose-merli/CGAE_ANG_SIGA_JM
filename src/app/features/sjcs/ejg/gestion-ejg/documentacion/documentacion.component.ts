@@ -157,12 +157,25 @@ export class DocumentacionComponent implements OnInit {
               this.tiposCabecera += element.labelDocumento;
             }
           });
-           //Si se esta actualizando los documentos cuando se ha introducido un nuevo documento
+            //Si se esta actualizando la documentacion cuando se ha introducido una nueva documentacion
             //se añade el iddocumentacion al body actual
             if(this.showModal && this.body.idDocumentacion == null){
-              //Actualmente, el ultimo documento introducido conincide con el ultimo documento de la lista
+              //Actualmente, la ultima documentaciom introducido conincide con la ultima documentacion de la lista
               //Se asigna el valor de iddocumentacion para que se pueda asignar ficheros
               this.body.idDocumentacion = this.documentos[this.documentos.length-1].idDocumentacion;
+              //Para evitar que se produzcan errores al pulsar el botón "Reestablecer"
+              this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+            }
+            //Si se esta actualizando los documentos cuando se ha introducido un nuevo fichero
+            //se añade el iddocumento al body actual
+            if(this.showModal &&this.body.idFichero == null){
+              let documentacion= this.documentos.find(
+                item => item.idDocumentacion == this.body.idDocumentacion
+              );
+              if (documentacion != undefined){
+                this.body.idFichero = documentacion.idFichero;
+                this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+              }
             }
         }
         this.nDocumentos = this.documentos.length;
@@ -189,7 +202,7 @@ export class DocumentacionComponent implements OnInit {
       { field: "regEntrada", header: "justiciaGratuita.ejg.documentacion.RegistroEntrada" },
       { field: "regSalida", header: "justiciaGratuita.ejg.documentacion.RegistroSalida" },
       { field: "f_presentacion", header: "censo.consultaDatosGenerales.literal.fechaPresentacion" },
-      { field: "propietario", header: "justiciaGratuita.ejg.documentacion.Propietario" },
+      { field: "propietarioDes", header: "justiciaGratuita.ejg.documentacion.Propietario" },
     ];
     /* }else{
       this.cols = [
@@ -376,35 +389,35 @@ export class DocumentacionComponent implements OnInit {
       .postSendFileAndParameters("gestionejg_subirDocumentoEjg", file, this.body.idDocumentacion)
       .subscribe(
         data => {
-          this.progressSpinner = false;
-
           if (data["error"].code == 200) {
             this.showMessage("success", "Correcto", data["error"].message);
             this.getDocumentos(this.item);
             this.selectedDatos = [];
             this.numSelected = 0;
-            this.showModal = false;
-            //this.body.idDocumento = 
-            //   this.body.nombreFichero = file.get
-            // this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-            //   if(this.bodyInicial.f_presentacion!=null && this.bodyInicial.f_presentacion!=undefined){
-            //     this.ficheros=[{
-            //       "fecha": this.datepipe.transform(this.bodyInicial.f_presentacion, 'dd/MM/yyyy'),
-            //       "nombre": this.bodyInicial.nombreFichero
-            //     }]
-            //     }else{
-            //       this.ficheros=[{
-            //         "fecha": this.translateService.instant("justiciaGratuita.ejg.documentacion.noFechaPre"),
-            //         "nombre": this.bodyInicial.nombreFichero
-            //       }]
-            //     }
+            //this.showModal = false;
+            //El id del fichero se asigna actualmente dentro del método getDocumentos().
+            this.body.nombreFichero = file.name;
+            this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+              if(this.bodyInicial.f_presentacion!=null && this.bodyInicial.f_presentacion!=undefined){
+                this.ficheros=[{
+                  "fecha": this.datepipe.transform(this.bodyInicial.f_presentacion, 'dd/MM/yyyy'),
+                  "nombre": this.bodyInicial.nombreFichero
+                }]
+                }else{
+                  this.ficheros=[{
+                    "fecha": this.translateService.instant("justiciaGratuita.ejg.documentacion.noFechaPre"),
+                    "nombre": this.bodyInicial.nombreFichero
+                  }]
+                }
           } else if (data["error"].code == null) {
             this.showMessage("info", "Información", data["error"].message);
           }
         },
         error => {
-          this.showMessage("info", "Información", "Se ha producido un error al cargar el fichero, vuelva a intentarlo de nuevo pasados unos minutos");
-          this.progressSpinner = false;
+          //Maximo de tamaño permitido actualmente al hacer peticiones al back (5242880)
+          //Introducir en la BBDD
+          if(file.size>5242880) this.showMessage("info", "Información", "Se ha producido un error al cargar el fichero debido a que su tamaño excede el maximo permitido (5242880).");
+          else this.showMessage("info", "Información", "Se ha producido un error al cargar el fichero, vuelva a intentarlo de nuevo pasados unos minutos");
         },
         () => {
           this.progressSpinner = false;
@@ -416,17 +429,20 @@ export class DocumentacionComponent implements OnInit {
     this.progressSpinner = true;
 
     //this.body.nuevoEJG=!this.modoEdicion;
+    let documentos: any[] = [];
+    if(this.selectedDatos.length==0) documentos.push(this.body);
+    else documentos = this.selectedDatos;
 
-    this.sigaServices.postDownloadFiles("gestionejg_descargarDocumentosEjg", this.selectedDatos).subscribe(
+    this.sigaServices.postDownloadFiles("gestionejg_descargarDocumentosEjg", documentos).subscribe(
       data => {
         let blob = null;
 
         // if (data.status == 200) {
-        if (this.selectedDatos.length == 1) {
-          if (this.selectedDatos[0].nombreFichero != null) {
-            let mime = this.getMimeType(this.selectedDatos[0].nombreFichero.substring(this.selectedDatos[0].nombreFichero.lastIndexOf("."), this.selectedDatos[0].nombreFichero.length));
+        if (documentos.length == 1) {
+          if (documentos[0].nombreFichero != null) {
+            let mime = this.getMimeType(documentos[0].nombreFichero.substring(documentos[0].nombreFichero.lastIndexOf("."), documentos[0].nombreFichero.length));
             blob = new Blob([data], { type: mime });
-            saveAs(blob, this.selectedDatos[0].nombreFichero);
+            saveAs(blob, documentos[0].nombreFichero);
           }
           else this.showMessage("error", "Información", "La documentación seleccionada no tiene un fichero asociado");
 
@@ -507,7 +523,6 @@ export class DocumentacionComponent implements OnInit {
 
       },
       err => {
-        this.progressSpinner = false;
         this.showMsg('error', 'Error', this.translateService.instant('general.mensaje.error.bbdd'));
       },
       () => {
@@ -573,6 +588,19 @@ export class DocumentacionComponent implements OnInit {
     this.showModal = false;
   }
 
+  checkPermisosSubirFichero(event){
+    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if(this.body.idDocumentacion!=null) this.subirFichero(event);
+      else {
+        //Introducir en la BBDD
+        this.msgs = [{ severity: "error", summary: "Error", detail: "Debe guardar el documento nuevo antes de introducir un fichero." }];
+      }
+    }
+  }
+
   openModal(datos) {
     this.showModal = true;
     if (datos != null) {
@@ -600,6 +628,7 @@ export class DocumentacionComponent implements OnInit {
       else this.ficheros = [];
     }
     else {
+      this.ficheros = [];
       this.getComboPresentador();
       this.body = new DocumentacionEjgItem();
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));

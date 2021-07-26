@@ -233,7 +233,7 @@
   </div>
   <!-- </div> -->
   <!-- <div class="bloque col-lg-6 col-md-6"> -->
-  <div *ngIf="body.idDocumentacion!=null" class="form-row">
+  <div class="form-row">
     <p-table [value]="ficheros" [columns]="colsModal" [responsive]="true" #tableFicheros class="tabla-listado"
       [paginator]="false" [rows]="selectedItem" [selectionMode]="single" [(selection)]="selectedDatos"
       [responsive]="true">
@@ -274,7 +274,7 @@
       <button [disabled]="body.idFichero==null" (click)="deleteDocumentos()" pButton type="button"
         icon="fa fa-trash" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
       <p-fileUpload #pUploadFile icon="fa fa-plus" iconPos="left" chooseLabel="{{ 'general.boton.new' | translate}}" [disabled]="body.idFichero!=null"
-        name="file" mode="basic"  class="edit my-0 mx-auto main-button" (onSelect)="subirFichero($event)" auto="true">
+        name="file" mode="basic"  class="edit my-0 mx-auto main-button" (onSelect)="checkPermisosSubirFichero($event)" auto="true">
       </p-fileUpload> <!-- accept=".xls" -->
     </div>
   </div>
