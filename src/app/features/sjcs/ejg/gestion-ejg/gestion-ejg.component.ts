@@ -136,10 +136,8 @@ export class GestionEjgComponent implements OnInit {
                 this.persistenceService.setDatos(this.body);
                 this.modoEdicion = true;
               }
-  
             }
           }
-          
 
           sessionStorage.removeItem("EJGItem");
           this.datos = [
@@ -176,8 +174,6 @@ export class GestionEjgComponent implements OnInit {
           
         }
         this.obtenerPermisos();
-
-
       }
       ).catch(error => console.error(error));
     //this.commonsService.scrollTop();

@@ -1,17 +1,45 @@
+import { DatosAbogadoContrarioComponent } from "../features/sjcs/justiciables/gestion-justiciables/datos-abogado-contrario/datos-abogado-contrario.component";
+import { ProcuradoresItem } from "../models/sjcs/ProcuradoresItem";
+
 export const procesos_ejg: any = {
+    //buscador
     ejg: "946",
-   // Tarjetas 
-    tarjetaResumen: "940", // nuevo 
-    datosGenerales: "943", // nuevo
-    serviciosTramit: "944", // nuevo
+
+   //detalle ejg
+    tarjetaResumen: "93V", 
+    datosGenerales: "943",
+    serviciosTramitacion: "944",
     unidadFamiliar: "94T",
-    expedientesEcon: "945", // nuevo
+    expedientesEconomicos: "945",
     relaciones: "94R",
     estados: "94I",
     documentacion: "94J",
     informeCalif: "94K",
-    resolucion: "91R", // nuevo
+    resolucion: "91R",
     impugnacion: "91O",
     regtel: "94V",
     comunicaciones: "94Z",
+
+    //detalle unidad familiar
+    detalleUF: "93A",
+    datosGeneralesUF: "93B",
+    datosSolicitudesUF: "93C",
+    datosDireccionContactoUF: "93D",
+    datosRepresentanteLegalUF: "93E",
+    datosAdicionalesUF: "93F",
+
+    //pre-designacion
+    preDesignacion: "93G",
+    defensaJuridica: "93H",
+    procurador: "93I",
+    contrarios: "93J",
+
+    //detalle contrarios
+    detalleContrarios: "93K",
+    datosGeneralesContrarios: "93O",
+    datosSolicitudesContrarios: "93Q",
+    datosDireccionContactoContrarios: "93R",
+    datosRepresentantesLegal: "93S",
+    datosAbogadoContrario: "93T",
+    datosProcuradorContrario: "93U",
 }
