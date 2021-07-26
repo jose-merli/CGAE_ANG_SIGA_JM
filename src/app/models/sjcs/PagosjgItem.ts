@@ -25,7 +25,10 @@ export class PagosjgItem {
 	abreviatura: String;
 	cantidad: String;
 	codBanco: String;
+	idSufijo: String;
 	nombreUsuModificacion: String;
+	idPropSepa: String;
+	idPropOtros: String;
 
 	constructor() { }
 }

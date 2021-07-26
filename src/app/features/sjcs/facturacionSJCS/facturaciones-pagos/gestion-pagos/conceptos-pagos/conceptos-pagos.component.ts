@@ -31,6 +31,7 @@ export class ConceptosPagosComponent implements OnInit {
   disableNuevo: boolean = false;
   selectionMode = 'multiple';
   selectedDatos: ConceptoPagoItem[] = [];
+  numConceptos: number;
 
   @Input() idEstadoPago;
   @Input() idPago;
@@ -147,9 +148,6 @@ export class ConceptosPagosComponent implements OnInit {
           this.bodyAux = [];
 
           resp.listaConceptos.forEach(el => {
-            // if (el.porcentajeApagar == null) {
-            //   el.porcentajeApagar = "0.00";
-            // }
 
             el.nuevo = false;
             el.cantidadRestante = el.importePendiente;
@@ -169,6 +167,7 @@ export class ConceptosPagosComponent implements OnInit {
 
           this.body = JSON.parse(JSON.stringify(resp.listaConceptos));
           this.bodyAux = JSON.parse(JSON.stringify(resp.listaConceptos));
+          this.numConceptos = this.body.length;
         }
       },
       err => {

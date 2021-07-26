@@ -12,7 +12,7 @@
   <app-conceptos-pagos *ngIf="showCards" [idPago]="idPago" [idEstadoPago]="idEstadoPago"
     [idFacturacion]="idFacturacion"></app-conceptos-pagos>
 
-  <app-configuracion-ficheros *ngIf="showCards"></app-configuracion-ficheros>
+  <app-configuracion-ficheros *ngIf="showCards" [idPago]="idPago"></app-configuracion-ficheros>
 
   <app-detalle-pago *ngIf="showCards"></app-detalle-pago>
 

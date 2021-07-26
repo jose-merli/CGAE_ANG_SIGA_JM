@@ -16,7 +16,7 @@
           </div>
           <div class="d-flex justify-content-between">
             <label>{{ "facturacionSJCS.facturacionesYPagos.importeTotal" | translate }}:
-              <span>{{ importePagado | number }} €</span>
+              <span>{{ importePagado | number }} <span *ngIf="importePagado && null != importePagado">€</span></span>
             </label>
             <i *ngIf="!showFichaPagos" class="fa fa-angle-down float-right" (click)="onHideDatosGenerales()"></i>
           </div>

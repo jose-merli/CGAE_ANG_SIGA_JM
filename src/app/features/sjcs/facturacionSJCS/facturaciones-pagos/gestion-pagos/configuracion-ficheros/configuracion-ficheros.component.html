@@ -37,35 +37,27 @@
         <div class="form-row">
           <div class="col-lg-4 col-md-4">
             <label>{{ "facturacionSJCS.facturacionesYPagos.iban" | translate }} (*)</label>
-            <p-dropdown class="select-form" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
-              filterBy="label,labelSinTilde" [showClear]="true" [(disabled)]='!permisos'></p-dropdown>
-            <!--<p-dropdown class="select-form" [(ngModel)]='body.idPartidaPresupuestaria' [options]="partidaPresupuestaria"
-            [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde"
-            [showClear]="true" [(disabled)]='cerrada || !permisos'></p-dropdown>-->
+            <p-dropdown [options]="comboCuentasBanc" [(ngModel)]="configuracionFicheros.iban" class="select-form"
+              [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde"
+              [showClear]="true" [(disabled)]='!permisos'></p-dropdown>
           </div>
           <div class="col-lg-2 col-md-2">
             <label>{{ "facturacionSJCS.facturacionesYPagos.sufijo" | translate }} (*)</label>
-            <p-dropdown class="select-form" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
-              filterBy="label,labelSinTilde" [showClear]="true" [(disabled)]='!permisos'></p-dropdown>
-            <!--<p-dropdown class="select-form" [(ngModel)]='body.idPartidaPresupuestaria' [options]="partidaPresupuestaria"
-            [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde"
-            [showClear]="true" [(disabled)]='cerrada || !permisos'></p-dropdown>-->
+            <p-dropdown [options]="comboSufijos" [(ngModel)]="configuracionFicheros.sufijo" class="select-form"
+              [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde"
+              [showClear]="true" [(disabled)]='!permisos'></p-dropdown>
           </div>
           <div class="col-lg-3 col-md-3">
             <label>{{ "facturacionSJCS.facturacionesYPagos.propositoTransferencias" | translate }} SEPA (*)</label>
-            <p-dropdown class="select-form" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
-              filterBy="label,labelSinTilde" [showClear]="true" [(disabled)]='!permisos'></p-dropdown>
-            <!--<p-dropdown class="select-form" [(ngModel)]='body.idPartidaPresupuestaria' [options]="partidaPresupuestaria"
-            [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde"
-            [showClear]="true" [(disabled)]='cerrada || !permisos'></p-dropdown>-->
+            <p-dropdown [options]="comboPropTransSepa" [(ngModel)]="configuracionFicheros.propSepa" class="select-form"
+              [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde"
+              [showClear]="true" [(disabled)]='!permisos'></p-dropdown>
           </div>
           <div class="col-lg-3 col-md-3">
             <label>{{ "facturacionSJCS.facturacionesYPagos.propositoTransferencias" | translate }} (*)</label>
-            <p-dropdown class="select-form" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
-              filterBy="label,labelSinTilde" [showClear]="true" [(disabled)]='!permisos'></p-dropdown>
-            <!--<p-dropdown class="select-form" [(ngModel)]='body.idPartidaPresupuestaria' [options]="partidaPresupuestaria"
-            [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde"
-            [showClear]="true" [(disabled)]='cerrada || !permisos'></p-dropdown>-->
+            <p-dropdown [options]="comboPropOtrTrans" [(ngModel)]="configuracionFicheros.propOtr" class="select-form"
+              [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde"
+              [showClear]="true" [(disabled)]='!permisos'></p-dropdown>
           </div>
         </div>
       </div>
@@ -76,19 +68,10 @@
           label="{{ 'general.boton.restablecer' | translate }}" [(disabled)]='!permisos'></button>
         <button pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"
           [(disabled)]='!permisos'></button>
-        <!--<button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate }}" [(disabled)]='disabledRestablecer() || !permisos'></button>
-        <button (click)="guardar()" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}" [(disabled)]='disabledGuardar() || !permisos'></button>-->
       </div>
     </div>
   </div>
 </div>
-
-<p-confirmDialog header="Confirmación"  icon="fa fa-question-circle"  width="425"  #cd>
-  <p-footer>
-    <button type="button"  pButton icon="fa-check"  label="Si"  (click)="cd.accept()"></button>
-    <button type="button"  pButton icon="fa-close"  label="No"  (click)="cd.reject()"></button>
-  </p-footer>
-</p-confirmDialog>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>

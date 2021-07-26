@@ -128,6 +128,7 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
           let datos = data.facturacionItem;
           let importeTotal = 0;
           let importePendiente = 0;
+          const importesConHitosNoRepetidos: { idConcepto: string, importeTotal: number, importePendiente: number }[] = [];
 
           if (undefined != data.facturacionItem && data.facturacionItem.length > 0) {
 
@@ -155,16 +156,22 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
               element.idGrupoOld = element.idGrupo;
               element.idConceptoOld = element.idConcepto;
 
-              if (element.importeTotal && element.importeTotal.length > 0) {
-                importeTotal += parseFloat(element.importeTotal);
-              }
 
-              if (element.importePendiente && element.importePendiente.length > 0) {
-                importePendiente += parseFloat(element.importePendiente);
+              if (importesConHitosNoRepetidos.find(el => el.idConcepto == element.idConcepto) == undefined) {
+                importesConHitosNoRepetidos.push({
+                  idConcepto: element.idConcepto,
+                  importeTotal: (element.importeTotal && element.importeTotal.length > 0) ? parseFloat(element.importeTotal) : 0,
+                  importePendiente: (element.importePendiente && element.importePendiente.length > 0) ? parseFloat(element.importePendiente) : 0
+                });
               }
 
             });
           }
+
+          importesConHitosNoRepetidos.forEach(el => {
+            importeTotal += el.importeTotal;
+            importePendiente += el.importePendiente;
+          });
 
           this.body = JSON.parse(JSON.stringify(datos));
           this.bodyAux = JSON.parse(JSON.stringify(datos));

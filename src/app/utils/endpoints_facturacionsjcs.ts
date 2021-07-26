@@ -40,4 +40,10 @@ export let endpoints_facturacionsjcs: any = {
     pagosjcs_getConceptosPago: "pagosjcs/getConceptosPago",
     pagosjcs_saveConceptoPago: "pagosjcs/saveConceptoPago",
     pagosjcs_deleteConceptoPago: "pagosjcs/deleteConceptoPago",
+    pagosjcs_comboPropTranferenciaSepa: "pagosjcs/comboPropTranferenciaSepa",
+    pagosjcs_comboPropOtrasTranferencias: "pagosjcs/comboPropOtrasTranferencias",
+    pagosjcs_comboSufijos: "pagosjcs/comboSufijos",
+    pagosjcs_comboCuentasBanc: "pagosjcs/comboCuentasBanc",
+    pagosjcs_saveConfigFichAbonos: "pagosjcs/saveConfigFichAbonos",
 }
+
