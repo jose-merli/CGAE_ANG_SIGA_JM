@@ -45,7 +45,6 @@ export class DatosUnidadFamiliarComponent implements OnInit {
   resaltadoDatos: boolean = false;
 
   @Input() modoEdicion;
-  @Input() showTarjetaPermiso;
   @Input() body: JusticiableItem;
   @Input() checkedViewRepresentante;
   @Input() navigateToJusticiable: boolean = false;
@@ -68,7 +67,6 @@ export class DatosUnidadFamiliarComponent implements OnInit {
 
     /* Proviene de un EJG */
     if (this.fromUniFamiliar) {
-      this.showTarjetaPermiso = true;
       this.permisoEscritura = true;
     }
 

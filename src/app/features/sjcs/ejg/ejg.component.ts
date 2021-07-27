@@ -10,6 +10,7 @@ import { FiltrosEjgComponent } from './filtros-busqueda-ejg/filtros-ejg.componen
 import * as moment from "moment";
 import { DatePipe } from '../../../../../node_modules/@angular/common';
 import { EJGItem } from '../../../models/sjcs/EJGItem';
+import { procesos_ejg } from '../../../permisos/procesos_ejg';
 
 @Component({
   selector: 'app-ejg',
@@ -51,33 +52,27 @@ export class EJGComponent implements OnInit {
   ngOnInit() {
     this.buscar = this.filtros.buscar
 
-    this.commonsService.checkAcceso("946")
-      .then(respuesta => {
-        this.permisoEscritura = respuesta;
+    this.commonsService.checkAcceso(procesos_ejg.ejg)
+    .then(respuesta => {
+      this.permisoEscritura = respuesta;
+      this.persistenceService.setPermisos(this.permisoEscritura);
 
-        this.persistenceService.setPermisos(this.permisoEscritura);
-
-
-        if (this.permisoEscritura == undefined) {
-          sessionStorage.setItem("codError", "403");
-          sessionStorage.setItem(
-            "descError",
-            this.translateService.instant("generico.error.permiso.denegado")
-          );
-          this.router.navigate(["/errorAcceso"]);
-        }
+      if (this.permisoEscritura == undefined) {
+        sessionStorage.setItem("codError", "403");
+        sessionStorage.setItem(
+          "descError",
+          this.translateService.instant("generico.error.permiso.denegado")
+        );
+        this.router.navigate(["/errorAcceso"]);
       }
-      ).catch(error => console.error(error));
+    }).catch(error => console.error(error));
 
-      //Preparacion previa para recibir el valor de remesa si se accede a esta pantalla desde una ficha
-      //de remesa.
-      if (sessionStorage.getItem("remesa") != null) {
-        this.remesa = JSON.parse(sessionStorage.getItem("remesa"));
-        sessionStorage.removeItem("remesa");
-      }
-        
-        
-      
+    //Preparacion previa para recibir el valor de remesa si se accede a esta pantalla desde una ficha
+    //de remesa.
+    if (sessionStorage.getItem("remesa") != null) {
+      this.remesa = JSON.parse(sessionStorage.getItem("remesa"));
+      sessionStorage.removeItem("remesa");
+    }
   }
 
   searchEJGs(event) {
