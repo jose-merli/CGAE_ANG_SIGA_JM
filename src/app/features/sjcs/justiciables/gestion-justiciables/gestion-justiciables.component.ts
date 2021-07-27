@@ -47,12 +47,18 @@ export class GestionJusticiablesComponent implements OnInit {
   fromUniFamiliar: boolean = false;
   fromContrarioEJG: boolean = false;
 
+  showDatosGenerales;
+  showDatosSolicitudes;
+  showDatosPersonales;
+  showDatosUF;
+  showDatosRepresentantes;
+
   constructor(private router: Router,
     private activatedRoute: ActivatedRoute,
     private translateService: TranslateService,
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private commnosService: CommonsService,
+    private commonsService: CommonsService,
     private authenticationService: AuthenticationService,
     private location: Location) { }
 
@@ -156,92 +162,150 @@ export class GestionJusticiablesComponent implements OnInit {
 
     await this.checkAcceso();
 
-    if (this.permisoEscritura == undefined) {
-      sessionStorage.setItem("codError", "403");
-      sessionStorage.setItem(
-        "descError",
-        this.translateService.instant("generico.error.permiso.denegado")
-      );
-      this.progressSpinner = false;
-      this.router.navigate(["/errorAcceso"]);
-    } else {
-      //El padre de todas las tarjetas se encarga de enviar a sus hijos el objeto nuevo del justiciable que se quiere mostrar
+    //El padre de todas las tarjetas se encarga de enviar a sus hijos el objeto nuevo del justiciable que se quiere mostrar
 
-      //Para indicar que estamos en modo de creacion de representante
-      this.activatedRoute.queryParams.subscribe(params => {
-        if (params.rp == "1") {
-          this.modoRepresentante = true;
-          this.body = new JusticiableItem();
-          this.nuevo();
-        } else if (params.fr == "u") {
-          this.permisoEscritura = false;
-        }
-      });
-
-      this.commnosService.scrollTop();
-      //Carga configuracion de las tarjetas
-      if (this.persistenceService.getFichasPosibles() != null && this.persistenceService.getFichasPosibles() != undefined) {
-        this.fichasPosibles = this.persistenceService.getFichasPosibles();
-        this.fromJusticiable = this.fichasPosibles[0].activa;
+    //Para indicar que estamos en modo de creacion de representante
+    this.activatedRoute.queryParams.subscribe(params => {
+      if (params.rp == "1") {
+        this.modoRepresentante = true;
+        this.body = new JusticiableItem();
+        this.nuevo();
+      } else if (params.fr == "u") {
+        this.permisoEscritura = false;
       }
+    });
 
-      //Creacion de una nueva unidad familiar
-      if (this.fromUniFamiliar && sessionStorage.getItem("Nuevo")) {
-        this.modoEdicion = true;
-      this.searchSolicitante();
-      //Proviene de la tarjeta de unidad familiar directamente
-      } else if (this.fromUniFamiliar){
+    this.commonsService.scrollTop();
+    //Carga configuracion de las tarjetas
+    if (this.persistenceService.getFichasPosibles() != null && this.persistenceService.getFichasPosibles() != undefined) {
+      this.fichasPosibles = this.persistenceService.getFichasPosibles();
+      this.fromJusticiable = this.fichasPosibles[0].activa;
+    }
+
+    //Creacion de una nueva unidad familiar
+    if (this.fromUniFamiliar && sessionStorage.getItem("Nuevo")) {
       this.modoEdicion = true;
-        this.fillJusticiableBuesquedaItemToUnidadFamiliarEJG();
-      }
-      else if (this.persistenceService.getDatos() != null && !this.modoRepresentante) {
-        this.modoEdicion = true;
-        this.justiciableBusquedaItem = this.persistenceService.getDatos();
-        this.search();
+    this.searchSolicitante();
+    //Proviene de la tarjeta de unidad familiar directamente
+    } else if (this.fromUniFamiliar){
+    this.modoEdicion = true;
+      this.fillJusticiableBuesquedaItemToUnidadFamiliarEJG();
+    }
+    else if (this.persistenceService.getDatos() != null && !this.modoRepresentante) {
+      this.modoEdicion = true;
+      this.justiciableBusquedaItem = this.persistenceService.getDatos();
+      this.search();
 
-      } else {
-        sessionStorage.removeItem("Nuevo");
-        this.modoEdicion = false;
-        this.progressSpinner = false;
-      }
-
-      //Indicar que se han guardado los datos generales de un Representante y hay que mostrar de nuevo al justiciable que tiene asociado el representante creado
-      this.sigaServices.guardarDatosGeneralesRepresentante$.subscribe((data) => {
-
-        this.progressSpinner = true;
-        this.commnosService.scrollTop();
-        this.persistenceService.setBody(data);
-        this.modoRepresentante = false;
-        this.modoEdicion = true;
-        this.progressSpinner = false;
-
-        if (!this.navigateToJusticiable) {
-          this.checkedViewRepresentante = false;
-          this.justiciableBusquedaItem = this.persistenceService.getDatos();
-          this.search();
-        }
-
-      });
-
+    } else {
+      sessionStorage.removeItem("Nuevo");
+      this.modoEdicion = false;
       this.progressSpinner = false;
     }
+
+    //Indicar que se han guardado los datos generales de un Representante y hay que mostrar de nuevo al justiciable que tiene asociado el representante creado
+    this.sigaServices.guardarDatosGeneralesRepresentante$.subscribe((data) => {
+
+      this.progressSpinner = true;
+      this.commonsService.scrollTop();
+      this.persistenceService.setBody(data);
+      this.modoRepresentante = false;
+      this.modoEdicion = true;
+      this.progressSpinner = false;
+
+      if (!this.navigateToJusticiable) {
+        this.checkedViewRepresentante = false;
+        this.justiciableBusquedaItem = this.persistenceService.getDatos();
+        this.search();
+      }
+
+    });
+
+    this.progressSpinner = false;
   }
 
   async checkAcceso(){
     if(this.fromUniFamiliar){
-      this.commnosService.checkAcceso(procesos_ejg.detalleUF)
+      this.commonsService.checkAcceso(procesos_ejg.detalleUF)
       .then(respuesta => {
         this.permisoEscritura = respuesta;
 
         //hay que comprobar permisos para las tarjetas
-
+        if(this.permisoEscritura!=undefined){
+          this.checkAccesoTarjetasUF();
+        }else{
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.progressSpinner = false;
+          this.router.navigate(["/errorAcceso"]);
+        }
       }).catch(error => console.error(error));
     }else{
-      this.commnosService.checkAcceso(procesos_justiciables.gestionJusticiables)
+      this.commonsService.checkAcceso(procesos_justiciables.gestionJusticiables)
       .then(respuesta => {
         this.permisoEscritura = respuesta;
+
+        if(this.permisoEscritura!=undefined){
+          this.checkAccesoTarjetas()
+        }else{
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.progressSpinner = false;
+          this.router.navigate(["/errorAcceso"]);
+        }
+
       }).catch(error => console.error(error));
     }
+  }
+
+  checkAccesoTarjetasUF(){
+    this.commonsService.checkAcceso(procesos_ejg.datosGeneralesUF)
+    .then(respuesta => {
+      this.showDatosGenerales = respuesta;
+    }).catch(error => console.error(error));
+
+    this.commonsService.checkAcceso(procesos_ejg.datosSolicitudesUF)
+    .then(respuesta => {
+      this.showDatosSolicitudes = respuesta;
+    }).catch(error => console.error(error));
+
+    this.commonsService.checkAcceso(procesos_ejg.datosDireccionContactoUF)
+    .then(respuesta => {
+      this.showDatosPersonales = respuesta;
+    }).catch(error => console.error(error));
+
+    this.commonsService.checkAcceso(procesos_ejg.datosAdicionalesUF)
+    .then(respuesta => {
+      this.showDatosUF = respuesta;
+    }).catch(error => console.error(error));
+
+    this.commonsService.checkAcceso(procesos_ejg.datosRepresentanteLegalUF)
+    .then(respuesta => {
+      this.showDatosRepresentantes = respuesta;
+    }).catch(error => console.error(error));
+  }
+
+  checkAccesoTarjetas(){
+    this.commonsService.checkAcceso(procesos_justiciables.tarjetaDatosGenerales)
+    .then(respuesta => {
+      this.showDatosGenerales = respuesta;
+      this.showDatosPersonales = respuesta;
+    }).catch(error => console.error(error));
+
+    this.commonsService.checkAcceso(procesos_justiciables.tarjetaDatosSolicitud)
+    .then(respuesta => {
+      this.showDatosSolicitudes = respuesta;
+    }).catch(error => console.error(error));
+
+    this.commonsService.checkAcceso(procesos_justiciables.tarjetaDatosRepresentante)
+    .then(respuesta => {
+      this.showDatosSolicitudes = respuesta;
+    }).catch(error => console.error(error));
   }
 
   fillJusticiableBuesquedaItemToUnidadFamiliarEJG() {
@@ -394,7 +458,7 @@ export class GestionJusticiablesComponent implements OnInit {
   }
 
   newRepresentante(event) {
-    this.commnosService.scrollTop();
+    this.commonsService.scrollTop();
     this.nuevoRepresentante = true;
     this.body = new JusticiableItem();
     this.body.nif = event.nif;
@@ -407,7 +471,7 @@ export class GestionJusticiablesComponent implements OnInit {
   }
 
   viewRepresentante(event) {
-    this.commnosService.scrollTop();
+    this.commonsService.scrollTop();
     this.checkedViewRepresentante = true;
     this.representanteBusquedaItem = new JusticiableBusquedaItem();
     this.representanteBusquedaItem.idpersona = event.idpersona;
@@ -473,7 +537,7 @@ export class GestionJusticiablesComponent implements OnInit {
       this.checkedViewRepresentante = false;
       this.nuevoRepresentante = false;
       this.modoEdicion = true;
-      this.commnosService.scrollTop();
+      this.commonsService.scrollTop();
       this.navigateToJusticiable = false;
       this.search();
 

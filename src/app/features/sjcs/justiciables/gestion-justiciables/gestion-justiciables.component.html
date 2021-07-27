@@ -17,25 +17,30 @@
       <!-- checkedViewRepresentante: variable indica si estamos viendo la ficha de un representante -->
       <!-- newJusticiable: Funcion para indicar a las demás tarjetas que se ha creado un nuevo justiciable -->
       <!-- searchJusticiableOverwritten: Funcion para indicar que se ha sobrescrito un justiciable al añadir en modo nuevo un nif registrado y pulsar que se quiere sobreescribir -->
-
-      <app-datos-generales *ngSwitchCase="'generales'" [showTarjeta]="ficha.activa" [body]="body" [fromJusticiable]="fromJusticiable" [fromUniFamiliar]="fromUniFamiliar"
-        [modoRepresentante]="modoRepresentante" [checkedViewRepresentante]="checkedViewRepresentante" (notifySearchJusticiableByNif)="searchJusticiableByNif($event)"
-        (newJusticiable)="newJusticiable($event)" (searchJusticiableOverwritten)="searchJusticiableOverwritten($event)"></app-datos-generales>
-
-      <!-- showTarjeta: variable indica si se muestra o no la tarjeta -->
-      <!-- body: variable donde se le pasa la informacion de un justiciable -->
-      <!-- createJusticiableByUpdateSolicitud: Funcion para indicar a las demás tarjetas que se ha creado un nuevo justiciable al cambiar los datos de solicitud
-      y no querer actualizar el justiciable propio-->
-
-      <app-datos-personales *ngSwitchCase="'personales'" [showTarjeta]="ficha.activa" [body]="body" [fromUniFamiliar]="fromUniFamiliar" (notifySearchJusticiableByNif)="searchJusticiableByNif($event)"
-        (newJusticiable)="newJusticiable($event)" (searchJusticiableOverwritten)="searchJusticiableOverwritten($event)"></app-datos-personales>
+      <div *ngIf="showDatosGenerales != undefined">
+        <app-datos-generales *ngSwitchCase="'generales'" [showTarjeta]="ficha.activa" [body]="body" [fromJusticiable]="fromJusticiable" [fromUniFamiliar]="fromUniFamiliar"
+          [modoRepresentante]="modoRepresentante" [checkedViewRepresentante]="checkedViewRepresentante" (notifySearchJusticiableByNif)="searchJusticiableByNif($event)"
+          (newJusticiable)="newJusticiable($event)" (searchJusticiableOverwritten)="searchJusticiableOverwritten($event)"></app-datos-generales>
+      </div>
 
       <!-- showTarjeta: variable indica si se muestra o no la tarjeta -->
       <!-- body: variable donde se le pasa la informacion de un justiciable -->
       <!-- createJusticiableByUpdateSolicitud: Funcion para indicar a las demás tarjetas que se ha creado un nuevo justiciable al cambiar los datos de solicitud
       y no querer actualizar el justiciable propio-->
 
-      <app-datos-solicitud *ngSwitchCase="'solicitud'" [showTarjeta]="ficha.activa" [body]="body" (createJusticiableByUpdateSolicitud)="createJusticiableByUpdateSolicitud($event)"></app-datos-solicitud>
+      <div *ngIf="showDatosPersonales != undefined">
+        <app-datos-personales *ngSwitchCase="'personales'" [showTarjeta]="ficha.activa" [body]="body" [fromUniFamiliar]="fromUniFamiliar" (notifySearchJusticiableByNif)="searchJusticiableByNif($event)"
+          (newJusticiable)="newJusticiable($event)" (searchJusticiableOverwritten)="searchJusticiableOverwritten($event)"></app-datos-personales>
+      </div>
+
+      <!-- showTarjeta: variable indica si se muestra o no la tarjeta -->
+      <!-- body: variable donde se le pasa la informacion de un justiciable -->
+      <!-- createJusticiableByUpdateSolicitud: Funcion para indicar a las demás tarjetas que se ha creado un nuevo justiciable al cambiar los datos de solicitud
+      y no querer actualizar el justiciable propio-->
+
+      <div *ngIf="showDatosSolicitudes != undefined">
+        <app-datos-solicitud *ngSwitchCase="'solicitud'" [showTarjeta]="ficha.activa" [body]="body" (createJusticiableByUpdateSolicitud)="createJusticiableByUpdateSolicitud($event)"></app-datos-solicitud>
+      </div>
 
       <!-- showTarjeta: variable indica si se muestra o no la tarjeta -->
       <!-- body: variable donde se le pasa la informacion de un justiciable -->
@@ -46,12 +51,13 @@
       <!-- newJusticiable: Funcion para indicar a las demás tarjetas que se ha creado un nuevo justiciable -->
       <!-- createJusticiableByUpdateRepresentante: Funcion para indicar que se ha creado un nuevo justiciable desde la tarjeta representante -->
       <!-- navigateToJusticiable: Funcion para indicar que ya no estamos en modo representante -->
-
-      <app-datos-representante *ngSwitchCase="'representante'" [showTarjeta]="ficha.activa" [body]="body" [modoEdicion]="modoEdicion"
-        [checkedViewRepresentante]="checkedViewRepresentante" (newRepresentante)="newRepresentante($event)" (viewRepresentante)="viewRepresentante($event)"
-        (createJusticiableByUpdateRepresentante)="createJusticiableByUpdateRepresentante($event)" [navigateToJusticiable]="navigateToJusticiable" 
-        [fromContrario]="fromContrario" [fromInteresado]="fromInteresado" [fromContrarioEJG]="fromContrarioEJG" [fromUniFamiliar]="fromUniFamiliar"></app-datos-representante>
-
+      <div *ngIf="showDatosRepresentantes">
+        <app-datos-representante *ngSwitchCase="'representante'" [showTarjeta]="ficha.activa" [body]="body" [modoEdicion]="modoEdicion"
+          [checkedViewRepresentante]="checkedViewRepresentante" (newRepresentante)="newRepresentante($event)" (viewRepresentante)="viewRepresentante($event)"
+          (createJusticiableByUpdateRepresentante)="createJusticiableByUpdateRepresentante($event)" [navigateToJusticiable]="navigateToJusticiable" 
+          [fromContrario]="fromContrario" [fromInteresado]="fromInteresado" [fromContrarioEJG]="fromContrarioEJG" [fromUniFamiliar]="fromUniFamiliar">
+        </app-datos-representante>
+      </div>
       <!-- showTarjeta: variable indica si se muestra o no la tarjeta -->
       <!-- body: variable donde se le pasa la informacion de un justiciable -->
       <!-- fromJusticiable: variable indica desde donde se accede a la ficha justiciables -->
@@ -74,8 +80,10 @@
        (contrarioEJG)="contrarioEJG($event)"[showTarjetaPermiso]="ficha.activa" [body]="body" 
        [modoEdicion]="modoEdicion" [fromContrario]="fromContrario" [fromContrarioEJG]="fromContrarioEJG"></app-datos-procurador-contrario> 
     
-       <app-datos-unidad-familiar *ngSwitchCase="'unidadFamiliar'"  [showTarjetaPermiso]="ficha.activa" [solicitante]="solicitante" 
-       [body]="body" [modoEdicion]="modoEdicion" [fromUniFamiliar]="fromUniFamiliar"></app-datos-unidad-familiar> 
+       <div *ngIf="showDatosUF != undefined">
+        <app-datos-unidad-familiar *ngSwitchCase="'unidadFamiliar'" [solicitante]="solicitante" 
+        [body]="body" [modoEdicion]="modoEdicion" [fromUniFamiliar]="fromUniFamiliar"></app-datos-unidad-familiar> 
+       </div>
     
       </div>
   </div>

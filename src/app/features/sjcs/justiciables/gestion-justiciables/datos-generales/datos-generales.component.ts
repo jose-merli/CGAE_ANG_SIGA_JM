@@ -68,7 +68,6 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
   personaRepetida: boolean = false;
 
   count: number = 1;
-  showTarjetaPermiso: boolean = false;
   selectedDatos = [];
   rowsPerPage: any = [];
 
@@ -117,60 +116,45 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
     this.progressSpinner = true;
 
-    this.commonsService.checkAcceso(procesos_justiciables.tarjetaDatosGenerales)
-      .then(respuesta => {
+    if (this.body != undefined && this.body.idpersona != undefined) {
+      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
 
-        this.permisoEscritura = respuesta;
+      this.parseFechas();
 
-        if (this.permisoEscritura == undefined) {
-          this.progressSpinner = false;
-          this.showTarjetaPermiso = false;
-        } else {
-          this.showTarjetaPermiso = true;
-          if (this.body != undefined && this.body.idpersona != undefined) {
-            this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+    } else {
+      this.body = new JusticiableItem();
+    }
 
-            this.parseFechas();
+    //Obligatorio pais españa
+    this.body.idpaisdir1 = "191";
 
-          } else {
-            this.body = new JusticiableItem();
-          }
+    if (this.body.idpersona == undefined) {
+      this.modoEdicion = false;
+      this.body.fechaalta = new Date();
+    } else {
+      this.modoEdicion = true;
 
-          //Obligatorio pais españa
-          this.body.idpaisdir1 = "191";
-
-          if (this.body.idpersona == undefined) {
-            this.modoEdicion = false;
-            this.body.fechaalta = new Date();
-          } else {
-            this.modoEdicion = true;
-
-            if (this.body.idprovincia != undefined && this.body.idprovincia != null &&
-              this.body.idprovincia != "") {
-              this.isDisabledPoblacion = false;
-            } else {
-              this.isDisabledPoblacion = true;
-            }
-
-          }
-
-          this.progressSpinner = false;
-
-        }
-
-        this.sigaServices.guardarDatosSolicitudJusticiable$.subscribe((data) => {
-          this.body.autorizaavisotelematico = data.autorizaavisotelematico;
-          this.body.asistidoautorizaeejg = data.asistidoautorizaeejg;
-          this.body.asistidosolicitajg = data.asistidosolicitajg;
-          this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-        });
+      if (this.body.idprovincia != undefined && this.body.idprovincia != null &&
+        this.body.idprovincia != "") {
+        this.isDisabledPoblacion = false;
+      } else {
+        this.isDisabledPoblacion = true;
       }
-      ).catch(error => console.error(error));
+
+    }
+
+    this.progressSpinner = false;
+
+    this.sigaServices.guardarDatosSolicitudJusticiable$.subscribe((data) => {
+      this.body.autorizaavisotelematico = data.autorizaavisotelematico;
+      this.body.asistidoautorizaeejg = data.asistidoautorizaeejg;
+      this.body.asistidosolicitajg = data.asistidosolicitajg;
+      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+    });
 
     this.getCombos();
     this.getColsDatosContacto();
     this.getDatosContacto();
-
   }
 
   ngOnChanges(changes: SimpleChanges) {

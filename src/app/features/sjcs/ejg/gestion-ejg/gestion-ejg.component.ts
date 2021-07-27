@@ -95,7 +95,7 @@ export class GestionEjgComponent implements OnInit {
    // this.progressSpinner = true;
 
     this.commonsService.checkAcceso(procesos_ejg.ejg)
-      .then(respuesta => {
+      .then(async respuesta => {
         this.permisoEscritura = respuesta;
 
         if (this.permisoEscritura == undefined) {
@@ -173,7 +173,7 @@ export class GestionEjgComponent implements OnInit {
           ];
           
         }
-        this.obtenerPermisos();
+        await this.obtenerPermisos();
       }
       ).catch(error => console.error(error));
     //this.commonsService.scrollTop();
@@ -227,7 +227,7 @@ export class GestionEjgComponent implements OnInit {
     this.location.back();
   }
 
-  obtenerPermisos() {
+  async obtenerPermisos() {
     //TarjetaResumen
     this.commonsService.checkAcceso(procesos_ejg.tarjetaResumen)
       .then(respuesta => {

@@ -51,7 +51,6 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 	esMenorEdad: boolean = false;
 	idPersona;
 	permisoEscritura;
-	showTarjetaPermiso: boolean = false;
 	representanteValido: boolean = false;
 	confirmationAssociate: boolean = false;
 	confirmationDisassociate: boolean = false;
@@ -77,28 +76,12 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 	ngOnInit() {
 		this.progressSpinner = true;
 
-		this.commonsService
-			.checkAcceso(procesos_justiciables.tarjetaDatosRepresentante)
-			.then((respuesta) => {
-				this.permisoEscritura = respuesta;
+		this.getTiposIdentificacion();
+		this.persistenceService.clearFiltrosAux();
 
-				if (this.permisoEscritura == undefined) {
-					this.showTarjetaPermiso = false;
-					this.progressSpinner = false;
-				} else {
-					this.showTarjetaPermiso = true;
-					this.getTiposIdentificacion();
-					this.persistenceService.clearFiltrosAux();
-				}
+		this.validateShowEnlaceepresentante();
 
-				this.validateShowEnlaceepresentante();
-			})
-			.catch((error) => console.error(error));
-
-		/* if (sessionStorage.getItem("newRepresentante")) {
-			let data = JSON.parse(sessionStorage.getItem("newRepresentante"));
-			this.generalBody = data;
-		} */
+		this.progressSpinner = false;
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
