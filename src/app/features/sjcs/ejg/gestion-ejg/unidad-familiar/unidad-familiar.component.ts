@@ -477,59 +477,52 @@ export class UnidadFamiliarComponent implements OnInit {
   downloadEEJ() {
     this.progressSpinner = true;
 
-    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
-    if (msg != undefined) {
-      this.msgs = msg;
-      this.progressSpinner = false;
-    } else {
+    let datosToCall = [];
 
-      let datosToCall = [];
+    this.selectedDatos.forEach(element => {
+      let ejgData: EJGItem = new EJGItem();
 
-      this.selectedDatos.forEach(element => {
-        let ejgData: EJGItem = new EJGItem();
+      ejgData.annio = this.body.annio;
+      ejgData.idInstitucion = this.body.idInstitucion;
+      ejgData.numEjg = this.body.numEjg;
+      ejgData.tipoEJG = this.body.tipoEJG;
+      ejgData.nif = element.pjg_nif;
 
-        ejgData.annio = this.body.annio;
-        ejgData.idInstitucion = this.body.idInstitucion;
-        ejgData.numEjg = this.body.numEjg;
-        ejgData.tipoEJG = this.body.tipoEJG;
-        ejgData.nif = element.pjg_nif;
+      datosToCall.push(ejgData);
+    });
 
-        datosToCall.push(ejgData);
-      });
+    this.sigaServices.postDownloadFiles("gestionejg_descargarExpedientesJG", datosToCall).subscribe(
+      data => {
+        this.progressSpinner = false;
 
-      this.sigaServices.postDownloadFiles("gestionejg_descargarExpedientesJG", datosToCall).subscribe(
-        data => {
-          this.progressSpinner = false;
-
-          if (data.size == 0) {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-          } else {
-            let blob = null;
-
-            let now = new Date();
-            let month = now.getMonth() + 1;
-            let nombreFichero = "eejg_" + now.getFullYear();
-
-            if (month < 10) {
-              nombreFichero = nombreFichero + "0" + month;
-            } else {
-              nombreFichero += month;
-            }
-
-            nombreFichero += now.getDate() + "_" + now.getHours() + "" + now.getMinutes();
-
-            let mime = data.type;
-            blob = new Blob([data], { type: mime });
-            saveAs(blob, nombreFichero);
-          }
-        },
-        err => {
-          this.progressSpinner = false;
+        if (data.size == 0) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-          console.log(err);
+        } else {
+          let blob = null;
+
+          let now = new Date();
+          let month = now.getMonth() + 1;
+          let nombreFichero = "eejg_" + now.getFullYear();
+
+          if (month < 10) {
+            nombreFichero = nombreFichero + "0" + month;
+          } else {
+            nombreFichero += month;
+          }
+
+          nombreFichero += now.getDate() + "_" + now.getHours() + "" + now.getMinutes();
+
+          let mime = data.type;
+          blob = new Blob([data], { type: mime });
+          saveAs(blob, nombreFichero);
         }
-      );
-    }
+      },
+      err => {
+        this.progressSpinner = false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        console.log(err);
+      }
+    );
   }
 
   checkPermisosSolicitarEEJ() {

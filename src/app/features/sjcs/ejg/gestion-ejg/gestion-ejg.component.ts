@@ -32,21 +32,20 @@ export class GestionEjgComponent implements OnInit {
   idEJG;
   filtros;
   filtrosAux;
-  permisoEscritura: boolean = true;
   modoEdicion: boolean = true;
-  permisoEscrituraResumen: boolean = false;
-  permisoEscrituraDatosGenerales: boolean = false;
-  permisoEscrituraServiciosTramitacion: boolean = false;
-  permisoEscrituraUnidadFamiliar: boolean = false;
-  permisoEscrituraExpedientesEconomicos: boolean = false;
-  permisoEscrituraRelaciones: boolean = false;
-  permisoEscrituraEstados: boolean = false;
-  permisoEscrituraDocumentacion: boolean = false;
-  permisoEscrituraInformeCalif: boolean = false;
-  permisoEscrituraResolucion: boolean = false;
-  permisoEscrituraImpugnacion: boolean = false;
-  permisoEscrituraRegtel: boolean = false;
-  permisoEscrituraComunicaciones: boolean = false;
+  permisoEscrituraResumen;
+  permisoEscrituraDatosGenerales;
+  permisoEscrituraServiciosTramitacion;
+  permisoEscrituraUnidadFamiliar;
+  permisoEscrituraExpedientesEconomicos;
+  permisoEscrituraRelaciones;
+  permisoEscrituraEstados;
+  permisoEscrituraDocumentacion;
+  permisoEscrituraInformeCalif;
+  permisoEscrituraResolucion;
+  permisoEscrituraImpugnacion;
+  permisoEscrituraRegtel;
+  permisoEscrituraComunicaciones;
 
   iconoTarjetaResumen = "clipboard";
 
@@ -91,91 +90,76 @@ export class GestionEjgComponent implements OnInit {
     private router: Router,
     private commonsService: CommonsService) { }
 
-  ngOnInit() {
-   // this.progressSpinner = true;
+  async ngOnInit() {
+    this.progressSpinner = true;
 
-    this.commonsService.checkAcceso(procesos_ejg.ejg)
-      .then(async respuesta => {
-        this.permisoEscritura = respuesta;
-
-        if (this.permisoEscritura == undefined) {
-          sessionStorage.setItem("codError", "403");
-          sessionStorage.setItem(
-            "descError",
-            this.translateService.instant("generico.error.permiso.denegado")
-          );
-         // this.progressSpinner = false;
-          this.router.navigate(["/errorAcceso"]);
-        } else {
-          //El padre de todas las tarjetas se encarga de enviar a sus hijos el objeto nuevo del EJG que se quiere mostrar
-          //Para indicar que estamos en modo de creacion de representante
-          if(sessionStorage.getItem("EJGItemDesigna")){
-            //obtiene un EJG desde la tarjeta relaciones de la ficha designacion
-            this.body = JSON.parse(sessionStorage.getItem("EJGItemDesigna"));
-            this.persistenceService.setDatos(this.body);
-            this.modoEdicion = true;
-            sessionStorage.removeItem("EJGItemDesigna")
-          }else{
-            this.body = this.persistenceService.getDatos();
-            if (this.body != undefined && this.body != null) {
-              this.modoEdicion = true;
-              //  if (this.dato.fechabaja != null) {
-              //    this.modoEdicion = true;
-              //  }
-            } else {
-              //hemos pulsado nuevo 
-              if(sessionStorage.getItem("Nuevo")){
-                sessionStorage.removeItem("Nuevo");
-                this.body = new EJGItem();
-                this.modoEdicion = false;
-              }
-              //vuelve de asociar una unidad familiar
-              else{
-                this.body = JSON.parse(sessionStorage.getItem("EJGItem"));
-                sessionStorage.removeItem("EJGItem");
-                this.persistenceService.setDatos(this.body);
-                this.modoEdicion = true;
-              }
-            }
-          }
-
-          sessionStorage.removeItem("EJGItem");
-          this.datos = [
-            {
-              label: "Año/Numero EJG",
-              value: this.body.numAnnioProcedimiento
-            },
-            {
-              label: "Solicitante",
-              value: this.body.nombreApeSolicitante
-            },
-
-            {
-              label: "Estado EJG",
-              value: this.body.estadoEJG
-            },
-            {
-              label: "Designado",
-              value: this.body.apellidosYNombre
-            },
-            {
-              label: "Dictamen",
-              value: this.body.dictamenSing
-            },
-            {
-              label: "CAJG",
-              value: this.body.resolucion
-            },
-            {
-              label: "Impugnación",
-              value: this.body.impugnacion
-            },
-          ];
-          
+    //El padre de todas las tarjetas se encarga de enviar a sus hijos el objeto nuevo del EJG que se quiere mostrar
+    //Para indicar que estamos en modo de creacion de representante
+    if(sessionStorage.getItem("EJGItemDesigna")){
+      //obtiene un EJG desde la tarjeta relaciones de la ficha designacion
+      this.body = JSON.parse(sessionStorage.getItem("EJGItemDesigna"));
+      this.persistenceService.setDatos(this.body);
+      this.modoEdicion = true;
+      sessionStorage.removeItem("EJGItemDesigna")
+    }else{
+      this.body = this.persistenceService.getDatos();
+      if (this.body != undefined && this.body != null) {
+        this.modoEdicion = true;
+        //  if (this.dato.fechabaja != null) {
+        //    this.modoEdicion = true;
+        //  }
+      } else {
+        //hemos pulsado nuevo 
+        if(sessionStorage.getItem("Nuevo")){
+          sessionStorage.removeItem("Nuevo");
+          this.body = new EJGItem();
+          this.modoEdicion = false;
         }
-        await this.obtenerPermisos();
+        //vuelve de asociar una unidad familiar
+        else{
+          this.body = JSON.parse(sessionStorage.getItem("EJGItem"));
+          sessionStorage.removeItem("EJGItem");
+          this.persistenceService.setDatos(this.body);
+          this.modoEdicion = true;
+        }
       }
-      ).catch(error => console.error(error));
+    }
+
+    sessionStorage.removeItem("EJGItem");
+    this.datos = [
+      {
+        label: "Año/Numero EJG",
+        value: this.body.numAnnioProcedimiento
+      },
+      {
+        label: "Solicitante",
+        value: this.body.nombreApeSolicitante
+      },
+
+      {
+        label: "Estado EJG",
+        value: this.body.estadoEJG
+      },
+      {
+        label: "Designado",
+        value: this.body.apellidosYNombre
+      },
+      {
+        label: "Dictamen",
+        value: this.body.dictamenSing
+      },
+      {
+        label: "CAJG",
+        value: this.body.resolucion
+      },
+      {
+        label: "Impugnación",
+        value: this.body.impugnacion
+      },
+    ];
+        
+      await this.obtenerPermisos();
+      
     //this.commonsService.scrollTop();
     this.goTop();
   }
@@ -232,7 +216,6 @@ export class GestionEjgComponent implements OnInit {
     this.commonsService.checkAcceso(procesos_ejg.tarjetaResumen)
       .then(respuesta => {
         this.permisoEscrituraResumen = respuesta;
-        this.persistenceService.setPermisos(this.permisoEscrituraResumen);
       }
       ).catch(error => console.error(error));
 
@@ -240,15 +223,13 @@ export class GestionEjgComponent implements OnInit {
     this.commonsService.checkAcceso(procesos_ejg.datosGenerales)
       .then(respuesta => {
         this.permisoEscrituraDatosGenerales = respuesta;
-        this.persistenceService.setPermisos(this.permisoEscrituraDatosGenerales);
       }
       ).catch(error => console.error(error));
 
     //ServiciosTramitacion
-    this.commonsService.checkAcceso(procesos_ejg.serviciosTramit)
+    this.commonsService.checkAcceso(procesos_ejg.serviciosTramitacion)
       .then(respuesta => {
         this.permisoEscrituraServiciosTramitacion = respuesta;
-        this.persistenceService.setPermisos(this.permisoEscrituraServiciosTramitacion);
       }
       ).catch(error => console.error(error));
 
@@ -256,15 +237,13 @@ export class GestionEjgComponent implements OnInit {
     this.commonsService.checkAcceso(procesos_ejg.unidadFamiliar)
       .then(respuesta => {
         this.permisoEscrituraUnidadFamiliar = respuesta;
-        this.persistenceService.setPermisos(this.permisoEscrituraUnidadFamiliar);
       }
       ).catch(error => console.error(error));
 
     //ExpedientesEcon
-    this.commonsService.checkAcceso(procesos_ejg.expedientesEcon)
+    this.commonsService.checkAcceso(procesos_ejg.expedientesEconomicos)
       .then(respuesta => {
         this.permisoEscrituraExpedientesEconomicos = respuesta;
-        this.persistenceService.setPermisos(this.permisoEscrituraExpedientesEconomicos);
       }
       ).catch(error => console.error(error));
 
@@ -272,7 +251,6 @@ export class GestionEjgComponent implements OnInit {
     this.commonsService.checkAcceso(procesos_ejg.relaciones)
       .then(respuesta => {
         this.permisoEscrituraRelaciones = respuesta;
-        this.persistenceService.setPermisos(this.permisoEscrituraRelaciones);
       }
       ).catch(error => console.error(error));
 
@@ -280,7 +258,6 @@ export class GestionEjgComponent implements OnInit {
     this.commonsService.checkAcceso(procesos_ejg.estados)
       .then(respuesta => {
         this.permisoEscrituraEstados = respuesta;
-        this.persistenceService.setPermisos(this.permisoEscrituraEstados);
       }
       ).catch(error => console.error(error));
 
@@ -288,7 +265,6 @@ export class GestionEjgComponent implements OnInit {
     this.commonsService.checkAcceso(procesos_ejg.documentacion)
       .then(respuesta => {
         this.permisoEscrituraDocumentacion = respuesta;
-        this.persistenceService.setPermisos(this.permisoEscrituraDocumentacion);
       }
       ).catch(error => console.error(error));
 
@@ -296,7 +272,6 @@ export class GestionEjgComponent implements OnInit {
     this.commonsService.checkAcceso(procesos_ejg.informeCalif)
       .then(respuesta => {
         this.permisoEscrituraInformeCalif = respuesta;
-        this.persistenceService.setPermisos(this.permisoEscrituraInformeCalif);
       }
       ).catch(error => console.error(error));
 
@@ -304,7 +279,6 @@ export class GestionEjgComponent implements OnInit {
     this.commonsService.checkAcceso(procesos_ejg.resolucion)
       .then(respuesta => {
         this.permisoEscrituraResolucion = respuesta;
-        this.persistenceService.setPermisos(this.permisoEscrituraResolucion);
       }
       ).catch(error => console.error(error));
 
@@ -312,7 +286,6 @@ export class GestionEjgComponent implements OnInit {
     this.commonsService.checkAcceso(procesos_ejg.impugnacion)
       .then(respuesta => {
         this.permisoEscrituraImpugnacion = respuesta;
-        this.persistenceService.setPermisos(this.permisoEscrituraImpugnacion);
       }
       ).catch(error => console.error(error));
 
@@ -320,7 +293,6 @@ export class GestionEjgComponent implements OnInit {
     this.commonsService.checkAcceso(procesos_ejg.regtel)
       .then(respuesta => {
         this.permisoEscrituraRegtel = respuesta;
-        this.persistenceService.setPermisos(this.permisoEscrituraRegtel);
       }
       ).catch(error => console.error(error));
       
@@ -328,9 +300,9 @@ export class GestionEjgComponent implements OnInit {
     this.commonsService.checkAcceso(procesos_ejg.comunicaciones)
       .then(respuesta => {
         this.permisoEscrituraComunicaciones = respuesta;
-        this.persistenceService.setPermisos(this.permisoEscrituraComunicaciones);
       }
       ).catch(error => console.error(error));
+      
     this.enviarEnlacesTarjeta();
   }
 
@@ -433,6 +405,8 @@ export class GestionEjgComponent implements OnInit {
      };
 
      this.enlacesTarjetaResumen.push(pruebaTarjeta);
+
+     this.progressSpinner = false;
   }
 
   isCloseReceive(event) {
