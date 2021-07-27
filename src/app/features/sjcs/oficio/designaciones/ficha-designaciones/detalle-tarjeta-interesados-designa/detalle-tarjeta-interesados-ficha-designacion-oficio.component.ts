@@ -34,41 +34,7 @@ export class DetalleTarjetaInteresadosFichaDesignacionOficioComponent implements
   selectAll: boolean = false;
   progressSpinner: boolean = false;
 
-  fichasPosibles = [
-    {
-      origen: "justiciables",
-      activa: false
-    },
-    {
-      key: "generales",
-      activa: true
-    },
-    {
-      key: "personales",
-      activa: true
-    },
-    {
-      key: "solicitud",
-      activa: false
-    },
-    {
-      key: "representante",
-      activa: false
-    },
-    {
-      key: "asuntos",
-      activa: false
-    },
-    {
-      key: "abogado",
-      activa: false
-    },
-    {
-      key: "procurador",
-      activa: false
-    }
-
-  ];
+  
 
   @ViewChild("table") tabla;
 
@@ -211,7 +177,6 @@ export class DetalleTarjetaInteresadosFichaDesignacionOficioComponent implements
           this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
         }
         this.persistenceService.setDatos(datos[0]);
-        this.persistenceService.setFichasPosibles(this.fichasPosibles);
         sessionStorage.setItem("origin", "Interesado");
         sessionStorage.setItem("designa", JSON.stringify(this.interesados));
         this.persistenceService.clearBody();

@@ -415,9 +415,8 @@ export class DocumentacionComponent implements OnInit {
         },
         error => {
           //Maximo de tamaño permitido actualmente al hacer peticiones al back (5242880)
-          //Introducir en la BBDD
-          if(file.size>5242880) this.showMessage("info", "Información", "Se ha producido un error al cargar el fichero debido a que su tamaño excede el maximo permitido (5242880).");
-          else this.showMessage("info", "Información", "Se ha producido un error al cargar el fichero, vuelva a intentarlo de nuevo pasados unos minutos");
+          if(file.size>5242880) this.showMessage("info", "Información", this.translateService.instant("justiciaGratuita.ejg.documentacion.tamMax"));
+          else this.showMessage("info", "Información", this.translateService.instant("justiciaGratuita.ejg.documentacion.errorFich"));
         },
         () => {
           this.progressSpinner = false;
@@ -444,7 +443,7 @@ export class DocumentacionComponent implements OnInit {
             blob = new Blob([data], { type: mime });
             saveAs(blob, documentos[0].nombreFichero);
           }
-          else this.showMessage("error", "Información", "La documentación seleccionada no tiene un fichero asociado");
+          else this.showMessage("error", "Información", this.translateService.instant("justiciaGratuita.ejg.documentacion.noFich"));
 
         } else {
 
@@ -595,8 +594,7 @@ export class DocumentacionComponent implements OnInit {
     } else {
       if(this.body.idDocumentacion!=null) this.subirFichero(event);
       else {
-        //Introducir en la BBDD
-        this.msgs = [{ severity: "error", summary: "Error", detail: "Debe guardar el documento nuevo antes de introducir un fichero." }];
+        this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant("justiciaGratuita.ejg.documentacion.disNew") }];
       }
     }
   }
