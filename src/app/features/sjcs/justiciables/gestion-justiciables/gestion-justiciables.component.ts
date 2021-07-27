@@ -23,7 +23,7 @@ export class GestionJusticiablesComponent implements OnInit {
 
   fichasPosibles;
   modoEdicion: boolean;
-  body: JusticiableItem ;
+  body: JusticiableItem;
   solicitante: JusticiableItem;
   justiciableBusquedaItem: JusticiableBusquedaItem;
   representanteBusquedaItem: JusticiableBusquedaItem;
@@ -69,10 +69,96 @@ export class GestionJusticiablesComponent implements OnInit {
     if (sessionStorage.getItem("origin") == "Interesado") {
       //sessionStorage.removeItem('origin');
       this.fromInteresado = true;
+
+      let fichasPosiblesInteresados = [
+        {
+          origen: "justiciables",
+          activa: false
+        },
+        {
+          key: "generales",
+          activa: true
+        },
+        {
+          key: "personales",
+          activa: true
+        },
+        {
+          key: "solicitud",
+          activa: false
+        },
+        {
+          key: "representante",
+          activa: false
+        },
+        {
+          key: "asuntos",
+          activa: false
+        },
+        {
+          key: "abogado",
+          activa: false
+        },
+        {
+          key: "procurador",
+          activa: false
+        },
+        {
+          key: "unidadFamiliar",
+          activa: false
+        }
+
+      ];
+
+
+      this.persistenceService.setFichasPosibles(fichasPosiblesInteresados);
     }
     if (sessionStorage.getItem("origin") == "Contrario") {
       //sessionStorage.removeItem('origin');
       this.fromContrario = true;
+
+
+      let fichasPosiblesContrarios = [
+        {
+          origen: "justiciables",
+          activa: false
+        },
+        {
+          key: "generales",
+          activa: true
+        },
+        {
+          key: "personales",
+          activa: true
+        },
+        {
+          key: "solicitud",
+          activa: true
+        },
+        {
+          key: "representante",
+          activa: true
+        },
+        {
+          key: "asuntos",
+          activa: true
+        },
+        {
+          key: "abogado",
+          activa: true
+        },
+        {
+          key: "procurador",
+          activa: true
+        },
+        {
+          key: "unidadFamiliar",
+          activa: false
+        }
+
+      ];
+
+      this.persistenceService.setFichasPosibles(fichasPosiblesContrarios);
     }
 
     if (sessionStorage.getItem("origin") == "ContrarioEJG") {
@@ -110,8 +196,12 @@ export class GestionJusticiablesComponent implements OnInit {
         {
           key: "procurador",
           activa: true
+        },
+        {
+          key: "unidadFamiliar",
+          activa: false
         }
-    
+
       ];
       this.persistenceService.setFichasPosibles(fichasPosiblesContrariosEJG);
     }
@@ -185,10 +275,10 @@ export class GestionJusticiablesComponent implements OnInit {
     //Creacion de una nueva unidad familiar
     if (this.fromUniFamiliar && sessionStorage.getItem("Nuevo")) {
       this.modoEdicion = true;
-    this.searchSolicitante();
-    //Proviene de la tarjeta de unidad familiar directamente
-    } else if (this.fromUniFamiliar){
-    this.modoEdicion = true;
+      this.searchSolicitante();
+      //Proviene de la tarjeta de unidad familiar directamente
+    } else if (this.fromUniFamiliar) {
+      this.modoEdicion = true;
       this.fillJusticiableBuesquedaItemToUnidadFamiliarEJG();
     }
     else if (this.persistenceService.getDatos() != null && !this.modoRepresentante) {
@@ -223,89 +313,89 @@ export class GestionJusticiablesComponent implements OnInit {
     this.progressSpinner = false;
   }
 
-  async checkAcceso(){
-    if(this.fromUniFamiliar){
+  async checkAcceso() {
+    if (this.fromUniFamiliar) {
       this.commonsService.checkAcceso(procesos_ejg.detalleUF)
-      .then(respuesta => {
-        this.permisoEscritura = respuesta;
+        .then(respuesta => {
+          this.permisoEscritura = respuesta;
 
-        //hay que comprobar permisos para las tarjetas
-        if(this.permisoEscritura!=undefined){
-          this.checkAccesoTarjetasUF();
-        }else{
-          sessionStorage.setItem("codError", "403");
-          sessionStorage.setItem(
-            "descError",
-            this.translateService.instant("generico.error.permiso.denegado")
-          );
-          this.progressSpinner = false;
-          this.router.navigate(["/errorAcceso"]);
-        }
-      }).catch(error => console.error(error));
-    }else{
+          //hay que comprobar permisos para las tarjetas
+          if (this.permisoEscritura != undefined) {
+            this.checkAccesoTarjetasUF();
+          } else {
+            sessionStorage.setItem("codError", "403");
+            sessionStorage.setItem(
+              "descError",
+              this.translateService.instant("generico.error.permiso.denegado")
+            );
+            this.progressSpinner = false;
+            this.router.navigate(["/errorAcceso"]);
+          }
+        }).catch(error => console.error(error));
+    } else {
       this.commonsService.checkAcceso(procesos_justiciables.gestionJusticiables)
-      .then(respuesta => {
-        this.permisoEscritura = respuesta;
+        .then(respuesta => {
+          this.permisoEscritura = respuesta;
 
-        if(this.permisoEscritura!=undefined){
-          this.checkAccesoTarjetas()
-        }else{
-          sessionStorage.setItem("codError", "403");
-          sessionStorage.setItem(
-            "descError",
-            this.translateService.instant("generico.error.permiso.denegado")
-          );
-          this.progressSpinner = false;
-          this.router.navigate(["/errorAcceso"]);
-        }
+          if (this.permisoEscritura != undefined) {
+            this.checkAccesoTarjetas()
+          } else {
+            sessionStorage.setItem("codError", "403");
+            sessionStorage.setItem(
+              "descError",
+              this.translateService.instant("generico.error.permiso.denegado")
+            );
+            this.progressSpinner = false;
+            this.router.navigate(["/errorAcceso"]);
+          }
 
-      }).catch(error => console.error(error));
+        }).catch(error => console.error(error));
     }
   }
 
-  checkAccesoTarjetasUF(){
+  checkAccesoTarjetasUF() {
     this.commonsService.checkAcceso(procesos_ejg.datosGeneralesUF)
-    .then(respuesta => {
-      this.showDatosGenerales = respuesta;
-    }).catch(error => console.error(error));
+      .then(respuesta => {
+        this.showDatosGenerales = respuesta;
+      }).catch(error => console.error(error));
 
     this.commonsService.checkAcceso(procesos_ejg.datosSolicitudesUF)
-    .then(respuesta => {
-      this.showDatosSolicitudes = respuesta;
-    }).catch(error => console.error(error));
+      .then(respuesta => {
+        this.showDatosSolicitudes = respuesta;
+      }).catch(error => console.error(error));
 
     this.commonsService.checkAcceso(procesos_ejg.datosDireccionContactoUF)
-    .then(respuesta => {
-      this.showDatosPersonales = respuesta;
-    }).catch(error => console.error(error));
+      .then(respuesta => {
+        this.showDatosPersonales = respuesta;
+      }).catch(error => console.error(error));
 
     this.commonsService.checkAcceso(procesos_ejg.datosAdicionalesUF)
-    .then(respuesta => {
-      this.showDatosUF = respuesta;
-    }).catch(error => console.error(error));
+      .then(respuesta => {
+        this.showDatosUF = respuesta;
+      }).catch(error => console.error(error));
 
     this.commonsService.checkAcceso(procesos_ejg.datosRepresentanteLegalUF)
-    .then(respuesta => {
-      this.showDatosRepresentantes = respuesta;
-    }).catch(error => console.error(error));
+      .then(respuesta => {
+        this.showDatosRepresentantes = respuesta;
+      }).catch(error => console.error(error));
   }
 
-  checkAccesoTarjetas(){
+  checkAccesoTarjetas() {
     this.commonsService.checkAcceso(procesos_justiciables.tarjetaDatosGenerales)
-    .then(respuesta => {
-      this.showDatosGenerales = respuesta;
-      this.showDatosPersonales = respuesta;
-    }).catch(error => console.error(error));
+      .then(respuesta => {
+        this.showDatosGenerales = respuesta;
+        this.showDatosPersonales = respuesta;
+      }).catch(error => console.error(error));
 
     this.commonsService.checkAcceso(procesos_justiciables.tarjetaDatosSolicitud)
-    .then(respuesta => {
-      this.showDatosSolicitudes = respuesta;
-    }).catch(error => console.error(error));
+      .then(respuesta => {
+        this.showDatosSolicitudes = respuesta;
+      }).catch(error => console.error(error));
 
     this.commonsService.checkAcceso(procesos_justiciables.tarjetaDatosRepresentante)
-    .then(respuesta => {
-      this.showDatosSolicitudes = respuesta;
-    }).catch(error => console.error(error));
+      .then(respuesta => {
+        this.showDatosSolicitudes = respuesta;
+      }).catch(error => console.error(error));
   }
 
   fillJusticiableBuesquedaItemToUnidadFamiliarEJG() {
@@ -342,23 +432,23 @@ export class GestionJusticiablesComponent implements OnInit {
         //si se crea una nueva unidad familiar
 
         this.body = new JusticiableItem();
-        
-          //datos de contacto
-          this.body.correoelectronico = this.solicitante.correoelectronico;
-          this.body.fax = this.solicitante.fax;
-          this.body.telefonos = this.solicitante.telefonos;
 
-          //Direccion
-          this.body.direccion = this.solicitante.direccion;
-          this.body.idtipovia = this.solicitante.idtipovia;
-          this.body.numerodir = this.solicitante.numerodir;
-          this.body.escaleradir = this.solicitante.escaleradir;
-          this.body.pisodir = this.solicitante.pisodir;
-          this.body.puertadir = this.solicitante.puertadir;
-          this.body.idpaisdir1 = this.solicitante.idpaisdir1;
-          this.body.codigopostal = this.solicitante.codigopostal;
-          this.body.idprovincia = this.solicitante.idprovincia;
-          this.body.idpoblacion = this.solicitante.idpoblacion;
+        //datos de contacto
+        this.body.correoelectronico = this.solicitante.correoelectronico;
+        this.body.fax = this.solicitante.fax;
+        this.body.telefonos = this.solicitante.telefonos;
+
+        //Direccion
+        this.body.direccion = this.solicitante.direccion;
+        this.body.idtipovia = this.solicitante.idtipovia;
+        this.body.numerodir = this.solicitante.numerodir;
+        this.body.escaleradir = this.solicitante.escaleradir;
+        this.body.pisodir = this.solicitante.pisodir;
+        this.body.puertadir = this.solicitante.puertadir;
+        this.body.idpaisdir1 = this.solicitante.idpaisdir1;
+        this.body.codigopostal = this.solicitante.codigopostal;
+        this.body.idprovincia = this.solicitante.idprovincia;
+        this.body.idpoblacion = this.solicitante.idpoblacion;
 
         this.progressSpinner = false;
       },
@@ -555,9 +645,9 @@ export class GestionJusticiablesComponent implements OnInit {
     //}
     else {
       //Para que se abra la tarjeta de unidad familiar y se haga scroll a su posicion
-      if (this.fromUniFamiliar){
-         sessionStorage.setItem('tarjeta', 'unidadFamiliar');
-         sessionStorage.setItem("origin","UnidadFamiliar");
+      if (this.fromUniFamiliar) {
+        sessionStorage.setItem('tarjeta', 'unidadFamiliar');
+        sessionStorage.setItem("origin", "UnidadFamiliar");
       }
       //this.router.navigate(["/justiciables"]);
 

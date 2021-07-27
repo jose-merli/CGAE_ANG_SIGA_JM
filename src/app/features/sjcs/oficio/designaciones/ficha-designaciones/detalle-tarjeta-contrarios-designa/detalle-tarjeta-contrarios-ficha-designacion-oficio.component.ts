@@ -33,41 +33,6 @@ export class DetalleTarjetaContrariosFichaDesignacionOficioComponent implements 
   selectAll: boolean= false;
   progressSpinner: boolean = false;
   
-  fichasPosibles = [
-    {
-      origen: "justiciables",
-      activa: false
-    },
-    {
-      key: "generales",
-      activa: true
-    },
-    {
-      key: "personales",
-      activa: true
-    },
-    {
-      key: "solicitud",
-      activa: true
-    },
-    {
-      key: "representante",
-      activa: true
-    },
-    {
-      key: "asuntos",
-      activa: true
-    },
-    {
-      key: "abogado",
-      activa: true
-    },
-    {
-      key: "procurador",
-      activa: true
-    }
-
-  ];
 
   @ViewChild("table") tabla;
 
@@ -192,7 +157,6 @@ export class DetalleTarjetaContrariosFichaDesignacionOficioComponent implements 
           this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
         }
         this.persistenceService.setDatos(datos[0]);
-        this.persistenceService.setFichasPosibles(this.fichasPosibles);
         sessionStorage.setItem("origin","Contrario");
         sessionStorage.setItem("contrarioDesigna", JSON.stringify(evento));
         this.persistenceService.clearBody();
