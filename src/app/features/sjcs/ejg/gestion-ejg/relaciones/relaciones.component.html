@@ -115,15 +115,19 @@
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
               <div>
-                <div *ngIf="!checkPre(dato) ">
-                  <span>{{dato[col.field]}}</span>
+                <div *ngIf="col.field != 'sjcs'">
+                  <span>
+                    {{dato[col.field]}}
+                  </span>
                 </div>
-                <div *ngIf="col.field == 'sjcs' ">
-                  <span class="enlace" (click) = "checkPermisosConsultEditRelacion(dato)">{{dato[col.field]}}</span>
+                <div *ngIf="checkPre(dato) && col.field == 'sjcs'">
+                  <span *ngIf="isPreDesigna == true" class="enlace" (click)="navigateToFichaPre()">{{dato[col.field]}}</span>
+                  <span *ngIf="isPreDesigna == false" class="enlace" (click)="checkPermisosConsultEditRelacion(dato)">{{dato[col.field]}}</span>
                 </div>
-                <div *ngIf="checkPre(dato)">
-                  <span class ="enlace" (click)="navigateToFichaPre()">{{dato[col.field]}}</span>
-                </div>
+                <!--   <div *ngIf="checkPre(dato) && col.field == sjcs && dato[col.field] != 'PRE-DESIGNACION'">
+                    <span class="enlace" (click) = "checkPermisosConsultEditRelacion(dato)">{{dato[col.field]}}</span>
+                  </div> -->
+
               </div>
 
             </td>

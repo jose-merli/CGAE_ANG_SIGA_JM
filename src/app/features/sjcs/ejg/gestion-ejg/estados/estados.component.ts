@@ -358,6 +358,7 @@ export class EstadosComponent implements OnInit {
     let icon = "fa fa-edit";
 
     this.confirmationService.confirm({
+      key:'addEstado',
       message: mess,
       icon: icon,
       accept: () => {
@@ -411,7 +412,6 @@ export class EstadosComponent implements OnInit {
        );
        this.creaEstado = false;
     }else{
-      console.log("edita")
       
        this.progressSpinner = true;
        this.selectedDatos[0].fechaInicio=this.fechaEstado;

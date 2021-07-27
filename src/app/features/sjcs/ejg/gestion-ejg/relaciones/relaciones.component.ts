@@ -32,7 +32,7 @@ export class RelacionesComponent implements OnInit {
   msgs;
   selectedItem: number = 10;
   selectAll;
-  selectedDatos:any[] = [];
+  selectedDatos: any[] = [];
   buscadores = [];
   numSelected = 0;
   selectMultiple: boolean = false;
@@ -49,6 +49,7 @@ export class RelacionesComponent implements OnInit {
   noAsociaASI: boolean = false;
   noAsociaDES: boolean = false;
   noCreaDes: boolean = false;
+  isPreDesigna: boolean= false;
 
   @ViewChild("table") table: DataTable;
 
@@ -65,7 +66,7 @@ export class RelacionesComponent implements OnInit {
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
   @Input() openTarjetaRelaciones;
-  
+
 
   constructor(private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
@@ -87,7 +88,7 @@ export class RelacionesComponent implements OnInit {
       this.nuevo = true;
       this.modoEdicion = true;
     }
-    
+
     this.getCols();
   }
 
@@ -100,7 +101,7 @@ export class RelacionesComponent implements OnInit {
     }
   }
 
-  
+
 
   esFichaActiva(key) {
 
@@ -132,29 +133,29 @@ export class RelacionesComponent implements OnInit {
         this.nRelaciones = this.relaciones.length;
         //obtiene el tipo en caso de devolver solo 1.
         //deshabilitacion de botones en caso de obtener una relacion de cada tipo
-      //ya que solo puede haber una sola relacion
-      this.relaciones.forEach(relacion => {
-        relacion.fechaasunto = this.formatDate(relacion.fechaasunto);
-        switch (relacion.sjcs) {
-          case 'ASISTENCIA':
-            this.noAsociaASI = true;
-            break;
-          case 'SOJ':
-            this.noAsociaSOJ = true;
-            break;
-          case 'DESIGNACIÓN':
-            //en caso de designacion, si ya esta relacionado no se podra crear una nueva designacion para ese EJG
-            this.noAsociaDES = true;
-            this.noCreaDes = true;
-            break;
+        //ya que solo puede haber una sola relacion
+        this.relaciones.forEach(relacion => {
+          relacion.fechaasunto = this.formatDate(relacion.fechaasunto);
+          switch (relacion.sjcs) {
+            case 'ASISTENCIA':
+              this.noAsociaASI = true;
+              break;
+            case 'SOJ':
+              this.noAsociaSOJ = true;
+              break;
+            case 'DESIGNACIÓN':
+              //en caso de designacion, si ya esta relacionado no se podra crear una nueva designacion para ese EJG
+              this.noAsociaDES = true;
+              this.noCreaDes = true;
+              break;
             default:
-            this.noAsociaASI = false;
-            this.noAsociaSOJ = false;
-            this.noAsociaDES = false;
-            this.noCreaDes = false;
-            break;
-        }
-      })
+              this.noAsociaASI = false;
+              this.noAsociaSOJ = false;
+              this.noAsociaDES = false;
+              this.noCreaDes = false;
+              break;
+          }
+        })
         if (this.relaciones.length == 1) {
           this.tipoRelacion = this.relaciones[0].sjcs;
         }
@@ -164,11 +165,11 @@ export class RelacionesComponent implements OnInit {
         let pre = new RelacionesItem();
         pre.sjcs = "PRE-DESIGNACION";
         this.relaciones.push(pre);
-       // this.progressSpinner = false;
+        // this.progressSpinner = false;
       },
       err => {
         console.log(err);
-       // this.progressSpinner = false;
+        // this.progressSpinner = false;
         this.showMessage("error", this.translateServices.instant("general.message.incorrect"), this.translateServices.instant("general.mensaje.error.bbdd"));
       }
     );
@@ -179,8 +180,25 @@ export class RelacionesComponent implements OnInit {
   }
 
   checkPre(dato) {
-    if (dato.sjcs == "PRE-DESIGNACION") return true;
-    else return false;
+     if (dato.sjcs == "PRE-DESIGNACION" ){
+       this.isPreDesigna = true;
+      return true;
+     } 
+    else if(dato.sjcs == "ASISTENCIA"){
+      this.isPreDesigna = false;
+      return true; 
+    }else if(dato.sjcs == "SOJ"){
+      this.isPreDesigna = false;
+      return true; 
+    } else if(dato.sjcs == "DESIGNACIÓN"){
+      this.isPreDesigna = false;
+      return true; 
+    }else if(dato.sjcs == "EXPEDIENTE"){
+      this.isPreDesigna = false;
+      return true; 
+    }else{
+      return false;
+    }
   }
   openTab(evento) {
     if (this.persistenceService.getPermisos() != undefined) {
@@ -215,11 +233,11 @@ export class RelacionesComponent implements OnInit {
       { field: "anio", header: "justiciaGratuita.maestros.calendarioLaboralAgenda.anio", width: "3%" },
       { field: "numero", header: "justiciaGratuita.sjcs.designas.DatosIden.numero", width: "3%" },
       { field: "fechaasunto", header: "dato.jgr.guardia.saltcomp.fecha", width: '6%' },
-      { field: "descturno", header: "justiciaGratuita.justiciables.literal.turnoGuardia" , width: '6%'},
-      { field: "letrado", header: "justiciaGratuita.sjcs.designas.colegiado" , width: '6%'},
-      { field: "interesado", header: "justiciaGratuita.sjcs.designas.datosInteresados" , width: '6%'},
+      { field: "descturno", header: "justiciaGratuita.justiciables.literal.turnoGuardia", width: '6%' },
+      { field: "letrado", header: "justiciaGratuita.sjcs.designas.colegiado", width: '6%' },
+      { field: "interesado", header: "justiciaGratuita.sjcs.designas.datosInteresados", width: '6%' },
       { field: "dilnigproc", header: "sjcs.oficio.designaciones.relaciones.numDiligNigNproc", width: '6%' },
-      { field: "resolucion", header: "justiciaGratuita.maestros.fundamentosResolucion.resolucion" , width: '6%'}
+      { field: "resolucion", header: "justiciaGratuita.maestros.fundamentosResolucion.resolucion", width: '6%' }
 
     ];
     this.cols.forEach(it => this.buscadores.push(""));
@@ -342,83 +360,91 @@ export class RelacionesComponent implements OnInit {
       }
     );*/
 
-    for( let dato of this.selectedDatos){
-     
+    for (let dato of this.selectedDatos) {
+
       let identificador = dato.sjcs;
 
       switch (identificador) {
         case 'ASISTENCIA':
-          let relacion:RelacionesItem = new RelacionesItem();
-     
-     relacion.idinstitucion = dato.idinstitucion;
-     relacion.numero = dato.numero;
-     relacion.anio = dato.anio;
+          let relacion: RelacionesItem = new RelacionesItem();
+
+          relacion.idinstitucion = dato.idinstitucion;
+          relacion.numero = dato.numero;
+          relacion.anio = dato.anio;
           this.sigaServices.post("gestionejg_borrarRelacionAsistenciaEJG", relacion).subscribe(
             n => {
               this.progressSpinner = false;
               this.showMessage("success", this.translateServices.instant("general.message.correct"), this.translateServices.instant("general.message.accion.realizada"));
-             
+              this.selectedDatos = [];
               this.getRelaciones();
             },
             err => {
               console.log(err);
               this.progressSpinner = false;
+              this.selectedDatos = [];
               this.showMessage("error", this.translateServices.instant("general.message.incorrect"), this.translateServices.instant("general.mensaje.error.bbdd"));
-              
+
             }
           );
           break;
-          case 'SOJ':
-            let relacionSOJ:RelacionesItem = new RelacionesItem();
-     
-            relacionSOJ.idinstitucion = dato.idinstitucion;
-            relacionSOJ.numero = dato.numero;
-            relacionSOJ.anio = dato.anio;
-            relacionSOJ.idtipo = dato.idtipo;
-            this.sigaServices.post("gestionejg_borrarRelacionSojEJG", relacionSOJ).subscribe(
-              n => {
-                this.progressSpinner = false;
-                this.showMessage("success", this.translateServices.instant("general.message.correct"), this.translateServices.instant("general.message.accion.realizada"));
-                
-                this.getRelaciones();
-              },
-              err => {
-                console.log(err);
-                this.progressSpinner = false;
-                this.showMessage("error", this.translateServices.instant("general.message.incorrect"), this.translateServices.instant("general.mensaje.error.bbdd"));
-                
-              }
-            );
+        case 'SOJ':
+          let relacionSOJ: RelacionesItem = new RelacionesItem();
+
+          relacionSOJ.idinstitucion = dato.idinstitucion;
+          relacionSOJ.numero = dato.numero;
+          relacionSOJ.anio = dato.anio;
+          relacionSOJ.idtipo = dato.idtipo;
+          this.sigaServices.post("gestionejg_borrarRelacionSojEJG", relacionSOJ).subscribe(
+            n => {
+              this.progressSpinner = false;
+              this.showMessage("success", this.translateServices.instant("general.message.correct"), this.translateServices.instant("general.message.accion.realizada"));
+              this.selectedDatos = [];
+              this.getRelaciones();
+            },
+            err => {
+              console.log(err);
+              this.progressSpinner = false;
+              this.selectedDatos = [];
+              this.showMessage("error", this.translateServices.instant("general.message.incorrect"), this.translateServices.instant("general.mensaje.error.bbdd"));
+
+            }
+          );
           break;
-          case 'DESIGNACIÓN':
-            let relacionDes:RelacionesItem = new RelacionesItem();
-     
-            relacionDes.idinstitucion = dato.idinstitucion;
-            relacionDes.numero = dato.numero;
-            relacionDes.anio = dato.anio;
-            relacionDes.idturno = dato.idturno;
-            this.sigaServices.post("gestionejg_borrarRelacion", relacionDes).subscribe(
-              n => {
-                this.progressSpinner = false;
-                this.showMessage("success", this.translateServices.instant("general.message.correct"), this.translateServices.instant("general.message.accion.realizada"));
-                
-                this.getRelaciones();
-              },
-              err => {
-                console.log(err);
-                this.progressSpinner = false;
-                this.showMessage("error", this.translateServices.instant("general.message.incorrect"), this.translateServices.instant("general.mensaje.error.bbdd"));
-                
-              }
-            );
-            
+        case 'DESIGNACIÓN':
+          /* let relacionDes: RelacionesItem = new RelacionesItem();
+
+          relacionDes.idinstitucion = dato.idinstitucion;
+          relacionDes.numero = dato.numero;
+          relacionDes.anio = dato.anio;
+          relacionDes.idturnodesigna = dato.idturno; */
+          
+          let request= [
+            dato.idinstitucion,dato.numero,dato.anio,dato.idturno,this.body.annio,this.body.numEjg,this.body.tipoEJG
+          ]
+
+          this.sigaServices.post("gestionejg_borrarRelacion", request).subscribe(
+            n => {
+              this.progressSpinner = false;
+              this.showMessage("success", this.translateServices.instant("general.message.correct"), this.translateServices.instant("general.message.accion.realizada"));
+              this.selectedDatos = [];
+              this.getRelaciones();
+            },
+            err => {
+              console.log(err);
+              this.progressSpinner = false;
+              this.selectedDatos = [];
+              this.showMessage("error", this.translateServices.instant("general.message.incorrect"), this.translateServices.instant("general.mensaje.error.bbdd"));
+
+            }
+          );
+
           break;
-      
+
         default:
           this.showMessage("error", this.translateServices.instant("general.message.incorrect"), "No se puede realizar la accion de eliminar. Tipo de Asunto incorrecto.");
           break;
       }
-      
+
     }
 
     /* let identificador = this.selectedDatos[0].sjcs
@@ -466,19 +492,18 @@ export class RelacionesComponent implements OnInit {
     }
   }
   consultEditRelacion(dato) {
-    this.progressSpinner = true;
-
+   
     //this.body.nuevoEJG=!this.modoEdicion;
 
- /*    this.sigaServices.post("gestionejg_consultEditRelacion", this.body).subscribe(
-      n => {
-        this.progressSpinner = false;
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner = false;
-      }
-    ); */
+    /*    this.sigaServices.post("gestionejg_consultEditRelacion", this.body).subscribe(
+         n => {
+           this.progressSpinner = false;
+         },
+         err => {
+           console.log(err);
+           this.progressSpinner = false;
+         }
+       ); */
     let identificador = dato.sjcs;
 
     switch (identificador) {
@@ -487,47 +512,46 @@ export class RelacionesComponent implements OnInit {
          * TODO: enlazar una vez este creada la pagina.
          */
 
-        this.router.navigate(['/rutaSinDefinir']);
-
+         this.porhacer();
         break;
-        case 'SOJ':
-          /**
-         * TODO: enlazar una vez este creada la pagina.
-         */
+      case 'SOJ':
+        /**
+       * TODO: enlazar una vez este creada la pagina.
+       */
 
-          this.router.navigate(['/soj']);
+        this.porhacer();
         break;
-        case 'DESIGNACIÓN':
-          let desItem = new DesignaItem(); 
-          let ape = this.selectedDatos[0].letrado.split(',')[0];
-          desItem.ano = this.selectedDatos[0].anio;
-          desItem.numero = this.selectedDatos[0].numero;
-          desItem.idInstitucion = this.selectedDatos[0].idinstitucion;
-          desItem.idTurno = this.selectedDatos[0].idturno;
-          desItem.codigo = this.selectedDatos[0].codigo;
-          desItem.descripcionTipoDesigna = this.selectedDatos[0].destipo
-          desItem.fechaEntradaInicio = this.selectedDatos[0].fechaasunto;
-          desItem.nombreTurno = this.selectedDatos[0].descturno;
-          desItem.nombreProcedimiento = this.selectedDatos[0].dilnigproc.split('-')[2];
-          desItem.nombreColegiado = this.selectedDatos[0].letrado;
-          desItem.apellido1Colegiado =ape.split(' ')[0];
-          desItem.apellido2Colegiado =ape.split(' ')[1];
+      case 'DESIGNACIÓN':
+        let desItem = new DesignaItem();
+        let ape = dato.letrado.split(',')[0];
+        desItem.ano = dato.anio;
+        desItem.numero = dato.numero;
+        desItem.idInstitucion = dato.idinstitucion;
+        desItem.idTurno = dato.idturno;
+        desItem.codigo = dato.codigo;
+        desItem.descripcionTipoDesigna = dato.destipo
+        desItem.fechaEntradaInicio = dato.fechaasunto;
+        desItem.nombreTurno = dato.descturno;
+        desItem.nombreProcedimiento = dato.dilnigproc.split('-')[2];
+        desItem.nombreColegiado = dato.letrado;
+        desItem.apellido1Colegiado = ape.split(' ')[0];
+        desItem.apellido2Colegiado = ape.split(' ')[1];
 
-          if (this.art27) sessionStorage.setItem("Art27", "true");
-          sessionStorage.setItem('designaItemLink',JSON.stringify(desItem));
-          sessionStorage.setItem("nuevaDesigna", "false");
-          this.router.navigate(['/fichaDesignaciones']);
+        if (this.art27) sessionStorage.setItem("Art27", "true");
+        sessionStorage.setItem('designaItemLink', JSON.stringify(desItem));
+        sessionStorage.setItem("nuevaDesigna", "false");
+        this.router.navigate(['/fichaDesignaciones']);
         break;
-        case 'PRE-DESIGNACION':
+      case 'PRE-DESIGNACION':
 
-          this.router.navigate(['/ficha-pre-designacion']);
-        break;
-    
-      default:
-        this.showMessage("error", this.translateServices.instant("general.message.incorrect"), "No se puede realizar la accion de eliminar. Tipo de Asunto incorrecto.");
+        this.router.navigate(['/ficha-pre-designacion']);
         break;
     }
 
+  }
+
+  porhacer() {
+    this.showMessage("success", this.translateServices.instant("general.message.correct"), this.translateServices.instant("general.message.accion.realizada"));
   }
 
   checkPermisosDelete() {

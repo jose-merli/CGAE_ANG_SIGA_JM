@@ -82,7 +82,7 @@ export let endpoints_EJG: any = {
     //Relaciones
     gestionejg_borrarRelacion: "ejg/gestion-ejg/borrarRelacion",
     gestionejg_borrarRelacionAsistenciaEJG: "ejg/gestion-ejg/borrarRelAsisEJG",
-    gestionejg_borrarRelacionSojEJG: "ejg/gestion-ejg/borrarRelAsisEJG",
+    gestionejg_borrarRelacionSojEJG: "ejg/gestion-ejg/borrarRelSojEJG",
     gestionejg_crearDesignacion: "ejg/gestion-ejg/crearDesignacion",
     gestionejg_asociarDesignacion: "ejg/gestion-ejg/asociarDesignacion",
     gestionejg_asociarSOJ: "ejg/gestion-ejg/asociarSOJ",

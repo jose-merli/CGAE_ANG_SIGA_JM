@@ -31,7 +31,7 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
   selectMultiple: boolean = false;
   selectionMode: string = "single";
   numSelected = 0;
-  body;
+  body:DesignaItem;
   selectedDatos: any[] = [];
 
   selectAll: boolean = false;
@@ -67,7 +67,9 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
         }
         element.fechaasunto = this.formatDate(element.fechaasunto);
       });
-      this.body = sessionStorage.getItem("designaItemLink");
+      this.body = JSON.parse(sessionStorage.getItem("designaItemLink"));
+    }else{
+      this.relacion.emit();
     }
 
     this.getCols();
@@ -224,9 +226,9 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
           this.sigaServices.post("designaciones_eliminarRelacionAsistenciaDes", relacion).subscribe(
             n => {
               this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-              this.progressSpinner = false;
               this.selectedDatos = [];
               this.relacion.emit();
+              this.progressSpinner = false;
             },
             err => {
               console.log(err);
@@ -237,19 +239,17 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
           );
           break;
         case 'E':
-          let relacionEjg: RelacionesItem = new RelacionesItem();
+          let anio = this.body.ano.toString().substr(1,4);
+          let request= [
+            dato.idinstitucion,dato.numero,dato.anio,dato.idtipo,anio,this.body.numero,this.body.idTurno
+          ]
 
-          relacionEjg.idinstitucion = dato.idinstitucion;
-          relacionEjg.numero = dato.numero;
-          relacionEjg.anio = dato.anio;
-          relacionEjg.idturno = dato.idturno;
-
-          this.sigaServices.post("designaciones_eliminarRelacion", relacionEjg).subscribe(
+          this.sigaServices.post("designaciones_eliminarRelacion", request).subscribe(
             n => {
               this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-              this.progressSpinner = false;
               this.selectedDatos = [];
               this.relacion.emit();
+              this.progressSpinner = false;
             },
             err => {
               console.log(err);
@@ -261,9 +261,6 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
 
           break;
 
-        default:
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No se puede realizar la accion de eliminar. Tipo de Asunto incorrecto.");
-          break;
       }
     }
   }
@@ -301,7 +298,7 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
     //this.persistenceService.clearDatos();
     sessionStorage.setItem("radioTajertaValue", 'ejg');
     //let desItem = JSON.stringify(this.body);
-    sessionStorage.setItem("Designacion", this.body);
+    sessionStorage.setItem("Designacion", JSON.stringify(this.body));
     this.router.navigate(["/busquedaAsuntos"]);
 
   }
@@ -317,7 +314,7 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
     //this.persistenceService.clearDatos();
     sessionStorage.setItem("radioTajertaValue", 'asi');
     //let desItem = JSON.stringify(this.body);
-    sessionStorage.setItem("Designacion", this.body);
+    sessionStorage.setItem("Designacion", JSON.stringify(this.body));
     this.router.navigate(["/busquedaAsuntos"]);
   }
   checkPermisosCrearEJG() {
@@ -330,15 +327,8 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
   }
   crearEJG() {
 
-    /*  this.progressSpinner = true;
-     //Recogemos los datos de nuevo de la capa de persistencia para captar posibles cambios realizados en el resto de tarjetas
-     this.body = this.persistenceService.getDatos();
-     this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-     //Utilizamos el bodyInicial para no tener en cuenta cambios que no se hayan guardado.
-     sessionStorage.setItem("EJG", JSON.stringify(this.bodyInicial));
-     sessionStorage.setItem("nuevaDesigna", "true");
-     if (this.art27) sessionStorage.setItem("Art27", "true");
-     this.progressSpinner = false; */
+     sessionStorage.setItem("EJGItemDesigna",JSON.stringify(this.body));
+     
     this.router.navigate(["/gestionEjg"]);
   }
 
@@ -360,31 +350,28 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
          * TODO: enlazar una vez este creada la pagina.
          */
 
-        this.router.navigate(['/rutaSinDefinir']);
+           this.porhacer();
           break;
         case 'E':
 
         let ejgItem = new EJGItem();
-        ejgItem.annio = this.selectedDatos[0].anio;
-        ejgItem.numero = this.selectedDatos[0].numero;
-        ejgItem.idInstitucion = this.selectedDatos[0].idinstitucion;
-        ejgItem.turnoDes = this.selectedDatos[0].desturno;
-        ejgItem.tipoEJG = this.selectedDatos[0].idtipo;
-        ejgItem.idTurno = this.selectedDatos[0].idturno;
-        ejgItem.numDesigna = this.selectedDatos[0].iddesigna;
-        ejgItem.fechaApertura = this.selectedDatos[0].fechaasunto;
-        ejgItem.numAnnioProcedimiento = this.selectedDatos[0].dilnigproc.split(' - ')[2];
-        ejgItem.numerodiligencia = this.selectedDatos[0].dilnigproc.split(' - ')[0];
-        ejgItem.nig = this.selectedDatos[0].dilnigproc.split(' - ')[1];
+        ejgItem.annio = dato.anio;
+        ejgItem.numero = dato.numero;
+        ejgItem.idInstitucion = dato.idinstitucion;
+        ejgItem.turnoDes = dato.desturno;
+        ejgItem.tipoEJG = dato.idtipo;
+        ejgItem.idTurno = dato.idturno;
+        ejgItem.numDesigna = dato.iddesigna;
+        ejgItem.fechaApertura = dato.fechaasunto;
+        ejgItem.numAnnioProcedimiento = dato.dilnigproc.split(' - ')[2];
+        ejgItem.numerodiligencia = dato.dilnigproc.split(' - ')[0];
+        ejgItem.nig = dato.dilnigproc.split(' - ')[1];
 
         sessionStorage.setItem("EJGItemDesigna",JSON.stringify(ejgItem));
 
           this.router.navigate(["/gestionEjg"]);
           break;
 
-        default:
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No se puede realizar la accion de eliminar. Tipo de Asunto incorrecto.");
-          break;
       }
     }
   }

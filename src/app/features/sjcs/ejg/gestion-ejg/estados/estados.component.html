@@ -224,6 +224,12 @@
       <button type="button" pButton icon="fa-close" label="No" (click)="delEstado.reject()"></button>
     </p-footer>
   </p-confirmDialog>
+  <p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" key="addEstado" #addEstado>
+    <p-footer>
+      <button type="button" pButton icon="fa-check" label="Si" (click)="addEstado.accept()"></button>
+      <button type="button" pButton icon="fa-close" label="No" (click)="addEstado.reject()"></button>
+    </p-footer>
+  </p-confirmDialog>
 </div>
 
 <!--DIALOG ANADIR ESTADO-->
