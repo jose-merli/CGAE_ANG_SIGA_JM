@@ -53,8 +53,8 @@ export class GestionJusticiablesComponent implements OnInit {
   showDatosUF;
   showDatosRepresentantes;
   showAsuntos;
-  showDatosProcuradorContrario;
-  showDatosAbogadoContrario;
+  showProcuradorContrario;
+  showAbogadoContrario;
 
   constructor(private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -335,7 +335,27 @@ export class GestionJusticiablesComponent implements OnInit {
             this.router.navigate(["/errorAcceso"]);
           }
         }).catch(error => console.error(error));
-    } else {
+
+    }else if(this.fromContrarioEJG){
+      this.commonsService.checkAcceso(procesos_ejg.detalleContrarios)
+        .then(respuesta => {
+          this.permisoEscritura = respuesta;
+
+          //hay que comprobar permisos para las tarjetas
+          if (this.permisoEscritura != undefined) {
+            this.checkAccesoTarjetasDetalleContrarios();
+          } else {
+            sessionStorage.setItem("codError", "403");
+            sessionStorage.setItem(
+              "descError",
+              this.translateService.instant("generico.error.permiso.denegado")
+            );
+            this.progressSpinner = false;
+            this.router.navigate(["/errorAcceso"]);
+          }
+        }).catch(error => console.error(error));
+
+    }else {
       this.commonsService.checkAcceso(procesos_justiciables.gestionJusticiables)
         .then(respuesta => {
           this.permisoEscritura = respuesta;
@@ -354,6 +374,43 @@ export class GestionJusticiablesComponent implements OnInit {
 
         }).catch(error => console.error(error));
     }
+  }
+
+  checkAccesoTarjetasDetalleContrarios() {
+    this.commonsService.checkAcceso(procesos_ejg.datosGeneralesContrarios)
+      .then(respuesta => {
+        this.showDatosGenerales = respuesta;
+      }).catch(error => console.error(error));
+
+    this.commonsService.checkAcceso(procesos_ejg.datosSolicitudesContrarios)
+      .then(respuesta => {
+        this.showDatosSolicitudes = respuesta;
+      }).catch(error => console.error(error));
+
+    this.commonsService.checkAcceso(procesos_ejg.datosDireccionContactoContrarios)
+      .then(respuesta => {
+        this.showDatosPersonales = respuesta;
+      }).catch(error => console.error(error));
+
+    this.commonsService.checkAcceso(procesos_ejg.datosRepresentantesLegal)
+    .then(respuesta => {
+      this.showDatosRepresentantes = respuesta;
+    }).catch(error => console.error(error));
+
+    this.commonsService.checkAcceso(procesos_ejg.asuntosContrarios)
+    .then(respuesta => {
+      this.showAsuntos = respuesta;
+    }).catch(error => console.error(error));
+
+    this.commonsService.checkAcceso(procesos_ejg.datosAbogadoContrario)
+    .then(respuesta => {
+      this.showAbogadoContrario = respuesta;
+    }).catch(error => console.error(error));
+
+    this.commonsService.checkAcceso(procesos_ejg.datosProcuradorContrario)
+    .then(respuesta => {
+      this.showProcuradorContrario = respuesta;
+    }).catch(error => console.error(error));
   }
 
   checkAccesoTarjetasUF() {

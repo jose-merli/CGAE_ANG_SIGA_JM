@@ -100,12 +100,10 @@ export class RelacionesComponent implements OnInit {
     }
   }
 
-  
-
   esFichaActiva(key) {
-
     return this.fichaPosible.activa;
   }
+
   abreCierraFicha(key) {
     this.resaltadoDatosGenerales = true;
     if (
@@ -173,6 +171,7 @@ export class RelacionesComponent implements OnInit {
       }
     );
   }
+
   setItalic(dato) {
     if (dato.fechabaja == null) return false;
     else return true;
@@ -201,15 +200,6 @@ export class RelacionesComponent implements OnInit {
   }
 
   getCols() {
-    /* this.cols = [
-      { field: "sjcs", header: "menu.justiciaGratuita", width: "5%" },
-      { field: "anio", header: "justiciaGratuita.maestros.calendarioLaboralAgenda.anio", width: "3%" },
-      { field: "numero", header: "justiciaGratuita.sjcs.designas.DatosIden.numero", width: "3%" },
-      { field: "descturno", header: "justiciaGratuita.justiciables.literal.turnoGuardia", width: "10%" },
-      { field: "letrado", header: "justiciaGratuita.sjcs.designas.colegiado", width: "10%" },
-      { field: "interesado", header: "justiciaGratuita.justiciables.literal.interesados", width: "10%" },
-      { field: "datosinteres", header: "justiciaGratuita.justiciables.literal.datosInteres", width: "10%" },
-    ]; */
     this.cols = [
       { field: "sjcs", header: "justiciaGratuita.oficio.designas.interesados.identificador", width: '6%' },
       { field: "anio", header: "justiciaGratuita.maestros.calendarioLaboralAgenda.anio", width: "3%" },
@@ -285,6 +275,7 @@ export class RelacionesComponent implements OnInit {
       }
     }
   }
+  
   actualizaSeleccionados(selectedDatos) {
     this.numSelected = selectedDatos.length;
     this.seleccion = false;
@@ -317,30 +308,6 @@ export class RelacionesComponent implements OnInit {
   }
   delete() {
     this.progressSpinner = true;
-
-    //this.relaciones.nuevoEJG=!this.modoEdicion;
-    /* let data = [];
-    let ejg: EJGItem;
-
-    for (let i = 0; this.selectedDatos.length > i; i++) {
-      ejg = this.selectedDatos[i];
-      ejg.fechaEstadoNew = this.fechaEstado;
-      ejg.estadoNew = this.valueComboEstado;
-
-      data.push(ejg);
-    } 
-    this.sigaServices.post("gestionejg_borrarRelacion", data).subscribe(
-      n => {
-        this.progressSpinner = false;
-        this.showMessage("success", this.translateServices.instant("general.message.correct"), this.translateServices.instant("general.message.accion.realizada"));
-        this.getRelaciones();
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner = false;
-        this.showMessage("error", this.translateServices.instant("general.message.incorrect"), this.translateServices.instant("general.mensaje.error.bbdd"));
-      }
-    );*/
 
     for( let dato of this.selectedDatos){
      
@@ -418,24 +385,7 @@ export class RelacionesComponent implements OnInit {
           this.showMessage("error", this.translateServices.instant("general.message.incorrect"), "No se puede realizar la accion de eliminar. Tipo de Asunto incorrecto.");
           break;
       }
-      
     }
-
-    /* let identificador = this.selectedDatos[0].sjcs
-    let data: RelacionesItem[];
-    data = this.selectedDatos;
-    this.sigaServices.post("gestionejg_borrarRelacion", data).subscribe(
-      n => {
-        this.progressSpinner = false;
-        this.showMessage("success", this.translateServices.instant("general.message.correct"), this.translateServices.instant("general.message.accion.realizada"));
-        this.getRelaciones();
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner = false;
-        this.showMessage("error", this.translateServices.instant("general.message.incorrect"), this.translateServices.instant("general.mensaje.error.bbdd"));
-      }
-    ); */
   }
 
   onChangeRowsPerPages(event) {
@@ -468,17 +418,6 @@ export class RelacionesComponent implements OnInit {
   consultEditRelacion(dato) {
     this.progressSpinner = true;
 
-    //this.body.nuevoEJG=!this.modoEdicion;
-
- /*    this.sigaServices.post("gestionejg_consultEditRelacion", this.body).subscribe(
-      n => {
-        this.progressSpinner = false;
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner = false;
-      }
-    ); */
     let identificador = dato.sjcs;
 
     switch (identificador) {

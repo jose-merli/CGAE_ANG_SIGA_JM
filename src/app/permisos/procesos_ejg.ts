@@ -31,6 +31,7 @@ export const procesos_ejg: any = {
 
     //pre-designacion
     preDesignacion: "93G",
+    preDesResumen: "93Z",
     defensaJuridica: "93H",
     procurador: "93I",
     contrarios: "93J",

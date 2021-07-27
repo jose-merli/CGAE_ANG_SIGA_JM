@@ -16,6 +16,7 @@ import { InscripcionesItems } from '../../../../../../models/sjcs/InscripcionesI
 import { Location } from '@angular/common';
 import { EJGItem } from '../../../../../../models/sjcs/EJGItem';
 import { Message } from 'primeng/components/common/api';
+import { procesos_ejg } from '../../../../../../permisos/procesos_ejg';
 
 @Component({
   selector: 'app-ficha-pre-designacion',
@@ -44,6 +45,11 @@ export class FichaPreDesignacionComponent implements OnInit {
   msgs: Message[];
   permisoEscritura: boolean = true;
 
+  permisoContrarios;
+  permisoProcurador;
+  permisoDefensaJuridica;
+  permisoResumen;
+
   constructor(private translateService: TranslateService,
     private sigaServices: SigaServices,
     private commonsService: CommonsService,
@@ -51,7 +57,58 @@ export class FichaPreDesignacionComponent implements OnInit {
     private router: Router,
     private location: Location) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    this.progressSpinner=true;
+    await this.checkAcceso();
+  }
+
+  async checkAcceso(){
+    this.commonsService.checkAcceso(procesos_ejg.preDesignacion)
+    .then(respuesta => {
+      this.permisoEscritura = respuesta;
+    }).catch(error => console.error(error));
+
+    if (this.permisoEscritura == undefined) {
+      sessionStorage.setItem("codError", "403");
+      sessionStorage.setItem(
+        "descError",
+        this.translateService.instant("generico.error.permiso.denegado")
+      );
+      this.progressSpinner=false;
+      this.router.navigate(["/errorAcceso"]);
+    }else{
+      await this.obtenerAccesoTarjetas();
+      this.progressSpinner=false;
+    }
+  }
+  
+  async obtenerAccesoTarjetas(){
+    this.commonsService.checkAcceso(procesos_ejg.preDesResumen)
+      .then(respuesta => {
+        this.permisoResumen = respuesta;
+      }
+      ).catch(error => console.error(error));
+
+    this.commonsService.checkAcceso(procesos_ejg.defensaJuridica)
+      .then(respuesta => {
+        this.permisoDefensaJuridica = respuesta;
+      }
+      ).catch(error => console.error(error));
+
+      this.commonsService.checkAcceso(procesos_ejg.procurador)
+      .then(respuesta => {
+        this.permisoProcurador = respuesta;
+      }
+      ).catch(error => console.error(error));
+
+      this.commonsService.checkAcceso(procesos_ejg.contrarios)
+      .then(respuesta => {
+        this.permisoContrarios = respuesta;
+      }
+      ).catch(error => console.error(error));
+  }
+
+  cargaInicial(){
     //Comprobar si el ejg tiene alguna designacion asignada.
     //Si es asi, esta ficha sera unicamente de consulta, no edicion.
     //if()
