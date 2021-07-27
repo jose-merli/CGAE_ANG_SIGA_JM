@@ -33,7 +33,6 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 	nifRepresentante;
 
 	@Input() modoEdicion;
-	@Input() showTarjetaPermiso;
 	@Input() body: JusticiableItem;
 	@Input() checkedViewRepresentante;
 	@Input() navigateToJusticiable: boolean = false;
@@ -76,23 +75,7 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 
 		this.progressSpinner = true;
 
-		/* this.commonsService
-			.checkAcceso(procesos_justiciables.tarjetaAbogadoContrario)
-			.then((respuesta) => {
-				this.permisoEscritura = respuesta;
-	
-				if (this.permisoEscritura == undefined) {
-					this.showTarjetaPermiso = false;
-					this.progressSpinner = false;
-				} else {
-					this.showTarjetaPermiso = true;
-					this.persistenceService.clearFiltrosAux();
-				}
-			})
-			.catch((error) => console.error(error)); */
-
 		if (this.fromContrario || this.fromContrarioEJG) {
-			this.showTarjetaPermiso = true;
 			this.permisoEscritura = true;
 		}
 		/* Proviene de search() */

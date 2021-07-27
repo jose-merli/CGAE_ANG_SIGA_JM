@@ -52,6 +52,9 @@ export class GestionJusticiablesComponent implements OnInit {
   showDatosPersonales;
   showDatosUF;
   showDatosRepresentantes;
+  showAsuntos;
+  showDatosProcuradorContrario;
+  showDatosAbogadoContrario;
 
   constructor(private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -288,6 +291,11 @@ export class GestionJusticiablesComponent implements OnInit {
     .then(respuesta => {
       this.showDatosRepresentantes = respuesta;
     }).catch(error => console.error(error));
+
+    this.commonsService.checkAcceso(procesos_ejg.asuntosUF)
+    .then(respuesta => {
+      this.showAsuntos = respuesta;
+    }).catch(error => console.error(error));
   }
 
   checkAccesoTarjetas(){
@@ -305,6 +313,11 @@ export class GestionJusticiablesComponent implements OnInit {
     this.commonsService.checkAcceso(procesos_justiciables.tarjetaDatosRepresentante)
     .then(respuesta => {
       this.showDatosSolicitudes = respuesta;
+    }).catch(error => console.error(error));
+
+    this.commonsService.checkAcceso(procesos_justiciables.tarjetaAsuntos)
+    .then(respuesta => {
+      this.showAsuntos = respuesta;
     }).catch(error => console.error(error));
   }
 

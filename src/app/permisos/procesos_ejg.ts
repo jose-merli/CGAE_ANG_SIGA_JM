@@ -6,7 +6,7 @@ export const procesos_ejg: any = {
     ejg: "946",
 
    //detalle ejg
-    tarjetaResumen: "93V", 
+    tarjetaResumen: "93Y", 
     datosGenerales: "943",
     serviciosTramitacion: "944",
     unidadFamiliar: "94T",
@@ -27,6 +27,7 @@ export const procesos_ejg: any = {
     datosDireccionContactoUF: "93D",
     datosRepresentanteLegalUF: "93E",
     datosAdicionalesUF: "93F",
+    asuntosUF: "93V",
 
     //pre-designacion
     preDesignacion: "93G",
@@ -42,4 +43,5 @@ export const procesos_ejg: any = {
     datosRepresentantesLegal: "93S",
     datosAbogadoContrario: "93T",
     datosProcuradorContrario: "93U",
+    asuntosContrarios: "93X"
 }
