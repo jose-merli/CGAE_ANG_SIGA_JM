@@ -614,19 +614,18 @@ export class RelacionesComponent implements OnInit {
   }
 
   navigateToFichaPre() {
-    let found = false;
     sessionStorage.removeItem("Designa");
     this.progressSpinner = true;
     //Comprobamos si entre la relaciones hay una designacion
-    this.relaciones.forEach(element => {
-      if (element.sjcs == "DESIGNACIÓN") {
-        found = true;
-        sessionStorage.setItem("Designa", JSON.stringify(element));
+    let foundDesigna = this.relaciones.find(element => 
+      element.sjcs == "DESIGNACIÓN"
+    )
+    if (foundDesigna != undefined) {
         let designaItem: DesignaItem = new DesignaItem();
         //designaItem.idInstitucion = parseInt(element.idinstitucion.toString());
         //designaItem.idTurno = parseInt(element.idturno.toString());
-        designaItem.ano = parseInt(element.anio.toString());
-        designaItem.codigo = element.numero.toString();
+        designaItem.ano = parseInt(foundDesigna.anio.toString());
+        designaItem.codigo = foundDesigna.numero.toString();
 
         if (designaItem.numColegiado == "") {
           designaItem.numColegiado = null;
@@ -686,8 +685,7 @@ export class RelacionesComponent implements OnInit {
           }
         );
       }
-    });
-    if (found == false) this.router.navigate(["/ficha-pre-designacion"]);
+    else this.router.navigate(["/ficha-pre-designacion"]);
   }
 
 
@@ -766,30 +764,21 @@ export class RelacionesComponent implements OnInit {
             this.sigaServices.post("designaciones_busquedaJuzgado", item.idJuzgado).subscribe(
               n => {
                 item.nombreJuzgado = n.body;
-                sessionStorage.setItem("Designa", JSON.stringify(item));
-                this.router.navigate(["/ficha-pre-designacion"]);
-
               },
               err => {
-                this.progressSpinner = false;
                 item.nombreJuzgado = "";
+              }, () => {
+                this.progressSpinner = false;
                 sessionStorage.setItem("Designa", JSON.stringify(item));
                 this.router.navigate(["/ficha-pre-designacion"]);
-              }, () => {
-
               });
           },
           err => {
-            this.progressSpinner = false;
-
-            console.log(err);
           }, () => {
             this.progressSpinner = false;
           });
       },
       err => {
-        this.progressSpinner = false;
-        console.log(err);
       }, () => {
         this.progressSpinner = false;
       });

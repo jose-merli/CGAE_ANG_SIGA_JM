@@ -92,7 +92,7 @@ export class GestionJusticiablesComponent implements OnInit {
         },
         {
           key: "representante",
-          activa: false
+          activa: true
         },
         {
           key: "asuntos",
