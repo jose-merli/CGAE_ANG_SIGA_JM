@@ -5,6 +5,7 @@ import { SigaServices } from '../../../../../_services/siga.service';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { ResolucionEJGItem } from '../../../../../models/sjcs/ResolucionEJGItem';
 import { TranslateService } from '../../../../../commons/translate/translation.service';
+import { Router } from "@angular/router";
 import { ConfirmationService } from 'primeng/api';
 
 @Component({
@@ -51,7 +52,8 @@ export class ResolucionComponent implements OnInit {
 
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
-    private commonsServices: CommonsService, private translateService: TranslateService, private confirmationService: ConfirmationService) { }
+    private commonsServices: CommonsService, private translateService: TranslateService, 
+    private confirmationService: ConfirmationService, private router: Router) { }
 
   ngOnInit() {
     if (this.persistenceService.getDatos()) {
@@ -366,6 +368,15 @@ export class ResolucionComponent implements OnInit {
   }
 
   openActa() {
+    //Implmentacion teorica.
+    //Cambiar por acceso implmentado en la pantalla de acceso a actas.
+    //this.router.navigate(["/fichaActa"]);
+    //Se escoge la acta guardada, no la que se tenga seleccionada en el desplegable sin guardar.
+    //Los datos a pasar deberan revisarse acordemente.
+    //this.persistenceService.setDatos(this.bodyInicial);
+    //Se crea una variable de entorno para el caso en el cual se vuelva desde la ficha de acta al EJG.
+    //El EJG se puede rellenar subiendo los datos a la capa de persistencia o con un item "EJGItem" que tendra prioridad.
+    //sessionStorage.setItem("EJGItem", JSON.stringify(this.bodyInicial));
     this.msgs = [
       {
         severity: "info",

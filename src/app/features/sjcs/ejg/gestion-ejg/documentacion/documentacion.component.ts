@@ -410,13 +410,13 @@ export class DocumentacionComponent implements OnInit {
                   }]
                 }
           } else if (data["error"].code == null) {
-            this.showMessage("info", "Información", data["error"].message);
+            this.showMessage("info", this.translateService.instant("general.message.informacion"), data["error"].message);
           }
         },
         error => {
           //Maximo de tamaño permitido actualmente al hacer peticiones al back (5242880)
-          if(file.size>5242880) this.showMessage("info", "Información", this.translateService.instant("justiciaGratuita.ejg.documentacion.tamMax"));
-          else this.showMessage("info", "Información", this.translateService.instant("justiciaGratuita.ejg.documentacion.errorFich"));
+          if(file.size>5242880) this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.ejg.documentacion.tamMax"));
+          else this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.ejg.documentacion.errorFich"));
         },
         () => {
           this.progressSpinner = false;
@@ -443,7 +443,7 @@ export class DocumentacionComponent implements OnInit {
             blob = new Blob([data], { type: mime });
             saveAs(blob, documentos[0].nombreFichero);
           }
-          else this.showMessage("error", "Información", this.translateService.instant("justiciaGratuita.ejg.documentacion.noFich"));
+          else this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.ejg.documentacion.noFich"));
 
         } else {
 

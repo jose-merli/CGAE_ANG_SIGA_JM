@@ -200,10 +200,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
               this.location.back();
             },
             err => {
-              this.showMesg("error",
-                "No se ha asociado el EJG correctamente",
-                ""
-              );
+              this.showMesg("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
               // this.location.back();
               this.progressSpinner = false;
             }
@@ -225,10 +222,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
               this.location.back();
             },
             err => {
-              this.showMesg("error",
-                "No se ha asociado el EJG correctamente",
-                ""
-              );
+              this.showMesg("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
               //this.location.back();
               this.progressSpinner = false;
             }
@@ -253,10 +247,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
               this.location.back();
             },
             err => {
-              this.showMesg("error",
-                "No se ha asociado el EJG correctamente",
-                ""
-              );
+              this.showMesg("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
               // this.location.back();
               this.progressSpinner = false;
             }
@@ -317,10 +308,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
                     this.location.back();
                   },
                   err => {
-                    this.showMesg("error",
-                    "No se ha asociado el EJG correctamente",
-                    ""
-                  );
+                    this.showMesg("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
                     this.progressSpinner = false;
                   }
                 );
@@ -329,7 +317,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
           break;
         case 'asi':
 
-          let requestAsistencia = [anoDesigna, this.datosDesigna.idTurno, asunto[1],data.idinstitucion,data.anio, data.numero];
+          let requestAsistencia = [anoDesigna, this.datosDesigna.idTurno, this.datosDesigna.numero,data.idinstitucion,data.anio, data.numero];
           
         this.sigaServices.post("designacion_asociarAsistenciaDesigna", requestAsistencia).subscribe(
           m => {
@@ -339,10 +327,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
               this.location.back();
           },
           err => {
-            this.showMesg("error",
-              "No se ha asociado el EJG correctamente",
-              ""
-            );
+            this.showMesg("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
             //this.location.back();
             this.progressSpinner = false;
           }

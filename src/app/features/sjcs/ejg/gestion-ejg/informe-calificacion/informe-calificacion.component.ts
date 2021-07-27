@@ -403,7 +403,7 @@ export class InformeCalificacionComponent implements OnInit {
           item => item.propietario == "1" && item.fechaInicio > this.dictamen.fechaDictamen
         );
         //Introducir mensaje en la base de datos
-        if (estadoCAJG != undefined)  this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No se admite borrar el dictamen ya que hay un estado visible por la comisión que se ha dado de alta con posterioridad al dictamen");
+        if (estadoCAJG != undefined)  this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.dictamen.disDel"));
         else this.confirmDelete();
       },
       err => {

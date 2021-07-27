@@ -154,6 +154,7 @@ export class FichaPreDesignacionComponent implements OnInit {
   }
 
   backTo() {
+    sessionStorage.removeItem("Designa");
     this.location.back();
   }
 
