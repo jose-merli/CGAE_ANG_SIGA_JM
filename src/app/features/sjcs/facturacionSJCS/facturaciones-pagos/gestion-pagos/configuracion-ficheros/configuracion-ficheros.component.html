@@ -17,7 +17,9 @@
           </div>
           <div class="d-flex justify-content-between">
             <label>{{ "facturacionSJCS.facturacionesYPagos.iban" | translate }}:
-              <span></span>
+              <span
+                *ngIf="comboCuentasBanc && comboCuentasBanc.length > 0 && configuracionFicheros.codBanco && configuracionFicheros.codBanco!= null && configuracionFicheros.codBanco.trim().length > 0">
+                {{ getIban() }}</span>
             </label>
             <i *ngIf="!showFicha" class="fa fa-angle-down float-right" (click)="onHideFicha()"></i>
           </div>
@@ -37,27 +39,35 @@
         <div class="form-row">
           <div class="col-lg-4 col-md-4">
             <label>{{ "facturacionSJCS.facturacionesYPagos.iban" | translate }} (*)</label>
-            <p-dropdown [options]="comboCuentasBanc" [(ngModel)]="configuracionFicheros.iban" class="select-form"
+            <p-dropdown [options]="comboCuentasBanc" [(ngModel)]="configuracionFicheros.codBanco" class="select-form"
               [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde"
-              [showClear]="true" [(disabled)]='!permisos'></p-dropdown>
+              [showClear]="true" [(disabled)]='!permisos'
+              [ngClass]="{'camposObligatorios': marcarObligatorio(configuracionFicheros.codBanco)}">
+            </p-dropdown>
           </div>
           <div class="col-lg-2 col-md-2">
             <label>{{ "facturacionSJCS.facturacionesYPagos.sufijo" | translate }} (*)</label>
-            <p-dropdown [options]="comboSufijos" [(ngModel)]="configuracionFicheros.sufijo" class="select-form"
+            <p-dropdown [options]="comboSufijos" [(ngModel)]="configuracionFicheros.idSufijo" class="select-form"
               [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde"
-              [showClear]="true" [(disabled)]='!permisos'></p-dropdown>
+              [showClear]="true" [(disabled)]='!permisos'
+              [ngClass]="{'camposObligatorios': marcarObligatorio(configuracionFicheros.idSufijo)}">
+            </p-dropdown>
           </div>
           <div class="col-lg-3 col-md-3">
             <label>{{ "facturacionSJCS.facturacionesYPagos.propositoTransferencias" | translate }} SEPA (*)</label>
-            <p-dropdown [options]="comboPropTransSepa" [(ngModel)]="configuracionFicheros.propSepa" class="select-form"
-              [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde"
-              [showClear]="true" [(disabled)]='!permisos'></p-dropdown>
+            <p-dropdown [options]="comboPropTransSepa" [(ngModel)]="configuracionFicheros.idPropSepa"
+              class="select-form" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
+              filterBy="label,labelSinTilde" [showClear]="true" [(disabled)]='!permisos'
+              [ngClass]="{'camposObligatorios': marcarObligatorio(configuracionFicheros.idPropSepa)}">
+            </p-dropdown>
           </div>
           <div class="col-lg-3 col-md-3">
             <label>{{ "facturacionSJCS.facturacionesYPagos.propositoTransferencias" | translate }} (*)</label>
-            <p-dropdown [options]="comboPropOtrTrans" [(ngModel)]="configuracionFicheros.propOtr" class="select-form"
-              [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde"
-              [showClear]="true" [(disabled)]='!permisos'></p-dropdown>
+            <p-dropdown [options]="comboPropOtrTrans" [(ngModel)]="configuracionFicheros.idPropOtros"
+              class="select-form" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
+              filterBy="label,labelSinTilde" [showClear]="true" [(disabled)]='!permisos'
+              [ngClass]="{'camposObligatorios': marcarObligatorio(configuracionFicheros.idPropOtros)}">
+            </p-dropdown>
           </div>
         </div>
       </div>
@@ -65,9 +75,10 @@
     <div class="card-footer" *ngIf="showFicha">
       <div class="text-right main-button">
         <button pButton type="button" icon="fa fa-undo" iconPos="left"
-          label="{{ 'general.boton.restablecer' | translate }}" [(disabled)]='!permisos'></button>
+          label="{{ 'general.boton.restablecer' | translate }}" [disabled]='!permisos || disableRestablecer()'
+          (click)="restablecer()"></button>
         <button pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"
-          [(disabled)]='!permisos'></button>
+          [disabled]='!permisos' (click)="guardar()"></button>
       </div>
     </div>
   </div>

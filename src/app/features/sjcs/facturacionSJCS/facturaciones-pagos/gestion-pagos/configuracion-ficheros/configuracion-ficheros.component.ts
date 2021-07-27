@@ -4,7 +4,9 @@ import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_fa
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { Router } from '@angular/router';
 import { SigaServices } from '../../../../../../_services/siga.service';
-import { Error } from '../../../../../../models/Error'; import { PagosjgItem } from '../../../../../../models/sjcs/PagosjgItem';
+import { Error } from '../../../../../../models/Error';
+import { PagosjgItem } from '../../../../../../models/sjcs/PagosjgItem';
+import { PagosjgDTO } from '../../../../../../models/sjcs/PagosjgDTO';
 @Component({
   selector: 'app-configuracion-ficheros',
   templateUrl: './configuracion-ficheros.component.html',
@@ -49,6 +51,8 @@ export class ConfiguracionFicherosComponent implements OnInit {
       this.getComboSufijos();
       this.getComboPropTransSepa();
       this.getComboPropOtrTrans();
+
+      this.getConfigFichAbonos();
 
     }).catch(error => console.error(error));
 
@@ -184,5 +188,100 @@ export class ConfiguracionFicherosComponent implements OnInit {
 
   }
 
+  getConfigFichAbonos() {
+
+    this.sigaService.getParam("pagosjcs_getConfigFichAbonos", `?idPago=${this.idPago}`).subscribe(
+      (data: PagosjgDTO) => {
+        this.progressSpinner = false;
+
+        const resp = data.pagosjgItem[0];
+        const error = data.error;
+
+        if (error && null != error && null != error.description) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.description.toString()));
+        } else {
+          this.configuracionFicheros = JSON.parse(JSON.stringify(resp));
+          this.configuracionFicherosAux = JSON.parse(JSON.stringify(resp));
+        }
+
+      },
+      err => {
+        this.progressSpinner = false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
+
+  }
+
+  comprobaciones() {
+
+    let valido = true;
+
+    if (this.configuracionFicheros.codBanco == undefined || this.configuracionFicheros.codBanco == null || this.configuracionFicheros.codBanco.trim().length == 0
+      || this.configuracionFicheros.idSufijo == undefined || this.configuracionFicheros.idSufijo == null || this.configuracionFicheros.idSufijo.trim().length == 0
+      || this.configuracionFicheros.idPropSepa == undefined || this.configuracionFicheros.idPropSepa == null || this.configuracionFicheros.idPropSepa.trim().length == 0
+      || this.configuracionFicheros.idPropOtros == undefined || this.configuracionFicheros.idPropOtros == null || this.configuracionFicheros.idPropOtros.trim().length == 0) {
+      valido = false;
+    }
+
+    if (!valido) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
+    }
+
+    return valido;
+
+  }
+
+  guardar() {
+
+    if (this.comprobaciones()) {
+
+      this.progressSpinner = true;
+
+      this.sigaService.post("pagosjcs_saveConfigFichAbonos", this.configuracionFicheros).subscribe(
+        data => {
+          this.progressSpinner = false;
+
+          const resp = JSON.parse(data.body);
+          const error = resp.error;
+
+          if (error && null != error && null != error.description) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.description.toString()));
+          } else if (resp.status == 'OK') {
+            this.getConfigFichAbonos();
+          }
+
+        },
+        err => {
+          this.progressSpinner = false;
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+      );
+
+    }
+
+  }
+
+  disableRestablecer() {
+    return JSON.stringify(this.configuracionFicheros) == JSON.stringify(this.configuracionFicherosAux);
+  }
+
+  restablecer() {
+    this.configuracionFicheros = JSON.parse(JSON.stringify(this.configuracionFicherosAux));
+  }
+
+  marcarObligatorio(valor: string): boolean {
+
+    let resp = false;
+
+    if (valor == undefined || valor == null || valor.trim().length == 0) {
+      resp = true;
+    }
+    return resp;
+  }
+
+  getIban() {
+    return this.comboCuentasBanc.find(el => el.value == this.configuracionFicheros.codBanco).label;
+  }
 
 }

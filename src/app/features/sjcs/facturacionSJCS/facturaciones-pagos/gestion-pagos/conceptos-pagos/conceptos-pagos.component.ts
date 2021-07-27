@@ -178,37 +178,59 @@ export class ConceptosPagosComponent implements OnInit {
 
   }
 
+  comprobaciones(nuevos: ConceptoPagoItem[]) {
+
+    let valido = true;
+
+    nuevos.forEach(el => {
+      if (el.idConcepto == undefined || el.idConcepto == null || el.idConcepto.trim().length == 0) {
+        valido = false;
+      }
+    });
+
+    if (!valido) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
+    }
+
+    return valido;
+
+  }
+
   guardar() {
 
     if (!this.disabledGuardar()) {
 
-      this.progressSpinner = true;
-
       let nuevos = this.body.filter(el => el.nuevo);
 
-      this.sigaService.post("pagosjcs_saveConceptoPago", nuevos).subscribe(
-        data => {
+      if (this.comprobaciones(nuevos)) {
 
-          this.progressSpinner = false;
+        this.progressSpinner = true;
 
-          const resp = JSON.parse(data.body);
-          const error = resp.error;
+        this.sigaService.post("pagosjcs_saveConceptoPago", nuevos).subscribe(
+          data => {
 
-          if (error && null != error && null != error.description) {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.description.toString()));
-          } else {
-            console.log(resp);
+            this.progressSpinner = false;
+
+            const resp = JSON.parse(data.body);
+            const error = resp.error;
+
+            if (error && null != error && null != error.description) {
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.description.toString()));
+            } else {
+              console.log(resp);
+            }
+
+          },
+          err => {
+            this.progressSpinner = false
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          },
+          () => {
+            this.getComboConceptos();
           }
+        );
 
-        },
-        err => {
-          this.progressSpinner = false
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        },
-        () => {
-          this.getComboConceptos();
-        }
-      );
+      }
 
     }
 

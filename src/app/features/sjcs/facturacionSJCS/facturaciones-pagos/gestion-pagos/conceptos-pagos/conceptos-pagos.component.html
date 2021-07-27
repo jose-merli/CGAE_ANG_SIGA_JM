@@ -63,7 +63,8 @@
                     <p-dropdown [options]="comboConceptos" [(ngModel)]="dato.idConcepto" class="select-form"
                       [filter]="true" filterBy="label,labelSinTilde"
                       placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true"
-                      (onChange)="cambioConcepto($event, dato)">
+                      (onChange)="cambioConcepto($event, dato)"
+                      [ngClass]="{'camposObligatorios': (dato.idConcepto == undefined || dato.idConcepto == null || dato.idConcepto.trim().length == 0)}">
                     </p-dropdown>
                   </div>
                   <div *ngIf="col.field == 'importeFacturado'">
