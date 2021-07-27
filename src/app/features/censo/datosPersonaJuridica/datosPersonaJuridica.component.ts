@@ -30,6 +30,7 @@ export class DatosPersonaJuridicaComponent implements OnInit {
   enlacesTarjetaResumen;
   openTarjeta;
   iconoTarjetaResumen = "clipboard";
+  cantidadIntegrantes;
 
   constructor(
     public sigaServices: OldSigaServices,
@@ -43,6 +44,7 @@ export class DatosPersonaJuridicaComponent implements OnInit {
     this.enlacesTarjetaResumen = [];
     this.migaPan = this.translateService.instant("menu.censo.fichaSociedad");
     sessionStorage.setItem("migaPan", this.migaPan);
+    this.cantidadIntegrantes = JSON.parse(sessionStorage.getItem("usuarioBody"))[0].numeroIntegrantes;
 
     this.fichasPosibles = [
       {

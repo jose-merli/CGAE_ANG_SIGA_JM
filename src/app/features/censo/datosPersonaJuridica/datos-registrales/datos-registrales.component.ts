@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, SimpleChanges, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, SimpleChanges, Output, EventEmitter, ViewEncapsulation, OnChanges } from '@angular/core';
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { esCalendar } from "../../../../utils/calendar";
 import { Message } from "primeng/components/common/api";
@@ -25,7 +25,7 @@ import { MultiSelect } from 'primeng/multiselect';
   styleUrls: ["./datos-registrales.component.scss"],
   encapsulation: ViewEncapsulation.None
 })
-export class DatosRegistralesComponent implements OnInit {
+export class DatosRegistralesComponent implements OnInit, OnChanges {
   uploadedFiles: any[] = [];
   formBusqueda: FormGroup;
   cols: any = [];
@@ -123,6 +123,7 @@ export class DatosRegistralesComponent implements OnInit {
 
   tarjeta: string;
   searchDatos: boolean = false;
+  @Input() cantidadIntegrantes;
   @Input() openTarjeta;
   @Output() permisosEnlace = new EventEmitter<any>();
 
@@ -238,6 +239,14 @@ export class DatosRegistralesComponent implements OnInit {
     let fichaPosible = this.esFichaActiva(this.openTarjeta);
     if (fichaPosible == false) {
       this.abreCierraFicha(this.openTarjeta);
+    }
+
+    if (changes.cantidadIntegrantes &&
+        changes.cantidadIntegrantes != null &&
+        changes.cantidadIntegrantes.currentValue == 0 &&
+        this.sociedadProfesional == true) {
+      this.sociedadProfesional = false;
+      this.showCustomFail("Debe haber como mínimo un integrante para poder marcar la sociedad como profesional.");
     }
 
   }
@@ -521,6 +530,14 @@ export class DatosRegistralesComponent implements OnInit {
             if (this.body.numRegistro == "") {
               this.body.numRegistro = null;
             }
+
+            if (this.cantidadIntegrantes == 0) {
+              this.body.sociedadProfesional = "0";
+            }
+
+            if (this.body.resena == null) {
+              this.body.resena = "";
+            }
             this.sigaServices
               .post("datosRegistrales_update", this.body)
               .subscribe(
@@ -715,12 +732,7 @@ export class DatosRegistralesComponent implements OnInit {
     } else if (
       (this.body.objetoSocial != undefined &&
         this.body.objetoSocial != "" &&
-        !this.onlySpaces(this.body.objetoSocial)) &&
-      (this.body.resena != undefined &&
-        this.body.resena != "" &&
-        !this.onlySpaces(this.body.resena)) &&
-      (this.fechaConstitucion != undefined &&
-        this.compruebaFechaConstitucion())
+        !this.onlySpaces(this.body.objetoSocial))
     ) {
       return false;
     } else {
@@ -890,6 +902,11 @@ export class DatosRegistralesComponent implements OnInit {
   //   }
   // }
 
+  compruebaNumIntegrantes() {
+    if (this.cantidadIntegrantes == 0) {
+      this.showCustomFail("Debe haber como mínimo un integrante para poder marcar la sociedad como profesional.");
+    }
+  }
 
   fillFechaConstitucion(event) {
     this.fechaConstitucion = event;
