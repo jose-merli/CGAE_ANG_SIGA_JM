@@ -41,15 +41,15 @@
   <!-- Solicitar por internet -->
   <div class="form-group-interlineado col-lg-3 col-md-3">
     <div class="d-flex align-items-baseline justify-content-between alineacionCheckboxes">
-      <p-checkbox binary="true" label="Solicitar por internet" [(ngModel)]="checkBoxSolicitarPorInternet"
-        (onChange)="onChangeSolicitudInternet()"></p-checkbox>
+      <p-checkbox binary="true" label="{{'facturacion.fichaproductos.datosgenerales.solinternet' | translate}}"
+        [(ngModel)]="checkBoxSolicitarPorInternet" (onChange)="onChangeSolicitudInternet()"></p-checkbox>
     </div>
   </div>
 
   <!-- Solicitar anulacion por internet -->
   <div class="form-group-interlineado col-lg-3 col-md-3">
     <div class="d-flex align-items-baseline justify-content-between alineacionCheckboxes">
-      <p-checkbox binary="true" label="Solicitar anulacion por internet"
+      <p-checkbox binary="true" label="{{'facturacion.fichaproductos.datosgenerales.solbajainternet' | translate}}"
         [(ngModel)]="checkboxSolicitarAnulacionPorInternet" (onChange)="onChangeSolicitudAnulacionInternet()">
       </p-checkbox>
     </div>
@@ -57,15 +57,13 @@
 
   <!-- Cuenta contable -->
   <div class="form-group-interlineado col-lg-3 col-md-3">
-    <label>Cuenta contable</label>
-    <!--Provisional, insertan en gen_diccionario-->
+    <label>{{ "facturacion.fichaproductos.datosgenerales.cuentacontable" | translate}}</label>
     <input type="text" class="form-control" [(ngModel)]='producto.cuentacontable' pInputText>
   </div>
 
   <!-- Tipo de certificado -->
   <div class="form-group-interlineado col-lg-3 col-md-3">
-    <label>Tipo de certificado</label>
-    <!--Provisional, insertan en gen_diccionario-->
+    <label>{{ "facturacion.fichaproductos.datosgenerales.tipocertificado" | translate}}</label>
     <p-dropdown [filter]="true" styleClass="widthAll" [showClear]="true"
       placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='producto.tipocertificado'
       [options]="tiposCertificadosItems">

@@ -41,6 +41,7 @@ export class FichaProductosComponent implements OnInit, OnDestroy {
   mostrarTarjPagos: boolean = false;
   productoDelBuscador: ListaProductosItems = new ListaProductosItems(); //Producto obtenido de la fila del buscador de productos en la cual pulsamos el enlace a la ficha productos.
   producto: ProductoDetalleItem = new ProductoDetalleItem(); //Guarda los valores traidos del servicio detalleProducto
+  productoOriginal: ProductoDetalleItem = new ProductoDetalleItem();
 
   //Suscripciones
   subscriptionProductDetail: Subscription;
@@ -70,7 +71,6 @@ export class FichaProductosComponent implements OnInit, OnDestroy {
   backTo() {
     sessionStorage.setItem("volver", 'true');
     sessionStorage.removeItem('productoBuscador');
-    sessionStorage.removeItem('productoDetalle');
     this.router.navigate(['/productos']);
   }
   //FIN METODOS APP
@@ -85,12 +85,10 @@ export class FichaProductosComponent implements OnInit, OnDestroy {
         producto => {
           this.progressSpinner = false;
           this.producto = producto;
-
-          sessionStorage.setItem('productoDetalle', JSON.stringify(producto));
-
-          /* let error = this.tiposObject.error;
-          if (error != null && error.description != null) {
-          } */
+          this.producto.formasdepagointernetoriginales = { ...this.producto.formasdepagointernet };
+          this.producto.formasdepagosecretariaoriginales = { ...this.producto.formasdepagosecretaria };
+          this.producto.editar = true;
+          this.producto.productooriginal = { ...producto };
         },
         err => {
           this.progressSpinner = false;

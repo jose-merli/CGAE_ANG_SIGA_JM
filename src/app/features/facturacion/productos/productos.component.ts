@@ -44,10 +44,9 @@ export class ProductosComponent implements OnInit, OnDestroy, AfterViewChecked {
   busquedaProductos(event) {
     this.progressSpinner = true;
     let filtrosProductos = JSON.parse(sessionStorage.getItem("filtrosProductos"));
-    let error = null;
+
     this.subscriptionProductosBusqueda = this.sigaServices.post("productosBusqueda_busqueda", filtrosProductos).subscribe(
       listaProductosDTO => {
-        console.log(listaProductosDTO);
 
         this.listaProductosDTO = JSON.parse(listaProductosDTO.body);
 

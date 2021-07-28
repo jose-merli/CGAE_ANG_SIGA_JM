@@ -23,7 +23,7 @@ export class DetalleTarjetaFormasPagosFichaProductoFacturacionComponent implemen
   ivasNoDerogablesObject: ComboObject = new ComboObject();
   internetPayMethodsObject: ComboObject = new ComboObject();
   secretaryPayMethodsObject: ComboObject = new ComboObject();
-  defaultLabelCombosMultiSelect: String = this.translateService.instant("general.boton.seleccionar");
+  defaultLabelCombosMultiSelect: String = "Seleccionar";
 
   //Variables control
   aGuardar: boolean = false; //Usada en condiciones que validan la obligatoriedad, definida al hacer click en el boton guardar
@@ -41,12 +41,8 @@ export class DetalleTarjetaFormasPagosFichaProductoFacturacionComponent implemen
   }
 
   ngOnInit() {
-    if (sessionStorage.getItem('productoBuscador')) {
-      this.productoOriginal = this.producto;
-
-      this.producto.editar = true;
-      this.producto.formasdepagointernetoriginales = this.productoOriginal.formasdepagointernet;
-      this.producto.formasdepagosecretariaoriginales = this.productoOriginal.formasdepagosecretaria;
+    if (this.producto.editar) {
+      this.productoOriginal = { ...this.producto };
 
       if (this.producto.nofacturable == "1") {
         this.checkboxNoFacturable = true;
@@ -185,6 +181,10 @@ export class DetalleTarjetaFormasPagosFichaProductoFacturacionComponent implemen
 
   guardarFormaPago() {
     this.progressSpinner = true;
+    if (this.producto.formasdepagointernet == null || this.producto.formasdepagointernet == undefined)
+      this.producto.formasdepagointernet = [];
+    if (this.producto.formasdepagosecretaria == null || this.producto.formasdepagosecretaria == undefined)
+      this.producto.formasdepagosecretaria = [];
 
     this.subscriptionCrearFormasDePago = this.sigaServices.post("fichaProducto_crearFormaDePago", this.producto).subscribe(
       response => {

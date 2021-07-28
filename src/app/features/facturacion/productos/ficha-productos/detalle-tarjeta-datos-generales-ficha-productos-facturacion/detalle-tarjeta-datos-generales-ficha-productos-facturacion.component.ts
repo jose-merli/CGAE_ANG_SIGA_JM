@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { AfterContentInit, AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
 import { Subscription } from 'rxjs';
@@ -14,7 +14,7 @@ import { SigaServices } from '../../../../../_services/siga.service';
   templateUrl: './detalle-tarjeta-datos-generales-ficha-productos-facturacion.component.html',
   styleUrls: ['./detalle-tarjeta-datos-generales-ficha-productos-facturacion.component.scss']
 })
-export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent implements OnInit, OnDestroy {
+export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent implements OnChanges, OnInit, OnDestroy {
 
   //Variables generales app
   msgs = []; //Para mostrar los mensajes p-growl y dialogos de confirmacion
@@ -22,7 +22,7 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
 
   //Variables tarjeta datos generales
   @Input() producto: ProductoDetalleItem; //Guarda los valores seleccionados/escritos en los campos
-  productoOriginal: ProductoDetalleItem = new ProductoDetalleItem(); //En caso de que entre en modo editar este objeto sera el que contenga los datos originales conseguidos gracias al servicio detalleProducto.
+  productoOriginal: ProductoDetalleItem = new ProductoDetalleItem; //En caso de que entre en modo editar este objeto sera el que contenga los datos originales conseguidos gracias al servicio detalleProducto.
   @Input() productoDelBuscador: ListaProductosItems;
   categoriasObject: ComboObject = new ComboObject(); //Modelo con la lista opciones + atributo error
   tiposObject: ComboObject = new ComboObject();
@@ -67,21 +67,9 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
 
   }
 
-  ngOnInit() {
-    if (sessionStorage.getItem('productoBuscador')) {
-      this.productoOriginal = this.producto;
-
-      if (this.producto.solicitaralta == "1") {
-        this.checkBoxSolicitarPorInternet = true;
-      } else if (this.producto.solicitaralta == "0") {
-        this.checkBoxSolicitarPorInternet = false;
-      }
-
-      if (this.producto.solicitarbaja == "1") {
-        this.checkboxSolicitarAnulacionPorInternet = true;
-      } else if (this.producto.solicitarbaja == "0") {
-        this.checkboxSolicitarAnulacionPorInternet = false;
-      }
+  ngOnChanges(changes: SimpleChanges) {
+    if (this.producto.editar) {
+      this.productoOriginal = { ...this.producto };
 
       this.desactivarBotonEliminar = false;
       this.mostrarTarjetaFormaPagos.emit(true);
@@ -91,6 +79,20 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
       this.desactivarBotonEliminar = true;
     }
 
+    if (this.producto.solicitaralta == "1") {
+      this.checkBoxSolicitarPorInternet = true;
+    } else if (this.producto.solicitaralta == "0") {
+      this.checkBoxSolicitarPorInternet = false;
+    }
+
+    if (this.producto.solicitarbaja == "1") {
+      this.checkboxSolicitarAnulacionPorInternet = true;
+    } else if (this.producto.solicitarbaja == "0") {
+      this.checkboxSolicitarAnulacionPorInternet = false;
+    }
+  }
+
+  ngOnInit() {
     this.getComboCategoria();
   }
 
@@ -137,62 +139,19 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
   }
 
   restablecer() {
-    this.producto = this.productoOriginal;
-  }
+    this.producto = { ...this.productoOriginal };
 
-  //Metodo para activar/desactivar productos mediante borrado logico (es decir fechabaja == null esta activo lo contrario inactivo) en caso de que tengan una transaccion pendiente de compra o compras ya existentes, en caso contrario se hara borrado fisico (DELETE)
-  eliminarReactivar() {
-    let keyConfirmation = "deletePlantillaDoc";
-    let mensaje;
-    if (this.producto.fechabaja != null) {
-      mensaje = this.translateService.instant("facturacion.maestros.tiposproductosservicios.reactivarconfirm");
-    } else if (this.producto.fechabaja == null) {
-      mensaje = this.translateService.instant("messages.deleteConfirmation");
+    if (this.producto.solicitaralta == "1") {
+      this.checkBoxSolicitarPorInternet = true;
+    } else if (this.producto.solicitaralta == "0") {
+      this.checkBoxSolicitarPorInternet = false;
     }
 
-    this.confirmationService.confirm({
-      key: keyConfirmation,
-      message: mensaje,
-      icon: "fa fa-trash-alt",
-      accept: () => {
-        this.progressSpinner = true;
-
-        let listaProductosDTO = new ListaProductosDTO();
-        listaProductosDTO.listaProductosItems.push(this.productoDelBuscador);
-
-        this.subscriptionActivarDesactivarProductos = this.sigaServices.post("productosBusqueda_activarDesactivar", listaProductosDTO).subscribe(
-          response => {
-            if (JSON.parse(response.body).error.code == 500) {
-              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-            } else {
-              this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-              this.desactivarBotonEliminar = false;
-            }
-          },
-          err => {
-            this.progressSpinner = false;
-          },
-          () => {
-            this.progressSpinner = false;
-            sessionStorage.setItem("volver", 'true');
-            sessionStorage.removeItem('productoDetalle');
-            sessionStorage.removeItem('productoBuscador');
-            this.router.navigate(['/productos']);
-          }
-        );
-      },
-      reject: () => {
-        this.msgs = [
-          {
-            severity: "info",
-            summary: "info",
-            detail: this.translateService.instant(
-              "general.message.accion.cancelada"
-            )
-          }
-        ];
-      }
-    });
+    if (this.producto.solicitarbaja == "1") {
+      this.checkboxSolicitarAnulacionPorInternet = true;
+    } else if (this.producto.solicitarbaja == "0") {
+      this.checkboxSolicitarAnulacionPorInternet = false;
+    }
   }
 
   guardar() {
@@ -236,7 +195,7 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
         this.progressSpinner = false;
       },
       () => {
-        if (sessionStorage.getItem('productoBuscador')) {
+        if (this.producto.editar) {
           this.getComboTipo();
         }
         this.progressSpinner = false;
@@ -267,7 +226,7 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
   guardarProducto() {
     this.progressSpinner = true;
 
-    if (!sessionStorage.getItem('productoBuscador')) {
+    if (!this.producto.editar) {
       this.subscriptionCrearProductoInstitucion = this.sigaServices.post("fichaProducto_crearProducto", this.producto).subscribe(
         response => {
           this.progressSpinner = false;
@@ -287,14 +246,14 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
           this.progressSpinner = false;
         }
       );
-    } else if (sessionStorage.getItem('productoBuscador')) {
+    } else if (this.producto.editar) {
       this.subscriptionEditarProductoInstitucion = this.sigaServices.post("fichaProducto_editarProducto", this.producto).subscribe(
         response => {
           this.progressSpinner = false;
 
           if (JSON.parse(response.body).error.code == 500) {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-          } else if (JSON.parse(response.body).error.code == 200) {
+          } else {
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           }
         },
@@ -306,6 +265,60 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
         }
       );
     }
+  }
+
+  //Metodo para activar/desactivar productos mediante borrado logico (es decir fechabaja == null esta activo lo contrario inactivo) en caso de que tengan una transaccion pendiente de compra o compras ya existentes, en caso contrario se hara borrado fisico (DELETE)
+  eliminarReactivar() {
+    let keyConfirmation = "deletePlantillaDoc";
+    let mensaje;
+    if (this.producto.fechabaja != null) {
+      mensaje = this.translateService.instant("facturacion.maestros.tiposproductosservicios.reactivarconfirm");
+    } else if (this.producto.fechabaja == null) {
+      mensaje = this.translateService.instant("messages.deleteConfirmation");
+    }
+
+    this.confirmationService.confirm({
+      key: keyConfirmation,
+      message: mensaje,
+      icon: "fa fa-trash-alt",
+      accept: () => {
+        this.progressSpinner = true;
+
+        let listaProductosDTO = new ListaProductosDTO();
+        listaProductosDTO.listaProductosItems.push(this.productoDelBuscador);
+
+        this.subscriptionActivarDesactivarProductos = this.sigaServices.post("productosBusqueda_activarDesactivar", listaProductosDTO).subscribe(
+          response => {
+            if (JSON.parse(response.body).error.code == 500) {
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+            } else {
+              this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+              this.desactivarBotonEliminar = false;
+            }
+          },
+          err => {
+            this.progressSpinner = false;
+          },
+          () => {
+            this.progressSpinner = false;
+            sessionStorage.setItem("volver", 'true');
+            sessionStorage.removeItem('productoBuscador');
+            this.router.navigate(['/productos']);
+          }
+        );
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "info",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
   }
   //FIN SERVICIOS DATOS GENERALES
 }

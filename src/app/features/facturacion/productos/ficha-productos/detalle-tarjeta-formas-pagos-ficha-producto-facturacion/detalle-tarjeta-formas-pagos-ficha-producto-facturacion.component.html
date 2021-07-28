@@ -17,7 +17,7 @@
   <!-- Precio -->
   <div class="form-group-interlineado col-lg-3 col-md-3">
     <!-- <label>{{ "facturacion.productos.preciodesde" | translate}}</label> -->
-    <label>Precio</label><span *ngIf="obligatorio">(*)</span>
+    <label>{{"form.busquedaCursos.literal.precio" | translate}}</label><span *ngIf="obligatorio">(*)</span>
     <!--PROVISIONAL-->
     <input [disabled]="checkboxNoFacturable" DigitDecimaNumber type="text" class="form-control"
       [(ngModel)]='producto.valor' [ngClass]="{'camposObligatorios': aGuardar && obligatorio && producto.valor == ''}"
@@ -26,18 +26,18 @@
 
   <!-- IVA -->
   <div class="form-group-interlineado col-lg-3 col-md-3">
-    <label>IVA</label><span *ngIf="obligatorio">(*)</span>
+    <label>{{"facturacion.productos.iva" | translate}}</label><span *ngIf="obligatorio">(*)</span>
     <!--Provisional, insertan en gen_diccionario-->
     <p-dropdown [disabled]="checkboxNoFacturable" [filter]="true" styleClass="widthAll" [showClear]="true"
       placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='producto.idtipoiva'
-      [ngClass]="{'camposObligatorios': aGuardar && obligatorio && producto.idtipoiva != null}"
+      [ngClass]="{'camposObligatorios': aGuardar && obligatorio && producto.idtipoiva == null}"
       [options]="ivasNoDerogablesObject.combooItems">
     </p-dropdown>
   </div>
 
   <!-- Formas de pago aceptadas por internet -->
   <div class="form-group-interlineado col-lg-3 col-md-3 pb-lg-2 pb-md-2">
-    <label>Formas de pago aceptadas por internet</label>
+    <label>{{"facturacion.fichaproductos.formasdepago.pagointernet" | translate}}</label>
     <p-multiSelect [defaultLabel]="defaultLabelCombosMultiSelect" autoWidth="false"
       [options]="internetPayMethodsObject.combooItems" styleClass="widthAll" filterBy="label, labelSinTilde"
       [(ngModel)]='producto.formasdepagointernet'></p-multiSelect>
@@ -45,7 +45,7 @@
 
   <!-- Formas de pago aceptadas en secretaria -->
   <div class="form-group-interlineado col-lg-3 col-md-3">
-    <label>Formas de pago aceptadas en Secretaria</label>
+    <label>{{"facturacion.fichaproductos.formasdepago.pagosecretaria" | translate}}</label>
     <p-multiSelect [defaultLabel]="defaultLabelCombosMultiSelect" autoWidth="false"
       [options]="secretaryPayMethodsObject.combooItems" styleClass="widthAll" filterBy="label, labelSinTilde"
       [(ngModel)]='producto.formasdepagosecretaria'></p-multiSelect>

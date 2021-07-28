@@ -150,13 +150,8 @@ export class FiltrosProductosComponent implements OnInit, OnDestroy {
         this.progressSpinner = false;
 
         this.categoriasObject = CategorySelectValues;
-
-        let error = this.categoriasObject.error;
-        if (error != null && error.description != null) {
-        }
       },
       err => {
-        console.log(err);
         this.progressSpinner = false;
       },
       () => {
@@ -174,13 +169,8 @@ export class FiltrosProductosComponent implements OnInit, OnDestroy {
         this.progressSpinner = false;
 
         this.tiposObject = TipoSelectValues;
-
-        let error = this.tiposObject.error;
-        if (error != null && error.description != null) {
-        }
       },
       err => {
-        console.log(err);
         this.progressSpinner = false;
       },
       () => {
@@ -199,12 +189,8 @@ export class FiltrosProductosComponent implements OnInit, OnDestroy {
 
         this.ivasObject = IvaTypeSelectValues;
 
-        let error = this.ivasObject.error;
-        if (error != null && error.description != null) {
-        }
       },
       err => {
-        console.log(err);
         this.progressSpinner = false;
       },
       () => {
@@ -223,12 +209,8 @@ export class FiltrosProductosComponent implements OnInit, OnDestroy {
 
         this.formasPagoObject = PayMethodSelectValues;
 
-        let error = this.formasPagoObject.error;
-        if (error != null && error.description != null) {
-        }
       },
       err => {
-        console.log(err);
         this.progressSpinner = false;
       },
       () => {
