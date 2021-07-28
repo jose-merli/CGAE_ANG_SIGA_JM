@@ -23,6 +23,7 @@ export class RelacionesComponent implements OnInit {
   @Input() tarjetaRelaciones: string;
   @Input() art27: boolean = false;
 
+  isPreDesigna: boolean;
   openFicha: boolean = false;
   nuevo;
   body: EJGItem;
@@ -178,9 +179,27 @@ export class RelacionesComponent implements OnInit {
   }
 
   checkPre(dato) {
-    if (dato.sjcs == "PRE-DESIGNACION") return true;
-    else return false;
-  }
+    if (dato.sjcs == "PRE-DESIGNACION" ){
+      this.isPreDesigna = true;
+     return true;
+    } 
+   else if(dato.sjcs == "ASISTENCIA"){
+     this.isPreDesigna = false;
+     return true; 
+   }else if(dato.sjcs == "SOJ"){
+     this.isPreDesigna = false;
+     return true; 
+   } else if(dato.sjcs == "DESIGNACIÓN"){
+     this.isPreDesigna = false;
+     return true; 
+   }else if(dato.sjcs == "EXPEDIENTE"){
+     this.isPreDesigna = false;
+     return true; 
+   }else{
+     return false;
+   }
+ }
+
   openTab(evento) {
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos();
