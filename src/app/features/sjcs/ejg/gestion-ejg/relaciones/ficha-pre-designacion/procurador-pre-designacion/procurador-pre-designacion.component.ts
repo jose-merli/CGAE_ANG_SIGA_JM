@@ -38,10 +38,12 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 
 	ejg: EJGItem;
 
-	fechaCabecera: string = "";
+	fechaCabecera: Date = null;
 	nombreCabecera: string = "";
 
 	@Input() permisoEscritura = true;
+	@Output() opened = new EventEmitter<Boolean>();
+	@Output() idOpened = new EventEmitter<Boolean>();
 
 	idPersona;
 	openPro: boolean = false;
@@ -89,7 +91,7 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 			this.generalBody.idProcurador = data.idProcurador;
 		}
 		/* Procede de ficha ejg */
-		else if (this.ejg.idInstitucionProc != null) {
+		else if (this.ejg.idProcurador != null) {
 
 			this.generalBody.fechaDesigna = new Date(this.ejg.fechaDesProc);
 			this.generalBody.numerodesignacion = this.ejg.numerodesignaproc;
@@ -106,7 +108,7 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 				err => {
 					this.progressSpinner = false;
 				});
-			this.fechaCabecera = this.datepipe.transform(this.generalBody.fechaDesigna, 'dd/MM/yyyy');
+			this.fechaCabecera = this.generalBody.fechaDesigna;
 		}
 
 		
@@ -162,7 +164,7 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 						this.translateService.instant('general.message.accion.realizada')
 					);
 					this.generalBody = new ProcuradorItem();
-					this.fechaCabecera = "";
+					this.fechaCabecera = null;
 					this.nombreCabecera = "";
 					this.persistenceService.setDatos(ejgPeticion);
 					this.ejg = ejgPeticion;
@@ -205,7 +207,7 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 					);
 
 					this.ejg = ejgPeticion;
-					this.fechaCabecera = this.datepipe.transform(this.generalBody.fechaDesigna, 'dd/MM/yyyy');
+					this.fechaCabecera = this.generalBody.fechaDesigna;
 					this.nombreCabecera = this.generalBody.nombre;
 					this.persistenceService.setDatos(this.ejg);
 				}

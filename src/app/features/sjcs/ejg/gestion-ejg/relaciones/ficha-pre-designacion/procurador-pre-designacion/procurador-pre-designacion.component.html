@@ -24,7 +24,7 @@
           <div class="row">
             <div class="col-3">
               <label>{{ 'justiciaGratuita.oficio.designaciones.fechaDesignacion' | translate }}
-                <span>{{ fechaCabecera }}</span>
+                <span>{{ fechaCabecera | date: 'dd/MM/yyyy' }}</span>
               </label>
             </div>
             <div class="col-3">
