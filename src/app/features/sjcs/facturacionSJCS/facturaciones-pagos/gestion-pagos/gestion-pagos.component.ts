@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { USER_VALIDATIONS } from '../../../../../properties/val-properties';
 import { SigaWrapper } from '../../../../../wrapper/wrapper.class';
 import { Location } from "@angular/common";
@@ -19,18 +19,18 @@ import { Router } from '@angular/router';
   templateUrl: './gestion-pagos.component.html',
   styleUrls: ['./gestion-pagos.component.scss']
 })
-export class GestionPagosComponent extends SigaWrapper implements OnInit {
+export class GestionPagosComponent extends SigaWrapper implements OnInit, AfterViewChecked {
 
   msgs;
   permisos;
   datos: PagosjgItem = new PagosjgItem();
-  cerrada;
   modoEdicion;
   numCriterios;
   idPago;
   idEstadoPago;
   idFacturacion;
   showCards: boolean = false;
+  editingConceptos: boolean = false;
 
   @ViewChild(CompensacionFacturaComponent) compensacion;
   @ViewChild(ConfiguracionFicherosComponent) configuracionFic;
@@ -41,7 +41,8 @@ export class GestionPagosComponent extends SigaWrapper implements OnInit {
   constructor(private location: Location,
     private commonsService: CommonsService,
     private router: Router,
-    private translateService: TranslateService) {
+    private translateService: TranslateService,
+    private changeDetectorRef: ChangeDetectorRef) {
     super(USER_VALIDATIONS);
   }
 
@@ -69,18 +70,10 @@ export class GestionPagosComponent extends SigaWrapper implements OnInit {
 
       if (paramsPago == undefined || paramsPago == null || undefined == paramsPago.idPago) {
         this.modoEdicion = false;
-        this.cerrada = false;
       } else {
-        if (undefined != paramsPago.idEstadoPago) {
-          if (paramsPago == '30') {
-            this.cerrada = true;
-          } else {
-            this.cerrada = false;
-          }
-        }
-
         this.modoEdicion = true;
       }
+
       this.numCriterios = 0;
       this.showCards = true;
     });
@@ -92,6 +85,14 @@ export class GestionPagosComponent extends SigaWrapper implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  changeEditingConceptos(event) {
+    this.editingConceptos = event;
+  }
+
+  ngAfterViewChecked() {
+    this.changeDetectorRef.detectChanges();
   }
 
 }

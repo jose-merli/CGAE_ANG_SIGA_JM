@@ -14,6 +14,9 @@ export class DetallePagoComponent implements OnInit {
   progressSpinner: boolean = false;
   permisos;
 
+  @Input() idPago;
+  @Input() idEstadoPago;
+
   @ViewChild("tabla") tabla;
 
   constructor(private commonsService: CommonsService, private translateService: TranslateService, private router: Router) { }
@@ -33,6 +36,10 @@ export class DetallePagoComponent implements OnInit {
       this.progressSpinner = false;
 
     }).catch(error => console.error(error));
+
+  }
+
+  linkCartasPago() {
 
   }
 

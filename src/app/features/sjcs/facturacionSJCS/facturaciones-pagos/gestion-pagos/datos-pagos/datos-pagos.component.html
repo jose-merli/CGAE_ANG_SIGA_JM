@@ -39,14 +39,14 @@
               <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.facturacion' | translate }} (*)</label>
               <p-dropdown class="select-form" filterBy="label,labelSinTilde" [showClear]="true" [filter]="true"
                 placeholder="{{'general.boton.seleccionar' | translate}}"
-                [disabled]='cerrada || !permisos || modoEdicion' [(ngModel)]='body.idFacturacion'
+                [disabled]='isPagoCerrado() || !permisos || modoEdicion' [(ngModel)]='body.idFacturacion'
                 [options]="facturaciones"
                 [ngClass]="{'camposObligatorios': marcarObligatorio('select', body.idFacturacion)}"></p-dropdown>
             </div>
             <div style="margin-top: 1em; margin-bottom: 1em;">
               <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.nombre' | translate }} (*)</label>
               <input pInputText class="form-control" type="text" maxlength="100" name="nombre"
-                [(disabled)]='cerrada || !permisos' [(ngModel)]='body.nombre'
+                [(disabled)]='isPagoCerrado() || !permisos' [(ngModel)]='body.nombre'
                 [ngClass]="{'camposObligatorios': marcarObligatorio('input', body.nombre)}"
                 (blur)="body.abreviatura = body.nombre.slice(0, 36)" />
             </div>
@@ -54,7 +54,7 @@
               <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.nombreAbonoBanco' | translate }}
                 (*)</label>
               <input pInputText class="form-control" type="text" maxlength="36" name="Banco"
-                [(disabled)]='cerrada || !permisos' [(ngModel)]='body.abreviatura'
+                [(disabled)]='isPagoCerrado() || !permisos' [(ngModel)]='body.abreviatura'
                 [ngClass]="{'camposObligatorios': marcarObligatorio('input', body.abreviatura)}" />
             </div>
           </div>
@@ -104,9 +104,11 @@
     </div>
     <div class="card-footer" *ngIf="showFicha">
       <div class="text-right main-button">
-        <button pButton type="button" iconPos="left" icon="fa fa-play" [disabled]="disabledEjecutar() || !permisos"
+        <button pButton type="button" iconPos="left" icon="fa fa-play"
+          [disabled]="disabledEjecutar() || !permisos || editingConceptos"
           label="{{ 'general.boton.ejecutar' | translate }}"></button>
-        <button pButton type="button" iconPos="left" icon="fa fa-close" [disabled]="disabledCerrar() || !permisos"
+        <button pButton type="button" iconPos="left" icon="fa fa-close"
+          [disabled]="disabledCerrar() || !permisos || editingConceptos"
           label="{{ 'facturacionSJCS.facturacionesYPagos.cerrarAbonar' | translate }}"></button>
         <button pButton type="button" iconPos="left" icon="fa fa-lock-open" [disabled]='disabledReabrir() || !permisos'
           label="{{ 'facturacionSJCS.facturacionesYPagos.deshacerCierre' | translate }}"></button>

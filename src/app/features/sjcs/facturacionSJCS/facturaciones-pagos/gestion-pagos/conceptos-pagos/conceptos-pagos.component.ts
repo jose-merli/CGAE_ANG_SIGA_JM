@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '../../../../../../commons/translate';
 import { ComboItem } from '../../../../../../models/ComboItem';
@@ -36,6 +36,8 @@ export class ConceptosPagosComponent implements OnInit {
   @Input() idEstadoPago;
   @Input() idPago;
   @Input() idFacturacion;
+
+  @Output() editing = new EventEmitter<boolean>();
 
   @ViewChild("tabla") tabla;
 
@@ -238,7 +240,7 @@ export class ConceptosPagosComponent implements OnInit {
 
   eliminar() {
 
-    if (this.selectedDatos.length > 0) {
+    if (!this.disabledEliminar()) {
       this.progressSpinner = true;
 
       this.sigaService.post("pagosjcs_deleteConceptoPago", this.selectedDatos).subscribe(
@@ -270,39 +272,54 @@ export class ConceptosPagosComponent implements OnInit {
 
   nuevo() {
 
-    let concepto: ConceptoPagoItem = new ConceptoPagoItem();
-    concepto.idPagosjg = this.idPago;
-    concepto.idFacturacion = this.idFacturacion;
-    concepto.porcentajeApagar = "0.00";
-    concepto.cantidadApagar = 0.00;
-    concepto.nuevo = true;
+    if (!this.disabledNuevo()) {
 
-    if (this.body.length == 0) {
-      this.body.push(concepto);
-    } else {
-      this.body = [concepto, ...this.body];
+      let concepto: ConceptoPagoItem = new ConceptoPagoItem();
+      concepto.idPagosjg = this.idPago;
+      concepto.idFacturacion = this.idFacturacion;
+      concepto.porcentajeApagar = "0.00";
+      concepto.cantidadApagar = 0.00;
+      concepto.nuevo = true;
+
+      if (this.body.length == 0) {
+        this.body.push(concepto);
+      } else {
+        this.body = [concepto, ...this.body];
+      }
+
     }
 
   }
 
   restablecer() {
-    this.body = JSON.parse(JSON.stringify(this.bodyAux));
+    if (!this.disabledRestablecer()) {
+      this.body = JSON.parse(JSON.stringify(this.bodyAux));
+    }
   }
 
   disabledRestablecer() {
-    return JSON.stringify(this.body) == JSON.stringify(this.bodyAux);
+
+    let disable = (JSON.stringify(this.body) == JSON.stringify(this.bodyAux)) || this.isPagoCerradoOejecutado();
+
+    if (!disable) {
+      this.editing.emit(true);
+    } else {
+      this.editing.emit(false);
+    }
+
+    return disable;
   }
 
   disabledGuardar() {
-    return JSON.stringify(this.body) == JSON.stringify(this.bodyAux);
+    return (JSON.stringify(this.body) == JSON.stringify(this.bodyAux)) || this.isPagoCerradoOejecutado();
   }
 
   disabledNuevo() {
-    return this.disableNuevo;
+    return this.disableNuevo || this.isPagoCerradoOejecutado();
   }
 
   disabledEliminar() {
-    return (this.selectedDatos.length == 0)
+    return (this.selectedDatos.length == 0) || this.isPagoCerradoOejecutado();
   }
 
   getComboConceptos() {
@@ -429,6 +446,10 @@ export class ConceptosPagosComponent implements OnInit {
       dato.porcentajeRestante = null;
     }
 
+  }
+
+  isPagoCerradoOejecutado() {
+    return (this.idEstadoPago == '30' || this.idEstadoPago == '20');
   }
 
 }

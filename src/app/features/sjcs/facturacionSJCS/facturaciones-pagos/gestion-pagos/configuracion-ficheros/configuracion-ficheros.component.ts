@@ -26,7 +26,7 @@ export class ConfiguracionFicherosComponent implements OnInit {
   configuracionFicherosAux: PagosjgItem = new PagosjgItem();
 
   @Input() idPago;
-
+  @Input() idEstadoPago;
 
   constructor(private commonsService: CommonsService,
     private translateService: TranslateService,
@@ -234,7 +234,7 @@ export class ConfiguracionFicherosComponent implements OnInit {
 
   guardar() {
 
-    if (this.comprobaciones()) {
+    if (this.comprobaciones() && !this.isPagoCerrado()) {
 
       this.progressSpinner = true;
 
@@ -263,11 +263,17 @@ export class ConfiguracionFicherosComponent implements OnInit {
   }
 
   disableRestablecer() {
-    return JSON.stringify(this.configuracionFicheros) == JSON.stringify(this.configuracionFicherosAux);
+    return (JSON.stringify(this.configuracionFicheros) == JSON.stringify(this.configuracionFicherosAux)) || this.isPagoCerrado();
+  }
+
+  disableGuardar() {
+    return (JSON.stringify(this.configuracionFicheros) == JSON.stringify(this.configuracionFicherosAux)) || this.isPagoCerrado();
   }
 
   restablecer() {
-    this.configuracionFicheros = JSON.parse(JSON.stringify(this.configuracionFicherosAux));
+    if (!this.isPagoCerrado()) {
+      this.configuracionFicheros = JSON.parse(JSON.stringify(this.configuracionFicherosAux));
+    }
   }
 
   marcarObligatorio(valor: string): boolean {
@@ -282,6 +288,10 @@ export class ConfiguracionFicherosComponent implements OnInit {
 
   getIban() {
     return this.comboCuentasBanc.find(el => el.value == this.configuracionFicheros.codBanco).label;
+  }
+
+  isPagoCerrado() {
+    return (this.idEstadoPago == '30');
   }
 
 }

@@ -27,10 +27,11 @@ export class DatosPagosComponent implements OnInit {
   permisos;
 
   @Input() numCriterios;
-  @Input() cerrada;
   @Input() modoEdicion;
   @Input() idPago;
   @Input() idEstadoPago;
+  @Input() editingConceptos;
+
   @ViewChild("tabla") tabla;
 
   constructor(private translateService: TranslateService, private sigaService: SigaServices,
@@ -260,7 +261,6 @@ export class DatosPagosComponent implements OnInit {
       if (!this.modoEdicion) {
         this.body = new PagosjgItem();
         this.histEstados = [];
-        //this.changeCerrada.emit(false);
       } else {
         if (this.idEstadoPago == "10") {
           this.body = JSON.parse(JSON.stringify(this.bodyAux));
@@ -351,6 +351,10 @@ export class DatosPagosComponent implements OnInit {
     }
 
     return resp;
+  }
+
+  isPagoCerrado() {
+    return (this.idEstadoPago == '30');
   }
 
 }
