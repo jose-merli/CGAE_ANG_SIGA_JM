@@ -39,8 +39,6 @@ export class ContrariosPreDesignacionComponent implements OnInit {
   progressSpinner: boolean = false;
 
   @Input() permisoEscritura: boolean = true;
-  @Output() opened = new EventEmitter<Boolean>();
-  @Output() idOpened = new EventEmitter<Boolean>();
 
   @ViewChild("table") tabla;
 
@@ -240,8 +238,11 @@ export class ContrariosPreDesignacionComponent implements OnInit {
       });
   }
 
-  abreCierra() {
+  abreCierra(key) {
+    if (
+      key == "contrariosPreDesigna"){
     this.openCon = !this.openCon;
+      }
   }
 
   searchHistorical() {

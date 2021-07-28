@@ -3,13 +3,13 @@
   <div class="card" id="top">
     <div class="card-header header-ficha">
       <div *ngIf="!openCon" class="form-row">
-        <div class="col-lg-1 col-md-2" (click)="abreCierra()">
+        <div class="col-lg-1 col-md-2" (click)="abreCierra('contrariosPreDesigna')">
           <!-- (click)="" -->
           <div class="img-colegiado">
             <i class="fa fa-users icon-ficha pointer"></i>
           </div>
         </div>
-        <div class="col-lg-11 col-md-10" (click)="abreCierra()">
+        <div class="col-lg-11 col-md-10" (click)="abreCierra('contrariosPreDesigna')">
           <div class="d-flex justify-content-start mb-1">
             <label class="mr-auto title-ficha pointer">{{ 'justiciaGratuita.ejg.preDesigna.contrarios' | translate
               }}</label>
@@ -40,11 +40,11 @@
               <span>{{primero.procurador}}</span></label>
             </div>
           </div>
-          <i class="fa fa-angle-down float-right" (click)="abreCierraFicha()"></i>
+          <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('contrariosPreDesigna')"></i>
         </div>
       </div>
       <div *ngIf="openCon" class=" header-ficha-open d-flex justify-content-start align-items-center"
-        (click)="abreCierra()">
+        (click)="abreCierra('contrariosPreDesigna')">
         <!-- (click)="" -->
         <div class="img-colegiado">
           <i class="fa fa-users icon-ficha"></i>
