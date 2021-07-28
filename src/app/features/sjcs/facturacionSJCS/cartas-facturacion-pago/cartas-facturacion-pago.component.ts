@@ -8,6 +8,7 @@ import { Location } from "@angular/common";
 import { SigaServices } from '../../../../_services/siga.service';
 import { FiltroCartasFacturacionPagoComponent } from './filtro-cartas-facturacion-pago/filtro-cartas-facturacion-pago.component';
 import { TablaCartasFacturacionPagoComponent } from './tabla-cartas-facturacion-pago/tabla-cartas-facturacion-pago.component';
+import { SigaStorageService } from '../../../../siga-storage.service';
 
 @Component({
   selector: 'app-cartas-facturacion-pago',
@@ -29,7 +30,7 @@ export class CartasFacturacionPagoComponent implements OnInit, OnDestroy {
 
   constructor(private commonsService: CommonsService, private persistenceService: PersistenceService,
     private translateService: TranslateService, private router: Router, private activatedRoute: ActivatedRoute,
-    private location: Location, private sigaServices: SigaServices) { }
+    private location: Location, private sigaServices: SigaServices, private sigaStorageService: SigaStorageService) { }
 
   ngOnInit() {
     this.commonsService.checkAcceso(procesos_facturacionSJCS.cartasFacturacionPago)
@@ -52,21 +53,36 @@ export class CartasFacturacionPagoComponent implements OnInit, OnDestroy {
 
     this.activaVolver = false;
 
+    let isLetrado = this.sigaStorageService.isLetrado;
+
     //Viene de ficha de facturación 
-    if (undefined != this.persistenceService.getDatos()) {
-      let datos = this.persistenceService.getDatos();
-      let isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
+    if (undefined != sessionStorage.getItem("datosCartasFacturacion")) {
+      let datos = JSON.parse(sessionStorage.getItem("datosCartasFacturacion"));
+      sessionStorage.removeItem("datosCartasFacturacion");
       this.activaVolver = true;
 
-      //Si es letrado no puede ver las cartas de facturacion de las ficha de facturacion 
-      if (undefined != datos.idFacturacion && null != datos.idFacturacion && !isLetrado) {
-        datos.modoBusqueda = datos.modo;
+      //Si es letrado no puede ver las cartas de facturación de la ficha de facturación 
+      if (!isLetrado) {
         this.filtros.filtros.idFacturacion = datos.idFacturacion;
         this.persistenceService.setFiltros(datos);
-
         this.search(datos.modo);
       }
     }
+
+    // Viene de ficha de pago
+    if (undefined != sessionStorage.getItem("datosCartasPago")) {
+      let datos = JSON.parse(sessionStorage.getItem("datosCartasPago"));
+      sessionStorage.removeItem("datosCartasPago");
+      this.activaVolver = true;
+
+      //Si es letrado no puede ver las cartas de pago de las ficha de pagos 
+      if (!isLetrado) {
+        this.filtros.filtros.idPago = datos.idPago;
+        this.persistenceService.setFiltros(datos);
+        this.search(datos.modo);
+      }
+    }
+
   }
 
   volver() {

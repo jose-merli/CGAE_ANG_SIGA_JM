@@ -1,3 +1,5 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
 <div class="detalle-container">
   <div id="facSJCSFichaPagosDetaPago">
     <div class="card">
@@ -15,7 +17,7 @@
             </div>
             <div class="d-flex justify-content-between">
               <label>{{ "facturacionSJCS.facturacionesYPagos.numeroPagos" | translate }}:
-                <span>{{ numPagos }}</span>
+                <span>{{ numApuntes }}</span>
               </label>
               <label>
                 <i class="fas fa-edit icon-enlace"></i>

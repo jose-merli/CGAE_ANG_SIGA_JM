@@ -1,7 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { FacturacionItem } from '../../../../../../models/sjcs/FacturacionItem';
-import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
 
 @Component({
@@ -16,19 +14,18 @@ export class CartasFacturacionComponent implements OnInit {
   @Input() idFacturacion;
   @Input() idEstadoFacturacion;
 
-  constructor(private router: Router, private persistenceService: PersistenceService,
-    private sigaService: SigaServices) { }
+  constructor(private router: Router, private sigaService: SigaServices) { }
 
   ngOnInit() {
     this.progressSpinnerCartas = false;
-    
-    if(undefined!=this.idFacturacion){
-      this.serviceNumApuntes();    
+
+    if (undefined != this.idFacturacion) {
+      this.serviceNumApuntes();
     }
   }
 
-  serviceNumApuntes(){
-    if(undefined!=this.idFacturacion){
+  serviceNumApuntes() {
+    if (undefined != this.idFacturacion) {
       this.progressSpinnerCartas = true;
 
       //datos de la facturación
@@ -36,7 +33,7 @@ export class CartasFacturacionComponent implements OnInit {
         data => {
           this.numApuntes = data.valor;
           this.progressSpinnerCartas = false;
-        },	  
+        },
         err => {
           console.log(err);
           this.progressSpinnerCartas = false;
@@ -45,23 +42,26 @@ export class CartasFacturacionComponent implements OnInit {
     }
   }
 
-  disableEnlaceCartas(){
-    if(this.idEstadoFacturacion=='30' || this.idEstadoFacturacion=='20'){
+  disableEnlaceCartas() {
+    if (this.idEstadoFacturacion == '30' || this.idEstadoFacturacion == '20') {
       return false;
-    }else{
+    } else {
       return true;
     }
   }
 
-  linkCartasFacturacion(){
-    if(undefined!=this.idFacturacion && undefined!=this.idEstadoFacturacion && (this.idEstadoFacturacion=='30' || this.idEstadoFacturacion=='20')){
-      let datos= this.persistenceService.getDatos();
-      this.persistenceService.setFiltrosAux(this.persistenceService.getFiltros());
+  linkCartasFacturacion() {
 
-      datos.idFacturacion=this.idFacturacion;
-      datos.modo="f";
+    if (undefined != this.idFacturacion && null != this.idFacturacion && undefined != this.idEstadoFacturacion && null != this.idEstadoFacturacion && (this.idEstadoFacturacion == '30' || this.idEstadoFacturacion == '20')) {
 
-      this.persistenceService.setDatos(datos);
+      const datosCartasFacturacion = {
+        idFacturacion: this.idFacturacion,
+        idEstadoFacturacion: this.idEstadoFacturacion,
+        modoBusqueda: 'f'
+      };
+
+      sessionStorage.setItem("datosCartasFacturacion", JSON.stringify(datosCartasFacturacion));
+
       this.router.navigate(["/cartaFacturacionPago"]);
     }
   }
