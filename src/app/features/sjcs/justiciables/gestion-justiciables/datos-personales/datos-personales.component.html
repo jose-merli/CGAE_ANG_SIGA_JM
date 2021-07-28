@@ -123,8 +123,8 @@
                 <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true"
                   label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname"></p-checkbox>
               </div>
-              <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}"
-                (click)="isSelectMultiple(); selectedDatos=false">
+              <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
+                <!-- (click)="isSelectMultiple(); selectedDatos="false"> se comenta por error en el build, no entiendo muy bien lo del selectedDatos = false cuando es un array-->
                 <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
             </div>
           </div>

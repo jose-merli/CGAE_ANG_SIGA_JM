@@ -134,7 +134,7 @@
               <input type="text" [(ngModel)]="generalBody.descrIngrAnuales" [maxLength]="60" class="form-control" pInputText>
             </div>
             <div class="form-group col-lg-2 col-md-2">
-              <input type='number'  value="{{ value | number:'1.2-2' }}"  [(ngModel)]="generalBody.impIngrAnuales"  [maxLength]="10" 
+              <input type='number' [(ngModel)]="generalBody.impIngrAnuales"  [maxLength]="10" 
               class="form-control" (keypress)="numberOnly($event)" pInputText >
             </div> €
           </div>

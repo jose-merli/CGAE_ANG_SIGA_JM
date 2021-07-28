@@ -235,7 +235,7 @@
   <!-- <div class="bloque col-lg-6 col-md-6"> -->
   <div class="form-row">
     <p-table [value]="ficheros" [columns]="colsModal" [responsive]="true" #tableFicheros class="tabla-listado"
-      [paginator]="false" [rows]="selectedItem" [selectionMode]="single" [(selection)]="selectedDatos"
+      [paginator]="false" [rows]="selectedItem" selectionMode="single" [(selection)]="selectedDatos"
       [responsive]="true">
       <!-- (onRowSelect)="onRowSelect($event)" -->
       <ng-template pTemplate="colgroup" let-columns>
