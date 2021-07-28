@@ -48,7 +48,7 @@
         <app-regtel-ejg *ngIf="permisoEscrituraRegtel != undefined && modoEdicion"(opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaRegtel]="tarjetaRegtel"  [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraRegtel" (modoEdicionSend)="modoEdicionSend($event)" [openTarjetaRegtel]="openTarjetaRegtel">
         </app-regtel-ejg>
         
-         <app-comunicaciones-ejg *ngIf="permisoEscrituraComunicaciones != undefined && modoEdicion" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaComunicaciones]="tarjetaComunicaciones" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraComunicaciones" (modoEdicionSend)="modoEdicionSend($event)" [openTarjetaComunicaciones] = "openTarjetaComunicaciones">
+         <app-comunicaciones-ejg id= "comunicaciones" *ngIf="permisoEscrituraComunicaciones != undefined && modoEdicion" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaComunicaciones]="tarjetaComunicaciones" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraComunicaciones" (modoEdicionSend)="modoEdicionSend($event)" [openTarjetaComunicaciones] = "openTarjetaComunicaciones">
         </app-comunicaciones-ejg>
     </div>
 

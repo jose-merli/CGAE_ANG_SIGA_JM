@@ -216,6 +216,12 @@ export class GestionEjgComponent implements OnInit {
     this.commonsService.checkAcceso(procesos_ejg.tarjetaResumen)
       .then(respuesta => {
         this.permisoEscrituraResumen = respuesta;
+        //Método para rellenar los enlaces de la tarjeta fija
+        //Es necesario para este metodo que se tenga todos los permisos asignado ya que si 
+        //no puede asociar los distintos enlaces con las tarjetas corerspondientes al no estar 
+        //"activas" (*ngIf=false)
+        //Al no saber el orden en el que se devolveran los persmisos, se debe llamar en todos los servicios
+        this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -223,6 +229,12 @@ export class GestionEjgComponent implements OnInit {
     this.commonsService.checkAcceso(procesos_ejg.datosGenerales)
       .then(respuesta => {
         this.permisoEscrituraDatosGenerales = respuesta;
+        //Método para rellenar los enlaces de la tarjeta fija
+        //Es necesario para este metodo que se tenga todos los permisos asignado ya que si 
+        //no puede asociar los distintos enlaces con las tarjetas corerspondientes al no estar 
+        //"activas" (*ngIf=false)
+        //Al no saber el orden en el que se devolveran los persmisos, se debe llamar en todos los servicios
+        this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -230,6 +242,12 @@ export class GestionEjgComponent implements OnInit {
     this.commonsService.checkAcceso(procesos_ejg.serviciosTramitacion)
       .then(respuesta => {
         this.permisoEscrituraServiciosTramitacion = respuesta;
+        //Método para rellenar los enlaces de la tarjeta fija
+        //Es necesario para este metodo que se tenga todos los permisos asignado ya que si 
+        //no puede asociar los distintos enlaces con las tarjetas corerspondientes al no estar 
+        //"activas" (*ngIf=false)
+        //Al no saber el orden en el que se devolveran los persmisos, se debe llamar en todos los servicios
+        this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -237,6 +255,12 @@ export class GestionEjgComponent implements OnInit {
     this.commonsService.checkAcceso(procesos_ejg.unidadFamiliar)
       .then(respuesta => {
         this.permisoEscrituraUnidadFamiliar = respuesta;
+        //Método para rellenar los enlaces de la tarjeta fija
+        //Es necesario para este metodo que se tenga todos los permisos asignado ya que si 
+        //no puede asociar los distintos enlaces con las tarjetas corerspondientes al no estar 
+        //"activas" (*ngIf=false)
+        //Al no saber el orden en el que se devolveran los persmisos, se debe llamar en todos los servicios
+        this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -244,6 +268,12 @@ export class GestionEjgComponent implements OnInit {
     this.commonsService.checkAcceso(procesos_ejg.expedientesEconomicos)
       .then(respuesta => {
         this.permisoEscrituraExpedientesEconomicos = respuesta;
+        //Método para rellenar los enlaces de la tarjeta fija
+        //Es necesario para este metodo que se tenga todos los permisos asignado ya que si 
+        //no puede asociar los distintos enlaces con las tarjetas corerspondientes al no estar 
+        //"activas" (*ngIf=false)
+        //Al no saber el orden en el que se devolveran los persmisos, se debe llamar en todos los servicios
+        this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -251,6 +281,12 @@ export class GestionEjgComponent implements OnInit {
     this.commonsService.checkAcceso(procesos_ejg.relaciones)
       .then(respuesta => {
         this.permisoEscrituraRelaciones = respuesta;
+        //Método para rellenar los enlaces de la tarjeta fija
+        //Es necesario para este metodo que se tenga todos los permisos asignado ya que si 
+        //no puede asociar los distintos enlaces con las tarjetas corerspondientes al no estar 
+        //"activas" (*ngIf=false)
+        //Al no saber el orden en el que se devolveran los persmisos, se debe llamar en todos los servicios
+        this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -258,6 +294,12 @@ export class GestionEjgComponent implements OnInit {
     this.commonsService.checkAcceso(procesos_ejg.estados)
       .then(respuesta => {
         this.permisoEscrituraEstados = respuesta;
+        //Método para rellenar los enlaces de la tarjeta fija
+        //Es necesario para este metodo que se tenga todos los permisos asignado ya que si 
+        //no puede asociar los distintos enlaces con las tarjetas corerspondientes al no estar 
+        //"activas" (*ngIf=false)
+        //Al no saber el orden en el que se devolveran los persmisos, se debe llamar en todos los servicios
+        this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -265,6 +307,12 @@ export class GestionEjgComponent implements OnInit {
     this.commonsService.checkAcceso(procesos_ejg.documentacion)
       .then(respuesta => {
         this.permisoEscrituraDocumentacion = respuesta;
+        //Método para rellenar los enlaces de la tarjeta fija
+        //Es necesario para este metodo que se tenga todos los permisos asignado ya que si 
+        //no puede asociar los distintos enlaces con las tarjetas corerspondientes al no estar 
+        //"activas" (*ngIf=false)
+        //Al no saber el orden en el que se devolveran los persmisos, se debe llamar en todos los servicios
+        this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -272,6 +320,12 @@ export class GestionEjgComponent implements OnInit {
     this.commonsService.checkAcceso(procesos_ejg.informeCalif)
       .then(respuesta => {
         this.permisoEscrituraInformeCalif = respuesta;
+        //Método para rellenar los enlaces de la tarjeta fija
+        //Es necesario para este metodo que se tenga todos los permisos asignado ya que si 
+        //no puede asociar los distintos enlaces con las tarjetas corerspondientes al no estar 
+        //"activas" (*ngIf=false)
+        //Al no saber el orden en el que se devolveran los persmisos, se debe llamar en todos los servicios
+        this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -279,6 +333,12 @@ export class GestionEjgComponent implements OnInit {
     this.commonsService.checkAcceso(procesos_ejg.resolucion)
       .then(respuesta => {
         this.permisoEscrituraResolucion = respuesta;
+        //Método para rellenar los enlaces de la tarjeta fija
+        //Es necesario para este metodo que se tenga todos los permisos asignado ya que si 
+        //no puede asociar los distintos enlaces con las tarjetas corerspondientes al no estar 
+        //"activas" (*ngIf=false)
+        //Al no saber el orden en el que se devolveran los persmisos, se debe llamar en todos los servicios
+        this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -286,6 +346,12 @@ export class GestionEjgComponent implements OnInit {
     this.commonsService.checkAcceso(procesos_ejg.impugnacion)
       .then(respuesta => {
         this.permisoEscrituraImpugnacion = respuesta;
+        //Método para rellenar los enlaces de la tarjeta fija
+        //Es necesario para este metodo que se tenga todos los permisos asignado ya que si 
+        //no puede asociar los distintos enlaces con las tarjetas corerspondientes al no estar 
+        //"activas" (*ngIf=false)
+        //Al no saber el orden en el que se devolveran los persmisos, se debe llamar en todos los servicios
+        this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -293,6 +359,12 @@ export class GestionEjgComponent implements OnInit {
     this.commonsService.checkAcceso(procesos_ejg.regtel)
       .then(respuesta => {
         this.permisoEscrituraRegtel = respuesta;
+        //Método para rellenar los enlaces de la tarjeta fija
+        //Es necesario para este metodo que se tenga todos los permisos asignado ya que si 
+        //no puede asociar los distintos enlaces con las tarjetas corerspondientes al no estar 
+        //"activas" (*ngIf=false)
+        //Al no saber el orden en el que se devolveran los persmisos, se debe llamar en todos los servicios
+        this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
       
@@ -300,10 +372,17 @@ export class GestionEjgComponent implements OnInit {
     this.commonsService.checkAcceso(procesos_ejg.comunicaciones)
       .then(respuesta => {
         this.permisoEscrituraComunicaciones = respuesta;
+        //Método para rellenar los enlaces de la tarjeta fija
+        //Es necesario para este metodo que se tenga todos los permisos asignado ya que si 
+        //no puede asociar los distintos enlaces con las tarjetas corerspondientes al no estar 
+        //"activas" (*ngIf=false)
+        //Al no saber el orden en el que se devolveran los persmisos, se debe llamar en todos los servicios
+        this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
       
-    this.enviarEnlacesTarjeta();
+    // this.enviarEnlacesTarjeta();
+    
   }
 
   enviarEnlacesTarjeta() {
