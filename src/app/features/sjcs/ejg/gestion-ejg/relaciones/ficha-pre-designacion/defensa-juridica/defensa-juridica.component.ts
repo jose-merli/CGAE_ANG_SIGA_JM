@@ -26,6 +26,8 @@ export class DefensaJuridicaComponent implements OnInit {
   designa = null;
   bodyInicial: EJGItem;
   @Input() permisoEscritura: boolean = true;
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
 
   isDisabledProcedimiento: boolean = true;
 
@@ -211,6 +213,8 @@ export class DefensaJuridicaComponent implements OnInit {
 
   abreCierra() {
     this.openDef = !this.openDef;
+    // this.opened.emit(this.openDef);
+    // this.idOpened.emit(key);
   }
 
   checkPermisosAsociarDes() {

@@ -39,6 +39,8 @@ export class ContrariosPreDesignacionComponent implements OnInit {
   progressSpinner: boolean = false;
 
   @Input() permisoEscritura: boolean = true;
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
 
   @ViewChild("table") tabla;
 

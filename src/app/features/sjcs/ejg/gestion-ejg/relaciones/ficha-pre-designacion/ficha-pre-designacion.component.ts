@@ -29,7 +29,8 @@ export class FichaPreDesignacionComponent implements OnInit {
 
   iconoTarjetaResumen = "clipboard";
 
-  datos;
+  
+  
   progressSpinner: boolean = false;
   //Mediante esta sentencia el padre puede acceder a los datos y atributos del hijo
   /*a particularidad de éste método es que tenemos que esperar a que la vista esté totalmente 
@@ -41,6 +42,15 @@ export class FichaPreDesignacionComponent implements OnInit {
   //@ViewChild(TablaInscripcionesComponent) tablapartida;
   //comboPartidosJudiciales
 
+  datosTarjetaResumen;
+
+  //Variables asociadas a los enlaces de la tarjeta resumen
+  enlacesTarjetaResumen = [];
+  manuallyOpened: boolean;
+  openTarjetaDefensaJuridica: boolean;
+  openTarjetaContrariosPreDesigna: boolean;
+  openTarjetaProcuradorPreDesigna: boolean;
+
   msgs: Message[];
   permisoEscritura: boolean = true;
 
@@ -51,17 +61,25 @@ export class FichaPreDesignacionComponent implements OnInit {
     private router: Router,
     private location: Location) { }
 
-  ngOnInit() {
-    //Comprobar si el ejg tiene alguna designacion asignada.
-    //Si es asi, esta ficha sera unicamente de consulta, no edicion.
-    //if()
+  async ngOnInit() {
+    
     if (sessionStorage.getItem("EJGItem")) {
       this.body = JSON.parse(sessionStorage.getItem("EJGItem"));
       sessionStorage.removeItem("EJGItem");
       this.persistenceService.setDatos(this.body);
     }
     else this.body = this.persistenceService.getDatos();
-    this.datos = [
+    
+    //Comprobar si el EJG tiene alguna designacion asignada.
+    //Si es asi, esta ficha sera unicamente de consulta, no edicion.
+    this.checkEJGDesignas();
+    //Actualmente se presentan los mismos datos que en la ficha de EJG.
+    await this.iniciarTarjetaResumen();
+  }
+
+  async iniciarTarjetaResumen(){
+
+    this.datosTarjetaResumen = [
       {
         label: "Año/Numero EJG",
         value: this.body.numAnnioProcedimiento
@@ -70,7 +88,6 @@ export class FichaPreDesignacionComponent implements OnInit {
         label: "Solicitante",
         value: this.body.nombreApeSolicitante
       },
-
       {
         label: "Estado EJG",
         value: this.body.estadoEJG
@@ -93,10 +110,33 @@ export class FichaPreDesignacionComponent implements OnInit {
       },
     ];
 
-    this.checkEJGDesignas();
+    let enlaces = {
+      label: "justiciaGratuita.ejg.preDesigna.defensaJuridica",
+      value: document.getElementById("defensaJuridica"),
+      nombre: "defensaJuridica",
+    };
+
+    this.enlacesTarjetaResumen.push(enlaces);
+
+    enlaces = {
+      label: "justiciaGratuita.ejg.preDesigna.contrarios",
+      value: document.getElementById("contrariosPreDesigna"),
+      nombre: "contrariosPreDesigna",
+    };
+
+    this.enlacesTarjetaResumen.push(enlaces);
+
+    enlaces = {
+      label: "justiciaGratuita.oficio.designas.contrarios.procurador",
+      value: document.getElementById("procuradorPreDesigna"),
+      nombre: "procuradorPreDesigna",
+    };
+
+    this.enlacesTarjetaResumen.push(enlaces);
   }
 
   backTo() {
+    //Variable de entorno que guarda toda la informacion perteneciente a la designacion asociada al EJG si la hubiera.
     sessionStorage.removeItem("Designa");
     this.location.back();
   }
@@ -122,6 +162,38 @@ export class FichaPreDesignacionComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  isCloseReceive(event) {
+    if (event != undefined) {
+      switch (event) {
+        case "defensaJuridica":
+          this.openTarjetaDefensaJuridica = this.manuallyOpened;
+          break;
+        case "contrariosPreDesigna":
+          this.openTarjetaContrariosPreDesigna = this.manuallyOpened;
+          break;
+        case "procuradorPreDesigna":
+          this.openTarjetaProcuradorPreDesigna = this.manuallyOpened;
+      }
+    }
+  }
+
+  isOpenReceive(event) {
+
+    if (event != undefined) {
+      switch (event) {
+        case "defensaJuridica":
+          this.openTarjetaDefensaJuridica = true;
+          break;
+        case "contrariosPreDesigna":
+          this.openTarjetaContrariosPreDesigna = true;
+          break;
+        case "procuradorPreDesigna":
+          this.openTarjetaProcuradorPreDesigna = true;
+          break;
+      }
+    }
   }
 
 }

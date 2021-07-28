@@ -6,11 +6,12 @@
             <i class="fa fa-angle-right"></i>{{'justiciaGratuita.ejg.datosGenerales.EJG' | translate}}
             <i class="fa fa-angle-right"></i>{{'justiciaGratuita.ejg.preDesigna.datosPre' | translate}}
     </div>
-    <app-tarjeta-resumen-fija class="pb-50" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="datos" [icono]="iconoTarjetaResumen"  >
+    <app-tarjeta-resumen-fija class="pb-50" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="datosTarjetaResumen" [icono]="iconoTarjetaResumen"  
+    [enlaces]="enlacesTarjetaResumen" >
     </app-tarjeta-resumen-fija>
-    <app-defensa-juridica [permisoEscritura]="permisoEscritura"></app-defensa-juridica>
-    <app-contrarios-pre-designacion [permisoEscritura]="permisoEscritura"></app-contrarios-pre-designacion>
-    <app-procurador-pre-designacion [permisoEscritura]="permisoEscritura"></app-procurador-pre-designacion>
+    <app-defensa-juridica [permisoEscritura]="permisoEscritura" id="defensaJuridica" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)"></app-defensa-juridica>
+    <app-contrarios-pre-designacion [permisoEscritura]="permisoEscritura" id="contrariosPreDesigna" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)"></app-contrarios-pre-designacion>
+    <app-procurador-pre-designacion [permisoEscritura]="permisoEscritura" id="procuradorPreDesigna" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)"></app-procurador-pre-designacion>
 </div>
 
 <div class="mt-3 text-right main-button" id="down">
