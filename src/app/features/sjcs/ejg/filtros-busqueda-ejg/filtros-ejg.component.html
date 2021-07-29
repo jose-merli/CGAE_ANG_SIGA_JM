@@ -32,7 +32,8 @@
             <div class="col-log-8 col-md-8 pr5">
               <label><strong>{{ 'gratuita.busquedaAsistencias.literal.numero' |
                   translate}}</strong></label>
-              <input type="text" class="form-control" maxLength="10" #inputNumero pInputText [(ngModel)]="body.numero">
+              <!-- <input type="text" class="form-control" maxLength="10" #inputNumero pInputText [(ngModel)]="body.numero"> -->
+              <input type="text" class="form-control" #inputNumero pInputText [(ngModel)]="body.numero">
             </div>
           </div>
         </div>
