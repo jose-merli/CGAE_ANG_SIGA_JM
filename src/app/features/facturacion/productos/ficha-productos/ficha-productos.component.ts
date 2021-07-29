@@ -77,18 +77,18 @@ export class FichaProductosComponent implements OnInit, OnDestroy {
 
   //INICIO SERVICIOS 
   //Metodo para que en caso de que se haya accedido a traves del enlace de la columna producto se consiga toda la informacion restante del producto seleccionado para completar los campos a editar
-  async detalleProducto() {
+  detalleProducto() {
     this.progressSpinner = true;
 
-    this.subscriptionProductDetail = await this.sigaServices.getParam("fichaProducto_detalleProducto", "?idTipoProducto=" + this.productoDelBuscador.idtipoproducto +
+    this.subscriptionProductDetail = this.sigaServices.getParam("fichaProducto_detalleProducto", "?idTipoProducto=" + this.productoDelBuscador.idtipoproducto +
       "&idProducto=" + this.productoDelBuscador.idproducto + "&idProductoInstitucion=" + this.productoDelBuscador.idproductoinstitucion).subscribe(
         producto => {
-          this.progressSpinner = false;
           this.producto = producto;
-          this.producto.formasdepagointernetoriginales = { ...this.producto.formasdepagointernet };
-          this.producto.formasdepagosecretariaoriginales = { ...this.producto.formasdepagosecretaria };
+          this.producto.formasdepagointernetoriginales = Object.assign([], this.producto.formasdepagointernet);
+          this.producto.formasdepagosecretariaoriginales = Object.assign([], this.producto.formasdepagosecretaria);
           this.producto.editar = true;
           this.producto.productooriginal = { ...producto };
+          this.progressSpinner = false;
         },
         err => {
           this.progressSpinner = false;

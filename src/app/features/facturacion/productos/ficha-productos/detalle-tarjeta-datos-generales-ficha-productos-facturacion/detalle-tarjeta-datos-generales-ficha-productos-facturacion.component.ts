@@ -22,6 +22,7 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
 
   //Variables tarjeta datos generales
   @Input() producto: ProductoDetalleItem; //Guarda los valores seleccionados/escritos en los campos
+  productoo: ProductoDetalleItem = new ProductoDetalleItem();
   productoOriginal: ProductoDetalleItem = new ProductoDetalleItem; //En caso de que entre en modo editar este objeto sera el que contenga los datos originales conseguidos gracias al servicio detalleProducto.
   @Input() productoDelBuscador: ListaProductosItems;
   categoriasObject: ComboObject = new ComboObject(); //Modelo con la lista opciones + atributo error
@@ -69,6 +70,7 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
 
   ngOnChanges(changes: SimpleChanges) {
     if (this.producto.editar) {
+      this.getComboTipo();
       this.productoOriginal = { ...this.producto };
 
       this.desactivarBotonEliminar = false;
@@ -186,18 +188,15 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
 
     this.subscriptionCategorySelectValues = this.sigaServices.get("tiposProductos_comboProducto").subscribe(
       CategorySelectValues => {
-        this.progressSpinner = false;
-
         this.categoriasObject = CategorySelectValues;
 
+        this.progressSpinner = false;
       },
       err => {
         this.progressSpinner = false;
       },
       () => {
-        if (this.producto.editar) {
-          this.getComboTipo();
-        }
+
         this.progressSpinner = false;
       }
     );
@@ -209,10 +208,9 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
 
     this.subscriptionCategorySelectValues = this.sigaServices.getParam("productosBusqueda_comboTipos", "?idCategoria=" + this.producto.idtipoproducto).subscribe(
       TipoSelectValues => {
-        this.progressSpinner = false;
-
         this.tiposObject = TipoSelectValues;
 
+        this.progressSpinner = false;
       },
       err => {
         this.progressSpinner = false;
@@ -229,7 +227,6 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
     if (!this.producto.editar) {
       this.subscriptionCrearProductoInstitucion = this.sigaServices.post("fichaProducto_crearProducto", this.producto).subscribe(
         response => {
-          this.progressSpinner = false;
 
           if (JSON.parse(response.body).error.code == 500) {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
@@ -238,6 +235,8 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
             this.desactivarBotonEliminar = false;
             this.mostrarTarjetaFormaPagos.emit(true);
           }
+
+          this.progressSpinner = false;
         },
         err => {
           this.progressSpinner = false;

@@ -76,7 +76,7 @@ export class DetalleTarjetaFormasPagosFichaProductoFacturacionComponent implemen
       this.producto.nofacturable = '1';
 
       this.producto.valor = "0";
-      this.producto.idtipoiva = null;
+      this.producto.idtipoiva = 3;
       this.producto.formasdepagointernet = null;
       this.producto.formasdepagosecretaria = null;
 
