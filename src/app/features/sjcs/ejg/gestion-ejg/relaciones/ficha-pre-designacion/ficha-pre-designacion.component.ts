@@ -33,8 +33,8 @@ export class FichaPreDesignacionComponent implements OnInit {
 
   iconoTarjetaResumen = "clipboard";
 
-  
-  
+
+
   progressSpinner: boolean = false;
   //Mediante esta sentencia el padre puede acceder a los datos y atributos del hijo
   /*la particularidad de éste método es que tenemos que esperar a que la vista esté totalmente 
@@ -46,11 +46,11 @@ export class FichaPreDesignacionComponent implements OnInit {
   @ViewChild(ProcuradorPreDesignacionComponent) procuradorPreDesigna;
 
 
-   
+
 
   datosTarjetaResumen;
 
- 
+
 
   //Variables asociadas a los enlaces de la tarjeta resumen
   enlacesTarjetaResumen = [];
@@ -75,16 +75,16 @@ export class FichaPreDesignacionComponent implements OnInit {
     private location: Location) { }
 
   async ngOnInit() {
-    this.progressSpinner=true;
+    this.progressSpinner = true;
     await this.checkAcceso();
     this.cargaInicial();
   }
 
-  async checkAcceso(){
+  async checkAcceso() {
     this.commonsService.checkAcceso(procesos_ejg.preDesignacion)
-    .then(respuesta => {
-      this.permisoEscritura = respuesta;
-    }).catch(error => console.error(error));
+      .then(respuesta => {
+        this.permisoEscritura = respuesta;
+      }).catch(error => console.error(error));
 
     if (this.permisoEscritura == undefined) {
       sessionStorage.setItem("codError", "403");
@@ -92,41 +92,50 @@ export class FichaPreDesignacionComponent implements OnInit {
         "descError",
         this.translateService.instant("generico.error.permiso.denegado")
       );
-      this.progressSpinner=false;
+      this.progressSpinner = false;
       this.router.navigate(["/errorAcceso"]);
-    }else{
+    } else {
       await this.obtenerAccesoTarjetas();
-      this.progressSpinner=false;
+      this.progressSpinner = false;
     }
   }
-  
-  async obtenerAccesoTarjetas(){
+
+  async obtenerAccesoTarjetas() {
+    let recibidos = 0;
     this.commonsService.checkAcceso(procesos_ejg.preDesResumen)
       .then(respuesta => {
         this.permisoResumen = respuesta;
+        recibidos++;
+        if(recibidos==4)this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
     this.commonsService.checkAcceso(procesos_ejg.defensaJuridica)
       .then(respuesta => {
         this.permisoDefensaJuridica = respuesta;
+        recibidos++;
+        if(recibidos==4)this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
-      this.commonsService.checkAcceso(procesos_ejg.procurador)
+    this.commonsService.checkAcceso(procesos_ejg.procurador)
       .then(respuesta => {
         this.permisoProcurador = respuesta;
+        recibidos++;
+        if(recibidos==4)this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
-      this.commonsService.checkAcceso(procesos_ejg.contrarios)
+    this.commonsService.checkAcceso(procesos_ejg.contrarios)
       .then(respuesta => {
         this.permisoContrarios = respuesta;
+        recibidos++;
+        if(recibidos==4)this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
   }
 
-  async cargaInicial(){
+  async cargaInicial() {
     //Comprobar si el ejg tiene alguna designacion asignada.
     //Si es asi, esta ficha sera unicamente de consulta, no edicion.
     //if()
@@ -136,7 +145,7 @@ export class FichaPreDesignacionComponent implements OnInit {
       this.persistenceService.setDatos(this.body);
     }
     else this.body = this.persistenceService.getDatos();
-    
+
     //Comprobar si el EJG tiene alguna designacion asignada.
     //Si es asi, esta ficha sera unicamente de consulta, no edicion.
     this.checkEJGDesignas();
@@ -144,7 +153,7 @@ export class FichaPreDesignacionComponent implements OnInit {
     await this.iniciarTarjetaResumen();
   }
 
-  async iniciarTarjetaResumen(){
+  async iniciarTarjetaResumen() {
 
     this.datosTarjetaResumen = [
       {
@@ -176,30 +185,45 @@ export class FichaPreDesignacionComponent implements OnInit {
         value: this.body.impugnacion
       },
     ];
+  }
 
-    let enlaces = {
-      label: "justiciaGratuita.ejg.preDesigna.defensaJuridica",
-      value: document.getElementById("defensaJuridica"),
-      nombre: "defensaJuridica",
-    };
+  enviarEnlacesTarjeta() {
+    this.enlacesTarjetaResumen = []
 
-    this.enlacesTarjetaResumen.push(enlaces);
+    setTimeout(() => {
 
-    enlaces = {
-      label: "justiciaGratuita.ejg.preDesigna.contrarios",
-      value: document.getElementById("contrariosPreDesigna"),
-      nombre: "contrariosPreDesigna",
-    };
+      let enlaces
+      
+      if (this.permisoDefensaJuridica != undefined) {
+        enlaces = {
+          label: "justiciaGratuita.ejg.preDesigna.defensaJuridica",
+          value: document.getElementById("defensaJuridica"),
+          nombre: "defensaJuridica",
+        };
 
-    this.enlacesTarjetaResumen.push(enlaces);
+        this.enlacesTarjetaResumen.push(enlaces);
+      }
 
-    enlaces = {
-      label: "justiciaGratuita.oficio.designas.contrarios.procurador",
-      value: document.getElementById("procuradorPreDesigna"),
-      nombre: "procuradorPreDesigna",
-    };
+      if (this.permisoContrarios != undefined) {
+        enlaces = {
+          label: "justiciaGratuita.ejg.preDesigna.contrarios",
+          value: document.getElementById("contrariosPreDesigna"),
+          nombre: "contrariosPreDesigna",
+        };
 
-    this.enlacesTarjetaResumen.push(enlaces);
+        this.enlacesTarjetaResumen.push(enlaces);
+      }
+
+      if (this.permisoProcurador != undefined) {
+        enlaces = {
+          label: "justiciaGratuita.oficio.designas.contrarios.procurador",
+          value: document.getElementById("procuradorPreDesigna"),
+          nombre: "procuradorPreDesigna",
+        };
+
+        this.enlacesTarjetaResumen.push(enlaces);
+      }
+    }, 5);
   }
 
   backTo() {
@@ -217,11 +241,11 @@ export class FichaPreDesignacionComponent implements OnInit {
     });
   }
 
-  checkEJGDesignas(){
+  checkEJGDesignas() {
     this.sigaServices.post("gestionejg_getEjgDesigna", this.body).subscribe(
       n => {
         let ejgDesignas = JSON.parse(n.body).ejgDesignaItems;
-        if(ejgDesignas.length==0) this.permisoEscritura = true;
+        if (ejgDesignas.length == 0) this.permisoEscritura = true;
         else this.permisoEscritura = false;
       }
     );
