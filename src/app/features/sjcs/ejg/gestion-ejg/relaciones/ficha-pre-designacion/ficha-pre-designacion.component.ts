@@ -17,6 +17,9 @@ import { Location } from '@angular/common';
 import { EJGItem } from '../../../../../../models/sjcs/EJGItem';
 import { Message } from 'primeng/components/common/api';
 import { procesos_ejg } from '../../../../../../permisos/procesos_ejg';
+import { ContrariosPreDesignacionComponent } from './contrarios-pre-designacion/contrarios-pre-designacion.component';
+import { DefensaJuridicaComponent } from './defensa-juridica/defensa-juridica.component';
+import { ProcuradorPreDesignacionComponent } from './procurador-pre-designacion/procurador-pre-designacion.component';
 
 @Component({
   selector: 'app-ficha-pre-designacion',
@@ -34,16 +37,20 @@ export class FichaPreDesignacionComponent implements OnInit {
   
   progressSpinner: boolean = false;
   //Mediante esta sentencia el padre puede acceder a los datos y atributos del hijo
-  /*a particularidad de éste método es que tenemos que esperar a que la vista esté totalmente 
+  /*la particularidad de éste método es que tenemos que esperar a que la vista esté totalmente 
   cargada para acceder a los atributos del hijo. Para ello creamos un método de Angular llamado
-   ngAfterViewInit() en el que simplemente inicializamos la variable con el valor del atributo del hijo 
-   el hijo lo declaramos como @ViewChild(ChildComponent)).*/
+  ngAfterViewInit() en el que simplemente inicializamos la variable con el valor del atributo del hijo 
+  el hijo lo declaramos como @ViewChild(ChildComponent)).*/
+  @ViewChild(ContrariosPreDesignacionComponent) contrariosPreDesigna;
+  @ViewChild(DefensaJuridicaComponent) defensaJuridica;
+  @ViewChild(ProcuradorPreDesignacionComponent) procuradorPreDesigna;
 
-  //@ViewChild(FiltrosInscripciones) filtros;
-  //@ViewChild(TablaInscripcionesComponent) tablapartida;
-  //comboPartidosJudiciales
+
+   
 
   datosTarjetaResumen;
+
+ 
 
   //Variables asociadas a los enlaces de la tarjeta resumen
   enlacesTarjetaResumen = [];
@@ -70,6 +77,7 @@ export class FichaPreDesignacionComponent implements OnInit {
   async ngOnInit() {
     this.progressSpinner=true;
     await this.checkAcceso();
+    this.cargaInicial();
   }
 
   async checkAcceso(){
@@ -223,33 +231,27 @@ export class FichaPreDesignacionComponent implements OnInit {
     this.msgs = [];
   }
 
-  isCloseReceive(event) {
-    if (event != undefined) {
-      switch (event) {
-        case "defensaJuridica":
-          this.openTarjetaDefensaJuridica = this.manuallyOpened;
-          break;
-        case "contrariosPreDesigna":
-          this.openTarjetaContrariosPreDesigna = this.manuallyOpened;
-          break;
-        case "procuradorPreDesigna":
-          this.openTarjetaProcuradorPreDesigna = this.manuallyOpened;
-      }
-    }
-  }
-
   isOpenReceive(event) {
 
     if (event != undefined) {
       switch (event) {
+        // case "defensaJuridica":
+        //   this.openTarjetaDefensaJuridica = true;
+        //   break;
+        // case "contrariosPreDesigna":
+        //   this.openTarjetaContrariosPreDesigna = true;
+        //   break;
+        // case "procuradorPreDesigna":
+        //   this.openTarjetaProcuradorPreDesigna = true;
+        //   break;
         case "defensaJuridica":
-          this.openTarjetaDefensaJuridica = true;
+          this.defensaJuridica.openDef = true;
           break;
         case "contrariosPreDesigna":
-          this.openTarjetaContrariosPreDesigna = true;
+          this.contrariosPreDesigna.openCon = true;
           break;
         case "procuradorPreDesigna":
-          this.openTarjetaProcuradorPreDesigna = true;
+          this.procuradorPreDesigna.openPro = true;
           break;
       }
     }

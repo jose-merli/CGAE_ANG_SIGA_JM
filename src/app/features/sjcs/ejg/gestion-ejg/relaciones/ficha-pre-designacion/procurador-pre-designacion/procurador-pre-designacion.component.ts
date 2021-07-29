@@ -42,8 +42,6 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 	nombreCabecera: string = "";
 
 	@Input() permisoEscritura = true;
-	@Output() opened = new EventEmitter<Boolean>();
-	@Output() idOpened = new EventEmitter<Boolean>();
 
 	idPersona;
 	openPro: boolean = false;

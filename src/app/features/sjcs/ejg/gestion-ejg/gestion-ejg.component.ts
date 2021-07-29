@@ -158,8 +158,9 @@ export class GestionEjgComponent implements OnInit {
       },
     ];
         
-      await this.obtenerPermisos();
+    this.obtenerPermisos();
       
+    
     //this.commonsService.scrollTop();
     this.goTop();
   }
@@ -212,10 +213,13 @@ export class GestionEjgComponent implements OnInit {
   }
 
   async obtenerPermisos() {
+    let recibidos=0; //Determina cuantos servicios de los permisos se han terminado
     //TarjetaResumen
     this.commonsService.checkAcceso(procesos_ejg.tarjetaResumen)
       .then(respuesta => {
         this.permisoEscrituraResumen = respuesta;
+        recibidos++;
+        if(recibidos==13)this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -223,6 +227,8 @@ export class GestionEjgComponent implements OnInit {
     this.commonsService.checkAcceso(procesos_ejg.datosGenerales)
       .then(respuesta => {
         this.permisoEscrituraDatosGenerales = respuesta;
+        recibidos++;
+        if(recibidos==13)this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -230,6 +236,8 @@ export class GestionEjgComponent implements OnInit {
     this.commonsService.checkAcceso(procesos_ejg.serviciosTramitacion)
       .then(respuesta => {
         this.permisoEscrituraServiciosTramitacion = respuesta;
+        recibidos++;
+        if(recibidos==13)this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -237,6 +245,8 @@ export class GestionEjgComponent implements OnInit {
     this.commonsService.checkAcceso(procesos_ejg.unidadFamiliar)
       .then(respuesta => {
         this.permisoEscrituraUnidadFamiliar = respuesta;
+        recibidos++;
+        if(recibidos==13)this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -244,6 +254,8 @@ export class GestionEjgComponent implements OnInit {
     this.commonsService.checkAcceso(procesos_ejg.expedientesEconomicos)
       .then(respuesta => {
         this.permisoEscrituraExpedientesEconomicos = respuesta;
+        recibidos++;
+        if(recibidos==13)this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -251,6 +263,8 @@ export class GestionEjgComponent implements OnInit {
     this.commonsService.checkAcceso(procesos_ejg.relaciones)
       .then(respuesta => {
         this.permisoEscrituraRelaciones = respuesta;
+        recibidos++;
+        if(recibidos==13)this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -258,6 +272,8 @@ export class GestionEjgComponent implements OnInit {
     this.commonsService.checkAcceso(procesos_ejg.estados)
       .then(respuesta => {
         this.permisoEscrituraEstados = respuesta;
+        recibidos++;
+        if(recibidos==13)this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -265,6 +281,8 @@ export class GestionEjgComponent implements OnInit {
     this.commonsService.checkAcceso(procesos_ejg.documentacion)
       .then(respuesta => {
         this.permisoEscrituraDocumentacion = respuesta;
+        recibidos++;
+        if(recibidos==13)this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -272,6 +290,8 @@ export class GestionEjgComponent implements OnInit {
     this.commonsService.checkAcceso(procesos_ejg.informeCalif)
       .then(respuesta => {
         this.permisoEscrituraInformeCalif = respuesta;
+        recibidos++;
+        if(recibidos==13)this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -279,6 +299,8 @@ export class GestionEjgComponent implements OnInit {
     this.commonsService.checkAcceso(procesos_ejg.resolucion)
       .then(respuesta => {
         this.permisoEscrituraResolucion = respuesta;
+        recibidos++;
+        if(recibidos==13)this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -286,6 +308,8 @@ export class GestionEjgComponent implements OnInit {
     this.commonsService.checkAcceso(procesos_ejg.impugnacion)
       .then(respuesta => {
         this.permisoEscrituraImpugnacion = respuesta;
+        recibidos++;
+        if(recibidos==13)this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -293,6 +317,8 @@ export class GestionEjgComponent implements OnInit {
     this.commonsService.checkAcceso(procesos_ejg.regtel)
       .then(respuesta => {
         this.permisoEscrituraRegtel = respuesta;
+        recibidos++;
+        if(recibidos==13)this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
       
@@ -300,112 +326,140 @@ export class GestionEjgComponent implements OnInit {
     this.commonsService.checkAcceso(procesos_ejg.comunicaciones)
       .then(respuesta => {
         this.permisoEscrituraComunicaciones = respuesta;
+        recibidos++;
+        if(recibidos==13)this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
-      
-    this.enviarEnlacesTarjeta();
+    
   }
 
   enviarEnlacesTarjeta() {
-    this.enlacesTarjetaResumen = [];
+     this.enlacesTarjetaResumen = []
 
-    let pruebaTarjeta = {
-      label: "general.message.datos.generales",
-      value: document.getElementById("datosGenerales"),
-      nombre: "datosGenerales",
-    };
+    let pruebaTarjeta;
 
-    this.enlacesTarjetaResumen.push(pruebaTarjeta);
+    setTimeout(() =>{
 
-    pruebaTarjeta = {
-      label: "justiciaGratuita.ejg.datosGenerales.ServiciosTramit",
-      value: document.getElementById("serviciosTramitacion"),
-      nombre: "serviciosTramitacion",
-    };
+    if(this.permisoEscrituraDatosGenerales != undefined){
+      pruebaTarjeta = {
+        label: "general.message.datos.generales",
+        value: document.getElementById("datosGenerales"),
+        nombre: "datosGenerales",
+      };
 
-    this.enlacesTarjetaResumen.push(pruebaTarjeta);
-
-    pruebaTarjeta = {
-      label: "justiciaGratuita.justiciables.rol.unidadFamiliar",
-      value: document.getElementById("unidadFamiliar"),
-      nombre: "unidadFamiliar",
-    };
-
-    this.enlacesTarjetaResumen.push(pruebaTarjeta);
-
-    pruebaTarjeta = {
-      label: "justiciaGratuita.ejg.datosGenerales.ExpedientesEconomicos",
-      value: document.getElementById("expedientesEconomicos"),
-      nombre: "expedientesEconomicos",
-    };
-
-    this.enlacesTarjetaResumen.push(pruebaTarjeta);
-
-    pruebaTarjeta = {
-      label: "justiciaGratuita.ejg.datosGenerales.Relaciones",
-      value: document.getElementById("relaciones"),
-      nombre: "relaciones",
-    };
-
-    this.enlacesTarjetaResumen.push(pruebaTarjeta);
-
-    pruebaTarjeta = {
-      label: "censo.fichaIntegrantes.literal.estado",
-      value: document.getElementById("estados"),
-      nombre: "estados",
-    };
-
-    this.enlacesTarjetaResumen.push(pruebaTarjeta);
-
-    pruebaTarjeta = {
-      label: "menu.facturacionSJCS.mantenimientoDocumentacionEJG",
-      value: document.getElementById("documentacion"),
-      nombre: "documentacion",
-    };
-
-    this.enlacesTarjetaResumen.push(pruebaTarjeta);
-
-    pruebaTarjeta = {
-      label: "justiciaGratuita.ejg.datosGenerales.InformeCalificacion",
-      value: document.getElementById("informeCalificacion"),
-      nombre: "informeCalificacion",
+      this.enlacesTarjetaResumen.push(pruebaTarjeta);
     }
 
-    this.enlacesTarjetaResumen.push(pruebaTarjeta);
+    if(this.permisoEscrituraServiciosTramitacion != undefined){
+      pruebaTarjeta = {
+        label: "justiciaGratuita.ejg.datosGenerales.ServiciosTramit",
+        value: document.getElementById("serviciosTramitacion"),
+        nombre: "serviciosTramitacion",
+      };
 
-    pruebaTarjeta = {
-      label: "justiciaGratuita.maestros.fundamentosResolucion.resolucion",
-      value: document.getElementById("resolucion"),
-      nombre: "resolucion",
-    };
+      this.enlacesTarjetaResumen.push(pruebaTarjeta);
+    }
 
-    this.enlacesTarjetaResumen.push(pruebaTarjeta);
+    if(this.permisoEscrituraUnidadFamiliar != undefined){
+      pruebaTarjeta = {
+        label: "justiciaGratuita.justiciables.rol.unidadFamiliar",
+        value: document.getElementById("unidadFamiliar"),
+        nombre: "unidadFamiliar",
+      };
 
-    pruebaTarjeta = {
-      label: "justiciaGratuita.ejg.datosGenerales.Impugnacion",
-      value: document.getElementById("impugnacion"),
-      nombre: "impugnacion",
-    };
+      this.enlacesTarjetaResumen.push(pruebaTarjeta);
+    }
 
-    this.enlacesTarjetaResumen.push(pruebaTarjeta);
+    if(this.permisoEscrituraExpedientesEconomicos != undefined){
+      pruebaTarjeta = {
+        label: "justiciaGratuita.ejg.datosGenerales.ExpedientesEconomicos",
+        value: document.getElementById("expedientesEconomicos"),
+        nombre: "expedientesEconomicos",
+      };
 
-    pruebaTarjeta = {
-      label: "censo.regtel.literal.titulo",
-      value: document.getElementById("regtel"),
-      nombre: "regtel",
-    };
+      this.enlacesTarjetaResumen.push(pruebaTarjeta);
+    }
 
-    this.enlacesTarjetaResumen.push(pruebaTarjeta);
+    if(this.permisoEscrituraRelaciones != undefined){
+      pruebaTarjeta = {
+        label: "justiciaGratuita.ejg.datosGenerales.Relaciones",
+        value: document.getElementById("relaciones"),
+        nombre: "relaciones",
+      };
 
+      this.enlacesTarjetaResumen.push(pruebaTarjeta);
+    }
+
+    if(this.permisoEscrituraEstados != undefined){
+      pruebaTarjeta = {
+        label: "censo.fichaIntegrantes.literal.estado",
+        value: document.getElementById("estados"),
+        nombre: "estados",
+      };
+
+      this.enlacesTarjetaResumen.push(pruebaTarjeta);
+    }
+
+    if(this.permisoEscrituraDocumentacion != undefined){
+      pruebaTarjeta = {
+        label: "menu.facturacionSJCS.mantenimientoDocumentacionEJG",
+        value: document.getElementById("documentacion"),
+        nombre: "documentacion",
+      };
+
+      this.enlacesTarjetaResumen.push(pruebaTarjeta);
+    }
+
+    if(this.permisoEscrituraInformeCalif != undefined){
+      pruebaTarjeta = {
+        label: "justiciaGratuita.ejg.datosGenerales.InformeCalificacion",
+        value: document.getElementById("informeCalificacion"),
+        nombre: "informeCalificacion",
+      }
+
+      this.enlacesTarjetaResumen.push(pruebaTarjeta);
+    }
+
+    if(this.permisoEscrituraResolucion != undefined){
+      pruebaTarjeta = {
+        label: "justiciaGratuita.maestros.fundamentosResolucion.resolucion",
+        value: document.getElementById("resolucion"),
+        nombre: "resolucion",
+      };
+
+      this.enlacesTarjetaResumen.push(pruebaTarjeta);
+    }
+
+    if(this.permisoEscrituraImpugnacion != undefined){
+      pruebaTarjeta = {
+        label: "justiciaGratuita.ejg.datosGenerales.Impugnacion",
+        value: document.getElementById("impugnacion"),
+        nombre: "impugnacion",
+      };
+
+      this.enlacesTarjetaResumen.push(pruebaTarjeta);
+    }
+
+    if(this.permisoEscrituraRegtel != undefined){
+      pruebaTarjeta = {
+        label: "censo.regtel.literal.titulo",
+        value: document.getElementById("regtel"),
+        nombre: "regtel",
+      };
+
+      this.enlacesTarjetaResumen.push(pruebaTarjeta);
+    }
   
-    pruebaTarjeta ={
-    label: "menu.enviosAGrupos",
-    value: document.getElementById("comunicaciones"),
-     nombre: "comunicaciones",
-     };
+    if(this.permisoEscrituraComunicaciones != undefined ){
+      pruebaTarjeta ={
+      label: "menu.enviosAGrupos",
+      value: document.getElementById("comunicaciones"),
+      nombre: "comunicaciones",
+      };
 
      this.enlacesTarjetaResumen.push(pruebaTarjeta);
-
+    }
+    }, 5)
      this.progressSpinner = false;
   }
 
