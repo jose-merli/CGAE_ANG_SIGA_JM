@@ -65,6 +65,7 @@ export class InformeCalificacionComponent implements OnInit {
           this.dictamen.fechaDictamen = new Date(this.dictamen.fechaDictamen);
           this.fechaDictCabecera = this.dictamen.fechaDictamen;
         }
+
         // this.getDictamen(this.item);
         //Comprobamos el campo de fundamentos para que se asigne en caso de que haya un valor asignado
         //al tipo de dictamen
@@ -76,6 +77,7 @@ export class InformeCalificacionComponent implements OnInit {
       this.dictamen = new EJGItem();
       this.getComboTipoDictamen();
     }
+    this.bodyInicial = JSON.parse(JSON.stringify(this.dictamen));
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -87,10 +89,10 @@ export class InformeCalificacionComponent implements OnInit {
     }
   }
 
-
   esFichaActiva(key) {
     return this.fichaPosible.activa;
   }
+  
   abreCierraFicha(key) {
     if (
       key == "informeCalificacion" &&
@@ -423,6 +425,19 @@ export class InformeCalificacionComponent implements OnInit {
       //   this.msgs = this.commonServices.checkPermisoAccion();
       // } else {
         this.save();
+      // }
+    }
+  }
+
+  checkPermisosRest() {
+    let msg = this.commonServices.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      // if (this.disabledSave()) {
+      //   this.msgs = this.commonServices.checkPermisoAccion();
+      // } else {
+        this.rest();
       // }
     }
   }

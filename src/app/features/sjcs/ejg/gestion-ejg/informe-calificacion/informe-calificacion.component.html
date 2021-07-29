@@ -64,7 +64,7 @@
     <div *ngIf="esFichaActiva('informeCalificacion')" class="card-footer">
       <div class="text-right main-button ">
         <button (click)="checkPermisosSave()" pButton [disabled]="!permisoEscritura" type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-        <button (click)="checkPermisosConfirmRest()" pButton [disabled]="!permisoEscritura" type="button" icon="fa fa-repeat" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="checkPermisosRest()" pButton [disabled]="!permisoEscritura" type="button" icon="fa fa-repeat" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
         <button [disabled]="!permisoEscritura || dictamen.iddictamen == null" (click)="checkPermisosConfirmDelete()" pButton type="button" icon="fa fa-trash" iconPos="left" label="{{ 'general.boton.borrarDictamen' | translate}}"></button>
         <button [disabled]="!permisoEscritura" (click)="checkPermisosDownload()" pButton type="button" icon="fa fa-download" iconPos="left" label="{{ 'general.boton.descargar.informe' | translate}}"></button>
       </div> 
