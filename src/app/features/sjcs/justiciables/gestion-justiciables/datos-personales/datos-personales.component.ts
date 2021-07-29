@@ -1,5 +1,5 @@
 
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { ConfirmationService } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../../commons/translate';
 import { JusticiableBusquedaItem } from '../../../../../models/sjcs/JusticiableBusquedaItem';
@@ -8,15 +8,11 @@ import { JusticiableTelefonoItem } from '../../../../../models/sjcs/JusticiableT
 import { CommonsService } from '../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
-import { Subject } from 'rxjs';
 import { AuthenticationService } from '../../../../../_services/authentication.service';
 import { Router } from '@angular/router';
 import { SigaConstants } from '../../../../../utils/SigaConstants';
-import { procesos_maestros } from '../../../../../permisos/procesos_maestros';
-import { procesos_justiciables } from '../../../../../permisos/procesos_justiciables';
-import { Checkbox, ConfirmDialog } from '../../../../../../../node_modules/primeng/primeng';
+import { Checkbox } from '../../../../../../../node_modules/primeng/primeng';
 import { Dialog } from 'primeng/primeng';
-import { UnidadFamiliarEJGItem } from '../../../../../models/sjcs/UnidadFamiliarEJGItem';
 
 @Component({
   selector: 'app-datos-personales',

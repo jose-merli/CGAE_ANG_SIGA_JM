@@ -1,6 +1,3 @@
-import { DatosAbogadoContrarioComponent } from "../features/sjcs/justiciables/gestion-justiciables/datos-abogado-contrario/datos-abogado-contrario.component";
-import { ProcuradoresItem } from "../models/sjcs/ProcuradoresItem";
-
 export const procesos_ejg: any = {
     //buscador
     ejg: "946",

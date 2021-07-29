@@ -471,8 +471,10 @@ export class TablaEjgComponent implements OnInit {
     this.sigaServices.post("filtrosejg_anadirExpedienteARemesa", this.selectedDatos).subscribe(
       n => {
         this.progressSpinner=false;
-        if(JSON.parse(n.body).status=="OK")this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.busqueda.EjgEnRemesa"));
+        if(JSON.parse(n.body).status=="OK"){
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.busqueda.emit(true);
+      }else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.busqueda.EjgEnRemesa"));
       },
       err => {
         this.progressSpinner=false;
