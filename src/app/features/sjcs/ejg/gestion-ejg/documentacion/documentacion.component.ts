@@ -314,13 +314,10 @@ export class DocumentacionComponent implements OnInit {
             this.showMsg('error', 'Error', this.translateService.instant('general.message.error.realiza.accion'));
           }
         }
-
       },
       err => {
         this.progressSpinner = false;
         this.showMsg('error', 'Error', this.translateService.instant('general.mensaje.error.bbdd'));
-      },
-      () => {
       }
     );
   }
@@ -352,10 +349,8 @@ export class DocumentacionComponent implements OnInit {
             this.showMsg('error', 'Error', this.translateService.instant('general.message.error.realiza.accion'));
           }
         }
-
       },
       err => {
-        console.log(err);
         this.progressSpinner = false;
         this.showMsg('error', 'Error', this.translateService.instant('general.mensaje.error.bbdd'));
       },

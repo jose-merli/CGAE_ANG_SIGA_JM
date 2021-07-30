@@ -227,9 +227,8 @@ export class RelacionesComponent implements OnInit {
       { field: "descturno", header: "justiciaGratuita.justiciables.literal.turnoGuardia" , width: '6%'},
       { field: "letrado", header: "justiciaGratuita.sjcs.designas.colegiado" , width: '6%'},
       { field: "interesado", header: "justiciaGratuita.sjcs.designas.datosInteresados" , width: '6%'},
+      { field: "resolucion", header: "justiciaGratuita.maestros.fundamentosResolucion.resolucion" , width: '6%'},
       { field: "dilnigproc", header: "sjcs.oficio.designaciones.relaciones.numDiligNigNproc", width: '6%' },
-      { field: "resolucion", header: "justiciaGratuita.maestros.fundamentosResolucion.resolucion" , width: '6%'}
-
     ];
     this.cols.forEach(it => this.buscadores.push(""));
 
