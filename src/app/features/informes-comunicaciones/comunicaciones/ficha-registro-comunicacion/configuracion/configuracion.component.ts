@@ -290,7 +290,11 @@ para poder filtrar el dato con o sin estos caracteres*/
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
         // sessionStorage.removeItem("crearNuevoEnvio");
         // sessionStorage.setItem("enviosMasivosSearch", JSON.stringify(this.body));
-        this.showSuccess(this.translateService.instant("informesycomunicaciones.enviosMasivos.ficha.envioCorrect"));
+        if (result.description == null){
+          this.showFail(this.translateService.instant("general.message.datos.generales.remitente"));
+        } else {
+          this.showSuccess(this.translateService.instant("informesycomunicaciones.enviosMasivos.ficha.envioCorrect"));
+        }
         // this.editarPlantilla = true;
       },
       err => {
