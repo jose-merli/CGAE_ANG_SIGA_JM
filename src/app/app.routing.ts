@@ -118,6 +118,8 @@ import { SOJComponent } from './features/sjcs/soj/soj.component';
 import { EJGComponent } from './features/sjcs/ejg/ejg.component';
 import { RemesasComponent } from './features/sjcs/remesas/remesas.component';
 import { FiltroRemesasComponent } from './features/sjcs/remesas/filtro-remesas/filtro-remesas.component';
+import { ActasComponent } from './features/sjcs/actas/actas.component';
+import { FiltroActasComponent } from './features/sjcs/actas/filtro-actas/filtro-actas.component';
 import { EjgComisionComponent } from './features/sjcs/ejg-comision/ejg-comision.component';
 import { EjgComisionBusquedaComponent } from './features/sjcs/ejg-comision/ejg-comision-busqueda/ejg-comision-busqueda.component';
 import { GestionActasComponent } from './features/sjcs/gestion-actas/gestion-actas.component';
@@ -868,6 +870,11 @@ const appRoutes: Routes = [
 		canActivate: [ AuthGuard ]
 	},
 	{
+		path: 'filtro-actas',
+		component: FiltroActasComponent,
+		canActivate: [ AuthGuard ]
+	},
+	{
 		path: 'ejg-comision',
 		component: EjgComisionComponent,
 		canActivate: [ AuthGuard ]
@@ -879,7 +886,7 @@ const appRoutes: Routes = [
 	},
 	{
 		path: 'gestionActas',
-		component: GestionActasComponent,
+		component: ActasComponent,
 		canActivate: [ AuthGuard ]
 	},
 	{

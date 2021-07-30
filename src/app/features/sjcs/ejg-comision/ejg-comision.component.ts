@@ -6,6 +6,8 @@ import { PersistenceService } from '../../../_services/persistence.service';
 import { Router } from '../../../../../node_modules/@angular/router';
 import { TablaEjgComisionComponent } from './tabla-ejg-comision/tabla-ejg-comision.component';
 import { EjgComisionBusquedaComponent } from './ejg-comision-busqueda/ejg-comision-busqueda.component';
+import { procesos_comision } from '../../../permisos/procesos_comision';
+
 
 @Component({
   selector: 'app-ejg-comision',
@@ -44,7 +46,7 @@ export class EjgComisionComponent implements OnInit {
   ngOnInit() {
     this.buscar = this.filtros.buscar
 
-    this.commonsService.checkAcceso("946")
+    this.commonsService.checkAcceso(procesos_comision.ejgComision)
       .then(respuesta => {
         this.permisoEscritura = respuesta;
 

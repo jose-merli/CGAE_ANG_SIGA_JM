@@ -129,7 +129,6 @@ export class TablaEjgComisionComponent implements OnInit {
 
 
   styleObligatorioFechaPonente(event) {
-    console.log("styleObligatorioFechaPonente datos" + this.resaltadoDatosFechaPonente +" "+ event );
     if (this.resaltadoDatosFechaPonente && this.valuePonente != null) {
       console.log("styleObligatorioFechaPonente");
       return this.commonServices.styleObligatorio(event); 
@@ -255,6 +254,7 @@ export class TablaEjgComisionComponent implements OnInit {
   getComboAnioActa() {
     this.sigaServices.get("filtrosejg_comboAnioActaComision").subscribe(
       n => {
+        console.log("******************comboanioacta**********************");
         this.comboAnioActa = n.combooItems;
       },
       err => {
@@ -266,6 +266,7 @@ export class TablaEjgComisionComponent implements OnInit {
   getComboPonente() {
     this.sigaServices.get("filtrosejg_comboPonenteComision").subscribe(
       n => {
+        console.log("******************getComboPonente**********************");
         this.comboPonente = n.combooItems;
       },
       err => {
@@ -275,9 +276,9 @@ export class TablaEjgComisionComponent implements OnInit {
   }
 
   getComboResolucion() {
-    console.log("******************************************getComboResolucion");
-    this.sigaServices.getParam("filtrosejg_comboResolucionComision", "2502").subscribe(
+    this.sigaServices.get("filtrosejg_comboResolucionComision").subscribe(
       n => {
+        console.log("******************************************getComboResolucion");
         this.comboResolucion = n.combooItems;
       },
       err => {
@@ -747,13 +748,13 @@ export class TablaEjgComisionComponent implements OnInit {
   }
 
   getComboFundamento() {
-    console.log("******************************************getComboFundamento");
     this.sigaServices
       .getParam(
         "filtrosejg_comboFundamentoJuridComision", "?idTurno=" + this.filtro.resolucion
       )
       .subscribe(
         n => {
+          console.log("******************************************getComboFundamento");
           this.comboFundamento = n.combooItems;
           this.commonServices.arregloTildesCombo(this.comboFundamento);
         },

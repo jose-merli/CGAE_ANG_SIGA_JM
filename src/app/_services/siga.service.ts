@@ -31,6 +31,7 @@ import { endpoints_generales } from "../utils/endpoints_generales";
 import { Documento } from '../features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-designa/ficha-actuacion/tarjeta-doc-ficha-act/tarjeta-doc-ficha-act.component';
 import { ActuacionDesignaItem } from '../models/sjcs/ActuacionDesignaItem';
 import { DocumentoDesignaItem } from '../models/sjcs/DocumentoDesignaItem';
+import { endpoints_EJG_Comision } from '../utils/endpoints_EJG_Comision';
 
 @Injectable()
 export class SigaServices {
@@ -626,6 +627,7 @@ export class SigaServices {
         ...endpoints_justiciables,
         ...endpoints_oficio,
         ...endpoints_maestros,
+		...endpoints_EJG_Comision,
     };
 
 	private menuToggled = new Subject<any>();
@@ -681,12 +683,6 @@ export class SigaServices {
 
   getParam(service: string, body: any): Observable<any> {
     return this.http.get(environment.newSigaUrl + this.endpoints[service] + body).map((response) => {
-      return response;
-    });
-  }
-
-  getParams(service: string, body: any, param: any): Observable<any> {
-    return this.http.get(environment.newSigaUrl + this.endpoints[service] + body + param).map((response) => {
       return response;
     });
   }

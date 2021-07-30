@@ -458,6 +458,9 @@ import { TablaEjgComisionComponent } from './features/sjcs/ejg-comision/tabla-ej
 import { RemesasComponent } from './features/sjcs/remesas/remesas.component';
 import { FiltroRemesasComponent } from './features/sjcs/remesas/filtro-remesas/filtro-remesas.component';
 import { TablaRemesasComponent } from './features/sjcs/remesas/tabla-remesas/tabla-remesas.component';
+import { ActasComponent } from './features/sjcs/actas/actas.component';
+import { FiltroActasComponent } from './features/sjcs/actas/filtro-actas/filtro-actas.component';
+import { TablaActasComponent } from './features/sjcs/actas/tabla-actas/tabla-actas.component';
 
 
 @NgModule({
@@ -838,6 +841,10 @@ import { TablaRemesasComponent } from './features/sjcs/remesas/tabla-remesas/tab
 		RemesasComponent,
 		FiltroRemesasComponent,
 		TablaRemesasComponent,
+		ActasComponent,
+		FiltroActasComponent,
+		TablaActasComponent,
+
 
 
 	],

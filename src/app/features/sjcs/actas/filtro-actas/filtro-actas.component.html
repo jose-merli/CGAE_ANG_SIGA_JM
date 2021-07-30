@@ -1,0 +1,73 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="card">
+  <div class="card-body">
+    <p (click)="onHideDatosGenerales()" class="title-module"> {{ 'general.message.datos.generales' | translate }}
+      <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+      <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+    </p>
+
+    <!-- CAMPOS COMPONEN FILTROS BUSQUEDA-->
+    <div *ngIf="showDatosGenerales" class="module vista-simple">
+      <div class="form-row">
+
+        <div class="form-group-interlineado col-lg-2 col-md-2">
+          <div class="form-row">
+            <div class="col-lg-4 col-md-4 pl5">
+              <label><strong>{{ 'justiciaGratuita.maestros.calendarioLaboralAgenda.anio' |
+                  translate}}</strong></label>
+              <input type="text" [(ngModel)]="datosFiltro.anio" class="form-control" (keypress)="numberOnly($event)"
+                maxLength="4" pInputText>
+            </div>
+            <div class="col-log-8 col-md-8 pr5">
+              <label><strong>{{ 'gratuita.busquedaAsistencias.literal.numero' |
+                  translate}}</strong></label>
+              <input type="text" class="form-control" maxLength="10" #inputNumero pInputText [(ngModel)]="datosFiltro.acta">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group col-lg-2 col-md-2">
+          <label>{{ 'sjcs.actas.fechaResolucion' |
+             translate}}</label>
+          <app-fecha [(value)]="datosFiltro.fechaResolucion" (valueChangeSelected)="fillFechaResolucion($event)"
+            (valueChangeInput)="fillFechaDesde($event)">
+          </app-fecha>
+        </div>
+
+        <div class="form-group col-lg-2 col-md-2">
+          <label>{{ 'sjcs.actas.fechaReunion' |
+            translate}}</label>
+          <app-fecha [(value)]="datosFiltro.fechaReunion" (valueChangeSelected)="fillFechaReunion($event)"
+            (valueChangeInput)="fillFechaHasta($event)">
+          </app-fecha>
+        </div>
+
+        <div class="form-group col-lg-4 col-md-4">
+          <label>{{ 'sjcs.actas.presidente' |
+            translate}}</label>
+          <p-dropdown class="select-form" [(ngModel)]='datosFiltro.presidente' placeholder="Seleccionar" [options]="comboPresidente"
+            [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
+          </p-dropdown>
+        </div>
+
+        <div class="form-group col-lg-4 col-md-4">
+          <label>{{ 'sjcs.actas.secretario' |
+            translate}}</label>
+          <p-dropdown class="select-form" [(ngModel)]='datosFiltro.secretario' placeholder="Seleccionar" [options]="comboSecretario"
+            [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
+          </p-dropdown>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="card-footer">
+  <!-- BOTONES TARJETA -->
+  <div class="text-right main-button">
+    <button (click)="clearFilters()" pButton type="button" icon="fa fa-eraser" iconPos="left"
+      label="{{ 'general.boton.clear' | translate}}"></button>
+    <button (click)="search()" pButton type="button" icon="fa fa-search" iconPos="left"
+      label="{{ 'general.boton.search' | translate }}"></button>
+  </div>
+</div>

@@ -17,7 +17,7 @@
         <i *ngIf="!showdatosIdentificacion" class="fa fa-angle-down float-right"></i>
       </p>
       <div *ngIf="showdatosIdentificacion" class="form-row">
-        <div class="form-group-interlineado col-lg-3 col-md-3">
+        <div class="form-group-interlineado col-lg-3 col-md-3" style="display: none;">
           <label>{{ "censo.busquedaClientesAvanzada.literal.colegio" | translate }}</label>
           <p-dropdown class="select-form" [(ngModel)]='body.colegio' placeholder="Seleccionar" [disabled]="inst2000"
             [options]="comboColegio" (onChange)="cargarComboComision()" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
