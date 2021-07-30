@@ -2,7 +2,6 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '../../../../../commons/translate';
 import { ComboObject } from '../../../../../models/ComboObject';
-import { ListaProductosItems } from '../../../../../models/ListaProductosItems';
 import { ProductoDetalleItem } from '../../../../../models/ProductoDetalleItem';
 import { SigaServices } from '../../../../../_services/siga.service';
 
@@ -24,6 +23,7 @@ export class DetalleTarjetaFormasPagosFichaProductoFacturacionComponent implemen
   internetPayMethodsObject: ComboObject = new ComboObject();
   secretaryPayMethodsObject: ComboObject = new ComboObject();
   defaultLabelCombosMultiSelect: String = "Seleccionar";
+  esColegiado: boolean;
 
   //Variables control
   aGuardar: boolean = false; //Usada en condiciones que validan la obligatoriedad, definida al hacer click en el boton guardar
@@ -41,6 +41,9 @@ export class DetalleTarjetaFormasPagosFichaProductoFacturacionComponent implemen
   }
 
   ngOnInit() {
+    if (sessionStorage.getItem('esColegiado'))
+      this.esColegiado = JSON.parse(sessionStorage.getItem('esColegiado'));
+
     if (this.producto.editar) {
       this.productoOriginal = { ...this.producto };
 

@@ -36,7 +36,7 @@
   </div>
 
   <!-- Formas de pago aceptadas por internet -->
-  <div class="form-group-interlineado col-lg-3 col-md-3 pb-lg-2 pb-md-2">
+  <div *ngIf="esColegiado" class="form-group-interlineado col-lg-3 col-md-3 pb-lg-2 pb-md-2">
     <label>{{"facturacion.fichaproductos.formasdepago.pagointernet" | translate}}</label>
     <p-multiSelect [defaultLabel]="defaultLabelCombosMultiSelect" autoWidth="false"
       [options]="internetPayMethodsObject.combooItems" styleClass="widthAll" filterBy="label, labelSinTilde"

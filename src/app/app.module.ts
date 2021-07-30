@@ -442,6 +442,9 @@ import { FichaProductosComponent } from './features/facturacion/productos/ficha-
 import { DigitDecimaNumberDirective } from './commons/directives/digit-decima-number.directive';
 import { DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent } from './features/facturacion/productos/ficha-productos/detalle-tarjeta-datos-generales-ficha-productos-facturacion/detalle-tarjeta-datos-generales-ficha-productos-facturacion.component';
 import { DetalleTarjetaFormasPagosFichaProductoFacturacionComponent } from './features/facturacion/productos/ficha-productos/detalle-tarjeta-formas-pagos-ficha-producto-facturacion/detalle-tarjeta-formas-pagos-ficha-producto-facturacion.component';
+import { ServiciosComponent } from './features/facturacion/servicios/servicios.component';
+import { FiltrosServiciosComponent } from './features/facturacion/servicios/filtros-servicios/filtros-servicios.component';
+import { GestionServiciosComponent } from './features/facturacion/servicios/gestion-servicios/gestion-servicios.component';
 
 @NgModule({
 	declarations: [
@@ -804,7 +807,10 @@ import { DetalleTarjetaFormasPagosFichaProductoFacturacionComponent } from './fe
 		//Otros
 		DigitDecimaNumberDirective,
 		DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent,
-		DetalleTarjetaFormasPagosFichaProductoFacturacionComponent
+		DetalleTarjetaFormasPagosFichaProductoFacturacionComponent,
+		ServiciosComponent,
+		FiltrosServiciosComponent,
+		GestionServiciosComponent
 	],
 	imports: [
 		Paginador3Module,

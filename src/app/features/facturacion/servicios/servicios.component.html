@@ -1,0 +1,19 @@
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<!-- Pantalla Facturacion > Servicios -->
+<div>
+  <!-- Buscador de servicios -->
+  <div class="card">
+    <app-filtros-servicios (busqueda)="busquedaProductos($event)"></app-filtros-servicios>
+  </div>
+  <!-- Listado de servicios -->
+  <div>
+    <app-gestion-servicios *ngIf="muestraTablaServicios" [serviceData]="serviceData"
+      [servicioDataConHistorico]="servicioDataConHistorico" [servicioDataSinHistorico]="servicioDataSinHistorico"
+      (busqueda)="busquedaServicios($event)" id="tablaServicios">
+    </app-gestion-servicios>
+  </div>
+</div>

@@ -1,30 +1,31 @@
 import { AfterViewChecked, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '../../../commons/translate';
-import { ListaProductosDTO } from '../../../models/ListaProductosDTO';
+import { ListaServiciosDTO } from '../../../models/ListaServiciosDTO';
 import { CommonsService } from '../../../_services/commons.service';
 import { SigaServices } from '../../../_services/siga.service';
 
 @Component({
-  selector: 'app-productos',
-  templateUrl: './productos.component.html',
-  styleUrls: ['./productos.component.scss']
+  selector: 'app-servicios',
+  templateUrl: './servicios.component.html',
+  styleUrls: ['./servicios.component.scss']
 })
-export class ProductosComponent implements OnInit, OnDestroy, AfterViewChecked {
+export class ServiciosComponent implements OnInit, OnDestroy, AfterViewChecked {
   //Variables generales app
   msgs = []; //Para mostrar los mensajes p-growl y dialogos de confirmacion
   progressSpinner: boolean = false; //Para mostrar/no mostrar el spinner de carga
 
   //Variables busqueda
-  productData: any[] = [];
-  muestraTablaProductos: boolean = false;
+  serviceData: any[] = [];
+  muestraTablaServicios: boolean = false;
 
   //Suscripciones
-  subscriptionProductosBusqueda: Subscription;
+  subscriptionServiciosBusqueda: Subscription;
 
   constructor(public sigaServices: SigaServices, private commonsService: CommonsService, private translateService: TranslateService, private cdRef: ChangeDetectorRef) { }
 
   ngOnInit() {
+
   }
 
   ngAfterViewChecked() {
@@ -32,62 +33,61 @@ export class ProductosComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   ngOnDestroy() {
-    if (this.subscriptionProductosBusqueda)
-      this.subscriptionProductosBusqueda.unsubscribe();
+    if (this.subscriptionServiciosBusqueda)
+      this.subscriptionServiciosBusqueda.unsubscribe();
   }
 
   //INICIO SERVICIOS
-  listaProductosDTO: ListaProductosDTO;
-  productDataConHistorico: any[] = [];
-  productDataSinHistorico: any[] = [];
-  busquedaProductos(event) {
+  listaServiciosDTO: ListaServiciosDTO;
+  servicioDataConHistorico: any[] = [];
+  servicioDataSinHistorico: any[] = [];
+  busquedaServicios(event) {
     this.progressSpinner = true;
-    let filtrosProductos = JSON.parse(sessionStorage.getItem("filtrosProductos"));
+    let filtrosServicios = JSON.parse(sessionStorage.getItem("filtrosServicios"));
 
-    this.subscriptionProductosBusqueda = this.sigaServices.post("productosBusqueda_busqueda", filtrosProductos).subscribe(
-      listaProductosDTO => {
+    this.subscriptionServiciosBusqueda = this.sigaServices.post("serviciosBusqueda_busqueda", filtrosServicios).subscribe(
+      listaServiciosDTO => {
 
-        this.listaProductosDTO = JSON.parse(listaProductosDTO.body);
+        this.listaServiciosDTO = JSON.parse(listaServiciosDTO.body);
 
-        if (JSON.parse(listaProductosDTO.body).error.code == 500) {
+        if (JSON.parse(listaServiciosDTO.body).error.code == 500) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         } else {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         }
 
+        this.showTablaServicios(true);
+        this.servicioDataSinHistorico = [];
+        this.commonsService.scrollTablaFoco("tablaServicios");
         this.progressSpinner = false;
-        this.showTablaProductos(true);
-        this.productDataSinHistorico = [];
-        this.commonsService.scrollTablaFoco("tablaProductos");
-
       },
       err => {
+        this.commonsService.scrollTablaFoco("tablaServicios");
         this.progressSpinner = false;
-        this.commonsService.scrollTablaFoco("tablaProductos");
       }, () => {
-        this.productDataConHistorico = this.listaProductosDTO.listaProductosItems;
+        this.servicioDataConHistorico = this.listaServiciosDTO.listaServiciosItems;
 
-        if (this.productDataConHistorico) {
-          this.productDataConHistorico.forEach(producto => {
-            if (producto.fechabaja == null) {
-              this.productDataSinHistorico.push(producto);
+        if (this.servicioDataConHistorico) {
+          this.servicioDataConHistorico.forEach(servicio => {
+            if (servicio.fechabaja == null) {
+              this.servicioDataSinHistorico.push(servicio);
             }
           });
         }
 
-        this.productData = this.productDataSinHistorico;
+        this.serviceData = this.servicioDataSinHistorico;
 
         this.progressSpinner = false;
         setTimeout(() => {
-          this.commonsService.scrollTablaFoco('tablaProductos');
+          this.commonsService.scrollTablaFoco('tablaServicios');
         }, 5);
       });;
   }
   //FIN SERVICIOS
 
   //INICIO METODOS
-  showTablaProductos(mostrar) {
-    this.muestraTablaProductos = mostrar;
+  showTablaServicios(mostrar) {
+    this.muestraTablaServicios = mostrar;
   }
 
   //Borra el mensaje de notificacion p-growl mostrado en la esquina superior derecha cuando pasas el puntero del raton sobre el
