@@ -18,12 +18,15 @@ export class FiltroRemesasComponent implements OnInit {
   showDatosGenerales: boolean = true;
   msgs = [];
 
+  valuePrefijo: String;
+  valueNumero: String;
+  valueSufijo: String;
   valueEstado: String;
   valueFecha: String;
   valueDesde: String;
   valueHasta: String;
   valueAnio: String;
-  valueNumero: String;
+  valueAnioNumero: String;
   valueDescripcion: String;
   valueFechaDesde: String;
   valueFechaHasta: String;

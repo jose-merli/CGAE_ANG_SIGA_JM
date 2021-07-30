@@ -10,71 +10,97 @@
     <!-- CAMPOS COMPONEN FILTROS BUSQUEDA-->
     <div *ngIf="showDatosGenerales" class="module vista-simple">
       <div class="form-row">
-        <div class="form-row col-lg-5 col-md-5">
-          <label>Nº Registro</label>
-          <div class="registro">
-            <input type="text" name="prefijo" value="" class="box" class="registro-control"
-              [(ngModel)]='filtros.descripcion' pInputText maxLength="60" pInputText>
-          </div>
-          <div class="registro">
-            <input type="text" name="nombre" value="" class="box" class="registro-control"
-              [(ngModel)]='filtros.descripcion' pInputText maxLength="60" pInputText>
-          </div>
-          <div class="registro">
-            <input type="text" name="sufijo" value="" class="box" class="registro-control"
-              [(ngModel)]='filtros.descripcion' pInputText maxLength="60" pInputText>
-          </div>
-        </div>
-
-        <div class="form-group col-lg-3 col-md-3">
-          <label>Descripcion</label>
-          <input type="text" name="nombre" value="" class="box" class="form-control" [(ngModel)]='valueDescripcion'
-            pInputText maxLength="60" pInputText>
-        </div>
-
         <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>Nº Registro</label>
           <div class="form-row">
-            <div class="flex-container-anionumero">
-              <div class="col-lg-2 col-md-2 pl5">
-                <label><strong>{{ 'justiciaGratuita.maestros.calendarioLaboralAgenda.anio' |
-                    translate}}</strong></label>
-                <input type="text" [(ngModel)]="valueAnio" class="form-control" (keypress)="numberOnly($event)"
-                  maxLength="4" pInputText>
-              </div>
-              /
-              <div class="col-log-4 col-md-4 pr5">
-                <label><strong>{{ 'gratuita.busquedaAsistencias.literal.numero' |
-                    translate}}</strong></label>
-                <input type="text" class="form-control" maxLength="10" #inputNumero pInputText
-                  [(ngModel)]="valueNumero">
-              </div>
+            <div class="form-group-interlineado col-lg-4 col-md-4 px-1">
+              <input type="text" name="prefijo" value="" class="box" class="registro-control w-100"
+                [(ngModel)]='valuePrefijo' maxLength="8" pInputText>
+            </div>
+            <div class="form-group-interlineado col-lg-4 col-md-4 px-1">
+              <input type="text" name="numero" value="" class="box" class="registro-control w-100"
+                [(ngModel)]='valueNumero' maxLength="10" pInputText>
+            </div>
+            
+            <div class="form-group-interlineado col-lg-4 col-md-4 px-1">
+              <input type="text" name="sufijo" value="" class="box" class="registro-control w-100"
+                [(ngModel)]='valueSufijo' maxLength="8" pInputText>
             </div>
           </div>
         </div>
 
-        <div class="form-group col-lg-3 col-md-3">
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>Descripcion</label>
+          <input type="text" name="nombre" value="" class="box" class="form-control" [(ngModel)]='valueDescripcion'
+            maxLength="200" pInputText>
+        </div>
+
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <div class="form-row">
+              <div class="form-group-interlineado col-lg-4 col-md-4 px-1">
+                <label><strong>{{ 'justiciaGratuita.maestros.calendarioLaboralAgenda.anio' |
+                    translate}}</strong></label>
+                <input type="text" [(ngModel)]="valueAnio" class="form-control"
+                  maxLength="4" pInputText>
+              </div>
+              /
+              <div class="form-group-interlineado col-lg-4 col-md-4 px-1">
+                <label><strong>{{ 'gratuita.busquedaAsistencias.literal.numero' |
+                    translate}}</strong></label>
+                <input type="text" class="form-control" maxLength="10" #inputNumero pInputText
+                  [(ngModel)]="valueAnioNumero">
+              </div>
+          </div>
+        </div>
+
+        <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>Estado</label>
           <p-dropdown class="select-form" [(ngModel)]='valueEstado' placeholder="Seleccionar" [options]="comboEstado"
             [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
           </p-dropdown>
         </div>
+      </div>
 
-        <div class="form-group col-lg-3 col-md-3">
-          <label>Fecha</label>
-          <p-dropdown class="select-form" [(ngModel)]='valueFecha' placeholder="Seleccionar" [options]="comboFecha"
-            [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
-          </p-dropdown>
-        </div>
-
-        <div class="form-group col-lg-3 col-md-3">
-          <label>Desde</label>
+      <div class="form-row">
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>Fecha de generaci&oacute;n desde</label>
           <app-fecha [(value)]="valueDesde" (valueChangeSelected)="fillFechaDesde($event)"
             (valueChangeInput)="fillFechaDesde($event)">
           </app-fecha>
         </div>
 
-        <div class="form-group col-lg-3 col-md-3">
-          <label>Hasta</label>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>Fecha de generaci&oacute;n hasta</label>
+          <app-fecha [(value)]="valueHasta" (valueChangeSelected)="fillFechaHasta($event)"
+            (valueChangeInput)="fillFechaHasta($event)">
+          </app-fecha>
+        </div>
+
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>Fecha de env&iacute;o desde</label>
+          <app-fecha [(value)]="valueDesde" (valueChangeSelected)="fillFechaDesde($event)"
+            (valueChangeInput)="fillFechaDesde($event)">
+          </app-fecha>
+        </div>
+
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>Fecha de env&iacute;o hasta</label>
+          <app-fecha [(value)]="valueHasta" (valueChangeSelected)="fillFechaHasta($event)"
+            (valueChangeInput)="fillFechaHasta($event)">
+          </app-fecha>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>Fecha de recepci&oacute;n desde</label>
+          <app-fecha [(value)]="valueDesde" (valueChangeSelected)="fillFechaDesde($event)"
+            (valueChangeInput)="fillFechaDesde($event)">
+          </app-fecha>
+        </div>
+
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>Fecha de recepci&oacute;n hasta</label>
           <app-fecha [(value)]="valueHasta" (valueChangeSelected)="fillFechaHasta($event)"
             (valueChangeInput)="fillFechaHasta($event)">
           </app-fecha>
