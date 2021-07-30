@@ -16,9 +16,8 @@
             </label>
           </div>
           <div class="d-flex justify-content-between">
-            <label>Número de Compensaciones(*****):
-              <span></span>
-              <!--<span>{{ numCriterios }}</span>-->
+            <label>Número de Compensaciones:
+              <span>{{ nCompensaciones }}</span>
             </label>
             <i *ngIf="!showFicha" class="fa fa-angle-down float-right" (click)="onHideFicha()"></i>
           </div>
@@ -36,9 +35,9 @@
     <div *ngIf="showFicha" class="card-body">
       <div class="module vista-avanzada">
         <div class="form-row">
-          <p-table [value]="body" [columns]="cols" [(selection)]="selectedDatos" [selectionMode]="selectionMode"
-            [responsive]="true" #tabla class="tabla-listado" [paginator]="true" [rows]="selectedItem"
-            (onRowSelect)="seleccionaFila($event)" (onRowUnselect)="numSelected = selectedDatos.length"
+          <p-table [value]="compensaciones" [columns]="cols" [(selection)]="selectedDatos"
+            [selectionMode]="selectionMode" [responsive]="true" #tabla class="tabla-listado" [paginator]="true"
+            [rows]="selectedItem" (onRowSelect)="seleccionaFila()" (onRowUnselect)="seleccionaFila()"
             paginatorPosition="both">
             <ng-template pTemplate="colgroup" let-columns>
               <colgroup>
@@ -59,20 +58,9 @@
             <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
               <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
                 <td class="text-center" *ngFor="let col of columns">
-                  <!--<div *ngIf="col.field == 'descGrupo'">
-                  {{ dato[col.field] }}
-                </div>
-                <div *ngIf="col.field == 'importeTotal'">
-                  <div *ngIf='!dato.editable'>
-                      {{ dato.importeTotalFormat | numberPipe }} €
+                  <div>
+                    {{ dato[col.field] }}
                   </div>
-                </div>
-
-                <div *ngIf="col.field == 'importePendiente'">
-                  <div *ngIf='!dato.editable'>
-                      {{ dato.importePendienteFormat | numberPipe }} €
-                  </div>
-                </div>-->
                 </td>
               </tr>
             </ng-template>
@@ -116,19 +104,14 @@
     </div>
     <div class="card-footer" *ngIf="showFicha">
       <div class="text-right main-button">
-        <button [disabled]="!permisos" pButton type="button" icon="fa fa-play-circle" iconPos="left"></button>
-        <button [disabled]="!permisos" pButton type="button" icon="fa fa-play-circle" iconPos="left"></button>
+        <button (click)="marcar()" pButton type="button" icon="fa fa-plus" iconPos="left" label="Marcar"
+          [disabled]='!permisos'></button>
+        <button (click)="desmarcar()" pButton type="button" icon="fa fa-plus" iconPos="left" label="Desmarcar"
+          [disabled]='!permisos'></button>
       </div>
     </div>
   </div>
 </div>
-
-<p-confirmDialog header="Confirmación"  icon="fa fa-question-circle"  width="425"  #cd>
-  <p-footer>
-    <button type="button"  pButton icon="fa-check"  label="Si"  (click)="cd.accept()"></button>
-    <button type="button"  pButton icon="fa-close"  label="No"  (click)="cd.reject()"></button>
-  </p-footer>
-</p-confirmDialog>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>

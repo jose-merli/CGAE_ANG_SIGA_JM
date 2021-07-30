@@ -17,7 +17,8 @@
 
   <app-detalle-pago *ngIf="showCards" [idPago]="idPago" [idEstadoPago]="idEstadoPago"></app-detalle-pago>
 
-  <app-compensacion-factura *ngIf="showCards"></app-compensacion-factura>
+  <app-compensacion-factura *ngIf="showCards" [idPago]="idPago" [idEstadoPago]="idEstadoPago">
+  </app-compensacion-factura>
 
   <div class="text-right main-button">
     <button (click)="volver()" pButton type="button" icon="fa fa-angle-left" iconPos="left"

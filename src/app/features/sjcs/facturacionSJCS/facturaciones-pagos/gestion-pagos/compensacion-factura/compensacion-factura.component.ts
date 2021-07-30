@@ -3,6 +3,9 @@ import { Router } from '@angular/router';
 import { TranslateService } from '../../../../../../commons/translate';
 import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacionSJCS';
 import { CommonsService } from '../../../../../../_services/commons.service';
+import { SigaServices } from '../../../../../../_services/siga.service';
+import { CompensacionFacObject } from '../../../../../../models/sjcs/CompensacionFacObject';
+import { CompensacionFacItem } from '../../../../../../models/sjcs/CompensacionFacItem';
 
 @Component({
   selector: 'app-compensacion-factura',
@@ -10,26 +13,31 @@ import { CommonsService } from '../../../../../../_services/commons.service';
   styleUrls: ['./compensacion-factura.component.scss']
 })
 export class CompensacionFacturaComponent implements OnInit {
+
   selectedItem: number = 10;
   rowsPerPage: any = [];
   buscadores = [];
-  selectedDatos = [];
+  selectedDatos: CompensacionFacItem[] = [];
   numSelected = 0;
   showFicha: boolean = false;
   selectAll: boolean = false;
   progressSpinner: boolean = false;
-
   selectionMode: String = "multiple";
-
   cols;
   msgs;
   permisos;
+  compensaciones: CompensacionFacItem[] = []
+  nCompensaciones: number = 0;
 
   @ViewChild("tabla") tabla;
+
+  @Input() idPago;
+  @Input() idEstadoPago;
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private commonsService: CommonsService,
     private translateService: TranslateService,
+    private sigaServices: SigaServices,
     private router: Router) { }
 
   ngOnInit() {
@@ -46,6 +54,7 @@ export class CompensacionFacturaComponent implements OnInit {
 
       this.progressSpinner = false;
       this.getCols();
+      this.getCompensacionFacturas();
 
     }).catch(error => console.error(error));
 
@@ -58,10 +67,15 @@ export class CompensacionFacturaComponent implements OnInit {
 
   getCols() {
     this.cols = [
-      { field: "descConcepto", header: "facturacionSJCS.facturacionesYPagos.conceptos" },
-      { field: "importeTotal", header: "facturacionSJCS.facturacionesYPagos.importe" },
-      { field: "importePendiente", header: "facturacionSJCS.facturacionesYPagos.importePendiente" },
-      { field: "descGrupo", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.grupoTurnos" }
+      { field: "compensar", header: "facturacionSJCS.facturacionesYPagos.compensar" },
+      { field: "numColegiado", header: "facturacionSJCS.facturacionesYPagos.nColegiado" },
+      { field: "nombre", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.nombre" },
+      { field: "fechaFactura", header: "facturacionSJCS.facturacionesYPagos.fechaFactura" },
+      { field: "numeroFactura", header: "facturacionSJCS.facturacionesYPagos.numeroFactura" },
+      { field: "importeTotalFactura", header: "facturacionSJCS.facturacionesYPagos.importeTotalFactura" },
+      { field: "importePendienteFactura", header: "facturacionSJCS.facturacionesYPagos.importePendienteFactura" },
+      { field: "importeCompensado", header: "facturacionSJCS.facturacionesYPagos.impCompensado" },
+      { field: "importePagado", header: "facturacionSJCS.facturacionesYPagos.importeDelPago" }
     ];
 
     this.cols.forEach(it => this.buscadores.push(""));
@@ -85,13 +99,13 @@ export class CompensacionFacturaComponent implements OnInit {
     ];
   }
 
-  seleccionaFila(evento) {
+  seleccionaFila() {
     this.numSelected = this.selectedDatos.length;
   }
 
   onChangeSelectAll() {
     if (this.selectAll === true) {
-      // this.selectedDatos = this.datos;
+      this.selectedDatos = this.compensaciones;
       this.numSelected = this.selectedDatos.length;
     } else {
       this.selectedDatos = [];
@@ -115,4 +129,53 @@ export class CompensacionFacturaComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
+
+
+  getCompensacionFacturas() {
+
+    this.progressSpinner = true;
+
+    this.sigaServices.getParam("pagosjcs_getCompensacionFacturas", `?idPago=${this.idPago}`).subscribe(
+      (data: CompensacionFacObject) => {
+
+        this.progressSpinner = false;
+
+        const error = data.error;
+        const resp = data.compensaciones;
+
+        if (error && null != error && null != error.description) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.description.toString()));
+        } else {
+          this.compensaciones = resp;
+          this.nCompensaciones = resp.length;
+        }
+
+      },
+      err => {
+        this.progressSpinner = false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
+
+  }
+
+  marcar() {
+    this.selectedDatos.forEach(el => {
+      el.compensar = true;
+    });
+    this.selectAll = false;
+    this.selectedDatos = [];
+    this.numSelected = 0;
+  }
+
+  desmarcar() {
+    this.selectedDatos.forEach(el => {
+      el.compensar = false;
+    });
+    this.selectAll = false;
+    this.selectedDatos = [];
+    this.numSelected = 0;
+  }
+
+
 }

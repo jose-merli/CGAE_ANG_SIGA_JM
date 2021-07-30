@@ -47,5 +47,6 @@ export let endpoints_facturacionsjcs: any = {
     pagosjcs_saveConfigFichAbonos: "pagosjcs/saveConfigFichAbonos",
     pagosjcs_getConfigFichAbonos: "pagosjcs/getConfigFichAbonos",
     pagosjcs_getNumApuntesPago: "pagosjcs/getNumApuntesPago",
+    pagosjcs_getCompensacionFacturas: "pagosjcs/getCompensacionFacturas",
 }
 
