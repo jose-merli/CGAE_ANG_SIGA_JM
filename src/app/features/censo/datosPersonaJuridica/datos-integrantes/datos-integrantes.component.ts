@@ -72,8 +72,8 @@ export class DatosIntegrantesComponent implements OnInit {
   isValidate: boolean;
 
   tarjeta: string;
-  @Input() cantidadIntegrantes;
-  @Output() cantidadIntegrantesChange = new EventEmitter<any>();
+  @Input() cantidadIntegrantes; 
+  @Output() cantidadIntegrantesChange = new EventEmitter<any>(); 
   @Input() openTarjeta;
   @Output() permisosEnlace = new EventEmitter<any>();
 
@@ -255,7 +255,7 @@ export class DatosIntegrantesComponent implements OnInit {
             this.searchIntegrantes = JSON.parse(data["body"]);
             this.datos = this.searchIntegrantes.datosIntegrantesItem;
             // console.log(this.datos);
-            this.cantidadIntegrantesChange.emit(this.datos.length);
+            this.cantidadIntegrantesChange.emit(this.datos.length); 
             this.datos = this.datos.map(it => {
               it.nombreApel = it.apellidos.trim() + ", " + it.nombre;
               return it;

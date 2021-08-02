@@ -123,7 +123,7 @@ export class DatosRegistralesComponent implements OnInit, OnChanges {
 
   tarjeta: string;
   searchDatos: boolean = false;
-  @Input() cantidadIntegrantes;
+  @Input() cantidadIntegrantes; 
   @Input() openTarjeta;
   @Output() permisosEnlace = new EventEmitter<any>();
 
@@ -241,13 +241,13 @@ export class DatosRegistralesComponent implements OnInit, OnChanges {
       this.abreCierraFicha(this.openTarjeta);
     }
 
-    if (changes.cantidadIntegrantes &&
-        changes.cantidadIntegrantes != null &&
-        changes.cantidadIntegrantes.currentValue == 0 &&
-        this.sociedadProfesional == true) {
-      this.sociedadProfesional = false;
-      this.showCustomFail("Debe haber como mínimo un integrante para poder marcar la sociedad como profesional.");
-    }
+    if (changes.cantidadIntegrantes && 
+        changes.cantidadIntegrantes != null && 
+        changes.cantidadIntegrantes.currentValue == 0 && 
+        this.sociedadProfesional == true) { 
+      this.sociedadProfesional = false; 
+      this.showCustomFail("Debe haber como mínimo un integrante para poder marcar la sociedad como profesional."); 
+    } 
 
   }
   checkAcceso() {
@@ -531,13 +531,13 @@ export class DatosRegistralesComponent implements OnInit, OnChanges {
               this.body.numRegistro = null;
             }
 
-            if (this.cantidadIntegrantes == 0) {
-              this.body.sociedadProfesional = "0";
-            }
+            if (this.cantidadIntegrantes == 0) { 
+              this.body.sociedadProfesional = "0"; 
+            } 
 
-            if (this.body.resena == null) {
-              this.body.resena = "";
-            }
+            if (this.body.resena == null) { 
+              this.body.resena = ""; 
+            } 
             this.sigaServices
               .post("datosRegistrales_update", this.body)
               .subscribe(
@@ -902,11 +902,11 @@ export class DatosRegistralesComponent implements OnInit, OnChanges {
   //   }
   // }
 
-  compruebaNumIntegrantes() {
-    if (this.cantidadIntegrantes == 0) {
-      this.showCustomFail("Debe haber como mínimo un integrante para poder marcar la sociedad como profesional.");
-    }
-  }
+  compruebaNumIntegrantes() { 
+    if (this.cantidadIntegrantes == 0) { 
+      this.showCustomFail("Debe haber como mínimo un integrante para poder marcar la sociedad como profesional."); 
+    } 
+  } 
 
   fillFechaConstitucion(event) {
     this.fechaConstitucion = event;

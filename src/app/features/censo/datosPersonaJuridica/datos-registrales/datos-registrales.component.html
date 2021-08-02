@@ -57,9 +57,9 @@
                 pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
-              <label *ngIf="!sociedadProfesional">{{"censo.consultaDatosRegistrales.literal.Resenia" | translate}}</label>
-              <label *ngIf="sociedadProfesional">{{"censo.consultaDatosRegistrales.literal.Resenia" | translate}} (*)</label>
-              <input [ngClass]="sociedadProfesional ? styleObligatorio(body.resena) : ''" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.resena"
+              <label *ngIf="!sociedadProfesional">{{"censo.consultaDatosRegistrales.literal.Resenia" | translate}}</label> 
+              <label *ngIf="sociedadProfesional">{{"censo.consultaDatosRegistrales.literal.Resenia" | translate}} (*)</label> 
+              <input [ngClass]="sociedadProfesional ? styleObligatorio(body.resena) : ''" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.resena" 
                 type="text" class="form-control" (ngModelChange)="desactivadoGuardar()" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
@@ -75,9 +75,9 @@
 
 
             <div class="form-group col-lg-6 col-md-6 form-group-date">
-              <label *ngIf="!sociedadProfesional">{{"censo.general.literal.FechaConstitucion" | translate}}</label>
-              <label *ngIf="sociedadProfesional">{{"censo.general.literal.FechaConstitucion" | translate}} (*)</label>
-              <app-fecha [inputStyleClass]="sociedadProfesional ? styleObligatorio(fechaConstitucion) : ''" [(value)]="fechaConstitucion" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" (valueChangeSelected)="fillFechaConstitucion($event)"
+              <label *ngIf="!sociedadProfesional">{{"censo.general.literal.FechaConstitucion" | translate}}</label> 
+              <label *ngIf="sociedadProfesional">{{"censo.general.literal.FechaConstitucion" | translate}} (*)</label> 
+              <app-fecha [inputStyleClass]="sociedadProfesional ? styleObligatorio(fechaConstitucion) : ''" [(value)]="fechaConstitucion" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" (valueChangeSelected)="fillFechaConstitucion($event)" 
                 (valueChangeInput)="fillFechaConstitucion($event)" (ngModelChange)="desactivadoGuardar()"></app-fecha>
               <div *ngIf="fechaCorrecta == false">
                 <label class="labelError">La fecha no puede ser superior a la actual</label>
@@ -158,7 +158,7 @@
             <div class="form-check col-lg-6 col-md-6">
               <br>
               <label class="form-group-label">{{"censo.busquedaClientes.noColegiados.sociedadProfesional" | translate}}</label> &nbsp;&nbsp;
-              <p-checkbox [(ngModel)]='sociedadProfesional' binary="true" (onChange)="onChangeSociedadProfesional()" (click)="compruebaNumIntegrantes()" [disabled]="tarjeta == '2' || (!sociedadProfesional && cantidadIntegrantes == 0)"></p-checkbox>
+              <p-checkbox [(ngModel)]='sociedadProfesional' binary="true" (onChange)="onChangeSociedadProfesional()" (click)="compruebaNumIntegrantes()" [disabled]="tarjeta == '2' || (!sociedadProfesional && cantidadIntegrantes == 0)"></p-checkbox> 
             </div>
           </div>
         </div>
