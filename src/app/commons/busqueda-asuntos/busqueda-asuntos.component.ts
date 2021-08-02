@@ -219,8 +219,11 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
             m => {
               this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
               sessionStorage.removeItem("radioTajertaValue");
-              this.progressSpinner = false;
-              if(!copy)this.location.back();
+              
+              if(!copy){
+                this.progressSpinner = false;
+                this.location.back();
+              }
               else {
                 this.sigaServices.post("gestionejg_getEjgDesigna", this.datos).subscribe(
                   x => {
@@ -259,8 +262,11 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
             m => {
               this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
               sessionStorage.removeItem("radioTajertaValue");
-              this.progressSpinner = false;
-              if(!copy)this.location.back();
+              
+              if(!copy){
+                this.progressSpinner = false;
+                this.location.back();
+              }
               else {
                 this.sigaServices.post("gestionejg_copyEjg2Asis", requestAsistencia).subscribe(
                   x => {
@@ -297,8 +303,11 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
 
               this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
               sessionStorage.removeItem("radioTajertaValue");
-              this.progressSpinner = false;
-              if(!copy)this.location.back();
+              
+              if(!copy){
+                this.progressSpinner = false;
+                this.location.back();
+              }
               else {
                 this.sigaServices.post("gestionejg_copyEjg2Soj", requestSoj).subscribe(
                   x => {
@@ -319,7 +328,6 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
               this.progressSpinner = false;
             }
           );
-
           break;
       }
     }
