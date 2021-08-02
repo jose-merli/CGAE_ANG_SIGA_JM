@@ -400,7 +400,9 @@ export class RelacionesComponent implements OnInit {
           break;
       
         default:
+          //Introducir en la BBDD
           this.showMessage("error", this.translateServices.instant("general.message.incorrect"), "No se puede realizar la accion de eliminar. Tipo de Asunto incorrecto.");
+          this.progressSpinner = false;
           break;
       }
     }
@@ -456,17 +458,17 @@ export class RelacionesComponent implements OnInit {
         break;
         case 'DESIGNACIÓN':
           let desItem = new DesignaItem(); 
-          let ape = this.selectedDatos[0].letrado.split(',')[0];
-          desItem.ano = this.selectedDatos[0].anio;
-          desItem.numero = this.selectedDatos[0].numero;
-          desItem.idInstitucion = this.selectedDatos[0].idinstitucion;
-          desItem.idTurno = this.selectedDatos[0].idturno;
-          desItem.codigo = this.selectedDatos[0].codigo;
-          desItem.descripcionTipoDesigna = this.selectedDatos[0].destipo
-          desItem.fechaEntradaInicio = this.selectedDatos[0].fechaasunto;
-          desItem.nombreTurno = this.selectedDatos[0].descturno;
-          desItem.nombreProcedimiento = this.selectedDatos[0].dilnigproc.split('-')[2];
-          desItem.nombreColegiado = this.selectedDatos[0].letrado;
+          let ape = dato.letrado.split(',')[0];
+          desItem.ano = dato.anio;
+          desItem.numero = dato.numero;
+          desItem.idInstitucion = dato.idinstitucion;
+          desItem.idTurno = dato.idturno;
+          desItem.codigo = dato.codigo;
+          desItem.descripcionTipoDesigna = dato.destipo
+          desItem.fechaEntradaInicio = dato.fechaasunto;
+          desItem.nombreTurno = dato.descturno;
+          desItem.nombreProcedimiento = dato.dilnigproc.split('-')[2];
+          desItem.nombreColegiado = dato.letrado;
           desItem.apellido1Colegiado =ape.split(' ')[0];
           desItem.apellido2Colegiado =ape.split(' ')[1];
 
@@ -481,6 +483,7 @@ export class RelacionesComponent implements OnInit {
         break;
     
       default:
+        //Introducir en la BBDD
         this.showMessage("error", this.translateServices.instant("general.message.incorrect"), "No se puede realizar la accion de eliminar. Tipo de Asunto incorrecto.");
         break;
     }
