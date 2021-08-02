@@ -378,13 +378,18 @@ export class RelacionesComponent implements OnInit {
             );
           break;
           case 'DESIGNACIÓN':
-            let relacionDes:RelacionesItem = new RelacionesItem();
+            /* let relacionDes:RelacionesItem = new RelacionesItem();
      
             relacionDes.idinstitucion = dato.idinstitucion;
             relacionDes.numero = dato.numero;
             relacionDes.anio = dato.anio;
-            relacionDes.idturno = dato.idturno;
-            this.sigaServices.post("gestionejg_borrarRelacion", relacionDes).subscribe(
+            relacionDes.idturno = dato.idturno; */
+
+            let request= [
+              dato.idinstitucion,dato.numero,dato.anio,dato.idturno,this.body.annio,this.body.numero,this.body.tipoEJG
+            ]
+
+            this.sigaServices.post("gestionejg_borrarRelacion", request).subscribe(
               n => {
                 this.progressSpinner = false;
                 this.showMessage("success", this.translateServices.instant("general.message.correct"), this.translateServices.instant("general.message.accion.realizada"));
