@@ -60,6 +60,8 @@ export class FiltrosEjgComponent implements OnInit {
   isDisabledFundamentoImpug: boolean = true;
   isDisabledGuardia: boolean = true;
   tipoLetrado;
+
+  bodyDictamen = [];
   @Input() permisos;
   /*Éste método es útil cuando queremos qeremos informar de cambios en los datos desde el hijo,
   por ejemplo, si tenemos un botón en el componente hijo y queremos actualizar los datos del padre.*/
@@ -87,6 +89,7 @@ export class FiltrosEjgComponent implements OnInit {
     }
     if (this.persistenceService.getFiltros() != undefined) {
       this.body = this.persistenceService.getFiltros();
+      if(this.body.dictamen != undefined) this.bodyDictamen = Array.from(this.body.dictamen);
      
       this.body.fechaAperturaDesd = this.transformDate(this.body.fechaAperturaDesd);
       this.body.fechaAperturaHast = this.transformDate(this.body.fechaAperturaHast);
@@ -173,7 +176,7 @@ export class FiltrosEjgComponent implements OnInit {
 
   onChangeDictamen() {
     this.comboFundamentoCalif = [];
-    if (this.body.dictamen != undefined && this.body.dictamen != "") {
+    if (this.bodyDictamen != undefined && this.bodyDictamen != []) {
       this.isDisabledFundamentosCalif = false;
       this.getComboFundamentoCalif();
 
@@ -264,9 +267,10 @@ export class FiltrosEjgComponent implements OnInit {
     );
   }
   getComboFundamentoCalif() {
+    
     this.sigaServices.getParam(
       "filtrosejg_comboFundamentoCalif",
-      "?list_dictamen=" + this.body.dictamen
+      "?list_dictamen=" + this.bodyDictamen.toString()
     ).subscribe(
       n => {
         // this.isDisabledFundamentosCalif = false;
@@ -608,6 +612,7 @@ export class FiltrosEjgComponent implements OnInit {
           this.body.numColegiado=this.usuarioBusquedaExpress.numColegiado;
       }
 
+      this.body.dictamen = this.bodyDictamen.toString();
       
       this.busqueda.emit(false);
       

@@ -77,7 +77,7 @@ export class EJGComponent implements OnInit {
 
   searchEJGs(event) {
 
-     this.progressSpinner = true;
+     /* this.progressSpinner = true;
      let data = new EJGItem();
     let cadena;
     data = this.filtros.body;
@@ -87,10 +87,10 @@ export class EJGComponent implements OnInit {
       cadena =  this.filtros.body.dictamen;
       data.dictamen = cadena.toString();
       
-    } 
+    }  */
     
     
-    this.sigaServices.post("filtrosejg_busquedaEJG", data).subscribe(
+    this.sigaServices.post("filtrosejg_busquedaEJG", this.filtros.body).subscribe(
       n => {
         this.datos = JSON.parse(n.body).ejgItems;
         let error = JSON.parse(n.body).error;
@@ -102,6 +102,7 @@ export class EJGComponent implements OnInit {
           this.tabla.table.reset();
           this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
         }
+        //cadena = [];
         this.progressSpinner = false;
         if (error != null && error.description != null) {
           this.showMessageError("info", this.translateService.instant("general.message.informacion"), error.description);

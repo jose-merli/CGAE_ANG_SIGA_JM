@@ -122,9 +122,9 @@
         <div class="form-row">
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ "justiciaGratuita.ejg.datosGenerales.Dictamen" | translate }}</label>
-            <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='body.dictamen'
+            <p-multiSelect class="select-form" [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='bodyDictamen'
               [options]="comboDictamen" [selectedItemsLabel]="textSelected" styleClass="widthAll"
-              (onChange)="onChangeDictamen()" [filter]="true" filterBy="label,labelSinTilde" maxSelectedLabels="10">
+              (onChange)="onChangeDictamen()" [filter]="true" filterBy="label,labelSinTilde,value" maxSelectedLabels="10">
             </p-multiSelect>
           </div>
 
