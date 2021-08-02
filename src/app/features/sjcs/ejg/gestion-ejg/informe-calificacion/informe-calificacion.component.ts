@@ -92,7 +92,7 @@ export class InformeCalificacionComponent implements OnInit {
   esFichaActiva(key) {
     return this.fichaPosible.activa;
   }
-  
+
   abreCierraFicha(key) {
     if (
       key == "informeCalificacion" &&
@@ -166,6 +166,7 @@ export class InformeCalificacionComponent implements OnInit {
   //     }
   //   );
   // }
+  
   onChangeDictamen() {
     this.comboFundamentoCalif = [];
     if (this.dictamen.idTipoDictamen != undefined) {

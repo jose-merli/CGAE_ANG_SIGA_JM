@@ -422,7 +422,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                 
                 this.sigaServices.post("designacion_asociarEjgDesigna", request).subscribe(
                   m => {
-                    //Se debe añadir a la base de datos estos mensajes
+                    //Se debe añadir a la BBDD estos mensajes (etiquetas)
                     if(JSON.parse(m.body).error.code==200)this.msgs = [{ severity: "success", summary: "Asociación con EJG realizada correctamente", detail: this.translateService.instant( JSON.parse(m.body).error.description) }];
                     else this.msgs = [{ severity: "error", summary: "Asociación con EJG fallida", detail: this.translateService.instant( JSON.parse(m.body).error.description) }];
                     sessionStorage.removeItem("EJG");
