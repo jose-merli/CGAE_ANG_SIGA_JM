@@ -131,28 +131,27 @@ export class RelacionesComponent implements OnInit {
         this.nRelaciones = this.relaciones.length;
         //obtiene el tipo en caso de devolver solo 1.
         //deshabilitacion de botones en caso de obtener una relacion de cada tipo
-      //ya que solo puede haber una sola relacion
-      this.relaciones.forEach(relacion => {
-        relacion.fechaasunto = this.formatDate(relacion.fechaasunto);
-        switch (relacion.sjcs) {
-          case 'ASISTENCIA':
-            this.noAsociaASI = true;
-            break;
-          case 'SOJ':
-            this.noAsociaSOJ = true;
-            break;
-          case 'DESIGNACIÓN':
-            //en caso de designacion, si ya esta relacionado no se podra crear una nueva designacion para ese EJG
-            this.noAsociaDES = true;
-            this.noCreaDes = true;
-            break;
-            default:
-            this.noAsociaASI = false;
-            this.noAsociaSOJ = false;
-            this.noAsociaDES = false;
-            this.noCreaDes = false;
-            break;
-        }
+        //ya que solo puede haber una sola relacion
+        //Se reinicia el valor de las deshabilitaciones para que se actualicen si se borra una relacion.
+        this.noAsociaASI = false;
+        this.noAsociaSOJ = false;
+        this.noAsociaDES = false;
+        this.noCreaDes = false;
+        this.relaciones.forEach(relacion => {
+          relacion.fechaasunto = this.formatDate(relacion.fechaasunto);
+          switch (relacion.sjcs) {
+            case 'ASISTENCIA':
+              this.noAsociaASI = true;
+              break;
+            case 'SOJ':
+              this.noAsociaSOJ = true;
+              break;
+            case 'DESIGNACIÓN':
+              //en caso de designacion, si ya esta relacionado no se podra crear una nueva designacion para ese EJG
+              this.noAsociaDES = true;
+              this.noCreaDes = true;
+              break;
+          }
       })
         if (this.relaciones.length == 1) {
           this.tipoRelacion = this.relaciones[0].sjcs;
@@ -326,8 +325,11 @@ export class RelacionesComponent implements OnInit {
   }
   delete() {
     this.progressSpinner = true;
+    let selected = this.selectedDatos;
 
-    for( let dato of this.selectedDatos){
+    this.selectedDatos = [];
+
+    for( let dato of selected){
      
       let identificador = dato.sjcs;
 
