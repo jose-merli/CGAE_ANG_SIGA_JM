@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { MultiSelect } from 'primeng/multiselect';
 import { noComponentFactoryError } from '@angular/core/src/linker/component_factory_resolver';
 import { Message } from 'primeng/components/common/api';
+import { procesos_ejg } from '../../../../../permisos/procesos_ejg';
 
 
 @Component({
@@ -68,6 +69,8 @@ export class DatosGeneralesEjgComponent implements OnInit {
   @Output() idOpened = new EventEmitter<Boolean>();
   @Input() openTarjetaDatosGenerales;
 
+  disabledNumEJG: boolean = true;
+
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
     private commonsServices: CommonsService,
     private translateService: TranslateService,
@@ -86,20 +89,10 @@ export class DatosGeneralesEjgComponent implements OnInit {
       this.nuevo = false;
       this.body = this.persistenceService.getDatos();
 
+      this.disabledNumEJG = true;
+
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-      /* this.sigaServices.post("gestionejg_datosEJG", selected).subscribe(
-        n => {
-          this.ejgObject = JSON.parse(n.body).ejgItems;
-          this.datosItem = this.ejgObject[0];
-          this.persistenceService.setDatos(this.datosItem);
-          this.consultaUnidadFamiliar(selected);
-          this.commonServices.scrollTop();
-        },
-        err => {
-          console.log(err);
-          this.commonServices.scrollTop();
-        }
-      ); */
+
       if (this.body.fechalimitepresentacion != undefined)
         this.body.fechalimitepresentacion = new Date(this.body.fechalimitepresentacion);
       if (this.body.fechapresentacion != undefined)
@@ -112,6 +105,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
       this.getPrestacionesRechazadasEJG();
       this.checkEJGDesignas();
     } else {
+      this.disabledNumEJG = true;
       this.nuevo = true;
       this.modoEdicion = false;
       this.body = new EJGItem();
@@ -331,22 +325,8 @@ export class DatosGeneralesEjgComponent implements OnInit {
     this.progressSpinner = true;
 
     if (this.modoEdicion) {
-
-      /* //Comprobamos si las prestaciones rechazadas iniciales.
-      let prestacionesRechazadasInicial = this.comboPrestaciones.map(it => it.value.toString()).filter(x => this.bodyInicial.prestacion.indexOf(x) === -1);
-      
-      //Comprobamos las prestaciones rechazadas actuales.
-      let prestacionesRechazadasActual = this.comboPrestaciones.map(it => it.value.toString()).filter(x => this.body.prestacion.indexOf(x) === -1);
-
-      //Comprobamos la diferencia entre ambas prestaciones rechazadas. SI son iguales se declara con un array vacio. 
-      //En caso contrario, se le asigna los ids de las prestaciones rechazadas.
-      if(prestacionesRechazadasInicial.length === prestacionesRechazadasActual.length && 
-        prestacionesRechazadasInicial.every(function(value, index) { return value === prestacionesRechazadasActual[index]})){
-          this.body.prestacionesRechazadas = [];
-        }
-        else this.body.prestacionesRechazadas = prestacionesRechazadasActual; */
-
       this.body.prestacionesRechazadas = this.comboPrestaciones.map(it => it.value.toString()).filter(x => this.body.prestacion.indexOf(x) === -1);
+
       //hacer update
       this.sigaServices.post("gestionejg_actualizaDatosGenerales", this.body).subscribe(
         n => {
@@ -355,9 +335,17 @@ export class DatosGeneralesEjgComponent implements OnInit {
           if (n.statusText == "OK") {
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
             //Se actualiza la tarjeta de estados en el caso que se actualice el estado inicial por cambiar la fecha de apertura
-            if(this.body.fechaApertura != this.bodyInicial.fechaApertura) this.newEstado.emit(null);
+            if(this.body.fechaApertura != this.bodyInicial.fechaApertura) 
+              this.newEstado.emit(null);
+
+            this.body.numAnnioProcedimiento= "E"+this.body.annio+"/"+this.body.numEjg;
+
             this.bodyInicial = this.body;
+           
             this.persistenceService.setDatos(this.bodyInicial);
+
+            this.guardadoSend.emit(true);
+
             this.changeTipoEJGColegio();
           }
           else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
@@ -376,27 +364,25 @@ export class DatosGeneralesEjgComponent implements OnInit {
         this.body.idInstitucion = this.institucionActual;
 
         this.sigaServices.post("gestionejg_insertaDatosGenerales", JSON.stringify(this.body)).subscribe(
-          n => {
-            this.progressSpinner = false;
-            if (JSON.parse(n.body).error.code == 200) {
-              let ejgObject = JSON.parse(n.body).ejgItems;
-              let datosItem = ejgObject[0];
-              this.persistenceService.setDatos(datosItem);
-              this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-              this.body.numEjg = datosItem.numEjg;
-              this.body.numero = datosItem.numero;
-              this.guardadoSend.emit(true);
-            }
-            else {
-              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-            }
-
-          },
-          err => {
-            this.progressSpinner = false;
+        n => {
+          this.progressSpinner = false;
+          
+          if (JSON.parse(n.body).error.code == 200) {
+            let ejgObject = JSON.parse(n.body).ejgItems;
+            let datosItem = ejgObject[0];
+            this.persistenceService.setDatos(datosItem);
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+            this.body.numEjg = datosItem.numEjg;
+            this.body.numero = datosItem.numero;
+            this.guardadoSend.emit(true);
+          }else {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
           }
-        );
+        },
+        err => {
+          this.progressSpinner = false;
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        });
       }
       else {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
@@ -413,6 +399,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
       this.rest();
     }
   }
+
   rest() {
     if (!this.nuevo) {
       this.body = JSON.parse(JSON.stringify(this.bodyInicial));
@@ -429,6 +416,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
       this.body = JSON.parse(JSON.stringify(this.nuevoBody));
     }
   }
+
   checkPermisosComunicar() {
     let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
@@ -437,10 +425,12 @@ export class DatosGeneralesEjgComponent implements OnInit {
       this.comunicar();
     }
   }
+
   comunicar() {
     this.persistenceService.clearDatos();
     this.router.navigate(["/gestionEjg"]);
   }
+
   checkPermisosAsociarDes() {
     let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
@@ -488,10 +478,8 @@ export class DatosGeneralesEjgComponent implements OnInit {
       //Comprobamos si el EJG tiene una designacion asociada
       if(this.isAssociated) this.addExp();
       else this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('justiciaGratuita.ejg.datosGenerales.noDesignaEjg') }];
-      
     }
   }
-
 
   addExp() {
     let us = undefined;
@@ -501,7 +489,6 @@ export class DatosGeneralesEjgComponent implements OnInit {
       "&idInstitucionEJG=" + this.body.idInstitucion + "&anioEJG=" + this.body.annio + "&actionE=/JGR_InteresadoEJG.do&" +
       "localizacionE=gratuita.busquedaEJG.localizacion&tituloE=pestana.justiciagratuitaejg.solicitante&idInstitucionJG=" + this.institucionActual + "&idPersonaJG=" + this.body.idPersonajg + "&conceptoE=EJG&" +
       "NUMERO=" + this.body.numero + "&ejgNumEjg=" + this.body.numEjg + "&IDTIPOEJG=" + this.body.tipoEJG + "&ejgAnio=" + this.body.annio + "&accionE=editar&IDINSTITUCION=" + this.institucionActual + "&solicitante=JOSE%20LUIS%20ALGBJL%20ZVQNDSMF&ANIO=" + this.body.annio + "";
-
 
     sessionStorage.setItem("url", JSON.stringify(us));
     sessionStorage.removeItem("reload");
@@ -526,6 +513,17 @@ export class DatosGeneralesEjgComponent implements OnInit {
     setTimeout(() => {
       this.someDropdown.filterInputChild.nativeElement.focus();
     }, 300);
+  }
+
+  disableEnableNumEJG(){
+    this.commonsServices.checkAcceso(procesos_ejg.cambioNumEJG)
+    .then(respuesta => {
+      if(respuesta){
+        this.disabledNumEJG=!this.disabledNumEJG;
+      }else{
+        this.msgs = this.commonsServices.checkPermisos(false, undefined);
+      }
+    }).catch(error => console.error(error));
   }
 
 }
