@@ -177,7 +177,7 @@ export class FiltrosEjgComponent implements OnInit {
 
   onChangeDictamen() {
     this.comboFundamentoCalif = [];
-    if (this.bodyDictamen != undefined && this.bodyDictamen != []) {
+    if (this.bodyDictamen != undefined && this.bodyDictamen != [] && this.bodyDictamen.length != 0) {
       this.isDisabledFundamentosCalif = false;
       this.getComboFundamentoCalif();
 
@@ -613,9 +613,12 @@ export class FiltrosEjgComponent implements OnInit {
           this.body.numColegiado=this.usuarioBusquedaExpress.numColegiado;
       }
 
-      if(this.bodyDictamen.toString() != undefined && this.bodyDictamen.toString() != null && this.bodyDictamen.toString() != "") this.body.dictamen = this.bodyDictamen.toString();
+      if(this.bodyDictamen.toString() != undefined && this.bodyDictamen.toString() != null && this.bodyDictamen.toString() != ""){
+        this.body.dictamen = this.bodyDictamen.toString()
+      }
       
       this.busqueda.emit(false);
+      this.body.dictamen = ""
       
     }
   }
