@@ -27,4 +27,8 @@ export let endpoints_generales: any = {
     gestionJusticiables_copyEjg2Soj: 'gestionJusticiables/copyEjg2Soj',
     gestionJusticiables_copyEjg2Asis: 'gestionJusticiables/copyEjg2Asis',
     gestionJusticiables_copyEjg2Designa: 'gestionJusticiables/copyEjg2Designa',
+
+    gestionJusticiables_copyAsis2Soj: 'gestionJusticiables/copyAsis2Soj',
+    gestionJusticiables_copyAsis2Ejg: 'gestionJusticiables/copyAsis2Ejg',
+    gestionJusticiables_copyAsis2Designa: 'gestionJusticiables/copyAsis2Designa',
 }
