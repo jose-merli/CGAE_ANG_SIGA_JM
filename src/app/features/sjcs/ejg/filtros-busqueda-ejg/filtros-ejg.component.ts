@@ -89,7 +89,7 @@ export class FiltrosEjgComponent implements OnInit {
     }
     if (this.persistenceService.getFiltros() != undefined) {
       this.body = this.persistenceService.getFiltros();
-      if(this.body.dictamen != undefined) this.bodyDictamen = Array.from(this.body.dictamen);
+      if(this.body.dictamen != undefined && this.body.dictamen != null && this.body.dictamen != "") this.bodyDictamen = Array.from(this.body.dictamen);
      
       this.body.fechaAperturaDesd = this.transformDate(this.body.fechaAperturaDesd);
       this.body.fechaAperturaHast = this.transformDate(this.body.fechaAperturaHast);
@@ -612,7 +612,7 @@ export class FiltrosEjgComponent implements OnInit {
           this.body.numColegiado=this.usuarioBusquedaExpress.numColegiado;
       }
 
-      this.body.dictamen = this.bodyDictamen.toString();
+      if(this.bodyDictamen.toString() != undefined && this.bodyDictamen.toString() != null && this.bodyDictamen.toString() != "") this.body.dictamen = this.bodyDictamen.toString();
       
       this.busqueda.emit(false);
       

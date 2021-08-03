@@ -437,7 +437,7 @@
            label="{{ 'general.boton.clear' | translate}}"></button>
         <button (click)="isBuscar()" pButton type="button" icon="fa fa-search" iconPos="left"
           label="{{'general.boton.search' | translate}}"></button>
-        <button (click)="isNuevo()" pButton type="button"  icon="fa fa-plus"  iconPos="left"
+        <button (click)="checkPermisosIsNuevo()"  [disabled]="!permisoEscritura" pButton type="button"  icon="fa fa-plus"  iconPos="left"
            label="{{ 'general.boton.new' | translate}}"></button>
       </div>
     </div>
