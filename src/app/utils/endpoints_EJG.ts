@@ -102,9 +102,6 @@ export let endpoints_EJG: any = {
     gestionejg_getDelitosEJG: "ejg/gestion-ejg/getDelitosEJG",
     gestionejg_actualizarDelitosEJG: "ejg/gestion-ejg/actualizarDelitosEJG",
     gestionejg_busquedaProcuradores: "ejg/gestion-ejg/busquedaProcuradores",
-    gestionejg_copyEjg2Soj: 'ejg/gestion-ejg/copyEjg2Soj',
-    gestionejg_copyEjg2Asis: 'ejg/gestion-ejg/copyEjg2Asis',
-    gestionejg_copyEjg2Designa: 'ejg/gestion-ejg/copyEjg2Designa',
 
     //REGTEL
     gestionejg_searchListDocEjg: 'ejg/gestion-ejg/searchListDocEjg',

@@ -139,7 +139,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
       this.datosAsociar = event;
       // if (this.fromEJG) this.asociarEJG(this.datosAsociar);
       if (this.fromEJG) this.confirmCopiarEJG(this.datosAsociar);
-      else if (this.fromDES) this.asociarDES(this.datosAsociar);
+      else if (this.fromDES) this.confirmCopiarDES(this.datosAsociar);
     }
   }
 
@@ -205,6 +205,23 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
     });
   }
 
+  confirmCopiarDES(data) {
+    //Introducir etiqueta en la BBDD
+    let mess = "¿Desea copiar los datos de la designación en el asunto seleccionado?";
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      key: "copy",
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.asociarDES(data, true);
+      },
+      reject: () => {
+        this.asociarDES(data, false);
+      }
+    });
+  }
+
 
   asociarEJG(data, copy) {
     if (this.datos != null) {
@@ -219,8 +236,8 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
             m => {
               this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
               sessionStorage.removeItem("radioTajertaValue");
-              
-              if(!copy){
+
+              if (!copy) {
                 this.progressSpinner = false;
                 this.location.back();
               }
@@ -258,8 +275,8 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
             m => {
               this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
               sessionStorage.removeItem("radioTajertaValue");
-              
-              if(!copy){
+
+              if (!copy) {
                 this.progressSpinner = false;
                 this.location.back();
               }
@@ -300,8 +317,8 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
 
               this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
               sessionStorage.removeItem("radioTajertaValue");
-              
-              if(!copy){
+
+              if (!copy) {
                 this.progressSpinner = false;
                 this.location.back();
               }
@@ -342,7 +359,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
       key: "asoc",
       icon: icon,
       accept: () => {
-        this.asociarDES(data);
+        this.asociarDES(data, false);
 
       },
       reject: () => {
@@ -354,10 +371,12 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
               "general.message.accion.cancelada"
             )
           }
-        ];      }
+        ];
+      }
     });
   }
-  asociarDES(data) {
+
+  asociarDES(data, copy) {
 
     let asunto = this.datosDesigna.ano.split("/");
 
@@ -370,42 +389,74 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
       switch (radioValue) {
 
         case 'ejg':
-          let request = [anoDesigna,data.anio,data.idTipoEjg, turno, asunto[1], data.numero];
-          
-                 this.sigaServices.post("designacion_asociarEjgDesigna", request).subscribe(
-                  m => {
-          
-                    this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-                    sessionStorage.removeItem("radioTajertaValue");
+          let request = [anoDesigna, data.anio, data.idTipoEjg, turno, asunto[1], data.numero];
+
+          this.sigaServices.post("designacion_asociarEjgDesigna", request).subscribe(
+            m => {
+
+              this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+              sessionStorage.removeItem("radioTajertaValue");
+              if (!copy) {
+                this.progressSpinner = false;
+                this.location.back();
+              }
+              else {
+                this.sigaServices.post("designacion_copyDesigna2Ejg", request).subscribe(
+                  x => {
                     this.progressSpinner = false;
+                    this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
                     this.location.back();
                   },
                   err => {
-                    this.showMesg("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-                    this.progressSpinner = false;
+                    //Crear etiqueta en la BBDD
+                    this.showMesg("error", this.translateService.instant("general.message.incorrect"), "Se ha producido un error al copiar los datos de la designacion al EJG seleccionado");
+                    this.location.back();
                   }
                 );
-                  
+              }
+            },
+            err => {
+              this.showMesg("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+              this.progressSpinner = false;
+            }
+          );
+
 
           break;
         case 'asi':
 
-          let requestAsistencia = [anoDesigna, this.datosDesigna.idTurno, this.datosDesigna.numero,data.idinstitucion,data.anio, data.numero];
-          
-        this.sigaServices.post("designacion_asociarAsistenciaDesigna", requestAsistencia).subscribe(
-          m => {
-            this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          let requestAsistencia = [anoDesigna, this.datosDesigna.idTurno, this.datosDesigna.numero, data.idinstitucion, data.anio, data.numero];
+
+          this.sigaServices.post("designacion_asociarAsistenciaDesigna", requestAsistencia).subscribe(
+            m => {
+              this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
               sessionStorage.removeItem("radioTajertaValue");
+              if (!copy) {
+                this.progressSpinner = false;
+                this.location.back();
+              }
+              else {
+                this.sigaServices.post("designacion_copyDesigna2Asis", requestAsistencia).subscribe(
+                  x => {
+                    this.progressSpinner = false;
+                    this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+                    this.location.back();
+                  },
+                  err => {
+                    //Crear etiqueta en la BBDD
+                    this.showMesg("error", this.translateService.instant("general.message.incorrect"), "Se ha producido un error al copiar los datos de la designacion al EJG seleccionado");
+                    this.location.back();
+                  }
+                );
+              }
+            },
+            err => {
+              this.showMesg("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+              //this.location.back();
               this.progressSpinner = false;
-              this.location.back();
-          },
-          err => {
-            this.showMesg("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-            //this.location.back();
-            this.progressSpinner = false;
-          }
-        ); 
-         
+            }
+          );
+
 
           break;
         case 'soj':
@@ -421,8 +472,24 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
              
              this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
              sessionStorage.removeItem("radioTajertaValue");
-             this.progressSpinner = false;
-             this.location.back();
+             if (!copy) {
+                this.progressSpinner = false;
+                this.location.back();
+              }
+              else {
+                this.sigaServices.post("designacion_copyDesigna2Soj", requestSoj).subscribe(
+                  x => {
+                    this.progressSpinner = false;
+                    this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+                    this.location.back();
+                  },
+                  err => {
+                    //Crear etiqueta en la BBDD
+                    this.showMesg("error", this.translateService.instant("general.message.incorrect"), "Se ha producido un error al copiar los datos de la designacion al EJG seleccionado");
+                    this.location.back();
+                  }
+                );
+              }
            },
            err => {
              this.showMesg("error",
