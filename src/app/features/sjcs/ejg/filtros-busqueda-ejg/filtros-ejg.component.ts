@@ -22,7 +22,7 @@ export class FiltrosEjgComponent implements OnInit {
   body: EJGItem = new EJGItem();
   nuevo: boolean = true;
   inst2000: boolean;
-  permisoEscritura: boolean = false;
+  //permisoEscritura: boolean = false;
   showdatosIdentificacion: boolean = true;
   showDatosGeneralesEJG: boolean = false;
   showDatosDefensa: boolean = false;
@@ -66,6 +66,7 @@ export class FiltrosEjgComponent implements OnInit {
   /*Éste método es útil cuando queremos qeremos informar de cambios en los datos desde el hijo,
   por ejemplo, si tenemos un botón en el componente hijo y queremos actualizar los datos del padre.*/
   @Output() busqueda = new EventEmitter<boolean>();
+  @Input() permisoEscritura;
 
   
   @ViewChild('inputNumero') inputNumero: ElementRef;
@@ -661,12 +662,20 @@ export class FiltrosEjgComponent implements OnInit {
   }
 
   checkPermisosIsNuevo(){
-    let msg = this.commonServices.checkPermisos(this.permisoEscritura, undefined);
+    if(this.permisoEscritura == false){
+      let msg = this.commonServices.checkPermisos(this.permisoEscritura, undefined);
+      if (msg != undefined) {
+        this.msgs = msg;
+      } 
+    }else{
+      this.isNuevo();
+    }
+    /* let msg = this.commonServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
     } else {
       this.isNuevo();
-    }
+    } */
   }
   isNuevo() {
     if(sessionStorage.getItem("EJGItem")){
