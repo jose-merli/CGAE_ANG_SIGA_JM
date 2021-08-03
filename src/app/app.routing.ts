@@ -239,6 +239,7 @@ import { TiposProductosComponent } from "./features/facturacion/maestros/tipos-p
 import { TiposServiciosComponent } from "./features/facturacion/maestros/tipos-servicios/tipos-servicios.component";
 import { ProductosComponent } from "./features/facturacion/productos/productos.component";
 import { FichaProductosComponent } from "./features/facturacion/productos/ficha-productos/ficha-productos.component";
+import { ServiciosComponent } from "./features/facturacion/servicios/servicios.component";
 
 const appRoutes: Routes = [
 	{ path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
@@ -1313,6 +1314,12 @@ const appRoutes: Routes = [
 	{
 		path: 'productos',
 		component: ProductosComponent,
+		canActivate: [AuthGuard]
+	},
+
+	{
+		path: 'servicios',
+		component: ServiciosComponent,
 		canActivate: [AuthGuard]
 	},
 

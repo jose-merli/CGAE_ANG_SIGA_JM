@@ -456,6 +456,7 @@ export class SigaServices {
     fichaProducto_crearFormaDePago: 'pys/formasPagoProducto',
 
     serviciosBusqueda_busqueda: 'pys/buscarProductos',
+    serviciosBusqueda_comboTipos: 'pys/listadoTipoServicioByIdCategoria',
     // FOTO
     solicitudModificacion_searchSolModifDatosUseFoto: 'solicitudModificacion/searchSolModifDatosUseFoto',
     solicitudModificacion_searchDatosUseFotoDetail: 'solicitudModificacion/searchDatosUseFotoDetail',

@@ -12,7 +12,7 @@
   <!-- Listado de servicios -->
   <div>
     <app-gestion-servicios *ngIf="muestraTablaServicios" [serviceData]="serviceData"
-      [servicioDataConHistorico]="servicioDataConHistorico" [servicioDataSinHistorico]="servicioDataSinHistorico"
+      [serviceDataConHistorico]="serviceDataConHistorico" [serviceDataSinHistorico]="serviceDataSinHistorico"
       (busqueda)="busquedaServicios($event)" id="tablaServicios">
     </app-gestion-servicios>
   </div>

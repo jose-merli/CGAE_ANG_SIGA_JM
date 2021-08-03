@@ -91,7 +91,7 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
   initColsProducts() {
     this.colsProducts = [
       {
-        field: "categoria", //Campo productData (array con los datos de la tabla) que deberia ser el mismo que en la interfaz TiposProductosItem de la tabla
+        field: "categoria", //Campo productData (array con los datos de la tabla)
         header: "facturacion.productos.categoria" //Titulo columna
       },
       {

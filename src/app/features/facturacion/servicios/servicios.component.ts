@@ -39,8 +39,8 @@ export class ServiciosComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   //INICIO SERVICIOS
   listaServiciosDTO: ListaServiciosDTO;
-  servicioDataConHistorico: any[] = [];
-  servicioDataSinHistorico: any[] = [];
+  serviceDataConHistorico: any[] = [];
+  serviceDataSinHistorico: any[] = [];
   busquedaServicios(event) {
     this.progressSpinner = true;
     let filtrosServicios = JSON.parse(sessionStorage.getItem("filtrosServicios"));
@@ -57,7 +57,7 @@ export class ServiciosComponent implements OnInit, OnDestroy, AfterViewChecked {
         }
 
         this.showTablaServicios(true);
-        this.servicioDataSinHistorico = [];
+        this.serviceDataSinHistorico = [];
         this.commonsService.scrollTablaFoco("tablaServicios");
         this.progressSpinner = false;
       },
@@ -65,17 +65,17 @@ export class ServiciosComponent implements OnInit, OnDestroy, AfterViewChecked {
         this.commonsService.scrollTablaFoco("tablaServicios");
         this.progressSpinner = false;
       }, () => {
-        this.servicioDataConHistorico = this.listaServiciosDTO.listaServiciosItems;
+        this.serviceDataConHistorico = this.listaServiciosDTO.listaServiciosItems;
 
-        if (this.servicioDataConHistorico) {
-          this.servicioDataConHistorico.forEach(servicio => {
+        if (this.serviceDataConHistorico) {
+          this.serviceDataConHistorico.forEach(servicio => {
             if (servicio.fechabaja == null) {
-              this.servicioDataSinHistorico.push(servicio);
+              this.serviceDataSinHistorico.push(servicio);
             }
           });
         }
 
-        this.serviceData = this.servicioDataSinHistorico;
+        this.serviceData = this.serviceDataSinHistorico;
 
         this.progressSpinner = false;
         setTimeout(() => {

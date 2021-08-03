@@ -35,7 +35,7 @@ export class FiltrosProductosComponent implements OnInit, OnDestroy {
   constructor(private sigaServices: SigaServices, private translateService: TranslateService, private router: Router) { }
 
   ngOnInit() {
-    //Reestablece los datos de busqueda anteriormente usados si se viene desde el boton volver de la ficha de productos.
+    //Restablece los datos de busqueda anteriormente usados si se viene desde el boton volver de la ficha de productos.
     if (sessionStorage.getItem("volver") == 'true' && sessionStorage.getItem('filtrosProductos')) {
       this.filtrosProductos = JSON.parse(sessionStorage.getItem("filtrosProductos"));
       sessionStorage.removeItem("volver");
@@ -164,7 +164,7 @@ export class FiltrosProductosComponent implements OnInit, OnDestroy {
   getComboTipo() {
     this.progressSpinner = true;
 
-    this.subscriptionCategorySelectValues = this.sigaServices.getParam("productosBusqueda_comboTipos", "?idCategoria=" + this.filtrosProductos.categoria).subscribe(
+    this.subscriptionTypeSelectValues = this.sigaServices.getParam("productosBusqueda_comboTipos", "?idCategoria=" + this.filtrosProductos.categoria).subscribe(
       TipoSelectValues => {
         this.progressSpinner = false;
 

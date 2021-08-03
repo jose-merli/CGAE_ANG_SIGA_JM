@@ -1,5 +1,3 @@
-import { ComboObject } from "./ComboObject";
-
 export class FiltrosProductos {
     categoria: string;
     tipo: string;
