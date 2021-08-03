@@ -242,7 +242,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
                 this.location.back();
               }
               else {
-                this.sigaServices.post("gestionejg_copyEjg2Designa", datos).subscribe(
+                this.sigaServices.post("gestionJusticiables_copyEjg2Designa", datos).subscribe(
                   x => {
                     this.progressSpinner = false;
                     this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
@@ -281,7 +281,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
                 this.location.back();
               }
               else {
-                this.sigaServices.post("gestionejg_copyEjg2Asis", requestAsistencia).subscribe(
+                this.sigaServices.post("gestionJusticiables_copyEjg2Asis", requestAsistencia).subscribe(
                   x => {
                     this.progressSpinner = false;
                     this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
@@ -323,7 +323,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
                 this.location.back();
               }
               else {
-                this.sigaServices.post("gestionejg_copyEjg2Soj", requestSoj).subscribe(
+                this.sigaServices.post("gestionJusticiables_copyEjg2Soj", requestSoj).subscribe(
                   x => {
                     this.progressSpinner = false;
                     this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
@@ -401,7 +401,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
                 this.location.back();
               }
               else {
-                this.sigaServices.post("designacion_copyDesigna2Ejg", request).subscribe(
+                this.sigaServices.post("gestionJusticiables_copyDesigna2Ejg", request).subscribe(
                   x => {
                     this.progressSpinner = false;
                     this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
@@ -436,7 +436,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
                 this.location.back();
               }
               else {
-                this.sigaServices.post("designacion_copyDesigna2Asis", requestAsistencia).subscribe(
+                this.sigaServices.post("gestionJusticiables_copyDesigna2Asis", requestAsistencia).subscribe(
                   x => {
                     this.progressSpinner = false;
                     this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
@@ -477,7 +477,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
                 this.location.back();
               }
               else {
-                this.sigaServices.post("designacion_copyDesigna2Soj", requestSoj).subscribe(
+                this.sigaServices.post("gestionJusticiables_copyDesigna2Soj", requestSoj).subscribe(
                   x => {
                     this.progressSpinner = false;
                     this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
