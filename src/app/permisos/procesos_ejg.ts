@@ -5,6 +5,7 @@ export const procesos_ejg: any = {
    //detalle ejg
     tarjetaResumen: "93Y", 
     datosGenerales: "943",
+    cambioNumEJG: "930",
     serviciosTramitacion: "944",
     unidadFamiliar: "94T",
     expedientesEconomicos: "945",
