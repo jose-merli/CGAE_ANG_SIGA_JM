@@ -29,6 +29,8 @@ export class GestionEjgComponent implements OnInit {
   datosFamiliares: any;
   datos;
   // datosItem: EJGItem;
+  noAsocDes:boolean = false;
+
   idEJG;
   filtros;
   filtrosAux;
