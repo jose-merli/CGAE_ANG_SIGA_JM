@@ -155,19 +155,13 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
     this.filtros.anio = fecha.getFullYear();
 
     //Se asignan los valores de los filtros cuando procede de EJG y se fijan
-    /* if (this.data != null) {
+    if(sessionStorage.getItem("radioTajertaValue")){
+      this.radioTarjeta=sessionStorage.getItem("radioTajertaValue")
+      this.disableRadio = true;
+    }else{
       this.radioTarjeta = 'des';
-      
-    }else{ */
-      if(sessionStorage.getItem("radioTajertaValue")){
-        this.radioTarjeta=sessionStorage.getItem("radioTajertaValue")
-        this.disableRadio = true;
-        //sessionStorage.removeItem("radioTajertaValue");
-      }else{
-        this.radioTarjeta = 'des';
-        sessionStorage.setItem("radioTajertaValue",""+this.radioTarjeta);
-      }
-    //}
+      sessionStorage.setItem("radioTajertaValue",""+this.radioTarjeta);
+    }
     
     if (sessionStorage.getItem("buscadorColegiados")) {
 

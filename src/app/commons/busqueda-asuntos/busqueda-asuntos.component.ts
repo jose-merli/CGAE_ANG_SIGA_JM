@@ -21,9 +21,7 @@ import { PersistenceService } from '../../_services/persistence.service';
 import { FiltrosBusquedaAsuntosComponent } from "./filtros-busqueda-asuntos/filtros-busqueda-asuntos.component";
 import { TablaBusquedaAsuntosComponent } from "./tabla-busqueda-asuntos/tabla-busqueda-asuntos.component";
 import { ConfirmationService } from 'primeng/api';
-import { AsuntosJusticiableItem } from "../../models/sjcs/AsuntosJusticiableItem";
-import { EJGItem } from "../../models/sjcs/EJGItem";
-import { DesignaItem } from "../../models/sjcs/DesignaItem";
+
 export enum KEY_CODE {
   ENTER = 13
 }
@@ -86,7 +84,6 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
   datos;
 
   ngOnInit() {
-
     //asociar desde EJG
     if (sessionStorage.getItem('EJG')) {
       this.datos = JSON.parse(sessionStorage.getItem('EJG'));
@@ -100,46 +97,16 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
       this.fromDES = true;
       sessionStorage.removeItem('Designacion');
     }
-
-
-    /*   if (sessionStorage.getItem('EJGSoj')) {
-        this.datos = JSON.parse(sessionStorage.getItem('EJGSoj'));
-        this.from = true;
-        sessionStorage.removeItem('EJGSoj');
-      }
-      if (sessionStorage.getItem('EJGAsistencia')) {
-        this.datos = JSON.parse(sessionStorage.getItem('EJGAsistencia'));
-        this.from = true;
-        sessionStorage.removeItem('EJGAsistencia');
-      } */
-
-
-
-
-    // this.commonsService.checkAcceso()
-    //   .then(respuesta => {
-    //     this.permisoEscritura = respuesta;
-    //     this.persistenceService.setPermisos(this.permisoEscritura);
-
-    //     if (this.permisoEscritura == undefined) {
-    //       sessionStorage.setItem("codError", "403");
-    //       sessionStorage.setItem(
-    //         "descError",
-    //         this.translateService.instant("generico.error.permiso.denegado")
-    //       );
-    //       this.router.navigate(["/errorAcceso"]);
-    //     }
-    //     this.getInstitucion();
-    //   }
-    //   ).catch(error => console.error(error));
-
   }
+
   asociarElement(event) {
     if (!(event == null || event == undefined)) {
       this.datosAsociar = event;
-      // if (this.fromEJG) this.asociarEJG(this.datosAsociar);
-      if (this.fromEJG) this.confirmCopiarEJG(this.datosAsociar);
-      else if (this.fromDES) this.confirmCopiarDES(this.datosAsociar);
+
+      if (this.fromEJG) 
+        this.confirmCopiarEJG(this.datosAsociar);
+      else if (this.fromDES) 
+        this.confirmCopiarDES(this.datosAsociar);
     }
   }
 

@@ -20,7 +20,6 @@ export class TablaBusquedaAsuntosComponent implements OnInit {
   cols = [];
   msgs;
   progressSpinner: boolean = false;
-
   selectedItem: number = 10;
   selectAll;
   selectedDatos:any[] = [];
@@ -28,7 +27,6 @@ export class TablaBusquedaAsuntosComponent implements OnInit {
   selectMultiple: boolean = false;
   seleccion: boolean = false;
  
-
   permisoEscritura: boolean = true;
   datosInicio: boolean = false;
   datos = [];
@@ -39,32 +37,18 @@ export class TablaBusquedaAsuntosComponent implements OnInit {
   @Input() showTarjeta;
   @Input() body;
   @Input() modoEdicion;
+  @Input() radioTarjeta;
   @Input() fromJusticiable;
   @Input() data: AsuntosJusticiableItem = null;
   @Output() elementoAsociado = new EventEmitter<String[]>();
-
-
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private persistenceService: PersistenceService, private location: Location, private sigaServices: SigaServices) { }
 
   ngOnInit() {
+    this.radioTarjeta=sessionStorage.getItem("radioTajertaValue")
 
-    // this.commonsService.checkAcceso(procesos_justiciables.tarjetaAsuntos)
-    //   .then(respuesta => {
-
-    //     this.permisoEscritura = respuesta;
-
-    //     if (this.permisoEscritura == undefined) {
-    //       this.showTarjetaPermiso = false;
-    //     } else {
-    //       this.showTarjetaPermiso = true;
     this.getCols();
-    
-
-    //     }
-    //   }
-    //   ).catch(error => console.error(error));
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -76,8 +60,7 @@ export class TablaBusquedaAsuntosComponent implements OnInit {
   }
 
   getCols() {
-
-    this.cols = [
+    this.cols =  [
       { field: "anio", header: "justiciaGratuita.sjcs.designas.DatosIden.ano", width: "10%" },
       { field: "numero", header: "gratuita.busquedaAsistencias.literal.numero", width: "10%" },
       { field: "dilnigproc", header: "sjcs.oficio.designaciones.relaciones.numDiligNigNproc", width: "25%"},
@@ -85,9 +68,6 @@ export class TablaBusquedaAsuntosComponent implements OnInit {
       { field: "tipo", header: "censo.nuevaSolicitud.tipoSolicitud", width: "20%" },
       { field: "turnoGuardia", header: "justiciaGratuita.justiciables.literal.turnoGuardia", width: "25%" },
       { field: "letrado", header: "justiciaGratuita.justiciables.literal.colegiado", width: "20%" },
-      
-      
-
     ];
 
     this.rowsPerPage = [
