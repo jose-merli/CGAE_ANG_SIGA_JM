@@ -61,6 +61,7 @@ export class UnidadFamiliarComponent implements OnInit {
   @Output() searchHistoricalSend = new EventEmitter<boolean>();
   @Output() opened = new EventEmitter<boolean>();
   @Output() idOpened = new EventEmitter<boolean>();
+  @Output() updateRes = new EventEmitter<boolean>();
 
   @ViewChild("cdDelete") cdDelete: Dialog;
 
@@ -404,6 +405,7 @@ export class UnidadFamiliarComponent implements OnInit {
 
       data.push(ejg);
     }
+    
     this.sigaServices.post("gestionejg_borrarFamiliar", data).subscribe(
       n => {
         this.progressSpinner = false;
@@ -412,6 +414,17 @@ export class UnidadFamiliarComponent implements OnInit {
         if (n.statusText == 'OK') {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.historico = false;
+          //Si uno de los datos que hemos eliminado es el solicitante principal,
+          //se actualiza la tarjeta resumen para reflejarlo.
+          let solP = data.find(
+            item => item.uf_enCalidad == "3"
+          )
+          if(solP != undefined) {
+            this.body.idPersonajg = null;
+            this.body.nombreApeSolicitante = null;
+            this.persistenceService.setDatos(this.body);
+            this.updateRes.emit();
+          }
           this.consultaUnidadFamiliar(this.body);
         } else {
           this.showMessage('error', 'Error', this.translateService.instant('general.message.error.realiza.accion'));

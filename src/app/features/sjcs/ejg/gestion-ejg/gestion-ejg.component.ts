@@ -125,6 +125,18 @@ export class GestionEjgComponent implements OnInit {
     }
 
     sessionStorage.removeItem("EJGItem");
+    this.updateTarjResumen();
+        
+    this.obtenerPermisos();
+      
+    
+    //this.commonsService.scrollTop();
+    this.goTop();
+  }
+
+  updateTarjResumen(){
+    this.body = this.persistenceService.getDatos();
+
     this.datos = [
       {
         label: "Año/Numero EJG",
@@ -156,12 +168,6 @@ export class GestionEjgComponent implements OnInit {
         value: this.body.impugnacion
       },
     ];
-        
-    this.obtenerPermisos();
-      
-    
-    //this.commonsService.scrollTop();
-    this.goTop();
   }
 
   goTop() {

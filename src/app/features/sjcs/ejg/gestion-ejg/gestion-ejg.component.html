@@ -16,7 +16,10 @@
         <app-servicios-tramitacion *ngIf="permisoEscrituraServiciosTramitacion != undefined && modoEdicion" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaServiciosTramitacion]="tarjetaServiciosTramitacion" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraServiciosTramitacion" (modoEdicionSend)="modoEdicionSend($event)" [openTarjetaServiciosTramitacion]="openTarjetaServiciosTramitacion">
         </app-servicios-tramitacion>
         
-        <app-unidad-familiar *ngIf="permisoEscrituraUnidadFamiliar != undefined && modoEdicion" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaUnidadFamiliar]="tarjetaUnidadFamiliar" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraUnidadFamiliar" (modoEdicionSend)="modoEdicionSend($event)" [openTarjetaUnidadFamiliar]="openTarjetaUnidadFamiliar"> 
+        <app-unidad-familiar *ngIf="permisoEscrituraUnidadFamiliar != undefined && modoEdicion" (opened)="manuallyOpened = $event" 
+        (idOpened)="isCloseReceive($event)" [tarjetaUnidadFamiliar]="tarjetaUnidadFamiliar" [modoEdicion]="modoEdicion" 
+        [permisoEscritura]="permisoEscrituraUnidadFamiliar" (modoEdicionSend)="modoEdicionSend($event)" [openTarjetaUnidadFamiliar]="openTarjetaUnidadFamiliar"
+        (updateRes)="updateTarjResumen()"> 
         </app-unidad-familiar>
         
         <app-expedientes-economicos *ngIf="permisoEscrituraExpedientesEconomicos != undefined && modoEdicion" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaExpedientesEconomicos]="tarjetaExpedientesEconomicos" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraExpedientesEconomicos" (modoEdicionSend)="modoEdicionSend($event)" [openTarjetaExpedientesEconomicos]="openTarjetaExpedientesEconomicos">
