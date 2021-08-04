@@ -76,20 +76,6 @@ export class EJGComponent implements OnInit {
   }
 
   searchEJGs(event) {
-
-     /* this.progressSpinner = true;
-     let data = new EJGItem();
-    let cadena;
-    data = this.filtros.body;
-
-    if(this.filtros.body.dictamen != undefined){
-     
-      cadena =  this.filtros.body.dictamen;
-      data.dictamen = cadena.toString();
-      
-    }  */
-    
-    
     this.sigaServices.post("filtrosejg_busquedaEJG", this.filtros.body).subscribe(
       n => {
         this.datos = JSON.parse(n.body).ejgItems;

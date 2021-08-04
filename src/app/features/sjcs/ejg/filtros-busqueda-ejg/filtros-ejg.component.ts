@@ -204,7 +204,7 @@ export class FiltrosEjgComponent implements OnInit {
       this.getComboGuardia();
     } else {
       this.isDisabledGuardia = true;
-      this.body.guardia = "";
+      this.body.idGuardia = "";
     }
   }
 
@@ -632,7 +632,7 @@ export class FiltrosEjgComponent implements OnInit {
   }
   clearFiltersTramitador() {
     this.body.idTurno = "";
-    this.body.guardia = "";
+    this.body.idGuardia = "";
     this.body.numColegiado = "";
     this.body.apellidosYNombre = "";
     this.body.tipoLetrado = "";
