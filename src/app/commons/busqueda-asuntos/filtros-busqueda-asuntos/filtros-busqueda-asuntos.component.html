@@ -6,16 +6,14 @@
         <div class="card-body">
             <div class="form-row">
                 <div class="col-12">
+                    <p-radioButton value="des" name="tarj" (click)="changeFilters()" [disabled]="disableRadio" label="{{'justiciaGratuita.ejg.busquedaAsuntos.designaciones' | translate}}" [(ngModel)]='radioTarjeta'></p-radioButton>
 
-                    <!-- <p-radioButton value="des" name="tarj" (click)="changeFilters()"
-                        label="{{'menu.justiciaGratuita.designas' | translate}}" [(ngModel)]='radioTarjeta'
-                        [disabled]="fromEJG"></p-radioButton> -->
-                    <p-radioButton value="des" name="tarj" (click)="changeFilters()" [disabled]="disableRadio" label="{{'justiciaGratuita.ejg.busquedaAsuntos.designaciones' | translate}}"
-                        [(ngModel)]='radioTarjeta'></p-radioButton>
                     <p-radioButton value="soj" name="tarj" label="{{'justiciaGratuita.ejg.busquedaAsuntos.SOJ' | translate}}" [(ngModel)]='radioTarjeta'
                         (click)="changeFilters()" [disabled]="disableRadio"></p-radioButton>
+
                     <p-radioButton value="asi" name="tarj" (click)="changeFilters()" [disabled]="disableRadio"
                         label="{{'menu.justiciaGratuita.asistencia' | translate}}" [(ngModel)]='radioTarjeta'></p-radioButton>
+
                     <p-radioButton value="ejg" name="tarj" (click)="changeFilters()" [disabled]="disableRadio"
                         label="{{ 'justiciaGratuita.ejg.datosGenerales.EJG' | translate}}" [(ngModel)]='radioTarjeta'></p-radioButton>
                 </div>
