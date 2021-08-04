@@ -46,8 +46,6 @@ export class TablaBusquedaAsuntosComponent implements OnInit {
     private persistenceService: PersistenceService, private location: Location, private sigaServices: SigaServices) { }
 
   ngOnInit() {
-    this.radioTarjeta=sessionStorage.getItem("radioTajertaValue")
-
     this.getCols();
   }
 
@@ -60,15 +58,41 @@ export class TablaBusquedaAsuntosComponent implements OnInit {
   }
 
   getCols() {
-    this.cols =  [
-      { field: "anio", header: "justiciaGratuita.sjcs.designas.DatosIden.ano", width: "10%" },
-      { field: "numero", header: "gratuita.busquedaAsistencias.literal.numero", width: "10%" },
-      { field: "dilnigproc", header: "sjcs.oficio.designaciones.relaciones.numDiligNigNproc", width: "25%"},
-      { field: "juzgado", header: "justiciaGratuita.ejg.datosGenerales.Juzgado", width: "20%" },
-      { field: "tipo", header: "censo.nuevaSolicitud.tipoSolicitud", width: "20%" },
-      { field: "turnoGuardia", header: "justiciaGratuita.justiciables.literal.turnoGuardia", width: "25%" },
-      { field: "letrado", header: "justiciaGratuita.justiciables.literal.colegiado", width: "20%" },
-    ];
+    if(this.radioTarjeta=='ejg' || this.radioTarjeta=='asi'){
+      this.cols =  [
+        { field: "anio", header: "justiciaGratuita.sjcs.designas.DatosIden.ano", width: "10%" },
+        { field: "numero", header: "gratuita.busquedaAsistencias.literal.numero", width: "10%" },
+        { field: "dilnigproc", header: 'justiciaGratuita.ejg.busquedaAsuntos.diliNumProc', width: "25%"},
+        { field: "juzgado", header: "justiciaGratuita.ejg.datosGenerales.Juzgado", width: "20%" },
+        { field: "tipo", header: "censo.nuevaSolicitud.tipoSolicitud", width: "20%" },
+        { field: "turnoGuardia", header: "justiciaGratuita.justiciables.literal.turnoGuardia", width: "25%" },
+        { field: "letrado", header: "justiciaGratuita.justiciables.literal.colegiado", width: "20%" },
+      ];
+    }
+
+    if(this.radioTarjeta=='des'){
+      this.cols =  [
+        { field: "anio", header: "justiciaGratuita.sjcs.designas.DatosIden.ano", width: "10%" },
+        { field: "numero", header: "gratuita.busquedaAsistencias.literal.numero", width: "10%" },
+        { field: "dilnigproc", header: 'justiciaGratuita.ejg.busquedaAsuntos.nigNumProc', width: "25%"},
+        { field: "juzgado", header: "justiciaGratuita.ejg.datosGenerales.Juzgado", width: "20%" },
+        { field: "tipo", header: "censo.nuevaSolicitud.tipoSolicitud", width: "20%" },
+        { field: "turnoGuardia", header: "justiciaGratuita.justiciables.literal.turnoGuardia", width: "25%" },
+        { field: "letrado", header: "justiciaGratuita.justiciables.literal.colegiado", width: "20%" },
+      ];
+    }
+
+    if(this.radioTarjeta=='soj'){
+      this.cols =  [
+        { field: "anio", header: "justiciaGratuita.sjcs.designas.DatosIden.ano", width: "10%" },
+        { field: "numero", header: "gratuita.busquedaAsistencias.literal.numero", width: "10%" },
+        // { field: "dilnigproc", header: "sjcs.oficio.designaciones.relaciones.numDiligNigNproc", width: "25%"},
+        { field: "juzgado", header: "justiciaGratuita.ejg.datosGenerales.Juzgado", width: "20%" },
+        { field: "tipo", header: "censo.nuevaSolicitud.tipoSolicitud", width: "20%" },
+        { field: "turnoGuardia", header: "justiciaGratuita.justiciables.literal.turnoGuardia", width: "25%" },
+        { field: "letrado", header: "justiciaGratuita.justiciables.literal.colegiado", width: "20%" },
+      ];
+    }
 
     this.rowsPerPage = [
       {

@@ -55,6 +55,8 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
   datosAsociar;
   datosDesigna;
 
+  radioTarjeta;
+
   es: any = esCalendar;
   permisoEscritura: any;
   @ViewChild(FiltrosBusquedaAsuntosComponent) filtros;
@@ -478,11 +480,9 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
     this.selectAll = false;
     this.buscar = true;
     this.selectMultiple = false;
-
     this.selectedDatos = "";
-    this.progressSpinner = true;
-    this.buscar = true;
-
+    this.radioTarjeta=event;
+    
     if (event == "ejg") {
       this.sigaServices
         .post(
