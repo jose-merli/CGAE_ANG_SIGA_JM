@@ -65,6 +65,7 @@ export class RelacionesComponent implements OnInit {
   activacionTarjeta: boolean = false;
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
+  @Output() noAsocDes = new EventEmitter<Boolean>();
   @Input() openTarjetaRelaciones;
   
 
@@ -152,7 +153,9 @@ export class RelacionesComponent implements OnInit {
               this.noCreaDes = true;
               break;
           }
-      })
+        })
+        if(this.noAsociaDES == false)this.noAsocDes.emit(false);
+        else this.noAsocDes.emit(true);
         if (this.relaciones.length == 1) {
           this.tipoRelacion = this.relaciones[0].sjcs;
         }
