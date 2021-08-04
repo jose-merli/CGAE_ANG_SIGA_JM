@@ -65,6 +65,7 @@ export class RelacionesComponent implements OnInit {
   activacionTarjeta: boolean = false;
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
+  @Output() noAsocDes = new EventEmitter<Boolean>();
   @Input() openTarjetaRelaciones;
   
 
@@ -152,7 +153,9 @@ export class RelacionesComponent implements OnInit {
               this.noCreaDes = true;
               break;
           }
-      })
+        })
+        if(this.noAsociaDES == false)this.noAsocDes.emit(false);
+        else this.noAsocDes.emit(true);
         if (this.relaciones.length == 1) {
           this.tipoRelacion = this.relaciones[0].sjcs;
         }
@@ -464,7 +467,7 @@ export class RelacionesComponent implements OnInit {
           this.router.navigate(['/soj']);
         break;
         case 'DESIGNACIÓN':
-          let desItem = new DesignaItem(); 
+          let desItem : any = new DesignaItem(); 
           let ape = dato.letrado.split(',')[0];
           desItem.ano = dato.anio;
           desItem.numero = dato.numero;
@@ -478,6 +481,9 @@ export class RelacionesComponent implements OnInit {
           desItem.nombreColegiado = dato.letrado;
           desItem.apellido1Colegiado =ape.split(' ')[0];
           desItem.apellido2Colegiado =ape.split(' ')[1];
+          //Se cambia el valor del campo ano para que se procese de forma adecuada 
+          //En la ficha en las distintas tarjetas para obtener sus valores
+          desItem.ano = 'D' + desItem.ano + '/' + desItem.codigo;
 
           if (this.art27) sessionStorage.setItem("Art27", "true");
           sessionStorage.setItem('designaItemLink',JSON.stringify(desItem));

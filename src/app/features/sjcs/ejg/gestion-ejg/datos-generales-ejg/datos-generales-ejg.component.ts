@@ -49,7 +49,6 @@ export class DatosGeneralesEjgComponent implements OnInit {
   showTipoExp: boolean = false;
 
   institucionActual;
-  isAssociated: boolean = false;
 
   @ViewChild('someDropdown') someDropdown: MultiSelect;
 
@@ -68,6 +67,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
   @Input() openTarjetaDatosGenerales;
+  @Input() noAsocDes;
 
   disabledNumEJG: boolean = true;
 
@@ -103,7 +103,6 @@ export class DatosGeneralesEjgComponent implements OnInit {
         this.showTipoExp = true;
 
       this.getPrestacionesRechazadasEJG();
-      this.checkEJGDesignas();
     } else {
       this.disabledNumEJG = true;
       this.nuevo = true;
@@ -127,16 +126,6 @@ export class DatosGeneralesEjgComponent implements OnInit {
         this.openFicha = !this.openFicha;
       }
     }
-  }
-
-  checkEJGDesignas(){
-    this.sigaServices.post("gestionejg_getEjgDesigna", this.bodyInicial).subscribe(
-      n => {
-        let ejgDesignas = JSON.parse(n.body).ejgDesignaItems;
-        if(ejgDesignas.length==0) this.isAssociated = false;
-        else this.isAssociated = true;
-      }
-    );
   }
 
   getPrestacionesRechazadasEJG() {
@@ -443,6 +432,8 @@ export class DatosGeneralesEjgComponent implements OnInit {
   asociarDes() {
     this.body = this.persistenceService.getDatos();
     this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+    //Esto determina que en la pantalla de busqueda de asuntos no se pueda cambiar de la pocion de designaciones
+    sessionStorage.setItem("radioTajertaValue", 'des');
     //Utilizamos el bodyInicial para no tener en cuenta cambios que no se hayan guardado.
     sessionStorage.setItem("EJG", JSON.stringify(this.bodyInicial));
     this.router.navigate(["/busquedaAsuntos"]);
@@ -476,7 +467,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
       this.msgs = msg;
     } else {
       //Comprobamos si el EJG tiene una designacion asociada
-      if(this.isAssociated) this.addExp();
+      if(!this.noAsocDes) this.addExp();
       else this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('justiciaGratuita.ejg.datosGenerales.noDesignaEjg') }];
     }
   }

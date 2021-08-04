@@ -29,6 +29,8 @@ export class GestionEjgComponent implements OnInit {
   datosFamiliares: any;
   datos;
   // datosItem: EJGItem;
+  noAsocDes:boolean = false;
+
   idEJG;
   filtros;
   filtrosAux;
@@ -105,9 +107,6 @@ export class GestionEjgComponent implements OnInit {
       this.body = this.persistenceService.getDatos();
       if (this.body != undefined && this.body != null) {
         this.modoEdicion = true;
-        //  if (this.dato.fechabaja != null) {
-        //    this.modoEdicion = true;
-        //  }
       } else {
         //hemos pulsado nuevo 
         if(sessionStorage.getItem("Nuevo")){

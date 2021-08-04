@@ -10,7 +10,7 @@
         
         <app-datos-generales-ejg (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaDatosGenerales]="tarjetaDatosGenerales" 
         *ngIf="permisoEscrituraDatosGenerales != undefined" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraDatosGenerales" (modoEdicionSend)="modoEdicionSend($event)" 
-        (guardadoSend)="guardadoSend($event)" [openTarjetaDatosGenerales]="openTarjetaDatosGenerales" (newEstado)="newEstado()">
+        (guardadoSend)="guardadoSend($event)" [openTarjetaDatosGenerales]="openTarjetaDatosGenerales" (newEstado)="newEstado()" [noAsocDes]="noAsocDes">
         </app-datos-generales-ejg>
 
         <app-servicios-tramitacion *ngIf="permisoEscrituraServiciosTramitacion != undefined && modoEdicion" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaServiciosTramitacion]="tarjetaServiciosTramitacion" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraServiciosTramitacion" (modoEdicionSend)="modoEdicionSend($event)" [openTarjetaServiciosTramitacion]="openTarjetaServiciosTramitacion">
@@ -22,7 +22,9 @@
         <app-expedientes-economicos *ngIf="permisoEscrituraExpedientesEconomicos != undefined && modoEdicion" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaExpedientesEconomicos]="tarjetaExpedientesEconomicos" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraExpedientesEconomicos" (modoEdicionSend)="modoEdicionSend($event)" [openTarjetaExpedientesEconomicos]="openTarjetaExpedientesEconomicos">
         </app-expedientes-economicos>
         
-        <app-relaciones *ngIf="permisoEscrituraRelaciones != undefined && modoEdicion" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaRelaciones]="tarjetaRelaciones" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraRelaciones" (modoEdicionSend)="modoEdicionSend($event)" [openTarjetaRelaciones]="openTarjetaRelaciones">
+        <app-relaciones *ngIf="permisoEscrituraRelaciones != undefined && modoEdicion" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" 
+        [tarjetaRelaciones]="tarjetaRelaciones" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraRelaciones" (modoEdicionSend)="modoEdicionSend($event)" 
+        [openTarjetaRelaciones]="openTarjetaRelaciones" (noAsocDes)="noAsocDes=$event">
         </app-relaciones>
         
         <app-estados *ngIf="permisoEscrituraEstados != undefined && modoEdicion" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" 
