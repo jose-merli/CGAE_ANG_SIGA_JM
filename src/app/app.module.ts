@@ -380,6 +380,7 @@ import { ConfiguracionFicherosComponent } from './features/sjcs/facturacionSJCS/
 import { DetallePagoComponent } from './features/sjcs/facturacionSJCS/facturaciones-pagos/gestion-pagos/detalle-pago/detalle-pago.component';
 import { CompensacionFacturaComponent } from './features/sjcs/facturacionSJCS/facturaciones-pagos/gestion-pagos/compensacion-factura/compensacion-factura.component';
 import { ConceptosPagosComponent } from './features/sjcs/facturacionSJCS/facturaciones-pagos/gestion-pagos/conceptos-pagos/conceptos-pagos.component';
+import { SiNoPipe } from './commons/sino-pipe/si-no.pipe';
 
 @NgModule({
 	declarations: [
@@ -692,6 +693,7 @@ import { ConceptosPagosComponent } from './features/sjcs/facturacionSJCS/factura
 		DetallePagoComponent,
 		CompensacionFacturaComponent,
 		ConceptosPagosComponent,
+		SiNoPipe,
 	],
 	imports: [
 		BrowserModule,

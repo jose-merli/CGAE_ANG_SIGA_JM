@@ -58,7 +58,17 @@
             <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
               <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
                 <td class="text-center" *ngFor="let col of columns">
-                  <div>
+                  <div *ngIf="col.field == 'compensar'">
+                    {{ dato[col.field] | siNo }}
+                  </div>
+                  <div *ngIf="col.field == 'fechaFactura'">
+                    {{ dato[col.field] | date: 'dd/MM/yyyy' }}
+                  </div>
+                  <div
+                    *ngIf="col.field == 'importeTotalFactura' || col.field == 'importePendienteFactura' || col.field == 'importeCompensado' || col.field == 'importePagado'">
+                    {{ dato[col.field] | currency:'EUR' }}
+                  </div>
+                  <div *ngIf="col.field == 'numColegiado' || col.field == 'nombre' || col.field == 'numeroFactura'">
                     {{ dato[col.field] }}
                   </div>
                 </td>
@@ -104,10 +114,10 @@
     </div>
     <div class="card-footer" *ngIf="showFicha">
       <div class="text-right main-button">
-        <button (click)="marcar()" pButton type="button" icon="fa fa-plus" iconPos="left" label="Marcar"
-          [disabled]='!permisos'></button>
-        <button (click)="desmarcar()" pButton type="button" icon="fa fa-plus" iconPos="left" label="Desmarcar"
-          [disabled]='!permisos'></button>
+        <button (click)="marcar()" pButton type="button" label="{{ 'facturacionSJCS.boton.marcar' | translate }}"
+          [disabled]="!permisos || paramDeducirCobroAutom.valor == '1'"></button>
+        <button (click)="desmarcar()" pButton type="button" label="{{ 'facturacionSJCS.boton.desmarcar' | translate }}"
+          [disabled]="!permisos || paramDeducirCobroAutom.valor == '1'"></button>
       </div>
     </div>
   </div>

@@ -13,6 +13,7 @@ import { procesos_facturacionSJCS } from '../../../../../permisos/procesos_factu
 import { CommonsService } from '../../../../../_services/commons.service';
 import { TranslateService } from '../../../../../commons/translate';
 import { Router } from '@angular/router';
+import { CompensacionFacItem } from '../../../../../models/sjcs/CompensacionFacItem';
 
 @Component({
   selector: 'app-gestion-pagos',
@@ -31,6 +32,7 @@ export class GestionPagosComponent extends SigaWrapper implements OnInit, AfterV
   idFacturacion;
   showCards: boolean = false;
   editingConceptos: boolean = false;
+  facturasMarcadas: CompensacionFacItem[] = [];
 
   @ViewChild(CompensacionFacturaComponent) compensacion;
   @ViewChild(ConfiguracionFicherosComponent) configuracionFic;

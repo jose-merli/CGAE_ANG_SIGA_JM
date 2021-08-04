@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '../../../../../../commons/translate';
 import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacionSJCS';
@@ -6,6 +6,10 @@ import { CommonsService } from '../../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { CompensacionFacObject } from '../../../../../../models/sjcs/CompensacionFacObject';
 import { CompensacionFacItem } from '../../../../../../models/sjcs/CompensacionFacItem';
+import { ParametroRequestDto } from '../../../../../../models/ParametroRequestDto';
+import { SigaStorageService } from '../../../../../../siga-storage.service';
+import { ParametroDto } from '../../../../../../models/ParametroDto';
+import { ParametroItem } from '../../../../../../models/ParametroItem';
 
 @Component({
   selector: 'app-compensacion-factura',
@@ -28,17 +32,20 @@ export class CompensacionFacturaComponent implements OnInit {
   permisos;
   compensaciones: CompensacionFacItem[] = []
   nCompensaciones: number = 0;
+  paramDeducirCobroAutom: ParametroItem;
 
   @ViewChild("tabla") tabla;
 
   @Input() idPago;
   @Input() idEstadoPago;
+  @Output() facturasMarcadasEvent = new EventEmitter<CompensacionFacItem[]>();
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private commonsService: CommonsService,
     private translateService: TranslateService,
     private sigaServices: SigaServices,
-    private router: Router) { }
+    private router: Router,
+    private sigaStorageService: SigaStorageService) { }
 
   ngOnInit() {
 
@@ -53,8 +60,26 @@ export class CompensacionFacturaComponent implements OnInit {
       }
 
       this.progressSpinner = false;
-      this.getCols();
-      this.getCompensacionFacturas();
+
+      let parametro = new ParametroRequestDto();
+      parametro.idInstitucion = this.sigaStorageService.institucionActual;
+      parametro.modulo = 'FCS';
+      parametro.parametrosGenerales = 'DEDUCIR_COBROS_AUTOMATICO';
+
+      this.sigaServices.postPaginado("parametros_search", "?numPagina=1", parametro).subscribe(
+        data => {
+          const resp: ParametroDto = JSON.parse(data['body']);
+          const parametros = resp.parametrosItems;
+          parametros.forEach(el => {
+            if (el.parametro == 'DEDUCIR_COBROS_AUTOMATICO' && (el.idInstitucion == el.idinstitucionActual || el.idInstitucion == '0')) {
+              this.paramDeducirCobroAutom = el;
+            }
+          });
+
+          this.getCols();
+          this.getCompensacionFacturas(this.paramDeducirCobroAutom.valor.toString());
+        }
+      );
 
     }).catch(error => console.error(error));
 
@@ -131,7 +156,7 @@ export class CompensacionFacturaComponent implements OnInit {
   }
 
 
-  getCompensacionFacturas() {
+  getCompensacionFacturas(deducirCobrosAutomatico: string) {
 
     this.progressSpinner = true;
 
@@ -148,6 +173,14 @@ export class CompensacionFacturaComponent implements OnInit {
         } else {
           this.compensaciones = resp;
           this.nCompensaciones = resp.length;
+
+          if (deducirCobrosAutomatico == '1') {
+            this.compensaciones.forEach(el => {
+              el.compensar = true;
+            });
+
+            this.facturasMarcadasEvent.emit(this.compensaciones);
+          }
         }
 
       },
@@ -160,21 +193,35 @@ export class CompensacionFacturaComponent implements OnInit {
   }
 
   marcar() {
-    this.selectedDatos.forEach(el => {
-      el.compensar = true;
-    });
-    this.selectAll = false;
-    this.selectedDatos = [];
-    this.numSelected = 0;
+
+    if (this.paramDeducirCobroAutom.valor == '0') {
+      this.selectedDatos.forEach(el => {
+        el.compensar = true;
+      });
+      this.selectAll = false;
+      this.selectedDatos = [];
+      this.numSelected = 0;
+
+      let marcadas = this.compensaciones.filter(el => el.compensar);
+      this.facturasMarcadasEvent.emit(marcadas);
+    }
+
   }
 
   desmarcar() {
-    this.selectedDatos.forEach(el => {
-      el.compensar = false;
-    });
-    this.selectAll = false;
-    this.selectedDatos = [];
-    this.numSelected = 0;
+
+    if (this.paramDeducirCobroAutom.valor == '0') {
+      this.selectedDatos.forEach(el => {
+        el.compensar = false;
+      });
+      this.selectAll = false;
+      this.selectedDatos = [];
+      this.numSelected = 0;
+
+      let marcadas = this.compensaciones.filter(el => el.compensar);
+      this.facturasMarcadasEvent.emit(marcadas);
+    }
+
   }
 
 

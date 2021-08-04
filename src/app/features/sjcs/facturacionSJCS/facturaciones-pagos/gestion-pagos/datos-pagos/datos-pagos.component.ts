@@ -6,6 +6,7 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacionSJCS';
 import { Router } from '@angular/router';
+import { CompensacionFacItem } from '../../../../../../models/sjcs/CompensacionFacItem';
 
 @Component({
   selector: 'app-datos-pagos',
@@ -31,6 +32,7 @@ export class DatosPagosComponent implements OnInit {
   @Input() idPago;
   @Input() idEstadoPago;
   @Input() editingConceptos;
+  @Input() facturasMarcadas: CompensacionFacItem[];
 
   @ViewChild("tabla") tabla;
 
