@@ -82,7 +82,7 @@ export class FiltrosProductosComponent implements OnInit, OnDestroy {
         sessionStorage.setItem("filtrosProductos", JSON.stringify(this.filtrosProductos));
         this.busqueda.emit(true);
       } else {
-        //Aviso en caso de que el precioHasta sea menos que el precioDesde
+        //Aviso en caso de que el precioHasta sea menor que el precioDesde
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.productos.errorpreciodesdehasta"));
       }
     } else {

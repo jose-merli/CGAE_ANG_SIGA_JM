@@ -89,18 +89,18 @@ export class FiltrosServiciosComponent implements OnInit, OnDestroy {
         sessionStorage.setItem("filtrosServicios", JSON.stringify(this.filtrosServicios));
         this.busqueda.emit(true);
       } else {
-        //Aviso en caso de que el precioHasta sea menos que el precioDesde
+        //Aviso en caso de que el precioHasta sea menor que el precioDesde
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.productos.errorpreciodesdehasta"));
       }
     } else {
-      sessionStorage.setItem("filtrosProductos", JSON.stringify(this.filtrosServicios));
+      sessionStorage.setItem("filtrosServicios", JSON.stringify(this.filtrosServicios));
       this.busqueda.emit(true);
     }
   }
 
   nuevo() {
     sessionStorage.removeItem("servicioBuscador");
-    this.router.navigate(["/fichaProductos"]);
+    this.router.navigate(["/fichaServicios"]);
   }
 
   //Inicializa las propiedades necesarias para el dialogo de confirmacion

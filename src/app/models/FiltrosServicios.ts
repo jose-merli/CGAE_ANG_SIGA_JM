@@ -7,7 +7,7 @@ export class FiltrosServicios {
     precioHasta: string;
     iva: string;
     formaPago: string;
-    tiposuscripcion: string; //El campo es llamado 'AUTOMATICO' en BD
+    tipoSuscripcion: string; //El campo es llamado 'AUTOMATICO' en BD
 
     constructor() { }
 }

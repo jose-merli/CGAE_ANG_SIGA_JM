@@ -20,8 +20,8 @@ export class GestionServiciosComponent implements OnInit, OnDestroy {
   @Output() busqueda = new EventEmitter<boolean>();
 
   //Variables p-table
-  @ViewChild("servicesTable") servicesTable; //Referencia a la tabla de productos del html
-  colsServices: any = []; //Columnas tabla productos
+  @ViewChild("servicesTable") servicesTable; //Referencia a la tabla de servicios del html
+  colsServices: any = []; //Columnas tabla servicios
   @Input() serviceData: any[] = []; //Datos de la tabla
   @Input() serviceDataSinHistorico: any[] = [];
   @Input() serviceDataConHistorico: any[] = []
@@ -277,7 +277,7 @@ export class GestionServiciosComponent implements OnInit, OnDestroy {
 
   //INICIO SERVICIOS
   //Metodo para activar/desactivar servicios mediante borrado logico (es decir fechabaja == null esta activo lo contrario inactivo) en caso de que tenga alguna solicitud ya existente, en caso contrario se hara borrado fisico (DELETE)
-  /* activarDesactivar(selectedRows) {
+  activarDesactivar(selectedRows) {
     let keyConfirmation = "deletePlantillaDoc";
     let mensaje;
     if (selectedRows[0].fechabaja != null) {
@@ -294,7 +294,7 @@ export class GestionServiciosComponent implements OnInit, OnDestroy {
         this.progressSpinner = true;
         let listaServiciosDTO = new ListaServiciosDTO();
         listaServiciosDTO.listaServiciosItems = selectedRows;
-        this.subscriptionActivarDesactivarServicios = this.sigaServices.post("productosBusqueda_activarDesactivar", listaProductosDTO).subscribe(
+        this.subscriptionActivarDesactivarServicios = this.sigaServices.post("serviciosBusqueda_activarDesactivar", listaServiciosDTO).subscribe(
           data => {
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           },
@@ -328,7 +328,7 @@ export class GestionServiciosComponent implements OnInit, OnDestroy {
         ];
       }
     });
-  } */
+  }
 
   //FIN SERVICIOS
 
