@@ -13,8 +13,8 @@
             <label class="mr-auto title-ficha pointer">{{ 'justiciaGratuita.ejg.datosGenerales.Impugnacion' | translate }}</label>
           </div>
           <div class="d-flex justify-content-between default">
-              <label>{{ "censo.resultadosSolicitudesModificacion.literal.fecha" | translate }}: <span *ngIf="impugnacion">{{impugnacion.fechaAuto | date: 'dd/MM/yyyy'}}</span></label>
-              <label>{{ "justiciaGratuita.ejg.datosGenerales.AutoResolutorio" | translate }}: <span>{{impugnacionDesc}}</span></label>
+              <label>{{ "censo.resultadosSolicitudesModificacion.literal.fecha" | translate }}: <span *ngIf="impugnacion">{{bodyInicial.fechaAuto | date: 'dd/MM/yyyy'}}</span></label>
+              <label>{{ "justiciaGratuita.ejg.datosGenerales.AutoResolutorio" | translate }}: <span>{{bodyInicial.impugnacionDesc}}</span></label>
               <label id ="maxHeader">{{ "justiciaGratuita.ejg.datosGenerales.SentidoAuto" | translate }}: <span>{{fundImpugnacionDesc}}</span></label>
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('impugnacion')"></i>
           </div>

@@ -48,7 +48,7 @@
         
         <app-impugnacion *ngIf="permisoEscrituraImpugnacion != undefined && modoEdicion" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" 
         [tarjetaImpugnacion]="tarjetaImpugnacion" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraImpugnacion" (modoEdicionSend)="modoEdicionSend($event)" 
-        [openTarjetaImpugnacion]="openTarjetaImpugnacion" (newEstado)="newEstado()">
+        [openTarjetaImpugnacion]="openTarjetaImpugnacion" (newEstado)="newEstado()" (updateRes)="updateTarjResumen()">
         </app-impugnacion>
         
         <app-regtel-ejg *ngIf="permisoEscrituraRegtel != undefined && modoEdicion"(opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaRegtel]="tarjetaRegtel"  [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraRegtel" (modoEdicionSend)="modoEdicionSend($event)" [openTarjetaRegtel]="openTarjetaRegtel">

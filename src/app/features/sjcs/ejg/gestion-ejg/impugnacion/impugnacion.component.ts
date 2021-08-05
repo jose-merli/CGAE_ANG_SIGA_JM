@@ -28,7 +28,7 @@ export class ImpugnacionComponent implements OnInit {
   comboImpugnacion = [];
   checkmodificable: boolean = false;
   checkmodificableRT: boolean = false;
-  impugnacionDesc: String;
+  
   fundImpugnacionDesc: String;
   isDisabledFundamentoImpug: boolean = false;
 
@@ -44,6 +44,7 @@ export class ImpugnacionComponent implements OnInit {
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
   @Output() newEstado = new EventEmitter();
+  @Output() updateRes = new EventEmitter();
   @Input() openTarjetaImpugnacion;
 
 
@@ -109,7 +110,8 @@ export class ImpugnacionComponent implements OnInit {
           item => item.value == this.impugnacion.autoResolutorio
         );
         if (impug != undefined)
-          this.impugnacionDesc = impug.label;
+          this.bodyInicial.impugnacionDesc = impug.label;
+          this.impugnacion.impugnacionDesc = impug.label;
       },
       err => {
         console.log(err);
@@ -118,12 +120,18 @@ export class ImpugnacionComponent implements OnInit {
   }
   onChangeImpugnacion() {
     this.comboFundamentoImpug = [];
+    this.impugnacion.sentidoAuto = null;
     if (this.impugnacion.autoResolutorio != undefined) {
       this.isDisabledFundamentoImpug = false;
+      let impugDes = this.comboImpugnacion.find(
+        item => item.value == this.impugnacion.autoResolutorio
+      )
+      this.impugnacion.impugnacionDesc = impugDes.label;
       this.getComboFundamentoImpug();
     } else {
       this.isDisabledFundamentoImpug = true;
       this.impugnacion.sentidoAuto = "";
+      this.impugnacion.impugnacionDesc = null;
     }
   }
   getComboFundamentoImpug() {
@@ -133,7 +141,7 @@ export class ImpugnacionComponent implements OnInit {
         this.commonsService.arregloTildesCombo(this.comboFundamentoImpug);
         let fundImpug = this.comboFundamentoImpug.find(
           item => item.value == this.impugnacion.sentidoAuto
-        );
+        )
         if (fundImpug != undefined)
           this.fundImpugnacionDesc = fundImpug.label;
       },
@@ -154,8 +162,24 @@ export class ImpugnacionComponent implements OnInit {
         if (JSON.parse(n.body).error.code == 200) {
           //Para que se actualicen los estados presentados en la tarjeta de estados
           this.newEstado.emit(null);
+          
+          let fundImpug = this.comboFundamentoImpug.find(
+            item => item.value == this.impugnacion.sentidoAuto
+          )
+          if (fundImpug != undefined)
+            this.fundImpugnacionDesc = fundImpug.label;
+          else this.fundImpugnacionDesc = "";
+          let impug = this.comboImpugnacion.find(
+            item => item.value == this.impugnacion.autoResolutorio
+          );
+          if (impug != undefined){
+            this.bodyInicial.impugnacionDesc = impug.label;
+            this.impugnacion.impugnacionDesc = impug.label;
+          }
           this.bodyInicial = JSON.parse(JSON.stringify(this.impugnacion));
           this.persistenceService.setDatos(this.impugnacion);
+          //Output para que actualice los datos de la tarjeta resumen
+          this.updateRes.emit();
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         }
         else {

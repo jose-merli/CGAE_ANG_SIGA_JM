@@ -118,6 +118,7 @@ export class EJGItem {
     resolucion: string;
     fundamentoJuridico: string;
 
+    //Impugnacion
     requiereTurn: boolean;
     bis: boolean;
     fechaPublicacion: Date;
@@ -126,6 +127,7 @@ export class EJGItem {
     sentidoAuto: String;
     autoResolutorio: String;
     fechaAuto: Date;
+    impugnacionDesc: String;
 
     fechaEstadoNew: Date;
     estadoNew: String;

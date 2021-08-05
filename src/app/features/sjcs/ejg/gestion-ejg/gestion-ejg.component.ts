@@ -165,7 +165,7 @@ export class GestionEjgComponent implements OnInit {
       },
       {
         label: "Impugnación",
-        value: this.body.impugnacion
+        value: this.body.impugnacionDesc
       },
     ];
   }
