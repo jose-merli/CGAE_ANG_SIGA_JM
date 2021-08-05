@@ -109,9 +109,10 @@ export class ImpugnacionComponent implements OnInit {
         let impug = this.comboImpugnacion.find(
           item => item.value == this.impugnacion.autoResolutorio
         );
-        if (impug != undefined)
+        if (impug != undefined){
           this.bodyInicial.impugnacionDesc = impug.label;
           this.impugnacion.impugnacionDesc = impug.label;
+        }
       },
       err => {
         console.log(err);
