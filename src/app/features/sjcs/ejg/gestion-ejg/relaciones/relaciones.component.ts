@@ -124,8 +124,6 @@ export class RelacionesComponent implements OnInit {
   }
 
   getRelaciones() {
-    //this.progressSpinner = true;
-
     this.sigaServices.post("gestionejg_getRelaciones", this.body).subscribe(
       n => {
         this.relaciones = JSON.parse(n.body).relacionesItem;
@@ -230,7 +228,7 @@ export class RelacionesComponent implements OnInit {
       { field: "letrado", header: "justiciaGratuita.sjcs.designas.colegiado" , width: '6%'},
       { field: "interesado", header: "justiciaGratuita.sjcs.designas.datosInteresados" , width: '6%'},
       { field: "resolucion", header: "justiciaGratuita.maestros.fundamentosResolucion.resolucion" , width: '6%'},
-      { field: "dilnigproc", header: "sjcs.oficio.designaciones.relaciones.numDiligNigNproc", width: '6%' },
+      { field: "dilnigproc", header: 'justiciaGratuita.ejg.busquedaAsuntos.diliNumProc', width: '6%' },
     ];
     this.cols.forEach(it => this.buscadores.push(""));
 

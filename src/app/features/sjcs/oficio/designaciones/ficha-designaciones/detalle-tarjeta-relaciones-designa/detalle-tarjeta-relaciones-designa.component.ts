@@ -95,7 +95,7 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
       { field: "descturno", header: "justiciaGratuita.justiciables.literal.turnoGuardia" },
       { field: "letrado", header: "justiciaGratuita.sjcs.designas.colegiado" },
       { field: "interesado", header: "justiciaGratuita.sjcs.designas.datosInteresados" },
-      { field: "dilnigproc", header: "sjcs.oficio.designaciones.relaciones.numDiligNigNproc" },
+      { field: "dilnigproc", header: 'justiciaGratuita.ejg.busquedaAsuntos.nigNumProc'},
       { field: "resolucion", header: "justiciaGratuita.maestros.fundamentosResolucion.resolucion" }
 
     ];
@@ -198,19 +198,6 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
   }
 
   eliminarRelacion() {
-    /* this.progressSpinner = true;
-
-    this.sigaServices.post("designaciones_eliminarRelacion", this.selectedDatos).subscribe(
-      data => {
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
-        this.relacion.emit();
-      },
-      err => {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        this.progressSpinner = false;
-      }
-    ); */
     for (let dato of this.selectedDatos) {
 
       let identificador = dato.sjcs.charAt(0);
@@ -269,61 +256,25 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
     this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
   }
 
-  /*  checkPermisosAsociarSOJ() {
-     // let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
-      //if (msg != undefined) {
-        //this.msgs = msg;
-      //} else {
-        this.asociarSOJ();
-      //}
-    }
- 
-   asociarSOJ() {
-     //this.persistenceService.clearDatos();
-     sessionStorage.setItem("radioTajertaValue", 'soj');
-     let desItem = JSON.stringify(this.body);
-     sessionStorage.setItem("Designacion", desItem);
-     this.router.navigate(["/busquedaAsuntos"]);
- 
-   } */
   checkPermisosAsociarEJG() {
-    // let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
-    //if (msg != undefined) {
-    //this.msgs = msg;
-    //} else {
     this.asociarEJG();
-    //}
   }
   asociarEJG() {
-    //this.persistenceService.clearDatos();
     sessionStorage.setItem("radioTajertaValue", 'ejg');
-    //let desItem = JSON.stringify(this.body);
     sessionStorage.setItem("Designacion", JSON.stringify(this.body));
     this.router.navigate(["/busquedaAsuntos"]);
 
   }
   checkPermisosAsociarAsistencia() {
-    // let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
-    //if (msg != undefined) {
-    //this.msgs = msg;
-    //} else {
     this.asociarAsistencia();
-    //}
   }
   asociarAsistencia() {
-    //this.persistenceService.clearDatos();
     sessionStorage.setItem("radioTajertaValue", 'asi');
-    //let desItem = JSON.stringify(this.body);
     sessionStorage.setItem("Designacion", JSON.stringify(this.body));
     this.router.navigate(["/busquedaAsuntos"]);
   }
   checkPermisosCrearEJG() {
-    // let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
-    //if (msg != undefined) {
-    //this.msgs = msg;
-    //} else {
     this.crearEJG();
-    //}
   }
   crearEJG() {
 
@@ -333,12 +284,7 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
   }
 
   checkPermisosEditar(dato){
-     // let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
-    //if (msg != undefined) {
-    //this.msgs = msg;
-    //} else {
       this.consultarEditar(dato);
-      //}
   }
   consultarEditar(dato) {
     
@@ -349,7 +295,6 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
           /**
          * TODO: enlazar una vez este creada la pagina.
          */
-
            this.porhacer();
           break;
         case 'E':
@@ -371,8 +316,6 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
 
           this.router.navigate(["/gestionEjg"]);
           break;
-
       }
     }
   }
-
