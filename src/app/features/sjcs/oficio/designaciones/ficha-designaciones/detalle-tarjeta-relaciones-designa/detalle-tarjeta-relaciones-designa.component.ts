@@ -367,6 +367,8 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
         ejgItem.numerodiligencia = dato.dilnigproc.split(' - ')[0];
         ejgItem.nig = dato.dilnigproc.split(' - ')[1];
 
+        //Se deberia añadir una llamada al servicio "datosEJG" (gestionejg_datosEJG) para obtener todos los datos 
+        //necesarios del EJG seleccionado. Actualmente falta traer del back en esta tabla su tipoejg.
         sessionStorage.setItem("EJGItemDesigna",JSON.stringify(ejgItem));
 
           this.router.navigate(["/gestionEjg"]);

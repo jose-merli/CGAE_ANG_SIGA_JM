@@ -77,7 +77,7 @@ export class DocumentacionComponent implements OnInit {
 
   ngOnInit() {
     if (this.persistenceService.getDatos()) {
-      this.getComboPresentador();
+      
       this.resaltadoDatos = true;
       this.nuevo = false;
       this.modoEdicion = true;
@@ -85,6 +85,7 @@ export class DocumentacionComponent implements OnInit {
       this.getCols();
       this.getComboTipoDocumentacion();
       this.getDocumentos(this.item);
+      this.getComboPresentador();
     } else {
       this.nuevo = true;
       this.modoEdicion = false;
