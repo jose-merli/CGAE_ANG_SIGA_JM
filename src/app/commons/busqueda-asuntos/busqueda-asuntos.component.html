@@ -8,7 +8,7 @@
 
     <div class="busqueda-container">
         <app-filtros-busqueda-asuntos [permisoEscritura]="permisoEscritura" (search)="searchEvent($event)" (resetTable)="resetTableEvent($event)" [data]="datos"></app-filtros-busqueda-asuntos>
-        <app-tabla-busqueda-asuntos *ngIf="buscar" [body]="body" [data]="datos" (elementoAsociado)="asociarElement($event)" id="tablaBusqueda"></app-tabla-busqueda-asuntos>
+        <app-tabla-busqueda-asuntos *ngIf="buscar" [body]="body" [data]="datos" [radioTarjeta]="radioTarjeta" (elementoAsociado)="asociarElement($event)" id="tablaBusqueda"></app-tabla-busqueda-asuntos>
     </div>
 
     <div class="mt-3 text-right main-button ">
