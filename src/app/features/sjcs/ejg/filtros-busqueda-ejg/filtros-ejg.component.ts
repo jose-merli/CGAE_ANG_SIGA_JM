@@ -54,6 +54,7 @@ export class FiltrosEjgComponent implements OnInit {
   institucionActual;
   maxDate;
   minDate;
+  resaltadoDatos: boolean = false;
 
   isDisabledFundamentosJurid: boolean = true;
   isDisabledFundamentosCalif: boolean = true;
@@ -720,4 +721,27 @@ export class FiltrosEjgComponent implements OnInit {
     // fecha = this.datepipe.transform(fecha, 'dd/MM/yyyy');
     return fecha;
   }
+
+  styleObligatorio(evento) {
+    if(((this.body.numRegRemesa2== undefined || this.body.numRegRemesa2 == null || this.body.numRegRemesa2 == "") 
+    && 
+    (this.body.numRegRemesa3 != undefined || this.body.numRegRemesa3 != null || this.body.numRegRemesa3 != ""))){
+      this.muestraCamposObligatorios();
+    }
+    
+    if(((this.body.numRegRemesa2 != undefined || this.body.numRegRemesa2 != null || this.body.numRegRemesa2 != "") 
+    && 
+    (this.body.numRegRemesa3 == undefined || this.body.numRegRemesa3 == null || this.body.numRegRemesa3 == ""))){
+      this.muestraCamposObligatorios();
+    }
+
+      if (this.resaltadoDatos && (evento == undefined || evento == null || evento == "")) {
+        return this.commonServices.styleObligatorio(evento);
+      }
+    }
+    muestraCamposObligatorios() {
+      this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+      this.resaltadoDatos = true;
+    }
+    
 }
