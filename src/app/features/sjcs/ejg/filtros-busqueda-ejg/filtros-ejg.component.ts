@@ -55,6 +55,8 @@ export class FiltrosEjgComponent implements OnInit {
   maxDate;
   minDate;
   resaltadoDatos: boolean = false;
+  numRemesaRelleno: boolean = false;
+  sufijoRemesaRelleno: boolean = false;
 
   isDisabledFundamentosJurid: boolean = true;
   isDisabledFundamentosCalif: boolean = true;
@@ -608,19 +610,22 @@ export class FiltrosEjgComponent implements OnInit {
     if (this.checkFilters()) {
       //this.persistenceService.setFiltros(this.body);
       // this.persistenceService.setFiltrosAux(this.body);
-
-      if(this.usuarioBusquedaExpress.numColegiado!=undefined && this.usuarioBusquedaExpress.numColegiado!=null 
-        && this.usuarioBusquedaExpress.numColegiado.trim()!=""){
-          this.body.numColegiado=this.usuarioBusquedaExpress.numColegiado;
+      if(this.disableBuscar() == false){
+        this.muestraCamposObligatorios()
+      }else{
+        if(this.usuarioBusquedaExpress.numColegiado!=undefined && this.usuarioBusquedaExpress.numColegiado!=null 
+          && this.usuarioBusquedaExpress.numColegiado.trim()!=""){
+            this.body.numColegiado=this.usuarioBusquedaExpress.numColegiado;
+        }
+  
+        if(this.bodyDictamen.toString() != undefined && this.bodyDictamen.toString() != null && this.bodyDictamen.toString() != ""){
+          this.body.dictamen = this.bodyDictamen.toString()
+        }
+        
+        this.busqueda.emit(false);
+        this.body.dictamen = ""
       }
-
-      if(this.bodyDictamen.toString() != undefined && this.bodyDictamen.toString() != null && this.bodyDictamen.toString() != ""){
-        this.body.dictamen = this.bodyDictamen.toString()
-      }
-      
-      this.busqueda.emit(false);
-      this.body.dictamen = ""
-      
+  
     }
   }
   showMessage(severity, summary, msg) {
@@ -723,18 +728,6 @@ export class FiltrosEjgComponent implements OnInit {
   }
 
   styleObligatorio(evento) {
-    if(((this.body.numRegRemesa2== undefined || this.body.numRegRemesa2 == null || this.body.numRegRemesa2 == "") 
-    && 
-    (this.body.numRegRemesa3 != undefined || this.body.numRegRemesa3 != null || this.body.numRegRemesa3 != ""))){
-      this.muestraCamposObligatorios();
-    }
-    
-    if(((this.body.numRegRemesa2 != undefined || this.body.numRegRemesa2 != null || this.body.numRegRemesa2 != "") 
-    && 
-    (this.body.numRegRemesa3 == undefined || this.body.numRegRemesa3 == null || this.body.numRegRemesa3 == ""))){
-      this.muestraCamposObligatorios();
-    }
-
       if (this.resaltadoDatos && (evento == undefined || evento == null || evento == "")) {
         return this.commonServices.styleObligatorio(evento);
       }
@@ -742,6 +735,28 @@ export class FiltrosEjgComponent implements OnInit {
     muestraCamposObligatorios() {
       this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
       this.resaltadoDatos = true;
+    }
+
+    disableBuscar(){
+      this.numRegRemesaRelleno();
+      if((this.numRemesaRelleno == true && this.sufijoRemesaRelleno == false) || (this.numRemesaRelleno == false && this.sufijoRemesaRelleno == true)){
+        return false;
+      }else{
+        return true;
+      }
+    }
+
+    numRegRemesaRelleno(){
+      if((this.body.numRegRemesa2 == undefined || this.body.numRegRemesa2 == null || this.body.numRegRemesa2 == "")){
+        this.numRemesaRelleno = true;
+      }else{
+        this.numRemesaRelleno = false;
+      }
+      if((this.body.numRegRemesa3 == undefined || this.body.numRegRemesa3 == null || this.body.numRegRemesa3 == "")){
+        this.sufijoRemesaRelleno = true;
+      }else{
+        this.sufijoRemesaRelleno = false;
+      }
     }
     
 }

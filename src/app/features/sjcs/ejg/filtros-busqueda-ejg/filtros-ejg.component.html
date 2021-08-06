@@ -326,11 +326,11 @@
                 [(ngModel)]="body.numRegRemesa1">
               </div>
               <div class="col-lg-4 col-md-4 form-group-interlineado">
-                <input type="text" class="form-control" maxLength="8" inputStyleClass="styleObligatorio(body.numRegRemesa2)" (keypress)="numberOnly($event)" pInputText
+                <input type="text" class="form-control" maxLength="8" [ngClass]="styleObligatorio(body.numRegRemesa2)" (keypress)="numberOnly($event)" pInputText
                 [(ngModel)]="body.numRegRemesa2">
               </div>
               <div class="col-lg-4 col-md-4 form-group-interlineado">
-                <input type="text" class="form-control" maxLength="8" inputStyleClass="styleObligatorio(body.numRegRemesa3)" (keypress)="numberOnly($event)" pInputText
+                <input type="text" class="form-control" maxLength="8" [ngClass]="styleObligatorio(body.numRegRemesa3)" (keypress)="numberOnly($event)" pInputText
                 [(ngModel)]="body.numRegRemesa3">
               </div>
      
