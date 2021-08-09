@@ -72,6 +72,8 @@ export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
   searchJusticiable: boolean = false;
   nuevoInteresado: boolean = false;
   nuevoContrario: boolean = false;
+  nuevoAsistido: boolean = false;
+  nuevoContrarioAsistencia: boolean = false;
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
     private commonsService: CommonsService, private translateService: TranslateService, private router: Router,
@@ -97,6 +99,16 @@ export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
     if(sessionStorage.getItem("origin")=="newContrario"){
       sessionStorage.removeItem('origin');
       this.nuevoContrario=true;
+    }
+
+    if(sessionStorage.getItem("origin")=="newAsistido"){
+      sessionStorage.removeItem('origin');
+      this.nuevoAsistido=true;
+    }
+
+    if(sessionStorage.getItem("origin")=="newContrarioAsistencia"){
+      sessionStorage.removeItem('origin');
+      this.nuevoContrarioAsistencia=true;
     }
 
     this.persistenceService.setFichasPosibles(this.fichasPosibles);

@@ -10,6 +10,14 @@ export class RelacionesItem {
     codigo:String;
     desturno:String;
     destipo:String;
+    fechaAsunto : string;
+    dilnigproc : string;
+    resolucion : string;
+    interesado : string;
+    letrado : string;
+    dictamen : string;
+    fechaDictamen : string;
+    fechaResolucion : string;
     constructor() { }
   }
   

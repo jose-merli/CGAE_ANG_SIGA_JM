@@ -117,7 +117,7 @@ export class FichaPreasistenciasComponent implements OnInit {
   backTo() {
     sessionStorage.setItem("volver", "true");
     sessionStorage.removeItem("preasistenciaItemLink");
-    this.location.back();
+    this.router.navigate(['/guardiasSolicitudesCentralita']);
   }
 
   clear() {

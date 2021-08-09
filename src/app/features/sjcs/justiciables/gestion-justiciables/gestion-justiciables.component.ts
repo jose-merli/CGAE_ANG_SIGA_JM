@@ -38,8 +38,9 @@ export class GestionJusticiablesComponent implements OnInit {
   justiciableOverwritten: boolean = false;
   justiciableCreateByUpdate: boolean = false;
   permisoEscritura;
-  fromInteresado:boolean=false;
-  fromContrario:boolean=false;
+  fromInteresado : boolean = false;
+  fromContrario : boolean = false;
+  fromAsistencia : boolean = false;
 
   constructor(private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -303,7 +304,9 @@ export class GestionJusticiablesComponent implements OnInit {
       this.search();
     } else if(this.fromContrario || this.fromInteresado) {
       this.router.navigate(['/fichaDesignaciones']);
-    }  
+    }  else if(this.fromAsistencia){
+      this.router.navigate(['/fichaAsistencia']);
+    }
     else {
       //this.router.navigate(["/justiciables"]);
       this.location.back();

@@ -1305,7 +1305,17 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       }
     }
 
+    
+    linkFichaAsistencia(id){
+      let idAsistencia : string = id;
+      if(this.pantalla == "AE"){
+        sessionStorage.setItem("idAsistencia", idAsistencia.substr(1));
+        this.router.navigate(['/fichaAsistencia']);
+      }
+    }
+
   }
+  
 function compare(a: number | string, b: number | string, isAsc: boolean) {
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }

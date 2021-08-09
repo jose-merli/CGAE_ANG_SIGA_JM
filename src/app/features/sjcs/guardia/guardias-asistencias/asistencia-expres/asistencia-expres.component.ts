@@ -217,9 +217,8 @@ export class AsistenciaExpresComponent implements OnInit {
         if(asistencia.idDelito
             || asistencia.observaciones){
               let comboDelitosValue = '';
-              if(asistencia.idDelito
-                && this.comboDelitos.find(comboItem => (comboItem.label == asistencia.idDelito))){
-                comboDelitosValue = this.comboDelitos.find(comboItem => (comboItem.label == asistencia.idDelito)).value;
+              if(asistencia.idDelito){
+                comboDelitosValue = asistencia.idDelito;
               }
           delitosObservacionesValue = [comboDelitosValue, asistencia.observaciones];
         }else{
@@ -335,6 +334,7 @@ export class AsistenciaExpresComponent implements OnInit {
       },
       err => {
         console.log(err);
+        this.progressSpinner = false
       }
     );
 
@@ -354,6 +354,7 @@ export class AsistenciaExpresComponent implements OnInit {
       err => {
         console.log(err);
         this.showMsg('error',this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.errorResultados"), err);
+        this.progressSpinner = false
       }
     );
   }
@@ -390,7 +391,7 @@ export class AsistenciaExpresComponent implements OnInit {
             tarjetaAsistenciaItem.apellido2 = row.cells[0].value[2];
             tarjetaAsistenciaItem.sexo = row.cells[0].value[4];
             if(row.cells[1].value[0]){
-              tarjetaAsistenciaItem.idDelito = this.comboDelitos.find(comboItem => (comboItem.value == row.cells[1].value[0])).label;
+              tarjetaAsistenciaItem.idDelito = row.cells[1].value[0];
             }
             tarjetaAsistenciaItem.observaciones = row.cells[1].value[1];
           }

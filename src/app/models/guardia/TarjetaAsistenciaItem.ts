@@ -1,4 +1,6 @@
+import { RelacionesItem } from "../sjcs/RelacionesItem";
 import { ActuacionAsistenciaItem } from "./ActuacionAsistenciaItem";
+import { ContrarioItem } from "./ContrarioItem";
 import { FiltroAsistenciaItem } from "./FiltroAsistenciaItem";
 
 export class TarjetaAsistenciaItem{
@@ -37,4 +39,15 @@ export class TarjetaAsistenciaItem{
 	  nombreColegiado : string;
 	  descripcionGuardia : string;
 	  fechaGuardia : string;
+	  idPersonaJg : string;
+	  numContrarios : string;
+	  primerContrario : ContrarioItem;
+	  primeraRelacion : RelacionesItem;
+	  nig : string;
+	  juzgado : string;
+	  comisaria : string;
+	  numProcedimiento : string;
+	  idProcedimiento : string;
+	  numDiligencia : string;
+	  delitos : string [];
 }

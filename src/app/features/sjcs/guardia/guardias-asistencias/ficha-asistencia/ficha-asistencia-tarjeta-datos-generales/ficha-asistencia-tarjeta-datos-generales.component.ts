@@ -19,24 +19,30 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 })
 export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit {
 
-  @Input() datos;
+
   @Output() refreshDatosGenerales = new EventEmitter<string>();
   msgs: Message[] = [];
   permisoEscritura : boolean;
   progressSpinner : boolean = false;
-  asistencia : TarjetaAsistenciaItem = new TarjetaAsistenciaItem();
+  @Input() asistencia : TarjetaAsistenciaItem = new TarjetaAsistenciaItem();
+  asistenciaAux : TarjetaAsistenciaItem;
   isNuevaAsistencia : boolean = false;
   comboTurnos = [];
   comboGuardias = [];
   comboTipoAsistenciaColegio = [];
+  disableDataForEdit : boolean = false;
   comboLetradoGuardia = [];
   usuarioBusquedaExpress = {
     numColegiado: '',
     nombreAp: ''
   };
+  ineditable : boolean = false; //Si esta finalizada o anulada no se puede editar ningun campo
+  reactivable : boolean = false;
+  anulable : boolean = false;
+  finalizable : boolean = false;
   saveDisabled : boolean = true;
   preasistencia : PreAsistenciaItem;
-  comboEstadosAsistencia =[];
+  comboEstadosAsistencia = [];
 
   @ViewChild(BusquedaColegiadoExpressComponent) busquedaColegiado: BusquedaColegiadoExpressComponent;
   constructor(private datepipe : DatePipe,
@@ -65,31 +71,30 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit {
       this.asistencia.fechaEstado = this.datepipe.transform(new Date(), 'dd/MM/yyyy');
       this.asistencia.idSolicitudCentralita = this.preasistencia.idSolicitud;
       this.asistencia.filtro = new FiltroAsistenciaItem();
+      this.disableDataForEdit = false
+    }else if(this.asistencia.anioNumero){
+      this.asistenciaAux = Object.assign({}, this.asistencia);
+      this.disableDataForEdit = true;
+      this.getTurnosByColegiadoFecha();
+      this.onChangeTurno();
+      this.onChangeGuardia();
+      this.onChangeLetradoGuardia();
+
+      this.checkEstado();
+
     }
 
     this.getComboEstadosAsistencia();
 
   }
 
-  getComboTurnos(){
-      this.sigaServices.get("combo_turnos").subscribe(
-        n => {
-          this.comboTurnos = n.combooItems;
-        },
-        err => {
-          console.log(err);
-  
-        }, () => {
-          this.commonServices.arregloTildesCombo(this.comboTurnos);
-        }
-      );
-  }
-
   getComboEstadosAsistencia(){
     this.sigaServices.get("combo_estadosAsistencia").subscribe(
       n => {
         this.comboEstadosAsistencia = n.combooItems;
-        this.asistencia.estado = this.comboEstadosAsistencia[0].value;
+        if(!this.disableDataForEdit){
+          this.asistencia.estado = this.comboEstadosAsistencia[0].value;
+        }
       },
       err => {
         console.log(err);
@@ -118,7 +123,9 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit {
 
   onChangeTurno(){
 
-    this.asistencia.idGuardia = '';
+    if(!this.disableDataForEdit){ //Si estamos en edicion
+      this.asistencia.idGuardia = '';
+    }
 
     //Si tenemos seleccionado un turno, cargamos las guardias correspondientes
     if(this.asistencia.idTurno){
@@ -146,14 +153,24 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit {
           data => {
             
             this.comboTipoAsistenciaColegio = data.combooItems;
-            
-            this.setDefaultValueOnComboTiposAsistencia();
 
-            this.getDefaultTipoAsistenciaColegio();
+            if(!this.disableDataForEdit){ //Si estamos en modo edicion no seteamos valor por defecto
+            
+              this.setDefaultValueOnComboTiposAsistencia();
+
+              this.getDefaultTipoAsistenciaColegio();
+            }else{
+              this.comboTipoAsistenciaColegio.forEach(comboItem => {
+      
+                  comboItem.value = comboItem.value.slice(0,comboItem.value.length - 1);
+          
+              });
+            }
 
           },
           err => {
             console.log(err);
+            this.progressSpinner = false;
           },
           () => {
             this.commonServices.arregloTildesCombo(this.comboTipoAsistenciaColegio);
@@ -226,7 +243,9 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit {
   getTurnosByColegiadoFecha(){
 
     this.comboTurnos = [];
-    this.asistencia.idTurno = "";
+    if(!this.disableDataForEdit){ //Si estamos en edicion
+      this.asistencia.idTurno = "";
+    }
     this.sigaServices.getParam("busquedaGuardias_getTurnosByColegiadoFecha", this.fillParams()).subscribe(
       n => {
         this.clear();
@@ -323,23 +342,30 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit {
   }
   
   resetDatosGenerales(){
-    this.asistencia.fechaAsistencia = '';
-    this.asistencia.fechaCierre = '';
-    this.asistencia.fechaEstado = '';
-    this.asistencia.fechaSolicitud = '';
-    this.asistencia.idLetradoGuardia = '';
-    this.asistencia.idTipoAsistenciaColegio = '';
-    this.comboGuardias = [];
-    this.comboTurnos = [];
-    this.comboLetradoGuardia = [];
-    this.comboTipoAsistenciaColegio = [];
-    this.asistencia.idTurno = '';
-    this.asistencia.idGuardia = '';
-    this.asistencia.nombreColegiado = '';
-    this.asistencia.numeroColegiado = '';
-    this.asistencia.estado = '';
-    this.usuarioBusquedaExpress.nombreAp = '';
-    this.usuarioBusquedaExpress.numColegiado = '';
+
+    if(!this.disableDataForEdit){
+
+      this.asistencia.fechaCierre = '';
+      this.asistencia.fechaSolicitud = '';
+      this.asistencia.idLetradoGuardia = '';
+      this.asistencia.idTipoAsistenciaColegio = '';
+      this.comboTipoAsistenciaColegio = [];
+      this.comboLetradoGuardia = [];
+      this.asistencia.fechaAsistencia = '';
+      this.comboGuardias = [];
+      this.comboTurnos = [];
+      this.asistencia.idTurno = '';
+      this.asistencia.idGuardia = '';
+      this.asistencia.nombreColegiado = '';
+      this.asistencia.numeroColegiado = '';
+      this.usuarioBusquedaExpress.nombreAp = '';
+      this.usuarioBusquedaExpress.numColegiado = '';
+
+    }else{
+
+      this.asistencia = Object.assign({}, this.asistenciaAux);
+
+    }
   }
 
   saveAsistencia(){
@@ -358,7 +384,15 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit {
             this.showMsg('success', this.translateService.instant("general.message.accion.realizada"), '');
             if(this.preasistencia){
               sessionStorage.setItem("creadaFromPreasistencia", "true");
+              this.anulable = true;
+              this.finalizable = true;
+              this.reactivable = false;
             }
+            this.disableDataForEdit = true;
+            this.asistenciaAux = Object.assign({}, this.asistencia);
+            this.asistencia.anioNumero = result.id;
+            this.asistencia.anio = result.id.split("/")[0];
+            this.asistencia.numero = result.id.split("/")[1];
             this.refreshDatosGenerales.emit(result.id);
           }
           
@@ -393,6 +427,95 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit {
       }
 
     return ok;
+  }
+
+  anular(){
+
+    this.reactivable = true;
+    this.anulable = false;
+    this.finalizable = false;
+    this.asistencia.estado = "2";
+    this.asistencia.fechaEstado = this.datepipe.transform(new Date(), "dd/MM/yyyy");
+    this.updateEstadoAsistencia();
+
+  }
+
+  finalizar(){
+
+    this.anulable = false;
+    this.reactivable = false;
+    this.finalizable = false;
+    this.asistencia.estado = "4";
+    this.asistencia.fechaEstado = this.datepipe.transform(new Date(), "dd/MM/yyyy");
+    this.updateEstadoAsistencia();
+
+  }
+
+  reactivar(){
+
+    this.anulable = true;
+    this.reactivable = false;
+    this.finalizable = true;
+    this.asistencia.estado = "1";
+    this.asistencia.fechaEstado = this.datepipe.transform(new Date(), "dd/MM/yyyy");
+    this.updateEstadoAsistencia();
+
+  }
+
+  updateEstadoAsistencia(){
+
+    let asistencias : TarjetaAsistenciaItem[] = [this.asistencia];
+      this.sigaServices
+      .post("busquedaGuardias_updateEstadoAsistencia", asistencias)
+      .subscribe(
+        n => {
+          let result = JSON.parse(n["body"]);
+          if(result.error){
+            this.showMsg('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
+          }else{
+            this.showMsg('success', this.translateService.instant("general.message.accion.realizada"), '');
+            this.checkEstado();
+            this.asistenciaAux = Object.assign({}, this.asistencia);
+            this.refreshDatosGenerales.emit(result.id);
+          }
+          
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+
+  }
+
+  checkEstado(){
+
+    if(this.asistencia.estado == "1"){
+
+      this.anulable = true;
+      this.reactivable = false;
+      this.finalizable = true;
+      this.ineditable = false; //Si esta activa, se pueden editar datos
+
+    }else if(this.asistencia.estado == "2"){
+
+      this.reactivable = true;
+      this.anulable = false;
+      this.finalizable = false;
+      this.ineditable = true;
+
+    }else if (this.asistencia.estado == "4"){
+
+      this.anulable = false;
+      this.reactivable = false;
+      this.finalizable = false;
+      this.ineditable = true;
+
+    }
+
   }
 
 }

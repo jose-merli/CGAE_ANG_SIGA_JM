@@ -36,8 +36,8 @@
                     [ngClass]="{'hoverBlue2': isSelected(rowGroup.id), 'fixedBlue': seleccionarTodo}" 
                     #rowSelected>
 
-                    <div *ngIf="!posicionOcultar(-1) && pantalla != 'JE'" class="table-row-header p-2 selectedRowClass" [id]="rowGroup.id">
-                        {{rowGroup.id}}   
+                    <div *ngIf="!posicionOcultar(-1) && pantalla != 'JE'" class="table-row-header p-2 selectedRowClass selectWrap" [id]="rowGroup.id">
+                        <span class="w100 cell-value selectWrap enlace"(click)="linkFichaAsistencia(rowGroup.id)"><a>{{rowGroup.id}}</a></span>
                     </div>
                     <div *ngIf="!posicionOcultar(-1) && pantalla == 'JE'" class="table-row-header p-2 selectedRowClass" [id]="rowGroup.id">
                         <span [ngClass]="{'color-red': colorByStateDesigmacion(rowGroup.estadoDesignacion) == 'red', 'color-blue': colorByStateDesigmacion(rowGroup.estadoDesignacion) == 'blue', 'color-green': colorByStateDesigmacion(rowGroup.estadoDesignacion) == 'green', 'color-black': colorByStateDesigmacion(rowGroup.estadoDesignacion) == 'black'}">D{{rowGroup.id}} </span>

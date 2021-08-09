@@ -40,13 +40,34 @@
                                     <app-tarjeta [image]="tarj.imagen" [cardTitle]="tarj.nombre" [campos]="tarj.campos"
                                         [icon]="tarj.icono" [enlaces]="tarj.enlaces" [cardOpenState]="tarj.opened"
                                         [fixed]="tarj.fixed" class="w-100" [enlaceCardClosed]="tarj.enlaceCardClosed"
-                                        [datosLetrado]="tarj.letrado">
+                                        [datosLetrado]="tarj.letrado" [enlaceCardOpen] = "tarj.enlaceCardOpen">
                                     </app-tarjeta>
                                 </mat-expansion-panel-header>
                                 <ng-template matExpansionPanelContent>
                                   <div *ngIf="tarj.nombre == 'Datos Generales'" id="datosgenerales">
-                                      <app-ficha-asistencia-tarjeta-datos-generales [datos]="tarj.campos" (refreshDatosGenerales)="refreshDatosGenerales($event);">
-                                      </app-ficha-asistencia-tarjeta-datos-generales>
+                                    <app-ficha-asistencia-tarjeta-datos-generales [asistencia]="asistencia" (refreshDatosGenerales)="refreshDatosGenerales($event);">
+                                    </app-ficha-asistencia-tarjeta-datos-generales>
+                                  </div>
+                                  <div *ngIf="tarj.nombre == 'Asistido'" id="asistido">
+                                    <app-ficha-asistencia-tarjeta-asistido [idAsistencia] = "asistencia.anioNumero" (refreshTarjetas)="refreshDatosGenerales($event)"
+                                    [idPersonaAsistido]="asistencia.idPersonaJg">
+                                    </app-ficha-asistencia-tarjeta-asistido>
+                                  </div>
+                                  <div *ngIf="tarj.nombre == 'Contrarios'" id="contrarios">
+                                    <app-ficha-asistencia-tarjeta-contrarios [idAsistencia] = "asistencia.anioNumero" (refreshTarjetas)="refreshDatosGenerales($event)">
+                                    </app-ficha-asistencia-tarjeta-contrarios>
+                                  </div>
+                                  <div *ngIf="tarj.nombre == 'Defensa Jurídica'" id="defensaJuridica">
+                                    <app-ficha-asistencia-tarjeta-defensa-juridica [idAsistencia] = "asistencia.anioNumero" (refreshTarjetas)="refreshDatosGenerales($event)">
+                                    </app-ficha-asistencia-tarjeta-defensa-juridica>
+                                  </div>
+                                  <div *ngIf="tarj.nombre == 'Observaciones'" id="observaciones">
+                                    <app-ficha-asistencia-tarjeta-observaciones [idAsistencia] = "asistencia.anioNumero">
+                                    </app-ficha-asistencia-tarjeta-observaciones>
+                                  </div>
+                                  <div *ngIf="tarj.nombre == 'Relaciones'" id="relaciones">
+                                    <app-ficha-asistencia-tarjeta-relaciones [asistencia] = "asistencia" (refreshTarjetas)="refreshDatosGenerales($event)">
+                                    </app-ficha-asistencia-tarjeta-relaciones>
                                   </div>
                                 </ng-template>
                             </mat-expansion-panel>
