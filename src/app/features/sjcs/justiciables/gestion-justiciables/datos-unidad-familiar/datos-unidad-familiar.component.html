@@ -1,0 +1,225 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="ficha-container">
+  <div class="card">
+    <div class="card-header header-ficha" (click)="onHideTarjeta()">
+      <div *ngIf="showTarjeta" class="header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="fa fa-users icon-ficha"></i>
+          </div>
+        </div>
+        <label class="title-ficha">{{ 'gratuita.personaJG.literal.unidadFamiliar' | translate }}</label>
+        <div class="d-flex justify-content-start mb-1 ml-auto">
+          <!-- <label *ngIf="showEnlaceAbogado" class="mr-3">
+            <i (click)="navigateToAbogado();$event.stopPropagation();" class="fas fa-external-link-alt mr-2"></i>
+            <a (click)="navigateToAbogado();$event.stopPropagation();">
+              <span style="color: blue; text-decoration: underline;cursor:pointer;"> {{
+                'informesycomunicaciones.comunicaciones.fichaColegial' | translate }}
+              </span>
+            </a>
+          </label> -->
+          <i class="fa fa-angle-up ml-auto"></i>
+        </div>
+      </div>
+      <div *ngIf="!showTarjeta" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="fa fa-users icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1">
+            <label class="mr-auto title-ficha">{{ 'gratuita.personaJG.literal.unidadFamiliar' | translate }}
+            </label>
+          </div>
+          <div class="row">
+            <div class="col-5">
+              <label>{{ "justiciaGratuita.justiciables.unidadFamiliar.solicitantePrincipal" | translate }}
+                <span>{{ solicitanteCabecera }}</span>
+              </label>
+            </div>
+            <div class="col-5">
+              <label>{{ "informes.solicitudAsistencia.parentesco" | translate }}
+                <span>{{ parentescoCabecera }}</span>
+              </label>
+            </div>
+            <div class="col-2">
+              <i class="fa fa-angle-down float-right"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div [hidden]="!showTarjeta" class="card-body card-body-ficha">
+      <div class="row">
+        <div class="bloque col-lg-6 col-md-6">
+          <div class="form-row">
+            <div class="form-row col-lg-6 col-md-6">
+              <!-- <div class="form-row col-lg-6 col-md-6">
+                <label>{{ "justiciaGratuita.justiciables.rol.solicitante" | translate }}</label>
+              </div>
+              <div class="form-row col-lg-6 col-md-6">
+                <p-checkbox [(ngModel)]="solicitanteBox" [disabled]="!permisoEscritura || disableSol" binary="true"></p-checkbox>
+              </div> -->
+              <div class="form-row col-lg-5 col-md-5">
+                <label>{{ "administracion.usuarios.literal.rol" | translate }}/{{ "justiciaGratuita.justiciables.rol.solicitante" | translate }}</label>
+              </div>
+              <div class="form-row col-lg-7 col-md-7">
+                <p-dropdown class="select-form" [(ngModel)]='generalBody.uf_enCalidad' placeholder="Seleccionar"
+                [options]="comboRol" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
+              </p-dropdown>
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-row col-lg-6 col-md-6">
+              <div class="form-row col-lg-6 col-md-6">
+                <label>{{ "justiciaGratuita.justiciables.unidadFamiliar.incapacitado" | translate }}</label>
+              </div>
+              <div class="form-row col-lg-6 col-md-6">
+                <p-checkbox [(ngModel)]="incapacitadoBox" [disabled]="!permisoEscritura" binary="true"></p-checkbox>
+              </div>
+            </div>
+            <div class="form-row col-lg-6 col-md-6">
+              <div class="col-lg-6 col-md-6">
+                <label>{{ "justiciaGratuita.justiciables.unidadFamiliar.circunstanciasExcepcionales" | translate
+                  }}</label>
+              </div>
+              <div class="col-lg-6 col-md-6">
+                <p-checkbox [(ngModel)]="cirExcepBox" [disabled]="!permisoEscritura" binary="true"></p-checkbox>
+              </div>
+            </div>
+          </div>
+          <div class="form-row col-lg-12 col-md-12">
+            <div class="form-row col-lg-6 col-md-6">
+              <span>{{ "justiciaGratuita.justiciables.unidadFamiliar.grupoLaboral" | translate }}</span>
+            </div>
+            <div class="form-group col-lg5 col-md-5">
+              <p-dropdown class="select-form" [(ngModel)]='generalBody.idTipoGrupoLab' placeholder="Seleccionar"
+                [options]="comboGrupoLaboral" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
+              </p-dropdown>
+            </div>
+          </div>
+          <div class="form-row col-lg-12 col-md-12">
+            <div class="form-row col-lg-6 col-md-6">
+              <span>{{ "informes.solicitudAsistencia.parentesco" | translate }} (*)</span>
+            </div>
+            <div class="form-group col-lg-5 col-md-5">
+              <p-dropdown class="select-form" [(ngModel)]='generalBody.idParentesco' placeholder="Seleccionar"
+                [options]="comboParentesco" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"
+                [ngClass]="styleObligatorio(generalBody.idParentesco)">
+              </p-dropdown>
+            </div>
+          </div>
+        </div>
+        <div class="bloque col-lg-6 col-md-6">
+          <label style="text-align:center; font-weight: bold; padding-bottom: 10px">{{
+            "justiciaGratuita.justiciables.unidadFamiliar.datosFinancieros" | translate }}</label>
+          <div class="form-row col-lg-12 col-md-12">
+            <div class="form-row col-lg-3 col-md-3">
+              <label>{{ "justiciaGratuita.justiciables.unidadFamiliar.tipoIngresos" | translate }}</label>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <p-dropdown class="select-form" [(ngModel)]='generalBody.idTipoIngreso' placeholder="Seleccionar"
+                [options]="comboTipoIng" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
+              </p-dropdown>
+            </div>
+          </div>
+          <div class="form-row col-lg-12 col-md-12">
+            <div class="form-row col-lg-3 col-md-3">
+              <span>{{ "justiciaGratuita.justiciables.unidadFamiliar.ingresos" | translate }}</span>
+            </div>
+            <div class="form-group col-lg-7 col-md-7">
+              <input type="text" [(ngModel)]="generalBody.descrIngrAnuales" [maxLength]="60" class="form-control" pInputText>
+            </div>
+            <div class="form-group col-lg-2 col-md-2">
+              <!-- Debe tener dos decimales -->
+              <input type='number' [(ngModel)]="generalBody.impIngrAnuales"  [maxLength]="10" 
+              class="form-control" (keypress)="numberOnly($event)" pInputText ><!-- value="{{ generalBody.impIngrAnuales | number:'1.2-2' }}" -->
+            </div> €
+          </div>
+          <div class="form-row col-lg-12 col-md-12">
+            <div class="form-row col-lg-3 col-md-3">
+              <span>{{ "justiciaGratuita.justiciables.unidadFamiliar.bienesInmuebles" | translate }}</span>
+            </div>
+            <div class="form-group col-lg-7 col-md-7">
+              <input type="text" [(ngModel)]="generalBody.bienesInmu" [maxLength]="60" class="form-control" pInputText>
+            </div>
+            <div class="form-group col-lg-2 col-md-2">
+              <input type='number'   [(ngModel)]="generalBody.impBienesInmu" [maxLength]="10" class="form-control"
+                (keypress)="numberOnly($event)" pInputText>
+            </div> €
+          </div>
+          <div class="form-row col-lg-12 col-md-12">
+            <div class="form-row col-lg-3 col-md-3">
+              <span>{{ "justiciaGratuita.justiciables.unidadFamiliar.bienesMobiliarios" | translate }}</span>
+            </div>
+            <div class="form-group col-lg-7 col-md-7">
+              <input type="text" [(ngModel)]="generalBody.bienesMu" [maxLength]="60" class="form-control" pInputText>
+            </div>
+            <div class="form-group col-lg-2 col-md-2">
+              <input type='number'  [(ngModel)]="generalBody.impBienesMu" [maxLength]="10" class="form-control"
+                (keypress)="numberOnly($event)" pInputText>
+            </div> €
+          </div>
+          <div class="form-row col-lg-12 col-md-12">
+            <div class="form-row col-lg-3 col-md-3">
+              <span>{{ "justiciaGratuita.Calendarios.Observaciones" | translate }}</span>
+            </div>
+            <div class="form-group col-lg-9 col-md-9">
+              <input type="text" [(ngModel)]="generalBody.observaciones"  [maxLength]="60" class="form-control" pInputText>
+            </div>
+          </div>
+          <!-- <div class="form-row">
+            <div class="form-group col-lg-3 col-md-3">
+              <label>{{ "censo.busquedaClientesAvanzada.literal.colegio" | translate }} (*)
+              </label>
+              <input [(ngModel)]="''" type="text" class="form-control" maxlength="20" pInputText
+                disabled />
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+              <label>{{ "censo.resultadosSolicitudesModificacion.literal.nColegiado" | translate }} (*)
+              </label>
+              <input [(ngModel)]="''" disabled type="text" class="form-control" maxlength="20"
+                pInputText />
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+              <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.estado" | translate }} (*)
+              </label>
+              <input [(ngModel)]="''" type="text" disabled class="form-control" maxlength="20"
+                pInputText />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ "justiciaGratuita.oficio.designas.interesados.apellidosnombre" | translate }}
+              </label>
+              <input [(ngModel)]="''" type="text" disabled class="form-control" [maxLength]="100"
+                pInputText />
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ "censo.fichaCliente.literal.identificacion" | translate }}
+              </label>
+              <input [(ngModel)]="''" type="text" disabled class="form-control" [maxLength]="100"
+                pInputText />
+            </div>
+          </div> -->
+        </div>
+      </div>
+    </div>
+    <div [hidden]="!showTarjeta" class="card-footer">
+      <div class="text-right main-button">
+        <button (click)="rest()" pButton type="button" icon="fa fa-undo" iconPos="left"
+          label="{{ 'general.boton.restablecer' | translate}}"></button>
+
+        <button (click)="checkSave()" pButton type="button" icon="fa fa-save" iconPos="left"
+          label="{{ 'general.boton.guardar' | translate}}"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

@@ -54,7 +54,6 @@ export class FiltrosBajasTemporales implements OnInit {
     private localStorageService: SigaStorageService) { }
 
   ngOnInit() {   
-
     this.clearFilters();
 
     this.isLetrado = this.localStorageService.isLetrado;
@@ -67,9 +66,6 @@ export class FiltrosBajasTemporales implements OnInit {
     }
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisos = this.persistenceService.getPermisos();
-    }
-    if (this.persistenceService.getFiltros() != undefined) {
-      this.filtros = this.persistenceService.getFiltros();
     }
     
     if(sessionStorage.getItem("buscadorColegiados")){​​
@@ -203,39 +199,21 @@ export class FiltrosBajasTemporales implements OnInit {
     return fecha;
   }
 
-  fillFechaDesdeCalendar(event) {
-    if(event != null){
-      this.filtros.fechadesde = this.transformaFecha(event);
-    }else{
-      this.filtros.fechahasta = undefined;
-    }
-  
-  }
   fillFechaSolicitudDesdeCalendar(event) {
-    if(event != null){
-      this.filtros.fechasolicituddesde = this.transformaFecha(event);
-    }else{
-      this.filtros.fechasolicitudhasta = undefined;
-    }
-  
-  }
-
-  fillAfechaDeCalendar(event) {
-    this.filtros.fechadesde = this.transformaFecha(event);
-    if(this.filtros.fechadesde != undefined){
-      this.filtros.validado = undefined;
-      this.disabledestado = true;
-    }else{
-      this.disabledestado = false;
-    }
-  }
-
-  fillFechaHastaCalendar(event) {
-    this.filtros.fechahasta = this.transformaFecha(event);
+    this.filtros.fechasolicituddesde = this.transformaFecha(event); 
   }
 
   fillFechaHastaSolicitudCalendar(event) {
     this.filtros.fechasolicitudhasta = this.transformaFecha(event);
+  }
+  
+  
+  fillFechaDesdeCalendar(event) {
+    this.filtros.fechadesde = this.transformaFecha(event);
+  }
+
+  fillFechaHastaCalendar(event) {
+    this.filtros.fechahasta = this.transformaFecha(event);
   }
 
   showSearchIncorrect() {

@@ -3,18 +3,22 @@ import { Actuacion, Col } from '../../detalle-tarjeta-actuaciones-designa.compon
 import { SigaServices } from '../../../../../../../../_services/siga.service';
 import { Message } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../../../../../commons/translate/translation.service';
-import { DocumentoActDesignaItem } from '../../../../../../../../models/sjcs/DocumentoActDesignaItem';
 import { DatePipe } from '@angular/common';
 import { saveAs } from "file-saver/FileSaver";
 import { UsuarioLogado } from '../ficha-actuacion.component';
 import { ParametroRequestDto } from '../../../../../../../../models/ParametroRequestDto';
 import { SigaStorageService } from '../../../../../../../../siga-storage.service';
 import { ParametroItem } from '../../../../../../../../models/ParametroItem';
+import { DocumentoDesignaItem } from '../../../../../../../../models/sjcs/DocumentoDesignaItem';
+import { CommonsService } from '../../../../../../../../_services/commons.service';
+import { procesos_oficio } from '../../../../../../../../permisos/procesos_oficio';
+import { Router } from '@angular/router';
 
-export class Documento extends DocumentoActDesignaItem {
+export class Documento extends DocumentoDesignaItem {
   file: File;
   nuevo: boolean = false;
   extension: string;
+  asociado: string;
 }
 
 @Component({
@@ -24,15 +28,19 @@ export class Documento extends DocumentoActDesignaItem {
 })
 export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
 
-  @Input() documentos: DocumentoActDesignaItem[];
+  @Input() documentos: DocumentoDesignaItem[];
   @Input() actuacionDesigna: Actuacion;
   @Input() usuarioLogado: UsuarioLogado;
   @Input() isColegiado;
   @Input() isAnulada;
-  @Input() modoLectura: boolean;
+  // Este modo lectura se produce cuando:
+  // - Es colegiado y la actuación está validada y el turno no permite la modificación o la actuación no pertenece al colegiado
+  // - La actuación está facturada
+  @Input() modoLectura2: boolean = false;
 
   @Output() buscarDocumentosEvent = new EventEmitter<any>();
 
+  modoLectura: boolean;
   permiteSubidDescargaFicheros: boolean;
 
   documentos2: Documento[];
@@ -97,15 +105,41 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
     private translateService: TranslateService,
     private datePipe: DatePipe,
     private changeDetectorRef: ChangeDetectorRef,
-    private sigaStorageService: SigaStorageService
+    private sigaStorageService: SigaStorageService,
+    private commonsService: CommonsService,
+    private router: Router
   ) { }
 
   ngOnInit() {
-    this.getParametro();
+
+    this.commonsService.checkAcceso(procesos_oficio.designaTarjetaActuacionesDocumentacion)
+      .then(respuesta => {
+        let permisoEscritura = respuesta;
+
+        if (permisoEscritura == undefined) {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
+
+        if (!permisoEscritura) {
+          this.modoLectura = true;
+        }
+
+        this.getParametro();
+
+      }
+      ).catch(error => console.error(error));
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.documentos && changes.documentos.currentValue) {
+      this.selectedDatos = [];
+      this.numSelected = 0;
       this.convertObject();
     }
   }
@@ -128,7 +162,7 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
 
       copiaDocumentos2.forEach((el, i) => {
 
-        if (!el.nuevo && this.isColegiado && !(this.usuarioLogado.idPersona == el.idPersona && this.usuarioLogado.numColegiado == el.numColegiado)) {
+        if (!el.nuevo && this.isColegiado && !(this.usuarioLogado.idPersona == el.idPersona)) {
           copiaDocumentos2.splice(i, 1);
           error = true;
         }
@@ -141,7 +175,7 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
 
       this.progressSpinner = true;
 
-      this.sigaServices.postSendFileAndActuacion("actuaciones_designacion_subirDocumentoActDesigna", copiaDocumentos2, this.actuacionDesigna.actuacion).subscribe(
+      this.sigaServices.postSendFileAndActuacion("designacion_subirDocumentoDesigna", copiaDocumentos2, this.actuacionDesigna.actuacion).subscribe(
         data => {
 
           let resp = data;
@@ -183,6 +217,7 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
     doc.asociado = `${this.actuacionDesigna.actuacion.numeroAsunto} ${this.actuacionDesigna.actuacion.acreditacion} ${this.actuacionDesigna.actuacion.modulo}`;
     doc.anio = this.actuacionDesigna.actuacion.anio;
     doc.numero = this.actuacionDesigna.actuacion.numero;
+    doc.idTurno = this.actuacionDesigna.actuacion.idTurno;
     doc.idActuacion = this.actuacionDesigna.actuacion.numeroAsunto;
 
     this.documentos2.unshift(doc);
@@ -214,7 +249,7 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
 
     this.progressSpinner = true;
 
-    this.sigaServices.postDownloadFiles("actuaciones_designacion_descargarDocumentosActDesigna", this.selectedDatos).subscribe(
+    this.sigaServices.postDownloadFiles("designacion_descargarDocumentosDesigna", this.selectedDatos).subscribe(
       data => {
 
         let blob = null;
@@ -248,7 +283,7 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
     let error = false;
     this.selectedDatos.forEach((el, i) => {
 
-      if (this.isColegiado && !(this.usuarioLogado.idPersona == el.idPersona && this.usuarioLogado.numColegiado == el.numColegiado)) {
+      if (this.isColegiado && !(this.usuarioLogado.idPersona == el.idPersona)) {
         this.selectedDatos.splice(i, 1);
         error = true;
       }
@@ -261,7 +296,7 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
 
     this.progressSpinner = true;
 
-    this.sigaServices.post("actuaciones_designacion_eliminarDocumentosActDesigna", this.selectedDatos).subscribe(
+    this.sigaServices.post("designacion_eliminarDocumentosDesigna", this.selectedDatos).subscribe(
       data => {
         let resp = JSON.parse(data.body);
 
@@ -310,8 +345,8 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
     this.documentos.forEach(el => {
       let doc = new Documento();
 
-      doc.idDocumentacionasi = el.idDocumentacionasi;
-      doc.idTipoDocumento = el.idTipoDocumento;
+      doc.idDocumentaciondes = el.idDocumentaciondes;
+      doc.idTipodocumento = el.idTipodocumento;
       doc.nombreTipoDocumento = el.nombreTipoDocumento;
       doc.idFichero = el.idFichero;
       doc.idInstitucion = el.idInstitucion;
@@ -320,16 +355,15 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
       doc.fechaEntrada = this.datePipe.transform(new Date(el.fechaEntrada), 'dd/MM/yyyy');
       doc.anio = el.anio;
       doc.numero = el.numero;
+      doc.idTurno = el.idTurno;
       doc.idActuacion = el.idActuacion;
       doc.observaciones = el.observaciones;
       doc.nombreFichero = el.nombreFichero;
-      doc.asociado = el.asociado;
       doc.file = null;
       doc.nuevo = false;
       doc.asociado = `${this.actuacionDesigna.actuacion.numeroAsunto} ${this.actuacionDesigna.actuacion.acreditacion} ${this.actuacionDesigna.actuacion.modulo}`;
       doc.extension = el.nombreFichero.substring(el.nombreFichero.lastIndexOf("."), el.nombreFichero.length);
       doc.idPersona = el.idPersona;
-      doc.numColegiado = el.numColegiado;
       this.documentos2.push(doc);
     });
   }

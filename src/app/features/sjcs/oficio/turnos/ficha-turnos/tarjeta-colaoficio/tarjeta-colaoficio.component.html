@@ -88,29 +88,14 @@
         <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
-              <div *ngIf="setItalic(dato) && col.field =='nombrepersona'">
-                <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato.alfabeticoapellidos}} {{dato[col.field]}}</span>
-              </div>
-              <div *ngIf="setItalic(dato) && col.field =='fechavalidacion'">
-                <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
-              </div>
-              <div *ngIf="setItalic(dato) && col.field !='nombreguardia' && col.field !='fechavalidacion'">
-                <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
-              </div>
-              <div *ngIf="setItalic(dato) && col.field =='fechabaja'">
-                <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
-              </div>
-              <div *ngIf="!setItalic(dato) && col.field =='fechabaja'">
+              <div *ngIf="col.field !='nombrepersona' && col.field !='fechavalidacion' && col.field != 'fechabajapersona'">
                 <span>{{dato[col.field]}}</span>
               </div>
-              <div *ngIf="!setItalic(dato) && col.field !='nombrepersona' && col.field !='fechavalidacion'">
-                <span>{{dato[col.field]}}</span>
-              </div>
-              <div *ngIf="!setItalic(dato) && col.field =='fechavalidacion'">
+              <div *ngIf="col.field =='fechavalidacion' || col.field =='fechabajapersona'">
                 <span>{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
               </div>
-              <div *ngIf="!setItalic(dato) && col.field =='nombrepersona'">
-                <span>{{dato.alfabeticoapellidos}} {{dato[col.field]}} </span>
+              <div *ngIf="col.field =='nombrepersona'">
+                <span>{{dato.alfabeticoapellidos}}, {{dato[col.field]}} </span>
               </div>
             </td>
           </tr>

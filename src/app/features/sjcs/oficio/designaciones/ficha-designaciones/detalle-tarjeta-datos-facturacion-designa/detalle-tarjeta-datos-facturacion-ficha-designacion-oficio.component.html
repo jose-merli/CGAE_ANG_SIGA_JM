@@ -13,6 +13,7 @@
     <div class="form-row">
 
       <div class="form-group col-lg-4 col-md-4 w-100">
+        <label>{{'justiciaGratuita.oficio.designas.facturacion' | translate}}</label>
         <p-dropdown class="select-form" [(ngModel)]="selector.value"
           placeholder="{{'general.boton.seleccionar' | translate}}" [options]="selector.opciones" [filter]="true"
           filterBy="label,labelSinTilde" [showClear]="true" [disabled]="isAnulada  || !permisoEscritura">
@@ -27,8 +28,9 @@
 
 <div class="card-footer">
   <div class="text-right main-button">
-    <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer" (click)="restablecer()" [disabled]="!permisoEscritura"></button>
+    <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer" (click)="restablecer()"
+      [disabled]="!permisoEscritura"></button>
     <button pButton type="button" icon="far fa-save" iconPos="left" label="Guardar" (click)="guardar()"
-      [disabled]="selector.value == '' || selector.value == null || !permisoEscritura"></button>
+      [disabled]="!permisoEscritura"></button>
   </div>
 </div>

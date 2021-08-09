@@ -34,11 +34,14 @@ export class BuscadorColegiadosComponent implements OnInit {
     if (sessionStorage.getItem('usuarioBusquedaExpress')) {
       sessionStorage.removeItem('usuarioBusquedaExpress')
     }
+
     //Comprobar si viene del botón nuevo de busqueda de inscripciones
     if (sessionStorage.getItem("origin") =="newInscrip") {
       sessionStorage.removeItem('origin');
       this.nuevaInscripcion=true;
     }
+
+    
 
   }
 
@@ -64,6 +67,7 @@ export class BuscadorColegiadosComponent implements OnInit {
   }
 
   goBack() {
+    sessionStorage.setItem("volver", "true");
     this.location.back();
   }
 

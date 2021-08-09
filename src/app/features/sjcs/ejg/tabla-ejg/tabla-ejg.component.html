@@ -1,0 +1,164 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="card mt-3">
+  <div class="card-body p-0">
+    <!-- TABLA RESULTADOS -->
+
+    <p-table [autoLayout]="true" [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table
+      class="tabla-listado overflow" [paginator]="true" [rows]="selectedItem" (onRowUnselect)="actualizaSeleccionados(selectedDatos)" [ngClass]="{ 'customCursor' : selectMultiple }"
+      selectionMode="multiple" paginatorPosition="both" id="tablaFoco" (onRowSelect)="checkAddRemesa(selectedDatos)">
+
+      <ng-template pTemplate="colgroup" let-columns>
+        <colgroup>
+          <col *ngFor="let col of cols" [style.width]="col.width">
+        </colgroup>
+      </ng-template>
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+            {{ col.header | translate }}
+            <p-sortIcon [field]="col.field"></p-sortIcon>
+            <input pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText
+              type="text" (input)="
+                table.filter($event.target.value, col.field, 'contains')
+              " />
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+        <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+          <td class="text-center" *ngFor="let col of columns">
+
+            <div *ngIf="col.field == 'fechaApertura'">
+              <div><!-- [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}" -->
+                <span>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</span>
+              </div>
+            </div>
+
+            <div *ngIf="col.field != 'fechaApertura'">
+              <div *ngIf="setItalic(dato) && col.field!='numAnnioProcedimiento'">
+                <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
+              </div>
+              <div *ngIf="!setItalic(dato) && col.field!='numAnnioProcedimiento'">
+                <span>{{dato[col.field]}}</span>
+              </div>
+              <div *ngIf="setItalic(dato) && col.field=='numAnnioProcedimiento'">
+                <span  class="enlace"  (click)="datosEJG(dato)" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
+              </div>
+              <div *ngIf="!setItalic(dato) && col.field=='numAnnioProcedimiento'">
+                <span class="enlace" (click)="datosEJG(dato)">{{dato[col.field]}}</span>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage" let-columns>
+        <tr>
+          <td [attr.colspan]="columns.length">
+            {{'justiciaGratuita.maestros.fundamentosCalificacion.tabla.sinResultados'|translate}}
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="paginatorleft">
+        <div class="mostrar d-flex text-right justify-content-end">
+          <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }}{{table.first + 1}} al {{table.first
+            + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}</label>
+          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{selectedDatos.length}}
+          </label>
+          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: 0
+          </label>
+          <label>{{"general.message.mostrar" | translate}}</label>
+          <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
+          </p-dropdown>
+          <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+          <div class="ml-3 selectAll">
+            <p-checkbox (onChange)="onChangeSelectAll()" [disabled]="!permisoEscritura" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
+              name="groupname"></p-checkbox>
+          </div>
+        </div>
+      </ng-template>
+    </p-table>
+
+  </div>
+  <div class="card-footer">
+    <div class="text-right main-button">
+      <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="comunicar()" type="button" icon="fa fa-comment" iconPos="left" label="{{ 'general.boton.comunicar' | translate}}">
+      </button>
+      
+      <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="changeEstado()" type="button" icon="fas fa-exchange-alt" iconPos="left" label="{{'general.boton.cambiarEstado' | translate}}">
+      </button>
+      
+      <button pButton [disabled]="(selectedDatos.length == 0) || !permisoEscritura" (click)="downloadEEJ()" type="button" icon="fa fa-download" iconPos="left" label="{{'justiciaGratuita.ejg.datosGenerales.DescargarEEJ' | translate}}">
+      </button>
+      
+      <button pButton [disabled]="((!selectMultiple || !selectAll) && (selectedDatos.length == 0 || disableAddRemesa)) || !permisoEscritura" (click)="addRemesa()" type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.aniadirARemesa' | translate}}">
+      </button>
+    </div>
+  </div>
+</div>
+
+<!--DIALOG CAMBIA ESTADO-->
+<p-dialog width="320" responsive="true" modal="modal" [draggable]="false" resizable="false" [(visible)]="showModalCambioEstado" (onHide)="cerrarDialog()">
+  <p-header class="title">
+    <label>{{'general.boton.cambiarEstado' | translate}} </label>
+  </p-header>
+  <div class="form-row">
+    <div class="form-group-interlineado col-lg-12 col-md-12" >
+      <label>{{'censo.nuevaSolicitud.fechaEstado' | translate}}</label>
+      <app-fecha [(value)]="fechaEstado"
+      (valueChangeSelected)="fillFechaEstado($event)" (valueChangeInput)="fillFechaEstado($event)"></app-fecha>
+    </div>
+    <div class="form-group-interlineado col-lg-12 col-md-12">
+      <label>{{ "justiciaGratuita.ejg.datosGenerales.EstadoEJG" | translate }}</label>
+      <p-dropdown  [(ngModel)]='valueComboEstado' class="select-form" placeholder="Seleccionar" [options]="comboEstadoEJG" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+    </div>
+    <div class="form-group-interlineado col-lg-12 col-md-12">
+      <label>{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{selectedDatos.length}}</label>
+    </div>
+
+    <div class="main-button col-lg-12 col-md-12">
+      <button (click)="checkCambiarEstados()" pButton type="button" icon="fa fa-edit" iconPos="left" label="{{'general.boton.guardarCerrar' | translate}}"></button>
+      <button (click)="cancelaCambiarEstados()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
+    </div>
+  </div>
+</p-dialog>
+
+<p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" #cd>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="cd.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="cd.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+<!--DIALOG AÑADIR REMESA-->
+<p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" #cd1>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="cd1.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="cd1.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+<!--MODAL AÑADIR REMESA-->
+<p-dialog width="320" responsive="true" modal="modal" [draggable]="false" resizable="false" [(visible)]="showModalAnadirRemesa" (onHide)="cerrarDialog()">
+  <p-header class="title">
+    <label>{{'justiciaGratuita.ejg.busqueda.AsignarARemesa' | translate}} </label>
+  </p-header>
+  <div class="form-row">
+    <div class="form-group-interlineado col-lg-12 col-md-12">
+      <label>{{ "justiciaGratuita.ejg.busqueda.Remesas" | translate }}</label>
+      <p-dropdown  [(ngModel)]='valueComboRemesa' class="select-form" (onChange)="checkBotonAnadir()" placeholder="Seleccionar" 
+      [options]="comboRemesa" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" [disabled]="remesa != null"></p-dropdown>
+    </div>
+    <div class="form-group-interlineado col-lg-12 col-md-12">
+      <label>{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{selectedDatos.length}}</label>
+    </div>
+    <div class="main-button col-lg-12 col-md-12">
+      <button (click)="checkAnadirRemesa()" pButton type="button" icon="fa fa-edit" iconPos="left" [disabled]="disableBotonAnadir" label="{{'general.boton.submit' | translate}}"></button>
+      <button (click)="cancelaAnadirRemesa()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
+    </div>
+  </div>
+</p-dialog>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

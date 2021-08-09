@@ -45,20 +45,19 @@
                 <ng-template matExpansionPanelContent>
                   <div *ngIf="tarj.nombre == 'Datos Generales'">
                     <app-tarjeta-datos-gen-ficha-act [actuacionDesigna]="actuacionDesigna" [isAnulada]="isAnulada"
-                      [isColegiado]="isColegiado" [usuarioLogado]="usuarioLogado"
-                      [institucionActual]="institucionActual" (buscarActEvent)="getActuacionDesigna($event)"
-                      [modoLectura]="modoLectura">
+                      [isColegiado]="isColegiado" [usuarioLogado]="usuarioLogado" [modoLectura2]="modoLectura"
+                      [institucionActual]="institucionActual" (buscarActEvent)="getActuacionDesigna($event)">
                     </app-tarjeta-datos-gen-ficha-act>
                   </div>
                   <div *ngIf="tarj.nombre == 'Justificación'">
                     <app-tarjeta-jus-ficha-act [actuacionDesigna]="actuacionDesigna" [isColegiado]="isColegiado"
-                      [usuarioLogado]="usuarioLogado" (isAnuladaEvent)="isAnulada = $event"
-                      (buscarActuacionEvent)="getActuacionDesigna($event)" [modoLectura]="modoLectura">
+                      [usuarioLogado]="usuarioLogado" (isAnuladaEvent)="isAnulada = $event" [modoLectura2]="modoLectura"
+                      (buscarActuacionEvent)="getActuacionDesigna($event)">
                     </app-tarjeta-jus-ficha-act>
                   </div>
                   <div *ngIf="tarj.nombre == 'Datos Facturación'">
                     <app-tarjeta-datos-fact-ficha-act [isAnulada]="isAnulada" [actuacionDesigna]="actuacionDesigna"
-                      (changeDataEvent)="changeDataTarjeta($event)" [modoLectura]="modoLectura">
+                      (buscarActEvent)="getActuacionDesigna($event)" [modoLectura2]="modoLectura">
                     </app-tarjeta-datos-fact-ficha-act>
                   </div>
                   <div *ngIf="tarj.nombre == 'Relaciones'">
@@ -72,7 +71,7 @@
                   <div *ngIf="tarj.nombre == 'Documentación'">
                     <app-tarjeta-doc-ficha-act [actuacionDesigna]="actuacionDesigna" [documentos]="documentos"
                       (buscarDocumentosEvent)="getDocumentosPorActDesigna()" [usuarioLogado]="usuarioLogado"
-                      [isColegiado]="isColegiado" [isAnulada]="isAnulada" [modoLectura]="modoLectura">
+                      [isColegiado]="isColegiado" [isAnulada]="isAnulada" [modoLectura2]="modoLectura">
                     </app-tarjeta-doc-ficha-act>
                   </div>
                 </ng-template>

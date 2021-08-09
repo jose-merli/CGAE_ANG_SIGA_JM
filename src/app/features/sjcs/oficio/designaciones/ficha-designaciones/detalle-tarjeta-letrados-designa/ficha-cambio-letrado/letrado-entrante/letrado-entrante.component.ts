@@ -22,15 +22,13 @@ export class LetradoEntranteComponent implements OnInit {
   disableFechaDesignacion;
   disableCheck=false;
   isLetrado: boolean;
-
-  @Input() saliente;
-
+  minDateDesigna: any;
+  @Input() entrante;
   @Output() fillEntrante = new EventEmitter<boolean>();
 
   constructor(private router: Router,private sigaServices: SigaServices) { }
 
   ngOnInit() {
-
     this.body.art27=false;
     if (sessionStorage.getItem("NewLetrado")) {
 			let data = JSON.parse(sessionStorage.getItem("NewLetrado"));
@@ -49,9 +47,10 @@ export class LetradoEntranteComponent implements OnInit {
 		}
 
     let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
+    this.minDateDesigna = new Date(designa.fechaAlta.split('/').reverse().join('-'));
     if(designa.art27=="Si") {
       this.body.art27=true;
-      this.body.fechaDesignacion = this.saliente.fechaDesignacion;
+      this.body.fechaDesignacion = this.entrante.fechaDesignacion;
       this.disableFechaDesignacion=true;
     }
 
@@ -71,7 +70,6 @@ export class LetradoEntranteComponent implements OnInit {
       }
     );
   }
-
 
   incluirSalto(){
   }
@@ -98,7 +96,7 @@ export class LetradoEntranteComponent implements OnInit {
 
   search() {
 			sessionStorage.setItem("origin", "AbogadoContrario");
-      sessionStorage.setItem("Oldletrado",  JSON.stringify(this.saliente));
+      sessionStorage.setItem("Oldletrado",  JSON.stringify(this.entrante));
       sessionStorage.setItem("Newletrado",  JSON.stringify(this.body));
 			this.router.navigate(['/busquedaGeneral']);
   }

@@ -42,7 +42,7 @@
                         <div class="form-group-interlineado col-lg-2 col-md-2">
                             <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.fchAhasta" | translate}}</label>
                             <app-fecha [(value)]="fechaAperturaHastaSelect"
-                                (valueChangeSelected)="fillFechaAHastaCalendar($event)" [disabled]="disabledFechaAHasta"
+                                (valueChangeSelected)="fillFechaAHastaCalendar($event)"
                                 [minDate]="fechaAperturaDesdeSelect"></app-fecha>
                         </div>
                         <div class="form-group-interlineado col-lg-2 col-md-2">
@@ -135,7 +135,7 @@
                         </div>
                         <div class="form-group-interlineado col-lg-2 col-md-2">
                             <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.numAno" | translate}}</label>
-                            <input type="text" maxLength="10" class="form-control" [(ngModel)]="body.anoProcedimiento"
+                            <input type="text" maxLength="10" class="form-control" [(ngModel)]="body.anoProcedimiento" (ngModelChange)="changeNumAno($event)"
                                 pInputText>
                         </div>
                         <div class="form-group-interlineado col-lg-6 col-md-6">
@@ -146,7 +146,7 @@
                         </div>
                         <div class="form-group-interlineado col-lg-2 col-md-2">
                             <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.NIG" | translate}}</label>
-                            <input type="text" maxLength="10" class="form-control" [(ngModel)]="body.nig" pInputText>
+                            <input type="number" maxLength="10" class="form-control" [(ngModel)]="body.nig" pInputText>
                         </div>
                         <div class="form-group-interlineado col-lg-2 col-md-2">
                             <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.asunto" | translate}}</label>
@@ -257,7 +257,7 @@
 
         <!-- colegiado -->
         <mat-accordion class="example-headers-align" multi>
-            <mat-expansion-panel class="my-1" [expanded]="expanded">
+            <mat-expansion-panel class="my-1" [expanded]="true">
                 <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
                     <div class="font-weight-bold">
                         <p class="w100">{{ 'justiciaGratuita.justiciables.literal.colegiado' | translate }}</p>
@@ -265,7 +265,7 @@
                 </mat-expansion-panel-header>
                 <ng-template matExpansionPanelContent>
                     <app-busqueda-colegiado-express class="flexCenter" [pantalla]="'ejg'"
-                        [numColegiado]="usuarioBusquedaExpress.numColegiado"
+                        [numColegiado]="usuarioBusquedaExpress.numColegiado" [obligatorio] = "true"
                         [nombreAp]="usuarioBusquedaExpress.nombreAp" (colegiado)="changeColegiado($event)">
                     </app-busqueda-colegiado-express>
                 </ng-template>
@@ -284,7 +284,7 @@
                 <ng-template matExpansionPanelContent>
                     <div class="form-row">
                         <div class="form-group-interlineado col-lg-3 col-md-3 vertical-center">
-                            <p-checkbox binary="true" [disabled]="isLetrado" 
+                            <p-checkbox binary="true" [disabled]="" 
                                 label="{{ 'justiciaGratuita.oficio.justificacionExpres.justYValidacionesPdtes' | translate }}"
                                 class="ml-0" [(ngModel)]="checkMostrarPendientes"
                                 (onChange)="onChangeCheckMostrarPendientes($event)"></p-checkbox>
@@ -297,7 +297,7 @@
                                 [maxDate]="filtroJustificacion.justificacionHasta"
                                 (valueChangeInput)="fillFechasJustificacion($event, 'justificacionDesde')"
                                 (valueChangeSelected)="fillFechasJustificacion($event, 'justificacionDesde')"
-                                [(disabled)]="checkMostrarPendientes || isLetrado">
+                                [(disabled)]="checkMostrarPendientes">
                             </app-fecha>
                         </div>
 
@@ -308,7 +308,7 @@
                                 [minDate]="filtroJustificacion.justificacionDesde"
                                 (valueChangeInput)="fillFechasJustificacion($event, 'justificacionHasta')"
                                 (valueChangeSelected)="fillFechasJustificacion($event, 'justificacionHasta')"
-                                [(disabled)]="checkMostrarPendientes || isLetrado">
+                                [(disabled)]="checkMostrarPendientes">
                             </app-fecha>
                         </div>
                         <div class="form-group-interlineado col-lg-2 col-md-2">
@@ -316,7 +316,7 @@
                             <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde"
                                 [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
                                 [(ngModel)]='filtroJustificacion.estado' [options]="comboEstados"
-                                [(disabled)]="checkMostrarPendientes || isLetrado">
+                                [(disabled)]="checkMostrarPendientes">
                             </p-dropdown>
                         </div>
                         <div class="form-group-interlineado col-lg-2 col-md-2">
@@ -325,7 +325,7 @@
                             <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde"
                                 [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
                                 [(ngModel)]='filtroJustificacion.actuacionesValidadas'
-                                [options]="comboActuacionesValidadas" [(disabled)]="checkMostrarPendientes || isLetrado">
+                                [options]="comboActuacionesValidadas" [(disabled)]="checkMostrarPendientes">
                             </p-dropdown>
                         </div>
 
@@ -333,7 +333,7 @@
                             <p-checkbox binary="true"
                                 label="{{ 'justiciaGratuita.oficio.justificacionExpres.activarRestriccionesVisualizacion' | translate }}"
                                 class="ml-0" [(ngModel)]="checkRestricciones"
-                                (onChange)="onChangeCheckRestricciones($event)" [(hidden)]="isLetrado">
+                                (onChange)="onChangeCheckRestricciones($event)" >
                             </p-checkbox>
                         </div>
 
@@ -342,7 +342,7 @@
                             <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde"
                                 [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
                                 [(ngModel)]='filtroJustificacion.sinEJG' [options]="comboEJGSinResolucion"
-                                [(disabled)]="disableRestricciones || isLetrado">
+                                [(disabled)]="disableRestricciones">
                             </p-dropdown>
                         </div>
                         <div class="form-group-interlineado col-lg-2 col-md-2">
@@ -351,7 +351,7 @@
                             <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde"
                                 [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
                                 [(ngModel)]='filtroJustificacion.conEJGNoFavorables' [options]="comboEJGnoFavorable"
-                                [(disabled)]="disableRestricciones || isLetrado">
+                                [(disabled)]="disableRestricciones">
                             </p-dropdown>
                         </div>
                         <div class="form-group-interlineado col-lg-2 col-md-2">
@@ -360,7 +360,7 @@
                             <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde"
                                 [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
                                 [(ngModel)]='filtroJustificacion.ejgSinResolucion' [options]="comboSinEJG"
-                                [(disabled)]="disableRestricciones || isLetrado">
+                                [(disabled)]="disableRestricciones">
                             </p-dropdown>
                         </div>
                         <div class="form-group-interlineado col-lg-2 col-md-2">
@@ -369,7 +369,7 @@
                             <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde"
                                 [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
                                 [(ngModel)]='filtroJustificacion.resolucionPTECAJG' [options]="comboResoluciones"
-                                [(disabled)]="disableRestricciones || isLetrado">
+                                [(disabled)]="disableRestricciones">
                             </p-dropdown>
                         </div>
                     </div>
@@ -391,17 +391,17 @@
                         <div class="form-group-interlineado col-lg-3 col-md-3">
                             <label>{{ 'justiciaGratuita.oficio.justificacionExpres.anioDesignacion' | translate
                                 }}</label>
-                            <input [disabled]="isLetrado"  type="number" class="form-control" [(ngModel)]='filtroJustificacion.anioDesignacion' maxLength="4" pInputText>
+                            <input [disabled]=""  type="number" class="form-control" [(ngModel)]='filtroJustificacion.anioDesignacion' maxLength="4" pInputText>
                         </div>
                         <div class="form-group-interlineado col-lg-3 col-md-3">
                             <label>{{ 'justiciaGratuita.oficio.justificacionExpres.numDesignacion' | translate
                                 }}</label>
-                            <input [disabled]="isLetrado"  type="text" maxLength="10" class="form-control" [(ngModel)]='filtroJustificacion.numDesignacion' pInputText>
+                            <input [disabled]=""  type="text" maxLength="10" class="form-control" [(ngModel)]='filtroJustificacion.numDesignacion' pInputText>
                         </div>
                         <div class="form-group-interlineado col-lg-3 col-md-3">
                             <label>{{ 'justiciaGratuita.oficio.justificacionExpres.fechaDesignacionDesde' | translate
                                 }}</label>
-                            <app-fecha [(value)]="filtroJustificacion.designacionDesde" [(disabled)]="isLetrado" 
+                            <app-fecha [(value)]="filtroJustificacion.designacionDesde"  
                                 [maxDate]="filtroJustificacion.designacionHasta"
                                 (valueChangeInput)="fillFechasJustificacion($event, 'designacionDesde')"
                                 (valueChangeSelected)="fillFechasJustificacion($event, 'designacionDesde')">
@@ -410,7 +410,7 @@
                         <div class="form-group-interlineado col-lg-3 col-md-3">
                             <label>{{ 'justiciaGratuita.oficio.justificacionExpres.fechaDesignacionHasta' | translate
                                 }}</label>
-                            <app-fecha [(value)]="filtroJustificacion.designacionHasta" [(disabled)]="isLetrado" 
+                            <app-fecha [(value)]="filtroJustificacion.designacionHasta" 
                                 [minDate]="filtroJustificacion.designacionDesde"
                                 (valueChangeInput)="fillFechasJustificacion($event, 'designacionHasta')"
                                 (valueChangeSelected)="fillFechasJustificacion($event, 'designacionHasta')">
@@ -418,22 +418,22 @@
                         </div>
                         <div class="form-group-interlineado col-lg-3 col-md-3">
                             <label>{{ 'facturacionSJCS.facturacionesYPagos.apellidos' | translate }}</label>
-                            <input [disabled]="isLetrado"  pInputText type="text" class="form-control"
+                            <input [disabled]=""  pInputText type="text" class="form-control"
                                 [(ngModel)]='filtroJustificacion.apellidos' maxLength="60">
                         </div>
                         <div class="form-group-interlineado col-lg-3 col-md-3">
                             <label>{{ 'administracion.parametrosGenerales.literal.nombre' | translate }}</label>
-                            <input [disabled]="isLetrado"  pInputText type="text" class="form-control" [(ngModel)]='filtroJustificacion.nombre'
+                            <input [disabled]=""  pInputText type="text" class="form-control" [(ngModel)]='filtroJustificacion.nombre'
                                 maxLength="30">
                         </div>
                         <div class="form-group-interlineado col-lg-3 col-md-3">
                             <label>{{ 'justiciaGratuita.oficio.justificacionExpres.anioEJG' | translate }}</label>
-                            <input [disabled]="isLetrado"  pInputText type="text" class="form-control" [(ngModel)]='filtroJustificacion.anioEJG'
+                            <input [disabled]=""  pInputText type="text" class="form-control" [(ngModel)]='filtroJustificacion.anioEJG'
                                 maxLength="4">
                         </div>
                         <div class="form-group-interlineado col-lg-3 col-md-3">
                             <label>{{ 'justiciaGratuita.oficio.justificacionExpres.numeroEJG' | translate }}</label>
-                            <input [disabled]="isLetrado"  pInputText type="text" class="form-control" [(ngModel)]='filtroJustificacion.numEJG'
+                            <input [disabled]=""  pInputText type="text" class="form-control" [(ngModel)]='filtroJustificacion.numEJG'
                                 maxLength="30">
                         </div>
                     </div>
@@ -451,7 +451,7 @@
             (click)="limpiar()">
         </button>
 
-        <button *ngIf="this.isButtonVisible" (click)="nuevo()" pButton type="button" icon="fa fa-plus"  iconPos="left" label="Nuevo"></button>
+        <button *ngIf="this.isButtonVisible && this.showDesignas" (click)="nuevo()" pButton type="button" icon="fa fa-plus"  iconPos="left" label="Nuevo"></button>
 
         <button pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"
             (click)="buscar()">
@@ -462,3 +462,10 @@
 <div *ngIf="progressSpinner" class="overlay-spinner">
     <div class="loader"></div>
 </div>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="confirmacionGuardarJustificacionExpress" icon="icon" width="425"
+  #confirmacionGuardarJustificacionExpress>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="OK" (click)="confirmacionGuardarJustificacionExpress.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="Cancel" (click)="confirmacionGuardarJustificacionExpress.reject()"></button>
+  </p-footer>
+</p-confirmDialog>

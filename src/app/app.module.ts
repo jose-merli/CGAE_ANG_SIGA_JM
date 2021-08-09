@@ -314,12 +314,10 @@ import { SigaServices } from './_services/siga.service';
 import { DestinatariosRetencionesComponent } from './features/sjcs/maestros/destinatarios-retenciones/destinatarios-retenciones.component';
 import { DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-datos-adicionales-designa/detalle-tarjeta-datos-adicionales-ficha-designacion-oficio.component';
 import { DetalleTarjetaContrariosFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-contrarios-designa/detalle-tarjeta-contrarios-ficha-designacion-oficio.component';
-import{ DetalleTarjetaInteresadosFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-interesados-designa/detalle-tarjeta-interesados-ficha-designacion-oficio.component';
-import{ DetalleTarjetaLetradosDesignaComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/detalle-tarjeta-letrados-designa.component';
+import { DetalleTarjetaInteresadosFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-interesados-designa/detalle-tarjeta-interesados-ficha-designacion-oficio.component';
+import { DetalleTarjetaLetradosDesignaComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/detalle-tarjeta-letrados-designa.component';
 
 import { ProgramacionCalendariosComponent } from './features/sjcs/guardia/programacionCalendarios/programacionCalendarios.component';
-import { CargasMasivasOficioComponent } from './features/sjcs/oficio/cargas-masivas-oficio/cargas-masivas-oficio.component';
-
 
 //COOKIES
 import { SelectButtonModule, ColorPickerModule, OverlayPanelModule, PaginatorModule, InputMaskModule } from 'primeng/primeng';
@@ -409,6 +407,28 @@ import { TarjetaRelFichaActComponent } from './features/sjcs/oficio/designacione
 import { DetalleTarjetaRelacionesDesignaComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-relaciones-designa/detalle-tarjeta-relaciones-designa.component';
 import { DetalleTarjetaComunicacionesDesignaComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-comunicaciones-designa/detalle-tarjeta-comunicaciones-designa.component';
 import { TablaResultadoMixDocDesigService } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-documentacion-designa/tabla-resultado-mix-doc-desig.service';
+
+//EJG
+import { ImpugnacionComponent } from './features/sjcs/ejg/gestion-ejg/impugnacion/impugnacion.component';
+import { ResolucionComponent } from './features/sjcs/ejg/gestion-ejg/resolucion/resolucion.component';
+import { InformeCalificacionComponent } from './features/sjcs/ejg/gestion-ejg/informe-calificacion/informe-calificacion.component';
+import { DocumentacionComponent } from './features/sjcs/ejg/gestion-ejg/documentacion/documentacion.component';
+import { EstadosComponent } from './features/sjcs/ejg/gestion-ejg/estados/estados.component';
+import { RelacionesComponent } from './features/sjcs/ejg/gestion-ejg/relaciones/relaciones.component';
+import { ExpedientesEconomicosComponent } from './features/sjcs/ejg/gestion-ejg/expedientes-economicos/expedientes-economicos.component';
+import { ServiciosTramitacionComponent } from './features/sjcs/ejg/gestion-ejg/servicios-tramitacion/servicios-tramitacion.component';
+import { UnidadFamiliarComponent } from './features/sjcs/ejg/gestion-ejg/unidad-familiar/unidad-familiar.component';
+import { DatosGeneralesEjgComponent } from './features/sjcs/ejg/gestion-ejg/datos-generales-ejg/datos-generales-ejg.component';
+import { TablaEjgComponent } from './features/sjcs/ejg/tabla-ejg/tabla-ejg.component';
+import { FiltrosEjgComponent } from './features/sjcs/ejg/filtros-busqueda-ejg/filtros-ejg.component';
+import { GestionEjgComponent } from './features/sjcs/ejg/gestion-ejg/gestion-ejg.component';
+import { AddExpedienteComponent } from './features/sjcs/ejg/gestion-ejg/datos-generales-ejg/add-expediente/add-expediente.component';
+import { ComunicacionesEJGComponent } from './features/sjcs/ejg/gestion-ejg/comunicaciones/comunicaciones-ejg.component';
+import { FichaPreDesignacionComponent } from './features/sjcs/ejg/gestion-ejg/relaciones/ficha-pre-designacion/ficha-pre-designacion.component';
+import { DefensaJuridicaComponent } from './features/sjcs/ejg/gestion-ejg/relaciones/ficha-pre-designacion/defensa-juridica/defensa-juridica.component';
+import { RegtelEjgComponent } from './features/sjcs/ejg/gestion-ejg/regtel-ejg/regtel-ejg.component';
+
+
 import { SigaStorageService } from './siga-storage.service';
 import { FichaCambioLetradoComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/ficha-cambio-letrado/ficha-cambio-letrado.component';
 import { LetradoEntranteComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/ficha-cambio-letrado/letrado-entrante/letrado-entrante.component';
@@ -429,6 +449,9 @@ import { FichaAsistenciaTarjetaDefensaJuridicaComponent } from './features/sjcs/
 import { FichaAsistenciaTarjetaObservacionesComponent } from './features/sjcs/guardia/guardias-asistencias/ficha-asistencia/ficha-asistencia-tarjeta-observaciones/ficha-asistencia-tarjeta-observaciones.component';
 import { FichaAsistenciaTarjetaRelacionesComponent } from './features/sjcs/guardia/guardias-asistencias/ficha-asistencia/ficha-asistencia-tarjeta-relaciones/ficha-asistencia-tarjeta-relaciones.component';
 
+import { ProcuradorPreDesignacionComponent } from './features/sjcs/ejg/gestion-ejg/relaciones/ficha-pre-designacion/procurador-pre-designacion/procurador-pre-designacion.component';
+import { ContrariosPreDesignacionComponent } from './features/sjcs/ejg/gestion-ejg/relaciones/ficha-pre-designacion/contrarios-pre-designacion/contrarios-pre-designacion.component';
+import { CargasMasivasOficioComponent } from './features/sjcs/oficio/cargas-masivas-oficio/cargas-masivas-oficio.component';
 
 @NgModule({
 	declarations: [
@@ -575,7 +598,31 @@ import { FichaAsistenciaTarjetaRelacionesComponent } from './features/sjcs/guard
 		ResultadoAsistenciaExpresComponent,
 		VolanteExpresComponent,
 		SOJComponent,
+		//EJG
+		// EJGComponent,
+		FiltrosEjgComponent,
+		TablaEjgComponent,
 		EJGComponent,
+		GestionEjgComponent,
+		DatosGeneralesEjgComponent,
+		ServiciosTramitacionComponent,
+		UnidadFamiliarComponent,
+		ExpedientesEconomicosComponent,
+		RelacionesComponent,
+		FichaPreDesignacionComponent,
+  		DefensaJuridicaComponent,
+		EstadosComponent,
+		DocumentacionComponent,
+		InformeCalificacionComponent,
+		ResolucionComponent,
+		ImpugnacionComponent,
+		ComunicacionesComponent,
+		AddExpedienteComponent,
+		ComunicacionesEJGComponent,
+		ProcuradorPreDesignacionComponent,
+ 		ContrariosPreDesignacionComponent,
+		RegtelEjgComponent,
+		
 		GestionActasComponent,
 		MantenimientoFacturacionComponent,
 		PrevisionesComponent,

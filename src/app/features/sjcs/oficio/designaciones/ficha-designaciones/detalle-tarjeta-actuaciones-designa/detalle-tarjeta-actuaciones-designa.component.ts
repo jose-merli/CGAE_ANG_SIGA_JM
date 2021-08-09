@@ -5,6 +5,8 @@ import { Message } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../../../commons/translate/translation.service';
 import { Router } from '@angular/router';
 import { SigaStorageService } from '../../../../../../siga-storage.service';
+import { CommonsService } from '../../../../../../_services/commons.service';
+import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
 
 export interface Col {
   field: string,
@@ -32,6 +34,7 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
   @Input() permiteTurno: boolean;
 
   @Output() buscarEvent = new EventEmitter<boolean>();
+  @Output() buscarDocumentosEvent = new EventEmitter<boolean>();
 
   cols: Col[] = [
     {
@@ -75,17 +78,45 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
   actuacionesSeleccionadas: ActuacionDesignaItem[] = [];
   msgs: Message[] = [];
   isLetrado: boolean;
+  modoLectura: boolean = false;
+  currentRoute: String;
+  idClasesComunicacionArray: string[] = [];
+  idClaseComunicacion: String;
+  keys: any[] = [];
 
   constructor
     (
       private sigaServices: SigaServices,
       private translateService: TranslateService,
       private router: Router,
-      private localStorageService: SigaStorageService
+      private localStorageService: SigaStorageService,
+      private commonsService: CommonsService
     ) { }
 
   ngOnInit() {
-    this.isLetrado = this.localStorageService.isLetrado;
+    this.currentRoute = this.router.url;
+    this.commonsService.checkAcceso(procesos_oficio.designasActuaciones)
+      .then(respuesta => {
+        let permisoEscritura = respuesta;
+
+        if (permisoEscritura == undefined) {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
+
+        if (!permisoEscritura) {
+          this.modoLectura = true;
+        }
+
+        this.isLetrado = this.localStorageService.isLetrado;
+
+      })
+      .catch(err => console.log(err));
+
   }
 
   toogleHistory(value: boolean) {
@@ -105,7 +136,7 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
 
   onRowSelected(event) {
 
-    if ((this.historico && !event.data.anulada) || !event.data.permiteModificacion) {
+    if ((this.historico && !event.data.anulada)) {
       this.actuacionesSeleccionadas.pop();
     }
 
@@ -223,15 +254,12 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
 
       this.actuacionesSeleccionadas.forEach(el => {
 
-        if (this.isLetrado && (el.validada || !this.permiteTurno)) {
+        if (el.facturado || (this.isLetrado && el.validada && (!this.permiteTurno || !el.permiteModificacion))) {
           error = true;
+        } else {
+          actuacionesRequest.push(el);
         }
 
-        if (!error && !el.facturado) {
-          actuacionesRequest.push(el);
-        } else {
-          error = true;
-        }
       });
 
       if (error) {
@@ -246,6 +274,7 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
           if (resp.status == 'OK') {
             this.actuacionesSeleccionadas = [];
             this.buscarEvent.emit(false);
+            this.buscarDocumentosEvent.emit(true);
           }
 
           if (resp.error != null && resp.error.descripcion != null) {
@@ -272,7 +301,7 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
       isNew: true,
       designaItem: this.campos,
       actuacion: new ActuacionDesignaItem(),
-      relaciones: null
+      relaciones: this.relaciones
     }
     sessionStorage.setItem("actuacionDesigna", JSON.stringify(actuacion));
     this.router.navigate(['/fichaActDesigna']);
@@ -290,6 +319,70 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
     sessionStorage.setItem("actuacionDesigna", JSON.stringify(actuacion));
     this.router.navigate(['/fichaActDesigna']);
 
+  }
+
+  navigateComunicar() {
+    sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
+    //IDMODULO de SJCS es 10
+    sessionStorage.setItem("idModulo", '10');
+    
+    this.getDatosComunicar();
+  }
+  
+  getKeysClaseComunicacion() {
+    this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
+      data => {
+        this.keys = JSON.parse(data["body"]);
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  getDatosComunicar() {
+    let datosSeleccionados = [];
+    let rutaClaseComunicacion = this.currentRoute.toString();
+
+    this.sigaServices
+      .post("dialogo_claseComunicacion", rutaClaseComunicacion)
+      .subscribe(
+        data => {
+          this.idClaseComunicacion = JSON.parse(
+            data["body"]
+          ).clasesComunicaciones[0].idClaseComunicacion;
+          this.sigaServices
+            .post("dialogo_keys", this.idClaseComunicacion)
+            .subscribe(
+              data => {
+                this.keys = JSON.parse(data["body"]).keysItem;
+                this.actuacionesSeleccionadas.forEach(element => {
+                  let keysValues = [];
+                  this.keys.forEach(key => {
+                    if (element[key.nombre] != undefined) {
+                      keysValues.push(element[key.nombre]);
+                    }else if(key.nombre == "num" && element["numero"] != undefined){
+                      keysValues.push(element["numero"]);
+                    }
+                  });
+                  datosSeleccionados.push(keysValues);
+                });
+
+                sessionStorage.setItem(
+                  "datosComunicar",
+                  JSON.stringify(datosSeleccionados)
+                );
+                this.router.navigate(["/dialogoComunicaciones"]);
+              },
+              err => {
+                console.log(err);
+              }
+            );
+        },
+        err => {
+          console.log(err);
+        }
+      );
   }
 
 }

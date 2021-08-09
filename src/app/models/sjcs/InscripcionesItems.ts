@@ -17,7 +17,7 @@ export class InscripcionesItems {
   idpersona: String;
   historico: boolean;
   fechasolicitud: Date;
-  idturno: String;
+  idturno: String | string[];
   observacionessolicitud: String;
   fechavalidacion: Date;
   observacionesvalidacion: String;

@@ -74,6 +74,8 @@ export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
   nuevoContrario: boolean = false;
   nuevoAsistido: boolean = false;
   nuevoContrarioAsistencia: boolean = false;
+  nuevaUniFamiliar: boolean = false;
+  nuevoContrarioEJG: boolean = false;
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
     private commonsService: CommonsService, private translateService: TranslateService, private router: Router,
@@ -92,12 +94,11 @@ export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
     });
 
     if(sessionStorage.getItem("origin")=="newInteresado"){
-      sessionStorage.removeItem('origin');
       this.nuevoInteresado=true;
     }
 
     if(sessionStorage.getItem("origin")=="newContrario"){
-      sessionStorage.removeItem('origin');
+      
       this.nuevoContrario=true;
     }
 
@@ -110,6 +111,16 @@ export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
       sessionStorage.removeItem('origin');
       this.nuevoContrarioAsistencia=true;
     }
+    if(sessionStorage.getItem("origin")=="UnidadFamiliar"){
+      this.nuevaUniFamiliar=true;
+      sessionStorage.removeItem("origin");
+    }
+
+    if(sessionStorage.getItem("origin")=="newContrarioEJG"){
+      this.nuevoContrarioEJG = true;
+      sessionStorage.removeItem("origin");
+    }
+    
 
     this.persistenceService.setFichasPosibles(this.fichasPosibles);
 

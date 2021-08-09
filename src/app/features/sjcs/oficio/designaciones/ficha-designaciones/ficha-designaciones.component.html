@@ -71,12 +71,14 @@
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Datos Facturación'">
                                         <app-detalle-tarjeta-datos-facturacion-ficha-designacion-oficio
-                                            (changeDataTarjeta)="changeDataTarjeta($event)" [campos]="campos">
+                                            (changeDataDatosFacEvent)="changeDataDatosFacEvent($event)"
+                                            [campos]="campos">
                                         </app-detalle-tarjeta-datos-facturacion-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Documentación'">
                                         <app-detalle-tarjeta-documentacion-ficha-designacion-oficio
                                             [documentos]="documentos" [campos]="campos" [isLetrado]="isLetrado"
+                                            [actuacionesDesignaItems]="actuacionesDesignaItems"
                                             (buscarDocDesignaEvent)="getDocumentosDesigna()">
                                         </app-detalle-tarjeta-documentacion-ficha-designacion-oficio>
                                     </div>
@@ -85,12 +87,13 @@
                                             [contrarios]="contrarios" (searchContrarios)="searchContrarios($event)">
                                         </app-detalle-tarjeta-contrarios-ficha-designacion-oficio>
                                     </div>
-                                    <div *ngIf="tarj.nombre == 'Procurador'" id="procurador">
+                                    <div *ngIf="tarj.nombre == 'Procurador'" >
                                         <app-detalle-tarjeta-procurador-ficha-designacion-oficio [cabeceras]="cabeceras"
                                             [totalRegistros]="totalRegistros" [seleccionarTodo]="seleccionarTodo"
                                             [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups"
+                                            [procuradores]="procurador"
                                             (modDatos)="modDatos($event)" (mostrar)="mostrar()"
-                                            (restablecer)="restablecer()" (nuevo)="nuevo()">
+                                            (restablecer)="restablecer()">
                                         </app-detalle-tarjeta-procurador-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Cambio Letrado'">
@@ -106,7 +109,8 @@
                                         <app-detalle-tarjeta-actuaciones-ficha-designacion-oficio [campos]="campos"
                                             [actuacionesDesignaItems]="actuacionesDesignaItems"
                                             [relaciones]="relaciones" (buscarEvent)="getActuacionesDesigna($event)"
-                                            [permiteTurno]="permiteTurno">
+                                            [permiteTurno]="permiteTurno"
+                                            (buscarDocumentosEvent)="getDocumentosDesigna()">
                                         </app-detalle-tarjeta-actuaciones-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Relaciones'">
@@ -140,34 +144,3 @@
     <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left"
         label="{{ 'general.boton.volver' | translate}}"></button>
 </div>
-
-<!--Guardar Procurador-->
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" [(visible)]="showModal2" key="cdSave"
-    #cdSave icon="icon" width="425">
-    <div class="bloque col-lg-12 col-md-12">
-        <div class="row">
-            <div class="form-group col-lg-6 col-md-6">
-                <label>{{ "justiciaGratuita.oficio.designaciones.guardarProcurador" | translate }} </label>
-            </div>
-        </div>
-    </div>
-    <p-footer>
-        <button type="button" pButton icon="fa-check" label="Si" (click)="guardarProcuradorEJG(listaPrueba)"></button>
-        <button type="button" pButton icon="fa-close" label="No" (click)="cerrarModal()"></button>
-    </p-footer>
-</p-confirmDialog>
-
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" [(visible)]="showModal3" key="cdFecha"
-    #cdFecha icon="fa fa-question-circle" width="425">
-    <div class="bloque col-lg-12 col-md-12">
-        <div class="row">
-            <div class="form-group col-lg-6 col-md-6">
-                <label>{{ "justiciaGratuita.oficio.designaciones.eliminarDesignacion" | translate }} </label>
-            </div>
-        </div>
-    </div>
-    <p-footer>
-        <button type="button" pButton icon="fa-check" label="Si" (click)="actualizarProcurador()"></button>
-        <button type="button" pButton icon="fa-close" label="No" (click)="cerrarModal()"></button>
-    </p-footer>
-</p-confirmDialog>

@@ -94,7 +94,7 @@ export class FichaAsistenciaTarjetaRelacionesComponent implements OnInit {
       desItem.codigo = relacion.codigo;
       desItem.descripcionTipoDesigna = relacion.destipo
       desItem.fechaEntradaInicio = relacion.fechaAsunto;
-      desItem.nombreTurno = relacion.desturno;
+      desItem.nombreTurno = relacion.descturno;
       desItem.nombreProcedimiento = relacion.dilnigproc.split(' / ')[2];
       desItem.nombreColegiado = relacion.letrado;
       desItem.apellido1Colegiado =ape.split(' ')[0];

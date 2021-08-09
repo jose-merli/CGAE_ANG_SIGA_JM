@@ -162,9 +162,11 @@ export class TarjetaLetradoComponent implements OnInit {
             this.translateService.instant("generico.error.permiso.denegado")
           );
           this.router.navigate(["/errorAcceso"]);
-        }else if(this.persistenceService.getPermisos() != true){
+          
+          this.permisosModificacionDirecciones = respuesta;
+        }/*else if(this.persistenceService.getPermisos() != true){
           this.permisosModificacionDirecciones = true;
-        }
+        }*/
       }
       ).catch(error => console.error(error));
       this.sigaServices.get("institucionActual").subscribe(n => {

@@ -28,19 +28,19 @@
             <label>{{ "censo.busquedaClientesAvanzada.literal.colegio" | translate }}</label>
             <p-dropdown class="select-form" [(ngModel)]="filtro.idInstitucion"
               placeholder="{{'general.boton.seleccionar' | translate}}" [disabled]="institucionActual!=2000"
-              [options]="comboColegios" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
+              [options]="comboColegios" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" (onChange)="getComboTurno()">
             </p-dropdown>
           </div>
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.turno" | translate }}</label>
             <p-multiSelect class="select-form" [(ngModel)]='filtro.idTurno' placeholder="Seleccionar" [options]="comboTurno"
             [filter]="true" maxSelectedLabels="10" filterBy="label,labelSinTilde" selectionLimit="10" styleClass="widthAll"
-            defaultLabel="{{ 'general.boton.seleccionar' | translate}}" (onChange)="getComboguardiaPorTurno($event)" ></p-multiSelect>
+            defaultLabel="{{ 'general.boton.seleccionar' | translate}}" (onChange)="getComboguardiaPorTurno($event)" [disabled]="fixedTurn"></p-multiSelect>
           </div>
           <div class="form-group col-lg-3 col-md-3">
             <label>{{"menu.justiciaGratuita.GuardiaMenu" | translate}}</label>
             <p-multiSelect class="select-form" [(ngModel)]='filtro.idGuardia' placeholder="Seleccionar" [options]="comboguardiaPorTurno"
-              [filter]="true" maxSelectedLabels="10" [disabled]="filtro.idTurno==undefined || filtro.idTurno==''" filterBy="label,labelSinTilde" selectionLimit="10" defaultLabel="{{ 'general.boton.seleccionar' | translate}}" styleClass="widthAll"></p-multiSelect>
+              [filter]="true" maxSelectedLabels="10" [disabled]="filtro.idTurno==undefined || filtro.idTurno=='' || fixedGuard" filterBy="label,labelSinTilde" selectionLimit="10" defaultLabel="{{ 'general.boton.seleccionar' | translate}}" styleClass="widthAll"></p-multiSelect>
           </div>
           <div class="form-group col-lg-3 col-md-3">
             <label>{{ 'menu.justiciaGratuita.componentes.estadoColegial' | translate }}</label>
@@ -48,7 +48,8 @@
           </div>
           <div class="form-group col-lg-2 col-md-2">
           <label>Fecha Estado</label>
-        <app-fecha [(value)]='filtro.fechaestado' [utc]="true"></app-fecha>
+        <app-fecha [(value)]="filtro.fechaestado" (valueChangeSelected)="fillFechaEstado($event)"
+        (valueChangeInput)="fillFechaEstado($event)"></app-fecha>
         </div>
         </div>
       </ng-template>
