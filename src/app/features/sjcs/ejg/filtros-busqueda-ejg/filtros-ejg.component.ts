@@ -57,6 +57,9 @@ export class FiltrosEjgComponent implements OnInit {
   resaltadoDatos: boolean = false;
   numRemesaRelleno: boolean = false;
   sufijoRemesaRelleno: boolean = false;
+  tipoLetradoRelleno: boolean = false;
+  idTurnoRelleno: boolean = false;
+  numColegiadoRelleno: boolean = false;
 
   isDisabledFundamentosJurid: boolean = true;
   isDisabledFundamentosCalif: boolean = true;
@@ -611,7 +614,13 @@ export class FiltrosEjgComponent implements OnInit {
       //this.persistenceService.setFiltros(this.body);
       // this.persistenceService.setFiltrosAux(this.body);
       if(this.disableBuscar() == false){
-        this.muestraCamposObligatorios()
+        if(this.tipoLetradoRelleno == false && (this.idTurnoRelleno == true && this.numColegiadoRelleno == true)){
+          this.camposObligatoriosTurnoOLetrado();
+        }else{
+          this.muestraCamposObligatorios();
+        }
+          
+       
       }else{
         if(this.usuarioBusquedaExpress.numColegiado!=undefined && this.usuarioBusquedaExpress.numColegiado!=null 
           && this.usuarioBusquedaExpress.numColegiado.trim()!=""){
@@ -737,25 +746,52 @@ export class FiltrosEjgComponent implements OnInit {
       this.resaltadoDatos = true;
     }
 
+    camposObligatoriosTurnoOLetrado() {
+      this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('justiciaGratuita.ejg.campoTurnoLetradoObligatorio') }];
+      this.resaltadoDatos = true;
+    }
+
     disableBuscar(){
-      this.numRegRemesaRelleno();
-      if((this.numRemesaRelleno == true && this.sufijoRemesaRelleno == false) || (this.numRemesaRelleno == false && this.sufijoRemesaRelleno == true)){
+      this.comprobarCamposObligatorios();
+      if((this.numRemesaRelleno == true && this.sufijoRemesaRelleno == false) 
+      || (this.numRemesaRelleno == false && this.sufijoRemesaRelleno == true) 
+      || (this.tipoLetradoRelleno == false && (this.idTurnoRelleno == true && this.numColegiadoRelleno == true))){
         return false;
       }else{
         return true;
       }
     }
 
-    numRegRemesaRelleno(){
+    comprobarCamposObligatorios(){
       if((this.body.numRegRemesa2 == undefined || this.body.numRegRemesa2 == null || this.body.numRegRemesa2 == "")){
         this.numRemesaRelleno = true;
       }else{
         this.numRemesaRelleno = false;
       }
+
       if((this.body.numRegRemesa3 == undefined || this.body.numRegRemesa3 == null || this.body.numRegRemesa3 == "")){
         this.sufijoRemesaRelleno = true;
       }else{
         this.sufijoRemesaRelleno = false;
+      }
+
+      if(this.body.tipoLetrado == undefined || this.body.tipoLetrado == null || this.body.tipoLetrado == ""){
+        this.tipoLetradoRelleno = true;
+      }else{
+        this.tipoLetradoRelleno = false;
+      }
+
+      if(this.body.idTurno == undefined || this.body.idTurno == null || this.body.idTurno== ""){
+        this.idTurnoRelleno = true;
+      }else{
+        this.idTurnoRelleno = false;
+      }
+
+      if((this.usuarioBusquedaExpress.numColegiado == undefined || this.usuarioBusquedaExpress.numColegiado == null || this.usuarioBusquedaExpress.numColegiado == "")
+      && (this.usuarioBusquedaExpress.nombreAp == undefined || this.usuarioBusquedaExpress.nombreAp == null || this.usuarioBusquedaExpress.nombreAp == "")){
+        this.numColegiadoRelleno = true;
+      }else{
+        this.numColegiadoRelleno = false;
       }
     }
     
