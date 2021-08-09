@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '../../../../../../commons/translate';
 import { ComboItem } from '../../../../../../models/ComboItem';
@@ -14,7 +14,7 @@ import { SigaServices } from '../../../../../../_services/siga.service';
   templateUrl: './conceptos-pagos.component.html',
   styleUrls: ['./conceptos-pagos.component.scss']
 })
-export class ConceptosPagosComponent implements OnInit {
+export class ConceptosPagosComponent implements OnInit, OnChanges {
 
   showFichaCriterios: boolean = false;
   progressSpinner: boolean = false;
@@ -36,6 +36,7 @@ export class ConceptosPagosComponent implements OnInit {
   @Input() idEstadoPago;
   @Input() idPago;
   @Input() idFacturacion;
+  @Input() modoEdicion;
 
   @Output() editing = new EventEmitter<boolean>();
 
@@ -62,12 +63,16 @@ export class ConceptosPagosComponent implements OnInit {
       this.progressSpinner = false;
       this.getCols();
 
-      if (undefined != this.idPago && null != this.idPago) {
-        this.getComboConceptos();
+      if (this.modoEdicion) {
+        this.cargarDatosIniciales();
       }
 
     }).catch(error => console.error(error));
 
+  }
+
+  cargarDatosIniciales() {
+    this.getComboConceptos();
   }
 
   onChangeRowsPerPages(event) {
@@ -115,7 +120,12 @@ export class ConceptosPagosComponent implements OnInit {
   }
 
   onHideDatosGenerales() {
-    this.showFichaCriterios = !this.showFichaCriterios;
+
+    if (!this.modoEdicion) {
+      this.showFichaCriterios = false;
+    } else {
+      this.showFichaCriterios = !this.showFichaCriterios;
+    }
   }
 
   showMessage(severity, summary, msg) {
@@ -219,7 +229,7 @@ export class ConceptosPagosComponent implements OnInit {
             if (error && null != error && null != error.description) {
               this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.description.toString()));
             } else {
-              console.log(resp);
+              this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
             }
 
           },
@@ -253,7 +263,7 @@ export class ConceptosPagosComponent implements OnInit {
           if (error && null != error && null != error.description) {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.description.toString()));
           } else {
-            console.log(resp);
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           }
 
         },
@@ -450,6 +460,13 @@ export class ConceptosPagosComponent implements OnInit {
 
   isPagoCerradoOejecutado() {
     return (this.idEstadoPago == '30' || this.idEstadoPago == '20');
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+
+    if (changes.modoEdicion && changes.modoEdicion.currentValue && changes.modoEdicion.currentValue == true) {
+      this.cargarDatosIniciales();
+    }
   }
 
 }

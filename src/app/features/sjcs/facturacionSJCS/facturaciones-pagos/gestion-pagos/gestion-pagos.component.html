@@ -6,19 +6,23 @@
     <p>SJCS &nbsp;<i class="fa fa-angle-right"></i>{{'facturacionSJCS.facturacionesYPagos.fichaPago' | translate}}</p>
   </div>
 
-  <app-datos-pagos *ngIf="showCards" [idPago]="idPago" [idEstadoPago]="idEstadoPago" [modoEdicion]="modoEdicion"
-    [numCriterios]="numCriterios" [editingConceptos]="editingConceptos" [facturasMarcadas]="facturasMarcadas"></app-datos-pagos>
+  <app-datos-pagos *ngIf="showCards" [(idPago)]="idPago" [(idEstadoPago)]="idEstadoPago" [(modoEdicion)]="modoEdicion"
+    [numCriterios]="numCriterios" [editingConceptos]="editingConceptos" [facturasMarcadas]="facturasMarcadas"
+    (facturacionChange)="idFacturacion = $event">
+  </app-datos-pagos>
 
   <app-conceptos-pagos *ngIf="showCards" [idPago]="idPago" [idEstadoPago]="idEstadoPago" [idFacturacion]="idFacturacion"
-    (editing)="changeEditingConceptos($event)"></app-conceptos-pagos>
+    (editing)="changeEditingConceptos($event)" [modoEdicion]="modoEdicion"></app-conceptos-pagos>
 
-  <app-configuracion-ficheros *ngIf="showCards" [idPago]="idPago" [idEstadoPago]="idEstadoPago">
+  <app-configuracion-ficheros *ngIf="showCards" [idPago]="idPago" [idEstadoPago]="idEstadoPago"
+    [modoEdicion]="modoEdicion">
   </app-configuracion-ficheros>
 
-  <app-detalle-pago *ngIf="showCards" [idPago]="idPago" [idEstadoPago]="idEstadoPago"></app-detalle-pago>
+  <app-detalle-pago *ngIf="showCards" [idPago]="idPago" [idEstadoPago]="idEstadoPago" [modoEdicion]="modoEdicion">
+  </app-detalle-pago>
 
   <app-compensacion-factura *ngIf="showCards" [idPago]="idPago" [idEstadoPago]="idEstadoPago"
-    (facturasMarcadasEvent)="facturasMarcadas = $event">
+    (facturasMarcadasEvent)="facturasMarcadas = $event" [modoEdicion]="modoEdicion">
   </app-compensacion-factura>
 
   <div class="text-right main-button">

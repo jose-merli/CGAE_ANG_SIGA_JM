@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, SimpleChanges, OnChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { Message } from 'primeng/api';
 import { TranslateService } from '../../../../../../commons/translate';
@@ -12,7 +12,7 @@ import { SigaServices } from '../../../../../../_services/siga.service';
   templateUrl: './detalle-pago.component.html',
   styleUrls: ['./detalle-pago.component.scss']
 })
-export class DetallePagoComponent implements OnInit {
+export class DetallePagoComponent implements OnInit, OnChanges {
 
   progressSpinner: boolean = false;
   permisos;
@@ -21,6 +21,7 @@ export class DetallePagoComponent implements OnInit {
 
   @Input() idPago;
   @Input() idEstadoPago;
+  @Input() modoEdicion;
 
   @ViewChild("tabla") tabla;
 
@@ -41,10 +42,17 @@ export class DetallePagoComponent implements OnInit {
       }
 
       this.progressSpinner = false;
-      this.getNumApuntesPago();
+
+      if (this.modoEdicion) {
+        this.cargarDatosIniciales();
+      }
 
     }).catch(error => console.error(error));
 
+  }
+
+  cargarDatosIniciales() {
+    this.getNumApuntesPago();
   }
 
   showMessage(severity, summary, msg) {
@@ -90,6 +98,13 @@ export class DetallePagoComponent implements OnInit {
       sessionStorage.setItem("datosCartasPago", JSON.stringify(datosCartasPago));
 
       this.router.navigate(["/cartaFacturacionPago"]);
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+
+    if (changes.modoEdicion && changes.modoEdicion.currentValue && changes.modoEdicion.currentValue == true) {
+      this.cargarDatosIniciales();
     }
   }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, Output, EventEmitter } from '@angular/core';
 import { PagosjgItem } from '../../../../../../models/sjcs/PagosjgItem';
 import { ComboItem } from '../../../../../administracion/parametros/parametros-generales/parametros-generales.component';
 import { TranslateService } from '../../../../../../commons/translate/translation.service';
@@ -29,10 +29,14 @@ export class DatosPagosComponent implements OnInit {
 
   @Input() numCriterios;
   @Input() modoEdicion;
+  @Output() modoEdicionChange = new EventEmitter<boolean>();
   @Input() idPago;
+  @Output() idPagoChange = new EventEmitter<string>();
   @Input() idEstadoPago;
+  @Output() idEstadoPagoChange = new EventEmitter<string>();
   @Input() editingConceptos;
   @Input() facturasMarcadas: CompensacionFacItem[];
+  @Output() facturacionChange = new EventEmitter<string>();
 
   @ViewChild("tabla") tabla;
 
@@ -196,8 +200,12 @@ export class DatosPagosComponent implements OnInit {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.description));
           } else if (resp.status == 'OK') {
             this.idPago = resp.id;
+            this.idPagoChange.emit(this.idPago);
+            this.facturacionChange.emit(this.body.idFacturacion.toString());
             this.idEstadoPago = '10';
+            this.idEstadoPagoChange.emit(this.idEstadoPago);
             this.modoEdicion = true;
+            this.modoEdicionChange.emit(true);
             this.bodyAux = new PagosjgItem();
             this.bodyAux = JSON.parse(JSON.stringify(this.body));
           }
@@ -284,6 +292,35 @@ export class DatosPagosComponent implements OnInit {
   }
 
   ejecutar() {
+
+    if (this.modoEdicion && !this.disabledEjecutar()) {
+
+      this.progressSpinner = true;
+
+      const pago = new PagosjgItem();
+      pago.idPagosjg = this.idPago;
+
+      this.sigaService.post("pagosjcs_ejecutarPago", pago).subscribe(
+        data => {
+          this.progressSpinner = false;
+
+          const resp = JSON.parse(data.body);
+          const error = resp.error;
+
+          if (resp.status == 'KO' && error && null != error && null != error.description) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), error.description);
+          } else if (resp.status == 'OK') {
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          }
+
+        },
+        err => {
+          this.progressSpinner = false;
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+      );
+
+    }
 
   }
 

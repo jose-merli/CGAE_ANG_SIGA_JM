@@ -104,10 +104,10 @@
     </div>
     <div class="card-footer" *ngIf="showFicha">
       <div class="text-right main-button">
-        <button pButton type="button" iconPos="left" icon="fa fa-play"
+        <button *ngIf="idEstadoPago != '30'" pButton type="button" iconPos="left" icon="fa fa-play"
           [disabled]="disabledEjecutar() || !permisos || editingConceptos"
-          label="{{ 'general.boton.ejecutar' | translate }}"></button>
-        <button pButton type="button" iconPos="left" icon="fa fa-close"
+          label="{{ 'general.boton.ejecutar' | translate }}" (click)="ejecutar()"></button>
+        <button *ngIf="idEstadoPago == '20'" pButton type="button" iconPos="left" icon="fa fa-close"
           [disabled]="disabledCerrar() || !permisos || editingConceptos"
           label="{{ 'facturacionSJCS.facturacionesYPagos.cerrarAbonar' | translate }}"></button>
         <button pButton type="button" iconPos="left" icon="fa fa-lock-open" [disabled]='disabledReabrir() || !permisos'

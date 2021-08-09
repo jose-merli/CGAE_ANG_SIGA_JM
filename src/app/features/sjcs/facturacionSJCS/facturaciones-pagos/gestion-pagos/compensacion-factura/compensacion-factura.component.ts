@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, ChangeDetectorRef, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '../../../../../../commons/translate';
 import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacionSJCS';
@@ -16,7 +16,7 @@ import { ParametroItem } from '../../../../../../models/ParametroItem';
   templateUrl: './compensacion-factura.component.html',
   styleUrls: ['./compensacion-factura.component.scss']
 })
-export class CompensacionFacturaComponent implements OnInit {
+export class CompensacionFacturaComponent implements OnInit, OnChanges {
 
   selectedItem: number = 10;
   rowsPerPage: any = [];
@@ -38,6 +38,7 @@ export class CompensacionFacturaComponent implements OnInit {
 
   @Input() idPago;
   @Input() idEstadoPago;
+  @Input() modoEdicion;
   @Output() facturasMarcadasEvent = new EventEmitter<CompensacionFacItem[]>();
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
@@ -61,27 +62,36 @@ export class CompensacionFacturaComponent implements OnInit {
 
       this.progressSpinner = false;
 
-      let parametro = new ParametroRequestDto();
-      parametro.idInstitucion = this.sigaStorageService.institucionActual;
-      parametro.modulo = 'FCS';
-      parametro.parametrosGenerales = 'DEDUCIR_COBROS_AUTOMATICO';
+      this.getCols();
 
-      this.sigaServices.postPaginado("parametros_search", "?numPagina=1", parametro).subscribe(
-        data => {
-          const resp: ParametroDto = JSON.parse(data['body']);
-          const parametros = resp.parametrosItems;
-          parametros.forEach(el => {
-            if (el.parametro == 'DEDUCIR_COBROS_AUTOMATICO' && (el.idInstitucion == el.idinstitucionActual || el.idInstitucion == '0')) {
-              this.paramDeducirCobroAutom = el;
-            }
-          });
-
-          this.getCols();
-          this.getCompensacionFacturas(this.paramDeducirCobroAutom.valor.toString());
-        }
-      );
+      if (this.modoEdicion) {
+        this.cargarDatosIniciales();
+      }
 
     }).catch(error => console.error(error));
+
+  }
+
+  cargarDatosIniciales() {
+
+    let parametro = new ParametroRequestDto();
+    parametro.idInstitucion = this.sigaStorageService.institucionActual;
+    parametro.modulo = 'FCS';
+    parametro.parametrosGenerales = 'DEDUCIR_COBROS_AUTOMATICO';
+
+    this.sigaServices.postPaginado("parametros_search", "?numPagina=1", parametro).subscribe(
+      data => {
+        const resp: ParametroDto = JSON.parse(data['body']);
+        const parametros = resp.parametrosItems;
+        parametros.forEach(el => {
+          if (el.parametro == 'DEDUCIR_COBROS_AUTOMATICO' && (el.idInstitucion == el.idinstitucionActual || el.idInstitucion == '0')) {
+            this.paramDeducirCobroAutom = el;
+          }
+        });
+
+        this.getCompensacionFacturas(this.paramDeducirCobroAutom.valor.toString());
+      }
+    );
 
   }
 
@@ -139,7 +149,12 @@ export class CompensacionFacturaComponent implements OnInit {
   }
 
   onHideFicha() {
-    this.showFicha = !this.showFicha;
+
+    if (!this.modoEdicion) {
+      this.showFicha = false;
+    } else {
+      this.showFicha = !this.showFicha;
+    }
   }
 
   showMessage(severity, summary, msg) {
@@ -224,5 +239,11 @@ export class CompensacionFacturaComponent implements OnInit {
 
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+
+    if (changes.modoEdicion && changes.modoEdicion.currentValue && changes.modoEdicion.currentValue == true) {
+      this.cargarDatosIniciales();
+    }
+  }
 
 }

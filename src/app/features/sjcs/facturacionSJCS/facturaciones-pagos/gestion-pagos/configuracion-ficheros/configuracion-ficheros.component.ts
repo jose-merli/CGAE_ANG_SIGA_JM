@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, OnChanges } from '@angular/core';
 import { TranslateService } from '../../../../../../commons/translate';
 import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacionSJCS';
 import { CommonsService } from '../../../../../../_services/commons.service';
@@ -12,7 +12,7 @@ import { PagosjgDTO } from '../../../../../../models/sjcs/PagosjgDTO';
   templateUrl: './configuracion-ficheros.component.html',
   styleUrls: ['./configuracion-ficheros.component.scss']
 })
-export class ConfiguracionFicherosComponent implements OnInit {
+export class ConfiguracionFicherosComponent implements OnInit, OnChanges {
 
   showFicha: boolean = false;
   progressSpinner: boolean = false;
@@ -27,6 +27,7 @@ export class ConfiguracionFicherosComponent implements OnInit {
 
   @Input() idPago;
   @Input() idEstadoPago;
+  @Input() modoEdicion;
 
   constructor(private commonsService: CommonsService,
     private translateService: TranslateService,
@@ -47,19 +48,31 @@ export class ConfiguracionFicherosComponent implements OnInit {
 
       this.progressSpinner = false;
 
-      this.getcomboCuentasBanc();
-      this.getComboSufijos();
-      this.getComboPropTransSepa();
-      this.getComboPropOtrTrans();
-
-      this.getConfigFichAbonos();
+      if (this.modoEdicion) {
+        this.cargarDatosIniciales();
+      }
 
     }).catch(error => console.error(error));
 
   }
 
+  cargarDatosIniciales() {
+
+    this.getcomboCuentasBanc();
+    this.getComboSufijos();
+    this.getComboPropTransSepa();
+    this.getComboPropOtrTrans();
+
+    this.getConfigFichAbonos();
+  }
+
   onHideFicha() {
-    this.showFicha = !this.showFicha;
+
+    if (!this.modoEdicion) {
+      this.showFicha = false;
+    } else {
+      this.showFicha = !this.showFicha;
+    }
   }
 
   showMessage(severity, summary, msg) {
@@ -292,6 +305,13 @@ export class ConfiguracionFicherosComponent implements OnInit {
 
   isPagoCerrado() {
     return (this.idEstadoPago == '30');
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+
+    if (changes.modoEdicion && changes.modoEdicion.currentValue && changes.modoEdicion.currentValue == true) {
+      this.cargarDatosIniciales();
+    }
   }
 
 }
