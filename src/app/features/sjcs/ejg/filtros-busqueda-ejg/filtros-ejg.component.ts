@@ -90,6 +90,7 @@ export class FiltrosEjgComponent implements OnInit {
     private commonServices: CommonsService) { }
 
   ngOnInit() {
+    this.progressSpinner = true;
     this.getCombos();
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisos = this.persistenceService.getPermisos();
@@ -136,6 +137,7 @@ export class FiltrosEjgComponent implements OnInit {
     setTimeout(() => {
       this.inputNumero.nativeElement.focus();  
     }, 300);
+    this.progressSpinner = false;
   }
 
   getCombos() {
