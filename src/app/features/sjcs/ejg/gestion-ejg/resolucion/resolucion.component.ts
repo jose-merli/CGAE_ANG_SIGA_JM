@@ -326,6 +326,7 @@ export class ResolucionComponent implements OnInit {
     this.confirmationService.confirm({
       message: mess,
       icon: icon,
+      key: "cd",
       accept: () => {
         this.rest()
       },
