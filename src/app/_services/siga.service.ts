@@ -626,6 +626,7 @@ export class SigaServices {
         ...endpoints_justiciables,
         ...endpoints_oficio,
         ...endpoints_maestros,
+		...endpoints_guardia
     };
 
 	private menuToggled = new Subject<any>();
