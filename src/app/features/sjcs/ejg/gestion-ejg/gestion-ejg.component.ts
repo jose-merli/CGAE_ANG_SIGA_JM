@@ -119,13 +119,14 @@ export class GestionEjgComponent implements OnInit {
           this.body = JSON.parse(sessionStorage.getItem("EJGItem"));
           sessionStorage.removeItem("EJGItem");
           this.persistenceService.setDatos(this.body);
+          this.updateTarjResumen();
           this.modoEdicion = true;
         }
       }
     }
 
-    sessionStorage.removeItem("EJGItem");
-    this.updateTarjResumen();
+    //sessionStorage.removeItem("EJGItem");
+    //this.updateTarjResumen();
         
     this.obtenerPermisos();
       
