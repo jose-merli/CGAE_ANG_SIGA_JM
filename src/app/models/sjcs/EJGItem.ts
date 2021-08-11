@@ -18,14 +18,14 @@ export class EJGItem {
     fechaLimiteHast: Date;
 
     idInstitucion: string;
-    
+
     dictamenSing: string;
     fundamentoCalifDes: string;
 
     fechaDictamenDesd: Date;
     fechaDictamenHast: Date;
-    
-    
+
+
     fechaResolucionDesd: Date;
     fechaResolucionHast: Date;
     impugnacion: string;
@@ -43,13 +43,13 @@ export class EJGItem {
     procedimiento: string;
     nig: string;
     idsituacion: number;
-	numerodiligencia: string;
-	comisaria: number;
+    numerodiligencia: string;
+    comisaria: number;
     delitos: string;
     idPretension: number;
     observaciones: string;
 
-    
+
     fechaPonenteDesd: Date;
     fechaPonenteHast: Date;
     numRegRemesa: string;
@@ -83,11 +83,11 @@ export class EJGItem {
     fechalimitepresentacion: Date;
     historico: boolean;
     observacionesDictamen: String;
-    
+
     numDesigna: String;
 
     //Procurador (Ficha pre-designacion)
-    
+
     fechaDesProc: Date;
     idProcurador: string;
     idInstitucionProc: number;
@@ -113,7 +113,7 @@ export class EJGItem {
     numActa: string;
     annioCAJG: string;
     numCAJG: string;
-    
+
     ponente: string;
     resolucion: string;
     fundamentoJuridico: string;
@@ -132,7 +132,8 @@ export class EJGItem {
     fechaEstadoNew: Date;
     estadoNew: String;
 
-    
+    // Estados de solicitud de expediente económico
+    estadosSolicitudExpEco: String[];
 
     constructor() { }
 }
