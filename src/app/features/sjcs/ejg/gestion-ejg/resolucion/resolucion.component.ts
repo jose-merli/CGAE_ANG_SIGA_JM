@@ -346,6 +346,14 @@ export class ResolucionComponent implements OnInit {
 
   rest() {
     this.resolucion = JSON.parse(JSON.stringify(this.bodyInicial));
+    if (this.resolucion.fechaPresentacionPonente != undefined)
+          this.resolucion.fechaPresentacionPonente = new Date(this.resolucion.fechaPresentacionPonente);
+        if (this.resolucion.fechaResolucionCAJG != undefined)
+          this.resolucion.fechaResolucionCAJG = new Date(this.resolucion.fechaResolucionCAJG);
+        if (this.resolucion.fechaRatificacion != undefined)
+          this.resolucion.fechaRatificacion = new Date(this.resolucion.fechaRatificacion);
+        if (this.resolucion.fechaNotificacion != undefined)
+          this.resolucion.fechaNotificacion = new Date(this.resolucion.fechaNotificacion);
   }
 
   checkPermisosOpenActa() {
@@ -392,11 +400,11 @@ export class ResolucionComponent implements OnInit {
   }
 
   fillFechaPresPonente(event) {
-    this.resolucion.fechaPresentacionPonente = event;
+    if(event != null) this.resolucion.fechaPresentacionPonente = new Date(event);
   }
 
   fillFechaResCAJG(event) {
-    this.resolucion.fechaResolucionCAJG = event;
+    if(event != null)this.resolucion.fechaResolucionCAJG = new Date(event);
   }
 
   fillFechaResCAJGActa(event){
@@ -413,11 +421,11 @@ export class ResolucionComponent implements OnInit {
   }
 
   fillFechaNotif(event) {
-    this.resolucion.fechaNotificacion = event;
+    if(event != null)this.resolucion.fechaNotificacion = new Date(event);
   }
 
   fillFechaResFirme(event) {
-    this.resolucion.fechaRatificacion = event;
+    if(event != null)this.resolucion.fechaRatificacion =new Date(event);
   }
 
   onChangeCheckT(event) {
