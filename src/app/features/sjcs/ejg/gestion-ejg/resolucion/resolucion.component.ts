@@ -7,6 +7,7 @@ import { ResolucionEJGItem } from '../../../../../models/sjcs/ResolucionEJGItem'
 import { TranslateService } from '../../../../../commons/translate/translation.service';
 import { Router } from "@angular/router";
 import { ConfirmationService } from 'primeng/api';
+import { saveAs } from "file-saver/FileSaver";
 
 @Component({
   selector: 'app-resolucion',
@@ -446,6 +447,19 @@ export class ResolucionComponent implements OnInit {
   }
 
   descargarDocumentoResolucion(){
+    this.progressSpinner = true;
 
+    this.sigaServices.postDownloadFiles("gestionejg_descargarDocumentoResolucion", this.resolucion.docResolucion).subscribe(
+      n => {
+        this.progressSpinner = false;
+
+        let blob = new Blob([n], { type: "application/zip" });
+        saveAs(blob, this.resolucion.docResolucion);
+      },
+      err => {
+        this.progressSpinner = false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
   }
 }
