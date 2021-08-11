@@ -326,6 +326,7 @@ export class ResolucionComponent implements OnInit {
     this.confirmationService.confirm({
       message: mess,
       icon: icon,
+      key: "cd",
       accept: () => {
         this.rest()
       },
@@ -406,10 +407,8 @@ export class ResolucionComponent implements OnInit {
 
     //Reasignamos la fecha al traerse del back en formato string
     //No se realiza directamente ya que la conversion de new Date con strings se realiza desde MM/DD/YYYY y se nos devuelve DD/MM/YYY desde el back
-    
     var dateParts = fechaActa.split("/");
 
-    // month is 0-based, that's why we need dataParts[1] - 1
     this.resolucion.fechaResolucionCAJG = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
   }
 
@@ -438,4 +437,7 @@ export class ResolucionComponent implements OnInit {
     });
   }
 
+  descargarDocumentoResolucion(){
+
+  }
 }
