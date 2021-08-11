@@ -408,6 +408,15 @@
               [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
             </p-dropdown>
           </div>
+
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{"justiciaGratuita.ejg.solicitante.solicitudExpEconomico" | translate}}</label>
+            <p-multiSelect #solicitudExpEconomico class="select-form" [(ngModel)]='body.estadosSolicitudExpEco'
+              defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboEstadosExpEco" [filter]="true"
+              maxSelectedLabels="10" [selectedItemsLabel]="'{0} estados seleccionados'" filterBy="label,labelSinTilde"
+              styleClass="widthAll" (onPanelShow)="focusInputField(solicitudExpEconomico)">
+            </p-multiSelect>
+          </div>
         </div>
       </div>
 

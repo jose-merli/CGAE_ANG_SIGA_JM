@@ -52,6 +52,17 @@ export class FiltrosEjgComponent implements OnInit {
   comboTipoLetrado = datos_combos.comboTipoLetrado;
   comboRol = [];
   comboJuzgado = [];
+  comboEstadosExpEco = [
+    { label: this.translateService.instant('justiciaGratuita.ejg.solicitante.solicitudExpEconomico.estado.inicial'), value: '10' },
+    { label: this.translateService.instant('justiciaGratuita.ejg.solicitante.solicitudExpEconomico.estado.inicialEsperando'), value: '15' },
+    { label: this.translateService.instant('justiciaGratuita.ejg.solicitante.solicitudExpEconomico.estado.espera'), value: '20' },
+    { label: this.translateService.instant('justiciaGratuita.ejg.solicitante.solicitudExpEconomico.estado.esperaEsperando'), value: '25' },
+    { label: this.translateService.instant('justiciaGratuita.ejg.solicitante.solicitudExpEconomico.estado.pendienteInfo'), value: '23' },
+    { label: this.translateService.instant('justiciaGratuita.ejg.solicitante.solicitudExpEconomico.estado.finalizado'), value: '30' },
+    { label: this.translateService.instant('justiciaGratuita.ejg.solicitante.solicitudExpEconomico.estado.errorSolicitud'), value: '40' },
+    { label: this.translateService.instant('justiciaGratuita.ejg.solicitante.solicitudExpEconomico.estado.errorConsultaInfo'), value: '50' },
+    { label: this.translateService.instant('justiciaGratuita.ejg.solicitante.solicitudExpEconomico.estado.caducado'), value: '60' }
+  ];
   institucionActual;
   maxDate;
   minDate;
