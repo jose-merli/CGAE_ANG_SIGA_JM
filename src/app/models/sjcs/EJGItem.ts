@@ -135,5 +135,8 @@ export class EJGItem {
     // Estados de solicitud de expediente económico
     estadosSolicitudExpEco: String[];
 
+    // Check que indica si se busca EJGs por estados concretos o que hayan pasado por ese estado en algún momento
+    ultimoEstado: boolean = true;
+
     constructor() { }
 }
