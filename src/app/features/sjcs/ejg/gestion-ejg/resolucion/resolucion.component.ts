@@ -7,6 +7,7 @@ import { ResolucionEJGItem } from '../../../../../models/sjcs/ResolucionEJGItem'
 import { TranslateService } from '../../../../../commons/translate/translation.service';
 import { Router } from "@angular/router";
 import { ConfirmationService } from 'primeng/api';
+import { saveAs } from "file-saver/FileSaver";
 
 @Component({
   selector: 'app-resolucion',
@@ -346,6 +347,14 @@ export class ResolucionComponent implements OnInit {
 
   rest() {
     this.resolucion = JSON.parse(JSON.stringify(this.bodyInicial));
+    if (this.resolucion.fechaPresentacionPonente != undefined)
+          this.resolucion.fechaPresentacionPonente = new Date(this.resolucion.fechaPresentacionPonente);
+        if (this.resolucion.fechaResolucionCAJG != undefined)
+          this.resolucion.fechaResolucionCAJG = new Date(this.resolucion.fechaResolucionCAJG);
+        if (this.resolucion.fechaRatificacion != undefined)
+          this.resolucion.fechaRatificacion = new Date(this.resolucion.fechaRatificacion);
+        if (this.resolucion.fechaNotificacion != undefined)
+          this.resolucion.fechaNotificacion = new Date(this.resolucion.fechaNotificacion);
   }
 
   checkPermisosOpenActa() {
@@ -392,11 +401,11 @@ export class ResolucionComponent implements OnInit {
   }
 
   fillFechaPresPonente(event) {
-    this.resolucion.fechaPresentacionPonente = event;
+    if(event != null) this.resolucion.fechaPresentacionPonente = new Date(event);
   }
 
   fillFechaResCAJG(event) {
-    this.resolucion.fechaResolucionCAJG = event;
+    if(event != null)this.resolucion.fechaResolucionCAJG = new Date(event);
   }
 
   fillFechaResCAJGActa(event){
@@ -413,11 +422,11 @@ export class ResolucionComponent implements OnInit {
   }
 
   fillFechaNotif(event) {
-    this.resolucion.fechaNotificacion = event;
+    if(event != null)this.resolucion.fechaNotificacion = new Date(event);
   }
 
   fillFechaResFirme(event) {
-    this.resolucion.fechaRatificacion = event;
+    if(event != null)this.resolucion.fechaRatificacion =new Date(event);
   }
 
   onChangeCheckT(event) {
@@ -438,6 +447,19 @@ export class ResolucionComponent implements OnInit {
   }
 
   descargarDocumentoResolucion(){
+    this.progressSpinner = true;
 
+    this.sigaServices.postDownloadFiles("gestionejg_descargarDocumentoResolucion", this.resolucion.docResolucion).subscribe(
+      n => {
+        this.progressSpinner = false;
+
+        let blob = new Blob([n], { type: "application/zip" });
+        saveAs(blob, this.resolucion.docResolucion);
+      },
+      err => {
+        this.progressSpinner = false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
   }
 }
