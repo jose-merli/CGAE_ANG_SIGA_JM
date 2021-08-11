@@ -179,7 +179,10 @@ export class InformeCalificacionComponent implements OnInit {
   }
 
   fillFechaDictamen(event) {
-    this.dictamen.fechaDictamen = event;
+    if(event != null && !isNaN(Date.parse(event))){
+      this.dictamen.fechaDictamen = new Date(event);
+    }
+    
   }
 
   getEstados() {
@@ -233,7 +236,7 @@ export class InformeCalificacionComponent implements OnInit {
             else{
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
             this.bodyInicial = this.dictamen;
-
+            this.bodyInicial.fechaDictamen = new Date(this.dictamen.fechaDictamen);
             //Revisamos la cabecera de la tarjeta
             this.comboFundamentoCalif.forEach(pres => {
               if (pres.value == this.dictamen.fundamentoCalif) this.fundamentoCalifCabecera = pres.label;
@@ -354,7 +357,9 @@ export class InformeCalificacionComponent implements OnInit {
   }
 
   rest() {
-    this.dictamen = JSON.parse(JSON.stringify(this.bodyInicial));
+    let bodyinit:EJGItem = JSON.parse(JSON.stringify(this.bodyInicial));
+    this.dictamen = bodyinit;
+    this.dictamen.fechaDictamen = new Date(bodyinit.fechaDictamen);
   }
 
   download() {
