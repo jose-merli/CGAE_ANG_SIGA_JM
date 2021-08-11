@@ -87,6 +87,7 @@ export class EstadosComponent implements OnInit {
       this.modoEdicion = true;
       this.body = this.persistenceService.getDatos();
       this.item = this.body;
+      this.creaEstado = true;
       this.getEstados(this.item);
       this.getCols();
     } else {
@@ -271,6 +272,7 @@ export class EstadosComponent implements OnInit {
       if (this.selectedDatos[i].automatico != "0") {
         this.progressSpinner = false;
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("areasmaterias.materias.ficha.eliminarError"));
+        this.activarRestablecerEstados();
         return;
       }
       
@@ -414,24 +416,30 @@ export class EstadosComponent implements OnInit {
     }else{
       
        this.progressSpinner = true;
-       this.selectedDatos[0].fechaInicio=this.fechaEstado;
-       this.selectedDatos[0].idEstadoejg=this.valueComboEstado;
-       this.selectedDatos[0].observaciones=this.observacionesEstado;
- 
-     this.sigaServices.post("gestionejg_editarEstado", this.selectedDatos[0]).subscribe(
-       n => {
-         this.progressSpinner = false;
-         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-         this.getEstados(this.item);
-       },
-       err => {
-         console.log(err);
-         this.progressSpinner = false;
-         //this.busqueda.emit(false);
-         this.selectedDatos=[];
-         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+       if(this.selectedDatos[0].automatico != "0"){
+        this.progressSpinner = false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("informesycomunicaciones.consultas.noPuedeEditarConsulta"));
+       }else{
+        this.selectedDatos[0].fechaInicio=this.fechaEstado;
+        this.selectedDatos[0].idEstadoejg=this.valueComboEstado;
+        this.selectedDatos[0].observaciones=this.observacionesEstado;
+  
+      this.sigaServices.post("gestionejg_editarEstado", this.selectedDatos[0]).subscribe(
+        n => {
+          this.progressSpinner = false;
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.getEstados(this.item);
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+          //this.busqueda.emit(false);
+          this.selectedDatos=[];
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        }
+      ); 
        }
-     ); 
+       
      
     }
 
@@ -514,9 +522,10 @@ export class EstadosComponent implements OnInit {
     this.restablecer = true;
     this.editaEstado = false;
     
-    if (!this.creaEstado) {
+    
       if(this.datosEstados[indice] != undefined && this.datosEstados[indice].automatico != 1 && this.datosEstados[indice].fechabaja == null){
         this.editaEstado = true;
+        this.creaEstado = false;
         this.guardar = true;
         for(let j = 0;j <= this.datosEstados.length;j++){
           if(j == indice){
@@ -529,18 +538,23 @@ export class EstadosComponent implements OnInit {
         
 
       } else {
-        this.editaEstado = false;
+        //this.editaEstado = false;
         this.datosEstados[indice].isMod = false;
-        this.restablecer = true;
+        //this.restablecer = true;
+        this.restablecer = false;
+      this.editaEstado = false;
+      this.creaEstado = true;
+      this.guardar = false;
+      this.selectedDatos = [];
 
       }
     } 
-  }
+  
 
   activarRestablecerEstados() {
       this.restablecer = false;
       this.editaEstado = false;
-      this.creaEstado = false;
+      this.creaEstado = true;
       this.guardar = false;
       this.selectedDatos = [];
       this.getEstados(this.item);
