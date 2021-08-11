@@ -76,12 +76,13 @@
               <label> / {{'justiciaGratuita.sjcs.designas.DatosIden.numero' | translate}}</label>
               <input type="text" class="form-control" maxLength="20" pInputText [(ngModel)]="resolucion.numeroCAJG">
             </div>
-            <div *ngIf="resolucion.documentoResolucion" class="form-group col-lg-6 col-md-6" style="margin-top: 3%;">
+            <div *ngIf="resolucion.docResolucion != undefined && resolucion.docResolucion!=null && permisoEscritura" class="form-group col-lg-6 col-md-6">
               <label> {{'justiciaGratuita.ejg.resolucion.documentoResolucion' | translate}}</label>
             </div>
-            <div  *ngIf="resolucion.documentoResolucion" class="form-group col-lg-6 col-md-6">
+            <div style="display: flex;" *ngIf="resolucion.docResolucion != undefined && resolucion.docResolucion!=null && permisoEscritura" class="form-group col-lg-6 col-md-6">
+              <label> {{ resolucion.docResolucion }}</label> &nbsp;
               <div class="main-button">
-                <button (click)="descargarDocumentoResolucion()" pButton [disabled]="!permisoEscritura" type="button" label="{{ 'general.boton.download' | translate}}"></button>
+                <button (click)="descargarDocumentoResolucion()" pButton type="button" icon="fa fa-download" iconPos="center"></button>
               </div>
             </div>
           </div>
@@ -166,7 +167,7 @@
             icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
         </div>
       </div>
-      <p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" key="cd" #cd>
+      <p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" #cd>
         <p-footer>
           <button type="button" pButton icon="fa-check" label="Si" (click)="cd.accept()"></button>
           <button type="button" pButton icon="fa-close" label="No" (click)="cd.reject()"></button>
