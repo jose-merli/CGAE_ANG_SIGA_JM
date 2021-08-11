@@ -244,6 +244,8 @@ export class ImpugnacionComponent implements OnInit {
   }
   rest() {
     this.impugnacion = JSON.parse(JSON.stringify(this.bodyInicial));
+    this.impugnacion.fechaAuto = new Date(this.impugnacion.fechaAuto);
+    this.impugnacion.fechaPublicacion = new Date(this.impugnacion.fechaPublicacion);
   }
   checkPermisosSave() {
     let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
@@ -265,10 +267,10 @@ export class ImpugnacionComponent implements OnInit {
   }
 
   fillFechaAuto(event) {
-    this.impugnacion.fechaAuto = event;
+    if(event != null)this.impugnacion.fechaAuto = new Date(event);
   }
   fillFechaPublicacion(event) {
-    this.impugnacion.fechaPublicacion = event;
+    if(event != null)this.impugnacion.fechaPublicacion = new Date(event);
   }
   onChangeCheckBis(event) {
     this.impugnacion.bis = event;

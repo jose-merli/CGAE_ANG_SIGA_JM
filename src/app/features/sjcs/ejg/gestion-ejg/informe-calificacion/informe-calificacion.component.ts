@@ -357,9 +357,8 @@ export class InformeCalificacionComponent implements OnInit {
   }
 
   rest() {
-    let bodyinit:EJGItem = JSON.parse(JSON.stringify(this.bodyInicial));
-    this.dictamen = bodyinit;
-    this.dictamen.fechaDictamen = new Date(bodyinit.fechaDictamen);
+    this.dictamen = JSON.parse(JSON.stringify(this.bodyInicial));
+    this.dictamen.fechaDictamen = new Date(this.dictamen.fechaDictamen);
   }
 
   download() {
