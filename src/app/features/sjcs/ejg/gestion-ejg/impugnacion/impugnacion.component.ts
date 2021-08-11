@@ -225,6 +225,7 @@ export class ImpugnacionComponent implements OnInit {
     this.confirmationService.confirm({
       message: mess,
       icon: icon,
+      key: "rest",
       accept: () => {
         this.rest()
       },

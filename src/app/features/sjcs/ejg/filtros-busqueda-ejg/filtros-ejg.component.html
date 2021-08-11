@@ -55,13 +55,19 @@
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ "justiciaGratuita.ejg.datosGenerales.TipoEJG" | translate }}</label>
-          <p-dropdown class="select-form" [(ngModel)]='body.tipoEJG' placeholder="Seleccionar" [options]="comboTipoEJG"
-            [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+          <p-multiSelect #tipoEJG class="select-form" [(ngModel)]='body.tipoEJG'
+            defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboTipoEJG" [filter]="true"
+            maxSelectedLabels="10" [selectedItemsLabel]="'{0} tipos seleccionados'" filterBy="label,labelSinTilde"
+            styleClass="widthAll" (onPanelShow)="focusInputField(tipoEJG)">
+          </p-multiSelect>
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ "justiciaGratuita.ejg.datosGenerales.EstadoEJG" | translate }}</label>
-          <p-dropdown class="select-form" [(ngModel)]='body.estadoEJG' placeholder="Seleccionar"
-            [options]="comboEstadoEJG" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+          <p-multiSelect #estadoEJG class="select-form" [(ngModel)]='body.estadoEJG'
+            defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboEstadoEJG" [filter]="true"
+            maxSelectedLabels="10" [selectedItemsLabel]="'{0} estados seleccionados'" filterBy="label,labelSinTilde"
+            styleClass="widthAll" (onPanelShow)="focusInputField(estadoEJG)">
+          </p-multiSelect>
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ "justiciaGratuita.ejg.datosGenerales.FechaEstadoDesd" | translate }}
@@ -81,15 +87,19 @@
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ "justiciaGratuita.ejg.datosGenerales.TipoEJGColegio" | translate }}</label>
-          <p-dropdown class="select-form" [(ngModel)]='body.tipoEJGColegio' placeholder="Seleccionar"
-            [options]="comboTipoEJGColegio" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
-          </p-dropdown>
+          <p-multiSelect #tipoEJGColegio class="select-form" [(ngModel)]='body.tipoEJGColegio'
+            defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboTipoEJGColegio" [filter]="true"
+            maxSelectedLabels="10" [selectedItemsLabel]="'{0} colegios seleccionados'" filterBy="label,labelSinTilde"
+            styleClass="widthAll" (onPanelShow)="focusInputField(tipoEJGColegio)">
+          </p-multiSelect>
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ "justiciaGratuita.ejg.datosGenerales.CreadoDesde" | translate }}</label>
-          <p-dropdown class="select-form" [(ngModel)]='body.creadoDesde' placeholder="Seleccionar"
-            [options]="comboCreadoDesde" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
-          </p-dropdown>
+          <p-multiSelect #creadoDesde class="select-form" [(ngModel)]='body.creadoDesde'
+            defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboCreadoDesde" [filter]="true"
+            maxSelectedLabels="10" [selectedItemsLabel]="'{0} elementos seleccionados'" filterBy="label,labelSinTilde"
+            styleClass="widthAll" (onPanelShow)="focusInputField(creadoDesde)">
+          </p-multiSelect>
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ "justiciaGratuita.ejg.datosGenerales.FechaLimiteDesd" | translate }}
@@ -124,7 +134,8 @@
             <label>{{ "justiciaGratuita.ejg.datosGenerales.Dictamen" | translate }}</label>
             <p-multiSelect class="select-form" [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='bodyDictamen'
               [options]="comboDictamen" [selectedItemsLabel]="textSelected" styleClass="widthAll"
-              (onChange)="onChangeDictamen()" [filter]="true" filterBy="label,labelSinTilde,value" maxSelectedLabels="10">
+              (onChange)="onChangeDictamen()" [filter]="true" filterBy="label,labelSinTilde,value"
+              maxSelectedLabels="10">
             </p-multiSelect>
           </div>
 
@@ -249,8 +260,7 @@
 
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{'justiciaGratuita.ejg.datosGenerales.numAnnioProcedimiento'|translate}}</label>
-            <input type="text" class="form-control" maxLength="15" pInputText
-              [(ngModel)]="body.numAnnioProcedimiento">
+            <input type="text" class="form-control" maxLength="15" pInputText [(ngModel)]="body.numAnnioProcedimiento">
           </div>
 
           <div class="form-group-interlineado col-lg-3 col-md-3">
@@ -323,17 +333,17 @@
             <div class="form-row">
               <div class="col-lg-4 col-md-4 form-group-interlineado">
                 <input type="text" class="form-control" maxLength="8" (keypress)="numberOnly($event)" pInputText
-                [(ngModel)]="body.numRegRemesa1">
+                  [(ngModel)]="body.numRegRemesa1">
               </div>
               <div class="col-lg-4 col-md-4 form-group-interlineado">
-                <input type="text" class="form-control" maxLength="8" [ngClass]="styleObligatorio(body.numRegRemesa2)" (keypress)="numberOnly($event)" pInputText
-                [(ngModel)]="body.numRegRemesa2">
+                <input type="text" class="form-control" maxLength="8" [ngClass]="styleObligatorio(body.numRegRemesa2)"
+                  (keypress)="numberOnly($event)" pInputText [(ngModel)]="body.numRegRemesa2">
               </div>
               <div class="col-lg-4 col-md-4 form-group-interlineado">
-                <input type="text" class="form-control" maxLength="8" [ngClass]="styleObligatorio(body.numRegRemesa3)" (keypress)="numberOnly($event)" pInputText
-                [(ngModel)]="body.numRegRemesa3">
+                <input type="text" class="form-control" maxLength="8" [ngClass]="styleObligatorio(body.numRegRemesa3)"
+                  (keypress)="numberOnly($event)" pInputText [(ngModel)]="body.numRegRemesa3">
               </div>
-     
+
             </div>
           </div>
 
@@ -450,8 +460,8 @@
            label="{{ 'general.boton.clear' | translate}}"></button>
         <button (click)="isBuscar()" pButton type="button" icon="fa fa-search" iconPos="left"
           label="{{'general.boton.search' | translate}}"></button>
-        <button (click)="checkPermisosIsNuevo()"  [disabled]="!permisoEscritura" pButton type="button"  icon="fa fa-plus"  iconPos="left"
-           label="{{ 'general.boton.new' | translate}}"></button>
+        <button (click)="checkPermisosIsNuevo()" [disabled]="!permisoEscritura" pButton type="button"  icon="fa fa-plus"
+           iconPos="left"  label="{{ 'general.boton.new' | translate}}"></button>
       </div>
     </div>
   </div>
