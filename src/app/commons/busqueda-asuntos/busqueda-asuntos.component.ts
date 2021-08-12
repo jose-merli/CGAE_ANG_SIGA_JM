@@ -106,9 +106,9 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
       this.datosAsociar = event;
 
       if (this.fromEJG) 
-        this.confirmCopiarEJG(this.datosAsociar);
+        this.confirmAsociarEJG(this.datosAsociar);
       else if (this.fromDES) 
-        this.confirmCopiarDES(this.datosAsociar);
+        this.confirmAsociarDES(this.datosAsociar);
     }
   }
 
@@ -133,7 +133,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
 
   confirmAsociarEJG(data) {
     let mess = this.translateService.instant(
-      "general.message.aceptar"
+      "justiciaGratuita.ejg.busquedaAsuntos.confirmacionAsociarEjg"
     );
     let icon = "fa fa-edit";
     this.confirmationService.confirm({
@@ -320,7 +320,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
 
   confirmAsociarDES(data) {
     let mess = this.translateService.instant(
-      "justiciaGratuita.ejg.message.eliminarEstado"
+      "justiciaGratuita.ejg.busquedaAsuntos.confirmacionAsociarDes"
     );
     let icon = "fa fa-edit";
     this.confirmationService.confirm({
