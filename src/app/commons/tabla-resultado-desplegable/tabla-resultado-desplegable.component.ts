@@ -1313,6 +1313,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.newActuacionesArr = []; //limpiamos
     this.rowValidadas = [];
     sessionStorage.setItem("rowIdsToUpdate", JSON.stringify(this.rowIdsToUpdate));
+    this.refreshData.emit(true);
   }
 
   eliminar(){
