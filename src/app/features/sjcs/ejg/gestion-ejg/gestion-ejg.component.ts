@@ -100,9 +100,10 @@ export class GestionEjgComponent implements OnInit {
     if(sessionStorage.getItem("EJGItemDesigna")){
       //obtiene un EJG desde la tarjeta relaciones de la ficha designacion
       this.body = JSON.parse(sessionStorage.getItem("EJGItemDesigna"));
+      sessionStorage.removeItem("EJGItemDesigna")
       this.persistenceService.setDatos(this.body);
       this.modoEdicion = true;
-      sessionStorage.removeItem("EJGItemDesigna")
+      
     }else{
       this.body = this.persistenceService.getDatos();
       if (this.body != undefined && this.body != null) {

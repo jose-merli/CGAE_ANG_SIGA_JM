@@ -248,7 +248,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     //Se comprueba si se procede de la pantalla de gestion de EJG
     if (sessionStorage.getItem("EJG")) {
       this.datosEJG =JSON.parse(sessionStorage.getItem("EJG"));
-      
+      sessionStorage.removeItem("EJG");
 
       //Datos de la tarjeta datos generales
       //Comprobar art 27.
@@ -371,9 +371,9 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     sessionStorage.removeItem("datosGeneralesDesigna");
     this.progressSpinner = true;
     this.msgs = [];
-    if (detail == "save" && (this.inputs[0].value == "" || this.inputs[0].value == undefined)) {
+    /* if (detail == "save" && (this.inputs[0].value == "" || this.inputs[0].value == undefined)) {
       this.confirmarActivar(severity, summary, detail);
-    } else {
+    } else { */
       
       if (detail == "save" && (this.anio.value == "") ) {
         detail = "Guardar";
@@ -425,7 +425,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                     //Se debe añadir a la BBDD estos mensajes (etiquetas)
                     if(JSON.parse(m.body).error.code==200)this.msgs = [{ severity: "success", summary: "Asociación con EJG realizada correctamente", detail: this.translateService.instant( JSON.parse(m.body).error.description) }];
                     else this.msgs = [{ severity: "error", summary: "Asociación con EJG fallida", detail: this.translateService.instant( JSON.parse(m.body).error.description) }];
-                    sessionStorage.removeItem("EJG");
+                   // sessionStorage.removeItem("EJG");
 
                     //Una vez se han asociado el ejg y la designa, procedemos a traer los posibles datos de pre-designacion
                     this.sigaServices.post("gestionejg_getEjgDesigna", this.datosEJG).subscribe(
@@ -544,7 +544,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         }
       }
 
-    }
+   // }
 
     if (detail == "Restablecer") {
       this.nuevaDesigna = sessionStorage.getItem("nuevaDesigna");

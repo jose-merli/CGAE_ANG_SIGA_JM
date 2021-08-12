@@ -298,24 +298,33 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
            this.porhacer();
           break;
         case 'E':
-
+        this.progressSpinner = true;
         let ejgItem = new EJGItem();
         ejgItem.annio = dato.anio;
         ejgItem.numero = dato.numero;
         ejgItem.idInstitucion = dato.idinstitucion;
-        ejgItem.turnoDes = dato.desturno;
         ejgItem.tipoEJG = dato.idtipo;
-        ejgItem.idTurno = dato.idturno;
-        ejgItem.numDesigna = dato.iddesigna;
-        ejgItem.fechaApertura = dato.fechaasunto;
-        ejgItem.numAnnioProcedimiento = dato.dilnigproc.split(' - ')[2];
-        ejgItem.numerodiligencia = dato.dilnigproc.split(' - ')[0];
-        ejgItem.nig = dato.dilnigproc.split(' - ')[1];
 
-        //Se deberia añadir una llamada al servicio "datosEJG" (gestionejg_datosEJG) para obtener todos los datos 
-        //necesarios del EJG seleccionado. Actualmente falta traer del back en esta tabla su tipoejg.
-        sessionStorage.setItem("EJGItemDesigna",JSON.stringify(ejgItem));
-
+        let result;
+        // al no poder obtener todos los datos del EJG necesarios para obtener su informacion
+        //se hace una llamada a al base de datos pasando las claves primarias y obteniendo los datos necesarios
+        this.sigaServices.post("filtrosejg_busquedaEJG", ejgItem).subscribe(
+          n => {
+            result = JSON.parse(n.body).ejgItems;
+            sessionStorage.setItem("EJGItemDesigna",JSON.stringify(result[0]));
+            let error = JSON.parse(n.body).error;
+          
+            this.progressSpinner = false;
+            if (error != null && error.description != null) {
+              this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
+            }
+          },
+          err => {
+            this.progressSpinner = false;
+            console.log(err);
+          }
+        );
+        
           this.router.navigate(["/gestionEjg"]);
           break;
       }

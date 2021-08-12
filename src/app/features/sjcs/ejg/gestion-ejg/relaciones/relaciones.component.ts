@@ -466,7 +466,7 @@ export class RelacionesComponent implements OnInit {
         break;
         case 'DESIGNACIÓN':
           let desItem : any = new DesignaItem(); 
-          let ape = dato.letrado.split(',')[0];
+          
           desItem.ano = dato.anio;
           desItem.numero = dato.numero;
           desItem.idInstitucion = dato.idinstitucion;
@@ -477,8 +477,7 @@ export class RelacionesComponent implements OnInit {
           desItem.nombreTurno = dato.descturno;
           desItem.nombreProcedimiento = dato.dilnigproc.split('-')[2];
           desItem.nombreColegiado = dato.letrado;
-          desItem.apellido1Colegiado =ape.split(' ')[0];
-          desItem.apellido2Colegiado =ape.split(' ')[1];
+          
           //Se cambia el valor del campo ano para que se procese de forma adecuada 
           //En la ficha en las distintas tarjetas para obtener sus valores
           desItem.ano = 'D' + desItem.ano + '/' + desItem.codigo;
