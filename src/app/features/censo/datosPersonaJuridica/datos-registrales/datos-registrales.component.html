@@ -51,9 +51,8 @@
           </label>
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
-              <label *ngIf="!sociedadProfesional">{{"censo.consultaDatosRegistrales.literal.objSocial" | translate}}</label> 
-              <label *ngIf="sociedadProfesional">{{"censo.consultaDatosRegistrales.literal.objSocial" | translate}} (*)</label> 
-              <input [ngClass]="sociedadProfesional ? styleObligatorio(body.objetoSocial) : ''" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" 
+              <label>{{"censo.consultaDatosRegistrales.literal.objSocial" | translate}}</label> 
+              <input [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" 
               [(ngModel)]="body.objetoSocial" type="text" class="form-control" (ngModelChange)="desactivadoGuardar()"
                 pInputText>
             </div>

@@ -538,6 +538,10 @@ export class DatosRegistralesComponent implements OnInit, OnChanges {
             if (this.body.resena == null) { 
               this.body.resena = ""; 
             } 
+
+            if (this.body.objetoSocial == null) { 
+              this.body.objetoSocial = ""; 
+            } 
             this.sigaServices
               .post("datosRegistrales_update", this.body)
               .subscribe(
@@ -702,8 +706,6 @@ export class DatosRegistralesComponent implements OnInit, OnChanges {
   desactivadoGuardar() {
     if (this.sociedadProfesional == true) {
       if (
-        this.body.objetoSocial != undefined &&
-        !this.onlySpaces(this.body.objetoSocial) &&
         this.body.resena != undefined &&
         !this.onlySpaces(this.body.resena) &&
         this.fechaConstitucion != undefined &&
