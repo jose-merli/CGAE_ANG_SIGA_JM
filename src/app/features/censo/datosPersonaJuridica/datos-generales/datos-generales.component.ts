@@ -815,9 +815,6 @@ export class DatosGenerales implements OnInit {
     }
 
     if (
-      this.body.abreviatura != "" &&
-      this.body.abreviatura != undefined &&
-      !this.onlySpaces(this.body.abreviatura) &&
       this.body.nif != "" &&
       this.body.nif != undefined &&
       !this.onlySpaces(this.body.nif) &&
@@ -849,9 +846,6 @@ export class DatosGenerales implements OnInit {
   }
   checkDatos(){
     if (
-      this.body.abreviatura != "" &&
-      this.body.abreviatura != undefined &&
-      !this.onlySpaces(this.body.abreviatura) &&
       this.body.nif != "" &&
       this.body.nif != undefined &&
       !this.onlySpaces(this.body.nif) &&
@@ -864,6 +858,12 @@ export class DatosGenerales implements OnInit {
       this.idiomaPreferenciaSociedad != undefined
       //this.file != undefined
     ) {
+      
+      if (this.body.abreviatura == "" ||
+      this.body.abreviatura == undefined) {
+        this.body.abreviatura = " ";
+      }
+
       if (
         this.editar &&
         (this.body.fechaConstitucion != undefined ||
@@ -1432,9 +1432,6 @@ export class DatosGenerales implements OnInit {
   }
   muestraCamposObligatorios(){
     if (
-      this.body.abreviatura == "" ||
-      this.body.abreviatura == undefined ||
-      !this.onlySpaces(this.body.abreviatura) ||
       this.body.nif == "" ||
       this.body.nif == undefined ||
       !this.onlySpaces(this.body.nif) ||

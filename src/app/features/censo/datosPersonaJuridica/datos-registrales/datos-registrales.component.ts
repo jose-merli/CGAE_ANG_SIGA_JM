@@ -729,21 +729,18 @@ export class DatosRegistralesComponent implements OnInit, OnChanges {
         this.resaltadoDatos = true;
         return true;
       }
-    } else if (
-      (this.body.objetoSocial != undefined &&
-        this.body.objetoSocial != "" &&
-        !this.onlySpaces(this.body.objetoSocial))
-    ) {
-      return false;
     } else {
 
       if ((this.body.contadorNumsspp == undefined ||
         this.onlySpaces(this.body.contadorNumsspp) || this.body.contadorNumsspp == null) && this.noEditable) {
         this.showCustomFail("No está configurado correctamente el contador de Sociedades. Si no tiene acceso a la configuración de contadores, por favor contacte con el Administrador");
+        
+        // this.muestraCamposObligatorios();
+        this.resaltadoDatos = true;
+        return true;
+      } else {
+        return false;
       }
-      // this.muestraCamposObligatorios();
-      this.resaltadoDatos = true;
-      return true;
     }
   }
 
