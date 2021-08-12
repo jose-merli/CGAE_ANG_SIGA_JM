@@ -1178,14 +1178,29 @@ export class TablaResultadoDesplegableComponent implements OnInit {
 
       this.sigaServices.get("combo_comboJuzgadoDesignaciones").subscribe(
         n => {
-          this.comboJuzgados = n.combooItems;
-          this.commonsService.arregloTildesCombo(this.comboJuzgados);
-          this.progressSpinner = false;
-          if (this.configComboDesigna == "1" || this.configComboDesigna == "2" || this.configComboDesigna == "3"){
-          this.cargaModulosPorJuzgado(this.comboJuzgados[0].value, designacion, rowGroup);
-          }else if (this.configComboDesigna == "4" || this.configComboDesigna == "5" ){
-            this.cargaModulos(designacion, rowGroup);
+            this.comboJuzgados = n.combooItems;
+            if(this.comboJuzgados[0] != undefined){
+            this.commonsService.arregloTildesCombo(this.comboJuzgados);
+            this.progressSpinner = false;
+            if (this.configComboDesigna == "1" || this.configComboDesigna == "2" || this.configComboDesigna == "3"){
+              this.cargaModulosPorJuzgado(this.comboJuzgados[0].value, designacion, rowGroup);
+            }else if (this.configComboDesigna == "4" || this.configComboDesigna == "5" ){
+              this.cargaModulos(designacion, rowGroup);
+            }
+          }else{
+            if (this.configComboDesigna == "1" || this.configComboDesigna == "2" || this.configComboDesigna == "3"){
+                this.comboModulos = [];
+                let data: String[] = [];
+                data.push("0");
+                data.push(this.idTurno);
+                this.cargaAcreditacionesPorModulo(data, designacion, rowGroup); 
+              }else if (this.configComboDesigna == "4" || this.configComboDesigna == "5" ){
+                this.cargaModulos(designacion, rowGroup);
+              }
+            
+            this.progressSpinner = false;
           }
+         
         },
         err => {
           console.log(err);
@@ -1391,55 +1406,48 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.progressSpinner = true;
     let desig = rowGroup.rows[0].cells;
     this.idTurno = desig[17].value;
-    this.sigaServices.getParam("combo_comboAcreditacionesPorModulo", `?idModulo=${$event[0]}&idTurno=${this.idTurno}`).subscribe(
-      n => {
-        this.comboAcreditacion = n.combooItems;
-        this.commonsService.arregloTildesCombo(this.comboAcreditacion);
-        this.progressSpinner = false;
-                        //this.cargaJuzgados.emit(true);
-      //this.comboModulos = [];
-      //this.comboAcreditacion = [];
+    if($event[0] == "0"){
       this.rowGroups.forEach((rowGroup,i) => {
         if (rowGroup.id == designacion){
           let id = Object.keys(rowGroup.rows)[0];
-
-          let newArrayCells: Cell[] = [
-            { type: 'checkbox', value: false, size: 120 , combo: null},
-            { type: 'multiselect1', value: this.comboJuzgados[0].value, size: 400 , combo: this.comboJuzgados},
-            { type: 'input', value: desig[2].value, size: 200, combo: null},
-            { type: 'input', value: desig[3].value, size: 200 , combo: null},//numProc
-            { type: 'multiselect2', value: this.comboModulos[0].value, size: 400 , combo: this.comboModulos}, //modulo
-            { type: 'datePicker', value: this.formatDate(new Date()), size: 200 , combo: null},
-            { type: 'checkbox', value: this.formatDate(new Date()) , size: 200, combo: null},
-            { type: 'multiselect3', value: this.comboAcreditacion[0].value , size: 200, combo: this.comboAcreditacion},
-            { type: 'checkbox', value: validacion, size: 80 , combo: null},
-            { type: 'invisible', value:  desig[19].value , size: 0, combo: null},//numDesig
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  desig[15].value , size: 0, combo: null},//idJuzgado   
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  desig[10].value , size: 0, combo: null},//anio
-            { type: 'invisible', value:  desig[17].value, size: 0, combo: null},//idturno
-            { type: 'invisible', value:  desig[13].value , size: 0, combo: null}];//idInstitucion
-
+          let newArrayCells: Cell[];
+            newArrayCells= [
+              { type: 'checkbox', value: false, size: 120 , combo: null},
+              { type: 'multiselect1', value: "0", size: 400 , combo: []},
+              { type: 'input', value: desig[2].value, size: 200, combo: null},
+              { type: 'input', value: desig[3].value, size: 200 , combo: null},//numProc
+              { type: 'multiselect2', value: "0", size: 400 , combo: []}, //modulo
+              { type: 'datePicker', value: this.formatDate(new Date()), size: 200 , combo: null},
+              { type: 'checkbox', value: this.formatDate(new Date()) , size: 200, combo: null},
+              { type: 'multiselect3', value: "0" , size: 200, combo: []},
+              { type: 'checkbox', value: validacion, size: 80 , combo: null},
+              { type: 'invisible', value:  desig[19].value , size: 0, combo: null},//numDesig
+              { type: 'invisible', value:  '' , size: 0, combo: null},
+              { type: 'invisible', value:  '' , size: 0, combo: null},
+              { type: 'invisible', value:  '' , size: 0, combo: null},
+              { type: 'invisible', value:  '' , size: 0, combo: null},
+              { type: 'invisible', value:  '' , size: 0, combo: null},
+              { type: 'invisible', value:  '' , size: 0, combo: null},
+              { type: 'invisible', value:  '' , size: 0, combo: null},
+              { type: 'invisible', value:  '' , size: 0, combo: null},
+              { type: 'invisible', value:  '' , size: 0, combo: null},
+              { type: 'invisible', value:  '' , size: 0, combo: null},
+              { type: 'invisible', value:  '' , size: 0, combo: null},
+              { type: 'invisible', value:  desig[15].value , size: 0, combo: null},//idJuzgado   
+              { type: 'invisible', value:  '' , size: 0, combo: null},
+              { type: 'invisible', value:  '' , size: 0, combo: null},
+              { type: 'invisible', value:  '' , size: 0, combo: null},
+              { type: 'invisible', value:  '' , size: 0, combo: null},
+              { type: 'invisible', value:  '' , size: 0, combo: null},
+              { type: 'invisible', value:  '' , size: 0, combo: null},
+              { type: 'invisible', value:  '' , size: 0, combo: null},
+              { type: 'invisible', value:  '' , size: 0, combo: null},
+              { type: 'invisible', value:  '' , size: 0, combo: null},
+              { type: 'invisible', value:  '' , size: 0, combo: null},
+              { type: 'invisible', value:  desig[10].value , size: 0, combo: null},//anio
+              { type: 'invisible', value:  desig[17].value, size: 0, combo: null},//idturno
+              { type: 'invisible', value:  desig[13].value , size: 0, combo: null}];//idInstitucion
+        
             if(!this.isLetrado || (this.isLetrado && newArrayCells[8].value != true && this.turnoAllow == "1")){
               let newRow: Row = {cells: newArrayCells, position: 'noCollapse'};
               rowGroup.rows.push(newRow);
@@ -1452,12 +1460,115 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       
         }
       })
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner = false;
-      }
-    );
+    }else{
+      this.sigaServices.getParam("combo_comboAcreditacionesPorModulo", `?idModulo=${$event[0]}&idTurno=${this.idTurno}`).subscribe(
+        n => {
+          this.comboAcreditacion = n.combooItems;
+          this.commonsService.arregloTildesCombo(this.comboAcreditacion);
+          this.progressSpinner = false;
+                          //this.cargaJuzgados.emit(true);
+        //this.comboModulos = [];
+        //this.comboAcreditacion = [];
+        this.rowGroups.forEach((rowGroup,i) => {
+          if (rowGroup.id == designacion){
+            let id = Object.keys(rowGroup.rows)[0];
+            let newArrayCells: Cell[];
+            if(this.comboJuzgados.length != 0){
+              newArrayCells= [
+                { type: 'checkbox', value: false, size: 120 , combo: null},
+                { type: 'multiselect1', value: this.comboJuzgados[0].value, size: 400 , combo: this.comboJuzgados},
+                { type: 'input', value: desig[2].value, size: 200, combo: null},
+                { type: 'input', value: desig[3].value, size: 200 , combo: null},//numProc
+                { type: 'multiselect2', value: this.comboModulos[0].value, size: 400 , combo: this.comboModulos}, //modulo
+                { type: 'datePicker', value: this.formatDate(new Date()), size: 200 , combo: null},
+                { type: 'checkbox', value: this.formatDate(new Date()) , size: 200, combo: null},
+                { type: 'multiselect3', value: this.comboAcreditacion[0].value , size: 200, combo: this.comboAcreditacion},
+                { type: 'checkbox', value: validacion, size: 80 , combo: null},
+                { type: 'invisible', value:  desig[19].value , size: 0, combo: null},//numDesig
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  desig[15].value , size: 0, combo: null},//idJuzgado   
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  desig[10].value , size: 0, combo: null},//anio
+                { type: 'invisible', value:  desig[17].value, size: 0, combo: null},//idturno
+                { type: 'invisible', value:  desig[13].value , size: 0, combo: null}];//idInstitucion
+            }else{
+              newArrayCells = [
+                { type: 'checkbox', value: false, size: 120 , combo: null},
+                { type: 'multiselect1', value: "0", size: 400 , combo: []},
+                { type: 'input', value: desig[2].value, size: 200, combo: null},
+                { type: 'input', value: desig[3].value, size: 200 , combo: null},//numProc
+                { type: 'multiselect2', value: this.comboModulos[0].value, size: 400 , combo: this.comboModulos}, //modulo
+                { type: 'datePicker', value: this.formatDate(new Date()), size: 200 , combo: null},
+                { type: 'checkbox', value: this.formatDate(new Date()) , size: 200, combo: null},
+                { type: 'multiselect3', value: this.comboAcreditacion[0].value , size: 200, combo: this.comboAcreditacion},
+                { type: 'checkbox', value: validacion, size: 80 , combo: null},
+                { type: 'invisible', value:  desig[19].value , size: 0, combo: null},//numDesig
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  desig[15].value , size: 0, combo: null},//idJuzgado   
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  desig[10].value , size: 0, combo: null},//anio
+                { type: 'invisible', value:  desig[17].value, size: 0, combo: null},//idturno
+                { type: 'invisible', value:  desig[13].value , size: 0, combo: null}];//idInstitucion
+            }
+  
+              if(!this.isLetrado || (this.isLetrado && newArrayCells[8].value != true && this.turnoAllow == "1")){
+                let newRow: Row = {cells: newArrayCells, position: 'noCollapse'};
+                rowGroup.rows.push(newRow);
+                this.newActuacionesArr.push(newRow);
+              }else{
+                this.showMsg('error', "No tiene permiso para añadir actuaciones", '')
+                this.rowGroups = this.rowGroupsAux;
+                this.refreshData.emit(true);
+              }
+        
+          }
+        })
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        }
+      );
+    }
+    
   }
 
   formatDate(date) {
