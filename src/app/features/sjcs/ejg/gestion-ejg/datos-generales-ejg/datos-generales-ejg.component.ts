@@ -101,6 +101,8 @@ export class DatosGeneralesEjgComponent implements OnInit {
         this.body.fechaApertura = new Date(this.body.fechaApertura);
       if (this.body.tipoEJG != undefined)
         this.showTipoExp = true;
+        if(this.body.numDesigna != null || this.body.numDesigna != undefined || this.body.numDesigna != null)
+          this.noAsocDes = false;
 
       this.getPrestacionesRechazadasEJG();
     } else {
@@ -110,6 +112,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
       this.body = new EJGItem();
       this.bodyInicial = new EJGItem();
       this.showTipoExp = false;
+      this.noAsocDes = true;
       // this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     }
 
@@ -467,7 +470,9 @@ export class DatosGeneralesEjgComponent implements OnInit {
       this.msgs = msg;
     } else {
       //Comprobamos si el EJG tiene una designacion asociada
-      if(!this.noAsocDes) this.addExp();
+      if(!this.noAsocDes){
+        this.addExp();
+      } 
       else this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('justiciaGratuita.ejg.datosGenerales.noDesignaEjg') }];
     }
   }
