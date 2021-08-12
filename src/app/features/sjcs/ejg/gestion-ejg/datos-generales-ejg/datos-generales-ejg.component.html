@@ -125,12 +125,15 @@
                 <input type="text" [(ngModel)]="body.numeroexpInsos" [disabled]="true" class="form-control"
                   (keypress)="numberOnly($event)" maxLength="10" pInputText>
               </div>
-              <label>{{ 'justiciaGratuita.ejg.datosGenerales.TipoExpediente' | translate}}:</label>
-              <br>
-              <label *ngIf="showTipoExp">{{tipoExpedienteDes | translate}}</label>
-              <p-dropdown *ngIf="!showTipoExp" class="select-form" [(ngModel)]='body.idTipoExpInsos'
-                placeholder="Seleccionar" [options]="comboTipoExpediente" [filter]="true" filterBy="label,labelSinTilde"
-                [showClear]="true"></p-dropdown>
+              <div class="form-row">
+                <div class="form-group col-lg-6 col-md-6">
+                  <label>{{ 'justiciaGratuita.ejg.datosGenerales.TipoExpediente' | translate}}:</label>
+                  <label *ngIf="showTipoExp">{{tipoExpedienteDes}}</label>
+                  <p-dropdown *ngIf="!showTipoExp" class="select-form" [(ngModel)]='body.idTipoExpInsos'
+                    placeholder="Seleccionar" [options]="comboTipoExpediente" [filter]="true" filterBy="label,labelSinTilde"
+                    [showClear]="true"></p-dropdown>
+                </div>
+              </div>
           </div>
         </div>
       </div>
