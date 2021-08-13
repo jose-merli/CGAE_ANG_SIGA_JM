@@ -45,9 +45,10 @@ export class LoginDevelopComponent implements OnInit {
 	ngOnInit() {
 		this.sigaServices.getBackend("environmentInfo").subscribe(n => {
 			this.environment = n.environment;
-			this.sigaFrontVersion = n.sigaFrontVersion;
 			this.sigaWebVersion = n.sigaWebVersion;
 		});
+		//Modificar la version de front en cada entrega
+		this.sigaFrontVersion = '202108131300';
 		sessionStorage.removeItem('authenticated');
 		this.ocultar = true;
 		this.progressSpinner = true;
