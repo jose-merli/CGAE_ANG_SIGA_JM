@@ -41,4 +41,7 @@ export class ActuacionDesignaItem {
     validarJustificacion: string;
     nombreProcedimiento: string;
     nombreModulo: string;
+    idPartidaPresupuestaria: string;
+    partidaPresupuestaria: string;
+    idInstitucion: string;
 }

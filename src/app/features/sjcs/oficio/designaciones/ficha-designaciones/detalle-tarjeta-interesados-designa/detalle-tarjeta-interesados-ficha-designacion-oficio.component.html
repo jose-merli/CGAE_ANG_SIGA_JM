@@ -1,3 +1,4 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div>
   <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [selectionMode]="selectionMode"
     [responsive]="true" #table class="tabla-listado" [paginator]="true" [rows]="selectedItem"
@@ -66,17 +67,23 @@
   </p-table>
   <div class="card-footer">
     <div class="text-right main-button">
-      <button pButton type="button"  icon="fa fa-comment" iconPos="left"
+      <button pButton type="button" icon="fa fa-comment" iconPos="left"
         label="{{'general.boton.comunicar' | translate}}"></button>
-      <button 
-        (click)="NewInteresado()" pButton type="button" icon="fa fa-plus" iconPos="left"
+      <button (click)="NewInteresado()" pButton type="button" icon="fa fa-plus" iconPos="left"
         label="{{ 'general.boton.new' | translate}}"></button>
-      <button pButton type="button"
-        (click)="Eliminar()" icon="fa fa-trash-alt" iconPos="left" [disabled]="selectedDatos.length == 0"
-        label="{{ 'general.boton.eliminar' | translate}}"></button>
+      <button pButton type="button" (click)="Eliminar()" icon="fa fa-trash-alt" iconPos="left"
+        [disabled]="selectedDatos.length == 0" label="{{ 'general.boton.eliminar' | translate}}"></button>
     </div>
   </div>
 </div>
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="deletePlantillaDoc" icon="icon"
+  width="425" #deletePlantillaDoc>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="deletePlantillaDoc.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="deletePlantillaDoc.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>

@@ -110,7 +110,7 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
 
   sortData(sort: Sort) {
     let data: Row[] = [];
-    this.rowGroups = this.rowGroupsAux.filter((row) => {
+    this.rowGroups = this.rowGroups.filter((row) => {
       data.push(row);
     });
     data = data.slice();
@@ -120,33 +120,84 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
     }
     this.rowGroups = data.sort((a, b) => {
       const isAsc = sort.direction === 'asc';
-      let resultado;
-      for (let i = 0; i < a.cells.length; i++) {
-        resultado = compare(a.cells[i].value, b.cells[i].value, isAsc);
+
+      for (let i = 0; i < this.cabeceras.length; i++) {
+        let nombreCabecera = this.cabeceras[i].id;
+        if (nombreCabecera == sort.active){
+          console.log("a.cells["+i+"].type:"+a.cells[i].type);
+
+          if (a.cells[i].type=='datePickerFin' && b.cells[i].type=='datePickerFin'){
+            return compareDate(a.cells[i].value[0], b.cells[i].value[0], isAsc);
+          }
+
+          let valorA = a.cells[i].value;
+          let valorB = b.cells[i].value;
+          if (valorA!=null && valorB!=null){
+            if(isNaN(valorA)){ //Checked for numeric
+              const dayA = valorA.substr(0, 2) ;
+              const monthA = valorA.substr(3, 2);
+              const yearA = valorA.substr(6, 10);
+              console.log("fecha a:"+ yearA+","+monthA+","+dayA);
+              var dt=new Date(yearA, monthA, dayA);
+              if(!isNaN(dt.getTime())){ //Checked for date
+                return compareDate(a.cells[i].value, b.cells[i].value, isAsc);
+              }else{
+              }
+            } else{
+            }
+          }
+
+          return compare(a.cells[i].value, b.cells[i].value, isAsc);
+          
+        }
       }
-      return resultado;
+ 
     });
-    this.rowGroupsAux = this.rowGroups;
-    this.totalRegistros = this.rowGroups.length;
 
   }
 
 
-  searchChange(j: any) {
-    let isReturn = true;
-    this.rowGroups = this.rowGroupsAux.filter((row) => {
-      if (
-        this.searchText[j] != " " &&
-        this.searchText[j] != undefined &&
-        !row.cells[j].value.toString().toLowerCase().includes(this.searchText[j].toLowerCase())
-      ) {
-        isReturn = false;
-      } else {
-        isReturn = true;
+  getComboLabel(key: string){
+    for (let i = 0; i < this.comboTipos.length; i++){
+      if (this.comboTipos[i].value == key){
+        return this.comboTipos[i].label;
       }
-      if (isReturn) {
+    }
+    return "";
+  }
+
+
+  searchChange(x: any) {
+    let isReturnArr = [];
+    this.rowGroups = this.rowGroupsAux.filter((row) => {
+      let isReturn = true;
+      for(let j=0; j<this.cabeceras.length;j++){
+        if (this.searchText[j] != " " &&  this.searchText[j] != undefined){
+          if (row.cells[j].value){
+            console.log("tipo de celda:"+row.cells[j].type);
+            if(row.cells[j].type == 'select'){
+              let labelCombo = this.getComboLabel(row.cells[j].value);
+              console.log("valor de celda:"+labelCombo);
+              if (!labelCombo.toLowerCase().includes(this.searchText[j].toLowerCase())){
+                isReturn = false;
+                break;
+              }
+            } else if (!row.cells[j].value.toString().toLowerCase().includes(this.searchText[j].toLowerCase())){
+              isReturn = false;
+              break;
+            }
+          }else{
+              if (this.searchText[j]!=""){
+                isReturn = false;
+                break;
+              }
+          }
+        }
+      }
+      if (isReturn){
         return row;
       }
+
     });
     this.totalRegistros = this.rowGroups.length;
   }
@@ -244,6 +295,13 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
     this.rowGroupsAux = this.rowGroups;
     this.totalRegistros = this.rowGroups.length;
     this.tablaFoco.nativeElement.scrollIntoView();
+
+
+    if (this.emptyResults) {
+      this.rowGroups.pop();
+      this.emptyResults = false;
+    }
+
   }
 
   guardar() {
@@ -313,6 +371,27 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
     this.progressSpinner = false;
     this.showMsg({ severity: "success", summary: 'Operación realizada con éxito', detail: 'Los registros ha sido restablecidos' });
     this.tablaFoco.nativeElement.scrollIntoView();
+
+    if (this.rowGroups.length == 0 || (this.rowGroups.length == 1 && this.rowGroups[0].cells[0].type == 'empty')) {
+      this.emptyResults = true;
+      this.rowGroups = [
+        {
+          id: 0,
+          cells: [
+            {
+              type: 'empty',
+              value: "No hay resultados",
+              combo: null,
+              disabled: false,
+              header: null
+            }
+          ],
+          italic: false
+        }
+      ];
+    } else {
+      this.emptyResults = false;
+    }
   }
 
   anular() {
@@ -388,6 +467,43 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
   }
 
 }
-function compare(a: string, b: number | string, isAsc: boolean) {
+function compareDate (fechaA:  any, fechaB:  any, isAsc: boolean){
+
+  let dateA = null;
+  let dateB = null;
+  if (fechaA!=null){
+    const dayA = fechaA.substr(0, 2) ;
+    const monthA = fechaA.substr(3, 2);
+    const yearA = fechaA.substr(6, 10);
+    dateA = new Date(yearA, monthA, dayA);
+  }
+
+  if (fechaB!=null){
+    const dayB = fechaB.substr(0, 2) ;
+    const monthB = fechaB.substr(3, 2);
+    const yearB = fechaB.substr(6, 10);
+    dateB = new Date(yearB, monthB, dayB);
+  }
+
+
+  return compare(dateA, dateB, isAsc);
+
+
+}
+
+function compare(a: number | string | Date, b: number | string | Date, isAsc: boolean) {
+
+  if (typeof a === "string" && typeof b === "string") {
+    a = a.toLowerCase();
+    b = b.toLowerCase();
+  }
+
+  if (a==null && b!=null){
+    return ( 1 ) * (isAsc ? 1 : -1);
+  }
+  if (a!=null && b==null){
+    return ( -1 ) * (isAsc ? 1 : -1);
+  }
+
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }

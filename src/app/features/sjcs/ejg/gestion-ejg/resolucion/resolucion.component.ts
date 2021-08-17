@@ -1,11 +1,13 @@
-import { Component, OnInit, Input,Output,SimpleChanges,EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, SimpleChanges, EventEmitter } from '@angular/core';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { ResolucionEJGItem } from '../../../../../models/sjcs/ResolucionEJGItem';
 import { TranslateService } from '../../../../../commons/translate/translation.service';
+import { Router } from "@angular/router";
 import { ConfirmationService } from 'primeng/api';
+import { saveAs } from "file-saver/FileSaver";
 
 @Component({
   selector: 'app-resolucion',
@@ -34,30 +36,34 @@ export class ResolucionComponent implements OnInit {
   fundamentoJuridicoDesc: String;
   ResolDesc: String;
   progressSpinner: boolean = false;
+  habilitarActas: boolean = false;
 
   resaltadoDatosGenerales: boolean = false;
-  
+
   fichaPosible = {
     key: "resolucion",
     activa: false
   }
-  
+
   activacionTarjeta: boolean = false;
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
+  @Output() newEstado = new EventEmitter();
   @Input() openTarjetaResolucion;
 
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
-    private commonsServices: CommonsService,private translateService: TranslateService, private confirmationService: ConfirmationService) { }
+    private commonsServices: CommonsService, private translateService: TranslateService, 
+    private confirmationService: ConfirmationService, private router: Router) { }
 
   ngOnInit() {
     if (this.persistenceService.getDatos()) {
-        this.modoEdicion = true;
-        this.nuevo = false;
-        this.body = this.persistenceService.getDatos();
-        this.getResolucion(this.body);
-      }else {
+      this.modoEdicion = true;
+      this.nuevo = false;
+      this.body = this.persistenceService.getDatos();
+      this.getResolucion(this.body);
+      this.getHabilitarActasComision();
+    } else {
       this.modoEdicion = false;
       this.nuevo = true;
       this.resolucion = new ResolucionEJGItem();
@@ -97,27 +103,31 @@ export class ResolucionComponent implements OnInit {
   }
 
   getResolucion(selected) {
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
     this.sigaServices.post("gestionejg_getResolucion", selected).subscribe(
-    n => {
-      if(n.body){
-        this.resolucion = JSON.parse(n.body);
-      }else{this.resolucion = new   ResolucionEJGItem();}
-     if (this.resolucion.fechaPresentacionPonente != undefined)
-        this.resolucion.fechaPresentacionPonente = new Date(this.resolucion.fechaPresentacionPonente);
-     if (this.resolucion.fechaResolucionCAJG != undefined)
-        this.resolucion.fechaResolucionCAJG = new Date(this.resolucion.fechaResolucionCAJG);
-     if (this.resolucion.fechaRatificacion != undefined)
-        this.resolucion.fechaRatificacion = new Date(this.resolucion.fechaRatificacion);
-     if (this.resolucion.fechaNotificacion != undefined)
-        this.resolucion.fechaNotificacion = new Date(this.resolucion.fechaNotificacion);
-      this.getComboActaAnnio();
-      this.getComboFundamentoJurid();
-      this.getComboResolucion();
-      this.progressSpinner = false;
+      n => {
+        if (n.body) {
+          this.resolucion = JSON.parse(n.body);
+        } else { this.resolucion = new ResolucionEJGItem(); }
+        if (this.resolucion.fechaPresentacionPonente != undefined)
+          this.resolucion.fechaPresentacionPonente = new Date(this.resolucion.fechaPresentacionPonente);
+        if (this.resolucion.fechaResolucionCAJG != undefined)
+          this.resolucion.fechaResolucionCAJG = new Date(this.resolucion.fechaResolucionCAJG);
+        if (this.resolucion.fechaRatificacion != undefined)
+          this.resolucion.fechaRatificacion = new Date(this.resolucion.fechaRatificacion);
+        if (this.resolucion.fechaNotificacion != undefined)
+          this.resolucion.fechaNotificacion = new Date(this.resolucion.fechaNotificacion);
+
+        this.getComboActaAnnio();
+        if(this.resolucion.idTiporatificacionEJG != undefined)this.getComboFundamentoJurid();
+        this.getComboResolucion();
+
+        //Se desbloquea el desplegable de fundamento juridico si hay una resolucion seleccionada al inciar la tarjeta.
+        if (this.resolucion.idTiporatificacionEJG != undefined && this.resolucion.idTiporatificacionEJG != null) this.isDisabledFundamentosJurid = false;
+        //this.progressSpinner = false;
       },
       err => {
-       console.log(err);
+        console.log(err);
       }
     );
   }
@@ -129,7 +139,7 @@ export class ResolucionComponent implements OnInit {
         let resol = this.comboResolucion.find(
           item => item.value == this.resolucion.idTiporatificacionEJG
         );
-        if(resol != undefined)
+        if (resol != undefined)
           this.ResolDesc = resol.label;
       },
       err => {
@@ -137,6 +147,7 @@ export class ResolucionComponent implements OnInit {
       }
     );
   }
+
   getComboActaAnnio() {
     this.sigaServices.get("gestionejg_comboActaAnnio").subscribe(
       n => {
@@ -144,18 +155,28 @@ export class ResolucionComponent implements OnInit {
         this.commonsServices.arregloTildesCombo(this.comboActaAnnio);
       },
       err => {
-        console.log(err);
       }
     );
   }
+
+  getHabilitarActasComision() {
+    this.sigaServices.get("gestionejg_getHabilitarActa").subscribe(
+      n => {
+        this.habilitarActas = n;
+      },
+      err => {
+      }
+    )
+  }
+
   onChangeResolucion() {
     this.comboFundamentoJurid = [];
-    if (this.resolucion.idTiporatificacionEJG != undefined && this.resolucion.idTiporatificacionEJG != "") {
+    if (this.resolucion.idTiporatificacionEJG != undefined && this.resolucion.idTiporatificacionEJG != null) {
       this.isDisabledFundamentosJurid = false;
       this.getComboFundamentoJurid();
     } else {
       this.isDisabledFundamentosJurid = true;
-      this.resolucion.idFundamentoJuridico = "";
+      this.resolucion.idFundamentoJuridico = null;
     }
   }
   getComboFundamentoJurid() {
@@ -168,39 +189,54 @@ export class ResolucionComponent implements OnInit {
         n => {
           this.comboFundamentoJurid = n.combooItems;
           this.commonsServices.arregloTildesCombo(this.comboFundamentoJurid);
-          
+
           let fJuridico = this.comboFundamentoJurid.find(
             item => item.value == this.resolucion.idFundamentoJuridico
           );
-          if(fJuridico != undefined)
+          if (fJuridico != undefined)
             this.fundamentoJuridicoDesc = fJuridico.label;
         },
         error => { },
         () => { }
       );
   }
-  getComboPonente(){
+  getComboPonente() {
     this.sigaServices.get("filtrosejg_comboPonente").subscribe(
       n => {
         this.comboPonente = n.combooItems;
-          this.commonsServices.arregloTildesCombo(this.comboPonente);
+        this.commonsServices.arregloTildesCombo(this.comboPonente);
       },
       err => {
         console.log(err);
       }
     );
   }
-  getComboOrigen(){
+  getComboOrigen() {
     this.sigaServices.get("gestionejg_comboOrigen").subscribe(
       n => {
         this.comboOrigen = n.combooItems;
-          this.commonsServices.arregloTildesCombo(this.comboOrigen);
+        this.commonsServices.arregloTildesCombo(this.comboOrigen);
       },
       err => {
-        console.log(err);
       }
     );
   }
+
+  setCabecera() {
+    let resol = this.comboResolucion.find(
+      item => item.value == this.resolucion.idTiporatificacionEJG
+    );
+    if (resol != undefined) {
+      this.ResolDesc = resol.label;
+    }
+
+    let fJuridico = this.comboFundamentoJurid.find(
+      item => item.value == this.resolucion.idFundamentoJuridico
+    );
+    if (fJuridico != undefined)
+      this.fundamentoJuridicoDesc = fJuridico.label;
+  }
+
   disabledSave() {
     if (this.nuevo) {
       /*if (this.resolucion.fechaApertura != undefined) { 
@@ -235,22 +271,47 @@ export class ResolucionComponent implements OnInit {
       }
     }
   }
-  save(){
-    this.progressSpinner=true;
+  save() {
+    this.progressSpinner = true;
 
     //this.body.nuevoEJG=!this.modoEdicion;
 
-    this.sigaServices.post("gestionejg_guardarResolucion", this.body).subscribe(
+    this.resolucion.anio = Number(this.body.annio);
+    this.resolucion.idTipoEJG = Number(this.body.tipoEJG);
+    this.resolucion.numero = Number(this.body.numero);
+
+    //Se debe extraer los valores que necesitamos del id del elemento del combo de actas seleccionado.
+    if (this.resolucion.idAnnioActa != null){
+          this.resolucion.idActa = Number(this.resolucion.idAnnioActa.split(",")[0]);
+          this.resolucion.annioActa = Number(this.resolucion.idAnnioActa.split(",")[1]);
+    }
+    else {
+      this.resolucion.idActa = null;
+      this.resolucion.annioActa = null;
+    }
+
+    this.sigaServices.post("gestionejg_guardarResolucion", this.resolucion).subscribe(
       n => {
-        this.progressSpinner=false;
+        this.progressSpinner = false;
+        if (n.statusText == 'OK') {
+
+          //Para que se actualicen los estados presentados en la tarjeta de estados
+          this.newEstado.emit(null);
+
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.bodyInicial = JSON.parse(JSON.stringify(this.resolucion));
+          this.setCabecera();
+        } else {
+          this.showMessage('error', 'Error', this.translateService.instant('general.message.error.realiza.accion'));
+        }
       },
       err => {
-        console.log(err);
-        this.progressSpinner=false;
+        this.progressSpinner = false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }
     );
   }
-  checkPermisosConfirmRest(){
+  checkPermisosConfirmRest() {
     let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
@@ -258,7 +319,7 @@ export class ResolucionComponent implements OnInit {
       this.confirmRest();
     }
   }
-  confirmRest(){
+  confirmRest() {
     let mess = this.translateService.instant(
       "justiciaGratuita.ejg.message.restablecerResolucion"
     );
@@ -266,6 +327,7 @@ export class ResolucionComponent implements OnInit {
     this.confirmationService.confirm({
       message: mess,
       icon: icon,
+      key: "cd",
       accept: () => {
         this.rest()
       },
@@ -282,9 +344,19 @@ export class ResolucionComponent implements OnInit {
       }
     });
   }
-  rest(){
+
+  rest() {
     this.resolucion = JSON.parse(JSON.stringify(this.bodyInicial));
+    if (this.resolucion.fechaPresentacionPonente != undefined)
+          this.resolucion.fechaPresentacionPonente = new Date(this.resolucion.fechaPresentacionPonente);
+        if (this.resolucion.fechaResolucionCAJG != undefined)
+          this.resolucion.fechaResolucionCAJG = new Date(this.resolucion.fechaResolucionCAJG);
+        if (this.resolucion.fechaRatificacion != undefined)
+          this.resolucion.fechaRatificacion = new Date(this.resolucion.fechaRatificacion);
+        if (this.resolucion.fechaNotificacion != undefined)
+          this.resolucion.fechaNotificacion = new Date(this.resolucion.fechaNotificacion);
   }
+
   checkPermisosOpenActa() {
     let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
@@ -293,27 +365,101 @@ export class ResolucionComponent implements OnInit {
       this.openActa();
     }
   }
-  openActa(){
+
+  numberOnly(event): boolean {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode >= 48 && charCode <= 57) {
+      return true;
+    }
+    else {
+      return false;
+
+    }
   }
+
+  openActa() {
+    //Implmentacion teorica.
+    //Cambiar por acceso implmentado en la pantalla de acceso a actas.
+    //this.router.navigate(["/fichaActa"]);
+    //Se escoge la acta guardada, no la que se tenga seleccionada en el desplegable sin guardar.
+    //Los datos a pasar deberan revisarse acordemente.
+    //this.persistenceService.setDatos(this.bodyInicial);
+    //Se crea una variable de entorno para el caso en el cual se vuelva desde la ficha de acta al EJG.
+    //El EJG se puede rellenar subiendo los datos a la capa de persistencia o con un item "EJGItem" que tendra prioridad.
+    //sessionStorage.setItem("EJGItem", JSON.stringify(this.bodyInicial));
+    this.msgs = [
+      {
+        severity: "info",
+        summary: "En proceso",
+        detail: "Boton no funcional actualmente"
+      }
+    ];
+  }
+
   clear() {
     this.msgs = [];
   }
+
   fillFechaPresPonente(event) {
-    this.resolucion.fechaPresentacionPonente = event; 
+    if(event != null) this.resolucion.fechaPresentacionPonente = new Date(event);
   }
-  fillFechaResCAJG(event){
-    this.resolucion.fechaResolucionCAJG = event; 
+
+  fillFechaResCAJG(event) {
+    if(event != null)this.resolucion.fechaResolucionCAJG = new Date(event);
   }
-  fillFechaNotif(event){
-    this.resolucion.fechaNotificacion = event;
+
+  fillFechaResCAJGActa(event){
+    let actaannio = this.comboActaAnnio.find(
+      item => item.value == this.resolucion.idTiporatificacionEJG
+    );
+    let fechaActa = actaannio.label.split("-")[1];
+
+    //Reasignamos la fecha al traerse del back en formato string
+    //No se realiza directamente ya que la conversion de new Date con strings se realiza desde MM/DD/YYYY y se nos devuelve DD/MM/YYY desde el back
+    var dateParts = fechaActa.split("/");
+
+    this.resolucion.fechaResolucionCAJG = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
   }
-  fillFechaResFirme(event){
-    this.resolucion.fechaRatificacion = event; 
+
+  fillFechaNotif(event) {
+    if(event != null)this.resolucion.fechaNotificacion = new Date(event);
   }
+
+  fillFechaResFirme(event) {
+    if(event != null)this.resolucion.fechaRatificacion =new Date(event);
+  }
+
   onChangeCheckT(event) {
     this.resolucion.turnadoRatificacion = event;
   }
+
   onChangeCheckR(event) {
     this.resolucion.requiereNotificarProc = event;
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+
+  descargarDocumentoResolucion(){
+    this.progressSpinner = true;
+
+    this.sigaServices.postDownloadFiles("gestionejg_descargarDocumentoResolucion", this.resolucion.docResolucion).subscribe(
+      n => {
+        this.progressSpinner = false;
+
+        let blob = new Blob([n], { type: "application/zip" });
+        saveAs(blob, this.resolucion.docResolucion);
+      },
+      err => {
+        this.progressSpinner = false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
   }
 }

@@ -16,6 +16,7 @@ import { procesos_maestros } from '../../../../../permisos/procesos_maestros';
 import { procesos_justiciables } from '../../../../../permisos/procesos_justiciables';
 import { Checkbox, ConfirmDialog } from '../../../../../../../node_modules/primeng/primeng';
 import { Dialog } from 'primeng/primeng';
+import { UnidadFamiliarEJGItem } from '../../../../../models/sjcs/UnidadFamiliarEJGItem';
 
 @Component({
   selector: 'app-datos-generales',
@@ -67,7 +68,6 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
   personaRepetida: boolean = false;
 
   count: number = 1;
-  showTarjetaPermiso: boolean = false;
   selectedDatos = [];
   rowsPerPage: any = [];
 
@@ -91,6 +91,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
   @Input() showTarjeta;
   @Input() fromJusticiable;
+  @Input() fromUniFamiliar:boolean = false;
   @Input() body: JusticiableItem;
   @Input() modoRepresentante;
   @Input() checkedViewRepresentante;
@@ -115,60 +116,45 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
     this.progressSpinner = true;
 
-    this.commonsService.checkAcceso(procesos_justiciables.tarjetaDatosGenerales)
-      .then(respuesta => {
+    if (this.body != undefined && this.body.idpersona != undefined) {
+      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
 
-        this.permisoEscritura = respuesta;
+      this.parseFechas();
 
-        if (this.permisoEscritura == undefined) {
-          this.progressSpinner = false;
-          this.showTarjetaPermiso = false;
-        } else {
-          this.showTarjetaPermiso = true;
-          if (this.body != undefined && this.body.idpersona != undefined) {
-            this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+    } else {
+      this.body = new JusticiableItem();
+    }
 
-            this.parseFechas();
+    //Obligatorio pais españa
+    this.body.idpaisdir1 = "191";
 
-          } else {
-            this.body = new JusticiableItem();
-          }
+    if (this.body.idpersona == undefined) {
+      this.modoEdicion = false;
+      this.body.fechaalta = new Date();
+    } else {
+      this.modoEdicion = true;
 
-          //Obligatorio pais españa
-          this.body.idpaisdir1 = "191";
-
-          if (this.body.idpersona == undefined) {
-            this.modoEdicion = false;
-            this.body.fechaalta = new Date();
-          } else {
-            this.modoEdicion = true;
-
-            if (this.body.idprovincia != undefined && this.body.idprovincia != null &&
-              this.body.idprovincia != "") {
-              this.isDisabledPoblacion = false;
-            } else {
-              this.isDisabledPoblacion = true;
-            }
-
-          }
-
-          this.progressSpinner = false;
-
-        }
-
-        this.sigaServices.guardarDatosSolicitudJusticiable$.subscribe((data) => {
-          this.body.autorizaavisotelematico = data.autorizaavisotelematico;
-          this.body.asistidoautorizaeejg = data.asistidoautorizaeejg;
-          this.body.asistidosolicitajg = data.asistidosolicitajg;
-          this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-        });
+      if (this.body.idprovincia != undefined && this.body.idprovincia != null &&
+        this.body.idprovincia != "") {
+        this.isDisabledPoblacion = false;
+      } else {
+        this.isDisabledPoblacion = true;
       }
-      ).catch(error => console.error(error));
+
+    }
+
+    this.progressSpinner = false;
+
+    this.sigaServices.guardarDatosSolicitudJusticiable$.subscribe((data) => {
+      this.body.autorizaavisotelematico = data.autorizaavisotelematico;
+      this.body.asistidoautorizaeejg = data.asistidoautorizaeejg;
+      this.body.asistidosolicitajg = data.asistidosolicitajg;
+      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+    });
 
     this.getCombos();
     this.getColsDatosContacto();
     this.getDatosContacto();
-
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -306,6 +292,9 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       }
     }
   }
+
+  
+
 
   validateCampos(url) {
 
@@ -451,7 +440,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       },
       err => {
 
-        if (JSON.parse(err.error).error.description != "") {
+        if (err.error != undefined && JSON.parse(err.error).error.description != "") {
           if (JSON.parse(err.error).error.code == "600") {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
           } else {

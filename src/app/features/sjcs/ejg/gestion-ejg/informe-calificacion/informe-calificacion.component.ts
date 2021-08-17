@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter,SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { CommonsService } from '../../../../../_services/commons.service';
@@ -22,7 +22,7 @@ export class InformeCalificacionComponent implements OnInit {
   dictamen: EJGItem;
   nuevoBody: EJGItem = new EJGItem();
   item: EJGItem;
-  
+
   bodyInicial: EJGItem;
   msgs = [];
   nuevo;
@@ -30,21 +30,28 @@ export class InformeCalificacionComponent implements OnInit {
   comboFundamentoCalif = [];
   comboDictamen = [];
 
+  dictamenCabecera = "";
+  fundamentoCalifCabecera = "";
+
   selectedDatos = [];
   valueComboEstado = "";
   fechaEstado = new Date();
 
-  resaltadoDatosGenerales: boolean = false;
-  
+  fechaDictCabecera: Date = null;
+
+  estados;
+
   fichaPosible = {
     key: "informeCalificacion",
     activa: false
   }
-  
+
   activacionTarjeta: boolean = false;
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
+  @Output() newEstado = new EventEmitter();
   @Input() openTarjetaInformeCalificacion;
+
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
     private commonServices: CommonsService, private translateService: TranslateService, private confirmationService: ConfirmationService) { }
@@ -53,14 +60,24 @@ export class InformeCalificacionComponent implements OnInit {
     if (this.modoEdicion) {
       if (this.persistenceService.getDatos()) {
         this.nuevo = false;
-        this.item = this.persistenceService.getDatos();
-        this.getDictamen(this.item);
+        this.dictamen = this.persistenceService.getDatos();
+        if(this.dictamen.fechaDictamen != null){
+          this.dictamen.fechaDictamen = new Date(this.dictamen.fechaDictamen);
+          this.fechaDictCabecera = this.dictamen.fechaDictamen;
+        }
+
+        // this.getDictamen(this.item);
+        //Comprobamos el campo de fundamentos para que se asigne en caso de que haya un valor asignado
+        //al tipo de dictamen
+        this.onChangeDictamen();
+        this.getComboTipoDictamen();
       }
     } else {
       this.nuevo = true;
       this.dictamen = new EJGItem();
       this.getComboTipoDictamen();
     }
+    this.bodyInicial = JSON.parse(JSON.stringify(this.dictamen));
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -72,13 +89,11 @@ export class InformeCalificacionComponent implements OnInit {
     }
   }
 
-  
   esFichaActiva(key) {
-
     return this.fichaPosible.activa;
   }
+
   abreCierraFicha(key) {
-    this.resaltadoDatosGenerales = true;
     if (
       key == "informeCalificacion" &&
       !this.activacionTarjeta
@@ -93,16 +108,20 @@ export class InformeCalificacionComponent implements OnInit {
     this.opened.emit(this.openFicha);
     this.idOpened.emit(key);
   }
-  
+
   getComboFundamentoCalif() {
     this.sigaServices.getParam(
       "filtrosejg_comboFundamentoCalif",
-      "?list_dictamen=" + this.dictamen.iddictamen
+      "?list_dictamen=" + this.dictamen.idTipoDictamen
     ).subscribe(
       n => {
         // this.isDisabledFundamentosCalif = false;
         this.comboFundamentoCalif = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboFundamentoCalif);
+
+        this.comboFundamentoCalif.forEach(pres => {
+          if (pres.value == this.dictamen.fundamentoCalif) this.fundamentoCalifCabecera = pres.label;
+        });
       },
       err => {
         console.log(err);
@@ -114,156 +133,250 @@ export class InformeCalificacionComponent implements OnInit {
       n => {
         this.comboDictamen = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboDictamen);
-        this.comboDictamen.push({ label: "Indiferente", value: "-1" });
+        //Craear entrada en la base de datos
+        // this.comboDictamen.push({ label: "Indiferente", value: "-1" });
+        this.comboDictamen.forEach(pres => {
+          if (pres.value == this.dictamen.idTipoDictamen) {
+            //this.dictamenCabecera = pres.label;
+            this.dictamen.dictamenSing = pres.label;
+          }
+        });
       },
       err => {
-        console.log(err);
       }
     );
   }
-  getDictamen(selected) {
-    this.progressSpinner = true;
-    this.sigaServices.post("gestionejg_getDictamen", selected).subscribe(
-    n => {
-      if(n.body){
-        this.dictamen = JSON.parse(n.body);
-      }else{this.dictamen = new EJGItem();}
-      if (this.dictamen.fechaDictamen != undefined)
-        this.dictamen.fechaDictamen = new Date(this.dictamen.fechaDictamen);
-      this.getComboTipoDictamen();
-      if(this.dictamen.iddictamen)
-        this.getComboFundamentoCalif();
-      this.progressSpinner = false;
-      },
-      err => {
-       console.log(err);
-      }
-    );
-  }
+
+  // getDictamen(selected) {
+  //   this.progressSpinner = true;
+  //   this.sigaServices.post("gestionejg_getDictamen", selected).subscribe(
+  //     n => {
+  //       if (n.body) {
+  //         this.dictamen = JSON.parse(n.body);
+  //       } else { this.dictamen = new EJGItem(); }
+  //       if (this.dictamen.fechaDictamen != undefined)
+  //         this.dictamen.fechaDictamen = new Date(this.dictamen.fechaDictamen);
+  //       this.getComboTipoDictamen();
+  //       if (this.dictamen.iddictamen)
+  //         this.getComboFundamentoCalif();
+  //       this.progressSpinner = false;
+  //     },
+  //     err => {
+  //       this.progressSpinner = false;
+  //     }
+  //   );
+  // }
+  
   onChangeDictamen() {
     this.comboFundamentoCalif = [];
-    if (this.dictamen.iddictamen != undefined) {
+    if (this.dictamen.idTipoDictamen != undefined) {
       this.isDisabledFundamentosCalif = false;
       this.getComboFundamentoCalif();
     } else {
       this.isDisabledFundamentosCalif = true;
-      this.dictamen.fundamentoCalif = "";
+      this.dictamen.fundamentoCalif = null;
     }
   }
+
   fillFechaDictamen(event) {
-    this.dictamen.fechaDictamenDesd = event;
+    if(event != null && !isNaN(Date.parse(event))){
+      this.dictamen.fechaDictamen = new Date(event);
+    }
+    
   }
-save(){
-  if(this.disabledSave()){
-    this.progressSpinner=true;
 
-   // this.dictamen.nuevoEJG=!this.modoEdicion;
-
-    this.sigaServices.post("gestionejg_guardarInformeCalfiacion", this.dictamen).subscribe(
+  getEstados() {
+    //this.progressSpinner = true;
+    this.sigaServices.post("gestionejg_getEstados", this.dictamen).subscribe(
       n => {
-        this.progressSpinner=false;
+        this.estados = JSON.parse(n.body).estadoEjgItems;
+        //this.progressSpinner = false;
       },
       err => {
-        console.log(err);
-        this.progressSpinner=false;
+        //this.progressSpinner = false;
       }
     );
   }
-}
-confirmRest(){
-  let mess = this.translateService.instant(
-    "messages.ReestablecerDictamen"
-  );
-  let icon = "fa fa-edit";
-  this.confirmationService.confirm({
-    message: mess,
-    icon: icon,
-    accept: () => {
-      this.rest()
-    },
-    reject: () => {
-      this.msgs = [
-        {
-          severity: "info",
-          summary: "Cancelar",
-          detail: this.translateService.instant(
-            "general.message.accion.cancelada"
-          )
-        }
-      ];
-    }
-  });
-}
-confirmDelete() {
-  let mess = this.translateService.instant(
-    "messages.deleteConfirmation"
-  );
-  let icon = "fa fa-edit";
-  this.confirmationService.confirm({
-    message: mess,
-    icon: icon,
-    accept: () => {
-      this.delete()
-    },
-    reject: () => {
-      this.msgs = [
-        {
-          severity: "info",
-          summary: "Cancelar",
-          detail: this.translateService.instant(
-            "general.message.accion.cancelada"
-          )
-        }
-      ];
-    }
-  });
-}
-    delete(){
-      this.progressSpinner=true;
 
-      //this.dictamen.nuevoEJG=!this.modoEdicion;
-      let data = [];
-      let ejg: EJGItem;
+  save() {
+    // if (this.disabledSave()) {
+      this.progressSpinner = true;
 
-      for(let i=0; this.selectedDatos.length>i; i++){
-        ejg = this.selectedDatos[i];
-        ejg.fechaEstadoNew=this.fechaEstado;
-        ejg.estadoNew=this.valueComboEstado;
+      // this.dictamen.nuevoEJG=!this.modoEdicion;
 
-        data.push(ejg);
-      }
-      this.sigaServices.post("gestionejg_borrarInformeCalificacion", data).subscribe(
+      this.sigaServices.post("gestionejg_actualizarInformeCalificacionEjg", this.dictamen).subscribe(
         n => {
-          this.progressSpinner=false;
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          
+
+          if (n.statusText == "OK") {
+
+            this.newEstado.emit(null);
+            
+            //En el caso que se cree un nuevo dictamen, se debe extraer del back
+            if(this.dictamen.iddictamen == null){
+            this.sigaServices.post("gestionejg_datosEJG", this.dictamen).subscribe(
+              n => {
+                this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+                let ejgObject = JSON.parse(n.body).ejgItems;
+                let datosItem = ejgObject[0];
+                this.persistenceService.setDatos(datosItem);
+                this.dictamen = datosItem;
+                //Para que se presente la fecha correctamente
+                this.dictamen.fechaDictamen = new Date(this.dictamen.fechaDictamen);
+                this.fechaDictCabecera = this.dictamen.fechaDictamen;
+                this.progressSpinner = false;
+              },
+              err => {
+                this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+                this.progressSpinner = false;
+              }
+            );
+            }
+            //Actualizacion de un dictamen existente
+            else{
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+            this.bodyInicial = this.dictamen;
+            this.bodyInicial.fechaDictamen = new Date(this.dictamen.fechaDictamen);
+            //Revisamos la cabecera de la tarjeta
+            this.comboFundamentoCalif.forEach(pres => {
+              if (pres.value == this.dictamen.fundamentoCalif) this.fundamentoCalifCabecera = pres.label;
+            });
+            this.comboDictamen.forEach(pres => {
+              if (pres.value == this.dictamen.idTipoDictamen) {
+                //this.dictamenCabecera = pres.label;
+                this.dictamen.dictamenSing = pres.label;
+              }
+            });
+
+            this.fechaDictCabecera = this.dictamen.fechaDictamen;
+
+            this.persistenceService.setDatos(this.bodyInicial);
+
+            this.progressSpinner = false;
+            }
+          }
+          else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+
+            this.progressSpinner = false;
+          }
         },
         err => {
-          console.log(err);
-          this.progressSpinner=false;
+          this.progressSpinner = false;
+
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         }
       );
-    }
-    rest(){
-      this.dictamen = JSON.parse(JSON.stringify(this.bodyInicial));
-    }
-    download(){
-      if(this.disabledSave()){
-        this.progressSpinner=true;
-    
-       // this.dictamen.nuevoEJG=!this.modoEdicion;
-    
-        this.sigaServices.post("gestionejg_descargarInformeCalificacion", this.dictamen).subscribe(
-          n => {
-            this.progressSpinner=false;
-          },
-          err => {
-            console.log(err);
-            this.progressSpinner=false;
-          }
-        );
+    // }
+  }
+  
+  confirmDelete() {
+    // let mess = this.translateService.instant(
+    //   "messages.deleteConfirmation"
+    // );
+    // let icon = "fa fa-edit";
+    // this.confirmationService.confirm({
+    //   message: mess,
+    //   icon: icon,
+    //   accept: () => {
+        this.delete()
+    //   },
+    //   reject: () => {
+    //     this.msgs = [
+    //       {
+    //         severity: "info",
+    //         summary: "Cancelar",
+    //         detail: this.translateService.instant(
+    //           "general.message.accion.cancelada"
+    //         )
+    //       }
+    //     ];
+    //   }
+    // });
+  }
+
+  delete() {
+    this.progressSpinner = true;
+
+    //this.dictamen.nuevoEJG=!this.modoEdicion;
+    // let data = [];
+    // let ejg: EJGItem;
+
+    // for (let i = 0; this.selectedDatos.length > i; i++) {
+    //   ejg = this.selectedDatos[i];
+    //   ejg.fechaEstadoNew = this.fechaEstado;
+    //   ejg.estadoNew = this.valueComboEstado;
+
+    //   data.push(ejg);
+    // }
+    // this.sigaServices.post("gestionejg_borrarInformeCalificacion", data).subscribe(
+    //   n => {
+    //     this.progressSpinner = false;
+    //     this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+    //   },
+    //   err => {
+    //     console.log(err);
+    //     this.progressSpinner = false;
+    //     this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+    //   }
+    // );
+
+    let dictamenPeticion: EJGItem = this.dictamen;
+
+    dictamenPeticion.fechaDictamen = null;
+    dictamenPeticion.idTipoDictamen = null;
+    dictamenPeticion.fundamentoCalif = null;
+    dictamenPeticion.dictamen = null;
+
+    this.sigaServices.post("gestionejg_actualizarInformeCalificacionEjg", this.dictamen).subscribe(
+      n => {
+        this.progressSpinner = false;
+
+        if (n.statusText == "OK") {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          dictamenPeticion.iddictamen = null;
+          
+          this.bodyInicial = dictamenPeticion;
+          this.dictamen = dictamenPeticion;
+          this.dictamen.dictamenSing = "";
+          this.persistenceService.setDatos(this.bodyInicial);
+
+          this.fechaDictCabecera = this.dictamen.fechaDictamen;
+
+          this.fundamentoCalifCabecera = "";
+          //this.dictamenCabecera = "";
+        }
+        else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      },
+      err => {
+        this.progressSpinner = false;
+
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }
-    }
+    );
+  }
+
+  rest() {
+    this.dictamen = JSON.parse(JSON.stringify(this.bodyInicial));
+    this.dictamen.fechaDictamen = new Date(this.dictamen.fechaDictamen);
+  }
+
+  download() {
+    // if (this.disabledSave()) {
+      this.progressSpinner = true;
+
+      // this.dictamen.nuevoEJG=!this.modoEdicion;
+
+      this.sigaServices.post("gestionejg_descargarInformeCalificacion", this.dictamen).subscribe(
+        n => {
+          this.progressSpinner = false;
+        },
+        err => {
+          this.progressSpinner = false;
+        }
+      );
+    // }
+  }
 
   showMessage(severity, summary, msg) {
     this.msgs = [];
@@ -273,62 +386,73 @@ confirmDelete() {
       detail: msg
     });
   }
+
   clear() {
     this.msgs = [];
   }
-  checkPermisosConfirmDelete(){
+
+  checkPermisosConfirmDelete() {
     let msg = this.commonServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
-    } else {
-      this.confirmDelete();
-    }
+    } 
+    else this.checkFechaEstadoComision()
   }
-  checkPermisosConfirmRest(){
-    let msg = this.commonServices.checkPermisos(this.permisoEscritura, undefined);
-    if (msg != undefined) {
-      this.msgs = msg;
-    } else {
-      this.confirmRest();
-    }
+
+  checkFechaEstadoComision(){
+    this.progressSpinner = true;
+    this.sigaServices.post("gestionejg_getEstados", this.dictamen).subscribe(
+      n => {
+        let estados = JSON.parse(n.body).estadoEjgItems;
+        this.progressSpinner = false;
+
+        let estadoCAJG = estados.find(
+          item => item.propietario == "1" && item.fechaInicio > this.dictamen.fechaDictamen
+        );
+        //Introducir mensaje en la base de datos
+        if (estadoCAJG != undefined)  this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.dictamen.disDel"));
+        else this.confirmDelete();
+      },
+      err => {
+        this.progressSpinner = false;
+
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
   }
-  checkPermisosSave(){
+  
+  checkPermisosSave() {
     let msg = this.commonServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
     } else {
-      if (this.disabledSave()) {
-        this.msgs = this.commonServices.checkPermisoAccion();
-      } else {
+      // if (this.disabledSave()) {
+      //   this.msgs = this.commonServices.checkPermisoAccion();
+      // } else {
         this.save();
-      }
+      // }
     }
   }
-  disabledSave() {
-    if (this.nuevo) {
-      if (this.dictamen.fechaApertura != undefined) {
-        return false;
-      } else {
-        return true;
-      }
+
+  checkPermisosRest() {
+    let msg = this.commonServices.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
     } else {
-      if (this.permisoEscritura) {
-        if (this.dictamen.fechaApertura != undefined) {
-          return false;
-        } else {
-          return true;
-        }
-      } else {
-        return true;
-      }
+      // if (this.disabledSave()) {
+      //   this.msgs = this.commonServices.checkPermisoAccion();
+      // } else {
+        this.rest();
+      // }
     }
   }
-  checkPermisosDownload(){
+  
+  checkPermisosDownload() {
     let msg = this.commonServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
     } else {
       this.download();
     }
-    }
+  }
 }

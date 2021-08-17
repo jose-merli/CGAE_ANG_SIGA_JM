@@ -1,7 +1,7 @@
  <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 
-<div *ngIf="showTarjetaPermiso" class="ficha-container">
-  <div class="card">
+<div class="ficha-container">
+  <div class="card" id = "procuradorJusticiable">
     <div class="card-header header-ficha" (click)="onHideTarjeta()">
       <div *ngIf="showTarjeta" class="header-ficha-open d-flex justify-content-start align-items-center">
         <div class="img-colegiado">
@@ -25,12 +25,12 @@
           <div class="row">
             <div class="col-3">
               <label>{{ 'censo.resultadosSolicitudesModificacion.literal.nColegiado' | translate }}
-                <span>{{ generalBody.numColegiado }}</span>
+                <span>{{ nColegiadoCabecera }}</span>
               </label>
             </div>
             <div class="col-3">
               <label>{{ 'administracion.parametrosGenerales.literal.nombre.apellidos' | translate }}
-                <span>{{ generalBody.nombre }}</span>
+                <span>{{ nombreCabecera }}</span>
               </label>
             </div>
             <div class="col-3"></div>
@@ -71,7 +71,7 @@
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "censo.resultadosSolicitudesModificacion.literal.nColegiado" | translate }}
               </label>
-              <input [(ngModel)]="generalBody.numColegiado" type="text" disabled class="form-control" [maxLength]="100" [disabled]="!permisoEscritura"
+              <input [(ngModel)]="generalBody.nColegiado" type="text" disabled class="form-control" [maxLength]="100" [disabled]="!permisoEscritura"
                 pInputText/>
             </div>
             <div class="form-group col-lg-6 col-md-6">

@@ -10,7 +10,6 @@ import {
   EventEmitter
 } from "@angular/core";
 import { Router } from "@angular/router";
-import { ConfirmationService } from "primeng/api";
 import { DataTable } from "primeng/datatable";
 import {
   FormBuilder,
@@ -25,11 +24,10 @@ import { SigaWrapper } from "../../../wrapper/wrapper.class";
 import { esCalendar } from "../../../utils/calendar";
 import { SigaServices } from "../../../_services/siga.service";
 import { DialogoComunicacionesItem } from "../../../models/DialogoComunicacionItem";
-import { ModelosComunicacionesItem } from "../../../models/ModelosComunicacionesItem";
 import { AsistenciasItem } from "../../../models/sjcs/AsistenciasItem";
 import { PersistenceService } from "../../../_services/persistence.service";
 import { CommonsService } from '../../../_services/commons.service';
-import { EJGItem } from "../../../models/sjcs/EJGItem";
+import { AsuntosJusticiableItem } from "../../../models/sjcs/AsuntosJusticiableItem";
 
 export enum KEY_CODE {
   ENTER = 13
@@ -67,7 +65,7 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
 
   editar: boolean = true;
   noResultsSubtipos: boolean = true;
-  filtros: AsistenciasItem = new AsistenciasItem;
+  filtros: AsuntosJusticiableItem = new AsuntosJusticiableItem;
   comboTipoEjg: any[];
   comboTipoEjgColegio: any[];
   comboEstadoEjg: any[] = [];
@@ -101,28 +99,35 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
   idClaseComunicacion: String;
   keys: any[] = [];
   comboTiposAsitencia: any[];
+  disableRadio: boolean = false;
 
   @Input() permisoEscritura;
   @Input() idPersona;
-  @Input() datosEJG: EJGItem = null;
+  @Input() data: AsuntosJusticiableItem = null;
+  @Input() from: boolean = false;
 
-  @Output() search = new EventEmitter<boolean>();
+  @Output() search = new EventEmitter<String>();
+  @Output() resetTable = new EventEmitter<Boolean>();
 
   institucionActual: any;
   deshabilitarCombCol: boolean = false;
   colegiosSeleccionados: any[] = [];
-  radioTarjeta: String = 'ejg';
+  radioTarjeta: String = 'des';
   showDesignacion: boolean = true;
   showSOJ: boolean = true;
   showAsistencias: boolean = true;
   comboEstadoDesignacion: { label: string; value: string; }[];
   filtroAux: any;
+  usuarioBusquedaExpress = {
+    numColegiado: '',
+    nombreAp: ''
+  };
+
   constructor(
     private sigaServices: SigaServices,
     private router: Router,
     private formBuilder: FormBuilder,
     private changeDetectorRef: ChangeDetectorRef,
-    private confirmationService: ConfirmationService,
     private translateService: TranslateService,
     private persistenceService: PersistenceService,
     private commonService: CommonsService,
@@ -150,26 +155,71 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
     this.filtros.anio = fecha.getFullYear();
 
     //Se asignan los valores de los filtros cuando procede de EJG y se fijan
-    if (this.datosEJG != null) {
+    if(sessionStorage.getItem("radioTajertaValue")){
+      this.radioTarjeta=sessionStorage.getItem("radioTajertaValue")
+      this.disableRadio = true;
+    }else{
       this.radioTarjeta = 'des';
-
+      sessionStorage.setItem("radioTajertaValue",""+this.radioTarjeta);
     }
+    
+    if (sessionStorage.getItem("buscadorColegiados")) {
+
+      let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
+
+      sessionStorage.removeItem('buscadorColegiados');
+
+      if (busquedaColegiado.nombreSolo != undefined) this.usuarioBusquedaExpress.nombreAp = busquedaColegiado.apellidos + ", " + busquedaColegiado.nombreSolo;
+      else this.usuarioBusquedaExpress.nombreAp = busquedaColegiado.apellidos + ", " + busquedaColegiado.nombre;
+
+      this.usuarioBusquedaExpress.numColegiado = busquedaColegiado.nColegiado;
+      this.filtros.nColegiado = this.usuarioBusquedaExpress.numColegiado;
+
+      //Asignacion de idPersona según el origen de la busqueda.
+      this.idPersona = busquedaColegiado.idPersona;
+      if (this.idPersona == undefined) this.idPersona = busquedaColegiado.idpersona;
+    }
+  //Se comprueba si vueleve de una busqueda de colegiado
+  if (sessionStorage.getItem("idTurno")) {
+    this.data.idTurno = sessionStorage.getItem("idTurno");
+    sessionStorage.removeItem('idTurno');
+  }
+
+  //Se comprueba si vueleve de una busqueda de colegiado
+  if (sessionStorage.getItem("idGuardia")) {
+    this.data.idGuardia = sessionStorage.getItem("idGuardia");
+    sessionStorage.removeItem('idGuardia');
+  }
+  
+     
   }
 
   changeFilters() {
-    let filtrosNuevos = new AsistenciasItem;
-    filtrosNuevos.anio = this.filtros.anio;
+    sessionStorage.removeItem("radioTajertaValue");
+    sessionStorage.setItem("radioTajertaValue",""+this.radioTarjeta);
+    sessionStorage.removeItem('buscadorColegiados');
+    sessionStorage.removeItem('idGuardia');
+    sessionStorage.removeItem('idTurno');
+    this.usuarioBusquedaExpress.nombreAp='';
+    this.usuarioBusquedaExpress.numColegiado='';
+    this.filtros = new AsuntosJusticiableItem;
+    this.resetTable.emit(true);
+    /* let filtrosNuevos = new AsuntosJusticiableItem;
+     filtrosNuevos.anio = this.filtros.anio;
     filtrosNuevos.numero = this.filtros.numero;
-    filtrosNuevos.fechadesde = this.filtros.fechadesde;
-    filtrosNuevos.fechahasta = this.filtros.fechahasta;
+    filtrosNuevos.fechaAperturaDesde = this.filtros.fechaAperturaDesde;
+    filtrosNuevos.fechaAperturaHasta = this.filtros.fechaAperturaHasta;
     filtrosNuevos.idTurno = this.filtros.idTurno;
     filtrosNuevos.idGuardia = undefined;
     filtrosNuevos.nif = this.filtros.nif;
     filtrosNuevos.apellidos = this.filtros.apellidos;
     filtrosNuevos.nombre = this.filtros.nombre;
+    filtrosNuevos.nColegiado = this.filtros.nColegiado;
+    filtrosNuevos.numProcedimiento = this.filtros.numProcedimiento;
+    filtrosNuevos.numeroDiligencia = this.filtros.numeroDiligencia;
 
-    this.filtros = new AsistenciasItem;
-    this.filtros = filtrosNuevos;
+    this.filtros = new AsuntosJusticiableItem;
+    this.filtros = filtrosNuevos; */
   }
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
@@ -401,7 +451,7 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
   }
   getComboTurno() {
     this.progressSpinner = true;
-    if (this.datosEJG != null) {
+    if (this.data != null) {
       this.sigaServices.getParam("componenteGeneralJG_comboTurnos", "?pantalla=EJG").subscribe(
         n => {
           this.comboTurno = n.combooItems;
@@ -456,7 +506,7 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
 
   comprobarCamposCompuestos() {
     let continuar = true;
-    if ((this.filtros.anio == undefined || this.filtros.anio == "") && (this.filtros.numero != undefined && this.filtros.undefined != "")) {
+    if ((this.filtros.anio == undefined || this.filtros.anio == "") && (this.filtros.numero != undefined && this.filtros != undefined)) {
       continuar = false;
       this.customError = "scs.busquedaasuntos.error.campoanio";
     }
@@ -504,19 +554,10 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
   }
 
   isBuscar() {
-    //if (this.comprobarCamposCompuestos()) {
-    this.filtrosTrim();
-    this.filtros.radioTarjeta = this.radioTarjeta;
-    if (this.idPersona != undefined && this.idPersona != "")
-      this.filtros.idPersonaColegiado = this.idPersona;
     this.persistenceService.setFiltros(this.filtros);
     this.persistenceService.setFiltrosAux(this.filtros);
     this.filtroAux = this.persistenceService.getFiltrosAux()
-    this.search.emit(false)
-
-    /* } else {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(this.customError));
-    } */
+    this.search.emit(this.radioTarjeta)
   }
 
   showMessage(severity, summary, msg) {
@@ -545,76 +586,14 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
   }
 
   isLimpiar() {
-    this.filtros = new AsistenciasItem();
-
+    this.filtros = new AsuntosJusticiableItem();
+    
+    this.usuarioBusquedaExpress.nombreAp='';
+    this.usuarioBusquedaExpress.numColegiado='';
+    
     if (!this.deshabilitarCombCol) {
       this.colegiosSeleccionados = [];
     }
-  }
-
-  //Elimina los espacios en blancos finales e iniciales de los inputs de los filtros
-  filtrosTrim() {
-    if (this.filtros.nif != null) {
-      this.filtros.nif = this.filtros.nif.trim();
-    }
-    if (this.filtros.apellidos != null) {
-      this.filtros.apellidos = this.filtros.apellidos.trim();
-    }
-    if (this.filtros.nombre != null) {
-      this.filtros.nombre = this.filtros.nombre.trim();
-    }
-    if (this.filtros.anioRegistro != null) {
-      this.filtros.anioRegistro = this.filtros.anioRegistro.trim();
-    }
-    if (this.filtros.numero != null) {
-      this.filtros.numero = this.filtros.numero.trim();
-    }
-    if (this.filtros.idInstitucion != null) {
-      this.filtros.idInstitucion = this.filtros.idInstitucion.trim();
-    }
-    if (this.filtros.idTurno != null) {
-      this.filtros.idTurno = this.filtros.idTurno.trim();
-    }
-    if (this.filtros.idGuardia != null) {
-      this.filtros.idGuardia = this.filtros.idGuardia.trim();
-    }
-    if (this.filtros.nig != null) {
-      this.filtros.nig = this.filtros.nig.trim();
-    }
-    if (this.filtros.idTipoEjg != null) {
-      this.filtros.idTipoEjg = this.filtros.idTipoEjg.trim();
-    }
-    if (this.filtros.idTipoEjColegio != null) {
-      this.filtros.idTipoEjColegio = this.filtros.idTipoEjColegio.trim();
-    }
-    if (this.filtros.idEstadoPorEjg != null) {
-      this.filtros.idEstadoPorEjg = this.filtros.idEstadoPorEjg.trim();
-    }
-    if (this.filtros.idTipoDesignacion != null) {
-      this.filtros.idTipoDesignacion = this.filtros.idTipoDesignacion.trim();
-    }
-    if (this.filtros.anioProcedimiento != null) {
-      this.filtros.anioProcedimiento = this.filtros.anioProcedimiento.trim();
-    }
-    if (this.filtros.numProcedimiento != null) {
-      this.filtros.numProcedimiento = this.filtros.numProcedimiento.trim();
-    }
-    if (this.filtros.numProcedimientoRegistro != null) {
-      this.filtros.numProcedimientoRegistro = this.filtros.numProcedimientoRegistro.trim();
-    }
-    if (this.filtros.idJuzgado != null) {
-      this.filtros.idJuzgado = this.filtros.idJuzgado.trim();
-    }
-    if (this.filtros.numeroDiligencia != null) {
-      this.filtros.numeroDiligencia = this.filtros.numeroDiligencia.trim();
-    }
-    if (this.filtros.asunto != null) {
-      this.filtros.asunto = this.filtros.asunto.trim();
-    }
-    if (this.filtros.comisaria != null) {
-      this.filtros.comisaria = this.filtros.comisaria.trim();
-    }
-
   }
 
   getColsResults() {
@@ -652,14 +631,6 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
         "cen.busqueda.error.busquedageneral"
       )
     });
-  }
-
-  isDisabledCombos() {
-    if (this.filtros.tipoCV != "" && this.filtros.tipoCV != null) {
-      return false;
-    } else {
-      return true;
-    }
   }
 
   //búsqueda con enter

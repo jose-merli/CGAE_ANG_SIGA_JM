@@ -36,9 +36,11 @@ export class FichaCambioLetradoComponent implements OnInit {
     fixed: false,
     opened: false,
     campos: [],
-    enlaceCardClosed: {click: 'irFichaColegial()', title: this.translateService.instant('informesycomunicaciones.comunicaciones.fichaColegial')},
+    enlaceCardClosed: { click: 'irFichaColegial()', title: this.translateService.instant('informesycomunicaciones.comunicaciones.fichaColegial') },
     letrado: {}
   };
+
+  resaltadoDatos: boolean = false;
 
   @ViewChild(LetradoEntranteComponent) entrante;
   @ViewChild(LetradoSalienteComponent) saliente;
@@ -51,7 +53,7 @@ export class FichaCambioLetradoComponent implements OnInit {
     private datepipe: DatePipe) { }
 
   ngOnInit() {
-
+    this.resaltadoDatos = true;
     //Para saber si el usuario es un letrado o no
     /* getLetrado() {
       let isLetrado: ComboItem;
@@ -143,10 +145,8 @@ export class FichaCambioLetradoComponent implements OnInit {
 
   clickSave() {
 
-    
     //Campos obligatorios rellenados?
-    if (this.entrante.body.fechaDesignacion != null || this.entrante.body.fechaDesignacion != undefined ||
-      this.saliente.body.motivoRenuncia != undefined || this.saliente.body.motivoRenuncia != null) {
+    if ((this.entrante.body.fechaDesignacion != null || this.entrante.body.fechaDesignacion != undefined) && (this.saliente.body.motivoRenuncia != undefined || this.saliente.body.motivoRenuncia != null)) {
       //Comprobar requisitos según art 27
       if ((this.entrante.body.numColegiado == undefined || this.entrante.body.numColegiado == "") && this.entrante.body.art27 == false) {
         this.confirmationService.confirm({
@@ -171,12 +171,14 @@ export class FichaCambioLetradoComponent implements OnInit {
         });
       }
       else if (this.entrante.body.numColegiado != undefined && this.entrante.body.numColegiado != "") {
-        this.save()
+        this.save();
       }
-      else this.showMessage("error", "Cancel", this.translateService.instant("general.message.camposObligatorios"))
+      else{
+        this.showMessage("error", "Cancel", this.translateService.instant("general.message.camposObligatorios"));
+      } 
     }
     else {
-      this.showMessage("error", "Cancel", this.translateService.instant("general.message.camposObligatorios"))
+      this.showMessage("error", "Cancel", this.translateService.instant("general.message.camposObligatorios"));
     }
   }
 
@@ -184,60 +186,38 @@ export class FichaCambioLetradoComponent implements OnInit {
     this.progressSpinner = true;
     //Definir parametros y construir servicio
 
-    /* setAnio(designa.getAnio());
-          key.setIdturno(designa.getIdturno());
-          key.setNumero(designa.getNumero());
-          key.setIdpersona(letradoSaliente.getIdpersona());
-          key.setFechadesigna(letradoSaliente.getFechadesigna());
-          oldLetrado.setObservaciones(letradoSaliente.getObservaciones());
-          oldLetrado.setMotivosrenuncia(letradoSaliente.getMotivosrenuncia() 
-          letradoEntrante.getFechadesigna()
-          letradoEntrante.getIdpersona()*/
-
     let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
 
-    /* let item = new CambioLetradoItem(); */
-
     let request = [designa.ano, //0
-      designa.idTurno, //1
-      designa.numero,//2
-      this.body.idPersona,//3
-       this.saliente.body.observaciones, //4
-       this.saliente.body.motivoRenuncia, //5
-       sessionStorage.getItem("FDSaliente"), //6
-       this.saliente.body.fechaSolRenuncia, //7
-      this.entrante.body.fechaDesignacion, //8
-       this.entrante.body.idPersona, //9
-       this.saliente.body.compensacion, //10
-       this.entrante.body.salto //11
-      ]; 
-
-    /* item.ano=request[0];
-    item.idTurno=request[1];
-    item.numero=request[2];
-    item.idPersonaSaliente=request[3];
-    item.observaciones=request[4];
-    item.motivoRenuncia=request[5];
-    item.fechaDesignacionSaliente=request[6];
-    item.fechaSolRenuncia=request[7];
-    item.fechaDesignacionEntrante=request[8];
-    item.idPersonaEntrante=request[9]; 
-    
-    */
+    designa.idTurno, //1
+    designa.numero,//2
+    this.body.idPersona,//3
+    this.saliente.body.observaciones, //4
+    this.saliente.body.motivoRenuncia, //5
+    sessionStorage.getItem("FDSaliente"), //6
+    this.saliente.body.fechaSolRenuncia, //7
+    this.datepipe.transform(this.entrante.body.fechaDesignacion, 'dd/MM/yyyy'),//8
+    this.entrante.body.idPersona, //9
+    this.saliente.body.compensacion, //10
+    this.entrante.body.salto //11
+    ];
 
     this.progressSpinner = true;
 
     this.sigaServices.post("designaciones_updateLetradoDesignacion", request).subscribe(
       n => {
         this.progressSpinner = false;
-
-         this.router.navigate(['/fichaDesignaciones']);
+        //Mostrar mensaje todo correcto
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        setTimeout(() => {
+          this.router.navigate(['/fichaDesignaciones']);
+        }, 400);
       },
       err => {
-        if (err.error!=null 
+        if (err.error != null
           /* || err != undefined && JSON.parse(err.error).error.description != "" */
-          ) {
-          if(JSON.parse(err.error).error.code == 100){
+        ) {
+          if (JSON.parse(err.error).error.code == 100) {
             this.confirmationService.confirm({
               key: "errorPlantillaDoc",
               message: this.translateService.instant("justiciaGratuita.oficio.designas.letrados.nocolaletrado"),
@@ -259,7 +239,7 @@ export class FichaCambioLetradoComponent implements OnInit {
     this.progressSpinner = false;
   }
 
-  
+
   formatDate(date) {
     const pattern = 'dd/MM/yyyy';
     return this.datepipe.transform(date, pattern);
@@ -273,6 +253,16 @@ export class FichaCambioLetradoComponent implements OnInit {
       detail: msg
     });
   }
+
+  checkDatosGenerales() {
+    if ((this.entrante.body.fechaDesignacion != null || this.entrante.body.fechaDesignacion != undefined) &&
+      (this.saliente.body.motivoRenuncia != undefined || this.saliente.body.motivoRenuncia != null)) {
+      this.resaltadoDatos = false;
+    } else {
+      this.resaltadoDatos = true;
+    }
+  }
+
 
 
 }

@@ -70,9 +70,9 @@ export class DetalleTarjetaComunicacionesDesignaComponent implements OnInit {
       { field: "claseComunicacion", header: "informesycomunicaciones.comunicaciones.busqueda.claseComunicacion" },
       { field: "destinatario", header: "informesycomunicaciones.comunicaciones.busqueda.destinatario" },
       { field: "fechaCreacion", header: "informesycomunicaciones.enviosMasivos.fechaCreacion" },
-      { field: "fechaProgramacion", header: "informesycomunicaciones.comunicaciones.busqueda.fechaProgramada" },
+      { field: "fechaProgramada", header: "informesycomunicaciones.comunicaciones.busqueda.fechaProgramada" },
       { field: "tipoEnvio", header: "informesycomunicaciones.comunicaciones.busqueda.tipoEnvio" },
-      { field: "estado", header: "censo.nuevaSolicitud.estado" }
+      { field: "estadoEnvio", header: "censo.nuevaSolicitud.estado" }
     ];
 
     this.rowsPerPage = [

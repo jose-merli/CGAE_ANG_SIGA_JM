@@ -9,6 +9,7 @@ import { CommonsService } from '../../../../_services/commons.service';
 import { DatePipe } from '../../../../../../node_modules/@angular/common';
 import { Dialog } from 'primeng/primeng';
 import { saveAs } from "file-saver/FileSaver";
+//import moment = require('moment');
 
 @Component({
   selector: 'app-tabla-ejg',
@@ -44,7 +45,6 @@ export class TablaEjgComponent implements OnInit {
   ejgObject = [];
   datosFamiliares = [];
 
-  comboEstadoEJG = [];
   comboRemesa = [];
   fechaEstado = new Date();
   valueComboEstado = "";
@@ -55,6 +55,7 @@ export class TablaEjgComponent implements OnInit {
 
   @Input() filtro;
   @Input() remesa;
+  @Input() comboEstadoEJG;
 
   @ViewChild("table") table: DataTable;
   @Output() searchHistoricalSend = new EventEmitter<boolean>();
@@ -68,8 +69,7 @@ export class TablaEjgComponent implements OnInit {
 
   constructor(private translateService: TranslateService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
     private sigaServices: SigaServices, private persistenceService: PersistenceService, 
-    private confirmationService: ConfirmationService, private commonServices: CommonsService,
-    private datepipe: DatePipe) {
+    private confirmationService: ConfirmationService, private commonServices: CommonsService) {
 
   }
 
@@ -92,25 +92,12 @@ export class TablaEjgComponent implements OnInit {
       this.historico = this.persistenceService.getHistorico();
     }
 
-    this.getComboEstadoEJG();
     this.getComboRemesa(); 
   }
 
   //Se activara cada vez que los @Input cambien de valor (ahora unicamente datos)
   ngOnChanges(){
     this.selectedDatos=[];
-  }
-
-  getComboEstadoEJG() {
-    this.sigaServices.get("filtrosejg_comboEstadoEJG").subscribe(
-      n => {
-        this.comboEstadoEJG = n.combooItems;
-        this.commonServices.arregloTildesCombo(this.comboEstadoEJG);
-      },
-      err => {
-        console.log(err);
-      }
-    );
   }
   
   openTab(evento) {
@@ -151,6 +138,11 @@ export class TablaEjgComponent implements OnInit {
       n => {
         this.datosFamiliares = JSON.parse(n.body).unidadFamiliarEJGItems;
         this.persistenceService.setBodyAux(this.datosFamiliares);
+
+        if(sessionStorage.getItem("EJGItem")){
+          sessionStorage.removeItem("EJGItem");
+        }
+
         this.router.navigate(['/gestionEjg']);
         this.progressSpinner = false;
         this.commonServices.scrollTop();
@@ -173,7 +165,7 @@ export class TablaEjgComponent implements OnInit {
     this.cols = [
       { field: "turnoDes", header: "justiciaGratuita.justiciables.literal.turnoGuardia", width: "20%" },
       { field: "turno", header: "dato.jgr.guardia.guardias.turno", width: "10%" },
-      { field: "numAnnioProcedimiento", header: "justiciaGratuita.ejg.datosGenerales.numAnnioProcedimiento", width: "5%" },
+      { field: "numAnnioProcedimiento", header: "justiciaGratuita.ejg.datosGenerales.annioNum", width: "5%" },
       { field: "apellidosYNombre", header: "busquedaSanciones.detalleSancion.letrado.literal", width: "20%" },
       { field: "fechaApertura", header: "gratuita.busquedaEJG.literal.fechaApertura", width: "10%" },
       { field: "estadoEJG", header: "justiciaGratuita.ejg.datosGenerales.EstadoEJG", width: "15%" },
@@ -363,56 +355,58 @@ export class TablaEjgComponent implements OnInit {
   }
 
   downloadEEJ() {
-    this.progressSpinner=true;
+    let msg = this.commonServices.checkPermisos(this.permisoEscritura, undefined);
 
-    this.sigaServices.postDownloadFiles("gestionejg_descargarExpedientesJG", this.selectedDatos).subscribe(
-      data => {
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.progressSpinner=true;
 
-        let blob = null;
+      let datos = this.selectedDatos;
 
-          let mime = "application/pdf";
-          blob = new Blob([data], { type: mime });
-          saveAs(blob, "eejg_2005_2018-01200_45837302G_20210525_131611.pdf");
-      
-      },
-      err => {
-        this.progressSpinner = false;
-        console.log(err);
-      },
-      () => {
-        this.progressSpinner = false;
-      }
-    );
+      datos.forEach(element => {
+        element.nif = undefined;
+      });
 
+      this.sigaServices.postDownloadFiles("gestionejg_descargarExpedientesJG", this.selectedDatos).subscribe(
+        data => {
+          if(data.size==0){
+            this.progressSpinner = false;
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+          }else{
+            this.progressSpinner = false;
+            
+            let blob = null;
 
+            let now = new Date();
+            let month = now.getMonth()+1;
+            let nombreFichero = "eejg_"+now.getFullYear();
 
-    // this.sigaServices.post("", ).subscribe(
-    //   n => {
-    //     this.progressSpinner=false;
-    //     let dato: Error = JSON.parse(n.body); 
+            if(month<10){
+              nombreFichero = nombreFichero+"0"+month;
+            }else{
+              nombreFichero += month;
+            }
 
-    //     if(dato.code=='200'){
-    //       this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-    //     }else{
-    //       if(dato.description == "noExiste"){
-    //         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.mensaje.noExistePeticiones"));
-    //       }else{
-    //         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-    //       }
-    //     }
-    //   },
-    //   err => {
-    //     console.log(err);
-    //     this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-    //     this.progressSpinner=false;
-    //   }
-    // );
+            nombreFichero += now.getDate()+"_"+now.getHours()+""+now.getMinutes();
+
+            let mime = data.type;
+            blob = new Blob([data], { type: mime });
+            saveAs(blob, nombreFichero);
+          }
+        },
+        err => {
+          this.progressSpinner = false;
+          console.log(err);
+        }
+      );
+    }
   }
 
   addRemesa() {
     this.showModalAnadirRemesa = true;
 
-    //Queda pendiente añadir el codigo que gestionaria el desplegable si se accede desde una fecha de remesa.
+    //Queda pendiente añadir el codigo que gestionaria el desplegable si se accede desde una ficha de remesa.
     //El desplegable tendria que tener el valor de la remesa de la que procede y además deshabilitar el desplegable para que no pueda cambiar de valor.
     if(this.remesa!=null){
       this.valueComboRemesa = this.remesa.descripcion;
@@ -477,8 +471,10 @@ export class TablaEjgComponent implements OnInit {
     this.sigaServices.post("filtrosejg_anadirExpedienteARemesa", this.selectedDatos).subscribe(
       n => {
         this.progressSpinner=false;
-        if(JSON.parse(n.body).status=="OK")this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.busqueda.EjgEnRemesa"));
+        if(JSON.parse(n.body).status=="OK"){
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.busqueda.emit(true);
+      }else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.busqueda.EjgEnRemesa"));
       },
       err => {
         this.progressSpinner=false;
@@ -505,11 +501,35 @@ export class TablaEjgComponent implements OnInit {
         this.disableAddRemesa = false;
       }
     } */
-    if(this.filtro.estadoEJG=="7" || this.filtro.estadoEJG=="8"){
+    //Actualmente depende de los valores seleccionados en el filtro. 
+    //Esto se debe cambiar al valor de los datos seleccionados adquiriendo las etiquetas que corresponden a los valores 7 y 8 del combo de estadosEJG.
+    //Concretamente, se comprobaria si alguno de los ejgs seleccionados tienen un estado ejg distinto a ese y se bloquearia si asi fuera.
+
+    this.disableAddRemesa = false;
+    let LRC;
+    let LRCAD;
+
+    //Buscamos las etiquetas correspondientes a los valores 7 y 8 
+    //que equivaldrian respectivamente a "Listo remitir comisión" y "Listo remitir comisión act. designación" respectivamente 
+    this.comboEstadoEJG.forEach(element => {
+      if(element.value=="7") LRC = element.label;
+      else if(element.value=="8")LRCAD = element.label;
+    });
+
+    selectedDatos.forEach(element => {
+      if(element.estadoEJG!=LRC && element.estadoEJG!=LRCAD) this.disableAddRemesa = true;
+    });
+
+    /* if(this.filtro.estadoEJG=="7" || this.filtro.estadoEJG=="8"){
       this.disableAddRemesa = false;
     }
     else{
       this.disableAddRemesa = true;
-    }
+    } */
+    
+  }
+
+  fillFechaEstado(event){
+    this.fechaEstado=event;
   }
 }

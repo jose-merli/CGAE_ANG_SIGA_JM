@@ -70,12 +70,16 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
 
   clearForm() {
     this.colegiadoForm.reset();
+    this.styleObligatory = true;
+    this.obligatorio = true;
+    this.colegiadoForm.get('numColegiado').setValue("");
+    this.colegiadoForm.get('nombreAp').setValue("");
     this.changeValue();
   }
 
   isBuscar(form) {
     //Se revisa si esta en la pantalla de gestion de Ejg y la tarjeta de servicios de tramitación
-    if (this.tarjeta == "ServiciosTramit" && this.pantalla == "EJG") {
+    if (this.tarjeta == "ServiciosTramit" && this.pantalla == "gestionEjg") {
       //Se comprueba que se han rellenado los campos de turno y guardia
       if (this.idGuardia != null && this.idGuardia != undefined &&
         this.idTurno != null && this.idTurno != undefined) {

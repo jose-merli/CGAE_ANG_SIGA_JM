@@ -14,6 +14,9 @@
           </div>
           <div class="d-flex justify-content-between default">
               <label *ngIf="nExpedientes > 0">{{ "justiciaGratuita.ejg.datosGenerales.numero.Expedientes" | translate }}: <span>{{nExpedientes}}</span></label>
+              <label *ngIf="nExpedientes > 0">{{ "formacion.busquedaInscripcion.fechaSolicitud" | translate }}: <span>{{expedientesEcon[0].f_solicitud | date: 'dd/MM/yyyy'}}</span></label>
+              <label *ngIf="nExpedientes > 0">{{ "justiciaGratuita.ejg.datosGenerales.FechaRecepcion" | translate }}: <span>{{expedientesEcon[0].f_recepcion | date: 'dd/MM/yyyy'}}</span></label>
+              <label *ngIf="nExpedientes > 0">{{ "censo.busquedaSolicitudesModificacion.literal.estado" | translate }}: <span>{{expedientesEcon[0].estado}}</span></label>
               <label *ngIf="nExpedientes == 0">{{ "justiciaGratuita.ejg.datosGenerales.numero.Expedientes" | translate }}: <span>{{ "general.message.no.registros" | translate }}</span></label>
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('expedientesEconomicos')"></i>
           </div>
@@ -30,7 +33,7 @@
     <div *ngIf="esFichaActiva('expedientesEconomicos')" class="px-0 pt-0 pb-0 card-body card-body-ficha">
           <!-- TABLA RESULTADOS -->
           <p-table [value]="expedientesEcon" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple" [responsive]="true"
-            #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowUnSelect)="actualizaSeleccionados(selectedDatos)" [ngClass]="{ 'customCursor': selectMultiple}"
+            #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowUnselect)="actualizaSeleccionados(selectedDatos)" [ngClass]="{ 'customCursor': selectMultiple}"
             selectionMode="multiple" paginatorPosition="both">
             <ng-template pTemplate="colgroup" let-columns>
               <colgroup>
@@ -100,7 +103,7 @@
           </p-table>
          <div class="card-footer">
           <div class="text-right main-button">
-            <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="checkPermisosDownloadEEJ()" type="button" icon="fas fa-download" iconPos="left" label="{{'justiciaGratuita.ejg.datosGenerales.DescargarEEJ' | translate}}"></button>
+            <button pButton [disabled]="(selectedDatos.length == 0) || !permisoEscritura" (click)="downloadEEJ()" type="button" icon="fas fa-download" iconPos="left" label="{{'justiciaGratuita.ejg.datosGenerales.DescargarEEJ' | translate}}"></button>
           </div>
         </div>
         <p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" #cd>

@@ -13,8 +13,8 @@
             <label class="mr-auto title-ficha pointer">{{ 'justiciaGratuita.ejg.datosGenerales.Impugnacion' | translate }}</label>
           </div>
           <div class="d-flex justify-content-between default">
-              <label>{{ "censo.resultadosSolicitudesModificacion.literal.fecha" | translate }}: <span *ngIf="impugnacion">{{impugnacion.fechaAuto | date: 'dd/MM/yyyy'}}</span></label>
-              <label>{{ "justiciaGratuita.ejg.datosGenerales.AutoResolutorio" | translate }}: <span>{{impugnacionDesc}}</span></label>
+              <label>{{ "censo.resultadosSolicitudesModificacion.literal.fecha" | translate }}: <span *ngIf="impugnacion">{{bodyInicial.fechaAuto | date: 'dd/MM/yyyy'}}</span></label>
+              <label>{{ "justiciaGratuita.ejg.datosGenerales.AutoResolutorio" | translate }}: <span>{{bodyInicial.impugnacionDesc}}</span></label>
               <label id ="maxHeader">{{ "justiciaGratuita.ejg.datosGenerales.SentidoAuto" | translate }}: <span>{{fundImpugnacionDesc}}</span></label>
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('impugnacion')"></i>
           </div>
@@ -34,13 +34,13 @@
         <div class="bloque col-lg-12 col-md-12">
           <div class="form-row">
             <div *ngIf="impugnacion" class="form-group col-lg-3 col-md-3">
-              <label>{{ "justiciaGratuita.ejg.datosGenerales.fechaAuto" | translate }} * </label>
-              <app-fecha [inputStyleClass]="styleObligatorio(impugnacion.fechaApertura)" [(value)]="impugnacion.fechaAuto" (valueChangeSelected)="fillFechaAuto($event)" (valueChangeInput)="fillFechaAuto($event)"></app-fecha>
+              <label>{{ "justiciaGratuita.ejg.datosGenerales.fechaAuto" | translate }} (*) </label>
+              <app-fecha [inputStyleClass]="styleObligatorio(impugnacion.fechaAuto)" [(value)]="impugnacion.fechaAuto" (valueChangeSelected)="fillFechaAuto($event)" (valueChangeInput)="fillFechaAuto($event)"></app-fecha>
             </div>
             <div *ngIf="impugnacion" class="form-group col-lg-6 col-md-6">
-                <label>{{ "justiciaGratuita.ejg.datosGenerales.AutoResolutorio" | translate }}</label>
+                <label>{{ "justiciaGratuita.ejg.datosGenerales.AutoResolutorio" | translate }} (*)</label>
                 <p-dropdown autoWidth="false" [(ngModel)]='impugnacion.autoResolutorio' [options]="comboImpugnacion" (onChange)="onChangeImpugnacion()" class="select-form" placeholder="Seleccionar"
-                 [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+                 [filter]="true"  [ngClass]="styleObligatorio(impugnacion.autoResolutorio)" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
             </div>
             <div *ngIf="impugnacion" class="form-group col-lg-9 col-md-9">
                   <label>{{ "justiciaGratuita.ejg.datosGenerales.SentidoAuto" | translate }}</label>
@@ -52,7 +52,7 @@
               <div *ngIf="impugnacion" class="form-group col-lg-12 col-md-12">
                   <label>{{ "censo.nuevaSolicitud.observaciones" | translate }}
                   </label>
-                  <textarea class="form-control ui-inputtext" autoResize="autoResize" maxLength="3900" pInputTextarea [(ngModel)]="impugnacion.observacionesImpugnacion" [disabled]="true"></textarea>
+                  <textarea class="form-control ui-inputtext" autoResize="autoResize" maxLength="3900" pInputTextarea [(ngModel)]="impugnacion.observacionesImpugnacion"></textarea>
                 </div>
           </div>
           <div class="form-row">
@@ -87,10 +87,10 @@
   </div>
 </div>
 
-<p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" #cd>
+<p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" key="rest" #rest>
   <p-footer>
-    <button type="button" pButton icon="fa-check" label="Si" (click)="cd.accept()"></button>
-    <button type="button" pButton icon="fa-close" label="No" (click)="cd.reject()"></button>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="rest.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="rest.reject()"></button>
   </p-footer>
 </p-confirmDialog>
 

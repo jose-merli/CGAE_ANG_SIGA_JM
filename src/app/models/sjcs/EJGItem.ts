@@ -19,17 +19,13 @@ export class EJGItem {
 
     idInstitucion: string;
 
-
-    dictamen: string;
     dictamenSing: string;
-    fundamentoCalif: string;
     fundamentoCalifDes: string;
 
     fechaDictamenDesd: Date;
     fechaDictamenHast: Date;
-    fechaDictamen: Date;
-    resolucion: string;
-    fundamentoJuridico: string;
+
+
     fechaResolucionDesd: Date;
     fechaResolucionHast: Date;
     impugnacion: string;
@@ -37,6 +33,7 @@ export class EJGItem {
     fechaImpugnacionDesd: Date;
     fechaImpugnacionHast: Date;
 
+    //Defensa juridica (Ficha pre-designacion)
     juzgado: string;
     asunto: string;
     calidad: string;
@@ -45,12 +42,14 @@ export class EJGItem {
     numAnnioProcedimiento: string;
     procedimiento: string;
     nig: string;
+    idsituacion: number;
+    numerodiligencia: string;
+    comisaria: number;
+    delitos: string;
+    idPretension: number;
+    observaciones: string;
 
-    annioCAJG: string;
-    numCAJG: string;
-    annioActa: string;
-    numActa: string;
-    ponente: string;
+
     fechaPonenteDesd: Date;
     fechaPonenteHast: Date;
     numRegRemesa: string;
@@ -84,10 +83,42 @@ export class EJGItem {
     fechalimitepresentacion: Date;
     historico: boolean;
     observacionesDictamen: String;
-    iddictamen: String;
 
     numDesigna: String;
 
+    //Procurador (Ficha pre-designacion)
+
+    fechaDesProc: Date;
+    idProcurador: string;
+    idInstitucionProc: number;
+    numerodesignaproc: string;
+    nombreApProcurador: string;
+
+    //Dictamen
+
+    iddictamen: number;
+    fechaDictamen: Date;
+    idTipoDictamen: number;
+    fundamentoCalif: number;
+    //el atributo dictamen hace referencia al texto de observaciones de la pestaña de dictamen
+    dictamen: string;
+
+    //REGTEL
+
+    identificadords: string;
+
+    //Resolucion
+
+    annioActa: string;
+    numActa: string;
+    annioCAJG: string;
+    numCAJG: string;
+
+    ponente: string;
+    resolucion: string;
+    fundamentoJuridico: string;
+
+    //Impugnacion
     requiereTurn: boolean;
     bis: boolean;
     fechaPublicacion: Date;
@@ -96,9 +127,16 @@ export class EJGItem {
     sentidoAuto: String;
     autoResolutorio: String;
     fechaAuto: Date;
+    impugnacionDesc: String;
 
     fechaEstadoNew: Date;
     estadoNew: String;
+
+    // Estados de solicitud de expediente económico
+    estadosSolicitudExpEco: String[];
+
+    // Check que indica si se busca EJGs por estados concretos o que hayan pasado por ese estado en algún momento
+    ultimoEstado: boolean = true;
 
     constructor() { }
 }

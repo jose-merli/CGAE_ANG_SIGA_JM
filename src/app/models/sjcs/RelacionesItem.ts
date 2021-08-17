@@ -1,5 +1,6 @@
 export class RelacionesItem {
     sjcs: String;
+    idsjcs:String;
     idinstitucion:String;
     anio: String;
     numero: String;
@@ -8,8 +9,13 @@ export class RelacionesItem {
     idturnodesigna:String;
     idtipo:String;
     codigo:String;
-    desturno:String;
+    descturno:String;
     destipo:String;
+    letrado:String;
+    interesado:String;
+    fechaDesignacion:Date;
+    datosinteres:String;
+    
     constructor() { }
   }
   

@@ -7,6 +7,10 @@ import { PersistenceService } from '../../../_services/persistence.service';
 import { Router } from '../../../../../node_modules/@angular/router';
 import { TablaEjgComponent } from './tabla-ejg/tabla-ejg.component';
 import { FiltrosEjgComponent } from './filtros-busqueda-ejg/filtros-ejg.component';
+import * as moment from "moment";
+import { DatePipe } from '../../../../../node_modules/@angular/common';
+import { EJGItem } from '../../../models/sjcs/EJGItem';
+import { procesos_ejg } from '../../../permisos/procesos_ejg';
 
 @Component({
   selector: 'app-ejg',
@@ -27,7 +31,7 @@ export class EJGComponent implements OnInit {
   remesa;
 
   permisoEscritura: any;
-  
+
 
   //Mediante esta sentencia el padre puede acceder a los datos y atributos del hijo
   // la particularidad de éste método es que tenemos que esperar a que la vista esté totalmente 
@@ -48,12 +52,10 @@ export class EJGComponent implements OnInit {
   ngOnInit() {
     this.buscar = this.filtros.buscar
 
-    this.commonsService.checkAcceso("946")
+    this.commonsService.checkAcceso(procesos_ejg.ejg)
       .then(respuesta => {
         this.permisoEscritura = respuesta;
-
         this.persistenceService.setPermisos(this.permisoEscritura);
-
 
         if (this.permisoEscritura == undefined) {
           sessionStorage.setItem("codError", "403");
@@ -63,25 +65,61 @@ export class EJGComponent implements OnInit {
           );
           this.router.navigate(["/errorAcceso"]);
         }
-      }
-      ).catch(error => console.error(error));
+      }).catch(error => console.error(error));
 
-      //Preparacion previa para recibir el valor de remesa si se accede a esta pantalla desde una ficha
-      //de remesa.
-      if (sessionStorage.getItem("remesa") != null) {
-        this.remesa = JSON.parse(sessionStorage.getItem("remesa"));
-        sessionStorage.removeItem("remesa");
-      }
-        
-        
-      
+    //Preparacion previa para recibir el valor de remesa si se accede a esta pantalla desde una ficha
+    //de remesa.
+    if (sessionStorage.getItem("remesa") != null) {
+      this.remesa = JSON.parse(sessionStorage.getItem("remesa"));
+      sessionStorage.removeItem("remesa");
+    }
   }
 
   searchEJGs(event) {
 
-    this.progressSpinner = true;
-    
-    this.sigaServices.post("filtrosejg_busquedaEJG", this.filtros.body).subscribe(
+    // Creamos una copia de los filtros y modificamos los elementos de selección múltiple (cambiamos los arrays por strings separados por ',')
+    let filtros = JSON.parse(JSON.stringify(this.filtros.body));
+
+    if (filtros.tipoEJG) {
+      if (filtros.tipoEJG.length > 0) {
+        filtros.tipoEJG = filtros.tipoEJG.toString();
+      } else {
+        filtros.tipoEJG = undefined;
+      }
+    }
+
+    if (filtros.tipoEJGColegio) {
+      if (filtros.tipoEJGColegio.length > 0) {
+        filtros.tipoEJGColegio = filtros.tipoEJGColegio.toString();
+      } else {
+        filtros.tipoEJGColegio = undefined;
+      }
+    }
+
+    if (filtros.creadoDesde) {
+      if (filtros.creadoDesde.length > 0) {
+        let cadena = "";
+        filtros.creadoDesde.forEach((el: string, i: number) => {
+          cadena += "'" + el + "'";
+          if (i < filtros.creadoDesde.length - 1) {
+            cadena += ", ";
+          }
+        });
+        filtros.creadoDesde = cadena;
+      } else {
+        filtros.creadoDesde = undefined;
+      }
+    }
+
+    if (filtros.estadoEJG) {
+      if (filtros.estadoEJG.length > 0) {
+        filtros.estadoEJG = filtros.estadoEJG.toString();
+      } else {
+        filtros.estadoEJG = undefined;
+      }
+    }
+
+    this.sigaServices.post("filtrosejg_busquedaEJG", filtros).subscribe(
       n => {
         this.datos = JSON.parse(n.body).ejgItems;
         let error = JSON.parse(n.body).error;
@@ -93,6 +131,7 @@ export class EJGComponent implements OnInit {
           this.tabla.table.reset();
           this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
         }
+        //cadena = [];
         this.progressSpinner = false;
         if (error != null && error.description != null) {
           this.showMessageError("info", this.translateService.instant("general.message.informacion"), error.description);
@@ -102,12 +141,12 @@ export class EJGComponent implements OnInit {
         this.progressSpinner = false;
         console.log(err);
       },
-      () =>{
+      () => {
         this.progressSpinner = false;
         setTimeout(() => {
           this.commonsService.scrollTablaFoco('tablaFoco');
           this.commonsService.scrollTop();
-        }, 5);       
+        }, 5);
       }
     );
   }
@@ -140,7 +179,3 @@ export class EJGComponent implements OnInit {
     return fecha;
   }
 }
-
-
-
-

@@ -41,10 +41,15 @@ export class GestionDesignacionesComponent implements OnInit {
   @Output() busqueda = new EventEmitter<boolean>();
   tieneLetradoAsignado: boolean = false;
   @ViewChild("table") tabla: DataTable;
+  currentRoute: String;
+  idClasesComunicacionArray: string[] = [];
+  idClaseComunicacion: String;
+  keys: any[] = [];
 
   constructor( private datepipe: DatePipe, private persistenceService: PersistenceService, private confirmationService: ConfirmationService, private router: Router, public sigaServices: SigaServices, private translateService: TranslateService) { }
 
   ngOnInit() {
+    this.currentRoute = this.router.url;
     this.getComboTipoDesignas();
     this.checkAcceso();
     if (
@@ -142,10 +147,23 @@ export class GestionDesignacionesComponent implements OnInit {
               dato.modulo = datosModulo[0].modulo;
               dato.idModulo = datosModulo[0].idModulo;
             }
-            sessionStorage.setItem("nuevaDesigna", "false");
-            sessionStorage.setItem("designaItemLink", JSON.stringify(dato));
-            this.router.navigate(["/fichaDesignaciones"]);
-
+            this.sigaServices.post("designaciones_busquedaJuzgado", dato.idJuzgado).subscribe(
+              n => {
+                dato.nombreJuzgado = n.body;
+                sessionStorage.setItem("nuevaDesigna", "false");
+                sessionStorage.setItem("designaItemLink", JSON.stringify(dato));
+                this.router.navigate(["/fichaDesignaciones"]);
+    
+              },
+              err => {
+                this.progressSpinner = false;
+                dato.nombreJuzgado = "";
+                sessionStorage.setItem("nuevaDesigna", "false");
+                sessionStorage.setItem("designaItemLink", JSON.stringify(dato));
+                this.router.navigate(["/fichaDesignaciones"]);
+              }, () => {
+                this.progressSpinner = false;
+              });
           },
           err => {
             this.progressSpinner = false;
@@ -153,15 +171,14 @@ export class GestionDesignacionesComponent implements OnInit {
             console.log(err);
           }, () => {
             this.progressSpinner = false;
-          });;
+          });
       },
       err => {
         this.progressSpinner = false;
         console.log(err);
       }, () => {
         this.progressSpinner = false;
-      });;
-
+      });
   }
 
   getComboTipoDesignas() {
@@ -297,10 +314,6 @@ export class GestionDesignacionesComponent implements OnInit {
     resquetLetrado = [element.ano, element.idTurno, element.numero];
     this.tieneLetrado(resquetLetrado,designaToDelete, request, i);
     });
-  }
-
-  comunicar() {
-
   }
 
   tieneLetrado(requestLetrado, designaToDelete, request, indice) {
@@ -442,5 +455,67 @@ export class GestionDesignacionesComponent implements OnInit {
   actualizaFicha(event){
     sessionStorage.removeItem("designaItemLink");
     this.openTab(event);
+  }
+
+  navigateComunicar(dato) {
+    sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
+    //IDMODULO de SJCS es 10
+    sessionStorage.setItem("idModulo", '10');
+    
+    this.getDatosComunicar();
+  }
+  
+  getKeysClaseComunicacion() {
+    this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
+      data => {
+        this.keys = JSON.parse(data["body"]);
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  getDatosComunicar() {
+    let datosSeleccionados = [];
+    let rutaClaseComunicacion = this.currentRoute.toString();
+
+    this.sigaServices
+      .post("dialogo_claseComunicacion", rutaClaseComunicacion)
+      .subscribe(
+        data => {
+          this.idClaseComunicacion = JSON.parse(
+            data["body"]
+          ).clasesComunicaciones[0].idClaseComunicacion;
+          this.sigaServices
+            .post("dialogo_keys", this.idClaseComunicacion)
+            .subscribe(
+              data => {
+                this.keys = JSON.parse(data["body"]).keysItem;
+                this.selectedDatos.forEach(element => {
+                  let keysValues = [];
+                  this.keys.forEach(key => {
+                    if (element[key.nombre] != undefined) {
+                      keysValues.push(element[key.nombre]);
+                    }
+                  });
+                  datosSeleccionados.push(keysValues);
+                });
+
+                sessionStorage.setItem(
+                  "datosComunicar",
+                  JSON.stringify(datosSeleccionados)
+                );
+                this.router.navigate(["/dialogoComunicaciones"]);
+              },
+              err => {
+                console.log(err);
+              }
+            );
+        },
+        err => {
+          console.log(err);
+        }
+      );
   }
 }

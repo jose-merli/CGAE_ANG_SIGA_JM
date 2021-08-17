@@ -22,6 +22,7 @@ export class ServiciosTramitacionComponent implements OnInit {
 
   @Output() modoEdicionSend = new EventEmitter<any>();
 
+  resaltadoDatos: boolean = false;
   disableNum = false;
   openFicha: boolean = false;
   textFilter: string = "Seleccionar";
@@ -45,8 +46,6 @@ export class ServiciosTramitacionComponent implements OnInit {
   msgs = [];
   nuevo;
   tipoLetrado;
-
-  resaltadoDatosGenerales: boolean = false;
 
   fichaPosible = {
     key: "serviciosTramitacion",
@@ -162,10 +161,11 @@ export class ServiciosTramitacionComponent implements OnInit {
       sessionStorage.removeItem('pantalla');
     }
 
-    this.getComboGuardia();
+    //Para evitar que se realice una busqueda innecesaria y lance errores por consola cuando no haya ningun turno seleccionado.
+    if(this.body.idTurno!=undefined && this.body.idTurno!=null)this.getComboGuardia();
 
-    //Se desbloquea el desplegable de guardia si hay un turno seleccionado al inciar la tarjeta
-    //if (this.body.idTurno != undefined && this.body.idTurno != null) this.isDisabledGuardia = false;
+    //Se desbloquea el desplegable de guardia si hay un turno seleccionado al inciar la tarjeta.
+    if (this.body.idTurno != undefined && this.body.idTurno != null) this.isDisabledGuardia = false;
 
     //Comprobamos si el colegiado fue seleccionado por art 27 o no. ES uno de los métodos más lentos del inicio
     if (this.body.apellidosYNombre != undefined && this.body.apellidosYNombre != null  && this.art27 == true) this.checkArt27();
@@ -175,7 +175,7 @@ export class ServiciosTramitacionComponent implements OnInit {
 
     let datos = new ColegiadosSJCSItem();
 
-    this.progressSpinner = true;
+   // this.progressSpinner = true;
     //Estado "Ejerciente"
     datos.idEstado = "20";
     datos.idInstitucion = this.institucionActual;
@@ -199,12 +199,24 @@ export class ServiciosTramitacionComponent implements OnInit {
           });
           if (!presente) this.art27 = true;
         }
-        this.progressSpinner = false;
+        //this.progressSpinner = false;
         this.buscandoCol = false;
         this.initArt27 = this.art27;
       }
     );
 
+  }
+
+  styleObligatorio(evento) {
+    if (this.resaltadoDatos && (evento == undefined || evento == null || evento == "")) {
+      return this.commonServices.styleObligatorio(evento);
+    }
+  }
+
+  styleObligatorioCole(evento) {
+    if (this.resaltadoDatos && (evento == undefined || evento == null || evento == "")) {
+      return "border: 1px solid red !important";
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -221,7 +233,7 @@ export class ServiciosTramitacionComponent implements OnInit {
     return this.fichaPosible.activa;
   }
   abreCierraFicha(key) {
-    this.resaltadoDatosGenerales = true;
+    this.resaltadoDatos = true;
     if (
       key == "serviciosTramitacion" &&
       !this.activacionTarjeta
@@ -263,17 +275,17 @@ export class ServiciosTramitacionComponent implements OnInit {
       n => {
         this.comboTurno = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboTurno);
-        if (!this.buscandoCol) this.progressSpinner = false;
+        //if (!this.buscandoCol) this.progressSpinner = false;
       },
       err => {
-        if (!this.buscandoCol) this.progressSpinner = false;
+       // if (!this.buscandoCol) this.progressSpinner = false;
       }
     );
 
   }
 
   getComboGuardia() {
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
     this.sigaServices.getParam(
       "combo_guardiaPorTurno",
       "?idTurno=" + this.body.idTurno
@@ -286,10 +298,10 @@ export class ServiciosTramitacionComponent implements OnInit {
             this.body.idGuardia = sessionStorage.getItem("idGuardia");
             sessionStorage.removeItem('idGuardia');
           }
-          if (!this.buscandoCol) this.progressSpinner = false;
+          //if (!this.buscandoCol) this.progressSpinner = false;
         },
         err => {
-          if (!this.buscandoCol) this.progressSpinner = false;
+          //if (!this.buscandoCol) this.progressSpinner = false;
         }
       );
   }
@@ -327,6 +339,7 @@ export class ServiciosTramitacionComponent implements OnInit {
     } else {
       if (this.disabledSave()) {
         this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+        this.resaltadoDatos = true;
       } else {
         this.save();
       }

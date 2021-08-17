@@ -1,6 +1,6 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div>
-  <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [selectionMode]="selectionMode"
+  <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple"
     [responsive]="true" #table class="tabla-listado" [paginator]="true" [rows]="selectedItem"
     (onRowSelect)="actualizaSeleccionados()" (onRowUnselect)="actualizaSeleccionados()"
     [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">
@@ -24,8 +24,11 @@
     <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
       <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
         <td class="text-center" *ngFor="let col of columns">
-          <div>
-            <a><span>{{dato[col.field]}}</span></a>
+          <div *ngIf="col.field == 'sjcs'">
+            <span class="enlace" (click) = "checkPermisosEditar(dato)">{{dato[col.field]}}</span>
+          </div>
+          <div *ngIf="col.field != 'sjcs'">
+            <span>{{dato[col.field]}}</span>
           </div>
         </td>
       </tr>
@@ -61,13 +64,20 @@
   </p-table>
   <div class="card-footer">
     <div class="text-right main-button">
-      <button pButton type="button" iconPos="left" (click)="porhacer()" label="{{'general.boton.AsociarAsistencia' | translate}}"></button>
-      <button pButton type="button" iconPos="left" (click)="porhacer()" label="{{ 'general.boton.asociarSOJ' | translate}}"></button>
-      <button pButton type="button" iconPos="left" (click)="porhacer()" label="{{ 'general.boton.asociarEJG' | translate}}"></button>
-      <button pButton type="button" iconPos="left" (click)="porhacer()" label="{{'general.boton.crearEJG' | translate}}"></button>
-      <button pButton type="button" [disabled]="!isAnySelected()" (click)="eliminarRelacion()" icon="fa fa-trash" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
-    </div>
+      <button pButton type="button" iconPos="left" (click)="checkPermisosAsociarAsistencia()" label="{{'general.boton.AsociarAsistencia' | translate}}"></button>
+      <!-- <button pButton type="button" iconPos="left" (click)="checkPermisosAsociarSOJ()" label="{{ 'general.boton.asociarSOJ' | translate}}"></button> -->
+      <button pButton type="button" iconPos="left" (click)="checkPermisosAsociarEJG()" label="{{ 'general.boton.asociarEJG' | translate}}"></button>
+      <button pButton type="button" iconPos="left" (click)="checkPermisosCrearEJG()" label="{{'general.boton.crearEJG' | translate}}"></button>
+      <button pButton type="button" [disabled]="!isAnySelected()" (click)="confirmDelete()" icon="fa fa-trash" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
+<!--       <button pButton [disabled]="!isAnySelected()" (click)="checkPermisosEditar()" type="button" iconPos="left" label="{{'general.boton.consultEditRelacion' | translate}}"></button>
+ -->    </div>
   </div>
+  <p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" key="delRelacionDes" #delRelacionDes>
+    <p-footer>
+      <button type="button" pButton icon="fa-check" label="Si" (click)="delRelacionDes.accept()"></button>
+      <button type="button" pButton icon="fa-close" label="No" (click)="delRelacionDes.reject()"></button>
+    </p-footer>
+  </p-confirmDialog>
 </div>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">

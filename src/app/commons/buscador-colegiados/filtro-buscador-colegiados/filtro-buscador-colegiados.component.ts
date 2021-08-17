@@ -28,6 +28,7 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
   disabledEstado: boolean = false;
   fixedTurn: boolean = false;
   fixedGuard: boolean = false;
+  nuevo: boolean = true;
 
   comboColegios: any;
   comboTurno: any;
@@ -52,7 +53,7 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
     }
 
     //Bloquear el desplegable del estado de colegiado a ejerciente
-    if (this.nuevaInscripcion || (sessionStorage.getItem("pantalla") == "EJG" && sessionStorage.getItem("tarjeta") == "ServiciosTramit")) {
+    if (this.nuevaInscripcion || (sessionStorage.getItem("pantalla") == "gestionEjg" && sessionStorage.getItem("tarjeta") == "ServiciosTramit")) {
       this.filtro.idEstado = "20";
       this.disabledEstado = true;
     }
@@ -65,6 +66,14 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
       this.getComboEstadoColegial();
     });
 
+        //Comprobar si proviene de la tarjeta servicio de tramitacion de la ficha EJG.
+        if (sessionStorage.getItem("pantalla") == "gestionEjg" && sessionStorage.getItem("tarjeta") == "ServiciosTramit") {
+          if (sessionStorage.getItem("idTurno")) {
+            this.filtro.idTurno = [];
+            this.filtro.idTurno.push(sessionStorage.getItem("idTurno"));
+            this.getComboguardiaPorTurno({ value: this.filtro.idTurno[0] });
+          }
+        }
 
   }
 
@@ -112,18 +121,26 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
   getComboguardiaPorTurno(evento) {
     this.progressSpinner = true;
 
-    if (evento.value != undefined) {
+    if (evento.value != undefined && evento.value.length != 0) {
       this.sigaServices.getParam("combo_guardiaPorTurno", "?idTurno=" + evento.value).subscribe(
         n => {
           this.comboguardiaPorTurno = n.combooItems;
           this.progressSpinner = false;
+          if (this.comboguardiaPorTurno == []) this.filtro.idGuardia = [];
+          else if (sessionStorage.getItem("pantalla") == "gestionEjg" && sessionStorage.getItem("tarjeta") == "ServiciosTramit" && this.nuevo) {
+            if (sessionStorage.getItem("idGuardia")) {
+              this.filtro.idGuardia = [];
+              this.filtro.idGuardia.push(sessionStorage.getItem("idGuardia"));
+              this.nuevo = false;
+            }
+          }
         },
         err => {
-          console.log(err);
           this.progressSpinner = false;
         }
       );
     } else {
+      this.filtro.idGuardia = [];
       this.progressSpinner = false;
     }
   }

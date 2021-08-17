@@ -1,14 +1,14 @@
 export class ResolucionEJGItem {
-    idActa: String;
-    annioActa: String;
+    idActa: number;
+    annioActa: number;
     idAnnioActa: String;
-    idTiporatificacionEJG: String;
-    idFundamentoJuridico: String;
+    idTiporatificacionEJG: number;
+    idFundamentoJuridico: number;
     ratificacionDictamen: String;
-    idOrigencajg: String;
-    anioCAJG: String;
+    idOrigencajg: number;
+    anioCAJG: number;
     numeroCAJG: String;
-    idPonente: String;
+    idPonente: number;
     tipoResolucionCAJG: String;
     fechaPresentacionPonente: Date;
     fechaResolucionCAJG: Date;
@@ -18,4 +18,9 @@ export class ResolucionEJGItem {
     turnadoRatificacion: boolean;
     requiereNotificarProc: boolean;
     notasCAJG: String;
+    anio : number;
+    numero: number;
+    idInstitucion: number;
+    idTipoEJG: number;
+    docResolucion: String;
 }

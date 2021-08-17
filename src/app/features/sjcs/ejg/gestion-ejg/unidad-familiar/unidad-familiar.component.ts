@@ -2,13 +2,15 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, Simp
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { UnidadFamiliarEJGItem } from '../../../../../models/sjcs/UnidadFamiliarEJGItem';
 import { PersistenceService } from '../../../../../_services/persistence.service';
-//import { fichasPosibles_unidadFamiliar } from '../../../../../utils/fichasPosibles_justiciables';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { TranslateService } from '../../../../../commons/translate/translation.service';
 import { ConfirmationService } from 'primeng/api';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 import { SigaServices } from '../../../../../_services/siga.service';
-import { Dialog } from 'primeng/primeng';
+import { DataTable, Dialog } from 'primeng/primeng';
+import { DatePipe } from '@angular/common';
+import { saveAs } from "file-saver/FileSaver";
+import { JusticiableBusquedaItem } from '../../../../../models/sjcs/JusticiableBusquedaItem';
 
 @Component({
   selector: 'app-unidad-familiar',
@@ -17,73 +19,39 @@ import { Dialog } from 'primeng/primeng';
 })
 export class UnidadFamiliarComponent implements OnInit {
 
-  [x : string]: any;
+  @ViewChild("table") table: DataTable;
+
+  solicitanteP: UnidadFamiliarEJGItem = new UnidadFamiliarEJGItem();
 
   rowsPerPage: any = [];
   selectedDatos = [];
   buscadores = [];
+  nExpedientes = 0;
 
   nuevo: boolean;
-  body: UnidadFamiliarEJGItem = new UnidadFamiliarEJGItem();
+  body: EJGItem = new EJGItem();
   selectAll;
   cols;
   msgs;
   datosFamiliares;
   datosFamiliaresActivos;
-  
+  apellidosCabecera: string = "";
+
   selectionMode;
   editMode;
   progressSpinner: boolean = false;
   selectDatos;
 
-  numSelected:number = 0;
+  numSelected: number = 0;
   selectedItem: number = 10;
-
+  volverSolicitarEejg: boolean = false;
   selectMultiple: boolean = false;
   seleccion: boolean = false;
   openFicha: boolean = false;
   historico: boolean = false;
+  isRepresentante: boolean = false;
   resaltadoDatosGenerales: boolean = false;
   activacionTarjeta: boolean = false;
-
-  fichasPosibles = [
-    {
-      origen: "justiciables",
-      activa: false
-    },
-    {
-      key: "generales",
-      activa: true
-    },
-    {
-      key: "personales",
-      activa: true
-    },
-    {
-      key: "solicitud",
-      activa: true
-    },
-    {
-      key: "representante",
-      activa: true
-    },
-    {
-      key: "asuntos",
-      activa: true
-    },
-    {
-      key: "abogado",
-      activa: false
-    },
-    {
-      key: "procurador",
-      activa: false
-    },
-    {
-      key: "unidadFamiliar",
-      activa: true
-    }
-  ];
 
   @Input() modoEdicion;
   @Input() tarjetaUnidadFamiliar: string;
@@ -93,8 +61,9 @@ export class UnidadFamiliarComponent implements OnInit {
   @Output() searchHistoricalSend = new EventEmitter<boolean>();
   @Output() opened = new EventEmitter<boolean>();
   @Output() idOpened = new EventEmitter<boolean>();
+  @Output() updateRes = new EventEmitter<boolean>();
 
-  @ViewChild("cd") cdDelete: Dialog;
+  @ViewChild("cdDelete") cdDelete: Dialog;
 
   fichaPosible = {
     key: "unidadFamiliar",
@@ -103,19 +72,21 @@ export class UnidadFamiliarComponent implements OnInit {
 
   constructor(private changeDetectorRef: ChangeDetectorRef, private confirmationService: ConfirmationService,
     private persistenceService: PersistenceService, private router: Router,
+    private datepipe: DatePipe,
     private commonsService: CommonsService, private translateService: TranslateService,
-    private sigaServices: SigaServices ) { }
+    private sigaServices: SigaServices) { }
 
   ngOnInit() {
+
     this.getCols();
     if (this.persistenceService.getDatos()) {
       this.nuevo = false;
       this.modoEdicion = true;
       this.body = this.persistenceService.getDatos();
       //this.datosFamiliares = this.persistenceService.getBodyAux();
-      
+
       this.consultaUnidadFamiliar(this.body);
-      
+
     } else {
       this.nuevo = true;
       this.modoEdicion = false;
@@ -132,7 +103,7 @@ export class UnidadFamiliarComponent implements OnInit {
       sessionStorage.removeItem('tarjeta');
     }
   }
-  
+
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.openTarjetaUnidadFamiliar == true) {
@@ -144,7 +115,7 @@ export class UnidadFamiliarComponent implements OnInit {
   }
 
   consultaUnidadFamiliar(selected) {
-    this.progressSpinner = true;
+   // this.progressSpinner = true;
 
     let nombresol = this.body.nombreApeSolicitante;
 
@@ -152,9 +123,10 @@ export class UnidadFamiliarComponent implements OnInit {
       n => {
         this.datosFamiliares = JSON.parse(n.body).unidadFamiliarEJGItems;
         this.persistenceService.setBodyAux(this.datosFamiliares);
-        this.progressSpinner = false;
+       // this.progressSpinner = false;
         this.datosFamiliares.forEach(element => {
           element.nombreApeSolicitante = nombresol;
+          //Introducir entrada en la base de datos
           if (element.estado == 30) {
             element.estadoDes = "Denegada";
           } else if (element.estado == 40) {
@@ -166,25 +138,75 @@ export class UnidadFamiliarComponent implements OnInit {
           } else if (element.estado == 20) {
             element.estadoDes = "Pendiente aprobación";
           }
-  
+
           if (element.estadoDes != undefined && element.fechaSolicitud != undefined) {
-            element.expedienteEconom = element.estadoDes + " * " + element.fechaSolicitud;
+            element.expedienteEconom = element.estadoDes + " * " + this.datepipe.transform(element.fechaSolicitud, 'dd/MM/yyyy');
           } else if (element.estadoDes != undefined && element.fechaSolicitud == undefined) {
             element.expedienteEconom = element.estadoDes + " * ";
           } else if (element.estadoDes == undefined && element.fechaSolicitud != undefined) {
-            element.expedienteEconom = " * " + element.fechaSolicitud;
+            element.expedienteEconom = " * " + this.datepipe.transform(element.fechaSolicitud, 'dd/MM/yyyy');
           } else if (element.estadoDes == undefined && element.fechaSolicitud == undefined) {
             element.expedienteEconom = "  ";
           }
-          if(this.datosFamiliares != undefined){
-            this.datosFamiliaresActivos = this.datosFamiliares.filter(
-              (dato) => /*dato.fechaBaja != undefined && */ dato.fechaBaja == null);
-              
-            }
+
+          //Se traduce el valor del back a su idioma y rol correspondientes
+          //Si se selecciona el valor "Unidad Familiar" en el desplegable "Rol/Solicitante"
+          if (element.uf_enCalidad == "1") {
+            element.labelEnCalidad = this.translateService.instant('justiciaGratuita.justiciables.rol.unidadFamiliar');
+          }
+          //Si se selecciona el valor "Solicitante" en el desplegable "Rol/Solicitante"
+          if (element.uf_enCalidad == "2") {
+            element.labelEnCalidad = this.translateService.instant('justiciaGratuita.justiciables.rol.solicitante');
+          }
+          //Si se selecciona el valor "Solicitante principal" en el desplegable "Rol/Solicitante"
+          if (element.uf_enCalidad == "3") {
+            element.labelEnCalidad = this.translateService.instant('justiciaGratuita.justiciables.unidadFamiliar.solicitantePrincipal');
+          }
         });
+        if (this.datosFamiliares != undefined) {
+          //Se buscan los familiares activos
+          this.datosFamiliaresActivos = this.datosFamiliares.filter(
+            (dato) => /*dato.fechaBaja != undefined && */ dato.fechaBaja == null);
+          //Obtenemos el solicitante principal
+          this.solicitanteP = this.datosFamiliaresActivos.filter(
+            (dato) => dato.uf_enCalidad == "3")[0];
+          this.nExpedientes = this.datosFamiliaresActivos.length;
+
+          if (this.solicitanteP != undefined) {
+            this.datosFamiliaresActivos.forEach(familiar => {
+              if (familiar.uf_enCalidad != "3") familiar.relacionadoCon = this.solicitanteP.pjg_nombrecompleto;
+            })
+          }
+          let representantes = [];
+          //Introducimos las entradas de los representantes de los familiares introducidos
+          this.datosFamiliaresActivos.forEach(element => {
+            if (element.representante != undefined && element.representante != null) {
+              let representante = new UnidadFamiliarEJGItem();
+
+              representante.pjg_nombrecompleto = element.representante;
+              representante.pjg_direccion = element.direccionRepresentante;
+              representante.pjg_nif = element.nifRepresentante;
+              representante.labelEnCalidad = this.translateService.instant('justiciaGratuita.justiciables.rol.representante');
+              representante.relacionadoCon = element.pjg_nombrecompleto;
+              representante.fechaBaja = null;
+              representante.isRepresentante = true;
+
+              representantes.push(representante);
+            }
+          });
+          //Hacemos esto para no introducir los representantes en mitad de la lectura del array DatosFamiliaresActivos
+          if (representantes.length > 0) representantes.forEach(element => {
+            this.datosFamiliaresActivos.push(element);
+          }
+          );
+        }
+        if (this.solicitanteP == undefined) this.solicitanteP = new UnidadFamiliarEJGItem();
+        if (this.solicitanteP.pjg_nombrecompleto != undefined) this.apellidosCabecera = this.solicitanteP.pjg_nombrecompleto.split(",")[0];
+        else this.apellidosCabecera = "";
+       // this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+       // this.progressSpinner = false;
       }
     );
   }
@@ -215,14 +237,9 @@ export class UnidadFamiliarComponent implements OnInit {
     else return true;
   }
   openTab(evento) {
-
-    //this.persistenceService.setBody(evento);
-    //this.persistenceService.setFichasPosibles(fichasPosibles_unidadFamiliar);
-    //this.router.navigate(["/gestionJusticiables"], { queryParams: { fr: "u" } });
-
-    this.persistenceService.setFichasPosibles(this.fichasPosibles);
-    sessionStorage.setItem("origin","UnidadFamiliar");
+    sessionStorage.setItem("origin", "UnidadFamiliar");
     sessionStorage.setItem("Familiar", JSON.stringify(evento));
+
     this.router.navigate(["/gestionJusticiables"]);
 
   }
@@ -232,8 +249,8 @@ export class UnidadFamiliarComponent implements OnInit {
       { field: "pjg_nif", header: "administracion.usuarios.literal.NIF", width: "10%" },
       { field: "pjg_nombrecompleto", header: "administracion.parametrosGenerales.literal.nombre.apellidos", width: "20%" },
       { field: "pjg_direccion", header: "censo.consultaDirecciones.literal.direccion", width: "15%" },
-      { field: "uf_enCalidad", header: "administracion.usuarios.literal.rol", width: "10%" },
-      { field: "nombreApeSolicitante", header: "justiciaGratuita.ejg.datosGenerales.RelacionadoCon", width: "20%" },
+      { field: "labelEnCalidad", header: "administracion.usuarios.literal.rol", width: "10%" },
+      { field: "relacionadoCon", header: "justiciaGratuita.ejg.datosGenerales.RelacionadoCon", width: "20%" },
       { field: "pd_descripcion", header: "informes.solicitudAsistencia.parentesco", width: "15%" },
       { field: "expedienteEconom", header: "justiciaGratuita.ejg.datosGenerales.ExpedienteEcon", width: "20%" },
     ];
@@ -274,6 +291,19 @@ export class UnidadFamiliarComponent implements OnInit {
     }
   }
 
+  isVolverSolicitarEEJG(datos) {
+    if (datos.length != 1) {
+      this.volverSolicitarEejg = false
+    } else {
+      if ((datos[0].expedienteEconom == "" || datos[0].expedienteEconom == undefined || datos[0].expedienteEconom == null)
+        && (datos[0].estado != "30" || datos[0].estado != "40" || datos[0].estado != "50")) {
+        this.volverSolicitarEejg = false
+      } else {
+        this.volverSolicitarEejg = true
+      }
+    }
+  }
+
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
@@ -309,8 +339,15 @@ export class UnidadFamiliarComponent implements OnInit {
   }
 
   actualizaSeleccionados(selectedDatos) {
+    this.isVolverSolicitarEEJG(selectedDatos);
     this.numSelected = selectedDatos.length;
     this.seleccion = false;
+    let repre = this.selectedDatos.find(
+      item => item.isRepresentante == true
+    );
+    if (repre != undefined)
+      this.isRepresentante = true;
+    else this.isRepresentante = false;
   }
 
   showMessage(severity, summary, msg) {
@@ -332,11 +369,13 @@ export class UnidadFamiliarComponent implements OnInit {
     );
     let icon = "fa fa-edit";
     this.confirmationService.confirm({
+      key: "cdDelete",
       message: mess,
       icon: icon,
       accept: () => {
-        this.delete()
         this.cdDelete.hide();
+        this.delete()
+
       },
       reject: () => {
         this.msgs = [
@@ -354,27 +393,47 @@ export class UnidadFamiliarComponent implements OnInit {
   }
 
   delete() {
-    this.progressSpinner=true;
+    this.progressSpinner = true;
 
     let data = [];
     let ejg: EJGItem;
 
-    for(let i=0; this.selectedDatos.length>i; i++){
+    for (let i = 0; this.selectedDatos.length > i; i++) {
       ejg = this.selectedDatos[i];
-      ejg.fechaEstadoNew=this.fechaEstado;
-      ejg.estadoNew=this.valueComboEstado;
+      /* ejg.fechaEstadoNew=this.fechaEstado;
+      ejg.estadoNew=this.valueComboEstado; */
 
       data.push(ejg);
     }
+    
     this.sigaServices.post("gestionejg_borrarFamiliar", data).subscribe(
       n => {
-        this.progressSpinner=false;
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.consultaUnidadFamiliar(this.body);
+        this.progressSpinner = false;
+        this.selectedDatos = [];
+
+        if (n.statusText == 'OK') {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.historico = false;
+          //Si uno de los datos que hemos eliminado es el solicitante principal,
+          //se actualiza la tarjeta resumen para reflejarlo.
+          let solP = data.find(
+            item => item.uf_enCalidad == "3"
+          )
+          if(solP != undefined) {
+            this.body.idPersonajg = null;
+            this.body.nombreApeSolicitante = null;
+            this.persistenceService.setDatos(this.body);
+            this.updateRes.emit();
+          }
+          this.consultaUnidadFamiliar(this.body);
+        } else {
+          this.showMessage('error', 'Error', this.translateService.instant('general.message.error.realiza.accion'));
+        }
+
       },
       err => {
-        console.log(err);
-        this.progressSpinner=false;
+        this.progressSpinner = false;
+        this.selectedDatos = [];
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }
     );
@@ -385,8 +444,9 @@ export class UnidadFamiliarComponent implements OnInit {
   }
 
   searchHistorical() {
-    this.datosFamiliares.historico = !this.datosFamiliares.historico;
+    //this.datosFamiliares.historico = !this.datosFamiliares.historico;
     this.historico = !this.historico;
+    this.selectedDatos = [];
     if (this.historico) {
       this.editMode = false;
       this.nuevo = false;
@@ -397,36 +457,88 @@ export class UnidadFamiliarComponent implements OnInit {
       this.datosFamiliaresActivos = this.datosFamiliares.filter(
         (dato) =>  /*dato.fechaBaja != undefined && */dato.fechaBaja == null);
     }
+    let representantes = [];
+
+    //Introducimos las entradas de los representantes de los familiares introducidos
+    this.datosFamiliaresActivos.forEach(element => {
+      if (element.representante != undefined && element.representante != null) {
+        let representante = new UnidadFamiliarEJGItem();
+
+        representante.pjg_nombrecompleto = element.representante;
+        representante.pjg_direccion = element.direccionRepresentante;
+        representante.pjg_nif = element.nifRepresentante;
+        representante.labelEnCalidad = this.translateService.instant('justiciaGratuita.justiciables.rol.representante');
+        representante.relacionadoCon = element.pjg_nombrecompleto;
+        representante.fechaBaja = null;
+        representante.isRepresentante = true;
+
+        representantes.push(representante);
+      }
+    });
+
+    //Hacemos esto para no introducir los representantes en mitad de la lectura del array DatosFamiliaresActivos
+    if (representantes.length > 0) representantes.forEach(element => {
+      this.datosFamiliaresActivos.push(element);
+    });
+    
     this.selectMultiple = false;
     this.selectionMode = "single";
     this.persistenceService.setHistorico(this.historico);
 
   }
 
-  checkPermisosDownloadEEJ(){
-    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
-    if (msg != undefined) {
-      this.msgs = msg;
-    } else {
-      this.downloadEEJ();
-    }
-  }
+  downloadEEJ() {
+    this.progressSpinner = true;
 
-  downloadEEJ(){
-    this.progressSpinner=true;
+    let datosToCall = [];
 
-    this.sigaServices.post("gestionejg_descargarExpedientesJG", this.selectDatos).subscribe(
-      n => {
-        this.progressSpinner=false;
+    this.selectedDatos.forEach(element => {
+      let ejgData: EJGItem = new EJGItem();
+
+      ejgData.annio = this.body.annio;
+      ejgData.idInstitucion = this.body.idInstitucion;
+      ejgData.numEjg = this.body.numEjg;
+      ejgData.tipoEJG = this.body.tipoEJG;
+      ejgData.nif = element.pjg_nif;
+
+      datosToCall.push(ejgData);
+    });
+
+    this.sigaServices.postDownloadFiles("gestionejg_descargarExpedientesJG", datosToCall).subscribe(
+      data => {
+        this.progressSpinner = false;
+
+        if (data.size == 0) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        } else {
+          let blob = null;
+
+          let now = new Date();
+          let month = now.getMonth() + 1;
+          let nombreFichero = "eejg_" + now.getFullYear();
+
+          if (month < 10) {
+            nombreFichero = nombreFichero + "0" + month;
+          } else {
+            nombreFichero += month;
+          }
+
+          nombreFichero += now.getDate() + "_" + now.getHours() + "" + now.getMinutes();
+
+          let mime = data.type;
+          blob = new Blob([data], { type: mime });
+          saveAs(blob, nombreFichero);
+        }
       },
       err => {
+        this.progressSpinner = false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         console.log(err);
-        this.progressSpinner=false;
       }
     );
   }
 
-  checkPermisosSolicitarEEJ(){
+  checkPermisosSolicitarEEJ() {
     let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
@@ -436,7 +548,19 @@ export class UnidadFamiliarComponent implements OnInit {
   }
 
   solicitarEEJ() {
-
+    this.sigaServices.post("gestionejg_solicitarEEJG", this.selectedDatos[0]).subscribe(
+      n => {
+        this.progressSpinner = false;
+        this.selectDatos = [];
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+        this.selectDatos = [];
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
   }
 
   checkPermisosComunicar(datos) {
@@ -481,9 +605,9 @@ export class UnidadFamiliarComponent implements OnInit {
   }
 
   asociar() {
-    sessionStorage.setItem("origin","uniFamiliar");
-    sessionStorage.setItem("datosFamiliares",JSON.stringify(this.datosFamiliares));
-    sessionStorage.setItem("EJG",JSON.stringify(this.body));
+    sessionStorage.setItem("origin", "UnidadFamiliar");
+    sessionStorage.setItem("datosFamiliares", JSON.stringify(this.datosFamiliares));
+    sessionStorage.setItem("EJGItem", JSON.stringify(this.persistenceService.getDatos()));
     //this.searchContrarios.emit(true);
     this.router.navigate(["/justiciables"]);
   }

@@ -7,6 +7,7 @@ import { CommonsService } from '../../../../../_services/commons.service';
 import { TranslateService } from '../../../../../commons/translate';
 import { ConfirmationService } from 'primeng/api';
 import { DataTable } from "primeng/datatable";
+import { forEach } from '@angular/router/src/utils/collection';
 
 @Component({
   selector: 'app-estados',
@@ -34,52 +35,62 @@ export class EstadosComponent implements OnInit {
   selectMultiple: boolean = false;
   seleccion: boolean = false;
   historico: boolean = false;
-  estados: EstadoEJGItem;
-
+  estados:any[] = [];
+  guardar:boolean = false;
+  
+  datosEstados: any[] = [];
+  checkEstados: any[] = [];
   comboEstadoEJG = [];
-  valueComboEstado = "";
-  fechaEstado = new Date();
+  valueComboEstado: string = "";
+  observacionesEstado: string = "";
+  fechaEstado: Date = new Date();
   showModalAnadirEstado: boolean;
 
-  datosFamiliares=[];
-  
+  datosFamiliares = [];
+
   selectionMode: string = "single";
   editMode: boolean;
 
   progressSpinner: boolean = false;
-  
+  editaEstado: boolean = false;
   resaltadoDatosGenerales: boolean = false;
   fichaPosible = {
     key: "estados",
     activa: false
   }
-  
+
+  inserCol: any[] = [];
+
   activacionTarjeta: boolean = false;
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
   @Input() openTarjetaEstados;
-  @Output() busqueda = new EventEmitter<boolean>();
+  //@Output() busqueda = new EventEmitter<boolean>();
 
   @ViewChild("table")
   table: DataTable;
+  creaEstado: boolean = false;
+  numSelectedEstados: number;
+  restablecer: boolean;
 
   //[x: string]: any;
 
 
   constructor(private sigaServices: SigaServices,
-    private persistenceService: PersistenceService,private commonsServices: CommonsService,
+    private persistenceService: PersistenceService, private commonsServices: CommonsService,
     private translateService: TranslateService, private confirmationService: ConfirmationService,
     private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit() {
-      if (this.persistenceService.getDatos()) {
-        this.nuevo = false;
-        this.modoEdicion = true;
-        this.body = this.persistenceService.getDatos();
-        this.item = this.body;
-        this.getEstados(this.item);
-        this.getCols();
-      }else {
+    if (this.persistenceService.getDatos()) {
+      this.nuevo = false;
+      this.modoEdicion = true;
+      this.body = this.persistenceService.getDatos();
+      this.item = this.body;
+      this.creaEstado = true;
+      this.getEstados(this.item);
+      this.getCols();
+    } else {
       this.nuevo = true;
       this.modoEdicion = false;
       this.item = new EJGItem();
@@ -96,19 +107,24 @@ export class EstadosComponent implements OnInit {
   }
 
   getEstados(selected) {
-    this.progressSpinner = true;
+   // this.progressSpinner = true;
     this.sigaServices.post("gestionejg_getEstados", selected).subscribe(
       n => {
         this.estados = JSON.parse(n.body).estadoEjgItems;
+        this.datosEstados = this.estados;
         // this.nExpedientes = this.expedientesEcon.length;
         // this.persistenceService.setFiltrosAux(this.expedientesEcon);
         // this.router.navigate(['/gestionEjg']);
-        this.progressSpinner = false;
+        this.checkEstados = JSON.parse(JSON.stringify(this.estados));
+        //this.progressSpinner = false;
       },
       err => {
         console.log(err);
       }
     );
+    for(let i in this.datosEstados){
+      this.datosEstados[i].isMod = false;
+    }
   }
   setItalic(dato) {
     if (dato.fechabaja == null) return false;
@@ -131,7 +147,7 @@ export class EstadosComponent implements OnInit {
       { field: "fechaModificacion", header: "censo.resultadosSolicitudesModificacion.literal.fecha", width: "10%" },
       { field: "descripcion", header: "censo.fichaIntegrantes.literal.estado", width: "15%" },
       { field: "observaciones", header: "gratuita.mantenimientoLG.literal.observaciones", width: "25%" },
-      { field: "automatico", header: "administracion.auditoriaUsuarios.literal.Automatico", width: "10%" }, 
+      { field: "automatico", header: "administracion.auditoriaUsuarios.literal.Automatico", width: "10%" },
       { field: "propietario", header: "justiciaGratuita.ejg.documentacion.Propietario", width: "5%" },
       { field: "user", header: "menu.administracion.auditoria.usuarios", width: "25%" },
     ];
@@ -225,10 +241,12 @@ export class EstadosComponent implements OnInit {
     );
     let icon = "fa fa-edit";
     this.confirmationService.confirm({
+      key:'delEstado',
       message: mess,
       icon: icon,
       accept: () => {
-        this.delete()
+        this.delete();
+
       },
       reject: () => {
         this.msgs = [
@@ -240,80 +258,114 @@ export class EstadosComponent implements OnInit {
             )
           }
         ];
+        this.activarRestablecerEstados();
       }
     });
   }
-  consultar() {
+  
 
-  }
   delete() {
-    this.progressSpinner=true;
+    this.progressSpinner = true;
 
-   // this.body.nuevoEJG=!this.modoEdicion;
-    let data = [];
-    let ejg: EJGItem;
 
-    for(let i=0; this.selectedDatos.length>i; i++){
-      ejg = this.selectedDatos[i];
-      ejg.fechaEstadoNew=this.fechaEstado;
-      ejg.estadoNew=this.valueComboEstado;
-
-      data.push(ejg);
+    for (let i = 0; this.selectedDatos.length > i; i++) {
+      if (this.selectedDatos[i].automatico != "0") {
+        this.progressSpinner = false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("areasmaterias.materias.ficha.eliminarError"));
+        this.activarRestablecerEstados();
+        return;
+      }
+      
     }
-    this.sigaServices.post("gestionejg_borrarEstado", data).subscribe(
+
+
+    this.sigaServices.post("gestionejg_borrarEstado", this.selectedDatos).subscribe(
       n => {
-        this.progressSpinner=false;
+        console.log(n);
+        this.progressSpinner = false;
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.getEstados(this.item);
       },
       err => {
         console.log(err);
-        this.progressSpinner=false;
+        this.progressSpinner = false;
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }
     );
-  }
-  activate() {
-
+    this.activarRestablecerEstados();
   }
 
   getComboEstado() {
-    this.progressSpinner=true;
+    this.progressSpinner = true;
 
     this.sigaServices.get("filtrosejg_comboEstadoEJG").subscribe(
       n => {
         this.comboEstadoEJG = n.combooItems;
         //this.commonServices.arregloTildesCombo(this.comboEstadoEJG);
-        this.progressSpinner=false;
+        this.progressSpinner = false;
       },
       err => {
         console.log(err);
-        this.progressSpinner=false;
+        this.progressSpinner = false;
       }
     );
   }
 
   changeEstado() {
-    if (this.selectedDatos != null && this.selectedDatos != undefined && this.selectedDatos.length > 0 ) {
-      this.showModalAnadirEstado = true;
-      this.getComboEstado();      
-    } else {
-      this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("censo.datosBancarios.mensaje.seleccionar.almenosUno"));
-    }
+
+    this.showModalAnadirEstado = true;
+    this.getComboEstado();
+
   }
-   
-  cancelaAnadirEstado(){
+
+  nuevaFila() {
+    this.guardar = true;
+    this.creaEstado = true;
+    this.editaEstado = false;
+    this.restablecer = true;
+
+    //this.datosEstados = JSON.parse(JSON.stringify(this.estados));
+    let dummy = {
+      fechaInicio: "",
+      fechaModificacion:"",
+      descripcion: "",
+      observaciones: "",
+      automatico:"",
+      propietario:"",
+      user:"",
+      nuevoRegistro: true,
+      isMod: true
+    };
+    
+    this.datosEstados = [dummy, ...this.datosEstados];
+    this.datosEstados[0].isMod = false;
+    this.getComboEstado();
+  }
+
+  cancelaAnadirEstado() {
     this.showModalAnadirEstado = false;
   }
 
-  checkAnadirEstado(){
-    let mess = this.translateService.instant("justiciaGratuita.ejg.datosGenerales.AddEstado");
+  checkAnadirEstado() {
+    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      let mess;
+    if(this.creaEstado == true){
+     mess = this.translateService.instant("justiciaGratuita.ejg.datosGenerales.AddEstado");
+  }else{
+    mess = this.translateService.instant("general.message.aceptar");
+  }
     let icon = "fa fa-edit";
 
     this.confirmationService.confirm({
+      key:'addEstado',
       message: mess,
       icon: icon,
       accept: () => {
         this.anadirEstado();
+        
       },
       reject: () => {
         this.msgs = [{
@@ -321,42 +373,78 @@ export class EstadosComponent implements OnInit {
           summary: "Cancel",
           detail: this.translateService.instant("general.message.accion.cancelada")
         }];
+        this.activarRestablecerEstados();
 
-        this.cancelaAnadirEstado();
       }
     });
+    }
+    
   }
 
-  anadirEstado(){
-    this.progressSpinner=true;
-    let data = [];
-    let ejg: EJGItem;
+  anadirEstado() {
 
-    for(let i=0; this.selectedDatos.length>i; i++){
-      ejg = this.selectedDatos[i];
-      ejg.fechaEstadoNew=this.fechaEstado;
-      ejg.estadoNew=this.valueComboEstado;
+    if(this.creaEstado == true){
+      let estadoNew = new EstadoEJGItem();
 
-      data.push(ejg);
+      estadoNew.fechaInicio = this.fechaEstado;
+      estadoNew.idEstadoejg = this.valueComboEstado;
+      estadoNew.observaciones = this.observacionesEstado;
+   
+      estadoNew.numero = this.item.numero;
+      estadoNew.anio = this.item.annio;
+      estadoNew.idinstitucion = this.item.idInstitucion;
+      estadoNew.idtipoejg = this.item.tipoEJG;
+   
+   
+   
+       this.progressSpinner = true;
+   
+       this.sigaServices.post("gestionejg_nuevoEstado", estadoNew).subscribe(
+         n => {
+           this.progressSpinner = false;
+           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+           this.getEstados(this.item);
+         },
+         err => {
+           console.log(err);
+           this.progressSpinner = false;
+           //this.busqueda.emit(false);
+           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+         }
+       );
+       this.creaEstado = false;
+    }else{
+      
+       this.progressSpinner = true;
+       if(this.selectedDatos[0].automatico != "0"){
+        this.progressSpinner = false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("informesycomunicaciones.consultas.noPuedeEditarConsulta"));
+       }else{
+        this.selectedDatos[0].fechaInicio=this.fechaEstado;
+        this.selectedDatos[0].idEstadoejg=this.valueComboEstado;
+        this.selectedDatos[0].observaciones=this.observacionesEstado;
+  
+      this.sigaServices.post("gestionejg_editarEstado", this.selectedDatos[0]).subscribe(
+        n => {
+          this.progressSpinner = false;
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.getEstados(this.item);
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+          //this.busqueda.emit(false);
+          this.selectedDatos=[];
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        }
+      ); 
+       }
+       
+     
     }
 
-    this.sigaServices.post("gestionejg_nuevoEstado", data).subscribe(
-      n => {
-        this.progressSpinner=false;
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.busqueda.emit(false);
-        this.showModalAnadirEstado = false;
-        this.selectedDatos = [];
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner=false;
-        this.busqueda.emit(false);
-        this.showModalAnadirEstado = false;
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        this.selectedDatos = [];
-      }
-    );
+    this.activarRestablecerEstados();
+
   }
 
   searchHistorical() {
@@ -369,9 +457,11 @@ export class EstadosComponent implements OnInit {
       this.numSelected = 0;
     }
     this.selectMultiple = false;
-     this.selectionMode = "single";
+    this.selectionMode = "single";
     this.persistenceService.setHistorico(this.historico);
     this.getEstados(this.item);
+
+
   }
 
   esFichaActiva(key) {
@@ -406,20 +496,72 @@ export class EstadosComponent implements OnInit {
       }
     }
   }
-  checkPermisosActivate(){
+  checkPermisosActivate() {
     let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
     } else {
-      this.activate();
+      //this.activate();
     }
   }
-  checkPermisosConsultar(){
-    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
-    if (msg != undefined) {
-      this.msgs = msg;
-    } else {
-      this.consultar();
+
+  styleObligatorio(resaltado, evento) {
+    if (resaltado = 'estados') {
+      if ((evento == null || evento == undefined || evento == "") && resaltado == "estados" && this.resaltadoDatosGenerales) {
+        return "camposObligatorios";
+      }
     }
+    else {
+      if (this.resaltadoDatosGenerales && (evento == undefined || evento == null || evento == "")) {
+        return this.commonsServices.styleObligatorio(evento);
+      }
+    }
+  }
+  onRowSelectEstados(i) {
+    let indice = parseInt(i);
+    this.restablecer = true;
+    this.editaEstado = false;
+    
+    
+      if(this.datosEstados[indice] != undefined && this.datosEstados[indice].automatico != 1 && this.datosEstados[indice].fechabaja == null){
+        this.editaEstado = true;
+        this.creaEstado = false;
+        this.guardar = true;
+        for(let j = 0;j <= this.datosEstados.length;j++){
+          if(j == indice){
+            this.datosEstados[indice].isMod = true;
+            this.getComboEstado();
+          }else{
+            this.datosEstados[j].isMod = false;
+          }
+        }
+        
+
+      } else {
+        //this.editaEstado = false;
+        this.datosEstados[indice].isMod = false;
+        //this.restablecer = true;
+        this.restablecer = false;
+      this.editaEstado = false;
+      this.creaEstado = true;
+      this.guardar = false;
+      this.selectedDatos = [];
+
+      }
+    } 
+  
+
+  activarRestablecerEstados() {
+      this.restablecer = false;
+      this.editaEstado = false;
+      this.creaEstado = true;
+      this.guardar = false;
+      this.selectedDatos = [];
+      this.getEstados(this.item);
+    
+  }
+
+  onChangeObservaciones(event){
+    this.observacionesEstado = event.target.value;
   }
 }

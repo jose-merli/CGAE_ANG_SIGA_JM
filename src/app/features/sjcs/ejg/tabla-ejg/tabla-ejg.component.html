@@ -88,7 +88,7 @@
       <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="changeEstado()" type="button" icon="fas fa-exchange-alt" iconPos="left" label="{{'general.boton.cambiarEstado' | translate}}">
       </button>
       
-      <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 1) || !permisoEscritura" (click)="downloadEEJ()" type="button" icon="fa fa-download" iconPos="left" label="{{'justiciaGratuita.ejg.datosGenerales.DescargarEEJ' | translate}}">
+      <button pButton [disabled]="(selectedDatos.length == 0) || !permisoEscritura" (click)="downloadEEJ()" type="button" icon="fa fa-download" iconPos="left" label="{{'justiciaGratuita.ejg.datosGenerales.DescargarEEJ' | translate}}">
       </button>
       
       <button pButton [disabled]="((!selectMultiple || !selectAll) && (selectedDatos.length == 0 || disableAddRemesa)) || !permisoEscritura" (click)="addRemesa()" type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.aniadirARemesa' | translate}}">
@@ -105,7 +105,8 @@
   <div class="form-row">
     <div class="form-group-interlineado col-lg-12 col-md-12" >
       <label>{{'censo.nuevaSolicitud.fechaEstado' | translate}}</label>
-      <app-fecha [(value)]="fechaEstado"></app-fecha>
+      <app-fecha [(value)]="fechaEstado"
+      (valueChangeSelected)="fillFechaEstado($event)" (valueChangeInput)="fillFechaEstado($event)"></app-fecha>
     </div>
     <div class="form-group-interlineado col-lg-12 col-md-12">
       <label>{{ "justiciaGratuita.ejg.datosGenerales.EstadoEJG" | translate }}</label>

@@ -33,12 +33,12 @@
       <div class="form-row">
         <div class="form-group col-lg-6 col-md-6">
           <label>{{ "dato.jgr.guardia.guardias.turno" | translate }} (*)</label>
-          <p-dropdown class="select-form" (onChange)="onChangeTurnos()" [(ngModel)]='body.idTurno' placeholder="Seleccionar" [options]="comboTurno"
+          <p-dropdown [ngClass]="styleObligatorio(body.idTurno)" class="select-form" (onChange)="onChangeTurnos()" [(ngModel)]='body.idTurno' placeholder="Seleccionar" [options]="comboTurno"
             [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" ></p-dropdown>
         </div>
         <div class="form-group col-lg-6 col-md-6">
           <label>{{ "menu.justiciaGratuita.GuardiaMenu" | translate }} (*)</label>
-          <p-dropdown class="select-form" [(ngModel)]='body.idGuardia' [(disabled)]="isDisabledGuardia" placeholder="Seleccionar" [options]="comboGuardia"
+          <p-dropdown [ngClass]="styleObligatorio(body.idGuardia)" class="select-form" [(ngModel)]='body.idGuardia' [(disabled)]="isDisabledGuardia" placeholder="Seleccionar" [options]="comboGuardia"
             [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" ></p-dropdown>
         </div>
         <!-- <div class="form-group col-lg-3 col-md-3">
@@ -49,9 +49,14 @@
           <label>{{"administracion.parametrosGenerales.literal.nombre.apellidos" | translate}}</label>
           <input type="text" class="form-control" disabled [(ngModel)]="body.apellidosYNombre" pInputText />
         </div> -->
-        <div class="form-group col-lg-9 col-md-9">
+        <div *ngIf="body.idPersona == null && resaltadoDatos" class="form-group col-lg-9 col-md-9" style="border: 1px solid red !important" >
           <app-busqueda-colegiado-express (idPersona)="idPersona($event)" [idTurno]="this.body.idTurno" [idGuardia]="this.body.idGuardia" [tarjeta]="'ServiciosTramit'" 
-          [pantalla]="'EJG'"  [numColegiado]="usuarioBusquedaExpress.numColegiado" [art27]="art27"
+          [pantalla]="'gestionEjg'"  [numColegiado]="usuarioBusquedaExpress.numColegiado" [art27]="art27"
+          [nombreAp]="usuarioBusquedaExpress.nombreAp"></app-busqueda-colegiado-express>
+        </div>
+        <div *ngIf="body.idPersona != null" class="form-group col-lg-9 col-md-9">
+          <app-busqueda-colegiado-express (idPersona)="idPersona($event)" [idTurno]="this.body.idTurno" [idGuardia]="this.body.idGuardia" [tarjeta]="'ServiciosTramit'" 
+          [pantalla]="'gestionEjg'"  [numColegiado]="usuarioBusquedaExpress.numColegiado" [art27]="art27"
           [nombreAp]="usuarioBusquedaExpress.nombreAp"></app-busqueda-colegiado-express>
         </div>
         <div class="form-group col-lg-3 col-md-3 form-row">

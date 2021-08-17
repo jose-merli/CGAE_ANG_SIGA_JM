@@ -116,13 +116,7 @@ import { GuardiasCentralitaComponent } from './features/sjcs/guardia/guardias-ce
 import { VolanteExpresComponent } from './features/sjcs/guardia/volante-expres/volante-expres.component';
 import { SOJComponent } from './features/sjcs/soj/soj.component';
 import { EJGComponent } from './features/sjcs/ejg/ejg.component';
-import { RemesasComponent } from './features/sjcs/remesas/remesas.component';
-import { FiltroRemesasComponent } from './features/sjcs/remesas/filtro-remesas/filtro-remesas.component';
 import { ActasComponent } from './features/sjcs/actas/actas.component';
-import { FiltroActasComponent } from './features/sjcs/actas/filtro-actas/filtro-actas.component';
-import { EjgComisionComponent } from './features/sjcs/ejg-comision/ejg-comision.component';
-import { EjgComisionBusquedaComponent } from './features/sjcs/ejg-comision/ejg-comision-busqueda/ejg-comision-busqueda.component';
-import { GestionActasComponent } from './features/sjcs/gestion-actas/gestion-actas.component';
 import { MantenimientoFacturacionComponent } from './features/sjcs/facturacionSJCS/mantenimiento-facturacion/mantenimiento-facturacion.component';
 import { PrevisionesComponent } from './features/sjcs/facturacionSJCS/previsiones/previsiones.component';
 import { MantenimientoPagosComponent } from './features/sjcs/facturacionSJCS/mantenimiento-pagos/mantenimiento-pagos.component';
@@ -153,6 +147,7 @@ import { ComunicaResolucionesComponent } from './features/sjcs/comunicaciones/co
 import { ComunicaDesignacionesComponent } from './features/sjcs/comunicaciones/comunica-designaciones/comunica-designaciones.component';
 import { DesignacionesComponent } from './features/sjcs/oficio/designaciones/designaciones.component';
 import { CargasMasivasOficioComponent } from './features/sjcs/oficio/cargas-masivas-oficio/cargas-masivas-oficio.component';
+import { FichaPreDesignacionComponent } from './features/sjcs/ejg/gestion-ejg/relaciones/ficha-pre-designacion/ficha-pre-designacion.component';
 
 //Consultas
 import { RecuperarConsultasComponent } from './features/consultas/recuperar-consultas/recuperar-consultas.component';
@@ -860,28 +855,8 @@ const appRoutes: Routes = [
 		canActivate: [ AuthGuard ]
 	},
 	{
-		path: 'remesas',
-		component: RemesasComponent,
-		canActivate: [ AuthGuard ]
-	},
-	{
-		path: 'filtro-remesas',
-		component: FiltroRemesasComponent,
-		canActivate: [ AuthGuard ]
-	},
-	{
-		path: 'filtro-actas',
-		component: FiltroActasComponent,
-		canActivate: [ AuthGuard ]
-	},
-	{
-		path: 'ejg-comision',
-		component: EjgComisionComponent,
-		canActivate: [ AuthGuard ]
-	},
-	{
-		path: 'ejg-comision-busqueda',
-		component: EjgComisionBusquedaComponent,
+		path: 'ficha-pre-designacion',
+		component: FichaPreDesignacionComponent,
 		canActivate: [ AuthGuard ]
 	},
 	{
@@ -897,6 +872,11 @@ const appRoutes: Routes = [
 	{
 		path: 'previsiones',
 		component: PrevisionesComponent,
+		canActivate: [ AuthGuard ]
+	},
+	{
+		path: 'ficha-pre-designacion',
+		component: FichaPreDesignacionComponent,
 		canActivate: [ AuthGuard ]
 	},
 	{

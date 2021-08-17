@@ -1,7 +1,7 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="busqueda-container">
-    <app-filtros-ejg (busqueda)="searchEJGs($event)"></app-filtros-ejg>
-    <app-tabla-ejg *ngIf="buscar" [datos]="datos" [filtro]="this.filtros.body" [remesa]="remesa" (busqueda)="searchEJGs($event)" (searchHistoricalSend)="searchEJGs($event)"></app-tabla-ejg>
+    <app-filtros-ejg (busqueda)="searchEJGs($event)" [permisoEscritura] = "this.permisoEscritura"></app-filtros-ejg>
+    <app-tabla-ejg *ngIf="buscar" [datos]="datos" [filtro]="this.filtros.body" [comboEstadoEJG]="this.filtros.comboEstadoEJG" [remesa]="remesa" (busqueda)="searchEJGs($event)" (searchHistoricalSend)="searchEJGs($event)"></app-tabla-ejg>
 </div>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">

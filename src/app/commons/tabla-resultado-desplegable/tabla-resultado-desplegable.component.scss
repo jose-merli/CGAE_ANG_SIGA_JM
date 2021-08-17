@@ -11,10 +11,10 @@
 .row {
   margin: 0;
 }
-
+/*
 ::ng-deep .mat-sort-header-arrow {
   opacity: 1 !important;
-}
+}*/
 
 .column-title {
   display: none;
@@ -181,6 +181,10 @@
 
 ::ng-deep div.mat-expansion-panel-content {
   margin-top: 0.5rem !important;
+}
+
+::ng-deep .ui-dropdown-items {
+  width: 200px;
 }
 
 .vertical-center {
@@ -556,4 +560,69 @@ color: green;
 .setPosition{
   position: relative;
     top: 65px;
+}
+.wrapName2{
+    word-wrap: break-word;
+    max-width: 125px;
+}
+.enlace {
+  color: #0000EE !important;
+  text-decoration: underline;
+  cursor: pointer !important;
+}
+
+.hoverToClick :hover {
+  background-color: rgb(141, 175, 220) !important;
+  border: 1px solid #004375;
+  cursor: pointer;
+}
+.mw80{
+  max-width: 200px;
+}
+
+.mw100{
+  max-width: 400px;
+}
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+
+  /* Position the tooltip text */
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -60px;
+
+  /* Fade in tooltip */
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* Tooltip arrow */
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+.setDiv{
+    width: fit-content;
+    margin: 0 auto;
 }

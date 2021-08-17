@@ -13,9 +13,9 @@
             <label class="mr-auto title-ficha pointer">{{ 'justiciaGratuita.ejg.datosGenerales.InformeCalificacion' | translate }}</label>
           </div>
           <div class="d-flex justify-content-between default">
-              <label>{{ "censo.resultadosSolicitudesModificacion.literal.fecha" | translate }}: <span *ngIf="dictamen">{{dictamen.fechaDictamen | date: 'dd/MM/yyyy'}}</span></label>
+              <label>{{ "censo.resultadosSolicitudesModificacion.literal.fecha" | translate }}: <span *ngIf="dictamen">{{fechaDictCabecera | date: 'dd/MM/yyyy'}}</span></label>
               <label>{{ "justiciaGratuita.maestros.fundamentosCalificacion.datosGenerales.dictamen" | translate }}: <span *ngIf="dictamen">{{dictamen.dictamenSing}}</span></label>
-              <label>{{ "justiciaGratuita.ejg.datosGenerales.Fundamento" | translate }}: <span *ngIf="dictamen">{{dictamen.fundamentoCalifDes}}</span></label>
+              <label>{{ "justiciaGratuita.ejg.datosGenerales.Fundamento" | translate }}: <span *ngIf="dictamen">{{fundamentoCalifCabecera}}</span></label>
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('informeCalificacion')"></i>
           </div>
         </div>
@@ -41,7 +41,7 @@
             </div>
             <div *ngIf="dictamen" class="form-group col-lg-3 col-md-3">
                 <label>{{ "justiciaGratuita.ejg.datosGenerales.Dictamen" | translate }}</label>
-                <p-dropdown autoWidth="false" [(ngModel)]='dictamen.iddictamen' [options]="comboDictamen" class="select-form" placeholder="Seleccionar"
+                <p-dropdown autoWidth="false" [(ngModel)]='dictamen.idTipoDictamen' [options]="comboDictamen" class="select-form" placeholder="Seleccionar"
                  (onChange)="onChangeDictamen()" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
             </div>
             <div *ngIf="dictamen" class="form-group col-lg-6 col-md-6">
@@ -51,10 +51,10 @@
             </div>
           </div>
           <div class="form-row">
-              <div *ngIf="dictamen" class="form-group col-lg-12 col-md-12">
+              <div class="form-group col-lg-12 col-md-12">
                   <label>{{ "censo.nuevaSolicitud.observaciones" | translate }}
                   </label>
-                  <textarea class="form-control ui-inputtext" autoResize="autoResize" maxLength="3900" pInputTextarea [(ngModel)]="dictamen.observacionesDictamen" [disabled]="true"></textarea>
+                  <textarea class="form-control ui-inputtext" autoResize="autoResize" maxLength="300" pInputTextarea [(ngModel)]="dictamen.dictamen" ></textarea>
                 </div>
             </div>
         </div>
@@ -64,8 +64,8 @@
     <div *ngIf="esFichaActiva('informeCalificacion')" class="card-footer">
       <div class="text-right main-button ">
         <button (click)="checkPermisosSave()" pButton [disabled]="!permisoEscritura" type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-        <button (click)="checkPermisosConfirmRest()" pButton [disabled]="!permisoEscritura" type="button" icon="fa fa-repeat" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button [disabled]="!permisoEscritura" (click)="checkPermisosConfirmDelete()" pButton type="button" icon="fa fa-trash" iconPos="left" label="{{ 'general.boton.borrarDictamen' | translate}}"></button>
+        <button (click)="checkPermisosRest()" pButton [disabled]="!permisoEscritura" type="button" icon="fa fa-repeat" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button [disabled]="!permisoEscritura || dictamen.iddictamen == null" (click)="checkPermisosConfirmDelete()" pButton type="button" icon="fa fa-trash" iconPos="left" label="{{ 'general.boton.borrarDictamen' | translate}}"></button>
         <button [disabled]="!permisoEscritura" (click)="checkPermisosDownload()" pButton type="button" icon="fa fa-download" iconPos="left" label="{{ 'general.boton.descargar.informe' | translate}}"></button>
       </div> 
     </div>

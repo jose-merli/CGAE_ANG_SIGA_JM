@@ -2,10 +2,12 @@ import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, ChangeDe
 import { ComunicacionesSearchItem } from '../../../../../models/ComunicacionesSearchItem';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { Router } from "@angular/router";
-import { DataTable } from 'primeng/datatable';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../commons/translate';
+import { DataTable } from 'primeng/primeng';
+import { EnviosMasivosItem } from '../../../../../models/EnviosMasivosItem';
+
 @Component({
   selector: 'app-comunicaciones-ejg',
   templateUrl: './comunicaciones-ejg.component.html',
@@ -15,16 +17,16 @@ export class ComunicacionesEJGComponent implements OnInit {
   @Input() modoEdicion;
   @Input() permisoEscritura;
   @Input() tarjetaComunicaciones: string;
- //@Input() comunicaciones;
   @Input() openTarjetaComunicaciones;
   
-
+  @ViewChild("table") table: DataTable;
+  
   msgs;
+  
   fichaPosible = {
     key: "comunicaciones",
     activa: false
   }
-  selectedDatos=[];
   
   resaltadoDatosGenerales: boolean=false;
   activacionTarjeta: boolean = false;
@@ -33,45 +35,37 @@ export class ComunicacionesEJGComponent implements OnInit {
   buscadores = [];
   rowsPerPage: any = [];
   selectedItem: number = 10;
-  datos;
-  selectMultiple: boolean = false;
-  seleccion: boolean = false;
-  historico: boolean = false;
-  selectAll;
-  bodySearch: ComunicacionesSearchItem = new ComunicacionesSearchItem();
-  body: EJGItem;
   item: EJGItem;
-  comunicaciones: ComunicacionesSearchItem;
+  comunicaciones: EnviosMasivosItem[] = [];
+  numComunicaciones=0;
   progressSpinner: boolean = false;
 
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
+
   nuevo: boolean;
   estado: any;
-  // @ViewChild("table")
-  // table: DataTable;
+
   constructor(private persistenceService: PersistenceService,
-    private router: Router,
+    private router: Router, private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
     private translateService: TranslateService) { }
 
   ngOnInit() {
-    // this.getCols();
+    this.numComunicaciones=0;
 
-    // this.datos=this.comunicaciones; 
     if (this.persistenceService.getDatos()) {
       this.nuevo = false;
       this.modoEdicion = true;
-      this.body = this.persistenceService.getDatos();
-      this.item = this.body;
+      this.item = this.persistenceService.getDatos();
+
       this.searchComunicaciones();
       this.getCols();
     }else {
-    this.nuevo = true;
-    this.modoEdicion = false;
-    this.item = new EJGItem();
-  }
-    
+      this.nuevo = true;
+      this.modoEdicion = false;
+      this.item = new EJGItem();
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -83,8 +77,6 @@ export class ComunicacionesEJGComponent implements OnInit {
     }
   }
 
-
-
   clear() {
     this.msgs = [];
   }
@@ -95,41 +87,30 @@ export class ComunicacionesEJGComponent implements OnInit {
 
   abreCierraFicha(key) {
     this.resaltadoDatosGenerales = true;
-    if (
-      key == "comunicaciones" &&
-      !this.activacionTarjeta
-    ) {
+    if (key == "comunicaciones" && !this.activacionTarjeta) {
       this.fichaPosible.activa = !this.fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
+
     if (this.activacionTarjeta) {
       this.fichaPosible.activa = !this.fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
+    
     this.opened.emit(this.openFicha);
     this.idOpened.emit(key);
   }
 
-  // openTab(evento){
-  //   if (this.persistenceService.getPermisos() != undefined) {
-  //     this.permisoEscritura = this.persistenceService.getPermisos();
-  //   }
-  //   if (!this.selectAll && !this.selectMultiple) {
-  //   } else {
-  //     if (evento.data.fechabaja == undefined && this.historico) {
-  //       this.selectedDatos.pop();
-  //     }
-  //   }
-  // }
   getCols() {
     this.cols = [
       { field: "claseComunicacion", header: "informesycomunicaciones.comunicaciones.busqueda.claseComunicacion" },
       { field: "destinatario", header: "informesycomunicaciones.comunicaciones.busqueda.destinatario" },
       { field: "fechaCreacion", header: "informesycomunicaciones.enviosMasivos.fechaCreacion" },
-      { field: "fechaProgramacion", header: "informesycomunicaciones.comunicaciones.busqueda.fechaProgramada" },
+      { field: "fechaProgramada", header: "informesycomunicaciones.comunicaciones.busqueda.fechaProgramada" },
       { field: "tipoEnvio", header: "informesycomunicaciones.comunicaciones.busqueda.tipoEnvio" },
-      { field: "estado", header: "censo.nuevaSolicitud.estado" }
+      { field: "estadoEnvio", header: "censo.nuevaSolicitud.estado" }
     ];
+
     this.cols.forEach(it => this.buscadores.push(""));
 
     this.rowsPerPage = [
@@ -151,56 +132,50 @@ export class ComunicacionesEJGComponent implements OnInit {
       }
     ];
   }
+
   setItalic(dato) {
     if (dato.fechabaja == null) return false;
     else return true;
   }
-  onChangeSelectAll(){}
+
   onChangeRowsPerPages(event){
-    // this.selectedItem = event.value;
-    // this.changeDetectorRef.detectChanges();
-    // this.table.reset();
+    this.selectedItem = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.table.reset();
   }
-  actualizaSeleccionados(){}
 
   navigateTo(dato) {
     this.estado = dato[0].idEstado;
+
     if (this.estado != 5) {
-      // this.body.estado = dato[0].estado;
       this.router.navigate(["/fichaRegistroComunicacion"]);
-      sessionStorage.setItem("comunicacionesSearch", JSON.stringify(dato[0]));
-      sessionStorage.setItem("filtrosCom", JSON.stringify(this.bodySearch));
+      sessionStorage.setItem("comunicacionesSearch",  JSON.stringify(dato[0]));
+      //sessionStorage.setItem("filtrosCom", JSON.stringify(this.bodySearch));
     } else if (this.estado == 5) {
-      //this.showInfo("La comunicación está en proceso, no puede editarse");
       this.showMessage("error",this.translateService.instant("general.message.incorrect"),this.translateService.instant("informesycomunicaciones.comunicaciones.envioProcess"));
-      this.selectedDatos = [];
     }
- 
   }
 
   searchComunicaciones() {
-    this.progressSpinner = true;
-    let data = [];
+    //this.progressSpinner = true;
 
-    data.push(this.body.annio);
-    data.push(this.body.numero);
-    data.push(this.body.tipoEJG);
-
-    this.sigaServices.post("gestionejg_getComunicaciones", data).subscribe(
+    this.sigaServices.post("gestionejg_getComunicaciones", this.item).subscribe(
       n => {
-        this.comunicaciones = JSON.parse(n.body).comunicacionesItem;
+        this.comunicaciones = JSON.parse(n.body).enviosMasivosItem;
 
-        this.progressSpinner = false;
+        this.numComunicaciones = this.comunicaciones.length;
+       // this.progressSpinner = false;
 
       },
       err => {
         console.log(err);
-        this.progressSpinner = false;
+       // this.progressSpinner = false;
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         
       }
     );
   }
+
   showMessage(severity, summary, msg) {
     this.msgs = [];
     this.msgs.push({

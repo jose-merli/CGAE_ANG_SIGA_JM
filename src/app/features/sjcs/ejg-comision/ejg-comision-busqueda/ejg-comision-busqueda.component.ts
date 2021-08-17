@@ -162,7 +162,7 @@ export class EjgComisionBusquedaComponent implements OnInit {
 
     } else {
       this.isDisabledFundamentosCalif = true;
-      this.body.fundamentoCalif = "";
+      this.body.fundamentoCalif = null;
 
     }
   }

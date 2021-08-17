@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { Message } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../../../commons/translate';
 import { DesignaItem } from '../../../../../../models/sjcs/DesignaItem';
@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
   templateUrl: './detalle-tarjeta-datos-facturacion-ficha-designacion-oficio.component.html',
   styleUrls: ['./detalle-tarjeta-datos-facturacion-ficha-designacion-oficio.component.scss']
 })
-export class DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent implements OnInit, OnDestroy {
+export class DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent implements OnInit {
 
   selector =
     {
@@ -24,36 +24,38 @@ export class DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent imple
 
   msgs: Message[] = [];
   permisoEscritura: boolean;
-  @Input() isAnulada: boolean;
-  @Input() campos;
-  @Output() changeDataEvent = new EventEmitter<any>();
   progressSpinner: boolean = false;
 
+  @Input() isAnulada: boolean;
+  @Input() campos;
+  @Output() changeDataDatosFacEvent = new EventEmitter<any>();
+
   constructor(private sigaServices: SigaServices,
-     private commonsService: CommonsService,
+    private commonsService: CommonsService,
     private translateService: TranslateService,
     private persistenceService: PersistenceService,
     private router: Router) { }
 
   ngOnInit() {
-    this.getComboPartidaPresupuestaria();
 
     this.commonsService.checkAcceso(procesos_oficio.designaTarjetaFacturacion)
-          .then(respuesta => {
-            this.permisoEscritura = respuesta;
-            this.persistenceService.setPermisos(this.permisoEscritura);
-     
-            if (this.permisoEscritura == undefined) {
-              sessionStorage.setItem("codError", "403");
-              sessionStorage.setItem(
-                "descError",
-                this.translateService.instant("generico.error.permiso.denegado")
-              );
-              this.router.navigate(["/errorAcceso"]);
-            }
-            
-          }
-          ).catch(error => console.error(error)); 
+      .then(respuesta => {
+        this.permisoEscritura = respuesta;
+        this.persistenceService.setPermisos(this.permisoEscritura);
+
+        if (this.permisoEscritura == undefined) {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
+
+        this.getComboPartidaPresupuestaria();
+
+      }
+      ).catch(error => console.error(error));
   }
 
   getComboPartidaPresupuestaria() {
@@ -82,16 +84,17 @@ export class DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent imple
     let facturacionDesigna = new DesignaItem();
     facturacionDesigna.idTurno = designaItem.idTurno;
     let anio = this.campos.ano.split("/");
-    facturacionDesigna.ano = Number(anio[0].substring(1,5));
+    facturacionDesigna.ano = Number(anio[0].substring(1, 5));
     facturacionDesigna.numero = designaItem.numero;
 
     this.sigaServices.post("designaciones_getDatosFacturacion", facturacionDesigna).subscribe(
       n => {
         let resp = JSON.parse(n.body).combooItems;
-        if (resp.length > 0) {
+
+        if (resp.length > 0 && resp[0] != null) {
           this.selector.value = resp[0].value;
-          // this.changeDataEvent.emit({ tarjeta: 'sjcsDesigActuaOfiDatFac', partida: resp.label });
-          sessionStorage.setItem("datosIniActuDesignaDatosFact", JSON.stringify(resp[0]));
+        } else {
+          this.selector.value = null;
         }
       },
       err => {
@@ -110,9 +113,9 @@ export class DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent imple
     let factAct = new DesignaItem();
     factAct.idTurno = Number(this.campos.idTurno);
     let anio = this.campos.ano.split("/");
-    factAct.ano = Number(anio[0].substring(1,5));
+    factAct.ano = Number(anio[0].substring(1, 5));
     factAct.numero = this.campos.numero;
-    factAct.idPartidaPresupuestaria = Number(this.selector.value);
+    factAct.idPartidaPresupuestaria = this.selector.value;
 
     this.sigaServices.post("designaciones_updateDatosFacturacion", factAct).subscribe(
       n => {
@@ -120,9 +123,17 @@ export class DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent imple
         const resp = JSON.parse(n.body);
 
         if (resp.error != null && resp.error.code == 200) {
+
+          this.campos.idPartidaPresupuestaria = this.selector.value;
+          if (this.selector.value != undefined && this.selector.value != null && this.selector.value != '') {
+            this.campos.nombrePartida = this.selector.opciones.find(el => el.value == this.selector.value).label;
+          } else {
+            this.campos.nombrePartida = '';
+          }
+
+          this.changeDataDatosFacEvent.emit();
+
           this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
-          // this.changeDataEvent.emit({ tarjeta: 'sjcsDesigActuaOfiDatFac', partida: this.selector.opciones.find(el => el.value == this.selector.value).label });
-          sessionStorage.setItem("datosIniActuDesignaDatosFact", JSON.stringify({ label: this.selector.opciones.find(el => el.value == this.selector.value).label, value: this.selector.value }));
         }
 
         if (resp.error != null && resp.error.descripcion != null) {
@@ -140,13 +151,8 @@ export class DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent imple
   }
 
   restablecer() {
-
-    if (sessionStorage.getItem("datosIniActuDesignaDatosFact")) {
-      let valorIni = JSON.parse(sessionStorage.getItem("datosIniActuDesignaDatosFact"));
-      this.selector.value = valorIni.value;
-      // this.changeDataEvent.emit({ tarjeta: 'sjcsDesigActuaOfiDatFac', partida: valorIni.label });
-      this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
-    }
+    this.selector.value = this.campos.idPartidaPresupuestaria;
+    this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
   }
 
   showMsg(severity, summary, detail) {
@@ -160,10 +166,6 @@ export class DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent imple
 
   clear() {
     this.msgs = [];
-  }
-
-  ngOnDestroy(): void {
-    sessionStorage.removeItem("datosIniActuDesignaDatosFact");
   }
 
 }

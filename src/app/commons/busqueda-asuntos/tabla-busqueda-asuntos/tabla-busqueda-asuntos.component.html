@@ -4,7 +4,7 @@
   <div class="card-body p-0">
     <!-- TABLA RESULTADOS -->
 
-    <p-table [value]="datos" [rows]="selectedItem" [columns]="cols" selectionMode="single" (onRowSelect)="getAsunto($event)" [responsive]="true"
+    <p-table [value]="datos" [rows]="selectedItem" [columns]="cols" [(selection)]="selectedDatos" selectionMode="single" (onRowSelect)="openTab($event)" [responsive]="true"
       #table class="tabla-listado" [paginator]="true" paginatorPosition="both">
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
@@ -25,17 +25,10 @@
       <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
         <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
           <td class="text-center" *ngFor="let col of columns">
-            <div *ngIf="col.field != 'fecha' && col.field != 'datosInteres'">
+            <div *ngIf="col.field != 'fecha' && col.field">
               <span>{{dato[col.field]}}</span>
             </div>
-            <div *ngIf="col.field == 'fecha'">
-              <div>
-                <label>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</label>
-              </div>
-            </div>
-            <div *ngIf="col.field == 'datosInteres'">
-              <div [innerHTML]="dato[col.field]"></div>
-            </div>
+
           </td>
 
         </tr>

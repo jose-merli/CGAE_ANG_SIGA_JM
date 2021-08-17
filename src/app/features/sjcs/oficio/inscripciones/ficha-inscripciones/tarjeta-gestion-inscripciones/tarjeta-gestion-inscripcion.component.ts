@@ -99,7 +99,7 @@ export class TarjetaGestionInscripcion implements OnInit {
         this.datos = this.persistenceService.getDatos();
         this.body = this.datos;
       }
-      this.busqueda();
+      //this.busqueda();
       this.modoEdicion = true;
 
     } else {

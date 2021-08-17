@@ -1,6 +1,6 @@
 import { NgModule, LOCALE_ID } from '@angular/core';
 import { CommonModule, DatePipe, APP_BASE_HREF, UpperCasePipe } from '@angular/common';
-import { DataTableModule, PaginatorModule, InputTextModule, CheckboxModule, DropdownModule, ButtonModule, GrowlModule, ConfirmationService, MenubarModule, PickListModule, TooltipModule, ConfirmDialogModule } from 'primeng/primeng';
+import { DataTableModule, PaginatorModule, InputTextModule, CheckboxModule, DropdownModule, ButtonModule, GrowlModule, MenubarModule, PickListModule, TooltipModule } from 'primeng/primeng';
 import { FormsModule } from '@angular/forms';
 import { PipeTranslationModule } from '../../../../commons/translate/pipe-translation.module';
 import { ImagePipe } from '../../../../commons/image-pipe/image.pipe';
@@ -17,7 +17,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JwtInterceptor } from '../../../../_interceptor/jwt.interceptor';
 import { CookieService } from 'ngx-cookie-service';
 import { TableModule } from 'primeng/table';
-
+import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { MultiSelectModule } from "primeng/multiselect";
 import { PrecioModule } from '../../../../commons/precio/precio.module';
 import { TarjetaResumenFijaModule } from '../../../../commons/tarjeta-resumen-fija/tarjeta-resumen-fija.module';
@@ -26,7 +26,7 @@ import { FechaModule } from '../../../../commons/fecha/fecha.module';
 import { routingOficio } from '../oficio-routing.module';
 import { BusquedaColegiadoExpressModule } from '../../../../commons/busqueda-colegiado-express/busqueda-colegiado-express.module';
 import {TreeTableModule} from 'primeng/treetable';
-import {TreeNode} from 'primeng/api';
+import {ConfirmationService, TreeNode} from 'primeng/api';
 import { BajasTemporalesComponent } from './busqueda-bajas-temporales.component';
 import { MatSortModule } from '@angular/material/sort';
 import { FiltrosBajasTemporales } from './filtros-inscripciones/filtros-bajas-temporales.component';

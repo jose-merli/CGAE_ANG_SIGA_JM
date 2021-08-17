@@ -7,15 +7,28 @@
     </div>
 
     <div class="busqueda-container">
-        <!-- <app-filtro [permisoEscritura]="permisoEscritura" (isOpen)="isOpenReceive($event)"></app-filtro>
-  <app-tabla *ngIf="buscar" [datos]="datos" (searchHistoricalSend)="search($event)"></app-tabla> -->
-        <app-filtros-busqueda-asuntos [permisoEscritura]="permisoEscritura" (search)="searchEvent($event)" [datosEJG]="datosEJG"></app-filtros-busqueda-asuntos>
-        <app-tabla-busqueda-asuntos *ngIf="buscar" [body]="body" [datosEJG]="datosEJG"></app-tabla-busqueda-asuntos>
+        <app-filtros-busqueda-asuntos [permisoEscritura]="permisoEscritura" (search)="searchEvent($event)" (resetTable)="resetTableEvent($event)" [data]="datos"></app-filtros-busqueda-asuntos>
+        <app-tabla-busqueda-asuntos *ngIf="buscar" [body]="body" [data]="datos" [radioTarjeta]="radioTarjeta" (elementoAsociado)="asociarElement($event)" id="tablaBusqueda"></app-tabla-busqueda-asuntos>
     </div>
 
     <div class="mt-3 text-right main-button ">
         <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate }}"></button>
     </div>
+
+    <p-confirmDialog header="Confirmación" key="asoc" icon="fa fa-question-circle" width="425" #asoc>
+        <p-footer>
+          <button type="button" pButton icon="fa-check" label="Si" (click)="asoc.accept()"></button>
+          <button type="button" pButton icon="fa-close" label="No" (click)="asoc.reject()"></button>
+        </p-footer>
+    </p-confirmDialog>
+
+    <p-confirmDialog header="Confirmación" key="copy" icon="fa fa-question-circle" width="425" #copy>
+        <p-footer>
+          <button type="button" pButton icon="fa-check" label="Si" (click)="copy.accept()"></button>
+          <button type="button" pButton icon="fa-close" label="No" (click)="copy.reject()"></button>
+        </p-footer>
+    </p-confirmDialog>
+    
     <div *ngIf="progressSpinner" class="overlay-spinner">
         <div class="loader"></div>
     </div>

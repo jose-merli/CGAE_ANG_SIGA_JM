@@ -1,5 +1,5 @@
 
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { ConfirmationService } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../../commons/translate';
 import { JusticiableBusquedaItem } from '../../../../../models/sjcs/JusticiableBusquedaItem';
@@ -8,13 +8,10 @@ import { JusticiableTelefonoItem } from '../../../../../models/sjcs/JusticiableT
 import { CommonsService } from '../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
-import { Subject } from 'rxjs';
 import { AuthenticationService } from '../../../../../_services/authentication.service';
 import { Router } from '@angular/router';
 import { SigaConstants } from '../../../../../utils/SigaConstants';
-import { procesos_maestros } from '../../../../../permisos/procesos_maestros';
-import { procesos_justiciables } from '../../../../../permisos/procesos_justiciables';
-import { Checkbox, ConfirmDialog } from '../../../../../../../node_modules/primeng/primeng';
+import { Checkbox } from '../../../../../../../node_modules/primeng/primeng';
 import { Dialog } from 'primeng/primeng';
 
 @Component({
@@ -29,7 +26,6 @@ export class DatosPersonalesComponent implements OnInit {
   progressSpinner: boolean = false;
 
   edadAdulta: number = 18;
-  modoEdicion: boolean = false;
   msgs;
   comboTipoIdentificacion;
   comboSexo;
@@ -67,7 +63,6 @@ export class DatosPersonalesComponent implements OnInit {
   personaRepetida: boolean = false;
 
   count: number = 1;
-  showTarjetaPermiso: boolean = false;
   selectedDatos = [];
   rowsPerPage: any = [];
 
@@ -90,10 +85,13 @@ export class DatosPersonalesComponent implements OnInit {
   @Output() searchJusticiableOverwritten = new EventEmitter<any>();
 
   @Input() showTarjeta;
-  @Input() fromJusticiable;
+  @Input() fromJusticiable: boolean = false;
+  @Input() fromUniFamiliar: boolean = false;
   @Input() body: JusticiableItem;
   @Input() modoRepresentante;
   @Input() checkedViewRepresentante;
+
+  modoEdicion: boolean = false;
 
   confirmationSave: boolean = false;
   confirmationUpdate: boolean = false;
@@ -112,55 +110,42 @@ export class DatosPersonalesComponent implements OnInit {
   ngOnInit() {
     this.progressSpinner = true;
 
-    this.commonsService.checkAcceso(procesos_justiciables.tarjetaDatosGenerales)
-      .then(respuesta => {
+    if (this.body != undefined && this.body.idpersona != undefined) {
+      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
 
-        this.permisoEscritura = respuesta;
+      this.parseFechas();
 
-        if (this.permisoEscritura == undefined) {
-          this.progressSpinner = false;
-          this.showTarjetaPermiso = false;
-        } else {
-          this.showTarjetaPermiso = true;
-          if (this.body != undefined && this.body.idpersona != undefined) {
-            this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+    } else {
+      this.body = new JusticiableItem();
+    }
 
-            this.parseFechas();
+    //Obligatorio pais españa
+    this.body.idpaisdir1 = "191";
 
-          } else {
-            this.body = new JusticiableItem();
-          }
+    if (this.body.idpersona == undefined) {
+      this.modoEdicion = false;
+      this.body.fechaalta = new Date();
+      
+    } else {
+      this.modoEdicion = true;
 
-          //Obligatorio pais españa
-          this.body.idpaisdir1 = "191";
-
-          if (this.body.idpersona == undefined) {
-            this.modoEdicion = false;
-            this.body.fechaalta = new Date();
-          } else {
-            this.modoEdicion = true;
-
-            if (this.body.idprovincia != undefined && this.body.idprovincia != null &&
-              this.body.idprovincia != "") {
-              this.isDisabledPoblacion = false;
-            } else {
-              this.isDisabledPoblacion = true;
-            }
-
-          }
-
-          this.progressSpinner = false;
-
-        }
-
-        this.sigaServices.guardarDatosSolicitudJusticiable$.subscribe((data) => {
-          this.body.autorizaavisotelematico = data.autorizaavisotelematico;
-          this.body.asistidoautorizaeejg = data.asistidoautorizaeejg;
-          this.body.asistidosolicitajg = data.asistidosolicitajg;
-          this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-        });
+      if (this.body.idprovincia != undefined && this.body.idprovincia != null &&
+        this.body.idprovincia != "") {
+        this.isDisabledPoblacion = false;
+      } else {
+        this.isDisabledPoblacion = true;
       }
-      ).catch(error => console.error(error));
+
+    }
+
+    this.progressSpinner = false;
+
+    this.sigaServices.guardarDatosSolicitudJusticiable$.subscribe((data) => {
+      this.body.autorizaavisotelematico = data.autorizaavisotelematico;
+      this.body.asistidoautorizaeejg = data.asistidoautorizaeejg;
+      this.body.asistidosolicitajg = data.asistidosolicitajg;
+      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+    });
 
     this.getCombos();
     this.getColsDatosContacto();
@@ -179,9 +164,6 @@ export class DatosPersonalesComponent implements OnInit {
       this.body = new JusticiableItem();
       this.progressSpinner = false;
     }
-
-    //Obligatorio pais españa
-    this.body.idpaisdir1 = "191";
 
     if (this.body.idpersona == undefined) {
       this.modoEdicion = false;
@@ -447,7 +429,7 @@ export class DatosPersonalesComponent implements OnInit {
       err => {
 
         if (JSON.parse(err.error).error.description != "") {
-          if (JSON.parse(err.error).error.code == "600") {
+          if (err.error != undefined && JSON.parse(err.error).error.code == "600") {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
           } else {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
@@ -584,6 +566,7 @@ export class DatosPersonalesComponent implements OnInit {
       }
     ];
   }
+
 
   getDatosContacto() {
     this.datos = [];

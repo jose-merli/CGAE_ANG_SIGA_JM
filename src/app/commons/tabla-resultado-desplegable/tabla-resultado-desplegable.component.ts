@@ -119,7 +119,6 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   ngOnInit(): void {
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos();
-      console.log(' this.permisoEscritura: ',  this.permisoEscritura)
     }
     if (this.pantalla == 'JE'){
       this.rowIdsToUpdate = []; //limpiamos
@@ -316,6 +315,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   searchChange(j: any) {
     if (this.pantalla == 'JE') {
       let isReturn = true;
+      let sT;
       let isReturnArr = [];
       this.rowGroups = this.rowGroupsAux.filter((row) => {
         isReturnArr = [];
@@ -325,16 +325,22 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             if (row.rows[r].cells[i].value != null && i <= 8){
 
               //this.searchText.forEach(sT => {
-          
+          if ( (i == 8 || i == 0) && (this.searchText[i + 3] == 's' || this.searchText[i + 3] == 'si')){
+            sT  = 'true';
+          }else if ((i == 8 || i == 0) && (this.searchText[i + 3] == 'n' || this.searchText[i + 3] == 'no')){
+            sT  = 'false';
+          }else{
+            sT = this.searchText[i + 3];
+          }
                   if ( 
                     (i == 0 && this.searchText[i] != undefined && !row.id.toLowerCase().includes(this.searchText[0].toLowerCase())) ||
                     (i == 1 && this.searchText[i] != undefined && !row.id2.toLowerCase().includes(this.searchText[1].toLowerCase())) ||
                     (i == 2 && this.searchText[i] != undefined && !row.id3.toLowerCase().includes(this.searchText[2].toLowerCase())) ||
                    
-                    (this.searchText[i + 3] != " " &&
-                    this.searchText[i] + 3 != undefined &&
-                    this.searchText[i + 3] != null &&
-                    !row.rows[0].cells[i].value.toString().toLowerCase().includes(this.searchText[i + 3].toLowerCase()))
+                    (sT != " " &&
+                    sT != undefined &&
+                    sT != null &&
+                    !row.rows[0].cells[i].value.toString().toLowerCase().includes(sT.toLowerCase()))
                   ) {
                     isReturn = false;
                   } else {
@@ -400,11 +406,19 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           this.refreshData.emit(true);
         }else{
           cell.value = this.datepipe.transform(event, 'dd/MM/yyyy');
-          this.rowIdsToUpdate.push(rowId);
+          if (this.sumar){
+            this.rowIdsToUpdate.push(rowId);
+          }else{
+            this.rowIdsToUpdate = []; //limpiamos
+          }
         }
       }else{
         cell.value = this.datepipe.transform(event, 'dd/MM/yyyy');
-        this.rowIdsToUpdate.push(rowId);
+        if (this.sumar){
+          this.rowIdsToUpdate.push(rowId);
+        }else{
+          this.rowIdsToUpdate = []; //limpiamos
+        }
       }
     }else{
       //actuacion
@@ -412,7 +426,11 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       if((this.isLetrado && row.cells[8].value != true && this.turnoAllow) || (!this.isLetrado)){
         if (row.cells[8].value != true){
         cell.value = this.datepipe.transform(event, 'dd/MM/yyyy');
-        this.rowIdsToUpdate.push(rowId);
+        if (this.sumar){
+          this.rowIdsToUpdate.push(rowId);
+        }else{
+          this.rowIdsToUpdate = []; //limpiamos
+        }
         } else{
           this.rowValidadas.push(row);
           this.showMsg('error', "No se pueden actualizar actuaciones validadas", '')
@@ -456,7 +474,11 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         if (this.justActivarDesigLetrado != "1"){
           this.showMsg('error', "No tiene permiso para actualizar designaciones", '')
         }else{
-          this.rowIdsToUpdate.push(rowId);
+          if (this.sumar){
+            this.rowIdsToUpdate.push(rowId);
+          }else{
+            this.rowIdsToUpdate = []; //limpiamos
+          }
           if (cell != undefined){
             if (event == true){
               /*Aquellas actuaciones sin fecha de justificación activando el check de las actuaciones se aplicará como fecha de justificación la fecha cumplimentada en el componente de acciones generales del listado*/
@@ -465,7 +487,11 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           }
         }
       }else{
-        this.rowIdsToUpdate.push(rowId);
+        if (this.sumar){
+          this.rowIdsToUpdate.push(rowId);
+        }else{
+          this.rowIdsToUpdate = []; //limpiamos
+        }
           if (cell != undefined){
             if (event == true){
               /*Aquellas actuaciones sin fecha de justificación activando el check de las actuaciones se aplicará como fecha de justificación la fecha cumplimentada en el componente de acciones generales del listado*/
@@ -478,7 +504,11 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       this.turnoAllow = rowGroup.rows[0].cells[39].value;
       if((this.isLetrado && row.cells[8].value != true && this.turnoAllow) || (!this.isLetrado)){
         if (row.cells[8].value  != true){
-          this.rowIdsToUpdate.push(rowId);
+          if (this.sumar){
+            this.rowIdsToUpdate.push(rowId);
+          }else{
+            this.rowIdsToUpdate = []; //limpiamos
+          }
           if (event == true){
             /*Aquellas actuaciones sin fecha de justificación activando el check de las actuaciones se aplicará como fecha de justificación la fecha cumplimentada en el componente de acciones generales del listado*/
             cell.value = this.fechaFiltro;
@@ -525,15 +555,23 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         if (this.justActivarDesigLetrado != "1"){
           this.showMsg('error', "No tiene permiso para actualizar designaciones", '')
         }else{
-          this.rowIdsToUpdate.push(rowId);
+          if (this.sumar){
+            this.rowIdsToUpdate.push(rowId);
+          }else{
+            this.rowIdsToUpdate = []; //limpiamos
+          }
           if (cell != undefined){
-            cell.value = event;
+            cell.value[0] = event;
           }
         }
       }else{
-        this.rowIdsToUpdate.push(rowId);
+        if (this.sumar){
+          this.rowIdsToUpdate.push(rowId);
+        }else{
+          this.rowIdsToUpdate = []; //limpiamos
+        }
           if (cell != undefined){
-            cell.value = event;
+            cell.value[0] = event;
           }
       }
     }else{
@@ -541,9 +579,13 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       this.turnoAllow = rowGroup.rows[0].cells[39].value;
       if((this.isLetrado && row.cells[8].value != true && this.turnoAllow) || (!this.isLetrado)){
         if (row.cells[8].value  != true){
-          this.rowIdsToUpdate.push(rowId);
+          if (this.sumar){
+            this.rowIdsToUpdate.push(rowId);
+          }else{
+            this.rowIdsToUpdate = []; //limpiamos
+          }
           if (cell != undefined){
-            cell.value = event;
+            cell.value[0] = event;
           }
         }else{
           this.rowValidadas.push(row);
@@ -559,6 +601,101 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.lastChange = "checkBoxChange";
   }
 
+  checkBoxChange2(event, rowId, cell, row, rowGroup, padre, index){
+    if (cell.value == false && row != undefined && row.cells[35].value == "1"){
+      cell.value = !cell.value;
+      this.showMsg('error', "No puede desvalidar actuaciones facturadas", '')
+    }else{
+      if ((this.lastChangePadre == rowId && padre) || (this.lastChangeHijo == index && !padre)){
+        if (this.lastChange == "checkBoxChange2"){
+          this.sumar = !this.sumar;
+          if (padre){
+            this.lastChangePadre = rowId;
+            this.numDesignasModificadas.emit(this.sumar);
+          }else{
+            this.lastChangeHijo = index;
+            this.numActuacionesModificadas.emit(this.sumar);
+          }
+        }
+      }else{
+        this.sumar = true;
+        if (padre){
+          this.lastChangePadre = rowId;
+          this.numDesignasModificadas.emit(this.sumar);
+        }else{
+          this.lastChangeHijo = index;
+          this.numActuacionesModificadas.emit(this.sumar);
+        }
+      }
+      this.rowValidadas = [];
+      if (row == undefined){
+        //designacion
+        if(this.isLetrado){
+          if (this.justActivarDesigLetrado != "1"){
+            cell.value = !cell.value;
+            this.showMsg('error', "No tiene permiso para actualizar designaciones", '')
+          }else{
+            if (this.sumar){
+              this.rowIdsToUpdate.push(rowId);
+            }else{
+              this.rowIdsToUpdate = []; //limpiamos
+            }
+            if (cell != undefined){
+              cell.value = !cell.value;
+            }
+          }
+        }else{
+          if (this.sumar){
+            this.rowIdsToUpdate.push(rowId);
+          }else{
+            this.rowIdsToUpdate = []; //limpiamos
+          }
+            /*if (cell != undefined){
+              cell.value = !cell.value;
+            }*/
+        }
+      }else{
+        //actuacion
+        this.turnoAllow = rowGroup.rows[0].cells[39].value;
+        if((this.isLetrado && row.cells[8].value == true && this.turnoAllow) || (!this.isLetrado)){
+          /*if (row.cells[8].value  == true){*/
+            if (this.sumar){
+              this.rowIdsToUpdate.push(rowId);
+            }else{
+              this.rowIdsToUpdate = []; //limpiamos
+            }
+            /*if (cell != undefined){
+              cell.value = !cell.value;
+            }*/
+          /*}else{
+            this.rowValidadas.push(row);
+            cell.value = !cell.value;
+            this.showMsg('error', "No se pueden actualizar actuaciones validadas", '')
+          }*/
+        }else{
+          cell.value = !cell.value;
+          this.showMsg('error', "No tiene permiso para actualizar datos de una actuación", '')
+          this.refreshData.emit(true);
+        }
+      }
+
+      sessionStorage.setItem("rowIdsToUpdate", JSON.stringify(this.rowIdsToUpdate));
+      this.lastChange = "checkBoxChange2";
+
+      if (cell.value == true){
+        if (row != undefined){
+          row.cells[6].type = 'text';
+          row.cells[5].type = 'text';
+        }
+        
+      }else{
+        if (row != undefined){
+        row.cells[6].type = 'datePicker';
+        row.cells[5].type = 'datePicker';
+        }
+      }
+    }
+  }
   changeSelect(row, cell, rowId, rowGroup, padre, index){
     if ((this.lastChangePadre == rowId && padre) || ( this.lastChangeHijo == index && !padre)){
       if (this.lastChange == "changeSelect"){
@@ -587,17 +724,29 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         if (this.justActivarDesigLetrado != "1"){
           this.showMsg('error', "No tiene permiso para actualizar designaciones", '')
         }else{
-          this.rowIdsToUpdate.push(rowId);
+          if (this.sumar){
+            this.rowIdsToUpdate.push(rowId);
+          }else{
+            this.rowIdsToUpdate = []; //limpiamos
+          }
         }
       }else{
-        this.rowIdsToUpdate.push(rowId);
+        if (this.sumar){
+          this.rowIdsToUpdate.push(rowId);
+        }else{
+          this.rowIdsToUpdate = []; //limpiamos
+        }
       }
     }else{
       //actuacion
       this.turnoAllow = rowGroup.rows[0].cells[39].value;
       if((this.isLetrado && row.cells[8].value != true && this.turnoAllow) || (!this.isLetrado)){
         if (row.cells[8].value  != true){
-        this.rowIdsToUpdate.push(rowId);
+          if (this.sumar){
+            this.rowIdsToUpdate.push(rowId);
+          }else{
+            this.rowIdsToUpdate = []; //limpiamos
+          }
         }else{
           this.rowValidadas.push(row);
           this.showMsg('error', "No se pueden actualizar actuaciones validadas", '')
@@ -611,7 +760,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.lastChange = "changeSelect";
   }
 
-  inputChange(vent, rowId, row, rowGroup, padre, index){
+  inputChange(event, rowId, row, rowGroup, padre, index){
     if ((this.lastChangePadre == rowId && padre) || ( this.lastChangeHijo == index && !padre)){
       if (this.lastChange == "inputChange"){
         this.sumar = !this.sumar;
@@ -640,17 +789,27 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         if (this.justActivarDesigLetrado != "1"){
           this.showMsg('error', "No tiene permiso para actualizar designaciones", '')
         }else{
-          this.rowIdsToUpdate.push(rowId);
+          if (this.sumar){
+            this.rowIdsToUpdate.push(rowId);
+          }else{
+            this.rowIdsToUpdate = []; //limpiamos
+          }
         }
       }else{
-        this.rowIdsToUpdate.push(rowId);
+      
+          this.rowIdsToUpdate.push(rowId);
+     
       }
     }else{
       //actuacion
       this.turnoAllow = rowGroup.rows[0].cells[39].value;
       if((this.isLetrado && row.cells[8].value != true && this.turnoAllow) || (!this.isLetrado)){
         if (row.cells[8].value  != true){
-        this.rowIdsToUpdate.push(rowId);
+          if (this.sumar){
+            this.rowIdsToUpdate.push(rowId);
+          }else{
+            this.rowIdsToUpdate = []; //limpiamos
+          }
         } else{
           this.rowValidadas.push(row);
           this.showMsg('error', "No se pueden actualizar actuaciones validadas", '')
@@ -973,6 +1132,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   }
 
   newFromSelected(){
+    console.log('sessionStorage.getItem(rowIdsToUpdate) ', sessionStorage.getItem('rowIdsToUpdate') );
     if (sessionStorage.getItem('rowIdsToUpdate') != null && sessionStorage.getItem('rowIdsToUpdate') != 'null' && sessionStorage.getItem('rowIdsToUpdate') != '[]'){
       let keyConfirmation = "confirmacionGuardarJustificacionExpress";
         this.confirmationService.confirm({
@@ -1018,14 +1178,29 @@ export class TablaResultadoDesplegableComponent implements OnInit {
 
       this.sigaServices.get("combo_comboJuzgadoDesignaciones").subscribe(
         n => {
-          this.comboJuzgados = n.combooItems;
-          this.commonsService.arregloTildesCombo(this.comboJuzgados);
-          this.progressSpinner = false;
-          if (this.configComboDesigna == "1" || this.configComboDesigna == "2" || this.configComboDesigna == "3"){
-          this.cargaModulosPorJuzgado(this.comboJuzgados[0].value, designacion, rowGroup);
-          }else if (this.configComboDesigna == "4" || this.configComboDesigna == "5" ){
-            this.cargaModulos(designacion, rowGroup);
+            this.comboJuzgados = n.combooItems;
+            if(this.comboJuzgados[0] != undefined){
+            this.commonsService.arregloTildesCombo(this.comboJuzgados);
+            this.progressSpinner = false;
+            if (this.configComboDesigna == "1" || this.configComboDesigna == "2" || this.configComboDesigna == "3"){
+              this.cargaModulosPorJuzgado(this.comboJuzgados[0].value, designacion, rowGroup);
+            }else if (this.configComboDesigna == "4" || this.configComboDesigna == "5" ){
+              this.cargaModulos(designacion, rowGroup);
+            }
+          }else{
+            if (this.configComboDesigna == "1" || this.configComboDesigna == "2" || this.configComboDesigna == "3"){
+                this.comboModulos = [];
+                let data: String[] = [];
+                data.push("0");
+                data.push(this.idTurno);
+                this.cargaAcreditacionesPorModulo(data, designacion, rowGroup); 
+              }else if (this.configComboDesigna == "4" || this.configComboDesigna == "5" ){
+                this.cargaModulos(designacion, rowGroup);
+              }
+            
+            this.progressSpinner = false;
           }
+         
         },
         err => {
           console.log(err);
@@ -1138,6 +1313,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.newActuacionesArr = []; //limpiamos
     this.rowValidadas = [];
     sessionStorage.setItem("rowIdsToUpdate", JSON.stringify(this.rowIdsToUpdate));
+    this.refreshData.emit(true);
   }
 
   eliminar(){
@@ -1169,7 +1345,12 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           if (rowG.rows[this.childNumber + 1].cells[8].value == false){
             //actuacion No Validada
             if ((this.isLetrado && this.turnoAllow == "1" ) || (!this.isLetrado)){
-              deletedAct.push(rowG.rows[this.childNumber + 1].cells)
+              if (rowG.rows[this.childNumber + 1].cells[35].value == "1"){
+                this.showMsg('error', "No puede eliminar actuaciones facturadas", '')
+                this.refreshData.emit(true);
+              }else{
+                deletedAct.push(rowG.rows[this.childNumber + 1].cells)
+              }
             }else {
               this.showMsg('error', "No tiene permiso para eliminar actuaciones", '')
               this.refreshData.emit(true);
@@ -1226,55 +1407,48 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.progressSpinner = true;
     let desig = rowGroup.rows[0].cells;
     this.idTurno = desig[17].value;
-    this.sigaServices.getParam("combo_comboAcreditacionesPorModulo", `?idModulo=${$event[0]}&idTurno=${this.idTurno}`).subscribe(
-      n => {
-        this.comboAcreditacion = n.combooItems;
-        this.commonsService.arregloTildesCombo(this.comboAcreditacion);
-        this.progressSpinner = false;
-                        //this.cargaJuzgados.emit(true);
-      //this.comboModulos = [];
-      //this.comboAcreditacion = [];
+    if($event[0] == "0"){
       this.rowGroups.forEach((rowGroup,i) => {
         if (rowGroup.id == designacion){
           let id = Object.keys(rowGroup.rows)[0];
-
-          let newArrayCells: Cell[] = [
-            { type: 'checkbox', value: false, size: 50 , combo: null},
-            { type: 'multiselect1', value: this.comboJuzgados[0].value, size: 153 , combo: this.comboJuzgados},
-            { type: 'input', value: desig[2].value, size: 153, combo: null},
-            { type: 'input', value: desig[3].value, size: 153 , combo: null},//numProc
-            { type: 'multiselect2', value: this.comboModulos[0].value, size: 153 , combo: this.comboModulos}, //modulo
-            { type: 'datePicker', value: this.formatDate(new Date()), size: 153 , combo: null},
-            { type: 'checkbox', value: this.formatDate(new Date()) , size: 153, combo: null},
-            { type: 'multiselect3', value: this.comboAcreditacion[0].value , size: 153, combo: this.comboAcreditacion},
-            { type: 'checkbox', value: validacion, size: 50 , combo: null},
-            { type: 'invisible', value:  desig[19].value , size: 0, combo: null},//numDesig
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  desig[15].value , size: 0, combo: null},//idJuzgado   
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  '' , size: 0, combo: null},
-            { type: 'invisible', value:  desig[10].value , size: 0, combo: null},//anio
-            { type: 'invisible', value:  desig[17].value, size: 0, combo: null},//idturno
-            { type: 'invisible', value:  desig[13].value , size: 0, combo: null}];//idInstitucion
-
+          let newArrayCells: Cell[];
+            newArrayCells= [
+              { type: 'checkbox', value: false, size: 120 , combo: null},
+              { type: 'multiselect1', value: "0", size: 400 , combo: []},
+              { type: 'input', value: desig[2].value, size: 200, combo: null},
+              { type: 'input', value: desig[3].value, size: 200 , combo: null},//numProc
+              { type: 'multiselect2', value: "0", size: 400 , combo: []}, //modulo
+              { type: 'datePicker', value: this.formatDate(new Date()), size: 200 , combo: null},
+              { type: 'checkbox', value: this.formatDate(new Date()) , size: 200, combo: null},
+              { type: 'multiselect3', value: "0" , size: 200, combo: []},
+              { type: 'checkbox', value: validacion, size: 80 , combo: null},
+              { type: 'invisible', value:  desig[19].value , size: 0, combo: null},//numDesig
+              { type: 'invisible', value:  '' , size: 0, combo: null},
+              { type: 'invisible', value:  '' , size: 0, combo: null},
+              { type: 'invisible', value:  '' , size: 0, combo: null},
+              { type: 'invisible', value:  '' , size: 0, combo: null},
+              { type: 'invisible', value:  '' , size: 0, combo: null},
+              { type: 'invisible', value:  '' , size: 0, combo: null},
+              { type: 'invisible', value:  '' , size: 0, combo: null},
+              { type: 'invisible', value:  '' , size: 0, combo: null},
+              { type: 'invisible', value:  '' , size: 0, combo: null},
+              { type: 'invisible', value:  '' , size: 0, combo: null},
+              { type: 'invisible', value:  '' , size: 0, combo: null},
+              { type: 'invisible', value:  desig[15].value , size: 0, combo: null},//idJuzgado   
+              { type: 'invisible', value:  '' , size: 0, combo: null},
+              { type: 'invisible', value:  '' , size: 0, combo: null},
+              { type: 'invisible', value:  '' , size: 0, combo: null},
+              { type: 'invisible', value:  '' , size: 0, combo: null},
+              { type: 'invisible', value:  '' , size: 0, combo: null},
+              { type: 'invisible', value:  '' , size: 0, combo: null},
+              { type: 'invisible', value:  '' , size: 0, combo: null},
+              { type: 'invisible', value:  '' , size: 0, combo: null},
+              { type: 'invisible', value:  '' , size: 0, combo: null},
+              { type: 'invisible', value:  '' , size: 0, combo: null},
+              { type: 'invisible', value:  desig[10].value , size: 0, combo: null},//anio
+              { type: 'invisible', value:  desig[17].value, size: 0, combo: null},//idturno
+              { type: 'invisible', value:  desig[13].value , size: 0, combo: null}];//idInstitucion
+        
             if(!this.isLetrado || (this.isLetrado && newArrayCells[8].value != true && this.turnoAllow == "1")){
               let newRow: Row = {cells: newArrayCells, position: 'noCollapse'};
               rowGroup.rows.push(newRow);
@@ -1287,12 +1461,115 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       
         }
       })
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner = false;
-      }
-    );
+    }else{
+      this.sigaServices.getParam("combo_comboAcreditacionesPorModulo", `?idModulo=${$event[0]}&idTurno=${this.idTurno}`).subscribe(
+        n => {
+          this.comboAcreditacion = n.combooItems;
+          this.commonsService.arregloTildesCombo(this.comboAcreditacion);
+          this.progressSpinner = false;
+                          //this.cargaJuzgados.emit(true);
+        //this.comboModulos = [];
+        //this.comboAcreditacion = [];
+        this.rowGroups.forEach((rowGroup,i) => {
+          if (rowGroup.id == designacion){
+            let id = Object.keys(rowGroup.rows)[0];
+            let newArrayCells: Cell[];
+            if(this.comboJuzgados.length != 0){
+              newArrayCells= [
+                { type: 'checkbox', value: false, size: 120 , combo: null},
+                { type: 'multiselect1', value: this.comboJuzgados[0].value, size: 400 , combo: this.comboJuzgados},
+                { type: 'input', value: desig[2].value, size: 200, combo: null},
+                { type: 'input', value: desig[3].value, size: 200 , combo: null},//numProc
+                { type: 'multiselect2', value: this.comboModulos[0].value, size: 400 , combo: this.comboModulos}, //modulo
+                { type: 'datePicker', value: this.formatDate(new Date()), size: 200 , combo: null},
+                { type: 'checkbox', value: this.formatDate(new Date()) , size: 200, combo: null},
+                { type: 'multiselect3', value: this.comboAcreditacion[0].value , size: 200, combo: this.comboAcreditacion},
+                { type: 'checkbox', value: validacion, size: 80 , combo: null},
+                { type: 'invisible', value:  desig[19].value , size: 0, combo: null},//numDesig
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  desig[15].value , size: 0, combo: null},//idJuzgado   
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  desig[10].value , size: 0, combo: null},//anio
+                { type: 'invisible', value:  desig[17].value, size: 0, combo: null},//idturno
+                { type: 'invisible', value:  desig[13].value , size: 0, combo: null}];//idInstitucion
+            }else{
+              newArrayCells = [
+                { type: 'checkbox', value: false, size: 120 , combo: null},
+                { type: 'multiselect1', value: "0", size: 400 , combo: []},
+                { type: 'input', value: desig[2].value, size: 200, combo: null},
+                { type: 'input', value: desig[3].value, size: 200 , combo: null},//numProc
+                { type: 'multiselect2', value: this.comboModulos[0].value, size: 400 , combo: this.comboModulos}, //modulo
+                { type: 'datePicker', value: this.formatDate(new Date()), size: 200 , combo: null},
+                { type: 'checkbox', value: this.formatDate(new Date()) , size: 200, combo: null},
+                { type: 'multiselect3', value: this.comboAcreditacion[0].value , size: 200, combo: this.comboAcreditacion},
+                { type: 'checkbox', value: validacion, size: 80 , combo: null},
+                { type: 'invisible', value:  desig[19].value , size: 0, combo: null},//numDesig
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  desig[15].value , size: 0, combo: null},//idJuzgado   
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  '' , size: 0, combo: null},
+                { type: 'invisible', value:  desig[10].value , size: 0, combo: null},//anio
+                { type: 'invisible', value:  desig[17].value, size: 0, combo: null},//idturno
+                { type: 'invisible', value:  desig[13].value , size: 0, combo: null}];//idInstitucion
+            }
+  
+              if(!this.isLetrado || (this.isLetrado && newArrayCells[8].value != true && this.turnoAllow == "1")){
+                let newRow: Row = {cells: newArrayCells, position: 'noCollapse'};
+                rowGroup.rows.push(newRow);
+                this.newActuacionesArr.push(newRow);
+              }else{
+                this.showMsg('error', "No tiene permiso para añadir actuaciones", '')
+                this.rowGroups = this.rowGroupsAux;
+                this.refreshData.emit(true);
+              }
+        
+          }
+        })
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        }
+      );
+    }
+    
   }
 
   formatDate(date) {
@@ -1324,7 +1601,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.progressSpinner = true;
     this.sigaServices.get("combo_comboModulos").subscribe(
       n => {
-        this.comboModulos = JSON.parse(n.body).combooItems;
+        this.progressSpinner = false;
+        this.comboModulos = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboModulos);
         let data: String[] = [];
         let desig = rowGroup.rows[0].cells;
@@ -1371,10 +1649,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   }
   
     linkFichaActIfPermis(row, rowGroup){
-      console.log('this.permisosFichaAct: ', this.permisosFichaAct)
-      console.log('this.pantalla: ', this.pantalla)
       if (this.pantalla == 'JE'){
-       // if (this.permisosFichaAct){
+       if (this.permisosFichaAct){
           
           let des: DesignaItem = new DesignaItem();
           if (rowGroup != null){
@@ -1421,7 +1697,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           };
           
           this.searchRelaciones(actuacion);
-        //}
+        }
       }
     }
 
@@ -1429,7 +1705,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
 
         this.progressSpinner = true;
   
-        let item = [actuacion.designaItem.ano, actuacion.designaItem.idTurno, actuacion.designaItem.idInstitucion];
+        let item = ["D" + actuacion.designaItem.ano, actuacion.designaItem.idTurno, actuacion.designaItem.idInstitucion, actuacion.designaItem.numero];
   
         this.sigaServices.post("designacionesBusquedaRelaciones", item).subscribe(
           n => {

@@ -20,13 +20,13 @@
         <label>Fecha Justificación</label>
         <app-fecha [utc]="false" [(value)]='fechaJusti' [minDate]="fechaActuacion"
           (valueChangeSelected)="fillFecha($event)" (valueChangeInput)="fillFecha($event)"
-          [disabled]="isAnulada || isColegiado || modoLectura || disableAll">
+          [disabled]="isAnulada || isColegiado || modoLectura || disableAll || modoLectura2">
         </app-fecha>
       </div>
       <div class="form-group col-lg-6 col-md-6 w-100 mb-6">
         <label>Observaciones</label>
-        <textarea class="form-control" pInputTextarea [(ngModel)]="observaciones" [readonly]="isAnulada || modoLectura || disableAll"
-          maxlength="1024"></textarea>
+        <textarea class="form-control" pInputTextarea [(ngModel)]="observaciones"
+          [readonly]="isAnulada || modoLectura || disableAll || modoLectura2" maxlength="1024"></textarea>
       </div>
 
     </div>
@@ -38,16 +38,16 @@
 <div class="card-footer">
   <div class="text-right main-button">
     <button *ngIf="!actuacionDesigna.actuacion.anulada" pButton type="button" icon="" iconPos="left" label="Anular"
-      (click)="anular()" [disabled]="modoLectura || disableAll"></button>
+      (click)="anular()" [disabled]="modoLectura || disableAll || modoLectura2"></button>
     <button *ngIf="actuacionDesigna.actuacion.anulada" pButton type="button" icon="" iconPos="left" label="Reactivar"
-      (click)="reactivar()" [disabled]="modoLectura || disableAll"></button>
+      (click)="reactivar()" [disabled]="modoLectura || disableAll || modoLectura2"></button>
     <button *ngIf="actuacionDesigna.actuacion.validada" pButton type="button" icon="" iconPos="left" label="Desvalidar"
-      (click)="desvalidar()" [disabled]="isAnulada || modoLectura || disableAll"></button>
+      (click)="desvalidar()" [disabled]="isAnulada || modoLectura || disableAll || modoLectura2"></button>
     <button *ngIf="!actuacionDesigna.actuacion.validada" pButton type="button" icon="" iconPos="left" label="Validar"
-      (click)="validar()" [disabled]="isAnulada || isColegiado || modoLectura || disableAll"></button>
+      (click)="validar()" [disabled]="isAnulada || isColegiado || modoLectura || disableAll || modoLectura2"></button>
     <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer" (click)="restablecer()"
-      [disabled]="isAnulada || modoLectura || disableAll"></button>
+      [disabled]="isAnulada || modoLectura || disableAll || modoLectura2"></button>
     <button pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"
-      [disabled]="isAnulada || modoLectura || disableAll" (click)="updateDatosJustificacion()"></button>
+      [disabled]="isAnulada || modoLectura || disableAll || modoLectura2" (click)="updateDatosJustificacion()"></button>
   </div>
 </div>

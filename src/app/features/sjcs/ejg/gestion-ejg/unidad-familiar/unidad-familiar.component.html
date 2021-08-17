@@ -14,12 +14,14 @@
               }}</label>
           </div>
           <div class="d-flex justify-content-between default">
-            <label name>{{ "censo.fichaCliente.literal.identificacion" | translate }}: <span>{{body.nif}}</span></label>
-            <label name>{{ "gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate }}:
-              <span>{{body.apellidos}}</span></label>
-            <label name>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}:
-              <span>{{body.nombre}}</span></label>
-            <label name>{{ "justiciaGratuita.ejg.datosGenerales.EstadoEJG" | translate }}:
+            <label *ngIf="nExpedientes == 0">{{ "justiciaGratuita.ejg.datosGenerales.numero.Expedientes" | translate }}: <span>{{ "general.message.no.registros" | translate }}</span></label>
+            <label *ngIf="nExpedientes > 0">{{ "justiciaGratuita.ejg.datosGenerales.numero.Expedientes" | translate }}: <span>{{nExpedientes}}</span></label>
+            <label *ngIf="solicitanteP.uf_idPersona != undefined">{{ "censo.fichaCliente.literal.identificacion" | translate }}: <span>{{solicitanteP.pjg_nif}}</span></label>
+            <label *ngIf="solicitanteP.uf_idPersona != undefined">{{ "gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate }}:
+              <span>{{apellidosCabecera}}</span></label>
+            <label *ngIf="solicitanteP.uf_idPersona != undefined">{{ "administracion.parametrosGenerales.literal.nombre" | translate }}:
+              <span>{{solicitanteP.pjg_nombre}}</span></label>
+            <label>{{ "justiciaGratuita.ejg.datosGenerales.EstadoEJG" | translate }}:
               <span>{{body.estadoEJG}}</span></label>
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('unidadFamiliar')"></i>
           </div>
@@ -39,7 +41,7 @@
       <!-- TABLA RESULTADOS -->
       <p-table [value]="datosFamiliaresActivos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple"
         [responsive]="true" #table class="tabla-listado" [paginator]="true" [rows]="selectedItem"
-        (onRowUnSelect)="actualizaSeleccionados(selectedDatos)" [ngClass]="{ 'customCursor': selectMultiple}"
+        (onRowSelect)="actualizaSeleccionados(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)" [ngClass]="{ 'customCursor': selectMultiple}"
         selectionMode="multiple" paginatorPosition="both">
         <ng-template pTemplate="colgroup" let-columns>
           <colgroup>
@@ -64,11 +66,13 @@
 
               <!-- NIF Y NOMBRE -->
               <div *ngIf="isEliminado(dato) && (col.field == 'pjg_nif' || col.field == 'pjg_nombrecompleto')">
-                <span class="enlace" (click)="openTab(dato)"
-                  [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
+                <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
               </div>
-              <div *ngIf="!isEliminado(dato) && (col.field == 'pjg_nif' || col.field == 'pjg_nombrecompleto')">
+              <div *ngIf="!isEliminado(dato) && (col.field == 'pjg_nif' || col.field == 'pjg_nombrecompleto') && dato.isRepresentante != true">
                 <span class="enlace" (click)="openTab(dato)">{{dato[col.field]}}</span>
+              </div>
+              <div *ngIf="!isEliminado(dato) && (col.field == 'pjg_nif' || col.field == 'pjg_nombrecompleto') && dato.isRepresentante == true">
+                <span>{{dato[col.field]}}</span>
               </div>
 
               <!-- RESTO COLUMNAS -->
@@ -114,18 +118,18 @@
       <div class="card-footer">
         <div class="text-right main-button">
           <button pButton
-            [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura"
+            [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura || !volverSolicitarEejg"
             (click)="checkPermisosSolicitarEEJ()" type="button"
             label="{{'general.boton.volver.solicitudEejg' | translate}}"></button>
           <button pButton
-            [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura"
-            (click)="checkPermisosDownloadEEJ()" type="button" icon="fa fa-download" iconPos="left"
+            [disabled]="!permisoEscritura || selectedDatos.length==0 || isRepresentante"
+            (click)="downloadEEJ()" type="button" icon="fa fa-download" iconPos="left"
             label="{{'justiciaGratuita.ejg.datosGenerales.DescargarEEJ' | translate}}"></button>
           <button pButton
-            [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura"
+            [disabled]="!permisoEscritura || isRepresentante || selectedDatos.length!=1"
             (click)="checkPermisosSolicitarEEJ()" type="button"
             label="{{'general.boton.solicitudEejg' | translate}}"></button>
-          <button [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura"
+          <button [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura  || isRepresentante"
             (click)="checkPermisosComunicar(selectedDatos)" pButton type="button" icon="fa fa-comment" iconPos="left"
             label="{{'general.boton.comunicar' | translate }}"></button>
           <button *ngIf="!historico" (click)="searchHistorical(); selectedDatos=[]" pButton type="button" iconPos="left"
@@ -133,7 +137,7 @@
           <button *ngIf="historico" (click)="searchHistorical(); selectedDatos=[]" pButton type="button"
             icon="fa fa-history" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
           <button pButton *ngIf="!historico"
-            [disabled]="!permisoEscritura || ((!selectMultiple || !selectAll) && selectedDatos.length == 0)"
+            [disabled]="!permisoEscritura || ((!selectMultiple || !selectAll) && selectedDatos.length == 0) || isRepresentante"
             (click)="checkPermisosConfirmDelete()" type="button" icon="fa fa-trash" iconPos="left"
             label="{{ 'general.boton.eliminar' | translate}}"></button>
           <button *ngIf="historico" pButton
@@ -148,12 +152,14 @@
     </div>
   </div>
 </div>
+
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
 </div>
-<p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" #cd>
+
+<p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" key="cdDelete" #cdDelete>
   <p-footer>
-    <button type="button" pButton icon="fa-check" label="Si" (click)="cd.accept()"></button>
-    <button type="button" pButton icon="fa-close" label="No" (click)="cd.reject()"></button>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="cdDelete.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="cdDelete.reject()"></button>
   </p-footer>
 </p-confirmDialog>

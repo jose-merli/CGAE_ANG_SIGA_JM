@@ -14,8 +14,7 @@
           </div>
           <div class="d-flex justify-content-between default" >
             <label >{{'informesycomunicaciones.modelosdecomunicacion.ficha.numComunicaciones' | translate}}: 
-              <span *ngIf="comunicaciones!=undefined && omunicaciones!=null">{{comunicaciones.length}}</span>
-              <span *ngIf="comunicaciones==undefined || comunicaciones==null">{{0}}</span>
+              <span>{{numComunicaciones}}</span>
             </label>
             
             <i class="fa fa-angle-down ml-auto" (click)="abreCierraFicha('comunicaciones')"></i>
@@ -33,10 +32,7 @@
     <div *ngIf="esFichaActiva('comunicaciones')" class="px-0 pt-0 pb-0 card-body card-body-ficha">
       <div>
         <!-- TABLA RESULTADOS -->
-        <p-table [value]="comunicaciones" [columns]="cols" [(selection)]="selectedDatos" [selectionMode]="selectionMode"
-          [responsive]="true" #table class="tabla-listado" [paginator]="true" [rows]="selectedItem"
-          (onRowSelect)="actualizaSeleccionados()" (onRowUnselect)="actualizaSeleccionados()"
-          [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">
+        <p-table [value]="comunicaciones" [columns]="cols" [selectionMode]="single" [responsive]="true" #table class="tabla-listado" [paginator]="true" [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both" [rows]="selectedItem">
           <ng-template pTemplate="colgroup" let-columns>
             <colgroup>
               <col *ngFor="let col of cols" [style.width]="col.width">
@@ -48,17 +44,24 @@
                 {{ col.header | translate }}
                 <p-sortIcon [field]="col.field"></p-sortIcon>
                 <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text"
-                  (input)="
-                      table.filter($event.target.value, col.field, 'contains')
-                    " />
+                  (input)="table.filter($event.target.value, col.field, 'contains')" />
               </th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
             <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
-              <td class="text-center" *ngFor="let col of columns" [routerLink]="" (click)="navigateTo([dato])">
-                <div>
-                  <a class="enlace"  ><span>{{dato[col.field]}}</span></a>
+              <td class="text-center" *ngFor="let col of columns">
+
+                <div *ngIf="col.field=='destinatario'">
+                  <span class="enlace" (click)="navigateTo([dato])">{{dato[col.field]}}</span>
+                </div>
+
+                <div *ngIf="col.field!='destinatario' && col.field !='fechaProgramada' && col.field!='fechaCreacion'">
+                  <span>{{dato[col.field]}}</span>
+                </div>
+
+                <div *ngIf="col.field=='fechaProgramada' || col.field=='fechaCreacion'">
+                  <span>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</span>
                 </div>
               </td>
             </tr>
@@ -83,11 +86,6 @@
               <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
               </p-dropdown>
               <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-              <div class="ml-3 selectAll">
-                <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true"
-                  label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname">
-                </p-checkbox>
-              </div>
             </div>
           </ng-template>
         </p-table> 
