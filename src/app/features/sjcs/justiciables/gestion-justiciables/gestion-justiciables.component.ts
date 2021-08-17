@@ -534,6 +534,11 @@ export class GestionJusticiablesComponent implements OnInit {
       this.justiciableBusquedaItem = new JusticiableBusquedaItem();
       this.justiciableBusquedaItem.idpersona = event.idpersona;
       this.justiciableBusquedaItem.idinstitucion = this.authenticationService.getInstitucionSession();
+
+      if (this.fromUniFamiliar) {
+        sessionStorage.setItem("datosDesdeJusticiable", JSON.stringify(this.persistenceService.getDatos()));
+      }
+
       this.persistenceService.setDatos(this.justiciableBusquedaItem);
       this.body = event;
       this.modoEdicion = true;

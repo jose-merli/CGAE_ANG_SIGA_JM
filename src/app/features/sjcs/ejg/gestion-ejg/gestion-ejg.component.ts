@@ -106,6 +106,14 @@ export class GestionEjgComponent implements OnInit {
       
     }else{
       this.body = this.persistenceService.getDatos();
+
+      if(sessionStorage.getItem("datosDesdeJusticiable")) {
+        this.body = JSON.parse(sessionStorage.getItem("datosDesdeJusticiable"));
+        sessionStorage.removeItem("datosDesdeJusticiable");
+        this.persistenceService.setDatos(this.body);
+        this.updateTarjResumen();
+      }
+
       if (this.body != undefined && this.body != null) {
         this.modoEdicion = true;
       } else {
