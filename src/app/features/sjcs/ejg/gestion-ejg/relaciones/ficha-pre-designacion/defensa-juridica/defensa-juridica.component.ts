@@ -204,7 +204,7 @@ export class DefensaJuridicaComponent implements OnInit {
     });
     //Valor de la cabecera para procedimiento
     this.comboProcedimiento.forEach(element => {
-      if (element.value == this.bodyInicial.procedimiento) this.procedimientoCabecera = element.label;
+      if (element.value == this.bodyInicial.idPretension) this.procedimientoCabecera = element.label;
     });
   }
 
@@ -429,7 +429,7 @@ export class DefensaJuridicaComponent implements OnInit {
           this.commonsServices.arregloTildesCombo(this.comboProcedimiento);
           //Valor de la cabecera para procedimiento
           this.comboProcedimiento.forEach(element => {
-            if (element.value == this.bodyInicial.procedimiento) this.procedimientoCabecera = element.label;
+            if (element.value == this.bodyInicial.idPretension) this.procedimientoCabecera = element.label;
           });
         },
         err => {
