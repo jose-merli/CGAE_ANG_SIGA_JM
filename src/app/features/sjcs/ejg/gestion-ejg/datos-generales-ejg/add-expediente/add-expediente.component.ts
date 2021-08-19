@@ -1,36 +1,56 @@
-import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { OldSigaServices } from '../../../../../../_services/oldSiga.service';
 import { Location } from '@angular/common';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
-import { CommonsService } from '../../../../../../_services/commons.service';
-import { TranslateService } from '../../../../../../commons/translate';
 import { Router } from '@angular/router';
 
 @Component({
-    selector: 'add-expediente',
-    templateUrl: './add-expediente.component.html'
-  })
-  export class AddExpedienteComponent implements OnInit{
+  selector: 'add-expediente',
+  templateUrl: './add-expediente.component.html'
+})
+export class AddExpedienteComponent implements OnInit {
 
-    progressSpinner:boolean = false;
-    url;
-    datos;
+  progressSpinner: boolean = false;
+  url;
+  datos;
 
-    constructor(public oldSigaServices: OldSigaServices, private sigaServices: SigaServices,
-      private location: Location, private persistenceService: PersistenceService) {
-        oldSigaServices.getOldSigaUrl("url");
-      }
+  constructor(public oldSigaServices: OldSigaServices, private sigaServices: SigaServices,
+    private location: Location, private persistenceService: PersistenceService, private router: Router) {
 
-    ngOnInit() {
-      if (this.persistenceService.getDatos()) {
-        this.datos = this.persistenceService.getDatos();
-      }
+    this.progressSpinner = true;
+    if (sessionStorage.getItem('reload') == 'si') {
+
+      sessionStorage.removeItem('reload');
+      sessionStorage.setItem('reload', 'no');
+      setTimeout(() => {
+        this.url = JSON.parse(sessionStorage.getItem('url'));
+        document.getElementById('noViewContent').className = 'mainFrameWrapper2';
+        document.getElementById('noViewContent').className = 'mainFrameWrapper2';
+        this.router.navigate(['/addExp']);
+      }, 2000);
+    } else {
+
+      this.url = JSON.parse(sessionStorage.getItem('url'));
+      sessionStorage.removeItem('url');
+      setTimeout(() => {
+        this.url = JSON.parse(sessionStorage.getItem('url'));
+        document.getElementById('noViewContent').className = 'mainFrameWrapper';
+        this.progressSpinner = false;
+      }, 2000);
     }
 
-    goBack() {
-      this.progressSpinner = true;
-    
+  }
+
+  ngOnInit() {
+    if (this.persistenceService.getDatos()) {
+      this.datos = this.persistenceService.getDatos();
+    }
+  }
+
+  goBack() {
+    this.progressSpinner = true;
+
     this.sigaServices.post("gestionejg_datosEJG", this.datos).subscribe(
       n => {
         let ejgObject = JSON.parse(n.body).ejgItems;
@@ -44,21 +64,21 @@ import { Router } from '@angular/router';
         this.progressSpinner = false;
       }
     );
-    }
-
-    consultaUnidadFamiliar(selected) {
-      this.progressSpinner = true;
-  
-      this.sigaServices.post("gestionejg_unidadFamiliarEJG", selected).subscribe(
-        n => {
-          let datosFamiliares = JSON.parse(n.body).unidadFamiliarEJGItems;
-          this.persistenceService.setBodyAux(datosFamiliares);
-          this.location.back();
-          this.progressSpinner = false;
-        },
-        err => {
-          this.progressSpinner = false;
-        }
-      );
-    }
   }
+
+  consultaUnidadFamiliar(selected) {
+    this.progressSpinner = true;
+
+    this.sigaServices.post("gestionejg_unidadFamiliarEJG", selected).subscribe(
+      n => {
+        let datosFamiliares = JSON.parse(n.body).unidadFamiliarEJGItems;
+        this.persistenceService.setBodyAux(datosFamiliares);
+        this.location.back();
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+}

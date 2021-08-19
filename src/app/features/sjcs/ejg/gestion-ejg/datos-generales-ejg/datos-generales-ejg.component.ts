@@ -101,8 +101,8 @@ export class DatosGeneralesEjgComponent implements OnInit {
         this.body.fechaApertura = new Date(this.body.fechaApertura);
       if (this.body.tipoEJG != undefined)
         this.showTipoExp = true;
-        if(this.body.numDesigna != null || this.body.numDesigna != undefined || this.body.numDesigna != null)
-          this.noAsocDes = false;
+      if (this.body.numDesigna != null || this.body.numDesigna != undefined || this.body.numDesigna != null)
+        this.noAsocDes = false;
 
       this.getPrestacionesRechazadasEJG();
     } else {
@@ -119,7 +119,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
     });
-    
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -184,7 +184,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
     );
   }
 
-  changeTipoEJGColegio(){
+  changeTipoEJGColegio() {
     this.comboTipoEJGColegio.forEach(element => {
       if (element.value == this.body.tipoEJGColegio) this.tipoEJGColDesc = element.label;
     });
@@ -327,13 +327,13 @@ export class DatosGeneralesEjgComponent implements OnInit {
           if (n.statusText == "OK") {
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
             //Se actualiza la tarjeta de estados en el caso que se actualice el estado inicial por cambiar la fecha de apertura
-            if(this.body.fechaApertura != this.bodyInicial.fechaApertura) 
+            if (this.body.fechaApertura != this.bodyInicial.fechaApertura)
               this.newEstado.emit(null);
 
-            this.body.numAnnioProcedimiento= "E"+this.body.annio+"/"+this.body.numEjg;
+            this.body.numAnnioProcedimiento = "E" + this.body.annio + "/" + this.body.numEjg;
 
             this.bodyInicial = this.body;
-           
+
             this.persistenceService.setDatos(this.bodyInicial);
 
             this.guardadoSend.emit(true);
@@ -356,25 +356,25 @@ export class DatosGeneralesEjgComponent implements OnInit {
         this.body.idInstitucion = this.institucionActual;
 
         this.sigaServices.post("gestionejg_insertaDatosGenerales", JSON.stringify(this.body)).subscribe(
-        n => {
-          this.progressSpinner = false;
-          
-          if (JSON.parse(n.body).error.code == 200) {
-            let ejgObject = JSON.parse(n.body).ejgItems;
-            let datosItem = ejgObject[0];
-            this.persistenceService.setDatos(datosItem);
-            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-            this.body.numEjg = datosItem.numEjg;
-            this.body.numero = datosItem.numero;
-            this.guardadoSend.emit(true);
-          }else {
+          n => {
+            this.progressSpinner = false;
+
+            if (JSON.parse(n.body).error.code == 200) {
+              let ejgObject = JSON.parse(n.body).ejgItems;
+              let datosItem = ejgObject[0];
+              this.persistenceService.setDatos(datosItem);
+              this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+              this.body.numEjg = datosItem.numEjg;
+              this.body.numero = datosItem.numero;
+              this.guardadoSend.emit(true);
+            } else {
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+            }
+          },
+          err => {
+            this.progressSpinner = false;
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-          }
-        },
-        err => {
-          this.progressSpinner = false;
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        });
+          });
       }
       else {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
@@ -470,28 +470,27 @@ export class DatosGeneralesEjgComponent implements OnInit {
       this.msgs = msg;
     } else {
       //Comprobamos si el EJG tiene una designacion asociada
-      if(!this.noAsocDes){
+      if (!this.noAsocDes) {
         this.addExp();
-      } 
+      }
       else this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('justiciaGratuita.ejg.datosGenerales.noDesignaEjg') }];
     }
   }
 
   addExp() {
+
     let us = undefined;
-    us =
-      this.sigaServices.getOldSigaUrl() +
-      "JGR_MantenimientoEJG.do?codigoDesignaNumEJG=" + this.body.numEjg + "&numeroEJG=" + this.body.numEjg + "&idTipoEJG=" + this.body.tipoEJG +
-      "&idInstitucionEJG=" + this.body.idInstitucion + "&anioEJG=" + this.body.annio + "&actionE=/JGR_InteresadoEJG.do&" +
-      "localizacionE=gratuita.busquedaEJG.localizacion&tituloE=pestana.justiciagratuitaejg.solicitante&idInstitucionJG=" + this.institucionActual + "&idPersonaJG=" + this.body.idPersonajg + "&conceptoE=EJG&" +
-      "NUMERO=" + this.body.numero + "&ejgNumEjg=" + this.body.numEjg + "&IDTIPOEJG=" + this.body.tipoEJG + "&ejgAnio=" + this.body.annio + "&accionE=editar&IDINSTITUCION=" + this.institucionActual + "&solicitante=JOSE%20LUIS%20ALGBJL%20ZVQNDSMF&ANIO=" + this.body.annio + "";
+    us = this.sigaServices.getOldSigaUrl() + "JGR_MantenimientoEJG.do?codigoDesignaNumEJG=" + this.body.numEjg +
+      "&numeroEJG=" + this.body.numEjg + "&idTipoEJG=" + this.body.tipoEJG + "&idInstitucionEJG=" + this.body.idInstitucion + "&anioEJG=" + this.body.annio +
+      "&actionE=/JGR_InteresadoEJG.do&localizacionE=gratuita.busquedaEJG.localizacion&tituloE=pestana.justiciagratuitaejg.solicitante" +
+      "&idInstitucionJG=" + this.institucionActual + "&idPersonaJG=" + this.body.idPersonajg + "&conceptoE=EJG&NUMERO=" + this.body.numEjg +
+      "&ejgNumEjg=" + this.body.numEjg + "&IDTIPOEJG=" + this.body.tipoEJG + "&ejgAnio=" + this.body.annio + "&accionE=editar&IDINSTITUCION=" + this.institucionActual +
+      "&solicitante=" + this.body.nombreApeSolicitante + "&ANIO=" + this.body.annio;
 
     sessionStorage.setItem("url", JSON.stringify(us));
     sessionStorage.removeItem("reload");
     sessionStorage.setItem("reload", "si");
-    //sessionStorage.setItem("idInstitucionFichaColegial", this.body.idInstitucion);
 
-    this.url = "";
     this.router.navigate(["/addExp"]);
   }
 
@@ -511,15 +510,15 @@ export class DatosGeneralesEjgComponent implements OnInit {
     }, 300);
   }
 
-  disableEnableNumEJG(){
+  disableEnableNumEJG() {
     this.commonsServices.checkAcceso(procesos_ejg.cambioNumEJG)
-    .then(respuesta => {
-      if(respuesta){
-        this.disabledNumEJG=!this.disabledNumEJG;
-      }else{
-        this.msgs = this.commonsServices.checkPermisos(false, undefined);
-      }
-    }).catch(error => console.error(error));
+      .then(respuesta => {
+        if (respuesta) {
+          this.disabledNumEJG = !this.disabledNumEJG;
+        } else {
+          this.msgs = this.commonsServices.checkPermisos(false, undefined);
+        }
+      }).catch(error => console.error(error));
   }
 
 }
