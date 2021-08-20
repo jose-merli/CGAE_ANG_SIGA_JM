@@ -467,6 +467,8 @@ export class RelacionesComponent implements OnInit {
           "&NUMERO=" + dato.numero + "&anioSOJ=" + dato.anio + "&localizacionE=gratuita.busquedaSOJ.localizacion&IDINSTITUCION=" + this.sigaStorageService.institucionActual +
           "&idTipoSOJ=" + dato.idtipo + "&idInstitucionSOJ=" + dato.idinstitucion + "&accionE=editar";
 
+        us = encodeURI(us);
+
         sessionStorage.setItem("url", JSON.stringify(us));
         sessionStorage.removeItem("reload");
         sessionStorage.setItem("reload", "si");

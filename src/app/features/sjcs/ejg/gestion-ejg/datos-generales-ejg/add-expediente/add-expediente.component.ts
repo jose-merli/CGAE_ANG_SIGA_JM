@@ -21,6 +21,8 @@ export class AddExpedienteComponent implements OnInit {
     this.progressSpinner = true;
     if (sessionStorage.getItem('reload') == 'si') {
 
+      this.url = oldSigaServices.getOldSigaUrl('ejg');
+
       sessionStorage.removeItem('reload');
       sessionStorage.setItem('reload', 'no');
       setTimeout(() => {

@@ -15,10 +15,12 @@ export class SOJComponent implements OnInit {
   url;
   progressSpinner: boolean = false;
 
-  constructor(public sigaServices: OldSigaServices, private location: Location, private router: Router) {
+  constructor(public oldSigaServices: OldSigaServices, private location: Location, private router: Router) {
 
     this.progressSpinner = true;
     if (sessionStorage.getItem('reload') == 'si') {
+
+      this.url = oldSigaServices.getOldSigaUrl('soj');
 
       sessionStorage.removeItem('reload');
       sessionStorage.setItem('reload', 'no');

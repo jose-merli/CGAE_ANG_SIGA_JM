@@ -487,6 +487,8 @@ export class DatosGeneralesEjgComponent implements OnInit {
       "&ejgNumEjg=" + this.body.numEjg + "&IDTIPOEJG=" + this.body.tipoEJG + "&ejgAnio=" + this.body.annio + "&accionE=editar&IDINSTITUCION=" + this.institucionActual +
       "&solicitante=" + this.body.nombreApeSolicitante + "&ANIO=" + this.body.annio;
 
+    us = encodeURI(us);
+
     sessionStorage.setItem("url", JSON.stringify(us));
     sessionStorage.removeItem("reload");
     sessionStorage.setItem("reload", "si");
