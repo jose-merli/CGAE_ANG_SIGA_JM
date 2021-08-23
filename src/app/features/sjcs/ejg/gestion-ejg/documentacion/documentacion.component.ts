@@ -83,9 +83,9 @@ export class DocumentacionComponent implements OnInit {
       this.modoEdicion = true;
       this.item = this.persistenceService.getDatos();
       this.getCols();
+      this.getComboPresentador();
       this.getComboTipoDocumentacion();
       this.getDocumentos(this.item);
-      this.getComboPresentador();
     } else {
       this.nuevo = true;
       this.modoEdicion = false;
