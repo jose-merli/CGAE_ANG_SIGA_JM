@@ -1,0 +1,90 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+
+<div class="busqueda-container">
+  <div class="card">
+    <div class="card-header header-ficha" (click)="abreCierraFicha()">
+      <div *ngIf="!openFicha" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="fas fa-cog icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10 ">
+          <div class="d-flex justify-content-end mb-1">
+            <label class="mr-auto title-ficha">{{'administracion.catalogos.titulo.datos.generales' | translate}}</label>
+          </div>
+          <div class="d-flex justify-content-between">
+            <br>
+            <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fas fa-cog icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{'administracion.catalogos.titulo.datos.generales' | translate}}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <div *ngIf="openFicha" class="card-body card-body-ficha">
+      <div class="row">
+        <div class="bloque col-lg-9 col-md-9">
+
+          <div class="form-row">
+            <div class="form-group col-lg-12 col-md-12">
+              <label style="text-align:center; font-weight: bold;">{{ "general.message.datos.generales" | translate }}</label>
+            </div>
+
+            <div class="form-group col-lg-2 col-md-2">
+              <label>{{ 'justiciaGratuita.ejg.datosGenerales.FechaResolucion' |
+                 translate}}</label>
+              <app-fecha [(value)]="datosFiltro.fechaResolucion" (valueChangeSelected)="fillFechaResolucion($event)"
+                (valueChangeInput)="fillFechaDesde($event)">
+              </app-fecha>
+            </div>
+    
+            <div class="form-group col-lg-2 col-md-2">
+              <label>{{ 'justiciaGratuita.ejg.datosGenerales.FechaReunion' |
+                translate}}</label>
+              <app-fecha [(value)]="datosFiltro.fechaReunion" (valueChangeSelected)="fillFechaReunion($event)"
+                (valueChangeInput)="fillFechaHasta($event)">
+              </app-fecha>
+            </div>
+    
+            <div class="form-group col-lg-4 col-md-4">
+              <label>{{ 'justiciaGratuita.ejg.datosGenerales.Presidente' |
+                translate}}</label>
+              <p-dropdown class="select-form" [(ngModel)]='datosFiltro.presidente' placeholder="Seleccionar" [options]="comboPresidente"
+                [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
+              </p-dropdown>
+            </div>
+    
+            <div class="form-group col-lg-4 col-md-4">
+              <label>{{ 'justiciaGratuita.ejg.datosGenerales.Secretario' |
+                translate}}</label>
+              <p-dropdown class="select-form" [(ngModel)]='datosFiltro.secretario' placeholder="Seleccionar" [options]="comboSecretario"
+                [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
+              </p-dropdown>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+    </div>
+
+    <div *ngIf="openFicha" class="card-footer ">
+      <div class="text-right main-button ">
+        <button (click)="checkPermisosRest()" pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-undo"
+          iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="checkPermisosSave()" pButton [disabled]="disabledSave()" type="button" icon="far fa-save" iconPos="left"
+          label="{{ 'general.boton.guardar' | translate}}"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

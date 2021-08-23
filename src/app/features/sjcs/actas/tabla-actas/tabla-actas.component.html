@@ -7,11 +7,7 @@
     <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple" [responsive]="true" #table
       class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="openTab($event)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
       [ngClass]="{ 'customCursor': selectMultiple}" selectionMode="multiple" paginatorPosition="both">
-      <ng-template pTemplate="colgroup" let-columns>
-        <colgroup>
-          <col *ngFor="let col of cols" [style.width]="col.width">
-        </colgroup>
-      </ng-template>
+      
       <ng-template pTemplate="header" let-columns>
         <tr>
           <th *ngFor="let col of columns;let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
@@ -27,10 +23,12 @@
       <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
         <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
           <td class="text-center" *ngFor="let col of columns">
-            <div *ngIf="setItalic(dato)">
-              <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
+            <div *ngIf="col.field == 'fechaResolucion' || col.field == 'fechaReunion'">
+              <div>
+                <span>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</span>
+              </div>
             </div>
-            <div *ngIf="!setItalic(dato)">
+            <div *ngIf="col.field == 'numeroActa' || col.field == 'nombrePresidente' || col.field == 'nombreSecretario'">
               <span>{{dato[col.field]}}</span>
             </div>
           </td>

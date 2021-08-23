@@ -8,9 +8,9 @@ describe('GestionActasComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [GestionActasComponent]
+      declarations: [ GestionActasComponent ]
     })
-      .compileComponents();
+    .compileComponents();
   }));
 
   beforeEach(() => {

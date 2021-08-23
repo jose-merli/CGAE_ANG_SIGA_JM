@@ -28,7 +28,7 @@
         </div>
 
         <div class="form-group col-lg-2 col-md-2">
-          <label>{{ 'sjcs.actas.fechaResolucion' |
+          <label>{{ 'justiciaGratuita.ejg.datosGenerales.FechaResolucion' |
              translate}}</label>
           <app-fecha [(value)]="datosFiltro.fechaResolucion" (valueChangeSelected)="fillFechaResolucion($event)"
             (valueChangeInput)="fillFechaDesde($event)">
@@ -36,7 +36,7 @@
         </div>
 
         <div class="form-group col-lg-2 col-md-2">
-          <label>{{ 'sjcs.actas.fechaReunion' |
+          <label>{{ 'justiciaGratuita.ejg.datosGenerales.FechaReunion' |
             translate}}</label>
           <app-fecha [(value)]="datosFiltro.fechaReunion" (valueChangeSelected)="fillFechaReunion($event)"
             (valueChangeInput)="fillFechaHasta($event)">
@@ -44,7 +44,7 @@
         </div>
 
         <div class="form-group col-lg-4 col-md-4">
-          <label>{{ 'sjcs.actas.presidente' |
+          <label>{{ 'justiciaGratuita.ejg.datosGenerales.Presidente' |
             translate}}</label>
           <p-dropdown class="select-form" [(ngModel)]='datosFiltro.presidente' placeholder="Seleccionar" [options]="comboPresidente"
             [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
@@ -52,7 +52,7 @@
         </div>
 
         <div class="form-group col-lg-4 col-md-4">
-          <label>{{ 'sjcs.actas.secretario' |
+          <label>{{ 'justiciaGratuita.ejg.datosGenerales.Secretario' |
             translate}}</label>
           <p-dropdown class="select-form" [(ngModel)]='datosFiltro.secretario' placeholder="Seleccionar" [options]="comboSecretario"
             [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">

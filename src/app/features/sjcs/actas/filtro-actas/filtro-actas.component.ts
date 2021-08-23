@@ -106,12 +106,12 @@ export class FiltroActasComponent implements OnInit {
 
     if (this.checkFilters()) {
       console.log("Entra en el search y intenta enviar algo")
-      console.log(this.datosFiltro.acta)
+      console.log(this.datosFiltro.numeroActa)
       console.log(this.datosFiltro.anio)
       console.log(this.datosFiltro.fechaResolucion)
       console.log(this.datosFiltro.fechaReunion)
-      console.log(this.datosFiltro.presidente)
-      console.log(this.datosFiltro.secretario)
+      console.log(this.datosFiltro.idPresidente)
+      console.log(this.datosFiltro.idSecretario)
       this.persistenceService.setFiltros(this.datosFiltro);
       this.searchEmitter.emit(true);
     }

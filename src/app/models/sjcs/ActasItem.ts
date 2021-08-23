@@ -1,11 +1,15 @@
 export class ActasItem {
 
-    anio: String;
-    acta: String;
-    presidente: String;
-    secretario: String;
-    fechaResolucion: Date;
-    fechaReunion: Date;
+
+      anio:String;
+	  idActa:String;
+	  numeroActa:String;
+	  idPresidente:String;
+	  nombrePresidente:String;
+	  idSecretario:String;
+	  nombreSecretario:String;
+	  fechaResolucion:Date;
+	  fechaReunion:Date;
 
     constructor() { }
 }

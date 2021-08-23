@@ -35,8 +35,8 @@ export class TablaActasComponent implements OnInit {
 
   //Resultados de la busqueda
   @Input() datos;
-  @Input() permisos;
   @Input() filtro;
+  @Input() permisos;
   @Input() institucionActual;
   @ViewChild("table") table: DataTable;
 
@@ -60,7 +60,6 @@ export class TablaActasComponent implements OnInit {
 
     this.getCols();
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
-
     if (this.persistenceService.getHistorico() != undefined) {
       this.historico = this.persistenceService.getHistorico();
     }
@@ -147,7 +146,7 @@ export class TablaActasComponent implements OnInit {
       this.persistenceService.setDatos(evento.data);
 
 
-      this.router.navigate(["/gestionComisarias"]);
+      this.router.navigate(["/fichaGestionActas"]);
     } else {
 
       if (evento.data.idInstitucion != this.institucionActual) {
@@ -236,11 +235,11 @@ export class TablaActasComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "acta", header: "sjcs.actas.numeroActa", width: "40%" },
-      { field: "fechaResolucion", header: "sjcs.actas.fechaResolucion", width: "15%" },
-      { field: "fechaReunion", header: "sjcs.actas.fechaReunion", width: "15%" },
-      { field: "presidente", header: "sjcs.actas.presidente", width: "15%" },
-      { field: "secretario", header: "sjcs.actas.secretario", width: "15%" }
+      { field: "numeroActa", header: "sjcs.actas.numeroActa", width: "15%" },
+      { field: "fechaResolucion", header: "justiciaGratuita.ejg.datosGenerales.FechaResolucion", width: "15%" },
+      { field: "fechaReunion", header: "justiciaGratuita.ejg.datosGenerales.FechaReunion", width: "15%" },
+      { field: "nombrePresidente", header: "justiciaGratuita.ejg.datosGenerales.Presidente", width: "15%" },
+      { field: "nombreSecretario", header: "justiciaGratuita.ejg.datosGenerales.Secretario", width: "15%" }
 
     ];
 

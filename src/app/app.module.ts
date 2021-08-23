@@ -210,7 +210,7 @@ import { GuardiasCentralitaComponent } from './features/sjcs/guardia/guardias-ce
 import { VolanteExpresComponent } from './features/sjcs/guardia/volante-expres/volante-expres.component';
 import { SOJComponent } from './features/sjcs/soj/soj.component';
 // import { EJGComponent } from './features/sjcs/ejg/ejg.component';
-import { GestionActasComponent } from './features/sjcs/gestion-actas/gestion-actas.component';
+import { GestionActasComponent } from './features/sjcs/actas/gestion-actas/gestion-actas.component';
 import { MantenimientoFacturacionComponent } from './features/sjcs/facturacionSJCS/mantenimiento-facturacion/mantenimiento-facturacion.component';
 import { PrevisionesComponent } from './features/sjcs/facturacionSJCS/previsiones/previsiones.component';
 import { MantenimientoPagosComponent } from './features/sjcs/facturacionSJCS/mantenimiento-pagos/mantenimiento-pagos.component';
@@ -468,6 +468,7 @@ import { TablaActasComponent } from './features/sjcs/actas/tabla-actas/tabla-act
 
 import { ProcuradorPreDesignacionComponent } from './features/sjcs/ejg/gestion-ejg/relaciones/ficha-pre-designacion/procurador-pre-designacion/procurador-pre-designacion.component';
 import { ContrariosPreDesignacionComponent } from './features/sjcs/ejg/gestion-ejg/relaciones/ficha-pre-designacion/contrarios-pre-designacion/contrarios-pre-designacion.component';
+import { DatosGeneralesActasComponent } from './features/sjcs/actas/gestion-actas/datos-generales-actas/datos-generales-actas.component';
 
 @NgModule({
 	declarations: [
@@ -855,6 +856,7 @@ import { ContrariosPreDesignacionComponent } from './features/sjcs/ejg/gestion-e
 		ActasComponent,
 		FiltroActasComponent,
 		TablaActasComponent,
+		DatosGeneralesActasComponent,
 
 
 

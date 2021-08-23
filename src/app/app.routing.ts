@@ -116,7 +116,9 @@ import { GuardiasCentralitaComponent } from './features/sjcs/guardia/guardias-ce
 import { VolanteExpresComponent } from './features/sjcs/guardia/volante-expres/volante-expres.component';
 import { SOJComponent } from './features/sjcs/soj/soj.component';
 import { EJGComponent } from './features/sjcs/ejg/ejg.component';
+import { EjgComisionComponent } from './features/sjcs/ejg-comision/ejg-comision.component';
 import { ActasComponent } from './features/sjcs/actas/actas.component';
+import { GestionActasComponent } from './features/sjcs/actas/gestion-actas/gestion-actas.component';
 import { MantenimientoFacturacionComponent } from './features/sjcs/facturacionSJCS/mantenimiento-facturacion/mantenimiento-facturacion.component';
 import { PrevisionesComponent } from './features/sjcs/facturacionSJCS/previsiones/previsiones.component';
 import { MantenimientoPagosComponent } from './features/sjcs/facturacionSJCS/mantenimiento-pagos/mantenimiento-pagos.component';
@@ -850,6 +852,11 @@ const appRoutes: Routes = [
 		canActivate: [ AuthGuard ]
 	},
 	{
+		path: 'ejg-comision',
+		component: EjgComisionComponent,
+		canActivate: [ AuthGuard ]
+	},
+	{
 		path: 'ejg',
 		component: EJGComponent,
 		canActivate: [ AuthGuard ]
@@ -862,6 +869,11 @@ const appRoutes: Routes = [
 	{
 		path: 'gestionActas',
 		component: ActasComponent,
+		canActivate: [ AuthGuard ]
+	},
+	{
+		path: 'fichaGestionActas',
+		component: GestionActasComponent,
 		canActivate: [ AuthGuard ]
 	},
 	{
