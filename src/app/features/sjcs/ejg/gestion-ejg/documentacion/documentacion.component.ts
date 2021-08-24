@@ -408,6 +408,7 @@ export class DocumentacionComponent implements OnInit {
           } else if (data["error"].code == null) {
             this.showMessage("info", this.translateService.instant("general.message.informacion"), data["error"].message);
           }
+          this.progressSpinner = false;
         },
         error => {
           //Maximo de tamaño permitido actualmente al hacer peticiones al back (5242880)

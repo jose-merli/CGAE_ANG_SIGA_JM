@@ -36,6 +36,8 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 	msgs: Message[] = [];
 	nifRepresentante;
 
+	resaltadoDatos = false;
+
 	ejg: EJGItem;
 
 	fechaCabecera: Date = null;
@@ -183,6 +185,32 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 		);
 	}
 
+	styleObligatorio(evento) {
+		if (this.resaltadoDatos && (evento == undefined || evento == null || evento == "")) {
+		  return this.commonsService.styleObligatorio(evento);
+		}
+	}
+
+	
+	muestraCamposObligatorios() {
+		this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+		this.resaltadoDatos = true;
+	}
+
+	checkPermisosAsso() {
+		let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+		if (msg != undefined) {
+		  this.msgs = msg;
+		} else {
+		  if (this.disabledAssociate()) {
+			//this.msgs = this.commonsServices.checkPermisoAccion();
+			this.muestraCamposObligatorios();
+		  } else {
+			this.Associate();
+		  }
+		}
+	  }
+
 	Associate() {
 
 		this.progressSpinner = true;
@@ -230,6 +258,15 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 
 	disabledSave() {
 		if (this.generalBody.idProcurador != undefined && this.generalBody.idProcurador != '') {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	disabledAssociate() {
+		if (this.generalBody.idProcurador != undefined && this.generalBody.idProcurador != ''
+		&& this.generalBody.fechaDesigna != null && this.generalBody.numerodesignacion) {
 			return false;
 		} else {
 			return true;
