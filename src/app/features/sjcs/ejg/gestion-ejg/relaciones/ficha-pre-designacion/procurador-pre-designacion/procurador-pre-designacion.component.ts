@@ -266,7 +266,7 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 
 	disabledAssociate() {
 		if (this.generalBody.idProcurador != undefined && this.generalBody.idProcurador != ''
-		&& this.generalBody.fechaDesigna != null && this.generalBody.numerodesignacion) {
+		&& this.generalBody.fechaDesigna != null ) { //&& this.generalBody.numerodesignacion
 			return false;
 		} else {
 			return true;

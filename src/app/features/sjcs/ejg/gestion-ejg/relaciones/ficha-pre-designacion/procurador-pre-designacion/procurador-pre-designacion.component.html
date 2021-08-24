@@ -93,8 +93,7 @@
               <label>{{ "justiciaGratuita.oficio.justificacionExpres.numDesignacion" | translate }}
               </label>
               <input [(ngModel)]="generalBody.numerodesignacion" type="text" class="form-control"
-                [maxLength]="20" [disabled]="!permisoEscritura" (keypress)="numberOnly($event)" pInputText 
-                [ngClass]="styleObligatorio(generalBody.numerodesignacion)"/>
+                 [maxLength]="20" [disabled]="!permisoEscritura" (keypress)="numberOnly($event)" pInputText/> <!--[ngClass]="styleObligatorio(generalBody.numerodesignacion)" -->
             </div>
             <div class="form-group-interlineado col-lg-6 col-md-6">
               <label>{{ "justiciaGratuita.oficio.designaciones.fechaDesignacion" | translate }}
