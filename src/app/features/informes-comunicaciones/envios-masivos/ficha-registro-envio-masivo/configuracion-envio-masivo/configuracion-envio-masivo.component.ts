@@ -139,6 +139,7 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
             if (datos.idPersona == null){
               this.showFail(this.translateService.instant(
                 "general.message.datos.generales.remitente"));
+                this.body.idPlantillaEnvios = null;
             }
           },
             err => {
