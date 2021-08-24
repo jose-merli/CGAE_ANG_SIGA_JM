@@ -358,6 +358,10 @@ export class InformeCalificacionComponent implements OnInit {
 
   rest() {
     this.dictamen = JSON.parse(JSON.stringify(this.bodyInicial));
+    if(this.dictamen.fundamentoCalif != null){
+      this.getComboFundamentoCalif();
+      this.isDisabledFundamentosCalif = false;
+    }
     this.dictamen.fechaDictamen = new Date(this.dictamen.fechaDictamen);
   }
 
