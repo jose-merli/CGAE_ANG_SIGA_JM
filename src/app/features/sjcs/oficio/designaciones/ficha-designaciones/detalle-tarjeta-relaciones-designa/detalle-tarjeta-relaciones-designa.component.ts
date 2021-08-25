@@ -280,6 +280,8 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
 
     sessionStorage.setItem("EJGItemDesigna", "nuevo");
 
+    sessionStorage.setItem("Designacion", JSON.stringify(this.body));
+
     this.router.navigate(["/gestionEjg"]);
   }
 

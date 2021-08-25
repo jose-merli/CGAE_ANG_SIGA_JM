@@ -9,6 +9,8 @@ import { MultiSelect } from 'primeng/multiselect';
 import { noComponentFactoryError } from '@angular/core/src/linker/component_factory_resolver';
 import { Message } from 'primeng/components/common/api';
 import { procesos_ejg } from '../../../../../permisos/procesos_ejg';
+import { DesignaItem } from '../../../../../models/sjcs/DesignaItem';
+import { Location } from '@angular/common'
 
 
 @Component({
@@ -74,6 +76,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
     private commonsServices: CommonsService,
     private translateService: TranslateService,
+    private location: Location,
     private router: Router) { }
 
   ngOnInit() {
@@ -351,6 +354,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
       this.progressSpinner = false;
     } else {
       //hacer insert
+      //Se comprueban los campos obligatorios
       if (this.body.tipoEJG != null && this.body.tipoEJG != undefined && this.body.fechaApertura != null && this.body.fechaApertura != undefined) {
         this.body.annio = this.body.fechaApertura.getFullYear().toString();
         this.body.idInstitucion = this.institucionActual;
@@ -363,6 +367,49 @@ export class DatosGeneralesEjgComponent implements OnInit {
               let ejgObject = JSON.parse(n.body).ejgItems;
               let datosItem = ejgObject[0];
               this.persistenceService.setDatos(datosItem);
+
+
+              //En el caso que se proceda de una designación, se asocia el EJG con la designación
+              if (sessionStorage.getItem("Designacion")) {
+
+                let designa: DesignaItem = JSON.parse(sessionStorage.getItem("Designacion"));
+
+                sessionStorage.removeItem("Designacion");
+
+                //El formato de el atributo designa.ano es "D[año]/[numDesigna]"
+                let designaAnio = designa.ano.toString().slice(1,5);
+
+                let numDesigna = designa.ano.toString().split("/")[1];
+
+                let request = [designaAnio, this.body.annio, this.body.tipoEJG, designa.idTurno, numDesigna, datosItem.numero];
+
+                //Se asociado el nuevo EJG creado a la designación de origen
+                this.sigaServices.post("designacion_asociarEjgDesigna", request).subscribe(
+                  m => {
+
+                    this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+
+                    //Se copia la informacion de la designacion de origen al nuevo EJG creado
+                    this.sigaServices.post("gestionJusticiables_copyDesigna2Ejg", request).subscribe(
+                      x => {
+                        this.progressSpinner = false;
+                        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+                        this.location.back();
+                      },
+                      err => {
+                        //Crear etiqueta en la BBDD
+                        this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Se ha producido un error al copiar los datos de la designacion al EJG seleccionado");
+                        this.location.back();
+                      }
+                    );
+                  },
+                  err => {
+                    this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+                    this.progressSpinner = false;
+                  }
+                );
+
+              }
               this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
               this.body.numEjg = datosItem.numEjg;
               this.body.numero = datosItem.numero;
