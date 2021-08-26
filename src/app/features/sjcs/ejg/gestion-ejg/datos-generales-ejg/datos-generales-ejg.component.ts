@@ -104,8 +104,9 @@ export class DatosGeneralesEjgComponent implements OnInit {
         this.body.fechaApertura = new Date(this.body.fechaApertura);
       if (this.body.tipoEJG != undefined)
         this.showTipoExp = true;
-      if (this.body.numDesigna != null || this.body.numDesigna != undefined || this.body.numDesigna != null)
-        this.noAsocDes = false;
+      // if (this.body.numDesigna != null || this.body.numDesigna != undefined || this.body.numDesigna != null)
+      //   this.noAsocDes = false;
+      this.getDesignaEjg();
 
       this.getPrestacionesRechazadasEJG();
     } else {
@@ -115,7 +116,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
       this.body = new EJGItem();
       this.bodyInicial = new EJGItem();
       this.showTipoExp = false;
-      this.noAsocDes = true;
+      // this.noAsocDes = true;
       // this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     }
 
@@ -522,6 +523,25 @@ export class DatosGeneralesEjgComponent implements OnInit {
       }
       else this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('justiciaGratuita.ejg.datosGenerales.noDesignaEjg') }];
     }
+  }
+
+  getDesignaEjg(){
+    this.sigaServices.post("gestionejg_getRelaciones", this.body).subscribe(
+      n => {
+        let relaciones = JSON.parse(n.body).relacionesItem;
+        // this.nExpedientes = this.expedientesEcon.length;
+        // this.persistenceService.setFiltrosAux(this.expedientesEcon);
+        // this.router.navigate(['/gestionEjg']);
+        let foundDesigna = relaciones.find(
+          item => item.sjcs == 'DESIGNACIÓN'
+        );
+        if (foundDesigna != undefined) this.noAsocDes = false;
+        else this.noAsocDes = true;
+        //this.progressSpinner = false;
+      },
+      err => {
+      }
+    );
   }
 
   addExp() {

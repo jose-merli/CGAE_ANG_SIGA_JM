@@ -154,8 +154,8 @@ export class RelacionesComponent implements OnInit {
               break;
           }
         })
-        if (this.noAsociaDES == false) this.noAsocDes.emit(false);
-        else this.noAsocDes.emit(true);
+        if (this.noAsociaDES == false) this.noAsocDes.emit(true);
+        else this.noAsocDes.emit(false);
         if (this.relaciones.length == 1) {
           this.tipoRelacion = this.relaciones[0].sjcs;
         }

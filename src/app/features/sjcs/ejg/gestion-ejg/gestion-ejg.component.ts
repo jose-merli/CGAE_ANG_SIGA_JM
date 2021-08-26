@@ -225,6 +225,10 @@ export class GestionEjgComponent implements OnInit {
     });
   }
 
+  asignNoAsocDes(event){
+    this.noAsocDes = event;
+  }
+
   abreCierraFicha() {
     this.openFicha = !this.openFicha;
   }
