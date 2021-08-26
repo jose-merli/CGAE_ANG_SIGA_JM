@@ -1225,7 +1225,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           this.muestraCamposObligatorios();
         }else{
           if (!this.codigoPostalValido && this.body.idPais == "191") {
-            this.showFail("El código postal debe tener 5 caracteres");
+            this.showFail("El código postal debe tener 5 dígitos");
             return false;
           } else {
             this.comprobarAuditoria('noletrado');
@@ -1244,7 +1244,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           this.muestraCamposObligatorios();
         }else{
           if (!this.codigoPostalValido && this.body.idPais == "191") {
-            this.showFail("El código postal debe tener 5 caracteres");
+            this.showFail("El código postal debe tener 5 dígitos");
           } else {
             this.comprobarAuditoria('letrado');
           }
