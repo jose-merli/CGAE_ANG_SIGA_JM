@@ -581,7 +581,11 @@ export class DatosRegistralesComponent implements OnInit, OnChanges {
         this.progressSpinner = false;
       }
     } else {
-      this.showCustomFail("Debe rellenar todos los datos obligatorios para guardar");
+      if (this.body.resena.length < 3) {
+        this.showCustomFail("La reseña debe tener al menos 3 caracteres.");
+      } else {
+        this.showCustomFail("Debe rellenar todos los datos obligatorios para guardar");
+      }
     }
 
   }
@@ -715,6 +719,12 @@ export class DatosRegistralesComponent implements OnInit, OnChanges {
         this.contadorNoCorrecto == false &&
         this.fechaFinCorrecta != false
       ) {
+
+        if (this.body.resena.length < 3) {
+          this.showCustomFail("La reseña debe tener al menos 3 caracteres.");
+          return true;
+        }
+
         if (this.camposDesactivados == true && this.noEditable == false) {
           this.muestraCamposObligatorios();
           return true;
@@ -732,6 +742,12 @@ export class DatosRegistralesComponent implements OnInit, OnChanges {
         return true;
       }
     } else {
+      if (this.body.resena != undefined &&
+        !this.onlySpaces(this.body.resena) &&
+        this.body.resena.length < 3) {
+        this.showCustomFail("La reseña debe tener al menos 3 caracteres.");
+        return true;
+      }
 
       if ((this.body.contadorNumsspp == undefined ||
         this.onlySpaces(this.body.contadorNumsspp) || this.body.contadorNumsspp == null) && this.noEditable) {

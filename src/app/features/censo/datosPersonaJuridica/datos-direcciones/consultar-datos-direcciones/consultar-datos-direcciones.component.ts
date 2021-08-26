@@ -1224,7 +1224,12 @@ para poder filtrar el dato con o sin estos caracteres*/
         (this.body.idTipoDireccion==undefined || this.body.idTipoDireccion==null || this.body.idTipoDireccion.length==0)){
           this.muestraCamposObligatorios();
         }else{
-          this.comprobarAuditoria('noletrado');
+          if (!this.codigoPostalValido && this.body.idPais == "191") {
+            this.showFail("El código postal debe tener 5 caracteres");
+            return false;
+          } else {
+            this.comprobarAuditoria('noletrado');
+          }
         }
       }
     }
@@ -1238,7 +1243,11 @@ para poder filtrar el dato con o sin estos caracteres*/
         (this.body.idTipoDireccion==undefined || this.body.idTipoDireccion==null)){
           this.muestraCamposObligatorios();
         }else{
-          this.comprobarAuditoria('letrado');
+          if (!this.codigoPostalValido && this.body.idPais == "191") {
+            this.showFail("El código postal debe tener 5 caracteres");
+          } else {
+            this.comprobarAuditoria('letrado');
+          }
         }
       }
     }
