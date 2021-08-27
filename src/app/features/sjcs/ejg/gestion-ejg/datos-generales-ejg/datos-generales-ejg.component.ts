@@ -526,7 +526,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
 
   addExp() {
 
-    let us = undefined;
+    /*let us = undefined;
     us = this.sigaServices.getOldSigaUrl() + "JGR_MantenimientoEJG.do?codigoDesignaNumEJG=" + this.body.numEjg +
       "&numeroEJG=" + this.body.numEjg + "&idTipoEJG=" + this.body.tipoEJG + "&idInstitucionEJG=" + this.body.idInstitucion + "&anioEJG=" + this.body.annio +
       "&actionE=/JGR_InteresadoEJG.do&localizacionE=gratuita.busquedaEJG.localizacion&tituloE=pestana.justiciagratuitaejg.solicitante" +
@@ -538,7 +538,9 @@ export class DatosGeneralesEjgComponent implements OnInit {
 
     sessionStorage.setItem("url", JSON.stringify(us));
     sessionStorage.removeItem("reload");
-    sessionStorage.setItem("reload", "si");
+    sessionStorage.setItem("reload", "si");*/
+    sessionStorage.setItem("expedienteInsos", JSON.stringify(this.body));
+
 
     this.router.navigate(["/addExp"]);
   }
