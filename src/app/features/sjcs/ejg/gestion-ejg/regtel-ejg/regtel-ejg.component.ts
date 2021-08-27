@@ -179,14 +179,14 @@ export class RegtelEjgComponent implements OnInit {
             this.item.identificadords = data.body;
             let mess = this.translateService.instant("messages.collectionCreated");
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-            if (this.nRegtel != 0) {
-              this.messageRegtel = this.nRegtel + '';
-            } else {
-              this.messageRegtel = this.translateService.instant(
-                'general.message.no.registros'
-              );
-            }
-
+            // if (this.nRegtel != 0) {
+            //   this.messageRegtel = this.nRegtel + '';
+            // } else {
+            //   this.messageRegtel = this.translateService.instant(
+            //     'general.message.no.registros'
+            //   );
+            // }
+            this.getRegtel();
           },
           err => {
             if (this.nRegtel != 0) {
