@@ -181,7 +181,7 @@ export class DocumentacionComponent implements OnInit {
             }
           }
 
-          if(this.ficheroTemporal != null) this.subirFichero();
+          if(this.ficheroTemporal != null && this.ficheroTemporal != undefined) this.subirFichero();
         }
         this.nDocumentos = this.documentos.length;
         // this.progressSpinner = false;
