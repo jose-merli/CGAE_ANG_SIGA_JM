@@ -27,7 +27,7 @@
         
         <app-relaciones *ngIf="permisoEscrituraRelaciones != undefined && modoEdicion" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" 
         [tarjetaRelaciones]="tarjetaRelaciones" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraRelaciones" (modoEdicionSend)="modoEdicionSend($event)" 
-        [openTarjetaRelaciones]="openTarjetaRelaciones" (noAsocDes)="noAsocDes=$event">
+        [openTarjetaRelaciones]="openTarjetaRelaciones" (noAsocDes)="asignNoAsocDes($event)">
         </app-relaciones>
         
         <app-estados *ngIf="permisoEscrituraEstados != undefined && modoEdicion" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" 

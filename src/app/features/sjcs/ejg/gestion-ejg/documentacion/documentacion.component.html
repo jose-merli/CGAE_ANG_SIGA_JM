@@ -274,7 +274,7 @@
       <button [disabled]="body.idFichero==null" (click)="deleteDocumentos()" pButton type="button"
         icon="fa fa-trash" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
       <p-fileUpload #pUploadFile icon="fa fa-plus" iconPos="left" chooseLabel="{{ 'general.boton.new' | translate}}" [disabled]="body.idFichero!=null"
-        name="file" mode="basic"  class="edit my-0 mx-auto main-button" (onSelect)="checkPermisosSubirFichero($event)" auto="true">
+        name="file" mode="basic"  class="edit my-0 mx-auto main-button" (onSelect)="seleccionarFichero($event)" auto="true">
       </p-fileUpload> <!-- accept=".xls" -->
     </div>
   </div>

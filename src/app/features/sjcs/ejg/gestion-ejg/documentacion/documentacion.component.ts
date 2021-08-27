@@ -56,9 +56,11 @@ export class DocumentacionComponent implements OnInit {
 
   comboPresentador;
   comboTipoDocumentacion;
-  comboDocumentos;
+  comboDocumentos: any [];
 
   resaltadoDatosGenerales: boolean = false;
+
+  ficheroTemporal: File = null;
 
   fichaPosible = {
     key: "documentacion",
@@ -77,7 +79,7 @@ export class DocumentacionComponent implements OnInit {
 
   ngOnInit() {
     if (this.persistenceService.getDatos()) {
-      
+
       this.resaltadoDatos = true;
       this.nuevo = false;
       this.modoEdicion = true;
@@ -85,7 +87,6 @@ export class DocumentacionComponent implements OnInit {
       this.getCols();
       this.getComboPresentador();
       this.getComboTipoDocumentacion();
-      this.getDocumentos(this.item);
     } else {
       this.nuevo = true;
       this.modoEdicion = false;
@@ -125,7 +126,7 @@ export class DocumentacionComponent implements OnInit {
   }
 
   getDocumentos(selected) {
-   // this.progressSpinner = true;
+    // this.progressSpinner = true;
     this.sigaServices.post("gestionejg_getDocumentos", selected).subscribe(
       n => {
         this.documentos = JSON.parse(n.body).ejgDocItems;
@@ -144,8 +145,8 @@ export class DocumentacionComponent implements OnInit {
                 if (pres.value == element.presentador) element.presentador_persona = pres.label;
               });
             }
-            //Cuando el `presentador es un solicitante
-            else if(element.presentador){
+            //Cuando el presentador es un solicitante
+            else if (element.presentador) {
               element.presentador = "S_" + element.presentador;
               //Valor de la columna presentador
               this.comboPresentador.forEach(pres => {
@@ -153,34 +154,37 @@ export class DocumentacionComponent implements OnInit {
               });
             }
             //Se escribe los tipos de documento presentados en la cabecera
-            if(this.documentos.length<=3 && this.documentos.length>0){
-              if(this.tiposCabecera!="")this.tiposCabecera += ", ";
+            if (this.documentos.length <= 3 && this.documentos.length > 0) {
+              if (this.tiposCabecera != "") this.tiposCabecera += ", ";
               this.tiposCabecera += element.labelDocumento;
             }
           });
-            //Si se esta actualizando la documentacion cuando se ha introducido una nueva documentacion
-            //se añade el iddocumentacion al body actual
-            if(this.showModal && this.body.idDocumentacion == null){
-              //Actualmente, la ultima documentaciom introducido conincide con la ultima documentacion de la lista
-              //Se asigna el valor de iddocumentacion para que se pueda asignar ficheros
-              this.body.idDocumentacion = this.documentos[this.documentos.length-1].idDocumentacion;
-              //Para evitar que se produzcan errores al pulsar el botón "Reestablecer"
+          //Si se esta introducido un nuevo documento
+          //se añade el iddocumentacion al body actual
+          if (this.showModal && this.body.idDocumentacion == null) {
+            //Actualmente, la ultima documentaciom introducido conincide con la ultima documentacion de la lista
+            //Se asigna el valor de iddocumentacion para que se pueda asignar ficheros
+            this.body.idDocumentacion = this.documentos[this.documentos.length - 1].idDocumentacion;
+            //Para evitar que se produzcan errores al pulsar el botón "Reestablecer"
+            this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+          }
+
+          //Si se esta actualizando o creando los documentos cuando se ha introducido un nuevo fichero
+          //se añade el iddocumento al body actual
+          if (this.showModal && this.body.idFichero == null) {
+            let documentacion = this.documentos.find(
+              item => item.idDocumentacion == this.body.idDocumentacion
+            );
+            if (documentacion != undefined) {
+              this.body.idFichero = documentacion.idFichero;
               this.bodyInicial = JSON.parse(JSON.stringify(this.body));
             }
-            //Si se esta actualizando los documentos cuando se ha introducido un nuevo fichero
-            //se añade el iddocumento al body actual
-            if(this.showModal &&this.body.idFichero == null){
-              let documentacion= this.documentos.find(
-                item => item.idDocumentacion == this.body.idDocumentacion
-              );
-              if (documentacion != undefined){
-                this.body.idFichero = documentacion.idFichero;
-                this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-              }
-            }
+          }
+
+          if(this.ficheroTemporal != null && this.ficheroTemporal != undefined) this.subirFichero();
         }
         this.nDocumentos = this.documentos.length;
-       // this.progressSpinner = false;
+        // this.progressSpinner = false;
         if (this.tableDocumentacion != undefined) this.tableDocumentacion.reset();
       },
       err => {
@@ -195,7 +199,7 @@ export class DocumentacionComponent implements OnInit {
   }
 
   getCols() {
-    //if(this.documentos != undefined && this.documentos.presentador != undefined){
+    
     this.cols = [
       { field: "flimite_presentacion", header: "justiciaGratuita.ejg.datosGenerales.FechaLimPresentacion" },
       { field: "presentador_persona", header: "justiciaGratuita.ejg.documentacion.Presentador" },
@@ -205,17 +209,6 @@ export class DocumentacionComponent implements OnInit {
       { field: "f_presentacion", header: "censo.consultaDatosGenerales.literal.fechaPresentacion" },
       { field: "propietarioDes", header: "justiciaGratuita.ejg.documentacion.Propietario" },
     ];
-    /* }else{
-      this.cols = [
-        { field: "flimite_presentacion", header: "justiciaGratuita.ejg.datosGenerales.FechaLimPresentacion", width: "10%" },
-        { field: "presentador_persona", header: "justiciaGratuita.ejg.documentacion.Presentador", width: "20%" },
-        { field: "documentoDesc", header: "justiciaGratuita.ejg.documentacion.Documento", width: "20%" },
-        { field: "regEntrada", header: "justiciaGratuita.ejg.documentacion.RegistroEntrada", width: "15%" },
-        { field: "regSalida", header: "justiciaGratuita.ejg.documentacion.RegistroSalida", width: "15%" },
-        { field: "f_presentacion", header: "censo.consultaDatosGenerales.literal.fechaPresentacion", width: "10%" },
-        { field: "propietario", header: "justiciaGratuita.ejg.documentacion.Propietario", width: "10%" },
-      ];
-    }   */
     this.cols.forEach(it => this.buscadores.push(""));
 
     this.rowsPerPage = [
@@ -374,37 +367,62 @@ export class DocumentacionComponent implements OnInit {
     }
   }
 
-  subirFichero(event: any) {
+  seleccionarFichero(event: any) {
+
+    let fileList: FileList = event.files;
+    this.ficheroTemporal = fileList[0];
+
+    this.body.nombreFichero = this.ficheroTemporal.name;
+    if (this.bodyInicial.f_presentacion != null && this.bodyInicial.f_presentacion != undefined) {
+      this.ficheros = [{
+        "fecha": this.datepipe.transform(this.bodyInicial.f_presentacion, 'dd/MM/yyyy'),
+        "nombre": this.body.nombreFichero
+      }]
+    } else {
+      this.ficheros = [{
+        "fecha": this.translateService.instant("justiciaGratuita.ejg.documentacion.noFechaPre"),
+        "nombre": this.body.nombreFichero
+      }]
+    }
+  }
+
+  subirFichero() {
 
     this.progressSpinner = true;
 
-    let fileList: FileList = event.files;
-    let file: File = fileList[0];
+    // let fileList: FileList = event.files;
+    // let file: File = fileList[0];
+
+    let idDocumentacion : string = this.body.idDocumentacion.toString();
+    //Si se ha seleccionado la opcion "Todos" en el desplegable "Documento"
+    if(this.body.idDocumento == -1){
+      //Se resta 2 teniendo en cuenta el elemento "Todos" y el elemento ya introducido anteriormente
+      for(var i = 0; i < this.comboDocumentos.length-2; i++){
+        //Vamos a obtener un string con los indices de todos los nuevos documentos creados
+        idDocumentacion += "," +this.documentos[this.documentos.length - this.comboDocumentos.length + 1 + i].idDocumentacion;
+      }
+    }
 
     this.sigaServices
-      .postSendFileAndParameters("gestionejg_subirDocumentoEjg", file, this.body.idDocumentacion)
+      .postSendFileAndParameters("gestionejg_subirDocumentoEjg", this.ficheroTemporal, idDocumentacion)
       .subscribe(
         data => {
           if (data["error"].code == 200) {
             this.showMessage("success", "Correcto", data["error"].message);
+            this.body.nombreFichero = this.ficheroTemporal.name;
+            this.ficheroTemporal = null;
             this.getDocumentos(this.item);
             this.selectedDatos = [];
             this.numSelected = 0;
-            //this.showModal = false;
-            //El id del fichero se asigna actualmente dentro del método getDocumentos().
-            this.body.nombreFichero = file.name;
+
+            
+            
+            if(this.body.idDocumento == -1){
+              this.body.idDocumento = this.documentos[this.documentos.length-1].idDocumento;
+            }
+            
             this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-              if(this.bodyInicial.f_presentacion!=null && this.bodyInicial.f_presentacion!=undefined){
-                this.ficheros=[{
-                  "fecha": this.datepipe.transform(this.bodyInicial.f_presentacion, 'dd/MM/yyyy'),
-                  "nombre": this.bodyInicial.nombreFichero
-                }]
-                }else{
-                  this.ficheros=[{
-                    "fecha": this.translateService.instant("justiciaGratuita.ejg.documentacion.noFechaPre"),
-                    "nombre": this.bodyInicial.nombreFichero
-                  }]
-                }
+            
           } else if (data["error"].code == null) {
             this.showMessage("info", this.translateService.instant("general.message.informacion"), data["error"].message);
           }
@@ -412,8 +430,9 @@ export class DocumentacionComponent implements OnInit {
         },
         error => {
           //Maximo de tamaño permitido actualmente al hacer peticiones al back (5242880)
-          if(file.size>5242880) this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.ejg.documentacion.tamMax"));
+          if (this.ficheroTemporal.size > 5242880) this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.ejg.documentacion.tamMax"));
           else this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.ejg.documentacion.errorFich"));
+          this.progressSpinner = false;
         },
         () => {
           this.progressSpinner = false;
@@ -426,7 +445,7 @@ export class DocumentacionComponent implements OnInit {
 
     //this.body.nuevoEJG=!this.modoEdicion;
     let documentos: any[] = [];
-    if(this.selectedDatos.length==0) documentos.push(this.body);
+    if (this.selectedDatos.length == 0) documentos.push(this.body);
     else documentos = this.selectedDatos;
 
     this.sigaServices.postDownloadFiles("gestionejg_descargarDocumentosEjg", documentos).subscribe(
@@ -434,8 +453,8 @@ export class DocumentacionComponent implements OnInit {
         let blob = null;
 
         // Se comprueba si todos los documentos asociados no tiene ningún fichero 
-        let documentoAsociado = documentos.find(item => item.nombreFichero !=null)
-        if(documentoAsociado != undefined){
+        let documentoAsociado = documentos.find(item => item.nombreFichero != null)
+        if (documentoAsociado != undefined) {
           if (documentos.length == 1) {
             if (documentos[0].nombreFichero != null) {
               let mime = this.getMimeType(documentos[0].nombreFichero.substring(documentos[0].nombreFichero.lastIndexOf("."), documentos[0].nombreFichero.length));
@@ -508,6 +527,18 @@ export class DocumentacionComponent implements OnInit {
           //this.deseleccionarTodo = true;
           this.getDocumentos(this.item);
           this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+          if (this.bodyInicial.f_presentacion != null && this.bodyInicial.f_presentacion != undefined) {
+            this.ficheros = [{
+              "fecha": this.datepipe.transform(this.bodyInicial.f_presentacion, 'dd/MM/yyyy'),
+              "nombre": this.body.nombreFichero
+            }]
+          } else {
+            this.ficheros = [{
+              "fecha": this.translateService.instant("justiciaGratuita.ejg.documentacion.noFechaPre"),
+              "nombre": this.body.nombreFichero
+            }]
+          }
+          this.subirFichero();
         } else {
           if (error != null && error.description != null && error.description != '') {
             this.showMsg('error', 'Error', this.translateService.instant(error.description));
@@ -553,7 +584,6 @@ export class DocumentacionComponent implements OnInit {
             this.showMsg('error', 'Error', this.translateService.instant('general.message.error.realiza.accion'));
           }
         }
-
       },
       err => {
         this.progressSpinner = false;
@@ -583,12 +613,12 @@ export class DocumentacionComponent implements OnInit {
     this.showModal = false;
   }
 
-  checkPermisosSubirFichero(event){
+  checkPermisosSubirFichero(event) {
     let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
     } else {
-      if(this.body.idDocumentacion!=null) this.subirFichero(event);
+      if (this.body.idDocumentacion != null) this.subirFichero();
       else {
         this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant("justiciaGratuita.ejg.documentacion.disNew") }];
       }
@@ -597,6 +627,7 @@ export class DocumentacionComponent implements OnInit {
 
   openModal(datos) {
     this.showModal = true;
+    this.ficheroTemporal = null;
     if (datos != null) {
       this.selectedDatos = [];
       this.body = datos;
@@ -623,6 +654,8 @@ export class DocumentacionComponent implements OnInit {
     }
     else {
       this.ficheros = [];
+      //Se obtiene el combo de presentadores cada vez que se crea una nueva documentacion
+      //Para cubrir la posibilidad de nuevos solicitantes o de solicitantes eliminados
       this.getComboPresentador();
       this.body = new DocumentacionEjgItem();
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
@@ -654,10 +687,10 @@ export class DocumentacionComponent implements OnInit {
         //Se buscan los solicitantes del EJG
         this.sigaServices.post("gestionejg_unidadFamiliarEJG", this.item).subscribe(
           n => {
-    
+
             let familiares = JSON.parse(n.body).unidadFamiliarEJGItems;
             this.progressSpinner = false;
-    
+
             if (familiares != undefined) {
               //Se buscan los solicitantes
               this.solicitantes = familiares.filter(
@@ -666,29 +699,35 @@ export class DocumentacionComponent implements OnInit {
               //Se añaden los solicitantes de la unidad familiar
               this.solicitantes.forEach(element => {
                 //En el caso que sea un solicitante normal
-                if(element.uf_enCalidad=="2"){
-                this.comboPresentador.push({
-                  label: element.pjg_nombrecompleto+ " ("+this.translateService.instant('justiciaGratuita.justiciables.rol.solicitante')+")", 
-                  value: "S_"+element.uf_idPersona});
+                if (element.uf_enCalidad == "2") {
+                  this.comboPresentador.push({
+                    label: element.pjg_nombrecompleto + " (" + this.translateService.instant('justiciaGratuita.justiciables.rol.solicitante') + ")",
+                    value: "S_" + element.uf_idPersona
+                  });
                 }
                 //En el caso que sea el solicitante pprincipal
-                else{
+                else {
                   this.comboPresentador.push({
-                    label: element.pjg_nombrecompleto+ " ("+this.translateService.instant('justiciaGratuita.justiciables.unidadFamiliar.solicitantePrincipal')+")", 
-                    value: "S_"+element.uf_idPersona});
+                    label: element.pjg_nombrecompleto + " (" + this.translateService.instant('justiciaGratuita.justiciables.unidadFamiliar.solicitantePrincipal') + ")",
+                    value: "S_" + element.uf_idPersona
+                  });
                 }
               })
             }
-           // this.progressSpinner = false;
+
+            //Se ubica aqui la llamada al método para obtener la tabla para evitar que
+            //no se tenga el comboPresentador definido a la hora de obtener su columna
+            if(!this.showModal)this.getDocumentos(this.item);
+            // this.progressSpinner = false;
           },
           err => {
-           // this.progressSpinner = false;
+            // this.progressSpinner = false;
           }
         );
-        
+
       },
       err => {
-       // this.progressSpinner = false;
+        // this.progressSpinner = false;
       }
     );
   }
@@ -700,33 +739,33 @@ export class DocumentacionComponent implements OnInit {
       n => {
         this.comboTipoDocumentacion = n.combooItems;
         this.commonsServices.arregloTildesCombo(this.comboTipoDocumentacion);
-       // this.progressSpinner = false;
+        // this.progressSpinner = false;
       },
       err => {
-       // this.progressSpinner = false;
+        // this.progressSpinner = false;
       }
     );
   }
 
   getComboDocumentos() {
-    if(this.body.idTipoDocumento != null && this.body.idTipoDocumento != undefined){
-    this.progressSpinner = true;
+    if (this.body.idTipoDocumento != null && this.body.idTipoDocumento != undefined) {
+      this.progressSpinner = true;
 
-    this.sigaServices.getParam("gestionejg_comboDocumentos", "?idTipoDocumentacion="+this.body.idTipoDocumento).subscribe(
-      n => {
-        this.comboDocumentos = n.combooItems;
-        this.commonsServices.arregloTildesCombo(this.comboDocumentos);
-        //añadimos el elemento "Todos" que hara que se añadan todos los elementos del combo.
-        if(this.comboDocumentos.length>1) this.comboDocumentos.push({ label: this.translateService.instant('justiciaGratuita.ejg.documentacion.todosDoc'), value: "-1" });
-        this.progressSpinner = false;
-      },
-      err => {
-        this.progressSpinner = false;
-      }
-    );
+      this.sigaServices.getParam("gestionejg_comboDocumentos", "?idTipoDocumentacion=" + this.body.idTipoDocumento).subscribe(
+        n => {
+          this.comboDocumentos = n.combooItems;
+          this.commonsServices.arregloTildesCombo(this.comboDocumentos);
+          //añadimos el elemento "Todos" que hara que se añadan todos los elementos del combo.
+          if (this.comboDocumentos.length > 1) this.comboDocumentos.push({ label: this.translateService.instant('justiciaGratuita.ejg.documentacion.todosDoc'), value: "-1" });
+          this.progressSpinner = false;
+        },
+        err => {
+          this.progressSpinner = false;
+        }
+      );
     }
-    else{
-      this.comboDocumentos=[];
+    else {
+      this.comboDocumentos = [];
     }
   }
 

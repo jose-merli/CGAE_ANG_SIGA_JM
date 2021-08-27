@@ -104,8 +104,6 @@ export class DatosGeneralesEjgComponent implements OnInit {
         this.body.fechaApertura = new Date(this.body.fechaApertura);
       if (this.body.tipoEJG != undefined)
         this.showTipoExp = true;
-      if (this.body.numDesigna != null || this.body.numDesigna != undefined || this.body.numDesigna != null)
-        this.noAsocDes = false;
 
       this.getPrestacionesRechazadasEJG();
     } else {
@@ -115,8 +113,6 @@ export class DatosGeneralesEjgComponent implements OnInit {
       this.body = new EJGItem();
       this.bodyInicial = new EJGItem();
       this.showTipoExp = false;
-      this.noAsocDes = true;
-      // this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     }
 
     this.sigaServices.get("institucionActual").subscribe(n => {
@@ -141,7 +137,6 @@ export class DatosGeneralesEjgComponent implements OnInit {
         JSON.parse(n.body).forEach(element => {
           this.bodyInicial.prestacionesRechazadas.push(element.idprestacion.toString());
         });;
-        //this.bodyInicial.prestacion = this.body.prestacion.filter(x => this.bodyInicial.prestacionesRechazadas.indexOf(x) === -1);
         this.bodyInicial.prestacion = this.comboPrestaciones.map(it => it.value.toString()).filter(x => this.bodyInicial.prestacionesRechazadas.indexOf(x) === -1);
         this.body.prestacion = this.bodyInicial.prestacion;
       },
@@ -217,7 +212,6 @@ export class DatosGeneralesEjgComponent implements OnInit {
         this.commonsServices.arregloTildesCombo(this.comboPrestaciones);
         this.body.prestacion = n.combooItems.map(it => it.value.toString());
         this.bodyInicial.prestacion = this.body.prestacion;
-        // this.textSelected = n.combooItems;
       },
       err => {
         console.log(err);
@@ -308,7 +302,6 @@ export class DatosGeneralesEjgComponent implements OnInit {
       this.msgs = msg;
     } else {
       if (this.disabledSave()) {
-        //this.msgs = this.commonsServices.checkPermisoAccion();
         this.muestraCamposObligatorios();
       } else {
         this.save();
