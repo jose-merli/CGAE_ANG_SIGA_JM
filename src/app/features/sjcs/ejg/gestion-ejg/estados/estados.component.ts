@@ -95,6 +95,8 @@ export class EstadosComponent implements OnInit {
       this.modoEdicion = false;
       this.item = new EJGItem();
     }
+
+    this.getComboEstado();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -339,7 +341,7 @@ export class EstadosComponent implements OnInit {
 
     this.datosEstados = [dummy, ...this.datosEstados];
     this.datosEstados[0].isMod = false;
-    this.getComboEstado();
+    //this.getComboEstado();
   }
 
   cancelaAnadirEstado() {
@@ -528,12 +530,11 @@ export class EstadosComponent implements OnInit {
     if (this.datosEstados[indice] != undefined && this.datosEstados[indice].automatico != 1 && this.datosEstados[indice].fechabaja == null) {
       this.estadoAutomatico = false;
       this.editaEstado = true;
-      this.creaEstado = false;
       this.guardar = true;
-      for (let j = 0; j <= this.datosEstados.length; j++) {
+      for (let j = 0; j < this.datosEstados.length; j++) {
         if (j == indice) {
           this.datosEstados[indice].isMod = true;
-          this.getComboEstado();
+          //this.getComboEstado();
         } else {
           this.datosEstados[j].isMod = false;
         }
@@ -542,15 +543,18 @@ export class EstadosComponent implements OnInit {
 
     } else {
       this.estadoAutomatico = true;
-      //this.editaEstado = false;
       this.datosEstados[indice].isMod = false;
-      //this.restablecer = true;
       this.restablecer = false;
       this.editaEstado = false;
-      this.creaEstado = true;
       this.guardar = false;
       this.selectedDatos = [];
 
+    }
+
+    if (this.datosEstados[0].nuevoRegistro == true) {
+      this.creaEstado = true;
+    } else {
+      this.creaEstado = false;
     }
   }
 
