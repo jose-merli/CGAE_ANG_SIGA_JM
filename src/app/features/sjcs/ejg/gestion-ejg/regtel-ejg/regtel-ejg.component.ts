@@ -176,7 +176,7 @@ export class RegtelEjgComponent implements OnInit {
         .subscribe(
           data => {
             this.item.identificadords = data.body;
-            //Se introduce el cambio en la capa de persistencia para evitar que pida cerar una coleccion innecesariamente
+            //Se introduce el cambio en la capa de persistencia para evitar que pida crear una coleccion innecesariamente.
             this.persistenceService.setDatos(this.item);
             let mess = this.translateService.instant("messages.collectionCreated");
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
