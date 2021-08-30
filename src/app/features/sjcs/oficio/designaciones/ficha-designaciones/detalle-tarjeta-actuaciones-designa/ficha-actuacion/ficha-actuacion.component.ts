@@ -3,16 +3,18 @@ import { Location, DatePipe } from '@angular/common';
 import { ActuacionDesignaItem } from '../../../../../../../models/sjcs/ActuacionDesignaItem';
 import { SigaServices } from '../../../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../../../commons/translate/translation.service';
-import { ColegiadoItem } from '../../../../../../../models/ColegiadoItem';
 import { DesignaItem } from '../../../../../../../models/sjcs/DesignaItem';
 import { AccionItem } from './tarjeta-his-ficha-act/tarjeta-his-ficha-act.component';
 import { Message } from 'primeng/components/common/api';
 import { ActuacionDesignaObject } from '../../../../../../../models/sjcs/ActuacionDesignaObject';
-import { DocumentoActDesignaObject } from '../../../../../../../models/sjcs/DocumentoActDesignaObject';
-import { DocumentoActDesignaItem } from '../../../../../../../models/sjcs/DocumentoActDesignaItem';
 import { Actuacion } from '../detalle-tarjeta-actuaciones-designa.component';
 import { SigaStorageService } from '../../../../../../../siga-storage.service';
 import { TurnosItem } from '../../../../../../../models/sjcs/TurnosItem';
+import { DocumentoDesignaItem } from '../../../../../../../models/sjcs/DocumentoDesignaItem';
+import { DocumentoDesignaObject } from '../../../../../../../models/sjcs/DocumentoDesignaObject';
+import { CommonsService } from '../../../../../../../_services/commons.service';
+import { procesos_oficio } from '../../../../../../../permisos/procesos_oficio';
+import { Router } from '@angular/router';
 
 export class UsuarioLogado {
   idPersona: string;
@@ -106,12 +108,7 @@ export class FichaActuacionComponent implements OnInit {
       fixed: false,
       detalle: true,
       opened: false,
-      campos: [
-        {
-          "key": "Partida Presupuestaria",
-          "value": ""
-        },
-      ]
+      campos: []
     },
     {
       id: 'sjcsDesigActuaOfiRela',
@@ -155,7 +152,7 @@ export class FichaActuacionComponent implements OnInit {
   msgs: Message[] = [];
   relaciones: any;
   isColegiado;
-  documentos: DocumentoActDesignaItem[] = [];
+  documentos: DocumentoDesignaItem[] = [];
   modoLectura: boolean = false;
   permiteTurno: boolean;
 
@@ -163,45 +160,82 @@ export class FichaActuacionComponent implements OnInit {
     private sigaServices: SigaServices,
     private translateService: TranslateService,
     private datePipe: DatePipe,
-    private sigaStorageService: SigaStorageService) { }
+    private sigaStorageService: SigaStorageService,
+    private commonsService: CommonsService,
+    private router: Router) { }
 
   ngOnInit() {
 
-    this.isColegiado = this.sigaStorageService.isLetrado;
+    this.commonsService.checkAcceso(procesos_oficio.designasActuaciones)
+      .then(respuesta => {
+        let permisoEscritura = respuesta;
 
-    if (this.isColegiado) {
-      this.usuarioLogado = new UsuarioLogado();
-      this.usuarioLogado.idPersona = this.sigaStorageService.idPersona;
-      this.usuarioLogado.numColegiado = this.sigaStorageService.numColegiado;
-    }
+        if (permisoEscritura == undefined) {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
 
-    this.institucionActual = this.sigaStorageService.institucionActual;
+        // if (!permisoEscritura) {
+        //   this.modoLectura = true;
+        // }
 
-    if (sessionStorage.getItem("actuacionDesigna")) {
-      let actuacion = JSON.parse(sessionStorage.getItem("actuacionDesigna"));
-      sessionStorage.removeItem("actuacionDesigna");
-      this.actuacionDesigna = actuacion;
+        this.isColegiado = this.sigaStorageService.isLetrado;
 
-      this.getPermiteTurno();
-    }
+        if (this.isColegiado) {
+          this.usuarioLogado = new UsuarioLogado();
+          this.usuarioLogado.idPersona = this.sigaStorageService.idPersona;
+          this.usuarioLogado.numColegiado = this.sigaStorageService.numColegiado;
+        }
+
+        this.institucionActual = this.sigaStorageService.institucionActual;
+
+        if (sessionStorage.getItem("actuacionDesignaJE")) {
+          let actuacionJE = JSON.parse(sessionStorage.getItem("actuacionDesignaJE"));
+          sessionStorage.removeItem("actuacionDesignaJE");
+          actuacionJE.designaItem.ano = "D" + actuacionJE.designaItem.ano;
+          this.actuacionDesigna = actuacionJE;
+
+          if (this.actuacionDesigna.isNew) {
+            this.getPermiteTurno();
+          } else {
+            this.getActuacionDesigna('0', actuacionJE);
+          }
+
+        }
+
+        if (sessionStorage.getItem("actuacionDesigna")) {
+          let actuacion = JSON.parse(sessionStorage.getItem("actuacionDesigna"));
+          sessionStorage.removeItem("actuacionDesigna");
+          this.actuacionDesigna = actuacion;
+          this.getPermiteTurno();
+        }
+
+      }
+      ).catch(error => console.error(error));
+
   }
 
   cargaInicial() {
 
+    if (this.actuacionDesigna.relaciones != null) {
+      this.relaciones = this.actuacionDesigna.relaciones;
+    }
+
     if (this.actuacionDesigna.isNew) {
+      this.tarjetaFija.campos[0].value = this.actuacionDesigna.designaItem.ano;
       this.isNewActDesig = true;
       this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiDatosGen').opened = true;
     } else {
 
-      if (this.isColegiado && (this.actuacionDesigna.actuacion.validada || !this.permiteTurno)) {
+      if ((this.isColegiado && this.actuacionDesigna.actuacion.validada && (!this.permiteTurno || !this.actuacionDesigna.actuacion.permiteModificacion)) || (this.actuacionDesigna.actuacion.facturado)) {
         this.modoLectura = true;
       }
 
       this.establecerValoresIniciales();
-    }
-
-    if (this.actuacionDesigna.relaciones != null) {
-      this.relaciones = this.actuacionDesigna.relaciones;
     }
   }
 
@@ -224,7 +258,7 @@ export class FichaActuacionComponent implements OnInit {
   isOpenReceive(event) {
     let tarjTemp = this.listaTarjetas.find(tarj => tarj.id == event);
 
-    if (tarjTemp.detalle) {
+    if (!this.isNewActDesig && tarjTemp.detalle) {
       tarjTemp.opened = true;
     }
 
@@ -259,31 +293,6 @@ export class FichaActuacionComponent implements OnInit {
       this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiRela').campos = event.campos;
     }
 
-  }
-
-  getIdPartidaPresupuestaria() {
-
-    this.progressSpinner = true;
-
-    let factAct = new DesignaItem();
-    factAct.idTurno = Number(this.actuacionDesigna.actuacion.idTurno);
-    factAct.ano = Number(this.actuacionDesigna.actuacion.anio);
-    factAct.numero = this.actuacionDesigna.designaItem.numero;
-
-    this.sigaServices.post("designaciones_getDatosFacturacion", factAct).subscribe(
-      n => {
-        let resp = JSON.parse(n.body).combooItems;
-        if (resp.length > 0) {
-          this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiDatFac').campos[0].value = resp[0].label;
-        }
-      },
-      err => {
-        this.progressSpinner = false;
-        console.log(err);
-      }, () => {
-        this.progressSpinner = false;
-      }
-    );
   }
 
   showMsg(severity, summary, detail) {
@@ -416,18 +425,31 @@ export class FichaActuacionComponent implements OnInit {
 
   }
 
-  getActuacionDesigna(event) {
+  getActuacionDesigna(event, actuacionJE?: Actuacion) {
 
     this.progressSpinner = true;
 
-    let params = {
-      anio: this.actuacionDesigna.designaItem.ano.split('/')[0].replace('D', ''),
-      idTurno: this.actuacionDesigna.designaItem.idTurno,
-      numero: this.actuacionDesigna.designaItem.numero,
-      historico: false,
-      idPersonaColegiado: '',
-      numeroAsunto: event
-    };
+    let params = {};
+
+    if (actuacionJE) {
+      params = {
+        anio: actuacionJE.actuacion.anio,
+        idTurno: actuacionJE.actuacion.idTurno,
+        numero: actuacionJE.designaItem.numero,
+        numeroAsunto: actuacionJE.actuacion.numeroAsunto,
+        historico: false,
+        idPersonaColegiado: ''
+      };
+    } else {
+      params = {
+        anio: this.actuacionDesigna.designaItem.ano.split('/')[0].replace('D', ''),
+        idTurno: this.actuacionDesigna.designaItem.idTurno,
+        numero: this.actuacionDesigna.designaItem.numero,
+        numeroAsunto: event,
+        historico: false,
+        idPersonaColegiado: ''
+      };
+    }
 
     this.sigaServices.post("actuaciones_designacion", params).subscribe(
       data => {
@@ -438,21 +460,36 @@ export class FichaActuacionComponent implements OnInit {
           this.showMsg('error', 'Error', this.translateService.instant(object.error.description.toString()));
         } else {
           let resp = object.actuacionesDesignaItems[0];
+          let designa = JSON.parse(JSON.stringify(this.actuacionDesigna.designaItem));
+          this.actuacionDesigna = new Actuacion();
           let relaciones = null;
 
-          if (this.actuacionDesigna.relaciones != null && this.actuacionDesigna.relaciones.length > 0) {
-            relaciones = this.actuacionDesigna.relaciones.slice();
+          if (!actuacionJE) {
+
+            if (this.actuacionDesigna.relaciones != null && this.actuacionDesigna.relaciones.length > 0) {
+              relaciones = this.actuacionDesigna.relaciones.slice();
+            }
+
+            this.actuacionDesigna.relaciones = relaciones;
+          } else {
+            if (actuacionJE.relaciones != undefined && actuacionJE.relaciones != null && actuacionJE.relaciones.length > 0) {
+              this.actuacionDesigna.relaciones = actuacionJE.relaciones.slice();
+            } else {
+              this.actuacionDesigna.relaciones = null;
+            }
           }
 
-          let designa = JSON.parse(JSON.stringify(this.actuacionDesigna.designaItem));
-
-          this.actuacionDesigna = new Actuacion();
           this.actuacionDesigna.designaItem = designa;
           this.actuacionDesigna.actuacion = resp;
           this.actuacionDesigna.isNew = false;
           this.isNewActDesig = false;
-          this.actuacionDesigna.relaciones = relaciones;
-          this.establecerValoresIniciales();
+
+          if (actuacionJE) {
+            this.getPermiteTurno();
+          } else {
+            this.establecerValoresIniciales();
+          }
+
         }
       },
       err => {
@@ -469,7 +506,7 @@ export class FichaActuacionComponent implements OnInit {
 
     // Se rellenan la tarjeta resumen
     this.tarjetaFija.campos[0].value = this.actuacionDesigna.designaItem.ano;
-    this.tarjetaFija.campos[1].value = `${this.actuacionDesigna.designaItem.numColegiado} ${this.actuacionDesigna.designaItem.nombreColegiado}`;
+    this.tarjetaFija.campos[1].value = `${this.actuacionDesigna.actuacion.numColegiado} ${this.actuacionDesigna.actuacion.letrado}`;
     this.tarjetaFija.campos[2].value = this.actuacionDesigna.actuacion.numeroAsunto;
     if (this.actuacionDesigna.actuacion.fechaActuacion != undefined && this.actuacionDesigna.actuacion.fechaActuacion != null && this.actuacionDesigna.actuacion.fechaActuacion != '') {
       this.tarjetaFija.campos[3].value = this.datePipe.transform(new Date(this.actuacionDesigna.actuacion.fechaActuacion.split('/').reverse().join('-')), 'dd/MM/yyyy');
@@ -482,22 +519,43 @@ export class FichaActuacionComponent implements OnInit {
     // Se rellenan los campos de la tarjeta de Justificación plegada
     if (this.actuacionDesigna.actuacion.fechaJustificacion != undefined && this.actuacionDesigna.actuacion.fechaJustificacion != null && this.actuacionDesigna.actuacion.fechaJustificacion != '') {
       this.listaTarjetas[1].campos[0].value = this.datePipe.transform(new Date(this.actuacionDesigna.actuacion.fechaJustificacion.split('/').reverse().join('-')), 'dd/MM/yyyy');
+    } else {
+      this.listaTarjetas[1].campos[0].value = null;
     }
     this.listaTarjetas[1].campos[1].value = this.actuacionDesigna.actuacion.validada ? 'Validada' : 'Pendiente de validar';
 
+    // Se rellenan los campos de la tarjeta Relaciones plegada
     if (this.relaciones == undefined || this.relaciones == null || this.relaciones.length == 0) {
       this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiRela').campos = [{
-        "key": "Nº total",
-        "value": 'No existen relaciones asociadas a la actuación'
+        "key": null,
+        "value": this.translateService.instant('justiciaGratuita.oficio.designas.relaciones.vacio')
       }];
-    } else {
+    } else if (this.relaciones.length > 0) {
       this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiRela').campos = [{
-        "key": "Nº total",
+        "key": this.translateService.instant('justiciaGratuita.oficio.justificacionExpres.numeroEJG'),
+        "value": this.relaciones[0].sjcs
+      },
+      {
+        "key": this.translateService.instant('justiciaGratuita.oficio.designas.relaciones.total'),
         "value": this.relaciones.length
       }];
     }
 
-    this.getIdPartidaPresupuestaria();
+    // Se rellenan los campos de la tarjeta Datos Facturación plegada
+    if (this.actuacionDesigna.actuacion.idPartidaPresupuestaria == undefined || this.actuacionDesigna.actuacion.idPartidaPresupuestaria == null || this.actuacionDesigna.actuacion.idPartidaPresupuestaria == '') {
+      let campos = [{
+        "key": "Partida Presupuestaria",
+        "value": ""
+      }];
+      this.listaTarjetas[2].campos = campos;
+    } else {
+      let campos = [{
+        "key": "Partida Presupuestaria",
+        "value": this.actuacionDesigna.actuacion.partidaPresupuestaria
+      }];
+      this.listaTarjetas[2].campos = campos;
+    }
+
     this.getAccionesActuacion();
     this.getDocumentosPorActDesigna();
   }
@@ -509,14 +567,15 @@ export class FichaActuacionComponent implements OnInit {
     let params = {
       anio: this.actuacionDesigna.actuacion.anio,
       numero: this.actuacionDesigna.actuacion.numero,
+      idTurno: this.actuacionDesigna.actuacion.idTurno,
       idActuacion: this.actuacionDesigna.actuacion.numeroAsunto
     };
 
-    this.sigaServices.post("actuaciones_designacion_getDocumentosPorActDesigna", params).subscribe(
+    this.sigaServices.post("designacion_getDocumentosPorDesigna", params).subscribe(
       data => {
 
-        let resp: DocumentoActDesignaObject = JSON.parse(data.body);
-        this.documentos = resp.listaDocumentoActDesignaItem;
+        let resp: DocumentoDesignaObject = JSON.parse(data.body);
+        this.documentos = resp.listaDocumentoDesignaItem;
 
         if (this.documentos != undefined && this.documentos != null) {
 

@@ -110,7 +110,7 @@ import { ProgramacionCalendariosComponent } from './features/sjcs/guardia/progra
 import { GuardiasBajasTemporalesComponent } from './features/sjcs/guardia/guardias-bajas-temporales/guardias-bajas-temporales.component';
 import { GuardiasSaltosCompensacionesComponent } from './features/sjcs/guardia/guardias-saltos-compensaciones/guardias-saltos-compensaciones.component';
 import { DefinirListasGuardiasComponent } from './features/sjcs/guardia/definir-listas-guardias/definir-listas-guardias.component';
-import { GuardiasCentralitaComponent } from './features/sjcs/guardia/guardias-centralita/guardias-centralita.component';
+import { GuardiasSolicitudesCentralitaComponent } from './features/sjcs/guardia/guardias-solicitudes-centralita/guardias-solicitudes-centralita.component';
 import { VolanteExpresComponent } from './features/sjcs/guardia/volante-expres/volante-expres.component';
 import { SOJComponent } from './features/sjcs/soj/soj.component';
 import { EJGComponent } from './features/sjcs/ejg/ejg.component';
@@ -145,6 +145,7 @@ import { ComunicaResolucionesComponent } from './features/sjcs/comunicaciones/co
 import { ComunicaDesignacionesComponent } from './features/sjcs/comunicaciones/comunica-designaciones/comunica-designaciones.component';
 import { DesignacionesComponent } from './features/sjcs/oficio/designaciones/designaciones.component';
 import { CargasMasivasOficioComponent } from './features/sjcs/oficio/cargas-masivas-oficio/cargas-masivas-oficio.component';
+import { FichaPreDesignacionComponent } from './features/sjcs/ejg/gestion-ejg/relaciones/ficha-pre-designacion/ficha-pre-designacion.component';
 
 //Consultas
 import { RecuperarConsultasComponent } from './features/consultas/recuperar-consultas/recuperar-consultas.component';
@@ -235,6 +236,8 @@ import { TurnosComponent } from "./features/sjcs/oficio/turnos/busqueda-turnos.c
 import { BuscadorColegiadosComponent } from "./commons/buscador-colegiados/buscador-colegiados.component";
 import { BuscadorGuardiaIncompatibilidadesComponent } from "./features/sjcs/guardia/guardias-incompatibilidades/buscador-guardia-incompatibilidades/buscador-guardia-incompatibilidades.component";
 import { AsistenciaExpresComponent } from "./features/sjcs/guardia/guardias-asistencias/asistencia-expres/asistencia-expres.component";
+import { FichaAsistenciaComponent } from "./features/sjcs/guardia/guardias-asistencias/ficha-asistencia/ficha-asistencia.component";
+import { BusquedaAsuntosComponent } from "./commons/busqueda-asuntos/busqueda-asuntos.component";
 
 const appRoutes: Routes = [
 	{ path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
@@ -819,8 +822,13 @@ const appRoutes: Routes = [
 		canActivate: [AuthGuard]
 	},
 	{
-		path: 'guardiasAceptadasCentralita',
-		component: GuardiasCentralitaComponent,
+		path: 'guardiasSolicitudesCentralita',
+		component: GuardiasSolicitudesCentralitaComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'fichaAsistencia',
+		component: FichaAsistenciaComponent,
 		canActivate: [AuthGuard]
 	},
 	{
@@ -837,6 +845,11 @@ const appRoutes: Routes = [
 		path: 'ejg',
 		component: EJGComponent,
 		canActivate: [AuthGuard]
+	},
+	{
+		path: 'ficha-pre-designacion',
+		component: FichaPreDesignacionComponent,
+		canActivate: [ AuthGuard ]
 	},
 	{
 		path: 'gestionActas',
@@ -1303,6 +1316,10 @@ const appRoutes: Routes = [
 	{
 		path: 'buscadorColegiados',
 		component: BuscadorColegiadosComponent
+	}, 
+	{
+		path: 'busquedaAsuntos',
+		component: BusquedaAsuntosComponent 
 	},
 
 	{ path: ' ', redirectTo: 'home' }

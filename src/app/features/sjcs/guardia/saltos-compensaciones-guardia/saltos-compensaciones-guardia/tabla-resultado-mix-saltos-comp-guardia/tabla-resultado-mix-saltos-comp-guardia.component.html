@@ -50,10 +50,25 @@
                 </p-dropdown>
               </span>
 
+              <span class="w100 cell-value selectWrap" *ngIf="cell.type == 'select-grupo'">
+                <p-dropdown autoWidth="false" class="center" [placeholder]="textFilter" [(ngModel)]="cell.value"
+                  [options]="cell.combo" showClear="true" styleClass="widthAll" (onChange)="changeSelectGroup(row, cell)"
+                  [disabled]="cell.disabled">
+                </p-dropdown>
+              </span>
+
               <span class="w100 cell-value" *ngIf="cell.type == 'multiselect'">
                 <p-multiSelect #{i} autoWidth="false" [(ngModel)]='cell.value' [selectedItemsLabel]="textSelected"
                   [defaultLabel]="textFilter" [options]="cell.combo" maxSelectedLabels="10" styleClass="widthAll"
-                  [filter]="true" filterBy="label,labelSinTilde" (onChange)="changeMultiSelect(cell)" id="notSelectAll"
+                  [filter]="true" filterBy="label,labelSinTilde" (onChange)="changeMultiSelect(row, cell)" id="notSelectAll"
+                  [disabled]="cell.disabled">
+                </p-multiSelect>
+              </span>
+
+              <span class="w100 cell-value" *ngIf="cell.type == 'multiselect-grupo'">
+                <p-multiSelect #{i} autoWidth="false" [(ngModel)]='cell.value' [selectedItemsLabel]="textSelected"
+                  [defaultLabel]="textFilter" [options]="cell.combo" maxSelectedLabels="10" styleClass="widthAll"
+                  [filter]="true" filterBy="label,labelSinTilde" (onChange)="changeMultiSelectGrupo(row, cell)" id="notSelectAll"
                   [disabled]="cell.disabled">
                 </p-multiSelect>
               </span>
@@ -89,7 +104,10 @@
         [disabled]="historico" (click)="anular()"></button>
 
       <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"
-        [disabled]="!anySelected" (click)="nuevo()"></button>
+        [disabled]="!anySelected" (click)="nuevo(false)"></button>
+
+      <button pButton type="button" icon="fa fa-plus" iconPos="left" label="Grupo"
+        [disabled]="!anySelected" (click)="nuevo(true)"></button>
 
       <button pButton type="button" icon="fa fa-trash-alt" iconPos="left"
         label="{{ 'general.boton.eliminar' | translate}}" [disabled]="!anySelected" (click)="delete()"></button>

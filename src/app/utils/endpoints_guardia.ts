@@ -11,7 +11,8 @@ export let endpoints_guardia: any = {
     busquedaGuardia_materia: "combo/materias",
     busquedaGuardia_tipoTurno: "combo/tipoTurno",
     busquedaGuardia_tiposGuardia: "combo/tipoGuardia",
-    busquedaGuardia_guardia: "combo/guardias",
+    busquedaGuardia_grupo: "combo/guardiasGrupo",
+    busquedaGuardia_noGrupo: "combo/guardiasNoGrupo",
     busquedaGuardia_listasGuardia: "combo/listasguardias",
     busquedaGuardia_conjuntoGuardia: "combo/conjuntoguardias",
     busquedaGuardia_estado: "combo/estado",
@@ -46,6 +47,8 @@ export let endpoints_guardia: any = {
     saltosCompensacionesGuardia_guardar: "guardia/saltosCompensaciones/guardarSaltosCompensaciones",
     saltosCompensacionesGuardia_anular: "guardia/saltosCompensaciones/anularSaltosCompensaciones",
     saltosCompensacionesGuardia_borrar: "guardia/saltosCompensaciones/borrarSaltosCompensaciones",
+    saltosCompensacionesGuardia_comboColegiados: "guardia/letradosGuardia",
+    saltosCompensacionesGuardia_esGuardia: "guardia/saltosCompensaciones/isGrupo",
 
     //Incompatibilidades
     guardiasIncompatibilidades_buscarIncompatibilidades : "guardia/buscarIncompatibilidades",
@@ -75,5 +78,30 @@ export let endpoints_guardia: any = {
     busquedaGuardias_getLetradosGuardiaDia: "asistencia/getColegiadosGuardiaDia",
     busquedaGuardias_buscarAsistencias: "asistencia/buscarAsistencias",
     busquedaGuardias_getComisarias: "asistencia/getComisarias",
-    busquedaGuardias_getJuzgados: "asistencia/getJuzgados"
+    busquedaGuardias_getJuzgados: "asistencia/getJuzgados",
+    busquedaGuardias_guardarAsistencias: "asistencia/guardarAsistenciasExpres",
+    busquedaGuardias_buscarAsistenciasAsociadas: "asistencia/buscarAsistenciasByIdSolicitud",
+    busquedaGuardias_getDefaultTipoAsistenciaColegio: "asistencia/getDefaultTipoAsistenciaColegio",
+    busquedaGuardias_guardarAsistenciasDatosGenerales: "asistencia/guardarAsistencia",
+    busquedaGuardias_buscarTarjetaAsistencia: "asistencia/buscarTarjetaAsistencia",
+    busquedaGuardias_updateEstadoAsistencia: "asistencia/updateEstadoAsistencia",
+    busquedaGuardias_asociarAsistido: "asistencia/asociarAsistido",
+    busquedaGuardias_desasociarAsistido: "asistencia/desasociarAsistido",
+    busquedaGuardias_searchListaContrarios: "asistencia/searchListaContrarios",
+    busquedaGuardias_asociarContrario: "asistencia/asociarContrario",
+    busquedaGuardias_desasociarContrario: "asistencia/desasociarContrario",
+    busquedaGuardias_searchTarjetaDefensaJuridica: "asistencia/searchTarjetaDefensaJuridica",
+    busquedaGuardias_guardarTarjetaDefensaJuridica: "asistencia/guardarTarjetaDefensaJuridica",
+    busquedaGuardias_searchTarjetaObservaciones: "asistencia/searchTarjetaObservaciones",
+    busquedaGuardias_guardarTarjetaObservaciones: "asistencia/guardarTarjetaObservaciones",
+    busquedaGuardias_searchRelaciones: "asistencia/searchRelaciones",
+    busquedaGuardias_asociarDesigna: "asistencia/asociarDesigna",
+    busquedaGuardias_eliminarRelacion: "asistencia/eliminarRelacion",
+
+    //Preasistencias
+    busquedaPreasistencias_buscarPreasistencias: "preasistencia/buscarPreAsistencias",
+    busquedaPreasistencias_denegarPreasistencias: "preasistencia/denegarPreAsistencias",
+    busquedaPreasistencias_activarPreasistenciasDenegadas: "preasistencia/activarPreAsistenciasDenegadas",
+    //Inscripciones
+    guardiasInscripciones_buscarInscripciones : "guardia/busquedainscripciones",
 }

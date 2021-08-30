@@ -17,7 +17,7 @@ import { SigaStorageService } from '../../../../../siga-storage.service';
   styleUrls: ['./filtros-inscripciones.component.scss']
 })
 export class FiltrosInscripciones implements OnInit {
-  
+
   progressSpinner: boolean = false;
   showDatosGenerales: boolean = true;
   buscar: boolean = false;
@@ -25,7 +25,7 @@ export class FiltrosInscripciones implements OnInit {
   isDisabledMateria: boolean = true;
   isDisabledSubZona: boolean = true;
   turnos: any[] = [];
-  disabledFechaHasta:boolean = true;
+  disabledFechaHasta: boolean = true;
   partidoJudicial: string;
   resultadosPoblaciones: any;
   disabledestado: boolean = false;
@@ -48,12 +48,12 @@ export class FiltrosInscripciones implements OnInit {
     { label: "Baja", value: "3" },
     { label: "Denegada", value: "4" }
   ];
-  usuarioBusquedaExpress = {​​​​​​​​​
+  usuarioBusquedaExpress = {
     numColegiado: '',
     nombreAp: ''
-  }​​​​​​​​​;
+  };
   usuarioLogado;
-  isLetrado:boolean = false;
+  isLetrado: boolean = false;
 
   textSelected: String = 'general.boton.seleccionar';
   @Input() permisos;
@@ -69,119 +69,138 @@ export class FiltrosInscripciones implements OnInit {
     private persistenceService: PersistenceService,
     private localStorageService: SigaStorageService) { }
 
-  ngOnInit() {  
-    
+  ngOnInit() {
+
     this.isLetrado = this.localStorageService.isLetrado;
-    
+
     if (this.persistenceService.getHistorico() != undefined) {
       this.filtros.historico = this.persistenceService.getHistorico();
       // this.isBuscar();
     }
-    this.commonsService.checkAcceso(procesos_oficio.colaDeGuardia)
-    .then(respuesta => {
-      this.permisosTarjeta = respuesta;
-      this.persistenceService.setPermisos(this.permisosTarjeta);
-      if (this.permisosTarjeta == undefined) {
-        sessionStorage.setItem("codError", "403");
-        sessionStorage.setItem(
-          "descError",
-          this.translateService.instant("generico.error.permiso.denegado")
-        );
-        this.router.navigate(["/errorAcceso"]);
-      }else if(this.persistenceService.getPermisos() != true){
-        this.permisos = true;
-      }
-    }
-    ).catch(error => console.error(error));
+    this.commonsService.checkAcceso(procesos_oficio.inscripciones)
+      .then(respuesta => {
+        this.permisosTarjeta = respuesta;
+        this.persistenceService.setPermisos(this.permisosTarjeta);
+        if (this.permisosTarjeta == undefined) {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
 
-    if (this.persistenceService.getFiltros() != undefined) {
-      this.filtros = this.persistenceService.getFiltros();
+        }/*else if(this.persistenceService.getPermisos() != true){
+        this.permisos = true;
+      }*/
+        this.permisos = this.permisosTarjeta;
+      }
+      ).catch(error => console.error(error));
+
+    if (
+      sessionStorage.getItem("filtrosInscripciones") != null && sessionStorage.getItem("volver") == "true"
+    ) {
+      this.filtros = JSON.parse(
+        sessionStorage.getItem("filtrosInscripciones")
+      );
+      this.usuarioBusquedaExpress.numColegiado = sessionStorage.getItem("numColegiado");
+
+      sessionStorage.removeItem("volver");
+      sessionStorage.removeItem("numColegiado");
+
+      if (this.filtros.fechadesde != undefined && this.filtros.fechadesde != null) {
+        this.filtros.fechadesde = new Date(this.filtros.fechadesde);
+      }
+      if (this.filtros.fechahasta != undefined && this.filtros.fechahasta != null) {
+        this.filtros.fechahasta = new Date(this.filtros.fechahasta);
+        this.disabledFechaHasta = false;
+      }
+      if (this.filtros.afechade != undefined && this.filtros.afechade != null) {
+        this.filtros.afechade = new Date(this.filtros.afechade);
+      }
+      if (sessionStorage.getItem("colegiadoRelleno")) {
+        const { numColegiado, nombre } = JSON.parse(sessionStorage.getItem("datosColegiado"));
+        this.usuarioBusquedaExpress.numColegiado = numColegiado;
+        this.usuarioBusquedaExpress.nombreAp = nombre.replace(/,/g, "");
+
+        this.isBuscar();
+
+        sessionStorage.removeItem("colegiadoRelleno");
+        sessionStorage.removeItem("datosColegiado");
+      }
       this.isBuscar();
     }
-    
-    if(this.isLetrado){
+    if (this.isLetrado) {
       this.getDataLoggedUser();
     }
 
-    if(sessionStorage.getItem("colegiadoRelleno")){
-      const { numColegiado, nombre } = JSON.parse(sessionStorage.getItem("datosColegiado"));
-      this.usuarioBusquedaExpress.numColegiado = numColegiado;
-      this.usuarioBusquedaExpress.nombreAp = nombre.replace(/,/g,"");
 
-      this.isBuscar();
-
-      sessionStorage.removeItem("colegiadoRelleno");
-      sessionStorage.removeItem("datosColegiado");
-    }
 
     this.sigaServices.get("inscripciones_comboTurnos").subscribe(
       n => {
         this.turnos = n.combooItems;
         let turnoInscripcion = JSON.parse(sessionStorage.getItem("idTurno"));
-				if(turnoInscripcion != null && turnoInscripcion != undefined){
-          this.turnos.forEach(turnoCombo =>{ 
-            if(turnoCombo.value == turnoInscripcion){
-              this.filtros.idturno = turnoCombo;
-              
+        if (turnoInscripcion != null && turnoInscripcion != undefined) {
+          this.turnos.forEach(turnoCombo => {
+            if (turnoCombo.value == turnoInscripcion.toString()) {
+              this.filtros.idturno = turnoCombo.value;
             }
           });
-				}
+        }
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
     para poder filtrar el dato con o sin estos caracteres*/
       },
       err => {
         console.log(err);
-      },()=>{
+      }, () => {
         if (sessionStorage.getItem("idTurno") != undefined) {
-          this.filtros.idturno = JSON.parse(
+          this.filtros.idturno = [JSON.parse(
             sessionStorage.getItem("idTurno")
-          );
+          ).toString()];
           this.isBuscar();
-          sessionStorage.setItem("idTurno",undefined);
+          sessionStorage.setItem("idTurno", undefined);
         }
       }
     );
-    this.clearFilters();
-    
-    if(sessionStorage.getItem("buscadorColegiados")){​​
+
+    if (sessionStorage.getItem("buscadorColegiados")) {
 
       let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
 
-      this.usuarioBusquedaExpress.nombreAp=busquedaColegiado.nombre+" "+busquedaColegiado.apellidos;
+      this.usuarioBusquedaExpress.nombreAp = busquedaColegiado.nombre + " " + busquedaColegiado.apellidos;
 
-      this.usuarioBusquedaExpress.numColegiado=busquedaColegiado.nColegiado;
+      this.usuarioBusquedaExpress.numColegiado = busquedaColegiado.nColegiado;
 
       sessionStorage.removeItem("buscadorColegiados");
-    }​
+    }
   }
 
-    getDataLoggedUser() {
-      this.progressSpinner = true;
+  getDataLoggedUser() {
+    this.progressSpinner = true;
 
-      this.sigaServices.get("usuario_logeado").subscribe(n => {
-  
-        const usuario = n.usuarioLogeadoItem;
-        const colegiadoItem = new ColegiadoItem();
-        colegiadoItem.nif = usuario[0].dni;
-  
-        this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(
-          usr => {
-            const { numColegiado, nombre } = JSON.parse(usr.body).colegiadoItem[0];
-            this.usuarioBusquedaExpress.numColegiado = numColegiado;
-            this.usuarioBusquedaExpress.nombreAp = nombre.replace(/,/g,"");
+    this.sigaServices.get("usuario_logeado").subscribe(n => {
 
-            this.usuarioLogado = JSON.parse(usr.body).colegiadoItem[0];
-            this.progressSpinner = false;
-           }, err =>{
-            this.progressSpinner = false;
-          },
-          ()=>{
-            this.progressSpinner = false;
-            setTimeout(()=>{
-              this.isBuscar();
-            }, 5);
-          });
+      const usuario = n.usuarioLogeadoItem;
+      const colegiadoItem = new ColegiadoItem();
+      colegiadoItem.nif = usuario[0].dni;
+
+      this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(
+        usr => {
+          const { numColegiado, nombre } = JSON.parse(usr.body).colegiadoItem[0];
+          this.usuarioBusquedaExpress.numColegiado = numColegiado;
+          this.usuarioBusquedaExpress.nombreAp = nombre.replace(/,/g, "");
+
+          this.usuarioLogado = JSON.parse(usr.body).colegiadoItem[0];
+          this.progressSpinner = false;
+        }, err => {
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+          setTimeout(() => {
+            this.isBuscar();
+          }, 5);
         });
+    });
   }
 
 
@@ -189,56 +208,56 @@ export class FiltrosInscripciones implements OnInit {
     let isLetrado = this.localStorageService.isLetrado;
     this.progressSpinner = true;
     this.persistenceService.setFiltros(this.filtros);
-    if(isLetrado){
+    if (isLetrado) {
       let colegiadoConectado = new ColegiadoItem();
       this.sigaServices.get("usuario_logeado").subscribe(n => {
         colegiadoConectado.nif = n.usuarioLogeadoItem[0].dni;
         this.sigaServices
-        .post("busquedaColegiados_searchColegiado", colegiadoConectado)
-        .subscribe(
-          data => {
-          colegiadoConectado = JSON.parse(data.body).colegiadoItem[0];
-          this.persistenceService.setDatos(colegiadoConectado);
-          sessionStorage.setItem("origin","newInscrip");
-          this.router.navigate(["/gestionInscripciones"]);
-        })
+          .post("busquedaColegiados_searchColegiado", colegiadoConectado)
+          .subscribe(
+            data => {
+              colegiadoConectado = JSON.parse(data.body).colegiadoItem[0];
+              this.persistenceService.setDatos(colegiadoConectado);
+              sessionStorage.setItem("origin", "newInscrip");
+              this.router.navigate(["/gestionInscripciones"]);
+            })
       });
-    }   
-    else{ 
-      sessionStorage.setItem("origin","newInscrip");
-      this.router.navigate(["/buscadorColegiados"]); 
     }
-    
-    
+    else {
+      sessionStorage.setItem("origin", "newInscrip");
+      this.router.navigate(["/buscadorColegiados"]);
+    }
+
+
   }
 
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
   checkFilters() {
-    if((this.filtros.estado == null ||
-        this.filtros.estado == undefined ||
-        this.filtros.estado.length == 0) &&
+    if ((this.filtros.estado == null ||
+      this.filtros.estado == undefined ||
+      this.filtros.estado.length == 0) &&
       (this.filtros.idturno == null ||
         this.filtros.idturno == undefined ||
         this.filtros.idturno.length == 0) &&
       (this.filtros.fechadesde == null ||
-        this.filtros.fechadesde == undefined ) &&
+        this.filtros.fechadesde == undefined) &&
       (this.filtros.afechade == null ||
-        this.filtros.afechade == undefined ) &&
+        this.filtros.afechade == undefined) &&
       (this.filtros.abreviatura == null ||
-        this.filtros.abreviatura == undefined ) &&
+        this.filtros.abreviatura == undefined) &&
       ((<HTMLInputElement>document.querySelector("input[formControlName='nombreAp']")) != null) &&
       ((<HTMLInputElement>document.querySelector("input[formControlName='nombreAp']")).value == null ||
         (<HTMLInputElement>document.querySelector("input[formControlName='nombreAp']")).value == undefined ||
         (<HTMLInputElement>document.querySelector("input[formControlName='nombreAp']")).value == "") &&
       ((<HTMLInputElement>document.querySelector("input[formControlName='numColegiado']")).value == null ||
         (<HTMLInputElement>document.querySelector("input[formControlName='numColegiado']")).value == undefined ||
-        (<HTMLInputElement>document.querySelector("input[formControlName='numColegiado']")).value == "")){
-    this.showSearchIncorrect();
-    return false;
+        (<HTMLInputElement>document.querySelector("input[formControlName='numColegiado']")).value == "")) {
+      this.showSearchIncorrect();
+      return false;
     }
-    else{
+    else {
       // quita espacios vacios antes de buscar
       if (this.filtros.abreviatura != undefined && this.filtros.abreviatura != null) {
         this.filtros.abreviatura = this.filtros.abreviatura.trim();
@@ -261,14 +280,18 @@ export class FiltrosInscripciones implements OnInit {
 
   isBuscar() {
     if (this.checkFilters()) {
-      this.buscar=true;
+      this.buscar = true;
       this.persistenceService.setFiltros(this.filtros);
       this.persistenceService.setFiltrosAux(this.filtros);
-      this.filtroAux = this.persistenceService.getFiltrosAux()
+      sessionStorage.setItem("numColegiado", this.usuarioBusquedaExpress.numColegiado);
+      this.filtroAux = this.persistenceService.getFiltrosAux();
+      sessionStorage.setItem(
+        "filtrosInscripciones",
+        JSON.stringify(this.filtros));
       this.busqueda.emit(false);
       this.commonsService.scrollTablaFoco("tablaFoco");
     }
-    
+
   }
 
   transformaFecha(fecha) {
@@ -290,25 +313,25 @@ export class FiltrosInscripciones implements OnInit {
   }
 
   fillFechaDesdeCalendar(event) {
-    if(event != null){
+    if (event != null) {
       this.filtros.fechadesde = this.transformaFecha(event);
       this.disabledFechaHasta = false;
-    }else{
+    } else {
       this.filtros.fechadesde = undefined;
       this.filtros.fechahasta = undefined;
       this.disabledFechaHasta = true;
     }
-  
+
   }
 
   fillAfechaDeCalendar(event) {
-    if(event != null){
+    if (event != null) {
       this.filtros.afechade = this.transformaFecha(event);
       // Ignora el error provocado por la estructura de datos de InscripcionesItem
       // @ts-ignore
       // this.filtros.estado = ["1","2"];
       // this.disabledestado = true;
-    }else{
+    } else {
       this.filtros.afechade = undefined;
       this.disabledestado = false;
     }
@@ -332,19 +355,19 @@ export class FiltrosInscripciones implements OnInit {
   clearFilters() {
     this.filtros = new InscripcionesItems();
     this.filtros.estado = undefined;
-    this.filtros.idturno = undefined; 
+    this.filtros.idturno = undefined;
     this.filtros.fechadesde = undefined;
     this.filtros.fechahasta = undefined;
     this.filtros.afechade = undefined;
     this.disabledestado = false;
     this.disabledFechaHasta = true;
-    if(sessionStorage.getItem("isLetrado")=="false"){
-      this.usuarioBusquedaExpress = {​​​​​​​​​
+    if (sessionStorage.getItem("isLetrado") == "false") {
+      this.usuarioBusquedaExpress = {
         numColegiado: "",
         nombreAp: ""
-      }​​​​​​​​​;
+      };
     }
-   
+
   }
 
   //búsqueda con enter

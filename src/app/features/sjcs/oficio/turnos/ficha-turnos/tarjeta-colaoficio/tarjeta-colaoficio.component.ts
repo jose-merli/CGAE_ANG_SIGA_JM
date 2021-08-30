@@ -227,10 +227,7 @@ export class TarjetaColaOficio implements OnInit {
     this.turnosItem.fechaActual = this.transformaFecha(event);
     this.getColaOficio();
   }
-  setItalic(dato) {
-    if (dato.fechabajapersona == null) return false;
-    else return true;
-  }
+  
   searchHistorical() {
     this.historico = !this.historico;
     this.persistenceService.setHistorico(this.historico);
@@ -310,9 +307,9 @@ export class TarjetaColaOficio implements OnInit {
         this.progressSpinner = false;
         if (this.datos != undefined && this.datos.length > 0) {
           this.primerLetrado = this.datos[0].numerocolegiado;
-          this.nombreApellidosPrimerLetrado = this.datos[0].alfabeticoapellidos + "," + this.datos[0].nombrepersona;
+          this.nombreApellidosPrimerLetrado = this.datos[0].alfabeticoapellidos + ", " + this.datos[0].nombrepersona;
           this.ultimoLetrado = this.datos[this.datos.length - 1].numerocolegiado;
-          this.apeyNombreUltimo = this.datos[this.datos.length - 1].alfabeticoapellidos + "," + this.datos[this.datos.length - 1].nombrepersona;
+          this.apeyNombreUltimo = this.datos[this.datos.length - 1].alfabeticoapellidos + ", " + this.datos[this.datos.length - 1].nombrepersona;
           this.nInscritos = this.datos.length;
         }
       }
@@ -629,9 +626,9 @@ export class TarjetaColaOficio implements OnInit {
       { field: "orden", header: "administracion.informes.literal.orden" },
       { field: "numerocolegiado", header: "censo.busquedaClientesAvanzada.literal.nColegiado" },
       { field: "nombrepersona", header: "administracion.parametrosGenerales.literal.nombre.apellidos" },
-      { field: "fechabaja", header: "justiciaGratuita.oficio.turnos.fechaBaja" },
       // { field: "alfabeticoapellidos", header: "administracion.parametrosGenerales.literal.nombre" },
       { field: "fechavalidacion", header: "justiciaGratuita.oficio.turnos.fechavalidacion" },
+      { field: "fechabajapersona", header: "justiciaGratuita.oficio.turnos.fechaBaja" },
       { field: "saltos", header: "justiciaGratuita.oficio.turnos.saltos" },
       { field: "compensaciones", header: "justiciaGratuita.oficio.turnos.compensaciones" }
     ];

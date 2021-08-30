@@ -23,13 +23,14 @@
 }
 .toBottomLeft{
     position: absolute !important;
-    bottom: 50px !important;
+    bottom: 162px !important;
     left: 25px !important;
 }
 .toBottomRight{
     position: absolute;
-    bottom: 50px;
+    bottom: 159px;
     right: 25px;
+    z-index: 200000;
 }
 .w90{
     width: 90%;

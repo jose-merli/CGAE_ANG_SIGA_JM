@@ -16,6 +16,7 @@ import { procesos_justiciables } from '../../../../../permisos/procesos_justicia
 import { Checkbox, ConfirmDialog } from '../../../../../../../node_modules/primeng/primeng';
 import { Dialog } from 'primeng/primeng';
 import { ColegiadoItem } from "../../../../../models/ColegiadoItem";
+import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 
 @Component({
 	selector: 'app-datos-abogado-contrario',
@@ -32,11 +33,11 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 	nifRepresentante;
 
 	@Input() modoEdicion;
-	@Input() showTarjetaPermiso;
 	@Input() body: JusticiableItem;
 	@Input() checkedViewRepresentante;
 	@Input() navigateToJusticiable: boolean = false;
 	@Input() fromContrario;
+	@Input() fromContrarioEJG;
 
 	searchRepresentanteGeneral: boolean = false;
 	showEnlaceRepresentante: boolean = false;
@@ -56,6 +57,7 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 
 	@Output() createJusticiableByUpdateRepresentante = new EventEmitter<JusticiableItem>();
 	@Output() contrario = new EventEmitter<boolean>();
+	@Output() contrarioEJG = new EventEmitter<boolean>();
 
 	confirmationSave: boolean = false;
 	confirmationUpdate: boolean = false;
@@ -73,23 +75,7 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 
 		this.progressSpinner = true;
 
-		/* this.commonsService
-			.checkAcceso(procesos_justiciables.tarjetaAbogadoContrario)
-			.then((respuesta) => {
-				this.permisoEscritura = respuesta;
-	
-				if (this.permisoEscritura == undefined) {
-					this.showTarjetaPermiso = false;
-					this.progressSpinner = false;
-				} else {
-					this.showTarjetaPermiso = true;
-					this.persistenceService.clearFiltrosAux();
-				}
-			})
-			.catch((error) => console.error(error)); */
-
-		if (this.fromContrario) {
-			this.showTarjetaPermiso = true;
+		if (this.fromContrario || this.fromContrarioEJG) {
 			this.permisoEscritura = true;
 		}
 		/* Proviene de search() */
@@ -104,11 +90,12 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 			this.generalBody.idPersona = data.idPersona;
 
 			this.permisoEscritura = true;
-			this.contrario.emit(true);
+			if(sessionStorage.getItem("EJGItem")) this.contrarioEJG.emit(true);
+			else this.contrario.emit(true);
 		}
 		/* Procede de ficha designacion */
-		if (sessionStorage.getItem("idabogadoFicha")) {
-			let idabogado = JSON.parse(sessionStorage.getItem("idabogadoFicha"));
+		else if (sessionStorage.getItem("idabogadoFicha")) {
+			let idabogado = sessionStorage.getItem("idabogadoFicha");
 			sessionStorage.removeItem("idabogadoFicha");
 			this.sigaServices.post("designaciones_searchAbogadoByIdPersona", idabogado).subscribe(
 				n => {
@@ -120,12 +107,12 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 					this.generalBody.nif = data.nif;
 					this.generalBody.idPersona = data.idPersona;
 
+					if(sessionStorage.getItem("EJGItem")) this.contrarioEJG.emit(true);
 					this.contrario.emit(true);
 					this.permisoEscritura = true; 
 				},
 				err => {
 					this.progressSpinner = false;
-					console.log(err);
 				});
 		}
 
@@ -146,27 +133,50 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 	}
 
 	Disassociate() {
-		let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
-		let request = [designa.idInstitucion, sessionStorage.getItem("personaDesigna"), designa.ano, designa.idTurno, designa.numero, "", ""]
-		this.sigaServices.post('designaciones_updateAbogadoContrario', request).subscribe(
-			(n) => {
-				this.progressSpinner = false;
-				this.showMessage(
-					'success',
-					this.translateService.instant('general.message.correct'),
-					this.translateService.instant('general.message.accion.realizada')
-				);
-				this.persistenceService.setBody(this.generalBody);
-			},
-			(err) => {
-				this.progressSpinner = false;
-				this.translateService.instant('general.message.error.realiza.accion');
-			}
-		);
-		this.generalBody = null;
+		if(!sessionStorage.getItem("EJGItem")){
+			let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
+			let request = [designa.idInstitucion, sessionStorage.getItem("personaDesigna"), designa.ano, designa.idTurno, designa.numero, "", ""]
+			this.sigaServices.post('designaciones_updateAbogadoContrario', request).subscribe(
+				(n) => {
+					this.progressSpinner = false;
+					this.showMessage(
+						'success',
+						this.translateService.instant('general.message.correct'),
+						this.translateService.instant('general.message.accion.realizada')
+					);
+					this.persistenceService.setBody(this.generalBody);
+				},
+				(err) => {
+					this.progressSpinner = false;
+					this.translateService.instant('general.message.error.realiza.accion');
+				}
+			);
+			this.generalBody = null;
+		}
+		else{
+			let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
+			let request = [sessionStorage.getItem("personaDesigna"), ejg.annio, ejg.numero, ejg.tipoEJG, "", ""]
+			this.sigaServices.post('gestionejg_updateAbogadoContrarioEJG', request).subscribe(
+				(n) => {
+					this.progressSpinner = false;
+					this.showMessage(
+						'success',
+						this.translateService.instant('general.message.correct'),
+						this.translateService.instant('general.message.accion.realizada')
+					);
+					this.persistenceService.setBody(this.generalBody);
+				},
+				(err) => {
+					this.progressSpinner = false;
+					this.translateService.instant('general.message.error.realiza.accion');
+				}
+			);
+			this.generalBody = null;
+		}
 	}
 
 	Associate() {
+		if(!sessionStorage.getItem("EJGItem")){
 		let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
 		let request = [designa.idInstitucion, sessionStorage.getItem("personaDesigna"), designa.ano, designa.idTurno, designa.numero, this.generalBody.idPersona, this.generalBody.nombre]
 		this.sigaServices.post('designaciones_updateAbogadoContrario', request).subscribe(
@@ -184,6 +194,27 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 				this.translateService.instant('general.message.error.realiza.accion');
 			}
 		);
+		}
+		else{
+			let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
+			let request = [sessionStorage.getItem("personaDesigna"), ejg.annio, ejg.numero, ejg.tipoEJG, this.generalBody.idPersona, this.generalBody.nombre]
+			this.sigaServices.post('gestionejg_updateAbogadoContrarioEJG', request).subscribe(
+				(n) => {
+					this.progressSpinner = false;
+					this.showMessage(
+						'success',
+						this.translateService.instant('general.message.correct'),
+						this.translateService.instant('general.message.accion.realizada')
+					);
+					this.persistenceService.setBody(this.generalBody);
+				},
+				(err) => {
+					this.progressSpinner = false;
+					this.translateService.instant('general.message.error.realiza.accion');
+				}
+			);
+			this.generalBody = null;
+		}
 	}
 
 	navigateToAbogado(){

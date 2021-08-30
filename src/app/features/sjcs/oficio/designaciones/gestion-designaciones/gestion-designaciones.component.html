@@ -28,7 +28,7 @@
               <span>{{dato[col.field]}}</span>
             </div>
             <div *ngIf="col.field =='ano'">            
-              <a [routerLink]="" class="enlace" (click)="openTab(dato)"><span>{{dato[col.field]}}</span></a>
+              <a class="enlace" (click)="openTab(dato)"><span>{{dato[col.field]}}</span></a>
             </div>
           </td>
         </tr>
@@ -67,8 +67,8 @@
     <div class="text-right main-button">
       <button pButton [disabled]="disableDelete"
         (click)="delete()" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
-        <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0)"
-          (click)="comunicar()" type="button" icon="fa fa-comment" iconPos="left" label="{{ 'general.boton.comunicar' | translate}}"></button>
+        <button *ngIf="esColegio && selectedDatos && selectedDatos.length > 0" (click)="navigateComunicar(selectedDatos)"
+          pButton type="button" icon="fa fa-comment" iconPos="left" label="{{'general.boton.comunicar' | translate }}"></button>
     </div>
   </div>
 </div>

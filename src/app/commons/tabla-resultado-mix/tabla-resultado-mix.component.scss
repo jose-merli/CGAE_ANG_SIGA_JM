@@ -10,9 +10,10 @@ overflow-wrap: break-word;}
   margin: 0;
 }
 
-::ng-deep .mat-sort-header-arrow {
+/*::ng-deep .mat-sort-header-arrow {
   opacity: 1 !important;
-}
+}*/
+
 .column-title {
   display: none;
 }
@@ -448,8 +449,31 @@ padding: 0;
 .mt10{
   margin-top: 10px;
 }
+
 .enlace {
   color: #0000EE !important;
   text-decoration: underline;
   cursor: pointer !important;
+}
+.wrapText {
+  max-width: 110px;
+  overflow-wrap: break-word;
+}
+.flex2{
+  display: flex;
+}
+.w-50{
+  width: 50%;
+}
+.mr-5{
+  margin-right: 5px;
+}
+.align {
+  align-items: center;
+}
+.mb-50{
+  margin-bottom: 50px;
+}
+.auto{
+  margin: auto;
 }

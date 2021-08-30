@@ -1,0 +1,271 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="busqueda-container" id="estados">
+  <div class="card">
+    <div class="card-header header-ficha">
+      <div *ngIf="!esFichaActiva('estados')" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('estados')">
+          <div class="img-colegiado">
+            <i class="fas fa-graduation-cap icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10 ">
+          <div class="d-flex justify-content-end mb-1" (click)="abreCierraFicha('estados')">
+            <label class="mr-auto title-ficha pointer">{{ "censo.fichaIntegrantes.literal.estado" | translate
+              }}s</label>
+          </div>
+          <div class="d-flex justify-content-between default">
+            <label>{{ "censo.fichaIntegrantes.literal.estado" | translate }}: <span
+                *ngIf="estados && estados[0]">{{estados[0].descripcion}}</span></label>
+            <label>{{ "censo.resultadosSolicitudesModificacion.literal.fecha" | translate }}: <span
+                *ngIf="estados && estados[0]">{{estados[0].fechaModificacion | date: 'dd/MM/yyyy'}}</span></label>
+            <label>{{ "general.boton.usuario" | translate }}: <span
+                *ngIf="estados && estados[0]">{{estados[0].user}}</span></label>
+            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('estados')"></i>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="esFichaActiva('estados')" class=" header-ficha-open d-flex justify-content-start align-items-center"
+        (click)="abreCierraFicha('estados')">
+        <div class="img-colegiado">
+          <i class="fas fa-graduation-cap icon-ficha"></i>
+        </div>
+        <label class="title-ficha pointer">{{ "censo.fichaIntegrantes.literal.estado" | translate }}s</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+    <div *ngIf="esFichaActiva('estados')" class="px-0 pt-0 pb-0 card-body card-body-ficha">
+
+
+      <!-- TABLA RESULTADOS NEW-->
+<!-- (onRowSelect)="onRowSelectEstados(datosEstados,rowIndex)" -->
+      <p-dataTable [value]="datosEstados" [(selection)]="selectedDatos" selectionMode="multiple"
+      [responsive]="true" #table class="tabla-listado" [paginator]="true" [rows]="selectedItem"
+       [ngClass]="{ 'customCursor': selectMultiple}" selectionMode="multiple"
+      paginatorPosition="both" editable="true">
+
+      <p-column field="fechaInicio" #fechaInicio filterPlaceholder="{{'general.boton.search' | translate}}" [header]="cols[0].header | translate"
+        [filter]="true" filterMatchMode="contains" class="text-center" >
+        <ng-template let-col let-car="rowData" pTemplate="body" let-rowIndex="rowIndex">
+          <div (click)="onRowSelectEstados(rowIndex)">
+<!-- <span *ngIf="car[col.field].length > 9 ">{{car[col.field]}}</span> -->
+          <!-- <span *ngIf="filaEditable && datosEstados[rowIndex].isMod == true && isCrearColegial">{{car[col.field]}}</span> -->
+          <span *ngIf="car[col.field].length == undefined && !setItalic(car) && !editaEstado">{{car[col.field] | date: 'dd/MM/yyyy'}}</span>
+          <span *ngIf="setItalic(car)" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{car[col.field] | date: 'dd/MM/yyyy'}}</span>
+          <span *ngIf="editaEstado && datosEstados[rowIndex].isMod != true">{{car[col.field] | date: 'dd/MM/yyyy'}}</span>
+          <app-fecha *ngIf="creaEstado && datosEstados[rowIndex].nuevoRegistro" [(value)]="fechaEstado"></app-fecha> 
+          <app-fecha *ngIf="datosEstados[rowIndex].isMod != undefined && datosEstados[rowIndex].isMod == true && !creaEstado && editaEstado" [(value)]="fechaEstado"></app-fecha>
+        
+          </div>
+          
+        </ng-template>
+
+      </p-column>
+
+      <p-column field="fechaModificacion" #fechaModificacion filterPlaceholder="{{'general.boton.search' | translate}}" [header]="cols[1].header | translate"
+        [filter]="true" filterMatchMode="contains" class="text-center">
+        <ng-template let-col let-car="rowData" pTemplate="body" let-rowIndex="rowIndex">
+          <span *ngIf="car[col.field].length == undefined && !setItalic(car)">{{car[col.field] | date: 'dd/MM/yyyy'}}</span>
+          <span *ngIf="setItalic(car)" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{car[col.field] | date: 'dd/MM/yyyy'}}</span>
+  
+        </ng-template>
+      </p-column>
+
+      <p-column field="descripcion" #descripcion filterPlaceholder="{{'general.boton.search' | translate}}" [header]="cols[2].header | translate"
+        [filter]="true" filterMatchMode="contains" class="text-center">
+        <ng-template let-col let-car="rowData" pTemplate="body" let-rowIndex="rowIndex">
+          <div (click)="onRowSelectEstados(rowIndex)">
+          <span *ngIf="!setItalic(car) && !editaEstado">{{car[col.field]}}</span>
+          <span *ngIf="!setItalic(car) && (editaEstado && datosEstados[rowIndex].isMod != true)">{{car[col.field]}}</span>
+          <span *ngIf="setItalic(car)" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{car[col.field]}}</span>
+             <p-dropdown *ngIf="creaEstado && (car[col.field] == undefined || car[col.field] == '')" [(ngModel)]='valueComboEstado' class="select-form" placeholder="Seleccionar"
+            [options]="comboEstadoEJG" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+            <p-dropdown *ngIf=" datosEstados[rowIndex].isMod != undefined && datosEstados[rowIndex].isMod == true && !creaEstado && editaEstado" [(ngModel)]='valueComboEstado' class="select-form" placeholder="Seleccionar"
+            [options]="comboEstadoEJG" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+            </div>
+        </ng-template>
+
+      </p-column>
+      <p-column field="observaciones" #observaciones filterPlaceholder="{{'general.boton.search' | translate}}" [header]="cols[3].header | translate"
+        [filter]="true" filterMatchMode="contains" class="text-center">
+        <ng-template let-col let-car="rowData" pTemplate="body" let-rowIndex="rowIndex">
+          <div (click)="onRowSelectEstados(rowIndex)">
+          <span *ngIf="!setItalic(car) && !editaEstado">{{car[col.field]}}</span>
+          <span *ngIf="!setItalic(car) && (editaEstado && datosEstados[rowIndex].isMod != true)">{{car[col.field]}}</span>
+          <span *ngIf="setItalic(car)" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{car[col.field]}}</span>
+
+           <input *ngIf="creaEstado &&  datosEstados[rowIndex].nuevoRegistro" [(ngModel)]='observacionesEstado' type="text" pInputText/>
+           <input *ngIf=" (datosEstados[rowIndex].isMod != undefined && datosEstados[rowIndex].isMod == true && !creaEstado && editaEstado) " [(ngModel)]='car[col.field]' type="text" pInputText (input)="restablecer = true; onChangeObservaciones($event)"/>
+          </div>
+          
+        </ng-template>
+
+      </p-column>
+
+      <p-column field="automatico" #automatico filterPlaceholder="{{'general.boton.search' | translate}}" [header]="cols[4].header | translate"
+        [filter]="true" filterMatchMode="contains" class="text-center">
+        <ng-template let-col let-car="rowData" pTemplate="body" let-rowIndex="rowIndex">
+          <div *ngIf="setItalic(car) && car[col.field] == '1'">
+            <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{
+              "messages.si" | translate }}</span>
+          </div>
+          <div *ngIf="!setItalic(car) && car[col.field] == '1'">
+            <span>{{ "messages.si" | translate }}</span>
+          </div>
+          <div *ngIf="setItalic(car) && car[col.field] == '0'">
+            <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{
+              "general.boton.no" | translate }}</span>
+          </div>
+          <div *ngIf="!setItalic(car) && car[col.field] == '0'">
+            <span>{{ "general.boton.no" | translate }}</span>
+          </div>
+        </ng-template>
+
+      </p-column>
+
+      <p-column field="propietario" #propietario filterPlaceholder="{{'general.boton.search' | translate}}" [header]="cols[5].header | translate"
+        [filter]="true" filterMatchMode="contains" class="text-center">
+        <ng-template let-col let-car="rowData" pTemplate="body" let-rowIndex="rowIndex">
+          <div *ngIf="setItalic(car) && car[col.field] == '1'">
+            <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{
+              "justiciaGratuita.ejg.datosGenerales.CAJG" | translate }}</span>
+          </div>
+          <div *ngIf="!setItalic(car) && car[col.field] == '1'">
+            <span>{{ "justiciaGratuita.ejg.datosGenerales.CAJG" | translate }}</span>
+          </div>
+          <div *ngIf="setItalic(car) && car[col.field] == '0'">
+            <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{
+              "justiciaGratuita.ejg.datosGenerales.ICA" | translate }}</span>
+          </div>
+          <div *ngIf="!setItalic(car) && car[col.field] == '0'">
+            <span>{{ "justiciaGratuita.ejg.datosGenerales.ICA" | translate }}</span>
+          </div>
+        </ng-template>
+
+      </p-column>
+
+      <p-column field="user" #user filterPlaceholder="{{'general.boton.search' | translate}}" [header]="cols[6].header | translate"
+        [filter]="true" filterMatchMode="contains" class="text-center">
+        <ng-template let-col let-car="rowData" pTemplate="body" let-rowIndex="rowIndex">
+          <span *ngIf="!setItalic(car)">{{car[col.field]}}</span>
+          <span *ngIf="setItalic(car)" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{car[col.field]}}</span>
+        </ng-template>
+
+      </p-column>
+      
+      <ng-template pTemplate="emptymessage" let-columns>
+        <div class="mostrar d-flex text-right justify-content-end">
+          <label [attr.colspan]="columns.length">
+            {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
+          </label>
+        </div>
+
+      </ng-template>
+      <ng-template pTemplate="paginatorLeft">
+        <div class="mostrar d-flex text-right justify-content-end">
+          <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' |
+            translate }}{{table.first + 1}} al
+            {{table.first + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate
+            }} {{table.totalRecords}}</label>
+          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">{{
+            'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{selectedDatos.length}}
+          </label>
+          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{
+            'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: 0
+          </label>
+          <label>{{"general.message.mostrar" | translate}}</label>
+          <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
+          </p-dropdown>
+          <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+          <div class="ml-3 selectAll">
+            <p-checkbox (onChange)="onChangeSelectAll()" [disabled]="!permisoEscritura" [(ngModel)]="selectAll"
+              binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname"></p-checkbox>
+          </div>
+        </div>
+      </ng-template>
+      </p-dataTable>
+
+
+      <div class="card-footer">
+        <div class="text-right main-button">
+          <button *ngIf="!historico"
+            [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura || creaEstado == true"
+            (click)="confirmDelete()" pButton type="button" icon="fa fa-trash" iconPos="left"
+            label="{{ 'general.boton.eliminar' | translate}}"></button>
+
+          <!-- <button *ngIf="historico" pButton
+            [disabled]="!permisoEscritura || ((!selectMultiple || !selectAll) && selectedDatos.length == 0) || creaEstado || editaEstado"
+            (click)="checkPermisosActivate()" type="button" icon="fa fa-check" iconPos="left"
+            label="{{'general.boton.activar' | translate}}"></button> -->
+
+          <button [disabled]=" !restablecer || !permisoEscritura"
+            (click)="activarRestablecerEstados()" pButton type="button" icon="fa fa-undo" iconPos="left"
+            label="{{ 'general.boton.restablecer' | translate}}"></button>
+
+          <button [disabled]="( selectedDatos.length > 0) || creaEstado == true || !permisoEscritura"
+            (click)="nuevaFila()" pButton type="button" icon="fa fa-plus" iconPos="left"
+            label="{{ 'general.boton.new' | translate}}"></button>
+
+          <button (click)="checkAnadirEstado()" pButton type="button"
+            [disabled]= "!permisoEscritura || !guardar" icon="far fa-save" iconPos="left"
+            label="{{ 'general.boton.guardar' | translate}}"></button>
+
+          <button *ngIf="!historico" [disabled]="creaEstado == true || !permisoEscritura || editaEstado" (click)="searchHistorical() " pButton type="button" icon="fa fa-history"
+            iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
+
+          <button *ngIf="historico" [disabled]="creaEstado == true || !permisoEscritura || editaEstado" (click)="searchHistorical()" pButton type="button" icon="fa fa-undo" iconPos="left"
+            label="{{'general.message.ocultarHistorico' | translate}}"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" key="delEstado" #delEstado>
+    <p-footer>
+      <button type="button" pButton icon="fa-check" label="Si" (click)="delEstado.accept()"></button>
+      <button type="button" pButton icon="fa-close" label="No" (click)="delEstado.reject()"></button>
+    </p-footer>
+  </p-confirmDialog>
+  <p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" key="addEstado" #addEstado>
+    <p-footer>
+      <button type="button" pButton icon="fa-check" label="Si" (click)="addEstado.accept()"></button>
+      <button type="button" pButton icon="fa-close" label="No" (click)="addEstado.reject()"></button>
+    </p-footer>
+  </p-confirmDialog>
+</div>
+
+<!--DIALOG ANADIR ESTADO-->
+<!-- <p-dialog width="320" responsive="true" modal="modal" [draggable]="false" resizable="false"
+  [(visible)]="showModalAnadirEstado" (onHide)="cancelaAnadirEstado()">
+  <p-header class="title">
+    <label>{{'justiciaGratuita.ejg.datosGenerales.AddEstado' | translate}} </label>
+  </p-header>
+  <div class="form-row">
+    <div class="form-group-interlineado col-lg-12 col-md-12">
+      <label>{{'censo.nuevaSolicitud.fechaEstado' | translate}}</label>
+      <app-fecha [(value)]="fechaEstado"></app-fecha>
+    </div>
+    <div class="form-group-interlineado col-lg-12 col-md-12">
+      <label>{{ "justiciaGratuita.ejg.datosGenerales.EstadoEJG" | translate }}</label>
+      <p-dropdown [(ngModel)]='valueComboEstado' class="select-form" placeholder="Seleccionar"
+        [options]="comboEstadoEJG" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+    </div>
+     <div class="form-group-interlineado col-lg-12 col-md-12">
+      <label>{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{selectedDatos.length}}</label>
+    </div>
+
+    <div class="form-group-interlineado col-lg-12 col-md-12">
+      <label>{{'gratuita.mantenimientoLG.literal.observaciones' | translate}}</label>
+      <textarea [rows]="10" [cols]="5" [(ngModel)]="observaciones" pInputTextarea></textarea>
+    </div>
+
+    <div class="main-button col-lg-12 col-md-12">
+      <button (click)="checkAnadirEstado()" pButton type="button" icon="fa fa-edit" iconPos="left"
+        label="{{'general.boton.guardarCerrar' | translate}}"></button>
+      <button (click)="cancelaAnadirEstado()" pButton type="button" icon="fa fa-close" iconPos="left"
+        label="{{'general.boton.cancel' | translate}}"></button>
+    </div>
+  </div>
+</p-dialog> -->
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

@@ -1,13 +1,13 @@
-import { Component, OnInit, Input, ViewChild, Output, EventEmitter, ChangeDetectorRef, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ChangeDetectorRef, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { DataTable } from '../../../../../node_modules/primeng/primeng';
-import { TranslateService } from '../../translate';
-import { Router } from '../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../_services/siga.service';
 import { PersistenceService } from '../../../_services/persistence.service';
-import { ProcuradoresItem } from '../../../models/sjcs/ProcuradoresItem';
-import { ProcuradoresObject } from '../../../models/sjcs/ProcuradoresObject';
-import { JusticiableItem } from '../../../models/sjcs/JusticiableItem';
+import { AsuntosJusticiableItem } from '../../../models/sjcs/AsuntosJusticiableItem';
 import { CommonsService } from '../../../_services/commons.service';
+import { Location } from '@angular/common';
+import { DesignaItem } from '../../../models/sjcs/DesignaItem';
+import { EJGItem } from '../../../models/sjcs/EJGItem';
+
 
 @Component({
   selector: 'app-tabla-busqueda-asuntos',
@@ -20,50 +20,33 @@ export class TablaBusquedaAsuntosComponent implements OnInit {
   cols = [];
   msgs;
   progressSpinner: boolean = false;
-
   selectedItem: number = 10;
   selectAll;
-  selectedDatos = [];
+  selectedDatos:any[] = [];
   numSelected = 0;
   selectMultiple: boolean = false;
   seleccion: boolean = false;
-
+ 
   permisoEscritura: boolean = true;
-  datos = [];
   datosInicio: boolean = false;
-
+  datos = [];
   idPersona;
   showTarjetaPermiso: boolean = true;
-
 
   @ViewChild("table") table: DataTable;
   @Input() showTarjeta;
   @Input() body;
   @Input() modoEdicion;
+  @Input() radioTarjeta;
   @Input() fromJusticiable;
+  @Input() data: AsuntosJusticiableItem = null;
+  @Output() elementoAsociado = new EventEmitter<String[]>();
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
-    private sigaServices: SigaServices,
-    private commonsService: CommonsService,
-    private persistenceService: PersistenceService) { }
+    private persistenceService: PersistenceService, private location: Location, private sigaServices: SigaServices) { }
 
   ngOnInit() {
-
-    // this.commonsService.checkAcceso(procesos_justiciables.tarjetaAsuntos)
-    //   .then(respuesta => {
-
-    //     this.permisoEscritura = respuesta;
-
-    //     if (this.permisoEscritura == undefined) {
-    //       this.showTarjetaPermiso = false;
-    //     } else {
-    //       this.showTarjetaPermiso = true;
     this.getCols();
-
-    //     }
-    //   }
-    //   ).catch(error => console.error(error));
-
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -75,16 +58,41 @@ export class TablaBusquedaAsuntosComponent implements OnInit {
   }
 
   getCols() {
+    if(this.radioTarjeta=='ejg' || this.radioTarjeta=='asi'){
+      this.cols =  [
+        { field: "anio", header: "justiciaGratuita.sjcs.designas.DatosIden.ano", width: "10%" },
+        { field: "numero", header: "gratuita.busquedaAsistencias.literal.numero", width: "10%" },
+        { field: "dilnigproc", header: 'justiciaGratuita.ejg.busquedaAsuntos.diliNumProc', width: "25%"},
+        { field: "juzgado", header: "justiciaGratuita.ejg.datosGenerales.Juzgado", width: "20%" },
+        { field: "tipo", header: "censo.nuevaSolicitud.tipoSolicitud", width: "20%" },
+        { field: "turnoGuardia", header: "justiciaGratuita.justiciables.literal.turnoGuardia", width: "25%" },
+        { field: "letrado", header: "justiciaGratuita.justiciables.literal.colegiado", width: "20%" },
+      ];
+    }
 
-    this.cols = [
-      { field: "asunto", header: "justiciaGratuita.justiciables.literal.asuntos", width: "5%" },
-      { field: "fecha", header: "censo.resultadosSolicitudesModificacion.literal.fecha", width: "5%" },
-      { field: "turnoGuardia", header: "justiciaGratuita.justiciables.literal.turnoGuardia", width: "10%" },
-      { field: "letrado", header: "justiciaGratuita.justiciables.literal.colegiado", width: "15%" },
-      { field: "interesado", header: "justiciaGratuita.justiciables.literal.interesados", width: "20%" },
-      { field: "datosInteres", header: "justiciaGratuita.justiciables.literal.datosInteres", width: "20%" }
+    if(this.radioTarjeta=='des'){
+      this.cols =  [
+        { field: "anio", header: "justiciaGratuita.sjcs.designas.DatosIden.ano", width: "10%" },
+        { field: "numero", header: "gratuita.busquedaAsistencias.literal.numero", width: "10%" },
+        { field: "dilnigproc", header: 'justiciaGratuita.ejg.busquedaAsuntos.nigNumProc', width: "25%"},
+        { field: "juzgado", header: "justiciaGratuita.ejg.datosGenerales.Juzgado", width: "20%" },
+        { field: "tipo", header: "censo.nuevaSolicitud.tipoSolicitud", width: "20%" },
+        { field: "turnoGuardia", header: "justiciaGratuita.justiciables.literal.turnoGuardia", width: "25%" },
+        { field: "letrado", header: "justiciaGratuita.justiciables.literal.colegiado", width: "20%" },
+      ];
+    }
 
-    ];
+    if(this.radioTarjeta=='soj'){
+      this.cols =  [
+        { field: "anio", header: "justiciaGratuita.sjcs.designas.DatosIden.ano", width: "10%" },
+        { field: "numero", header: "gratuita.busquedaAsistencias.literal.numero", width: "10%" },
+        // { field: "dilnigproc", header: "sjcs.oficio.designaciones.relaciones.numDiligNigNproc", width: "25%"},
+        { field: "juzgado", header: "justiciaGratuita.ejg.datosGenerales.Juzgado", width: "20%" },
+        { field: "tipo", header: "censo.nuevaSolicitud.tipoSolicitud", width: "20%" },
+        { field: "turnoGuardia", header: "justiciaGratuita.justiciables.literal.turnoGuardia", width: "25%" },
+        { field: "letrado", header: "justiciaGratuita.justiciables.literal.colegiado", width: "20%" },
+      ];
+    }
 
     this.rowsPerPage = [
       {
@@ -121,6 +129,7 @@ export class TablaBusquedaAsuntosComponent implements OnInit {
     //     this.progressSpinner = false;
     //     console.log(err);
     //   });
+
   }
 
   onChangeRowsPerPages(event) {
@@ -142,7 +151,43 @@ export class TablaBusquedaAsuntosComponent implements OnInit {
     this.msgs = [];
   }
 
-  openTab() {
+   openTab(event) {
+     this.elementoAsociado.emit(event.data);
+  } 
 
-  }
+
+  /* getAsunto(event) {
+    if (this.datos != null) {
+
+      let asunto = event.data.asunto.split("/");
+
+      let anoDesigna = asunto[0].split("D")[1];
+
+      let turno = event.data.turnoGuardia.split("/")[0];
+
+      //     let request = [anoDesigna, this.datos.annio, this.datos.tipoEJG,
+      //       //, newDesigna.idTurno.toString(), newId.id, this.datosEJG.numero
+      //       turno, asunto[1], this.datos.numero
+      //     ];
+
+      this.sigaServices.post("designacion_asociarEjgDesigna", request).subscribe(
+        m => {
+
+          if (JSON.parse(m.body).error.code == 200) this.showMessage("success", "Asociación con EJG realizada correctamente", "");
+          else this.showMessage("error", "Asociación con EJG fallida", "");
+          sessionStorage.removeItem("EJG");
+          this.location.back();
+        },
+        err => {
+          this.showMessage("error",
+            "No se ha asociado el EJG correctamente",
+            ""
+          );
+          this.progressSpinner = false;
+        }
+      );
+
+
+    }
+  } */
 }

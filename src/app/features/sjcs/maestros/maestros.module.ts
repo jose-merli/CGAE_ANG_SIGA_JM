@@ -24,7 +24,6 @@ import { GestionDestinatariosComponent } from './destinatarios-retenciones/desti
 import { ProcedimientosModule } from './procedimientos/procedimientos.module';
 import { SpinnerModule } from '../../../../../node_modules/primeng/primeng';
 import { RetencionesIrpfModule } from './retenciones-IRPF/retenciones-irpf.module';
-import { JusticiablesModule } from '../justiciables/justiciables.module';
 
 @NgModule({
         declarations: [],

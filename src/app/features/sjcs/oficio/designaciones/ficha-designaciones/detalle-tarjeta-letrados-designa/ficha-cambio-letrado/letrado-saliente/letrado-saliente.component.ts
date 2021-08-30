@@ -5,7 +5,7 @@ import { PersistenceService } from '../../../../../../../../_services/persistenc
 import { Router } from '@angular/router';
 import { Message } from 'primeng/components/common/api';
 import { CommonsService } from '../../../../../../../../_services/commons.service';
-import {CamposCambioLetradoItem } from '../../../../../../../../models/sjcs/CamposCambioLetradoItem';
+import { CamposCambioLetradoItem } from '../../../../../../../../models/sjcs/CamposCambioLetradoItem';
 import { procesos_oficio } from '../../../../../../../../permisos/procesos_oficio';
 
 
@@ -19,21 +19,21 @@ export class LetradoSalienteComponent implements OnInit {
   msgs: Message[] = [];
   body = new CamposCambioLetradoItem();
   datos;
-  showTarjeta=true;
+  showTarjeta = true;
   progressSpinner = false;
-  disableCheck=false;
+  disableCheck = false;
   isLetrado: boolean;
-
+  resaltadoDatos: boolean = false;
   @Input() saliente;
 
   comboRenuncia;
 
   constructor(private sigaServices: SigaServices,
-    private commonsService: CommonsService, private persistenceService: PersistenceService,private translateService: TranslateService, private router: Router) { }
+    private commonsService: CommonsService, private persistenceService: PersistenceService, private translateService: TranslateService, private router: Router) { }
 
   ngOnInit() {
-
-    this.body=this.saliente;
+    this.resaltadoDatos = true;
+    this.body = this.saliente;
     /* this.body.fechaDesignacion;
     this.body.fechaEfecRenuncia=new Date();
     this.body.fechaSolRenuncia=new Date();
@@ -46,10 +46,10 @@ export class LetradoSalienteComponent implements OnInit {
     this.body.observaciones=""; */
 
     this.body.fechaSolRenuncia = new Date();
-    
+
     this.motivosRenuncia();
 
-    if(sessionStorage.getItem("isLetrado")=="true") this.disableCheck=true;
+    if (sessionStorage.getItem("isLetrado") == "true") this.disableCheck = true;
 
     this.sigaServices.get('getLetrado').subscribe(
       (data) => {
@@ -79,21 +79,30 @@ export class LetradoSalienteComponent implements OnInit {
     );
   }
 
-  incluirCompensacion(){
+  incluirCompensacion() {
   }
 
-  changeMotivo(event){
+  changeMotivo(event) {
   }
 
-  onHideTarjeta(){
-    this.showTarjeta=!this.showTarjeta;
+  onHideTarjeta() {
+    this.showTarjeta = !this.showTarjeta;
   }
 
   clear() {
-    this.msgs=[];
+    this.msgs = [];
   }
 
-  fillFechaDesignacion(event){}
+  fillFechaDesignacion(event) { }
 
-  fillFechaSolRenuncia(event){}
+  fillFechaSolRenuncia(event) {
+    this.body.fechaSolRenuncia = event;
+  }
+
+
+  styleObligatorio(resaltado) {
+    if (this.body.motivoRenuncia == undefined || this.body.motivoRenuncia == null) {
+      return "camposObligatorios";
+    }
+  }
 }

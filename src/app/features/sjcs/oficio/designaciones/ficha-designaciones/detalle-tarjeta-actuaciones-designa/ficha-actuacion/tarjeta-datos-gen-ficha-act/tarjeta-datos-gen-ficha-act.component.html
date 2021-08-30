@@ -14,7 +14,7 @@
         <label>{{ datos.datePicker.label }}</label>
         <app-fecha [utc]="false" [(value)]='datos.datePicker.value' [minDate]="fechaEntradaInicioDate"
           [maxDate]="fechaMaxima" (valueChangeSelected)="fillFecha($event)" (valueChangeInput)="fillFecha($event)"
-          [disabled]="isAnulada || modoLectura"
+          [disabled]="isAnulada || modoLectura || modoLectura2"
           [inputStyleClass]="(datos.datePicker.value == null || datos.datePicker.value == '') ? 'camposObligatorios': ''">
         </app-fecha>
       </div>
@@ -28,33 +28,48 @@
       <div class=" form-group col-lg-12 col-md-12 w-100">
         <label>{{ datos.textarea.label }}</label>
         <textarea class="form-control" pInputTextarea [(ngModel)]="datos.textarea.value" maxlength="4000"
-          [readonly]="isAnulada || modoLectura"></textarea>
+          [readonly]="isAnulada || modoLectura || modoLectura2"></textarea>
       </div>
 
     </div>
   </div>
   <div class="col-lg-8 col-md-8 mb-5">
     <div class="form-row">
+      <div class="form-group col-lg-6 col-md-6 w-100">
+        <div *ngFor="let selector of datos.selectores">
+          <div *ngIf="selector.nombre == 'Juzgado (*)'">
+            <label>{{ selector.nombre }}</label>
+            <p-dropdown class="select-form" [(ngModel)]="selector.value"
+              placeholder="{{'general.boton.seleccionar' | translate}}" [options]="selector.opciones" [filter]="true"
+              filterBy="label,labelSinTilde" [showClear]="true" (onChange)="onChangeSelector(selector)"
+              [ngClass]="{'camposObligatorios': marcaObligatorio(selector)}"
+              [disabled]="isAnulada || selector.disabled || modoLectura || modoLectura2">
+            </p-dropdown>
+          </div>
+        </div>
+      </div>
       <div class="form-group col-lg-4 col-md-4 w-100">
         <label>{{ datos.inputNig.label }} <span *ngIf="datos.inputNig.obligatorio">(*)</span></label>
         <input type="text" class="form-control" pInputText [(ngModel)]="datos.inputNig.value"
-          [readonly]="isAnulada || modoLectura"
+          [readonly]="isAnulada || modoLectura || modoLectura2"
           [ngClass]="{'camposObligatorios': (datos.inputNig.obligatorio && (datos.inputNig.value == null || datos.inputNig.value.trim() == ''))}">
       </div>
       <div class="form-group col-lg-2 col-md-2 w-100">
         <label>{{ datos.inputNumPro.label }} <span *ngIf="datos.inputNumPro.obligatorio">(*)</span></label>
         <input type="text" class="form-control" pInputText [(ngModel)]="datos.inputNumPro.value"
-          [readonly]="isAnulada || modoLectura"
+          [readonly]="isAnulada || modoLectura || modoLectura2"
           [ngClass]="{'camposObligatorios': (datos.inputNumPro.obligatorio && (datos.inputNumPro.value == null || datos.inputNumPro.value.trim() == ''))}">
       </div>
-      <div class="form-group col-lg-6 col-md-6 w-100" *ngFor="let selector of datos.selectores">
-        <label>{{ selector.nombre }}</label>
-        <p-dropdown class="select-form" [(ngModel)]="selector.value"
-          placeholder="{{'general.boton.seleccionar' | translate}}" [options]="selector.opciones" [filter]="true"
-          filterBy="label,labelSinTilde" [showClear]="true" (onChange)="onChangeSelector(selector)"
-          [ngClass]="{'camposObligatorios': marcaObligatorio(selector)}"
-          [disabled]="isAnulada || selector.disabled || modoLectura">
-        </p-dropdown>
+      <div class="form-group col-lg-6 col-md-6 w-100" *ngFor="let selector of datos.selectores.slice(1)">
+        <div *ngIf="selector.nombre != 'Juzgado (*)'">
+          <label>{{ selector.nombre }}</label>
+          <p-dropdown class="select-form" [(ngModel)]="selector.value"
+            placeholder="{{'general.boton.seleccionar' | translate}}" [options]="selector.opciones" [filter]="true"
+            filterBy="label,labelSinTilde" [showClear]="true" (onChange)="onChangeSelector(selector)"
+            [ngClass]="{'camposObligatorios': marcaObligatorio(selector)}"
+            [disabled]="isAnulada || selector.disabled || modoLectura || modoLectura2">
+          </p-dropdown>
+        </div>
       </div>
       <div class="form-group col-lg-6 col-md-6 w-100" style="display: flex; align-items: flex-end;">
         Completar si es complemento por desplazamiento
@@ -65,11 +80,11 @@
 
 <div class="card-footer">
   <div class="text-right main-button">
-    <button pButton type="button" icon="fa fa-paper-plane" iconPos="left" label="Comunicar"
-      (click)="showMsg('success', 'Se ha comunicado correctamente', '')" [disabled]="isAnulada || modoLectura"></button>
+    <button pButton type="button" icon="fa fa-comment" iconPos="left" label="{{'general.boton.comunicar' | translate }}"
+      (click)="navigateComunicar()" [disabled]="isAnulada || modoLectura || modoLectura2"></button>
     <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer" (click)="restablecer()"
-      [disabled]="isAnulada || modoLectura"></button>
+      [disabled]="isAnulada || modoLectura || modoLectura2"></button>
     <button pButton type="button" icon="far fa-save" iconPos="left" label="Guardar" (click)="guardarAction()"
-      [disabled]="isAnulada || modoLectura"></button>
+      [disabled]="isAnulada || modoLectura || modoLectura2"></button>
   </div>
 </div>

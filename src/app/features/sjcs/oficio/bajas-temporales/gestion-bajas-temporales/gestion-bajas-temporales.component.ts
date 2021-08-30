@@ -1,9 +1,9 @@
-import { ElementRef, Renderer2, Output, EventEmitter, SimpleChanges} from '@angular/core';
+import { ElementRef, Renderer2, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Sort } from '@angular/material/sort';
 import { Message } from 'primeng/components/common/api';
-import { ConfirmationService } from 'primeng/primeng';
+import { ConfirmationService } from "primeng/api";
 import { Row, Cell } from './gestion-bajas-temporales.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { DatePipe } from '@angular/common';
@@ -26,7 +26,7 @@ interface NewCell {
   styleUrls: ['./gestion-bajas-temporales.component.scss']
 })
 export class GestionBajasTemporalesComponent implements OnInit {
-  
+
   info = new FormControl();
   msgs: Message[] = [];
   @Input() cabeceras = [];
@@ -62,7 +62,7 @@ export class GestionBajasTemporalesComponent implements OnInit {
   numperPage = 10;
   newInputValue = [];
   newInputValuePerRow = [];
-  inputValues: NewCell = {position: '', value: ''};
+  inputValues: NewCell = { position: '', value: '' };
   inputValuesArr: NewCell[] = [];
   enableGuardar = false;
   multiselectValue = [];
@@ -85,16 +85,16 @@ export class GestionBajasTemporalesComponent implements OnInit {
   @ViewChild("tablaFoco") tablaFoco: ElementRef;
   permisosTarjeta: boolean = true;
   disableAll: boolean = false;
-  usuarioBusquedaExpress = {​​​​​​​​​
+  usuarioBusquedaExpress = {
     numColegiado: '',
     nombreAp: ''
-  }​​​​​​​​​;
+  };
 
   constructor(
     private renderer: Renderer2,
     private persistenceService: PersistenceService,
-    private pipe : DatePipe,
-		private router: Router,
+    private pipe: DatePipe,
+    private router: Router,
     private translateService: TranslateService,
     private confirmationService: ConfirmationService,
     private commonsService: CommonsService
@@ -122,38 +122,38 @@ export class GestionBajasTemporalesComponent implements OnInit {
       this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
     }
     this.commonsService.checkAcceso(procesos_oficio.bajastemporales)
-    .then(respuesta => {
-      this.permisosTarjeta = respuesta;
-      this.persistenceService.setPermisos(this.permisosTarjeta);
-      if (this.permisosTarjeta == undefined) {
-        sessionStorage.setItem("codError", "403");
-        sessionStorage.setItem(
-          "descError",
-          this.translateService.instant("generico.error.permiso.denegado")
-        );
-        this.router.navigate(["/errorAcceso"]);
-      } else if (this.persistenceService.getPermisos() != true) {
-        this.disableAll = true;
-        this.isDisabled = true;
+      .then(respuesta => {
+        this.permisosTarjeta = respuesta;
+        this.persistenceService.setPermisos(this.permisosTarjeta);
+        if (this.permisosTarjeta == undefined) {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        } else if (this.persistenceService.getPermisos() != true) {
+          this.disableAll = true;
+          this.isDisabled = true;
+        }
       }
-    }
-    ).catch(error => console.error(error));
+      ).catch(error => console.error(error));
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if(sessionStorage.getItem("nuevo")){
+    if (sessionStorage.getItem("nuevo")) {
       this.nuevo();
     }
     sessionStorage.removeItem("nuevo");
   }
 
-  onChangeMulti(event, rowPosition, cell){
+  onChangeMulti(event, rowPosition, cell) {
     let deseleccionado;
-   
+
     let selected = event.itemValue;
     let arraySelected = event.value;
     let labelSelected;
-    if (arraySelected.includes(selected)){
+    if (arraySelected.includes(selected)) {
       deseleccionado = false;
     } else {
       deseleccionado = true;
@@ -164,32 +164,32 @@ export class GestionBajasTemporalesComponent implements OnInit {
     let idTurnoIncompatible = this.rowGroups[rowPosition].cells[5];
     let idGuardiaIncompatible = this.rowGroups[rowPosition].cells[6];
     let nombreTurnoInc = this.rowGroups[rowPosition].cells[9];
-    if (deseleccionado){
+    if (deseleccionado) {
       //eliminar doble
       this.eliminarFromCombo(this.rowGroups[rowPosition])
     } else {
       //guardar doble
-      
+
       this.comboGuardiasIncompatibles.forEach(comboObj => {
-        if ( comboObj.value == selected){
+        if (comboObj.value == selected) {
           labelSelected = comboObj.label;
         }
       })
-      let cellguardiaInc:  Cell = new Cell();
+      let cellguardiaInc: Cell = new Cell();
       cellguardiaInc.type = 'text';
       cellguardiaInc.value = labelSelected;
       this.rowGroups[rowPosition].cells[10].value.push(labelSelected);
       this.nuevoFromCombo(turno, cellguardiaInc, idGuardia, idTurno, idTurnoIncompatible, idGuardiaIncompatible, nombreTurnoInc);
     }
   }
-  nuevoFromCombo(turno, guardiaInc, idGuardia, idTurno, idTurnoIncompatible, idGuardiaIncompatible, nombreTurnoInc){
+  nuevoFromCombo(turno, guardiaInc, idGuardia, idTurno, idTurnoIncompatible, idGuardiaIncompatible, nombreTurnoInc) {
     this.enableGuardar = true;
     let labelSelected = '';
     let row: Row = new Row();
     let cell1: Cell = new Cell();
     let cell2: Cell = new Cell();
     let cellInvisible: Cell = new Cell();
-    let cellMulti:  Cell = new Cell();
+    let cellMulti: Cell = new Cell();
     let cellArr: Cell = new Cell();
     let idG;
     cell1.type = 'input';
@@ -199,21 +199,21 @@ export class GestionBajasTemporalesComponent implements OnInit {
     cellInvisible.type = 'invisible';
     cellInvisible.value = nombreTurnoInc;
     cellMulti.combo = this.comboGuardiasIncompatibles;
-    cellMulti.type = 'multiselect'; 
+    cellMulti.type = 'multiselect';
     cellMulti.value = [idGuardia.value];
     this.comboGuardiasIncompatibles.forEach(comboObj => {
-      if ( comboObj.value == idGuardia.value){
+      if (comboObj.value == idGuardia.value) {
         labelSelected = comboObj.label;
       }
     });
     cellArr.type = 'invisible';
     cellArr.value = [labelSelected];
-    if (idGuardia.value != ''){
-      this.comboGuardiasIncompatibles.push({ label: labelSelected, value: idGuardia.value})
+    if (idGuardia.value != '') {
+      this.comboGuardiasIncompatibles.push({ label: labelSelected, value: idGuardia.value })
     }
     row.cells = [turno, guardiaInc, cellMulti, cell1, cell2, idTurno, idGuardia, idGuardiaIncompatible, idTurnoIncompatible, cellInvisible, cellArr];
-    if (idGuardia.value != ''){
-    this.rowGroups.unshift(row);
+    if (idGuardia.value != '') {
+      this.rowGroups.unshift(row);
     }
     this.totalRegistros = this.rowGroups.length;
     this.rowGroupsAux = this.rowGroups;
@@ -230,7 +230,7 @@ export class GestionBajasTemporalesComponent implements OnInit {
     }
 
     this.estadoPendiente.emit(this.selectedArray);
-    
+
     if (this.selectedArray.length != 0) {
       this.anySelected.emit(true);
     } else {
@@ -250,8 +250,9 @@ export class GestionBajasTemporalesComponent implements OnInit {
   }
 
   sortData(sort: Sort) {
+    console.log("entro en el método Sort con valor:"+ sort.active+","+sort.direction);
     let data: Row[] = [];
-    this.rowGroups = this.rowGroupsAux.filter((row) => {
+    this.rowGroups = this.rowGroups.filter((row) => {
       data.push(row);
     });
     data = data.slice();
@@ -259,40 +260,90 @@ export class GestionBajasTemporalesComponent implements OnInit {
       this.rowGroups = data;
       return;
     }
+
     this.rowGroups = data.sort((a, b) => {
       const isAsc = sort.direction === 'asc';
-      let resultado;
-      for (let i = 0; i < a.cells.length; i++) {
-        resultado = compare(a.cells[i].value, b.cells[i].value, isAsc);
+
+      for (let i = 0; i < this.cabeceras.length; i++) {
+        let nombreCabecera = this.cabeceras[i].id;
+        if (nombreCabecera == sort.active){
+          console.log("a.cells["+i+"].type:"+a.cells[i].type);
+
+          if (a.cells[i].type=='datePickerFin' && b.cells[i].type=='datePickerFin'){
+            return compareDate(a.cells[i].value[0], b.cells[i].value[0], isAsc);
+          }
+
+          let valorA = a.cells[i].value;
+          let valorB = b.cells[i].value;
+          if (valorA!=null && valorB!=null){
+            if(isNaN(valorA)){ //Checked for numeric
+              const dayA = valorA.substr(0, 2) ;
+              const monthA = valorA.substr(3, 2);
+              const yearA = valorA.substr(6, 10);
+              console.log("fecha a:"+ yearA+","+monthA+","+dayA);
+              var dt=new Date(yearA, monthA, dayA);
+              if(!isNaN(dt.getTime())){ //Checked for date
+                return compareDate(a.cells[i].value, b.cells[i].value, isAsc);
+              }else{
+              }
+            } else{
+            }
+          }
+
+          return compare(a.cells[i].value, b.cells[i].value, isAsc);
+          
+        }
       }
-      return resultado;
+ 
     });
-    this.rowGroupsAux = this.rowGroups;
-    this.totalRegistros = this.rowGroups.length;
 
   }
 
-  searchChange(j: any) {
-    let isReturn = true;
+  getComboLabel(key: string){
+    for (let i = 0; i < this.comboTipo.length; i++){
+      if (this.comboTipo[i].value == key){
+        return this.comboTipo[i].label;
+      }
+    }
+    return "";
+  }
+
+
+  searchChange(x: any) {
     let isReturnArr = [];
     this.rowGroups = this.rowGroupsAux.filter((row) => {
-      if (
-        this.searchText[j] != " " &&
-        this.searchText[j] != undefined &&
-        !row.cells[j].value.toString().toLowerCase().includes(this.searchText[j].toLowerCase())
-      ) {
-        isReturn = false;
-      } else {
-        isReturn = true;
+      let isReturn = true;
+      for(let j=0; j<this.cabeceras.length;j++){
+        if (this.searchText[j] != " " &&  this.searchText[j] != undefined){
+          if (row.cells[j].value){
+            console.log("tipo de celda:"+row.cells[j].type);
+            if(row.cells[j].type == 'select'){
+              let labelCombo = this.getComboLabel(row.cells[j].value);
+              console.log("valor de celda:"+labelCombo);
+              if (!labelCombo.toLowerCase().includes(this.searchText[j].toLowerCase())){
+                isReturn = false;
+                break;
+              }
+            } else if (!row.cells[j].value.toString().toLowerCase().includes(this.searchText[j].toLowerCase())){
+              isReturn = false;
+              break;
+            }
+          }else{
+              if (this.searchText[j]!=""){
+                isReturn = false;
+                break;
+              }
+          }
+        }
       }
-      if (isReturn) {
+      if (isReturn){
         return row;
       }
+
     });
     this.totalRegistros = this.rowGroups.length;
-    this.rowGroupsAux = this.rowGroups;
   }
-  
+
   showMessage(event) {
     this.msgs = [];
     this.msgs.push({
@@ -309,95 +360,111 @@ export class GestionBajasTemporalesComponent implements OnInit {
   isPar(numero): boolean {
     return numero % 2 === 0;
   }
-  fromReg(event){
+  fromReg(event) {
     this.from = Number(event) - 1;
   }
-  toReg(event){
+  toReg(event) {
     this.to = Number(event);
   }
-  perPage(perPage){
+  perPage(perPage) {
     this.numperPage = perPage;
   }
 
-  fillFecha(event, cell) {
-    cell.value = this.pipe.transform(event, 'dd/MM/yyyy');
+  fillFecha(event, cell, row) {
+    if (cell.value[0] != undefined) {
+      cell.value[0] = this.pipe.transform(event, 'dd/MM/yyyy');
+      row.cells[5].value[1] = new Date(event);
+    } else {
+      cell.value = this.pipe.transform(event, 'dd/MM/yyyy');
+      row.cells[5].value[1] = new Date(event);
+    }
+
   }
- 
-  inputValueChange(event, i , z, cell){
+
+  fillFecha2(event, cell, row) {
+    if (cell.value[0] != undefined) {
+      cell.value[0] = this.pipe.transform(event, 'dd/MM/yyyy');
+      cell.value[1] = new Date(row.cells[4].value);
+    } else {
+      cell.value = this.pipe.transform(event, 'dd/MM/yyyy');
+    }
+  }
+
+  inputValueChange(event, i, z, cell) {
     let cells: Cell[] = [];
-    let rowFilled: Row =  new Row();
+    let rowFilled: Row = new Row();
     rowFilled.cells = cells;
-    if (this.inputValuesArr[z]  != undefined){
-      if (z == 3){
-        this.inputValuesArr[z - 1] = { position: z , value: this.newInputValue[z]};
-      }else{
-        this.inputValuesArr[z] = { position: z , value: this.newInputValue[z]};
+    if (this.inputValuesArr[z] != undefined) {
+      if (z == 3) {
+        this.inputValuesArr[z - 1] = { position: z, value: this.newInputValue[z] };
+      } else {
+        this.inputValuesArr[z] = { position: z, value: this.newInputValue[z] };
       }
-     
-    }else{
+
+    } else {
       this.inputValues.position = z;
       this.inputValues.value = this.newInputValue[z];
-      this.inputValuesArr.push(Object.assign({},this.inputValues));
+      this.inputValuesArr.push(Object.assign({}, this.inputValues));
     }
-             this.rowGroups[this.rowGroups.length -1].cells.forEach((cell, c) => {
-              let cellFilled1 = new Cell();
-            if (c != 2){  
-              if (this.inputValuesArr[c]!= undefined && c != 3){
-                let cellFilled = new Cell();
-                cellFilled.value = this.inputValuesArr[c].value;
-                cellFilled.type = 'newinput';
-                cellFilled1 = cellFilled;
-              }
-                else if (this.inputValuesArr[c-1]!= undefined && c >= 3){
-                  let cellFilled = new Cell();
-                  cellFilled.value = this.inputValuesArr[c-1].value;
-                  cellFilled.type = 'newinput';
-                  cellFilled1 = cellFilled;
-                }
-              else {
-                let cellFilled = new Cell();
-                cellFilled.value = ' ';
-                cellFilled.type = 'newinput';
-                cellFilled1 = cellFilled;
-              }
+    this.rowGroups[this.rowGroups.length - 1].cells.forEach((cell, c) => {
+      let cellFilled1 = new Cell();
+      if (c != 2) {
+        if (this.inputValuesArr[c] != undefined && c != 3) {
+          let cellFilled = new Cell();
+          cellFilled.value = this.inputValuesArr[c].value;
+          cellFilled.type = 'newinput';
+          cellFilled1 = cellFilled;
+        }
+        else if (this.inputValuesArr[c - 1] != undefined && c >= 3) {
+          let cellFilled = new Cell();
+          cellFilled.value = this.inputValuesArr[c - 1].value;
+          cellFilled.type = 'newinput';
+          cellFilled1 = cellFilled;
+        }
+        else {
+          let cellFilled = new Cell();
+          cellFilled.value = ' ';
+          cellFilled.type = 'newinput';
+          cellFilled1 = cellFilled;
+        }
 
-            } else {
-              let cellFilled = new Cell();
-              cellFilled.combo = this.comboGuardiasIncompatibles;
-              cellFilled.type = 'multiselect';  
-              cellFilled1 = cellFilled;
-            }
-           rowFilled.cells.push(cellFilled1);
-          })
-      this.rowGroups[this.rowGroups.length - 1] = rowFilled;
-      this.rowGroupsAux = this.rowGroups;
-      this.totalRegistros = this.rowGroups.length;
+      } else {
+        let cellFilled = new Cell();
+        cellFilled.combo = this.comboGuardiasIncompatibles;
+        cellFilled.type = 'multiselect';
+        cellFilled1 = cellFilled;
+      }
+      rowFilled.cells.push(cellFilled1);
+    })
+    this.rowGroups[this.rowGroups.length - 1] = rowFilled;
+    this.rowGroupsAux = this.rowGroups;
+    this.totalRegistros = this.rowGroups.length;
 
   }
 
-  nuevo(){
+  nuevo() {
     const now = Date.now();
     const myFormattedDate = this.pipe.transform(now, 'dd/MM/yyyy');
 
-    if(sessionStorage.getItem("buscadorColegiados")){​​
+    if (sessionStorage.getItem("buscadorColegiados")) {
 
       let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
 
-      this.usuarioBusquedaExpress.nombreAp=busquedaColegiado.apellidos+", "+busquedaColegiado.nombre;
+      this.usuarioBusquedaExpress.nombreAp = busquedaColegiado.apellidos + ", " + busquedaColegiado.nombre;
 
-      this.usuarioBusquedaExpress.numColegiado=busquedaColegiado.nColegiado;
-      
+      this.usuarioBusquedaExpress.numColegiado = busquedaColegiado.nColegiado;
+
       sessionStorage.removeItem("buscadorColegiados")
-    }​​else{
-      this.usuarioBusquedaExpress.nombreAp=sessionStorage.getItem("nombCol");
+    } else {
+      this.usuarioBusquedaExpress.nombreAp = sessionStorage.getItem("nombCol");
 
-      this.usuarioBusquedaExpress.numColegiado=sessionStorage.getItem("nCol");
+      this.usuarioBusquedaExpress.numColegiado = sessionStorage.getItem("nCol");
     }
 
     sessionStorage.removeItem("nombCol");
     sessionStorage.removeItem("nCol");
 
-    if(this.usuarioBusquedaExpress.nombreAp != "" || this.usuarioBusquedaExpress.numColegiado != ""){
+    if (this.usuarioBusquedaExpress.nombreAp != "" || this.usuarioBusquedaExpress.numColegiado != "") {
       this.enableGuardar = true;
       let row: Row = new Row();
       let cell1: Cell = new Cell();
@@ -422,8 +489,8 @@ export class GestionBajasTemporalesComponent implements OnInit {
       cell4.value = '';
       cell5.type = 'datePicker';
       cell5.value = '';
-      cell6.type = 'datePicker';
-      cell6.value = '';
+      cell6.type = 'datePickerFin';
+      cell6.value = ['', ''];
       cell7.type = 'text';
       cell7.value = myFormattedDate;
       cell8.type = 'text';
@@ -433,21 +500,22 @@ export class GestionBajasTemporalesComponent implements OnInit {
       cell10.type = 'invisible';
       cell10.value = true;
       row.cells = [cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8, cell9, cell10];
+      row.id = 0;
       this.rowGroups.unshift(row);
       this.rowGroupsAux = this.rowGroups;
       this.totalRegistros = this.rowGroups.length;
       sessionStorage.removeItem("nuevo");
     }
-}
-  inputChange(event, i, z){
+  }
+  inputChange(event, i, z) {
     this.enableGuardar = true;
   }
-  
-  eliminar(){
-  this.delete.emit(this.selectedArray);
-  this.totalRegistros = this.rowGroups.length;
-  this.rowGroupsAux = this.rowGroups;
-  //this.to = this.totalRegistros;
+
+  eliminar() {
+    this.delete.emit(this.selectedArray);
+    this.totalRegistros = this.rowGroups.length;
+    this.rowGroupsAux = this.rowGroups;
+    //this.to = this.totalRegistros;
   }
 
   searchHistorical() {
@@ -456,14 +524,15 @@ export class GestionBajasTemporalesComponent implements OnInit {
     this.searchHistorico.emit(this.historico);
   }
 
-  checkGuardar(){
-    let keyConfirmation = "deleteTurnosGuardias";
-
-    if(this.rowGroups[0].cells[2].value != "" && this.rowGroups[0].cells[3].value != "" && this.rowGroups[0].cells[4].value != "" && this.rowGroups[0].cells[5].value != ""){
+  checkGuardar() {
+    if (this.rowGroups[0].cells[2].value != "" && this.rowGroups[0].cells[3].value != "" && this.rowGroups[0].cells[4].value != "" && this.rowGroups[0].cells[5].value != "") {
+      let mess = this.translateService.instant('sjcs.oficio.bajastemporales.nuevo.mensajeConfirmacion');
+      let icon = "fa fa-question-circle";
+      let keyConfirmation = "deleteTurnosGuardias";
       this.confirmationService.confirm({
         key: keyConfirmation,
-        message: this.translateService.instant('sjcs.oficio.bajastemporales.nuevo.mensajeConfirmacion'),
-        icon: "fa fa-trash-alt",
+        message: mess,
+        icon: icon,
         accept: () => {
           this.modDatos.emit(this.rowGroups);
         },
@@ -479,35 +548,82 @@ export class GestionBajasTemporalesComponent implements OnInit {
           ];
         }
       });
-      
-    }else{
-      this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("general.message.camposObligatorios")});
+
+    } else {
+      this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("general.message.camposObligatorios") });
     }
     this.totalRegistros = this.rowGroups.length;
   }
 
-  checkDenegar(){
+  checkDenegar() {
     this.denegar.emit(this.selectedArray);
     this.totalRegistros = this.rowGroups.length;
   }
 
-  checkValidar(){
+  checkValidar() {
     this.validar.emit(this.selectedArray);
     this.totalRegistros = this.rowGroups.length;
   }
 
-  checkAnular(){
+  checkAnular() {
     this.anular.emit(this.selectedArray);
     this.totalRegistros = this.rowGroups.length;
   }
 
-  eliminarFromCombo(rowToDelete){
+  eliminarFromCombo(rowToDelete) {
     this.deleteFromCombo.emit(rowToDelete);
   }
-  selectedAll(evento){
+  selectedAll(evento) {
     this.seleccionarTodo = evento;
   }
 }
-function compare(a: string, b: number | string, isAsc: boolean) {
+
+function compareDate (fechaA:  any, fechaB:  any, isAsc: boolean){
+
+  let dateA = null;
+  let dateB = null;
+  if (fechaA!=null){
+    const dayA = fechaA.substr(0, 2) ;
+    const monthA = fechaA.substr(3, 2);
+    const yearA = fechaA.substr(6, 10);
+    console.log("fecha a:"+ yearA+","+monthA+","+dayA);
+    dateA = new Date(yearA, monthA, dayA);
+  }
+
+  if (fechaB!=null){
+    const dayB = fechaB.substr(0, 2) ;
+    const monthB = fechaB.substr(3, 2);
+    const yearB = fechaB.substr(6, 10);
+    console.log("fecha b:"+ yearB+","+monthB+","+dayB);
+    dateB = new Date(yearB, monthB, dayB);
+  }
+
+  console.log("comparacionDate isAsc:"+ isAsc+";");
+
+  return compare(dateA, dateB, isAsc);
+
+
+}
+
+function compare(a: number | string | Date, b: number | string | Date, isAsc: boolean) {
+  console.log("comparacion  a:"+ a+"; b:"+ b);
+
+  if (typeof a === "string" && typeof b === "string") {
+    console.log("comparacion  de cadenas");
+    a = a.toLowerCase();
+    b = b.toLowerCase();
+  }
+
+  console.log("compare isAsc:"+ isAsc+";");
+
+  if (a==null && b!=null){
+    return ( 1 ) * (isAsc ? 1 : -1);
+  }
+  if (a!=null && b==null){
+    return ( -1 ) * (isAsc ? 1 : -1);
+  }
+
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }
+
+

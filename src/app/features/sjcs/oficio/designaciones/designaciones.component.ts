@@ -28,10 +28,13 @@ export class DesignacionesComponent implements OnInit {
   muestraTablaJustificacion: boolean = false;
   muestraTablaDesignas: boolean = false;
   comboTipoDesigna: any[];
-  colegiado: boolean;
+  colegiadoJE: boolean;
+  colegiadoDesig: boolean;
   isLetrado: boolean = false;
   idPersonaLogado;
   numColegiadoLogado;
+  usuarioBusquedaExpressFromFicha = {numColegiado: '',
+                            nombreAp: ''};
   @ViewChild(FiltroDesignacionesComponent) filtros;
   
   datosJustificacion: JustificacionExpressItem = new JustificacionExpressItem();
@@ -47,6 +50,13 @@ export class DesignacionesComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    if (sessionStorage.getItem("colegiadoRelleno") == "true"){
+      const { numColegiado, nombre } = JSON.parse(sessionStorage.getItem("datosColegiado"));
+        this.usuarioBusquedaExpressFromFicha.numColegiado = numColegiado; //pasar al filtro
+        this.usuarioBusquedaExpressFromFicha.nombreAp = nombre.replace(/,/g,""); //pasar al filtro
+    }
+
     sessionStorage.setItem("rowIdsToUpdate", JSON.stringify([]));
     this.isLetrado = this.localStorageService.isLetrado;
     this.idPersonaLogado = this.localStorageService.idPersona;
@@ -58,25 +68,42 @@ export class DesignacionesComponent implements OnInit {
   }
 
   busquedaJustificacionExpres(){
-    this.datosJustificacion = new JustificacionExpressItem();
     this.progressSpinner=true;
+    this.datosJustificacion = new JustificacionExpressItem();
+    
     if(sessionStorage.getItem("buscadorColegiados")){​​
-
+      this.progressSpinner=true;
       let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
 
       this.filtros.filtroJustificacion.nColegiado = busquedaColegiado.nColegiado;
 
     }​
+
+    let error = null;
     
+    this.progressSpinner=true;
     this.sigaServicesNew.post("justificacionExpres_busqueda", this.filtros.filtroJustificacion).subscribe(
       data => {
-        this.progressSpinner=false;
+        
 
         if(data!=undefined && data!=null){
           this.datosJustificacion = JSON.parse(data.body);
         }
-
+        if(this.datosJustificacion[0] != null && this.datosJustificacion[0] != undefined){
+          if(this.datosJustificacion[0].error != null){
+            error = this.datosJustificacion[0].error;
+          }
+        }
         this.muestraTablaJustificacion=true;
+        this.progressSpinner=false;
+
+        if (error != null && error.description != null) {
+          this.msgs = [];
+          this.msgs.push({
+            severity:"info", 
+            summary:this.translateService.instant("general.message.informacion"), 
+            detail: error.description});
+        }
       },
       err => {
         this.progressSpinner = false;
@@ -112,9 +139,10 @@ export class DesignacionesComponent implements OnInit {
     this.sigaServicesNew.post("justificacionExpres_eliminacion", event).subscribe(
       data => {
            //refrescamos tabla
-        this.busquedaJustificacionExpres();
-        this.progressSpinner=false;
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.busquedaJustificacionExpres();
+        //this.progressSpinner=false;
+        
       },
       err => {
         this.muestraTablaJustificacion=true;
@@ -168,9 +196,18 @@ export class DesignacionesComponent implements OnInit {
     }
     this.sigaServicesNew.post("designaciones_busqueda", designaItem).subscribe(
       n => {
+        let error = null;
         this.datos = JSON.parse(n.body);
+        
+        if(this.datos[0] != null && this.datos[0] != undefined){
+          if(this.datos[0].error != null){
+            error = this.datos[0].error;
+          }
+        }
+
         this.datos.forEach(element => {
          element.factConvenio = element.ano;
+         element.anio = element.ano;
          element.ano = 'D' +  element.ano + '/' + element.codigo;
         //  element.fechaEstado = new Date(element.fechaEstado);
         element.fechaEstado = this.formatDate(element.fechaEstado);
@@ -205,28 +242,6 @@ export class DesignacionesComponent implements OnInit {
         };
         
         this.progressSpinner = false;
-        this.sigaServicesNew.post("actuaciones_designacion", params).subscribe(
-          data => {
-            let object: ActuacionDesignaObject = JSON.parse(data.body);
-            let resp = object.actuacionesDesignaItems;
-              let validadas = 0;
-              let total = 0;
-    
-              resp.forEach(el => {
-
-                if (el.validada) {
-                  validadas += 1;
-                }
-              });
-              this.actuacionesDesignaItems = resp;
-              total = this.actuacionesDesignaItems.length;
-              if(total == validadas && total > 0){
-                element.validada = "Si";
-              }else{
-                element.validada = "No";
-              }
-            });
-            this.progressSpinner = false;
           },
           err => {
             this.progressSpinner = false;
@@ -235,6 +250,13 @@ export class DesignacionesComponent implements OnInit {
         this.progressSpinner=false;
         this.showTablaDesigna(true);
         this.commonsService.scrollTablaFoco("tablaFoco");
+        if (error != null && error.description != null) {
+          this.msgs = [];
+          this.msgs.push({
+            severity:"info", 
+            summary:this.translateService.instant("general.message.informacion"), 
+            detail: error.description});
+        }
       },
       err => {
         this.progressSpinner = false;
@@ -304,12 +326,18 @@ export class DesignacionesComponent implements OnInit {
     return this.datePipe.transform(date, pattern);
   }
 
-  esColegiado(event){
-    this.colegiado = event;
+  esColegiadoJE(event){
+    this.colegiadoJE = event;
+  }
+
+  esColegiadoDesig(event){
+    this.colegiadoDesig = event;
   }
 
   actuacionesToDleteArr(event){
+    this.progressSpinner=true;
     this.eliminacionJustificacionExpres(event);
+    this.progressSpinner=false;
   }
   newActuacionItem(event){
     this.insercionJustificacionExpres(event);
@@ -320,5 +348,12 @@ export class DesignacionesComponent implements OnInit {
 
   getpermisosFichaAct(event){
     this.permisosFichaAct = event;
+  }
+  checkRestriccionesasLetrado(event){
+    
+    //this.muestraTablaJustificacion = false;
+    this.isLetrado = event;
+    console.log('checkRestriccionesasLetrado: ', this.isLetrado)
+    //this.muestraTablaJustificacion = true;
   }
 }

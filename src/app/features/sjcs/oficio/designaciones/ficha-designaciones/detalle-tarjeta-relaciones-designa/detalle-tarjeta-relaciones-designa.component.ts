@@ -1,24 +1,28 @@
-import { Component, OnInit, Input, ChangeDetectorRef, ViewChild, SimpleChanges, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectorRef, ViewChild, SimpleChanges, EventEmitter, Output, OnChanges } from '@angular/core';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../../commons/translate';
-import { PersistenceService } from '../../../../../../_services/persistence.service';
-import { Router } from '@angular/router';
-import { DesignaItem } from '../../../../../../models/sjcs/DesignaItem';
 import { Message } from 'primeng/primeng';
+import { DatePipe } from '@angular/common';
+import { Router } from '@angular/router';
+import { PersistenceService } from '../../../../../../_services/persistence.service';
+import { DesignaItem } from '../../../../../../models/sjcs/DesignaItem';
+import { ConfirmationService } from 'primeng/api';
+import { RelacionesItem } from '../../../../../../models/sjcs/RelacionesItem';
+import { EJGItem } from '../../../../../../models/sjcs/EJGItem';
 
 @Component({
   selector: 'app-detalle-tarjeta-relaciones-designa',
   templateUrl: './detalle-tarjeta-relaciones-designa.component.html',
   styleUrls: ['./detalle-tarjeta-relaciones-designa.component.scss']
 })
-export class DetalleTarjetaRelacionesDesignaComponent implements OnInit {
-  
+export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChanges {
+
   msgs: Message[] = [];
+
+  @Input() relaciones;
 
   @Output() searchRelaciones = new EventEmitter<boolean>();
   @Output() relacion = new EventEmitter<any>();
-
-  @Input() relaciones;
 
   selectedItem: number = 10;
   datos;
@@ -27,57 +31,73 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit {
   selectMultiple: boolean = false;
   selectionMode: string = "single";
   numSelected = 0;
-  
-  selectedDatos: any = [];
+  body:DesignaItem;
+  selectedDatos: any[] = [];
 
-  selectAll: boolean= false;
+  selectAll: boolean = false;
   progressSpinner: boolean = false;
 
   @ViewChild("table") tabla;
   disabled: boolean = false;
+  nuevo: boolean;
 
-  constructor(private sigaServices: SigaServices, 
-    private  translateService: TranslateService,
+  constructor(private sigaServices: SigaServices,
+    private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
-    private persistenceService: PersistenceService,
+    private datepipe: DatePipe,
     private router: Router,
-    ) { }
+    private confirmationService: ConfirmationService,
+  ) { }
+
+
+  formatDate(date) {
+    const pattern = 'dd/MM/yyyy';
+    return this.datepipe.transform(date, pattern);
+  }
 
   ngOnInit() {
-    this.getCols(); 
-    this.datos=this.relaciones;
-  }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    this.datos=this.relaciones;
-  }
+    if (this.datos) {
 
-  onChangeRowsPerPages(event) {
-    this.selectedItem = event.value;
-    this.changeDetectorRef.detectChanges();
-    this.tabla.reset();
-  }
-
-  actualizaSeleccionados(){
-    if (this.selectedDatos == undefined) {
-      this.selectedDatos = [];
-      this.disabled = true;
+      this.datos.forEach(element => {
+        if (element.sjcs.charAt(0) == 'E') {
+          if (element.impugnacion != null) {
+            element.resolucion = element.impugnacion;
+          }
+        }
+        element.fechaasunto = this.formatDate(element.fechaasunto);
+      });
+      this.body = JSON.parse(sessionStorage.getItem("designaItemLink"));
+    }else{
+      this.relacion.emit();
     }
-    if (this.selectedDatos != undefined) {
-      this.disabled = false;
-      if(this.selectedDatos.length ==undefined) this.numSelected=1;
-      else this.numSelected = this.selectedDatos.length;
+
+    this.getCols();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    for (const inputName in changes) {
+      if (changes.hasOwnProperty(inputName)) {
+        let change = changes[inputName];
+        switch (inputName) {
+          case 'relaciones': {
+            this.datos = change.currentValue;
+          }
+        }
+      }
     }
   }
 
   getCols() {
     this.cols = [
-      { field: "sjcs", header: "justiciaGratuita.oficio.designas.interesados.identificador" },
-      { field: "anio", header: "justiciaGratuita.sjcs.designas.DatosIden.ano" },
-      { field: "numero", header: "gratuita.busquedaAsistencias.literal.numero" },
-      { field: "destipo", header: "censo.nuevaSolicitud.tipoSolicitud" },
-      { field: "desturno", header: "dato.jgr.guardia.guardias.turno" },
-      { field: "idletrado", header: "justiciaGratuita.sjcs.designas.colegiado" }
+      { field: "sjcs", header: "justiciaGratuita.oficio.designas.interesados.identificador", width: '6%' },
+      { field: "fechaasunto", header: "dato.jgr.guardia.saltcomp.fecha", width: '6%' },
+      { field: "descturno", header: "justiciaGratuita.justiciables.literal.turnoGuardia" },
+      { field: "letrado", header: "justiciaGratuita.sjcs.designas.colegiado" },
+      { field: "interesado", header: "justiciaGratuita.sjcs.designas.datosInteresados" },
+      { field: "dilnigproc", header: 'justiciaGratuita.ejg.busquedaAsuntos.nigNumProc'},
+      { field: "resolucion", header: "justiciaGratuita.maestros.fundamentosResolucion.resolucion" }
+
     ];
 
     this.rowsPerPage = [
@@ -99,7 +119,27 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit {
       }
     ];
   }
-  
+
+
+  onChangeRowsPerPages(event) {
+    this.selectedItem = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.tabla.reset();
+  }
+
+  actualizaSeleccionados() {
+    if (this.selectedDatos == undefined) {
+      this.selectedDatos = [];
+      this.disabled = true;
+    }
+    if (this.selectedDatos != undefined) {
+      this.disabled = false;
+      if (this.selectedDatos.length == undefined) this.numSelected = 1;
+      else this.numSelected = this.selectedDatos.length;
+    }
+  }
+
+
   showMessage(severity, summary, msg) {
     this.msgs = [];
     this.msgs.push({
@@ -109,7 +149,7 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit {
     });
   }
 
-  
+
   onChangeSelectAll() {
     if (this.selectAll === true) {
       this.selectedDatos = this.datos;
@@ -124,28 +164,160 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit {
     this.msgs = [];
   }
 
-  
+
   isAnySelected() {
-    return this.selectedDatos != "";
+
+    return this.selectedDatos.length != 0 ? true : false;
+
   }
 
-  eliminarRelacion(){
-    this.progressSpinner = true;
-
-    this.sigaServices.post("designaciones_eliminarRelacion", this.selectedDatos).subscribe(
-      data => {
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.progressSpinner = false;
-          this.relacion.emit();
-    },
-    err => {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        this.progressSpinner = false;
-      }
+  confirmDelete() {
+    let mess = this.translateService.instant(
+      "justiciaGratuita.ejg.message.eliminarRelacion"
     );
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      key: "delRelacionDes",
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.eliminarRelacion()
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancelar",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
   }
 
-  porhacer(){
+  eliminarRelacion() {
+    for (let dato of this.selectedDatos) {
+
+      let identificador = dato.sjcs.charAt(0);
+
+      switch (identificador) {
+        case 'A':
+          let relacion: RelacionesItem = new RelacionesItem();
+
+          relacion.idinstitucion = dato.idinstitucion;
+          relacion.numero = dato.numero;
+          relacion.anio = dato.anio;
+
+          this.sigaServices.post("designaciones_eliminarRelacionAsistenciaDes", relacion).subscribe(
+            n => {
+              this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+              this.selectedDatos = [];
+              this.relacion.emit();
+              this.progressSpinner = false;
+            },
+            err => {
+              console.log(err);
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+              this.selectedDatos = [];
+              this.progressSpinner = false;
+            }
+          );
+          break;
+        case 'E':
+          let anio = this.body.ano.toString().substr(1,4);
+          let request= [
+            dato.idinstitucion,dato.numero,dato.anio,dato.idtipo,anio,this.body.numero,this.body.idTurno
+          ]
+
+          this.sigaServices.post("designaciones_eliminarRelacion", request).subscribe(
+            n => {
+              this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+              this.selectedDatos = [];
+              this.relacion.emit();
+              this.progressSpinner = false;
+            },
+            err => {
+              console.log(err);
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+              this.selectedDatos = [];
+              this.progressSpinner = false;
+            }
+          );
+
+          break;
+
+      }
+    }
+  }
+
+  porhacer() {
     this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
   }
-}
+
+  checkPermisosAsociarEJG() {
+    this.asociarEJG();
+  }
+  asociarEJG() {
+    sessionStorage.setItem("radioTajertaValue", 'ejg');
+    sessionStorage.setItem("Designacion", JSON.stringify(this.body));
+    this.router.navigate(["/busquedaAsuntos"]);
+
+  }
+  checkPermisosAsociarAsistencia() {
+    this.asociarAsistencia();
+  }
+  asociarAsistencia() {
+    sessionStorage.setItem("radioTajertaValue", 'asi');
+    sessionStorage.setItem("Designacion", JSON.stringify(this.body));
+    this.router.navigate(["/busquedaAsuntos"]);
+  }
+  checkPermisosCrearEJG() {
+    this.crearEJG();
+  }
+  crearEJG() {
+
+     sessionStorage.setItem("EJGItemDesigna",JSON.stringify(this.body));
+     
+    this.router.navigate(["/gestionEjg"]);
+  }
+
+  checkPermisosEditar(dato){
+      this.consultarEditar(dato);
+  }
+  consultarEditar(dato) {
+    
+      let identificador = dato.sjcs.charAt(0);
+
+      switch (identificador) {
+        case 'A':
+          /**
+         * TODO: enlazar una vez este creada la pagina.
+         */
+           this.porhacer();
+          break;
+        case 'E':
+
+        let ejgItem = new EJGItem();
+        ejgItem.annio = dato.anio;
+        ejgItem.numero = dato.numero;
+        ejgItem.idInstitucion = dato.idinstitucion;
+        ejgItem.turnoDes = dato.desturno;
+        ejgItem.tipoEJG = dato.idtipo;
+        ejgItem.idTurno = dato.idturno;
+        ejgItem.numDesigna = dato.iddesigna;
+        ejgItem.fechaApertura = dato.fechaasunto;
+        ejgItem.numAnnioProcedimiento = dato.dilnigproc.split(' - ')[2];
+        ejgItem.numerodiligencia = dato.dilnigproc.split(' - ')[0];
+        ejgItem.nig = dato.dilnigproc.split(' - ')[1];
+
+        //Se deberia añadir una llamada al servicio "datosEJG" (gestionejg_datosEJG) para obtener todos los datos 
+        //necesarios del EJG seleccionado. Actualmente falta traer del back en esta tabla su tipoejg.
+        sessionStorage.setItem("EJGItemDesigna",JSON.stringify(ejgItem));
+
+          this.router.navigate(["/gestionEjg"]);
+          break;
+      }
+    }
+  }

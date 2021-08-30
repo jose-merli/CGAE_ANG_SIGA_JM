@@ -55,15 +55,17 @@ export class FiltrosSaltosCompensacionesOficioComponent implements OnInit {
 
     this.getComboTurno();
 
-    if (sessionStorage.getItem("filtrosSaltosCompOficio") && !this.isNewFromOtherPage) {
+    if (sessionStorage.getItem("filtrosSaltosCompOficio") && sessionStorage.getItem("volver") == 'true') {
 
       this.filtros = JSON.parse(sessionStorage.getItem("filtrosSaltosCompOficio"));
+      this.usuarioBusquedaExpress.numColegiado = sessionStorage.getItem("numColegiado");
 
       if (sessionStorage.getItem("historicoSaltosCompOficio")) {
         this.historico = "true" == sessionStorage.getItem("historicoSaltosCompOficio");
       }
       this.isBuscar.emit(this.historico)
-
+      sessionStorage.removeItem("volver");
+      sessionStorage.removeItem("numColegiado");
     }
 
     if (sessionStorage.getItem('buscadorColegiados')) {
@@ -116,6 +118,7 @@ export class FiltrosSaltosCompensacionesOficioComponent implements OnInit {
 
   search() {
     this.filtros.colegiadoGrupo = this.usuarioBusquedaExpress.numColegiado;
+    sessionStorage.setItem("numColegiado", this.usuarioBusquedaExpress.numColegiado);
 
     if (this.filtros.fechaDesde != undefined && this.filtros.fechaDesde != null && this.filtros.fechaDesde != '') {
       this.filtros.fechaDesde = this.formatDate(this.filtros.fechaDesde);

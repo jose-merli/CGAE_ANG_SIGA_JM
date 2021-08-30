@@ -14,7 +14,7 @@
                         <div class="form-row">
                             <div class="form-group-interlineado col-lg-3 col-md-3">
                                 <label>{{'sjcs.guardia.asistencia.guardiadia' | translate}}</label>
-                                <app-fecha [(value)]="filtro.diaGuardia" (valueChangeSelected)="fillFechaFiltro($event)"  
+                                <app-fecha [(value)]="filtro.diaGuardia" (valueChangeSelected)="fillFechaFiltro($event)"  [inputStyleClass] = "styleObligatorio(filtro.diaGuardia)"
                                 (valueChangeInput)="fillFechaFiltro($event)"></app-fecha>
                             </div>
                             <div class="form-group-interlineado col-lg-3 col-md-3">
@@ -22,7 +22,7 @@
                                 <p-dropdown class="select-form"
                                     placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
                                     [showClear]="true" [(ngModel)]="filtro.idTurno"
-                                    [ngModelOptions]="{standalone: true}" [options]="comboTurnos"
+                                    [ngModelOptions]="{standalone: true}" [options]="comboTurnos" [ngClass]="styleObligatorio(filtro.idTurno)"
                                     (onChange)="onChangeTurno()">
                                 </p-dropdown>
                             </div>
@@ -30,7 +30,7 @@
                                 <label>{{"menu.justiciaGratuita.GuardiaMenu" | translate}} (*)</label>
                                 <p-dropdown class="select-form"
                                     placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
-                                    [showClear]="true" [(ngModel)]="filtro.idGuardia"
+                                    [showClear]="true" [(ngModel)]="filtro.idGuardia" [ngClass]="styleObligatorio(filtro.idGuardia)"
                                     [ngModelOptions]="{standalone: true}" [options]="comboGuardias"
                                     (onChange)="onChangeGuardia()">
                                 </p-dropdown>
@@ -49,7 +49,7 @@
                                 <label>{{"sjcs.guardia.asistencia.letradoguardia" | translate}} (*)</label>
                                 <p-dropdown class="select-form"
                                     placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
-                                    [showClear]="true" [(ngModel)]="filtro.idLetradoGuardia"
+                                    [showClear]="true" [(ngModel)]="filtro.idLetradoGuardia" [ngClass]="styleObligatorio(filtro.idLetradoGuardia)"
                                     [ngModelOptions]="{standalone: true}" [options]="comboLetradosGuardia"
                                     (onChange)="onChangeLetradoGuardia()">
                                 </p-dropdown>
@@ -62,7 +62,7 @@
                             </div>
                             <div class="form-check col-lg-3 col-md-3">
                                 <br>
-                                <label class="form-group-label pt-2"><b>Sustituir al letrado de guardia</b></label>
+                                <label class="form-group-label pt-2"><b>{{"justiciaGratuita.guardia.asistenciasexpress.sustitucion" | translate}}</b></label>
                                 &nbsp;&nbsp;
                                 <p-checkbox [(ngModel)]="filtro.isSustituto" (onChange)="onChangeSustitutoCheck()" binary="true"
                                 [disabled]="filtro.idPersona"></p-checkbox>

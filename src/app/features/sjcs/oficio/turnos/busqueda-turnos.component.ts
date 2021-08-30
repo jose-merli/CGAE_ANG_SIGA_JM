@@ -116,6 +116,7 @@ export class TurnosComponent implements OnInit {
     this.filtros.filtroAux.idsubzona = "";
     this.sigaServices.post("turnos_busquedaTurnos", this.filtros.filtroAux).subscribe(
       n => {
+        let error = JSON.parse(n.body).error;
         this.datos = JSON.parse(n.body).turnosItem;
         this.datos.forEach(element => {
           element.nletrados = +element.nletrados;
@@ -134,6 +135,14 @@ export class TurnosComponent implements OnInit {
         setTimeout(() => {
           this.commonsService.scrollTablaFoco("tablaFoco");
         }, 5);
+
+        if (error != null && error.description != null) {
+          this.msgs = [];
+          this.msgs.push({
+            severity:"info", 
+            summary:this.translateService.instant("general.message.informacion"), 
+            detail: error.description});
+        }
       },
       err => {
         this.progressSpinner = false;

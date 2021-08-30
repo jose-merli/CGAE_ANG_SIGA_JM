@@ -12,37 +12,42 @@
 
       <div class="form-group col-lg-3 col-md-3 w-100">
         <label>Fecha(*)</label>
-        <app-fecha [inputStyleClass]="(fechaGenerales == null || fechaGenerales == '') ? 'camposObligatorios': ''" [(value)]='fechaGenerales' (valueChangeInput)="fillFechaHastaCalendar($event)" (valueChangeSelected)="fillFechaHastaCalendar($event)" [utc]="true"></app-fecha>
+        <app-fecha [inputStyleClass]="(fechaGenerales == null || fechaGenerales == '') ? 'camposObligatorios': ''" [(value)]='fechaGenerales' (valueChangeInput)="fillFechaHastaCalendar($event)" (valueChangeSelected)="fillFechaHastaCalendar($event)" [utc]="false"></app-fecha>
       </div>
 
       <div class="form-group col-lg-3 col-md-3 w-100" *ngFor="let selector of selectores">
         <!-- <app-selector [i]="0" [selector]="selector"></app-selector> -->
         <label *ngIf="selector.nombre != 'Turno'">{{selector.nombre}}</label>
         <label *ngIf="selector.nombre == 'Turno'">{{selector.nombre}}(*)</label>
-        <p-dropdown *ngIf="selector.nombre == 'Turno'" autoWidth="false" class="inputWidth"  filterBy="label,labelSinTilde" [filter] = "true" placeholder="Seleccionar" [disabled]="selector.disable"
-          [ngModelOptions]="{standalone: true}" [(ngModel)]="selector.value" [options]="selector.opciones" 
+        <p-dropdown *ngIf="selector.nombre == 'Turno'" autoWidth="false" class="inputWidth"
+          filterBy="label,labelSinTilde" [filter]="true" placeholder="Seleccionar" [disabled]="selector.disable"
+          [ngModelOptions]="{standalone: true}" [(ngModel)]="selector.value" [options]="selector.opciones"
           [ngClass]="styleObligatorio('selector', selector.obligatorio)" showClear="true" class="select-form">
         </p-dropdown>
-        <p-dropdown *ngIf="selector.nombre != 'Turno'" autoWidth="false" filterBy="label,labelSinTilde" [filter] = "true" class="inputWidth" placeholder="Seleccionar" [disabled]="selector.disable"
-          [ngModelOptions]="{standalone: true}" [(ngModel)]="selector.value" [options]="selector.opciones" 
+        <p-dropdown *ngIf="selector.nombre != 'Turno'" autoWidth="false" filterBy="label,labelSinTilde" [filter]="true"
+          class="inputWidth" placeholder="Seleccionar" [disabled]="selector.disable"
+          [ngModelOptions]="{standalone: true}" [(ngModel)]="selector.value" [options]="selector.opciones"
           showClear="true" class="select-form">
         </p-dropdown>
       </div>
 
       <div class="form-group col-lg-3 col-md-3 w-100" *ngFor="let inputTitle of inputs">
         <label>{{ inputTitle.nombre }}</label>
-        <input type="text" [(ngModel)]="inputTitle.value" class="form-control" [disabled]="inputTitle.disable" pInputText>
+        <input type="text" [(ngModel)]="inputTitle.value" class="form-control" [disabled]="inputTitle.disable"
+          pInputText>
       </div>
 
       <div class="form-group col-lg-3 col-md-3 w-100">
         <label>Designación</label>
         <div class="d-flex align-items-baseline justify-content-between">
           <div id="check2">
-            <p-checkbox binary="true" label="Art. 27-28" [(ngModel)]="checkArt" [disabled]="disableCheckArt" (onChange)="onChangeArt()"></p-checkbox>
+            <p-checkbox binary="true" label="Art. 27-28" [(ngModel)]="checkArt" [disabled]="disableCheckArt"
+              (onChange)="onChangeArt()"></p-checkbox>
           </div>
           <div class="main-button">
-            <button pButton (click)="searchColegiado()" type="button" icon="fa fa-search" iconPos="left" [disabled]="disableButtons"></button>
-            <button pButton type="button" icon="fa fa-eraser" iconPos="left" [disabled]="disableButtons" ></button>
+            <button pButton type="button" icon="fa fa-eraser" iconPos="left" [disabled]="disableButtons"></button>
+            <button pButton (click)="searchColegiado()" type="button" icon="fa fa-search" iconPos="left"
+              [disabled]="disableButtons"></button>
           </div>
         </div>
       </div>
@@ -56,14 +61,15 @@
     <button pButton type="button" icon="fa fa-paper-plane" iconPos="left" label="Comunicar" [disabled]="true"
       (click)="showMsg('success', 'Se ha comunicado correctamente', '')"></button>
     <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer"
-      (click)="showMsg('success', 'Se ha restablecido correctamente', 'Restablecer')"  [disabled]="isLetrado"></button>
+      (click)="showMsg('success', 'Se ha restablecido correctamente', 'Restablecer')" [disabled]="isLetrado"></button>
     <button pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"
       (click)="showMsg('success', 'Se ha guardado correctamente', 'save')" [disabled]="!permisoEscritura"></button>
   </div>
 </div>
 
 
-<p-confirmDialog  header="{{ 'general.cabecera.confirmacion' | translate}}" icon="icon"   key="confirmGuardar" width="425" #confirmGuardar>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" icon="icon" key="confirmGuardar" width="425"
+  #confirmGuardar>
   <p-footer>
     <button type="button" pButton icon="fa-check" label="Si" (click)="confirmGuardar.accept()"></button>
     <button type="button" pButton icon="fa-close" label="No" (click)="confirmGuardar.reject()"></button>

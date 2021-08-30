@@ -1,0 +1,87 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="busqueda-container" id="serviciosTramitacion">
+  <div class="card">
+    <div class="card-header header-ficha">
+      <div *ngIf="!esFichaActiva('serviciosTramitacion')" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('serviciosTramitacion')">
+          <div class="img-colegiado">
+            <i class="fas fa-gavel icon-ficha"></i>
+          </div>
+        </div>
+       <div class="col-lg-11 col-md-10 ">
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('serviciosTramitacion')">
+            <label class="mr-auto title-ficha pointer">{{ "justiciaGratuita.ejg.datosGenerales.ServiciosTramit" | translate }}</label>
+          </div>
+          <div class="d-flex justify-content-between default">
+              <label name>{{ "menu.justiciaGratuita.oficio.comboturno" | translate }}: <span>{{body.turno}}</span></label>
+              <label name>{{ "menu.justiciaGratuita.GuardiaMenu" | translate }}: <span>{{body.guardia}}</span></label>
+              <label name>{{ "menu.justiciaGratuita.Tramitador" | translate }}: <span>{{body.apellidosYNombre}}</span></label>
+              <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('serviciosTramitacion')" *ngIf="!esFichaActiva('serviciosTramitacion')"></i>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="esFichaActiva('serviciosTramitacion')" class=" header-ficha-open d-flex justify-content-start align-items-center" (click)="abreCierraFicha('serviciosTramitacion')">
+        <div class="img-colegiado">
+          <i class="fas fa-gavel icon-ficha" ></i>
+        </div>
+        <label class="title-ficha pointer">{{ "justiciaGratuita.ejg.datosGenerales.ServiciosTramit" | translate }}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+    <div *ngIf="esFichaActiva('serviciosTramitacion')" class="card-body card-body-ficha">
+
+      <div class="form-row">
+        <div class="form-group col-lg-6 col-md-6">
+          <label>{{ "dato.jgr.guardia.guardias.turno" | translate }} (*)</label>
+          <p-dropdown [ngClass]="styleObligatorio(body.idTurno)" class="select-form" (onChange)="onChangeTurnos()" [(ngModel)]='body.idTurno' placeholder="Seleccionar" [options]="comboTurno"
+            [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" ></p-dropdown>
+        </div>
+        <div class="form-group col-lg-6 col-md-6">
+          <label>{{ "menu.justiciaGratuita.GuardiaMenu" | translate }} (*)</label>
+          <p-dropdown [ngClass]="styleObligatorio(body.idGuardia)" class="select-form" [(ngModel)]='body.idGuardia' [(disabled)]="isDisabledGuardia" placeholder="Seleccionar" [options]="comboGuardia"
+            [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" ></p-dropdown>
+        </div>
+        <!-- <div class="form-group col-lg-3 col-md-3">
+          <label>{{"censo.resultadoDuplicados.numeroColegiado" | translate}}</label>
+          <input type="text" (keypress)="numberOnly($event)" class="form-control" [(ngModel)]="body.idPersona" pInputText />
+        </div>
+        <div class="form-group col-lg-6 col-md-6">
+          <label>{{"administracion.parametrosGenerales.literal.nombre.apellidos" | translate}}</label>
+          <input type="text" class="form-control" disabled [(ngModel)]="body.apellidosYNombre" pInputText />
+        </div> -->
+        <div *ngIf="body.idPersona == null && resaltadoDatos" class="form-group col-lg-9 col-md-9" style="border: 1px solid red !important" >
+          <app-busqueda-colegiado-express (idPersona)="idPersona($event)" [idTurno]="this.body.idTurno" [idGuardia]="this.body.idGuardia" [tarjeta]="'ServiciosTramit'" 
+          [pantalla]="'gestionEjg'"  [numColegiado]="usuarioBusquedaExpress.numColegiado" [art27]="art27"
+          [nombreAp]="usuarioBusquedaExpress.nombreAp"></app-busqueda-colegiado-express>
+        </div>
+        <div *ngIf="body.idPersona != null" class="form-group col-lg-9 col-md-9">
+          <app-busqueda-colegiado-express (idPersona)="idPersona($event)" [idTurno]="this.body.idTurno" [idGuardia]="this.body.idGuardia" [tarjeta]="'ServiciosTramit'" 
+          [pantalla]="'gestionEjg'"  [numColegiado]="usuarioBusquedaExpress.numColegiado" [art27]="art27"
+          [nombreAp]="usuarioBusquedaExpress.nombreAp"></app-busqueda-colegiado-express>
+        </div>
+        <div class="form-group col-lg-3 col-md-3 form-row">
+          <!-- Revisar más adelante -->
+          <div class="form-group col-lg-6 pt-1 col-md-6">
+            <label>Art 27-28</label>
+            <p-checkbox [(ngModel)]="art27" [disabled]="!permisoEscritura" binary="true" (onChange)="clearBusqueda()"></p-checkbox>
+          </div>
+          <!-- <div class="form-group col-lg-6 col-md-6 pt-4">
+            <div id="buttonExpressColegiados" class="text-right main-button">
+              <button (click)="isLimpiar()" pButton type="button" icon="fa fa-eraser" iconPos="left"></button>
+              <button (click)="isBuscar()" pButton [disabled]="buscarDisabled" type="button" icon="fa fa-search" iconPos="left"></button>
+            </div>
+          </div> -->
+        </div>
+      </div>
+    </div>
+    <div *ngIf="esFichaActiva('serviciosTramitacion')" class="card-footer">
+      <div class="text-right main-button">
+        <button (click)="checkPermisosRest()" pButton [disabled]="!permisoEscritura" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="checkPermisosSave()" pButton [disabled]="!permisoEscritura" type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

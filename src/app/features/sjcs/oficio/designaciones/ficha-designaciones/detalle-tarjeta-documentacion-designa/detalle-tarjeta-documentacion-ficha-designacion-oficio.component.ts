@@ -9,12 +9,16 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 import { Cell, Row, TablaResultadoMixDocDesigService } from './tabla-resultado-mix-doc-desig.service';
 import { TranslateService } from '../../../../../../commons/translate/translation.service';
 import { saveAs } from "file-saver/FileSaver";
-import { ColegiadoItem } from '../../../../../../models/ColegiadoItem';
 import { SigaStorageService } from '../../../../../../siga-storage.service';
+import { UsuarioLogado } from '../detalle-tarjeta-actuaciones-designa/ficha-actuacion/ficha-actuacion.component';
+import { ActuacionDesignaItem } from '../../../../../../models/sjcs/ActuacionDesignaItem';
+import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
+import { Router } from '@angular/router';
 
 interface Cabecera {
-  id: string,
-  name: string
+  id: string;
+  name: string;
+  width: string;
 }
 @Component({
   selector: 'app-detalle-tarjeta-documentacion-ficha-designacion-oficio',
@@ -26,30 +30,36 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
   @Input() documentos: DocumentoDesignaItem[];
   @Input() campos: DesignaItem;
   @Input() isLetrado: boolean;
-  usuarioLogado: any;
+  @Input() actuacionesDesignaItems: ActuacionDesignaItem[];
+  usuarioLogado: UsuarioLogado;
   @Output() buscarDocDesignaEvent = new EventEmitter<any>();
   @ViewChild('table') table: ElementRef;
   deseleccionarTodo: boolean = false;
   cabeceras: Cabecera[] = [
     {
       id: "fecha",
-      name: "Fecha"
+      name: "Fecha",
+      width: '20%'
     },
     {
       id: "asociado",
-      name: "Asociado"
+      name: "Asociado",
+      width: '20%'
     },
     {
       id: "tipoDoc",
-      name: "Tipo documentación"
+      name: "Tipo documentación",
+      width: '20%'
     },
     {
       id: "nombre",
-      name: "Nombre"
+      name: "Nombre",
+      width: '20%'
     },
     {
       id: "observaciones",
-      name: "Observaciones"
+      name: "Observaciones",
+      width: '20%'
     }
   ];
   rowGroups: Row[];
@@ -67,6 +77,8 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
   emptyResults: boolean = false;
   comboTipoDoc = [];
   textFilter: string = "Seleccionar";
+  comboAsociado = [];
+  modoLectura: boolean = false;
 
   constructor(
     private datepipe: DatePipe,
@@ -75,17 +87,44 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
     private trmDoc: TablaResultadoMixDocDesigService,
     private translateService: TranslateService,
     private cdRef: ChangeDetectorRef,
-    private localStorageService: SigaStorageService
+    private localStorageService: SigaStorageService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
 
-    this.isLetrado = this.localStorageService.isLetrado;
-    if (this.isLetrado) {
-      this.getDataLoggedUser();
-    }
+    this.commonsService.checkAcceso(procesos_oficio.designasDocumentacion)
+      .then(respuesta => {
+        let permisoEscritura = respuesta;
 
-    this.getComboTiposDoc();
+        if (permisoEscritura == undefined) {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
+
+        if (!permisoEscritura) {
+          this.modoLectura = true;
+        }
+
+        this.isLetrado = this.localStorageService.isLetrado;
+
+        if (this.isLetrado) {
+          this.usuarioLogado.idPersona = this.localStorageService.idPersona;
+          this.usuarioLogado.numColegiado = this.localStorageService.numColegiado;
+        }
+
+        this.getComboAsociado();
+
+        if (this.comboTipoDoc == undefined || this.comboTipoDoc == null || this.comboTipoDoc.length == 0) {
+          this.getComboTiposDoc();
+        }
+
+      })
+      .catch(err => console.log(err));
 
   }
 
@@ -103,8 +142,8 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
 
       let obj = [
         { type: 'text', value: this.datepipe.transform(new Date(element.fechaEntrada), 'dd/MM/yyyy'), header: this.cabeceras[0].id, disabled: false },
-        { type: 'text', value: 'Designación', header: this.cabeceras[1].id, disabled: false },
-        { type: 'select', value: element.idTipodocumento, combo: this.comboTipoDoc, header: this.cabeceras[2].id, disabled: false },
+        { type: 'text', value: element.idActuacion == null ? 'Designación' : this.comboAsociado.find(el => el.value == element.idActuacion).label, header: this.cabeceras[1].id, disabled: false },
+        { type: 'text', value: this.comboTipoDoc.find(el => el.value == element.idTipodocumento).label, header: this.cabeceras[2].id, disabled: false },
         { type: 'text', value: element.nombreFichero, header: this.cabeceras[3].id, disabled: false },
         { type: 'textarea', value: element.observaciones, header: this.cabeceras[4].id, disabled: false },
         { type: 'invisible', value: false, header: 'nuevo', disabled: false },
@@ -115,7 +154,7 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
         { type: 'invisible', value: element.anio, header: 'anio', disabled: false },
         { type: 'invisible', value: element.numero, header: 'numero', disabled: false },
         { type: 'invisible', value: element.idPersona, header: 'idPersona', disabled: false },
-        { type: 'invisible', value: element.numColegiado, header: 'numColegiado', disabled: false }
+        { type: 'invisible', value: element.idActuacion, header: 'idActuacion', disabled: false },
       ];
 
 
@@ -281,9 +320,7 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
         this.progressSpinner = false;
       }, () => {
         this.progressSpinner = false;
-        if (!this.isLetrado) {
-          this.cargaInicial();
-        }
+        this.cargaInicial();
       }
     );
   }
@@ -303,10 +340,11 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
     cell1.header = this.cabeceras[0].id;
     cell1.disabled = true;
 
-    cell2.type = 'text';
-    cell2.value = 'Designación';
+    cell2.type = 'select';
+    cell2.combo = this.comboAsociado;
+    cell2.value = null;
     cell2.header = this.cabeceras[1].id;
-    cell2.disabled = true;
+    cell2.disabled = false;
 
     cell3.type = 'select';
     cell3.combo = this.comboTipoDoc;
@@ -354,7 +392,7 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
 
       copiaRowGroups.forEach((el, i) => {
 
-        if (!el.cells[5].value && this.isLetrado && !(this.usuarioLogado.idPersona == el.cells[12].value && this.usuarioLogado.numColegiado == el.cells[13].value)) {
+        if (!el.cells[5].value && this.isLetrado && !(this.usuarioLogado.idPersona == el.cells[12].value)) {
           copiaRowGroups.splice(i, 1);
           error = true;
         }
@@ -364,7 +402,7 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
       if (error) {
         this.showMsg('info', this.translateService.instant("general.message.informacion"), 'Alguno de los registros no puedo ser editado porque no ser usted su creador');
       }
-      if(copiaRowGroups.length>0){
+      if (copiaRowGroups.length > 0) {
         this.progressSpinner = true;
 
         let designa = {
@@ -416,7 +454,7 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
     this.selectedArray.forEach((el, i) => {
       let row: Row = this.rowGroups.slice(el, el + 1)[0];
 
-      if (!row.cells[5].value && this.isLetrado && !(this.usuarioLogado.idPersona == row.cells[12].value && this.usuarioLogado.numColegiado == row.cells[13].value)) {
+      if (!row.cells[5].value && this.isLetrado && !(this.usuarioLogado.idPersona == row.cells[12].value)) {
         error = true;
       } else {
 
@@ -433,7 +471,7 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
       this.showMsg('info', this.translateService.instant("general.message.informacion"), 'Alguno de los registros no puede ser editado porque no ser usted su creador');
     }
 
-    if(docAeliminar.length>0){
+    if (docAeliminar.length > 0) {
       this.sigaServices.post("designacion_eliminarDocumentosDesigna", docAeliminar).subscribe(
         data => {
           let resp = JSON.parse(data.body);
@@ -552,12 +590,18 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
 
     documentos.forEach(doc => {
 
-      if ((doc.cells[2].value == undefined || doc.cells[2].value == null || (typeof doc.cells[2].value == 'string' && doc.cells[2].value.trim() == ''))) {
-        error = true;
-        this.showMsg('error', this.translateService.instant('general.message.incorrect'), this.translateService.instant('general.message.camposObligatorios'));
+      if (doc.cells[5].value) {
+
+        if ((doc.cells[1].value == undefined || doc.cells[1].value == null || (typeof doc.cells[1].value == 'string' && doc.cells[1].value.trim() == '')) ||
+          (doc.cells[2].value == undefined || doc.cells[2].value == null || (typeof doc.cells[2].value == 'string' && doc.cells[2].value.trim() == ''))
+        ) {
+          error = true;
+          this.showMsg('error', this.translateService.instant('general.message.incorrect'), this.translateService.instant('general.message.camposObligatorios'));
+        }
+
       }
 
-      if (!error && (doc.cells[5].value && (doc.cells[3].value == undefined || doc.cells[3].value == null))) {
+      if (!error && (doc.cells[3].value == undefined || doc.cells[3].value == null)) {
         error = true;
         this.showMsg('error', 'Error', this.translateService.instant('general.boton.adjuntarFichero'));
       }
@@ -569,23 +613,18 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
     return error;
   }
 
-  getDataLoggedUser() {
+  getComboAsociado() {
+    this.comboAsociado.push({
+      label: 'Designación',
+      value: '0'
+    });
 
-    this.progressSpinner = true;
-
-    this.sigaServices.get("usuario_logeado").subscribe(n => {
-
-      const usuario = n.usuarioLogeadoItem;
-      const colegiadoItem = new ColegiadoItem();
-      colegiadoItem.nif = usuario[0].dni;
-
-      this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(
-        usr => {
-          this.usuarioLogado = JSON.parse(usr.body).colegiadoItem[0];
-          this.progressSpinner = false;
-          this.cargaInicial();
-        });
-
+    this.actuacionesDesignaItems.forEach(actuacion => {
+      let asociado = `${actuacion.numeroAsunto} ${actuacion.acreditacion} ${actuacion.modulo}`;
+      this.comboAsociado.push({
+        label: asociado,
+        value: actuacion.numeroAsunto
+      });
     });
 
   }
@@ -597,8 +636,29 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.documentos && changes.documentos.currentValue) {
-      this.cargaInicial();
+
+      if (this.comboTipoDoc != undefined && this.comboTipoDoc != null && this.comboTipoDoc.length > 0) {
+        this.cargaInicial();
+      } else {
+        this.getComboTiposDoc();
+      }
+
     }
+  }
+
+  getTamanioColumn(cell: Cell) {
+    return cell.type == 'empty' ? '100%' : this.cabeceras.find(el => el.id == cell.header).width;
+  }
+
+  changeSelect(row: Row, cell: Cell) {
+
+    if (cell.header == 'asociado' && cell.value != null && cell.value != '0') {
+      row.cells[2].value = '1';
+      row.cells[2].disabled = true;
+    } else {
+      row.cells[2].disabled = false;
+    }
+
   }
 
 }

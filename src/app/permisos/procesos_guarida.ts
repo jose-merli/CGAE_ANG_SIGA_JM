@@ -13,5 +13,6 @@ export const procesos_guardia: any = {
     incompatibilidades: "919",
     calendario: "92K",
     saltos_compensaciones: "76S",
-
+    asistencias_express: "96W",
+    solicitudes_centralita: "956"
 }

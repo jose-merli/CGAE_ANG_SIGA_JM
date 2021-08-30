@@ -3,29 +3,31 @@
 
 <app-tabla-resultado-desplegable [seleccionarTodo]="seleccionarTodo" [ngClass]="{'customCursor': selectMultiple}"
     [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups"
-    (anySelected)="notifyAnySelected($event)" (anySelected)="notifyAnySelected($event)" [pantalla]="'AE'">
+    (anySelected)="notifyAnySelected($event)" [pantalla]="pantalla">
 </app-tabla-resultado-desplegable>
 
 
-<div class="card-footer">
+<div class="card-footer ajustar">
     <div class="row inline">
-        <div class="center col-lg-4 col-md-4 ajustar">
+        <div class="center col-lg-4 col-md-4">
             <div class="form-inline">
-                <label class="mr-3 textoAlineado form-group">Fecha Justificación</label>
-                <app-fecha [utc]="false"></app-fecha>
+                <label class="mr-3 textoAlineado form-group">{{"justiciaGratuita.oficio.designas.actuaciones.fechaJustificacion" | translate}}</label>
+                <app-fecha [(value)] = "fechaJustificacion" [utc]="false" [disabled]="isLetrado"(valueChangeSelected)="fillFecha($event)"  
+                (valueChangeInput)="fillFecha($event)"
+                 ></app-fecha>
             </div>
         </div>
-        <div class="right col main-button">
-            <button [disabled]="isDisabled" pButton type="button"  icon="fa fa-eraser"  iconPos="left" label="Crear EJG"
+        <div class="right col main-button marginButtons">
+            <button [disabled]="isDisabled" pButton type="button"  icon="fa fa-eraser"  iconPos="left" label="{{'general.boton.crearEJG' | translate}}"
                 (click)="showMsg('success', 'Se ha creado correctamente', '')"></button>
             <button [disabled]="isDisabled" type="submit" pButton icon="fa fa-plus" iconPos="left"
-                label="Nueva Actuación"></button>
-            <button [disabled]="isDisabled" type="submit" pButton icon="fa fa-plus" iconPos="left"
-                label="Nueva Asistencia"></button>
-            <button [disabled]="isDisabled" type="submit" pButton icon="fa fa-undo" iconPos="left" label="Restablecer"
-                (click)="showMsg('success', 'Se ha restablecido correctamente', '')"></button>
-            <button [disabled]="isDisabled" type="submit" pButton icon="far fa-save" iconPos="left" label="Guardar"
-                (click)="showMsg('success', 'Se ha guardado correctamente', '')"></button>
+                label="{{'justiciaGratuita.guardia.asistenciasexpress.nuevaactuacion' | translate}}" (click)="nuevaActuacion()"></button>
+            <button type="submit" pButton icon="fa fa-plus" iconPos="left" (click)="nuevaAsistencia()" [disabled]="isDisabled"
+                label="{{'justiciaGratuita.guardia.asistenciasexpress.nuevaasistencia' | translate}}"></button>
+            <button [disabled]="isDisabled" type="submit" pButton icon="fa fa-undo" iconPos="left" label="{{'general.boton.restablecer' | translate}}"
+                (click)="resetTable(); showMsg('success', 'Se ha restablecido correctamente', '')"></button>
+            <button [disabled]="isDisabled" type="submit" pButton icon="far fa-save" iconPos="left" label="{{'general.boton.guardar' | translate}}"
+                (click)="guardar();"></button>
         </div>
     </div>
 </div>

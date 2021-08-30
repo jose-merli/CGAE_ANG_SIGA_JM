@@ -42,6 +42,7 @@ export class JustificacionExpressItem {
   procedimiento: String;
   expedientes: [{}];
   actuaciones : ActuacionesJustificacionExpressItem[];
+  categoriaProcedimiento: String;
 
   constructor() { }
 }

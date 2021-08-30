@@ -8,11 +8,11 @@
         (toReg)="toReg($event)" [totalRegistros]="totalRegistros"></app-paginador2>
     </div>
 
-    <div class="table" matSort (matSortChange)="sortData($event)" #table>
+    <div class="table" matSort (matSortChange)="sortData($event)" matSortDirection="asc" #table>
       <div class="table-header">
         <div class="table-header-child p-2" *ngFor="let cabecera of cabeceras; let j = index" #BorderedHeader>
           <div>
-            <div [mat-sort-header]=cabecera.id>{{cabecera.name | translate}}</div>
+            <div [mat-sort-header]=cabecera.id disableClear>{{cabecera.name | translate}}</div>
             <input type="text" class="form-control" pInputTex [(ngModel)]="searchText[j]"
               (ngModelChange)="searchChange(j)" autocomplete="off" placeholder="Buscar">
           </div>
@@ -38,8 +38,8 @@
 
               <span class="w100 cell-value selectWrap" *ngIf="cell.type == 'select'">
                 <p-dropdown autoWidth="false" class="center" [placeholder]="textFilter" [(ngModel)]="cell.value"
-                  [options]="cell.combo" showClear="true" styleClass="widthAll" (onChange)="changeSelect(row, cell)"
-                  [disabled]="cell.disabled">
+                  [options]="cell.combo" showClear="true" styleClass="widthAll" filter="true"
+                  filterBy="label,labelSinTilde" (onChange)="changeSelect(row, cell)" [disabled]="cell.disabled">
                 </p-dropdown>
               </span>
 

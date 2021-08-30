@@ -1475,7 +1475,11 @@ tr:hover {
 	cursor: pointer !important;
 }
 
-#cabeza, #sInteres, #alterMutua, #mutualidad, #nueIncoDatosAltMut, #nueIncoMutAbo, #detaSanDatosGene, #formaFichInsDatosCur {
+.default{
+	cursor: default !important;
+}
+
+#cabeza, #sInteres, #alterMutua, #mutualidad, #nueIncoDatosAltMut, #nueIncoMutAbo, #detaSanDatosGene, #inscripciones, #formaFichInsDatosCur {
 
 	div {
     	cursor: default;

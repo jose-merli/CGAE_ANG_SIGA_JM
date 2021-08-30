@@ -23,8 +23,14 @@
     <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
       <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
         <td class="text-center" *ngFor="let col of columns">
-          <div>
-            <a class="enlace" (click)="navigateTo([dato])"><span>{{dato[col.field]}}</span></a>
+          <div *ngIf="col.field=='destinatario'">
+            <span class="enlace" (click)="navigateTo([dato])">{{dato[col.field]}}</span>
+          </div>
+          <div *ngIf="col.field!='destinatario' && col.field!='fechaProgramada' && col.field!='fechaCreacion'">
+            <span>{{dato[col.field]}}</span>
+          </div>
+          <div *ngIf="col.field!='destinatario' && (col.field=='fechaProgramada' || col.field=='fechaCreacion')">
+            <span>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</span>
           </div>
         </td>
       </tr>

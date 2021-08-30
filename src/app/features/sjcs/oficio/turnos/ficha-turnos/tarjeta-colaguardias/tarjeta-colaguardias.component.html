@@ -84,29 +84,14 @@
         <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
-              <div *ngIf="setItalic(dato) && col.field =='nombreguardia'">
-                <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato.alfabeticoapellidos}} {{dato[col.field]}}</span>
-              </div>
-              <div *ngIf="setItalic(dato) && col.field =='fechavalidacion'">
-                <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
-              </div>
-              <div *ngIf="setItalic(dato) && col.field !='nombreguardia' && col.field !='fechavalidacion'">
-                <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
-              </div>
-              <div *ngIf="setItalic(dato) && col.field =='fechabajaguardia'">
-                <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
-              </div>
-              <div *ngIf="!setItalic(dato) && col.field =='fechabajaguardia'">
+              <div *ngIf="col.field !='nombreguardia' && col.field !='fechavalidacion' && col.field != 'fechabajaguardia'">
                 <span>{{dato[col.field]}}</span>
               </div>
-              <div *ngIf="!setItalic(dato) && col.field !='nombreguardia' && col.field !='fechavalidacion'">
+              <div *ngIf="col.field =='fechavalidacion' || col.field =='fechabajaguardia'">
                 <span>{{dato[col.field]}}</span>
               </div>
-              <div *ngIf="!setItalic(dato) && col.field =='fechavalidacion'">
-                <span>{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
-              </div>
-              <div *ngIf="!setItalic(dato) && col.field =='nombreguardia'">
-                <span>{{dato.alfabeticoapellidos}} {{dato[col.field]}} </span>
+              <div *ngIf="col.field =='nombreguardia'">
+                <span>{{dato.alfabeticoapellidos}}, {{dato[col.field]}} </span>
               </div>
             </td>
           </tr>
