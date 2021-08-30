@@ -532,10 +532,26 @@ export class DatosGeneralesEjgComponent implements OnInit {
     sessionStorage.setItem("url", JSON.stringify(us));
     sessionStorage.removeItem("reload");
     sessionStorage.setItem("reload", "si");*/
-    sessionStorage.setItem("expedienteInsos", JSON.stringify(this.body));
 
+    this.progressSpinner=true;
 
-    this.router.navigate(["/addExp"]);
+    this.sigaServices.post("gestionejg_getDatosExpInsos", this.body).subscribe(
+      n => {
+        this.progressSpinner=false;
+        let datos = JSON.parse(n.body).expInsosItem;
+
+        if(datos!=null && datos!=undefined){
+          sessionStorage.setItem("expedienteInsos", JSON.stringify(datos));
+          this.router.navigate(["/addExp"]);
+        }else{
+          this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("informesYcomunicaciones.consultas.mensaje.sinResultados"));
+        }
+      },
+      err => {
+        console.log(err);
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
   }
 
   styleObligatorio(evento) {
