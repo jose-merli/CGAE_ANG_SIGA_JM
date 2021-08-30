@@ -13,9 +13,9 @@
     </div>
     <div class="card-body card-body-ficha">
       <div class="row col-12">
-        <app-tabla-resultado-order *ngIf="dataReady" [duplicar]="duplicar" [calendarios]="true" [totalRegistros] = "totalRegistros" [seleccionarTodo]="seleccionarTodo"
-        [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups"
-        (anySelected)="notifyAnySelected($event)" (selectedRow)="checkSelectedRow($event)" (colaGuardiaModified)="updateColaGuardia($event)" (rest)="rest($event)" (dupli)="duplicar($event)" (delete)="delete($event)">
+        <app-tabla-resultado-order *ngIf="dataReady" [estado]="tarjetaDatosGenerales.estado" [duplicar]="duplicar" [calendarios]="true" [totalRegistros] = "totalRegistros" [seleccionarTodo]="seleccionarTodo"
+        [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" [comboGuardia]="comboGuardiaConjunto"
+        (anySelected)="notifyAnySelected($event)" (selectedRow)="checkSelectedRow($event)" (colaGuardiaModified)="updateColaGuardia($event)" (guardiasCalendarioModified)="updateGuardiasCalendario($event)" (rest)="rest($event)" (dupli)="duplicar($event)" (delete)="delete($event)" (guardarGuardiasEnConjunto)="guardarGuardiasEnConjunto($event)">
       </app-tabla-resultado-order>
 
       </div>

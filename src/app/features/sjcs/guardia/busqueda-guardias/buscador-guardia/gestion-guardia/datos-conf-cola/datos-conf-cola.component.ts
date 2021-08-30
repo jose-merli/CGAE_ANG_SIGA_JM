@@ -272,7 +272,9 @@ export class DatosConfColaComponent implements OnInit {
   cambiaGrupo() {
     let configuracionCola: ConfiguracionCola = {
       'manual': true,
-      'porGrupos': this.body.porGrupos
+      'porGrupos': this.body.porGrupos,
+      'idConjuntoGuardia': 0,
+      "fromCombo": false
     };
     if (this.body.porGrupos) {
       this.globalGuardiasService.emitConf(configuracionCola);

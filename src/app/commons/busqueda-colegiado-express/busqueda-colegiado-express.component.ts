@@ -82,6 +82,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
             this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("general.message.colegiadoNoEncontrado"));
           }
           this.changeValue();
+  
         },
         error => {
           this.progressSpinner = false;

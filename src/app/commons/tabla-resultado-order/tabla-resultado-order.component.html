@@ -24,9 +24,9 @@
      
               <div (click)="selectRow(i, row)" class="table-row-wrapper hoverBlue" [ngClass]="{'hoverBlue2': isSelected(i), 'fixedBlue': seleccionarTodo, 'fixedRed': selectWrong(i)}">
             
-            <div *ngFor="let cell of row['cells'] | slice:0:9; let z = index " class="table-cell p-2 selectedRowClass" [ngClass]="{'borders-child': isPar(i)}" #cellSelected>
+            <div *ngFor="let cell of row['cells'] | slice:0:5; let z = index " class="table-cell p-2 selectedRowClass" [ngClass]="{'borders-child': isPar(i)}" #cellSelected>
                 <div class="breakWord cell-wrapper selectedRowClass">
-                    <span class="w100 cell-value" *ngIf="cell.type != 'text' && cell.type != 'select' && cell.type != 'selectDependency'"><input type="text"  (change)="valueChange(i, z, $event)" class="form-control mt-2" pInputText  [(ngModel)]="cell.value" [placeholder]="cell.value"></span>
+                    <span class="w100 cell-value" *ngIf="cell.type != 'text' && cell.type != 'select' && cell.type != 'selectDependency' && cell.type != 'selectDependency2' && cell.type != 'invisible'"><input type="text"  (change)="valueChange(i, z, $event)" class="form-control mt-2" pInputText  [(ngModel)]="cell.value" [placeholder]="cell.value"></span>
                     <span class="w100 cell-value" *ngIf="cell.type == 'text'">{{cell.value}}</span> 
                     <span class="w100 cell-value" *ngIf="cell.type == 'selectDependency'"><p-dropdown class="select-form"  [filter]="true" [(ngModel)]="cell.value" (onChange)="onChangeTurno(cell.value)"
                                                                                     [options]="comboTurno" filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
@@ -36,6 +36,11 @@
                                                                                     [options]="cell.combo" filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
                                                                                     [showClear]="true">
                                                                                 </p-dropdown></span>
+                    <span class="w100 cell-value" *ngIf="cell.type == 'selectDependency2'"><p-dropdown class="select-form"  [filter]="true" [(ngModel)]="cell.value" 
+                                                                                    [options]="cell.combo" filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
+                                                                                    [showClear]="true">
+                                                                                </p-dropdown></span>
+                                                                                
                     <!--<span class="w100 cell-value" *ngIf="cell.type == 'buttom'"><button pButton type="button"  iconPos="left"></button></span> 
                     <span class="w100 cell-value" *ngIf="cell.type == 'checkbox'"> <p-checkbox [ngModel]="validaCheck(cell.value)" binary="true">
                     </p-checkbox></span> 
@@ -69,7 +74,7 @@
 
 <div class="card-footer h50 pt-5">
         <div class="text-right main-button butBottom">
-          <button pButton type="button" icon="far fa-save" iconPos="left" label="Guardar" [disabled]="isDisabled"
+          <button *ngIf="!calendarios" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar" [disabled]="isDisabled"
             (click)="guardar()"></button>
            <button *ngIf="!calendarios"  pButton type="button" icon="fa fa-reply" iconPos="left" label="Duplicar" [disabled]="!anySelectedBol"
                   (click)="duplicar(); showMsg('success', 'Se ha duplicado correctamente', '')"></button>
@@ -81,9 +86,12 @@
             <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer"
                   (click)="restablecer(); showMsg('success', 'Se ha restablecido correctamente', '')" [disabled]="isDisabled"></button>
             
+            <button *ngIf="calendarios" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar" [disabled]="isDisabled"
+                  (click)="saveCal()"></button>
             <button *ngIf="calendarios" pButton type="button" icon="far fa-save" iconPos="left" label="Descargar LOG" [disabled]="isDisabled"
                   (click)="descargarLog()"></button>
-            <button *ngIf="calendarios" pButton type="button" icon="far fa-save" iconPos="left" label="Añadir letrado" [disabled]="isDisabled"
+                  <!--<a [href]="'data:application/octet-stream;base64,' + data | safe" download="excel.xls">Download</a>-->
+            <button *ngIf="calendarios" pButton type="button" icon="far fa-save" iconPos="left" label="Añadir letrado" [disabled]="rowwSelected == undefined || (rowwSelected != undefined && rowwSelected.length == 0)"
                   (click)="anadirLetrado()"></button>
             <button *ngIf="calendarios" pButton type="button" icon="far fa-save" iconPos="left" label="Eliminar" [disabled]="isDisabled"
                   (click)="eliminar()"></button>

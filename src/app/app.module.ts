@@ -1,3 +1,4 @@
+
 import { APP_BASE_HREF, CommonModule, DatePipe, registerLocaleData } from '@angular/common';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import es from '@angular/common/locales/es';
@@ -416,6 +417,7 @@ import { SelectorModule } from './commons/selector/selector.module';
 import { AsistenciaExpresComponent } from './features/sjcs/guardia/guardias-asistencias/asistencia-expres/asistencia-expres.component';
 import { BuscadorAsistenciaExpresComponent } from './features/sjcs/guardia/guardias-asistencias/asistencia-expres/buscador-asistencia-expres/buscador-asistencia-expres.component';
 import { ResultadoAsistenciaExpresComponent } from './features/sjcs/guardia/guardias-asistencias/resultado-asistencia-expres/resultado-asistencia-expres.component';
+import { SafePipe } from './commons/tabla-resultado-order/safe.pipe';
 @NgModule({
 	declarations: [
 		TablaResultadoDesplegableComponent,
@@ -858,6 +860,7 @@ import { ResultadoAsistenciaExpresComponent } from './features/sjcs/guardia/guar
 		ConfirmationService,
 		PersistenceService,
 		TrimPipePipe,
+		SafePipe,
 		TablaResultadoDesplegableJEService,
 		TablaResultadoDesplegableAEService,
 		TablaResultadoMixDocDesigService,

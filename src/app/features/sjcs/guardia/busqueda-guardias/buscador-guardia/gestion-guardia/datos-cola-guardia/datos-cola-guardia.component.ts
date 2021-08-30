@@ -77,7 +77,9 @@ export class DatosColaGuardiaComponent implements OnInit {
   ];
   configuracionCola: ConfiguracionCola = {
     'manual': true,
-    'porGrupos': true
+    'porGrupos': true,
+    'idConjuntoGuardia': 0,
+    "fromCombo": false
 };
   allSelected = false;
   isDisabled = true;

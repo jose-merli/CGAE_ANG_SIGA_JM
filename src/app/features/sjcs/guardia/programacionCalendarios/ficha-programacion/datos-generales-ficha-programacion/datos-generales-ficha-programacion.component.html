@@ -52,7 +52,7 @@
           </label>
           <p-dropdown class="select-form"  [filter]="true" [(ngModel)]="datosGenerales.listaGuarias.value"
           [options]="comboConjuntoGuardias" filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
-          [showClear]="true">
+          [showClear]="true" (onChange)="changeListaGuardia($event)">
         </p-dropdown>
         </div>
         <!-- FechaDesde -->
@@ -60,7 +60,7 @@
           <label>
             {{ "justiciaGratuita.Calendarios.FechaDesde" | translate }} (*)
           </label>
-          <app-fecha [(value)]="datosGenerales.fechaDesde" 
+          <app-fecha required="true" [(value)]="datosGenerales.fechaDesde" 
             (valueChangeSelected)="fillFechaCalendarioDesde($event)"  (valueChangeInput)="fillFechaCalendarioDesde($event)"></app-fecha>
         </div>
 
@@ -69,7 +69,7 @@
           <label>
             {{"justiciaGratuita.Calendarios.FechaHasta" | translate}} (*)
           </label>
-          <app-fecha [(value)]="datosGenerales.fechaHasta" 
+          <app-fecha required="true" [(value)]="datosGenerales.fechaHasta" 
             (valueChangeSelected)="fillFechaCalendarioHasta($event)"  (valueChangeInput)="fillFechaCalendarioHasta($event)"></app-fecha>
         </div>
 
@@ -78,20 +78,24 @@
           <label>
             {{"justiciaGratuita.Calendarios.FechaProgramada" | translate}}
           </label>
-          <app-fecha [(value)]="datosGenerales.fechaProgramacion" 
+          <app-fecha [(value)]="datosGenerales.fechaProgramacion" [showTime]="true"
           (valueChangeSelected)="fillFechaProgramada($event)"  (valueChangeInput)="fillFechaProgramada($event)"></app-fecha>
         </div>
-
-        <div class="row col-6" id="div1">
+        <!-- Estado -->
+          <div class="form-group col-lg-3 col-md-3">
+            <label>{{"justiciaGratuita.Calendarios.Estado" | translate}} </label>   
+            <input type="text" name="estado" value="" class="box" class="form-control" [(ngModel)]='datosGenerales.estado' pInputText
+            maxLength="40" pInputText>
+            
+          </div>
           <!-- Observaciones -->
-          <div class="form-group col-lg-6 col-md-6" id="desFact">
+          <div class="form-group col-lg-3 col-md-3" id="desFact">
             <label>
               {{"justiciaGratuita.Calendarios.Observaciones" | translate}} 
             </label>
             <textarea [placeholder] = "datosGenerales.observaciones" name="textoEnPlantilla" [disabled]="historico || !permisoEscritura" class="form-control ui-inputtext" pInputTextarea
               [(ngModel)]="datosGenerales.observaciones" autoResize="autoResize" maxlength="3999"></textarea>
           </div>
-        </div>
 
       </div>
     </div>

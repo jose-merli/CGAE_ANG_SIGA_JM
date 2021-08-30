@@ -1,3 +1,4 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
 <div class="ficha-comunicacion-container" id="top">
   <div class="header-title">
     <i class="fa fa-square"></i>
@@ -9,14 +10,15 @@
   <div>
     <app-tarjeta-resumen-fija  class="pb-50" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="infoResumen" [enlaces]="enlacesTarjetaResumen" icono="iconoTarjetaResumen" (modoEdicionSend)="modoEdicionSend($event)" (isOpen)="isOpenReceive($event)" [manuallyOpened]="manuallyOpened"></app-tarjeta-resumen-fija>
 
-    <app-datos-generales-ficha-programacion [openFicha]="openGen" (opened)="manuallyOpened = $event" (dataToDuplicate)="getdataToDuplicate($event)" (idOpened)="isCloseReceive($event)" [datosGeneralesIniciales] = "datosGeneralesIniciales" [datosGenerales] = "datosGenerales"  [tarjetaDatosGenerales]="tarjetaDatosGenerales" [permisoEscritura]="permisoEscrituraDatosGenerales" [modoEdicion]="modoEdicion" (modoEdicionSend)="modoEdicionSend($event)"></app-datos-generales-ficha-programacion>
+    <app-datos-generales-ficha-programacion (guardarDatosCalendario)="guardarDatosCalendario($event)" [openFicha]="openGen" (opened)="manuallyOpened = $event" (dataToDuplicate)="getdataToDuplicate($event)" (idOpened)="isCloseReceive($event)" [datosGeneralesIniciales] = "datosGeneralesIniciales" [datosGenerales] = "datosGenerales" [permisoEscritura]="permisoEscrituraDatosGenerales" [modoEdicion]="modoEdicion" (modoEdicionSend)="modoEdicionSend($event)"></app-datos-generales-ficha-programacion>
 
-    <app-guardias-calendario-ficha-programacion [openFicha]="openGen" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [datosTarjetaGuardiasCalendario] = "datosTarjetaGuardiasCalendario"  [tarjetaDatosGenerales]="tarjetaDatosGenerales" [permisoEscritura]="permisoEscrituraDatosGenerales" [modoEdicion]="modoEdicion" (modoEdicionSend)="modoEdicionSend($event)"></app-guardias-calendario-ficha-programacion>
+    <app-guardias-calendario-ficha-programacion *ngIf="dataReady" (searchGuardiasFromCal)="searchGuardiasFromCal($event)" [idCal]="dataToReceive.idCalendarioProgramado" (fillDatosTarjetaGuardiasCalendario)="fillDatosTarjetaGuardiasCalendario($event)" [duplicar]="duplicar" [openFicha]="openGen" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [datosTarjetaGuardiasCalendarioIni] = "datosTarjetaGuardiasCalendario"  [tarjetaDatosGenerales]="datosGenerales" [permisoEscritura]="permisoEscrituraDatosGenerales" [modoEdicion]="modoEdicion" (modoEdicionSend)="modoEdicionSend($event)"></app-guardias-calendario-ficha-programacion>
 
     
   </div>
 </div>
 <div class="mt-3 text-right main-button " id="down">
+  <button (click)="generate()" [disabled]="disableGenerar" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.generar' | translate}}"></button>
   <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate }}"></button>
 </div>
 

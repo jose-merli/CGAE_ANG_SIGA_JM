@@ -768,7 +768,10 @@ export class SigaServices {
         return this.parseErrorBlob(response);
       });
   }
-
+  getDownloadFiles(service: string): any {
+      return this.http
+      .get(environment.newSigaUrl + this.endpoints[service], {observe: 'response', responseType: 'blob'});
+  }
   postSendContent(service: string, file: any): Observable<any> {
     let formData: FormData = new FormData();
     if (file != undefined) {

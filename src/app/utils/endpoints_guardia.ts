@@ -57,6 +57,17 @@ export let endpoints_guardia: any = {
     guardiaCalendario_buscar : "guardia/buscarCalendariosProgramados",
     guardiaCalendario_eliminar : "guardia/eliminarCalendariosProgramados",
     guardiaCalendario_guardar : "guardia/guardarCalendariosProgramados",
+    guardiaCalendario_guardiaFromConjunto: "guardia/guardiasFromIdConjunto",
+    guardiaCalendario_getGuardiasFromCalendar : "guardia/getGuardiasCalendario",
+    guardiaCalendario_getFechasProgFromGuardia: "guardia/getFechasProgramacionGuardia",
+    guardiaCalendario_guardarGuardiaConjunto: "guardia/addGuardiaConjunto",
+    guardiaCalendario_guardarGuardiaCalendar: "guardia/addGuardiaCalendario",
+    guardiaCalendario_eliminarGuardiaCalendar: "guardia/deleteGuardiaCalendario",
+    guardiaCalendario_updateCalendarioProgramado: "guardia/updateCalendarioProgramado",
+    guardiaCalendario_newCalendarioProgramado: "guardia/newCalendarioProgramado",
+    guardiaCalendario_generar: "guardia/generarCalendario",
+    guardiaCalendario_descargarExcelLog: "guardia/descargarExcelLog",
+    
 
     //Asistencia
     busquedaGuardias_getTurnosByColegiadoFecha: "asistencia/turnosByColegiadoFecha",

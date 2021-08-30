@@ -7,7 +7,7 @@ export class CalendariosDatosEntradaItem{
   observaciones: string;
   fechaDesde: string;
 	fechaHasta: string;
-	fechaProgramacion: string;
+	fechaProgramacion: Date;
 	estado: string;
 	generado: string;
 	numGuardias: string;

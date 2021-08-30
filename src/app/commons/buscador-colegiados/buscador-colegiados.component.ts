@@ -27,10 +27,16 @@ export class BuscadorColegiadosComponent implements OnInit {
   @ViewChild(TablaBuscadorColegiadosComponent) tabla;
 
   @Input() volver;
+  calendarioSelected;
 
   constructor(private router: Router, private persistenceService: PersistenceService, private location: Location, private sigaServices: SigaServices, private translateService: TranslateService) { }
 
   ngOnInit() {
+    console.log('sessionStorage.getItem("calendariosProgramados"): ', sessionStorage.getItem("calendariosProgramados"))
+    if(sessionStorage.getItem("calendariosProgramados") == "true"){
+      this.calendarioSelected = sessionStorage.getItem("calendarioSeleccinoado");
+      console.log('calendarioSelected: ', this.calendarioSelected)
+    }
     if (sessionStorage.getItem('usuarioBusquedaExpress')) {
       sessionStorage.removeItem('usuarioBusquedaExpress')
     }
@@ -68,6 +74,10 @@ export class BuscadorColegiadosComponent implements OnInit {
   }
 
   buscar(){
+    if(sessionStorage.getItem("calendariosProgramados") == "true"){
+      let calendarioSelected = sessionStorage.getItem("calendarioSeleccinoado");
+      this.router.navigate(["/fichaGuardiasColegiado"]); // TO DO
+    }
     let guardia = "";
     let turno = "";
 

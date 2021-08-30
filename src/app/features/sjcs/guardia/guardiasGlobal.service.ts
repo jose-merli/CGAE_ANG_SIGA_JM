@@ -8,7 +8,9 @@ export class GlobalGuardiasService {
     public isConfEmitter$: BehaviorSubject<ConfiguracionCola>;
     configuracionCola: ConfiguracionCola = {
             'manual': false,
-            'porGrupos': false
+            'porGrupos': false,
+            "idConjuntoGuardia": 0,
+            "fromCombo": false
         };
     constructor( 
     ) {
@@ -27,7 +29,9 @@ export class GlobalGuardiasService {
 export class ConfiguracionCola {
     constructor(
         public manual: boolean,
-        public porGrupos: boolean
+        public porGrupos: boolean,
+        public idConjuntoGuardia: number,
+        public fromCombo: boolean
     ) { }
 }
 
