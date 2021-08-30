@@ -76,8 +76,9 @@ export class RegtelEjgComponent implements OnInit {
       this.body = this.persistenceService.getDatos();
       this.item = this.body;
       //Se comprueba que se tiene una carpeta DocuShare creada mediante el atributo "identificadords"
-      if(this.item.identificadords != null) this.getRegtel();
-        this.getCols();
+      //que se actualizara correspondientemente en el servicio si tuviera una asociada.
+      this.getRegtel();
+      this.getCols();
     }else {
       this.nuevo = true;
       this.modoEdicion = false;
@@ -98,9 +99,9 @@ export class RegtelEjgComponent implements OnInit {
   }
 
   esFichaActiva(key) {
-
     return this.fichaPosible.activa;
   }
+
   abreCierraFicha(key) {
     this.resaltadoDatosGenerales = true;
     if (
@@ -125,8 +126,6 @@ export class RegtelEjgComponent implements OnInit {
   getRegtel() {
     this.messageRegtel = this.translateService.instant('aplicacion.cargando');
 
-    
-    
     this.sigaServices
         .getParam(
           'gestionejg_searchListDocEjg',
@@ -135,7 +134,7 @@ export class RegtelEjgComponent implements OnInit {
         .subscribe(
           data => {
             let bodySearchRegTel = JSON.parse(data['body']);
-            this.regtel = bodySearchRegTel.docuShareObjectVO;
+            this.regtel = bodySearchRegTel.docuShareObjectVOItem;
             //this.generalBody.identificadords = bodySearchRegTel.identificadorDS;
             // this.bodyRegTel.forEach(element => {
             //   element.fechaModificacion = this.arreglarFechaRegtel(
@@ -177,6 +176,8 @@ export class RegtelEjgComponent implements OnInit {
         .subscribe(
           data => {
             this.item.identificadords = data.body;
+            //Se introduce el cambio en la capa de persistencia para evitar que pida cerar una coleccion innecesariamente
+            this.persistenceService.setDatos(this.item);
             let mess = this.translateService.instant("messages.collectionCreated");
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
             // if (this.nRegtel != 0) {
