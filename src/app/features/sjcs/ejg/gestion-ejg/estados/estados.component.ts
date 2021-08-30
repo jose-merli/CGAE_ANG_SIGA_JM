@@ -53,6 +53,7 @@ export class EstadosComponent implements OnInit {
 
   progressSpinner: boolean = false;
   editaEstado: boolean = false;
+  estadoAutomatico: boolean = false;
   resaltadoDatosGenerales: boolean = false;
   fichaPosible = {
     key: "estados",
@@ -520,15 +521,20 @@ export class EstadosComponent implements OnInit {
     }
   }
 
-  estadoAutomatico: boolean;
+  
   onRowSelectEstados(i) {
     let indice = parseInt(i);
     this.restablecer = true;
     this.editaEstado = false;
 
-
+    /* if (this.datosEstados[0].nuevoRegistro == true) {
+      this.creaEstado = true;
+    } else {
+      this.creaEstado = false;
+    } */
     if (this.datosEstados[indice] != undefined && this.datosEstados[indice].automatico != 1 && this.datosEstados[indice].fechabaja == null) {
       this.estadoAutomatico = false;
+      this.creaEstado = false;
       this.editaEstado = true;
       this.guardar = true;
       for (let j = 0; j < this.datosEstados.length; j++) {
@@ -547,15 +553,12 @@ export class EstadosComponent implements OnInit {
       this.restablecer = false;
       this.editaEstado = false;
       this.guardar = false;
+      this.creaEstado = true;
       this.selectedDatos = [];
 
     }
 
-    if (this.datosEstados[0].nuevoRegistro == true) {
-      this.creaEstado = true;
-    } else {
-      this.creaEstado = false;
-    }
+    
   }
 
   activarRestablecerEstados() {
