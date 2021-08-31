@@ -639,7 +639,6 @@ export class RegtelFichaColegialComponent implements OnInit {
           this.showSuccessDetalle(mess + this.generalBody.identificadords);
         },
         err => {
-          console.log(err);
           this.showFail();
         }
       );
@@ -661,4 +660,9 @@ export class RegtelFichaColegialComponent implements OnInit {
       )
     });
   }
+
+  setItalicRegtel(datoH) {
+		if (datoH.tipo == 1) return false;
+		else return true;
+	}
 }
