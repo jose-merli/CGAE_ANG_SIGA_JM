@@ -133,7 +133,7 @@ export class RegtelEjgComponent implements OnInit {
         )
         .subscribe(
           data => {
-            let bodySearchRegTel = JSON.parse(data['body']);
+            let bodySearchRegTel = JSON.parse(data.body);
             this.regtel = bodySearchRegTel.docuShareObjectVOItem;
             this.item.identificadords = bodySearchRegTel.identificadorDS;
             // this.bodyRegTel.forEach(element => {
@@ -331,7 +331,7 @@ export class RegtelEjgComponent implements OnInit {
     )
     .subscribe(
       data => {
-        let bodySearchRegTel = JSON.parse(data["body"]);
+        let bodySearchRegTel = JSON.parse(data.body);
         this.regtel = bodySearchRegTel.docuShareObjectVO;
         this.nRegtel = this.regtel.length;
         //  this.bodyRegTel.forEach(element => {
@@ -378,7 +378,7 @@ export class RegtelEjgComponent implements OnInit {
         )
         .subscribe(
           data => {
-            let bodySearchRegTel = JSON.parse(data["body"]);
+            let bodySearchRegTel = JSON.parse(data.body);
             this.regtel = bodySearchRegTel.docuShareObjectVO;
             this.nRegtel = this.regtel.length;
             // this.bodyRegTel.forEach(element => {
