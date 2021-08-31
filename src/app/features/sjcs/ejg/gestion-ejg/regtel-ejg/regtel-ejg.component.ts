@@ -135,7 +135,7 @@ export class RegtelEjgComponent implements OnInit {
           data => {
             let bodySearchRegTel = JSON.parse(data['body']);
             this.regtel = bodySearchRegTel.docuShareObjectVOItem;
-            //this.generalBody.identificadords = bodySearchRegTel.identificadorDS;
+            this.item.identificadords = bodySearchRegTel.identificadorDS;
             // this.bodyRegTel.forEach(element => {
             //   element.fechaModificacion = this.arreglarFechaRegtel(
             //     JSON.stringify(new Date(element.fechaModificacion))
