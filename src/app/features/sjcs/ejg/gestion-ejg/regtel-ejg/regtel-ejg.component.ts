@@ -37,7 +37,7 @@ export class RegtelEjgComponent implements OnInit {
   seleccion: boolean = false;
   nRegtel = 0;
   regtel = [];
-  atrasRegTel: string = '';
+  atrasRegTel: String = '';
 
   buttonVisibleRegtelCarpeta:boolean = false;
   buttonVisibleRegtelDescargar:boolean = false;
@@ -133,8 +133,8 @@ export class RegtelEjgComponent implements OnInit {
         )
         .subscribe(
           data => {
-            let bodySearchRegTel = JSON.parse(data.body);
-            this.regtel = bodySearchRegTel.docuShareObjectVOItem;
+            let bodySearchRegTel = JSON.parse(data["body"]);
+            this.regtel = bodySearchRegTel.docuShareObjectVO;
             this.item.identificadords = bodySearchRegTel.identificadorDS;
             // this.bodyRegTel.forEach(element => {
             //   element.fechaModificacion = this.arreglarFechaRegtel(
@@ -292,6 +292,9 @@ export class RegtelEjgComponent implements OnInit {
     this.progressSpinner = true;
     let selectedRegtel: DocushareItem = JSON.parse(JSON.stringify(this.selectedDatos));
     selectedRegtel.fechaModificacion = undefined;
+    selectedRegtel.numero = this.item.numero;
+    selectedRegtel.idTipoEjg = this.item.tipoEJG;
+    selectedRegtel.anio = this.item.annio;
     this.sigaServices
       .postDownloadFiles(
         "fichaColegialRegTel_downloadDoc",
@@ -320,18 +323,26 @@ export class RegtelEjgComponent implements OnInit {
   }
   showFolder(){
 
+    this.progressSpinner = true;
+    if (this.atrasRegTel != this.selectedDatosRegtel.parent) {
+      this.atrasRegTel = this.selectedDatosRegtel.parent;
+    }
+
     let selectedRegtel: DocushareItem = JSON.parse(JSON.stringify(this.selectedDatos));
     selectedRegtel.fechaModificacion = undefined;
+    selectedRegtel.numero = this.item.numero;
+    selectedRegtel.idTipoEjg = this.item.tipoEJG;
+    selectedRegtel.anio = this.item.annio;
 
     this.sigaServices
     .postPaginado(
-      "fichaColegialRegTel_searchListDir",
+      "gestionejg_searchListDirEjg",
       "?numPagina=1",
       selectedRegtel
     )
     .subscribe(
       data => {
-        let bodySearchRegTel = JSON.parse(data.body);
+        let bodySearchRegTel = JSON.parse(data["body"]);
         this.regtel = bodySearchRegTel.docuShareObjectVO;
         this.nRegtel = this.regtel.length;
         //  this.bodyRegTel.forEach(element => {
@@ -368,17 +379,22 @@ export class RegtelEjgComponent implements OnInit {
   
   onClickAtrasRegtel() {
     this.progressSpinner = true;
-    let selectedRegtel: DocushareItem = JSON.parse(JSON.stringify(this.selectedDatos));
+    this.selectedDatosRegtel.id = this.selectedDatosRegtel.parent;
+    let selectedRegtel = JSON.parse(JSON.stringify(this.selectedDatosRegtel));
+    selectedRegtel.fechaModificacion = undefined;
+    selectedRegtel.numero = this.item.numero;
+    selectedRegtel.idTipoEjg = this.item.tipoEJG;
+    selectedRegtel.anio = this.item.annio;
     selectedRegtel.fechaModificacion = undefined;
       this.sigaServices
         .postPaginado(
-          "fichaColegialRegTel_searchListDir",
+          "gestionejg_searchListDirEjg",
           "?numPagina=1",
           selectedRegtel
         )
         .subscribe(
           data => {
-            let bodySearchRegTel = JSON.parse(data.body);
+            let bodySearchRegTel = JSON.parse(data["body"]);
             this.regtel = bodySearchRegTel.docuShareObjectVO;
             this.nRegtel = this.regtel.length;
             // this.bodyRegTel.forEach(element => {
@@ -408,6 +424,11 @@ export class RegtelEjgComponent implements OnInit {
             this.progressSpinner = false;
           }
         );
-    
   }
+
+  
+  setItalic(datoH) {
+		if (datoH.tipo == 1) return false;
+		else return true;
+	}
 }
