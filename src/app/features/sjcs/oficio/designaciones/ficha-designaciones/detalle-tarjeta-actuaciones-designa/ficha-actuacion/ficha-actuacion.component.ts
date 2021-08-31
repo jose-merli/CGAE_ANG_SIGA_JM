@@ -177,19 +177,26 @@ export class FichaActuacionComponent implements OnInit {
             this.translateService.instant("generico.error.permiso.denegado")
           );
           this.router.navigate(["/errorAcceso"]);
+        }else if(permisoEscritura == true){
+          this.usuarioLogado = new UsuarioLogado();
+          this.usuarioLogado.idPersona = this.sigaStorageService.idPersona;
+          this.usuarioLogado.numColegiado = this.sigaStorageService.numColegiado;
+          this.isColegiado = true;
+        }else{
+          this.isColegiado = false;
         }
 
         // if (!permisoEscritura) {
         //   this.modoLectura = true;
         // }
 
-        this.isColegiado = this.sigaStorageService.isLetrado;
+        /* this.isColegiado = this.sigaStorageService.isLetrado;
 
         if (this.isColegiado) {
           this.usuarioLogado = new UsuarioLogado();
           this.usuarioLogado.idPersona = this.sigaStorageService.idPersona;
           this.usuarioLogado.numColegiado = this.sigaStorageService.numColegiado;
-        }
+        } */
 
         this.institucionActual = this.sigaStorageService.institucionActual;
 
@@ -231,7 +238,7 @@ export class FichaActuacionComponent implements OnInit {
       this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiDatosGen').opened = true;
     } else {
 
-      if ((this.isColegiado && this.actuacionDesigna.actuacion.validada && (!this.permiteTurno || !this.actuacionDesigna.actuacion.permiteModificacion)) || (this.actuacionDesigna.actuacion.facturado)) {
+      if ((!this.isColegiado && this.actuacionDesigna.actuacion.validada && (!this.permiteTurno || !this.actuacionDesigna.actuacion.permiteModificacion)) || (this.actuacionDesigna.actuacion.facturado)) {
         this.modoLectura = true;
       }
 

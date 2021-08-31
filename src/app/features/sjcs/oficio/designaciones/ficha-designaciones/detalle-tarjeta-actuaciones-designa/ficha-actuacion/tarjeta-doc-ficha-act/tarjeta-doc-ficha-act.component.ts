@@ -36,7 +36,7 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
   // Este modo lectura se produce cuando:
   // - Es colegiado y la actuación está validada y el turno no permite la modificación o la actuación no pertenece al colegiado
   // - La actuación está facturada
-  @Input() modoLectura2: boolean = false;
+  @Input() modoLectura2;
 
   @Output() buscarDocumentosEvent = new EventEmitter<any>();
 
@@ -123,10 +123,10 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
             this.translateService.instant("generico.error.permiso.denegado")
           );
           this.router.navigate(["/errorAcceso"]);
-        }
-
-        if (!permisoEscritura) {
+        }else if (permisoEscritura == false) {
           this.modoLectura = true;
+        }else{
+          this.modoLectura = false;
         }
 
         this.getParametro();
@@ -162,7 +162,7 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
 
       copiaDocumentos2.forEach((el, i) => {
 
-        if (!el.nuevo && this.isColegiado && !(this.usuarioLogado.idPersona == el.idPersona)) {
+        if (!el.nuevo && this.isColegiado == false && !(this.usuarioLogado.idPersona == el.idPersona)) {
           copiaDocumentos2.splice(i, 1);
           error = true;
         }
@@ -283,7 +283,7 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
     let error = false;
     this.selectedDatos.forEach((el, i) => {
 
-      if (this.isColegiado && !(this.usuarioLogado.idPersona == el.idPersona)) {
+      if (this.isColegiado == false && !(this.usuarioLogado.idPersona == el.idPersona)) {
         this.selectedDatos.splice(i, 1);
         error = true;
       }
