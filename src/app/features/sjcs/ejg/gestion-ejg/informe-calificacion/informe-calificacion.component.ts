@@ -125,8 +125,10 @@ export class InformeCalificacionComponent implements OnInit {
       },
       err => {
         console.log(err);
+
       }
     );
+
   }
   getComboTipoDictamen() {
     this.sigaServices.get("busquedaFundamentosCalificacion_comboDictamen").subscribe(
@@ -359,7 +361,9 @@ export class InformeCalificacionComponent implements OnInit {
   rest() {
     this.dictamen = JSON.parse(JSON.stringify(this.bodyInicial));
     if(this.dictamen.fundamentoCalif != null){
+      this.progressSpinner = true;
       this.getComboFundamentoCalif();
+      this.progressSpinner = false;
       this.isDisabledFundamentosCalif = false;
     }
     this.dictamen.fechaDictamen = new Date(this.dictamen.fechaDictamen);
