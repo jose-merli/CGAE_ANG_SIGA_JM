@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, ViewChild, OnChanges, ViewEncapsulation, SimpleChanges, EventEmitter} from '@angular/core';
+import { Component, OnInit, Input, Output, ViewChild, OnChanges, ViewEncapsulation, SimpleChanges, EventEmitter, ChangeDetectorRef} from '@angular/core';
 import { DataTable } from 'primeng/primeng';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { Router } from '../../../../../../../node_modules/@angular/router';
@@ -63,6 +63,7 @@ export class RegtelFichaColegialComponent implements OnInit {
   constructor(
     private sigaServices: SigaServices,
     private translateService: TranslateService,
+    private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService
     ) {}
 
@@ -665,4 +666,10 @@ export class RegtelFichaColegialComponent implements OnInit {
 		if (datoH.tipo == 1) return false;
 		else return true;
 	}
+
+  onChangeRowsPerPagesRegtel(event) {
+    this.selectedItemRegtel = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.tableRegTel.reset();
+  }
 }
