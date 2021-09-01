@@ -42,7 +42,7 @@ export class RegtelEjgComponent implements OnInit {
 
   buttonVisibleRegtelCarpeta:boolean = false;
   buttonVisibleRegtelDescargar:boolean = false;
-  buttonVisibleRegtelAtras:boolean = false;
+  buttonVisibleRegtelAtras:boolean = true;
 
   resaltadoDatosGenerales: boolean = false;
   progressSpinner: boolean;
