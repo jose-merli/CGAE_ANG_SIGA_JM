@@ -1,7 +1,7 @@
 export class ExpInsosItem {
 
     numero: string;
-    numEjg: string;
+    numEJG: string;
     anioEJG: string;
     idTipoEJG: string;
     idInstitucion: string;
