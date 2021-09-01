@@ -8,6 +8,7 @@ import { DocushareItem } from '../../../../../models/DocushareItem';
 import { DataTable } from "primeng/datatable";
 import { TranslateService } from '../../../../../commons/translate';
 import { ConfirmationService } from 'primeng/api';
+import { DocushareObject } from '../../../../../models/DocushareObject';
 
 @Component({
   selector: 'app-regtel-ejg',
@@ -47,6 +48,8 @@ export class RegtelEjgComponent implements OnInit {
   progressSpinner: boolean;
   selectedDatosRegtel: DocushareItem;
   idPersona: any;
+
+  bodySearchRegTel: DocushareObject = new DocushareObject();
 
   @ViewChild("table")
   table: DataTable;
@@ -133,9 +136,9 @@ export class RegtelEjgComponent implements OnInit {
         )
         .subscribe(
           data => {
-            let bodySearchRegTel = JSON.parse(data["body"]);
-            this.regtel = bodySearchRegTel.docuShareObjectVO;
-            this.item.identificadords = bodySearchRegTel.identificadorDS;
+            this.bodySearchRegTel = JSON.parse(data["body"]);
+            this.regtel = this.bodySearchRegTel.docuShareObjectVO;
+            this.item.identificadords = this.bodySearchRegTel.identificadorDS;
             // this.bodyRegTel.forEach(element => {
             //   element.fechaModificacion = this.arreglarFechaRegtel(
             //     JSON.stringify(new Date(element.fechaModificacion))
@@ -342,8 +345,8 @@ export class RegtelEjgComponent implements OnInit {
     )
     .subscribe(
       data => {
-        let bodySearchRegTel = JSON.parse(data["body"]);
-        this.regtel = bodySearchRegTel.docuShareObjectVO;
+        this.bodySearchRegTel = JSON.parse(data["body"]);
+        this.regtel = this.bodySearchRegTel.docuShareObjectVO;
         this.nRegtel = this.regtel.length;
         //  this.bodyRegTel.forEach(element => {
         //   element.fechaModificacion = this.arreglarFechaRegtel(
@@ -394,8 +397,8 @@ export class RegtelEjgComponent implements OnInit {
         )
         .subscribe(
           data => {
-            let bodySearchRegTel = JSON.parse(data["body"]);
-            this.regtel = bodySearchRegTel.docuShareObjectVO;
+            this.bodySearchRegTel = JSON.parse(data["body"]);
+            this.regtel = this.bodySearchRegTel.docuShareObjectVO;
             this.nRegtel = this.regtel.length;
             // this.bodyRegTel.forEach(element => {
             //   element.fechaModificacion = this.arreglarFechaRegtel(
