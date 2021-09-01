@@ -136,7 +136,7 @@ export class RegtelEjgComponent implements OnInit {
         )
         .subscribe(
           data => {
-            this.bodySearchRegTel = JSON.parse(data["body"]);
+            this.bodySearchRegTel = JSON.parse(data);
             this.regtel = this.bodySearchRegTel.docuShareObjectVO;
             this.item.identificadords = this.bodySearchRegTel.identificadorDS;
             // this.bodyRegTel.forEach(element => {
