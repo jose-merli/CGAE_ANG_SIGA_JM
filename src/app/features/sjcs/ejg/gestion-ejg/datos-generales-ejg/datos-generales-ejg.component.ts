@@ -538,10 +538,14 @@ export class DatosGeneralesEjgComponent implements OnInit {
     this.sigaServices.post("gestionejg_getDatosExpInsos", this.body).subscribe(
       n => {
         this.progressSpinner=false;
-        let datos = JSON.parse(n.body).expInsosItem;
+        let datos = JSON.parse(n.body).expInsosItems;
+
+        console.log('valor de n:'+n);
+        console.log('valor de n.body:'+n.body);
+        console.log('valor de datos:'+datos);
 
         if(datos!=null && datos!=undefined){
-          sessionStorage.setItem("expedienteInsos", JSON.stringify(datos));
+          sessionStorage.setItem("expedienteInsos", JSON.stringify(datos[0]));
           this.router.navigate(["/addExp"]);
         }else{
           this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("informesYcomunicaciones.consultas.mensaje.sinResultados"));
