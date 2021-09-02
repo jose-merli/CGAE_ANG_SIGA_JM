@@ -12,6 +12,7 @@ import { DesignaItem } from '../../../../../models/sjcs/DesignaItem';
 import { DatePipe } from '@angular/common';
 import { AsistenciasItem } from '../../../../../models/sjcs/AsistenciasItem';
 import { SigaStorageService } from '../../../../../siga-storage.service';
+import { OldSigaServices } from '../../../../../_services/oldSiga.service';
 
 @Component({
   selector: 'app-relaciones',
@@ -78,7 +79,8 @@ export class RelacionesComponent implements OnInit {
     private commonsServices: CommonsService,
     private datePipe: DatePipe,
     private router: Router,
-    private sigaStorageService: SigaStorageService) { }
+    private sigaStorageService: SigaStorageService,
+    public oldSigaServices: OldSigaServices) { }
 
   ngOnInit() {
     if (this.persistenceService.getDatos()) {
@@ -460,7 +462,13 @@ export class RelacionesComponent implements OnInit {
 
         break;
       case 'SOJ':
-        let us = undefined;
+
+        
+
+        let us = this.oldSigaServices.getOldSigaUrl('detalleSOJ');
+        us +='&granotmp=1630574876868&numeroSOJ=922&IDTIPOSOJ=2&ANIO=2018&idPersonaJG=552608&idInstitucionJG=2005&actionE=/JGR_PestanaSOJBeneficiarios.do&tituloE=pestana.justiciagratuitasoj.solicitante&conceptoE=SOJ&NUMERO=922&anioSOJ=2018&localizacionE=gratuita.busquedaSOJ.localizacion&IDINSTITUCION=2005&idTipoSOJ=2&idInstitucionSOJ=2005&accionE=editar';
+
+        /*let us = undefined;
         us = this.sigaServices.getOldSigaUrl() + "JGR_PestanaSOJDatosGenerales.do?numeroSOJ=" + dato.numero +
           "&IDTIPOSOJ=" + dato.idtipo + "&ANIO=" + dato.anio + "&idPersonaJG=" + dato.idpersonajg + "&idInstitucionJG=" +
           this.sigaStorageService.institucionActual + "&actionE=/JGR_PestanaSOJBeneficiarios.do&tituloE=pestana.justiciagratuitasoj.solicitante&conceptoE=SOJ" +
@@ -472,7 +480,7 @@ export class RelacionesComponent implements OnInit {
         sessionStorage.setItem("url", JSON.stringify(us));
         sessionStorage.removeItem("reload");
         sessionStorage.setItem("reload", "si");
-
+*/
         this.router.navigate(['/soj']);
         break;
       case 'DESIGNACIÓN':
