@@ -10,6 +10,12 @@ export class ExpInsosItem {
     idPretension: string;
     idTurno: string;
     nombre: string;
+    idpersonasolicitante: string;
+	nifsolicitante: string;
+	nombresolicitante: string;
+	apellido1solicitante: string;
+	apellido2solicitante: string;
+	numprocedimiento: string;
 
     constructor() { }
 }

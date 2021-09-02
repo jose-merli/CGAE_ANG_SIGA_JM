@@ -518,21 +518,6 @@ export class DatosGeneralesEjgComponent implements OnInit {
   }
 
   addExp() {
-
-    /*let us = undefined;
-    us = this.sigaServices.getOldSigaUrl() + "JGR_MantenimientoEJG.do?codigoDesignaNumEJG=" + this.body.numEjg +
-      "&numeroEJG=" + this.body.numEjg + "&idTipoEJG=" + this.body.tipoEJG + "&idInstitucionEJG=" + this.body.idInstitucion + "&anioEJG=" + this.body.annio +
-      "&actionE=/JGR_InteresadoEJG.do&localizacionE=gratuita.busquedaEJG.localizacion&tituloE=pestana.justiciagratuitaejg.solicitante" +
-      "&idInstitucionJG=" + this.institucionActual + "&idPersonaJG=" + this.body.idPersonajg + "&conceptoE=EJG&NUMERO=" + this.body.numEjg +
-      "&ejgNumEjg=" + this.body.numEjg + "&IDTIPOEJG=" + this.body.tipoEJG + "&ejgAnio=" + this.body.annio + "&accionE=editar&IDINSTITUCION=" + this.institucionActual +
-      "&solicitante=" + this.body.nombreApeSolicitante + "&ANIO=" + this.body.annio;
-
-    us = encodeURI(us);
-
-    sessionStorage.setItem("url", JSON.stringify(us));
-    sessionStorage.removeItem("reload");
-    sessionStorage.setItem("reload", "si");*/
-
     this.progressSpinner=true;
 
     this.sigaServices.post("gestionejg_getDatosExpInsos", this.body).subscribe(

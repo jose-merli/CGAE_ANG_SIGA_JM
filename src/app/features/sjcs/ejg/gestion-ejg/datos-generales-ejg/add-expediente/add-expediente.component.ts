@@ -42,11 +42,13 @@ export class AddExpedienteComponent implements OnInit {
 
     this.url +='&soloSeguimiento=false&editable=1&modo=&avanzada=&metodo=abrirNuevoEjg'+
     '&numeroEjg='+this.body.numero +'&numEJGDisciplinario='+this.body.numEJG+'&idTipoEjg='+this.body.idTipoEJG
-    +'&anioEjg='+this.body.anioEJG+'&nifSolicitante=&nombreSolicitante=++&idInstitucion_TipoExpediente='+this.body.idInstitucion
+    +'&anioEjg='+this.body.anioEJG+'&nifSolicitante=&nombreSolicitante='+this.body.nombresolicitante+' '+this.body.apellido1solicitante+' '
+    +this.body.apellido2solicitante+'&idInstitucion_TipoExpediente='+this.body.idInstitucion
     +'&numeroProcedimiento=&anioProcedimiento=&procedimiento='+this.body.idProcedimiento+'&asunto=&juzgado='+this.body.idJuzgado
     +'&juzgadoInstitucion=&pretension='+ this.body.idPretension +'&pretensionInstitucion='+this.body.idInstitucion
     +'&idturnoDesignado='+this.body.idTurno+'&nombreDesignado='+this.body.nombre+'&numColDesignado='
-    +'&idclasificacion=1&solicitanteEjgNif=&solicitanteEjgNombre=&solicitanteEjgApellido1=&solicitanteEjgApellido2=';
+    +'&idclasificacion=1&solicitanteEjgNif='+this.body.nifsolicitante+'&solicitanteEjgNombre='+this.body.nombresolicitante
+    +'&solicitanteEjgApellido1='+this.body.apellido1solicitante+'&solicitanteEjgApellido2='+this.body.apellido2solicitante;
 
 
 
