@@ -15,6 +15,7 @@ import { DocumentoDesignaObject } from '../../../../../../../models/sjcs/Documen
 import { CommonsService } from '../../../../../../../_services/commons.service';
 import { procesos_oficio } from '../../../../../../../permisos/procesos_oficio';
 import { Router } from '@angular/router';
+import { FichaColegialGeneralesItem } from '../../../../../../../models/FichaColegialGeneralesItem';
 
 export class UsuarioLogado {
   idPersona: string;
@@ -178,25 +179,24 @@ export class FichaActuacionComponent implements OnInit {
           );
           this.router.navigate(["/errorAcceso"]);
         }else if(permisoEscritura == true){
-          this.usuarioLogado = new UsuarioLogado();
-          this.usuarioLogado.idPersona = this.sigaStorageService.idPersona;
-          this.usuarioLogado.numColegiado = this.sigaStorageService.numColegiado;
-          this.isColegiado = true;
+          
+          this.modoLectura = false;
         }else{
-          this.isColegiado = false;
+          this.modoLectura = true;
         }
 
         // if (!permisoEscritura) {
         //   this.modoLectura = true;
         // }
 
-        /* this.isColegiado = this.sigaStorageService.isLetrado;
+         this.isColegiado = sessionStorage.getItem('esColegiado');
+         let colegiadoLog = JSON.parse(sessionStorage.getItem('personaBody'));
 
         if (this.isColegiado) {
           this.usuarioLogado = new UsuarioLogado();
-          this.usuarioLogado.idPersona = this.sigaStorageService.idPersona;
-          this.usuarioLogado.numColegiado = this.sigaStorageService.numColegiado;
-        } */
+          this.usuarioLogado.idPersona = colegiadoLog.idPersona.toString();
+          this.usuarioLogado.numColegiado = colegiadoLog.numColegiado.toString();
+        } 
 
         this.institucionActual = this.sigaStorageService.institucionActual;
 

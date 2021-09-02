@@ -160,14 +160,14 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
 
       let copiaDocumentos2: Documento[] = this.documentos2.slice();
 
-      copiaDocumentos2.forEach((el, i) => {
+       copiaDocumentos2.forEach((el, i) => {
 
         if (!el.nuevo && this.isColegiado == false && !(this.usuarioLogado.idPersona == el.idPersona)) {
           copiaDocumentos2.splice(i, 1);
           error = true;
         }
 
-      });
+      }); 
 
       if (error) {
         this.showMsg('info', this.translateService.instant("general.message.informacion"), 'Alguno de los registros no puedo ser editado porque no es usted su creador');
