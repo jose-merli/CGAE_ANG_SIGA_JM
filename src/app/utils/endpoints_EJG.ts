@@ -108,7 +108,6 @@ export let endpoints_EJG: any = {
     //REGTEL
     gestionejg_searchListDocEjg: 'ejg/gestion-ejg/searchListDocEjg',
 	gestionejg_insertCollectionEjg: 'ejg/gestion-ejg/insertCollectionEjg',
-    gestionejg_searchListDirEjg: 'ejg/gestion-ejg/searchListDirEjg',
 
     //comunicaciones
     gestionejg_getComunicaciones: "ejg/gestion-ejg/getComunicaciones"
