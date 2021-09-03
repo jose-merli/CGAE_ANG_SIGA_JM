@@ -140,6 +140,7 @@ import { CertificadosIrpfComponent } from './features/sjcs/informes/certificados
 import { ComunicaPreparacionComponent } from './features/sjcs/comunicaciones/comunica-preparacion/comunica-preparacion.component';
 import { ComunicaRemesaEnvioComponent } from './features/sjcs/comunicaciones/comunica-remesa-envio/comunica-remesa-envio.component';
 import { ComunicaRemesaResultadoComponent } from './features/sjcs/comunicaciones/comunica-remesa-resultado/comunica-remesa-resultado.component';
+import { RemesasComponent } from './features/sjcs/remesas/remesas.component';
 import { ComunicaEnvioActualizacionComponent } from './features/sjcs/comunicaciones/comunica-envio-actualizacion/comunica-envio-actualizacion.component';
 import { ComunicaInfoEconomicaComponent } from './features/sjcs/comunicaciones/comunica-info-economica/comunica-info-economica.component';
 import { ComunicaCargaComponent } from './features/sjcs/comunicaciones/comunica-carga/comunica-carga.component';
@@ -982,6 +983,11 @@ const appRoutes: Routes = [
 	{
 		path: 'comunicaRemesaResultado',
 		component: ComunicaRemesaResultadoComponent,
+		canActivate: [ AuthGuard ]
+	},
+	{
+		path: 'remesas',
+		component: RemesasComponent,
 		canActivate: [ AuthGuard ]
 	},
 	{

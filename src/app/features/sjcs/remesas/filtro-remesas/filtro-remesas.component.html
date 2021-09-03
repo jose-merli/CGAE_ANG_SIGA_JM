@@ -15,48 +15,47 @@
           <div class="form-row">
             <div class="form-group-interlineado col-lg-4 col-md-4 px-1">
               <input type="text" name="prefijo" value="" class="box" class="registro-control w-100"
-                [(ngModel)]='valuePrefijo' maxLength="8" pInputText>
+                [(ngModel)]='filtros.prefijo' maxLength="8" pInputText>
             </div>
             <div class="form-group-interlineado col-lg-4 col-md-4 px-1">
               <input type="text" name="numero" value="" class="box" class="registro-control w-100"
-                [(ngModel)]='valueNumero' maxLength="10" pInputText>
+                [(ngModel)]='filtros.numero' maxLength="10" pInputText>
             </div>
-            
+
             <div class="form-group-interlineado col-lg-4 col-md-4 px-1">
               <input type="text" name="sufijo" value="" class="box" class="registro-control w-100"
-                [(ngModel)]='valueSufijo' maxLength="8" pInputText>
+                [(ngModel)]='filtros.sufijo' maxLength="8" pInputText>
             </div>
           </div>
         </div>
 
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>Descripcion</label>
-          <input type="text" name="nombre" value="" class="box" class="form-control" [(ngModel)]='valueDescripcion'
+          <input type="text" name="nombre" value="" class="box" class="form-control" [(ngModel)]='filtros.descripcion'
             maxLength="200" pInputText>
         </div>
 
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <div class="form-row">
-              <div class="form-group-interlineado col-lg-4 col-md-4 px-1">
-                <label><strong>{{ 'justiciaGratuita.maestros.calendarioLaboralAgenda.anio' |
-                    translate}}</strong></label>
-                <input type="text" [(ngModel)]="valueAnio" class="form-control"
-                  maxLength="4" pInputText>
-              </div>
-              /
-              <div class="form-group-interlineado col-lg-4 col-md-4 px-1">
-                <label><strong>{{ 'gratuita.busquedaAsistencias.literal.numero' |
-                    translate}}</strong></label>
-                <input type="text" class="form-control" maxLength="10" #inputNumero pInputText
-                  [(ngModel)]="valueAnioNumero">
-              </div>
+            <div class="form-group-interlineado col-lg-4 col-md-4 px-1">
+              <label><strong>{{ 'justiciaGratuita.maestros.calendarioLaboralAgenda.anio' |
+                  translate}}</strong></label>
+              <input type="text" [(ngModel)]="filtros.annioEJG" class="form-control" maxLength="4" pInputText>
+            </div>
+            /
+            <div class="form-group-interlineado col-lg-4 col-md-4 px-1">
+              <label><strong>{{ 'gratuita.busquedaAsistencias.literal.numero' |
+                  translate}}</strong></label>
+              <input type="text" class="form-control" maxLength="10" #inputNumero pInputText
+                [(ngModel)]="filtros.numeroEJG">
+            </div>
           </div>
         </div>
 
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>Estado</label>
-          <p-dropdown class="select-form" [(ngModel)]='valueEstado' placeholder="Seleccionar" [options]="comboEstado"
-            [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
+          <p-dropdown class="select-form" [(ngModel)]='filtros.estado' placeholder="Seleccionar"
+            [options]="comboEstados" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
           </p-dropdown>
         </div>
       </div>
@@ -64,29 +63,29 @@
       <div class="form-row">
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>Fecha de generaci&oacute;n desde</label>
-          <app-fecha [(value)]="valueDesde" (valueChangeSelected)="fillFechaDesde($event)"
-            (valueChangeInput)="fillFechaDesde($event)">
+          <app-fecha [(value)]="filtros.fechaGeneracionDesde" (valueChangeSelected)="fillFechaGeneracionDesde($event)"
+            (valueChangeInput)="fillFechaGeneracionDesde($event)">
           </app-fecha>
         </div>
 
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>Fecha de generaci&oacute;n hasta</label>
-          <app-fecha [(value)]="valueHasta" (valueChangeSelected)="fillFechaHasta($event)"
-            (valueChangeInput)="fillFechaHasta($event)">
+          <app-fecha [(value)]="filtros.fechaGeneracionHasta" (valueChangeSelected)="fillFechaGeneracionHasta($event)"
+            (valueChangeInput)="fillFechaGeneracionHasta($event)" [minDate]="filtros.fechaGeneracionDesde">
           </app-fecha>
         </div>
 
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>Fecha de env&iacute;o desde</label>
-          <app-fecha [(value)]="valueDesde" (valueChangeSelected)="fillFechaDesde($event)"
-            (valueChangeInput)="fillFechaDesde($event)">
+          <app-fecha [(value)]="filtros.fechaEnvioDesde" (valueChangeSelected)="fillFechaEnvioDesde($event)"
+            (valueChangeInput)="fillFechaEnvioDesde($event)">
           </app-fecha>
         </div>
 
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>Fecha de env&iacute;o hasta</label>
-          <app-fecha [(value)]="valueHasta" (valueChangeSelected)="fillFechaHasta($event)"
-            (valueChangeInput)="fillFechaHasta($event)">
+          <app-fecha [(value)]="filtros.fechaEnvioHasta" (valueChangeSelected)="fillFechaEnvioHasta($event)"
+            (valueChangeInput)="fillFechaEnvioHasta($event)" [minDate]="filtros.fechaEnvioDesde">
           </app-fecha>
         </div>
       </div>
@@ -94,15 +93,15 @@
       <div class="form-row">
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>Fecha de recepci&oacute;n desde</label>
-          <app-fecha [(value)]="valueDesde" (valueChangeSelected)="fillFechaDesde($event)"
-            (valueChangeInput)="fillFechaDesde($event)">
+          <app-fecha [(value)]="filtros.fechaRecepcionDesde" (valueChangeSelected)="fillFechaRecepcionDesde($event)"
+            (valueChangeInput)="fillFechaRecepcionDesde($event)">
           </app-fecha>
         </div>
 
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>Fecha de recepci&oacute;n hasta</label>
-          <app-fecha [(value)]="valueHasta" (valueChangeSelected)="fillFechaHasta($event)"
-            (valueChangeInput)="fillFechaHasta($event)">
+          <app-fecha [(value)]="filtros.fechaRecepcionHasta" (valueChangeSelected)="fillFechaRecepcionHasta($event)"
+            (valueChangeInput)="fillFechaRecepcionHasta($event)" [minDate]="filtros.fechaRecepcionDesde">
           </app-fecha>
         </div>
       </div>
@@ -116,5 +115,7 @@
       label="{{ 'general.boton.clear' | translate}}"></button>
     <button (click)="search()" pButton type="button" icon="fa fa-search" iconPos="left"
       label="{{ 'general.boton.search' | translate }}"></button>
+    <button (click)="checkPermisosIsNuevo()" pButton type="button"  icon="fa fa-plus"
+       iconPos="left"  label="{{ 'general.boton.new' | translate}}"></button>
   </div>
 </div>

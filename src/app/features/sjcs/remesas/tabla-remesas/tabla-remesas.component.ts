@@ -6,6 +6,7 @@ import { PretensionObject } from '../../../../models/sjcs/PretensionObject';
 import { PretensionItem } from '../../../../models/sjcs/PretensionItem';
 import { ConfirmationService, Paginator } from 'primeng/primeng';
 import { CommonsService } from '../../../../_services/commons.service';
+import { RemesasBusquedaObject } from '../../../../models/sjcs/RemesasBusquedaObject';
 
 @Component({
   selector: 'app-tabla-remesas',
@@ -66,7 +67,6 @@ export class TablaRemesasComponent implements OnInit {
     this.selectedDatos = [];
     this.getCols();
 
-    this.getComboJurisdiccion();
     this.datosInicial = JSON.parse(JSON.stringify(this.datos));
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
   }
@@ -155,18 +155,6 @@ export class TablaRemesasComponent implements OnInit {
       }
 
     }
-  }
-
-  getComboJurisdiccion() {
-    this.sigaServices
-      .get("busquedaProcedimientos_jurisdiccion")
-      .subscribe(
-        n => {
-          this.comboJurisdiccion = n.combooItems;
-        },
-        error => { },
-        () => { }
-      );
   }
 
   changeDescripcion(dato) {
@@ -363,7 +351,6 @@ export class TablaRemesasComponent implements OnInit {
     this.tabla.sortOrder = 0;
     this.tabla.sortField = '';
     this.tabla.reset();
-    this.getComboJurisdiccion();
 
     if (this.datosInicial != undefined && this.datosInicial != null) {
       this.datos = JSON.parse(JSON.stringify(this.datosInicial));
@@ -445,21 +432,17 @@ export class TablaRemesasComponent implements OnInit {
   }
 
   delete() {
-    let del = new PretensionObject();
-    del.pretensionItems = this.selectedDatos
-    let url;
-    if (this.historico) url = "gestionProcedimientos_activateProcedimientos";
-    else url = "gestionProcedimientos_deleteProcedimientos";
-    this.sigaServices.post(url, del).subscribe(
+    let del = new RemesasBusquedaObject();
+    del.resultadoBusqueda = this.selectedDatos;
+    this.sigaServices.post("filtrosremesas_borrarRemesa", del.resultadoBusqueda).subscribe(
       data => {
+        this.showMessage("success", this.translateService.instant("general.message.correct"), JSON.parse(data.body).error.description);
         this.selectedDatos = [];
-        this.search.emit(this.historico);
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
       err => {
         if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
@@ -543,10 +526,13 @@ export class TablaRemesasComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "codigoExt", header: "general.codeext" },
+      { field: "nRegistro", header: "formacion.fichaCursos.tarjetaPrecios.resumen.numRegistros" },
       { field: "descripcion", header: "administracion.parametrosGenerales.literal.descripcion" },
-      { field: "descripcionJurisdiccion", header: "menu.justiciaGratuita.maestros.Jurisdiccion" }
-
+      { field: "fechaGeneracion", header: "justiciaGratuita.remesas.tabla.FechaGeneracion" },
+      { field: "fechaEnvio", header: "justiciaGratuita.remesas.tabla.FechaEnvio" },
+      { field: "fechaRecepcion", header: "justiciaGratuita.remesas.tabla.FechaRecepcion" },
+      { field: "estado", header: "justiciaGratuita.Calendarios.Estado" },
+      { field: "incidenciasEJG", header: "justiciaGratuita.remesas.tabla.Incidencias" }
     ];
     this.cols.forEach(it => this.buscadores.push(""))
 

@@ -1,12 +1,11 @@
 import { Component, OnInit, EventEmitter, HostListener, Input, ViewChild, Output } from '@angular/core';
 import { KEY_CODE } from '../../../censo/busqueda-personas-juridicas/busqueda-personas-juridicas.component';
-import { } from '../../../../models/sjcs/ProcedimientoItem';
-import { PretensionItem } from '../../../../models/sjcs/PretensionItem';
 import { Router } from '../../../../../../node_modules/@angular/router';
 import { TranslateService } from '../../../../commons/translate';
 import { SigaServices } from '../../../../_services/siga.service';
 import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
+import { RemesasBusquedaItem } from '../../../../models/sjcs/RemesasBusquedaItem';
 
 @Component({
   selector: 'app-filtro-remesas',
@@ -18,22 +17,8 @@ export class FiltroRemesasComponent implements OnInit {
   showDatosGenerales: boolean = true;
   msgs = [];
 
-  valuePrefijo: String;
-  valueNumero: String;
-  valueSufijo: String;
-  valueEstado: String;
-  valueFecha: String;
-  valueDesde: String;
-  valueHasta: String;
-  valueAnio: String;
-  valueAnioNumero: String;
-  valueDescripcion: String;
-  valueFechaDesde: String;
-  valueFechaHasta: String;
-
-
-  filtros: PretensionItem = new PretensionItem();
-  filtroAux: PretensionItem = new PretensionItem();
+  filtros: RemesasBusquedaItem = new RemesasBusquedaItem();
+  filtroAux: RemesasBusquedaItem = new RemesasBusquedaItem();
   historico: boolean = false;
 
   isDisabledPoblacion: boolean = true;
@@ -42,72 +27,81 @@ export class FiltroRemesasComponent implements OnInit {
   @Input() permisoEscritura;
   @ViewChild("prueba") prueba;
 
-  comboProcedimientos = [];
-  comboJurisdiccion = [];
+  comboEstados = [];
 
-  @Output() isOpen = new EventEmitter<boolean>();
+  @Output() filtrosValues = new EventEmitter<RemesasBusquedaItem>();
 
   constructor(private router: Router, private translateService: TranslateService, private sigaServices: SigaServices,
     private persistenceService: PersistenceService, private commonServices: CommonsService) { }
 
   ngOnInit() {
 
+    this.getComboEstados();
+
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos();
     }
-    this.getComboJurisdiccion();
-    this.getComboProcedimientos();
 
     if (this.persistenceService.getFiltros() != undefined) {
       this.filtros = this.persistenceService.getFiltros();
       if (this.persistenceService.getHistorico() != undefined) {
         this.historico = this.persistenceService.getHistorico();
       }
-      this.isOpen.emit(this.historico)
 
     } else {
-      this.filtros = new PretensionItem();
+      this.filtros = new RemesasBusquedaItem();
     }
 
   }
 
-
-  getComboProcedimientos() {
+  getComboEstados() {
+    console.log("Dentro del comboEstado");
     this.sigaServices
-      .get("busquedaProcedimientos_procedimientos")
+      .get("filtrosremesas_comboEstadoRemesa")
       .subscribe(
         n => {
-          this.comboProcedimientos = n.combooItems;
+          console.log("Dentro de la respuesta");
+          this.comboEstados = n.combooItems;
         },
         error => { },
         () => { }
       );
   }
 
-
-  fillFechaDesde(event) {
+  fillFechaGeneracionDesde(event) {
     if (event != null) {
-      this.valueFechaDesde = event;
+      this.filtros.fechaGeneracionDesde = event;
     }
   }
 
-  fillFechaHasta(event) {
+  fillFechaGeneracionHasta(event) {
     if (event != null) {
-      this.valueFechaHasta = event;
+      this.filtros.fechaGeneracionHasta = event;
     }
   }
 
-  getComboJurisdiccion() {
+  fillFechaEnvioDesde(event) {
+    if (event != null) {
+      this.filtros.fechaEnvioDesde = event;
+    }
+  }
 
-    this.sigaServices
-      .get("busquedaProcedimientos_jurisdiccion")
-      .subscribe(
-        n => {
-          this.comboJurisdiccion = n.combooItems;
-        },
-        error => { },
-        () => { }
-      );
+  fillFechaEnvioHasta(event) {
+    if (event != null) {
+      this.filtros.fechaEnvioHasta = event;
+    }
+  }
+
+  fillFechaRecepcionDesde(event) {
+    if (event != null) {
+      this.filtros.fechaRecepcionDesde = event;
+    }
+  }
+
+  fillFechaRecepcionHasta(event) {
+    if (event != null) {
+      this.filtros.fechaRecepcionHasta = event;
+    }
   }
 
   onHideDatosGenerales() {
@@ -115,35 +109,14 @@ export class FiltroRemesasComponent implements OnInit {
   }
 
   search() {
-
-    if (this.checkFilters()) {
-      this.persistenceService.setFiltros(this.filtros);
+     /*  this.persistenceService.setFiltros(this.filtros);
       this.persistenceService.setFiltrosAux(this.filtros);
-      this.filtroAux = this.persistenceService.getFiltrosAux()
-      this.isOpen.emit(false)
-    }
-
-  }
-
-
-  checkFilters() {
-    if (this.filtros.descripcion != undefined) {
-      this.filtros.descripcion = this.filtros.descripcion.trim();
-    }
-    // if (
-    //   (this.filtros.descripcion == null || this.filtros.descripcion.trim() == "" || this.filtros.descripcion.trim().length < 3) &&
-    //   (this.filtros.idJurisdiccion == null || this.filtros.idJurisdiccion == "") &&
-    //   (this.filtros.idPretension == null || this.filtros.idPretension == "")) {
-    //   this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
-    //   return false;
-    // } else {
-
-    return true;
-    // }
+      this.filtroAux = this.persistenceService.getFiltrosAux() */
+      this.filtrosValues.emit(this.filtros);
   }
 
   clearFilters() {
-    this.filtros = new PretensionItem();
+    this.filtros = new RemesasBusquedaItem();
   }
 
   clear() {

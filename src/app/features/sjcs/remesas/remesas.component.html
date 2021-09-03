@@ -6,8 +6,8 @@
 </div>
 
 <div class="busqueda-container">
-  <app-filtro-remesas [permisoEscritura]="permisoEscritura" (isOpen)="isOpenReceive($event)"></app-filtro-remesas>
-  <app-tabla-remesas *ngIf="buscar" [permisos]="permisoEscritura" [datos]="datos" (search)="search($event)"></app-tabla-remesas>
+  <app-filtro-remesas [permisoEscritura]="permisoEscritura" (filtrosValues) = "getFiltrosValues($event)"></app-filtro-remesas>
+  <app-tabla-remesas *ngIf="buscar" [permisos]="permisoEscritura" [datos]="datos" (search)="search()"></app-tabla-remesas>
 </div>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">
