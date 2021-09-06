@@ -53,7 +53,7 @@ export class ResolucionComponent implements OnInit {
 
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
-    private commonsServices: CommonsService, private translateService: TranslateService, 
+    private commonsServices: CommonsService, private translateService: TranslateService,
     private confirmationService: ConfirmationService, private router: Router) { }
 
   ngOnInit() {
@@ -108,6 +108,7 @@ export class ResolucionComponent implements OnInit {
       n => {
         if (n.body) {
           this.resolucion = JSON.parse(n.body);
+          this.bodyInicial = JSON.parse(n.body);
         } else { this.resolucion = new ResolucionEJGItem(); }
         if (this.resolucion.fechaPresentacionPonente != undefined)
           this.resolucion.fechaPresentacionPonente = new Date(this.resolucion.fechaPresentacionPonente);
@@ -119,7 +120,7 @@ export class ResolucionComponent implements OnInit {
           this.resolucion.fechaNotificacion = new Date(this.resolucion.fechaNotificacion);
 
         this.getComboActaAnnio();
-        if(this.resolucion.idTiporatificacionEJG != undefined)this.getComboFundamentoJurid();
+        if (this.resolucion.idTiporatificacionEJG != undefined) this.getComboFundamentoJurid();
         this.getComboResolucion();
 
         //Se desbloquea el desplegable de fundamento juridico si hay una resolucion seleccionada al inciar la tarjeta.
@@ -281,9 +282,9 @@ export class ResolucionComponent implements OnInit {
     this.resolucion.numero = Number(this.body.numero);
 
     //Se debe extraer los valores que necesitamos del id del elemento del combo de actas seleccionado.
-    if (this.resolucion.idAnnioActa != null){
-          this.resolucion.idActa = Number(this.resolucion.idAnnioActa.split(",")[0]);
-          this.resolucion.annioActa = Number(this.resolucion.idAnnioActa.split(",")[1]);
+    if (this.resolucion.idAnnioActa != null) {
+      this.resolucion.idActa = Number(this.resolucion.idAnnioActa.split(",")[0]);
+      this.resolucion.annioActa = Number(this.resolucion.idAnnioActa.split(",")[1]);
     }
     else {
       this.resolucion.idActa = null;
@@ -348,13 +349,13 @@ export class ResolucionComponent implements OnInit {
   rest() {
     this.resolucion = JSON.parse(JSON.stringify(this.bodyInicial));
     if (this.resolucion.fechaPresentacionPonente != undefined)
-          this.resolucion.fechaPresentacionPonente = new Date(this.resolucion.fechaPresentacionPonente);
-        if (this.resolucion.fechaResolucionCAJG != undefined)
-          this.resolucion.fechaResolucionCAJG = new Date(this.resolucion.fechaResolucionCAJG);
-        if (this.resolucion.fechaRatificacion != undefined)
-          this.resolucion.fechaRatificacion = new Date(this.resolucion.fechaRatificacion);
-        if (this.resolucion.fechaNotificacion != undefined)
-          this.resolucion.fechaNotificacion = new Date(this.resolucion.fechaNotificacion);
+      this.resolucion.fechaPresentacionPonente = new Date(this.resolucion.fechaPresentacionPonente);
+    if (this.resolucion.fechaResolucionCAJG != undefined)
+      this.resolucion.fechaResolucionCAJG = new Date(this.resolucion.fechaResolucionCAJG);
+    if (this.resolucion.fechaRatificacion != undefined)
+      this.resolucion.fechaRatificacion = new Date(this.resolucion.fechaRatificacion);
+    if (this.resolucion.fechaNotificacion != undefined)
+      this.resolucion.fechaNotificacion = new Date(this.resolucion.fechaNotificacion);
   }
 
   checkPermisosOpenActa() {
@@ -401,14 +402,14 @@ export class ResolucionComponent implements OnInit {
   }
 
   fillFechaPresPonente(event) {
-    if(event != null) this.resolucion.fechaPresentacionPonente = new Date(event);
+    if (event != null) this.resolucion.fechaPresentacionPonente = new Date(event);
   }
 
   fillFechaResCAJG(event) {
-    if(event != null)this.resolucion.fechaResolucionCAJG = new Date(event);
+    if (event != null) this.resolucion.fechaResolucionCAJG = new Date(event);
   }
 
-  fillFechaResCAJGActa(event){
+  fillFechaResCAJGActa(event) {
     let actaannio = this.comboActaAnnio.find(
       item => item.value == this.resolucion.idTiporatificacionEJG
     );
@@ -422,11 +423,11 @@ export class ResolucionComponent implements OnInit {
   }
 
   fillFechaNotif(event) {
-    if(event != null)this.resolucion.fechaNotificacion = new Date(event);
+    if (event != null) this.resolucion.fechaNotificacion = new Date(event);
   }
 
   fillFechaResFirme(event) {
-    if(event != null)this.resolucion.fechaRatificacion =new Date(event);
+    if (event != null) this.resolucion.fechaRatificacion = new Date(event);
   }
 
   onChangeCheckT(event) {
@@ -446,7 +447,7 @@ export class ResolucionComponent implements OnInit {
     });
   }
 
-  descargarDocumentoResolucion(){
+  descargarDocumentoResolucion() {
     this.progressSpinner = true;
 
     this.sigaServices.postDownloadFiles("gestionejg_descargarDocumentoResolucion", this.resolucion.docResolucion).subscribe(
