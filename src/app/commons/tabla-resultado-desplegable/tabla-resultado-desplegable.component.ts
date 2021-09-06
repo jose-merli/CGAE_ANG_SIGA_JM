@@ -1214,14 +1214,28 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   }
 
   colorByStateExpediente(state){
-    if ( state == 'DESFAVORABLE'){
+     if ( state == 'DESFAVORABLE'){
       return 'red';
     }else if ( state == 'FAVORABLE'){
       return 'blue'; 
     } else {
       return 'black';
     }
+
   } 
+
+  tooltipEJG(state,resolucion){
+    if ( (resolucion == '' || resolucion == undefined || resolucion == null || resolucion == 'SIN_RESOLUCION') && (state == '' || state == undefined || state == null) ){
+      return 'Designación con EJG sin Resolución';
+    }else if((resolucion != '' || resolucion != undefined || resolucion != null || resolucion != 'SIN_RESOLUCION') && (state == '' || state == undefined || state == null)){
+      return `Resolucion: ${resolucion}`;
+    }else if((resolucion == '' || resolucion == undefined || resolucion == null || resolucion == 'SIN_RESOLUCION') && (state != '' || state != undefined || state != null)){
+      return `Dictamen: ${state}`;
+    }else{
+      return `Resolucion: ${resolucion} \ Dictamen: ${state}`;
+    }
+  }
+
   searchActuacionwithSameNumDesig(idAcreditacionNew, rowGroupWithNew){
     let esPosibleCrearNuevo = true;
     let nameAcreditacionArr = [];

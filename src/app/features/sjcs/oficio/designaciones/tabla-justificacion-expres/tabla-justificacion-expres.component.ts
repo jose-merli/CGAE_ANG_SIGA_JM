@@ -286,6 +286,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
       let arr2 = [];
       let cod = designacion.codigoDesignacion + '\n' + "("+this.formatDate(designacion.fechaDesignacion)+")";
       let estadoDesignacion = designacion.estado;
+     
       
       arr1 = [];
       obj1 = {};
@@ -330,6 +331,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
       let id2 = expedientes;
       let estadoEx = estados;
       let id3 = designacion.cliente;
+      let resolucionDesignacion = designacion.resolucionDesignacion;
 
       let moduleSelector =
       {
@@ -699,7 +701,7 @@ console.log('designacion.actuaciones: ', designacion.actuaciones)
 
 
      //arr2.push(Object.assign({},obj1));
-      dataObj = { [cod]  : arr2, [id2] : "" , [id3] : "", [estadoDesignacion] : "", [estadoEx] : ""};
+      dataObj = { [cod]  : arr2, [id2] : "" , [id3] : "", [estadoDesignacion] : "", [estadoEx] : "", [resolucionDesignacion]:""};
       data.push(Object.assign({},dataObj));
       arr2 = [];
       expedientes = "";
