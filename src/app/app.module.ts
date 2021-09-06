@@ -468,6 +468,7 @@ import { TablaActasComponent } from './features/sjcs/actas/tabla-actas/tabla-act
 
 import { ProcuradorPreDesignacionComponent } from './features/sjcs/ejg/gestion-ejg/relaciones/ficha-pre-designacion/procurador-pre-designacion/procurador-pre-designacion.component';
 import { ContrariosPreDesignacionComponent } from './features/sjcs/ejg/gestion-ejg/relaciones/ficha-pre-designacion/contrarios-pre-designacion/contrarios-pre-designacion.component';
+import { FichaRemesasComponent } from './src/app/features/sjcs/remesas/ficha-remesas/ficha-remesas.component';
 
 @NgModule({
 	declarations: [
@@ -855,6 +856,7 @@ import { ContrariosPreDesignacionComponent } from './features/sjcs/ejg/gestion-e
 		ActasComponent,
 		FiltroActasComponent,
 		TablaActasComponent,
+		FichaRemesasComponent,
 
 
 
