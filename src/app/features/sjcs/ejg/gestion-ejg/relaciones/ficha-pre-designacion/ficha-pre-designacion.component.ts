@@ -75,7 +75,6 @@ export class FichaPreDesignacionComponent implements OnInit {
     private location: Location) { }
 
   async ngOnInit() {
-    this.progressSpinner = true;
     await this.checkAcceso();
     this.cargaInicial();
   }
@@ -92,11 +91,9 @@ export class FichaPreDesignacionComponent implements OnInit {
         "descError",
         this.translateService.instant("generico.error.permiso.denegado")
       );
-      this.progressSpinner = false;
       this.router.navigate(["/errorAcceso"]);
     } else {
       await this.obtenerAccesoTarjetas();
-      this.progressSpinner = false;
     }
   }
 

@@ -32,6 +32,8 @@ export class ContrariosPreDesignacionComponent implements OnInit {
   selectMultiple: boolean = false;
   selectionMode: string = "single";
   numSelected = 0;
+  nuevo: boolean = false;
+  eliminar: boolean = false;
 
   selectedDatos: any = [];
 
@@ -59,6 +61,11 @@ export class ContrariosPreDesignacionComponent implements OnInit {
     
 
     this.searchContrariosEJG();
+
+    if(this.permisoEscritura){
+      this.nuevo=true;
+      this.eliminar = true
+    }
 
   }
 
@@ -177,8 +184,8 @@ export class ContrariosPreDesignacionComponent implements OnInit {
       this.progressSpinner = false;
     },
       err => {
-        this.progressSpinner = false;
       });
+      this.progressSpinner = false;
   }
 
   NewContrario() {
@@ -210,7 +217,7 @@ export class ContrariosPreDesignacionComponent implements OnInit {
         sessionStorage.setItem("EJGItem", JSON.stringify(this.ejg));
         this.persistenceService.setDatos(datos[0]);
         sessionStorage.setItem("origin", "ContrarioEJG");
-        this.persistenceService.clearBody();
+       // this.persistenceService.clearBody();
         sessionStorage.setItem("contrarioEJG", JSON.stringify(evento));
         if (evento.abogado != "" && evento.abogado != null) {
           sessionStorage.setItem("idabogadoFicha", evento.idabogadocontrario);

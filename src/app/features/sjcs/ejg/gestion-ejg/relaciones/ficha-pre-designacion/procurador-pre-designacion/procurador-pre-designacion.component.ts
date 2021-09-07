@@ -149,6 +149,7 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 	}
 
 	Disassociate() {
+		this.progressSpinner = true;
 		let ejgPeticion: EJGItem = this.persistenceService.getDatos();
 		ejgPeticion.idProcurador = null;
 		ejgPeticion.idInstitucionProc = null;

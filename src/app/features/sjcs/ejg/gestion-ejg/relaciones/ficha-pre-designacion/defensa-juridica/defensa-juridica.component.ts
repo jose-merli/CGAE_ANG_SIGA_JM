@@ -148,7 +148,6 @@ export class DefensaJuridicaComponent implements OnInit {
               }
             });
           }).catch(error => {
-            this.progressSpinner = false;
             let severity = "error";
             let summary = this.translateService.instant("justiciaGratuita.oficio.designa.NIGInvalido");
             let detail = "";
@@ -306,6 +305,7 @@ export class DefensaJuridicaComponent implements OnInit {
   }
 
   actualizarDelitosEJG() {
+    this.progressSpinner = true;
     let peticionDelitos: EJGItem = this.body;
     if (peticionDelitos.delitos != null) peticionDelitos.delitos = this.delitosValue.toString();
     this.sigaServices.post("gestionejg_actualizarDelitosEJG", peticionDelitos).subscribe(
