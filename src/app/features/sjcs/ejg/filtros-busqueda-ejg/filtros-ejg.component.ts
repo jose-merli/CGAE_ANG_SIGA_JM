@@ -91,7 +91,8 @@ export class FiltrosEjgComponent implements OnInit {
 
   usuarioBusquedaExpress = {
     numColegiado: '',
-    nombreAp: ''
+    nombreAp: '',
+    idPersona:''
   };
 
   constructor(private router: Router,
@@ -144,6 +145,7 @@ export class FiltrosEjgComponent implements OnInit {
 
       this.usuarioBusquedaExpress.nombreAp = busquedaColegiado.nombre + " " + busquedaColegiado.apellidos;
       this.usuarioBusquedaExpress.numColegiado = busquedaColegiado.nColegiado;
+      this.usuarioBusquedaExpress.idPersona = busquedaColegiado.idPersona;
     }
 
     setTimeout(() => {
@@ -639,6 +641,7 @@ export class FiltrosEjgComponent implements OnInit {
         if (this.usuarioBusquedaExpress.numColegiado != undefined && this.usuarioBusquedaExpress.numColegiado != null
           && this.usuarioBusquedaExpress.numColegiado.trim() != "") {
           this.body.numColegiado = this.usuarioBusquedaExpress.numColegiado;
+          this.body.idPersona = this.usuarioBusquedaExpress.idPersona;
         }
 
         if (this.bodyDictamen.toString() != undefined && this.bodyDictamen.toString() != null && this.bodyDictamen.toString() != "") {
