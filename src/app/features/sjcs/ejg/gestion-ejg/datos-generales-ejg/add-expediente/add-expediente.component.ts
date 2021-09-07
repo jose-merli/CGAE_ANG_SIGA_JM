@@ -40,15 +40,37 @@ export class AddExpedienteComponent implements OnInit {
 
     this.url = oldSigaServices.getOldSigaUrl('expedienteDatAudi');
 
+    let nifSolicitante = '';
+    let nombreSolicitante = '';
+    let apellido1Solicitante = '';
+    let apellido2Solicitante = '';
+    let nombreCompletoSolicitante = '';
+   
+    if (this.body.nifsolicitante!=null){
+      nifSolicitante = this.body.nifsolicitante;
+    }
+    if (this.body.nombresolicitante!=null){
+      nombreSolicitante = this.body.nombresolicitante;
+    }
+    if (this.body.apellido1solicitante!=null){
+      apellido1Solicitante = this.body.apellido1solicitante;
+    }
+    if (this.body.apellido2solicitante!=null){
+      apellido2Solicitante = this.body.apellido2solicitante;
+    }
+    if (this.body.nombresolicitante!=null){
+      nombreCompletoSolicitante = nombreSolicitante+'+'+apellido1Solicitante+'+'+apellido2Solicitante;
+    }
+
     this.url +='&soloSeguimiento=false&editable=1&modo=&avanzada=&metodo=abrirNuevoEjg'+
     '&numeroEjg='+this.body.numero +'&numEJGDisciplinario='+this.body.numEJG+'&idTipoEjg='+this.body.idTipoEJG
-    +'&anioEjg='+this.body.anioEJG+'&nifSolicitante='+this.body.nifsolicitante+'&nombreSolicitante='+this.body.nombresolicitante+'+'+this.body.apellido1solicitante+'+'
-    +this.body.apellido2solicitante+'&idInstitucion_TipoExpediente='+this.body.idInstitucion
+    +'&anioEjg='+this.body.anioEJG+'&nifSolicitante='+ nifSolicitante +'&nombreSolicitante='+nombreCompletoSolicitante
+    +'&idInstitucion_TipoExpediente='+this.body.idInstitucion
     +'&numeroProcedimiento='+this.body.numprocedimiento+'&anioProcedimiento=&procedimiento='+this.body.idProcedimiento+'&asunto=&juzgado='+this.body.idJuzgado
     +'&juzgadoInstitucion=&pretension='+ this.body.idPretension +'&pretensionInstitucion='+this.body.idInstitucion
     +'&idturnoDesignado='+this.body.idTurno+'&nombreDesignado='+this.body.nombre+'&numColDesignado='
-    +'&idclasificacion=1&solicitanteEjgNif='+this.body.nifsolicitante+'&solicitanteEjgNombre='+this.body.nombresolicitante
-    +'&solicitanteEjgApellido1='+this.body.apellido1solicitante+'&solicitanteEjgApellido2='+this.body.apellido2solicitante;
+    +'&idclasificacion=1&solicitanteEjgNif='+nifSolicitante+'&solicitanteEjgNombre='+nombreSolicitante
+    +'&solicitanteEjgApellido1='+apellido1Solicitante+'&solicitanteEjgApellido2='+apellido2Solicitante;
 
 
 
