@@ -65,7 +65,7 @@ export class GestionJusticiablesComponent implements OnInit {
     private authenticationService: AuthenticationService,
     private location: Location) { }
 
-  async ngOnInit() {
+  ngOnInit() {
 
     this.progressSpinner = true;
 
@@ -253,7 +253,7 @@ export class GestionJusticiablesComponent implements OnInit {
       this.persistenceService.setFichasPosibles(fichasPosiblesUniFami);
     }
 
-    await this.checkAcceso();
+    this.checkAcceso();
 
     //El padre de todas las tarjetas se encarga de enviar a sus hijos el objeto nuevo del justiciable que se quiere mostrar
 

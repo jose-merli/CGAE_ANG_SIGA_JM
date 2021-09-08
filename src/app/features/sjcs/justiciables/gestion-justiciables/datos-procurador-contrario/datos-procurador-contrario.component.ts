@@ -195,6 +195,8 @@ export class DatosProcuradorContrarioComponent implements OnInit {
 			);
 		} else {
 			sessionStorage.setItem("nuevoProcurador", "true");
+			if(this.fromContrario) sessionStorage.setItem("origin", "AbogadoContrario");
+			else sessionStorage.setItem("origin", "AbogadoContrarioEJG");
 			this.router.navigate(['/busquedaGeneral']);
 		}
 	}

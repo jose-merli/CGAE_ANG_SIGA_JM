@@ -127,7 +127,9 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 				this.translateService.instant('general.message.noTienePermisosRealizarAccion')
 			);
 		} else {
-			sessionStorage.setItem("origin", "AbogadoContrario");
+			
+			if(this.fromContrario) sessionStorage.setItem("origin", "AbogadoContrario");
+			else sessionStorage.setItem("origin", "AbogadoContrarioEJG");
 			this.router.navigate(['/busquedaGeneral']);
 		}
 	}
@@ -144,6 +146,7 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 						this.translateService.instant('general.message.correct'),
 						this.translateService.instant('general.message.accion.realizada')
 					);
+					this.generalBody = null;
 					this.persistenceService.setBody(this.generalBody);
 				},
 				(err) => {
@@ -151,7 +154,7 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 					this.translateService.instant('general.message.error.realiza.accion');
 				}
 			);
-			this.generalBody = null;
+			
 		}
 		else{
 			let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
@@ -164,6 +167,7 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 						this.translateService.instant('general.message.correct'),
 						this.translateService.instant('general.message.accion.realizada')
 					);
+					this.generalBody = null;
 					this.persistenceService.setBody(this.generalBody);
 				},
 				(err) => {
@@ -171,7 +175,6 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 					this.translateService.instant('general.message.error.realiza.accion');
 				}
 			);
-			this.generalBody = null;
 		}
 	}
 
