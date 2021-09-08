@@ -52,7 +52,7 @@
                 </a>
               </div>
                 <div class="text-center"
-                  *ngIf="col.field !='nombre_turno' && col.field !='descripcion_tipo_guardia'">
+                  *ngIf="col.field !='nombre_turno' "><!-- && col.field !='descripcion_tipo_guardia' -->
                   <span>{{rowData[col.field]}}</span>
                 </div>
               </td>

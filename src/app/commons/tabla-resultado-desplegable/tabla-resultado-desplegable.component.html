@@ -47,7 +47,7 @@
                     </div>
 
                     <div *ngIf="!posicionOcultar(-1) && pantalla == 'JE'" class="table-row-header p-2 selectedRowClass mw80" [id]="rowGroup.id2">
-                        <span [ngClass]="{'color-red': colorByStateExpediente(rowGroup.estadoEx) == 'red', 'color-blue': colorByStateExpediente(rowGroup.estadoEx) == 'blue', 'color-black': colorByStateExpediente(rowGroup.estadoEx) == 'black'}">  <span *ngIf="rowGroup.id2 != ''" >E</span>{{rowGroup.id2}}</span>
+                        <span [pTooltip]="tooltipEJG(rowGroup.estadoEx,rowGroup.resolucionDesignacion)" tooltipPosition="top" [ngClass]="{'color-red': colorByStateExpediente(rowGroup.estadoEx) == 'red', 'color-blue': colorByStateExpediente(rowGroup.estadoEx) == 'blue', 'color-black': colorByStateExpediente(rowGroup.estadoEx) == 'black'}">  <span *ngIf="rowGroup.id2 != ''" >E</span>{{rowGroup.id2}}</span>
                     </div>
 
                     <div *ngIf="!posicionOcultar(-1) && pantalla == 'JE'" class="table-row-header p-2 selectedRowClass wrapName mw100" [id]="rowGroup.id3">
@@ -266,6 +266,13 @@
         </button>
     </div>
 </div>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="deletePlantillaDoc" icon="icon" width="425"
+  #deletePlantillaDoc>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="OK" (click)="deletePlantillaDoc.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="Cancel" (click)="deletePlantillaDoc.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
 <div *ngIf="progressSpinner" class="overlay-spinner">
     <div class="loader"></div>
 </div>

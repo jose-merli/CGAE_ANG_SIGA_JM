@@ -108,9 +108,9 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       for (let i = 0; i < this.table.nativeElement.children.length; i++) {
 
         if (!event.target.classList.contains("selectedRowClass")) {
-          this.selected = false;
-          this.selectedArray = [];
-          this.selecteChild = [];
+          // this.selected = false;
+          // this.selectedArray = [];
+          // this.selecteChild = [];
         }
       }
     });
@@ -143,6 +143,9 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       this.cabecerasMultiselect.push(cab.name);
     });
     this.totalRegistros = this.rowGroups.length;
+    this.selected = false;
+    this.selectedArray = [];
+    this.selecteChild = [];
   }
 
   selectRow(rowSelected, rowId, child) {
@@ -395,7 +398,6 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         this.numActuacionesModificadas.emit(this.sumar);
       }
     }
-    console.log('this.isLetrado: ', this.isLetrado)
     this.rowValidadas = [];
     if (row == undefined){
       //designacion
@@ -1161,8 +1163,6 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         }
         });
     });
-    console.log('selectedArray', this.selectedArray)
-    console.log('selecteChild', this.selecteChild)
   }
 }
   toDoButton(type, designacion, rowGroup, rowWrapper){
@@ -1214,14 +1214,28 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   }
 
   colorByStateExpediente(state){
-    if ( state == 'DESFAVORABLE'){
+     if ( state == 'DESFAVORABLE'){
       return 'red';
     }else if ( state == 'FAVORABLE'){
       return 'blue'; 
     } else {
       return 'black';
     }
+
   } 
+
+  tooltipEJG(state,resolucion){
+    if ( (resolucion == '' || resolucion == undefined || resolucion == null || resolucion == 'SIN_RESOLUCION') && (state == '' || state == undefined || state == null) ){
+      return 'Designación con EJG sin Resolución';
+    }else if((resolucion != '' || resolucion != undefined || resolucion != null || resolucion != 'SIN_RESOLUCION') && (state == '' || state == undefined || state == null)){
+      return `Resolucion: ${resolucion}`;
+    }else if((resolucion == '' || resolucion == undefined || resolucion == null || resolucion == 'SIN_RESOLUCION') && (state != '' || state != undefined || state != null)){
+      return `Dictamen: ${state}`;
+    }else{
+      return `Resolucion: ${resolucion} \ Dictamen: ${state}`;
+    }
+  }
+
   searchActuacionwithSameNumDesig(idAcreditacionNew, rowGroupWithNew){
     let esPosibleCrearNuevo = true;
     let nameAcreditacionArr = [];
@@ -1344,11 +1358,13 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           //rowG.rows.splice(this.childNumber, 1);
           if (rowG.rows[this.childNumber + 1].cells[8].value == false){
             //actuacion No Validada
+            console.log("isListreado")
             if ((this.isLetrado && this.turnoAllow == "1" ) || (!this.isLetrado)){
               if (rowG.rows[this.childNumber + 1].cells[35].value == "1"){
                 this.showMsg('error', "No puede eliminar actuaciones facturadas", '')
                 this.refreshData.emit(true);
               }else{
+                console.log("push del else");
                 deletedAct.push(rowG.rows[this.childNumber + 1].cells)
               }
             }else {
@@ -1371,12 +1387,37 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.totalRegistros = this.rowGroups.length;
 
     if (deletedAct.length != 0){
-      let deletedActNOT_REPEATED = new Set(deletedAct);
-      deletedAct = Array.from(deletedActNOT_REPEATED);
-      this.actuacionesToDelete.emit(deletedAct);
+      
+    let keyConfirmation = "deletePlantillaDoc";
+
+    this.confirmationService.confirm({
+      key: keyConfirmation,
+      message: this.translateService.instant('messages.deleteConfirmation'),
+      icon: "fa fa-trash-alt",
+      accept: () => {
+        let deletedActNOT_REPEATED = new Set(deletedAct);
+        deletedAct = Array.from(deletedActNOT_REPEATED);
+        this.actuacionesToDelete.emit(deletedAct);
+        deletedAct = [];
+        this.selectedArray = [];
+        this.selecteChild = [];
+        this.selected = false;
+      },
+      reject: () => {
+        deletedAct = [];
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "info",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
     }
     
-    deletedAct = [];
   }
 
   showMsg(severity, summary, detail) {
