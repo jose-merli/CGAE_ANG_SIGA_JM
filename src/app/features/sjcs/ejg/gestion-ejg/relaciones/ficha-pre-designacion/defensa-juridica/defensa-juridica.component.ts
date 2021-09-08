@@ -448,6 +448,7 @@ export class DefensaJuridicaComponent implements OnInit {
           this.delitosValueInicial = this.delitosValue;
         },
         err => {
+          this.progressSpinner = false;
         }
       );
   }

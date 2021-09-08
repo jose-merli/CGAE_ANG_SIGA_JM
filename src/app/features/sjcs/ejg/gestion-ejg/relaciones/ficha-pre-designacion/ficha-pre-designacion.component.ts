@@ -74,13 +74,22 @@ export class FichaPreDesignacionComponent implements OnInit {
     private router: Router,
     private location: Location) { }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.progressSpinner = true;
-    await this.checkAcceso();
+    //Comprobar si el ejg tiene alguna designacion asignada.
+    //Si es asi, esta ficha sera unicamente de consulta, no edicion.
+    //if()
+    if (sessionStorage.getItem("EJGItem")) {
+      this.body = JSON.parse(sessionStorage.getItem("EJGItem"));
+      sessionStorage.removeItem("EJGItem");
+      this.persistenceService.setDatos(this.body);
+    }
+    else this.body = this.persistenceService.getDatos();
+    this.checkAcceso();
     this.cargaInicial();
   }
 
-  async checkAcceso() {
+  checkAcceso() {
     this.commonsService.checkAcceso(procesos_ejg.preDesignacion)
       .then(respuesta => {
         this.permisoEscritura = respuesta;
@@ -95,12 +104,12 @@ export class FichaPreDesignacionComponent implements OnInit {
       this.progressSpinner = false;
       this.router.navigate(["/errorAcceso"]);
     } else {
-      await this.obtenerAccesoTarjetas();
+      this.obtenerAccesoTarjetas();
       this.progressSpinner = false;
     }
   }
 
-  async obtenerAccesoTarjetas() {
+  obtenerAccesoTarjetas() {
     let recibidos = 0;
     this.commonsService.checkAcceso(procesos_ejg.preDesResumen)
       .then(respuesta => {
@@ -135,25 +144,15 @@ export class FichaPreDesignacionComponent implements OnInit {
       ).catch(error => console.error(error));
   }
 
-  async cargaInicial() {
-    //Comprobar si el ejg tiene alguna designacion asignada.
-    //Si es asi, esta ficha sera unicamente de consulta, no edicion.
-    //if()
-    if (sessionStorage.getItem("EJGItem")) {
-      this.body = JSON.parse(sessionStorage.getItem("EJGItem"));
-      sessionStorage.removeItem("EJGItem");
-      this.persistenceService.setDatos(this.body);
-    }
-    else this.body = this.persistenceService.getDatos();
-
+  cargaInicial() {
     //Comprobar si el EJG tiene alguna designacion asignada.
     //Si es asi, esta ficha sera unicamente de consulta, no edicion.
     this.checkEJGDesignas();
     //Actualmente se presentan los mismos datos que en la ficha de EJG.
-    await this.iniciarTarjetaResumen();
+    this.iniciarTarjetaResumen();
   }
 
-  async iniciarTarjetaResumen() {
+  iniciarTarjetaResumen() {
 
     this.datosTarjetaResumen = [
       {
