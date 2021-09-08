@@ -74,15 +74,17 @@ export class FichaPreDesignacionComponent implements OnInit {
     private router: Router,
     private location: Location) { }
 
-  async ngOnInit() {
-    await this.checkAcceso();
+   ngOnInit() {
+    this.checkAcceso();
     this.cargaInicial();
   }
 
-  async checkAcceso() {
+   checkAcceso() {
+    this.progressSpinner = true;
     this.commonsService.checkAcceso(procesos_ejg.preDesignacion)
       .then(respuesta => {
         this.permisoEscritura = respuesta;
+        this.progressSpinner = false;
       }).catch(error => console.error(error));
 
     if (this.permisoEscritura == undefined) {
@@ -93,46 +95,56 @@ export class FichaPreDesignacionComponent implements OnInit {
       );
       this.router.navigate(["/errorAcceso"]);
     } else {
-      await this.obtenerAccesoTarjetas();
+       this.obtenerAccesoTarjetas();
     }
   }
 
-  async obtenerAccesoTarjetas() {
+   obtenerAccesoTarjetas() {
+     
     let recibidos = 0;
     this.commonsService.checkAcceso(procesos_ejg.preDesResumen)
       .then(respuesta => {
+        this.progressSpinner = true;
         this.permisoResumen = respuesta;
         recibidos++;
         if(recibidos==4)this.enviarEnlacesTarjeta();
+        this.progressSpinner = false;
       }
       ).catch(error => console.error(error));
 
     this.commonsService.checkAcceso(procesos_ejg.defensaJuridica)
       .then(respuesta => {
+        this.progressSpinner = true;
         this.permisoDefensaJuridica = respuesta;
         recibidos++;
         if(recibidos==4)this.enviarEnlacesTarjeta();
+        this.progressSpinner = false;
       }
       ).catch(error => console.error(error));
 
     this.commonsService.checkAcceso(procesos_ejg.procurador)
       .then(respuesta => {
+        this.progressSpinner = true;
         this.permisoProcurador = respuesta;
         recibidos++;
         if(recibidos==4)this.enviarEnlacesTarjeta();
+        this.progressSpinner = false;
       }
       ).catch(error => console.error(error));
 
     this.commonsService.checkAcceso(procesos_ejg.contrarios)
       .then(respuesta => {
+        this.progressSpinner = true;
         this.permisoContrarios = respuesta;
         recibidos++;
         if(recibidos==4)this.enviarEnlacesTarjeta();
+        this.progressSpinner = false;
       }
       ).catch(error => console.error(error));
+      this.progressSpinner = false;
   }
 
-  async cargaInicial() {
+   cargaInicial() {
     //Comprobar si el ejg tiene alguna designacion asignada.
     //Si es asi, esta ficha sera unicamente de consulta, no edicion.
     //if()
@@ -147,11 +159,11 @@ export class FichaPreDesignacionComponent implements OnInit {
     //Si es asi, esta ficha sera unicamente de consulta, no edicion.
     this.checkEJGDesignas();
     //Actualmente se presentan los mismos datos que en la ficha de EJG.
-    await this.iniciarTarjetaResumen();
+    this.iniciarTarjetaResumen();
   }
 
-  async iniciarTarjetaResumen() {
-
+   iniciarTarjetaResumen() {
+    this.progressSpinner = true;
     this.datosTarjetaResumen = [
       {
         label: "Año/Numero EJG",
@@ -182,6 +194,7 @@ export class FichaPreDesignacionComponent implements OnInit {
         value: this.body.impugnacion
       },
     ];
+    this.progressSpinner = false;
   }
 
   enviarEnlacesTarjeta() {
@@ -239,11 +252,13 @@ export class FichaPreDesignacionComponent implements OnInit {
   }
 
   checkEJGDesignas() {
+    this.progressSpinner = true;
     this.sigaServices.post("gestionejg_getEjgDesigna", this.body).subscribe(
       n => {
         let ejgDesignas = JSON.parse(n.body).ejgDesignaItems;
         if (ejgDesignas.length == 0) this.permisoEscritura = true;
         else this.permisoEscritura = false;
+        this.progressSpinner = false;
       }
     );
   }

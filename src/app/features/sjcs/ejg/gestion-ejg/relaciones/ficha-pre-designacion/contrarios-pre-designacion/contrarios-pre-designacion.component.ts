@@ -217,7 +217,7 @@ export class ContrariosPreDesignacionComponent implements OnInit {
         sessionStorage.setItem("EJGItem", JSON.stringify(this.ejg));
         this.persistenceService.setDatos(datos[0]);
         sessionStorage.setItem("origin", "ContrarioEJG");
-       // this.persistenceService.clearBody();
+        this.persistenceService.clearBody();
         sessionStorage.setItem("contrarioEJG", JSON.stringify(evento));
         if (evento.abogado != "" && evento.abogado != null) {
           sessionStorage.setItem("idabogadoFicha", evento.idabogadocontrario);

@@ -43,7 +43,7 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 	fechaCabecera: Date = null;
 	nombreCabecera: string = "";
 
-	@Input() permisoEscritura = true;
+	@Input() permisoEscritura:boolean;
 
 	idPersona;
 	openPro: boolean = false;
@@ -51,7 +51,7 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 	confirmationAssociate: boolean = false;
 	confirmationDisassociate: boolean = false;
 	confirmationCreateRepresentante: boolean = false;
-
+	perEscritura: boolean = false;
 	menorEdadJusticiable: boolean = false;
 
 	constructor(private sigaServices: SigaServices,
@@ -111,6 +111,7 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 			this.fechaCabecera = this.generalBody.fechaDesigna;
 		}
 
+		if(this.permisoEscritura)this.perEscritura = true;
 		
 		this.progressSpinner = false;
 	}
