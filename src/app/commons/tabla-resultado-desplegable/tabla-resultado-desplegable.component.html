@@ -48,6 +48,7 @@
 
                     <div *ngIf="!posicionOcultar(-1) && pantalla == 'JE'" class="table-row-header p-2 selectedRowClass mw80" [id]="rowGroup.id2">
                         <span [pTooltip]="tooltipEJG(rowGroup.estadoEx,rowGroup.resolucionDesignacion)" tooltipPosition="top" [ngClass]="{'color-red': colorByStateExpediente(rowGroup.estadoEx) == 'red', 'color-blue': colorByStateExpediente(rowGroup.estadoEx) == 'blue', 'color-black': colorByStateExpediente(rowGroup.estadoEx) == 'black'}">  <span *ngIf="rowGroup.id2 != ''" >E</span>{{rowGroup.id2}}</span>
+                        <button *ngIf="rowGroup.resolucionDesignacion != 'SIN_RESOLUCION'" pButton type="button" icon="fa fa-comment" iconPos="left"></button>
                     </div>
 
                     <div *ngIf="!posicionOcultar(-1) && pantalla == 'JE'" class="table-row-header p-2 selectedRowClass wrapName mw100" [id]="rowGroup.id3">
