@@ -526,11 +526,12 @@ export class EstadosComponent implements OnInit {
     let indice = parseInt(i);
     this.restablecer = true;
     this.editaEstado = false;
-
-
-    if (this.datosEstados[indice] != undefined && this.datosEstados[indice].automatico != 1 && this.datosEstados[indice].fechabaja == null) {
+if(this.datosEstados[0].nuevoRegistro == true){
+  this.creaEstado = true;
+}else if (this.datosEstados[indice] != undefined && this.datosEstados[indice].automatico != 1 && this.datosEstados[indice].fechabaja == null) {
       this.estadoAutomatico = false;
       this.editaEstado = true;
+      this.creaEstado = false;
       this.guardar = true;
       for (let j = 0; j < this.datosEstados.length; j++) {
         if (j == indice) {
@@ -548,15 +549,16 @@ export class EstadosComponent implements OnInit {
       this.restablecer = false;
       this.editaEstado = false;
       this.guardar = false;
+      this.creaEstado = true;
       this.selectedDatos = [];
 
     }
 
-    if (this.datosEstados[0].nuevoRegistro == true) {
+    /* if (this.datosEstados[0].nuevoRegistro == true) {
       this.creaEstado = true;
     } else {
       this.creaEstado = false;
-    }
+    } */
   }
 
   activarRestablecerEstados() {
