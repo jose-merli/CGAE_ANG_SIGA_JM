@@ -5,6 +5,8 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { TranslateService } from '../../../../../../commons/translate';
 import { Cell, Row, TablaResultadoOrderCGService } from '../../../../../../commons/tabla-resultado-order/tabla-resultado-order-cg.service';
+import { GlobalGuardiasService } from '../../../guardiasGlobal.service';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -20,26 +22,31 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
   @Input() modoEdicion: boolean = false;
   @Input() permisoEscritura: boolean;
   @Output() modoEdicionSend = new EventEmitter<any>();
-  @Input() tarjetaDatosGenerales;
-  @Input() datosTarjetaGuardiasCalendario = {
-                                              'duplicar': false,
-                                              'tabla': [],
-                                              'turno':'',
-                                              'nombre': '',
-                                              'generado': '',
-                                              'numGuardias': '',
-                                              'listaGuarias': {},
-                                              'fechaDesde': '',
-                                              'fechaHasta': '',
-                                              'fechaProgramacion': '',
-                                              'estado': '',
-                                              'observaciones': '',
-                                              'idCalendarioProgramado': '',
-                                              'idTurno': '',
-                                              'idGuardia': '',
-                                            };
+  @Input() tarjetaDatosGenerales= {
+    'duplicar' : '',
+    'tabla': [],
+    'turno':'',
+    'nombre': '',
+    'generado': '',
+    'numGuardias': '',
+    'listaGuarias': {},
+    'fechaDesde': '',
+    'fechaHasta': '',
+    'fechaProgramacion': null,
+    'estado': '',
+    'observaciones': '',
+    'idCalendarioProgramado': '',
+    'idTurno': '',
+    'idGuardia': '',
+  };
+  @Input() datosTarjetaGuardiasCalendarioIni = []
+  @Input() idCal;
+  datosTarjetaGuardiasCalendario = []
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
+  @Output() fillDatosTarjetaGuardiasCalendario = new EventEmitter<any[]>();
+  @Output() searchGuardiasFromCal = new EventEmitter<string>();
+  
   dataReady = false;
   tipoGuardiaResumen = {
     label: "",
@@ -60,7 +67,12 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
   rowGroupsAux: Row[];
   totalRegistros = 0;
   selectedRow: Row;
+  suscription: Subscription;
   cabeceras = [
+    {
+      id: "orden",
+      name: "orden"
+    },
     {
       id: "turno",
       name: "dato.jgr.guardia.guardias.turno"
@@ -81,22 +93,51 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
   allSelected = false;
   isDisabled = true;
   seleccionarTodo = false;
-  duplicar = false;
+  idConjuntoGuardiaElegido: number;
+  comboGuardiaConjunto = [];
+  @Input() duplicar = false;
   constructor(private persistenceService: PersistenceService,
     private sigaService: SigaServices,
     private commonServices: CommonsService,
     private translateService: TranslateService,
-    private trmService: TablaResultadoOrderCGService,) { }
+    private trmService: TablaResultadoOrderCGService,
+    private globalGuardiasService: GlobalGuardiasService) { }
 
 
   ngOnInit() {
-      this.jsonToRow(); //PROVISIONAL
+    console.log
+    if (this.datosTarjetaGuardiasCalendarioIni.length != 0){
+      this.datosTarjetaGuardiasCalendario = this.datosTarjetaGuardiasCalendarioIni;
+      this.jsonToRow(false);
+      this.dataReady = true;
+    }else{
+      this.dataReady = false;
+    }
+    this.suscription = this.globalGuardiasService.getConf().subscribe((confValue)=>{
+      this.dataReady = false;
+      this.idConjuntoGuardiaElegido = confValue.idConjuntoGuardia;
+      console.log('idConjuntoGuardiaElegido*****: ', this.idConjuntoGuardiaElegido)
+      if (this.idConjuntoGuardiaElegido != null){
+        if (this.datosTarjetaGuardiasCalendarioIni.length == 0){
+        this.datosTarjetaGuardiasCalendario = [];
+        this.rowGroups = [];
+        this.getGuardiasFromConjunto(this.idConjuntoGuardiaElegido, confValue.fromCombo);
+        }else{
+          if (this.idConjuntoGuardiaElegido != 0){
+            this.datosTarjetaGuardiasCalendario = this.datosTarjetaGuardiasCalendarioIni;
+            this.getGuardiasFromConjunto(this.idConjuntoGuardiaElegido, confValue.fromCombo);
+          }else{
+            this.datosTarjetaGuardiasCalendario = this.datosTarjetaGuardiasCalendarioIni;
+            this.jsonToRow(confValue.fromCombo);
+            this.dataReady = true;
+          }
+          
+        }
+        
+
+
+        //this.jsonToRow(); //PROVISIONAL
  
-    this.duplicar = this.datosTarjetaGuardiasCalendario.duplicar;
-
-
-
-
     this.resaltadoDatos=true;
 
     this.getCols();
@@ -135,7 +176,16 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
         this.progressSpinner = false;
       });
+      }else{
+        this.dataReady = true;
+      }
+    });
+      
   }
+  ngOnDestroy(){
+    this.suscription.unsubscribe();
+   }
+   
 
   checkSelectedRow(selected) {
     this.selectedRow = selected;
@@ -215,6 +265,29 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
       }
     );
   }
+
+    getGuardiasFromConjunto(idConjunto, fromCombo) {
+      this.progressSpinner = true;
+      this.sigaService.getParam(
+        "guardiaCalendario_guardiaFromConjunto", "?idConjunto=" + idConjunto).subscribe(
+          response => {
+            response.forEach((res, i) => {
+              this.datosTarjetaGuardiasCalendario.push(res);
+              if (i == response.length - 1){
+                this.jsonToRow(fromCombo);
+              }
+            })
+            this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+        console.log(err);
+      }
+    );
+    this.fillDatosTarjetaGuardiasCalendario.emit(this.datosTarjetaGuardiasCalendario);
+  }
+
+ 
 
   onChangeTurno() {
     this.body.idGuardia = "";
@@ -328,49 +401,70 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
     let idGuardia;
     let idTurno;
     let toDelete:Row[] = [];
+    let newList = [];
     indexToDelete.forEach(index => {
       toDelete.push(this.rowGroups[index]);
       this.rowGroups.splice(index, 1); 
     })
 
-    toDelete.forEach(row => {
-      row.cells.forEach((c, index) => {
- 
-        if (index == 7){
-          idGuardia = c.value;
-        }
-        if (index == 8){
-          idTurno = c.value;
-        }
-      })
-      this.eliminarCal(idGuardia, idTurno)
-
+    toDelete.forEach(nrg => {
+          let responseObject = (
+            {
+              'orden': nrg.cells[0].value,
+              'turno': nrg.cells[1].value,
+              'guardia': nrg.cells[2].value,
+              'generado': nrg.cells[3].value,
+              'idGuardia': nrg.cells[5].value,
+              'idTurno': nrg.cells[6].value
+            });
+            newList.push(responseObject);
+              
     })
+    this.eliminarCal(newList);
     this.rowGroupsAux = this.rowGroups;
     this.totalRegistros = this.rowGroups.length;
     }
 
-    //Elimina las guarduas seleccionadas
-      eliminarCal(idGuardia, idTurno){
+    //Elimina las guardias seleccionadas
+      eliminarCal(lista){
+        this.sigaService.postPaginado(
+          "guardiaCalendario_eliminarGuardiaCalendar", "?idCalendar=" +this.idCal, lista).subscribe(
+            data => {
+              this.searchGuardiasFromCal.emit(this.idCal);
+            }, err => {
+              console.log(err);
+            });
+        
 //to do
     }
 
-jsonToRow(){
+jsonToRow(fromCombo){
+  this.dataReady = false;
+  this.progressSpinner = true;
   console.log('jsonToRow')
   console.log('this.datosTarjetaGuardiasCalendario: ', this.datosTarjetaGuardiasCalendario)
   let arr: Row[] = [];
-
+  let ord = 0;
     let i = 0;
+
+    this.datosTarjetaGuardiasCalendario.forEach((dat, i) => { 
+      if (fromCombo){
+        ord = i + 1;
+      }else{
+        ord = dat.orden;
+      }
     let objCells:Cell[] = [
-    { type: 'text', value: this.datosTarjetaGuardiasCalendario.turno , combo: null},
-    { type: 'text', value: this.datosTarjetaGuardiasCalendario.nombre , combo: null},
-    { type: 'text', value: this.datosTarjetaGuardiasCalendario.generado, combo: null},
-    { type: 'text', value: this.datosTarjetaGuardiasCalendario.numGuardias , combo: null}
+    { type: 'text', value: ord , combo: null},
+    { type: 'text', value: dat.turno , combo: null},
+    { type: 'text', value: dat.guardia , combo: null},
+    { type: 'text', value: dat.generado, combo: null},
+    { type: 'text', value:  this.datosTarjetaGuardiasCalendario.length , combo: null},
+    { type: 'invisible', value: dat.idGuardia, combo: null},
+    { type: 'invisible', value: dat.idTurno, combo: null}
     ];
-console.log('objCells: ', objCells)
     let obj:Row = {cells: objCells};
     arr.push(obj);
-console.log('ar: ', arr)
+  })
    this.rowGroups = [];
   this.rowGroups = this.trmService.getTableData(arr);
   this.rowGroupsAux = [];
@@ -378,6 +472,7 @@ console.log('ar: ', arr)
   this.totalRegistros = this.rowGroups.length;
   this.dataReady = true;
   console.log('rowGroups: ', this.rowGroups)
+  this.progressSpinner = false;
 }
 
 selectedAll(event) {
@@ -391,4 +486,63 @@ notifyAnySelected(event) {
     this.isDisabled = true;
   }
 }
+
+
+updateGuardiasCalendario(event){
+//HACER
+}
+
+setGuardiasCalendario(guardiaCalendario){
+  let guardiaCalendarioModificadoSt = JSON.parse(JSON.stringify(guardiaCalendario));
+  this.sigaService.post(
+    "busquedaGuardias_updateCalendario", guardiaCalendarioModificadoSt).subscribe(
+      data => {
+
+      }, err => {
+        console.log(err);
+      });
+}
+
+
+  guardarGuardiasEnConjunto(event){
+    let newRowGroups : Row[] = event;
+    let newList = [];
+    newRowGroups.forEach(nrg => {
+      let responseObject = (
+        {
+          'orden': nrg.cells[0].value,
+          'turno': nrg.cells[1].value,
+          'guardia': nrg.cells[2].value,
+          'generado': nrg.cells[3].value,
+          'idGuardia': nrg.cells[2].value
+        });
+        newList.push(responseObject);
+    })
+    if (this.idConjuntoGuardiaElegido != 0){
+      this.saveGuardiasConjunto(newList);  
+    }else{
+      this.saveGuardiasCalendario(newList);  
+    }
+      
+  }
+
+  saveGuardiasConjunto(lista){
+    this.sigaService.postPaginado(
+      "guardiaCalendario_guardarGuardiaConjunto" ,"?idConjuntoGuardia=" + this.idConjuntoGuardiaElegido.toString(), lista).subscribe(
+        data => {
+          this.getGuardiasFromConjunto(this.idConjuntoGuardiaElegido, true);
+        }, err => {
+          console.log(err);
+        });
+  }
+  saveGuardiasCalendario(lista){
+    this.sigaService.postPaginado(
+      "guardiaCalendario_guardarGuardiaCalendar", "?idCalendar=" +this.idCal, lista).subscribe(
+        data => {
+          this.searchGuardiasFromCal.emit(this.idCal);
+        }, err => {
+          console.log(err);
+        });
+  }
+  
 }

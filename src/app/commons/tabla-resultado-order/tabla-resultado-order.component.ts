@@ -7,6 +7,12 @@ import { Row, Cell } from './tabla-resultado-order-cg.service';
 import { SigaServices } from '../../_services/siga.service';
 import { CommonsService } from '../../_services/commons.service';
 import { eventInstanceToEventRange } from 'fullcalendar';
+import { Router } from '@angular/router';
+import { saveAs } from "file-saver/FileSaver";
+import { TranslateService } from '../translate';
+import { DomSanitizer } from '@angular/platform-browser';
+import 'rxjs/add/observable/fromPromise';
+import { Observable } from 'rxjs/Observable';
 @Component({
   selector: 'app-tabla-resultado-order',
   templateUrl: './tabla-resultado-order.component.html',
@@ -15,17 +21,19 @@ import { eventInstanceToEventRange } from 'fullcalendar';
 export class TablaResultadoOrderComponent implements OnInit {
   isDisabled = false;
   info = new FormControl();
-  @Input() cabeceras = [];
+  @Input() cabeceras = [];  
   @Input() rowGroups: Row[];
   @Input() rowGroupsAux: Row[];
   @Input() calendarios;
   rowGroupsOrdered = [];
   @Input() seleccionarTodo = false;
+  @Input() estado;
   @Output() anySelected = new EventEmitter<any>();
   @Output() selectedRow = new EventEmitter<any>();
   @Output() colaGuardiaModified = new EventEmitter<any>();
   @Output() rest = new EventEmitter<Boolean>();
   @Output() dupli = new EventEmitter<Boolean>();
+  @Output() guardarGuardiasEnConjunto = new EventEmitter<Row[]>();
   anySelectedBol = false;
   from = 0;
   to = 10;
@@ -57,13 +65,21 @@ export class TablaResultadoOrderComponent implements OnInit {
   @ViewChild('table') table: ElementRef;
   @Output() delete = new EventEmitter<any>();
   comboTurno = [];
-  comboGuardia = [];
+  @Input() comboGuardia = [];
   progressSpinner = false;
+  rowwSelected;
+  comboGenerado = [{ label: 'Sí', value: 'Si'},
+  { label: 'No', value: 'No'}];
+  @Output() guardiasCalendarioModified = new EventEmitter<any>();
+  
   constructor(
     private renderer: Renderer2,
     private sigaServices: SigaServices,
     private commonServices: CommonsService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private router: Router,
+    private translateService: TranslateService,
+    private sanitizer: DomSanitizer
   ) {
     this.renderer.listen('window', 'click',(event: { target: HTMLInputElement; })=>{
       for (let i = 0; i < this.table.nativeElement.children.length; i++) {
@@ -79,7 +95,9 @@ export class TablaResultadoOrderComponent implements OnInit {
 
   ngOnInit(): void {
     this.selectedArray = [];
-    this.totalRegistros = this.rowGroups.length;
+    if(this.rowGroups != undefined){
+      this.totalRegistros = this.rowGroups.length;
+    }
     this.numCabeceras = this.cabeceras.length;
     this.numColumnas = this.numCabeceras;
     this.cabeceras.forEach(cab =>{
@@ -91,9 +109,10 @@ export class TablaResultadoOrderComponent implements OnInit {
       let x = this.ordenValue(i);
       this.xArr.push(x);
     })
-
-    this.maxGroup = this.grupos.reduce((a, b)=>Math.max(a, b)); 
-    this.ordenarGrupos();
+    if (!this.calendarios){
+      this.maxGroup = this.grupos.reduce((a, b)=>Math.max(a, b)); 
+      this.ordenarGrupos();
+    }
   }
   perPage(perPage){
     this.numperPage = perPage;
@@ -118,13 +137,19 @@ export class TablaResultadoOrderComponent implements OnInit {
       const i = this.selectedArray.indexOf(rowId);
       this.selectedArray.splice(i, 1);
     }else{
-      this.positionSelected = rowId;
+      if (this.calendarios){
+        this.positionSelected = Number(rowId) + 1;
+      }else{
+        this.positionSelected = rowId;
+      }
+      
       this.selectedArray.push(rowId);
     }
     if(this.selectedArray.length != 0){
       this.anySelected.emit(true);
       this.anySelectedBol = true;
       this.selectedRow.emit(rowSelected);
+      this.rowwSelected = rowSelected;
     }else{
       this.anySelected.emit(false);
       this.anySelectedBol = false;
@@ -133,8 +158,11 @@ export class TablaResultadoOrderComponent implements OnInit {
   }
 
   guardar(){
-
-    this.wrongPositionArr = [];
+    if (this.calendarios){
+      this.guardiasCalendarioModified.emit(this.rowGroups);
+      this.totalRegistros = this.rowGroups.length;
+    }else{
+      this.wrongPositionArr = [];
       this.ordenarGrupos();
       this.orderByOrder();
       this.displayWrongSequence();
@@ -150,6 +178,17 @@ export class TablaResultadoOrderComponent implements OnInit {
       this.showMsg('error', 'Error. Los valores en la columna "Orden" deben ser secuenciales.', '')
     }
     return errorVacio;
+    }
+  }
+
+  saveCal(){
+    let newRowGroups: Row[] = [];
+    this.rowGroups.forEach(rowG => {
+      if(rowG.cells[1].type == 'selectDependency'){
+        newRowGroups.push(rowG);
+      }
+    })
+    this.guardarGuardiasEnConjunto.emit(newRowGroups);
   }
   updateColaGuardia(){
     this.colaGuardiaModified.emit(this.rowGroups);
@@ -386,8 +425,24 @@ this.totalRegistros = this.rowGroups.length;
   this.totalRegistros = this.rowGroups.length;
   }
   moveRow(movement){
-    let groupSelected = this.rowGroups[this.positionSelected].cells[1].value;
-    this.rowGroupsAux.forEach((row, index)=> {
+    let groupSelected;
+    if (this.calendarios){
+      groupSelected = this.rowGroups[this.positionSelected - 1].cells[1].value;
+      this.rowGroupsAux.forEach((row, index)=> {
+      
+        if (movement == 'up'){
+          let first = this.rowGroups[this.positionSelected - 1];
+          this.rowGroups[this.positionSelected - 1] = this.rowGroups[this.positionSelected - 2];
+          this.rowGroups[this.positionSelected - 2] = first;
+        } else if (movement == 'down'){
+          let first = this.rowGroups[this.positionSelected - 1];
+          this.rowGroups[this.positionSelected - 1] = this.rowGroups[this.positionSelected];
+          this.rowGroups[this.positionSelected] = first;
+        }
+      });
+    }else{
+      groupSelected = this.rowGroups[this.positionSelected].cells[1].value;
+      this.rowGroupsAux.forEach((row, index)=> {
       
         if (movement == 'up'){
           if(Number(row.cells[1].value) == Number(groupSelected)){
@@ -404,6 +459,9 @@ this.totalRegistros = this.rowGroups.length;
         }
       
     })
+    }
+    
+
 this.rowGroupsAux = this.rowGroups;
 this.totalRegistros = this.rowGroups.length;
   }
@@ -422,6 +480,7 @@ this.totalRegistros = this.rowGroups.length;
     }
   }
   disableButton(type){
+    if (this.rowGroups != undefined){
     this.grupos = [];
     this.rowGroups.forEach((rg, i) =>{
     this.grupos.push(rg.cells[1].value);
@@ -432,11 +491,20 @@ this.totalRegistros = this.rowGroups.length;
     } else {
       this.unavailableUp = false;
     }
-    if (this.positionSelected == this.grupos.length - 1 || this.grupos[this.positionSelected]  >= this.maxGroup){
-      this.unavailableDown = true;
-    } else {
-      this.unavailableDown = false;
+    if (this.calendarios){
+      if (this.positionSelected == this.grupos.length || this.grupos[this.positionSelected]  >= this.maxGroup){
+        this.unavailableDown = true;
+      } else {
+        this.unavailableDown = false;
+      }
+    }else{
+      if (this.positionSelected == this.grupos.length - 1 || this.grupos[this.positionSelected]  >= this.maxGroup){
+        this.unavailableDown = true;
+      } else {
+        this.unavailableDown = false;
+      }
     }
+
 
     if ( this.selectedArray.length != 1 || (this.unavailableUp && type == 'up')){
       disable = true;
@@ -444,6 +512,7 @@ this.totalRegistros = this.rowGroups.length;
       disable = true;
     }
     return disable;
+  }
   }
   sortData(sort: Sort) {
     let data :Row[] = [];
@@ -510,18 +579,29 @@ this.totalRegistros = this.rowGroups.length;
     }
 
     eliminar(){
-      this.delete.emit(this.selectedArray);
-      this.totalRegistros = this.rowGroups.length;
-      this.rowGroupsAux = this.rowGroups;
+      if (this.calendarios){
+        if ( this.estado == "Pendiente"){
+          this.delete.emit(this.selectedArray);
+        this.totalRegistros = this.rowGroups.length;
+        this.rowGroupsAux = this.rowGroups;
+        }else{
+          this.showMsg('error', 'Error. No pueden eliminarse guardias con estado distinto de Pendiente', '')
+        }
+      }else{
+        this.delete.emit(this.selectedArray);
+        this.totalRegistros = this.rowGroups.length;
+        this.rowGroupsAux = this.rowGroups;
+      }
       //this.to = this.totalRegistros;
       }
       nuevo(){
         this.getComboTurno();
         let newCells: Cell[] = [
+          { type: 'input', value: '', combo: null},
           { type: 'selectDependency', value: '' , combo: this.comboTurno},
-          { type: 'select', value: '', combo: this.comboGuardia},
-          { type: 'text', value: '', combo: null},
-          { type: 'text', value: '', combo: null}
+          { type: 'selectDependency2', value: '', combo: this.comboGuardia},
+          { type: 'select', value: '', combo: this.comboGenerado},
+          { type: 'input', value: '', combo: null}
           ];
           let rowObject: Row = new Row();
           rowObject.cells = newCells;
@@ -561,7 +641,7 @@ this.totalRegistros = this.rowGroups.length;
   setCombouardia(){
     this.rowGroups.forEach((row, r) => {
       row.cells.forEach((cell, c) => {
-        if (cell.type == 'select'){
+        if (cell.type == 'selectDependency2'){
           
           console.log('this.comboGuardia: ', this.comboGuardia)
           this.rowGroups[r].cells[c].combo = this.comboGuardia;
@@ -589,7 +669,81 @@ this.totalRegistros = this.rowGroups.length;
 
   }
   
+  anadirLetrado(){
+    console.log('this.rowwSelected: ', this.rowwSelected)
+    if (this.rowwSelected.length != 0){
+      let calendario = {
+           'orden': this.rowwSelected.cells[0].value,
+              'turno': this.rowwSelected.cells[1].value,
+              'guardia': this.rowwSelected.cells[2].value,
+              'generado': this.rowwSelected.cells[3].value,
+              'idGuardia': this.rowwSelected.cells[5].value,
+              'idTurno': this.rowwSelected.cells[6].value
+      }
+    
+    sessionStorage.setItem("calendariosProgramados","true");
+    sessionStorage.setItem("calendarioSeleccinoado", JSON.stringify(calendario));
+    this.router.navigate(["/buscadorColegiados"]);
+    }
+  }
+  showFail(msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: this.translateService.instant("general.message.incorrect"),
+      detail: msg
+    });
+  }
+
+
+  public base64ToBlob(b64Data, sliceSize=512) {
+    let byteCharacters = atob(b64Data); //data.file there
+    let byteArrays = [];
+    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+        let slice = byteCharacters.slice(offset, offset + sliceSize);
+    
+        let byteNumbers = new Array(slice.length);
+        for (var i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+        }
+        let byteArray = new Uint8Array(byteNumbers);
+        byteArrays.push(byteArray);
+    }
+    return new Blob(byteArrays, {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+    }
+  descargarLog(){
+    let resHead ={
+      'response' : null,
+      'header': null    };
+this.progressSpinner = true;
+   let descarga =  this.sigaServices.getDownloadFiles(
+    "guardiaCalendario_descargarExcelLog");
+  descarga.subscribe(resp =>{
+    this.progressSpinner = false;
+      resHead.response = resp.body;
+      resHead.header = resp.headers;
+      console.log(resp.headers);
+      console.log(resp.body);
+      console.log(resp.headers.get('Content-Disposition'))
+      console.log('data: ', resHead)
+      let contentDispositionHeader = resHead.header.get('Content-Disposition');
+      let fileName = contentDispositionHeader.split(';')[1].trim().split('=')[1];
+      console.log('fileName: ', fileName)
+      let blob = new Blob([resHead.response], { type: 'application/octet-stream' });
+      saveAs(blob, fileName);
+    },
+    err => {
+          this.progressSpinner = false;
+          console.log(err);
+        });
+    }
+
+
+  transform(url) {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  }
 }
+
 function compare(a: number | string, b: number | string, isAsc: boolean) {
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }

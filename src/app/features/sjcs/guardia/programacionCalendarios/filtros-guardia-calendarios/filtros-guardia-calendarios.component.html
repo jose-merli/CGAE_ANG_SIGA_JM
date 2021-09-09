@@ -23,9 +23,9 @@
         <!-- GUARDIA -->
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
-          <p-dropdown class="select-form"  [filter]="true" [(ngModel)]="filtros.idGuardia"
+          <p-dropdown class="select-form"  [filter]="true" [(ngModel)]="filtros.idGuardia"  name="filtros.idGuardia"
           [options]="comboGuardia" filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
-          [showClear]="true">
+          [showClear]="true"> 
         </p-dropdown>
         </div>
 

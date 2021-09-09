@@ -4,6 +4,8 @@ import { PersistenceService } from '../../../../../../_services/persistence.serv
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { TranslateService } from '../../../../../../commons/translate';
+import { DatePipe } from '@angular/common';
+import { ConfiguracionCola, GlobalGuardiasService } from '../../../guardiasGlobal.service';
 
 
 @Component({
@@ -31,7 +33,7 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
     'listaGuarias': {},
     'fechaDesde': '',
     'fechaHasta': '',
-    'fechaProgramacion': '',
+    'fechaProgramacion': null,
     'estado': '',
     'observaciones': '',
     'idCalendarioProgramado': '',
@@ -49,7 +51,7 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
     'listaGuarias': {},
     'fechaDesde': '',
     'fechaHasta': '',
-    'fechaProgramacion': '',
+    'fechaProgramacion': null,
     'estado': '',
     'observaciones': '',
     'idCalendarioProgramado': '',
@@ -60,6 +62,7 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
 
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
+  @Output() guardarDatosCalendario = new EventEmitter<{}>();
   tipoGuardiaResumen = {
     label: "",
     value: "",
@@ -80,11 +83,19 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
   constructor(private persistenceService: PersistenceService,
     private sigaService: SigaServices,
     private commonServices: CommonsService,
-    private translateService: TranslateService) { }
+    private translateService: TranslateService,
+    private datepipe: DatePipe,
+    private globalGuardiasService: GlobalGuardiasService) { }
 
 
   ngOnInit() {
-    this.getComboListaGuardia();
+    if (this.datosGenerales != undefined){
+    if (this.datosGenerales.fechaProgramacion != null){
+      this.datosGenerales.fechaProgramacion = new Date(this.datosGenerales.fechaProgramacion.toString());
+    }
+    
+    console.log('fecha no ok: ', this.datosGenerales.fechaProgramacion)
+    //this.getComboListaGuardia();
     this.getComboConjuntouardia();
     this.resaltadoDatos=true;
 
@@ -124,16 +135,34 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
         this.progressSpinner = false;
       });
+    }
   }
 
   fillFechaCalendarioDesde(event) {
-    this.datosGenerales.fechaDesde = this.changeDateFormat(event.toString());
+    if (this.formatDate2(event) != null){
+      this.datosGenerales.fechaDesde = this.changeDateFormat(this.formatDate2(event).toString());
+    }
   }
   fillFechaCalendarioHasta(event) {
-    this.datosGenerales.fechaHasta = this.changeDateFormat(event.toString());
+    console.log('event: ', event)
+    if (this.formatDate2(event) != null){
+      this.datosGenerales.fechaHasta = this.changeDateFormat(this.formatDate2(event).toString());
+    }
+       console.log('datosGenerales.fechaHasta 1: ', this.datosGenerales.fechaHasta)
   }
   fillFechaProgramada(event) {
-    this.datosGenerales.fechaProgramacion = this.changeDateFormat(event.toString());
+    console.log('OK event: ', event)
+    if (event == null){
+      this.datosGenerales.fechaProgramacion = null;
+    }else{
+      this.datosGenerales.fechaProgramacion = new Date(event.toString());
+      console.log('OK fecha: ', this.datosGenerales.fechaProgramacion)
+    }
+  }
+  
+formatDate2(date) {
+  const pattern = 'yyyy-MM-dd';
+    return this.datepipe.transform(date, pattern);
   }
   changeDateFormat(date1){
     console.log('date1: ', date1)
@@ -159,13 +188,16 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
   }
 
   getComboConjuntouardia() {
+    this.progressSpinner = true;
     this.sigaService.get(
       "busquedaGuardia_conjuntoGuardia").subscribe(
         data => {
           this.comboConjuntoGuardias = data.combooItems;
           this.commonServices.arregloTildesCombo(this.comboConjuntoGuardias);
+          this.progressSpinner = false;
         },
         err => {
+          this.progressSpinner = false;
           console.log(err);
         }
       )
@@ -192,12 +224,7 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
 
   disabledSave() {
     if (this.permisoEscritura){
-      /*if (!this.historico && (this.body.nombre && this.body.nombre.trim())
-        && (this.body.descripcion && this.body.descripcion.trim()) && !(this.body.idTurnoPrincipal && !this.body.idGuardiaPrincipal)
-        && (this.body.idTurno) && (JSON.stringify(this.body) != JSON.stringify(this.bodyInicial))) {*/
-          if (!this.historico && (this.body.nombre && this.body.nombre.trim())
-        && (this.body.descripcion && this.body.descripcion.trim()) && !(this.body.idTurnoPrincipal && !this.body.idGuardiaPrincipal)
-        && (this.body.idTurno)) {
+          if (this.datosGenerales.fechaHasta && this.datosGenerales.fechaDesde) {
         return false;
       } else return true;
     }
@@ -321,29 +348,52 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
   }
 
   save() {
+    console.log('datosGenerales.fechaHasta: ', this.datosGenerales.fechaHasta)
+    this.progressSpinner = true;
     console.log('DUPLICAR: ', this.datosGenerales.duplicar)
     if (this.datosGenerales.duplicar){
       this.dataToDuplicate.emit(this.datosGenerales);
 
 //TO DO
-    }
+    }else{
     if(!this.disabledSave()){
       if (this.permisoEscritura && !this.historico) {
-        this.progressSpinner = true;
+        //Guardar sólo actualizará el estado si no tiene estado (creación) o es Pendiente/Programada
+        if (this.datosGenerales.estado == "" || this.datosGenerales.estado == "Pendiente" || this.datosGenerales.estado == "Programada"){
+          if(this.datosGenerales.fechaProgramacion == undefined || this.datosGenerales.fechaProgramacion == null){
+            //Al guardar con Fecha de programación vacía, se pasará al estado Pendiente
+          this.datosGenerales.estado = "Pendiente";
+          }else {
+            //Al guardar con Fecha de programación rellena, se pasará al estado Programada. 
+            this.datosGenerales.estado = "Programada";
+          }
+          //GUARDAMOS
+          this.guardarDatosCalendario.emit(this.datosGenerales)
+          this.progressSpinner = false;
+        } else{
+          this.showMessage('error', 'Error. Debido al estado de la programación, no es posible guardar', '')
+          this.progressSpinner = false;
+        }
+     
+
+
+
+        
         let url = "";
 
-        if (!this.modoEdicion && this.permisoEscritura) {
+        /*if (!this.modoEdicion && this.permisoEscritura) {
           url = "busquedaGuardias_createGuardia";
           this.callSaveService(url);
 
         } else if (this.permisoEscritura) {
           url = "busquedaGuardias_updateGuardia";
           this.callSaveService(url);
-        }
+        }*/
       }
     }else{
       this.muestraCamposObligatorios();
     }
+  }
   }
 
   showMessage(severity, summary, msg) {
@@ -361,6 +411,22 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  formatDate(date) {
+  const pattern = 'yyyy-MM-dd HH:mm:ss-SS';
+    return this.datepipe.transform(date, pattern);
+  }
+
+  changeListaGuardia(event){
+     let idConjuntoGuardiaElegido = event.value;
+     let configuracionCola: ConfiguracionCola = {
+      'manual': false,
+      'porGrupos': false,
+      'idConjuntoGuardia': idConjuntoGuardiaElegido,
+      "fromCombo": true
+    };
+     this.globalGuardiasService.emitConf(configuracionCola);
   }
 
 }

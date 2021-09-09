@@ -8,6 +8,7 @@ import { CommonsService } from '../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { AcreditacionesItem } from '../../../../../models/sjcs/AcreditacionesItem';
+import { ConfiguracionCola, GlobalGuardiasService } from '../../guardiasGlobal.service';
 
 @Component({
   selector: 'app-filtros-guardia-calendarios',
@@ -48,10 +49,10 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
     private translateService: TranslateService,
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private commonServices: CommonsService) { }
+    private commonServices: CommonsService,
+    private globalGuardiasService: GlobalGuardiasService) { }
 
   ngOnInit() {
-
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos();
     }
@@ -66,8 +67,16 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
       this.filtros = JSON.parse(
         sessionStorage.getItem("filtrosBusquedaGuardiasFichaGuardia")
       );
+      if (this.filtros){
+        console.log('this.filtros.idGuardia: ', this.filtros.idGuardia)
+        console.log('this.filtros.idTurno: ', this.filtros.idTurno)
+        this.getComboGuardia();
+        this.search();
+        sessionStorage.removeItem("filtrosBusquedaGuardiasFichaGuardia");
+      }
+  
 
-      sessionStorage.removeItem("filtrosBusquedaGuardiasFichaGuardia");
+     
 
       if (this.persistenceService.getHistorico() != undefined) {
         this.historico = this.persistenceService.getHistorico();
@@ -110,7 +119,7 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
 
     if (this.filtros.idTurno) {
       this.getComboGuardia();
-      this.getComboListaGuardia();
+      //this.getComboListaGuardia();
     } 
   }
 
@@ -249,10 +258,37 @@ console.log('search')
   }
 
   nuevo() {
-    if (this.permisoEscritura) {
+    let configuracionCola: ConfiguracionCola = {
+      'manual': false,
+      'porGrupos': false,
+      'idConjuntoGuardia': null,
+      "fromCombo": false
+    };
+     this.globalGuardiasService.emitConf(configuracionCola);
+    let dataToSend = {
+      'duplicar' : '',
+      'tabla': [],
+      'turno':'',
+      'nombre': '',
+      'generado': '',
+      'numGuardias': '',
+      'listaGuarias': {},
+      'fechaDesde': '',
+      'fechaHasta': '',
+      'fechaProgramacion': null,
+      'estado': '',
+      'observaciones': '',
+      'idCalendarioProgramado': null,
+      'idTurno': '',
+      'idGuardia': '',
+    };
+    this.persistenceService.setDatos(dataToSend);
+
+    this.router.navigate(["/fichaProgramacion"]);
+    /*if (this.permisoEscritura) {
       this.persistenceService.clearDatos();
       this.router.navigate(["/gestionGuardias"]);
-    }
+    }*/
   }
 
   checkFilters() {

@@ -97,6 +97,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
       if(this.rowGroups != undefined){
          this.rowGroups.forEach((row, i) => {
           //selecteCombo = {label: ?, value: row.cells[7].value}
+          if (row.cells)
           values.push(row.cells[6].value);
         });
         this.totalRegistros = this.rowGroups.length;
@@ -384,6 +385,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
    /* if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos();
     }*/
+    console.log('se envia fecha: ', row.cells[4].value.value)
     let dataToSend = {
       'duplicar': false,
       'tabla': [],
@@ -394,7 +396,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
       'listaGuarias': row.cells[5].value,
       'fechaDesde': row.cells[2].value,
       'fechaHasta': row.cells[3].value,
-      'fechaProgramacion': row.cells[4].value,
+      'fechaProgramacion': row.cells[4].value.value.toString(),
       'estado': row.cells[7].value,
       'observaciones': row.cells[6].value,
       'idCalendarioProgramado': row.cells[10].value,
@@ -432,7 +434,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
       'listaGuarias': this.selectedRowValue[5].value,
       'fechaDesde': '',
       'fechaHasta': '',
-      'fechaProgramacion': this.selectedRowValue[4].value,
+      'fechaProgramacion': this.selectedRowValue[4].value.toString(),
       'estado': this.selectedRowValue[7].value,
       'observaciones': this.selectedRowValue[6].value,
       'idCalendarioProgramado': this.selectedRowValue[10].value,
@@ -560,6 +562,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
     }
   }
   eliminar(){
+    console.log('this.selectedArray: ', this.selectedArray)
   this.delete.emit(this.selectedArray);
   this.totalRegistros = this.rowGroups.length;
   this.rowGroupsAux = this.rowGroups;
@@ -574,6 +577,13 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
     this.seleccionarTodo = evento;
   }
 
+  changeDateFormat(date1){
+    let year = date1.substring(0, 4)
+    let month = date1.substring(5,7)
+    let day = date1.substring(8, 10)
+    let date2 = day + '/' + month + '/' + year;
+    return date2;
+  }
   changeFecha(event){
     console.log(this.selectedRowValue)
 

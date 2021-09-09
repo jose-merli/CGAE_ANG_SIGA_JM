@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { ViewChild } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
@@ -93,6 +94,14 @@ export class ProgramacionCalendariosComponent implements OnInit {
       name: "justiciaGratuita.Calendarios.NumGuardias"
     }
   ];
+
+  comboEstados = [
+    { label: "Pendiente", value: "0" },
+    { label: "Programada", value: "1" },
+    { label: "En proceso", value: "2" },
+    { label: "Procesada con Errores", value: "3" },
+    { label: "Generada", value: "4" }
+  ];
   @ViewChild(FiltrosGuardiaCalendarioComponent) filtros;
   //@ViewChild(TablaGuardiasComponent) tabla;
 
@@ -103,7 +112,8 @@ export class ProgramacionCalendariosComponent implements OnInit {
     private router: Router,
     public oldSigaServices: OldSigaServices,
     private trmService: TablaResultadoMixIncompService,
-    private authenticationService: AuthenticationService) {
+    private authenticationService: AuthenticationService,
+    private datepipe: DatePipe) {
     this.url = oldSigaServices.getOldSigaUrl("guardiasIncompatibilidades");
     }
 
@@ -160,6 +170,18 @@ export class ProgramacionCalendariosComponent implements OnInit {
     }
 
   }
+
+  getStatusValue(id){
+    let status;
+    this.comboEstados.forEach(estado => {
+      if (estado.value != null && id != null){
+        if ( estado.value.toString() == id.toString()){
+          status = estado.label;
+        }
+      }
+    })
+    return status;
+  }
   getFiltrosValues(event){
     this.filtrosValues = event;
     this.convertArraysToStrings();
@@ -184,6 +206,7 @@ export class ProgramacionCalendariosComponent implements OnInit {
 
 
 buscarCal(){
+  this.progressSpinner = true;
   this.buscar = false;
   console.log('filtrosValues: ', this.filtrosValues)
 //let jsonEntrada  = JSON.parse(JSON.stringify(datosEntrada))
@@ -260,16 +283,19 @@ jsonToRow(){
   let generado = '??????';
   let numGuardias = '??????';
   let arr = [];
+
   this.respuestaCalendario.forEach((res, i) => {
+    let fP = {label: this.formatDate(res.fechaProgramacion), value: new Date(res.fechaProgramacion.toString())};
     let objCells = [
     { type: 'text', value: res.turno },
     { type: 'text', value: res.guardia },
     { type: 'text', value: this.changeDateFormat(res.fechaDesde)},
     { type: 'text', value: this.changeDateFormat(res.fechaHasta) },
-    { type: 'text', value: this.changeDateFormat(res.fechaProgramacion) },
-    { type: 'label', value: {label: res.listaGuardias, value: this.filtrosValues.listaGuardias }},
+    { type: 'date', value: fP },
+    //{ type: 'text', value: new Date(res.fechaProgramacion.toString()) },
+    { type: 'label', value: {label: res.listaGuardias, value: res.idCalG }},
     { type: 'text', value: res.observaciones },
-    { type: 'text', value: res.estado },
+    { type: 'text', value: this.getStatusValue(res.estado) },
     { type: 'text', value: res.generado },
     { type: 'text', value: res.numGuardias},
     { type: 'invisible', value: res.idCalendarioProgramado},
@@ -277,7 +303,7 @@ jsonToRow(){
     { type: 'invisible', value: res.idGuardia},
     
     ];
-
+console.log('res.fechaProgramacion: ', res.fechaProgramacion)
     let obj = {id: i, cells: objCells};
     arr.push(obj);
   })
@@ -291,6 +317,11 @@ jsonToRow(){
   console.log('rowGroups: ', this.rowGroups)
   this.buscar = true;
 }
+
+formatDate(date) {
+  const pattern = 'yyyy-MM-dd HH:mm:ss-SS';
+    return this.datepipe.transform(date, pattern);
+  }
 changeDateFormat(date1){
   let year = date1.substring(0, 4)
   let month = date1.substring(5,7)
@@ -298,6 +329,7 @@ changeDateFormat(date1){
   let date2 = day + '/' + month + '/' + year;
   return date2;
 }
+
 save(event){
   let idTurnoIncompatible;
   let idGuardiaIncompatible;
@@ -378,6 +410,7 @@ rowToDelete.cells.forEach((c, index) => {
   }*/
 
 delete(indexToDelete){
+  console.log('indexToDelete: ', indexToDelete)
   let idGuardia;
   let idTurno;
   let idCalendarioProgramado;

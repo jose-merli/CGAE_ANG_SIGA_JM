@@ -69,6 +69,8 @@ export let endpoints_guardia: any = {
     guardiaCalendario_updateCalendarioProgramado: "guardia/updateCalendarioProgramado",
     guardiaCalendario_newCalendarioProgramado: "guardia/newCalendarioProgramado",
     guardiaCalendario_generar: "guardia/generarCalendario",
+    guardiaCalendario_descargarExcelLog: "guardia/descargarExcelLog",
+    
 
     //Asistencia
     busquedaGuardias_getTurnosByColegiadoFecha: "asistencia/turnosByColegiadoFecha",

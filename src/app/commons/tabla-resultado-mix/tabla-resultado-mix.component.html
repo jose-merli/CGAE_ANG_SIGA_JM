@@ -17,6 +17,46 @@
               (ngModelChange)="searchChange(j)" autocomplete="off" placeholder="Buscar">
           </div>
         </div>
+<<<<<<< HEAD
+    </div> 
+    <div *ngFor="let row of rowGroups | slice:from:to; let i = index" class="table-row child">
+        <div (click)="selectRow(row['id'], row['cells'])" class="table-row-wrapper hoverBlue" [ngClass]="{'hoverBlue2': isSelected(row['id']), 'fixedBlue': seleccionarTodo}" #rowSelected>
+            <div *ngFor="let cell of row['cells'] | slice:0:10; let z = index" class="table-cell p-2 selectedRowClass" [ngClass]="{'borders-child': isPar(row['id'])}" #cellSelected>
+                <div class="cell-wrapper selectedRowClass">
+                    <span class="w100 cell-value" *ngIf="cell.type == 'text' && calendarios" class="enlace" (click)="openTab(row)">{{cell.value}}</span> 
+                    <span class="w100 cell-value" *ngIf="cell.type == 'date' && calendarios" >{{cell.value.label}}</span> 
+                    <span class="w100 cell-value" *ngIf="cell.type == 'input'"><input type="text" class="form-control mt-2" pInputText [(ngModel)]="cell.value"  (change) ="inputChange($event, row['id'], z, cell)"></span>
+                    <span class="w100 cell-value" *ngIf="cell.type == 'text'  && !calendarios">{{cell.value}}</span> 
+                    <span class="w100 cell-value" *ngIf="cell.type == 'label'  && calendarios">{{cell.value.label}}</span> 
+                    <span class="w100 cell-value" *ngIf="cell.type == 'buttom'"><button pButton type="button"  iconPos="left" [label]="cell.value"></button></span> 
+                    <span class="w100 cell-value" *ngIf="cell.type == 'checkbox'"> <p-checkbox [ngModel]="validaCheck(cell.value)" binary="true">
+                    </p-checkbox></span> 
+                    <span class="w100 cell-value" *ngIf="cell.type == 'datePicker'"><app-fecha [(value)]="fechaIncorporacionDesdeSelect" [utc]="false" (valueChangeSelected)="fillFechaIncorporacionDesde($event)"	(valueChangeInput)="fillFechaIncorporacionDesde($event)">	
+                    </app-fecha></span>
+                    <span class="w100 cell-value" *ngIf="cell.type == 'select'"><app-selector class="center" [i]="0" [textoVisible]="" [selector]="cell.value"></app-selector></span>
+                    <span class="w100 cell-value" *ngIf="cell.type == 'number'">{{cell.value}}</span>
+                    <span class="w100 cell-value" *ngIf="cell.type == 'link'"><a>{{cell.value}}</a></span>
+                    <span class="w100 cell-value" *ngIf="cell.type == 'download'"><div (click)="showMsg('success', 'Documento descargado', '')"><i class="pointer fa fa-download"></i></div></span>
+                    <span class="w100 cell-value" *ngIf="cell.type == '5InputSelector'">
+                        <input type="text" class="form-control " pInputText   size="10" [placeholder]="cell.value[0]">
+                    <input type="text" class="form-control " pInputText   size="10" [placeholder]="cell.value[1]">
+                    <input type="text" class="form-control " pInputText   size="10" [placeholder]="cell.value[2]">
+                    <input type="text" class="form-control " pInputText   size="10" [placeholder]="cell.value[3]">
+                    <app-selector [textoVisible]="cell.value[4]" [i]="0" [selector]="cell.value"></app-selector>
+                    </span>
+                    <span class="w100 cell-value" *ngIf="cell.type == '2SelectorInput'">
+                        <app-selector [i]="0" [selector]="cell.value"></app-selector>
+                        <input type="text" class="form-control mt-2" pInputText   [placeholder]="cell.value">
+                    </span>
+                    <span class="w100 cell-value" *ngIf="cell.type == 'multiselect'">
+
+                        <p-multiSelect #{i} autoWidth="false" [(ngModel)]='cell.value' [selectedItemsLabel]="textSelected" [defaultLabel]="textFilter"
+                        [options]="cell.combo" maxSelectedLabels="10"  styleClass="widthAll"
+                        [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeMulti($event, row['id'], cell)" >
+                        </p-multiSelect>
+                    </span>
+                    
+=======
       </div>
       <div *ngFor="let row of rowGroups | slice:from:to; let i = index" class="table-row child">
         <div (click)="selectRow(row['id'], row['cells'])" class="table-row-wrapper hoverBlue"
@@ -49,6 +89,7 @@
               <span class="w100 cell-value" *ngIf="cell.type == 'link'"><a>{{cell.value}}</a></span>
               <span class="w100 cell-value" *ngIf="cell.type == 'download'">
                 <div (click)="showMsg('success', 'Documento descargado', '')"><i class="pointer fa fa-download"></i>
+>>>>>>> 77f54fcf749c9ffa8f7c7343cc529eab0216fb0b
                 </div>
               </span>
               <span class="w100 cell-value" *ngIf="cell.type == '5InputSelector'">
