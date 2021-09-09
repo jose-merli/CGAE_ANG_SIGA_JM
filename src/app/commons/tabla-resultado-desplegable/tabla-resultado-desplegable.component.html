@@ -47,8 +47,9 @@
                     </div>
 
                     <div *ngIf="!posicionOcultar(-1) && pantalla == 'JE'" class="table-row-header p-2 selectedRowClass mw80" [id]="rowGroup.id2">
-                        <span [pTooltip]="tooltipEJG(rowGroup.estadoEx,rowGroup.resolucionDesignacion)" tooltipPosition="top" [ngClass]="{'color-red': colorByStateExpediente(rowGroup.estadoEx) == 'red', 'color-blue': colorByStateExpediente(rowGroup.estadoEx) == 'blue', 'color-black': colorByStateExpediente(rowGroup.estadoEx) == 'black'}">  <span *ngIf="rowGroup.id2 != ''" >E</span>{{rowGroup.id2}}</span>
-                        <button *ngIf="rowGroup.resolucionDesignacion != 'SIN_RESOLUCION'" pButton type="button" icon="fa fa-comment" iconPos="left"></button>
+                        <span [pTooltip]="rowGroup.estadoEx" tooltipPosition="top" [ngClass]="{'color-red': colorByStateExpediente(rowGroup.resolucionDesignacion) == 'red', 'color-blue': colorByStateExpediente(rowGroup.resolucionDesignacion) == 'blue', 'color-black': colorByStateExpediente(rowGroup.resolucionDesignacion) == 'black'}">  <span *ngIf="rowGroup.id2 != ''" >E</span>{{rowGroup.id2}}</span>
+                        <button *ngIf="rowGroup.resolucionDesignacion != 'SIN_RESOLUCION' && rowGroup.id2 != ''" pButton type="button" icon="fa fa-comment" iconPos="left" (click)="navigateComunicar(rowGroup.id2)"></button>
+
                     </div>
 
                     <div *ngIf="!posicionOcultar(-1) && pantalla == 'JE'" class="table-row-header p-2 selectedRowClass wrapName mw100" [id]="rowGroup.id3">
@@ -258,8 +259,8 @@
         <button [disabled]="disableDelete == true || colegiado" pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="Eliminar" (click)="eliminar()">
         </button> 
 
-        <button [disabled]="colegiado"  pButton type="button" icon="fa fa-comment" iconPos="left" label="Comunicar">
-        </button>
+        <!-- <button [hidden]="colegiado"  pButton type="button" icon="fa fa-comment" iconPos="left" label="Comunicar" (click)="navigateComunicar()">
+        </button> -->
         
         <button [disabled]="colegiado" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"  (click)="guardar()">
         </button>
