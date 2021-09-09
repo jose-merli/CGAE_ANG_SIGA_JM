@@ -1219,10 +1219,10 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }
   }
 
-  colorByStateExpediente(state){
-     if ( state == 'DESFAVORABLE'){
+  colorByStateExpediente(resolucion){
+     if ( resolucion == 'NO_FAVORABLE'){
       return 'red';
-    }else if ( state == 'FAVORABLE'){
+    }else if ( resolucion == 'FAVORABLE'){
       return 'blue'; 
     } else {
       return 'black';
@@ -1230,17 +1230,17 @@ export class TablaResultadoDesplegableComponent implements OnInit {
 
   } 
 
-  tooltipEJG(state,resolucion){
-    if ( (resolucion == '' || resolucion == undefined || resolucion == null || resolucion == 'SIN_RESOLUCION') && (state == '' || state == undefined || state == null) ){
+  /* tooltipEJG(state,resolucion){
+    if ( (resolucion == '' || resolucion == undefined || resolucion == null || resolucion == 'SIN_RESOLUCION') && (state == "''" || state == undefined || state == null) ){
       return 'Designación con EJG sin Resolución';
-    }else if((resolucion != '' || resolucion != undefined || resolucion != null || resolucion != 'SIN_RESOLUCION') && (state == '' || state == undefined || state == null)){
+    }else if((resolucion != '' || resolucion != undefined || resolucion != null || resolucion != 'SIN_RESOLUCION') && (state == "''" || state == undefined || state == null)){
       return `Resolucion: ${resolucion}`;
-    }else if((resolucion == '' || resolucion == undefined || resolucion == null || resolucion == 'SIN_RESOLUCION') && (state != '' || state != undefined || state != null)){
+    }else if((resolucion == '' || resolucion == undefined || resolucion == null || resolucion == 'SIN_RESOLUCION') && (state != "''" || state != undefined || state != null)){
       return `Dictamen: ${state}`;
     }else{
       return `Resolucion: ${resolucion} \ Dictamen: ${state}`;
     }
-  }
+  } */
 
   searchActuacionwithSameNumDesig(idAcreditacionNew, rowGroupWithNew){
     let esPosibleCrearNuevo = true;
