@@ -59,7 +59,11 @@
           <div class="row">
             <div class="form-group col-lg-2 col-md-2">
               <label>{{ "justiciaGratuita.oficio.designaciones.fechaDesignacion" | translate}}</label>
-               <input disabled [(value)]="body.fechaDesignacion" (valueChangeSelected)="fillFechaDesignacion($event)"/> 
+               <!-- <input disabled [(value)]="body.fechaDesignacion" (valueChangeSelected)="fillFechaDesignacion($event)"/>  -->
+               <app-fecha [inputStyleClass]="(body.fechaDesignacion == null) ? 'camposObligatorios': ''" [(value)]="body.fechaDesignacion"
+               (valueChangeSelected)="fillFechaDesignacion($event)" (valueChangeInput)="fillFechaDesignacion($event)" [utc]="false"
+                [disabled]="disableFechaDesignacion">
+              </app-fecha>
             </div>
           </div>
           <div class="row">

@@ -196,7 +196,8 @@ export class FichaCambioLetradoComponent implements OnInit {
     this.saliente.body.motivoRenuncia, //5
     sessionStorage.getItem("FDSaliente"), //6
     this.saliente.body.fechaSolRenuncia, //7
-    this.datepipe.transform(this.entrante.body.fechaDesignacion, 'dd/MM/yyyy'),//8
+    //this.datepipe.transform(this.entrante.body.fechaDesignacion, 'dd/MM/yyyy'),//8
+    this.saliente.body.fechaDesignacion,
     this.entrante.body.idPersona, //9
     this.saliente.body.compensacion, //10
     this.entrante.body.salto //11

@@ -7,6 +7,7 @@ import { Message } from 'primeng/components/common/api';
 import { CommonsService } from '../../../../../../../../_services/commons.service';
 import { CamposCambioLetradoItem } from '../../../../../../../../models/sjcs/CamposCambioLetradoItem';
 import { procesos_oficio } from '../../../../../../../../permisos/procesos_oficio';
+import { DatePipe } from '@angular/common';
 
 
 @Component({
@@ -29,6 +30,7 @@ export class LetradoSalienteComponent implements OnInit {
   comboRenuncia;
 
   constructor(private sigaServices: SigaServices,
+    private datepipe: DatePipe,
     private commonsService: CommonsService, private persistenceService: PersistenceService, private translateService: TranslateService, private router: Router) { }
 
   ngOnInit() {
@@ -46,6 +48,7 @@ export class LetradoSalienteComponent implements OnInit {
     this.body.observaciones=""; */
 
     this.body.fechaSolRenuncia = new Date();
+   // this.datepipe.transform(this.body.fechaDesignacion, 'dd/MM/yyyy');
 
     this.motivosRenuncia();
 

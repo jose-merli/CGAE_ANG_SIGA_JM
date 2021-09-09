@@ -24,7 +24,8 @@
       <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
         <td class="text-center" *ngFor="let col of columns">
           <div>
-            <span>{{dato[col.field]}}   </span>
+            <span *ngIf="col.field != 'fechaDesignacion' || col.field != 'fechaSolRenuncia' || col.field != 'fechaEfecRenuncia'">{{dato[col.field]}}   </span>
+            <span *ngIf="col.field == 'fechaDesignacion' || col.field == 'fechaSolRenuncia' || col.field == 'fechaEfecRenuncia'">{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
             <div class="ayuda-btn" *ngIf="col.field == 'motivoRenuncia'" [pTooltip]="dato.observaciones" 
             tooltipPosition="top">
               <i class="fa fa-question"></i>

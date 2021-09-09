@@ -62,11 +62,11 @@ export class DetalleTarjetaLetradosDesignaComponent implements OnInit {
 
     this.datos=this.letrados;
     sessionStorage.setItem("FDSaliente",this.letrados[0].fechaDesignacion);
-    this.datos.forEach(element => {
+     /*  this.datos.forEach(element => {
       element.fechaDesignacion = this.datepipe.transform(element.fechaDesignacion, 'dd/MM/yyyy');
       if(element.fechaEfecRenuncia!=null) element.fechaEfecRenuncia = this.datepipe.transform(element.fechaEfecRenuncia, 'dd/MM/yyyy');
       if(element.fechaSolRenuncia!=null) element.fechaSolRenuncia = this.datepipe.transform(element.fechaSolRenuncia, 'dd/MM/yyyy');
-    });
+    });  */
     
     this.sigaServices.get('getLetrado').subscribe(
       (data) => {
