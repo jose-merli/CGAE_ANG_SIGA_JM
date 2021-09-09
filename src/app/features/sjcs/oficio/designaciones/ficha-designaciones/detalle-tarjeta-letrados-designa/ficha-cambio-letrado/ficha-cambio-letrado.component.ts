@@ -210,7 +210,7 @@ export class FichaCambioLetradoComponent implements OnInit {
         //Mostrar mensaje todo correcto
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         setTimeout(() => {
-          this.router.navigate(['/fichaDesignaciones']);
+          this.location.back();
         }, 400);
       },
       err => {

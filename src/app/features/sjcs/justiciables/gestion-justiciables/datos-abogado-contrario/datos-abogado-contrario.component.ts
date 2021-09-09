@@ -108,7 +108,7 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 					this.generalBody.idPersona = data.idPersona;
 
 					if(sessionStorage.getItem("EJGItem")) this.contrarioEJG.emit(true);
-					this.contrario.emit(true);
+					else this.contrario.emit(true);
 					this.permisoEscritura = true; 
 				},
 				err => {
@@ -127,7 +127,6 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 				this.translateService.instant('general.message.noTienePermisosRealizarAccion')
 			);
 		} else {
-			sessionStorage.setItem("origin", "AbogadoContrario");
 			if(this.fromContrario) sessionStorage.setItem("origin", "AbogadoContrario");
       		else if(this.fromContrarioEJG) sessionStorage.setItem("origin", "AbogadoContrarioEJG");
 			this.router.navigate(['/busquedaGeneral']);
