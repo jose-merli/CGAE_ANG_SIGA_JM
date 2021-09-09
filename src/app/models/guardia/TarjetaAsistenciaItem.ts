@@ -50,4 +50,10 @@ export class TarjetaAsistenciaItem{
 	  idProcedimiento : string;
 	  numDiligencia : string;
 	  delitos : string [];
+	  numDocumentos : string;
+	  numValidadas : string;
+	  numJustificadas : string;
+	  numFacturadas: string;
+	  diaDespuesDisabled : boolean;
+	  idTipoEjg : string;
 }

@@ -19,6 +19,7 @@ export class FichaAsistenciaTarjetaAsistidoComponent implements OnInit {
 
   @Input() idAsistencia : string;
   @Input() idPersonaAsistido : string;
+  @Input() editable : boolean;
   @Output() refreshTarjetas = new EventEmitter<string>();
   msgs: Message[] = [];
   asistido : JusticiableItem = new JusticiableItem();

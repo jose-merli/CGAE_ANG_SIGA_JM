@@ -24,7 +24,7 @@
 <div *ngIf="show">
     <div class="card mt-3">
         <div class="card-body p-0">
-            <app-resultado-asistencia-expres [rowGroups] = "rowGroups" [rowGroupsAux] = "rowGroupsAux"  [initialRowGroups] = "initialRowGroups" (refreshInitialRowGroup) = "refreshInitialRowGroup($event)"
+            <app-resultado-asistencia-expres [filtro]="filtros.filtro" [rowGroups] = "rowGroups" [rowGroupsAux] = "rowGroupsAux"  [initialRowGroups] = "initialRowGroups" (refreshInitialRowGroup) = "refreshInitialRowGroup($event)"
             [comboJuzgadosAE]="comboJuzgados" [comboComisarias]="comboComisarias" [comboDelitos]="comboDelitos" [comboSexo] = "comboSexo"
             (saveTableData)="saveTableData($event)"></app-resultado-asistencia-expres>
         </div>

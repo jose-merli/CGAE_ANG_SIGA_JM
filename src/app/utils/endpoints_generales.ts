@@ -17,7 +17,11 @@ export let endpoints_generales: any = {
     combo_comboJuzgado: "combo/comboJuzgado",
     combo_comboComisariaCdgoExt: "combo/comboComisariaCdgoExt",
     combo_comboJuzgadoCdgoExt: "combo/comboJuzgadoCdgoExt",
- 
+    combo_comboTipoDocAsistencia : "combo/comboTipoDocAsistencia",
+    combo_comboAsociadoAsistencia : "combo/comboAsociadoAsistencia",
+    combo_comboOrigenContacto : "combo/comboOrigenContacto",
+    combo_comboTipoActuacion : "combo/comboTipoActuacionAsistencia",
+    combo_comboCosteFijo : "combo/comboCosteFijoActuacionAsistencia",
 
     gestionJusticiables_busquedaClaveAsuntosEJG: "gestionJusticiables/busquedaClaveAsuntosEJG",
     gestionJusticiables_busquedaClaveAsuntosAsistencias: "gestionJusticiables/busquedaClaveAsuntosAsistencias",

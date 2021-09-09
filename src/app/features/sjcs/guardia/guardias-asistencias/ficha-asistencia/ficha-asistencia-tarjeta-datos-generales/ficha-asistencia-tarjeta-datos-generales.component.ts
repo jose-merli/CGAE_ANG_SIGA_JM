@@ -108,7 +108,7 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit {
   getDefaultTipoAsistenciaColegio(){
     this.sigaServices.get("busquedaGuardias_getDefaultTipoAsistenciaColegio").subscribe(
       n => {
-        if(n && n.valor){
+        if(n && n.valor && this.comboTipoAsistenciaColegio.find(comboItem => comboItem.value == n.valor)){
           this.asistencia.idTipoAsistenciaColegio = n.valor;
         }
       },
@@ -156,16 +156,16 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit {
 
             if(!this.disableDataForEdit){ //Si estamos en modo edicion no seteamos valor por defecto
             
-              this.setDefaultValueOnComboTiposAsistencia();
+              ///this.setDefaultValueOnComboTiposAsistencia();
 
               this.getDefaultTipoAsistenciaColegio();
-            }else{
+            }/*else{
               this.comboTipoAsistenciaColegio.forEach(comboItem => {
       
                   comboItem.value = comboItem.value.slice(0,comboItem.value.length - 1);
           
               });
-            }
+            }*/
 
           },
           err => {
@@ -220,24 +220,6 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit {
       );
 
     }
-  }
-
-
-   //Setea el valor por defecto del combo
-   setDefaultValueOnComboTiposAsistencia(){
-
-    this.comboTipoAsistenciaColegio.forEach(comboItem => {
-      
-      
-      if(comboItem.value.charAt(comboItem.value.length - 1) === '1'){
-        comboItem.value = comboItem.value.slice(0,comboItem.value.length - 1);
-        this.asistencia.idTipoAsistenciaColegio = comboItem.value;
-      }else{
-        comboItem.value = comboItem.value.slice(0,comboItem.value.length - 1);
-      }
-
-    });
-
   }
 
   getTurnosByColegiadoFecha(){
@@ -431,9 +413,7 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit {
 
   anular(){
 
-    this.reactivable = true;
-    this.anulable = false;
-    this.finalizable = false;
+    
     this.asistencia.estado = "2";
     this.asistencia.fechaEstado = this.datepipe.transform(new Date(), "dd/MM/yyyy");
     this.updateEstadoAsistencia();

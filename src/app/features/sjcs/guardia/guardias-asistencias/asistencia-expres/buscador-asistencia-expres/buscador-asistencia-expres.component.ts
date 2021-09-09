@@ -39,6 +39,8 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
   comboTiposAsistencia = [];
   comboLetradosGuardia = [];
   resaltadoDatos: boolean = false;
+  opcionSeleccionado: string = '0';
+  verSeleccion: string = '';
 
   @ViewChild(BusquedaColegiadoExpressComponent) busquedaColegiado: BusquedaColegiadoExpressComponent;
 
@@ -67,8 +69,6 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
     this.resaltadoDatos = true;
     //this.getComboTurno();
   }
-  opcionSeleccionado: string = '0';
-  verSeleccion: string = '';
 
   capturar() {
     // Pasamos el valor seleccionado a la variable verSeleccion
@@ -194,7 +194,8 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
           
           this.comboTiposAsistencia = data.combooItems;
           this.commonServices.arregloTildesCombo(this.comboTiposAsistencia);
-          this.setDefaultValueOnComboTiposAsistencia();
+          //this.setDefaultValueOnComboTiposAsistencia();
+          this.getDefaultTipoAsistenciaColegio();
 
         },
         err => {
@@ -225,21 +226,20 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
 
   }
 
-  //Setea el valor por defecto del combo
-  setDefaultValueOnComboTiposAsistencia(){
+  getDefaultTipoAsistenciaColegio(){
+    this.sigaServices.get("busquedaGuardias_getDefaultTipoAsistenciaColegio").subscribe(
+      n => {
+        if(n && n.valor && this.comboTiposAsistencia.find(comboItem => comboItem.value == n.valor)){
+          this.filtro.idTipoAsistenciaColegiado = n.valor;
+        }
+      },
+      err => {
+        console.log(err);
 
-    this.comboTiposAsistencia.forEach(comboItem => {
-      
-      
-      if(comboItem.value.charAt(comboItem.value.length - 1) === '1'){
-        comboItem.value = comboItem.value.slice(0,comboItem.value.length - 1);
-        this.filtro.idTipoAsistenciaColegiado = comboItem.value;
-      }else{
-        comboItem.value = comboItem.value.slice(0,comboItem.value.length - 1);
+      }, () => {
+        this.commonServices.arregloTildesCombo(this.comboTurnos);
       }
-
-    });
-
+    );
   }
 
   changeColegiado(event) {

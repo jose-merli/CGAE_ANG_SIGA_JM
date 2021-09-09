@@ -58,7 +58,8 @@ export class GuardiasSolicitudesCentralitaComponent implements OnInit {
 
     }).catch(error => console.error(error));
     
-    if(sessionStorage.getItem("volver") == "true"){
+    if(sessionStorage.getItem("volver") == "true"
+      && sessionStorage.getItem("filtro")){
       this.buscador.filtro = JSON.parse(sessionStorage.getItem("filtro"));
       sessionStorage.removeItem("filtro");
       this.search();

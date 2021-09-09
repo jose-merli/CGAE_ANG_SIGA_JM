@@ -14,6 +14,7 @@ export class FichaAsistenciaTarjetaDefensaJuridicaComponent implements OnInit {
 
   msgs : Message [] = [];
   @Input() idAsistencia;
+  @Input() editable : boolean;
   comboComisarias = [];
   comboJuzgados = [];
   comboDelitos = [];

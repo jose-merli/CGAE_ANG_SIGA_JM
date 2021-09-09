@@ -110,6 +110,7 @@ export class GestionEjgComponent implements OnInit {
       } else {
         //hemos pulsado nuevo 
         if(sessionStorage.getItem("Nuevo")){
+          this.nuevo = true;
           sessionStorage.removeItem("Nuevo");
           this.body = new EJGItem();
           this.modoEdicion = false;
@@ -135,6 +136,7 @@ export class GestionEjgComponent implements OnInit {
   }
 
   updateTarjResumen(){
+    if(!this.nuevo)
     this.body = this.persistenceService.getDatos();
 
     this.datos = [
@@ -214,6 +216,7 @@ export class GestionEjgComponent implements OnInit {
   }
   
   backTo() {
+    this.persistenceService.clearDatos();
     this.location.back();
   }
 

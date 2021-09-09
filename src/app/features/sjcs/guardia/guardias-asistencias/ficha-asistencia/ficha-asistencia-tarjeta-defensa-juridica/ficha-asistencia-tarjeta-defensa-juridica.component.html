@@ -7,26 +7,26 @@
       <div class="form-row">
         <div class="form-group col-lg-6 col-md-6">
           <label>{{'gratuita.mantAsistencias.literal.numeroDiligenciasolo' | translate}}</label>
-          <input type="text" class="form-control" [(ngModel)]='defensaJuridicaItem.numDiligencia' pInputText [ngModelOptions]="{standalone: true}">
+          <input type="text" class="form-control" [(ngModel)]='defensaJuridicaItem.numDiligencia' pInputText [ngModelOptions]="{standalone: true}" [disabled]="!editable">
         </div>
         <div class="form-group col-lg-6 col-md-6">
           <label>{{'gratuita.busquedaDesignas.literal.numProcedimiento' | translate}}</label>
-          <input type="text" class="form-control" [(ngModel)]='defensaJuridicaItem.numProcedimiento' pInputText [ngModelOptions]="{standalone: true}">
+          <input type="text" class="form-control" [(ngModel)]='defensaJuridicaItem.numProcedimiento' pInputText [ngModelOptions]="{standalone: true}" [disabled]="!editable">
         </div>
         <div class="form-group col-lg-6 col-md-6">
           <label>{{'justiciaGratuita.ejg.datosGenerales.NIG' | translate}}</label>
-          <input type="text" class="form-control" [(ngModel)]='defensaJuridicaItem.nig' pInputText [ngModelOptions]="{standalone: true}">
+          <input type="text" class="form-control" [(ngModel)]='defensaJuridicaItem.nig' pInputText [ngModelOptions]="{standalone: true}" [disabled]="!editable">
         </div>
         <div class="form-group col-lg-6 col-md-6">
           <label>{{ 'justiciaGratuita.ejg.preDesigna.delitos' | translate }}</label>
-          <p-multiSelect class="select-form" [(ngModel)]='defensaJuridicaItem.idDelitos' [options]="comboDelitos"
+          <p-multiSelect class="select-form" [(ngModel)]='defensaJuridicaItem.idDelitos' [options]="comboDelitos" [disabled]="!editable"
           [filter]="true" filterBy="label,labelSinTilde" styleClass="widthAll" [ngModelOptions]="{standalone: true}"
           defaultLabel="{{ 'general.boton.seleccionar' | translate}}" ></p-multiSelect>
         </div>
         <div class="form-group col-lg-6 col-md-6">
-          <label>Comisaría</label>
+          <label>{{'justiciaGratuita.guardia.fichaasistencia.comisaria' | translate}}</label>
           <p-dropdown class="select-form"
-          placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
+          placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true" [disabled]="!editable"
           [showClear]="true" [(ngModel)]="defensaJuridicaItem.idComisaria"
           [ngModelOptions]="{standalone: true}" [options]="comboComisarias"
           (onChange)="onChangeComisaria()">
@@ -35,7 +35,7 @@
         <div class="form-group col-lg-6 col-md-6">
           <label>{{'justiciaGratuita.ejg.datosGenerales.Juzgado' | translate}}</label>
           <p-dropdown class="select-form"
-          placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
+          placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true" [disabled]="!editable"
           [showClear]="true" [(ngModel)]="defensaJuridicaItem.idJuzgado"
           [ngModelOptions]="{standalone: true}" [options]="comboJuzgados"
           (onChange)="onChangeJuzgado()">
@@ -44,7 +44,7 @@
         <div class="form-group col-lg-6 col-md-6">
           <label>{{'justiciaGratuita.maestros.Procedimientos' | translate}}</label>
           <p-dropdown class="select-form"
-          placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
+          placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true" [disabled]="!editable"
           [showClear]="true" [(ngModel)]="defensaJuridicaItem.idProcedimiento"
           [ngModelOptions]="{standalone: true}" [options]="comboProcedimientos">
           </p-dropdown>
@@ -54,14 +54,14 @@
     <div class="col-lg-5 col-md-5 col-sm-5 pr-0 mb-3">
       <div class="form-row">
         <div class="form-group col-lg-12 col-md-12 w-100">
-          <label>Observaciones Defensa Jurídica</label>
-          <textarea [rows]="5" [cols]="30" pInputTextarea autoResize="false" [(ngModel)]="defensaJuridicaItem.observaciones"></textarea>
+          <label>{{'justiciaGratuita.guardia.fichaasistencia.observacionesdf' | translate}}</label>
+          <textarea [rows]="5" [cols]="30" pInputTextarea autoResize="false" [(ngModel)]="defensaJuridicaItem.observaciones" [disabled]="!editable"></textarea>
         </div>
       </div>
       <div class="form-row">
         <div class="form-group col-lg-12 col-md-12 w-100">
-          <label>Delitos/Faltas</label>
-          <textarea [rows]="5" [cols]="30" pInputTextarea autoResize="false" [(ngModel)]="defensaJuridicaItem.comentariosDelitos"></textarea>
+          <label>{{'justiciaGratuita.guardia.fichaasistencia.delitosfaltas' | translate}}</label>
+          <textarea [rows]="5" [cols]="30" pInputTextarea autoResize="false" [(ngModel)]="defensaJuridicaItem.comentariosDelitos" [disabled]="!editable"></textarea>
         </div>
       </div>
     </div>
@@ -69,9 +69,9 @@
 
 <div class="card-footer">
   <div class="text-right main-button">
-    <button pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.boton.restablecer' | translate}}"
+    <button pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.boton.restablecer' | translate}}" [disabled] = "idAsistencia == null || idAsistencia == '' || !editable"
       (click)="restablecer();"></button>
-    <button pButton type="button" icon="far fa-save" iconPos="left" label="{{'general.boton.guardar' | translate}}" [disabled] = "idAsistencia == null || idAsistencia == ''"
+    <button pButton type="button" icon="far fa-save" iconPos="left" label="{{'general.boton.guardar' | translate}}" [disabled] = "idAsistencia == null || idAsistencia == '' || !editable"
       (click)="saveDefensaJuridicaData();"></button>
   </div>
 </div>

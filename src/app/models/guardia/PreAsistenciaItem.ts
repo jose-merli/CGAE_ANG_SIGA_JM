@@ -17,4 +17,6 @@ export class PreAsistenciaItem{
     fechaRecepcion : string;
     idTipoCentroDetencion : string;
 
+    constructor(){}
+
 }

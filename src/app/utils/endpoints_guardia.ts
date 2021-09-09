@@ -60,6 +60,15 @@ export let endpoints_guardia: any = {
     guardiaCalendario_buscar : "guardia/buscarCalendariosProgramados",
     guardiaCalendario_eliminar : "guardia/eliminarCalendariosProgramados",
     guardiaCalendario_guardar : "guardia/guardarCalendariosProgramados",
+    guardiaCalendario_guardiaFromConjunto: "guardia/guardiasFromIdConjunto",
+    guardiaCalendario_getGuardiasFromCalendar : "guardia/getGuardiasCalendario",
+    guardiaCalendario_getFechasProgFromGuardia: "guardia/getFechasProgramacionGuardia",
+    guardiaCalendario_guardarGuardiaConjunto: "guardia/addGuardiaConjunto",
+    guardiaCalendario_guardarGuardiaCalendar: "guardia/addGuardiaCalendario",
+    guardiaCalendario_eliminarGuardiaCalendar: "guardia/deleteGuardiaCalendario",
+    guardiaCalendario_updateCalendarioProgramado: "guardia/updateCalendarioProgramado",
+    guardiaCalendario_newCalendarioProgramado: "guardia/newCalendarioProgramado",
+    guardiaCalendario_generar: "guardia/generarCalendario",
 
     //Asistencia
     busquedaGuardias_getTurnosByColegiadoFecha: "asistencia/turnosByColegiadoFecha",
@@ -85,7 +94,26 @@ export let endpoints_guardia: any = {
     busquedaGuardias_guardarTarjetaObservaciones: "asistencia/guardarTarjetaObservaciones",
     busquedaGuardias_searchRelaciones: "asistencia/searchRelaciones",
     busquedaGuardias_asociarDesigna: "asistencia/asociarDesigna",
+    busquedaGuardias_asociarEjg: "asistencia/asociarEjg",
     busquedaGuardias_eliminarRelacion: "asistencia/eliminarRelacion",
+    busquedaGuardias_searchDocumentacion: "asistencia/searchDocumentacion",
+    busquedaGuardias_subirDocumentoAsistencia: "asistencia/subirDocumentoAsistencia",
+    busquedaGuardias_eliminarDocumentoAsistencia: "asistencia/eliminarDocumentoAsistencia",
+    busquedaGuardias_descargarDocumentosAsistencia: "asistencia/descargarDocumentoAsistencia",
+    busquedaGuardias_searchCaracteristicas: "asistencia/searchCaracteristicas",
+    busquedaGuardias_saveCaracteristicas: "asistencia/saveCaracteristicas",
+    busquedaGuardias_searchActuaciones: "asistencia/searchActuaciones",
+    busquedaGuardias_updateEstadoActuacion: "asistencia/updateEstadoActuacion",
+    busquedaGuardias_eliminarActuaciones: "asistencia/eliminarActuaciones",
+
+    //Actuaciones asistencias
+    actuaciones_searchTarjetaActuacion: "actuacionAsistencia/searchTarjetaActuacion",
+    actuaciones_searchTarjetaDatosGenerales: "actuacionAsistencia/searchTarjetaDatosGenerales",
+    actuaciones_saveTarjetaDatosGenerales: "actuacionAsistencia/saveDatosGenerales",
+    actuaciones_searchTarjetaJustificacion: "actuacionAsistencia/searchTarjetaJustificacion",
+    actuaciones_saveTarjetaJustificacion: "actuacionAsistencia/saveTarjetaJustificacion",
+    actuaciones_updateEstadoActuacion: "actuacionAsistencia/updateEstadoActuacion",
+    actuaciones_searchHistorico: "actuacionAsistencia/searchHistorico",
 
     //Preasistencias
     busquedaPreasistencias_buscarPreasistencias: "preasistencia/buscarPreAsistencias",
@@ -93,4 +121,6 @@ export let endpoints_guardia: any = {
     busquedaPreasistencias_activarPreasistenciasDenegadas: "preasistencia/activarPreAsistenciasDenegadas",
     //Inscripciones
     guardiasInscripciones_buscarInscripciones : "guardia/busquedainscripciones",
+
+
 }
