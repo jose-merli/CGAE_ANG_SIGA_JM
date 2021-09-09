@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { ElementRef, Renderer2, Output, EventEmitter, SimpleChange, ViewRef } from '@angular/core';
+import { ElementRef, Renderer2, Output, EventEmitter, SimpleChange, ViewRef, KeyValueDiffers } from '@angular/core';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Sort } from '@angular/material/sort';
@@ -57,6 +57,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   positionsToDelete = [];
   numColumnasChecked = 0;
   selected = false;
+  currentRoute: String;
   selectedArray = [];
   selecteChild = [];
   RGid = "inicial";
@@ -92,6 +93,9 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   searchParametros: ParametroDto = new ParametroDto();
   configComboDesigna;
   permisoEscritura;
+  idClasesComunicacionArray: string[] = [];
+  idClaseComunicacion: String;
+  keys: any[] = [];
   constructor(
     private renderer: Renderer2,
     private datepipe: DatePipe,
@@ -117,6 +121,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.currentRoute = this.router.url;
+    this.getKeysClaseComunicacion();
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos();
     }
@@ -1771,6 +1777,96 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             this.router.navigate(['/fichaActDesigna']);
           }
         );
+    }
+
+    navigateComunicar(identificador) {
+      sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
+      if (this.pantalla == 'JE'){
+      //IDMODULO de SJCS es 10
+      sessionStorage.setItem("idModulo", '10');
+      
+      this.getDatosComunicarJE(identificador);
+      }
+      else this.msgs = [
+        {
+          severity: "info",
+          summary: "En proceso",
+          detail: "Boton no funcional actualmente"
+        }
+      ];
+    }
+    
+    getKeysClaseComunicacion() {
+      this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
+        data => {
+          this.keys = JSON.parse(data["body"]);
+        },
+        err => {
+          console.log(err);
+        }
+      );
+    }
+
+  getDatosComunicarJE(expediente) {
+    let datosSeleccionados = [];
+    let rutaClaseComunicacion = this.currentRoute.toString();
+
+    this.sigaServices
+      .post("dialogo_claseComunicacion", rutaClaseComunicacion)
+      .subscribe(
+        data => {
+          this.idClaseComunicacion = JSON.parse(
+            data["body"]
+          ).clasesComunicaciones[0].idClaseComunicacion;
+          this.sigaServices
+            .post("dialogo_keys", this.idClaseComunicacion)
+            .subscribe(
+              data => {
+                this.keys = JSON.parse(data["body"]).keysItem;
+                this.sigaServices.get("institucionActual").subscribe(n => {
+                  let institucionActual = n.value;
+                  let i = 0;
+                  let anioEJG: String = expediente.substr(0, 4);
+                  let numEJG: String = expediente.substr(5);
+                  this.sigaServices.getParam("justificacionExpres_getEJG", "?numEjg=" + numEJG + "&anioEjg=" + anioEJG).subscribe(
+                    ejg => {
+                      let keysValues = [];
+                      //Actualmente no se utilizan las keys que devuelve el servicio ya que
+                      //no corresponden a EJGs que es lo que estamos manejando en esta pantalla.
+                      // this.keys.forEach(key => {
+                      //   if (element[key.nombre] != undefined) {
+                      //     keysValues.push(element[key.nombre]);
+                      //   }else if(key.nombre == "num" && element["numero"] != undefined){
+                      //     keysValues.push(element["numero"]);
+                      //   }else if(key.nombre == "idturno" && element["idTurno"] != undefined){
+                      //     keysValues.push(element["idTurno"]);
+                      //   }
+                      // });
+                      if (anioEJG != undefined) {
+                        keysValues.push(anioEJG);
+                      }
+
+                      keysValues.push(ejg.numero);
+                      keysValues.push(ejg.idtipoejg);
+                      keysValues.push(ejg.idinstitucion);
+
+
+                      datosSeleccionados.push(keysValues);
+
+                      sessionStorage.setItem(
+                        "datosComunicar",
+                        JSON.stringify(datosSeleccionados)
+                      );
+
+                      i++;
+                      if (this.selectedArray.length == i) {
+                        this.router.navigate(["/dialogoComunicaciones"]);
+                      }
+                    });
+                });
+              });
+        }
+      );
     }
   }
 function compare(a: number | string, b: number | string, isAsc: boolean) {
