@@ -31,7 +31,7 @@ export class LoginDevelopComponent implements OnInit {
 	// value=N selected="">NO, no soy Letrado</option>
 	//                   <option value=S>SÍ, soy Letrado</option>
 	environment: string = "";
-	sigaFrontVersion: string = "";
+	sigaFrontVersion: string = "1.0.73_0";
 	sigaWebVersion: string = "";
 
 	letrado: any[] = [{ label: 'No, no soy Letrado', value: 'N' }, { label: 'Sí, soy Letrado', value: 'S' }];
@@ -49,7 +49,7 @@ export class LoginDevelopComponent implements OnInit {
 	ngOnInit() {
 		this.sigaServices.getBackend("environmentInfo").subscribe(n => {
 			this.environment = n.environment;
-			this.sigaFrontVersion = n.sigaFrontVersion;
+			//this.sigaFrontVersion = n.sigaFrontVersion;
 			this.sigaWebVersion = n.sigaWebVersion;
 		});
 		sessionStorage.removeItem('authenticated');
