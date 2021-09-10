@@ -123,7 +123,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
 
   ngOnInit(): void {
     this.rowGroupOriginal = JSON.parse(JSON.stringify(this.rowGroups));
-    this.currentRoute = this.router.url;
+    this.currentRoute = "/justificacionExpres";
     this.getKeysClaseComunicacion();
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos();
@@ -1810,22 +1810,22 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     );
   }
 
-  navigateComunicar(identificador) {
-    sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
-    if (this.pantalla == 'JE') {
+    navigateComunicarJE(rowGroup, identificador) {
+      sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
+      if (this.pantalla == 'JE'){
       //IDMODULO de SJCS es 10
       sessionStorage.setItem("idModulo", '10');
-
-      this.getDatosComunicarJE(identificador);
-    }
-    else this.msgs = [
-      {
-        severity: "info",
-        summary: "En proceso",
-        detail: "Boton no funcional actualmente"
+      
+      this.getDatosComunicarJE(rowGroup, identificador);
       }
-    ];
-  }
+      else this.msgs = [
+        {
+          severity: "info",
+          summary: "En proceso",
+          detail: "Boton no funcional actualmente"
+        }
+      ];
+    }
 
   getKeysClaseComunicacion() {
     this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
@@ -1838,7 +1838,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     );
   }
 
-  getDatosComunicarJE(expediente) {
+  getDatosComunicarJE(rowGroup,expediente) {
     let datosSeleccionados = [];
     let rutaClaseComunicacion = this.currentRoute.toString();
 
@@ -1859,29 +1859,22 @@ export class TablaResultadoDesplegableComponent implements OnInit {
                   let i = 0;
                   let anioEJG: String = expediente.substr(0, 4);
                   let numEJG: String = expediente.substr(5);
+                  let aniodes: String = rowGroup.rows[0].cells[10].value;
+                  let idTurno: String = rowGroup.rows[0].cells[17].value;
+                  let numeroDes: String = rowGroup.rows[0].cells[19].value;
+                  
                   this.sigaServices.getParam("justificacionExpres_getEJG", "?numEjg=" + numEJG + "&anioEjg=" + anioEJG).subscribe(
                     ejg => {
                       let keysValues = [];
-                      //Actualmente no se utilizan las keys que devuelve el servicio ya que
-                      //no corresponden a EJGs que es lo que estamos manejando en esta pantalla.
-                      // this.keys.forEach(key => {
-                      //   if (element[key.nombre] != undefined) {
-                      //     keysValues.push(element[key.nombre]);
-                      //   }else if(key.nombre == "num" && element["numero"] != undefined){
-                      //     keysValues.push(element["numero"]);
-                      //   }else if(key.nombre == "idturno" && element["idTurno"] != undefined){
-                      //     keysValues.push(element["idTurno"]);
-                      //   }
-                      // });
-                      if (anioEJG != undefined) {
-                        keysValues.push(anioEJG);
-                      }
-
-                      keysValues.push(ejg.numero);
-                      keysValues.push(ejg.idtipoejg);
+                      
                       keysValues.push(ejg.idinstitucion);
-
-
+                      keysValues.push(idTurno);
+                      keysValues.push(aniodes);
+                      keysValues.push(numeroDes);
+                      keysValues.push(ejg.idtipoejg); 
+                      keysValues.push(anioEJG);
+                      keysValues.push(ejg.numero);
+                      
                       datosSeleccionados.push(keysValues);
 
                       sessionStorage.setItem(

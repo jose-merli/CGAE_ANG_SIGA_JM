@@ -58,9 +58,7 @@
                         <span [pTooltip]="rowGroup.estadoEx" tooltipPosition="top"
                             [ngClass]="{'color-red': colorByStateExpediente(rowGroup.resolucionDesignacion) == 'red', 'color-blue': colorByStateExpediente(rowGroup.resolucionDesignacion) == 'blue', 'color-black': colorByStateExpediente(rowGroup.resolucionDesignacion) == 'black'}">
                             <span *ngIf="rowGroup.id2 != ''">E</span>{{rowGroup.id2}}</span>
-                        <button *ngIf="rowGroup.resolucionDesignacion != 'SIN_RESOLUCION' && rowGroup.id2 != ''" pButton
-                            type="button" icon="fa fa-comment" iconPos="left"
-                            (click)="navigateComunicar(rowGroup.id2)"></button>
+                        <button *ngIf="rowGroup.resolucionDesignacion != 'SIN_RESOLUCION' && rowGroup.id2 != ''" pButton type="button" icon="fa fa-comment" iconPos="left" (click)="navigateComunicarJE(rowGroup, rowGroup.id2)"></button>
 
                     </div>
 
