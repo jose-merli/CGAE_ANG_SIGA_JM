@@ -188,20 +188,40 @@ export class FichaCambioLetradoComponent implements OnInit {
     //Definir parametros y construir servicio
 
     let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
-
-    let request = [designa.ano, //0
-    designa.idTurno, //1
-    designa.numero,//2
-    this.body.idPersona,//3
-    this.saliente.body.observaciones, //4
-    this.saliente.body.motivoRenuncia, //5
-    sessionStorage.getItem("FDSaliente"), //6
-    this.saliente.body.fechaSolRenuncia, //7
-    this.datepipe.transform(this.entrante.body.fechaDesignacion, 'dd/MM/yyyy'),//8
-    this.entrante.body.idPersona, //9
-    this.saliente.body.compensacion, //10
-    this.entrante.body.salto //11
-    ];
+    let request=[];
+    if(this.entrante.body.art27 == true){
+      this.entrante.body.art27 = "Si";
+      request = [designa.ano, //0
+        designa.idTurno, //1
+        designa.numero,//2
+        this.body.idPersona,//3
+        this.saliente.body.observaciones, //4
+        this.saliente.body.motivoRenuncia, //5
+        sessionStorage.getItem("FDSaliente"), //6
+        this.saliente.body.fechaSolRenuncia, //7
+        this.entrante.body.fechaDesignacion,//8
+        this.entrante.body.idPersona, //9
+        this.saliente.body.compensacion, //10
+        this.entrante.body.salto, //11
+        this.entrante.body.art27 //12
+        ];
+    }else{
+      this.entrante.body.art27 = "No";
+      request = [designa.ano, //0
+        designa.idTurno, //1
+        designa.numero,//2
+        this.body.idPersona,//3
+        this.saliente.body.observaciones, //4
+        this.saliente.body.motivoRenuncia, //5
+        sessionStorage.getItem("FDSaliente"), //6
+        this.saliente.body.fechaSolRenuncia, //7
+        this.datepipe.transform(this.entrante.body.fechaDesignacion, 'dd/MM/yyyy'),//8
+        this.entrante.body.idPersona, //9
+        this.saliente.body.compensacion, //10
+        this.entrante.body.salto, //11
+        this.entrante.body.art27 //12
+        ];
+    }
 
     this.progressSpinner = true;
 
@@ -237,7 +257,6 @@ export class FichaCambioLetradoComponent implements OnInit {
         this.progressSpinner = false;
       }
     );
-    this.progressSpinner = false;
   }
 
 
