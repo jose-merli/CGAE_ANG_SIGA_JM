@@ -148,7 +148,8 @@ export class FichaCambioLetradoComponent implements OnInit {
     //Campos obligatorios rellenados?
     if ((this.entrante.body.fechaDesignacion != null || this.entrante.body.fechaDesignacion != undefined) && (this.saliente.body.motivoRenuncia != undefined || this.saliente.body.motivoRenuncia != null)) {
       //Comprobar requisitos según art 27
-      if ((this.entrante.body.numColegiado == undefined || this.entrante.body.numColegiado == "") && this.entrante.body.art27 == false) {
+      if ((this.entrante.body.numColegiado == undefined || this.entrante.body.numColegiado == "") ) {
+      // && this.entrante.body.art27 == false) {
         this.confirmationService.confirm({
           key: "deletePlantillaDoc",
           message: "Se va a seleccionar un letrado automáticamente. ¿Desea continuar?",

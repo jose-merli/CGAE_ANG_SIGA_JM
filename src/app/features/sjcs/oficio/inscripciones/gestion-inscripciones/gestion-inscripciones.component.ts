@@ -790,7 +790,6 @@ export class TablaInscripcionesComponent implements OnInit {
       }
       else {
         if (currentDateString != selectedDateString) {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("sjcs.oficio.inscripciones.gestion.validaFecha"));
           this.disabledSolicitarBaja = true;
         }
         this.disabledSolicitarBaja = false;
