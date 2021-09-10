@@ -462,13 +462,15 @@ import { TablaEjgComisionComponent } from './features/sjcs/ejg-comision/tabla-ej
 import { RemesasComponent } from './features/sjcs/remesas/remesas.component';
 import { FiltroRemesasComponent } from './features/sjcs/remesas/filtro-remesas/filtro-remesas.component';
 import { TablaRemesasComponent } from './features/sjcs/remesas/tabla-remesas/tabla-remesas.component';
+import { FichaRemesasComponent } from './features/sjcs/remesas/ficha-remesas/ficha-remesas.component';
+import { TarjetaDatosGeneralesComponent } from './features/sjcs/remesas/ficha-remesas/tarjeta-datos-generales/tarjeta-datos-generales.component';
+import { TarjetaEjgsComponent } from './features/sjcs/remesas/ficha-remesas/tarjeta-ejgs/tarjeta-ejgs.component';
 import { ActasComponent } from './features/sjcs/actas/actas.component';
 import { FiltroActasComponent } from './features/sjcs/actas/filtro-actas/filtro-actas.component';
 import { TablaActasComponent } from './features/sjcs/actas/tabla-actas/tabla-actas.component';
 
 import { ProcuradorPreDesignacionComponent } from './features/sjcs/ejg/gestion-ejg/relaciones/ficha-pre-designacion/procurador-pre-designacion/procurador-pre-designacion.component';
 import { ContrariosPreDesignacionComponent } from './features/sjcs/ejg/gestion-ejg/relaciones/ficha-pre-designacion/contrarios-pre-designacion/contrarios-pre-designacion.component';
-import { FichaRemesasComponent } from './src/app/features/sjcs/remesas/ficha-remesas/ficha-remesas.component';
 
 @NgModule({
 	declarations: [
@@ -857,6 +859,8 @@ import { FichaRemesasComponent } from './src/app/features/sjcs/remesas/ficha-rem
 		FiltroActasComponent,
 		TablaActasComponent,
 		FichaRemesasComponent,
+		TarjetaDatosGeneralesComponent,
+		TarjetaEjgsComponent
 
 
 

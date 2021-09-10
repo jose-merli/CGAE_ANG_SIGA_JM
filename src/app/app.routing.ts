@@ -141,6 +141,7 @@ import { ComunicaPreparacionComponent } from './features/sjcs/comunicaciones/com
 import { ComunicaRemesaEnvioComponent } from './features/sjcs/comunicaciones/comunica-remesa-envio/comunica-remesa-envio.component';
 import { ComunicaRemesaResultadoComponent } from './features/sjcs/comunicaciones/comunica-remesa-resultado/comunica-remesa-resultado.component';
 import { RemesasComponent } from './features/sjcs/remesas/remesas.component';
+import { FichaRemesasComponent } from "./features/sjcs/remesas/ficha-remesas/ficha-remesas.component";
 import { ComunicaEnvioActualizacionComponent } from './features/sjcs/comunicaciones/comunica-envio-actualizacion/comunica-envio-actualizacion.component';
 import { ComunicaInfoEconomicaComponent } from './features/sjcs/comunicaciones/comunica-info-economica/comunica-info-economica.component';
 import { ComunicaCargaComponent } from './features/sjcs/comunicaciones/comunica-carga/comunica-carga.component';
@@ -238,6 +239,7 @@ import { BajasTemporalesComponent } from "./features/sjcs/oficio/bajas-temporale
 import { TurnosComponent } from "./features/sjcs/oficio/turnos/busqueda-turnos.component";
 import { BuscadorColegiadosComponent } from "./commons/buscador-colegiados/buscador-colegiados.component";
 import { BusquedaAsuntosComponent } from "./commons/busqueda-asuntos/busqueda-asuntos.component";
+
 
 const appRoutes: Routes = [
 	{ path: 'home', component: HomeComponent, canActivate: [ AuthGuard ] },
@@ -988,6 +990,11 @@ const appRoutes: Routes = [
 	{
 		path: 'remesas',
 		component: RemesasComponent,
+		canActivate: [ AuthGuard ]
+	},
+	{
+		path: 'fichaRemesas',
+		component: FichaRemesasComponent,
 		canActivate: [ AuthGuard ]
 	},
 	{

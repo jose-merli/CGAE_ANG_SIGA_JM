@@ -154,6 +154,13 @@ export class RemesasComponent implements OnInit {
       n => {
         console.log("Dentro del servicio del padre que llama al buscarRemesas");
         this.datos = JSON.parse(n.body).remesasItems;
+
+        this.datos.forEach(element => {
+          element.fechaRecepcion = this.formatDate(element.fechaRecepcion);
+          element.fechaGeneracion = this.formatDate(element.fechaGeneracion);
+          element.fechaEnvio = this.formatDate(element.fechaEnvio);
+        });
+
         console.log("Contenido de la respuesta del back --> ", this.datos);
         this.buscar = true;
         this.progressSpinner = false;
@@ -192,8 +199,17 @@ export class RemesasComponent implements OnInit {
   formatDate(date) {
     const pattern = 'dd/MM/yyyy';
     return this.datepipe.transform(date, pattern);
+    /* if(date != null){
+      if (date.indexOf('.') > 0) {
+        return this.datepipe.transform(new Date(date * 1000), 'dd/MM/yyyy');
+      } else {
+        date = date + '.0000';
+        return this.datepipe.transform(new Date(date * 1000), 'dd/MM/yyyy');
+      }
+    } */
+    
   }
-  
+
   clear() {
     this.msgs = [];
   }
