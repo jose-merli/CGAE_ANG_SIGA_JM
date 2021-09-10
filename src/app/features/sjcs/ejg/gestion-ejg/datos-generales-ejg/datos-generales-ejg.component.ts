@@ -406,6 +406,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
                 }, () => {
                   this.progressSpinner = false;
                   sessionStorage.removeItem("asistencia");
+                  sessionStorage.setItem("volver","true");
                   this.location.back();
                 }
               );

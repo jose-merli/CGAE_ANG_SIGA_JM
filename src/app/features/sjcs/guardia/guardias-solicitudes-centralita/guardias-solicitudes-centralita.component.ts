@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Message } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../commons/translate';
@@ -8,6 +8,7 @@ import { CommonsService } from '../../../../_services/commons.service';
 import { OldSigaServices } from '../../../../_services/oldSiga.service'
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
+import { KEY_CODE } from '../../../administracion/parametros/parametros-generales/parametros-generales.component';
 import { BuscadorSolicitudesCentralitaComponent } from './buscador-solicitudes-centralita/buscador-solicitudes-centralita.component';
 
 
@@ -62,6 +63,13 @@ export class GuardiasSolicitudesCentralitaComponent implements OnInit {
       && sessionStorage.getItem("filtro")){
       this.buscador.filtro = JSON.parse(sessionStorage.getItem("filtro"));
       sessionStorage.removeItem("filtro");
+      this.search();
+    }
+  }
+
+  @HostListener("document:keypress", ["$event"])
+  onKeyPress(event: KeyboardEvent) {
+    if (event.keyCode === KEY_CODE.ENTER) {
       this.search();
     }
   }

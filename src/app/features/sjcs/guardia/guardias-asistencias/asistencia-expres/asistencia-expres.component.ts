@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { Message } from 'primeng/components/common/api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BuscadorAsistenciaExpresComponent } from './buscador-asistencia-expres/buscador-asistencia-expres.component';
@@ -16,13 +16,14 @@ import moment = require('moment');
 import { procesos_guardia } from '../../../../../permisos/procesos_guarida';
 import { SigaStorageService } from '../../../../../siga-storage.service';
 import { FiltroAsistenciaItem } from '../../../../../models/guardia/FiltroAsistenciaItem';
+import { KEY_CODE } from '../../../../administracion/parametros/parametros-generales/parametros-generales.component';
 
 @Component({
   selector: 'app-asistencia-expres',
   templateUrl: './asistencia-expres.component.html',
   styleUrls: ['./asistencia-expres.component.scss']
 })
-export class AsistenciaExpresComponent implements OnInit {
+export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
   msgs: Message[] = [];
   show = false;
   cFormValidity = true;
@@ -94,7 +95,10 @@ export class AsistenciaExpresComponent implements OnInit {
                   ];
     this.rutas = ['SJCS', this.translateService.instant("menu.justiciaGratuita.GuardiaMenu"), this.translateService.instant("menu.justiciaGratuita.asistencia")];
 
-    if(sessionStorage.getItem("filtroAsistencia")){
+  }
+
+  ngAfterViewInit(): void {
+    if(sessionStorage.getItem("filtroAsistencia") && sessionStorage.getItem("volver")){
       let oldFiltro : FiltroAsistenciaItem = JSON.parse(sessionStorage.getItem("filtroAsistencia"));
       this.filtros.filtro.diaGuardia = oldFiltro.diaGuardia;
       this.filtros.getTurnosByColegiadoFecha();
@@ -108,10 +112,11 @@ export class AsistenciaExpresComponent implements OnInit {
       this.filtros.filtro.idTipoAsistenciaColegiado = oldFiltro.idTipoAsistenciaColegiado;
       this.filtros.filtro.isSustituto = oldFiltro.isSustituto;
       sessionStorage.removeItem("filtroAsistencia");
+      sessionStorage.removeItem("volver");
       this.getComboComisarias(); // Posteriormente hace la busqueda de asistencias
     }
-
   }
+  
   showResponse() {
     this.show = true;
   }
@@ -137,6 +142,13 @@ export class AsistenciaExpresComponent implements OnInit {
 
   isDisabled() {
     return this.modoBusqueda == 'a';
+  }
+
+  @HostListener("document:keypress", ["$event"])
+  onKeyPress(event: KeyboardEvent) {
+    if (event.keyCode === KEY_CODE.ENTER) {
+      this.checkSustitutoCheckBox();
+    }
   }
 
   checkSustitutoCheckBox(){

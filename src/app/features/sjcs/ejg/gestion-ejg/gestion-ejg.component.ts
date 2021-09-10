@@ -217,6 +217,9 @@ export class GestionEjgComponent implements OnInit {
   
   backTo() {
     this.persistenceService.clearDatos();
+    if(sessionStorage.getItem("filtroAsistencia")){
+      sessionStorage.setItem("volver","true");
+    }
     this.location.back();
   }
 

@@ -864,6 +864,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
     if(this.preasistencia){
       this.router.navigate(['/fichaPreasistencia']);
     }else{
+      sessionStorage.setItem("volver","true");
       this.router.navigate(['/guardiasAsistencias']);
     }
   }
