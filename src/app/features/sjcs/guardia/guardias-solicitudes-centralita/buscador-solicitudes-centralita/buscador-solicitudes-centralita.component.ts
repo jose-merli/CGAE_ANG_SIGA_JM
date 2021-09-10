@@ -187,10 +187,18 @@ export class BuscadorSolicitudesCentralitaComponent implements OnInit, AfterView
     }
   }
   fillFechaDesde(event){
-    this.filtro.fechaLlamadaDsd = this.datepipe.transform(new Date(event), 'dd/MM/yyyy HH:mm');
+    if(event){
+      this.filtro.fechaLlamadaDsd = this.datepipe.transform(new Date(event), 'dd/MM/yyyy HH:mm');
+    }else{
+      this.filtro.fechaLlamadaDsd = ''
+    }
   }
   fillFechaHasta(event){
-    this.filtro.fechaLlamadaHasta = this.datepipe.transform(new Date(event), 'dd/MM/yyyy HH:mm');
+    if(event){
+      this.filtro.fechaLlamadaHasta = this.datepipe.transform(new Date(event), 'dd/MM/yyyy HH:mm');
+    }else{
+      this.filtro.fechaLlamadaHasta = '';
+    }
   }
   changeColegiado(event) {
     this.filtro.nombreColegiado = event.nombreAp;

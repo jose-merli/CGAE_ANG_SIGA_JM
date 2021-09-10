@@ -1,0 +1,192 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div id="buscadAsisExpr">
+
+    <div *ngIf="modoBusqueda === 'a'">
+      <mat-accordion class="example-headers-align" multi>
+          <mat-expansion-panel class="my-1" [expanded]="true">
+              <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+                  <div class="w100 font-weight-bold">
+                      <p class="w100">{{'general.message.datos.generales' | translate}}</p>
+                  </div>
+              </mat-expansion-panel-header>
+              <ng-template matExpansionPanelContent>
+                  <div class="form-row">
+                      <div class="form-group-interlineado col-lg-2 col-md-2">
+                        <label>{{'justiciaGratuita.sjcs.designas.DatosIden.ano' | translate}}</label>
+                        <input type="text" pKeyFilter="int" class="form-control" [(ngModel)]="filtro.anio" [ngModelOptions]="{standalone: true}" pInputText maxlength="4"/>
+                      </div>
+                      <div class="form-group-interlineado col-lg-2 col-md-2">
+                        <label>{{'facturacionSJCS.facturacionesYPagos.numero' | translate}}</label>
+                        <input type="text" pKeyFilter="int" class="form-control" [(ngModel)]="filtro.numero" [ngModelOptions]="{standalone: true}" pInputText maxlength="10"/>
+                      </div>
+                      <div class="form-group-interlineado col-lg-2 col-md-2">
+                        <label>Fecha Asistencia Desde</label>
+                        <app-fecha [(value)]="filtro.fechaAsistenciaDesde" (valueChangeSelected)="fillFechaAsistenciaDesde($event)" 
+                        (valueChangeInput)="fillFechaAsistenciaDesde($event)"></app-fecha>
+                      </div>
+                      <div class="form-group-interlineado col-lg-2 col-md-2">
+                        <label>Fecha Asistencia Hasta</label>
+                        <app-fecha [(value)]="filtro.fechaAsistenciaHasta" (valueChangeSelected)="fillFechaAsistenciaHasta($event)"
+                        (valueChangeInput)="fillFechaAsistenciaHasta($event)"></app-fecha>
+                      </div>
+                      <div class="form-group-interlineado col-lg-2 col-md-2">
+                          <label>{{"dato.jgr.guardia.guardias.turno" | translate}}</label>
+                          <p-dropdown class="select-form"
+                              placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
+                              [showClear]="true"  [(ngModel)]="filtro.idTurno" [ngModelOptions]="{standalone: true}"
+                              [options]="comboTurnos" 
+                              (onChange)="onChangeTurno()">
+                          </p-dropdown>
+                      </div>
+                      <div class="form-group-interlineado col-lg-2 col-md-2">
+                          <label>{{"menu.justiciaGratuita.GuardiaMenu" | translate}}</label>
+                          <p-dropdown class="select-form"
+                              placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
+                              [showClear]="true" [(ngModel)]="filtro.idGuardia" [ngModelOptions]="{standalone: true}"
+                               [options]="comboGuardias"
+                              (onChange)="onChangeGuardia()">
+                          </p-dropdown>
+                      </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
+                      <label>{{"sjcs.guardia.asistencia.tipoasistenciacolegio" | translate}}</label>
+                      <p-dropdown class="select-form" [(ngModel)]="filtro.idTipoAsistenciaColegiado" [ngModelOptions]="{standalone: true}"
+                          placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
+                          [showClear]="true" [options]="comboTiposAsistencia" (onChange)="onChangeTipoAsistencia()">
+                      </p-dropdown>
+                    </div>
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
+                      <label>{{'menu.expediente.sanciones.busquedaPorSanciones.origen.literal' | translate}}</label>
+                      <p-dropdown class="select-form" [(ngModel)]="filtro.idOrigenAsistencia" [ngModelOptions]="{standalone: true}"
+                          placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
+                          [showClear]="true" [options]="comboOrigenAsistencia">
+                      </p-dropdown>
+                    </div>
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
+                      <label>{{'censo.fichaIntegrantes.literal.estado' | translate}}</label>
+                      <p-dropdown class="select-form" [(ngModel)]="filtro.idEstadoAsistencia" [ngModelOptions]="{standalone: true}"
+                          placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
+                          [showClear]="true" [options]="comboEstado">
+                      </p-dropdown>
+                    </div>
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
+                      <label>{{'justiciaGratuita.oficio.justificacionExpres.actuacionesValidadas' | translate}}</label>
+                      <p-dropdown class="select-form" [(ngModel)]="filtro.idActuacionValidada" [ngModelOptions]="{standalone: true}"
+                          placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
+                          [showClear]="true" [options]="comboActuacionesV">
+                      </p-dropdown>
+                    </div>
+                  </div>
+              </ng-template>
+          </mat-expansion-panel>
+      </mat-accordion>
+      <mat-accordion class="example-headers-align" multi>
+        <mat-expansion-panel class="my-1" [expanded]="false">
+            <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+                <div class="w100 font-weight-bold">
+                    <p class="w100">{{'justiciaGratuita.justiciables.literal.colegiado' | translate}}</p>
+                </div>
+            </mat-expansion-panel-header>
+            <ng-template matExpansionPanelContent>
+              <div class="form-row">
+                  <div class="form-group-interlineado col-lg-6 col-md-6">
+                      <app-busqueda-colegiado-express [numColegiado]="usuarioBusquedaExpress.numColegiado"
+                          [pantalla]="'guardia'"
+                          [nombreAp]="usuarioBusquedaExpress.nombreAp" (colegiado)="changeColegiado($event)">
+                      </app-busqueda-colegiado-express>
+                  </div>
+              </div>
+            </ng-template>
+        </mat-expansion-panel>
+      </mat-accordion>
+      <mat-accordion class="example-headers-align" multi>
+        <mat-expansion-panel class="my-1" [expanded]="false">
+            <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+                <div class="w100 font-weight-bold">
+                    <p class="w100">{{'informesycomunicaciones.modelosdecomunicacion.fichaModeloComuncaciones.datos' | translate}} {{'justiciaGratuita.guardia.solicitudescentralita.asistido' | translate}}</p>
+                </div>
+            </mat-expansion-panel-header>
+            <ng-template matExpansionPanelContent>
+              <div class="form-row">
+                <div class="form-group-interlineado col-lg-3 col-md-3">
+                  <label>{{'administracion.usuarios.literal.NIF' | translate}}</label>
+                  <input type="text" class="form-control" pInputText maxlength="9" [(ngModel)]="filtro.nif" [ngModelOptions]="{standalone: true}"/>
+                </div>
+                <div class="form-group-interlineado col-lg-3 col-md-3">
+                  <label>{{'facturacionSJCS.facturacionesYPagos.apellidos' | translate}}</label>
+                  <input type="text" class="form-control" pInputText [(ngModel)]="filtro.apellidos" [ngModelOptions]="{standalone: true}"/>
+                </div>
+                <div class="form-group-interlineado col-lg-3 col-md-3">
+                  <label>{{'censo.usuario.nombre' | translate}}</label>
+                  <input type="text" class="form-control" pInputText [(ngModel)]="filtro.nombre" [ngModelOptions]="{standalone: true}"/>
+                </div>
+                <div class="form-group-interlineado col-lg-3 col-md-3">
+                  <label>{{'censo.fichaIntegrantes.literal.estado' | translate}}</label>
+                  <p-dropdown class="select-form" [(ngModel)]="filtro.idEstadoAsistido" [ngModelOptions]="{standalone: true}"
+                      placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
+                      [showClear]="true" [options]="comboEstadoAsistido">
+                  </p-dropdown>
+                </div>
+              </div>
+            </ng-template>
+        </mat-expansion-panel>
+      </mat-accordion>
+      <mat-accordion class="example-headers-align" multi>
+        <mat-expansion-panel class="my-1" [expanded]="false">
+            <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+                <div class="w100 font-weight-bold">
+                    <p class="w100">{{'justiciaGratuita.sjcs.designas.datosActu' | translate}}</p>
+                </div>
+            </mat-expansion-panel-header>
+            <ng-template matExpansionPanelContent>
+              <div class="form-row">
+                <div class="form-group-interlineado col-lg-3 col-md-3">
+                  <label>{{'justiciaGratuita.guardia.asistenciasexpress.cabeceradiligencia' | translate}}/{{'gratuita.mantActuacion.literal.nasunto' | translate}}</label>
+                  <input type="text" class="form-control" pInputText [(ngModel)]="filtro.numDiligencia" [ngModelOptions]="{standalone: true}"/>
+                </div>
+                <div class="form-group-interlineado col-lg-3 col-md-3">
+                  <label>{{'justiciaGratuita.guardia.fichaasistencia.comisaria' | translate}}</label>
+                  <p-dropdown class="select-form" [(ngModel)]="filtro.idComisaria" [ngModelOptions]="{standalone: true}"
+                      placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
+                      [showClear]="true" [options]="comboComisarias">
+                  </p-dropdown>
+                </div>
+                <div class="form-group-interlineado col-lg-3 col-md-3">
+                  <label>{{'gratuita.busquedaDesignas.literal.numProcedimiento' | translate}}</label>
+                  <input type="text" class="form-control" pInputText [(ngModel)]="filtro.numProcedimiento" [ngModelOptions]="{standalone: true}"/>
+                </div>
+                <div class="form-group-interlineado col-lg-3 col-md-3">
+                  <label>{{'justiciaGratuita.ejg.datosGenerales.Juzgado' | translate}}</label>
+                  <p-dropdown class="select-form" [(ngModel)]="filtro.idJuzgado" [ngModelOptions]="{standalone: true}"
+                      placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
+                      [showClear]="true" [options]="comboJuzgados">
+                  </p-dropdown>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group-interlineado col-lg-3 col-md-3">
+                  <label>{{'justiciaGratuita.maestros.gestionCostesFijos.tipoActuacion' | translate}}</label>
+                  <p-dropdown class="select-form" [(ngModel)]="filtro.idTipoActuacion" [ngModelOptions]="{standalone: true}"
+                      placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
+                      [showClear]="true" [options]="comboTipoActuacion">
+                  </p-dropdown>
+                </div>
+                <div class="form-group-interlineado col-lg-3 col-md-3">
+                  <label>{{'justiciaGratuita.sjcs.designas.DatosIden.procedimiento' | translate}}</label>
+                  <p-dropdown class="select-form" [(ngModel)]="filtro.idProcedimiento" [ngModelOptions]="{standalone: true}"
+                      placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
+                      [showClear]="true" [options]="comboProcedimientos">
+                  </p-dropdown>
+                </div>
+                <div class="form-group-interlineado col-lg-3 col-md-3">
+                  <label>{{'justiciaGratuita.ejg.datosGenerales.NIG' | translate}}</label>
+                  <input type="text" class="form-control" pInputText maxlength="23" [(ngModel)]="filtro.nig" [ngModelOptions]="{standalone: true}"/>
+                </div>
+              </div>
+            </ng-template>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+
+</div>

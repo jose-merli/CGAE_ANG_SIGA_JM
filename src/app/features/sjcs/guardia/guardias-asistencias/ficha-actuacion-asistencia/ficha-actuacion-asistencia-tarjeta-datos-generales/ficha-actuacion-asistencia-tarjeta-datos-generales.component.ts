@@ -97,7 +97,7 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
   }
 
   save(){
-    if(this.fActuacionvalida && this.datosGeneralesActuacion.tipoActuacion){
+    if(this.datosGeneralesActuacion.fechaActuacion && this.fActuacionvalida && this.datosGeneralesActuacion.tipoActuacion){
 
       this.progressSpinner = true;
       this.sigaServices
@@ -158,18 +158,22 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
   }
 
   fillFechaActuacion(event){
-    this.datosGeneralesActuacion.fechaActuacion = this.datepipe.transform(new Date(event), 'dd/MM/yyyy');
+    if(event){
+      this.datosGeneralesActuacion.fechaActuacion = this.datepipe.transform(new Date(event), 'dd/MM/yyyy');
 
-    let fechaAsistenciaDate = moment([Number(this.asistencia.fechaAsistencia.split('/')[2].split(' ')[0]), Number(this.asistencia.fechaAsistencia.split('/')[1])-1,Number(this.asistencia.fechaAsistencia.split('/')[0])]).toDate();
-    if(new Date(event) > fechaAsistenciaDate){
-      this.datosGeneralesActuacion.diaDespues = true;
-      this.fActuacionvalida = true;
-    }else{
-      this.datosGeneralesActuacion.diaDespues = false;
-      if(new Date(event) < fechaAsistenciaDate){
-        this.showMsg('error','Error','La fecha de la Actuacion debe ser mayor a la fecha de la Asistencia');
-        this.fActuacionvalida = false;
+      let fechaAsistenciaDate = moment([Number(this.asistencia.fechaAsistencia.split('/')[2].split(' ')[0]), Number(this.asistencia.fechaAsistencia.split('/')[1])-1,Number(this.asistencia.fechaAsistencia.split('/')[0])]).toDate();
+      if(new Date(event) > fechaAsistenciaDate){
+        this.datosGeneralesActuacion.diaDespues = true;
+        this.fActuacionvalida = true;
+      }else{
+        this.datosGeneralesActuacion.diaDespues = false;
+        if(new Date(event) < fechaAsistenciaDate){
+          this.showMsg('error','Error','La fecha de la Actuacion debe ser mayor a la fecha de la Asistencia');
+          this.fActuacionvalida = false;
+        }
       }
+    }else {
+      this.datosGeneralesActuacion.fechaActuacion = '';
     }
   }
 

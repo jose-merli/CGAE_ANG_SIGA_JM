@@ -105,9 +105,12 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
 
   fillFechaFiltro(event) {
 
-    this.filtro.diaGuardia = this.datepipe.transform(new Date(event), 'dd/MM/yyyy');
-
-    this.getTurnosByColegiadoFecha();
+    if(event){
+      this.filtro.diaGuardia = this.datepipe.transform(new Date(event), 'dd/MM/yyyy');
+      this.getTurnosByColegiadoFecha();
+    }else{
+      this.filtro.diaGuardia = '';
+    }
     
   }
 

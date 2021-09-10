@@ -253,20 +253,36 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit {
   }
 
   fillFechaAsistencia(event){
-    this.asistencia.fechaAsistencia = this.datepipe.transform(new Date(event), 'dd/MM/yyyy HH:mm');
-    this.getTurnosByColegiadoFecha();
+    if(event){
+      this.asistencia.fechaAsistencia = this.datepipe.transform(new Date(event), 'dd/MM/yyyy HH:mm');
+      this.getTurnosByColegiadoFecha();
+    }else{
+      this.asistencia.fechaAsistencia = '';
+    }
   }
 
   fillFechaSolicitud(event){
-    this.asistencia.fechaSolicitud = this.datepipe.transform(new Date(event), 'dd/MM/yyyy HH:mm');
+    if(event){
+      this.asistencia.fechaSolicitud = this.datepipe.transform(new Date(event), 'dd/MM/yyyy HH:mm');
+    }else{
+      this.asistencia.fechaSolicitud = '';
+    }
   }
 
   fillFechaEstado(event){
-    this.asistencia.fechaEstado = this.datepipe.transform(new Date(event), 'dd/MM/yyyy');
+    if(event){
+      this.asistencia.fechaEstado = this.datepipe.transform(new Date(event), 'dd/MM/yyyy');
+    }else{
+      this.asistencia.fechaEstado = '';
+    }
   }
 
   fillFechaCierre(event){
-    this.asistencia.fechaCierre = this.datepipe.transform(new Date(event), 'dd/MM/yyyy');
+    if(event){
+      this.asistencia.fechaCierre = this.datepipe.transform(new Date(event), 'dd/MM/yyyy');
+    }else{
+      this.asistencia.fechaCierre = '';
+    }
   }
 
   styleObligatorio(evento){

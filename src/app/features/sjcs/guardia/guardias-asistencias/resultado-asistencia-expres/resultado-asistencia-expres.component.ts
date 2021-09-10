@@ -328,8 +328,11 @@ export class ResultadoAsistenciaExpresComponent implements OnInit {
   }
 
   fillFecha(event) {
-
-    this.fechaJustificacion = this.datepipe.transform(new Date(event), 'dd/MM/yyyy');
+    if(event){
+      this.fechaJustificacion = this.datepipe.transform(new Date(event), 'dd/MM/yyyy');
+    }else{
+      this.fechaJustificacion = '';
+    }
     
   }
 
