@@ -5,8 +5,11 @@ import { Subscription } from 'rxjs';
 import { TranslateService } from '../../../../commons/translate';
 import { ListaProductosDTO } from '../../../../models/ListaProductosDTO';
 import { ListaProductosItems } from '../../../../models/ListaProductosItems';
+import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
+import { procesos_facturacion } from '../../../../permisos/procesos_facturacion';
+
 
 @Component({
   selector: 'app-gestion-productos',
@@ -40,10 +43,16 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
   numSelectedAbleRegisters: number = 0;
   numSelectedDisableRegisters: number = 0;
 
+  //Permiso para acceder a la ficha de compra/suscripcion
+  permisoCompra;
+
   //Suscripciones
   subscriptionActivarDesactivarProductos: Subscription;
 
-  constructor(private changeDetectorRef: ChangeDetectorRef, private persistenceService: PersistenceService, private translateService: TranslateService, private confirmationService: ConfirmationService, private sigaServices: SigaServices, private router: Router) { }
+  constructor(private changeDetectorRef: ChangeDetectorRef, private persistenceService: PersistenceService, 
+    private translateService: TranslateService, private confirmationService: ConfirmationService, 
+    private sigaServices: SigaServices, private router: Router,
+    private commonsService: CommonsService) { }
 
   ngOnInit() {
     if (this.persistenceService.getPaginacion() != undefined) {
@@ -56,6 +65,7 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
 
     this.initrowsPerPageSelect();
     this.initColsProducts();
+    this.getPermisoComprar();
   }
 
   //Necesario para liberar memoria
@@ -330,6 +340,57 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
         ];
       }
     });
+  }
+
+  getPermisoComprar(){
+    this.commonsService
+			.checkAcceso(procesos_facturacion.fichaCompraSuscripcion)
+			.then((respuesta) => {
+				this.permisoCompra = respuesta;
+			})
+			.catch((error) => console.error(error));
+  }
+
+  checkPermisoComprar(){
+    let msg = this.commonsService.checkPermisos(this.permisoCompra, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.checkFormasPago()) {
+        this.router.navigate(["/fichaCompraSuscripcion"]);
+      } else {
+        this.msgs = [
+          {
+            severity: "error",
+            summary: this.translateService.instant(
+              "facturacion.productos.ResFormasPagoNoCompatibles"
+            ),
+            detail: this.translateService.instant(
+              "facturacion.productos.FormasPagoNoCompatibles"
+            )
+          }
+        ];
+      }
+    }
+  }
+
+  checkFormasPago(){
+    
+    //Se extrae el atributo y se separan las distintas formas de pago.
+    let formasPagoArrays: any[]= [];
+    this.selectedRows.forEach(element => {
+      formasPagoArrays.push(element.formapago.split(", "));
+    });
+    
+    //Se comprueba si todas las filas seleccionadas comparten alguna forma de pago.
+    let result = formasPagoArrays.shift().filter(function(v) {
+      return formasPagoArrays.every(function(a) {
+          return a.indexOf(v) !== -1;
+      });
+    });
+
+    return result.length>0;
   }
 
   //FIN SERVICIOS

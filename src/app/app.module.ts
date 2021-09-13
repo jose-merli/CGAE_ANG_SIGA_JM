@@ -172,6 +172,7 @@ import { GestionarSolicitudesComponent } from './features/productosYServicios/ge
 import { SolicitudCompraSubscripcionComponent } from './features/productosYServicios/solicitudCompraSubscripcion/solicitudCompraSubscripcion.component';
 import { SolicitudAnulacionComponent } from './features/productosYServicios/solicitudAnulacion/solicitudAnulacion.component';
 import { CargaComprasComponent } from './features/productosYServicios/cargaCompras/cargaCompras.component';
+import { FichaCompraSuscripcionComponent } from './features/facturacion/ficha-compra-suscripcion/ficha-compra-suscripcion.component';
 
 //Modulo de Expedientes
 import { TiposExpedientesComponent } from './features/expedientes/tipos-expedientes/tipos-expedientes.component';
@@ -810,7 +811,8 @@ import { GestionServiciosComponent } from './features/facturacion/servicios/gest
 		DetalleTarjetaFormasPagosFichaProductoFacturacionComponent,
 		ServiciosComponent,
 		FiltrosServiciosComponent,
-		GestionServiciosComponent
+		GestionServiciosComponent,
+		FichaCompraSuscripcionComponent
 	],
 	imports: [
 		Paginador3Module,
