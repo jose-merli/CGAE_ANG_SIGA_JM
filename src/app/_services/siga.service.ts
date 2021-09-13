@@ -428,6 +428,7 @@ export class SigaServices {
       'solicitudModificacion/searchSolModifDatosCambiarFotoDetail',
     solicitudModificacion_searchDatosGeneralesDetail: 'solicitudModificacion/searchDatosGeneralesDetail',
     //PRODUCTOS Y SERVICIOS
+    //PANTALLA TIPOS PRODUCTOS
     tiposProductos_searchListadoProductos: 'pys/listadoTipoProducto',
     tiposProductos_searchListadoProductosHistorico: 'pys/listadoTipoProductoHistorico',
     tiposProductos_activarDesactivarProducto: 'pys/activarDesactivarProducto',
@@ -435,6 +436,7 @@ export class SigaServices {
     tiposProductos_modificarProducto: 'pys/modificarProducto',
     tiposProductos_comboProducto: 'combo/tipoProductos',
 
+    //PANTALLA TIPOS SERVICIOS
     tiposServicios_searchListadoServicios: 'pys/listadoTipoServicio',
     tiposServicios_searchListadoServiciosHistorico: 'pys/listadoTipoServicioHistorico',
     tiposServicios_activarDesactivarServicio: 'pys/activarDesactivarServicio',
@@ -442,6 +444,7 @@ export class SigaServices {
     tiposServicios_modificarServicio: 'pys/modificarServicio',
     tiposServicios_comboServicios: 'combo/tipoServicios',
 
+    //PANTALLAS BUSCADOR PRODUCTOS / FICHA PRODUCTOS
     productosBusqueda_comboIva: 'combo/tipoIva',
     productosBusqueda_comboFormaPago: 'combo/tipoFormaPago',
     productosBusqueda_comboTipos: 'pys/listadoTipoProductoByIdCategoria',
@@ -455,9 +458,12 @@ export class SigaServices {
     fichaProducto_comboFormasDePagoSecretaria: 'combo/comboPagoSecretaria',
     fichaProducto_crearFormaDePago: 'pys/formasPagoProducto',
 
+    //PANTALLAS BUSCADOR SERVICIOS / FICHA SERVICIOS
     serviciosBusqueda_busqueda: 'pys/buscarServicios',
     serviciosBusqueda_comboTipos: 'pys/listadoTipoServicioByIdCategoria',
     serviciosBusqueda_activarDesactivar: 'pys/reactivarBorradoFisicoLogicoServicios',
+    fichaServicio_detalleServicio: 'pys/detalleServicio',
+
     // FOTO
     solicitudModificacion_searchSolModifDatosUseFoto: 'solicitudModificacion/searchSolModifDatosUseFoto',
     solicitudModificacion_searchDatosUseFotoDetail: 'solicitudModificacion/searchDatosUseFotoDetail',
