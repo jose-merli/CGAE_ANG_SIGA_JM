@@ -291,7 +291,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
       arr1 = [];
       obj1 = {};
       
-      if ( estadoDesignacion == 'V'){
+      /* if ( estadoDesignacion == 'V'){
         validada = true; // activa
         finalizada = false;
       }else if ( estadoDesignacion == 'F'){
@@ -300,6 +300,34 @@ export class TablaJustificacionExpresComponent implements OnInit {
       } else {
         finalizada = false; 
         validada = false;
+      } */
+
+      let numActuacionesValidas = 0;
+      if(designacion.actuaciones != undefined || designacion.actuaciones != null){
+
+        designacion.actuaciones.forEach(actuacion => {
+          if ( actuacion.validada == "1"){
+            numActuacionesValidas++;
+          } 
+        });
+  
+        if(numActuacionesValidas == designacion.actuaciones.length){
+          validada = true;
+        }else{
+          validada = false;
+        }
+      }else{
+        validada = false
+      }
+      
+      
+
+      if ( estadoDesignacion == 'V'){
+        finalizada = false;
+      }else if ( estadoDesignacion == 'F'){
+        finalizada = true; // finalizada
+      } else {
+        finalizada = false;
       }
 
       if (designacion.expedientes != null && designacion.expedientes != []){
