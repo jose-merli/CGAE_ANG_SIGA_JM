@@ -198,16 +198,7 @@ export class RemesasComponent implements OnInit {
 
   formatDate(date) {
     const pattern = 'dd/MM/yyyy';
-    return this.datepipe.transform(date, pattern);
-    /* if(date != null){
-      if (date.indexOf('.') > 0) {
-        return this.datepipe.transform(new Date(date * 1000), 'dd/MM/yyyy');
-      } else {
-        date = date + '.0000';
-        return this.datepipe.transform(new Date(date * 1000), 'dd/MM/yyyy');
-      }
-    } */
-    
+    return this.datepipe.transform(date, pattern);    
   }
 
   clear() {

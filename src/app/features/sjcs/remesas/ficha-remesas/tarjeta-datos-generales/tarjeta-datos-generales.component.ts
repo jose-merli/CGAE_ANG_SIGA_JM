@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef, EventEmitter, Output, Input, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { DataTable } from "primeng/datatable";
-import { Location } from "@angular/common";
+import { DatePipe, Location } from "@angular/common";
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { Subject } from "rxjs/Subject";
 import { DatosGeneralesConsultaItem } from '../../../../../models/DatosGeneralesConsultaItem';
@@ -15,6 +15,7 @@ import { ModulosItem } from '../../../../../models/sjcs/ModulosItem';
 import { procesos_oficio } from '../../../../../permisos/procesos_oficio';
 import { filter } from 'rxjs/operator/filter';
 import { Router } from '@angular/router';
+import { RemesasItem } from '../../../../../models/sjcs/RemesasItem';
 
 @Component({
   selector: 'app-tarjeta-datos-generales',
@@ -43,7 +44,7 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
   disableAll: boolean = false;
   jurisdicciones: any[] = [];
   areas: any[] = [];
-  tiposturno: any[] = [];
+  tiposIncidencias: any[] = ["Expedientes con incidencias", "Expedientes sin incidencias", "Expedientes con incidencias antes del envío", "Expedientes con incidencias después del envío", "Expedientes con incidencias y no en nueva remesa"];
   turnosItem2;
   permisosTarjeta: boolean = true;
   permisosTarjetaResumen: boolean = true;
@@ -85,12 +86,21 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
   @Input() turnosItem: TurnosItems;
   @Input() newTurno: boolean;
   @Input() tarjetaDatosGenerales: string;
+  cols;
+  buscadores = [];
+  rowsPerPage: any = [];
+  item;
+  remesaTabla;
+  remesaItem: RemesasItem;
+  datos;
+  remesasDatosEntradaItem;
 
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
     private persistenceService: PersistenceService,
     private commonsService: CommonsService,
-    private router: Router) { }
+    private router: Router,
+    private datepipe: DatePipe) { }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.turnosItem != undefined && (changes.turnosItem.currentValue != null || changes.turnosItem.currentValue != undefined)) {
@@ -139,6 +149,18 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
   }
 
   ngOnInit() {
+    if(localStorage.getItem('ficha') == "registro"){
+      this.item = localStorage.getItem('remesaItem');
+      console.log("Item -> ", this.item);
+      localStorage.removeItem('remesaItem');
+      this.remesaTabla = JSON.parse(this.item);
+      console.log("Item en JSON -> ", this.remesaTabla);
+      this.listadoEstadosRemesa();
+    }else if(localStorage.getItem('ficha') == "nuevo"){
+      this.remesaItem.descripcion = "";
+    }
+    localStorage.removeItem('ficha');
+
     this.checkDatosGenerales();
     this.actualizarFichaResumen();
     this.resaltadoDatosGenerales = true;
@@ -171,248 +193,66 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
     } else {
       this.modoEdicion = true;
     }
-    this.getCombos();
-
+    this.getCols();
   }
 
+  getCols() {
 
-  getCombos() {
-    this.sigaServices.get("fichaZonas_getPartidosJudiciales").subscribe(
-      n => {
-        this.comboPJ = n.combooItems;
+    this.cols = [
+      { field: "fechaModificacion", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaEstado" },
+      { field: "estado", header: "justiciaGratuita.Calendarios.Estado" }
+    ];
+    this.cols.forEach(it => this.buscadores.push(""))
 
+    this.rowsPerPage = [
+      {
+        label: 10,
+        value: 10
       },
-      err => {
-        console.log(err);
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
       }
-    );
+    ];
+  }
 
-
-    this.sigaServices.get("fichaAreas_getJurisdicciones").subscribe(
+  listadoEstadosRemesa(){
+    this.progressSpinner = true;
+    this.remesasDatosEntradaItem =
+    {
+      'idRemesa': (this.remesaTabla[0].idRemesa != null && this.remesaTabla[0].idRemesa != undefined) ? this.remesaTabla[0].idRemesa.toString() : this.remesaTabla[0].idRemesa,  
+    };
+    this.sigaServices.post("filtrosremesas_listadoEstadosRemesa", this.remesasDatosEntradaItem).subscribe(
       n => {
-        this.jurisdicciones = n.combooItems;
+        console.log("Dentro del servicio del padre que llama al listadoEstadosRemesa");
+        this.datos = JSON.parse(n.body).estadoRemesaItem;
 
-        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-    para poder filtrar el dato con o sin estos caracteres*/
-        this.jurisdicciones.map(e => {
-          let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
-          let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
-          let i;
-          let x;
-          for (i = 0; i < e.label.length; i++) {
-            if ((x = accents.indexOf(e.label[i])) != -1) {
-              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
-              return e.labelSinTilde;
-            }
-          }
+        this.datos.forEach(element => {
+          element.fechaRemesa = this.formatDate(element.fechaModificacion);
         });
 
-      },
-      err => {
-        console.log(err);
-      }, () => {
-        for (let i = 0; i < this.jurisdicciones.length; i++) {
-          if (this.jurisdicciones[i].value == this.turnosItem.idjurisdiccion) {
-            this.jurisdiccionDescripcion = this.jurisdicciones[i].label
-          }
-
-        }
-      }
-    );
-
-    this.sigaServices.get("combossjcs_comboAreas").subscribe(
-      n => {
-        this.areas = n.combooItems;
-
-        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-    para poder filtrar el dato con o sin estos caracteres*/
-      },
-      err => {
-        console.log(err);
-      }, () => {
-        if (this.turnosItem.idarea != null) {
-
-          this.sigaServices
-            .getParam(
-              "combossjcs_comboMaterias",
-              "?idArea=" + this.turnosItem.idarea)
-            .subscribe(
-              n => {
-                // this.isDisabledPoblacion = false;
-                this.materias = n.combooItems;
-                this.materias.map(e => {
-                  let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
-                  let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
-                  let i;
-                  let x;
-                  for (i = 0; i < e.label.length; i++) {
-                    if ((x = accents.indexOf(e.label[i])) != -1) {
-                      e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
-                      return e.labelSinTilde;
-                    }
-                  }
-                });
-              },
-              error => { },
-              () => {
-
-              }
-            );
-        }
-      }
-    );
-
-    this.sigaServices.get("combossjcs_comboTiposTurno").subscribe(
-      n => {
-        this.tiposturno = n.combooItems;
-
-        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-    para poder filtrar el dato con o sin estos caracteres*/
-        this.tiposturno.map(e => {
-          let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
-          let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
-          let i;
-          let x;
-          for (i = 0; i < e.label.length; i++) {
-            if ((x = accents.indexOf(e.label[i])) != -1) {
-              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
-              return e.labelSinTilde;
-            }
-          }
-        });
+        console.log("Contenido de la respuesta del back --> ", this.datos);
+        this.progressSpinner = false;
 
       },
       err => {
+        this.progressSpinner = false;
+        let error = err;
         console.log(err);
-      }, () => {
-        for (let i = 0; i < this.tiposturno.length; i++) {
-          if (this.tiposturno[i].value == this.turnosItem.idtipoturno) {
-            this.tipoturnoDescripcion = this.tiposturno[i].label
-          }
+      });
+  }
 
-        }
-      }
-    );
-
-    this.sigaServices.get("combossjcs_comboZonas").subscribe(
-      n => {
-        this.zonas = n.combooItems;
-
-        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-    para poder filtrar el dato con o sin estos caracteres*/
-        this.zonas.map(e => {
-          let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
-          let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
-          let i;
-          let x;
-          for (i = 0; i < e.label.length; i++) {
-            if ((x = accents.indexOf(e.label[i])) != -1) {
-              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
-              return e.labelSinTilde;
-            }
-          }
-        });
-
-      },
-      err => {
-        console.log(err);
-      }, () => {
-        if (this.turnosItem.idzona != null) {
-          this.sigaServices
-            .getParam(
-              "fichaZonas_searchSubzones",
-              "?idZona=" + this.turnosItem.idzona
-            )
-            .subscribe(
-              n => {
-                this.partidasJudiciales = n.zonasItems;
-              },
-              err => {
-                console.log(err);
-
-              }, () => {
-                this.getPartidosJudiciales();
-              }
-            );
-
-          this.sigaServices
-            .getParam(
-              "combossjcs_comboSubZonas",
-              "?idZona=" + this.turnosItem.idzona)
-            .subscribe(
-              n => {
-                // this.isDisabledPoblacion = false;
-                this.subzonas = n.combooItems;
-              },
-              error => { },
-              () => {
-                // this.partidoJudicial = this.turnosItem.zona + "," + this.turnosItem.subzona;
-                this.body = this.turnosItem;
-              }
-            );
-        }
-      }
-    );
-    this.sigaServices.get("combossjcs_comboPartidasPresupuestaria").subscribe(
-      n => {
-        this.partidas = n.combooItems;
-
-        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-    para poder filtrar el dato con o sin estos caracteres*/
-        this.partidas.map(e => {
-          let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
-          let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
-          let i;
-          let x;
-          for (i = 0; i < e.label.length; i++) {
-            if ((x = accents.indexOf(e.label[i])) != -1) {
-              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
-              return e.labelSinTilde;
-            }
-          }
-        });
-
-      },
-      err => {
-        console.log(err);
-      }, () => {
-        for (let i = 0; i < this.partidas.length; i++) {
-          if (this.partidas[i].value == this.turnosItem.idpartidapresupuestaria) {
-            this.partidaPresupuestaria = this.partidas[i].label
-          }
-
-        }
-      }
-    );
-
-    this.sigaServices.get("combossjcs_comboGruposFacturacion").subscribe(
-      n => {
-        this.grupofacturacion = n.combooItems;
-
-        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-    para poder filtrar el dato con o sin estos caracteres*/
-        this.grupofacturacion.map(e => {
-          let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
-          let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
-          let i;
-          let x;
-          for (i = 0; i < e.label.length; i++) {
-            if ((x = accents.indexOf(e.label[i])) != -1) {
-              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
-              return e.labelSinTilde;
-            }
-          }
-        });
-
-      },
-      err => {
-        console.log(err);
-      }, () => {
-        this.body = this.turnosItem;
-        this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
-        this.actualizarFichaResumen();
-      }
-    );
+  formatDate(date) {
+    const pattern = 'dd/MM/yyyy HH24:MI:SS';
+    return this.datepipe.transform(date, pattern);    
   }
 
   obtenerPartidos() {
@@ -455,10 +295,10 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
 
   }
 
-  onChangeTipoturno() {
-    for (let i = 0; i < this.tiposturno.length; i++) {
-      if (this.tiposturno[i].value == this.turnosItem.idtipoturno) {
-        this.tipoturnoDescripcion = this.tiposturno[i].label
+  onChangeTipoincidencias() {
+    for (let i = 0; i < this.tiposIncidencias.length; i++) {
+      if (this.tiposIncidencias[i].value == this.turnosItem.idtipoturno) {
+        this.tipoturnoDescripcion = this.tiposIncidencias[i].label
       }
     }
   }
@@ -735,9 +575,9 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
 
         }
 
-        for (let i = 0; i < this.tiposturno.length; i++) {
-          if (this.tiposturno[i].value == this.turnosItem.idtipoturno) {
-            this.tipoturnoDescripcion = this.tiposturno[i].label
+        for (let i = 0; i < this.tiposIncidencias.length; i++) {
+          if (this.tiposIncidencias[i].value == this.turnosItem.idtipoturno) {
+            this.tipoturnoDescripcion = this.tiposIncidencias[i].label
           }
         }
         for (let i = 0; i < this.subzonas.length; i++) {

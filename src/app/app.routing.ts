@@ -993,7 +993,7 @@ const appRoutes: Routes = [
 		canActivate: [ AuthGuard ]
 	},
 	{
-		path: 'fichaRemesas',
+		path: 'fichaRemesasEnvio',
 		component: FichaRemesasComponent,
 		canActivate: [ AuthGuard ]
 	},

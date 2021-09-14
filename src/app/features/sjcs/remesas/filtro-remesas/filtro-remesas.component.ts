@@ -132,6 +132,11 @@ export class FiltroRemesasComponent implements OnInit {
     });
   }
 
+  openTab() {
+    this.router.navigate(["/fichaRemesasEnvio"]);
+    localStorage.setItem('ficha', "nuevo");
+  }
+
   //búsqueda con enter
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {

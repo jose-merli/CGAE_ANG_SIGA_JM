@@ -209,8 +209,9 @@ export class TablaRemesasComponent implements OnInit {
     this.persistenceService.setPaginacion(paginacion);
     this.progressSpinner = true;
     this.persistenceService.setDatos(evento);
-    this.router.navigate(["/fichaRemesas"]/* , { queryParams: { idturno: evento.idturno } } */);
-
+    this.router.navigate(["/fichaRemesasEnvio"]);
+    localStorage.setItem('remesaItem', JSON.stringify(this.selectedDatos));
+    localStorage.setItem('ficha', "registro");
   }
 
   onChangeRowsPerPages(event) {
