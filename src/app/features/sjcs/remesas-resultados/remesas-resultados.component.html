@@ -1,0 +1,21 @@
+<div class="header-title">
+  <i class="fa fa-square"></i>
+  <p>{{'menu.justiciaGratuita' | translate}}
+    <i class="fa fa-angle-right"></i>{{'justiciaGratuita.maestros.Remesas' | translate}}
+  </p>
+</div>
+
+<div class="busqueda-container">
+  <div class="card-footer">
+    <!-- BOTONES TARJETA -->
+    <div class="text-right main-button">
+      <button (click)="search()" pButton type="button" icon="fa fa-search" iconPos="left"
+        label="{{ 'general.boton.search' | translate }}"></button>
+    </div>
+  <!-- <app-filtro-remesas [permisoEscritura]="permisoEscritura" (filtrosValues) = "getFiltrosValues($event)"></app-filtro-remesas>
+  <app-tabla-remesas *ngIf="buscar" [permisos]="permisoEscritura" [datos]="datos" (search)="search()"></app-tabla-remesas> -->
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
