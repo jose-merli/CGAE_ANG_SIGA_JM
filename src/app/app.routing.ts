@@ -239,6 +239,7 @@ import { BajasTemporalesComponent } from "./features/sjcs/oficio/bajas-temporale
 import { TurnosComponent } from "./features/sjcs/oficio/turnos/busqueda-turnos.component";
 import { BuscadorColegiadosComponent } from "./commons/buscador-colegiados/buscador-colegiados.component";
 import { BusquedaAsuntosComponent } from "./commons/busqueda-asuntos/busqueda-asuntos.component";
+import { RemesasResultadosComponent } from './features/sjcs/remesas-resultados/remesas-resultados.component';
 
 
 const appRoutes: Routes = [
@@ -1343,6 +1344,11 @@ const appRoutes: Routes = [
 	{
 		path: 'busquedaAsuntos',
 		component: BusquedaAsuntosComponent 
+	},
+	{
+		path: 'remesasResultado',
+		component: RemesasResultadosComponent,
+		canActivate: [ AuthGuard ]
 	},
 	{ path: ' ', redirectTo: 'home' }
 ];
