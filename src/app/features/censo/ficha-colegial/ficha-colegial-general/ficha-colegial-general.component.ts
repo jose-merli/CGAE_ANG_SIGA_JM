@@ -629,7 +629,7 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
       this.router.navigate(["/busquedaCensoGeneral"]);
     } else if (sessionStorage.getItem("esColegiado") == "false") {
       this.router.navigate(["/busquedaNoColegiados"]);
-    } else if (sessionStorage.getItem("esColegiado") == "true" && sessionStorage.getItem("solicitudAprobada") != "true") {
+    } else if (sessionStorage.getItem("esColegiado") == "true" && sessionStorage.getItem("solicitudAprobada") != "true" && sessionStorage.getItem("origin")!="Cliente") {
       this.router.navigate(["/busquedaColegiados"]);
     } else {
       sessionStorage.removeItem("solicitudAprobada")
