@@ -1,0 +1,73 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+
+<div class="form-row p-lg-3 p-md-3">
+
+  <!-- Categoria -->
+  <div class="form-group-interlineado col-lg-3 col-md-3 pb-lg-2 pb-md-2">
+    <label>{{ "facturacion.productos.categoria" | translate}}(*)</label>
+    <p-dropdown (onChange)="valueChangeCategoria()" [filter]="true" styleClass="widthAll" [showClear]="true"
+      placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='servicio.idtiposervicios'
+      [options]="categoriasObject.combooItems"
+      [ngClass]="{'camposObligatorios': aGuardar && servicio.idtiposervicios == null}">
+    </p-dropdown>
+  </div>
+
+  <!-- Tipo -->
+  <div class="form-group-interlineado col-lg-3 col-md-3 pb-lg-2 pb-md-2">
+    <label>{{ "facturacion.productos.tipo" | translate}}(*)</label>
+    <p-dropdown [disabled]="servicio.idtiposervicios == null" [filter]="true" styleClass="widthAll" [showClear]="true"
+      placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='servicio.idservicio'
+      [options]="tiposObject.combooItems" [ngClass]="{'camposObligatorios': aGuardar && servicio.idservicio == null}">
+    </p-dropdown>
+  </div>
+
+  <!-- Servicio -->
+  <div class="form-group-interlineado col-lg-3 col-md-3 pb-lg-2 pb-md-2">
+    <label>{{ "facturacion.servicios.servicio" | translate}}(*)</label>
+    <input type="text" class="form-control" [(ngModel)]='servicio.descripcion'
+      [ngClass]="{'camposObligatorios': aGuardar && (servicio.descripcion == '' || servicio.descripcion == undefined)}"
+      pInputText>
+  </div>
+
+  <!-- Codigo -->
+  <div class="form-group-interlineado col-lg-3 col-md-3 pb-lg-2 pb-md-2">
+    <label>{{ "facturacion.productos.codigo" | translate}}</label>
+    <input type="text" class="form-control" [(ngModel)]='servicio.codigoext' pInputText>
+  </div>
+
+  <!-- Cuenta contable -->
+  <div class="form-group-interlineado col-lg-3 col-md-3">
+    <label>{{ "facturacion.fichaproductos.datosgenerales.cuentacontable" | translate}}</label>
+    <input maxlength="20" type="text" class="form-control" [(ngModel)]='servicio.cuentacontable' pInputText>
+  </div>
+
+  <!-- Solicitar por internet -->
+  <div class="form-group-interlineado col-lg-3 col-md-3">
+    <div class="d-flex align-items-baseline justify-content-between alineacionCheckboxes">
+      <p-checkbox binary="true" label="{{'facturacion.fichaproductos.datosgenerales.solinternet' | translate}}"
+        [(ngModel)]="checkBoxSolicitarPorInternet" (onChange)="onChangeSolicitudInternet()"></p-checkbox>
+    </div>
+  </div>
+
+  <!-- Solicitar anulacion por internet -->
+  <div class="form-group-interlineado col-lg-3 col-md-3">
+    <div class="d-flex align-items-baseline justify-content-between alineacionCheckboxes">
+      <p-checkbox binary="true" label="{{'facturacion.fichaproductos.datosgenerales.solbajainternet' | translate}}"
+        [(ngModel)]="checkboxSolicitarAnulacionPorInternet" (onChange)="onChangeSolicitudAnulacionInternet()">
+      </p-checkbox>
+    </div>
+  </div>
+
+  <!-- Asignacion automatica -->
+  <div class="form-group-interlineado col-lg-3 col-md-3">
+    <div class="d-flex align-items-baseline justify-content-between alineacionCheckboxes">
+      <p-checkbox binary="true" label="{{'facturacion.fichaproductos.datosgenerales.solbajainternet' | translate}}"
+        [(ngModel)]="checkboxSolicitarAnulacionPorInternet" (onChange)="onChangeSolicitudAnulacionInternet()">
+      </p-checkbox>
+    </div>
+  </div>
+
+</div>

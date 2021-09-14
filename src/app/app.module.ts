@@ -447,6 +447,9 @@ import { ServiciosComponent } from './features/facturacion/servicios/servicios.c
 import { FiltrosServiciosComponent } from './features/facturacion/servicios/filtros-servicios/filtros-servicios.component';
 import { GestionServiciosComponent } from './features/facturacion/servicios/gestion-servicios/gestion-servicios.component';
 import { TarjetaClienteCompraSuscripcionComponent } from './features/facturacion/ficha-compra-suscripcion/tarjeta-cliente-compra-suscripcion/tarjeta-cliente-compra-suscripcion.component';
+import { FichaServiciosComponent } from './features/facturacion/servicios/ficha-servicios/ficha-servicios.component';
+import { DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent } from './features/facturacion/servicios/ficha-servicios/detalle-tarjeta-datos-generales-ficha-servicios-facturacion/detalle-tarjeta-datos-generales-ficha-servicios-facturacion.component';
+
 
 @NgModule({
 	declarations: [
@@ -814,7 +817,9 @@ import { TarjetaClienteCompraSuscripcionComponent } from './features/facturacion
 		FiltrosServiciosComponent,
 		GestionServiciosComponent,
 		FichaCompraSuscripcionComponent,
-		TarjetaClienteCompraSuscripcionComponent
+		TarjetaClienteCompraSuscripcionComponent,
+		FichaServiciosComponent,
+		DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent
 	],
 	imports: [
 		Paginador3Module,
