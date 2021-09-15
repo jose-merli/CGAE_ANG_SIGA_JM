@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '../../../../../commons/translate';
+import { CodigosPorInstitucionObject } from '../../../../../models/codigosPorInstitucionObject';
 import { ComboObject } from '../../../../../models/ComboObject';
 import { ListaProductosDTO } from '../../../../../models/ListaProductosDTO';
 import { ListaProductosItems } from '../../../../../models/ListaProductosItems';
@@ -51,6 +52,7 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
   checkBoxSolicitarPorInternet: boolean = false;
   checkboxSolicitarAnulacionPorInternet: boolean = false;
   @Output() mostrarTarjetaFormaPagos = new EventEmitter<boolean>();
+  listaCodigosPorInstitucionObject: CodigosPorInstitucionObject;
 
   //variables de control
   aGuardar: boolean = false; //Usada en condiciones que validan la obligatoriedad, definida al hacer click en el boton guardar
@@ -62,7 +64,7 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
   subscriptionCrearProductoInstitucion: Subscription;
   subscriptionEditarProductoInstitucion: Subscription;
   subscriptionActivarDesactivarProductos: Subscription;
-
+  subscriptionCodesByInstitution: Subscription;
 
   constructor(private sigaServices: SigaServices, private translateService: TranslateService, private confirmationService: ConfirmationService, private router: Router) {
 
@@ -96,6 +98,7 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
 
   ngOnInit() {
     this.getComboCategoria();
+    this.obtenerCodigosPorColegio();
   }
 
   //Necesario para liberar memoria
@@ -110,6 +113,8 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
       this.subscriptionEditarProductoInstitucion.unsubscribe();
     if (this.subscriptionActivarDesactivarProductos)
       this.subscriptionActivarDesactivarProductos.unsubscribe;
+    if (this.subscriptionCodesByInstitution)
+      this.subscriptionCodesByInstitution.unsubscribe;
   }
 
   //INICIO METODOS TARJETA DATOS GENERALES
@@ -158,8 +163,16 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
 
   guardar() {
     this.aGuardar = true;
-    if (this.producto.idtipoproducto != null && this.producto.idproducto != null && this.producto.descripcion != '') {
-      this.guardarProducto();
+    if (this.producto.idtipoproducto != null && this.producto.idproducto != null && this.producto.descripcion != '' && this.producto.descripcion != undefined) {
+      if (this.producto.codigoext != "") {
+        if (this.listaCodigosPorInstitucionObject.listaCodigosPorColegio.includes(this.producto.codigoext)) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.fichaproductos.datosgenerales.mensajeerrorcodigo"))
+        } else {
+          this.guardarProducto();
+        }
+      } else {
+        this.guardarProducto();
+      }
     } else {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
     }
@@ -209,6 +222,26 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
     this.subscriptionCategorySelectValues = this.sigaServices.getParam("productosBusqueda_comboTipos", "?idCategoria=" + this.producto.idtipoproducto).subscribe(
       TipoSelectValues => {
         this.tiposObject = TipoSelectValues;
+
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  //Metodo para obtener todos los codigos PYS_PRODUCTOINSTITUCION en la institucion actual
+  obtenerCodigosPorColegio() {
+    this.progressSpinner = true;
+
+    this.subscriptionCodesByInstitution = this.sigaServices.get("fichaProducto_obtenerCodigosPorColegio").subscribe(
+      codesByInstitutionValues => {
+
+        this.listaCodigosPorInstitucionObject = codesByInstitutionValues;
 
         this.progressSpinner = false;
       },

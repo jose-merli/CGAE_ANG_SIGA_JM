@@ -457,6 +457,7 @@ export class SigaServices {
     fichaProducto_comboFormasDePagoInternet: 'combo/pagoInternet',
     fichaProducto_comboFormasDePagoSecretaria: 'combo/comboPagoSecretaria',
     fichaProducto_crearFormaDePago: 'pys/formasPagoProducto',
+    fichaProducto_obtenerCodigosPorColegio: '/pys/obtenerCodigosPorColegio',
 
     //PANTALLAS BUSCADOR SERVICIOS / FICHA SERVICIOS
     serviciosBusqueda_busqueda: 'pys/buscarServicios',
