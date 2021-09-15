@@ -91,9 +91,10 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
   rowsPerPage: any = [];
   item;
   remesaTabla;
-  remesaItem: RemesasItem;
+  remesaItem: RemesasItem = new RemesasItem();
   datos;
   remesasDatosEntradaItem;
+  editar: boolean;
 
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
@@ -150,6 +151,7 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
 
   ngOnInit() {
     if(localStorage.getItem('ficha') == "registro"){
+      this.editar = true;
       this.item = localStorage.getItem('remesaItem');
       console.log("Item -> ", this.item);
       localStorage.removeItem('remesaItem');
@@ -157,6 +159,8 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
       console.log("Item en JSON -> ", this.remesaTabla);
       this.listadoEstadosRemesa();
     }else if(localStorage.getItem('ficha') == "nuevo"){
+      this.editar = false;
+      this.getUltimoRegitroRemesa();
       this.remesaItem.descripcion = "";
     }
     localStorage.removeItem('ficha');
@@ -196,6 +200,21 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
     this.getCols();
   }
 
+  getUltimoRegitroRemesa() {
+    console.log("Dentro del getUltimoRegistroRemesa");
+    this.sigaServices
+      .get("ficharemesas_getUltimoRegistroRemesa")
+      .subscribe(
+        n => {
+          console.log("Dentro de la respuesta. Contenido --> ", n.contador);
+          this.remesaItem.numero = n.contador + 1;
+          console.log("remesaItem -> ", this.remesaItem);
+        },
+        error => { },
+        () => { }
+      );
+  }
+
   getCols() {
 
     this.cols = [
@@ -230,7 +249,7 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
     {
       'idRemesa': (this.remesaTabla[0].idRemesa != null && this.remesaTabla[0].idRemesa != undefined) ? this.remesaTabla[0].idRemesa.toString() : this.remesaTabla[0].idRemesa,  
     };
-    this.sigaServices.post("filtrosremesas_listadoEstadosRemesa", this.remesasDatosEntradaItem).subscribe(
+    this.sigaServices.post("ficharemesas_listadoEstadosRemesa", this.remesasDatosEntradaItem).subscribe(
       n => {
         console.log("Dentro del servicio del padre que llama al listadoEstadosRemesa");
         this.datos = JSON.parse(n.body).estadoRemesaItem;

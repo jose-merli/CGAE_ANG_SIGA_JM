@@ -8,6 +8,12 @@
 <div class="busqueda-container">
   <app-tarjeta-datos-generales></app-tarjeta-datos-generales>
   <app-tarjeta-ejgs></app-tarjeta-ejgs>
+  <div class="text-right main-button ">
+    <button (click)="rest()" pButton type="button" icon="fa fa-undo"
+      iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+    <button (click)="save()" pButton type="button" icon="far fa-save" iconPos="left"
+      label="{{ 'general.boton.guardar' | translate}}"></button>
+  </div>
 </div>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">

@@ -166,6 +166,13 @@ export class RemesasComponent implements OnInit {
         this.progressSpinner = false;
 
         this.resetSelect();
+
+        console.log("Registros de this.datos --> ", this.datos.length);
+
+        if (this.datos.length == 200) {
+          console.log("Dentro del if del mensaje con mas de 200 resultados");
+          this.showMessage('info', this.translateService.instant("general.message.informacion"), "La consulta devuelve más de 200 resultados.");
+        }
       },
       err => {
         this.progressSpinner = false;
@@ -187,12 +194,12 @@ export class RemesasComponent implements OnInit {
     }
   }
 
-  showMessage(event) {
+  showMessage(severity, summary, msg) {
     this.msgs = [];
     this.msgs.push({
-      severity: event.severity,
-      summary: event.summary,
-      detail: event.msg
+      severity: severity,
+      summary: summary,
+      detail: msg
     });
   }
 

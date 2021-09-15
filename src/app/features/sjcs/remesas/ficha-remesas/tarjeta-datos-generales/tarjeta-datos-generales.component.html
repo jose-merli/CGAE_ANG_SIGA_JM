@@ -15,11 +15,11 @@
           <div class="d-flex justify-content-between" style="cursor:default">
             <label>{{ "formacion.fichaCursos.tarjetaPrecios.resumen.numRegistros" | translate }}
               <span *ngIf = "remesaTabla != null">{{ remesaTabla[0].nRegistro }}</span>
-              <span *ngIf = "remesaTabla == null">{{ Prueba }}</span>
+              <span *ngIf = "remesaTabla == null">{{ remesaItem.numero }}</span>
             </label>
             <label>{{ "administracion.parametrosGenerales.literal.descripcion" | translate }}
               <span *ngIf = "remesaTabla != null">{{ remesaTabla[0].descripcion }}</span>
-              <span *ngIf = "remesaTabla == null">{{ descripcion }}</span>
+              <span *ngIf = "remesaTabla == null">{{ remesaItem.descripcion }}</span>
             </label>
 
             <!-- <i *ngIf="!esFichaActiva('generales')" class="fa fa-angle-down float-right"></i> -->
@@ -47,7 +47,7 @@
               <label>
                 <strong> {{ "formacion.fichaCursos.tarjetaPrecios.resumen.numRegistros" | translate }} </strong>
                 <span *ngIf = "remesaTabla != null"> {{ remesaTabla[0].nRegistro }}</span>
-                <span *ngIf = "remesaTabla == null"> {{ Prueba }}</span>
+                <span *ngIf = "remesaTabla == null"> {{ remesaItem.numero }}</span>
               </label>
             </div>
 
@@ -162,14 +162,9 @@
       <br>
     </div>
 
-    <div *ngIf="openFicha" class="card-footer ">
-      <div class="text-right main-button ">
-        <button (click)="rest()" pButton [disabled]="disableAll || historico" type="button" icon="fa fa-undo"
-          iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="save()" pButton [disabled]="!permisosTarjeta" type="button" icon="far fa-save" iconPos="left"
-          label="{{ 'general.boton.guardar' | translate}}"></button>
-      </div>
-    </div>
+    <!-- <div *ngIf="openFicha" class="card-footer ">
+      
+    </div> -->
   </div>
   <div *ngIf="progressSpinner" class="overlay-spinner">
     <div class="loader"></div>
