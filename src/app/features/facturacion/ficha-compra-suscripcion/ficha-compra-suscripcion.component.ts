@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-ficha-compra-suscripcion',
@@ -7,9 +8,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FichaCompraSuscripcionComponent implements OnInit {
 
-  constructor() { }
+  progressSpinner: boolean = false;
+
+  ficha;
+
+
+
+  constructor(private location: Location) { }
 
   ngOnInit() {
+    
   }
 
+  backTo(){
+    this.location.back();
+  }
 }

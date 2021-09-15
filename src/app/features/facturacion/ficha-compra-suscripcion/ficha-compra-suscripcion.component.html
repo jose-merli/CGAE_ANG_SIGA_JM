@@ -1,3 +1,19 @@
-<p>
-  ficha-compra-suscripcion works!
-</p>
+<div class="ficha-comunicacion-container" id="top">
+  <div class="header-title">
+      <i class="fa fa-square"></i>
+      <p>{{'menu.facturacion' | translate}}
+        <i class="fa fa-angle-right"></i>{{'menu.productosYServicios.solicitudes.alta' | translate}}<!-- Corregir etiqueta en la BBDD y sustituir "Compra/Subscripción" por "Compra/Suscripción" -->
+  </div>
+  <div>
+      <app-tarjeta-cliente-compra-suscripcion [(ficha)]="ficha">
+      </app-tarjeta-cliente-compra-suscripcion>
+  </div>
+</div>
+
+<div class="mt-3 text-right main-button" id="down">
+  <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate }}"></button>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

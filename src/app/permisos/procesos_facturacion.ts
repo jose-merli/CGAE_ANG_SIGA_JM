@@ -3,6 +3,6 @@
 } */
 export const procesos_facturacion: any = {
 
-    fichaCompraSuscripcion: "64"
+    fichaCompraSuscripcion: "39"
 
 }
