@@ -463,6 +463,8 @@ export class SigaServices {
     serviciosBusqueda_comboTipos: 'pys/listadoTipoServicioByIdCategoria',
     serviciosBusqueda_activarDesactivar: 'pys/reactivarBorradoFisicoLogicoServicios',
     fichaServicio_detalleServicio: 'pys/detalleServicio',
+    fichaServicio_crearServicio: 'pys/nuevoServicio',
+    fichaServicio_editarServicio: 'pys/editarServicio',
 
     // FOTO
     solicitudModificacion_searchSolModifDatosUseFoto: 'solicitudModificacion/searchSolModifDatosUseFoto',

@@ -5,19 +5,16 @@ export class ServicioDetalleItem {
     descripcion: string;//Descripcion producto
     iniciofinalponderado: string;
     momentocargo: string;
-    solicitarbaja: string = "0";
-    solicitaralta: string = "0";
+    permitirbaja: string = "0";
+    permitiralta: string = "0";
+    automatico: string; //Tipo Suscripcion
     cuentacontable: string;
-    idimpresora: number;
-    idplantilla: number;
-    tipocertificado: string;
     fechabaja: Date;
-    idcontador: string;
-    nofacturable: string = "0";
+    idconsulta: number;
+    criterios: string;
+    facturacionponderada: string;
     idtipoiva: number;
-    codigoext: string;
     codigo_traspasonav: string;
-    orden: number;
 
     categoria: string; //Descripcion categoria
     valoriva: number;
@@ -27,8 +24,13 @@ export class ServicioDetalleItem {
     formasdepagosecretaria: number[] = [];
     formasdepagointernetoriginales: number[] = [];
     formasdepagosecretariaoriginales: number[] = [];
-    editar: boolean;
+    editar: boolean = false;
     serviciooriginal: ServicioDetalleItem;
+
+
+    codigo;//codigoext (hay que crear la columna en la tabla)
+    nofacturable//hay que crear la columna en la tabla?;
+
 
     constructor() { }
 }

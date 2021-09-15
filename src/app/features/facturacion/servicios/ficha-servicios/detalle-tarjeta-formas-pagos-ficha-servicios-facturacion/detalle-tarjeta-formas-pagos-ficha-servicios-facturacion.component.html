@@ -14,20 +14,12 @@
     </div>
   </div>
 
-  <!-- Precio -->
-  <div class="form-group-interlineado col-lg-3 col-md-3">
-    <label>{{"form.busquedaCursos.literal.precio" | translate}}</label><span *ngIf="obligatorio">(*)</span>
-    <input [disabled]="checkboxNoFacturable" DigitDecimaNumber type="text" class="form-control"
-      [(ngModel)]='producto.valor' [ngClass]="{'camposObligatorios': aGuardar && obligatorio && producto.valor == ''}"
-      pInputText>
-  </div>
-
   <!-- IVA -->
   <div class="form-group-interlineado col-lg-3 col-md-3">
     <label>{{"facturacion.productos.iva" | translate}}</label><span *ngIf="obligatorio">(*)</span>
     <p-dropdown [disabled]="checkboxNoFacturable" [filter]="true" styleClass="widthAll" [showClear]="true"
-      placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='producto.idtipoiva'
-      [ngClass]="{'camposObligatorios': aGuardar && obligatorio && producto.idtipoiva == null}"
+      placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='servicio.idtipoiva'
+      [ngClass]="{'camposObligatorios': aGuardar && obligatorio && servicio.idtipoiva == null}"
       [options]="ivasNoDerogablesObject.combooItems">
     </p-dropdown>
   </div>
@@ -47,13 +39,6 @@
       [options]="secretaryPayMethodsObject.combooItems" styleClass="widthAll" filterBy="label, labelSinTilde"
       [(ngModel)]='producto.formasdepagosecretaria'></p-multiSelect>
   </div>
-</div>
 
-<!-- Botones -->
-<div class="card-footer">
-  <div class="text-right main-button">
-    <!-- Guardar -->
-    <button (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left"
-      label="{{ 'general.boton.guardar' | translate}}"></button>
-  </div>
+
 </div>
