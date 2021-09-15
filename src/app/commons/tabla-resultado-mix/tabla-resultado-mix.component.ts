@@ -8,6 +8,9 @@ import { ValidationModule } from '../validation/validation.module';
 import { CloseScrollStrategy } from '@angular/cdk/overlay';
 import { Router } from '@angular/router';
 import { PersistenceService } from '../../_services/persistence.service';
+import { TranslateService } from './../../commons/translate';
+import { throwMatDialogContentAlreadyAttachedError } from '@angular/material';
+
 
 /*interface Cabecera {
   id: string,
@@ -32,6 +35,7 @@ export class TablaResultadoMixComponent implements OnInit {
   @Input() calendarios;
   @Input() dataToDuplicate;
   @Input() inscripciones: boolean;
+  @Input() isLetrado: boolean;
   
   @Output() resultado = new EventEmitter<{}>();
 
@@ -39,6 +43,12 @@ export class TablaResultadoMixComponent implements OnInit {
   @Output() save = new EventEmitter<Row[]>();
   @Output() delete = new EventEmitter<any>();
   @Output() deleteFromCombo = new EventEmitter<any>();
+
+  habilitadoValidar: boolean;
+  habilitadoDenegar: boolean;
+  habilitadoSolicitarBaja: boolean;
+  habilitadoCambiarFecha: boolean;
+  fechaHoy: Date;
 
   cabecerasMultiselect = [];
   modalStateDisplay = true;
@@ -67,27 +77,35 @@ export class TablaResultadoMixComponent implements OnInit {
   comboTipo: any;
   fechaActual: Date;
   observaciones: string;
-  infoParaElPadre: { fechasolicitudbajaSeleccionada: any; fechaActual: Date; observaciones: any; id_persona: any; };
+  infoParaElPadre: { fechasolicitudbajaSeleccionada: any; fechaActual: any; observaciones: any; id_persona: any; idturno: any, idinstitucion: any, idguardia: any,  fechasolicitud: any, fechavalidacion: any, fechabaja: any, observacionessolicitud: any, observacionesbaja: any, observacionesvalidacion: any, observacionesdenegacion: any, fechadenegacion: any, observacionesvalbaja: any, fechavaloralta: any, fechavalorbaja: any, validarinscripciones: any, estado: any} [];
+  jsonParaEnviar: { tipoAccion:any, datos: any};
+  
+  infoHabilitado: { isLetrado: any; validarjustificaciones:any; estadoNombre:any};
 
+
+  @Input() firstColumn: number;
+  @Input() lastColumn: number;
 
   constructor(
     
     private renderer: Renderer2,
     private router: Router,
     private persistenceService: PersistenceService,
+    private translateService: TranslateService,
+
   ) {
     this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
       for (let i = 0; i < this.table.nativeElement.children.length; i++) {
 
         if (!event.target.classList.contains("selectedRowClass")) {
           this.selected = false;
-          this.selectedArray = [];
         }
       }
     });
   }
 
   ngOnInit(): void {
+
     console.log('AÑADIR DATA TO DUPLICATE: ', this.dataToDuplicate)
 console.log('this.rowGroups: tabla ', this.rowGroups)
 console.log("VALOR DE MI INPUT: ",this.inscripciones)
@@ -97,7 +115,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
       if(this.rowGroups != undefined){
          this.rowGroups.forEach((row, i) => {
           //selecteCombo = {label: ?, value: row.cells[7].value}
-          if (row.cells)
+          //>>no está igual if (row.cells)
           values.push(row.cells[6].value);
         });
         this.totalRegistros = this.rowGroups.length;
@@ -204,6 +222,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
   validaCheck(texto) {
     return texto === 'Si';
   }
+
   selectRow(rowId, rowCells) {
  this.selectedRowValue = rowCells;
     if (this.selectedArray.includes(rowId)) {
@@ -217,6 +236,9 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
     } else {
       this.anySelected.emit(false);
     }
+
+    this.HabilitarBotones();
+
 
   }
   isSelected(id) {
@@ -288,14 +310,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
         if (this.searchText[j] != " " &&  this.searchText[j] != undefined){
           if (row.cells[j].value){
             console.log("tipo de celda:"+row.cells[j].type);
-            /*if(row.cells[j].type == 'select'){
-              let labelCombo = this.getComboLabel(row.cells[j].value);
-              console.log("valor de celda:"+labelCombo);
-              if (!labelCombo.toLowerCase().includes(this.searchText[j].toLowerCase())){
-                isReturn = false;
-                break;
-              }
-            } else */if (!row.cells[j].value.toString().toLowerCase().includes(this.searchText[j].toLowerCase())){
+            if (!row.cells[j].value.toString().toLowerCase().includes(this.searchText[j].toLowerCase())){
               isReturn = false;
               break;
             }
@@ -314,16 +329,6 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
     });
     this.totalRegistros = this.rowGroups.length;
   }
-  
-  /*getComboLabel(key: string){
-    for (let i = 0; i < this.comboTipo.length; i++){
-      if (this.comboTipo[i].value == key){
-        return this.comboTipo[i].label;
-      }
-    }
-    return "";
-  }*/
-
 
   showMsg(severity, summary, detail) {
     this.msgs = [];
@@ -584,41 +589,220 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
     let date2 = day + '/' + month + '/' + year;
     return date2;
   }
-  changeFecha(event){
-    console.log(this.selectedRowValue)
+  
 
-    this.infoParaElPadre = {
-      'fechasolicitudbajaSeleccionada': this.resultado[8].cell.value,
-      'fechaActual':this.fechaActual,
-      'observaciones': null,
-      'id_persona': this.resultado[5].cell.value
+  //mirar el formato de fecha que necesito
+
+  transformaFecha(fecha) {
+    if (fecha != null) {
+      let jsonDate = JSON.stringify(fecha);
+      let rawDate = jsonDate.slice(1, -1);
+      if (rawDate.length < 14) {
+        let splitDate = rawDate.split("/");
+        let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+        fecha = new Date((arrayDate += "T00:00:00.001Z"));
+      } else {
+        fecha = new Date(fecha);
+      }
+    } else {
+      fecha = undefined;
     }
+
+
+    return fecha;
   }
 
-  
-  changeObservaciones(event){
-    this.infoParaElPadre = {
-      'fechasolicitudbajaSeleccionada': this.resultado[8].cell.value,
-      'fechaActual': null,
-      'observaciones': this.observaciones,
-      'id_persona': this.resultado[5].cell.value
-    }
+  changeFecha(event){
+    this.fechaActual = event;
+  }
+
+  HabilitarBotones(){
+
+    this.infoHabilitado= {
+      isLetrado : this.isLetrado,
+      validarjustificaciones: this.selectedRowValue[22].value,
+      estadoNombre: this.selectedRowValue[8].value
+ };    
+
+ if(this.infoHabilitado.validarjustificaciones=="S" && (this.infoHabilitado.estadoNombre=="Pendiente de Alta" || this.infoHabilitado.estadoNombre=="Pendiente de Baja") && !this.isLetrado){
+  this.habilitadoValidar=false;
+}else{
+  this.habilitadoValidar=true;
+}
+
+if((this.infoHabilitado.estadoNombre=="Pendiente de Alta" || this.infoHabilitado.estadoNombre=="Pendiente de Baja")&& !this.isLetrado){
+  this.habilitadoDenegar=false;
+}else{
+  this.habilitadoDenegar=true;
+}
+
+
+if(this.infoHabilitado.estadoNombre=="Alta"){
+  this.habilitadoSolicitarBaja=false;
+}else{
+  this.habilitadoSolicitarBaja=true;
+
+}
+
+
   }
 
   validar(){
-    this.resultado.emit(this.infoParaElPadre);
+    this.infoParaElPadre = [];
+    console.log("entra");
+    console.log("observaciones:",this.observaciones);
+    console.log("fecha:",this.fechaActual);
+
+    this.selectedArray.forEach(el => {
+      let obj = JSON.parse(JSON.stringify(this.rowGroups[el])).cells;
+      this.infoParaElPadre.push( {
+        'fechasolicitudbajaSeleccionada': this.transformaFecha(obj[6].value),
+        'fechaActual': this.fechaActual,
+        'observaciones': this.observaciones,
+        'id_persona': obj[21].value,
+        'idinstitucion' : obj[9].value,
+        'idturno': obj[10].value,
+        'idguardia': obj[11].value,
+        'fechasolicitud': this.transformaFecha(obj[4].value),
+        'fechavalidacion': this.transformaFecha(obj[5].value),
+        'fechabaja': this.transformaFecha(obj[12].value),
+        'observacionessolicitud': obj[13].value,
+        'observacionesbaja': obj[14].value,
+        'observacionesvalidacion': obj[15].value,
+        'observacionesdenegacion': obj[16].value,
+        'fechadenegacion': this.transformaFecha(obj[17].value),
+        'observacionesvalbaja': obj[18].value,
+        'fechavaloralta': obj[19].value,
+        'fechavalorbaja': obj[20].value,
+        'validarinscripciones': obj[23].value,
+        'estado': obj[24].value
+
+
+      });
+      
+    });
+
+    this.jsonParaEnviar = 
+    {'tipoAccion': "validar",
+      'datos': this.infoParaElPadre}
+      console.log(this.jsonParaEnviar);
+    this.resultado.emit(this.jsonParaEnviar);
   }
 
   denegar(){
-    console.log("He entrado en denegar")
+
+    this.infoParaElPadre = [];
+
+    this.selectedArray.forEach(el => {
+      let obj = JSON.parse(JSON.stringify(this.rowGroups[el])).cells;
+      this.infoParaElPadre.push( {
+        'fechasolicitudbajaSeleccionada': this.transformaFecha(obj[6].value),
+        'fechaActual': this.fechaActual,
+        'observaciones': this.observaciones,
+        'id_persona': obj[21].value,
+        'idinstitucion' : obj[9].value,
+        'idturno': obj[10].value,
+        'idguardia': obj[11].value,
+        'fechasolicitud': this.transformaFecha(obj[4].value),
+        'fechavalidacion': this.transformaFecha(obj[5].value),
+        'fechabaja': this.transformaFecha(obj[12].value),
+        'observacionessolicitud': obj[13].value,
+        'observacionesbaja': obj[14].value,
+        'observacionesvalidacion': obj[15].value,
+        'observacionesdenegacion': obj[16].value,
+        'fechadenegacion': this.transformaFecha(obj[17].value),
+        'observacionesvalbaja': obj[18].value,
+        'fechavaloralta': obj[19].value,
+        'fechavalorbaja': obj[20].value,
+        'validarinscripciones': obj[23].value,
+        'estado': obj[24].value
+      });
+      
+    });
+
+    this.jsonParaEnviar = 
+    {'tipoAccion': "denegar",
+      'datos': this.infoParaElPadre}
+    this.resultado.emit(this.jsonParaEnviar);  
   }
 
   solicitarBaja(){
-    console.log("He entrado en SolicitarBaja")
+
+    this.infoParaElPadre = [];
+
+    this.selectedArray.forEach(el => {
+      let obj = JSON.parse(JSON.stringify(this.rowGroups[el])).cells;
+      this.infoParaElPadre.push( {
+        'fechasolicitudbajaSeleccionada': this.transformaFecha(obj[6].value),
+        'fechaActual': this.fechaActual,
+        'observaciones': this.observaciones,
+        'id_persona': obj[21].value,
+        'idinstitucion' : obj[9].value,
+        'idturno': obj[10].value,
+        'idguardia': obj[11].value,
+        'fechasolicitud': this.transformaFecha(obj[4].value),
+        'fechavalidacion': this.transformaFecha(obj[5].value),
+        'fechabaja': this.transformaFecha(obj[12].value),
+        'observacionessolicitud': obj[13].value,
+        'observacionesbaja': obj[14].value,
+        'observacionesvalidacion': obj[15].value,
+        'observacionesdenegacion': obj[16].value,
+        'fechadenegacion': this.transformaFecha(obj[17].value),
+        'observacionesvalbaja': obj[18].value,
+        'fechavaloralta': obj[19].value,
+        'fechavalorbaja': obj[20].value,
+        'validarinscripciones': obj[23].value,
+        'estado': obj[24].value
+
+
+      });
+      
+    });
+
+
+    this.jsonParaEnviar = 
+    {'tipoAccion': "solicitarBaja",
+      'datos': this.infoParaElPadre}
+    this.resultado.emit(this.jsonParaEnviar);  
   }
 
   cambiarFecha(){
-    console.log("He entrado en CambiarFecha")
+
+    this.infoParaElPadre = [];
+    
+    this.rowGroups.forEach(el => {
+      let obj = JSON.parse(JSON.stringify(el.cells));
+      this.infoParaElPadre.push( {
+        'fechasolicitudbajaSeleccionada': this.transformaFecha(obj[6].value),
+        'fechaActual': this.fechaActual,
+        'observaciones': this.observaciones,
+        'id_persona': obj[21].value,
+        'idinstitucion' : obj[9].value,
+        'idturno': obj[10].value,
+        'idguardia': obj[11].value,
+        'fechasolicitud': this.transformaFecha(obj[4].value),
+        'fechavalidacion': this.transformaFecha(obj[5].value),
+        'fechabaja': this.transformaFecha(obj[12].value),
+        'observacionessolicitud': obj[13].value,
+        'observacionesbaja': obj[14].value,
+        'observacionesvalidacion': obj[15].value,
+        'observacionesdenegacion': obj[16].value,
+        'fechadenegacion': this.transformaFecha(obj[17].value),
+        'observacionesvalbaja': obj[18].value,
+        'fechavaloralta': obj[19].value,
+        'fechavalorbaja': obj[20].value,
+        'validarinscripciones': obj[23].value,
+        'estado': obj[24].value
+
+
+      });
+      
+    });
+
+    this.jsonParaEnviar = 
+    {'tipoAccion': "cambiarFecha",
+      'datos': this.infoParaElPadre}
+    this.resultado.emit(this.jsonParaEnviar);  
   }
 }
 

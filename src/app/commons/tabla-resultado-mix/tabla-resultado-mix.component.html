@@ -17,8 +17,8 @@
               (ngModelChange)="searchChange(j)" autocomplete="off" placeholder="Buscar">
           </div>
         </div>
-<<<<<<< HEAD
-    </div> 
+
+    </div> <!--
     <div *ngFor="let row of rowGroups | slice:from:to; let i = index" class="table-row child">
         <div (click)="selectRow(row['id'], row['cells'])" class="table-row-wrapper hoverBlue" [ngClass]="{'hoverBlue2': isSelected(row['id']), 'fixedBlue': seleccionarTodo}" #rowSelected>
             <div *ngFor="let cell of row['cells'] | slice:0:10; let z = index" class="table-cell p-2 selectedRowClass" [ngClass]="{'borders-child': isPar(row['id'])}" #cellSelected>
@@ -54,18 +54,19 @@
                         [options]="cell.combo" maxSelectedLabels="10"  styleClass="widthAll"
                         [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeMulti($event, row['id'], cell)" >
                         </p-multiSelect>
-                    </span>
+                    </span> 
                     
-=======
-      </div>
+
+      </div> -->
       <div *ngFor="let row of rowGroups | slice:from:to; let i = index" class="table-row child">
         <div (click)="selectRow(row['id'], row['cells'])" class="table-row-wrapper hoverBlue"
           [ngClass]="{'hoverBlue2': isSelected(row['id']), 'fixedBlue': seleccionarTodo}" #rowSelected>
-          <div *ngFor="let cell of row['cells'] | slice:0:10; let z = index" class="table-cell p-2 selectedRowClass"
+          <div *ngFor="let cell of row['cells'] | slice:firstColumn:lastColumn; let z = index" class="table-cell p-2 selectedRowClass"
             [ngClass]="{'borders-child': isPar(row['id'])}" #cellSelected>
             <div class="cell-wrapper selectedRowClass wrapText">
               <span class="w100 cell-value" *ngIf="cell.type == 'text' && calendarios" class="enlace wrapText"
                 (click)="openTab(row)">{{cell.value}}</span>
+                <span class="w100 cell-value" *ngIf="cell.type == 'date' && calendarios" >{{cell.value.label}}</span>
               <span class="w100 cell-value" *ngIf="cell.type == 'input'"><input type="text" class="form-control mt-2"
                   pInputText [(ngModel)]="cell.value" (change)="inputChange($event, row['id'], z, cell)"></span>
               <span class="w100 cell-value" *ngIf="cell.type == 'text'  && !calendarios">{{cell.value}}</span>
@@ -89,7 +90,6 @@
               <span class="w100 cell-value" *ngIf="cell.type == 'link'"><a>{{cell.value}}</a></span>
               <span class="w100 cell-value" *ngIf="cell.type == 'download'">
                 <div (click)="showMsg('success', 'Documento descargado', '')"><i class="pointer fa fa-download"></i>
->>>>>>> 77f54fcf749c9ffa8f7c7343cc529eab0216fb0b
                 </div>
               </span>
               <span class="w100 cell-value" *ngIf="cell.type == '5InputSelector'">
@@ -111,55 +111,46 @@
                 </p-multiSelect>
               </span>
 
+              <span class="w100 cell-value" *ngIf="cell.type == 'textToolTip' && !calendarios">
+                <span [pTooltip]="cell.value[0]" tooltipPosition="right">{{ cell.value[1] }}</span>
+              </span>
+
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <!-- <div  *ngIf='inscripciones==true' class="card-footer h50 pt-5" >
-    <div class="text-right main-button butBottom mt10">
-      <button pButton type="button" label="Validar" [disabled]="isDisabled" (click)="validar()"></button>
-       <button pButton type="button" label="Denegar" [disabled]="!anySelected" (click)="denegar()"></button>
-        <button pButton type="button" label="Solicitar Baja" [disabled]="!anySelected"
-              (click)="eliminar(); showMsg('success', 'Se ha eliminado correctamente', '')"></button>
-        <button *ngIf="calendarios" pButton type="button" icon="fa fa-plus" iconPos="left" label="Duplicar" [disabled]="!anySelected && this.selectedRowValue.length == 0"
-              (click)="duplicar()"></button>
-        <button pButton type="button" icon="fa fa-download" iconPos="left" label="Descargar LOG" 
-              (click)="descargarLOG(); showMsg('success', 'LOG descargado correctamente', '')"></button>
-    </div>
-</div>-->
 
+  <!--BOTONES-->
 
   <div class="card-footer h50">
-    <div class="col-lg-12 col-md-12 flex2 text-right main-button">
+    <div class="col-lg-12 col-md-12 col-sm-12 flex2 text-right main-button">
 
-      <div *ngIf="inscripciones" class="col-lg-8 col-md-8 flex2 align">
+      <div *ngIf="inscripciones" class="col-lg-7 col-md-7 col-sm-7 flex2 align ">
         <div class="w-50 mr-5">
           <label> Fecha </label>
-          <app-fecha [disabled]="isDisabled" [(ngModel)]='fechaActual' onChange="changeFecha($event)"
-            (valueChangeInput)="fillFechaCalendar($event)" (valueChangeSelected)="fillFechaCalendar($event)"
-            name="BotonfechaActual" ngDefaultControl></app-fecha>
+          <app-fecha [disabled]="isDisabled" [(ngModel)]='fechaActual' (valueChangeSelected)="changeFecha($event)" (valueChangeInput)="changeFecha($event)" name="fechaActual" ngDefaultControl></app-fecha>
         </div>
         <div class=" w-50">
           <label> Observaciones </label>
-          <textarea class="textareains" [(ngModel)]='observaciones' onChange="changeObservaciones($event)"
-            name="observaciones" [disabled]="isDisabled" class="form-control" pInputTextarea autoResize="autoResize"
-            maxLength="1024" name="Botonobservaciones" ngDefaultControl></textarea>
+          <textarea class="textareains" [(ngModel)]='observaciones' 
+            [disabled]="isDisabled" class="form-control" pInputTextarea autoResize="autoResize"
+            maxLength="1024" name="observaciones" ngDefaultControl></textarea>
         </div>
 
       </div>
 
 
 
-      <div class="col-lg-4 col-md-4 align auto">
-        <button *ngIf='inscripciones' pButton type="button" label="Validar" [disabled]="isDisabled"
+      <div class="col-lg-5 col-md-5 col-sm-5 align auto ">
+        <button *ngIf='inscripciones' pButton type="button" label="Validar" [disabled]="habilitadoValidar"
           (click)="validar()"></button>
-        <button *ngIf='inscripciones' pButton type="button" label="Denegar" [disabled]="isDisabled"
+        <button *ngIf='inscripciones' pButton type="button" label="Denegar" [disabled]="habilitadoDenegar"
           (click)="denegar()"></button>
-        <button *ngIf='inscripciones' pButton type="button" label="Solicitar Baja" [disabled]="isDisabled"
+        <button *ngIf='inscripciones' pButton type="button" label="Solicitar Baja" [disabled]="habilitadoSolicitarBaja"
           (click)="solicitarBaja()"></button>
-        <button *ngIf='inscripciones' pButton type="button" label="Cambiar Fecha" [disabled]="isDisabled"
+        <button *ngIf='inscripciones' pButton type="button" label="Cambiar Fecha" [disabled]="habilitadoCambiarFecha"
           (click)="cambiarFecha()"></button>
 
 
@@ -184,49 +175,3 @@
   </div>
 
 </div>
-<!--<div *ngIf="inscripciones" class="card-footer">
-    <div class="main-button">
-      <div class="form-row">
-        <div class="form-group offset-0 col-lg-3 col-md-3">
-          <label>
-            Fecha
-          </label>
-          <app-fecha [disabled]="isDisabled"  (valueChangeInput)="fillFechaCalendar($event)"
-            (valueChangeSelected)="fillFechaCalendar($event)"></app-fecha>
-        </div>
-        <div class="form-group col-4">
-            <label>
-                Observaciones
-              </label>
-              <textarea class="textareains" name="observaciones" [disabled]="isDisabled"  class="form-control" pInputTextarea autoResize="autoResize"
-                 maxLength="1024"></textarea>
-        </div>
-        <div class="form-group prueba">
-          <label>
-          </label>
-          <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledValidar || isLetrado)" (click)="validar(selectedDatos)"
-            type="button" label="{{ 'general.boton.validar' | translate}}"></button>
-
-        </div>
-        <div class="form-group">
-          <label>
-          </label>
-          <button  pButton [disabled]="!permisos || ((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledDenegar || isLetrado)" (click)="denegar(selectedDatos)"
-            type="button" label="{{ 'general.boton.denegar' | translate}}"></button>
-        </div>
-        <div class="form-group">
-          <label>
-          </label>
-          <button pButton [disabled]="!permisos || ((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledSolicitarBaja)" (click)="solicitarBaja(selectedDatos)"
-            type="button" label="{{ 'general.boton.solicitarbaja' | translate}}"></button>
-        </div>
-        <div class="form-group">
-          <label>
-          </label>
-          <button pButton [disabled]="!permisos || ((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledCambiarFecha)" (click)="cambiarFecha(selectedDatos)"
-            type="button" label="{{ 'justiciaGratuita.oficio.inscripciones.cambiarfecha' | translate}}"></button>
-        </div>
-      </div>
-
-    </div>
-  </div> -->

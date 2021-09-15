@@ -1,11 +1,9 @@
-export class ResultadoInscripciones {
+export class ResultadoInscripcionesBotones {
   idturno: String;
   estado: String;
   abreviatura: String;
   validarinscripciones: String;
-  validarjustificaciones: String;
   nombreGuardia: String;
-  descripcionGuardia: String;
   idguardia: String;
   apellidosnombre: String;
   ncolegiado: String;
@@ -31,16 +29,21 @@ export class ResultadoInscripciones {
   description: String;
   infoURL: String;
   errorDetail: String;
-  
+  observacionesvalidacionNUEVA: String;
+  fechavalidacionNUEVA: Date;
+  observacionesvalbajaNUEVA: String;
+  fechasolicitudbajaNUEVA: Date;
+  observacionesdenegacionNUEVA: String;
+  fechadenegacionNUEVA: Date;
+  observacionessolicitudNUEVA: String;
+  fechasolicitudNUEVA: String;
 
   constructor(obj: Object) {
     this.idturno = obj['idturno'];
     this.estado = obj['estado'];
     this.abreviatura = obj['abreviatura'];
     this.validarinscripciones = obj['validarinscripciones'];
-    this.validarjustificaciones = obj['validarjustificaciones'];
     this.nombreGuardia = obj['nombreGuardia'];
-    this.descripcionGuardia = obj['descripcionGuardia'];
     this.idguardia = obj['idguardia'];
     this.apellidosnombre = obj['apellidosnombre'];
     this.ncolegiado = obj['ncolegiado'];
@@ -66,6 +69,13 @@ export class ResultadoInscripciones {
     this.description = obj['description'];
     this.infoURL = obj['infoURL'];
     this.errorDetail = obj['errorDetail'];
-    
+    this.observacionesvalidacionNUEVA = obj['observacionesvalidacionNUEVA'];
+    this.fechavalidacionNUEVA = obj['fechavalidacionNUEVA'];
+    this.observacionesvalbajaNUEVA = obj['observacionesvalbajaNUEVA'];
+    this.fechasolicitudbajaNUEVA = obj['fechasolicitudbajaNUEVA'];
+    this.observacionesdenegacionNUEVA = obj['observacionesdenegacionNUEVA'];
+    this.fechadenegacionNUEVA = obj['fechadenegacionNUEVA'];
+    this.observacionessolicitudNUEVA = obj['observacionessolicitudNUEVA'];
+    this.fechasolicitudNUEVA = obj['fechasolicitudNUEVA'];
   }
 }
