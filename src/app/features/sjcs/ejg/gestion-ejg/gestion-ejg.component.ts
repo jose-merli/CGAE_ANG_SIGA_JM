@@ -110,6 +110,7 @@ export class GestionEjgComponent implements OnInit {
         this.body = JSON.parse(sessionStorage.getItem("EJGItemDesigna"));
         this.persistenceService.setDatos(this.body);
         this.modoEdicion = true;
+        this.updateTarjResumen();
       }
 
       sessionStorage.removeItem("EJGItemDesigna");
@@ -126,6 +127,7 @@ export class GestionEjgComponent implements OnInit {
 
       if (this.body != undefined && this.body != null) {
         this.modoEdicion = true;
+        this.updateTarjResumen();
       } else {
         //hemos pulsado nuevo 
         if (sessionStorage.getItem("Nuevo")) {
