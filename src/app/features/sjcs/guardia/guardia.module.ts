@@ -9,6 +9,7 @@ import { GlobalGuardiasService } from "./guardiasGlobal.service";
 import { BusquedaGuardiasIncompatibilidadesModule } from "./guardias-incompatibilidades/busqueda-guardias-incompatibilidades.module";
 import { ProgramacionCalendariosModule } from "./programacionCalendarios/programacionCalendarios.module";
 import { InscripcionesGuardiaModule } from "./guardias-inscripciones/guardias-inscripciones.module";
+import { GuardiaColegiadoModule } from "./guardia-colegiado/guardia-colegiado.module";
 
 @NgModule({
     declarations: [],
@@ -20,7 +21,8 @@ import { InscripcionesGuardiaModule } from "./guardias-inscripciones/guardias-in
         TablaResultadoOrderModule,
         BusquedaGuardiasIncompatibilidadesModule,
         ProgramacionCalendariosModule,
-        InscripcionesGuardiaModule
+        InscripcionesGuardiaModule,
+        GuardiaColegiadoModule
     ],
 
     providers: [

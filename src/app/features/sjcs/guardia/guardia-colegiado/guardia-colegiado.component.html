@@ -1,0 +1,10 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div class="busqueda-container">
+    <app-filtros-guardia-colegiado></app-filtros-guardia-colegiado>
+    <app-tabla-guardia-colegiado></app-tabla-guardia-colegiado>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
+    <div class="loader"></div>
+</div>

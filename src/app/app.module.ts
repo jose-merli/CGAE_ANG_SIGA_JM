@@ -463,6 +463,11 @@ import { FichaActuacionAsistenciaTarjetaJustificacionComponent } from './feature
 import { FichaActuacionAsistenciaTarjetaHistoricoComponent } from './features/sjcs/guardia/guardias-asistencias/ficha-actuacion-asistencia/ficha-actuacion-asistencia-tarjeta-historico/ficha-actuacion-asistencia-tarjeta-historico.component';
 import { FichaActuacionAsistenciaTarjetaDocumentacionComponent } from './features/sjcs/guardia/guardias-asistencias/ficha-actuacion-asistencia/ficha-actuacion-asistencia-tarjeta-documentacion/ficha-actuacion-asistencia-tarjeta-documentacion.component';
 import { BuscadorAsistenciasComponent } from './features/sjcs/guardia/guardias-asistencias/asistencia-expres/buscador-asistencias/buscador-asistencias.component';
+import { GuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/guardia-colegiado.component';
+import { GestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/gestion-guardia-colegiado/gestion-guardia-colegiado.component';
+import { FiltrosGuardiaCalendarioComponent } from './features/sjcs/guardia/programacionCalendarios/filtros-guardia-calendarios/filtros-guardia-calendarios.component';
+import { TablaGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/tabla-guardia-colegiado/tabla-guardia-colegiado.component';
+import { FiltrosGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/filtros-guardia-colegiado/filtros-guardia-colegiado.component';
 
 @NgModule({
 	declarations: [
@@ -609,6 +614,12 @@ import { BuscadorAsistenciasComponent } from './features/sjcs/guardia/guardias-a
 		ResultadoAsistenciaExpresComponent,
 		VolanteExpresComponent,
 		SOJComponent,
+
+		//Guardia Colegiado
+		GuardiaColegiadoComponent,
+		GestionGuardiaColegiadoComponent,
+		FiltrosGuardiaColegiadoComponent,
+		TablaGuardiaColegiadoComponent,
 		//EJG
 		// EJGComponent,
 		FiltrosEjgComponent,
