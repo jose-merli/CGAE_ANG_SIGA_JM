@@ -1,4 +1,5 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '../../../../../commons/translate';
 import { ComboObject } from '../../../../../models/ComboObject';
@@ -36,7 +37,7 @@ export class DetalleTarjetaFormasPagosFichaProductoFacturacionComponent implemen
   subscriptionCrearFormasDePago: Subscription;
 
 
-  constructor(private sigaServices: SigaServices, private translateService: TranslateService) {
+  constructor(private sigaServices: SigaServices, private translateService: TranslateService, private router: Router) {
 
   }
 
@@ -49,10 +50,13 @@ export class DetalleTarjetaFormasPagosFichaProductoFacturacionComponent implemen
 
       if (this.producto.nofacturable == "1") {
         this.checkboxNoFacturable = true;
+        this.obligatorio = false;
       } else if (this.producto.nofacturable == "0") {
         this.checkboxNoFacturable = false;
+        this.obligatorio = true;
       }
     }
+
 
     this.getComboTipoIvaNoDerogables();
     this.getComboFormasDePagoInternet();
@@ -97,8 +101,14 @@ export class DetalleTarjetaFormasPagosFichaProductoFacturacionComponent implemen
 
   guardar() {
     this.aGuardar = true;
-    if (this.obligatorio) {
-      if (this.producto.valor != "" && this.producto.idtipoiva != null && this.producto.idtipoiva != undefined) {
+    if (this.obligatorio && this.producto.solicitaralta == '0') {
+      if (this.producto.valor != "" && this.producto.idtipoiva != null && this.producto.idtipoiva != undefined && this.producto.formasdepagosecretaria != null && this.producto.formasdepagosecretaria.length > 0) {
+        this.guardarFormaPago();
+      } else {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
+      }
+    } else if (this.obligatorio && this.producto.solicitaralta == '1') {
+      if (this.producto.valor != "" && this.producto.idtipoiva != null && this.producto.idtipoiva != undefined && this.producto.formasdepagosecretaria != null && this.producto.formasdepagosecretaria.length > 0 && this.producto.formasdepagointernet != null && this.producto.formasdepagointernet.length > 0) {
         this.guardarFormaPago();
       } else {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
@@ -203,6 +213,9 @@ export class DetalleTarjetaFormasPagosFichaProductoFacturacionComponent implemen
         this.progressSpinner = false;
       },
       () => {
+        sessionStorage.setItem("volver", 'true');
+        sessionStorage.removeItem('productoBuscador');
+        this.router.navigate(['/productos']);
         this.progressSpinner = false;
       }
     );

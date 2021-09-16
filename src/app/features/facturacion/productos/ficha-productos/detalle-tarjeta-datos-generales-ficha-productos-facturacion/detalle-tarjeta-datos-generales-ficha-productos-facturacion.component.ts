@@ -275,6 +275,7 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
           this.progressSpinner = false;
         },
         () => {
+          this.obtenerCodigosPorColegio();
           this.progressSpinner = false;
         }
       );
