@@ -121,8 +121,16 @@ export let endpoints_guardia: any = {
     busquedaPreasistencias_buscarPreasistencias: "preasistencia/buscarPreAsistencias",
     busquedaPreasistencias_denegarPreasistencias: "preasistencia/denegarPreAsistencias",
     busquedaPreasistencias_activarPreasistenciasDenegadas: "preasistencia/activarPreAsistenciasDenegadas",
+
     //Inscripciones
     guardiasInscripciones_buscarInscripciones : "guardia/busquedainscripciones",
-
+    guardiasInscripciones_validarInscripciones : "guardias/inscripciones/validarInscripciones",
+    guardiasInscripciones_denegarInscripciones : "guardias/inscripciones/denegarInscripciones",
+    guardiasInscripciones_solicitarBajaInscripciones: "guardias/inscripciones/solicitarBajaInscripcion",
+    guardiasInscripciones_cambiarFechaInscripciones: "guardias/inscripciones/cambiarFechaInscripcion",
+    guardiasInscripciones_buscarsaltoscompensaciones: "guardias/inscripciones/buscarSaltosCompensaciones",
+    guardiasInscripciones_eliminarsaltoscompensaciones: "guardias/inscripciones/eliminarSaltosCompensaciones",
+    guardiasInscripciones_buscarTrabajosSJCS: "guardias/inscripciones/buscarTrabajosSJCS",
+    guardiasInscripciones_buscarGuardiasAsocTurnos: "guardias/inscripciones/buscarGuardiasAsocTurnos"
 
 }

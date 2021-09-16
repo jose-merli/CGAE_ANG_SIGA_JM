@@ -14,7 +14,7 @@ export class InscripcionesDatosEntradaItem{
    
   constructor(obj: Object) {
     this.idEstado = obj['idEstado'];
-    this.idturno = obj['idTurno'];
+    this.idturno = obj['idturno'];
     this.idguardia = obj['idGuardia'];
     this.afechade = obj['aFechaDe'];
     this.fechadesde = obj['fechaDesde'];
