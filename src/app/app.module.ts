@@ -473,6 +473,7 @@ import { ProcuradorPreDesignacionComponent } from './features/sjcs/ejg/gestion-e
 import { ContrariosPreDesignacionComponent } from './features/sjcs/ejg/gestion-ejg/relaciones/ficha-pre-designacion/contrarios-pre-designacion/contrarios-pre-designacion.component';
 import { RemesasResultadosComponent } from './features/sjcs/remesas-resultados/remesas-resultados.component';
 import { FiltroRemesasResultadosComponent } from './features/sjcs/remesas-resultados/filtro-remesas-resultados/filtro-remesas-resultados.component';
+import { TablaRemesasResultadosComponent } from './features/sjcs/remesas-resultados/tabla-remesas-resultados/tabla-remesas-resultados.component';
 
 @NgModule({
 	declarations: [
@@ -864,7 +865,8 @@ import { FiltroRemesasResultadosComponent } from './features/sjcs/remesas-result
 		TarjetaDatosGeneralesComponent,
 		TarjetaEjgsComponent,
 		RemesasResultadosComponent,
-		FiltroRemesasResultadosComponent
+		FiltroRemesasResultadosComponent,
+		TablaRemesasResultadosComponent
 
 
 
