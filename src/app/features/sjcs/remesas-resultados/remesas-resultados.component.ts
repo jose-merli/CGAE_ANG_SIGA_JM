@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit, ViewChild} from '@angular/core';
 import { RemesasResultadoItem } from '../../../models/sjcs/RemesasResultadoItem';
 import { SigaServices } from '../../../_services/siga.service';
@@ -11,14 +12,15 @@ import { FiltroRemesasResultadosComponent } from './filtro-remesas-resultados/fi
 })
 export class RemesasResultadosComponent implements OnInit {
 
+  buscar: boolean = false;
   progressSpinner: boolean = false;
-  datos: RemesasResultadoItem = new RemesasResultadoItem();
+  datos;
   remesasResultadosItem: RemesasResultadoItem = new RemesasResultadoItem();
 
   filtrosValues: RemesasResultadoItem = new RemesasResultadoItem();
   @ViewChild(FiltroRemesasResultadosComponent) filtros;
 
-  constructor(private sigaServices: SigaServices) { }
+  constructor(private sigaServices: SigaServices, private datepipe: DatePipe) { }
 
   ngOnInit() { }
 
@@ -50,14 +52,15 @@ export class RemesasResultadosComponent implements OnInit {
         console.log("Dentro del servicio que llama al buscarRemesasResultado");
         this.datos = JSON.parse(n.body).remesasResultadosItems;
 
-        // this.datos.forEach(element => {
-        //   element.fechaRecepcion = this.formatDate(element.fechaRecepcion);
-        //   element.fechaGeneracion = this.formatDate(element.fechaGeneracion);
-        //   element.fechaEnvio = this.formatDate(element.fechaEnvio);
-        // });
+        this.datos.forEach(element => {
+          element.fechaResolucionRemesaResultado = this.formatDate(element.fechaResolucionRemesaResultado);
+          element.fechaCargaRemesaResultado = this.formatDate(element.fechaCargaRemesaResultado);
+          element.numRegistroRemesaCompleto = this.formatNumRegistroRemesaCompleto(element);
+          element.numRemesaCompleto = this.formatNumRegistroRemesaCompleto(element);
+        });
 
         console.log("Contenido de la respuesta del back --> ", this.datos);
-        // this.buscar = true;
+        this.buscar = true;
         this.progressSpinner = false;
 
         // this.resetSelect();
@@ -68,6 +71,39 @@ export class RemesasResultadosComponent implements OnInit {
         console.log(err);
       });
     
+  }
+
+  formatNumRegistroRemesaCompleto(element){
+    let numeroFormateado = ''; 
+    if(element.prefijoRemesa !== null){
+      numeroFormateado += element.prefijoRemesa
+    }
+    if(element.numeroRemesa !== null){
+      numeroFormateado += element.numeroRemesa
+    }
+    if(element.sufijoRemesa !== null){
+      numeroFormateado += element.sufijoRemesa
+    }
+    return numeroFormateado;
+  }
+
+  formatNumRemesaCompleto(element){
+    let numeroFormateado = ''; 
+    if(element.numRemesaPrefijo !== null){
+      numeroFormateado += element.numRemesaPrefijo
+    }
+    if(element.numRemesaNumero !== null){
+      numeroFormateado += element.numRemesaNumero
+    }
+    if(element.numRemesaSufijo !== null){
+      numeroFormateado += element.numRemesaSufijo
+    }
+    return numeroFormateado;
+  }
+
+  formatDate(date) {
+    const pattern = 'dd/MM/yyyy';
+    return this.datepipe.transform(date, pattern);    
   }
 
 }

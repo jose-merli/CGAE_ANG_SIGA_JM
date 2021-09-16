@@ -22,5 +22,8 @@ export class RemesasResultadoItem{
     sufijoRemesa?: string;
     descripcionRemesa?: string;
 
+    numRegistroRemesaCompleto?: string;
+    numRemesaCompleto?: string;
+
     constructor() { }
 }
