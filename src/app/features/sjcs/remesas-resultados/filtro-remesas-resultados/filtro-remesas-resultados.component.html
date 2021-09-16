@@ -1,0 +1,101 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="card">
+  <div class="card-body">
+    <p (click)="onHideDatosGenerales()" class="title-module">Datos Generales Remesa
+      <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+      <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+    </p>
+
+    <!-- CAMPOS COMPONEN FILTROS BUSQUEDA-->
+    <div *ngIf="showDatosGenerales" class="module vista-simple">
+      <div class="form-row">
+        <div class="form-group-interlineado col-lg-4 col-md-4">
+          <label>Nº de Remesa</label>
+          <div class="form-row">
+            <div class="form-group-interlineado col-lg-4 col-md-4 px-1">
+              <input type="text" name="numRemesaPrefijo" value="" class="box" class="registro-control w-100"
+                [(ngModel)]='filtros.numRemesaPrefijo' maxLength="8" pInputText>
+            </div>
+            <div class="form-group-interlineado col-lg-4 col-md-4 px-1">
+              <input type="text" name="numRemesaNumero" value="" class="box" class="registro-control w-100"
+                [(ngModel)]='filtros.numRemesaNumero' maxLength="10" pInputText>
+            </div>
+
+            <div class="form-group-interlineado col-lg-4 col-md-4 px-1">
+              <input type="text" name="numRemesaSufijo" value="" class="box" class="registro-control w-100"
+                [(ngModel)]='filtros.numRemesaSufijo' maxLength="8" pInputText>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group-interlineado col-lg-4 col-md-4">
+          <label>Nº de Registro</label>
+          <div class="form-row">
+            <div class="form-group-interlineado col-lg-4 col-md-4 px-1">
+              <input type="text" name="numRegistroPrefijo" value="" class="box" class="registro-control w-100"
+                [(ngModel)]='filtros.numRegistroPrefijo' maxLength="8" pInputText>
+            </div>
+            <div class="form-group-interlineado col-lg-4 col-md-4 px-1">
+              <input type="text" name="numRegistroNumero" value="" class="box" class="registro-control w-100"
+                [(ngModel)]='filtros.numRegistroNumero' maxLength="10" pInputText>
+            </div>
+
+            <div class="form-group-interlineado col-lg-4 col-md-4 px-1">
+              <input type="text" name="numRegistroSufijo" value="" class="box" class="registro-control w-100"
+                [(ngModel)]='filtros.numRegistroSufijo' maxLength="8" pInputText>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group-interlineado col-lg-4 col-md-4">
+          <label>Nombre Fichero</label>
+          <input type="text" name="nombreFichero" value="" class="box" class="form-control" [(ngModel)]='filtros.nombreFichero'
+            maxLength="200" pInputText>
+        </div>
+
+      </div>
+
+      <div class="form-row">
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>Fecha de remesa desde</label>
+          <app-fecha [(value)]="filtros.fechaRemesaDesde" (valueChangeSelected)="fillFechaRemesaDesde($event)"
+            (valueChangeInput)="fillFechaRemesaDesde($event)">
+          </app-fecha>
+        </div>
+
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>Fecha de remesa hasta</label>
+          <app-fecha [(value)]="filtros.fechaRemesaHasta" (valueChangeSelected)="fillFechaRemesaHasta($event)"
+            (valueChangeInput)="fillFechaRemesaHasta($event)" [minDate]="filtros.fechaRemesaDesde">
+          </app-fecha>
+        </div>
+
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>Fecha de carga desde</label>
+          <app-fecha [(value)]="filtros.fechaCargaDesde" (valueChangeSelected)="fillFechaCargaDesde($event)"
+            (valueChangeInput)="fillFechaCargaDesde($event)">
+          </app-fecha>
+        </div>
+
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>Fecha de carga hasta</label>
+          <app-fecha [(value)]="filtros.fechaCargaHasta" (valueChangeSelected)="fillFechaCardaHasta($event)"
+            (valueChangeInput)="fillFechaCardaHasta($event)" [minDate]="filtros.fechaCargaDesde">
+          </app-fecha>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<div class="card-footer">
+  <div class="text-right main-button">
+    <button (click)="clearFilters()" pButton type="button" icon="fa fa-eraser" iconPos="left"
+      label="{{ 'general.boton.clear' | translate}}"></button>
+    <button (click)="search()" pButton type="button" icon="fa fa-search" iconPos="left"
+      label="{{ 'general.boton.search' | translate }}"></button>
+    <!-- <button (click)="checkPermisosIsNuevo()" pButton type="button"  icon="fa fa-plus"
+       iconPos="left"  label="{{ 'general.boton.new' | translate}}"></button> -->
+  </div>
+</div>
