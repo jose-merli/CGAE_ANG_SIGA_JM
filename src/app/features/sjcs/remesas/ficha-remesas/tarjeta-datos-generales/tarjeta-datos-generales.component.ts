@@ -254,9 +254,9 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
         console.log("Dentro del servicio del padre que llama al listadoEstadosRemesa");
         this.datos = JSON.parse(n.body).estadoRemesaItem;
 
-        this.datos.forEach(element => {
+        /* this.datos.forEach(element => {
           element.fechaRemesa = this.formatDate(element.fechaModificacion);
-        });
+        }); */
 
         console.log("Contenido de la respuesta del back --> ", this.datos);
         this.progressSpinner = false;
