@@ -9,9 +9,9 @@
         </div>
         <label class="title-ficha">{{ 'facturacion.productos.Cliente' | translate }}</label>
         <div class="d-flex justify-content-start mb-1 ml-auto">
-          <label *ngIf="showEnlaceRepresentante" class="mr-3">
-            <i (click)="navigateToRepresentante();$event.stopPropagation();" class="fas fa-external-link-alt mr-2"></i>
-            <a (click)="navigateToRepresentante();$event.stopPropagation();">
+          <label *ngIf="ficha.idPersona != null && ficha.idPersona != undefined" class="mr-3">
+            <i (click)="$event.stopPropagation();irFichaColegial()" class="fas fa-external-link-alt mr-2"></i>
+            <a (click)="$event.stopPropagation();irFichaColegial()">
               <span style="color: blue; text-decoration: underline;cursor:pointer;"> {{ 'facturacion.productos.Cliente' | translate }}
               </span>
             </a>
@@ -33,24 +33,24 @@
           <div class="row">
             <div class="col-3">
               <label>NIF
-                <span>{{ body.nif }}</span>
+                <span>{{ ficha.nif }}</span>
               </label>
             </div>
             <div class="col-3">
               <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}
-                <span>{{ body.nombre }} {{ body.apellidos }}</span>
+                <span>{{ ficha.nombre }} {{ ficha.apellidos }}</span>
               </label>
 
             </div>
             <div *ngIf="showEnlaceCliente" class="col-3">
-              <label *ngIf="body.idpersona != null && body.idpersona != undefined">
+              <label *ngIf="ficha.idPersona != null && ficha.idPersona != undefined">
                 <i (click)="$event.stopPropagation();irFichaColegial()" class="fas fa-external-link-alt mr-2"></i>
                 <a (click)="$event.stopPropagation();irFichaColegial()">
                   <span style="color: blue; text-decoration: underline;cursor:pointer;"> {{ 'justiciaGratuita.justiciables.fichaJusticiable' | translate }}
                   </span>
                 </a>
               </label>
-              <label *ngIf="body.idpersona == null || body.idpersona == undefined">
+              <label *ngIf="ficha.idPersona == null || ficha.idPersona == undefined">
                 <i class="fas fa-external-link-alt mr-2"></i>
                 <span style="color: gray; text-decoration: underline;cursor:pointer;"> {{ 'justiciaGratuita.justiciables.fichaJusticiable' | translate }}
                 </span>
@@ -76,25 +76,25 @@
               <label>{{ "censo.busquedaClientesAvanzada.literal.tipoCliente" | translate }}
               </label>
               <p-dropdown class="select-form" [options]="tipoIdentificacion" disabled placeholder="{{'general.boton.seleccionar' | translate}}"
-                [(ngModel)]="body.idtipoidentificacion" showClear="true" disabled></p-dropdown>
+                [(ngModel)]="ficha.idtipoidentificacion" showClear="true" disabled></p-dropdown>
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{ "censo.fichaCliente.literal.identificacion" | translate }}
               </label>
-              <input [(ngModel)]="body.nif" type="text" class="form-control" disabled pInputText/>
+              <input [(ngModel)]="ficha.nif" type="text" class="form-control" disabled pInputText/>
             </div>
           </div>
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate }}
               </label>
-              <input [(ngModel)]="body.apellidos" type="text" disabled class="form-control" 
+              <input [(ngModel)]="ficha.apellidos" type="text" disabled class="form-control" 
                 pInputText/>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}
               </label>
-              <input [(ngModel)]="body.nombre" type="text" disabled class="form-control" 
+              <input [(ngModel)]="ficha.nombre" type="text" disabled class="form-control" 
                 pInputText />
             </div>
           </div>

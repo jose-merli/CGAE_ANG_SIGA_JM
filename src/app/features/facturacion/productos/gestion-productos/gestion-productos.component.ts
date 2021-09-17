@@ -359,6 +359,7 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
     } else {
       if (this.checkFormasPago()) {
         sessionStorage.removeItem("Cliente");
+        sessionStorage.setItem("productos",JSON.stringify(this.selectedRows));
         this.router.navigate(["/fichaCompraSuscripcion"]);
       } else {
         this.msgs = [
