@@ -8,9 +8,9 @@
   <!-- Categoria -->
   <div class="form-group-interlineado col-lg-3 col-md-3 pb-lg-2 pb-md-2">
     <label>{{ "facturacion.productos.categoria" | translate}}(*)</label>
-    <p-dropdown (onChange)="valueChangeCategoria()" [filter]="true" styleClass="widthAll" [showClear]="true"
-      placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='producto.idtipoproducto'
-      [options]="categoriasObject.combooItems"
+    <p-dropdown [disabled]="producto.editar == true" (onChange)="valueChangeCategoria()" [filter]="true"
+      styleClass="widthAll" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+      [(ngModel)]='producto.idtipoproducto' [options]="categoriasObject.combooItems"
       [ngClass]="{'camposObligatorios': aGuardar && producto.idtipoproducto == null}">
     </p-dropdown>
   </div>
@@ -18,9 +18,10 @@
   <!-- Tipo -->
   <div class="form-group-interlineado col-lg-3 col-md-3 pb-lg-2 pb-md-2">
     <label>{{ "facturacion.productos.tipo" | translate}}(*)</label>
-    <p-dropdown [disabled]="producto.idtipoproducto == null" [filter]="true" styleClass="widthAll" [showClear]="true"
-      placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='producto.idproducto'
-      [options]="tiposObject.combooItems" [ngClass]="{'camposObligatorios': aGuardar && producto.idproducto == null}">
+    <p-dropdown [disabled]="producto.idtipoproducto == null || producto.editar == true" [filter]="true"
+      styleClass="widthAll" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+      [(ngModel)]='producto.idproducto' [options]="tiposObject.combooItems"
+      [ngClass]="{'camposObligatorios': aGuardar && producto.idproducto == null}">
     </p-dropdown>
   </div>
 

@@ -34,18 +34,24 @@
 
   <!-- Formas de pago aceptadas por internet -->
   <div *ngIf="esColegiado" class="form-group-interlineado col-lg-3 col-md-3 pb-lg-2 pb-md-2">
-    <label>{{"facturacion.fichaproductos.formasdepago.pagointernet" | translate}}</label>
-    <p-multiSelect [defaultLabel]="defaultLabelCombosMultiSelect" autoWidth="false"
+    <label>{{"facturacion.fichaproductos.formasdepago.pagointernet" | translate}}</label><span
+      *ngIf="obligatorio && producto.solicitaralta == '1'">(*)</span>
+    <p-multiSelect [disabled]="checkboxNoFacturable" [defaultLabel]="defaultLabelCombosMultiSelect" autoWidth="false"
       [options]="internetPayMethodsObject.combooItems" styleClass="widthAll" filterBy="label, labelSinTilde"
-      [(ngModel)]='producto.formasdepagointernet'></p-multiSelect>
+      [(ngModel)]='producto.formasdepagointernet'
+      [ngClass]="{'camposObligatorios': aGuardar && obligatorio && (producto.formasdepagointernet == null || producto.formasdepagointernet.length == 0) && producto.solicitaralta == '1'}">
+    </p-multiSelect>
   </div>
 
   <!-- Formas de pago aceptadas en secretaria -->
   <div class="form-group-interlineado col-lg-3 col-md-3">
-    <label>{{"facturacion.fichaproductos.formasdepago.pagosecretaria" | translate}}</label>
-    <p-multiSelect [defaultLabel]="defaultLabelCombosMultiSelect" autoWidth="false"
+    <label>{{"facturacion.fichaproductos.formasdepago.pagosecretaria" | translate}}</label><span
+      *ngIf="obligatorio">(*)</span>
+    <p-multiSelect [disabled]="checkboxNoFacturable" [defaultLabel]="defaultLabelCombosMultiSelect" autoWidth="false"
       [options]="secretaryPayMethodsObject.combooItems" styleClass="widthAll" filterBy="label, labelSinTilde"
-      [(ngModel)]='producto.formasdepagosecretaria'></p-multiSelect>
+      [(ngModel)]='producto.formasdepagosecretaria'
+      [ngClass]="{'camposObligatorios': aGuardar && obligatorio && (producto.formasdepagosecretaria == null || producto.formasdepagosecretaria.length == 0)}">
+    </p-multiSelect>
   </div>
 </div>
 
