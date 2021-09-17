@@ -2,170 +2,98 @@
 <div class="busqueda-container" id="datosGenerales">
   <div class="card">
     <div class="card-header header-ficha">
-      <div *ngIf="!openFicha" class="form-row">
-        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('datosGenerales')">
-          <div class="img-colegiado">
-            <i class="far fa-address-card icon-ficha"></i>
-          </div>
-        </div>
-        <div class="col-lg-11 col-md-10 ">
-          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('datosGenerales')">
-            <label class="mr-auto title-ficha" style="cursor:pointer">{{ "general.message.datos.generales" | translate }} </label>
-          </div>
-          <div class="d-flex justify-content-between" style="cursor:default">
-            <label>{{ "formacion.fichaCursos.tarjetaPrecios.resumen.numRegistros" | translate }}
-              <span *ngIf = "remesaTabla != null">{{ remesaTabla[0].nRegistro }}</span>
-              <span *ngIf = "remesaTabla == null">{{ remesaItem.numero }}</span>
-            </label>
-            <label>{{ "administracion.parametrosGenerales.literal.descripcion" | translate }}
-              <span *ngIf = "remesaTabla != null">{{ remesaTabla[0].descripcion }}</span>
-              <span *ngIf = "remesaTabla == null">{{ remesaItem.descripcion }}</span>
-            </label>
-
-            <!-- <i *ngIf="!esFichaActiva('generales')" class="fa fa-angle-down float-right"></i> -->
-            <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "
-              (click)="abreCierraFicha('datosGenerales')"></i>
-          </div>
-        </div>
-      </div>
-      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center"
-        (click)="abreCierraFicha('datosGenerales')">
-        <div class="img-colegiado">
-          <i class="far fa-address-card icon-ficha"></i>
-        </div>
-        <label class="title-ficha" style="cursor:pointer">Datos Generales de la Remesa</label>
-        <i class="fa fa-angle-up ml-auto"></i>
-      </div>
+      <label class="title-ficha" style="cursor:pointer">Datos Generales de la Remesa</label>
     </div>
 
-    <div *ngIf="openFicha" class="card-body card-body-ficha">
-      <div class="row">
-        <div class="bloque col-lg-6 col-md-6">
+    <div class="row">
 
-          <div class="form-row">
-            <div class="form-group col-lg-10 col-md-10">
-              <label>
-                <strong> {{ "formacion.fichaCursos.tarjetaPrecios.resumen.numRegistros" | translate }} </strong>
-                <span *ngIf = "remesaTabla != null"> {{ remesaTabla[0].nRegistro }}</span>
-                <span *ngIf = "remesaTabla == null"> {{ remesaItem.numero }}</span>
-              </label>
-            </div>
+      <div class="bloque mt-2 pt-2 col-lg-6 col-md-6">
 
-            <div class="form-group col-lg-10 col-md-10">
-              <label>
-                <strong> {{"administracion.parametrosGenerales.literal.descripcion" | translate}}</strong>
-              </label>
-              <input *ngIf = "remesaTabla != null" [(ngModel)]="remesaTabla[0].descripcion" [disabled]="disableAll || historico" type="text"
-                class="form-control" [maxLength]="100" pInputText>
-
-              <input *ngIf = "remesaTabla == null" [(ngModel)]="remesaItem.descripcion" [disabled]="disableAll || historico" type="text"
-              class="form-control" [maxLength]="100" pInputText>
-            </div>
-
-            <!-- <div class="form-group col-lg-10 col-md-10">
-              <label>
-                <strong> {{"justiciaGratuita.oficio.turnos.tipoturno" | translate}} </strong>
-              </label>
-              <p-dropdown class="select-form" [disabled]="disableAll || historico" [(ngModel)]='turnosItem.idtipoturno'
-                [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="tiposIncidencias"
-                placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true">
-              </p-dropdown>
-            </div>
-            
-            <div class="form-group col-lg-3 col-md-3">
-              <label>
-                {{"censo.consultaDirecciones.literal.poblacion" | translate}} (*)
-              </label>
-              <p-dropdown class="select-form" [(ngModel)]='body.idPoblacion' (onChange)="onChangePoblacion()" [filter]="true" filterBy="label,labelSinTilde"
-                [disabled]="isDisabledPoblacion || historico || !permisoEscritura" [options]="comboPoblacion" (input)="buscarPoblacion($event)"
-                [emptyFilterMessage]="resultadosPoblaciones" id="dropdown" placeholder="{{'general.boton.seleccionar' | translate}}"
-                [showClear]="true">
-              </p-dropdown>
-
-            </div>  -->
-          </div>
-        </div>
-        
-        <div class="bloque col-lg-6 col-md-6">
-          <div class="form-row">
-            <div class="form-group col-lg-3 col-md-3"></div>
-            <div class="form-group col-lg-8 col-md-8">
-              <p-table [value]="datos" [columns]="cols" [first]="page" [responsive]="true" #tabla class="tabla-listado">
-                <ng-template pTemplate="colgroup" let-columns>
-                  <colgroup>
-                    <col *ngFor="let col of cols" [style.width]="col.width">
-                  </colgroup>
-                </ng-template>
-                <ng-template pTemplate="header" let-columns>
-                  <tr>
-                    <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
-                      {{ col.header | translate }}
-                      <p-sortIcon [field]="col.field"></p-sortIcon>
-                      <input pDroppable="false" (click)="$event.stopPropagation()" [(ngModel)]="buscadores[i]"
-                        *ngSwitchCase="col.field" pInputText type="text" (input)="
-                tabla.filter($event.target.value, col.field, 'contains')
-              " />
-                    </th>
-                  </tr>
-                </ng-template>
-
-                <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
-                  <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
-
-                    <td class="text-center" *ngFor="let col of columns">
-
-                      <span *ngIf = "col.field == 'estado'  || col.field == 'fechaModificacion'">
-                        {{dato[col.field]}}
-                      </span>
-
-                    </td>
-
-                  </tr>
-                </ng-template>
-                <ng-template pTemplate="emptymessage" let-columns>
-                  <tr>
-                    <td [attr.colspan]="columns.length">
-                      {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
-                    </td>
-                  </tr>
-                </ng-template>
-              </p-table>
-            </div>
+        <div class="form-row ml-2">
+          <div class="col-lg-10 col-md-10">
+            <label>
+              <strong> {{ "formacion.fichaCursos.tarjetaPrecios.resumen.numRegistros" | translate }} </strong>
+              <span *ngIf="remesaTabla != null"> {{ remesaTabla[0].nRegistro }}</span>
+              <span *ngIf="remesaTabla == null"> {{ remesaItem.numero }}</span>
+            </label>
           </div>
         </div>
 
-        <!-- <div class="bloque col-lg-4 col-md-4">
-          <div class="form-row">
-            <div class="form-group col-lg-12 col-md-12">
-              <label style="text-align:center; font-weight: bold;">{{ 'justiciaGratuita.oficio.turnos.datosadicionales' | translate }}</label>
-            </div>
-            <div class="form-group col-lg-12 col-md-12">
-              <label>
-                {{"general.boton.description" | translate}}
-              </label>
-              <textarea name="observaciones" [disabled]="disableAll || historico" class="form-control" pInputTextarea autoResize="autoResize"
-                [(ngModel)]="turnosItem.descripcion" maxLength="4000"></textarea>
-            </div>
+        <p><br /></p>
 
-            <div class="form-group col-lg-12 col-md-12">
-              <label>
-                {{"justiciaGratuita.oficio.turnos.requisitosacceso" | translate}}
-              </label>
-              <textarea name="observaciones" [disabled]="disableAll || historico" class="form-control" pInputTextarea autoResize="autoResize"
-                [(ngModel)]="turnosItem.requisitos" maxLength="1024"></textarea>
-            </div>
+        <div class="form-row ml-2">
+          <div class="col-lg-10 col-md-10">
+            <label>
+              <strong> {{"administracion.parametrosGenerales.literal.descripcion" | translate}}</strong>
+            </label>
+            <input *ngIf="remesaTabla != null" [(ngModel)]="remesaTabla[0].descripcion"
+              [disabled]="disableAll || historico" type="text" class="form-control" [maxLength]="100" pInputText>
 
+            <input *ngIf="remesaTabla == null" [(ngModel)]="remesaItem.descripcion" [disabled]="disableAll || historico"
+              type="text" class="form-control" [maxLength]="100" pInputText>
           </div>
-        </div> -->
+        </div>
 
+        <p><br /></p>
+
+        <div class="form-row ml-2">
+          <div class="col-lg-10 col-md-10">
+            <b>
+              <p-checkbox *ngIf="localStorageService.institucionActual == 2003" [(ngModel)]="busquedaActualizaciones"
+                binary="true" label="Busqueda actulizaciones" name="groupname">
+              </p-checkbox>
+            </b>
+          </div>
+        </div>
       </div>
-      <br>
-    </div>
 
-    <!-- <div *ngIf="openFicha" class="card-footer ">
-      
-    </div> -->
+      <div class="bloque  mt-3 pt-2 col-lg-6 col-md-6">
+        <div class="form-row">
+          <div class="form-group col-lg-3 col-md-3"></div>
+          <div class="form-group col-lg-8 col-md-8">
+            <p-table [value]="datos" [columns]="cols" [first]="page" [responsive]="true" #tabla class="tabla-listado">
+              <ng-template pTemplate="colgroup" let-columns>
+                <colgroup>
+                  <col *ngFor="let col of cols" [style.width]="col.width">
+                </colgroup>
+              </ng-template>
+              <ng-template pTemplate="header" let-columns>
+                <tr>
+                  <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+                    {{ col.header | translate }}
+                    <p-sortIcon [field]="col.field"></p-sortIcon>
+                  </th>
+                </tr>
+              </ng-template>
+
+              <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+                <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+
+                  <td class="text-center" *ngFor="let col of columns">
+
+                    <span *ngIf="col.field == 'estado'  || col.field == 'fechaModificacion'">
+                      {{dato[col.field]}}
+                    </span>
+
+                  </td>
+
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="emptymessage" let-columns>
+                <tr>
+                  <td [attr.colspan]="columns.length">
+                    {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
   </div>
+
   <div *ngIf="progressSpinner" class="overlay-spinner">
     <div class="loader"></div>
   </div>

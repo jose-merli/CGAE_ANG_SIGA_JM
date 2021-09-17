@@ -16,6 +16,7 @@ import { procesos_oficio } from '../../../../../permisos/procesos_oficio';
 import { filter } from 'rxjs/operator/filter';
 import { Router } from '@angular/router';
 import { RemesasItem } from '../../../../../models/sjcs/RemesasItem';
+import { SigaStorageService } from '../../../../../siga-storage.service';
 
 @Component({
   selector: 'app-tarjeta-datos-generales',
@@ -94,14 +95,15 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
   remesaItem: RemesasItem = new RemesasItem();
   datos;
   remesasDatosEntradaItem;
-  editar: boolean;
+  busquedaActualizaciones: boolean;
 
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
     private persistenceService: PersistenceService,
     private commonsService: CommonsService,
     private router: Router,
-    private datepipe: DatePipe) { }
+    private datepipe: DatePipe,
+    private localStorageService: SigaStorageService) { }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.turnosItem != undefined && (changes.turnosItem.currentValue != null || changes.turnosItem.currentValue != undefined)) {
@@ -151,15 +153,13 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
 
   ngOnInit() {
     if(localStorage.getItem('ficha') == "registro"){
-      this.editar = true;
       this.item = localStorage.getItem('remesaItem');
       console.log("Item -> ", this.item);
       localStorage.removeItem('remesaItem');
       this.remesaTabla = JSON.parse(this.item);
       console.log("Item en JSON -> ", this.remesaTabla);
-      this.listadoEstadosRemesa();
+      this.listadoEstadosRemesa(this.remesaTabla[0]);
     }else if(localStorage.getItem('ficha') == "nuevo"){
-      this.editar = false;
       this.getUltimoRegitroRemesa();
       this.remesaItem.descripcion = "";
     }
@@ -198,7 +198,12 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
       this.modoEdicion = true;
     }
     this.getCols();
+    this.getInstitucionActual();
   }
+
+  getInstitucionActual() {
+		this.sigaServices.get("institucionActual").subscribe(n => { this.localStorageService.institucionActual = n.value });
+	}
 
   getUltimoRegitroRemesa() {
     console.log("Dentro del getUltimoRegistroRemesa");
@@ -243,11 +248,11 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
     ];
   }
 
-  listadoEstadosRemesa(){
+  listadoEstadosRemesa(remesa){
     this.progressSpinner = true;
     this.remesasDatosEntradaItem =
     {
-      'idRemesa': (this.remesaTabla[0].idRemesa != null && this.remesaTabla[0].idRemesa != undefined) ? this.remesaTabla[0].idRemesa.toString() : this.remesaTabla[0].idRemesa,  
+      'idRemesa': (remesa.idRemesa != null && remesa.idRemesa != undefined) ? remesa.idRemesa.toString() : remesa.idRemesa,  
     };
     this.sigaServices.post("ficharemesas_listadoEstadosRemesa", this.remesasDatosEntradaItem).subscribe(
       n => {

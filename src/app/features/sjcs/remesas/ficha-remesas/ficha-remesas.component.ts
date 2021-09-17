@@ -18,7 +18,7 @@ export class FichaRemesasComponent implements OnInit {
   msgs;
 
   constructor(private sigaServices: SigaServices,
-    private persistenceService: PersistenceService, 
+    private persistenceService: PersistenceService,
     private commonsServices: CommonsService,
     private translateService: TranslateService) { }
 
@@ -33,27 +33,31 @@ export class FichaRemesasComponent implements OnInit {
       };
     } else if (this.tarjetaDatosGenerales.remesaItem != null) {
       this.remesaItem = {
+        'idRemesa': 0,
         'descripcion': this.tarjetaDatosGenerales.remesaItem.descripcion,
         'numero': this.tarjetaDatosGenerales.remesaItem.numero
       };
     }
 
     this.progressSpinner = true;
-   
-       this.sigaServices.post("ficharemesas_guardarRemesa", this.remesaItem).subscribe(
-        data => {
-          this.showMessage("success", this.translateService.instant("general.message.correct"), JSON.parse(data.body).error.description);
-          this.progressSpinner = false;
-        },
-        err => {
-          if (err != undefined && JSON.parse(err.error).error.description != "") {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
-          } else {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-          }
-          this.progressSpinner = false;
-        },
-       );
+
+    this.sigaServices.post("ficharemesas_guardarRemesa", this.remesaItem).subscribe(
+      data => {
+        this.showMessage("success", this.translateService.instant("general.message.correct"), JSON.parse(data.body).error.description);
+        this.remesaItem.idRemesa = JSON.parse(data.body).id;
+      },
+      err => {
+        if (err != undefined && JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+      },
+      () => {
+        this.tarjetaDatosGenerales.listadoEstadosRemesa(this.remesaItem);
+        this.progressSpinner = false;
+      }
+    );
   }
 
   showMessage(severity, summary, msg) {

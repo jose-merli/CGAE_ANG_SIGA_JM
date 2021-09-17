@@ -145,6 +145,7 @@ export class TablaRemesasComponent implements OnInit {
         this.progressSpinner = false;
         this.selectMultiple = false;
         this.selectAll = false;
+        this.search.emit(true);
       }
     );
   }
