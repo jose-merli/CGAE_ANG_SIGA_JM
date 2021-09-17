@@ -2,11 +2,13 @@
   <div class="header-title">
       <i class="fa fa-square"></i>
       <p>{{'menu.facturacion' | translate}}
-        <i class="fa fa-angle-right"></i>{{'menu.productosYServicios.solicitudes.alta' | translate}}<!-- Corregir etiqueta en la BBDD y sustituir "Compra/Subscripción" por "Compra/Suscripción" -->
+        <i class="fa fa-angle-right"></i>{{'facturacion.productos.CompraSuscripcion' | translate}}
   </div>
   <div>
       <app-tarjeta-cliente-compra-suscripcion [(ficha)]="ficha">
       </app-tarjeta-cliente-compra-suscripcion>
+      <app-tarjeta-solicitud-compra-suscripcion [(ficha)]="ficha">
+      </app-tarjeta-solicitud-compra-suscripcion>
   </div>
 </div>
 

@@ -25,6 +25,7 @@ import { endpoints_justiciables } from "../utils/endpoints_justiciables";
 import { endpoints_guardia } from "../utils/endpoints_guardia";
 
 import { endpoints_oficio } from "../utils/endpoints_oficio";
+import { endpoints_facturacion } from "../utils/endpoints_facturacion";
 
 import { endpoints_componentes } from "../utils/endpoints_components";
 import { endpoints_generales } from "../utils/endpoints_generales";
@@ -664,6 +665,7 @@ export class SigaServices {
     dialogo_maxModelos: "dialogoComunicacion/maxModelos",
     ...endpoints_maestros,
     ...endpoints_guardia,
+    ...endpoints_facturacion,
   };
 
   private menuToggled = new Subject<any>();
