@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '../../../../../commons/translate';
+import { CodigosPorInstitucionObject } from '../../../../../models/codigosPorInstitucionObject';
 import { ComboObject } from '../../../../../models/ComboObject';
 import { ListaServiciosDTO } from '../../../../../models/ListaServiciosDTO';
 import { ListaServiciosItems } from '../../../../../models/ListaServiciosItems';
@@ -30,6 +31,7 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
   checkBoxPermitirSolicitudPorInternet: boolean = false;
   checkboxPermitirAnulacionPorInternet: boolean = false;
   checkboxAsignacionAutomatica: boolean = false;
+  listaCodigosPorInstitucionObject: CodigosPorInstitucionObject;
 
   //variables de control
   aGuardar: boolean = false; //Usada en condiciones que validan la obligatoriedad, definida al hacer click en el boton guardar
@@ -41,6 +43,7 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
   subscriptionCrearServicioInstitucion: Subscription;
   subscriptionEditarServicioInstitucion: Subscription;
   subscriptionActivarDesactivarServicios: Subscription;
+  subscriptionCodesByInstitution: Subscription;
 
   constructor(private sigaServices: SigaServices, private translateService: TranslateService, private confirmationService: ConfirmationService, private router: Router) { }
 
@@ -72,6 +75,7 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
 
   ngOnInit() {
     this.getComboCategoria();
+    this.obtenerCodigosPorColegio();
   }
 
   //Necesario para liberar memoria
@@ -84,9 +88,10 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
       this.subscriptionCrearServicioInstitucion.unsubscribe();
     if (this.subscriptionEditarServicioInstitucion)
       this.subscriptionEditarServicioInstitucion.unsubscribe();
-
     if (this.subscriptionActivarDesactivarServicios)
       this.subscriptionActivarDesactivarServicios.unsubscribe;
+    if (this.subscriptionCodesByInstitution)
+      this.subscriptionCodesByInstitution.unsubscribe;
   }
 
   //INICIO METODOS TARJETA DATOS GENERALES
@@ -119,7 +124,11 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
 
   //Metodo que se lanza al marcar/desmarcar el checkbox Asignacion automatica
   onChangeAsignacionAutomatica() {
-
+    if (this.checkboxAsignacionAutomatica) {
+      this.servicio.automatico = '1';
+    } else {
+      this.servicio.automatico = '0';
+    }
   }
 
   restablecer() {
@@ -136,12 +145,27 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
     } else if (this.servicio.permitirbaja == "0") {
       this.checkboxPermitirAnulacionPorInternet = false;
     }
+
+    if (this.servicio.automatico == "1") {
+      this.checkboxAsignacionAutomatica = true;
+    } else if (this.servicio.automatico == "0") {
+      this.checkboxAsignacionAutomatica = false;
+    }
+
   }
 
   guardar() {
     this.aGuardar = true;
-    if (this.servicio.idtiposervicios != null && this.servicio.idservicio != null && this.servicio.descripcion != '') {
-      this.guardarServicio();
+    if (this.servicio.idtiposervicios != null && this.servicio.idservicio != null && this.servicio.descripcion != '' && this.servicio.descripcion != undefined) {
+      if (this.servicio.codigoext != "") {
+        if (this.listaCodigosPorInstitucionObject.listaCodigosPorColegio.includes(this.servicio.codigoext)) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.fichaproductos.datosgenerales.mensajeerrorcodigo"))
+        } else {
+          this.guardarServicio();
+        }
+      } else {
+        this.guardarServicio();
+      }
     } else {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
     }
@@ -205,6 +229,26 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
     this.subscriptionTypeSelectValues = this.sigaServices.getParam("serviciosBusqueda_comboTipos", "?idCategoria=" + this.servicio.idtiposervicios).subscribe(
       TipoSelectValues => {
         this.tiposObject = TipoSelectValues;
+
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  //Metodo para obtener todos los codigos PYS_PRODUCTOINSTITUCION en la institucion actual
+  obtenerCodigosPorColegio() {
+    this.progressSpinner = true;
+
+    this.subscriptionCodesByInstitution = this.sigaServices.get("fichaServicio_obtenerCodigosPorColegio").subscribe(
+      codesByInstitutionValues => {
+
+        this.listaCodigosPorInstitucionObject = codesByInstitutionValues;
 
         this.progressSpinner = false;
       },
