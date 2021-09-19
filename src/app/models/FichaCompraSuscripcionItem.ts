@@ -17,6 +17,12 @@ export class FichaCompraSuscripcionItem {
     fechaAprobacion: Date;
     fechaDenegacion: Date;
     fechaAnulacion: Date;
+    idFormaPago: number;
+
+    
+    //TARJETA FORMA DE PAGO
+    idFormasPagoComunes: string;
+    idFormaPagoSeleccionada: number;
 
     productos: ListaProductosItems[];
     

@@ -20,15 +20,23 @@ export class FichaCompraSuscripcionComponent implements OnInit {
     private sigaServices: SigaServices,) { }
 
   ngOnInit() {
+
+    
+    if(sessionStorage.getItem("FichaCompraSuscripcion")){
+      this.ficha = JSON.parse(sessionStorage.getItem("FichaCompraSuscripcion"));
+      sessionStorage.removeItem("FichaCompraSuscripcion")
+    }
+    //Si vuelve de otra pantalla
+    else this.getDatosFicha();
     
   }
 
   getDatosFicha() {
-		this.sigaServices.get('facturacion_getFichaCompraSuscripcion').subscribe(
+    this.ficha = JSON.parse(sessionStorage.getItem("cargarFichaCompraSuscripcion"));
+    this.progressSpinner = true; 
+		this.sigaServices.post('facturacion_getFichaCompraSuscripcion', this.ficha).subscribe(
 			(n) => {
-				let data = JSON.parse(n.body);
-        this.ficha.nSolicitud = data.nSolicitud;
-        this.ficha.usuModificacion
+				this.ficha = JSON.parse(n.body);
 				this.progressSpinner = false;
 			},
 			(err) => {

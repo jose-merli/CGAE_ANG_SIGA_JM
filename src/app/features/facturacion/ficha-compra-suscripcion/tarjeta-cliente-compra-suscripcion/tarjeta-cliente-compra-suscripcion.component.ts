@@ -36,28 +36,8 @@ export class TarjetaClienteCompraSuscripcionComponent implements OnInit {
   ngOnInit() {
 
     this.getTiposIdentificacion();
-
-
-    //Se rellena la tarjeta automaticamente si el usuario que accede es un colegiado
-    if((sessionStorage.esColegiado=='true' && sessionStorage.personaBody) || sessionStorage.getItem("Colegiado")){
-      let personalBody;
-      //Si se vuelve de la ficha colegial como colegiado.
-      //Esto es debido a que el personalBody se borra en distintas pantallas de censo.
-      if(sessionStorage.getItem("Colegiado")){
-          personalBody = JSON.parse(sessionStorage.getItem("Colegiado"));
-          sessionStorage.setItem("personaBody",personalBody);
-          sessionStorage.removeItem("Colegiado");
-      }
-      else personalBody = JSON.parse(sessionStorage.personaBody);
-      this.ficha.apellidos = personalBody.apellidos1+ " " +personalBody.apellidos2;
-      this.ficha.nif = personalBody.nif;
-      this.ficha.idtipoidentificacion = personalBody.idTipoIdentificacion;
-      this.ficha.nombre = personalBody.soloNombre;
-      this.ficha.idPersona = personalBody.idPersona;
-      this.ficha.idInstitucion = personalBody.idInstitucion;
-    }
     //Se comprueba si se ha realizado una busqueda y se rellena la tarjeta con los datos extraidos
-    else if(sessionStorage.getItem("abogado")){
+    if(sessionStorage.getItem("abogado")){
       let data = JSON.parse(sessionStorage.getItem("abogado"))[0];
 			sessionStorage.removeItem("abogado");
 			this.ficha.nombre = data.nombre;
@@ -67,10 +47,6 @@ export class TarjetaClienteCompraSuscripcionComponent implements OnInit {
       this.ficha.idInstitucion = data.numeroInstitucion;
       
       this.compruebaDNIInput();
-    }
-    //Si se vuelve de la ficha colegial como no colegiado
-    else if(sessionStorage.getItem("Cliente")){
-      this.ficha = JSON.parse(sessionStorage.getItem("Cliente"));
     }
 
     if(sessionStorage.esColegiado=='true')this.showSearch = false;
@@ -156,9 +132,8 @@ export class TarjetaClienteCompraSuscripcionComponent implements OnInit {
               JSON.stringify(true)
             );
             this.progressSpinner = false;
-            sessionStorage.setItem("origin", "Cliente");
-            if(sessionStorage.personaBody)sessionStorage.setItem("Cliente", sessionStorage.personaBody);
-            else sessionStorage.setItem("Cliente", JSON.stringify(this.ficha));
+            sessionStorage.setItem("origin", "Cliente"); 
+            sessionStorage.setItem("FichaCompraSuscripcion", JSON.stringify(this.ficha));
             this.router.navigate(['/fichaColegial']);
           }
         },
@@ -201,8 +176,7 @@ export class TarjetaClienteCompraSuscripcionComponent implements OnInit {
           );
           this.progressSpinner = false;
           sessionStorage.setItem("origin", "Cliente");
-          if(sessionStorage.personaBody)sessionStorage.setItem("Cliente", sessionStorage.personaBody);
-          else sessionStorage.setItem("Cliente", JSON.stringify(this.ficha));
+          sessionStorage.setItem("FichaCompraSuscripcion", JSON.stringify(this.ficha));
           this.router.navigate(['/fichaColegial']);
       },
                  (err) => {

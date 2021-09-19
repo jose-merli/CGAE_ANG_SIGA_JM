@@ -9,6 +9,7 @@ import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
 import { procesos_facturacion } from '../../../../permisos/procesos_facturacion';
+import { FichaCompraSuscripcionItem } from '../../../../models/FichaCompraSuscripcionItem';
 
 
 @Component({
@@ -358,8 +359,14 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
       this.msgs = msg;
     } else {
       if (this.checkFormasPago()) {
-        sessionStorage.removeItem("Cliente");
-        sessionStorage.setItem("productos",JSON.stringify(this.selectedRows));
+        sessionStorage.removeItem("FichaCompraSuscripcion");
+        let nuevaCompra = new FichaCompraSuscripcionItem();
+        nuevaCompra.productos = this.selectedRows;
+        if(sessionStorage.esColegiado=='true' && sessionStorage.personaBody) {
+          let personalBody = JSON.parse(sessionStorage.personaBody);
+          nuevaCompra.idPersona = personalBody.idPersona;
+        }
+        sessionStorage.setItem("cargarFichaCompraSuscripcion",JSON.stringify(nuevaCompra));
         this.router.navigate(["/fichaCompraSuscripcion"]);
       } else {
         this.msgs = [

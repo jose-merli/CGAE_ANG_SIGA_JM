@@ -48,7 +48,7 @@
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "facturacion.productos.ultimoModificador" | translate }}
               </label>
-              <input [(ngModel)]="ficha.usumodificacion" type="text" class="form-control" disabled pInputText />
+              <input [(ngModel)]="ficha.usuModificacion" type="text" class="form-control" disabled pInputText />
             </div>
           </div>
           <p-table [value]="filas" [columns]="cols" #table class="tabla-listado"
@@ -103,15 +103,7 @@
           label="{{ 'general.boton.search' | translate}}"></button>
       </div>
       <div class="text-right main-button">
-        <button pButton *ngIf="showSearch" (click)="checkSearch()" type="button" icon="fa fa-search" iconPos="left"
-          label="{{ 'general.boton.search' | translate}}"></button>
-      </div>
-      <div class="text-right main-button">
-        <button pButton *ngIf="showSearch" (click)="checkSearch()" type="button" icon="fa fa-search" iconPos="left"
-          label="{{ 'general.boton.search' | translate}}"></button>
-      </div>
-      <div class="text-right main-button">
-        <button pButton *ngIf="showSearch" (click)="checkSearch()" type="button" icon="fa fa-search" iconPos="left"
+        <button pButton  (click)="checkSearch()" type="button" icon="fa fa-search" iconPos="left"
           label="{{ 'general.boton.search' | translate}}"></button>
       </div>
     </div>
