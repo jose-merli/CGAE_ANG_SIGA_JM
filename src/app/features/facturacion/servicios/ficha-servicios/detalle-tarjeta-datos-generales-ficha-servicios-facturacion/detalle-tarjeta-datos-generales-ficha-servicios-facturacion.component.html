@@ -41,7 +41,7 @@
   <!-- Permitir solicitud por internet -->
   <div class="form-group-interlineado col-lg-3 col-md-3" *ngIf="servicio.automatico == '0'">
     <div class="d-flex align-items-baseline justify-content-between alineacionCheckboxes">
-      <p-checkbox binary="true"
+      <p-checkbox binary="true" [disabled]="checkboxAsignacionAutomatica"
         label="{{'facturacion.fichaservicios.datosgenerales.permitirsoliciturinternet' | translate}}"
         [(ngModel)]="checkBoxPermitirSolicitudPorInternet" (onChange)="onChangePermitirSolicitudInternet()">
       </p-checkbox>
@@ -51,7 +51,7 @@
   <!-- Permitir anulacion por internet -->
   <div class="form-group-interlineado col-lg-3 col-md-3">
     <div class="d-flex align-items-baseline justify-content-between alineacionCheckboxes">
-      <p-checkbox binary="true"
+      <p-checkbox binary="true" [disabled]="checkboxAsignacionAutomatica"
         label="{{'facturacion.fichaservicios.datosgenerales.permitiranulacioninternet' | translate}}"
         [(ngModel)]="checkboxPermitirAnulacionPorInternet" (onChange)="onChangePermitirAnulacionInternet()">
       </p-checkbox>
@@ -70,7 +70,8 @@
   <!-- Asignacion automatica -->
   <div class="form-group-interlineado col-lg-3 col-md-3">
     <div class="d-flex align-items-baseline justify-content-between alineacionCheckboxes">
-      <p-checkbox binary="true" label="{{'facturacion.fichaservicios.datosgenerales.asignacionautomatica' | translate}}"
+      <p-checkbox [disabled]="servicio.idconsulta == null" binary="true"
+        label="{{'facturacion.fichaservicios.datosgenerales.asignacionautomatica' | translate}}"
         [(ngModel)]="checkboxAsignacionAutomatica" (onChange)="onChangeAsignacionAutomatica()">
       </p-checkbox>
     </div>

@@ -467,6 +467,7 @@ export class SigaServices {
     fichaServicio_detalleServicio: 'pys/detalleServicio',
     fichaServicio_crearServicio: 'pys/nuevoServicio',
     fichaServicio_editarServicio: 'pys/editarServicio',
+    fichaServicio_obtenerCodigosPorColegio: '/pys/obtenerCodigosPorColegioServicios',
 
     // FOTO
     solicitudModificacion_searchSolModifDatosUseFoto: 'solicitudModificacion/searchSolModifDatosUseFoto',
