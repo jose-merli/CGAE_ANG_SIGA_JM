@@ -168,24 +168,15 @@ export class TablaRemesasResultadosComponent implements OnInit {
 
   getCols() {
 
-    // this.cols = [
-    //   { field: "nRegistro", header: "formacion.fichaCursos.tarjetaPrecios.resumen.numRegistros" },
-    //   { field: "descripcion", header: "administracion.parametrosGenerales.literal.descripcion" },
-    //   { field: "fechaGeneracion", header: "justiciaGratuita.remesas.tabla.FechaGeneracion" },
-    //   { field: "fechaEnvio", header: "justiciaGratuita.remesas.tabla.FechaEnvio" },
-    //   { field: "fechaRecepcion", header: "justiciaGratuita.remesas.tabla.FechaRecepcion" },
-    //   { field: "estado", header: "justiciaGratuita.Calendarios.Estado" },
-    //   { field: "incidencias", header: "justiciaGratuita.remesas.tabla.Incidencias" }
-    // ];
-
     this.cols = [
-      { field: "numRemesaCompleto", header: 'Nº Remesa' },
-      { field: "descripcionRemesa", header: 'Descripción Remesa' },
-      { field: "numRegistroRemesaCompleto", header: 'Nº Registro' },
-      { field: "fechaCargaRemesaResultado", header: 'Fecha de Carga' },
-      { field: "fechaResolucionRemesaResultado", header: 'Fecha de Remesa' },
-      { field: "nombreFichero", header: 'Nombre Fichero' },
-      { field: "observacionesRemesaResultado", header: 'Observaciones' }
+      { field: "numRemesaCompleto", header: "justiciaGratuita.remesasResultados.tabla.numRemesa" },
+      { field: "descripcionRemesa", header: "justiciaGratuita.remesasResultados.tabla.descripcionRemesa" },
+      { field: "numRegistroRemesaCompleto", header: "justiciaGratuita.remesasResultados.tabla.numRegistro" },
+      { field: "fechaCargaRemesaResultado", header: "justiciaGratuita.remesasResultados.tabla.fechaCarga", width: "6%" },
+      { field: "fechaResolucionRemesaResultado", header: "justiciaGratuita.remesasResultados.tabla.fechaRemesa", width: "6%" },
+      { field: "nombreFichero", header: "justiciaGratuita.remesasResultados.tabla.nombreFichero" },
+      { field: "observacionesRemesaResultado", header: "justiciaGratuita.remesasResultados.tabla.observaciones" },
+      { field: "acciones" , header: "justiciaGratuita.remesasResultados.tabla.acciones", width: "5%"}
     ];
 
     this.cols.forEach(it => this.buscadores.push(""))
@@ -265,4 +256,11 @@ export class TablaRemesasResultadosComponent implements OnInit {
     this.msgs = [];
   }
 
+  descargarFicheros(datosSeleccionados){
+    console.log(datosSeleccionados);
+  }
+
+  consultarEditarRemesaResultado(remesaResultado){
+    console.log(remesaResultado);
+  }
 }
