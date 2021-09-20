@@ -1,0 +1,96 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="ficha-container">
+  <div class="card">
+    <div class="card-header header-ficha" (click)="onHideTarjeta()">
+      <div *ngIf="showTarjeta" class="header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fa fa-user icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{ 'facturacion.productos.formapago' | translate }}</label>
+        <div class="d-flex justify-content-start mb-1 ml-auto">
+          <i class="fa fa-angle-up ml-auto"></i>
+        </div>
+      </div>
+      <div *ngIf="!showTarjeta" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="fa fa-user icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1">
+            <label class="mr-auto title-ficha">{{ 'facturacion.productos.formapago' | translate }}
+            </label>
+          </div>
+          <div class="row">
+            <div *ngIf="ficha.productos != null" class="col-3">
+              <label>{{"facturacionSJCS.facturacionesYPagos.importeTotal" || translate}}
+                <span>{{ ficha.impTotal }}</span>
+              </label>
+            </div>
+            <div *ngIf="ficha.productos != null" class="col-3">
+              <label>{{"facturacionSJCS.facturacionesYPagos.importePendiente" || translate}}
+                <span>{{ ficha.pendPago }}</span>
+              </label>
+            </div>
+            <div class="col-3">
+              <label>{{ "facturacion.productos.formapago" | translate }}
+                <span>{{ ficha.idFormaPagoSeleccionada }}</span>
+              </label>
+            </div>
+            <div class="col-3">
+              <i class="fa fa-angle-down float-right"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div [hidden]="!showTarjeta" class="card-body card-body-ficha">
+      <div class="row">
+        <div class="bloque">
+          <div *ngIf="ficha.productos != null" class="form-row">
+            <div class="form-group col-lg-3 col-md-3">
+              <label>{{ "facturacion.productos.totalNeto" | translate }}
+              </label>
+              <input [(ngModel)]="ficha.totalNeto" type="text" class="form-control" disabled pInputText/>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+              <label>{{ "facturacion.productos.iva" | translate }}
+              </label>
+              <input [(ngModel)]="ficha.totalIVA" type="text" class="form-control" disabled pInputText/>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+              <label>{{ "facturacionSJCS.facturacionesYPagos.importeTotal" | translate }}
+              </label>
+              <input [(ngModel)]="ficha.impTotal" type="text" class="form-control" disabled pInputText/>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+              <label>{{ "facturacionSJCS.facturacionesYPagos.importePendiente" | translate }}
+              </label>
+              <input [(ngModel)]="ficha.pendPago" type="text" class="form-control" disabled pInputText/>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-lg-3 col-md-3">
+              <label>{{ "facturacion.productos.formapago" | translate }}
+              </label>
+              <p-dropdown class="select-form" [options]="comboComun" [disabled]="ficha.idEstadoPeticion != 30" placeholder="{{'general.boton.seleccionar' | translate}}"
+                [(ngModel)]="ficha.idFormaPagoSeleccionada" showClear="true" ></p-dropdown>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div [hidden]="!showTarjeta" class="card-footer">
+      <div class="text-right main-button">
+        <button pButton  (click)="checkSave()" type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.save' | translate}}"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

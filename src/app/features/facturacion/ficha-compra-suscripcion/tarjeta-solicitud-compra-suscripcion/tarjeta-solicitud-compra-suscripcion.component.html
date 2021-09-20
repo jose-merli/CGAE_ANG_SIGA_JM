@@ -29,6 +29,16 @@
                 <span>{{ ficha.nSolicitud }}</span>
               </label>
             </div>
+            <div *ngIf="filas.length > 0" class="col-3">
+              <label>{{ "censo.resultadosSolicitudesModificacion.literal.fecha" | translate }}
+                <span>{{ filas.[filas.length-1].fecha | date: 'dd/MM/yyyy' }}</span>
+              </label>
+            </div>
+            <div class="col-3">
+              <label>{{ "facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado" | translate }}
+                <span>{{ filas.[filas.length-1].estado }}</span>
+              </label>
+            </div>
             <div class="col-3">
               <i class="fa fa-angle-down float-right"></i>
             </div>
