@@ -31,7 +31,7 @@ export class LoginDevelopComponent implements OnInit {
 	// value=N selected="">NO, no soy Letrado</option>
 	//                   <option value=S>SÍ, soy Letrado</option>
 	environment: string = "";
-	sigaFrontVersion: string = "1.0.73_0";
+	sigaFrontVersion: string = "1.0.73_1";
 	sigaWebVersion: string = "";
 
 	letrado: any[] = [{ label: 'No, no soy Letrado', value: 'N' }, { label: 'Sí, soy Letrado', value: 'S' }];
