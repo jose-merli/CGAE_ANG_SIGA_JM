@@ -8,6 +8,7 @@ import { ConfirmationService, Paginator } from 'primeng/primeng';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { RemesasBusquedaObject } from '../../../../../models/sjcs/RemesasBusquedaObject';
 import { Router } from '../../../../../../../node_modules/@angular/router';
+import { ComboItem } from '../../../../administracion/parametros/parametros-generales/parametros-generales.component';
 
 @Component({
   selector: 'app-tarjeta-ejgs',
@@ -38,6 +39,9 @@ export class TarjetaEjgsComponent implements OnInit {
   initDatos;
   progressSpinner: boolean = false;
   buscadores = []
+  estadoRemesa: ComboItem[] = [{ value: "con_inci", label: "Expedientes con incidencias"},{ value: "sin_inci", label:  "Expedientes sin incidencias"},{ value: "inci_env", label: "Expedientes con incidencias antes del envío"},{ value: "desp_env", label:  "Expedientes con incidencias después del envío"}, { value: "inci_no_re", label: "Expedientes con incidencias y no en nueva remesa"}];
+  estadoRemesaSeleccionado;
+
   //Resultados de la busqueda
   @Input() datos;
 
@@ -170,13 +174,14 @@ export class TarjetaEjgsComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "turnoGuardiaEJG", header: "Turno/GuardiaEJG" },
+      { field: "turnoGuardiaEJG", header: "justiciaGratuita.remesas.ficha.TurnoGuardiaEJG" },
       { field: "anioEJG", header: "justiciaGratuita.oficio.justificacionExpres.anioEJG" },
       { field: "numeroEJG", header: "justiciaGratuita.oficio.justificacionExpres.numeroEJG" },
       { field: "estadoEJG", header: "justiciaGratuita.ejg.datosGenerales.EstadoEJG" },
       { field: "solicitante", header: "justiciaGratuita.justiciables.rol.solicitante" },
-      { field: "nuevaRemsa", header: "En nueva remesa" },
-      { field: "estadoEJGDentroRemesa", header: "Estado del EJG dentro de la remesa" }
+      { field: "nuevaRemsa", header: "justiciaGratuita.remesas.ficha.EnNuevaRemesa" },
+      { field: "estadoEJGDentroRemesa", header: "justiciaGratuita.remesas.ficha.EstadoEJGDentroRemesa" },
+      { field: "incidencias", header: "justiciaGratuita.remesas.tabla.Incidencias" }
     ];
     this.cols.forEach(it => this.buscadores.push(""))
 

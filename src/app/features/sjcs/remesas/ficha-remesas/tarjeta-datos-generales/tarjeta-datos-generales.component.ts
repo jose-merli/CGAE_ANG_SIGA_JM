@@ -45,7 +45,6 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
   disableAll: boolean = false;
   jurisdicciones: any[] = [];
   areas: any[] = [];
-  tiposIncidencias: any[] = ["Expedientes con incidencias", "Expedientes sin incidencias", "Expedientes con incidencias antes del envío", "Expedientes con incidencias después del envío", "Expedientes con incidencias y no en nueva remesa"];
   turnosItem2;
   permisosTarjeta: boolean = true;
   permisosTarjetaResumen: boolean = true;
@@ -319,14 +318,6 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
 
   }
 
-  onChangeTipoincidencias() {
-    for (let i = 0; i < this.tiposIncidencias.length; i++) {
-      if (this.tiposIncidencias[i].value == this.turnosItem.idtipoturno) {
-        this.tipoturnoDescripcion = this.tiposIncidencias[i].label
-      }
-    }
-  }
-
   getPartidosJudiciales() {
 
     for (let i = 0; i < this.partidasJudiciales.length; i++) {
@@ -598,12 +589,7 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
           );
 
         }
-
-        for (let i = 0; i < this.tiposIncidencias.length; i++) {
-          if (this.tiposIncidencias[i].value == this.turnosItem.idtipoturno) {
-            this.tipoturnoDescripcion = this.tiposIncidencias[i].label
-          }
-        }
+        
         for (let i = 0; i < this.subzonas.length; i++) {
           if (this.subzonas[i].value == this.turnosItem.idsubzona) {
             this.turnosItem.subzona = this.subzonas[i].label

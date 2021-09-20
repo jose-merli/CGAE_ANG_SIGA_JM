@@ -15,8 +15,17 @@
       <ng-template pTemplate="header" let-columns>
         <tr>
           <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
-            {{ col.header | translate }}
-            <p-sortIcon [field]="col.field"></p-sortIcon>
+
+            <span *ngIf = "col.header != 'justiciaGratuita.remesas.tabla.Incidencias'">
+              {{ col.header | translate }}
+            </span>
+
+            <p-dropdown *ngIf = "col.header == 'justiciaGratuita.remesas.tabla.Incidencias'" class="select-form" [(ngModel)]='estadoRemesaSeleccionado' placeholder="Seleccionar"
+            [options]="estadoRemesa" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
+          </p-dropdown>
+            
+            <p-sortIcon *ngIf = "col.header != 'justiciaGratuita.remesas.tabla.Incidencias'" [field]="col.field"></p-sortIcon>
+
             <input pDroppable="false" (click)="$event.stopPropagation()" [(ngModel)]="buscadores[i]" *ngSwitchCase="col.field" pInputText
               type="text" (input)="
                 tabla.filter($event.target.value, col.field, 'contains')
