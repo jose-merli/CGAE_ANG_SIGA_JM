@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, ChangeDetectorRef, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '../../../../../../commons/translate';
 import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacionSJCS';
@@ -6,9 +6,6 @@ import { CommonsService } from '../../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { CompensacionFacObject } from '../../../../../../models/sjcs/CompensacionFacObject';
 import { CompensacionFacItem } from '../../../../../../models/sjcs/CompensacionFacItem';
-import { ParametroRequestDto } from '../../../../../../models/ParametroRequestDto';
-import { SigaStorageService } from '../../../../../../siga-storage.service';
-import { ParametroDto } from '../../../../../../models/ParametroDto';
 import { ParametroItem } from '../../../../../../models/ParametroItem';
 
 @Component({
@@ -16,7 +13,7 @@ import { ParametroItem } from '../../../../../../models/ParametroItem';
   templateUrl: './compensacion-factura.component.html',
   styleUrls: ['./compensacion-factura.component.scss']
 })
-export class CompensacionFacturaComponent implements OnInit, OnChanges {
+export class CompensacionFacturaComponent implements OnInit {
 
   selectedItem: number = 10;
   rowsPerPage: any = [];
@@ -32,21 +29,20 @@ export class CompensacionFacturaComponent implements OnInit, OnChanges {
   permisos;
   compensaciones: CompensacionFacItem[] = []
   nCompensaciones: number = 0;
-  paramDeducirCobroAutom: ParametroItem;
 
   @ViewChild("tabla") tabla;
 
   @Input() idPago;
   @Input() idEstadoPago;
   @Input() modoEdicion;
+  @Input() paramDeducirCobroAutom: ParametroItem;
   @Output() facturasMarcadasEvent = new EventEmitter<CompensacionFacItem[]>();
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private commonsService: CommonsService,
     private translateService: TranslateService,
     private sigaServices: SigaServices,
-    private router: Router,
-    private sigaStorageService: SigaStorageService) { }
+    private router: Router) { }
 
   ngOnInit() {
 
@@ -64,34 +60,11 @@ export class CompensacionFacturaComponent implements OnInit, OnChanges {
 
       this.getCols();
 
-      if (this.modoEdicion) {
-        this.cargarDatosIniciales();
+      if (this.modoEdicion && this.idEstadoPago == '20') {
+        this.getCompensacionFacturas(this.paramDeducirCobroAutom.valor.toString());
       }
 
     }).catch(error => console.error(error));
-
-  }
-
-  cargarDatosIniciales() {
-
-    let parametro = new ParametroRequestDto();
-    parametro.idInstitucion = this.sigaStorageService.institucionActual;
-    parametro.modulo = 'FCS';
-    parametro.parametrosGenerales = 'DEDUCIR_COBROS_AUTOMATICO';
-
-    this.sigaServices.postPaginado("parametros_search", "?numPagina=1", parametro).subscribe(
-      data => {
-        const resp: ParametroDto = JSON.parse(data['body']);
-        const parametros = resp.parametrosItems;
-        parametros.forEach(el => {
-          if (el.parametro == 'DEDUCIR_COBROS_AUTOMATICO' && (el.idInstitucion == el.idinstitucionActual || el.idInstitucion == '0')) {
-            this.paramDeducirCobroAutom = el;
-          }
-        });
-
-        this.getCompensacionFacturas(this.paramDeducirCobroAutom.valor.toString());
-      }
-    );
 
   }
 
@@ -209,7 +182,7 @@ export class CompensacionFacturaComponent implements OnInit, OnChanges {
 
   marcar() {
 
-    if (this.paramDeducirCobroAutom.valor == '0') {
+    if (this.paramDeducirCobroAutom.valor == '0' && !this.isPagoCerrado()) {
       this.selectedDatos.forEach(el => {
         el.compensar = true;
       });
@@ -225,7 +198,7 @@ export class CompensacionFacturaComponent implements OnInit, OnChanges {
 
   desmarcar() {
 
-    if (this.paramDeducirCobroAutom.valor == '0') {
+    if (this.paramDeducirCobroAutom.valor == '0' && !this.isPagoCerrado()) {
       this.selectedDatos.forEach(el => {
         el.compensar = false;
       });
@@ -239,11 +212,8 @@ export class CompensacionFacturaComponent implements OnInit, OnChanges {
 
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-
-    if (changes.modoEdicion && changes.modoEdicion.currentValue && changes.modoEdicion.currentValue == true) {
-      this.cargarDatosIniciales();
-    }
+  isPagoCerrado() {
+    return (this.idEstadoPago == '30');
   }
 
 }

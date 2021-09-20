@@ -7,8 +7,8 @@
   </div>
 
   <app-datos-pagos *ngIf="showCards" [(idPago)]="idPago" [(idEstadoPago)]="idEstadoPago" [(modoEdicion)]="modoEdicion"
-    [numCriterios]="numCriterios" [editingConceptos]="editingConceptos" [facturasMarcadas]="facturasMarcadas"
-    (facturacionChange)="idFacturacion = $event">
+    [numCriterios]="numCriterios" [editingConceptos]="editingConceptos" [facturasMarcadas]="facturasMarcadas" [paramDeducirCobroAutom]="paramDeducirCobroAutom"
+    (facturacionChange)="idFacturacion = $event" (compensacionFactEvent)="compensacionFact()">
   </app-datos-pagos>
 
   <app-conceptos-pagos *ngIf="showCards" [idPago]="idPago" [idEstadoPago]="idEstadoPago" [idFacturacion]="idFacturacion"
@@ -22,7 +22,7 @@
   </app-detalle-pago>
 
   <app-compensacion-factura *ngIf="showCards" [idPago]="idPago" [idEstadoPago]="idEstadoPago"
-    (facturasMarcadasEvent)="facturasMarcadas = $event" [modoEdicion]="modoEdicion">
+    (facturasMarcadasEvent)="facturasMarcadas = $event" [modoEdicion]="modoEdicion" [paramDeducirCobroAutom]="paramDeducirCobroAutom">
   </app-compensacion-factura>
 
   <div class="text-right main-button">

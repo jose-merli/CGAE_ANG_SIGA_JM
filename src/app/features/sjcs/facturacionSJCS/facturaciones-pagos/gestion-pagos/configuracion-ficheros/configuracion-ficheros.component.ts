@@ -307,6 +307,10 @@ export class ConfiguracionFicherosComponent implements OnInit, OnChanges {
     return (this.idEstadoPago == '30');
   }
 
+  isPagoEjecutado() {
+    return this.idEstadoPago == '20';
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
 
     if (changes.modoEdicion && changes.modoEdicion.currentValue && changes.modoEdicion.currentValue == true) {

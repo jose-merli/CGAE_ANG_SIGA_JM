@@ -14,6 +14,11 @@ import { CommonsService } from '../../../../../_services/commons.service';
 import { TranslateService } from '../../../../../commons/translate';
 import { Router } from '@angular/router';
 import { CompensacionFacItem } from '../../../../../models/sjcs/CompensacionFacItem';
+import { ParametroItem } from '../../../../../models/ParametroItem';
+import { ParametroDto } from '../../../../../models/ParametroDto';
+import { ParametroRequestDto } from '../../../../../models/ParametroRequestDto';
+import { SigaStorageService } from '../../../../../siga-storage.service';
+import { SigaServices } from '../../../../../_services/siga.service';
 
 @Component({
   selector: 'app-gestion-pagos',
@@ -33,18 +38,21 @@ export class GestionPagosComponent extends SigaWrapper implements OnInit, AfterV
   showCards: boolean = false;
   editingConceptos: boolean = false;
   facturasMarcadas: CompensacionFacItem[] = [];
+  paramDeducirCobroAutom: ParametroItem;
 
-  @ViewChild(CompensacionFacturaComponent) compensacion;
-  @ViewChild(ConfiguracionFicherosComponent) configuracionFic;
-  @ViewChild(DatosPagosComponent) datosPagos;
-  @ViewChild(ConceptosPagosComponent) conceptos;
-  @ViewChild(DetallePagoComponent) detallePagos;
+  @ViewChild(CompensacionFacturaComponent) compensacion: CompensacionFacturaComponent;
+  @ViewChild(ConfiguracionFicherosComponent) configuracionFic: ConfiguracionFicherosComponent;
+  @ViewChild(DatosPagosComponent) datosPagos: DatosPagosComponent;
+  @ViewChild(ConceptosPagosComponent) conceptos: ConceptosPagosComponent;
+  @ViewChild(DetallePagoComponent) detallePagos: DetallePagoComponent;
 
   constructor(private location: Location,
     private commonsService: CommonsService,
     private router: Router,
     private translateService: TranslateService,
-    private changeDetectorRef: ChangeDetectorRef) {
+    private changeDetectorRef: ChangeDetectorRef,
+    private sigaStorageService: SigaStorageService,
+    private sigaServices: SigaServices) {
     super(USER_VALIDATIONS);
   }
 
@@ -62,6 +70,8 @@ export class GestionPagosComponent extends SigaWrapper implements OnInit, AfterV
       }
 
       const paramsPago = JSON.parse(sessionStorage.getItem("paramsPago"));
+
+      this.getParamDeducirCobroAutom();
 
       if (paramsPago && null != paramsPago) {
         this.idPago = paramsPago.idPago;
@@ -95,6 +105,31 @@ export class GestionPagosComponent extends SigaWrapper implements OnInit, AfterV
 
   ngAfterViewChecked() {
     this.changeDetectorRef.detectChanges();
+  }
+
+  compensacionFact() {
+    this.compensacion.getCompensacionFacturas(this.paramDeducirCobroAutom.valor.toString());
+  }
+
+  getParamDeducirCobroAutom() {
+
+    let parametro = new ParametroRequestDto();
+    parametro.idInstitucion = this.sigaStorageService.institucionActual;
+    parametro.modulo = 'FCS';
+    parametro.parametrosGenerales = 'DEDUCIR_COBROS_AUTOMATICO';
+
+    this.sigaServices.postPaginado("parametros_search", "?numPagina=1", parametro).subscribe(
+      data => {
+        const resp: ParametroDto = JSON.parse(data['body']);
+        const parametros = resp.parametrosItems;
+        parametros.forEach(el => {
+          if (el.parametro == 'DEDUCIR_COBROS_AUTOMATICO' && (el.idInstitucion == el.idinstitucionActual || el.idInstitucion == '0')) {
+            this.paramDeducirCobroAutom = el;
+          }
+        });
+      }
+    );
+
   }
 
 }

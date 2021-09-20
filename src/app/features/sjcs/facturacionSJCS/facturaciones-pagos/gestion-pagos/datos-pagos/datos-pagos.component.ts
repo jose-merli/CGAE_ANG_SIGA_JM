@@ -7,6 +7,9 @@ import { CommonsService } from '../../../../../../_services/commons.service';
 import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacionSJCS';
 import { Router } from '@angular/router';
 import { CompensacionFacItem } from '../../../../../../models/sjcs/CompensacionFacItem';
+import { CerrarPagoObject } from '../../../../../../models/sjcs/CerrarPagoObject';
+import { ParametroItem } from '../../../../../../models/ParametroItem';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'app-datos-pagos',
@@ -28,6 +31,7 @@ export class DatosPagosComponent implements OnInit {
   permisos;
 
   @Input() numCriterios;
+  @Input() paramDeducirCobroAutom: ParametroItem;
   @Input() modoEdicion;
   @Output() modoEdicionChange = new EventEmitter<boolean>();
   @Input() idPago;
@@ -37,11 +41,12 @@ export class DatosPagosComponent implements OnInit {
   @Input() editingConceptos;
   @Input() facturasMarcadas: CompensacionFacItem[];
   @Output() facturacionChange = new EventEmitter<string>();
+  @Output() compensacionFactEvent = new EventEmitter<boolean>();
 
   @ViewChild("tabla") tabla;
 
   constructor(private translateService: TranslateService, private sigaService: SigaServices,
-    private commonsService: CommonsService, private router: Router) { }
+    private commonsService: CommonsService, private router: Router, private confirmationService: ConfirmationService) { }
 
   ngOnInit() {
 
@@ -272,7 +277,7 @@ export class DatosPagosComponent implements OnInit {
         this.body = new PagosjgItem();
         this.histEstados = [];
       } else {
-        if (this.idEstadoPago == "10") {
+        if (this.idEstadoPago == "10" || this.idEstadoPago == "20") {
           this.body = JSON.parse(JSON.stringify(this.bodyAux));
 
           if (undefined == this.body) {
@@ -284,7 +289,7 @@ export class DatosPagosComponent implements OnInit {
   }
 
   disabledEjecutar() {
-    if ((this.modoEdicion && this.idEstadoPago != "30") && this.disabledRestablecer()) {
+    if ((this.modoEdicion && this.idEstadoPago != "30" && this.idEstadoPago != "20") && this.disabledRestablecer()) {
       return false;
     } else {
       return true;
@@ -311,6 +316,9 @@ export class DatosPagosComponent implements OnInit {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), error.description);
           } else if (resp.status == 'OK') {
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+            this.historicoEstados();
+            this.idEstadoPago = "20";
+            this.compensacionFactEvent.emit(true);
           }
 
         },
@@ -333,6 +341,101 @@ export class DatosPagosComponent implements OnInit {
   }
 
   cerrar() {
+
+    if (this.facturasMarcadas.length == 0) {
+
+      this.confirmationService.confirm({
+        key: "cdCompensacionFac",
+        message: this.translateService.instant("messages.factSJCS.compensarConfirmation"),
+        icon: "fa fa-search",
+        accept: () => {
+          this.paramDeducirCobroAutom.valor == '0' ? this.cerrarPagoManual() : this.cerrarPago();
+        },
+        reject: () => {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant('general.message.accion.cancelada'));
+        }
+      });
+    } else {
+      this.paramDeducirCobroAutom.valor == '0' ? this.cerrarPagoManual() : this.cerrarPago();
+    }
+
+  }
+
+  cerrarPago() {
+
+    if (this.modoEdicion && !this.disabledCerrar()) {
+
+      this.progressSpinner = true;
+
+      const payload: CerrarPagoObject = new CerrarPagoObject();
+      payload.idPago = this.idPago;
+      payload.idsParaEnviar = null;
+
+      this.sigaService.post("pagosjcs_cerrarPago", payload).subscribe(
+        data => {
+
+          const resp = JSON.parse(data.body);
+
+          if (resp.status == 'KO' && resp.error != null && resp.error.description != null) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(resp.error.description));
+          } else {
+            this.idEstadoPago = '30';
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          }
+
+          this.progressSpinner = false;
+
+        },
+        err => {
+          this.progressSpinner = false;
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        },
+        () => {
+          this.progressSpinner = false;
+          this.historicoEstados();
+        }
+      );
+
+    }
+
+  }
+
+  cerrarPagoManual() {
+
+    if (this.modoEdicion && !this.disabledCerrar()) {
+
+      this.progressSpinner = true;
+
+      const payload: CerrarPagoObject = new CerrarPagoObject();
+      payload.idPago = this.idPago;
+      payload.idsParaEnviar = this.facturasMarcadas.map(el => el.idPersona);
+
+      this.sigaService.post("pagosjcs_cerrarPagoManual", payload).subscribe(
+        data => {
+
+          const resp = JSON.parse(data.body);
+
+          if (resp.status == 'KO' && resp.error != null && resp.error.description != null) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(resp.error.description));
+          } else {
+            this.idEstadoPago = '30';
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          }
+
+          this.progressSpinner = false;
+
+        },
+        err => {
+          this.progressSpinner = false;
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        },
+        () => {
+          this.progressSpinner = false;
+          this.historicoEstados();
+        }
+      );
+
+    }
 
   }
 
@@ -394,6 +497,10 @@ export class DatosPagosComponent implements OnInit {
 
   isPagoCerrado() {
     return (this.idEstadoPago == '30');
+  }
+
+  isPagoEjecutado() {
+    return this.idEstadoPago == '20';
   }
 
 }
