@@ -17,6 +17,7 @@ export class TarjetaFormaPagoCompraSuscripcionComponent implements OnInit {
 
   @Input("ficha") ficha: FichaCompraSuscripcionItem;
 
+  showTarjeta: boolean = false;
   comboComun = [];
 
   desFormaPagoSelecc;
@@ -64,4 +65,7 @@ export class TarjetaFormaPagoCompraSuscripcionComponent implements OnInit {
     });
   }
 
+  onHideTarjeta(){
+    this.showTarjeta = !this.showTarjeta;
+  }
 }
