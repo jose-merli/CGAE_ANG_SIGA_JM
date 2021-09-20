@@ -2,7 +2,7 @@
 
 <div class="card">
   <div class="card-body">
-    <p (click)="onHideDatosGenerales()" class="title-module">Datos Generales Remesa
+    <p (click)="onHideDatosGenerales()" class="title-module">{{ 'justiciaGratuita.remesasResultados.filtro.datosGenerales' | translate }}
       <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
       <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
     </p>
@@ -11,7 +11,7 @@
     <div *ngIf="showDatosGenerales" class="module vista-simple">
       <div class="form-row">
         <div class="form-group-interlineado col-lg-4 col-md-4">
-          <label>Nº de Remesa</label>
+          <label>{{ 'justiciaGratuita.remesasResultados.filtro.numRemesa' | translate }}</label>
           <div class="form-row">
             <div class="form-group-interlineado col-lg-4 col-md-4 px-1">
               <input type="text" name="numRemesaPrefijo" value="" class="box" class="registro-control w-100"
@@ -30,7 +30,7 @@
         </div>
 
         <div class="form-group-interlineado col-lg-4 col-md-4">
-          <label>Nº de Registro</label>
+          <label>{{ 'justiciaGratuita.remesasResultados.filtro.numRegistro' | translate }}</label>
           <div class="form-row">
             <div class="form-group-interlineado col-lg-4 col-md-4 px-1">
               <input type="text" name="numRegistroPrefijo" value="" class="box" class="registro-control w-100"
@@ -49,7 +49,7 @@
         </div>
 
         <div class="form-group-interlineado col-lg-4 col-md-4">
-          <label>Nombre Fichero</label>
+          <label>{{ 'justiciaGratuita.remesasResultados.filtro.nombreFichero' | translate }}</label>
           <input type="text" name="nombreFichero" value="" class="box" class="form-control" [(ngModel)]='filtros.nombreFichero'
             maxLength="200" pInputText>
         </div>
@@ -58,28 +58,28 @@
 
       <div class="form-row">
         <div class="form-group-interlineado col-lg-3 col-md-3">
-          <label>Fecha de remesa desde</label>
+          <label>{{ 'justiciaGratuita.remesasResultados.filtro.fechaRemesaDesde' | translate }}</label>
           <app-fecha [(value)]="filtros.fechaRemesaDesde" (valueChangeSelected)="fillFechaRemesaDesde($event)"
             (valueChangeInput)="fillFechaRemesaDesde($event)">
           </app-fecha>
         </div>
 
         <div class="form-group-interlineado col-lg-3 col-md-3">
-          <label>Fecha de remesa hasta</label>
+          <label>{{ 'justiciaGratuita.remesasResultados.filtro.fechaRemesaHasta' | translate }}</label>
           <app-fecha [(value)]="filtros.fechaRemesaHasta" (valueChangeSelected)="fillFechaRemesaHasta($event)"
             (valueChangeInput)="fillFechaRemesaHasta($event)" [minDate]="filtros.fechaRemesaDesde">
           </app-fecha>
         </div>
 
         <div class="form-group-interlineado col-lg-3 col-md-3">
-          <label>Fecha de carga desde</label>
+          <label>{{ 'justiciaGratuita.remesasResultados.filtro.fechaCargaDesde' | translate }}</label>
           <app-fecha [(value)]="filtros.fechaCargaDesde" (valueChangeSelected)="fillFechaCargaDesde($event)"
             (valueChangeInput)="fillFechaCargaDesde($event)">
           </app-fecha>
         </div>
 
         <div class="form-group-interlineado col-lg-3 col-md-3">
-          <label>Fecha de carga hasta</label>
+          <label>{{ 'justiciaGratuita.remesasResultados.filtro.fechaCargaHasta' | translate }}</label>
           <app-fecha [(value)]="filtros.fechaCargaHasta" (valueChangeSelected)="fillFechaCardaHasta($event)"
             (valueChangeInput)="fillFechaCardaHasta($event)" [minDate]="filtros.fechaCargaDesde">
           </app-fecha>
