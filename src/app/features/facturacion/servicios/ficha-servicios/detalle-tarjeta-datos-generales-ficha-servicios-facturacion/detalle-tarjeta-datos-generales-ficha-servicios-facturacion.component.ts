@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
 import { Subscription } from 'rxjs';
@@ -32,6 +32,7 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
   checkboxPermitirAnulacionPorInternet: boolean = false;
   checkboxAsignacionAutomatica: boolean = false;
   listaCodigosPorInstitucionObject: CodigosPorInstitucionObject;
+  @Output() mostrarTarjetaFormaPagos = new EventEmitter<boolean>();
 
   //variables de control
   aGuardar: boolean = false; //Usada en condiciones que validan la obligatoriedad, definida al hacer click en el boton guardar
@@ -53,10 +54,10 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
       this.servicioOriginal = { ...this.servicio };
 
       this.desactivarBotonEliminar = false;
-      //this.mostrarTarjetaFormaPagos.emit(true);
+      this.mostrarTarjetaFormaPagos.emit(true);
 
     } else {
-      //this.mostrarTarjetaFormaPagos.emit(false);
+      this.mostrarTarjetaFormaPagos.emit(false);
       this.desactivarBotonEliminar = true;
     }
 
@@ -126,6 +127,10 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
   onChangeAsignacionAutomatica() {
     if (this.checkboxAsignacionAutomatica) {
       this.servicio.automatico = '1';
+      this.checkBoxPermitirSolicitudPorInternet = false;
+      this.servicio.permitiralta = '0';
+      this.checkboxPermitirAnulacionPorInternet = false;
+      this.servicio.permitirbaja = '0';
     } else {
       this.servicio.automatico = '0';
     }
@@ -241,7 +246,7 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
     );
   }
 
-  //Metodo para obtener todos los codigos PYS_PRODUCTOINSTITUCION en la institucion actual
+  //Metodo para obtener todos los codigos PYS_SERVICIOSINSTITUCION en la institucion actual
   obtenerCodigosPorColegio() {
     this.progressSpinner = true;
 
@@ -273,7 +278,7 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
           } else {
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
             this.desactivarBotonEliminar = false;
-            //this.mostrarTarjetaFormaPagos.emit(true);
+            this.mostrarTarjetaFormaPagos.emit(true);
           }
 
           this.progressSpinner = false;
@@ -283,6 +288,7 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
         },
         () => {
           this.progressSpinner = false;
+          this.obtenerCodigosPorColegio();
         }
       );
     } else if (this.servicio.editar) {

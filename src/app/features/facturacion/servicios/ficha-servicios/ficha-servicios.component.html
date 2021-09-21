@@ -17,10 +17,10 @@
                 [servicioDelBuscador]="servicioDelBuscador">
               </app-detalle-tarjeta-datos-generales-ficha-servicios-facturacion>
             </div>
-            <!--   <div *ngIf="tarj.id == 'serviciosFormasDePago'">
-              <app-detalle-tarjeta-formas-pagos-ficha-producto-facturacion [servicio]="servicio">
-              </app-detalle-tarjeta-formas-pagos-ficha-producto-facturacion>
-            </div> -->
+            <div *ngIf="tarj.id == 'serviciosFormasDePago'">
+              <app-detalle-tarjeta-formas-pagos-ficha-servicios-facturacion [servicio]="servicio">
+              </app-detalle-tarjeta-formas-pagos-ficha-servicios-facturacion>
+            </div>
           </ng-template>
         </mat-expansion-panel>
       </mat-accordion>

@@ -39,6 +39,21 @@ export class DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent impleme
   ngOnInit() {
     if (sessionStorage.getItem('esColegiado'))
       this.esColegiado = JSON.parse(sessionStorage.getItem('esColegiado'));
+
+    if (this.servicio.editar) {
+      this.servicioOriginal = { ...this.servicio };
+
+      if (this.servicio.nofacturable == "1") {
+        this.checkboxNoFacturable = true;
+        this.obligatorio = false;
+      } else if (this.servicio.nofacturable == "0") {
+        this.checkboxNoFacturable = false;
+        this.obligatorio = true;
+      }
+    }
+    this.getComboTipoIvaNoDerogables();
+    this.getComboFormasDePagoInternet();
+    this.getComboFormasDePagoSecretaria();
   }
 
   //Necesario para liberar memoria
@@ -58,7 +73,6 @@ export class DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent impleme
       this.obligatorio = false;
       this.servicio.nofacturable = '1';
 
-      //this.servicio.valor = "0";
       this.servicio.idtipoiva = 3;
       this.servicio.formasdepagointernet = null;
       this.servicio.formasdepagosecretaria = null;
@@ -67,7 +81,6 @@ export class DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent impleme
       this.obligatorio = true;
       this.servicio.nofacturable = '0';
 
-      //this.servicio.valor = this.productoOriginal.valor;
       this.servicio.idtipoiva = this.servicioOriginal.idtipoiva;
       this.servicio.formasdepagointernet = this.servicioOriginal.formasdepagointernet;
       this.servicio.formasdepagosecretaria = this.servicioOriginal.formasdepagosecretaria;
@@ -106,6 +119,25 @@ export class DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent impleme
         this.progressSpinner = false;
 
         this.internetPayMethodsObject = InternetPayMethodsSelectValues;
+      },
+      err => {
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  //Metodo para obtener los valores del combo Formas de pago aceptadas en secretaria
+  getComboFormasDePagoSecretaria() {
+    this.progressSpinner = true;
+
+    this.subscriptionSecretaryPayMethodsSelectValues = this.sigaServices.get("fichaProducto_comboFormasDePagoSecretaria").subscribe(
+      SecretaryPayMethodsSelectValues => {
+        this.progressSpinner = false;
+
+        this.secretaryPayMethodsObject = SecretaryPayMethodsSelectValues;
       },
       err => {
         this.progressSpinner = false;

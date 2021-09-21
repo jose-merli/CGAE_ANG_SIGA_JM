@@ -35,11 +35,11 @@
   <!-- Codigo -->
   <div class="form-group-interlineado col-lg-3 col-md-3 pb-lg-2 pb-md-2">
     <label>{{ "facturacion.productos.codigo" | translate}}</label>
-    <input type="text" class="form-control" [(ngModel)]='servicio.codigo' pInputText>
+    <input type="text" class="form-control" [(ngModel)]='servicio.codigoext' pInputText>
   </div>
 
   <!-- Permitir solicitud por internet -->
-  <div class="form-group-interlineado col-lg-3 col-md-3" *ngIf="servicio.automatico == '0'">
+  <div class="form-group-interlineado col-lg-3 col-md-3" *ngIf="servicio.automatico == '0' || !servicio.editar">
     <div class="d-flex align-items-baseline justify-content-between alineacionCheckboxes">
       <p-checkbox binary="true" [disabled]="checkboxAsignacionAutomatica"
         label="{{'facturacion.fichaservicios.datosgenerales.permitirsoliciturinternet' | translate}}"
