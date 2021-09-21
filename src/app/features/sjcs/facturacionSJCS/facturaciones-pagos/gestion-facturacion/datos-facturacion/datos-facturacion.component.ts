@@ -28,6 +28,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
   @Output() changeModoEdicion = new EventEmitter<boolean>();
   @Output() changeEstadoFacturacion = new EventEmitter<String>();
   @Output() changeIdFacturacion = new EventEmitter<String>();
+  @Output() changeFacturacion = new EventEmitter<boolean>();
 
   permisos;
   showFichaFacturacion: boolean = true;
@@ -291,6 +292,9 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
           }
 
         }
+      },
+      () => {
+        this.changeFacturacion.emit(true);
       }
     );
   }
@@ -353,6 +357,9 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
 
         }
       },
+      () => {
+        this.changeFacturacion.emit(true);
+      }
     );
   }
 
@@ -395,6 +402,9 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
           }
 
         }
+      },
+      () => {
+        this.changeFacturacion.emit(true);
       }
     );
   }
@@ -438,6 +448,9 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
           }
 
         }
+      },
+      () => {
+        this.changeFacturacion.emit(true);
       }
     );
   }
@@ -546,6 +559,8 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
         }
       }
     }
+
+    this.changeFacturacion.emit(true);
   }
 
   getCols() {
@@ -603,11 +618,11 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
     return resp;
   }
 
-  getTextEstadoFac(): string {
+  getTextEstadoFac(idEstadoFacturacion: string): string {
 
     let resp: string;
 
-    switch (this.idEstadoFacturacion) {
+    switch (idEstadoFacturacion) {
       case '10':
         resp = this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado.abierta");
         break;

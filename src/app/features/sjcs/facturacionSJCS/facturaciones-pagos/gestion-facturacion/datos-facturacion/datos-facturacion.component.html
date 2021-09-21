@@ -27,7 +27,7 @@
               <span>{{ checkRegularizar == true ? 'Sí': 'No' }}</span>
             </label>
             <label>{{ "facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado" | translate }}:
-              <span>{{ getTextEstadoFac() }}</span>
+              <span>{{ getTextEstadoFac(idEstadoFacturacion) }}</span>
             </label>
             <i *ngIf="!showFichaFacturacion" class="fa fa-angle-down float-right" (click)="onHideDatosGenerales()"></i>
           </div>

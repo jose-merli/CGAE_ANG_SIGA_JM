@@ -1,5 +1,5 @@
 import { AfterViewChecked, ChangeDetectorRef, Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import { Location } from "@angular/common";
+import { DatePipe, Location } from "@angular/common";
 import { USER_VALIDATIONS } from '../../../../../properties/val-properties';
 import { SigaWrapper } from "../../../../../wrapper/wrapper.class";
 import { PersistenceService } from '../../../../../_services/persistence.service';
@@ -13,6 +13,7 @@ import { CommonsService } from '../../../../../_services/commons.service';
 import { procesos_facturacionSJCS } from '../../../../../permisos/procesos_facturacionSJCS';
 import { TranslateService } from '../../../../../commons/translate';
 import { Router } from '@angular/router';
+import { SigaServices } from '../../../../../_services/siga.service';
 
 @Component({
   selector: 'app-gestion-facturacion',
@@ -38,10 +39,26 @@ export class GestionFacturacionComponent extends SigaWrapper implements OnInit, 
     detalle: false,
     fixed: true,
     campos: [
-      // {
-      //   "key": "",
-      //   "value": ""
-      // },
+      {
+        "key": this.translateService.instant('facturacionSJCS.facturacionesYPagos.buscarFacturacion.nombre'),
+        "value": ""
+      },
+      {
+        "key": this.translateService.instant('facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaDesde'),
+        "value": ""
+      },
+      {
+        "key": this.translateService.instant('facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaHasta'),
+        "value": ""
+      },
+      {
+        "key": this.translateService.instant('facturacionSJCS.facturacionesYPagos.buscarFacturacion.regularizada'),
+        "value": ""
+      },
+      {
+        "key": this.translateService.instant('facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado'),
+        "value": ""
+      },
     ],
     enlaces: []
   };
@@ -54,6 +71,8 @@ export class GestionFacturacionComponent extends SigaWrapper implements OnInit, 
     { id: 'facSJCSFichaFactCartasFac', nombre: this.translateService.instant('facturacionSJCS.facturacionesYPagos.cartasFacturacion') }
   ];
 
+  facturacion: FacturacionItem;
+
   @ViewChild(PagosComponent) pagos;
   @ViewChild(BaremosComponent) baremos;
   @ViewChild(CartasFacturacionComponent) cartas;
@@ -65,7 +84,9 @@ export class GestionFacturacionComponent extends SigaWrapper implements OnInit, 
     private changeDetectorRef: ChangeDetectorRef,
     private commonsService: CommonsService,
     private translateService: TranslateService,
-    private router: Router) {
+    private router: Router,
+    private datePipe: DatePipe,
+    private sigaService: SigaServices) {
     super(USER_VALIDATIONS);
   }
 
@@ -85,6 +106,7 @@ export class GestionFacturacionComponent extends SigaWrapper implements OnInit, 
         this.datos = this.persistenceService.getDatos();
         this.idFacturacion = this.datos.idFacturacion;
         this.idEstadoFacturacion = this.datos.idEstado;
+        this.getFacturacion();
       }
 
       if (undefined == this.idFacturacion) {
@@ -106,6 +128,14 @@ export class GestionFacturacionComponent extends SigaWrapper implements OnInit, 
 
     }).catch(error => console.error(error));
 
+  }
+
+  establecerDatosTarjetaResumen() {
+    this.tarjetaFija.campos[0].value = this.facturacion.nombre.toString();
+    this.tarjetaFija.campos[1].value = this.datePipe.transform(this.facturacion.fechaDesde, 'dd/MM/yyyy');
+    this.tarjetaFija.campos[2].value = this.datePipe.transform(this.facturacion.fechaHasta, 'dd/MM/yyyy');
+    this.tarjetaFija.campos[3].value = this.facturacion.regularizacion == "0" ? 'No' : 'Sí';
+    this.tarjetaFija.campos[4].value = this.datosFac.getTextEstadoFac(this.idEstadoFacturacion);
   }
 
   volver() {
@@ -203,6 +233,20 @@ export class GestionFacturacionComponent extends SigaWrapper implements OnInit, 
 
   ngAfterViewChecked() {
     this.changeDetectorRef.detectChanges();
+  }
+
+  getFacturacion() {
+
+    this.sigaService.getParam("facturacionsjcs_datosfacturacion", "?idFacturacion=" + this.idFacturacion).subscribe(
+      data => {
+        this.facturacion = data.facturacionItem[0];
+      },
+      err => { },
+      () => {
+        this.establecerDatosTarjetaResumen();
+      }
+    );
+
   }
 
 }

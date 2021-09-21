@@ -38,7 +38,7 @@
         [idEstadoFacturacion]="idEstadoFacturacion" [editingConceptos]="editingConceptos"
         [idFacturacion]="idFacturacion" [modoEdicion]="modoEdicion" (changeModoEdicion)="changeModoEdicion($event)"
         (changeEstadoFacturacion)="changeEstadoFacturacion($event)" (changeCerrada)="changeCerrada($event)"
-        (changeIdFacturacion)="changeIdFacturacion($event)">
+        (changeIdFacturacion)="changeIdFacturacion($event)" (changeFacturacion)="getFacturacion()">
       </app-datos-facturacion>
 
       <app-conceptos-facturacion [idEstadoFacturacion]="idEstadoFacturacion" [idFacturacion]="idFacturacion"
