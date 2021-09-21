@@ -27,7 +27,6 @@ export class FichaCompraSuscripcionItem {
     impTotal: number;
     pendPago: number;
     cuentaBancSelecc: string;
-    noFact:boolean ;
 
     idEstadoPeticion: string;
     productos: ListaProductosItems[];

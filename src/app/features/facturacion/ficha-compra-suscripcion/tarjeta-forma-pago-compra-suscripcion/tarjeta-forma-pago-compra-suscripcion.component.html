@@ -40,7 +40,7 @@
               </label>
             </div>
             <div class="col-3">
-              <i class="fa fa-angle-down float-right"></i>
+              <i class="fa fa-angle-down ml-auto"></i>
             </div>
           </div>
         </div>
@@ -87,8 +87,8 @@
               showClear="true"></p-dropdown>
           </div>
           <div class="form-group col-lg-3 col-md-3">
-            <p-checkbox class="select-form" [disabled]="disableNoFact" label="No facturable" binary="true"
-              [(ngModel)]="ficha.idFormaPagoSeleccionada"></p-checkbox>
+            <p-checkbox class="select-form" [disabled]="disableNoFacturableBox" label="No facturable" binary="true"
+              [(ngModel)]="noFact"></p-checkbox>
           </div>
         </div>
       </div>
