@@ -1,8 +1,5 @@
-/* export const procesos_oficio: any = {
-    productos:
-} */
-export const procesos_facturacion: any = {
+export const procesos_facturacionSJCS: any = {
 
-    fichaCompraSuscripcion: "39"
-
+    facturacionYpagos: "600",
+    cartasFacturacionPago: "620"
 }

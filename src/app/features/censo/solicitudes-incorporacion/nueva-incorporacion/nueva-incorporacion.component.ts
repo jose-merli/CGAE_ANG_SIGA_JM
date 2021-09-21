@@ -184,6 +184,7 @@ export class NuevaIncorporacionComponent implements OnInit {
         this.solicitudEditar = JSON.parse(
           sessionStorage.getItem("nuevaIncorporacion")
         );
+        this.solicitudEditar.numeroIdentificacion = nuevaIncorporacion.numeroIdentificacion;
 
         if (this.solicitudEditar.fechaIncorporacion != null)
           if (this.solicitudEditar.fechaIncorporacion.getDate == undefined && this.solicitudEditar.fechaIncorporacion != undefined) {

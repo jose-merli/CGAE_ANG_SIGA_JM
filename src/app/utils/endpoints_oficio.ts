@@ -60,6 +60,8 @@ export let endpoints_oficio: any = {
     justificacionExpres_actualizacion: "oficio/actualizaJustificacionExpres",
     justificacionExpres_eliminacion: "oficio/eliminaJustificacionExpres",
     justificacionExpres_insercion: "oficio/insertaJustificacionExpres",
+    justificacionExpres_getEJG: "oficio/getEJG",
+
 
     //CARGAS MASIVAS OFICIO
     busquedaGuardia_guardia: "combo/guardias",
@@ -103,8 +105,7 @@ export let endpoints_oficio: any = {
     designaciones_comprobarProcurador: "oficio/designas/compruebaProcurador",
     designaciones_comprobarFechaProcurador: "oficio/designas/compruebaFechaProcurador",
     designaciones_guardarProcuradorEJG: "oficio/designas/guardarProcuradorEJG",
-    designaciones_actualizarProcurador: "oficio/designas/actualizarProcurador",
-    designaciones_nuevoProcurador: "oficio/designas/nuevoProcurador",
+    designaciones_getEjgDesigna: "oficio/designas/getEjgDesigna",
     designaciones_motivosRenuncia: "oficio/designas/comboTipoMotivo",
     actuaciones_designacion_anular: "oficio/designas/anularActDesigna",
     actuaciones_designacion_reactivar: "oficio/designas/reactivarActDesigna",
@@ -132,6 +133,7 @@ export let endpoints_oficio: any = {
     designaciones_searchAbogadoByIdPersona:"oficio/designas/searchAbogadoByIdPersona",
     designacionesBusquedaRelaciones:"oficio/designas/busquedaRelaciones",
     designaciones_eliminarRelacion:"oficio/designas/eliminarRelacion",
+    designaciones_eliminarRelacionAsistenciaDes:"oficio/designas/eliminarRelacionAsistenciaDesigna",
     designaciones_busquedaDesignacionActual:"oficio/designas/busquedaDesignacionActual",
     designaciones_busquedaLetradosDesignacion:"oficio/designas/busquedaLetradosDesignacion",
     designaciones_eliminarDesignaciones:"oficio/designas/deleteDesigna",
@@ -144,6 +146,9 @@ export let endpoints_oficio: any = {
     designacion_subirDocumentoDesigna: "oficio/designas/subirDocumentoDesigna",
     designacion_eliminarDocumentosDesigna: "oficio/designas/eliminarDocumentosDesigna",
     designacion_descargarDocumentosDesigna: "oficio/designas/descargarDocumentosDesigna",
+    designacion_asociarEjgDesigna: "oficio/designas/asociarEjgDesigna",
+    designacion_asociarAsistenciaDesigna: "oficio/designas/asociarAsistenciaDesigna",
+    designacion_getPreDesignaEJG: "oficio/designas/getPreDesignaEJG",
 
     //SALTOS Y COMPENSACIONES
     saltosCompensacionesOficio_buscar: "oficio/saltosCompensaciones/buscarSaltosOCompensaciones",

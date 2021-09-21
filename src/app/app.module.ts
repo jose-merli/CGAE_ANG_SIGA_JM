@@ -210,7 +210,7 @@ import { GuardiasAsistenciasComponent } from './features/sjcs/guardia/guardias-a
 import { GuardiasCentralitaComponent } from './features/sjcs/guardia/guardias-centralita/guardias-centralita.component';
 import { VolanteExpresComponent } from './features/sjcs/guardia/volante-expres/volante-expres.component';
 import { SOJComponent } from './features/sjcs/soj/soj.component';
-import { EJGComponent } from './features/sjcs/ejg/ejg.component';
+// import { EJGComponent } from './features/sjcs/ejg/ejg.component';
 import { GestionActasComponent } from './features/sjcs/gestion-actas/gestion-actas.component';
 import { MantenimientoFacturacionComponent } from './features/sjcs/facturacionSJCS/mantenimiento-facturacion/mantenimiento-facturacion.component';
 import { PrevisionesComponent } from './features/sjcs/facturacionSJCS/previsiones/previsiones.component';
@@ -430,10 +430,35 @@ import { TarjetaRelFichaActComponent } from './features/sjcs/oficio/designacione
 import { DetalleTarjetaRelacionesDesignaComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-relaciones-designa/detalle-tarjeta-relaciones-designa.component';
 import { DetalleTarjetaComunicacionesDesignaComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-comunicaciones-designa/detalle-tarjeta-comunicaciones-designa.component';
 import { TablaResultadoMixDocDesigService } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-documentacion-designa/tabla-resultado-mix-doc-desig.service';
+
+//EJG
+import { ImpugnacionComponent } from './features/sjcs/ejg/gestion-ejg/impugnacion/impugnacion.component';
+import { ResolucionComponent } from './features/sjcs/ejg/gestion-ejg/resolucion/resolucion.component';
+import { InformeCalificacionComponent } from './features/sjcs/ejg/gestion-ejg/informe-calificacion/informe-calificacion.component';
+import { DocumentacionComponent } from './features/sjcs/ejg/gestion-ejg/documentacion/documentacion.component';
+import { EstadosComponent } from './features/sjcs/ejg/gestion-ejg/estados/estados.component';
+import { RelacionesComponent } from './features/sjcs/ejg/gestion-ejg/relaciones/relaciones.component';
+import { ExpedientesEconomicosComponent } from './features/sjcs/ejg/gestion-ejg/expedientes-economicos/expedientes-economicos.component';
+import { ServiciosTramitacionComponent } from './features/sjcs/ejg/gestion-ejg/servicios-tramitacion/servicios-tramitacion.component';
+import { UnidadFamiliarComponent } from './features/sjcs/ejg/gestion-ejg/unidad-familiar/unidad-familiar.component';
+import { DatosGeneralesEjgComponent } from './features/sjcs/ejg/gestion-ejg/datos-generales-ejg/datos-generales-ejg.component';
+import { EJGComponent } from './features/sjcs/ejg/ejg.component';
+import { TablaEjgComponent } from './features/sjcs/ejg/tabla-ejg/tabla-ejg.component';
+import { FiltrosEjgComponent } from './features/sjcs/ejg/filtros-busqueda-ejg/filtros-ejg.component';
+import { GestionEjgComponent } from './features/sjcs/ejg/gestion-ejg/gestion-ejg.component';
+import { AddExpedienteComponent } from './features/sjcs/ejg/gestion-ejg/datos-generales-ejg/add-expediente/add-expediente.component';
+import { ComunicacionesEJGComponent } from './features/sjcs/ejg/gestion-ejg/comunicaciones/comunicaciones-ejg.component';
+import { FichaPreDesignacionComponent } from './features/sjcs/ejg/gestion-ejg/relaciones/ficha-pre-designacion/ficha-pre-designacion.component';
+import { DefensaJuridicaComponent } from './features/sjcs/ejg/gestion-ejg/relaciones/ficha-pre-designacion/defensa-juridica/defensa-juridica.component';
+import { RegtelEjgComponent } from './features/sjcs/ejg/gestion-ejg/regtel-ejg/regtel-ejg.component';
+import { ProcuradorPreDesignacionComponent } from './features/sjcs/ejg/gestion-ejg/relaciones/ficha-pre-designacion/procurador-pre-designacion/procurador-pre-designacion.component';
+import { ContrariosPreDesignacionComponent } from './features/sjcs/ejg/gestion-ejg/relaciones/ficha-pre-designacion/contrarios-pre-designacion/contrarios-pre-designacion.component';
+
 import { SigaStorageService } from './siga-storage.service';
 import { FichaCambioLetradoComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/ficha-cambio-letrado/ficha-cambio-letrado.component';
 import { LetradoEntranteComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/ficha-cambio-letrado/letrado-entrante/letrado-entrante.component';
 import { LetradoSalienteComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/ficha-cambio-letrado/letrado-saliente/letrado-saliente.component';
+
 import { TiposProductosComponent } from './features/facturacion/maestros/tipos-productos/tipos-productos.component';
 import { TiposServiciosComponent } from './features/facturacion/maestros/tipos-servicios/tipos-servicios.component';
 import { ProductosComponent } from './features/facturacion/productos/productos.component';
@@ -452,7 +477,6 @@ import { DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent } from '
 import { DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent } from './features/facturacion/servicios/ficha-servicios/detalle-tarjeta-formas-pagos-ficha-servicios-facturacion/detalle-tarjeta-formas-pagos-ficha-servicios-facturacion.component';
 import { TarjetaSolicitudCompraSuscripcionComponent } from './features/facturacion/ficha-compra-suscripcion/tarjeta-solicitud-compra-suscripcion/tarjeta-solicitud-compra-suscripcion.component';
 import { TarjetaFormaPagoCompraSuscripcionComponent } from './features/facturacion/ficha-compra-suscripcion/tarjeta-forma-pago-compra-suscripcion/tarjeta-forma-pago-compra-suscripcion.component';
-
 
 @NgModule({
 	declarations: [
@@ -600,7 +624,31 @@ import { TarjetaFormaPagoCompraSuscripcionComponent } from './features/facturaci
 		GuardiasCentralitaComponent,
 		VolanteExpresComponent,
 		SOJComponent,
+		//EJG
+		// EJGComponent,
+		FiltrosEjgComponent,
+		TablaEjgComponent,
 		EJGComponent,
+		GestionEjgComponent,
+		DatosGeneralesEjgComponent,
+		ServiciosTramitacionComponent,
+		UnidadFamiliarComponent,
+		ExpedientesEconomicosComponent,
+		RelacionesComponent,
+		FichaPreDesignacionComponent,
+  		DefensaJuridicaComponent,
+		EstadosComponent,
+		DocumentacionComponent,
+		InformeCalificacionComponent,
+		ResolucionComponent,
+		ImpugnacionComponent,
+		ComunicacionesComponent,
+		AddExpedienteComponent,
+		ComunicacionesEJGComponent,
+		ProcuradorPreDesignacionComponent,
+ 		ContrariosPreDesignacionComponent,
+		RegtelEjgComponent,
+		
 		GestionActasComponent,
 		MantenimientoFacturacionComponent,
 		PrevisionesComponent,

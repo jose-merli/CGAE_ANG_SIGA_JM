@@ -30,6 +30,8 @@ export class FiltroJusticiablesComponent implements OnInit {
   @Input() permisoEscritura;
   @Output() isOpen = new EventEmitter<boolean>();
   @Input() modoRepresentante;
+  @Input() nuevaUniFamiliar;
+  @Input() nuevoContrarioEJG;
 
   comboProvincias = [];
   comboPoblacion = [];
@@ -45,7 +47,7 @@ export class FiltroJusticiablesComponent implements OnInit {
     if (this.modoRepresentante) {
       if (this.persistenceService.getFiltrosAux() != undefined) {
         this.filtros = this.persistenceService.getFiltrosAux();
-        this.isOpen.emit(false)
+        //this.isOpen.emit(false)
         this.configuracionFiltros();
       } else {
         this.filtros = new JusticiableBusquedaItem();
@@ -53,7 +55,7 @@ export class FiltroJusticiablesComponent implements OnInit {
     } else {
       if (this.persistenceService.getFiltros() != undefined) {
         this.filtros = this.persistenceService.getFiltros();
-        this.isOpen.emit(false)
+        //this.isOpen.emit(false)
         this.configuracionFiltros();
       } else {
         this.filtros = new JusticiableBusquedaItem();
@@ -77,6 +79,11 @@ export class FiltroJusticiablesComponent implements OnInit {
   }
 
   backTo() {
+    if(sessionStorage.getItem("EJGItem") && this.nuevaUniFamiliar){
+       this.persistenceService.setDatos(JSON.parse(sessionStorage.getItem("EJGItem")));
+       sessionStorage.removeItem("EJGItem");
+    }
+    sessionStorage.removeItem("fichaJust");
     this.location.back();
   }
 
@@ -186,6 +193,10 @@ export class FiltroJusticiablesComponent implements OnInit {
     } else {
       this.persistenceService.clearDatos();
       this.persistenceService.clearBody();
+      if(this.nuevaUniFamiliar){
+         sessionStorage.setItem("origin","UnidadFamiliar");
+         sessionStorage.setItem("Nuevo","true");
+      }
       this.router.navigate(["/gestionJusticiables"]);
     }
   }

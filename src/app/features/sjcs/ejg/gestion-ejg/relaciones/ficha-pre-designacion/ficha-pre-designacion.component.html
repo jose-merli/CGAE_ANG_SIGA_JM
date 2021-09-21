@@ -1,0 +1,25 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div class="busqueda-container">
+    <div class="header-title">
+        <i class="fa fa-square"></i>
+        <p>{{'menu.justiciaGratuita' | translate}}
+            <i class="fa fa-angle-right"></i>{{'justiciaGratuita.ejg.datosGenerales.EJG' | translate}}
+            <i class="fa fa-angle-right"></i>{{'justiciaGratuita.ejg.preDesigna.datosPre' | translate}}
+    </div>
+    <app-tarjeta-resumen-fija class="pb-50" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="datosTarjetaResumen" [icono]="iconoTarjetaResumen"  
+    [enlaces]="enlacesTarjetaResumen" (isOpen)="isOpenReceive($event)">
+    </app-tarjeta-resumen-fija>
+    <app-defensa-juridica [permisoEscritura]="permisoEscritura" id="defensaJuridica"></app-defensa-juridica>
+    <app-contrarios-pre-designacion [permisoEscritura]="permisoEscritura" id="contrariosPreDesigna"></app-contrarios-pre-designacion>
+    <app-procurador-pre-designacion [permisoEscritura]="permisoEscritura" id="procuradorPreDesigna"></app-procurador-pre-designacion>
+</div>
+
+<div class="mt-3 text-right main-button" id="down">
+    <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left"
+      label="{{ 'general.boton.volver' | translate }}"></button>
+  </div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
+    <div class="loader"></div>
+</div>

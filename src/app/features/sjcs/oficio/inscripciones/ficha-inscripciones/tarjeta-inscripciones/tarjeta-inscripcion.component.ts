@@ -491,8 +491,8 @@ export class TarjetaInscripcion implements OnInit {
       { field: "nombre_subzona", header: "justiciaGratuita.maestros.zonasYSubzonas.zonas.cabecera", width:'15%' },
       { field: "nombre_area", header: "menu.justiciaGratuita.maestros.Area",width:'15%' },
       { field: "nombre_materia", header: "menu.justiciaGratuita.maestros.Materia",width:'15%' },
-      // { field: "descripcion_tipo_guardia", header: "dato.jgr.guardia.guardias.tipoGuardia" },
-      { field: "tipoguardias", header: "dato.jgr.guardia.guardias.tipoGuardia",width:'15%' },
+      { field: "descripcion_tipo_guardia", header: "dato.jgr.guardia.guardias.tipoGuardia" },
+      // { field: "tipoguardias", header: "dato.jgr.guardia.guardias.tipoGuardia",width:'15%' },
       // { field: "ncolegiado", header: "censo.busquedaClientesAvanzada.literal.nColegiado" },
     ];
 

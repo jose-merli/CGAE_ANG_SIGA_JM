@@ -130,7 +130,11 @@ export class FichaInscripcionesComponent implements OnInit {
 			}).catch(error => console.error(error));
 		//this.turno = JSON.parse(sessionStorage.getItem("turno"));
 		//if (this.persistenceService.getDatos() != undefined) {
-		this.datos = this.persistenceService.getDatos();
+		//En el caso que proceda de ver uno de los turnos o las guardias de las inscripciones
+		if(sessionStorage.getItem("Inscripciones")){
+			this.datos = JSON.parse(sessionStorage.getItem("Inscripciones"));
+		}
+		else this.datos = this.persistenceService.getDatos();
 		//Comprueba la procedencia
 		if(sessionStorage.getItem("origin") == "newInscrip"){
 			this.datos.fechasolicitud = new Date();

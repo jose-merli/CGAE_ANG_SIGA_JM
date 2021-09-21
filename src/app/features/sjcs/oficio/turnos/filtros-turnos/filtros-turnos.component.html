@@ -37,7 +37,7 @@
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ 'menu.justiciaGratuita.maestros.Materia' | translate}}</label>
           
-          <p-multiSelect #someDropdown2 [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtros.idmateria' [(disabled)]="isDisabledMateria"
+          <p-multiSelect #someDropdown2 [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtros.idmateria'
           [options]="materias" maxSelectedLabels="10" selectionLimits="10" [selectedItemsLabel]="textSelected" [(disabled)]="isDisabledMateria"
           styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde" ></p-multiSelect>
         </div>
@@ -50,7 +50,7 @@
 
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{'justiciaGratuita.maestros.zonasYSubzonas.zona'|translate}}</label>
-          <p-multiSelect #someDropdown4 [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtros.idsubzona' [(disabled)]="isDisabledSubZona"
+          <p-multiSelect #someDropdown4 [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtros.idsubzona'
           [options]="subzonas" maxSelectedLabels="10" selectionLimits="10" (onChange)="partidoJudiciales()"[selectedItemsLabel]="textSelected"
           styleClass="widthAll" [filter]="true" [(disabled)]="isDisabledSubZona" filterBy="label,labelSinTilde" ></p-multiSelect>
         

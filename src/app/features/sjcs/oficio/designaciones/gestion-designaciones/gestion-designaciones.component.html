@@ -67,7 +67,7 @@
     <div class="text-right main-button">
       <button pButton [disabled]="disableDelete"
         (click)="delete()" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
-        <button *ngIf="esColegio && selectedDatos && selectedDatos.length > 0" (click)="navigateComunicar(selectedDatos)"
+        <button *ngIf="esColegio && selectedDatos && selectedDatos.length > 0" (click)="navigateComunicar()"
           pButton type="button" icon="fa fa-comment" iconPos="left" label="{{'general.boton.comunicar' | translate }}"></button>
     </div>
   </div>

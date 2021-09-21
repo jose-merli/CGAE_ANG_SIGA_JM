@@ -8,6 +8,7 @@ export class RowGroup {
   id3: string;
   estadoDesignacion: string;
   estadoEx: string;
+  resolucionDesignacion:String;
 }
 
 export class Row {
@@ -45,7 +46,8 @@ export class TablaResultadoDesplegableJEService {
           "1": "",
           "2": "",
           "estadoDesignacion": "",
-          "estadoEx": ""
+          "estadoEx": "",
+          "resolucionDesignacion":""
         },
 
         {
@@ -62,7 +64,8 @@ export class TablaResultadoDesplegableJEService {
           "1": "",
           "2": "",
           "estadoDesignacion": "",
-          "estadoEx": ""
+          "estadoEx": "",
+          "resolucionDesignacion":""
         },
       ],
     };
@@ -98,6 +101,7 @@ export class TablaResultadoDesplegableJEService {
       rowGroupObject.id3 = Object.keys(rowGroup)[2];
       rowGroupObject.estadoDesignacion = Object.keys(rowGroup)[3];
       rowGroupObject.estadoEx = Object.keys(rowGroup)[4];
+      rowGroupObject.resolucionDesignacion = Object.keys(rowGroup)[5];
       
       rowGroupObject.rows = rows;
 

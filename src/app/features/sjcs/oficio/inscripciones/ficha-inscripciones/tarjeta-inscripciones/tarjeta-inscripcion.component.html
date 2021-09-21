@@ -52,14 +52,14 @@
                 </a>
               </div>
                 <div class="text-center"
-                  *ngIf="col.field !='nombre_turno' && col.field !='descripcion_tipo_guardia'">
+                  *ngIf="col.field !='nombre_turno' "><!-- && col.field !='descripcion_tipo_guardia' -->
                   <span>{{rowData[col.field]}}</span>
                 </div>
               </td>
             </tr>
           </ng-template>
           <ng-template pTemplate="rowexpansion" let-dato let-columns="columns">
-            <tr [pSelectableRow]="dato">        
+            <tr [pSelectableRow]="dato" *ngIf="dato.nombre_guardia != null">        
               <td *ngFor="let col of columns">
                 <div *ngIf="col.field=='nombre_turno'" class="displayMargin">    
                     <p-checkbox [disabled]="disabledGuardias || disableAll" [(ngModel)]="dato.selectedBoolean" (onChange)="seleccionarFila(dato, $event)" binary="true"></p-checkbox>    
