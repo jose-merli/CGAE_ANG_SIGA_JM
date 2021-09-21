@@ -4,8 +4,9 @@ import { FundamentosCalificacionObject } from '../../../../../models/sjcs/Fundam
 import { SigaServices } from '../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../commons/translate';
 import { Router } from '../../../../../../../node_modules/@angular/router';
-import { ConfirmationService } from '../../../../../../../node_modules/primeng/primeng';
+import { ConfirmationService, DataTable } from '../../../../../../../node_modules/primeng/primeng';
 import { CommonsService } from '../../../../../_services/commons.service';
+
 
 @Component({
 	selector: 'app-tabla-fundamentos-calificacion',
@@ -150,7 +151,6 @@ export class TablaFundamentosCalificacionComponent implements OnInit {
 			this.selectMultiple = false;
 		}
 	}
-
 	onChangeSelectAll() {
 		if (this.permisoEscritura) {
 			if (!this.historico) {

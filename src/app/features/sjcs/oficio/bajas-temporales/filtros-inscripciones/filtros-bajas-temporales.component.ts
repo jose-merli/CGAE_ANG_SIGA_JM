@@ -281,6 +281,9 @@ export class FiltrosBajasTemporales implements OnInit {
   updateColegiado(event) {
     this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
     this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
+    this.filtros.ncolegiado =  this.usuarioBusquedaExpress.numColegiado;
+    this.filtros.nombre = this.usuarioBusquedaExpress.nombreAp;
+    this.persistenceService.setFiltrosAux(this.filtros);
   }
   
   nuevaBajaTemporal(){

@@ -1,5 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { GestionEjgComponent } from './ejg/gestion-ejg/gestion-ejg.component';
+import { AuthGuard } from '../../_guards/auth.guards';
+import{ AddExpedienteComponent } from './ejg/gestion-ejg/datos-generales-ejg/add-expediente/add-expediente.component';
 
 const routesSjcs: Routes = [
 	{
@@ -71,10 +74,19 @@ const routesSjcs: Routes = [
 		loadChildren: './justiciables/justiciables.module#JusticiablesModule'
 	},
 	{
+		path: 'gestionEjg',
+		component: GestionEjgComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'addExp',
+		component: AddExpedienteComponent,
+		canActivate: [AuthGuard]
+	},
+	{
 		path: 'turnos',
 		loadChildren: './oficio/turnos/turnos.module#GestionTurnosModule'
 	},
-
 	{     //GUARDIAS ---------------------------------------------------------------------------------
 		path: "guardias",
 		loadChildren: './guardia/guardia.module#GuardiaModule'

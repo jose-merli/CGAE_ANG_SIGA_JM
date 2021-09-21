@@ -16,6 +16,11 @@ export let endpoints_justiciables: any = {
     gestionJusticiables_getJusticiableByNif: "justiciables/gestionJusticiables/getJusticiableByNif",
     gestionJusticiables_getJusticiableByIdPersona: "justiciables/gestionJusticiables/getJusticiableByIdPersona",
     gestionJusticiables_associateRepresentante: "justiciables/gestionJusticiables/associateRepresentante",
-    gestionJusticiables_disassociateRepresentante: "justiciables/gestionJusticiables/disassociateRepresentante"
+    gestionJusticiables_disassociateRepresentante: "justiciables/gestionJusticiables/disassociateRepresentante",
+    gestionJusticiables_comboGruposLaborales: "justiciables/gestionJusticiables/comboGruposLaborales",
+    gestionJusticiables_comboParentesco: "justiciables/gestionJusticiables/comboParentesco",
+    gestionJusticiables_comboTiposIngresos: "justiciables/gestionJusticiables/comboTiposIngresos",
+    gestionJusticiables_updateUnidadFamiliar: "justiciables/gestionJusticiables/updateUnidadFamiliar",
+    gestionJusticiables_getSolicitante: "justiciables/gestionJusticiables/getSolicitante"
 
 }
