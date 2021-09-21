@@ -344,7 +344,7 @@ export class FiltroDesignacionesComponent implements OnInit {
   checkAccesoFichaActuacion() {
     this.commonsService.checkAcceso(procesos_oficio.designasActuaciones)
       .then(respuesta => {
-        if (respuesta == undefined) {
+        if (respuesta == undefined || respuesta == false) {
           this.permisoEscritura = false;
         }else{
           this.permisoEscritura = respuesta;

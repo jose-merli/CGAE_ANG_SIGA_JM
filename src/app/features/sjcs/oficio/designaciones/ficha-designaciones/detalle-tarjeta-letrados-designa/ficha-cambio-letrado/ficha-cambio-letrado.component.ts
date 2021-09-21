@@ -148,7 +148,8 @@ export class FichaCambioLetradoComponent implements OnInit {
     //Campos obligatorios rellenados?
     if ((this.entrante.body.fechaDesignacion != null || this.entrante.body.fechaDesignacion != undefined) && (this.saliente.body.motivoRenuncia != undefined || this.saliente.body.motivoRenuncia != null)) {
       //Comprobar requisitos según art 27
-      if ((this.entrante.body.numColegiado == undefined || this.entrante.body.numColegiado == "") && this.entrante.body.art27 == false) {
+      if ((this.entrante.body.numColegiado == undefined || this.entrante.body.numColegiado == "") ) {
+      // && this.entrante.body.art27 == false) {
         this.confirmationService.confirm({
           key: "deletePlantillaDoc",
           message: "Se va a seleccionar un letrado automáticamente. ¿Desea continuar?",
@@ -187,20 +188,40 @@ export class FichaCambioLetradoComponent implements OnInit {
     //Definir parametros y construir servicio
 
     let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
-
-    let request = [designa.ano, //0
-    designa.idTurno, //1
-    designa.numero,//2
-    this.body.idPersona,//3
-    this.saliente.body.observaciones, //4
-    this.saliente.body.motivoRenuncia, //5
-    sessionStorage.getItem("FDSaliente"), //6
-    this.saliente.body.fechaSolRenuncia, //7
-    this.datepipe.transform(this.entrante.body.fechaDesignacion, 'dd/MM/yyyy'),//8
-    this.entrante.body.idPersona, //9
-    this.saliente.body.compensacion, //10
-    this.entrante.body.salto //11
-    ];
+    let request=[];
+    if(this.entrante.body.art27 == true){
+      this.entrante.body.art27 = "Si";
+      request = [designa.ano, //0
+        designa.idTurno, //1
+        designa.numero,//2
+        this.body.idPersona,//3
+        this.saliente.body.observaciones, //4
+        this.saliente.body.motivoRenuncia, //5
+        sessionStorage.getItem("FDSaliente"), //6
+        this.saliente.body.fechaSolRenuncia, //7
+        this.entrante.body.fechaDesignacion,//8
+        this.entrante.body.idPersona, //9
+        this.saliente.body.compensacion, //10
+        this.entrante.body.salto, //11
+        this.entrante.body.art27 //12
+        ];
+    }else{
+      this.entrante.body.art27 = "No";
+      request = [designa.ano, //0
+        designa.idTurno, //1
+        designa.numero,//2
+        this.body.idPersona,//3
+        this.saliente.body.observaciones, //4
+        this.saliente.body.motivoRenuncia, //5
+        sessionStorage.getItem("FDSaliente"), //6
+        this.saliente.body.fechaSolRenuncia, //7
+        this.datepipe.transform(this.entrante.body.fechaDesignacion, 'dd/MM/yyyy'),//8
+        this.entrante.body.idPersona, //9
+        this.saliente.body.compensacion, //10
+        this.entrante.body.salto, //11
+        this.entrante.body.art27 //12
+        ];
+    }
 
     this.progressSpinner = true;
 
@@ -210,7 +231,7 @@ export class FichaCambioLetradoComponent implements OnInit {
         //Mostrar mensaje todo correcto
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         setTimeout(() => {
-          this.router.navigate(['/fichaDesignaciones']);
+          this.location.back();
         }, 400);
       },
       err => {
@@ -236,7 +257,6 @@ export class FichaCambioLetradoComponent implements OnInit {
         this.progressSpinner = false;
       }
     );
-    this.progressSpinner = false;
   }
 
 

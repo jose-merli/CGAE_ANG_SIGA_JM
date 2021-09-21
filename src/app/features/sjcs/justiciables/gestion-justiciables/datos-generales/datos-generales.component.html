@@ -1,8 +1,6 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 
-
-
-<div *ngIf="showTarjetaPermiso" class="ficha-container">
+<div class="ficha-container">
   <div class="card">
     <div class="card-header header-ficha" (click)="onHideTarjeta()">
       <div *ngIf="!showTarjeta" class="form-row">
@@ -67,7 +65,7 @@
             <div class="form-group col-lg-3 col-md-3">
               <label>{{ "censo.fichaCliente.literal.identificacion" | translate }} (*)
               </label>
-              <input [(ngModel)]="body.nif" type="text" class="form-control" maxLength="18" (ngModelChange)="compruebaDNI()" [disabled]="!permisoEscritura"
+              <input [(ngModel)]="body.nif" type="text" class="form-control" maxLength="18" [ngClass]="styleObligatorio(body.nif)" (ngModelChange)="compruebaDNI()" [disabled]="!permisoEscritura"
                 pInputText/>
             </div>
             <div class="form-group col-lg-3 col-md-3">

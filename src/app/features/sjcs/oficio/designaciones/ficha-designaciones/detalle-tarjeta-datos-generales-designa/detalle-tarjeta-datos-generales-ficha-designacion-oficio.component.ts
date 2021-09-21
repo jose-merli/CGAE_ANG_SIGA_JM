@@ -8,8 +8,10 @@ import { ActuacionDesignaObject } from '../../../../../../models/sjcs/ActuacionD
 import { DesignaItem } from '../../../../../../models/sjcs/DesignaItem';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
-import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
+import { EJGItem } from '../../../../../../models/sjcs/EJGItem';
+import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-detalle-tarjeta-datos-generales-ficha-designacion-oficio',
@@ -27,6 +29,8 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
   initDatos: any;
   disableButtons: boolean;
   progressSpinner: boolean;
+  datosEJG: EJGItem;
+
   permisoEscritura: boolean;
   isLetrado: boolean;
   nif: any;
@@ -38,6 +42,11 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
   @Input() selectedValue;
   @Output() refreshDataGenerales = new EventEmitter<DesignaItem>();
   nuevaDesignaCreada: DesignaItem;
+  currentRoute: String;
+  idClasesComunicacionArray: string[] = [];
+  idClaseComunicacion: String;
+  keys: any[] = [];
+
   anio = {
     value: "",
     disable: false
@@ -88,10 +97,13 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
      private confirmationService: ConfirmationService, 
      private translateService: TranslateService, 
      private router: Router,
-     private persistenceService: PersistenceService) {
+     private persistenceService: PersistenceService,
+     private location: Location) {
   }
 
   ngOnInit() {
+    this.currentRoute = this.router.url;
+    this.getKeysClaseComunicacion();
     this.resaltadoDatos = true;
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
     this.initDatos = this.campos;
@@ -240,6 +252,46 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     if (this.selectores[1].value = "") {
       this.selectores[1].value = "";
     }
+    //Se comprueba si se procede de la pantalla de gestion de EJG
+    if (sessionStorage.getItem("EJG")) {
+      this.datosEJG =JSON.parse(sessionStorage.getItem("EJG"));
+      sessionStorage.removeItem("EJG");
+
+      //Datos de la tarjeta datos generales
+      //Comprobar art 27.
+      if(sessionStorage.getItem("Art27")){
+        this.checkArt = true;
+        sessionStorage.removeItem("Art27");
+      }
+      if(this.inputs[0].value == undefined){
+        this.inputs[0].value = "";
+        this.inputs[1].value = "";
+        this.inputs[2].value = "";
+      }
+      if(this.datosEJG.apellidosYNombre!=undefined && this.datosEJG.apellidosYNombre!=null) {
+        if(!this.checkArt){
+        this.sigaServices.post("designaciones_searchAbogadoByIdPersona", this.datosEJG.idPersona).subscribe(
+          n => {
+            let data = JSON.parse(n.body).colegiadoItem;
+            this.inputs[0].value = data.numColegiado;
+          },
+          err => {
+            this.progressSpinner = false;
+          });
+        }
+          let colegiado = this.datosEJG.apellidosYNombre.split(", ")
+            this.inputs[1].value = colegiado[0];
+            this.inputs[2].value = colegiado[1];
+      }
+      
+      //Los valores y bloqueo del turno y del tipo se determinan en los combos correspondientes.
+
+      //Comprobar que fechaapertura es lo mismo que fechagenerales.
+      this.fechaGenerales = new Date(this.datosEJG.fechaApertura);
+      /* this.anio.value = this.datosEJG.annio;
+      this.numero.value = this.datosEJG.numEjg; */
+     
+    }
     this.getComboTurno();
     this.getComboTipoDesignas();
   }
@@ -253,6 +305,14 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         if (datosGeneralesDesigna != null && datosGeneralesDesigna != undefined) {
           this.selectores[1].value = datosGeneralesDesigna[1];
         }
+        //Condicion pensada para que se aplique cuando se crea una designacion desde EJG
+        if(this.datosEJG != undefined && this.datosEJG != null){
+          if(this.datosEJG.tipoEJGColegio !=null){
+            this.selectores[1].value = this.datosEJG.tipoEJGColegio;
+            this.selectores[1].disable = true;
+          }
+          else this.selectores[1].value="";
+        }
         this.progressSpinner = false;
       },
       err => {
@@ -264,7 +324,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       }
     );
   }
-
+  
 
   getComboTurno() {
     this.progressSpinner = true;
@@ -275,6 +335,14 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         if (datosGeneralesDesigna != null && datosGeneralesDesigna != undefined) {
           this.selectores[0].value = datosGeneralesDesigna[0];
           this.checkArt = datosGeneralesDesigna[2];
+        }
+        //Condicion pensada para que se aplique cuandose crea una designacion desde EJG
+        if(this.datosEJG != undefined && this.datosEJG != null){
+          if(this.datosEJG.idTurno !=null){
+            this.selectores[0].value = this.datosEJG.idTurno;
+            this.selectores[0].disable = true;
+          }
+          else this.selectores[0].value="";
         }
         this.progressSpinner = false;
       },
@@ -310,10 +378,11 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     sessionStorage.removeItem("datosGeneralesDesigna");
     this.progressSpinner = true;
     this.msgs = [];
-    if (detail == "save" && (this.inputs[0].value == "" || this.inputs[0].value == undefined)) {
+    /* if (detail == "save" && (this.inputs[0].value == "" || this.inputs[0].value == undefined)) {
       this.confirmarActivar(severity, summary, detail);
-    } else {
-      if (detail == "save" && this.anio.value == "") {
+    } else { */
+      
+      if (detail == "save" && (this.anio.value == "") ) {
         detail = "Guardar";
         let newDesigna = new DesignaItem();
         var idTurno: number = +this.selectores[0].value;
@@ -350,7 +419,54 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
               newDesignaRfresh.ano = newDesigna.ano;
               newDesignaRfresh.codigo = newId.id;
               newDesignaRfresh.idTurnos = [String(newDesigna.idTurno)];
-              this.progressSpinner = false;
+
+              //Introducimos aqui la asocion con EJG en el caso que venga de una ficha EJG
+              if(this.datosEJG != null && this.datosEJG != undefined){
+
+                //Realizamos un a peticion con un array strings sin determinar un objeto a medida ya que se considera que  
+                //el uso puntual de este servicio lo justifica.
+                let request= [newDesigna.ano.toString(), this.datosEJG.annio, this.datosEJG.tipoEJG, newDesigna.idTurno.toString(), newId.id, this.datosEJG.numero];
+                
+                this.sigaServices.post("designacion_asociarEjgDesigna", request).subscribe(
+                  m => {
+                    //Se debe añadir a la BBDD estos mensajes (etiquetas)
+                    if(JSON.parse(m.body).error.code==200)this.msgs = [{ severity: "success", summary: "Asociación con EJG realizada correctamente", detail: this.translateService.instant( JSON.parse(m.body).error.description) }];
+                    else this.msgs = [{ severity: "error", summary: "Asociación con EJG fallida", detail: this.translateService.instant( JSON.parse(m.body).error.description) }];
+                   // sessionStorage.removeItem("EJG");
+
+                    //Una vez se han asociado el ejg y la designa, procedemos a traer los posibles datos de pre-designacion
+                    this.sigaServices.post("gestionejg_getEjgDesigna", this.datosEJG).subscribe(
+                      x => {
+                        let ejgDesignas = JSON.parse(x.body).ejgDesignaItems;
+                        this.sigaServices.post("designacion_getPreDesignaEJG", ejgDesignas[0]).subscribe(
+                          y => {
+                            if (y.statusText == "OK") this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+                            else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+                            this.progressSpinner = false;
+                            this.location.back();
+                          }
+                        );
+                      },
+                      err => {
+                        this.location.back();
+                      }
+                    );
+                    
+                  },
+                  err => {
+                    severity = "error";
+                        summary = "No se ha asociado el EJG correctamente";
+                        this.msgs.push({
+                          severity,
+                          summary,
+                          detail
+                        });
+                    this.progressSpinner = false;
+                    this.location.back();
+                  }
+                );
+              }
+              
               this.busquedaDesignaciones(newDesignaRfresh);
               this.progressSpinner = false;
               //MENSAJE DE TODO CORRECTO
@@ -371,15 +487,13 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                     summary,
                     detail
                   });
-              console.log(err);
               this.progressSpinner = false;
             }, () => {
               this.progressSpinner = false;
             }
           );
         }
-
-      } else if (detail == "save" && this.anio.value != "") {
+      } else if (detail == "save" && this.anio.value != "" ) {
         detail = "Guardar";
         let newDesigna = new DesignaItem();
         var idTurno: number = +this.selectores[0].value;
@@ -437,7 +551,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         }
       }
 
-    }
+   // }
 
     if (detail == "Restablecer") {
       this.nuevaDesigna = sessionStorage.getItem("nuevaDesigna");
@@ -454,6 +568,16 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     }
 
   }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+
 
   transformaFecha(fecha) {
     if (fecha != null) {
@@ -668,6 +792,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     } else {
       this.progressSpinner = false;
     }
+    this.progressSpinner = false;
   }
 
   formatDate(date) {
@@ -734,5 +859,69 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         }, 5);
       });;
 
+  }
+
+  navigateComunicar() {
+    sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
+    //IDMODULO de SJCS es 10
+    sessionStorage.setItem("idModulo", '10');
+    
+    this.getDatosComunicar();
+  }
+  
+  getKeysClaseComunicacion() {
+    this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
+      data => {
+        this.keys = JSON.parse(data["body"]);
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  getDatosComunicar() {
+    let datosSeleccionados = [];
+    let rutaClaseComunicacion = this.currentRoute.toString();
+
+    this.sigaServices
+      .post("dialogo_claseComunicacion", rutaClaseComunicacion)
+      .subscribe(
+        data => {
+          this.idClaseComunicacion = JSON.parse(
+            data["body"]
+          ).clasesComunicaciones[0].idClaseComunicacion;
+          this.sigaServices
+            .post("dialogo_keys", this.idClaseComunicacion)
+            .subscribe(
+              data => {
+                this.keys = JSON.parse(data["body"]).keysItem;
+                  let keysValues = [];
+                  this.keys.forEach(key => {
+                    if (this.initDatos[key.nombre] != undefined) {
+                      keysValues.push(this.initDatos[key.nombre]);
+                    }else if(key.nombre == "num" && this.initDatos["numero"] != undefined){
+                      keysValues.push(this.initDatos["numero"]);
+                    }else if(key.nombre == "idturno" && this.initDatos["idTurno"] != undefined){
+                      keysValues.push(this.initDatos["idTurno"]);
+                    }
+                  });
+                  datosSeleccionados.push(keysValues);
+
+                sessionStorage.setItem(
+                  "datosComunicar",
+                  JSON.stringify(datosSeleccionados)
+                );
+                this.router.navigate(["/dialogoComunicaciones"]);
+              },
+              err => {
+                console.log(err);
+              }
+            );
+        },
+        err => {
+          console.log(err);
+        }
+      );
   }
 }

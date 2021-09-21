@@ -35,8 +35,7 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
 	selectedAutorizaavisotel;
 	selectedAsistidosolicitajg;
 	selectedAsistidoautorizaeejg;
-	permisoEscritura;
-	showTarjetaPermiso: boolean = false;
+	permisoEscritura: boolean = true;
 
 	@ViewChild('cdSolicitud') cdSolicitud: Dialog;
 
@@ -54,63 +53,50 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
 	) { }
 
 	ngOnInit() {
-		this.commonsService
-			.checkAcceso(procesos_justiciables.tarjetaDatosSolicitud)
-			.then((respuesta) => {
-				this.permisoEscritura = respuesta;
+		if (this.body != undefined && this.body.idpersona != undefined) {
+			this.bodyInicial = JSON.parse(JSON.stringify(this.body));
 
-				if (this.permisoEscritura == undefined) {
-					this.showTarjetaPermiso = false;
-				} else {
-					this.showTarjetaPermiso = true;
+			this.tratamientoDescripcionesTarjeta();
+		} else {
+			this.body = new JusticiableItem();
+		}
 
-					if (this.body != undefined && this.body.idpersona != undefined) {
-						this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+		if (this.body.idpersona == undefined) {
+			this.modoEdicion = false;
+			this.selectedAutorizaavisotel = undefined;
+			this.selectedAsistidosolicitajg = undefined;
+			this.selectedAsistidoautorizaeejg = undefined;
+			this.showTarjeta = false;
+		} else {
+			this.modoEdicion = true;
+			this.tratamientoDescripcionesTarjeta();
+		}
 
-						this.tratamientoDescripcionesTarjeta();
-					} else {
-						this.body = new JusticiableItem();
-					}
+		this.getCombos();
 
-					if (this.body.idpersona == undefined) {
-						this.modoEdicion = false;
-						this.selectedAutorizaavisotel = undefined;
-						this.selectedAsistidosolicitajg = undefined;
-						this.selectedAsistidoautorizaeejg = undefined;
-						this.showTarjeta = false;
-					} else {
-						this.modoEdicion = true;
-						this.tratamientoDescripcionesTarjeta();
-					}
+		this.sigaServices.guardarDatosGeneralesJusticiable$.subscribe((data) => {
+			let asistidoautorizaeejg = this.body.asistidoautorizaeejg;
+			let asistidosolicitajg = this.body.asistidosolicitajg;
+			let autorizaavisotelematico = this.body.autorizaavisotelematico;
+			this.body = data;
+			this.body.asistidoautorizaeejg = asistidoautorizaeejg;
+			this.body.asistidosolicitajg = asistidosolicitajg;
+			this.body.autorizaavisotelematico = autorizaavisotelematico;
+			this.modoEdicion = true;
+			this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+		});
 
-					this.getCombos();
-
-					this.sigaServices.guardarDatosGeneralesJusticiable$.subscribe((data) => {
-						let asistidoautorizaeejg = this.body.asistidoautorizaeejg;
-						let asistidosolicitajg = this.body.asistidosolicitajg;
-						let autorizaavisotelematico = this.body.autorizaavisotelematico;
-						this.body = data;
-						this.body.asistidoautorizaeejg = asistidoautorizaeejg;
-						this.body.asistidosolicitajg = asistidosolicitajg;
-						this.body.autorizaavisotelematico = autorizaavisotelematico;
-						this.modoEdicion = true;
-						this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-					});
-
-					this.sigaServices.guardarDatosGeneralesRepresentante$.subscribe((data) => {
-						let asistidoautorizaeejg = this.body.asistidoautorizaeejg;
-						let asistidosolicitajg = this.body.asistidosolicitajg;
-						let autorizaavisotelematico = this.body.autorizaavisotelematico;
-						this.body = data;
-						this.body.asistidoautorizaeejg = asistidoautorizaeejg;
-						this.body.asistidosolicitajg = asistidosolicitajg;
-						this.body.autorizaavisotelematico = autorizaavisotelematico;
-						this.modoEdicion = true;
-						this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-					});
-				}
-			})
-			.catch((error) => console.error(error));
+		this.sigaServices.guardarDatosGeneralesRepresentante$.subscribe((data) => {
+			let asistidoautorizaeejg = this.body.asistidoautorizaeejg;
+			let asistidosolicitajg = this.body.asistidosolicitajg;
+			let autorizaavisotelematico = this.body.autorizaavisotelematico;
+			this.body = data;
+			this.body.asistidoautorizaeejg = asistidoautorizaeejg;
+			this.body.asistidosolicitajg = asistidosolicitajg;
+			this.body.autorizaavisotelematico = autorizaavisotelematico;
+			this.modoEdicion = true;
+			this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+		});
 	}
 
 	ngOnChanges(changes: SimpleChanges) {

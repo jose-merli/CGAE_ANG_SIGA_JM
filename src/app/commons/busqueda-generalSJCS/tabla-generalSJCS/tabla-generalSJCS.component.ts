@@ -101,7 +101,13 @@ export class TablaGeneralSJCSComponent implements OnInit {
 
   backWithData(evento) {
 
-    this.persistenceService.setDatos(evento.data);
+    //Bloquear el desplegable del estado de colegiado a ejerciente
+    if (sessionStorage.getItem("pantalla") == "gestionEjg" && sessionStorage.getItem("tarjeta") == "ServiciosTramit"){
+      let persona = sessionStorage.setItem("buscadorGeneral", JSON.stringify((evento)));
+      sessionStorage.removeItem("tarjeta");
+      sessionStorage.removeItem("pantalla");
+    }
+    else this.persistenceService.setDatos(evento.data);
     this.location.back();
 
   }

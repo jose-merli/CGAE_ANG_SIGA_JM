@@ -34,8 +34,6 @@ export class AsuntosComponent implements OnInit, OnChanges {
   datosInicio: boolean = false;
 
   idPersona;
-  showTarjetaPermiso: boolean = true;
-
 
   @ViewChild("table") table: DataTable;
   @Input() showTarjeta;
@@ -48,22 +46,7 @@ export class AsuntosComponent implements OnInit, OnChanges {
     private commonsService: CommonsService) { }
 
   ngOnInit() {
-
-    this.commonsService.checkAcceso(procesos_justiciables.tarjetaAsuntos)
-      .then(respuesta => {
-
-        this.permisoEscritura = respuesta;
-
-        if (this.permisoEscritura == undefined) {
-          this.showTarjetaPermiso = false;
-        } else {
-          this.showTarjetaPermiso = true;
-          this.getCols();
-
-        }
-      }
-      ).catch(error => console.error(error));
-
+    this.getCols();
   }
 
   ngOnChanges(changes: SimpleChanges) {

@@ -13,6 +13,8 @@ export class PersistenceService {
     private historicoName: string = "historico";
     private permisosName: string = "permisos";
     private fichasPosibles: string = "fichasPosibles";
+    private datosBusquedaGeneralSJCS: string = "datosBusquedaGeneralSJCS";
+    private filtrosBusquedaGeneralSJCS: string = "filtrosBusquedaGeneralSJCS";
 
     constructor() { }
 
@@ -133,6 +135,32 @@ export class PersistenceService {
         sessionStorage.removeItem(this.fichasPosibles);
     }
 
+    setDatosBusquedaGeneralSJCS(data: any) {
+        sessionStorage.setItem(this.datosBusquedaGeneralSJCS, JSON.stringify(data));
+    }
+
+    getDatosBusquedaGeneralSJCS() {
+        let data = sessionStorage.getItem(this.datosBusquedaGeneralSJCS);
+        return JSON.parse(data);
+    }
+
+    clearDatosBusquedaGeneralSJCS() {
+        sessionStorage.removeItem(this.datosBusquedaGeneralSJCS);
+    }
+
+    setFiltrosBusquedaGeneralSJCS(data: any) {
+        sessionStorage.setItem(this.filtrosBusquedaGeneralSJCS, JSON.stringify(data));
+    }
+
+    getFiltrosBusquedaGeneralSJCS() {
+        let data = sessionStorage.getItem(this.filtrosBusquedaGeneralSJCS);
+        return JSON.parse(data);
+    }
+
+    clearFiltrosBusquedaGeneralSJCS() {
+        sessionStorage.removeItem(this.filtrosBusquedaGeneralSJCS);
+    }
+
 
     clearPersistence() {
         this.clearFiltros();
@@ -144,6 +172,8 @@ export class PersistenceService {
         this.clearBody();
         this.clearBodyAux();
         this.clearPaginacion();
+        this.clearDatosBusquedaGeneralSJCS();
+        this.clearFiltrosBusquedaGeneralSJCS();
     }
 
 }
