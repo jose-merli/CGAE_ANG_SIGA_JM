@@ -5,10 +5,12 @@
         <i class="fa fa-angle-right"></i>{{'facturacion.productos.CompraSuscripcion' | translate}}
   </div>
   <div>
-      <app-tarjeta-cliente-compra-suscripcion [(ficha)]="ficha">
+      <app-tarjeta-cliente-compra-suscripcion #cliente [(ficha)]="ficha">
       </app-tarjeta-cliente-compra-suscripcion>
       <app-tarjeta-solicitud-compra-suscripcion [(ficha)]="ficha">
       </app-tarjeta-solicitud-compra-suscripcion>
+      <app-tarjeta-forma-pago-compra-suscripcion [(ficha)]="ficha">
+      </app-tarjeta-forma-pago-compra-suscripcion>
   </div>
 </div>
 

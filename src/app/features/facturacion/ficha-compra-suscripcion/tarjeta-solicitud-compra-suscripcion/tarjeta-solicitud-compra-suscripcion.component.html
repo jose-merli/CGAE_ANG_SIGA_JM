@@ -29,6 +29,16 @@
                 <span>{{ ficha.nSolicitud }}</span>
               </label>
             </div>
+            <div *ngIf="filas.length > 0" class="col-3">
+              <label>{{ "censo.resultadosSolicitudesModificacion.literal.fecha" | translate }}
+                <span>{{ filas[filas.length-1].fecha | date: 'dd/MM/yyyy' }}</span>
+              </label>
+            </div>
+            <div *ngIf="filas.length > 0" class="col-3">
+              <label>{{ "facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado" | translate }}
+                <span>{{ filas[filas.length-1].estado }}</span>
+              </label>
+            </div>
             <div class="col-3">
               <i class="fa fa-angle-down float-right"></i>
             </div>
@@ -97,14 +107,21 @@
     <div [hidden]="!showTarjeta" class="card-footer">
       <div class="text-right main-button">
         <!-- Solicitud -->
-        <button pButton *ngIf="showSearch" (click)="checkSearch()" type="button" icon="fa fa-search" iconPos="left"
-          label="{{ 'general.boton.search' | translate}}"></button>
-        <button pButton *ngIf="showSearch" (click)="checkSearch()" type="button" icon="fa fa-search" iconPos="left"
-          label="{{ 'general.boton.search' | translate}}"></button>
-      </div>
-      <div class="text-right main-button">
+        <button pButton *ngIf="ficha.productos != null" (click)="checkSolicitarCompra()" type="button" icon="fa fa-search" iconPos="left"
+          label="{{ 'facturacion.productos.solicitarCompra' | translate}}"></button>
+        <button pButton *ngIf="ficha.productos == null" (click)="checkSearch()" type="button" icon="fa fa-search" iconPos="left"
+          label="{{ 'facturacion.productos.solicitarSuscripcion' | translate}}"></button>
+      <!-- Aprobar -->
         <button pButton  (click)="checkSearch()" type="button" icon="fa fa-search" iconPos="left"
-          label="{{ 'general.boton.search' | translate}}"></button>
+          label="{{ 'facturacion.productos.aprobar' | translate}}"></button>
+      <!-- Denegar/Cancelar -->
+        <button pButton  (click)="checkSearch()" type="button" icon="fa fa-search" iconPos="left"
+          label="{{ 'general.boton.denegar' | translate}}"></button>
+        <button pButton  (click)="checkSearch()" type="button" icon="fa fa-search" iconPos="left"
+          label="{{ 'general.boton.cancel' | translate}}"></button>
+      <!-- Anular -->
+        <button pButton  (click)="checkSearch()" type="button" icon="fa fa-search" iconPos="left"
+          label="{{ 'general.boton.anular' | translate}}"></button>
       </div>
     </div>
   </div>

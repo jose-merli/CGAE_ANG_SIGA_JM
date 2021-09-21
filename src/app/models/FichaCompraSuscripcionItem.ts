@@ -17,13 +17,19 @@ export class FichaCompraSuscripcionItem {
     fechaAprobacion: Date;
     fechaDenegacion: Date;
     fechaAnulacion: Date;
-    idFormaPago: number;
 
     
     //TARJETA FORMA DE PAGO
     idFormasPagoComunes: string;
     idFormaPagoSeleccionada: number;
+    totalNeto: number;
+    totalIVA: number;
+    impTotal: number;
+    pendPago: number;
+    cuentaBancSelecc: string;
+    noFact:boolean ;
 
+    idEstadoPeticion: string;
     productos: ListaProductosItems[];
     
     constructor() {}

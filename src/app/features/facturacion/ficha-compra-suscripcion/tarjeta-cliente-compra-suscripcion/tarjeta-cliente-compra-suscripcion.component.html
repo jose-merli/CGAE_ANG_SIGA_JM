@@ -46,13 +46,13 @@
               <label *ngIf="ficha.idPersona != null && ficha.idPersona != undefined">
                 <i (click)="$event.stopPropagation();irFichaColegial()" class="fas fa-external-link-alt mr-2"></i>
                 <a (click)="$event.stopPropagation();irFichaColegial()">
-                  <span style="color: blue; text-decoration: underline;cursor:pointer;"> {{ 'justiciaGratuita.justiciables.fichaJusticiable' | translate }}
+                  <span style="color: blue; text-decoration: underline;cursor:pointer;"> {{ 'facturacion.productos.Cliente' | translate }}
                   </span>
                 </a>
               </label>
               <label *ngIf="ficha.idPersona == null || ficha.idPersona == undefined">
                 <i class="fas fa-external-link-alt mr-2"></i>
-                <span style="color: gray; text-decoration: underline;cursor:pointer;"> {{ 'justiciaGratuita.justiciables.fichaJusticiable' | translate }}
+                <span style="color: gray; text-decoration: underline;cursor:pointer;"> {{ 'facturacion.productos.Cliente' | translate }}
                 </span>
               </label>
             </div>

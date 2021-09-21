@@ -48,13 +48,21 @@ export class TarjetaClienteCompraSuscripcionComponent implements OnInit {
       
       this.compruebaDNIInput();
     }
-
-    if(sessionStorage.esColegiado=='true')this.showSearch = false;
-    else this.showSearch = true;
+    
+    this.checkHideSearch();
     
     if(this.ficha.idPersona != null) this.showEnlaceCliente = true;
 
     this.getPermisoBuscar();
+  }
+
+  checkHideSearch(){
+    if(this.ficha.idEstadoPeticion==null){
+      if(sessionStorage.esColegiado=='true')this.showSearch = false;
+      else this.showSearch = true;
+    }
+    //El cliente solo se puede cambiar cuando se esta creando la ficha.
+    else this.showSearch = false;
   }
 
   getPermisoBuscar(){
