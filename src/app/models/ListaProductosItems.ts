@@ -11,6 +11,7 @@ export class ListaProductosItems {
     iva: string;
     precioiva: string;
     formapago: string;
+    noFacturable: string;
 
     constructor() { }
 }

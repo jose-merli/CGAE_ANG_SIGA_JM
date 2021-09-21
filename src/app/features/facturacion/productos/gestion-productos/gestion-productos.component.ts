@@ -362,10 +362,6 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
         sessionStorage.removeItem("FichaCompraSuscripcion");
         let nuevaCompra = new FichaCompraSuscripcionItem();
         nuevaCompra.productos = this.selectedRows;
-        if(sessionStorage.esColegiado=='true' && sessionStorage.personaBody) {
-          let personalBody = JSON.parse(sessionStorage.personaBody);
-          nuevaCompra.idPersona = personalBody.idPersona;
-        }
         sessionStorage.setItem("cargarFichaCompraSuscripcion",JSON.stringify(nuevaCompra));
         this.router.navigate(["/fichaCompraSuscripcion"]);
       } else {

@@ -36,7 +36,7 @@
             </div>
             <div class="col-3">
               <label>{{ "facturacion.productos.formapago" | translate }}
-                <span>{{ ficha.idFormaPagoSeleccionada }}</span>
+                <span>{{ desFormaPagoSelecc }}</span>
               </label>
             </div>
             <div class="col-3">
@@ -47,37 +47,48 @@
       </div>
     </div>
     <div [hidden]="!showTarjeta" class="card-body card-body-ficha">
-      <div class="row">
-        <div class="bloque">
-          <div *ngIf="ficha.productos != null" class="form-row">
-            <div class="form-group col-lg-3 col-md-3">
-              <label>{{ "facturacion.productos.totalNeto" | translate }}
-              </label>
-              <input [(ngModel)]="ficha.totalNeto" type="text" class="form-control" disabled pInputText/>
-            </div>
-            <div class="form-group col-lg-3 col-md-3">
-              <label>{{ "facturacion.productos.iva" | translate }}
-              </label>
-              <input [(ngModel)]="ficha.totalIVA" type="text" class="form-control" disabled pInputText/>
-            </div>
-            <div class="form-group col-lg-3 col-md-3">
-              <label>{{ "facturacionSJCS.facturacionesYPagos.importeTotal" | translate }}
-              </label>
-              <input [(ngModel)]="ficha.impTotal" type="text" class="form-control" disabled pInputText/>
-            </div>
-            <div class="form-group col-lg-3 col-md-3">
-              <label>{{ "facturacionSJCS.facturacionesYPagos.importePendiente" | translate }}
-              </label>
-              <input [(ngModel)]="ficha.pendPago" type="text" class="form-control" disabled pInputText/>
-            </div>
+      <div>
+        <div *ngIf="ficha.productos != null" class="form-row">
+          <div class="form-group col-lg-3 col-md-3">
+            <label>{{ "facturacion.productos.totalNeto" | translate }}
+            </label>
+            <input [(ngModel)]="ficha.totalNeto" type="text" class="form-control" disabled pInputText />
           </div>
-          <div class="form-row">
-            <div class="form-group col-lg-3 col-md-3">
-              <label>{{ "facturacion.productos.formapago" | translate }}
-              </label>
-              <p-dropdown class="select-form" [options]="comboComun" [disabled]="ficha.idEstadoPeticion != 30" placeholder="{{'general.boton.seleccionar' | translate}}"
-                [(ngModel)]="ficha.idFormaPagoSeleccionada" showClear="true" ></p-dropdown>
-            </div>
+          <div class="form-group col-lg-3 col-md-3">
+            <label>{{ "facturacion.productos.iva" | translate }}
+            </label>
+            <input [(ngModel)]="ficha.totalIVA" type="text" class="form-control" disabled pInputText />
+          </div>
+          <div class="form-group col-lg-3 col-md-3">
+            <label>{{ "facturacionSJCS.facturacionesYPagos.importeTotal" | translate }}
+            </label>
+            <input [(ngModel)]="ficha.impTotal" type="text" class="form-control" disabled pInputText />
+          </div>
+          <div class="form-group col-lg-3 col-md-3">
+            <label>{{ "facturacionSJCS.facturacionesYPagos.importePendiente" | translate }}
+            </label>
+            <input [(ngModel)]="ficha.pendPago" type="text" class="form-control" disabled pInputText />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-lg-3 col-md-3">
+            <label>{{ "facturacion.productos.formapago" | translate }}
+            </label>
+            <p-dropdown class="select-form" [options]="comboComun" [disabled]="ficha.idEstadoPeticion == 30"
+              placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="selectedPago" showClear="true">
+            </p-dropdown>
+          </div>
+          <!-- Desplegable condicional que solo aparece si la forma de pago seleccionada es "Domiciliación bancaria". corresponde a idformapago = 20 -->
+          <div *ngIf="selectedPago == 20" class="form-group col-lg-3 col-md-3">
+            <label>Cuenta Bancaria
+            </label>
+            <p-dropdown class="select-form" [options]="cuentasBanc" [disabled]="ficha.idEstadoPeticion != 10"
+              placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="ficha.cuentaBancSelecc"
+              showClear="true"></p-dropdown>
+          </div>
+          <div class="form-group col-lg-3 col-md-3">
+            <p-checkbox class="select-form" [disabled]="disableNoFact" label="No facturable" binary="true"
+              [(ngModel)]="ficha.idFormaPagoSeleccionada"></p-checkbox>
           </div>
         </div>
       </div>
@@ -85,7 +96,8 @@
 
     <div [hidden]="!showTarjeta" class="card-footer">
       <div class="text-right main-button">
-        <button pButton  (click)="checkSave()" type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.save' | translate}}"></button>
+        <button pButton (click)="checkSave()" type="button" icon="fa fa-save" iconPos="left"
+          label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
   </div>

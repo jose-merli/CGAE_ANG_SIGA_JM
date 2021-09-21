@@ -1,7 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Message } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../commons/translate';
 import { FichaCompraSuscripcionItem } from '../../../../models/FichaCompraSuscripcionItem';
+import { procesos_facturacion } from '../../../../permisos/procesos_facturacion';
+import { CommonsService } from '../../../../_services/commons.service';
 import { SigaServices } from '../../../../_services/siga.service';
 
 @Component({
@@ -22,14 +25,18 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
 
   filas: any[] = null;
 
+  permisoSolicitarCompra;
+
   progressSpinner : boolean = false;
   showTarjeta: boolean = false;
 
   constructor(
-    private sigaServices: SigaServices, private translateService: TranslateService,) { }
+    private sigaServices: SigaServices, private translateService: TranslateService, 
+    private commonsService: CommonsService, private router: Router) { }
 
   ngOnInit() {
     this.processDatos();
+    this.checkPermisos();
   }
 
   getNSolicitud(){
@@ -60,7 +67,21 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
     }
   }
 
-  solicitar(){
+  checkPermisos(){
+    this.getPermisoSolicitarCompra();
+  }
+
+  checkSolicitarCompra(){
+    let msg = this.commonsService.checkPermisos(this.permisoSolicitarCompra, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    }  else {
+			this.solicitarCompra();
+		}
+  }
+
+  solicitarCompra(){
     this.progressSpinner = true; 
 		this.sigaServices.post('facturacion_solicitarCompra', this.ficha).subscribe(
 			(n) => {
@@ -68,7 +89,6 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         } else {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.ficha.idEstadoPeticion = "10";
         }
 				this.progressSpinner = false;
 			},
@@ -90,5 +110,14 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
       summary: summary,
       detail: msg
     });
+  }
+  
+  getPermisoSolicitarCompra(){
+    this.commonsService
+			.checkAcceso(procesos_facturacion.fichaCompraSuscripcion)
+			.then((respuesta) => {
+				this.permisoSolicitarCompra = respuesta;
+			})
+			.catch((error) => console.error(error));
   }
 }

@@ -49,14 +49,14 @@ export class TarjetaClienteCompraSuscripcionComponent implements OnInit {
       this.compruebaDNIInput();
     }
     
-    this.hideSearch();
+    this.checkHideSearch();
     
     if(this.ficha.idPersona != null) this.showEnlaceCliente = true;
 
     this.getPermisoBuscar();
   }
 
-  hideSearch(){
+  checkHideSearch(){
     if(this.ficha.idEstadoPeticion==null){
       if(sessionStorage.esColegiado=='true')this.showSearch = false;
       else this.showSearch = true;

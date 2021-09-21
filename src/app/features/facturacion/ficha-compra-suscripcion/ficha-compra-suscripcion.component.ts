@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { FichaCompraSuscripcionItem } from '../../../models/FichaCompraSuscripcionItem';
 import { SigaServices } from '../../../_services/siga.service';
+import { Message } from 'primeng/components/common/api';
+import { TranslateService } from '../../../commons/translate';
 
 @Component({
   selector: 'app-ficha-compra-suscripcion',
@@ -10,14 +12,17 @@ import { SigaServices } from '../../../_services/siga.service';
 })
 export class FichaCompraSuscripcionComponent implements OnInit {
 
+  msgs : Message[];
+  
   progressSpinner: boolean = false;
 
   ficha: FichaCompraSuscripcionItem = new FichaCompraSuscripcionItem;
 
+  @ViewChild("cliente") tarjCliente;
 
 
   constructor(private location: Location, 
-    private sigaServices: SigaServices,) { }
+    private sigaServices: SigaServices, private translateService: TranslateService,) { }
 
   ngOnInit() {
 
@@ -46,7 +51,18 @@ export class FichaCompraSuscripcionComponent implements OnInit {
 		);
 	}
 
+  
+
   backTo(){
     this.location.back();
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
   }
 }
