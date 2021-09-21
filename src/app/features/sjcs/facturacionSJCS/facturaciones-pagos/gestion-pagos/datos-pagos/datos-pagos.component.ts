@@ -25,7 +25,7 @@ export class DatosPagosComponent implements OnInit {
   body: PagosjgItem = new PagosjgItem();
   bodyAux: PagosjgItem = new PagosjgItem();
 
-  histEstados = [];
+  histEstados: PagosjgItem[] = [];
   selectedItem: number = 10;
   facturaciones: ComboItem[];
   permisos;
@@ -501,6 +501,43 @@ export class DatosPagosComponent implements OnInit {
 
   isPagoEjecutado() {
     return this.idEstadoPago == '20';
+  }
+
+  deletePago() {
+
+    if (this.modoEdicion) {
+
+      this.progressSpinner = true;
+
+      this.sigaService.post("pagosjcs_deletePago", this.body).subscribe(
+        data => {
+
+          const resp = JSON.parse(data.body);
+
+          if (resp.status == 'KO' && resp.error != null && resp.error.description != null) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(resp.error.description));
+          } else {
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          }
+
+          this.progressSpinner = false;
+        },
+        err => {
+          this.progressSpinner = false;
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        },
+        () => {
+          this.progressSpinner = false;
+          this.router.navigate(["/facturacionesYPagos"]);
+        }
+      );
+
+    }
+
+  }
+
+  isVisibleDelete(): boolean {
+    return (this.modoEdicion && !this.histEstados.map(el => el.idEstado).includes("30"));
   }
 
 }

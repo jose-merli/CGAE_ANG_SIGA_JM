@@ -119,6 +119,8 @@
           (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
         <button pButton type="button" iconPos="left" icon="fa fa-save" [disabled]="disabledSave() || !permisos"
           label="{{ 'general.boton.guardar' | translate }}" (click)="guardar()"></button>
+        <button *ngIf="isVisibleDelete()" pButton type="button" iconPos="left" icon="fa fa-trash-alt"
+          label="{{ 'general.boton.borrar' | translate }}" (click)="deletePago()"></button>
       </div>
     </div>
   </div>
