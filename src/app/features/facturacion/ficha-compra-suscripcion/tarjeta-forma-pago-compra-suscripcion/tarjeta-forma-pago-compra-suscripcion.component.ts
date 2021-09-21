@@ -5,7 +5,7 @@ import { SigaServices } from '../../../../_services/siga.service';
 import { Message } from 'primeng/components/common/api';
 import { DatosBancariosItem } from '../../../../models/DatosBancariosItem';
 import { CommonsService } from '../../../../_services/commons.service';
-import { procesos_facturacion } from '../../../../permisos/procesos_facturacion';
+import { procesos_PyS } from '../../../../permisos/procesos_PyS';
 import { Router } from '@angular/router';
 
 @Component({
@@ -67,7 +67,7 @@ export class TarjetaFormaPagoCompraSuscripcionComponent implements OnInit {
 
   getPermisoBuscar(){
     this.commonsService
-			.checkAcceso(procesos_facturacion.fichaCompraSuscripcion)
+			.checkAcceso(procesos_PyS.fichaCompraSuscripcion)
 			.then((respuesta) => {
 				this.permisoGuardar = respuesta;
 			})
