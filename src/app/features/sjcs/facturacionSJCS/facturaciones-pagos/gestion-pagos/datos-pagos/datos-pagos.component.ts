@@ -509,7 +509,10 @@ export class DatosPagosComponent implements OnInit {
 
       this.progressSpinner = true;
 
-      this.sigaService.post("pagosjcs_deletePago", this.body).subscribe(
+      const payload = new PagosjgItem();
+      payload.idPagosjg = this.idPago;
+
+      this.sigaService.post("pagosjcs_deletePago", payload).subscribe(
         data => {
 
           const resp = JSON.parse(data.body);
