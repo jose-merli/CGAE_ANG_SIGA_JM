@@ -10,7 +10,7 @@ export class ListaServiciosItems {
     categoria: string;
     tipo: string;
     iva: string;
-    precioivames: string;
+    precioperiodicidad: string;
     formapago: string;
 
     constructor() { }

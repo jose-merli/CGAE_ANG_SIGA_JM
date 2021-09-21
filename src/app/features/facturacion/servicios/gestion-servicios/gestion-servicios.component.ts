@@ -105,7 +105,7 @@ export class GestionServiciosComponent implements OnInit, OnDestroy {
         header: "facturacion.servicios.servicio"
       },
       {
-        field: "precioivames",
+        field: "precioperiodicidad",
         header: "facturacion.servicios.precioivames"
       },
       {
