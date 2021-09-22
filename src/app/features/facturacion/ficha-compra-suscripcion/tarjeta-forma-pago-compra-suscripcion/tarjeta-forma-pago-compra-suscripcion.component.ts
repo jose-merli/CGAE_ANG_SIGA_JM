@@ -1,11 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { TranslateService } from '../../../../commons/translate';
 import { FichaCompraSuscripcionItem } from '../../../../models/FichaCompraSuscripcionItem';
 import { SigaServices } from '../../../../_services/siga.service';
 import { Message } from 'primeng/components/common/api';
 import { DatosBancariosItem } from '../../../../models/DatosBancariosItem';
 import { CommonsService } from '../../../../_services/commons.service';
-import { procesos_facturacion } from '../../../../permisos/procesos_facturacion';
+import { procesos_PyS } from '../../../../permisos/procesos_PyS';
 import { Router } from '@angular/router';
 
 @Component({
@@ -22,54 +22,42 @@ export class TarjetaFormaPagoCompraSuscripcionComponent implements OnInit {
   @Input("ficha") ficha: FichaCompraSuscripcionItem;
 
   showTarjeta: boolean = false;
-  disableNoFact: boolean;
+  disableNoFacturableBox: boolean = false;
+  noFact: boolean = true;
   permisoGuardar;
   selectedPago;
-  comboComun = [];
+  @Input("comboComun") comboComun: any[];
 
-  desFormaPagoSelecc;
+  desFormaPagoSelecc: string;
   cuentasBanc;
 
   constructor(private sigaServices: SigaServices, private translateService: TranslateService, 
     private commonsService: CommonsService, private router: Router) { }
 
   ngOnInit() {
-    this.disableNoFact = true;
-    //Aparece seleccionado por defecto al crear una ficha nueva
-    if(this.ficha.noFact == null)this.ficha.noFact = true;
-
-    this.getComboFormaPago();
-    this.selectedPago = this.ficha.idFormaPagoSeleccionada;
+    this.checkNoFacturable();
   }
 
-  //Metodo para obtener los valores del combo Forma de pago
-  getComboFormaPago() {
-    this.progressSpinner = true;
+  ngOnChanges(changes: SimpleChanges) {
+    this.selectedPago = this.ficha.idFormaPagoSeleccionada;
+    this.desFormaPagoSelecc = this.comboComun.find(
+      el => 
+        el.value == this.selectedPago
+    ).label
+  }
 
-    this.sigaServices.get("productosBusqueda_comboFormaPago").subscribe(
-      PayMethodSelectValues => {
-        this.progressSpinner = false;
-
-        let comboPagos = PayMethodSelectValues.combooItems;
-        //Revisamos el combo para escoger unicamente el combo con los valores en comun de los productos.
-        //Posible optimizacion con la implementacion de un servicio especifico para esta pantalla.
-        this.ficha.idFormasPagoComunes.split(",").forEach(
-          comun => {
-            comboPagos.forEach(pago => {
-              if(pago.value==comun || pago.value==this.ficha.idFormaPagoSeleccionada) this.comboComun.push(pago);
-              //Se asigna el valor que se mostrará en la cabecera de la tarjeta.
-              if(pago.value==this.ficha.idFormaPagoSeleccionada) this.desFormaPagoSelecc = pago.label;
-            });
-          }
-        );
-      },
-      err => {
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-      }
-    );
+  checkNoFacturable(){
+    let i=0;
+    //Se comprueba si todos los productos seleccionados son no facturables
+    while(i<this.ficha.productos.length && this.ficha.productos[i].noFacturable=="1"){
+      this.ficha.productos[i] 
+      i++;
+    }
+    //Si son todos no facturables
+    if(i==this.ficha.productos.length){
+      this.disableNoFacturableBox = true;
+      this.noFact = true;
+    }
   }
 
 
@@ -79,7 +67,7 @@ export class TarjetaFormaPagoCompraSuscripcionComponent implements OnInit {
 
   getPermisoBuscar(){
     this.commonsService
-			.checkAcceso(procesos_facturacion.fichaCompraSuscripcion)
+			.checkAcceso(procesos_PyS.fichaCompraSuscripcion)
 			.then((respuesta) => {
 				this.permisoGuardar = respuesta;
 			})

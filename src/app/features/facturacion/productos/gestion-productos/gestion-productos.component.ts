@@ -8,7 +8,7 @@ import { ListaProductosItems } from '../../../../models/ListaProductosItems';
 import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
-import { procesos_facturacion } from '../../../../permisos/procesos_facturacion';
+import { procesos_PyS } from '../../../../permisos/procesos_PyS';
 import { FichaCompraSuscripcionItem } from '../../../../models/FichaCompraSuscripcionItem';
 
 
@@ -345,7 +345,7 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
 
   getPermisoComprar(){
     this.commonsService
-			.checkAcceso(procesos_facturacion.fichaCompraSuscripcion)
+			.checkAcceso(procesos_PyS.fichaCompraSuscripcion)
 			.then((respuesta) => {
 				this.permisoCompra = respuesta;
 			})
@@ -358,7 +358,7 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
     if (msg != undefined) {
       this.msgs = msg;
     } else {
-      if (this.checkFormasPago()) {
+      if (this.checkFormasPago() && this.checkNoFacturable()) {
         sessionStorage.removeItem("FichaCompraSuscripcion");
         let nuevaCompra = new FichaCompraSuscripcionItem();
         nuevaCompra.productos = this.selectedRows;
@@ -378,6 +378,19 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
         ];
       }
     }
+  }
+
+  checkNoFacturable(){
+    let total = 0;
+    //Se comprueba si todos los productos seleccionados son no facturables
+    for(let i = 0; i<this.selectedRows.length; i++){
+      total += this.selectedRows[i].noFacturable; 
+    }
+    //Si son todos no facturables
+    if(total==this.selectedRows.length || total==0){
+      return true;
+    }
+    else return false;
   }
 
   checkFormasPago(){

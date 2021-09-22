@@ -6,7 +6,7 @@ import { DatosColegiadosItem } from '../../../../models/DatosColegiadosItem';
 import { FichaCompraSuscripcionItem } from '../../../../models/FichaCompraSuscripcionItem';
 import { JusticiableBusquedaItem } from '../../../../models/sjcs/JusticiableBusquedaItem';
 import { JusticiableItem } from '../../../../models/sjcs/JusticiableItem';
-import { procesos_facturacion } from '../../../../permisos/procesos_facturacion';
+import { procesos_PyS } from '../../../../permisos/procesos_PyS';
 import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
@@ -67,7 +67,7 @@ export class TarjetaClienteCompraSuscripcionComponent implements OnInit {
 
   getPermisoBuscar(){
     this.commonsService
-			.checkAcceso(procesos_facturacion.fichaCompraSuscripcion)
+			.checkAcceso(procesos_PyS.fichaCompraSuscripcion)
 			.then((respuesta) => {
 				this.permisoBuscar = respuesta;
 			})

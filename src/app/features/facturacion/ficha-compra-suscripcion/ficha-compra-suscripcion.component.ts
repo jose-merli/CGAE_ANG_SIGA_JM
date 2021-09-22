@@ -18,6 +18,11 @@ export class FichaCompraSuscripcionComponent implements OnInit {
 
   ficha: FichaCompraSuscripcionItem = new FichaCompraSuscripcionItem;
 
+  comboComun: any[] = [];
+  desFormaPagoSelecc: string;
+  selectedPago: number;
+
+
   @ViewChild("cliente") tarjCliente;
 
 
@@ -29,10 +34,14 @@ export class FichaCompraSuscripcionComponent implements OnInit {
     
     if(sessionStorage.getItem("FichaCompraSuscripcion")){
       this.ficha = JSON.parse(sessionStorage.getItem("FichaCompraSuscripcion"));
-      sessionStorage.removeItem("FichaCompraSuscripcion")
+      sessionStorage.removeItem("FichaCompraSuscripcion");
+      this.selectedPago = this.ficha.idFormaPagoSeleccionada;
+      this.getComboFormaPago();
     }
     //Si vuelve de otra pantalla
     else this.getDatosFicha();
+
+    
     
   }
 
@@ -43,15 +52,43 @@ export class FichaCompraSuscripcionComponent implements OnInit {
 			(n) => {
 				this.ficha = JSON.parse(n.body);
 				this.progressSpinner = false;
+        this.selectedPago = this.ficha.idFormaPagoSeleccionada;
+        this.getComboFormaPago();
 			},
 			(err) => {
-				console.log(err);
 				this.progressSpinner = false;
 			}
 		);
 	}
 
-  
+  //Metodo para obtener los valores del combo Forma de pago
+  getComboFormaPago() {
+    this.progressSpinner = true;
+
+    this.sigaServices.get("productosBusqueda_comboFormaPago").subscribe(
+      PayMethodSelectValues => {
+        this.progressSpinner = false;
+
+        let comboPagos = PayMethodSelectValues.combooItems;
+        //Revisamos el combo para escoger unicamente el combo con los valores en comun de los productos.
+        //Posible optimizacion con la implementacion de un servicio especifico para esta pantalla.
+        let comunes = this.ficha.idFormasPagoComunes.split(",");
+            comboPagos.forEach(pago => {
+              for(let comun of comunes){
+                if(pago.value==comun || pago.value==this.ficha.idFormaPagoSeleccionada.toString) this.comboComun.push(pago);
+              }
+              //Se asigna el valor que se mostrará en la cabecera de la tarjeta.
+              if(pago.value==this.ficha.idFormaPagoSeleccionada) this.desFormaPagoSelecc = pago.label;
+            });
+      },
+      err => {
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
 
   backTo(){
     this.location.back();

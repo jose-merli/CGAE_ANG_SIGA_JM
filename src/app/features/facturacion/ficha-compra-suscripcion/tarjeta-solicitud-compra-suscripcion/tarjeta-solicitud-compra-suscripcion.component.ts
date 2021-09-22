@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Message } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../commons/translate';
 import { FichaCompraSuscripcionItem } from '../../../../models/FichaCompraSuscripcionItem';
-import { procesos_facturacion } from '../../../../permisos/procesos_facturacion';
+import { procesos_PyS } from '../../../../permisos/procesos_PyS';
 import { CommonsService } from '../../../../_services/commons.service';
 import { SigaServices } from '../../../../_services/siga.service';
 
@@ -114,7 +114,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
   
   getPermisoSolicitarCompra(){
     this.commonsService
-			.checkAcceso(procesos_facturacion.fichaCompraSuscripcion)
+			.checkAcceso(procesos_PyS.fichaCompraSuscripcion)
 			.then((respuesta) => {
 				this.permisoSolicitarCompra = respuesta;
 			})
