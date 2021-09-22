@@ -2,12 +2,11 @@ import { Component, OnInit, Input, Output, ViewChild, EventEmitter, ChangeDetect
 import { TranslateService } from '../../../../commons/translate';
 import { SigaServices } from '../../../../_services/siga.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
-import { PretensionObject } from '../../../../models/sjcs/PretensionObject';
-import { PretensionItem } from '../../../../models/sjcs/PretensionItem';
 import { ConfirmationService, Paginator } from 'primeng/primeng';
 import { CommonsService } from '../../../../_services/commons.service';
-import { RemesasBusquedaObject } from '../../../../models/sjcs/RemesasBusquedaObject';
 import { Router } from '@angular/router';
+import { saveAs } from "file-saver/FileSaver";
+import { RemesasResultadoItem } from '../../../../models/sjcs/RemesasResultadoItem';
 
 @Component({
   selector: 'app-tabla-remesas-resultados',
@@ -28,7 +27,7 @@ export class TablaRemesasResultadosComponent implements OnInit {
 
   selectedItem: number = 10;
   selectAll: boolean = false;
-  selectedDatos: any[] = [];
+  selectedDatos = [];
   numSelected = 0;
   selectMultiple: boolean = false;
   seleccion: boolean = false;
@@ -71,45 +70,6 @@ export class TablaRemesasResultadosComponent implements OnInit {
     this.datosInicial = JSON.parse(JSON.stringify(this.datos));
   }
 
-  checkPermisosDelete() {
-    let msg = this.commonsService.checkPermisos(this.permisos, undefined);
-
-    if (msg != undefined) {
-      this.msgs = msg;
-    } else {
-      if (((!this.selectMultiple || !this.selectAll) && (this.selectedDatos == undefined || this.selectedDatos.length == 0)) || !this.permisos) {
-        this.msgs = this.commonsService.checkPermisoAccion();
-      } else {
-        this.confirmDelete();
-      }
-    }
-  }
-
-  confirmDelete() {
-    let mess = this.translateService.instant(
-      "messages.deleteConfirmation"
-    );
-    let icon = "fa fa-edit";
-    this.confirmationService.confirm({
-      message: mess,
-      icon: icon,
-      accept: () => {
-        this.delete()
-      },
-      reject: () => {
-        this.msgs = [
-          {
-            severity: "info",
-            summary: "Cancel",
-            detail: this.translateService.instant(
-              "general.message.accion.cancelada"
-            )
-          }
-        ];
-      }
-    });
-  }
-
   selectedRow(selectedDatos) {
     if (this.selectedDatos == undefined) {
       this.selectedDatos = []
@@ -124,30 +84,6 @@ export class TablaRemesasResultadosComponent implements OnInit {
     }
   }
 
-  delete() {
-    let del = new RemesasBusquedaObject();
-    del.resultadoBusqueda = this.selectedDatos;
-    this.sigaServices.post("filtrosremesas_borrarRemesa", del.resultadoBusqueda).subscribe(
-      data => {
-        this.showMessage("success", this.translateService.instant("general.message.correct"), JSON.parse(data.body).error.description);
-        this.selectedDatos = [];
-        this.progressSpinner = false;
-      },
-      err => {
-        if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-        this.selectMultiple = false;
-        this.selectAll = false;
-      }
-    );
-  }
 
   onChangeSelectAll() {
     if (this.selectAll === true) {
@@ -256,8 +192,61 @@ export class TablaRemesasResultadosComponent implements OnInit {
     this.msgs = [];
   }
 
-  descargarFicheros(datosSeleccionados){
-    console.log(datosSeleccionados);
+  descargarFicheros(){
+    this.progressSpinner = true;
+    let remesasResultados: RemesasResultadoItem[] = []
+    this.selectedDatos.forEach(rem => {
+      let remesa: RemesasResultadoItem = new RemesasResultadoItem(
+        {
+          'idRemesaResultado': rem.idRemesaResultado,
+          'numRemesaPrefijo': '',
+          'numRemesaNumero': '',
+          'numRemesaSufijo': '',
+          'numRegistroPrefijo': '',
+          'numRegistroNumero': '',
+          'numRegistroSufijo': '',
+          'nombreFichero': rem.nombreFichero,
+          'fechaRemesaDesde': '',
+          'fechaRemesaHasta': '',
+          'fechaCargaDesde': '',
+          'fechaCargaHasta': '',
+          'observacionesRemesaResultado': '',
+          'fechaCargaRemesaResultado': '',
+          'fechaResolucionRemesaResultado': '',
+          'idRemesa': null,
+          'numeroRemesa': '',
+          'prefijoRemesa': '',
+          'sufijoRemesa': '',
+          'descripcionRemesa': '',
+          'numRegistroRemesaCompleto': '',
+          'numRemesaCompleto': ''
+          }
+      );
+      remesasResultados.push(remesa);
+    });
+    let descarga =  this.sigaServices.postDownloadFiles("remesasResultados_descargarFicheros", remesasResultados);
+    descarga.subscribe(
+      data => {
+        let blob = null;
+        // Se comprueba si todos los documentos asociados no tiene ningún fichero 
+        let documentoAsociado = remesasResultados.find(item => item.nombreFichero !=null)
+        if(documentoAsociado != undefined){
+            blob = new Blob([data], { type: "application/zip" });
+            if(blob.size > 50){
+              saveAs(blob, "descargaRemesasResultados.zip");
+            } else {
+              this.showMessage("error", this.translateService.instant("general.message.informacion"), 'No se puede descargar los ficheros de las remesas de resultados seleccionadas');
+            }
+        }
+        else this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.ejg.documentacion.noFich"));
+
+        this.selectedDatos = [];
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+      }
+    );
   }
 
   consultarEditarRemesaResultado(remesaResultado){

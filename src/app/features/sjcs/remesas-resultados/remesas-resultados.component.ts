@@ -15,9 +15,59 @@ export class RemesasResultadosComponent implements OnInit {
   buscar: boolean = false;
   progressSpinner: boolean = false;
   datos;
-  remesasResultadosItem: RemesasResultadoItem = new RemesasResultadoItem();
+  remesasResultadosItem: RemesasResultadoItem = new RemesasResultadoItem(
+    {
+      'idRemesaResultado': null,
+      'numRemesaPrefijo': '',
+      'numRemesaNumero': '',
+      'numRemesaSufijo': '',
+      'numRegistroPrefijo': '',
+      'numRegistroNumero': '',
+      'numRegistroSufijo': '',
+      'nombreFichero': '',
+      'fechaRemesaDesde': '',
+      'fechaRemesaHasta': '',
+      'fechaCargaDesde': '',
+      'fechaCargaHasta': '',
+      'observacionesRemesaResultado': '',
+      'fechaCargaRemesaResultado': '',
+      'fechaResolucionRemesaResultado': '',
+      'idRemesa': null,
+      'numeroRemesa': '',
+      'prefijoRemesa': '',
+      'sufijoRemesa': '',
+      'descripcionRemesa': '',
+      'numRegistroRemesaCompleto': '',
+      'numRemesaCompleto': ''
+      }
+  );
 
-  filtrosValues: RemesasResultadoItem = new RemesasResultadoItem();
+  filtrosValues: RemesasResultadoItem = new RemesasResultadoItem(
+    {
+      'idRemesaResultado': null,
+      'numRemesaPrefijo': '',
+      'numRemesaNumero': '',
+      'numRemesaSufijo': '',
+      'numRegistroPrefijo': '',
+      'numRegistroNumero': '',
+      'numRegistroSufijo': '',
+      'nombreFichero': '',
+      'fechaRemesaDesde': '',
+      'fechaRemesaHasta': '',
+      'fechaCargaDesde': '',
+      'fechaCargaHasta': '',
+      'observacionesRemesaResultado': '',
+      'fechaCargaRemesaResultado': '',
+      'fechaResolucionRemesaResultado': '',
+      'idRemesa': null,
+      'numeroRemesa': '',
+      'prefijoRemesa': '',
+      'sufijoRemesa': '',
+      'descripcionRemesa': '',
+      'numRegistroRemesaCompleto': '',
+      'numRemesaCompleto': ''
+      }
+  );
   @ViewChild(FiltroRemesasResultadosComponent) filtros;
 
   constructor(private sigaServices: SigaServices, private datepipe: DatePipe) { }
