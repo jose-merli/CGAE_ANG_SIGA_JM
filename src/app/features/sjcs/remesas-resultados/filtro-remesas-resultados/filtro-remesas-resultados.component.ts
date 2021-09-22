@@ -17,8 +17,58 @@ export class FiltroRemesasResultadosComponent implements OnInit {
   showDatosGenerales: boolean = true;
   msgs = [];
 
-  filtros: RemesasResultadoItem = new RemesasResultadoItem();
-  filtroAux: RemesasResultadoItem = new RemesasResultadoItem();
+  filtros: RemesasResultadoItem = new RemesasResultadoItem(
+    {
+    'idRemesaResultado': null,
+    'numRemesaPrefijo': '',
+    'numRemesaNumero': '',
+    'numRemesaSufijo': '',
+    'numRegistroPrefijo': '',
+    'numRegistroNumero': '',
+    'numRegistroSufijo': '',
+    'nombreFichero': '',
+    'fechaRemesaDesde': '',
+    'fechaRemesaHasta': '',
+    'fechaCargaDesde': '',
+    'fechaCargaHasta': '',
+    'observacionesRemesaResultado': '',
+    'fechaCargaRemesaResultado': '',
+    'fechaResolucionRemesaResultado': '',
+    'idRemesa': null,
+    'numeroRemesa': '',
+    'prefijoRemesa': '',
+    'sufijoRemesa': '',
+    'descripcionRemesa': '',
+    'numRegistroRemesaCompleto': '',
+    'numRemesaCompleto': ''
+    }
+  );
+  filtroAux: RemesasResultadoItem = new RemesasResultadoItem(
+    {
+      'idRemesaResultado': null,
+      'numRemesaPrefijo': '',
+      'numRemesaNumero': '',
+      'numRemesaSufijo': '',
+      'numRegistroPrefijo': '',
+      'numRegistroNumero': '',
+      'numRegistroSufijo': '',
+      'nombreFichero': '',
+      'fechaRemesaDesde': '',
+      'fechaRemesaHasta': '',
+      'fechaCargaDesde': '',
+      'fechaCargaHasta': '',
+      'observacionesRemesaResultado': '',
+      'fechaCargaRemesaResultado': '',
+      'fechaResolucionRemesaResultado': '',
+      'idRemesa': null,
+      'numeroRemesa': '',
+      'prefijoRemesa': '',
+      'sufijoRemesa': '',
+      'descripcionRemesa': '',
+      'numRegistroRemesaCompleto': '',
+      'numRemesaCompleto': ''
+      }
+  );
   historico: boolean = false;
 
 
@@ -41,7 +91,32 @@ export class FiltroRemesasResultadosComponent implements OnInit {
       }
 
     } else {
-      this.filtros = new RemesasResultadoItem();
+      this.filtros = new RemesasResultadoItem(
+        {
+          'idRemesaResultado': null,
+          'numRemesaPrefijo': '',
+          'numRemesaNumero': '',
+          'numRemesaSufijo': '',
+          'numRegistroPrefijo': '',
+          'numRegistroNumero': '',
+          'numRegistroSufijo': '',
+          'nombreFichero': '',
+          'fechaRemesaDesde': '',
+          'fechaRemesaHasta': '',
+          'fechaCargaDesde': '',
+          'fechaCargaHasta': '',
+          'observacionesRemesaResultado': '',
+          'fechaCargaRemesaResultado': '',
+          'fechaResolucionRemesaResultado': '',
+          'idRemesa': null,
+          'numeroRemesa': '',
+          'prefijoRemesa': '',
+          'sufijoRemesa': '',
+          'descripcionRemesa': '',
+          'numRegistroRemesaCompleto': '',
+          'numRemesaCompleto': ''
+          }
+      );
     }
 
   }
@@ -79,7 +154,32 @@ export class FiltroRemesasResultadosComponent implements OnInit {
   }
 
   clearFilters() {
-    this.filtros = new RemesasResultadoItem();
+    this.filtros = new RemesasResultadoItem(
+      {
+        'idRemesaResultado': null,
+        'numRemesaPrefijo': '',
+        'numRemesaNumero': '',
+        'numRemesaSufijo': '',
+        'numRegistroPrefijo': '',
+        'numRegistroNumero': '',
+        'numRegistroSufijo': '',
+        'nombreFichero': '',
+        'fechaRemesaDesde': '',
+        'fechaRemesaHasta': '',
+        'fechaCargaDesde': '',
+        'fechaCargaHasta': '',
+        'observacionesRemesaResultado': '',
+        'fechaCargaRemesaResultado': '',
+        'fechaResolucionRemesaResultado': '',
+        'idRemesa': null,
+        'numeroRemesa': '',
+        'prefijoRemesa': '',
+        'sufijoRemesa': '',
+        'descripcionRemesa': '',
+        'numRegistroRemesaCompleto': '',
+        'numRemesaCompleto': ''
+        }
+    );
   }
 
   clear() {

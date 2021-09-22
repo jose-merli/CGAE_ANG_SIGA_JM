@@ -5,5 +5,6 @@ export let endpoints_remesa: any = {
     ficharemesas_listadoEstadosRemesa: "remesasEnvio/listadoEstadosRemesa",
     ficharemesas_getUltimoRegistroRemesa: "remesasEnvio/getUltimoRegitroRemesa",
     ficharemesas_guardarRemesa: "remesasEnvio/guardarRemesa",
-    remesasResultados_buscarRemesasResultados: "remesasResultado/buscarRemesasResultado"
+    remesasResultados_buscarRemesasResultados: "remesasResultado/buscarRemesasResultado",
+    remesasResultados_descargarFicheros: "remesasResultado/descargarFicheros"
 }
