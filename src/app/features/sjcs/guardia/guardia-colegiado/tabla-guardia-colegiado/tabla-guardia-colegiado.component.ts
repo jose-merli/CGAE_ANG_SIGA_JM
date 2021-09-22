@@ -1,9 +1,11 @@
-import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService, DataTable } from 'primeng/primeng';
 import { TranslateService } from '../../../../../commons/translate';
+import { GuardiaItem } from '../../../../../models/guardia/GuardiaItem';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
+import { FiltrosGuardiaColegiadoComponent } from '../filtros-guardia-colegiado/filtros-guardia-colegiado.component';
 
 @Component({
   selector: 'app-tabla-guardia-colegiado',
@@ -13,19 +15,28 @@ import { SigaServices } from '../../../../../_services/siga.service';
 export class TablaGuardiaColegiadoComponent implements OnInit {
 
   @Input() datos;
+  @Input() permisoEscritura:boolean;
+  @Output() isOpen = new EventEmitter<boolean>();
 
-  @ViewChild("table") table: DataTable;
+  @ViewChild("tablaGuardCol") table: DataTable;
+  @ViewChild(FiltrosGuardiaColegiadoComponent)filtros;
+  
   initDatos: any;
   cols: any;
   buscadores = [];
-  rowsPerPage: { label: number; value: number; }[];
-  permisoEscritura: any;
+  rowsPerPage: any = [];
   selectMultiple: boolean;
-  selectedDatos: any[];
-  numSelected: number;
-  selectedItem: any;
-  fechaValidacion;
+  selectedDatos = [];
+  selectAll;
+  numSelected: number = 0;
+  selectedItem: number = 10;
+  fechaValidacion: Date;
   msgs: { severity: string; summary: string; detail: string; }[];
+  progressSpinner: boolean;
+  permisos: any;
+  validar:boolean = false;
+  desvalidar: boolean = false;
+  borrar: boolean = false;
 
   constructor(private translateService: TranslateService,
     private router: Router,
@@ -35,6 +46,7 @@ export class TablaGuardiaColegiadoComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit() {
+    this.permisos = this.permisoEscritura;
     this.getCols();
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
   }
@@ -59,12 +71,13 @@ export class TablaGuardiaColegiadoComponent implements OnInit {
   }
   getCols() {
     this.cols = [
-      { field: "fechaInicio", header: "facturacion.seriesFacturacion.literal.fInicio" },
-      { field: "fechaFin", header: "censo.consultaDatos.literal.fechaFin" },
-      { field: "turno", header: "dato.jgr.guardia.guardias.turno" },
-      { field: "idTipoGuardia", header: "menu.justiciaGratuita.GuardiaMenu" },
-      { field: "tipoDia", header: "dato.jgr.guardia.guardias.tipoDia" },
-      { field: "nColegiado", header: "justiciaGratuita.justiciables.literal.colegiado" },
+      { field: "fechadesde", header: "facturacion.seriesFacturacion.literal.fInicio" },
+      { field: "fechahasta", header: "censo.consultaDatos.literal.fechaFin" },
+      { field: "tipoTurno", header: "dato.jgr.guardia.guardias.turno" },
+      { field: "tipoGuardia", header: "menu.justiciaGratuita.GuardiaMenu" },
+      { field: "tipoDiasGuardia", header: "dato.jgr.guardia.guardias.tipoDia" },
+      { field: "letradosGuardia", header: "justiciaGratuita.justiciables.literal.colegiado" },
+      { field: "numColegiado", header: "facturacionSJCS.facturacionesYPagos.nColegiado" },
       { field: "ordenGrupo", header: "administracion.informes.literal.orden" },
       { field: "estado", header: "dato.jgr.guardia.inscripciones.estado" },
 
@@ -94,8 +107,30 @@ export class TablaGuardiaColegiadoComponent implements OnInit {
     this.fechaValidacion = event;
   }
 
-  confirmValidar() {
-    if (this.permisoEscritura) {
+  rowSelected(selectedDatos){
+    let fechaAcutal = new Date();
+    if(selectedDatos.fechaValidacion == null){
+      this.validar = true;
+      this.desvalidar = false;
+    }else{
+      this.validar = false;
+      this.desvalidar = true;
+    }
+    if(selectedDatos.fechadesde > fechaAcutal){
+      this.borrar = true;
+    }else{
+      this.borrar = false;
+    }
+  }
+
+  resetBoton(){
+    this.validar = false;
+    this.desvalidar = false;
+    this.borrar = false;
+  }
+
+  confirmValidar(selectedDatos) {
+  
 
       /* let mess = this.translateService.instant(
         "messages.deleteConfirmation"
@@ -106,7 +141,7 @@ export class TablaGuardiaColegiadoComponent implements OnInit {
         message: mess,
         icon: icon,
         accept: () => {
-          this.validarGuardia();
+          this.validarGuardia(selectedDatos);
         },
         reject: () => {
           this.msgs = [
@@ -120,15 +155,53 @@ export class TablaGuardiaColegiadoComponent implements OnInit {
           ];
         }
       });
+    
+  }
+
+  validarGuardia(selectedDatos){
+     
+
+    if(selectedDatos.fechaValidacion == null || selectedDatos.fechaValidacion == undefined){
+      let guardia = new GuardiaItem();
+      guardia.idTurno=selectedDatos.idTurno;
+      guardia.idGuardia = selectedDatos.idGuardia;
+      guardia.idPersona = selectedDatos.idPersona;
+      guardia.fechadesde = selectedDatos.fechadesde;
+      if(this.fechaValidacion != null || this.fechaValidacion != undefined){
+        guardia.fechaValidacion = this.fechaValidacion
+      }else{
+        guardia.fechaValidacion = new Date();
+      }
+      
+      
+      this.progressSpinner = true;
+      this.sigaServices.post("guardiasColegiado_validarSolicitudGuardia", guardia).subscribe(
+        n => {
+          let status = JSON.parse(n.body).status;
+          
+  
+          if (status == 'OK') {
+            this.validar = false;
+            this.showMessage({ severity: "success", summary: this.translateService.instant("general.message.correct"), msg:this.translateService.instant("general.message.accion.realizada") });
+            this.search();
+          }else{
+            this.showMessage({ severity: 'error', summary: this.translateService.instant("general.message.incorrect"), msg: "Error de base de datos" });
+          }
+          this.progressSpinner = false;
+        },
+        err => {
+          this.progressSpinner = false;
+          console.log(err);
+        });
+    }else{
+      this.showMessage({ severity: 'error', summary: this.translateService.instant("general.message.incorrect"), msg: "Guardia ya validada" });
     }
+    
+    this.resetBoton();
   }
 
-  validarGuardia(){
-
-  }
-
-  confirmDesvalidar() {
-    if (this.permisoEscritura) {
+  confirmDesValidar(selectedDatos) {
+    
 
       /* let mess = this.translateService.instant(
         "messages.deleteConfirmation"
@@ -139,7 +212,7 @@ export class TablaGuardiaColegiadoComponent implements OnInit {
         message: mess,
         icon: icon,
         accept: () => {
-          this.desvalidarGuardia()
+          this.desvalidarGuardia(selectedDatos)
         },
         reject: () => {
           this.msgs = [
@@ -153,15 +226,41 @@ export class TablaGuardiaColegiadoComponent implements OnInit {
           ];
         }
       });
+    
+  }
+
+  desvalidarGuardia(selectedDatos){
+    if(selectedDatos.fechaValidacion != null || selectedDatos.fechaValidacion != undefined){
+      let guardia = new GuardiaItem();
+      guardia=selectedDatos;
+      
+      this.progressSpinner = true;
+      this.sigaServices.post("guardiasColegiado_desvalidarGuardiaColegiado", guardia).subscribe(
+        n => {
+          let status = JSON.parse(n.body).status;
+          
+  
+          if (status == 'OK') {
+            this.desvalidar = false;
+            this.showMessage({ severity: "success", summary: this.translateService.instant("general.message.correct"), msg:this.translateService.instant("general.message.accion.realizada") });
+            this.search();
+          }else{
+            this.showMessage({ severity: 'error', summary: this.translateService.instant("general.message.incorrect"), msg: "Error de base de datos" });
+          }
+          this.progressSpinner = false;
+        },
+        err => {
+          this.progressSpinner = false;
+          console.log(err);
+        });
+    }else{
+      this.showMessage({ severity: 'error', summary: this.translateService.instant("general.message.incorrect"), msg: "Guardia ya validada" });
     }
+    this.resetBoton();
   }
 
-  desvalidarGuardia(){
-
-  }
-
-  confirmDelete() {
-    if (this.permisoEscritura) {
+  confirmDelete(selectedDatos) {
+    
 
       let mess = this.translateService.instant(
         "messages.deleteConfirmation"
@@ -171,7 +270,7 @@ export class TablaGuardiaColegiadoComponent implements OnInit {
         message: mess,
         icon: icon,
         accept: () => {
-          this.borrarTurno()
+          this.borrarGuardiaColegiado(selectedDatos)
         },
         reject: () => {
           this.msgs = [
@@ -185,15 +284,68 @@ export class TablaGuardiaColegiadoComponent implements OnInit {
           ];
         }
       });
+    
+  }
+
+  borrarGuardiaColegiado(selectedDatos){
+   
+      let guardia = new GuardiaItem();
+      guardia=selectedDatos;
+      
+      this.progressSpinner = true;
+      this.sigaServices.post("guardiasColegiado_eliminarGuardiaColegiado", guardia).subscribe(
+        n => {
+          let status = JSON.parse(n.body).status;
+          
+  
+          if (status == 'OK') {
+            this.borrar = false;
+            this.showMessage({ severity: "success", summary: this.translateService.instant("general.message.correct"), msg:this.translateService.instant("general.message.accion.realizada") });
+           this.search();
+          }else{
+            this.showMessage({ severity: 'error', summary: this.translateService.instant("general.message.incorrect"), msg: "Error de base de datos" });
+          }
+          this.progressSpinner = false;
+        },
+        err => {
+          this.progressSpinner = false;
+          console.log(err);
+        });
+        this.resetBoton();
+  }
+  search(){
+   
+    this.isOpen.emit(false);
+  }
+  openTab(evento) {
+
+    if (this.persistenceService.getPermisos() != undefined) {
+      this.permisoEscritura = this.persistenceService.getPermisos();
+    }
+
+    if (!this.selectAll && !this.selectMultiple) {
+      this.progressSpinner = true;
+      this.datos = new GuardiaItem();
+      this.datos.idGuardia = evento.idGuardia;
+      this.datos.idTurno = evento.idTurno;
+      this.persistenceService.setDatos(this.datos);
+      this.router.navigate(['/gestionGuardiaColegiado']);
+    
     }
   }
 
-  borrarTurno(){
-
+  showMessage(event) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: event.severity,
+      summary: event.summary,
+      detail: event.msg
+    });
   }
 
-  navGuardiaColegiado(){
-    this.router.navigate(['/gestionGuardiaColegiado']);
+  clear() {
+    this.msgs = [];
   }
+  
 
 }

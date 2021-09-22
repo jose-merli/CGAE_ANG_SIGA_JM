@@ -131,6 +131,12 @@ export let endpoints_guardia: any = {
     guardiasInscripciones_buscarsaltoscompensaciones: "guardias/inscripciones/buscarSaltosCompensaciones",
     guardiasInscripciones_eliminarsaltoscompensaciones: "guardias/inscripciones/eliminarSaltosCompensaciones",
     guardiasInscripciones_buscarTrabajosSJCS: "guardias/inscripciones/buscarTrabajosSJCS",
-    guardiasInscripciones_buscarGuardiasAsocTurnos: "guardias/inscripciones/buscarGuardiasAsocTurnos"
+    guardiasInscripciones_buscarGuardiasAsocTurnos: "guardias/inscripciones/buscarGuardiasAsocTurnos",
+
+    //guardias colegiado
+   guardiasColegiado_buscarGuardiasColegiado: "guardia/busquedaGuardia/busquedaGuardiasColegiado",
+   guardiasColegiado_validarSolicitudGuardia: "guardia/validarSolicitudGuardia",
+   guardiasColegiado_desvalidarGuardiaColegiado: "guardia/desvalidarGuardiaColegiado",
+   guardiasColegiado_eliminarGuardiaColegiado:"guardia/eliminarGuardiaColegiado"
 
 }

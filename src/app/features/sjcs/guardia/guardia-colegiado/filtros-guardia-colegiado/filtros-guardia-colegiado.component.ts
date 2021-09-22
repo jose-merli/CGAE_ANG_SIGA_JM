@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { TranslateService } from '../../../../../commons/translate';
 import { GuardiaColegiadoItem } from '../../../../../models/guardia/GuardiaColegiadoItem';
+import { GuardiaItem } from '../../../../../models/guardia/GuardiaItem';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
+import { MultiSelect } from 'primeng/primeng';
 
 @Component({
   selector: 'app-filtros-guardia-colegiado',
@@ -14,46 +16,114 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
   msgs;
   progressSpinner: boolean = false;
   showDatosGenerales: boolean = false;
-  body;
-  filtros = new GuardiaColegiadoItem();
+  filtros = new GuardiaItem();
+  filtroAux = new GuardiaItem();
   comboTurno;
   comboGuardia;
   isDisabledGuardia;
-  comboValidar;
-  disabledBusquedaExpress: boolean=false;
+  comboValidar = [
+    { label: 'SI', value: 1 },
+    { label: 'NO', value: 0 }
+  ];
+  disabledBusquedaExpress: boolean = false;
   usuarioBusquedaExpress = {
     numColegiado: '',
     nombreAp: ''
   };
+  KEY_CODE = {
+    ENTER: 13
+  }
+  permisos;
+  @Input('permisoEscritura') permisoEscritura = false;
+
+  @Output() isOpen = new EventEmitter<boolean>();
+
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
     private persistenceService: PersistenceService,
     private commonServices: CommonsService) { }
 
   ngOnInit() {
+    
+    this.progressSpinner = true;
+    this.getCombos()
+    if (this.permisoEscritura != undefined) {
+      this.permisos = this.permisoEscritura
+    }
+    this.progressSpinner = false;
+    if (this.persistenceService.getFiltros() != undefined) {
+      this.filtros = this.persistenceService.getFiltros();
+      
+      if (this.filtros.idGuardia != null || this.filtros.idGuardia != undefined) {
+        this.getComboGuardia();
+      }
+      
+      this.search();
+      
+
+    } else {
+      this.filtros = new GuardiaItem();   
+    }
     this.showDatosGenerales = true;
-    if(sessionStorage.getItem("buscadorColegiados")){
+    if (sessionStorage.getItem("buscadorColegiados")) {
       let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
       sessionStorage.removeItem("buscadorColegiados");
 
-      this.usuarioBusquedaExpress.nombreAp=busquedaColegiado.nombre+" "+busquedaColegiado.apellidos;
-      this.usuarioBusquedaExpress.numColegiado=busquedaColegiado.nColegiado;
+      this.usuarioBusquedaExpress.nombreAp = busquedaColegiado.nombre + " " + busquedaColegiado.apellidos;
+      this.usuarioBusquedaExpress.numColegiado = busquedaColegiado.nColegiado;
     }
   }
 
-  search(event){
-    if(this.usuarioBusquedaExpress.numColegiado!=undefined && this.usuarioBusquedaExpress.numColegiado!=null 
-      && this.usuarioBusquedaExpress.numColegiado.trim()!=""){
-        this.filtros.numeroColegiado=this.usuarioBusquedaExpress.numColegiado;
+  getCombos(){
+    this.getComboTurno();
+    if(this.filtros.idTurno != null || this.filtros.idTurno != undefined){
+      this.getComboGuardia();
     }
-    console.log(this.filtros);
+    
   }
 
-  onChangeTurnos(){
+  search() {
+    
+      this.isOpen.emit(false);
+ 
+  }
+
+  getComboTurno() {
+    this.sigaServices.get("busquedaGuardia_turno").subscribe(
+      n => {
+        this.comboTurno = n.combooItems;
+        this.commonServices.arregloTildesCombo(this.comboTurno);
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  getComboGuardia() {
+    this.sigaServices.getParam(
+      "busquedaGuardia_guardia", "?idTurno=" + this.filtros.idTurno).subscribe(
+        data => {
+          this.comboGuardia = data.combooItems;
+          this.commonServices.arregloTildesCombo(this.comboGuardia);
+        },
+        err => {
+          console.log(err);
+        }
+      )
 
   }
 
-  changeColegiado(event){
+  onChangeTurnos() {
+    this.filtros.idGuardia = "";
+    this.comboGuardia = [];
+
+    if (this.filtros.idTurno) {
+      this.getComboGuardia();
+    }
+  }
+
+  changeColegiado(event) {
     this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
     this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
   }
@@ -62,18 +132,18 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
     this.msgs = [];
   }
 
-  rest(){
+  rest() {
     this.usuarioBusquedaExpress.nombreAp = '';
     this.usuarioBusquedaExpress.numColegiado = '';
-    this.filtros = new GuardiaColegiadoItem();
+    this.filtros = new GuardiaItem();
   }
 
-  fillFechaDesde(event){
-    this.filtros.fechaInicio = event;
+  fillFechaDesde(event) {
+    this.filtros.fechadesde = event;
   }
 
-  fillFechaHasta(event){
-    this.filtros.fechaFin = event;
+  fillFechaHasta(event) {
+    this.filtros.fechahasta = event;
   }
 
   showMessage(event) {
@@ -97,8 +167,8 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
 
-   // Control de fechas
-   getFechaHastaCalendar(fechaInputDesde, fechainputHasta) {
+  // Control de fechas
+  getFechaHastaCalendar(fechaInputDesde, fechainputHasta) {
     if (
       fechaInputDesde != undefined &&
       fechainputHasta != undefined
@@ -131,5 +201,20 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
     }
     return fechaInputesde;
   }
+
+  //búsqueda con enter
+  @HostListener("document:keypress", ["$event"])
+  onKeyPress(event: KeyboardEvent) {
+    if (event.keyCode === this.KEY_CODE.ENTER) {
+      this.search();
+    }
+  }
+
+  focusInputField(multiSelect: MultiSelect) {
+    setTimeout(() => {
+      multiSelect.filterInputChild.nativeElement.focus();
+    }, 300);
+  }
+
 
 }

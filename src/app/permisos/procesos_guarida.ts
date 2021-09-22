@@ -16,5 +16,6 @@ export const procesos_guardia: any = {
     asistencias_express: "96W",
     solicitudes_centralita: "956",
     tarjeta_caracteristicas_asistencias: "95W",
-    inscripciones_guardias:"97L"
+    inscripciones_guardias:"97L",
+    guardias_colegiado:"98L"
 }
