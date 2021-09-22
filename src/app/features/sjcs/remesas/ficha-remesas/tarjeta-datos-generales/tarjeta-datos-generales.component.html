@@ -51,7 +51,7 @@
         <div class="form-row">
           <div class="form-group col-lg-3 col-md-3"></div>
           <div class="form-group col-lg-8 col-md-8">
-            <p-table [value]="datos" [columns]="cols" [first]="page" [responsive]="true" #tabla class="tabla-listado">
+            <p-table [value]="resultado" [columns]="cols" [first]="page" [responsive]="true" #tabla class="tabla-listado">
               <ng-template pTemplate="colgroup" let-columns>
                 <colgroup>
                   <col *ngFor="let col of cols" [style.width]="col.width">

@@ -86,13 +86,14 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
   @Input() turnosItem: TurnosItems;
   @Input() newTurno: boolean;
   @Input() tarjetaDatosGenerales: string;
+  @Input() datos;
   cols;
   buscadores = [];
   rowsPerPage: any = [];
   item;
-  remesaTabla;
-  remesaItem: RemesasItem = new RemesasItem();
-  datos;
+  @Input() remesaTabla;
+  @Input() remesaItem: RemesasItem = new RemesasItem();
+  resultado;
   remesasDatosEntradaItem;
   busquedaActualizaciones: boolean;
 
@@ -151,18 +152,12 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
   }
 
   ngOnInit() {
-    if(localStorage.getItem('ficha') == "registro"){
-      this.item = localStorage.getItem('remesaItem');
-      console.log("Item -> ", this.item);
-      localStorage.removeItem('remesaItem');
-      this.remesaTabla = JSON.parse(this.item);
-      console.log("Item en JSON -> ", this.remesaTabla);
+    if(this.remesaTabla != null){
       this.listadoEstadosRemesa(this.remesaTabla[0]);
-    }else if(localStorage.getItem('ficha') == "nuevo"){
+    }else if(this.remesaItem != null){
       this.getUltimoRegitroRemesa();
       this.remesaItem.descripcion = "";
     }
-    localStorage.removeItem('ficha');
 
     this.checkDatosGenerales();
     this.actualizarFichaResumen();
@@ -256,13 +251,9 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
     this.sigaServices.post("ficharemesas_listadoEstadosRemesa", this.remesasDatosEntradaItem).subscribe(
       n => {
         console.log("Dentro del servicio del padre que llama al listadoEstadosRemesa");
-        this.datos = JSON.parse(n.body).estadoRemesaItem;
+        this.resultado = JSON.parse(n.body).estadoRemesaItem;
 
-        /* this.datos.forEach(element => {
-          element.fechaRemesa = this.formatDate(element.fechaModificacion);
-        }); */
-
-        console.log("Contenido de la respuesta del back --> ", this.datos);
+        console.log("Contenido de la respuesta del back --> ", this.resultado);
         this.progressSpinner = false;
 
       },

@@ -14,22 +14,20 @@
       </ng-template>
       <ng-template pTemplate="header" let-columns>
         <tr>
-          <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+          <th *ngFor="let col of columns; let i = index; ultimo as last" [ngSwitch]="col.field" [pSortableColumn]="col.field" [ngStyle]="{'display': col.display}">
 
-            <span *ngIf = "col.header != 'justiciaGratuita.remesas.tabla.Incidencias'">
+            <span *ngIf = "!ultimo">
               {{ col.header | translate }}
             </span>
 
-            <p-dropdown *ngIf = "col.header == 'justiciaGratuita.remesas.tabla.Incidencias'" class="select-form" [(ngModel)]='estadoRemesaSeleccionado' placeholder="Seleccionar"
-            [options]="estadoRemesa" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
+            <p-dropdown *ngIf = "col.header == 'justiciaGratuita.remesas.ficha.EstadoEJGDentroRemesa'" class="select-form" [(ngModel)]='estadoRemesaSeleccionado' placeholder="Seleccionar"
+            [options]="estadoRemesa" filterBy="label,labelSinTilde" (onChange) = "tabla.filter($event.value, columns[8].field, 'inCollection' )" [showClear]="true">
           </p-dropdown>
             
-            <p-sortIcon *ngIf = "col.header != 'justiciaGratuita.remesas.tabla.Incidencias'" [field]="col.field"></p-sortIcon>
+            <p-sortIcon *ngIf = "col.header != 'justiciaGratuita.remesas.ficha.EstadoEJGDentroRemesa'" [field]="col.field"></p-sortIcon>
 
-            <input pDroppable="false" (click)="$event.stopPropagation()" [(ngModel)]="buscadores[i]" *ngSwitchCase="col.field" pInputText
-              type="text" (input)="
-                tabla.filter($event.target.value, col.field, 'contains')
-              " />
+            <input *ngIf = "col.header != 'justiciaGratuita.remesas.ficha.EstadoEJGDentroRemesa'" pDroppable="false" (click)="$event.stopPropagation()" [(ngModel)]="buscadores[i]" pInputText
+              type="text" (input)="tabla.filter($event.target.value, col.field, 'contains')"/>
           </th>
         </tr>
       </ng-template>
@@ -37,9 +35,9 @@
       <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
         <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
 
-          <td class="text-center" *ngFor="let col of columns">
+          <td class="text-center" *ngFor="let col of columns; ultimo as last" [ngStyle]="{'display': col.display}">
 
-            <span>
+            <span *ngIf = "!ultimo">
               {{dato[col.field]}}
             </span>
           </td>
