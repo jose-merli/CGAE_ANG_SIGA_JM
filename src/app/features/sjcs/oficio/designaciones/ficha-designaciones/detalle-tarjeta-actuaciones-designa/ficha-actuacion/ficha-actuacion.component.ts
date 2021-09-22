@@ -189,7 +189,13 @@ export class FichaActuacionComponent implements OnInit {
         //   this.modoLectura = true;
         // }
 
-         this.isColegiado = sessionStorage.getItem('esColegiado');
+        let colegiadosession = sessionStorage.getItem('esColegiado');
+         //JSON.parse(sessionStorage.getItem('esColegiado'));
+          if(colegiadosession == 'true'){
+            this.isColegiado = true;
+          }else{
+            this.isColegiado = false;
+          }
          let colegiadoLog = JSON.parse(sessionStorage.getItem('personaBody'));
 
         if (this.isColegiado) {
