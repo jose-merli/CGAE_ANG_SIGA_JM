@@ -236,7 +236,7 @@ export class TarjetaEjgsComponent implements OnInit {
       { field: "solicitante", header: "justiciaGratuita.justiciables.rol.solicitante", display: "table-cell" },
       { field: "nuevaRemesa", header: "justiciaGratuita.remesas.ficha.EnNuevaRemesa", display: "table-cell" },
       { field: "estadoRemesa", header: "justiciaGratuita.remesas.ficha.EstadoEJGDentroRemesa", display: "table-cell" },
-      { field: "incidencias", header: "", display: "none"}
+      { field: "incidencias", header: "", width: "0.001%"}
     ];
     this.cols.forEach(it => this.buscadores.push(""))
 
