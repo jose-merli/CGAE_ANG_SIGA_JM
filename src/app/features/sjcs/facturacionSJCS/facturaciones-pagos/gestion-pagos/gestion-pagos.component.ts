@@ -19,6 +19,12 @@ import { ParametroDto } from '../../../../../models/ParametroDto';
 import { ParametroRequestDto } from '../../../../../models/ParametroRequestDto';
 import { SigaStorageService } from '../../../../../siga-storage.service';
 import { SigaServices } from '../../../../../_services/siga.service';
+import { PagosjgDTO } from '../../../../../models/sjcs/PagosjgDTO';
+
+export interface Enlace {
+  id: string;
+  ref: any;
+}
 
 @Component({
   selector: 'app-gestion-pagos',
@@ -27,6 +33,7 @@ import { SigaServices } from '../../../../../_services/siga.service';
 })
 export class GestionPagosComponent extends SigaWrapper implements OnInit, AfterViewChecked {
 
+  pago: PagosjgItem;
   msgs;
   permisos;
   datos: PagosjgItem = new PagosjgItem();
@@ -39,6 +46,35 @@ export class GestionPagosComponent extends SigaWrapper implements OnInit, AfterV
   editingConceptos: boolean = false;
   facturasMarcadas: CompensacionFacItem[] = [];
   paramDeducirCobroAutom: ParametroItem;
+
+  tarjetaFija = {
+    nombre: 'facturacionSJCS.facturacionesYPagos.inforesumen',
+    icono: 'fas fa-clipboard',
+    imagen: '',
+    detalle: false,
+    fixed: true,
+    campos: [
+      {
+        "key": this.translateService.instant('facturacionSJCS.facturacionesYPagos.fichaPago.nombreFac'),
+        "value": ""
+      },
+      {
+        "key": this.translateService.instant('facturacionSJCS.facturacionesYPagos.fichaPago.nombrePag'),
+        "value": ""
+      },
+      {
+        "key": this.translateService.instant('facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado'),
+        "value": ""
+      },
+    ],
+    enlaces: [
+      { id: 'facSJCSFichaPagosDatosGen', nombre: this.translateService.instant('general.message.datos.generales'), ref: null },
+      { id: 'facSJCSFichaPagosConcep', nombre: this.translateService.instant('facturacionSJCS.facturacionesYPagos.criteriosPagos'), ref: null },
+      { id: 'facSJCSFichaPagosConfigFich', nombre: this.translateService.instant('facturacionSJCS.facturacionesYPagos.configuracionFicheros'), ref: null },
+      { id: 'facSJCSFichaPagosDetaPago', nombre: this.translateService.instant('facturacionSJCS.facturacionesYPagos.detallePago'), ref: null },
+      { id: 'facSJCSFichaPagosCompFac', nombre: this.translateService.instant('facturacionSJCS.facturacionesYPagos.compensacionFactura'), ref: null }
+    ]
+  };
 
   @ViewChild(CompensacionFacturaComponent) compensacion: CompensacionFacturaComponent;
   @ViewChild(ConfiguracionFicherosComponent) configuracionFic: ConfiguracionFicherosComponent;
@@ -78,6 +114,7 @@ export class GestionPagosComponent extends SigaWrapper implements OnInit, AfterV
         this.idEstadoPago = paramsPago.idEstadoPago;
         this.idFacturacion = paramsPago.idFacturacion;
         sessionStorage.removeItem("paramsPago");
+        this.getPago();
       }
 
       if (paramsPago == undefined || paramsPago == null || undefined == paramsPago.idPago) {
@@ -127,6 +164,85 @@ export class GestionPagosComponent extends SigaWrapper implements OnInit, AfterV
             this.paramDeducirCobroAutom = el;
           }
         });
+      }
+    );
+
+  }
+
+  ngAfterViewInit() {
+
+    this.goTop();
+  }
+
+  goTop() {
+    let top = document.getElementById("top");
+    if (top) {
+      top.scrollIntoView();
+      top = null;
+    }
+  }
+
+  addEnlace(enlace: Enlace) {
+    this.tarjetaFija.enlaces.find(el => el.id == enlace.id).ref = enlace.ref;
+  }
+
+  isOpenReceive(event) {
+
+    if (this.modoEdicion) {
+
+      switch (event) {
+        case 'facSJCSFichaPagosDatosGen':
+          this.datosPagos.showFicha = true;
+          break;
+        case 'facSJCSFichaPagosConcep':
+          this.conceptos.showFichaCriterios = true;;
+          break;
+        case 'facSJCSFichaPagosConfigFich':
+          this.configuracionFic.showFicha = true;
+          break;
+        case 'facSJCSFichaPagosCompFac':
+          this.compensacion.showFicha = true;
+      }
+
+    }
+
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+
+  establecerDatosTarjetaResumen() {
+    this.tarjetaFija.campos[0].value = this.pago.nombreFac.toString();
+    this.tarjetaFija.campos[1].value = this.pago.nombre.toString();
+    this.tarjetaFija.campos[2].value = this.pago.desEstado.toString();
+  }
+
+  getPago() {
+
+    this.sigaServices.getParam("pagosjcs_getPago", "?idPago=" + this.idPago).subscribe(
+      (data: PagosjgDTO) => {
+
+        const resp = data.pagosjgItem[0];
+        const error = data.error;
+
+        if (error && null != error && null != error.description) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.description.toString()));
+        } else {
+          this.pago = resp;
+        }
+
+        this.establecerDatosTarjetaResumen();
+      },
+      err => {
+        if (null != err.error) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant('general.mensaje.error.bbdd'));
+        }
       }
     );
 

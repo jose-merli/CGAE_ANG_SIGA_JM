@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '../../../../../../commons/translate';
 import { ComboItem } from '../../../../../../models/ComboItem';
@@ -8,13 +8,14 @@ import { ConceptoPagoObject } from '../../../../../../models/sjcs/ConceptoPagoOb
 import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacionSJCS';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
+import { Enlace } from '../gestion-pagos.component';
 
 @Component({
   selector: 'app-conceptos-pagos',
   templateUrl: './conceptos-pagos.component.html',
   styleUrls: ['./conceptos-pagos.component.scss']
 })
-export class ConceptosPagosComponent implements OnInit, OnChanges {
+export class ConceptosPagosComponent implements OnInit, OnChanges, AfterViewInit {
 
   showFichaCriterios: boolean = false;
   progressSpinner: boolean = false;
@@ -39,6 +40,7 @@ export class ConceptosPagosComponent implements OnInit, OnChanges {
   @Input() modoEdicion;
 
   @Output() editing = new EventEmitter<boolean>();
+  @Output() addEnlace = new EventEmitter<Enlace>();
 
   @ViewChild("tabla") tabla;
 
@@ -467,6 +469,16 @@ export class ConceptosPagosComponent implements OnInit, OnChanges {
     if (changes.modoEdicion && changes.modoEdicion.currentValue && changes.modoEdicion.currentValue == true) {
       this.cargarDatosIniciales();
     }
+  }
+
+  ngAfterViewInit() {
+
+    const enlace: Enlace = {
+      id: 'facSJCSFichaPagosConcep',
+      ref: document.getElementById('facSJCSFichaPagosConcep')
+    };
+
+    this.addEnlace.emit(enlace);
   }
 
 }

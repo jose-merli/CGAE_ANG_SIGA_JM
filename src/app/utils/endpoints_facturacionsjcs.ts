@@ -34,6 +34,7 @@ export let endpoints_facturacionsjcs: any = {
     pagosjcs_buscarPagos: "pagosjcs/buscarPagos",
     pagosjcs_datosGeneralesPago: "pagosjcs/datosGeneralesPago",
     pagosjcs_historicoPago: "pagosjcs/historicoPagos",
+    pagosjcs_getPago: "pagosjcs/getPago",
     pagosjcs_savePago: "pagosjcs/savePago",
     pagosjcs_updatePago: "pagosjcs/updatePago",
     pagosjcs_deletePago: "pagosjcs/deletePago",

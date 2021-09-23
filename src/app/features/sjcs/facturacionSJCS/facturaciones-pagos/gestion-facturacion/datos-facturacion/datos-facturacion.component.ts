@@ -31,7 +31,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
   @Output() changeFacturacion = new EventEmitter<boolean>();
 
   permisos;
-  showFichaFacturacion: boolean = true;
+  showFichaFacturacion: boolean = false;
   progressSpinnerDatos: boolean = false;
   checkRegularizar: boolean = false;
   checkVisible: boolean = false;

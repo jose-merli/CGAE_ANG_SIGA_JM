@@ -193,16 +193,20 @@ export class GestionFacturacionComponent extends SigaWrapper implements OnInit, 
 
   isOpenReceive(event) {
 
-    switch (event) {
-      case 'facSJCSFichaFactDatosFac':
-        this.datosFac.showFichaFacturacion = true;
-        break;
-      case 'facSJCSFichaFactConceptosFac':
-        this.conceptos.showFichaConceptos = true;
-        break;
-      case 'facSJCSFichaFactPagosFac':
-        this.pagos.showFichaPagos = true;
-        break;
+    if (this.modoEdicion) {
+
+      switch (event) {
+        case 'facSJCSFichaFactDatosFac':
+          this.datosFac.showFichaFacturacion = true;
+          break;
+        case 'facSJCSFichaFactConceptosFac':
+          this.conceptos.showFichaConceptos = true;
+          break;
+        case 'facSJCSFichaFactPagosFac':
+          this.pagos.showFichaPagos = true;
+          break;
+      }
+
     }
 
   }

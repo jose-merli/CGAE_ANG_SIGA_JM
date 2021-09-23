@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, SimpleChanges, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, SimpleChanges, OnChanges, Output, EventEmitter, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Message } from 'primeng/api';
 import { TranslateService } from '../../../../../../commons/translate';
@@ -6,13 +6,14 @@ import { StringObject } from '../../../../../../models/StringObject';
 import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacionSJCS';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
+import { Enlace } from '../gestion-pagos.component';
 
 @Component({
   selector: 'app-detalle-pago',
   templateUrl: './detalle-pago.component.html',
   styleUrls: ['./detalle-pago.component.scss']
 })
-export class DetallePagoComponent implements OnInit, OnChanges {
+export class DetallePagoComponent implements OnInit, OnChanges, AfterViewInit {
 
   progressSpinner: boolean = false;
   permisos;
@@ -22,6 +23,7 @@ export class DetallePagoComponent implements OnInit, OnChanges {
   @Input() idPago;
   @Input() idEstadoPago;
   @Input() modoEdicion;
+  @Output() addEnlace = new EventEmitter<Enlace>();
 
   @ViewChild("tabla") tabla;
 
@@ -106,6 +108,16 @@ export class DetallePagoComponent implements OnInit, OnChanges {
     if (changes.modoEdicion && changes.modoEdicion.currentValue && changes.modoEdicion.currentValue == true) {
       this.cargarDatosIniciales();
     }
+  }
+
+  ngAfterViewInit() {
+
+    const enlace: Enlace = {
+      id: 'facSJCSFichaPagosDetaPago',
+      ref: document.getElementById('facSJCSFichaPagosDetaPago')
+    };
+
+    this.addEnlace.emit(enlace);
   }
 
 }

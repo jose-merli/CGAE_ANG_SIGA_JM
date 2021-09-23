@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, ChangeDetectorRef, Output, EventEmitter, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '../../../../../../commons/translate';
 import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacionSJCS';
@@ -7,13 +7,14 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 import { CompensacionFacObject } from '../../../../../../models/sjcs/CompensacionFacObject';
 import { CompensacionFacItem } from '../../../../../../models/sjcs/CompensacionFacItem';
 import { ParametroItem } from '../../../../../../models/ParametroItem';
+import { Enlace } from '../gestion-pagos.component';
 
 @Component({
   selector: 'app-compensacion-factura',
   templateUrl: './compensacion-factura.component.html',
   styleUrls: ['./compensacion-factura.component.scss']
 })
-export class CompensacionFacturaComponent implements OnInit {
+export class CompensacionFacturaComponent implements OnInit, AfterViewInit {
 
   selectedItem: number = 10;
   rowsPerPage: any = [];
@@ -37,6 +38,7 @@ export class CompensacionFacturaComponent implements OnInit {
   @Input() modoEdicion;
   @Input() paramDeducirCobroAutom: ParametroItem;
   @Output() facturasMarcadasEvent = new EventEmitter<CompensacionFacItem[]>();
+  @Output() addEnlace = new EventEmitter<Enlace>();
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private commonsService: CommonsService,
@@ -214,6 +216,16 @@ export class CompensacionFacturaComponent implements OnInit {
 
   isPagoCerrado() {
     return (this.idEstadoPago == '30');
+  }
+
+  ngAfterViewInit() {
+
+    const enlace: Enlace = {
+      id: 'facSJCSFichaPagosCompFac',
+      ref: document.getElementById('facSJCSFichaPagosCompFac')
+    };
+
+    this.addEnlace.emit(enlace);
   }
 
 }

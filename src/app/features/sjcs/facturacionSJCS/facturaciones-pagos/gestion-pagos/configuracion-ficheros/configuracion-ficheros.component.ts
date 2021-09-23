@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, SimpleChanges, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, OnChanges, AfterViewInit, Output, EventEmitter } from '@angular/core';
 import { TranslateService } from '../../../../../../commons/translate';
 import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacionSJCS';
 import { CommonsService } from '../../../../../../_services/commons.service';
@@ -7,12 +7,13 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 import { Error } from '../../../../../../models/Error';
 import { PagosjgItem } from '../../../../../../models/sjcs/PagosjgItem';
 import { PagosjgDTO } from '../../../../../../models/sjcs/PagosjgDTO';
+import { Enlace } from '../gestion-pagos.component';
 @Component({
   selector: 'app-configuracion-ficheros',
   templateUrl: './configuracion-ficheros.component.html',
   styleUrls: ['./configuracion-ficheros.component.scss']
 })
-export class ConfiguracionFicherosComponent implements OnInit, OnChanges {
+export class ConfiguracionFicherosComponent implements OnInit, OnChanges, AfterViewInit {
 
   showFicha: boolean = false;
   progressSpinner: boolean = false;
@@ -28,6 +29,7 @@ export class ConfiguracionFicherosComponent implements OnInit, OnChanges {
   @Input() idPago;
   @Input() idEstadoPago;
   @Input() modoEdicion;
+  @Output() addEnlace = new EventEmitter<Enlace>();
 
   constructor(private commonsService: CommonsService,
     private translateService: TranslateService,
@@ -316,6 +318,16 @@ export class ConfiguracionFicherosComponent implements OnInit, OnChanges {
     if (changes.modoEdicion && changes.modoEdicion.currentValue && changes.modoEdicion.currentValue == true) {
       this.cargarDatosIniciales();
     }
+  }
+
+  ngAfterViewInit() {
+
+    const enlace: Enlace = {
+      id: 'facSJCSFichaPagosConfigFich',
+      ref: document.getElementById('facSJCSFichaPagosConfigFich')
+    };
+
+    this.addEnlace.emit(enlace);
   }
 
 }

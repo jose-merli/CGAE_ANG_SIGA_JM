@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, Output, EventEmitter, AfterViewInit } from '@angular/core';
 import { PagosjgItem } from '../../../../../../models/sjcs/PagosjgItem';
 import { ComboItem } from '../../../../../administracion/parametros/parametros-generales/parametros-generales.component';
 import { TranslateService } from '../../../../../../commons/translate/translation.service';
@@ -10,13 +10,14 @@ import { CompensacionFacItem } from '../../../../../../models/sjcs/CompensacionF
 import { CerrarPagoObject } from '../../../../../../models/sjcs/CerrarPagoObject';
 import { ParametroItem } from '../../../../../../models/ParametroItem';
 import { ConfirmationService } from 'primeng/api';
+import { Enlace } from '../gestion-pagos.component';
 
 @Component({
   selector: 'app-datos-pagos',
   templateUrl: './datos-pagos.component.html',
   styleUrls: ['./datos-pagos.component.scss']
 })
-export class DatosPagosComponent implements OnInit {
+export class DatosPagosComponent implements OnInit, AfterViewInit {
   showFicha: boolean = false;
   progressSpinner: boolean = false;
   cols;
@@ -42,6 +43,8 @@ export class DatosPagosComponent implements OnInit {
   @Input() facturasMarcadas: CompensacionFacItem[];
   @Output() facturacionChange = new EventEmitter<string>();
   @Output() compensacionFactEvent = new EventEmitter<boolean>();
+  @Output() addEnlace = new EventEmitter<Enlace>();
+  @Output() changePago = new EventEmitter<boolean>();
 
   @ViewChild("tabla") tabla;
 
@@ -205,14 +208,17 @@ export class DatosPagosComponent implements OnInit {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.description));
           } else if (resp.status == 'OK') {
             this.idPago = resp.id;
+            this.body.idPagosjg = resp.id;
             this.idPagoChange.emit(this.idPago);
             this.facturacionChange.emit(this.body.idFacturacion.toString());
             this.idEstadoPago = '10';
+            this.body.idEstado = '10';
             this.idEstadoPagoChange.emit(this.idEstadoPago);
             this.modoEdicion = true;
             this.modoEdicionChange.emit(true);
             this.bodyAux = new PagosjgItem();
             this.bodyAux = JSON.parse(JSON.stringify(this.body));
+            this.changePago.emit(true);
           }
 
         },
@@ -243,6 +249,7 @@ export class DatosPagosComponent implements OnInit {
             this.bodyAux = new PagosjgItem();
             this.bodyAux = JSON.parse(JSON.stringify(this.body));
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+            this.changePago.emit(true);
           }
         },
         err => {
@@ -319,6 +326,7 @@ export class DatosPagosComponent implements OnInit {
             this.historicoEstados();
             this.idEstadoPago = "20";
             this.compensacionFactEvent.emit(true);
+            this.changePago.emit(true);
           }
 
         },
@@ -381,6 +389,7 @@ export class DatosPagosComponent implements OnInit {
           } else {
             this.idEstadoPago = '30';
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+            this.changePago.emit(true);
           }
 
           this.progressSpinner = false;
@@ -420,6 +429,7 @@ export class DatosPagosComponent implements OnInit {
           } else {
             this.idEstadoPago = '30';
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+            this.changePago.emit(true);
           }
 
           this.progressSpinner = false;
@@ -439,7 +449,7 @@ export class DatosPagosComponent implements OnInit {
 
   }
 
-  disabledReabrir() {
+  disabledDeshacerCierre() {
     if ((this.modoEdicion && this.idEstadoPago == "30") && this.disabledRestablecer()) {
       return false;
     } else {
@@ -447,7 +457,7 @@ export class DatosPagosComponent implements OnInit {
     }
   }
 
-  reabrir() {
+  deshacerCierre() {
 
   }
 
@@ -541,6 +551,16 @@ export class DatosPagosComponent implements OnInit {
 
   isVisibleDelete(): boolean {
     return (this.modoEdicion && !this.histEstados.map(el => el.idEstado).includes("30"));
+  }
+
+  ngAfterViewInit() {
+
+    const enlace: Enlace = {
+      id: 'facSJCSFichaPagosDatosGen',
+      ref: document.getElementById('facSJCSFichaPagosDatosGen')
+    };
+
+    this.addEnlace.emit(enlace);
   }
 
 }
