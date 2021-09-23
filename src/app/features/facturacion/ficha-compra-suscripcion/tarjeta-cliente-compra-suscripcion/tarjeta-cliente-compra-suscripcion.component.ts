@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, SimpleChange, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { Message } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../commons/translate';
@@ -49,15 +49,17 @@ export class TarjetaClienteCompraSuscripcionComponent implements OnInit {
       this.compruebaDNIInput();
     }
     
-    this.checkHideSearch();
-    
     if(this.ficha.idPersona != null) this.showEnlaceCliente = true;
 
     this.getPermisoBuscar();
   }
 
+  ngOnChanges(changes: SimpleChanges){
+    this.checkHideSearch();
+  }
+
   checkHideSearch(){
-    if(this.ficha.idEstadoPeticion==null){
+    if(this.ficha.idEstadoPeticion==null || this.ficha.idEstadoPeticion==undefined){
       if(sessionStorage.esColegiado=='true')this.showSearch = false;
       else this.showSearch = true;
     }
