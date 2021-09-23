@@ -357,6 +357,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
           }
         }
       }
+    }
       if (isReturn){
         return row;
       }
@@ -364,6 +365,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
     });
     this.totalRegistros = this.rowGroups.length;
   }
+
 
   showMsg(severity, summary, detail) {
     this.msgs = [];
