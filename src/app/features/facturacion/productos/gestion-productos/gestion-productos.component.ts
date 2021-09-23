@@ -358,12 +358,41 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
     if (msg != undefined) {
       this.msgs = msg;
     } else {
-      if (this.checkFormasPago() && this.checkNoFacturable()) {
-        sessionStorage.removeItem("FichaCompraSuscripcion");
-        let nuevaCompra = new FichaCompraSuscripcionItem();
-        nuevaCompra.productos = this.selectedRows;
-        sessionStorage.setItem("cargarFichaCompraSuscripcion",JSON.stringify(nuevaCompra));
-        this.router.navigate(["/fichaCompraSuscripcion"]);
+      if (this.checkFormasPago()) {
+        if (this.checkNoFacturable()) {
+          this.progressSpinner = true;
+
+          sessionStorage.removeItem("FichaCompraSuscripcion");
+          let nuevaCompra = new FichaCompraSuscripcionItem();
+          nuevaCompra.productos = this.selectedRows;
+
+          let servicio;
+          if (sessionStorage.getItem("esColegiado") == "true") servicio = 'PyS_getFichaCompraSuscripcionColegiado';
+          else servicio = 'PyS_getFichaCompraSuscripcionNoColegiado';
+
+          this.sigaServices.post(servicio, nuevaCompra).subscribe(
+            (n) => {
+              this.progressSpinner = false;
+
+              sessionStorage.setItem("FichaCompraSuscripcion", n.body);
+              this.router.navigate(["/fichaCompraSuscripcion"]);
+            },
+            (err) => {
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+              this.progressSpinner = false;
+            }
+          );
+        }
+        else {
+          //Pendiente de inserción y sustitucion de etiquetas.
+          this.msgs = [
+            {
+              severity: "error",
+              summary: "Valores de 'no facturable' distintos",
+              detail: "Los productos seleccionados tienen valores distintos en el parametro 'no facturable'"
+            }
+          ];
+        }
       } else {
         this.msgs = [
           {

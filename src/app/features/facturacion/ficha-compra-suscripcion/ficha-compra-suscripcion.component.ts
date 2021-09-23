@@ -20,7 +20,6 @@ export class FichaCompraSuscripcionComponent implements OnInit {
 
   comboComun: any[] = [];
   desFormaPagoSelecc: string;
-  selectedPago: number;
 
 
   @ViewChild("cliente") tarjCliente;
@@ -35,7 +34,6 @@ export class FichaCompraSuscripcionComponent implements OnInit {
     if(sessionStorage.getItem("FichaCompraSuscripcion")){
       this.ficha = JSON.parse(sessionStorage.getItem("FichaCompraSuscripcion"));
       sessionStorage.removeItem("FichaCompraSuscripcion");
-      this.selectedPago = this.ficha.idFormaPagoSeleccionada;
       this.getComboFormaPago();
     }
     //Si vuelve de otra pantalla
@@ -48,11 +46,14 @@ export class FichaCompraSuscripcionComponent implements OnInit {
   getDatosFicha() {
     this.ficha = JSON.parse(sessionStorage.getItem("cargarFichaCompraSuscripcion"));
     this.progressSpinner = true; 
-		this.sigaServices.post('facturacion_getFichaCompraSuscripcion', this.ficha).subscribe(
+    let peticion = this.ficha;
+    let servicio;
+    if(sessionStorage.getItem("esColegiado") == "true") servicio = 'PyS_getFichaCompraSuscripcionColegiado';
+    else servicio = 'PyS_getFichaCompraSuscripcionNoColegiado';
+		this.sigaServices.post(servicio, peticion).subscribe(
 			(n) => {
 				this.ficha = JSON.parse(n.body);
 				this.progressSpinner = false;
-        this.selectedPago = this.ficha.idFormaPagoSeleccionada;
         this.getComboFormaPago();
 			},
 			(err) => {
