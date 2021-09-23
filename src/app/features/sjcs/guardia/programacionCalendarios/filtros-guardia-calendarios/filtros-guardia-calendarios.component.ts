@@ -9,6 +9,7 @@ import { PersistenceService } from '../../../../../_services/persistence.service
 import { SigaServices } from '../../../../../_services/siga.service';
 import { AcreditacionesItem } from '../../../../../models/sjcs/AcreditacionesItem';
 import { ConfiguracionCola, GlobalGuardiasService } from '../../guardiasGlobal.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-filtros-guardia-calendarios',
@@ -31,17 +32,15 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
   @Input() permisoEscritura;
   @Output() isOpen = new EventEmitter<boolean>();
   @Output() filtrosValues = new EventEmitter<CalendarioProgramadoItem>();
-
   comboTurno = [];
   comboGuardia = [];
   comboConjuntoGuardias = [];
   comboListaGuardias = [];
   comboEstado = [];
-  
   KEY_CODE = {
     ENTER: 13
   }
-
+  emptyFilters = true;
   textFilter: string = "Seleccionar";
   textSelected: String = "{0} etiquetas seleccionadas";
 
@@ -50,9 +49,12 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
     private commonServices: CommonsService,
-    private globalGuardiasService: GlobalGuardiasService) { }
+    private globalGuardiasService: GlobalGuardiasService,
+    private datePipe: DatePipe) { }
 
   ngOnInit() {
+   this.emptyFilters = true;
+    this.checkFilters();
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos();
     }
@@ -67,9 +69,13 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
       this.filtros = JSON.parse(
         sessionStorage.getItem("filtrosBusquedaGuardiasFichaGuardia")
       );
-      if (this.filtros){
-        console.log('this.filtros.idGuardia: ', this.filtros.idGuardia)
-        console.log('this.filtros.idTurno: ', this.filtros.idTurno)
+      if (this.filtros  ){
+        if (!this.filtros.volver){
+          let AnioAnterior = new Date().getFullYear() - 1;
+          this.filtros.fechaCalendarioDesde = new Date(AnioAnterior, new Date().getMonth(), new Date().getDate());
+          console.log('new Date().getMonth(): ', new Date().getMonth())
+          console.log('new Date().getDate(): ', new Date().getDate())
+        }
         this.getComboGuardia();
         this.search();
         sessionStorage.removeItem("filtrosBusquedaGuardiasFichaGuardia");
@@ -85,6 +91,12 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
 
     } else {
       this.filtros = new CalendarioProgramadoItem();
+      if (!this.filtros.volver){
+      let AnioAnterior = new Date().getFullYear() - 1;
+      this.filtros.fechaCalendarioDesde = new Date(AnioAnterior, new Date().getMonth(), new Date().getDate());
+      console.log('new Date().getMonth(): ', new Date().getMonth())
+      console.log('new Date().getDate(): ', new Date().getDate())
+      }
     }
 
   }
@@ -102,21 +114,28 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
   }
 
   getComboEstado() {
-    this.sigaServices.get("busquedaGuardia_estado").subscribe(
+    this.comboEstado = [
+      { label: "Pendiente", value: "5" },
+      { label: "Programada", value: "1" },
+      { label: "En proceso", value: "2" },
+      { label: "Procesada con Errores", value: "3" },
+      { label: "Generada", value: "4" }
+    ];
+    /*this.sigaServices.get("busquedaGuardia_estado").subscribe(
       n => {
         this.comboEstado = n.combooItems;
-        this.commonServices.arregloTildesCombo(this.comboTurno);
+        this.commonServices.arregloTildesCombo(this.comboEstado);
       },
       err => {
         console.log(err);
       }
-    );
+    );*/
   }
 
   onChangeTurno() {
     this.filtros.idGuardia = "";
     this.comboGuardia = [];
-
+    this.checkFilters();
     if (this.filtros.idTurno) {
       this.getComboGuardia();
       //this.getComboListaGuardia();
@@ -166,9 +185,11 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
 
   }
   fillFechaCalendarioDesde(event) {
+    this.checkFilters();
     this.filtros.fechaCalendarioDesde = event;
   }
   fillFechaCalendarioHasta(event) {
+    this.checkFilters();
     this.filtros.fechaCalendarioHasta = event;
   }
 
@@ -205,9 +226,11 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
 
 
   fillFechaProgramadaDesde(event) {
+    this.checkFilters();
     this.filtros.fechaProgramadaDesde = event;
   }
   fillFechaProgramadaHasta(event) {
+    this.checkFilters();
     this.filtros.fechaProgramadaHasta = event;
   }
 
@@ -244,8 +267,54 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
 
 
   search() {
-console.log('search')
-    if (this.checkFilters()) {
+    let compareDateOk = -1;
+    let compareDateHourOk = -1;
+    console.log('search')
+    if (this.filtros.fechaCalendarioDesde != undefined && this.filtros.fechaCalendarioHasta != undefined){
+     compareDateOk = compareDate(this.changeDateFormat(this.formatDate2(this.filtros.fechaCalendarioDesde).toString()), this.changeDateFormat(this.formatDate2(this.filtros.fechaCalendarioHasta).toString()), true);
+    }
+
+    let objDate1 = null;
+    let hour1 = null;
+    let objDate2 = null;
+    let hour2 = null;
+
+    let fechaA = null;
+    let fechaB = null;
+    if (this.filtros.fechaProgramadaDesde != undefined && this.filtros.fechaProgramadaHasta != undefined){
+     fechaA = this.formatDate(this.filtros.fechaProgramadaDesde);
+     fechaB = this.formatDate(this.filtros.fechaProgramadaHasta);
+    }
+    if (fechaA!=undefined && fechaA != null){
+      const dayA = fechaA.substr(0, 2) ;
+
+      const monthA = fechaA.substr(3, 2);
+      const yearA = fechaA.substr(6, 4);
+      const hourA = fechaA.substr(11, 2);
+      const minA = fechaA.substr(14, 2);
+      const segA = fechaA.substr(17, 2);
+      console.log("fecha a:"+ yearA+","+monthA+","+dayA +  "  " + hourA + ":" + minA + ":" + segA);
+      objDate1= {  day: dayA,month: monthA, year: yearA};
+      hour1={ hour: hourA,minute: minA,second: segA};
+    }
+
+    if (fechaB!=undefined && fechaB != null){
+      const dayB = fechaB.substr(0, 2) ;
+      const monthB = fechaB.substr(3, 2);
+      const yearB = fechaB.substr(6, 4);
+      const hourB = fechaB.substr(11, 2);
+      const minB = fechaB.substr(14, 2);
+      const segB = fechaB.substr(17, 2);
+      console.log("fecha b:"+ yearB+","+monthB+","+dayB+  "  " + hourB + ":" + minB + ":" + segB);
+      objDate2= {  day: dayB,month: monthB, year: yearB};
+      hour2={ hour: hourB,minute: minB,second: segB};
+   
+    }
+    if ( fechaA != null && fechaB != null){
+        compareDateHourOk = compareDateHour(objDate1, hour1, objDate2, hour2, true);
+    }
+    //if (compareDateOk == -1 && compareDateHourOk == -1) {
+      if (compareDateOk == -1 && compareDateHourOk == -1) {
       this.persistenceService.setFiltros(this.filtros);
       this.persistenceService.setFiltrosAux(this.filtros);
       this.filtroAux = this.persistenceService.getFiltrosAux();
@@ -253,6 +322,12 @@ console.log('search')
       this.isOpen.emit(false)
       this.filtrosValues.emit(Object.assign({},this.filtros));
       console.log('search ok', this.filtrosValues)
+    }else{
+      if (!this.checkFilters() ){
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
+      }else{
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Rango de fechas incorrecto. Debe cumplir que la fecha desde sea menor o igual que la fecha hasta");
+      }
     }
 
   }
@@ -276,7 +351,7 @@ console.log('search')
       'fechaDesde': '',
       'fechaHasta': '',
       'fechaProgramacion': null,
-      'estado': '',
+      'estado': 'Pendiente',
       'observaciones': '',
       'idCalendarioProgramado': null,
       'idTurno': '',
@@ -301,15 +376,15 @@ console.log('search')
       (this.filtros.listaGuardias == null || this.filtros.listaGuardias == undefined) &&
       (this.filtros.idTurno == null || this.filtros.idTurno == undefined) &&
       (this.filtros.idGuardia == null || this.filtros.idGuardia == undefined)) {
-
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
+      this.emptyFilters = true;
+      //this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
       return false;
     } else {
       // quita espacios vacios antes de buscar
       if (this.filtros.guardia != undefined && this.filtros.guardia != null) {
         this.filtros.guardia = this.filtros.guardia.trim();
       }
-
+      this.emptyFilters = false;
       return true;
     }
   }
@@ -335,6 +410,7 @@ console.log('search')
   }
 
   rest() {
+    this.emptyFilters = true;
     this.filtros = new CalendarioProgramadoItem();
     this.isDisabledMateria = true;
   }
@@ -356,4 +432,81 @@ console.log('search')
     }, 300);
   }
 
+  formatDate(date) {
+    const pattern = 'dd/MM/yyyy HH:mm:ss';
+      return this.datePipe.transform(date, pattern);
+    }
+  formatDate2(date) {
+    const pattern = 'yyyy-MM-dd';
+      return this.datePipe.transform(date, pattern);
+    }
+    changeDateFormat(date1){
+      console.log('date1: ', date1)
+      let year = date1.substring(0, 4)
+      let month = date1.substring(5,7)
+      let day = date1.substring(8, 10)
+      let date2 = day + '/' + month + '/' + year;
+      return date2;
+    }
+
+
+
+}
+
+
+function compareDateHour(dateObj1,hour1,dateObj2,hour2, isAsc){
+
+  let objDate1=new Date(dateObj1.year+'-'+dateObj1.month+"-"+dateObj1.day+
+  " "+ hour1.hour +":" + hour1.minute + ":" + hour1.second + ".000Z");
+  let objDate2=new Date(dateObj2.year+'-'+dateObj2.month+"-"+dateObj2.day+
+  " "+ hour2.hour +":" + hour2.minute + ":" + hour2.second + ".000Z");
+
+  //return (objDate1.getTime() / 1000) > (objDate2.getTime() / 1000) ? true :false;
+  return ((objDate1.getTime() / 1000) < (objDate2.getTime() / 1000) ? -1 : 1) * (isAsc ? 1 : -1);
+}
+
+function compareDate (fechaA:  any, fechaB:  any, isAsc: boolean){
+
+  let dateA = null;
+  let dateB = null;
+  if (fechaA!=null){
+    const dayA = fechaA.substr(0, 2) ;
+    const monthA = fechaA.substr(3, 2);
+    const yearA = fechaA.substr(6, 10);
+    console.log("fecha a:"+ yearA+","+monthA+","+dayA);
+    dateA = new Date(yearA, monthA, dayA);
+  }
+
+  if (fechaB!=null){
+    const dayB = fechaB.substr(0, 2) ;
+    const monthB = fechaB.substr(3, 2);
+    const yearB = fechaB.substr(6, 10);
+    console.log("fecha b:"+ yearB+","+monthB+","+dayB);
+    dateB = new Date(yearB, monthB, dayB);
+  }
+
+  console.log("comparacionDate isAsc:"+ isAsc+";");
+
+  return compare(dateA, dateB, isAsc);
+
+}
+function compare(a: number | string | Date, b: number | string | Date, isAsc: boolean) {
+  console.log("comparacion  a:"+ a+"; b:"+ b);
+
+  if (typeof a === "string" && typeof b === "string") {
+    console.log("comparacion  de cadenas");
+    a = a.toLowerCase();
+    b = b.toLowerCase();
+  }
+
+  console.log("compare isAsc:"+ isAsc+";");
+
+  if (a==null && b!=null){
+    return ( 1 ) * (isAsc ? 1 : -1);
+  }
+  if (a!=null && b==null){
+    return ( -1 ) * (isAsc ? 1 : -1);
+  }
+
+  return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }

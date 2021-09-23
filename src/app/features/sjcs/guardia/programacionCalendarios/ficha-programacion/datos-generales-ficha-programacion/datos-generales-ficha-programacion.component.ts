@@ -22,6 +22,7 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
   @Input() permisoEscritura: boolean;
   @Output() modoEdicionSend = new EventEmitter<any>();
   @Output() dataToDuplicate = new EventEmitter<any>();
+  @Output() reloadDatos = new EventEmitter<{}>();
   @Input() tarjetaDatosGenerales;
   @Input() datosGeneralesIniciales = {
     'duplicar' : '',
@@ -40,7 +41,6 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
     'idTurno': '',
     'idGuardia': '',
   };
- 
   @Input() datosGenerales = {
     'duplicar' : '',
     'tabla': [],
@@ -85,10 +85,12 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
     private commonServices: CommonsService,
     private translateService: TranslateService,
     private datepipe: DatePipe,
-    private globalGuardiasService: GlobalGuardiasService) { }
+    private globalGuardiasService: GlobalGuardiasService) {
+     }
 
 
   ngOnInit() {
+    this.openFicha = true;
     if (this.datosGenerales != undefined){
     if (this.datosGenerales.fechaProgramacion != null){
       this.datosGenerales.fechaProgramacion = new Date(this.datosGenerales.fechaProgramacion.toString());
@@ -136,12 +138,16 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
         this.progressSpinner = false;
       });
     }
+
+    console.log('datosGeneralesIniciales!!!!!!!!: ', this.datosGeneralesIniciales)
   }
 
   fillFechaCalendarioDesde(event) {
+    console.log('datosGeneralesIniciales!!!!!!!! 3: ', this.datosGeneralesIniciales)
     if (this.formatDate2(event) != null){
       this.datosGenerales.fechaDesde = this.changeDateFormat(this.formatDate2(event).toString());
     }
+    console.log('datosGeneralesIniciales!!!!!!!! 4: ', this.datosGeneralesIniciales)
   }
   fillFechaCalendarioHasta(event) {
     console.log('event: ', event)
@@ -151,6 +157,7 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
        console.log('datosGenerales.fechaHasta 1: ', this.datosGenerales.fechaHasta)
   }
   fillFechaProgramada(event) {
+    console.log('datosGeneralesIniciales!!!!!!!! 1: ', this.datosGeneralesIniciales)
     console.log('OK event: ', event)
     if (event == null){
       this.datosGenerales.fechaProgramacion = null;
@@ -158,6 +165,7 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
       this.datosGenerales.fechaProgramacion = new Date(event.toString());
       console.log('OK fecha: ', this.datosGenerales.fechaProgramacion)
     }
+    console.log('datosGeneralesIniciales!!!!!!!! 2: ', this.datosGeneralesIniciales)
   }
   
 formatDate2(date) {
@@ -302,7 +310,8 @@ formatDate2(date) {
 
   rest() {
     console.log('Reestablecer: ', this.datosGeneralesIniciales)
-    this.datosGenerales = Object.assign(this.datosGeneralesIniciales, {});
+    //this.datosGenerales = Object.assign(datosInicialesCopy, {});
+    this.reloadDatos.emit(this.datosGeneralesIniciales);
   }
 
 
@@ -361,7 +370,8 @@ formatDate2(date) {
         //Guardar sólo actualizará el estado si no tiene estado (creación) o es Pendiente/Programada
         if (this.datosGenerales.estado == "" || this.datosGenerales.estado == "Pendiente" || this.datosGenerales.estado == "Programada"){
           if(this.datosGenerales.fechaProgramacion == undefined || this.datosGenerales.fechaProgramacion == null){
-            //Al guardar con Fecha de programación vacía, se pasará al estado Pendiente
+            //Al guardar con Fecha de programación vacía, se pasará al estado Pendiente y fechaProgramacion = hoy
+            this.datosGenerales.fechaProgramacion = new Date();
           this.datosGenerales.estado = "Pendiente";
           }else {
             //Al guardar con Fecha de programación rellena, se pasará al estado Programada. 

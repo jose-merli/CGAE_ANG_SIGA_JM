@@ -70,6 +70,7 @@ export let endpoints_guardia: any = {
     guardiaCalendario_newCalendarioProgramado: "guardia/newCalendarioProgramado",
     guardiaCalendario_generar: "guardia/generarCalendario",
     guardiaCalendario_descargarExcelLog: "guardia/descargarExcelLog",
+    guardiaCalendario_zipLog: "guardia/descargarZipExcelLog",
     
 
     //Asistencia

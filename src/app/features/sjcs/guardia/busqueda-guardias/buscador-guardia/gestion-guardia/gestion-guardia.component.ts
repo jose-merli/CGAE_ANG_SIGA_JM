@@ -114,8 +114,27 @@ export class GestionGuardiaComponent implements OnInit {
         JSON.stringify(this.persistenciaGuardia)
       );
     }
-
-    this.location.back();
+       /*let dataToSend = {
+         'duplicar': false,
+         'tabla': [],
+         'turno':row.cells[0].value,
+         'nombre': row.cells[1].value,
+         'generado': row.cells[8].value,
+         'numGuardias': row.cells[9].value,
+         'listaGuarias': row.cells[5].value,
+         'fechaDesde': row.cells[2].value,
+         'fechaHasta': row.cells[3].value,
+         'fechaProgramacion': row.cells[4].value.value,
+         'estado': row.cells[7].value,
+         'observaciones': row.cells[6].value,
+         'idCalendarioProgramado': row.cells[10].value,
+         'idTurno': row.cells[11].value,
+         'idGuardia': row.cells[12].value
+       }*/
+        let datosFichaProgramacion = this.persistenceService.getDatos();
+        this.persistenceService.setDatos(datosFichaProgramacion);
+         //this.router.navigate(["/fichaProgramacion"]);
+        this.location.back();
   }
 
   modoEdicionSend(event) {

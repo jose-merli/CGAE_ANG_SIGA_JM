@@ -3,11 +3,13 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Sort } from '@angular/material/sort';
 import { Row, Cell } from './tabla-resultado-mix-incompatib.service';
-import { Message } from 'primeng/components/common/api';
+import { ConfirmationService, Message } from 'primeng/components/common/api';
 import { ValidationModule } from '../validation/validation.module';
 import { CloseScrollStrategy } from '@angular/cdk/overlay';
 import { Router } from '@angular/router';
 import { PersistenceService } from '../../_services/persistence.service';
+import { RowGroup } from '../tabla-resultado-desplegable/tabla-resultado-desplegable-ae.service';
+import { TranslateService } from '../translate/translation.service';
 
 /*interface Cabecera {
   id: string,
@@ -34,12 +36,21 @@ export class TablaResultadoMixComponent implements OnInit {
   @Input() inscripciones: boolean;
   
   @Output() resultado = new EventEmitter<{}>();
-
+  @Output() descargaLOG = new EventEmitter<any[]>();
   @Output() anySelected = new EventEmitter<any>();
   @Output() save = new EventEmitter<Row[]>();
   @Output() delete = new EventEmitter<any>();
   @Output() deleteFromCombo = new EventEmitter<any>();
-
+  comboTipos = [
+    {
+      label: 'Salto',
+      value: 'S'
+    },
+    {
+      label: 'Compensación',
+      value: 'C'
+    }
+  ];
   cabecerasMultiselect = [];
   modalStateDisplay = true;
   searchText = [];
@@ -75,6 +86,8 @@ export class TablaResultadoMixComponent implements OnInit {
     private renderer: Renderer2,
     private router: Router,
     private persistenceService: PersistenceService,
+    private confirmationService: ConfirmationService,
+    private translateService: TranslateService
   ) {
     this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
       for (let i = 0; i < this.table.nativeElement.children.length; i++) {
@@ -246,8 +259,13 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
         if (nombreCabecera == sort.active){
           console.log("a.cells["+i+"].type:"+a.cells[i].type);
 
-          if (a.cells[i].type=='datePickerFin' && b.cells[i].type=='datePickerFin'){
-            return compareDate(a.cells[i].value[0], b.cells[i].value[0], isAsc);
+          if ((a.cells[i].type=='datePickerFin' && b.cells[i].type=='datePickerFin')){
+            return compareDate(a.cells[i].value[0], b.cells[i].value[0], isAsc, false);
+          }else if (a.cells[i].type=='date' && b.cells[i].type=='date'){
+            return compareDate(a.cells[i].value, b.cells[i].value, isAsc, false);
+          }
+          else if (a.cells[i].type=='dateTime' && b.cells[i].type=='dateTime'){
+            return compareDateAndTime(a.cells[i].value, b.cells[i].value, isAsc);
           }
 
           let valorA = a.cells[i].value;
@@ -260,14 +278,14 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
               console.log("fecha a:"+ yearA+","+monthA+","+dayA);
               var dt=new Date(yearA, monthA, dayA);
               if(!isNaN(dt.getTime())){ //Checked for date
-                return compareDate(a.cells[i].value, b.cells[i].value, isAsc);
+                return compareDate(a.cells[i].value, b.cells[i].value, isAsc, false);
               }else{
               }
             } else{
             }
           }
 
-          return compare(a.cells[i].value, b.cells[i].value, isAsc);
+          return compare(a.cells[i].value, b.cells[i].value, isAsc, false);
           
         }
       }
@@ -277,8 +295,20 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
   }
 
 
-  
-
+  getComboLabel(key: string){
+    for (let i = 0; i < this.comboTipos.length; i++){
+      if (this.comboTipos[i].value == key){
+        return this.comboTipos[i].label;
+      }
+    }
+    return "";
+  }
+  setMyStyles(size) {
+    let styles = {
+      'max-width': size + 'px',
+    };
+    return styles;
+  }
 
   searchChange(x: any) {
     let isReturnArr = [];
@@ -288,14 +318,14 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
         if (this.searchText[j] != " " &&  this.searchText[j] != undefined){
           if (row.cells[j].value){
             console.log("tipo de celda:"+row.cells[j].type);
-            /*if(row.cells[j].type == 'select'){
+            if(row.cells[j].type == 'select'){
               let labelCombo = this.getComboLabel(row.cells[j].value);
               console.log("valor de celda:"+labelCombo);
               if (!labelCombo.toLowerCase().includes(this.searchText[j].toLowerCase())){
                 isReturn = false;
                 break;
               }
-            } else */if (!row.cells[j].value.toString().toLowerCase().includes(this.searchText[j].toLowerCase())){
+            } else if (!row.cells[j].value.toString().toLowerCase().includes(this.searchText[j].toLowerCase())){
               isReturn = false;
               break;
             }
@@ -353,8 +383,76 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
   perPage(perPage){
     this.numperPage = perPage;
   }
+  getValuesOMIndex(index){
+    let toDelete:Row;
+      toDelete = this.rowGroups[index];
+    return toDelete;
+  }
+  descargarLOG(){
+    let dataToSendArr = [];
+    let selectedValuesArr:Row[] = [];
+    if (this.selectedArray.length > 0){
+      this.selectedArray.forEach(index => {
+        let selectedValues:Row  = this.getValuesOMIndex(index);
+        selectedValuesArr.push(selectedValues);
+      })
+        
+        selectedValuesArr.forEach(selectedRowValue => {
 
-  descargarLOG
+        let dataToSend = {
+          'duplicar': false,
+          'tabla': this.rowGroups,
+          'turno':selectedRowValue.cells[0].value,
+          'nombre': selectedRowValue.cells[1].value,
+          'generado': selectedRowValue.cells[8].value,
+          'numGuardias': selectedRowValue.cells[9].value,
+          'listaGuarias': selectedRowValue.cells[5].value,
+          'fechaDesde': '',
+          'fechaHasta': '',
+          'fechaProgramacion': selectedRowValue.cells[4].value.label,
+          'estado': selectedRowValue.cells[7].value,
+          'observaciones': selectedRowValue.cells[6].value,
+          'idCalendarioProgramado': selectedRowValue.cells[10].value,
+          'idTurno': selectedRowValue.cells[11].value,
+          'idGuardia': selectedRowValue.cells[12].value
+        }
+          if( dataToSend.estado == "Generada"){
+            dataToSendArr.push(dataToSend);
+            this.descargaLOG.emit(dataToSendArr);
+          }
+          else{
+             this.showMsg('error', 'Error. No puede descargar el log del calendario ' + dataToSend.idCalendarioProgramado + ' porque no está Generado' ,'')
+            }
+      })
+    } else if (this.selectedRowValue[0] != undefined){
+      
+      let dataToSend = {
+        'duplicar': false,
+        'tabla': this.rowGroups,
+        'turno':this.selectedRowValue[0].value,
+        'nombre': this.selectedRowValue[1].value,
+        'generado': this.selectedRowValue[8].value,
+        'numGuardias': this.selectedRowValue[9].value,
+        'listaGuarias': this.selectedRowValue[5].value,
+        'fechaDesde': '',
+        'fechaHasta': '',
+        'fechaProgramacion': this.selectedRowValue[4].value.label,
+        'estado': this.selectedRowValue[7].value,
+        'observaciones': this.selectedRowValue[6].value,
+        'idCalendarioProgramado': this.selectedRowValue[10].value,
+        'idTurno': this.selectedRowValue[11].value,
+        'idGuardia': this.selectedRowValue[12].value
+      }
+       if( dataToSend.estado == "Generada"){
+        dataToSendArr.push(dataToSend);
+        this.descargaLOG.emit(dataToSendArr);
+       }else{
+        this.showMsg('error', 'Error. No puede descargar el log del calendario ' + dataToSend.idCalendarioProgramado + ' porque no está Generado' ,'')
+       }
+    }else{
+      this.showMsg('error', 'Error. Debe seleccionar uno o más registros para poder descargar sus LOGs' ,'')
+    }
+  }
   duplicar2(){
     if (this.selectedRowValue.length != 0){
       console.log('this.selectedRowValue', this.selectedRowValue)
@@ -385,7 +483,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
    /* if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos();
     }*/
-    console.log('se envia fecha: ', row.cells[4].value.value)
+
     let dataToSend = {
       'duplicar': false,
       'tabla': [],
@@ -396,7 +494,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
       'listaGuarias': row.cells[5].value,
       'fechaDesde': row.cells[2].value,
       'fechaHasta': row.cells[3].value,
-      'fechaProgramacion': row.cells[4].value.value.toString(),
+      'fechaProgramacion': row.cells[4].value.value,
       'estado': row.cells[7].value,
       'observaciones': row.cells[6].value,
       'idCalendarioProgramado': row.cells[10].value,
@@ -562,13 +660,75 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
     }
   }
   eliminar(){
-    console.log('this.selectedArray: ', this.selectedArray)
-  this.delete.emit(this.selectedArray);
-  this.totalRegistros = this.rowGroups.length;
-  this.rowGroupsAux = this.rowGroups;
-  //this.to = this.totalRegistros;
+    let entra = false;
+    this.selectedArray.forEach((index) => {
+        let fechaDesdeSelected = this.rowGroups[index].cells[2].value;
+        let idGuardiaSelected = this.rowGroups[index].cells[12].value;
+        let facturadoSelected = this.rowGroups[index].cells[13].value;
+        let asistenciasSelected = this.rowGroups[index].cells[14].value;
+        this.rowGroups.forEach(rg => {
+          let fechaDesde = rg.cells[2].value;
+          let idGuardia = rg.cells[12].value;
+        if (compareDate (fechaDesde, fechaDesdeSelected, true, true) == 1 && idGuardiaSelected == idGuardia){
+          entra = true;
+        }
+      });
+      if (entra){
+        //fechaDesde > fechaDesdeSelected: Calendarios seleccionados no son los últimos generados (por fecha desde) para la misma guardia.
+        let errorcalPosterior = "No puede eliminarse el calendario con fecha desde " + fechaDesdeSelected + " , ya que existen calendarios posteriores para esta guardia";
+          let mess = 'Se van a borrar ' + this.selectedArray.length + ' calendarios ya generados en la programación seleccionada. ¿Desea continuar?';
+          this.confirmDelete(errorcalPosterior, mess);
+      }else{
+      this.eliminarCheck(facturadoSelected, asistenciasSelected);
+      }
+    })
+
+    
   }
 
+  eliminarCheck(facturado, asistencias){
+      if (facturado){
+        //existen guardias de colegiado facturadas en esos calendarios
+        let errorFac = "No pueden eliminarse calendarios con guardias de colegiado facturadas";
+        let mess = 'Se van a borrar ' + this.selectedArray.length + ' calendarios ya generados en la programación seleccionada. ¿Desea continuar?';
+        this.confirmDelete(errorFac, mess);
+      }else if (asistencias){
+        //existen asistencias en las guardias de colegiado de esos calendarios
+        let errorAs = "No pueden eliminarse calendarios cuyas guardias de colegiado tienen asistencias";
+        let mess = 'Se van a borrar ' + this.selectedArray.length + ' calendarios ya generados en la programación seleccionada. ¿Desea continuar?';
+        this.confirmDelete(errorAs, mess);
+      }else{
+        //borrado ok
+        this.delete.emit(this.selectedArray);
+        this.totalRegistros = this.rowGroups.length;
+        this.rowGroupsAux = this.rowGroups;
+      }
+   
+  }
+  confirmDelete(error, mess) {
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      key: "eliminarCalendario",
+      accept: () => {
+        if (error != ""){
+          this.showMsg('error', error, error);
+        }
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
   eliminarFromCombo(rowToDelete){
     this.deleteFromCombo.emit(rowToDelete);
     this.rowGroupsAux = this.rowGroups;
@@ -622,7 +782,54 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
   }
 }
 
-function compareDate (fechaA:  any, fechaB:  any, isAsc: boolean){
+function compareDateAndTime (fechaA:  any, fechaB:  any, isAsc: boolean){
+  let objDate1 = null;
+  let hour1 = null;
+  let objDate2 = null;
+  let hour2 = null;
+
+  if (fechaA!=null){
+    const dayA = fechaA.substr(0, 2) ;
+    const monthA = fechaA.substr(3, 2);
+    const yearA = fechaA.substr(6, 10);
+    const hourA = fechaA.substr(11, 13);
+    const minA = fechaA.substr(14, 16);
+    const segA = fechaA.substr(17, 19);
+    console.log("fecha a:"+ yearA+","+monthA+","+dayA +  "  " + hourA + ":" + minA + ":" + segA);
+    objDate1= {  day: dayA,month: monthA, year: yearA};
+    hour1={ hour: hourA,minute: minA,second: segA};
+  }
+
+  if (fechaB!=null){
+    const dayB = fechaB.substr(0, 2) ;
+    const monthB = fechaB.substr(3, 2);
+    const yearB = fechaB.substr(6, 10);
+    const hourB = fechaB.substr(11, 13);
+    const minB = fechaB.substr(14, 16);
+    const segB = fechaB.substr(17, 19);
+    console.log("fecha b:"+ yearB+","+monthB+","+dayB+  "  " + hourB + ":" + minB + ":" + segB);
+    objDate2= {  day: dayB,month: monthB, year: yearB};
+    hour2={ hour: hourB,minute: minB,second: segB};
+  }
+
+  console.log("comparacionDate isAsc:"+ isAsc+";");
+
+  return  compareDateHour(objDate1, hour1, objDate2, hour2, isAsc);
+
+}
+
+function compareDateHour(dateObj1,hour1,dateObj2,hour2, isAsc){
+
+  let objDate1=new Date(dateObj1.year+'-'+dateObj1.month+"-"+dateObj1.day+
+  " "+ hour1.hour +":" + hour1.minute + ":" + hour1.second + ".000Z");
+  let objDate2=new Date(dateObj2.year+'-'+dateObj2.month+"-"+dateObj2.day+
+  " "+ hour2.hour +":" + hour2.minute + ":" + hour2.second + ".000Z");
+
+  //return (objDate1.getTime() / 1000) > (objDate2.getTime() / 1000) ? true :false;
+  return ((objDate1.getTime() / 1000) < (objDate2.getTime() / 1000) ? -1 : 1) * (isAsc ? 1 : -1);
+}
+
+function compareDate (fechaA:  any, fechaB:  any, isAsc: boolean, quitarIgual: Boolean){
 
   let dateA = null;
   let dateB = null;
@@ -644,11 +851,10 @@ function compareDate (fechaA:  any, fechaB:  any, isAsc: boolean){
 
   console.log("comparacionDate isAsc:"+ isAsc+";");
 
-  return compare(dateA, dateB, isAsc);
+  return compare(dateA, dateB, isAsc, quitarIgual);
 
 }
-
-function compare(a: number | string | Date, b: number | string | Date, isAsc: boolean) {
+function compare(a: number | string | Date, b: number | string | Date, isAsc: boolean, quitarIgual: Boolean) {
   console.log("comparacion  a:"+ a+"; b:"+ b);
 
   if (typeof a === "string" && typeof b === "string") {
@@ -665,7 +871,10 @@ function compare(a: number | string | Date, b: number | string | Date, isAsc: bo
   if (a!=null && b==null){
     return ( -1 ) * (isAsc ? 1 : -1);
   }
-
+if (!quitarIgual){
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+}else{
+  return (a <= b ? -1 : 1) * (isAsc ? 1 : -1);
+}
 }
 

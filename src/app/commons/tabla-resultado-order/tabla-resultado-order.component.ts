@@ -8,11 +8,12 @@ import { SigaServices } from '../../_services/siga.service';
 import { CommonsService } from '../../_services/commons.service';
 import { eventInstanceToEventRange } from 'fullcalendar';
 import { Router } from '@angular/router';
-import { saveAs } from "file-saver/FileSaver";
 import { TranslateService } from '../translate';
 import { DomSanitizer } from '@angular/platform-browser';
 import 'rxjs/add/observable/fromPromise';
 import { Observable } from 'rxjs/Observable';
+import { GuardiaItem } from '../../models/guardia/GuardiaItem';
+import { PersistenceService } from '../../_services/persistence.service';
 @Component({
   selector: 'app-tabla-resultado-order',
   templateUrl: './tabla-resultado-order.component.html',
@@ -20,6 +21,7 @@ import { Observable } from 'rxjs/Observable';
 })
 export class TablaResultadoOrderComponent implements OnInit {
   isDisabled = false;
+  @Input() isDisabledNuevo = false;
   info = new FormControl();
   @Input() cabeceras = [];  
   @Input() rowGroups: Row[];
@@ -34,6 +36,9 @@ export class TablaResultadoOrderComponent implements OnInit {
   @Output() rest = new EventEmitter<Boolean>();
   @Output() dupli = new EventEmitter<Boolean>();
   @Output() guardarGuardiasEnConjunto = new EventEmitter<Row[]>();
+  @Output() descargaLog = new EventEmitter<Boolean>();
+  @Output() disableGen = new EventEmitter<Boolean>();
+  @Input() tarjetaDatosGenerales;
   anySelectedBol = false;
   from = 0;
   to = 10;
@@ -79,7 +84,8 @@ export class TablaResultadoOrderComponent implements OnInit {
     private cd: ChangeDetectorRef,
     private router: Router,
     private translateService: TranslateService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private persistenceService: PersistenceService,
   ) {
     this.renderer.listen('window', 'click',(event: { target: HTMLInputElement; })=>{
       for (let i = 0; i < this.table.nativeElement.children.length; i++) {
@@ -182,6 +188,7 @@ export class TablaResultadoOrderComponent implements OnInit {
   }
 
   saveCal(){
+    this.disableGen.emit(false);
     let newRowGroups: Row[] = [];
     this.rowGroups.forEach(rowG => {
       if(rowG.cells[1].type == 'selectDependency'){
@@ -425,10 +432,11 @@ this.totalRegistros = this.rowGroups.length;
   this.totalRegistros = this.rowGroups.length;
   }
   moveRow(movement){
+    this.disableGen.emit(true);
     let groupSelected;
     if (this.calendarios){
       groupSelected = this.rowGroups[this.positionSelected - 1].cells[1].value;
-      this.rowGroupsAux.forEach((row, index)=> {
+      //this.rowGroupsAux.forEach((row, index)=> {
       
         if (movement == 'up'){
           let first = this.rowGroups[this.positionSelected - 1];
@@ -439,7 +447,7 @@ this.totalRegistros = this.rowGroups.length;
           this.rowGroups[this.positionSelected - 1] = this.rowGroups[this.positionSelected];
           this.rowGroups[this.positionSelected] = first;
         }
-      });
+      //});
     }else{
       groupSelected = this.rowGroups[this.positionSelected].cells[1].value;
       this.rowGroupsAux.forEach((row, index)=> {
@@ -561,6 +569,7 @@ this.totalRegistros = this.rowGroups.length;
       return numero % 2 === 0;
     }
     restablecer(){
+      this.disableGen.emit(false);
       console.log('this.rowGroupsAux: ', this.rowGroupsAux)
       this.rowGroups = this.rowGroupsAux;
       this.rest.emit(true);
@@ -579,6 +588,7 @@ this.totalRegistros = this.rowGroups.length;
     }
 
     eliminar(){
+      this.disableGen.emit(true);
       if (this.calendarios){
         if ( this.estado == "Pendiente"){
           this.delete.emit(this.selectedArray);
@@ -595,6 +605,7 @@ this.totalRegistros = this.rowGroups.length;
       //this.to = this.totalRegistros;
       }
       nuevo(){
+        this.disableGen.emit(true);
         this.getComboTurno();
         let newCells: Cell[] = [
           { type: 'input', value: '', combo: null},
@@ -712,36 +723,26 @@ this.totalRegistros = this.rowGroups.length;
     return new Blob(byteArrays, {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
     }
   descargarLog(){
-    let resHead ={
-      'response' : null,
-      'header': null    };
-this.progressSpinner = true;
-   let descarga =  this.sigaServices.getDownloadFiles(
-    "guardiaCalendario_descargarExcelLog");
-  descarga.subscribe(resp =>{
-    this.progressSpinner = false;
-      resHead.response = resp.body;
-      resHead.header = resp.headers;
-      console.log(resp.headers);
-      console.log(resp.body);
-      console.log(resp.headers.get('Content-Disposition'))
-      console.log('data: ', resHead)
-      let contentDispositionHeader = resHead.header.get('Content-Disposition');
-      let fileName = contentDispositionHeader.split(';')[1].trim().split('=')[1];
-      console.log('fileName: ', fileName)
-      let blob = new Blob([resHead.response], { type: 'application/octet-stream' });
-      saveAs(blob, fileName);
-    },
-    err => {
-          this.progressSpinner = false;
-          console.log(err);
-        });
+    this.descargaLog.emit(true);
     }
 
 
   transform(url) {
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
+
+  openTab(row) {
+    let guardiaItem = new GuardiaItem();
+    guardiaItem.idGuardia = row.cells[2].value;
+    guardiaItem.idTurno = row.cells[1].value;
+    this.persistenceService.setDatos(this.tarjetaDatosGenerales);
+    sessionStorage.setItem(
+      "filtrosBusquedaGuardiasFichaGuardia",
+      JSON.stringify(guardiaItem)
+    );
+    //this.persistenceService.setHistorico(evento.fechabaja ? true : false);
+    this.router.navigate(["/gestionGuardias"]); // ficha guardias
+   }
 }
 
 function compare(a: number | string, b: number | string, isAsc: boolean) {

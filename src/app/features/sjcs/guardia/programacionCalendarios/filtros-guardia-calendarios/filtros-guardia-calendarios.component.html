@@ -23,7 +23,7 @@
         <!-- GUARDIA -->
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
-          <p-dropdown class="select-form"  [filter]="true" [(ngModel)]="filtros.idGuardia"  name="filtros.idGuardia"
+          <p-dropdown class="select-form"  [filter]="true" [(ngModel)]="filtros.idGuardia"  (onChange)="checkFilters()" name="filtros.idGuardia"
           [options]="comboGuardia" filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
           [showClear]="true"> 
         </p-dropdown>
@@ -33,7 +33,7 @@
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{"menu.justiciaGratuita.calendarios.ListaGuardias" | translate}}</label>
           <p-dropdown class="select-form"  [filter]="true" [(ngModel)]="filtros.listaGuardias"
-            [options]="comboConjuntoGuardias" filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
+            [options]="comboConjuntoGuardias" filterMatchMode="contains" (onChange)="checkFilters()" placeholder="{{'general.boton.seleccionar' | translate}}"
             [showClear]="true">
           </p-dropdown>
         </div>
@@ -41,7 +41,7 @@
         <!-- ESTADO -->
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{"menu.justiciaGratuita.calendarios.Estado" | translate}}</label>
-          <p-dropdown class="select-form" [(ngModel)]="filtros.estado" [options]="comboEstado" [filter]="true"
+          <p-dropdown class="select-form" [(ngModel)]="filtros.estado" (onChange)="checkFilters()" [options]="comboEstado" [filter]="true"
             filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
             [(disabled)]="isDisabledEstado" (input)="buscarEstado($event)" [showClear]="true"
             [emptyFilterMessage]="resultadosAreas">
@@ -86,7 +86,7 @@
         label="{{ 'general.boton.clear' | translate}}"></button>
       <button pButton (click)="search()" type="button" icon="fa fa-search" iconPos="left"
         label="{{ 'general.boton.search' | translate }}"></button>
-      <button pButton (click)="nuevo()" type="button" icon="fa fa-plus" iconPos="left"
+      <button [disabled]="emptyFilters" pButton (click)="nuevo()" type="button" icon="fa fa-plus" iconPos="left"
         label="{{ 'general.boton.new' | translate}}"></button>
     </div>
   </div>

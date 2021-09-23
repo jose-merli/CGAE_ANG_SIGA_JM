@@ -772,9 +772,10 @@ export class SigaServices {
         return this.parseErrorBlob(response);
       });
   }
-  getDownloadFiles(service: string): any {
+  getDownloadFiles(service: string, body: any): any {
+	  console.log('body: ', body)
       return this.http
-      .get(environment.newSigaUrl + this.endpoints[service], {observe: 'response', responseType: 'blob'});
+      .post(environment.newSigaUrl + this.endpoints[service], body, {observe: 'response', responseType: 'blob'});
   }
   postSendContent(service: string, file: any): Observable<any> {
     let formData: FormData = new FormData();
