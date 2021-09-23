@@ -16,6 +16,7 @@ export class TablaGuardiaColegiadoComponent implements OnInit {
 
   @Input() datos;
   @Input() permisoEscritura:boolean;
+  @Input() isColegiado;
   @Output() isOpen = new EventEmitter<boolean>();
 
   @ViewChild("tablaGuardCol") table: DataTable;
@@ -46,7 +47,7 @@ export class TablaGuardiaColegiadoComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit() {
-    this.permisos = this.permisoEscritura;
+    this.isColegiado = JSON.parse(this.isColegiado);
     this.getCols();
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
   }
@@ -288,35 +289,41 @@ export class TablaGuardiaColegiadoComponent implements OnInit {
   }
 
   borrarGuardiaColegiado(selectedDatos){
-   
-      let guardia = new GuardiaItem();
-      guardia=selectedDatos;
-      
-      this.progressSpinner = true;
-      this.sigaServices.post("guardiasColegiado_eliminarGuardiaColegiado", guardia).subscribe(
-        n => {
-          let status = JSON.parse(n.body).status;
-          
-  
-          if (status == 'OK') {
-            this.borrar = false;
-            this.showMessage({ severity: "success", summary: this.translateService.instant("general.message.correct"), msg:this.translateService.instant("general.message.accion.realizada") });
-           this.search();
-          }else{
-            this.showMessage({ severity: 'error', summary: this.translateService.instant("general.message.incorrect"), msg: "Error de base de datos" });
-          }
-          this.progressSpinner = false;
-        },
-        err => {
-          this.progressSpinner = false;
-          console.log(err);
-        });
-        this.resetBoton();
+    let fechaActual = new Date();
+   if(selectedDatos.fechadesde >= fechaActual){
+    let guardia = new GuardiaItem();
+    guardia=selectedDatos;
+    
+    this.progressSpinner = true;
+    this.sigaServices.post("guardiasColegiado_eliminarGuardiaColegiado", guardia).subscribe(
+      n => {
+        let status = JSON.parse(n.body).status;
+        
+
+        if (status == 'OK') {
+          this.borrar = false;
+          this.showMessage({ severity: "success", summary: this.translateService.instant("general.message.correct"), msg:this.translateService.instant("general.message.accion.realizada") });
+         this.search();
+        }else{
+          this.showMessage({ severity: 'error', summary: this.translateService.instant("general.message.incorrect"), msg: "Error de base de datos" });
+        }
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+        console.log(err);
+      });
+   }else{
+    this.showMessage({ severity: 'error', summary: this.translateService.instant("general.message.incorrect"), msg: "No se puede eliminar una guardia anterior a la fecha actual." });
+   }
+   this.resetBoton();
+    
   }
+
   search(){
-   
     this.isOpen.emit(false);
   }
+  
   openTab(evento) {
 
     if (this.persistenceService.getPermisos() != undefined) {

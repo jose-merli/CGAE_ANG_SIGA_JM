@@ -34,9 +34,13 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
     ENTER: 13
   }
   permisos;
-  @Input('permisoEscritura') permisoEscritura = false;
+  @Input() permisoEscritura;
+  @Input() isColegiado;
+  @Input() colegiadoInfo;
 
   @Output() isOpen = new EventEmitter<boolean>();
+  isColeg: boolean;
+  colegInfo;
 
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
@@ -45,25 +49,20 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
 
   ngOnInit() {
     
-    this.progressSpinner = true;
     this.getCombos()
-    if (this.permisoEscritura != undefined) {
-      this.permisos = this.permisoEscritura
+    if (this.persistenceService.getPermisos() != undefined) {
+      this.permisoEscritura = this.persistenceService.getPermisos();
     }
-    this.progressSpinner = false;
-    if (this.persistenceService.getFiltros() != undefined) {
-      this.filtros = this.persistenceService.getFiltros();
-      
-      if (this.filtros.idGuardia != null || this.filtros.idGuardia != undefined) {
-        this.getComboGuardia();
+   
+    this.isColeg = JSON.parse(this.isColegiado);
+    this.colegInfo = JSON.parse(this.colegiadoInfo);
+    
+      if(this.isColeg){
+        this.usuarioBusquedaExpress.numColegiado = this.colegInfo.numColegiado
+        this.usuarioBusquedaExpress.nombreAp = this.colegInfo.nombre
+        this.filtros.numColegiado = this.usuarioBusquedaExpress.numColegiado;
       }
-      
-      this.search();
-      
-
-    } else {
-      this.filtros = new GuardiaItem();   
-    }
+    
     this.showDatosGenerales = true;
     if (sessionStorage.getItem("buscadorColegiados")) {
       let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
@@ -71,6 +70,7 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
 
       this.usuarioBusquedaExpress.nombreAp = busquedaColegiado.nombre + " " + busquedaColegiado.apellidos;
       this.usuarioBusquedaExpress.numColegiado = busquedaColegiado.nColegiado;
+      this.filtros.numColegiado = this.usuarioBusquedaExpress.numColegiado;
     }
   }
 
@@ -85,7 +85,7 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
   search() {
     
       this.isOpen.emit(false);
- 
+
   }
 
   getComboTurno() {
@@ -126,6 +126,7 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
   changeColegiado(event) {
     this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
     this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
+    this.filtros.numColegiado = this.usuarioBusquedaExpress.numColegiado;
   }
 
   clear() {
@@ -133,9 +134,15 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
   }
 
   rest() {
-    this.usuarioBusquedaExpress.nombreAp = '';
-    this.usuarioBusquedaExpress.numColegiado = '';
-    this.filtros = new GuardiaItem();
+    if(this.isColeg){
+      this.filtros = new GuardiaItem();
+      this.filtros.numColegiado = this.usuarioBusquedaExpress.numColegiado;
+    }else{
+      this.usuarioBusquedaExpress.nombreAp = '';
+      this.usuarioBusquedaExpress.numColegiado = '';
+      this.filtros = new GuardiaItem();
+    }
+    
   }
 
   fillFechaDesde(event) {

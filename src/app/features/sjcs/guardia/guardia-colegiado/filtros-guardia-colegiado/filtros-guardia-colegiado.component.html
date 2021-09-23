@@ -33,7 +33,7 @@
           <!-- FECHA DESDE -->
         <div class="form-group col-lg-6 col-md-6">
           <label>{{ "censo.solicitudincorporacion.fechaDesde" | translate }}</label>
-          <app-fecha [minDate]="getFechaDesdeCalendar(filtros.fechadesde, filtros.fechahasta)" [(value)]="filtros.fechadesde" (valueChangeSelected)="fillFechaDesde($event)"
+          <app-fecha [maxDate]="getFechaHastaCalendar(filtros.fechadesde, filtros.fechahasta)" [(value)]="filtros.fechadesde" (valueChangeSelected)="fillFechaDesde($event)"
             (valueChangeInput)="fillFechaDesde($event)"></app-fecha>
         </div>
 
@@ -41,7 +41,7 @@
         <!-- FECHA HASTA -->
         <div class="form-group col-lg-6 col-md-6">
           <label>{{ "censo.solicitudincorporacion.fechaHasta" | translate }}</label>
-          <app-fecha [maxDate]="getFechaHastaCalendar(filtros.fechadesde, filtros.fechahasta)" [(value)]="filtros.fechahasta" (valueChangeSelected)="fillFechaHasta($event)"
+          <app-fecha [minDate]="getFechaDesdeCalendar(filtros.fechadesde, filtros.fechahasta)" [(value)]="filtros.fechahasta" (valueChangeSelected)="fillFechaHasta($event)"
             (valueChangeInput)="fillFechaHasta($event)"></app-fecha>
         </div>
       </div>
@@ -60,7 +60,7 @@
           <div class="form-group-interlineado col-lg-6 col-md-6">
             <app-busqueda-colegiado-express class="flexCenter" [pantalla]="'guardia'"
               [numColegiado]="usuarioBusquedaExpress.numColegiado" [nombreAp]="usuarioBusquedaExpress.nombreAp"
-              [disabled]="!permiso" (colegiado)="changeColegiado($event)">
+              [disabled]="isColeg" (colegiado)="changeColegiado($event)">
             </app-busqueda-colegiado-express>
           </div>
         </div>

@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '../../../../commons/translate';
+import { ColegiadoItem } from '../../../../models/ColegiadoItem';
 import { procesos_guardia } from '../../../../permisos/procesos_guarida';
 import { SigaStorageService } from '../../../../siga-storage.service';
 import { CommonsService } from '../../../../_services/commons.service';
@@ -23,15 +24,20 @@ export class GuardiaColegiadoComponent implements OnInit {
   permisosEscritura:boolean = false;
   progressSpinner: boolean = false;
   buscar: boolean = false;
-  permisoEscritura:boolean;
+  permisoEscritura;
+  isColegiado;
+  colegiadoInfo;
 
   constructor(private persistenceService: PersistenceService,
     private sigaServices: SigaServices,
     private commonsService: CommonsService,
     private translateService: TranslateService,
-    private router: Router,) { }
+    private router: Router,
+    private localStorageService: SigaStorageService) { }
 
   ngOnInit() {
+
+
 
     this.progressSpinner = true;
     this.commonsService.checkAcceso(procesos_guardia.guardias_colegiado)
@@ -39,7 +45,7 @@ export class GuardiaColegiadoComponent implements OnInit {
 
         this.permisoEscritura = respuesta;
 
-        //this.persistenceService.setPermisos(this.permisoEscritura);
+        this.persistenceService.setPermisos(this.permisoEscritura);
 
         if (this.permisoEscritura == undefined) {
           sessionStorage.setItem("codError", "403");
@@ -49,6 +55,9 @@ export class GuardiaColegiadoComponent implements OnInit {
           );
           this.router.navigate(["/errorAcceso"]);
         }
+        this.isColegiado = sessionStorage.getItem('esColegiado');
+
+        this.colegiadoInfo = sessionStorage.getItem('personaBody');
       }
       ).catch(error => console.error(error));
 
