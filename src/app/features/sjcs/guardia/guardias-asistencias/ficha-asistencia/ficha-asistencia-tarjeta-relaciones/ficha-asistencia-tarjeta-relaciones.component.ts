@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService, Message } from 'primeng/api';
@@ -5,7 +6,10 @@ import { DataTable } from 'primeng/primeng';
 import { TranslateService } from '../../../../../../commons/translate';
 import { TarjetaAsistenciaItem } from '../../../../../../models/guardia/TarjetaAsistenciaItem';
 import { DesignaItem } from '../../../../../../models/sjcs/DesignaItem';
+import { EJGItem } from '../../../../../../models/sjcs/EJGItem';
 import { RelacionesItem } from '../../../../../../models/sjcs/RelacionesItem';
+import { CommonsService } from '../../../../../../_services/commons.service';
+import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
 
 @Component({
@@ -17,6 +21,7 @@ export class FichaAsistenciaTarjetaRelacionesComponent implements OnInit {
 
   msgs : Message [] = [];
   @Input() asistencia : TarjetaAsistenciaItem;
+  @Input() editable : boolean;
   @Output() refreshTarjetas = new EventEmitter<string>();
   rows : number = 10;
   rowsPerPage = [
@@ -45,12 +50,17 @@ export class FichaAsistenciaTarjetaRelacionesComponent implements OnInit {
   selectedDatos : RelacionesItem [] = [];
   relaciones : RelacionesItem [] = [];
   disableDelete : boolean = true;
+  disableDesigna : boolean = false;
+  disableEJG : boolean = false;
   @ViewChild("table") table: DataTable;
   constructor(private changeDetectorRef : ChangeDetectorRef,
     private sigaServices : SigaServices,
     private router : Router,
     private confirmationService : ConfirmationService,
-    private translateService : TranslateService) { }
+    private translateService : TranslateService,
+    private datePipe : DatePipe,
+    private persistenceService : PersistenceService,
+    private commonsService : CommonsService) { }
 
   ngOnInit() {
 
@@ -72,9 +82,29 @@ export class FichaAsistenciaTarjetaRelacionesComponent implements OnInit {
           this.progressSpinner = false;
         }, () => {
           this.progressSpinner = false;
+          this.checkRelaciones();
         }
       );
 
+    }
+
+  }
+  checkRelaciones(){
+
+    if(this.relaciones){
+      if(this.relaciones.find(relacion => relacion.sjcs.charAt(0)=='E')){ //Si hay algun EJG asociado no permitimos que se asocien mas
+        this.disableEJG = true;
+      }else{
+        this.disableEJG = false;
+      }
+      if(this.relaciones.find(relacion => relacion.sjcs.charAt(0)=='D')){ //Si hay alguna Designa asociada no permitimos que se asocien mas
+        this.disableDesigna = true;
+      }else{
+        this.disableDesigna = false;
+      }
+    }else{
+      this.disableEJG = false;
+      this.disableDesigna = false;
     }
 
   }
@@ -93,7 +123,7 @@ export class FichaAsistenciaTarjetaRelacionesComponent implements OnInit {
       desItem.idTurno = relacion.idturno;
       desItem.codigo = relacion.codigo;
       desItem.descripcionTipoDesigna = relacion.destipo
-      desItem.fechaEntradaInicio = relacion.fechaAsunto;
+      desItem.fechaEntradaInicio = this.datePipe.transform(relacion.fechaasunto,'dd/MM/yyyy');
       desItem.nombreTurno = relacion.descturno;
       desItem.nombreProcedimiento = relacion.dilnigproc.split(' / ')[2];
       desItem.nombreColegiado = relacion.letrado;
@@ -109,39 +139,81 @@ export class FichaAsistenciaTarjetaRelacionesComponent implements OnInit {
       this.router.navigate(['/fichaDesignaciones']);
 
     }else if('E' == tipoAsunto){ //Si empieza por E es un EJG, redirigimos a la ficha
-      /*let ejgItem = new EJGItem();
+      let ejgItem = new EJGItem();
       ejgItem.annio = relacion.anio;
-      ejgItem.numero = relacion.numero;
-      ejgItem.idInstitucion = relacion.idinstitucion;
-      ejgItem.turnoDes = relacion.desturno;
+      ejgItem.numero = relacion.numero; //ID ejg junto al anio
       ejgItem.tipoEJG = relacion.idtipo;
-      ejgItem.idTurno = relacion.idturno;
-      ejgItem.numDesigna = relacion.iddesigna;
-      ejgItem.fechaApertura = relacion.fechaAsunto;
-      ejgItem.numAnnioProcedimiento = relacion.dilnigproc.split(' / ')[2];
-      ejgItem.numerodiligencia = relacion.dilnigproc.split(' / ')[0];
-      ejgItem.nig = relacion.dilnigproc.split(' / ')[1];
-      sessionStorage.setItem("EJGItemDesigna",JSON.stringify(ejgItem));
-
-      this.router.navigate(["/gestionEjg"]);*/
+      this.progressSpinner = true;
+    
+      this.sigaServices.post("gestionejg_datosEJG", ejgItem).subscribe(
+        n => {
+          let ejgObject : any []= JSON.parse(n.body).ejgItems;
+          let datosItem : EJGItem = ejgObject[0];
+          this.persistenceService.setDatos(datosItem);
+          this.consultaUnidadFamiliar(ejgItem);
+          this.commonsService.scrollTop();
+          this.progressSpinner = false;
+        },
+        err => {
+          console.error(err);
+          this.showMsg('error', 'Error al consultar el EJG','');
+          this.progressSpinner = false;
+        },
+        ()=>{
+          this.progressSpinner = false;
+        }
+      );
+      
     }
 
   }
 
+  consultaUnidadFamiliar(selected) {
+    this.progressSpinner = true;
+
+    this.sigaServices.post("gestionejg_unidadFamiliarEJG", selected).subscribe(
+      n => {
+        let datosFamiliares : any[] = JSON.parse(n.body).unidadFamiliarEJGItems;
+        this.persistenceService.setBodyAux(datosFamiliares);
+
+        if(sessionStorage.getItem("EJGItem")){
+          sessionStorage.removeItem("EJGItem");
+        }
+
+        sessionStorage.setItem("idAsistencia", this.asistencia.anioNumero);
+        this.router.navigate(['/gestionEjg']);
+        this.progressSpinner = false;
+        this.commonsService.scrollTop();
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      },
+      () =>{
+        this.progressSpinner = false;
+      }
+    );
+  }
+
   asociarDesignacion(){
     sessionStorage.setItem("radioTajertaValue", 'des');
-    sessionStorage.setItem("idAsistencia",this.asistencia.anioNumero);
+    sessionStorage.setItem("Asistencia", JSON.stringify(this.asistencia));
+    sessionStorage.setItem("idAsistencia", this.asistencia.anioNumero);
     this.router.navigate(["/busquedaAsuntos"]);
   }
 
   asociarEJG(){
     sessionStorage.setItem("radioTajertaValue", 'ejg');
-    sessionStorage.setItem("idAsistencia",this.asistencia.anioNumero);
+    sessionStorage.setItem("Asistencia", JSON.stringify(this.asistencia));
+    sessionStorage.setItem("idAsistencia", this.asistencia.anioNumero);
     this.router.navigate(["/busquedaAsuntos"]);
   }
 
   crearEJG(){
-    //???
+    sessionStorage.setItem("asistencia", JSON.stringify(this.asistencia));
+    sessionStorage.setItem("idAsistencia", this.asistencia.anioNumero);
+    sessionStorage.setItem("Nuevo","true");
+    this.router.navigate(["/gestionEjg"]);
   }
 
   crearDesignacion(){
@@ -154,7 +226,7 @@ export class FichaAsistenciaTarjetaRelacionesComponent implements OnInit {
   eliminarRelacion(){
     this.confirmationService.confirm({
       key: "confirmEliminar",
-      message: "¿Desea eliminar la relacion?",
+      message: this.translateService.instant("messages.deleteConfirmation"),
       icon: "fa fa-question-circle",
       accept: () => {this.executeEliminarRelacion();},
       reject: () =>{this.showMsg('info',"Cancel",this.translateService.instant("general.message.accion.cancelada"));}

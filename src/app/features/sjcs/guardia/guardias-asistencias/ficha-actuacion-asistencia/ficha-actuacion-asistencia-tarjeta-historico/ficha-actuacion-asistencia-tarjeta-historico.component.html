@@ -1,0 +1,32 @@
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+
+ <p-dataTable #table [value]="historicoItems" emptyMessage="{{ 'general.message.no.registros' | translate}}" [responsive] = "true" [loading]="loading" loadingIcon="fa-spinner"
+  class="tabla-listado" [sortOrder]="1" [(selection)]="selectedDatos" [rows]="rows" selectionMode="single">
+    <p-column field="fecha" header="{{'dato.jgr.guardia.saltcomp.fecha' | translate}}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}">
+      <ng-template let-col let-dato="rowData" let-ri="rowIndex" pTemplate="body">
+        <td class="text-center">
+          <div>
+            <span>{{dato[col.field] | date : 'dd/MM/yyyy'}}</span>
+          </div>
+        </td>
+      </ng-template>
+    </p-column>
+    <p-column field="accion" header="{{'justiciaGratuita.oficio.inscripciones.accion' | translate}}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}">
+    </p-column>
+    <p-column field="usuario" header="{{'general.boton.usuario' | translate}}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}">
+    </p-column>
+    <p-column field="observaciones" header="{{'censo.nuevaSolicitud.observaciones' | translate}}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}">
+    </p-column>
+    <ng-template pTemplate="paginatorLeft">
+      <div class="mostrar d-flex text-right justify-content-end">
+          <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{table.first
+              + 1}} al {{table.first + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+              | translate }} {{table.totalRecords}} {{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}} : {{numSeleccionado}}</label>
+          <label>{{ 'general.message.mostrar' | translate}}</label>
+          <p-dropdown [(ngModel)]="rows" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+          <label class="pl-1">{{'cargaMasivaDatosCurriculares.numRegistros.literal' | translate}}</label>
+      </div>
+    </ng-template>
+  </p-dataTable>

@@ -1,13 +1,13 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 
 
-<app-tabla-resultado-desplegable [seleccionarTodo]="seleccionarTodo" [ngClass]="{'customCursor': selectMultiple}"
+<app-tabla-resultado-desplegable [filtroAsistencia]="filtro" [seleccionarTodo]="seleccionarTodo" [ngClass]="{'customCursor': selectMultiple}"
     [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups"
     (anySelected)="notifyAnySelected($event)" [pantalla]="pantalla">
 </app-tabla-resultado-desplegable>
 
 
-<div class="card-footer ajustar">
+<div class="card-footer ajustar marginButtons">
     <div class="row inline">
         <div class="center col-lg-4 col-md-4">
             <div class="form-inline">
@@ -17,9 +17,9 @@
                  ></app-fecha>
             </div>
         </div>
-        <div class="right col main-button marginButtons">
-            <button [disabled]="isDisabled" pButton type="button"  icon="fa fa-eraser"  iconPos="left" label="{{'general.boton.crearEJG' | translate}}"
-                (click)="showMsg('success', 'Se ha creado correctamente', '')"></button>
+        <div class="right col main-button ">
+            <button [disabled]="isDisabled || disableCrearEJG" pButton type="button"  icon="fa fa-eraser"  iconPos="left" label="{{'general.boton.crearEJG' | translate}}"
+                (click)="crearEJG();"></button>
             <button [disabled]="isDisabled" type="submit" pButton icon="fa fa-plus" iconPos="left"
                 label="{{'justiciaGratuita.guardia.asistenciasexpress.nuevaactuacion' | translate}}" (click)="nuevaActuacion()"></button>
             <button type="submit" pButton icon="fa fa-plus" iconPos="left" (click)="nuevaAsistencia()" [disabled]="isDisabled"

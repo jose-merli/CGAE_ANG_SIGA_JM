@@ -9,6 +9,9 @@ import { MultiSelect } from 'primeng/multiselect';
 import { noComponentFactoryError } from '@angular/core/src/linker/component_factory_resolver';
 import { Message } from 'primeng/components/common/api';
 import { procesos_ejg } from '../../../../../permisos/procesos_ejg';
+import { TarjetaAsistenciaItem } from '../../../../../models/guardia/TarjetaAsistenciaItem';
+import moment = require('moment');
+import { Location } from '@angular/common';
 
 
 @Component({
@@ -47,6 +50,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
   comboTipoExpediente = [];
   tipoExpedienteDes: string;
   showTipoExp: boolean = false;
+  datosAsistencia : TarjetaAsistenciaItem;
 
   institucionActual;
 
@@ -74,7 +78,8 @@ export class DatosGeneralesEjgComponent implements OnInit {
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
     private commonsServices: CommonsService,
     private translateService: TranslateService,
-    private router: Router) { }
+    private router: Router,
+    private location : Location) { }
 
   ngOnInit() {
     this.resaltadoDatos = true;
@@ -103,6 +108,17 @@ export class DatosGeneralesEjgComponent implements OnInit {
         this.showTipoExp = true;
 
       this.getPrestacionesRechazadasEJG();
+    }else if(sessionStorage.getItem("asistencia")){ //Si hemos pulsado Crear EJG en la ficha de Asistencias en la tarjeta Relaciones o le hemos dado a Crear EJG en la pantalla de asistencias expres
+
+      this.datosAsistencia = JSON.parse(sessionStorage.getItem("asistencia"));
+      this.disabledNumEJG = true;
+      this.nuevo = true;
+      this.modoEdicion = false;
+      this.body = new EJGItem();
+      this.bodyInicial = new EJGItem();
+      this.showTipoExp = false;
+      this.body.fechaApertura = moment(this.datosAsistencia.fechaAsistencia.substr(0,10), 'DD/MM/YYYY').toDate();
+
     } else {
       this.disabledNumEJG = true;
       this.nuevo = true;
@@ -364,6 +380,38 @@ export class DatosGeneralesEjgComponent implements OnInit {
             this.body.numEjg = datosItem.numEjg;
             this.body.numero = datosItem.numero;
             this.guardadoSend.emit(true);
+
+            if(this.datosAsistencia){ //Si procedemos de una asistencia asociamos el EJG recien creado con ella y copiamos sus datos
+
+              let ejgItem : EJGItem = new EJGItem();
+              ejgItem.annio = String(this.body.annio);
+              ejgItem.numero = String(this.body.numero);
+              ejgItem.tipoEJG = String(this.body.tipoEJG);
+
+              this.sigaServices.postPaginado("busquedaGuardias_asociarEjg","?anioNumero="+this.datosAsistencia.anioNumero+"&copiarDatos=S", ejgItem).subscribe(
+                n => {
+        
+                  let error = JSON.parse(n.body).error;
+                  this.progressSpinner = false;
+        
+                  if (error != null && error.description != null) {
+                    this.showMessage("error", "Error al asociar el EJG con la Asistencia", error.description);
+                  } else {
+                    this.showMessage('success', this.translateService.instant("general.message.accion.realizada"), 'Se ha asociado el EJG con la Asistencia correctamente');
+                  }
+                },
+                err => {
+                  console.log(err);
+                  this.progressSpinner = false;
+                }, () => {
+                  this.progressSpinner = false;
+                  sessionStorage.removeItem("asistencia");
+                  sessionStorage.setItem("volver","true");
+                  this.location.back();
+                }
+              );
+
+            }
           }else {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
           }

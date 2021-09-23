@@ -13,6 +13,7 @@ export class FichaAsistenciaTarjetaObservacionesComponent implements OnInit {
 
   msgs : Message [] = [];
   @Input() idAsistencia : string;
+  @Input() editable : boolean;
   tarjetaObservacionesItem : TarjetaObservacionesItem = new TarjetaObservacionesItem();
   tarjetaObservacionesItemAux : TarjetaObservacionesItem = new TarjetaObservacionesItem();
   progressSpinner : boolean = false;

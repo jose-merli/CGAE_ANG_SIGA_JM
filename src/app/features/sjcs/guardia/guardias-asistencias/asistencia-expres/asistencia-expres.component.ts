@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { Message } from 'primeng/components/common/api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BuscadorAsistenciaExpresComponent } from './buscador-asistencia-expres/buscador-asistencia-expres.component';
@@ -15,13 +15,15 @@ import { TranslateService } from '../../../../../commons/translate';
 import moment = require('moment');
 import { procesos_guardia } from '../../../../../permisos/procesos_guarida';
 import { SigaStorageService } from '../../../../../siga-storage.service';
+import { FiltroAsistenciaItem } from '../../../../../models/guardia/FiltroAsistenciaItem';
+import { KEY_CODE } from '../../../../administracion/parametros/parametros-generales/parametros-generales.component';
 
 @Component({
   selector: 'app-asistencia-expres',
   templateUrl: './asistencia-expres.component.html',
   styleUrls: ['./asistencia-expres.component.scss']
 })
-export class AsistenciaExpresComponent implements OnInit {
+export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
   msgs: Message[] = [];
   show = false;
   cFormValidity = true;
@@ -94,6 +96,27 @@ export class AsistenciaExpresComponent implements OnInit {
     this.rutas = ['SJCS', this.translateService.instant("menu.justiciaGratuita.GuardiaMenu"), this.translateService.instant("menu.justiciaGratuita.asistencia")];
 
   }
+
+  ngAfterViewInit(): void {
+    if(sessionStorage.getItem("filtroAsistencia") && sessionStorage.getItem("volver")){
+      let oldFiltro : FiltroAsistenciaItem = JSON.parse(sessionStorage.getItem("filtroAsistencia"));
+      this.filtros.filtro.diaGuardia = oldFiltro.diaGuardia;
+      this.filtros.getTurnosByColegiadoFecha();
+      this.filtros.filtro.idTurno = oldFiltro.idTurno;
+      this.filtros.onChangeTurno();
+      this.filtros.filtro.idGuardia = oldFiltro.idGuardia;
+      this.filtros.onChangeGuardia();
+      this.filtros.filtro.idLetradoGuardia = oldFiltro.idLetradoGuardia;
+      this.filtros.onChangeLetradoGuardia();
+      this.filtros.filtro.idPersona = oldFiltro.idPersona;
+      this.filtros.filtro.idTipoAsistenciaColegiado = oldFiltro.idTipoAsistenciaColegiado;
+      this.filtros.filtro.isSustituto = oldFiltro.isSustituto;
+      sessionStorage.removeItem("filtroAsistencia");
+      sessionStorage.removeItem("volver");
+      this.getComboComisarias(); // Posteriormente hace la busqueda de asistencias
+    }
+  }
+  
   showResponse() {
     this.show = true;
   }
@@ -119,6 +142,13 @@ export class AsistenciaExpresComponent implements OnInit {
 
   isDisabled() {
     return this.modoBusqueda == 'a';
+  }
+
+  @HostListener("document:keypress", ["$event"])
+  onKeyPress(event: KeyboardEvent) {
+    if (event.keyCode === KEY_CODE.ENTER) {
+      this.checkSustitutoCheckBox();
+    }
   }
 
   checkSustitutoCheckBox(){
@@ -195,7 +225,7 @@ export class AsistenciaExpresComponent implements OnInit {
       );
   }
 
-  fromJsonToRowGroups(asistencias){
+  fromJsonToRowGroups(asistencias : TarjetaAsistenciaItem[]){
 
     let nombreApellidosType, fechaActuacionType, lugarType, nDiligenciaType;
     let nombreApellidosValue, delitosObservacionesValue, ejgValue, fechaActuacionValue, lugarValue, nDiligenciaValue;
@@ -259,22 +289,23 @@ export class AsistenciaExpresComponent implements OnInit {
         if(indiceAct != 0){
           arrayDatosActuacion =
           [
-            {type: 'invisible', value: '', combo: this.comboSexo},
-            {type: 'invisible', value: '', combo: this.comboDelitos},
-            {type: 'invisible', value: ''},
-            {type: fechaActuacionType, value: fechaActuacionValue, showTime: true},
-            {type: lugarType, value: lugarValue},
-            {type: nDiligenciaType, value: nDiligenciaValue}
+            {type: 'invisible', value: '', combo: this.comboSexo, size: 445.5},
+            {type: 'invisible', value: '', combo: this.comboDelitos, size: 225.75},
+            {type: 'invisible', value: '', size: 225.75},
+            {type: fechaActuacionType, value: fechaActuacionValue, showTime: true, size: 225.75},
+            {type: lugarType, value: lugarValue, size: 225.75},
+            {type: nDiligenciaType, value: nDiligenciaValue, size: 225.75}
           ]
         }else{
           arrayDatosActuacion =
           [
             {type: nombreApellidosType, value: nombreApellidosValue, combo: this.comboSexo, size: 445.5},
             {type: '2SelectorInput', value: delitosObservacionesValue, combo: this.comboDelitos, size: 225.75},
-            {type: 'text', value: ejgValue, size: 225.75},
+            {type: 'link', value: ejgValue, size: 225.75},
             {type: fechaActuacionType, value: fechaActuacionValue, showTime: true, size: 225.75},
             {type: lugarType, value: lugarValue, size: 225.75},
-            {type: nDiligenciaType, value: nDiligenciaValue, size: 225.75}
+            {type: nDiligenciaType, value: nDiligenciaValue, size: 225.75},
+            {type: 'invisible', value: asistencia.idTipoEjg}
           ]
         }
 
@@ -466,7 +497,7 @@ export class AsistenciaExpresComponent implements OnInit {
             this.progressSpinner = false;
             valid = false;
           }else if(valid && actuacion.fechaJustificacion){
-            let fechaActuacionDate : Date = moment(actuacion.fechaActuacion,'DD/MM/YYYY HH:mm').toDate();
+            let fechaActuacionDate : Date = moment([Number(actuacion.fechaActuacion.split('/')[2].split(' ')[0]), Number(actuacion.fechaActuacion.split('/')[1])-1,Number(actuacion.fechaActuacion.split('/')[0])]).toDate();
             let fechaJustificacionDate : Date = moment(actuacion.fechaJustificacion,'DD/MM/YYYY').toDate();
             //La fecha justificacion no puede ser anterior a la fecha actuacion
             if(fechaJustificacionDate < fechaActuacionDate){

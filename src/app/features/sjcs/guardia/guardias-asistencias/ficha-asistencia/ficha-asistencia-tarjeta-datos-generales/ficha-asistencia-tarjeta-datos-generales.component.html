@@ -27,7 +27,7 @@
         (valueChangeInput)="fillFechaEstado($event)"></app-fecha>
       </div>
       <div class="form-group-interlineado col-lg-3 col-md-3">
-        <label>Fecha Cierre</label>
+        <label>{{'justiciaGratuita.guardia.fichaasistencia.fechacierre' | translate}}</label>
         <app-fecha [(value)]="asistencia.fechaCierre" (valueChangeSelected)="fillFechaCierre($event)"
         (valueChangeInput)="fillFechaCierre($event)" [disabled]="ineditable"></app-fecha>
       </div>

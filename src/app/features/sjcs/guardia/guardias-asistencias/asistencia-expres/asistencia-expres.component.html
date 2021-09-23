@@ -6,9 +6,14 @@
             <p-radioButton *ngFor="let radio of radios" [(ngModel)]='modoBusqueda' (click)="hideResponse()" class="mr-4"
                 name="modo" [value]="radio.value" [label]="radio.label"></p-radioButton>
         </div>
-        <app-buscador-asistencia-expres [modoBusqueda]="modoBusqueda"></app-buscador-asistencia-expres>
+        <div *ngIf="modoBusqueda == 'b'">
+            <app-buscador-asistencia-expres [modoBusqueda]="modoBusqueda"></app-buscador-asistencia-expres>
+        </div>
+        <div *ngIf="modoBusqueda == 'a'">
+            <app-buscador-asistencias [modoBusqueda]="modoBusqueda"></app-buscador-asistencias>
+        </div>
     </div>
-    <div class="card-footer">
+    <div *ngIf="modoBusqueda == 'b'" class="card-footer">
         <div class="text-right main-button">
             <button pButton type="button"  icon="fa fa-eraser"  iconPos="left"
                 label="{{ 'general.boton.clear' | translate}}" (click)="hideResponse();clearForm();"
@@ -19,14 +24,32 @@
                 [disabled]="isDisabled()"></button>
         </div>
     </div>
+    <div *ngIf="modoBusqueda == 'a'" class="card-footer">
+        <div class="text-right main-button">
+            <button pButton type="button"  icon="fa fa-eraser"  iconPos="left"
+                label="{{ 'general.boton.clear' | translate}}"></button>
+            <button type="submit" pButton icon="fa fa-search" iconPos="left"
+                label="{{'general.boton.search' | translate}}"></button>
+                <!--icon="fa fa-plus"-->
+            <button type="button" pButton icon="fa fa-plus" iconPos="left"
+                label="{{'general.boton.new' | translate}}"></button>
+        </div>
+    </div>
 </div>
-
-<div *ngIf="show">
+<div *ngIf="show && modoBusqueda=='b'">
     <div class="card mt-3">
         <div class="card-body p-0">
-            <app-resultado-asistencia-expres [rowGroups] = "rowGroups" [rowGroupsAux] = "rowGroupsAux"  [initialRowGroups] = "initialRowGroups" (refreshInitialRowGroup) = "refreshInitialRowGroup($event)"
+            <app-resultado-asistencia-expres [filtro]="filtros.filtro" [rowGroups] = "rowGroups" [rowGroupsAux] = "rowGroupsAux"  [initialRowGroups] = "initialRowGroups" (refreshInitialRowGroup) = "refreshInitialRowGroup($event)"
             [comboJuzgadosAE]="comboJuzgados" [comboComisarias]="comboComisarias" [comboDelitos]="comboDelitos" [comboSexo] = "comboSexo"
             (saveTableData)="saveTableData($event)"></app-resultado-asistencia-expres>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="show && modoBusqueda=='a'">
+    <div class="card mt-3">
+        <div class="card-body p-0">
+            <!--Componente con la p-table para resultado de asistencias, por hacer-->
         </div>
     </div>
 </div>

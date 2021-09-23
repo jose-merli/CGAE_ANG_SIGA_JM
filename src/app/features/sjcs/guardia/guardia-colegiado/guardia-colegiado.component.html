@@ -1,0 +1,10 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div class="busqueda-container">
+    <app-filtros-guardia-colegiado [permisoEscritura]="permisoEscritura" (isOpen)="isOpenReceive($event)"></app-filtros-guardia-colegiado>
+    <app-tabla-guardia-colegiado *ngIf="buscar" [permisoEscritura]="permisoEscritura"  [datos]="datos" (isOpen)="isOpenReceive($event)"></app-tabla-guardia-colegiado>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
+    <div class="loader"></div>
+</div>

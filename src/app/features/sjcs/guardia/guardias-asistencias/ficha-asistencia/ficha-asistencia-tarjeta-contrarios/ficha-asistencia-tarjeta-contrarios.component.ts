@@ -19,6 +19,7 @@ export class FichaAsistenciaTarjetaContrariosComponent implements OnInit {
 
   msgs : Message [] = [];
   @Input() idAsistencia : string;
+  @Input() editable : boolean;
   @Output() refreshTarjetas = new EventEmitter<string>();
   selectedDatos : ContrarioItem [] = [];
   rows : number = 10;

@@ -8,12 +8,12 @@
       <div class="form-group col-lg-6 col-md-6 w-100">
         <label>{{'gratuita.mantenimientoLG.literal.observaciones' | translate }}</label>
         <textarea [rows]="5" [cols]="30" pInputTextarea autoResize="false"
-          [(ngModel)]="tarjetaObservacionesItem.observaciones"></textarea>
+          [(ngModel)]="tarjetaObservacionesItem.observaciones" [disabled]="!editable"></textarea>
       </div>
       <div class="form-group col-lg-6 col-md-6 w-100">
-        <label>Incidencias</label>
-        <textarea [rows]="5" [cols]="30" pInputTextarea autoResize="false"
-          [(ngModel)]="tarjetaObservacionesItem.incidencias"></textarea>
+        <label>{{'justiciaGratuita.remesas.tabla.Incidencias' | translate}}</label>
+        <textarea [rows]="5" [cols]="30" pInputTextarea autoResize="false" 
+          [(ngModel)]="tarjetaObservacionesItem.incidencias" [disabled]="!editable"></textarea>
       </div>
     </div>
   </div>
@@ -23,8 +23,8 @@
 <div class="card-footer">
   <div class="text-right main-button">
     <button pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.boton.restablecer' | translate}}"
-      (click)="restablecer();" [disabled] = "idAsistencia == null || idAsistencia ==''"></button>
+      (click)="restablecer();" [disabled] = "idAsistencia == null || idAsistencia =='' || !editable"></button>
     <button pButton type="button" icon="far fa-save" iconPos="left" label="{{'general.boton.guardar' | translate}}"
-      (click)="saveTarjetaObservaciones();" [disabled] = "idAsistencia == null || idAsistencia ==''"></button>
+      (click)="saveTarjetaObservaciones();" [disabled] = "idAsistencia == null || idAsistencia =='' || !editable"></button>
   </div>
 </div>

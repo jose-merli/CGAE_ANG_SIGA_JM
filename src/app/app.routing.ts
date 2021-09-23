@@ -238,6 +238,7 @@ import { BuscadorGuardiaIncompatibilidadesComponent } from "./features/sjcs/guar
 import { AsistenciaExpresComponent } from "./features/sjcs/guardia/guardias-asistencias/asistencia-expres/asistencia-expres.component";
 import { FichaAsistenciaComponent } from "./features/sjcs/guardia/guardias-asistencias/ficha-asistencia/ficha-asistencia.component";
 import { BusquedaAsuntosComponent } from "./commons/busqueda-asuntos/busqueda-asuntos.component";
+import { FichaActuacionAsistenciaComponent } from "./features/sjcs/guardia/guardias-asistencias/ficha-actuacion-asistencia/ficha-actuacion-asistencia.component";
 
 const appRoutes: Routes = [
 	{ path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
@@ -829,6 +830,11 @@ const appRoutes: Routes = [
 	{
 		path: 'fichaAsistencia',
 		component: FichaAsistenciaComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'fichaActuacionAsistencia',
+		component: FichaActuacionAsistenciaComponent,
 		canActivate: [AuthGuard]
 	},
 	{

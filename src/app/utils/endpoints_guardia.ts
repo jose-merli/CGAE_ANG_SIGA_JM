@@ -97,12 +97,47 @@ export let endpoints_guardia: any = {
     busquedaGuardias_guardarTarjetaObservaciones: "asistencia/guardarTarjetaObservaciones",
     busquedaGuardias_searchRelaciones: "asistencia/searchRelaciones",
     busquedaGuardias_asociarDesigna: "asistencia/asociarDesigna",
+    busquedaGuardias_asociarEjg: "asistencia/asociarEjg",
     busquedaGuardias_eliminarRelacion: "asistencia/eliminarRelacion",
+    busquedaGuardias_searchDocumentacion: "asistencia/searchDocumentacion",
+    busquedaGuardias_subirDocumentoAsistencia: "asistencia/subirDocumentoAsistencia",
+    busquedaGuardias_eliminarDocumentoAsistencia: "asistencia/eliminarDocumentoAsistencia",
+    busquedaGuardias_descargarDocumentosAsistencia: "asistencia/descargarDocumentoAsistencia",
+    busquedaGuardias_searchCaracteristicas: "asistencia/searchCaracteristicas",
+    busquedaGuardias_saveCaracteristicas: "asistencia/saveCaracteristicas",
+    busquedaGuardias_searchActuaciones: "asistencia/searchActuaciones",
+    busquedaGuardias_updateEstadoActuacion: "asistencia/updateEstadoActuacion",
+    busquedaGuardias_eliminarActuaciones: "asistencia/eliminarActuaciones",
+
+    //Actuaciones asistencias
+    actuaciones_searchTarjetaActuacion: "actuacionAsistencia/searchTarjetaActuacion",
+    actuaciones_searchTarjetaDatosGenerales: "actuacionAsistencia/searchTarjetaDatosGenerales",
+    actuaciones_saveTarjetaDatosGenerales: "actuacionAsistencia/saveDatosGenerales",
+    actuaciones_searchTarjetaJustificacion: "actuacionAsistencia/searchTarjetaJustificacion",
+    actuaciones_saveTarjetaJustificacion: "actuacionAsistencia/saveTarjetaJustificacion",
+    actuaciones_updateEstadoActuacion: "actuacionAsistencia/updateEstadoActuacion",
+    actuaciones_searchHistorico: "actuacionAsistencia/searchHistorico",
 
     //Preasistencias
     busquedaPreasistencias_buscarPreasistencias: "preasistencia/buscarPreAsistencias",
     busquedaPreasistencias_denegarPreasistencias: "preasistencia/denegarPreAsistencias",
     busquedaPreasistencias_activarPreasistenciasDenegadas: "preasistencia/activarPreAsistenciasDenegadas",
+
     //Inscripciones
     guardiasInscripciones_buscarInscripciones : "guardia/busquedainscripciones",
+    guardiasInscripciones_validarInscripciones : "guardias/inscripciones/validarInscripciones",
+    guardiasInscripciones_denegarInscripciones : "guardias/inscripciones/denegarInscripciones",
+    guardiasInscripciones_solicitarBajaInscripciones: "guardias/inscripciones/solicitarBajaInscripcion",
+    guardiasInscripciones_cambiarFechaInscripciones: "guardias/inscripciones/cambiarFechaInscripcion",
+    guardiasInscripciones_buscarsaltoscompensaciones: "guardias/inscripciones/buscarSaltosCompensaciones",
+    guardiasInscripciones_eliminarsaltoscompensaciones: "guardias/inscripciones/eliminarSaltosCompensaciones",
+    guardiasInscripciones_buscarTrabajosSJCS: "guardias/inscripciones/buscarTrabajosSJCS",
+    guardiasInscripciones_buscarGuardiasAsocTurnos: "guardias/inscripciones/buscarGuardiasAsocTurnos",
+
+    //guardias colegiado
+   guardiasColegiado_buscarGuardiasColegiado: "guardia/busquedaGuardia/busquedaGuardiasColegiado",
+   guardiasColegiado_validarSolicitudGuardia: "guardia/validarSolicitudGuardia",
+   guardiasColegiado_desvalidarGuardiaColegiado: "guardia/desvalidarGuardiaColegiado",
+   guardiasColegiado_eliminarGuardiaColegiado:"guardia/eliminarGuardiaColegiado"
+
 }

@@ -52,6 +52,14 @@ export class GuardiaItem {
     idGrupoUltimo;
     idGrupoGuardia;
     volver;
+    numColegiado;
+    fechadesde;
+    fechahasta;
+    fechaBaja;
+    validada;
+    ordenGrupo;
+    idPersona;
+    fechaValidacion;
 
 
     constructor() { }

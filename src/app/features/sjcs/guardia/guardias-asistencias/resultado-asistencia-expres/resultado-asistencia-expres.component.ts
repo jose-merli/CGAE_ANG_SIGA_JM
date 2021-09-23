@@ -5,6 +5,8 @@ import { Message } from 'primeng/components/common/api';
 import { Cell, Row, RowGroup } from '../../../../../commons/tabla-resultado-desplegable/tabla-resultado-desplegable-ae.service';
 import { TablaResultadoDesplegableComponent } from '../../../../../commons/tabla-resultado-desplegable/tabla-resultado-desplegable.component';
 import { TranslateService } from '../../../../../commons/translate';
+import { FiltroAsistenciaItem } from '../../../../../models/guardia/FiltroAsistenciaItem';
+import { TarjetaAsistenciaItem } from '../../../../../models/guardia/TarjetaAsistenciaItem';
 import { procesos_guardia } from '../../../../../permisos/procesos_guarida';
 import { SigaStorageService } from '../../../../../siga-storage.service';
 import { CommonsService } from '../../../../../_services/commons.service';
@@ -24,6 +26,7 @@ export class ResultadoAsistenciaExpresComponent implements OnInit {
   @Input() comboDelitos = [];
   @Input() comboJuzgadosAE = [];
   @Input() comboSexo = [];
+  @Input() filtro : FiltroAsistenciaItem;
   @Output() saveTableData = new EventEmitter<RowGroup[]>();
   @Output() search = new EventEmitter<boolean>();
   @Output() refreshInitialRowGroup = new EventEmitter<boolean>();
@@ -41,7 +44,8 @@ export class ResultadoAsistenciaExpresComponent implements OnInit {
   seleccionarTodo = false;
   resultModified;
   permisoEscrituraAE : boolean = false;
-  @ViewChild(TablaResultadoDesplegableComponent) tabla;
+  disableCrearEJG : boolean = false;
+  @ViewChild(TablaResultadoDesplegableComponent) tabla : TablaResultadoDesplegableComponent;
   constructor(private sigaStorageService: SigaStorageService,
     private datepipe: DatePipe,
     private commonServices : CommonsService,
@@ -76,31 +80,38 @@ export class ResultadoAsistenciaExpresComponent implements OnInit {
     this.cabeceras = [
       {
         id: "asistencia",
-        name: this.translateService.instant("formacion.busquedaInscripcion.asistencia")
+        name: this.translateService.instant("formacion.busquedaInscripcion.asistencia"),
+        size: 225.75
       },
       {
         id: "idApNombreSexo",
-        name: this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.cabeceraasistido")
+        name: this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.cabeceraasistido"),
+        size: 445.5
       },
       {
         id: "delitosYobservaciones",
-        name: this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.cabeceradelitosobservaciones")
+        name: this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.cabeceradelitosobservaciones"),
+        size: 225.75
       },
       {
         id: "ejg",
-        name: "EJG"
+        name: "EJG",
+        size: 225.75
       },
       {
         id: "actuacion",
-        name: this.translateService.instant("justiciaGratuita.oficio.designas.actuaciones.fechaActuacion")
+        name: this.translateService.instant("justiciaGratuita.oficio.designas.actuaciones.fechaActuacion"),
+        size: 225.75
       },
       {
         id: "lugar",
-        name: this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.cabeceralugar")
+        name: this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.cabeceralugar"),
+        size: 225.75
       },
       {
         id: "diligencia",
-        name: this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.cabeceradiligencia")
+        name: this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.cabeceradiligencia"),
+        size: 225.75
       }
     ];
   }
@@ -112,9 +123,19 @@ export class ResultadoAsistenciaExpresComponent implements OnInit {
   notifyAnySelected(event) {
     if ((this.seleccionarTodo || event) && this.permisoEscrituraAE) {
       this.isDisabled = false;
+      let rowInfoAsistencia : RowGroup = this.rowGroups.find(rowGroup => rowGroup.id == this.tabla.selectedArray[0])
+      if((rowInfoAsistencia && rowInfoAsistencia.rows &&
+        rowInfoAsistencia.rows[0].cells[2].value) || !rowInfoAsistencia){
+        this.disableCrearEJG = true;
+      }else{
+        this.disableCrearEJG = false;
+      }
     } else {
       this.isDisabled = true;
+      this.disableCrearEJG = true;
     }
+
+    
   }
 
   showMsg(severity, summary, detail) {
@@ -156,7 +177,7 @@ export class ResultadoAsistenciaExpresComponent implements OnInit {
     cellDelitosObservaciones.type = '2SelectorInput';
     cellDelitosObservaciones.value = ['',''];
     cellDelitosObservaciones.combo = this.comboDelitos;
-    cellAsistido.size = 225.75;
+    cellDelitosObservaciones.size = 225.75;
 
     cellEJG.type = 'text';
     cellEJG.value = '';
@@ -272,6 +293,19 @@ export class ResultadoAsistenciaExpresComponent implements OnInit {
     }
 
   }
+  crearEJG(){
+    if(this.filtro){
+      let asistencia : TarjetaAsistenciaItem = new TarjetaAsistenciaItem();
+      let idAsistencia : string = this.rowGroups.find(rowGroup => rowGroup.id == this.tabla.selectedArray[0]).id;
+      idAsistencia = idAsistencia.substring(1);
+      asistencia.anioNumero = idAsistencia;
+      asistencia.fechaAsistencia = this.filtro.diaGuardia + ' 00:00';
+      sessionStorage.setItem("asistencia", JSON.stringify(asistencia));
+      sessionStorage.setItem("filtroAsistencia", JSON.stringify(this.filtro));
+      sessionStorage.setItem("Nuevo","true");
+      this.router.navigate(["/gestionEjg"]);
+    }
+  }
   guardar(){
 
     let rowGroupsToUpdate : RowGroup[] = [];
@@ -294,8 +328,11 @@ export class ResultadoAsistenciaExpresComponent implements OnInit {
   }
 
   fillFecha(event) {
-
-    this.fechaJustificacion = this.datepipe.transform(new Date(event), 'dd/MM/yyyy');
+    if(event){
+      this.fechaJustificacion = this.datepipe.transform(new Date(event), 'dd/MM/yyyy');
+    }else{
+      this.fechaJustificacion = '';
+    }
     
   }
 

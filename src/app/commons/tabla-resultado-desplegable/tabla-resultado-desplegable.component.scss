@@ -576,17 +576,23 @@ color: green;
   cursor: pointer !important;
 }
 
-.hoverToClick :hover {
-  background-color: rgb(141, 175, 220) !important;
-  border: 1px solid #004375;
-  cursor: pointer;
+div.hoverToClick:hover  span{
+    background-color: rgb(141, 175, 220) !important;
+    border: 1px solid #004375;
+    cursor: pointer;
 }
 .mw80{
   max-width: 200px;
 }
+.mw81{
+  max-width: 235.75px;
+}
 
 .mw100{
   max-width: 400px;
+}
+.mw101{
+  max-width: 445.5px;
 }
 /* Tooltip text */
 .tooltip .tooltiptext {

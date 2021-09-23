@@ -21,6 +21,10 @@ import { PersistenceService } from '../../_services/persistence.service';
 import { FiltrosBusquedaAsuntosComponent } from "./filtros-busqueda-asuntos/filtros-busqueda-asuntos.component";
 import { TablaBusquedaAsuntosComponent } from "./tabla-busqueda-asuntos/tabla-busqueda-asuntos.component";
 import { ConfirmationService } from 'primeng/api';
+import { TarjetaAsistenciaItem } from "../../models/guardia/TarjetaAsistenciaItem";
+import { DesignaItem } from "../../models/sjcs/DesignaItem";
+import { AsuntosJusticiableItem } from "../../models/sjcs/AsuntosJusticiableItem";
+import { EJGItem } from "../../models/sjcs/EJGItem";
 
 export enum KEY_CODE {
   ENTER = 13
@@ -52,9 +56,10 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
   buscar: boolean = false;
   fromEJG: boolean = false;
   fromDES: boolean = false;
+  fromASI: boolean = false;
   datosAsociar;
   datosDesigna;
-
+  datosAsistencia : TarjetaAsistenciaItem;
   radioTarjeta;
 
   es: any = esCalendar;
@@ -99,16 +104,27 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
       this.fromDES = true;
       sessionStorage.removeItem('Designacion');
     }
+
+    if (sessionStorage.getItem('Asistencia')) {
+      this.datosAsistencia = JSON.parse(sessionStorage.getItem('Asistencia'));
+      this.fromASI = true;
+      sessionStorage.removeItem('Asistencia');
+    }
+
+
   }
 
   asociarElement(event) {
     if (!(event == null || event == undefined)) {
       this.datosAsociar = event;
 
-      if (this.fromEJG) 
+      if (this.fromEJG){
         this.confirmCopiarEJG(this.datosAsociar);
-      else if (this.fromDES) 
+      }else if (this.fromDES){
         this.confirmCopiarDES(this.datosAsociar);
+      }else if(this.fromASI){
+        this.confirmCopiarASI(this.datosAsociar);
+      }
     }
   }
 
@@ -156,6 +172,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
       }
     });
   }
+
 
   confirmCopiarEJG(data) {
     //Introducir etiqueta en la BBDD
@@ -473,6 +490,99 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
           break;
       }
     }
+  }
+
+  confirmCopiarASI(data) {
+    let mess = "¿Desea copiar los datos de la asistencia en el asunto seleccionado?";
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      key: "copy",
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.asociarASI(data, true);
+      },
+      reject: () => {
+        this.asociarASI(data, false);
+      }
+    });
+  }
+
+  asociarASI(data : AsuntosJusticiableItem, copiarDatos : boolean){
+
+    if(this.datosAsistencia){
+
+      let anioNumeroASI = this.datosAsistencia.anioNumero;
+      let copyData = copiarDatos ? 'S' : 'N';
+      let radioValue = sessionStorage.getItem("radioTajertaValue");
+      switch (radioValue) {
+      
+        case 'ejg':
+          let ejgItem : EJGItem = new EJGItem();
+          ejgItem.annio = String(data.anio);
+          ejgItem.numero = String(data.numero);
+          ejgItem.tipoEJG = String(data.idTipoEjg);
+
+          this.sigaServices.postPaginado("busquedaGuardias_asociarEjg","?anioNumero="+anioNumeroASI+"&copiarDatos="+copyData, ejgItem).subscribe(
+            n => {
+    
+              let error = JSON.parse(n.body).error;
+              this.progressSpinner = false;
+              sessionStorage.removeItem("radioTajertaValue");
+    
+              if (error != null && error.description != null) {
+                this.showMesg("error", "Error al asociar el EJG con la Asistencia", error.description);
+              } else {
+                this.showMesg('success', this.translateService.instant("general.message.accion.realizada"), 'Se ha asociado el EJG con la Asistencia correctamente');
+              }
+            },
+            err => {
+              console.log(err);
+              this.progressSpinner = false;
+            }, () => {
+              this.progressSpinner = false;
+              sessionStorage.removeItem("Asistencia");
+              this.location.back();
+            }
+          );
+
+          break;
+        case 'des':
+          let designaItem : DesignaItem = new DesignaItem();
+          designaItem.ano = Number(data.anio);
+          designaItem.codigo = data.numero;
+          designaItem.nombreTurno = data.turnoGuardia;
+          
+          this.sigaServices.postPaginado("busquedaGuardias_asociarDesigna","?anioNumero="+anioNumeroASI+"&copiarDatos="+copyData, designaItem).subscribe(
+            n => {
+    
+              let error = JSON.parse(n.body).error;
+              this.progressSpinner = false;
+              sessionStorage.removeItem("radioTajertaValue");
+    
+              if (error != null && error.description != null) {
+                this.showMesg("error", "Error al asociar la Designacion con la Asistencia", error.description);
+              } else {
+                this.showMesg('success', this.translateService.instant("general.message.accion.realizada"), 'Se ha asociado la Designacion con la Asistencia correctamente');
+              }
+            },
+            err => {
+              console.log(err);
+              this.progressSpinner = false;
+            }, () => {
+              this.progressSpinner = false;
+              sessionStorage.removeItem("Asistencia");
+              this.location.back();
+            }
+          );
+
+          break;
+      
+      }
+
+
+    }
+
   }
 
   search(event) {

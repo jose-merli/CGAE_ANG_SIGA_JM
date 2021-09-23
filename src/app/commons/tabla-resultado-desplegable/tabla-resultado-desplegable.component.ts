@@ -16,6 +16,8 @@ import { SigaServices } from '../../_services/siga.service';
 import { TranslateService } from '../translate';
 import { Cell, Row, RowGroup } from './tabla-resultado-desplegable-je.service';
 import { PersistenceService } from '../../_services/persistence.service';
+import { FiltroAsistenciaItem } from '../../models/guardia/FiltroAsistenciaItem';
+import { EJGItem } from '../../models/sjcs/EJGItem';
 @Component({
   selector: 'app-tabla-resultado-desplegable',
   templateUrl: './tabla-resultado-desplegable.component.html',
@@ -34,6 +36,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   @Input() isLetrado;
   @Input() permisosFichaAct;
   @Input() fechaFiltro;
+  @Input() filtroAsistencia : FiltroAsistenciaItem;
   turnoAllow;  //to do
   justActivarDesigLetrado;
   activarSubidaJustDesig;
@@ -72,6 +75,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   numperPage = 10;
   from = 0;
   to = 10;
+  fromRowGroup = 0;
+  toRowGroup = 9;
   totalRegistros = 0;
   disableDelete = true;
   idTurno = "";
@@ -105,6 +110,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
 
   ) {
 
+
     this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
       for (let i = 0; i < this.table.nativeElement.children.length; i++) {
 
@@ -122,6 +128,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       this.permisoEscritura = this.persistenceService.getPermisos();
     }
     if (this.pantalla == 'JE'){
+      this.fromRowGroup = 0;
+      this.toRowGroup = 9;
       this.rowIdsToUpdate = []; //limpiamos
       this.dataToUpdateArr = []; //limpiamos
       this.newActuacionesArr = []; //limpiamos
@@ -139,6 +147,9 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       if (this.comboModulos != undefined && this.comboModulos !== [] && this.comboAcreditacion !== undefined && this.comboAcreditacion !== []){
         this.searchNuevo(this.comboModulos, this.comboAcreditacion);
       }
+    }else if(this.pantalla == 'AE'){
+      this.fromRowGroup = 0;
+      this.toRowGroup = 6;
     }
     this.cabeceras.forEach(cab => {
       this.selectedHeader.push(cab);
@@ -322,7 +333,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }
   }
   searchChange(j: any) {
-    if (this.pantalla == 'JE') {
+    if (this.pantalla == 'JE' || this.pantalla == 'AE') {
       let isReturn = true;
       let sT;
       let isReturnArr = [];
@@ -428,6 +439,9 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         }else{
           this.rowIdsToUpdate = []; //limpiamos
         }
+      }else{
+        cell.value = event;
+        this.rowIdsToUpdate.push(rowId);
       }
     }else if(this.pantalla == 'JE'){
       //actuacion
@@ -1651,9 +1665,68 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     linkFichaAsistencia(id){
       let idAsistencia : string = id;
       if(this.pantalla == "AE"){
+        sessionStorage.setItem("filtroAsistencia", JSON.stringify(this.filtroAsistencia));
         sessionStorage.setItem("idAsistencia", idAsistencia.substr(1));
         this.router.navigate(['/fichaAsistencia']);
       }
+    }
+    linkToFichaEJG(rowGroup : RowGroup, idEJG : string){
+      if(this.pantalla == "AE" && idEJG){
+        idEJG = idEJG.substring(1);
+        sessionStorage.setItem("filtroAsistencia", JSON.stringify(this.filtroAsistencia));
+        let ejgItem = new EJGItem();
+        ejgItem.numAnnioProcedimiento = idEJG;
+        ejgItem.annio = idEJG.split("/")[0];
+        ejgItem.numero = idEJG.split("/")[1];
+        ejgItem.tipoEJG = rowGroup.rows[0].cells[6].value;
+        this.progressSpinner = true;
+    
+        this.sigaServices.post("gestionejg_datosEJG", ejgItem).subscribe(
+          n => {
+            let ejgObject : any []= JSON.parse(n.body).ejgItems;
+            let datosItem : EJGItem = ejgObject[0];
+            this.persistenceService.setDatos(datosItem);
+            this.consultaUnidadFamiliar(ejgItem);
+            this.commonsService.scrollTop();
+            this.progressSpinner = false;
+          },
+          err => {
+            console.error(err);
+            this.showMsg('error', 'Error al consultar el EJG','');
+            this.progressSpinner = false;
+          },
+          ()=>{
+            this.progressSpinner = false;
+          }
+        );
+
+      }
+    }
+
+    consultaUnidadFamiliar(selected) {
+      this.progressSpinner = true;
+  
+      this.sigaServices.post("gestionejg_unidadFamiliarEJG", selected).subscribe(
+        n => {
+          let datosFamiliares : any[] = JSON.parse(n.body).unidadFamiliarEJGItems;
+          this.persistenceService.setBodyAux(datosFamiliares);
+  
+          if(sessionStorage.getItem("EJGItem")){
+            sessionStorage.removeItem("EJGItem");
+          }
+  
+          this.router.navigate(['/gestionEjg']);
+          this.progressSpinner = false;
+          this.commonsService.scrollTop();
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () =>{
+          this.progressSpinner = false;
+        }
+      );
     }
 
     searchRelaciones(actuacion: Actuacion) {
