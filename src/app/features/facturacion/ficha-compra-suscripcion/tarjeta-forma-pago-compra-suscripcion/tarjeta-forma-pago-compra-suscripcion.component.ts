@@ -93,7 +93,7 @@ export class TarjetaFormaPagoCompraSuscripcionComponent implements OnInit {
 
   save(){
     //En el caso que se este modificando una ficha ya creada
-    if(this.ficha.idEstadoPeticion != null){
+    if(this.ficha.idEstadoPeticion != null && this.ficha.idEstadoPeticion != undefined){
       let peticion = this.ficha;
       peticion.idFormaPagoSeleccionada = this.selectedPago;
       //SI la forma de pago seleccionada es "Domicializacion bancaria"
