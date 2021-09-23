@@ -14,6 +14,8 @@ export class CalendariosDatosEntradaItem{
   idCalG: string;
   listaGuardias: string;
   idCalendarioProgramado: string;
+  facturado: boolean;
+  asistenciasAsociadas: boolean
   constructor(obj: Object) {
     
     this.idCalendarioProgramado = obj['idCalendarioProgramado'];
@@ -30,6 +32,8 @@ export class CalendariosDatosEntradaItem{
     this.numGuardias = obj['numGuardias'];
     this.idCalG = obj['idCalG'];
     this.listaGuardias = obj['listaGuardias'];
+    this.facturado = obj['facturado'];
+    this.asistenciasAsociadas = obj['asistenciasAsociadas'];
   }
 }
 

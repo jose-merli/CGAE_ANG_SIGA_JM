@@ -51,6 +51,7 @@ export class GuardiaItem {
     historico: boolean;
     idGrupoUltimo;
     idGrupoGuardia;
+    volver;
     numColegiado;
     fechadesde;
     fechahasta;

@@ -10,6 +10,7 @@ export class Cell {
   type: string;
   value: any;
   combo: Combo[];
+  size: number;
 }
 
 export class Combo {
@@ -63,9 +64,11 @@ export class TablaResultadoMixIncompService {
           cellObject.type = cell['type'];
           cellObject.combo = cell['combo'];
           cellObject.value = cell['value'];
+          cellObject.size = cell['size'];
         } else {
           cellObject.type = cell['type'];
           cellObject.value = cell['value'];
+          cellObject.size = cell['size'];
         }
         cells.push(cellObject);
       });
