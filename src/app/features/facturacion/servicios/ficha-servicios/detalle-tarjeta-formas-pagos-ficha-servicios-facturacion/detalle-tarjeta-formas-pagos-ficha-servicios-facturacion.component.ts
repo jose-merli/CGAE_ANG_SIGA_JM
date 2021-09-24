@@ -21,7 +21,6 @@ export class DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent impleme
   servicioOriginal: ServicioDetalleItem = new ServicioDetalleItem(); //Necesario para restablecer valores originales
   checkboxNoFacturable: boolean = false;
   checkboxFacturacionProporcionalDiasInscripcion: boolean = false;
-  aplicacionPrecio: string = 'prorrateo';
   ivasNoDerogablesObject: ComboObject = new ComboObject();
   internetPayMethodsObject: ComboObject = new ComboObject();
   secretaryPayMethodsObject: ComboObject = new ComboObject();
@@ -96,9 +95,9 @@ export class DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent impleme
 
   onChangeFacturacionProporcionalDiasInscripcion() {
     if (this.checkboxFacturacionProporcionalDiasInscripcion) {
-      //this.servicio.nofacturable = '1';
+      this.servicio.facturacionponderada = '1';
     } else {
-      //this.servicio.nofacturable = '0';
+      this.servicio.facturacionponderada = '0';
     }
   }
 

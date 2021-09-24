@@ -59,21 +59,21 @@
   <!-- Aplicación de precio por cambio de situación del interesado -->
   <!-- Prorrateo (media ponderada) -->
   <span class="mr-4">
-    <p-radioButton [(ngModel)]='aplicacionPrecio' name="tarj" value="prorrateo"
+    <p-radioButton [(ngModel)]='servicio.iniciofinalponderado' name="tarj" value="P"
       (click)="onChangeAplicacionPrecioRadioButtons('prorrateo')"
-      label="{{ 'justiciaGratuita.oficio.designas' | translate }}"></p-radioButton>
+      label="{{ 'facturacion.servicios.fichaservicio.opcionradiobuttonprorrateo' | translate }}"></p-radioButton>
   </span>
   <!-- Del inicio del periodo: -->
   <span class="mr-4">
-    <p-radioButton [(ngModel)]='aplicacionPrecio' name="tarj" value="inicioPeriodo"
+    <p-radioButton [(ngModel)]='servicio.iniciofinalponderado' name="tarj" value="I"
       (click)="onChangeAplicacionPrecioRadioButtons('inicioPeriodo')"
-      label="{{ 'justiciaGratuita.oficio.justificacionExpres' | translate}}"></p-radioButton>
+      label="{{ 'facturacion.servicios.fichaservicio.opcionradiobuttoninicio' | translate}}"></p-radioButton>
   </span>
   <!-- Del fin del periodo: -->
   <span class="mr-4">
-    <p-radioButton [(ngModel)]='aplicacionPrecio' name="tarj" value="finPeriodo"
+    <p-radioButton [(ngModel)]='servicio.iniciofinalponderado' name="tarj" value="F"
       (click)="onChangeAplicacionPrecioRadioButtons('finPeriodo')"
-      label="{{ 'justiciaGratuita.oficio.justificacionExpres' | translate}}"></p-radioButton>
+      label="{{ 'facturacion.servicios.fichaservicio.opcionradiobuttonfin' | translate}}"></p-radioButton>
   </span>
 
 </div>
