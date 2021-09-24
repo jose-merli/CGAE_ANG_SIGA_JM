@@ -748,6 +748,26 @@ export class SigaServices {
 			});
 	}
 
+	postSendContentCarga(service: string, file: any): Observable<any> {
+		let formData: FormData = new FormData();
+		if (file != undefined) {
+			formData.append('uploadFile', file, file.name);
+		}
+		let headers = new HttpHeaders();
+
+		headers.append('Content-Type', 'multipart/form-data');
+		headers.append('Accept', 'application/json');
+
+		return this.http
+			.post(environment.newSigaUrl + this.endpoints[service], formData, {
+				headers: headers,
+				observe: 'body'
+			})
+			.map((response) => {
+				return response;
+			});
+	}
+
 	postSendFileAndParameters(service: string, file: any, idPersona: any): Observable<any> {
 		let formData: FormData = new FormData();
 		if (file != undefined) {

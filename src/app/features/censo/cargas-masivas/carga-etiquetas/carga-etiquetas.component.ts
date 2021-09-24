@@ -102,14 +102,15 @@ export class CargaEtiquetasComponent implements OnInit {
   }
 
   uploadFile(event: any) {
-    this.progressSpinner = true;
     if (this.file != undefined) {
+
+      this.showMessage("info", "Información", "Se inicia el procesado del fichero en segundo plano, puede seguir trabajando, la carga quedará registrada.");
+
       this.sigaServices
-        .postSendContent("cargasMasivasEtiquetas_uploadFile", this.file)
+        .postSendContentCarga("cargasMasivasEtiquetas_uploadFile", this.file)
         .subscribe(
           data => {
             this.file = null;
-            this.progressSpinner = false;
             this.uploadFileDisable = true;
             this.body.errores = data["error"];
             let mensaje = this.body.errores.message.toString();
@@ -123,12 +124,10 @@ export class CargaEtiquetasComponent implements OnInit {
           error => {
             console.log(error);
             this.showFail("Error en la subida del fichero.");
-            this.progressSpinner = false;
           },
           () => {
             this.pUploadFile.clear();
             this.pUploadFile.chooseLabel = "Seleccionar Archivo";
-            this.progressSpinner = false;
           }
         );
     }
