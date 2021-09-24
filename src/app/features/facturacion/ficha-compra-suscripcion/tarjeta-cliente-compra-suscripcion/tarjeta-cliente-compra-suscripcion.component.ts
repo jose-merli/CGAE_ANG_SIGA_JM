@@ -7,6 +7,7 @@ import { FichaCompraSuscripcionItem } from '../../../../models/FichaCompraSuscri
 import { JusticiableBusquedaItem } from '../../../../models/sjcs/JusticiableBusquedaItem';
 import { JusticiableItem } from '../../../../models/sjcs/JusticiableItem';
 import { procesos_PyS } from '../../../../permisos/procesos_PyS';
+import { SigaStorageService } from '../../../../siga-storage.service';
 import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
@@ -31,7 +32,8 @@ export class TarjetaClienteCompraSuscripcionComponent implements OnInit {
   progressSpinner: boolean = false;
   
   constructor(private persistenceService: PersistenceService, 
-    private sigaServices: SigaServices, private translateService: TranslateService, private router: Router, private commonsService: CommonsService) { }
+    private sigaServices: SigaServices, private translateService: TranslateService, 
+    private router: Router, private commonsService: CommonsService, private localStorageService: SigaStorageService,) { }
 
   ngOnInit() {
 
@@ -60,7 +62,7 @@ export class TarjetaClienteCompraSuscripcionComponent implements OnInit {
 
   checkHideSearch(){
     if(this.ficha.idEstadoPeticion==null || this.ficha.idEstadoPeticion==undefined){
-      if(sessionStorage.esColegiado=='true')this.showSearch = false;
+      if(this.localStorageService.isLetrado)this.showSearch = false;
       else this.showSearch = true;
     }
     //El cliente solo se puede cambiar cuando se esta creando la ficha.
@@ -83,7 +85,7 @@ export class TarjetaClienteCompraSuscripcionComponent implements OnInit {
       this.msgs = msg;
     }  else {
 			sessionStorage.setItem("origin", "newCliente");
-      sessionStorage.setItem("Cliente", JSON.stringify(this.ficha));
+      sessionStorage.setItem("FichaCompraSuscripcion", JSON.stringify(this.ficha));
 			this.router.navigate(['/busquedaGeneral']);
 		}
   }

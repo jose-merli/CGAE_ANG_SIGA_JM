@@ -4,6 +4,7 @@ import { Message } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../commons/translate';
 import { FichaCompraSuscripcionItem } from '../../../../models/FichaCompraSuscripcionItem';
 import { procesos_PyS } from '../../../../permisos/procesos_PyS';
+import { SigaStorageService } from '../../../../siga-storage.service';
 import { CommonsService } from '../../../../_services/commons.service';
 import { SigaServices } from '../../../../_services/siga.service';
 
@@ -23,46 +24,46 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
     { field: "estado", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado"},
   ];
 
-  filas: any[] = null;
+  filas: any[] = [];
 
   permisoSolicitarCompra;
 
   progressSpinner : boolean = false;
   showTarjeta: boolean = false;
+  esColegiado: boolean;
 
   constructor(
     private sigaServices: SigaServices, private translateService: TranslateService, 
-    private commonsService: CommonsService, private router: Router) { }
+    private commonsService: CommonsService, private router: Router,
+    private localStorageService: SigaStorageService,) { }
 
   ngOnInit() {
+    this.esColegiado = this.localStorageService.isLetrado;
     this.processDatos();
     this.checkPermisos();
   }
 
-  getNSolicitud(){
-    this.sigaServices.get('getNSolicitud').subscribe(
-      n => {
-        this.ficha.nSolicitud = n;
-      }
-    )
-  }
-
   processDatos(){
+    //Pendiente etiquetas para los estados
     this.filas = [];
-    if(this.ficha.fechaSolicitud!=null){
-      let fila = [{ fecha: this.ficha.fechaSolicitud , estado: "Solicitado"}];
+    if(this.ficha.fechaPendiente!=null){
+      let fila = [{ fecha: this.ficha.fechaPendiente , estado: "Solicitada"}];
       this.filas.push(fila);
     }
-    if(this.ficha.fechaAprobacion!=null){
-      let fila = [{ fecha: this.ficha.fechaAprobacion , estado: "Aprobado"}];
+    if(this.ficha.fechaDenegada!=null){
+      let fila = [{ fecha: this.ficha.fechaDenegada , estado: "Denegada"}];
       this.filas.push(fila);
     }
-    if(this.ficha.fechaDenegacion!=null){
-      let fila = [{ fecha: this.ficha.fechaDenegacion , estado: "Denegado"}];
+    if(this.ficha.fechaAceptada!=null){
+      let fila = [{ fecha: this.ficha.fechaAceptada , estado: "Acaptada"}];
       this.filas.push(fila);
     }
-    if(this.ficha.fechaAnulacion!=null){
-      let fila = [{ fecha: this.ficha.fechaAnulacion , estado: "Anulado"}];
+    if(this.ficha.fechaSolicitadaAnulacion!=null){
+      let fila = [{ fecha: this.ficha.fechaSolicitadaAnulacion , estado: "Solicitada anulación"}];
+      this.filas.push(fila);
+    }
+    if(this.ficha.fechaAnulada!=null){
+      let fila = [{ fecha: this.ficha.fechaAnulada , estado: "Anulada"}];
       this.filas.push(fila);
     }
   }
@@ -83,7 +84,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
 
   solicitarCompra(){
     this.progressSpinner = true; 
-		this.sigaServices.post('facturacion_solicitarCompra', this.ficha).subscribe(
+		this.sigaServices.post('PyS_solicitarCompra', this.ficha).subscribe(
 			(n) => {
 				if( n.status != 'OK') {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
@@ -93,7 +94,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
 				this.progressSpinner = false;
 			},
 			(err) => {
-				console.log(err);
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
 				this.progressSpinner = false;
 			}
 		);

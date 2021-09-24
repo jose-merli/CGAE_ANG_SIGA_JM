@@ -366,16 +366,48 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
           let nuevaCompra = new FichaCompraSuscripcionItem();
           nuevaCompra.productos = this.selectedRows;
 
-          let servicio;
-          if (sessionStorage.getItem("esColegiado") == "true") servicio = 'PyS_getFichaCompraSuscripcionColegiado';
-          else servicio = 'PyS_getFichaCompraSuscripcionNoColegiado';
-
-          this.sigaServices.post(servicio, nuevaCompra).subscribe(
+          this.sigaServices.post('PyS_getFichaCompraSuscripcion', nuevaCompra).subscribe(
             (n) => {
               this.progressSpinner = false;
 
-              sessionStorage.setItem("FichaCompraSuscripcion", n.body);
-              this.router.navigate(["/fichaCompraSuscripcion"]);
+              if(JSON.parse(n.body).idFormasPagoComunes==null){
+                //Se comprueba si es no facturable
+                //A tener en cuenta que a esta altura todos los productos seleccionados tienen
+                //el mismo valor "noFacturable"
+                if(this.selectedRows[0].noFacturable=="1"){
+                sessionStorage.setItem("FichaCompraSuscripcion", n.body);
+                this.router.navigate(["/fichaCompraSuscripcion"]);
+                }
+                else {
+                  if(this.selectedRows.length>1){
+                    this.msgs = [
+                      {
+                        severity: "error",
+                        summary: this.translateService.instant(
+                          "facturacion.productos.ResFormasPagoNoCompatibles"
+                        ),
+                        detail: this.translateService.instant(
+                          "facturacion.productos.FormasPagoNoCompatibles"
+                        )
+                      }
+                    ];
+                  }
+                  else {
+                    //Sustituir por etiquetas
+                    this.msgs = [
+                      {
+                        severity: "error",
+                        summary: "El usuario no puede realizar compras de este producto",
+                        detail: "Este producto no tiene formas de pago permitidas para el usuario actual"
+                      }
+                    ];
+                  }
+                }
+              }
+              else{
+                sessionStorage.setItem("FichaCompraSuscripcion", n.body);
+                this.router.navigate(["/fichaCompraSuscripcion"]);
+              }
             },
             (err) => {
               this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));

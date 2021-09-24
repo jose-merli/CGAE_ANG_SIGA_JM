@@ -39,8 +39,8 @@
                 <span>{{ filas[filas.length-1].estado }}</span>
               </label>
             </div>
-            <div class="col-3">
-              <i class="fa fa-angle-down float-right"></i>
+            <div class="col-3 ml-auto">
+              <i class="fa fa-angle-down ml-auto"></i>
             </div>
           </div>
         </div>
@@ -61,7 +61,7 @@
               <input [(ngModel)]="ficha.usuModificacion" type="text" class="form-control" disabled pInputText />
             </div>
           </div>
-          <p-table [value]="filas" [columns]="cols" #table class="tabla-listado"
+          <p-table *ngIf="filas.length > 0" [value]="filas" [columns]="cols" #table class="tabla-listado"
             [ngClass]="{ 'customCursor': selectMultiple}">
             <ng-template pTemplate="colgroup" let-columns>
               <colgroup>
@@ -108,20 +108,20 @@
       <div class="text-right main-button">
         <!-- Solicitud -->
         <button pButton *ngIf="ficha.productos != null" (click)="checkSolicitarCompra()" type="button" icon="fa fa-search" iconPos="left"
-          label="{{ 'facturacion.productos.solicitarCompra' | translate}}"></button>
+          label="{{ 'facturacion.productos.solicitarCompra' | translate}}" [disabled]="ficha.idEstadoPeticion != undefined"></button>
         <button pButton *ngIf="ficha.productos == null" (click)="checkSearch()" type="button" icon="fa fa-search" iconPos="left"
-          label="{{ 'facturacion.productos.solicitarSuscripcion' | translate}}"></button>
+          label="{{ 'facturacion.productos.solicitarSuscripcion' | translate}}" [disabled]="ficha.idEstadoPeticion != undefined"></button>
       <!-- Aprobar -->
         <button pButton  (click)="checkSearch()" type="button" icon="fa fa-search" iconPos="left"
-          label="{{ 'facturacion.productos.aprobar' | translate}}"></button>
+          label="{{ 'facturacion.productos.aprobar' | translate}}" [disabled]="ficha.idEstadoPeticion != '20' && ficha.idEstadoPeticion != '30'"></button>
       <!-- Denegar/Cancelar -->
-        <button pButton  (click)="checkSearch()" type="button" icon="fa fa-search" iconPos="left"
-          label="{{ 'general.boton.denegar' | translate}}"></button>
-        <button pButton  (click)="checkSearch()" type="button" icon="fa fa-search" iconPos="left"
-          label="{{ 'general.boton.cancel' | translate}}"></button>
+        <button *ngIf="!esColegiado" pButton  (click)="checkSearch()" type="button" icon="fa fa-search" iconPos="left"
+          label="{{ 'general.boton.denegar' | translate}}" [disabled]="ficha.idEstadoPeticion != '20' && ficha.idEstadoPeticion != '30'"></button>
+        <button *ngIf="esColegiado" pButton  (click)="checkSearch()" type="button" icon="fa fa-search" iconPos="left"
+          label="{{ 'general.boton.cancel' | translate}}" [disabled]="ficha.idEstadoPeticion != '20' && ficha.idEstadoPeticion != '30'"></button>
       <!-- Anular -->
         <button pButton  (click)="checkSearch()" type="button" icon="fa fa-search" iconPos="left"
-          label="{{ 'general.boton.anular' | translate}}"></button>
+          label="{{ 'general.boton.anular' | translate}}" [disabled]="ficha.idEstadoPeticion == '20'"></button>
       </div>
     </div>
   </div>

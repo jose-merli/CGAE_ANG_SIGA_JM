@@ -139,6 +139,8 @@ export class TarjetaFormaPagoCompraSuscripcionComponent implements OnInit {
       }
       if(this.noFact) this.ficha.noFact = "1";
       else this.ficha.noFact = "0";
+      
+      this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
     }
   }
 
@@ -162,14 +164,14 @@ export class TarjetaFormaPagoCompraSuscripcionComponent implements OnInit {
             this.progressSpinner = false;
           }
         );
-    }
+  }
 
-    showMessage(severity, summary, msg) {
+  showMessage(severity, summary, msg) {
       this.msgs = [];
       this.msgs.push({
         severity: severity,
         summary: summary,
         detail: msg
       });
-    }
+  }
 }

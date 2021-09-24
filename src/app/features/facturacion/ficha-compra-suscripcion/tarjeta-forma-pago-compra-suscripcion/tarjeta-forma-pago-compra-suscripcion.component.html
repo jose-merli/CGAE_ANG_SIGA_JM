@@ -7,7 +7,7 @@
         <div class="img-colegiado">
           <i class="fa fa-user icon-ficha"></i>
         </div>
-        <label class="title-ficha">{{ 'facturacion.productos.formapago' | translate }}</label>
+        <label class="title-ficha">{{ "facturacion.productos.formapago" | translate }}</label>
         <div class="d-flex justify-content-start mb-1 ml-auto">
           <i class="fa fa-angle-up ml-auto"></i>
         </div>
@@ -20,26 +20,26 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">{{ 'facturacion.productos.formapago' | translate }}
+            <label class="mr-auto title-ficha">{{ "facturacion.productos.formapago" | translate }}
             </label>
           </div>
           <div class="row">
             <div *ngIf="ficha.productos != null" class="col-3">
-              <label>{{ 'facturacionSJCS.facturacionesYPagos.importeTotal' || translate}}
+              <label>{{ "facturacionSJCS.facturacionesYPagos.importeTotal" | translate }}
                 <span>{{ ficha.impTotal }}</span>
               </label>
             </div>
             <div *ngIf="ficha.productos != null" class="col-3">
-              <label>{{ 'facturacionSJCS.facturacionesYPagos.importePendiente' || translate}}
+              <label>{{ "facturacionSJCS.facturacionesYPagos.importePendiente" | translate }}
                 <span>{{ ficha.pendPago }}</span>
               </label>
             </div>
             <div class="col-3">
-              <label>{{ 'facturacion.productos.formapago' | translate }}
+              <label>{{ "facturacion.productos.formapago" | translate }}
                 <span>{{ desFormaPagoSelecc }}</span>
               </label>
             </div>
-            <div class="col-3">
+            <div class="col-3 ml-auto">
               <i class="fa fa-angle-down ml-auto"></i>
             </div>
           </div>
