@@ -219,19 +219,15 @@ export class DatosPagosComponent implements OnInit, AfterViewInit {
             this.bodyAux = new PagosjgItem();
             this.bodyAux = JSON.parse(JSON.stringify(this.body));
             this.changePago.emit(true);
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+            this.historicoEstados();
           }
 
         },
         err => {
           this.progressSpinner = false;
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        },
-        () => {
-          this.progressSpinner = false;
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.historicoEstados();
-        }
-      );
+        });
 
     } else {
 
