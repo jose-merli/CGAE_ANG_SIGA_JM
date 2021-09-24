@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
+import { AfterViewChecked, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
 import { Subscription } from 'rxjs';
@@ -51,12 +51,15 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
   ngOnChanges(changes: SimpleChanges) {
     if (this.servicio.editar) {
       this.getComboTipo();
+      //this.getComboCondicionSuscripcion();
       this.servicioOriginal = { ...this.servicio };
 
       this.desactivarBotonEliminar = false;
       this.mostrarTarjetaFormaPagos.emit(true);
 
     } else {
+      //this.servicio.idconsulta = 0;
+      //this.getComboCondicionSuscripcion();
       this.mostrarTarjetaFormaPagos.emit(false);
       this.desactivarBotonEliminar = true;
     }
@@ -72,10 +75,17 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
     } else if (this.servicio.permitirbaja == "0") {
       this.checkboxPermitirAnulacionPorInternet = false;
     }
+
+    if (this.servicio.automatico == "1") {
+      this.checkboxAsignacionAutomatica = true;
+    } else if (this.servicio.automatico == "0") {
+      this.checkboxAsignacionAutomatica = false;
+    }
   }
 
   ngOnInit() {
     this.getComboCategoria();
+    this.getComboCondicionSuscripcion();
     this.obtenerCodigosPorColegio();
   }
 
@@ -115,7 +125,7 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
   }
 
   //Metodo que se lanza al marcar/desmarcar el checkbox permitir anulacion por internet
-  onChangePermitirdAnulacionInternet() {
+  onChangePermitirAnulacionInternet() {
     if (this.checkboxPermitirAnulacionPorInternet) {
       this.servicio.permitirbaja = '1';
     } else {
@@ -159,10 +169,94 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
 
   }
 
+  //Si se ha activado el check de Asignación automática, o bien se ha cambiado la condición de suscripción (estando marcado “Asignación automática”):
+  comprobacionPreGuardar() {
+    if ((this.checkboxAsignacionAutomatica && this.servicioOriginal.automatico == '0') || (this.checkboxAsignacionAutomatica && this.servicio.idconsulta != this.servicioOriginal.idconsulta)) {
+      //Antes de nada, se comprobará si la única forma de pago configurada para ese servicio es “domiciliación bancaria”. Si es así, se dará un mensaje de aviso avisando de este hecho y 
+      //advirtiendo que no se suscribirá a aquellos censados que no tengan especificada una cuenta bancaria marcada como “cuenta de cargo”.
+      let comprobacionUnicaFormaPagoInternet: boolean = true;
+      let comprobacionUnicaFormaPagoSecretaria: boolean = true;
+
+      //ID Domiciliacion Bancaria en formas de pago internet = 20
+      if (this.servicio.formasdepagointernet != null && this.servicio.formasdepagointernet.length > 0) {
+        this.servicio.formasdepagointernet.forEach(formadepagointernet => {
+          if (formadepagointernet != 20) {
+            comprobacionUnicaFormaPagoInternet = false;
+          }
+        });
+      }
+      if (this.servicio.formasdepagointernet != null && this.servicio.formasdepagointernet.length > 0) {
+        //ID Domiciliacion Bancaria en formas de pago secretaria = 80
+        this.servicio.formasdepagosecretaria.forEach(formasdepagosecretaria => {
+          if (formasdepagosecretaria != 80) {
+            comprobacionUnicaFormaPagoSecretaria = false;
+          }
+        });
+      }
+
+      if (comprobacionUnicaFormaPagoInternet = true && comprobacionUnicaFormaPagoSecretaria == true && this.servicio.editar) {
+
+        let keyConfirmation = "avisoDomiciliacionBancariaUnicaFormaPago";
+        let mensaje = this.translateService.instant("facturacion.servicios.fichaservicio.unicaformapagodomiciliacionbancariaconfirm");
+
+        this.confirmationService.confirm({
+          key: keyConfirmation,
+          message: mensaje,
+          icon: "fas fa-question",
+          accept: () => {
+            this.avisoSuscripcionAutomatica();
+          },
+          reject: () => {
+            this.msgs = [
+              {
+                severity: "info",
+                summary: "info",
+                detail: this.translateService.instant(
+                  "general.message.accion.cancelada"
+                )
+              }
+            ];
+          }
+        });
+
+      } else {
+        this.avisoSuscripcionAutomatica();
+      }
+    } else {
+      this.guardar();
+    }
+  }
+
+  avisoSuscripcionAutomatica() {
+    let keyConfirmation = "avisoSuscripcionAutomatica";
+    let mensaje = this.translateService.instant("facturacion.servicios.fichaservicio.avisosuscripcionautomatica");
+
+    this.confirmationService.confirm({
+      key: keyConfirmation,
+      message: mensaje,
+      icon: "fas fa-question",
+      accept: () => {
+        this.progressSpinner = true;
+        this.guardar();
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "info",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
+
   guardar() {
     this.aGuardar = true;
     if (this.servicio.idtiposervicios != null && this.servicio.idservicio != null && this.servicio.descripcion != '' && this.servicio.descripcion != undefined) {
-      if (this.servicio.codigoext != "") {
+      if (this.servicio.codigoext != "" && this.servicio.codigoext != null) {
         if (this.listaCodigosPorInstitucionObject.listaCodigosPorColegio.includes(this.servicio.codigoext)) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.fichaproductos.datosgenerales.mensajeerrorcodigo"))
         } else {
@@ -245,6 +339,42 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
       }
     );
   }
+
+  //Metodo para obtener los valores del combo Tipo segun el combo Categoriaç
+  getComboCondicionSuscripcion() {
+    this.progressSpinner = true;
+
+    this.subscriptionTypeSelectValues = this.sigaServices.get("fichaServicio_comboCondicionSuscripcion").subscribe(
+      CondicionSuscripcionValues => {
+        this.condicionesSuscripcionObject = CondicionSuscripcionValues;
+
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+  /* getComboCondicionSuscripcion() {
+    this.progressSpinner = true;
+
+    this.subscriptionTypeSelectValues = this.sigaServices.getParam("fichaServicio_comboCondicionSuscripcion", "?idConsulta=" + this.servicio.idconsulta).subscribe(
+      CondicionSuscripcionValues => {
+        this.condicionesSuscripcionObject = CondicionSuscripcionValues;
+
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  } */
 
   //Metodo para obtener todos los codigos PYS_SERVICIOSINSTITUCION en la institucion actual
   obtenerCodigosPorColegio() {
