@@ -46,4 +46,46 @@
     </p-multiSelect>
   </div>
 
+  <!-- Facturación proporcional por días de suscripción -->
+  <div class="form-group-interlineado2 col-lg-4 col-md-4">
+    <div class="d-flex align-items-baseline justify-content-between alineacionCheckboxes2">
+      <p-checkbox binary="true" label="Facturación proporcional por días de suscripción "
+        [(ngModel)]="checkboxFacturacionProporcionalDiasInscripcion"
+        (onChange)="onChangeFacturacionProporcionalDiasInscripcion()">
+      </p-checkbox>
+    </div>
+  </div>
+
+  <!-- Aplicación de precio por cambio de situación del interesado -->
+  <!-- Prorrateo (media ponderada) -->
+  <span class="mr-4">
+    <p-radioButton [(ngModel)]='aplicacionPrecio' name="tarj" value="prorrateo"
+      (click)="onChangeAplicacionPrecioRadioButtons('prorrateo')"
+      label="{{ 'justiciaGratuita.oficio.designas' | translate }}"></p-radioButton>
+  </span>
+  <!-- Del inicio del periodo: -->
+  <span class="mr-4">
+    <p-radioButton [(ngModel)]='aplicacionPrecio' name="tarj" value="inicioPeriodo"
+      (click)="onChangeAplicacionPrecioRadioButtons('inicioPeriodo')"
+      label="{{ 'justiciaGratuita.oficio.justificacionExpres' | translate}}"></p-radioButton>
+  </span>
+  <!-- Del fin del periodo: -->
+  <span class="mr-4">
+    <p-radioButton [(ngModel)]='aplicacionPrecio' name="tarj" value="finPeriodo"
+      (click)="onChangeAplicacionPrecioRadioButtons('finPeriodo')"
+      label="{{ 'justiciaGratuita.oficio.justificacionExpres' | translate}}"></p-radioButton>
+  </span>
+
+</div>
+
+<!-- Botones -->
+<div class="card-footer">
+  <div class="text-right main-button">
+    <!-- Restablecer -->
+    <!--  <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left"
+     label="{{'general.boton.restablecer' | translate}}"></button> -->
+    <!-- Guardar -->
+    <button (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left"
+      label="{{ 'general.boton.guardar' | translate}}"></button>
+  </div>
 </div>

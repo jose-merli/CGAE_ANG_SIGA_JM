@@ -28,7 +28,7 @@ export class ServicioDetalleItem {
     serviciooriginal: ServicioDetalleItem;
 
 
-    codigoext;//codigoext (hay que crear la columna en la tabla)
+    codigoext;
     nofacturable//hay que crear la columna en la tabla?;
 
 

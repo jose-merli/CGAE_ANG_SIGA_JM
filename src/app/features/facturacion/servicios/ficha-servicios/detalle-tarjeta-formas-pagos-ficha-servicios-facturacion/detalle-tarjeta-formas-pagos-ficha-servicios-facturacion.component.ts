@@ -1,4 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '../../../../../commons/translate';
 import { ComboObject } from '../../../../../models/ComboObject';
@@ -19,6 +20,8 @@ export class DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent impleme
   @Input() servicio: ServicioDetalleItem; //Servicio obtenido de la fila del buscador de servicios en la cual pulsamos el enlace a la ficha servicios.
   servicioOriginal: ServicioDetalleItem = new ServicioDetalleItem(); //Necesario para restablecer valores originales
   checkboxNoFacturable: boolean = false;
+  checkboxFacturacionProporcionalDiasInscripcion: boolean = false;
+  aplicacionPrecio: string = 'prorrateo';
   ivasNoDerogablesObject: ComboObject = new ComboObject();
   internetPayMethodsObject: ComboObject = new ComboObject();
   secretaryPayMethodsObject: ComboObject = new ComboObject();
@@ -33,8 +36,9 @@ export class DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent impleme
   subscriptionIvasNoDerogablesSelectValues: Subscription;
   subscriptionInternetPayMethodsSelectValues: Subscription;
   subscriptionSecretaryPayMethodsSelectValues: Subscription;
+  subscriptionCrearFormasDePago: Subscription;
 
-  constructor(private sigaServices: SigaServices, private translateService: TranslateService) { }
+  constructor(private sigaServices: SigaServices, private translateService: TranslateService, private router: Router) { }
 
   ngOnInit() {
     if (sessionStorage.getItem('esColegiado'))
@@ -64,6 +68,8 @@ export class DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent impleme
       this.subscriptionInternetPayMethodsSelectValues.unsubscribe();
     if (this.subscriptionSecretaryPayMethodsSelectValues)
       this.subscriptionSecretaryPayMethodsSelectValues.unsubscribe();
+    if (this.subscriptionCrearFormasDePago)
+      this.subscriptionCrearFormasDePago.unsubscribe();
   }
 
   //INICIO METODOS APP
@@ -86,6 +92,76 @@ export class DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent impleme
       this.servicio.formasdepagosecretaria = this.servicioOriginal.formasdepagosecretaria;
 
     }
+  }
+
+  onChangeFacturacionProporcionalDiasInscripcion() {
+    if (this.checkboxFacturacionProporcionalDiasInscripcion) {
+      //this.servicio.nofacturable = '1';
+    } else {
+      //this.servicio.nofacturable = '0';
+    }
+  }
+
+  onChangeAplicacionPrecioRadioButtons(event) {
+
+  }
+
+  /*   restablecer() {
+    this.servicio = { ...this.servicioOriginal };
+
+    if (this.servicio.permitiralta == "1") {
+      this.checkBoxPermitirSolicitudPorInternet = true;
+    } else if (this.servicio.permitiralta == "0") {
+      this.checkBoxPermitirSolicitudPorInternet = false;
+    }
+
+    if (this.servicio.permitirbaja == "1") {
+      this.checkboxPermitirAnulacionPorInternet = true;
+    } else if (this.servicio.permitirbaja == "0") {
+      this.checkboxPermitirAnulacionPorInternet = false;
+    }
+
+    if (this.servicio.automatico == "1") {
+      this.checkboxAsignacionAutomatica = true;
+    } else if (this.servicio.automatico == "0") {
+      this.checkboxAsignacionAutomatica = false;
+    }
+
+  } */
+
+  guardar() {
+    this.aGuardar = true;
+    if (this.obligatorio && this.servicio.permitiralta == '0') {
+      if (this.servicio.idtipoiva != null && this.servicio.idtipoiva != undefined && this.servicio.formasdepagosecretaria != null && this.servicio.formasdepagosecretaria.length > 0) {
+        this.guardarFormaPago();
+      } else {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
+      }
+    } else if (this.obligatorio && this.servicio.permitiralta == '1') {
+      if (this.servicio.idtipoiva != null && this.servicio.idtipoiva != undefined && this.servicio.formasdepagosecretaria != null && this.servicio.formasdepagosecretaria.length > 0 && this.servicio.formasdepagointernet != null && this.servicio.formasdepagointernet.length > 0) {
+        this.guardarFormaPago();
+      } else {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
+      }
+    } else {
+      this.guardarFormaPago();
+    }
+  }
+
+
+  //Borra el mensaje de notificacion p-growl mostrado en la esquina superior derecha cuando pasas el puntero del raton sobre el
+  clear() {
+    this.msgs = [];
+  }
+
+  //Inicializa las propiedades necesarias para el dialogo de confirmacion
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
   }
   //FIN METODOS APP
 
@@ -146,6 +222,36 @@ export class DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent impleme
         this.progressSpinner = false;
       }
     );
+  }
+
+  guardarFormaPago() {
+    this.progressSpinner = true;
+    if (this.servicio.formasdepagointernet == null || this.servicio.formasdepagointernet == undefined)
+      this.servicio.formasdepagointernet = [];
+    if (this.servicio.formasdepagosecretaria == null || this.servicio.formasdepagosecretaria == undefined)
+      this.servicio.formasdepagosecretaria = [];
+
+    this.subscriptionCrearFormasDePago = this.sigaServices.post("fichaServicio_crearFormaDePago", this.servicio).subscribe(
+      response => {
+        this.progressSpinner = false;
+
+        if (JSON.parse(response.body).error.code == 500) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        } else {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        }
+      },
+      err => {
+        this.progressSpinner = false;
+      },
+      () => {
+        sessionStorage.setItem("volver", 'true');
+        sessionStorage.removeItem('servicioBuscador');
+        this.router.navigate(['/servicios']);
+        this.progressSpinner = false;
+      }
+    );
+
   }
   //FIN SERVICIOS
 }

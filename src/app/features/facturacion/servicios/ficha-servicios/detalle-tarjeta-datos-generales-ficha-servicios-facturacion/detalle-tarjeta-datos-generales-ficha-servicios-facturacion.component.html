@@ -8,9 +8,9 @@
   <!-- Categoria -->
   <div class="form-group-interlineado col-lg-3 col-md-3 pb-lg-2 pb-md-2">
     <label>{{ "facturacion.productos.categoria" | translate}}(*)</label>
-    <p-dropdown (onChange)="valueChangeCategoria()" [filter]="true" styleClass="widthAll" [showClear]="true"
-      placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='servicio.idtiposervicios'
-      [options]="categoriasObject.combooItems"
+    <p-dropdown [disabled]="servicio.editar == true" (onChange)="valueChangeCategoria()" [filter]="true"
+      styleClass="widthAll" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+      [(ngModel)]='servicio.idtiposervicios' [options]="categoriasObject.combooItems"
       [ngClass]="{'camposObligatorios': aGuardar && servicio.idtiposervicios == null}">
     </p-dropdown>
   </div>
@@ -18,9 +18,10 @@
   <!-- Tipo -->
   <div class="form-group-interlineado col-lg-3 col-md-3 pb-lg-2 pb-md-2">
     <label>{{ "facturacion.productos.tipo" | translate}}(*)</label>
-    <p-dropdown [disabled]="servicio.idtiposervicios == null" [filter]="true" styleClass="widthAll" [showClear]="true"
-      placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='servicio.idservicio'
-      [options]="tiposObject.combooItems" [ngClass]="{'camposObligatorios': aGuardar && servicio.idservicio == null}">
+    <p-dropdown [disabled]="servicio.idtiposervicios == null || servicio.editar == true" [filter]="true"
+      styleClass="widthAll" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+      [(ngModel)]='servicio.idservicio' [options]="tiposObject.combooItems"
+      [ngClass]="{'camposObligatorios': aGuardar && servicio.idservicio == null}">
     </p-dropdown>
   </div>
 
@@ -39,7 +40,7 @@
   </div>
 
   <!-- Permitir solicitud por internet -->
-  <div class="form-group-interlineado col-lg-3 col-md-3" *ngIf="servicio.automatico == '0' || !servicio.editar">
+  <div class="form-group-interlineado col-lg-3 col-md-3" *ngIf="servicio.automatico == '0'">
     <div class="d-flex align-items-baseline justify-content-between alineacionCheckboxes">
       <p-checkbox binary="true" [disabled]="checkboxAsignacionAutomatica"
         label="{{'facturacion.fichaservicios.datosgenerales.permitirsoliciturinternet' | translate}}"
@@ -60,7 +61,7 @@
 
   <!-- Condicion de suscripcion -->
   <div class="form-group-interlineado col-lg-3 col-md-3 pb-lg-2 pb-md-2">
-    <label>{{ "facturacion.fichaservicios.datosgenerales.condicionsuscripcion" | translate}}(*)</label>
+    <label>{{ "facturacion.fichaservicios.datosgenerales.condicionsuscripcion" | translate}}</label>
     <p-dropdown [filter]="true" styleClass="widthAll" [showClear]="true"
       placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='servicio.idconsulta'
       [options]="condicionesSuscripcionObject.combooItems">
@@ -70,7 +71,7 @@
   <!-- Asignacion automatica -->
   <div class="form-group-interlineado col-lg-3 col-md-3">
     <div class="d-flex align-items-baseline justify-content-between alineacionCheckboxes">
-      <p-checkbox [disabled]="servicio.idconsulta == null" binary="true"
+      <p-checkbox [disabled]="servicio.idconsulta == null || servicio.idconsulta == undefined" binary="true"
         label="{{'facturacion.fichaservicios.datosgenerales.asignacionautomatica' | translate}}"
         [(ngModel)]="checkboxAsignacionAutomatica" (onChange)="onChangeAsignacionAutomatica()">
       </p-checkbox>
@@ -102,6 +103,33 @@
       iconPos="left" label="{{'facturacion.maestros.tiposproductosservicios.reactivar' | translate}}"></button>
 
     <!-- Guardar -->
-    <button (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left"
+    <button (click)="comprobacionPreGuardar()" pButton type="button" icon="far fa-save" iconPos="left"
       label="{{ 'general.boton.guardar' | translate}}"></button>
   </div>
+
+
+  <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="deletePlantillaDoc" icon="icon"
+    width="425" #deletePlantillaDoc>
+    <p-footer>
+      <button type="button" pButton icon="fa-check" label="Si" (click)="deletePlantillaDoc.accept()"></button>
+      <button type="button" pButton icon="fa-close" label="No" (click)="deletePlantillaDoc.reject()"></button>
+    </p-footer>
+  </p-confirmDialog>
+
+  <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}"
+    key="avisoDomiciliacionBancariaUnicaFormaPago" icon="icon" width="425" #avisoDomiciliacionBancariaUnicaFormaPago>
+    <p-footer>
+      <button type="button" pButton icon="fa-check" label="Si"
+        (click)="avisoDomiciliacionBancariaUnicaFormaPago.accept()"></button>
+      <button type="button" pButton icon="fa-close" label="No"
+        (click)="avisoDomiciliacionBancariaUnicaFormaPago.reject()"></button>
+    </p-footer>
+  </p-confirmDialog>
+
+  <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="avisoSuscripcionAutomatica"
+    icon="icon" width="425" #avisoSuscripcionAutomatica>
+    <p-footer>
+      <button type="button" pButton icon="fa-check" label="Si" (click)="avisoSuscripcionAutomatica.accept()"></button>
+      <button type="button" pButton icon="fa-close" label="No" (click)="avisoSuscripcionAutomatica.reject()"></button>
+    </p-footer>
+  </p-confirmDialog>
