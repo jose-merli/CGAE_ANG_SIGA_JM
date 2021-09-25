@@ -36,6 +36,7 @@ export class TarjetaFormaPagoCompraSuscripcionComponent implements OnInit {
 
   ngOnInit() {
     this.checkNoFacturable();
+    this.getPermisoGuardar();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -65,7 +66,7 @@ export class TarjetaFormaPagoCompraSuscripcionComponent implements OnInit {
     this.showTarjeta = !this.showTarjeta;
   }
 
-  getPermisoBuscar(){
+  getPermisoGuardar(){
     this.commonsService
 			.checkAcceso(procesos_PyS.fichaCompraSuscripcion)
 			.then((respuesta) => {

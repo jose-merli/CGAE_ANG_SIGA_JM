@@ -36,33 +36,12 @@ export class FichaCompraSuscripcionComponent implements OnInit {
       sessionStorage.removeItem("FichaCompraSuscripcion");
       this.getComboFormaPago();
     }
-    //Si vuelve de otra pantalla
-    else this.getDatosFicha();
 
     
     
   }
 
-  getDatosFicha() {
-    this.ficha = JSON.parse(sessionStorage.getItem("cargarFichaCompraSuscripcion"));
-    this.progressSpinner = true; 
-    let peticion = this.ficha;
-    let servicio;
-    if(sessionStorage.getItem("esColegiado") == "true") servicio = 'PyS_getFichaCompraSuscripcionColegiado';
-    else servicio = 'PyS_getFichaCompraSuscripcionNoColegiado';
-		this.sigaServices.post(servicio, peticion).subscribe(
-			(n) => {
-				this.ficha = JSON.parse(n.body);
-				this.progressSpinner = false;
-        this.getComboFormaPago();
-			},
-			(err) => {
-				this.progressSpinner = false;
-			}
-		);
-	}
-
-  //Metodo para obtener los valores del combo Forma de pago
+  //Metodo para obtener los valores del desplegable "Forma de pago" de la tarjeta Forma de pago
   getComboFormaPago() {
     this.progressSpinner = true;
 
@@ -86,6 +65,27 @@ export class FichaCompraSuscripcionComponent implements OnInit {
         this.progressSpinner = false;
       },
       () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  actualizarFicha(){
+    this.sigaServices.post('PyS_getFichaCompraSuscripcion', this.ficha).subscribe(
+      (n) => {
+
+        if( n.status != 200) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        } else {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.ficha = JSON.parse(n.body);
+        }
+
+        this.progressSpinner = false;
+          
+      },
+      (err) => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         this.progressSpinner = false;
       }
     );
