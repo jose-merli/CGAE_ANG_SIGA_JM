@@ -358,8 +358,8 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
     if (msg != undefined) {
       this.msgs = msg;
     } else {
-      if (this.checkFormasPago()) {
-        if (this.checkNoFacturable()) {
+      if (this.checkNoFacturable()) {
+        if (this.checkFormasPago()) {
           this.progressSpinner = true;
 
           sessionStorage.removeItem("FichaCompraSuscripcion");
@@ -416,27 +416,28 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
           );
         }
         else {
-          //Pendiente de inserción y sustitucion de etiquetas.
           this.msgs = [
             {
               severity: "error",
-              summary: "Valores de 'no facturable' distintos",
-              detail: "Los productos seleccionados tienen valores distintos en el parametro 'no facturable'"
+              summary: this.translateService.instant(
+                "facturacion.productos.ResFormasPagoNoCompatibles"
+              ),
+              detail: this.translateService.instant(
+                "facturacion.productos.FormasPagoNoCompatibles"
+              )
             }
           ];
         }
       } else {
+        //Pendiente de inserción y sustitucion de etiquetas.
         this.msgs = [
           {
             severity: "error",
-            summary: this.translateService.instant(
-              "facturacion.productos.ResFormasPagoNoCompatibles"
-            ),
-            detail: this.translateService.instant(
-              "facturacion.productos.FormasPagoNoCompatibles"
-            )
+            summary: "Valores de 'no facturable' distintos",
+            detail: "Los productos seleccionados tienen valores distintos en el parametro 'no facturable'"
           }
         ];
+        
       }
     }
   }
@@ -455,19 +456,38 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
   }
 
   checkFormasPago(){
-    
+    let error: boolean = false;
+
     //Se extrae el atributo y se separan las distintas formas de pago.
     let formasPagoArrays: any[]= [];
     this.selectedRows.forEach(element => {
-      formasPagoArrays.push(element.formapago.split(", "));
+      if(element!=""){ 
+        if(element.noFacturable=="1") formasPagoArrays.push(element.formapago.split(", ").push("No facturable"));
+        else formasPagoArrays.push(element.formapago.split(", "));
+      }
+      else if(element.noFacturable=="1")formasPagoArrays.push("No facturable");
+      else{
+        this.msgs = [
+          {
+            severity: "error",
+            summary: "Producto con forma de pago no definida",
+            detail: "El producto '"+element.descripcion+"' no tiene forma de pago definida y no tiene la propieda de 'No facturable' por lo que no se puede realizar su compra"
+          }
+        ];
+        error = true;
+      }
     });
+
+    let result = [];
     
-    //Se comprueba si todas las filas seleccionadas comparten alguna forma de pago.
-    let result = formasPagoArrays.shift().filter(function(v) {
-      return formasPagoArrays.every(function(a) {
-          return a.indexOf(v) !== -1;
+    if(!error){
+      //Se comprueba si todas las filas seleccionadas comparten alguna forma de pago.
+      result = formasPagoArrays.shift().filter(function(v) {
+        return formasPagoArrays.every(function(a) {
+            return a.indexOf(v) !== -1;
+        });
       });
-    });
+    }
 
     return result.length>0;
   }
