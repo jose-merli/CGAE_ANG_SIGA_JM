@@ -50,36 +50,35 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
   }
 
   processHist(){
-    //Pendiente etiquetas para los estados
     this.filas = [];
     if(this.ficha.fechaPendiente!=null){
       let fila = new FilaHistoricoPeticionItem();
       fila.fecha = this.ficha.fechaPendiente;
-      fila.estado = "Pendiente";
+      fila.estado = this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.pendiente");
       this.filas.push(fila);
     }
     if(this.ficha.fechaDenegada!=null){
       let fila = new FilaHistoricoPeticionItem();
       fila.fecha = this.ficha.fechaDenegada;
-      fila.estado = "Denegada";
+      fila.estado = this.translateService.instant("facturacion.productos.denegada");
       this.filas.push(fila);
     }
     if(this.ficha.fechaAceptada!=null){
       let fila = new FilaHistoricoPeticionItem();
       fila.fecha = this.ficha.fechaAceptada;
-      fila.estado = "Aceptada";
+      fila.estado = this.translateService.instant("facturacion.productos.aceptada");
       this.filas.push(fila);
     }
     if(this.ficha.fechaSolicitadaAnulacion!=null){
       let fila = new FilaHistoricoPeticionItem();
       fila.fecha = this.ficha.fechaSolicitadaAnulacion;
-      fila.estado = "Solicitada anulación";
+      fila.estado = this.translateService.instant("facturacion.productos.anulacionSolicitada");
       this.filas.push(fila);
     }
     if(this.ficha.fechaAnulada!=null){
       let fila = new FilaHistoricoPeticionItem();
       fila.fecha = this.ficha.fechaAnulada;
-      fila.estado = "Anulada";
+      fila.estado = this.translateService.instant("facturacion.productos.anulada");
       this.filas.push(fila);
     }
   }
