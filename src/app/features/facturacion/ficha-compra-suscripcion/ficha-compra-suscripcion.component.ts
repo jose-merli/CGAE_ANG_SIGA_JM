@@ -20,7 +20,6 @@ export class FichaCompraSuscripcionComponent implements OnInit {
 
   comboComun: any[] = [];
   desFormaPagoSelecc: string;
-  selectedPago: number;
 
 
   @ViewChild("cliente") tarjCliente;
@@ -35,33 +34,14 @@ export class FichaCompraSuscripcionComponent implements OnInit {
     if(sessionStorage.getItem("FichaCompraSuscripcion")){
       this.ficha = JSON.parse(sessionStorage.getItem("FichaCompraSuscripcion"));
       sessionStorage.removeItem("FichaCompraSuscripcion");
-      this.selectedPago = this.ficha.idFormaPagoSeleccionada;
       this.getComboFormaPago();
     }
-    //Si vuelve de otra pantalla
-    else this.getDatosFicha();
 
     
     
   }
 
-  getDatosFicha() {
-    this.ficha = JSON.parse(sessionStorage.getItem("cargarFichaCompraSuscripcion"));
-    this.progressSpinner = true; 
-		this.sigaServices.post('facturacion_getFichaCompraSuscripcion', this.ficha).subscribe(
-			(n) => {
-				this.ficha = JSON.parse(n.body);
-				this.progressSpinner = false;
-        this.selectedPago = this.ficha.idFormaPagoSeleccionada;
-        this.getComboFormaPago();
-			},
-			(err) => {
-				this.progressSpinner = false;
-			}
-		);
-	}
-
-  //Metodo para obtener los valores del combo Forma de pago
+  //Metodo para obtener los valores del desplegable "Forma de pago" de la tarjeta Forma de pago
   getComboFormaPago() {
     this.progressSpinner = true;
 
@@ -85,6 +65,27 @@ export class FichaCompraSuscripcionComponent implements OnInit {
         this.progressSpinner = false;
       },
       () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  actualizarFicha(){
+    this.sigaServices.post('PyS_getFichaCompraSuscripcion', this.ficha).subscribe(
+      (n) => {
+
+        if( n.status != 200) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        } else {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.ficha = JSON.parse(n.body);
+        }
+
+        this.progressSpinner = false;
+          
+      },
+      (err) => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         this.progressSpinner = false;
       }
     );

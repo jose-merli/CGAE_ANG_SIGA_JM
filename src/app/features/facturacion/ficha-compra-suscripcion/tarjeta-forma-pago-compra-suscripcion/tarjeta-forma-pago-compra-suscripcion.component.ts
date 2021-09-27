@@ -36,10 +36,11 @@ export class TarjetaFormaPagoCompraSuscripcionComponent implements OnInit {
 
   ngOnInit() {
     this.checkNoFacturable();
+    this.getPermisoGuardar();
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.selectedPago = this.ficha.idFormaPagoSeleccionada;
+    this.selectedPago = this.ficha.idFormaPagoSeleccionada +"";
     this.desFormaPagoSelecc = this.comboComun.find(
       el => 
         el.value == this.selectedPago
@@ -65,13 +66,20 @@ export class TarjetaFormaPagoCompraSuscripcionComponent implements OnInit {
     this.showTarjeta = !this.showTarjeta;
   }
 
-  getPermisoBuscar(){
+  getPermisoGuardar(){
     this.commonsService
 			.checkAcceso(procesos_PyS.fichaCompraSuscripcion)
 			.then((respuesta) => {
 				this.permisoGuardar = respuesta;
 			})
 			.catch((error) => console.error(error));
+  }
+
+  disableSave(){
+    let checkBox;
+    if(this.noFact)checkBox = "1";
+    else checkBox = "0";
+    return this.ficha.idFormaPagoSeleccionada == this.selectedPago && this.ficha.cuentaBancSelecc == this.cuentasBanc && this.noFact == checkBox;
   }
 
   checkSave(){
@@ -85,25 +93,56 @@ export class TarjetaFormaPagoCompraSuscripcionComponent implements OnInit {
   }
 
   save(){
-    this.msgs.push({
-      severity: "info",
-      summary: "Boton pendiente de implementación",
-      detail: "Gracias por su paciencia"
-    });
-    this.sigaServices.post('facturacion_solicitarCompra', this.ficha).subscribe(
-			(n) => {
-				if( n.status != 'OK') {
+    //En el caso que se este modificando una ficha ya creada
+    if(this.ficha.idEstadoPeticion != null && this.ficha.idEstadoPeticion != undefined){
+      let peticion = this.ficha;
+      peticion.idFormaPagoSeleccionada = this.selectedPago;
+      //SI la forma de pago seleccionada es "Domicializacion bancaria"
+      if(this.selectedPago == "20") peticion.cuentaBancSelecc = this.cuentasBanc;
+      else {
+        peticion.cuentaBancSelecc = null;
+        this.cuentasBanc = null;
+      }
+      if(this.noFact) peticion.noFact = "1";
+      else peticion.noFact = "0";
+      this.sigaServices.post('PyS_savePagoCompraSuscripcion', this.ficha).subscribe(
+        (n) => {
+          if( n.status != 'OK') {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          } else {
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+            this.ficha.idFormaPagoSeleccionada = this.selectedPago;
+            //SI la forma de pago seleccionada es "Domicializacion bancaria"
+            if(this.selectedPago == "20") this.ficha.cuentaBancSelecc = this.cuentasBanc;
+            else {
+              this.ficha.cuentaBancSelecc = null;
+              this.cuentasBanc = null;
+            }
+            if(this.noFact) this.ficha.noFact = "1";
+            else this.ficha.noFact = "0";
+          }
+          this.progressSpinner = false;
+        },
+        (err) => {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        } else {
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.progressSpinner = false;
         }
-				this.progressSpinner = false;
-			},
-			(err) => {
-				console.log(err);
-				this.progressSpinner = false;
-			}
-		);
+      );
+    }
+    //Una ficha nueva
+    else{
+      this.ficha.idFormaPagoSeleccionada = this.selectedPago;
+      //SI la forma de pago seleccionada es "Domicializacion bancaria"
+      if(this.selectedPago == "20") this.ficha.cuentaBancSelecc = this.cuentasBanc;
+      else {
+        this.ficha.cuentaBancSelecc = null;
+        this.cuentasBanc = null;
+      }
+      if(this.noFact) this.ficha.noFact = "1";
+      else this.ficha.noFact = "0";
+      
+      this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+    }
   }
 
   cargarDatosBancarios() {
@@ -126,14 +165,14 @@ export class TarjetaFormaPagoCompraSuscripcionComponent implements OnInit {
             this.progressSpinner = false;
           }
         );
-    }
+  }
 
-    showMessage(severity, summary, msg) {
+  showMessage(severity, summary, msg) {
       this.msgs = [];
       this.msgs.push({
         severity: severity,
         summary: summary,
         detail: msg
       });
-    }
+  }
 }

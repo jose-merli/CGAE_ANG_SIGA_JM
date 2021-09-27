@@ -358,24 +358,86 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
     if (msg != undefined) {
       this.msgs = msg;
     } else {
-      if (this.checkFormasPago() && this.checkNoFacturable()) {
-        sessionStorage.removeItem("FichaCompraSuscripcion");
-        let nuevaCompra = new FichaCompraSuscripcionItem();
-        nuevaCompra.productos = this.selectedRows;
-        sessionStorage.setItem("cargarFichaCompraSuscripcion",JSON.stringify(nuevaCompra));
-        this.router.navigate(["/fichaCompraSuscripcion"]);
+      if (this.checkNoFacturable()) {
+        if (this.checkFormasPago()) {
+          this.progressSpinner = true;
+
+          sessionStorage.removeItem("FichaCompraSuscripcion");
+          let nuevaCompra = new FichaCompraSuscripcionItem();
+          nuevaCompra.productos = this.selectedRows;
+
+          this.sigaServices.post('PyS_getFichaCompraSuscripcion', nuevaCompra).subscribe(
+            (n) => {
+              this.progressSpinner = false;
+
+              if(JSON.parse(n.body).idFormasPagoComunes==null){
+                //Se comprueba si es no facturable
+                //A tener en cuenta que a esta altura todos los productos seleccionados tienen
+                //el mismo valor "noFacturable"
+                if(this.selectedRows[0].noFacturable=="1"){
+                sessionStorage.setItem("FichaCompraSuscripcion", n.body);
+                this.router.navigate(["/fichaCompraSuscripcion"]);
+                }
+                else {
+                  if(this.selectedRows.length>1){
+                    this.msgs = [
+                      {
+                        severity: "error",
+                        summary: this.translateService.instant(
+                          "facturacion.productos.ResFormasPagoNoCompatibles"
+                        ),
+                        detail: this.translateService.instant(
+                          "facturacion.productos.FormasPagoNoCompatibles"
+                        )
+                      }
+                    ];
+                  }
+                  else {
+                    //Sustituir por etiquetas
+                    this.msgs = [
+                      {
+                        severity: "error",
+                        summary: "El usuario no puede realizar compras de este producto",
+                        detail: "Este producto no tiene formas de pago permitidas para el usuario actual"
+                      }
+                    ];
+                  }
+                }
+              }
+              else{
+                sessionStorage.setItem("FichaCompraSuscripcion", n.body);
+                this.router.navigate(["/fichaCompraSuscripcion"]);
+              }
+            },
+            (err) => {
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+              this.progressSpinner = false;
+            }
+          );
+        }
+        else {
+          this.msgs = [
+            {
+              severity: "error",
+              summary: this.translateService.instant(
+                "facturacion.productos.ResFormasPagoNoCompatibles"
+              ),
+              detail: this.translateService.instant(
+                "facturacion.productos.FormasPagoNoCompatibles"
+              )
+            }
+          ];
+        }
       } else {
+        //Pendiente de inserción y sustitucion de etiquetas.
         this.msgs = [
           {
             severity: "error",
-            summary: this.translateService.instant(
-              "facturacion.productos.ResFormasPagoNoCompatibles"
-            ),
-            detail: this.translateService.instant(
-              "facturacion.productos.FormasPagoNoCompatibles"
-            )
+            summary: "Valores de 'no facturable' distintos",
+            detail: "Los productos seleccionados tienen valores distintos en el parametro 'no facturable'"
           }
         ];
+        
       }
     }
   }
@@ -394,19 +456,38 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
   }
 
   checkFormasPago(){
-    
+    let error: boolean = false;
+
     //Se extrae el atributo y se separan las distintas formas de pago.
     let formasPagoArrays: any[]= [];
     this.selectedRows.forEach(element => {
-      formasPagoArrays.push(element.formapago.split(", "));
+      if(element!=""){ 
+        if(element.noFacturable=="1") formasPagoArrays.push(element.formapago.split(", ").push("No facturable"));
+        else formasPagoArrays.push(element.formapago.split(", "));
+      }
+      else if(element.noFacturable=="1")formasPagoArrays.push("No facturable");
+      else{
+        this.msgs = [
+          {
+            severity: "error",
+            summary: "Producto con forma de pago no definida",
+            detail: "El producto '"+element.descripcion+"' no tiene forma de pago definida y no tiene la propieda de 'No facturable' por lo que no se puede realizar su compra"
+          }
+        ];
+        error = true;
+      }
     });
+
+    let result = [];
     
-    //Se comprueba si todas las filas seleccionadas comparten alguna forma de pago.
-    let result = formasPagoArrays.shift().filter(function(v) {
-      return formasPagoArrays.every(function(a) {
-          return a.indexOf(v) !== -1;
+    if(!error){
+      //Se comprueba si todas las filas seleccionadas comparten alguna forma de pago.
+      result = formasPagoArrays.shift().filter(function(v) {
+        return formasPagoArrays.every(function(a) {
+            return a.indexOf(v) !== -1;
+        });
       });
-    });
+    }
 
     return result.length>0;
   }

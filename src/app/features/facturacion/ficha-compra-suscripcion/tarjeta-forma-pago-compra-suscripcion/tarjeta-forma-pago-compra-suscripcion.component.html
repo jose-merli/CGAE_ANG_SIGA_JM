@@ -7,7 +7,7 @@
         <div class="img-colegiado">
           <i class="fa fa-user icon-ficha"></i>
         </div>
-        <label class="title-ficha">{{ 'facturacion.productos.formapago' | translate }}</label>
+        <label class="title-ficha">{{ "facturacion.productos.formapago" | translate }}</label>
         <div class="d-flex justify-content-start mb-1 ml-auto">
           <i class="fa fa-angle-up ml-auto"></i>
         </div>
@@ -20,17 +20,17 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">{{ 'facturacion.productos.formapago' | translate }}
+            <label class="mr-auto title-ficha">{{ "facturacion.productos.formapago" | translate }}
             </label>
           </div>
           <div class="row">
             <div *ngIf="ficha.productos != null" class="col-3">
-              <label>{{"facturacionSJCS.facturacionesYPagos.importeTotal" || translate}}
+              <label>{{ "facturacionSJCS.facturacionesYPagos.importeTotal" | translate }}
                 <span>{{ ficha.impTotal }}</span>
               </label>
             </div>
             <div *ngIf="ficha.productos != null" class="col-3">
-              <label>{{"facturacionSJCS.facturacionesYPagos.importePendiente" || translate}}
+              <label>{{ "facturacionSJCS.facturacionesYPagos.importePendiente" | translate }}
                 <span>{{ ficha.pendPago }}</span>
               </label>
             </div>
@@ -39,7 +39,7 @@
                 <span>{{ desFormaPagoSelecc }}</span>
               </label>
             </div>
-            <div class="col-3">
+            <div class="col-3 ml-auto">
               <i class="fa fa-angle-down ml-auto"></i>
             </div>
           </div>
@@ -79,10 +79,10 @@
             </p-dropdown>
           </div>
           <!-- Desplegable condicional que solo aparece si la forma de pago seleccionada es "Domiciliación bancaria". corresponde a idformapago = 20 -->
-          <div *ngIf="selectedPago == 20" class="form-group col-lg-3 col-md-3">
+          <div *ngIf="selectedPago == '20'" class="form-group col-lg-3 col-md-3">
             <label>Cuenta Bancaria
             </label>
-            <p-dropdown class="select-form" [options]="cuentasBanc" [disabled]="ficha.idEstadoPeticion != 10"
+            <p-dropdown class="select-form" [options]="cuentasBanc" [disabled]="ficha.idEstadoPeticion != '10'"
               placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="ficha.cuentaBancSelecc"
               showClear="true"></p-dropdown>
           </div>
@@ -97,7 +97,7 @@
     <div [hidden]="!showTarjeta" class="card-footer">
       <div class="text-right main-button">
         <button pButton (click)="checkSave()" type="button" icon="fa fa-save" iconPos="left"
-          label="{{ 'general.boton.guardar' | translate}}"></button>
+          label="{{ 'general.boton.guardar' | translate}}" [disabled]="disableSave()"></button>
       </div>
     </div>
   </div>

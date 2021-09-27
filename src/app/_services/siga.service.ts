@@ -30,6 +30,7 @@ import { endpoints_componentes } from "../utils/endpoints_components";
 import { endpoints_EJG } from "../utils/endpoints_EJG";
 import { endpoints_facturacionsjcs } from "../utils/endpoints_facturacionsjcs";
 import { endpoints_generales } from "../utils/endpoints_generales";
+import { endpoints_PyS } from "../utils/endpoints_PyS";
 import { Documento } from '../features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-designa/ficha-actuacion/tarjeta-doc-ficha-act/tarjeta-doc-ficha-act.component';
 import { ActuacionDesignaItem } from '../models/sjcs/ActuacionDesignaItem';
 import { DocumentoDesignaItem } from '../models/sjcs/DocumentoDesignaItem';
@@ -673,6 +674,7 @@ export class SigaServices {
     ...endpoints_maestros,
     ...endpoints_guardia,
     ...endpoints_facturacion,
+	...endpoints_PyS,
   };
 
   private menuToggled = new Subject<any>();

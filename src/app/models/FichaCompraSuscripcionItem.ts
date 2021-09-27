@@ -13,10 +13,11 @@ export class FichaCompraSuscripcionItem {
     //TARJETA SOLICITUD
     nSolicitud: string;
     usuModificacion: string;
-    fechaSolicitud: Date;
-    fechaAprobacion: Date;
-    fechaDenegacion: Date;
-    fechaAnulacion: Date;
+    fechaPendiente: Date;
+    fechaDenegada: Date;
+    fechaAceptada: Date;
+    fechaSolicitadaAnulacion: Date;
+    fechaAnulada: Date;
 
     
     //TARJETA FORMA DE PAGO
@@ -27,6 +28,7 @@ export class FichaCompraSuscripcionItem {
     impTotal: number;
     pendPago: number;
     cuentaBancSelecc: string;
+    noFact: string;
 
     idEstadoPeticion: string;
     productos: ListaProductosItems[];
