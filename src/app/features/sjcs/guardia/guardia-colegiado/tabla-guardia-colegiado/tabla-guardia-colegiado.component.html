@@ -37,10 +37,6 @@
             <div *ngIf="col.field != 'fechadesde' && col.field != 'fechahasta'">
               <span class="enlace" (click)="openTab(dato)">{{dato[col.field]}}</span>
             </div>
-
-            <div *ngIf="col.field == 'ordenGrupo' && !(datos[rowIndex].grupoGuardiaColegiado == null || datos[rowIndex].grupoGuardiaColegiado == undefined || datos[rowIndex].grupoGuardiaColegiado == '' )">
-              <span>{{dato[col.field]}}</span>
-            </div>
           
 
             <!-- <div *ngIf="col.field == 'nombre'">

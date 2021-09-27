@@ -50,8 +50,9 @@
         <!-- PENDIENTE VALIDAR  -->
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>Pendiente de Validar</label>
-          <p-dropdown class="select-form" [(ngModel)]='filtros.pendienteValidar' placeholder="Seleccionar"
-            [options]="comboValidar" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+          <p-dropdown class="select-form" [(ngModel)]='filtros.validada' placeholder="Seleccionar"
+            [options]="comboValidar" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" 
+            (valueChangeSelected)="fillPendienteValidar($event)" (valueChangeInput)="fillPendienteValidar($event)"></p-dropdown>
         </div>
 
       </div>

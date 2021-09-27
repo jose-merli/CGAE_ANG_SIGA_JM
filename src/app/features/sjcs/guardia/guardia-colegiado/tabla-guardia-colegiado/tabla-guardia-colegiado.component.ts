@@ -80,7 +80,7 @@ export class TablaGuardiaColegiadoComponent implements OnInit {
       { field: "letradosGuardia", header: "justiciaGratuita.justiciables.literal.colegiado" },
       { field: "numColegiado", header: "facturacionSJCS.facturacionesYPagos.nColegiado" },
       { field: "ordenGrupo", header: "administracion.informes.literal.orden" },
-      { field: "estado", header: "dato.jgr.guardia.inscripciones.estado" },
+      { field: "estadoGuardia", header: "dato.jgr.guardia.inscripciones.estado" },
 
     ];
     this.cols.forEach(it => this.buscadores.push(""))

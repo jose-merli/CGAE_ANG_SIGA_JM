@@ -153,6 +153,10 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
     this.filtros.fechahasta = event;
   }
 
+  fillPendienteValidar(event){
+    this.filtros.validada = event;
+  }
+
   showMessage(event) {
     this.msgs = [];
     this.msgs.push({
