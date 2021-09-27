@@ -6,7 +6,7 @@ import { SigaServices } from '../../../_services/siga.service';
 import { Router } from '../../../../../node_modules/@angular/router';
 import { FiltroRemesasComponent } from './filtro-remesas/filtro-remesas.component';
 import { TablaRemesasComponent } from './tabla-remesas/tabla-remesas.component';
-import { procesos_maestros } from '../../../permisos/procesos_maestros';
+import { procesos_comision } from '../../../permisos/procesos_comision';
 import { RemesasBusquedaObject } from '../../../models/sjcs/RemesasBusquedaObject';
 import { RemesasBusquedaItem } from '../../../models/sjcs/RemesasBusquedaItem';
 import { DatePipe } from '@angular/common';
@@ -41,7 +41,7 @@ export class RemesasComponent implements OnInit {
 
   ngOnInit() {
 
-    this.commonsService.checkAcceso(procesos_maestros.procedimientos)
+    this.commonsService.checkAcceso(procesos_comision.remesasEnvio)
       .then(respuesta => {
 
         this.permisoEscritura = respuesta;
@@ -155,11 +155,11 @@ export class RemesasComponent implements OnInit {
         console.log("Dentro del servicio del padre que llama al buscarRemesas");
         this.datos = JSON.parse(n.body).remesasItems;
 
-        this.datos.forEach(element => {
+       /*  this.datos.forEach(element => {
           element.fechaRecepcion = this.formatDate(element.fechaRecepcion);
           element.fechaGeneracion = this.formatDate(element.fechaGeneracion);
           element.fechaEnvio = this.formatDate(element.fechaEnvio);
-        });
+        }); */
 
         console.log("Contenido de la respuesta del back --> ", this.datos);
         this.buscar = true;

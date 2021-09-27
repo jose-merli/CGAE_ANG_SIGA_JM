@@ -9,6 +9,11 @@ export class EJGRemesaItem {
     numeroEJG?: number;
     solicitante?: string;
     turnoGuardiaEJG?: string;
+    numIncidencias?: number;
+    incidenciasAntesEnvio?: number;
+    incidencias?: string;
+    incidenciasDespuesEnvio?: number;
+    idEjgRemesa?: number;
 
     constructor() { }
     

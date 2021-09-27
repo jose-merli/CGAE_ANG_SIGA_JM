@@ -4,8 +4,9 @@
 <div class="card mt-3">
   <div class="card-body p-0">
 
-    <p-table [value]="datos" [columns]="cols" [first]="page" selectionMode="multiple" [(selection)]="selectedDatos" [responsive]="true"
-      #tabla class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="selectedRow(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
+    <p-table [value]="datos" [columns]="cols" [first]="page" selectionMode="multiple" [(selection)]="selectedDatos"
+      [responsive]="true" #tabla class="tabla-listado" [paginator]="true" [rows]="selectedItem"
+      (onRowSelect)="selectedRow(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
       [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
@@ -17,9 +18,16 @@
           <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
             {{ col.header | translate }}
             <p-sortIcon [field]="col.field"></p-sortIcon>
-            <input pDroppable="false" (click)="$event.stopPropagation()" [(ngModel)]="buscadores[i]" *ngSwitchCase="col.field" pInputText
-              type="text" (input)="
+            <input *ngIf="col.field != 'fechaGeneracion' && col.field != 'fechaEnvio' && col.field != 'fechaRecepcion'"
+              pDroppable="false" (click)="$event.stopPropagation()" [(ngModel)]="buscadores[i]" pInputText type="text"
+              (input)="
                 tabla.filter($event.target.value, col.field, 'contains')
+              " />
+
+            <input *ngIf="col.field == 'fechaGeneracion' || col.field == 'fechaEnvio' || col.field == 'fechaRecepcion'"
+              pDroppable="false" (click)="$event.stopPropagation()" [(ngModel)]="buscadores[i]" pInputText type="text"
+              (input)="
+                tabla.filter($event.target.value, col.field, 'inCollection')
               " />
           </th>
         </tr>
@@ -30,9 +38,20 @@
 
           <td class="text-center" *ngFor="let col of columns">
 
-            <span>
+            <span
+              *ngIf="col.field != 'fechaGeneracion' && col.field != 'fechaEnvio' && col.field != 'fechaRecepcion' && col.field != 'nRegistro'">
               {{dato[col.field]}}
             </span>
+
+            <span *ngIf="col.field == 'fechaGeneracion' || col.field == 'fechaEnvio' || col.field == 'fechaRecepcion'">
+              {{dato[col.field] | date: 'dd/MM/yyyy'}}
+            </span>
+
+            <a class="enlace" (click)="openTab(dato)">
+              <span *ngIf="col.field == 'nRegistro'">
+                {{dato[col.field]}}
+              </span>
+            </a>
           </td>
 
         </tr>
@@ -46,19 +65,24 @@
       </ng-template>
       <ng-template pTemplate="paginatorleft">
         <div class="mostrar d-flex text-right justify-content-end">
-          <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }}{{tabla.first + 1}} al {{tabla.first
-            + tabla.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{tabla.totalRecords}}</label>
-          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{selectedDatos.length}}
+          <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' |
+            translate }}{{tabla.first + 1}} al {{tabla.first
+            + tabla.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }}
+            {{tabla.totalRecords}}</label>
+          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">{{
+            'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{selectedDatos.length}}
           </label>
-          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: 0
+          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{
+            'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: 0
           </label>
           <label>{{"general.message.mostrar" | translate}}</label>
           <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
           </p-dropdown>
           <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
           <div class="ml-3 selectAll">
-            <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
-              name="groupname" [disabled]="!permisos"></p-checkbox>
+            <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true"
+              label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname" [disabled]="!permisos">
+            </p-checkbox>
           </div>
         </div>
       </ng-template>
@@ -70,11 +94,11 @@
   <div class="card-footer">
     <div class="text-right main-button">
 
-      <button pButton [disabled]="((!selectMultiple || !selectAll) && (selectedDatos == undefined || selectedDatos.length == 0)) || !permisos"
-        (click)="checkPermisosDelete()" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
+      <button pButton
+        [disabled]="((!selectMultiple || !selectAll) && (selectedDatos == undefined || selectedDatos.length == 0)) || !permisos"
+        (click)="checkPermisosDelete()" type="button" icon="fa fa-trash-alt" iconPos="left"
+        label="{{ 'general.boton.eliminar' | translate}}"></button>
 
-      <button pButton [disabled]="selectMultiple || selectAll" (click)="openTab()"
-        type="button" icon="fa fa-edit" iconPos="left" label="{{ 'general.boton.consultar' | translate}} / {{ 'general.boton.editar' | translate}}"></button>
     </div>
   </div>
 </div>

@@ -8,8 +8,6 @@ import { RemesasBusquedaObject } from '../../../../../models/sjcs/RemesasBusqued
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { ComboItem } from '../../../../administracion/parametros/parametros-generales/parametros-generales.component';
 import { RemesasItem } from '../../../../../models/sjcs/RemesasItem';
-import { Table } from 'primeng/table';
-import { ColumnasItem } from '../../../../../models/sjcs/ColumnasItem';
 
 @Component({
   selector: 'app-tarjeta-ejgs',
@@ -29,6 +27,7 @@ export class TarjetaEjgsComponent implements OnInit {
 
   body;
 
+  openFicha: boolean = false;
   selectedItem: number = 10;
   selectAll: boolean = false;
   selectedDatos: any[] = [];
@@ -43,6 +42,8 @@ export class TarjetaEjgsComponent implements OnInit {
   buscadores = []
   estadoRemesa: ComboItem[] = [{ value: "con_inci", label: "Expedientes con incidencias"},{ value: "sin_inci", label:  "Expedientes sin incidencias"},{ value: "inci_env", label: "Expedientes con incidencias antes del envío"},{ value: "desp_env", label:  "Expedientes con incidencias después del envío"}, { value: "inci_no_re", label: "Expedientes con incidencias y no en nueva remesa"}];
   estadoRemesaSeleccionado;
+  resaltadoEJGsAsociados: boolean = false;
+  modoEdicion: boolean = false;
 
   //Resultados de la busqueda
   @Input() datos;
@@ -55,6 +56,19 @@ export class TarjetaEjgsComponent implements OnInit {
   remesasDatosEntradaItem;
   @Input() remesaTabla;
   @Input() remesaItem: RemesasItem = new RemesasItem();
+  @Input() openGen;
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
+  fichasPosibles = [
+    {
+      key: "generales",
+      activa: true
+    },
+    {
+      key: "configuracion",
+      activa: false
+    },
+  ];
 
   constructor(private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -67,10 +81,11 @@ export class TarjetaEjgsComponent implements OnInit {
 
   ngOnInit() {
     if(this.remesaTabla != null){
-      this.getEJGRemesa(this.remesaTabla[0]);
+      this.getEJGRemesa(this.remesaTabla);
     }
 
     this.getCols();
+    this.resaltadoEJGsAsociados = true;
 
     this.tabla.filterConstraints['inCollection'] = function inCollection(value: any, filter: any): boolean{
       // value = array con los datos de la fila actual
@@ -80,46 +95,46 @@ export class TarjetaEjgsComponent implements OnInit {
 
       if (filter === undefined || filter === null) {
         return true;
-    }
-
-    if (incidencias === undefined || incidencias === null || incidencias.length === 0) {
-        return false;
-    }
-
-    for (let i = 0; i < incidencias.length; i++) {
-      switch (filter) {
-
-        case "con_inci":
-          if(incidencias[0] == "1"){
-            return true;
-          }
-          break;
-
-        case "sin_inci":
-          if(incidencias[0] == "0"){
-            return true;
-          }
-          break;
-      
-        case "inci_env":
-          if(incidencias[0] == "1" && incidencias[1] == "1"){
-            return true;
-          }
-          break;
-
-        case "desp_env":
-          if(incidencias[0] == "1" && incidencias[2] == "1"){
-            return true;
-          }
-          break;
-      
-        default:
-          if(incidencias[0] == "1" && incidencias[3] == "0"){
-            return true;
-          }
-          break;
       }
-    }
+
+      if (incidencias === undefined || incidencias === null || incidencias.length === 0) {
+          return false;
+      }
+
+      for (let i = 0; i < incidencias.length; i++) {
+        switch (filter) {
+
+          case "con_inci":
+            if(incidencias[0] == "1"){
+              return true;
+            }
+            break;
+
+          case "sin_inci":
+            if(incidencias[0] == "0"){
+              return true;
+            }
+            break;
+        
+          case "inci_env":
+            if(incidencias[0] == "1" && incidencias[1] == "1"){
+              return true;
+            }
+            break;
+
+          case "desp_env":
+            if(incidencias[0] == "1" && incidencias[2] == "1"){
+              return true;
+            }
+            break;
+        
+          default:
+            if(incidencias[0] == "1" && incidencias[3] == "0"){
+              return true;
+            }
+            break;
+        }
+      }
       return false;
     }
   }
@@ -127,6 +142,39 @@ export class TarjetaEjgsComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges) {
     this.selectedDatos = [];
     this.datosInicial = JSON.parse(JSON.stringify(this.datos));
+    if (this.openGen == true) {
+      if (this.openFicha == false) {
+        this.abreCierraFicha('EJGsAsociados')
+      }
+    }
+  }
+
+  abreCierraFicha(key) {
+    this.resaltadoEJGsAsociados = true;
+    let fichaPosible = this.getFichaPosibleByKey(key);
+    if (
+      key == "EJGsAsociados" &&
+      !this.modoEdicion
+    ) {
+      fichaPosible.activa = !fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
+    if (this.modoEdicion) {
+      fichaPosible.activa = !fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
+    this.opened.emit(this.openFicha);
+    this.idOpened.emit(key);
+  }
+
+  getFichaPosibleByKey(key): any {
+    let fichaPosible = this.fichasPosibles.filter(elto => {
+      return elto.key === key;
+    });
+    if (fichaPosible && fichaPosible.length) {
+      return fichaPosible[0];
+    }
+    return {};
   }
 
   checkPermisosDelete() {
@@ -238,7 +286,7 @@ export class TarjetaEjgsComponent implements OnInit {
       { field: "estadoRemesa", header: "justiciaGratuita.remesas.ficha.EstadoEJGDentroRemesa", display: "table-cell" },
       { field: "incidencias", header: "", width: "0.001%"}
     ];
-    this.cols.forEach(it => this.buscadores.push(""))
+    this.cols.forEach(it => this.buscadores.push(""));
 
     this.rowsPerPage = [
       {

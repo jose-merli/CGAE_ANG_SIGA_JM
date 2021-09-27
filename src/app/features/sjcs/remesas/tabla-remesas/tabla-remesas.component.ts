@@ -8,6 +8,7 @@ import { ConfirmationService, Paginator } from 'primeng/primeng';
 import { CommonsService } from '../../../../_services/commons.service';
 import { RemesasBusquedaObject } from '../../../../models/sjcs/RemesasBusquedaObject';
 import { Router } from '../../../../../../node_modules/@angular/router';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-tabla-remesas',
@@ -53,7 +54,8 @@ export class TablaRemesasComponent implements OnInit {
     private router: Router,
     private persistenceService: PersistenceService,
     private confirmationService: ConfirmationService,
-    private commonsService: CommonsService
+    private commonsService: CommonsService,
+    private datepipe: DatePipe
   ) { }
 
   ngOnInit() {
@@ -64,6 +66,31 @@ export class TablaRemesasComponent implements OnInit {
 
     this.datosInicial = JSON.parse(JSON.stringify(this.datos));
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
+
+    this.tabla.filterConstraints['inCollection'] = function inCollection(value: any, filter: any): boolean {
+      // value = array con los datos de la fila actual
+      // filter = valor del filtro por el que se va a buscar en el array value
+
+      const pattern = 'dd/MM/yyyy';
+
+      let datepipe = new DatePipe('en-US');
+
+      let incidencias = datepipe.transform(value, pattern);
+
+      if (filter === undefined || filter === null) {
+        return true;
+      }
+
+      if (incidencias === undefined || incidencias === null || incidencias.length === 0) {
+        return false;
+      }
+
+      if (incidencias.includes(filter)) {
+        return true;
+      }
+
+      return false;
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -207,11 +234,13 @@ export class TablaRemesasComponent implements OnInit {
       selectedItem: this.selectedItem
     };
 
+    console.log("evento -> ", evento);
+
     this.persistenceService.setPaginacion(paginacion);
     this.progressSpinner = true;
     this.persistenceService.setDatos(evento);
     this.router.navigate(["/fichaRemesasEnvio"]);
-    localStorage.setItem('remesaItem', JSON.stringify(this.selectedDatos));
+    localStorage.setItem('remesaItem', JSON.stringify(evento));
     localStorage.setItem('ficha', "registro");
   }
 

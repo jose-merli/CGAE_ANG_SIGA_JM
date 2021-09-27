@@ -1,11 +1,45 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000">
 </p-growl>
+<div class="card">
+  <div class="card-header header-ficha">
+    <div *ngIf="!openFicha" class="form-row">
+      <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('EJGsAsociados')">
+        <div class="img-colegiado">
+          <i class="fas fa-list icon-ficha"></i>
+        </div>
+      </div>
+      <div class="col-lg-11 col-md-10 ">
+        <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('EJGsAsociados')">
+          <label class="mr-auto title-ficha" style="cursor:pointer">{{ "justiciaGratuita.remesas.ficha.EJGsAsociados"
+            | translate }}
+          </label>
+        </div>
+        <div class="d-flex justify-content-between" style="cursor:default">
+          <label>{{ "justiciaGratuita.remesas.ficha.EJGsSinErrores" | translate }} / {{
+            "justiciaGratuita.remesas.ficha.NumeroTotalEJGs" | translate }}
+            <span *ngIf="remesaTabla != null"> {{ remesaTabla.incidencias }}</span>
+            <span *ngIf="remesaTabla == null"> {{ remesaItem.incidencias }}</span>
+          </label>
+          <!-- <i *ngIf="!esFichaActiva('generales')" class="fa fa-angle-down float-right"></i> -->
+          <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "
+            (click)="abreCierraFicha('EJGsAsociados')"></i>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center"
+      (click)="abreCierraFicha('EJGsAsociados')">
+      <div class="img-colegiado">
+        <i class="far fa-address-card icon-ficha"></i>
+      </div>
+      <label class="title-ficha" style="cursor:pointer">EJG's Asociados</label>
+      <i class="fa fa-angle-up ml-auto"></i>
+    </div>
+  </div>
 
-<div class="card mt-3">
-  <div class="card-body p-0">
-
-    <p-table [value]="datos" [columns]="cols" [first]="page" selectionMode="multiple" [(selection)]="selectedDatos" [responsive]="true"
-      #tabla class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="selectedRow(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
+  <div *ngIf="openFicha" class="card-body p-0">
+    <p-table [value]="datos" [columns]="cols" [first]="page" selectionMode="multiple" [(selection)]="selectedDatos"
+      [responsive]="true" #tabla class="tabla-listado" [paginator]="true" [rows]="selectedItem"
+      (onRowSelect)="selectedRow(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
       [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
@@ -14,20 +48,27 @@
       </ng-template>
       <ng-template pTemplate="header" let-columns>
         <tr>
-          <th *ngFor="let col of columns;" [ngSwitch]="col.field" [pSortableColumn]="col.field" [ngStyle]="{'display': col.width}">
+          <th *ngFor="let col of columns;" [ngSwitch]="col.field" [pSortableColumn]="col.field"
+            [ngStyle]="{'display': col.width}">
 
             <span>
               {{ col.header | translate }}
             </span>
 
-            <p-dropdown *ngIf = "col.header == 'justiciaGratuita.remesas.ficha.EstadoEJGDentroRemesa'" class="select-form" [(ngModel)]='estadoRemesaSeleccionado' placeholder="Seleccionar"
-            [options]="estadoRemesa" filterBy="label,labelSinTilde" (onChange) = "tabla.filter($event.value, columns[8].field, 'inCollection' )" [showClear]="true">
-          </p-dropdown>
-            
-            <p-sortIcon *ngIf = "col.header != 'justiciaGratuita.remesas.ficha.EstadoEJGDentroRemesa' && col.field != 'incidencias'" [field]="col.field"></p-sortIcon>
+            <p-dropdown *ngIf="col.header == 'justiciaGratuita.remesas.ficha.EstadoEJGDentroRemesa'" class="select-form"
+              [(ngModel)]='estadoRemesaSeleccionado' placeholder="Seleccionar" [options]="estadoRemesa"
+              filterBy="label,labelSinTilde" (onChange)="tabla.filter($event.value, columns[8].field, 'inCollection')"
+              [showClear]="true">
+            </p-dropdown>
 
-            <input *ngIf = "col.header != 'justiciaGratuita.remesas.ficha.EstadoEJGDentroRemesa' && col.field != 'incidencias'" pDroppable="false" (click)="$event.stopPropagation()" [(ngModel)]="buscadores[i]" pInputText
-              type="text" (input)="tabla.filter($event.target.value, col.field, 'contains')"/>
+            <p-sortIcon
+              *ngIf="col.header != 'justiciaGratuita.remesas.ficha.EstadoEJGDentroRemesa' && col.field != 'incidencias'"
+              [field]="col.field"></p-sortIcon>
+
+            <input
+              *ngIf="col.header != 'justiciaGratuita.remesas.ficha.EstadoEJGDentroRemesa' && col.field != 'incidencias'"
+              pDroppable="false" (click)="$event.stopPropagation()" [(ngModel)]="buscadores[i]" pInputText type="text"
+              (input)="tabla.filter($event.target.value, col.field, 'contains')" />
           </th>
         </tr>
       </ng-template>
@@ -37,7 +78,7 @@
 
           <td class="text-center" *ngFor="let col of columns;">
 
-            <span *ngIf = "col.field != 'incidencias'">
+            <span *ngIf="col.field != 'incidencias'">
               {{dato[col.field]}}
             </span>
           </td>
@@ -53,25 +94,31 @@
       </ng-template>
       <ng-template pTemplate="paginatorleft">
         <div class="mostrar d-flex text-right justify-content-end">
-          <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }}{{tabla.first + 1}} al {{tabla.first
-            + tabla.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{tabla.totalRecords}}</label>
-          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{selectedDatos.length}}
+          <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' |
+            translate }}{{tabla.first + 1}} al {{tabla.first
+            + tabla.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }}
+            {{tabla.totalRecords}}</label>
+          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">{{
+            'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{selectedDatos.length}}
           </label>
-          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: 0
+          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{
+            'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: 0
           </label>
           <label>{{"general.message.mostrar" | translate}}</label>
           <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
           </p-dropdown>
           <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
           <div class="ml-3 selectAll">
-            <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
-              name="groupname" [disabled]="!permisos"></p-checkbox>
+            <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true"
+              label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname" [disabled]="!permisos">
+            </p-checkbox>
           </div>
         </div>
       </ng-template>
     </p-table>
   </div>
- 
-<div *ngIf="progressSpinner" class="overlay-spinner">
-  <div class="loader"></div>
+
+  <div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+  </div>
 </div>
