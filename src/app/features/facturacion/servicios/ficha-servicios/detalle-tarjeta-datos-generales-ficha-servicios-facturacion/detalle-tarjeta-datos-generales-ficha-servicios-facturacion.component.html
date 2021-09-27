@@ -40,7 +40,7 @@
   </div>
 
   <!-- Permitir solicitud por internet -->
-  <div class="form-group-interlineado col-lg-3 col-md-3" *ngIf="servicio.automatico == '0'">
+  <div class="form-group-interlineado col-lg-3 col-md-3">
     <div class="d-flex align-items-baseline justify-content-between alineacionCheckboxes">
       <p-checkbox binary="true" [disabled]="checkboxAsignacionAutomatica"
         label="{{'facturacion.fichaservicios.datosgenerales.permitirsoliciturinternet' | translate}}"
@@ -62,7 +62,7 @@
   <!-- Condicion de suscripcion -->
   <div class="form-group-interlineado col-lg-3 col-md-3 pb-lg-2 pb-md-2">
     <label>{{ "facturacion.fichaservicios.datosgenerales.condicionsuscripcion" | translate}}</label>
-    <p-dropdown [filter]="true" styleClass="widthAll" [showClear]="true"
+    <p-dropdown (onChange)="valueChangeCondicion()" [filter]="true" styleClass="widthAll" [showClear]="true"
       placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='servicio.idconsulta'
       [options]="condicionesSuscripcionObject.combooItems">
     </p-dropdown>

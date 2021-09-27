@@ -115,6 +115,14 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
     }
   }
 
+  //Metodo que se lanza al cambiar de valor el combo de Condicion de Suscripcion, se usa para desmarcar el checkbox Asignacion Automatica en caso de que no haya ninguna condicion seleccionada.
+  valueChangeCondicion() {
+    if (this.servicio.idconsulta == null) {
+      this.checkboxAsignacionAutomatica = false;
+      this.onChangeAsignacionAutomatica();
+    }
+  }
+
   //Metodo que se lanza al marcar/desmarcar el checkbox permitir solicitud por internet
   onChangePermitirSolicitudInternet() {
     if (this.checkBoxPermitirSolicitudPorInternet) {
@@ -178,23 +186,30 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
       let comprobacionUnicaFormaPagoSecretaria: boolean = true;
 
       //ID Domiciliacion Bancaria en formas de pago internet = 20
-      if (this.servicio.formasdepagointernet != null && this.servicio.formasdepagointernet.length > 0) {
+      if (this.servicio.formasdepagointernet.length > 0) {
         this.servicio.formasdepagointernet.forEach(formadepagointernet => {
           if (formadepagointernet != 20) {
             comprobacionUnicaFormaPagoInternet = false;
           }
         });
       }
-      if (this.servicio.formasdepagointernet != null && this.servicio.formasdepagointernet.length > 0) {
+
+      if (this.servicio.formasdepagosecretaria.length > 0) {
         //ID Domiciliacion Bancaria en formas de pago secretaria = 80
         this.servicio.formasdepagosecretaria.forEach(formasdepagosecretaria => {
           if (formasdepagosecretaria != 80) {
             comprobacionUnicaFormaPagoSecretaria = false;
           }
         });
-      }
+      } else
 
-      if (comprobacionUnicaFormaPagoInternet = true && comprobacionUnicaFormaPagoSecretaria == true && this.servicio.editar) {
+        if (this.servicio.formasdepagointernet.length == 0 && this.servicio.formasdepagosecretaria.length == 0) {
+          comprobacionUnicaFormaPagoInternet = false;
+          comprobacionUnicaFormaPagoSecretaria = false;
+        }
+
+
+      if (comprobacionUnicaFormaPagoInternet == true && comprobacionUnicaFormaPagoSecretaria == true && this.servicio.editar) {
 
         let keyConfirmation = "avisoDomiciliacionBancariaUnicaFormaPago";
         let mensaje = this.translateService.instant("facturacion.servicios.fichaservicio.unicaformapagodomiciliacionbancariaconfirm");
@@ -257,7 +272,7 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
     this.aGuardar = true;
     if (this.servicio.idtiposervicios != null && this.servicio.idservicio != null && this.servicio.descripcion != '' && this.servicio.descripcion != undefined) {
       if (this.servicio.codigoext != "" && this.servicio.codigoext != null) {
-        if (this.listaCodigosPorInstitucionObject.listaCodigosPorColegio.includes(this.servicio.codigoext)) {
+        if (this.listaCodigosPorInstitucionObject.listaCodigosPorColegio.includes(this.servicio.codigoext) && this.servicio.codigoext != this.servicioOriginal.codigoext) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.fichaproductos.datosgenerales.mensajeerrorcodigo"))
         } else {
           this.guardarServicio();
