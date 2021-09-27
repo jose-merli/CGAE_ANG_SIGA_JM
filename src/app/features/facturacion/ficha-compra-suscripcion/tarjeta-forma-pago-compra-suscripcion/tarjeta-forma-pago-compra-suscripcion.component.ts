@@ -59,6 +59,9 @@ export class TarjetaFormaPagoCompraSuscripcionComponent implements OnInit {
       this.disableNoFacturableBox = true;
       this.noFact = true;
     }
+
+    if(this.noFact) this.ficha.noFact = "1";
+      else this.ficha.noFact = "0";
   }
 
 

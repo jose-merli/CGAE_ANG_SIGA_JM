@@ -148,7 +148,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
 
   aprobarCompra(){
     this.progressSpinner = true; 
-		this.sigaServices.post('PyS_solicitarCompra', this.ficha).subscribe(
+		this.sigaServices.post('PyS_aprobarCompra', this.ficha).subscribe(
 			(n) => {
 				if( n.status != 200) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
