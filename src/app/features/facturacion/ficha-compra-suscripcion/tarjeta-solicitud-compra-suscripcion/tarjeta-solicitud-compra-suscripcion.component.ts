@@ -8,6 +8,7 @@ import { procesos_PyS } from '../../../../permisos/procesos_PyS';
 import { SigaStorageService } from '../../../../siga-storage.service';
 import { CommonsService } from '../../../../_services/commons.service';
 import { SigaServices } from '../../../../_services/siga.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-tarjeta-solicitud-compra-suscripcion',
@@ -30,6 +31,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
 
   permisoSolicitarCompra;
   permisoAprobarCompra;
+  permisoDenegar;
 
   progressSpinner : boolean = false;
   showTarjeta: boolean = false;
@@ -38,7 +40,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
   constructor(
     private sigaServices: SigaServices, private translateService: TranslateService, 
     private commonsService: CommonsService, private router: Router,
-    private localStorageService: SigaStorageService,) { }
+    private localStorageService: SigaStorageService,private location: Location, ) { }
 
   ngOnInit() {
     this.processHist();
@@ -85,6 +87,8 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
 
   checkPermisos(){
     this.getPermisoSolicitarCompra();
+    this.getPermisoAprobarCompra();
+    this.getPermisoDenegar();
   }
 
   checkSolicitarCompra(){
@@ -107,6 +111,17 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
     }  else {
 			if(this.ficha.productos!= null)this.aprobarCompra();
       // else this.aprobarSuscripcion();
+		}
+  }
+
+  checkDenegar(){
+    let msg = null;
+    if(this.ficha.productos!= null) msg = this.commonsService.checkPermisos(this.permisoDenegar, undefined);
+
+    if (msg != null) {
+      this.msgs = msg;
+    }  else {
+      this.denegar();
 		}
   }
 
@@ -152,6 +167,31 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
 		);
   }
 
+  denegar(){
+    if(this.ficha.fechaPendiente != undefined || this.ficha.fechaPendiente != null){
+      this.progressSpinner = true;
+      this.sigaServices.post('PyS_denegarPeticion', this.ficha).subscribe(
+        (n) => {
+          if( n.status != 200) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          } else {
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+            
+            if(this.esColegiado) this.location.back();
+            //Se actualiza la información de la ficha
+            else this.actualizaFicha.emit();
+          }
+          this.progressSpinner = false;
+        },
+        (err) => {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          this.progressSpinner = false;
+        }
+      );
+    }
+    else this.location.back();
+  }
+
   onHideTarjeta(){
     this.showTarjeta = ! this.showTarjeta;
   }
@@ -167,19 +207,30 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
   
   getPermisoSolicitarCompra(){
     this.commonsService
-			.checkAcceso(procesos_PyS.fichaCompraSuscripcion)
+			.checkAcceso(procesos_PyS.solicitarCompra)
 			.then((respuesta) => {
 				this.permisoSolicitarCompra = respuesta;
 			})
 			.catch((error) => console.error(error));
   }
 
-  getPermisoAprobar(){
+  getPermisoAprobarCompra(){
     this.commonsService
-			.checkAcceso(procesos_PyS.fichaCompraSuscripcion)
+			.checkAcceso(procesos_PyS.aprobarCompra)
 			.then((respuesta) => {
 				this.permisoAprobarCompra = respuesta;
 			})
 			.catch((error) => console.error(error));
   }
+
+  getPermisoDenegar(){
+    //Según la documentación funcional de Productos y Servicios, cualquier usuario que tenga acceso total puede realizar esta acción
+    this.commonsService
+			.checkAcceso(procesos_PyS.fichaCompraSuscripcion)
+			.then((respuesta) => {
+				this.permisoDenegar = respuesta;
+			})
+			.catch((error) => console.error(error));
+  }
+
 }

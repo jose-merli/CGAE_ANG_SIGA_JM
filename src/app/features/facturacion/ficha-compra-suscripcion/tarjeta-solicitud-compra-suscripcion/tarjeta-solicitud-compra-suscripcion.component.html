@@ -113,7 +113,7 @@
           label="{{ 'facturacion.productos.solicitarSuscripcion' | translate}}" [disabled]="ficha.fechaSolicitada != null"></button>
       <!-- Aprobar -->
         <button pButton  (click)="checkAprobar()" type="button" icon="fa fa-search" iconPos="left"
-          label="{{ 'facturacion.productos.aprobar' | translate}}" [disabled]="ficha.fechaAprobada != null"></button>
+          label="{{ 'facturacion.productos.aprobar' | translate}}" [disabled]="ficha.fechaAprobada != null || ficha.fechaDenegada != null"></button>
       <!-- Denegar/Cancelar -->
         <button *ngIf="!esColegiado" pButton  (click)="checkDenegar()" type="button" icon="fa fa-search" iconPos="left"
           label="{{ 'general.boton.denegar' | translate}}" [disabled]="ficha.fechaAprobada != null"></button>

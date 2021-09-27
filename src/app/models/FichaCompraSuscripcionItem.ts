@@ -11,7 +11,7 @@ export class FichaCompraSuscripcionItem {
     nif: string;
 
     //TARJETA SOLICITUD
-    nSolicitud: string;
+    nSolicitud: string; //Equivaldria al idpeticion de la tabla PYS_PETICIONCOMPRASUSCRIPCION
     usuModificacion: string;
     fechaPendiente: Date;
     fechaDenegada: Date;
