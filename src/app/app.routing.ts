@@ -55,6 +55,7 @@ import { MantenimientoCertificadosComponent } from './features/certificados/mant
 import { MantenimientoSufijosComponent } from './features/facturacion/mantenimiento-sufijos/mantenimiento-sufijos.component';
 import { FacturaPlantillasComponent } from './features/facturacion/factura-plantillas/factura-plantillas.component';
 import { GestionCuentasBancariasComponent } from './features/facturacion/gestion-cuentas-bancarias/gestion-cuentas-bancarias.component';
+import { FichaCuentaBancariaComponent } from "./features/facturacion/gestion-cuentas-bancarias/ficha-cuenta-bancaria/ficha-cuenta-bancaria.component";
 import { SeriesFacturaComponent } from './features/facturacion/series-factura/series-factura.component';
 import { PrevisionesFacturaComponent } from './features/facturacion/previsiones-factura/previsiones-factura.component';
 import { ProgramarFacturaComponent } from './features/facturacion/programar-factura/programar-factura.component';
@@ -224,8 +225,6 @@ import { ConsultasComponent } from './features/informes-comunicaciones/consultas
 import { FichaConsultaComponent } from './features/informes-comunicaciones/consultas/ficha-consulta/ficha-consulta.component';
 
 import { ComunicacionesComponent } from './features/informes-comunicaciones/comunicaciones/comunicaciones.component';
-
-
 
 import { FichaRegistroComunicacionComponent } from './features/informes-comunicaciones/comunicaciones/ficha-registro-comunicacion/ficha-registro-comunicacion.component';
 import { EnviosMasivosComponent } from './features/informes-comunicaciones/envios-masivos/envios-masivos.component';
@@ -529,6 +528,11 @@ const appRoutes: Routes = [
 	{
 		path: 'gestionCuentasBancarias',
 		component: GestionCuentasBancariasComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'fichaCuentaBancaria',
+		component: FichaCuentaBancariaComponent,
 		canActivate: [AuthGuard]
 	},
 	{
