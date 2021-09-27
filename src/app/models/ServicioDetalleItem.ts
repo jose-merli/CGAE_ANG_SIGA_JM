@@ -2,8 +2,9 @@ export class ServicioDetalleItem {
     idtiposervicios: number; //Valor Categoria
     idservicio: number; //Valor Tipo
     idserviciosinstitucion: number; //Valor Producto
-    descripcion: string;//Descripcion producto
-    iniciofinalponderado: string;
+    descripcion: string; //Descripcion producto
+    iniciofinalponderado: string = "P"; //Aplicación de precio por cambio de situación del interesado Radio Buttons
+    facturacionponderada: string; //Facturación proporcional por días de suscripción Checkbox
     momentocargo: string;
     permitirbaja: string = "0";
     permitiralta: string = "0";
@@ -12,7 +13,6 @@ export class ServicioDetalleItem {
     fechabaja: Date;
     idconsulta: number;
     criterios: string;
-    facturacionponderada: string;
     idtipoiva: number;
     codigo_traspasonav: string;
 
