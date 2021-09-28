@@ -115,17 +115,17 @@ export class DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent impleme
   restablecer() {
     this.servicio = { ...this.servicioOriginal };
 
-    if (this.servicioOriginal.nofacturable = "1") {
+    if (this.servicioOriginal.nofacturable == "1") {
       this.checkboxNoFacturable = true;
       this.onChangeNoFacturable();
-    } else if (this.servicioOriginal.nofacturable = "0") {
+    } else if (this.servicioOriginal.nofacturable == "0") {
       this.checkboxNoFacturable = false;
       this.onChangeNoFacturable;
     }
 
-    if (this.servicioOriginal.facturacionponderada = "1") {
+    if (this.servicioOriginal.facturacionponderada == "1") {
       this.checkboxFacturacionProporcionalDiasInscripcion = true;
-    } else if (this.servicioOriginal.facturacionponderada = "0") {
+    } else if (this.servicioOriginal.facturacionponderada == "0") {
       this.checkboxFacturacionProporcionalDiasInscripcion = false;
     }
   }

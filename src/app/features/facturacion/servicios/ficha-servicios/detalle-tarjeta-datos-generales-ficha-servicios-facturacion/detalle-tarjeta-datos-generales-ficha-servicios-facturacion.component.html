@@ -98,6 +98,10 @@
       pButton type="button" icon="fa fa-trash-alt " iconPos="left"
       label="{{'general.boton.eliminar' | translate}}"></button>
 
+    <!-- Borrar suscripciones o bajas -->
+    <button *ngIf="servicio.editar" (click)="borrarSuscripcionesBajas()" pButton type="button" icon="fa fa-trash-alt "
+      iconPos="left" label="Borrar suscripciones/bajas"></button>
+
     <!-- Reactivar -->
     <button (click)="eliminarReactivar()" *ngIf="servicio.fechabaja != null" pButton type="button" icon="fa fa-undo "
       iconPos="left" label="{{'facturacion.maestros.tiposproductosservicios.reactivar' | translate}}"></button>

@@ -285,6 +285,10 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
     }
   }
 
+  borrarSuscripcionesBajas() {
+
+  }
+
   //Borra el mensaje de notificacion p-growl mostrado en la esquina superior derecha cuando pasas el puntero del raton sobre el
   clear() {
     this.msgs = [];
@@ -303,7 +307,6 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
   //FIN METODOS TARJETA DATOS GENERALES
 
   //INICIO SERVICIOS TARJETA DATOS GENERALES
-  //INICIO SERVICIOS DATOS GENERALES
   //Metodo para obtener los valores del combo categoria
   getComboCategoria() {
     this.progressSpinner = true;
