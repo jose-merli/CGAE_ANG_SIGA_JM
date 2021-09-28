@@ -20,23 +20,23 @@
             <span *ngIf="remesaTabla != null"> {{ remesaTabla.incidencias }}</span>
             <span *ngIf="remesaTabla == null"> {{ remesaItem.incidencias }}</span>
           </label>
-          <!-- <i *ngIf="!esFichaActiva('generales')" class="fa fa-angle-down float-right"></i> -->
+          
           <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "
             (click)="abreCierraFicha('EJGsAsociados')"></i>
         </div>
       </div>
     </div>
-    <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center"
+    <div *ngIf="openFicha" class="header-ficha-open d-flex justify-content-start align-items-center"
       (click)="abreCierraFicha('EJGsAsociados')">
       <div class="img-colegiado">
-        <i class="far fa-address-card icon-ficha"></i>
+        <i class="fas fa-list icon-ficha"></i>
       </div>
       <label class="title-ficha" style="cursor:pointer">EJG's Asociados</label>
       <i class="fa fa-angle-up ml-auto"></i>
     </div>
   </div>
 
-  <div *ngIf="openFicha" class="card-body p-0">
+  <div *ngIf="openFicha" class="card-body card-body-ficha">
     <p-table [value]="datos" [columns]="cols" [first]="page" selectionMode="multiple" [(selection)]="selectedDatos"
       [responsive]="true" #tabla class="tabla-listado" [paginator]="true" [rows]="selectedItem"
       (onRowSelect)="selectedRow(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
@@ -48,7 +48,7 @@
       </ng-template>
       <ng-template pTemplate="header" let-columns>
         <tr>
-          <th *ngFor="let col of columns;" [ngSwitch]="col.field" [pSortableColumn]="col.field"
+          <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field"
             [ngStyle]="{'display': col.width}">
 
             <span>
@@ -110,7 +110,7 @@
           <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
           <div class="ml-3 selectAll">
             <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true"
-              label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname" [disabled]="!permisos">
+              label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname" > <!--[disabled]="!permisos" -->
             </p-checkbox>
           </div>
         </div>

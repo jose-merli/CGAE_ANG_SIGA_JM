@@ -7,6 +7,7 @@ import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
 import { TarjetaDatosGeneralesComponent } from './tarjeta-datos-generales/tarjeta-datos-generales.component';
+import { Router } from '../../../../../../node_modules/@angular/router';
 import { TarjetaEjgsComponent } from './tarjeta-ejgs/tarjeta-ejgs.component';
 
 @Component({
@@ -29,6 +30,7 @@ export class FichaRemesasComponent implements OnInit {
   constructor(private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
     private commonsService: CommonsService,
+    private router: Router,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService) { }
 
@@ -173,6 +175,10 @@ export class FichaRemesasComponent implements OnInit {
         this.tarjetaEJGs.getEJGRemesa(this.tarjetaEJGs.remesaTabla[0]);
       }
     );
+  }
+
+  openTab(){
+    this.router.navigate(["/ejg"]);
   }
 
   showMessage(severity, summary, msg) {

@@ -54,8 +54,7 @@ export class TablaRemesasComponent implements OnInit {
     private router: Router,
     private persistenceService: PersistenceService,
     private confirmationService: ConfirmationService,
-    private commonsService: CommonsService,
-    private datepipe: DatePipe
+    private commonsService: CommonsService
   ) { }
 
   ngOnInit() {
