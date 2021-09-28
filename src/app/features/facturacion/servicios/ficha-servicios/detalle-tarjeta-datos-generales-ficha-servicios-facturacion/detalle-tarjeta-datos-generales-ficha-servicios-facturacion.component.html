@@ -100,7 +100,7 @@
 
     <!-- Borrar suscripciones o bajas -->
     <button *ngIf="servicio.editar" (click)="borrarSuscripcionesBajas()" pButton type="button" icon="fa fa-trash-alt "
-      iconPos="left" label="Borrar suscripciones/bajas"></button>
+      iconPos="left" label="Borrar suscripciones/bajas***"></button>
 
     <!-- Reactivar -->
     <button (click)="eliminarReactivar()" *ngIf="servicio.fechabaja != null" pButton type="button" icon="fa fa-undo "
@@ -110,30 +110,88 @@
     <button (click)="comprobacionPreGuardar()" pButton type="button" icon="far fa-save" iconPos="left"
       label="{{ 'general.boton.guardar' | translate}}"></button>
   </div>
+</div>
 
 
-  <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="deletePlantillaDoc" icon="icon"
-    width="425" #deletePlantillaDoc>
-    <p-footer>
-      <button type="button" pButton icon="fa-check" label="Si" (click)="deletePlantillaDoc.accept()"></button>
-      <button type="button" pButton icon="fa-close" label="No" (click)="deletePlantillaDoc.reject()"></button>
-    </p-footer>
-  </p-confirmDialog>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="deletePlantillaDoc" icon="icon"
+  width="425" #deletePlantillaDoc>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="deletePlantillaDoc.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="deletePlantillaDoc.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
 
-  <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}"
-    key="avisoDomiciliacionBancariaUnicaFormaPago" icon="icon" width="425" #avisoDomiciliacionBancariaUnicaFormaPago>
-    <p-footer>
-      <button type="button" pButton icon="fa-check" label="Si"
-        (click)="avisoDomiciliacionBancariaUnicaFormaPago.accept()"></button>
-      <button type="button" pButton icon="fa-close" label="No"
-        (click)="avisoDomiciliacionBancariaUnicaFormaPago.reject()"></button>
-    </p-footer>
-  </p-confirmDialog>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}"
+  key="avisoDomiciliacionBancariaUnicaFormaPago" icon="icon" width="425" #avisoDomiciliacionBancariaUnicaFormaPago>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si"
+      (click)="avisoDomiciliacionBancariaUnicaFormaPago.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No"
+      (click)="avisoDomiciliacionBancariaUnicaFormaPago.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
 
-  <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="avisoSuscripcionAutomatica"
-    icon="icon" width="425" #avisoSuscripcionAutomatica>
-    <p-footer>
-      <button type="button" pButton icon="fa-check" label="Si" (click)="avisoSuscripcionAutomatica.accept()"></button>
-      <button type="button" pButton icon="fa-close" label="No" (click)="avisoSuscripcionAutomatica.reject()"></button>
-    </p-footer>
-  </p-confirmDialog>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="avisoSuscripcionAutomatica" icon="icon"
+  width="425" #avisoSuscripcionAutomatica>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="avisoSuscripcionAutomatica.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="avisoSuscripcionAutomatica.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+
+<!-- DIALOG BORRAR SUSCRIPCIONES O BAJAS -->
+<p-dialog width="auto" height="auto" responsive="true" modal="modal" [draggable]="false" resizable="false"
+  [(visible)]="showModalSuscripcionesBajas" (onHide)="cancelarDialogBorrarSuscripcionesBajas()">
+  <p-header class="title">
+    <!-- <label>{{'general.boton.cambiarEstado' | translate}} </label> -->
+    <label>Configuracion********</label>
+  </p-header>
+  <div class="form-row">
+
+    <!-- Altas y Bajas -->
+    <div class="form-group-interlineado col-lg-6 col-md-6 pb-lg-2 pb-md-2">
+      <span class="mr-4">
+        <p-radioButton [(ngModel)]='borrarSuscripcionBajaItem.opcionaltasbajas' name="altasBajas" value="altasBajas"
+          label="Altas y Bajas***" (click)="onChangeRadioButtonsOpcionAltasBajas('altasBajas')"></p-radioButton>
+      </span>
+    </div>
+
+    <!-- Fecha de eliminacion de altas -->
+    <div class="form-group-interlineado col-lg-6 col-md-6 pb-lg-2 pb-md-2">
+      <label>Eliminacion de altas***</label>
+      <app-fecha [(value)]="borrarSuscripcionBajaItem.fechaeliminacionaltas"
+        (valueChangeSelected)="fillFechaEliminacionAltas($event)"
+        (valueChangeInput)="fillFechaEliminacionAltas($event)"></app-fecha>
+    </div>
+
+    <!-- Bajas -->
+    <div class="form-group-interlineado col-lg-6 col-md-6 pb-lg-2 pb-md-2">
+      <span class="mr-4">
+        <p-radioButton [(ngModel)]='borrarSuscripcionBajaItem.opcionaltasbajas' name="altasBajas" value="bajas"
+          label="Bajas***" (click)="onChangeRadioButtonsOpcionAltasBajas('bajas')">
+        </p-radioButton>
+      </span>
+    </div>
+
+    <!-- Incluir solicitudes de bajas manuales -->
+    <div class="form-group-interlineado col-lg-6 col-md-6 pb-lg-2 pb-md-2">
+      <div class="d-flex align-items-baseline justify-content-between alineacionCheckboxes">
+        <p-checkbox [disabled]="borrarSuscripcionBajaItem.opcionaltasbajas == 'altasBajas'" binary="true"
+          label="Incluir solicitudes de bajas manuales***" [(ngModel)]="checkboxIncluirSolBajasManuales"
+          (onChange)="onChangeIncluirSolBajasManuales()">
+        </p-checkbox>
+      </div>
+    </div>
+  </div>
+
+  <div class="paddingDialogBorrarSuscripcionesBajasButtons">
+    <div class="text-right main-button">
+      <button (click)="guardarDialogBorrarSuscripcionesBajas()" pButton type="button" icon="fa fa-edit" iconPos="left"
+        label="{{'general.boton.guardarCerrar' | translate}}"></button>
+      <button (click)="cancelarDialogBorrarSuscripcionesBajas()" pButton type="button" icon="fa fa-close" iconPos="left"
+        label="{{'general.boton.cancel' | translate}}"></button>
+    </div>
+  </div>
+
+</p-dialog>

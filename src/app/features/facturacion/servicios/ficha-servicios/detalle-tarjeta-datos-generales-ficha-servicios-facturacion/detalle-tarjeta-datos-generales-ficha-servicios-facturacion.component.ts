@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '../../../../../commons/translate';
+import { BorrarSuscripcionItem } from '../../../../../models/BorrarSuscripcionBajaItem';
 import { CodigosPorInstitucionObject } from '../../../../../models/codigosPorInstitucionObject';
 import { ComboObject } from '../../../../../models/ComboObject';
 import { ListaServiciosDTO } from '../../../../../models/ListaServiciosDTO';
@@ -34,6 +35,12 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
   listaCodigosPorInstitucionObject: CodigosPorInstitucionObject;
   @Output() mostrarTarjetaFormaPagos = new EventEmitter<boolean>();
 
+  //Variables Dialog Borrar Suscripciones y bajas
+  borrarSuscripcionBajaItem: BorrarSuscripcionItem = new BorrarSuscripcionItem;
+  showModalSuscripcionesBajas = false; //Muestra o no muestra el dialogo de suscripciones o bajas
+  checkboxIncluirSolBajasManuales: boolean = false;
+
+
   //variables de control
   aGuardar: boolean = false; //Usada en condiciones que validan la obligatoriedad, definida al hacer click en el boton guardar
   desactivarBotonEliminar: boolean = false; //Para activar el boton eliminar/reactivar dependiendo de si estamos en edicion o en creacion de un nuevo producto pero ya hemos guardado.
@@ -45,6 +52,7 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
   subscriptionEditarServicioInstitucion: Subscription;
   subscriptionActivarDesactivarServicios: Subscription;
   subscriptionCodesByInstitution: Subscription;
+  subscriptionBorrarSuscripcionesBajas: Subscription;
 
   constructor(private sigaServices: SigaServices, private translateService: TranslateService, private confirmationService: ConfirmationService, private router: Router) { }
 
@@ -103,6 +111,8 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
       this.subscriptionActivarDesactivarServicios.unsubscribe;
     if (this.subscriptionCodesByInstitution)
       this.subscriptionCodesByInstitution.unsubscribe;
+    if (this.subscriptionBorrarSuscripcionesBajas)
+      this.subscriptionBorrarSuscripcionesBajas.unsubscribe;
   }
 
   //INICIO METODOS TARJETA DATOS GENERALES
@@ -152,6 +162,28 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
     } else {
       this.servicio.automatico = '0';
     }
+  }
+
+  //Metodo que se lanza al marcar/desmarcar el checkbox Incluir solicitudes de baja manuales en el dialogo abierto al pulsar el boton Borrar Suscripciones/Bajas 
+  onChangeIncluirSolBajasManuales() {
+    if (this.checkboxIncluirSolBajasManuales) {
+      this.borrarSuscripcionBajaItem.incluirbajasmanuales = '1';
+    } else {
+      this.borrarSuscripcionBajaItem.incluirbajasmanuales = '0';
+    }
+  }
+
+  //Metodo que se lanza al marcar una de las dos opciones radio buttons disponibles en el dialogo borrar suscripciones o bajas 
+  onChangeRadioButtonsOpcionAltasBajas(event) {
+    if (event == "altasBajas") {
+      this.checkboxIncluirSolBajasManuales = false;
+      this.onChangeIncluirSolBajasManuales();
+    }
+  }
+
+  fillFechaEliminacionAltas(event) {
+    this.borrarSuscripcionBajaItem.fechaeliminacionaltas = event;
+    //this.borrarSuscripcionBajaItem.fechaeliminacionaltas = `${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()}`;
   }
 
   restablecer() {
@@ -285,8 +317,35 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
     }
   }
 
-  borrarSuscripcionesBajas() {
+  guardarDialogBorrarSuscripcionesBajas() {
+    this.progressSpinner = true;
 
+    this.borrarSuscripcionBajaItem.idtiposervicios = this.servicio.idtiposervicios;
+    this.borrarSuscripcionBajaItem.idservicio = this.servicio.idservicio;
+    this.borrarSuscripcionBajaItem.idserviciosinstitucion = this.servicio.idserviciosinstitucion;
+    //this.borrarSuscripcionBajaItem.fechaeliminacionaltas = null;
+
+    this.subscriptionBorrarSuscripcionesBajas = this.sigaServices.post("fichaServicio_borrarSuscripcionesBajas", this.borrarSuscripcionBajaItem).subscribe(
+      respuesta => {
+
+
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  borrarSuscripcionesBajas() {
+    this.showModalSuscripcionesBajas = true;
+  }
+
+  cancelarDialogBorrarSuscripcionesBajas() {
+    this.showModalSuscripcionesBajas = false;
   }
 
   //Borra el mensaje de notificacion p-growl mostrado en la esquina superior derecha cuando pasas el puntero del raton sobre el

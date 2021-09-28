@@ -60,19 +60,16 @@
   <!-- Prorrateo (media ponderada) -->
   <span class="mr-4">
     <p-radioButton [(ngModel)]='servicio.iniciofinalponderado' name="tarj" value="P"
-      (click)="onChangeAplicacionPrecioRadioButtons('prorrateo')"
       label="{{ 'facturacion.servicios.fichaservicio.opcionradiobuttonprorrateo' | translate }}"></p-radioButton>
   </span>
   <!-- Del inicio del periodo: -->
   <span class="mr-4">
     <p-radioButton [(ngModel)]='servicio.iniciofinalponderado' name="tarj" value="I"
-      (click)="onChangeAplicacionPrecioRadioButtons('inicioPeriodo')"
       label="{{ 'facturacion.servicios.fichaservicio.opcionradiobuttoninicio' | translate}}"></p-radioButton>
   </span>
   <!-- Del fin del periodo: -->
   <span class="mr-4">
     <p-radioButton [(ngModel)]='servicio.iniciofinalponderado' name="tarj" value="F"
-      (click)="onChangeAplicacionPrecioRadioButtons('finPeriodo')"
       label="{{ 'facturacion.servicios.fichaservicio.opcionradiobuttonfin' | translate}}"></p-radioButton>
   </span>
 

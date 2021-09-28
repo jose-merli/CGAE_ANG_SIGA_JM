@@ -108,10 +108,6 @@ export class DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent impleme
     }
   }
 
-  onChangeAplicacionPrecioRadioButtons(event) {
-
-  }
-
   restablecer() {
     this.servicio = { ...this.servicioOriginal };
 
