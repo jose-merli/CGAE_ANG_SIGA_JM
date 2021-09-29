@@ -57,52 +57,52 @@ export class ProgramacionCalendariosComponent implements OnInit {
     {
       id: "turno",
       name: "dato.jgr.guardia.guardias.turno",
-      size: 200
+      size: 230
     },
     {
       id: "guardia",
       name: "dato.jgr.guardia.guardias.guardia",
-      size: 200
+      size: 230
     },
     {
       id: "fechaCalDesde",
       name: "justiciaGratuita.Calendarios.FechaDesde",
-      size: 100
+      size: 130
     },
     {
       id: "fechaCalHasta",
       name: "justiciaGratuita.Calendarios.FechaHasta",
-      size: 100
+      size: 130
     },
     {
       id: "fechaProgramada",
       name: "justiciaGratuita.Calendarios.FechaProgramada",
-      size: 100
+      size: 130
     },
     {
       id: "listaGuardias",
       name: "menu.justiciaGratuita.calendarios.ListaGuardias",
-      size: 200
+      size: 230
     },
     {
       id: "observaciones",
       name: "justiciaGratuita.Calendarios.Observaciones",
-      size: 200
+      size: 230
     },
     {
       id: "estado",
       name: "menu.justiciaGratuita.calendarios.Estado",
-      size: 100
+      size: 130
     },
     {
       id: "generado",
       name: "justiciaGratuita.Calendarios.Generado",
-      size: 70
+      size: 100
     },
     {
       id: "numGuardias",
       name: "justiciaGratuita.Calendarios.NumGuardias",
-      size: 70
+      size: 100
     }
   ];
 
@@ -137,15 +137,15 @@ export class ProgramacionCalendariosComponent implements OnInit {
         this.rowGroups = this.dataToDuplicate.tabla;
         
         let objCells: Cell[] = [
-          { type: 'text', value: this.dataToDuplicate.turno, combo: null, size: 200 },
-          { type: 'text', value: this.dataToDuplicate.nombre, combo: null, size: 200 },
-          { type: 'date', value: this.dataToDuplicate.fechaDesde, combo: null, size: 100},
-          { type: 'date', value: this.dataToDuplicate.fechaHasta , combo: null, size: 100},
-          { type: 'dateTime', value: this.dataToDuplicate.fechaProgramacion , combo: null, size: 100},
-          { type: 'label', value: this.dataToDuplicate.listaGuarias, combo: null, size: 200},
-          { type: 'link', value: this.dataToDuplicate.observaciones , combo: null, size: 200},
-          { type: 'text', value: this.dataToDuplicate.estado , combo: null, size: 100},
-          { type: 'text', value: this.dataToDuplicate.generado, combo: null , size: 50 },
+          { type: 'text', value: this.dataToDuplicate.turno, combo: null, size: 230 },
+          { type: 'text', value: this.dataToDuplicate.nombre, combo: null, size: 230 },
+          { type: 'date', value: this.dataToDuplicate.fechaDesde, combo: null, size: 130},
+          { type: 'date', value: this.dataToDuplicate.fechaHasta , combo: null, size: 130},
+          { type: 'dateTime', value: this.dataToDuplicate.fechaProgramacion , combo: null, size: 130},
+          { type: 'label', value: this.dataToDuplicate.listaGuarias, combo: null, size: 230},
+          { type: 'link', value: this.dataToDuplicate.observaciones , combo: null, size: 230},
+          { type: 'text', value: this.dataToDuplicate.estado , combo: null, size: 130},
+          { type: 'text', value: this.dataToDuplicate.generado, combo: null , size: 100 },
           { type: 'text', value: this.dataToDuplicate.numGuardias, combo: null, size: 100 },
           { type: 'invisible', value: this.dataToDuplicate.idCalendarioProgramado, combo: null, size: 0},
           { type: 'invisible', value: this.dataToDuplicate.idTurno, combo: null, size: 0},
@@ -309,17 +309,17 @@ jsonToRow(){
     let fP = {label: res.fechaProgramacion, value: new Date(this.formatOfficial(res.fechaProgramacion))};
     //let fP = {label: res.fechaProgramacion, value: res.fechaProgramacion};
     let objCells = [
-    { type: 'text', value: res.turno, size: 200 },
-    { type: 'text', value: res.guardia, size: 200  },
-    { type: 'date', value: this.changeDateFormat(res.fechaDesde), size: 100 },
-    { type: 'date', value: this.changeDateFormat(res.fechaHasta), size: 100 },
-    { type: 'dateTime', value: fP, size: 100 },
+    { type: 'text', value: res.turno, size: 230 },
+    { type: 'text', value: res.guardia, size: 230  },
+    { type: 'date', value: this.changeDateFormat(res.fechaDesde), size: 130 },
+    { type: 'date', value: this.changeDateFormat(res.fechaHasta), size: 130 },
+    { type: 'dateTime', value: fP, size: 130 },
     //{ type: 'text', value: new Date(res.fechaProgramacion.toString()) },
-    { type: 'label', value: {label: res.listaGuardias, value: res.idCalG }, size: 200 },
-    { type: 'link', value: res.observaciones, size: 200  },
-    { type: 'text', value: this.getStatusValue(res.estado), size: 100 },
-    { type: 'text', value: res.generado, size: 70 },
-    { type: 'text', value: res.numGuardias, size: 70},
+    { type: 'label', value: {label: res.listaGuardias, value: res.idCalG }, size: 230 },
+    { type: 'link', value: res.observaciones, size: 230  },
+    { type: 'text', value: this.getStatusValue(res.estado), size: 130 },
+    { type: 'text', value: res.generado, size: 100 },
+    { type: 'text', value: res.numGuardias, size: 100},
     { type: 'invisible', value: res.idCalendarioProgramado, size: 0},
     { type: 'invisible', value: res.idTurno, size: 0},
     { type: 'invisible', value: res.idGuardia, size: 0},
@@ -643,51 +643,57 @@ guardarInc(nombreTurno, nombreGuardia, nombreTurnoIncompatible, nombreGuardiaInc
 
 
   descargaLOG(eventArr){
+    let noGenerado = false;
     let dataToZipArr = [];
     eventArr.forEach(event => {
-   
-    let estadoNumerico = "0";
-    switch (event.estado) {
-      case "Pendiente":
-        estadoNumerico = "5";
-        break;
-      case "Programada":
-        estadoNumerico = "1";
-        break;
-      case "En proceso":
-        estadoNumerico = "2";
-        break;
-      case "Procesada con Errores":
-        estadoNumerico = "3";
-        break;
-      case "Generada":
-        estadoNumerico = "4";
-        break;
-      default:
-        estadoNumerico = "0";
-        break;
-    }
-    let dataToZip = {
-      'turno': event.turno,
-      'guardia': event.nombre,
-      'idGuardia': event.idGuardia,
-      'idTurno': event.idTurno,
-      'observaciones': event.observaciones,
-      'fechaDesde': event.fechaDesde,
-      'fechaHasta': event.fechaHasta,
-      'fechaProgramacion': event.fechaProgramacion,
-      'estado': estadoNumerico,
-      'generado': event.generado,
-      'numGuardias': event.numGuardias,
-      'idCalG': event.listaGuarias.value,
-      'listaGuardias': event.listaGuarias.label,
-      'idCalendarioProgramado': event.idCalendarioProgramado,
-    };
-    dataToZipArr.push(dataToZip);
-  })
-
-    this.descargarZipLogGenerados(dataToZipArr);
-
+   if (event.estado == 'Generada'){
+        let estadoNumerico = "0";
+        switch (event.estado) {
+          case "Pendiente":
+            estadoNumerico = "5";
+            break;
+          case "Programada":
+            estadoNumerico = "1";
+            break;
+          case "En proceso":
+            estadoNumerico = "2";
+            break;
+          case "Procesada con Errores":
+            estadoNumerico = "3";
+            break;
+          case "Generada":
+            estadoNumerico = "4";
+            break;
+          default:
+            estadoNumerico = "0";
+            break;
+        }
+        let dataToZip = {
+          'turno': event.turno,
+          'guardia': event.nombre,
+          'idGuardia': event.idGuardia,
+          'idTurno': event.idTurno,
+          'observaciones': event.observaciones,
+          'fechaDesde': event.fechaDesde,
+          'fechaHasta': event.fechaHasta,
+          'fechaProgramacion': event.fechaProgramacion,
+          'estado': estadoNumerico,
+          'generado': event.generado,
+          'numGuardias': event.numGuardias,
+          'idCalG': event.listaGuarias.value,
+          'listaGuardias': event.listaGuarias.label,
+          'idCalendarioProgramado': event.idCalendarioProgramado,
+        };
+        dataToZipArr.push(dataToZip);
+        } else{
+          noGenerado = true;
+        }
+      })
+        if (noGenerado){
+        this.descargarZipLogGenerados(dataToZipArr);
+        } else{
+          this.showMessage({ severity: 'info', summary: 'No puede descargar el log porque no se ha comenzado la generación del calendario', msg: 'No puede descargar el log porque no se ha comenzado la generación del calendario' });
+        }
   }
 
   /*descargarZipLogGenerados(datos){

@@ -404,6 +404,7 @@ formatDate2(date) {
       this.muestraCamposObligatorios();
     }
   }
+  this.progressSpinner = false;
   }
 
   showMessage(severity, summary, msg) {

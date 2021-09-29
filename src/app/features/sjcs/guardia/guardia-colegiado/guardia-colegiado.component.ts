@@ -8,7 +8,7 @@ import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
 import { FiltrosGuardiaColegiadoComponent } from './filtros-guardia-colegiado/filtros-guardia-colegiado.component';
 import { TablaGuardiaColegiadoComponent } from './tabla-guardia-colegiado/tabla-guardia-colegiado.component';
-
+import { Location } from '@angular/common';
 @Component({
   selector: 'app-guardia-colegiado',
   templateUrl: './guardia-colegiado.component.html',
@@ -24,12 +24,18 @@ export class GuardiaColegiadoComponent implements OnInit {
   progressSpinner: boolean = false;
   buscar: boolean = false;
   permisoEscritura:boolean;
-
+  dataBuscador = { 
+    'guardia': '',
+    'turno': '',
+    'fechaDesde': '',
+    'fechaHasta': ''
+}
   constructor(private persistenceService: PersistenceService,
     private sigaServices: SigaServices,
     private commonsService: CommonsService,
     private translateService: TranslateService,
-    private router: Router,) { }
+    private router: Router,
+    private location: Location) { }
 
   ngOnInit() {
 
@@ -53,7 +59,7 @@ export class GuardiaColegiadoComponent implements OnInit {
       ).catch(error => console.error(error));
 
       this.progressSpinner = false;
-
+      this.dataBuscador = JSON.parse(sessionStorage.getItem("itemGuardiaColegiado"));
   }
 
   isOpenReceive(event) {
@@ -112,6 +118,13 @@ export class GuardiaColegiadoComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  backTo() {
+    let datosFichaProgramacion = this.persistenceService.getDatos();
+    this.persistenceService.setDatos(datosFichaProgramacion);
+    sessionStorage.removeItem("itemGuardiaColegiado"))
+    this.location.back();
   }
 
 }

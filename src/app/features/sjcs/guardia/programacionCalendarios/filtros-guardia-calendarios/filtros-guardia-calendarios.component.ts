@@ -132,7 +132,7 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
     );*/
   }
 
-  onChangeTurno() {
+  onChangeTurno(event) {
     this.filtros.idGuardia = "";
     this.comboGuardia = [];
     this.checkFilters();

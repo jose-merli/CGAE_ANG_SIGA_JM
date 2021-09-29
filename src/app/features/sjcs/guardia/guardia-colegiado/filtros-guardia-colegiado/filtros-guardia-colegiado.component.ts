@@ -35,7 +35,12 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
   }
   permisos;
   @Input('permisoEscritura') permisoEscritura = false;
-
+  @Input() dataBuscador = { 
+    'guardia': '',
+    'turno': '',
+    'fechaDesde': '',
+    'fechaHasta': ''
+}
   @Output() isOpen = new EventEmitter<boolean>();
 
   constructor(private sigaServices: SigaServices,
@@ -44,7 +49,7 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
     private commonServices: CommonsService) { }
 
   ngOnInit() {
-    
+
     this.progressSpinner = true;
     this.getCombos()
     if (this.permisoEscritura != undefined) {
@@ -57,7 +62,20 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
       if (this.filtros.idGuardia != null || this.filtros.idGuardia != undefined) {
         this.getComboGuardia();
       }
-      
+      if (this.dataBuscador != null){
+        if (this.dataBuscador.guardia != ''){
+          this.filtros.idGuardia = this.dataBuscador.guardia.toString();
+        }
+        if(this.dataBuscador.turno != ''){
+          this.filtros.idTurno = this.dataBuscador.turno.toString();
+        }
+        if(this.dataBuscador.fechaDesde != ''){
+          this.filtros.fechadesde = new Date(this.changeDateFormat(this.dataBuscador.fechaDesde)); //MM/dd/yyyy
+        }
+        if(this.dataBuscador.fechaHasta != ''){
+          this.filtros.fechahasta = new Date(this.changeDateFormat(this.dataBuscador.fechaHasta));//MM/dd/yyyy
+        }
+      }
       this.search();
       
 
@@ -73,7 +91,11 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
       this.usuarioBusquedaExpress.numColegiado = busquedaColegiado.nColegiado;
     }
   }
-
+  changeDateFormat(date1){
+    // date1 dd/MM/yyyy
+    let date1C = date1.split("/").reverse().join("-")
+    return date1C;
+  }
   getCombos(){
     this.getComboTurno();
     if(this.filtros.idTurno != null || this.filtros.idTurno != undefined){
