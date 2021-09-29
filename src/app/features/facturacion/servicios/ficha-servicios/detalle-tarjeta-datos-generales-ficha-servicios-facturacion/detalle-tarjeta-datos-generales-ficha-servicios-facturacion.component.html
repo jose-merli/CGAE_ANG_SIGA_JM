@@ -100,7 +100,8 @@
 
     <!-- Borrar suscripciones o bajas -->
     <button *ngIf="servicio.editar" (click)="borrarSuscripcionesBajas()" pButton type="button" icon="fa fa-trash-alt "
-      iconPos="left" label="Borrar suscripciones/bajas***"></button>
+      iconPos="left"
+      label="{{'facturacion.servicios.fichaservicio.botonborrarsuscripcionesbajas' | translate}}"></button>
 
     <!-- Reactivar -->
     <button (click)="eliminarReactivar()" *ngIf="servicio.fechabaja != null" pButton type="button" icon="fa fa-undo "
@@ -144,22 +145,22 @@
 <p-dialog width="auto" height="auto" responsive="true" modal="modal" [draggable]="false" resizable="false"
   [(visible)]="showModalSuscripcionesBajas" (onHide)="cancelarDialogBorrarSuscripcionesBajas()">
   <p-header class="title">
-    <!-- <label>{{'general.boton.cambiarEstado' | translate}} </label> -->
-    <label>Configuracion********</label>
+    <label>{{ "facturacion.servicios.fichaservicio.titulobajasaltasdialog" | translate}}</label>
   </p-header>
   <div class="form-row">
 
     <!-- Altas y Bajas -->
     <div class="form-group-interlineado col-lg-6 col-md-6 pb-lg-2 pb-md-2">
       <span class="mr-4">
-        <p-radioButton [(ngModel)]='borrarSuscripcionBajaItem.opcionaltasbajas' name="altasBajas" value="altasBajas"
-          label="Altas y Bajas***" (click)="onChangeRadioButtonsOpcionAltasBajas('altasBajas')"></p-radioButton>
+        <p-radioButton [(ngModel)]='borrarSuscripcionBajaItem.opcionaltasbajas' name="altasBajas" value="0"
+          label="{{ 'facturacion.servicios.fichaservicio.radiobuttonvaloraltasbajas' | translate}}"
+          (click)="onChangeRadioButtonsOpcionAltasBajas('altasBajas')"></p-radioButton>
       </span>
     </div>
 
     <!-- Fecha de eliminacion de altas -->
     <div class="form-group-interlineado col-lg-6 col-md-6 pb-lg-2 pb-md-2">
-      <label>Eliminacion de altas***</label>
+      <label>{{ "facturacion.servicios.fichaservicio.fechaeliminacionaltas" | translate}}</label>
       <app-fecha [(value)]="borrarSuscripcionBajaItem.fechaeliminacionaltas"
         (valueChangeSelected)="fillFechaEliminacionAltas($event)"
         (valueChangeInput)="fillFechaEliminacionAltas($event)"></app-fecha>
@@ -168,8 +169,9 @@
     <!-- Bajas -->
     <div class="form-group-interlineado col-lg-6 col-md-6 pb-lg-2 pb-md-2">
       <span class="mr-4">
-        <p-radioButton [(ngModel)]='borrarSuscripcionBajaItem.opcionaltasbajas' name="altasBajas" value="bajas"
-          label="Bajas***" (click)="onChangeRadioButtonsOpcionAltasBajas('bajas')">
+        <p-radioButton [(ngModel)]='borrarSuscripcionBajaItem.opcionaltasbajas' name="altasBajas" value="1"
+          label="{{ 'facturacion.servicios.fichaservicio.radiobuttonvalorbajas' | translate}}"
+          (click)="onChangeRadioButtonsOpcionAltasBajas('bajas')">
         </p-radioButton>
       </span>
     </div>
@@ -177,9 +179,9 @@
     <!-- Incluir solicitudes de bajas manuales -->
     <div class="form-group-interlineado col-lg-6 col-md-6 pb-lg-2 pb-md-2">
       <div class="d-flex align-items-baseline justify-content-between alineacionCheckboxes">
-        <p-checkbox [disabled]="borrarSuscripcionBajaItem.opcionaltasbajas == 'altasBajas'" binary="true"
-          label="Incluir solicitudes de bajas manuales***" [(ngModel)]="checkboxIncluirSolBajasManuales"
-          (onChange)="onChangeIncluirSolBajasManuales()">
+        <p-checkbox [disabled]="borrarSuscripcionBajaItem.opcionaltasbajas == '0'" binary="true"
+          label="{{ 'facturacion.servicios.fichaservicio.incluirsolbajasmanuales' | translate}}"
+          [(ngModel)]="checkboxIncluirSolBajasManuales" (onChange)="onChangeIncluirSolBajasManuales()">
         </p-checkbox>
       </div>
     </div>

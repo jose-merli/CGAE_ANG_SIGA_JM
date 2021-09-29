@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '../../../../../commons/translate';
@@ -26,6 +26,7 @@ export class DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent impleme
   secretaryPayMethodsObject: ComboObject = new ComboObject();
   defaultLabelCombosMultiSelect: String = "Seleccionar";
   esColegiado: boolean;
+  @Output() mostrarTarjetaPrecios = new EventEmitter<boolean>();
 
   //Variables control
   aGuardar: boolean = false; //Usada en condiciones que validan la obligatoriedad, definida al hacer click en el boton guardar
@@ -45,6 +46,7 @@ export class DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent impleme
 
     if (this.servicio.editar) {
       this.servicioOriginal = { ...this.servicio };
+      this.mostrarTarjetaPrecios.emit(true);
 
       if (this.servicio.nofacturable == "1") {
         this.checkboxNoFacturable = true;
@@ -236,15 +238,13 @@ export class DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent impleme
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         } else {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.mostrarTarjetaPrecios.emit(true);
         }
       },
       err => {
         this.progressSpinner = false;
       },
       () => {
-        sessionStorage.setItem("volver", 'true');
-        sessionStorage.removeItem('servicioBuscador');
-        this.router.navigate(['/servicios']);
         this.progressSpinner = false;
       }
     );

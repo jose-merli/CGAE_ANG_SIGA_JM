@@ -175,7 +175,7 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
 
   //Metodo que se lanza al marcar una de las dos opciones radio buttons disponibles en el dialogo borrar suscripciones o bajas 
   onChangeRadioButtonsOpcionAltasBajas(event) {
-    if (event == "altasBajas") {
+    if (event == "0") {
       this.checkboxIncluirSolBajasManuales = false;
       this.onChangeIncluirSolBajasManuales();
     }
@@ -323,10 +323,15 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
     this.borrarSuscripcionBajaItem.idtiposervicios = this.servicio.idtiposervicios;
     this.borrarSuscripcionBajaItem.idservicio = this.servicio.idservicio;
     this.borrarSuscripcionBajaItem.idserviciosinstitucion = this.servicio.idserviciosinstitucion;
-    //this.borrarSuscripcionBajaItem.fechaeliminacionaltas = null;
 
     this.subscriptionBorrarSuscripcionesBajas = this.sigaServices.post("fichaServicio_borrarSuscripcionesBajas", this.borrarSuscripcionBajaItem).subscribe(
       respuesta => {
+        if (JSON.parse(respuesta.body).error.code == 500) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        } else {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.showModalSuscripcionesBajas = false;
+        }
 
 
         this.progressSpinner = false;
