@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '../../../../commons/translate';
+import { ColegiadoItem } from '../../../../models/ColegiadoItem';
 import { procesos_guardia } from '../../../../permisos/procesos_guarida';
 import { SigaStorageService } from '../../../../siga-storage.service';
 import { CommonsService } from '../../../../_services/commons.service';
@@ -30,14 +31,19 @@ export class GuardiaColegiadoComponent implements OnInit {
     'fechaDesde': '',
     'fechaHasta': ''
 }
+  isColegiado: boolean;
+
   constructor(private persistenceService: PersistenceService,
     private sigaServices: SigaServices,
     private commonsService: CommonsService,
     private translateService: TranslateService,
     private router: Router,
-    private location: Location) { }
+    private location: Location,
+    private localStorageService: SigaStorageService) { }
 
   ngOnInit() {
+
+
 
     this.progressSpinner = true;
     this.commonsService.checkAcceso(procesos_guardia.guardias_colegiado)
@@ -45,7 +51,7 @@ export class GuardiaColegiadoComponent implements OnInit {
 
         this.permisoEscritura = respuesta;
 
-        //this.persistenceService.setPermisos(this.permisoEscritura);
+        this.persistenceService.setPermisos(this.permisoEscritura);
 
         if (this.permisoEscritura == undefined) {
           sessionStorage.setItem("codError", "403");
@@ -57,7 +63,7 @@ export class GuardiaColegiadoComponent implements OnInit {
         }
       }
       ).catch(error => console.error(error));
-
+      this.isColegiado = JSON.parse(sessionStorage.getItem('esColegiado'));
       this.progressSpinner = false;
       this.dataBuscador = JSON.parse(sessionStorage.getItem("itemGuardiaColegiado"));
   }
@@ -66,6 +72,7 @@ export class GuardiaColegiadoComponent implements OnInit {
     
       this.search(event);
   }
+
 
   search(event){
     this.progressSpinner = true;
@@ -123,7 +130,7 @@ export class GuardiaColegiadoComponent implements OnInit {
   backTo() {
     let datosFichaProgramacion = this.persistenceService.getDatos();
     this.persistenceService.setDatos(datosFichaProgramacion);
-    sessionStorage.removeItem("itemGuardiaColegiado"))
+    sessionStorage.removeItem("itemGuardiaColegiado");
     this.location.back();
   }
 

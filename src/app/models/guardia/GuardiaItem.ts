@@ -60,6 +60,7 @@ export class GuardiaItem {
     ordenGrupo;
     idPersona;
     fechaValidacion;
+    idCalendarioGuardias;
 
 
     constructor() { }

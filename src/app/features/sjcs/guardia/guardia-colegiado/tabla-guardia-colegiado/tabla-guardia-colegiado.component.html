@@ -37,10 +37,6 @@
             <div *ngIf="col.field != 'fechadesde' && col.field != 'fechahasta'">
               <span class="enlace" (click)="openTab(dato)">{{dato[col.field]}}</span>
             </div>
-
-            <div *ngIf="col.field == 'ordenGrupo' && !(datos[rowIndex].grupoGuardiaColegiado == null || datos[rowIndex].grupoGuardiaColegiado == undefined || datos[rowIndex].grupoGuardiaColegiado == '' )">
-              <span>{{dato[col.field]}}</span>
-            </div>
           
 
             <!-- <div *ngIf="col.field == 'nombre'">
@@ -85,20 +81,20 @@
       <div class="ui-grid-col-8">
         <div class="form-group-interlineado col-lg-3 col-md-3" style="align-self: center;">
           <label>{{ "censo.consultaDatosCV.literal.fechaVerificacion" | translate }}</label>
-          <app-fecha [disabled]=" !permisoEscritura" [(value)]="fechaValidacion" (valueChangeSelected)="fillFechaValidacion($event)"
+          <app-fecha [disabled]="  isColegiado" [(value)]="fechaValidacion" (valueChangeSelected)="fillFechaValidacion($event)"
             (valueChangeInput)="fillFechaValidacion($event)"></app-fecha>
         </div>
         
       </div>
       <div class="text-right main-button ui-grid-col-4">
         
-        <button  pButton [disabled]=" !permisos || ((!selectMultiple || !selectAll) && !validar )"
+        <button  pButton [disabled]=" isColegiado || ((!selectMultiple || !selectAll) && !validar  )"
           (click)="confirmValidar(selectedDatos)" type="button" icon="fa fa-save" iconPos="left" label="{{'general.boton.validar' | translate}}"></button>
           <!-- <button  pButton [disabled]="!permisoEscritura || ((!selectMultiple || !selectAll) && selectedDatos.length == 0)"
           (click)="confirmDesValidar()" type="button" icon="fa fa-check" iconPos="left" label="{{'general.boton.activar' | translate}}"></button> -->
-          <button  pButton [disabled]="!permisos || ((!selectMultiple || !selectAll) && !desvalidar )"
+          <button  pButton [disabled]=" isColegiado || ((!selectMultiple || !selectAll) && !desvalidar )"
           (click)="confirmDesValidar(selectedDatos)" type="button" icon="fa fa-undo" iconPos="left" label="Desvalidar"></button>
-        <button  pButton [disabled]=" ((!selectMultiple || !selectAll) && !borrar)"
+        <button  pButton [disabled]=" isColegiado || ((!selectMultiple || !selectAll) && !borrar)"
           (click)="confirmDelete(selectedDatos)" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
       
       </div>

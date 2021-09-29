@@ -193,4 +193,34 @@ export class ServiciosInteresFichaColegialComponent implements OnInit, OnChanges
     }
       this.router.navigate(["/bajasTemporales"]);
   }
+  inscripcionesGuardia(){
+    if(!this.isLetrado){
+      sessionStorage.setItem("colegiadoRelleno","true");
+      sessionStorage.setItem("datosColegiado",JSON.stringify(this.generalBody));
+    }
+      this.router.navigate(["/inscripcionesGuardia"]);
+  }
+  guardiasColegiado(){
+    if(!this.isLetrado){
+      sessionStorage.setItem("colegiadoRelleno","true");
+      sessionStorage.setItem("datosColegiado",JSON.stringify(this.generalBody));
+    }
+      this.router.navigate(["/programacionCalendarios"]);
+  }
+  asistencias(){
+    if(!this.isLetrado){
+      sessionStorage.setItem("colegiadoRelleno","true");
+      sessionStorage.setItem("datosColegiado",JSON.stringify(this.generalBody));
+    }
+      this.router.navigate(["/guardiasAsistencias"]);
+  }
+  preAsistencia(){
+    if(!this.isLetrado){
+      sessionStorage.setItem("colegiadoRelleno","true");
+      sessionStorage.setItem("datosColegiado",JSON.stringify(this.generalBody));
+    }
+      this.router.navigate(["/guardiasSolicitudesCentralita"]);
+  }
+
+
 }

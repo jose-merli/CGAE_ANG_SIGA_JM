@@ -49,8 +49,11 @@ export class GuardiasInscripcionesComponent implements OnInit {
   rowGroups: Row[];
   rowGroupsAux: Row[];
   /*rowGroupsAux2 = {
+    
 
   };*/
+  datosColegiado;
+  desdeFichaColegial = false;
   totalRegistros = 0;
   allSelected = false;
   isDisabled = true;
@@ -129,6 +132,13 @@ export class GuardiasInscripcionesComponent implements OnInit {
 
     //this.isLetrado = this.sigaStorageService.isLetrado;
     this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
+    
+    if(sessionStorage.getItem("datosColegiado") != null || sessionStorage.getItem("datosColegiado") != undefined) {
+      this.datosColegiado = JSON.parse(sessionStorage.getItem("datosColegiado"));
+      this.buscarDesdeEnlace();
+      this.filtros.usuarioBusquedaExpress.numColegiado = this.datosColegiado.numColegiado;
+      
+    }
 
     this.commonsService.checkAcceso(procesos_guardia.inscripciones_guardias)
       .then(respuesta => {
@@ -179,9 +189,100 @@ export class GuardiasInscripcionesComponent implements OnInit {
 
   }
 
+
+
+  buscarDesdeEnlace(){
+   
+      this.inscripcionesDatosEntradaItem =
+      {
+        'nColegiado': this.datosColegiado.numColegiado
+      };
+      this.progressSpinner = true;
+      this.sigaServices.post(
+        "guardiasInscripciones_buscarInscripciones", this.inscripcionesDatosEntradaItem).subscribe(
+          data => {
+            let error = JSON.parse(data.body).error;
+            this.datos = JSON.parse(data.body).inscripcionesItem;
+            this.buscar = true;
+            console.log(data);
+            this.datos = this.datos.map(it => {
+              it.letradosIns = +it.letradosIns;
+              return it;
+            })
+            this.respuestaInscripciones = [];
+            this.datos.forEach((dat, i) => {
+              let responseObject = new ResultadoInscripciones(
+                {
+                  'idturno': dat.idturno,
+                  'estado': dat.estado,
+                  'abreviatura': dat.abreviatura,
+                  'validarinscripciones': dat.validarinscripciones,
+                  'validarjustificaciones': dat.validarjustificaciones,
+                  'nombreGuardia': dat.nombreGuardia,
+                  'descripcionGuardia': dat.descripcionGuardia,
+                  'idguardia': dat.idguardia,
+                  'apellidosnombre': dat.apellidosnombre,
+                  'ncolegiado': dat.ncolegiado,
+                  'nombre': dat.nombre,
+                  'apellidos': dat.apellidos,
+                  'apellidos2': dat.apellidos2,
+                  'idinstitucion': dat.idinstitucion,
+                  'idpersona': dat.idpersona,
+                  'fechasolicitud': this.formatDate(dat.fechasolicitud),
+                  'observacionessolicitud': dat.observacionessolicitud,
+                  'fechavalidacion': this.formatDate(dat.fechavalidacion),
+                  'fechabaja': this.formatDate(dat.fechabaja),
+                  'observacionesvalidacion': dat.observacionesvalidacion,
+                  'fechasolicitudbaja': this.formatDate(dat.fechasolicitudbaja),
+                  'observacionesbaja': dat.observacionesbaja,
+                  'observacionesvalbaja': dat.observacionesvalbaja,
+                  'fechadenegacion': dat.fechadenegacion,
+                  'observacionesdenegacion': dat.observacionesdenegacion,
+                  'fechavaloralta': dat.fechavaloralta,
+                  'fechavalorbaja': dat.fechavalorbaja,
+                  'code': dat.code,
+                  'message': dat.message,
+                  'description': dat.description,
+                  'infoURL': dat.infoURL,
+                  'errorDetail': dat.errorDetail
+                }
+              );
+              this.respuestaInscripciones.push(responseObject);
+            })
+            this.jsonToRow();
+  
+            this.buscar = true;
+            this.progressSpinner = false;
+            //this.resetSelect();
+  
+            if (this.totalRegistros == 200) {
+              this.showMessage('info', this.translateService.instant("general.message.informacion"), "La consulta devuelve más de 200 resultados.");
+            }
+  
+            if (this.tabla != null && this.tabla != undefined) {
+              this.tabla.historico = event;
+            }
+  
+  
+            if (error != null && error.description != null) {
+              this.showMessage('info', this.translateService.instant("general.message.informacion"), this.translateService.instant("error.description"));
+            }
+          },
+          err => {
+            this.progressSpinner = false;
+            console.log(err);
+          },
+          () => {
+            this.commonsService.scrollTablaFoco('tablaFoco');
+          });
+  }
+  
+
   buscarIns() {
 
     //let jsonEntrada  = JSON.parse(JSON.stringify(datosEntrada))
+
+
 
     this.inscripcionesDatosEntradaItem =
     {
