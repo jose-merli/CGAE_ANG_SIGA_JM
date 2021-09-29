@@ -16,7 +16,7 @@ export class TablaGuardiaColegiadoComponent implements OnInit {
 
   @Input() datos;
   @Input() permisoEscritura:boolean;
-  @Input() isColegiado;
+  @Input() isColegiado:boolean;
   @Output() isOpen = new EventEmitter<boolean>();
 
   @ViewChild("tablaGuardCol") table: DataTable;
@@ -47,7 +47,7 @@ export class TablaGuardiaColegiadoComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit() {
-    this.isColegiado = JSON.parse(this.isColegiado);
+    this.isColegiado = this.isColegiado;
     this.getCols();
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
   }

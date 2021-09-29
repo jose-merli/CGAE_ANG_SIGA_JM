@@ -25,8 +25,7 @@ export class GuardiaColegiadoComponent implements OnInit {
   progressSpinner: boolean = false;
   buscar: boolean = false;
   permisoEscritura;
-  isColegiado;
-  colegiadoInfo;
+  isColegiado: boolean;
 
   constructor(private persistenceService: PersistenceService,
     private sigaServices: SigaServices,
@@ -55,12 +54,9 @@ export class GuardiaColegiadoComponent implements OnInit {
           );
           this.router.navigate(["/errorAcceso"]);
         }
-        this.isColegiado = sessionStorage.getItem('esColegiado');
-
-        this.colegiadoInfo = sessionStorage.getItem('personaBody');
       }
       ).catch(error => console.error(error));
-
+      this.isColegiado = JSON.parse(sessionStorage.getItem('esColegiado'));
       this.progressSpinner = false;
 
   }
@@ -69,6 +65,7 @@ export class GuardiaColegiadoComponent implements OnInit {
     
       this.search(event);
   }
+
 
   search(event){
     this.progressSpinner = true;
