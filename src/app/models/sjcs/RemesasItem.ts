@@ -12,6 +12,7 @@ export class RemesasItem {
     sufijo?: number;
     totalEJG?: number;
     comboIncidencia?: string;
+    ficha?: boolean;
 
     constructor() { }
 }

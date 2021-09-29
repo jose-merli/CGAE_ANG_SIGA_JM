@@ -153,6 +153,7 @@ export class TablaRemesasComponent implements OnInit {
   delete() {
     let del = new RemesasBusquedaObject();
     del.resultadoBusqueda = this.selectedDatos;
+    console.log("Remesa -> ", del.resultadoBusqueda);
     this.sigaServices.post("listadoremesas_borrarRemesa", del.resultadoBusqueda).subscribe(
       data => {
         this.showMessage("success", this.translateService.instant("general.message.correct"), JSON.parse(data.body).error.description);

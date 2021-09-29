@@ -9,6 +9,7 @@ import { SigaServices } from '../../../../_services/siga.service';
 import { TarjetaDatosGeneralesComponent } from './tarjeta-datos-generales/tarjeta-datos-generales.component';
 import { Router } from '../../../../../../node_modules/@angular/router';
 import { TarjetaEjgsComponent } from './tarjeta-ejgs/tarjeta-ejgs.component';
+import { RemesasBusquedaItem } from '../../../../models/sjcs/RemesasBusquedaItem';
 
 @Component({
   selector: 'app-ficha-remesas',
@@ -19,6 +20,7 @@ export class FichaRemesasComponent implements OnInit {
 
   @ViewChild(TarjetaDatosGeneralesComponent) tarjetaDatosGenerales: TarjetaDatosGeneralesComponent;
   @ViewChild(TarjetaEjgsComponent) tarjetaEJGs: TarjetaEjgsComponent;
+  guardado: boolean = false;
   progressSpinner: boolean = false;
   remesa;
   msgs;
@@ -41,6 +43,7 @@ export class FichaRemesasComponent implements OnInit {
       localStorage.removeItem('remesaItem');
       this.remesaTabla = JSON.parse(this.item);
       console.log("Item en JSON -> ", this.remesaTabla);
+      this.guardado = true;
     }else if(localStorage.getItem('ficha') == "nuevo"){
       this.remesaItem.descripcion = "";
     }
@@ -78,11 +81,12 @@ export class FichaRemesasComponent implements OnInit {
       () => {
         this.tarjetaDatosGenerales.listadoEstadosRemesa(this.remesa);
         this.progressSpinner = false;
+        this.guardado = true;
       }
     );
   }
 
-  checkPermisosDelete() {
+  checkPermisosDelete(evento) {
     let msg = this.commonsService.checkPermisos(this.tarjetaEJGs.permisos, undefined);
 
     if (msg != undefined) {
@@ -91,12 +95,12 @@ export class FichaRemesasComponent implements OnInit {
       if (((!this.tarjetaEJGs.selectMultiple || !this.tarjetaEJGs.selectAll) && (this.tarjetaEJGs.selectedDatos == undefined || this.tarjetaEJGs.selectedDatos.length == 0)) || !this.tarjetaEJGs.permisos) {
         this.msgs = this.commonsService.checkPermisoAccion();
       } else {
-        this.confirmDelete();
+          this.confirmDelete(evento);
       }
     }
   }
 
-  confirmDelete() {
+  confirmDelete(evento) {
     console.log("Se ha pulsado el botón eliminar. Registro seleccionado -> ", this.tarjetaEJGs.selectedDatos);
     let mess = this.translateService.instant(
       "messages.deleteConfirmation"
@@ -106,7 +110,12 @@ export class FichaRemesasComponent implements OnInit {
       message: mess,
       icon: icon,
       accept: () => {
-        this.delete()
+        if(evento){
+          this.deleteRemesa();
+        }else{
+          this.deleteExpediente();
+        }
+        
       },
       reject: () => {
         this.msgs = [
@@ -120,6 +129,45 @@ export class FichaRemesasComponent implements OnInit {
         ];
       }
     });
+  }
+  
+  deleteRemesa() {
+    let del: RemesasBusquedaItem[] = [];
+    console.log("Remesa -> ", del);
+    if(this.remesaTabla != null){
+      del[0] =
+      {
+        'idRemesa': (this.remesaTabla.idRemesa != null && this.remesaTabla.idRemesa != undefined) ? this.remesaTabla.idRemesa.toString() : this.remesaTabla.idRemesa,
+        'descripcion': (this.remesaTabla.descripcion != null && this.remesaTabla.descripcion != undefined) ? this.remesaTabla.descripcion.toString() : this.remesaTabla.descripcion,
+        'ficha' : true
+      };
+    }else if(this.remesaItem != null){
+      del[0] =
+      {
+        'idRemesa': (this.remesaItem.idRemesa != null && this.remesaItem.idRemesa != undefined) ? this.remesaItem.idRemesa : this.remesaItem.idRemesa,
+        'descripcion': (this.remesaItem.descripcion != null && this.remesaItem.descripcion != undefined) ? this.remesaItem.descripcion.toString() : this.remesaItem.descripcion,
+        'ficha' : true
+      };
+    }
+  
+    this.sigaServices.post("listadoremesas_borrarRemesa", del).subscribe(
+      data => {
+        this.showMessage("success", this.translateService.instant("general.message.correct"), JSON.parse(data.body).error.description);
+        this.progressSpinner = false;
+      },
+      err => {
+        if (err != undefined && JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+        this.router.navigate(["/remesas"]);
+      }
+    );
   }
 
   selectedRow(selectedDatos) {
@@ -136,11 +184,8 @@ export class FichaRemesasComponent implements OnInit {
     }
   }
 
-  delete() {
-    let del : EJGRemesaItem[] = [];
+  deleteExpediente() {
     let ejgItem: EJGRemesaItem[] = [];
-    del = this.tarjetaEJGs.selectedDatos;
-    console.log("Registro seleccionado -> ", del);
     let i = 0;
     this.tarjetaEJGs.selectedDatos.forEach(element => {
       ejgItem[i] =

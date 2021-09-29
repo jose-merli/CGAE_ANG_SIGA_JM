@@ -13,6 +13,7 @@ export class RemesasBusquedaItem {
     numeroEJG?: number;
     prefijo?: number;
     sufijo?: number;
+    ficha?: boolean;
 
     constructor(){ }
 }
