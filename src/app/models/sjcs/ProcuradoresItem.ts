@@ -25,6 +25,8 @@ export class ProcuradoresItem {
     nColegiado: string;
     nombreApe: string;
     inst;
+    numero: string;
+    
 
     constructor() { }
 }

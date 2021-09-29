@@ -23,7 +23,7 @@ import { ColegiadoItem } from '../../models/ColegiadoItem';
 	styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-	constructor(private sigaServices: SigaServices, private oldSigaServices: OldSigaServices,private authenticationService: AuthenticationService, handler: HttpBackend,
+	constructor(private sigaServices: SigaServices, private oldSigaServices: OldSigaServices,private authenticationService: AuthenticationService, handler: HttpBackend, 
 		private localStorageService: SigaStorageService) {
 		this.http = new HttpClient(handler);
 		this.oldSigaServices = oldSigaServices;
@@ -33,16 +33,16 @@ export class HomeComponent implements OnInit {
 	ngOnInit() {
 		this.sigaServices.get('getLetrado').subscribe(
 			(data) => {
-				if (data.value == 'S') {
-					this.localStorageService.isLetrado = true;
-				} else {
-					this.localStorageService.isLetrado = false;
-				}
+			  if (data.value == 'S') {
+				this.localStorageService.isLetrado = true;
+			  } else {
+				this.localStorageService.isLetrado = false;
+			  }
 			},
 			(err) => {
-				console.log(err);
+			  console.log(err);
 			}
-		);
+		  );
 		this.getLetrado();
 		this.getColegiadoLogeado();
 		//this.getMantenerSesion();
@@ -92,8 +92,28 @@ export class HomeComponent implements OnInit {
 	}
 
 	getColegiadoLogeado() {
-		sessionStorage.setItem('esNuevoNoColegiado', JSON.stringify(false));
-		sessionStorage.setItem('esColegiado', 'true');
+		this.generalBody.searchLoggedUser = true;
+
+		this.sigaServices
+			.postPaginado('busquedaColegiados_searchColegiadoFicha', '?numPagina=1', this.generalBody)
+			.subscribe(
+				(data) => {
+					let busqueda = JSON.parse(data['body']);
+					if (busqueda.colegiadoItem.length > 0) {
+						sessionStorage.setItem('personaBody', JSON.stringify(busqueda.colegiadoItem[0]));
+						sessionStorage.setItem('esNuevoNoColegiado', JSON.stringify(false));
+						sessionStorage.setItem('esColegiado', 'true');
+					} else {
+						sessionStorage.setItem('personaBody', JSON.stringify(this.generalBody));
+						sessionStorage.setItem('esNuevoNoColegiado', JSON.stringify(true));
+						sessionStorage.setItem('emptyLoadFichaColegial', 'true');
+						sessionStorage.setItem('esColegiado', 'false');
+					}
+				},
+				(err) => {
+					console.log(err);
+				}
+			);
 	}
 
 	getMantenerSesion() {

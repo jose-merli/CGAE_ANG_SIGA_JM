@@ -9,9 +9,13 @@ export class TurnosItems {
   idmateria: string;
   materia: string;
   idzona: string;
+  idpersonaUltimo: string;
   zona: string;
+  codigoext: string;
   idordenacioncolas: string;
+  pesosSeleccionadosTarjeta: string;
   idguardias: string;
+  idcomboguardias: string;
   guardias: string;
   idzubzona: string;
   idsubzona: string;
@@ -19,6 +23,7 @@ export class TurnosItems {
   subzona: string;
   idpartido: string;
   partido: string;
+  idgrupofacturacion: string;
   idpartidapresupuestaria: string;
   idjurisdiccion: string;
   partidapresupuestariaReal: any[];
@@ -41,5 +46,21 @@ export class TurnosItems {
   activarretriccionacreditCheck: boolean;
   visiblemovil: string;
   visibleMovilCheck: boolean;
+  fechavalidacion: Date;
+  fechasolicitud: Date;
+  nifcif: string;
+  idpersona: string;
+  nombrepersona: string;
+  apellido1: string;
+  apellido2: string;
+  numerocolegiado: string;
+  fechanacimiento: Date;
+  antiguedadcola: string;
+  saltos: string;
+  compensaciones: string;
+  fechabajapersona: Date;
+  fechabajaguardia: Date;
+  fechaActual: Date;
+  numeroInscritos;
   constructor() { }
 }

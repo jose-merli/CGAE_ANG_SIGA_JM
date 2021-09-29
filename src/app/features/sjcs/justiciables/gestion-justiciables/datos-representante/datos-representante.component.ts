@@ -20,6 +20,7 @@ import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaConstants } from '../../../../../utils/SigaConstants';
 import { procesos_justiciables } from '../../../../../permisos/procesos_justiciables';
 import { Dialog } from 'primeng/primeng';
+import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 
 @Component({
 	selector: 'app-datos-representante',
@@ -39,14 +40,17 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 	@Input() body: JusticiableItem;
 	@Input() checkedViewRepresentante;
 	@Input() navigateToJusticiable: boolean = false;
+	@Input() fromInteresado;
+	@Input() fromContrario;
+	@Input() fromContrarioEJG;
+	@Input() fromUniFamiliar;
 
 	searchRepresentanteGeneral: boolean = false;
 	showEnlaceRepresentante: boolean = false;
 	// navigateToJusticiable: boolean = false;
 	esMenorEdad: boolean = false;
 	idPersona;
-	permisoEscritura;
-	showTarjetaPermiso: boolean = false;
+	permisoEscritura: boolean = true;
 	representanteValido: boolean = false;
 	confirmationAssociate: boolean = false;
 	confirmationDisassociate: boolean = false;
@@ -72,23 +76,12 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 	ngOnInit() {
 		this.progressSpinner = true;
 
-		this.commonsService
-			.checkAcceso(procesos_justiciables.tarjetaDatosRepresentante)
-			.then((respuesta) => {
-				this.permisoEscritura = respuesta;
+		this.getTiposIdentificacion();
+		this.persistenceService.clearFiltrosAux();
 
-				if (this.permisoEscritura == undefined) {
-					this.showTarjetaPermiso = false;
-					this.progressSpinner = false;
-				} else {
-					this.showTarjetaPermiso = true;
-					this.getTiposIdentificacion();
-					this.persistenceService.clearFiltrosAux();
-				}
+		this.validateShowEnlaceepresentante();
 
-				this.validateShowEnlaceepresentante();
-			})
-			.catch((error) => console.error(error));
+		this.progressSpinner = false;
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
@@ -225,7 +218,6 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 			},
 			(err) => {
 				this.progressSpinner = false;
-				console.log(err);
 			}
 		);
 	}
@@ -243,6 +235,10 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 		);
 	}
 
+	checkPermisoEscritura(){
+
+	}
+
 	search() {
 		if (!this.permisoEscritura) {
 			this.showMessage(
@@ -252,6 +248,11 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 			);
 		} else {
 			this.persistenceService.clearBody();
+			sessionStorage.setItem("origin", "newRepresentante");
+			if(this.fromUniFamiliar)sessionStorage.setItem("fichaJust", "UnidadFamiliar");
+			// if(this.fromInteresado)sessionStorage.setItem("fichaJust", "Interesado");
+			// if(this.fromContrario)sessionStorage.setItem("fichaJust", "Contrario");
+			// if(this.fromContrarioEJG)sessionStorage.setItem("fichaJust", "ContrarioEJG");
 			this.router.navigate(['/justiciables'], { queryParams: { rp: '1' } });
 		}
 	}
@@ -286,30 +287,30 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 				},
 				(err) => {
 					this.progressSpinner = false;
-					console.log(err);
 				}
 			);
 		}
 	}
 
 	searchRepresentanteByIdPersona() {
-		if (this.generalBody.idpersona.trim() != undefined && this.generalBody.idpersona.trim() != '') {
-			this.progressSpinner = true;
-			let bodyBusqueda = new JusticiableBusquedaItem();
-			bodyBusqueda.idpersona = this.generalBody.idpersona;
+		if (this.generalBody.idpersona != undefined) {
+			if (this.generalBody.idpersona.trim() != undefined && this.generalBody.idpersona.trim() != '') {
+				this.progressSpinner = true;
+				let bodyBusqueda = new JusticiableBusquedaItem();
+				bodyBusqueda.idpersona = this.generalBody.idpersona;
 
-			this.sigaServices.post('gestionJusticiables_getJusticiableByIdPersona', bodyBusqueda).subscribe(
-				(n) => {
-					this.generalBody = JSON.parse(n.body).justiciable;
-					this.nifRepresentante = this.generalBody.nif;
-					this.progressSpinner = false;
-					this.compruebaDNI();
-				},
-				(err) => {
-					this.progressSpinner = false;
-					console.log(err);
-				}
-			);
+				this.sigaServices.post('gestionJusticiables_getJusticiableByIdPersona', bodyBusqueda).subscribe(
+					(n) => {
+						this.generalBody = JSON.parse(n.body).justiciable;
+						this.nifRepresentante = this.generalBody.nif;
+						this.progressSpinner = false;
+						this.compruebaDNI();
+					},
+					(err) => {
+						this.progressSpinner = false;
+					}
+				);
+			}
 		}
 	}
 
@@ -447,22 +448,81 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 	callServiceAssociate() {
 		this.progressSpinner = true;
 
-		this.sigaServices.post('gestionJusticiables_associateRepresentante', this.body).subscribe(
-			(n) => {
-				this.progressSpinner = false;
-				this.showMessage(
-					'success',
-					this.translateService.instant('general.message.correct'),
-					this.translateService.instant('general.message.accion.realizada')
-				);
-				this.showEnlaceRepresentante = true;
-				this.persistenceService.setBody(this.generalBody);
-			},
-			(err) => {
-				this.progressSpinner = false;
-				this.translateService.instant('general.message.error.realiza.accion');
-			}
-		);
+		if (this.fromInteresado) {
+			let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
+			let request = [designa.idInstitucion, sessionStorage.getItem("personaDesigna"), designa.ano, designa.idTurno, designa.numero, this.generalBody.apellidos.concat(",", this.generalBody.nombre)]
+			this.sigaServices.post('designaciones_updateRepresentanteInteresado', request).subscribe(
+				(n) => {
+					this.progressSpinner = false;
+					this.showMessage(
+						'success',
+						this.translateService.instant('general.message.correct'),
+						this.translateService.instant('general.message.accion.realizada')
+					);
+					this.persistenceService.setBody(this.generalBody);
+				},
+				(err) => {
+					this.progressSpinner = false;
+					this.translateService.instant('general.message.error.realiza.accion');
+				}
+			);
+		}
+		else if (this.fromContrario) {
+			let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
+			let request = [designa.idInstitucion, sessionStorage.getItem("personaDesigna"), designa.ano, designa.idTurno, designa.numero, this.generalBody.apellidos.concat(",", this.generalBody.nombre)]
+			this.sigaServices.post('designaciones_updateRepresentanteContrario', request).subscribe(
+				(n) => {
+					this.progressSpinner = false;
+					this.showMessage(
+						'success',
+						this.translateService.instant('general.message.correct'),
+						this.translateService.instant('general.message.accion.realizada')
+					);
+					this.persistenceService.setBody(this.generalBody);
+				},
+				(err) => {
+					this.progressSpinner = false;
+					this.translateService.instant('general.message.error.realiza.accion');
+				}
+			);
+		}
+		else if (this.fromContrarioEJG) {
+			let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
+			let request = [sessionStorage.getItem("personaDesigna"), ejg.annio, ejg.numero, ejg.tipoEJG, this.generalBody.apellidos.concat(",", this.generalBody.nombre)]
+			this.sigaServices.post('gestionejg_updateRepresentanteContrarioEJG', request).subscribe(
+				(n) => {
+					this.progressSpinner = false;
+					this.showMessage(
+						'success',
+						this.translateService.instant('general.message.correct'),
+						this.translateService.instant('general.message.accion.realizada')
+					);
+					this.persistenceService.setBody(this.generalBody);
+				},
+				(err) => {
+					this.progressSpinner = false;
+					this.translateService.instant('general.message.error.realiza.accion');
+				}
+			);
+		}
+		else {
+			this.sigaServices.post('gestionJusticiables_associateRepresentante', this.body).subscribe(
+				(n) => {
+					this.progressSpinner = false;
+					this.showMessage(
+						'success',
+						this.translateService.instant('general.message.correct'),
+						this.translateService.instant('general.message.accion.realizada')
+					);
+					this.showEnlaceRepresentante = true;
+					this.persistenceService.setBody(this.generalBody);
+				},
+				(err) => {
+					this.progressSpinner = false;
+					this.translateService.instant('general.message.error.realiza.accion');
+				}
+			);
+		}
 	}
 
 	checkPermisosDisassociate() {
@@ -504,26 +564,88 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 
 	callServiceDisassociate() {
 		this.progressSpinner = true;
-		this.sigaServices.post('gestionJusticiables_disassociateRepresentante', this.body).subscribe(
-			(n) => {
-				this.showMessage(
-					'success',
-					this.translateService.instant('general.message.correct'),
-					this.translateService.instant('general.message.accion.realizada')
-				);
-				this.generalBody = new JusticiableItem();
-				this.nifRepresentante = undefined;
-				this.persistenceService.setBody(this.generalBody);
-				this.body.idrepresentantejg = undefined;
-				this.showEnlaceRepresentante = false;
-				this.progressSpinner = false;
-				this.showEnlaceRepresentante = false;
-			},
-			(err) => {
-				this.progressSpinner = false;
-				this.translateService.instant('general.message.error.realiza.accion');
-			}
-		);
+
+		if (this.fromInteresado) {
+			let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
+			let request = [designa.idInstitucion, sessionStorage.getItem("personaDesigna"), designa.ano, designa.idTurno, designa.numero, ""]
+			this.sigaServices.post('designaciones_updateRepresentanteInteresado', request).subscribe(
+				(n) => {
+					this.progressSpinner = false;
+					this.showMessage(
+						'success',
+						this.translateService.instant('general.message.correct'),
+						this.translateService.instant('general.message.accion.realizada')
+					);
+					this.persistenceService.setBody(this.generalBody);
+				},
+				(err) => {
+					this.progressSpinner = false;
+					this.translateService.instant('general.message.error.realiza.accion');
+				}
+			);
+			this.generalBody = null;
+		}
+		else if (this.fromContrario) {
+			let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
+			let request = [designa.idInstitucion, sessionStorage.getItem("personaDesigna"), designa.ano, designa.idTurno, designa.numero, ""]
+			this.sigaServices.post('designaciones_updateRepresentanteContrario', request).subscribe(
+				(n) => {
+					this.progressSpinner = false;
+					this.showMessage(
+						'success',
+						this.translateService.instant('general.message.correct'),
+						this.translateService.instant('general.message.accion.realizada')
+					);
+					this.persistenceService.setBody(this.generalBody);
+				},
+				(err) => {
+					this.progressSpinner = false;
+					this.translateService.instant('general.message.error.realiza.accion');
+				}
+			);
+			this.generalBody = null;
+		}
+		else if (this.fromContrarioEJG) {
+			let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
+			let request = [sessionStorage.getItem("personaDesigna"), ejg.annio, ejg.numero, ejg.tipoEJG, ""]
+			this.sigaServices.post('gestionejg_updateRepresentanteContrarioEJG', request).subscribe(
+				(n) => {
+					this.progressSpinner = false;
+					this.showMessage(
+						'success',
+						this.translateService.instant('general.message.correct'),
+						this.translateService.instant('general.message.accion.realizada')
+					);
+					this.persistenceService.setBody(this.generalBody);
+				},
+				(err) => {
+					this.progressSpinner = false;
+					this.translateService.instant('general.message.error.realiza.accion');
+				}
+			);
+		}
+		else {
+			this.sigaServices.post('gestionJusticiables_disassociateRepresentante', this.body).subscribe(
+				(n) => {
+					this.showMessage(
+						'success',
+						this.translateService.instant('general.message.correct'),
+						this.translateService.instant('general.message.accion.realizada')
+					);
+					this.generalBody = new JusticiableItem();
+					this.nifRepresentante = undefined;
+					this.persistenceService.setBody(this.generalBody);
+					this.body.idrepresentantejg = undefined;
+					this.showEnlaceRepresentante = false;
+					this.progressSpinner = false;
+					this.showEnlaceRepresentante = false;
+				},
+				(err) => {
+					this.progressSpinner = false;
+					this.translateService.instant('general.message.error.realiza.accion');
+				}
+			);
+		}
 	}
 
 	callConfirmationAssociate() {
@@ -567,6 +689,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 							this.body.idrepresentantejg = this.generalBody.idpersona;
 							this.callServiceAssociate();
 						}
+
 					}
 				},
 				reject: () => { }

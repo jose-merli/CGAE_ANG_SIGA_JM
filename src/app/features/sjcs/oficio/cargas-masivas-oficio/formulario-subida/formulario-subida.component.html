@@ -1,0 +1,37 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="card">
+  <div class="card-body">
+    <p class="title-module">
+      <span (click)="abreCierraSubidaFichero()">{{ 'oficio.cargasMasivas.subidaFichero' | translate }}</span>
+      <i (click)="abreCierraSubidaFichero()" *ngIf="!showSubidaFichero" class="fa fa-angle-up float-right"></i>
+      <i (click)="abreCierraSubidaFichero()" *ngIf="showSubidaFichero" class="fa fa-angle-down float-right"></i>
+    </p>
+    <div *ngIf="showSubidaFichero" class="module vista-simple">
+      <div class="row">
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ "oficio.cargasMasivas.fechaSolicitud" | translate }}</label>
+          <br>
+          <app-fecha [(value)]="fechaSolicitud" [disabledDelete]="true" (valueChangeSelected)="fillFechaCarga($event)" (valueChangeInput)="detectFechaCargaInput($event)"></app-fecha> 
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ "oficio.cargasMasivas.adjuntar" | translate }}</label>
+          <br>
+          <p-fileUpload #pUploadFile icon="fa fa-plus" iconPos="left" chooseLabel="{{ 'oficio.cargasMasivas.seleccionarArchivo' | translate}}" name="file"
+            mode="basic" accept=".xls"  class="edit my-0 mx-auto main-button" (onSelect)="getFile($event)" auto="true"></p-fileUpload>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <!-- BOTON TARJETA -->
+      <div class="text-right main-button">
+        <button (click)="isBuscar()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"></button>
+        <button (click)="uploadFile()" pButton type="button" icon="fa fa-upload" iconPos="left" label="{{ 'general.boton.cargarFichero' | translate}}"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

@@ -259,6 +259,9 @@ export class FichaCursoComponent implements OnInit {
     private commonsService: CommonsService,
     private elRef: ElementRef, private renderer: Renderer,
   ) {
+
+    window.scrollTo(0, 0);
+
   }
 
   ngOnInit() {

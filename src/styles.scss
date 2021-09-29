@@ -1475,6 +1475,10 @@ tr:hover {
 	cursor: pointer !important;
 }
 
+.default{
+	cursor: default !important;
+}
+
 #cabeza, #sInteres, #alterMutua, #mutualidad, #nueIncoDatosAltMut, #nueIncoMutAbo, #detaSanDatosGene, #inscripciones, #formaFichInsDatosCur {
 
 	div {
@@ -1518,6 +1522,10 @@ tr:hover {
 
 div[class*="header-ficha-open"] {
 	cursor: pointer !important;
+}
+
+.ui-dropdown:not(.ui-state-disabled):hover {
+    background: #FFFFFF !important; 
 }
 
 .tarjetaFija {

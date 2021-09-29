@@ -8,8 +8,9 @@
 </div>
 
 <div class="busqueda-container">
-  <app-filtro-justiciables (isOpen)="isOpenReceive($event)" [permisoEscritura]="permisoEscritura" [modoRepresentante]="modoRepresentante"></app-filtro-justiciables>
-  <app-tabla-justiciables *ngIf="buscar" [datos]="datos" (searchHistoricalSend)="search($event)" [modoRepresentante]="modoRepresentante"></app-tabla-justiciables>
+  <app-filtro-justiciables (isOpen)="isOpenReceive($event)" [permisoEscritura]="permisoEscritura" [modoRepresentante]="modoRepresentante" [nuevaUniFamiliar]="nuevaUniFamiliar" [nuevoContrarioEJG]="nuevoContrarioEJG"></app-filtro-justiciables>
+  <app-tabla-justiciables *ngIf="buscar" [datos]="datos" [nuevoInteresado]="nuevoInteresado" [nuevoContrario]="nuevoContrario" [nuevaUniFamiliar]="nuevaUniFamiliar"
+  (searchHistoricalSend)="search($event)" [modoRepresentante]="modoRepresentante" [nuevoContrarioEJG]="nuevoContrarioEJG"></app-tabla-justiciables>
 </div>
 
 <div *ngIf="modoRepresentante || searchJusticiable" class="mt-3 text-right main-button ">

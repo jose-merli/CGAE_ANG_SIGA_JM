@@ -8,7 +8,7 @@
 
 <div class="busqueda-container">
   <app-filtros-procuradores [permisoEscritura]="permisoEscritura" (isOpen)="isOpenReceive($event)"></app-filtros-procuradores>
-  <app-tabla-procuradores *ngIf="buscar" [datos]="datos" [institucionActual]="institucionActual" (searchHistoricalSend)="search($event)"></app-tabla-procuradores>
+  <app-tabla-procuradores *ngIf="buscar" [datos]="datos" [fromProcuradorContrario]="fromProcuradorContrario" [institucionActual]="institucionActual" (searchHistoricalSend)="search($event)"></app-tabla-procuradores>
 </div>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">

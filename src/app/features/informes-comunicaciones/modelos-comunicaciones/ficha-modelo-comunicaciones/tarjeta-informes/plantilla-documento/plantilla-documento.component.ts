@@ -98,6 +98,7 @@ export class PlantillaDocumentoComponent implements OnInit {
   VALOR_FORMATO_XLS: string = "1";
   VALOR_FORMATO_DOC: string = "2";
   VALOR_FORMATO_PDF: string = "3";
+  VALOR_FORMATO_FO: string = "4";
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -452,9 +453,9 @@ export class PlantillaDocumentoComponent implements OnInit {
 
   changeFormato() {
     if (this.body.idFormatoSalida == "2") {
-      this.formatoAccept = ".doc,.docx";
+      this.formatoAccept = ".doc,.docx,.fo";
     } else if (this.body.idFormatoSalida == "1") {
-      this.formatoAccept = ".xls,.xlsx";
+      this.formatoAccept = ".xls,.xlsx,.fo";
     }
   }
 

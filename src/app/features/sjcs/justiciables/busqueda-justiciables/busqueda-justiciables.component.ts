@@ -41,6 +41,10 @@ export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
       activa: true
     },
     {
+      key: "personales",
+      activa: true
+    },
+    {
       key: "solicitud",
       activa: false
     },
@@ -51,6 +55,14 @@ export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
     {
       key: "asuntos",
       activa: false
+    },
+    {
+      key: "abogado",
+      activa: false
+    },
+    {
+      key: "procurador",
+      activa: false
     }
 
   ];
@@ -58,6 +70,10 @@ export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
   permisoEscritura;
   modoRepresentante: boolean = false;
   searchJusticiable: boolean = false;
+  nuevoInteresado: boolean = false;
+  nuevoContrario: boolean = false;
+  nuevaUniFamiliar: boolean = false;
+  nuevoContrarioEJG: boolean = false;
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
     private commonsService: CommonsService, private translateService: TranslateService, private router: Router,
@@ -74,6 +90,26 @@ export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
       }
 
     });
+
+    if(sessionStorage.getItem("origin")=="newInteresado"){
+      this.nuevoInteresado=true;
+    }
+
+    if(sessionStorage.getItem("origin")=="newContrario"){
+      
+      this.nuevoContrario=true;
+    }
+
+    if(sessionStorage.getItem("origin")=="UnidadFamiliar"){
+      this.nuevaUniFamiliar=true;
+      sessionStorage.removeItem("origin");
+    }
+
+    if(sessionStorage.getItem("origin")=="newContrarioEJG"){
+      this.nuevoContrarioEJG = true;
+      sessionStorage.removeItem("origin");
+    }
+    
 
     this.persistenceService.setFichasPosibles(this.fichasPosibles);
 

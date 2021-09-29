@@ -1,0 +1,110 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+
+
+<div class="ficha-container">
+  <div class="card">
+    <div class="card-header header-ficha" (click)="onHideTarjeta()">
+      <div *ngIf="!showTarjeta" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="fa fa-user icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10 ">
+          <div class="d-flex justify-content-start mb-1">
+            <label class="mr-auto title-ficha"> Datos Colegiado Sustituto
+              <!-- {{ 'administracion.catalogos.titulo.datos.generales' | translate}} -->
+            </label>
+          </div>
+          <div class="row">
+            <!-- <div class="col-3">
+              <label>{{ "censo.fichaCliente.literal.identificacion" | translate }}
+                <span>{{ body.nif }}</span>
+              </label>
+            </div>
+            <div class="col-3">
+              <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}
+                <span>{{ body.nombre }} {{ body.apellido11 }} {{ body.apellido2 }}</span>
+              </label>
+            </div>
+            <div class="col-3">
+              <label>{{ "censo.consultaDatosColegiacion.literal.fechaNac" | translate }}
+                <span>{{ body.fechanacimiento | date: 'dd/MM/yyyy' }}</span>
+              </label>
+            </div>
+            <div class="col-3">
+              <label>{{ "administracion.usuarios.literal.fechaAlta" | translate }}
+                <span>{{ body.fechaalta | date: 'dd/MM/yyyy' }}</span>
+              </label>
+              <i *ngIf="!showTarjeta" class="fa fa-angle-down float-right"></i>
+            </div> -->
+          </div>
+        </div>
+      </div>
+      <div *ngIf="showTarjeta" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fa fa-user icon-ficha"></i>
+        </div>
+        <label class="title-ficha">Datos Colegiado Sustituto</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+    <!--cuerpo datos generales-->
+    <div [hidden]="!showTarjeta" class="card-body card-body-ficha">
+      <div class="row">
+
+        <!-- info identificacion -->
+        <div class="col-lg-12 col-md-12">
+          <div class="row">
+            <div class="form-group col-lg-2 col-md-2">
+              <label>{{ "justiciaGratuita.oficio.designaciones.fechaDesignacion" | translate}} (*)</label>
+              <app-fecha [inputStyleClass]="(body.fechaDesignacion == null) ? 'camposObligatorios': ''" [(value)]="body.fechaDesignacion"
+               (valueChangeSelected)="fillFechaDesignacion($event)" (valueChangeInput)="fillFechaDesignacion($event)" [utc]="false"
+                [disabled]="disableFechaDesignacion"  [minDate]="minDateDesigna">
+              </app-fecha>
+            </div>
+            <div *ngIf="!disableCheck" class="form-group col-lg-2 col-md-2">
+              <p-checkbox (onChange)="incluirSalto()" [(ngModel)]="body.salto" binary="true"
+                label="{{ 'justiciaGratuita.oficio.designas.letrados.salto' | translate}}" 
+                name="salto" [hidden]="isLetrado" >
+              </p-checkbox>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-lg-2 col-md-2">
+              <label>{{ "censo.resultadosSolicitudesModificacion.literal.nColegiado" | translate }}
+              </label>
+              <input [(ngModel)]="body.numColegiado" name="nombre" type="text" class="form-control" [maxLength]="95"
+                pInputText disabled />
+            </div>
+            <div class="form-group col-lg-4 col-md-4">
+              <label>{{ "gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate }}
+              </label>
+              <input [(ngModel)]="body.apellidos" name="apellidos" type="text" class="form-control" [maxLength]="95"
+                pInputText disabled />
+            </div>
+            <div class="form-group col-lg-4 col-md-4">
+              <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}
+              </label>
+              <input [(ngModel)]="body.nombre" name="nombre" type="text" class="form-control" [maxLength]="95"
+                pInputText disabled />
+            </div>
+            <div class="form-group col-lg-1 col-md-1">
+              <p-checkbox [(ngModel)]="body.art27" binary="true" label="{{ 'justiciaGratuita.oficio.designas.letrados.art27' | translate}}" name="art27" disabled>
+              </p-checkbox>
+            </div>
+            <div class="form-group col-lg-1 col-md-1">
+              <button (click)="search()" pButton type="button" icon="fa fa-search" iconPos="center"></button>
+              <button (click)="rest()" pButton type="button" icon="fa fa-eraser" iconPos="center"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

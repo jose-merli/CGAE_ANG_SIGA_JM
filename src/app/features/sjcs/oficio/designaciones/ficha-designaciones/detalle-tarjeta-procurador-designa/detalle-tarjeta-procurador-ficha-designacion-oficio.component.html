@@ -1,0 +1,98 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="card" id="procurador">
+    <div class="card-body p-0">
+        <div class="padding-interior w-100">
+            <app-paginador2 (perPage)="perPage($event)" (seleccionarTodo)="selectedAll($event)"
+                (fromReg)="fromReg($event)" (toReg)="toReg($event)" [totalRegistros]="totalRegistros"></app-paginador2>
+        </div>
+        <div class="table" matSort (matSortChange)="sortData($event)" #table>
+            <div class="table-header ">
+                <div class="table-header-child p-2" *ngFor="let cabecera of cabeceras; let j = index" #BorderedHeader>
+                    <div>
+                        <div [mat-sort-header]=cabecera.id>{{cabecera.name | translate}}</div>
+                        <input type="text" class="form-control" pInputTex [(ngModel)]="searchText[j]"
+                            (ngModelChange)="searchChange(j)" autocomplete="off" placeholder="Buscar">
+                    </div>
+                </div>
+            </div>
+            <div *ngFor="let row of rowGroups | slice:from:to; let i = index;" class="table-row child">
+                <div (click)="selectRow(row['id'])" class="table-row-wrapper hoverBlue"
+                    [ngClass]="{'hoverBlue2': isSelected(row['id']), 'fixedBlue': seleccionarTodo}" #rowSelected>
+                    <div *ngFor="let cell of row['cells'] | slice:0:8; let z = index"
+                        class="table-cell p-2 selectedRowClass" [ngClass]="{'borders-child': isPar(row['id'])}"
+                        #cellSelected>
+                        <div class="cell-wrapper selectedRowClass">
+                            <span class="w100 cell-value" *ngIf="cell.type == 'newinput'"><input type="text"
+                                    class="form-control mt-2" pInputText [(ngModel)]="this.newInputValue[z]"
+                                    (change)="inputValueChange($event, i, z, cell)"></span>
+                            <!-- numero designacion -->
+                            <span class="w100 cell-value" *ngIf="z == 1 && cell.type == 'input'"><input type="text"
+                                    class="form-control mt-2" pInputText [(ngModel)]="cell.value"
+                                    (change)="inputChange($event, i, z)" [maxLength]="20"
+                                    (keypress)="numberOnly($event)"></span>
+                            <!-- [ngClass]="styleObligatorio(cell.value)" -->
+                            <!-- observaciones -->
+                            <span class="w100 cell-value" *ngIf="z== 5 && cell.type == 'input'"><input type="text"
+                                    [ngClass]="styleObligatorio(cell.value)" class="form-control mt-2" pInputText
+                                    [(ngModel)]="cell.value" (change)="inputChange($event, i, z)"
+                                    [maxLength]="1024"></span>
+                            <span class="w100 cell-value" *ngIf="cell.type == 'text'"
+                                [ngClass]="{'setItalic': row.italic}">{{cell.value}}</span>
+                            <!-- fecha designacion -->
+                            <span class="w100 cell-value" *ngIf="cell.type == 'datePicker' && z == 0">
+                                <app-fecha [(value)]="cell.value" [inputStyleClass]="styleObligatorio(cell.value)"
+                                    [utc]="false" (valueChangeSelected)="fillFechaDesigna($event, cell)"
+                                    (valueChangeInput)="fillFechaDesigna($event, cell)">
+                                </app-fecha>
+                            </span>
+                            <!-- fecha solicitud -->
+                            <span class="w100 cell-value" *ngIf="cell.type == 'datePicker' && z == 6">
+                                <app-fecha [(value)]="cell.value" [utc]="false"
+                                    (valueChangeSelected)="fillFecha($event, cell)"
+                                    (valueChangeInput)="fillFecha($event, cell)" [minDate]="fechaDesigna">
+                                </app-fecha>
+                            </span>
+                            <!-- combo motivo -->
+                            <span class="w100 cell-value selectWrap" *ngIf="cell.type == 'select'">
+                                <p-dropdown autoWidth="false" class="center" [placeholder]="'Motivos'"
+                                    [(ngModel)]="cell.value" [options]="cell.combo" showClear="true"
+                                    styleClass="widthAll">
+                                </p-dropdown>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer h50 pt-5">
+            <div class="text-right main-button butBottom mt10">
+                <button pButton (click)="checkRestablecer()" [disabled]="disableEdition()" icon="fa fa-undo"
+                    type="button" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+
+                <button pButton (click)="checkGuardar()" [disabled]="disableEdition()" icon="fa fa-save" type="button"
+                    iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+
+                <button pButton (click)="checkNuevo()" icon="fa fa-plus" type="button" iconPos="left"
+                    label="{{ 'general.boton.new' | translate}}"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" icon="icon" key="confirmGuardar" width="425"
+    #confirmGuardar>
+    <p-footer>
+        <button type="button" pButton icon="fa-check" label="Si" (click)="confirmGuardar.accept()"></button>
+        <button type="button" pButton icon="fa-close" label="No" (click)="confirmGuardar.reject()"></button>
+    </p-footer>
+</p-confirmDialog>
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" icon="icon" key="confirmGuardarEJG" width="425"
+  #confirmGuardarEJG>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="confirmGuardarEJG.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="confirmGuardarEJG.reject()"></button>
+  </p-footer>
+</p-confirmDialog>

@@ -1,0 +1,9 @@
+<div class="header-title">
+  <i class="fa fa-square"></i>
+  <p [pTooltip]="tooltip" tooltipPosition="right">
+    <span *ngFor="let ruta of rutas; last as lastRuta">
+      <span *ngIf="!lastRuta">{{ruta}} &nbsp;<i class="fa fa-angle-right"></i> </span>
+      <span *ngIf="lastRuta">{{ruta}}</span>
+    </span>
+  </p>
+</div>

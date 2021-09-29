@@ -1,0 +1,71 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="header-title">
+  <i class="fa fa-square"></i>
+  <p>{{'menu.justiciaGratuita' | translate}}
+    <i class="fa fa-angle-right"></i>{{ 'menu.justiciaGratuita.TurnosOficio' | translate}}
+    <i class="fa fa-angle-right"></i>{{ 'menu.sjcs.bajasTemporales' | translate}}
+  </p>
+</div>
+<div class="card">
+  <div class="card-body">
+    <!-- CAMPOS COMPONEN FILTROS BUSQUEDA-->
+    <div class="module vista-avanzada">
+      <div class="form-row">
+        <div class="form-group-interlineado col-lg-2 col-md-3">
+          <label>{{'censo.busquedaClientesAvanzada.literal.tipoCliente'|translate}}</label>
+          <p-dropdown class="select-form" [(ngModel)]='filtros.tipo' placeholder="Seleccionar" [options]="comboTipo"
+            [filter]="true" [disabled]="disabledestado" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+        </div>
+        <div class="form-group-interlineado col-lg-2 col-md-3">
+          <label>{{'censo.fichaIntegrantes.literal.estado'|translate}}</label>
+          <p-dropdown class="select-form" [(ngModel)]='filtros.validado' placeholder="Seleccionar" [options]="comboEstado"
+          [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+        </div>
+        <div class="form-group-interlineado col-lg-2 col-md-1">
+          <label>{{ "oficio.busquedaBajasTemporales.fechaSolicitudDesde" | translate }}
+          </label>
+          <app-fecha [(value)]="filtros.fechasolicituddesde" (valueChangeInput)="fillFechaSolicitudDesdeCalendar($event)" (valueChangeSelected)="fillFechaSolicitudDesdeCalendar($event)"></app-fecha>
+        </div>
+        <div class="form-group-interlineado col-lg-2 col-md-1">
+          <label>{{ "oficio.busquedaBajasTemporales.fechaSolicitudHasta" | translate }}
+          </label>
+          <app-fecha [(value)]="filtros.fechasolicitudhasta" (valueChangeInput)="fillFechaHastaSolicitudCalendar($event)" [minDate]="filtros.fechasolicituddesde" (valueChangeSelected)="fillFechaHastaSolicitudCalendar($event)"></app-fecha>
+        </div>
+        <div class="form-group-interlineado col-lg-2 col-md-1">
+          <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaDesde" | translate }}
+          </label>
+          <app-fecha [(value)]="filtros.fechadesde" (valueChangeInput)="fillFechaDesdeCalendar($event)" (valueChangeSelected)="fillFechaDesdeCalendar($event)"></app-fecha>
+        </div>
+        <div class="form-group-interlineado col-lg-2 col-md-1">
+          <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta" | translate }}
+          </label>
+          <app-fecha [(value)]="filtros.fechahasta" [minDate]="filtros.fechadesde" (valueChangeInput)="fillFechaHastaCalendar($event)" (valueChangeSelected)="fillFechaHastaCalendar($event)"></app-fecha>
+        </div>
+      </div>
+    
+    <p (click)="onHideDatosGenerales()" class="title-module">{{ "justiciaGratuita.justiciables.literal.colegiado" | translate}}
+      <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+      <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+    </p>
+    <div *ngIf="showDatosGenerales" class="module vista-avanzada">
+      <div class="form-row">
+        <div class="form-group-interlineado col-lg-12 col-md-12">
+          <app-busqueda-colegiado-express [pantalla]="'ejg'" [(numColegiado)]="usuarioBusquedaExpress.numColegiado" [(nombreAp)]="usuarioBusquedaExpress.nombreAp" (colegiado)="updateColegiado($event)"></app-busqueda-colegiado-express>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <div class="card-footer">
+    <!-- BOTONES TARJETA -->
+    <div class="text-right main-button">
+      <button (click)="clearFilters()" pButton type="button" icon="fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate}}"></button>
+      <button (click)="isBuscar()" pButton type="button" icon="fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"></button>
+      <button pButton type="button" [disabled]="!permisos" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}" (click)="nuevaBajaTemporal()"></button>
+    </div>
+  </div>
+</div>
+
+

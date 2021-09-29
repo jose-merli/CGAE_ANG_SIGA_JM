@@ -1,0 +1,28 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="busqueda-container">
+
+  <div class="header-title">
+    <i class="fa fa-square"></i>
+    <p>{{'menu.justiciaGratuita' | translate}}
+      <i class="fa fa-angle-right"></i>{{ 'menu.justiciaGratuita.TurnosOficio' | translate }}
+      <i class="fa fa-angle-right"></i>{{'menu.justiciaGratuita.saltosYCompensaciones'|translate}}
+  </div>
+
+  <app-filtros-saltos-compensaciones-oficio *ngIf="showFilters" (isBuscar)="isBuscar($event)"
+    [isNewFromOtherPage]="isNewFromOtherPage" [activacionEditar]="activacionEditar">
+  </app-filtros-saltos-compensaciones-oficio>
+
+</div>
+
+<app-tabla-resultado-mix-saltos-comp-oficio *ngIf="showResults" [cabeceras]="cabeceras"
+  [totalRegistros]="totalRegistros" [seleccionarTodo]="seleccionarTodo" [rowGroupsAux]="rowGroupsAux"
+  [rowGroups]="rowGroups" (searchHistory)="searchHistory($event)" (anySelected)="notifyAnySelected($event)"
+  (selectedRow)="checkSelectedRow($event)" (anularEvent)="anular($event)" (deleteEvent)="delete($event)"
+  (saveEvent)="guardar($event)" [comboTurnos]="comboTurnos" [comboTipos]="comboTipos" [emptyResults]="emptyResults"
+  [historico]="historico" [activacionEditar]="activacionEditar">
+</app-tabla-resultado-mix-saltos-comp-oficio>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

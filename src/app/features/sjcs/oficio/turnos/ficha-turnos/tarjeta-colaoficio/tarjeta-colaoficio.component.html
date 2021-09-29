@@ -1,0 +1,152 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="ficha-container" id="colaOficio">
+  <div class="card">
+    <div class="card-header header-ficha">
+      <div *ngIf="!openFicha" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('colaOficio')">
+          <div class="img-colegiado">
+            <i class="fas fa-list icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('colaOficio')">
+            <label class="mr-auto title-ficha" style="cursor:pointer" >{{'justiciaGratuita.oficio.turnos.coladeoficio'|translate}}</label>
+          </div>
+          <div  class="d-flex justify-content-between" style="cursor:default">
+            <label *ngIf="existenDatos()">{{ "justiciaGratuita.oficio.turnos.ncolegiadoprimero" | translate }}
+              <span>{{ primerLetrado }}</span>
+            </label>
+            <label *ngIf="existenDatos()">{{ "justiciaGratuita.oficio.turnos.apellidosprimerletrado" | translate }}
+              <span>{{ nombreApellidosPrimerLetrado }}</span>
+            </label>
+            <label *ngIf="existenDatos()">{{ "justiciaGratuita.oficio.turnos.ncolegiadoultimo" | translate }}
+              <span>{{ ultimoLetrado }}</span>
+            </label>
+            <label *ngIf="existenDatos()">{{ "justiciaGratuita.oficio.turnos.apellidosultmletrado" | translate }}
+              <span>{{ apeyNombreUltimo }}</span>
+            </label>
+            <label *ngIf="existenDatos()">{{ "justiciaGratuita.oficio.turnos.ninscritos" | translate }}
+              <span>{{ nInscritos }}</span>
+            </label>
+            <label *ngIf="!existenDatos()">{{ "justiciaGratuita.oficio.turnos.colaoficio.vacio" | translate }}
+            </label>
+            <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "  (click)="abreCierraFicha('colaOficio')"></i>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center" (click)="abreCierraFicha('colaOficio')">
+        <div class="img-colegiado">
+          <i class="fas fa-list icon-ficha"></i>
+        </div>
+        <label class="title-ficha" style="cursor:pointer">{{"justiciaGratuita.oficio.turnos.coladeoficio" | translate}}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+    <!--cuerpo datos generales-->
+    <!-- esFichaActiva('tablacolaoficio') && -->
+    <div *ngIf=" openFicha" class="card-body card-body-ficha">
+      <div class="form-row">
+        <div class="form-group col-lg-2 col-md-2">
+          <label>{{ "justiciaGratuita.oficio.turnos.mostrarinscripciones" | translate }} (*)
+          </label>
+          <app-fecha [(value)]="turnosItem.fechaActual" (valueChangeInput)="fillFechaDesdeCalendar($event)" (valueChangeSelected)="fillFechaDesdeCalendar($event)"></app-fecha>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <br>
+          <label>{{ "justiciaGratuita.oficio.turnos.ncolegiadoultimo" | translate }}
+          </label>
+          <strong>{{ ultimoLetrado }}</strong>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <br>
+          <label>{{ "justiciaGratuita.oficio.turnos.apellidosultmletrado" | translate }}
+          </label>
+          <br>
+          <strong>{{ apeyNombreUltimo }}</strong>
+        </div>
+      </div>
+      <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [selectionMode]="selectionMode" [responsive]="true"
+        #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="actualizaSeleccionados()" (onRowUnselect)="actualizaSeleccionados()"
+        [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">
+        <ng-template pTemplate="colgroup" let-columns>
+          <colgroup>
+            <col *ngFor="let col of cols" [style.width]="col.width">
+          </colgroup>
+        </ng-template>
+        <ng-template pTemplate="header" let-columns>
+          <tr>
+            <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+              {{ col.header | translate }}
+              <p-sortIcon [field]="col.field"></p-sortIcon>
+              <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="
+                table.filter($event.target.value, col.field, 'contains')
+              " />
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+          <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+            <td class="text-center" *ngFor="let col of columns">
+              <div *ngIf="col.field !='nombrepersona' && col.field !='fechavalidacion' && col.field != 'fechabajapersona'">
+                <span>{{dato[col.field]}}</span>
+              </div>
+              <div *ngIf="col.field =='fechavalidacion' || col.field =='fechabajapersona'">
+                <span>{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
+              </div>
+              <div *ngIf="col.field =='nombrepersona'">
+                <span>{{dato.alfabeticoapellidos}}, {{dato[col.field]}} </span>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage" let-columns>
+          <tr>
+            <td [attr.colspan]="columns.length">
+              {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
+            </td>
+          </tr>
+        </ng-template>        
+        <ng-template pTemplate="paginatorleft">
+          <div class="mostrar d-flex text-right justify-content-end">
+            <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }}{{table.first + 1}} al {{table.first
+              + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}</label>
+              <!-- *ngIf="selectedDatos  && selectedDatos.length > 0" -->
+              <label class="pr-3 numSeleccionados" >{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{selectedDatos.length}}
+              </label>
+              <!-- <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: 0
+              </label> -->
+            <label>{{"general.message.mostrar" | translate}}</label>
+            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
+            </p-dropdown>
+            <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+            <div class="ml-3 selectAll">
+              <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true"
+                  label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname">
+              </p-checkbox>
+            </div>
+          </div>
+        </ng-template>
+        
+      </p-table>
+    </div>
+    <div *ngIf="openFicha" class="card-footer">
+      <div class="text-right main-button">
+        <button [disabled]=" disableAll || selectedDatos.length == 0 || selectedDatos.length > 1" (click)="confirmUltimo(selectedDatos)"
+          pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'justiciaGratuita.oficio.turnos.marcarultimo' | translate}}"></button>
+        <button pButton [disabled]=" disableAll || selectedDatos.length == 0 || selectedDatos.length > 1" type="button"
+          (click)="saltoCompensacion()" icon="fa fa-plus" iconPos="left" label="{{ 'justiciaGratuita.oficio.turnos.nuevosaltocompen' | translate}}"></button>
+
+      </div>
+    </div>
+  </div>
+</div>
+<p-confirmDialog header="Confirmación"  icon="fa fa-question-circle"  width="425" key="confirmDialogColaOficio"  #cd>
+  <p-footer>
+    <button type="button"  pButton icon="fa-check"  label="Si"  (click)="cd.accept()"></button>
+    <button type="button"  pButton icon="fa-close"  label="No"  (click)="cd.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

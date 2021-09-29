@@ -31,6 +31,7 @@ export class BusquedaProcuradoresComponent implements OnInit {
   msgs;
 
   permisoEscritura;
+  fromProcuradorContrario=false;
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
     private commonsService: CommonsService, private translateService: TranslateService, private router: Router) { }
@@ -38,6 +39,10 @@ export class BusquedaProcuradoresComponent implements OnInit {
 
   ngOnInit() {
 
+    if(sessionStorage.getItem("origin")=="fromProcuradorContrario"){
+      sessionStorage.removeItem('origin');
+      this.fromProcuradorContrario=true;
+    }
     this.commonsService.checkAcceso(procesos_maestros.procuradores)
       .then(respuesta => {
 

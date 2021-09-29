@@ -1,9 +1,9 @@
 import { TranslateService } from "../translate/translation.service";
 import { Component, OnInit, ViewEncapsulation } from "@angular/core";
 import { Router } from "@angular/router";
-import { MenuItem } from "primeng/api";
+import { ConfirmationService, MenuItem } from "primeng/api";
+import { PanelMenuModule } from "primeng/panelmenu";
 import { SigaServices } from "../../_services/siga.service";
-import { PersistenceService } from '../../_services/persistence.service';
 
 @Component({
   selector: "app-menu",
@@ -28,7 +28,7 @@ export class MenuComponent implements OnInit {
     private router: Router,
     private sigaServices: SigaServices,
     private translateService: TranslateService,
-    private persistenceService: PersistenceService
+    private confirmationService: ConfirmationService
   ) { }
 
   // TODO: Revisar si tiene sentido que las rutas las devuelva el back
@@ -76,7 +76,27 @@ export class MenuComponent implements OnInit {
   }
 
   navigateTo(ruta) {
-    this.persistenceService.clearPersistence();
+    let keyConfirmation = "confirmacionGuardarJustificacionExpress";
+    if (sessionStorage.getItem('rowIdsToUpdate') != null && sessionStorage.getItem('rowIdsToUpdate') != 'null' && sessionStorage.getItem('rowIdsToUpdate') != '[]'){
+      console.log('if')
+      this.confirmationService.confirm({
+        key: keyConfirmation,
+        message: this.translateService.instant('justiciaGratuita.oficio.justificacion.reestablecer'),
+        icon: "fa fa-trash-alt",
+        accept: () => {
+          this.navigate(ruta);
+        },
+        reject: () => {
+        }
+      });
+    }else{
+      console.log('else')
+      this.navigate(ruta);
+    }
+ 
+  }
+  navigate(ruta) {
+    sessionStorage.setItem("rowIdsToUpdate", JSON.stringify([]));
     sessionStorage.removeItem("disabledPlantillaEnvio");
     if (ruta !== " ") {
       if (ruta !== "opcionMenu" && ruta !== "permisos") {
@@ -128,6 +148,4 @@ export class MenuComponent implements OnInit {
   backMenuChild() {
     this.showChildOfChild = false;
   }
-
-
 }

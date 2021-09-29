@@ -298,7 +298,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
 
 
         this.tipoCambioAuditoria = null;
-        // this.checkAcceso();
+        this.checkAcceso();
         this.onInitGenerales();
 
         this.checkColegialesBody = JSON.parse(JSON.stringify(this.colegialesBody));
@@ -2144,6 +2144,32 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
     } else {
       this.isLetrado = !this.permisos;
     }
+  }
+
+  checkAcceso() {
+    this.progressSpinner = true;
+    let procesos: any = ["12P"];
+    let proceso;
+    procesos = procesos.map(it => {
+      proceso = it;
+      it = new ControlAccesoDto();
+      it.idProceso = proceso;
+      return it
+
+    })
+    this.sigaServices.post("acces_controls", procesos).subscribe(
+      data => {
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.activateNumColegiado = permisosArray[0].derechoacceso == 3 ? true : false;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
   }
 
 }

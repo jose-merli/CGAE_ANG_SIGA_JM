@@ -1,11 +1,16 @@
-import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
-import {  HttpBackend,  HttpClient} from '../../../node_modules/@angular/common/http';
-import { TranslateService } from '../commons/translate';
-import { ControlAccesoDto } from '../models/ControlAccesoDto';
-import { SigaServices } from './siga.service';
+import { Injectable } from "@angular/core";
+import { Http } from "@angular/http";
+import "rxjs/add/operator/catch";
+import "rxjs/add/operator/map";
+import {
+  HttpBackend,
+  HttpClient
+} from "../../../node_modules/@angular/common/http";
+
+import { ControlAccesoDto } from "../models/ControlAccesoDto";
+import { SigaServices } from "./siga.service";
+import { TranslateService } from '../commons/translate/translation.service';
+import { ComboItem } from "../models/ComboItem";
 
 @Injectable()
 export class CommonsService {
@@ -130,6 +135,29 @@ export class CommonsService {
       }
     });
   }
+
+  getLetrado = () => {
+		let isLetrado: ComboItem;
+    let respuesta = undefined;
+
+    respuesta = new Promise((resolve, reject) => {
+      this.sigaServices.get('getLetrado').subscribe(
+        (data) => {
+          isLetrado = data;
+          if (isLetrado.value == 'S') {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        },
+        (err) => {
+          console.log(err);
+          reject(undefined);
+        }
+        );
+    });
+    return respuesta;
+	}
 
   checkAcceso = (idProceso) => {
     let activacionEditar = undefined;

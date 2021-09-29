@@ -1,0 +1,62 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="card">
+  <div class="card-body">
+    <p class="title-module"> {{ 'general.message.datos.generales' | translate }}</p>
+
+    <!-- CAMPOS COMPONEN FILTROS BUSQUEDA-->
+    <div class="module vista-simple">
+      <div class="form-row">
+        <div class="form-group col-lg-3">
+          <label>
+            {{"justiciaGratuita.sjcs.designas.DatosIden.turno" | translate}}
+          </label>
+          <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" (onChange)="onChangeTurno()" [filter]="true"
+            filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="comboTurnos" [(ngModel)]='filtros.idTurno'
+            [showClear]="true">
+          </p-dropdown>
+        </div>
+        <div class="form-group col-3">
+          <label>
+            {{"menu.justiciaGratuita.GuardiaMenu" | translate}}
+          </label>
+          <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]='filtros.idGuardia'
+            [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="comboGuardias" [disabled]="isDisabledGuardia"
+            [showClear]="true"></p-dropdown>
+        </div>
+        <div class="form-group col-lg-6 col-md-6">
+          <label>{{"administracion.auditoriaUsuarios.fechaDesde" | translate}} / {{"administracion.auditoriaUsuarios.fechaHasta"
+            | translate}}</label>
+          <div class="row">
+            <div class="col-lg-5 col-md-5">
+
+              <app-fecha [(value)]="filtros.fechaDesde" [maxDate]="getFechaHasta(filtros.fechaDesde, filtros.fechaHasta)" (valueChangeSelected)="fillFechaDesde($event)"
+                 (valueChangeInput)="fillFechaDesde($event)"></app-fecha>
+            </div> /
+            <div class="col-lg-6 col-md-6">
+              <app-fecha [(value)]="filtros.fechaHasta" [minDate]="getFechaDesde(filtros.fechaDesde,filtros.fechaHasta)" (valueChangeSelected)="fillFechaHasta($event)"
+                 (valueChangeInput)="fillFechaHasta($event)"></app-fecha>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <p class="title-module"> {{ 'justiciaGratuita.justiciables.literal.colegiado' | translate }}</p>
+
+      <!-- CAMPOS COMPONEN FILTROS BUSQUEDA-->
+      <div class="module vista-simple">
+        <div class="form-row">
+          <div class="form-group col-lg-6 col-md-6">
+            <app-busqueda-colegiado-express></app-busqueda-colegiado-express>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-footer">
+    <!-- BOTONES TARJETA -->
+    <div class="text-right main-button">
+      <button (click)="clearFilters()" pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate}}"></button>
+      <button (click)="search()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"></button>
+    </div>
+  </div>

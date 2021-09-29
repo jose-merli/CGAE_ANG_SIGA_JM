@@ -56,7 +56,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
   selectedDatosColegiales;
   situacionPersona: String;
   isEliminarEstadoColegial: boolean = false;
-  openFicha: boolean = false;
+ openFicha: boolean = false;
   information: boolean = false;
   checkDatosColegiales: any[] = [];
   datosColegialesInit: any[] = [];
@@ -200,9 +200,11 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.resaltadoDatosGenerales = true;
+    this.getLetrado();
     sessionStorage.removeItem("direcciones");
     sessionStorage.removeItem("situacionColegialesBody");
     sessionStorage.removeItem("fichaColegial");
+    sessionStorage.setItem("permisos", JSON.stringify(this.permisos)); // No se si esto hace falta
     
     if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
       this.disabledNif = true;
@@ -235,7 +237,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
       this.checkGeneralBody = JSON.parse(sessionStorage.getItem("personaBody"));
       this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
       if (this.colegialesBody.situacionResidente == "0") this.colegialesBody.situacionResidente = "No";
-      if (this.colegialesBody.situacionResidente == "1") this.colegialesBody.situacionResidente = "Si";
+     if (this.colegialesBody.situacionResidente == "1") this.colegialesBody.situacionResidente = "Si";
 
       this.checkColegialesBody = JSON.parse(JSON.stringify(this.colegialesBody));
       this.idPersona = this.generalBody.idPersona;
@@ -297,7 +299,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
         this.colegialesBody = new FichaColegialColegialesItem();
       }
 
-      // this.searchDatosBancariosIdPersona.datosBancariosItem[0] = new DatosBancariosItem();
+     // this.searchDatosBancariosIdPersona.datosBancariosItem[0] = new DatosBancariosItem();
     }
     // Control de si es creacion o no 
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
@@ -1866,7 +1868,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
       severity: "error",
       summary: this.translateService.instant("general.message.incorrect"),
       detail: this.translateService.instant(
-        "general.message.error.realiza.accion"
+       "general.message.error.realiza.accion"
       )
     });
   }
@@ -2122,7 +2124,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
                     .subscribe(
                       data => {
                         this.nuevoEstadoColegial = new FichaColegialColegialesItem;
-                        this.isCrearColegial = false;
+                       this.isCrearColegial = false;
                         this.isRestablecer = false;
                         this.inscritoChange = false;
                         this.filaEditable = false;
@@ -2408,7 +2410,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
     } else if (this.colegialesBody.situacion != undefined) {
       this.situacionPersona = "De baja";
     } else {
-      this.situacionPersona = "No Colegiado";
+      this.situacionPersona = "";
     }
     if (this.esColegiado) {
       this.datosTarjetaResumen = [
@@ -2763,7 +2765,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
         this.suggestTopics = JSON.parse(JSON.stringify(this.comboTopics));
       }
       this.autocompleteTopics.suggestionsUpdated = true;
-      this.autocompleteTopics.panelVisible = true;
+     this.autocompleteTopics.panelVisible = true;
       this.autocompleteTopics.focusInput();
     } else {
       if (this.autocompleteTopics.highlightOption != undefined) {
@@ -2824,7 +2826,6 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
       this.resaltadoDatosGenerales = true;
     }
   }
-
   isOpenReceive(event) {
     let fichaPosible = this.esFichaActiva(event);
     if (fichaPosible == false) {

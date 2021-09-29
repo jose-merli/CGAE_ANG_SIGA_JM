@@ -1,0 +1,11 @@
+<!-- <div class="center"> -->
+<label *ngIf="selector != undefined && selector.nombre != ''">{{selector.nombre}}</label>
+<p-dropdown autoWidth="false" class="inputWidth" placeholder="{{textoVisible}}" [ngModelOptions]="{standalone: true}"
+    [(ngModel)]="opcionSeleccionado[i]" filterBy="label,labelSinTilde" [filter] = "true" [options]="selector.opciones" showClear="true" (onChange)="capturar()"
+     [disabled]="selector.disable" 
+    class="select-form">
+</p-dropdown>
+<!-- </div> -->
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+</div>

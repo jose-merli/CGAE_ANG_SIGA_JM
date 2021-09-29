@@ -1,0 +1,99 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="busqueda-container" id="impugnacion">
+  <div class="card">
+    <div class="card-header header-ficha">
+      <div *ngIf="!esFichaActiva('impugnacion')" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('impugnacion')">
+          <div class="img-colegiado">
+            <i class="fas fa-university icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10 ">
+          <div class="d-flex justify-content-end mb-1" (click)="abreCierraFicha('impugnacion')">
+            <label class="mr-auto title-ficha pointer">{{ 'justiciaGratuita.ejg.datosGenerales.Impugnacion' | translate }}</label>
+          </div>
+          <div class="d-flex justify-content-between default">
+              <label>{{ "censo.resultadosSolicitudesModificacion.literal.fecha" | translate }}: <span *ngIf="impugnacion">{{bodyInicial.fechaAuto | date: 'dd/MM/yyyy'}}</span></label>
+              <label>{{ "justiciaGratuita.ejg.datosGenerales.AutoResolutorio" | translate }}: <span>{{bodyInicial.impugnacionDesc}}</span></label>
+              <label id ="maxHeader">{{ "justiciaGratuita.ejg.datosGenerales.SentidoAuto" | translate }}: <span>{{fundImpugnacionDesc}}</span></label>
+            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('impugnacion')"></i>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="esFichaActiva('impugnacion')" class=" header-ficha-open d-flex justify-content-start align-items-center" (click)="abreCierraFicha('impugnacion')">
+        <div class="img-colegiado">
+          <i class="fas fa-university icon-ficha"></i>
+        </div>
+        <label class="title-ficha pointer">{{ 'justiciaGratuita.ejg.datosGenerales.Impugnacion' | translate }}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <div *ngIf="esFichaActiva('impugnacion')" class="card-body card-body-ficha">
+      <div class="row">
+        <div class="bloque col-lg-12 col-md-12">
+          <div class="form-row">
+            <div *ngIf="impugnacion" class="form-group col-lg-3 col-md-3">
+              <label>{{ "justiciaGratuita.ejg.datosGenerales.fechaAuto" | translate }} (*) </label>
+              <app-fecha [inputStyleClass]="styleObligatorio(impugnacion.fechaAuto)" [(value)]="impugnacion.fechaAuto" (valueChangeSelected)="fillFechaAuto($event)" (valueChangeInput)="fillFechaAuto($event)"></app-fecha>
+            </div>
+            <div *ngIf="impugnacion" class="form-group col-lg-6 col-md-6">
+                <label>{{ "justiciaGratuita.ejg.datosGenerales.AutoResolutorio" | translate }} (*)</label>
+                <p-dropdown autoWidth="false" [(ngModel)]='impugnacion.autoResolutorio' [options]="comboImpugnacion" (onChange)="onChangeImpugnacion()" class="select-form" placeholder="Seleccionar"
+                 [filter]="true"  [ngClass]="styleObligatorio(impugnacion.autoResolutorio)" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+            </div>
+            <div *ngIf="impugnacion" class="form-group col-lg-9 col-md-9">
+                  <label>{{ "justiciaGratuita.ejg.datosGenerales.SentidoAuto" | translate }}</label>
+                  <p-dropdown  class="select-form" [(ngModel)]='impugnacion.sentidoAuto' placeholder="Seleccionar"
+                    [options]="comboFundamentoImpug" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+            </div>
+          </div>
+          <div class="form-row">
+              <div *ngIf="impugnacion" class="form-group col-lg-12 col-md-12">
+                  <label>{{ "censo.nuevaSolicitud.observaciones" | translate }}
+                  </label>
+                  <textarea class="form-control ui-inputtext" autoResize="autoResize" maxLength="3900" pInputTextarea [(ngModel)]="impugnacion.observacionesImpugnacion"></textarea>
+                </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-lg-3 col-md-3">
+                <label>{{ "justiciaGratuita.ejg.datosGenerales.NumImpugnacion" | translate }}</label>
+                <input type="text" class="form-control" pInputText [(ngModel)]="impugnacion.nImpugnacion">
+            </div>
+            <div *ngIf="impugnacion" class="form-group col-lg-3 col-md-3">
+              <label>{{ "justiciaGratuita.ejg.datosGenerales.FechaPublicacion" | translate }}</label>
+              <app-fecha [(value)]="impugnacion.fechaPublicacion" (valueChangeSelected)="fillFechaPublicacion($event)" (valueChangeInput)="fillFechaPublicacion($event)"></app-fecha>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+                <br>
+                <p-checkbox (onClick)="onChangeCheckBis($event)" [(ngModel)]="impugnacion.bis" binary="true" label="{{ 'justiciaGratuita.ejg.datosGenerales.Bis' | translate }}"
+                name="groupname" [disabled]="!permisoEscritura"></p-checkbox>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+                <br>
+                <p-checkbox (onClick)="onChangeCheckRT($event)" [(ngModel)]="impugnacion.requiereTurn" binary="true" label= "{{ 'justiciaGratuita.ejg.datosGenerales.RequiereTurnado' | translate }}"
+                name="groupname" [disabled]="!permisoEscritura"></p-checkbox>
+            </div>
+        </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="esFichaActiva('impugnacion')" class="card-footer">
+      <div class="text-right main-button ">
+        <button (click)="checkPermisosSave()" pButton [disabled]="!permisoEscritura" type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="checkPermisosConfirmRest()" pButton [disabled]="!permisoEscritura" type="button" icon="fa fa-repeat" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+      </div> 
+    </div>
+  </div>
+</div>
+
+<p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" key="rest" #rest>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="rest.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="rest.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

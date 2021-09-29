@@ -1,0 +1,82 @@
+<div class="form-row p-0">
+  <!-- TABLA RESULTADOS -->
+  <div class="col-11" style="padding-left: 4px;">
+    <p-table [value]="datos" [columns]="cols" [paginator]="true" [first]="page" datakey="numeroGrupo" paginatorPosition="both"
+      [selectionMode]="selectionMode" [(selection)]="selectedDatos" selectionMode="single" [responsive]="true" #tabla class="tabla-listado"
+      [rows]="selectedItem">
+      <ng-template pTemplate="colgroup" let-columns>
+        <colgroup>
+          <col *ngFor="let col of cols" [style.width]="col.width">
+        </colgroup>
+      </ng-template>
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+            {{ col.header | translate }}
+            <p-sortIcon [field]="col.field"></p-sortIcon>
+            <input pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText
+              type="text" (input)="
+                tabla.filter($event.target.value, col.field, 'contains')
+              " />
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+        <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+          <td class="text-center" *ngFor="let col of columns">
+            <span *ngIf="(dato != selectedDatos || !col.editable) && !(col.field == 'numeroGrupo' && dato.numeroGrupo == 0) && (col.field != 'ordenCola' || +dato[col.field] > 0 ) || (!editable) ||(col.field == 'orden' && !porGrupos)">{{dato[col.field]}}</span>
+            <span *ngIf="col.field == 'ordenCola' && +dato[col.field] <= 0"></span>
+            <div *ngIf="col.editable && dato == selectedDatos && (col.editable && editable) && ( (!porGrupos && col.field != 'orden')||(porGrupos && col.editable))">
+              <input class="form-control paddingInput" (onBlur)="cambiaInput(dato)" (input)="cambiaInput(dato)" (ngModelChange)="cambiaInput(dato)"
+                (onChange)="cambiaInput(dato)" (keypress)="numberOnly($event)" [(ngModel)]="dato[col.field]" type="text" maxLength="10"
+              />
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage" let-columns>
+        <tr>
+          <td [attr.colspan]="columns.length">
+            {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="paginatorleft">
+        <div class="mostrar d-flex text-right justify-content-end">
+          <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }}{{tabla.first + 1}} al {{tabla.first
+            + tabla.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{tabla.totalRecords}}</label>
+          <label>{{"general.message.mostrar" | translate}}</label>
+          <div class="ml-3">
+            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
+            </p-dropdown>
+          </div>
+        </div>
+      </ng-template>
+    </p-table>
+  </div>
+  <div class="col-1 row cuerpo">
+    <div id="botones" class="row">
+      <div class="col-12 boton">
+        <button pButton (click)="sube(selectedDatos)" [disabled]="!botActivos" style="width: -webkit-fill-available;"
+          icon="fas fa-chevron-up">
+        </button>
+      </div>
+      <div class="col-12 boton">
+        <button pButton (click)="baja(selectedDatos)" [disabled]="!botActivos" style="width: -webkit-fill-available;"
+          icon="fas fa-chevron-down">
+        </button>
+      </div>
+      <!-- <div class="col-12 boton">
+        <button pButton (click)="sube(selectedDatos)" [disabled]="!botActivos || disabledBotones()" style="width: -webkit-fill-available;"
+          icon="fas fa-chevron-up">
+        </button>
+      </div>
+      <div class="col-12 boton">
+        <button pButton (click)="baja(selectedDatos)" [disabled]="!botActivos || disabledBotones()" style="width: -webkit-fill-available;"
+          icon="fas fa-chevron-down">
+        </button>
+      </div> -->
+    </div>
+  </div>
+
+</div>

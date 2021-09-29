@@ -1,8 +1,6 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 
-
-
-<div *ngIf="showTarjetaPermiso" class="ficha-container">
+<div class="ficha-container">
   <div class="card">
     <div class="card-header header-ficha" (click)="onHideTarjeta()">
       <div *ngIf="!showTarjeta" class="form-row">
@@ -53,7 +51,7 @@
       <div class="row">
 
         <!-- info identificacion -->
-        <div class="bloque col-lg-6 col-md-6">
+        <div class="col-lg-12 col-md-12">
           <div class="row">
             <div class="form-group col-lg-12 col-md-1 input-ayuda">
               <label style="font-weight: bold;">{{ 'general.boton.datosIdentificacion' | translate }}</label>
@@ -67,7 +65,7 @@
             <div class="form-group col-lg-3 col-md-3">
               <label>{{ "censo.fichaCliente.literal.identificacion" | translate }} (*)
               </label>
-              <input [(ngModel)]="body.nif" type="text" class="form-control" maxLength="18" (ngModelChange)="compruebaDNI()" [disabled]="!permisoEscritura"
+              <input [(ngModel)]="body.nif" type="text" class="form-control" maxLength="18" [ngClass]="styleObligatorio(body.nif)" (ngModelChange)="compruebaDNI()" [disabled]="!permisoEscritura"
                 pInputText/>
             </div>
             <div class="form-group col-lg-3 col-md-3">
@@ -109,72 +107,10 @@
             </div>
           </div>
         </div>
-
-        <!-- info personasl -->
-        <div class="bloque col-lg-6 col-md-6">
-          <div class="form-row">
-            <div class="form-group col-lg-12 col-md-1 input-ayuda">
-              <label style="font-weight: bold;">{{ 'formacion.fichaInscripcion.datosPersonales.cabecera' | translate }}</label>
-            </div>
-            <div class="form-group col-lg-3 col-md-3">
-              <label>{{ "censo.busquedaClientesAvanzada.literal.sexo" | translate }}
-              </label>
-              <p-dropdown class="select-form" [(ngModel)]="body.sexo" [options]="comboSexo" [filter]="true" filterBy="label,labelSinTilde"
-                showClear="true" placeholder="{{'general.boton.seleccionar' | translate}}" [disabled]="!permisoEscritura"></p-dropdown>
-            </div>
-            <div class="form-group col-lg-3 col-md-3">
-              <label>{{ "censo.consultaDatosColegiacion.literal.fechaNac" | translate }}
-              </label>
-              <app-fecha [(value)]="body.fechanacimiento" (valueChangeInput)="fillFechaNacimiento($event)" (valueChangeSelected)="fillFechaNacimiento($event)"
-                [utc]="false" [disabled]="!permisoEscritura"></app-fecha>
-            </div>
-            <div class="form-group col-lg-3 col-md-3">
-              <label>{{ "censo.consultaDatosGenerales.literal.edad" | translate }}
-              </label>
-              <input type="text" class="form-control" disabled [(ngModel)]="body.edad" [disabled]="!permisoEscritura" pInputText />
-            </div>
-            <div class="form-group col-lg-3 col-md-3">
-              <label>{{ "administracion.usuarios.literal.fechaAlta" | translate }}
-              </label>
-              <app-fecha [(value)]="body.fechaalta" [disabled]="true" [utc]="false" [disabled]="!permisoEscritura"></app-fecha>
-            </div>
-            <div class="form-group col-lg-6 col-md-6">
-              <label>{{ "censo.consultaDatosGenerales.literal.estadoCivil" | translate }}
-              </label>
-              <p-dropdown class="select-form" [options]="comboEstadoCivil" showClear="true" placeholder="{{'general.boton.seleccionar' | translate}}"
-                [filter]="true" filterBy="label,labelSinTilde" [(ngModel)]="body.idestadocivil" [disabled]="!permisoEscritura"></p-dropdown>
-            </div>
-            <div class="form-group col-lg-6 col-md-6">
-              <label>{{ "gratuita.personaJG.literal.regimenConyugal" | translate }}
-              </label>
-              <p-dropdown class="select-form" [options]="comboRegimenConyugal" showClear="true" placeholder="{{'general.boton.seleccionar' | translate}}"
-                [(ngModel)]="body.regimenConyugal" [filter]="true" filterBy="label,labelSinTilde" [disabled]="!permisoEscritura"></p-dropdown>
-            </div>
-            <div class="form-group col-lg-6 col-md-6">
-              <label>{{ "gratuita.personaJG.literal.profesion" | translate }}
-              </label>
-              <p-dropdown class="select-form" [options]="comboProfesion" showClear="true" placeholder="{{'general.boton.seleccionar' | translate}}"
-                [(ngModel)]="body.idprofesion" [filter]="true" filterBy="label,labelSinTilde" [disabled]="!permisoEscritura"></p-dropdown>
-            </div>
-            <div class="form-group col-lg-3 col-md-3">
-              <label>{{ "gratuita.busquedaSOJ.literal.minusvalia" | translate }}
-              </label>
-              <p-dropdown class="select-form" [options]="comboMinusvalia" showClear="true" placeholder="{{'general.boton.seleccionar' | translate}}"
-                [(ngModel)]="body.idminusvalia" [filter]="true" filterBy="label,labelSinTilde" [disabled]="!permisoEscritura"></p-dropdown>
-            </div>
-            <div class="form-group col-lg-3 col-md-3">
-              <label>{{ 'censo.usuario.idioma' | translate }}
-              </label>
-              <p-dropdown class="select-form" [options]="comboIdiomas" showClear="true" placeholder="{{'general.boton.seleccionar' | translate}}"
-                [(ngModel)]="body.idlenguaje" [filter]="true" filterBy="label,labelSinTilde" [disabled]="!permisoEscritura"></p-dropdown>
-            </div>
-
-          </div>
-        </div>
       </div>
       <div class="row">
         <!-- info direcciones -->
-        <div class="bloque col-lg-6 col-md-6">
+        <div class="col-lg-12 col-md-12">
           <div class="form-row">
             <div class="form-group col-lg-12 col-md-3 input-ayuda">
               <div class="col-3">
@@ -266,147 +202,6 @@
               <input [(ngModel)]="body.idpoblacion" type="text" class="form-control" [maxLength]="99" pInputText>
             </div> -->
 
-          </div>
-        </div>
-
-        <!-- info contacto -->
-        <div class="bloque col-lg-6 col-md-6">
-          <div class="form-row">
-            <div class="form-group col-lg-12 col-md-1 input-ayuda">
-              <label style="font-weight: bold;">{{ 'censo.datosDireccion.literal.datos.contacto' | translate }}</label>
-            </div>
-            <div class="col-lg-12 col-md-12 pb-1">
-              <div class="row">
-                <div class="ml-3 selectAll">
-                  <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
-                    name="groupname"></p-checkbox>
-                </div>
-                <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
-                  <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
-              </div>
-            </div>
-            <div class="col-lg-12 col-md-12">
-              <!-- tabla -->
-              <p-table [value]="datos" [columns]="cols" [responsive]="true" #table class="tabla-listado" [paginator]="false" [rows]="selectedItem"
-                [selectionMode]="selectionMode" [(selection)]="selectedDatos" [responsive]="true" (onRowSelect)="onRowSelect($event)">
-                <ng-template pTemplate="colgroup" let-columns>
-                  <colgroup>
-                    <col *ngFor="let col of columns" [style.width]="col.width">
-                  </colgroup>
-                </ng-template>
-                <ng-template pTemplate="header" let-columns>
-                  <tr>
-                    <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
-                      {{ col.header | translate }}
-                      <p-sortIcon [field]="col.field"></p-sortIcon>
-                      <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="table.filter($event.target.value,
-                col.field, 'contains')">
-                    </th>
-                  </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
-                  <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
-                    <td class="text-center" *ngFor="let col of columns">
-
-                      <div *ngIf="dato.nuevo">
-                        <div *ngIf="col.field == 'numeroTelefono'" class="row">
-                          <div class="col-lg-10 col-md-10 pr-0">
-                            <input class="form-control" [(ngModel)]="dato[col.field]" (input)="changeTelefono(dato)" maxlength="20" [disabled]="!permisoEscritura"
-                              pInputText>
-                            <div *ngIf="!dato.tlfValido">
-                              <small class="input-error">{{ 'general.mensaje.validacion.telefono' | translate}}</small>
-                            </div>
-                          </div>
-                          <div class="col-lg-2 col-md-2">
-                            <p-checkbox (ngModelChange)="onChangePreferente(dato)" [(ngModel)]="dato.preferenteSmsCheck" binary="true" [disabled]="!permisoEscritura"></p-checkbox>
-                          </div>
-                        </div>
-                        <div *ngIf="col.field == 'tipo'">
-                          <input class="form-control" [(ngModel)]="dato.nombreTelefono" [disabled]="!permisoEscritura" maxlength="100" pInputText>
-                        </div>
-                      </div>
-
-                      <div *ngIf="dato.tipo == 'Fax' && col.field != 'tipo' && !dato.nuevo && !selectAll && !selectMultiple">
-                        <input class="form-control" [(ngModel)]="dato[col.field]" (input)="changeFax(dato)" [disabled]="!permisoEscritura" maxlength="20"
-                          pInputText>
-                        <div *ngIf="!faxValido">
-                          <small class="input-error">{{ 'general.mensaje.validacion.fax' | translate}}</small>
-                        </div>
-                      </div>
-
-                      <div *ngIf="dato.tipo == 'Fax' && col.field != 'tipo' && !dato.nuevo && (selectAll || selectMultiple)">
-                        <span>{{ dato[col.field] }}</span>
-                      </div>
-
-                      <div *ngIf="dato.tipo == 'Correo-Electrónico' && col.field != 'tipo' && !dato.nuevo && !selectAll && !selectMultiple">
-                        <div *ngIf="edicionEmail" class="ui-inputgroup">
-                          <input type="text" class="form-control" pInputText [(ngModel)]="dato[col.field]" (input)="changeEmail(dato)" maxlength="100"
-                            [disabled]="!permisoEscritura" />
-                          <button (click)="editEmail()" pButton type="button" icon="fas fa-check" class="ui-button-warn" [disabled]="!permisoEscritura"></button>
-                        </div>
-                        <div *ngIf="!emailValido">
-                          <small class="input-error">{{ 'general.mensaje.validacion.email' | translate}}</small>
-                        </div>
-                        <div *ngIf="!edicionEmail" class="ui-inputgroup">
-                          <a *ngIf="dato[col.field] != undefined && dato[col.field] != ''" [href]="'mailto:'+dato[col.field]" class="col-11" target="_blank">{{dato[col.field]}}</a>
-                          <span *ngIf="dato[col.field] == undefined || dato[col.field] == ''" class="col-11">{{dato[col.field]}}</span>
-                          <button (click)="editEmail()" pButton type="button" icon="fas fa-pencil-alt" class="ui-button-warn button-edit col-1" [disabled]="!permisoEscritura"></button>
-                        </div>
-                      </div>
-
-                      <div *ngIf="dato.tipo == 'Correo-Electrónico' && col.field != 'tipo' && !dato.nuevo && (selectAll || selectMultiple)">
-                        <span>{{ dato[col.field] }}</span>
-                      </div>
-
-                      <div *ngIf="dato.tipo == 'Telefono' && col.field != 'tipo' && !dato.nuevo && !selectAll && !selectMultiple" class="row">
-
-                        <div class="col-lg-10 col-md-10 pr-0">
-                          <input class="form-control" [(ngModel)]="dato[col.field]" (input)="changeTelefono(dato)" maxlength="20" pInputText [disabled]="!permisoEscritura">
-                          <div *ngIf="!dato.tlfValido">
-                            <small class="input-error">{{ 'general.mensaje.validacion.telefono' | translate}}</small>
-                          </div>
-                        </div>
-                        <div class="col-lg-2 col-md-2">
-                          <p-checkbox (onChange)="onChangePreferente(dato)" [(ngModel)]="dato.preferenteSmsCheck" binary="true" [disabled]="!permisoEscritura"></p-checkbox>
-                        </div>
-                      </div>
-
-                      <div *ngIf="dato.tipo == 'Telefono' && col.field != 'tipo' && !dato.nuevo && (selectAll || selectMultiple)">
-                        <span>{{ dato[col.field] }}</span>
-                      </div>
-
-                      <div *ngIf="col.field == 'tipo' && !dato.nuevo && dato.tipo == 'Telefono' && !selectAll && !selectMultiple">
-                        <input class="form-control" [(ngModel)]="dato.nombreTelefono" maxLength="98" pInputText [disabled]="!permisoEscritura">
-                      </div>
-
-                      <div *ngIf="col.field == 'tipo' && !dato.nuevo && dato.tipo == 'Telefono' && (selectAll || selectMultiple)">
-                        <span>{{ dato.nombreTelefono }}</span>
-                      </div>
-
-                      <div *ngIf="col.field == 'tipo' && !dato.nuevo && dato.tipo != 'Telefono'">
-                        <label>{{dato.nombreTelefono}}</label>
-                      </div>
-                    </td>
-                  </tr>
-                </ng-template>
-                <ng-template pTemplate="emptymessage" let-columns>
-                  <tr>
-                    <td [attr.colspan]="columns.length">
-                      {{ 'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}.
-                    </td>
-                  </tr>
-                </ng-template>
-              </p-table>
-
-            </div>
-            <div class="text-right form-group main-button col-lg-12 col-md-12 pt-2">
-              <button class="botontabla" (click)="checkPermisosRestData()" [disabled]="!permisoEscritura" pButton type="button" icon="fa fa-undo"
-                iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-              <button [disabled]="!permisoEscritura || disabledDelete()" (click)="checkPermisosDeleteData(selectedDatos)" pButton type="button"
-                icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar'  | translate}}"></button>
-              <button class="botontabla" (click)="checkPermisosNewData()" [disabled]="!permisoEscritura || selectAll || selectMultiple"
-                pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
-            </div>
           </div>
         </div>
       </div>

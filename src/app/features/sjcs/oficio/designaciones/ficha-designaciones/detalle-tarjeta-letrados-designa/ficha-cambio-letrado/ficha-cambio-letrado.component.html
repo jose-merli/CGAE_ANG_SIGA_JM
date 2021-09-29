@@ -1,0 +1,93 @@
+<!-- Alertas -->
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<!-- Alertas -->
+
+
+
+<div id="fichaCambioLetrado">
+  <!-- <div class="tarjetaFija" id="cabeza" >
+    <div class="card-header header-ficha">
+      <div class="form-row">
+        <div class="col-lg-2 col-md-2">
+          <div class="img-colegiado">
+            <i [class]="tarjetaFija.icono"></i>
+          </div>
+        </div>
+        <div class="col-lg-10 col-md-10 ">
+          <div class="d-flex" style="margin-left: -1px;">
+            <label class="title-ficha">{{tarjetaFija.nombre}}</label>
+          </div>
+
+          INICIO BLOQUE COMENTADO
+          <div class="d-flex justify-content-between" *ngIf="chincheta">
+            <br>
+            <i ngClass="fas fa-thumbtack"></i>
+          </div>
+          FIN BLOQUE COMENTADO
+        </div>
+        <div class="col-1"></div>
+        <div class="col-11 form-row">
+          <div class="d-flex flex-wrap" *ngFor="let dato of tarjetaFija.campos">
+            <label name>
+              <b>{{dato.label}}: </b>{{dato.value}}</label>
+          </div>
+        </div>
+        <div class="col-1"></div>
+        <div class="col-11 form-row pt-2">
+          <i (click)="goDown()" class="fa fa-angle-down ml-auto pr-3"></i>
+          <i (click)="goTop()" class="fa fa-angle-up"></i>
+        </div>
+      </div>
+    </div>
+  </div>  -->
+
+  <div *ngIf="tarjetaResumen !== null">
+    <div class="card" style="z-index: 2;">
+        <div class="card-body p-0">
+            <mat-accordion class="example-headers-align" multi>
+                <mat-expansion-panel [disabled]="true">
+                    <mat-expansion-panel-header class="h-100" [collapsedHeight]="'auto'"
+                        [expandedHeight]="'auto'">
+                        <app-tarjeta [image]="tarjetaResumen.imagen" [cardTitle]="tarjetaResumen.nombre"
+                            [campos]="tarjetaResumen.campos" [icon]="tarjetaResumen.icono"
+                            [enlaces]="tarjetaResumen.enlaces" [fixed]="tarjetaResumen.fixed" class="w-100"
+                            (isOpen)="isOpenReceive($event)" [datosLetrado]="tarjetaResumen.letrado" [cardOpenState]="tarjetaResumen.opened"
+                            [enlaceCardClosed]="tarjetaResumen.enlaceCardClosed">
+                        </app-tarjeta>
+                    </mat-expansion-panel-header>
+                    <ng-template matExpansionPanelContent>
+                    </ng-template>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
+    </div>
+</div>
+
+  <app-letrado-saliente [saliente]="body" id="top"></app-letrado-saliente>
+  <app-letrado-entrante [entrante]="body"></app-letrado-entrante>
+</div>
+<div class="mt-3 text-right main-button" id="down">
+  <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left"
+    label="{{ 'general.boton.volver' | translate}}"></button>
+  <button (click)="clickSave()" pButton type="button" icon="fa fa-save" iconPos="left"
+    label="{{ 'general.boton.guardarCerrar' | translate}}" [disabled]="disableSave"></button>
+</div>
+<!-- Spinner -->
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+<!-- Spinner -->
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="deletePlantillaDoc" icon="icon"
+  width="425" #deletePlantillaDoc>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="deletePlantillaDoc.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="deletePlantillaDoc.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+<p-confirmDialog header="Error" key="errorPlantillaDoc" icon="icon" width="425" #errorPlantillaDoc>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="OK" (click)="errorPlantillaDoc.accept()"></button>
+  </p-footer>
+</p-confirmDialog>

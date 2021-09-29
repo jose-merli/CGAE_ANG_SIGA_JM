@@ -107,8 +107,8 @@
 
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{"censo.consultaDatosRegistrales.literal.numRegistro.mercantil" | translate}} (*)</label>
-              <input [ngClass]="styleObligatorio(body.numRegistro)" [(ngModel)]="body.numRegistro"
+              <label>{{"censo.consultaDatosRegistrales.literal.numRegistro.mercantil" | translate}}</label>
+              <input [(ngModel)]="body.numRegistro"
                [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" type="text" class="form-control" (ngModelChange)="desactivadoGuardar()"
                  [maxLength]="20" pInputText>
             </div>
@@ -132,19 +132,19 @@
                 </div>
               </div>
               <div class="form-group col-lg-4 col-md-4">
-                <input [ngClass]="styleObligatorio(body.sufijoNumsspp)" (ngModelChange)="desactivadoGuardar()" [disabled]="noEditable || !sociedadProfesional || camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.sufijoNumsspp"
+                <input (ngModelChange)="desactivadoGuardar()" [disabled]="noEditable || !sociedadProfesional || camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.sufijoNumsspp"
                   type="text" maxlength="8" class="form-control" pInputText>
               </div>
             </div>
 
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{"censo.consultaDatosRegistrales.literal.idRegProv" | translate}} (*)</label>
-              <input [ngClass]="styleObligatorio(body.identificacionReg)" (ngModelChange)="desactivadoGuardar()" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.identificacionReg" type="text"
+              <label>{{"censo.consultaDatosRegistrales.literal.idRegProv" | translate}}</label>
+              <input (ngModelChange)="desactivadoGuardar()" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.identificacionReg" type="text"
                 class="form-control" [maxLength]="10" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
-              <label>{{"censo.consultaDatosRegistrales.literal.fechaRegistro" | translate}} (*)</label>
-              <app-fecha [inputStyleClass]="styleObligatorio(fechaInscripcion)" (ngModelChange)="desactivadoGuardar()" [(value)]="fechaInscripcion" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" (valueChangeSelected)="fillFechaInscripcion($event)"
+              <label>{{"censo.consultaDatosRegistrales.literal.fechaRegistro" | translate}}</label>
+              <app-fecha (ngModelChange)="desactivadoGuardar()" [(value)]="fechaInscripcion" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" (valueChangeSelected)="fillFechaInscripcion($event)"
                 (valueChangeInput)="fillFechaInscripcion($event)"></app-fecha>
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">

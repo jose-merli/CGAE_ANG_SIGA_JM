@@ -1,0 +1,73 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+
+<div class="card" id="colaGuardias">
+  <div class="card-header header-ficha">
+    <div *ngIf="!openFicha" class="form-row">
+      <div class="col-lg-1 col-md-2" (click)="abreCierraFicha()">
+        <div class="img-colegiado">
+          <i class="fas fa-file icon-ficha"></i>
+        </div>
+      </div>
+      <div class="col-lg-11 col-md-10 cabeza">
+        <div class="d-flex justify-content-end mb-1" (click)="abreCierraFicha()">
+          <label class="mr-auto title-ficha">{{ 'justiciaGratuita.oficio.turnos.coladeguardias' | translate }}</label>
+        </div>
+        <div class="d-flex justify-content-between sub">
+          <label>
+            <strong>{{resumenColaGuardia}}</strong>
+          </label>
+          <i (click)="abreCierraFicha()" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center" (click)="abreCierraFicha()">
+      <div class="img-colegiado">
+        <i class="fas fa-file icon-ficha"></i>
+      </div>
+      <label class="title-ficha">{{ 'justiciaGratuita.oficio.turnos.coladeguardias' | translate }}</label>
+      <i class="fa fa-angle-up ml-auto"></i>
+    </div>
+  </div>
+
+
+  <div *ngIf="openFicha" class="card-body card-body-ficha">
+    <div class="row">
+
+      <div class="form-row">
+
+        <div class="form-group col-lg-12 col-md-12">
+          <label style="text-align:center; font-weight: bold;">{{ "justiciaGratuita.oficio.turnos.coladeguardias" | translate }}</label>
+        </div>
+        <div class="col-3 form-group">
+          <label>{{"justiciaGratuita.oficio.turnos.seleccionarguardia" | translate}}</label>
+          <input [(ngModel)]="body.nombre" [disabled]="true" type="text" class="form-control" [maxLength]="300" pInputText>
+        </div>
+        <div class="col-3 form-group">
+          <label>{{"justiciaGratuita.oficio.turnos.mostrarinscripciones" | translate}}</label>
+          <app-fecha [(value)]="body.letradosIns" (valueChangeSelected)="fillFecha($event)" (valueChangeInput)="fillFecha($event)"
+            [disabled]="!permisoEscritura || historico"></app-fecha>
+        </div>
+        <div class="col-12">
+          <app-tabla-dinamica-cola-guardia [selectionMode]="selectionMode" [editable]="editable" [idUltimo]="body.idPersonaUltimo"
+            [porGrupos]="body.porGrupos" [botActivos]="disabledBotones()" [datos]="datos" (updateInscripciones)="changeGrupo($event);changeOrden($event)"></app-tabla-dinamica-cola-guardia>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="openFicha" class="card-footer ">
+    <div class="text-right main-button ">
+      <button pButton [disabled]="historico || !permisoEscritura || !body.porGrupos || duplicarDisabled()" (click)="duplicar()"
+        type="button" icon="fa fa-reply-all" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
+      <button pButton [disabled]="historico || !permisoEscritura || true" type="button" icon="fa fa-plus" iconPos="left" label="{{ 'justiciaGratuita.oficio.turnos.nuevosaltocompen' | translate}}"></button>
+      <button pButton [disabled]="disabledUltimo()" (click)="ultimo(tabla.selectedDatos)" type="button" label="{{ 'justiciaGratuita.oficio.turnos.marcarultimo' | translate}}"></button>
+      <button pButton [disabled]="historico || !permisoEscritura || true" type="button" icon="fa fa-comment" iconPos="left" label="{{ 'general.boton.comunicar' | translate}}"></button>
+      <button pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-undo-alt" (click)="rest()" iconPos="left"
+        label="{{ 'general.boton.restablecer' | translate}}"></button>
+      <button pButton [disabled]="historico || !permisoEscritura || disabledSave()" type="button" (click)="save()" label="{{'general.boton.guardar' | translate}}"
+        icon="fa fa-save" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+    </div>
+  </div>
+</div>
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

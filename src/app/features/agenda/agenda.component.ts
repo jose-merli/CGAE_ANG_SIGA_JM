@@ -272,9 +272,6 @@ export class AgendaComponent implements OnInit {
     evento.idEventoOriginal = event.calEvent.idEventoOriginal;
     evento.idRepeticionEvento = event.calEvent.idRepeticionEvento;
 
-    evento.descripcionOld = event.calEvent.descripcionOld;
-    evento.fechaInicioOld = event.calEvent.fechaInicioOld;
-
     if (event.calEvent.realEnd) {
       evento.end = event.calEvent.realEnd;
     } else {

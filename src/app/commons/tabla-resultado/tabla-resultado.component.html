@@ -1,0 +1,33 @@
+<div id="tablaResultado" #tablaResultado>
+
+    <div class="tabla-listado overflow my-3">
+        <div class="ui-table ui-widget ui-table-responsive ui-table-hoverable-rows ui-table-auto-layout">
+            <div class="ui-table-wrapper">
+                <table matSort (matSortChange)="sortData($event)">
+                    <thead class="ui-table-thead">
+                        <tr>
+                            <th *ngFor="let cabecera of cabeceras; let i = index">
+                                <div [mat-sort-header]="cabecera.id" class="w100">
+                                    {{cabecera.name}}
+                                </div>
+                                <div class="w100">
+                                    <input pdroppable="false" pinputtext type="text" placeholder="Buscar"
+                                        class="ui-inputtext ui-corner-all ui-state-default ui-widget"
+                                        [(ngModel)]="searchText[i]" (ngModelChange)="searchChange(i)">
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="ui-table-tbody selectedRowClass">
+                        <tr class="selectedRowClass" (click)="selectRow(i)" *ngFor="let dat of sortedData; let i = index;"  [ngClass]="{'hoverBlue2': isSelected(i), 'fixedBlue': allSelected}">
+                            <td class="selectedRowClass" *ngFor="let id of ids">
+                                {{ dat[id] }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>

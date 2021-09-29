@@ -1,0 +1,18 @@
+<div class="tabla-listado overflow my-3">
+  <div class="ui-table ui-widget ui-table-responsive ui-table-hoverable-rows ui-table-auto-layout">
+    <div class="ui-table-wrapper">
+      <table mdbTable>
+        <thead class="ui-table-thead">
+          <tr>
+            <th *ngFor="let cabecera of cabeceras" scope="col">{{cabecera.name}} </th>
+          </tr>
+        </thead>
+        <tbody class="ui-table-tbody">
+          <tr mdbTableCol (click)="selectRow(i)" *ngFor="let el of elementos; let i = index" [ngClass]="{'fixedBlue': allSelected, 'hoverBlue': isSelected(i)}">
+            <td *ngFor="let campo of el; let j = index">{{campo}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

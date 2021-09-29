@@ -1,0 +1,102 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<!-- Spinner -->
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+<!-- Spinner -->
+
+<!-- Tabla de documentación -->
+<p-table [value]="documentos2" [columns]="cols" [responsive]="true" #table class="tabla-listado" [paginator]="true"
+  paginatorPosition="both" [rows]="selectedItem" [selectionMode]="selectionMode"
+  (onRowSelect)="actualizaSeleccionados($event)" (onRowUnselect)="actualizaSeleccionados($event)"
+  [(selection)]="selectedDatos">
+
+  <ng-template pTemplate="colgroup" let-columns>
+    <colgroup>
+      <col *ngFor="let col of cols" [style.width]="col.width">
+    </colgroup>
+  </ng-template>
+
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+      <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+        {{col.header}}
+        <p-sortIcon [field]="col.field"></p-sortIcon>
+        <input class="filtros" placeholder="{{'general.boton.search' | translate}}" pDroppable="false"
+          (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="table.filter($event.target.value,
+            col.field, 'contains')">
+      </th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+    <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+
+      <td style="text-align: center !important;" *ngFor="let col of columns">
+
+        <span *ngIf="col.field == 'observaciones'">
+          <textarea class="form-control" pInputTextarea [(ngModel)]="dato[col.field]"></textarea>
+        </span>
+
+        <span *ngIf="col.field == 'nombreFichero' && dato.nuevo" class="text-center">
+          <p-fileUpload #pUploadFile name="file" mode="basic" accept=".doc,.docx,.pdf,.jpg,.png,.rtf,.txt"
+            chooseLabel="{{ 'general.boton.adjuntarFichero' | translate }}"  class="edit my-0 mx-auto main-button"
+            auto="true" (onSelect)="getFile(dato, pUploadFile, $event)"></p-fileUpload>
+        </span>
+
+        <span
+          *ngIf="col.field != 'observaciones' || (col.field == 'nombreFichero' && !dato.nuevo)">{{dato[col.field]}}</span>
+
+      </td>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="emptymessage" let-columns>
+    <tr>
+      <td [attr.colspan]="columns.length">
+        {{ 'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}.
+      </td>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="paginatorleft">
+    <div class="mostrar d-flex text-right justify-content-end">
+      <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' |
+        translate }}{{table.first + 1}} al {{table.first
+        + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }}
+        {{table.totalRecords}}</label>
+      <label class="pr-3 numSeleccionados">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' |
+        translate }}: {{numSelected}}
+      </label>
+      <label>{{"general.message.mostrar" | translate}}</label>
+      <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
+      </p-dropdown>
+      <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+      <div class="ml-3 selectAll">
+        <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true"
+          label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname">
+        </p-checkbox>
+      </div>
+    </div>
+  </ng-template>
+
+</p-table>
+<!-- Tabla de documentación -->
+
+<div class="card-footer">
+  <div class="text-right main-button">
+    <button pButton type="button" icon="fa fa-trash" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"
+      [disabled]="selectedDatos.length == 0 || modoLectura || (!isColegiado && !permiteSubidDescargaFicheros) || modoLectura2"
+      (click)="eliminarArchivos()"></button>
+    <button pButton type="button" icon="fa fa-download" iconPos="left" label="{{'general.boton.download' | translate}}"
+      [disabled]="selectedDatos.length == 0 || modoLectura || (!isColegiado && !permiteSubidDescargaFicheros) || modoLectura2"
+      (click)="descargarArchivos()"></button>
+    <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"
+      (click)="nuevo()"
+      [disabled]=" modoLectura || (!isColegiado && !permiteSubidDescargaFicheros) || modoLectura2"></button>
+    <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"
+      (click)="uploadFile()"
+      [disabled]=" modoLectura || (!isColegiado && !permiteSubidDescargaFicheros) || modoLectura2"></button>
+  </div>
+</div>

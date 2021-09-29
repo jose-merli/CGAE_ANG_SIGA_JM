@@ -11,7 +11,7 @@
     <div *ngIf="showDatosGenerales" class="module vista-simple">
       <div class="form-row">
         <div class="form-group col-lg-3 col-md-3">
-          <label>{{"dato.jgr.guardia.guardias.turno" | translate}}</label>
+          <label>{{"justiciaGratuita.sjcs.designas.DatosIden.turno" | translate}}</label>
           <p-dropdown class="select-form" [(ngModel)]='filtros.idTurno' placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboTurno"
             [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeTurno()" [showClear]="true"></p-dropdown>
         </div>

@@ -357,13 +357,19 @@ export class DatosIntegrantesComponent implements OnInit {
           this.progressSpinner = false;
           this.searchIntegrantes = JSON.parse(data["body"]);
           this.datos = this.searchIntegrantes.datosIntegrantesItem;
+          this.datos = this.datos.map(it => {
+            it.nombreApel = it.apellidos.trim() + ", " + it.nombre;
+            return it;
+          });
           this.table.paginator = true;
         },
         err => {
           console.log(err);
           this.progressSpinner = false;
         },
-        () => { }
+        () => { 
+          this.progressSpinner = false;
+        }
       );
   }
 

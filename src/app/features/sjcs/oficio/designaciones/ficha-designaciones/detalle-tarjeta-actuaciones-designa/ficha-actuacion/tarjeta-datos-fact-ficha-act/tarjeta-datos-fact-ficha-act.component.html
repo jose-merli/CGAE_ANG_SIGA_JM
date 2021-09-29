@@ -1,0 +1,36 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<!-- Spinner -->
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+<!-- Spinner -->
+
+<div class="row w-100 m-0 padding-interior">
+
+  <div class="col-lg-12 col-md-12">
+
+    <div class="form-row">
+
+      <div class="form-group col-lg-4 col-md-4 w-100">
+        <label>{{'justiciaGratuita.oficio.designas.facturacion' | translate}}</label>
+        <p-dropdown class="select-form" [(ngModel)]="selector.value"
+          placeholder="{{'general.boton.seleccionar' | translate}}" [options]="selector.opciones" [filter]="true"
+          filterBy="label,labelSinTilde" [showClear]="true" [disabled]="isAnulada || modoLectura || modoLectura2">
+        </p-dropdown>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<div class="card-footer">
+  <div class="text-right main-button">
+    <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer" (click)="restablecer()"
+      [disabled]="isAnulada || modoLectura || modoLectura2"></button>
+    <button pButton type="button" icon="far fa-save" iconPos="left" label="Guardar" (click)="guardar()"
+      [disabled]="isAnulada || isLetrado || modoLectura || modoLectura2"></button>
+  </div>
+</div>

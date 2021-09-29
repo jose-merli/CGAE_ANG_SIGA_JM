@@ -1,0 +1,31 @@
+<div class="card" id="calendarios">
+  <div class="card-header header-ficha">
+    <div *ngIf="!openFicha" class="form-row">
+      <div class="col-lg-1 col-md-2">
+        <div class="img-colegiado">
+          <i class="fas fa-calendar-alt icon-ficha"></i>
+        </div>
+      </div>
+      <div class="col-lg-11 col-md-10 cabeza">
+        <div class="d-flex justify-content-end mb-1">
+          <label class="mr-auto title-ficha">{{ 'agenda.fichaEventos.datosGenerales.calendario' | translate }}</label>
+        </div>
+        <div class="d-flex justify-content-between sub">
+          <label>{{'dato.jgr.guardia.guardias.ultimaFechaDesde' | translate}}:
+            <strong>{{datos.fechaDesde | date: 'dd/MM/yyyy'}}</strong>
+          </label>
+          <label>{{'dato.jgr.guardia.guardias.ultimaFechaHasta' | translate}}:
+            <strong>{{datos.fechaHasta | date: 'dd/MM/yyyy'}}</strong>
+          </label>
+          <label>{{'dato.jgr.guardia.guardias.generado' | translate}}:
+            <strong>{{datos.generado}}</strong>
+          </label>
+          <label>
+            <a href="">{{'dato.jgr.guardia.guardias.fichaProgramacion' | translate}}</a>
+          </label>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

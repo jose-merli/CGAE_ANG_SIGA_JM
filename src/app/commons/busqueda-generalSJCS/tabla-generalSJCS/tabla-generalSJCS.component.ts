@@ -28,10 +28,12 @@ export class TablaGeneralSJCSComponent implements OnInit {
   numSelected = 0;
   selectMultiple: boolean = false;
   seleccion: boolean = false;
+  historico: boolean = false;
 
   message;
 
   initDatos;
+  nuevo: boolean = false;
   progressSpinner: boolean = false;
   permisoEscritura: boolean = true;
 
@@ -55,13 +57,120 @@ export class TablaGeneralSJCSComponent implements OnInit {
   ngOnInit() {
     this.getCols();
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
+
+    if (this.persistenceService.getHistorico() != undefined) {
+      this.historico = this.persistenceService.getHistorico();
+    }
   }
+  confirmDelete() {
+    let mess = this.translateService.instant(
+      "messages.deleteConfirmation"
+    );
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.delete()
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
+
+  searchHistorical() {
+
+    this.historico = !this.historico;
+    this.persistenceService.setHistorico(this.historico);
+    this.searchHistoricalSend.emit(this.historico);
+    this.selectAll = false
+    if (this.selectMultiple) {
+      this.selectMultiple = false;
+    }
+  }
+
 
   backWithData(evento) {
 
-    this.persistenceService.setDatosBusquedaGeneralSJCS(evento.data);
+    //Bloquear el desplegable del estado de colegiado a ejerciente
+    if (sessionStorage.getItem("pantalla") == "gestionEjg" && sessionStorage.getItem("tarjeta") == "ServiciosTramit"){
+      let persona = sessionStorage.setItem("buscadorGeneral", JSON.stringify((evento)));
+      sessionStorage.removeItem("tarjeta");
+      sessionStorage.removeItem("pantalla");
+    }
+    else this.persistenceService.setDatos(evento.data);
     this.location.back();
 
+  }
+
+  delete() {
+
+    let procuradorDelete = undefined;
+    procuradorDelete.procuradorItems = this.selectedDatos;
+    this.sigaServices.post("busquedaGeneralSJCS_deleteGeneralSJCS", procuradorDelete).subscribe(
+
+      data => {
+
+        this.selectedDatos = [];
+        this.searchHistoricalSend.emit(false);
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.progressSpinner = false;
+      },
+      err => {
+
+        if (err != undefined && JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  activate() {
+    let procuradorActivate = undefined;
+    procuradorActivate.procuradorItems = this.selectedDatos;
+    this.sigaServices.post("busquedaGeneralSJCS_activateGeneralSJCS", procuradorActivate).subscribe(
+      data => {
+
+        this.selectedDatos = [];
+        this.searchHistoricalSend.emit(true);
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.progressSpinner = false;
+      },
+      err => {
+
+        if (err != undefined && JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+
+
+  setItalic(dato) {
+    if (dato.fechabaja == null) return false;
+    else return true;
   }
 
   getCols() {

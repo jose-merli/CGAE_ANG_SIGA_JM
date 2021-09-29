@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
 import { OldSigaServices } from "../../../_services/oldSiga.service";
 
 @Component({
@@ -9,9 +10,11 @@ import { OldSigaServices } from "../../../_services/oldSiga.service";
 export class ComunicacionesCensoComponent implements OnInit {
   url;
 
-  constructor(private sigaServices: OldSigaServices) {
+  constructor(private sigaServices: OldSigaServices, private activatedRoute: ActivatedRoute) {
     this.url = JSON.parse(sessionStorage.getItem("url"));
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.activatedRoute.snapshot.params["id"];
+  }
 }

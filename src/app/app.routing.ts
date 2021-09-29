@@ -9,47 +9,36 @@ import { LogoutComponent } from "./commons/logout/logout.component";
 // Censo
 import { SearchColegiadosComponent } from './features/censo/search-colegiados/search-colegiados.component';
 import { SearchNoColegiadosComponent } from './features/censo/search-no-colegiados/search-no-colegiados.component';
-import { CensoDocumentacionComponent } from './features/censo/censo-documentacion/censo-documentacion.component';
-import { BusquedaCensoGeneralComponent } from './features/censo/busqueda-censo-general/busqueda-censo-general.component';
-import { BusquedaGeneralComponent } from './features/censo/busqueda-general/busqueda-general.component';
-import { BusquedaLetradosComponent } from './features/censo/busqueda-letrados/busqueda-letrados.component';
 import { BusquedaNoColegiadosComponent } from './features/censo/busqueda-no-colegiados/busqueda-no-colegiados.component';
-import { CargasPeriodicasComponent } from './features/censo/cargas-periodicas/cargas-periodicas.component';
 import { CertificadosAcaComponent } from './features/censo/certificados-aca/certificados-aca.component';
 import { ComisionesCargosComponent } from './features/censo/comisiones-cargos/comisiones-cargos.component';
-import { ComunicacionSociedadesComponent } from './features/censo/comunicacionSociedades/comunicacion-sociedades.component';
-import { ConfigurarPerfilComponent } from './features/censo/configurar-perfil/configurar-perfil.component';
-import { AccesoFichaPersonaComponent } from './features/censo/datosPersonaJuridica/accesoFichaPersona/accesoFichaPersona.component';
-import { ConsultarDatosBancariosComponent } from './features/censo/datosPersonaJuridica/datos-bancarios/consultar-datos-bancarios/consultar-datos-bancarios.component';
-import { DatosBancariosComponent } from './features/censo/datosPersonaJuridica/datos-bancarios/datos-bancarios.component';
-import { ConsultarDatosDireccionesComponent } from './features/censo/datosPersonaJuridica/datos-direcciones/consultar-datos-direcciones/consultar-datos-direcciones.component';
-import { DatosDireccionesComponent } from './features/censo/datosPersonaJuridica/datos-direcciones/datos-direcciones.component';
-import { DetalleIntegranteComponent } from './features/censo/datosPersonaJuridica/datos-integrantes/detalleIntegrante/detalleIntegrante.component';
-import { DatosPersonaJuridicaComponent } from './features/censo/datosPersonaJuridica/datosPersonaJuridica.component';
 import { DocumentacionSolicitudesComponent } from './features/censo/documentacion-solicitudes/documentacion-solicitudes.component';
-import { ExpedientesComponent } from './features/censo/expedientesCenso/expedientes.component';
-import { FacturacionSociedadesCensoComponent } from './features/censo/facturacionSociedadesCenso/facturacion-sociedades-censo.component';
 // CENSO II
-import { EdicionCurricularesComponent } from './features/censo/ficha-colegial/edicionDatosCurriculares/edicionCurriculares.component';
-import { SubtipoCurricularComponent } from './features/censo/gestion-subtiposCV/subtipo-curricular/subtipo-curricular.component';
-import { TipoCurricularComponent } from './features/censo/gestion-subtiposCV/tipo-curricular.component';
-import { MantenimientoDuplicadosComponent } from './features/censo/mantenimiento-duplicados/mantenimiento-duplicados.component';
-import { MantenimientoGruposFijosComponent } from './features/censo/mantenimiento-grupos-fijos/mantenimiento-grupos-fijos.component';
-import { MantenimientoMandatosComponent } from './features/censo/mantenimiento-mandatos/mantenimiento-mandatos.component';
-import { MediadoresComponent } from './features/censo/mediadores/mediadores.component';
-import { ModificacionDatosComponent } from './features/censo/modificacion-datos/modificacion-datos.component';
-import { RegtelComponent } from './features/censo/regtel/regtel.component';
 import { SolicitudesEspecificasComponent } from './features/censo/solicitudes-especificas/solicitudes-especificas.component';
 import { AlterMutuaComponent } from './features/censo/solicitudes-incorporacion/alter-mutua/alter-mutua.component';
 import { AlterMutuaOfertasComponent } from './features/censo/solicitudes-incorporacion/alter-mutua/alterMutuaOfertas/alter-mutua-ofertas.component';
 import { AlterMutuaRetaComponent } from './features/censo/solicitudes-incorporacion/alter-mutua/alterMutuaReta/alter-mutua-reta.component';
-import { MutualidadAbogaciaSeguroAccidentes } from './features/censo/solicitudes-incorporacion/mutualidadAbogaciaSeguroAccidentes/mutualidad-abogacia-seguro-accidentes.component';
-import { MutualidadAbogaciaPlanUniversal } from './features/censo/solicitudes-incorporacion/mutualidadDeLaAbogaciaPlanUniversal/mutualidad-abogacia-plan-universal.component';
+import { ModificacionDatosComponent } from './features/censo/modificacion-datos/modificacion-datos.component';
+import { MantenimientoMandatosComponent } from './features/censo/mantenimiento-mandatos/mantenimiento-mandatos.component';
+import { BusquedaLetradosComponent } from './features/censo/busqueda-letrados/busqueda-letrados.component';
+import { MantenimientoDuplicadosComponent } from './features/censo/mantenimiento-duplicados/mantenimiento-duplicados.component';
+import { MediadoresComponent } from './features/censo/mediadores/mediadores.component';
+import { CargasPeriodicasComponent } from './features/censo/cargas-periodicas/cargas-periodicas.component';
+import { ConfigurarPerfilComponent } from './features/censo/configurar-perfil/configurar-perfil.component';
+import { CensoDocumentacionComponent } from './features/censo/censo-documentacion/censo-documentacion.component';
+import { TipoCurricularComponent } from './features/censo/gestion-subtiposCV/tipo-curricular.component';
+import { BusquedaGeneralComponent } from './features/censo/busqueda-general/busqueda-general.component';
+import { DetalleIntegranteComponent } from './features/censo/datosPersonaJuridica/datos-integrantes/detalleIntegrante/detalleIntegrante.component';
+import { AccesoFichaPersonaComponent } from './features/censo/datosPersonaJuridica/accesoFichaPersona/accesoFichaPersona.component';
+import { DatosBancariosComponent } from './features/censo/datosPersonaJuridica/datos-bancarios/datos-bancarios.component';
+import { ConsultarDatosBancariosComponent } from './features/censo/datosPersonaJuridica/datos-bancarios/consultar-datos-bancarios/consultar-datos-bancarios.component';
+import { DatosDireccionesComponent } from './features/censo/datosPersonaJuridica/datos-direcciones/datos-direcciones.component';
+import { ConsultarDatosDireccionesComponent } from './features/censo/datosPersonaJuridica/datos-direcciones/consultar-datos-direcciones/consultar-datos-direcciones.component';
+import { BusquedaCensoGeneralComponent } from './features/censo/busqueda-censo-general/busqueda-censo-general.component';
+import { FacturacionSociedadesCensoComponent } from './features/censo/facturacionSociedadesCenso/facturacion-sociedades-censo.component';
+import { ComunicacionSociedadesComponent } from './features/censo/comunicacionSociedades/comunicacion-sociedades.component';
 import { NuevaIncorporacionComponent } from './features/censo/solicitudes-incorporacion/nueva-incorporacion/nueva-incorporacion.component';
 import { SolicitudesIncorporacionComponent } from './features/censo/solicitudes-incorporacion/solicitudes-incorporacion.component';
-import { NuevaSolicitudesModificacionComponent } from './features/censo/solicitudes-modificacion/nueva-solicitudes-modificacion/nueva-solicitudes-modificacion.component';
-import { SolicitudesModificacionComponent } from './features/censo/solicitudes-modificacion/solicitudes-modificacion.component';
-import { TurnoOficioComponent } from './features/censo/turnoOficioCenso/turnoOficio.component';
 
 //Certificados
 import { ComunicacionInterprofesionalComponent } from './features/certificados/comunicacion-interprofesional/comunicacion-interprofesional.component';
@@ -98,6 +87,34 @@ import { NuevoExpedienteComponent } from './features/expedientes/nuevo-expedient
 import { DevolucionComponent } from './features/sjcs/devolucion/devolucion.component';
 import { JustificacionComponent } from './features/sjcs/justificacion/justificacion.component';
 import { CertificacionComponent } from './features/sjcs/certificacion/certificacion.component';
+import { ZonasYSubzonasComponent } from './features/sjcs/maestros/zonas-subzonas/zonas-subzonas.component';
+import { AreasYMateriasComponent } from './features/sjcs/maestros/areas-materias/areas-materias.component';
+import { PartidasComponent } from './features/sjcs/maestros/partidas/partidas.component';
+import { RetencionesIRPFComponent } from './features/sjcs/maestros/retenciones-IRPF/retenciones-IRPF.component';
+import { MantenimientoProcuradoresComponent } from './features/sjcs/maestros/mantenimiento-procuradores/mantenimiento-procuradores.component';
+import { MantenimientoPrisionesComponent } from './features/sjcs/maestros/mantenimiento-prisiones/mantenimiento-prisiones.component';
+import { MantenimientoComisariasComponent } from './features/sjcs/maestros/mantenimiento-comisarias/mantenimiento-comisarias.component';
+import { MantenimientoJuzgadosComponent } from './features/sjcs/maestros/mantenimiento-juzgados/mantenimiento-juzgados.component';
+import { DocumentacionEJGComponent } from './features/sjcs/maestros/documentacion-ejg/documentacion-ejg.component';
+import { DestinatariosRetencionesComponent } from './features/sjcs/maestros/destinatarios-retenciones/destinatarios-retenciones.component';
+import { TiposAsistenciaComponent } from './features/sjcs/maestros/tiposAsistencia/tiposAsistencia.component';
+import { SolicitudesTurnosGuardiasComponent } from './features/sjcs/oficio/solicitudesTurnosGuardias/solicitudesTurnosGuardias.component';
+import { GuardiasSolicitudesTurnosComponent } from './features/sjcs/guardia/solicitudes-turnos/solicitudes-turnos.component';
+import { GuardiasIncompatibilidadesComponent } from './features/sjcs/guardia/guardias-incompatibilidades/guardias-incompatibilidades.component';
+import { ProgramacionCalendariosComponent } from './features/sjcs/guardia/programacionCalendarios/programacionCalendarios.component';
+import { GuardiasBajasTemporalesComponent } from './features/sjcs/guardia/guardias-bajas-temporales/guardias-bajas-temporales.component';
+import { GuardiasSaltosCompensacionesComponent } from './features/sjcs/guardia/guardias-saltos-compensaciones/guardias-saltos-compensaciones.component';
+import { DefinirListasGuardiasComponent } from './features/sjcs/guardia/definir-listas-guardias/definir-listas-guardias.component';
+import { GuardiasAsistenciasComponent } from './features/sjcs/guardia/guardias-asistencias/guardias-asistencias.component';
+import { GuardiasCentralitaComponent } from './features/sjcs/guardia/guardias-centralita/guardias-centralita.component';
+import { VolanteExpresComponent } from './features/sjcs/guardia/volante-expres/volante-expres.component';
+import { EJGComponent } from './features/sjcs/ejg/ejg.component';
+import { DesignacionesComponent } from './features/sjcs/oficio/designaciones/designaciones.component';
+import { CargasMasivasOficioComponent } from './features/sjcs/oficio/cargas-masivas-oficio/cargas-masivas-oficio.component';
+import { FichaPreDesignacionComponent } from './features/sjcs/ejg/gestion-ejg/relaciones/ficha-pre-designacion/ficha-pre-designacion.component';
+import { MutualidadAbogaciaSeguroAccidentes } from './features/censo/solicitudes-incorporacion/mutualidadAbogaciaSeguroAccidentes/mutualidad-abogacia-seguro-accidentes.component';
+// CENSO II
+import { EdicionCurricularesComponent } from './features/censo/ficha-colegial/edicionDatosCurriculares/edicionCurriculares.component';
 
 //Consultas
 import { RecuperarConsultasComponent } from './features/consultas/recuperar-consultas/recuperar-consultas.component';
@@ -109,6 +126,7 @@ import { NuevaConsultaExpertaComponent } from './features/consultas/nueva-consul
 import { InformesGenericosComponent } from './features/comunicaciones/informes-genericos/informes-genericos.component';
 import { HomeComponent } from './features/home/home.component';
 import { ListaCorreosComponent } from './features/comunicaciones/lista-correos/lista-correos.component';
+
 
 // Administracion
 import { CatalogosMaestros } from './features/administracion/catalogos-maestros/catalogos-maestros.component';
@@ -133,34 +151,33 @@ import { GestionAuditoriaComponent } from './features/administracion/auditoria/u
 import { GestionEntidad } from './features/administracion/gestion-entidad/gestion-entidad.component';
 import { BusquedaPersonasJuridicas } from './features/censo/busqueda-personas-juridicas/busqueda-personas-juridicas.component';
 import { DatosGenerales } from './features/censo/datosPersonaJuridica/datos-generales/datos-generales.component';
+import { BajasTemporalesComponent } from "./features/sjcs/oficio/bajas-temporales/busqueda-bajas-temporales.component";
+import { TurnosComponent } from "./features/sjcs/oficio/turnos/busqueda-turnos.component";
 
 
-//COOKIES
 //ERROR
 import { ErrorAccesoComponent } from './commons/error/error-acceso/error-acceso.component';
 import { DatosCvComponent } from './features/censo/cargas-masivas/datos-cv/datos-cv.component';
 import { BusquedaCursosComponent } from './features/formacion/busqueda-cursos/busqueda-cursos.component';
 import { FichaCalendarioComponent } from './features/agenda/ficha-calendario/ficha-calendario.component';
 import { CargasMasivasComponent } from './features/censo/cargas-masivas/cargas-masivas.component';
+import { SubtipoCurricularComponent } from './features/censo/gestion-subtiposCV/subtipo-curricular/subtipo-curricular.component';
 import { AgendaComponent } from './features/agenda/agenda.component';
 import { DatosNotificacionesComponent } from './features/agenda/datos-notificaciones/datos-notificaciones.component';
 import { FichaCursoComponent } from './features/formacion/ficha-curso/ficha-curso.component';
 import { DetalleSancionComponent } from './features/censo/busqueda-sanciones/detalle-sancion/detalle-sancion.component';
 import { FichaInscripcionComponent } from './features/formacion/ficha-inscripcion/ficha-inscripcion.component';
 import { BusquedaInscripcionesComponent } from './features/formacion/busqueda-inscripciones/busqueda-inscripciones.component';
+import { SolicitudesModificacionComponent } from './features/censo/solicitudes-modificacion/solicitudes-modificacion.component';
+import { NuevaSolicitudesModificacionComponent } from './features/censo/solicitudes-modificacion/nueva-solicitudes-modificacion/nueva-solicitudes-modificacion.component';
 import { ComunicacionesCensoComponent } from './features/censo/comunicacionesCenso/comunicaciones.component';
+import { ExpedientesComponent } from './features/censo/expedientesCenso/expedientes.component';
+import { RegtelComponent } from './features/censo/regtel/regtel.component';
+import { TurnoOficioComponent } from './features/censo/turnoOficioCenso/turnoOficio.component';
 import { AuditoriaComponent } from './features/censo/auditoria/auditoria.component';
 
 //INFORMES Y COMUNICACIONES
-import { ComunicacionesComponent } from './features/informes-comunicaciones/comunicaciones/comunicaciones.component';
-import { FichaRegistroComunicacionComponent } from './features/informes-comunicaciones/comunicaciones/ficha-registro-comunicacion/ficha-registro-comunicacion.component';
-import { ConsultasComponent } from './features/informes-comunicaciones/consultas/consultas.component';
-import { FichaConsultaComponent } from './features/informes-comunicaciones/consultas/ficha-consulta/ficha-consulta.component';
-import { EnviosMasivosComponent } from './features/informes-comunicaciones/envios-masivos/envios-masivos.component';
-import { FichaRegistroEnvioMasivoComponent } from './features/informes-comunicaciones/envios-masivos/ficha-registro-envio-masivo/ficha-registro-envio-masivo.component';
 
-import { MaestrosModulosComponent } from "./features/sjcs/maestros/maestros-modulos/busqueda-modulosybasesdecompensacion.component";
-import { PartidosJudicialesComponent } from "./features/sjcs/maestros/partidos-judiciales/partidas-judiciales.component";
 import { ComisariasComponent } from "./features/sjcs/maestros/comisarias/comisarias/comisarias.component";
 
 import { FichaModeloComunicacionesComponent } from './features/informes-comunicaciones/modelos-comunicaciones/ficha-modelo-comunicaciones/ficha-modelo-comunicaciones.component';
@@ -168,6 +185,11 @@ import { PlantillaDocumentoComponent } from './features/informes-comunicaciones/
 import { ModelosComunicacionesComponent } from './features/informes-comunicaciones/modelos-comunicaciones/modelos-comunicaciones.component';
 import { DetallePlantillaEnvioComponent } from './features/informes-comunicaciones/plantillas-envio/detalle-plantilla-envio/detalle-plantilla-envio.component';
 //INFORMES Y COMUNICACIONES
+import { ConsultasComponent } from './features/informes-comunicaciones/consultas/consultas.component';
+import { FichaConsultaComponent } from './features/informes-comunicaciones/consultas/ficha-consulta/ficha-consulta.component';
+
+import { ComunicacionesComponent } from './features/informes-comunicaciones/comunicaciones/comunicaciones.component';
+
 import { PlantillasEnvioComponent } from './features/informes-comunicaciones/plantillas-envio/plantillas-envio.component';
 //COOKIES
 import { PoliticaCookiesComponent } from './features/politica-cookies/politica-cookies.component';
@@ -179,7 +201,14 @@ import { BandejaEntradaComponent } from './features/comunicaciones/bandeja-entra
 import { BusquedaGeneralSJCSComponent } from './commons/busqueda-generalSJCS/busqueda-generalSJCS.component';
 
 
+import { MaestrosModulosComponent } from "./features/sjcs/maestros/maestros-modulos/busqueda-modulosybasesdecompensacion.component";
+import { PartidosJudicialesComponent } from "./features/sjcs/maestros/partidos-judiciales/partidas-judiciales.component";
+import { BuscadorColegiadosComponent } from "./commons/buscador-colegiados/buscador-colegiados.component";
+import { BusquedaAsuntosComponent } from "./commons/busqueda-asuntos/busqueda-asuntos.component";
 
+import { FichaRegistroComunicacionComponent } from './features/informes-comunicaciones/comunicaciones/ficha-registro-comunicacion/ficha-registro-comunicacion.component';
+import { EnviosMasivosComponent } from './features/informes-comunicaciones/envios-masivos/envios-masivos.component';
+import { FichaRegistroEnvioMasivoComponent } from './features/informes-comunicaciones/envios-masivos/ficha-registro-envio-masivo/ficha-registro-envio-masivo.component';
 import { DialogoComunicacionesComponent } from './features/informes-comunicaciones/dialogo-comunicaciones/dialogo-comunicaciones.component';
 import { FichaColegialGeneralComponent } from './features/censo/ficha-colegial/ficha-colegial-general/ficha-colegial-general.component';
 import { FichaEventosComponent } from "./features/agenda/ficha-eventos/ficha-eventos.component";
@@ -217,6 +246,9 @@ import { PrevisionesComponent } from "./features/sjcs/facturacionSJCS/previsione
 import { ResumenPagosComponent } from "./features/sjcs/facturacionSJCS/resumen-pagos/resumen-pagos.component";
 import { RetencionesJudicialesComponent } from "./features/sjcs/facturacionSJCS/retenciones-judiciales/retenciones-judiciales.component";
 import { TramosLECComponent } from "./features/sjcs/facturacionSJCS/tramos-lec/tramos-lec.component";
+import { MantenimientoGruposFijosComponent } from "./features/censo/mantenimiento-grupos-fijos/mantenimiento-grupos-fijos.component";
+import { DatosPersonaJuridicaComponent } from "./features/censo/datosPersonaJuridica/datosPersonaJuridica.component";
+import { MutualidadAbogaciaPlanUniversal } from "./features/censo/solicitudes-incorporacion/mutualidadDeLaAbogaciaPlanUniversal/mutualidad-abogacia-plan-universal.component";
 
 const appRoutes: Routes = [
 	{ path: 'home', component: HomeComponent, canActivate: [ AuthGuard ] },
@@ -658,15 +690,23 @@ const appRoutes: Routes = [
 	//Justicia Gratuita
 	{
 		path: 'zonasYsubzonas',
-		loadChildren: './features/sjcs/sjcs.module#SjcsModule'
+		component: ZonasYSubzonasComponent,
+		canActivate: [ AuthGuard ]
 	},
 	{
 		path: 'areasYMaterias',
+		component: AreasYMateriasComponent,
+        canActivate: [ AuthGuard ]
+    },
+    {
+		path: 'costesFijos',
 		loadChildren: './features/sjcs/sjcs.module#SjcsModule'
 	},
 	{
-		path: 'costesFijos',
-		loadChildren: './features/sjcs/sjcs.module#SjcsModule'
+		
+		path: 'cargasMasivasOficio',
+		component: CargasMasivasOficioComponent,
+		canActivate: [ AuthGuard ]
 	},
 	{
 		path: 'funcamentosCalificacion',
@@ -678,19 +718,23 @@ const appRoutes: Routes = [
 	},
 	{
 		path: 'partidas',
-		loadChildren: './features/sjcs/sjcs.module#SjcsModule'
+		component: PartidasComponent,
+		canActivate: [ AuthGuard ]
 	},
 	{
 		path: 'partidosJudiciales',
-		loadChildren: './features/sjcs/sjcs.module#SjcsModule'
+		component: PartidosJudicialesComponent,
+		canActivate: [ AuthGuard ]
 	},
 	{
 		path: 'retencionesIRPF',
-		loadChildren: './features/sjcs/sjcs.module#SjcsModule'
+		component: RetencionesIRPFComponent,
+		canActivate: [ AuthGuard ]
 	},
 	{
 		path: 'maestrosModulos',
-		loadChildren: './features/sjcs/sjcs.module#SjcsModule'
+		component: MaestrosModulosComponent,
+		canActivate: [ AuthGuard ]
 	},
 	{
 		path: 'calendarioLaboral',
@@ -699,23 +743,28 @@ const appRoutes: Routes = [
 	},
 	{
 		path: 'mantenimientoprocuradores',
-		loadChildren: './features/sjcs/sjcs.module#SjcsModule'
+		component: MantenimientoProcuradoresComponent,
+		canActivate: [ AuthGuard ]
 	},
 	{
 		path: 'mantenimientoPrisiones',
-		loadChildren: './features/sjcs/sjcs.module#SjcsModule'
+		component: MantenimientoPrisionesComponent,
+		canActivate: [ AuthGuard ]
 	},
 	{
 		path: 'mantenimientoComisarias',
-		loadChildren: './features/sjcs/sjcs.module#SjcsModule'
+		component: MantenimientoComisariasComponent,
+		canActivate: [ AuthGuard ]
 	},
 	{
 		path: 'mantenimientoJuzgados',
-		loadChildren: './features/sjcs/sjcs.module#SjcsModule'
+		component: MantenimientoJuzgadosComponent,
+		canActivate: [ AuthGuard ]
 	},
 	{
 		path: 'documentacionEJG',
-		loadChildren: './features/sjcs/sjcs.module#SjcsModule'
+		component: DocumentacionEJGComponent,
+		canActivate: [ AuthGuard ]
 	},
 	{
 		path: 'maestroPJ',
@@ -724,17 +773,19 @@ const appRoutes: Routes = [
 	},
 	{
 		path: 'destinatariosRetenciones',
-		loadChildren: './features/sjcs/sjcs.module#SjcsModule'
-	},
-	{
+		component: DestinatariosRetencionesComponent,
+        canActivate: [ AuthGuard ]
+    },
+    {
 		path: 'tiposActuacion',
 		loadChildren: './features/sjcs/sjcs.module#SjcsModule'
 	},
 	{
 		path: 'tiposAsistencia',
-		loadChildren: './features/sjcs/sjcs.module#SjcsModule'
-	},
-	{
+		component: TiposAsistenciaComponent,
+        canActivate: [ AuthGuard ]
+    },
+    {
 		path: 'calendarioLaboralAgenda',
 		loadChildren: './features/sjcs/sjcs.module#SjcsModule'
 	},
@@ -745,6 +796,11 @@ const appRoutes: Routes = [
 	{
 		path: 'justiciables',
 		loadChildren: './features/sjcs/sjcs.module#SjcsModule'
+    },
+    {
+		path: 'turnos',
+		component: TurnosComponent,
+		canActivate: [ AuthGuard ]
 	},
 	{
 		path: 'facturacionesYPagos',
@@ -753,8 +809,61 @@ const appRoutes: Routes = [
 	{
 		path: '	cartaFacturacionPago',
 		loadChildren: './features/sjcs/sjcs.module#SjcsModule'
+	},{
+		path: 'solicitudesTurnosGuardias',
+		component: SolicitudesTurnosGuardiasComponent,
+		canActivate: [ AuthGuard ]
 	},
 	{
+		path: 'bajasTemporales',
+		component: BajasTemporalesComponent,
+		canActivate: [ AuthGuard ]
+	},
+	{
+		path: 'guardiasSolicitudesTurnos',
+		component: GuardiasSolicitudesTurnosComponent,
+		canActivate: [ AuthGuard ]
+	},
+	{
+		path: 'guardiasIncompatibilidades',
+		component: GuardiasIncompatibilidadesComponent,
+		canActivate: [ AuthGuard ]
+	},
+	{
+		path: 'programacionCalendarios',
+		component: ProgramacionCalendariosComponent,
+		canActivate: [ AuthGuard ]
+	},
+	{
+		path: 'guardiasBajasTemporales',
+		component: GuardiasBajasTemporalesComponent,
+		canActivate: [ AuthGuard ]
+	},
+	{
+		path: 'guardiasSaltosCompensaciones',
+		component: GuardiasSaltosCompensacionesComponent,
+		canActivate: [ AuthGuard ]
+	},
+	{
+		path: 'definirListasGuardias',
+		component: DefinirListasGuardiasComponent,
+		canActivate: [ AuthGuard ]
+	},
+	{
+		path: 'guardiasAsistencias',
+		component: GuardiasAsistenciasComponent,
+		canActivate: [ AuthGuard ]
+	},
+	{
+		path: 'guardiasAceptadasCentralita',
+		component: GuardiasCentralitaComponent,
+		canActivate: [ AuthGuard ]
+	},
+	{
+		path: 'volanteExpres',
+		component: VolanteExpresComponent,
+		canActivate: [ AuthGuard ]
+	},{
 		path: 'soj',
 		component: SOJComponent,
 		canActivate: [ AuthGuard ]
@@ -802,6 +911,11 @@ const appRoutes: Routes = [
 	{
 		path: 'generarImpreso190',
 		component: GenerarImpreso190Component,
+		canActivate: [ AuthGuard ]
+	},
+	{
+		path: 'comunicaDesignaciones',
+		component: ComunicaDesignacionesComponent,
 		canActivate: [ AuthGuard ]
 	},
 	{
@@ -900,8 +1014,8 @@ const appRoutes: Routes = [
 		canActivate: [ AuthGuard ]
 	},
 	{
-		path: 'comunicaDesignaciones',
-		component: ComunicaDesignacionesComponent,
+		path: 'designaciones',
+		component: DesignacionesComponent,
 		canActivate: [ AuthGuard ]
 	},
 
@@ -1168,6 +1282,14 @@ const appRoutes: Routes = [
 	{
 		path: 'errorAcceso',
 		component: ErrorAccesoComponent
+	},
+	{
+		path: 'buscadorColegiados',
+		component: BuscadorColegiadosComponent
+	}, 
+	{
+		path: 'busquedaAsuntos',
+		component: BusquedaAsuntosComponent 
 	},
 	{
 		path: 'buscarCursos',
