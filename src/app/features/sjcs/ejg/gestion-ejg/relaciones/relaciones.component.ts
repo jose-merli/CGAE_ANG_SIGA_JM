@@ -211,7 +211,7 @@ export class RelacionesComponent implements OnInit {
     if (!this.selectAll && !this.selectMultiple) {
       // this.progressSpinner = true;
       // this.datosEJG();
-      if (evento.sjcs == "PRE-DESIGNACION") {
+      if (evento.data.sjcs == "PRE-DESIGNACION") {
         this.navigateToFichaPre();
       }
 
