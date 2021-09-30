@@ -354,6 +354,7 @@ export class FichaInscripcionesComponent implements OnInit {
 	getColaOficio() {
 		this.datos.historico = this.historico;
 		this.progressSpinner = true;
+		if(this.datos.idturno != undefined && this.datos.idturno != null){
 		this.sigaServices.post("inscripciones_TarjetaColaOficio", this.datos).subscribe(
 		  n => {
 			// this.datos = n.turnosItem;
@@ -386,7 +387,8 @@ export class FichaInscripcionesComponent implements OnInit {
 			}
 		  }
 		);
-	  }
+	}
+  }
 
 	solicitarBaja(access=2) {
 		this.progressSpinner = true;
