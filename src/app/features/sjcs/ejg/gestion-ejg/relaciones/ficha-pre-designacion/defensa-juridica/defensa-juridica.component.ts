@@ -173,25 +173,24 @@ export class DefensaJuridicaComponent implements OnInit {
     //Esto es para la validacion de CADENA
 
     //Obtenemos la institucion actual
-    let idInstitucion = this.body.idInstitucion;
+    // let idInstitucion = this.body.idInstitucion;
 
     //Codigo copiado de la tarjeta detalles de la ficha de designaciones
-    if (idInstitucion == "2008" || idInstitucion == "2015" || idInstitucion == "2029" || idInstitucion == "2033" || idInstitucion == "2036" ||
-      idInstitucion == "2043" || idInstitucion == "2006" || idInstitucion == "2021" || idInstitucion == "2035" || idInstitucion == "2046" || idInstitucion == "2066") {
-      if (nProcedimiento != '') {
-        var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{5}[\.]{1}[0-9]{2}$/;
-        var ret = objRegExp.test(nProcedimiento);
-        return ret;
-      }
-      else
-        return true;
-    } else {
+    // if (idInstitucion == "2008" || idInstitucion == "2015" || idInstitucion == "2029" || idInstitucion == "2033" || idInstitucion == "2036" ||
+    //   idInstitucion == "2043" || idInstitucion == "2006" || idInstitucion == "2021" || idInstitucion == "2035" || idInstitucion == "2046" || idInstitucion == "2066") {
+    //   if (nProcedimiento != '') {
+    //     var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{5}[\.]{1}[0-9]{2}$/;
+    //     var ret = objRegExp.test(nProcedimiento);
+    //     return ret;
+    //   }
+    //   else
+    //     return true;
+    // } else {
       // var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{7}[/]$/;
       var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{7}$/;
       var ret = objRegExp.test(nProcedimiento);
       return ret;
-    }
-
+    // }
   }
 
   getCabecera() {
