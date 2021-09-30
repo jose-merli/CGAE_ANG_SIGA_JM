@@ -1,7 +1,10 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConfirmationService, SortEvent } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '../../../../../commons/translate';
+import { ComboObject } from '../../../../../models/ComboObject';
+import { PreciosServicioObject } from '../../../../../models/PreciosServicioObject';
+import { ServicioDetalleItem } from '../../../../../models/ServicioDetalleItem';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 
@@ -29,13 +32,19 @@ export class DetalleTarjetaPrecioFichaServiciosFacturacionComponent implements O
   first = 0;
   buscadores = [];
 
+  //Variables tarjeta
+  @Input() servicio: ServicioDetalleItem; //Servicio obtenido de la fila del buscador de servicios en la cual pulsamos el enlace a la ficha servicios.
+  periodicidadObject: ComboObject;
+  condicionesObject: ComboObject;
+
   //Variables control
   newRegisterRow: boolean = false; //Para desactivar por ejemplo el boton nuevo una vez añadida una fila impidiendo que se añada mas de una
-  edit: boolean = true; //Usado para ocultar/mostrar en html, etc.
+  edit: boolean = false; //Usado para ocultar/mostrar en html, etc.
   nuevo: boolean = false; //Usado para ocultar/mostrar en html, etc.
 
   //Suscripciones
-  //subscriptionServicesList: Subscription;
+  subscriptionListaPrecios: Subscription;
+  subscriptionPeriodicidadList: Subscription
 
   constructor(private changeDetectorRef: ChangeDetectorRef, private sigaServices: SigaServices, private persistenceService: PersistenceService, private translateService: TranslateService, private confirmationService: ConfirmationService) { }
 
@@ -48,14 +57,21 @@ export class DetalleTarjetaPrecioFichaServiciosFacturacionComponent implements O
       this.rowsPerPage = paginacion.selectedItem;
     }
 
-    //this.getListaServicios();
+    if (this.servicio.editar) {
+
+    }
+
     this.initrowsPerPageSelect();
     this.initcolsPrecios();
+    this.getListaPrecios();
+    this.getComboPeriodicidad();
   }
 
   //Necesario para liberar memoria
   ngOnDestroy() {
-
+    if (this.subscriptionListaPrecios) {
+      this.subscriptionListaPrecios.unsubscribe();
+    }
   }
 
   //INICIO METODOS P-TABLE
@@ -81,25 +97,24 @@ export class DetalleTarjetaPrecioFichaServiciosFacturacionComponent implements O
     ];
   }
 
-  periodicidadList = [];
   //Define las columnas
   initcolsPrecios() {
     this.colsPrecios = [
       {
         field: "precio", //Campo preciosDatos (array con los datos de la tabla) que deberia ser el mismo que en la interfaz TiposServiciosItem de la tabla
-        header: "precio***" //Titulo columna
+        header: "form.busquedaCursos.literal.precio" //Titulo columna
       },
       {
-        field: "periodicidad",
-        header: "periodicidad***"
+        field: "descripcionperiodicidad",
+        header: "facturacion.servicios.fichaservicio.periodicidadcoltablaprecios"
       },
       {
-        field: "descripcion",
-        header: "descripcion***"
+        field: "descripcionprecio",
+        header: "general.description"
       },
       {
-        field: "condicion",
-        header: "condicion***"
+        field: "descripcionconsulta",
+        header: "informesycomunicaciones.modelosdecomunicacion.fichaModeloComuncaciones.condicion"
       }
     ];
 
@@ -168,7 +183,7 @@ export class DetalleTarjetaPrecioFichaServiciosFacturacionComponent implements O
     this.numSelectedRows = this.selectedRows.length;
     if (this.selectedRows.length == 1) {
       this.edit = true;
-    } else if (this.selectedRows.length > 1) {
+    } else if (this.selectedRows.length > 1 || this.selectedRows.length == 0) {
       this.edit = false;
     }
 
@@ -260,4 +275,78 @@ export class DetalleTarjetaPrecioFichaServiciosFacturacionComponent implements O
   }
   //FIN METODOS P-TABLE
 
+
+  //INICIO METODOS SERVICIOS
+
+  preciosServicioObject: PreciosServicioObject;
+
+  //Metodo para obtener los datos de la tabla precios del servicio
+  getListaPrecios() {
+    this.numSelectedRows = 0;
+    this.selectedRows = [];
+    this.progressSpinner = true;
+    this.newRegisterRow = false;
+    this.edit = false;
+    this.preciosParaEditarCrear = [];
+
+    this.selectAllRows = false;
+    this.selectMultipleRows = false;
+
+    this.subscriptionListaPrecios = this.sigaServices.post("fichaServicio_obtenerPreciosServicio", this.servicio).subscribe(
+      preciosServicioObject => {
+        this.progressSpinner = false;
+
+        this.preciosServicioObject = JSON.parse(preciosServicioObject.body);
+        this.preciosDatos = this.preciosServicioObject.fichaTarjetaPreciosItem;
+
+        if (preciosServicioObject.error.code == 500) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+
+        this.preciosTabla.paginator = true;
+      },
+      err => {
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  getComboPeriodicidad() {
+    this.progressSpinner = true;
+
+    this.subscriptionPeriodicidadList = this.sigaServices.get("fichaServicio_comboPeriodicidad").subscribe(
+      periodicidadTypeSelectValues => {
+        this.progressSpinner = false;
+
+        this.periodicidadObject = periodicidadTypeSelectValues;
+
+      },
+      err => {
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  //FIN METODOS SERVICIOS
+
+  //Borra el mensaje de notificacion p-growl mostrado en la esquina superior derecha cuando pasas el puntero del raton sobre el
+  clear() {
+    this.msgs = [];
+  }
+
+  //Inicializa las propiedades necesarias para el dialogo de confirmacion
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
 }

@@ -23,7 +23,7 @@
               </app-detalle-tarjeta-formas-pagos-ficha-servicios-facturacion>
             </div>
             <div *ngIf="tarj.id == 'serviciosPrecios'">
-              <app-detalle-tarjeta-precio-ficha-servicios-facturacion>
+              <app-detalle-tarjeta-precio-ficha-servicios-facturacion [servicio]="servicio">
               </app-detalle-tarjeta-precio-ficha-servicios-facturacion>
             </div>
           </ng-template>

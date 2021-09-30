@@ -473,6 +473,8 @@ export class SigaServices {
     fichaServicio_comboCondicionSuscripcion: 'combo/CondicionSuscripcion',
     fichaServicio_crearFormaDePago: 'pys/formasPagoServicio',
     fichaServicio_borrarSuscripcionesBajas: 'pys/borrarSuscripcionesBajas',
+    fichaServicio_obtenerPreciosServicio: 'pys/detalleTarjetaPrecios',
+    fichaServicio_comboPeriodicidad: 'combo/comboPeriodicidad',
 
     // FOTO
     solicitudModificacion_searchSolModifDatosUseFoto: 'solicitudModificacion/searchSolModifDatosUseFoto',

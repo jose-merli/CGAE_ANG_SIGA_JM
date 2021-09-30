@@ -30,6 +30,7 @@
   <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
     <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
       <td class="text-center" *ngFor="let col of columns">
+        <!-- COLUMNA PRECIO -->
         <div *ngIf="col.field == 'precio'">
           <label *ngIf="!edit">{{rowData[col.field]}}</label>
 
@@ -39,26 +40,29 @@
           <!-- [ngClass]="{'camposObligatorios': aGuardar && obligatorio && producto.valor == ''}"
  -->
         </div>
-        <div *ngIf="col.field == 'periodicidad'">
+        <!-- COLUMNA PERIODICIDAD -->
+        <div *ngIf="col.field == 'descripcionperiodicidad'">
           <label *ngIf="!edit">{{rowData[col.field]}}</label>
 
           <p-dropdown *ngIf="edit" [filter]="true" styleClass="widthAll" [showClear]="true"
-            placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='rowData.periodicidad'
-            [options]="periodicidadList">
+            placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='rowData.idperiodicidad'
+            [options]="periodicidadObject.combooItems">
           </p-dropdown>
 
         </div>
-        <div *ngIf="col.field == 'descripcion'">
+        <!-- COLUMNA DESCRIPCION PRECIO -->
+        <div *ngIf="col.field == 'descripcionprecio'">
           <label *ngIf="!edit">{{rowData[col.field]}}</label>
 
-          <input *ngIf="edit" type="text" class="form-control" [(ngModel)]='rowData.descripcion' pInputText>
+          <input *ngIf="edit" type="text" class="form-control" [(ngModel)]='rowData.descripcionprecio' pInputText>
 
         </div>
-        <div *ngIf="col.field == 'condicion'">
-          <label *ngIf="!edit">{{rowData[col.field]}}</label>
+        <!-- COLUMNA DESCRIPCION CONDICION -->
+        <div *ngIf="col.field == 'descripcionconsulta'">
+          <label *ngIf="!edit || rowData.pordefecto == '1'">{{rowData[col.field]}}</label>
 
-          <p-dropdown *ngIf="edit" [filter]="true" styleClass="widthAll" [showClear]="true"
-            placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='rowData.periodicidad'
+          <p-dropdown *ngIf="edit && rowData.pordefecto != '1'" [filter]="true" styleClass="widthAll" [showClear]="true"
+            placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='rowData.idcondicion'
             [options]="periodicidadList">
           </p-dropdown>
 
