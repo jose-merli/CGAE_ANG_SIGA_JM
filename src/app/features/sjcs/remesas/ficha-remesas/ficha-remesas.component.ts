@@ -10,6 +10,8 @@ import { TarjetaDatosGeneralesComponent } from './tarjeta-datos-generales/tarjet
 import { Router } from '../../../../../../node_modules/@angular/router';
 import { TarjetaEjgsComponent } from './tarjeta-ejgs/tarjeta-ejgs.component';
 import { RemesasBusquedaItem } from '../../../../models/sjcs/RemesasBusquedaItem';
+import { declaredViewContainer } from '@angular/core/src/view/util';
+import { Button } from 'selenium-webdriver';
 
 @Component({
   selector: 'app-ficha-remesas',
@@ -30,6 +32,8 @@ export class FichaRemesasComponent implements OnInit {
   ejgItem;
   tipoPCAJG;
   remesa: { idRemesa: any; descripcion: string; numero: number; };
+  checkAccionesRemesas;
+  acciones: boolean = false;
 
   constructor(private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
@@ -64,7 +68,6 @@ export class FichaRemesasComponent implements OnInit {
   checkAcciones() {
     console.log("Dentro del checkAcciones --> ", this.tarjetaDatosGenerales);
     let remesaCheckAcciones;
-    let checkAccionesRemesas;
 
     if (this.remesaTabla != null) {
       remesaCheckAcciones =
@@ -84,23 +87,18 @@ export class FichaRemesasComponent implements OnInit {
         n => {
           console.log("Dentro de la respuesta. Contenido --> ", JSON.parse(n.body).checkAccionesRemesas);
 
-          checkAccionesRemesas = JSON.parse(n.body).checkAccionesRemesas;
+          this.checkAccionesRemesas = JSON.parse(n.body).checkAccionesRemesas;
           
-          if(checkAccionesRemesas.length == 0){
-            this.botonValidar = false;
+          if(this.checkAccionesRemesas.length == 0){
+            this.acciones = false;
           }else{
-            checkAccionesRemesas.forEach(element => {
-              if(element.descripcion == "Validar Remesa"){
-                this.botonValidar = true;
-              }else{
-                this.botonValidar = false;
-              }
-            });
+            this.acciones = true
           }
         },
-        error => { },
+        error => {},
         () => { }
       );
+      
   }
 
   save() {

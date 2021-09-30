@@ -21,7 +21,6 @@ export class TarjetaEjgsComponent implements OnInit {
   cols;
   msgs;
   page: number = 0;
-  datosInicial = [];
   selectedBefore;
 
 
@@ -92,7 +91,6 @@ export class TarjetaEjgsComponent implements OnInit {
     console.log(changes);
     console.log(changes.tabla);
     this.selectedDatos = [];
-    this.datosInicial = JSON.parse(JSON.stringify(this.datos));
     if (this.openGen == true) {
       if (this.openFicha == false) {
         this.abreCierraFicha('EJGsAsociados');

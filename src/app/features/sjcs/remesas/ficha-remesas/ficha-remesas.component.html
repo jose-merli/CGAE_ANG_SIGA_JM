@@ -11,9 +11,11 @@
   <app-tarjeta-ejgs [remesaTabla]="remesaTabla" [remesaItem]="remesaItem"></app-tarjeta-ejgs>
 
   <div class="card-footer">
-    <div class="text-right main-button ">
-      <button *ngIf= "botonValidar" pButton type="button" icon="fas fa-check" iconPos="left"
-        label="{{ 'general.boton.validarRemesa' | translate}}"></button>
+    <div id="botonesAccion" class="text-right main-button ">
+      <ng-container *ngIf="acciones">
+        <button *ngFor="let i of checkAccionesRemesas" (click)="buttonClicked(i)" pButton type="button" icon="fa fa-trash-alt" iconPos="left"
+        [label]= "i.descripcion"></button>
+       </ng-container>
       <button (click)="confirmDelete(true)" pButton type="button" icon="fa fa-trash-alt" iconPos="left" [disabled] = "!guardado"
         label="{{ 'general.boton.eliminarRemesa' | translate}}"></button>
       <button (click)="openTab()" pButton type="button"  icon="fa fa-plus"
