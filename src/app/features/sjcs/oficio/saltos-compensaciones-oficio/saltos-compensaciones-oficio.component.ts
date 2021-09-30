@@ -382,7 +382,9 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
     event.forEach(row => {
       let salto = new SaltoCompItem();
       row.cells.forEach((cell, index) => {
-        if (index == 3) {
+        if (index == 0) {
+          salto.idTurno = cell.value;
+        }if (index == 3) {
           salto.saltoCompensacion = cell.value;
         }
         if (index == 4) {
@@ -394,19 +396,23 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
         if (index == 7) {
           salto.idSaltosTurno = cell.value;
         }
-        if (index == 8) {
+        if (index == 8 && cell.value != '') {
           salto.idTurno = cell.value;
         }
         if (index == 9) {
-          salto.idPersona = cell.value;
+          if(cell.value == null || cell.value == undefined || cell.value == ''){
+            salto.idPersona = row.cells[1].value;
+          }else{
+            salto.idPersona = cell.value;
+          }
         }
 
       });
 
-      if (row.cells[7].value == '') {
-        salto.idTurno = row.cells[0].value;
-        salto.idPersona = row.cells[1].value;
-      }
+      //if (row.cells[7].value == '') {
+      //  salto.idTurno = row.cells[0].value;
+        //salto.idPersona = row.cells[1].value;
+      //}
 
       arraySaltos.push(salto);
     });
