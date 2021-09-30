@@ -422,11 +422,11 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
 
     this.sigaService.post("facturacionsjcs_simularfacturacion", this.body.idFacturacion).subscribe(
       data => {
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("messages.facturacionSJCS.programada"));
 
         this.historicoEstados();
-        this.changeEstadoFacturacion.emit("50");
-        this.changeCerrada.emit(true);
+        // this.changeEstadoFacturacion.emit("50");
+        // this.changeCerrada.emit(true);
         this.progressSpinnerDatos = false;
       },
       err => {
