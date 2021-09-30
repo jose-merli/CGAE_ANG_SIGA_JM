@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
+import { Location } from '@angular/common';
 @Component({
   selector: 'app-gestion-guardia-colegiado',
   templateUrl: './gestion-guardia-colegiado.component.html',
@@ -7,9 +7,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GestionGuardiaColegiadoComponent implements OnInit {
 
-  constructor() { }
+  constructor(private location: Location,) { }
 
   ngOnInit() {
   }
 
+  backTo(){
+    this.location.back();
+  }
 }

@@ -468,6 +468,13 @@ import { GestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardi
 import { FiltrosGuardiaCalendarioComponent } from './features/sjcs/guardia/programacionCalendarios/filtros-guardia-calendarios/filtros-guardia-calendarios.component';
 import { TablaGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/tabla-guardia-colegiado/tabla-guardia-colegiado.component';
 import { FiltrosGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/filtros-guardia-colegiado/filtros-guardia-colegiado.component';
+import { CalendarioGestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/gestion-guardia-colegiado/calendario-gestion-guardia-colegiado/calendario-gestion-guardia-colegiado.component';
+import { ColegiadoGestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/gestion-guardia-colegiado/colegiado-gestion-guardia-colegiado/colegiado-gestion-guardia-colegiado.component';
+import { DatosGeneralesGestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/gestion-guardia-colegiado/datos-generales-gestion-guardia-colegiado/datos-generales-gestion-guardia-colegiado.component';
+import { GuardiaGestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/gestion-guardia-colegiado/guardia-gestion-guardia-colegiado/guardia-gestion-guardia-colegiado.component';
+import { PermutasGestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/gestion-guardia-colegiado/permutas-gestion-guardia-colegiado/permutas-gestion-guardia-colegiado.component';
+import { SustitucionesGestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/gestion-guardia-colegiado/sustituciones-gestion-guardia-colegiado/sustituciones-gestion-guardia-colegiado.component';
+import { TurnoGestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/gestion-guardia-colegiado/turno-gestion-guardia-colegiado/turno-gestion-guardia-colegiado.component';
 
 @NgModule({
 	declarations: [
@@ -620,6 +627,14 @@ import { FiltrosGuardiaColegiadoComponent } from './features/sjcs/guardia/guardi
 		GestionGuardiaColegiadoComponent,
 		FiltrosGuardiaColegiadoComponent,
 		TablaGuardiaColegiadoComponent,
+		CalendarioGestionGuardiaColegiadoComponent,
+		ColegiadoGestionGuardiaColegiadoComponent,
+		DatosGeneralesGestionGuardiaColegiadoComponent,
+		GuardiaGestionGuardiaColegiadoComponent,
+		PermutasGestionGuardiaColegiadoComponent,
+		SustitucionesGestionGuardiaColegiadoComponent,
+		TurnoGestionGuardiaColegiadoComponent,
+
 		//EJG
 		// EJGComponent,
 		FiltrosEjgComponent,

@@ -1,19 +1,9 @@
-import { LOCALE_ID, NgModule } from '@angular/core';
-import { APP_BASE_HREF, CommonModule, DatePipe, UpperCasePipe } from '@angular/common';
-import { AuthGuard } from '../../../../_guards/auth.guards';
-import { environment } from '../../../../../environments/environment';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { JwtInterceptor } from '../../../../_interceptor/jwt.interceptor';
-import { CookieService } from '../../../../../../node_modules/ngx-cookie-service';
-import { DialogModule } from 'primeng/dialog';
-import { BusquedaColegiadoExpressModule } from '../../../../commons/busqueda-colegiado-express/busqueda-colegiado-express.module';
-import { DataTableModule, PaginatorModule, InputTextModule, CheckboxModule, DropdownModule, ButtonModule, GrowlModule, ConfirmationService, MenubarModule, ConfirmDialogModule, MultiSelectModule } from 'primeng/primeng';
+import { NgModule, LOCALE_ID } from '@angular/core';
+import { CommonModule, DatePipe, APP_BASE_HREF, UpperCasePipe } from '@angular/common';
+import { ButtonModule, CheckboxModule, ConfirmationService, ConfirmDialogModule, DataTableModule, DropdownModule, GrowlModule, InputTextModule, MenubarModule, MultiSelectModule, PaginatorModule, PickListModule, TreeTableModule } from 'primeng/primeng';
 import { FormsModule } from '@angular/forms';
-
-import { HeaderGestionEntidadService } from '../../../../_services/headerGestionEntidad.service';
-import { MessageService } from 'primeng/components/common/messageservice';
 import { PipeTranslationModule } from '../../../../commons/translate/pipe-translation.module';
-import { TableModule } from 'primeng/table';
+import { TableModule } from '../../../../../../node_modules/primeng/table';
 import { FechaModule } from '../../../../commons/fecha/fecha.module';
 import { ImagePipe } from '../../../../commons/image-pipe/image.pipe';
 import { TrimPipePipe } from '../../../../commons/trim-pipe/trim-pipe.pipe';
@@ -21,10 +11,18 @@ import { SigaServices } from '../../../../_services/siga.service';
 import { CommonsService } from '../../../../_services/commons.service';
 import { cardService } from '../../../../_services/cardSearch.service';
 import { AuthenticationService } from '../../../../_services/authentication.service';
+import { MessageService } from '../../../../../../node_modules/primeng/components/common/messageservice';
+import { HeaderGestionEntidadService } from '../../../../_services/headerGestionEntidad.service';
+import { AuthGuard } from '../../../../_guards/auth.guards';
+import { environment } from '../../../../../environments/environment';
+import { HTTP_INTERCEPTORS } from '../../../../../../node_modules/@angular/common/http';
+import { JwtInterceptor } from '../../../../_interceptor/jwt.interceptor';
+import { CookieService } from '../../../../../../node_modules/ngx-cookie-service';
+import { BusquedaColegiadoExpressModule } from '../../../../commons/busqueda-colegiado-express/busqueda-colegiado-express.module';
+import { DialogModule } from 'primeng/dialog';
 
 @NgModule({
   imports: [
-    CommonModule,
     DialogModule,
     CommonModule,
     DataTableModule,
@@ -42,6 +40,8 @@ import { AuthenticationService } from '../../../../_services/authentication.serv
     FechaModule,
     ConfirmDialogModule,
     BusquedaColegiadoExpressModule,
+    PickListModule,
+     TreeTableModule
   ],
   declarations: [],
   providers:[
