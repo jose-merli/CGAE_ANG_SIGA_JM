@@ -12,7 +12,7 @@
 
   <div class="card-footer">
     <div class="text-right main-button ">
-      <button pButton type="button" icon="fas fa-check" iconPos="left" [disabled] = "!botonValidar"
+      <button *ngIf= "botonValidar" pButton type="button" icon="fas fa-check" iconPos="left"
         label="{{ 'general.boton.validarRemesa' | translate}}"></button>
       <button (click)="confirmDelete(true)" pButton type="button" icon="fa fa-trash-alt" iconPos="left" [disabled] = "!guardado"
         label="{{ 'general.boton.eliminarRemesa' | translate}}"></button>
