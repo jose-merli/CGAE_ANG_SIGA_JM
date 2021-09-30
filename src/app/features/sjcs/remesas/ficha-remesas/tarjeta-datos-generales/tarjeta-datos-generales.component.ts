@@ -48,6 +48,7 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
   item;
   @Input() remesaTabla;
   @Input() remesaItem: RemesasItem = new RemesasItem();
+  @Output() estado = new EventEmitter<Boolean>();
   resultado;
   remesasDatosEntradaItem;
   busquedaActualizaciones: boolean;
@@ -164,7 +165,7 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
     ];
   }
 
-  listadoEstadosRemesa(remesa){
+  listadoEstadosRemesa(remesa, padre?){
     this.progressSpinner = true;
     this.remesasDatosEntradaItem =
     {
@@ -174,6 +175,10 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
       n => {
         console.log("Dentro del servicio del padre que llama al listadoEstadosRemesa");
         this.resultado = JSON.parse(n.body).estadoRemesaItem;
+
+        if(padre){
+          this.estado.emit(true);
+        }
 
         console.log("Contenido de la respuesta del back --> ", this.resultado);
         this.progressSpinner = false;

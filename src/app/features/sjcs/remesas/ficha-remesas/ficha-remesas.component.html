@@ -7,11 +7,13 @@
 </div>
 
 <div class="busqueda-container">
-  <app-tarjeta-datos-generales [remesaTabla]="remesaTabla" [remesaItem]="remesaItem"></app-tarjeta-datos-generales>
+  <app-tarjeta-datos-generales [remesaTabla]="remesaTabla" [remesaItem]="remesaItem" (estado) = "checkAcciones()"></app-tarjeta-datos-generales>
   <app-tarjeta-ejgs [remesaTabla]="remesaTabla" [remesaItem]="remesaItem"></app-tarjeta-ejgs>
 
   <div class="card-footer">
     <div class="text-right main-button ">
+      <button pButton type="button" icon="fas fa-check" iconPos="left" [disabled] = "!botonValidar"
+        label="{{ 'general.boton.validarRemesa' | translate}}"></button>
       <button (click)="confirmDelete(true)" pButton type="button" icon="fa fa-trash-alt" iconPos="left" [disabled] = "!guardado"
         label="{{ 'general.boton.eliminarRemesa' | translate}}"></button>
       <button (click)="openTab()" pButton type="button"  icon="fa fa-plus"

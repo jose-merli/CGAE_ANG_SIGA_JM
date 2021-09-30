@@ -20,14 +20,16 @@ export class FichaRemesasComponent implements OnInit {
 
   @ViewChild(TarjetaDatosGeneralesComponent) tarjetaDatosGenerales: TarjetaDatosGeneralesComponent;
   @ViewChild(TarjetaEjgsComponent) tarjetaEJGs: TarjetaEjgsComponent;
+  botonValidar: boolean = false;
   guardado: boolean = false;
   progressSpinner: boolean = false;
-  remesa;
   msgs;
   item;
   remesaTabla;
   remesaItem: RemesasItem = new RemesasItem();
   ejgItem;
+  tipoPCAJG;
+  remesa: { idRemesa: any; descripcion: string; numero: number; };
 
   constructor(private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
@@ -37,28 +39,80 @@ export class FichaRemesasComponent implements OnInit {
     private translateService: TranslateService) { }
 
   ngOnInit() {
-    if(localStorage.getItem('ficha') == "registro"){
+    this.botonValidar = false;
+
+    if (localStorage.getItem('ficha') == "registro") {
       this.item = localStorage.getItem('remesaItem');
       console.log("Item -> ", this.item);
       localStorage.removeItem('remesaItem');
       this.remesaTabla = JSON.parse(this.item);
       console.log("Item en JSON -> ", this.remesaTabla);
       this.guardado = true;
-    }else if(localStorage.getItem('ficha') == "nuevo"){
+      this.checkAcciones();
+    } else if (localStorage.getItem('ficha') == "nuevo") {
       this.remesaItem.descripcion = "";
     }
     localStorage.removeItem('ficha');
+
+    this.remesa = {
+      'idRemesa': 0,
+      'descripcion': "",
+      'numero': 0
+    }
+  }
+
+  checkAcciones() {
+    console.log("Dentro del checkAcciones --> ", this.tarjetaDatosGenerales);
+    let remesaCheckAcciones;
+    let checkAccionesRemesas;
+
+    if (this.remesaTabla != null) {
+      remesaCheckAcciones =
+      {
+        'estado': (this.remesaTabla.estado != null && this.remesaTabla.estado != undefined) ? this.remesaTabla.estado.toString() : this.remesaTabla.estado,
+      };
+    }else if(this.remesaItem != null){
+      remesaCheckAcciones =
+      {
+        'estado': (this.tarjetaDatosGenerales.resultado[0].estado != null && this.tarjetaDatosGenerales.resultado[0].estado != undefined) ? this.tarjetaDatosGenerales.resultado[0].estado.toString() : this.tarjetaDatosGenerales.resultado[0].estado,
+      };
+    }
+
+    this.sigaServices
+      .post("ficharemesas_checkAcciones", remesaCheckAcciones)
+      .subscribe(
+        n => {
+          console.log("Dentro de la respuesta. Contenido --> ", JSON.parse(n.body).checkAccionesRemesas);
+
+          checkAccionesRemesas = JSON.parse(n.body).checkAccionesRemesas;
+          
+          if(checkAccionesRemesas.length == 0){
+            this.botonValidar = false;
+          }else{
+            checkAccionesRemesas.forEach(element => {
+              if(element.descripcion == "Validar Remesa"){
+                this.botonValidar = true;
+              }else{
+                this.botonValidar = false;
+              }
+            });
+          }
+        },
+        error => { },
+        () => { }
+      );
   }
 
   save() {
     if (this.tarjetaDatosGenerales.remesaTabla != null) {
       this.remesa = {
         'idRemesa': this.tarjetaDatosGenerales.remesaTabla[0].idRemesa,
-        'descripcion': this.tarjetaDatosGenerales.remesaTabla[0].descripcion
+        'descripcion': this.tarjetaDatosGenerales.remesaTabla[0].descripcion,
+        'numero':this.tarjetaDatosGenerales.remesaTabla[0].numero
       };
     } else if (this.tarjetaDatosGenerales.remesaItem != null) {
       this.remesa = {
-        'idRemesa': 0,
+        'idRemesa': (this.remesa.idRemesa != null && this.remesa.idRemesa != undefined) ? this.remesa.idRemesa.toString() : 0,
         'descripcion': this.tarjetaDatosGenerales.remesaItem.descripcion,
         'numero': this.tarjetaDatosGenerales.remesaItem.numero
       };
@@ -79,7 +133,7 @@ export class FichaRemesasComponent implements OnInit {
         }
       },
       () => {
-        this.tarjetaDatosGenerales.listadoEstadosRemesa(this.remesa);
+        this.tarjetaDatosGenerales.listadoEstadosRemesa(this.remesa, true);
         this.progressSpinner = false;
         this.guardado = true;
       }
@@ -95,7 +149,7 @@ export class FichaRemesasComponent implements OnInit {
       if (((!this.tarjetaEJGs.selectMultiple || !this.tarjetaEJGs.selectAll) && (this.tarjetaEJGs.selectedDatos == undefined || this.tarjetaEJGs.selectedDatos.length == 0)) || !this.tarjetaEJGs.permisos) {
         this.msgs = this.commonsService.checkPermisoAccion();
       } else {
-          this.confirmDelete(evento);
+        this.confirmDelete(evento);
       }
     }
   }
@@ -110,12 +164,12 @@ export class FichaRemesasComponent implements OnInit {
       message: mess,
       icon: icon,
       accept: () => {
-        if(evento){
+        if (evento) {
           this.deleteRemesa();
-        }else{
+        } else {
           this.deleteExpediente();
         }
-        
+
       },
       reject: () => {
         this.msgs = [
@@ -130,26 +184,26 @@ export class FichaRemesasComponent implements OnInit {
       }
     });
   }
-  
+
   deleteRemesa() {
-    let del: RemesasBusquedaItem[] = [];
+    let del: RemesasItem[] = [];
     console.log("Remesa -> ", del);
-    if(this.remesaTabla != null){
+    if (this.remesaTabla != null) {
       del[0] =
-      {
+      { 
         'idRemesa': (this.remesaTabla.idRemesa != null && this.remesaTabla.idRemesa != undefined) ? this.remesaTabla.idRemesa.toString() : this.remesaTabla.idRemesa,
         'descripcion': (this.remesaTabla.descripcion != null && this.remesaTabla.descripcion != undefined) ? this.remesaTabla.descripcion.toString() : this.remesaTabla.descripcion,
-        'ficha' : true
+        'ficha': true
       };
-    }else if(this.remesaItem != null){
+    } else if (this.remesaItem != null) {
       del[0] =
       {
-        'idRemesa': (this.remesaItem.idRemesa != null && this.remesaItem.idRemesa != undefined) ? this.remesaItem.idRemesa : this.remesaItem.idRemesa,
+        'idRemesa': (this.remesa.idRemesa != null && this.remesa.idRemesa != undefined) ? this.remesa.idRemesa : this.remesa.idRemesa,
         'descripcion': (this.remesaItem.descripcion != null && this.remesaItem.descripcion != undefined) ? this.remesaItem.descripcion.toString() : this.remesaItem.descripcion,
-        'ficha' : true
+        'ficha': true
       };
     }
-  
+
     this.sigaServices.post("listadoremesas_borrarRemesa", del).subscribe(
       data => {
         this.showMessage("success", this.translateService.instant("general.message.correct"), JSON.parse(data.body).error.description);
@@ -198,8 +252,8 @@ export class FichaRemesasComponent implements OnInit {
       };
       i++;
     });
-    
-    this.sigaServices.post("ficharemesa_borrarExpedientesRemesa", ejgItem).subscribe(
+
+    this.sigaServices.post("ficharemesas_borrarExpedientesRemesa", ejgItem).subscribe(
       data => {
         this.showMessage("success", this.translateService.instant("general.message.correct"), JSON.parse(data.body).error.description);
         this.tarjetaEJGs.selectedDatos = [];
@@ -222,7 +276,7 @@ export class FichaRemesasComponent implements OnInit {
     );
   }
 
-  openTab(){
+  openTab() {
     this.router.navigate(["/ejg"]);
   }
 

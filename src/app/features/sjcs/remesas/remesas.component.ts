@@ -81,56 +81,6 @@ export class RemesasComponent implements OnInit {
     }
   }
 
-  jsonToRow() {
-    let arr = [];
-    this.resultadoBusqueda.resultadoBusqueda.forEach((res, i) => {
-      let estadoNombre: String;
-      switch (res.estado) {
-        case "0": estadoNombre = "Iniciada"; break;
-        case "1": estadoNombre = "Generada"; break;
-        case "2": estadoNombre = "Enviada"; break;
-        case "3": estadoNombre = "Recibida"; break;
-        case "4": estadoNombre = "Validando"; break;
-        case "5": estadoNombre = "Validada"; break;
-        case "6": estadoNombre = "Procesando remesa"; break;
-        default: estadoNombre = "Error envío";
-      }
-      let objCells = [
-        { type: 'text', value: res.descripcion },
-        { type: 'text', value: res.estado },
-        { type: 'text', value: res.fechaEnvio },
-        { type: 'text', value: res.fechaGeneracion },
-        { type: 'text', value: res.fechaRecepcion },
-        { type: 'text', value: res.numero },
-        { type: 'text', value: res.prefijo },
-        { type: 'text', value: res.sufijo },
-        { type: 'text', value: estadoNombre },
-        /* { type: 'invisible', value: res.idinstitucion },
-        { type: 'invisible', value: res.idturno },
-        { type: 'invisible', value: res.idguardia },
-        { type: 'invisible', value: res.fechabaja },
-        { type: 'invisible', value: res.observacionessolicitud },
-        { type: 'invisible', value: res.observacionesbaja },
-        { type: 'invisible', value: res.observacionesvalidacion },
-        { type: 'invisible', value: res.observacionesdenegacion },
-        { type: 'invisible', value: res.fechadenegacion },
-        { type: 'invisible', value: res.observacionesvalbaja },
-        { type: 'invisible', value: res.fechavaloralta },
-        { type: 'invisible', value: res.fechavalorbaja },
-        { type: 'invisible', value: res.idpersona } */
-      ]
-        ;
-      let obj = { id: i, cells: objCells };
-      arr.push(obj);
-    });
-
-    /* this.rowGroups = [];
-    this.rowGroups = this.trmService.getTableData(arr);
-    this.rowGroupsAux = [];
-    this.rowGroupsAux = this.trmService.getTableData(arr);
-    this.totalRegistros = this.rowGroups.length; */
-  }
-
   search() {
     console.log("Dentro del search del padre");
     this.remesasDatosEntradaItem =
