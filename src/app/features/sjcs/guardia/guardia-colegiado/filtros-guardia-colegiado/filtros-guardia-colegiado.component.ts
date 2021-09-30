@@ -35,7 +35,13 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
     ENTER: 13
   }
   permisos;
-  @Input() permisoEscritura;
+  @Input('permisoEscritura') permisoEscritura = false;
+  @Input() dataBuscador = { 
+    'guardia': '',
+    'turno': '',
+    'fechaDesde': '',
+    'fechaHasta': ''
+}
   @Input() isColegiado: boolean;
 
   @Output() isOpen = new EventEmitter<boolean>();
@@ -51,6 +57,34 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
 
   ngOnInit() {
 
+    this.progressSpinner = true;
+    this.getCombos()
+    if (this.permisoEscritura != undefined) {
+      this.permisos = this.permisoEscritura
+    }
+    this.progressSpinner = false;
+    if (this.persistenceService.getFiltros() != undefined) {
+      this.filtros = this.persistenceService.getFiltros();
+      
+      if (this.filtros.idGuardia != null || this.filtros.idGuardia != undefined) {
+        this.getComboGuardia();
+      }
+      if (this.dataBuscador != null){
+        if (this.dataBuscador.guardia != ''){
+          this.filtros.idGuardia = this.dataBuscador.guardia.toString();
+        }
+        if(this.dataBuscador.turno != ''){
+          this.filtros.idTurno = this.dataBuscador.turno.toString();
+        }
+        if(this.dataBuscador.fechaDesde != ''){
+          this.filtros.fechadesde = new Date(this.changeDateFormat(this.dataBuscador.fechaDesde)); //MM/dd/yyyy
+        }
+        if(this.dataBuscador.fechaHasta != ''){
+          this.filtros.fechahasta = new Date(this.changeDateFormat(this.dataBuscador.fechaHasta));//MM/dd/yyyy
+        }
+      }
+      this.search();
+      
     if (this.isColegiado) {
       this.progressSpinner = true
       this.sigaServices.get("usuario_logeado").subscribe(n => {
@@ -69,7 +103,7 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
           });
       });
     }
-
+  
 
     this.getCombos()
     if (this.persistenceService.getPermisos() != undefined) {
@@ -93,7 +127,13 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
       this.filtros.numColegiado = this.usuarioBusquedaExpress.numColegiado;
     }
   }
-
+}
+  changeDateFormat(date1){
+    // date1 dd/MM/yyyy
+    let date1C = date1.split("/").reverse().join("-")
+    return date1C;
+  }
+ 
   getCombos() {
     this.getComboTurno();
     if (this.filtros.idTurno != null || this.filtros.idTurno != undefined) {

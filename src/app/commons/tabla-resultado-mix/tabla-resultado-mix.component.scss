@@ -67,7 +67,7 @@ overflow-wrap: break-word;}
   flex-wrap: wrap;
   align-content: center;
   width: 100%;
-  justify-content: center;
+  //justify-content: center;
   border: 1px solid #D5D5D5;;
   .table-header-child {
     flex: 1;
@@ -171,6 +171,9 @@ width: 100%;
 .borders-child {	
 	border-top: 1px solid #D5D5D5;	
     border-bottom: 1px solid #D5D5D5;	
+}
+.borders-child-last {	
+  border-bottom: 1px solid #D5D5D5;		
 }
 ::ng-deep {
   span.cdk-visually-hidden {
@@ -325,7 +328,7 @@ display: flex;
 flex-wrap: wrap;
 align-content: center;
 width: 100%;
-justify-content: center;
+//justify-content: center;
 background-color: #e6ecf1;
 border: 1px solid #e6ecf1;
 .table-header-child{

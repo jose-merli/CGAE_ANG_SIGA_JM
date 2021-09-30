@@ -11,6 +11,7 @@ import { PersistenceService } from '../../_services/persistence.service';
 import { RowGroup } from '../tabla-resultado-desplegable/tabla-resultado-desplegable-ae.service';
 import { TranslateService } from '../translate/translation.service';
 import { throwMatDialogContentAlreadyAttachedError } from '@angular/material';
+import { DatePipe } from '@angular/common';
 
 
 /*interface Cabecera {
@@ -103,7 +104,8 @@ export class TablaResultadoMixComponent implements OnInit {
     private router: Router,
     private persistenceService: PersistenceService,
     private confirmationService: ConfirmationService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private datePipe: DatePipe
 
   ) {
     this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
@@ -286,13 +288,13 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
             return compareDate(a.cells[i].value, b.cells[i].value, isAsc, false);
           }
           else if (a.cells[i].type=='dateTime' && b.cells[i].type=='dateTime'){
-            return compareDateAndTime(a.cells[i].value, b.cells[i].value, isAsc);
+            return compareDateAndTime(a.cells[i].value.label, b.cells[i].value.label, isAsc);
           }
 
           let valorA = a.cells[i].value;
           let valorB = b.cells[i].value;
           if (valorA!=null && valorB!=null){
-            if(isNaN(valorA)){ //Checked for numeric
+            /*if(isNaN(valorA)){ //Checked for numeric
               const dayA = valorA.substr(0, 2) ;
               const monthA = valorA.substr(3, 2);
               const yearA = valorA.substr(6, 10);
@@ -303,7 +305,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
               }else{
               }
             } else{
-            }
+            }*/
           }
 
           return compare(a.cells[i].value, b.cells[i].value, isAsc, false);
@@ -337,7 +339,9 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
       let isReturn = true;
       for(let j=0; j<this.cabeceras.length;j++){
         if (this.searchText[j] != " " &&  this.searchText[j] != undefined){
-          if (row.cells[j].value){
+          console.log('row.cells[j].value: ', row.cells[j].value)
+          if (row.cells[j].value != null && row.cells[j].value != "null"){
+             console.log('row.cells[j].value 2: ', row.cells[j].value)
             console.log("tipo de celda:"+row.cells[j].type);
             if(row.cells[j].type == 'select'){
               let labelCombo = this.getComboLabel(row.cells[j].value);
@@ -346,16 +350,20 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
                 isReturn = false;
                 break;
               }
-            } else if (!row.cells[j].value.toString().toLowerCase().includes(this.searchText[j].toLowerCase())){
+            } else if (!row.cells[j].value.toString().toLowerCase().includes(this.searchText[j].toLowerCase()) || row.cells[j].value == "" || row.cells[j].value == null){
               isReturn = false;
               break;
           }else{
-              if (this.searchText[j]!=""){
+             /* if (this.searchText[j]!=""){
                 isReturn = false;
                 break;
-              }
+              }*/
           }
+        }else{
+          isReturn = false;
         }
+      }else{
+        isReturn = true;
       }
     }
       if (isReturn){
@@ -382,6 +390,9 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
 
   isPar(numero): boolean {
     return numero % 2 === 0;
+  }
+  isLast(numero):boolean {
+    return numero == this.to - 1;
   }
   fromReg(event){
     this.from = Number(event) - 1;
@@ -528,12 +539,23 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
       }*/
     }
   }
-
+  changeDateFormat2(date1){
+    // date1 dd/MM/yyyy
+    let date1C = date1.split("/").reverse().join("-")
+    return date1C;
+  }
+  datetoString(date) {
+  const pattern = 'dd/MM/yyyy';
+    return this.datePipe.transform(date, pattern);
+  }
   duplicar(){
     console.log('duplicar this.selectedRowValue: ', this.selectedRowValue)
        /* if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos();
     }*/
+    //duplicar-> fechadesde = fechahastaanterios + 1 dia
+    let fd = new Date (this.changeDateFormat2(this.selectedRowValue[3].value))
+    fd.setDate(fd.getDate() + 1);
     let dataToSend = {
       'duplicar': true,
       'tabla': this.rowGroups,
@@ -542,9 +564,9 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
       'generado': this.selectedRowValue[8].value,
       'numGuardias': this.selectedRowValue[9].value,
       'listaGuarias': this.selectedRowValue[5].value,
-      'fechaDesde': '',
+      'fechaDesde': this.datetoString(fd),
       'fechaHasta': '',
-      'fechaProgramacion': this.selectedRowValue[4].value.toString(),
+      'fechaProgramacion': this.selectedRowValue[4].value.value,
       'estado': this.selectedRowValue[7].value,
       'observaciones': this.selectedRowValue[6].value,
       'idCalendarioProgramado': this.selectedRowValue[10].value,
@@ -973,31 +995,35 @@ if(this.infoHabilitado.estadoNombre=="Alta"){
   }
 }
 
-function compareDateAndTime (fechaA:  any, fechaB:  any, isAsc: boolean){
+function compareDateAndTime (date1:  any, date2:  any, isAsc: boolean){
   let objDate1 = null;
   let hour1 = null;
   let objDate2 = null;
   let hour2 = null;
-
-  if (fechaA!=null){
+  let fechaA1 = date1.split("/").join("-")
+  let fechaA = fechaA1.split(" ")[0];
+  let horaA = fechaA1.split(" ")[1].split(":").join("-");
+  if (fechaA!=null && horaA!=null){
     const dayA = fechaA.substr(0, 2) ;
     const monthA = fechaA.substr(3, 2);
     const yearA = fechaA.substr(6, 10);
-    const hourA = fechaA.substr(11, 13);
-    const minA = fechaA.substr(14, 16);
-    const segA = fechaA.substr(17, 19);
+    const hourA = horaA.substr(0, 2);
+    const minA = horaA.substr(3, 2);
+    const segA = horaA.substr(6, 8);
     console.log("fecha a:"+ yearA+","+monthA+","+dayA +  "  " + hourA + ":" + minA + ":" + segA);
     objDate1= {  day: dayA,month: monthA, year: yearA};
     hour1={ hour: hourA,minute: minA,second: segA};
   }
-
+  let fechaB1 = date2.split("/").join("-")
+  let fechaB = fechaB1.split(" ")[0];
+  let horaB = fechaB1.split(" ")[1].split(":").join("-");
   if (fechaB!=null){
     const dayB = fechaB.substr(0, 2) ;
     const monthB = fechaB.substr(3, 2);
     const yearB = fechaB.substr(6, 10);
-    const hourB = fechaB.substr(11, 13);
-    const minB = fechaB.substr(14, 16);
-    const segB = fechaB.substr(17, 19);
+    const hourB = horaB.substr(0, 2);
+    const minB = horaB.substr(3, 2);
+    const segB = horaB.substr(6, 8);
     console.log("fecha b:"+ yearB+","+monthB+","+dayB+  "  " + hourB + ":" + minB + ":" + segB);
     objDate2= {  day: dayB,month: monthB, year: yearB};
     hour2={ hour: hourB,minute: minB,second: segB};

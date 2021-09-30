@@ -125,6 +125,7 @@ export class FichaProgramacionComponent implements OnInit {
   idConjuntoGuardiaElegido;
   suscription: Subscription;
   wrongList = [];
+  fromCombo = false;
   constructor(private persistenceService: PersistenceService,
     private location: Location, private sigaServices: SigaServices,
     private commonService: CommonsService,
@@ -138,6 +139,7 @@ export class FichaProgramacionComponent implements OnInit {
     this.suscription = this.globalGuardiasService.getConf().subscribe((confValue)=>{
          this.dataReady = false;
       this.idConjuntoGuardiaElegido = confValue.idConjuntoGuardia;
+      this.fromCombo = confValue.fromCombo;
       this.dataReady = true;});
   
     console.log('this.persistenceService.getDatos(): ', this.persistenceService.getDatos())
@@ -542,7 +544,7 @@ this.estado = this.datosGeneralesIniciales.estado;
     'observaciones': event.observaciones,
     'fechaDesde': event.fechaDesde,
     'fechaHasta': event.fechaHasta,
-    'fechaProgramacion': this.formatDate2(event.fechaProgramacion),
+    'fechaProgramacion': this.formatDate3(event.fechaProgramacion),
     'estado': estadoNumerico,
     'generado': event.generado,
     'numGuardias': event.numGuardias,
@@ -559,6 +561,9 @@ this.estado = this.datosGeneralesIniciales.estado;
       this.getGuardiasFromCal(event);
     }
    getGuardiasFromCal(idCalendarioProgramado){
+     if (!this.fromCombo){
+    this.datosTarjetaGuardiasCalendarioIni = [];
+     }
     this.dataReady = false;
     this.progressSpinner = true;
     this.sigaServices.post(
@@ -838,8 +843,9 @@ this.estado = this.datosGeneralesIniciales.estado;
         );
       }
         this.router.navigate(["/programacionCalendarios"]);
-
+        this.progressSpinner = false;
      }, err => {
+      this.progressSpinner = false;
       //this.showMessage('error', JSON.stringify(data.body.error.message), JSON.stringify(data.body.error.message));
       if(err.status = "409"){
         this.showMessage('error', "No existen guardias asociadas a esta programación", "No existen guardias asociadas a esta programación");

@@ -282,6 +282,9 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
       this.sigaService.getParam(
         "guardiaCalendario_guardiaFromConjunto", "?idConjunto=" + idConjunto).subscribe(
           response => {
+            if (!fromCombo){
+            this.datosTarjetaGuardiasCalendario = [];
+            }
             response.forEach((res, i) => {
               this.datosTarjetaGuardiasCalendario.push(res);
               if (i == response.length - 1){
@@ -467,7 +470,7 @@ jsonToRow(fromCombo){
         ord = dat.orden;
       }
     let objCells:Cell[] = [
-    { type: 'text', value: ord , combo: null},
+    { type: 'link2', value: ord , combo: null},
     { type: 'text', value: dat.turno , combo: null},
     { type: 'link', value: dat.guardia , combo: null},
     { type: 'text', value: dat.generado, combo: null},

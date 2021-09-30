@@ -38,7 +38,23 @@ export class TablaResultadoOrderComponent implements OnInit {
   @Output() guardarGuardiasEnConjunto = new EventEmitter<Row[]>();
   @Output() descargaLog = new EventEmitter<Boolean>();
   @Output() disableGen = new EventEmitter<Boolean>();
-  @Input() tarjetaDatosGenerales;
+  @Input() tarjetaDatosGenerales = {
+    'duplicar' : '',
+    'tabla': [],
+    'turno':'',
+    'nombre': '',
+    'generado': '',
+    'numGuardias': '',
+    'listaGuarias': {},
+    'fechaDesde': '',
+    'fechaHasta': '',
+    'fechaProgramacion': null,
+    'estado': '',
+    'observaciones': '',
+    'idCalendarioProgramado': '',
+    'idTurno': '',
+    'idGuardia': '',
+  };
   anySelectedBol = false;
   from = 0;
   to = 10;
@@ -568,6 +584,10 @@ this.totalRegistros = this.rowGroups.length;
     isPar(numero):boolean {
       return numero % 2 === 0;
     }
+
+    isLast(numero):boolean {
+      return numero == this.to - 1;
+    }
     restablecer(){
       this.disableGen.emit(false);
       console.log('this.rowGroupsAux: ', this.rowGroupsAux)
@@ -742,6 +762,18 @@ this.totalRegistros = this.rowGroups.length;
     );
     //this.persistenceService.setHistorico(evento.fechabaja ? true : false);
     this.router.navigate(["/gestionGuardias"]); // ficha guardias
+   }
+
+   openTab2(row) {
+     let itemGuardiaColegiado = { 'guardia': row.cells[5].value,
+                                  'turno': row.cells[6].value,
+                                  'fechaDesde': this.tarjetaDatosGenerales.fechaDesde,
+                                  'fechaHasta': this.tarjetaDatosGenerales.fechaHasta
+                                }
+    sessionStorage.setItem("itemGuardiaColegiado", JSON.stringify(itemGuardiaColegiado));
+
+    this.persistenceService.setDatos(this.tarjetaDatosGenerales);
+    this.router.navigate(["/guardiasColegiado"]);  //busqueda guardias colegiado
    }
 }
 
