@@ -103,7 +103,7 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
 
   async getComboTurno() {
 
-    let asyncResult = await this.sigaServices.get("busquedaGuardia_turno").toPromise();
+    let asyncResult = await this.sigaServices.get("inscripciones_comboTurnos").toPromise();
 
     this.comboTurnos = asyncResult.combooItems;
     this.commonsService.arregloTildesCombo(this.comboTurnos);
