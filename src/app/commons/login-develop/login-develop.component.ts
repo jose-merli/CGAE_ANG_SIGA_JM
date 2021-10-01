@@ -48,7 +48,7 @@ export class LoginDevelopComponent implements OnInit {
 			this.sigaWebVersion = n.sigaWebVersion;
 		});
 		//Modificar la version de front en cada entrega
-		this.sigaFrontVersion = '202108231300';
+		this.sigaFrontVersion = '202110011300';
 		sessionStorage.removeItem('authenticated');
 		this.ocultar = true;
 		this.progressSpinner = true;
