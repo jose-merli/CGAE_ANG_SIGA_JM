@@ -378,9 +378,9 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     sessionStorage.removeItem("datosGeneralesDesigna");
     this.progressSpinner = true;
     this.msgs = [];
-    /* if (detail == "save" && (this.inputs[0].value == "" || this.inputs[0].value == undefined)) {
+    if (detail == "save" && (this.inputs[0].value == "" || this.inputs[0].value == undefined)) {
       this.confirmarActivar(severity, summary, detail);
-    } else { */
+    } else { 
       
       if (detail == "save" && (this.anio.value == "") ) {
         detail = "Guardar";
@@ -550,8 +550,10 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
           );
         }
       }
-
-   // }
+      if(this.resaltadoDatos == true){
+        this.progressSpinner = false;
+      }
+    }
 
     if (detail == "Restablecer") {
       this.nuevaDesigna = sessionStorage.getItem("nuevaDesigna");
