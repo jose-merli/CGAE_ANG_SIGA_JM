@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Message } from 'primeng/components/common/api';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '../../../commons/translate';
@@ -6,6 +6,7 @@ import { FiltrosCompraProductosItem } from '../../../models/FiltrosCompraProduct
 import { ListaCompraProductosItem } from '../../../models/ListaCompraProductosItem';
 import { CommonsService } from '../../../_services/commons.service';
 import { SigaServices } from '../../../_services/siga.service';
+import { TarjetaFiltroCompraProductosComponent } from './tarjeta-filtro-compra-productos/tarjeta-filtro-compra-productos.component';
 
 @Component({
   selector: 'app-compra-productos',
@@ -21,6 +22,7 @@ export class CompraProductosComponent implements OnInit {
 
   muestraTablaCompraProductos: boolean = false;
 
+  @ViewChild(TarjetaFiltroCompraProductosComponent) filtrosBusqueda;
   
   //Suscripciones
   subscriptionProductosBusqueda: Subscription;
@@ -38,7 +40,7 @@ export class CompraProductosComponent implements OnInit {
 
   busquedaCompraProductos(event) {
     this.progressSpinner = true;
-    let filtrosProductos: FiltrosCompraProductosItem = JSON.parse(sessionStorage.getItem("filtrosCompraProductos"));
+    let filtrosProductos: FiltrosCompraProductosItem = this.filtrosBusqueda.filtrosCompraProductos;
 
     this.subscriptionProductosBusqueda = this.sigaServices.post("PyS_getListaCompraProductos", filtrosProductos).subscribe(
       listaCompraProductosDTO => {

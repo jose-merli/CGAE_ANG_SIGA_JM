@@ -245,7 +245,6 @@ export class TarjetaFiltroCompraProductosComponent implements OnInit {
   }
 
   buscar() {
-    sessionStorage.setItem("filtrosCompraProductos", JSON.stringify(this.filtrosCompraProductos));
     this.busqueda.emit(true);
   }
 

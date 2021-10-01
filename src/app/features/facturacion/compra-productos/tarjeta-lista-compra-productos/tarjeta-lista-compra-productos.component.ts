@@ -162,20 +162,23 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
     this.progressSpinner = true;
     let peticion: FichaCompraSuscripcionItem[] = [];
     this.selectedRows.forEach(row => {
-      let solicitud: FichaCompraSuscripcionItem;
+      let solicitud: FichaCompraSuscripcionItem = new FichaCompraSuscripcionItem();
       solicitud.nSolicitud = row.nSolicitud;
       solicitud.fechaAceptada = row.fechaEfectiva;
       solicitud.fechaDenegada = row.fechaDenegada;
+      peticion.push(solicitud);
     });
-    this.sigaServices.post('PyS_solicitarCompraMultiple', peticion).subscribe(
+    this.sigaServices.post('PyS_aprobarCompraMultiple', peticion).subscribe(
       (n) => {
         if (n.status != 200) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         } else {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           //Se actualiza la información de la ficha
-          this.actualizarLista.emit();
+          this.actualizarLista.emit(true);
         }
+        this.selectedRows = [];
+        this.numSelectedRows = 0;
         this.progressSpinner = false;
       },
       (err) => {
@@ -189,20 +192,23 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
     this.progressSpinner = true;
     let peticion: FichaCompraSuscripcionItem[] = [];
     this.selectedRows.forEach(row => {
-      let solicitud: FichaCompraSuscripcionItem;
+      let solicitud: FichaCompraSuscripcionItem = new FichaCompraSuscripcionItem();
       solicitud.nSolicitud = row.nSolicitud;
       solicitud.fechaAceptada = row.fechaEfectiva;
       solicitud.fechaDenegada = row.fechaDenegada;
+      peticion.push(solicitud);
     });
-    this.sigaServices.post('PyS_solicitarCompraMultiple', peticion).subscribe(
+    this.sigaServices.post('PyS_denegarPeticionMultiple', peticion).subscribe(
       (n) => {
         if (n.status != 200) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         } else {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           //Se actualiza la información de la ficha
-          this.actualizarLista.emit();
+          this.actualizarLista.emit(true);
         }
+        this.selectedRows = [];
+        this.numSelectedRows = 0;
         this.progressSpinner = false;
       },
       (err) => {
@@ -214,7 +220,7 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
   }
 
   openTab(rowData) {
-    this.progressSpinner = false;
+    this.progressSpinner = true;
     let compra = new FichaCompraSuscripcionItem();
     compra.nSolicitud = rowData.nSolicitud;
     compra.productos = [];
