@@ -96,7 +96,11 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
 
     if (msg != undefined) {
       this.msgs = msg;
-    }  else {
+    }  else if(this.ficha.idFormaPagoSeleccionada == null || this.ficha.idPersona == null){
+      //Etiqueta
+      this.showMessage("error","***Debe completar los campos obligatorios","******Compruebe que no le falta por seleccionar la forma de pago ni el cliente");
+    }
+    else {
 			this.solicitarCompra();
 		}
   }
@@ -170,7 +174,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
   denegar(){
     if(this.ficha.fechaPendiente != undefined || this.ficha.fechaPendiente != null){
       this.progressSpinner = true;
-      this.sigaServices.post('PyS_denegarPeticion', this.ficha).subscribe(
+      this.sigaServices.post('PyS_denegarPeticion', this.ficha.nSolicitud).subscribe(
         (n) => {
           if( n.status != 200) {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));

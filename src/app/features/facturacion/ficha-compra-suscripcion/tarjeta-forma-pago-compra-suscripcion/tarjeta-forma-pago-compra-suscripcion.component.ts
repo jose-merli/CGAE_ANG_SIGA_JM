@@ -25,8 +25,8 @@ export class TarjetaFormaPagoCompraSuscripcionComponent implements OnInit {
   disableNoFacturableBox: boolean = false;
   noFact: boolean = true;
   permisoGuardar;
-  selectedPago;
-  @Input("comboComun") comboComun: any[];
+  selectedPago = null;
+  @Input("comboComun") comboComun: any[] = [];
 
   desFormaPagoSelecc: string;
   cuentasBanc;
@@ -40,7 +40,9 @@ export class TarjetaFormaPagoCompraSuscripcionComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.selectedPago = this.ficha.idFormaPagoSeleccionada +"";
+    if(this.ficha.idFormaPagoSeleccionada != null){
+      this.selectedPago = this.ficha.idFormaPagoSeleccionada +"";
+    }
     this.desFormaPagoSelecc = this.comboComun.find(
       el => 
         el.value == this.selectedPago

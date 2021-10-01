@@ -360,7 +360,37 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
     } else {
       if (this.checkNoFacturable()) {
         if (this.checkFormasPago()) {
-          this.progressSpinner = true;
+          this.nuevaCompra();
+        }
+        else {
+          this.msgs = [
+            {
+              severity: "error",
+              summary: this.translateService.instant(
+                "facturacion.productos.ResFormasPagoNoCompatibles"
+              ),
+              detail: this.translateService.instant(
+                "facturacion.productos.FormasPagoNoCompatibles"
+              )
+            }
+          ];
+        }
+      } else {
+        //Pendiente de inserción y sustitucion de etiquetas.
+        this.msgs = [
+          {
+            severity: "error",
+            summary: "Valores de 'no facturable' distintos",
+            detail: "Los productos seleccionados tienen valores distintos en el parametro 'no facturable'"
+          }
+        ];
+        
+      }
+    }
+  }
+
+  nuevaCompra(){
+    this.progressSpinner = true;
 
           sessionStorage.removeItem("FichaCompraSuscripcion");
           let nuevaCompra = new FichaCompraSuscripcionItem();
@@ -414,32 +444,6 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
               this.progressSpinner = false;
             }
           );
-        }
-        else {
-          this.msgs = [
-            {
-              severity: "error",
-              summary: this.translateService.instant(
-                "facturacion.productos.ResFormasPagoNoCompatibles"
-              ),
-              detail: this.translateService.instant(
-                "facturacion.productos.FormasPagoNoCompatibles"
-              )
-            }
-          ];
-        }
-      } else {
-        //Pendiente de inserción y sustitucion de etiquetas.
-        this.msgs = [
-          {
-            severity: "error",
-            summary: "Valores de 'no facturable' distintos",
-            detail: "Los productos seleccionados tienen valores distintos en el parametro 'no facturable'"
-          }
-        ];
-        
-      }
-    }
   }
 
   checkNoFacturable(){

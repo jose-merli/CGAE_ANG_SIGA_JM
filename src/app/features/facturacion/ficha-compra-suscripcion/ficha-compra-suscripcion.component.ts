@@ -52,7 +52,8 @@ export class FichaCompraSuscripcionComponent implements OnInit {
         let comboPagos = PayMethodSelectValues.combooItems;
         //Revisamos el combo para escoger unicamente el combo con los valores en comun de los productos.
         //Posible optimizacion con la implementacion de un servicio especifico para esta pantalla.
-        let comunes = this.ficha.idFormasPagoComunes.split(",");
+        let comunes = [];
+        if(this.ficha.idFormasPagoComunes != null)comunes = this.ficha.idFormasPagoComunes.split(",");
             comboPagos.forEach(pago => {
               for(let comun of comunes){
                 if(pago.value==comun || pago.value==this.ficha.idFormaPagoSeleccionada.toString) this.comboComun.push(pago);

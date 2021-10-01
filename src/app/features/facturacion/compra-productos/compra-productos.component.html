@@ -1,0 +1,18 @@
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<!-- Pantalla Facturacion > Compra de Productos -->
+<div>
+  <!-- Buscador de compras de productos -->
+  <div class="card">
+    <app-tarjeta-filtro-compra-productos (busqueda)="busquedaCompraProductos($event)" id="filtroCompraProductos"></app-tarjeta-filtro-compra-productos>
+  </div>
+  <!-- Listado de compras de productos -->
+  <div>
+    <app-tarjeta-lista-compra-productos [hidden]="!muestraTablaCompraProductos" 
+      (actualizarLista)="busquedaCompraProductos($event)" [listaCompraProductos]="listaCompraProductos" id="tablaCompraProductos">
+    </app-tarjeta-lista-compra-productos>
+  </div>
+</div>

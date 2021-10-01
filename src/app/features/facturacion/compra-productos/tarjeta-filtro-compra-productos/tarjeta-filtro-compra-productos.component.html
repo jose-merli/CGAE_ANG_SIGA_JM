@@ -1,0 +1,117 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+
+<!-- Campos Buscador -->
+<div class="card-body">
+
+  <!-- Buscador de Persona -->
+  <div class="form-row">
+    <div class="col-lg-5 col-md-5">
+      <label>{{ "censo.consultaDatosColegiacion.literal.numIden" | translate }}
+      </label>
+      <input [(ngModel)]="nifCifCliente" type="text" disabled class="form-control" 
+        pInputText/>
+    </div>
+    <div class="col-lg-5 col-md-5">
+      <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}
+      </label>
+      <input [(ngModel)]="nombreCliente" type="text" disabled class="form-control" 
+        pInputText />
+    </div>
+    <div class="main-button col-lg-2 col-md-2">
+      <button type="submit" [disabled]="localStorageService.isLetrado" pButton icon="fa fa-search"
+        (click)="searchPersona()" iconPos="left"></button>
+      <button pButton type="button" [disabled]="localStorageService.isLetrado" icon="fa fa-eraser" iconPos="left"
+        (click)="limpiarCliente()">
+      </button>
+    </div>
+    
+  </div>
+
+  <div class="form-row">
+    <!-- Fecha de solicitud -->
+    <div class="col-lg-3 col-md-3">
+      <label>{{ "oficio.busquedaBajasTemporales.fechaSolicitudDesde" | translate }}
+      </label>
+      <app-fecha [(value)]="filtrosCompraProductos.fechaSolicitudDesde"
+        [maxDate]="getFechaHastaCalendar(filtrosCompraProductos.fechaSolicitudDesde, filtrosCompraProductos.fechaSolicitudHasta)"
+        (valueChangeSelected)="fillFechaSolicitudDesde($event)" (valueChangeInput)="fillFechaSolicitudDesde($event)">
+      </app-fecha>
+    </div>
+    <div class="ol-lg-3 col-md-3">
+      <label>{{ "oficio.busquedaBajasTemporales.fechaSolicitudHasta" | translate }}
+      </label>
+      <app-fecha [(value)]="filtrosCompraProductos.fechaSolicitudHasta"
+        [minDate]="getFechaDesdeCalendar(filtrosCompraProductos.fechaSolicitudDesde, filtrosCompraProductos.fechaSolicitudHasta)"
+        (valueChangeSelected)="fillFechaSolicitudHasta($event)" (valueChangeInput)="fillFechaSolicitudHasta($event)">
+      </app-fecha>
+    </div>
+
+    <!-- Numero de solicitud -->
+    <div class="col-lg-3 col-md-3">
+      <label>{{ "facturacion.productos.nSolicitud" | translate }}</label>
+      <input type="text" class="form-control" [(ngModel)]='filtrosCompraProductos.nSolicitud' pInputText>
+    </div>
+
+    <!-- Estado Solicitud -->
+    <div class="col-lg-3 col-md-3">
+      <label>{{ "censo.solicitudincorporacion.estadoSolicitud" | translate}}</label>
+      <p-dropdown  [filter]="true" styleClass="widthAll" [showClear]="true"
+        placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='filtrosCompraProductos.idEstadoSolicitud'
+        [options]="estadosCompraObject">
+      </p-dropdown>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <!-- Categoria -->
+    <div class="col-lg-3 col-md-3">
+      <label>{{ "facturacion.productos.categoria" | translate}}</label>
+      <p-dropdown (onChange)="valueChangeCategoria()" [filter]="true" styleClass="widthAll" [showClear]="true"
+        placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='filtrosCompraProductos.idCategoria'
+        [options]="categoriasObject.combooItems">
+      </p-dropdown>
+    </div>
+
+    <!-- Tipo -->
+    <div class="col-lg-3 col-md-3">
+      <label>{{ "facturacion.productos.tipo" | translate}}</label>
+      <p-dropdown [disabled]="filtrosCompraProductos.idCategoria == null" [filter]="true" styleClass="widthAll" [showClear]="true"
+        placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='filtrosCompraProductos.idTipoProducto'
+        [options]="tiposObject.combooItems">
+      </p-dropdown>
+    </div>
+
+    <!-- Producto -->
+    <div class="col-lg-3 col-md-3">
+      <label>{{ "facturacion.productos.producto" | translate}}</label>
+      <input type="text" class="form-control" [(ngModel)]='filtrosCompraProductos.descProd' pInputText>
+    </div>
+
+    <!-- Estado Factura -->
+    <div class="col-lg-3 col-md-3">
+      <label>{{ "facturacion.productos.estadoFactura" | translate}}</label>
+      <p-dropdown  [filter]="true" styleClass="widthAll" [showClear]="true"
+        placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='filtrosCompraProductos.idEstadoFactura'
+        [options]="estadosFacturaObject">
+      </p-dropdown>
+    </div>
+  </div>
+</div>
+
+<!-- Botones -->
+<div class="card-footer">
+  <div class="text-right main-button">
+    <button pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate}}"
+      (click)="limpiar()">
+    </button>
+
+    <button pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"
+      (click)="checkBuscar()">
+    </button>
+    
+    <button (click)="checkNuevaCompra()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.new' | translate}}"></button>
+  </div>
+</div>
