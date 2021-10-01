@@ -35,7 +35,7 @@ export class DetalleTarjetaPrecioFichaServiciosFacturacionComponent implements O
   //Variables tarjeta
   @Input() servicio: ServicioDetalleItem; //Servicio obtenido de la fila del buscador de servicios en la cual pulsamos el enlace a la ficha servicios.
   periodicidadObject: ComboObject;
-  condicionesObject: ComboObject;
+  condicionesSuscripcionObject: ComboObject;
 
   //Variables control
   newRegisterRow: boolean = false; //Para desactivar por ejemplo el boton nuevo una vez añadida una fila impidiendo que se añada mas de una
@@ -44,7 +44,9 @@ export class DetalleTarjetaPrecioFichaServiciosFacturacionComponent implements O
 
   //Suscripciones
   subscriptionListaPrecios: Subscription;
-  subscriptionPeriodicidadList: Subscription
+  subscriptionPeriodicidadList: Subscription;
+  subscriptionCondicionesSelect: Subscription;
+  subscriptionCrearEditarPrecios: Subscription;
 
   constructor(private changeDetectorRef: ChangeDetectorRef, private sigaServices: SigaServices, private persistenceService: PersistenceService, private translateService: TranslateService, private confirmationService: ConfirmationService) { }
 
@@ -65,13 +67,19 @@ export class DetalleTarjetaPrecioFichaServiciosFacturacionComponent implements O
     this.initcolsPrecios();
     this.getListaPrecios();
     this.getComboPeriodicidad();
+    this.getComboCondicionSuscripcion();
   }
 
   //Necesario para liberar memoria
   ngOnDestroy() {
-    if (this.subscriptionListaPrecios) {
+    if (this.subscriptionListaPrecios)
       this.subscriptionListaPrecios.unsubscribe();
-    }
+    if (this.subscriptionPeriodicidadList)
+      this.subscriptionCondicionesSelect.unsubscribe();
+    if (this.subscriptionCondicionesSelect)
+      this.subscriptionCondicionesSelect.unsubscribe();
+    if (this.subscriptionCrearEditarPrecios)
+      this.subscriptionCrearEditarPrecios.unsubscribe();
   }
 
   //INICIO METODOS P-TABLE
@@ -169,7 +177,7 @@ export class DetalleTarjetaPrecioFichaServiciosFacturacionComponent implements O
 
     this.numSelectedRows = this.selectedRows.length;
 
-    if (this.selectedRows.length == 1) {
+    if (this.selectedRows.length == 1 && !this.nuevo) {
       this.edit = true;
     } else if (this.selectedRows.length > 1) {
       this.edit = false;
@@ -181,10 +189,14 @@ export class DetalleTarjetaPrecioFichaServiciosFacturacionComponent implements O
   onRowUnselect() {
 
     this.numSelectedRows = this.selectedRows.length;
-    if (this.selectedRows.length == 1) {
-      this.edit = true;
-    } else if (this.selectedRows.length > 1 || this.selectedRows.length == 0) {
+    if (this.nuevo) {
       this.edit = false;
+    } else if (!this.nuevo) {
+      if (this.selectedRows.length == 1) {
+        this.edit = true;
+      } else if (this.selectedRows.length > 1 || this.selectedRows.length == 0) {
+        this.edit = false;
+      }
     }
 
   }
@@ -203,22 +215,22 @@ export class DetalleTarjetaPrecioFichaServiciosFacturacionComponent implements O
     this.selectedRows = [];
     this.selectAllRows = false;
     this.selectMultipleRows = false;
-    this.edit = true;
     this.nuevo = true;
+    this.edit = false;
 
-    /* let nuevoDato = {
-      precio: 0,
-      periodicidad: this.comboItem[0].value,//COMBO CON OPCIONES MESES
-      descripcion: "",
-      condicion: this.comboItem[0].value,//COMBO CONDICIONES SUSCRIPCION
-      nuevo: ""
-    }; */
     let nuevoDato = {
+      idserviciosinstitucion: this.servicio.idserviciosinstitucion,
+      idtiposervicios: this.servicio.idtiposervicios,
+      idservicio: this.servicio.idservicio,
       precio: 0,
-      periodicidad: "provisional",//COMBO CON OPCIONES MESES
-      descripcion: "",
-      condicion: "provisional",//COMBO CONDICIONES SUSCRIPCION
-      nuevo: ""
+      idperiodicidad: this.periodicidadObject.combooItems[0].value,
+      descripcionprecio: "",
+      idcondicion: this.condicionesSuscripcionObject.combooItems[0].value,
+      descripcionperiodicidad: this.periodicidadObject.combooItems[0].label,
+      descripcionconsulta: this.condicionesSuscripcionObject.combooItems[0].label,
+      pordefecto: "0",
+      idperiodicidadoriginal: this.periodicidadObject.combooItems[0].value,
+      nuevo: "1"
     };
 
     this.preciosDatos.unshift(nuevoDato);
@@ -235,17 +247,44 @@ export class DetalleTarjetaPrecioFichaServiciosFacturacionComponent implements O
 
   //Metodo que guarda la fila que esta siendo editada en un array para mandarla a posteriori al back
   preciosParaEditarCrear = [];
-  emptyDescripcion: boolean;
   changeTableField(row) {
     this.edit = true;
-    if (row.descripcion == "") {
-      this.emptyDescripcion = true;
-    } else {
-      this.emptyDescripcion = false;
-    }
+
+    //Cambiar la descripcionperiodicidad de la row de esa fila para que al deseleccionarla no vuelva a la original
+    //1. Obtengo la descripcion
+    let descripcionperiodicidad;
+    this.periodicidadObject.combooItems.forEach(periodicidad => {
+      if (row.idperiodicidad == periodicidad.value) {
+        descripcionperiodicidad = periodicidad.label;
+      }
+    });
+    //2. Le cambio la descripcion a la fila
+    this.preciosDatos.forEach(precioFila => {
+      if (precioFila.idpreciosservicios == row.idpreciosservicios && precioFila.idperiodicidadoriginal == row.idperiodicidadoriginal && precioFila.idtiposervicios == row.idtiposervicios && precioFila.idservicio == row.idservicio && precioFila.idserviciosinstitucion == row.idserviciosinstitucion) {
+        precioFila.descripcionperiodicidad = descripcionperiodicidad;
+      }
+    });
+
+    //Cambiar la descripcioncondicion de la row de esa fila para que al deseleccionarla no vuelva a la original
+    //1. Obtengo la descripcion
+    let descripcioncondicion;
+    this.condicionesSuscripcionObject.combooItems.forEach(condicion => {
+      if (row.idcondicion == condicion.value) {
+        descripcioncondicion = condicion.label;
+      }
+    });
+    //2. Le cambio la descripcion a la fila
+    this.preciosDatos.forEach(precioFila => {
+      if (precioFila.idpreciosservicios == row.idpreciosservicios && precioFila.idperiodicidadoriginal == row.idperiodicidadoriginal && precioFila.idtiposervicios == row.idtiposervicios && precioFila.idservicio == row.idservicio && precioFila.idserviciosinstitucion == row.idserviciosinstitucion) {
+        precioFila.descripcioncondicion = descripcioncondicion;
+      }
+    });
+
+    //el precio no te deja escribir hasta que quitas el simbolo del euro
+
 
     if (this.preciosParaEditarCrear.length > 0) {
-      let indexRow = this.preciosParaEditarCrear.findIndex(servicio => (servicio.idservicio == row.idservicio && servicio.idtiposervicios == row.idtiposervicios))
+      let indexRow = this.preciosParaEditarCrear.findIndex(precioFila => (precioFila.idpreciosservicios == row.idpreciosservicios && precioFila.idperiodicidadoriginal == row.idperiodicidadoriginal && precioFila.idtiposervicios == row.idtiposervicios && precioFila.idservicio == row.idservicio && precioFila.idserviciosinstitucion == row.idserviciosinstitucion))
       if (indexRow != -1) {
         this.preciosParaEditarCrear[indexRow] = row;
       } else {
@@ -256,6 +295,54 @@ export class DetalleTarjetaPrecioFichaServiciosFacturacionComponent implements O
     }
   }
 
+  changeTableFieldRowNueva(row) {
+    this.edit = false;
+
+    //Cambiar la descripcionperiodicidad de la row de esa fila para que al deseleccionarla no vuelva a la original
+    //1. Obtengo la descripcion
+    let descripcionperiodicidad;
+    this.periodicidadObject.combooItems.forEach(periodicidad => {
+      if (row.idperiodicidad == periodicidad.value) {
+        descripcionperiodicidad = periodicidad.label;
+      }
+    });
+    //2. Le cambio la descripcion a la fila
+    this.preciosDatos.forEach(precioFila => {
+      if (precioFila.idpreciosservicios == row.idpreciosservicios && precioFila.idperiodicidadoriginal == row.idperiodicidadoriginal && precioFila.idtiposervicios == row.idtiposervicios && precioFila.idservicio == row.idservicio && precioFila.idserviciosinstitucion == row.idserviciosinstitucion) {
+        precioFila.descripcionperiodicidad = descripcionperiodicidad;
+      }
+    });
+
+    //Cambiar la descripcioncondicion de la row de esa fila para que al deseleccionarla no vuelva a la original
+    //1. Obtengo la descripcion
+    let descripcioncondicion;
+    this.condicionesSuscripcionObject.combooItems.forEach(condicion => {
+      if (row.idcondicion == condicion.value) {
+        descripcioncondicion = condicion.label;
+      }
+    });
+    //2. Le cambio la descripcion a la fila
+    this.preciosDatos.forEach(precioFila => {
+      if (precioFila.idpreciosservicios == row.idpreciosservicios && precioFila.idperiodicidadoriginal == row.idperiodicidadoriginal && precioFila.idtiposervicios == row.idtiposervicios && precioFila.idservicio == row.idservicio && precioFila.idserviciosinstitucion == row.idserviciosinstitucion) {
+        precioFila.descripcioncondicion = descripcioncondicion;
+      }
+    });
+
+    //el precio no te deja escribir hasta que quitas el simbolo del euro
+
+    if (this.preciosParaEditarCrear.length > 0) {
+      let indexRow = this.preciosParaEditarCrear.findIndex(precioFila => (precioFila.idpreciosservicios == row.idpreciosservicios && precioFila.idperiodicidadoriginal == row.idperiodicidadoriginal && precioFila.idtiposervicios == row.idtiposervicios && precioFila.idservicio == row.idservicio && precioFila.idserviciosinstitucion == row.idserviciosinstitucion))
+      if (indexRow != -1) {
+        this.preciosParaEditarCrear[indexRow] = row;
+      } else {
+        this.preciosParaEditarCrear.push(row);
+      }
+    } else if (this.preciosParaEditarCrear.length == 0) {
+      this.preciosParaEditarCrear.push(row);
+    }
+
+  }
+
   //Metodo que reestablece la informacion original de la tabla al haber editado algun dato.
   resetToOriginalData() {
     this.edit = false;
@@ -263,15 +350,12 @@ export class DetalleTarjetaPrecioFichaServiciosFacturacionComponent implements O
     this.preciosParaEditarCrear = [];
     this.selectedRows = [];
     this.numSelectedRows = 0;
-    //this.getListaServicios();
+    this.getListaPrecios();
   }
 
   guardar() {
-    /*   if (this.nuevo) {
-        this.crearServicio(this.preciosParaEditarCrear);
-      } else if (!this.nuevo) {
-        this.modificarServicio(this.preciosParaEditarCrear);
-      } */
+
+    this.crearEditarPrecios(this.preciosParaEditarCrear);
   }
   //FIN METODOS P-TABLE
 
@@ -314,6 +398,7 @@ export class DetalleTarjetaPrecioFichaServiciosFacturacionComponent implements O
     );
   }
 
+  //Metodo para obtener los valores del combo periodicidad
   getComboPeriodicidad() {
     this.progressSpinner = true;
 
@@ -329,6 +414,59 @@ export class DetalleTarjetaPrecioFichaServiciosFacturacionComponent implements O
       },
       () => {
         this.progressSpinner = false;
+      }
+    );
+  }
+
+  //Metodo para obtener los valores del combo condicion de suscripcion
+  getComboCondicionSuscripcion() {
+    this.progressSpinner = true;
+
+    this.subscriptionCondicionesSelect = this.sigaServices.get("fichaServicio_comboCondicionSuscripcion").subscribe(
+      CondicionSuscripcionValues => {
+        this.condicionesSuscripcionObject = CondicionSuscripcionValues;
+
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  //Metodo para crear/editar precios en bd
+  crearEditarPrecios(preciosParaEditarCrear) {
+    this.progressSpinner = true;
+    let preciosServicioObject = new PreciosServicioObject();
+    preciosServicioObject.fichaTarjetaPreciosItem = preciosParaEditarCrear;
+    this.subscriptionCrearEditarPrecios = this.sigaServices.post("fichaServicio_crearEditarPrecios", preciosServicioObject).subscribe(
+      response => {
+        if (JSON.parse(response.body).error.code == 500) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        } else {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        }
+      },
+      err => {
+        if (err != undefined && JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+        this.selectMultipleRows = false;
+        this.selectAllRows = false;
+        this.edit = false;
+        this.selectedRows = []
+        this.preciosParaEditarCrear = [];
+        this.nuevo = false;
+        this.getListaPrecios();
       }
     );
   }

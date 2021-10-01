@@ -475,6 +475,7 @@ export class SigaServices {
     fichaServicio_borrarSuscripcionesBajas: 'pys/borrarSuscripcionesBajas',
     fichaServicio_obtenerPreciosServicio: 'pys/detalleTarjetaPrecios',
     fichaServicio_comboPeriodicidad: 'combo/comboPeriodicidad',
+    fichaServicio_crearEditarPrecios: 'pys/crearEditarPrecios',
 
     // FOTO
     solicitudModificacion_searchSolModifDatosUseFoto: 'solicitudModificacion/searchSolModifDatosUseFoto',

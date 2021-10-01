@@ -32,38 +32,57 @@
       <td class="text-center" *ngFor="let col of columns">
         <!-- COLUMNA PRECIO -->
         <div *ngIf="col.field == 'precio'">
-          <label *ngIf="!edit">{{rowData[col.field]}}</label>
+          <label *ngIf="!edit && rowData.nuevo == undefined">{{rowData[col.field]}}</label>
 
-          <input *ngIf="edit" DigitDecimaNumber type="text" class="form-control" [(ngModel)]='rowData.precio'
-            pInputText>
+          <input *ngIf="edit && !nuevo" DigitDecimaNumber type="text" class="form-control" [(ngModel)]='rowData.precio'
+            pInputText (keydown)="changeTableField(rowData)">
+
+          <input *ngIf="nuevo && rowIndex == 0" DigitDecimaNumber type="text" class="form-control"
+            [(ngModel)]='rowData.precio' pInputText (keydown)="changeTableFieldRowNueva(rowData)">
 
           <!-- [ngClass]="{'camposObligatorios': aGuardar && obligatorio && producto.valor == ''}"
  -->
         </div>
         <!-- COLUMNA PERIODICIDAD -->
         <div *ngIf="col.field == 'descripcionperiodicidad'">
-          <label *ngIf="!edit">{{rowData[col.field]}}</label>
+          <label *ngIf="!edit && rowData.nuevo == undefined">{{rowData[col.field]}}</label>
 
-          <p-dropdown *ngIf="edit" [filter]="true" styleClass="widthAll" [showClear]="true"
+          <p-dropdown *ngIf="edit && !nuevo" [filter]="true" styleClass="widthAll" [showClear]="true"
             placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='rowData.idperiodicidad'
-            [options]="periodicidadObject.combooItems">
+            [options]="periodicidadObject.combooItems" (onChange)="changeTableField(rowData)">
+          </p-dropdown>
+
+          <p-dropdown *ngIf="nuevo && rowIndex == 0" [filter]="true" styleClass="widthAll" [showClear]="true"
+            placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='rowData.idperiodicidad'
+            [options]="periodicidadObject.combooItems" (onChange)="changeTableFieldRowNueva(rowData)">
           </p-dropdown>
 
         </div>
         <!-- COLUMNA DESCRIPCION PRECIO -->
         <div *ngIf="col.field == 'descripcionprecio'">
-          <label *ngIf="!edit">{{rowData[col.field]}}</label>
+          <label *ngIf="!edit && rowData.nuevo == undefined">{{rowData[col.field]}}</label>
 
-          <input *ngIf="edit" type="text" class="form-control" [(ngModel)]='rowData.descripcionprecio' pInputText>
+          <input *ngIf="edit && !nuevo" type="text" class="form-control" [(ngModel)]='rowData.descripcionprecio'
+            pInputText (keydown)="changeTableField(rowData)">
+
+          <input *ngIf="nuevo && rowIndex == 0" type="text" class="form-control" [(ngModel)]='rowData.descripcionprecio'
+            pInputText (keydown)="changeTableFieldRowNueva(rowData)">
 
         </div>
         <!-- COLUMNA DESCRIPCION CONDICION -->
         <div *ngIf="col.field == 'descripcionconsulta'">
-          <label *ngIf="!edit || rowData.pordefecto == '1'">{{rowData[col.field]}}</label>
+          <label
+            *ngIf="(!edit && rowData.nuevo == undefined) || rowData.pordefecto == '1'">{{rowData[col.field]}}</label>
 
-          <p-dropdown *ngIf="edit && rowData.pordefecto != '1'" [filter]="true" styleClass="widthAll" [showClear]="true"
+          <p-dropdown *ngIf="edit && rowData.pordefecto != '1' && !nuevo" [filter]="true" styleClass="widthAll"
+            [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+            [(ngModel)]='rowData.idcondicion' [options]="condicionesSuscripcionObject.combooItems"
+            (onChange)="changeTableField(rowData)">
+          </p-dropdown>
+
+          <p-dropdown *ngIf="nuevo && rowIndex == 0" [filter]="true" styleClass="widthAll" [showClear]="true"
             placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='rowData.idcondicion'
-            [options]="periodicidadList">
+            [options]="condicionesSuscripcionObject.combooItems" (onChange)="changeTableFieldRowNueva(rowData)">
           </p-dropdown>
 
         </div>
@@ -71,7 +90,7 @@
     </tr>
   </ng-template>
 
-  <ng-template pTemplate="emptymessage" let-columns>
+  <ng-template pTemplate=" emptymessage" let-columns>
     <tr>
       <td [attr.colspan]="columns.length">
         {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
@@ -104,18 +123,19 @@
   </ng-template>
 </p-table>
 
-<!--  <p-footer>
-      <div class="text-right main-button">
-        <button *ngIf="!historico" (click)="getListaServiciosHistorico(); selectedRows=[]" pButton type="button"
-          icon="fa fa-history" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
+<p-footer>
+  <div class="text-right main-button">
+    <!-- Restablecer -->
+    <button (click)="resetToOriginalData();" [disabled]="preciosParaEditarCrear.length == 0" pButton type="button"
+      icon="fa fa-undo" iconPos="left" label="{{'general.boton.restablecer' | translate}}"></button>
 
-        <button *ngIf="historico" (click)="getListaServicios(); selectedRows=[]" pButton type="button" icon="fa fa-undo"
-          iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
+    <button (click)="newRegister();" [disabled]="newRegisterRow" pButton type="button" icon="fa fa-plus  "
+      iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
 
-        <button (click)="resetToOriginalData();" [disabled]="servicesToEditCreate.length == 0 || nuevo" pButton
-          type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate}}"></button>
+    <button (click)="guardar();" [disabled]="preciosParaEditarCrear.length == 0" pButton type="button"
+      icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
 
-        <button
+    <!--  <button
           [disabled]="(selectedRows == '') || (numSelectedAbleRegisters > 0 && numSelectedDisableRegisters > 0) || newRegisterRow"
           *ngIf="(numSelectedAbleRegisters > 0 && numSelectedDisableRegisters > 0) || (numSelectedAbleRegisters >= 0 && numSelectedDisableRegisters == 0)"
           (click)="activarDesactivar(selectedRows)" pButton type="button" icon="fa fa-trash-alt " iconPos="left"
@@ -129,13 +149,11 @@
         <button (click)="removeNewRegister()" *ngIf="newRegisterRow" pButton type="button" icon="fa fa-close "
           iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
 
-        <button (click)="guardar();" [disabled]="servicesToEditCreate.length == 0 || emptyDescripcion" pButton
-          type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        
 
-        <button (click)="newRegister();" [disabled]="newRegisterRow || historico" pButton type="button"
-          icon="fa fa-plus  " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
-      </div>
-    </p-footer> -->
+        -->
+  </div>
+</p-footer>
 
 <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="deletePlantillaDoc" icon="icon"
   width="425" #deletePlantillaDoc>
