@@ -165,7 +165,7 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
     this.aGuardar = true;
     if (this.producto.idtipoproducto != null && this.producto.idproducto != null && this.producto.descripcion != '' && this.producto.descripcion != undefined) {
       if (this.producto.codigoext != "" && this.producto.codigoext != null) {
-        if (this.listaCodigosPorInstitucionObject.listaCodigosPorColegio.includes(this.producto.codigoext)) {
+        if (this.listaCodigosPorInstitucionObject.listaCodigosPorColegio.includes(this.producto.codigoext) && this.producto.codigoext != this.productoOriginal.codigoext) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.fichaproductos.datosgenerales.mensajeerrorcodigo"))
         } else {
           this.guardarProducto();

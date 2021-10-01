@@ -36,10 +36,21 @@ export class FichaServiciosComponent implements OnInit, OnDestroy {
       detalle: true,
       opened: true,
       campos: []
+    },
+    {
+      id: 'serviciosPrecios',
+      nombre: "Precios",
+      imagen: "",
+      icono: 'fa fa-eur',
+      fixed: false,
+      detalle: true,
+      opened: true,
+      campos: []
     }
   ];
 
   mostrarTarjPagos: boolean = false;
+  mostrarTarjPrecios: boolean = false;
   servicioDelBuscador: ListaServiciosItems = new ListaServiciosItems(); //Servicio obtenido de la fila del buscador de servicios en la cual pulsamos el enlace a la ficha servicios.
   servicio: ServicioDetalleItem = new ServicioDetalleItem(); //Guarda los valores traidos del servicio detalleServicio
   servicioOriginal: ServicioDetalleItem = new ServicioDetalleItem();
@@ -67,6 +78,10 @@ export class FichaServiciosComponent implements OnInit, OnDestroy {
   //INICIO METODOS APP
   mostrarTarjetaFormaPagos(event) {
     this.mostrarTarjPagos = event;
+  }
+
+  mostrarTarjetaPrecios(event) {
+    this.mostrarTarjPrecios = event;
   }
 
   backTo() {

@@ -1,6 +1,6 @@
 <div *ngFor="let tarj of listaTarjetas; let i = index;">
   <div class="card" [id]="tarj.id"
-    *ngIf="tarj.id != 'serviciosFormasDePago' || (mostrarTarjPagos && tarj.id == 'serviciosFormasDePago')">
+    *ngIf="(tarj.id != 'serviciosFormasDePago' || (mostrarTarjPagos && tarj.id == 'serviciosFormasDePago')) && (tarj.id != 'serviciosPrecios' || (mostrarTarjPrecios && tarj.id == 'serviciosPrecios'))">
     <div class="card-body p-0">
       <mat-accordion class="example-headers-align" multi>
         <mat-expansion-panel (opened)="tarj.opened = true" (closed)="tarj.opened = false"
@@ -18,8 +18,13 @@
               </app-detalle-tarjeta-datos-generales-ficha-servicios-facturacion>
             </div>
             <div *ngIf="tarj.id == 'serviciosFormasDePago'">
-              <app-detalle-tarjeta-formas-pagos-ficha-servicios-facturacion [servicio]="servicio">
+              <app-detalle-tarjeta-formas-pagos-ficha-servicios-facturacion
+                (mostrarTarjetaPrecios)="mostrarTarjetaPrecios($event)" [servicio]="servicio">
               </app-detalle-tarjeta-formas-pagos-ficha-servicios-facturacion>
+            </div>
+            <div *ngIf="tarj.id == 'serviciosPrecios'">
+              <app-detalle-tarjeta-precio-ficha-servicios-facturacion [servicio]="servicio">
+              </app-detalle-tarjeta-precio-ficha-servicios-facturacion>
             </div>
           </ng-template>
         </mat-expansion-panel>

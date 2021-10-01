@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '../../../../../commons/translate';
@@ -26,6 +26,7 @@ export class DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent impleme
   secretaryPayMethodsObject: ComboObject = new ComboObject();
   defaultLabelCombosMultiSelect: String = "Seleccionar";
   esColegiado: boolean;
+  @Output() mostrarTarjetaPrecios = new EventEmitter<boolean>();
 
   //Variables control
   aGuardar: boolean = false; //Usada en condiciones que validan la obligatoriedad, definida al hacer click en el boton guardar
@@ -45,6 +46,7 @@ export class DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent impleme
 
     if (this.servicio.editar) {
       this.servicioOriginal = { ...this.servicio };
+      this.mostrarTarjetaPrecios.emit(true);
 
       if (this.servicio.nofacturable == "1") {
         this.checkboxNoFacturable = true;
@@ -53,6 +55,13 @@ export class DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent impleme
         this.checkboxNoFacturable = false;
         this.obligatorio = true;
       }
+
+      if (this.servicio.facturacionponderada == "1") {
+        this.checkboxFacturacionProporcionalDiasInscripcion = true;
+      } else if (this.servicio.facturacionponderada == "0") {
+        this.checkboxFacturacionProporcionalDiasInscripcion = false;
+      }
+
     }
     this.getComboTipoIvaNoDerogables();
     this.getComboFormasDePagoInternet();
@@ -97,36 +106,27 @@ export class DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent impleme
     if (this.checkboxFacturacionProporcionalDiasInscripcion) {
       this.servicio.facturacionponderada = '1';
     } else {
-      this.servicio.facturacionponderada = '0';
+      this.servicio.facturacionponderada = "0";
     }
   }
 
-  onChangeAplicacionPrecioRadioButtons(event) {
-
-  }
-
-  /*   restablecer() {
+  restablecer() {
     this.servicio = { ...this.servicioOriginal };
 
-    if (this.servicio.permitiralta == "1") {
-      this.checkBoxPermitirSolicitudPorInternet = true;
-    } else if (this.servicio.permitiralta == "0") {
-      this.checkBoxPermitirSolicitudPorInternet = false;
+    if (this.servicioOriginal.nofacturable == "1") {
+      this.checkboxNoFacturable = true;
+      this.onChangeNoFacturable();
+    } else if (this.servicioOriginal.nofacturable == "0") {
+      this.checkboxNoFacturable = false;
+      this.onChangeNoFacturable;
     }
 
-    if (this.servicio.permitirbaja == "1") {
-      this.checkboxPermitirAnulacionPorInternet = true;
-    } else if (this.servicio.permitirbaja == "0") {
-      this.checkboxPermitirAnulacionPorInternet = false;
+    if (this.servicioOriginal.facturacionponderada == "1") {
+      this.checkboxFacturacionProporcionalDiasInscripcion = true;
+    } else if (this.servicioOriginal.facturacionponderada == "0") {
+      this.checkboxFacturacionProporcionalDiasInscripcion = false;
     }
-
-    if (this.servicio.automatico == "1") {
-      this.checkboxAsignacionAutomatica = true;
-    } else if (this.servicio.automatico == "0") {
-      this.checkboxAsignacionAutomatica = false;
-    }
-
-  } */
+  }
 
   guardar() {
     this.aGuardar = true;
@@ -238,15 +238,13 @@ export class DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent impleme
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         } else {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.mostrarTarjetaPrecios.emit(true);
         }
       },
       err => {
         this.progressSpinner = false;
       },
       () => {
-        sessionStorage.setItem("volver", 'true');
-        sessionStorage.removeItem('servicioBuscador');
-        this.router.navigate(['/servicios']);
         this.progressSpinner = false;
       }
     );

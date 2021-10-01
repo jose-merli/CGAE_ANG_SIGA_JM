@@ -480,6 +480,7 @@ import { TarjetaFormaPagoCompraSuscripcionComponent } from './features/facturaci
 import { CompraProductosComponent } from './features/facturacion/compra-productos/compra-productos.component';
 import { TarjetaFiltroCompraProductosComponent } from './features/facturacion/compra-productos/tarjeta-filtro-compra-productos/tarjeta-filtro-compra-productos.component';
 import { TarjetaListaCompraProductosComponent } from './features/facturacion/compra-productos/tarjeta-lista-compra-productos/tarjeta-lista-compra-productos.component';
+import { DetalleTarjetaPrecioFichaServiciosFacturacionComponent } from './features/facturacion/servicios/ficha-servicios/detalle-tarjeta-precio-ficha-servicios-facturacion/detalle-tarjeta-precio-ficha-servicios-facturacion.component';
 
 @NgModule({
 	declarations: [
@@ -880,7 +881,8 @@ import { TarjetaListaCompraProductosComponent } from './features/facturacion/com
 		TarjetaFormaPagoCompraSuscripcionComponent,
 		CompraProductosComponent,
 		TarjetaFiltroCompraProductosComponent,
-		TarjetaListaCompraProductosComponent
+		TarjetaListaCompraProductosComponent,
+		DetalleTarjetaPrecioFichaServiciosFacturacionComponent
 	],
 	imports: [
 		Paginador3Module,
