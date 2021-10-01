@@ -400,11 +400,7 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
           salto.idTurno = cell.value;
         }
         if (index == 9) {
-          if(cell.value == null || cell.value == undefined || cell.value == ''){
-            salto.idPersona = row.cells[1].value;
-          }else{
-            salto.idPersona = cell.value;
-          }
+          salto.idPersona = cell.value;
         }
 
       });
