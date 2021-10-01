@@ -477,6 +477,9 @@ import { DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent } from '
 import { DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent } from './features/facturacion/servicios/ficha-servicios/detalle-tarjeta-formas-pagos-ficha-servicios-facturacion/detalle-tarjeta-formas-pagos-ficha-servicios-facturacion.component';
 import { TarjetaSolicitudCompraSuscripcionComponent } from './features/facturacion/ficha-compra-suscripcion/tarjeta-solicitud-compra-suscripcion/tarjeta-solicitud-compra-suscripcion.component';
 import { TarjetaFormaPagoCompraSuscripcionComponent } from './features/facturacion/ficha-compra-suscripcion/tarjeta-forma-pago-compra-suscripcion/tarjeta-forma-pago-compra-suscripcion.component';
+import { CompraProductosComponent } from './features/facturacion/compra-productos/compra-productos.component';
+import { TarjetaFiltroCompraProductosComponent } from './features/facturacion/compra-productos/tarjeta-filtro-compra-productos/tarjeta-filtro-compra-productos.component';
+import { TarjetaListaCompraProductosComponent } from './features/facturacion/compra-productos/tarjeta-lista-compra-productos/tarjeta-lista-compra-productos.component';
 
 @NgModule({
 	declarations: [
@@ -874,7 +877,10 @@ import { TarjetaFormaPagoCompraSuscripcionComponent } from './features/facturaci
 		FichaCompraSuscripcionComponent,
 		DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent,
 		TarjetaSolicitudCompraSuscripcionComponent,
-		TarjetaFormaPagoCompraSuscripcionComponent
+		TarjetaFormaPagoCompraSuscripcionComponent,
+		CompraProductosComponent,
+		TarjetaFiltroCompraProductosComponent,
+		TarjetaListaCompraProductosComponent
 	],
 	imports: [
 		Paginador3Module,
