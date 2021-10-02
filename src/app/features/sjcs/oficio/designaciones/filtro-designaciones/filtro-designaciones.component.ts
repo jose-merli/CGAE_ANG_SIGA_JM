@@ -359,9 +359,10 @@ export class FiltroDesignacionesComponent implements OnInit {
           if (sessionStorage.getItem("volver") != null && sessionStorage.getItem("volver") != undefined && sessionStorage.getItem("volver") == 'true') {
             this.cargarFiltros();
             this.buscar();
-          } else {
-            this.body = new DesignaItem();
-          }
+            sessionStorage.removeItem("volver");
+          } //else {
+            //this.body = new DesignaItem();
+          //}
         }
       },
       err => {
