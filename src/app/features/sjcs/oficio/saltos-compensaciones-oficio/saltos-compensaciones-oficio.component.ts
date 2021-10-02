@@ -384,7 +384,11 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
       row.cells.forEach((cell, index) => {
         if (index == 0) {
           salto.idTurno = cell.value;
-        }if (index == 3) {
+        }
+        if (index == 1) {
+          salto.idPersona = cell.value;
+        }
+        if (index == 3) {
           salto.saltoCompensacion = cell.value;
         }
         if (index == 4) {
@@ -399,7 +403,7 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
         if (index == 8 && cell.value != '') {
           salto.idTurno = cell.value;
         }
-        if (index == 9) {
+        if (index == 9 && cell.value != '') {
           salto.idPersona = cell.value;
         }
 
