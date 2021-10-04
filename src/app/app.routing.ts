@@ -240,6 +240,7 @@ import { TurnosComponent } from "./features/sjcs/oficio/turnos/busqueda-turnos.c
 import { BuscadorColegiadosComponent } from "./commons/buscador-colegiados/buscador-colegiados.component";
 import { BusquedaAsuntosComponent } from "./commons/busqueda-asuntos/busqueda-asuntos.component";
 import { RemesasResultadosComponent } from './features/sjcs/remesas-resultados/remesas-resultados.component';
+import { FichaRemesasResultadosComponent } from "./features/sjcs/remesas-resultados/ficha-remesas-resultados/ficha-remesas-resultados.component";
 
 
 const appRoutes: Routes = [
@@ -1348,6 +1349,11 @@ const appRoutes: Routes = [
 	{
 		path: 'remesasResultado',
 		component: RemesasResultadosComponent,
+		canActivate: [ AuthGuard ]
+	},
+	{
+		path: 'remesasResultadoFicha',
+		component: FichaRemesasResultadosComponent,
 		canActivate: [ AuthGuard ]
 	},
 	{ path: ' ', redirectTo: 'home' }

@@ -1,0 +1,27 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div class="header-title">
+  <i class="fa fa-square"></i>
+  <p>{{'menu.justiciaGratuita' | translate}}
+    <i class="fa fa-angle-right"></i>{{'menu.justiciaGratuita.remesas.envio' | translate}}
+  </p>
+</div>
+
+<div class="busqueda-container">
+  <app-tarjeta-datos-generales-remesas-resultados [remesaItem]="remesaItem"></app-tarjeta-datos-generales-remesas-resultados>
+
+
+  <div class="card-footer">
+    <div class="text-right main-button ">
+      <button (click)="volver()" pButton type="button" icon="fa fa-angle-left" iconPos="left"
+        label="Volver"></button>
+      <button (click)="save()" pButton type="button" icon="far fa-save" iconPos="left"
+        label="{{ 'general.boton.guardar' | translate}}"></button>
+    </div>
+  </div>
+
+</div>
+
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

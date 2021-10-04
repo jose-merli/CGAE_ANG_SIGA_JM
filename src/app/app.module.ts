@@ -474,6 +474,8 @@ import { ContrariosPreDesignacionComponent } from './features/sjcs/ejg/gestion-e
 import { RemesasResultadosComponent } from './features/sjcs/remesas-resultados/remesas-resultados.component';
 import { FiltroRemesasResultadosComponent } from './features/sjcs/remesas-resultados/filtro-remesas-resultados/filtro-remesas-resultados.component';
 import { TablaRemesasResultadosComponent } from './features/sjcs/remesas-resultados/tabla-remesas-resultados/tabla-remesas-resultados.component';
+import { FichaRemesasResultadosComponent } from './features/sjcs/remesas-resultados/ficha-remesas-resultados/ficha-remesas-resultados.component';
+import { TarjetaDatosGeneralesRemesasResultadosComponent } from './features/sjcs/remesas-resultados/ficha-remesas-resultados/tarjeta-datos-generales-remesas-resultados/tarjeta-datos-generales-remesas-resultados.component';
 
 @NgModule({
 	declarations: [
@@ -866,7 +868,9 @@ import { TablaRemesasResultadosComponent } from './features/sjcs/remesas-resulta
 		TarjetaEjgsComponent,
 		RemesasResultadosComponent,
 		FiltroRemesasResultadosComponent,
-		TablaRemesasResultadosComponent
+		TablaRemesasResultadosComponent,
+		FichaRemesasResultadosComponent,
+		TarjetaDatosGeneralesRemesasResultadosComponent
 
 
 

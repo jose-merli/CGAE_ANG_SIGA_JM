@@ -6,8 +6,8 @@ export class ContadorItem {
   modificablecontador: String;
   modo: String;
   contador: String;
-  prefijo: String;
-  sufijo: String;
+  prefijo: string;
+  sufijo: string;
   longitudcontador: String;
   fechareconfiguracion: Date;
   reconfiguracioncontador: String;
