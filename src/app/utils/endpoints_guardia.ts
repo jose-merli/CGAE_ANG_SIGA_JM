@@ -76,7 +76,9 @@ export let endpoints_guardia: any = {
     busquedaGuardias_getTurnosByColegiadoFecha: "asistencia/turnosByColegiadoFecha",
     busquedaGuardias_getTiposAsistencia: "asistencia/getTiposAsistencia",
     busquedaGuardias_getLetradosGuardiaDia: "asistencia/getColegiadosGuardiaDia",
+    busquedaGuardias_buscarAsistenciasExpress: "asistencia/buscarAsistenciasExpress",
     busquedaGuardias_buscarAsistencias: "asistencia/buscarAsistencias",
+    busquedaGuardias_eliminarAsistencias: "asistencia/eliminarAsistencia",
     busquedaGuardias_getComisarias: "asistencia/getComisarias",
     busquedaGuardias_getJuzgados: "asistencia/getJuzgados",
     busquedaGuardias_guardarAsistencias: "asistencia/guardarAsistenciasExpres",
@@ -107,6 +109,8 @@ export let endpoints_guardia: any = {
     busquedaGuardias_searchActuaciones: "asistencia/searchActuaciones",
     busquedaGuardias_updateEstadoActuacion: "asistencia/updateEstadoActuacion",
     busquedaGuardias_eliminarActuaciones: "asistencia/eliminarActuaciones",
+    busquedaGuardias_isUnicaAsistenciaPorGuardia: "asistencia/isUnicaAsistenciaPorGuardia",
+    busquedaGuardias_desvalidarGuardiasAsistencias: "asistencia/desvalidarGuardiasAsistencias",
 
     //Actuaciones asistencias
     actuaciones_searchTarjetaActuacion: "actuacionAsistencia/searchTarjetaActuacion",

@@ -1667,6 +1667,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       if(this.pantalla == "AE"){
         sessionStorage.setItem("filtroAsistencia", JSON.stringify(this.filtroAsistencia));
         sessionStorage.setItem("idAsistencia", idAsistencia.substr(1));
+        sessionStorage.setItem("modoBusqueda","b");
         this.router.navigate(['/fichaAsistencia']);
       }
     }

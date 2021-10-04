@@ -1,7 +1,9 @@
 import { DatePipe } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { EventEmitter } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Router, RoutesRecognized } from '@angular/router';
 import { Message } from 'primeng/api';
+import { BusquedaColegiadoExpressComponent } from '../../../../../../commons/busqueda-colegiado-express/busqueda-colegiado-express.component';
 import { FiltroAsistenciaItem } from '../../../../../../models/guardia/FiltroAsistenciaItem';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
@@ -11,10 +13,11 @@ import { SigaServices } from '../../../../../../_services/siga.service';
   templateUrl: './buscador-asistencias.component.html',
   styleUrls: ['./buscador-asistencias.component.scss']
 })
-export class BuscadorAsistenciasComponent implements OnInit {
+export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit {
 
   msgs : Message[] = [];
   filtro : FiltroAsistenciaItem = new FiltroAsistenciaItem();
+  filtroAux : FiltroAsistenciaItem = new FiltroAsistenciaItem();
   comboTurnos = [];
   comboGuardias = [];
   comboTiposAsistencia = [];
@@ -39,12 +42,53 @@ export class BuscadorAsistenciasComponent implements OnInit {
     numColegiado: '',
     nombreAp: ''
   };
-
+  openDatosGenerales : boolean = true;
+  openColegiado : boolean = false;
+  openDatosAsistido : boolean = false;
+  openDatosActuaciones : boolean = false;
+  @Output() searchAgain = new EventEmitter<boolean>();
   @Input() modoBusqueda : string;
+  @ViewChild(BusquedaColegiadoExpressComponent) buscador : BusquedaColegiadoExpressComponent;
   constructor(private router : Router,
     private sigaServices : SigaServices,
     private commonsService : CommonsService,
     private datePipe : DatePipe) { }
+  ngAfterViewInit(): void {
+    if(sessionStorage.getItem("filtroAsistencia") && sessionStorage.getItem("volver") && sessionStorage.getItem("modoBusqueda") == "a"){
+      let oldFiltro : FiltroAsistenciaItem = JSON.parse(sessionStorage.getItem("filtroAsistencia"));
+      this.filtro = oldFiltro;
+      if(oldFiltro.idTurno){
+        this.onChangeTurno();
+      }
+      if(oldFiltro.idGuardia){
+        this.onChangeGuardia();
+      }
+      if(oldFiltro.idTipoAsistenciaColegiado){
+        this.onChangeTipoAsistencia();
+      }
+      if(oldFiltro.numColegiado){
+        this.openColegiado = true;
+        this.usuarioBusquedaExpress.numColegiado = oldFiltro.numColegiado;
+
+        setTimeout(()=>{
+          if(this.buscador){
+            this.buscador.isBuscar(this.usuarioBusquedaExpress);
+          }
+        },500) 
+      }
+      if(oldFiltro.nif || oldFiltro.nombre || oldFiltro.apellidos || oldFiltro.idEstadoAsistido){
+        this.openDatosAsistido = true;
+      }
+      if(oldFiltro.numDiligencia || oldFiltro.idComisaria || oldFiltro.numProcedimiento 
+        || oldFiltro.idJuzgado || oldFiltro.idTipoActuacion || oldFiltro.idProcedimiento || oldFiltro.nig){
+          this.openDatosActuaciones = true;
+      }
+      sessionStorage.removeItem("filtroAsistencia");
+      sessionStorage.removeItem("volver");
+      sessionStorage.removeItem("modoBusqueda");
+      this.searchAgain.emit(true);
+    }
+  }
 
   ngOnInit() {
     this.checkLastRoute();
@@ -53,6 +97,7 @@ export class BuscadorAsistenciasComponent implements OnInit {
 
       this.usuarioBusquedaExpress.nombreAp = `${apellidos}, ${nombre}`;
       this.usuarioBusquedaExpress.numColegiado = nColegiado;
+      this.filtro.numColegiado = nColegiado;
     }
     this.filtro.anio = new Date().getFullYear().toString();
     this.getComboTurnos();
@@ -222,6 +267,9 @@ export class BuscadorAsistenciasComponent implements OnInit {
     this.sigaServices.get("busquedaJusticiables_comboRoles").subscribe(
       n => {
         this.comboEstadoAsistido = n.combooItems;
+        //Quitamos el elemento unidad familiar, que sólo está relacionado con EJG
+        let indexUF = this.comboEstadoAsistido.findIndex(item => item.value == "4");
+        this.comboEstadoAsistido.splice(indexUF);
       },
       err => {
         console.log(err);
@@ -235,6 +283,7 @@ export class BuscadorAsistenciasComponent implements OnInit {
   changeColegiado(event) {
     this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
     this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
+    this.filtro.numColegiado = event.nColegiado;
   }
 
   fillFechaAsistenciaHasta(event){
@@ -249,6 +298,16 @@ export class BuscadorAsistenciasComponent implements OnInit {
       this.filtro.fechaAsistenciaDesde = this.datePipe.transform(new Date(event),'dd/MM/yyyy');
     }else{
       this.filtro.fechaAsistenciaDesde = '';
+    }
+  }
+  onChangeJuzgado(){
+    if(this.filtro.idJuzgado){
+      this.filtro.idComisaria = '';
+    }
+  }
+  onChangeComisaria(){
+    if(this.filtro.idComisaria){
+      this.filtro.idJuzgado = '';
     }
   }
 

@@ -463,6 +463,8 @@ import { FichaActuacionAsistenciaTarjetaJustificacionComponent } from './feature
 import { FichaActuacionAsistenciaTarjetaHistoricoComponent } from './features/sjcs/guardia/guardias-asistencias/ficha-actuacion-asistencia/ficha-actuacion-asistencia-tarjeta-historico/ficha-actuacion-asistencia-tarjeta-historico.component';
 import { FichaActuacionAsistenciaTarjetaDocumentacionComponent } from './features/sjcs/guardia/guardias-asistencias/ficha-actuacion-asistencia/ficha-actuacion-asistencia-tarjeta-documentacion/ficha-actuacion-asistencia-tarjeta-documentacion.component';
 import { BuscadorAsistenciasComponent } from './features/sjcs/guardia/guardias-asistencias/asistencia-expres/buscador-asistencias/buscador-asistencias.component';
+import { ResultadoAsistenciasComponent } from './features/sjcs/guardia/guardias-asistencias/resultado-asistencias/resultado-asistencias.component';
+import { BuscadorListaGuardiasComponent } from './features/sjcs/guardia/definir-listas-guardias/buscador-lista-guardias/buscador-lista-guardias.component';
 
 @NgModule({
 	declarations: [
@@ -858,6 +860,8 @@ import { BuscadorAsistenciasComponent } from './features/sjcs/guardia/guardias-a
 		FichaActuacionAsistenciaTarjetaHistoricoComponent,
 		FichaActuacionAsistenciaTarjetaDocumentacionComponent,
 		BuscadorAsistenciasComponent,
+		ResultadoAsistenciasComponent,
+		BuscadorListaGuardiasComponent,
 	],
 	imports: [
 		SelectorModule,
