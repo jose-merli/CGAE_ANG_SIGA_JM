@@ -38,6 +38,8 @@ export class DetalleTarjetaPrecioFichaServiciosFacturacionComponent implements O
   condicionesSuscripcionObject: ComboObject;
 
   //Variables control
+  aGuardar: boolean = false; //Usada en condiciones que validan la obligatoriedad, definida al hacer click en el boton guardar
+  obligatoriosNoRellenos: number = 0;
   newRegisterRow: boolean = false; //Para desactivar por ejemplo el boton nuevo una vez añadida una fila impidiendo que se añada mas de una
   edit: boolean = false; //Usado para ocultar/mostrar en html, etc.
   nuevo: boolean = false; //Usado para ocultar/mostrar en html, etc.
@@ -47,6 +49,7 @@ export class DetalleTarjetaPrecioFichaServiciosFacturacionComponent implements O
   subscriptionPeriodicidadList: Subscription;
   subscriptionCondicionesSelect: Subscription;
   subscriptionCrearEditarPrecios: Subscription;
+  subscriptionEliminarPrecios: Subscription;
 
   constructor(private changeDetectorRef: ChangeDetectorRef, private sigaServices: SigaServices, private persistenceService: PersistenceService, private translateService: TranslateService, private confirmationService: ConfirmationService) { }
 
@@ -80,6 +83,8 @@ export class DetalleTarjetaPrecioFichaServiciosFacturacionComponent implements O
       this.subscriptionCondicionesSelect.unsubscribe();
     if (this.subscriptionCrearEditarPrecios)
       this.subscriptionCrearEditarPrecios.unsubscribe();
+    if (this.subscriptionEliminarPrecios)
+      this.subscriptionEliminarPrecios.unsubscribe();
   }
 
   //INICIO METODOS P-TABLE
@@ -219,10 +224,10 @@ export class DetalleTarjetaPrecioFichaServiciosFacturacionComponent implements O
     this.edit = false;
 
     let nuevoDato = {
-      idserviciosinstitucion: this.servicio.idserviciosinstitucion,
+      idserviciosinstitucion: this.preciosDatos[0].idserviciosinstitucion,
       idtiposervicios: this.servicio.idtiposervicios,
       idservicio: this.servicio.idservicio,
-      precio: 0,
+      precio: "0",
       idperiodicidad: this.periodicidadObject.combooItems[0].value,
       descripcionprecio: "",
       idcondicion: this.condicionesSuscripcionObject.combooItems[0].value,
@@ -276,7 +281,7 @@ export class DetalleTarjetaPrecioFichaServiciosFacturacionComponent implements O
     //2. Le cambio la descripcion a la fila
     this.preciosDatos.forEach(precioFila => {
       if (precioFila.idpreciosservicios == row.idpreciosservicios && precioFila.idperiodicidadoriginal == row.idperiodicidadoriginal && precioFila.idtiposervicios == row.idtiposervicios && precioFila.idservicio == row.idservicio && precioFila.idserviciosinstitucion == row.idserviciosinstitucion) {
-        precioFila.descripcioncondicion = descripcioncondicion;
+        precioFila.descripcionconsulta = descripcioncondicion;
       }
     });
 
@@ -324,7 +329,7 @@ export class DetalleTarjetaPrecioFichaServiciosFacturacionComponent implements O
     //2. Le cambio la descripcion a la fila
     this.preciosDatos.forEach(precioFila => {
       if (precioFila.idpreciosservicios == row.idpreciosservicios && precioFila.idperiodicidadoriginal == row.idperiodicidadoriginal && precioFila.idtiposervicios == row.idtiposervicios && precioFila.idservicio == row.idservicio && precioFila.idserviciosinstitucion == row.idserviciosinstitucion) {
-        precioFila.descripcioncondicion = descripcioncondicion;
+        precioFila.descripcionconsulta = descripcioncondicion;
       }
     });
 
@@ -354,8 +359,28 @@ export class DetalleTarjetaPrecioFichaServiciosFacturacionComponent implements O
   }
 
   guardar() {
+    this.aGuardar = true;
 
-    this.crearEditarPrecios(this.preciosParaEditarCrear);
+    this.preciosParaEditarCrear.forEach(precios => {
+      if (precios.precio == '') {
+        this.obligatoriosNoRellenos++;
+      }
+
+      if (precios.idperiodicidad == null) {
+        this.obligatoriosNoRellenos++;
+      }
+
+      if (precios.idcondicion == null && precios.pordefecto == "0") {
+        this.obligatoriosNoRellenos++;
+      }
+    });
+
+    if (this.obligatoriosNoRellenos == 0) {
+      this.crearEditarPrecios(this.preciosParaEditarCrear);
+    } else {
+      this.obligatoriosNoRellenos = 0;
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
+    }
   }
   //FIN METODOS P-TABLE
 
@@ -383,7 +408,7 @@ export class DetalleTarjetaPrecioFichaServiciosFacturacionComponent implements O
         this.preciosServicioObject = JSON.parse(preciosServicioObject.body);
         this.preciosDatos = this.preciosServicioObject.fichaTarjetaPreciosItem;
 
-        if (preciosServicioObject.error.code == 500) {
+        if (JSON.parse(preciosServicioObject.body).error.code == 500) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
 
@@ -469,6 +494,77 @@ export class DetalleTarjetaPrecioFichaServiciosFacturacionComponent implements O
         this.getListaPrecios();
       }
     );
+  }
+
+  comprobacionEliminar(selectedRows) {
+    let hayPrecioPorDefecto: boolean = false;
+    selectedRows.forEach(precios => {
+      if (precios.pordefecto == "1") {
+        hayPrecioPorDefecto = true;
+      }
+    });
+
+    if (!hayPrecioPorDefecto) {
+      this.eliminar(selectedRows);
+    } else if (hayPrecioPorDefecto) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El precio por defecto no puede ser eliminado, por favor deseleccionelo. ***");
+    }
+  }
+
+
+  //Metodo para eliminar precios del servicio
+  eliminar(selectedRows) {
+    let keyConfirmation = "deletePrecio";
+    let mensaje = this.translateService.instant("messages.deleteConfirmation");
+
+
+    this.confirmationService.confirm({
+      key: keyConfirmation,
+      message: mensaje,
+      icon: "fa fa-trash-alt",
+      accept: () => {
+        this.progressSpinner = true;
+        let preciosServicioObject = new PreciosServicioObject();
+        preciosServicioObject.fichaTarjetaPreciosItem = selectedRows;
+        this.subscriptionEliminarPrecios = this.sigaServices.post("fichaServicio_eliminarPrecios", preciosServicioObject).subscribe(
+          response => {
+            if (JSON.parse(response.body).error.code == 500) {
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+            } else {
+              this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+            }
+          },
+          err => {
+            if (err != undefined && JSON.parse(err.error).error.description != "") {
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+            } else {
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+            }
+            this.progressSpinner = false;
+          },
+          () => {
+            this.selectedRows = [];
+            this.getListaPrecios();
+            this.progressSpinner = false;
+            this.selectMultipleRows = false;
+            this.selectAllRows = false;
+            this.edit = false;
+            this.nuevo = false;
+          }
+        );
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "info",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
   }
 
   //FIN METODOS SERVICIOS
