@@ -1,0 +1,41 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="busqueda-container">
+  <div class="card">
+    <div class="card-header header-ficha">
+      <div  class="form-row">
+        <div class="col-lg-1 col-md-2" >
+          <div class="img-colegiado">
+            <i class="fas fa-link icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10 ">
+          <div class="d-flex justify-content-end mb-1" >
+            <label class="mr-auto title-ficha pointer">{{'menu.justiciaGratuita.GuardiaMenu' | translate}}</label>
+            <i class="fas fa-external-link-alt mr-2"></i><label class="enlace">Ficha Guardia</label>
+          </div>
+          <div class="d-flex justify-content-between default" >
+            
+            <label >{{'dato.jgr.guardia.guardias.turno' | translate}}: 
+              <span>Materia</span>
+            </label>
+            <label >{{'dato.jgr.guardia.guardias.guardia' | translate}}: 
+              <span>Nombre</span>
+            </label>
+            <label >{{'dato.jgr.guardia.guardias.tipoGuardia' | translate}}: 
+              <span>Zona</span>
+            </label>
+            <label >Número de Inscritos: 
+              <span>0</span>
+            </label>
+           
+            <i class="fa fa-angle-down ml-auto" ></i>
+          </div>
+        </div>
+      </div>
+     
+    </div>
+  </div>
+  
+  <div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+  </div>

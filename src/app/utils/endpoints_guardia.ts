@@ -70,6 +70,7 @@ export let endpoints_guardia: any = {
     guardiaCalendario_newCalendarioProgramado: "guardia/newCalendarioProgramado",
     guardiaCalendario_generar: "guardia/generarCalendario",
     guardiaCalendario_descargarExcelLog: "guardia/descargarExcelLog",
+    guardiaCalendario_zipLog: "guardia/descargarZipExcelLog",
     
 
     //Asistencia
@@ -125,8 +126,22 @@ export let endpoints_guardia: any = {
     busquedaPreasistencias_buscarPreasistencias: "preasistencia/buscarPreAsistencias",
     busquedaPreasistencias_denegarPreasistencias: "preasistencia/denegarPreAsistencias",
     busquedaPreasistencias_activarPreasistenciasDenegadas: "preasistencia/activarPreAsistenciasDenegadas",
+
     //Inscripciones
     guardiasInscripciones_buscarInscripciones : "guardia/busquedainscripciones",
+    guardiasInscripciones_validarInscripciones : "guardias/inscripciones/validarInscripciones",
+    guardiasInscripciones_denegarInscripciones : "guardias/inscripciones/denegarInscripciones",
+    guardiasInscripciones_solicitarBajaInscripciones: "guardias/inscripciones/solicitarBajaInscripcion",
+    guardiasInscripciones_cambiarFechaInscripciones: "guardias/inscripciones/cambiarFechaInscripcion",
+    guardiasInscripciones_buscarsaltoscompensaciones: "guardias/inscripciones/buscarSaltosCompensaciones",
+    guardiasInscripciones_eliminarsaltoscompensaciones: "guardias/inscripciones/eliminarSaltosCompensaciones",
+    guardiasInscripciones_buscarTrabajosSJCS: "guardias/inscripciones/buscarTrabajosSJCS",
+    guardiasInscripciones_buscarGuardiasAsocTurnos: "guardias/inscripciones/buscarGuardiasAsocTurnos",
 
+    //guardias colegiado
+   guardiasColegiado_buscarGuardiasColegiado: "guardia/busquedaGuardia/busquedaGuardiasColegiado",
+   guardiasColegiado_validarSolicitudGuardia: "guardia/validarSolicitudGuardia",
+   guardiasColegiado_desvalidarGuardiaColegiado: "guardia/desvalidarGuardiaColegiado",
+   guardiasColegiado_eliminarGuardiaColegiado:"guardia/eliminarGuardiaColegiado"
 
 }

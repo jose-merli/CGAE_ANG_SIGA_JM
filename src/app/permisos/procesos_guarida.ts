@@ -15,5 +15,7 @@ export const procesos_guardia: any = {
     saltos_compensaciones: "76S",
     asistencias_express: "96W",
     solicitudes_centralita: "956",
-    tarjeta_caracteristicas_asistencias: "95W"
+    tarjeta_caracteristicas_asistencias: "95W",
+    inscripciones_guardias:"97L",
+    guardias_colegiado:"98L"
 }

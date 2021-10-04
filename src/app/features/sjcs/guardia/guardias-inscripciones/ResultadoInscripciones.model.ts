@@ -1,15 +1,20 @@
 export class ResultadoInscripciones {
+  idturno: String;
   estado: String;
   abreviatura: String;
+  validarinscripciones: String;
+  validarjustificaciones: String;
+  nombreGuardia: String;
+  descripcionGuardia: String;
+  idguardia: String;
   apellidosnombre: String;
   ncolegiado: String;
   nombre: String;
   apellidos: String;
   apellidos2: String;
-  idinstitucion: String;
+  idinstitucion: number;
   idpersona: String;
   fechasolicitud: Date;
-  idturno: String;
   observacionessolicitud: String;
   fechavalidacion: Date;
   observacionesvalidacion: String;
@@ -21,21 +26,21 @@ export class ResultadoInscripciones {
   observacionesdenegacion: String;
   fechavaloralta: Date;
   fechavalorbaja: Date;
-  nombreGuardia: String;
-  idguardia: String;
-  validarinscripciones: String;
   code: String;
   message: String;
   description: String;
   infoURL: String;
   errorDetail: String;
+  
 
   constructor(obj: Object) {
-    this.idturno = obj['idTurno'];
+    this.idturno = obj['idturno'];
     this.estado = obj['estado'];
     this.abreviatura = obj['abreviatura'];
     this.validarinscripciones = obj['validarinscripciones'];
+    this.validarjustificaciones = obj['validarjustificaciones'];
     this.nombreGuardia = obj['nombreGuardia'];
+    this.descripcionGuardia = obj['descripcionGuardia'];
     this.idguardia = obj['idguardia'];
     this.apellidosnombre = obj['apellidosnombre'];
     this.ncolegiado = obj['ncolegiado'];
@@ -61,5 +66,6 @@ export class ResultadoInscripciones {
     this.description = obj['description'];
     this.infoURL = obj['infoURL'];
     this.errorDetail = obj['errorDetail'];
+    
   }
 }

@@ -6,7 +6,8 @@
     <i class="fa fa-square"></i>
     <p>{{'menu.justiciaGratuita' | translate}}
       <i class="fa fa-angle-right"></i>{{ 'menu.justiciaGratuita.GuardiaMenu' | translate }}
-      <i class="fa fa-angle-right"></i>{{'menu.justiciaGratuita.guardia.calendarios' | translate}}
+      <!--<i class="fa fa-angle-right"></i>{{'menu.justiciaGratuita.guardia.calendarios' | translate}}-->
+      <i class="fa fa-angle-right"></i>Calendarios Programados
     </p>
   </div>
 
@@ -14,7 +15,7 @@
     <app-filtros-guardia-calendarios  (isOpen)="isOpenReceive($event)" (filtrosValues)="getFiltrosValues($event)"></app-filtros-guardia-calendarios>
     <app-tabla-resultado-mix *ngIf="buscar" [dataToDuplicate] = "dataToDuplicate" [calendarios] ="true" [totalRegistros] = "totalRegistros" [seleccionarTodo]="seleccionarTodo"
     [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" [comboGuardiasIncompatibles]="comboGuardiasIncompatibles" 
-    (anySelected)="notifyAnySelected($event)" (selectedRow)="checkSelectedRow($event)" (save)="save($event)"  (delete)="delete($event)" (deleteFromCombo)="deleteFromCombo($event)"></app-tabla-resultado-mix>
+    (anySelected)="notifyAnySelected($event)" (selectedRow)="checkSelectedRow($event)" (save)="save($event)"  (delete)="delete($event)" (deleteFromCombo)="deleteFromCombo($event)" (descargaLOG)="descargaLOG($event)"></app-tabla-resultado-mix>
   </div>
 
 

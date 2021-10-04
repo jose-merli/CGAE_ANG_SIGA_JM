@@ -282,13 +282,14 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit {
   }
 
   fillAfechaDeCalendar(event) {
-    if (event != null) {
+    if (event != null && event != "" && event != undefined) {
       this.filtros.afechade = this.transformaFecha(event);
       // Ignora el error provocado por la estructura de datos de InscripcionesItem
-      // @ts-ignore
-      // this.filtros.estado = ["1","2"];
-      // this.disabledestado = true;
+      //@ts-ignore
+       this.filtros.estado = ["1","2"];
+       this.disabledestado = true;
     } else {
+      this.filtros.estado = null;
       this.filtros.afechade = undefined;
       this.disabledestado = false;
     }

@@ -36,6 +36,14 @@ export class GuardiaItem {
   porGrupos;
   fechabaja;
   historico: boolean;
+  fechadesde:Date;
+  fechahasta:Date;
+  validada;
+  ordenGrupo;
+  numColegiado;
+  idPersona;
+  fechaValidacion;
+  idCalendarioGuardias
   constructor() { }
 
 }

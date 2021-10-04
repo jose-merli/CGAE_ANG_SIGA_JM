@@ -44,9 +44,36 @@
               </span>
             </a>
           </label>
+          <label>
+            <a (click)="inscripcionesGuardia()">
+              <span style="color: blue; text-decoration: underline;cursor:pointer">{{ "justiciaGratuita.guardia.inscripcionesGuardia" | translate }}
+              </span>
+            </a>
+          </label>
+          <label>
+            <a (click)="guardiasColegiado()">
+              <span style="color: blue; text-decoration: underline;cursor:pointer">{{ "justiciaGratuita.guardia.guardiasColegiado" | translate }}
+              </span>
+            </a>
+          </label>
           <i class="float-right"></i>
         </div>
-      </div>
+        
+        <div class="d-flex justify-content-between">
+          <label>
+            <a (click)="asistencias()">
+              <span style="color: blue; text-decoration: underline;cursor:pointer">{{ "menu.justiciaGratuita.asistencia" | translate }}
+              </span>
+            </a>
+          </label>
+          <label>
+            <a (click)="preAsistencia()">
+              <span style="color: blue; text-decoration: underline;cursor:pointer">{{ "menu.sjcs.solicitudesAceptadasCentralita" | translate }}
+              </span>
+            </a>
+          </label>
+          <i class="float-right"></i>
+        </div>
     </div>
   </div>
 </div>

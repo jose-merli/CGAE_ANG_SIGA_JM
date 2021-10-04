@@ -22,6 +22,7 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
   @Input() modoEdicion: boolean = false;
   @Input() permisoEscritura: boolean;
   @Output() modoEdicionSend = new EventEmitter<any>();
+  @Output() descargaLog= new EventEmitter<Boolean>();
   @Input() tarjetaDatosGenerales= {
     'duplicar' : '',
     'tabla': [],
@@ -44,9 +45,10 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
   datosTarjetaGuardiasCalendario = []
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
+  @Output() disGen = new EventEmitter<Boolean>();
   @Output() fillDatosTarjetaGuardiasCalendario = new EventEmitter<any[]>();
   @Output() searchGuardiasFromCal = new EventEmitter<string>();
-  
+  @Input() estado;
   dataReady = false;
   tipoGuardiaResumen = {
     label: "",
@@ -71,7 +73,7 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
   cabeceras = [
     {
       id: "orden",
-      name: "orden"
+      name: "administracion.informes.literal.orden"
     },
     {
       id: "turno",
@@ -95,6 +97,7 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
   seleccionarTodo = false;
   idConjuntoGuardiaElegido: number;
   comboGuardiaConjunto = [];
+  isDisabledNuevo;
   @Input() duplicar = false;
   constructor(private persistenceService: PersistenceService,
     private sigaService: SigaServices,
@@ -105,9 +108,14 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
 
 
   ngOnInit() {
+    if(this.estado == "Pendiente" || this.estado == "Programada"){
+      this.isDisabledNuevo = false;
+    }else{
+      this.isDisabledNuevo = true;
+    }
     console.log
     if (this.datosTarjetaGuardiasCalendarioIni.length != 0){
-      this.datosTarjetaGuardiasCalendario = this.datosTarjetaGuardiasCalendarioIni;
+      //this.datosTarjetaGuardiasCalendario = Object.assign({},this.datosTarjetaGuardiasCalendarioIni);
       this.jsonToRow(false);
       this.dataReady = true;
     }else{
@@ -124,10 +132,10 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
         this.getGuardiasFromConjunto(this.idConjuntoGuardiaElegido, confValue.fromCombo);
         }else{
           if (this.idConjuntoGuardiaElegido != 0){
-            this.datosTarjetaGuardiasCalendario = this.datosTarjetaGuardiasCalendarioIni;
+            this.datosTarjetaGuardiasCalendario = this.datosTarjetaGuardiasCalendarioIni.map(x => Object.assign({}, x));
             this.getGuardiasFromConjunto(this.idConjuntoGuardiaElegido, confValue.fromCombo);
           }else{
-            this.datosTarjetaGuardiasCalendario = this.datosTarjetaGuardiasCalendarioIni;
+            this.datosTarjetaGuardiasCalendario = this.datosTarjetaGuardiasCalendarioIni.map(x => Object.assign({}, x));
             this.jsonToRow(confValue.fromCombo);
             this.dataReady = true;
           }
@@ -267,10 +275,16 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
   }
 
     getGuardiasFromConjunto(idConjunto, fromCombo) {
+      if (this.datosTarjetaGuardiasCalendario.length != this.datosTarjetaGuardiasCalendarioIni.length){
+      this.datosTarjetaGuardiasCalendario = this.datosTarjetaGuardiasCalendarioIni.map(x => Object.assign({}, x));
+      }
       this.progressSpinner = true;
       this.sigaService.getParam(
         "guardiaCalendario_guardiaFromConjunto", "?idConjunto=" + idConjunto).subscribe(
           response => {
+            if (!fromCombo){
+            this.datosTarjetaGuardiasCalendario = [];
+            }
             response.forEach((res, i) => {
               this.datosTarjetaGuardiasCalendario.push(res);
               if (i == response.length - 1){
@@ -317,6 +331,8 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
 
   rest() {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    this.datosTarjetaGuardiasCalendario = this.datosTarjetaGuardiasCalendarioIni.map(x => Object.assign({}, x));
+    this.jsonToRow(false);
   }
 
 
@@ -454,9 +470,9 @@ jsonToRow(fromCombo){
         ord = dat.orden;
       }
     let objCells:Cell[] = [
-    { type: 'text', value: ord , combo: null},
+    { type: 'link2', value: ord , combo: null},
     { type: 'text', value: dat.turno , combo: null},
-    { type: 'text', value: dat.guardia , combo: null},
+    { type: 'link', value: dat.guardia , combo: null},
     { type: 'text', value: dat.generado, combo: null},
     { type: 'text', value:  this.datosTarjetaGuardiasCalendario.length , combo: null},
     { type: 'invisible', value: dat.idGuardia, combo: null},
@@ -543,6 +559,16 @@ setGuardiasCalendario(guardiaCalendario){
         }, err => {
           console.log(err);
         });
+  }
+
+  descargaLog1(event){
+    if (event){
+      this.descargaLog.emit(event);
+    }
+  }
+
+  disableGen($event){
+    this.disGen.emit($event);
   }
   
 }

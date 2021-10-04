@@ -10,6 +10,9 @@ import { MatSortModule } from '@angular/material';
 import { PaginadorModule } from '../paginador/paginador.module';
 import { FechaModule } from '../fecha/fecha.module';
 import { SelectorModule } from '../selector/selector.module';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import {​ TooltipModule }​ from "primeng/tooltip";
+
 
 @NgModule({
   imports: [
@@ -28,7 +31,9 @@ import { SelectorModule } from '../selector/selector.module';
     MatSortModule,
     FechaModule,
     PaginadorModule,
-    MultiSelectModule
+    MultiSelectModule,
+    ConfirmDialogModule,
+    TooltipModule,
     
 
   ],
