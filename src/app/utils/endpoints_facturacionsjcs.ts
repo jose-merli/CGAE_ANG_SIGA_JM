@@ -39,6 +39,7 @@ export let endpoints_facturacionsjcs: any = {
     pagosjcs_updatePago: "pagosjcs/updatePago",
     pagosjcs_deletePago: "pagosjcs/deletePago",
     pagosjcs_ejecutarPago: "pagosjcs/ejecutarPagoSJCS",
+    pagosjcs_simularPago: "pagosjcs/simularPagoSJCS",
     pagosjcs_comboConceptoPago: "pagosjcs/comboConceptosPago",
     pagosjcs_getConceptosPago: "pagosjcs/getConceptosPago",
     pagosjcs_saveConceptoPago: "pagosjcs/saveConceptoPago",

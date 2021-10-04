@@ -316,7 +316,7 @@ export class DatosPagosComponent implements OnInit, AfterViewInit {
           const error = resp.error;
 
           if (resp.status == 'KO' && error && null != error && null != error.description) {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), error.description);
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.description));
           } else if (resp.status == 'OK') {
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
             this.historicoEstados();
@@ -457,6 +457,105 @@ export class DatosPagosComponent implements OnInit, AfterViewInit {
 
   }
 
+  disabledSimularPago() {
+    if (this.modoEdicion && this.idEstadoPago == "10" && this.disabledRestablecer()) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+
+  simularPago() {
+
+    if (this.modoEdicion && !this.disabledSimularPago()) {
+
+      this.progressSpinner = true;
+
+      const payload = new PagosjgItem();
+      payload.idPagosjg = this.idPago;
+
+      this.sigaService.post("pagosjcs_simularPago", payload).subscribe(
+
+        data => {
+          
+          this.progressSpinner = false;
+
+          const resp = JSON.parse(data.body);
+
+          if (resp.status == 'KO' && resp.error != null && resp.error.description != null) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(resp.error.description));
+          } else {
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("messages.facturacionSJCS.pago.simulado"));
+          }
+
+        },
+        err => {
+          this.progressSpinner = false;
+        }
+
+      );
+
+    }
+
+  }
+
+  deletePago() {
+
+    if (this.modoEdicion) {
+
+      this.progressSpinner = true;
+
+      const payload = new PagosjgItem();
+      payload.idPagosjg = this.idPago;
+
+      this.sigaService.post("pagosjcs_deletePago", payload).subscribe(
+        data => {
+
+          const resp = JSON.parse(data.body);
+
+          if (resp.status == 'KO' && resp.error != null && resp.error.description != null) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(resp.error.description));
+          } else {
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          }
+
+          this.progressSpinner = false;
+        },
+        err => {
+          this.progressSpinner = false;
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        },
+        () => {
+          this.progressSpinner = false;
+          this.router.navigate(["/facturacionesYPagos"]);
+        }
+      );
+
+    }
+
+  }
+
+  disabledDelete() {
+    if (this.modoEdicion && this.disabledRestablecer()) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  isVisibleDelete(): boolean {
+    return (this.modoEdicion && !this.histEstados.map(el => el.idEstado).includes("30"));
+  }
+
+  isPagoCerrado() {
+    return (this.idEstadoPago == '30');
+  }
+
+  isPagoEjecutado() {
+    return this.idEstadoPago == '20';
+  }
+
   getCols() {
     this.cols = [
       { field: "fechaEstado", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaEstado" },
@@ -499,54 +598,6 @@ export class DatosPagosComponent implements OnInit, AfterViewInit {
     }
 
     return resp;
-  }
-
-  isPagoCerrado() {
-    return (this.idEstadoPago == '30');
-  }
-
-  isPagoEjecutado() {
-    return this.idEstadoPago == '20';
-  }
-
-  deletePago() {
-
-    if (this.modoEdicion) {
-
-      this.progressSpinner = true;
-
-      const payload = new PagosjgItem();
-      payload.idPagosjg = this.idPago;
-
-      this.sigaService.post("pagosjcs_deletePago", payload).subscribe(
-        data => {
-
-          const resp = JSON.parse(data.body);
-
-          if (resp.status == 'KO' && resp.error != null && resp.error.description != null) {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(resp.error.description));
-          } else {
-            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          }
-
-          this.progressSpinner = false;
-        },
-        err => {
-          this.progressSpinner = false;
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        },
-        () => {
-          this.progressSpinner = false;
-          this.router.navigate(["/facturacionesYPagos"]);
-        }
-      );
-
-    }
-
-  }
-
-  isVisibleDelete(): boolean {
-    return (this.modoEdicion && !this.histEstados.map(el => el.idEstado).includes("30"));
   }
 
   ngAfterViewInit() {
