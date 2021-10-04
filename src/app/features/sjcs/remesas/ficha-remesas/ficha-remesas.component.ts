@@ -32,7 +32,7 @@ export class FichaRemesasComponent implements OnInit {
   ejgItem;
   tipoPCAJG;
   remesa: { idRemesa: any; descripcion: string; numero: number; };
-  checkAccionesRemesas;
+  getAccionesRemesas;
   acciones: boolean = false;
 
   constructor(private sigaServices: SigaServices,
@@ -52,7 +52,7 @@ export class FichaRemesasComponent implements OnInit {
       this.remesaTabla = JSON.parse(this.item);
       console.log("Item en JSON -> ", this.remesaTabla);
       this.guardado = true;
-      this.checkAcciones();
+      this.getAcciones();
     } else if (localStorage.getItem('ficha') == "nuevo") {
       this.remesaItem.descripcion = "";
     }
@@ -65,31 +65,31 @@ export class FichaRemesasComponent implements OnInit {
     }
   }
 
-  checkAcciones() {
-    console.log("Dentro del checkAcciones --> ", this.tarjetaDatosGenerales);
-    let remesaCheckAcciones;
+  getAcciones() {
+    console.log("Dentro del getAcciones --> ", this.tarjetaDatosGenerales);
+    let remesaGetAcciones;
 
     if (this.remesaTabla != null) {
-      remesaCheckAcciones =
+      remesaGetAcciones =
       {
         'estado': (this.remesaTabla.estado != null && this.remesaTabla.estado != undefined) ? this.remesaTabla.estado.toString() : this.remesaTabla.estado,
       };
     }else if(this.remesaItem != null){
-      remesaCheckAcciones =
+      remesaGetAcciones =
       {
         'estado': (this.tarjetaDatosGenerales.resultado[0].estado != null && this.tarjetaDatosGenerales.resultado[0].estado != undefined) ? this.tarjetaDatosGenerales.resultado[0].estado.toString() : this.tarjetaDatosGenerales.resultado[0].estado,
       };
     }
 
     this.sigaServices
-      .post("ficharemesas_checkAcciones", remesaCheckAcciones)
+      .post("ficharemesas_getAcciones", remesaGetAcciones)
       .subscribe(
         n => {
           console.log("Dentro de la respuesta. Contenido --> ", JSON.parse(n.body).checkAccionesRemesas);
 
-          this.checkAccionesRemesas = JSON.parse(n.body).checkAccionesRemesas;
+          this.getAccionesRemesas = JSON.parse(n.body).checkAccionesRemesas;
           
-          if(this.checkAccionesRemesas.length == 0){
+          if(this.getAccionesRemesas.length == 0){
             this.acciones = false;
           }else{
             this.acciones = true
