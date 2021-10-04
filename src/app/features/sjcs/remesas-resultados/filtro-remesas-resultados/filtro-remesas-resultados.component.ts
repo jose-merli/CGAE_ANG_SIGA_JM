@@ -195,6 +195,11 @@ export class FiltroRemesasResultadosComponent implements OnInit {
     });
   }
 
+  new(){
+    localStorage.setItem('fichaRemesaResultado', "nuevo");
+    this.router.navigate(["/remesasResultadoFicha"]);
+  }
+
   //búsqueda con enter
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {

@@ -1,0 +1,63 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="busqueda-container" id="datosGenerales">
+  <div class="card">
+    <div class="card-body">
+      <p class="title-module">{{ 'justiciaGratuita.remesasResultados.filtro.datosGenerales' | translate }}</p>
+
+      <!-- CAMPOS COMPONEN FILTROS BUSQUEDA-->
+      <div class="module vista-simple">
+        <div class="form-row">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ 'justiciaGratuita.remesasResultados.filtro.numRegistro' | translate }}</label>
+            <div class="form-row">
+              <div class="form-group-interlineado col-lg-6 col-md-6 px-1">
+                <input type="text" name="numRegistroPrefijo" value="" class="box" class="registro-control w-100"
+                  maxLength="8" pInputText [disabled]="isEnabledNuevo" [(ngModel)]="remesaItem.prefijoRemesa">
+              </div>
+              <div class="form-group-interlineado col-lg-6 col-md-6 px-1">
+                <input type="text" name="numRegistroNumero" value="" class="box" class="registro-control w-100"
+                  maxLength="10" pInputText [disabled]="isEnabledNuevo" [(ngModel)]="remesaItem.sufijoRemesa">
+              </div>
+              </div>
+            </div>
+
+            <div class="form-group-interlineado col-lg-3 col-md-3">
+              <label>{{ 'justiciaGratuita.remesasResultados.tabla.fechaCarga' | translate }}</label>
+              <app-fecha (valueChangeSelected)="fillFechaCargaDetalle($event)" [(ngModel)]="remesaItem.fechaCargaRemesaResultado"></app-fecha>
+            </div>
+    
+            <div class="form-group-interlineado col-lg-3 col-md-3">
+              <label>{{ 'justiciaGratuita.remesasResultados.tabla.fechaRemesa' | translate }}</label>
+              <app-fecha (valueChangeSelected)="fillFechaRemesaDetalle($event)" [(ngModel)]="remesaItem.fechaResolucionRemesaResultado"></app-fecha>
+            </div>
+    
+            <div class="form-group-interlineado col-lg-3 col-md-3">
+              <br>
+              <div class="ui-inputgroup">
+              <p-fileUpload #pUploadFile name="file" chooseLabel="Subir fichero de carga"
+                mode="basic" accept=".txt"  class="edit my-0 mx-auto main-button" (onSelect)="getFile($event)" auto="true" ></p-fileUpload>
+                <div *ngIf="archivoDisponible">
+                  <input type="text" pInputText disabled="true" [(ngModel)]="nombreFichero" />
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-lg-6 col-md-6">
+                <label>{{ "censo.nuevaSolicitud.observaciones" | translate }}</label>
+                <textarea class="form-control ui-inputtext" autoResize="autoResize" maxLength="3900" pInputTextarea [(ngModel)]="remesaItem.observacionesRemesaResultado"></textarea>
+            </div>
+        </div>
+
+      </div>
+    </div>
+</div>
+
+
+  <div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+  </div>
