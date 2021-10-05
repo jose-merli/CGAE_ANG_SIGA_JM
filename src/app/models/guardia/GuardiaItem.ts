@@ -61,6 +61,7 @@ export class GuardiaItem {
     idPersona;
     fechaValidacion;
     idCalendarioGuardias;
+    tipoGuardia;
 
 
     constructor() { }

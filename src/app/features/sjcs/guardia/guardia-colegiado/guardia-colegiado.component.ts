@@ -22,7 +22,7 @@ export class GuardiaColegiadoComponent implements OnInit {
   datos;
   msgs;
   permisosEscritura:boolean = false;
-  progressSpinner: boolean = false;
+  progressSpinner: boolean;
   buscar: boolean = false;
   permisoEscritura:boolean;
   dataBuscador = { 

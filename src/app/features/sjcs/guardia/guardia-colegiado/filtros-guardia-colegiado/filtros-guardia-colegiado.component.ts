@@ -16,7 +16,7 @@ import { ColegiadoItem } from '../../../../../models/ColegiadoItem';
 export class FiltrosGuardiaColegiadoComponent implements OnInit {
   msgs;
   progressSpinner: boolean = false;
-  showDatosGenerales: boolean = false;
+  showDatosGenerales: boolean;
   filtros = new GuardiaItem();
   filtroAux = new GuardiaItem();
   comboTurno;
@@ -58,6 +58,7 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
   ngOnInit() {
 
     this.progressSpinner = true;
+    this.showDatosGenerales = true;
     this.getCombos()
     if (this.permisoEscritura != undefined) {
       this.permisos = this.permisoEscritura

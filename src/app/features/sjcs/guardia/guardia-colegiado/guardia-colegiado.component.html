@@ -14,10 +14,9 @@
     <app-tabla-guardia-colegiado *ngIf="buscar"  [isColegiado]="isColegiado" [permisoEscritura]="permisoEscritura"  [datos]="datos" (isOpen)="isOpenReceive($event)"></app-tabla-guardia-colegiado>
 </div>
 
-<div *ngIf="progressSpinner" class="overlay-spinner">
-    <div class="loader"></div>
-</div>
-
 <div class="mt-3 text-right main-button " id="down">
     <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate }}"></button>
   </div>
+  <div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+</div>

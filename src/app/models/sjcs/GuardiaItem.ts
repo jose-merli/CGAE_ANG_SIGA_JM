@@ -43,7 +43,12 @@ export class GuardiaItem {
   numColegiado;
   idPersona;
   fechaValidacion;
-  idCalendarioGuardias
+  idCalendarioGuardias;
+  observacionesAnulacion;
+  fechasustitucion:Date;
+  comensustitucion;
+  sustituto;
+  letradosustituido;
   constructor() { }
 
 }
