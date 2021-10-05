@@ -1,8 +1,8 @@
 import { DatePipe } from '@angular/common';
-import { EventEmitter } from '@angular/core';
+import { AfterViewInit, EventEmitter } from '@angular/core';
 import { Component, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Router, RoutesRecognized } from '@angular/router';
-import { Message } from 'primeng/api';
+import { ConfirmationService, Message } from 'primeng/api';
 import { BusquedaColegiadoExpressComponent } from '../../../../../../commons/busqueda-colegiado-express/busqueda-colegiado-express.component';
 import { TranslateService } from '../../../../../../commons/translate';
 import { FiltroAsistenciaItem } from '../../../../../../models/guardia/FiltroAsistenciaItem';
@@ -17,7 +17,7 @@ import { SigaServices } from '../../../../../../_services/siga.service';
   templateUrl: './ficha-asistencia-tarjeta-datos-generales.component.html',
   styleUrls: ['./ficha-asistencia-tarjeta-datos-generales.component.scss']
 })
-export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit {
+export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, AfterViewInit {
 
 
   @Output() refreshDatosGenerales = new EventEmitter<string>();
@@ -41,8 +41,10 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit {
   anulable : boolean = false;
   finalizable : boolean = false;
   saveDisabled : boolean = true;
+  duplicarAsistencia : boolean = false;
   preasistencia : PreAsistenciaItem;
   comboEstadosAsistencia = [];
+  idAsistenciaCopy : string;
 
   @ViewChild(BusquedaColegiadoExpressComponent) busquedaColegiado: BusquedaColegiadoExpressComponent;
   constructor(private datepipe : DatePipe,
@@ -50,7 +52,8 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit {
     private sigaServices : SigaServices,
     private commonServices : CommonsService,
     private router : Router,
-    private sigaStorageService : SigaStorageService) { }
+    private sigaStorageService : SigaStorageService,
+    private confirmationService : ConfirmationService) { }
 
   ngOnInit() {
 
@@ -88,11 +91,41 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit {
 
   }
 
+  ngAfterViewInit(): void {
+    if(sessionStorage.getItem("asistenciaCopy")){
+
+        this.confirmationService.confirm({
+          key: "confirmEliminarGeneral",
+          message: 'Se van a copiar todos los datos de la asistencia seleccionada. Para modificarlos guarde la asistencia nueva y acceda al resto de tarjetas.',
+          icon: "fa fa-question-circle",
+          accept: () => {
+            this.asistencia = JSON.parse(sessionStorage.getItem("asistenciaCopy"));
+            this.idAsistenciaCopy=this.asistencia.anio+"/"+this.asistencia.numero;
+            this.isNuevaAsistencia = true;
+            this.disableDataForEdit = false;
+            this.duplicarAsistencia = true;
+            this.asistencia.numero = '';
+            this.getTurnosByColegiadoFecha();
+            this.onChangeTurno();
+            this.onChangeGuardia();
+            sessionStorage.removeItem("asistenciaCopy");
+          },
+          reject: () =>{
+            sessionStorage.removeItem("asistenciaCopy");
+            sessionStorage.setItem("volver","true");
+            this.router.navigate(["/guardiasAsistencias"])
+          }
+        }); 
+      
+    }
+  }
+
+
   getComboEstadosAsistencia(){
     this.sigaServices.get("combo_estadosAsistencia").subscribe(
       n => {
         this.comboEstadosAsistencia = n.combooItems;
-        if(!this.disableDataForEdit){
+        if(!this.disableDataForEdit && !this.duplicarAsistencia){
           this.asistencia.estado = this.comboEstadosAsistencia[0].value;
         }
       },
@@ -123,7 +156,7 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit {
 
   onChangeTurno(){
 
-    if(!this.disableDataForEdit){ //Si estamos en edicion
+    if(!this.disableDataForEdit  && !this.duplicarAsistencia){ //Si estamos en edicion
       this.asistencia.idGuardia = '';
     }
 
@@ -154,7 +187,7 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit {
             
             this.comboTipoAsistenciaColegio = data.combooItems;
 
-            if(!this.disableDataForEdit){ //Si estamos en modo edicion no seteamos valor por defecto
+            if(!this.disableDataForEdit  && !this.duplicarAsistencia){ //Si estamos en modo edicion no seteamos valor por defecto
             
               ///this.setDefaultValueOnComboTiposAsistencia();
 
@@ -225,7 +258,7 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit {
   getTurnosByColegiadoFecha(){
 
     this.comboTurnos = [];
-    if(!this.disableDataForEdit){ //Si estamos en edicion
+    if(!this.disableDataForEdit  && !this.duplicarAsistencia){ //Si estamos en edicion
       this.asistencia.idTurno = "";
     }
     this.sigaServices.getParam("busquedaGuardias_getTurnosByColegiadoFecha", this.fillParams()).subscribe(
@@ -341,7 +374,7 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit {
   
   resetDatosGenerales(){
 
-    if(!this.disableDataForEdit){
+    if(!this.disableDataForEdit  && !this.duplicarAsistencia){
 
       this.asistencia.fechaCierre = '';
       this.asistencia.fechaSolicitud = '';
@@ -370,9 +403,10 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit {
 
     if(this.checkDatosObligatorios()){
       this.progressSpinner = true
+      let idAsistencia = this.idAsistenciaCopy ? this.idAsistenciaCopy : '';
       let asistencias : TarjetaAsistenciaItem[] = [this.asistencia];
       this.sigaServices
-      .post("busquedaGuardias_guardarAsistenciasDatosGenerales", asistencias)
+      .postPaginado("busquedaGuardias_guardarAsistenciasDatosGenerales","?idAsistenciaCopy="+idAsistencia, asistencias)
       .subscribe(
         n => {
           let result = JSON.parse(n["body"]);
@@ -387,6 +421,7 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit {
               this.reactivable = false;
             }
             this.disableDataForEdit = true;
+            this.duplicarAsistencia = false;
             this.asistenciaAux = Object.assign({}, this.asistencia);
             this.asistencia.anioNumero = result.id;
             this.asistencia.anio = result.id.split("/")[0];

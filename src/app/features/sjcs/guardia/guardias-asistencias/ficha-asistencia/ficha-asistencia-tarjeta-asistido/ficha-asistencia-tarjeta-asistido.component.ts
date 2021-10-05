@@ -42,15 +42,15 @@ export class FichaAsistenciaTarjetaAsistidoComponent implements OnInit {
     },
     {
       key: "solicitud",
-      activa: false
+      activa: true
     },
     {
       key: "representante",
-      activa: false
+      activa: true
     },
     {
       key: "asuntos",
-      activa: false
+      activa: true
     },
     {
       key: "abogado",

@@ -56,4 +56,5 @@ export class TarjetaAsistenciaItem{
 	  numFacturadas: string;
 	  diaDespuesDisabled : boolean;
 	  idTipoEjg : string;
+	  guardiaRequeridaValidacion : string;
 }

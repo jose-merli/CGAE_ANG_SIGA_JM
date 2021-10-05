@@ -24,6 +24,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
   asistencia : TarjetaAsistenciaItem = new TarjetaAsistenciaItem();
   visibleTarjetaCaract : boolean = false;
   editable : boolean = true;
+  nuevaAsistencia : boolean = false;
   tarjetaFija = {
     nombre: 'Resumen Asistencia',
     icono: 'fas fa-clipboard',
@@ -145,6 +146,10 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
 
     this.preasistencia = JSON.parse(sessionStorage.getItem("preasistenciaItemLink"));
     this.rutas = ['SJCS', this.translateService.instant("menu.justiciaGratuita.GuardiaMenu"), this.translateService.instant("menu.justiciaGratuita.asistencia")];
+    if(sessionStorage.getItem("nuevaAsistencia")){
+      this.nuevaAsistencia = true;
+      sessionStorage.removeItem("nuevaAsistencia");
+    }
   }
 
   ngAfterViewInit(){
@@ -159,9 +164,11 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
     }).catch(error => console.error(error));
 
     if(sessionStorage.getItem("idAsistencia")){
+      this.nuevaAsistencia = false;
       let idAsistencia = sessionStorage.getItem("idAsistencia");
       this.searchTarjetaAsistencia(idAsistencia);
     }else if(sessionStorage.getItem("asistenciaAsistido")){
+      this.nuevaAsistencia = false;
       let idAsistencia = sessionStorage.getItem("asistenciaAsistido");
       this.searchTarjetaAsistencia(idAsistencia);
     }
@@ -235,13 +242,13 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
       }
     ]
     this.listaTarjetas[0].campos = camposDatosGenerales;
-    if(this.preasistencia){
+    if(this.preasistencia || this.nuevaAsistencia){
       this.listaTarjetas[0].opened = true;
     }
 
     //TARJETA ASISTIDO
     let camposAsistido = [];
-    if(this.preasistencia){
+    if(this.preasistencia || this.nuevaAsistencia){
 
       camposAsistido = [
         {
@@ -270,7 +277,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
 
     //TARJETA CONTRARIOS
     let camposContrarios = [];
-    if(this.preasistencia){
+    if(this.preasistencia || this.nuevaAsistencia){
 
       camposContrarios = [
         {
@@ -302,7 +309,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
     //Defensa juridica - no tiene campos
 
     //TARJETA Relaciones[5]
-    if(this.preasistencia){
+    if(this.preasistencia || this.nuevaAsistencia){
       this.listaTarjetas[5].campos = [
         {
           "key": null,
@@ -335,7 +342,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
     }
 
     //TARJETA Documentacion
-    if(this.preasistencia){
+    if(this.preasistencia || this.nuevaAsistencia){
       this.listaTarjetas[6].campos = [
         {
           "key": null,
@@ -354,7 +361,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
     //TARJETA CARACTERISTICAS - no tiene campos
 
     //TARJETA ACTUACIONES
-    if(this.preasistencia || (this.asistencia && !this.asistencia.numeroActuaciones)){
+    if(this.preasistencia || (this.asistencia && !this.asistencia.numeroActuaciones) || this.nuevaAsistencia){
 
       this.listaTarjetas[8].campos = [
         {
@@ -615,7 +622,8 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
               tarj.opened = true;
             }
           });
-
+          
+          this.asistencia = newAsistenciaData;
         }
       },
       err => {

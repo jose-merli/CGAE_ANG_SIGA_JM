@@ -101,3 +101,10 @@
       (click)="saveAsistencia();"></button>
   </div>
 </div>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" icon="icon" key="confirmEliminarGeneral" width="425"
+  #confirmEliminarGeneral>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="confirmEliminarGeneral.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="confirmEliminarGeneral.reject()"></button>
+  </p-footer>
+</p-confirmDialog>

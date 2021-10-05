@@ -17,6 +17,8 @@ import { procesos_guardia } from '../../../../../permisos/procesos_guarida';
 import { SigaStorageService } from '../../../../../siga-storage.service';
 import { FiltroAsistenciaItem } from '../../../../../models/guardia/FiltroAsistenciaItem';
 import { KEY_CODE } from '../../../../administracion/parametros/parametros-generales/parametros-generales.component';
+import { BuscadorAsistenciasComponent } from './buscador-asistencias/buscador-asistencias.component';
+import { ResultadoAsistenciasComponent } from '../resultado-asistencias/resultado-asistencias.component';
 
 @Component({
   selector: 'app-asistencia-expres',
@@ -33,6 +35,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
   initialRowGroups : RowGroup[];
   rutas: string[] = [];
   radios = [];
+  asistencias : TarjetaAsistenciaItem[] = [];
   progressSpinner : boolean;
   showSustitutoDialog : boolean;
   mensajeSustitutoDialog : string;
@@ -48,8 +51,10 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
   resaltadoDatos: boolean = false;
   permisoEscrituraAE : boolean = false;
   resultModified;
-  @ViewChild(BuscadorAsistenciaExpresComponent) filtros: BuscadorAsistenciaExpresComponent;
-  @ViewChild(ResultadoAsistenciaExpresComponent) resultado: ResultadoAsistenciaExpresComponent;
+  @ViewChild(BuscadorAsistenciaExpresComponent) filtrosAE: BuscadorAsistenciaExpresComponent;
+  @ViewChild(ResultadoAsistenciaExpresComponent) resultadoAE: ResultadoAsistenciaExpresComponent;
+  @ViewChild(BuscadorAsistenciasComponent) filtro : BuscadorAsistenciasComponent;
+  @ViewChild(ResultadoAsistenciasComponent) resultado : ResultadoAsistenciasComponent;
   constructor(private activatedRoute: ActivatedRoute,
     private sigaServices: SigaServices,
     private trdService: TablaResultadoDesplegableAEService,
@@ -98,23 +103,28 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    if(sessionStorage.getItem("filtroAsistencia") && sessionStorage.getItem("volver")){
+    if(sessionStorage.getItem("filtroAsistencia") && sessionStorage.getItem("volver") && sessionStorage.getItem("modoBusqueda") == "b"){
+      this.modoBusqueda = 'b';
       let oldFiltro : FiltroAsistenciaItem = JSON.parse(sessionStorage.getItem("filtroAsistencia"));
-      this.filtros.filtro.diaGuardia = oldFiltro.diaGuardia;
-      this.filtros.getTurnosByColegiadoFecha();
-      this.filtros.filtro.idTurno = oldFiltro.idTurno;
-      this.filtros.onChangeTurno();
-      this.filtros.filtro.idGuardia = oldFiltro.idGuardia;
-      this.filtros.onChangeGuardia();
-      this.filtros.filtro.idLetradoGuardia = oldFiltro.idLetradoGuardia;
-      this.filtros.onChangeLetradoGuardia();
-      this.filtros.filtro.idPersona = oldFiltro.idPersona;
-      this.filtros.filtro.idTipoAsistenciaColegiado = oldFiltro.idTipoAsistenciaColegiado;
-      this.filtros.filtro.isSustituto = oldFiltro.isSustituto;
+      this.filtrosAE.filtro.diaGuardia = oldFiltro.diaGuardia;
+      this.filtrosAE.getTurnosByColegiadoFecha();
+      this.filtrosAE.filtro.idTurno = oldFiltro.idTurno;
+      this.filtrosAE.onChangeTurno();
+      this.filtrosAE.filtro.idGuardia = oldFiltro.idGuardia;
+      this.filtrosAE.onChangeGuardia();
+      this.filtrosAE.filtro.idLetradoGuardia = oldFiltro.idLetradoGuardia;
+      this.filtrosAE.onChangeLetradoGuardia();
+      this.filtrosAE.filtro.idPersona = oldFiltro.idPersona;
+      this.filtrosAE.filtro.idTipoAsistenciaColegiado = oldFiltro.idTipoAsistenciaColegiado;
+      this.filtrosAE.filtro.isSustituto = oldFiltro.isSustituto;
       sessionStorage.removeItem("filtroAsistencia");
       sessionStorage.removeItem("volver");
+      sessionStorage.removeItem("modoBusqueda");
       this.getComboComisarias(); // Posteriormente hace la busqueda de asistencias
+    }else if(sessionStorage.getItem("filtroAsistencia") && sessionStorage.getItem("volver") && sessionStorage.getItem("modoBusqueda") == "a"){
+      this.modoBusqueda = 'a';
     }
+
   }
   
   showResponse() {
@@ -147,14 +157,19 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {
     if (event.keyCode === KEY_CODE.ENTER) {
-      this.checkSustitutoCheckBox();
+      if(this.modoBusqueda == 'b'){
+        this.checkSustitutoCheckBox();
+      }else{
+        this.searchAsistencias();
+      }
+      
     }
   }
 
   checkSustitutoCheckBox(){
     if(this.validateForm()){
       this.showSustitutoDialog = true;
-      if(this.filtros.filtro.isSustituto){
+      if(this.filtrosAE.filtro.isSustituto){
           this.mensajeSustitutoDialog =  this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.refuerzoguardia");
       }else{
           this.mensajeSustitutoDialog = this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.refuerzoguardia2");
@@ -173,26 +188,26 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
 
   clearForm(){
 
-    this.filtros.comboGuardias = [];
-    this.filtros.comboLetradosGuardia = [];
-    this.filtros.comboTiposAsistencia = [];
-    this.filtros.comboTurnos = [];
-    this.filtros.filtro.diaGuardia = '';
-    this.filtros.filtro.idGuardia = '';
-    this.filtros.filtro.idLetradoGuardia = '';
-    this.filtros.filtro.idTurno = '';
-    this.filtros.filtro.isSustituto = false;
-    this.filtros.filtro.idTipoAsistenciaColegiado = '';
-    this.filtros.resaltadoDatos = true;
+    this.filtrosAE.comboGuardias = [];
+    this.filtrosAE.comboLetradosGuardia = [];
+    this.filtrosAE.comboTiposAsistencia = [];
+    this.filtrosAE.comboTurnos = [];
+    this.filtrosAE.filtro.diaGuardia = '';
+    this.filtrosAE.filtro.idGuardia = '';
+    this.filtrosAE.filtro.idLetradoGuardia = '';
+    this.filtrosAE.filtro.idTurno = '';
+    this.filtrosAE.filtro.isSustituto = false;
+    this.filtrosAE.filtro.idTipoAsistenciaColegiado = '';
+    this.filtrosAE.resaltadoDatos = true;
     
   }
 
   validateForm(){
     let ok : boolean = true;
-    if(!this.filtros.filtro.diaGuardia
-      || !this.filtros.filtro.idGuardia
-      || !this.filtros.filtro.idLetradoGuardia
-      || !this.filtros.filtro.idTurno){
+    if(!this.filtrosAE.filtro.diaGuardia
+      || !this.filtrosAE.filtro.idGuardia
+      || !this.filtrosAE.filtro.idLetradoGuardia
+      || !this.filtrosAE.filtro.idTurno){
         this.showMsg('error', 'Error', this.translateService.instant("general.message.camposObligatorios"));
         ok = false;
       }
@@ -200,10 +215,10 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
   }
 
   search(){
-    this.filtros.filtroAux = this.filtros.filtro;
+    this.filtrosAE.filtroAux = this.filtrosAE.filtro;
     this.hideResponse();
     this.sigaServices
-      .post("busquedaGuardias_buscarAsistencias", this.filtros.filtro)
+      .post("busquedaGuardias_buscarAsistenciasExpress", this.filtrosAE.filtro)
       .subscribe(
         n => {
           let asistenciasDTO = JSON.parse(n["body"]);
@@ -329,7 +344,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
 
   getComboJuzgados(){
 
-    this.sigaServices.getParam("busquedaGuardias_getJuzgados","?idTurno="+this.filtros.filtro.idTurno).subscribe(
+    this.sigaServices.getParam("busquedaGuardias_getJuzgados","?idTurno="+this.filtrosAE.filtro.idTurno).subscribe(
       n => {
         this.clear();
         if(n.error !== null
@@ -350,7 +365,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
   }
   getComboComisarias(){
 
-    this.sigaServices.getParam("busquedaGuardias_getComisarias","?idTurno="+this.filtros.filtro.idTurno).subscribe(
+    this.sigaServices.getParam("busquedaGuardias_getComisarias","?idTurno="+this.filtrosAE.filtro.idTurno).subscribe(
       n => {
         this.clear();
         if(n.error !== null
@@ -401,7 +416,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
 
         let tarjetaAsistenciaItem : TarjetaAsistenciaItem = new TarjetaAsistenciaItem();
         tarjetaAsistenciaItem.actuaciones = [];
-        tarjetaAsistenciaItem.filtro = this.filtros.filtroAux;
+        tarjetaAsistenciaItem.filtro = this.filtrosAE.filtroAux;
         if(rowGroup.id.length != 0){
           tarjetaAsistenciaItem.anioNumero = rowGroup.id;
           tarjetaAsistenciaItem.anio = rowGroup.id.split('/')[0].substring(1);
@@ -433,12 +448,12 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
           actuacionAsistenciaItem.comisariaJuzgado = row.cells[4].value[3];
           actuacionAsistenciaItem.lugar = row.cells[4].value[4];
           actuacionAsistenciaItem.numeroAsunto = row.cells[5].value;
-          actuacionAsistenciaItem.fechaJustificacion = this.resultado.fechaJustificacion;
+          actuacionAsistenciaItem.fechaJustificacion = this.resultadoAE.fechaJustificacion;
           tarjetaAsistenciaItem.actuaciones.push(actuacionAsistenciaItem);
 
         })
 
-        if(this.filtros.filtro.isSustituto == undefined){
+        if(this.filtrosAE.filtro.isSustituto == undefined){
           tarjetaAsistenciaItem.filtro.isSustituto = false;
         }
         tarjetasAsistenciaItem.push(tarjetaAsistenciaItem);
@@ -522,4 +537,64 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
     }
   }
 
+  searchAsistencias(){
+
+    this.hideResponse();
+    setTimeout(()=>{
+      if(this.modoBusqueda == 'a' && this.filtro && this.filtro.filtro){
+        this.progressSpinner = true;
+        this.sigaServices
+        .post("busquedaGuardias_buscarAsistencias", this.filtro.filtro)
+        .subscribe(
+          n => {
+            let asistenciasDTO = JSON.parse(n["body"]);
+            if(asistenciasDTO.error && asistenciasDTO.error.code != 200){
+              this.showMsg('error', this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.errorResultados"), asistenciasDTO.error.description);
+            }else if(asistenciasDTO.tarjetaAsistenciaItems.length === 0){
+              this.showMsg('info','Info',this.translateService.instant("informesYcomunicaciones.consultas.mensaje.sinResultados"));
+            }else{
+              if(asistenciasDTO.error && asistenciasDTO.error.code == 200){ //Todo ha ido bien pero la consulta ha excedido los registros maximos
+                this.showMsg('info', 'Info', asistenciasDTO.error.description);
+              }
+              let asistenciaItems: TarjetaAsistenciaItem[] = asistenciasDTO.tarjetaAsistenciaItems;
+              this.filtro.filtroAux = Object.assign({},this.filtro.filtro);
+              this.asistencias = asistenciaItems;
+              this.showResponse();
+            }    
+            this.progressSpinner = false;
+          },
+          err => {
+            console.log(err);
+          },
+          () =>{
+            this.progressSpinner = false;
+          }
+        );
+      }
+    },500) 
+  }
+
+  resetFiltros(){
+    if(!this.filtro.filtroAux.anio){
+      this.filtro.filtro = new FiltroAsistenciaItem();
+      this.filtro.usuarioBusquedaExpress.nombreAp = '';
+      this.filtro.usuarioBusquedaExpress.numColegiado = '';
+      this.filtro.filtro.anio = String(new Date().getFullYear());
+    }else{
+      this.filtro.filtro = Object.assign({},this.filtro.filtroAux);
+    }
+  }
+
+  nuevaAsistencia(){
+    sessionStorage.setItem("nuevaAsistencia","true");
+    sessionStorage.setItem("filtroAsistencia",JSON.stringify(this.filtro.filtro));
+    sessionStorage.setItem("modoBusqueda","a");
+    this.router.navigate(["/fichaAsistencia"]);
+  }
+
+  searchAsistenciasEvent(event){
+    if(event){
+      this.searchAsistencias();
+    }
+  }
 }
