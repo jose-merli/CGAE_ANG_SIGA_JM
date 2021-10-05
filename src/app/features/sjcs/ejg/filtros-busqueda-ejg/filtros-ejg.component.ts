@@ -427,8 +427,8 @@ export class FiltrosEjgComponent implements OnInit {
 
   getComboTurno() {
     if (this.body.tipoLetrado == "E") {
-      this.tipoLetrado = "2";
-    } else if (this.body.tipoLetrado == "D" || this.body.tipoLetrado == "A") { this.tipoLetrado = "1"; }
+      this.tipoLetrado = "1";
+    } else if (this.body.tipoLetrado == "D" || this.body.tipoLetrado == "A") { this.tipoLetrado = "2"; }
     this.sigaServices.getParam("filtrosejg_comboTurno",
       "?idTurno=" + this.tipoLetrado).subscribe(
         n => {
