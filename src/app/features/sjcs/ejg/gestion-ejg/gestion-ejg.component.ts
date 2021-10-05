@@ -159,37 +159,39 @@ export class GestionEjgComponent implements OnInit {
   updateTarjResumen() {
     this.body = this.persistenceService.getDatos();
 
-    this.datos = [
-      {
-        label: "Año/Numero EJG",
-        value: this.body.numAnnioProcedimiento
-      },
-      {
-        label: "Solicitante",
-        value: this.body.nombreApeSolicitante
-      },
+    if(this.body != null && this.body != undefined){
+      this.datos = [
+        {
+          label: "Año/Numero EJG",
+          value: this.body.numAnnioProcedimiento
+        },
+        {
+          label: "Solicitante",
+          value: this.body.nombreApeSolicitante
+        },
 
-      {
-        label: "Estado EJG",
-        value: this.body.estadoEJG
-      },
-      {
-        label: "Designado",
-        value: this.body.apellidosYNombre
-      },
-      {
-        label: "Dictamen",
-        value: this.body.dictamenSing
-      },
-      {
-        label: "CAJG",
-        value: this.body.resolucion
-      },
-      {
-        label: "Impugnación",
-        value: this.body.impugnacionDesc
-      },
-    ];
+        {
+          label: "Estado EJG",
+          value: this.body.estadoEJG
+        },
+        {
+          label: "Designado",
+          value: this.body.apellidosYNombre
+        },
+        {
+          label: "Dictamen",
+          value: this.body.dictamenSing
+        },
+        {
+          label: "CAJG",
+          value: this.body.resolucion
+        },
+        {
+          label: "Impugnación",
+          value: this.body.impugnacionDesc
+        },
+      ];
+    }
   }
 
   goTop() {
