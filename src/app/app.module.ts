@@ -463,6 +463,8 @@ import { FichaActuacionAsistenciaTarjetaJustificacionComponent } from './feature
 import { FichaActuacionAsistenciaTarjetaHistoricoComponent } from './features/sjcs/guardia/guardias-asistencias/ficha-actuacion-asistencia/ficha-actuacion-asistencia-tarjeta-historico/ficha-actuacion-asistencia-tarjeta-historico.component';
 import { FichaActuacionAsistenciaTarjetaDocumentacionComponent } from './features/sjcs/guardia/guardias-asistencias/ficha-actuacion-asistencia/ficha-actuacion-asistencia-tarjeta-documentacion/ficha-actuacion-asistencia-tarjeta-documentacion.component';
 import { BuscadorAsistenciasComponent } from './features/sjcs/guardia/guardias-asistencias/asistencia-expres/buscador-asistencias/buscador-asistencias.component';
+import { ResultadoAsistenciasComponent } from './features/sjcs/guardia/guardias-asistencias/resultado-asistencias/resultado-asistencias.component';
+import { BuscadorListaGuardiasComponent } from './features/sjcs/guardia/definir-listas-guardias/buscador-lista-guardias/buscador-lista-guardias.component';
 import { GuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/guardia-colegiado.component';
 import { GestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/gestion-guardia-colegiado/gestion-guardia-colegiado.component';
 import { FiltrosGuardiaCalendarioComponent } from './features/sjcs/guardia/programacionCalendarios/filtros-guardia-calendarios/filtros-guardia-calendarios.component';
@@ -471,7 +473,15 @@ import { FiltrosGuardiaColegiadoComponent } from './features/sjcs/guardia/guardi
 import { CargasMasivasGuardiaComponent } from './features/sjcs/guardia/cargas-masivas-guardia/cargas-masivas-guardia.component';
 import { FormularioBusquedaGuardiaComponent } from './features/sjcs/guardia/cargas-masivas-guardia/formulario-busqueda-guardia/formulario-busqueda-guardia.component';
 import { FormularioSubidaGuardiaComponent } from './features/sjcs/guardia/cargas-masivas-guardia/formulario-subida-guardia/formulario-subida-guardia.component';
+import { CalendarioGestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/gestion-guardia-colegiado/calendario-gestion-guardia-colegiado/calendario-gestion-guardia-colegiado.component';
+import { ColegiadoGestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/gestion-guardia-colegiado/colegiado-gestion-guardia-colegiado/colegiado-gestion-guardia-colegiado.component';
+import { DatosGeneralesGestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/gestion-guardia-colegiado/datos-generales-gestion-guardia-colegiado/datos-generales-gestion-guardia-colegiado.component';
+import { GuardiaGestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/gestion-guardia-colegiado/guardia-gestion-guardia-colegiado/guardia-gestion-guardia-colegiado.component';
+import { PermutasGestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/gestion-guardia-colegiado/permutas-gestion-guardia-colegiado/permutas-gestion-guardia-colegiado.component';
+import { SustitucionesGestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/gestion-guardia-colegiado/sustituciones-gestion-guardia-colegiado/sustituciones-gestion-guardia-colegiado.component';
+import { TurnoGestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/gestion-guardia-colegiado/turno-gestion-guardia-colegiado/turno-gestion-guardia-colegiado.component';
 import { ListaArchivosGuardiaComponent } from './features/sjcs/guardia/cargas-masivas-guardia/lista-archivos-guardia/lista-archivos-guardia.component';
+
 
 @NgModule({
 	declarations: [
@@ -624,6 +634,14 @@ import { ListaArchivosGuardiaComponent } from './features/sjcs/guardia/cargas-ma
 		GestionGuardiaColegiadoComponent,
 		FiltrosGuardiaColegiadoComponent,
 		TablaGuardiaColegiadoComponent,
+		CalendarioGestionGuardiaColegiadoComponent,
+		ColegiadoGestionGuardiaColegiadoComponent,
+		DatosGeneralesGestionGuardiaColegiadoComponent,
+		GuardiaGestionGuardiaColegiadoComponent,
+		PermutasGestionGuardiaColegiadoComponent,
+		SustitucionesGestionGuardiaColegiadoComponent,
+		TurnoGestionGuardiaColegiadoComponent,
+
 		//EJG
 		// EJGComponent,
 		FiltrosEjgComponent,
@@ -877,6 +895,8 @@ import { ListaArchivosGuardiaComponent } from './features/sjcs/guardia/cargas-ma
 		FichaActuacionAsistenciaTarjetaHistoricoComponent,
 		FichaActuacionAsistenciaTarjetaDocumentacionComponent,
 		BuscadorAsistenciasComponent,
+		ResultadoAsistenciasComponent,
+		BuscadorListaGuardiasComponent,
 	],
 	imports: [
 		SelectorModule,

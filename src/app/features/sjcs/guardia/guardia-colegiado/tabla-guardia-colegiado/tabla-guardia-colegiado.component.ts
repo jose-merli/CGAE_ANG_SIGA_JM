@@ -332,10 +332,11 @@ export class TablaGuardiaColegiadoComponent implements OnInit {
 
     if (!this.selectAll && !this.selectMultiple) {
       this.progressSpinner = true;
-      this.datos = new GuardiaItem();
-      this.datos.idGuardia = evento.idGuardia;
-      this.datos.idTurno = evento.idTurno;
-      this.persistenceService.setDatos(this.datos);
+      let guardia = new GuardiaItem()
+      guardia = evento;
+      this.persistenceService.setDatos(guardia);
+      sessionStorage.setItem("infoGuardiaColeg",JSON.stringify(guardia));
+      sessionStorage.setItem("originGuardiaColeg","true");
       this.router.navigate(['/gestionGuardiaColegiado']);
     
     }

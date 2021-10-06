@@ -77,7 +77,9 @@ export let endpoints_guardia: any = {
     busquedaGuardias_getTurnosByColegiadoFecha: "asistencia/turnosByColegiadoFecha",
     busquedaGuardias_getTiposAsistencia: "asistencia/getTiposAsistencia",
     busquedaGuardias_getLetradosGuardiaDia: "asistencia/getColegiadosGuardiaDia",
+    busquedaGuardias_buscarAsistenciasExpress: "asistencia/buscarAsistenciasExpress",
     busquedaGuardias_buscarAsistencias: "asistencia/buscarAsistencias",
+    busquedaGuardias_eliminarAsistencias: "asistencia/eliminarAsistencia",
     busquedaGuardias_getComisarias: "asistencia/getComisarias",
     busquedaGuardias_getJuzgados: "asistencia/getJuzgados",
     busquedaGuardias_guardarAsistencias: "asistencia/guardarAsistenciasExpres",
@@ -108,6 +110,8 @@ export let endpoints_guardia: any = {
     busquedaGuardias_searchActuaciones: "asistencia/searchActuaciones",
     busquedaGuardias_updateEstadoActuacion: "asistencia/updateEstadoActuacion",
     busquedaGuardias_eliminarActuaciones: "asistencia/eliminarActuaciones",
+    busquedaGuardias_isUnicaAsistenciaPorGuardia: "asistencia/isUnicaAsistenciaPorGuardia",
+    busquedaGuardias_desvalidarGuardiasAsistencias: "asistencia/desvalidarGuardiasAsistencias",
 
     //Actuaciones asistencias
     actuaciones_searchTarjetaActuacion: "actuacionAsistencia/searchTarjetaActuacion",
@@ -140,12 +144,20 @@ export let endpoints_guardia: any = {
    guardiasColegiado_desvalidarGuardiaColegiado: "guardia/desvalidarGuardiaColegiado",
    guardiasColegiado_eliminarGuardiaColegiado:"guardia/eliminarGuardiaColegiado",
 
-       //CARGAS MASIVAS OFICIO
+
+       //CARGAS MASIVAS GUARDIA
        busquedaGuardia_guardia: "combo/guardias",
        busquedaGuardia_guardiaNoBaja: "combo/guardiasNoBaja",
        cargasMasivasGuardia_decargarModelo: "guardia/cargasMasivasGuardia/descargarModelo",
        cargasMasivasGuardia_uploadFileI: "guardia/cargasMasivasGuardia/uploadFileI",
        cargasMasivasGuardia_uploadFileGC: "guardia/cargasMasivasGuardia/uploadFileGC",
        cargasMasivasGuardia_uploadFileC: "guardia/cargasMasivasGuardia/uploadFileC",
+
+        guardiasColegiado_getGuardiaCole:"guardiaColegiado/getGuardiaColeg",
+        guardiasColegiado_getTurnoGuardiaColeg:"guardiaColegiado/getTurnoGuardiaColeg",
+        guardiasColegiado_getColegiado:"guardiaColegiado/getColegiado",
+        guardiasColegiado_updateGuardiaColeg:"guardiaColegiado/updateGuardiaColeg",
+        guardiasColegiado_insertGuardiaColeg:"guardiaColegiado/insertGuardiaColeg",
+        guardiasColegiado_sustituirGuardiaColeg:"guardiaColegiado/sustituirGuardiaColeg",
 
 }
