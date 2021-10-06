@@ -1,0 +1,20 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="header-title">
+  <i class="fa fa-square"></i>
+  <p>{{ "menu.justiciaGratuita" | translate}}
+    <i class="fa fa-angle-right"></i> {{ 'menu.justiciaGratuita.GuardiaMenu' | translate }}
+    <i class="fa fa-angle-right"></i> {{ 'menu.justiciaGratuita.cargaMasiva' | translate }}
+  </p>
+</div>
+
+<app-formulario-busqueda-guardia (tipoEvent)="receiveTipo($event)"></app-formulario-busqueda-guardia> 
+<app-formulario-subida-guardia *ngIf="tipo!=null" [tipo]="tipo" (datosEvent)="receiveDatos($event)" (buscarEvent)="receiveBuscar($event)"></app-formulario-subida-guardia>
+<app-lista-archivos-guardia *ngIf="buscar" [datos]="datos" id="tablaFoco"></app-lista-archivos-guardia>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
+    <div class="loader"></div>
+</div>
+
+

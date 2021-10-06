@@ -138,6 +138,14 @@ export let endpoints_guardia: any = {
    guardiasColegiado_buscarGuardiasColegiado: "guardia/busquedaGuardia/busquedaGuardiasColegiado",
    guardiasColegiado_validarSolicitudGuardia: "guardia/validarSolicitudGuardia",
    guardiasColegiado_desvalidarGuardiaColegiado: "guardia/desvalidarGuardiaColegiado",
-   guardiasColegiado_eliminarGuardiaColegiado:"guardia/eliminarGuardiaColegiado"
+   guardiasColegiado_eliminarGuardiaColegiado:"guardia/eliminarGuardiaColegiado",
+
+       //CARGAS MASIVAS OFICIO
+       busquedaGuardia_guardia: "combo/guardias",
+       busquedaGuardia_guardiaNoBaja: "combo/guardiasNoBaja",
+       cargasMasivasGuardia_decargarModelo: "guardia/cargasMasivasGuardia/descargarModelo",
+       cargasMasivasGuardia_uploadFileI: "guardia/cargasMasivasGuardia/uploadFileI",
+       cargasMasivasGuardia_uploadFileGC: "guardia/cargasMasivasGuardia/uploadFileGC",
+       cargasMasivasGuardia_uploadFileC: "guardia/cargasMasivasGuardia/uploadFileC",
 
 }

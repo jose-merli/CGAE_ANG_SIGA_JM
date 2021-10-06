@@ -468,6 +468,10 @@ import { GestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardi
 import { FiltrosGuardiaCalendarioComponent } from './features/sjcs/guardia/programacionCalendarios/filtros-guardia-calendarios/filtros-guardia-calendarios.component';
 import { TablaGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/tabla-guardia-colegiado/tabla-guardia-colegiado.component';
 import { FiltrosGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/filtros-guardia-colegiado/filtros-guardia-colegiado.component';
+import { CargasMasivasGuardiaComponent } from './features/sjcs/guardia/cargas-masivas-guardia/cargas-masivas-guardia.component';
+import { FormularioBusquedaGuardiaComponent } from './features/sjcs/guardia/cargas-masivas-guardia/formulario-busqueda-guardia/formulario-busqueda-guardia.component';
+import { FormularioSubidaGuardiaComponent } from './features/sjcs/guardia/cargas-masivas-guardia/formulario-subida-guardia/formulario-subida-guardia.component';
+import { ListaArchivosGuardiaComponent } from './features/sjcs/guardia/cargas-masivas-guardia/lista-archivos-guardia/lista-archivos-guardia.component';
 
 @NgModule({
 	declarations: [
@@ -675,6 +679,7 @@ import { FiltrosGuardiaColegiadoComponent } from './features/sjcs/guardia/guardi
 		ComunicaResolucionesComponent,
 		ComunicaDesignacionesComponent,
 		CargasMasivasOficioComponent,
+		CargasMasivasGuardiaComponent,
 		DetalleTarjetaProcuradorFichaDesignacionOficioComponent,
 
 		//Consultas
@@ -839,6 +844,9 @@ import { FiltrosGuardiaColegiadoComponent } from './features/sjcs/guardia/guardi
 		FormularioBusquedaComponent,
 		FormularioSubidaComponent,
 		ListaArchivosComponent,
+		FormularioBusquedaGuardiaComponent,
+		FormularioSubidaGuardiaComponent,
+		ListaArchivosGuardiaComponent,
 		FichaActuacionComponent,
 		TarjetaDatosGenFichaActComponent,
 		TarjetaJusFichaActComponent,

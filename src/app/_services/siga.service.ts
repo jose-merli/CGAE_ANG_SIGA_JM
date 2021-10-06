@@ -798,6 +798,29 @@ export class SigaServices {
       });
   }
 
+  postSendContentParams(service: string, params: any): Observable<any> {
+	let formData: FormData = new FormData();
+	let file = params[0];
+    if (file != undefined) {
+	  formData.append('uploadFile', file, file.name);
+	  formData.append('fechaDesde', params[1]);
+	  formData.append('fechaHasta', params[2]);
+	  formData.append('observaciones', params[3]);
+    }
+    let headers = new HttpHeaders();
+
+    headers.append('Content-Type', 'application/json');
+    headers.append('Accept', 'application/json');
+
+    return this.http
+      .post(environment.newSigaUrl + this.endpoints[service], formData, {
+        headers: headers
+      })
+      .map((response) => {
+        return response;
+      });
+  }
+
   postSendFileAndParameters(service: string, file: any, idPersona: any): Observable<any> {
     let formData: FormData = new FormData();
     if (file != undefined) {
@@ -806,6 +829,31 @@ export class SigaServices {
 
     // pasar parametros por la request
     formData.append('idPersona', idPersona);
+
+    let headers = new HttpHeaders();
+
+    headers.append('Content-Type', 'multipart/form-data');
+    headers.append('Accept', 'application/json');
+
+    return this.http
+      .post(environment.newSigaUrl + this.endpoints[service], formData, {
+        headers: headers
+      })
+      .map((response) => {
+        return response;
+      });
+  }
+
+  postSendFileAndParametersArr(service: string, file: any, params: any): Observable<any> {
+    let formData: FormData = new FormData();
+    if (file != undefined) {
+      formData.append('uploadFile', file, file.name);
+    }
+
+    // pasar parametros por la request
+	formData.append('fechaDesde', params[0]);
+	formData.append('fechaHasta', params[1]);
+	formData.append('observaciones', params[2]);
 
     let headers = new HttpHeaders();
 

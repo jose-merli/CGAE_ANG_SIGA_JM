@@ -10,6 +10,7 @@ import { BusquedaGuardiasIncompatibilidadesModule } from "./guardias-incompatibi
 import { ProgramacionCalendariosModule } from "./programacionCalendarios/programacionCalendarios.module";
 import { InscripcionesGuardiaModule } from "./guardias-inscripciones/guardias-inscripciones.module";
 import { GuardiaColegiadoModule } from "./guardia-colegiado/guardia-colegiado.module";
+import { GestionCargasMasivasGuardiaModule } from "./cargas-masivas-guardia/cargas-masivas-guardia.module";
 
 @NgModule({
     declarations: [],
@@ -22,7 +23,9 @@ import { GuardiaColegiadoModule } from "./guardia-colegiado/guardia-colegiado.mo
         BusquedaGuardiasIncompatibilidadesModule,
         ProgramacionCalendariosModule,
         InscripcionesGuardiaModule,
-        GuardiaColegiadoModule
+        GuardiaColegiadoModule,
+        GestionCargasMasivasGuardiaModule,
+        GestionCargasMasivasGuardiaModule
     ],
 
     providers: [
