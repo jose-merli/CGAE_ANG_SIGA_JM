@@ -4,7 +4,7 @@ import { Message } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../commons/translate';
 import { ComboItem } from '../../../../models/ComboItem';
 import { FichaCompraSuscripcionItem } from '../../../../models/FichaCompraSuscripcionItem';
-import { ListaCompraProductosItem } from '../../../../models/ListaCompraProductosItem';
+import { ListaComprasProductosItem } from '../../../../models/ListaComprasProductosItem';
 import { procesos_PyS } from '../../../../permisos/procesos_PyS';
 import { SigaStorageService } from '../../../../siga-storage.service';
 import { CommonsService } from '../../../../_services/commons.service';
@@ -23,7 +23,7 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
   estadosCompraObject: ComboItem[] = [];
 
   @Output() actualizarLista = new EventEmitter<Boolean>();
-  @Input() listaCompraProductos: ListaCompraProductosItem[];
+  @Input() listaCompraProductos: ListaComprasProductosItem[];
 
   cols = [
     { field: "fechaSolicitud", header: "censo.resultadosSolicitudesModificacion.literal.fecha" },
@@ -62,7 +62,7 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
   permisoAprobarCompra;
   permisoDenegar;
 
-  selectedRows: ListaCompraProductosItem[] = []; //Datos de las filas seleccionadas.
+  selectedRows: ListaComprasProductosItem[] = []; //Datos de las filas seleccionadas.
   numSelectedRows: number = 0; //Se usa para mostrar visualmente el numero de filas seleccionadas
   selectMultipleRows: boolean = true; //Seleccion multiples filas de la tabla
   selectAllRows: boolean = false; //Selecciona todas las filas de la pagina actual de la tabla
@@ -172,11 +172,15 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
       (n) => {
         if (n.status != 200) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        } else {
+        } else if(JSON.parse(n.body).error.description!=""){
+          this.showMessage("info", "***Solicitudes no alteradas", "*****Las solicitudes"+JSON.parse(n.body).error.description+" no se han alterado ya que su estado actual no permite la acción requerida");
+        }else {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           //Se actualiza la información de la ficha
           this.actualizarLista.emit(true);
         }
+
+        
         this.selectedRows = [];
         this.numSelectedRows = 0;
         this.progressSpinner = false;
@@ -202,11 +206,17 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
       (n) => {
         if (n.status != 200) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        } else {
+        } else if(JSON.parse(n.body).error.description!=""){
+          this.showMessage("info", "***Solicitudes no alteradas", "*****Las solicitudes"+JSON.parse(n.body).error.description+" no se han alterado ya que su estado actual no permite la acción requerida");
+        }else {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           //Se actualiza la información de la ficha
           this.actualizarLista.emit(true);
         }
+
+        
+
+
         this.selectedRows = [];
         this.numSelectedRows = 0;
         this.progressSpinner = false;

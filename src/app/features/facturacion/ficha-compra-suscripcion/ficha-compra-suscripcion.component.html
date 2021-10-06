@@ -9,8 +9,11 @@
       </app-tarjeta-cliente-compra-suscripcion>
       <app-tarjeta-solicitud-compra-suscripcion [(ficha)]="ficha" (actualizaFicha)="actualizarFicha()">
       </app-tarjeta-solicitud-compra-suscripcion>
-      <app-tarjeta-forma-pago-compra-suscripcion [(ficha)]="ficha" [comboComun]="comboComun" >
+      <app-tarjeta-forma-pago-compra-suscripcion [(ficha)]="ficha" [(comboComun)]="comboComun" >
       </app-tarjeta-forma-pago-compra-suscripcion>
+      <app-tarjeta-productos-compra-suscripcion *ngIf="ficha.productos != null" [(ficha)]="ficha" (actualizaFicha)="actualizarFicha()" 
+      [(comboComun)]="comboComun">
+      </app-tarjeta-productos-compra-suscripcion>
   </div>
 </div>
 

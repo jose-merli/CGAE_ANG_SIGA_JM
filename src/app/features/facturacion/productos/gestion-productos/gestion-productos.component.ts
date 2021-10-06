@@ -465,7 +465,7 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
     //Se extrae el atributo y se separan las distintas formas de pago.
     let formasPagoArrays: any[]= [];
     this.selectedRows.forEach(element => {
-      if(element!=""){ 
+      if(element.formapago!=""){ 
         if(element.noFacturable=="1") formasPagoArrays.push(element.formapago.split(", ").push("No facturable"));
         else formasPagoArrays.push(element.formapago.split(", "));
       }

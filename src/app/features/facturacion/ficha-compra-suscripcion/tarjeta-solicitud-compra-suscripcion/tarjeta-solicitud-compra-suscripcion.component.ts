@@ -96,9 +96,13 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
 
     if (msg != undefined) {
       this.msgs = msg;
-    }  else if(this.ficha.idFormaPagoSeleccionada == null || this.ficha.idPersona == null){
+    }  else if(this.ficha.idPersona == null){
       //Etiqueta
-      this.showMessage("error","***Debe completar los campos obligatorios","******Compruebe que no le falta por seleccionar la forma de pago ni el cliente");
+      this.showMessage("error","***Debe completar los campos obligatorios","******Debe seleccionar el cliente");
+    }
+    else if(this.ficha.idFormaPagoSeleccionada == null && this.ficha.noFact == "0"){
+      //Etiqueta
+      this.showMessage("error","***Debe completar los campos obligatorios","******Debe seleccionar una forma de pago si quiere que la solicitud sea facturable");
     }
     else {
 			this.solicitarCompra();
@@ -112,7 +116,14 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
 
     if (msg != null) {
       this.msgs = msg;
-    }  else {
+    }  else if(this.ficha.idPersona == null){
+      //Etiqueta
+      this.showMessage("error","***Debe completar los campos obligatorios","******Debe seleccionar el cliente");
+    }
+    else if(this.ficha.idFormaPagoSeleccionada == null && this.ficha.noFact == "0"){
+      //Etiqueta
+      this.showMessage("error","***Debe completar los campos obligatorios","******Debe seleccionar una forma de pago si quiere que la solicitud sea facturable");
+    } else {
 			if(this.ficha.productos!= null)this.aprobarCompra();
       // else this.aprobarSuscripcion();
 		}

@@ -1,3 +1,4 @@
+import { ListaProductosCompraItem } from "./ListaProductosCompraItem";
 import { ListaProductosItems } from "./ListaProductosItems";
 
 export class FichaCompraSuscripcionItem {
@@ -31,7 +32,7 @@ export class FichaCompraSuscripcionItem {
     noFact: string;
 
     idEstadoPeticion: string;
-    productos: ListaProductosItems[];
+    productos: ListaProductosCompraItem[];
     
     constructor() {}
   }

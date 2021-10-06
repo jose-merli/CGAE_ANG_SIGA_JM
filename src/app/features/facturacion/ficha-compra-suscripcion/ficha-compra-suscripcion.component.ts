@@ -30,6 +30,8 @@ export class FichaCompraSuscripcionComponent implements OnInit {
 
   ngOnInit() {
 
+    sessionStorage.removeItem("origin");
+
     
     if(sessionStorage.getItem("FichaCompraSuscripcion")){
       this.ficha = JSON.parse(sessionStorage.getItem("FichaCompraSuscripcion"));

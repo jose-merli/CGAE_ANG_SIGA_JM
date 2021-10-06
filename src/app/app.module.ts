@@ -69,6 +69,7 @@ import { PickListModule } from "primeng/picklist";
 import { FileUploadModule } from "primeng/fileupload";
 import { KeyFilterModule } from 'primeng/keyfilter';
 import { EditorModule } from '@tinymce/tinymce-angular';
+import {OrderListModule} from 'primeng/orderlist';
 
 
 // Modulo de censo
@@ -481,6 +482,7 @@ import { CompraProductosComponent } from './features/facturacion/compra-producto
 import { TarjetaFiltroCompraProductosComponent } from './features/facturacion/compra-productos/tarjeta-filtro-compra-productos/tarjeta-filtro-compra-productos.component';
 import { TarjetaListaCompraProductosComponent } from './features/facturacion/compra-productos/tarjeta-lista-compra-productos/tarjeta-lista-compra-productos.component';
 import { DetalleTarjetaPrecioFichaServiciosFacturacionComponent } from './features/facturacion/servicios/ficha-servicios/detalle-tarjeta-precio-ficha-servicios-facturacion/detalle-tarjeta-precio-ficha-servicios-facturacion.component';
+import { TarjetaProductosCompraSuscripcionComponent } from './features/facturacion/ficha-compra-suscripcion/tarjeta-productos-compra-suscripcion/tarjeta-productos-compra-suscripcion.component';
 
 @NgModule({
 	declarations: [
@@ -882,7 +884,8 @@ import { DetalleTarjetaPrecioFichaServiciosFacturacionComponent } from './featur
 		CompraProductosComponent,
 		TarjetaFiltroCompraProductosComponent,
 		TarjetaListaCompraProductosComponent,
-		DetalleTarjetaPrecioFichaServiciosFacturacionComponent
+		DetalleTarjetaPrecioFichaServiciosFacturacionComponent,
+		TarjetaProductosCompraSuscripcionComponent
 	],
 	imports: [
 		Paginador3Module,
@@ -953,6 +956,7 @@ import { DetalleTarjetaPrecioFichaServiciosFacturacionComponent } from './featur
 		OficioModule,
 		BusquedaAsuntosModule,
 		Paginador2Module,
+		OrderListModule,
 	],
 
 	exports: [DigitDecimaNumberDirective],

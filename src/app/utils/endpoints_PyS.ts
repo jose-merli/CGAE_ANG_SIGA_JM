@@ -7,5 +7,8 @@ export let endpoints_PyS: any = {
     PyS_comboEstadosFactura: "pys/comboEstadosFactura",
     PyS_getListaCompraProductos: "pys/getListaCompraProductos",
     PyS_denegarPeticionMultiple: "/pys/denegarPeticionMultiple",
-    PyS_aprobarCompraMultiple: "/pys/aprobarCompraMultiple"
+    PyS_aprobarCompraMultiple: "/pys/aprobarCompraMultiple",
+    PyS_getListaProductosCompra: "/pys/getListaProductosCompra",
+    PyS_getPermisoModificarImporteProducto: "/pys/getPermisoModificarImporteProducto",
+    PyS_updateProductosPeticion: "/pys/updateProductosPeticion"
 }
