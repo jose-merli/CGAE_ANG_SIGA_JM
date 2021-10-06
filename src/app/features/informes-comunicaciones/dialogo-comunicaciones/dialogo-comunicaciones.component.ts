@@ -394,12 +394,18 @@ export class DialogoComunicacionesComponent implements OnInit {
 					this.backTo();
 				},
 				(err) => {
-					console.log(err);
-					this.showFail(
-						this.translateService.instant(
-							'informesycomunicaciones.comunicaciones.mensaje.envio.error.generar'
-						)
-					);
+					if (JSON.parse(err.error).description != undefined && JSON.parse(err.error).description != null) {
+						this.showFail(
+							JSON.parse(err.error).description
+						);
+					} else {
+						this.showFail(
+							this.translateService.instant(
+								'informesycomunicaciones.comunicaciones.mensaje.envio.error.generar'
+							)
+						);
+					}
+					
 					this.progressSpinner = false;
 				},
 				() => {
