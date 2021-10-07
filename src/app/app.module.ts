@@ -478,6 +478,9 @@ import { DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent } from './f
 import { TarjetaSolicitudCompraSuscripcionComponent } from './features/facturacion/ficha-compra-suscripcion/tarjeta-solicitud-compra-suscripcion/tarjeta-solicitud-compra-suscripcion.component';
 import { TarjetaFormaPagoCompraSuscripcionComponent } from './features/facturacion/ficha-compra-suscripcion/tarjeta-forma-pago-compra-suscripcion/tarjeta-forma-pago-compra-suscripcion.component';
 import { FichaCuentaBancariaComponent } from './features/facturacion/gestion-cuentas-bancarias/ficha-cuenta-bancaria/ficha-cuenta-bancaria.component';
+import { FiltrosSeriesFacturaComponent } from './features/facturacion/series-factura/filtros-series-factura/filtros-series-factura.component';
+import { TablaSeriesFacturaComponent } from './features/facturacion/series-factura/tabla-series-factura/tabla-series-factura.component';
+import { GestionSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/gestion-series-factura.component';
 
 @NgModule({
 	declarations: [
@@ -876,7 +879,10 @@ import { FichaCuentaBancariaComponent } from './features/facturacion/gestion-cue
 		DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent,
 		TarjetaSolicitudCompraSuscripcionComponent,
 		TarjetaFormaPagoCompraSuscripcionComponent,
-		FichaCuentaBancariaComponent
+		FichaCuentaBancariaComponent,
+		FiltrosSeriesFacturaComponent,
+		TablaSeriesFacturaComponent,
+		GestionSeriesFacturaComponent
 	],
 	imports: [
 		Paginador3Module,
