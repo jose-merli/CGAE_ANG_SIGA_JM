@@ -152,7 +152,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
       this.fromAbogadoContrarioEJG = true;
     }
 
-    sessionStorage.removeItem('origin');
+    //sessionStorage.removeItem('origin');
     this.progressSpinner = true;
     this.currentRoute = this.router.url;
     this.getMigaPan();
