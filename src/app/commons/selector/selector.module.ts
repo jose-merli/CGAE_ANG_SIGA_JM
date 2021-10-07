@@ -7,7 +7,7 @@ import { PipeTranslationModule } from '../translate/pipe-translation.module';
 import { FormsModule } from '@angular/forms';
 import {DropdownModule} from 'primeng/dropdown';
 import { TableModule } from 'primeng/table';
-
+import { CheckboxModule } from "primeng/checkbox";
 @NgModule({
   imports: [
     CommonModule,
@@ -18,7 +18,8 @@ import { TableModule } from 'primeng/table';
     DropdownModule,
     ConfirmDialogModule,
     TableModule,
-    GrowlModule
+    GrowlModule,
+    CheckboxModule
   ],
   declarations: [
     SelectorComponent

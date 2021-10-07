@@ -1,11 +1,11 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { BusquedaColegiadoExpressComponent } from "./busqueda-colegiado-express.component";
-import { InputTextModule, ButtonModule, GrowlModule, ConfirmDialogModule } from "primeng/primeng";
+import { InputTextModule, ButtonModule, GrowlModule, ConfirmDialogModule, DropdownModule } from 'primeng/primeng';
 import { PipeTranslationModule } from "../translate/pipe-translation.module";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { TableModule } from "primeng/table";
-
+import { CheckboxModule } from "primeng/checkbox";
 @NgModule({
   imports: [
     CommonModule,
@@ -17,7 +17,9 @@ import { TableModule } from "primeng/table";
     FormsModule,
     ReactiveFormsModule,
     ConfirmDialogModule,
-    TableModule
+    TableModule,
+    CheckboxModule,
+    DropdownModule
   ],
   declarations: [BusquedaColegiadoExpressComponent],
   exports: [BusquedaColegiadoExpressComponent]

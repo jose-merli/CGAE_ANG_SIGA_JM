@@ -21,13 +21,19 @@ import { ProcuradoresModule } from './procuradores/procuradores.module';
 import { GestionDocumentacionEJGModule } from './documentacion-ejg/documentacion-ejg.module';
 import { GestionTiposActuacionModule } from './tiposActuacion/tiposActuacion.module';
 import { ProcedimientosModule } from './procedimientos/procedimientos.module';
-import { ConfirmDialogModule, GrowlModule, SpinnerModule } from '../../../../../node_modules/primeng/primeng';
+import { ConfirmDialogModule, DropdownModule, GrowlModule, SpinnerModule } from '../../../../../node_modules/primeng/primeng';
 import { RetencionesIrpfModule } from './retenciones-IRPF/retenciones-irpf.module';
 import { TableModule } from 'primeng/table';
 import { PartidasModule } from './partidas/partidas.module';
-
+import { DestinatariosRetencionesComponent } from './destinatarios-retenciones/destinatarios-retenciones.component';
+import { DestinatariosModule } from './destinatarios-retenciones/destinatarios.module';
+import { TablaDestinatariosComponent } from './destinatarios-retenciones/gestion-retenciones/gestion-retenciones.component';
+import { FiltrosRetenciones } from './destinatarios-retenciones/filtros-retenciones/filtrosretenciones.component';
+import { CheckboxModule } from "primeng/checkbox";
+import { FormsModule } from '@angular/forms';
+import { PipeTranslationModule } from '../../../commons/translate/pipe-translation.module';
 @NgModule({
-        declarations: [],
+        declarations: [DestinatariosRetencionesComponent, TablaDestinatariosComponent, FiltrosRetenciones],
         imports: [
                 CommonModule,
                 routingMaestros,
@@ -53,7 +59,11 @@ import { PartidasModule } from './partidas/partidas.module';
                 TableModule,
                 PartidasModule,
                 GestionPartidasJudicialesModule,
-                GrowlModule
+                GrowlModule,
+                CheckboxModule,
+                DropdownModule,
+                FormsModule,
+                PipeTranslationModule
         ],
 
         providers: []

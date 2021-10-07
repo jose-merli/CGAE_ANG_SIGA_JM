@@ -312,7 +312,6 @@ import { HeaderGestionEntidadService } from './_services/headerGestionEntidad.se
 import { OldSigaServices } from './_services/oldSiga.service';
 import { PersistenceService } from './_services/persistence.service';
 import { SigaServices } from './_services/siga.service';
-import { DestinatariosRetencionesComponent } from './features/sjcs/maestros/destinatarios-retenciones/destinatarios-retenciones.component';
 import { DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-datos-adicionales-designa/detalle-tarjeta-datos-adicionales-ficha-designacion-oficio.component';
 import { DetalleTarjetaContrariosFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-contrarios-designa/detalle-tarjeta-contrarios-ficha-designacion-oficio.component';
 import { DetalleTarjetaInteresadosFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-interesados-designa/detalle-tarjeta-interesados-ficha-designacion-oficio.component';
@@ -481,6 +480,8 @@ import { SustitucionesGestionGuardiaColegiadoComponent } from './features/sjcs/g
 import { TurnoGestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/gestion-guardia-colegiado/turno-gestion-guardia-colegiado/turno-gestion-guardia-colegiado.component';
 import { ListaArchivosGuardiaComponent } from './features/sjcs/guardia/cargas-masivas-guardia/lista-archivos-guardia/lista-archivos-guardia.component';
 import { TarjetaModule } from './commons/tarjeta/tarjeta.module';
+import { DestinatariosModule } from './features/sjcs/maestros/destinatarios-retenciones/destinatarios.module';
+import { MaestrosModule } from './features/sjcs/maestros/maestros.module';
 
 
 @NgModule({
@@ -969,7 +970,9 @@ import { TarjetaModule } from './commons/tarjeta/tarjeta.module';
 		OficioModule,
 		BusquedaAsuntosModule,
 		Paginador2Module,
-		TarjetaModule
+		TarjetaModule,
+		DestinatariosModule,
+		MaestrosModule
 	],
 
 	exports: [],

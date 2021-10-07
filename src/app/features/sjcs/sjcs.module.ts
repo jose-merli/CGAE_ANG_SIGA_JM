@@ -7,9 +7,9 @@ import { JusticiablesModule } from './justiciables/justiciables.module';
 import { GuardiaModule } from './guardia/guardia.module';
 import { OficioModule } from './oficio/oficio.module';
 import { EJGModule } from './ejg/ejg.module';
-import { ConfirmDialogModule, GrowlModule } from 'primeng/primeng';
+import { ConfirmDialogModule, DropdownModule, GrowlModule } from 'primeng/primeng';
 import { TableModule } from 'primeng/table';
-
+import { CheckboxModule } from "primeng/checkbox";
 @NgModule({
   declarations: [],
   imports: [
@@ -21,6 +21,8 @@ import { TableModule } from 'primeng/table';
     ConfirmDialogModule,
     TableModule,
     GrowlModule,
+    CheckboxModule,
+    DropdownModule,
     routingSjcs,
 
     EJGModule,
