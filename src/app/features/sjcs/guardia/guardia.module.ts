@@ -11,9 +11,10 @@ import { ProgramacionCalendariosModule } from "./programacionCalendarios/program
 import { InscripcionesGuardiaModule } from "./guardias-inscripciones/guardias-inscripciones.module";
 import { GuardiaColegiadoModule } from "./guardia-colegiado/guardia-colegiado.module";
 import { GestionCargasMasivasGuardiaModule } from "./cargas-masivas-guardia/cargas-masivas-guardia.module";
+import { TablaGuardiasComponent } from "./guardias-incompatibilidades/buscador-guardia-incompatibilidades/tabla-guardias/tabla-guardias.component";
 
 @NgModule({
-    declarations: [],
+    declarations: [TablaGuardiasComponent],
     imports: [
         routingGuardia,
         BusquedaGuardiasModule,

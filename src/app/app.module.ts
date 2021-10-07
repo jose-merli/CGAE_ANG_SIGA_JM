@@ -438,7 +438,6 @@ import { SelectorModule } from './commons/selector/selector.module';
 import { AsistenciaExpresComponent } from './features/sjcs/guardia/guardias-asistencias/asistencia-expres/asistencia-expres.component';
 import { BuscadorAsistenciaExpresComponent } from './features/sjcs/guardia/guardias-asistencias/asistencia-expres/buscador-asistencia-expres/buscador-asistencia-expres.component';
 import { ResultadoAsistenciaExpresComponent } from './features/sjcs/guardia/guardias-asistencias/resultado-asistencia-expres/resultado-asistencia-expres.component';
-import { SafePipe } from './commons/tabla-resultado-order/safe.pipe';
 import { BuscadorSolicitudesCentralitaComponent } from './features/sjcs/guardia/guardias-solicitudes-centralita/buscador-solicitudes-centralita/buscador-solicitudes-centralita.component';
 import { ResultadoSolicitudesCentralitaComponent } from './features/sjcs/guardia/guardias-solicitudes-centralita/resultado-solicitudes-centralita/resultado-solicitudes-centralita.component';
 import { FichaPreasistenciasComponent } from './features/sjcs/guardia/guardias-solicitudes-centralita/ficha-preasistencias/ficha-preasistencias.component';
@@ -481,6 +480,7 @@ import { PermutasGestionGuardiaColegiadoComponent } from './features/sjcs/guardi
 import { SustitucionesGestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/gestion-guardia-colegiado/sustituciones-gestion-guardia-colegiado/sustituciones-gestion-guardia-colegiado.component';
 import { TurnoGestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/gestion-guardia-colegiado/turno-gestion-guardia-colegiado/turno-gestion-guardia-colegiado.component';
 import { ListaArchivosGuardiaComponent } from './features/sjcs/guardia/cargas-masivas-guardia/lista-archivos-guardia/lista-archivos-guardia.component';
+import { TarjetaModule } from './commons/tarjeta/tarjeta.module';
 
 
 @NgModule({
@@ -496,7 +496,6 @@ import { ListaArchivosGuardiaComponent } from './features/sjcs/guardia/cargas-ma
 		HoraComponent,
 		InputDivididoComponent,
 		TablaSimpleComponent,
-		TarjetaComponent,
 
 		MyIframeComponent,
 		MenuComponent,
@@ -970,6 +969,7 @@ import { ListaArchivosGuardiaComponent } from './features/sjcs/guardia/cargas-ma
 		OficioModule,
 		BusquedaAsuntosModule,
 		Paginador2Module,
+		TarjetaModule
 	],
 
 	exports: [],
@@ -988,7 +988,6 @@ import { ListaArchivosGuardiaComponent } from './features/sjcs/guardia/cargas-ma
 		ConfirmationService,
 		PersistenceService,
 		TrimPipePipe,
-		SafePipe,
 		TablaResultadoDesplegableJEService,
 		TablaResultadoDesplegableAEService,
 		TablaResultadoMixDocDesigService,

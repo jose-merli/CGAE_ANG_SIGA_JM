@@ -10,7 +10,7 @@ import { CommonsService } from '../../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { TarjetaAsistenciaItem } from '../../../../../../models/guardia/TarjetaAsistenciaItem';
-import moment = require('moment');
+import * as moment from 'moment';
 import { EJGItem } from '../../../../../../models/sjcs/EJGItem';
 import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
 

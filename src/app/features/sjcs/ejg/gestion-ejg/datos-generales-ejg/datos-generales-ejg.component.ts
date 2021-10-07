@@ -11,7 +11,8 @@ import { Message } from 'primeng/components/common/api';
 import { procesos_ejg } from '../../../../../permisos/procesos_ejg';
 import { DesignaItem } from '../../../../../models/sjcs/DesignaItem';
 import { Location } from '@angular/common'
-
+import { TarjetaAsistenciaItem } from '../../../../../models/guardia/TarjetaAsistenciaItem';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-datos-generales-ejg',
