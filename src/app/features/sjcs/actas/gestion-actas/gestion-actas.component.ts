@@ -11,8 +11,6 @@ import { PersistenceService } from '../../../../_services/persistence.service';
 })
 export class GestionActasComponent implements OnInit {
 
-  
-
   fichasPosibles;
   datos: ActasItem = new ActasItem();
   modoEdicion: boolean = true;

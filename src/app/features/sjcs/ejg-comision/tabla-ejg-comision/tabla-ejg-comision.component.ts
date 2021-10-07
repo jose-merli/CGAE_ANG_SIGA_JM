@@ -6,7 +6,6 @@ import { SigaServices } from '../../../../_services/siga.service';
 import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { EJGItem } from '../../../../models/sjcs/EJGItem';
-import { ActualizarAnioActa } from '../../../../models/sjcs/ActualizarAnioActa';
 import { DatePipe } from '../../../../../../node_modules/@angular/common';
 import { Dialog } from 'primeng/primeng';
 import { saveAs } from "file-saver/FileSaver";
@@ -34,7 +33,6 @@ export class TablaEjgComisionComponent implements OnInit {
   selectResolucionFundamento = false;
   selectedDatos = [];
   selectDatos: EJGItem = new EJGItem();
-  actualizarAnioActa: ActualizarAnioActa = new ActualizarAnioActa();
   numSelected = 0;
   selectMultiple: boolean = false;
   seleccion: boolean = false;
@@ -805,35 +803,12 @@ export class TablaEjgComisionComponent implements OnInit {
     }
   }
 
-  guardarEditados() {
 
-    this.actualizarAnioActa.anioEjg = this.selectDatos.annio;
-    this.actualizarAnioActa.numeroEjg = this.selectDatos.numEjg;
-    this.actualizarAnioActa.idTipoEJG = this.selectDatos.tipoEJG;
-    this.actualizarAnioActa.idInstitucionEjgActa = this.selectDatos.idInstitucion;
-    this.actualizarAnioActa.anioIdActa = this.valueAnioActa;
 
-    let borrar;
-    
-    if(this.selectAnioActa == true){
-      this.actualizarAnioActa.borrar = 1;
-    }else{
-      this.actualizarAnioActa.borrar = 0;
-    }
-    this.sigaServices.post("filtrosejg_editarActaAnio",this.actualizarAnioActa).subscribe(
-      n => {
-        this.progressSpinner = false;
-        if (JSON.parse(n.body).status == "OK") this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.busqueda.EjgEnRemesa"));
-      },
-      err => {
-        this.progressSpinner = false;
-        console.log(err);
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-      }
-    );
-  }
 }
 
 
+function guardarEditados() {
+  throw new Error('Function not implemented.');
+}
 
