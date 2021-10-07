@@ -20,14 +20,22 @@ export class DatosGeneralesActasComponent implements OnInit {
   valueNumero: String;
   valuePresidente: String;
   valueSecretario: String;
-
+  horaInicio: Date;
+  horaFin: Date;
+  minutoInicio: Date;
+  minutoFin: Date;
+  observaciones: String;
+  expedientesRetirados: String;
+  expedientesActa: String;
 
 
   @Input() permisoEscritura;
 
-  datosFiltro: ActasItem = new ActasItem();  
+  datosFiltro: ActasItem = new ActasItem();
   comboPresidente = [];
   comboSecretario = [];
+  comboSufijo = [];
+
 
   //Resultados de la busqueda
   @Input() datos: ActasItem;
@@ -74,48 +82,41 @@ export class DatosGeneralesActasComponent implements OnInit {
   ngOnInit() {
     this.getComboPresidente();
     this.getComboSecretario();
+    this.getComboSufijo();
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos()
 
     }
 
-    
+
 
     this.getComboProvincias();
 
     this.validateHistorical();
+  }
 
-    // if (this.modoEdicion) {
-    //   this.body = this.datos;
-    //   this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-    //   if (this.body.codigoPostal == null) {
-    //     this.body.codigoPostal = "";
-    //   }
-
-    //   if (this.datos.visibleMovil == "1")
-    //     this.movilCheck = true
-
-    //   if (this.body != undefined && this.datos.nombrePoblacion != null) {
-    //     this.getComboPoblacion(this.body.nombrePoblacion);
-    //   } else {
-    //     this.progressSpinner = false;
-    //   }
-
-    //   this.changeEmail();
-
-    // } else {
-    //   this.body = new ComisariaItem();
-    //   this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-    // }
-   }
-
-   getComboPresidente() {
+  getComboPresidente() {
     this.sigaServices
       .get("filtrosejg_comboPresidente")
       .subscribe(
         n => {
           console.log("************************************************************************************getComboPresidente**************");
           this.comboPresidente = n.combooItems;
+          this.commonsService.arregloTildesCombo(this.comboPresidente);
+        },
+        err => {
+          console.log(err);
+        }
+      );
+  }
+
+  getComboSufijo() {
+    this.sigaServices
+      .get("filtrosejg_comboSufijo")
+      .subscribe(
+        n => {
+          console.log("************************************************************************************getComboSufijo**************");
+          this.comboSufijo = n.combooItems;
           this.commonsService.arregloTildesCombo(this.comboPresidente);
         },
         err => {
@@ -195,6 +196,17 @@ export class DatosGeneralesActasComponent implements OnInit {
     );
   }
 
+  guardarActa() {
+    this.progressSpinner = true;
+    let url = "";
+
+    let year = ((new Date()).getFullYear());
+    this.datosFiltro.anio = year.toString();
+    
+    url = "filtrosejg_guardarActa";
+      this.callSaveService(url);
+  }
+
   onChangeProvincia() {
 
     // this.body.idPoblacion = "";
@@ -268,21 +280,6 @@ export class DatosGeneralesActasComponent implements OnInit {
     // }
   }
 
-  save() {
-    this.progressSpinner = true;
-    let url = "";
-
-    if (!this.modoEdicion) {
-      url = "gestionComisarias_createComisaria";
-      this.callSaveService(url);
-
-    } else {
-      url = "gestionComisarias_updateComisarias";
-      this.callSaveService(url);
-    }
-
-  }
-
   cambiaMovil() {
     // if (this.movilCheck)
     //   this.body.visibleMovil = 1
@@ -291,42 +288,27 @@ export class DatosGeneralesActasComponent implements OnInit {
   }
 
   callSaveService(url) {
-    // if (this.body.nombre != undefined) this.body.nombre = this.body.nombre.trim();
-    // if (this.body.visibleMovil == null)
-    //   this.body.visibleMovil = 0
-    // this.sigaServices.post(url, this.body).subscribe(
-    //   data => {
+    this.sigaServices.post(url, this.datosFiltro).subscribe(
+      data => {
 
-    //     if (!this.modoEdicion) {
-    //       this.modoEdicion = true;
-    //       this.idComisaria = JSON.parse(data.body).id;
-    //       let send = {
-    //         modoEdicion: this.modoEdicion,
-    //         idComisaria: this.idComisaria
-    //       }
-    //       this.body.idComisaria = this.idComisaria
-    //       this.persistenceService.setDatos(this.body);
-    //       this.modoEdicionSend.emit(send);
-    //     }
+        this.bodyInicial = JSON.parse(data.body).status;
+        console.log(this.bodyInicial);
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.progressSpinner = false;
+      },
+      err => {
 
-    //     this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-
-    //     this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-    //     this.progressSpinner = false;
-    //   },
-    //   err => {
-
-    //     if (err.error != undefined && JSON.parse(err.error).error.description != "") {
-    //       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-    //     } else {
-    //       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-    //     }
-    //     this.progressSpinner = false;
-    //   },
-    //   () => {
-    //     this.progressSpinner = false;
-    //   }
-    // );
+        if (err.error != undefined && JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
 
   }
 
@@ -359,10 +341,10 @@ export class DatosGeneralesActasComponent implements OnInit {
   }
 
   isValidCodigoPostal(): boolean {
-     return (true
-    //   this.body.codigoPostal &&
-    //   typeof this.body.codigoPostal === "string" &&
-    //   /^(?:0[1-9]\d{3}|[1-4]\d{4}|5[0-2]\d{3})$/.test(this.body.codigoPostal)
+    return (true
+      //   this.body.codigoPostal &&
+      //   typeof this.body.codigoPostal === "string" &&
+      //   /^(?:0[1-9]\d{3}|[1-4]\d{4}|5[0-2]\d{3})$/.test(this.body.codigoPostal)
     );
   }
 
@@ -471,4 +453,4 @@ export class DatosGeneralesActasComponent implements OnInit {
     this.msgs = [];
   }
 
- }
+}

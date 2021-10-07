@@ -62,7 +62,8 @@ export class ActasComponent implements OnInit {
     this.sigaServices.post("filtrosejg_busquedaActas", this.filtros.datosFiltro).subscribe(
       n => {
 
-        this.datos = JSON.parse(n.body).actasItem;
+        this.datos = JSON.parse(n.body).actasItems;
+        console.log("parsea bien");
         this.buscar = true;
         this.progressSpinner = false;
         if (this.tabla != null && this.tabla != undefined) {

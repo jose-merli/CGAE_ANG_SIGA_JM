@@ -33,8 +33,28 @@
         <div class="bloque col-lg-9 col-md-9">
 
           <div class="form-row">
-            <div class="form-group col-lg-12 col-md-12">
-              <label style="text-align:center; font-weight: bold;">{{ "general.message.datos.generales" | translate }}</label>
+
+
+            <div class="form-group-interlineado col-lg-3 col-md-3">
+              <div class="form-row">
+                <div class="col-lg-4 col-md-4 pl5">
+                  <label><strong>{{ 'justiciaGratuita.maestros.calendarioLaboralAgenda.anio' |
+                      translate}}</strong></label>
+                  <input type="text" [(ngModel)]="datosFiltro.anio" class="form-control" (keypress)="numberOnly($event)"
+                    maxLength="4" pInputText>
+                </div>
+                <div class="col-log-8 col-md-8 pr5">
+                  <label><strong>{{ 'gratuita.busquedaAsistencias.literal.numero' |
+                      translate}}</strong></label>
+                  <input type="text" class="form-control" #inputNumero pInputText [(ngModel)]="datosFiltro.numeroActa">
+                </div>
+                <div class="col-log-8 col-md-8 pr5">
+                  <label><strong>sufijo</strong></label>
+                  <p-dropdown class="select-form" [(ngModel)]='datosFiltro.sufijo' placeholder="Seleccionar" [options]="comboSufijo"
+                  [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
+                </p-dropdown>
+              </div>
+              </div>
             </div>
 
             <div class="form-group col-lg-2 col-md-2">
@@ -68,6 +88,69 @@
                 [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
               </p-dropdown>
             </div>
+
+            <div class="form-group-interlineado col-lg-3 col-md-3">
+              <div class="flexpana">
+                <div class="flexpana">
+                  Hora Inicio 
+                </div>
+                <div class="flexpana">
+                      <input type="text" class="form-control" maxLength="4" (keypress)="numberOnly($event)" pInputText
+                      [(ngModel)]="horaInicio">
+                </div>
+                <div class="flexpana">
+                  :
+                 </div>
+                <div class="flexpana">
+                  <label><strong></strong></label>
+                      <input type="text" class="form-control" maxLength="4" (keypress)="numberOnly($event)" pInputText
+                      [(ngModel)]="minutoInicio">    
+                  </div>
+              </div>
+            </div>
+
+            <div class="form-group-interlineado col-lg-3 col-md-3">
+              <div class="flexpana">
+                <div class="flexpana">
+                  Hora Fin
+                </div>
+                <div class="flexpana">
+                      <input type="text" class="form-control" maxLength="4" (keypress)="numberOnly($event)" pInputText
+                      [(ngModel)]="horaFin">
+                </div>
+                <div class="flexpana">
+                  :
+                 </div>
+                <div class="flexpana">
+                  <label><strong></strong></label>
+                      <input type="text" class="form-control" maxLength="4" (keypress)="numberOnly($event)" pInputText
+                      [(ngModel)]="minutoFin">    
+                  </div>
+              </div>
+            </div>
+            <div class="form-group-interlineado col-lg-12 col-md-12">
+              <label>observaciones</label>
+              <textarea type="text" class="form-control" pInputText
+                [(ngModel)]="datosFiltro.observaciones">
+              </textarea>
+            </div>
+            <div class="form-group-interlineado col-lg-12 col-md-12">
+              <label>Miembros comision (Actas)</label>
+              <textarea type="text" class="form-control" maxLength="4000" pInputText
+                [(ngModel)]="datosFiltro.miembros">
+              </textarea>
+            </div>
+            <div class="form-group-interlineado col-lg-12 col-md-12">
+              <label>expedientesRetirados</label>
+              <textarea type="text" class="form-control" maxLength="4000" 
+                [(ngModel)]="datosFiltro.pendientes">
+              </textarea>
+            </div>
+            <div class="form-group-interlineado col-lg-1 col-md-1">
+              <label>expedientesActa</label>
+              <input type="text" class="form-control" readonly pInputText
+                [(ngModel)]="expedientesActa">
+            </div>
           </div>
         </div>
       </div>
@@ -78,8 +161,14 @@
       <div class="text-right main-button ">
         <button (click)="checkPermisosRest()" pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-undo"
           iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="checkPermisosSave()" pButton [disabled]="disabledSave()" type="button" icon="far fa-save" iconPos="left"
+        <button (click)="guardarActa()" pButton [disabled]="disabledSave()" type="button" icon="far fa-save" iconPos="left"
           label="{{ 'general.boton.guardar' | translate}}"></button>
+          <button (click)="checkPermisosRest()" pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-undo"
+          iconPos="left" label="Añadir EJG pendientes CAJG"></button>
+          <button (click)="checkPermisosRest()" pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-undo"
+          iconPos="left" label="Cerrar acta"></button>
+          <button (click)="checkPermisosRest()" pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-undo"
+          iconPos="left" label="Abrir acta"></button>
       </div>
     </div>
   </div>

@@ -158,4 +158,13 @@ export class FiltroActasComponent implements OnInit {
     }
   }
 
-}
+  newActa(evento) {
+
+    if (this.persistenceService.getPermisos() != undefined) {
+      this.permisoEscritura = this.persistenceService.getPermisos();
+    }
+      this.router.navigate(["/fichaGestionActas"]);
+    }
+  }
+
+

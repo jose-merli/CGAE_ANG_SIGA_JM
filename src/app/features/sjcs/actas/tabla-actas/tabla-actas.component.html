@@ -67,12 +67,14 @@
   </div>
   <div class="card-footer">
     <div class="text-right main-button">
-      <button *ngIf="!historico" (click)="searchHistorical(); selectedDatos=[]" pButton type="button" icon="fa fa-history" iconPos="left"
-        label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
-      <button *ngIf="historico" (click)="searchHistorical(); selectedDatos=[]" pButton type="button" icon="fa fa-undo" iconPos="left"
-        label="{{'general.message.ocultarHistorico' | translate}}"></button>
       <button *ngIf="!historico" pButton [disabled]="!permisoEscritura || ((!selectMultiple || !selectAll) && selectedDatos.length == 0)"
         (click)="checkPermisosDelete()" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
+        <button *ngIf="!historico" pButton [disabled]="!permisoEscritura || ((!selectMultiple || !selectAll) && selectedDatos.length == 0)"
+        (click)="anadirPendientesDeCajg()" type="button" icon="fa fa-trash-alt" iconPos="left" label="Añadir pendientes de CAJG"></button>
+        <button *ngIf="!historico" pButton [disabled]="!permisoEscritura || ((!selectMultiple || !selectAll) && selectedDatos.length == 0)"
+        (click)="abrirActa()" type="button" icon="fa fa-trash-alt" iconPos="left" label="Abrir Acta"></button>
+        <button *ngIf="!historico" pButton [disabled]="!permisoEscritura || ((!selectMultiple || !selectAll) && selectedDatos.length == 0)"
+        (click)="cerrarActa()" type="button" icon="fa fa-trash-alt" iconPos="left" label="Cerrar Acta"></button>
       <button *ngIf="historico" pButton [disabled]="!permisoEscritura || ((!selectMultiple || !selectAll) && selectedDatos.length == 0)"
         (click)="checkPermisosActivate()" type="button" icon="fa fa-check" iconPos="left" label="{{'general.boton.activar' | translate}}"></button>
     </div>

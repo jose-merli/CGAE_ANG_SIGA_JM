@@ -6,6 +6,8 @@ import { SigaServices } from '../../../../_services/siga.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { ComisariaObject } from '../../../../models/sjcs/ComisariaObject';
 import { CommonsService } from '../../../../_services/commons.service';
+import { ActasItem } from '../../../../models/sjcs/ActasItem';
+
 
 @Component({
   selector: 'app-tabla-actas',
@@ -25,6 +27,8 @@ export class TablaActasComponent implements OnInit {
   selectMultiple: boolean = false;
   seleccion: boolean = false;
   historico: boolean = false;
+  bodyInicial: ActasItem;
+
 
   message;
 
@@ -313,6 +317,96 @@ export class TablaActasComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+
+  abrirActa() {
+    this.sigaServices.post("filtrosejg_abrirActa", this.selectedDatos[0]).subscribe(
+      data => {
+        let bodyerror = JSON.parse(data.body).error;
+        let descripcion = JSON.parse(data.body).error.description;
+ 
+        if (bodyerror != undefined && descripcion != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), descripcion);
+        } else {
+        this.bodyInicial = JSON.parse(data.body).status;
+        console.log(this.bodyInicial);
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.progressSpinner = false;
+      }},
+      err => {
+
+        if (err.error != undefined && JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      })
+  }
+
+
+  cerrarActa() {
+    this.sigaServices.post("filtrosejg_cerrarActa", this.selectedDatos[0]).subscribe(
+      data => {
+
+        let bodyerror = JSON.parse(data.body).error;
+        let descripcion = JSON.parse(data.body).error.description;
+ 
+        if (bodyerror != undefined && descripcion != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), descripcion);
+        } else {
+        this.bodyInicial = JSON.parse(data.body).status;
+        console.log(this.bodyInicial);
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.progressSpinner = false;
+      }},
+      err => {
+
+        if (err.error != undefined && JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      })
+  }
+
+  anadirPendientesDeCajg() {
+    this.sigaServices.post("filtrosejg_abrirActa", this.selectedDatos[0]).subscribe(
+      data => {
+         let bodyerror = JSON.parse(data.body).error;
+        let descripcion = JSON.parse(data.body).error.description;
+
+        console.log(bodyerror);
+        console.log(descripcion);
+
+        if (bodyerror != undefined && descripcion != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(data.body).error.description));
+        } else {
+        this.bodyInicial = JSON.parse(data.body).status;
+        console.log(this.bodyInicial);
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.progressSpinner = false;
+      }},
+      err => {
+
+        if (err.error != undefined && JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      })
   }
 
 
