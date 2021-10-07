@@ -459,6 +459,7 @@ import { FichaCambioLetradoComponent } from './features/sjcs/oficio/designacione
 import { LetradoEntranteComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/ficha-cambio-letrado/letrado-entrante/letrado-entrante.component';
 import { LetradoSalienteComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/ficha-cambio-letrado/letrado-saliente/letrado-saliente.component';
 
+//PRODUCTOS Y SERVICIOS
 import { TiposProductosComponent } from './features/facturacion/maestros/tipos-productos/tipos-productos.component';
 import { TiposServiciosComponent } from './features/facturacion/maestros/tipos-servicios/tipos-servicios.component';
 import { ProductosComponent } from './features/facturacion/productos/productos.component';
@@ -481,6 +482,7 @@ import { CompraProductosComponent } from './features/facturacion/compra-producto
 import { TarjetaFiltroCompraProductosComponent } from './features/facturacion/compra-productos/tarjeta-filtro-compra-productos/tarjeta-filtro-compra-productos.component';
 import { TarjetaListaCompraProductosComponent } from './features/facturacion/compra-productos/tarjeta-lista-compra-productos/tarjeta-lista-compra-productos.component';
 import { DetalleTarjetaPrecioFichaServiciosFacturacionComponent } from './features/facturacion/servicios/ficha-servicios/detalle-tarjeta-precio-ficha-servicios-facturacion/detalle-tarjeta-precio-ficha-servicios-facturacion.component';
+import { ConstructorConsultasComponent } from './features/informes-comunicaciones/consultas/ficha-consulta/constructor-consultas/constructor-consultas.component';
 
 @NgModule({
 	declarations: [
@@ -882,7 +884,8 @@ import { DetalleTarjetaPrecioFichaServiciosFacturacionComponent } from './featur
 		CompraProductosComponent,
 		TarjetaFiltroCompraProductosComponent,
 		TarjetaListaCompraProductosComponent,
-		DetalleTarjetaPrecioFichaServiciosFacturacionComponent
+		DetalleTarjetaPrecioFichaServiciosFacturacionComponent,
+		ConstructorConsultasComponent
 	],
 	imports: [
 		Paginador3Module,
