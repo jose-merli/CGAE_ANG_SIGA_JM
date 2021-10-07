@@ -933,4 +933,8 @@ descargarLog(event){
     this.disableGenerar = $event;
     console.log('DISABLE GENERAR', $event)
   }
+
+  clear() {
+    this.msgs = [];
+  }
 }

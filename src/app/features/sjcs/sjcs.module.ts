@@ -7,6 +7,8 @@ import { JusticiablesModule } from './justiciables/justiciables.module';
 import { GuardiaModule } from './guardia/guardia.module';
 import { OficioModule } from './oficio/oficio.module';
 import { EJGModule } from './ejg/ejg.module';
+import { ConfirmDialogModule, GrowlModule } from 'primeng/primeng';
+import { TableModule } from 'primeng/table';
 
 @NgModule({
   declarations: [],
@@ -16,6 +18,9 @@ import { EJGModule } from './ejg/ejg.module';
     OficioModule,
     JusticiablesModule,
     GuardiaModule,
+    ConfirmDialogModule,
+    TableModule,
+    GrowlModule,
     routingSjcs,
 
     EJGModule,

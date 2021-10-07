@@ -3,7 +3,7 @@
   <div class="loader"></div>
 </div>
 
- <p-dataTable #table [value]="contrarios" emptyMessage="{{ 'general.message.no.registros' | translate}}" [responsive] = "true" [loading]="loading" loadingIcon="fa-spinner"
+ <p-dataTable #table [value]="contrarios" emptyMessage="{{ 'general.message.no.registros' | translate}}" [responsive] = "true"  loadingIcon="fa-spinner"
   class="tabla-listado" [sortOrder]="1" [(selection)]="selectedDatos" [paginator]="true" paginatorPosition="both" [rows]="rows" selectionMode="single" (onRowSelect)="onSelectRow($event.data)"
   (onRowUnselect)="actualizaSeleccionados()">
     <p-column field="nif" header="{{'administracion.usuarios.literal.NIF' | translate}}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}">

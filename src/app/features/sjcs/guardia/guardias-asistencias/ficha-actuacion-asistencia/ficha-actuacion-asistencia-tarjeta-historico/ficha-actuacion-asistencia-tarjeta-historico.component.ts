@@ -34,7 +34,7 @@ export class FichaActuacionAsistenciaTarjetaHistoricoComponent implements OnInit
       value: 40
     }
   ];
-
+  loading;
   @ViewChild("table") table : DataTable;
   constructor(private changeDetectorRef : ChangeDetectorRef,
     private sigaServices : SigaServices) { }

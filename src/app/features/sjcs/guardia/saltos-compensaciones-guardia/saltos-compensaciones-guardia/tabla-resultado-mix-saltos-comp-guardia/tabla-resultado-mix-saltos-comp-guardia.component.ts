@@ -57,7 +57,7 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
   textSelected: String = "{0} guardias seleccionadas";
   comboGuardias = [];
   comboColegiados = [];
-
+  isDisabled;
   constructor(private renderer: Renderer2, private datepipe: DatePipe, private sigaServices: SigaServices, private commonsService: CommonsService) {
     this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
       for (let i = 0; i < this.table.nativeElement.children.length; i++) {

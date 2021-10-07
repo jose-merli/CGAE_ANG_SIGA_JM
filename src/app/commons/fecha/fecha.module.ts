@@ -2,9 +2,10 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FechaComponent } from './fecha.component';
 import { CalendarModule } from 'primeng/calendar';
-import { ButtonModule } from 'primeng/primeng';
+import { ButtonModule, ConfirmDialogModule, GrowlModule } from 'primeng/primeng';
 import { PipeTranslationModule } from '../translate/pipe-translation.module';
 import { FormsModule } from '@angular/forms';
+import { TableModule } from 'primeng/table';
 
 @NgModule({
   imports: [
@@ -12,7 +13,10 @@ import { FormsModule } from '@angular/forms';
     FormsModule,
     CalendarModule,
     ButtonModule,
-    PipeTranslationModule
+    PipeTranslationModule,
+    ConfirmDialogModule,
+    TableModule,
+    GrowlModule
   ],
   declarations: [
     FechaComponent

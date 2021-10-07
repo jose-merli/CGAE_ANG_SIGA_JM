@@ -22,6 +22,11 @@ export class BuscadorGuardiaComponent implements OnInit {
   msgs;
   permisoEscritura
   progressSpinner: boolean = false;
+  totalRegistros;
+  seleccionarTodo;
+  cabeceras;
+  rowGroupsAux;
+  rowGroups;
 
   @ViewChild(FiltrosGuardiaComponent) filtros;
   @ViewChild(TablaGuardiasComponent) tabla;
@@ -143,6 +148,14 @@ export class BuscadorGuardiaComponent implements OnInit {
 
     });
 
+  }
+
+  notifyAnySelected(event){
+
+  }
+
+  checkSelectedRow(event){
+    
   }
 
 }

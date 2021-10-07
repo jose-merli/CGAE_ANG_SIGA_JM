@@ -76,4 +76,4 @@ import { TablaDestinatariosComponent } from './gestion-retenciones/gestion-reten
         { provide: LOCALE_ID, useValue: 'es-ES' }
     ]
 })
-export class GestionDestinatariosComponent { }
+export class GestionDestinatariosModule { }

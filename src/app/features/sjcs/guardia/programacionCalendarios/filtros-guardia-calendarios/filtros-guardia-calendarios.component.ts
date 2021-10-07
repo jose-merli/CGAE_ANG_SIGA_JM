@@ -43,7 +43,7 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
   emptyFilters = true;
   textFilter: string = "Seleccionar";
   textSelected: String = "{0} etiquetas seleccionadas";
-
+  isDisabledEstado = false;
   constructor(private router: Router,
     private translateService: TranslateService,
     private sigaServices: SigaServices,
@@ -449,7 +449,9 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
       return date2;
     }
 
+    buscarEstado(event){
 
+    }
 
 }
 
