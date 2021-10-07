@@ -141,3 +141,11 @@
     <button type="button" pButton icon="fa-close" label="No" (click)="cdCompensacionFac.reject()"></button>
   </p-footer>
 </p-confirmDialog>
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" icon="fa fa-question-circle" width="425"
+  key="cdDeshacerCierre" #cdDeshacerCierre>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="cdDeshacerCierre.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="cdDeshacerCierre.reject()"></button>
+  </p-footer>
+</p-confirmDialog>

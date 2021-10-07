@@ -455,6 +455,18 @@ export class DatosPagosComponent implements OnInit, AfterViewInit {
 
   deshacerCierre() {
 
+    this.confirmationService.confirm({
+      key: "cdDeshacerCierre",
+      message: this.translateService.instant("messages.factSJCS.deshacerCierreConfirmation"),
+      icon: "fa fa-search",
+      accept: () => {
+        alert("GENIAL");
+      },
+      reject: () => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant('general.message.accion.cancelada'));
+      }
+    });
+
   }
 
   disabledSimularPago() {
@@ -478,7 +490,7 @@ export class DatosPagosComponent implements OnInit, AfterViewInit {
       this.sigaService.post("pagosjcs_simularPago", payload).subscribe(
 
         data => {
-          
+
           this.progressSpinner = false;
 
           const resp = JSON.parse(data.body);

@@ -6,6 +6,7 @@ import { CartasFacturacionPagosItem } from '../../../../../models/sjcs/CartasFac
 import { KEY_CODE } from '../../../../../commons/login-develop/login-develop.component';
 import { TranslateService } from '../../../../../commons/translate/translation.service';
 import { MultiSelect } from 'primeng/primeng';
+import { SigaStorageService } from '../../../../../siga-storage.service';
 
 @Component({
   selector: 'app-filtro-cartas-facturacion-pago',
@@ -14,6 +15,7 @@ import { MultiSelect } from 'primeng/primeng';
 })
 export class FiltroCartasFacturacionPagoComponent implements OnInit {
 
+  obligatorio: boolean = false;
   showDatosGenerales: boolean = true;
   showDatosColegiado: boolean = true;
   filtros: CartasFacturacionPagosItem = new CartasFacturacionPagosItem();
@@ -38,7 +40,7 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
   @Input() activaVolver;
 
   constructor(private commonsService: CommonsService, private sigaServices: SigaServices,
-    private persistenceService: PersistenceService, private translateService: TranslateService) { }
+    private persistenceService: PersistenceService, private translateService: TranslateService, private sigaStorageService: SigaStorageService) { }
 
   ngOnInit() {
 
@@ -65,24 +67,22 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
 
     this.getCombos();
 
-    this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
+    this.isLetrado = this.sigaStorageService.isLetrado;
 
     if (this.isLetrado) {
       this.isColegiado();
     } else {
-      //Comprobamos que se ha realizado una busqueda en la busqueda express
-      let busquedaColegiado = this.persistenceService.getDatosBusquedaGeneralSJCS();
+      if (sessionStorage.getItem('buscadorColegiados')) {
 
-      if (busquedaColegiado != undefined) {
-        this.filtros.ncolegiado = busquedaColegiado.nColegiado;
-        this.filtros.idPersona = busquedaColegiado.idPersona;
-        this.filtros.apellidosNombre = busquedaColegiado.nombre;
+        const { nombre, apellidos, nColegiado, idPersona } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
+
+        this.filtros.apellidosNombre = `${apellidos}, ${nombre}`;
+        this.filtros.ncolegiado = nColegiado;
+        this.filtros.idPersona = idPersona;
+
+        sessionStorage.removeItem('buscadorColegiados');
       }
-
-      this.esColegiado = false;
     }
-
-
   }
 
   getCombos() {
@@ -94,58 +94,14 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
   }
 
   isColegiado() {
-    this.progressSpinner = true;
-    this.sigaServices.get("isColegiado").subscribe(
-      data => {
-        let persona = data;
 
-        if (persona != undefined && persona != null) {
-          this.filtros.apellidosNombre = persona.nombre;
-          this.filtros.ncolegiado = persona.numColegiado;
-          this.filtros.idPersona = persona.idPersona;
-          this.esColegiado = true;
+    this.esColegiado = false
 
-        } else {
-          //Comprobamos que se ha realizado una busqueda en la busqueda express
-          let busquedaColegiado = this.persistenceService.getDatosBusquedaGeneralSJCS();
+    this.filtros.ncolegiado = this.sigaStorageService.numColegiado;
+    this.filtros.idPersona = this.sigaStorageService.idPersona;
+    this.filtros.apellidosNombre = this.sigaStorageService.nombreApe;
 
-          if (busquedaColegiado != undefined) {
-            this.filtros.ncolegiado = busquedaColegiado.nColegiado;
-            this.filtros.idPersona = busquedaColegiado.idPersona;
-            this.filtros.apellidosNombre = busquedaColegiado.nombre;
-          }
-
-          this.esColegiado = false;
-
-        }
-
-        //Si proviene de la ficha de facturacion se realiza la busqueda de cartas de facturacion perteneciente a ese colegiado
-        if (undefined != this.persistenceService.getDatos()) {
-          let datos = this.persistenceService.getDatos();
-
-          if (undefined != datos.idFacturacion && null != datos.idFacturacion && this.esColegiado) {
-            this.filtros.idFacturacion = datos.idFacturacion;
-            this.modoBusqueda = datos.modo;
-            this.emitSearch.emit(this.modoBusqueda);
-          }
-        }
-
-        this.progressSpinner = false;
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner = false;
-
-      }
-    );
-
-    // if (JSON.parse(JSON.parse(sessionStorage.getItem("isLetrado")))) {
-    //   let persona = JSON.parse(sessionStorage.getItem("personaBody"));
-    //   this.filtros.ncolegiado = persona.ncolegiado;
-    //   this.filtros.apellidosNombre = persona.apellidosNombre;
-
-    //   this.search();
-    // }
+    this.showDatosColegiado = true;
   }
 
   search() {
@@ -165,12 +121,12 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
     if (event != undefined) {
       this.filtros.apellidosNombre = event.nombreAp;
       this.filtros.ncolegiado = event.nColegiado;
-      this.filtros.idPersona = event.idPersona;
     } else {
       this.filtros.apellidosNombre = undefined;
       this.filtros.ncolegiado = undefined;
-      this.filtros.idPersona = undefined;
     }
+
+    this.persistenceService.setFiltros(this.filtros);
   }
 
   recuperarIdPersona(event) {
@@ -179,6 +135,8 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
     } else {
       this.filtros.idPersona = undefined;
     }
+
+    this.persistenceService.setFiltros(this.filtros);
   }
 
   checkFilters() {
@@ -189,7 +147,7 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
 
 
       if (this.modoBusquedaFacturacion) {
-        if (this.filtros.idFacturacion == null || this.filtros.idFacturacion == undefined) {
+        if ((this.filtros.idFacturacion == null || this.filtros.idFacturacion == undefined) && (this.filtros.idPersona == undefined || this.filtros.idPersona == null || this.filtros.idPersona.trim().length == 0)) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
           return false;
 
@@ -197,7 +155,7 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
           return true;
         }
       } else {
-        if (this.filtros.idPago == null || this.filtros.idPago == undefined) {
+        if ((this.filtros.idPago == null || this.filtros.idPago == undefined) && (this.filtros.idPersona == undefined || this.filtros.idPersona == null || this.filtros.idPersona.trim().length == 0)) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
           return false;
 

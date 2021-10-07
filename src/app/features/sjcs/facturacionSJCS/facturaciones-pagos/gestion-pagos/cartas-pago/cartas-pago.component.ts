@@ -9,11 +9,11 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 import { Enlace } from '../gestion-pagos.component';
 
 @Component({
-  selector: 'app-detalle-pago',
-  templateUrl: './detalle-pago.component.html',
-  styleUrls: ['./detalle-pago.component.scss']
+  selector: 'app-cartas-pago',
+  templateUrl: './cartas-pago.component.html',
+  styleUrls: ['./cartas-pago.component.scss']
 })
-export class DetallePagoComponent implements OnInit, OnChanges, AfterViewInit {
+export class CartasPagoComponent implements OnInit, OnChanges, AfterViewInit {
 
   progressSpinner: boolean = false;
   permisos;
@@ -89,10 +89,10 @@ export class DetallePagoComponent implements OnInit, OnChanges, AfterViewInit {
 
   linkCartasPago() {
 
-    if (this.idPago != undefined && this.idPago != null && this.idEstadoPago != undefined && this.idEstadoPago != null) {
+    if (this.idEstadoPago == '30' && this.modoEdicion && this.idPago != undefined && this.idPago != null && this.idEstadoPago != undefined && this.idEstadoPago != null) {
 
       const datosCartasPago = {
-        idPago: this.idPago,
+        idPago: [this.idPago],
         idEstadoPago: this.idEstadoPago,
         modoBusqueda: 'p'
       };

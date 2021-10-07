@@ -393,7 +393,7 @@ import { CartasFacturacionComponent } from './features/sjcs/facturacionSJCS/fact
 import { GestionPagosComponent } from './features/sjcs/facturacionSJCS/facturaciones-pagos/gestion-pagos/gestion-pagos.component';
 import { DatosPagosComponent } from './features/sjcs/facturacionSJCS/facturaciones-pagos/gestion-pagos/datos-pagos/datos-pagos.component';
 import { ConfiguracionFicherosComponent } from './features/sjcs/facturacionSJCS/facturaciones-pagos/gestion-pagos/configuracion-ficheros/configuracion-ficheros.component';
-import { DetallePagoComponent } from './features/sjcs/facturacionSJCS/facturaciones-pagos/gestion-pagos/detalle-pago/detalle-pago.component';
+import { CartasPagoComponent } from './features/sjcs/facturacionSJCS/facturaciones-pagos/gestion-pagos/cartas-pago/cartas-pago.component';
 import { CompensacionFacturaComponent } from './features/sjcs/facturacionSJCS/facturaciones-pagos/gestion-pagos/compensacion-factura/compensacion-factura.component';
 import { ConceptosPagosComponent } from './features/sjcs/facturacionSJCS/facturaciones-pagos/gestion-pagos/conceptos-pagos/conceptos-pagos.component';
 import { SiNoPipe } from './commons/sino-pipe/si-no.pipe';
@@ -865,7 +865,7 @@ import { GuardiaModule } from './features/sjcs/guardia/guardia.module';
 		GestionPagosComponent,
 		DatosPagosComponent,
 		ConfiguracionFicherosComponent,
-		DetallePagoComponent,
+		CartasPagoComponent,
 		CompensacionFacturaComponent,
 		ConceptosPagosComponent,
 		SiNoPipe,

@@ -156,6 +156,7 @@ export class HomeComponent implements OnInit {
 					if(usuarioLogado) {
 						this.localStorageService.idPersona = usuarioLogado.idPersona;
 						this.localStorageService.numColegiado = usuarioLogado.numColegiado;
+						this.localStorageService.nombreApe = usuarioLogado.nombre;
 					}
 				});
 		});

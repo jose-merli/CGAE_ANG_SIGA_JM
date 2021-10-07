@@ -55,7 +55,7 @@ export class CartasFacturacionComponent implements OnInit {
     if (undefined != this.idFacturacion && null != this.idFacturacion && undefined != this.idEstadoFacturacion && null != this.idEstadoFacturacion && (this.idEstadoFacturacion == '30' || this.idEstadoFacturacion == '20')) {
 
       const datosCartasFacturacion = {
-        idFacturacion: this.idFacturacion,
+        idFacturacion: [this.idFacturacion],
         idEstadoFacturacion: this.idEstadoFacturacion,
         modoBusqueda: 'f'
       };

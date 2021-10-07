@@ -25,7 +25,7 @@ export class CartasFacturacionPagoComponent implements OnInit, OnDestroy {
   modoBusqueda: string;
   msgs = [];
 
-  @ViewChild(FiltroCartasFacturacionPagoComponent) filtros;
+  @ViewChild(FiltroCartasFacturacionPagoComponent) filtros: FiltroCartasFacturacionPagoComponent;
   @ViewChild(TablaCartasFacturacionPagoComponent) tabla;
 
   constructor(private commonsService: CommonsService, private persistenceService: PersistenceService,
@@ -77,12 +77,11 @@ export class CartasFacturacionPagoComponent implements OnInit, OnDestroy {
 
       //Si es letrado no puede ver las cartas de pago de las ficha de pagos 
       if (!isLetrado) {
-        this.filtros.filtros.idPago = datos.idPago;
+        this.filtros.filtros.idPago = [datos.idPago];
         this.persistenceService.setFiltros(datos);
         this.search(datos.modo);
       }
     }
-
   }
 
   volver() {
@@ -225,6 +224,10 @@ export class CartasFacturacionPagoComponent implements OnInit, OnDestroy {
       } else {
         filtersCopy.idPartidaPresupuestaria = filtersCopy.idPartidaPresupuestaria.toString();
       }
+    }
+
+    if (filtersCopy.idFacturacion) {
+      delete filtersCopy.idFacturacion;
     }
 
     this.sigaServices.post("facturacionsjcs_buscarCartaspago", filtersCopy).subscribe(

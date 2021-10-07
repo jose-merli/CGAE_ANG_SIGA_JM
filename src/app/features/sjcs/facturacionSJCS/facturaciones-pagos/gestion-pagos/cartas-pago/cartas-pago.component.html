@@ -21,7 +21,7 @@
               </label>
               <label>
                 <i class="fas fa-edit icon-enlace"></i>
-                <span (click)="linkCartasPago()" style="color: blue; text-decoration: underline; cursor: pointer;">{{
+                <span (click)="linkCartasPago()" [ngClass]="{'enlace-activado': modoEdicion && idEstadoPago == '30', 'enlace-desactivado':!modoEdicion}">{{
                   "facturacionSJCS.facturacionesYPagos.cartaPago" | translate }}
                 </span>
               </label>

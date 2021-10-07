@@ -6,7 +6,7 @@ import { Location } from "@angular/common";
 import { CompensacionFacturaComponent } from './compensacion-factura/compensacion-factura.component';
 import { ConfiguracionFicherosComponent } from './configuracion-ficheros/configuracion-ficheros.component';
 import { DatosPagosComponent } from './datos-pagos/datos-pagos.component';
-import { DetallePagoComponent } from './detalle-pago/detalle-pago.component';
+import { CartasPagoComponent } from './cartas-pago/cartas-pago.component'
 import { PagosjgItem } from '../../../../../models/sjcs/PagosjgItem';
 import { ConceptosPagosComponent } from './conceptos-pagos/conceptos-pagos.component';
 import { procesos_facturacionSJCS } from '../../../../../permisos/procesos_facturacionSJCS';
@@ -20,6 +20,7 @@ import { ParametroRequestDto } from '../../../../../models/ParametroRequestDto';
 import { SigaStorageService } from '../../../../../siga-storage.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { PagosjgDTO } from '../../../../../models/sjcs/PagosjgDTO';
+import { PersistenceService } from '../../../../../_services/persistence.service';
 
 export interface Enlace {
   id: string;
@@ -80,7 +81,7 @@ export class GestionPagosComponent extends SigaWrapper implements OnInit, AfterV
   @ViewChild(ConfiguracionFicherosComponent) configuracionFic: ConfiguracionFicherosComponent;
   @ViewChild(DatosPagosComponent) datosPagos: DatosPagosComponent;
   @ViewChild(ConceptosPagosComponent) conceptos: ConceptosPagosComponent;
-  @ViewChild(DetallePagoComponent) detallePagos: DetallePagoComponent;
+  @ViewChild(CartasPagoComponent) detallePagos: CartasPagoComponent;
 
   constructor(private location: Location,
     private commonsService: CommonsService,
@@ -88,7 +89,8 @@ export class GestionPagosComponent extends SigaWrapper implements OnInit, AfterV
     private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
     private sigaStorageService: SigaStorageService,
-    private sigaServices: SigaServices) {
+    private sigaServices: SigaServices,
+    private persistenceService: PersistenceService) {
     super(USER_VALIDATIONS);
   }
 
@@ -105,19 +107,17 @@ export class GestionPagosComponent extends SigaWrapper implements OnInit, AfterV
         this.router.navigate(["/errorAcceso"]);
       }
 
-      const paramsPago = JSON.parse(sessionStorage.getItem("paramsPago"));
-
       this.getParamDeducirCobroAutom();
 
-      if (paramsPago && null != paramsPago) {
-        this.idPago = paramsPago.idPago;
-        this.idEstadoPago = paramsPago.idEstadoPago;
-        this.idFacturacion = paramsPago.idFacturacion;
-        sessionStorage.removeItem("paramsPago");
+      if (null != this.persistenceService.getDatos()) {
+        this.datos = this.persistenceService.getDatos();
+        this.idPago = this.datos.idPagosjg;
+        this.idEstadoPago = this.datos.idEstado;
+        this.idFacturacion = this.datos.idFacturacion;
         this.getPago();
       }
 
-      if (paramsPago == undefined || paramsPago == null || undefined == paramsPago.idPago) {
+      if (undefined == this.datos || null == this.datos || undefined == this.datos.idPagosjg) {
         this.modoEdicion = false;
       } else {
         this.modoEdicion = true;
