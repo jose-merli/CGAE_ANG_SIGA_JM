@@ -22,4 +22,5 @@ export class ResolucionEJGItem {
     numero: number;
     idInstitucion: number;
     idTipoEJG: number;
+    docResolucion: String;
 }

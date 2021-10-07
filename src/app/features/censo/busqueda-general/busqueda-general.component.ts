@@ -95,6 +95,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
   idClaseComunicacion: String;
   keys: any[] = [];
   fromAbogadoContrario: boolean = false;
+  fromAbogadoContrarioEJG: boolean = false;
 
   migaPan: string = '';
   migaPan2: string = '';
@@ -145,9 +146,13 @@ export class BusquedaGeneralComponent implements OnDestroy {
   ngOnInit() {
 
     if (sessionStorage.getItem("origin") == "AbogadoContrario") {
-      sessionStorage.removeItem('origin');
       this.fromAbogadoContrario = true;
     }
+    if(sessionStorage.getItem("origin") == "AbogadoContrarioEJG"){
+      this.fromAbogadoContrarioEJG = true;
+    }
+
+    sessionStorage.removeItem('origin');
     this.progressSpinner = true;
     this.currentRoute = this.router.url;
     this.getMigaPan();
@@ -641,6 +646,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
 
     if (this.persona == 'f') {
       if (this.checkFilterFisic()) {
+        this.progressSpinner = true;
         if (this.bodyFisica.nif == undefined) {
           this.bodyFisica.nif = '';
         }
@@ -723,6 +729,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
             setTimeout(() => {
               this.commonsService.scrollTablaFoco('tablaFoco');
             }, 5);
+            this.progressSpinner = false;
           }
         );
       }
@@ -772,7 +779,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
         );
       }
     }
-    else {
+    else if(this.persona == 'j') {
       if (this.checkFilterJuridic()) {
         if (this.selectedTipo != undefined && this.selectedTipo.value == '') {
           this.bodyJuridica.tipo = '';
@@ -846,6 +853,8 @@ export class BusquedaGeneralComponent implements OnDestroy {
               }, 5);
             }
           );
+      }else{
+        this.progressSpinner = false;
       }
     }
   }
@@ -874,13 +883,17 @@ export class BusquedaGeneralComponent implements OnDestroy {
     
     //let colegioSelec = this.colegios_seleccionados[0].idInstitucion;
     // En caso que venga de una ficha de contrario
-    if (this.fromAbogadoContrario) {
+    if (this.fromAbogadoContrario || this.fromAbogadoContrarioEJG) {
       sessionStorage.setItem('abogado', JSON.stringify(id));
+      if(this.fromAbogadoContrario) sessionStorage.setItem("origin", "Contrario");
+      else sessionStorage.setItem("origin", "ContrarioEJG");
       this.location.back();
     }
     //En caso que se este seleccionando un nuevo porcurador
     else if (this.nuevoProcurador) {
       sessionStorage.setItem('datosProcurador', JSON.stringify(id));
+      if(this.fromAbogadoContrario) sessionStorage.setItem("origin", "Contrario");
+      else if(this.fromAbogadoContrarioEJG) sessionStorage.setItem("origin", "ContrarioEJG");
       this.location.back();
     }
     // ir a ficha de notario
@@ -1376,6 +1389,8 @@ export class BusquedaGeneralComponent implements OnDestroy {
   }
 
   backTo() {
+    if(this.fromAbogadoContrario) sessionStorage.setItem("origin", "Contrario");
+    else if(this.fromAbogadoContrarioEJG) sessionStorage.setItem("origin", "ContrarioEJG");
     this.location.back();
   }
 

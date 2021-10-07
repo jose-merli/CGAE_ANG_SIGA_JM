@@ -58,8 +58,8 @@
 
 <div class="card-footer">
   <div class="text-right main-button">
-    <button pButton type="button" icon="fa fa-paper-plane" iconPos="left" label="Comunicar" [disabled]="true"
-      (click)="showMsg('success', 'Se ha comunicado correctamente', '')"></button>
+    <button pButton type="button" icon="fa fa-paper-plane" iconPos="left" label="Comunicar" [disabled]="!disableButtons"
+      (click)="navigateComunicar()"></button>
     <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer"
       (click)="showMsg('success', 'Se ha restablecido correctamente', 'Restablecer')" [disabled]="isLetrado"></button>
     <button pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"

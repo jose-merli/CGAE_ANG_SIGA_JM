@@ -157,6 +157,12 @@ export class OldSigaServices {
 		//Administracion
 		catalogosMaestros: 'Dispatcher.do?proceso=78',
 
+		//EJG
+		expedienteDatAudi: 'Dispatcher.do?proceso=300', 
+		detalleSOJ: 'Dispatcher.do?proceso=94A',
+
+		//expedienteDatAudi: 'EXP_Auditoria_DatosGenerales.do?soloSeguimiento=false&editable=1&modo=&avanzada=&metodo=abrirNuevoEjg&numeroEjg=80&numEJGDisciplinario=20120&idTipoEjg=3&anioEjg=2021&nifSolicitante=&nombreSolicitante=++&idInstitucion_TipoExpediente=2005&numeroProcedimiento=&anioProcedimiento=&procedimiento=1231&asunto=&juzgado=114&juzgadoInstitucion=&pretension=128&pretensionInstitucion=2005&idturnoDesignado=3931&nombreDesignado=2005001421&numColDesignado=&idclasificacion=1&solicitanteEjgNif=&solicitanteEjgNombre=&solicitanteEjgApellido1=&solicitanteEjgApellido2=',
+
 		loginDevelop: 'developmentLogin.do',
 		//login: "sigainit.do"
 		login: 'login.do'
@@ -184,6 +190,8 @@ export class OldSigaServices {
 		let headers = new HttpHeaders({
 			'X-UA-Compatible': 'IE=EmulateIE7'
 		});
+
+		console.log('entra en el metodo get de oldsigaservice');
 
 		// let options = { headers: headers, responseType: 'blob' }
 		// options.responseType = ResponseContentType.Blob;

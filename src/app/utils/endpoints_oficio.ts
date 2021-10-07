@@ -60,6 +60,8 @@ export let endpoints_oficio: any = {
     justificacionExpres_actualizacion: "oficio/actualizaJustificacionExpres",
     justificacionExpres_eliminacion: "oficio/eliminaJustificacionExpres",
     justificacionExpres_insercion: "oficio/insertaJustificacionExpres",
+    justificacionExpres_getEJG: "oficio/getEJG",
+
 
     //CARGAS MASIVAS OFICIO
     busquedaGuardia_guardia: "combo/guardias",

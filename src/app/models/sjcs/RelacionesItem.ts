@@ -27,6 +27,8 @@ export class RelacionesItem {
     dictamenObs : string;
     idFundamentoCalif : string;
     idGuardia : string;
+    fechaDesignacion:Date;
+    idpersonajg: String;
     
     constructor() { }
   }

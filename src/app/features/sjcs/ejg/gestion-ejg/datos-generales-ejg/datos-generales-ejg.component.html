@@ -125,12 +125,15 @@
                 <input type="text" [(ngModel)]="body.numeroexpInsos" [disabled]="true" class="form-control"
                   (keypress)="numberOnly($event)" maxLength="10" pInputText>
               </div>
-              <label>{{ 'justiciaGratuita.ejg.datosGenerales.TipoExpediente' | translate}}:</label>
-              <br>
-              <label *ngIf="showTipoExp">{{tipoExpedienteDes | translate}}</label>
-              <p-dropdown *ngIf="!showTipoExp" class="select-form" [(ngModel)]='body.idTipoExpInsos'
-                placeholder="Seleccionar" [options]="comboTipoExpediente" [filter]="true" filterBy="label,labelSinTilde"
-                [showClear]="true"></p-dropdown>
+              <div class="form-row">
+                <div class="form-group col-lg-6 col-md-6">
+                  <label>{{ 'justiciaGratuita.ejg.datosGenerales.TipoExpediente' | translate}}:</label>
+                  <label *ngIf="showTipoExp">{{tipoExpedienteDes}}</label>
+                  <p-dropdown *ngIf="!showTipoExp" class="select-form" [(ngModel)]='body.idTipoExpInsos'
+                    placeholder="Seleccionar" [options]="comboTipoExpediente" [filter]="true" filterBy="label,labelSinTilde"
+                    [showClear]="true"></p-dropdown>
+                </div>
+              </div>
           </div>
         </div>
       </div>
@@ -138,13 +141,13 @@
 
     <div *ngIf="esFichaActiva('datosGenerales')" class="card-footer">
       <div class="text-right main-button ">
-        <button (click)="checkPermisosAsociarDes()" pButton [disabled]="!permisoEscritura || noAsocDes || !modoEdicion" type="button"
+        <button (click)="checkPermisosAsociarDes()" pButton [disabled]="!permisoEscritura || !noAsocDes || !modoEdicion" type="button"
           icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.AsociarDesignacion' | translate}}"></button>
 
-        <button (click)="checkPermisosCreateDes()" pButton [disabled]="!permisoEscritura || noAsocDes || !modoEdicion" type="button"
+        <button (click)="checkPermisosCreateDes()" pButton [disabled]="!permisoEscritura || !noAsocDes || !modoEdicion" type="button"
           icon="fa fa-download" iconPos="left" label="{{ 'general.boton.crearDesignacion' | translate}}"></button>
 
-        <button (click)="checkPermisosAddExp()" pButton [disabled]="!permisoEscritura || !modoEdicion " type="button"
+        <button (click)="checkPermisosAddExp()" pButton [disabled]="!permisoEscritura || !modoEdicion || noAsocDes" type="button"
           icon="fa fa-plus" iconPos="left"
           label="{{'justiciaGratuita.ejg.datosGenerales.AddExpediente' | translate }}"></button>
 

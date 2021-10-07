@@ -9,9 +9,8 @@ import { MultiSelect } from 'primeng/multiselect';
 import { noComponentFactoryError } from '@angular/core/src/linker/component_factory_resolver';
 import { Message } from 'primeng/components/common/api';
 import { procesos_ejg } from '../../../../../permisos/procesos_ejg';
-import { TarjetaAsistenciaItem } from '../../../../../models/guardia/TarjetaAsistenciaItem';
-import moment = require('moment');
-import { Location } from '@angular/common';
+import { DesignaItem } from '../../../../../models/sjcs/DesignaItem';
+import { Location } from '@angular/common'
 
 
 @Component({
@@ -78,8 +77,8 @@ export class DatosGeneralesEjgComponent implements OnInit {
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
     private commonsServices: CommonsService,
     private translateService: TranslateService,
-    private router: Router,
-    private location : Location) { }
+    private location: Location,
+    private router: Router) { }
 
   ngOnInit() {
     this.resaltadoDatos = true;
@@ -126,13 +125,12 @@ export class DatosGeneralesEjgComponent implements OnInit {
       this.body = new EJGItem();
       this.bodyInicial = new EJGItem();
       this.showTipoExp = false;
-      // this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     }
 
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
     });
-    
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -151,7 +149,6 @@ export class DatosGeneralesEjgComponent implements OnInit {
         JSON.parse(n.body).forEach(element => {
           this.bodyInicial.prestacionesRechazadas.push(element.idprestacion.toString());
         });;
-        //this.bodyInicial.prestacion = this.body.prestacion.filter(x => this.bodyInicial.prestacionesRechazadas.indexOf(x) === -1);
         this.bodyInicial.prestacion = this.comboPrestaciones.map(it => it.value.toString()).filter(x => this.bodyInicial.prestacionesRechazadas.indexOf(x) === -1);
         this.body.prestacion = this.bodyInicial.prestacion;
       },
@@ -197,7 +194,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
     );
   }
 
-  changeTipoEJGColegio(){
+  changeTipoEJGColegio() {
     this.comboTipoEJGColegio.forEach(element => {
       if (element.value == this.body.tipoEJGColegio) this.tipoEJGColDesc = element.label;
     });
@@ -227,7 +224,6 @@ export class DatosGeneralesEjgComponent implements OnInit {
         this.commonsServices.arregloTildesCombo(this.comboPrestaciones);
         this.body.prestacion = n.combooItems.map(it => it.value.toString());
         this.bodyInicial.prestacion = this.body.prestacion;
-        // this.textSelected = n.combooItems;
       },
       err => {
         console.log(err);
@@ -318,7 +314,6 @@ export class DatosGeneralesEjgComponent implements OnInit {
       this.msgs = msg;
     } else {
       if (this.disabledSave()) {
-        //this.msgs = this.commonsServices.checkPermisoAccion();
         this.muestraCamposObligatorios();
       } else {
         this.save();
@@ -340,13 +335,13 @@ export class DatosGeneralesEjgComponent implements OnInit {
           if (n.statusText == "OK") {
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
             //Se actualiza la tarjeta de estados en el caso que se actualice el estado inicial por cambiar la fecha de apertura
-            if(this.body.fechaApertura != this.bodyInicial.fechaApertura) 
+            if (this.body.fechaApertura != this.bodyInicial.fechaApertura)
               this.newEstado.emit(null);
 
-            this.body.numAnnioProcedimiento= "E"+this.body.annio+"/"+this.body.numEjg;
+            this.body.numAnnioProcedimiento = "E" + this.body.annio + "/" + this.body.numEjg;
 
             this.bodyInicial = this.body;
-           
+
             this.persistenceService.setDatos(this.bodyInicial);
 
             this.guardadoSend.emit(true);
@@ -364,62 +359,74 @@ export class DatosGeneralesEjgComponent implements OnInit {
       this.progressSpinner = false;
     } else {
       //hacer insert
+      //Se comprueban los campos obligatorios
       if (this.body.tipoEJG != null && this.body.tipoEJG != undefined && this.body.fechaApertura != null && this.body.fechaApertura != undefined) {
         this.body.annio = this.body.fechaApertura.getFullYear().toString();
         this.body.idInstitucion = this.institucionActual;
 
         this.sigaServices.post("gestionejg_insertaDatosGenerales", JSON.stringify(this.body)).subscribe(
-        n => {
-          this.progressSpinner = false;
-          
-          if (JSON.parse(n.body).error.code == 200) {
-            let ejgObject = JSON.parse(n.body).ejgItems;
-            let datosItem = ejgObject[0];
-            this.persistenceService.setDatos(datosItem);
-            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-            this.body.numEjg = datosItem.numEjg;
-            this.body.numero = datosItem.numero;
-            this.guardadoSend.emit(true);
+          n => {
+            this.progressSpinner = false;
 
-            if(this.datosAsistencia){ //Si procedemos de una asistencia asociamos el EJG recien creado con ella y copiamos sus datos
+            if (JSON.parse(n.body).error.code == 200) {
+              let ejgObject = JSON.parse(n.body).ejgItems;
+              let datosItem = ejgObject[0];
+              this.persistenceService.setDatos(datosItem);
 
-              let ejgItem : EJGItem = new EJGItem();
-              ejgItem.annio = String(this.body.annio);
-              ejgItem.numero = String(this.body.numero);
-              ejgItem.tipoEJG = String(this.body.tipoEJG);
 
-              this.sigaServices.postPaginado("busquedaGuardias_asociarEjg","?anioNumero="+this.datosAsistencia.anioNumero+"&copiarDatos=S", ejgItem).subscribe(
-                n => {
-        
-                  let error = JSON.parse(n.body).error;
-                  this.progressSpinner = false;
-        
-                  if (error != null && error.description != null) {
-                    this.showMessage("error", "Error al asociar el EJG con la Asistencia", error.description);
-                  } else {
-                    this.showMessage('success', this.translateService.instant("general.message.accion.realizada"), 'Se ha asociado el EJG con la Asistencia correctamente');
+              //En el caso que se proceda de una designación, se asocia el EJG con la designación
+              if (sessionStorage.getItem("Designacion")) {
+
+                let designa: DesignaItem = JSON.parse(sessionStorage.getItem("Designacion"));
+
+                sessionStorage.removeItem("Designacion");
+
+                //El formato de el atributo designa.ano es "D[año]/[numDesigna]"
+                let designaAnio = designa.ano.toString().slice(1,5);
+
+                let numDesigna = designa.ano.toString().split("/")[1];
+
+                let request = [designaAnio, this.body.annio, this.body.tipoEJG, designa.idTurno, numDesigna, datosItem.numero];
+
+                //Se asociado el nuevo EJG creado a la designación de origen
+                this.sigaServices.post("designacion_asociarEjgDesigna", request).subscribe(
+                  m => {
+
+                    this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+
+                    //Se copia la informacion de la designacion de origen al nuevo EJG creado
+                    this.sigaServices.post("gestionJusticiables_copyDesigna2Ejg", request).subscribe(
+                      x => {
+                        this.progressSpinner = false;
+                        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+                        this.location.back();
+                      },
+                      err => {
+                        //Crear etiqueta en la BBDD
+                        this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Se ha producido un error al copiar los datos de la designacion al EJG seleccionado");
+                        this.location.back();
+                      }
+                    );
+                  },
+                  err => {
+                    this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+                    this.progressSpinner = false;
                   }
-                },
-                err => {
-                  console.log(err);
-                  this.progressSpinner = false;
-                }, () => {
-                  this.progressSpinner = false;
-                  sessionStorage.removeItem("asistencia");
-                  sessionStorage.setItem("volver","true");
-                  this.location.back();
-                }
-              );
+                );
 
+              }
+              this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+              this.body.numEjg = datosItem.numEjg;
+              this.body.numero = datosItem.numero;
+              this.guardadoSend.emit(true);
+            } else {
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
             }
-          }else {
+          },
+          err => {
+            this.progressSpinner = false;
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-          }
-        },
-        err => {
-          this.progressSpinner = false;
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        });
+          });
       }
       else {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
@@ -515,27 +522,37 @@ export class DatosGeneralesEjgComponent implements OnInit {
       this.msgs = msg;
     } else {
       //Comprobamos si el EJG tiene una designacion asociada
-      if(!this.noAsocDes) this.addExp();
+      if (!this.noAsocDes) {
+        this.addExp();
+      }
       else this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('justiciaGratuita.ejg.datosGenerales.noDesignaEjg') }];
     }
   }
 
   addExp() {
-    let us = undefined;
-    us =
-      this.sigaServices.getOldSigaUrl() +
-      "JGR_MantenimientoEJG.do?codigoDesignaNumEJG=" + this.body.numEjg + "&numeroEJG=" + this.body.numEjg + "&idTipoEJG=" + this.body.tipoEJG +
-      "&idInstitucionEJG=" + this.body.idInstitucion + "&anioEJG=" + this.body.annio + "&actionE=/JGR_InteresadoEJG.do&" +
-      "localizacionE=gratuita.busquedaEJG.localizacion&tituloE=pestana.justiciagratuitaejg.solicitante&idInstitucionJG=" + this.institucionActual + "&idPersonaJG=" + this.body.idPersonajg + "&conceptoE=EJG&" +
-      "NUMERO=" + this.body.numero + "&ejgNumEjg=" + this.body.numEjg + "&IDTIPOEJG=" + this.body.tipoEJG + "&ejgAnio=" + this.body.annio + "&accionE=editar&IDINSTITUCION=" + this.institucionActual + "&solicitante=JOSE%20LUIS%20ALGBJL%20ZVQNDSMF&ANIO=" + this.body.annio + "";
+    this.progressSpinner=true;
 
-    sessionStorage.setItem("url", JSON.stringify(us));
-    sessionStorage.removeItem("reload");
-    sessionStorage.setItem("reload", "si");
-    //sessionStorage.setItem("idInstitucionFichaColegial", this.body.idInstitucion);
+    this.sigaServices.post("gestionejg_getDatosExpInsos", this.body).subscribe(
+      n => {
+        this.progressSpinner=false;
+        let datos = JSON.parse(n.body).expInsosItems;
 
-    this.url = "";
-    this.router.navigate(["/addExp"]);
+        console.log('valor de n:'+n);
+        console.log('valor de n.body:'+n.body);
+        console.log('valor de datos:'+datos);
+
+        if(datos!=null && datos!=undefined){
+          sessionStorage.setItem("expedienteInsos", JSON.stringify(datos[0]));
+          this.router.navigate(["/addExp"]);
+        }else{
+          this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("informesYcomunicaciones.consultas.mensaje.sinResultados"));
+        }
+      },
+      err => {
+        console.log(err);
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
   }
 
   styleObligatorio(evento) {
@@ -554,15 +571,15 @@ export class DatosGeneralesEjgComponent implements OnInit {
     }, 300);
   }
 
-  disableEnableNumEJG(){
+  disableEnableNumEJG() {
     this.commonsServices.checkAcceso(procesos_ejg.cambioNumEJG)
-    .then(respuesta => {
-      if(respuesta){
-        this.disabledNumEJG=!this.disabledNumEJG;
-      }else{
-        this.msgs = this.commonsServices.checkPermisos(false, undefined);
-      }
-    }).catch(error => console.error(error));
+      .then(respuesta => {
+        if (respuesta) {
+          this.disabledNumEJG = !this.disabledNumEJG;
+        } else {
+          this.msgs = this.commonsServices.checkPermisos(false, undefined);
+        }
+      }).catch(error => console.error(error));
   }
 
 }

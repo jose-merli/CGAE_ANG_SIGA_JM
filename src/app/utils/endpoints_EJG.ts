@@ -42,6 +42,7 @@ export let endpoints_EJG: any = {
     gestionejg_insertaDatosGenerales: "ejg/gestion-ejg/insertaDatosGenerales",
     gestionejg_actualizaDatosGenerales: "ejg/gestion-ejg/actualizaDatosGenerales",
     gestionejg_getEjgDesigna: "ejg/gestion-ejg/getEjgDesigna",
+    gestionejg_getDatosExpInsos: "ejg/gestion-ejg/getDatosExpInsos",
 
     //Servicios de tramitacion
     gestionejg_guardarServiciosTramitacion:"ejg/gestion-ejg/guardarServiciosTramitacion",
@@ -60,6 +61,7 @@ export let endpoints_EJG: any = {
     //Resolucion
     gestionejg_guardarResolucion: "ejg/gestion-ejg/guardarResolucion",
     gestionejg_getHabilitarActa: "ejg/gestion-ejg/getHabilitarActa",
+    gestionejg_descargarDocumentoResolucion: "ejg/gestion-ejg/descargarDocumentoResolucion",
 
     //Impugnacion
     gestionejg_guardarImpugnacion: "ejg/gestion-ejg/guardarImpugnacion",
