@@ -53,6 +53,7 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
   subscriptionActivarDesactivarServicios: Subscription;
   subscriptionCodesByInstitution: Subscription;
   subscriptionBorrarSuscripcionesBajas: Subscription;
+  subscriptionCondicionesSelect: Subscription;
 
   constructor(private sigaServices: SigaServices, private translateService: TranslateService, private confirmationService: ConfirmationService, private router: Router) { }
 
@@ -108,11 +109,13 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
     if (this.subscriptionEditarServicioInstitucion)
       this.subscriptionEditarServicioInstitucion.unsubscribe();
     if (this.subscriptionActivarDesactivarServicios)
-      this.subscriptionActivarDesactivarServicios.unsubscribe;
+      this.subscriptionActivarDesactivarServicios.unsubscribe();
     if (this.subscriptionCodesByInstitution)
-      this.subscriptionCodesByInstitution.unsubscribe;
+      this.subscriptionCodesByInstitution.unsubscribe();
     if (this.subscriptionBorrarSuscripcionesBajas)
-      this.subscriptionBorrarSuscripcionesBajas.unsubscribe;
+      this.subscriptionBorrarSuscripcionesBajas.unsubscribe();
+    if (this.subscriptionCondicionesSelect)
+      this.subscriptionCondicionesSelect.unsubscribe();
   }
 
   //INICIO METODOS TARJETA DATOS GENERALES
@@ -422,11 +425,11 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
     );
   }
 
-  //Metodo para obtener los valores del combo Tipo segun el combo Categoriaç
+  //Metodo para obtener los valores del combo condicion de suscripcion
   getComboCondicionSuscripcion() {
     this.progressSpinner = true;
 
-    this.subscriptionTypeSelectValues = this.sigaServices.get("fichaServicio_comboCondicionSuscripcion").subscribe(
+    this.subscriptionCondicionesSelect = this.sigaServices.get("fichaServicio_comboCondicionSuscripcion").subscribe(
       CondicionSuscripcionValues => {
         this.condicionesSuscripcionObject = CondicionSuscripcionValues;
 
