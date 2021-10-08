@@ -32,7 +32,8 @@ export class BuscadorListaGuardiasComponent implements OnInit {
       }
     ]
 
-    this.filtro.idTipo = '1'; //Seteamos valor por defecto
+
+
     this.getComboGrupoZona();
   }
 

@@ -27,6 +27,7 @@ export class TablaResultadoOrderComponent implements OnInit {
   @Input() rowGroups: Row[];
   @Input() rowGroupsAux: Row[];
   @Input() calendarios;
+  @Input() listaGuardias : boolean = false;
   rowGroupsOrdered = [];
   @Input() seleccionarTodo = false;
   @Input() estado;
@@ -38,6 +39,8 @@ export class TablaResultadoOrderComponent implements OnInit {
   @Output() guardarGuardiasEnConjunto = new EventEmitter<Row[]>();
   @Output() descargaLog = new EventEmitter<Boolean>();
   @Output() disableGen = new EventEmitter<Boolean>();
+  @Output() saveGuardiasEnLista = new EventEmitter<Row[]>();
+  @Input() permisosEscritura : boolean = false;
   @Input() tarjetaDatosGenerales = {
     'duplicar' : '',
     'tabla': [],
@@ -125,15 +128,17 @@ export class TablaResultadoOrderComponent implements OnInit {
     this.cabeceras.forEach(cab =>{
       this.cabecerasMultiselect.push(cab.name);
     })
-    this.xArr = [];
-    this.rowGroups.forEach((rg, i) =>{
-      this.grupos.push(rg.cells[1].value);
-      let x = this.ordenValue(i);
-      this.xArr.push(x);
-    })
-    if (!this.calendarios){
-      this.maxGroup = this.grupos.reduce((a, b)=>Math.max(a, b)); 
-      this.ordenarGrupos();
+    if(!this.listaGuardias){
+      this.xArr = [];
+      this.rowGroups.forEach((rg, i) =>{
+        this.grupos.push(rg.cells[1].value);
+        let x = this.ordenValue(i);
+        this.xArr.push(x);
+      })
+      if (!this.calendarios){
+        this.maxGroup = this.grupos.reduce((a, b)=>Math.max(a, b)); 
+        this.ordenarGrupos();
+      }
     }
   }
   perPage(perPage){
@@ -401,7 +406,7 @@ valueChange(i, z, $event){
     }else if (z == 2){
       this.rowGroups[i].cells[z].type = 'position';
       this.xArr[i] = $event.target.value;
-    }else{
+    }else if(!this.listaGuardias){
       this.rowGroups[i].cells[z].type = $event.target.type;
     }
 this.rowGroupsAux = this.rowGroups;
@@ -464,6 +469,25 @@ this.totalRegistros = this.rowGroups.length;
           this.rowGroups[this.positionSelected] = first;
         }
       //});
+    }else if(this.listaGuardias){
+      let ordenSelected = this.rowGroups[this.positionSelected].cells[0].value;
+
+      if (movement == 'up'){
+        let aboveRow = this.rowGroups[this.positionSelected - 1];
+        let aboveOrden = aboveRow.cells[0].value;
+        this.rowGroups[this.positionSelected - 1] = this.rowGroups[this.positionSelected];
+        this.rowGroups[this.positionSelected - 1].cells[0].value = aboveOrden;
+        this.rowGroups[this.positionSelected] = aboveRow;
+        this.rowGroups[this.positionSelected].cells[0].value = ordenSelected;
+      } else if (movement == 'down'){
+        let belowRow = this.rowGroups[this.positionSelected + 1];
+        let belowOrden = belowRow.cells[0].value;
+        this.rowGroups[this.positionSelected + 1] = this.rowGroups[this.positionSelected];
+        this.rowGroups[this.positionSelected + 1].cells[0].value = belowOrden;
+        this.rowGroups[this.positionSelected] = belowRow;
+        this.rowGroups[this.positionSelected].cells[0].value = ordenSelected;
+      }
+
     }else{
       groupSelected = this.rowGroups[this.positionSelected].cells[1].value;
       this.rowGroupsAux.forEach((row, index)=> {
@@ -482,12 +506,12 @@ this.totalRegistros = this.rowGroups.length;
           }
         }
       
-    })
+      })
     }
     
 
-this.rowGroupsAux = this.rowGroups;
-this.totalRegistros = this.rowGroups.length;
+    this.rowGroupsAux = this.rowGroups;
+    this.totalRegistros = this.rowGroups.length;
   }
   isSelected(id){
     if(this.selectedArray.includes(id)){
@@ -513,6 +537,11 @@ this.totalRegistros = this.rowGroups.length;
     if (this.positionSelected == 1 || this.grupos[this.positionSelected] <= 2){
       this.unavailableUp = true;
     } else {
+      this.unavailableUp = false;
+    }
+    if(this.listaGuardias && this.positionSelected == 0){
+      this.unavailableUp = true;
+    }else if (this.listaGuardias && this.positionSelected > 0){
       this.unavailableUp = false;
     }
     if (this.calendarios){
@@ -628,11 +657,11 @@ this.totalRegistros = this.rowGroups.length;
         this.disableGen.emit(true);
         this.getComboTurno();
         let newCells: Cell[] = [
-          { type: 'input', value: '', combo: null},
-          { type: 'selectDependency', value: '' , combo: this.comboTurno},
-          { type: 'selectDependency2', value: '', combo: this.comboGuardia},
-          { type: 'select', value: '', combo: this.comboGenerado},
-          { type: 'input', value: '', combo: null}
+          { type: 'input', value: '', combo: null, hiddenValue:'', required:false},
+          { type: 'selectDependency', value: '' , combo: this.comboTurno, hiddenValue:'', required:false},
+          { type: 'selectDependency2', value: '', combo: this.comboGuardia, hiddenValue:'', required:false},
+          { type: 'select', value: '', combo: this.comboGenerado, hiddenValue:'', required:false},
+          { type: 'input', value: '', combo: null, hiddenValue:'', required:false}
           ];
           let rowObject: Row = new Row();
           rowObject.cells = newCells;
@@ -661,12 +690,44 @@ this.totalRegistros = this.rowGroups.length;
     );
   }
   
-  onChangeTurno(idTurno) {
+  onChangeTurno(idTurno, row : Row) {
     this.getComboGuardia(idTurno);
     console.log('idTurno: ', idTurno)
     this.comboGuardia = [];
-      
+    if(this.listaGuardias){
+      row.cells[3].value = '';
+    }
 
+  }
+
+  onChangeGuardia(row : Row){
+    
+    if(this.listaGuardias){
+      let idTurno : string = row.cells[1].value;
+      let idGuardia : string = row.cells[2].value;
+      row.cells[1].hiddenValue = idTurno;
+      row.cells[2].hiddenValue = idGuardia;
+      if(idTurno && idGuardia){
+        this.progressSpinner = true;
+        this.sigaServices.getParam(
+          "listasGuardias_searchTipoDiaGuardia", "?idTurno=" + idTurno + "&idGuardia=" + idGuardia).subscribe(
+            data => {
+                row.cells[3].value = data.valor;
+                this.progressSpinner = false;
+            },
+            err => {
+              console.log(err);
+              this.progressSpinner = false;
+            },
+            ()=>{
+              this.progressSpinner = false;
+            }
+          );
+      }else if(!idGuardia){
+        row.cells[3].value = '';
+      }
+
+    }
   }
   
   setCombouardia(){
@@ -775,8 +836,69 @@ this.totalRegistros = this.rowGroups.length;
     this.persistenceService.setDatos(this.tarjetaDatosGenerales);
     this.router.navigate(["/guardiasColegiado"]);  //busqueda guardias colegiado
    }
+
+   nuevaGuardia(){
+    this.getComboTurno();
+    let newCells: Cell[] = [
+        { type: 'inputNumber', value: '', combo: null, hiddenValue:'', required:true},
+        { type: 'selectDependency', value: '' , combo: this.comboTurno, hiddenValue:'', required:true},
+        { type: 'selectDependency2', value: '', combo: this.comboGuardia, hiddenValue:'', required:true},
+        { type: 'text', value: '', combo: null, hiddenValue:'', required:false}
+      ];
+      let rowObject: Row = new Row();
+      rowObject.cells = newCells;
+      this.rowGroups.push(rowObject); 
+      this.totalRegistros = this.rowGroups.length;
+      console.log('this.rowGroups NUEVO: ', this.rowGroups)
+      console.log('this.totalRegistros NUEVO: ', this.totalRegistros)
+      this.to = this.totalRegistros;
+      this.cd.detectChanges();
+   }
+  saveGuardias(){
+
+    if(this.checkOrdenAndCamposObligatorios()){
+      this.saveGuardiasEnLista.emit(this.rowGroups);
+    }
+
+  }
+
+  checkOrdenAndCamposObligatorios (){
+
+    let ok : boolean = true;
+    if(this.rowGroups.find(row => !row.cells[0].value || !row.cells[1].hiddenValue || !row.cells[2].hiddenValue)){
+      ok = false;
+      this.showMsg('error','Error', 'Rellene los campos obligatorios');
+    }
+    if(ok){
+      this.rowGroups.forEach(row => {
+        if(ok){
+          let numero = row.cells[0].value;
+          let frecuencia = 0;
+
+          this.rowGroups.forEach( rowAux => {
+            if(numero == rowAux.cells[0].value){
+              frecuencia ++ ;
+            }
+            if(frecuencia >= 2 && ok){  
+              ok = false;
+              this.showFail('No pueden haber dos campos Orden con el mismo valor');
+            }
+          });
+        }
+      })
+    }
+    return ok;
+  }
+
+   styleObligatorio(mandatory : boolean, evento){
+    if(mandatory && (evento==undefined || evento==null || evento=="")){
+      return this.commonServices.styleObligatorio(evento);
+    }
+  }
 }
 
 function compare(a: number | string, b: number | string, isAsc: boolean) {
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }
+
+

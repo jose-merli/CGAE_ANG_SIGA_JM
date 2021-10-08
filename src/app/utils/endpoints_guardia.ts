@@ -142,6 +142,14 @@ export let endpoints_guardia: any = {
    guardiasColegiado_buscarGuardiasColegiado: "guardia/busquedaGuardia/busquedaGuardiasColegiado",
    guardiasColegiado_validarSolicitudGuardia: "guardia/validarSolicitudGuardia",
    guardiasColegiado_desvalidarGuardiaColegiado: "guardia/desvalidarGuardiaColegiado",
-   guardiasColegiado_eliminarGuardiaColegiado:"guardia/eliminarGuardiaColegiado"
+   guardiasColegiado_eliminarGuardiaColegiado:"guardia/eliminarGuardiaColegiado",
 
+
+   //listas guardias
+   listasGuardias_searchListaGuardias: "listaguardias/buscarListaGuardias",
+   listasGuardias_saveListaGuardias: "listaguardias/guardarListaGuardias",
+   listasGuardias_searchGuardiasFromLista: "listaguardias/searchGuardiasFromLista",
+   listasGuardias_searchTipoDiaGuardia: "guardia/searchTipoDiaGuardia",
+   listasGuardias_guardarGuardiasEnLista: "listaguardias/guardarGuardiasEnLista",
+   listasGuardias_eliminarGuardiasFromLista: "listaguardias/eliminarGuardiasFromLista"
 }

@@ -477,6 +477,11 @@ import { GuardiaGestionGuardiaColegiadoComponent } from './features/sjcs/guardia
 import { PermutasGestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/gestion-guardia-colegiado/permutas-gestion-guardia-colegiado/permutas-gestion-guardia-colegiado.component';
 import { SustitucionesGestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/gestion-guardia-colegiado/sustituciones-gestion-guardia-colegiado/sustituciones-gestion-guardia-colegiado.component';
 import { TurnoGestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/gestion-guardia-colegiado/turno-gestion-guardia-colegiado/turno-gestion-guardia-colegiado.component';
+import { ResultadoListaGuardiasComponent } from './features/sjcs/guardia/definir-listas-guardias/resultado-lista-guardias/resultado-lista-guardias.component';
+import { FichaListaGuardiasComponent } from './features/sjcs/guardia/definir-listas-guardias/ficha-lista-guardias/ficha-lista-guardias.component';
+import { FichaListaGuardiasTarjetaDatosGeneralesComponent } from './features/sjcs/guardia/definir-listas-guardias/ficha-lista-guardias/ficha-lista-guardias-tarjeta-datos-generales/ficha-lista-guardias-tarjeta-datos-generales.component';
+import { FichaListaGuardiasTarjetaGuardiasComponent } from './features/sjcs/guardia/definir-listas-guardias/ficha-lista-guardias/ficha-lista-guardias-tarjeta-guardias/ficha-lista-guardias-tarjeta-guardias.component';
+import { TablaResultadoOrderModule } from './commons/tabla-resultado-order/tabla-resultado-order.module';
 
 @NgModule({
 	declarations: [
@@ -888,6 +893,10 @@ import { TurnoGestionGuardiaColegiadoComponent } from './features/sjcs/guardia/g
 		BuscadorAsistenciasComponent,
 		ResultadoAsistenciasComponent,
 		BuscadorListaGuardiasComponent,
+		ResultadoListaGuardiasComponent,
+		FichaListaGuardiasComponent,
+		FichaListaGuardiasTarjetaDatosGeneralesComponent,
+		FichaListaGuardiasTarjetaGuardiasComponent,
 	],
 	imports: [
 		SelectorModule,
@@ -961,6 +970,7 @@ import { TurnoGestionGuardiaColegiadoComponent } from './features/sjcs/guardia/g
 		OficioModule,
 		BusquedaAsuntosModule,
 		Paginador2Module,
+		TablaResultadoOrderModule
 	],
 
 	exports: [],

@@ -13,14 +13,14 @@
             <button type="submit" pButton icon="fa fa-search" iconPos="left"
                 label="{{'general.boton.search' | translate}}" (click)="search()"></button>
             <button type="button" pButton icon="fa fa-plus" iconPos="left"
-                label="{{'general.boton.new' | translate}}"></button>
+                label="{{'general.boton.new' | translate}}" (click)="nuevaLista()" [disabled]="!permisosEscritura"></button>
         </div>
     </div>
 </div>
 <div *ngIf="show">
     <div class="card mt-3">
         <div class="card-body p-0">
-            <!-- Componente resultado -->
+            <app-resultado-lista-guardias [listas]="listas" [filtro]="buscador.filtro" [permisosEscritura]="permisosEscritura"></app-resultado-lista-guardias>
         </div>
     </div>
 </div>

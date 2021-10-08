@@ -239,6 +239,7 @@ import { AsistenciaExpresComponent } from "./features/sjcs/guardia/guardias-asis
 import { FichaAsistenciaComponent } from "./features/sjcs/guardia/guardias-asistencias/ficha-asistencia/ficha-asistencia.component";
 import { BusquedaAsuntosComponent } from "./commons/busqueda-asuntos/busqueda-asuntos.component";
 import { FichaActuacionAsistenciaComponent } from "./features/sjcs/guardia/guardias-asistencias/ficha-actuacion-asistencia/ficha-actuacion-asistencia.component";
+import { FichaListaGuardiasComponent } from "./features/sjcs/guardia/definir-listas-guardias/ficha-lista-guardias/ficha-lista-guardias.component";
 
 const appRoutes: Routes = [
 	{ path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
@@ -835,6 +836,11 @@ const appRoutes: Routes = [
 	{
 		path: 'fichaActuacionAsistencia',
 		component: FichaActuacionAsistenciaComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'fichaListaGuardias',
+		component: FichaListaGuardiasComponent,
 		canActivate: [AuthGuard]
 	},
 	{
