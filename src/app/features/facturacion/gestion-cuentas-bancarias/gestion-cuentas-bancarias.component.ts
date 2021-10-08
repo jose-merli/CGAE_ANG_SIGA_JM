@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService, DataTable } from 'primeng/primeng';
 import { TranslateService } from '../../../commons/translate';
+import { CuentasBancariasItem } from '../../../models/CuentasBancariasItem';
 import { CommonsService } from '../../../_services/commons.service';
 import { PersistenceService } from '../../../_services/persistence.service';
 import { SigaServices } from '../../../_services/siga.service';
@@ -16,7 +17,7 @@ import { SigaServices } from '../../../_services/siga.service';
 })
 export class GestionCuentasBancariasComponent implements OnInit {
 
- // url;
+  // url;
 
   /* constructor(public sigaServices: OldSigaServices) {
     this.url = sigaServices.getOldSigaUrl("gestionCuentasBancarias");
@@ -34,6 +35,7 @@ export class GestionCuentasBancariasComponent implements OnInit {
   rowsPerPage: any = [];
   buscadores = [];
   numSelected: number;
+  listaCuentasBancarias: CuentasBancariasItem[];
 
   constructor(private translateService: TranslateService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
     private sigaServices: SigaServices, private persistenceService: PersistenceService,
@@ -48,11 +50,11 @@ export class GestionCuentasBancariasComponent implements OnInit {
     this.cols = [
       { field: "nombre", header: "censo.tipoAbono.banco", width: "30%" },
       { field: "IBAN", header: "censo.mutualidad.literal.iban", width: "15%" },
-      { field: "descripcion", header: "general.boton.descripcion", width: "30%" },
-      { field: "comisionImporte", header: "Comision", width: "15%" },
+      { field: "descripcion", header: "general.boton.description", width: "30%" },
+      { field: "comisionImporte", header: "facturacion.cuentasBancarias.comisionImporte", width: "15%" },
       { field: "sjcs", header: "menu.justiciaGratuita", width: "5%" },
-      { field: "numUsos", header: "Num. Usos", width: "5%" },
-      { field: "numFicheros", header: "Num. Ficheros", width: "5%" },
+      { field: "numUsos", header: "facturacion.cuentasBancarias.numUsos", width: "5%" },
+      { field: "numFicheros", header: "facturacion.cuentasBancarias.numFicheros", width: "5%" },
     ];
 
     this.cols.forEach(it => this.buscadores.push(""));
@@ -77,10 +79,10 @@ export class GestionCuentasBancariasComponent implements OnInit {
     ];
   }
 
-  clear(){
+  clear() {
     this.msgs = [];
   }
-  onChangeSelectAll(){
+  onChangeSelectAll() {
     if (this.permisoEscritura) {
       if (!this.historico) {
         if (this.selectAll) {
@@ -105,9 +107,26 @@ export class GestionCuentasBancariasComponent implements OnInit {
       }
     }
   }
-  nuevo(){}
-  searchHistorical(){}
-  confirmDelete(){}
+  nuevo() { }
+
+  searchHistorical() {
+    this.sigaServices.get("facturacionPyS_getCuentasBancarias").subscribe(
+      data => {
+        this.listaCuentasBancarias = data.cuentasBancariasITem;
+      
+      },
+      err => {
+        console.log(err);
+      },
+    );
+
+    console.log(this.listaCuentasBancarias);
+  }
+
+
+
+  consultarEditar() { }
+  confirmDelete() { }
 
   isSelectMultiple() {
     this.selectAll = false;

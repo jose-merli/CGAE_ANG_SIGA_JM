@@ -6,7 +6,7 @@
   <div class="card-body p-0">
     <!-- TABLA RESULTADOS -->
 
-    <p-table [autoLayout]="true" [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table
+    <p-table [autoLayout]="true" [value]="listaCuentasBancarias" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table
       class="tabla-listado overflow" [paginator]="true" [rows]="selectedItem" (onRowUnselect)="actualizaSeleccionados(selectedDatos)" [ngClass]="{ 'customCursor' : selectMultiple }"
       selectionMode="multiple" paginatorPosition="both" (onRowSelect)="checkAddRemesa(selectedDatos)">
 
@@ -27,9 +27,15 @@
           </th>
         </tr>
       </ng-template>
-      <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
-        <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
-          <td class="text-center" *ngFor="let col of columns">
+      <ng-template pTemplate="body" let-cuentaBancaria let-columns="columns" let-rowIndex="rowIndex">
+        <tr [pSelectableRow]="listaCuentasBancarias" [pSelectableRowIndex]="rowIndex">
+          <<td class="text-center" *ngFor="let col of columns">
+
+            <div *ngIf="col.field == 'nombre'">
+              <div><!-- [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}" -->
+                <span>{{ cuentaBancaria.nombre}}</span>
+              </div>
+            </div>
 
             
           </td>
@@ -66,7 +72,7 @@
   <div class="card-footer">
     <div class="text-right main-button">
         <button *ngIf="!historico"
-          [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura"
+          [disabled]="selectedDatos.length == 0 || !permisoEscritura"
           (click)="confirmDelete()" pButton type="button" icon="fa fa-trash" iconPos="left"
           label="{{ 'general.boton.eliminar' | translate}}"></button>
 
@@ -78,6 +84,11 @@
 
         <button *ngIf="historico" (click)="searchHistorical()" pButton type="button" icon="fa fa-undo" iconPos="left"
           label="{{'general.message.ocultarHistorico' | translate}}"></button>
+
+        <button *ngIf="!historico"
+          [disabled]="selectedDatos.length == 0 || !permisoEscritura"
+          (click)="consultarEditar()" pButton type="button"  iconPos="left"
+          label="{{ 'general.boton.consultareditar.bancarios' | translate}}"></button>
       </div>
   </div>
 </div>

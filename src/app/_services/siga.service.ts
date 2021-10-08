@@ -24,7 +24,7 @@ import { endpoints_maestros } from "../utils/endpoints_maestros";
 import { endpoints_justiciables } from "../utils/endpoints_justiciables";
 import { endpoints_guardia } from "../utils/endpoints_guardia";
 import { endpoints_oficio } from "../utils/endpoints_oficio";
-import { endpoints_facturacion } from "../utils/endpoints_facturacion";
+import { endpoints_facturacionPyS } from "../utils/endpoints_facturacionPyS";
 
 import { endpoints_componentes } from "../utils/endpoints_components";
 import { endpoints_EJG } from "../utils/endpoints_EJG";
@@ -673,7 +673,7 @@ export class SigaServices {
     ...endpoints_oficio,
     ...endpoints_maestros,
     ...endpoints_guardia,
-    ...endpoints_facturacion,
+    ...endpoints_facturacionPyS,
 	...endpoints_PyS,
   };
 
