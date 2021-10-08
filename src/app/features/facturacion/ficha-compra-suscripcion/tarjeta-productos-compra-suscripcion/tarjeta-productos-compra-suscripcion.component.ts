@@ -1,7 +1,9 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { SortEvent } from 'primeng/api';
+import { Subject, Subscription } from 'rxjs';
 import { TranslateService } from '../../../../commons/translate';
+import { ComboItem } from '../../../../models/ComboItem';
 import { FichaCompraSuscripcionItem } from '../../../../models/FichaCompraSuscripcionItem';
 import { FiltrosCompraProductosItem } from '../../../../models/FiltrosCompraProductosItem';
 import { FiltrosProductos } from '../../../../models/FiltrosProductos';
@@ -35,7 +37,6 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
   permisoEditarImporte: boolean = false;
   permisoActualizarProductos;
   showModal: boolean = false;
-  @Input("comboComun") comboComun: any[];
 
   colsProducts = [
     { field: "categoria", header: "facturacion.productos.categoria" },
@@ -43,10 +44,11 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
     { field: "descripcion", header: "facturacion.productos.producto" },
     { field: "formapago", header: "facturacion.productos.formapago" },
   ];
-
-  listaProductosCompraFicha: ListaProductosCompraItem[] = [];
+  
+  @Input("productosTarjeta") productosTarjeta: ListaProductosCompraItem[];
   comboProductos : ListaProductosItems[] = [];
   newComboComun = [];
+  ivaCombo: ComboItem[] ;
 
   cols = [
     { field: "orden", header: "administracion.informes.literal.orden" },
@@ -90,34 +92,36 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
 
   //Suscripciones
   subscriptionProductosBusqueda: Subscription;
+  sidebarVisibilityChange: Subject<ListaProductosCompraItem[]> = new Subject<ListaProductosCompraItem[]>();
 
   constructor(public sigaServices: SigaServices, 
     private commonsService: CommonsService, 
     private translateService: TranslateService, 
     private cdRef: ChangeDetectorRef,
     private localStorageService: SigaStorageService,
-    private router : Router) { }
+    private router : Router) { 
+      this.sidebarVisibilityChange.subscribe((value) => {
+      this.productosTarjeta = value
+      });
+    }
 
   ngOnInit() {
-    this.getProductosCompra();
+    if(this.ficha.productos.length == 0){
+      this.getProductosCompra();
+    }
+    else{
+      this.productosTarjeta = this.ficha.productos;
+    }
+    
     this.getPermisoEditarImporte();
     this.getComboProductos();
+    this.getComboTipoIva();
     this.getPermisoActualizarProductos();
   }
 
   ngOnDestroy() {
     if (this.subscriptionProductosBusqueda)
       this.subscriptionProductosBusqueda.unsubscribe();
-  }
-
-  checkSave(){
-    let msg = this.commonsService.checkPermisos(this.permisoActualizarProductos, undefined);
-
-    if (msg != null) {
-      this.msgs = msg;
-    }  else {
-      this.updateProductosPeticion();
-		}
   }
 
   //INICIO SERVICIOS
@@ -128,7 +132,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
     "?idPeticion=" + this.ficha.nSolicitud).subscribe(
       listaProductosCompraDTO => {
 
-        this.listaProductosCompraFicha = listaProductosCompraDTO.listaProductosCompraItems;
+        this.productosTarjeta = listaProductosCompraDTO.listaProductosCompraItems;
 
         if (listaProductosCompraDTO.error.code == 200) {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
@@ -137,7 +141,15 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
         }
         this.checkTotal();
 
-        this.listaProductosCompraFicha.sort((a, b) => (a.orden > b.orden) ? 1 : -1);
+        this.productosTarjeta.sort((a, b) => (a.orden > b.orden) ? 1 : -1);
+
+        
+        if(this.ficha.fechaPendiente == null){
+          this.ficha.productos = this.productosTarjeta;
+        }
+        else {
+          this.ficha.productos = JSON.parse(JSON.stringify(this.productosTarjeta));
+        }
 
         this.progressSpinner = false;
 
@@ -195,7 +207,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
     let peticion: FichaCompraSuscripcionItem = new FichaCompraSuscripcionItem();
 
     peticion = this.ficha;
-    peticion.productos = this.listaProductosCompraFicha;
+    peticion.productos = this.productosTarjeta;
     this.sigaServices.post("PyS_updateProductosPeticion", peticion).subscribe(
       n => {
 
@@ -203,9 +215,13 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         } else {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          
+          this.checkTotal();
+
+          this.ficha.productos = JSON.parse(JSON.stringify(this.productosTarjeta));
+          //this.actualizaFicha.emit();
         }
 
-        this.actualizaFicha.emit();
         this.progressSpinner = false;
 
       },
@@ -213,22 +229,81 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
         this.progressSpinner = false;
       });
   }
-  //FIN SERVICIOS
 
-  //INICIO METODOS
-  checkTotal(){
-    this.listaProductosCompraFicha.forEach(
-      el =>{
-        el.total = ((Number(el.cantidad)*Number(el.precioUnitario))*(1 + Number(el.iva)/100)).toString()
+  //Metodo para obtener los valores del combo IVA
+  getComboTipoIva() {
+    this.progressSpinner = true;
+
+    this.sigaServices.get("fichaProducto_comboIvaNoDerogados").subscribe(
+      IvaTypeSelectValues => {
+        this.progressSpinner = false;
+
+        this.ivaCombo = IvaTypeSelectValues.combooItems;
+
+      },
+      err => {
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
       }
     );
   }
+  //FIN SERVICIOS
 
+  //INICIO METODOS
+
+  checkSave(){
+    let msg = this.commonsService.checkPermisos(this.permisoActualizarProductos, undefined);
+
+    if (msg != null) {
+      this.msgs = msg;
+    }  else if(this.checkCamposObligatorios()){
+      this.showMessage("error", "Error", this.translateService.instant('general.message.camposObligatorios'));
+    }  else {
+      this.updateProductosPeticion();
+		}
+  }
+
+  checkCamposObligatorios(){
+    this.productosTarjeta.forEach( el => {
+      if(el.cantidad != null || el.cantidad.trim() != "" ||
+      el.descripcion != null || el.descripcion.trim() != "" ||
+      el.precioUnitario != null || el.precioUnitario.trim() != "" ||
+      el.iva != null || el.iva.trim() != "") return true;
+    })
+    return false;
+  }
+
+  //En este método se calcula el total del importe por producto y se actualiza el valor del importe en la compra si se esta creando nueva.
+  checkTotal(){
+    let totalNeto = 0;
+    let totalIVA = 0;
+    let impTotal = 0;
+    this.productosTarjeta.forEach(
+      el =>{
+        el.total = ((Number(el.cantidad)*Number(el.precioUnitario))*(1 + Number(el.valorIva)/100)).toString()
+        if(this.ficha.fechaPendiente == null){
+          impTotal += Number(el.total);
+          totalNeto += (Number(el.cantidad)*Number(el.precioUnitario));
+          totalIVA += (Number(el.cantidad)*Number(el.precioUnitario))*( Number(el.valorIva)/100);
+        }
+      }
+    );
+    if(this.ficha.fechaPendiente == null){
+      this.ficha.totalNeto = totalNeto;
+      this.ficha.totalIVA = totalIVA;
+      this.ficha.impTotal = impTotal;
+    }
+  }
+
+  //Se cambia la tabla a su estado editable en todas las columnas que se permitan según el estado 
+  //de la ficha y permisos
   changeEditable(){
-    if(this.ficha.fechaAceptada == null && this.ficha.fechaDenegada == null){
+    if(this.ficha.fechaAceptada == null && this.ficha.fechaDenegada == null ){
       this.productoEditable = !this.productoEditable;
       this.cantidadEditable = !this.cantidadEditable;
-      if(this.permisoEditarImporte){
+      if(this.permisoEditarImporte && !this.esColegiado){
         this.precioUnitarioEditable = !this.precioUnitarioEditable;
         this.ivaEditable = !this.ivaEditable;
       }
@@ -246,7 +321,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
   }
 
   anadirProducto(selectedProducto){
-    let found = this.listaProductosCompraFicha.find( prod => 
+    let found = this.productosTarjeta.find( prod => 
       prod.idproducto == selectedProducto.idproducto && prod.idtipoproducto == selectedProducto.idtipoproducto && prod.idproductoinstitucion == selectedProducto.idproductoinstitucion
     ) 
     if(found == null){
@@ -254,39 +329,56 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
       let newProducto: ListaProductosCompraItem = new ListaProductosCompraItem();
       newProducto.cantidad = "1";
       newProducto.descripcion = selectedProducto.descripcion;
-      newProducto.orden = (this.listaProductosCompraFicha.length+1).toString();
+      newProducto.orden = (this.productosTarjeta.length+1).toString();
       newProducto.idproducto = selectedProducto.idproducto;
       newProducto.idtipoproducto = selectedProducto.idtipoproducto;
       newProducto.idproductoinstitucion = selectedProducto.idproductoinstitucion;
       newProducto.precioUnitario = selectedProducto.valor.split(" ")[0];
       newProducto.precioUnitario = newProducto.precioUnitario.replace(",", "."); //para evitar que utilice comas que se procesan de forma erronea
-      newProducto.iva = selectedProducto.iva.split("%")[0];
+      newProducto.iva = selectedProducto.iva;
+      newProducto.valorIva = selectedProducto.valorIva;
+      newProducto.idtipoiva = selectedProducto.idtipoiva;
       newProducto.idPeticion = this.ficha.nSolicitud;
       newProducto.noFacturable = selectedProducto.noFacturable;
-      this.listaProductosCompraFicha.push(newProducto);
+      this.productosTarjeta.push(newProducto);
       this.checkTotal();
     }
     else{
-      this.msgs = [
-        {
-          severity: "error",
-          summary: "****Producto ya presente en la lista",
-          detail: "***El producto seleccionado ya está presente en la solicitud"
-        }
-      ];
+      this.showMessage("error",
+          "****Producto ya presente en la lista",
+          "***El producto seleccionado ya está presente en la solicitud"
+        );
     }
   }
+
+//   initProducto(){
+//     let i = 1;
+//     for(let prod of this.productosTarjeta){
+//       prod.cantidad = "1";
+//       prod.orden = i.toString();
+//       prod.idPeticion = this.ficha.nSolicitud; 
+//       newProducto.precioUnitario = selectedProducto.valor.split(" ")[0];
+//       newProducto.precioUnitario = newProducto.precioUnitario.replace(",", "."); //para evitar que utilice comas que se procesan de forma erronea
+//       newProducto.idPeticion = this.ficha.nSolicitud;
+//       newProducto.noFacturable = selectedProducto.noFacturable;
+//       i++;
+//     }
+// idPersona: null
+// precioUnitario: null
+// total: null
+//   }
 
   checkFormasPagoComunes(selectedProducto){
     let error: boolean = false;
 
-    let productosLista = JSON.parse(JSON.stringify(this.listaProductosCompraFicha));
+    let productosLista = JSON.parse(JSON.stringify(this.productosTarjeta));
 
     let newProducto = new ListaProductosCompraItem();
     newProducto.idproducto = selectedProducto.idproducto;
     newProducto.idproductoinstitucion = selectedProducto.idproductoinstitucion;
     newProducto.idtipoproducto = selectedProducto.idtipoproducto;
     newProducto.noFacturable = selectedProducto.noFacturable;
+    newProducto.descripcion = selectedProducto.descripcion;
 
     productosLista.push(newProducto);
 
@@ -301,15 +393,11 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
         if(element.noFacturable=="1") formasPagoArrays.push(prod.formapago.split(", ").push("No facturable"));
         else formasPagoArrays.push(prod.formapago.split(", "));
       }
-      else if(element.noFacturable=="1")formasPagoArrays.push("No facturable");
+      else if(element.noFacturable=="1")formasPagoArrays.push(new Array("No facturable"));
       else{
-        this.msgs = [
-          {
-            severity: "error",
-            summary: "Producto con forma de pago no definida",
-            detail: "El producto '"+element.descripcion+"' no tiene forma de pago definida y no tiene la propieda de 'No facturable' por lo que no se puede realizar su compra"
-          }
-        ];
+        this.showMessage("error",
+        "***Producto con forma de pago no definida",
+        "***El producto '"+element.descripcion+"' no tiene forma de pago definida y no tiene la propieda de 'No facturable' por lo que no se puede realizar su compra");
         error = true;
       }
     });
@@ -323,23 +411,21 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
             return a.indexOf(v) !== -1;
         });
       });
-    }
-    if(result.length>0){
-      this.newComboComun = result;
-      this.anadirProducto(selectedProducto);
-    }
-    else {
-      this.msgs = [
-        {
-          severity: "error",
-          summary: this.translateService.instant(
-            "facturacion.productos.ResFormasPagoNoCompatibles"
-          ),
-          detail: this.translateService.instant(
-            "facturacion.productos.FormasPagoNoCompatibles"
-          )
-        }
-      ];
+    
+      if(result.length>0){
+        this.newComboComun = result;
+        this.anadirProducto(selectedProducto);
+      }
+      else {
+        this.showMessage("error",
+            this.translateService.instant(
+              "facturacion.productos.ResFormasPagoNoCompatibles"
+            ),
+            this.translateService.instant(
+              "facturacion.productos.FormasPagoNoCompatibles"
+            )
+        );
+      }
     }
   }
 
@@ -348,27 +434,25 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
   }
 
   borrarProducto(){
-    if(this.selectedRows.length<this.listaProductosCompraFicha.length){
+    if(this.selectedRows.length<this.productosTarjeta.length){
       for(let row of this.selectedRows){
-        let index = this.listaProductosCompraFicha.indexOf(row);
-        this.listaProductosCompraFicha.splice(index, 1);
+        let index = this.productosTarjeta.indexOf(row);
+        this.productosTarjeta.splice(index, 1);
       }
 
     //Reasignar valores de orden
     let i = 1;
-      for(let prod of this.listaProductosCompraFicha){
+      for(let prod of this.productosTarjeta){
         prod.orden = i+"";
         i++;
       }
+      this.selectedRows = [];
     }
     else{
-      this.msgs = [
-        {
-          severity: "error",
-          summary: "***No puede borrar todos los productos",
-          detail: "****Debe haber por lo menos un productos en la solicitud de compra"
-        }
-      ];
+      this.showMessage("error",
+           "***No puede borrar todos los productos",
+          "****Debe haber por lo menos un productos en la solicitud de compra"
+      );
     }
   }
 
@@ -398,8 +482,8 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
   //Metodo activado al pulsar sobre el checkbox Seleccionar todo
   onChangeSelectAllRows() {
     if (this.selectAllRows === true) {
-      this.selectedRows = this.listaProductosCompraFicha;
-      this.numSelectedRows = this.listaProductosCompraFicha.length;
+      this.selectedRows = this.productosTarjeta;
+      this.numSelectedRows = this.productosTarjeta.length;
 
     } else {
       this.selectedRows = [];
@@ -425,5 +509,72 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
   onRowSelect() {
     this.numSelectedRows = this.selectedRows.length;
   }
+
+  moveRow(direccion){
+    if(direccion == 'up' && this.selectedRows[0].orden != "1"){
+      //Se intercambian los elementos del array correspondientes
+      [this.productosTarjeta[Number(this.selectedRows[0].orden)-1],this.productosTarjeta[Number(this.selectedRows[0].orden)-2]] = 
+      [this.productosTarjeta[Number(this.selectedRows[0].orden)-2],this.productosTarjeta[Number(this.selectedRows[0].orden)-1]];
+      //Se asignan los nuevos valores de la columna orden
+      let orden = this.selectedRows[0].orden;
+      this.productosTarjeta[Number(orden)-2].orden = (Number(orden)-1)+"";
+      this.productosTarjeta[Number(orden)-1].orden = (Number(orden))+"";
+    }
+    else if(direccion == 'down' && this.selectedRows[0].orden != this.productosTarjeta.length+""){
+      //Se intercambian los elementos del array correspondientes
+      [this.productosTarjeta[Number(this.selectedRows[0].orden)-1],this.productosTarjeta[Number(this.selectedRows[0].orden)]] = 
+      [this.productosTarjeta[Number(this.selectedRows[0].orden)],this.productosTarjeta[Number(this.selectedRows[0].orden)-1]];
+      //Se asignan los nuevos valores de la columna orden
+      let orden = this.selectedRows[0].orden;
+      this.productosTarjeta[Number(orden)].orden = (Number(orden)+1)+"";
+      this.productosTarjeta[Number(orden)-1].orden = (Number(orden))+"";
+    }
+  }
+
+  disableUp(){ 
+    if(this.ficha.fechaAceptada != null || this.ficha.fechaDenegada != null) {
+      return true;
+    }
+    else if(this.selectedRows != undefined && this.selectedRows.length == 1){
+      return  this.selectedRows[0].orden == '1'
+    }
+    else {
+      return true;
+    }
+  }
+
+  disableDown(){
+    if(this.ficha.fechaAceptada != null || this.ficha.fechaDenegada != null) {
+      return true;
+    }
+    else if(this.selectedRows != undefined && this.selectedRows.length == 1){ 
+      return Number(this.selectedRows[0].orden) == this.productosTarjeta.length
+    }
+    else {
+      return true;
+    }
+  }
+
+  customSort(event: SortEvent) {
+    event.data.sort((data1, data2) => {
+      let value1 = data1[event.field];
+      let value2 = data2[event.field];
+      let result = null;
+
+      if (value1 == null && value2 != null)
+        result = -1;
+      else if (value1 != null && value2 == null)
+        result = 1;
+      else if (value1 == null && value2 == null)
+        result = 0;
+      else if (typeof value1 === 'string' && typeof value2 === 'string')
+        result = value1.localeCompare(value2);
+      else
+        result = (value1 < value2) ? -1 : (value1 > value2) ? 1 : 0;
+
+      return (event.order * result);
+    });
+  }
+  
   //FIN METODOS
 }

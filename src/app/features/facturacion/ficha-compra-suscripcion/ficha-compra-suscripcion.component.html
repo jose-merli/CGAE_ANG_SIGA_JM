@@ -7,13 +7,13 @@
   <div>
       <app-tarjeta-cliente-compra-suscripcion #cliente [(ficha)]="ficha">
       </app-tarjeta-cliente-compra-suscripcion>
-      <app-tarjeta-solicitud-compra-suscripcion [(ficha)]="ficha" (actualizaFicha)="actualizarFicha()">
+      <app-tarjeta-solicitud-compra-suscripcion  [(ficha)]="ficha" (actualizaFicha)="actualizarFicha()">
       </app-tarjeta-solicitud-compra-suscripcion>
-      <app-tarjeta-forma-pago-compra-suscripcion [(ficha)]="ficha" [(comboComun)]="comboComun" >
-      </app-tarjeta-forma-pago-compra-suscripcion>
-      <app-tarjeta-productos-compra-suscripcion *ngIf="ficha.productos != null" [(ficha)]="ficha" (actualizaFicha)="actualizarFicha()" 
-      [(comboComun)]="comboComun">
+      <app-tarjeta-productos-compra-suscripcion #productos *ngIf="ficha.productos != null" [(ficha)]="ficha" (actualizaFicha)="actualizarFicha()" 
+      > 
       </app-tarjeta-productos-compra-suscripcion>
+      <app-tarjeta-forma-pago-compra-suscripcion  [(ficha)]="ficha" [(comboComun)]="comboComun" >
+      </app-tarjeta-forma-pago-compra-suscripcion>
   </div>
 </div>
 

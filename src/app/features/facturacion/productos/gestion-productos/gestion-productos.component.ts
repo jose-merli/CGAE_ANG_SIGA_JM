@@ -469,13 +469,14 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
         if(element.noFacturable=="1") formasPagoArrays.push(element.formapago.split(", ").push("No facturable"));
         else formasPagoArrays.push(element.formapago.split(", "));
       }
-      else if(element.noFacturable=="1")formasPagoArrays.push("No facturable");
+      else if(element.noFacturable=="1")formasPagoArrays.push(new Array("No facturable"));
       else{
+        //Asignar etiqueta
         this.msgs = [
           {
             severity: "error",
-            summary: "Producto con forma de pago no definida",
-            detail: "El producto '"+element.descripcion+"' no tiene forma de pago definida y no tiene la propieda de 'No facturable' por lo que no se puede realizar su compra"
+            summary: "***Producto con forma de pago no definida",
+            detail: "***El producto '"+element.descripcion+"' no tiene forma de pago definida y no tiene la propieda de 'No facturable' por lo que no se puede realizar su compra"
           }
         ];
         error = true;
