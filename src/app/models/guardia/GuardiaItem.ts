@@ -63,6 +63,8 @@ export class GuardiaItem {
     idCalendarioGuardias;
     orden : string;
     idListaGuardia : string;
+    tipoGuardia;
+
 
     constructor() { }
 

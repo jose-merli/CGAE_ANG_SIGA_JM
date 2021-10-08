@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import moment = require('moment');
+import * as moment from 'moment';
 import { Message } from 'primeng/api';
 import { TranslateService } from '../../../../../../commons/translate';
 import { ActuacionAsistenciaItem } from '../../../../../../models/guardia/ActuacionAsistenciaItem';

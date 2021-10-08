@@ -12,7 +12,7 @@ import { DatePipe } from '@angular/common';
 
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { TranslateService } from '../../../../../commons/translate';
-import moment = require('moment');
+import * as moment from 'moment';
 import { procesos_guardia } from '../../../../../permisos/procesos_guarida';
 import { SigaStorageService } from '../../../../../siga-storage.service';
 import { FiltroAsistenciaItem } from '../../../../../models/guardia/FiltroAsistenciaItem';

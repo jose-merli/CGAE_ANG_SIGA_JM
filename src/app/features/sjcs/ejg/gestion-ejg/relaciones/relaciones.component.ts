@@ -11,6 +11,8 @@ import { RelacionesItem } from '../../../../../models/sjcs/RelacionesItem';
 import { DesignaItem } from '../../../../../models/sjcs/DesignaItem';
 import { DatePipe } from '@angular/common';
 import { AsistenciasItem } from '../../../../../models/sjcs/AsistenciasItem';
+import { SigaStorageService } from '../../../../../siga-storage.service';
+import { OldSigaServices } from '../../../../../_services/oldSiga.service';
 
 @Component({
   selector: 'app-relaciones',
@@ -33,7 +35,7 @@ export class RelacionesComponent implements OnInit {
   msgs;
   selectedItem: number = 10;
   selectAll;
-  selectedDatos:any[] = [];
+  selectedDatos: any[] = [];
   buscadores = [];
   numSelected = 0;
   selectMultiple: boolean = false;
@@ -67,7 +69,7 @@ export class RelacionesComponent implements OnInit {
   @Output() idOpened = new EventEmitter<Boolean>();
   @Output() noAsocDes = new EventEmitter<Boolean>();
   @Input() openTarjetaRelaciones;
-  
+
 
   constructor(private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
@@ -76,7 +78,9 @@ export class RelacionesComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private commonsServices: CommonsService,
     private datePipe: DatePipe,
-    private router: Router) { }
+    private router: Router,
+    private sigaStorageService: SigaStorageService,
+    public oldSigaServices: OldSigaServices) { }
 
   ngOnInit() {
     if (this.persistenceService.getDatos()) {
@@ -89,7 +93,7 @@ export class RelacionesComponent implements OnInit {
       this.nuevo = true;
       this.modoEdicion = true;
     }
-    
+
     this.getCols();
   }
 
@@ -152,8 +156,8 @@ export class RelacionesComponent implements OnInit {
               break;
           }
         })
-        if(this.noAsociaDES == false)this.noAsocDes.emit(false);
-        else this.noAsocDes.emit(true);
+        if (this.noAsociaDES == false) this.noAsocDes.emit(true);
+        else this.noAsocDes.emit(false);
         if (this.relaciones.length == 1) {
           this.tipoRelacion = this.relaciones[0].sjcs;
         }
@@ -163,11 +167,11 @@ export class RelacionesComponent implements OnInit {
         let pre = new RelacionesItem();
         pre.sjcs = "PRE-DESIGNACION";
         this.relaciones.push(pre);
-       // this.progressSpinner = false;
+        // this.progressSpinner = false;
       },
       err => {
         console.log(err);
-       // this.progressSpinner = false;
+        // this.progressSpinner = false;
         this.showMessage("error", this.translateServices.instant("general.message.incorrect"), this.translateServices.instant("general.mensaje.error.bbdd"));
       }
     );
@@ -179,26 +183,26 @@ export class RelacionesComponent implements OnInit {
   }
 
   checkPre(dato) {
-    if (dato.sjcs == "PRE-DESIGNACION" ){
+    if (dato.sjcs == "PRE-DESIGNACION") {
       this.isPreDesigna = true;
-     return true;
-    } 
-   else if(dato.sjcs == "ASISTENCIA"){
-     this.isPreDesigna = false;
-     return true; 
-   }else if(dato.sjcs == "SOJ"){
-     this.isPreDesigna = false;
-     return true; 
-   } else if(dato.sjcs == "DESIGNACIÓN"){
-     this.isPreDesigna = false;
-     return true; 
-   }else if(dato.sjcs == "EXPEDIENTE"){
-     this.isPreDesigna = false;
-     return true; 
-   }else{
-     return false;
-   }
- }
+      return true;
+    }
+    else if (dato.sjcs == "ASISTENCIA") {
+      this.isPreDesigna = false;
+      return true;
+    } else if (dato.sjcs == "SOJ") {
+      this.isPreDesigna = false;
+      return true;
+    } else if (dato.sjcs == "DESIGNACIÓN") {
+      this.isPreDesigna = false;
+      return true;
+    } else if (dato.sjcs == "EXPEDIENTE") {
+      this.isPreDesigna = false;
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   openTab(evento) {
     if (this.persistenceService.getPermisos() != undefined) {
@@ -207,7 +211,7 @@ export class RelacionesComponent implements OnInit {
     if (!this.selectAll && !this.selectMultiple) {
       // this.progressSpinner = true;
       // this.datosEJG();
-      if (evento.sjcs == "PRE-DESIGNACION") {
+      if (evento.data.sjcs == "PRE-DESIGNACION") {
         this.navigateToFichaPre();
       }
 
@@ -224,10 +228,10 @@ export class RelacionesComponent implements OnInit {
       { field: "anio", header: "justiciaGratuita.maestros.calendarioLaboralAgenda.anio", width: "3%" },
       { field: "numero", header: "justiciaGratuita.sjcs.designas.DatosIden.numero", width: "3%" },
       { field: "fechaasunto", header: "dato.jgr.guardia.saltcomp.fecha", width: '6%' },
-      { field: "descturno", header: "justiciaGratuita.justiciables.literal.turnoGuardia" , width: '6%'},
-      { field: "letrado", header: "justiciaGratuita.sjcs.designas.colegiado" , width: '6%'},
-      { field: "interesado", header: "justiciaGratuita.sjcs.designas.datosInteresados" , width: '6%'},
-      { field: "resolucion", header: "justiciaGratuita.maestros.fundamentosResolucion.resolucion" , width: '6%'},
+      { field: "descturno", header: "justiciaGratuita.justiciables.literal.turnoGuardia", width: '6%' },
+      { field: "letrado", header: "justiciaGratuita.sjcs.designas.colegiado", width: '6%' },
+      { field: "interesado", header: "justiciaGratuita.sjcs.designas.datosInteresados", width: '6%' },
+      { field: "resolucion", header: "justiciaGratuita.maestros.fundamentosResolucion.resolucion", width: '6%' },
       { field: "dilnigproc", header: 'justiciaGratuita.ejg.busquedaAsuntos.diliNumProc', width: '6%' },
     ];
     this.cols.forEach(it => this.buscadores.push(""));
@@ -293,7 +297,7 @@ export class RelacionesComponent implements OnInit {
       }
     }
   }
-  
+
   actualizaSeleccionados(selectedDatos) {
     this.numSelected = selectedDatos.length;
     this.seleccion = false;
@@ -330,83 +334,83 @@ export class RelacionesComponent implements OnInit {
 
     this.selectedDatos = [];
 
-    for( let dato of selected){
-     
+    for (let dato of selected) {
+
       let identificador = dato.sjcs;
 
       switch (identificador) {
         case 'ASISTENCIA':
-          let relacion:RelacionesItem = new RelacionesItem();
-     
-     relacion.idinstitucion = dato.idinstitucion;
-     relacion.numero = dato.numero;
-     relacion.anio = dato.anio;
+          let relacion: RelacionesItem = new RelacionesItem();
+
+          relacion.idinstitucion = dato.idinstitucion;
+          relacion.numero = dato.numero;
+          relacion.anio = dato.anio;
           this.sigaServices.post("gestionejg_borrarRelacionAsistenciaEJG", relacion).subscribe(
             n => {
               this.progressSpinner = false;
               this.showMessage("success", this.translateServices.instant("general.message.correct"), this.translateServices.instant("general.message.accion.realizada"));
-             
+
               this.getRelaciones();
             },
             err => {
               console.log(err);
               this.progressSpinner = false;
               this.showMessage("error", this.translateServices.instant("general.message.incorrect"), this.translateServices.instant("general.mensaje.error.bbdd"));
-              
+
             }
           );
           break;
-          case 'SOJ':
-            let relacionSOJ:RelacionesItem = new RelacionesItem();
-     
-            relacionSOJ.idinstitucion = dato.idinstitucion;
-            relacionSOJ.numero = dato.numero;
-            relacionSOJ.anio = dato.anio;
-            relacionSOJ.idtipo = dato.idtipo;
-            this.sigaServices.post("gestionejg_borrarRelacionSojEJG", relacionSOJ).subscribe(
-              n => {
-                this.progressSpinner = false;
-                this.showMessage("success", this.translateServices.instant("general.message.correct"), this.translateServices.instant("general.message.accion.realizada"));
-                
-                this.getRelaciones();
-              },
-              err => {
-                console.log(err);
-                this.progressSpinner = false;
-                this.showMessage("error", this.translateServices.instant("general.message.incorrect"), this.translateServices.instant("general.mensaje.error.bbdd"));
-                
-              }
-            );
-          break;
-          case 'DESIGNACIÓN':
-            /* let relacionDes:RelacionesItem = new RelacionesItem();
-     
-            relacionDes.idinstitucion = dato.idinstitucion;
-            relacionDes.numero = dato.numero;
-            relacionDes.anio = dato.anio;
-            relacionDes.idturno = dato.idturno; */
+        case 'SOJ':
+          let relacionSOJ: RelacionesItem = new RelacionesItem();
 
-            let request= [
-              dato.idinstitucion,dato.numero,dato.anio,dato.idturno,this.body.annio,this.body.numero,this.body.tipoEJG
-            ]
+          relacionSOJ.idinstitucion = dato.idinstitucion;
+          relacionSOJ.numero = dato.numero;
+          relacionSOJ.anio = dato.anio;
+          relacionSOJ.idtipo = dato.idtipo;
+          this.sigaServices.post("gestionejg_borrarRelacionSojEJG", relacionSOJ).subscribe(
+            n => {
+              this.progressSpinner = false;
+              this.showMessage("success", this.translateServices.instant("general.message.correct"), this.translateServices.instant("general.message.accion.realizada"));
 
-            this.sigaServices.post("gestionejg_borrarRelacion", request).subscribe(
-              n => {
-                this.progressSpinner = false;
-                this.showMessage("success", this.translateServices.instant("general.message.correct"), this.translateServices.instant("general.message.accion.realizada"));
-                
-                this.getRelaciones();
-              },
-              err => {
-                console.log(err);
-                this.progressSpinner = false;
-                this.showMessage("error", this.translateServices.instant("general.message.incorrect"), this.translateServices.instant("general.mensaje.error.bbdd"));
-                
-              }
-            );
-            
+              this.getRelaciones();
+            },
+            err => {
+              console.log(err);
+              this.progressSpinner = false;
+              this.showMessage("error", this.translateServices.instant("general.message.incorrect"), this.translateServices.instant("general.mensaje.error.bbdd"));
+
+            }
+          );
           break;
-      
+        case 'DESIGNACIÓN':
+          /* let relacionDes:RelacionesItem = new RelacionesItem();
+   
+          relacionDes.idinstitucion = dato.idinstitucion;
+          relacionDes.numero = dato.numero;
+          relacionDes.anio = dato.anio;
+          relacionDes.idturno = dato.idturno; */
+
+          let request = [
+            dato.idinstitucion, dato.numero, dato.anio, dato.idturno, this.body.annio, this.body.numero, this.body.tipoEJG
+          ]
+
+          this.sigaServices.post("gestionejg_borrarRelacion", request).subscribe(
+            n => {
+              this.progressSpinner = false;
+              this.showMessage("success", this.translateServices.instant("general.message.correct"), this.translateServices.instant("general.message.accion.realizada"));
+
+              this.getRelaciones();
+            },
+            err => {
+              console.log(err);
+              this.progressSpinner = false;
+              this.showMessage("error", this.translateServices.instant("general.message.incorrect"), this.translateServices.instant("general.mensaje.error.bbdd"));
+
+            }
+          );
+
+          break;
+
         default:
           //Introducir en la BBDD
           this.showMessage("error", this.translateServices.instant("general.message.incorrect"), "No se puede realizar la accion de eliminar. Tipo de Asunto incorrecto.");
@@ -457,42 +461,56 @@ export class RelacionesComponent implements OnInit {
         this.router.navigate(['/rutaSinDefinir']);
 
         break;
-        case 'SOJ':
-          /**
-         * TODO: enlazar una vez este creada la pagina.
-         */
+      case 'SOJ':
 
-          this.router.navigate(['/soj']);
-        break;
-        case 'DESIGNACIÓN':
-          let desItem : any = new DesignaItem(); 
-          let ape = dato.letrado.split(',')[0];
-          desItem.ano = dato.anio;
-          desItem.numero = dato.numero;
-          desItem.idInstitucion = dato.idinstitucion;
-          desItem.idTurno = dato.idturno;
-          desItem.codigo = dato.codigo;
-          desItem.descripcionTipoDesigna = dato.destipo
-          desItem.fechaEntradaInicio = dato.fechaasunto;
-          desItem.nombreTurno = dato.descturno;
-          desItem.nombreProcedimiento = dato.dilnigproc.split('-')[2];
-          desItem.nombreColegiado = dato.letrado;
-          desItem.apellido1Colegiado =ape.split(' ')[0];
-          desItem.apellido2Colegiado =ape.split(' ')[1];
-          //Se cambia el valor del campo ano para que se procese de forma adecuada 
-          //En la ficha en las distintas tarjetas para obtener sus valores
-          desItem.ano = 'D' + desItem.ano + '/' + desItem.codigo;
+        
 
-          if (this.art27) sessionStorage.setItem("Art27", "true");
-          sessionStorage.setItem('designaItemLink',JSON.stringify(desItem));
-          sessionStorage.setItem("nuevaDesigna", "false");
-          this.router.navigate(['/fichaDesignaciones']);
-        break;
-        case 'PRE-DESIGNACION':
+        let us = this.oldSigaServices.getOldSigaUrl('detalleSOJ');
+        us +='&granotmp=1630574876868&numeroSOJ=922&IDTIPOSOJ=2&ANIO=2018&idPersonaJG=552608&idInstitucionJG=2005&actionE=/JGR_PestanaSOJBeneficiarios.do&tituloE=pestana.justiciagratuitasoj.solicitante&conceptoE=SOJ&NUMERO=922&anioSOJ=2018&localizacionE=gratuita.busquedaSOJ.localizacion&IDINSTITUCION=2005&idTipoSOJ=2&idInstitucionSOJ=2005&accionE=editar';
 
-          this.router.navigate(['/ficha-pre-designacion']);
+        /*let us = undefined;
+        us = this.sigaServices.getOldSigaUrl() + "JGR_PestanaSOJDatosGenerales.do?numeroSOJ=" + dato.numero +
+          "&IDTIPOSOJ=" + dato.idtipo + "&ANIO=" + dato.anio + "&idPersonaJG=" + dato.idpersonajg + "&idInstitucionJG=" +
+          this.sigaStorageService.institucionActual + "&actionE=/JGR_PestanaSOJBeneficiarios.do&tituloE=pestana.justiciagratuitasoj.solicitante&conceptoE=SOJ" +
+          "&NUMERO=" + dato.numero + "&anioSOJ=" + dato.anio + "&localizacionE=gratuita.busquedaSOJ.localizacion&IDINSTITUCION=" + this.sigaStorageService.institucionActual +
+          "&idTipoSOJ=" + dato.idtipo + "&idInstitucionSOJ=" + dato.idinstitucion + "&accionE=editar";
+
+        us = encodeURI(us);
+
+        sessionStorage.setItem("url", JSON.stringify(us));
+        sessionStorage.removeItem("reload");
+        sessionStorage.setItem("reload", "si");
+*/
+        this.router.navigate(['/soj']);
         break;
-    
+      case 'DESIGNACIÓN':
+        let desItem: any = new DesignaItem();
+
+        desItem.ano = dato.anio;
+        desItem.numero = dato.numero;
+        desItem.idInstitucion = dato.idinstitucion;
+        desItem.idTurno = dato.idturno;
+        desItem.codigo = dato.codigo;
+        desItem.descripcionTipoDesigna = dato.destipo
+        desItem.fechaEntradaInicio = dato.fechaasunto;
+        desItem.nombreTurno = dato.descturno;
+        desItem.nombreProcedimiento = dato.dilnigproc.split('-')[2];
+        desItem.nombreColegiado = dato.letrado;
+
+        //Se cambia el valor del campo ano para que se procese de forma adecuada 
+        //En la ficha en las distintas tarjetas para obtener sus valores
+        desItem.ano = 'D' + desItem.ano + '/' + desItem.codigo;
+
+        if (this.art27) sessionStorage.setItem("Art27", "true");
+        sessionStorage.setItem('designaItemLink', JSON.stringify(desItem));
+        sessionStorage.setItem("nuevaDesigna", "false");
+        this.router.navigate(['/fichaDesignaciones']);
+        break;
+      case 'PRE-DESIGNACION':
+
+        this.router.navigate(['/ficha-pre-designacion']);
+        break;
+
       default:
         //Introducir en la BBDD
         this.showMessage("error", this.translateServices.instant("general.message.incorrect"), "No se puede realizar la accion de eliminar. Tipo de Asunto incorrecto.");
@@ -588,74 +606,74 @@ export class RelacionesComponent implements OnInit {
     sessionStorage.removeItem("Designa");
     this.progressSpinner = true;
     //Comprobamos si entre la relaciones hay una designacion
-    let foundDesigna = this.relaciones.find(element => 
+    let foundDesigna = this.relaciones.find(element =>
       element.sjcs == "DESIGNACIÓN"
     )
     if (foundDesigna != undefined) {
-        let designaItem: DesignaItem = new DesignaItem();
-        //designaItem.idInstitucion = parseInt(element.idinstitucion.toString());
-        //designaItem.idTurno = parseInt(element.idturno.toString());
-        designaItem.ano = parseInt(foundDesigna.anio.toString());
-        designaItem.codigo = foundDesigna.numero.toString();
+      let designaItem: DesignaItem = new DesignaItem();
+      //designaItem.idInstitucion = parseInt(element.idinstitucion.toString());
+      //designaItem.idTurno = parseInt(element.idturno.toString());
+      designaItem.ano = parseInt(foundDesigna.anio.toString());
+      designaItem.codigo = foundDesigna.numero.toString();
 
-        if (designaItem.numColegiado == "") {
-          designaItem.numColegiado = null;
-        }
-        this.sigaServices.post("designaciones_busqueda", designaItem).subscribe(
-          n => {
-            let datos = JSON.parse(n.body);
-            let error;
+      if (designaItem.numColegiado == "") {
+        designaItem.numColegiado = null;
+      }
+      this.sigaServices.post("designaciones_busqueda", designaItem).subscribe(
+        n => {
+          let datos = JSON.parse(n.body);
+          let error;
 
-            if (datos[0] != null && datos[0] != undefined) {
-              if (datos[0].error != null) {
-                error = datos[0].error;
-              }
+          if (datos[0] != null && datos[0] != undefined) {
+            if (datos[0].error != null) {
+              error = datos[0].error;
+            }
+          }
+
+          datos.forEach(designa => {
+            designa.factConvenio = designa.ano;
+            designa.anio = designa.ano;
+            designa.ano = 'D' + designa.ano + '/' + designa.codigo;
+            //  element.fechaEstado = new Date(element.fechaEstado);
+            designa.fechaEstado = this.formatDate(designa.fechaEstado);
+            designa.fechaFin = this.formatDate(designa.fechaFin);
+            designa.fechaAlta = this.formatDate(designa.fechaAlta);
+            designa.fechaEntradaInicio = this.formatDate(designa.fechaEntradaInicio);
+            if (designa.estado == 'V') {
+              designa.sufijo = designa.estado;
+              designa.estado = 'Activo';
+            } else if (designa.estado == 'F') {
+              designa.sufijo = designa.estado;
+              designa.estado = 'Finalizado';
+            } else if (designa.estado == 'A') {
+              designa.sufijo = designa.estado;
+              designa.estado = 'Anulada';
+            }
+            designa.nombreColegiado = designa.apellido1Colegiado + " " + designa.apellido2Colegiado + ", " + designa.nombreColegiado;
+            if (designa.nombreInteresado != null) {
+              designa.nombreInteresado = designa.apellido1Interesado + " " + designa.apellido2Interesado + ", " + designa.nombreInteresado;
+            }
+            if (designa.art27 == "1") {
+              designa.art27 = "Si";
+            } else {
+              designa.art27 = "No";
             }
 
-            datos.forEach(designa => {
-              designa.factConvenio = designa.ano;
-              designa.anio = designa.ano;
-              designa.ano = 'D' + designa.ano + '/' + designa.codigo;
-              //  element.fechaEstado = new Date(element.fechaEstado);
-              designa.fechaEstado = this.formatDate(designa.fechaEstado);
-              designa.fechaFin = this.formatDate(designa.fechaFin);
-              designa.fechaAlta = this.formatDate(designa.fechaAlta);
-              designa.fechaEntradaInicio = this.formatDate(designa.fechaEntradaInicio);
-              if (designa.estado == 'V') {
-                designa.sufijo = designa.estado;
-                designa.estado = 'Activo';
-              } else if (designa.estado == 'F') {
-                designa.sufijo = designa.estado;
-                designa.estado = 'Finalizado';
-              } else if (designa.estado == 'A') {
-                designa.sufijo = designa.estado;
-                designa.estado = 'Anulada';
-              }
-              designa.nombreColegiado = designa.apellido1Colegiado + " " + designa.apellido2Colegiado + ", " + designa.nombreColegiado;
-              if (designa.nombreInteresado != null) {
-                designa.nombreInteresado = designa.apellido1Interesado + " " + designa.apellido2Interesado + ", " + designa.nombreInteresado;
-              }
-              if (designa.art27 == "1") {
-                designa.art27 = "Si";
-              } else {
-                designa.art27 = "No";
-              }
+            const params = {
+              anio: designa.factConvenio,
+              idTurno: designa.idTurno,
+              numero: designa.numero,
+              historico: false
+            };
 
-              const params = {
-                anio: designa.factConvenio,
-                idTurno: designa.idTurno,
-                numero: designa.numero,
-                historico: false
-              };
-
-              this.getDatosAdicionales(designa);
-            });
-          },
-          err => {
-            this.progressSpinner = false;
-          }
-        );
-      }
+            this.getDatosAdicionales(designa);
+          });
+        },
+        err => {
+          this.progressSpinner = false;
+        }
+      );
+    }
     else this.router.navigate(["/ficha-pre-designacion"]);
   }
 

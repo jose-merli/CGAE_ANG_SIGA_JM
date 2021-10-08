@@ -8,7 +8,7 @@
           Guardia de Colegiado
   </div>
   <div>
-      <app-turno-gestion-guardia-colegiado class="pb-50" >
+      <app-turno-gestion-guardia-colegiado class="pb-50" *ngIf="activa">
       </app-turno-gestion-guardia-colegiado>
       
       <app-guardia-gestion-guardia-colegiado class="pb-50" >
@@ -20,7 +20,7 @@
       <app-colegiado-gestion-guardia-colegiado class="pb-50" >
       </app-colegiado-gestion-guardia-colegiado>
 
-      <app-datos-generales-gestion-guardia-colegiado class="pb-50" >
+      <app-datos-generales-gestion-guardia-colegiado class="pb-50" [modificar] = "modificar">
       </app-datos-generales-gestion-guardia-colegiado>
 
       <app-sustituciones-gestion-guardia-colegiado class="pb-50" >

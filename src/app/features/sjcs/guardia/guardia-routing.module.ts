@@ -11,6 +11,7 @@ import { FichaPreasistenciasComponent } from "./guardias-solicitudes-centralita/
 import { GuardiasInscripcionesComponent } from "./guardias-inscripciones/guardias-inscripciones.component";
 import { GuardiaColegiadoComponent } from "./guardia-colegiado/guardia-colegiado.component";
 import { GestionGuardiaColegiadoComponent } from "./guardia-colegiado/gestion-guardia-colegiado/gestion-guardia-colegiado.component";
+import { CargasMasivasGuardiaComponent } from "./cargas-masivas-guardia/cargas-masivas-guardia.component";
 
 
 const routesGuardia: Routes = [
@@ -61,7 +62,12 @@ const routesGuardia: Routes = [
         component: GestionGuardiaColegiadoComponent,
         canActivate: [AuthGuard]
     },
-    
+     {
+        path: "cargasMasivasGuardia",
+        component: CargasMasivasGuardiaComponent,
+        canActivate: [AuthGuard]
+    },
+        
 ];
 
 @NgModule({

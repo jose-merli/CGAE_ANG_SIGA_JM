@@ -17,7 +17,7 @@ import { DatePipe } from '@angular/common';
 import { SigaStorageService } from '../../../../siga-storage.service';
 import { MatDialog } from '@angular/material';
 import { ConfirmationService } from './../../../../../../node_modules/primeng/primeng';
-
+import { Location } from '@angular/common';
 interface GuardiaI {
   label: string;
   value: string;
@@ -124,7 +124,8 @@ export class GuardiasInscripcionesComponent implements OnInit {
     private trmService: TablaResultadoMixIncompService,
     private sigaStorageService: SigaStorageService,
     private authenticationService: AuthenticationService,
-    private confirmationService: ConfirmationService,) {
+    private confirmationService: ConfirmationService,
+    private location: Location) {
     this.url = oldSigaServices.getOldSigaUrl("guardiasIncompatibilidades");
   }
 
@@ -995,5 +996,9 @@ export class GuardiasInscripcionesComponent implements OnInit {
       });
 
     }
+  }
+
+    backTo() {
+    this.location.back();
   }
 }

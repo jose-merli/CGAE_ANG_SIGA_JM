@@ -14,7 +14,7 @@
     <div  class="px-0 pt-0 pb-0 card-body card-body-ficha">
        <p-table [value]="permutas" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple"
         [responsive]="true" #table class="tabla-listado" [paginator]="true" [rows]="selectedItem"
-        (onRowSelect)="openTab($event)" [ngClass]="{ 'customCursor': selectMultiple}" selectionMode="multiple"
+         [ngClass]="{ 'customCursor': selectMultiple}" selectionMode="multiple"
         paginatorPosition="both">
         <ng-template pTemplate="colgroup" let-columns>
           <colgroup>

@@ -18,13 +18,13 @@
           <div class="form-row">
             <div class="form-group-interlineado col-lg-6 col-md-6">
               <label>{{ "justiciaGratuita.guardia.solicitudescentralita.fechaguardia" | translate }}</label>
-              <app-fecha [(value)]="body" (valueChangeSelected)="fillFechaApertura($event)"
-                (valueChangeInput)="fillFechaApertura($event)">
+              <app-fecha [(disabled)] = "modificar" [(value)]="campoFecha" (valueChangeSelected)="fillFechaGuardia($event)"
+                (valueChangeInput)="fillFechaGuardia($event)">
               </app-fecha>
             </div>
             <div class="form-group-interlineado col-lg-6 col-md-6">
               <label>Motivo de Anulacion</label>
-              <textarea pInputTextarea [(ngModel)]="body"
+              <textarea pInputTextarea [(ngModel)]="body.observacionesAnulacion"
                 class="form-control ui-inputtext" autoResize="autoResize" maxLength="3900"></textarea>
             </div>
           </div>

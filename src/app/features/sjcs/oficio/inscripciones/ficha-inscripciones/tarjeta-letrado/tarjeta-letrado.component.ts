@@ -140,7 +140,7 @@ export class TarjetaLetradoComponent implements OnInit {
    if(origen == "newInscrip"){
     this.disableDirecciones = false;
    }
-   sessionStorage.removeItem("origin");
+  //  sessionStorage.removeItem("origin");
     this.commonsService.checkAcceso(procesos_oficio.tarjetaLetrado)
       .then(respuesta => {
         this.permisosTarjeta = respuesta;

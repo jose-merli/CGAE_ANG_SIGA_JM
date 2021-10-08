@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ColegiadoItem } from '../../../../../../models/ColegiadoItem';
+import { PersistenceService } from '../../../../../../_services/persistence.service';
+import { SigaServices } from '../../../../../../_services/siga.service';
 
 @Component({
   selector: 'app-colegiado-gestion-guardia-colegiado',
@@ -8,11 +11,23 @@ import { Component, OnInit } from '@angular/core';
 export class ColegiadoGestionGuardiaColegiadoComponent implements OnInit {
 
   msgs;
-  progressSpinner
-  constructor() { }
+  progressSpinner;
+  colegiado;
+  constructor(private sigaServices: SigaServices,
+    private persistenceService: PersistenceService) { }
 
   ngOnInit() {
+    this.progressSpinner = true;
+    if(this.persistenceService.getDatos()){
+      this.colegiado = this.persistenceService.getDatos();
+    }
+    this.progressSpinner = false
+
+
+
   }
 
-  clear(){}
+  clear(){
+    this.msgs = "";
+  }
 }
