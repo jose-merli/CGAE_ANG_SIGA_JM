@@ -859,6 +859,7 @@ export class SigaServices {
         doc.idActuacion = el.idActuacion;
         doc.observaciones = el.observaciones;
         doc.idTipodocumento = '1';
+		doc.usuModificacion = el.usuModificacion;
 
         formData.append(`uploadFile${i}`, el.file, el.file.name + ';' + JSON.stringify(doc));
       } else {
@@ -873,7 +874,7 @@ export class SigaServices {
         doc.idTurno = el.idTurno;
         doc.idActuacion = el.idActuacion;
         doc.observaciones = el.observaciones;
-
+		doc.usuModificacion = el.usuModificacion;
         documentosActualizar.push(doc);
       }
     });

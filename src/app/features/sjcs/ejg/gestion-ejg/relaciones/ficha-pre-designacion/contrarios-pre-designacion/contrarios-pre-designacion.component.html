@@ -129,8 +129,8 @@
           <button *ngIf="historicoContrario" (click)="searchHistorical()" pButton type="button" icon="fa fa-undo"
             iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
           <button *ngIf="!historicoContrario" (click)="NewContrario()" pButton type="button" icon="fa fa-plus"
-            iconPos="left" label="{{ 'general.boton.new' | translate}}" [disabled]="!permisoEscritura"></button>
-          <button *ngIf="!historicoContrario" pButton [disabled]="selectedDatos.length == 0 || !permisoEscritura" type="button"
+            iconPos="left" label="{{ 'general.boton.new' | translate}}" [disabled]="!nuevo"></button>
+          <button *ngIf="!historicoContrario" pButton [disabled]="selectedDatos.length == 0 || !eliminar" type="button"
             (click)="Eliminar()" icon="fa fa-trash-alt" iconPos="left" 
             label="{{ 'general.boton.eliminar' | translate}}"></button>
           <button *ngIf="historicoContrario" pButton [disabled]="selectedDatos.length == 0 || !permisoEscritura" type="button"

@@ -42,6 +42,11 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
   @Input() selectedValue;
   @Output() refreshDataGenerales = new EventEmitter<DesignaItem>();
   nuevaDesignaCreada: DesignaItem;
+  currentRoute: String;
+  idClasesComunicacionArray: string[] = [];
+  idClaseComunicacion: String;
+  keys: any[] = [];
+
   anio = {
     value: "",
     disable: false
@@ -97,6 +102,8 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
   }
 
   ngOnInit() {
+    this.currentRoute = this.router.url;
+    this.getKeysClaseComunicacion();
     this.resaltadoDatos = true;
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
     this.initDatos = this.campos;
@@ -213,9 +220,14 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
 
     } else if (sessionStorage.getItem("colegiadoGeneralDesigna")) {
       let colegiadoGeneral = JSON.parse(sessionStorage.getItem("colegiadoGeneralDesigna"));
-      this.inputs[0].value = colegiadoGeneral[0].numeroColegiado;
+      if(this.campos.idInstitucion == colegiadoGeneral[0].numeroInstitucion){
+        this.inputs[0].value = colegiadoGeneral[0].numeroColegiado;
+      }
       this.inputs[1].value = colegiadoGeneral[0].apellidos;
       this.inputs[2].value = colegiadoGeneral[0].nombre;
+      this.inputs[0].disable = true;
+      this.inputs[1].disable = true;
+      this.inputs[2].disable = true;
       this.nif = colegiadoGeneral[0].nif;
       this.nombreColegiado = colegiadoGeneral[0].nombre;
       let apellidos =  colegiadoGeneral[0].apellidos.split(' ');
@@ -371,9 +383,9 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     sessionStorage.removeItem("datosGeneralesDesigna");
     this.progressSpinner = true;
     this.msgs = [];
-    /* if (detail == "save" && (this.inputs[0].value == "" || this.inputs[0].value == undefined)) {
+    if (detail == "save" && ((this.inputs[0].value == "" && this.inputs[0].disable == false) || this.inputs[0].value == undefined)) {
       this.confirmarActivar(severity, summary, detail);
-    } else { */
+    } else { 
       
       if (detail == "save" && (this.anio.value == "") ) {
         detail = "Guardar";
@@ -543,8 +555,10 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
           );
         }
       }
-
-   // }
+      if(this.resaltadoDatos == true){
+        this.progressSpinner = false;
+      }
+    }
 
     if (detail == "Restablecer") {
       this.nuevaDesigna = sessionStorage.getItem("nuevaDesigna");
@@ -852,5 +866,69 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         }, 5);
       });;
 
+  }
+
+  navigateComunicar() {
+    sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
+    //IDMODULO de SJCS es 10
+    sessionStorage.setItem("idModulo", '10');
+    
+    this.getDatosComunicar();
+  }
+  
+  getKeysClaseComunicacion() {
+    this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
+      data => {
+        this.keys = JSON.parse(data["body"]);
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  getDatosComunicar() {
+    let datosSeleccionados = [];
+    let rutaClaseComunicacion = this.currentRoute.toString();
+
+    this.sigaServices
+      .post("dialogo_claseComunicacion", rutaClaseComunicacion)
+      .subscribe(
+        data => {
+          this.idClaseComunicacion = JSON.parse(
+            data["body"]
+          ).clasesComunicaciones[0].idClaseComunicacion;
+          this.sigaServices
+            .post("dialogo_keys", this.idClaseComunicacion)
+            .subscribe(
+              data => {
+                this.keys = JSON.parse(data["body"]).keysItem;
+                  let keysValues = [];
+                  this.keys.forEach(key => {
+                    if (this.initDatos[key.nombre] != undefined) {
+                      keysValues.push(this.initDatos[key.nombre]);
+                    }else if(key.nombre == "num" && this.initDatos["numero"] != undefined){
+                      keysValues.push(this.initDatos["numero"]);
+                    }else if(key.nombre == "idturno" && this.initDatos["idTurno"] != undefined){
+                      keysValues.push(this.initDatos["idTurno"]);
+                    }
+                  });
+                  datosSeleccionados.push(keysValues);
+
+                sessionStorage.setItem(
+                  "datosComunicar",
+                  JSON.stringify(datosSeleccionados)
+                );
+                this.router.navigate(["/dialogoComunicaciones"]);
+              },
+              err => {
+                console.log(err);
+              }
+            );
+        },
+        err => {
+          console.log(err);
+        }
+      );
   }
 }

@@ -61,6 +61,18 @@ export class FiltrosTurnos implements OnInit {
         this.filtros = JSON.parse(
           sessionStorage.getItem("filtrosTurnos")
         );
+        if (this.filtros.idarea != undefined && this.filtros.idarea != "") {
+          this.isDisabledMateria = false;
+        } else {
+          this.isDisabledMateria = true;
+        }
+        if (this.filtros.idzona != undefined && this.filtros.idzona != "") {
+          this.isDisabledSubZona = false;
+          this.partidoJudicial = "";
+        } else {
+          this.isDisabledSubZona = true;
+        }
+        this.partidoJudiciales();
         this.isBuscar();
         sessionStorage.removeItem("volver");
         }else{

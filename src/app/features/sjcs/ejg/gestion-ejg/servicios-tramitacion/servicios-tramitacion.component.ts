@@ -233,7 +233,7 @@ export class ServiciosTramitacionComponent implements OnInit {
     return this.fichaPosible.activa;
   }
   abreCierraFicha(key) {
-    this.resaltadoDatos = true;
+    // this.resaltadoDatos = true;
     if (
       key == "serviciosTramitacion" &&
       !this.activacionTarjeta

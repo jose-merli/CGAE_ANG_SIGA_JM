@@ -42,6 +42,7 @@ export let endpoints_EJG: any = {
     gestionejg_insertaDatosGenerales: "ejg/gestion-ejg/insertaDatosGenerales",
     gestionejg_actualizaDatosGenerales: "ejg/gestion-ejg/actualizaDatosGenerales",
     gestionejg_getEjgDesigna: "ejg/gestion-ejg/getEjgDesigna",
+    gestionejg_getDatosExpInsos: "ejg/gestion-ejg/getDatosExpInsos",
 
     //Servicios de tramitacion
     gestionejg_guardarServiciosTramitacion:"ejg/gestion-ejg/guardarServiciosTramitacion",

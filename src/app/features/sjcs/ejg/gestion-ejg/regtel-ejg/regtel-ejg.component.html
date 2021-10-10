@@ -19,12 +19,13 @@
             <label>{{ "censo.regtel.literal.numero.directorios" | translate }}
               <span>{{ messageRegtel }}</span>
             </label>
-             <!-- <label *ngIf="nDocumentos > 3 && documentos != undefined && documentos[0] != undefined && documentos[1] != undefined && documentos[2] != undefined">{{ "enviosMasivos.literal.documentos" | translate }}: <span>{{documentos[0].documentoDesc}},{{documentos[1].documentoDesc}},{{documentos[2].documentoDesc}}</span></label>-->
+            <!-- <label *ngIf="nDocumentos > 3 && documentos != undefined && documentos[0] != undefined && documentos[1] != undefined && documentos[2] != undefined">{{ "enviosMasivos.literal.documentos" | translate }}: <span>{{documentos[0].documentoDesc}},{{documentos[1].documentoDesc}},{{documentos[2].documentoDesc}}</span></label>-->
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('regtel')"></i>
           </div>
         </div>
       </div>
-      <div *ngIf="esFichaActiva('regtel')" class=" header-ficha-open d-flex justify-content-start align-items-center" (click)="abreCierraFicha('regtel')">
+      <div *ngIf="esFichaActiva('regtel')" class=" header-ficha-open d-flex justify-content-start align-items-center"
+        (click)="abreCierraFicha('regtel')">
         <div class="img-colegiado">
           <i class="fas fa-file-alt icon-ficha"></i>
         </div>
@@ -32,107 +33,78 @@
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
-    <div *ngIf="esFichaActiva('regtel')" class="px-0 pt-0 pb-0 card-body card-body-ficha">
-          <!-- TABLA RESULTADOS -->
-          <p-table [value]="regtel" [columns]="cols" [(selection)]="selectedDatos" selectionMode="single" [responsive]="true"
-            #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowUnselect)="actualizaSeleccionados(selectedDatos)" [ngClass]="{ 'customCursor': selectMultiple}"
-            selectionMode="single" paginatorPosition="both">
-            <ng-template pTemplate="colgroup" let-columns>
-              <colgroup>
-                <col *ngFor="let col of cols" [style.width]="col.width">
-              </colgroup>
-            </ng-template>
-            <ng-template pTemplate="header" let-columns>
-              <tr>
-                <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
-                  {{ col.header | translate }}
-                  <p-sortIcon [field]="col.field"></p-sortIcon>
-                  <input pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText
-                    type="text" (input)="table.filter($event.target.value, col.field, 'contains')" />
-                </th>
-              </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
-              <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
-                <td class="text-center" *ngFor="let col of columns">
-                  <div *ngIf="col.field == 'flimite_presentacion' || col.field == 'f_presentacion'">
-                    <div *ngIf="setItalic(dato)">
-                      <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ dato[col.field] | date: 'dd/MM/yyyy'}}</span>
-                    </div>
-                    <div *ngIf="!setItalic(dato)">
-                      <span>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</span>
-                    </div>
-                  </div>
-                  <div *ngIf="col.field != 'flimite_presentacion' && col.field != 'f_presentacion' && col.field != 'propietario'">
-                    <div *ngIf="setItalic(dato)">
-                      <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
-                    </div>
-                    <div *ngIf="!setItalic(dato)">
-                      <span>{{dato[col.field]}}</span>
-                    </div>
-                  </div>
-                  <div *ngIf="col.field == 'propietario'">
-                    <div *ngIf="setItalic(dato) && dato[col.field] == '1'">
-                      <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ "justiciaGratuita.ejg.datosGenerales.CAJG" | translate }}</span>
-                    </div>
-                    <div *ngIf="!setItalic(dato) && dato[col.field] == '1'">
-                      <span>{{ "justiciaGratuita.ejg.datosGenerales.CAJG" | translate }}</span>
-                    </div>
-                    <div *ngIf="setItalic(dato) && dato[col.field] == '0'">
-                      <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ "justiciaGratuita.ejg.datosGenerales.ICA" | translate }}</span>
-                    </div>
-                    <div *ngIf="!setItalic(dato) && dato[col.field] == '0'">
-                      <span>{{ "justiciaGratuita.ejg.datosGenerales.ICA" | translate }}</span>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            </ng-template>
-            <ng-template pTemplate="emptymessage" let-columns>
-              <tr>
-                <td [attr.colspan]="columns.length">
-                  <!-- {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }} -->
-                  {{ messageRegtel }}
-                </td>
-              </tr>
-            </ng-template>
-            <ng-template pTemplate="paginatorleft">
-              <div class="mostrar d-flex text-right justify-content-end">
-                <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }}{{table.first + 1}} al
-                  {{table.first + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate
-                  }} {{table.totalRecords}}</label>
-                <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{selectedDatos.length}}
-                </label>
-                <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: 0
-                </label>
-                <label>{{"general.message.mostrar" | translate}}</label>
-                <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
-                </p-dropdown>
-                <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-                <div class="ml-3 selectAll">
-                  <p-checkbox (onChange)="onChangeSelectAll()" [disabled]="!permisoEscritura" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
-                    name="groupname"></p-checkbox>
-                </div>
+    <div *ngIf="esFichaActiva('regtel')" class="card-body card-body-ficha">
+      <div>
+        <p-dataTable #table emptyMessage="{{ messageRegtel }}" [(selection)]="selectedDatosRegtel" [responsive]="true"
+          selectionMode="single" dataKey="id" #tableRegTel class="tabla-listado" [value]="regtel" [sortOrder]="0"
+          [sortField]="fechaModificacion" [paginator]="activarPaginacionRegTel()"
+          (onRowSelect)="onRowSelectedRegTel(selectedDatosRegtel)" (onRowUnselect)=" onRowDesselectedRegTel()"
+          paginatorPosition="both" [rows]="selectedItemRegtel" pageLinks="4">
+          <p-column *ngFor="let col of colsRegtel" [sortable]="true" [field]="col.field"
+            [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}" [filter]="true"
+            filterMatchMode="contains">
+            <ng-template let-datoH="rowData" pTemplate="body">
+              <div *ngIf="setItalicRegtel(datoH)">
+                <span [ngStyle]="{
+                  'font-style': 'italic',
+                  'font-weight': 'bold'
+                }">{{ datoH[col.field] }}</span>
+              </div>
+              <div *ngIf="!setItalicRegtel(datoH)">
+                <span>{{ datoH[col.field] }}</span>
               </div>
             </ng-template>
-          </p-table>
+            <ng-template *ngIf="col.field == 'sizeKB'"   let-datoH="rowData" pTemplate="body">
+              <div *ngIf="!setItalicRegtel(datoH)">
+                <span>{{ datoH[col.field] }}</span>
+              </div>
+            </ng-template>
+            <ng-template *ngIf="col.field == 'fechaModificacion'" let-datoH="rowData" pTemplate="body">
+              <span *ngIf="!setItalicRegtel(datoH)">{{ datoH[col.field] | date: 'dd/MM/yyyy'}}</span>
+              <span *ngIf="setItalicRegtel(datoH)"
+                [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{
+                datoH[col.field] | date: 'dd/MM/yyyy'}}</span>
+            </ng-template>
+          </p-column>
+          <ng-template pTemplate="paginatorLeft">
+            <div class="mostrar d-flex text-right justify-content-end">
+              <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros'
+                | translate}} {{ tableRegTel.first + 1
+                }} al {{ tableRegTel.first + tableRegTel.rows }} de un total de {{ tableRegTel.totalRecords }}</label>
+              <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' |
+                translate }}: {{ numSelectedRegtel }}</label>
+              <label>{{ "general.message.mostrar" | translate }}</label>
+              <p-dropdown [(ngModel)]="selectedItemRegtel" [options]="rowsPerPage"
+                (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+              <label class="pl-1">
+                {{ "cargaMasivaDatosCurriculares.numRegistros.literal" | translate }}
+              </label>
 
-        <div class="card-footer">
-          <div class="text-right main-button">
-            <button [disabled]="buttonVisibleRegtelAtras " (click)="onClickAtrasRegtel()" pButton type="button" icon="fa fa-undo"
-          iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
-            <button [disabled]="buttonVisibleRegtelCarpeta || ((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="checkPermisosShowFolder()"
-              pButton type="button" icon="fa fa-history" iconPos="left" label="{{ 'censo.regtel.literal.vercarpeta' | translate}}"></button>
-              <button [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="checkPermisosDownload()"
-              pButton type="button" icon="fa fa-download" iconPos="left" label="{{ 'agenda.fichaEventos.datosAsistencia.descargar' | translate}}"></button>
-              
-          </div>
+            </div>
+          </ng-template>
+        </p-dataTable>
+      </div>
+      <br />
+
+      <div class="card-footer">
+        <div class="text-right main-button">
+          <button [disabled]="buttonVisibleRegtelAtras" (click)="onClickAtrasRegtel()" pButton type="button"
+            icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
+          <button
+            [disabled]="buttonVisibleRegtelCarpeta"
+            (click)="checkPermisosShowFolder()" pButton type="button" icon="fa fa-history" iconPos="left"
+            label="{{ 'censo.regtel.literal.vercarpeta' | translate}}"></button>
+          <button [disabled]="buttonVisibleRegtelDescargar"
+            (click)="checkPermisosDownload()" pButton type="button" icon="fa fa-download" iconPos="left"
+            label="{{ 'agenda.fichaEventos.datosAsistencia.descargar' | translate}}"></button>
         </div>
+      </div>
     </div>
   </div>
 </div>
 
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="regtelFicha" icon="icon" width="425" #regtelFicha>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="regtelFicha" icon="icon" width="425"
+  #regtelFicha>
   <p-footer>
     <button type="button" pButton icon="fa-check" label="Si" (click)="regtelFicha.accept()"></button>
     <button type="button" pButton icon="fa-close" label="No" (click)="regtelFicha.reject()"></button>

@@ -2,8 +2,17 @@
 
 <div class="card mt-3">
     <div *ngIf="!progressSpinner" class="card-body p-0">
-        <app-tabla-resultado-desplegable *ngIf="dataReady" [fechaFiltro]="fechaFiltro" [permisosFichaAct]="permisosFichaAct" [isLetrado]="isLetrado" (dataToUpdate)="getDataToUpdate($event)" (actuacionToAdd)="getActuacionToAdd($event)" (actuacionesToDelete)="getActuacionesToDelete($event)" [colegiado]="colegiado" [seleccionarTodo]="seleccionarTodo" [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" [pantalla]="'JE'" [comboModulos]="comboModulos" [comboAcreditacion]="comboAcreditacionesPorModulo"
-         (refreshData)="getrefreshData($event)" (cargaAllModulos)="cargaAllModulos($event)" (cargaModulosPorJuzgado2)="cargaModulosPorJuzgado($event)" (cargaAcreditacionesPorModulo2)="cargaAcreditacionesPorModulo($event)"   (numActuacionesModificadas)="setNumActuacionesModificadas($event)" (numDesignasModificadas)="setnumDesignasModificadas($event)" (totalActuaciones)="settotalActuaciones($event)" ></app-tabla-resultado-desplegable>
+        <app-tabla-resultado-desplegable *ngIf="dataReady" [fechaFiltro]="fechaFiltro"
+            [permisosFichaAct]="permisosFichaAct" [isLetrado]="isLetrado" (dataToUpdate)="getDataToUpdate($event)"
+            (actuacionToAdd)="getActuacionToAdd($event)" (actuacionesToDelete)="getActuacionesToDelete($event)"
+            [colegiado]="colegiado" [seleccionarTodo]="seleccionarTodo" [cabeceras]="cabeceras"
+            [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" [pantalla]="'JE'" [comboModulos]="comboModulos"
+            [comboAcreditacion]="comboAcreditacionesPorModulo" (refreshData)="getrefreshData($event)"
+            (cargaAllModulos)="cargaAllModulos($event)" (cargaModulosPorJuzgado2)="cargaModulosPorJuzgado($event)"
+            (cargaAcreditacionesPorModulo2)="cargaAcreditacionesPorModulo($event)"
+            (numActuacionesModificadas)="setNumActuacionesModificadas($event)"
+            (numDesignasModificadas)="setnumDesignasModificadas($event)"
+            (totalActuaciones)="settotalActuaciones($event)"></app-tabla-resultado-desplegable>
 
 
     </div>
@@ -19,7 +28,7 @@
                 <div class="form-inline">
                     <label class="mr-3 textoAlineado form-group">Fecha Justificación</label>
                     <app-fecha [(value)]='fechaFiltro' [utc]="false" (valueChangeSelected)="fillFechaFiltro($event)"
-                    (valueChangeInput)="fillFechaFiltro($event)"></app-fecha>
+                        (valueChangeInput)="fillFechaFiltro($event)"></app-fecha>
                 </div>
             </div>
         </div>
