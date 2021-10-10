@@ -134,7 +134,7 @@ export class DatosUnidadFamiliarComponent implements OnInit {
       //Comprobamos el solicitante principal asociado
       //Si estamos en la creacion de una nueva unidad familiar 
       if(sessionStorage.getItem("EJGItem")){
-        ejg = JSON.parse(sessionStorage.get("EJGItem"));
+        ejg = JSON.parse(sessionStorage.getItem("EJGItem"));
       }
       //Si se esta editando una unidad familiar desde su tarjeta en ejg
       else if(this.persistenceService.getDatos()){
@@ -206,9 +206,9 @@ export class DatosUnidadFamiliarComponent implements OnInit {
           if(this.generalBody.uf_enCalidad == "3") {
             //Si estamos en la creacion de una nueva unidad familiar 
               if(sessionStorage.getItem("EJGItem")){
-                let ejg: EJGItem = JSON.parse(sessionStorage.get("EJGItem"));
+                let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
                 ejg.idPersonajg = this.generalBody.uf_idPersona;
-                sessionStorage.set("EJGItem",JSON.stringify(ejg));
+                sessionStorage.setItem("EJGItem",JSON.stringify(ejg));
               }
               //Si se esta editando una unidad familiar desde su tarjeta en ejg
               else if(this.persistenceService.getDatos()){
@@ -221,7 +221,6 @@ export class DatosUnidadFamiliarComponent implements OnInit {
           this.showMessage("error", this.translateService.instant('general.message.incorrect'),
             this.translateService.instant('general.message.error.realiza.accion'));
         }
-
 
       },
       err => {

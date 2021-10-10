@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { ElementRef, Renderer2, Output, EventEmitter, SimpleChange, ViewRef } from '@angular/core';
+import { ElementRef, Renderer2, Output, EventEmitter, SimpleChange, ViewRef, KeyValueDiffers } from '@angular/core';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Sort } from '@angular/material/sort';
@@ -57,6 +57,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   positionsToDelete = [];
   numColumnasChecked = 0;
   selected = false;
+  currentRoute: String;
   selectedArray = [];
   selecteChild = [];
   RGid = "inicial";
@@ -92,6 +93,9 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   searchParametros: ParametroDto = new ParametroDto();
   configComboDesigna;
   permisoEscritura;
+  idClasesComunicacionArray: string[] = [];
+  idClaseComunicacion: String;
+  keys: any[] = [];
   constructor(
     private renderer: Renderer2,
     private datepipe: DatePipe,
@@ -108,15 +112,17 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       for (let i = 0; i < this.table.nativeElement.children.length; i++) {
 
         if (!event.target.classList.contains("selectedRowClass")) {
-          this.selected = false;
-          this.selectedArray = [];
-          this.selecteChild = [];
+          // this.selected = false;
+          // this.selectedArray = [];
+          // this.selecteChild = [];
         }
       }
     });
   }
 
   ngOnInit(): void {
+    this.currentRoute = "/justificacionExpres";
+    this.getKeysClaseComunicacion();
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos();
     }
@@ -143,6 +149,9 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       this.cabecerasMultiselect.push(cab.name);
     });
     this.totalRegistros = this.rowGroups.length;
+    this.selected = false;
+    this.selectedArray = [];
+    this.selecteChild = [];
   }
 
   selectRow(rowSelected, rowId, child) {
@@ -395,7 +404,6 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         this.numActuacionesModificadas.emit(this.sumar);
       }
     }
-    console.log('this.isLetrado: ', this.isLetrado)
     this.rowValidadas = [];
     if (row == undefined){
       //designacion
@@ -1161,8 +1169,6 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         }
         });
     });
-    console.log('selectedArray', this.selectedArray)
-    console.log('selecteChild', this.selecteChild)
   }
 }
   toDoButton(type, designacion, rowGroup, rowWrapper){
@@ -1213,15 +1219,29 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }
   }
 
-  colorByStateExpediente(state){
-    if ( state == 'DESFAVORABLE'){
+  colorByStateExpediente(resolucion){
+     if ( resolucion == 'NO_FAVORABLE'){
       return 'red';
-    }else if ( state == 'FAVORABLE'){
+    }else if ( resolucion == 'FAVORABLE'){
       return 'blue'; 
     } else {
       return 'black';
     }
+
   } 
+
+  /* tooltipEJG(state,resolucion){
+    if ( (resolucion == '' || resolucion == undefined || resolucion == null || resolucion == 'SIN_RESOLUCION') && (state == "''" || state == undefined || state == null) ){
+      return 'Designación con EJG sin Resolución';
+    }else if((resolucion != '' || resolucion != undefined || resolucion != null || resolucion != 'SIN_RESOLUCION') && (state == "''" || state == undefined || state == null)){
+      return `Resolucion: ${resolucion}`;
+    }else if((resolucion == '' || resolucion == undefined || resolucion == null || resolucion == 'SIN_RESOLUCION') && (state != "''" || state != undefined || state != null)){
+      return `Dictamen: ${state}`;
+    }else{
+      return `Resolucion: ${resolucion} \ Dictamen: ${state}`;
+    }
+  } */
+
   searchActuacionwithSameNumDesig(idAcreditacionNew, rowGroupWithNew){
     let esPosibleCrearNuevo = true;
     let nameAcreditacionArr = [];
@@ -1344,11 +1364,13 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           //rowG.rows.splice(this.childNumber, 1);
           if (rowG.rows[this.childNumber + 1].cells[8].value == false){
             //actuacion No Validada
+            console.log("isListreado")
             if ((this.isLetrado && this.turnoAllow == "1" ) || (!this.isLetrado)){
               if (rowG.rows[this.childNumber + 1].cells[35].value == "1"){
                 this.showMsg('error', "No puede eliminar actuaciones facturadas", '')
                 this.refreshData.emit(true);
               }else{
+                console.log("push del else");
                 deletedAct.push(rowG.rows[this.childNumber + 1].cells)
               }
             }else {
@@ -1371,12 +1393,37 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.totalRegistros = this.rowGroups.length;
 
     if (deletedAct.length != 0){
-      let deletedActNOT_REPEATED = new Set(deletedAct);
-      deletedAct = Array.from(deletedActNOT_REPEATED);
-      this.actuacionesToDelete.emit(deletedAct);
+      
+    let keyConfirmation = "deletePlantillaDoc";
+
+    this.confirmationService.confirm({
+      key: keyConfirmation,
+      message: this.translateService.instant('messages.deleteConfirmation'),
+      icon: "fa fa-trash-alt",
+      accept: () => {
+        let deletedActNOT_REPEATED = new Set(deletedAct);
+        deletedAct = Array.from(deletedActNOT_REPEATED);
+        this.actuacionesToDelete.emit(deletedAct);
+        deletedAct = [];
+        this.selectedArray = [];
+        this.selecteChild = [];
+        this.selected = false;
+      },
+      reject: () => {
+        deletedAct = [];
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "info",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
     }
     
-    deletedAct = [];
   }
 
   showMsg(severity, summary, detail) {
@@ -1731,7 +1778,90 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           }
         );
     }
+
+    navigateComunicarJE(rowGroup, identificador) {
+      sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
+      if (this.pantalla == 'JE'){
+      //IDMODULO de SJCS es 10
+      sessionStorage.setItem("idModulo", '10');
+      
+      this.getDatosComunicarJE(rowGroup, identificador);
+      }
+      else this.msgs = [
+        {
+          severity: "info",
+          summary: "En proceso",
+          detail: "Boton no funcional actualmente"
+        }
+      ];
+    }
+
+  getKeysClaseComunicacion() {
+    this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
+      data => {
+        this.keys = JSON.parse(data["body"]);
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
+
+  getDatosComunicarJE(rowGroup,expediente) {
+    let datosSeleccionados = [];
+    let rutaClaseComunicacion = this.currentRoute.toString();
+
+    this.sigaServices
+      .post("dialogo_claseComunicacion", rutaClaseComunicacion)
+      .subscribe(
+        data => {
+          this.idClaseComunicacion = JSON.parse(
+            data["body"]
+          ).clasesComunicaciones[0].idClaseComunicacion;
+          this.sigaServices
+            .post("dialogo_keys", this.idClaseComunicacion)
+            .subscribe(
+              data => {
+                this.keys = JSON.parse(data["body"]).keysItem;
+                this.sigaServices.get("institucionActual").subscribe(n => {
+                  let institucionActual = n.value;
+                  let i = 0;
+                  let anioEJG: String = expediente.substr(0, 4);
+                  let numEJG: String = expediente.substr(5);
+                  let aniodes: String = rowGroup.rows[0].cells[10].value;
+                  let idTurno: String = rowGroup.rows[0].cells[17].value;
+                  let numeroDes: String = rowGroup.rows[0].cells[19].value;
+                  
+                  this.sigaServices.getParam("justificacionExpres_getEJG", "?numEjg=" + numEJG + "&anioEjg=" + anioEJG).subscribe(
+                    ejg => {
+                      let keysValues = [];
+                      
+                      keysValues.push(ejg.idinstitucion);
+                      keysValues.push(idTurno);
+                      keysValues.push(aniodes);
+                      keysValues.push(numeroDes);
+                      keysValues.push(ejg.idtipoejg); 
+                      keysValues.push(anioEJG);
+                      keysValues.push(ejg.numero);
+                      
+                      datosSeleccionados.push(keysValues);
+
+                      sessionStorage.setItem(
+                        "datosComunicar",
+                        JSON.stringify(datosSeleccionados)
+                      );
+
+                      i++;
+                      if (this.selectedArray.length == i) {
+                        this.router.navigate(["/dialogoComunicaciones"]);
+                      }
+                    });
+                });
+              });
+        }
+      );
+  }
+}
 function compare(a: number | string, b: number | string, isAsc: boolean) {
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }

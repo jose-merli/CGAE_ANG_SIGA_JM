@@ -47,7 +47,7 @@ export class FiltroJusticiablesComponent implements OnInit {
     if (this.modoRepresentante) {
       if (this.persistenceService.getFiltrosAux() != undefined) {
         this.filtros = this.persistenceService.getFiltrosAux();
-        this.isOpen.emit(false)
+        //this.isOpen.emit(false)
         this.configuracionFiltros();
       } else {
         this.filtros = new JusticiableBusquedaItem();
@@ -55,7 +55,7 @@ export class FiltroJusticiablesComponent implements OnInit {
     } else {
       if (this.persistenceService.getFiltros() != undefined) {
         this.filtros = this.persistenceService.getFiltros();
-        this.isOpen.emit(false)
+        //this.isOpen.emit(false)
         this.configuracionFiltros();
       } else {
         this.filtros = new JusticiableBusquedaItem();

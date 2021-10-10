@@ -8,6 +8,7 @@ import { DocushareItem } from '../../../../../models/DocushareItem';
 import { DataTable } from "primeng/datatable";
 import { TranslateService } from '../../../../../commons/translate';
 import { ConfirmationService } from 'primeng/api';
+import { DocushareObject } from '../../../../../models/DocushareObject';
 
 @Component({
   selector: 'app-regtel-ejg',
@@ -19,43 +20,46 @@ export class RegtelEjgComponent implements OnInit {
   @Input() permisoEscritura;
   @Input() tarjetaRegtel: string;
 
-  messageRegtel :string;
+  messageRegtel: string;
   openFicha: boolean = false;
   nuevo;
   body: EJGItem;
   item: EJGItem;
   bodyInicial;
   rowsPerPage: any = [];
-  cols;
+  colsRegtel;
   msgs;
-  selectedItem: number = 10;
+  selectedItemRegtel: number = 10;
   selectAll;
-  selectedDatos = [];
   buscadores = [];
   numSelected = 0;
   selectMultiple: boolean = false;
   seleccion: boolean = false;
   nRegtel = 0;
   regtel = [];
-  atrasRegTel: string = '';
+  atrasRegTel: String = '';
 
-  buttonVisibleRegtelCarpeta:boolean = false;
-  buttonVisibleRegtelDescargar:boolean = false;
-  buttonVisibleRegtelAtras:boolean = false;
+  numSelectedRegtel = 0;
+
+  buttonVisibleRegtelCarpeta: boolean = true;
+  buttonVisibleRegtelDescargar: boolean = true;
+  buttonVisibleRegtelAtras: boolean = true;
 
   resaltadoDatosGenerales: boolean = false;
   progressSpinner: boolean;
   selectedDatosRegtel: DocushareItem;
   idPersona: any;
 
+  bodySearchRegTel: DocushareObject = new DocushareObject();
+
   @ViewChild("table")
   table: DataTable;
-  
+
   fichaPosible = {
     key: "regtel",
     activa: false
   }
-  
+
   activacionTarjeta: boolean = false;
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
@@ -76,9 +80,10 @@ export class RegtelEjgComponent implements OnInit {
       this.body = this.persistenceService.getDatos();
       this.item = this.body;
       //Se comprueba que se tiene una carpeta DocuShare creada mediante el atributo "identificadords"
-      if(this.item.identificadords != null) this.getRegtel();
-        this.getCols();
-    }else {
+      //que se actualizara correspondientemente en el servicio si tuviera una asociada.
+      this.getRegtel();
+      this.getCols();
+    } else {
       this.nuevo = true;
       this.modoEdicion = false;
       this.item = new EJGItem();
@@ -92,15 +97,15 @@ export class RegtelEjgComponent implements OnInit {
         this.openFicha = !this.openFicha;
         //Si se cancela la creacion de una coleccion cuando se abra la tarjeta por primera vez,
         //se le pregunta cada vez que la abra de nuevo.
-        if(this.openFicha && this.item!= undefined && this.item.identificadords == null) this.callConfirmationServiceRegtel();
+        if (this.openFicha && this.item != undefined && this.item.identificadords == null) this.callConfirmationServiceRegtel();
       }
     }
   }
 
   esFichaActiva(key) {
-
     return this.fichaPosible.activa;
   }
+
   abreCierraFicha(key) {
     this.resaltadoDatosGenerales = true;
     if (
@@ -114,90 +119,90 @@ export class RegtelEjgComponent implements OnInit {
       this.fichaPosible.activa = !this.fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
-    
+
     this.opened.emit(this.openFicha);
     this.idOpened.emit(key);
     //Si se cancela la creacion de una coleccion cuando se abra la tarjeta por primera vez,
     //se le pregunta cada vez que la abra de nuevo.
-    if(this.openFicha && this.item!= undefined && this.item.identificadords == null) this.callConfirmationServiceRegtel();
+    if (this.openFicha && this.item != undefined && this.item.identificadords == null) this.callConfirmationServiceRegtel();
   }
 
   getRegtel() {
     this.messageRegtel = this.translateService.instant('aplicacion.cargando');
 
-    
-    
     this.sigaServices
-        .getParam(
-          'gestionejg_searchListDocEjg',
-          '?anio='+this.item.annio+'&numero='+this.item.numero+'&idTipoEJG='+this.item.tipoEJG+'&identificadords='+this.item.identificadords
-        )
-        .subscribe(
-          data => {
-            let bodySearchRegTel = JSON.parse(data['body']);
-            this.regtel = bodySearchRegTel.docuShareObjectVO;
-            //this.generalBody.identificadords = bodySearchRegTel.identificadorDS;
-            // this.bodyRegTel.forEach(element => {
-            //   element.fechaModificacion = this.arreglarFechaRegtel(
-            //     JSON.stringify(new Date(element.fechaModificacion))
-            //   );
-            // });
-            this.nRegtel = this.regtel.length;
-            if (this.nRegtel != 0) {
-              this.messageRegtel = this.nRegtel + '';
-            } else {
-              this.messageRegtel = this.translateService.instant(
-                'general.message.no.registros'
-              );
-            }
-            if (this.nRegtel > 0) {
-              this.atrasRegTel = this.regtel[0].parent;
-            }
-          },
-          err => {
-            
-        this.messageRegtel = this.translateService.instant(
-          'general.message.no.registros'
-        );
-            this.regtel = [];
-            this.nRegtel = 0;
-          },
+      .getParam(
+        'gestionejg_searchListDocEjg',
+        '?anio=' + this.item.annio + '&numero=' + this.item.numero + '&idTipoEJG=' + this.item.tipoEJG + '&identificadords=' + this.item.identificadords
+      )
+      .subscribe(
+        data => {
+          this.bodySearchRegTel = data;
+          this.regtel = this.bodySearchRegTel.docuShareObjectVO;
+          this.item.identificadords = this.bodySearchRegTel.identificadorDS;
+          // this.bodyRegTel.forEach(element => {
+          //   element.fechaModificacion = this.arreglarFechaRegtel(
+          //     JSON.stringify(new Date(element.fechaModificacion))
+          //   );
+          // });
+          this.nRegtel = this.regtel.length;
+          if (this.nRegtel != 0) {
+            this.messageRegtel = this.nRegtel + '';
+          } else {
+            this.messageRegtel = this.translateService.instant(
+              'general.message.no.registros'
+            );
+          }
+          if (this.nRegtel > 0) {
+            this.atrasRegTel = this.regtel[0].parent;
+          }
+        },
+        err => {
+
+          this.messageRegtel = this.translateService.instant(
+            'general.message.no.registros'
+          );
+          this.regtel = [];
+          this.nRegtel = 0;
+        },
       );
   }
 
-  insertColl(){
+  insertColl() {
 
     this.messageRegtel = this.translateService.instant('aplicacion.cargando');
-    
-    this.sigaServices
-        .post(
-          'gestionejg_insertCollectionEjg',
-          this.item
-        )
-        .subscribe(
-          data => {
-            this.item.identificadords = data.body;
-            let mess = this.translateService.instant("messages.collectionCreated");
-            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-            if (this.nRegtel != 0) {
-              this.messageRegtel = this.nRegtel + '';
-            } else {
-              this.messageRegtel = this.translateService.instant(
-                'general.message.no.registros'
-              );
-            }
 
-          },
-          err => {
-            if (this.nRegtel != 0) {
-              this.messageRegtel = this.nRegtel + '';
-            } else {
-              this.messageRegtel = this.translateService.instant(
-                'general.message.no.registros'
-              );
-            }
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-          },
+    this.sigaServices
+      .post(
+        'gestionejg_insertCollectionEjg',
+        this.item
+      )
+      .subscribe(
+        data => {
+          this.item.identificadords = data.body;
+          //Se introduce el cambio en la capa de persistencia para evitar que pida crear una coleccion innecesariamente.
+          this.persistenceService.setDatos(this.item);
+          let mess = this.translateService.instant("messages.collectionCreated");
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          // if (this.nRegtel != 0) {
+          //   this.messageRegtel = this.nRegtel + '';
+          // } else {
+          //   this.messageRegtel = this.translateService.instant(
+          //     'general.message.no.registros'
+          //   );
+          // }
+          this.getRegtel();
+        },
+        err => {
+          if (this.nRegtel != 0) {
+            this.messageRegtel = this.nRegtel + '';
+          } else {
+            this.messageRegtel = this.translateService.instant(
+              'general.message.no.registros'
+            );
+          }
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        },
       );
   }
 
@@ -231,13 +236,24 @@ export class RegtelEjgComponent implements OnInit {
   }
 
   getCols() {
-      this.cols = [
-        { field: "flimite_presentacion", header: "informesycomunicaciones.comunicaciones.documento.nombre", width: "25%" },
-        { field: "presentador_persona", header: "censo.regtel.literal.resumen", width: "40%" },
-        { field: "documentoDesc", header: "censo.datosDireccion.literal.fechaModificacion", width: "15%" },
-        { field: "regEntrada", header: "censo.regtel.literal.tamanno", width: "20%" },
-      ];
-    this.cols.forEach(it => this.buscadores.push(""));
+    this.colsRegtel = [
+      {
+        field: 'title',
+        header: 'censo.resultadosSolicitudesModificacion.literal.Nombre'
+      },
+      {
+        field: 'summary',
+        header: 'censo.regtel.literal.resumen'
+      },
+      {
+        field: 'fechaModificacion',
+        header: 'censo.datosDireccion.literal.fechaModificacion'
+      },
+      {
+        field: 'sizeKB',
+        header: 'censo.regtel.literal.tamanno'
+      }
+    ];
 
     this.rowsPerPage = [
       {
@@ -258,15 +274,36 @@ export class RegtelEjgComponent implements OnInit {
       }
     ];
   }
+
+  onRowSelectedRegTel(selectedDatosRegtel) {
+    this.numSelectedRegtel = 1;
+    this.selectedDatosRegtel = selectedDatosRegtel;
+    if (this.selectedDatosRegtel.tipo == "0") {
+      this.buttonVisibleRegtelCarpeta = false;
+      this.buttonVisibleRegtelDescargar = true;
+    } else {
+      this.buttonVisibleRegtelCarpeta = true;
+      this.buttonVisibleRegtelDescargar = false;
+    }
+  }
+
+  onRowDesselectedRegTel() {
+    this.numSelectedRegtel = 0;
+    this.buttonVisibleRegtelCarpeta = true;
+    this.buttonVisibleRegtelDescargar = true;
+  }
+
   onChangeRowsPerPages(event) {
-    this.selectedItem = event.value;
+    this.selectedItemRegtel = event.value;
     this.changeDetectorRef.detectChanges();
     this.table.reset();
   }
-  actualizaSeleccionados(selectedDatos) {
-    this.numSelected = selectedDatos.length;
+
+  actualizaSeleccionados(selectedDatosRegtel) {
+    this.numSelected = selectedDatosRegtel.length;
     this.seleccion = false;
   }
+
   showMessage(severity, summary, msg) {
     this.msgs = [];
     this.msgs.push({
@@ -278,7 +315,7 @@ export class RegtelEjgComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
-  checkPermisosDownload(){
+  checkPermisosDownload() {
     let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
@@ -287,9 +324,12 @@ export class RegtelEjgComponent implements OnInit {
     }
   }
 
-  download(){
+  download() {
     this.progressSpinner = true;
-    let selectedRegtel: DocushareItem = JSON.parse(JSON.stringify(this.selectedDatos));
+    this.selectedDatosRegtel.numero = this.item.numero;
+    this.selectedDatosRegtel.idTipoEjg = this.item.tipoEJG;
+    this.selectedDatosRegtel.anio = this.item.annio;
+    let selectedRegtel: DocushareItem = JSON.parse(JSON.stringify(this.selectedDatosRegtel));
     selectedRegtel.fechaModificacion = undefined;
     this.sigaServices
       .postDownloadFiles(
@@ -309,7 +349,7 @@ export class RegtelEjgComponent implements OnInit {
         }
       );
   }
-  checkPermisosShowFolder(){
+  checkPermisosShowFolder() {
     let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
@@ -317,96 +357,122 @@ export class RegtelEjgComponent implements OnInit {
       this.showFolder();
     }
   }
-  showFolder(){
+  showFolder() {
 
-    let selectedRegtel: DocushareItem = JSON.parse(JSON.stringify(this.selectedDatos));
+    this.progressSpinner = true;
+    if (this.atrasRegTel != this.selectedDatosRegtel.parent) {
+      this.atrasRegTel = this.selectedDatosRegtel.parent;
+    }
+
+    this.selectedDatosRegtel.numero = this.item.numero;
+    this.selectedDatosRegtel.idTipoEjg = this.item.tipoEJG;
+    this.selectedDatosRegtel.anio = this.item.annio;
+    let selectedRegtel: DocushareItem = JSON.parse(JSON.stringify(this.selectedDatosRegtel));
     selectedRegtel.fechaModificacion = undefined;
 
     this.sigaServices
-    .postPaginado(
-      "fichaColegialRegTel_searchListDir",
-      "?numPagina=1",
-      selectedRegtel
-    )
-    .subscribe(
-      data => {
-        let bodySearchRegTel = JSON.parse(data["body"]);
-        this.regtel = bodySearchRegTel.docuShareObjectVO;
-        this.nRegtel = this.regtel.length;
-        //  this.bodyRegTel.forEach(element => {
-        //   element.fechaModificacion = this.arreglarFechaRegtel(
-        //     JSON.stringify(new Date(element.fechaModificacion))
-        //   );
-        // });
+      .postPaginado(
+        "fichaColegialRegTel_searchListDir",
+        "?numPagina=1",
+        selectedRegtel
+      )
+      .subscribe(
+        data => {
+          this.bodySearchRegTel = JSON.parse(data["body"]);
+          this.regtel = this.bodySearchRegTel.docuShareObjectVO;
+          this.nRegtel = this.regtel.length;
+          //  this.bodyRegTel.forEach(element => {
+          //   element.fechaModificacion = this.arreglarFechaRegtel(
+          //     JSON.stringify(new Date(element.fechaModificacion))
+          //   );
+          // });
 
-        if (this.atrasRegTel != "") {
-          this.buttonVisibleRegtelAtras = false;
-        } else {
-          this.buttonVisibleRegtelAtras = true;
-        }
-        this.buttonVisibleRegtelCarpeta = true;
-        this.buttonVisibleRegtelDescargar = true;
-        this.progressSpinner = false;
-        if (this.nRegtel != 0) {
-          this.messageRegtel = this.nRegtel + "";
-        } else {
-          this.messageRegtel = this.translateService.instant(
-            "general.message.no.registros"
-          );
-        }
-
-      },
-      err => {
-        this.messageRegtel = this.translateService.instant(
-          "general.message.no.registros"
-        );
-        this.progressSpinner = false;
-      }
-    );
-  }
-  
-  onClickAtrasRegtel() {
-    this.progressSpinner = true;
-    let selectedRegtel: DocushareItem = JSON.parse(JSON.stringify(this.selectedDatos));
-    selectedRegtel.fechaModificacion = undefined;
-      this.sigaServices
-        .postPaginado(
-          "fichaColegialRegTel_searchListDir",
-          "?numPagina=1",
-          selectedRegtel
-        )
-        .subscribe(
-          data => {
-            let bodySearchRegTel = JSON.parse(data["body"]);
-            this.regtel = bodySearchRegTel.docuShareObjectVO;
-            this.nRegtel = this.regtel.length;
-            // this.bodyRegTel.forEach(element => {
-            //   element.fechaModificacion = this.arreglarFechaRegtel(
-            //     JSON.stringify(new Date(element.fechaModificacion))
-            //   );
-            // });
-
-            if (this.atrasRegTel != "") {
-              this.buttonVisibleRegtelAtras = true;
-            }
-            this.buttonVisibleRegtelCarpeta = true;
-            this.buttonVisibleRegtelDescargar = true;
-            if (this.nRegtel != 0) {
-              this.messageRegtel = this.nRegtel + "";
-            } else {
-              this.messageRegtel = this.translateService.instant(
-                "general.message.no.registros"
-              );
-            }
-            this.progressSpinner = false;
-          },
-          err => {
+          if (this.atrasRegTel != "") {
+            this.buttonVisibleRegtelAtras = false;
+          } else {
+            this.buttonVisibleRegtelAtras = true;
+          }
+          this.buttonVisibleRegtelCarpeta = true;
+          this.buttonVisibleRegtelDescargar = true;
+          this.progressSpinner = false;
+          
+          this.numSelectedRegtel = 0;
+          if (this.nRegtel != 0) {
+            this.messageRegtel = this.nRegtel + "";
+          } else {
             this.messageRegtel = this.translateService.instant(
               "general.message.no.registros"
             );
-            this.progressSpinner = false;
           }
-        );
-    
+
+        },
+        err => {
+          this.messageRegtel = this.translateService.instant(
+            "general.message.no.registros"
+          );
+          this.progressSpinner = false;
+        }
+      );
+  }
+
+  onClickAtrasRegtel() {
+    this.progressSpinner = true;
+    this.selectedDatosRegtel.id = this.selectedDatosRegtel.parent;
+    this.selectedDatosRegtel.numero = this.item.numero;
+    this.selectedDatosRegtel.idTipoEjg = this.item.tipoEJG;
+    this.selectedDatosRegtel.anio = this.item.annio;
+    let selectedRegtel = JSON.parse(JSON.stringify(this.selectedDatosRegtel));
+    selectedRegtel.fechaModificacion = undefined;
+    this.sigaServices
+      .postPaginado(
+        "fichaColegialRegTel_searchListDir",
+        "?numPagina=1",
+        selectedRegtel
+      )
+      .subscribe(
+        data => {
+          this.bodySearchRegTel = JSON.parse(data["body"]);
+          this.regtel = this.bodySearchRegTel.docuShareObjectVO;
+          this.nRegtel = this.regtel.length;
+          // this.bodyRegTel.forEach(element => {
+          //   element.fechaModificacion = this.arreglarFechaRegtel(
+          //     JSON.stringify(new Date(element.fechaModificacion))
+          //   );
+          // });
+
+          if (this.atrasRegTel != "") {
+            this.buttonVisibleRegtelAtras = true;
+          }
+          this.buttonVisibleRegtelCarpeta = true;
+          this.buttonVisibleRegtelDescargar = true;
+
+          this.numSelectedRegtel = 0;
+          if (this.nRegtel != 0) {
+            this.messageRegtel = this.nRegtel + "";
+          } else {
+            this.messageRegtel = this.translateService.instant(
+              "general.message.no.registros"
+            );
+          }
+          this.progressSpinner = false;
+        },
+        err => {
+          this.messageRegtel = this.translateService.instant(
+            "general.message.no.registros"
+          );
+          this.progressSpinner = false;
+        }
+      );
+  }
+
+
+  setItalicRegtel(datoH) {
+    if (datoH.tipo == 1) return false;
+    else return true;
+  }
+
+  activarPaginacionRegTel() {
+    if (!this.regtel || this.regtel.length == 0) return false;
+    else return true;
   }
 }

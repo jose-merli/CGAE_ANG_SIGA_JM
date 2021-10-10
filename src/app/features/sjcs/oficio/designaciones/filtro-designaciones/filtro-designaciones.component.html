@@ -340,7 +340,7 @@
                         <div class="form-group-interlineado col-lg-2 col-md-2">
                             <label>{{ 'justiciaGratuita.oficio.justificacionExpres.incluirSinEJG' | translate }}</label>
                             <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde"
-                                [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+                                [showClear]="false" placeholder="{{ 'general.boton.seleccionar' | translate }}"
                                 [(ngModel)]='filtroJustificacion.sinEJG' [options]="comboEJGSinResolucion"
                                 [(disabled)]="disableRestricciones">
                             </p-dropdown>
@@ -349,7 +349,7 @@
                             <label>{{ 'justiciaGratuita.oficio.justificacionExpres.conEJGNoFavorables' | translate
                                 }}</label>
                             <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde"
-                                [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+                                [showClear]="false" placeholder="{{ 'general.boton.seleccionar' | translate }}"
                                 [(ngModel)]='filtroJustificacion.conEJGNoFavorables' [options]="comboEJGnoFavorable"
                                 [(disabled)]="disableRestricciones">
                             </p-dropdown>
@@ -358,7 +358,7 @@
                             <label>{{ 'justiciaGratuita.oficio.justificacionExpres.ejgSinResolucion' | translate
                                 }}</label>
                             <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde"
-                                [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+                                [showClear]="false" placeholder="{{ 'general.boton.seleccionar' | translate }}"
                                 [(ngModel)]='filtroJustificacion.ejgSinResolucion' [options]="comboSinEJG"
                                 [(disabled)]="disableRestricciones">
                             </p-dropdown>
@@ -367,7 +367,7 @@
                             <label>{{ 'justiciaGratuita.oficio.justificacionExpres.ejgResolucionPTECAJG' | translate
                                 }}</label>
                             <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde"
-                                [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+                                [showClear]="false" placeholder="{{ 'general.boton.seleccionar' | translate }}"
                                 [(ngModel)]='filtroJustificacion.resolucionPTECAJG' [options]="comboResoluciones"
                                 [(disabled)]="disableRestricciones">
                             </p-dropdown>
