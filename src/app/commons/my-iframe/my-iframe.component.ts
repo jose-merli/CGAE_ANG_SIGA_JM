@@ -8,6 +8,7 @@ import {
 import { DomSanitizer } from "@angular/platform-browser";
 import { Input } from "@angular/core";
 import { OldSigaServices } from "../../_services/oldSiga.service";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 // import '../../../../SIGA.js'
 
 declare var ajusteAlto: any;
@@ -19,14 +20,18 @@ declare var ajusteAlto: any;
 })
 export class MyIframeComponent implements OnInit, AfterViewInit {
   @Input() url;
+  postId: any;
   // @ViewChild('iframe') iframe: ElementRef;
 
   // loading = true;
 
   constructor(
     private domSanitizer: DomSanitizer,
-    private service: OldSigaServices
-  ) {}
+    private service: OldSigaServices,
+    private http: HttpClient
+  ) {
+
+  }
 
   ngOnInit() {
     this.url = this.domSanitizer.bypassSecurityTrustResourceUrl(this.url);

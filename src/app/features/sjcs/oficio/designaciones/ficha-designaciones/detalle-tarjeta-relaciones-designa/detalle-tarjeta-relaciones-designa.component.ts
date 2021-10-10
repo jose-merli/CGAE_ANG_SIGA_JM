@@ -31,7 +31,7 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
   selectMultiple: boolean = false;
   selectionMode: string = "single";
   numSelected = 0;
-  body:DesignaItem;
+  body: DesignaItem;
   selectedDatos: any[] = [];
 
   selectAll: boolean = false;
@@ -68,7 +68,7 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
         element.fechaasunto = this.formatDate(element.fechaasunto);
       });
       this.body = JSON.parse(sessionStorage.getItem("designaItemLink"));
-    }else{
+    } else {
       this.relacion.emit();
     }
 
@@ -95,7 +95,7 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
       { field: "descturno", header: "justiciaGratuita.justiciables.literal.turnoGuardia" },
       { field: "letrado", header: "justiciaGratuita.sjcs.designas.colegiado" },
       { field: "interesado", header: "justiciaGratuita.sjcs.designas.datosInteresados" },
-      { field: "dilnigproc", header: 'justiciaGratuita.ejg.busquedaAsuntos.nigNumProc'},
+      { field: "dilnigproc", header: 'justiciaGratuita.ejg.busquedaAsuntos.nigNumProc' },
       { field: "resolucion", header: "justiciaGratuita.maestros.fundamentosResolucion.resolucion" }
 
     ];
@@ -226,9 +226,9 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
           );
           break;
         case 'E':
-          let anio = this.body.ano.toString().substr(1,4);
-          let request= [
-            dato.idinstitucion,dato.numero,dato.anio,dato.idtipo,anio,this.body.numero,this.body.idTurno
+          let anio = this.body.ano.toString().substr(1, 4);
+          let request = [
+            dato.idinstitucion, dato.numero, dato.anio, dato.idtipo, anio, this.body.numero, this.body.idTurno
           ]
 
           this.sigaServices.post("designaciones_eliminarRelacion", request).subscribe(
@@ -278,30 +278,33 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
   }
   crearEJG() {
 
-     sessionStorage.setItem("EJGItemDesigna",JSON.stringify(this.body));
-     
+    sessionStorage.setItem("EJGItemDesigna", "nuevo");
+
+    sessionStorage.setItem("Designacion", JSON.stringify(this.body));
+
     this.router.navigate(["/gestionEjg"]);
   }
 
-  checkPermisosEditar(dato){
-      this.consultarEditar(dato);
+  checkPermisosEditar(dato) {
+    this.consultarEditar(dato);
   }
   consultarEditar(dato) {
-    
-      let identificador = dato.sjcs.charAt(0);
 
-      switch (identificador) {
-        case 'A':
-          /**
-         * TODO: enlazar una vez este creada la pagina.
-         */
-           this.porhacer();
-          break;
-        case 'E':
+    let identificador = dato.sjcs.charAt(0);
+
+    switch (identificador) {
+      case 'A':
+        /**
+       * TODO: enlazar una vez este creada la pagina.
+       */
+        this.porhacer();
+        break;
+      case 'E':
         this.progressSpinner = true;
         let ejgItem = new EJGItem();
         ejgItem.annio = dato.anio;
-        ejgItem.numero = dato.numero;
+        // ejgItem.numero = dato.numero;
+        ejgItem.numero = dato.codigo;
         ejgItem.idInstitucion = dato.idinstitucion;
         ejgItem.tipoEJG = dato.idtipo;
 
@@ -311,9 +314,9 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
         this.sigaServices.post("filtrosejg_busquedaEJG", ejgItem).subscribe(
           n => {
             result = JSON.parse(n.body).ejgItems;
-            sessionStorage.setItem("EJGItemDesigna",JSON.stringify(result[0]));
+            sessionStorage.setItem("EJGItemDesigna", JSON.stringify(result[0]));
             let error = JSON.parse(n.body).error;
-          
+
             this.progressSpinner = false;
             if (error != null && error.description != null) {
               this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
@@ -322,11 +325,12 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
           err => {
             this.progressSpinner = false;
             console.log(err);
+          },
+          () => {
+            this.router.navigate(["/gestionEjg"]);
           }
         );
-        
-          this.router.navigate(["/gestionEjg"]);
-          break;
-      }
+        break;
     }
   }
+}

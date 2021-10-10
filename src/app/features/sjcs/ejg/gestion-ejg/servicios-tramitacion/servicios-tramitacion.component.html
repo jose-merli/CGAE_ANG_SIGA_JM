@@ -54,7 +54,7 @@
           [pantalla]="'gestionEjg'"  [numColegiado]="usuarioBusquedaExpress.numColegiado" [art27]="art27"
           [nombreAp]="usuarioBusquedaExpress.nombreAp"></app-busqueda-colegiado-express>
         </div>
-        <div *ngIf="body.idPersona != null" class="form-group col-lg-9 col-md-9">
+        <div *ngIf="!resaltadoDatos || resaltadoDatos == null" class="form-group col-lg-9 col-md-9">
           <app-busqueda-colegiado-express (idPersona)="idPersona($event)" [idTurno]="this.body.idTurno" [idGuardia]="this.body.idGuardia" [tarjeta]="'ServiciosTramit'" 
           [pantalla]="'gestionEjg'"  [numColegiado]="usuarioBusquedaExpress.numColegiado" [art27]="art27"
           [nombreAp]="usuarioBusquedaExpress.nombreAp"></app-busqueda-colegiado-express>

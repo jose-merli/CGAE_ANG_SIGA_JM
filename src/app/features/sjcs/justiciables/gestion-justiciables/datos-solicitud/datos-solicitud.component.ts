@@ -35,7 +35,7 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
 	selectedAutorizaavisotel;
 	selectedAsistidosolicitajg;
 	selectedAsistidoautorizaeejg;
-	permisoEscritura;
+	permisoEscritura: boolean = true;
 
 	@ViewChild('cdSolicitud') cdSolicitud: Dialog;
 
