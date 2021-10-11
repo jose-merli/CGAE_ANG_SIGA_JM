@@ -4,11 +4,26 @@
 
 <div class="card mt-3">
   <div class="card-body p-0">
-    <!-- TABLA RESULTADOS -->
 
+    <!-- TABLA RESULTADOS -- BORRAR --
     <p-table [autoLayout]="true" [value]="listaCuentasBancarias" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table
       class="tabla-listado overflow" [paginator]="true" [rows]="selectedItem" (onRowUnselect)="actualizaSeleccionados(selectedDatos)" [ngClass]="{ 'customCursor' : selectMultiple }"
       selectionMode="multiple" paginatorPosition="both" (onRowSelect)="checkAddRemesa(selectedDatos)">
+
+      <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+        <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+          <td class="text-center" *ngFor="let col of columns">
+            <div >
+              <div>
+                <span>{{dato[col.field]}}</span>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      
+    <!--NUEVA TABLA DE RESULTADOS [columns]="cols" [value]="listaCuentasBancarias"-->
+    <p-table  [autoLayout]="true" [value]="listaCuentasBancarias" [columns]="cols"  class="tabla-listado overflow"   [ngClass]="{ 'customCursor' : selectMultiple }" >
 
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
@@ -27,20 +42,15 @@
           </th>
         </tr>
       </ng-template>
-      <ng-template pTemplate="body" let-cuentaBancaria let-columns="columns" let-rowIndex="rowIndex">
-        <tr [pSelectableRow]="listaCuentasBancarias" [pSelectableRowIndex]="rowIndex">
-          <<td class="text-center" *ngFor="let col of columns">
 
-            <div *ngIf="col.field == 'nombre'">
-              <div><!-- [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}" -->
-                <span>{{ cuentaBancaria.nombre}}</span>
-              </div>
-            </div>
-
-            
-          </td>
-        </tr>
+      <ng-template pTemplate="body" let-cuentaBancaria let-columns="columns">
+          <tr>
+              <td *ngFor="let col of columns">
+                  {{cuentaBancaria[col.field]}}
+              </td>
+          </tr>
       </ng-template>
+
       <ng-template pTemplate="emptymessage" let-columns>
         <tr>
           <td [attr.colspan]="columns.length">
@@ -67,6 +77,7 @@
         </div>
       </ng-template>
     </p-table>
+    <!--/NUEVA TABLA DE RESULTADOS-->
 
   </div>
   <div class="card-footer">

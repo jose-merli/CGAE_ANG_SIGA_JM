@@ -1,3 +1,4 @@
+import { Input } from '@angular/core';
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService, DataTable } from 'primeng/primeng';
@@ -22,10 +23,11 @@ export class GestionCuentasBancariasComponent implements OnInit {
   /* constructor(public sigaServices: OldSigaServices) {
     this.url = sigaServices.getOldSigaUrl("gestionCuentasBancarias");
   } */
+  @Input() datos;
   @ViewChild("table") table: DataTable;
   msgs;
-  datos;
   cols;
+  body: CuentasBancariasItem = new CuentasBancariasItem();
   selectedDatos = [];
   selectedItem;
   selectMultiple;
@@ -49,7 +51,7 @@ export class GestionCuentasBancariasComponent implements OnInit {
   getCols() {
     this.cols = [
       { field: "nombre", header: "censo.tipoAbono.banco", width: "30%" },
-      { field: "IBAN", header: "censo.mutualidad.literal.iban", width: "15%" },
+      { field: "iban", header: "censo.mutualidad.literal.iban", width: "15%" },
       { field: "descripcion", header: "general.boton.description", width: "30%" },
       { field: "comisionImporte", header: "facturacion.cuentasBancarias.comisionImporte", width: "15%" },
       { field: "sjcs", header: "menu.justiciaGratuita", width: "5%" },
@@ -113,17 +115,12 @@ export class GestionCuentasBancariasComponent implements OnInit {
     this.sigaServices.get("facturacionPyS_getCuentasBancarias").subscribe(
       data => {
         this.listaCuentasBancarias = data.cuentasBancariasITem;
-      
       },
       err => {
         console.log(err);
       },
     );
-
-    console.log(this.listaCuentasBancarias);
   }
-
-
 
   consultarEditar() { }
   confirmDelete() { }
