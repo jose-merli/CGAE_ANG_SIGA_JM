@@ -15,6 +15,7 @@ import { DocumentoDesignaObject } from '../../../../../../../models/sjcs/Documen
 import { CommonsService } from '../../../../../../../_services/commons.service';
 import { procesos_oficio } from '../../../../../../../permisos/procesos_oficio';
 import { Router } from '@angular/router';
+import { FichaColegialGeneralesItem } from '../../../../../../../models/FichaColegialGeneralesItem';
 
 export class UsuarioLogado {
   idPersona: string;
@@ -177,19 +178,36 @@ export class FichaActuacionComponent implements OnInit {
             this.translateService.instant("generico.error.permiso.denegado")
           );
           this.router.navigate(["/errorAcceso"]);
+        }else if(permisoEscritura == true){
+          
+          this.modoLectura = false;
+        }else{
+          this.modoLectura = true;
         }
 
         // if (!permisoEscritura) {
         //   this.modoLectura = true;
         // }
 
-        this.isColegiado = this.sigaStorageService.isLetrado;
+        this.sigaServices.get('getLetrado').subscribe(
+          (data) => {
+            if (data.value == 'S') {
+              this.isColegiado = true;
+            } else {
+              this.isColegiado = false;
+            }
+            let colegiadoLog = JSON.parse(sessionStorage.getItem('personaBody'));
 
-        if (this.isColegiado) {
-          this.usuarioLogado = new UsuarioLogado();
-          this.usuarioLogado.idPersona = this.sigaStorageService.idPersona;
-          this.usuarioLogado.numColegiado = this.sigaStorageService.numColegiado;
-        }
+            if (this.isColegiado) {
+              this.usuarioLogado = new UsuarioLogado();
+              this.usuarioLogado.idPersona = colegiadoLog.idPersona.toString();
+              this.usuarioLogado.numColegiado = colegiadoLog.numColegiado.toString();
+            } 
+          },
+          (err) => {
+            console.log(err);
+          }
+        );         
 
         this.institucionActual = this.sigaStorageService.institucionActual;
 
@@ -231,7 +249,7 @@ export class FichaActuacionComponent implements OnInit {
       this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiDatosGen').opened = true;
     } else {
 
-      if ((this.isColegiado && this.actuacionDesigna.actuacion.validada && (!this.permiteTurno || !this.actuacionDesigna.actuacion.permiteModificacion)) || (this.actuacionDesigna.actuacion.facturado)) {
+      if ((!this.isColegiado && this.actuacionDesigna.actuacion.validada && (!this.permiteTurno || !this.actuacionDesigna.actuacion.permiteModificacion)) || (this.actuacionDesigna.actuacion.facturado)) {
         this.modoLectura = true;
       }
 

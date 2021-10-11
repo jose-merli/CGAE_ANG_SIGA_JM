@@ -32,6 +32,8 @@ export class ContrariosPreDesignacionComponent implements OnInit {
   selectMultiple: boolean = false;
   selectionMode: string = "single";
   numSelected = 0;
+  nuevo: boolean = false;
+  eliminar: boolean = false;
 
   selectedDatos: any = [];
 
@@ -59,6 +61,11 @@ export class ContrariosPreDesignacionComponent implements OnInit {
     
 
     this.searchContrariosEJG();
+
+    if(this.permisoEscritura){
+      this.nuevo=true;
+      this.eliminar = true
+    }
 
   }
 
@@ -177,8 +184,8 @@ export class ContrariosPreDesignacionComponent implements OnInit {
       this.progressSpinner = false;
     },
       err => {
-        this.progressSpinner = false;
       });
+      this.progressSpinner = false;
   }
 
   NewContrario() {

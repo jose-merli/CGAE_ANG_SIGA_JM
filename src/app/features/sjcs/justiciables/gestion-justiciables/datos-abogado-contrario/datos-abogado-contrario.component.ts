@@ -100,7 +100,7 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 			this.sigaServices.post("designaciones_searchAbogadoByIdPersona", idabogado).subscribe(
 				n => {
 					let data = JSON.parse(n.body).colegiadoItem;
-					this.generalBody.nombreColegio = data.institucion;
+					this.generalBody.nombreColegio = data.colegioResultado;
 					this.generalBody.numColegiado = data.numColegiado;
 					this.generalBody.estadoColegial = data.estadoColegial;
 					this.generalBody.nombre = data.nombre;
@@ -108,7 +108,7 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 					this.generalBody.idPersona = data.idPersona;
 
 					if(sessionStorage.getItem("EJGItem")) this.contrarioEJG.emit(true);
-					this.contrario.emit(true);
+					else this.contrario.emit(true);
 					this.permisoEscritura = true; 
 				},
 				err => {
@@ -127,7 +127,8 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 				this.translateService.instant('general.message.noTienePermisosRealizarAccion')
 			);
 		} else {
-			sessionStorage.setItem("origin", "AbogadoContrario");
+			if(this.fromContrario) sessionStorage.setItem("origin", "AbogadoContrario");
+      		else if(this.fromContrarioEJG) sessionStorage.setItem("origin", "AbogadoContrarioEJG");
 			this.router.navigate(['/busquedaGeneral']);
 		}
 	}
@@ -144,6 +145,8 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 						this.translateService.instant('general.message.correct'),
 						this.translateService.instant('general.message.accion.realizada')
 					);
+					this.generalBody = new ColegiadoItem();
+
 					this.persistenceService.setBody(this.generalBody);
 				},
 				(err) => {
@@ -151,7 +154,6 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 					this.translateService.instant('general.message.error.realiza.accion');
 				}
 			);
-			this.generalBody = null;
 		}
 		else{
 			let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
@@ -164,6 +166,8 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 						this.translateService.instant('general.message.correct'),
 						this.translateService.instant('general.message.accion.realizada')
 					);
+					this.generalBody = new ColegiadoItem();
+
 					this.persistenceService.setBody(this.generalBody);
 				},
 				(err) => {
@@ -171,7 +175,6 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 					this.translateService.instant('general.message.error.realiza.accion');
 				}
 			);
-			this.generalBody = null;
 		}
 	}
 
@@ -213,7 +216,6 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 					this.translateService.instant('general.message.error.realiza.accion');
 				}
 			);
-			this.generalBody = null;
 		}
 	}
 

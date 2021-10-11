@@ -36,12 +36,14 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 	msgs: Message[] = [];
 	nifRepresentante;
 
+	resaltadoDatos = false;
+
 	ejg: EJGItem;
 
 	fechaCabecera: Date = null;
 	nombreCabecera: string = "";
 
-	@Input() permisoEscritura = true;
+	@Input() permisoEscritura:boolean;
 
 	idPersona;
 	openPro: boolean = false;
@@ -49,7 +51,7 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 	confirmationAssociate: boolean = false;
 	confirmationDisassociate: boolean = false;
 	confirmationCreateRepresentante: boolean = false;
-
+	perEscritura: boolean = false;
 	menorEdadJusticiable: boolean = false;
 
 	constructor(private sigaServices: SigaServices,
@@ -109,6 +111,7 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 			this.fechaCabecera = this.generalBody.fechaDesigna;
 		}
 
+		if(this.permisoEscritura)this.perEscritura = true;
 		
 		this.progressSpinner = false;
 	}
@@ -147,6 +150,7 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 	}
 
 	Disassociate() {
+		this.progressSpinner = true;
 		let ejgPeticion: EJGItem = this.persistenceService.getDatos();
 		ejgPeticion.idProcurador = null;
 		ejgPeticion.idInstitucionProc = null;
@@ -182,6 +186,32 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 			}
 		);
 	}
+
+	styleObligatorio(evento) {
+		if (this.resaltadoDatos && (evento == undefined || evento == null || evento == "")) {
+		  return this.commonsService.styleObligatorio(evento);
+		}
+	}
+
+	
+	muestraCamposObligatorios() {
+		this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+		this.resaltadoDatos = true;
+	}
+
+	checkPermisosAsso() {
+		let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+		if (msg != undefined) {
+		  this.msgs = msg;
+		} else {
+		  if (this.disabledAssociate()) {
+			//this.msgs = this.commonsServices.checkPermisoAccion();
+			this.muestraCamposObligatorios();
+		  } else {
+			this.Associate();
+		  }
+		}
+	  }
 
 	Associate() {
 
@@ -230,6 +260,15 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 
 	disabledSave() {
 		if (this.generalBody.idProcurador != undefined && this.generalBody.idProcurador != '') {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	disabledAssociate() {
+		if (this.generalBody.idProcurador != undefined && this.generalBody.idProcurador != ''
+		&& this.generalBody.fechaDesigna != null ) { //&& this.generalBody.numerodesignacion
 			return false;
 		} else {
 			return true;

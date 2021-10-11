@@ -15,6 +15,7 @@ export class RelacionesItem {
     interesado:String;
     fechaDesignacion:Date;
     datosinteres:String;
+    idpersonajg: String;
     
     constructor() { }
   }

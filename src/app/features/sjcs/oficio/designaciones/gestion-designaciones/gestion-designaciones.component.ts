@@ -50,8 +50,10 @@ export class GestionDesignacionesComponent implements OnInit {
 
   ngOnInit() {
     this.currentRoute = this.router.url;
+    this.getKeysClaseComunicacion();
     this.getComboTipoDesignas();
     this.checkAcceso();
+    
     if (
       sessionStorage.getItem("isLetrado") != null &&
       sessionStorage.getItem("isLetrado") != undefined
@@ -457,7 +459,7 @@ export class GestionDesignacionesComponent implements OnInit {
     this.openTab(event);
   }
 
-  navigateComunicar(dato) {
+  navigateComunicar() {
     sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
     //IDMODULO de SJCS es 10
     sessionStorage.setItem("idModulo", '10');
@@ -497,6 +499,10 @@ export class GestionDesignacionesComponent implements OnInit {
                   this.keys.forEach(key => {
                     if (element[key.nombre] != undefined) {
                       keysValues.push(element[key.nombre]);
+                    }else if(key.nombre == "num" && element["numero"] != undefined){
+                      keysValues.push(element["numero"]);
+                    }else if(key.nombre == "idturno" && element["idTurno"] != undefined){
+                      keysValues.push(element["idTurno"]);
                     }
                   });
                   datosSeleccionados.push(keysValues);
