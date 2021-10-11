@@ -57,6 +57,8 @@ export class GestionGuardiaComponent implements OnInit {
   tarjetaInscripcionesGuardias: string;
   tarjetaTurnoGuardias: string;
   persistenciaGuardia: GuardiaItem;
+  origenGuarColeg:boolean;
+  guardiaCole: any;
 
   constructor(private persistenceService: PersistenceService,
     private location: Location, private sigaServices: SigaServices,
@@ -82,6 +84,18 @@ export class GestionGuardiaComponent implements OnInit {
       );
     }
 
+    //en caso de que la guardia venga desde Guardias de Colegiado.
+    if(sessionStorage.getItem("originGuarCole") == "true"){
+      if(sessionStorage.getItem("datosGuardiaGuardiaColeg")){
+
+        this.guardiaCole = JSON.parse(sessionStorage.getItem("datosGuardiaGuardiaColeg"));
+        this.guardiaCole = true;
+        this.search();
+        sessionStorage.removeItem("datosGuardiaGuardiaColeg");
+      }
+      sessionStorage.removeItem("originGuarCole");
+    }
+
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -89,7 +103,13 @@ export class GestionGuardiaComponent implements OnInit {
   }
   search() {
     this.progressSpinner = true;
-    this.datos = JSON.parse(JSON.stringify(this.persistenceService.getDatos()));
+    if(this.origenGuarColeg){
+      this.datos = JSON.parse(sessionStorage.getItem("datosGuardiaGuardiaColeg"));
+      this.origenGuarColeg = false
+    }else{
+      this.datos = JSON.parse(JSON.stringify(this.persistenceService.getDatos()));
+    }
+    
     this.sigaServices.post("busquedaGuardias_getGuardia", this.datos).subscribe(
       n => {
         this.datos = JSON.parse(n.body);

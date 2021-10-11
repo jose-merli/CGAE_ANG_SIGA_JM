@@ -13,17 +13,17 @@
       <div class="col-lg-11 col-md-10 ">
         <div class="d-flex justify-content-end mb-1" >
           <label class="mr-auto title-ficha pointer">{{'agenda.fichaEventos.datosGenerales.calendario' | translate}}</label>
-          <i class="fas fa-external-link-alt mr-2"></i><label class="enlace">{{'dato.jgr.guardia.guardias.fichaProgramacion' | translate}}</label>
+          <i class="fas fa-external-link-alt mr-2"></i><label (click)="navigateToFichaGuardia()" class="enlace">{{'dato.jgr.guardia.guardias.fichaProgramacion' | translate}}</label>
         </div>
         <div class="d-flex justify-content-between default" >
           <label >{{'administracion.auditoriaUsuarios.fechaDesde' | translate}}: 
-            <span>20/2/1992</span>
+            <span *ngIf = "calendarioItem.fechaDesde != null || calendarioItem.fechaDesde != undefined ">{{calendarioItem.fechaDesde | date: 'dd/MM/yyyy'}}</span>
           </label>
-          <label >{{'administracion.auditoriaUsuarios.fechaHasta' | translate}}: 
-            <span>20/2/1992</span>
+          <label  >{{'administracion.auditoriaUsuarios.fechaHasta' | translate}}: 
+            <span *ngIf = "calendarioItem.fechaHasta != null || calendarioItem.fechaHasta != undefined ">{{calendarioItem.fechaHasta | date: 'dd/MM/yyyy'}}</span>
           </label>
           <label >{{'dato.jgr.guardia.guardias.generado' | translate}}: 
-            <span>Si</span>
+            <span *ngIf = "calendarioItem.generado != null || calendarioItem.generado != undefined ">{{calendarioItem.generado}}</span>
           </label>
           
           

@@ -179,6 +179,15 @@ export class ProgramacionCalendariosComponent implements OnInit {
       this.datos = {};
     }
 
+    if(sessionStorage.getItem("originGuarCole") == "true"){
+      if (sessionStorage.getItem("datosCalendarioGuardiaColeg") == null || sessionStorage.getItem("datosCalendarioGuardiaColeg") == undefined) {
+        this.datos = JSON.parse(sessionStorage.getItem("datosCalendarioGuardiaColeg"));
+        sessionStorage.removeItem("datosCalendarioGuardiaColeg");
+      }
+      sessionStorage.removeItem("originGuarCole");
+    }
+    
+
   }
 
   getStatusValue(id){
