@@ -1,0 +1,243 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="ficha-container">
+  <div class="card">
+    <div class="card-header header-ficha" (click)="onHideTarjeta()">
+      <div *ngIf="showTarjeta" class="header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fa fa-user icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{ "menu.productosYServicios.categorias.productos" | translate }}</label>
+        <div class="d-flex justify-content-start mb-1 ml-auto">
+          <i class="fa fa-angle-up ml-auto"></i>
+        </div>
+      </div>
+      <div *ngIf="!showTarjeta" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="fa fa-user icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1">
+            <label class="mr-auto title-ficha">{{ "menu.productosYServicios.categorias.productos" | translate }}
+            </label>
+          </div>
+          <div class="row">
+            <div class="col-3">
+              <label>{{ "menu.productosYServicios.categorias.productos" | translate }}
+                <span>{{ ficha.productos.length }}</span>
+              </label>
+            </div>
+            <div class="col-3">
+              <label>{{ "facturacionSJCS.facturacionesYPagos.buscarFacturacion.total" | translate }}
+                <span>{{ ficha.impTotal }}</span>
+              </label>
+            </div>
+            <div class="d-flex justify-content-start mb-1 ml-auto">
+              <i class="fa fa-angle-down ml-auto"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div [hidden]="!showTarjeta" class="card-body card-body-ficha row">
+        <div class="col-lg-11 col-md-11">
+          <p-table #productsCompraTable [value]="productosTarjeta" [columns]="cols"
+            [(selection)]="selectedRows" selectionMode="multiple" [responsive]="true" class="tabla-listado"
+            [paginator]="true" [rows]="rowsPerPage" (onRowSelect)="onRowSelect()" (onRowUnselect)="onRowUnselect()"
+            [first]="first" (sortFunction)="customSort($event)" [customSort]="true" paginatorPosition="both">
+
+            <ng-template pTemplate="colgroup" let-columns>
+              <colgroup>
+                <col *ngFor="let col of cols" [style.width]="col.width">
+              </colgroup>
+            </ng-template>
+
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+                  {{ col.header | translate}}
+                </th>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+              <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+                <td class="text-center" *ngFor="let col of columns">
+                  <span *ngIf="col.field == 'descripcion'" class="enlace"
+                    (click)="openTab(rowData)">{{rowData[col.field]}}</span>
+
+                  <span *ngIf="col.field == 'observaciones' && !observacionesEditable"
+                    (click)="changeEditable()">{{rowData[col.field]}}</span>
+                  <input *ngIf="col.field == 'observaciones' && observacionesEditable" pInputText type="text"
+                    [(ngModel)]="rowData[col.field]" type="text" pInputText>
+
+                  <span *ngIf="col.field == 'cantidad' && !cantidadEditable"
+                    (click)="changeEditable()">{{rowData[col.field]}}</span>
+                  <input *ngIf="col.field == 'cantidad' && cantidadEditable" (input)="checkTotal()" pInputText
+                    type="text" [(ngModel)]="rowData[col.field]" type="text" pInputText>
+
+                  <span *ngIf="col.field == 'precioUnitario' && !precioUnitarioEditable"
+                    (click)="changeEditable()">{{rowData[col.field]}} €</span>
+                  <input *ngIf="col.field == 'precioUnitario' && precioUnitarioEditable" (input)="checkTotal()"
+                    pInputText type="text" [(ngModel)]="rowData[col.field]" type="text" pInputText>
+
+                  <span *ngIf="col.field == 'iva' && !ivaEditable" (click)="changeEditable()">{{rowData[col.field]}}</span>
+                  <p-dropdown *ngIf="col.field == 'iva' && ivaEditable" [filter]="true" styleClass="widthAll" [showClear]="true"
+                    placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='rowData.idtipoiva'
+                    [options]="ivaCombo">
+                  </p-dropdown>
+                  <!-- <input *ngIf="col.field == 'iva' && ivaEditable" pInputText type="text" (input)="checkTotal()"
+                    [(ngModel)]="rowData[col.field]" type="text" pInputText> -->
+
+                  <span *ngIf="col.field == 'total'">{{rowData[col.field]}} €</span>
+                  <span *ngIf="col.field == 'orden'">{{rowData[col.field]}}</span>
+                </td>
+              </tr>
+
+            </ng-template>
+
+            <ng-template pTemplate="emptymessage" let-columns>
+              <tr>
+                <td [attr.colspan]="columns.length">
+                  {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
+                </td>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="paginatorleft">
+              <div class="mostrar d-flex text-right justify-content-end">
+                <label class="pr-3 registros-totales">Mostrando registros del {{productsCompraTable.first + 1}} al
+                  {{productsCompraTable.first +
+                  productsCompraTable.rows}} de un total de {{productsCompraTable.totalRecords}}</label>
+                <div>
+                  <label class="pr-3 numSeleccionados">{{
+                    'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros'
+                    |
+                    translate }}: {{numSelectedRows}}
+                  </label>
+                </div>
+                <label>{{"general.message.mostrar" | translate}}</label>
+                <p-dropdown [(ngModel)]="rowsPerPage" [options]="rowsPerPageSelectValues"
+                  (onChange)="onChangeRowsPerPages($event)">
+                </p-dropdown>
+                <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+
+                <div class="ml-3 selectAll">
+                  <p-checkbox (onChange)="onChangeSelectAllRows()" [(ngModel)]="selectAllRows" binary="true"
+                    label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname">
+                  </p-checkbox>
+                </div>
+              </div>
+            </ng-template>
+          </p-table>
+
+          <p-footer>
+            <div class="text-right main-button">
+              <!-- Guardar -->
+              <button pButton (click)="checkSave()" type="button" icon="fa fa-save" iconPos="left"
+                label="{{ 'general.boton.guardar' | translate}}"
+                [disabled]="ficha.fechaAceptada != null || ficha.fechaDenegada != null || ficha.fechaPendiente == null"></button>
+              <!-- Nuevo -->
+              <button pButton (click)="openHideModal()" type="button" icon="fa fa-plus" iconPos="left"
+                label="{{ 'general.boton.new' | translate}}"
+                [disabled]="ficha.fechaAceptada != null || ficha.fechaDenegada != null"></button>
+              <!-- Borrar -->
+              <button pButton (click)="borrarProducto()" type="button" icon="fa fa-eraser" iconPos="left"
+                label="{{ 'general.boton.borrar' | translate}}"
+                [disabled]="(ficha.fechaAceptada != null || ficha.fechaDenegada != null) || selectedRows.length == 0"></button>
+            </div>
+          </p-footer>
+        </div>
+        <div [hidden]="!showTarjeta" class="col-lg-1 col-md-1 centerAlign">
+          <div class="col-lg-12 col-md-12"><button class="styledBut" [disabled]="disableUp()" class="pointer p-2"
+              (click)="moveRow('up')"><i class="fas fa-chevron-up"></i></button></div>
+          <div class="col-lg-12 col-md-12"><button class="styledBut" [disabled]="disableDown()" class="pointer p-2"
+              (click)="moveRow('down')"><i class="fas fa-chevron-down"></i></button></div>
+        </div>
+      </div>
+    </div>
+
+
+    <div *ngIf="progressSpinner" class="overlay-spinner">
+      <div class="loader"></div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <p-dialog responsive="true" modal="modal" [draggable]="false" resizable="false" [(visible)]="showModal"
+      (onHide)="cerrarDialog()">
+
+
+      <p-table #productsTable [value]="comboProductos" [columns]="colsProducts" class="tabla-listado" [paginator]="true"
+        [rows]="10" [first]="first">
+
+
+        <ng-template pTemplate="caption">
+          <div class="p-d-flex">
+            <span class="p-input-icon-left p-ml-auto">
+              <input pInputText type="text" (input)="productsTable.filterGlobal($event.target.value, 'contains')"
+                placeholder="{{ 'general.boton.search' | translate }}" />
+            </span>
+          </div>
+        </ng-template>
+
+        <ng-template pTemplate="colgroup" let-columns>
+          <colgroup>
+            <col *ngFor="let col of colsProducts" [style.width]="col.width">
+          </colgroup>
+        </ng-template>
+
+        <ng-template pTemplate="header" let-columns>
+          <tr>
+            <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+              {{ col.header | translate}}
+              <p-sortIcon [field]="col.field"></p-sortIcon>
+            </th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+          <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+            <td class="text-center" *ngFor="let col of columns">
+              <div>
+                <a (click)="checkFormasPagoComunes(rowData)"><span>{{rowData[col.field]}}</span></a>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage" let-columns>
+          <tr>
+            <td [attr.colspan]="columns.length">
+              {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-dialog>

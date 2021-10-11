@@ -1,4 +1,4 @@
-export class ListaCompraProductosItem{
+export class ListaComprasProductosItem{
     apellidosNombre: string;
     concepto: string;
     estadoFactura: string;

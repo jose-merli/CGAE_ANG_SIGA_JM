@@ -9,6 +9,7 @@ import { SigaStorageService } from '../../../../siga-storage.service';
 import { CommonsService } from '../../../../_services/commons.service';
 import { SigaServices } from '../../../../_services/siga.service';
 import { Location } from '@angular/common';
+import { ListaProductosCompraItem } from '../../../../models/ListaProductosCompraItem';
 
 @Component({
   selector: 'app-tarjeta-solicitud-compra-suscripcion',
@@ -20,6 +21,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
   msgs : Message[];
   
   @Input("ficha") ficha : FichaCompraSuscripcionItem; 
+  
   @Output() actualizaFicha = new EventEmitter<Boolean>();
 
   cols = [
@@ -91,14 +93,38 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
     this.getPermisoDenegar();
   }
 
+  checkProductos(){
+    if(this.ficha.productos.length == 0) return true;
+    this.ficha.productos.forEach( el => {
+      if(el.cantidad != null || el.cantidad.trim() != "" ||
+      el.descripcion != null || el.descripcion.trim() != "" ||
+      el.precioUnitario != null || el.precioUnitario.trim() != "" ||
+      el.iva != null || el.iva.trim() != "") return true;
+    })
+    return false;
+  }
+
   checkSolicitarCompra(){
     let msg = this.commonsService.checkPermisos(this.permisoSolicitarCompra, undefined);
 
     if (msg != undefined) {
       this.msgs = msg;
-    }  else if(this.ficha.idFormaPagoSeleccionada == null || this.ficha.idPersona == null){
+    }  else if(this.ficha.idPersona == null){
       //Etiqueta
-      this.showMessage("error","***Debe completar los campos obligatorios","******Compruebe que no le falta por seleccionar la forma de pago ni el cliente");
+      this.showMessage("error","***Debe completar los campos obligatorios","******Debe seleccionar el cliente");
+    } else if(this.checkProductos()){
+      if(this.ficha.productos.length == 0){
+        this.showMessage("error",
+           "***No puede borrar todos los productos",
+          "****Debe haber por lo menos un productos en la solicitud de compra"
+        );
+      }
+      else {
+        this.showMessage("error", "***Productos", this.translateService.instant('general.message.camposObligatorios'));
+      }
+    }  else if(this.ficha.idFormaPagoSeleccionada == null && this.ficha.noFact == "0"){
+      //Etiqueta
+      this.showMessage("error","***Debe completar los campos obligatorios","******Debe seleccionar una forma de pago si quiere que la solicitud sea facturable");
     }
     else {
 			this.solicitarCompra();
@@ -112,7 +138,24 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
 
     if (msg != null) {
       this.msgs = msg;
-    }  else {
+    }  else if(this.ficha.idPersona == null){
+      //Etiqueta
+      this.showMessage("error","***Debe completar los campos obligatorios","******Debe seleccionar el cliente");
+    }
+    else if(this.ficha.idFormaPagoSeleccionada == null && this.ficha.noFact == "0"){
+      //Etiqueta
+      this.showMessage("error","***Debe completar los campos obligatorios","******Debe seleccionar una forma de pago si quiere que la solicitud sea facturable");
+    } else if(this.ficha.fechaPendiente == null && this.checkProductos()){
+      if(this.ficha.productos.length == 0){
+        this.showMessage("error",
+           "***No puede borrar todos los productos",
+          "****Debe haber por lo menos un productos en la solicitud de compra"
+        );
+      }
+      else {
+        this.showMessage("error", "***Productos", this.translateService.instant('general.message.camposObligatorios'));
+      }
+    }else {
 			if(this.ficha.productos!= null)this.aprobarCompra();
       // else this.aprobarSuscripcion();
 		}

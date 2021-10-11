@@ -39,7 +39,7 @@
                 <span>{{ desFormaPagoSelecc }}</span>
               </label>
             </div>
-            <div class="col-3 ml-auto">
+            <div class="d-flex justify-content-start mb-1 ml-auto">
               <i class="fa fa-angle-down ml-auto"></i>
             </div>
           </div>
@@ -82,7 +82,7 @@
           <div *ngIf="selectedPago == '20'" class="form-group col-lg-3 col-md-3">
             <label>Cuenta Bancaria
             </label>
-            <p-dropdown class="select-form" [options]="cuentasBanc" [disabled]="ficha.idEstadoPeticion != '10'"
+            <p-dropdown class="select-form" [options]="cuentasBanc" [disabled]="ficha.fechaAprobada != null || ficha.fechaDenegada != null "
               placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="ficha.cuentaBancSelecc"
               showClear="true"></p-dropdown>
           </div>

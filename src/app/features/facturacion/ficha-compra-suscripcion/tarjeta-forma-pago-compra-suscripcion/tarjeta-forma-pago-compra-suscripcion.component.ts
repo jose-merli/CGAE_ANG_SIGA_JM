@@ -26,7 +26,7 @@ export class TarjetaFormaPagoCompraSuscripcionComponent implements OnInit {
   noFact: boolean = true;
   permisoGuardar;
   selectedPago = null;
-  @Input("comboComun") comboComun: any[] = [];
+  @Input("comboComun") comboComun: any[];
 
   desFormaPagoSelecc: string;
   cuentasBanc;
@@ -43,10 +43,12 @@ export class TarjetaFormaPagoCompraSuscripcionComponent implements OnInit {
     if(this.ficha.idFormaPagoSeleccionada != null){
       this.selectedPago = this.ficha.idFormaPagoSeleccionada +"";
     }
-    this.desFormaPagoSelecc = this.comboComun.find(
-      el => 
-        el.value == this.selectedPago
-    ).label
+    if(this.comboComun != undefined && this.comboComun.length > 0){
+      this.desFormaPagoSelecc = this.comboComun.find(
+        el => 
+          el.value == this.selectedPago
+      ).label
+    }
   }
 
   checkNoFacturable(){
@@ -84,7 +86,7 @@ export class TarjetaFormaPagoCompraSuscripcionComponent implements OnInit {
     let checkBox;
     if(this.noFact)checkBox = "1";
     else checkBox = "0";
-    return this.ficha.idFormaPagoSeleccionada == this.selectedPago && this.ficha.cuentaBancSelecc == this.cuentasBanc && this.noFact == checkBox;
+    return this.ficha.idFormaPagoSeleccionada == this.selectedPago && this.ficha.cuentaBancSelecc == this.cuentasBanc && this.ficha.noFact == checkBox;
   }
 
   checkSave(){

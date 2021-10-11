@@ -3,7 +3,7 @@ import { Message } from 'primeng/components/common/api';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '../../../commons/translate';
 import { FiltrosCompraProductosItem } from '../../../models/FiltrosCompraProductosItem';
-import { ListaCompraProductosItem } from '../../../models/ListaCompraProductosItem';
+import { ListaComprasProductosItem } from '../../../models/ListaComprasProductosItem';
 import { CommonsService } from '../../../_services/commons.service';
 import { SigaServices } from '../../../_services/siga.service';
 import { TarjetaFiltroCompraProductosComponent } from './tarjeta-filtro-compra-productos/tarjeta-filtro-compra-productos.component';
@@ -18,7 +18,7 @@ export class CompraProductosComponent implements OnInit {
   
   progressSpinner: boolean = false;
 
-  listaCompraProductos: ListaCompraProductosItem[];
+  listaCompraProductos: ListaComprasProductosItem[];
 
   muestraTablaCompraProductos: boolean = false;
 

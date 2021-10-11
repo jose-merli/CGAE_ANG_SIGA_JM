@@ -463,7 +463,10 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
       this.desactivarVolver = false;
     } else if (sessionStorage.getItem("esNuevoNoColegiado")) {
       this.desactivarVolver = false;
-    } else {
+    } //Si viene de la ficha de compra/suscripcion
+    else if(sessionStorage.getItem("origin")=="Cliente"){
+      this.desactivarVolver = false;
+    }else {
       //  LLEGA DESDE PUNTO DE MENÚ
       this.emptyLoadFichaColegial = JSON.parse(
         sessionStorage.getItem("emptyLoadFichaColegial")
