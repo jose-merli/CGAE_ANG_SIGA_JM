@@ -50,7 +50,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 	// navigateToJusticiable: boolean = false;
 	esMenorEdad: boolean = false;
 	idPersona;
-	permisoEscritura;
+	permisoEscritura: boolean = true;
 	representanteValido: boolean = false;
 	confirmationAssociate: boolean = false;
 	confirmationDisassociate: boolean = false;
@@ -233,6 +233,10 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 				this.progressSpinner = false;
 			}
 		);
+	}
+
+	checkPermisoEscritura(){
+
 	}
 
 	search() {

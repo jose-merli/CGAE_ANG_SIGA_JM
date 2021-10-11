@@ -61,6 +61,8 @@ export class GuardiaItem {
     idPersona;
     fechaValidacion;
     idCalendarioGuardias;
+    orden : string;
+    idListaGuardia : string;
     tipoGuardia;
 
 

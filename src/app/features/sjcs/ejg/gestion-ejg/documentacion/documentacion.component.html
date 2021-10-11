@@ -16,8 +16,7 @@
           <div class="d-flex justify-content-between default">
             <label *ngIf="nDocumentos > 3">{{ "justiciaGratuita.ejg.datosGenerales.numero.Documentos" | translate }}:
               <span>{{nDocumentos}}</span></label>
-            <label
-              *ngIf="nDocumentos <= 3 && nDocumentos > 0 ">{{
+            <label *ngIf="nDocumentos <= 3 && nDocumentos > 0 ">{{
               "enviosMasivos.literal.documentos" | translate }}:
               <span>{{tiposCabecera}}</span></label>
             <label *ngIf="nDocumentos == 0">{{ "justiciaGratuita.ejg.datosGenerales.numero.Documentos" | translate }}:
@@ -141,15 +140,13 @@
             label="{{ 'general.boton.consultar' | translate}}/{{ 'general.boton.edit' | translate}}"></button> -->
           <button [disabled]="!permisoEscritura || selectedDatos.length != 0" (click)="openModal(null)" pButton
             type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
-          <button [disabled]="selectedDatos.length == 0 || !permisoEscritura"
-            (click)="download()" pButton type="button" icon="fa fa-download" iconPos="left"
+          <button [disabled]="selectedDatos.length == 0" (click)="download()" pButton type="button"
+            icon="fa fa-download" iconPos="left"
             label="{{ 'agenda.fichaEventos.datosAsistencia.descargar' | translate}}"></button>
-          <button [disabled]="selectedDatos.length == 0 || !permisoEscritura"
-            (click)="deleteDocumentacion()" pButton type="button" icon="fa fa-trash" iconPos="left"
-            label="{{ 'general.boton.eliminar' | translate}}"></button>
-          <button [disabled]="selectedDatos.length == 0 || !permisoEscritura"
-            (click)="checkPermisosPrint()" pButton type="button" icon="fa fa-print" iconPos="left"
-            label="{{ 'general.boton.imprimir' | translate}}"></button>
+          <button [disabled]="selectedDatos.length == 0 || !permisoEscritura" (click)="deleteDocumentacion()" pButton
+            type="button" icon="fa fa-trash" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
+          <button [disabled]="selectedDatos.length == 0 || !permisoEscritura" (click)="checkPermisosPrint()" pButton
+            type="button" icon="fa fa-print" iconPos="left" label="{{ 'general.boton.imprimir' | translate}}"></button>
 
         </div>
       </div>
@@ -200,11 +197,11 @@
     </div>
     <div class="form-group col-lg-3 col-md-3 pr-0">
       <label>{{ 'justiciaGratuita.ejg.documentacion.regEntrada' | translate}}</label>
-      <input type="text" class="form-control" maxLength="10" pInputText [(ngModel)]="body.regEntrada">
+      <input type="text" class="form-control" pInputText [(ngModel)]="body.regEntrada">
     </div>
     <div class="form-group col-lg-3 col-md-3 pr-0">
       <label>{{ 'justiciaGratuita.ejg.documentacion.regSalida' | translate}}</label>
-      <input type="text" class="form-control" maxLength="10" pInputText [(ngModel)]="body.regSalida">
+      <input type="text" class="form-control" pInputText [(ngModel)]="body.regSalida">
     </div>
     <div class="form-group col-lg-6 col-md-6 pr-0">
       <label>{{ 'justiciaGratuita.ejg.documentacion.Presentador' | translate}}(*)</label>
@@ -216,15 +213,15 @@
       <label>{{ "justiciaGratuita.ejg.documentacion.tipoDoc" | translate }}(*)</label>
       <p-dropdown [(ngModel)]='body.idTipoDocumento' class="select-form" placeholder="Seleccionar"
         [options]="comboTipoDocumentacion" [disabled]="body.idDocumentacion!=null" [filter]="true"
-        (onChange)="getComboDocumentos()"
-        filterBy="label,labelSinTilde" [showClear]="true" [ngClass]="styleObligatorio(body.idTipoDocumento)">
+        (onChange)="getComboDocumentos()" filterBy="label,labelSinTilde" [showClear]="true"
+        [ngClass]="styleObligatorio(body.idTipoDocumento)">
       </p-dropdown>
     </div>
     <div class="form-group-interlineado col-lg-6 col-md-6">
       <label>{{ "justiciaGratuita.ejg.documentacion.Documento" | translate }}(*)</label>
-      <p-dropdown [(ngModel)]='body.idDocumento' [disabled]="body.idDocumentacion!=null || body.idTipoDocumento == null" class="select-form"
-        placeholder="Seleccionar" [options]="comboDocumentos" [filter]="true" filterBy="label,labelSinTilde"
-        [showClear]="true" [ngClass]="styleObligatorio(body.idDocumento)"></p-dropdown>
+      <p-dropdown [(ngModel)]='body.idDocumento' [disabled]="body.idDocumentacion!=null || body.idTipoDocumento == null"
+        class="select-form" placeholder="Seleccionar" [options]="comboDocumentos" [filter]="true"
+        filterBy="label,labelSinTilde" [showClear]="true" [ngClass]="styleObligatorio(body.idDocumento)"></p-dropdown>
     </div>
     <div class="form-group col-lg-12 col-md-12 pr-0">
       <label>{{ 'administracion.parametrosGenerales.literal.descripcion' | translate}}</label>
@@ -268,19 +265,19 @@
       </ng-template>
     </p-table>
     <div class="text-right form-group main-button col-lg-12 col-md-12 pt-2">
-      <button [disabled]="body.idFichero==null" (click)="download()" pButton type="button"
-        icon="fa fa-download" iconPos="left"
-        label="{{ 'agenda.fichaEventos.datosAsistencia.descargar' | translate}}"></button>
-      <button [disabled]="body.idFichero==null" (click)="deleteDocumentos()" pButton type="button"
-        icon="fa fa-trash" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
-      <p-fileUpload #pUploadFile icon="fa fa-plus" iconPos="left" chooseLabel="{{ 'general.boton.new' | translate}}" [disabled]="body.idFichero!=null"
-        name="file" mode="basic"  class="edit my-0 mx-auto main-button" (onSelect)="checkPermisosSubirFichero($event)" auto="true">
+      <button [disabled]="body.idFichero==null" (click)="download()" pButton type="button" icon="fa fa-download"
+        iconPos="left" label="{{ 'agenda.fichaEventos.datosAsistencia.descargar' | translate}}"></button>
+      <button [disabled]="body.idFichero==null" (click)="deleteDocumentos()" pButton type="button" icon="fa fa-trash"
+        iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
+      <p-fileUpload #pUploadFile icon="fa fa-plus" iconPos="left" chooseLabel="{{ 'general.boton.new' | translate}}"
+        [disabled]="body.idFichero!=null" name="file" mode="basic"  class="edit my-0 mx-auto main-button"
+        (onSelect)="seleccionarFichero($event)" auto="true">
       </p-fileUpload> <!-- accept=".xls" -->
     </div>
   </div>
   <!--</div> -->
   <div class="text-right main-button col-lg-12 col-md-12">
-    <button (click)="rest()" pButton type="button" icon="fa fa-undo" iconPos="left" 
+    <button (click)="rest()" pButton type="button" icon="fa fa-undo" iconPos="left"
       label="{{'general.boton.restablecer' | translate}}"></button><!-- [disabled]="disableBotonAnadir" -->
     <button *ngIf="body.idDocumentacion==null" (click)="checkNewDoc()" pButton type="button" icon="fa fa-save"
       iconPos="left" label="{{'general.boton.guardar' | translate}}"></button>

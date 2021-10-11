@@ -11,6 +11,9 @@ export class DocushareItem {
   originalFilename: String;
   idPersona:String;
   parent: String;
+  idTipoEjg: String;
+	anio: String;
+	numero: String;
   constructor() {}
 }
 // export enum DocuShareTipo {

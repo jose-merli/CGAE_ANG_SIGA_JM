@@ -40,36 +40,36 @@
       </div>
       <div class="form-row">
         <div class="form-group-interlineado col-lg-3 col-md-3">
-          <label>{{'justiciaGratuita.ejg.datosGenerales.annioNum' |translate}}</label>
-          <input type="text" class="form-control" maxLength="4" (keypress)="numberOnly($event)" pInputText
-            [(ngModel)]="body.numAnnioProcedimiento" [disabled]="!permisoEscritura">
+          <label>{{'gratuita.busquedaDesignas.literal.numProcedimiento' |translate}}</label>
+          <input type="text" class="form-control" pInputText 
+            [(ngModel)]="body.numAnnioProcedimiento" [disabled]="!perEscritura">
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{'justiciaGratuita.ejg.datosGenerales.NIG'|translate}}</label>
-          <input type="text" class="form-control" maxLength="49" pInputText [(ngModel)]="body.nig" [disabled]="!permisoEscritura">
+          <input type="text" class="form-control" maxLength="49" pInputText [(ngModel)]="body.nig" [disabled]="!perEscritura">
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ 'justiciaGratuita.ejg.datosGenerales.Juzgado' | translate}}</label>
           <p-dropdown class="select-form" [(ngModel)]='body.juzgado' placeholder="Seleccionar"
-            [options]="comboJuzgado" (onChange)="onChangeJuzgado()" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" [disabled]="!permisoEscritura"></p-dropdown>
+            [options]="comboJuzgado" (onChange)="onChangeJuzgado()" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" [disabled]="!perEscritura"></p-dropdown>
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{'justiciaGratuita.maestros.Procedimiento'|translate}}</label>
           <p-dropdown class="select-form" [(ngModel)]='body.idPretension' placeholder="Seleccionar"
-            [options]="comboProcedimiento" [(disabled)]="isDisabledProcedimiento || !permisoEscritura" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
+            [options]="comboProcedimiento" [(disabled)]="isDisabledProcedimiento || !perEscritura" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
           </p-dropdown>
         </div>
 
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{"justiciaGratuita.Calendarios.Observaciones" | translate}}</label>
-          <input type="text" class="form-control" maxLength="1023" pInputText [(ngModel)]="body.observaciones" [disabled]="!permisoEscritura">
+          <input type="text" class="form-control" maxLength="1023" pInputText [(ngModel)]="body.observaciones" [disabled]="!perEscritura">
         </div>
         <div class="form-group col-lg-3 col-md-3 w-100">
           <label>{{"justiciaGratuita.ejg.preDesigna.delitos" | translate}}</label>
           <p-multiSelect #someDropdown [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='delitosValue'
                 [options]="comboDelitos" [selectedItemsLabel]="textSelected" styleClass="widthAll" [filter]="true"
                 filterBy="label,labelSinTilde" maxSelectedLabels="10" selectionLimits="10"
-                [panelStyle]="{width:'100%'}" [disabled]="!permisoEscritura"></p-multiSelect>
+                [panelStyle]="{width:'100%'}" [disabled]="!perEscritura"></p-multiSelect>
         </div>
       </div>
       <div class="form-group col-lg-12 col-md-1 input-ayuda">
@@ -79,37 +79,37 @@
         <div class="form-group col-lg-3 col-md-3">
           <label>{{'justiciaGratuita.ejg.datosGenerales.Perceptivo'|translate}}</label>
           <p-dropdown class="select-form" [(ngModel)]='body.perceptivo' placeholder="Seleccionar"
-            [options]="comboPreceptivo" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" [disabled]="!permisoEscritura">
+            [options]="comboPreceptivo" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" [disabled]="!perEscritura">
           </p-dropdown>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{'justiciaGratuita.ejg.datosGenerales.Renuncia'|translate}}</label>
           <p-dropdown class="select-form" [(ngModel)]='body.renuncia' placeholder="Seleccionar"
-            [options]="comboRenuncia" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" [disabled]="!permisoEscritura">
+            [options]="comboRenuncia" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" [disabled]="!perEscritura">
           </p-dropdown>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{'censo.fichaCliente.situacion.cabecera'|translate}}</label>
           <p-dropdown class="select-form" [(ngModel)]='body.idsituacion' placeholder="Seleccionar"
-            [options]="comboSituacion" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" [disabled]="!permisoEscritura">
+            [options]="comboSituacion" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" [disabled]="!perEscritura">
           </p-dropdown>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{'gratuita.mantAsistencias.literal.numeroDiligenciasolo'|translate}}</label>
           <input type="text" [(ngModel)]="body.numerodiligencia" class="form-control" (keypress)="numberOnly($event)"
-            maxLength="10" [disabled]="!permisoEscritura" pInputText>
+            maxLength="10" [disabled]="!perEscritura" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{"gratuita.volantesExpres.literal.centroDetencion" | translate}}</label>
           <p-dropdown class="select-form" [(ngModel)]='body.comisaria'
             placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboComisaria" [filter]="true"
-            filterBy="label,labelSinTilde" [showClear]="true" [disabled]="!permisoEscritura"></p-dropdown>
+            filterBy="label,labelSinTilde" [showClear]="true" [disabled]="!perEscritura"></p-dropdown>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{"justiciaGratuita.ejg.datosGenerales.calidad" | translate}}</label>
           <p-dropdown class="select-form" [(ngModel)]='body.calidad'
             placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboCalidad" [filter]="true"
-            filterBy="label,labelSinTilde" [showClear]="true" [disabled]="!permisoEscritura"></p-dropdown>
+            filterBy="label,labelSinTilde" [showClear]="true" [disabled]="!perEscritura"></p-dropdown>
         </div>
         <!-- <app-input-dividido [anio]="anio" [numero]="numero" titulo="Año / Número"></app-input-dividido> -->
       </div>
@@ -118,16 +118,16 @@
     <div *ngIf="openDef" class="card-footer">
       <div class="text-right main-button ">
         <button (click)="checkPermisosAsociarDes()" pButton type="button"
-          icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.AsociarDesignacion' | translate}}" [disabled]="!permisoEscritura"></button>
+          icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.AsociarDesignacion' | translate}}" [disabled]="!perEscritura"></button>
 
         <button (click)="checkPermisosCreateDes()" pButton type="button"
-          icon="fa fa-download" iconPos="left" label="{{ 'general.boton.crearDesignacion' | translate}}" [disabled]="!permisoEscritura"></button>
+          icon="fa fa-download" iconPos="left" label="{{ 'general.boton.crearDesignacion' | translate}}" [disabled]="!perEscritura"></button>
 
         <button (click)="rest()" pButton type="button" icon="fa fa-undo" iconPos="left"
-          label="{{ 'general.boton.restablecer' | translate}}" [disabled]="!permisoEscritura"></button>
+          label="{{ 'general.boton.restablecer' | translate}}" [disabled]="!perEscritura"></button>
 
         <button (click)="checkSave()" pButton type="button" icon="fa fa-save" iconPos="left"
-          label="{{ 'general.boton.guardar' | translate}}" [disabled]="!permisoEscritura"></button>
+          label="{{ 'general.boton.guardar' | translate}}" [disabled]="!perEscritura"></button>
       </div>
     </div>
   </div>

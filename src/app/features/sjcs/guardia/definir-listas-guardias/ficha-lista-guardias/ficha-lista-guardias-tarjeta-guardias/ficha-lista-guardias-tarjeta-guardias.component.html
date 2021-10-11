@@ -1,0 +1,16 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+<div *ngIf="show" style="margin-bottom: -10px;">
+  <app-tabla-resultado-order [permisosEscritura]="permisosEscritura"  [totalRegistros] = "totalRegistros" [seleccionarTodo]="seleccionarTodo" [listaGuardias]="true" (saveGuardiasEnLista) = "saveGuardias($event);"
+  [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" (anySelected)="notifyAnySelected($event)" (selectedRow)="checkSelectedRow($event)" (rest)="resetTabla($event)"  (delete)="eliminarGuardias($event);">
+  </app-tabla-resultado-order>
+</div>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" icon="icon" key="confirmEliminar" width="425"
+  #confirmEliminar>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="confirmEliminar.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="confirmEliminar.reject()"></button>
+  </p-footer>
+</p-confirmDialog>

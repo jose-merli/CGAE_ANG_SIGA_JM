@@ -312,7 +312,6 @@ import { HeaderGestionEntidadService } from './_services/headerGestionEntidad.se
 import { OldSigaServices } from './_services/oldSiga.service';
 import { PersistenceService } from './_services/persistence.service';
 import { SigaServices } from './_services/siga.service';
-import { DestinatariosRetencionesComponent } from './features/sjcs/maestros/destinatarios-retenciones/destinatarios-retenciones.component';
 import { DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-datos-adicionales-designa/detalle-tarjeta-datos-adicionales-ficha-designacion-oficio.component';
 import { DetalleTarjetaContrariosFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-contrarios-designa/detalle-tarjeta-contrarios-ficha-designacion-oficio.component';
 import { DetalleTarjetaInteresadosFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-interesados-designa/detalle-tarjeta-interesados-ficha-designacion-oficio.component';
@@ -438,7 +437,6 @@ import { SelectorModule } from './commons/selector/selector.module';
 import { AsistenciaExpresComponent } from './features/sjcs/guardia/guardias-asistencias/asistencia-expres/asistencia-expres.component';
 import { BuscadorAsistenciaExpresComponent } from './features/sjcs/guardia/guardias-asistencias/asistencia-expres/buscador-asistencia-expres/buscador-asistencia-expres.component';
 import { ResultadoAsistenciaExpresComponent } from './features/sjcs/guardia/guardias-asistencias/resultado-asistencia-expres/resultado-asistencia-expres.component';
-import { SafePipe } from './commons/tabla-resultado-order/safe.pipe';
 import { BuscadorSolicitudesCentralitaComponent } from './features/sjcs/guardia/guardias-solicitudes-centralita/buscador-solicitudes-centralita/buscador-solicitudes-centralita.component';
 import { ResultadoSolicitudesCentralitaComponent } from './features/sjcs/guardia/guardias-solicitudes-centralita/resultado-solicitudes-centralita/resultado-solicitudes-centralita.component';
 import { FichaPreasistenciasComponent } from './features/sjcs/guardia/guardias-solicitudes-centralita/ficha-preasistencias/ficha-preasistencias.component';
@@ -480,7 +478,15 @@ import { GuardiaGestionGuardiaColegiadoComponent } from './features/sjcs/guardia
 import { PermutasGestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/gestion-guardia-colegiado/permutas-gestion-guardia-colegiado/permutas-gestion-guardia-colegiado.component';
 import { SustitucionesGestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/gestion-guardia-colegiado/sustituciones-gestion-guardia-colegiado/sustituciones-gestion-guardia-colegiado.component';
 import { TurnoGestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/gestion-guardia-colegiado/turno-gestion-guardia-colegiado/turno-gestion-guardia-colegiado.component';
+import { ResultadoListaGuardiasComponent } from './features/sjcs/guardia/definir-listas-guardias/resultado-lista-guardias/resultado-lista-guardias.component';
+import { FichaListaGuardiasComponent } from './features/sjcs/guardia/definir-listas-guardias/ficha-lista-guardias/ficha-lista-guardias.component';
+import { FichaListaGuardiasTarjetaDatosGeneralesComponent } from './features/sjcs/guardia/definir-listas-guardias/ficha-lista-guardias/ficha-lista-guardias-tarjeta-datos-generales/ficha-lista-guardias-tarjeta-datos-generales.component';
+import { FichaListaGuardiasTarjetaGuardiasComponent } from './features/sjcs/guardia/definir-listas-guardias/ficha-lista-guardias/ficha-lista-guardias-tarjeta-guardias/ficha-lista-guardias-tarjeta-guardias.component';
+import { TablaResultadoOrderModule } from './commons/tabla-resultado-order/tabla-resultado-order.module';
 import { ListaArchivosGuardiaComponent } from './features/sjcs/guardia/cargas-masivas-guardia/lista-archivos-guardia/lista-archivos-guardia.component';
+import { TarjetaModule } from './commons/tarjeta/tarjeta.module';
+import { DestinatariosModule } from './features/sjcs/maestros/destinatarios-retenciones/destinatarios.module';
+import { MaestrosModule } from './features/sjcs/maestros/maestros.module';
 
 
 @NgModule({
@@ -496,7 +502,6 @@ import { ListaArchivosGuardiaComponent } from './features/sjcs/guardia/cargas-ma
 		HoraComponent,
 		InputDivididoComponent,
 		TablaSimpleComponent,
-		TarjetaComponent,
 
 		MyIframeComponent,
 		MenuComponent,
@@ -897,6 +902,10 @@ import { ListaArchivosGuardiaComponent } from './features/sjcs/guardia/cargas-ma
 		BuscadorAsistenciasComponent,
 		ResultadoAsistenciasComponent,
 		BuscadorListaGuardiasComponent,
+		ResultadoListaGuardiasComponent,
+		FichaListaGuardiasComponent,
+		FichaListaGuardiasTarjetaDatosGeneralesComponent,
+		FichaListaGuardiasTarjetaGuardiasComponent,
 	],
 	imports: [
 		SelectorModule,
@@ -970,6 +979,10 @@ import { ListaArchivosGuardiaComponent } from './features/sjcs/guardia/cargas-ma
 		OficioModule,
 		BusquedaAsuntosModule,
 		Paginador2Module,
+		TablaResultadoOrderModule,
+		TarjetaModule,
+		DestinatariosModule,
+		MaestrosModule
 	],
 
 	exports: [],
@@ -988,7 +1001,6 @@ import { ListaArchivosGuardiaComponent } from './features/sjcs/guardia/cargas-ma
 		ConfirmationService,
 		PersistenceService,
 		TrimPipePipe,
-		SafePipe,
 		TablaResultadoDesplegableJEService,
 		TablaResultadoDesplegableAEService,
 		TablaResultadoMixDocDesigService,

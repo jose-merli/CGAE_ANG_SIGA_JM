@@ -9,6 +9,8 @@ export class Cell {
   type: string;
   value: any;
   combo: any [];
+  hiddenValue: any;
+  required : boolean;
 }
 export class TablaResultadoOrderCGService {
 
@@ -25,6 +27,8 @@ public getTableData(result) {
       cellObject.type = cell['type'];
       cellObject.value = cell['value'];
       cellObject.combo = cell['combo'];
+      cellObject.hiddenValue = cell['hiddenValue'];
+      cellObject.required = cell['required']
       cells.push(cellObject);
     });
     rowObject.cells = cells;

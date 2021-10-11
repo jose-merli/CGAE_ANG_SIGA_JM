@@ -15,7 +15,7 @@ export class BuscadorListaGuardiasComponent implements OnInit {
   comboTipo = [];
   comboGrupoZona = [];
   comboZona = [];
-
+  msgs;
   constructor(private sigaServices : SigaServices,
     private commonsService : CommonsService) { }
 
@@ -32,7 +32,8 @@ export class BuscadorListaGuardiasComponent implements OnInit {
       }
     ]
 
-    this.filtro.idTipo = '1'; //Seteamos valor por defecto
+
+
     this.getComboGrupoZona();
   }
 
@@ -77,5 +78,7 @@ export class BuscadorListaGuardiasComponent implements OnInit {
         }
       );
   }
-
+  clear() {
+    this.msgs = [];
+  }
 }

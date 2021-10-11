@@ -17,6 +17,7 @@ import { procesos_justiciables } from '../../../../../permisos/procesos_justicia
 import { Checkbox, ConfirmDialog } from '../../../../../../../node_modules/primeng/primeng';
 import { Dialog } from 'primeng/primeng';
 import { UnidadFamiliarEJGItem } from '../../../../../models/sjcs/UnidadFamiliarEJGItem';
+import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 
 @Component({
   selector: 'app-datos-generales',
@@ -102,6 +103,8 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
   menorEdadJusticiable: boolean = false;
 
   resaltadoDatos: boolean = false;
+  generalBody: UnidadFamiliarEJGItem;
+  initialBody: UnidadFamiliarEJGItem;
 
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
@@ -293,9 +296,6 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
     }
   }
 
-  
-
-
   validateCampos(url) {
 
     if (this.body.nombre != null && this.body.nombre != undefined) {
@@ -393,6 +393,18 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
             this.body.idinstitucion = this.authenticationService.getInstitucionSession();
 
             if (!this.modoRepresentante) {
+              //Si estamos en la creacion de Datos Generales 
+              if(sessionStorage.getItem("EJGItem")){
+                let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
+                sessionStorage.setItem("EJGItem",JSON.stringify(ejg));
+                this.persistenceService.setDatos(ejg);
+              }
+              //Si se esta editando Datos Generales desde su tarjeta en ejg
+              else if(this.persistenceService.getDatos()){
+                let ejg: EJGItem = this.persistenceService.getDatos();
+                this.persistenceService.setDatos(ejg);
+              }
+
               this.newJusticiable.emit(this.body);
             }
           } else {
@@ -404,14 +416,11 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
                 representante.nif = this.body.nif;
                 this.persistenceService.setBody(representante);
               }
-
             }
-
           }
 
           if (this.nuevoTelefono) {
             this.nuevoTelefono = false;
-
           }
 
           this.selectedDatos = [];

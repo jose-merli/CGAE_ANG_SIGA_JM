@@ -210,7 +210,7 @@ export class TablaJusticiablesComponent implements OnInit {
     else{
       //Comprobamos que el justiciable no esta ya en la designacion
       datosFamiliares.forEach(element => {
-        if(element.uf_idPersona == justiciable.idpersona) exist = true;
+        if(element.uf_idPersona == justiciable.idpersona && element.fechaBaja == null) exist = true;
       });
     }
 

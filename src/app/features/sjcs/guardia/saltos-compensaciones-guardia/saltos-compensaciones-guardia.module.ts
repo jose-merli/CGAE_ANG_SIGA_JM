@@ -25,6 +25,7 @@ import { SelectorModule } from '../../../../commons/selector/selector.module';
 import { MatSortModule } from '@angular/material';
 import { PaginadorModule } from '../../../../commons/paginador/paginador.module';
 import { TablaResultadoMixSaltosCompService } from './saltos-compensaciones-guardia/tabla-resultado-mix-saltos-comp-guardia/tabla-resultado-mix-saltos-comp.service';
+import { TablaSaltosCompensacionesGuardiaComponent } from './saltos-compensaciones-guardia/tabla-saltos-compensaciones-guardia/tabla-saltos-compensaciones-guardia.component';
 
 @NgModule({
   imports: [
@@ -57,7 +58,8 @@ import { TablaResultadoMixSaltosCompService } from './saltos-compensaciones-guar
   declarations: [
     SaltosCompensacionesGuardiaComponent,
     FiltrosSaltosCompensacionesGuardiaComponent,
-    TablaResultadoMixSaltosCompGuardiaComponent
+    TablaResultadoMixSaltosCompGuardiaComponent,
+    TablaSaltosCompensacionesGuardiaComponent
   ],
   providers: [
     ImagePipe,

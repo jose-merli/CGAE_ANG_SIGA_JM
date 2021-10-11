@@ -470,13 +470,13 @@ jsonToRow(fromCombo){
         ord = dat.orden;
       }
     let objCells:Cell[] = [
-    { type: 'link2', value: ord , combo: null},
-    { type: 'text', value: dat.turno , combo: null},
-    { type: 'link', value: dat.guardia , combo: null},
-    { type: 'text', value: dat.generado, combo: null},
-    { type: 'text', value:  this.datosTarjetaGuardiasCalendario.length , combo: null},
-    { type: 'invisible', value: dat.idGuardia, combo: null},
-    { type: 'invisible', value: dat.idTurno, combo: null}
+    { type: 'link2', value: ord , combo: null, hiddenValue:'', required : false},
+    { type: 'text', value: dat.turno , combo: null, hiddenValue:'', required : false},
+    { type: 'link', value: dat.guardia , combo: null, hiddenValue:'', required : false},
+    { type: 'text', value: dat.generado, combo: null, hiddenValue:'', required : false},
+    { type: 'text', value:  this.datosTarjetaGuardiasCalendario.length , combo: null, hiddenValue:'', required : false},
+    { type: 'invisible', value: dat.idGuardia, combo: null, hiddenValue:'', required : false},
+    { type: 'invisible', value: dat.idTurno, combo: null, hiddenValue:'', required : false}
     ];
     let obj:Row = {cells: objCells};
     arr.push(obj);

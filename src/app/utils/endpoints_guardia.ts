@@ -162,4 +162,12 @@ export let endpoints_guardia: any = {
 
 
 
+
+   //listas guardias
+   listasGuardias_searchListaGuardias: "listaguardias/buscarListaGuardias",
+   listasGuardias_saveListaGuardias: "listaguardias/guardarListaGuardias",
+   listasGuardias_searchGuardiasFromLista: "listaguardias/searchGuardiasFromLista",
+   listasGuardias_searchTipoDiaGuardia: "guardia/searchTipoDiaGuardia",
+   listasGuardias_guardarGuardiasEnLista: "listaguardias/guardarGuardiasEnLista",
+   listasGuardias_eliminarGuardiasFromLista: "listaguardias/eliminarGuardiasFromLista"
 }

@@ -25,7 +25,7 @@ export class DefensaJuridicaComponent implements OnInit {
   body: EJGItem = new EJGItem();
   designa = null;
   bodyInicial: EJGItem;
-  @Input() permisoEscritura: boolean = true;
+  @Input() permisoEscritura: boolean;
 
   isDisabledProcedimiento: boolean = true;
 
@@ -47,6 +47,7 @@ export class DefensaJuridicaComponent implements OnInit {
   procedimientoCabecera;
 
   openDef: boolean = false;
+  perEscritura: boolean = false;
 
   delitosValueInicial: any;
   delitosValue: any = [];
@@ -97,7 +98,7 @@ export class DefensaJuridicaComponent implements OnInit {
     //Valor inicial a reestablecer
     this.bodyInicial = JSON.parse(JSON.stringify(this.body));
 
-
+    this.progressSpinner = true;
     this.getComboPreceptivo();
     this.getComboRenuncia();
     this.getComboSituaciones();
@@ -106,20 +107,23 @@ export class DefensaJuridicaComponent implements OnInit {
     this.getComboJuzgado();
     if (this.body.juzgado != null) this.getComboProcedimiento();
     this.getComboDelitos();
-
+    this.progressSpinner = false;
     if (this.body.juzgado != undefined && this.body.juzgado != null) this.isDisabledProcedimiento = false;
+
+    if(this.permisoEscritura)this.perEscritura= true;
 
   }
 
   //Codigo copiado de la tarjeta detalles de la ficha de designaciones
-  async validarNig(nig) {
+   validarNig(nig) {
     let ret = false;
     let parametro = new ParametroRequestDto();
     parametro.idInstitucion = this.body.idInstitucion;
     parametro.modulo = "SCS";
     parametro.parametrosGenerales = "NIG_VALIDADOR";
     if (nig != null && nig != '') {
-      await this.sigaServices
+      this.progressSpinner = true;
+       this.sigaServices
         .postPaginado("parametros_search", "?numPagina=1", parametro)
         .toPromise().then(
           data => {
@@ -147,8 +151,8 @@ export class DefensaJuridicaComponent implements OnInit {
                 }
               }
             });
-          }).catch(error => {
             this.progressSpinner = false;
+          }).catch(error => {
             let severity = "error";
             let summary = this.translateService.instant("justiciaGratuita.oficio.designa.NIGInvalido");
             let detail = "";
@@ -159,6 +163,7 @@ export class DefensaJuridicaComponent implements OnInit {
             });
             ret = false;
           });
+          this.progressSpinner = false;
     }
 
     if (!ret) this.save();
@@ -168,25 +173,24 @@ export class DefensaJuridicaComponent implements OnInit {
     //Esto es para la validacion de CADENA
 
     //Obtenemos la institucion actual
-    let idInstitucion = this.body.idInstitucion;
+    // let idInstitucion = this.body.idInstitucion;
 
     //Codigo copiado de la tarjeta detalles de la ficha de designaciones
-    if (idInstitucion == "2008" || idInstitucion == "2015" || idInstitucion == "2029" || idInstitucion == "2033" || idInstitucion == "2036" ||
-      idInstitucion == "2043" || idInstitucion == "2006" || idInstitucion == "2021" || idInstitucion == "2035" || idInstitucion == "2046" || idInstitucion == "2066") {
-      if (nProcedimiento != '') {
-        var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{5}[\.]{1}[0-9]{2}$/;
-        var ret = objRegExp.test(nProcedimiento);
-        return ret;
-      }
-      else
-        return true;
-    } else {
+    // if (idInstitucion == "2008" || idInstitucion == "2015" || idInstitucion == "2029" || idInstitucion == "2033" || idInstitucion == "2036" ||
+    //   idInstitucion == "2043" || idInstitucion == "2006" || idInstitucion == "2021" || idInstitucion == "2035" || idInstitucion == "2046" || idInstitucion == "2066") {
+    //   if (nProcedimiento != '') {
+    //     var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{5}[\.]{1}[0-9]{2}$/;
+    //     var ret = objRegExp.test(nProcedimiento);
+    //     return ret;
+    //   }
+    //   else
+    //     return true;
+    // } else {
       // var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{7}[/]$/;
       var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{7}$/;
       var ret = objRegExp.test(nProcedimiento);
       return ret;
-    }
-
+    // }
   }
 
   getCabecera() {
@@ -204,7 +208,7 @@ export class DefensaJuridicaComponent implements OnInit {
     });
     //Valor de la cabecera para procedimiento
     this.comboProcedimiento.forEach(element => {
-      if (element.value == this.bodyInicial.procedimiento) this.procedimientoCabecera = element.label;
+      if (element.value == this.bodyInicial.idPretension) this.procedimientoCabecera = element.label;
     });
   }
 
@@ -216,7 +220,7 @@ export class DefensaJuridicaComponent implements OnInit {
   }
 
   checkPermisosAsociarDes() {
-    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    let msg = this.commonsServices.checkPermisos(this.perEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
     } else {
@@ -233,7 +237,7 @@ export class DefensaJuridicaComponent implements OnInit {
   }
 
   checkPermisosCreateDes() {
-    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    let msg = this.commonsServices.checkPermisos(this.perEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
     } else {
@@ -306,6 +310,7 @@ export class DefensaJuridicaComponent implements OnInit {
   }
 
   actualizarDelitosEJG() {
+    this.progressSpinner = true;
     let peticionDelitos: EJGItem = this.body;
     if (peticionDelitos.delitos != null) peticionDelitos.delitos = this.delitosValue.toString();
     this.sigaServices.post("gestionejg_actualizarDelitosEJG", peticionDelitos).subscribe(
@@ -429,7 +434,7 @@ export class DefensaJuridicaComponent implements OnInit {
           this.commonsServices.arregloTildesCombo(this.comboProcedimiento);
           //Valor de la cabecera para procedimiento
           this.comboProcedimiento.forEach(element => {
-            if (element.value == this.bodyInicial.procedimiento) this.procedimientoCabecera = element.label;
+            if (element.value == this.bodyInicial.idPretension) this.procedimientoCabecera = element.label;
           });
         },
         err => {

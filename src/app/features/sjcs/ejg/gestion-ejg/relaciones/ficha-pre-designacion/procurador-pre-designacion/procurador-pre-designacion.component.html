@@ -93,13 +93,13 @@
               <label>{{ "justiciaGratuita.oficio.justificacionExpres.numDesignacion" | translate }}
               </label>
               <input [(ngModel)]="generalBody.numerodesignacion" type="text" class="form-control"
-                [maxLength]="20" [disabled]="!permisoEscritura" (keypress)="numberOnly($event)" pInputText />
+                 [maxLength]="20" [disabled]="!perEscritura" (keypress)="numberOnly($event)" pInputText/> <!--[ngClass]="styleObligatorio(generalBody.numerodesignacion)" -->
             </div>
             <div class="form-group-interlineado col-lg-6 col-md-6">
               <label>{{ "justiciaGratuita.oficio.designaciones.fechaDesignacion" | translate }}
               </label>
-              <app-fecha [(value)]="generalBody.fechaDesigna" [disabled]="!permisoEscritura"
-                (valueChangeSelected)="fillFechaDesigna($event)" (valueChangeInput)="fillFechaDesigna($event)">
+              <app-fecha [(value)]="generalBody.fechaDesigna" [disabled]="!perEscritura"
+                (valueChangeSelected)="fillFechaDesigna($event)" (valueChangeInput)="fillFechaDesigna($event)" [inputStyleClass]="styleObligatorio(generalBody.fechaDesigna)">
               </app-fecha>
             </div>
           </div>
@@ -111,11 +111,11 @@
       <div class="text-right main-button">
         <button pButton (click)="Disassociate()" type="button" icon="fa fa-undo" iconPos="left"
           label="{{ 'censo.tipoCuenta.cargo.desasociar' | translate }}"
-          [disabled]="!permisoEscritura ||  disabledDisassociate()"></button>
+          [disabled]="!perEscritura ||  disabledDisassociate()"></button>
         <button pButton (click)="search()" type="button" icon="fa fa-search" iconPos="left"
-          [disabled]="!permisoEscritura" label="{{ 'general.boton.search' | translate}}"></button>
-        <button pButton (click)="Associate()" type="button" icon="far fa-save" iconPos="left"
-          label="{{ 'general.boton.guardar' | translate}}" [disabled]="!permisoEscritura || disabledSave()"></button>
+          [disabled]="!perEscritura" label="{{ 'general.boton.search' | translate}}"></button>
+        <button pButton (click)="checkPermisosAsso()" type="button" icon="far fa-save" iconPos="left"
+          label="{{ 'general.boton.guardar' | translate}}" [disabled]="!perEscritura || disabledSave()"></button>
       </div>
     </div>
   </div>

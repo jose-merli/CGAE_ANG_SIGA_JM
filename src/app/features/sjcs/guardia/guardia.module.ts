@@ -11,9 +11,15 @@ import { ProgramacionCalendariosModule } from "./programacionCalendarios/program
 import { InscripcionesGuardiaModule } from "./guardias-inscripciones/guardias-inscripciones.module";
 import { GuardiaColegiadoModule } from "./guardia-colegiado/guardia-colegiado.module";
 import { GestionCargasMasivasGuardiaModule } from "./cargas-masivas-guardia/cargas-masivas-guardia.module";
-
+import { TablaGuardiasComponent } from "./guardias-incompatibilidades/buscador-guardia-incompatibilidades/tabla-guardias/tabla-guardias.component";
+import { ButtonModule, ConfirmDialogModule, DropdownModule, GrowlModule, InputTextModule } from "primeng/primeng";
+import { TableModule } from "primeng/table";
+import { CommonModule } from "@angular/common";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { PipeTranslationModule } from "../../../commons/translate/pipe-translation.module";
+import {CheckboxModule} from 'primeng/primeng';
 @NgModule({
-    declarations: [],
+    declarations: [TablaGuardiasComponent],
     imports: [
         routingGuardia,
         BusquedaGuardiasModule,
@@ -25,7 +31,19 @@ import { GestionCargasMasivasGuardiaModule } from "./cargas-masivas-guardia/carg
         InscripcionesGuardiaModule,
         GuardiaColegiadoModule,
         GestionCargasMasivasGuardiaModule,
-        GestionCargasMasivasGuardiaModule
+        GestionCargasMasivasGuardiaModule,
+        CommonModule,
+        FormsModule,
+        PipeTranslationModule,
+        InputTextModule,
+        ButtonModule,
+        GrowlModule,
+        FormsModule,
+        ReactiveFormsModule,
+        ConfirmDialogModule,
+        TableModule,
+        DropdownModule,
+        CheckboxModule
     ],
 
     providers: [

@@ -12,21 +12,28 @@ import { GestionCostesfijosModule } from './costes-fijos/gestion-costesfijos/ges
 import { FundamentosResolucionModule } from './fundamentos-resolucion/fundamentos-resolucion.module';
 import { PrisionesModule } from './prisiones/prisiones.module';
 import { FundamentosCalificacionModule } from './fundamentos-calificacion/fundamentos-calificacion.module';
-import { GestionPartidasComponent } from './partidas/partidas.module';
-import { GestionPartidasJudicialesComponent } from './partidos-judiciales/partidas-judiciales.module';
+
+import { GestionPartidasJudicialesModule} from './partidos-judiciales/partidas-judiciales.module';
 import { ComisariasModule } from './comisarias/comisarias.module';
 import { CalendarioLaboralAgendaModule } from './calendario-laboral-agenda/calendario-laboral-agenda.module';
 import { GestionTiposAsistenciaModule } from './tiposAsistencia/tiposAsistencia.module';
 import { ProcuradoresModule } from './procuradores/procuradores.module';
 import { GestionDocumentacionEJGModule } from './documentacion-ejg/documentacion-ejg.module';
 import { GestionTiposActuacionModule } from './tiposActuacion/tiposActuacion.module';
-import { GestionDestinatariosComponent } from './destinatarios-retenciones/destinatarios.module';
 import { ProcedimientosModule } from './procedimientos/procedimientos.module';
-import { SpinnerModule } from '../../../../../node_modules/primeng/primeng';
+import { ConfirmDialogModule, DropdownModule, GrowlModule, SpinnerModule } from '../../../../../node_modules/primeng/primeng';
 import { RetencionesIrpfModule } from './retenciones-IRPF/retenciones-irpf.module';
-
+import { TableModule } from 'primeng/table';
+import { PartidasModule } from './partidas/partidas.module';
+import { DestinatariosRetencionesComponent } from './destinatarios-retenciones/destinatarios-retenciones.component';
+import { DestinatariosModule } from './destinatarios-retenciones/destinatarios.module';
+import { TablaDestinatariosComponent } from './destinatarios-retenciones/gestion-retenciones/gestion-retenciones.component';
+import { FiltrosRetenciones } from './destinatarios-retenciones/filtros-retenciones/filtrosretenciones.component';
+import { CheckboxModule } from "primeng/checkbox";
+import { FormsModule } from '@angular/forms';
+import { PipeTranslationModule } from '../../../commons/translate/pipe-translation.module';
 @NgModule({
-        declarations: [],
+        declarations: [DestinatariosRetencionesComponent, TablaDestinatariosComponent, FiltrosRetenciones],
         imports: [
                 CommonModule,
                 routingMaestros,
@@ -39,9 +46,7 @@ import { RetencionesIrpfModule } from './retenciones-IRPF/retenciones-irpf.modul
                 GestionModulosModule,
                 PrisionesModule,
                 FundamentosCalificacionModule,
-                GestionPartidasComponent,
                 ProcuradoresModule,
-                GestionPartidasJudicialesComponent,
                 GestionDocumentacionEJGModule,
                 ComisariasModule,
                 CalendarioLaboralAgendaModule,
@@ -50,7 +55,15 @@ import { RetencionesIrpfModule } from './retenciones-IRPF/retenciones-irpf.modul
                 RetencionesIrpfModule,
                 SpinnerModule,
                 GestionTiposActuacionModule,
-                GestionDestinatariosComponent,
+                ConfirmDialogModule,
+                TableModule,
+                PartidasModule,
+                GestionPartidasJudicialesModule,
+                GrowlModule,
+                CheckboxModule,
+                DropdownModule,
+                FormsModule,
+                PipeTranslationModule
         ],
 
         providers: []
