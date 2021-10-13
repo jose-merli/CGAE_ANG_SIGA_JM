@@ -1,5 +1,9 @@
+import { ViewChild } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
+import { MultiSelect } from 'primeng/multiselect';
+import { TranslateService } from '../../../commons/translate';
 import { OldSigaServices } from '../../../_services/oldSiga.service'
+import { FiltrosSeriesFacturaComponent } from './filtros-series-factura/filtros-series-factura.component';
 
 
 @Component({
@@ -11,15 +15,35 @@ import { OldSigaServices } from '../../../_services/oldSiga.service'
 export class SeriesFacturaComponent implements OnInit {
 
   url;
+  datos;
+  msgs;
 
-  constructor(public sigaServices: OldSigaServices) {
-    this.url = sigaServices.getOldSigaUrl("seriesFactura");
+  historico: boolean = false;
+  progressSpinner: boolean = false;
+  buscar: boolean = false; 
+
+  permisoEscritura: any;
+
+  @ViewChild(FiltrosSeriesFacturaComponent) filtros;
+
+  constructor(
+    private translateService: TranslateService
+    //public sigaServices: OldSigaServices
+    ) {
+    // this.url = sigaServices.getOldSigaUrl("seriesFactura");
   }
 
   ngOnInit() {
+    this.buscar = true; // cambiar
   }
 
 
+  searchSeriesFacturas(event): void {
 
+  }
+
+  clear() {
+    this.msgs = [];
+  }
 
 }

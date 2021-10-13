@@ -1,3 +1,17 @@
-<p>
-  tabla-series-factura works!
-</p>
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="card mt-3">
+  <div class="card-body p-0">
+
+    <!-- TABLA RESULTADOS -->
+    
+    
+  </div>
+
+  <div class="card-footer">
+    <div class="text-right main-button">
+      <button pButton (click)="mostrarHistorico()" type="button" icon="fa fa-history" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
+      <button pButton (click)="eliminar()" type="button" icon="fa fa-eraser" iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
+    </div>
+  </div>
+</div>
