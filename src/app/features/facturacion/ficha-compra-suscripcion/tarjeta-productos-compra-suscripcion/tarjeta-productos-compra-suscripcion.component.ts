@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { SortEvent } from 'primeng/api';
 import { Subject, Subscription } from 'rxjs';
@@ -15,6 +15,7 @@ import { procesos_PyS } from '../../../../permisos/procesos_PyS';
 import { SigaStorageService } from '../../../../siga-storage.service';
 import { CommonsService } from '../../../../_services/commons.service';
 import { SigaServices } from '../../../../_services/siga.service';
+import { DatosBancariosItem } from '../../../../models/DatosBancariosItem';
 
 @Component({
   selector: 'app-tarjeta-productos-compra-suscripcion',
@@ -47,16 +48,18 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
   
   @Input("productosTarjeta") productosTarjeta: ListaProductosCompraItem[];
   comboProductos : ListaProductosItems[] = [];
-  newComboComun = [];
   ivaCombo: ComboItem[] ;
+  comboComun: ComboItem[] = [];
 
   cols = [
     { field: "orden", header: "administracion.informes.literal.orden" },
     { field: "descripcion", header: "facturacion.productos.producto" },
     { field: "observaciones", header: "censo.nuevaSolicitud.observaciones" },
-    { field: "cantidad", header: "facturacionSJCS.facturacionesYPagos.cantidad" },
     { field: "precioUnitario", header: "facturacion.productos.precioUnitario" },
+    { field: "cantidad", header: "facturacionSJCS.facturacionesYPagos.cantidad" },
+    { field: "impNeto", header: "facturacion.productos.importeNeto" },
     { field: "iva", header: "facturacion.productos.iva" },
+    { field: "impIva", header: "facturacion.productos.importeIva" },
     { field: "total", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.total" },
   ];
 
@@ -81,6 +84,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
   
   @Input("ficha") ficha: FichaCompraSuscripcionItem;
   @Output() actualizaFicha = new EventEmitter<Boolean>();
+  @ViewChild("productsTable") tablaProductos;
 
   selectedRows: ListaProductosCompraItem[] = [];
   numSelectedRows: number = 0; //Se usa para mostrar visualmente el numero de filas seleccionadas
@@ -89,10 +93,16 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
   rowsPerPage: number = 10; //Define el numero de filas mostradas por pagina
   first = 0;
   buscadores = [];
+  buscadoresProductos = [];
 
-  //Suscripciones
+  
   subscriptionProductosBusqueda: Subscription;
   sidebarVisibilityChange: Subject<ListaProductosCompraItem[]> = new Subject<ListaProductosCompraItem[]>();
+  cuentasBanc: any[];
+  selectedPago: string;
+  totalUnidades: number;
+  datosTarjeta: FichaCompraSuscripcionItem = new FichaCompraSuscripcionItem();
+  comboPagos: any[];
 
   constructor(public sigaServices: SigaServices, 
     private commonsService: CommonsService, 
@@ -112,10 +122,13 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
     else{
       this.productosTarjeta = this.ficha.productos;
     }
+
+    this.datosTarjeta = this.ficha;
     
     this.getPermisoEditarImporte();
     this.getComboProductos();
     this.getComboTipoIva();
+    this.getComboPagos();
     this.getPermisoActualizarProductos();
   }
 
@@ -135,7 +148,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
         this.productosTarjeta = listaProductosCompraDTO.listaProductosCompraItems;
 
         if (listaProductosCompraDTO.error.code == 200) {
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          // this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
@@ -150,6 +163,8 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
         else {
           this.ficha.productos = JSON.parse(JSON.stringify(this.productosTarjeta));
         }
+
+        this.datosTarjeta = this.ficha;
 
         this.progressSpinner = false;
 
@@ -173,6 +188,24 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
       });;
   }
 
+  
+
+  getComboPagos(){
+    this.progressSpinner = true;
+
+    this.sigaServices.get("productosBusqueda_comboFormaPago").subscribe(
+      comboDTO => {
+
+        this.comboPagos = comboDTO.combooItems;
+        this.progressSpinner = false;
+
+      },
+      err => {
+        this.progressSpinner = false;
+      });
+  }
+
+
   getComboProductos(){
     this.progressSpinner = true;
 
@@ -184,7 +217,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
         if (JSON.parse(listaProductosDTO.body).error.code == 500) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         } else {
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          // this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         }
 
         JSON.parse(listaProductosDTO.body).listaProductosItems.forEach(producto => {
@@ -193,6 +226,25 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
           }
         });
 
+        //Apaño temporal ya que si no se hace este reset, la tabla muestra unicamente la primera paginad e productos
+        this.tablaProductos.reset();
+
+        //Se revisan las formas de pago para añadir los "no factuables" y los "No disponible"
+        this.comboProductos.forEach(producto => {
+          if(producto.formapago == null || producto.formapago == ""){
+            if(producto.noFacturable == "1"){
+              producto.formapago = "***No factuable";
+            }
+            else{
+              producto.formapago = "**Forma de pago no disponible";
+            }
+          }
+          else{
+            if(producto.noFacturable == "1"){
+              producto.formapago += ", ***No factuable";
+            }
+          }
+        });
         this.progressSpinner = false;
 
       },
@@ -206,9 +258,10 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
 
     let peticion: FichaCompraSuscripcionItem = new FichaCompraSuscripcionItem();
 
-    peticion = this.ficha;
-    peticion.productos = this.productosTarjeta;
-    this.sigaServices.post("PyS_updateProductosPeticion", peticion).subscribe(
+    // peticion = this.ficha;
+    // peticion.productos = this.productosTarjeta;
+    this.datosTarjeta.productos = this.productosTarjeta;
+    this.sigaServices.post("PyS_updateProductosPeticion", this.datosTarjeta).subscribe(
       n => {
 
         if (n.status == 500) {
@@ -275,25 +328,29 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
     return false;
   }
 
-  //En este método se calcula el total del importe por producto y se actualiza el valor del importe en la compra si se esta creando nueva.
+  //En este método se calcula el total de unidades y del importe de cada producto y se actualiza el valor del importe en la compra si se esta creando nueva.
   checkTotal(){
     let totalNeto = 0;
     let totalIVA = 0;
     let impTotal = 0;
+    this.totalUnidades = 0;
     this.productosTarjeta.forEach(
       el =>{
-        el.total = ((Number(el.cantidad)*Number(el.precioUnitario))*(1 + Number(el.valorIva)/100)).toString()
+        this.totalUnidades += Number(el.cantidad);
+        el.total = ((Number(el.cantidad)*Number(el.precioUnitario))*(1 + Number(el.valorIva)/100)).toString();
+        el.impIva = ((Number(el.cantidad)*Number(el.precioUnitario))*(Number(el.valorIva)/100)).toString();
+        el.impNeto = (Number(el.cantidad)*Number(el.precioUnitario)).toString();
         if(this.ficha.fechaPendiente == null){
           impTotal += Number(el.total);
-          totalNeto += (Number(el.cantidad)*Number(el.precioUnitario));
-          totalIVA += (Number(el.cantidad)*Number(el.precioUnitario))*( Number(el.valorIva)/100);
+          totalNeto += Number(el.impNeto);
+          totalIVA += Number(el.impIva);
         }
       }
     );
     if(this.ficha.fechaPendiente == null){
-      this.ficha.totalNeto = totalNeto;
-      this.ficha.totalIVA = totalIVA;
-      this.ficha.impTotal = impTotal;
+      this.datosTarjeta.totalNeto = totalNeto;
+      this.datosTarjeta.totalIVA = totalIVA;
+      this.datosTarjeta.impTotal = impTotal;
     }
   }
 
@@ -301,7 +358,6 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
   //de la ficha y permisos
   changeEditable(){
     if(this.ficha.fechaAceptada == null && this.ficha.fechaDenegada == null ){
-      this.productoEditable = !this.productoEditable;
       this.cantidadEditable = !this.cantidadEditable;
       if(this.permisoEditarImporte && !this.esColegiado){
         this.precioUnitarioEditable = !this.precioUnitarioEditable;
@@ -321,33 +377,35 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
   }
 
   anadirProducto(selectedProducto){
-    let found = this.productosTarjeta.find( prod => 
-      prod.idproducto == selectedProducto.idproducto && prod.idtipoproducto == selectedProducto.idtipoproducto && prod.idproductoinstitucion == selectedProducto.idproductoinstitucion
-    ) 
-    if(found == null){
-      this.showModal = false;
-      let newProducto: ListaProductosCompraItem = new ListaProductosCompraItem();
-      newProducto.cantidad = "1";
-      newProducto.descripcion = selectedProducto.descripcion;
-      newProducto.orden = (this.productosTarjeta.length+1).toString();
-      newProducto.idproducto = selectedProducto.idproducto;
-      newProducto.idtipoproducto = selectedProducto.idtipoproducto;
-      newProducto.idproductoinstitucion = selectedProducto.idproductoinstitucion;
-      newProducto.precioUnitario = selectedProducto.valor.split(" ")[0];
-      newProducto.precioUnitario = newProducto.precioUnitario.replace(",", "."); //para evitar que utilice comas que se procesan de forma erronea
-      newProducto.iva = selectedProducto.iva;
-      newProducto.valorIva = selectedProducto.valorIva;
-      newProducto.idtipoiva = selectedProducto.idtipoiva;
-      newProducto.idPeticion = this.ficha.nSolicitud;
-      newProducto.noFacturable = selectedProducto.noFacturable;
-      this.productosTarjeta.push(newProducto);
-      this.checkTotal();
-    }
-    else{
-      this.showMessage("error",
-          "****Producto ya presente en la lista",
-          "***El producto seleccionado ya está presente en la solicitud"
-        );
+    if(this.checkFormasPagoComunes(selectedProducto)){
+      let found = this.productosTarjeta.find( prod => 
+        prod.idproducto == selectedProducto.idproducto && prod.idtipoproducto == selectedProducto.idtipoproducto && prod.idproductoinstitucion == selectedProducto.idproductoinstitucion
+      ) 
+      if(found == null){
+        this.showModal = false;
+        let newProducto: ListaProductosCompraItem = new ListaProductosCompraItem();
+        newProducto.cantidad = "1";
+        newProducto.descripcion = selectedProducto.descripcion;
+        newProducto.orden = (this.productosTarjeta.length+1).toString();
+        newProducto.idproducto = selectedProducto.idproducto;
+        newProducto.idtipoproducto = selectedProducto.idtipoproducto;
+        newProducto.idproductoinstitucion = selectedProducto.idproductoinstitucion;
+        newProducto.precioUnitario = selectedProducto.valor.split(" ")[0];
+        newProducto.precioUnitario = newProducto.precioUnitario.replace(",", "."); //para evitar que utilice comas que se procesan de forma erronea
+        newProducto.iva = selectedProducto.iva;
+        newProducto.valorIva = selectedProducto.valorIva;
+        newProducto.idtipoiva = selectedProducto.idtipoiva;
+        newProducto.idPeticion = this.ficha.nSolicitud;
+        newProducto.noFacturable = selectedProducto.noFacturable;
+        this.productosTarjeta.push(newProducto);
+        this.checkTotal();
+      }
+      else{
+        this.showMessage("error",
+            "****Producto ya presente en la lista",
+            "***El producto seleccionado ya está presente en la solicitud de compra"
+          );
+      }
     }
   }
 
@@ -368,7 +426,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
 // total: null
 //   }
 
-  checkFormasPagoComunes(selectedProducto){
+  checkFormasPagoComunes(selectedProducto: ListaProductosItems){
     let error: boolean = false;
 
     let productosLista = JSON.parse(JSON.stringify(this.productosTarjeta));
@@ -385,26 +443,34 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
     //Se extrae el atributo y se separan las distintas formas de pago.
     let formasPagoArrays: any[]= [];
     
-    productosLista.forEach(element => {
-      let prod = this.comboProductos.find( prod => 
-        prod.idproducto == element.idproducto && prod.idtipoproducto == element.idtipoproducto && prod.idproductoinstitucion == element.idproductoinstitucion
-      ) 
-      if(prod.formapago!="" && prod.formapago != null){ 
-        if(element.noFacturable=="1") formasPagoArrays.push(prod.formapago.split(", ").push("No facturable"));
-        else formasPagoArrays.push(prod.formapago.split(", "));
-      }
-      else if(element.noFacturable=="1")formasPagoArrays.push(new Array("No facturable"));
-      else{
-        this.showMessage("error",
-        "***Producto con forma de pago no definida",
-        "***El producto '"+element.descripcion+"' no tiene forma de pago definida y no tiene la propieda de 'No facturable' por lo que no se puede realizar su compra");
-        error = true;
-      }
-    });
+    // productosLista.forEach(element => {
+    //   let prod = this.comboProductos.find( prod => 
+    //     prod.idproducto == element.idproducto && prod.idtipoproducto == element.idtipoproducto && prod.idproductoinstitucion == element.idproductoinstitucion
+    //   ) 
+    //   if(prod.formapago!="" && prod.formapago != null){ 
+    //     if(element.noFacturable=="1") formasPagoArrays.push(prod.formapago.split(", ").push("No facturable"));
+    //     else formasPagoArrays.push(prod.formapago.split(", "));
+    //   }
+    //   else if(element.noFacturable=="1")formasPagoArrays.push(new Array("No facturable"));
+    //   else{
+    //     this.showMessage("error",
+    //     "***Producto con forma de pago no definida",
+    //     "***El producto '"+element.descripcion+"' no tiene forma de pago definida y no tiene la propieda de 'No facturable' por lo que no se puede realizar su compra");
+    //     error = true;
+    //   }
+    // });
 
     let result = [];
-    
-    if(!error){
+
+    if(selectedProducto.formapago != "**Forma de pago no disponible"){
+
+      productosLista.forEach(element => {
+        let prod = this.comboProductos.find( prod => 
+          prod.idproducto == element.idproducto && prod.idtipoproducto == element.idtipoproducto && prod.idproductoinstitucion == element.idproductoinstitucion
+        ) 
+        formasPagoArrays.push(prod.formapago.split(", "));
+      });
+
       //Se comprueba si todas las filas seleccionadas comparten alguna forma de pago.
       result = formasPagoArrays.shift().filter(function(v) {
         return formasPagoArrays.every(function(a) {
@@ -412,9 +478,10 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
         });
       });
     
-      if(result.length>0){
-        this.newComboComun = result;
-        this.anadirProducto(selectedProducto);
+      if(result.length>0 &&  this.checkNoFacturable(productosLista)){
+        // this.comboComun = result;
+        this.comboComun = this.comboPagos.filter(pago => pago.label.contains(result));
+        return true;
       }
       else {
         this.showMessage("error",
@@ -425,7 +492,14 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
               "facturacion.productos.FormasPagoNoCompatibles"
             )
         );
+        return false;
       }
+    }
+    else{ 
+      this.showMessage("error",
+        "***Producto con forma de pago no definida",
+        "***El producto '"+selectedProducto.descripcion+"' no tiene forma de pago definida para este usuario y no tiene la propieda de 'No facturable' por lo que no se puede realizar su compra");
+      return false;
     }
   }
 
@@ -510,6 +584,30 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
     this.numSelectedRows = this.selectedRows.length;
   }
 
+  checkNoFacturable(productos: ListaProductosItems[]){
+    let i=0;
+    //Se comprueba si todos los productos seleccionados son no facturables facturables
+    for(let prod of productos){
+      if(prod.noFacturable == "1")i++;
+    }
+
+    if(i == 0 || i==productos.length){
+      //Si son todos no facturables
+      if(i==productos.length && (this.comboComun.length == 0 ||this.comboComun[this.comboComun.length-1].value != "-1")){
+        let noFacturableItem = new ComboItem();
+        noFacturableItem.label ="**No facturable";
+        noFacturableItem.value = "-1";
+        this.comboComun.push(noFacturableItem);
+        this.selectedPago = "-1";
+      }
+
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+
   moveRow(direccion){
     if(direccion == 'up' && this.selectedRows[0].orden != "1"){
       //Se intercambian los elementos del array correspondientes
@@ -553,6 +651,28 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
     else {
       return true;
     }
+  }
+
+  cargarDatosBancarios() {
+      
+    let peticionBanc = new DatosBancariosItem();
+
+    peticionBanc.historico = false;
+    peticionBanc.idPersona = this.ficha.idPersona;
+    peticionBanc.nifTitular = this.ficha.nif;
+      this.sigaServices
+        .postPaginado("datosBancarios_search", "?numPagina=1", peticionBanc)
+        .subscribe(
+          data => {
+            this.progressSpinner = false;
+            //Revisar para obtener pares "label"/"value"
+            this.cuentasBanc = JSON.parse(data["body"]).datosBancariosItem[0];
+          },
+          error => {
+            this.msgs.push({ severity: "error", summary: "", detail: JSON.stringify(JSON.parse(error["error"]).error.description) });
+            this.progressSpinner = false;
+          }
+        );
   }
 
   customSort(event: SortEvent) {

@@ -14,6 +14,7 @@ export class ListaProductosItems {
     noFacturable: string;
     idtipoiva: string;
     valorIva: string;
+    fechaBajaIva: Date;
 
     constructor() { }
 }

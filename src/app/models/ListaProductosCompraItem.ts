@@ -12,6 +12,8 @@ export class ListaProductosCompraItem{
     noFacturable: string;
     idtipoiva: string;
     valorIva: string;
+    impIva: string;
+    impNeto: string;
 
     idPeticion: string;
 }
