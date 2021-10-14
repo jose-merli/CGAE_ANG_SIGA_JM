@@ -477,6 +477,7 @@ export class SigaServices {
     fichaServicio_comboPeriodicidad: 'combo/comboPeriodicidad',
     fichaServicio_crearEditarPrecios: 'pys/crearEditarPrecios',
     fichaServicio_eliminarPrecios: 'pys/eliminarPrecios',
+    constructorConsultas_obtenerDatosConsulta: 'consultas/pys/obtenerDatosConsulta',
 
     // FOTO
     solicitudModificacion_searchSolModifDatosUseFoto: 'solicitudModificacion/searchSolModifDatosUseFoto',
