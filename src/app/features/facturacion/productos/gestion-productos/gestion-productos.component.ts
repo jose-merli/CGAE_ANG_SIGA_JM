@@ -10,6 +10,8 @@ import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
 import { procesos_PyS } from '../../../../permisos/procesos_PyS';
 import { FichaCompraSuscripcionItem } from '../../../../models/FichaCompraSuscripcionItem';
+import { ListaProductosCompraItem } from '../../../../models/ListaProductosCompraItem';
+import { SigaStorageService } from '../../../../siga-storage.service';
 
 
 @Component({
@@ -50,9 +52,10 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
   //Suscripciones
   subscriptionActivarDesactivarProductos: Subscription;
 
-  constructor(private changeDetectorRef: ChangeDetectorRef, private persistenceService: PersistenceService, 
-    private translateService: TranslateService, private confirmationService: ConfirmationService, 
+  constructor(private changeDetectorRef: ChangeDetectorRef, private persistenceService: PersistenceService,
+    private translateService: TranslateService, private confirmationService: ConfirmationService,
     private sigaServices: SigaServices, private router: Router,
+    private localStorageService: SigaStorageService,
     private commonsService: CommonsService) { }
 
   ngOnInit() {
@@ -343,159 +346,210 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
     });
   }
 
-  getPermisoComprar(){
+  getPermisoComprar() {
     this.commonsService
-			.checkAcceso(procesos_PyS.fichaCompraSuscripcion)
-			.then((respuesta) => {
-				this.permisoCompra = respuesta;
-			})
-			.catch((error) => console.error(error));
+      .checkAcceso(procesos_PyS.fichaCompraSuscripcion)
+      .then((respuesta) => {
+        this.permisoCompra = respuesta;
+      })
+      .catch((error) => console.error(error));
   }
 
-  checkPermisoComprar(){
+  checkPermisoComprar() {
     let msg = this.commonsService.checkPermisos(this.permisoCompra, undefined);
 
     if (msg != undefined) {
       this.msgs = msg;
     } else {
-      if (this.checkNoFacturable()) {
-        if (this.checkFormasPago()) {
-          this.nuevaCompra();
+      if (this.checkProductosCompra()) {
+        this.nuevaCompra();
+      }
+    }
+  }
+
+  checkProductosCompra() {
+    //Se revisan las formas de pago para añadir los "no factuables" y los "No disponible"
+    let productosLista: ListaProductosItems[] = JSON.parse(JSON.stringify(this.selectedRows));
+    productosLista.forEach(producto => {
+      if (producto.formapago == null || producto.formapago == "") {
+        if (producto.noFacturable == "1") {
+          producto.formapago = this.translateService.instant("facturacion.productos.noFacturable");
+        }
+        else {
+          producto.formapago = this.translateService.instant("facturacion.productos.pagoNoDisponible");
+        }
+      }
+      else {
+        if (producto.noFacturable == "1") {
+          producto.formapago += ", "+this.translateService.instant("facturacion.productos.noFacturable");
+        }
+      }
+    });
+
+    for (let prod of productosLista) {
+      if (prod.formapago != this.translateService.instant("facturacion.productos.pagoNoDisponible")) {
+        if (prod.fechaBajaIva == null) {
+
+
+        }
+        else {
+          this.showMessage("error",
+          this.translateService.instant("facturacion.productos.productoIvaDerogado"),
+          this.translateService.instant("facturacion.productos.productoIvaDerogadoDesc"));
+          return false;
+        }
+      }
+      else {
+        this.showMessage("error",
+        this.translateService.instant("facturacion.productos.productoSinFormaPago"),
+        this.translateService.instant("facturacion.productos.productoSinFormaPago"));
+        return false;
+      }
+    }
+    if (this.checkFormasPagoComunes(productosLista)) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
+  checkFormasPagoComunes(productosLista: any[]) {
+    let error: boolean = false;
+
+
+    //Se extrae el atributo y se separan las distintas formas de pago.
+    let formasPagoArrays: any[] = [];
+
+    let result = [];
+
+    let prod;
+    productosLista.forEach(element => {
+      prod = this.productData.find(prod =>
+        prod.idproducto == element.idproducto && prod.idtipoproducto == element.idtipoproducto && prod.idproductoinstitucion == element.idproductoinstitucion
+      )
+      let idformaspago;
+      if (prod.idFormasPago != null) {
+        idformaspago = prod.idFormasPago.split(",");
+      }
+      if (prod.noFacturable == "1") {
+        if (idformaspago != undefined) {
+          idformaspago.push("-1");
+        }
+        else {
+          idformaspago = ["-1"];
+        }
+      }
+      formasPagoArrays.push(idformaspago);
+    });
+
+    //Se comprueba si todas las filas seleccionadas comparten alguna forma de pago.
+    result = formasPagoArrays.shift().filter(function (v) {
+      return formasPagoArrays.every(function (a) {
+        return a.indexOf(v) !== -1;
+      });
+    });
+
+    if (result.length > 0) {
+      //Comprobamos si las formas de pago comunes se corresponden con 
+      //las formas de pago permitidas al usuario ( por internet o por secretaria)
+      // Personal del colegio = pago por secretaria ("S"), colegiado = formas de pago por internet ("A").
+      //Se hace una excepción con la forma de pago seleccionada anteriormente si es una solicitud pendiente.
+      let resultUsu = [];
+      for (let idpago of result) {
+        //"No factuable" se acepta siempre
+        if (idpago == "-1") {
+          resultUsu.push("-1");
+        }
+        else {
+          let index = prod.idFormasPago.split(",").indexOf(idpago);
+         let  esColegiado: boolean = this.localStorageService.isLetrado;
+          if ((esColegiado && prod.formasPagoInternet.split(",")[index] == "A") ||
+            ((!esColegiado && prod.formasPagoInternet.split(",")[index] == "S")) ) {
+            resultUsu.push(prod.idFormasPago.split(",")[index]);
+          }
+        }
+      }
+
+      if (resultUsu.length > 0) {
+        if (this.checkNoFacturable(productosLista)) {
+          return true;
         }
         else {
           this.msgs = [
             {
               severity: "error",
-              summary: this.translateService.instant(
-                "facturacion.productos.ResFormasPagoNoCompatibles"
-              ),
-              detail: this.translateService.instant(
-                "facturacion.productos.FormasPagoNoCompatibles"
-              )
+              summary: this.translateService.instant("facturacion.productos.facturableNoComp"),
+              detail: this.translateService.instant("facturacion.productos.facturableNoComp")
             }
           ];
+          return false;
         }
-      } else {
-        //Pendiente de inserción y sustitucion de etiquetas.
-        this.msgs = [
-          {
-            severity: "error",
-            summary: "Valores de 'no facturable' distintos",
-            detail: "Los productos seleccionados tienen valores distintos en el parametro 'no facturable'"
-          }
-        ];
-        
+      }
+      else {
+        this.showMessage("error",
+          this.translateService.instant("menu.facturacion.noCompatiblePorUsuario"),
+          this.translateService.instant("menu.facturacion.noCompatiblePorUsuarioDesc")
+        );
+        return false;
       }
     }
+    else {
+      this.showMessage("error",
+        this.translateService.instant(
+          "facturacion.productos.ResFormasPagoNoCompatibles"
+        ),
+        this.translateService.instant(
+          "facturacion.productos.FormasPagoNoCompatibles"
+        )
+      );
+      return false;
+    }
+
   }
 
-  nuevaCompra(){
+  nuevaCompra() {
     this.progressSpinner = true;
 
-          sessionStorage.removeItem("FichaCompraSuscripcion");
-          let nuevaCompra = new FichaCompraSuscripcionItem();
-          nuevaCompra.productos = this.selectedRows;
+    sessionStorage.removeItem("FichaCompraSuscripcion");
+    let nuevaCompra = new FichaCompraSuscripcionItem();
+    nuevaCompra.productos = this.selectedRows;
 
-          this.sigaServices.post('PyS_getFichaCompraSuscripcion', nuevaCompra).subscribe(
-            (n) => {
-              this.progressSpinner = false;
+    this.sigaServices.post('PyS_getFichaCompraSuscripcion', nuevaCompra).subscribe(
+      (n) => {
+        this.progressSpinner = false;
 
-              if(JSON.parse(n.body).idFormasPagoComunes==null){
-                //Se comprueba si es no facturable
-                //A tener en cuenta que a esta altura todos los productos seleccionados tienen
-                //el mismo valor "noFacturable"
-                if(this.selectedRows[0].noFacturable=="1"){
-                sessionStorage.setItem("FichaCompraSuscripcion", n.body);
-                this.router.navigate(["/fichaCompraSuscripcion"]);
-                }
-                else {
-                  if(this.selectedRows.length>1){
-                    this.msgs = [
-                      {
-                        severity: "error",
-                        summary: this.translateService.instant(
-                          "facturacion.productos.ResFormasPagoNoCompatibles"
-                        ),
-                        detail: this.translateService.instant(
-                          "facturacion.productos.FormasPagoNoCompatibles"
-                        )
-                      }
-                    ];
-                  }
-                  else {
-                    //Sustituir por etiquetas
-                    this.msgs = [
-                      {
-                        severity: "error",
-                        summary: "El usuario no puede realizar compras de este producto",
-                        detail: "Este producto no tiene formas de pago permitidas para el usuario actual"
-                      }
-                    ];
-                  }
-                }
-              }
-              else{
-                sessionStorage.setItem("FichaCompraSuscripcion", n.body);
-                this.router.navigate(["/fichaCompraSuscripcion"]);
-              }
-            },
-            (err) => {
-              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-              this.progressSpinner = false;
-            }
-          );
+        if (n.status == 200) {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+
+          sessionStorage.setItem("FichaCompraSuscripcion", n.body);
+          this.router.navigate(["/fichaCompraSuscripcion"]);
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+      },
+      (err) => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        this.progressSpinner = false;
+      }
+    );
   }
 
-  checkNoFacturable(){
-    let total = 0;
-    //Se comprueba si todos los productos seleccionados son no facturables
-    for(let i = 0; i<this.selectedRows.length; i++){
-      total += this.selectedRows[i].noFacturable; 
+  checkNoFacturable(productos: ListaProductosItems[]) {
+    let i = 0;
+    //Se comprueba si todos los productos seleccionados son no facturables facturables
+    for (let prod of productos) {
+      if (prod.noFacturable == "1") i++;
     }
-    //Si son todos no facturables
-    if(total==this.selectedRows.length || total==0){
+
+    if (i == 0 || i == productos.length) {
       return true;
     }
-    else return false;
-  }
-
-  checkFormasPago(){
-    let error: boolean = false;
-
-    //Se extrae el atributo y se separan las distintas formas de pago.
-    let formasPagoArrays: any[]= [];
-    this.selectedRows.forEach(element => {
-      if(element.formapago!=""){ 
-        if(element.noFacturable=="1") formasPagoArrays.push(element.formapago.split(", ").push("No facturable"));
-        else formasPagoArrays.push(element.formapago.split(", "));
-      }
-      else if(element.noFacturable=="1")formasPagoArrays.push(new Array("No facturable"));
-      else{
-        //Asignar etiqueta
-        this.msgs = [
-          {
-            severity: "error",
-            summary: "***Producto con forma de pago no definida",
-            detail: "***El producto '"+element.descripcion+"' no tiene forma de pago definida y no tiene la propieda de 'No facturable' por lo que no se puede realizar su compra"
-          }
-        ];
-        error = true;
-      }
-    });
-
-    let result = [];
-    
-    if(!error){
-      //Se comprueba si todas las filas seleccionadas comparten alguna forma de pago.
-      result = formasPagoArrays.shift().filter(function(v) {
-        return formasPagoArrays.every(function(a) {
-            return a.indexOf(v) !== -1;
-        });
-      });
+    else {
+      return false;
     }
-
-    return result.length>0;
   }
+
 
   //FIN SERVICIOS
 }
