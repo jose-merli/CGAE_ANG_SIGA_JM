@@ -37,17 +37,22 @@
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
               <div>
-                <!-- <div *ngIf="col.field != 'sjcs'">
+                <div *ngIf="col.field == 'fechaconfirmacion'">
+                  <span>
+                    {{dato[col.field] | date: 'dd/MM/yyyy'}}
+                  </span>
+                </div>
+                <div *ngIf="col.field == 'fechasolicitud'">
+                  <span>
+                    {{dato[col.field] | date: 'dd/MM/yyyy'}}
+                  </span>
+                </div>
+
+                <div *ngIf="col.field != 'fechasolicitud' && col.field != 'fechaconfirmacion'">
                   <span>
                     {{dato[col.field]}}
                   </span>
                 </div>
-                <div *ngIf="checkPre(dato) && col.field == 'sjcs'">
-                  <span *ngIf="isPreDesigna == true" class="enlace"
-                    (click)="navigateToFichaPre()">{{dato[col.field]}}</span>
-                  <span *ngIf="isPreDesigna == false" class="enlace"
-                    (click)="checkPermisosConsultEditRelacion(dato)">{{dato[col.field]}}</span>
-                </div> -->
                
               </div>
 

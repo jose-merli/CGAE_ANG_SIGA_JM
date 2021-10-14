@@ -150,6 +150,8 @@ export let endpoints_guardia: any = {
     guardiasColegiado_updateGuardiaColeg: "guardiaColegiado/updateGuardiaColeg",
     guardiasColegiado_insertGuardiaColeg: "guardiaColegiado/insertGuardiaColeg",
     guardiasColegiado_sustituirGuardiaColeg: "guardiaColegiado/sustituirGuardiaColeg",
+    guardiasColegiado_idConjuntoGuardia: "guardiaColegiado/getIdConjuntoGuardia",
+    guardiasColegiado_getPermutasColegiado: "guardiaColegiado/getPermutasColegiado",
 
 
     //CARGAS MASIVAS GUARDIA
