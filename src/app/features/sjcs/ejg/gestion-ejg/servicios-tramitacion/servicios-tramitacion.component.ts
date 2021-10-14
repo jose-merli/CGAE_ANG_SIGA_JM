@@ -402,10 +402,8 @@ export class ServiciosTramitacionComponent implements OnInit {
 
   rest() {
     this.body = this.bodyInicial;
-    this.usuarioBusquedaExpress = {
-      numColegiado: this.body.numColegiado,
-      nombreAp: this.body.apellidosYNombre
-    };
+    this.usuarioBusquedaExpress.numColegiado = this.body.numColegiado;
+    this.usuarioBusquedaExpress.nombreAp = this.body.apellidosYNombre;
     this.art27 = this.initArt27;
   }
 
