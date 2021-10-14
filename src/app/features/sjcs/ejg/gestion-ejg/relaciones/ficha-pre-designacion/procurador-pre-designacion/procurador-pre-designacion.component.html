@@ -111,11 +111,11 @@
       <div class="text-right main-button">
         <button pButton (click)="Disassociate()" type="button" icon="fa fa-undo" iconPos="left"
           label="{{ 'censo.tipoCuenta.cargo.desasociar' | translate }}"
-          [disabled]="!perEscritura ||  disabledDisassociate()"></button>
+          [disabled]="!permisoProcurador ||  disabledDisassociate()"></button>
         <button pButton (click)="search()" type="button" icon="fa fa-search" iconPos="left"
-          [disabled]="!perEscritura" label="{{ 'general.boton.search' | translate}}"></button>
+          [disabled]="!permisoProcurador" label="{{ 'general.boton.search' | translate}}"></button>
         <button pButton (click)="checkPermisosAsso()" type="button" icon="far fa-save" iconPos="left"
-          label="{{ 'general.boton.guardar' | translate}}" [disabled]="!perEscritura || disabledSave()"></button>
+          label="{{ 'general.boton.guardar' | translate}}" [disabled]="!permisoProcurador || disabledSave()"></button>
       </div>
     </div>
   </div>

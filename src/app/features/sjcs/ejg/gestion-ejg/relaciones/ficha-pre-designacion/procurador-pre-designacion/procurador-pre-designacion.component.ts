@@ -44,6 +44,7 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 	nombreCabecera: string = "";
 
 	@Input() permisoEscritura:boolean;
+	@Input() permisoProcurador:boolean;
 
 	idPersona;
 	openPro: boolean = false;
@@ -111,9 +112,21 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 			this.fechaCabecera = this.generalBody.fechaDesigna;
 		}
 
-		if(this.permisoEscritura)this.perEscritura = true;
+		if(this.permisoProcurador){
+			this.perEscritura = true;
+		  }else{
+			this.perEscritura = false;
+		  }
 		
 		this.progressSpinner = false;
+	}
+
+	ngOnChanges(changes: SimpleChanges): void {
+		if(this.permisoProcurador){
+			this.perEscritura = true;
+		  }else{
+			this.perEscritura = false;
+		  }
 	}
 
 	search() {
@@ -121,9 +134,15 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 			this.showMessage(
 				'error',
 				this.translateService.instant('general.message.incorrect'),
+				this.translateService.instant('general.message.existeDesignaAsociado')
+			);
+		}else if (!this.permisoProcurador) {
+			this.showMessage(
+				'error',
+				this.translateService.instant('general.message.incorrect'),
 				this.translateService.instant('general.message.noTienePermisosRealizarAccion')
 			);
-		} else {
+		}else {
 			sessionStorage.setItem("nuevoProcurador", "true");
 			this.router.navigate(['/busquedaGeneral']);
 		}
@@ -150,41 +169,55 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 	}
 
 	Disassociate() {
-		this.progressSpinner = true;
-		let ejgPeticion: EJGItem = this.persistenceService.getDatos();
-		ejgPeticion.idProcurador = null;
-		ejgPeticion.idInstitucionProc = null;
-		ejgPeticion.fechaDesProc = null;
-		ejgPeticion.numerodesignaproc = null;
-		ejgPeticion.nombreApProcurador = null;
-		this.sigaServices.post('gestionejg_guardarProcuradorEJG', ejgPeticion).subscribe(
-			(n) => {
-				if (n.statusText == "OK") {
-					this.showMessage(
-						'success',
-						this.translateService.instant('general.message.correct'),
-						this.translateService.instant('general.message.accion.realizada')
-					);
-					this.generalBody = new ProcuradorItem();
-					this.fechaCabecera = null;
-					this.nombreCabecera = "";
-					this.persistenceService.setDatos(ejgPeticion);
-					this.ejg = ejgPeticion;
+		if (!this.permisoEscritura) {
+			this.showMessage(
+				'error',
+				this.translateService.instant('general.message.incorrect'),
+				this.translateService.instant('general.message.existeDesignaAsociado')
+			);
+		}else if (!this.permisoProcurador) {
+			this.showMessage(
+				'error',
+				this.translateService.instant('general.message.incorrect'),
+				this.translateService.instant('general.message.noTienePermisosRealizarAccion')
+			);
+		} else {
+			this.progressSpinner = true;
+			let ejgPeticion: EJGItem = this.persistenceService.getDatos();
+			ejgPeticion.idProcurador = null;
+			ejgPeticion.idInstitucionProc = null;
+			ejgPeticion.fechaDesProc = null;
+			ejgPeticion.numerodesignaproc = null;
+			ejgPeticion.nombreApProcurador = null;
+			this.sigaServices.post('gestionejg_guardarProcuradorEJG', ejgPeticion).subscribe(
+				(n) => {
+					if (n.statusText == "OK") {
+						this.showMessage(
+							'success',
+							this.translateService.instant('general.message.correct'),
+							this.translateService.instant('general.message.accion.realizada')
+						);
+						this.generalBody = new ProcuradorItem();
+						this.fechaCabecera = null;
+						this.nombreCabecera = "";
+						this.persistenceService.setDatos(ejgPeticion);
+						this.ejg = ejgPeticion;
+					}
+					else {
+						this.showMessage(
+							'error',
+							this.translateService.instant('general.message.incorrect'),
+							this.translateService.instant('general.mensaje.error.bbdd')
+						);
+					}
+					this.progressSpinner = false;
+				},
+				(err) => {
+					this.progressSpinner = false;
+					this.translateService.instant('general.message.error.realiza.accion');
 				}
-				else {
-					this.showMessage(
-						'error',
-						this.translateService.instant('general.message.incorrect'),
-						this.translateService.instant('general.mensaje.error.bbdd')
-					);
-				}
-				this.progressSpinner = false;
-			},
-			(err) => {
-				this.progressSpinner = false;
-				this.translateService.instant('general.message.error.realiza.accion');
-			}
-		);
+			);
+		}
 	}
 
 	styleObligatorio(evento) {
@@ -200,9 +233,18 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 	}
 
 	checkPermisosAsso() {
-		let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
-		if (msg != undefined) {
-		  this.msgs = msg;
+		if (!this.permisoEscritura) {
+			this.showMessage(
+				'error',
+				this.translateService.instant('general.message.incorrect'),
+				this.translateService.instant('general.message.existeDesignaAsociado')
+			);
+		}else if (!this.permisoProcurador) {
+			this.showMessage(
+				'error',
+				this.translateService.instant('general.message.incorrect'),
+				this.translateService.instant('general.message.noTienePermisosRealizarAccion')
+			);
 		} else {
 		  if (this.disabledAssociate()) {
 			//this.msgs = this.commonsServices.checkPermisoAccion();
