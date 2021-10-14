@@ -7,11 +7,13 @@ import { SaltosCompensacionesGuardiaComponent } from "./saltos-compensaciones-gu
 import { FichaProgramacionComponent } from "./programacionCalendarios/ficha-programacion/ficha-programacion.component";
 import { AsistenciaExpresComponent } from "./guardias-asistencias/asistencia-expres/asistencia-expres.component";
 import { FichaPreasistenciasComponent } from "./guardias-solicitudes-centralita/ficha-preasistencias/ficha-preasistencias.component";
-
 import { GuardiasInscripcionesComponent } from "./guardias-inscripciones/guardias-inscripciones.component";
+import { FichaGuardiasInscripcionesComponent } from './guardias-inscripciones/ficha-guardias-inscripciones/ficha-guardias-inscripciones.component';
 import { GuardiaColegiadoComponent } from "./guardia-colegiado/guardia-colegiado.component";
 import { GestionGuardiaColegiadoComponent } from "./guardia-colegiado/gestion-guardia-colegiado/gestion-guardia-colegiado.component";
 import { CargasMasivasGuardiaComponent } from "./cargas-masivas-guardia/cargas-masivas-guardia.component";
+
+
 
 
 const routesGuardia: Routes = [
@@ -53,6 +55,11 @@ const routesGuardia: Routes = [
         canActivate: [AuthGuard]
     },
     {
+        path: "fichaInscripcionesGuardia",
+        component: FichaGuardiasInscripcionesComponent,
+        canActivate: [AuthGuard]
+    },
+    {
         path: "guardiasColegiado",
         component: GuardiaColegiadoComponent,
         canActivate: [AuthGuard]
@@ -68,6 +75,7 @@ const routesGuardia: Routes = [
         canActivate: [AuthGuard]
     },
         
+
 ];
 
 @NgModule({

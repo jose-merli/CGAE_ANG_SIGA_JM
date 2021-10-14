@@ -19,6 +19,7 @@ export class BuscadorColegiadosComponent implements OnInit {
   msgs: Message[] = [];
   show = false;
   nuevaInscripcion:boolean = false;
+  nuevaInscripcionGuardia:boolean = false;
 
   datos: ColegiadosSJCSItem = new ColegiadosSJCSItem();
 
@@ -47,6 +48,11 @@ export class BuscadorColegiadosComponent implements OnInit {
       this.nuevaInscripcion=true;
     }
 
+     //Comprobar si viene del botón nuevo de busqueda de inscripciones
+     if (sessionStorage.getItem("sesion") =="nuevaInscripcion") {
+      sessionStorage.removeItem('sesion');
+      this.nuevaInscripcionGuardia=true;
+    }
     
 
   }
@@ -82,6 +88,7 @@ export class BuscadorColegiadosComponent implements OnInit {
       let calendarioSelected = sessionStorage.getItem("calendarioSeleccinoado");
       this.router.navigate(["/fichaGuardiasColegiado"]); // TO DO
     }
+
     let guardia = "";
     let turno = "";
 
@@ -139,13 +146,22 @@ export class BuscadorColegiadosComponent implements OnInit {
       //sessionStorage.setItem("turno", JSON.stringify(event));
       sessionStorage.setItem("origin","newInscrip");
       this.router.navigate(["/gestionInscripciones"]);
-    } else{
+
+    } else if(this.nuevaInscripcionGuardia){
+      this.persistenceService.setDatos(event);
+      sessionStorage.setItem("sesion","nuevaInscripcion");
+      this.router.navigate(["/fichaInscripcionesGuardia"]);
+      
+    }else{
       sessionStorage.setItem("buscadorColegiados", JSON.stringify(event));
 
       sessionStorage.getItem('nuevo');
       
       this.location.back();
     }
+
+  
+
   }
 
   showMessage(severity, summary, msg) {
