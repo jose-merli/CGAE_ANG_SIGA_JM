@@ -1,0 +1,170 @@
+<!-- <p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="ficha-comunicacion-container" id="top">
+
+  <div class="header-title">
+    <i class="fa fa-square"></i>
+    <p>{{'menu.justiciaGratuita' | translate}}
+      <i class="fa fa-angle-right"></i>{{ 'menu.justiciaGratuita.GuardiaMenu' | translate}}
+      <i class="fa fa-angle-right"></i>{{ 'formacion.fichaCurso.inscripciones.cabecera' | translate}}
+    </p>
+  </div>
+
+  <div>
+    <app-tarjeta-resumen class="pb-50" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="infoResumen" [enlaces]="enlacesTarjetaResumen" [icono]="iconoTarjetaResumen" (modoEdicionSend)="modoEdicionSend($event)" (isOpen)="isOpenReceive($event)" [manuallyOpened]="manuallyOpened"></app-tarjeta-resumen>
+
+    <app-tarjeta-letrado (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaLetrado]="tarjetaLetrado"  [letradoItem]="letradoItem" 
+      (modoEdicionSend)="modoEdicionSend($event)" [openLetrado]="openLetrado"></app-tarjeta-letrado>
+
+  </div>
+</div>
+<div class="mt-3 text-right main-button " id="down">
+  <button (click)="generate()" [disabled]="disableGenerar" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.generar' | translate}}"></button>
+  <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate }}"></button>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div> -->
+
+<!-- <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl> -->
+<p-growl [(value)]="msgs" life="30000"></p-growl>
+<div class="consultas-container" id="top">
+  <div class="header-title">
+    <i class="fa fa-square"></i>
+    <p>{{'menu.justiciaGratuita' | translate}}
+      <i class="fa fa-angle-right"></i>{{ 'menu.justiciaGratuita.GuardiaMenu' | translate}}
+      <i class="fa fa-angle-right"></i>{{ 'formacion.fichaCurso.inscripciones.cabecera' | translate}}
+    </p>
+  </div>
+  <div id="fijoInscripciones">
+  <app-tarjeta-resumen-fija class="pb-50" *ngIf="permisosTarjetaResumen"  [chincheta]="true" icono="far fa-file-alt" [enlaces]="enlacesTarjetaResumen"
+    titulo="justiciaGratuita.oficio.turnos.inforesumen" [datos]="datosTarjetaResumen" [icono]="iconoTarjetaResumen" (isOpen)="isOpenReceive($event)" [manuallyOpened]="manuallyOpened"></app-tarjeta-resumen-fija>
+    <app-tarjeta-cola class="pb-50" *ngIf="permisosTarjetaCola" chincheta="true" icono="far fa-file-alt" 
+    titulo="justiciaGratuita.oficio.inscripciones.posicionenlacola" [datos]="datos3"></app-tarjeta-cola>
+    </div> 
+  
+  <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
+    <app-tarjeta-letrado (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaLetrado]="tarjetaLetrado"  [letradoItem]="letradoItem" 
+      (modoEdicionSend)="modoEdicionSend($event)" *ngSwitchCase="'letrado'" [openLetrado]="openLetrado"></app-tarjeta-letrado>
+    <app-tarjeta-inscripcion-guardia [datos]="datos" [idPersona]="idPersona" (seleccionadosSend)="seleccionadosSend($event)"  [modoEdicion]="modoEdicion"
+      *ngSwitchCase="'inscripcion'" (resultado)="BotonesInfo($event)"></app-tarjeta-inscripcion-guardia>
+    <app-tarjeta-gestion-inscripcion-guardia [datos]="datos" [idPersona]="idPersona" [modoEdicion]="modoEdicion"
+      *ngSwitchCase="'gestioninscripcion'"></app-tarjeta-gestion-inscripcion-guardia>
+  </div>
+  
+</div>
+<div class="card-footer">
+  <div class="main-button">
+    <div class="form-row">
+      <div class="form-group offset-0 col-lg-3 col-md-3">
+        <label>
+          {{"censo.resultadosSolicitudesModificacion.literal.fecha" | translate}}
+        </label>
+        <!-- <app-fecha [(value)]="datosSelected.fechaActual" *ngIf="!historico" [disabledDelete]="true"
+          (valueChangeInput)="fillFechaCalendar($event)" (valueChangeSelected)="fillFechaCalendar($event)"></app-fecha>
+      </div> -->
+      <app-fecha [(value)]="datos.fechaActual" [disabledDelete]="true"
+          (valueChangeInput)="fillFechaCalendar($event)" (valueChangeSelected)="fillFechaCalendar($event)"></app-fecha>
+      </div>
+
+      <div class="form-group col-4">
+        <label>
+          {{"gratuita.mantenimientoLG.literal.observaciones" | translate}}
+        </label>
+        <!-- <textarea [(ngModel)]="datosSelected.observaciones" class="textareains" name="observaciones"
+          [disabled]="disableAll || historico" class="form-control" pInputTextarea autoResize="autoResize"
+          maxLength="1024"></textarea> -->
+        <textarea [(ngModel)]="datos.observaciones" class="textareains" name="observaciones"
+          class="form-control" pInputTextarea autoResize="autoResize"
+          maxLength="1024"></textarea>
+      </div>
+      <!-- <div class="form-group prueba"> -->
+      <div class="form-group">
+        <label>
+        </label>
+        <!-- <button *ngIf="!historico" pButton
+          [disabled]="!permisos || (selectedDatos.length == 0 || disabledValidar || !isLetrado)"
+          (click)="validar(selectedDatos)" type="button" icon="fa fa-trash-alt" iconPos="left"
+          label="{{ 'general.boton.validar' | translate}}"></button> -->
+        <button pButton
+          [disabled]="modoEdicion || disabledSolicitarAlta"
+          (click)="solicitarAlta()" type="button" 
+          label="{{ 'general.boton.solicitaralta' | translate}}"></button>
+  
+      </div>
+
+      <div class="form-group">
+        <label>
+        </label>
+        <!-- <button *ngIf="!historico" pButton
+          [disabled]="!permisos || (selectedDatos.length == 0 || disabledValidar || !isLetrado)"
+          (click)="validar(selectedDatos)" type="button" icon="fa fa-trash-alt" iconPos="left"
+          label="{{ 'general.boton.validar' | translate}}"></button> -->
+        <button pButton
+          [disabled]="isLetrado || disabledValidar "
+          (click)="validar()" type="button" 
+          label="{{ 'general.boton.validar' | translate}}"></button>
+
+      </div>
+      <div class="form-group">
+        <label>
+        </label>
+        <!-- <button *ngIf="!historico" pButton
+          [disabled]="!permisos || (selectedDatos.length == 0 || disabledDenegar || !isLetrado)"
+          (click)="denegar(selectedDatos)" type="button" icon="fa fa-trash-alt" iconPos="left"
+          label="{{ 'general.boton.denegar' | translate}}"></button> -->
+        <button pButton
+          [disabled]="isLetrado || disabledDenegar "
+          (click)="denegar()" type="button"
+          label="{{ 'general.boton.denegar' | translate}}"></button>
+      </div>
+      <div class="form-group">
+        <label>
+        </label>
+        <!-- <button *ngIf="!historico" pButton
+          [disabled]="!permisos || (selectedDatos.length == 0 || disabledSolicitarBaja)"
+          (click)="solicitarBaja(selectedDatos)" type="button" icon="fa fa-trash-alt" iconPos="left"
+          label="{{ 'general.boton.solicitarbaja' | translate}}"></button> -->
+        <button pButton
+          [disabled]="disabledSolicitarBaja"
+          (click)="solicitarBaja()" type="button" 
+          label="{{ 'general.boton.solicitarbaja' | translate}}"></button>
+      </div>
+      <div class="form-group">
+        <label>
+        </label>
+        <button pButton
+          [disabled]="disabledCambiarFecha || isLetrado"
+          (click)="cambiarFecha()" type="button" 
+          label="{{ 'justiciaGratuita.oficio.inscripciones.cambiarfecha' | translate}}"></button>
+      </div>
+      <div class="form-group">
+        <label>
+        </label>
+        <button *ngIf="!historico" pButton
+          [disabled]="!permisos " (click)="comunicar(selectedDatos)"
+          type="button" label="{{ 'general.boton.comunicar' | translate}}"></button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="deletePlantillaDoc" icon="icon" width="425"
+  #deletePlantillaDoc>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="deletePlantillaDoc.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="deletePlantillaDoc.reject()"></button>
+  </p-footer>
+</p-confirmDialog>-->
+
+
+<div class="mt-3 text-right main-button " id="down">
+  <!--button (click)="generate()" [disabled]="disableGenerar" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+  -->
+    <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate }}"></button>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+
+<!-- <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl> -->

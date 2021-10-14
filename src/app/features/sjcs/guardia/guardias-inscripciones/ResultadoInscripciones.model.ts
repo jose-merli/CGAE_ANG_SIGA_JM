@@ -31,6 +31,7 @@ export class ResultadoInscripciones {
   description: String;
   infoURL: String;
   errorDetail: String;
+  descripcion_obligatoriedad: any;
   
 
   constructor(obj: Object) {
@@ -66,6 +67,6 @@ export class ResultadoInscripciones {
     this.description = obj['description'];
     this.infoURL = obj['infoURL'];
     this.errorDetail = obj['errorDetail'];
-    
+    this.descripcion_obligatoriedad = obj['descripcion_obligatoriedad'];
   }
 }

@@ -45,6 +45,9 @@ export class InscripcionesItems {
   tipoguardias:String;
   orden:String;
   observacionestabla:String;
+  usumodificacion: String;
+  accion: String;
+  validarinscripciones: String;
   fechatabla:Date;
   nifcif:String;
   telefono:String;

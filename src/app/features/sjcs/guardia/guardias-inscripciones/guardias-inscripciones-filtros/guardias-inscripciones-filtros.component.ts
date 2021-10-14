@@ -152,15 +152,16 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit {
             data => {
               colegiadoConectado = JSON.parse(data.body).colegiadoItem[0];
               this.persistenceService.setDatos(colegiadoConectado);
-              sessionStorage.setItem("origin", "newInscrip");
-              this.router.navigate(["/gestionInscripciones"]);
+              sessionStorage.setItem("sesion", "nuevaInscripcion");
+              this.router.navigate(["/fichaInscripcionesGuardia"]);
             })
       });
     }
     else {
-      sessionStorage.setItem("origin", "newInscrip");
+      sessionStorage.setItem("sesion", "nuevaInscripcion");
       this.router.navigate(["/buscadorColegiados"]);
     }
+    this.progressSpinner = false;
   }
 
   onChangeTurno() {
