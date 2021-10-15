@@ -11,7 +11,7 @@ import { CerrarPagoObject } from '../../../../../../models/sjcs/CerrarPagoObject
 import { ParametroItem } from '../../../../../../models/ParametroItem';
 import { ConfirmationService } from 'primeng/api';
 import { Enlace } from '../gestion-pagos.component';
-
+import { ErrorItem } from '../../../../../../models/ErrorItem';
 @Component({
   selector: 'app-datos-pagos',
   templateUrl: './datos-pagos.component.html',
@@ -453,19 +453,60 @@ export class DatosPagosComponent implements OnInit, AfterViewInit {
     }
   }
 
-  deshacerCierre() {
+  confirmDeshacerCierre() {
 
     this.confirmationService.confirm({
       key: "cdDeshacerCierre",
       message: this.translateService.instant("messages.factSJCS.deshacerCierreConfirmation"),
       icon: "fa fa-search",
       accept: () => {
-        alert("GENIAL");
+        this.deshacerCierre();
       },
       reject: () => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant('general.message.accion.cancelada'));
       }
     });
+
+  }
+
+  deshacerCierre() {
+
+    if (!this.disabledDeshacerCierre()) {
+
+      this.progressSpinner = true;
+
+      const payload = new PagosjgItem();
+      payload.idPagosjg = this.idPago;
+
+      this.sigaService.post("pagosjcs_deshacerCierre", payload).subscribe(
+
+        data => {
+
+          const resp: { status: string, id: string, error: ErrorItem } = JSON.parse(data.body);
+
+          if (resp.status == 'KO' && resp.error != null && resp.error.description != null) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(resp.error.description.toString()));
+          } else {
+            this.idEstadoPago = '20';
+            this.idEstadoPagoChange.emit(this.idEstadoPago);
+            this.changePago.emit(true);
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          }
+
+          this.progressSpinner = false;
+        },
+        err => {
+          this.progressSpinner = false;
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        },
+        () => {
+          this.progressSpinner = false;
+          this.historicoEstados();
+        }
+
+      );
+
+    }
 
   }
 
