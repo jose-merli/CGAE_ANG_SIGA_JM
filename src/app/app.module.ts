@@ -478,13 +478,13 @@ import { FichaServiciosComponent } from './features/facturacion/servicios/ficha-
 import { DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent } from './features/facturacion/servicios/ficha-servicios/detalle-tarjeta-datos-generales-ficha-servicios-facturacion/detalle-tarjeta-datos-generales-ficha-servicios-facturacion.component';
 import { DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent } from './features/facturacion/servicios/ficha-servicios/detalle-tarjeta-formas-pagos-ficha-servicios-facturacion/detalle-tarjeta-formas-pagos-ficha-servicios-facturacion.component';
 import { TarjetaSolicitudCompraSuscripcionComponent } from './features/facturacion/ficha-compra-suscripcion/tarjeta-solicitud-compra-suscripcion/tarjeta-solicitud-compra-suscripcion.component';
-import { TarjetaFormaPagoCompraSuscripcionComponent } from './features/facturacion/ficha-compra-suscripcion/tarjeta-forma-pago-compra-suscripcion/tarjeta-forma-pago-compra-suscripcion.component';
 import { CompraProductosComponent } from './features/facturacion/compra-productos/compra-productos.component';
 import { TarjetaFiltroCompraProductosComponent } from './features/facturacion/compra-productos/tarjeta-filtro-compra-productos/tarjeta-filtro-compra-productos.component';
 import { TarjetaListaCompraProductosComponent } from './features/facturacion/compra-productos/tarjeta-lista-compra-productos/tarjeta-lista-compra-productos.component';
 import { DetalleTarjetaPrecioFichaServiciosFacturacionComponent } from './features/facturacion/servicios/ficha-servicios/detalle-tarjeta-precio-ficha-servicios-facturacion/detalle-tarjeta-precio-ficha-servicios-facturacion.component';
 import { TarjetaProductosCompraSuscripcionComponent } from './features/facturacion/ficha-compra-suscripcion/tarjeta-productos-compra-suscripcion/tarjeta-productos-compra-suscripcion.component';
 import { ConstructorConsultasComponent } from './features/informes-comunicaciones/consultas/ficha-consulta/constructor-consultas/constructor-consultas.component';
+import { TarjetaFacturaCompraSuscripcionComponent } from './features/facturacion/ficha-compra-suscripcion/tarjeta-factura-compra-suscripcion/tarjeta-factura-compra-suscripcion.component';
 
 @NgModule({
 	declarations: [
@@ -882,13 +882,13 @@ import { ConstructorConsultasComponent } from './features/informes-comunicacione
 		FichaCompraSuscripcionComponent,
 		DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent,
 		TarjetaSolicitudCompraSuscripcionComponent,
-		TarjetaFormaPagoCompraSuscripcionComponent,
 		CompraProductosComponent,
 		TarjetaFiltroCompraProductosComponent,
 		TarjetaListaCompraProductosComponent,
 		DetalleTarjetaPrecioFichaServiciosFacturacionComponent,
 		TarjetaProductosCompraSuscripcionComponent,
-		ConstructorConsultasComponent
+		ConstructorConsultasComponent,
+		TarjetaFacturaCompraSuscripcionComponent
 	],
 	imports: [
 		Paginador3Module,

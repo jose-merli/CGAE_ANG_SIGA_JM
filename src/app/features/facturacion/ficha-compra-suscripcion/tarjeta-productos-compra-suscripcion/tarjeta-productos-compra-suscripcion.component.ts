@@ -46,7 +46,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
     { field: "formapago", header: "facturacion.productos.formapago" },
   ];
 
-  @Input("productosTarjeta") productosTarjeta: ListaProductosCompraItem[];
+  productosTarjeta: ListaProductosCompraItem[] = [];
   comboProductos: ListaProductosItems[] = [];
   ivaCombo: ComboItem[];
   comboComun: ComboItem[] = [];
@@ -103,17 +103,14 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
   selectedPago: string;
   totalUnidades: number;
   datosTarjeta: FichaCompraSuscripcionItem = new FichaCompraSuscripcionItem();
+  pagoCabecera: string;
 
   constructor(public sigaServices: SigaServices,
     private commonsService: CommonsService,
     private translateService: TranslateService,
     private cdRef: ChangeDetectorRef,
     private localStorageService: SigaStorageService,
-    private router: Router) {
-    this.sidebarVisibilityChange.subscribe((value) => {
-      this.productosTarjeta = value
-    });
-  }
+    private router: Router) {}
 
   ngOnInit() {
     this.getComboProductos();
@@ -534,7 +531,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
           let index = prod.idFormasPago.split(",").indexOf(idpago);
           if((this.esColegiado && prod.formasPagoInternet.split(",")[index] == "A") ||
           ((!this.esColegiado && prod.formasPagoInternet.split(",")[index] == "S")) ||
-          (this.ficha.productos[0].noFacturable =="0" && prod.idFormasPago.split(",")[index] == this.ficha.idFormaPagoSeleccionada)){
+          (productosLista[0].noFacturable =="0" && prod.idFormasPago.split(",")[index] == this.ficha.idFormaPagoSeleccionada)){
             resultUsu.push(prod.idFormasPago.split(",")[index]);
           }
         }
@@ -605,6 +602,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
         i++;
       }
       this.selectedRows = [];
+      this.numSelectedRows = 0;
       this.checkTotal();
       this.checkFormasPagoComunes(this.productosTarjeta);
     }
@@ -648,6 +646,18 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
     } else {
       this.selectedRows = [];
       this.numSelectedRows = 0;
+    }
+  }
+
+  newFormaPagoCabecera(){
+    if(this.selectedPago != null){
+      let pago  = this.comboComun.find( el => el.value==this.selectedPago);
+      if(pago != undefined){
+        this.pagoCabecera = pago.label.toString();
+      }
+      else{
+        this.pagoCabecera = this.translateService.instant("menu.facturacion.noFacturable");
+      }
     }
   }
 
