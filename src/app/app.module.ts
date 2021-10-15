@@ -485,6 +485,9 @@ import { DetalleTarjetaPrecioFichaServiciosFacturacionComponent } from './featur
 import { TarjetaProductosCompraSuscripcionComponent } from './features/facturacion/ficha-compra-suscripcion/tarjeta-productos-compra-suscripcion/tarjeta-productos-compra-suscripcion.component';
 import { ConstructorConsultasComponent } from './features/informes-comunicaciones/consultas/ficha-consulta/constructor-consultas/constructor-consultas.component';
 import { TarjetaFacturaCompraSuscripcionComponent } from './features/facturacion/ficha-compra-suscripcion/tarjeta-factura-compra-suscripcion/tarjeta-factura-compra-suscripcion.component';
+import { QueryBuilderModule } from '@syncfusion/ej2-angular-querybuilder';
+import { enableRipple } from '@syncfusion/ej2-base';
+enableRipple(true);
 
 @NgModule({
 	declarations: [
@@ -959,7 +962,8 @@ import { TarjetaFacturaCompraSuscripcionComponent } from './features/facturacion
 		OficioModule,
 		BusquedaAsuntosModule,
 		Paginador2Module,
-		OrderListModule,
+		QueryBuilderModule,
+		OrderListModule
 	],
 
 	exports: [DigitDecimaNumberDirective],
