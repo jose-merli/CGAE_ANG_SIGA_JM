@@ -1,12 +1,13 @@
-import { Output } from '@angular/core';
+import { HostListener, Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { Component, Input, OnInit } from '@angular/core';
 import { MultiSelect } from 'primeng/multiselect';
 import { TranslateService } from '../../../../commons/translate';
-import { SeriesFacturacionItem } from '../../../../models/SeriesFacturacionItem';
+import { SerieFacturacionItem } from '../../../../models/SeriesFacturacionItem';
 import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
+import { KEY_CODE } from '../../../administracion/auditoria/usuarios/auditoria-usuarios.component';
 
 @Component({
   selector: 'app-filtros-series-factura',
@@ -14,6 +15,8 @@ import { SigaServices } from '../../../../_services/siga.service';
   styleUrls: ['./filtros-series-factura.component.scss']
 })
 export class FiltrosSeriesFacturaComponent implements OnInit {
+
+  msgs;
 
   @Input() permisos;
   @Input() permisoEscritura;
@@ -33,7 +36,7 @@ export class FiltrosSeriesFacturaComponent implements OnInit {
   comboContadorFacturasRectificativas = [];
 
   
-  body: SeriesFacturacionItem = new SeriesFacturacionItem();
+  body: SerieFacturacionItem = new SerieFacturacionItem();
 
   constructor(
     private translateService: TranslateService,
@@ -70,8 +73,6 @@ export class FiltrosSeriesFacturaComponent implements OnInit {
   // Combos
 
   getComboCuentaBancaria() {
-    this.progressSpinner=true;
-
     this.sigaServices.get("facturacionPyS_comboCuentaBancaria").subscribe(
       n => {
         this.comboCuentaBancaria = n.combooItems;
@@ -112,8 +113,6 @@ export class FiltrosSeriesFacturaComponent implements OnInit {
       n => {
         this.comboTiposServicios = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboTiposServicios);
-      
-        console.log(this.comboTiposServicios);
       },
       err => {
         console.log(err);
@@ -190,19 +189,48 @@ export class FiltrosSeriesFacturaComponent implements OnInit {
   // Buttons
 
   focusInputField(someMultiselect: MultiSelect) {
-    /*
     setTimeout(() => {
       someMultiselect.filterInputChild.nativeElement.focus();
     }, 300);
-    */
   }
 
   checkPermisosIsNuevo() { }
 
-  clear() { }
+  clear() { 
+    this.msgs = [];
+  }
 
-  clearFilters() { }
+  clearFilters() {
+    this.goTop();
+  }
 
-  isBuscar() { }
+  isBuscar() {
+    this.busqueda.emit(false);
+  }
+
+  goTop() {
+    document.children[document.children.length - 1]
+    let top = document.getElementById("top");
+    if (top) {
+      top.scrollIntoView();
+      top = null;
+    }
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
   
+  //búsqueda con enter
+  @HostListener("document:keypress", ["$event"])
+  onKeyPress(event: KeyboardEvent) {
+    if (event.keyCode === KEY_CODE.ENTER) {
+      this.isBuscar();
+    }
+  }
 }
