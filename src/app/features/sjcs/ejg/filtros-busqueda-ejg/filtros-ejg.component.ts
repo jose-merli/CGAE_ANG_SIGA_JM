@@ -649,7 +649,7 @@ export class FiltrosEjgComponent implements OnInit {
         }
 
         this.busqueda.emit(false);
-        this.body.dictamen = ""
+        this.body.dictamen = "";
       }
 
     }
@@ -674,6 +674,8 @@ export class FiltrosEjgComponent implements OnInit {
     this.persistenceService.clearFiltros();
     this.inputNumero.nativeElement.focus();
     this.body.annio = new Date().getFullYear().toString();
+
+    this.bodyDictamen = [];
 
     this.getComboColegio();
 
