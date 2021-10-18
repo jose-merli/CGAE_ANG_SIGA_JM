@@ -126,25 +126,25 @@
 </div>
 
 <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" icon="fa fa-question-circle" width="425"
-  key="cdCreateRepresentante" #cdCreateRepresentante>
+  key="cdCreateAbogado" #cdCreateAbogado>
   <p-footer>
-    <button type="button" pButton icon="fa-check" label="Si" (click)="cdCreateRepresentante.accept()"></button>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="cdCreateAbogado.accept()"></button>
     <button type="button" pButton icon="fa-close" label="No" (click)="reject()"></button>
   </p-footer>
 </p-confirmDialog>
 
 <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" icon="fa fa-question-circle" width="425"
-  key="cdRepresentanteAssociate" #cdRepresentanteAssociate>
+  key="cdAbogadoAssociate" #cdAbogadoAssociate>
   <p-footer>
-    <button type="button" pButton icon="fa-check" label="Si" (click)="cdRepresentanteAssociate.accept()"></button>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="cdAbogadoAssociate.accept()"></button>
     <button type="button" pButton icon="fa-close" label="No" (click)="rejectAssociate()"></button>
   </p-footer>
 </p-confirmDialog>
 
 <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" icon="fa fa-question-circle" width="425"
-  key="cdRepresentanteDisassociate" #cdRepresentanteDisassociate>
+  key="cdAbogadoDisassociate" #cdAbogadoDisassociate>
   <p-footer>
-    <button type="button" pButton icon="fa-check" label="Si" (click)="cdRepresentanteDisassociate.accept()"></button>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="cdAbogadoDisassociate.accept()"></button>
     <button type="button" pButton icon="fa-close" label="No" (click)="rejectDisassociate()"></button>
   </p-footer>
 </p-confirmDialog>
