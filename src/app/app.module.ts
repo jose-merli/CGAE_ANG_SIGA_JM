@@ -69,6 +69,7 @@ import { PickListModule } from "primeng/picklist";
 import { FileUploadModule } from "primeng/fileupload";
 import { KeyFilterModule } from 'primeng/keyfilter';
 import { EditorModule } from '@tinymce/tinymce-angular';
+import {OrderListModule} from 'primeng/orderlist';
 
 
 // Modulo de censo
@@ -459,6 +460,7 @@ import { FichaCambioLetradoComponent } from './features/sjcs/oficio/designacione
 import { LetradoEntranteComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/ficha-cambio-letrado/letrado-entrante/letrado-entrante.component';
 import { LetradoSalienteComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/ficha-cambio-letrado/letrado-saliente/letrado-saliente.component';
 
+//PRODUCTOS Y SERVICIOS
 import { TiposProductosComponent } from './features/facturacion/maestros/tipos-productos/tipos-productos.component';
 import { TiposServiciosComponent } from './features/facturacion/maestros/tipos-servicios/tipos-servicios.component';
 import { ProductosComponent } from './features/facturacion/productos/productos.component';
@@ -476,11 +478,20 @@ import { FichaServiciosComponent } from './features/facturacion/servicios/ficha-
 import { DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent } from './features/facturacion/servicios/ficha-servicios/detalle-tarjeta-datos-generales-ficha-servicios-facturacion/detalle-tarjeta-datos-generales-ficha-servicios-facturacion.component';
 import { DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent } from './features/facturacion/servicios/ficha-servicios/detalle-tarjeta-formas-pagos-ficha-servicios-facturacion/detalle-tarjeta-formas-pagos-ficha-servicios-facturacion.component';
 import { TarjetaSolicitudCompraSuscripcionComponent } from './features/facturacion/ficha-compra-suscripcion/tarjeta-solicitud-compra-suscripcion/tarjeta-solicitud-compra-suscripcion.component';
-import { TarjetaFormaPagoCompraSuscripcionComponent } from './features/facturacion/ficha-compra-suscripcion/tarjeta-forma-pago-compra-suscripcion/tarjeta-forma-pago-compra-suscripcion.component';
 import { FichaCuentaBancariaComponent } from './features/facturacion/gestion-cuentas-bancarias/ficha-cuenta-bancaria/ficha-cuenta-bancaria.component';
 import { FiltrosSeriesFacturaComponent } from './features/facturacion/series-factura/filtros-series-factura/filtros-series-factura.component';
 import { TablaSeriesFacturaComponent } from './features/facturacion/series-factura/tabla-series-factura/tabla-series-factura.component';
 import { GestionSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/gestion-series-factura.component';
+import { CompraProductosComponent } from './features/facturacion/compra-productos/compra-productos.component';
+import { TarjetaFiltroCompraProductosComponent } from './features/facturacion/compra-productos/tarjeta-filtro-compra-productos/tarjeta-filtro-compra-productos.component';
+import { TarjetaListaCompraProductosComponent } from './features/facturacion/compra-productos/tarjeta-lista-compra-productos/tarjeta-lista-compra-productos.component';
+import { DetalleTarjetaPrecioFichaServiciosFacturacionComponent } from './features/facturacion/servicios/ficha-servicios/detalle-tarjeta-precio-ficha-servicios-facturacion/detalle-tarjeta-precio-ficha-servicios-facturacion.component';
+import { TarjetaProductosCompraSuscripcionComponent } from './features/facturacion/ficha-compra-suscripcion/tarjeta-productos-compra-suscripcion/tarjeta-productos-compra-suscripcion.component';
+import { ConstructorConsultasComponent } from './features/informes-comunicaciones/consultas/ficha-consulta/constructor-consultas/constructor-consultas.component';
+import { TarjetaFacturaCompraSuscripcionComponent } from './features/facturacion/ficha-compra-suscripcion/tarjeta-factura-compra-suscripcion/tarjeta-factura-compra-suscripcion.component';
+import { QueryBuilderModule } from '@syncfusion/ej2-angular-querybuilder';
+import { enableRipple } from '@syncfusion/ej2-base';
+enableRipple(true);
 
 @NgModule({
 	declarations: [
@@ -878,11 +889,17 @@ import { GestionSeriesFacturaComponent } from './features/facturacion/series-fac
 		FichaCompraSuscripcionComponent,
 		DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent,
 		TarjetaSolicitudCompraSuscripcionComponent,
-		TarjetaFormaPagoCompraSuscripcionComponent,
 		FichaCuentaBancariaComponent,
 		FiltrosSeriesFacturaComponent,
 		TablaSeriesFacturaComponent,
-		GestionSeriesFacturaComponent
+		GestionSeriesFacturaComponent,
+		CompraProductosComponent,
+		TarjetaFiltroCompraProductosComponent,
+		TarjetaListaCompraProductosComponent,
+		DetalleTarjetaPrecioFichaServiciosFacturacionComponent,
+		TarjetaProductosCompraSuscripcionComponent,
+		ConstructorConsultasComponent,
+		TarjetaFacturaCompraSuscripcionComponent
 	],
 	imports: [
 		Paginador3Module,
@@ -953,6 +970,8 @@ import { GestionSeriesFacturaComponent } from './features/facturacion/series-fac
 		OficioModule,
 		BusquedaAsuntosModule,
 		Paginador2Module,
+		QueryBuilderModule,
+		OrderListModule
 	],
 
 	exports: [DigitDecimaNumberDirective],

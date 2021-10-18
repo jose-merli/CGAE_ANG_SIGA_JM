@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { ListaProductosItems } from '../../../../models/ListaProductosItems';
 import { ProductoDetalleItem } from '../../../../models/ProductoDetalleItem';
 import { SigaServices } from '../../../../_services/siga.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-ficha-productos',
@@ -47,7 +48,7 @@ export class FichaProductosComponent implements OnInit, OnDestroy {
   subscriptionProductDetail: Subscription;
   subscriptionCategorySelectValues: Subscription;
 
-  constructor(private router: Router, private sigaServices: SigaServices) { }
+  constructor(private router: Router, private sigaServices: SigaServices, private location: Location) { }
 
   ngOnInit() {
     if (sessionStorage.getItem('productoBuscador')) {
@@ -71,6 +72,7 @@ export class FichaProductosComponent implements OnInit, OnDestroy {
   backTo() {
     sessionStorage.setItem("volver", 'true');
     sessionStorage.removeItem('productoBuscador');
+    if(sessionStorage.getItem("origin") =="Cliente") this.location.back();
     this.router.navigate(['/productos']);
   }
   //FIN METODOS APP

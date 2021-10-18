@@ -4,6 +4,7 @@ import { FichaCompraSuscripcionItem } from '../../../models/FichaCompraSuscripci
 import { SigaServices } from '../../../_services/siga.service';
 import { Message } from 'primeng/components/common/api';
 import { TranslateService } from '../../../commons/translate';
+import { ListaProductosCompraItem } from '../../../models/ListaProductosCompraItem';
 
 @Component({
   selector: 'app-ficha-compra-suscripcion',
@@ -23,6 +24,7 @@ export class FichaCompraSuscripcionComponent implements OnInit {
 
 
   @ViewChild("cliente") tarjCliente;
+  @ViewChild("productos") tarjProductos;
 
 
   constructor(private location: Location, 
@@ -30,15 +32,13 @@ export class FichaCompraSuscripcionComponent implements OnInit {
 
   ngOnInit() {
 
-    
+    sessionStorage.removeItem("origin");
+
     if(sessionStorage.getItem("FichaCompraSuscripcion")){
       this.ficha = JSON.parse(sessionStorage.getItem("FichaCompraSuscripcion"));
       sessionStorage.removeItem("FichaCompraSuscripcion");
       this.getComboFormaPago();
     }
-
-    
-    
   }
 
   //Metodo para obtener los valores del desplegable "Forma de pago" de la tarjeta Forma de pago
@@ -52,7 +52,8 @@ export class FichaCompraSuscripcionComponent implements OnInit {
         let comboPagos = PayMethodSelectValues.combooItems;
         //Revisamos el combo para escoger unicamente el combo con los valores en comun de los productos.
         //Posible optimizacion con la implementacion de un servicio especifico para esta pantalla.
-        let comunes = this.ficha.idFormasPagoComunes.split(",");
+        let comunes = [];
+        if(this.ficha.idFormasPagoComunes != null)comunes = this.ficha.idFormasPagoComunes.split(",");
             comboPagos.forEach(pago => {
               for(let comun of comunes){
                 if(pago.value==comun || pago.value==this.ficha.idFormaPagoSeleccionada.toString) this.comboComun.push(pago);

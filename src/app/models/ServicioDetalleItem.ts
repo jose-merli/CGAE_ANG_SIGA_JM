@@ -29,7 +29,7 @@ export class ServicioDetalleItem {
 
 
     codigoext;
-    nofacturable//hay que crear la columna en la tabla?;
+    nofacturable;
 
 
     constructor() { }

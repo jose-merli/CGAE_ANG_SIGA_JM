@@ -472,6 +472,12 @@ export class SigaServices {
     fichaServicio_obtenerCodigosPorColegio: '/pys/obtenerCodigosPorColegioServicios',
     fichaServicio_comboCondicionSuscripcion: 'combo/CondicionSuscripcion',
     fichaServicio_crearFormaDePago: 'pys/formasPagoServicio',
+    fichaServicio_borrarSuscripcionesBajas: 'pys/borrarSuscripcionesBajas',
+    fichaServicio_obtenerPreciosServicio: 'pys/detalleTarjetaPrecios',
+    fichaServicio_comboPeriodicidad: 'combo/comboPeriodicidad',
+    fichaServicio_crearEditarPrecios: 'pys/crearEditarPrecios',
+    fichaServicio_eliminarPrecios: 'pys/eliminarPrecios',
+    constructorConsultas_obtenerDatosConsulta: 'consultas/pys/obtenerDatosConsulta',
 
     // FOTO
     solicitudModificacion_searchSolModifDatosUseFoto: 'solicitudModificacion/searchSolModifDatosUseFoto',
@@ -674,7 +680,7 @@ export class SigaServices {
     ...endpoints_maestros,
     ...endpoints_guardia,
     ...endpoints_facturacionPyS,
-	...endpoints_PyS,
+    ...endpoints_PyS
   };
 
   private menuToggled = new Subject<any>();

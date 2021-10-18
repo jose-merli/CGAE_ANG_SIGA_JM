@@ -39,7 +39,7 @@
                 <span>{{ filas[filas.length-1].estado }}</span>
               </label>
             </div>
-            <div class="col-3 ml-auto">
+            <div class="d-flex justify-content-start mb-1 ml-auto">
               <i class="fa fa-angle-down ml-auto"></i>
             </div>
           </div>
@@ -112,16 +112,22 @@
         <button pButton *ngIf="ficha.productos == null && esColegiado" (click)="checkSolicitarSuscripcion()" type="button" icon="fa fa-search" iconPos="left"
           label="{{ 'facturacion.productos.solicitarSuscripcion' | translate}}" [disabled]="ficha.fechaSolicitada != null"></button>
       <!-- Aprobar -->
-        <button pButton  (click)="checkAprobar()" type="button" icon="fa fa-search" iconPos="left"
-          label="{{ 'facturacion.productos.aprobar' | translate}}" [disabled]="ficha.fechaAprobada != null"></button>
+        <button pButton *ngIf="!esColegiado"  (click)="checkAprobar()" type="button" icon="fa fa-search" iconPos="left"
+          label="{{ 'facturacion.productos.aprobar' | translate}}" [disabled]="ficha.fechaAceptada != null || ficha.fechaDenegada != null"></button>
       <!-- Denegar/Cancelar -->
         <button *ngIf="!esColegiado" pButton  (click)="checkDenegar()" type="button" icon="fa fa-search" iconPos="left"
-          label="{{ 'general.boton.denegar' | translate}}" [disabled]="ficha.fechaAprobada != null"></button>
+          label="{{ 'general.boton.denegar' | translate}}" [disabled]="ficha.fechaAceptada != null || ficha.fechaDenegada != null"></button>
         <button *ngIf="esColegiado" pButton  (click)="checkDenegar()" type="button" icon="fa fa-search" iconPos="left"
-          label="{{ 'general.boton.cancel' | translate}}" [disabled]="ficha.fechaAprobada != null"></button>
+          label="{{ 'general.boton.cancel' | translate}}" [disabled]="ficha.fechaAceptada != null || ficha.fechaDenegada != null"></button>
       <!-- Anular -->
         <button pButton  (click)="checkSearch()" type="button" icon="fa fa-search" iconPos="left"
-          label="{{ 'general.boton.anular' | translate}}" [disabled]="ficha.fechaAprobada == null && ficha.fechaSolicitadaAnulacion == null"></button>
+          label="{{ 'general.boton.anular' | translate}}" [disabled]="(ficha.fechaAceptada == null && ficha.fechaSolicitadaAnulacion == null) || ficha.fechaAnulada != null "></button>
+      <!-- Facturar -->
+        <button pButton  (click)="checkFacturar()" type="button" icon="fa fa-search" iconPos="left"
+        label="{{ 'general.boton.facturar' | translate}}" [disabled]="ficha.fechaSolicitada == null"></button>
+      <!-- Comunicaciones -->
+        <button pButton  (click)="checkFacturar()" type="button" icon="fa fa-search" iconPos="left"
+        label="{{ 'facturacion.consultamorosos.literal.comunicaciones' | translate}}" [disabled]="ficha.fechaSolicitada == null"></button>
       </div>
     </div>
   </div>

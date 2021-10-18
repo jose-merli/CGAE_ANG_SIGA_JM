@@ -38,6 +38,10 @@ export class FichaConsultaComponent implements OnInit {
 			{
 				key: 'plantillas',
 				activa: false
+			},
+			{
+				key: 'constructor',
+				activa: false
 			}
 		];
 	}

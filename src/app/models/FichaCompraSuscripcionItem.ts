@@ -1,3 +1,4 @@
+import { ListaProductosCompraItem } from "./ListaProductosCompraItem";
 import { ListaProductosItems } from "./ListaProductosItems";
 
 export class FichaCompraSuscripcionItem {
@@ -11,7 +12,7 @@ export class FichaCompraSuscripcionItem {
     nif: string;
 
     //TARJETA SOLICITUD
-    nSolicitud: string;
+    nSolicitud: string; //Equivaldria al idpeticion de la tabla PYS_PETICIONCOMPRASUSCRIPCION
     usuModificacion: string;
     fechaPendiente: Date;
     fechaDenegada: Date;
@@ -22,16 +23,15 @@ export class FichaCompraSuscripcionItem {
     
     //TARJETA FORMA DE PAGO
     idFormasPagoComunes: string;
-    idFormaPagoSeleccionada: number;
+    idFormaPagoSeleccionada: string;
     totalNeto: number;
     totalIVA: number;
     impTotal: number;
     pendPago: number;
     cuentaBancSelecc: string;
-    noFact: string;
 
     idEstadoPeticion: string;
-    productos: ListaProductosItems[];
+    productos: ListaProductosCompraItem[];
     
     constructor() {}
   }
