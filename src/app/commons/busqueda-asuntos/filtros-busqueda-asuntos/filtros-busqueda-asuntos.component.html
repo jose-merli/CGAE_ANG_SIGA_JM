@@ -199,7 +199,7 @@
                     </div>
     
                 </div>
-                <app-busqueda-colegiado-express (idPersona)="getIdPersona($event)" 
+                <app-busqueda-colegiado-express (idPersona)="getIdPersona($event)" (colegiado)="recuperarColegiado($event)"
                 [numColegiado]="usuarioBusquedaExpress.numColegiado"
                 [nombreAp]="usuarioBusquedaExpress.nombreAp"
                 ></app-busqueda-colegiado-express>
