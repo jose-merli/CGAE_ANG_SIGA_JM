@@ -282,8 +282,6 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
 
     let peticion: FichaCompraSuscripcionItem = new FichaCompraSuscripcionItem();
 
-    // peticion = this.ficha;
-    // peticion.productos = this.productosTarjeta;
     this.datosTarjeta.productos = this.productosTarjeta;
     this.sigaServices.post("PyS_updateProductosPeticion", this.datosTarjeta).subscribe(
       n => {
@@ -297,6 +295,11 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
 
           this.ficha.productos = JSON.parse(JSON.stringify(this.productosTarjeta));
           //this.actualizaFicha.emit();
+          
+          this.cantidadEditable = false;
+          this.precioUnitarioEditable = false;
+          this.ivaEditable = false;
+          this.observacionesEditable = false;
         }
 
         this.progressSpinner = false;
@@ -596,6 +599,10 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
 
   openHideModal() {
     this.showModal = !this.showModal;
+    this.cantidadEditable = false;
+    this.precioUnitarioEditable = false;
+    this.ivaEditable = false;
+    this.observacionesEditable = false;
   }
 
   borrarProducto() {
