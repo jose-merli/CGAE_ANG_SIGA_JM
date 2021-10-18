@@ -277,7 +277,8 @@
         <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
           <td class="text-center" *ngFor="let col of columns">
             <div>
-              <a (click)="anadirProducto(rowData)"><span>{{rowData[col.field]}}</span></a>
+              <a *ngIf="rowData.fechabaja == null" (click)="anadirProducto(rowData)"><span>{{rowData[col.field]}}</span></a>
+              <span *ngIf="rowData.fechabaja != null" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{rowData[col.field]}}</span>
             </div>
           </td>
         </tr>

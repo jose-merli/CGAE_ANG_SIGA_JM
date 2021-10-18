@@ -24,9 +24,9 @@ export class FichaCompraSuscripcionItem {
     //TARJETA FORMA DE PAGO
     idFormasPagoComunes: string;
     idFormaPagoSeleccionada: string;
-    totalNeto: number;
-    totalIVA: number;
-    impTotal: number;
+    totalNeto: string;
+    totalIVA: string;
+    impTotal: string;
     pendPago: number;
     cuentaBancSelecc: string;
 

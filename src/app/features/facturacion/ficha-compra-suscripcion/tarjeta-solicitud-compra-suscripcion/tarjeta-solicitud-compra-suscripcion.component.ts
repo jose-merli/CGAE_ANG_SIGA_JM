@@ -139,21 +139,18 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
     //En el caso que se trate de la aprobacion de una compra
     if(this.ficha.productos != null) {
       msg = this.commonsService.checkPermisos(this.permisoAprobarCompra, undefined);
-      // else msg = this.commonsService.checkPermisos(this.permisoAprobarSuscripcion, undefined);
 
       if (msg != null) {
         this.msgs = msg;
       }  else if(this.ficha.idPersona == null){
-        //Etiqueta
         this.showMessage("error",this.translateService.instant("general.message.camposObligatorios"),this.translateService.instant("facturacion.productos.seleccCliente"));
       }
       //Solicitud nueva
       else if(this.ficha.fechaPendiente == null){
         if(this.tarjProductos.selectedPago == null){
-          //Etiqueta
           this.showMessage("error",this.translateService.instant("general.message.camposObligatorios"),this.translateService.instant("facturacion.productos.seleccPago"));
         }
-        if(this.checkProductos()){
+        else if(this.checkProductos()){
           if(this.ficha.productos.length == 0){
             this.showMessage("error",
             this.translateService.instant("facturacion.productos.noBorrarProductos"),
@@ -165,7 +162,6 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
           }
         }else {
           this.aprobarCompra();
-          // else this.aprobarSuscripcion();
         }
       }
       else{

@@ -77,21 +77,28 @@ export class TarjetaFacturaCompraSuscripcionComponent implements OnInit {
   }
 
   openTab(selectedRow) {
-    this.progressSpinner = true;
-    sessionStorage.setItem("FichaCompraSuscripcion", JSON.stringify(this.ficha));
-    sessionStorage.setItem("origin", "Compra");
-    this.router.navigate(["/fichaProductos"]); //Cambiar direccion a la ficha de facturas y añadir item con informacion necesaria para inicializar la ficha
+    // this.progressSpinner = true;
+    // sessionStorage.setItem("FichaCompraSuscripcion", JSON.stringify(this.ficha));
+    // sessionStorage.setItem("origin", "Compra");
+    // this.router.navigate(["/fichaProductos"]); //Cambiar direccion a la ficha de facturas y añadir item con informacion necesaria para inicializar la ficha
+    this.msgs = [
+      {
+        severity: "info",
+        summary: "En proceso",
+        detail: "Ficha no implementada actualmente"
+      }
+    ];
   }
 
   getFacturasPeticion(){
-    this.sigaServices.getParam("productosBusqueda_busqueda","?idPeticion="+this.ficha.nSolicitud).subscribe(
+    this.sigaServices.getParam("PyS_getFacturasPeticion","?idPeticion="+this.ficha.nSolicitud).subscribe(
       listaFacturasPeticionDTO => {
 
-        if (JSON.parse(listaFacturasPeticionDTO.body).error.code == 500) {
+        if (listaFacturasPeticionDTO.error != null) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         } else {
           // this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.facturasTarjeta = JSON.parse(listaFacturasPeticionDTO.body).listaFacturasPeticionItems;
+          this.facturasTarjeta = listaFacturasPeticionDTO.listaFacturasPeticionItem;
           for(let factura of this.facturasTarjeta){
             let estado = this.comboEstadosFac.find(el =>
               el.value == factura.estado.toString()

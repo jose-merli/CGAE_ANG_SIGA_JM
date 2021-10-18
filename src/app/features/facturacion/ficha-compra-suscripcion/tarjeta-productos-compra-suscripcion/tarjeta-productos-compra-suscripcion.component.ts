@@ -115,21 +115,19 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
   ngOnInit() {
     this.getComboProductos();
     this.getComboPagos();
-    this.getComboTipoIva();
     this.getPermisoEditarImporte();
     this.getPermisoActualizarProductos();
+    this.getComboTipoIva();
 
     if (this.ficha.fechaPendiente != null) {
+      //Se recomenda añadir un procesamiento asincrono
+      //mediante promesa de los combos de productos y combopagos
       this.getProductosCompra();
     }
     else {
       this.productosTarjeta = this.ficha.productos;
     }
-
     this.datosTarjeta = this.ficha;
-
-
-    
   }
 
   ngOnDestroy() {
@@ -169,6 +167,13 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
             this.selectedPago = this.ficha.idFormaPagoSeleccionada.toString();
             this.checkFormasPagoComunes(this.productosTarjeta);
             }
+          }
+          this.newFormaPagoCabecera();
+
+          for(let productoTarj of this.productosTarjeta){
+            productoTarj.impNeto = Number(productoTarj.impNeto).toFixed(2);
+            productoTarj.precioUnitario = Number(productoTarj.precioUnitario).toFixed(2);
+
           }
 
           this.datosTarjeta = this.ficha;
@@ -230,11 +235,15 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
           // this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         }
 
-        JSON.parse(listaProductosDTO.body).listaProductosItems.forEach(producto => {
-          if (producto.fechabaja == null) {
-            this.comboProductos.push(producto);
-          }
-        });
+        //Descomentar esto y comentar el codigo de abajo asignando el valor de comboProductos
+        //Si se quiere mostrar unicamente productos no derogados
+        // JSON.parse(listaProductosDTO.body).listaProductosItems.forEach(producto => {
+        //   if (producto.fechabaja == null) {
+        //     this.comboProductos.push(producto);
+        //   }
+        // });
+
+        this.comboProductos = JSON.parse(listaProductosDTO.body).listaProductosItems
 
         //Apaño temporal ya que si no se hace este reset, la tabla muestra unicamente la primera paginad e productos
         this.tablaProductos.reset();
@@ -355,17 +364,17 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
     this.productosTarjeta.forEach(
       el => {
         this.totalUnidades += Number(el.cantidad);
-        el.total = ((Number(el.cantidad) * Number(el.precioUnitario)) * (1 + Number(el.valorIva) / 100)).toString();
-        el.impIva = ((Number(el.cantidad) * Number(el.precioUnitario)) * (Number(el.valorIva) / 100)).toString();
-        el.impNeto = (Number(el.cantidad) * Number(el.precioUnitario)).toString();
+        el.total = ((Number(el.cantidad) * Number(el.precioUnitario)) * (1 + Number(el.valorIva) / 100)).toFixed(2);
+        el.impIva = ((Number(el.cantidad) * Number(el.precioUnitario)) * (Number(el.valorIva) / 100)).toFixed(2);
+        el.impNeto = (Number(el.cantidad) * Number(el.precioUnitario)).toFixed(2);
         impTotal += Number(el.total);
         totalNeto += Number(el.impNeto);
         totalIVA += Number(el.impIva);
       }
     );
-    this.datosTarjeta.totalNeto = totalNeto;
-    this.datosTarjeta.totalIVA = totalIVA;
-    this.datosTarjeta.impTotal = impTotal;
+    this.datosTarjeta.totalNeto = totalNeto.toFixed(2);
+    this.datosTarjeta.totalIVA = totalIVA.toFixed(2);
+    this.datosTarjeta.impTotal = impTotal.toFixed(2);
   }
 
   //Se cambia la tabla a su estado editable en todas las columnas que se permitan según el estado 
@@ -545,6 +554,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
               this.comboComun.push(formaPago);
               if(pagoComun == this.ficha.idFormaPagoSeleccionada && this.ficha.productos[0].noFacturable == "0"){
                 this.selectedPago = this.ficha.idFormaPagoSeleccionada;
+                this.newFormaPagoCabecera();
               }
             }
           }
@@ -692,7 +702,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
       //Si son todos no facturables
       if (i == productos.length) {
         let noFacturableItem = new ComboItem();
-        noFacturableItem.label = this.translateService.instant("menu.facturacion.noFacturable");
+        noFacturableItem.label = this.translateService.instant("facturacion.productos.noFacturable");
         noFacturableItem.value = "-1";
         this.comboComun.push(noFacturableItem);
         this.selectedPago = "-1";
