@@ -1133,16 +1133,7 @@ const appRoutes: Routes = [
 		component: PlantillaDocumentoComponent,
 		canActivate: [AuthGuard]
 	},
-	{
-		path: 'consultas',
-		component: ConsultasComponent,
-		canActivate: [AuthGuard]
-	},
-	{
-		path: 'fichaConsulta',
-		component: FichaConsultaComponent,
-		canActivate: [AuthGuard]
-	},
+	
 
 	{
 		path: 'comunicaciones',

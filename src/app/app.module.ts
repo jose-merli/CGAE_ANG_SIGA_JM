@@ -487,10 +487,10 @@ import { TarjetaFiltroCompraProductosComponent } from './features/facturacion/co
 import { TarjetaListaCompraProductosComponent } from './features/facturacion/compra-productos/tarjeta-lista-compra-productos/tarjeta-lista-compra-productos.component';
 import { DetalleTarjetaPrecioFichaServiciosFacturacionComponent } from './features/facturacion/servicios/ficha-servicios/detalle-tarjeta-precio-ficha-servicios-facturacion/detalle-tarjeta-precio-ficha-servicios-facturacion.component';
 import { TarjetaProductosCompraSuscripcionComponent } from './features/facturacion/ficha-compra-suscripcion/tarjeta-productos-compra-suscripcion/tarjeta-productos-compra-suscripcion.component';
-import { ConstructorConsultasComponent } from './features/informes-comunicaciones/consultas/ficha-consulta/constructor-consultas/constructor-consultas.component';
 import { TarjetaFacturaCompraSuscripcionComponent } from './features/facturacion/ficha-compra-suscripcion/tarjeta-factura-compra-suscripcion/tarjeta-factura-compra-suscripcion.component';
 import { QueryBuilderModule } from '@syncfusion/ej2-angular-querybuilder';
 import { enableRipple } from '@syncfusion/ej2-base';
+import { MatSlideToggleModule } from '@angular/material';
 enableRipple(true);
 
 @NgModule({
@@ -786,7 +786,7 @@ enableRipple(true);
 		DetallePlantillaEnvioComponent,
 		TarjetaComunicacionesComponent,
 		ConsultasComponent,
-		FichaConsultaComponent,
+		//FichaConsultaComponent,
 		DatosGeneralesConsultaComponent,
 		ModelosComunicacionesConsultaComponent,
 		PlantillasEnviosConsultasComponent,
@@ -898,7 +898,6 @@ enableRipple(true);
 		TarjetaListaCompraProductosComponent,
 		DetalleTarjetaPrecioFichaServiciosFacturacionComponent,
 		TarjetaProductosCompraSuscripcionComponent,
-		ConstructorConsultasComponent,
 		TarjetaFacturaCompraSuscripcionComponent
 	],
 	imports: [
@@ -964,6 +963,7 @@ enableRipple(true);
 		MatPaginatorModule,
 		MatDatepickerModule,
 		MatNativeDateModule,
+		MatSlideToggleModule,
 		PaginatorModule,
 		GuardiaModule,
 		SjcsModule,
