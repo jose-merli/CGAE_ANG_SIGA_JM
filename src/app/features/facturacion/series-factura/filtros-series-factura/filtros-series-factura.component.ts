@@ -22,7 +22,8 @@ export class FiltrosSeriesFacturaComponent implements OnInit {
   @Input() permisoEscritura;
   @Output() busqueda = new EventEmitter<boolean>();
   
-  progressSpinner: boolean;
+  progressSpinner: boolean = false;
+  historico: boolean = false;
 
   // Combos
 
@@ -51,6 +52,14 @@ export class FiltrosSeriesFacturaComponent implements OnInit {
     this.getCombos();
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisos = this.persistenceService.getPermisos();
+    }
+
+    if (this.persistenceService.getFiltros() != undefined) {
+      this.body = this.persistenceService.getFiltros();
+      this.persistenceService.clearFiltros();
+      this.historico = this.persistenceService.getHistorico();
+
+      this.busqueda.emit(this.historico);
     }
 
     this.progressSpinner = false;
@@ -201,11 +210,33 @@ export class FiltrosSeriesFacturaComponent implements OnInit {
   }
 
   clearFilters() {
+    this.body = new SerieFacturacionItem();
+    this.persistenceService.clearFiltros();
+
     this.goTop();
   }
 
+  checkFilters(): boolean {
+    if (this.body.abreviatura != undefined)
+      this.body.abreviatura = this.body.abreviatura.trim();
+    if (this.body.descripcion != undefined)
+      this.body.descripcion = this.body.descripcion.trim();
+    if (this.body.cuentaBancaria != undefined)
+      this.body.cuentaBancaria = this.body.cuentaBancaria.trim();
+
+    //this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
+
+    return true;
+  }
+
   isBuscar() {
-    this.busqueda.emit(false);
+    if (this.checkFilters()) {
+      this.persistenceService.setFiltros(this.body);
+      this.persistenceService.setHistorico(this.historico);
+      
+      console.log(this.body);
+      this.busqueda.emit(false);
+    }
   }
 
   goTop() {
@@ -226,7 +257,7 @@ export class FiltrosSeriesFacturaComponent implements OnInit {
     });
   }
   
-  //búsqueda con enter
+  // Búsqueda con enter
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {
     if (event.keyCode === KEY_CODE.ENTER) {

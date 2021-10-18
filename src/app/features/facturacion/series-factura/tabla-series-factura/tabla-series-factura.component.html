@@ -5,9 +5,9 @@
 
     <!-- TABLA RESULTADOS -->
     <p-table [autoLayout]="true" [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table
-      class="tabla-listado overflow" [paginator]="true" [rows]="selectedItem" (onRowUnselect)="actualizaSeleccionados(selectedDatos)" [ngClass]="{ 'customCursor' : selectMultiple }"
-      selectionMode="multiple" paginatorPosition="both" id="tablaFoco" (onRowSelect)="checkAddRemesa(selectedDatos)">
-
+      class="tabla-listado overflow" [paginator]="true" [rows]="selectedItem" [ngClass]="{ 'customCursor' : selectMultiple }"
+      selectionMode="multiple" paginatorPosition="both" (onRowSelect)="clickFila($event)" id="tablaFoco">
+        <!-- (onRowUnselect)="actualizaSeleccionados(selectedDatos)" (onRowSelect)="clickFila($event)" -->
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
           <col *ngFor="let col of cols" [style.width]="col.width">
@@ -39,17 +39,59 @@
         <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
           <td class="text-center" *ngFor="let col of columns">
 
-            <div *ngIf="col.field != 'fasesAutomaticas'">
-              <span>{{ dato[col.field] }}</span>
+            <div *ngIf="col.field != 'tiposIncluidos' && col.field != 'fasesAutomaticas'">
+              <span class="historico" *ngIf="isHistorico(dato)">{{ dato[col.field] }}</span>
+              <span *ngIf="!isHistorico(dato)">{{ dato[col.field] }}</span>
+            </div>
+
+            <div *ngIf="col.field == 'tiposIncluidos'">
+              <span class="historico" *ngIf="isHistorico(dato)">{{ collapseTiposIncluidos(dato[col.field]) }}</span>
+              <span *ngIf="!isHistorico(dato)">{{ collapseTiposIncluidos(dato[col.field]) }}</span>
             </div>
 
             <div *ngIf="col.field == 'fasesAutomaticas'" class="text-center">
-              <!--
-              <mat-slide-toggle [(ngModel)]="dato['formaPago']"></mat-slide-toggle>
-              <mat-slide-toggle [(ngModel)]="dato['generarPDF']"></mat-slide-toggle>
-              <mat-slide-toggle [(ngModel)]="dato['envioFacturas']"></mat-slide-toggle>
-              <mat-slide-toggle [(ngModel)]="dato['traspasoFacturas']"></mat-slide-toggle>
+              <div class="form-row">
+
+                <!--
+                <div class="form-group-interlineado col-lg-3 col-md-3">
+                  <label>Pag</label>
+                  <mat-slide-toggle [(ngModel)]="dato['formaPago']"></mat-slide-toggle>
+                </div>
+                <div class="form-group-interlineado col-lg-3 col-md-3">
+                  <label>PDF</label>
+                  <mat-slide-toggle [(ngModel)]="dato['generarPDF']"></mat-slide-toggle>
+                </div>
+                <div class="form-group-interlineado col-lg-3 col-md-3">
+                  <label>Env</label>
+                  <mat-slide-toggle [(ngModel)]="dato['envioFacturas']"></mat-slide-toggle>
+                </div>
+                <div class="form-group-interlineado col-lg-3 col-md-3">
+                  <label>Tra</label>
+                  <mat-slide-toggle [(ngModel)]="dato['traspasoFacturas']"></mat-slide-toggle>
+                </div>
                 -->
+                
+                <div class="form-group-interlineado col-lg-3 col-md-3 mx-3">
+                  <label>Pag</label>
+                  <p-slider [(ngModel)]="dato['formaPago']" min="0" max="1" step="1"></p-slider>
+                </div>
+                <div class="form-group-interlineado col-lg-3 col-md-3 mx-3">
+                  <label>PDF</label>
+                  <p-slider [(ngModel)]="dato['generarPDF']" min="0" max="1" step="1"></p-slider>
+                </div>
+                <div class="form-group-interlineado col-lg-3 col-md-3 mx-3">
+                  <label>Env</label>
+                  <p-slider [(ngModel)]="dato['envioFacturas']" min="0" max="1" step="1"></p-slider>
+                </div>
+                <div class="form-group-interlineado col-lg-3 col-md-3 mx-3">
+                  <label>Tra</label>
+                  <p-slider [(ngModel)]="dato['traspasoFacturas']" min="0" max="1" step="1"></p-slider>
+                </div>
+
+
+                
+              </div>
+              
             </div>
           </td>
         </tr>
@@ -79,8 +121,10 @@
 
   <div class="card-footer">
     <div class="text-right main-button">
-      <button pButton (click)="mostrarHistorico()" type="button" icon="fa fa-history" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
-      <button pButton (click)="eliminar()" type="button" icon="fa fa-eraser" iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
+      <button pButton *ngIf="historico" (click)="toggleHistorico()" type="button" icon="fa fa-history" iconPos="left" label="{{ 'general.message.ocultarHistorico' | translate }}"></button>
+      <button pButton *ngIf="!historico" (click)="toggleHistorico()" type="button" icon="fa fa-history" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate }}"></button>
+
+      <button pButton (click)="eliminar()" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.eliminar' | translate }}"></button>
     </div>
   </div>
 </div>
