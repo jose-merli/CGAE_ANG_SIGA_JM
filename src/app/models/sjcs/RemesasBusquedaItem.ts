@@ -9,10 +9,10 @@ export class RemesasBusquedaItem {
     fechaRecepcionDesde?: string;
     fechaRecepcionHasta?: string;
     idRemesa?: number;
-    numero?: number;
+    numero?: string;
     numeroEJG?: number;
-    prefijo?: number;
-    sufijo?: number;
+    prefijo?: string;
+    sufijo?: string;
     ficha?: boolean;
 
     constructor(){ }

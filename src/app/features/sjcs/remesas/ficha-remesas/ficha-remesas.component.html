@@ -14,19 +14,20 @@
     <div id="botonesAccion" class="text-right main-button ">
       <ng-container *ngIf="acciones">
         <button *ngFor="let i of getAccionesRemesas" (click)="ejecutarAccion(i.idTipoAccionRemesa)" pButton type="button" icon="fa fa-check" iconPos="left"
-        [label]= "i.descripcion" [disabled] = "!guardado"></button>
-       </ng-container>
-       <button (click)="descargarLogErrores()" pButton type="button" icon="fa fa-download" iconPos="left" [disabled] = "!guardado"
-        label="Descargar Log"></button>
+        [label]= "i.descripcion" [disabled] = "!guardado || (tarjetaEJGs.datos == undefined || tarjetaEJGs.datos.length == 0)"></button>
+      </ng-container>
+      <button (click)="descargarLogErrores()" pButton type="button" icon="fa fa-download" iconPos="left"
+      [disabled] = "!guardado || (tarjetaEJGs.datos == undefined || tarjetaEJGs.datos.length == 0)" label="Descargar Log"></button>
       <button (click)="confirmDelete(true)" pButton type="button" icon="fa fa-trash-alt" iconPos="left" [disabled] = "!guardado"
         label="{{ 'general.boton.eliminarRemesa' | translate}}"></button>
       <button (click)="openTab()" pButton type="button"  icon="fa fa-plus"
        iconPos="left"  label="{{ 'general.boton.aniadirExpedientes' | translate}}" [disabled] = "!guardado || !estado"></button>
       <button (click)="confirmDelete(false)" pButton type="button" icon="fa fa-trash-alt" iconPos="left"
+        [disabled] = "((!tarjetaEJGs.selectMultiple || !tarjetaEJGs.selectAll) && (tarjetaEJGs.selectedDatos == undefined || tarjetaEJGs.selectedDatos.length == 0))"
         label="{{ 'general.boton.eliminarExpedientes' | translate}}"></button>
       <button (click)="save()" pButton type="button" icon="fa fa-save" iconPos="left"
         label="{{ 'general.boton.guardar' | translate}}"></button>
-        <button (click)="volver()" pButton type="button" icon="fa fa-angle-left" iconPos="left"
+      <button (click)="volver()" pButton type="button" icon="fa fa-angle-left" iconPos="left"
         label="{{ 'general.boton.volver' | translate}}"></button>
     </div>
   </div>

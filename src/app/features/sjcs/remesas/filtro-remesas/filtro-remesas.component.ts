@@ -137,6 +137,16 @@ export class FiltroRemesasComponent implements OnInit {
     localStorage.setItem('ficha', "nuevo");
   }
 
+  numberOnly(event): boolean {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode >= 48 && charCode <= 57) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
   //búsqueda con enter
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {

@@ -42,14 +42,14 @@
             <div class="form-group-interlineado col-lg-4 col-md-4 px-1">
               <label><strong>{{ 'justiciaGratuita.maestros.calendarioLaboralAgenda.anio' |
                   translate}}</strong></label>
-              <input type="text" [(ngModel)]="filtros.annioEJG" class="form-control" maxLength="4" pInputText>
+              <input type="text" [(ngModel)]="filtros.annioEJG" (keypress)="numberOnly($event)" class="form-control" maxLength="4" pInputText>
             </div>
             /
             <div class="form-group-interlineado col-lg-4 col-md-4 px-1">
               <label><strong>{{ 'gratuita.busquedaAsistencias.literal.numero' |
                   translate}}</strong></label>
               <input type="text" class="form-control" maxLength="10" #inputNumero pInputText
-                [(ngModel)]="filtros.numeroEJG">
+                [(ngModel)]="filtros.numeroEJG" (keypress)="numberOnly($event)">
             </div>
           </div>
         </div>
