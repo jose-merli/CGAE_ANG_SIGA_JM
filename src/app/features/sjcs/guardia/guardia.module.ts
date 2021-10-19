@@ -18,6 +18,8 @@ import { CommonModule } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { PipeTranslationModule } from "../../../commons/translate/pipe-translation.module";
 import {CheckboxModule} from 'primeng/primeng';
+
+
 @NgModule({
     declarations: [TablaGuardiasComponent],
     imports: [

@@ -81,6 +81,8 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
           }
         }
 
+        this.progressSpinner = false;
+
   }
 
   getComboColegios() {

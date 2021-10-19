@@ -167,6 +167,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
   }
   getFiltrosValues(event) {
     this.filtrosValues = JSON.parse(JSON.stringify(event));
+    console.log("FILTROS: ",this.filtrosValues);
     this.convertArraysToStrings();
     this.buscarIns();
 
@@ -341,7 +342,8 @@ export class GuardiasInscripcionesComponent implements OnInit {
                 'message': dat.message,
                 'description': dat.description,
                 'infoURL': dat.infoURL,
-                'errorDetail': dat.errorDetail
+                'errorDetail': dat.errorDetail,
+                'descripcion_obligatoriedad':dat.descripcion_obligatoriedad
               }
             );
             this.respuestaInscripciones.push(responseObject);
@@ -391,32 +393,39 @@ export class GuardiasInscripcionesComponent implements OnInit {
       }
 
       let objCells = [
-        { type: 'text', value: res.ncolegiado },
-        { type: 'text', value: res.apellidosnombre },
-        { type: 'textToolTip', value: [res.nombre,res.abreviatura ]}, //turno
-        { type: 'textToolTip', value: [res.descripcionGuardia, res.nombreGuardia] },
-        { type: 'text', value: res.fechasolicitud },
-        { type: 'text', value: res.fechavalidacion },
-        { type: 'text', value: res.fechasolicitudbaja },
-        { type: 'text', value: res.fechabaja },
-        { type: 'text', value: estadoNombre },
-        { type: 'invisible', value: res.idinstitucion },
-        { type: 'invisible', value: res.idturno },
-        { type: 'invisible', value: res.idguardia },
-        { type: 'invisible', value: res.fechabaja },
-        { type: 'invisible', value: res.observacionessolicitud },
-        { type: 'invisible', value: res.observacionesbaja },
-        { type: 'invisible', value: res.observacionesvalidacion },
-        { type: 'invisible', value: res.observacionesdenegacion },
-        { type: 'invisible', value: res.fechadenegacion },
-        { type: 'invisible', value: res.observacionesvalbaja },
-        { type: 'invisible', value: res.fechavaloralta },
-        { type: 'invisible', value: res.fechavalorbaja },
-        { type: 'invisible', value: res.idpersona },
-        { type: 'invisible', value: res.validarjustificaciones },
-        { type: 'invisible', value: res.validarinscripciones },
-        { type: 'invisible', value: res.estado },
-
+        { type: 'text', value: res.ncolegiado },                                                                 //0
+        { type: 'text', value: res.apellidosnombre },                                                            //1
+        { type: 'textToolTip', value: [res.nombre,res.abreviatura ]}, //turno                                    //2
+        { type: 'textToolTip', value: [res.descripcionGuardia, res.nombreGuardia] },                             //3
+        { type: 'text', value: res.fechasolicitud },                                                             //4
+        { type: 'text', value: res.fechavalidacion },                                                            //5
+        { type: 'text', value: res.fechasolicitudbaja },                                                         //6
+        { type: 'text', value: res.fechabaja },                                                                  //7
+        { type: 'text', value: estadoNombre },                                                                   //8
+        { type: 'invisible', value: res.idinstitucion },                                                         //9
+        { type: 'invisible', value: res.idturno },                                                               //10
+        { type: 'invisible', value: res.idguardia },                                                             //11
+        { type: 'invisible', value: res.fechabaja },                                                             //12
+        { type: 'invisible', value: res.observacionessolicitud },                                                //13
+        { type: 'invisible', value: res.observacionesbaja },                                                     //14
+        { type: 'invisible', value: res.observacionesvalidacion },                                               //15
+        { type: 'invisible', value: res.observacionesdenegacion },                                               //16
+        { type: 'invisible', value: res.fechadenegacion },                                                       //17
+        { type: 'invisible', value: res.observacionesvalbaja },                                                  //18
+        { type: 'invisible', value: res.fechavaloralta },                                                        //19
+        { type: 'invisible', value: res.fechavalorbaja },                                                        //20
+        { type: 'invisible', value: res.idpersona },                                                             //21
+        { type: 'invisible', value: res.validarjustificaciones },                                                //22
+        { type: 'invisible', value: res.validarinscripciones },                                                  //23
+        { type: 'invisible', value: res.estado },                                                                //24
+        { type: 'invisible', value: res.nombre },                                                                //25
+        { type: 'invisible', value: res.nombreGuardia },                                                         //26
+        { type: 'invisible', value: res.abreviatura },                                                           //27
+        { type: 'invisible', value: res.apellidos },                                                             //28
+        { type: 'invisible', value: res.apellidos2 },                                                            //29
+        { type: 'invisible', value: res.fechavaloralta },                                                        //30
+        { type: 'invisible', value: res.fechavalorbaja },                                                        //31
+        { type: 'invisible', value: res.descripcion_obligatoriedad}                                              //32
       ]
         ;
 
@@ -685,8 +694,9 @@ export class GuardiasInscripcionesComponent implements OnInit {
       icon: icon,
       accept: () => {
          //permitirá hacer la baja
-         //this.llamadaBackSolicitarBaja();
+         this.llamadaBackSolicitarBaja();
          console.log("Entró por aquí");
+         
 
       },
       reject: () => {
@@ -718,6 +728,8 @@ export class GuardiasInscripcionesComponent implements OnInit {
                 this.confirmBaja();
               }
             }
+
+            this.llamadaBackSolicitarBaja();
            
             console.log("Se ha realizado correctamente");
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
@@ -727,7 +739,8 @@ export class GuardiasInscripcionesComponent implements OnInit {
             this.progressSpinner = false;
             console.log(err);
             console.log("No se ha podido realizar el servicio de back");
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No puede darse de baja porque tiene trabajos SJCS pendientes.");
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));  
+
   
           },
           () => {
@@ -745,7 +758,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
             this.progressSpinner = false;
 
             console.log("Se ha realizado correctamente");
-            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+            //this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
   
           },
           err => {

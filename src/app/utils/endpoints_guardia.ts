@@ -137,6 +137,13 @@ export let endpoints_guardia: any = {
     guardiasInscripciones_eliminarsaltoscompensaciones: "guardias/inscripciones/eliminarSaltosCompensaciones",
     guardiasInscripciones_buscarTrabajosSJCS: "guardias/inscripciones/buscarTrabajosSJCS",
     guardiasInscripciones_buscarGuardiasAsocTurnos: "guardias/inscripciones/buscarGuardiasAsocTurnos",
+    guardiasInscripciones_TarjetaColaGuardia: "guardias/inscripciones/inscripcionesCombo",
+    guardiasInscripciones_TarjetaGestionInscripciones: "guardias/inscripciones/historicoInscripcion",
+    guardiasInscripciones_inscripcionesDisponibles:"guardias/inscripciones/inscripcionesDisponibles",
+    guardiasInscripciones_inscripcionPorguardia: "guardias/inscripciones/inscripcionPorguardia",
+    guardiasInscripciones_updateInscripcion: "guardias/inscripciones/updateInscripcion",
+    guardiasInscripciones_insertSolicitarAlta: "guardias/inscripciones/insertSolicitarAlta",
+
 
     //guardias colegiado
     guardiasColegiado_buscarGuardiasColegiado: "guardia/busquedaGuardia/busquedaGuardiasColegiado",
@@ -150,6 +157,8 @@ export let endpoints_guardia: any = {
     guardiasColegiado_updateGuardiaColeg: "guardiaColegiado/updateGuardiaColeg",
     guardiasColegiado_insertGuardiaColeg: "guardiaColegiado/insertGuardiaColeg",
     guardiasColegiado_sustituirGuardiaColeg: "guardiaColegiado/sustituirGuardiaColeg",
+    guardiasColegiado_idConjuntoGuardia: "guardiaColegiado/getIdConjuntoGuardia",
+    guardiasColegiado_getPermutasColegiado: "guardiaColegiado/getPermutasColegiado",
 
 
     //CARGAS MASIVAS GUARDIA
@@ -159,8 +168,6 @@ export let endpoints_guardia: any = {
     cargasMasivasGuardia_uploadFileI: "guardia/cargasMasivasGuardia/uploadFileI",
     cargasMasivasGuardia_uploadFileGC: "guardia/cargasMasivasGuardia/uploadFileGC",
     cargasMasivasGuardia_uploadFileC: "guardia/cargasMasivasGuardia/uploadFileC",
-
-
 
 
    //listas guardias

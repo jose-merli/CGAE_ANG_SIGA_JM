@@ -548,6 +548,87 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
   const pattern = 'dd/MM/yyyy';
     return this.datePipe.transform(date, pattern);
   }
+
+  llamarFicha(row) {
+
+    /* if (this.persistenceService.getPermisos() != undefined) {
+       this.permisoEscritura = this.persistenceService.getPermisos();
+     }*/
+     console.log('se envia fecha: ', row.cells[4].value.value)
+     console.log("ROW:",row);
+     let dataToSend = {
+      // 'duplicar': false,
+      // 'tabla': [],
+      'nombreturno':row.cells[25].value,
+       'nombre_turno':row.cells[25].value,
+       'nombre_guardia': row.cells[26].value,
+       'fechasolicitud': row.cells[4].value,
+       'fechavalidacion': row.cells[5].value,
+       'estadonombre': row.cells[8].value,
+       'idpersona': row.cells[21].value,
+       'idinstitucion': row.cells[9].value,
+       'ncolegiado': row.cells[0].value,
+       'cifnif': null,
+       'abreviatura': row.cells[27].value,
+       'accion': null,
+       'afechade':null,
+       'apellidos':row.cells[28].value,
+       'apellidos2': row.cells[29].value,
+       'apellidosnombre':row.cells[1].value,
+       'descripcion_tipo_guardia':null,
+       'estado':row.cells[24].value,
+       'fechaActual': new Date(),
+       'fechabaja':row.cells[7].value,
+       'fechadenegacion':row.cells[17].value,
+       'fechadesde':null,
+       'fechahasta':null,
+       'fechamodificacion':null,
+       'fechasolicitudbaja':row.cells[6].value,
+       'fechatabla':null,
+       'fechavaloralta':row.cells[30].value,
+       'fechavalorbaja':row.cells[31].value,
+       'guardias':null,
+       'historico':null,
+       'idarea':null,
+       'idguardia':row.cells[11].value,
+       'idmateria':null,
+       'idsubzona':null,
+       'idturno':row.cells[10].value,
+       'idzona':null,
+       'movil':null,
+       'nombre':null,
+       'nombre_area':null,
+       'nombre_zona':null,
+       'nombre_materia':null,
+       'nombre_subzona':null,
+       'numerocolegiado':null,
+       'obligatoriedad_inscripcion':null,
+       'observaciones':null,
+       'observacionesbaja':row.cells[14].value,
+       'observacionesdenegacion':row.cells[16].value,
+       'observacionessolicitud':row.cells[13].value,
+       'observacionestabla':null,
+       'observacionesvalbaja':row.cells[18].value,
+       'observacionesvalidacion':row.cells[15].value,
+       'orden':null,
+       'telefono':null,
+       'tipoguardias':row.cells[32].value,
+       'usumodificacion':null,
+       'validarinscripciones':row.cells[23].value
+
+     }
+ 
+ 
+     //2012-01-02 00:00:00.0 to 2012-01-02
+     if (!this.seleccionarTodo && this.selectedArray.length <= 1) {
+       //this.progressSpinner = true;
+       this.persistenceService.setDatos(dataToSend);
+       //this.persistenceService.setHistorico(evento.fechabaja ? true : false);
+       this.router.navigate(["/fichaInscripcionesGuardia"]);
+ 
+     } 
+   }
+
   duplicar(){
     console.log('duplicar this.selectedRowValue: ', this.selectedRowValue)
        /* if (this.persistenceService.getPermisos() != undefined) {

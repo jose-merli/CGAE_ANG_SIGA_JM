@@ -1,0 +1,105 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+
+<!--cuerpo datos generales-->
+<div class="busqueda-container" id="datosInscripcion">
+  <div class="card">
+  <div class="card-header header-ficha">
+    <div class=" header-ficha-open d-flex justify-content-start align-items-center">
+      
+        <div class="img-colegiado">
+          <i class="fas fa-link icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{ 'formacion.fichaCurso.boton.inscripcion' | translate }}</label>
+    </div>
+  </div>
+      <div class="card-body card-body-ficha">
+        <div class="row">
+          <!-- <div class="bloque col-lg-4 col-md-4"> -->
+  
+            <!-- <div class="form-row"> -->
+        <p-table #table class="tabla-listado" [responsive]="true" [(selection)]="selectedDatos" [selectionMode]="selectionMode" 
+        [value]="inscripcionesItem" dataKey="nombreTurno" [columns]="cols" [rows]="selectedItem">
+          <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+              <col *ngFor="let col of cols" [style.width]="col.width">
+            </colgroup>
+          </ng-template>
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+                <div class="text-center"
+                  *ngIf="col.field != 'colegiadoGrupo'">
+                  <span>{{ col.header | translate }}</span> 
+                </div>
+                <div class="text-center"
+                  *ngIf="col.field == 'colegiadoGrupo'">
+                  <span><strong>{{ col.header | translate }}</strong></span>
+                </div>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex" let-expanded="expanded"
+            let-columns="columns">
+            <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex" class="ui-widget-header" *ngIf="rowGroupMetadata[rowData.nombreTurno].index === rowIndex">
+                
+              <td *ngFor="let col of columns">   
+                <div class= "displayFlex">
+                  <div *ngIf="col.field =='nombreTurno'">       
+                  <p-checkbox [(ngModel)]='rowData.selectedBooleanPadre' [disabled]="disableAll || rowData.fechasolicitud" (onChange)="seleccionarPadre(rowData,$event)" binary="true"></p-checkbox>      
+                  </div>                     
+                <a [pRowToggler]="rowData">
+                   
+                  <div class="text-center" *ngIf="col.field =='nombreTurno'">                       
+                      <i
+                      [ngClass]="expanded ? 'fa fa-fw fa-chevron-circle-down' : 'fa fa-fw fa-chevron-circle-right'"></i>
+                      <a (click)="openTab(rowData, 'Turno')"><span >{{rowData[col.field]}}</span></a>
+                  </div>
+                
+                </a>
+              </div>
+                <div class="text-center"
+                  *ngIf="col.field !='nombreTurno' && col.field != 'colegiadoGrupo'">
+                  <span>{{rowData[col.field]}}</span> 
+                </div>
+                <div class="text-center"
+                  *ngIf="col.field == 'colegiadoGrupo'">
+                  <span><strong>{{rowData[col.field]}}</strong></span>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="rowexpansion" let-dato let-columns="columns">
+            <tr [pSelectableRow]="dato">        
+              <td *ngFor="let col of columns">
+                <div *ngIf="col.field=='nombreTurno'" class="displayMargin">    
+                    <p-checkbox [disabled]="disabledGuardias || disableAll" [(ngModel)]="dato.selectedBoolean" (onChange)="seleccionarFila(dato, $event)" binary="true"></p-checkbox>    
+                    <span (click)="openTab(dato, 'Guardia')" class="form-group-label">{{dato.nombreGuardia}}</span>
+                </div>
+                <div *ngIf="col.field=='colegiadoGrupo'" class="text-center">    
+                    <span class="form-group-label font-weight-bold">{{dato.colegiadoGrupo}}</span> <!--?????-->
+                </div>
+              </td>
+
+            </tr>
+          </ng-template>
+        </p-table>
+      <!-- </div> -->
+    <!-- </div> -->
+  </div>
+</div>
+      
+    
+  </div>
+</div>
+
+<!-- <p-confirmDialog header=" Confirmación"  icon="fa fa-question-circle"  width="425"  #cd>
+                <p-footer>
+                  <button type="button"  pButton icon="fa-check"  label="Si"  (click)="cd.accept()"></button>
+                  <button type="button"  pButton icon="fa-close"  label="No"  (click)="cd.reject()"></button>
+                </p-footer>
+                </p-confirmDialog> -->
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
