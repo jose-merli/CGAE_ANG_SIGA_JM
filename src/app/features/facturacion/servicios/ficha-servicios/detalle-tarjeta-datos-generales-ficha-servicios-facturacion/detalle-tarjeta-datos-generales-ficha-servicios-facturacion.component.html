@@ -90,6 +90,10 @@
 <div class="card-footer">
   <div class="text-right main-button">
     <!-- Restablecer -->
+    <button *ngIf="servicio.editar" (click)="nuevacondicion()" pButton type="button" icon="fa fa-database" iconPos="left"
+      label="Nueva condición***"></button>
+
+    <!-- Restablecer -->
     <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left"
       label="{{'general.boton.restablecer' | translate}}"></button>
 
