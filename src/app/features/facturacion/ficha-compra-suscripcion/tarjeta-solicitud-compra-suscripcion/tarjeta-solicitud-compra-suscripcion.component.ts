@@ -97,13 +97,18 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
 
   checkProductos(){
     let prods = this.tarjProductos.productosTarjeta;
-    if(prods.length == 0) return true;
+    let campoVacio = false;
     prods.forEach( el => {
-      if(el.cantidad != null || el.cantidad.trim() == "" ||
-      el.descripcion != null || el.descripcion.trim() == "" ||
-      el.precioUnitario != null || el.precioUnitario.trim() == "" ||
-      el.iva != null || el.iva.trim() != "") return true;
-    })
+      if(el.cantidad == null || el.cantidad.trim() == '' ||
+      el.descripcion == null || el.descripcion.trim() == '' ||
+      el.precioUnitario == null || el.precioUnitario.trim() == '' ||
+      el.iva == null || el.iva.trim() == '') {
+        campoVacio = true;
+      }
+    });
+    if(prods.length == 0 || campoVacio) {
+      return true;
+    }
     return false;
   }
 

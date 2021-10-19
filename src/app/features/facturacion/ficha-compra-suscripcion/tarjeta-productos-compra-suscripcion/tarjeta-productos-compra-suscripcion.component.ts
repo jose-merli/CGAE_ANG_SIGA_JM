@@ -346,13 +346,16 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
   }
 
   checkCamposObligatorios() {
+    let campoVacio = false;
     this.productosTarjeta.forEach(el => {
-      if (el.cantidad != null || el.cantidad.trim() != "" ||
-        el.descripcion != null || el.descripcion.trim() != "" ||
-        el.precioUnitario != null || el.precioUnitario.trim() != "" ||
-        el.iva != null || el.iva.trim() != "") return true;
+      if (el.cantidad == null || el.cantidad.trim() == "" ||
+        el.descripcion == null || el.descripcion.trim() == "" ||
+        el.precioUnitario == null || el.precioUnitario.trim() == "" ||
+        el.iva == null || el.iva.trim() == "") {
+          campoVacio = true;
+        }
     })
-    if(this.selectedPago = null){
+    if(this.selectedPago == null || campoVacio){
       return true;
     }
     return false;
@@ -564,7 +567,6 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
           return true;
         }
         else {
-          //Pendiente de inserción y sustitucion de etiquetas.
           this.msgs = [
             {
               severity: "error",
