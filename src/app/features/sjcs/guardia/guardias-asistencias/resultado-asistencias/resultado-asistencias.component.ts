@@ -231,10 +231,6 @@ export class ResultadoAsistenciasComponent implements OnInit {
 
     if(this.table.selectionMode == 'single'){
       this.numSeleccionado = 1;
-      sessionStorage.setItem("filtroAsistencia",JSON.stringify(this.filtro));
-      sessionStorage.setItem("modoBusqueda","a");
-      sessionStorage.setItem("idAsistencia",asistencia.anio+"/"+asistencia.numero);
-      this.router.navigate(["/fichaAsistencia"]);
     }else{
       this.numSeleccionado = this.selectedDatos.length;
       if(this.numSeleccionado == 1){
@@ -244,6 +240,13 @@ export class ResultadoAsistenciasComponent implements OnInit {
       }
     }
     this.disableDelete = false;
+  }
+
+  onClickEnlace(asistencia : TarjetaAsistenciaItem){
+      sessionStorage.setItem("filtroAsistencia",JSON.stringify(this.filtro));
+      sessionStorage.setItem("modoBusqueda","a");
+      sessionStorage.setItem("idAsistencia",asistencia.anio+"/"+asistencia.numero);
+      this.router.navigate(["/fichaAsistencia"]);
   }
 
   actualizaSeleccionados(){

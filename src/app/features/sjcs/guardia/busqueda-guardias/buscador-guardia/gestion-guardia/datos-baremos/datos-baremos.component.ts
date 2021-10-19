@@ -25,7 +25,7 @@ export class DatosBaremosComponent implements OnInit {
   historico: boolean = false;
   message;
   permisos: boolean = false;
-  datos = "";
+  datos = [];
   nuevo: boolean = false;
   progressSpinner: boolean = false;
   //Resultados de la busqueda
@@ -58,10 +58,11 @@ export class DatosBaremosComponent implements OnInit {
       //"busquedaGuardias_getBaremos", idGuardiaProvisional).subscribe(
       "busquedaGuardias_getBaremos", this.persistenceService.getDatos().idGuardia).subscribe(
         data => {
-          JSON.parse(data.body).combooItems.forEach(it => {
-            this.datos += (it.label + ": " + it.value + "€ , ");
+          let comboItems = JSON.parse(data.body).combooItems;
+          comboItems.forEach(it => {
+             it.value = it.value + "€";
           });
-          this.datos = this.datos.substring(0, this.datos.length - 2);
+          this.datos = comboItems;
 
         },
         err => {

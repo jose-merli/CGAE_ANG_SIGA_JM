@@ -33,9 +33,12 @@ export class TablaGuardiasComponent implements OnInit {
   nuevo: boolean = false;
   progressSpinner: boolean = false;
   permisoEscritura: boolean = false;
+  disabledActivar : boolean = true;
 
   //Resultados de la busqueda
-  @Input() datos;
+  @Input() guardias : GuardiaItem[] = [];
+
+  datos;
 
   @ViewChild("table") table: DataTable;
 
@@ -56,7 +59,7 @@ export class TablaGuardiasComponent implements OnInit {
     }
 
     this.getCols();
-    this.initDatos = JSON.parse(JSON.stringify((this.datos)));
+    this.initDatos = this.datos;
 
     if (this.persistenceService.getHistorico() != undefined) {
       this.historico = this.persistenceService.getHistorico();
@@ -129,8 +132,8 @@ export class TablaGuardiasComponent implements OnInit {
       if (!this.historico) {
         if (this.selectAll) {
           this.selectMultiple = true;
-          this.selectedDatos = this.datos;
-          this.numSelected = this.datos.length;
+          this.selectedDatos = this.guardias;
+          this.numSelected = this.guardias.length;
         } else {
           this.selectedDatos = [];
           this.numSelected = 0;
@@ -139,7 +142,7 @@ export class TablaGuardiasComponent implements OnInit {
       } else {
         if (this.selectAll) {
           this.selectMultiple = true;
-          this.selectedDatos = this.datos.filter(dato => dato.fechabaja != undefined && dato.fechabaja != null)
+          this.selectedDatos = this.guardias.filter(dato => dato.fechabaja != undefined && dato.fechabaja != null)
           this.numSelected = this.selectedDatos.length;
         } else {
           this.selectedDatos = [];
@@ -180,6 +183,14 @@ export class TablaGuardiasComponent implements OnInit {
       if (evento.fechabaja == undefined && this.historico) {
         this.selectedDatos.pop();
       }
+    }
+  }
+
+  checkSelectedRow(event){
+    if(this.historico && event.data.fechabaja){
+      this.disabledActivar = false;
+    }else{
+      this.disabledActivar = true;
     }
   }
 
@@ -241,9 +252,7 @@ export class TablaGuardiasComponent implements OnInit {
   confirmDelete() {
     if (this.permisoEscritura) {
 
-      let mess = this.translateService.instant(
-        "messages.deleteConfirmation"
-      );
+      let mess = 'Al dar de baja la guardia acepta dar de baja todas las inscripciones de los colegiados inscritos a dicha guardia. ¿Desea continuar?';
       let icon = "fa fa-edit";
       this.confirmationService.confirm({
         message: mess,
@@ -269,6 +278,13 @@ export class TablaGuardiasComponent implements OnInit {
   actualizaSeleccionados(selectedDatos) {
     this.numSelected = selectedDatos.length;
     this.seleccion = false;
+    if(!this.numSelected || this.numSelected == 0){
+      this.disabledActivar = true;
+    }else if(this.historico && this.selectedDatos.every(dato => dato.fechabaja)){
+      this.disabledActivar = false;
+    }else if(this.historico && this.selectedDatos.every(dato => !dato.fechabaja)){
+      this.disabledActivar = true;
+    }
   }
 
 

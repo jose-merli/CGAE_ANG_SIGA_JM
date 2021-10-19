@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, AfterViewInit } from '@angular/core';
 import { GuardiaItem } from '../../../../../../../models/guardia/GuardiaItem';
 import { PersistenceService } from '../../../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../../../_services/siga.service';
@@ -24,10 +24,7 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
 
-  tipoGuardiaResumen = {
-    label: "",
-    value: "",
-  };
+  tipoGuardiaResumen : string = '';
   @Input() openFicha: boolean = true;
   historico: boolean = false;
   isDisabledGuardia: boolean = true;
@@ -54,7 +51,6 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
     this.getComboTipoGuardia();
 
     this.getComboTurno();
-
     // this.progressSpinner = true;
     this.sigaService.datosRedy$.subscribe(
       data => {
@@ -67,6 +63,9 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
         this.body.idTurno = data.idTurno;
         this.body.nombre = data.nombre;
         this.body.envioCentralita = data.envioCentralita;
+        this.getComboTipoGuardia();
+
+        this.getComboTurno();
         //Informamos de la guardia de la que hereda si existe.
         if (data.idGuardiaPrincipal && data.idTurnoPrincipal)
           this.datos.push({
@@ -82,6 +81,7 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
           });
           this.datos.pop()
         }
+       
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
         this.progressSpinner = false;
       });
@@ -94,7 +94,8 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
   }
 
   muestraCamposObligatorios(){
-    this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
+    let msg = this.translateService.instant('general.message.camposObligatorios');
+    this.msgs = [{severity: "error", summary: "Error", detail: msg}];
     this.resaltadoDatos=true;
   }
 
@@ -265,7 +266,7 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
   }
 
   resumenTipoGuardiaResumen() {
-    this.tipoGuardiaResumen = this.comboTipoGuardia.filter(it => it.value == this.body.idTipoGuardia)[0]
+    this.tipoGuardiaResumen = this.comboTipoGuardia.filter(it => it.value == this.body.idTipoGuardia)[0].label;
   }
 
   clear() {

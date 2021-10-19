@@ -40,12 +40,14 @@ export class DatosConfColaComponent implements OnInit {
   numeroletradosguardia = "";
   msgs = [];
   progressSpinner: boolean = false;
+  tieneGuardiaPrincipal : boolean = false;
 
   isDisabledGuardia: boolean = true;
   constructor(private persistenceService: PersistenceService,
     private translateService: TranslateService,
     private sigaServices: SigaServices,
-    private globalGuardiasService: GlobalGuardiasService) { }
+    private globalGuardiasService: GlobalGuardiasService,
+    private commonServices : CommonsService) { }
 
   ngOnInit() {
     this.historico = this.persistenceService.getHistorico();
@@ -54,6 +56,9 @@ export class DatosConfColaComponent implements OnInit {
         if (data.body)
           data = JSON.parse(data.body)
 
+        if(data.idGuardiaPrincipal){
+          this.tieneGuardiaPrincipal = true;
+        }
         this.body.letradosGuardia = data.letradosGuardia;
         this.body.idOrdenacionColas = data.idOrdenacionColas;
         this.body.porGrupos = data.porGrupos == "1" ? true : false;
@@ -64,6 +69,12 @@ export class DatosConfColaComponent implements OnInit {
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
         if (this.modoEdicion) this.getResumen();
       });
+  }
+
+  styleObligatorio(evento){
+    if((evento==undefined || evento==null || evento=="")){
+      return this.commonServices.styleObligatorio(evento);
+    }
   }
 
   abreCierraFicha() {
@@ -336,8 +347,12 @@ export class DatosConfColaComponent implements OnInit {
           montag[4] = element.numero;
         }
       });
-      this.body.filtros = montag.toString();
-      this.callSaveService();
+      if(!this.body.letradosGuardia){
+        this.showMessage('error','Error',this.translateService.instant('general.message.camposObligatorios'));
+      }else{
+        this.body.filtros = montag.toString();
+        this.callSaveService();
+      }
     }
   }
 

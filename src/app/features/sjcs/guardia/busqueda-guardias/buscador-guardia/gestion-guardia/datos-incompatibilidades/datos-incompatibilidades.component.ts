@@ -2,6 +2,7 @@ import { Component, OnInit, Input, ViewChild, ChangeDetectorRef, AfterViewInit }
 import { SigaServices } from '../../../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../../../_services/persistence.service';
 import { DataTable } from '../../../../../../../../../node_modules/primeng/primeng';
+import { GuardiaItem } from '../../../../../../../models/guardia/GuardiaItem';
 
 @Component({
   selector: 'app-datos-incompatibilidades',
@@ -20,11 +21,18 @@ export class DatosIncompatibilidadesComponent implements OnInit {
   rowsPerPage;
   selectedItem: number = 10
   progressSpinner: boolean = false;
+  nombreTurno : string;
+  nombreGuardia : string;
+  tipoDia : string;
+  descripcionIncomp : string;
+  totalIncompatibilidades : string;
+  diasSeparacion : string;
+
 
   @Input() tarjetaIncompatibilidades;
   @Input() modoEdicion: boolean = false;
   @ViewChild("tabla") tabla;
-  datos;
+  datos : GuardiaItem [] = [];
   resumenIncompatibilidades = "";
 
 
@@ -36,7 +44,7 @@ export class DatosIncompatibilidadesComponent implements OnInit {
     this.getCols();
     if (this.persistenceService.getDatos()){
       this.getDatosIncompatibilidades();
-      this.getResumenIncompatibilidades();}
+    }
     else
       this.sigaServices.datosRedy$.subscribe(
         n => {
@@ -53,8 +61,9 @@ export class DatosIncompatibilidadesComponent implements OnInit {
           //this.datos = JSON.parse(data.body).guardiaItems;
           //this.resumenIncompatibilidades = JSON.parse(data.body).guardiaItems[0].incompatibilidades;
           if (this.datos && this.datos.length > 0){
-            this.resumenIncompatibilidades = this.resumenParte1;
-            this.resumenIncompatibilidades = this.resumenIncompatibilidades.concat(" ... " + JSON.parse(data.body).guardiaItems[0].incompatibilidades, " total");
+            /*this.resumenIncompatibilidades = this.resumenParte1;
+            this.resumenIncompatibilidades = this.resumenIncompatibilidades.concat(" ... " + JSON.parse(data.body).guardiaItems[0].incompatibilidades, " total");*/
+            this.totalIncompatibilidades = JSON.parse(data.body).guardiaItems[0].incompatibilidades
           }
 
           this.onChangeRowsPerPages({ value: 10 });
@@ -63,6 +72,7 @@ export class DatosIncompatibilidadesComponent implements OnInit {
         },
         err => {
           console.log(err);
+          this.progressSpinner = false;
         }
       );
   }
@@ -118,18 +128,31 @@ export class DatosIncompatibilidadesComponent implements OnInit {
 
   getDatosIncompatibilidades() {
     if (this.persistenceService.getDatos().idGuardia) {
-      let idGuardia = this.persistenceService.getDatos().idGuardia
+      let idGuardia = this.persistenceService.getDatos().idGuardia;
+      let idTurno = this.persistenceService.getDatos().idTurno;
       //idGuardia = 358; //borrar
-      this.sigaServices.post(
-        "busquedaGuardias_tarjetaIncompatibilidades", idGuardia).subscribe(
+      this.sigaServices.getParam(
+        "busquedaGuardias_tarjetaIncompatibilidades", "?idGuardia="+idGuardia+"&idTurno="+idTurno).subscribe(
           data => {
-            this.datos = JSON.parse(data.body).guardiaItems;
-            this.resumenParte1 = this.datos[this.datos.length - 1].turno +  " " + this.datos[this.datos.length - 1].nombre + " " +  this.datos[this.datos.length - 1].tipoDia + " " + this.datos[this.datos.length - 1].descripcion + " " + this.datos[this.datos.length - 1].diasSeparacionGuardias;
-            this.onChangeRowsPerPages({ value: 10 });
+            this.datos = data.guardiaItems
+            if (this.datos && this.datos.length > 0){
+              this.resumenIncompatibilidades = this.datos.length.toString();
+              this.nombreTurno = this.datos[this.datos.length - 1].turno;
+              this.nombreGuardia = this.datos[this.datos.length - 1].nombre;
+              this.tipoDia = this.datos[this.datos.length - 1].tipoDia;
+              this.descripcionIncomp = this.datos[this.datos.length - 1].descripcion;
+              this.diasSeparacion = this.datos[this.datos.length - 1].diasSeparacionGuardias;
+              this.onChangeRowsPerPages({ value: 10 });
+              this.getResumenIncompatibilidades();
+            }
             this.progressSpinner = false;
           },
           err => {
             console.log(err);
+            this.progressSpinner = false;
+          },
+          ()=>{
+            this.progressSpinner = false;
           }
         );
 
