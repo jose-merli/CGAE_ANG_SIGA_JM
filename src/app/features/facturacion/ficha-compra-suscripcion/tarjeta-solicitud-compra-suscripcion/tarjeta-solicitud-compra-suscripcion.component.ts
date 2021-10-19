@@ -134,6 +134,10 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
       //Etiqueta
       this.showMessage("error",this.translateService.instant('general.message.camposObligatorios'),this.translateService.instant("facturacion.productos.seleccPago"));
     }
+    //Si ha seleccionado forma de pago "domicialiacion bancaria" pero no ha elegido cuenta.
+    else if(this.tarjProductos.selectedPago == "80" && this.tarjProductos.datosTarjeta.cuentaBancSelecc == null){
+      this.showMessage("error", this.translateService.instant('menu.facturacion.productos'), this.translateService.instant('general.message.camposObligatorios'));
+    }
     else {
 			this.solicitarCompra();
 		}
@@ -155,8 +159,12 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
         if(this.tarjProductos.selectedPago == null){
           this.showMessage("error",this.translateService.instant("general.message.camposObligatorios"),this.translateService.instant("facturacion.productos.seleccPago"));
         }
+        //Si ha seleccionado forma de pago "domicialiacion bancaria" pero no ha elegido cuenta.
+        else if(this.tarjProductos.selectedPago == "80" && this.tarjProductos.datosTarjeta.cuentaBancSelecc == null){
+          this.showMessage("error", this.translateService.instant('menu.facturacion.productos'), this.translateService.instant('general.message.camposObligatorios'));
+        }
         else if(this.checkProductos()){
-          if(this.ficha.productos.length == 0){
+          if(this.tarjProductos.productosTarjeta.length == 0){
             this.showMessage("error",
             this.translateService.instant("facturacion.productos.noBorrarProductos"),
             this.translateService.instant("facturacion.productos.prodNecesario")
@@ -209,16 +217,20 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
 
   aprobarCompra(){
     this.progressSpinner = true; 
-    this.ficha.productos = this.tarjProductos.productosTarjeta;
-    this.ficha.idFormaPagoSeleccionada = this.tarjProductos.selectedPago;
-		this.sigaServices.post('PyS_aprobarCompra', this.ficha).subscribe(
+    let peticion = JSON.parse(JSON.stringify(this.ficha));
+    if(this.ficha.fechaPendiente == null){
+      peticion.productos = this.tarjProductos.productosTarjeta;
+      peticion.idFormaPagoSeleccionada = this.tarjProductos.selectedPago;
+      peticion.cuentaBancSelecc = this.tarjProductos.datosTarjeta.cuentaBancSelecc;
+    }
+		this.sigaServices.post('PyS_aprobarCompra', peticion).subscribe(
 			(n) => {
 				if( n.status != 200) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         } else {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          
-          //Se actualiza la información de la ficha
+
+          //Se actualiza la información de la ficha y se obtiene su historico actualizado
           this.actualizaFicha.emit();
         }
 				this.progressSpinner = false;

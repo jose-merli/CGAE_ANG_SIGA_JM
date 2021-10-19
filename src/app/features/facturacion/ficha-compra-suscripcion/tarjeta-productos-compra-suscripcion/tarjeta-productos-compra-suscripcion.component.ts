@@ -99,7 +99,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
 
   subscriptionProductosBusqueda: Subscription;
   sidebarVisibilityChange: Subject<ListaProductosCompraItem[]> = new Subject<ListaProductosCompraItem[]>();
-  cuentasBanc: any[];
+  cuentasBanc: ComboItem[] = [];
   selectedPago: string;
   totalUnidades: number;
   datosTarjeta: FichaCompraSuscripcionItem = new FichaCompraSuscripcionItem();
@@ -118,6 +118,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
     this.getPermisoEditarImporte();
     this.getPermisoActualizarProductos();
     this.getComboTipoIva();
+    this.cargarDatosBancarios();
 
     if (this.ficha.fechaPendiente != null) {
       //Se recomenda añadir un procesamiento asincrono
@@ -355,7 +356,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
           campoVacio = true;
         }
     })
-    if(this.selectedPago == null || campoVacio){
+    if(this.selectedPago == null || campoVacio || (this.selectedPago =="80" && this.datosTarjeta.cuentaBancSelecc == null)){
       return true;
     }
     return false;
@@ -668,6 +669,9 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
     }
   }
 
+  onChangePago(){
+    this.newFormaPagoCabecera();
+  }
   newFormaPagoCabecera(){
     if(this.selectedPago != null){
       let pago  = this.comboComun.find( el => el.value==this.selectedPago);
@@ -773,6 +777,8 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
 
     let peticionBanc = new DatosBancariosItem();
 
+    this.progressSpinner = true;
+
     peticionBanc.historico = false;
     peticionBanc.idPersona = this.ficha.idPersona;
     peticionBanc.nifTitular = this.ficha.nif;
@@ -781,8 +787,13 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
       .subscribe(
         data => {
           this.progressSpinner = false;
-          //Revisar para obtener pares "label"/"value"
-          this.cuentasBanc = JSON.parse(data["body"]).datosBancariosItem[0];
+          for(let cuenta of JSON.parse(data["body"]).datosBancariosItem){
+            let newEl = new ComboItem();
+            newEl.label = cuenta.ibanFormateado;
+            newEl.value = cuenta.idCuenta;
+            this.cuentasBanc.push(newEl);
+          }
+          this.datosTarjeta.cuentaBancSelecc = this.ficha.cuentaBancSelecc;
         },
         error => {
           this.msgs.push({ severity: "error", summary: "", detail: JSON.stringify(JSON.parse(error["error"]).error.description) });
