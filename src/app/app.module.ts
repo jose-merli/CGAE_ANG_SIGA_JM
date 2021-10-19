@@ -458,6 +458,7 @@ import { LetradoEntranteComponent } from './features/sjcs/oficio/designaciones/f
 import { LetradoSalienteComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/ficha-cambio-letrado/letrado-saliente/letrado-saliente.component';
 import { ProcuradorPreDesignacionComponent } from './features/sjcs/ejg/gestion-ejg/relaciones/ficha-pre-designacion/procurador-pre-designacion/procurador-pre-designacion.component';
 import { ContrariosPreDesignacionComponent } from './features/sjcs/ejg/gestion-ejg/relaciones/ficha-pre-designacion/contrarios-pre-designacion/contrarios-pre-designacion.component';
+import { ComunicacionesEntrantesComponent } from './features/informes-comunicaciones/comunicaciones-entrantes/comunicaciones-entrantes.component';
 
 @NgModule({
 	declarations: [
@@ -835,6 +836,7 @@ import { ContrariosPreDesignacionComponent } from './features/sjcs/ejg/gestion-e
 		TarjetaHisFichaActComponent,
 		DetalleTarjetaRelacionesDesignaComponent,
 		DetalleTarjetaComunicacionesDesignaComponent,
+		ComunicacionesEntrantesComponent,
 
 	],
 	imports: [

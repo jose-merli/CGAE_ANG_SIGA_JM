@@ -223,6 +223,7 @@ import { ConsultasComponent } from './features/informes-comunicaciones/consultas
 import { FichaConsultaComponent } from './features/informes-comunicaciones/consultas/ficha-consulta/ficha-consulta.component';
 
 import { ComunicacionesComponent } from './features/informes-comunicaciones/comunicaciones/comunicaciones.component';
+import { ComunicacionesEntrantesComponent} from './features/informes-comunicaciones/comunicaciones-entrantes/comunicaciones-entrantes.component';
 
 
 
@@ -1125,6 +1126,12 @@ const appRoutes: Routes = [
 	{
 		path: 'comunicaciones',
 		component: ComunicacionesComponent,
+		canActivate: [ AuthGuard ]
+	},
+
+	{
+		path: 'comunicacionesEntrantes',
+		component: ComunicacionesEntrantesComponent,
 		canActivate: [ AuthGuard ]
 	},
 
