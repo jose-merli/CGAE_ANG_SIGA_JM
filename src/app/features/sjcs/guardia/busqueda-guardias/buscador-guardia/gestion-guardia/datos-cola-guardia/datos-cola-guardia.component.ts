@@ -38,10 +38,10 @@ export class DatosColaGuardiaComponent implements OnInit {
   rowGroups: Row[];
   rowGroupsAux: Row[];
   cabeceras = [
-    {
+    /*{
       id: "ordenCola",
       name: "dato.jgr.guardia.guardias.ordenCola"
-    },
+    },*/
     {
       id: "grupo",
       name: "dato.jgr.guardia.guardias.grupo"
@@ -346,7 +346,7 @@ inicio(){
     this.sigaService.post(
       "busquedaGuardias_updateColaGuardia", colaGuardiaModificadoSt).subscribe(
         data => {
-
+          console.log(data);
         }, err => {
           console.log(err);
         });
@@ -399,19 +399,8 @@ inicio(){
   }
   transformData(){
     let arr = [];
-    let objArr = [
-      { type: 'text', value: '1' },
-      { type: 'input', value: '2' },
-      { type: 'position', value: '3' },
-      { type: 'text', value: '4567' },
-      { type: 'text', value: 'LUCIA FHHGGH FHFHFH' },
-      { type: 'text', value: '12/02/2018' },
-      { type: 'text', value: '12/02/2020' },
-      { type: 'text', value: '3' },
-      { type: 'text', value: '3' },
-      { type: 'text', value: '000' }
-    ];
     this.datos.forEach(datoObj =>{
+      let objArr = {cells:[]};
       let ordenValue = '';
       if (datoObj.orden != null){
         ordenValue = datoObj.orden;
@@ -419,10 +408,10 @@ inicio(){
         ordenValue = '';
       }
       if (this.configuracionCola.porGrupos == false){
-        objArr = [
-          { type: 'text', value: datoObj.ordenCola },
+        objArr.cells = [
+          //{ type: 'text', value: datoObj.ordenCola },
           { type: 'text', value: datoObj.numeroGrupo },
-          { type: 'text', value: ordenValue },
+          { type: 'text', value: datoObj.ordenCola },
           { type: 'text', value: datoObj.nColegiado },
           { type: 'text', value: datoObj.apellido1 + ',' + datoObj.apellido2 + ',' + datoObj.nombre},
           { type: 'text', value: datoObj.fechaValidacion },
@@ -432,10 +421,10 @@ inicio(){
           { type: 'text', value: datoObj.idGrupoGuardiaColegiado}
         ];
       } else {
-        objArr = [
-          { type: 'text', value: datoObj.ordenCola },
+        objArr.cells = [
+          //{ type: 'text', value: datoObj.ordenCola },
           { type: 'input', value: datoObj.numeroGrupo },
-          { type: 'position', value: ordenValue },
+          { type: 'position', value: datoObj.ordenCola },
           { type: 'text', value: datoObj.nColegiado },
           { type: 'text', value: datoObj.apellido1 + ',' + datoObj.apellido2 + ',' + datoObj.nombre},
           { type: 'text', value: datoObj.fechaValidacion },
@@ -455,40 +444,40 @@ inicio(){
 
   updateColaGuardia(event){
     let datCopy = {
-      apellido1: "ZFIM",
-      apellido2: " FIWQUQ",
-      compensaciones: "0",
-      fechaSuscripcion: 1262646000000,
-      fechaValidacion: "12/01/2010",
+      apellido1: "",
+      apellido2: "",
+      compensaciones: "",
+      fechaSuscripcion: '',
+      fechaValidacion: "",
       fechabaja: null,
-      idGrupoGuardia: "436",
-      idGrupoGuardiaColegiado: "0000000000000",
-      idGuardia: "1441",
-      idPersona: "2005003340",
-      idTurno: "802",
-      nColegiado: "5980",
-      nombre: "PRUEBA",
-      nombreApe: "PRUEBA",
-      numeroGrupo: 1,
-      orden: "0000000",
-      ordenCola: "1",
-      order: NaN,
-      saltos: "0"
+      idGrupoGuardia: "",
+      idGrupoGuardiaColegiado: "",
+      idGuardia: "",
+      idPersona: "",
+      idTurno: "",
+      nColegiado: "",
+      nombre: "",
+      nombreApe: "",
+      numeroGrupo: '',
+      orden: "",
+      ordenCola: "",
+      order: '',
+      saltos: ""
     };
     let datosModif = [];
     this.rowGroupModified = event;
     this.rowGroupModified.forEach(row => {
-      let ordenCola = row.cells[0];
-      let grupo = row.cells[1];
-      let orden = row.cells[2];
-      let numCol = row.cells[3];
-      let idGGC = row.cells[4]
+      let ordenCola = row.cells[1];
+      let grupo = row.cells[0];
+      //let orden = row.cells[2];
+      let numCol = row.cells[2];
+      let idGGC = row.cells[8]
       this.datos.forEach(dat => {
         if (dat.nColegiado == numCol.value && dat.idGrupoGuardiaColegiado != datCopy.idGrupoGuardiaColegiado && dat.idGrupoGuardiaColegiado == idGGC.value){
             datCopy = Object.assign({},dat);
             datCopy.ordenCola = ordenCola.value.toString();
-            datCopy.numeroGrupo = Number(grupo.value);
-            datCopy.orden = orden.value.toString();
+            datCopy.numeroGrupo = grupo.value;
+            //datCopy.orden = orden.value.toString();
           datosModif.push(datCopy);
         }
       });

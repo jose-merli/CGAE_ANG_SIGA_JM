@@ -64,6 +64,12 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
         this.body.tipoDiasGuardia = n.tipoDiasGuardia;
         this.body.diasPeriodo = n.diasPeriodo;
         this.body.diasGuardia = n.diasGuardia;
+        if(this.body.diasPeriodo == "0"){
+          this.body.diasPeriodo = '';
+        }
+        if(this.body.diasGuardia == "0"){
+          this.body.diasGuardia = '';
+        }
         this.body.idGuardia = n.idGuardia;
         this.body.idTurno = n.idTurno;
         this.body.separarGuardia = n.separarGuardia;
@@ -99,6 +105,22 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
 
   styleObligatorio(evento){
     if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
+      this.openFicha = true;
+      this.opened.emit(this.openFicha);
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+
+  styleObligatorioPeriodoTipoDia(evento){
+    if(this.resaltadoDatos && this.body.diasPeriodo && (evento==undefined || evento==null || evento=="")){
+      this.openFicha = true;
+      this.opened.emit(this.openFicha);
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+
+  styleObligatorioDuracionTipoDia(evento){
+    if(this.resaltadoDatos && this.body.diasGuardia && (evento==undefined || evento==null || evento=="")){
       this.openFicha = true;
       this.opened.emit(this.openFicha);
       return this.commonsService.styleObligatorio(evento);

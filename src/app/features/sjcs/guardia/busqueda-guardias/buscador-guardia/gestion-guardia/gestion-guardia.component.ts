@@ -73,6 +73,7 @@ export class GestionGuardiaComponent implements OnInit {
       this.modoEdicion = true;
     } else {
       this.modoEdicion = false;
+      this.openGen = true;
     }
     this.obtenerPermisos();
 

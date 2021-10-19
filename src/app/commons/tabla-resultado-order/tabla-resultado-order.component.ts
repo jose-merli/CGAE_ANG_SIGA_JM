@@ -95,6 +95,8 @@ export class TablaResultadoOrderComponent implements OnInit {
   comboGenerado = [{ label: 'Sí', value: 'Si'},
   { label: 'No', value: 'No'}];
   @Output() guardiasCalendarioModified = new EventEmitter<any>();
+  @Input() fromSlice : Number = 0;
+  @Input() toSlice : Number = 10;
   
   constructor(
     private renderer: Renderer2,
@@ -247,9 +249,10 @@ displayWrongSequence(){
   });
   //Returns false, 
 }
-isIncreasingSequence(numArr) {
+isIncreasingSequence(numbers) {
   let errArr = [];
   let resultado = false;
+  let numArr = Array.prototype.slice.call(numbers);
   for (var num = 0; num < numArr.length - 1; num++) {
       if (numArr[num] >= numArr[num + 1] || Number.isNaN(numArr[num]) || Number.isNaN(numArr[num + 1])) {
         errArr.push(true);
@@ -270,21 +273,21 @@ if (err == true){
     let errorSecuencia = false;
     let errSeqArr = [];
     let err2 = false;
+    let arrNumbers : Number[] = [];
     this.rowGroups.forEach((row, i) => { 
       if (i < this.rowGroups.length - 1){
         if (this.rowGroups[i].cells[1].value != this.rowGroups[i + 1].cells[1].value){
-          positions = positions + row.cells[1].value;
+          arrNumbers.push(Number(row.cells[1].value));
           //errorSecuencia = numbers.indexOf(positions) === -1;
-          errorSecuencia = this.isIncreasingSequence(positions);
+          errorSecuencia = this.isIncreasingSequence(arrNumbers);
           errSeqArr.push(errorSecuencia);
           if (errorSecuencia == true){
           }
-          positions = "";
         } else {
-          positions = positions + row.cells[1].value;
+          arrNumbers.push(Number(row.cells[1].value));
         }
       } else {
-        positions = positions + row.cells[1].value;
+        arrNumbers.push(Number(row.cells[1].value));
         errorSecuencia = this.isIncreasingSequence(positions);
         if (errorSecuencia == true){
         }
@@ -382,7 +385,7 @@ return rowsByGroup;
     });
     this.rowGroups = data.sort((a, b) => {
       let resultado;
-        resultado = compare(a.cells[1].value, b.cells[1].value, true);
+        resultado = compare(Number(a.cells[1].value), Number(b.cells[1].value), true);
     return resultado ;
   });
   this.rowGroupsAux = this.rowGroups;
@@ -539,9 +542,9 @@ this.totalRegistros = this.rowGroups.length;
     } else {
       this.unavailableUp = false;
     }
-    if(this.listaGuardias && this.positionSelected == 0){
+    if((this.listaGuardias || !this.calendarios) && this.positionSelected == 0){
       this.unavailableUp = true;
-    }else if (this.listaGuardias && this.positionSelected > 0){
+    }else if ((this.listaGuardias || !this.calendarios) && this.positionSelected > 0){
       this.unavailableUp = false;
     }
     if (this.calendarios){

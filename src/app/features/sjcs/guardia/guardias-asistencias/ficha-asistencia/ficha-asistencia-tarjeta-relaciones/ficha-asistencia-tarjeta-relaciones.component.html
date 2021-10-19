@@ -3,7 +3,7 @@
   <div class="loader"></div>
 </div>
 <p-dataTable #table [value]="relaciones" emptyMessage="{{ 'general.message.no.registros' | translate}}" [responsive] = "true" loadingIcon="fa-spinner"
-class="tabla-listado" [sortOrder]="1" [(selection)]="selectedDatos" [paginator]="true" paginatorPosition="both" [rows]="rows" selectionMode="single" (onRowSelect)="onSelectRow($event.data)"
+class="tabla-listado" [sortOrder]="1" [(selection)]="selectedDatos" [paginator]="true" paginatorPosition="both" [rows]="rows" selectionMode="multiple" (onRowSelect)="onSelectRow($event.data)"
 (onRowUnselect)="actualizaSeleccionados()">
   <p-column field="sjcs" header="{{'justiciaGratuita.oficio.designas.interesados.identificador' | translate}}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}">
     <ng-template let-col let-dato="rowData" let-ri="rowIndex" pTemplate="body">
@@ -40,8 +40,8 @@ class="tabla-listado" [sortOrder]="1" [(selection)]="selectedDatos" [paginator]=
           <p-checkbox (onChange)="onChangeSeleccionarTodo()" [(ngModel)]="seleccionarTodo" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
             name="groupname"></p-checkbox>
         </div>
-        <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': seleccionMultiple}" (click)="onChangeSeleccionMultiple()">
-          <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
+        <!--<label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': seleccionMultiple}" (click)="onChangeSeleccionMultiple()">
+          <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>-->
     </div>
   </ng-template>
   <p-footer>

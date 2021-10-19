@@ -348,6 +348,7 @@ export class FiltrosGuardiaComponent implements OnInit {
   nuevo() {
     if (this.permisoEscritura) {
       this.persistenceService.clearDatos();
+      this.persistenceService.setHistorico(false); //Lo seteamos a false, ya que si hemos pulsado en mostrar historico y le damos a nuevo aparecen todos las campos disabled
       this.router.navigate(["/gestionGuardias"]);
     }
   }

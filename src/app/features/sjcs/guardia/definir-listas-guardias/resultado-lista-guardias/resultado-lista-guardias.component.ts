@@ -79,13 +79,16 @@ export class ResultadoListaGuardiasComponent implements OnInit {
 
     if(this.table.selectionMode == 'single'){
       this.numSeleccionado = 1;
-      //REDIRECCION FICHA LISTA GUARDIA
-      sessionStorage.setItem("filtroListaGuardia",JSON.stringify(this.filtro));
-      sessionStorage.setItem("lista",JSON.stringify(lista));
-      this.router.navigate(["/fichaListaGuardias"]);
     }else{
       this.numSeleccionado = this.selectedDatos.length;
     }
+  }
+
+  onClickEnlace(lista : ListaGuardiasItem){
+    //REDIRECCION FICHA LISTA GUARDIA
+    sessionStorage.setItem("filtroListaGuardia",JSON.stringify(this.filtro));
+    sessionStorage.setItem("lista",JSON.stringify(lista));
+    this.router.navigate(["/fichaListaGuardias"]);
   }
 
   actualizaSeleccionados(){

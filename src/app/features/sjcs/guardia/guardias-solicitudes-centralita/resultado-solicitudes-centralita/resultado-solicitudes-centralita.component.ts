@@ -78,7 +78,7 @@ export class ResultadoSolicitudesCentralitaComponent implements OnInit {
       this.isLetrado = true;
 
     }
-    this.table.selectionMode = 'single';
+    this.table.selectionMode = 'multiple';
   }
 
   clear() {
@@ -130,8 +130,6 @@ export class ResultadoSolicitudesCentralitaComponent implements OnInit {
 
     if(this.table.selectionMode == 'single'){       //Redirigimos a tarjeta de Preasistencia
       this.numSeleccionado = 1;
-      sessionStorage.setItem("preasistenciaItemLink", JSON.stringify(data));
-      this.router.navigate(["/fichaPreasistencia"]);
     }else{
       this.numSeleccionado = this.selectedDatos.length;
     }
@@ -139,6 +137,10 @@ export class ResultadoSolicitudesCentralitaComponent implements OnInit {
     if(data && data.estado == '0' && this.numSeleccionado > 1){ // Solo se confirman de una en una
       this.confirmable = false;
     }
+  }
+  onClickEnlace(preasistencia : PreAsistenciaItem){
+    sessionStorage.setItem("preasistenciaItemLink", JSON.stringify(preasistencia));
+    this.router.navigate(["/fichaPreasistencia"]);
   }
 
   actualizaSeleccionados(){

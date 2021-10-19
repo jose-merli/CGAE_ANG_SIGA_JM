@@ -67,7 +67,7 @@
               {{"justiciaGratuita.guardia.gestion.unidad" | translate}}
             </label>
             <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [disabled]="!permisoEscritura || historico"
-              [showClear]="true" [(ngModel)]="body.tipoDiasGuardia" autoDisplayFirst="true" [options]="comboUnidad"></p-dropdown>
+              [showClear]="true" [(ngModel)]="body.tipoDiasGuardia" autoDisplayFirst="true" [options]="comboUnidad" [ngClass]="styleObligatorioDuracionTipoDia(body.tipoDiasGuardia)"></p-dropdown>
             <!-- <p-dropdown class="select-form" [(ngModel)]='body.idProvincia' (onChange)="onChangeProvincia()" [filter]="true" filterBy="label,labelSinTilde"
               filterMatchMode="contains" [options]="comboProvincias" placeholder="{{'general.boton.seleccionar' | translate}}"
               [disabled]="!permisoEscritura || historico" [showClear]="true">
@@ -90,7 +90,7 @@
               {{"justiciaGratuita.guardia.gestion.unidad" | translate}}
             </label>
             <p-dropdown class="select-form" [(ngModel)]="body.tipoDiasPeriodo" [disabled]="!permisoEscritura || historico" placeholder="{{'general.boton.seleccionar' | translate}}"
-              [showClear]="true" autoDisplayFirst="true" [options]="comboUnidad"></p-dropdown>
+              [showClear]="true" autoDisplayFirst="true" [options]="comboUnidad" [ngClass]="styleObligatorioPeriodoTipoDia(body.tipoDiasPeriodo)"></p-dropdown>
           </div>
 
           <!-- DIAS DE SEPARACION ENTRE GUARDIAS -->
