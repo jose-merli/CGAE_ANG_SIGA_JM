@@ -4,9 +4,9 @@
   <div class="card-body p-0">
 
     <!-- TABLA RESULTADOS -->
-    <p-table [autoLayout]="true" [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table
+    <p-table [autoLayout]="true" [value]="datosMostrados" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table
       class="tabla-listado overflow" [paginator]="true" [rows]="selectedItem" [ngClass]="{ 'customCursor' : selectMultiple }"
-      selectionMode="multiple" paginatorPosition="both" (onRowSelect)="clickFila($event)" id="tablaFoco">
+      selectionMode="multiple" paginatorPosition="both" (onRowSelect)="selectFila($event)" (onRowUnselect)="unselectFila($event)" id="tablaFoco">
         <!-- (onRowUnselect)="actualizaSeleccionados(selectedDatos)" (onRowSelect)="clickFila($event)" -->
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
@@ -39,37 +39,20 @@
         <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
           <td class="text-center" *ngFor="let col of columns">
 
-            <div *ngIf="col.field != 'tiposIncluidos' && col.field != 'fasesAutomaticas'">
-              <span class="historico" *ngIf="isHistorico(dato)">{{ dato[col.field] }}</span>
-              <span *ngIf="!isHistorico(dato)">{{ dato[col.field] }}</span>
+            <div *ngIf="col.field != 'tiposIncluidos' && col.field != 'fasesAutomaticas' && col.field != 'cuentaBancaria'">
+              <span [ngClass]="{ historico: isHistorico(dato) }">{{ dato[col.field] }}</span>
+            </div>
+
+            <div *ngIf="col.field == 'cuentaBancaria'">
+              <span [ngClass]="{ historico: isHistorico(dato) }">(...{{ dato[col.field] | slice:-4 }})</span>
             </div>
 
             <div *ngIf="col.field == 'tiposIncluidos'">
-              <span class="historico" *ngIf="isHistorico(dato)">{{ collapseTiposIncluidos(dato[col.field]) }}</span>
-              <span *ngIf="!isHistorico(dato)">{{ collapseTiposIncluidos(dato[col.field]) }}</span>
+              <span [ngClass]="{ historico: isHistorico(dato) }">{{ collapseTiposIncluidos(dato[col.field]) }}</span>
             </div>
 
             <div *ngIf="col.field == 'fasesAutomaticas'" class="text-center">
               <div class="form-row">
-
-                <!--
-                <div class="form-group-interlineado col-lg-3 col-md-3">
-                  <label>Pag</label>
-                  <mat-slide-toggle [(ngModel)]="dato['formaPago']"></mat-slide-toggle>
-                </div>
-                <div class="form-group-interlineado col-lg-3 col-md-3">
-                  <label>PDF</label>
-                  <mat-slide-toggle [(ngModel)]="dato['generarPDF']"></mat-slide-toggle>
-                </div>
-                <div class="form-group-interlineado col-lg-3 col-md-3">
-                  <label>Env</label>
-                  <mat-slide-toggle [(ngModel)]="dato['envioFacturas']"></mat-slide-toggle>
-                </div>
-                <div class="form-group-interlineado col-lg-3 col-md-3">
-                  <label>Tra</label>
-                  <mat-slide-toggle [(ngModel)]="dato['traspasoFacturas']"></mat-slide-toggle>
-                </div>
-                -->
                 
                 <div class="form-group-interlineado col-lg-3 col-md-3 mx-3">
                   <label>Pag</label>
@@ -87,8 +70,6 @@
                   <label>Tra</label>
                   <p-slider [(ngModel)]="dato['traspasoFacturas']" min="0" max="1" step="1"></p-slider>
                 </div>
-
-
                 
               </div>
               
@@ -124,7 +105,10 @@
       <button pButton *ngIf="historico" (click)="toggleHistorico()" type="button" icon="fa fa-history" iconPos="left" label="{{ 'general.message.ocultarHistorico' | translate }}"></button>
       <button pButton *ngIf="!historico" (click)="toggleHistorico()" type="button" icon="fa fa-history" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate }}"></button>
 
-      <button pButton (click)="eliminar()" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.eliminar' | translate }}"></button>
+      <button pButton *ngIf="!historico" (click)="confirmEliminar()" [disabled]="selectedDatos.length == 0" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.eliminar' | translate }}"></button>
+      <button pButton *ngIf="historico" (click)="confirmReactivar()" [disabled]="selectedDatos.length == 0" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.reactivar' | translate }}"></button>
     </div>
   </div>
+
+  <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" width="425"></p-confirmDialog>
 </div>

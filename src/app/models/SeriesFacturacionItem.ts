@@ -11,7 +11,7 @@ export class SerieFacturacionItem {
     contadorFacturas: string;
     contadorFacturasRectificativas: string;
   
-
+    fechaBaja: Date;
     tiposIncluidos: string[];
     formaPago: string;
     generarPDF: string;

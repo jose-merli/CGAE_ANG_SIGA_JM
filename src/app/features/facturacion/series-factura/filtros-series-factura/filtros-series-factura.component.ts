@@ -57,9 +57,8 @@ export class FiltrosSeriesFacturaComponent implements OnInit {
     if (this.persistenceService.getFiltros() != undefined) {
       this.body = this.persistenceService.getFiltros();
       this.persistenceService.clearFiltros();
-      this.historico = this.persistenceService.getHistorico();
 
-      this.busqueda.emit(this.historico);
+      this.busqueda.emit();
     }
 
     this.progressSpinner = false;
@@ -74,7 +73,7 @@ export class FiltrosSeriesFacturaComponent implements OnInit {
     this.getComboTiposProductos();
     this.getComboTiposServicios();
     this.getComboEtiquetas();
-    // this.getComboConsultasDestinatarios();
+    this.getComboConsultasDestinatarios();
     this.getComboContadorFacturas();
     this.getComboContadorFacturasRectificativas();
   }
@@ -177,24 +176,6 @@ export class FiltrosSeriesFacturaComponent implements OnInit {
     );
   }
 
-  // On change
-
-  onChangeCuentaBancaria(): void {
-
-  }
-
-  onChangeSufijo(): void {
-    
-  }
-
-  onChangeContadorFacturas(): void {
-    
-  }
-
-  onChangeContadorFacturasRectificativas(): void {
-    
-  }
-
   // Buttons
 
   focusInputField(someMultiselect: MultiSelect) {
@@ -229,13 +210,14 @@ export class FiltrosSeriesFacturaComponent implements OnInit {
     return true;
   }
 
+  // Botón de busqueda
+
   isBuscar() {
     if (this.checkFilters()) {
       this.persistenceService.setFiltros(this.body);
-      this.persistenceService.setHistorico(this.historico);
       
       console.log(this.body);
-      this.busqueda.emit(false);
+      this.busqueda.emit();
     }
   }
 

@@ -47,7 +47,7 @@ export class SeriesFacturaComponent implements OnInit {
     this.persistenceService.setPermisos(this.permisoEscritura);
   }
 
-  searchSeriesFacturas(event: boolean): void {
+  searchSeriesFacturas(): void {
     let filtros = JSON.parse(JSON.stringify(this.filtros.body));
     this.progressSpinner = true;
     console.log(filtros);
@@ -55,10 +55,6 @@ export class SeriesFacturaComponent implements OnInit {
     this.sigaServices.post("facturacionPyS_getSeriesFacturacion", filtros).subscribe(
       n => {
         this.datos = JSON.parse(n.body).serieFacturacionItems;
-
-        // Mostrar u ocultar histórico
-        if (!event)
-          this.datos = this.datos.filter((dato) => dato.fechaBaja != undefined && dato.fechaBaja != null);
 
         // Ordenamos los tipos incluidos por orden alfabético
         this.datos.forEach(element => {
@@ -74,7 +70,6 @@ export class SeriesFacturaComponent implements OnInit {
         this.buscar = true;
         
         if (this.tabla != undefined) {
-          this.tabla.historico = event;
           this.tabla.table.sortOrder = 0;
           this.tabla.table.sortField = '';
           this.tabla.table.reset();
