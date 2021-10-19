@@ -313,7 +313,7 @@ export class TarjetaEjgsComponent implements OnInit {
     ];
   }
 
-  getEJGRemesa(remesa){
+  getEJGRemesa(remesa, padre?){
     this.progressSpinner = true;
     this.remesasDatosEntradaItem =
     {
@@ -333,6 +333,10 @@ export class TarjetaEjgsComponent implements OnInit {
           }
           
         });
+
+        if(padre){
+          this.remesaItem.incidencias = "0 / 0";
+        }
 
         console.log("Contenido de la respuesta del back --> ", this.datos);
         this.progressSpinner = false;

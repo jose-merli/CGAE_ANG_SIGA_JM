@@ -13,6 +13,7 @@ export class RemesasItem {
     totalEJG?: number;
     comboIncidencia?: string;
     ficha?: boolean;
+    incidencias?: string;
 
     constructor() { }
 }

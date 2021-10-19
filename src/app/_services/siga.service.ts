@@ -778,6 +778,28 @@ export class SigaServices {
       });
   }
 
+  postDownloadFilesWithFileName(service: string, body: any): Observable<any> {
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+    return this.http
+      .post(environment.newSigaUrl + this.endpoints[service], body, {
+        headers: headers,
+        observe: 'response', // si observe: "response" no sirve. Si se quita el observe sirve
+        responseType: 'blob'
+      })
+      .map((response) => {
+		let data = {
+			file: new Blob([response.body], {type: response.headers.get("Content-Type")}),
+			filename: response.headers.get('content-disposition')
+		};
+        return data;
+      })
+      .catch((response) => {
+        return this.parseErrorBlob(response);
+      });
+  }
+
   postSendContent(service: string, file: any): Observable<any> {
     let formData: FormData = new FormData();
     if (file != undefined) {

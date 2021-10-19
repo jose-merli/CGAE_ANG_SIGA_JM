@@ -179,6 +179,8 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
         if(padre){
           this.estado.emit(true);
         }
+        
+        this.remesaItem.estado = this.resultado[0].estado;
 
         console.log("Contenido de la respuesta del back --> ", this.resultado);
         this.progressSpinner = false;

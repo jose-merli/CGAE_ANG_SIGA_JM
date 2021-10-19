@@ -9,9 +9,7 @@ import { SigaServices } from '../../../../_services/siga.service';
 import { TarjetaDatosGeneralesComponent } from './tarjeta-datos-generales/tarjeta-datos-generales.component';
 import { Router } from '../../../../../../node_modules/@angular/router';
 import { TarjetaEjgsComponent } from './tarjeta-ejgs/tarjeta-ejgs.component';
-import { RemesasBusquedaItem } from '../../../../models/sjcs/RemesasBusquedaItem';
-import { declaredViewContainer } from '@angular/core/src/view/util';
-import { Button } from 'selenium-webdriver';
+import { saveAs } from "file-saver/FileSaver";
 
 @Component({
   selector: 'app-ficha-remesas',
@@ -27,6 +25,7 @@ export class FichaRemesasComponent implements OnInit {
   progressSpinner: boolean = false;
   msgs;
   item;
+  remesaFromTabla: boolean;
   remesaTabla;
   remesaItem: RemesasItem = new RemesasItem();
   ejgItem;
@@ -34,6 +33,7 @@ export class FichaRemesasComponent implements OnInit {
   remesa: { idRemesa: any; descripcion: string; numero: number; };
   getAccionesRemesas;
   acciones: boolean = false;
+  estado: boolean = false;
 
   constructor(private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
@@ -53,8 +53,13 @@ export class FichaRemesasComponent implements OnInit {
       console.log("Item en JSON -> ", this.remesaTabla);
       this.guardado = true;
       this.getAcciones();
+      this.remesaFromTabla = true;
+      if(this.remesaTabla.estado == "Iniciada" || this.remesaTabla.estado == "Validada" || this.remesaTabla.estado == "Error envío"){
+        this.estado = true;
+      }
     } else if (localStorage.getItem('ficha') == "nuevo") {
       this.remesaItem.descripcion = "";
+      this.remesaFromTabla = false;
     }
     localStorage.removeItem('ficha');
 
@@ -98,7 +103,73 @@ export class FichaRemesasComponent implements OnInit {
         error => {},
         () => { }
       );
-      
+  }
+
+  ejecutarAccion(accion){
+    let remesaAccion;
+
+    if (this.remesaTabla != null) {
+      remesaAccion = {
+        'idRemesa': this.remesaTabla.idRemesa,
+        'accion': accion
+      };
+    } else if (this.remesaItem != null) {
+      remesaAccion = {
+        'idRemesa': (this.remesa.idRemesa != null && this.remesa.idRemesa != undefined) ? this.remesa.idRemesa.toString() : 0,
+        'accion': accion
+      };
+    }
+
+    this.progressSpinner = true;
+
+    this.sigaServices.post("ficharemesa_ejecutaOperacionRemesa", remesaAccion).subscribe(
+      data => {
+        this.showMessage("info", this.translateService.instant("general.message.informacion"), JSON.parse(data.body).error.description);
+        this.remesa.idRemesa = JSON.parse(data.body).id;
+      },
+      err => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  descargarLogErrores(){
+    let remesaAccion;
+
+    if (this.remesaTabla != null) {
+      remesaAccion = {
+        'idRemesa': this.remesaTabla.idRemesa,
+        'accion': 2
+      };
+    } else if (this.remesaItem != null) {
+      remesaAccion = {
+        'idRemesa': (this.remesa.idRemesa != null && this.remesa.idRemesa != undefined) ? this.remesa.idRemesa.toString() : 0,
+        'accion': 2
+      };
+    }
+
+    this.progressSpinner = true;
+
+    this.sigaServices.postDownloadFilesWithFileName("ficharemesa_descargarLogErrores", remesaAccion).subscribe(
+      (response: {file: Blob, filename: string}) => {
+        let filename = response.filename.split(';')[1].split('filename')[1].split('=')[1].trim();
+        if (response.file.size == 0) {          
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El archivo no existe");          
+
+        } else {
+          saveAs(response.file, filename);
+        }
+      },
+      err => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El archivo no existe"); 
+      }
+    );
+
+    this.progressSpinner = false;
   }
 
   save() {
@@ -132,6 +203,7 @@ export class FichaRemesasComponent implements OnInit {
       },
       () => {
         this.tarjetaDatosGenerales.listadoEstadosRemesa(this.remesa, true);
+        this.tarjetaEJGs.getEJGRemesa(this.remesa, true);
         this.progressSpinner = false;
         this.guardado = true;
       }
@@ -275,7 +347,21 @@ export class FichaRemesasComponent implements OnInit {
   }
 
   openTab() {
+    this.progressSpinner = true;
     this.router.navigate(["/ejg"]);
+    if(this.remesaFromTabla){
+      localStorage.setItem('remesa', JSON.stringify(this.remesaTabla)); 
+    }else{
+      localStorage.setItem('remesa', JSON.stringify(this.remesa)); 
+    }
+    if(this.tarjetaDatosGenerales.busquedaActualizaciones){
+      localStorage.setItem('busquedaActualizaciones', "true");
+    }
+  }
+  
+  volver(){
+    this.progressSpinner = true;
+    this.router.navigate(["/remesas"]);
   }
 
   showMessage(severity, summary, msg) {
@@ -285,6 +371,10 @@ export class FichaRemesasComponent implements OnInit {
       summary: summary,
       detail: msg
     });
+  }
+
+  clear() {
+    this.msgs = [];
   }
 
 }

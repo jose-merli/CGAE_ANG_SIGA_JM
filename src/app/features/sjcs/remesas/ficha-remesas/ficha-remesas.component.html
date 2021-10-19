@@ -7,23 +7,27 @@
 </div>
 
 <div class="busqueda-container">
-  <app-tarjeta-datos-generales [remesaTabla]="remesaTabla" [remesaItem]="remesaItem" (estado) = "checkAcciones()"></app-tarjeta-datos-generales>
+  <app-tarjeta-datos-generales [remesaTabla]="remesaTabla" [remesaItem]="remesaItem" (estado) = "getAcciones()"></app-tarjeta-datos-generales>
   <app-tarjeta-ejgs [remesaTabla]="remesaTabla" [remesaItem]="remesaItem"></app-tarjeta-ejgs>
 
   <div class="card-footer">
     <div id="botonesAccion" class="text-right main-button ">
       <ng-container *ngIf="acciones">
-        <button *ngFor="let i of getAccionesRemesas" (click)="buttonClicked(i)" pButton type="button" icon="fa fa-trash-alt" iconPos="left"
-        [label]= "i.descripcion"></button>
+        <button *ngFor="let i of getAccionesRemesas" (click)="ejecutarAccion(i.idTipoAccionRemesa)" pButton type="button" icon="fa fa-check" iconPos="left"
+        [label]= "i.descripcion" [disabled] = "!guardado"></button>
        </ng-container>
+       <button (click)="descargarLogErrores()" pButton type="button" icon="fa fa-download" iconPos="left" [disabled] = "!guardado"
+        label="Descargar Log"></button>
       <button (click)="confirmDelete(true)" pButton type="button" icon="fa fa-trash-alt" iconPos="left" [disabled] = "!guardado"
         label="{{ 'general.boton.eliminarRemesa' | translate}}"></button>
       <button (click)="openTab()" pButton type="button"  icon="fa fa-plus"
-       iconPos="left"  label="{{ 'general.boton.aniadirExpedientes' | translate}}"></button>
+       iconPos="left"  label="{{ 'general.boton.aniadirExpedientes' | translate}}" [disabled] = "!guardado || !estado"></button>
       <button (click)="confirmDelete(false)" pButton type="button" icon="fa fa-trash-alt" iconPos="left"
         label="{{ 'general.boton.eliminarExpedientes' | translate}}"></button>
-      <button (click)="save()" pButton type="button" icon="far fa-save" iconPos="left"
+      <button (click)="save()" pButton type="button" icon="fa fa-save" iconPos="left"
         label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="volver()" pButton type="button" icon="fa fa-angle-left" iconPos="left"
+        label="{{ 'general.boton.volver' | translate}}"></button>
     </div>
   </div>
 

@@ -8,6 +8,7 @@ import { CommonsService } from '../../../../_services/commons.service';
 import { datos_combos } from '../../../../utils/datos_combos';
 import { KEY_CODE } from '../../../administracion/auditoria/usuarios/auditoria-usuarios.component';
 import { MultiSelect } from 'primeng/multiselect';
+import { ThrowStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-filtros-ejg',
@@ -81,10 +82,14 @@ export class FiltrosEjgComponent implements OnInit {
 
   bodyDictamen = [];
   @Input() permisos;
+  @Input() remesa;
+  @Input() busquedaActualizaciones;
   /*Éste método es útil cuando queremos qeremos informar de cambios en los datos desde el hijo,
   por ejemplo, si tenemos un botón en el componente hijo y queremos actualizar los datos del padre.*/
   @Output() busqueda = new EventEmitter<boolean>();
   @Input() permisoEscritura;
+
+  remesaFicha: boolean = false;
 
 
   @ViewChild('inputNumero') inputNumero: ElementRef;
@@ -105,6 +110,14 @@ export class FiltrosEjgComponent implements OnInit {
   ngOnInit() {
     this.progressSpinner = true;
     this.getCombos();
+
+    if(this.remesa != null || this.remesa != undefined){
+      this.remesaFicha = true;
+    }
+
+    console.log("Viene de la ficha de una remesa? -> ", this.remesaFicha);
+    console.log("Remesa -> ", this.remesa);
+
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisos = this.persistenceService.getPermisos();
     }
@@ -418,6 +431,15 @@ export class FiltrosEjgComponent implements OnInit {
       n => {
         this.comboEstadoEJG = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboEstadoEJG);
+
+        if(this.remesaFicha){
+          this.comboEstadoEJG[0] = this.comboEstadoEJG[11];
+          this.comboEstadoEJG[1] = this.comboEstadoEJG[12];
+          for(let i = 0; this.comboEstadoEJG.length > 2 ; i++){
+            this.comboEstadoEJG.pop();
+          }
+        }
+        console.log("comboEstadoEJG -> ", this.comboEstadoEJG);
       },
       err => {
         console.log(err);
