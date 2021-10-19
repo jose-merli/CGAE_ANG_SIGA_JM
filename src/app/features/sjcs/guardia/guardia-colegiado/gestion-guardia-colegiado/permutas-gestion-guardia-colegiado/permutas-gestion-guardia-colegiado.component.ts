@@ -1,8 +1,10 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ConfirmationService } from 'primeng/primeng';
+import { ConfirmationService } from 'primeng/api';
 import { TranslateService } from '../../../../../../commons/translate';
+import { GuardiaItem } from '../../../../../../models/guardia/GuardiaItem';
 import { PermutaItem } from '../../../../../../models/guardia/PermutaItem';
+import { CommonsService } from '../../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
 
@@ -25,18 +27,29 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
   msgs;
   permutas;
   body: any;
+  clickPermuta:boolean = false;
+  comboTurnos;
+  comboGuardias;
+  valueComboTurno;
+  valueComboGuardia
+  motivos: any;
   constructor(private translateService: TranslateService,
     private router: Router,
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
     private confirmationService: ConfirmationService,
-    private changeDetectorRef: ChangeDetectorRef) { }
+    private changeDetectorRef: ChangeDetectorRef,
+    private commonServices: CommonsService) { }
 
   ngOnInit() {
     this.progressSpinner = true;
     if(this.persistenceService.getDatos()){
       this.body = this.persistenceService.getDatos();
      this.getPermutas();
+     this.getComboTurno();
+     if(this.valueComboTurno != null || this.valueComboTurno != undefined){
+       this.getComboGuardia();
+     }
      this.getCols()
     }
     this.progressSpinner = false
@@ -131,7 +144,101 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
 
   validar(){}
 
-  permutar(){}
+  nuevaFila(){
+ this.clickPermuta = true;
+
+ let dummy = {
+  fechaconfirmacion: "",
+  fechasolicitud: "",
+  nombreTurno: "",
+  nombreGuardia: "",
+  motivos: "",
+  nuevoRegistro: true
+};
+
+this.permutas = [dummy, ...this.permutas];
+
+  }
+
+  checkPermutar(){
+ 
+      let icon = "fa fa-edit";
+
+      this.confirmationService.confirm({
+        key: 'perm',
+        message: '¿Desea añadir la siguiente Permuta?',
+        icon: icon,
+        accept: () => {
+          this.permutaColegiado();
+          this.restPermutas();
+
+        },
+        reject: () => {
+          this.msgs = [{
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant("general.message.accion.cancelada")
+          }];
+          this.restPermutas();
+
+        }
+      });
+    
+  }
+
+  permutaColegiado(){
+    let permutaItem = new PermutaItem();
+    permutaItem.idturnoConfirmador = this.valueComboTurno;
+    permutaItem.idguardiaConfirmador = this.valueComboGuardia;
+
+    permutaItem.motivos = this.motivos;
+    permutaItem.idpersonaSolicitante = this.body.idPersona;
+    permutaItem.idguardiaSolicitante = this.body.idGuardia;
+    permutaItem.idturnoConfirmador = this.body.idTurno;
+    console.log("permutado");
+    console.log(permutaItem);
+  }
+
+  restPermutas(){
+    this.selectedDatos = [];
+    this.clickPermuta = false;
+  }
+  getComboTurno() {
+
+    this.sigaServices.getParam("guardiasColegiado_getComboTurnoInscrito",'?idPersona='+ this.body.idPersona).subscribe(
+      n => {
+        this.comboTurnos = n.combooItems;
+        this.commonServices.arregloTildesCombo(this.comboTurnos);
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  getComboGuardia() {
+    this.sigaServices.getParam(
+      "guardiasColegiado_getComboGuardiaDestinoInscrito", "?idTurno=" + this.valueComboTurno).subscribe(
+        data => {
+          this.comboGuardias = data.combooItems;
+          this.commonServices.arregloTildesCombo(this.comboGuardias);
+        },
+        err => {
+          console.log(err);
+        }
+      )
+
+  }
+
+  onChangeTurnos() {
+    this.valueComboGuardia = "";
+    this.comboGuardias = [];
+
+    if (this.valueComboTurno) {
+      this.getComboGuardia();
+    }
+  }
+
   clear(){
     this.msgs = [];
   }
