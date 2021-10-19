@@ -23,13 +23,12 @@ export class FichaCompraSuscripcionItem {
     
     //TARJETA FORMA DE PAGO
     idFormasPagoComunes: string;
-    idFormaPagoSeleccionada: number;
-    totalNeto: number;
-    totalIVA: number;
-    impTotal: number;
+    idFormaPagoSeleccionada: string;
+    totalNeto: string;
+    totalIVA: string;
+    impTotal: string;
     pendPago: number;
     cuentaBancSelecc: string;
-    noFact: string;
 
     idEstadoPeticion: string;
     productos: ListaProductosCompraItem[];

@@ -32,7 +32,7 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
     { field: "nColegiado", header: "censo.busquedaClientesAvanzada.literal.nColegiado" },
     { field: "apellidosNombre", header: "justiciaGratuita.oficio.designas.interesados.apellidosnombre" },
     { field: "concepto", header: "facturacionSJCS.facturacionesYPagos.conceptos" },
-    { field: "idFormaPago", header: "facturacion.productos.formapago" },
+    { field: "desFormaPago", header: "facturacion.productos.formapago" },
     { field: "importe", header: "facturacionSJCS.facturacionesYPagos.importe" },
     { field: "idEstadoSolicitud", header: "solicitudes.literal.titulo.estadosolicitud" },
     { field: "fechaEfectiva", header: "administracion.auditoriaUsuarios.literal.fechaEfectiva" },
@@ -173,7 +173,7 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
         if (n.status != 200) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         } else if(JSON.parse(n.body).error.description!=""){
-          this.showMessage("info", "***Solicitudes no alteradas", "*****Las solicitudes"+JSON.parse(n.body).error.description+" no se han alterado ya que su estado actual no permite la acción requerida");
+          this.showMessage("info", this.translateService.instant("facturacion.productos.solicitudesNoAlteradas"), this.translateService.instant("facturacion.productos.solicitudesNoAlteradasDesc") +JSON.parse(n.body).error.description);
         }else {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           //Se actualiza la información de la ficha
@@ -207,7 +207,7 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
         if (n.status != 200) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         } else if(JSON.parse(n.body).error.description!=""){
-          this.showMessage("info", "***Solicitudes no alteradas", "*****Las solicitudes"+JSON.parse(n.body).error.description+" no se han alterado ya que su estado actual no permite la acción requerida");
+          this.showMessage("info", this.translateService.instant("facturacion.productos.solicitudesNoAlteradas"), this.translateService.instant("facturacion.productos.solicitudesNoAlteradasDesc") +JSON.parse(n.body).error.description);
         }else {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           //Se actualiza la información de la ficha
