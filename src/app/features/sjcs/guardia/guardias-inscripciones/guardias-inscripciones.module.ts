@@ -25,6 +25,12 @@ import { SelectorModule } from '../../../../commons/selector/selector.module';
 import { MatSortModule } from '@angular/material';
 import { PaginadorModule } from '../../../../commons/paginador/paginador.module';
 import { TablaResultadoMixModule } from '../../../../commons/tabla-resultado-mix/tabla-resultado-mix.module';
+import { FichaGuardiasInscripcionesComponent } from './ficha-guardias-inscripciones/ficha-guardias-inscripciones.component';
+import { TarjetaResumenComponent } from './ficha-guardias-inscripciones/tarjeta-resumen/tarjeta-resumen.component';
+import { TarjetaLetradoComponent } from './ficha-guardias-inscripciones/tarjeta-letrado/tarjeta-letrado.component';
+import { TarjetaColaComponent } from './ficha-guardias-inscripciones/tarjeta-cola/tarjeta-cola.component';
+import { TarjetaInscripcionGuardiaComponent } from './ficha-guardias-inscripciones/tarjeta-inscripcion-guardia/tarjeta-inscripcion-guardia.component';
+import { TarjetaGestionInscripcionGuardiaComponent } from './ficha-guardias-inscripciones/tarjeta-gestion-inscripcion-guardia/tarjeta-gestion-inscripcion-guardia.component';
 
 @NgModule({
   imports: [
@@ -58,6 +64,12 @@ import { TablaResultadoMixModule } from '../../../../commons/tabla-resultado-mix
   declarations: [
     GuardiasInscripcionesComponent,
     GuardiasInscripcionesFiltrosComponent,
+    FichaGuardiasInscripcionesComponent,
+    TarjetaResumenComponent,
+    TarjetaLetradoComponent,
+    TarjetaColaComponent,
+    TarjetaInscripcionGuardiaComponent,
+    TarjetaGestionInscripcionGuardiaComponent,
     //TablaResultadoMixComponent
     
   ],

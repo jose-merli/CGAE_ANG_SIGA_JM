@@ -51,17 +51,17 @@ export let endpoints_guardia: any = {
     saltosCompensacionesGuardia_esGuardia: "guardia/saltosCompensaciones/isGrupo",
 
     //Incompatibilidades
-    guardiasIncompatibilidades_buscarIncompatibilidades : "guardia/buscarIncompatibilidades",
-    guardiasIncompatibilidades_eliminarIncompatibilidades:  "guardia/eliminarIncompatibilidades",
+    guardiasIncompatibilidades_buscarIncompatibilidades: "guardia/buscarIncompatibilidades",
+    guardiasIncompatibilidades_eliminarIncompatibilidades: "guardia/eliminarIncompatibilidades",
     guardiasIncompatibilidades_guardarIncompatibilidades: "guardia/guardarIncompatibilidades",
     guardiasIncompatibilidades_getCombo: "guardia/getComboGuardiasInc",
 
     //Calendarios programados
-    guardiaCalendario_buscar : "guardia/buscarCalendariosProgramados",
-    guardiaCalendario_eliminar : "guardia/eliminarCalendariosProgramados",
-    guardiaCalendario_guardar : "guardia/guardarCalendariosProgramados",
+    guardiaCalendario_buscar: "guardia/buscarCalendariosProgramados",
+    guardiaCalendario_eliminar: "guardia/eliminarCalendariosProgramados",
+    guardiaCalendario_guardar: "guardia/guardarCalendariosProgramados",
     guardiaCalendario_guardiaFromConjunto: "guardia/guardiasFromIdConjunto",
-    guardiaCalendario_getGuardiasFromCalendar : "guardia/getGuardiasCalendario",
+    guardiaCalendario_getGuardiasFromCalendar: "guardia/getGuardiasCalendario",
     guardiaCalendario_getFechasProgFromGuardia: "guardia/getFechasProgramacionGuardia",
     guardiaCalendario_guardarGuardiaConjunto: "guardia/addGuardiaConjunto",
     guardiaCalendario_guardarGuardiaCalendar: "guardia/addGuardiaCalendario",
@@ -71,7 +71,7 @@ export let endpoints_guardia: any = {
     guardiaCalendario_generar: "guardia/generarCalendario",
     guardiaCalendario_descargarExcelLog: "guardia/descargarExcelLog",
     guardiaCalendario_zipLog: "guardia/descargarZipExcelLog",
-    
+
 
     //Asistencia
     busquedaGuardias_getTurnosByColegiadoFecha: "asistencia/turnosByColegiadoFecha",
@@ -128,36 +128,55 @@ export let endpoints_guardia: any = {
     busquedaPreasistencias_activarPreasistenciasDenegadas: "preasistencia/activarPreAsistenciasDenegadas",
 
     //Inscripciones
-    guardiasInscripciones_buscarInscripciones : "guardia/busquedainscripciones",
-    guardiasInscripciones_validarInscripciones : "guardias/inscripciones/validarInscripciones",
-    guardiasInscripciones_denegarInscripciones : "guardias/inscripciones/denegarInscripciones",
+    guardiasInscripciones_buscarInscripciones: "guardia/busquedainscripciones",
+    guardiasInscripciones_validarInscripciones: "guardias/inscripciones/validarInscripciones",
+    guardiasInscripciones_denegarInscripciones: "guardias/inscripciones/denegarInscripciones",
     guardiasInscripciones_solicitarBajaInscripciones: "guardias/inscripciones/solicitarBajaInscripcion",
     guardiasInscripciones_cambiarFechaInscripciones: "guardias/inscripciones/cambiarFechaInscripcion",
     guardiasInscripciones_buscarsaltoscompensaciones: "guardias/inscripciones/buscarSaltosCompensaciones",
     guardiasInscripciones_eliminarsaltoscompensaciones: "guardias/inscripciones/eliminarSaltosCompensaciones",
     guardiasInscripciones_buscarTrabajosSJCS: "guardias/inscripciones/buscarTrabajosSJCS",
     guardiasInscripciones_buscarGuardiasAsocTurnos: "guardias/inscripciones/buscarGuardiasAsocTurnos",
+    guardiasInscripciones_TarjetaColaGuardia: "guardias/inscripciones/inscripcionesCombo",
+    guardiasInscripciones_TarjetaGestionInscripciones: "guardias/inscripciones/historicoInscripcion",
+    guardiasInscripciones_inscripcionesDisponibles:"guardias/inscripciones/inscripcionesDisponibles",
+    guardiasInscripciones_inscripcionPorguardia: "guardias/inscripciones/inscripcionPorguardia",
+    guardiasInscripciones_updateInscripcion: "guardias/inscripciones/updateInscripcion",
+    guardiasInscripciones_insertSolicitarAlta: "guardias/inscripciones/insertSolicitarAlta",
+
 
     //guardias colegiado
-   guardiasColegiado_buscarGuardiasColegiado: "guardia/busquedaGuardia/busquedaGuardiasColegiado",
-   guardiasColegiado_validarSolicitudGuardia: "guardia/validarSolicitudGuardia",
-   guardiasColegiado_desvalidarGuardiaColegiado: "guardia/desvalidarGuardiaColegiado",
-   guardiasColegiado_eliminarGuardiaColegiado:"guardia/eliminarGuardiaColegiado",
+    guardiasColegiado_buscarGuardiasColegiado: "guardia/busquedaGuardia/busquedaGuardiasColegiado",
+    guardiasColegiado_validarSolicitudGuardia: "guardia/validarSolicitudGuardia",
+    guardiasColegiado_desvalidarGuardiaColegiado: "guardia/desvalidarGuardiaColegiado",
+    guardiasColegiado_eliminarGuardiaColegiado: "guardia/eliminarGuardiaColegiado",
+    guardiasColegiado_getCalendarioColeg: "guardiaColegiado/getCalendarioColeg",
+    guardiasColegiado_getGuardiaCole: "guardiaColegiado/getGuardiaColeg",
+    guardiasColegiado_getTurnoGuardiaColeg: "guardiaColegiado/getTurnoGuardiaColeg",
+    guardiasColegiado_getColegiado: "guardiaColegiado/getColegiado",
+    guardiasColegiado_updateGuardiaColeg: "guardiaColegiado/updateGuardiaColeg",
+    guardiasColegiado_insertGuardiaColeg: "guardiaColegiado/insertGuardiaColeg",
+    guardiasColegiado_sustituirGuardiaColeg: "guardiaColegiado/sustituirGuardiaColeg",
+    guardiasColegiado_idConjuntoGuardia: "guardiaColegiado/getIdConjuntoGuardia",
+    guardiasColegiado_getPermutasColegiado: "guardiaColegiado/getPermutasColegiado",
+    guardiasColegiado_getComboTurnoInscrito: "guardiaColegiado/getTurnoInscrito",
+    guardiasColegiado_getComboGuardiaDestinoInscrito: "guardiaColegiado/getGuardiaDestinoInscrito",
 
 
-       //CARGAS MASIVAS GUARDIA
-       busquedaGuardia_guardia: "combo/guardias",
-       busquedaGuardia_guardiaNoBaja: "combo/guardiasNoBaja",
-       cargasMasivasGuardia_decargarModelo: "guardia/cargasMasivasGuardia/descargarModelo",
-       cargasMasivasGuardia_uploadFileI: "guardia/cargasMasivasGuardia/uploadFileI",
-       cargasMasivasGuardia_uploadFileGC: "guardia/cargasMasivasGuardia/uploadFileGC",
-       cargasMasivasGuardia_uploadFileC: "guardia/cargasMasivasGuardia/uploadFileC",
+    //CARGAS MASIVAS GUARDIA
+    busquedaGuardia_guardia: "combo/guardias",
+    busquedaGuardia_guardiaNoBaja: "combo/guardiasNoBaja",
+    cargasMasivasGuardia_decargarModelo: "guardia/cargasMasivasGuardia/descargarModelo",
+    cargasMasivasGuardia_uploadFileI: "guardia/cargasMasivasGuardia/uploadFileI",
+    cargasMasivasGuardia_uploadFileGC: "guardia/cargasMasivasGuardia/uploadFileGC",
+    cargasMasivasGuardia_uploadFileC: "guardia/cargasMasivasGuardia/uploadFileC",
 
-        guardiasColegiado_getGuardiaCole:"guardiaColegiado/getGuardiaColeg",
-        guardiasColegiado_getTurnoGuardiaColeg:"guardiaColegiado/getTurnoGuardiaColeg",
-        guardiasColegiado_getColegiado:"guardiaColegiado/getColegiado",
-        guardiasColegiado_updateGuardiaColeg:"guardiaColegiado/updateGuardiaColeg",
-        guardiasColegiado_insertGuardiaColeg:"guardiaColegiado/insertGuardiaColeg",
-        guardiasColegiado_sustituirGuardiaColeg:"guardiaColegiado/sustituirGuardiaColeg",
 
+   //listas guardias
+   listasGuardias_searchListaGuardias: "listaguardias/buscarListaGuardias",
+   listasGuardias_saveListaGuardias: "listaguardias/guardarListaGuardias",
+   listasGuardias_searchGuardiasFromLista: "listaguardias/searchGuardiasFromLista",
+   listasGuardias_searchTipoDiaGuardia: "guardia/searchTipoDiaGuardia",
+   listasGuardias_guardarGuardiasEnLista: "listaguardias/guardarGuardiasEnLista",
+   listasGuardias_eliminarGuardiasFromLista: "listaguardias/eliminarGuardiasFromLista"
 }

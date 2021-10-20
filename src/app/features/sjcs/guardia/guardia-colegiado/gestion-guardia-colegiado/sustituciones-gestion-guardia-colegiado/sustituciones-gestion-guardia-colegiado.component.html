@@ -33,13 +33,13 @@
               </app-fecha>
             </div>
             <div class="form-group-interlineado col-lg-3 col-md-3">
-              <p-checkbox [disabled]="modoLectura" (onClick)="onChangeCheckSalto($event)" [(ngModel)]="salto" binary="true"
+              <p-checkbox [disabled]="modoLectura" (onChange)="onChangeCheckSalto($event)" [(ngModel)]="salto" binary="true"
                 label="{{ 'justiciaGratuita.oficio.designas.letrados.salto' | translate }}" name="groupname"
                 ></p-checkbox>
 
             </div>
             <div class="form-group-interlineado col-lg-3 col-md-3">
-              <p-checkbox [disabled]="modoLectura" (onClick)="onChangeCheckCompensacion($event)" [(ngModel)]="compensacion" binary="true"
+              <p-checkbox [disabled]="modoLectura" (onChange)="onChangeCheckCompensacion($event)" [(ngModel)]="compensacion" binary="true"
                 label="{{ 'justiciaGratuita.oficio.designas.letrados.compensacion' | translate }}" name="groupname"
                 ></p-checkbox>
 
@@ -68,8 +68,8 @@
 
     <div class="card-footer">
       <div class="text-right main-button ">
-        <button [disabled]="modoLectura" (click)="sustituir()" pButton type="button" icon="fa fa-save" iconPos="left"
-          label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button [disabled]="modoLectura || (usuarioBusquedaExpress.numColegiado == '' || usuarioBusquedaExpress.numColegiado == undefined)" (click)="sustituir()" pButton type="button" icon="fa fa-save" iconPos="left"
+          label="{{ 'general.boton.sustituir' | translate}}"></button>
       </div>
     </div>
   </div>

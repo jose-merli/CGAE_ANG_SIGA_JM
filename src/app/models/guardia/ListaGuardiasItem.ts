@@ -5,5 +5,7 @@ export class ListaGuardiasItem {
     idTipo : string;
     idGrupoZona : string;
     idZona : string;
+    observaciones : string;
+    tipoDesc : string;
     constructor(){}
 }

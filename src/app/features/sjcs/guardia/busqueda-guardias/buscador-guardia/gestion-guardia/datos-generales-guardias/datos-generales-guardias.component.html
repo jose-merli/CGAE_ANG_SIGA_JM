@@ -21,7 +21,7 @@
               <strong> {{body.descripcion}}</strong>
             </label>
             <label>{{'dato.jgr.guardia.guardias.tipoGuardia' | translate}}:
-              <!--<strong>{{tipoGuardiaResumen.label}}</strong>-->
+              <strong>{{tipoGuardiaResumen}}</strong>
             </label>
             <label>{{'justiciaGratuita.guardia.gestion.sincCentralGuardias' | translate}}:
               <strong *ngIf="!body.sincCentralGuardias">No</strong>
@@ -221,7 +221,7 @@
       <div class="text-right main-button">
         <button (click)="rest()" pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-undo" iconPos="left"
           label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="save()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="save()" pButton type="button" [disabled]="historico || !permisoEscritura" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
   </div>

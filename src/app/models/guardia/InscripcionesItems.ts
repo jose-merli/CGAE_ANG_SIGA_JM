@@ -17,7 +17,7 @@ export class InscripcionesItems {
   idpersona: String;
   historico: boolean;
   fechasolicitud: Date;
-  idturno: String;
+  idturno;
   observacionessolicitud: String;
   fechavalidacion: Date;
   observacionesvalidacion: String;
@@ -38,7 +38,7 @@ export class InscripcionesItems {
   nombre_area: String;
   idmateria: String;
   nombre_materia: String;
-  idguardia: String;
+  idguardia;
   nombreGuardia: String;
   descripcion_tipo_guardia: String;
   obligatoriedad_inscripcion: String;

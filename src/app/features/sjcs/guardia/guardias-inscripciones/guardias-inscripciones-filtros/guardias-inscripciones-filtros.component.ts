@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, HostListener, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, HostListener, Output, EventEmitter, SimpleChanges, AfterViewInit } from '@angular/core';
 import { TranslateService } from '../../../../../commons/translate';
 import { KEY_CODE } from '../../../../censo/busqueda-no-colegiados/busqueda-no-colegiados.component';
 import { Router } from '../../../../../../../node_modules/@angular/router';
@@ -14,7 +14,7 @@ import { ColegiadoItem } from '../../../../../models/ColegiadoItem';
   styleUrls: ['./guardias-inscripciones-filtros.component.scss']
 })
 
-export class GuardiasInscripcionesFiltrosComponent implements OnInit {
+export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewInit {
 
   progressSpinner: boolean = false;
   showDatosGenerales: boolean = true;
@@ -52,6 +52,21 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit {
     private translateService: TranslateService,
     private commonsService: CommonsService,
     private persistenceService: PersistenceService) { }
+  
+  ngAfterViewInit(): void {
+    if(sessionStorage.getItem("filtroFromFichaGuardia")){
+      let filtrosFromGuardia = {
+        idTurno: '',
+        idGuardia: ''
+      }
+      filtrosFromGuardia = JSON.parse(sessionStorage.getItem("filtroFromFichaGuardia"));
+      this.filtros.idturno = [filtrosFromGuardia.idTurno];
+      this.onChangeTurno();
+      this.filtros.idguardia = [filtrosFromGuardia.idGuardia];
+      this.filtrosValues.emit(this.filtros);
+      sessionStorage.removeItem("filtroFromFichaGuardia");
+    }
+  }
 
   ngOnInit() {
 
@@ -152,15 +167,16 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit {
             data => {
               colegiadoConectado = JSON.parse(data.body).colegiadoItem[0];
               this.persistenceService.setDatos(colegiadoConectado);
-              sessionStorage.setItem("origin", "newInscrip");
-              this.router.navigate(["/gestionInscripciones"]);
+              sessionStorage.setItem("sesion", "nuevaInscripcion");
+              this.router.navigate(["/fichaInscripcionesGuardia"]);
             })
       });
     }
     else {
-      sessionStorage.setItem("origin", "newInscrip");
+      sessionStorage.setItem("sesion", "nuevaInscripcion");
       this.router.navigate(["/buscadorColegiados"]);
     }
+    this.progressSpinner = false;
   }
 
   onChangeTurno() {

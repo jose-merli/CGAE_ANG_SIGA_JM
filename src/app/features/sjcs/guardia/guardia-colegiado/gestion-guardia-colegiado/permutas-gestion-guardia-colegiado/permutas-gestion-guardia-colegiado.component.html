@@ -37,17 +37,38 @@
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
               <div>
-                <!-- <div *ngIf="col.field != 'sjcs'">
+                <div *ngIf="col.field == 'fechaconfirmacion'">
+                  <span>
+                    {{dato[col.field] | date: 'dd/MM/yyyy'}}
+                  </span>
+                </div>
+                <div *ngIf="col.field == 'fechasolicitud'">
+                  <span>
+                    {{dato[col.field] | date: 'dd/MM/yyyy'}}
+                  </span>
+                </div>
+
+                <div *ngIf="col.field != 'fechasolicitud' && col.field != 'fechaconfirmacion'">
                   <span>
                     {{dato[col.field]}}
                   </span>
                 </div>
-                <div *ngIf="checkPre(dato) && col.field == 'sjcs'">
-                  <span *ngIf="isPreDesigna == true" class="enlace"
-                    (click)="navigateToFichaPre()">{{dato[col.field]}}</span>
-                  <span *ngIf="isPreDesigna == false" class="enlace"
-                    (click)="checkPermisosConsultEditRelacion(dato)">{{dato[col.field]}}</span>
-                </div> -->
+                <div *ngIf="col.field == 'nombreTurno' && clickPermuta &&  permutas[rowIndex].nuevoRegistro">
+                  <p-dropdown
+                  [(ngModel)]='valueComboTurno' class="select-form" placeholder="Seleccionar" [options]="comboTurnos"
+                  [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+                </div>
+                <div *ngIf="col.field == 'nombreGuardia' && clickPermuta &&  permutas[rowIndex].nuevoRegistro">
+                  <p-dropdown
+                  [(ngModel)]='valueComboGuardia' class="select-form" placeholder="Seleccionar" [options]="comboGuardias"
+                  [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+                </div>
+
+                <div>
+                  <input *ngIf="col.field == 'motivos' && clickPermuta &&  permutas[rowIndex].nuevoRegistro" [(ngModel)]='motivos'
+                type="text" pInputText />
+                </div>
+
                
               </div>
 
@@ -88,19 +109,33 @@
 
       <div class="card-footer">
         <div class="text-right main-button">
-          <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura" (click)="validar()"
-            type="button" icon="fa fa-save" iconPos="left" label="{{'general.boton.validar' | translate}}"></button>
+          
+
+            <button pButton 
+            [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0 || clickPermuta)"
+            (click)="nuevaFila()" type="button" iconPos="left"
+            label="{{ 'general.boton.new' | translate }}"></button>
+
           <button pButton
-            [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura"
-            (click)="permutar()" type="button" iconPos="left"
+          [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0 || !clickPermuta)"
+            (click)="checkPermutar()" type="button" iconPos="left"
             label="{{ 'general.boton.permutar' | translate }}"></button>
+
+            <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0 || clickPermuta)" (click)="validar()"
+            type="button" icon="fa fa-save" iconPos="left" label="{{'general.boton.validar' | translate}}"></button>
 
         </div>
       </div>
     </div>
   </div>
+  <p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" key="perm" #perm>
+    <p-footer>
+      <button type="button" pButton icon="fa-check" label="Si" (click)="perm.accept()"></button>
+      <button type="button" pButton icon="fa-close" label="No" (click)="perm.reject()"></button>
+    </p-footer>
+  </p-confirmDialog>
+  <div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+  </div>
 </div>
 
-<div *ngIf="progressSpinner" class="overlay-spinner">
-  <div class="loader"></div>
-</div>

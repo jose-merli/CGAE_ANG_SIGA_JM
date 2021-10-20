@@ -1,5 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { isRegExp } from 'util';
 import { TranslateService } from '../../../../../../commons/translate';
 import { GuardiaItem } from '../../../../../../models/sjcs/GuardiaItem';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
@@ -15,7 +16,6 @@ export class SustitucionesGestionGuardiaColegiadoComponent implements OnInit {
   progressSpinner;
   msgs
   body = new GuardiaItem();
-  newCol = new GuardiaItem();
   usuarioBusquedaExpress = {
     numColegiado: '',
     nombreAp: '',
@@ -23,9 +23,11 @@ export class SustitucionesGestionGuardiaColegiadoComponent implements OnInit {
   };
   modoLectura:boolean;
   fechaSustitucion: Date;
-  salto;
-  compensacion;
-  comensustitucion;
+  salto:boolean = false;
+  compensacion:boolean = false;
+  comensustitucion = "";
+  newLetrado;
+  saltoOcompensacion;
   constructor(private datepipe:DatePipe,private persistenceService: PersistenceService,
     private translateService: TranslateService,private sigaServices: SigaServices) { }
 
@@ -40,40 +42,64 @@ export class SustitucionesGestionGuardiaColegiadoComponent implements OnInit {
       this.usuarioBusquedaExpress.nombreAp = busquedaColegiado.nombre + " " + busquedaColegiado.apellidos;
       this.usuarioBusquedaExpress.numColegiado = busquedaColegiado.nColegiado;
       this.usuarioBusquedaExpress.idPersona = busquedaColegiado.idPersona;
-      this.newCol.idPersona = this.usuarioBusquedaExpress.idPersona;
+      this.newLetrado = this.usuarioBusquedaExpress.idPersona;
       this.fechaSustitucion = new Date();
-      this.newCol.fechasustitucion = this.fechaSustitucion;
     }
   }
 
-  clear(){
-    this.msgs = "";
-  }
+  
   sustituir(){
-    this.modoLectura = true;
     
-    this.newCol.idTurno = this.body.idTurno;
-    this.newCol.idGuardia = this.body.idGuardia;
-    this.newCol.fechadesde = this.body.fechadesde;
-    
-    this.newCol.sustituto = "1";
-    this.newCol.letradosustituido = this.body.idPersona;
-    this.newCol.comensustitucion = this.comensustitucion;
-
-    //this.salto;
-    //this.compensacion;
-    this.sigaServices.post("guardiasColegiado_sustituirGuardiaColeg", this.newCol).subscribe(
-      n => {
-        this.progressSpinner = false;
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.body.observacionesAnulacion = "";
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner = false;
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+    if((this.newLetrado != undefined || this.newLetrado != null) && (this.fechaSustitucion != undefined || this.fechaSustitucion != null) ){
+      if(this.salto == true && this.compensacion == true){
+        this.saltoOcompensacion = "S/C";
+      }else if(this.salto == true && this.compensacion == false){
+        this.saltoOcompensacion = "S"
+      }else if(this.salto == false && this.compensacion == true){
+        this.saltoOcompensacion = "C"
+      }else{
+        this.saltoOcompensacion = "N"
       }
-    );
+      let letradoSus = [
+        this.body.idTurno,
+        this.body.idGuardia,
+        this.body.fechadesde,
+        this.body.idPersona,
+        //datos para el sustituto
+        this.newLetrado,
+        this.fechaSustitucion.getTime(),
+        this.comensustitucion,
+        this.saltoOcompensacion,
+        this.body.idCalendarioGuardias
+        ]
+
+        console.log(letradoSus)
+    
+         this.sigaServices.post("guardiasColegiado_sustituirGuardiaColeg", letradoSus).subscribe(
+          n => {
+            this.progressSpinner = false;
+            let error  = JSON.parse(n.body).error
+
+            if(error.code == 'OK'){
+              this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant(error.description));
+            }else{
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.description));
+            }
+            
+            this.comensustitucion;
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+          }
+        );
+        this.modoLectura = true;
+    }else{
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
+    }
+
+    
   }
 
   fillFechaSustitucion(event){
@@ -83,10 +109,29 @@ export class SustitucionesGestionGuardiaColegiadoComponent implements OnInit {
   changeColegiado(event){
     this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
     this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
-    this.usuarioBusquedaExpress.idPersona = event.idPersona;
-    this.newCol.numColegiado = this.usuarioBusquedaExpress.idPersona;
+    //busqueda del colegiado
+    this.progressSpinner = true
+    this.sigaServices.getParam("componenteGeneralJG_busquedaColegiado", "?colegiadoJGItem=" + event.nColegiado).subscribe(
+      data => {
+        
+
+        if (data.colegiadoJGItem.length == 1) {
+          
+          this.usuarioBusquedaExpress.idPersona = data.colegiadoJGItem[0].idPersona;
+          this.newLetrado = this.usuarioBusquedaExpress.idPersona;
+        } else {
+          
+          this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("general.message.colegiadoNoEncontrado"));
+        }
+        this.progressSpinner = false;
+      },
+      error => {
+        this.progressSpinner = false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
+    
     this.fechaSustitucion = new Date()
-    this.newCol.fechasustitucion = this.fechaSustitucion;
   }
   formatDate(date) {
     const pattern = 'dd/MM/yyyy';
@@ -100,7 +145,14 @@ export class SustitucionesGestionGuardiaColegiadoComponent implements OnInit {
       detail: msg
     });
   }
-  onChangeCheckSalto(event){}
-  onChangeCheckCompensacion(event){}
+  clear(){
+    this.msgs = [];
+  }
+  onChangeCheckSalto(event){
+    this.salto = event
+  }
+  onChangeCheckCompensacion(event){
+    this.compensacion = event
+  }
 
 }
