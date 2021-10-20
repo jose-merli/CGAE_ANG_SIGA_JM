@@ -125,6 +125,8 @@ export class TablaEjgComisionComponent implements OnInit {
     this.getComboFundamento();
     this.getComboResolucion();
     this.getComboRemesa();
+    this.getObligatoriedadResolucion();
+
   }
 
 
@@ -197,7 +199,6 @@ export class TablaEjgComisionComponent implements OnInit {
 
   checkResolucion() {
     console.log("********************************checkResolucion");
-    this.getObligatoriedadResolucion();
     if (this.valueResolucion != null && this.valueFundamento == null && this.obligatoriedadResolucion != null) {
       this.muestraCampoObligatorioFundamento();
     }
@@ -242,12 +243,15 @@ export class TablaEjgComisionComponent implements OnInit {
       n => {
         this.obligatoriedadResolucion = n.combooItems;
         console.log("****************************************" + this.obligatoriedadResolucion);
-        this.commonServices.arregloTildesCombo(this.comboEstadoEJG);
       },
       err => {
         console.log(err);
       }
     );
+  }
+
+  cancelarGuardarEditados(){
+    this.showModalEditarSeleccionados = false;
   }
 
 
@@ -803,12 +807,121 @@ export class TablaEjgComisionComponent implements OnInit {
     }
   }
 
+  guardarEditados() {
+
+    if(this.valueAnioActa != null){
+  
+      var array = this.valueAnioActa.split(',');
+      var annioActa = parseInt(array[1]);
+      var idActa = parseInt(array[2]);
+  
+  
+      this.selectedDatos.forEach(list => { list.annioActa = annioActa;
+                                           list.numActa = idActa;})
+  
+      this.sigaServices.post("filtrosejg_editarActaAnio", this.selectedDatos).subscribe(
+        n => {
+          this.progressSpinner = false;
+          if (JSON.parse(n.body).status == "OK") this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.busqueda.EjgEnRemesa"));
+        },
+        err => {
+          this.progressSpinner = false;
+          console.log(err);
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        }
+      );
+    }
+  
+    if(this.selectAnioActa == true){
+      this.sigaServices.post("filtrosejg_borrarActaAnio", this.selectedDatos).subscribe(
+        n => {
+          this.progressSpinner = false;
+          if (JSON.parse(n.body).status == "OK") this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.busqueda.EjgEnRemesa"));
+        },
+        err => {
+          this.progressSpinner = false;
+          console.log(err);
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        }
+      );
+    }
+  
+    if(this.valuePonente != null && this.valueFechaPonente != null){
+  
+      this.selectedDatos.forEach(list => { list.ponente = this.valuePonente;
+        list.fechaPonenteDesd = this.valueFechaPonente;})
+  
+      this.sigaServices.post("filtrosejg_editarPonente", this.selectedDatos).subscribe(
+        n => {
+          this.progressSpinner = false;
+          if (JSON.parse(n.body).status == "OK") this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.busqueda.EjgEnRemesa"));
+        },
+        err => {
+          this.progressSpinner = false;
+          console.log(err);
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        }
+      );
+    }
+  
+    if(this.selectPonente == true){
+      this.sigaServices.post("filtrosejg_borrarPonente", this.selectedDatos).subscribe(
+        n => {
+          this.progressSpinner = false;
+          if (JSON.parse(n.body).status == "OK") this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.busqueda.EjgEnRemesa"));
+        },
+        err => {
+          this.progressSpinner = false;
+          console.log(err);
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        }
+      );
+    }
+  
+  
+    if(this.valueResolucion != null || this.valueFundamento != null){
+  
+      this.selectedDatos.forEach(list => { list.idTipoDictamen = this.valueResolucion;
+        list.fundamentoJuridico = this.valueFundamento;})
+  
+      this.sigaServices.post("filtrosejg_editarResolucionFundamento", this.selectedDatos).subscribe(
+        n => {
+          this.progressSpinner = false;
+          if (JSON.parse(n.body).status == "OK") this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.busqueda.EjgEnRemesa"));
+        },
+        err => {
+          this.progressSpinner = false;
+          console.log(err);
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        }
+      );
+    }
+  
+    if(this.selectResolucionFundamento == true){
+      this.sigaServices.post("filtrosejg_borrarResolucionFundamento", this.selectedDatos).subscribe(
+        n => {
+          this.progressSpinner = false;
+          if (JSON.parse(n.body).status == "OK") this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.busqueda.EjgEnRemesa"));
+        },
+        err => {
+          this.progressSpinner = false;
+          console.log(err);
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        }
+      );
+    }
+  
+  }
+
 
 
 }
 
 
-function guardarEditados() {
-  throw new Error('Function not implemented.');
-}
 

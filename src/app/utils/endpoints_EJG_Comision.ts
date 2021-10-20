@@ -17,6 +17,13 @@ export let endpoints_EJG_Comision: any = {
     filtrosejg_comboPresidente: "ejgComision/filtros-ejg/comboPresidente",
     filtrosejg_comboSecretario: "ejgComision/filtros-ejg/comboSecretario",
     filtrosejg_busquedaActas: "ejgComision/filtros-ejg/busquedaActas",
+    filtrosejg_editarResolucionFundamento: "ejgComision/filtros-ejg/editarResolucionFundamento",
+    filtrosejg_borrarResolucionFundamento: "ejgComision/filtros-ejg/borrarResolucionFundamento",
+    filtrosejg_editarPonente: "ejgComision/filtros-ejg/editarPonente",
+    filtrosejg_borrarPonente: "ejgComision/filtros-ejg/borrarPonente",
+    filtrosejg_editarActaAnio: "ejgComision/filtros-ejg/editarActaAnio",
+    filtrosejg_borrarActaAnio: "ejgComision/filtros-ejg/borrarActaAnio",
+
 
 
 }
