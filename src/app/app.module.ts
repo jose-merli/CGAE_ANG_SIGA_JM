@@ -491,6 +491,7 @@ import { TarjetaFacturaCompraSuscripcionComponent } from './features/facturacion
 import { QueryBuilderModule } from '@syncfusion/ej2-angular-querybuilder';
 import { enableRipple } from '@syncfusion/ej2-base';
 import { MatSlideToggleModule } from '@angular/material';
+import { DatosGeneralesSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/datos-generales-series-factura/datos-generales-series-factura.component';
 enableRipple(true);
 
 @NgModule({
@@ -898,7 +899,8 @@ enableRipple(true);
 		TarjetaListaCompraProductosComponent,
 		DetalleTarjetaPrecioFichaServiciosFacturacionComponent,
 		TarjetaProductosCompraSuscripcionComponent,
-		TarjetaFacturaCompraSuscripcionComponent
+		TarjetaFacturaCompraSuscripcionComponent,
+		DatosGeneralesSeriesFacturaComponent
 	],
 	imports: [
 		Paginador3Module,

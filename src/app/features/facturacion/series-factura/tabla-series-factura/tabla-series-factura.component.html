@@ -39,41 +39,45 @@
         <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
           <td class="text-center" *ngFor="let col of columns">
 
-            <div *ngIf="col.field != 'tiposIncluidos' && col.field != 'fasesAutomaticas' && col.field != 'cuentaBancaria'">
-              <span [ngClass]="{ historico: isHistorico(dato) }">{{ dato[col.field] }}</span>
-            </div>
-
-            <div *ngIf="col.field == 'cuentaBancaria'">
-              <span [ngClass]="{ historico: isHistorico(dato) }">(...{{ dato[col.field] | slice:-4 }})</span>
-            </div>
-
-            <div *ngIf="col.field == 'tiposIncluidos'">
-              <span [ngClass]="{ historico: isHistorico(dato) }">{{ collapseTiposIncluidos(dato[col.field]) }}</span>
-            </div>
-
-            <div *ngIf="col.field == 'fasesAutomaticas'" class="text-center">
-              <div class="form-row">
-                
-                <div class="form-group-interlineado col-lg-3 col-md-3 mx-3">
-                  <label>Pag</label>
-                  <p-slider [(ngModel)]="dato['formaPago']" min="0" max="1" step="1"></p-slider>
-                </div>
-                <div class="form-group-interlineado col-lg-3 col-md-3 mx-3">
-                  <label>PDF</label>
-                  <p-slider [(ngModel)]="dato['generarPDF']" min="0" max="1" step="1"></p-slider>
-                </div>
-                <div class="form-group-interlineado col-lg-3 col-md-3 mx-3">
-                  <label>Env</label>
-                  <p-slider [(ngModel)]="dato['envioFacturas']" min="0" max="1" step="1"></p-slider>
-                </div>
-                <div class="form-group-interlineado col-lg-3 col-md-3 mx-3">
-                  <label>Tra</label>
-                  <p-slider [(ngModel)]="dato['traspasoFacturas']" min="0" max="1" step="1"></p-slider>
-                </div>
-                
+            <div [ngSwitch]="col.field">
+              <div *ngSwitchCase="'cuentaBancaria'">
+                <span [ngClass]="{ historico: isHistorico(dato) }">(...{{ dato[col.field] | slice:-4 }})</span>
               </div>
-              
+
+              <div *ngSwitchCase="'sufijo'">
+                <span [ngClass]="{ historico: isHistorico(dato) }">{{ dato[col.field] }}</span>
+              </div>
+
+              <div *ngSwitchCase="'tiposIncluidos'">
+                <span [ngClass]="{ historico: isHistorico(dato) }">{{ collapseTiposIncluidos(dato[col.field]) }}</span>
+              </div>
+
+              <div *ngSwitchCase="'fasesAutomaticas'">
+                <div class="form-row">
+                  <div class="form-group-interlineado col-lg-3 col-md-3 mx-3">
+                    <label>Pag</label>
+                    <p-slider [(ngModel)]="dato['formaPago']" min="0" max="1" step="1"></p-slider>
+                  </div>
+                  <div class="form-group-interlineado col-lg-3 col-md-3 mx-3">
+                    <label>PDF</label>
+                    <p-slider [(ngModel)]="dato['generarPDF']" min="0" max="1" step="1"></p-slider>
+                  </div>
+                  <div class="form-group-interlineado col-lg-3 col-md-3 mx-3">
+                    <label>Env</label>
+                    <p-slider [(ngModel)]="dato['envioFacturas']" min="0" max="1" step="1"></p-slider>
+                  </div>
+                  <div class="form-group-interlineado col-lg-3 col-md-3 mx-3">
+                    <label>Tra</label>
+                    <p-slider [(ngModel)]="dato['traspasoFacturas']" min="0" max="1" step="1"></p-slider>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngSwitchDefault>
+                <a class="enlace" (click)="openTab(dato)"><span [ngClass]="{ historico: isHistorico(dato) }">{{ dato[col.field] }}</span></a>
+              </div>
             </div>
+            
           </td>
         </tr>
       </ng-template>

@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { ConfirmationService, DataTable } from 'primeng/primeng';
 import { TranslateService } from '../../../../commons/translate';
 import { SerieFacturacionItem } from '../../../../models/SeriesFacturacionItem';
@@ -45,6 +46,7 @@ export class TablaSeriesFacturaComponent implements OnInit {
     private commonsService: CommonsService,
     private confirmationService: ConfirmationService,
     private persistenceService: PersistenceService,
+    private router: Router,
     private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit() {
@@ -194,7 +196,7 @@ export class TablaSeriesFacturaComponent implements OnInit {
     this.sigaServices.post("facturacionPyS_eliminaSerieFacturacion", this.selectedDatos).subscribe(
       data => {
         this.busqueda.emit();
-        this.showMessage("success", "Eliminar", "Las series de facturación dadas de baja con exito.");
+        this.showMessage("success", "Eliminar", "Las series de facturación han sido dadas de baja con exito.");
       },
       err => {
         console.log(err);
@@ -238,6 +240,14 @@ export class TablaSeriesFacturaComponent implements OnInit {
         this.progressSpinner = false;
       }
     );
+  }
+
+  // Abrir ficha de serie facturación
+  openTab(selectedRow) {
+    this.progressSpinner = true;
+    let serieFacturacionItem: SerieFacturacionItem = selectedRow;
+    sessionStorage.setItem("serieFacturacionItem", JSON.stringify(serieFacturacionItem));
+    this.router.navigate(["/datosSeriesFactura"]);
   }
 
   showMessage(severity, summary, msg) {
