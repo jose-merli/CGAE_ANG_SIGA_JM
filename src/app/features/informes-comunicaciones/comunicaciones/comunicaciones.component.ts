@@ -17,6 +17,7 @@ import { esCalendar } from "../../../utils/calendar";
 import { ProgramarItem } from "../../../models/ProgramarItem";
 import { FichaColegialGeneralesItem } from "../../../models/FichaColegialGeneralesItem";
 import { CommonsService } from '../../../_services/commons.service';
+import { NuevaComunicacionItem } from "../../../models/NuevaComunicacionItem";
 
 export enum KEY_CODE {
   ENTER = 13
@@ -66,6 +67,15 @@ export class ComunicacionesComponent implements OnInit {
   @ViewChild("table") table: DataTable;
   selectedDatos;
 
+  //VARIABLES CREACIÓN NUEVA COMUNICACIÓN
+  showNuevaComm: boolean = false;
+  bodyNuevaComm: NuevaComunicacionItem = new NuevaComunicacionItem();
+  selectedDocsNewComm : any [] = [];
+  comboJuzgado: any[] = [];
+  colsDocNuevaComm = [
+    { field: 'name', header: "censo.cargaMasivaDatosCurriculares.literal.nombreFichero" }
+  ];
+
   constructor(
     private sigaServices: SigaServices,
     private translateService: TranslateService,
@@ -81,6 +91,7 @@ export class ComunicacionesComponent implements OnInit {
     sessionStorage.removeItem("crearNuevaCom");
 
     this.getComboColegios();
+    this.getComboJuzgado();
     this.getTipoEnvios();
     this.getEstadosEnvios();
     this.getClasesComunicaciones();
@@ -307,6 +318,90 @@ para poder filtrar el dato con o sin estos caracteres*/
     );
   }
 
+  //MËTODOS NUEVA COMUNICACIÓN
+  //Método para mostrar la ventana de creación de comunicación estandar
+  nueva(){
+    this.showNuevaComm = true;
+    //Crear objeto especifico para el formulario de nueva comunicación
+    this.bodyNuevaComm = new NuevaComunicacionItem();
+    this.bodyNuevaComm.fechaEfecto = new Date();
+  }
+
+  isNuevaDisabled(){
+    //"Existirá un permiso específico en la aplicación para habilitar o no a cada usuario el botón de Nueva comunicación."
+    //Insertar proceso, insertar permisos del proceso e implmentar método apra obtener valor de permiso asociado.
+    //"Adicionalmente, para que esté disponible esta acción, el colegio tendrá que tener activada en la tabla de parámetros de configuración la integración con PNJ."
+    //Comprobar a que parametro hace referencia e implmentar servicio para obtener su valor.
+    return false;
+  }
+
+  cerrarDialogNueva(){
+    this.showNuevaComm = false;
+  }
+
+  seleccionarFichero(event: any) {
+
+    let fileList: FileList = event.files;
+    let ficheroTemporal = fileList[0];
+
+      this.bodyNuevaComm.docs.push(ficheroTemporal);
+  }
+
+  checkSaveNuevaComm(){
+    // let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+    // if (msg != undefined) {
+    //   this.msgs = msg;
+    // } 
+    // else {
+      if (this.checkCamposObligatoriosNuevaComm()) this.saveNuevaComm();
+      else {
+        this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant("justiciaGratuita.ejg.documentacion.disNew") }];
+      }
+    // }
+  }
+
+  checkCamposObligatoriosNuevaComm(){
+    let campoVacio: boolean = false;
+    if(this.bodyNuevaComm.fechaEfecto == null ||
+      this.bodyNuevaComm.asunto == null || this.bodyNuevaComm.asunto.trim() ){
+        campoVacio = true;
+    }
+    return !campoVacio;
+  }
+
+  saveNuevaComm(){
+    //Implementacion de servicio POST para insertar la nueva comunicacion en una tabla (por investigar)
+    this.selectedDocsNewComm
+  }
+
+  deleteDocumentos(){
+    for(let doc of this.selectedDocsNewComm){
+      let indexDoc = this.bodyNuevaComm.docs.findIndex(el => el.webkitRelativePath == doc.webkitRelativePath);
+      this.selectedDocsNewComm.splice(indexDoc, 1);
+      this.selectedDocsNewComm[0].inde
+      //filter((drink, index) => drink !== idx);
+    }
+    //Alternativa
+    let indexesDoc = [];
+    for(let doc of this.selectedDocsNewComm){
+      indexesDoc.push(doc.index);
+      //
+    }
+    this.bodyNuevaComm.docs.filter((doc, index) => !indexesDoc.includes(index));
+    this.selectedDocsNewComm = [];
+  }
+
+  getComboJuzgado() {
+    this.sigaServices.get("combo_comboJuzgadoDesignaciones").subscribe(
+      n => {
+        this.comboJuzgado = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboJuzgado);
+      },
+      err => {
+      }
+    );
+  }
+
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
@@ -343,6 +438,8 @@ para poder filtrar el dato con o sin estos caracteres*/
     sessionStorage.removeItem("filtrosCom");
     this.getResultados();
   }
+
+  
 
   getResultados() {
     this.sigaServices
@@ -565,5 +662,8 @@ función para que no cargue primero las etiquetas de los idiomas*/
     this.bodyProgramar.fechaProgramada = event;
   }
 
+  fillNuevaFechaEfecto(event) {
+    this.bodyNuevaComm.fechaEfecto = event;
+  }
 
 }
