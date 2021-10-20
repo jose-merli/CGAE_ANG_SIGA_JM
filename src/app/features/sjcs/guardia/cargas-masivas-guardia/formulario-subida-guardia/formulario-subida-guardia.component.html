@@ -10,7 +10,7 @@
     <div *ngIf="showSubidaFichero" class="module vista-simple">
       <div class="row">
         <div *ngIf="tipo == 'I'" class="form-group-interlineado col-lg-3 col-md-3">
-          <label>{{ "oficio.cargasMasivas.fechaSolicitud" | translate }} (*)</label>
+          <label>{{ "oficio.cargasMasivas.fechaSolicitud" | translate }} </label>
           <br>
           <app-fecha [(value)]="fechaSolicitud" [disabledDelete]="true" (valueChangeSelected)="fillFechaCarga($event)" (valueChangeInput)="detectFechaCargaInput($event)"></app-fecha> 
         </div>
