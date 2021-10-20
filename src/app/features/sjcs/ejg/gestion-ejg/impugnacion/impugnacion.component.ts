@@ -244,12 +244,8 @@ export class ImpugnacionComponent implements OnInit {
   }
   rest() {
     this.impugnacion = JSON.parse(JSON.stringify(this.bodyInicial));
-    if(this.impugnacion.fechaAuto!= null && this.impugnacion.fechaAuto!= undefined){
-      this.impugnacion.fechaAuto = new Date(this.impugnacion.fechaAuto);
-    }
-    if(this.impugnacion.fechaPublicacion!= null && this.impugnacion.fechaPublicacion!= undefined){
-      this.impugnacion.fechaPublicacion = new Date(this.impugnacion.fechaPublicacion);
-    }
+    this.impugnacion.fechaAuto = new Date(this.impugnacion.fechaAuto);
+    this.impugnacion.fechaPublicacion = new Date(this.impugnacion.fechaPublicacion);
   }
   checkPermisosSave() {
     let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);

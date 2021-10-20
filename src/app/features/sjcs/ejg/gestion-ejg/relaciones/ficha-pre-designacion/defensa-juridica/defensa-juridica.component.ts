@@ -455,7 +455,7 @@ export class DefensaJuridicaComponent implements OnInit {
   }
 
   getComboJuzgado() {
-    this.sigaServices.get("combo_comboJuzgadoDesignaciones").subscribe(
+    this.sigaServices.get("filtrosejg_comboJuzgados").subscribe(
       n => {
         this.comboJuzgado = n.combooItems;
         this.commonsServices.arregloTildesCombo(this.comboJuzgado);
