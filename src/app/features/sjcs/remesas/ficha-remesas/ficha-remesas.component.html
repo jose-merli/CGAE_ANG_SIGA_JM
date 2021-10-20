@@ -18,14 +18,14 @@
       </ng-container>
       <button (click)="descargarLogErrores()" pButton type="button" icon="fa fa-download" iconPos="left"
       [disabled] = "!guardado || (tarjetaEJGs.datos == undefined || tarjetaEJGs.datos.length == 0)" label="Descargar Log"></button>
-      <button (click)="confirmDelete(true)" pButton type="button" icon="fa fa-trash-alt" iconPos="left" [disabled] = "!guardado"
+      <button (click)="checkPermisosDelete(true)" pButton type="button" icon="fa fa-trash-alt" iconPos="left" [disabled] = "!guardado"
         label="{{ 'general.boton.eliminarRemesa' | translate}}"></button>
       <button (click)="openTab()" pButton type="button"  icon="fa fa-plus"
        iconPos="left"  label="{{ 'general.boton.aniadirExpedientes' | translate}}" [disabled] = "!guardado || !estado"></button>
-      <button (click)="confirmDelete(false)" pButton type="button" icon="fa fa-trash-alt" iconPos="left"
+      <button (click)="checkPermisosDelete(false)" pButton type="button" icon="fa fa-trash-alt" iconPos="left"
         [disabled] = "((!tarjetaEJGs.selectMultiple || !tarjetaEJGs.selectAll) && (tarjetaEJGs.selectedDatos == undefined || tarjetaEJGs.selectedDatos.length == 0))"
         label="{{ 'general.boton.eliminarExpedientes' | translate}}"></button>
-      <button (click)="save()" pButton type="button" icon="fa fa-save" iconPos="left"
+      <button (click)="checkPermisosSave()" pButton type="button" icon="fa fa-save" iconPos="left"
         label="{{ 'general.boton.guardar' | translate}}"></button>
       <button (click)="volver()" pButton type="button" icon="fa fa-angle-left" iconPos="left"
         label="{{ 'general.boton.volver' | translate}}"></button>

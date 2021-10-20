@@ -1,0 +1,17 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="header-title">
+  <i class="fa fa-square"></i>
+  <p>{{ "menu.justiciaGratuita" | translate}}
+    <i class="fa fa-angle-right"></i> {{ 'menu.justiciaGratuita.TurnosOficio' | translate }}
+    <i class="fa fa-angle-right"></i> {{ 'menu.justiciaGratuita.cargaMasiva' | translate }}
+  </p>
+</div>
+
+<app-tarjeta-fichero-modelo></app-tarjeta-fichero-modelo> 
+<app-tarjeta-subida-fichero></app-tarjeta-subida-fichero>
+<app-tarjeta-listado></app-tarjeta-listado>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+</div>

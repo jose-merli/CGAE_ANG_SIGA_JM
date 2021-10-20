@@ -150,6 +150,10 @@ import { ComunicaDesignacionesComponent } from './features/sjcs/comunicaciones/c
 import { DesignacionesComponent } from './features/sjcs/oficio/designaciones/designaciones.component';
 import { CargasMasivasOficioComponent } from './features/sjcs/oficio/cargas-masivas-oficio/cargas-masivas-oficio.component';
 import { FichaPreDesignacionComponent } from './features/sjcs/ejg/gestion-ejg/relaciones/ficha-pre-designacion/ficha-pre-designacion.component';
+import { RemesasResultadosComponent } from './features/sjcs/remesas-resultados/remesas-resultados.component';
+import { FichaRemesasResultadosComponent } from './features/sjcs/remesas-resultados/ficha-remesas-resultados/ficha-remesas-resultados.component';
+import { CargaMasivaProcuradoresComponent } from './features/sjcs/intercambios/carga-masiva-procuradores/carga-masiva-procuradores.component';
+import { CargaDesignaProcuradorComponent } from './features/sjcs/intercambios/carga-designa-procurador/carga-designa-procurador.component';
 
 //Consultas
 import { RecuperarConsultasComponent } from './features/consultas/recuperar-consultas/recuperar-consultas.component';
@@ -239,8 +243,7 @@ import { BajasTemporalesComponent } from "./features/sjcs/oficio/bajas-temporale
 import { TurnosComponent } from "./features/sjcs/oficio/turnos/busqueda-turnos.component";
 import { BuscadorColegiadosComponent } from "./commons/buscador-colegiados/buscador-colegiados.component";
 import { BusquedaAsuntosComponent } from "./commons/busqueda-asuntos/busqueda-asuntos.component";
-import { RemesasResultadosComponent } from './features/sjcs/remesas-resultados/remesas-resultados.component';
-import { FichaRemesasResultadosComponent } from "./features/sjcs/remesas-resultados/ficha-remesas-resultados/ficha-remesas-resultados.component";
+
 
 
 const appRoutes: Routes = [
@@ -997,6 +1000,16 @@ const appRoutes: Routes = [
 	{
 		path: 'fichaRemesasEnvio',
 		component: FichaRemesasComponent,
+		canActivate: [ AuthGuard ]
+	},
+	{
+		path: 'cargaMasivaProcuradores',
+		component: CargaMasivaProcuradoresComponent,
+		canActivate: [ AuthGuard ]
+	},
+	{
+		path: 'cargaDesignaProcurador',
+		component: CargaDesignaProcuradorComponent,
 		canActivate: [ AuthGuard ]
 	},
 	{

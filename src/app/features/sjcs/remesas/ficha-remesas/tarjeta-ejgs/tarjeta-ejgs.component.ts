@@ -182,45 +182,6 @@ export class TarjetaEjgsComponent implements OnInit {
     return {};
   }
 
-  checkPermisosDelete() {
-    let msg = this.commonsService.checkPermisos(this.permisos, undefined);
-
-    if (msg != undefined) {
-      this.msgs = msg;
-    } else {
-      if (((!this.selectMultiple || !this.selectAll) && (this.selectedDatos == undefined || this.selectedDatos.length == 0)) || !this.permisos) {
-        this.msgs = this.commonsService.checkPermisoAccion();
-      } else {
-        this.confirmDelete();
-      }
-    }
-  }
-
-  confirmDelete() {
-    let mess = this.translateService.instant(
-      "messages.deleteConfirmation"
-    );
-    let icon = "fa fa-edit";
-    this.confirmationService.confirm({
-      message: mess,
-      icon: icon,
-      accept: () => {
-        this.delete()
-      },
-      reject: () => {
-        this.msgs = [
-          {
-            severity: "info",
-            summary: "Cancel",
-            detail: this.translateService.instant(
-              "general.message.accion.cancelada"
-            )
-          }
-        ];
-      }
-    });
-  }
-
   selectedRow(selectedDatos) {
     if (this.selectedDatos == undefined) {
       this.selectedDatos = []
@@ -233,32 +194,6 @@ export class TarjetaEjgsComponent implements OnInit {
         this.selectMultiple = true;
       }
     }
-  }
-
-  delete() {
-    let del = new RemesasBusquedaObject();
-    del.resultadoBusqueda = this.selectedDatos;
-    this.sigaServices.post("listadoremesas_borrarRemesa", del.resultadoBusqueda).subscribe(
-      data => {
-        this.showMessage("success", this.translateService.instant("general.message.correct"), JSON.parse(data.body).error.description);
-        this.selectedDatos = [];
-        this.progressSpinner = false;
-      },
-      err => {
-        if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-        this.selectMultiple = false;
-        this.selectAll = false;
-        this.search.emit(true);
-      }
-    );
   }
 
   onChangeSelectAll() {

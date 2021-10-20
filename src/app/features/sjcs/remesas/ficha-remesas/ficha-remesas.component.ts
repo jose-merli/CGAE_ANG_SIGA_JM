@@ -10,6 +10,7 @@ import { TarjetaDatosGeneralesComponent } from './tarjeta-datos-generales/tarjet
 import { Router } from '../../../../../../node_modules/@angular/router';
 import { TarjetaEjgsComponent } from './tarjeta-ejgs/tarjeta-ejgs.component';
 import { saveAs } from "file-saver/FileSaver";
+import { procesos_comision } from '../../../../permisos/procesos_comision';
 
 @Component({
   selector: 'app-ficha-remesas',
@@ -20,6 +21,9 @@ export class FichaRemesasComponent implements OnInit {
 
   @ViewChild(TarjetaDatosGeneralesComponent) tarjetaDatosGenerales: TarjetaDatosGeneralesComponent;
   @ViewChild(TarjetaEjgsComponent) tarjetaEJGs: TarjetaEjgsComponent;
+  permisoEscrituraGuardar;
+  permisoEscrituraBorrarRemesa;
+  permisoEscrituraBorrarExpediente;
   botonValidar: boolean = false;
   guardado: boolean = false;
   progressSpinner: boolean = false;
@@ -68,6 +72,61 @@ export class FichaRemesasComponent implements OnInit {
       'descripcion': "",
       'numero': 0
     }
+
+    this.commonsService.checkAcceso(procesos_comision.guardadoRemesasEnvio)
+      .then(respuesta => {
+
+        this.permisoEscrituraGuardar = respuesta;
+
+        this.persistenceService.setPermisos(this.permisoEscrituraGuardar);
+
+        if (this.permisoEscrituraGuardar == undefined) {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
+      }
+    ).catch(error => console.error(error));
+
+    this.commonsService.checkAcceso(procesos_comision.borradoRemesasEnvio)
+      .then(respuesta => {
+
+        this.permisoEscrituraBorrarRemesa = respuesta;
+
+        this.persistenceService.setPermisos(this.permisoEscrituraBorrarRemesa);
+
+        if (this.permisoEscrituraBorrarRemesa == undefined) {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
+      }
+    ).catch(error => console.error(error));
+
+    this.commonsService.checkAcceso(procesos_comision.borradoExpedienteRemesaEnvio)
+      .then(respuesta => {
+
+        this.permisoEscrituraBorrarExpediente = respuesta;
+
+        this.persistenceService.setPermisos(this.permisoEscrituraBorrarExpediente);
+
+        if (this.permisoEscrituraBorrarExpediente == undefined) {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
+      }
+    ).catch(error => console.error(error));
+
   }
 
   getAcciones() {
@@ -158,7 +217,7 @@ export class FichaRemesasComponent implements OnInit {
       (response: {file: Blob, filename: string}) => {
         let filename = response.filename.split(';')[1].split('filename')[1].split('=')[1].trim();
         if (response.file.size == 0) {          
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El archivo no existe");          
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No existen expedientes con errores");          
 
         } else {
           saveAs(response.file, filename);
@@ -172,12 +231,22 @@ export class FichaRemesasComponent implements OnInit {
     this.progressSpinner = false;
   }
 
+  checkPermisosSave() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscrituraGuardar, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+        this.save();
+    }
+  }
+
   save() {
     if (this.tarjetaDatosGenerales.remesaTabla != null) {
       this.remesa = {
-        'idRemesa': this.tarjetaDatosGenerales.remesaTabla[0].idRemesa,
-        'descripcion': this.tarjetaDatosGenerales.remesaTabla[0].descripcion,
-        'numero':this.tarjetaDatosGenerales.remesaTabla[0].numero
+        'idRemesa': this.remesaTabla.idRemesa,
+        'descripcion': this.remesaTabla.descripcion,
+        'numero': this.remesaTabla.numero
       };
     } else if (this.tarjetaDatosGenerales.remesaItem != null) {
       this.remesa = {
@@ -211,16 +280,19 @@ export class FichaRemesasComponent implements OnInit {
   }
 
   checkPermisosDelete(evento) {
-    let msg = this.commonsService.checkPermisos(this.tarjetaEJGs.permisos, undefined);
+    let msg;
+
+    if (evento) {
+      msg = this.commonsService.checkPermisos(this.permisoEscrituraBorrarRemesa, undefined);
+    } else {
+      msg = this.commonsService.checkPermisos(this.permisoEscrituraBorrarExpediente, undefined);
+    }
+    
 
     if (msg != undefined) {
       this.msgs = msg;
     } else {
-      if (((!this.tarjetaEJGs.selectMultiple || !this.tarjetaEJGs.selectAll) && (this.tarjetaEJGs.selectedDatos == undefined || this.tarjetaEJGs.selectedDatos.length == 0)) || !this.tarjetaEJGs.permisos) {
-        this.msgs = this.commonsService.checkPermisoAccion();
-      } else {
         this.confirmDelete(evento);
-      }
     }
   }
 
@@ -290,6 +362,7 @@ export class FichaRemesasComponent implements OnInit {
       () => {
         this.progressSpinner = false;
         this.router.navigate(["/remesas"]);
+        localStorage.setItem('remesaBorrada', "true");
       }
     );
   }
@@ -341,7 +414,7 @@ export class FichaRemesasComponent implements OnInit {
         this.progressSpinner = false;
         this.tarjetaEJGs.selectMultiple = false;
         this.tarjetaEJGs.selectAll = false;
-        this.tarjetaEJGs.getEJGRemesa(this.tarjetaEJGs.remesaTabla[0]);
+        this.tarjetaEJGs.getEJGRemesa(this.remesaTabla);
       }
     );
   }

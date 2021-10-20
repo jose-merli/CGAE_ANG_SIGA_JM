@@ -58,6 +58,11 @@ export class RemesasComponent implements OnInit {
         }
       }
       ).catch(error => console.error(error));
+
+      if(localStorage.getItem('remesaBorrada') == "true"){
+        this.showMessage("success", this.translateService.instant("general.message.correct"), "La remesa se ha borrado correctmente");
+        localStorage.removeItem('remesaBorrada');
+      }
   }
 
   getFiltrosValues(event) {
