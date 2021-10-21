@@ -8,6 +8,7 @@ import { CommonsService } from '../../../../_services/commons.service';
 import { datos_combos } from '../../../../utils/datos_combos';
 import { KEY_CODE } from '../../../administracion/auditoria/usuarios/auditoria-usuarios.component';
 import { MultiSelect } from 'primeng/multiselect';
+import { forEach } from '@angular/router/src/utils/collection';
 
 @Component({
   selector: 'app-filtros-ejg',
@@ -247,9 +248,15 @@ export class FiltrosEjgComponent implements OnInit {
   getComboDictamen() {
     this.sigaServices.get("busquedaFundamentosCalificacion_comboDictamen").subscribe(
       n => {
-        this.comboDictamen = n.combooItems;
-        this.commonServices.arregloTildesCombo(this.comboDictamen);
         this.comboDictamen.push({ label: "Indiferente", value: "-1" });
+        this.comboDictamen.push({ label: "Sin dictamen", value: "0" });
+        if(n.combooItems!=null && n.combooItems != undefined){
+          n.combooItems.forEach(element => {
+            this.comboDictamen.push(element);
+          });
+          this.commonServices.arregloTildesCombo(this.comboDictamen);
+        }
+        this.bodyDictamen.push("-1");
       },
       err => {
         console.log(err);
