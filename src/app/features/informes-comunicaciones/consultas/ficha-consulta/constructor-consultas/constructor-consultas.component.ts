@@ -9,6 +9,8 @@ import { ConstructorConsultasDTO } from '../../../../../models/ConstructorConsul
 import { L10n, setCulture } from '@syncfusion/ej2-base';
 import { TranslateService } from '../../../../../commons/translate';
 import { RadioButtonModule } from '@syncfusion/ej2-angular-buttons';
+import { QueryBuilderDTO } from '../../../../../models/QueryBuilderDTO';
+import { ConfigColumnasQueryBuilderDTO } from '../../../../../models/ConfigColumnasQueryBuilderDTO';
 
 //Idioma
 setCulture('sigaIdiomas');
@@ -76,13 +78,14 @@ export class ConstructorConsultasComponent implements OnInit {
   public items:  { [key: string]: Object}[] = [{field:'USA', label:'USA'},{field:'England', label:'England'},{field:'India',label:'India'},{field:'Spain',label:'Spain'}];
   public fields: Object = { text: 'field', value: 'label' };
   comboGrupoCliente: String[] = ['Provisional1', 'Provisional2'];
-  comboSexo: String[] = ['HOMBRE', 'MUJER'];
+  comboSexo: { [key: string]: Object}[] = [{field: 'H', label: 'HOMBRE'}, {field: 'M', label: 'MUJER'}];
   comboTipoColegiado: String[] = ['Provisional1', 'Provisional2'];
   comboTipoSeguro: String[] = ['Provisional1', 'Provisional2'];
 
   //Suscripciones
   subscriptionDatosConstructorConsulta: Subscription;
   subscriptionGuardarDatosConstructor: Subscription;
+  subscriptionObtenerConfigColumnas: Subscription;
 
   constructor(private sigaServices: SigaServices,private translateService: TranslateService) { }
 
@@ -91,12 +94,18 @@ export class ConstructorConsultasComponent implements OnInit {
       this.consultaBuscador = JSON.parse(sessionStorage.getItem("consultasSearch"));
       //this.obtenerDatosConsulta(this.consultaBuscador.idConsulta);    
     }
+
+    this.obtenerConfigColumnas();
   }
 
   //Necesario para liberar memoria
   ngOnDestroy() {
     if (this.subscriptionDatosConstructorConsulta)
       this.subscriptionDatosConstructorConsulta.unsubscribe();
+    if (this.subscriptionGuardarDatosConstructor)
+      this.subscriptionGuardarDatosConstructor.unsubscribe();
+    if (this.subscriptionObtenerConfigColumnas)
+      this.subscriptionObtenerConfigColumnas.unsubscribe();
   }
         
   createdControl(): void {
@@ -119,8 +128,8 @@ export class ConstructorConsultasComponent implements OnInit {
 
   //INICIO METODOS TARJETA CONSTRUCTOR DE CONSULTAS
   checkDatos(){
-   console.log(this.constructorConsultas.getRules());
-   this.guardarDatosConstructor(this.constructorConsultas.getRules());
+   console.log(this.constructorConsultas.getRulesFromSql("SELECT CEN_CLIENTE.IDINSTITUCION, CEN_CLIENTE.IDPERSONA FROM CEN_CLIENTE , CEN_COLEGIADO WHERE CEN_CLIENTE.IDINSTITUCION = 2005 AND CEN_CLIENTE.IDPERSONA = @IDPERSONA@ AND ( F_SIGA_GETTIPOCLIENTE(@IDPERSONA@,2005,@FECHA@) = 20 AND CEN_COLEGIADO.SITUACIONRESIDENTE = '0' ) AND ( CEN_CLIENTE.IDPERSONA = CEN_COLEGIADO.IDPERSONA(+) AND CEN_CLIENTE.IDINSTITUCION = CEN_COLEGIADO.IDINSTITUCION(+) ) "));
+   //this.guardarDatosConstructor(this.constructorConsultas.getRules());
   }
 
   abreCierraFicha() {
@@ -145,23 +154,50 @@ export class ConstructorConsultasComponent implements OnInit {
   //FIN METODOS TARJETA CONSTRUCTOR DE CONSULTAS
 
   //INICIO SERVICIOS
-  //Metodo para obtener los valores del combo Tipo segun el combo Categoria
+  configColumnasDTO: ConfigColumnasQueryBuilderDTO;
+  obtenerConfigColumnas(){
+      this.progressSpinner = true;
+  
+      this.subscriptionObtenerConfigColumnas = this.sigaServices.get("constructorConsultas_obtenerConfigColumnasQueryBuilder").subscribe(
+        configColumnasQueryBuilder => {
+  
+          this.configColumnasDTO = configColumnasQueryBuilder;
+  
+       /*    if (JSON.parse(listaServiciosDTO.body).error.code == 500) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          } else {
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          } */
+        
+          this.progressSpinner = false;
+        },
+        err => {
+          this.progressSpinner = false;
+        }, () => {
+        
+        });;
+  
+  }
+
   obtenerDatosConsulta(idConsulta) {
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
 
     this.subscriptionDatosConstructorConsulta = this.sigaServices.getParam("constructorConsultas_obtenerDatosConsulta", "?idConsulta=" + idConsulta).subscribe(
       datosConstructorConsulta => {
-        this.datosConstructorConsulta.constructorConsultasItem = datosConstructorConsulta.constructorConsultasItem;
+        //this.datosConstructorConsulta.constructorConsultasItem = datosConstructorConsulta.constructorConsultasItem;
+        console.log(this.constructorConsultas.getRulesFromSql(datosConstructorConsulta.consulta));
 
+        this.importRules = this.constructorConsultas.getRulesFromSql(datosConstructorConsulta.consulta);
         this.progressSpinner = false;
       },
       err => {
         this.progressSpinner = false;
       },
       () => {
-        this.datosConstructorConsulta.constructorConsultasItem.forEach((registro, index) => {
+        this.progressSpinner = false;
+      /*   this.datosConstructorConsulta.constructorConsultasItem.forEach((registro, index) => {
 
-          this.importRules.condition = registro.conector;
+          this.importRules.condition = registro.conector; */
 /* 
           if(index <= 1){
             this.importRules.rules.push({
@@ -189,7 +225,7 @@ export class ConstructorConsultasComponent implements OnInit {
               
             }
           } */
-          this.importRules.rules.push({
+         /*  this.importRules.rules.push({
             'label': registro.campo,
             'field': registro.campo,
             'type': typeof registro.campo,
@@ -201,16 +237,24 @@ export class ConstructorConsultasComponent implements OnInit {
 
         console.log(this.importRules.rules[0]);
         this.constructorConsultas.setRules(this.importRules);
-        this.progressSpinner = false;
+        this.progressSpinner = false; */
       }
     );
   }
 
-  //Metodo para obtener los valores del combo Tipo segun el combo Categoria
+  queryBuilderDTO: QueryBuilderDTO;
+ 
   guardarDatosConstructor(datosConstructor) {
     this.progressSpinner = true;
+    
+    this.queryBuilderDTO = datosConstructor;
 
-    this.subscriptionGuardarDatosConstructor = this.sigaServices.post("constructorConsultas_guardarDatosConstructor", datosConstructor).subscribe(
+    /*   let pruebaEnvioDatosConstructor = {
+      idconsulta: this.consultaBuscador.idConsulta,
+      sentencia: this.constructorConsultas.getSqlFromRules(this.constructorConsultas.getRules())
+    }; */
+
+    this.subscriptionGuardarDatosConstructor = this.sigaServices.post("constructorConsultas_guardarDatosConstructor", this.constructorConsultas.getSqlFromRules(this.constructorConsultas.getRules())).subscribe(
       response => {
         /* if (JSON.parse(response.body).error.code == 500) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));

@@ -10,6 +10,7 @@ import { Subject } from "rxjs/Subject";
 import { ModelosComConsultasItem } from '../../../../../models/ModelosComConsultasItem';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { ServicioDetalleItem } from '../../../../../models/ServicioDetalleItem';
+import { Router } from '@angular/router';
 
 @Component({
   selector: "app-datos-generales-consulta",
@@ -78,7 +79,8 @@ export class DatosGeneralesConsultaComponent implements OnInit {
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
     private commonsService: CommonsService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -104,6 +106,7 @@ export class DatosGeneralesConsultaComponent implements OnInit {
       this.body.idObjetivo = "3";
       this.cargaComboClaseCom("3");
       this.body.idClaseComunicacion = "1";
+      this.generica = 'N';
 
     }
 
@@ -525,6 +528,10 @@ para poder filtrar el dato con o sin estos caracteres*/
           console.log(err);
         },
         () => {
+          if(sessionStorage.getItem("servicioDetalle") != undefined){
+            sessionStorage.setItem("vieneDeNuevaCondicion", "true");
+            this.router.navigate(["/fichaServicios"]);
+          }
           this.progressSpinner = false;
         }
       );

@@ -479,6 +479,7 @@ export class SigaServices {
     fichaServicio_eliminarPrecios: 'pys/eliminarPrecios',
     constructorConsultas_obtenerDatosConsulta: 'consultas/pys/obtenerDatosConsulta',
     constructorConsultas_guardarDatosConstructor: 'consultas/pys/constructorConsultas',
+    constructorConsultas_obtenerConfigColumnasQueryBuilder: 'consultas/pys/obtenerConfigColumnasQueryBuilder',
 
     // FOTO
     solicitudModificacion_searchSolModifDatosUseFoto: 'solicitudModificacion/searchSolModifDatosUseFoto',
