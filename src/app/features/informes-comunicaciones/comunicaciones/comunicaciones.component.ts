@@ -18,6 +18,7 @@ import { ProgramarItem } from "../../../models/ProgramarItem";
 import { FichaColegialGeneralesItem } from "../../../models/FichaColegialGeneralesItem";
 import { CommonsService } from '../../../_services/commons.service';
 import { NuevaComunicacionItem } from "../../../models/NuevaComunicacionItem";
+import { ComboItem } from "../../../models/ComboItem";
 
 export enum KEY_CODE {
   ENTER = 13
@@ -70,11 +71,12 @@ export class ComunicacionesComponent implements OnInit {
   //VARIABLES CREACIÓN NUEVA COMUNICACIÓN
   showNuevaComm: boolean = false;
   bodyNuevaComm: NuevaComunicacionItem = new NuevaComunicacionItem();
-  selectedDocsNewComm : any [] = [];
+  selectedDocsNuevaComm : any [] = [];
   comboJuzgado: any[] = [];
   colsDocNuevaComm = [
     { field: 'name', header: "censo.cargaMasivaDatosCurriculares.literal.nombreFichero" }
   ];
+  comboModelos: ComboItem[];
 
   constructor(
     private sigaServices: SigaServices,
@@ -95,6 +97,7 @@ export class ComunicacionesComponent implements OnInit {
     this.getTipoEnvios();
     this.getEstadosEnvios();
     this.getClasesComunicaciones();
+    this.getComboModelos();
 
     let objPersona = null;
 
@@ -355,7 +358,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     // else {
       if (this.checkCamposObligatoriosNuevaComm()) this.saveNuevaComm();
       else {
-        this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant("justiciaGratuita.ejg.documentacion.disNew") }];
+        this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
       }
     // }
   }
@@ -363,32 +366,59 @@ para poder filtrar el dato con o sin estos caracteres*/
   checkCamposObligatoriosNuevaComm(){
     let campoVacio: boolean = false;
     if(this.bodyNuevaComm.fechaEfecto == null ||
-      this.bodyNuevaComm.asunto == null || this.bodyNuevaComm.asunto.trim() ){
+      this.bodyNuevaComm.asunto == null || this.bodyNuevaComm.asunto.trim() == "" ){
         campoVacio = true;
     }
     return !campoVacio;
   }
 
   saveNuevaComm(){
-    //Implementacion de servicio POST para insertar la nueva comunicacion en una tabla (por investigar)
-    this.selectedDocsNewComm
+    this.progressSpinner = true;
+
+    let docs = JSON.parse(JSON.stringify(this.bodyNuevaComm.docs));
+    let peticion = JSON.parse(JSON.stringify(this.bodyNuevaComm));
+    peticion.docs= [];
+    
+    this.sigaServices.postSendFileAndComunicacion ("comunicaciones_saveNuevaComm", docs, peticion).subscribe(
+      data => {
+        
+        let resp = data;
+
+        if (resp.status == 'OK') {
+          this.progressSpinner = false;
+          this.msgs = [{severity:'success', summary: this.translateService.instant('general.message.correct'), detail: this.translateService.instant('general.message.accion.realizada')}];
+        }
+        else{
+          this.msgs = [{severity:'error',summary: 'Error',detail: this.translateService.instant('general.mensaje.error.bbdd')}];
+
+        }
+
+      },
+      err => {
+        this.progressSpinner = false;
+        this.msgs = [{severity:'error',summary: 'Error',detail: this.translateService.instant('general.mensaje.error.bbdd')}];
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
   }
 
   deleteDocumentos(){
-    for(let doc of this.selectedDocsNewComm){
+    for(let doc of this.selectedDocsNuevaComm){
       let indexDoc = this.bodyNuevaComm.docs.findIndex(el => el.webkitRelativePath == doc.webkitRelativePath);
-      this.selectedDocsNewComm.splice(indexDoc, 1);
-      this.selectedDocsNewComm[0].inde
+      this.selectedDocsNuevaComm.splice(indexDoc, 1);
+      this.selectedDocsNuevaComm[0].inde
       //filter((drink, index) => drink !== idx);
     }
     //Alternativa
     let indexesDoc = [];
-    for(let doc of this.selectedDocsNewComm){
+    for(let doc of this.selectedDocsNuevaComm){
       indexesDoc.push(doc.index);
       //
     }
     this.bodyNuevaComm.docs.filter((doc, index) => !indexesDoc.includes(index));
-    this.selectedDocsNewComm = [];
+    this.selectedDocsNuevaComm = [];
   }
 
   getComboJuzgado() {
@@ -396,6 +426,20 @@ para poder filtrar el dato con o sin estos caracteres*/
       n => {
         this.comboJuzgado = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboJuzgado);
+      },
+      err => {
+      }
+    );
+  }
+
+  
+  getComboModelos() {
+    //Se introduce un segundo parametro ya que lo requiere el servicio post per
+    //este body no se tiene en consideracion en el back (modelosClasesComunicacion)
+    this.sigaServices.post("comunicaciones_modelosComunicacion", "").subscribe(
+      n => {
+        this.comboModelos = JSON.parse(n.body).combooItems;
+        this.commonsService.arregloTildesCombo(this.comboModelos);
       },
       err => {
       }

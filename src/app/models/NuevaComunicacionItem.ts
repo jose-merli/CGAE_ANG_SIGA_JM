@@ -5,6 +5,6 @@ export class NuevaComunicacionItem {
     mensaje: string;
     numProcedimiento: string;
     nig: string;
-    idClaseComunicacion: string;
+    idModeloComunicacion: string;
     docs: File[] = [];
   }
