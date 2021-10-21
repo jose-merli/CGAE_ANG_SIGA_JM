@@ -428,7 +428,9 @@ export class FiltrosEjgComponent implements OnInit {
   getComboTurno() {
     if (this.body.tipoLetrado == "E") {
       this.tipoLetrado = "1";
-    } else if (this.body.tipoLetrado == "D" || this.body.tipoLetrado == "A") { this.tipoLetrado = "2"; }
+    } else if (this.body.tipoLetrado == "D" || this.body.tipoLetrado == "A") {
+      this.tipoLetrado = "2"; 
+    }
     this.sigaServices.getParam("filtrosejg_comboTurno",
       "?idTurno=" + this.tipoLetrado).subscribe(
         n => {
@@ -635,13 +637,16 @@ export class FiltrosEjgComponent implements OnInit {
         } else {
           this.muestraCamposObligatorios();
         }
-
-
       } else {
         if (this.usuarioBusquedaExpress.numColegiado != undefined && this.usuarioBusquedaExpress.numColegiado != null
           && this.usuarioBusquedaExpress.numColegiado.trim() != "") {
           this.body.numColegiado = this.usuarioBusquedaExpress.numColegiado;
           this.body.idPersona = this.usuarioBusquedaExpress.idPersona;
+        }
+
+        if(sessionStorage.getItem("numColegiado") != undefined && sessionStorage.getItem("numColegiado") != null 
+          && sessionStorage.getItem("numColegiado").trim() != ""){
+            this.body.numColegiado = sessionStorage.getItem("numColegiado");
         }
 
         if (this.bodyDictamen.toString() != undefined && this.bodyDictamen.toString() != null && this.bodyDictamen.toString() != "") {
@@ -651,9 +656,9 @@ export class FiltrosEjgComponent implements OnInit {
         this.busqueda.emit(false);
         this.body.dictamen = "";
       }
-
     }
   }
+  
   showMessage(severity, summary, msg) {
     this.msgs = [];
     this.msgs.push({
