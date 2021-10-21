@@ -1,8 +1,51 @@
 <p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
 <div class="busqueda-container" id="datosGenerales">
   <div class="card">
-    <div class="card-body">
-      <p class="title-module">{{ 'justiciaGratuita.remesasResultados.filtro.datosGenerales' | translate }}</p>
+    <div class="card-header header-ficha" >
+      <div *ngIf="!openFicha" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('datosGenerales')">
+          <div class="img-colegiado">
+            <i class="far fa-address-card icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10 ">
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('datosGenerales')">
+            <label class="mr-auto title-ficha" style="cursor:pointer">{{ "general.message.datos.generales" | translate }}
+
+            </label>
+          </div>
+          <div class="d-flex justify-content-between" style="cursor:default">
+            <label>{{ "formacion.fichaCursos.tarjetaPrecios.resumen.numRegistros" | translate }}
+              <span *ngIf="remesaItem != null" > {{ remesaItem.numRemesaNumero }}</span>
+              <span *ngIf="remesaItem == null"> {{ remesaItem.numRemesaNumero }}</span>
+            </label>
+            <label>{{ "justiciaGratuita.remesasResultados.tabla.fechaRemesa" | translate }}
+              <span *ngIf="remesaItem != null"> {{ remesaItem.fechaCargaRemesaResultado }}</span>
+              <span *ngIf="remesaItem == null"> {{ remesaItem.fechaCargaRemesaResultado }}</span>
+            </label>
+            <label>{{ "censo.cargaMasivaDatosCurriculares.literal.nombreFichero" | translate }}
+              <span *ngIf="remesaItem != null"> {{ remesaItem.nombreFichero }}</span>
+              <span *ngIf="remesaItem == null"> {{ remesaItem.nombreFichero }}</span>
+            </label>
+            <!-- <i *ngIf="!esFichaActiva('generales')" class="fa fa-angle-down float-right"></i> -->
+            <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "
+              (click)="abreCierraFicha('datosGenerales')"></i>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center" (click)="abreCierraFicha('datosGenerales')">
+        <div class="img-colegiado">
+          <i class="far fa-address-card icon-ficha"></i>
+        </div>
+        <label class="title-ficha" style="cursor:pointer">{{ 'justiciaGratuita.remesasResultados.filtro.datosGenerales' | translate }}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+
+
+
+    <div *ngIf="openFicha" class="card-body card-body-ficha">
 
       <!-- CAMPOS COMPONEN FILTROS BUSQUEDA-->
       <div class="module vista-simple">
@@ -14,33 +57,38 @@
                 <input type="text" name="numRegistroPrefijo" value="" class="box" class="registro-control w-100"
                   maxLength="8" pInputText [disabled]="isEnabledNuevo" [(ngModel)]="remesaItem.prefijoRemesa">
               </div>
-              <div class="form-group-interlineado col-lg-6 col-md-6 px-1">
-                <input type="text" name="numRegistroNumero" value="" class="box" class="registro-control w-100"
-                  maxLength="10" pInputText [disabled]="isEnabledNuevo" [(ngModel)]="remesaItem.sufijoRemesa">
-              </div>
               </div>
             </div>
 
             <div class="form-group-interlineado col-lg-3 col-md-3">
               <label>{{ 'justiciaGratuita.remesasResultados.tabla.fechaCarga' | translate }}</label>
-              <app-fecha (valueChangeSelected)="fillFechaCargaDetalle($event)" [(ngModel)]="remesaItem.fechaCargaRemesaResultado"></app-fecha>
+              <app-fecha [(value)]="remesaItem.fechaCargaRemesaResultado"  name="fechaCarga" ngDefaultControl (valueChangeSelected)="fillFechaCargaDetalle($event)" [(ngModel)]="remesaItem.fechaCargaRemesaResultado"></app-fecha>
             </div>
     
             <div class="form-group-interlineado col-lg-3 col-md-3">
               <label>{{ 'justiciaGratuita.remesasResultados.tabla.fechaRemesa' | translate }}</label>
-              <app-fecha (valueChangeSelected)="fillFechaRemesaDetalle($event)" [(ngModel)]="remesaItem.fechaResolucionRemesaResultado"></app-fecha>
-            </div>
+              <app-fecha [(value)]="remesaItem.fechaResolucionRemesaResultado" name="fechaRemesa" ngDefaultControl (valueChangeSelected)="fillFechaRemesaDetalle($event)" [(ngModel)]="remesaItem.fechaResolucionRemesaResultado"></app-fecha>
+            </div> 
     
             <div class="form-group-interlineado col-lg-3 col-md-3">
               <br>
-              <div class="ui-inputgroup">
+              <div class="ui-inputgroup" *ngIf="!conFichero">
+
               <p-fileUpload #pUploadFile name="file" chooseLabel="Subir fichero de carga"
                 mode="basic" accept=".txt"  class="edit my-0 mx-auto main-button" (onSelect)="getFile($event)" auto="true" ></p-fileUpload>
                 <div *ngIf="archivoDisponible">
                   <input type="text" pInputText disabled="true" [(ngModel)]="nombreFichero" />
                 </div>
               </div>
-            </div>
+
+              <div class="ui-inputgroup main-button" *ngIf="conFichero">
+                
+                <button (click)="descargarFicheros()" pButton type="button" icon="far fa-save" iconPos="left"  class="edit my-0 mx-auto main-button"
+                label="{{remesaItem.nombreFichero}}"
+               ></button>
+
+
+            </div> 
 
           </div>
 
@@ -54,7 +102,9 @@
         </div>
 
       </div>
-    </div>
+  </div>
+
+
 </div>
 
 

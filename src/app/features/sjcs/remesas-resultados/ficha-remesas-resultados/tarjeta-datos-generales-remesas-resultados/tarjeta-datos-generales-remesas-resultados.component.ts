@@ -18,6 +18,8 @@ import { Router } from '@angular/router';
 import { RemesasItem } from '../../../../../models/sjcs/RemesasItem';
 import { SigaStorageService } from '../../../../../siga-storage.service';
 import { RemesasResultadoItem } from '../../../../../models/sjcs/RemesasResultadoItem';
+import { RemesasResolucionItem } from '../../../../../models/sjcs/RemesasResolucionItem';
+import { saveAs } from "file-saver/FileSaver";
 
 @Component({
   selector: 'app-tarjeta-datos-generales-remesas-resultados',
@@ -27,7 +29,7 @@ import { RemesasResultadoItem } from '../../../../../models/sjcs/RemesasResultad
 export class TarjetaDatosGeneralesRemesasResultadosComponent implements OnInit {
 
   // datos;
-  openFicha: boolean = false;
+  openFicha: boolean = true;
   body: TurnosItems = new TurnosItems();
   bodyInicial;
   progressSpinner: boolean = false;
@@ -35,6 +37,8 @@ export class TarjetaDatosGeneralesRemesasResultadosComponent implements OnInit {
   nuevo: boolean = false;
   @Input() openGen;
 
+  conFichero : boolean = false;
+  remesaResolucion : RemesasResolucionItem = new RemesasResolucionItem();
   datosTarjetaResumen;
   msgs;
   historico;
@@ -64,7 +68,7 @@ export class TarjetaDatosGeneralesRemesasResultadosComponent implements OnInit {
   partidaPresupuestaria;
   MateriaDescripcion
   isDisabledSubZona: boolean = false;
-  fOpen: boolean = false;
+  fOpen: boolean = true;
   fichasPosibles = [
     {
       key: "generales",
@@ -97,7 +101,7 @@ export class TarjetaDatosGeneralesRemesasResultadosComponent implements OnInit {
   remesasDatosEntradaItem;
   busquedaActualizaciones: boolean;
   @ViewChild("pUploadFile") pUploadFile;
-  isEnabledNuevo: boolean = false;
+  isEnabledNuevo: boolean = true;
   
 
   file: File = undefined;
@@ -163,7 +167,10 @@ export class TarjetaDatosGeneralesRemesasResultadosComponent implements OnInit {
       this.getUltimoRegitroRemesa();
       //this.remesaItem.descripcion = "";
     }
-
+    if(this.remesaItem.nombreFichero.length > 0){
+        this.conFichero = true;
+        console.log("Tiene fichero")
+    }
     this.checkDatosGenerales();
     this.actualizarFichaResumen();
     this.resaltadoDatosGenerales = true;
@@ -531,122 +538,8 @@ export class TarjetaDatosGeneralesRemesasResultadosComponent implements OnInit {
 
   }
 
-  save() {
-    //comprobamos si todos los campos obligatorios se han rellenado
-    var camposOblig = document.getElementsByClassName('camposObligatorios');
-    if (camposOblig.length > 0) {
-      this.showMessage("error", "Error", this.translateService.instant("general.message.camposObligatorios"));
-    } else {
-      this.progressSpinner = true;
-      let url = "";
-      if (!this.modoEdicion) {
-        this.nuevo = true;
-        this.persistenceService.setDatos(null);
-        url = "turnos_createnewTurno";
-        this.callSaveService(url);
-      } else {
-        url = "turnos_updateDatosGenerales";
-        this.callSaveService(url);
-      }
-    }
-  }
-
-  callSaveService(url) {
-    if (this.turnosItem.codigoext != undefined) {
-      this.turnosItem.codigoext = this.turnosItem.codigoext.trim();
-    }
-    if (this.turnosItem.nombre != undefined) {
-      this.turnosItem.nombre = this.turnosItem.nombre.trim();
-    }
-    if (this.turnosItem.abreviatura != undefined) {
-      this.turnosItem.abreviatura = this.turnosItem.abreviatura.trim();
-    }
-    this.sigaServices.post(url, this.turnosItem).subscribe(
-      data => {
-
-        if (!this.modoEdicion) {
-          this.modoEdicion = true;
-          let turnos = JSON.parse(data.body);
-          this.turnosItem.idturno = turnos.id;
-          let send = {
-            modoEdicion: this.modoEdicion,
-            idTurno: this.turnosItem.idturno,
-          }
-          this.sigaServices.post("turnos_busquedaFichaTurnos", this.turnosItem).subscribe(
-            n => {
-              this.turnosItem2 = JSON.parse(n.body).turnosItem[0];
-            },
-            err => {
-              console.log(err);
-            }, () => {
-              this.persistenceService.setDatos(this.turnosItem2);
-              this.modoEdicionSend.emit(send);
-            }
-          );
-
-        }
-        
-        for (let i = 0; i < this.subzonas.length; i++) {
-          if (this.subzonas[i].value == this.turnosItem.idsubzona) {
-            this.turnosItem.subzona = this.subzonas[i].label
-          }
-        }
-        for (let i = 0; i < this.zonas.length; i++) {
-          if (this.zonas[i].value == this.turnosItem.idzona) {
-            this.turnosItem.zona = this.zonas[i].label
-          }
-        }
-        for (let i = 0; i < this.areas.length; i++) {
-          if (this.areas[i].value == this.turnosItem.idarea) {
-            this.turnosItem.area = this.areas[i].label
-          }
-        }
-        for (let i = 0; i < this.materias.length; i++) {
-          if (this.materias[i].value == this.turnosItem.idmateria) {
-            this.turnosItem.materia = this.materias[i].label
-          }
-        }
-        for (let i = 0; i < this.jurisdicciones.length; i++) {
-          if (this.jurisdicciones[i].value == this.turnosItem.idjurisdiccion) {
-            this.jurisdiccionDescripcion = this.jurisdicciones[i].label
-          }
-        }
-        for (let i = 0; i < this.partidas.length; i++) {
-          if (this.partidas[i].value == this.turnosItem.idpartidapresupuestaria) {
-            this.partidaPresupuestaria = this.partidas[i].label
-          }
-        }
-        this.actualizarFichaResumen();
-        if (this.nuevo) {
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("justiciaGratuita.oficio.turnos.mensajeguardarDatos"));
-          this.progressSpinner = false;
-        } else {
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.progressSpinner = false;
-        }
-      },
-      err => {
-        if (JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-        this.body = this.turnosItem;
-        this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
-      }
-    );
-
-  }
 
 
-  guardarDatos() {
-
-
-  }
 
   clear() {
     this.msgs = [];
@@ -749,6 +642,122 @@ export class TarjetaDatosGeneralesRemesasResultadosComponent implements OnInit {
         }
       },
       () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  save(){
+    console.log(this.remesaItem)
+    console.log("Otro")
+    console.log("fa"+ this.file)
+   //this.tarjetaDatosGeneralesRemesasResultados.insertar();
+  if(this.remesaItem != null){
+    this.remesaResolucion = {
+      'idRemesa' : this.remesaItem.idRemesa,
+      'observaciones' : this.remesaItem.observacionesRemesaResultado,
+      'nombreFichero' : this.remesaItem.nombreFichero,
+      'fechaCarga' : this.datepipe.transform(this.remesaItem.fechaCargaRemesaResultado, 'dd/MM/yyyy'),
+      'fechaResolucion' :  this.datepipe.transform(this.remesaItem.fechaResolucionRemesaResultado, 'dd/MM/yyyy'),
+    };
+  }
+  if(this.remesaResolucion.idRemesa == null ){
+    this.remesaResolucion.idRemesa = 0;
+  }
+console.log("Item: " + this.remesaResolucion.fechaCarga.toString)
+console.log(this.remesaResolucion)
+  this.progressSpinner = true;
+
+  this.sigaServices
+  .postSendContentAndParameter(
+  "remesasResultados_guardarRemesaResultado",
+  "?idRemesa=" + this.remesaResolucion.idRemesa +
+  "&observaciones=" + this.remesaResolucion.observaciones + 
+  "&nombreFichero=" + this.remesaResolucion.nombreFichero +
+  "&fechaCarga=" + this.remesaResolucion.fechaCarga +
+  "&fechaResolucion=" + this.remesaResolucion.fechaResolucion,
+  this.file)
+  .subscribe(
+    data => {
+
+      this.showMessage("success", this.translateService.instant("general.message.correct"), JSON.parse(data.body).error.description);
+      console.log(data)
+      this.progressSpinner = false;
+
+    },
+    err => {
+      if (err.error != null && err.error.error != null && err.error.error.code == 400) {
+        if (err.error.error.description != null) {
+          this.showFail(err.error.error.description);
+        } else {
+          this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.formatoNoPermitido"));
+        }
+      } else {
+        this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.errorSubirDocumento"));
+        console.log(err);
+      }
+      this.progressSpinner = false;
+    },
+    () => {
+    }
+  );
+  }
+
+  showFail(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "error", summary: "", detail: mensaje });
+  }
+  
+  descargarFicheros(){
+    this.progressSpinner = true;
+    let remesasResultados: RemesasResultadoItem[] = []
+    let remesa: RemesasResultadoItem = new RemesasResultadoItem(
+        {
+          'idRemesaResultado': this.remesaItem.idRemesaResultado,
+          'numRemesaPrefijo': '',
+          'numRemesaNumero': '',
+          'numRemesaSufijo': '',
+          'numRegistroPrefijo': '',
+          'numRegistroNumero': '',
+          'numRegistroSufijo': '',
+          'nombreFichero': this.remesaItem.nombreFichero,
+          'fechaRemesaDesde': '',
+          'fechaRemesaHasta': '',
+          'fechaCargaDesde': '',
+          'fechaCargaHasta': '',
+          'observacionesRemesaResultado': '',
+          'fechaCargaRemesaResultado': '',
+          'fechaResolucionRemesaResultado': '',
+          'idRemesa': null,
+          'numeroRemesa': '',
+          'prefijoRemesa': '',
+          'sufijoRemesa': '',
+          'descripcionRemesa': '',
+          'numRegistroRemesaCompleto': '',
+          'numRemesaCompleto': ''
+          }
+      );
+    remesasResultados.push(remesa);
+    
+    let descarga =  this.sigaServices.postDownloadFiles("remesasResultados_descargarFicheros", remesasResultados);
+    descarga.subscribe(
+      data => {
+        let blob = null;
+        // Se comprueba si todos los documentos asociados no tiene ningún fichero 
+        let documentoAsociado = remesasResultados.find(item => item.nombreFichero !=null)
+        if(documentoAsociado != undefined){
+            blob = new Blob([data], { type: "application/zip" });
+            if(blob.size > 50){
+              saveAs(blob, "descargaRemesasResultados.zip");
+            } else {
+              this.showMessage("error", this.translateService.instant("general.message.informacion"), 'No se puede descargar los ficheros de las remesas de resultados seleccionadas');
+            }
+        }
+        else this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.ejg.documentacion.noFich"));
+
+        this.progressSpinner = false;
+      },
+      err => {
         this.progressSpinner = false;
       }
     );

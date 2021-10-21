@@ -1,0 +1,38 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000">
+</p-growl>
+<div class="card">
+  <div class="card-header header-ficha">
+    <div *ngIf="!openFicha" class="form-row">
+      <div class="col-lg-1 col-md-2">
+        <div class="img-colegiado">
+          <i class='fa fa-address-book icon-ficha'></i>
+        </div>
+      </div>
+      <div class="col-lg-11 col-md-10 ">
+        <div class="d-flex justify-content-start mb-1">
+          <label class="mr-auto title-ficha" style="cursor:pointer">{{ "formacion.fichaInscripcion.datosCursos.cabecera"
+            | translate }}
+          </label>
+        </div>
+        <div class="d-flex justify-content-between" style="cursor:default">
+          <label>{{ "censo.general.literal.FechaConstitucion" | translate }}
+          </label>
+          
+          <label>{{ "censo.consultaDatosRegistrales.literal.Resenia" | translate }}
+          </label>
+          
+          <label>{{ "censo.consultaDatosRegistrales.literal.objSocial" | translate }}
+          </label>
+
+          <label>{{ "censo.consultaDatosRegistrales.literal.numRegistro" | translate }}
+          </label>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+  </div>
+</div>
