@@ -55,10 +55,10 @@
                 | date: 'dd/MM/yyyy'}}</span>
               <span *ngIf="editaEstado && datosEstados[rowIndex].isMod != true">{{car[col.field] | date:
                 'dd/MM/yyyy'}}</span>
-              <app-fecha *ngIf="creaEstado && datosEstados[rowIndex].nuevoRegistro" [(value)]="fechaEstado"></app-fecha>
+              <app-fecha *ngIf="creaEstado && datosEstados[rowIndex].nuevoRegistro" [(value)]="fechaIni" (valueChangeSelected)="fillFechaInicio($event)" (valueChangeInput)="fillFechaInicio($event)"></app-fecha>
               <app-fecha
                 *ngIf="datosEstados[rowIndex].isMod != undefined && datosEstados[rowIndex].isMod == true && !creaEstado && editaEstado"
-                [(value)]="fechaEstado"></app-fecha>
+                [(value)]="fechaIni" (valueChangeSelected)="fillFechaInicio($event,rowIndex)" (valueChangeInput)="fillFechaInicio($event,rowIndex)"></app-fecha>
 
             </div>
 
