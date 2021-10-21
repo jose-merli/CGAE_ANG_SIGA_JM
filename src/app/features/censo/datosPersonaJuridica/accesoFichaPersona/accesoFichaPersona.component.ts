@@ -374,6 +374,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
     let menuProcede = this.translateService.instant("menu.censo");
     sessionStorage.setItem("migaPan", migaPan);
     sessionStorage.setItem("menuProcede", menuProcede);
+    sessionStorage.setItem("AddDestinatarioIndv", "true");
 
     this.router.navigate(["/busquedaGeneral"]);
   }
