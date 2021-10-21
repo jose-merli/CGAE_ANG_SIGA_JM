@@ -294,8 +294,8 @@ let datosEntrada =
           this.progressSpinner = false;
           console.log(err);
         },
-        () => {
-          this.commonsService.scrollTablaFoco('tablaFoco');
+        () => { 
+          setTimeout(()=>{this.commonsService.scrollTablaFoco('tablaFoco')},5);
         });
 }
 formatOfficial(fechaB){
@@ -513,7 +513,7 @@ delete(indexToDelete){
           console.log(err);
         },
         () => {
-          this.commonsService.scrollTablaFoco('tablaFoco');
+          setTimeout(()=>{this.commonsService.scrollTablaFoco('tablaFoco')},5);
         });
   
 }
@@ -559,7 +559,7 @@ guardarInc(nombreTurno, nombreGuardia, nombreTurnoIncompatible, nombreGuardiaInc
           console.log(err);
         },
         () => {
-          this.commonsService.scrollTablaFoco('tablaFoco');
+          setTimeout(()=>{this.commonsService.scrollTablaFoco('tablaFoco')},5);
         });
 
 }

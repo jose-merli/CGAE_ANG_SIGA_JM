@@ -275,7 +275,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
             console.log(err);
           },
           () => {
-            this.commonsService.scrollTablaFoco('tablaFoco');
+            setTimeout(()=>{this.commonsService.scrollTablaFoco('tablaFoco');},5);
           });
   }
   
@@ -372,7 +372,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
           console.log(err);
         },
         () => {
-          this.commonsService.scrollTablaFoco('tablaFoco');
+          setTimeout(()=>{this.commonsService.scrollTablaFoco('tablaFoco');},5);
         });
   }
 

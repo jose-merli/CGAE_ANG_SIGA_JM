@@ -234,7 +234,7 @@ this.incompatibilidadesDatosEntradaItem = new IncompatibilidadesDatosEntradaItem
           console.log(err);
         },
         () => {
-          this.commonsService.scrollTablaFoco('tablaFoco');
+          setTimeout(()=>{this.commonsService.scrollTablaFoco('tablaFoco')},5);
         });
 }
 
@@ -463,7 +463,7 @@ let idGuardiaIncompatible;
           console.log(err);
         },
         () => {
-          this.commonsService.scrollTablaFoco('tablaFoco');
+          setTimeout(()=>{this.commonsService.scrollTablaFoco('tablaFoco')},5);
         });
   
 }
@@ -510,7 +510,7 @@ guardarInc(nombreTurno, nombreGuardia, nombreTurnoIncompatible, nombreGuardiaInc
           console.log(err);
         },
         () => {
-          this.commonsService.scrollTablaFoco('tablaFoco');
+          setTimeout(()=>{this.commonsService.scrollTablaFoco('tablaFoco')},5);
         });
 
 }

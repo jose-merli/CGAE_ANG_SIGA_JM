@@ -236,6 +236,9 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
         },
         () =>{
           this.progressSpinner = false;
+          setTimeout(() => {
+            this.commonServices.scrollTablaFoco('tablaFoco1');
+          }, 5);
         }
       );
   }
@@ -568,6 +571,9 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
           },
           () =>{
             this.progressSpinner = false;
+            setTimeout(() => {
+              this.commonServices.scrollTablaFoco('tablaFoco2');
+            }, 5);
           }
         );
       }

@@ -18,7 +18,7 @@
 
 <div *ngIf="show">
     <div class="card mt-3">
-        <div class="card-body p-0">
+        <div class="card-body p-0" id="tablaFoco">
             <app-resultado-solicitudes-centralita [preAsistencias] = "filas" (buscar) = "reloadTabla($event)" [permisoEscritura] = "permisoEscritura"></app-resultado-solicitudes-centralita>
         </div>
     </div>
