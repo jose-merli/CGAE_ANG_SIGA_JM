@@ -57,52 +57,52 @@ export class ProgramacionCalendariosComponent implements OnInit {
     {
       id: "turno",
       name: "dato.jgr.guardia.guardias.turno",
-      size: 230
+      size: 250
     },
     {
       id: "guardia",
       name: "dato.jgr.guardia.guardias.guardia",
-      size: 230
+      size: 250
     },
     {
       id: "fechaCalDesde",
       name: "justiciaGratuita.Calendarios.FechaDesde",
-      size: 130
+      size: 140
     },
     {
       id: "fechaCalHasta",
       name: "justiciaGratuita.Calendarios.FechaHasta",
-      size: 130
+      size: 140
     },
     {
       id: "fechaProgramada",
       name: "justiciaGratuita.Calendarios.FechaProgramada",
-      size: 130
+      size: 140
     },
     {
       id: "listaGuardias",
       name: "menu.justiciaGratuita.calendarios.ListaGuardias",
-      size: 230
+      size: 250
     },
     {
       id: "observaciones",
       name: "justiciaGratuita.Calendarios.Observaciones",
-      size: 230
+      size: 250
     },
     {
       id: "estado",
       name: "menu.justiciaGratuita.calendarios.Estado",
-      size: 130
+      size: 140
     },
     {
       id: "generado",
       name: "justiciaGratuita.Calendarios.Generado",
-      size: 100
+      size: 140
     },
     {
       id: "numGuardias",
       name: "justiciaGratuita.Calendarios.NumGuardias",
-      size: 100
+      size: 140
     }
   ];
 
@@ -137,16 +137,16 @@ export class ProgramacionCalendariosComponent implements OnInit {
         this.rowGroups = this.dataToDuplicate.tabla;
         
         let objCells: Cell[] = [
-          { type: 'text', value: this.dataToDuplicate.turno, combo: null, size: 230 },
-          { type: 'text', value: this.dataToDuplicate.nombre, combo: null, size: 230 },
-          { type: 'date', value: this.dataToDuplicate.fechaDesde, combo: null, size: 130},
-          { type: 'date', value: this.dataToDuplicate.fechaHasta , combo: null, size: 130},
-          { type: 'dateTime', value: this.dataToDuplicate.fechaProgramacion , combo: null, size: 130},
-          { type: 'label', value: this.dataToDuplicate.listaGuarias, combo: null, size: 230},
-          { type: 'link', value: this.dataToDuplicate.observaciones , combo: null, size: 230},
-          { type: 'text', value: this.dataToDuplicate.estado , combo: null, size: 130},
-          { type: 'text', value: this.dataToDuplicate.generado, combo: null , size: 100 },
-          { type: 'text', value: this.dataToDuplicate.numGuardias, combo: null, size: 100 },
+          { type: 'text', value: this.dataToDuplicate.turno, combo: null, size: 250 },
+          { type: 'text', value: this.dataToDuplicate.nombre, combo: null, size: 250 },
+          { type: 'date', value: this.dataToDuplicate.fechaDesde, combo: null, size: 140},
+          { type: 'date', value: this.dataToDuplicate.fechaHasta , combo: null, size: 140},
+          { type: 'dateTime', value: this.dataToDuplicate.fechaProgramacion , combo: null, size: 140},
+          { type: 'label', value: this.dataToDuplicate.listaGuarias, combo: null, size: 250},
+          { type: 'link', value: this.dataToDuplicate.observaciones , combo: null, size: 250},
+          { type: 'text', value: this.dataToDuplicate.estado , combo: null, size: 140},
+          { type: 'text', value: this.dataToDuplicate.generado, combo: null , size: 140 },
+          { type: 'text', value: this.dataToDuplicate.numGuardias, combo: null, size: 140 },
           { type: 'invisible', value: this.dataToDuplicate.idCalendarioProgramado, combo: null, size: 0},
           { type: 'invisible', value: this.dataToDuplicate.idTurno, combo: null, size: 0},
           { type: 'invisible', value: this.dataToDuplicate.idGuardia, combo: null, size: 0}          
@@ -318,17 +318,17 @@ jsonToRow(){
     let fP = {label: res.fechaProgramacion, value: new Date(this.formatOfficial(res.fechaProgramacion))};
     //let fP = {label: res.fechaProgramacion, value: res.fechaProgramacion};
     let objCells = [
-    { type: 'text', value: res.turno, size: 230 },
-    { type: 'text', value: res.guardia, size: 230  },
-    { type: 'date', value: this.changeDateFormat(res.fechaDesde), size: 130 },
-    { type: 'date', value: this.changeDateFormat(res.fechaHasta), size: 130 },
-    { type: 'dateTime', value: fP, size: 130 },
+    { type: 'text', value: res.turno, size: 250 },
+    { type: 'text', value: res.guardia, size: 250  },
+    { type: 'date', value: this.changeDateFormat(res.fechaDesde), size: 140 },
+    { type: 'date', value: this.changeDateFormat(res.fechaHasta), size: 140 },
+    { type: 'dateTime', value: fP, size: 140 },
     //{ type: 'text', value: new Date(res.fechaProgramacion.toString()) },
-    { type: 'label', value: {label: res.listaGuardias, value: res.idCalG }, size: 230 },
-    { type: 'link', value: res.observaciones, size: 230  },
-    { type: 'text', value: this.getStatusValue(res.estado), size: 130 },
-    { type: 'text', value: res.generado, size: 100 },
-    { type: 'text', value: res.numGuardias, size: 100},
+    { type: 'label', value: {label: res.listaGuardias, value: res.idCalG }, size: 250 },
+    { type: 'link', value: res.observaciones, size: 250  },
+    { type: 'text', value: this.getStatusValue(res.estado), size: 140 },
+    { type: 'text', value: res.generado, size: 140 },
+    { type: 'text', value: res.numGuardias, size: 140},
     { type: 'invisible', value: res.idCalendarioProgramado, size: 0},
     { type: 'invisible', value: res.idTurno, size: 0},
     { type: 'invisible', value: res.idGuardia, size: 0},
