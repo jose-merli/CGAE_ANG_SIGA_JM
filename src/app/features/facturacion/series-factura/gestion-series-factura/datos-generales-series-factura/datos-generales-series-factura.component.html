@@ -18,47 +18,77 @@
       <div class="row">
         <div class="bloque col-lg-4 col-md-4">
           <div class="form-group">
-            <label>Abreviatura (*)</label>
+            <label>{{ 'gratuita.definirTurnosIndex.literal.abreviatura' | translate }} (*)</label>
             <input type="text" [ngClass]="styleObligatorio(body.abreviatura)" [(ngModel)]="body.abreviatura" class="form-control" pInputText>
           </div>
           <div class="form-group">
             <label>Planificar confirmación posteriormente a</label>
             <p-dropdown class="select-form" [(ngModel)]='body.posteriorAFacturacion' placeholder="Seleccionar"
-              [options]="comboFacturaciones" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+              [options]="comboFacturacion" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
           </div>
           <div class="form-group">
-            <label>Estado</label>
+            <label>{{ 'menu.justiciaGratuita.calendarios.Estado' | translate }}</label>
             <input type="text" [(ngModel)]="body.estado" [disabled]="true" class="form-control" pInputText>
           </div>
         </div>
 
         <div class="bloque col-lg-4 col-md-4">
           <div class="form-group">
-            <label>Descripción (*)</label>
+            <label>{{ 'general.description' | translate }} (*)</label>
             <input type="text" [ngClass]="styleObligatorio(body.descripcion)" [(ngModel)]="body.descripcion" class="form-control" pInputText>
           </div>
           <div class="form-group">
-            <label>Tipos de Productos</label>
-            <p-autoComplete [style]="{'width':'100%'}" [(ngModel)]="body.tiposProductos" [suggestions]="comboTiposProductos" (completeMethod)="search($event)" [multiple]="true" [forceSelection]="true"></p-autoComplete>
+            <label>{{ 'facturacion.maestros.tiposproductos' | translate }}</label>
+            
+            <!--
+            <p-autoComplete #autocompleteTopics [(ngModel)]="body.tiposProductos" [suggestions]="comboTiposProductos" [minLength]="1" field="label"
+              [multiple]="true" [style]="{'width':'100%'}" (onFocus)="filterTopics($event)" (onBlur)="visiblePanelBlurTopics($event)"
+               (completeMethod)="filterLabelsMultipleTopics($event)">
+              <ng-template let-topicsSelecionados pTemplate="selectedItem">
+                <div class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li ui-state-highlight"
+                  [ngStyle]="{'background': topicsSelecionados.color, 'margin': marginPx, 'border': bw}">
+                  <span style="color: white">{{ comboTiposProductos.label }}</span>
+                </div>
+              </ng-template>
+            </p-autoComplete>
+            -->
+
+            <p-autoComplete [style]="{'width':'100%'}" [(ngModel)]="body.tiposProductos" [suggestions]="suggestionsTiposProductos" field="label" 
+              (completeMethod)="filterLabelsTiposProductos($event)" [multiple]="true" [forceSelection]="true"></p-autoComplete>
           </div>
           <div class="form-group">
-            <label>Tipos de Servicios</label>
-            <p-autoComplete [style]="{'width':'100%'}" [(ngModel)]="body.tiposServicios" [suggestions]="comboTiposServicios" (completeMethod)="search($event)" [multiple]="true" [forceSelection]="true"></p-autoComplete>
+            <label>{{ 'facturacion.maestros.tiposservicios' | translate }}</label>
+            
+            <!--
+            <p-autoComplete #autocompleteTopics [(ngModel)]="body.tiposServicios" [suggestions]="comboTiposServicios" [minLength]="1" field="label"
+              [multiple]="true" [style]="{'width':'100%'}" (onFocus)="filterTopics($event)" (onBlur)="visiblePanelBlurTopics($event)"
+               (completeMethod)="filterLabelsMultipleTopics($event)">
+              <ng-template let-topicsSelecionados pTemplate="selectedItem">
+                <div class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li ui-state-highlight"
+                  [ngStyle]="{'background': topicsSelecionados.color, 'margin': marginPx, 'border': bw}">
+                  <span style="color: white">{{ body.tiposServicios.label }}</span>
+                </div>
+              </ng-template>
+            </p-autoComplete>
+            -->
+
+            <p-autoComplete [style]="{'width':'100%'}" [(ngModel)]="body.tiposServicios" [suggestions]="suggestionsTiposServicios" field="label" 
+              (completeMethod)="filterLabelsTiposServicios($event)" [multiple]="true" [forceSelection]="true"></p-autoComplete>
           </div>
         </div>
 
         <div class="bloque col-lg-4 col-md-4">
           <div class="form-group">
             <label>Cuenta bancaria Entidad (*)</label>
-            <p-dropdown class="select-form" [(ngModel)]='body.cuentaBancaria' placeholder="Seleccionar"
-              [options]="comboCuentasBancarias" [filter]="true" filterBy="label,labelSinTilde"
-              [ngClass]="styleObligatorio(body.cuentaBancaria)" [showClear]="true"></p-dropdown>
+            <p-dropdown class="select-form" [(ngModel)]='body.idCuentaBancaria' placeholder="Seleccionar"
+              [options]="comboCuentaBancaria" [filter]="true" filterBy="label,labelSinTilde"
+              [ngClass]="styleObligatorio(body.idCuentaBancaria)" [showClear]="true"></p-dropdown>
           </div>
           <div class="form-group">
-            <label>Sufijo</label>
-            <p-dropdown class="select-form" [(ngModel)]='body.sufijo' placeholder="Seleccionar"
-              [options]="comboSufijos" [filter]="true" filterBy="label,labelSinTilde"
-              [ngClass]="styleObligatorio(body.tipoEJG)" [showClear]="true"></p-dropdown>
+            <label>{{ 'administracion.parametrosGenerales.literal.sufijo' | translate }}</label>
+            <p-dropdown class="select-form" [(ngModel)]='body.idSufijo' placeholder="Seleccionar"
+              [options]="comboSufijo" [filter]="true" filterBy="label,labelSinTilde"
+              [ngClass]="styleObligatorio(body.idSufijo)" [showClear]="true"></p-dropdown>
           </div>
         </div>
       </div>

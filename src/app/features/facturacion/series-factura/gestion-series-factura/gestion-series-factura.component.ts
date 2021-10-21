@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Message } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../commons/translate';
-import { SerieFacturacionItem } from '../../../../models/SeriesFacturacionItem';
+import { SerieFacturacionItem } from '../../../../models/SerieFacturacionItem';
 import { PersistenceService } from '../../../../_services/persistence.service';
 
 @Component({
@@ -37,10 +37,13 @@ export class GestionSeriesFacturaComponent implements OnInit {
     if (sessionStorage.getItem("serieFacturacionItem")) {
       this.body = JSON.parse(sessionStorage.getItem("serieFacturacionItem"));
       sessionStorage.removeItem("serieFacturacionItem");
-      
-      this.updateTarjetaResumen();
-      this.updateEnlacesTarjetaResumen();
+      this.persistenceService.setDatos(this.body);
+    } else {
+      this.body = this.persistenceService.getDatos();
     }
+
+    this.updateTarjetaResumen();
+    this.updateEnlacesTarjetaResumen();
 
     this.progressSpinner = false;
   }

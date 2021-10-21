@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, View
 import { Router } from '@angular/router';
 import { ConfirmationService, DataTable } from 'primeng/primeng';
 import { TranslateService } from '../../../../commons/translate';
-import { SerieFacturacionItem } from '../../../../models/SeriesFacturacionItem';
+import { SerieFacturacionItem } from '../../../../models/SerieFacturacionItem';
 import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';

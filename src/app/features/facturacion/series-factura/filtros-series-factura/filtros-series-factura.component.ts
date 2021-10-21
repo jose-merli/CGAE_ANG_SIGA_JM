@@ -3,7 +3,8 @@ import { EventEmitter } from '@angular/core';
 import { Component, Input, OnInit } from '@angular/core';
 import { MultiSelect } from 'primeng/multiselect';
 import { TranslateService } from '../../../../commons/translate';
-import { SerieFacturacionItem } from '../../../../models/SeriesFacturacionItem';
+import { ComboItem } from '../../../../models/ComboItem';
+import { SerieFacturacionItem } from '../../../../models/SerieFacturacionItem';
 import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
@@ -27,14 +28,14 @@ export class FiltrosSeriesFacturaComponent implements OnInit {
 
   // Combos
 
-  comboCuentaBancaria = [];
-  comboSufijo = [];
-  comboTiposProductos = [];
-  comboTiposServicios = [];
-  comboEtiquetas = [];
-  comboConsultasDestinatarios = [];
-  comboContadorFacturas = [];
-  comboContadorFacturasRectificativas = [];
+  comboCuentaBancaria: ComboItem[] = [];
+  comboSufijo: ComboItem[] = [];
+  comboTiposProductos: ComboItem[] = [];
+  comboTiposServicios: ComboItem[] = [];
+  comboEtiquetas: ComboItem[] = [];
+  comboConsultasDestinatarios: ComboItem[] = [];
+  comboContadorFacturas: ComboItem[] = [];
+  comboContadorFacturasRectificativas: ComboItem[] = [];
 
   
   body: SerieFacturacionItem = new SerieFacturacionItem();
@@ -202,8 +203,8 @@ export class FiltrosSeriesFacturaComponent implements OnInit {
       this.body.abreviatura = this.body.abreviatura.trim();
     if (this.body.descripcion != undefined)
       this.body.descripcion = this.body.descripcion.trim();
-    if (this.body.cuentaBancaria != undefined)
-      this.body.cuentaBancaria = this.body.cuentaBancaria.trim();
+    if (this.body.idCuentaBancaria != undefined)
+      this.body.idCuentaBancaria = this.body.idCuentaBancaria.trim();
 
     //this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
 
