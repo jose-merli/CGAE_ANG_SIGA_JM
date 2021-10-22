@@ -56,7 +56,7 @@
                 <div *ngIf="col.field == 'nombreTurno' && clickPermuta &&  permutas[rowIndex].nuevoRegistro">
                   <p-dropdown
                   [(ngModel)]='valueComboTurno' class="select-form" placeholder="Seleccionar" [options]="comboTurnos"
-                  [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+                  [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeTurnos()" [showClear]="true"></p-dropdown>
                 </div>
                 <div *ngIf="col.field == 'nombreGuardia' && clickPermuta &&  permutas[rowIndex].nuevoRegistro">
                   <p-dropdown
@@ -64,9 +64,8 @@
                   [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
                 </div>
 
-                <div>
-                  <input *ngIf="col.field == 'motivos' && clickPermuta &&  permutas[rowIndex].nuevoRegistro" [(ngModel)]='motivos'
-                type="text" pInputText />
+                <div *ngIf="col.field == 'motivos' && clickPermuta &&  permutas[rowIndex].nuevoRegistro">
+                  <input  [(ngModel)]='motivos' type="text" pInputText />
                 </div>
 
                
@@ -121,8 +120,11 @@
             (click)="checkPermutar()" type="button" iconPos="left"
             label="{{ 'general.boton.permutar' | translate }}"></button>
 
-            <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0 || clickPermuta)" (click)="validar()"
+            <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0 || clickPermuta)" (click)="checkValidar()"
             type="button" icon="fa fa-save" iconPos="left" label="{{'general.boton.validar' | translate}}"></button>
+
+            <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0 || !clickPermuta)" (click)="restPermutas()"
+            type="button" icon="fa fa-eraser" iconPos="left" label="{{'general.boton.restablecer' | translate}}"></button>
 
         </div>
       </div>
@@ -132,6 +134,12 @@
     <p-footer>
       <button type="button" pButton icon="fa-check" label="Si" (click)="perm.accept()"></button>
       <button type="button" pButton icon="fa-close" label="No" (click)="perm.reject()"></button>
+    </p-footer>
+  </p-confirmDialog>
+  <p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" key="valida" #valida>
+    <p-footer>
+      <button type="button" pButton icon="fa-check" label="Si" (click)="valida.accept()"></button>
+      <button type="button" pButton icon="fa-close" label="No" (click)="valida.reject()"></button>
     </p-footer>
   </p-confirmDialog>
   <div *ngIf="progressSpinner" class="overlay-spinner">
