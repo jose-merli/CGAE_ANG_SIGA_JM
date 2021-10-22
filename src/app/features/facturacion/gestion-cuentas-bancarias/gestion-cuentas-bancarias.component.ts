@@ -1,7 +1,7 @@
 import { Input } from '@angular/core';
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { ConfirmationService, DataTable } from 'primeng/primeng';
+import { ConfirmationService, DataTable, ProgressSpinner } from 'primeng/primeng';
 import { TranslateService } from '../../../commons/translate';
 import { CuentasBancariasItem } from '../../../models/CuentasBancariasItem';
 import { CommonsService } from '../../../_services/commons.service';
@@ -37,6 +37,7 @@ export class GestionCuentasBancariasComponent implements OnInit {
   rowsPerPage: any = [];
   buscadores = [];
   numSelected: number;
+  allCuentasBancarias: CuentasBancariasItem[];
   listaCuentasBancarias: CuentasBancariasItem[];
 
   constructor(private translateService: TranslateService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
@@ -44,19 +45,21 @@ export class GestionCuentasBancariasComponent implements OnInit {
     private confirmationService: ConfirmationService, private commonServices: CommonsService) {
   }
 
-  ngOnInit() {
-    this.getCols();
+  async ngOnInit() { 
+    this.historico = false;
+    await this.getCols();
+    await this.cargarDatos();
   }
 
-  getCols() {
+   getCols() {
     this.cols = [
-      { field: "nombre", header: "censo.tipoAbono.banco", width: "30%" },
-      { field: "iban", header: "censo.mutualidad.literal.iban", width: "15%" },
-      { field: "descripcion", header: "general.boton.description", width: "30%" },
-      { field: "comisionImporte", header: "facturacion.cuentasBancarias.comisionImporte", width: "15%" },
-      { field: "sjcs", header: "menu.justiciaGratuita", width: "5%" },
-      { field: "numUsos", header: "facturacion.cuentasBancarias.numUsos", width: "5%" },
-      { field: "numFicheros", header: "facturacion.cuentasBancarias.numFicheros", width: "5%" },
+      { field: "nombre", header: "censo.tipoAbono.banco", width: "35%" },
+      { field: "iban", header: "censo.mutualidad.literal.iban", width: "10%" },
+      { field: "descripcion", header: "general.boton.description", width: "10%" },
+      { field: "comisionImporte", header: "facturacion.cuentasBancarias.comisionImporte", width: "10%" },
+      { field: "sjcs", header: "menu.justiciaGratuita", width: "10%" },
+      { field: "numUsos", header: "facturacion.cuentasBancarias.numUsos", width: "10%" },
+      { field: "numFicheros", header: "facturacion.cuentasBancarias.numFicheros", width: "15%" },
     ];
 
     this.cols.forEach(it => this.buscadores.push(""));
@@ -84,6 +87,7 @@ export class GestionCuentasBancariasComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
+
   onChangeSelectAll() {
     if (this.permisoEscritura) {
       if (!this.historico) {
@@ -109,12 +113,15 @@ export class GestionCuentasBancariasComponent implements OnInit {
       }
     }
   }
+
   nuevo() { }
 
-  searchHistorical() {
+  cargarDatos() {
+    this.allCuentasBancarias = [];
     this.sigaServices.get("facturacionPyS_getCuentasBancarias").subscribe(
       data => {
-        this.listaCuentasBancarias = data.cuentasBancariasITem;
+        this.allCuentasBancarias = data.cuentasBancariasITem;
+        this.cargarListaCuentasBancarias();
       },
       err => {
         console.log(err);
@@ -122,8 +129,49 @@ export class GestionCuentasBancariasComponent implements OnInit {
     );
   }
 
+  mostrarOcultarHistoricos() {
+    this.historico = !this.historico;
+    this.cargarListaCuentasBancarias();
+  }
+
+  cargarListaCuentasBancarias() {
+    this.listaCuentasBancarias = [];
+
+    this.allCuentasBancarias.forEach( cuenta => {
+      
+      if (this.historico) {
+        if (cuenta.fechaBaja != null) {
+          this.listaCuentasBancarias.push(cuenta);
+        }
+      } else {
+        if (cuenta.fechaBaja == null) {
+          this.listaCuentasBancarias.push(cuenta);
+        }
+      }
+
+    });
+  }
+
   consultarEditar() { }
-  confirmDelete() { }
+
+  confirm() {
+    this.confirmationService.confirm({
+        message: 'Se va a proceder a dar de baja la cuenta seleccionada ¿Desea continuar?',
+        header: null,
+        icon: null,
+        accept: async () => {
+            await this.confirmDelete();
+            this.cargarDatos();
+        }
+    });
+  }
+
+  confirmDelete() { 
+    this.sigaServices.post("facturacionPyS_borrarCuentasBancarias", this.selectedDatos)
+    .subscribe( b => {
+      
+    });
+  }
 
   isSelectMultiple() {
     this.selectAll = false;
@@ -147,6 +195,7 @@ export class GestionCuentasBancariasComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
     this.table.reset();
   }
+
   showMessage(severity, summary, msg) {
     this.msgs = [];
     this.msgs.push({
@@ -155,4 +204,5 @@ export class GestionCuentasBancariasComponent implements OnInit {
       detail: msg
     });
   }
+
 }

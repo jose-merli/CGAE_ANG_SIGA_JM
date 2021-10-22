@@ -20,10 +20,11 @@
             </div>
           </td>
         </tr>
-      </ng-template>
+      </ng-template> -->
       
     <!--NUEVA TABLA DE RESULTADOS [columns]="cols" [value]="listaCuentasBancarias"-->
-    <p-table  [autoLayout]="true" [value]="listaCuentasBancarias" [columns]="cols"  class="tabla-listado overflow"   [ngClass]="{ 'customCursor' : selectMultiple }" >
+    <p-table #table [(selection)]="selectedDatos" [rows]="selectedItem" [autoLayout]="true"
+              [value]="listaCuentasBancarias" [columns]="cols" [ngClass]="{ 'customCursor' : selectMultiple }" selectionMode="multiple" class="tabla-listado overflow">
 
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
@@ -43,10 +44,36 @@
         </tr>
       </ng-template>
 
-      <ng-template pTemplate="body" let-cuentaBancaria let-columns="columns">
-          <tr>
+      <ng-template pTemplate="body" let-cuentaBancaria let-columns="columns" let-rowIndex="rowIndex">
+          <tr [pSelectableRow]="cuentaBancaria" [pSelectableRowIndex]="rowIndex">
               <td *ngFor="let col of columns">
-                  {{cuentaBancaria[col.field]}}
+
+                <!-- Muestra las cuentas actuales -->
+                <div *ngIf="!historico">
+                  <div *ngIf="col.field === 'iban'">
+                    <span >(... {{ cuentaBancaria[col.field] | slice:-4 }} )</span>
+                  </div>
+                  <div *ngIf="col.field === 'descripcion'">
+                    <span class="enlace">{{ cuentaBancaria[col.field] }}</span>
+                  </div>
+                  <div *ngIf="col.field !== 'iban' && col.field !== 'descripcion'">
+                    <span>{{ cuentaBancaria[col.field] }}</span>
+                  </div>
+                </div>
+
+                <!-- Muestra el historico de cuentas -->
+                <div *ngIf="historico">
+                  <div *ngIf="col.field === 'iban'">
+                    <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">(... {{ cuentaBancaria[col.field] | slice:-4 }} )</span>
+                  </div>
+                  <div *ngIf="col.field === 'descripcion'">
+                    <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}" class="enlace">{{ cuentaBancaria[col.field] }}</span>
+                  </div>
+                  <div *ngIf="col.field !== 'iban' && col.field !== 'descripcion'">
+                    <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ cuentaBancaria[col.field] }}</span>
+                  </div>
+                </div>
+
               </td>
           </tr>
       </ng-template>
@@ -83,23 +110,18 @@
   <div class="card-footer">
     <div class="text-right main-button">
         <button *ngIf="!historico"
-          [disabled]="selectedDatos.length == 0 || !permisoEscritura"
-          (click)="confirmDelete()" pButton type="button" icon="fa fa-trash" iconPos="left"
+          [disabled]="(selectedDatos.length === 0)"
+          (click)="confirm()" pButton type="button" icon="fa fa-trash" iconPos="left"
           label="{{ 'general.boton.eliminar' | translate}}"></button>
 
         <button *ngIf="!historico" [disabled]=" !permisoEscritura" (click)="nuevo()" pButton
           type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
 
-        <button *ngIf="!historico" (click)="searchHistorical() " pButton type="button" icon="fa fa-history"
+        <button *ngIf="!historico" (click)="mostrarOcultarHistoricos()" pButton type="button" icon="fa fa-history"
           iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
 
-        <button *ngIf="historico" (click)="searchHistorical()" pButton type="button" icon="fa fa-undo" iconPos="left"
+        <button *ngIf="historico" (click)="mostrarOcultarHistoricos()" pButton type="button" icon="fa fa-undo" iconPos="left"
           label="{{'general.message.ocultarHistorico' | translate}}"></button>
-
-        <button *ngIf="!historico"
-          [disabled]="selectedDatos.length == 0 || !permisoEscritura"
-          (click)="consultarEditar()" pButton type="button"  iconPos="left"
-          label="{{ 'general.boton.consultareditar.bancarios' | translate}}"></button>
       </div>
   </div>
 </div>
