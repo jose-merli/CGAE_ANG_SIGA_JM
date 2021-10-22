@@ -3,8 +3,8 @@
 -->
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="busqueda-container">
-    <app-filtros-series-factura (busqueda)="searchSeriesFacturas($event)" [permisoEscritura] = "this.permisoEscritura"></app-filtros-series-factura>
-    <app-tabla-series-factura *ngIf="buscar" [datos]="datos" (busqueda)="searchSeriesFacturas($event)" (searchHistoricalSend)="searchSeriesFacturas($event)"></app-tabla-series-factura>
+    <app-filtros-series-factura (busqueda)="searchSeriesFacturas()" [permisoEscritura] = "this.permisoEscritura"></app-filtros-series-factura>
+    <app-tabla-series-factura *ngIf="buscar" [datos]="datos" (busqueda)="searchSeriesFacturas()"></app-tabla-series-factura>
 </div>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">

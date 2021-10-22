@@ -27,55 +27,55 @@
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ "facturacion.seriesFactura.cuentaBancaria" | translate }}</label>
-          <p-dropdown class="select-form" [(ngModel)]='body.cuentaBancaria' placeholder="{{'general.boton.seleccionar' | translate}}"
+          <p-dropdown class="select-form" [(ngModel)]='body.idCuentaBancaria' placeholder="{{'general.boton.seleccionar' | translate}}"
               [options]="comboCuentaBancaria" [filter]="true" filterBy="label,labelSinTilde"
-              (onChange)="onChangeCuentaBancaria()" [showClear]="true"></p-dropdown>
+              [showClear]="true"></p-dropdown>
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ "facturacionSJCS.facturacionesYPagos.sufijo" | translate }}</label>
-          <p-dropdown class="select-form" [(ngModel)]='body.sufijo' placeholder="{{'general.boton.seleccionar' | translate}}"
+          <p-dropdown class="select-form" [(ngModel)]='body.idSufijo' placeholder="{{'general.boton.seleccionar' | translate}}"
               [options]="comboSufijo" [filter]="true" filterBy="label,labelSinTilde"
-              (onChange)="onChangeSufijo()" [showClear]="true"></p-dropdown>
+              [showClear]="true"></p-dropdown>
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ "facturacion.seriesFactura.tipoProductos" | translate }}</label>
-          <p-multiSelect #tipoProductos class="select-form" [(ngModel)]='body.tiposProductos'
+          <p-multiSelect #tipoProductos class="select-form" [(ngModel)]='body.idTiposProductos'
             defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboTiposProductos" [filter]="true"
             maxSelectedLabels="10" [selectedItemsLabel]="'{0} tipos seleccionados'" filterBy="label,labelSinTilde"
             styleClass="widthAll" (onPanelShow)="focusInputField(tiposProductos)"></p-multiSelect>
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ "facturacion.seriesFactura.tipoServicios" | translate }}</label>
-          <p-multiSelect #tipoServicios class="select-form" [(ngModel)]='body.tiposServicios'
+          <p-multiSelect #tipoServicios class="select-form" [(ngModel)]='body.idTiposServicios'
             defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboTiposServicios" [filter]="true"
             maxSelectedLabels="10" [selectedItemsLabel]="'{0} tipos seleccionados'" filterBy="label,labelSinTilde"
             styleClass="widthAll" (onPanelShow)="focusInputField(tiposServicios)"></p-multiSelect>
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ "menu.administracion.gestionMultiidioma.etiquetasSociedad" | translate }}</label>
-          <p-multiSelect #etiquetas class="select-form" [(ngModel)]='body.etiquetas'
+          <p-multiSelect #etiquetas class="select-form" [(ngModel)]='body.idEtiquetas'
             defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboEtiquetas" [filter]="true"
             maxSelectedLabels="10" [selectedItemsLabel]="'{0} etiquetas seleccionadas'" filterBy="label,labelSinTilde"
             styleClass="widthAll" (onPanelShow)="focusInputField(etiquetas)"></p-multiSelect>
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ "facturacion.seriesFactura.consultasDestinatarios" | translate }}</label>
-          <p-multiSelect #etiquetas class="select-form" [(ngModel)]='body.consultasDestinatarios'
+          <p-multiSelect #etiquetas class="select-form" [(ngModel)]='body.idConsultasDestinatarios'
             defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboConsultasDestinatarios" [filter]="true"
             maxSelectedLabels="10" [selectedItemsLabel]="'{0} consultas seleccionadas'" filterBy="label,labelSinTilde"
             styleClass="widthAll" (onPanelShow)="focusInputField(consultasDestinatarios)"></p-multiSelect>
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ "facturacion.seriesFactura.contadorFacturas" | translate }}</label>
-          <p-dropdown class="select-form" [(ngModel)]='body.contadorFacturas' placeholder="{{'general.boton.seleccionar' | translate}}"
+          <p-dropdown class="select-form" [(ngModel)]='body.idContadorFacturas' placeholder="{{'general.boton.seleccionar' | translate}}"
               [options]="comboContadorFacturas" [filter]="true" filterBy="label,labelSinTilde"
-              (onChange)="onChangeContadorFacturas(contadorFacturas)" [showClear]="true"></p-dropdown>
+              [showClear]="true"></p-dropdown>
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ "facturacion.seriesFactura.contadorFacturasRectificativas" | translate }}</label>
-          <p-dropdown class="select-form" [(ngModel)]='body.contadorFacturasRectificativas' placeholder="{{'general.boton.seleccionar' | translate}}"
+          <p-dropdown class="select-form" [(ngModel)]='body.idContadorFacturasRectificativas' placeholder="{{'general.boton.seleccionar' | translate}}"
               [options]="comboContadorFacturasRectificativas" [filter]="true" filterBy="label,labelSinTilde"
-              (onChange)="onChangeContadorFacturasRectificativas(contadorFacturasRectificativas)" [showClear]="true"></p-dropdown>
+              [showClear]="true"></p-dropdown>
         </div>
       </div>
     </div>

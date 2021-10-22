@@ -1,0 +1,114 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="busqueda-container" id="datosGenerales">
+  <div class="card" id="top">
+    <div class="card-header header-ficha">
+
+      <div 
+        class=" header-ficha-open d-flex justify-content-start align-items-center"
+        (click)="abreCierraFicha('datosGenerales')">
+        <div class="img-colegiado">
+          <i class="far fa-address-book icon-ficha"></i>
+        </div>
+        <label class="title-ficha pointer">{{ 'general.message.datos.generales' | translate }}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <div class="card-body card-body-ficha">
+      <div class="row">
+        <div class="bloque col-lg-4 col-md-4">
+          <div class="form-group">
+            <label>{{ 'gratuita.definirTurnosIndex.literal.abreviatura' | translate }} (*)</label>
+            <input type="text" [ngClass]="styleObligatorio(body.abreviatura)" [(ngModel)]="body.abreviatura" class="form-control" pInputText>
+          </div>
+          <div class="form-group">
+            <label>Planificar confirmación posteriormente a</label>
+            <p-dropdown class="select-form" [(ngModel)]='body.posteriorAFacturacion' placeholder="Seleccionar"
+              [options]="comboFacturacion" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+          </div>
+          <div class="form-group">
+            <label>{{ 'menu.justiciaGratuita.calendarios.Estado' | translate }}</label>
+            <input type="text" [(ngModel)]="body.estado" [disabled]="true" class="form-control" pInputText>
+          </div>
+        </div>
+
+        <div class="bloque col-lg-4 col-md-4">
+          <div class="form-group">
+            <label>{{ 'general.description' | translate }} (*)</label>
+            <input type="text" [ngClass]="styleObligatorio(body.descripcion)" [(ngModel)]="body.descripcion" class="form-control" pInputText>
+          </div>
+          <div class="form-group">
+            <label>{{ 'facturacion.maestros.tiposproductos' | translate }}</label>
+            
+            <!--
+            <p-autoComplete #autocompleteTopics [(ngModel)]="body.tiposProductos" [suggestions]="comboTiposProductos" [minLength]="1" field="label"
+              [multiple]="true" [style]="{'width':'100%'}" (onFocus)="filterTopics($event)" (onBlur)="visiblePanelBlurTopics($event)"
+               (completeMethod)="filterLabelsMultipleTopics($event)">
+              <ng-template let-topicsSelecionados pTemplate="selectedItem">
+                <div class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li ui-state-highlight"
+                  [ngStyle]="{'background': topicsSelecionados.color, 'margin': marginPx, 'border': bw}">
+                  <span style="color: white">{{ comboTiposProductos.label }}</span>
+                </div>
+              </ng-template>
+            </p-autoComplete>
+            -->
+
+            <p-autoComplete [style]="{'width':'100%'}" [(ngModel)]="body.tiposProductos" [suggestions]="suggestionsTiposProductos" field="label" 
+              (completeMethod)="filterLabelsTiposProductos($event)" [multiple]="true" [forceSelection]="true"></p-autoComplete>
+          </div>
+          <div class="form-group">
+            <label>{{ 'facturacion.maestros.tiposservicios' | translate }}</label>
+            
+            <!--
+            <p-autoComplete #autocompleteTopics [(ngModel)]="body.tiposServicios" [suggestions]="comboTiposServicios" [minLength]="1" field="label"
+              [multiple]="true" [style]="{'width':'100%'}" (onFocus)="filterTopics($event)" (onBlur)="visiblePanelBlurTopics($event)"
+               (completeMethod)="filterLabelsMultipleTopics($event)">
+              <ng-template let-topicsSelecionados pTemplate="selectedItem">
+                <div class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li ui-state-highlight"
+                  [ngStyle]="{'background': topicsSelecionados.color, 'margin': marginPx, 'border': bw}">
+                  <span style="color: white">{{ body.tiposServicios.label }}</span>
+                </div>
+              </ng-template>
+            </p-autoComplete>
+            -->
+
+            <p-autoComplete [style]="{'width':'100%'}" [(ngModel)]="body.tiposServicios" [suggestions]="suggestionsTiposServicios" field="label" 
+              (completeMethod)="filterLabelsTiposServicios($event)" [multiple]="true" [forceSelection]="true"></p-autoComplete>
+          </div>
+        </div>
+
+        <div class="bloque col-lg-4 col-md-4">
+          <div class="form-group">
+            <label>Cuenta bancaria Entidad (*)</label>
+            <p-dropdown class="select-form" [(ngModel)]='body.idCuentaBancaria' placeholder="Seleccionar"
+              [options]="comboCuentaBancaria" [filter]="true" filterBy="label,labelSinTilde"
+              [ngClass]="styleObligatorio(body.idCuentaBancaria)" [showClear]="true"></p-dropdown>
+          </div>
+          <div class="form-group">
+            <label>{{ 'administracion.parametrosGenerales.literal.sufijo' | translate }}</label>
+            <p-dropdown class="select-form" [(ngModel)]='body.idSufijo' placeholder="Seleccionar"
+              [options]="comboSufijo" [filter]="true" filterBy="label,labelSinTilde"
+              [ngClass]="styleObligatorio(body.idSufijo)" [showClear]="true"></p-dropdown>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <div class="text-right main-button">
+        <button pButton (click)="confirmEliminar()" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.eliminar' | translate }}"></button>
+        <button pButton (click)="confirmReactivar()" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.reactivar' | translate }}"></button>
+
+        <button pButton type="button" icon="fa fa-undo" iconPos="left"
+          label="{{ 'general.boton.restablecer' | translate}}"></button>
+
+        <button pButton type="button" icon="fa fa-save" iconPos="left"
+          label="{{ 'general.boton.guardar' | translate}}"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

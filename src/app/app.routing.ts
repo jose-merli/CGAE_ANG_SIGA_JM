@@ -244,6 +244,7 @@ import { FichaProductosComponent } from "./features/facturacion/productos/ficha-
 import { ServiciosComponent } from "./features/facturacion/servicios/servicios.component";
 import { FichaServiciosComponent } from "./features/facturacion/servicios/ficha-servicios/ficha-servicios.component";
 import { BusquedaAsuntosComponent } from "./commons/busqueda-asuntos/busqueda-asuntos.component";
+import { GestionSeriesFacturaComponent } from "./features/facturacion/series-factura/gestion-series-factura/gestion-series-factura.component";
 
 const appRoutes: Routes = [
 	{ path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
@@ -539,6 +540,11 @@ const appRoutes: Routes = [
 	{
 		path: 'seriesFactura',
 		component: SeriesFacturaComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'datosSeriesFactura',
+		component: GestionSeriesFacturaComponent,
 		canActivate: [AuthGuard]
 	},
 	{

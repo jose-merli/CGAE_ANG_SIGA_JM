@@ -279,7 +279,7 @@ import { DatosCvComponent } from './features/censo/cargas-masivas/datos-cv/datos
 import { CargaEtiquetasComponent2 } from './features/censo/cargaEtiquetas/cargaEtiquetas.component';
 import { DatosCVComponent2 } from './features/censo/datosCV/datosCV.component';
 import { AgendaComponent } from './features/agenda/agenda.component';
-import { SelectButtonModule, ColorPickerModule, OverlayPanelModule, PaginatorModule } from 'primeng/primeng';
+import { SelectButtonModule, ColorPickerModule, OverlayPanelModule, PaginatorModule, SliderModule } from 'primeng/primeng';
 import { FichaCalendarioComponent } from './features/agenda/ficha-calendario/ficha-calendario.component';
 import { CargasMasivasComponent } from './features/censo/cargas-masivas/cargas-masivas.component';
 import { DatosNotificacionesComponent } from './features/agenda/datos-notificaciones/datos-notificaciones.component';
@@ -491,6 +491,7 @@ import { TarjetaFacturaCompraSuscripcionComponent } from './features/facturacion
 import { QueryBuilderModule } from '@syncfusion/ej2-angular-querybuilder';
 import { enableRipple } from '@syncfusion/ej2-base';
 import { MatSlideToggleModule } from '@angular/material';
+import { DatosGeneralesSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/datos-generales-series-factura/datos-generales-series-factura.component';
 enableRipple(true);
 
 @NgModule({
@@ -898,7 +899,8 @@ enableRipple(true);
 		TarjetaListaCompraProductosComponent,
 		DetalleTarjetaPrecioFichaServiciosFacturacionComponent,
 		TarjetaProductosCompraSuscripcionComponent,
-		TarjetaFacturaCompraSuscripcionComponent
+		TarjetaFacturaCompraSuscripcionComponent,
+		DatosGeneralesSeriesFacturaComponent
 	],
 	imports: [
 		Paginador3Module,
@@ -971,7 +973,8 @@ enableRipple(true);
 		BusquedaAsuntosModule,
 		Paginador2Module,
 		QueryBuilderModule,
-		OrderListModule
+		OrderListModule,
+		SliderModule
 	],
 
 	exports: [DigitDecimaNumberDirective],

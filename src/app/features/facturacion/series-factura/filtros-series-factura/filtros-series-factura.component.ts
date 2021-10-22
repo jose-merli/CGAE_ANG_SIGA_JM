@@ -3,7 +3,8 @@ import { EventEmitter } from '@angular/core';
 import { Component, Input, OnInit } from '@angular/core';
 import { MultiSelect } from 'primeng/multiselect';
 import { TranslateService } from '../../../../commons/translate';
-import { SerieFacturacionItem } from '../../../../models/SeriesFacturacionItem';
+import { ComboItem } from '../../../../models/ComboItem';
+import { SerieFacturacionItem } from '../../../../models/SerieFacturacionItem';
 import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
@@ -22,18 +23,19 @@ export class FiltrosSeriesFacturaComponent implements OnInit {
   @Input() permisoEscritura;
   @Output() busqueda = new EventEmitter<boolean>();
   
-  progressSpinner: boolean;
+  progressSpinner: boolean = false;
+  historico: boolean = false;
 
   // Combos
 
-  comboCuentaBancaria = [];
-  comboSufijo = [];
-  comboTiposProductos = [];
-  comboTiposServicios = [];
-  comboEtiquetas = [];
-  comboConsultasDestinatarios = [];
-  comboContadorFacturas = [];
-  comboContadorFacturasRectificativas = [];
+  comboCuentaBancaria: ComboItem[] = [];
+  comboSufijo: ComboItem[] = [];
+  comboTiposProductos: ComboItem[] = [];
+  comboTiposServicios: ComboItem[] = [];
+  comboEtiquetas: ComboItem[] = [];
+  comboConsultasDestinatarios: ComboItem[] = [];
+  comboContadorFacturas: ComboItem[] = [];
+  comboContadorFacturasRectificativas: ComboItem[] = [];
 
   
   body: SerieFacturacionItem = new SerieFacturacionItem();
@@ -53,6 +55,13 @@ export class FiltrosSeriesFacturaComponent implements OnInit {
       this.permisos = this.persistenceService.getPermisos();
     }
 
+    if (this.persistenceService.getFiltros() != undefined) {
+      this.body = this.persistenceService.getFiltros();
+      this.persistenceService.clearFiltros();
+
+      this.busqueda.emit();
+    }
+
     this.progressSpinner = false;
   }
 
@@ -65,7 +74,7 @@ export class FiltrosSeriesFacturaComponent implements OnInit {
     this.getComboTiposProductos();
     this.getComboTiposServicios();
     this.getComboEtiquetas();
-    // this.getComboConsultasDestinatarios();
+    this.getComboConsultasDestinatarios();
     this.getComboContadorFacturas();
     this.getComboContadorFacturasRectificativas();
   }
@@ -168,24 +177,6 @@ export class FiltrosSeriesFacturaComponent implements OnInit {
     );
   }
 
-  // On change
-
-  onChangeCuentaBancaria(): void {
-
-  }
-
-  onChangeSufijo(): void {
-    
-  }
-
-  onChangeContadorFacturas(): void {
-    
-  }
-
-  onChangeContadorFacturasRectificativas(): void {
-    
-  }
-
   // Buttons
 
   focusInputField(someMultiselect: MultiSelect) {
@@ -201,11 +192,34 @@ export class FiltrosSeriesFacturaComponent implements OnInit {
   }
 
   clearFilters() {
+    this.body = new SerieFacturacionItem();
+    this.persistenceService.clearFiltros();
+
     this.goTop();
   }
 
+  checkFilters(): boolean {
+    if (this.body.abreviatura != undefined)
+      this.body.abreviatura = this.body.abreviatura.trim();
+    if (this.body.descripcion != undefined)
+      this.body.descripcion = this.body.descripcion.trim();
+    if (this.body.idCuentaBancaria != undefined)
+      this.body.idCuentaBancaria = this.body.idCuentaBancaria.trim();
+
+    //this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
+
+    return true;
+  }
+
+  // Botón de busqueda
+
   isBuscar() {
-    this.busqueda.emit(false);
+    if (this.checkFilters()) {
+      this.persistenceService.setFiltros(this.body);
+      
+      console.log(this.body);
+      this.busqueda.emit();
+    }
   }
 
   goTop() {
@@ -226,7 +240,7 @@ export class FiltrosSeriesFacturaComponent implements OnInit {
     });
   }
   
-  //búsqueda con enter
+  // Búsqueda con enter
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {
     if (event.keyCode === KEY_CODE.ENTER) {

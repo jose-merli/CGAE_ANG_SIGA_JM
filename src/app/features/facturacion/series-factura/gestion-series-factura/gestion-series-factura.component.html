@@ -1,3 +1,15 @@
-<p>
-  gestion-series-factura works!
-</p>
+<div class="ficha-comunicacion-container" id="top">
+  <div class="header-title">
+    <i class="fa fa-square"></i>
+    <p>{{ "menu.facturacion" | translate }}
+      <i class="fa fa-angle-right"></i>{{ "menu.facturacion.asignacionDeConceptosFacturables" | translate }}
+    </p>
+  </div>
+
+  <div>
+    <app-tarjeta-resumen-fija class="pb-50" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="datos" [icono]="iconoTarjetaResumen" (modoEdicionSend)="modoEdicionSend($event)" [enlaces]="enlacesTarjetaResumen" (isOpen)="isOpenReceive($event)" [manuallyOpened]="manuallyOpened">
+    </app-tarjeta-resumen-fija>
+
+    <app-datos-generales-series-factura [tarjetaDatosGenerales]="tarjetaDatosGenerales" [openTarjetaDatosGenerales]="openTarjetaDatosGenerales"></app-datos-generales-series-factura>
+  </div>
+</div>
