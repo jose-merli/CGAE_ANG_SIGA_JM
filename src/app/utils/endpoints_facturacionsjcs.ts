@@ -54,6 +54,14 @@ export let endpoints_facturacionsjcs: any = {
     pagosjcs_getCompensacionFacturas: "pagosjcs/getCompensacionFacturas",
     pagosjcs_cerrarPago: "pagosjcs/cerrarPago",
     pagosjcs_cerrarPagoManual: "pagosjcs/cerrarPagoManual",
-    pagosjcs_deshacerCierre: "pagosjcs/deshacerCierre"
+    pagosjcs_deshacerCierre: "pagosjcs/deshacerCierre",
+
+    /* Endpoints combos Retenciones */
+    retenciones_comboDestinatarios: "combo/getComboDestinatarios",
+    retenciones_comboPagos: "combo/getComboPagosRetenciones",
+
+    /* Endpoints Retenciones */
+    retenciones_buscarRetenciones: "retenciones/searchRetenciones",
+    retenciones_eliminarRetenciones: "retenciones/deleteRetenciones",
 }
 

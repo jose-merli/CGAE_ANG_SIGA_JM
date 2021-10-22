@@ -1,0 +1,18 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+
+<div class="header-title">
+  <i class="fa fa-square"></i>
+  <p>SJCS&nbsp;<i class="fa fa-angle-right"></i>{{'facturacionSJCS.retenciones.buscar.titulo' | translate}}
+  </p>
+</div>
+
+<div class="busqueda-container">
+  <app-filtro-busqueda-retenciones (buscarEvent)="buscarRetenciones(false, $event)"></app-filtro-busqueda-retenciones>
+  <app-tabla-busqueda-retenciones *ngIf="mostrarTablaResultados" [datos]="retencionesItemList"
+    (buscarEvent)="buscarRetenciones($event)" (eliminarEvent)="eliminarRetenciones($event)">
+  </app-tabla-busqueda-retenciones>
+</div>

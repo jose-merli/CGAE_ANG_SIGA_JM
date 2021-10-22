@@ -475,6 +475,9 @@ import { LetradoSalienteComponent } from './features/sjcs/oficio/designaciones/f
 import { ProcuradorPreDesignacionComponent } from './features/sjcs/ejg/gestion-ejg/relaciones/ficha-pre-designacion/procurador-pre-designacion/procurador-pre-designacion.component';
 import { ContrariosPreDesignacionComponent } from './features/sjcs/ejg/gestion-ejg/relaciones/ficha-pre-designacion/contrarios-pre-designacion/contrarios-pre-designacion.component';
 import { GuardiaModule } from './features/sjcs/guardia/guardia.module';
+import { RetencionesComponent } from './features/sjcs/facturacionSJCS/retenciones/retenciones.component';
+import { FiltroBusquedaRetencionesComponent } from './features/sjcs/facturacionSJCS/retenciones/filtro-busqueda-retenciones/filtro-busqueda-retenciones.component';
+import { TablaBusquedaRetencionesComponent } from './features/sjcs/facturacionSJCS/retenciones/tabla-busqueda-retenciones/tabla-busqueda-retenciones.component';
 
 @NgModule({
 	declarations: [
@@ -605,8 +608,8 @@ import { GuardiaModule } from './features/sjcs/guardia/guardia.module';
 		DetalleTarjetaInteresadosFichaDesignacionOficioComponent,
 		DetalleTarjetaLetradosDesignaComponent,
 		FichaDesignacionesComponent,
-		FichaCambioLetradoComponent, 
-		LetradoSalienteComponent, 
+		FichaCambioLetradoComponent,
+		LetradoSalienteComponent,
 		LetradoEntranteComponent,
 		DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent,
 		DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent,
@@ -635,7 +638,7 @@ import { GuardiaModule } from './features/sjcs/guardia/guardia.module';
 		ExpedientesEconomicosComponent,
 		RelacionesComponent,
 		FichaPreDesignacionComponent,
-  		DefensaJuridicaComponent,
+		DefensaJuridicaComponent,
 		EstadosComponent,
 		DocumentacionComponent,
 		InformeCalificacionComponent,
@@ -645,9 +648,9 @@ import { GuardiaModule } from './features/sjcs/guardia/guardia.module';
 		AddExpedienteComponent,
 		ComunicacionesEJGComponent,
 		ProcuradorPreDesignacionComponent,
- 		ContrariosPreDesignacionComponent,
+		ContrariosPreDesignacionComponent,
 		RegtelEjgComponent,
-		
+
 		GestionActasComponent,
 		MantenimientoFacturacionComponent,
 		PrevisionesComponent,
@@ -869,6 +872,9 @@ import { GuardiaModule } from './features/sjcs/guardia/guardia.module';
 		CompensacionFacturaComponent,
 		ConceptosPagosComponent,
 		SiNoPipe,
+		RetencionesComponent,
+		FiltroBusquedaRetencionesComponent,
+		TablaBusquedaRetencionesComponent,
 	],
 	imports: [
 		Paginador3Module,
@@ -926,8 +932,8 @@ import { GuardiaModule } from './features/sjcs/guardia/guardia.module';
 		// BusquedaAsuntosModule,
 		EditorModule,
 
-		
-		
+
+
 		MatExpansionModule,
 		MatCheckboxModule,
 		MatInputModule,
