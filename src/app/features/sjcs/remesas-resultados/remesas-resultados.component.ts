@@ -1,8 +1,13 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit, ViewChild} from '@angular/core';
 import { RemesasResultadoItem } from '../../../models/sjcs/RemesasResultadoItem';
+import { CommonsService } from '../../../_services/commons.service';
+import { procesos_comision } from '../../../permisos/procesos_comision';
 import { SigaServices } from '../../../_services/siga.service';
+import { TranslateService } from '../../../commons/translate';
+import { Router } from '../../../../../node_modules/@angular/router';
 import { FiltroRemesasResultadosComponent } from './filtro-remesas-resultados/filtro-remesas-resultados.component';
+import { PersistenceService } from '../../../_services/persistence.service';
 
 
 @Component({
@@ -15,6 +20,7 @@ export class RemesasResultadosComponent implements OnInit {
   buscar: boolean = false;
   progressSpinner: boolean = false;
   datos;
+  permisoEscritura;
   remesasResultadosItem: RemesasResultadoItem = new RemesasResultadoItem(
     {
       'idRemesaResultado': null,
@@ -70,9 +76,28 @@ export class RemesasResultadosComponent implements OnInit {
   );
   @ViewChild(FiltroRemesasResultadosComponent) filtros;
 
-  constructor(private sigaServices: SigaServices, private datepipe: DatePipe) { }
+  constructor(private persistenceService: PersistenceService,private translateService: TranslateService, private router: Router,
+           private sigaServices: SigaServices, private datepipe: DatePipe,private commonsService: CommonsService,) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.commonsService.checkAcceso(procesos_comision.remesasEnvio)
+    .then(respuesta => {
+
+      this.permisoEscritura = respuesta;
+
+      this.persistenceService.setPermisos(this.permisoEscritura);
+
+      if (this.permisoEscritura == undefined) {
+        sessionStorage.setItem("codError", "403");
+        sessionStorage.setItem(
+          "descError",
+          this.translateService.instant("generico.error.permiso.denegado")
+        );
+        this.router.navigate(["/errorAcceso"]);
+      }
+    }
+    ).catch(error => console.error(error));
+   }
 
   getFiltrosValues(event) {
     this.filtrosValues = JSON.parse(JSON.stringify(event));

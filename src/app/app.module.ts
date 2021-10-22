@@ -476,6 +476,7 @@ import { FiltroRemesasResultadosComponent } from './features/sjcs/remesas-result
 import { TablaRemesasResultadosComponent } from './features/sjcs/remesas-resultados/tabla-remesas-resultados/tabla-remesas-resultados.component';
 import { FichaRemesasResultadosComponent } from './features/sjcs/remesas-resultados/ficha-remesas-resultados/ficha-remesas-resultados.component';
 import { TarjetaDatosGeneralesRemesasResultadosComponent } from './features/sjcs/remesas-resultados/ficha-remesas-resultados/tarjeta-datos-generales-remesas-resultados/tarjeta-datos-generales-remesas-resultados.component';
+import { TarjetaRemesasEnvioComponent } from './features/sjcs/remesas-resultados/ficha-remesas-resultados/tarjeta-remesas-envio/tarjeta-remesas-envio.component';
 import { CargaMasivaProcuradoresComponent } from './features/sjcs/intercambios/carga-masiva-procuradores/carga-masiva-procuradores.component';
 import { CargaDesignaProcuradorComponent } from './features/sjcs/intercambios/carga-designa-procurador/carga-designa-procurador.component';
 import { TarjetaDatosCurricularesComponent } from './features/sjcs//intercambios/carga-masiva-procuradores/tarjta-datos-curriculares/tarjeta-datos-curriculares.component';
@@ -875,6 +876,7 @@ import { TarjetaDatosCurricularesComponent } from './features/sjcs//intercambios
 		TablaRemesasResultadosComponent,
 		FichaRemesasResultadosComponent,
 		TarjetaDatosGeneralesRemesasResultadosComponent,
+		TarjetaRemesasEnvioComponent,
 		CargaMasivaProcuradoresComponent,
 		CargaDesignaProcuradorComponent,
 		TarjetaDatosCurricularesComponent

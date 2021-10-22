@@ -30,16 +30,17 @@
 
           <td class="text-center" *ngFor="let col of columns">
 
-            <span>
+            <a class="enlace" (click)="openTab(dato)">
+              <span *ngIf="col.field == 'numRemesaCompleto'">
+                {{dato[col.field]}}
+              </span>
+            </a>
+
+            <span *ngIf="col.field != 'numRemesaCompleto'">
               {{dato[col.field]}}
             </span>
 
-            <div id="acciones" *ngIf="col.field == 'acciones'">
-              <label
-                  (click)="consultarEditarRemesaResultado(dato)">
-                  <i class="fas fa-edit" id="dirIcon"></i>
-              </label>
-          </div>
+       
             
           </td>
 

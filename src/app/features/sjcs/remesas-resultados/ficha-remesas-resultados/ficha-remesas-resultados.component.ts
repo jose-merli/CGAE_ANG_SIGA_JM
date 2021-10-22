@@ -9,6 +9,8 @@ import { TarjetaDatosGeneralesRemesasResultadosComponent } from './tarjeta-datos
 import { RemesasResultadoItem } from '../../../../models/sjcs/RemesasResultadoItem';
 import { ContadorItem } from '../../../../models/ContadorItem';
 import { DatePipe } from '@angular/common';
+import { RemesasResolucionItem } from '../../../../models/sjcs/RemesasResolucionItem';
+import { TarjetaRemesasEnvioComponent } from './tarjeta-remesas-envio/tarjeta-remesas-envio.component';
 
 @Component({
   selector: 'app-ficha-remesas-resultados',
@@ -18,11 +20,13 @@ import { DatePipe } from '@angular/common';
 export class FichaRemesasResultadosComponent implements OnInit {
 
   @ViewChild(TarjetaDatosGeneralesRemesasResultadosComponent) tarjetaDatosGeneralesRemesasResultados: TarjetaDatosGeneralesRemesasResultadosComponent;
+  @ViewChild(TarjetaRemesasEnvioComponent) tarjetaRemesaEnvio :TarjetaRemesasEnvioComponent;
   progressSpinner: boolean = false;
   remesa;
   msgs;
   item;
   remesaTabla;
+  remesaResolucion : RemesasResolucionItem = new RemesasResolucionItem();
   remesaItem: RemesasResultadoItem = new RemesasResultadoItem(
     {
     'idRemesaResultado': null,
@@ -51,6 +55,7 @@ export class FichaRemesasResultadosComponent implements OnInit {
   );
 
   fichaRemesaResultado : string = '';
+  file: File = undefined;
 
   constructor(private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
@@ -60,6 +65,7 @@ export class FichaRemesasResultadosComponent implements OnInit {
     private datepipe: DatePipe) { }
 
   ngOnInit() {
+    console.log("321: ")
     if(localStorage.getItem('fichaRemesaResultado') == "registro"){
       this.item = localStorage.getItem('remesaItem');
       console.log("Item -> ", this.item);
@@ -78,7 +84,14 @@ export class FichaRemesasResultadosComponent implements OnInit {
   }
 
   save() {
-   this.tarjetaDatosGeneralesRemesasResultados.insertar();
+    this.tarjetaDatosGeneralesRemesasResultados.save();
+
+  }//fin save
+
+
+  showFail(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "error", summary: "", detail: mensaje });
   }
 
   showMessage(severity, summary, msg) {
@@ -89,7 +102,10 @@ export class FichaRemesasResultadosComponent implements OnInit {
       detail: msg
     });
   }
-
+  
+  clear() {
+    this.msgs = [];
+  }
   rest(){
     this.tarjetaDatosGeneralesRemesasResultados.isEnabledNuevo = false;
     this.router.navigate(["/remesasResultado"]);

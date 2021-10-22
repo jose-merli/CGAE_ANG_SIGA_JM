@@ -111,8 +111,7 @@ export class TablaRemesasResultadosComponent implements OnInit {
       { field: "fechaCargaRemesaResultado", header: "justiciaGratuita.remesasResultados.tabla.fechaCarga", width: "6%" },
       { field: "fechaResolucionRemesaResultado", header: "justiciaGratuita.remesasResultados.tabla.fechaRemesa", width: "6%" },
       { field: "nombreFichero", header: "justiciaGratuita.remesasResultados.tabla.nombreFichero" },
-      { field: "observacionesRemesaResultado", header: "justiciaGratuita.remesasResultados.tabla.observaciones" },
-      { field: "acciones" , header: "justiciaGratuita.remesasResultados.tabla.acciones", width: "5%"}
+      { field: "observacionesRemesaResultado", header: "justiciaGratuita.remesasResultados.tabla.observaciones" }
     ];
 
     this.cols.forEach(it => this.buscadores.push(""))
@@ -147,9 +146,11 @@ export class TablaRemesasResultadosComponent implements OnInit {
     this.persistenceService.setPaginacion(paginacion);
     this.progressSpinner = true;
     this.persistenceService.setDatos(evento);
-    this.router.navigate(["/fichaRemesasEnvio"]);
-    localStorage.setItem('remesaItem', JSON.stringify(this.selectedDatos));
-    localStorage.setItem('ficha', "registro");
+    this.router.navigate(["/remesasResultadoFicha"]);
+    localStorage.setItem('remesaItem', JSON.stringify(evento));
+    localStorage.setItem('fichaRemesaResultado', "registro");
+    console.log("123 "+ evento)
+    console.log(JSON.stringify(this.selectedDatos))
   }
 
   onChangeRowsPerPages(event) {
