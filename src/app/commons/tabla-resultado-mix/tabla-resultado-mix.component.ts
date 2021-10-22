@@ -95,8 +95,8 @@ export class TablaResultadoMixComponent implements OnInit {
   infoHabilitado: { isLetrado: any; validarjustificaciones:any; estadoNombre:any};
 
 
-  @Input() firstColumn: number;
-  @Input() lastColumn: number;
+  @Input() firstColumn: number = 0;
+  @Input() lastColumn: number = 10;
 
   constructor(
     

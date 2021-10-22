@@ -36,7 +36,8 @@ class="tabla-listado" [sortOrder]="1" [(selection)]="selectedDatos" [paginator]=
   </ng-template>
   <p-footer>
     <div class="text-right main-button">
-      <button pButton type="button" icon="fa fa-send" iconPos="left" label="{{'general.boton.comunicar' | translate}}" [disabled]="!permisosEscritura"></button>
+      <button pButton type="button" icon="fa fa-send" iconPos="left" label="{{'general.boton.comunicar' | translate}}" (click)="navigateToComunicar()" 
+      [disabled]="!permisosEscritura || numSeleccionado <= 0"></button>
     </div>
   </p-footer>
 </p-dataTable>

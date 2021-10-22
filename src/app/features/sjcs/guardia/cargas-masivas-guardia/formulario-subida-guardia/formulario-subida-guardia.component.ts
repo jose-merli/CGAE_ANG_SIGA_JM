@@ -5,6 +5,7 @@ import { SigaServices } from "../../../../../_services/siga.service";
 import { CommonsService } from '../../../../../_services/commons.service';
 import { TranslateService } from "../../../../../commons/translate";
 import { Message } from 'primeng/components/common/api';
+import { IfObservable } from 'rxjs/observable/IfObservable';
 
 @Component({
   selector: 'app-formulario-subida-guardia',
@@ -89,7 +90,11 @@ export class FormularioSubidaGuardiaComponent implements OnInit {
 
   isBuscar() {
 
-    if(this.fechaSolicitud==undefined) this.showFail("Debe rellenar todos los campos obligatorios");
+    if(this.fechaSolicitud==undefined && this.tipo == 'I') {
+      this.showFail("Debe rellenar todos los campos obligatorios");
+    }else if ((this.fechaDesde==undefined && this.tipo == 'C') || (this.fechaHasta==undefined && this.tipo == 'C')){
+      this.showFail("Debe rellenar todos los campos obligatorios");
+    }
     else{
       this.progressSpinner = true;
 
@@ -101,7 +106,14 @@ export class FormularioSubidaGuardiaComponent implements OnInit {
           this.fechaSolicitud,
           "dd/MM/yyyy"
         );
-      
+       /* }else if (this.fechaDesde != undefined && this.fechaDesde != null){
+          body.fechaCarga = this.datePipe.transform(
+            this.fechaDesde,
+            "dd/MM/yyyy"
+          );*/
+        } else {
+          body.fechaCarga = null;
+        }
 
       this.sigaServices
         .postPaginado(
@@ -138,10 +150,7 @@ export class FormularioSubidaGuardiaComponent implements OnInit {
             }, 5);
           }
         );
-      } else {
-        body.fechaCarga = null;
       }
-    }
   }
 
   uploadFile() {
@@ -149,9 +158,10 @@ export class FormularioSubidaGuardiaComponent implements OnInit {
     let body: CargaMasivaItem = new CargaMasivaItem();
     if (this.file != undefined) {
       if(this.tipo=="I"){
-        let arrayBody = [this.file, this.fechaSolicitud];
-        this.sigaServices
-          .postSendContentParams("cargasMasivasGuardia_uploadFileI", arrayBody)
+        this.sigaServices.postSendContentAndParameter(
+            "cargasMasivasGuardia_uploadFileI",
+            "?fechaSolicitud=" + this.datepipe.transform(this.fechaSolicitud, 'dd/MM/yyyy') ,
+            this.file)
           .subscribe(
             data => {
               this.file = undefined;
@@ -209,7 +219,6 @@ export class FormularioSubidaGuardiaComponent implements OnInit {
           "?fechaDesde=" + this.datepipe.transform(this.fechaDesde, 'dd/MM/yyyy') + "&fechaHasta=" + this.datepipe.transform(this.fechaHasta, 'dd/MM/yyyy')+ "&observaciones=" + this.observaciones,
           this.file
         )
-         // .postSendFileAndParametersArr("cargasMasivasGuardia_uploadFileC", this.file, arrayBody)
           .subscribe(
             data => {
               this.file = undefined;

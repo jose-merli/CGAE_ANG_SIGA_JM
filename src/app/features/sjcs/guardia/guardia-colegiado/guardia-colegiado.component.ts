@@ -97,7 +97,7 @@ export class GuardiaColegiadoComponent implements OnInit {
         console.log(err);
       },
       () => {
-        this.commonsService.scrollTablaFoco('tablaGuardCole');
+        setTimeout(()=>{this.commonsService.scrollTablaFoco('tablaGuardCole');}, 5);
       });
 
   }

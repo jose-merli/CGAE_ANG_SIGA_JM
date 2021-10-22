@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, EventEmitter, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, EventEmitter, Output, ViewChild } from '@angular/core';
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService, Message } from 'primeng/api';
@@ -6,6 +6,7 @@ import { DataTable } from 'primeng/primeng';
 import { TranslateService } from '../../../../../commons/translate';
 import { FiltroAsistenciaItem } from '../../../../../models/guardia/FiltroAsistenciaItem';
 import { TarjetaAsistenciaItem } from '../../../../../models/guardia/TarjetaAsistenciaItem';
+import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 
 @Component({
@@ -13,7 +14,7 @@ import { SigaServices } from '../../../../../_services/siga.service';
   templateUrl: './resultado-asistencias.component.html',
   styleUrls: ['./resultado-asistencias.component.scss']
 })
-export class ResultadoAsistenciasComponent implements OnInit {
+export class ResultadoAsistenciasComponent implements OnInit, AfterViewInit {
 
   msgs : Message [] = [];
   @Input() asistencias : TarjetaAsistenciaItem[];
@@ -52,7 +53,13 @@ export class ResultadoAsistenciasComponent implements OnInit {
     private router : Router,
     private confirmationService : ConfirmationService,
     private translateService : TranslateService,
-    private sigaServices : SigaServices) { }
+    private sigaServices : SigaServices,
+    private commonServices : CommonsService) { }
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.commonServices.scrollTablaFoco('tablaFoco2');
+    }, 5);
+  }
 
   ngOnInit() {
   }
