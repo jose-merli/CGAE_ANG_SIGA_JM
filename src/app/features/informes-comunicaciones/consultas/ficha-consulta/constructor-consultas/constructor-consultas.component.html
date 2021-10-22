@@ -36,7 +36,7 @@
             <e-columns>
               <div *ngFor="let campo of configColumnasDTO.configColumnasQueryBuilderItem; let i = index">
                 <e-column *ngIf="campo.selectayuda == null" [field]="campo.nombreenconsulta" [label]="campo.nombreenconsulta" [type]="campo.tipocampo"></e-column>
-                <e-column *ngIf="campo.selectayuda != null" [field]="campo.nombreenconsulta" [label]="campo.nombreenconsulta" type="campo.tipocampo">
+                <e-column *ngIf="campo.selectayuda != null" [field]="campo.nombreenconsulta" [label]="campo.nombreenconsulta" [type]="campo.tipocampo">
                   <ng-template #ruleTemplate let-data>
                     <div class="e-rule e-rule-template">
                       <div class="e-rule-filter">
@@ -51,8 +51,9 @@
                         <p-radioButton id="{{data.ruleID}}_operator1" label='Is Equal' name='{{data.ruleID}}_operator' value='equal' (change)="operatorChange($event)" [checked]="(data.rule.operator == 'equal')"></p-radioButton>
                       </div> -->
                       <div class="e-rule-value e-value e-custom-value">
-                        <ejs-dropdownlist *ngIf="campo.nombreenconsulta == 'SEXO'" (change)="valueChange($event)" [fields]="fields" [dataSource]="items" [value]="data.rule.value">
+                        <ejs-dropdownlist (change)="valueChange($event)" [fields]="fields" [dataSource]="comboDTOColumnaQueryBuilder.combooItems" [value]="data.rule.value">
                         </ejs-dropdownlist>
+                        <!--(change)="valueChange($event)" FALLA DENTRO DEL NGFOR?-->
                       </div>
                       <div class="e-rule-value-delete">
                         <button class="e-removerule e-custom-delete e-rule-delete e-css e-btn e-small e-round">
@@ -64,17 +65,13 @@
                 </e-column>
               </div>
 
-              <e-column field="Country" label="Country" type="string">
+             <!--  <e-column field="Country" label="Country" type="string">
                 <ng-template #ruleTemplate let-data>
                   <div class="e-rule e-rule-template">
                     <div class="e-rule-filter">
                       <ejs-dropdownlist (change)="fieldChange($event)" [fields]="data.fields" [dataSource]="data.columns" [value]="data.rule.field">
                       </ejs-dropdownlist>
                     </div>
-                   <!--  <div class="e-rule-operator e-operator">
-                      <ejs-radiobutton id="{{data.ruleID}}_operator1" label='Is Equal' name='{{data.ruleID}}_operator' value='equal' (change)="operatorChange($event)" [checked]="(data.rule.operator == 'equal')"></ejs-radiobutton>
-                      <ejs-radiobutton id="{{data.ruleID}}_operator2" label='Is Not Equal' name='{{data.ruleID}}_operator' value='notequal' (change)="operatorChange($event)" [checked]="(data.rule.operator == 'notequal')"></ejs-radiobutton>
-                    </div> -->
                     <div class="e-rule-value e-value e-custom-value">
                       <ejs-dropdownlist (change)="valueChange($event)" [fields]="fields"  [dataSource]="items" [value]="data.rule.value">
                       </ejs-dropdownlist>
@@ -86,7 +83,7 @@
                     </div>
                   </div>
                 </ng-template>
-              </e-column>
+              </e-column> -->
               
 
              <!-- 

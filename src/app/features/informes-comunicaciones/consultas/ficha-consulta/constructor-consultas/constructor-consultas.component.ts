@@ -11,6 +11,7 @@ import { TranslateService } from '../../../../../commons/translate';
 import { RadioButtonModule } from '@syncfusion/ej2-angular-buttons';
 import { QueryBuilderDTO } from '../../../../../models/QueryBuilderDTO';
 import { ConfigColumnasQueryBuilderDTO } from '../../../../../models/ConfigColumnasQueryBuilderDTO';
+import { ComboObject } from '../../../../../models/ComboObject';
 
 //Idioma
 setCulture('sigaIdiomas');
@@ -61,7 +62,7 @@ export class ConstructorConsultasComponent implements OnInit {
   consultaBuscador;
   datosConstructorConsulta: ConstructorConsultasDTO = new ConstructorConsultasDTO();
  
-  importRules: RuleModel = {
+   importRules: RuleModel = {
     //Inicializa los campos del querybuilder
     'condition': '',
     'rules': [ { 
@@ -71,21 +72,24 @@ export class ConstructorConsultasComponent implements OnInit {
       'operator': 'equal',
       'value': 0
     }]
-  };
+  }; 
 
-  comboSiNo: string[] = ['Si', 'No'];
-  comboEstadoCivil: String[] = ['Casado/a', 'Desconocido', 'Divorciado/a', 'Emparejado/a', 'Separado/a', 'Soltero/a', 'Unión de hecho', 'Viudo/a'];
-  public items:  { [key: string]: Object}[] = [{field:'USA', label:'USA'},{field:'England', label:'England'},{field:'India',label:'India'},{field:'Spain',label:'Spain'}];
-  public fields: Object = { text: 'field', value: 'label' };
-  comboGrupoCliente: String[] = ['Provisional1', 'Provisional2'];
-  comboSexo: { [key: string]: Object}[] = [{field: 'H', label: 'HOMBRE'}, {field: 'M', label: 'MUJER'}];
-  comboTipoColegiado: String[] = ['Provisional1', 'Provisional2'];
-  comboTipoSeguro: String[] = ['Provisional1', 'Provisional2'];
+ /*  importRules: RuleModel = {
+    
+  };
+ */
+
+  
+  public fields: Object = { text: 'label', value: 'value' };
+
+  /* comboSexo: { [key: string]: Object}[] = [{id: 'H', descripcion: 'HOMBRE'}, {id: 'M', descripcion: 'MUJER'}];
+  comboTipoColegiado:{ [key: string]: Object}[] = [{id: '1', descripcion: 'residente'}, {id: '2', descripcion: 'no residente'}]; */
 
   //Suscripciones
   subscriptionDatosConstructorConsulta: Subscription;
   subscriptionGuardarDatosConstructor: Subscription;
   subscriptionObtenerConfigColumnas: Subscription;
+  subscriptionObtenerCombo: Subscription;
 
   constructor(private sigaServices: SigaServices,private translateService: TranslateService) { }
 
@@ -106,6 +110,8 @@ export class ConstructorConsultasComponent implements OnInit {
       this.subscriptionGuardarDatosConstructor.unsubscribe();
     if (this.subscriptionObtenerConfigColumnas)
       this.subscriptionObtenerConfigColumnas.unsubscribe();
+    if (this.subscriptionObtenerCombo)
+      this.subscriptionObtenerCombo.unsubscribe();
   }
         
   createdControl(): void {
@@ -115,6 +121,13 @@ export class ConstructorConsultasComponent implements OnInit {
   }
 
   fieldChange(e: any): void {
+ 
+    this.configColumnasDTO.configColumnasQueryBuilderItem.forEach(campo => {
+      if(e.value == campo.nombreenconsulta && campo.selectayuda != null){
+        this.obtenerCombosQueryBuilder(campo);
+      }
+    });
+
     this.constructorConsultas.notifyChange(e.value, e.element, 'field');
   }
 
@@ -128,7 +141,9 @@ export class ConstructorConsultasComponent implements OnInit {
 
   //INICIO METODOS TARJETA CONSTRUCTOR DE CONSULTAS
   checkDatos(){
-   console.log(this.constructorConsultas.getRulesFromSql("SELECT CEN_CLIENTE.IDINSTITUCION, CEN_CLIENTE.IDPERSONA FROM CEN_CLIENTE , CEN_COLEGIADO WHERE CEN_CLIENTE.IDINSTITUCION = 2005 AND CEN_CLIENTE.IDPERSONA = @IDPERSONA@ AND ( F_SIGA_GETTIPOCLIENTE(@IDPERSONA@,2005,@FECHA@) = 20 AND CEN_COLEGIADO.SITUACIONRESIDENTE = '0' ) AND ( CEN_CLIENTE.IDPERSONA = CEN_COLEGIADO.IDPERSONA(+) AND CEN_CLIENTE.IDINSTITUCION = CEN_COLEGIADO.IDINSTITUCION(+) ) "));
+   console.log(this.constructorConsultas.getRules());
+   console.log(this.constructorConsultas.getSqlFromRules(this.constructorConsultas.getRules()));
+   //console.log(this.constructorConsultas.getRulesFromSql("SELECT CEN_CLIENTE.IDINSTITUCION, CEN_CLIENTE.IDPERSONA FROM CEN_CLIENTE , CEN_COLEGIADO WHERE CEN_CLIENTE.IDINSTITUCION = 2005 AND CEN_CLIENTE.IDPERSONA = @IDPERSONA@ AND ( F_SIGA_GETTIPOCLIENTE(@IDPERSONA@,2005,@FECHA@) = 20 AND CEN_COLEGIADO.SITUACIONRESIDENTE = '0' ) AND ( CEN_CLIENTE.IDPERSONA = CEN_COLEGIADO.IDPERSONA(+) AND CEN_CLIENTE.IDINSTITUCION = CEN_COLEGIADO.IDINSTITUCION(+) ) "));
    //this.guardarDatosConstructor(this.constructorConsultas.getRules());
   }
 
@@ -177,6 +192,25 @@ export class ConstructorConsultasComponent implements OnInit {
         
         });;
   
+  }
+
+  comboDTOColumnaQueryBuilder: ComboObject = new ComboObject();
+  obtenerCombosQueryBuilder(campo){
+    this.progressSpinner = true;
+
+    this.subscriptionObtenerCombo = this.sigaServices.post("constructorConsultas_obtenerCombosQueryBuilder", campo).subscribe(
+      comboDTO => {
+
+        this.comboDTOColumnaQueryBuilder = JSON.parse(comboDTO.body);
+      
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+      }, () => {
+      
+      });;
+
   }
 
   obtenerDatosConsulta(idConsulta) {
