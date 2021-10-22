@@ -31,6 +31,7 @@ import { endpoints_generales } from "../utils/endpoints_generales";
 import { Documento } from '../features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-designa/ficha-actuacion/tarjeta-doc-ficha-act/tarjeta-doc-ficha-act.component';
 import { ActuacionDesignaItem } from '../models/sjcs/ActuacionDesignaItem';
 import { DocumentoDesignaItem } from '../models/sjcs/DocumentoDesignaItem';
+import { NuevaComunicacionItem } from '../models/NuevaComunicacionItem';
 
 @Injectable()
 export class SigaServices {
@@ -541,6 +542,7 @@ export class SigaServices {
 		comunicaciones_destinatarios: 'comunicaciones/detalle/destinatarios',
 		comunicaciones_descargarDocumento: 'comunicaciones/detalle/descargarDocumento',
 		comunicaciones_descargarCertificado: 'comunicaciones/detalle/descargarCertificado',
+		comunicaciones_saveNuevaComm: 'comunicaciones/saveNuevaComm',
 		consultas_search: 'consultas/search',
 		consultas_borrar: 'consultas/borrarConsulta',
 		consultas_listadoPlantillas: 'consultas/plantillasconsulta',
@@ -920,6 +922,30 @@ export class SigaServices {
     });
 
     formData.append('documentosActualizar', JSON.stringify(documentosActualizar));
+
+    let headers = new HttpHeaders();
+
+    headers.append('Content-Type', 'multipart/form-data');
+    headers.append('Accept', 'application/json');
+
+    return this.http
+      .post(environment.newSigaUrl + this.endpoints[service], formData, {
+        headers: headers
+      })
+      .map((response) => {
+        return response;
+      });
+  }
+
+  postSendFilesAndComunicacion(service: string, documentos: File[], nuevaComunicacion: NuevaComunicacionItem): Observable<any> {
+    let formData: FormData = new FormData();
+
+    documentos.forEach((el, i) => {
+
+        formData.append(`uploadFile${i}`, el, el.name + ';');
+    });
+
+    formData.append('nuevaComunicacion', JSON.stringify(nuevaComunicacion));
 
     let headers = new HttpHeaders();
 

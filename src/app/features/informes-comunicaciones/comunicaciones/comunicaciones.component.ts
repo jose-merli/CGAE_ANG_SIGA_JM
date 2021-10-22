@@ -19,6 +19,8 @@ import { FichaColegialGeneralesItem } from "../../../models/FichaColegialGeneral
 import { CommonsService } from '../../../_services/commons.service';
 import { NuevaComunicacionItem } from "../../../models/NuevaComunicacionItem";
 import { ComboItem } from "../../../models/ComboItem";
+import { procesos_com } from "../../../permisos/procesos_com";
+import { ParametroRequestDto } from "../../../models/ParametroRequestDto";
 
 export enum KEY_CODE {
   ENTER = 13
@@ -77,6 +79,8 @@ export class ComunicacionesComponent implements OnInit {
     { field: 'name', header: "censo.cargaMasivaDatosCurriculares.literal.nombreFichero" }
   ];
   comboModelos: ComboItem[];
+  permisoNuevaCom: boolean;
+  permisoIntPNJ: boolean;
 
   constructor(
     private sigaServices: SigaServices,
@@ -98,6 +102,8 @@ export class ComunicacionesComponent implements OnInit {
     this.getEstadosEnvios();
     this.getClasesComunicaciones();
     this.getComboModelos();
+    this.getPermisoNuevaCom();
+    this.getPermisoIntegracionPNJ();
 
     let objPersona = null;
 
@@ -330,14 +336,6 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.bodyNuevaComm.fechaEfecto = new Date();
   }
 
-  isNuevaDisabled(){
-    //"Existirá un permiso específico en la aplicación para habilitar o no a cada usuario el botón de Nueva comunicación."
-    //Insertar proceso, insertar permisos del proceso e implmentar método apra obtener valor de permiso asociado.
-    //"Adicionalmente, para que esté disponible esta acción, el colegio tendrá que tener activada en la tabla de parámetros de configuración la integración con PNJ."
-    //Comprobar a que parametro hace referencia e implmentar servicio para obtener su valor.
-    return false;
-  }
-
   cerrarDialogNueva(){
     this.showNuevaComm = false;
   }
@@ -351,22 +349,79 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   checkSaveNuevaComm(){
-    // let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
-    // if (msg != undefined) {
-    //   this.msgs = msg;
-    // } 
-    // else {
-      if (this.checkCamposObligatoriosNuevaComm()) this.saveNuevaComm();
+    let msg = this.commonsService.checkPermisos(this.permisoNuevaCom, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } 
+    else if(this.validarNProcedimiento(this.bodyNuevaComm.numProcedimiento)
+    && this.validarNig(this.bodyNuevaComm.nig)){
+      if (this.checkCamposObligatoriosNuevaComm()){
+        if(this.permisoIntPNJ){
+          this.saveNuevaComm();
+        }
+        else{
+          [{ severity: "error", summary: this.translateService.instant("general.message.incorrect"), detail: this.translateService.instant("general.message.noTienePermisosRealizarAccion") }];
+        }
+      }
       else {
         this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
       }
-    // }
+    }
+  }
+
+  getPermisoIntegracionPNJ(){
+
+    this.progressSpinner = true;
+
+    let parametro = new ParametroRequestDto();
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      parametro.idInstitucion = n.value;
+      parametro.modulo = "COM";
+      parametro.parametrosGenerales = "INTEGRACIONCONPNJ";
+
+      this.sigaServices
+        .postPaginado("parametros_search", "?numPagina=1", parametro)
+        .toPromise().then(
+          data => {
+            let searchParametros = JSON.parse(data["body"]);
+            let datosBuscar = searchParametros.parametrosItems;
+            let paramInst = datosBuscar.find(el => el.idInstitucion == el.idinstitucionActual);
+            //Si ha encontrado el parametro para la institucion actual
+            if(paramInst != undefined){
+              if(paramInst.valor == "1"){
+                this.permisoIntPNJ = true;
+              }
+              else{
+                this.permisoIntPNJ = false;
+              }
+            }
+            else if(datosBuscar[0].idInstitucion == "0"){
+              if(datosBuscar[0].valor == "1"){
+                this.permisoIntPNJ = true;
+              }
+              else{
+                this.permisoIntPNJ = false;
+              }
+            }
+            this.progressSpinner = false;
+          }).catch(error => {
+            let severity = "error";
+            let summary = this.translateService.instant('general.mensaje.error.bbdd');
+            let detail = "";
+            this.msgs.push({
+              severity,
+              summary,
+              detail
+            });
+          });
+    });
   }
 
   checkCamposObligatoriosNuevaComm(){
     let campoVacio: boolean = false;
     if(this.bodyNuevaComm.fechaEfecto == null ||
-      this.bodyNuevaComm.asunto == null || this.bodyNuevaComm.asunto.trim() == "" ){
+      this.bodyNuevaComm.asunto == null || this.bodyNuevaComm.asunto.trim() == ""
+      || this.bodyNuevaComm.juzgado == null ){
         campoVacio = true;
     }
     return !campoVacio;
@@ -379,7 +434,8 @@ para poder filtrar el dato con o sin estos caracteres*/
     let peticion = JSON.parse(JSON.stringify(this.bodyNuevaComm));
     peticion.docs= [];
     
-    this.sigaServices.postSendFileAndComunicacion ("comunicaciones_saveNuevaComm", docs, peticion).subscribe(
+    //REVISAR: Se recomienda poner alguna especie de limite en base al tamaño total de los ficheros
+    this.sigaServices.postSendFilesAndComunicacion ("comunicaciones_saveNuevaComm", docs, peticion).subscribe(
       data => {
         
         let resp = data;
@@ -445,6 +501,100 @@ para poder filtrar el dato con o sin estos caracteres*/
       }
     );
   }
+
+  getPermisoNuevaCom(){
+  this.commonsService.checkAcceso(procesos_com.nuevaComPeticionVariada)
+      .then(respuesta => {
+        this.permisoNuevaCom = respuesta;
+    }).catch(error => console.error(error));
+  }
+
+  validarNProcedimiento(nProcedimiento) {
+    //Esto es para la validacion de CADENA
+
+    //Obtenemos la institucion actual
+    // let idInstitucion = this.body.idInstitucion;
+
+    //Codigo copiado de la tarjeta detalles de la ficha de designaciones
+    // if (idInstitucion == "2008" || idInstitucion == "2015" || idInstitucion == "2029" || idInstitucion == "2033" || idInstitucion == "2036" ||
+    //   idInstitucion == "2043" || idInstitucion == "2006" || idInstitucion == "2021" || idInstitucion == "2035" || idInstitucion == "2046" || idInstitucion == "2066") {
+    //   if (nProcedimiento != '') {
+    //     var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{5}[\.]{1}[0-9]{2}$/;
+    //     var ret = objRegExp.test(nProcedimiento);
+    //     return ret;
+    //   }
+    //   else
+    //     return true;
+    // } else {
+      // var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{7}[/]$/;
+      var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{7}$/;
+      var ret = objRegExp.test(nProcedimiento);
+      if(ret) this.msgs.push({severity: "error", summary: this.translateService.instant("general.message.incorrect"), detail: this.translateService.instant("justiciaGratuita.ejg.preDesigna.errorNumProc")});
+      return !ret;
+    // }
+  }
+
+  //Codigo copiado de la tarjeta detalles de la ficha de designaciones y adaptado. Necesita completarse.
+  validarNig(nig) {
+    let ret = false;
+    let parametro = new ParametroRequestDto();
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      parametro.idInstitucion = n.value;
+      parametro.modulo = "COM";
+      parametro.parametrosGenerales = "NIG_VALIDADOR";
+      if (nig != null && nig != '') {
+        this.progressSpinner = true;
+        this.sigaServices
+          .postPaginado("parametros_search", "?numPagina=1", parametro)
+          .toPromise().then(
+            data => {
+              let searchParametros = JSON.parse(data["body"]);
+              let datosBuscar = searchParametros.parametrosItems;
+              datosBuscar.forEach(element => {
+                if (element.parametro == "NIG_VALIDADOR" && (element.idInstitucion == element.idinstitucionActual || element.idInstitucion == '0')) {
+                  let valorParametroNIG: RegExp = new RegExp(element.valor);
+                  if (nig != '') {
+                    ret = valorParametroNIG.test(nig);
+                    if (ret) {
+                      return true;
+                    }
+                    else {
+                      let severity = "error";
+                      let summary = this.translateService.instant("justiciaGratuita.oficio.designa.NIGInvalido");
+                      let detail = "";
+                      this.msgs.push({
+                        severity,
+                        summary,
+                        detail
+                      });
+                      return false;
+                    }
+                  }
+                  else {
+                    return true;
+                  }
+                }
+              });
+              this.progressSpinner = false;
+            }).catch(error => {
+              let severity = "error";
+              let summary = this.translateService.instant("justiciaGratuita.oficio.designa.NIGInvalido");
+              let detail = "";
+              this.msgs.push({
+                severity,
+                summary,
+                detail
+              });
+              return false;
+            });
+        this.progressSpinner = false;
+      }
+    });
+
+    if (!ret) return true;
+  }
+
+  //FIN MÉTODOS NUEVA COMUNICACIÓN
 
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;

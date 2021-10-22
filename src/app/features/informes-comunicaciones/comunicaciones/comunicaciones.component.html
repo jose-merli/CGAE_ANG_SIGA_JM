@@ -103,8 +103,8 @@
             'general.boton.clear'| translate }}"></button>
         <button (click)="buscar()" [disabled]="isButtonDisabled()" pButton type="button" icon="fa fa-search"
           iconPos="left" label="{{'general.boton.search' | translate}}"></button>
-        <button (click)="nueva()" [disabled]="isNuevaDisabled()" pButton type="button" icon="fa fa-plus"
-          iconPos="left" label="** Nueva"></button>
+        <button [disabled]="!permisoIntPNJ || !permisoNuevaCom" (click)="checkPermisosNuevaCom()" pButton type="button" icon="fa fa-plus"
+          iconPos="left" label="{{'general.boton.guardar' | 'translate}}"></button>
       </div>
     </div>
   </div>
@@ -227,11 +227,11 @@
   <p-dialog [(visible)]="showNuevaComm" responsive="true" [draggable]="false" modal="modal" resizable="false"
     [minWidth]="400" (onHide)="cerrarDialogNueva()">
     <p-header class="title">
-      <label>** Nueva Comunicacion</label>
+      <label>{{ "informesycomunicaciones.comunicaciones.nuevaComunicacion" | translate}}</label>
     </p-header>
     <div class="form-row">
       <div class="form-group-interlineado col-lg-4 col-md-4">
-        <label>{{ 'justiciaGratuita.ejg.datosGenerales.Juzgado' | translate}} **Destinatario (*)</label>
+        <label>{{ 'justiciaGratuita.ejg.datosGenerales.Juzgado' | translate}} ({{'facturacionSJCS.retenciones.destinatario' | translate}}) (*)</label>
         <p-dropdown class="select-form" [(ngModel)]='bodyNuevaComm.juzgado' [options]="comboJuzgado" [filter]="true"
           filterBy="label,labelSinTilde" placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true" ></p-dropdown>
       </div>
@@ -247,17 +247,17 @@
         </app-fecha>
       </div>
       <div class="form-group-interlineado col-lg-12 col-md-12">
-        <label>** Mensaje
+        <label>{{"informesycomunicaciones.comunicaciones.mensaje" | translate}}
         </label>
         <textarea pInputTextarea [(ngModel)]="bodyNuevaComm.mensaje" class="form-control ui-inputtext"
           autoResize="autoResize" maxLength="65535 "></textarea>
       </div>
       <div class="form-group-interlineado col-lg-4 col-md-4">
-        <label>{{'gratuita.busquedaDesignas.literal.numProcedimiento' |translate}}</label>
+        <label>{{'gratuita.busquedaDesignas.literal.numProcedimiento' | translate}}</label>
         <input type="text" class="form-control" pInputText [(ngModel)]="bodyNuevaComm.numProcedimiento">
       </div>
       <div class="form-group-interlineado col-lg-4 col-md-4">
-        <label>{{'justiciaGratuita.ejg.datosGenerales.NIG'|translate}}</label>
+        <label>{{'justiciaGratuita.ejg.datosGenerales.NIG' | translate}}</label>
         <input type="text" class="form-control" maxLength="49" pInputText [(ngModel)]="bodyNuevaComm.nig">
       </div>
       <div class="form-group-interlineado col-lg-4 col-md-4">
