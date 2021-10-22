@@ -766,10 +766,10 @@ export class SigaServices {
       })
       .map((response) => {
         return response;
-      })
-      .catch((response) => {
-        return this.parseErrorBlob(response);
       });
+    //   .catch((response) => {
+    //     return this.parseErrorBlob(response);
+    //   });
   }
 
   postSendContent(service: string, file: any): Observable<any> {

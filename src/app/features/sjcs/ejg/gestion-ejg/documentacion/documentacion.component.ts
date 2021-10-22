@@ -473,6 +473,7 @@ export class DocumentacionComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("formacion.mensaje.extesion.fichero.erronea"));
       }
     );
   }
@@ -828,6 +829,15 @@ export class DocumentacionComponent implements OnInit {
       case ".txt":
         mime = "text/plain";
         break;
+      case ".csv":
+        mime = "text/csv";
+        break;
+      case ".xls":
+          mime = "application/vnd.ms-excel";
+          break;
+      case ".xlsx":
+          mime = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        break;      
     }
 
     return mime;
