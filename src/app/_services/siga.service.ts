@@ -33,6 +33,7 @@ import { ActuacionDesignaItem } from '../models/sjcs/ActuacionDesignaItem';
 import { DocumentoDesignaItem } from '../models/sjcs/DocumentoDesignaItem';
 import { endpoints_EJG_Comision } from '../utils/endpoints_EJG_Comision';
 import { endpoints_remesa } from '../utils/endpoints_remesa';
+import { endpoints_intercambios } from '../utils/endpoints_intercambios';
 
 @Injectable()
 export class SigaServices {
@@ -629,7 +630,8 @@ export class SigaServices {
         ...endpoints_oficio,
         ...endpoints_maestros,
 		...endpoints_EJG_Comision,
-		...endpoints_remesa
+		...endpoints_remesa,
+		...endpoints_intercambios
     };
 
 	private menuToggled = new Subject<any>();

@@ -478,9 +478,7 @@ import { FichaRemesasResultadosComponent } from './features/sjcs/remesas-resulta
 import { TarjetaDatosGeneralesRemesasResultadosComponent } from './features/sjcs/remesas-resultados/ficha-remesas-resultados/tarjeta-datos-generales-remesas-resultados/tarjeta-datos-generales-remesas-resultados.component';
 import { CargaMasivaProcuradoresComponent } from './features/sjcs/intercambios/carga-masiva-procuradores/carga-masiva-procuradores.component';
 import { CargaDesignaProcuradorComponent } from './features/sjcs/intercambios/carga-designa-procurador/carga-designa-procurador.component';
-import { TarjetaFicheroModeloComponent } from './features/sjcs//intercambios/carga-masiva-procuradores/tarjeta-fichero-modelo/tarjeta-fichero-modelo.component';
-import { TarjetaSubidaFicheroComponent } from './features/sjcs//intercambios/carga-masiva-procuradores/tarjeta-subida-fichero/tarjeta-subida-fichero.component';
-import { TarjetaListadoComponent } from './features/sjcs//intercambios/carga-masiva-procuradores/tarjeta-listado/tarjeta-listado.component';
+import { TarjetaDatosCurricularesComponent } from './features/sjcs//intercambios/carga-masiva-procuradores/tarjta-datos-curriculares/tarjeta-datos-curriculares.component';
 
 
 @NgModule({
@@ -879,11 +877,7 @@ import { TarjetaListadoComponent } from './features/sjcs//intercambios/carga-mas
 		TarjetaDatosGeneralesRemesasResultadosComponent,
 		CargaMasivaProcuradoresComponent,
 		CargaDesignaProcuradorComponent,
-		TarjetaFicheroModeloComponent,
-		TarjetaSubidaFicheroComponent,
-		TarjetaListadoComponent
-
-
+		TarjetaDatosCurricularesComponent
 
 	],
 	imports: [
