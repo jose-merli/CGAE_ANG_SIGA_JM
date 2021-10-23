@@ -11,6 +11,7 @@ import { saveAs } from "file-saver/FileSaver";
 import { UnidadFamiliarEJGItem } from '../../../../../models/sjcs/UnidadFamiliarEJGItem';
 import { DatePipe } from '@angular/common';
 import { elementEnd } from '@angular/core/src/render3/instructions';
+import { forEach } from '@angular/router/src/utils/collection';
 
 @Component({
   selector: 'app-documentacion',
@@ -693,9 +694,23 @@ export class DocumentacionComponent implements OnInit {
             this.progressSpinner = false;
 
             if (familiares != undefined) {
-              //Se buscan los solicitantes
+              familiares.forEach(element => {
+                //Si se selecciona el valor "Unidad Familiar" en el desplegable "Rol/Solicitante"
+                if (element.uf_solicitante == "0") {
+                  element.uf_enCalidad = "0";
+                }
+                //Si se selecciona el valor "Solicitante" en el desplegable "Rol/Solicitante"
+                if (element.uf_solicitante == "1") {
+                  element.uf_enCalidad = "2";
+                }
+                //Si se selecciona el valor "Solicitante principal" en el desplegable "Rol/Solicitante"
+                if (element.uf_idPersona == element.solicitantePpal) {
+                  element.uf_enCalidad = "1";
+                }
+              });
+              //Se buscan los familiarres
               this.solicitantes = familiares.filter(
-                (dato) => dato.uf_solicitante == "1" || dato.uf_enCalidad != null || dato.idParentesco != null);
+                (dato) => dato.uf_enCalidad != null);
 
               //Se añaden los solicitantes de la unidad familiar
               this.solicitantes.forEach(element => {
@@ -707,7 +722,7 @@ export class DocumentacionComponent implements OnInit {
                   });
                 }
                 //En el caso que sea el solicitante pprincipal
-                else if(element.uf_solicitante == "1"){
+                else if(element.uf_enCalidad == "1"){
                   this.comboPresentador.push({
                     label: element.pjg_nombrecompleto + " (" + this.translateService.instant('justiciaGratuita.justiciables.unidadFamiliar.solicitantePrincipal') + ")",
                     value: "S_" + element.uf_idPersona
