@@ -695,7 +695,7 @@ export class DocumentacionComponent implements OnInit {
             if (familiares != undefined) {
               //Se buscan los solicitantes
               this.solicitantes = familiares.filter(
-                (dato) => dato.uf_solicitante == "1");
+                (dato) => dato.uf_solicitante == "1" || dato.uf_enCalidad != null || dato.idParentesco != null);
 
               //Se añaden los solicitantes de la unidad familiar
               this.solicitantes.forEach(element => {
@@ -707,9 +707,14 @@ export class DocumentacionComponent implements OnInit {
                   });
                 }
                 //En el caso que sea el solicitante pprincipal
-                else {
+                else if(element.uf_solicitante == "1"){
                   this.comboPresentador.push({
                     label: element.pjg_nombrecompleto + " (" + this.translateService.instant('justiciaGratuita.justiciables.unidadFamiliar.solicitantePrincipal') + ")",
+                    value: "S_" + element.uf_idPersona
+                  });
+                }else{//En el caso de otro familiar
+                  this.comboPresentador.push({
+                    label: element.pjg_nombrecompleto + " (" + element.pd_descripcion + ")",
                     value: "S_" + element.uf_idPersona
                   });
                 }

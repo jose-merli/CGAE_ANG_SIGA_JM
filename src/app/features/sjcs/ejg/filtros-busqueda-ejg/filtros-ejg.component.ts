@@ -8,7 +8,6 @@ import { CommonsService } from '../../../../_services/commons.service';
 import { datos_combos } from '../../../../utils/datos_combos';
 import { KEY_CODE } from '../../../administracion/auditoria/usuarios/auditoria-usuarios.component';
 import { MultiSelect } from 'primeng/multiselect';
-import { forEach } from '@angular/router/src/utils/collection';
 
 @Component({
   selector: 'app-filtros-ejg',
