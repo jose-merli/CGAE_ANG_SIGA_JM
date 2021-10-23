@@ -468,9 +468,9 @@ export class RelacionesComponent implements OnInit {
         let us = this.oldSigaServices.getOldSigaUrl('detalleSOJ');
         //us +='&granotmp=1630574876868&numeroSOJ=922&IDTIPOSOJ=2&ANIO=2018&idPersonaJG=552608&idInstitucionJG=2005&actionE=/JGR_PestanaSOJBeneficiarios.do&tituloE=pestana.justiciagratuitasoj.solicitante&conceptoE=SOJ&NUMERO=922&anioSOJ=2018&localizacionE=gratuita.busquedaSOJ.localizacion&IDINSTITUCION=2005&idTipoSOJ=2&idInstitucionSOJ=2005&accionE=editar';
 
-        us +='&granotmp=1630574876868&numeroSOJ' + dato.codigo + "&IDTIPOSOJ=" + dato.idtipo + "&ANIO=" + dato.anio + "&idPersonaJG=" + dato.idpersonajg + "&idInstitucionJG=" +
+        us +='&granotmp=1630574876868&numeroSOJ' + dato.numero + "&IDTIPOSOJ=" + dato.idtipo + "&ANIO=" + dato.anio + "&idPersonaJG=" + dato.idpersonajg + "&idInstitucionJG=" +
         this.sigaStorageService.institucionActual + "&actionE=/JGR_PestanaSOJBeneficiarios.do&tituloE=pestana.justiciagratuitasoj.solicitante&conceptoE=SOJ" +
-        "&NUMERO=" + dato.codigo + "&anioSOJ=" + dato.anio + "&localizacionE=gratuita.busquedaSOJ.localizacion&IDINSTITUCION=" + this.sigaStorageService.institucionActual +
+        "&NUMERO=" + dato.numero + "&anioSOJ=" + dato.anio + "&localizacionE=gratuita.busquedaSOJ.localizacion&IDINSTITUCION=" + this.sigaStorageService.institucionActual +
         "&idTipoSOJ=" + dato.idtipo + "&idInstitucionSOJ=" + dato.idinstitucion + "&accionE=editar";
       
 
