@@ -728,10 +728,17 @@ export class DocumentacionComponent implements OnInit {
                     value: "S_" + element.uf_idPersona
                   });
                 }else{//En el caso de otro familiar
+                  if(element.pd_descripcion!=null && element.pd_descripcion!=undefined){
                   this.comboPresentador.push({
                     label: element.pjg_nombrecompleto + " (" + element.pd_descripcion + ")",
                     value: "S_" + element.uf_idPersona
                   });
+                }else{
+                  this.comboPresentador.push({
+                    label: element.pjg_nombrecompleto + " (" + this.translateService.instant('justiciaGratuita.justiciables.rol.unidadFamiliar') + ")",
+                    value: "S_" + element.uf_idPersona
+                  });
+                }
                 }
               })
             }
