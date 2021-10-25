@@ -50,10 +50,8 @@ export class FichaRemesasComponent implements OnInit {
     this.botonValidar = false;
 
     if (localStorage.getItem('ficha') == "registro") {
-      this.item = localStorage.getItem('remesaItem');
-      console.log("Item -> ", this.item);
+      this.remesaTabla = JSON.parse(localStorage.getItem('remesaItem'));
       localStorage.removeItem('remesaItem');
-      this.remesaTabla = JSON.parse(this.item);
       console.log("Item en JSON -> ", this.remesaTabla);
       this.guardado = true;
       this.getAcciones();
@@ -61,6 +59,7 @@ export class FichaRemesasComponent implements OnInit {
       if(this.remesaTabla.estado == "Iniciada" || this.remesaTabla.estado == "Validada" || this.remesaTabla.estado == "Error envío"){
         this.estado = true;
       }
+      this.search();
     } else if (localStorage.getItem('ficha') == "nuevo") {
       this.remesaItem.descripcion = "";
       this.remesaFromTabla = false;
@@ -126,7 +125,60 @@ export class FichaRemesasComponent implements OnInit {
         }
       }
     ).catch(error => console.error(error));
+  }
 
+  obtenerValueEstado(label){
+    switch (label) {
+      case 'Iniciada':
+        this.remesaTabla.sufijo = '0';
+        break;
+      case 'Generada':
+        this.remesaTabla.sufijo = '1';
+        break;
+      case 'Enviada':
+        this.remesaTabla.sufijo = '2';
+        break;
+      case 'Recibida':
+        this.remesaTabla.sufijo = '3';
+        break;
+      case 'Validando':
+        this.remesaTabla.sufijo = '4';
+          break;
+      case 'Validada':
+        this.remesaTabla.sufijo = '5';
+        break;
+      case 'Procesando remesa':
+        this.remesaTabla.sufijo = '6';
+        break;
+      default:
+        this.remesaTabla.sufijo = '7';
+        break;
+    }
+  }
+
+  search() {
+    console.log("Dentro del search de la ficha-remesa");
+    this.obtenerValueEstado(this.remesaTabla.estado)
+    let remesasDatosEntradaItem =
+    {
+      'estado': (this.remesaTabla.sufijo != null && this.remesaTabla.sufijo != undefined) ? this.remesaTabla.sufijo.toString() : this.remesaTabla.sufijo,
+      'descripcion': (this.remesaTabla.descripcion != null && this.remesaTabla.descripcion != undefined) ? this.remesaTabla.descripcion.toString() : this.remesaTabla.descripcion,
+      };
+    this.progressSpinner = true;
+    this.sigaServices.post("filtrosremesas_buscarRemesa", remesasDatosEntradaItem).subscribe(
+      n => {
+        console.log("Dentro del servicio buscarRemesas para obtener las incidencias");
+        this.datos = JSON.parse(n.body).remesasItems;
+
+        this.remesaTabla.incidencias = this.datos[0].incidencias;
+
+        console.log("Contenido de la respuesta del back --> ", this.datos);
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+        console.log(err);
+      });
   }
 
   getAcciones() {
@@ -170,12 +222,14 @@ export class FichaRemesasComponent implements OnInit {
     if (this.remesaTabla != null) {
       remesaAccion = {
         'idRemesa': this.remesaTabla.idRemesa,
-        'accion': accion
+        'accion': accion,
+        'descripcion': this.getAccionesRemesas[accion-1].descripcion
       };
     } else if (this.remesaItem != null) {
       remesaAccion = {
         'idRemesa': (this.remesa.idRemesa != null && this.remesa.idRemesa != undefined) ? this.remesa.idRemesa.toString() : 0,
-        'accion': accion
+        'accion': accion,
+        'descripcion': this.getAccionesRemesas[accion-1].descripcion
       };
     }
 

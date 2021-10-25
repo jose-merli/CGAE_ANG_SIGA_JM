@@ -16,7 +16,7 @@
           </div>
           <div class="d-flex justify-content-between" style="cursor:default">
             <label>{{ "formacion.fichaCursos.tarjetaPrecios.resumen.numRegistros" | translate }}
-              <span *ngIf="remesaTabla != null" > {{ remesaTabla.nRegistro }}</span>
+              <span *ngIf="remesaTabla != null" > {{ remesaTabla.numero }}</span>
               <span *ngIf="remesaTabla == null"> {{ remesaItem.numero }}</span>
             </label>
             <label>{{ "administracion.parametrosGenerales.literal.descripcion" | translate }}
@@ -52,7 +52,7 @@
             <div class="col-lg-10 col-md-10">
               <label>
                 <strong> {{ "formacion.fichaCursos.tarjetaPrecios.resumen.numRegistros" | translate }} </strong>
-                <span *ngIf="remesaTabla != null"> {{ remesaTabla.nRegistro }}</span>
+                <span *ngIf="remesaTabla != null"> {{ remesaTabla.numero }}</span>
                 <span *ngIf="remesaTabla == null"> {{ remesaItem.numero }}</span>
               </label>
             </div>
