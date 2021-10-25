@@ -15,28 +15,20 @@ export class GestionActasComponent implements OnInit {
   datos: ActasItem = new ActasItem();
   modoEdicion: boolean = true;
   institucionActual: any;
+  actaItem: ActasItem;
 
   constructor(private persistenceService: PersistenceService, private location: Location) { }
 
   ngOnInit() {
-    if (this.persistenceService.getDatos() != undefined) {
-      this.datos = this.persistenceService.getDatos();
-
-      this.modoEdicion = true;
-    } else {
+  
       this.datos = new ActasItem();
       this.modoEdicion = false;
+   
+    if(localStorage.getItem('actasItem')){
+      this.datos = JSON.parse(localStorage.getItem('actasItem'));
+      console.log(this.actaItem);
+      localStorage.removeItem('actasItem');
     }
-    this.datos.anio = "1995";
-    this.datos.fechaResolucion = new Date();
-    this.datos.fechaReunion = new Date();
-    this.datos.idActa = "3";
-    this.datos.idPresidente = "3";
-    this.datos.idSecretario = "3";
-    this.datos.nombrePresidente = "Pepe";
-    this.datos.nombreSecretario = "Pedro";
-    this.datos.numeroActa = "123/1995";
-
   }
 
 

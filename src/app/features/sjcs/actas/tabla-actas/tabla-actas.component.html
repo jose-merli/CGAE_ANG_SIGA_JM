@@ -5,7 +5,7 @@
     <!-- TABLA RESULTADOS -->
 
     <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple" [responsive]="true" #table
-      class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="openTab($event)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
+      class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="selectedRow(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
       [ngClass]="{ 'customCursor': selectMultiple}" selectionMode="multiple" paginatorPosition="both">
       
       <ng-template pTemplate="header" let-columns>
@@ -23,14 +23,23 @@
       <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
         <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
           <td class="text-center" *ngFor="let col of columns">
-            <div *ngIf="col.field == 'fechaResolucion' || col.field == 'fechaReunion'">
+            <div *ngIf="col.field == 'fecharesolucion' || col.field == 'fechareunion'">
               <div>
                 <span>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</span>
               </div>
             </div>
-            <div *ngIf="col.field == 'numeroActa' || col.field == 'nombrePresidente' || col.field == 'nombreSecretario'">
+            <div *ngIf="col.field != 'fecharesolucion' && col.field != 'fechareunion' && col.field != 'numeroacta'">
               <span>{{dato[col.field]}}</span>
             </div>
+            <a class="enlace" (click)="openTab(dato)">
+
+              <span *ngIf="col.field == 'numeroacta'">
+
+                {{dato[col.field]}}
+
+              </span>
+
+            </a>
           </td>
 
         </tr>
@@ -67,14 +76,8 @@
   </div>
   <div class="card-footer">
     <div class="text-right main-button">
-      <button *ngIf="!historico" (click)="searchHistorical(); selectedDatos=[]" pButton type="button" icon="fa fa-history" iconPos="left"
-        label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
-      <button *ngIf="historico" (click)="searchHistorical(); selectedDatos=[]" pButton type="button" icon="fa fa-undo" iconPos="left"
-        label="{{'general.message.ocultarHistorico' | translate}}"></button>
-      <button *ngIf="!historico" pButton [disabled]="!permisoEscritura || ((!selectMultiple || !selectAll) && selectedDatos.length == 0)"
-        (click)="checkPermisosDelete()" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
-      <button *ngIf="historico" pButton [disabled]="!permisoEscritura || ((!selectMultiple || !selectAll) && selectedDatos.length == 0)"
-        (click)="checkPermisosActivate()" type="button" icon="fa fa-check" iconPos="left" label="{{'general.boton.activar' | translate}}"></button>
+      <button pButton [disabled]="!permisoEscritura || ((!selectMultiple || !selectAll) && selectedDatos.length == 0)"
+        (click)="delete()" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
     </div>
   </div>
 </div>

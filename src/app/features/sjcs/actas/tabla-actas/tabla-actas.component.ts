@@ -81,6 +81,19 @@ export class TablaActasComponent implements OnInit {
     }
   }
 
+  borrar() {
+    this.sigaServices
+    this.sigaServices.post("filtrosejg_borrar", this.selectedDatos).subscribe(
+      n => {
+          console.log("************************************************************************************getActa**************");
+          this.datos = JSON.parse(n.body);
+        },
+        err => {
+          console.log(err);
+        }
+      );
+  }
+
   confirmDelete() {
     let mess = this.translateService.instant(
       "messages.deleteConfirmation"
@@ -135,48 +148,34 @@ export class TablaActasComponent implements OnInit {
 
   openTab(evento) {
 
-    if (this.persistenceService.getPermisos() != undefined) {
-      this.permisoEscritura = this.persistenceService.getPermisos();
-    }
 
-    if (!this.selectAll && !this.selectMultiple) {
-      this.progressSpinner = true;
-      if (evento.data.idInstitucion != this.institucionActual)
-        evento.data.institucionVal = false;
-      this.persistenceService.setDatos(evento.data);
+    console.log("evento -> ", evento);
 
+    this.progressSpinner = true;
 
-      this.router.navigate(["/fichaGestionActas"]);
-    } else {
+    this.persistenceService.setDatos(evento);
 
-      if (evento.data.idInstitucion != this.institucionActual) {
-        this.selectedDatos.pop();
-      } else if (evento.data.fechabaja == undefined && this.historico) {
-        this.selectedDatos.pop();
-      }
-    }
+    this.router.navigate(["/fichaGestionActas"]);
+
+    localStorage.setItem('actasItem', JSON.stringify(evento));
+    
   }
 
   delete() {
 
-    let comisariaDelete = new ComisariaObject();
-    comisariaDelete.comisariaItems = this.selectedDatos;
-    this.sigaServices.post("busquedaComisarias_deleteComisarias", comisariaDelete).subscribe(
+    this.sigaServices.post("filtrosejg_borrar", this.selectedDatos).subscribe(
 
       data => {
 
         this.selectedDatos = [];
-        this.searchHistoricalSend.emit(false);
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
-      },
-      err => {
 
-        if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        if(JSON.parse(data.body).status == "OK"){
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        }else{
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(data.body).error.description);
+
         }
+
         this.progressSpinner = false;
       },
       () => {
@@ -235,11 +234,11 @@ export class TablaActasComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "numeroActa", header: "sjcs.actas.numeroActa", width: "15%" },
-      { field: "fechaResolucion", header: "justiciaGratuita.ejg.datosGenerales.FechaResolucion", width: "15%" },
-      { field: "fechaReunion", header: "justiciaGratuita.ejg.datosGenerales.FechaReunion", width: "15%" },
-      { field: "nombrePresidente", header: "justiciaGratuita.ejg.datosGenerales.Presidente", width: "15%" },
-      { field: "nombreSecretario", header: "justiciaGratuita.ejg.datosGenerales.Secretario", width: "15%" }
+      { field: "numeroacta", header: "sjcs.actas.numeroActa", width: "15%" },
+      { field: "fecharesolucion", header: "justiciaGratuita.ejg.datosGenerales.FechaResolucion", width: "15%" },
+      { field: "fechareunion", header: "justiciaGratuita.ejg.datosGenerales.FechaReunion", width: "15%" },
+      { field: "nombrepresidente", header: "justiciaGratuita.ejg.datosGenerales.Presidente", width: "15%" },
+      { field: "nombresecretario", header: "justiciaGratuita.ejg.datosGenerales.Secretario", width: "15%" }
 
     ];
 
@@ -295,6 +294,32 @@ export class TablaActasComponent implements OnInit {
         }
       }
     }
+  }
+
+  selectedRow(selectedDatos) {
+
+    if (this.selectedDatos == undefined) {
+
+      this.selectedDatos = []
+
+    }
+
+    if (selectedDatos != undefined) {
+
+      this.numSelected = selectedDatos.length;
+
+      if (this.numSelected == 1) {
+
+        this.selectMultiple = false;
+
+      } else {
+
+        this.selectMultiple = true;
+
+      }
+
+    }
+
   }
 
   actualizaSeleccionados(selectedDatos) {

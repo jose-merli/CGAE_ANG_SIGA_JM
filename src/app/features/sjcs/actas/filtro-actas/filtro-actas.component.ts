@@ -25,6 +25,8 @@ export class FiltroActasComponent implements OnInit {
   valueNumero: String;
   valuePresidente: String;
   valueSecretario: String;
+  progressSpinner: boolean = false;
+
 
 
 
@@ -62,6 +64,14 @@ export class FiltroActasComponent implements OnInit {
         }
       );
   }
+
+  nuevo(evento) {
+
+    this.progressSpinner = true;
+
+    this.router.navigate(["/fichaGestionActas"]);
+  }
+
 
   getComboSecretario() {
     this.sigaServices
