@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Message } from "primeng/components/common/api";
 import { RuleModel } from '@syncfusion/ej2-querybuilder';
 import { Browser } from '@syncfusion/ej2-base';
@@ -22,25 +22,25 @@ L10n.load({
       'querybuilder': {
           'AddGroup': 'Añadir Grupo',
           'AddCondition': 'Añadir condicion',
-          'DeleteRule': 'Entfernen Sie diesen Zustand',
-          'DeleteGroup': 'Gruppe löschen',
-          'Edit': 'BEARBEITEN',
-          'SelectField': 'Wählen Sie ein Feld aus',
-          'SelectOperator': 'Operator auswählen',
-          'StartsWith': 'Beginnt mit',
-          'EndsWith': 'Endet mit',
-          'Contains': 'Enthält',
+          'DeleteRule': 'Borrar condicion',
+          'DeleteGroup': 'Borrar grupo',
+          'Edit': 'Editar',
+          'SelectField': 'Seleccionar campo',
+          'SelectOperator': 'Seleccionar operador',
+          'StartsWith': 'Empieza con',
+          'EndsWith': 'Termina con',
+          'Contains': 'Contiene',
           'Equal': 'igual a',
           'NotEqual': 'distinto',
           'LessThan': 'menor que',
           'LessThanOrEqual': 'menor o igual',
           'GreaterThan': 'mayor que',
           'GreaterThanOrEqual': 'mayor o igual',
-          'Between': 'Zwischen',
-          'NotBetween': 'Nicht zwischen',
-          'In': 'Im',
-          'NotIn': 'Nicht in',
-          'Remove': 'LÖSCHEN',
+          'Between': 'entre',
+          'NotBetween': 'no entre',
+          'In': 'incluido',
+          'NotIn': 'No incluido',
+          'Remove': 'Eliminar',
           'ValidationMessage': 'Dieses Feld wird benötigt',
       }
   }
@@ -81,9 +81,22 @@ export class ConstructorConsultasComponent implements OnInit {
 
   
   public fields: Object = { text: 'label', value: 'value' };
+  public fields2: Object = { text: 'key', value: 'value' };
 
   /* comboSexo: { [key: string]: Object}[] = [{id: 'H', descripcion: 'HOMBRE'}, {id: 'M', descripcion: 'MUJER'}];
   comboTipoColegiado:{ [key: string]: Object}[] = [{id: '1', descripcion: 'residente'}, {id: '2', descripcion: 'no residente'}]; */
+
+  comboPrueba = [];
+  operadores: { [key: string]: Object}[] = [{key: 'Equal', value: 'igual'}, {key: 'Not Equal', value: 'distinto'}];
+
+  amountOperators = [
+    { key: 'Equal', value: 'equal' },
+    { key: 'Not equal', value: 'notequal' },
+    { key: 'Greater than', value: 'greaterthan' },
+    { key: 'Less than', value: 'lessthan' },
+    { key: 'Less than or equal', value: 'lessthanorequal' },
+    { key: 'Greater than or equal', value: 'greaterthanorequal' }
+];
 
   //Suscripciones
   subscriptionDatosConstructorConsulta: Subscription;
@@ -93,14 +106,21 @@ export class ConstructorConsultasComponent implements OnInit {
 
   constructor(private sigaServices: SigaServices,private translateService: TranslateService) { }
 
+  @ViewChild("ruleTemplate") private ruleTemplate;
   ngOnInit() {
     if(sessionStorage.getItem("consultasSearch")){
       this.consultaBuscador = JSON.parse(sessionStorage.getItem("consultasSearch"));
       //this.obtenerDatosConsulta(this.consultaBuscador.idConsulta);    
     }
-
+    
     this.obtenerConfigColumnas();
   }
+
+ /*  ngAfterViewInit() {
+    this.ruleTemplate.changes.subscribe(() => {
+      console.log(this.ruleTemplate);
+    });
+  } */
 
   //Necesario para liberar memoria
   ngOnDestroy() {
@@ -121,14 +141,17 @@ export class ConstructorConsultasComponent implements OnInit {
   }
 
   fieldChange(e: any): void {
- 
+    this.constructorConsultas.notifyChange(e.value, e.element, 'field');
+  }
+
+  obtenerComboCampo(e: any){
+    console.log("pruebaActionBegin");
+
     this.configColumnasDTO.configColumnasQueryBuilderItem.forEach(campo => {
-      if(e.value == campo.nombreenconsulta && campo.selectayuda != null){
+      if(e.rule.label == campo.nombreenconsulta && campo.selectayuda != null){
         this.obtenerCombosQueryBuilder(campo);
       }
     });
-
-    this.constructorConsultas.notifyChange(e.value, e.element, 'field');
   }
 
   operatorChange(e: any): void {
