@@ -400,6 +400,13 @@ export class ServiciosTramitacionComponent implements OnInit {
     }
   }
 
+  changeColegiado(event) {
+    this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
+    this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
+    this.body.numColegiado = event.nColegiado;
+    this.body.apellidosYNombre = event.nombreAp;
+  }
+
   rest() {
     this.body = this.bodyInicial;
     this.usuarioBusquedaExpress.numColegiado = this.body.numColegiado;
