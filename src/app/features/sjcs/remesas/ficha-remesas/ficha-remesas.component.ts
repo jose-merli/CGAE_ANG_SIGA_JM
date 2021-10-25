@@ -28,7 +28,7 @@ export class FichaRemesasComponent implements OnInit {
   guardado: boolean = false;
   progressSpinner: boolean = false;
   msgs;
-  item;
+  datos;
   remesaFromTabla: boolean;
   remesaTabla;
   remesaItem: RemesasItem = new RemesasItem();
