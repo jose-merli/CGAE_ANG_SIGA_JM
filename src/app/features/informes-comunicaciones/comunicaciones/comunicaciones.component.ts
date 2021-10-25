@@ -68,6 +68,7 @@ export class ComunicacionesComponent implements OnInit {
   personaBody: any;
   usuario: any[] = [];
   @ViewChild("table") table: DataTable;
+  @ViewChild("tableDocsNuevaComm") tableNewDocs: DataTable;
   selectedDatos;
 
   //VARIABLES CREACIÓN NUEVA COMUNICACIÓN
@@ -84,6 +85,9 @@ export class ComunicacionesComponent implements OnInit {
   //Comentado temporal
   permisoIntPNJ: boolean = true;
   permisoNuevaCom: boolean = true;
+  selectAllNewDocs: boolean = false;
+  selectMultipleNewDocs: boolean = false;
+  numSelectedNewDocs: number = 0;
 
   constructor(
     private sigaServices: SigaServices,
@@ -364,7 +368,9 @@ para poder filtrar el dato con o sin estos caracteres*/
     let fileList: FileList = event.files;
     let ficheroTemporal = fileList[0];
 
-      this.bodyNuevaComm.docs.push(ficheroTemporal);
+    this.bodyNuevaComm.docs.push(ficheroTemporal);
+    
+    this.tableNewDocs.reset();
   }
 
   checkSaveNuevaComm(){
@@ -618,6 +624,18 @@ para poder filtrar el dato con o sin estos caracteres*/
     if (!ret) return true;
   }
 
+  onChangeSelectAllNewDocs(){
+    
+    if (this.selectAllNewDocs === true) {
+      this.selectMultipleNewDocs = false;
+      this.selectedDocsNuevaComm = this.bodyNuevaComm.docs;
+      this.numSelectedNewDocs = this.bodyNuevaComm.docs.length;
+    } else {
+      this.selectedDocsNuevaComm = [];
+      this.numSelectedNewDocs = 0;
+    }
+  }
+
   //FIN MÉTODOS NUEVA COMUNICACIÓN
 
   onChangeRowsPerPages(event) {
@@ -790,6 +808,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.selectedDatos = [];
     }
   }
+
   fila(dato) {
     this.estado = dato[0].idEstado;
   }
