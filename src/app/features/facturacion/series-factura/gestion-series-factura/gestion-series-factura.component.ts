@@ -54,11 +54,11 @@ export class GestionSeriesFacturaComponent implements OnInit {
 
     this.datos = [
       {
-        label: "Abreviatura",
+        label: this.translateService.instant("gratuita.definirTurnosIndex.literal.abreviatura"),
         value: this.body.abreviatura
       },
       {
-        label: "Descripción",
+        label: this.translateService.instant("general.description"),
         value: this.body.descripcion
       },
       {
@@ -70,7 +70,7 @@ export class GestionSeriesFacturaComponent implements OnInit {
         value: this.body.sufijo
       },
       {
-        label: "Activo",
+        label: this.translateService.instant("administracion.usuarios.literal.activo"),
         value: this.body.fechaBaja == null ? "Sí" : "No"
       }
     ]
@@ -86,7 +86,7 @@ export class GestionSeriesFacturaComponent implements OnInit {
     });
 
     this.enlacesTarjetaResumen.push({
-      label: "Observaciones", // Internacionalizar
+      label: "justiciaGratuita.remesasResultados.tabla.observaciones",
       value: document.getElementById("observaciones"),
       nombre: "observaciones",
     });
@@ -98,15 +98,15 @@ export class GestionSeriesFacturaComponent implements OnInit {
     });
 
     this.enlacesTarjetaResumen.push({
-      label: "Destinatarios individuales", // Internacionalizar
+      label: "facturacion.asignacionConceptos.destIndividuales.cabecera",
       value: document.getElementById("destinatariosIndividuales"),
       nombre: "destinatariosIndividuales",
     });
 
     this.enlacesTarjetaResumen.push({
       label: "Lista de destinatarios", // Internacionalizar
-      value: document.getElementById("destinatarios"),
-      nombre: "destinatarios",
+      value: document.getElementById("destinatariosLista"),
+      nombre: "destinatariosLista",
     });
 
     this.enlacesTarjetaResumen.push({
@@ -151,6 +151,10 @@ export class GestionSeriesFacturaComponent implements OnInit {
       nombre: "exportacionContabilidad",
     });
 
+  }
+
+  guardadoSend(): void {
+    this.ngOnInit();
   }
 
   showMessage(severity, summary, msg) {

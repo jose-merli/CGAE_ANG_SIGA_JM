@@ -2,7 +2,7 @@ import { ComboItem } from "./ComboItem";
 
 export class SerieFacturacionItem {
 
-  idSerieFacturacion: string;
+	idSerieFacturacion: string;
 	observaciones: string;
 	fechaBaja: Date;
 	abreviatura: string;
@@ -10,28 +10,31 @@ export class SerieFacturacionItem {
 	tiposIncluidos: string[];
 
 	idCuentaBancaria: string;
-  cuentaBancaria: string;
+	cuentaBancaria: string;
 	idSufijo: string;
-  sufijo: string;
+	sufijo: string;
 
 	idFormaPago: string;
 	formaPago: string;
-	generarPDF: string;
-	envioFacturas: string;
-	traspasoFacturas: string;
-	
+	generarPDF: boolean;
+	envioFacturas: boolean;
+	traspasoFacturas: boolean;
+
 	idTiposProductos: string[];
-  tiposProductos: ComboItem[];
-  idTiposServicios: string[];
+	tiposProductos: ComboItem[];
+	idTiposServicios: string[];
 	tiposServicios: ComboItem[];
-  idEtiquetas: string;
+	idEtiquetas: string;
 	etiquetas: ComboItem[];
-  idConsultasDestinatarios: string[];
+	idConsultasDestinatarios: string[];
 	consultasDestinatarios: ComboItem[];
-  
+
 	idContadorFacturas: string;
 	idContadorFacturasRectificativas: string;
+
+	idSerieFacturacionPrevia: string;
+	serieGenerica: boolean;
     
-  constructor() { };
+	constructor() { };
 
 }

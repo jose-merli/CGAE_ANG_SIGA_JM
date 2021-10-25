@@ -492,6 +492,10 @@ import { QueryBuilderModule } from '@syncfusion/ej2-angular-querybuilder';
 import { enableRipple } from '@syncfusion/ej2-base';
 import { MatSlideToggleModule } from '@angular/material';
 import { DatosGeneralesSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/datos-generales-series-factura/datos-generales-series-factura.component';
+import { DestinatariosIndividualesSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/destinatarios-individuales-series-factura/destinatarios-individuales-series-factura.component';
+import { DestinatariosEtiquetasSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/destinatarios-etiquetas-series-factura/destinatarios-etiquetas-series-factura.component';
+import { ObservacionesSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/observaciones-series-factura/observaciones-series-factura.component';
+import { DestinatariosListaSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/destinatarios-lista-series-factura/destinatarios-lista-series-factura.component';
 enableRipple(true);
 
 @NgModule({
@@ -900,7 +904,11 @@ enableRipple(true);
 		DetalleTarjetaPrecioFichaServiciosFacturacionComponent,
 		TarjetaProductosCompraSuscripcionComponent,
 		TarjetaFacturaCompraSuscripcionComponent,
-		DatosGeneralesSeriesFacturaComponent
+		DatosGeneralesSeriesFacturaComponent,
+		ObservacionesSeriesFacturaComponent,
+		DestinatariosIndividualesSeriesFacturaComponent,
+		DestinatariosEtiquetasSeriesFacturaComponent,
+		DestinatariosListaSeriesFacturaComponent
 	],
 	imports: [
 		Paginador3Module,

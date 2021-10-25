@@ -1,10 +1,30 @@
 <p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
-<div class="busqueda-container" id="datosGenerales">
+<div class="ficha-container" id="datosGenerales">
   <div class="card" id="top">
     <div class="card-header header-ficha">
 
-      <div 
-        class=" header-ficha-open d-flex justify-content-start align-items-center"
+      <!-- Cabecera en ficha cerrada -->
+      <div *ngIf="!esFichaActiva('datosGenerales')" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('datosGenerales')">
+          <div class="img-colegiado">
+            <i class="far fa-address-book icon-ficha pointer"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('datosGenerales')">
+            <label class="mr-auto title-ficha pointer">{{ 'general.message.datos.generales' | translate }}</label>
+          </div>
+          <div class="d-flex justify-content-between default">
+            
+            
+            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('datosGenerales')"
+              *ngIf="!esFichaActiva('datosGenerales')"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cabecera en ficha abierta -->
+      <div *ngIf="esFichaActiva('datosGenerales')" class=" header-ficha-open d-flex justify-content-start align-items-center"
         (click)="abreCierraFicha('datosGenerales')">
         <div class="img-colegiado">
           <i class="far fa-address-book icon-ficha"></i>
@@ -14,18 +34,23 @@
       </div>
     </div>
 
-    <div class="card-body card-body-ficha">
+    <!-- Cuerpo en ficha abierta -->
+    <div *ngIf="esFichaActiva('datosGenerales')" class="card-body card-body-ficha">
       <div class="row">
         <div class="bloque col-lg-4 col-md-4">
           <div class="form-group">
             <label>{{ 'gratuita.definirTurnosIndex.literal.abreviatura' | translate }} (*)</label>
-            <input type="text" [ngClass]="styleObligatorio(body.abreviatura)" [(ngModel)]="body.abreviatura" class="form-control" pInputText>
+            <input type="text" [ngClass]="styleObligatorio(body.abreviatura)" id="abreviatura" [(ngModel)]="body.abreviatura" class="form-control" pInputText>
           </div>
           <div class="form-group">
             <label>Planificar confirmación posteriormente a</label>
-            <p-dropdown class="select-form" [(ngModel)]='body.posteriorAFacturacion' placeholder="Seleccionar"
-              [options]="comboFacturacion" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+            <p-dropdown class="select-form" [(ngModel)]='body.idSerieFacturacionPrevia' placeholder="Seleccionar"
+              [options]="comboPlanificacion" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
           </div>
+            <div class="form-group mb-3 d-flex justify-content-between">
+                <label class="checkbox-label" for="serieGenerica">Serie genérica para facturar todo</label>
+                <p-checkbox class="checkbox-inline" id="serieGenerica" [(ngModel)]="body.serieGenerica" binary="true"></p-checkbox>
+            </div>
           <div class="form-group">
             <label>{{ 'menu.justiciaGratuita.calendarios.Estado' | translate }}</label>
             <input type="text" [(ngModel)]="body.estado" [disabled]="true" class="form-control" pInputText>
@@ -96,14 +121,14 @@
 
     <div class="card-footer">
       <div class="text-right main-button">
-        <button pButton (click)="confirmEliminar()" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.eliminar' | translate }}"></button>
-        <button pButton (click)="confirmReactivar()" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.reactivar' | translate }}"></button>
+        <button pButton *ngIf="esActivo()" (click)="confirmEliminar()" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.eliminar' | translate }}"></button>
+        <button pButton *ngIf="!esActivo()" (click)="confirmReactivar()" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.reactivar' | translate }}"></button>
 
         <button pButton type="button" icon="fa fa-undo" iconPos="left"
-          label="{{ 'general.boton.restablecer' | translate}}"></button>
+          (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
 
         <button pButton type="button" icon="fa fa-save" iconPos="left"
-          label="{{ 'general.boton.guardar' | translate}}"></button>
+          (click)="save()" label="{{ 'general.boton.guardar' | translate }}"></button>
       </div>
     </div>
   </div>
@@ -112,3 +137,5 @@
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
 </div>
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" width="425"></p-confirmDialog>

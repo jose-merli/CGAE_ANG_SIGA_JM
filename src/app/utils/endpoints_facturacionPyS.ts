@@ -10,4 +10,6 @@ export let endpoints_facturacionPyS: any = {
     facturacionPyS_comboContadoresRectificativas: "facturacionPyS/comboContadoresRectificativas",
     facturacionPyS_eliminaSerieFacturacion:  "facturacionPyS/eliminaSerieFacturacion",
     facturacionPyS_reactivarSerieFacturacion:  "facturacionPyS/reactivarSerieFacturacion",
+    facturacionPyS_comboPlanificacion: "facturacionPyS/comboPlanificacion",
+    facturacionPyS_guardarSerieFacturacion: "facturacionPyS/guardarSerieFacturacion",
 }
