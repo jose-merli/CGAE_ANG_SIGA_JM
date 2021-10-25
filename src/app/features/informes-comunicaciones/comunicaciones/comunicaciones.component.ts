@@ -80,11 +80,11 @@ export class ComunicacionesComponent implements OnInit {
     { field: 'name', header: "censo.cargaMasivaDatosCurriculares.literal.nombreFichero" }
   ];
   comboModelos: ComboItem[];
-  //permisoNuevaCom: boolean = false;
-  //permisoIntPNJ: boolean = false;
+  permisoNuevaCom: boolean = false;
+  permisoIntPNJ: boolean = false;
   //Comentado temporal
-  permisoIntPNJ: boolean = true;
-  permisoNuevaCom: boolean = true;
+  // permisoIntPNJ: boolean = true;
+  // permisoNuevaCom: boolean = true;
   selectAllNewDocs: boolean = false;
   selectMultipleNewDocs: boolean = false;
   numSelectedNewDocs: number = 0;
@@ -110,8 +110,8 @@ export class ComunicacionesComponent implements OnInit {
     this.getClasesComunicaciones();
     this.getComboModelos();
     //Comentado temporal
-    // this.getPermisoNuevaCom();
-    // this.getPermisoIntegracionPNJ();
+    this.getPermisoNuevaCom();
+    this.getPermisoIntegracionPNJ();
 
     let objPersona = null;
 
@@ -345,8 +345,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.nueva();
     }
     else {
-      //REVISAR AÑADIR ETIQUETA CONCRETA PARA PERMISO DE INTEGRACIÓN CON PNJ
-      [{ severity: "error", summary: this.translateService.instant("general.message.incorrect"), detail: this.translateService.instant("general.message.noTienePermisosRealizarAccion") }];
+      [{ severity: "error", summary: this.translateService.instant("general.message.incorrect"), detail: this.translateService.instant("informesycomunicaciones.comunicaciones.noAccesoPNJ") }];
     }
   }
 
@@ -368,9 +367,18 @@ para poder filtrar el dato con o sin estos caracteres*/
     let fileList: FileList = event.files;
     let ficheroTemporal = fileList[0];
 
-    this.bodyNuevaComm.docs.push(ficheroTemporal);
+    //Se comprueba si hay ya algún documento con el mismo nombre
+    let sameName = this.bodyNuevaComm.docs.find(el => el.name == ficheroTemporal.name);
+    //Si no encuentra ningún otro documento con el mismo nombre
+    if(sameName == undefined){
+      this.bodyNuevaComm.docs.push(ficheroTemporal);
+      //Para que se actualice el numero de paginas de la tabla adecuadamente
+      this.tableNewDocs.reset();
+    }
+    else{
+      this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('informesycomunicaciones.comunicaciones.yaExisteNombreFichero') }];
+    }
     
-    this.tableNewDocs.reset();
   }
 
   checkSaveNuevaComm(){
@@ -385,7 +393,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           this.saveNuevaComm();
         }
         else{
-          [{ severity: "error", summary: this.translateService.instant("general.message.incorrect"), detail: this.translateService.instant("general.message.noTienePermisosRealizarAccion") }];
+          this.msgs = [{ severity: "error", summary: this.translateService.instant("general.message.incorrect"), detail: this.translateService.instant("informesycomunicaciones.comunicaciones.noAccesoPNJ") }];
         }
       }
       else {
@@ -492,19 +500,19 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   deleteDocumentos(){
     for(let doc of this.selectedDocsNuevaComm){
-      let indexDoc = this.bodyNuevaComm.docs.findIndex(el => el.webkitRelativePath == doc.webkitRelativePath);
-      this.selectedDocsNuevaComm.splice(indexDoc, 1);
-      this.selectedDocsNuevaComm[0].inde
-      //filter((drink, index) => drink !== idx);
+      let indexDoc = this.bodyNuevaComm.docs.findIndex(el => el.name == doc.name);
+      this.bodyNuevaComm.docs.splice(indexDoc, 1);
     }
     //Alternativa
-    let indexesDoc = [];
-    for(let doc of this.selectedDocsNuevaComm){
-      indexesDoc.push(doc.index);
-      //
-    }
-    this.bodyNuevaComm.docs.filter((doc, index) => !indexesDoc.includes(index));
+    // let indexesDoc = [];
+    // for(let doc of this.selectedDocsNuevaComm){
+    //   indexesDoc.push(doc.index);
+    //   //
+    // }
+    // this.bodyNuevaComm.docs.filter((doc, index) => !indexesDoc.includes(index));
     this.selectedDocsNuevaComm = [];
+    //Para que se actualice el numero de paginas adecuadamente
+    this.tableNewDocs.reset();
   }
 
   getComboJuzgado() {
