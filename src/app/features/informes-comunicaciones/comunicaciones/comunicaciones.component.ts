@@ -79,8 +79,11 @@ export class ComunicacionesComponent implements OnInit {
     { field: 'name', header: "censo.cargaMasivaDatosCurriculares.literal.nombreFichero" }
   ];
   comboModelos: ComboItem[];
-  permisoNuevaCom: boolean;
-  permisoIntPNJ: boolean;
+  //permisoNuevaCom: boolean = false;
+  //permisoIntPNJ: boolean = false;
+  //Comentado temporal
+  permisoIntPNJ: boolean = true;
+  permisoNuevaCom: boolean = true;
 
   constructor(
     private sigaServices: SigaServices,
@@ -102,8 +105,9 @@ export class ComunicacionesComponent implements OnInit {
     this.getEstadosEnvios();
     this.getClasesComunicaciones();
     this.getComboModelos();
-    this.getPermisoNuevaCom();
-    this.getPermisoIntegracionPNJ();
+    //Comentado temporal
+    // this.getPermisoNuevaCom();
+    // this.getPermisoIntegracionPNJ();
 
     let objPersona = null;
 
@@ -328,6 +332,21 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   //MËTODOS NUEVA COMUNICACIÓN
+  checkPermisosNuevaCom(){
+    let msg = this.commonsService.checkPermisos(this.permisoNuevaCom, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } 
+    else if(this.permisoIntPNJ){
+      this.nueva();
+    }
+    else {
+      //REVISAR AÑADIR ETIQUETA CONCRETA PARA PERMISO DE INTEGRACIÓN CON PNJ
+      [{ severity: "error", summary: this.translateService.instant("general.message.incorrect"), detail: this.translateService.instant("general.message.noTienePermisosRealizarAccion") }];
+    }
+  }
+
+
   //Método para mostrar la ventana de creación de comunicación estandar
   nueva(){
     this.showNuevaComm = true;
@@ -383,27 +402,32 @@ para poder filtrar el dato con o sin estos caracteres*/
         .postPaginado("parametros_search", "?numPagina=1", parametro)
         .toPromise().then(
           data => {
+            this.progressSpinner = false;
             let searchParametros = JSON.parse(data["body"]);
             let datosBuscar = searchParametros.parametrosItems;
-            let paramInst = datosBuscar.find(el => el.idInstitucion == el.idinstitucionActual);
-            //Si ha encontrado el parametro para la institucion actual
-            if(paramInst != undefined){
-              if(paramInst.valor == "1"){
-                this.permisoIntPNJ = true;
+            if(datosBuscar.length > 0){
+              let paramInst = datosBuscar.find(el => el.idInstitucion == el.idinstitucionActual);
+              //Si ha encontrado el parametro para la institucion actual
+              if(paramInst != undefined){
+                if(paramInst.valor == "1"){
+                  this.permisoIntPNJ = true;
+                }
+                else{
+                  this.permisoIntPNJ = false;
+                }
               }
-              else{
-                this.permisoIntPNJ = false;
+              else if(datosBuscar[0].idInstitucion == "0"){
+                if(datosBuscar[0].valor == "1"){
+                  this.permisoIntPNJ = true;
+                }
+                else{
+                  this.permisoIntPNJ = false;
+                }
               }
             }
-            else if(datosBuscar[0].idInstitucion == "0"){
-              if(datosBuscar[0].valor == "1"){
-                this.permisoIntPNJ = true;
-              }
-              else{
-                this.permisoIntPNJ = false;
-              }
+            else{
+              this.permisoIntPNJ = false;
             }
-            this.progressSpinner = false;
           }).catch(error => {
             let severity = "error";
             let summary = this.translateService.instant('general.mensaje.error.bbdd');
