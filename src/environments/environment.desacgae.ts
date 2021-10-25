@@ -9,5 +9,5 @@ export const environment = {
 	env: '',
 	baseHref: '/htdocs/',
   oldSigaUrl: '/SIGA/',
-  newSigaUrl: '/siga-web/'
+  newSigaUrl: '/siga-web-desa/'
 };
