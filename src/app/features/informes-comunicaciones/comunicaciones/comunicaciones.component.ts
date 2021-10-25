@@ -110,7 +110,7 @@ export class ComunicacionesComponent implements OnInit {
     this.getEstadosEnvios();
     this.getClasesComunicaciones();
     this.getComboModelos();
-    //Comentado temporal
+    //REVISAR: Comentado temporal
     // this.getPermisoNuevaCom();
     // this.getPermisoIntegracionPNJ();
 
@@ -391,7 +391,15 @@ para poder filtrar el dato con o sin estos caracteres*/
     && this.validarNig(this.bodyNuevaComm.nig)){
       if (this.checkCamposObligatoriosNuevaComm()){
         if(this.permisoIntPNJ){
-          this.saveNuevaComm();
+          let tamDocs = 0;
+          for(let doc of this.bodyNuevaComm.docs){
+            tamDocs += doc.size;
+          }
+          //Maximo de tamaño permitido actualmente al hacer peticiones al back (5242880)
+          if (tamDocs > 5242880)this.msgs = [{ severity: "info", summary: this.translateService.instant("general.message.informacion"), detail: this.translateService.instant("justiciaGratuita.ejg.documentacion.tamMax") }];
+          else {
+            this.saveNuevaComm();
+          }
         }
         else{
           this.msgs = [{ severity: "error", summary: this.translateService.instant("general.message.incorrect"), detail: this.translateService.instant("informesycomunicaciones.comunicaciones.noAccesoPNJ") }];
