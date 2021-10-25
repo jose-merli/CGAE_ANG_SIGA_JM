@@ -16,8 +16,8 @@
           </div>
           <div class="d-flex justify-content-between" style="cursor:default">
             <label>{{ "formacion.fichaCursos.tarjetaPrecios.resumen.numRegistros" | translate }}
-              <span *ngIf="remesaItem != null" > {{ remesaItem.numRemesaNumero }}</span>
-              <span *ngIf="remesaItem == null"> {{ remesaItem.numRemesaNumero }}</span>
+              <span *ngIf="remesaItem != null" > {{ remesaItem.numRegistroRemesaCompleto }}</span>
+              <span *ngIf="remesaItem == null"> {{ remesaItem.numRegistroRemesaCompleto }}</span>
             </label>
             <label>{{ "justiciaGratuita.remesasResultados.tabla.fechaRemesa" | translate }}
               <span *ngIf="remesaItem != null"> {{ remesaItem.fechaCargaRemesaResultado }}</span>
@@ -55,10 +55,36 @@
             <div class="form-row">
               <div class="form-group-interlineado col-lg-6 col-md-6 px-1">
                 <input type="text" name="numRegistroPrefijo" value="" class="box" class="registro-control w-100"
-                  maxLength="8" pInputText [disabled]="isEnabledNuevo" [(ngModel)]="remesaItem.prefijoRemesa">
+                  maxLength="8" pInputText [disabled]="isEnabledNuevo" [(ngModel)]="remesaItem.numRegistroRemesaCompleto">
               </div>
               </div>
             </div>
+
+
+
+            
+        <div class="form-group-interlineado col-lg-4 col-md-4">
+          <label>{{ 'justiciaGratuita.remesasResultados.filtro.numRegistro' | translate }}</label>
+          <div class="form-row">
+            <div class="form-group-interlineado col-lg-4 col-md-4 px-1">
+              <input type="text" name="numRegistroPrefijo" value="" class="box" class="registro-control w-100"
+                [(ngModel)]='remesaItem.prefijoRemesa' maxLength="8" pInputText>
+            </div>
+            <div class="form-group-interlineado col-lg-4 col-md-4 px-1">
+              <input type="text" name="numRegistroNumero" value="" class="box" class="registro-control w-100"
+                [(ngModel)]='remesaItem.numRegistroNumero' maxLength="10" pInputText>
+            </div>
+
+            <div class="form-group-interlineado col-lg-4 col-md-4 px-1">
+              <input type="text" name="numRegistroSufijo" value="" class="box" class="registro-control w-100"
+                [(ngModel)]='remesaItem.numRegistroSufijo' maxLength="8" pInputText>
+            </div>
+          </div>
+        </div>
+
+
+
+
 
             <div class="form-group-interlineado col-lg-3 col-md-3">
               <label>{{ 'justiciaGratuita.remesasResultados.tabla.fechaCarga' | translate }}</label>

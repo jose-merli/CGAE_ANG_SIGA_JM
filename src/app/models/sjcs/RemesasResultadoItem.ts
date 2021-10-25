@@ -22,7 +22,7 @@ export class RemesasResultadoItem{
     sufijoRemesa?: string;
     descripcionRemesa?: string;
 
-    numRegistroRemesaCompleto?: string;
+    numRegistroRemesaCompleto?:  number;
     numRemesaCompleto?: string;
 
     constructor(obj: Object) {
@@ -50,4 +50,5 @@ export class RemesasResultadoItem{
         this.numRemesaCompleto = obj['numRemesaCompleto'];
 
      }
+     
 }

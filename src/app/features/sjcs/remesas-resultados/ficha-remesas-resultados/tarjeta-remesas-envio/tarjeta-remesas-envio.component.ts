@@ -1,4 +1,8 @@
-import { Component } from '@angular/core'
+import { Component, Input } from '@angular/core'
+import { Router } from '@angular/router';
+import { RemesasItem } from '../../../../../models/sjcs/RemesasItem';
+import { RemesasResultadoItem } from '../../../../../models/sjcs/RemesasResultadoItem';
+import { SigaServices } from '../../../../../_services/siga.service';
 
 @Component({
     selector: 'app-tarjeta-remesas-envio',
@@ -9,7 +13,23 @@ export class TarjetaRemesasEnvioComponent {
     progressSpinner: boolean = false;
     msgs;
     openFicha: boolean = false;
+    datos;
+    estado;
+    incidencias;
+    remesasDatosEntradaItem;
+    resultado;
+    @Input() remesaItem: RemesasResultadoItem ;
+    @Input() remesaTabla;
+    remesa: { idRemesa: any; descripcion: string; nRegistro: number;};
 
+    constructor(private router: Router,private sigaServices: SigaServices){}
+    nuevo: boolean = false;
+
+    ngOnInit(){
+      if(this.remesaItem.idRemesa == null){
+        this.nuevo = true;
+      }
+    }
 
 
     showMessage(severity, summary, msg) {
@@ -24,4 +44,21 @@ export class TarjetaRemesasEnvioComponent {
     clear() {
         this.msgs = [];
       }
+
+    RemesaEnvio(){
+      if(!this.nuevo)
+      {
+        this.remesa=  {
+          'idRemesa': this.remesaItem.idRemesa,
+          'descripcion': this.remesaItem.descripcionRemesa,
+          'nRegistro': this.remesaItem.numRegistroRemesaCompleto,
+        }
+        this.router.navigate(["/fichaRemesasEnvio"]);
+        localStorage.setItem('remesaItem', JSON.stringify(this.remesa));
+        localStorage.setItem('ficha', "registro");
+      }      
+
+    }
+
+
 }

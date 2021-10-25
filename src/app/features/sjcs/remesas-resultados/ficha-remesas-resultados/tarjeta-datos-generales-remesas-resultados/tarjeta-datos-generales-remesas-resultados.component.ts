@@ -163,6 +163,9 @@ export class TarjetaDatosGeneralesRemesasResultadosComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log("Empieza;")
+    console.log(this.remesaItem)
+    console.log("FIN")
     if(this.remesaItem != null){
       this.getUltimoRegitroRemesa();
       //this.remesaItem.descripcion = "";
@@ -254,27 +257,7 @@ export class TarjetaDatosGeneralesRemesasResultadosComponent implements OnInit {
     ];
   }
 
-  listadoEstadosRemesa(remesa){
-    this.progressSpinner = true;
-    this.remesasDatosEntradaItem =
-    {
-      'idRemesa': (remesa.idRemesa != null && remesa.idRemesa != undefined) ? remesa.idRemesa.toString() : remesa.idRemesa,  
-    };
-    this.sigaServices.post("ficharemesas_listadoEstadosRemesa", this.remesasDatosEntradaItem).subscribe(
-      n => {
-        console.log("Dentro del servicio del padre que llama al listadoEstadosRemesa");
-        this.resultado = JSON.parse(n.body).estadoRemesaItem;
 
-        console.log("Contenido de la respuesta del back --> ", this.resultado);
-        this.progressSpinner = false;
-
-      },
-      err => {
-        this.progressSpinner = false;
-        let error = err;
-        console.log(err);
-      });
-  }
 
   formatDate(date) {
     const pattern = 'dd/MM/yyyy HH24:MI:SS';
@@ -626,81 +609,56 @@ export class TarjetaDatosGeneralesRemesasResultadosComponent implements OnInit {
     }
   }
 
-  insertar(){
-    //this.progressSpinner = true;
-
-    this.sigaServices.post("remesasResultados_guardarRemesaResultado", this.remesaItem).subscribe(
-      data => {
-        console.log(data)
-        this.showMessage("success", this.translateService.instant("general.message.correct"), JSON.parse(data.body).error.description);
-      },
-      err => {
-        if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
-      },
-      () => {
-        this.progressSpinner = false;
-      }
-    );
-  }
 
   save(){
-    console.log(this.remesaItem)
-    console.log("Otro")
-    console.log("fa"+ this.file)
-   //this.tarjetaDatosGeneralesRemesasResultados.insertar();
-  if(this.remesaItem != null){
-    this.remesaResolucion = {
-      'idRemesa' : this.remesaItem.idRemesa,
-      'observaciones' : this.remesaItem.observacionesRemesaResultado,
-      'nombreFichero' : this.remesaItem.nombreFichero,
-      'fechaCarga' : this.datepipe.transform(this.remesaItem.fechaCargaRemesaResultado, 'dd/MM/yyyy'),
-      'fechaResolucion' :  this.datepipe.transform(this.remesaItem.fechaResolucionRemesaResultado, 'dd/MM/yyyy'),
-    };
-  }
-  if(this.remesaResolucion.idRemesa == null ){
-    this.remesaResolucion.idRemesa = 0;
-  }
-console.log("Item: " + this.remesaResolucion.fechaCarga.toString)
-console.log(this.remesaResolucion)
-  this.progressSpinner = true;
-
-  this.sigaServices
-  .postSendContentAndParameter(
-  "remesasResultados_guardarRemesaResultado",
-  "?idRemesa=" + this.remesaResolucion.idRemesa +
-  "&observaciones=" + this.remesaResolucion.observaciones + 
-  "&nombreFichero=" + this.remesaResolucion.nombreFichero +
-  "&fechaCarga=" + this.remesaResolucion.fechaCarga +
-  "&fechaResolucion=" + this.remesaResolucion.fechaResolucion,
-  this.file)
-  .subscribe(
-    data => {
-
-      this.showMessage("success", this.translateService.instant("general.message.correct"), JSON.parse(data.body).error.description);
-      console.log(data)
-      this.progressSpinner = false;
-
-    },
-    err => {
-      if (err.error != null && err.error.error != null && err.error.error.code == 400) {
-        if (err.error.error.description != null) {
-          this.showFail(err.error.error.description);
-        } else {
-          this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.formatoNoPermitido"));
-        }
-      } else {
-        this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.errorSubirDocumento"));
-        console.log(err);
-      }
-      this.progressSpinner = false;
-    },
-    () => {
+    if(this.remesaItem != null){
+      this.remesaResolucion = {
+        'idRemesa' : this.remesaItem.idRemesa,
+        'observaciones' : this.remesaItem.observacionesRemesaResultado,
+        'nombreFichero' : this.remesaItem.nombreFichero,
+        'fechaCarga' : this.datepipe.transform(this.remesaItem.fechaCargaRemesaResultado, 'dd/MM/yyyy'),
+        'fechaResolucion' :  this.datepipe.transform(this.remesaItem.fechaResolucionRemesaResultado, 'dd/MM/yyyy'),
+      };
     }
-  );
+    if(this.remesaResolucion.idRemesa == null ){
+      this.remesaResolucion.idRemesa = 0;
+    }
+    this.progressSpinner = true;
+    this.sigaServices
+    .postSendContentAndParameter(
+    "remesasResultados_guardarRemesaResultado",
+    "?idRemesa=" + this.remesaResolucion.idRemesa +
+    "&observaciones=" + this.remesaResolucion.observaciones + 
+    "&nombreFichero=" + this.remesaResolucion.nombreFichero +
+    "&fechaCarga=" + this.remesaResolucion.fechaCarga +
+    "&fechaResolucion=" + this.remesaResolucion.fechaResolucion,
+    this.file)
+    .subscribe(
+      data => {
+        let accion = JSON.parse(data.body).error.description;
+        if(accion == "Insert"){
+          this.showMessage("success", this.translateService.instant("general.message.correct"),  this.translateService.instant("justiciaGratuita.remesasResultados.mensaje.actualizacionCorrecta"));
+        }else if(accion == "Updated"){
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("justiciaGratuita.remesasResultados.mensaje.guardadoCorrecto"));
+        }
+        this.progressSpinner = false;
+      },
+      err => {
+        if (err.error != null && err.error.error != null && err.error.error.code == 400) {
+          if (err.error.error.description != null) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          } else {
+            this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.formatoNoPermitido"));
+          }
+        } else {
+          this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.errorSubirDocumento"));
+          console.log(err);
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+      }
+    );
   }
 
   showFail(mensaje: string) {
