@@ -48,7 +48,7 @@
 				"prod": "environments/environment.prod.ts",
 				"cgae": "environments/environment.cgae.ts",
 				"deloitte": "environments/environment.deloitte.ts",
-				"deloittefase3": "environments/environment.deloittefase3.ts"
+				"desacgae": "environments/environment.desacgae.ts"
 			}
 		}
 	],

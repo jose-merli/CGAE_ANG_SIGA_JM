@@ -7,6 +7,7 @@
 		"start": "webpack-dev-server --port=4200",
 		"build": "webpack",
 		"deploy": "node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng build --prod --env=deloitte --base-href=/siga-ang/",
+		"deployDesaCGAE": "node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng build --prod --env=desacgae --base-href=/htdocs/",
 		"deployDebugger": "node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng build        --env=deloitte --base-href=/siga-ang/",
 		"deployDebuggerFase3": "node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng build        --env=deloittefase3 --base-href=/siga-ang-fase3/",
 		"cgaeBuild": "node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng build --prod --env=cgae --base-href=/htdocs/",
