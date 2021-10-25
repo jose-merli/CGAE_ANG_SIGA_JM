@@ -88,6 +88,7 @@ export class ComunicacionesComponent implements OnInit {
   selectAllNewDocs: boolean = false;
   selectMultipleNewDocs: boolean = false;
   numSelectedNewDocs: number = 0;
+  resaltadoDatos: boolean = false;
 
   constructor(
     private sigaServices: SigaServices,
@@ -110,8 +111,8 @@ export class ComunicacionesComponent implements OnInit {
     this.getClasesComunicaciones();
     this.getComboModelos();
     //Comentado temporal
-    this.getPermisoNuevaCom();
-    this.getPermisoIntegracionPNJ();
+    // this.getPermisoNuevaCom();
+    // this.getPermisoIntegracionPNJ();
 
     let objPersona = null;
 
@@ -398,6 +399,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       }
       else {
         this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+        this.resaltadoDatos = true;
       }
     }
   }
@@ -641,6 +643,12 @@ para poder filtrar el dato con o sin estos caracteres*/
     } else {
       this.selectedDocsNuevaComm = [];
       this.numSelectedNewDocs = 0;
+    }
+  }
+
+  styleObligatorio(evento) {
+    if (this.resaltadoDatos && (evento == undefined || evento == null || evento == "")) {
+      return this.commonsService.styleObligatorio(evento);
     }
   }
 

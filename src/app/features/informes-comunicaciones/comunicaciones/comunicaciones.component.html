@@ -247,18 +247,18 @@
     <div class="form-row">
       <div class="form-group-interlineado col-lg-4 col-md-4">
         <label>{{ 'justiciaGratuita.ejg.datosGenerales.Juzgado' | translate}} ({{'facturacionSJCS.retenciones.destinatario' | translate}}) (*)</label>
-        <p-dropdown class="select-form" [(ngModel)]='bodyNuevaComm.juzgado' [options]="comboJuzgado" [filter]="true"
+        <p-dropdown class="select-form" [ngClass]="styleObligatorio(bodyNuevaComm.juzgado)" [(ngModel)]='bodyNuevaComm.juzgado' [options]="comboJuzgado" [filter]="true"
           filterBy="label,labelSinTilde" placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true" ></p-dropdown>
       </div>
       <div class="form-group-interlineado col-lg-4 col-md-4">
         <label>{{ "enviosMasivos.literal.asunto" | translate }} (*)
         </label>
-        <input type="text" class="form-control" [attr.maxlength]="100" pInputText [(ngModel)]="bodyNuevaComm.asunto" />
+        <input type="text" class="form-control" [ngClass]="styleObligatorio(bodyNuevaComm.asunto)" [attr.maxlength]="100" pInputText [(ngModel)]="bodyNuevaComm.asunto" />
       </div>
       <div class="form-group-interlineado col-lg-4 col-md-4">
         <label>{{"administracion.auditoriaUsuarios.literal.fechaEfectiva" | translate}} (*)</label>
         <app-fecha [(value)]="bodyNuevaComm.fechaEfecto" [utc]="false" showTime="true"
-          (valueChangeSelected)="fillNuevaFechaEfecto($event)" (valueChangeInput)="fillNuevaFechaEfecto($event)">
+          (valueChangeSelected)="fillNuevaFechaEfecto($event)" [inputStyleClass]="styleObligatorio(bodyNuevaComm.fechaEfecto)" (valueChangeInput)="fillNuevaFechaEfecto($event)">
         </app-fecha>
       </div>
       <div class="form-group-interlineado col-lg-12 col-md-12">
