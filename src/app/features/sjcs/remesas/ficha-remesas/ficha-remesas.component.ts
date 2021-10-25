@@ -127,41 +127,11 @@ export class FichaRemesasComponent implements OnInit {
     ).catch(error => console.error(error));
   }
 
-  obtenerValueEstado(label){
-    switch (label) {
-      case 'Iniciada':
-        this.remesaTabla.sufijo = '0';
-        break;
-      case 'Generada':
-        this.remesaTabla.sufijo = '1';
-        break;
-      case 'Enviada':
-        this.remesaTabla.sufijo = '2';
-        break;
-      case 'Recibida':
-        this.remesaTabla.sufijo = '3';
-        break;
-      case 'Validando':
-        this.remesaTabla.sufijo = '4';
-          break;
-      case 'Validada':
-        this.remesaTabla.sufijo = '5';
-        break;
-      case 'Procesando remesa':
-        this.remesaTabla.sufijo = '6';
-        break;
-      default:
-        this.remesaTabla.sufijo = '7';
-        break;
-    }
-  }
-
   search() {
     console.log("Dentro del search de la ficha-remesa");
-    this.obtenerValueEstado(this.remesaTabla.estado)
     let remesasDatosEntradaItem =
     {
-      'estado': (this.remesaTabla.sufijo != null && this.remesaTabla.sufijo != undefined) ? this.remesaTabla.sufijo.toString() : this.remesaTabla.sufijo,
+      'idRemesa': (this.remesaTabla.idRemesa != null && this.remesaTabla.idRemesa != undefined) ? this.remesaTabla.idRemesa.toString() : this.remesaTabla.idRemesa,
       'descripcion': (this.remesaTabla.descripcion != null && this.remesaTabla.descripcion != undefined) ? this.remesaTabla.descripcion.toString() : this.remesaTabla.descripcion,
       };
     this.progressSpinner = true;
