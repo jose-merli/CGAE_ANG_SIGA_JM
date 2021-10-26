@@ -14,10 +14,14 @@
         <!-- TURNO -->
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{"dato.jgr.guardia.guardias.turno" | translate}}</label>
-          <p-multiSelect #multiSelectTurno [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtros.idTurno'
+          <!--<p-multiSelect #multiSelectTurno [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtros.idTurno'
             [options]="comboTurno" maxSelectedLabels="10" [selectedItemsLabel]="textSelected" styleClass="widthAll"
             [filter]="true" filterBy="label,labelSinTilde" (onPanelShow)="focusInputField(multiSelectTurno)">
-          </p-multiSelect>
+          </p-multiSelect>-->
+          <p-dropdown #multiSelectTurno [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtros.idTurno'
+            [options]="comboTurno" styleClass="widthAll" showClear="true" filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
+            [filter]="true" filterBy="label,labelSinTilde" (onPanelShow)="focusInputField(multiSelectTurno)">
+          </p-dropdown>
         </div>
 
         <!-- NOMBRE -->
@@ -74,46 +78,65 @@
         <!-- JURISDICCION -->
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{"menu.justiciaGratuita.maestros.Jurisdiccion" | translate}}</label>
-          <p-multiSelect #multiSelectJuric [defaultLabel]="textFilter" autoWidth="false"
+          <!--<p-multiSelect #multiSelectJuric [defaultLabel]="textFilter" autoWidth="false"
             [(ngModel)]='filtros.jurisdiccion' [options]="comboJurisdicciones" maxSelectedLabels="10"
             [selectedItemsLabel]="textSelected" styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde"
-            (onPanelShow)="focusInputField(multiSelectJuric)"></p-multiSelect>
+            (onPanelShow)="focusInputField(multiSelectJuric)"></p-multiSelect>-->
+
+          <p-dropdown #multiSelectJuric autoWidth="false"
+            [(ngModel)]='filtros.jurisdiccion' [options]="comboJurisdicciones" styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde"
+            placeholder="{{'general.boton.seleccionar' | translate}}" showClear="true"
+            (onPanelShow)="focusInputField(multiSelectJuric)"></p-dropdown>
         </div>
 
         <!-- GRUPO FACTURACION -->
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{"justiciaGratuita.oficio.turnos.grupofacturacion" | translate}}</label>
-          <p-multiSelect #multiSelectGrpFac [defaultLabel]="textFilter" autoWidth="false"
+          <!--<p-multiSelect #multiSelectGrpFac [defaultLabel]="textFilter" autoWidth="false"
             [(ngModel)]='filtros.grupoFacturacion' [options]="comboGrupoFacturacion" maxSelectedLabels="10"
             [selectedItemsLabel]="textSelected" styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde"
-            (onPanelShow)="focusInputField(multiSelectGrpFac)"></p-multiSelect>
+            (onPanelShow)="focusInputField(multiSelectGrpFac)"></p-multiSelect>-->
+          
+          <p-dropdown #multiSelectGrpFac autoWidth="false" showClear="true" placeholder="{{'general.boton.seleccionar' | translate}}"
+            [(ngModel)]='filtros.grupoFacturacion' [options]="comboGrupoFacturacion"
+            styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde"
+            (onPanelShow)="focusInputField(multiSelectGrpFac)"></p-dropdown>
         </div>
 
         <!-- PARTIDA PRESUPUESTARIA -->
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{"dato.jgr.guardia.guardias.partidaPresupuestaria" | translate}}</label>
-          <p-multiSelect #multiSelectPartPre [defaultLabel]="textFilter" autoWidth="false"
+          <!--<p-multiSelect #multiSelectPartPre [defaultLabel]="textFilter" autoWidth="false"
             [(ngModel)]='filtros.partidaPresupuestaria' [options]="comboPartidasPresupuestarias" maxSelectedLabels="10"
             [selectedItemsLabel]="textSelected" styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde"
-            (onPanelShow)="focusInputField(multiSelectPartPre)"></p-multiSelect>
+            (onPanelShow)="focusInputField(multiSelectPartPre)"></p-multiSelect>-->
+          <p-dropdown #multiSelectPartPre autoWidth="false" showClear="true" placeholder="{{'general.boton.seleccionar' | translate}}"
+            [(ngModel)]='filtros.partidaPresupuestaria' [options]="comboPartidasPresupuestarias" styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde"
+            (onPanelShow)="focusInputField(multiSelectPartPre)"></p-dropdown>
         </div>
 
         <!-- TIPO TURNO -->
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{"justiciaGratuita.oficio.turnos.tipoturno" | translate}}</label>
-          <p-multiSelect #multiSelectTipoTurno [defaultLabel]="textFilter" autoWidth="false"
+          <!--<p-multiSelect #multiSelectTipoTurno [defaultLabel]="textFilter" autoWidth="false"
             [(ngModel)]='filtros.tipoTurno' [options]="comboTipoTurno" maxSelectedLabels="10"
             [selectedItemsLabel]="textSelected" styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde"
-            (onPanelShow)="focusInputField(multiSelectTipoTurno)"></p-multiSelect>
+            (onPanelShow)="focusInputField(multiSelectTipoTurno)"></p-multiSelect>-->
+          <p-dropdown #multiSelectTipoTurno [defaultLabel]="textFilter" autoWidth="false" showClear="true" placeholder="{{'general.boton.seleccionar' | translate}}"
+            [(ngModel)]='filtros.tipoTurno' [options]="comboTipoTurno" styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde"
+            (onPanelShow)="focusInputField(multiSelectTipoTurno)"></p-dropdown>
         </div>
 
         <!-- TIPO GUARDIA -->
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{"dato.jgr.guardia.guardias.tipoGuardia" | translate}}</label>
-          <p-multiSelect #multiSelectTipoGuardia [defaultLabel]="textFilter" autoWidth="false"
+          <!--<p-multiSelect #multiSelectTipoGuardia [defaultLabel]="textFilter" autoWidth="false"
             [(ngModel)]='filtros.idTipoGuardia' [options]="comboTipoGuardia" maxSelectedLabels="10"
             [selectedItemsLabel]="textSelected" styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde"
-            (onPanelShow)="focusInputField(multiSelectTipoGuardia)"></p-multiSelect>
+            (onPanelShow)="focusInputField(multiSelectTipoGuardia)"></p-multiSelect>-->
+          <p-dropdown #multiSelectTipoGuardia [defaultLabel]="textFilter" autoWidth="false" showClear="true" placeholder="{{'general.boton.seleccionar' | translate}}"
+            [(ngModel)]='filtros.idTipoGuardia' [options]="comboTipoGuardia" styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde"
+            (onPanelShow)="focusInputField(multiSelectTipoGuardia)"></p-dropdown>
         </div>
 
       </div>

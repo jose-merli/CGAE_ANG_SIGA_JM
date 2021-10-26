@@ -86,3 +86,11 @@
         </div>
     </p-footer>
 </p-dialog>
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" icon="icon" key="confirmNewJusticiable" width="425"
+  #confirmNewJusticiable>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="confirmNewJusticiable.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="confirmNewJusticiable.reject()"></button>
+  </p-footer>
+</p-confirmDialog>

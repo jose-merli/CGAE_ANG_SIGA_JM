@@ -126,6 +126,11 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
     } else {
       this.body = new JusticiableItem();
+      if(sessionStorage.getItem("nif")){
+        this.body.nif = sessionStorage.getItem("nif");
+        this.compruebaDNI();
+        sessionStorage.removeItem("nif");
+      }
     }
 
     //Obligatorio pais españa
