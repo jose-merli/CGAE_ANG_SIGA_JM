@@ -60,7 +60,7 @@
               <label *ngIf="body.porGrupos">
                 {{"dato.jgr.guardia.guardias.minimoLetradosGrupo" | translate}}
               </label>
-              <input [disabled]="!permisoEscritura || historico || tieneGuardiaPrincipal" [(ngModel)]="body.letradosGuardia" (keypress)="numberOnly($event)" type="text"
+              <input [disabled]="!permisoEscritura || historico || tieneGuardiaPrincipal" [(ngModel)]="body.letradosGuardia" (onChange)="cambiaMinimo($event)" (keypress)="numberOnly($event)" type="text"
                 class="form-control" [maxLength]="200" pInputText [ngClass]="styleObligatorio(body.letradosGuardia)">
             </div>
 

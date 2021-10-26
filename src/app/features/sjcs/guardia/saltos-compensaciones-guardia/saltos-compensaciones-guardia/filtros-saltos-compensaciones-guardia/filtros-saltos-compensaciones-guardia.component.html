@@ -19,7 +19,7 @@
           <p-multiSelect #someDropdown [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtros.idTurno'
             [options]="comboTurnos" maxSelectedLabels="10" [selectedItemsLabel]="textSelected" styleClass="widthAll"
             [filter]="true" filterBy="label,labelSinTilde" (onPanelShow)="focusInputField(someDropdown)"
-            (onChange)="onChangeTurno()">
+            (onChange)="onChangeTurno($event)">
           </p-multiSelect>
         </div>
 
@@ -30,7 +30,7 @@
           <p-multiSelect #someDropdown1 [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtros.idGuardia'
             [options]="comboGuardias" maxSelectedLabels="10" [selectedItemsLabel]="textSelected" styleClass="widthAll"
             [filter]="true" filterBy="label,labelSinTilde" [disabled]="isDisabledGuardia"
-            (onPanelShow)="focusInputField(someDropdown)">
+            (onPanelShow)="focusInputField(someDropdown)" (onChange)="onChangeGuardia($event)">
           </p-multiSelect>
         </div>
 

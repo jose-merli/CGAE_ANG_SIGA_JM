@@ -34,7 +34,10 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
   comboTurnos = [];
 
   @Output() isBuscar = new EventEmitter<boolean>();
-
+  @Input()  dataFilterFromColaGuardia = { 'turno': 0,
+                                          'guardia': 0,
+                                          'colegiado': 0,
+                                          'grupo': 0};
   textFilter: string = "Seleccionar";
   textSelected: String = "{0} etiquetas seleccionadas";
 
@@ -55,8 +58,27 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
       }
       this.isBuscar.emit(this.historico)
 
-    }
 
+    if (this.dataFilterFromColaGuardia != null){
+          if (this.dataFilterFromColaGuardia.turno != 0){
+            this.filtros.idTurno = [this.dataFilterFromColaGuardia.turno.toString()] ;
+          }
+          if (this.dataFilterFromColaGuardia.guardia != 0){
+            if (this.filtros.idTurno) {
+              this.getComboGuardia();
+            }
+            this.isDisabledGuardia = false;
+            this.filtros.idGuardia = [ this.dataFilterFromColaGuardia.guardia.toString()] ;
+          }
+          if (this.dataFilterFromColaGuardia.colegiado != 0){
+            this.filtros.colegiadoGrupo = this.dataFilterFromColaGuardia.colegiado.toString() ;
+          }
+          if (this.dataFilterFromColaGuardia.grupo != 0){
+            this.filtros.grupo = this.dataFilterFromColaGuardia.grupo ;
+          }
+          this.search();
+        }
+      }
 
     if (sessionStorage.getItem("esColegiado") && sessionStorage.getItem("esColegiado") == 'true') {
       /*this.disabledBusquedaExpress = true;
@@ -72,7 +94,6 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
       this.showColegiado = true;
 
     }
-
   }
 
   getComboTurno() {
@@ -88,7 +109,7 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
     );
   }
 
-  onChangeTurno() {
+  onChangeTurno(event) {
     this.filtros.idGuardia = "";
     this.comboGuardias = [];
 
@@ -97,6 +118,9 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
     } else {
       this.isDisabledGuardia = true;
     }
+  }
+  onChangeGuardia(event){
+    console.log(event)
   }
 
   getComboGuardia() {

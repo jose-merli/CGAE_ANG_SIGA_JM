@@ -126,7 +126,7 @@
         label="{{ 'general.boton.clear' | translate}}"></button>
       <button pButton (click)="search()" type="button" icon="fa fa-search" iconPos="left"
         label="{{ 'general.boton.search' | translate }}"></button>
-      <button pButton (click)="nuevo()" type="button" icon="fa fa-plus" iconPos="left"
+      <button pButton (click)="nuevo()" [disabled]="abogado" type="button" icon="fa fa-plus" iconPos="left"
         label="{{ 'general.boton.new' | translate}}"></button>
     </div>
   </div>

@@ -105,7 +105,10 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
   isNewFromOtherPage: boolean = false;
   isNewFromOtherPageObject: any;
   comboColegiados = [];
-
+  dataFilterFromColaGuardia = { 'turno': 0,
+                                'guardia': 0,
+                                'colegiado': 0,
+                                'grupo': 0};
   @ViewChild(FiltrosSaltosCompensacionesGuardiaComponent) filtros: FiltrosSaltosCompensacionesGuardiaComponent;
   @ViewChild(TablaResultadoMixSaltosCompGuardiaComponent) tabla: TablaResultadoMixSaltosCompGuardiaComponent;
 
@@ -141,6 +144,8 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
       ).catch(error => console.error(error));
 
     this.getComboTurno();
+
+    this.dataFilterFromColaGuardia = JSON.parse(sessionStorage.getItem("itemSaltosCompColaGuardia"));
   }
 
   getComboTurno() {

@@ -25,8 +25,8 @@ export class FormularioBusquedaGuardiaComponent implements OnInit {
   enableC: boolean = false;
   disableGuardia: boolean = true;
   showTipo: boolean = false;
-	showFicheroModelo: boolean = false;
-  showCuerpoFicheroModelo: boolean = false;
+	showFicheroModelo: boolean = true;
+  showCuerpoFicheroModelo: boolean = true;
 
   turnosSelected: String = null;
   turnos: any[];

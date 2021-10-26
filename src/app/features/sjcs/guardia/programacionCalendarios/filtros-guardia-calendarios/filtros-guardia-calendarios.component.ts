@@ -337,7 +337,8 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
       'manual': false,
       'porGrupos': false,
       'idConjuntoGuardia': null,
-      "fromCombo": false
+      "fromCombo": false,
+      "minimoLetradosCola": 0
     };
      this.globalGuardiasService.emitConf(configuracionCola);
     let dataToSend = {

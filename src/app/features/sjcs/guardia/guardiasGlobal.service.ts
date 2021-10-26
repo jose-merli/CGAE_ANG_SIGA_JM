@@ -10,7 +10,8 @@ export class GlobalGuardiasService {
             'manual': false,
             'porGrupos': false,
             "idConjuntoGuardia": 0,
-            "fromCombo": false
+            "fromCombo": false,
+            "minimoLetradosCola": 0
         };
     constructor( 
     ) {
@@ -31,7 +32,8 @@ export class ConfiguracionCola {
         public manual: boolean,
         public porGrupos: boolean,
         public idConjuntoGuardia: number,
-        public fromCombo: boolean
+        public fromCombo: boolean,
+        public minimoLetradosCola:  number
     ) { }
 }
 

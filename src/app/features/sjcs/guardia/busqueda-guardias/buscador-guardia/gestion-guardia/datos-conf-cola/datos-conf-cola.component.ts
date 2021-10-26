@@ -50,6 +50,8 @@ export class DatosConfColaComponent implements OnInit {
     private commonServices : CommonsService) { }
 
   ngOnInit() {
+    //Enviamos el valor de "porGrupo"
+    
     this.historico = this.persistenceService.getHistorico();
     this.sigaServices.datosRedy$.subscribe(
       data => {
@@ -62,6 +64,14 @@ export class DatosConfColaComponent implements OnInit {
         this.body.letradosGuardia = data.letradosGuardia;
         this.body.idOrdenacionColas = data.idOrdenacionColas;
         this.body.porGrupos = data.porGrupos == "1" ? true : false;
+        let configuracionCola: ConfiguracionCola = {
+          'manual': true,
+          'porGrupos': this.body.porGrupos,
+          'idConjuntoGuardia': 0,
+          "fromCombo": false,
+          "minimoLetradosCola": this.body.letradosGuardia
+        };
+        this.globalGuardiasService.emitConf(configuracionCola);
         this.body.rotarComponentes = data.rotarComponentes;
         this.body.idGuardia = data.idGuardia;
         this.body.idTurno = data.idTurno;
@@ -280,12 +290,25 @@ export class DatosConfColaComponent implements OnInit {
       }
     }
   }
+
+  cambiaMinimo(event){
+    this.body.letradosGuardia = event;
+    let configuracionCola: ConfiguracionCola = {
+      'manual': true,
+      'porGrupos': this.body.porGrupos,
+      'idConjuntoGuardia': 0,
+      "fromCombo": false,
+      "minimoLetradosCola": this.body.letradosGuardia
+    };
+    this.globalGuardiasService.emitConf(configuracionCola);
+  }
   cambiaGrupo() {
     let configuracionCola: ConfiguracionCola = {
       'manual': true,
       'porGrupos': this.body.porGrupos,
       'idConjuntoGuardia': 0,
-      "fromCombo": false
+      "fromCombo": false,
+      "minimoLetradosCola": this.body.letradosGuardia
     };
     if (this.body.porGrupos) {
       this.globalGuardiasService.emitConf(configuracionCola);

@@ -14,6 +14,7 @@ import 'rxjs/add/observable/fromPromise';
 import { Observable } from 'rxjs/Observable';
 import { GuardiaItem } from '../../models/guardia/GuardiaItem';
 import { PersistenceService } from '../../_services/persistence.service';
+import { BuscadorGuardiaComponent } from '../../features/sjcs/guardia/busqueda-guardias/buscador-guardia/buscador-guardia.component';
 @Component({
   selector: 'app-tabla-resultado-order',
   templateUrl: './tabla-resultado-order.component.html',
@@ -40,7 +41,7 @@ export class TablaResultadoOrderComponent implements OnInit {
   @Output() descargaLog = new EventEmitter<Boolean>();
   @Output() disableGen = new EventEmitter<Boolean>();
   @Output() saveGuardiasEnLista = new EventEmitter<Row[]>();
-  @Input() permisosEscritura : boolean = false;
+  @Input() permisosEscritura : boolean = true;
   @Input() tarjetaDatosGenerales = {
     'duplicar' : '',
     'tabla': [],
@@ -83,7 +84,6 @@ export class TablaResultadoOrderComponent implements OnInit {
   unavailableDown = false;
   maxGroup = 0;
   wrongPositionArr = [];
-  ana = [];
   @Input() totalRegistros = 0;
   numperPage = 10;
   @ViewChild('table') table: ElementRef;
@@ -97,7 +97,11 @@ export class TablaResultadoOrderComponent implements OnInit {
   @Output() guardiasCalendarioModified = new EventEmitter<any>();
   @Input() fromSlice : Number = 0;
   @Input() toSlice : Number = 10;
-  
+  @Input() manual;
+  @Input() pantalla;
+  @Input() minimoLetrado;
+  @Input() s;
+  numPage = 0;
   constructor(
     private renderer: Renderer2,
     private sigaServices: SigaServices,
@@ -133,7 +137,11 @@ export class TablaResultadoOrderComponent implements OnInit {
     if(!this.listaGuardias){
       this.xArr = [];
       this.rowGroups.forEach((rg, i) =>{
+        if(this.pantalla == 'colaGuardias'){
+          this.grupos.push(rg.cells[0].value);
+        }else{
         this.grupos.push(rg.cells[1].value);
+        }
         let x = this.ordenValue(i);
         this.xArr.push(x);
       })
@@ -187,27 +195,60 @@ export class TablaResultadoOrderComponent implements OnInit {
   }
 
   guardar(){
+    this.progressSpinner = true;
+    console.log('this.rowGroups: ', this.rowGroups)
     if (this.calendarios){
       this.guardiasCalendarioModified.emit(this.rowGroups);
       this.totalRegistros = this.rowGroups.length;
     }else{
       this.wrongPositionArr = [];
       this.ordenarGrupos();
-      this.orderByOrder();
+      if (this.pantalla == 'colaGuardias'){
+      this.orderByOrder(1);
+      } else{
+        this.orderByOrder(1);
+      }
       this.displayWrongSequence();
     let errorVacio = this.checkEmpty();
-    let errorSecuencia = this.checkSequence();
+    let errorSecuenciaOrden = false;
+    let errorSecuenciaGrupo = false;
+    let errorMismoLetradoEnGrupo = false;
+    let errorGrupoNoOrden = false;
+    if (this.pantalla == 'colaGuardias'){
+      errorSecuenciaGrupo = this.checkSequence(0);
+      errorSecuenciaOrden = this.checkSequence(1);
+      errorMismoLetradoEnGrupo = this.checkLetrados();
+      errorGrupoNoOrden = this.checkOrdeIfGrupo();
+    }else{
+      errorSecuenciaOrden = this.checkSequence(1);
+    }
     this.totalRegistros = this.rowGroups.length;
-    if (!errorVacio && !errorSecuencia){
+    if (!errorVacio && !errorSecuenciaOrden && !errorSecuenciaGrupo){
       this.updateColaGuardia();
       this.showMsg('success', 'Se ha guardado correctamente', '')
+      this.progressSpinner = false;
+    }else if (errorGrupoNoOrden){
+      this.showMsg('error', 'Error. Todo letrado que pertenezcan a un grupo, tienen que tener valor en el campo orden.', '')
+      this.progressSpinner = false;
+    }else if (errorMismoLetradoEnGrupo){
+      this.showMsg('error', 'Error. Un letrado no puede encontrarse 2 veces en el mismo grupo.', '')
+      this.progressSpinner = false;
     } else if (errorVacio){
       this.showMsg('error', 'Error. Existen campos vacíos en la tabla.', '')
-    }else if (errorSecuencia){
+      this.progressSpinner = false;
+    }else if (errorSecuenciaOrden && !errorSecuenciaGrupo){
       this.showMsg('error', 'Error. Los valores en la columna "Orden" deben ser secuenciales.', '')
+      this.progressSpinner = false;
+    }else if (errorSecuenciaGrupo && !errorSecuenciaOrden){
+      this.showMsg('error', 'Error. Los valores en la columna "Grupo" deben ser secuenciales.', '')
+      this.progressSpinner = false;
+    }else if (errorSecuenciaGrupo && errorSecuenciaOrden){
+      this.showMsg('error', 'Error. Los valores en las columnas "Grupo" y "Orden" deben ser secuenciales.', '')
+      this.progressSpinner = false;
     }
     return errorVacio;
     }
+    this.progressSpinner = false;
   }
 
   saveCal(){
@@ -225,11 +266,13 @@ export class TablaResultadoOrderComponent implements OnInit {
     this.totalRegistros = this.rowGroups.length;
   }
 displayWrongSequence(){
+  
   this.wrongPositionArr = [];
   let positions = "";
   let numColArr = [];
     const numbers = "123456789";
   this.rowGroups.forEach((row, i) => { 
+    if (this.rowGroups[i].cells[0].value != null){
     if (i < this.rowGroups.length - 1){
       if (this.rowGroups[i].cells[1].value != this.rowGroups[i + 1].cells[1].value){
         positions = positions + row.cells[2].value;
@@ -246,15 +289,18 @@ displayWrongSequence(){
       numColArr.push(row.cells[3].value)
       this.compareStrings(numbers, positions, numColArr);
     }
+  }
   });
   //Returns false, 
 }
+
+
 isIncreasingSequence(numbers) {
   let errArr = [];
   let resultado = false;
   let numArr = Array.prototype.slice.call(numbers);
   for (var num = 0; num < numArr.length - 1; num++) {
-      if (numArr[num] >= numArr[num + 1] || Number.isNaN(numArr[num]) || Number.isNaN(numArr[num + 1])) {
+      if (numArr[num] > numArr[num + 1] || Number.isNaN(numArr[num]) || Number.isNaN(numArr[num + 1])) {
         errArr.push(true);
       } else {
         errArr.push(false);
@@ -267,7 +313,55 @@ if (err == true){
   });
   return resultado;
 }
-  checkSequence(){
+
+checkOrdeIfGrupo(){
+  let errSeqArr = [];
+  let err2 = false;
+  this.rowGroups.forEach((row, i) => { 
+    if (i < this.rowGroups.length - 1){
+      if (this.rowGroups[i].cells[0].value != null && this.rowGroups[i].cells[0].value != undefined && this.rowGroups[i].cells[0].value != ""){
+        if (this.rowGroups[i].cells[1].value != null && this.rowGroups[i].cells[1].value != undefined && this.rowGroups[i].cells[1].value != ""){
+          errSeqArr.push(false);
+        }else{
+          errSeqArr.push(true);
+        }
+      }
+    }
+  });
+
+  errSeqArr.forEach(err => {
+    if (err){
+      err2=true;
+    }
+  });
+  return err2;
+}
+
+checkLetrados(){
+  let errSeqArr = [];
+  let err2 = false;
+  this.rowGroups.forEach((row, i) => { 
+    if (i < this.rowGroups.length - 1){
+    //SI LOS GRUPOS SON IGUALES, COMPROBAMOS LOS LETRADOS
+    if (this.rowGroups[i].cells[0].value == this.rowGroups[i + 1].cells[0].value){
+      if (this.rowGroups[i].cells[2].value == this.rowGroups[i + 1].cells[2].value){
+        errSeqArr.push(true);
+      }else{
+        errSeqArr.push(false);
+      }
+    }else ´
+    errSeqArr.push(false);
+  }
+  });
+
+   errSeqArr.forEach(err => {
+      if (err){
+        err2=true;
+      }
+    });
+    return err2;
+}
+  checkSequence(j){
     let positions = "";
     const numbers = "123456789";
     let errorSecuencia = false;
@@ -276,24 +370,34 @@ if (err == true){
     let arrNumbers : Number[] = [];
     this.rowGroups.forEach((row, i) => { 
       if (i < this.rowGroups.length - 1){
-        if (this.rowGroups[i].cells[1].value != this.rowGroups[i + 1].cells[1].value){
-          arrNumbers.push(Number(row.cells[1].value));
+        if (this.rowGroups[i].cells[j].value != null && this.rowGroups[i + 1].cells[j].value != null){
+        if (this.rowGroups[i].cells[j].value != this.rowGroups[i + 1].cells[j].value){
+          arrNumbers.push(Number(row.cells[j].value));
           //errorSecuencia = numbers.indexOf(positions) === -1;
           errorSecuencia = this.isIncreasingSequence(arrNumbers);
           errSeqArr.push(errorSecuencia);
           if (errorSecuencia == true){
+            console.log('error true ' , i)
           }
         } else {
-          arrNumbers.push(Number(row.cells[1].value));
+          arrNumbers.push(Number(row.cells[j].value));
+          if (j == 0){
+            //Si estamos revisando el orden de grupos j == 0 y dos grupos consecutivos son iguales, revisamos si sus ordenes tambien lo son. En ese caso, error.
+            if (this.rowGroups[i].cells[1].value == this.rowGroups[i + 1].cells[1].value){
+              errorSecuencia = true;
+              errSeqArr.push(errorSecuencia);
+            }
+          }
         }
       } else {
-        arrNumbers.push(Number(row.cells[1].value));
+        arrNumbers.push(Number(row.cells[j].value));
         errorSecuencia = this.isIncreasingSequence(positions);
         if (errorSecuencia == true){
         }
         //errorSecuencia = numbers.indexOf(positions) === -1;
         errSeqArr.push(errorSecuencia);
       }
+    }
     });
     //Returns false, if the number is in sequence
     errSeqArr.forEach(err => {
@@ -310,12 +414,22 @@ if (err == true){
     let positionsArr = Array.from(positions);
     z = 1;
     for (var i = 0, len = positionsArr.length; i < len; i++){
+      if (this.pantalla == 'colaGuardias'){
+        if (numbersArr[i] !== positionsArr[i]){
+          z++;
+          if (z<=2 && i != 0){
+            this.wrongPositionArr.push(numColArr[i]);
+          }
+        }
+      }else{
         if (numbersArr[i] !== positionsArr[i]){
           z++;
           if (z<=2){
             this.wrongPositionArr.push(numColArr[i]);
           }
         }
+      }
+
     }
   }
   checkEmpty(){
@@ -329,14 +443,15 @@ if (err == true){
     })
     return errorVacio;
   }
-orderByOrder(){
+orderByOrder(x){
     let rowsByGroup : Row[] = [];
     this.rowGroups.forEach((row, i) => { 
+  if (this.rowGroups[i].cells[x].value != null){
       if (i < this.rowGroups.length - 1){
-        if (this.rowGroups[i].cells[1].value != this.rowGroups[i + 1].cells[1].value){
+        if (this.rowGroups[i].cells[x].value != this.rowGroups[i + 1].cells[x].value){
           rowsByGroup.push(row);
           //ordenar y guardar
-          this.orderSubGroups(rowsByGroup);
+          this.orderSubGroups(rowsByGroup, x);
           rowsByGroup = [];
         } else {
           rowsByGroup.push(row);
@@ -344,8 +459,16 @@ orderByOrder(){
       } else {
         rowsByGroup.push(row);
         //ordenar y guardar
-        this.orderSubGroups(rowsByGroup);
+        this.orderSubGroups(rowsByGroup, x);
       }
+
+      if (rowsByGroup.length < this.minimoLetrado){
+        this.showMsg('error', 'Error. No se cumple el mínimo número de letrados por grupos configurado', '')
+        this.progressSpinner = false;
+      }
+    }else{
+      this.rowGroupsOrdered = this.rowGroups;
+    }
     });
     this.rowGroups = this.rowGroupsOrdered;
     this.totalRegistros = this.rowGroups.length;
@@ -353,11 +476,11 @@ orderByOrder(){
     this.rowGroupsOrdered = [];
 }
 
-orderSubGroups(rowsByGroup){
+orderSubGroups(rowsByGroup, x){
   let data = rowsByGroup;
   rowsByGroup = data.sort((a, b) => {
     let resultado;
-      resultado = compare(a.cells[1].value, b.cells[1].value, true);
+      resultado = compare(a.cells[x].value, b.cells[x].value, true);
   return resultado ;
 });
 rowsByGroup.forEach(row => {
@@ -383,21 +506,67 @@ return rowsByGroup;
     this.rowGroups = this.rowGroupsAux.filter((row) => {
         data.push(row);
     });
+    console.log('this.rowGroupsAux: ', this.rowGroupsAux)
+    console.log('data: ', data)
     this.rowGroups = data.sort((a, b) => {
+      console.log('a.cells[0].value: ', a.cells[0].value)
+      console.log('a.cells[3].value: ', a.cells[3].value)
+      console.log('b.cells[0].value: ', b.cells[0].value)
+      console.log('b.cells[3].value: ', b.cells[3].value)
+      if (a.cells[0].value != null && b.cells[0].value != null){
       let resultado;
+      if (this.pantalla == 'colaGuardias'){
+        if (Number(a.cells[0].value) == Number(b.cells[0].value)){
+          resultado = 0;
+        }else{
+          resultado = compare(Number(a.cells[0].value), Number(b.cells[0].value), true); //ordenamos por grupo
+        }
+      }else{
         resultado = compare(Number(a.cells[1].value), Number(b.cells[1].value), true);
+      }
+      console.log('resultado: ',resultado)
     return resultado ;
+      }else{
+        console.log('resultado 0: ',0)
+        return 0;
+        /*let last = this.rowGroups[this.rowGroups.length - 1];
+        this.rowGroups[this.rowGroups.length - 1] = a;
+        this.rowGroups[this.rowGroups.length - 2] = last;*/
+      }
   });
   this.rowGroupsAux = this.rowGroups;
   this.grupos = [];
   this.rowGroups.forEach((rg, i) =>{
-    this.grupos.push(rg.cells[1].value);
+    if (this.pantalla == 'colaGuardias'){
+      this.grupos.push(rg.cells[0].value);
+    }else{
+      this.grupos.push(rg.cells[1].value);
+    }
   })
   this.totalRegistros = this.rowGroups.length;
   }
 
-
+  getPageNumber(event){
+    this.numPage = event;
+  }
 valueChange(i, z, $event){
+  if (this.pantalla == 'colaGuardias'){
+    let posicion = this.numperPage*(this.numPage) + i
+    if ( z == 1){
+      this.rowGroups[posicion].cells[z].value = Number($event.target.value);
+    } else {
+        this.rowGroups[posicion].cells[z].value = $event.target.value.toString();
+    }
+    if ( z ==1){
+      this.rowGroups[posicion].cells[z].type = 'input';
+      this.grupos[posicion] = Number($event.target.value);
+    }else if (z == 2){
+      this.rowGroups[posicion].cells[z].type = 'position';
+      this.xArr[posicion] = $event.target.value;
+    }else if(!this.listaGuardias){
+      this.rowGroups[posicion].cells[z].type = $event.target.type;
+    }
+  }else{
     if ( z == 1){
       this.rowGroups[i].cells[z].value = Number($event.target.value);
     } else {
@@ -412,10 +581,15 @@ valueChange(i, z, $event){
     }else if(!this.listaGuardias){
       this.rowGroups[i].cells[z].type = $event.target.type;
     }
+  }
 this.rowGroupsAux = this.rowGroups;
 this.grupos = [];
 this.rowGroups.forEach((rg, i) =>{
-  this.grupos.push(rg.cells[1].value);
+  if (this.pantalla == 'colaGuardias'){
+    this.grupos.push(rg.cells[0].value);
+  }else{
+    this.grupos.push(rg.cells[1].value);
+  }
 })
 this.totalRegistros = this.rowGroups.length;
   }
@@ -443,17 +617,55 @@ this.totalRegistros = this.rowGroups.length;
 
   }*/
   moveToLast(){
+    let i = 1;
     let lastGroup = this.grupos[this.grupos.length - 1];
-    let groupSelected = this.rowGroups[this.positionSelected].cells[1].value;
-    this.rowGroupsAux.forEach((row, index)=> {
+    let groupSelected = 0;
+    if (this.pantalla == 'colaGuardias'){
+      while (lastGroup == null && i <= this.grupos.length){
+      i++;
+      lastGroup = this.grupos[this.grupos.length - i];
+      }
+      groupSelected = this.rowGroups[this.positionSelected].cells[0].value;
+       this.rowGroupsAux.forEach((row, index)=> {
+      if(groupSelected != null && row.cells[0].value != null && Number(row.cells[0].value) == Number(groupSelected)){
+        this.rowGroups[index].cells[0].value = lastGroup;
+      } else if (groupSelected != null && row.cells[0].value != null && Number(row.cells[0].value) > Number(groupSelected)){
+        this.rowGroups[index].cells[0].value = Number(row.cells[0].value) - 1;
+      }else if (groupSelected != null && row.cells[0].value == null){
+        let last = this.rowGroups[this.rowGroups.length - 1];
+        this.rowGroups[this.rowGroups.length - 1] = this.rowGroups[index];
+        this.rowGroups[this.rowGroups.length - 2] = last;
+        //this.rowGroups[index].cells[0].value = Number(row.cells[0].value);
+      }
+  });
+  if (groupSelected == null){
+        let last = this.rowGroups[this.rowGroups.length - 1];
+        let selected = this.rowGroups[this.positionSelected];
+        this.rowGroups.forEach((row, index)=> {
+          if (index != 0  && index <=this.positionSelected){
+          this.rowGroups[index] = this.rowGroups[index - 1];
+          }
+          });
+       
+        this.rowGroups[0] = last;
+         this.rowGroups[this.rowGroups.length - 1] = selected;
+        
+      }
+    }else{
+      groupSelected = this.rowGroups[this.positionSelected].cells[1].value;
+       this.rowGroupsAux.forEach((row, index)=> {
       if(Number(row.cells[1].value) == Number(groupSelected)){
         this.rowGroups[index].cells[1].value = lastGroup;
       } else if (Number(row.cells[1].value) > Number(groupSelected)){
         this.rowGroups[index].cells[1].value = Number(row.cells[1].value) - 1;
       }
   });
-  this.guardar();
+    }
+   
+ 
+  this.rowGroupsAux = this.rowGroups;
   this.totalRegistros = this.rowGroups.length;
+  this.guardar();
   }
   moveRow(movement){
     this.disableGen.emit(true);
@@ -490,7 +702,31 @@ this.totalRegistros = this.rowGroups.length;
         this.rowGroups[this.positionSelected] = belowRow;
         this.rowGroups[this.positionSelected].cells[0].value = ordenSelected;
       }
-
+      }else if (this.pantalla == "colaGuardias"){
+      groupSelected = this.rowGroups[this.positionSelected].cells[0].value;
+     
+        /*if (movement == 'up'){
+          let first = this.rowGroups[this.positionSelected - 1];
+          this.rowGroups[this.positionSelected - 1] = this.rowGroups[this.positionSelected - 2];
+          this.rowGroups[this.positionSelected - 2] = first;
+        } else if (movement == 'down'){
+          let first = this.rowGroups[this.positionSelected - 1];
+          this.rowGroups[this.positionSelected - 1] = this.rowGroups[this.positionSelected];
+          this.rowGroups[this.positionSelected] = first;
+        }*/
+        if (movement == 'up'){
+          let actual = this.rowGroups[this.positionSelected].cells[0].value;
+          //actual = anterior
+          this.rowGroups[this.positionSelected].cells[0].value = this.rowGroups[this.positionSelected - 1].cells[0].value;
+          //anterior = actual
+          this.rowGroups[this.positionSelected - 1].cells[0].value = actual;
+        } else if (movement == 'down'){
+          let actual = this.rowGroups[this.positionSelected].cells[0].value;
+          //actual = siguiente
+          this.rowGroups[this.positionSelected].cells[0].value = this.rowGroups[this.positionSelected + 1].cells[0].value;
+          //siguiente = actual
+          this.rowGroups[this.positionSelected + 1].cells[0].value = actual;
+        }
     }else{
       groupSelected = this.rowGroups[this.positionSelected].cells[1].value;
       this.rowGroupsAux.forEach((row, index)=> {
@@ -510,12 +746,12 @@ this.totalRegistros = this.rowGroups.length;
         }
       
       })
-    }
     
-
+  }
     this.rowGroupsAux = this.rowGroups;
     this.totalRegistros = this.rowGroups.length;
   }
+
   isSelected(id){
     if(this.selectedArray.includes(id)){
       return true;
@@ -534,7 +770,11 @@ this.totalRegistros = this.rowGroups.length;
     if (this.rowGroups != undefined){
     this.grupos = [];
     this.rowGroups.forEach((rg, i) =>{
-    this.grupos.push(rg.cells[1].value);
+      if (this.pantalla == 'colaGuardias'){
+        this.grupos.push(rg.cells[0].value);
+      }else{
+        this.grupos.push(rg.cells[1].value);
+      }
   })
     let disable = false;
     if (this.positionSelected == 1 || this.grupos[this.positionSelected] <= 2){
@@ -897,6 +1137,24 @@ this.totalRegistros = this.rowGroups.length;
     if(mandatory && (evento==undefined || evento==null || evento=="")){
       return this.commonServices.styleObligatorio(evento);
     }
+  }
+
+  nuevoSaltoComp(){
+    let dataFilterFromColaGuardia = { 'turno': 0,
+    'guardia': 0,
+    'colegiado': 0,
+    'grupo': 0};
+    dataFilterFromColaGuardia.turno = this.rowGroups[this.positionSelected].cells[10].value;
+    dataFilterFromColaGuardia.guardia = this.rowGroups[this.positionSelected].cells[11].value;
+    dataFilterFromColaGuardia.colegiado = this.rowGroups[this.positionSelected].cells[2].value;
+    dataFilterFromColaGuardia.grupo = this.rowGroups[this.positionSelected].cells[0].value;
+    this.persistenceService.setDatos(dataFilterFromColaGuardia);
+    sessionStorage.setItem(
+      "itemSaltosCompColaGuardia",
+      JSON.stringify(dataFilterFromColaGuardia)
+    );
+    //this.persistenceService.setHistorico(evento.fechabaja ? true : false);
+    this.router.navigate(["/guardiasSaltosCompensaciones"]); 
   }
 }
 

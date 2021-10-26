@@ -27,7 +27,7 @@ export class BuscadorGuardiaComponent implements OnInit {
   cabeceras;
   rowGroupsAux;
   rowGroups;
-
+  abogado = false;
   @ViewChild(FiltrosGuardiaComponent) filtros;
   @ViewChild(TablaGuardiasComponent) tabla;
 
@@ -38,6 +38,8 @@ export class BuscadorGuardiaComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit() {
+    this.abogado = sessionStorage.getItem("permisoAbogado") === "true";
+    console.log('this.abogado: ', this.abogado)
     this.commonsService.checkAcceso(procesos_guardia.guardias)
       .then(respuesta => {
 
@@ -155,7 +157,7 @@ export class BuscadorGuardiaComponent implements OnInit {
   }
 
   checkSelectedRow(event){
-    
+
   }
 
 }
