@@ -74,7 +74,7 @@ export class SustitucionesGestionGuardiaColegiadoComponent implements OnInit {
         ]
 
         console.log(letradoSus)
-    
+    this.progressSpinner = true;
          this.sigaServices.post("guardiasColegiado_sustituirGuardiaColeg", letradoSus).subscribe(
           n => {
             this.progressSpinner = false;
@@ -82,8 +82,10 @@ export class SustitucionesGestionGuardiaColegiadoComponent implements OnInit {
 
             if(error.code == 'OK'){
               this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant(error.description));
+              this.modoLectura = true;
             }else{
               this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.description));
+              
             }
             
             this.comensustitucion;
@@ -92,11 +94,13 @@ export class SustitucionesGestionGuardiaColegiadoComponent implements OnInit {
             console.log(err);
             this.progressSpinner = false;
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+            this.modoLectura = false;
           }
         );
-        this.modoLectura = true;
+        
     }else{
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
+      
     }
 
     
