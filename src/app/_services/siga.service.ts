@@ -769,10 +769,10 @@ export class SigaServices {
       })
       .map((response) => {
         return response;
-      })
-      .catch((response) => {
-        return this.parseErrorBlob(response);
       });
+    //   .catch((response) => {
+    //     return this.parseErrorBlob(response);
+    //   });
   }
   getDownloadFiles(service: string, body: any): any {
 	  console.log('body: ', body)

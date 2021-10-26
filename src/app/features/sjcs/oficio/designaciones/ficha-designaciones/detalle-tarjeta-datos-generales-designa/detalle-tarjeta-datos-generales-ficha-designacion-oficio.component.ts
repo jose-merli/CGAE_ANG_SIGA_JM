@@ -223,9 +223,14 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
 
     } else if (sessionStorage.getItem("colegiadoGeneralDesigna")) {
       let colegiadoGeneral = JSON.parse(sessionStorage.getItem("colegiadoGeneralDesigna"));
-      this.inputs[0].value = colegiadoGeneral[0].numeroColegiado;
+      if(this.campos.idInstitucion == colegiadoGeneral[0].numeroInstitucion){
+        this.inputs[0].value = colegiadoGeneral[0].numeroColegiado;
+      }
       this.inputs[1].value = colegiadoGeneral[0].apellidos;
       this.inputs[2].value = colegiadoGeneral[0].nombre;
+      this.inputs[0].disable = true;
+      this.inputs[1].disable = true;
+      this.inputs[2].disable = true;
       this.nif = colegiadoGeneral[0].nif;
       this.nombreColegiado = colegiadoGeneral[0].nombre;
       let apellidos =  colegiadoGeneral[0].apellidos.split(' ');
@@ -394,7 +399,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     sessionStorage.removeItem("datosGeneralesDesigna");
     this.progressSpinner = true;
     this.msgs = [];
-    if (detail == "save" && (this.inputs[0].value == "" || this.inputs[0].value == undefined)) {
+    if (detail == "save" && ((this.inputs[0].value == "" && this.inputs[0].disable == false) || this.inputs[0].value == undefined)) {
       this.confirmarActivar(severity, summary, detail);
     } else { 
       

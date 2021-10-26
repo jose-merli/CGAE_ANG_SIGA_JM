@@ -9,9 +9,9 @@
     <app-tarjeta-resumen-fija class="pb-50" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="datosTarjetaResumen" [icono]="iconoTarjetaResumen"  
     [enlaces]="enlacesTarjetaResumen" (isOpen)="isOpenReceive($event)">
     </app-tarjeta-resumen-fija>
-    <app-defensa-juridica [permisoEscritura]="permisoEscritura" id="defensaJuridica"></app-defensa-juridica>
-    <app-contrarios-pre-designacion [permisoEscritura]="permisoEscritura" id="contrariosPreDesigna"></app-contrarios-pre-designacion>
-    <app-procurador-pre-designacion [permisoEscritura]="permisoEscritura" id="procuradorPreDesigna"></app-procurador-pre-designacion>
+    <app-defensa-juridica [permisoEscritura]="permisoEscritura" [permisoDefensaJuridica]="permisoDefensaJuridica" id="defensaJuridica"></app-defensa-juridica>
+    <app-contrarios-pre-designacion [permisoEscritura]="permisoEscritura" [permisoContrarios]="permisoContrarios" id="contrariosPreDesigna"></app-contrarios-pre-designacion>
+    <app-procurador-pre-designacion [permisoEscritura]="permisoEscritura" [permisoProcurador]="permisoProcurador" id="procuradorPreDesigna"></app-procurador-pre-designacion>
 </div>
 
 <div class="mt-3 text-right main-button" id="down">
