@@ -1,43 +1,42 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <p-confirmDialog></p-confirmDialog>
-<div class="card-body p-0">
-  <p-dataTable #table [value]="preAsistencias" emptyMessage="{{ 'general.message.no.registros' | translate}}" [responsive] = "true" [loading]="loading" loadingIcon="fa-spinner"
-  class="tabla-listado" [sortOrder]="1" [(selection)]="selectedDatos" [paginator]="true" paginatorPosition="both" [rows]="rows" selectionMode="multiple" (onRowSelect)="onSelectRow($event.data)"
-  (onRowUnselect)="actualizaSeleccionados()">
-    <p-column *ngFor="let col of columnas" [sortable]="true" [field]="col.field" [header]="col.header" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}">
-      <ng-template *ngIf="col.field == 'nAvisoCentralita'" let-dato="rowData" pTemplate="body">
-        <td class="text-center">
-          <div>
-            <a class="enlace" (click)="onClickEnlace(dato)"><span>{{dato[col.field]}}</span></a>
-          </div>
-        </td>
-      </ng-template>
-    </p-column>
-    <ng-template pTemplate="paginatorLeft">
-      <div class="mostrar d-flex text-right justify-content-end">
-          <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{table.first
-              + 1}} al {{table.first + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
-              | translate }} {{table.totalRecords}} {{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}} : {{numSeleccionado}}</label>
-          <label>{{ 'general.message.mostrar' | translate}}</label>
-          <p-dropdown [(ngModel)]="rows" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
-          <label class="pl-1">{{'cargaMasivaDatosCurriculares.numRegistros.literal' | translate}}</label>
-          <div class="ml-3 selectAll">
-            <p-checkbox (onChange)="onChangeSeleccionarTodo()" [(ngModel)]="seleccionarTodo" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
-              name="groupname"></p-checkbox>
-          </div>
-          <!--<label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': seleccionMultiple}" (click)="onChangeSeleccionMultiple()">
-            <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>-->
-      </div>
+<p-dataTable id="tablaFoco" #table [value]="preAsistencias" emptyMessage="{{ 'general.message.no.registros' | translate}}" [responsive] = "true" [loading]="loading" loadingIcon="fa-spinner"
+class="tabla-listado" [sortOrder]="1" [(selection)]="selectedDatos" [paginator]="true" paginatorPosition="both" [rows]="rows" selectionMode="multiple" (onRowSelect)="onSelectRow($event.data)"
+(onRowUnselect)="actualizaSeleccionados()">
+  <p-column *ngFor="let col of columnas" [sortable]="true" [field]="col.field" [header]="col.header" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}">
+    <ng-template *ngIf="col.field == 'nAvisoCentralita'" let-dato="rowData" pTemplate="body">
+      <td class="text-center">
+        <div>
+          <a class="enlace" (click)="onClickEnlace(dato)"><span>{{dato[col.field]}}</span></a>
+        </div>
+      </td>
     </ng-template>
-    <p-footer>
-      <div class="text-right main-button">
-        <button (click)="activarSolicitud();" [disabled] = "numSeleccionado == 0 || !activable || !isLetrado || !permisoEscritura" pButton type="button" icon="fa fa-send" iconPos="left" label="{{'justiciaGratuita.guardia.solicitudescentralita.activarsolicitud' | translate}}"></button>
-        <button (click)="confirmDenegarSolicitud();" [disabled] = "numSeleccionado == 0 || !denegable || !permisoEscritura" pButton type="button" icon="fa fa-send" iconPos="left" label="{{'general.boton.denegarSolicitud' | translate}}"></button>
-        <button (click)="confirmConfirmarSolicitud();"pButton type="button" icon="fa fa-send" [disabled] = "numSeleccionado == 0 || !confirmable || !permisoEscritura" iconPos="left" label="{{'justiciaGratuita.guardia.solicitudescentralita.confirmarsolicitud' | translate}}"></button>
-      </div>
-    </p-footer>
-  </p-dataTable>
-</div>
+  </p-column>
+  <ng-template pTemplate="paginatorLeft">
+    <div class="mostrar d-flex text-right justify-content-end">
+        <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{table.first
+            + 1}} al {{table.first + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+            | translate }} {{table.totalRecords}} {{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}} : {{numSeleccionado}}</label>
+        <label>{{ 'general.message.mostrar' | translate}}</label>
+        <p-dropdown [(ngModel)]="rows" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+        <label class="pl-1">{{'cargaMasivaDatosCurriculares.numRegistros.literal' | translate}}</label>
+        <div class="ml-3 selectAll">
+          <p-checkbox (onChange)="onChangeSeleccionarTodo()" [(ngModel)]="seleccionarTodo" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
+            name="groupname"></p-checkbox>
+        </div>
+        <!--<label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': seleccionMultiple}" (click)="onChangeSeleccionMultiple()">
+          <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>-->
+    </div>
+  </ng-template>
+  <p-footer>
+    <div class="text-right main-button">
+      <button (click)="activarSolicitud();" [disabled] = "numSeleccionado == 0 || !activable || !isLetrado || !permisoEscritura" pButton type="button" icon="fa fa-send" iconPos="left" label="{{'justiciaGratuita.guardia.solicitudescentralita.activarsolicitud' | translate}}"></button>
+      <button (click)="confirmDenegarSolicitud();" [disabled] = "numSeleccionado == 0 || !denegable || !permisoEscritura" pButton type="button" icon="fa fa-send" iconPos="left" label="{{'general.boton.denegarSolicitud' | translate}}"></button>
+      <button (click)="confirmConfirmarSolicitud();"pButton type="button" icon="fa fa-send" [disabled] = "numSeleccionado == 0 || !confirmable || !permisoEscritura" iconPos="left" label="{{'justiciaGratuita.guardia.solicitudescentralita.confirmarsolicitud' | translate}}"></button>
+    </div>
+  </p-footer>
+</p-dataTable>
+
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
 </div>

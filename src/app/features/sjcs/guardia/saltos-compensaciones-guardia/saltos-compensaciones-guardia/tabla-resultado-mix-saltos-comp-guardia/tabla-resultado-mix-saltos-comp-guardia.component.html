@@ -21,7 +21,7 @@
       </div>
       <div *ngFor="let row of rowGroups | slice:from:to; let i = index; " class="table-row child">
         <div (click)="selectRow(row['id'])" class="table-row-wrapper hoverBlue"
-          [ngClass]="{'hoverBlue2': isSelected(i), 'fixedBlue': seleccionarTodo}" #rowSelected>
+          [ngClass]="{'hoverBlue2': isSelected(row['id']), 'fixedBlue': seleccionarTodo}" #rowSelected>
           <div *ngFor="let cell of row['cells'] | slice:0:8; let z = index; "
             class="table-cell p-2 selectedRowClass" [ngClass]="{'borders-child': isPar(i)}" #cellSelected
             [style.minWidth]="getTamanioColumn(cell.header)">

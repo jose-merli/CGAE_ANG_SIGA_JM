@@ -1834,6 +1834,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       if(this.pantalla == "AE" && idEJG){
         idEJG = idEJG.substring(1);
         sessionStorage.setItem("filtroAsistencia", JSON.stringify(this.filtroAsistencia));
+        sessionStorage.setItem("modoBusqueda","b");
         let ejgItem = new EJGItem();
         ejgItem.numAnnioProcedimiento = idEJG;
         ejgItem.annio = idEJG.split("/")[0];

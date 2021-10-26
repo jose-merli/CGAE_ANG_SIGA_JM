@@ -107,6 +107,9 @@ export class GuardiasSolicitudesCentralitaComponent implements OnInit {
         },
         ()=>{
           this.progressSpinner = false;
+          setTimeout(() => {
+            this.commonServices.scrollTablaFoco('tablaFoco');
+          }, 5);
         }
       );
     }

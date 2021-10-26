@@ -46,7 +46,7 @@ export class GestionJusticiablesComponent implements OnInit {
   fromContrario: boolean = false;
   fromUniFamiliar: boolean = false;
   fromContrarioEJG: boolean = false;
-  fromAsistencia : boolean = false;
+  fromAsistenciaAsistido : boolean = false;
 
   showDatosGenerales;
   showDatosSolicitudes;
@@ -254,6 +254,45 @@ export class GestionJusticiablesComponent implements OnInit {
       this.persistenceService.setFichasPosibles(fichasPosiblesUniFami);
     }
 
+    if (sessionStorage.getItem("origin") == "newAsistido") {
+      this.fromAsistenciaAsistido = true;
+      let fichasPosiblesNewAsistido = [
+        {
+          origen: "justiciables",
+          activa: false
+        },
+        {
+          key: "generales",
+          activa: true
+        },
+        {
+          key: "personales",
+          activa: true
+        },
+        {
+          key: "solicitud",
+          activa: true
+        },
+        {
+          key: "representante",
+          activa: true
+        },
+        {
+          key: "asuntos",
+          activa: true
+        },
+        {
+          key: "abogado",
+          activa: false
+        },
+        {
+          key: "procurador",
+          activa: false
+        }
+      ];
+      this.persistenceService.setFichasPosibles(fichasPosiblesNewAsistido);
+    }
+
     await this.checkAcceso();
 
     //El padre de todas las tarjetas se encarga de enviar a sus hijos el objeto nuevo del justiciable que se quiere mostrar
@@ -284,12 +323,15 @@ export class GestionJusticiablesComponent implements OnInit {
     } else if (this.fromUniFamiliar) {
       this.modoEdicion = true;
       this.fillJusticiableBuesquedaItemToUnidadFamiliarEJG();
-    }
-    else if (this.persistenceService.getDatos() != null && !this.modoRepresentante) {
+    }else if (this.persistenceService.getDatos() != null && !this.modoRepresentante) {
       this.modoEdicion = true;
       this.justiciableBusquedaItem = this.persistenceService.getDatos();
       this.search();
 
+    }else if (this.fromAsistenciaAsistido && sessionStorage.getItem("Nuevo")) {
+      this.modoEdicion = false;
+      this.body = new JusticiableItem();
+      sessionStorage.removeItem("Nuevo");
     } else {
       sessionStorage.removeItem("Nuevo");
       this.modoEdicion = false;
@@ -538,6 +580,32 @@ export class GestionJusticiablesComponent implements OnInit {
 
       if (this.fromUniFamiliar) {
         sessionStorage.setItem("datosDesdeJusticiable", JSON.stringify(this.persistenceService.getDatos()));
+      }else if(this.fromAsistenciaAsistido && sessionStorage.getItem("idAsistencia")){
+        let idAsistencia = sessionStorage.getItem("idAsistencia");
+        if(idAsistencia){
+          this.sigaServices
+            .postPaginado("busquedaGuardias_asociarAsistido", "?anioNumero="+idAsistencia+"&actualizaDatos='S'", event)
+            .subscribe(
+              data => {
+                let result = JSON.parse(data["body"]);
+                if(result.error){
+                  this.showMessage('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
+                }else{
+                  this.showMessage('success', this.translateService.instant("general.message.accion.realizada"), '');
+                  sessionStorage.removeItem("Nuevo");
+                  this.router.navigate(["/fichaAsistencia"]);
+                }
+
+              },
+              err => {
+                console.log(err);
+                this.progressSpinner = false;
+              },
+              () => {
+                  this.progressSpinner = false;
+                }
+              );
+        }
       }
 
       this.persistenceService.setDatos(this.justiciableBusquedaItem);

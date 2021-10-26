@@ -215,7 +215,7 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
         filtrosModificados.idGuardia = filtrosModificados.idGuardia.toString();
       }
     }
-
+    this.showResults = false;
     this.progressSpinner = true;
     this.sigaServices.postPaginado("saltosCompensacionesGuardia_buscar", "?numPagina=1", filtrosModificados).subscribe(
       n => {
@@ -361,7 +361,7 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
     this.rowGroupsAux = [];
     this.rowGroupsAux = this.trmService.getTableData(arr);
     this.rowGroupsInit = [];
-    this.rowGroupsInit = [...this.rowGroups];
+    this.rowGroupsInit = this.trmService.getTableData(arr);
     this.totalRegistros = this.rowGroups.length;
   }
 
@@ -413,6 +413,8 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
       array.push(this.datos[element]);
     });
 
+    let anyElementDeleted = array.find(element => element.fechaUso != null || element.fechaAnulacion != null);
+
     this.sigaServices.post("saltosCompensacionesGuardia_borrar", array).subscribe(
       result => {
 
@@ -420,6 +422,10 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
 
         if (resp.status == 'KO' || (resp.error != undefined && resp.error != null)) {
           this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("general.mensaje.error.bbdd") });
+        }
+
+        if(anyElementDeleted){
+          this.showMessage({ severity: "info", summary: "Info", msg: 'Algunos registros seleccionados no se han podido eliminar al estar ya eliminados' });
         }
 
         if (resp.status == 'OK') {

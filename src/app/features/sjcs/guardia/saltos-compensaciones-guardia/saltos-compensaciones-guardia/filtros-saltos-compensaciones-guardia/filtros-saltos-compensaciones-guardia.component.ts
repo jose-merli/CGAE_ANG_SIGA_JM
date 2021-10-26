@@ -1,4 +1,6 @@
+import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+import moment = require('moment');
 import { ColegiadoItem } from '../../../../../../models/ColegiadoItem';
 import { SaltoCompItem } from '../../../../../../models/guardia/SaltoCompItem';
 import { CommonsService } from '../../../../../../_services/commons.service';
@@ -43,7 +45,8 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
 
   constructor(private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private commonServices: CommonsService) { }
+    private commonServices: CommonsService,
+    private datepipe : DatePipe) { }
 
   ngOnInit() {
 
@@ -51,11 +54,12 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
       this.permisoEscritura = this.persistenceService.getPermisos();
     }
     this.getComboTurno();
-    if (this.persistenceService.getFiltros() != undefined) {
+    if (this.persistenceService.getFiltros() != undefined && sessionStorage.getItem("volver")) {
       this.filtros = this.persistenceService.getFiltros();
       if (this.persistenceService.getHistorico() != undefined) {
         this.historico = this.persistenceService.getHistorico();
       }
+      sessionStorage.removeItem("volver");
       this.isBuscar.emit(this.historico)
 
 
@@ -154,10 +158,18 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
   }
 
   fillFechaDesde(event) {
-    this.filtros.fechaDesde = event;
+    if(event){
+      this.filtros.fechaDesde = this.datepipe.transform(new Date(event), 'dd/MM/yyyy');
+    }else{
+      this.filtros.fechaDesde = ''
+    }
   }
   fillFechaHasta(event) {
-    this.filtros.fechaHasta = event;
+    if(event){
+      this.filtros.fechaHasta = this.datepipe.transform(new Date(event), 'dd/MM/yyyy');
+    }else{
+      this.filtros.fechaHasta = ''
+    }
   }
 
   getFechaHasta(fechaInputDesde, fechainputHasta) {
@@ -174,7 +186,7 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
 
       if (msRangoFechas < 0) fechainputHasta = undefined;
     }
-    return fechainputHasta;
+    return moment(fechainputHasta,"dd/MM/yyyy").toDate();
   }
   getFechaDesde(fechaInputesde, fechaInputHasta) {
     if (
@@ -188,7 +200,7 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
 
       if (msRangoFechas < 0) fechaInputesde = undefined;
     }
-    return fechaInputesde;
+    return moment(fechaInputesde,"dd/MM/yyyy").toDate();
   }
 
   clearFilters() {
@@ -235,7 +247,7 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
 
   changeColegiado(event) {
     this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
-    this.usuarioBusquedaExpress.numColegiado = event.numColegiado;
+    this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
   }
 
 }

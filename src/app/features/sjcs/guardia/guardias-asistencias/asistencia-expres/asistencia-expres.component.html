@@ -6,14 +6,14 @@
             <p-radioButton *ngFor="let radio of radios" [(ngModel)]='modoBusqueda' (click)="hideResponse()" class="mr-4"
                 name="modo" [value]="radio.value" [label]="radio.label"></p-radioButton>
         </div>
-        <div *ngIf="modoBusqueda == 'b'">
+        <div [hidden]="modoBusqueda != 'b'">
             <app-buscador-asistencia-expres [modoBusqueda]="modoBusqueda"></app-buscador-asistencia-expres>
         </div>
-        <div *ngIf="modoBusqueda == 'a'">
+        <div [hidden]="modoBusqueda != 'a'">
             <app-buscador-asistencias (searchAgain)="searchAsistenciasEvent($event)" [modoBusqueda]="modoBusqueda"></app-buscador-asistencias>
         </div>
     </div>
-    <div *ngIf="modoBusqueda == 'b'" class="card-footer">
+    <div [hidden]="modoBusqueda != 'b'" class="card-footer">
         <div class="text-right main-button">
             <button pButton type="button"  icon="fa fa-eraser"  iconPos="left"
                 label="{{ 'general.boton.clear' | translate}}" (click)="hideResponse();clearForm();"
@@ -24,7 +24,7 @@
                 [disabled]="isDisabled()"></button>
         </div>
     </div>
-    <div *ngIf="modoBusqueda == 'a'" class="card-footer">
+    <div [hidden]="modoBusqueda != 'a'" class="card-footer">
         <div class="text-right main-button">
             <button pButton type="button"  icon="fa fa-eraser"  iconPos="left"
                 label="{{ 'general.boton.clear' | translate}}"
@@ -38,9 +38,9 @@
         </div>
     </div>
 </div>
-<div *ngIf="show && modoBusqueda=='b'">
+<div [hidden]="modoBusqueda != 'b' || !show">
     <div class="card mt-3">
-        <div class="card-body p-0">
+        <div class="card-body p-0" id="tablaFoco1">
             <app-resultado-asistencia-expres [filtro]="filtrosAE.filtro" [rowGroups] = "rowGroups" [rowGroupsAux] = "rowGroupsAux"  [initialRowGroups] = "initialRowGroups" (refreshInitialRowGroup) = "refreshInitialRowGroup($event)"
             [comboJuzgadosAE]="comboJuzgados" [comboComisarias]="comboComisarias" [comboDelitos]="comboDelitos" [comboSexo] = "comboSexo"
             (saveTableData)="saveTableData($event)"></app-resultado-asistencia-expres>
@@ -48,9 +48,9 @@
     </div>
 </div>
 
-<div *ngIf="show && modoBusqueda=='a'">
+<div [hidden]="modoBusqueda != 'a' || !show">
     <div class="card mt-3">
-        <div class="card-body p-0">
+        <div class="card-body p-0" id="tablaFoco2">
             <!--Componente con la p-table para resultado de asistencias, por hacer-->
             <app-resultado-asistencias [asistencias]="asistencias" [filtro]="filtro.filtro" (searchAgain)="searchAsistenciasEvent($event)"></app-resultado-asistencias>
         </div>

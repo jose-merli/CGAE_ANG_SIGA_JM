@@ -1,7 +1,7 @@
 import { IfStmt } from '@angular/compiler';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { Message } from 'primeng/api';
+import { ConfirmationService, Message } from 'primeng/api';
 import { TranslateService } from '../../../../../../commons/translate';
 import { JusticiableBusquedaItem } from '../../../../../../models/sjcs/JusticiableBusquedaItem';
 import { JusticiableItem } from '../../../../../../models/sjcs/JusticiableItem';
@@ -67,7 +67,9 @@ export class FichaAsistenciaTarjetaAsistidoComponent implements OnInit {
     private sigaServices : SigaServices,
     private translate : TranslateService,
     private router : Router,
-    private persistenceService : PersistenceService) { }
+    private persistenceService : PersistenceService,
+    private confirmationService : ConfirmationService,
+    private translateService : TranslateService) { }
 
   ngOnInit() {
     this.getComboTipoPersona();
@@ -142,7 +144,7 @@ export class FichaAsistenciaTarjetaAsistidoComponent implements OnInit {
           n => {
             let justiciableDTO : JusticiableObject = JSON.parse(n["body"]);
             let justiciableItem : JusticiableItem  = justiciableDTO.justiciable;
-            if(justiciableItem){
+            if(justiciableItem.idpersona){
 
               this.asistido.nif = justiciableItem.nif;
               this.asistido.nombre = justiciableItem.nombre;
@@ -151,6 +153,23 @@ export class FichaAsistenciaTarjetaAsistidoComponent implements OnInit {
               this.asistido.idpersona = justiciableItem.idpersona;
               this.asistido.idinstitucion = justiciableItem.idinstitucion;
               this.asistido.tipopersonajg = justiciableItem.tipopersonajg;
+
+            }else{ // si no se encuentra por busqueda rapida ofrecemos crear uno nuevo
+              
+              this.confirmationService.confirm({
+                key: "confirmNewJusticiable",
+                message: 'No se ha encontrado ningún justiciable con dicho número de identificación, ¿desea crear un nuevo justiciable?',
+                icon: "fa fa-question-circle",
+                accept: () => {
+                  sessionStorage.setItem("origin","newAsistido");
+                  sessionStorage.setItem("nif",this.asistido.nif);
+                  sessionStorage.setItem("Nuevo","true");
+                  sessionStorage.setItem("idAsistencia",this.idAsistencia);
+                  this.persistenceService.clearDatos();
+                  this.router.navigate(["/gestionJusticiables"]);
+                },
+                reject: () =>{this.showMsg('info',"Cancel",this.translateService.instant("general.message.accion.cancelada"));}
+              });
 
             }
           },

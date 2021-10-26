@@ -1,14 +1,16 @@
-import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { DataTable, Message } from 'primeng/primeng';
 import { ListaGuardiasItem } from '../../../../../models/guardia/ListaGuardiasItem';
+import { CommonsService } from '../../../../../_services/commons.service';
+import { SigaServices } from '../../../../../_services/siga.service';
 
 @Component({
   selector: 'app-resultado-lista-guardias',
   templateUrl: './resultado-lista-guardias.component.html',
   styleUrls: ['./resultado-lista-guardias.component.scss']
 })
-export class ResultadoListaGuardiasComponent implements OnInit {
+export class ResultadoListaGuardiasComponent implements OnInit, AfterViewInit {
 
   msgs : Message [] = [];
   rows : number = 10;
@@ -40,12 +42,29 @@ export class ResultadoListaGuardiasComponent implements OnInit {
   @ViewChild("table") table: DataTable;
   @Input() listas : ListaGuardiasItem [] = [];
   @Input() permisosEscritura : boolean = false;
+  currentRoute : string;
+  idClaseComunicacion : string;
+  keys: any[] = [];
+  institucionActual : string ;
   constructor(private changeDetectorRef : ChangeDetectorRef,
-    private router : Router) { }
-
+    private router : Router,
+    private sigaServices : SigaServices,
+    private commonsService : CommonsService) { }
   ngOnInit() {
+    this.currentRoute = this.router.url.toString();
+    this.getInstitucion();
   }
 
+  ngAfterViewInit(): void {
+    this.commonsService.scrollTablaFoco('tablaFoco');
+  }
+
+  getInstitucion() {
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      this.institucionActual = n.value;
+    });
+
+  }
   onChangeRowsPerPages(event) {
     this.rows = event.value;
     this.changeDetectorRef.detectChanges();
@@ -89,6 +108,57 @@ export class ResultadoListaGuardiasComponent implements OnInit {
     sessionStorage.setItem("filtroListaGuardia",JSON.stringify(this.filtro));
     sessionStorage.setItem("lista",JSON.stringify(lista));
     this.router.navigate(["/fichaListaGuardias"]);
+  }
+
+  navigateToComunicar(){
+
+    sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
+    //IDMODULO de SJCS es 10
+    sessionStorage.setItem("idModulo", '10');
+    let datosSeleccionados = [];
+    let rutaClaseComunicacion = this.currentRoute.toString();
+
+    this.sigaServices
+      .post("dialogo_claseComunicacion", rutaClaseComunicacion)
+      .subscribe(
+        data => {
+          this.idClaseComunicacion = JSON.parse(
+            data["body"]
+          ).clasesComunicaciones[0].idClaseComunicacion;
+          this.sigaServices
+            .post("dialogo_keys", this.idClaseComunicacion)
+            .subscribe(
+              data => {
+                this.keys = JSON.parse(data["body"]).keysItem;
+                this.selectedDatos.forEach(element => {
+                  let keysValues = [];
+                  keysValues.push(this.institucionActual);
+                  this.keys.forEach(key => {
+                    if (element[key.nombre] != undefined) {
+                      keysValues.push(element[key.nombre]);
+                    }else if(key.nombre == "idLista" && element["idLista"] != undefined){
+                      keysValues.push(element["idLista"]);
+                    }
+                  });
+                  datosSeleccionados.push(keysValues);
+                });
+
+                sessionStorage.setItem(
+                  "datosComunicar",
+                  JSON.stringify(datosSeleccionados)
+                );
+                this.router.navigate(["/dialogoComunicaciones"]);
+              },
+              err => {
+                console.log(err);
+              }
+            );
+        },
+        err => {
+          console.log(err);
+        }
+      );
+
   }
 
   actualizaSeleccionados(){

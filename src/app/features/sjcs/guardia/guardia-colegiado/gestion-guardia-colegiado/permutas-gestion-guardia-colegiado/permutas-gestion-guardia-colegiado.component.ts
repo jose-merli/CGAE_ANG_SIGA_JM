@@ -33,6 +33,7 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
   valueComboTurno;
   valueComboGuardia
   motivos: any;
+  permutasAux;
   constructor(private translateService: TranslateService,
     private router: Router,
     private sigaServices: SigaServices,
@@ -48,7 +49,7 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
      this.getPermutas();
      this.getComboTurno();
      if(this.valueComboTurno != null || this.valueComboTurno != undefined){
-       this.getComboGuardia();
+       this.getComboGuardia(this.valueComboTurno);
      }
      this.getCols()
     }
@@ -90,7 +91,7 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
   getPermutas(){
     
     let permutaItem = new PermutaItem();
-    permutaItem.idpersona = this.body.idPersona;
+    permutaItem.idturno = this.body.idTurno;
     permutaItem.idguardia = this.body.idGuardia;
 
       this.progressSpinner = true
@@ -142,7 +143,50 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
     });
   }
 
-  validar(){}
+  checkValidar(){
+ 
+    let icon = "fa fa-edit";
+
+    this.confirmationService.confirm({
+      key: 'valida',
+      message: '¿Desea validar las siguientes permutas?',
+      icon: icon,
+      accept: () => {
+        this.validar()
+
+      },
+      reject: () => {
+        this.msgs = [{
+          severity: "info",
+          summary: "Cancel",
+          detail: this.translateService.instant("general.message.accion.cancelada")
+        }];
+        this.restPermutas();
+
+      }
+    });
+  
+}
+
+  validar(){
+
+     this.progressSpinner = true
+    this.sigaServices.post("guardiasColegiado_validarPermuta", this.selectedDatos).subscribe(
+      n => {
+        this.progressSpinner = false;
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.restPermutas();
+          this.getPermutas();
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }, () => {
+        
+      }
+    ); 
+  }
 
   nuevaFila(){
  this.clickPermuta = true;
@@ -155,7 +199,7 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
   motivos: "",
   nuevoRegistro: true
 };
-
+this.permutasAux = this.permutas;
 this.permutas = [dummy, ...this.permutas];
 
   }
@@ -170,7 +214,6 @@ this.permutas = [dummy, ...this.permutas];
         icon: icon,
         accept: () => {
           this.permutaColegiado();
-          this.restPermutas();
 
         },
         reject: () => {
@@ -187,44 +230,83 @@ this.permutas = [dummy, ...this.permutas];
   }
 
   permutaColegiado(){
+    let datosConfirmador = this.valueComboGuardia.split('|');
     let permutaItem = new PermutaItem();
-    permutaItem.idturnoConfirmador = this.valueComboTurno;
-    permutaItem.idguardiaConfirmador = this.valueComboGuardia;
+    permutaItem.idguardiaConfirmador = datosConfirmador[0].trim();
+    permutaItem.fechainicioConfirmador = parseInt(datosConfirmador[4].trim());
+    permutaItem.idturnoConfirmador = datosConfirmador[1].trim();
+    permutaItem.idpersonaConfirmador = datosConfirmador[2].trim();
+    permutaItem.idcalendarioguardiasConfirmad = datosConfirmador[3].trim();
 
-    permutaItem.motivos = this.motivos;
+    permutaItem.motivossolicitante = this.motivos;
     permutaItem.idpersonaSolicitante = this.body.idPersona;
     permutaItem.idguardiaSolicitante = this.body.idGuardia;
-    permutaItem.idturnoConfirmador = this.body.idTurno;
-    console.log("permutado");
+    permutaItem.idturnoSolicitante = this.body.idTurno;
+    permutaItem.fechainicioSolicitante = this.body.fechadesde;
+    permutaItem.idcalendarioguardiasSolicitan = this.body.idCalendarioGuardias;
+    
     console.log(permutaItem);
+
+     this.progressSpinner = true
+    this.sigaServices.post("guardiasColegiado_permutarGuardia", permutaItem).subscribe(
+      n => {
+        this.progressSpinner = false;
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.restPermutas();
+          this.getPermutas();
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }, () => {
+        
+      }
+    ); 
   }
 
   restPermutas(){
     this.selectedDatos = [];
     this.clickPermuta = false;
+    
+      this.permutas = this.permutasAux;
+      this.permutasAux = [];
+    
   }
   getComboTurno() {
+
+    this.progressSpinner = true;
 
     this.sigaServices.getParam("guardiasColegiado_getComboTurnoInscrito",'?idPersona='+ this.body.idPersona).subscribe(
       n => {
         this.comboTurnos = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboTurnos);
+        this.progressSpinner = false;
       },
       err => {
         console.log(err);
+        this.progressSpinner = false;
       }
     );
   }
 
-  getComboGuardia() {
-    this.sigaServices.getParam(
-      "guardiasColegiado_getComboGuardiaDestinoInscrito", "?idTurno=" + this.valueComboTurno).subscribe(
+  getComboGuardia(turno) {
+    this.progressSpinner = true;
+    let guardiaItem = new GuardiaItem();
+    guardiaItem.idTurno = turno;
+    guardiaItem.idCalendarioGuardias = this.body.idCalendarioGuardias;
+    guardiaItem.fechadesde = new Date(this.body.fechadesde);
+    guardiaItem.idGuardia = this.body.idGuardia;
+    this.sigaServices.post(
+      "guardiasColegiado_getComboGuardiaDestinoInscrito",guardiaItem).subscribe(
         data => {
-          this.comboGuardias = data.combooItems;
+          this.comboGuardias = JSON.parse(data.body).comboGuardiasFuturasItems; 
           this.commonServices.arregloTildesCombo(this.comboGuardias);
+          this.progressSpinner = false;
         },
         err => {
           console.log(err);
+          this.progressSpinner = false;
         }
       )
 
@@ -235,8 +317,24 @@ this.permutas = [dummy, ...this.permutas];
     this.comboGuardias = [];
 
     if (this.valueComboTurno) {
-      this.getComboGuardia();
+      this.getComboGuardia(this.valueComboTurno);
     }
+  }
+
+  changeDateFormat(fecha){
+   if (fecha != null) {
+      let jsonDate = JSON.stringify(fecha);
+      let rawDate = jsonDate.slice(1, -1);
+      
+        let splitDate = rawDate.split("/");
+        let arrayDate = splitDate[0] + "-" + splitDate[1] + "-" + splitDate[2];
+        fecha = new Date(arrayDate);
+      
+    } else {
+      fecha = undefined;
+    }
+
+    return fecha;
   }
 
   clear(){

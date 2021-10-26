@@ -123,6 +123,9 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
       this.getComboComisarias(); // Posteriormente hace la busqueda de asistencias
     }else if(sessionStorage.getItem("filtroAsistencia") && sessionStorage.getItem("volver") && sessionStorage.getItem("modoBusqueda") == "a"){
       this.modoBusqueda = 'a';
+      sessionStorage.removeItem("modoBusqueda");
+      sessionStorage.removeItem("filtroAsistencia");
+      sessionStorage.removeItem("volver");
     }
 
   }
@@ -236,6 +239,9 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
         },
         () =>{
           this.progressSpinner = false;
+          setTimeout(() => {
+            this.commonServices.scrollTablaFoco('tablaFoco1');
+          }, 5);
         }
       );
   }
@@ -473,6 +479,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
             this.showMsg('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
           }else{
             this.showMsg('success', this.translateService.instant("general.message.accion.realizada"), '');
+            this.getComboComisarias();
           }
           
         },
@@ -568,6 +575,9 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
           },
           () =>{
             this.progressSpinner = false;
+            setTimeout(() => {
+              this.commonServices.scrollTablaFoco('tablaFoco2');
+            }, 5);
           }
         );
       }

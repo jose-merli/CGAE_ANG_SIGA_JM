@@ -1,4 +1,4 @@
-import { EventEmitter } from '@angular/core';
+import { AfterViewInit, EventEmitter } from '@angular/core';
 import { ChangeDetectorRef, Component, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService, Message } from 'primeng/components/common/api';
@@ -6,6 +6,7 @@ import { DataTable } from 'primeng/primeng';
 import { TranslateService } from '../../../../../commons/translate';
 import { PreAsistenciaItem } from '../../../../../models/guardia/PreAsistenciaItem';
 import { SigaStorageService } from '../../../../../siga-storage.service';
+import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 
 @Component({
@@ -13,7 +14,7 @@ import { SigaServices } from '../../../../../_services/siga.service';
   templateUrl: './resultado-solicitudes-centralita.component.html',
   styleUrls: ['./resultado-solicitudes-centralita.component.scss']
 })
-export class ResultadoSolicitudesCentralitaComponent implements OnInit {
+export class ResultadoSolicitudesCentralitaComponent implements OnInit, AfterViewInit {
 
   msgs: Message[] = [];
   columnas = [];
@@ -38,7 +39,14 @@ export class ResultadoSolicitudesCentralitaComponent implements OnInit {
     private sigaStorageService : SigaStorageService,
     private confirmationService: ConfirmationService,
     private sigaServices : SigaServices,
-    private router: Router) { }
+    private router: Router,
+    private commonsService : CommonsService) { }
+  
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.commonsService.scrollTablaFoco('tablaFoco');
+    }, 5);
+  }
 
   ngOnInit() {
     this.columnas =[

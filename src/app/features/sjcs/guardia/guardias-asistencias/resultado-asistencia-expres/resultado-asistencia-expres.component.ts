@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Message } from 'primeng/components/common/api';
 import { Cell, Row, RowGroup } from '../../../../../commons/tabla-resultado-desplegable/tabla-resultado-desplegable-ae.service';
@@ -17,7 +17,7 @@ import { PersistenceService } from '../../../../../_services/persistence.service
   templateUrl: './resultado-asistencia-expres.component.html',
   styleUrls: ['./resultado-asistencia-expres.component.scss']
 })
-export class ResultadoAsistenciaExpresComponent implements OnInit {
+export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit {
   msgs: Message[] = [];
   @Input() rowGroups: RowGroup[];
   @Input() rowGroupsAux: RowGroup[];
@@ -51,7 +51,12 @@ export class ResultadoAsistenciaExpresComponent implements OnInit {
     private commonServices : CommonsService,
     private persistenceService : PersistenceService,
     private translateService : TranslateService,
-    private router: Router) { }
+    private router: Router,) { }
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.commonServices.scrollTablaFoco('tablaFoco2');
+    }, 5);
+  }
 
   ngOnInit(): void {
     //this.rowGroups = this.trdService.getTableData(this.resultModified);
@@ -301,6 +306,7 @@ export class ResultadoAsistenciaExpresComponent implements OnInit {
       asistencia.anioNumero = idAsistencia;
       asistencia.fechaAsistencia = this.filtro.diaGuardia + ' 00:00';
       sessionStorage.setItem("asistencia", JSON.stringify(asistencia));
+      sessionStorage.setItem("modoBusqueda","b");
       sessionStorage.setItem("filtroAsistencia", JSON.stringify(this.filtro));
       sessionStorage.setItem("Nuevo","true");
       this.router.navigate(["/gestionEjg"]);
