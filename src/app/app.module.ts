@@ -487,6 +487,8 @@ import { ConstructorConsultasComponent } from './features/informes-comunicacione
 import { TarjetaFacturaCompraSuscripcionComponent } from './features/facturacion/ficha-compra-suscripcion/tarjeta-factura-compra-suscripcion/tarjeta-factura-compra-suscripcion.component';
 import { QueryBuilderModule } from '@syncfusion/ej2-angular-querybuilder';
 import { enableRipple } from '@syncfusion/ej2-base';
+import { DropDownListModule } from '@syncfusion/ej2-angular-dropdowns';
+import { RadioButtonModule as RadioButtonEJSModule} from '@syncfusion/ej2-angular-buttons';
 enableRipple(true);
 
 @NgModule({
@@ -963,7 +965,9 @@ enableRipple(true);
 		BusquedaAsuntosModule,
 		Paginador2Module,
 		QueryBuilderModule,
-		OrderListModule
+		OrderListModule,
+		DropDownListModule,
+		RadioButtonEJSModule
 	],
 
 	exports: [DigitDecimaNumberDirective],

@@ -34,6 +34,7 @@
 		"@angular/router": "^5.0.0",
 		"@syncfusion/ej2-angular-buttons": "^19.3.44",
 		"@syncfusion/ej2-angular-querybuilder": "^19.3.45",
+		"@syncfusion/ej2-angular-dropdowns": "^19.3.45",
 		"@tinymce/tinymce-angular": "^3.0.0",
 		"@types/jwt-decode": "^2.2.1",
 		"bootstrap": "^4.0.0-beta.2",

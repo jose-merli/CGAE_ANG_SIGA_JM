@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Message } from "primeng/components/common/api";
 import { RuleModel } from '@syncfusion/ej2-querybuilder';
 import { Browser } from '@syncfusion/ej2-base';
@@ -8,7 +8,6 @@ import { SigaServices } from '../../../../../_services/siga.service';
 import { ConstructorConsultasDTO } from '../../../../../models/ConstructorConsultasDTO';
 import { L10n, setCulture } from '@syncfusion/ej2-base';
 import { TranslateService } from '../../../../../commons/translate';
-import { RadioButtonModule } from '@syncfusion/ej2-angular-buttons';
 import { QueryBuilderDTO } from '../../../../../models/QueryBuilderDTO';
 import { ConfigColumnasQueryBuilderDTO } from '../../../../../models/ConfigColumnasQueryBuilderDTO';
 import { ComboObject } from '../../../../../models/ComboObject';
@@ -30,14 +29,14 @@ L10n.load({
           'StartsWith': 'Empieza con',
           'EndsWith': 'Termina con',
           'Contains': 'Contiene',
-          'Equal': 'igual a',
-          'NotEqual': 'distinto',
-          'LessThan': 'menor que',
-          'LessThanOrEqual': 'menor o igual',
-          'GreaterThan': 'mayor que',
-          'GreaterThanOrEqual': 'mayor o igual',
-          'Between': 'entre',
-          'NotBetween': 'no entre',
+          'Equal': 'Igual a',
+          'NotEqual': 'Distinto',
+          'LessThan': 'Menor que',
+          'LessThanOrEqual': 'Menor o igual',
+          'GreaterThan': 'Mayor que',
+          'GreaterThanOrEqual': 'Mayor o igual',
+          'Between': 'Entre',
+          'NotBetween': 'No esta entre',
           'In': 'incluido',
           'NotIn': 'No incluido',
           'Remove': 'Eliminar',
@@ -81,22 +80,18 @@ export class ConstructorConsultasComponent implements OnInit {
 
   
   public fields: Object = { text: 'label', value: 'value' };
-  public fields2: Object = { text: 'key', value: 'value' };
 
-  /* comboSexo: { [key: string]: Object}[] = [{id: 'H', descripcion: 'HOMBRE'}, {id: 'M', descripcion: 'MUJER'}];
-  comboTipoColegiado:{ [key: string]: Object}[] = [{id: '1', descripcion: 'residente'}, {id: '2', descripcion: 'no residente'}]; */
-
-  comboPrueba = [];
-  operadores: { [key: string]: Object}[] = [{key: 'Equal', value: 'igual'}, {key: 'Not Equal', value: 'distinto'}];
-
-  amountOperators = [
-    { key: 'Equal', value: 'equal' },
-    { key: 'Not equal', value: 'notequal' },
-    { key: 'Greater than', value: 'greaterthan' },
-    { key: 'Less than', value: 'lessthan' },
-    { key: 'Less than or equal', value: 'lessthanorequal' },
-    { key: 'Greater than or equal', value: 'greaterthanorequal' }
-];
+  public customOperators: any =  [
+    {value: 'equal', key: this.translateService.instant("general.message.error.realiza.accion")},
+    {value: 'notequal', key: 'Distinto***'},
+    {value: 'lessthan', key: 'Menor que***'},
+    {value: 'greaterthan', key: 'Mayor que***'},
+    {value: 'lessthanorequal', key: 'Menor o igual***'},
+    {value: 'greaterthanorequal', key: 'Mayor o igual***'},
+    {value: 'startswith', key: 'Empieza con***'},
+    {value: 'endswith', key: 'Termina con***'},
+    {value: 'isnull', key: 'Esta vacio***'},
+  ];;
 
   //Suscripciones
   subscriptionDatosConstructorConsulta: Subscription;
@@ -106,21 +101,14 @@ export class ConstructorConsultasComponent implements OnInit {
 
   constructor(private sigaServices: SigaServices,private translateService: TranslateService) { }
 
-  @ViewChild("ruleTemplate") private ruleTemplate;
   ngOnInit() {
     if(sessionStorage.getItem("consultasSearch")){
       this.consultaBuscador = JSON.parse(sessionStorage.getItem("consultasSearch"));
-      //this.obtenerDatosConsulta(this.consultaBuscador.idConsulta);    
+      this.obtenerDatosConsulta(this.consultaBuscador.idConsulta);    
     }
     
     this.obtenerConfigColumnas();
   }
-
- /*  ngAfterViewInit() {
-    this.ruleTemplate.changes.subscribe(() => {
-      console.log(this.ruleTemplate);
-    });
-  } */
 
   //Necesario para liberar memoria
   ngOnDestroy() {
@@ -133,23 +121,15 @@ export class ConstructorConsultasComponent implements OnInit {
     if (this.subscriptionObtenerCombo)
       this.subscriptionObtenerCombo.unsubscribe();
   }
-        
-  createdControl(): void {
-    if (Browser.isDevice) {
-      this.constructorConsultas.summaryView = true;
-    }
-  }
 
   fieldChange(e: any): void {
     this.constructorConsultas.notifyChange(e.value, e.element, 'field');
   }
 
   obtenerComboCampo(e: any){
-    console.log("pruebaActionBegin");
-
     this.configColumnasDTO.configColumnasQueryBuilderItem.forEach(campo => {
       if(e.rule.label == campo.nombreenconsulta && campo.selectayuda != null){
-        this.obtenerCombosQueryBuilder(campo);
+        this.obtenerCombosQueryBuilder(campo, e.rule.label);
       }
     });
   }
@@ -200,12 +180,6 @@ export class ConstructorConsultasComponent implements OnInit {
         configColumnasQueryBuilder => {
   
           this.configColumnasDTO = configColumnasQueryBuilder;
-  
-       /*    if (JSON.parse(listaServiciosDTO.body).error.code == 500) {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-          } else {
-            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          } */
         
           this.progressSpinner = false;
         },
@@ -218,13 +192,16 @@ export class ConstructorConsultasComponent implements OnInit {
   }
 
   comboDTOColumnaQueryBuilder: ComboObject = new ComboObject();
-  obtenerCombosQueryBuilder(campo){
+  listaCombosObject : Map<string, ComboObject> = new Map<string, ComboObject>();
+ 
+  obtenerCombosQueryBuilder(campo, nombreCampo){
     this.progressSpinner = true;
 
     this.subscriptionObtenerCombo = this.sigaServices.post("constructorConsultas_obtenerCombosQueryBuilder", campo).subscribe(
       comboDTO => {
 
         this.comboDTOColumnaQueryBuilder = JSON.parse(comboDTO.body);
+        this.listaCombosObject.set(nombreCampo, this.comboDTOColumnaQueryBuilder);
       
         this.progressSpinner = false;
       },
