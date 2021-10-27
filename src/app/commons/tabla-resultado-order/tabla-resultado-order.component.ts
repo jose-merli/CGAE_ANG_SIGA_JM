@@ -58,6 +58,7 @@ export class TablaResultadoOrderComponent implements OnInit {
     'idCalendarioProgramado': '',
     'idTurno': '',
     'idGuardia': '',
+    'filtrosBusqueda' : ''
   };
   anySelectedBol = false;
   from = 0;
@@ -349,8 +350,8 @@ checkLetrados(){
       }else{
         errSeqArr.push(false);
       }
-    }else ´
-    errSeqArr.push(false);
+    }else 
+        errSeqArr.push(false);
   }
   });
 
