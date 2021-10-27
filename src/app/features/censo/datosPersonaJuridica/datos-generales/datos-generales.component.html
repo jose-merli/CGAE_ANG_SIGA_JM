@@ -25,7 +25,7 @@
                 <span>{{tipoPersonaJuridica}}</span>
               </label>
               <label>{{"administracion.usuarios.literal.fechaAlta" | translate}}:
-                <span>{{body.fechaConstitucion}}</span>
+                <span>{{body.fechaAlta}}</span>
               </label>
               <label>{{"censo.consultaDatos.literal.fechaBaja" | translate}}:
                 <span>{{body.fechaBaja}}</span>
@@ -97,9 +97,9 @@
               </div>
               <div class="form-group col-lg-6 col-md-6 form-group-date">
                 <label>{{"administracion.usuarios.literal.fechaAlta" | translate}} (*)</label>
-                <app-fecha [inputStyleClass]="styleObligatorio(body.fechaConstitucion)" [(value)]="body.fechaConstitucion" [disabled]="!editar || disabledAction || tarjeta == '2'"
-                  (valueChangeSelected)="fillFechaConstitucion($event)"
-                  (valueChangeInput)="detectFechaConstitucionInput($event)" (ngModelChange)="onlyCheckDatos()"></app-fecha>
+                <app-fecha [inputStyleClass]="styleObligatorio(body.fechaAlta)" [(value)]="body.fechaAlta" [disabled]="!editar || disabledAction || tarjeta == '2'"
+                  (valueChangeSelected)="fillFechaAlta($event)"
+                  (valueChangeInput)="detectFechaAltaInput($event)" (ngModelChange)="onlyCheckDatos()"></app-fecha>
               </div>
               <div class="form-group col-lg-6 col-md-6 form-group-date">
                 <label>{{"censo.consultaDatos.literal.fechaBaja" | translate}}</label>

@@ -261,7 +261,7 @@ export class DatosGenerales implements OnInit {
       this.tipoPersonaJuridica = this.usuarioBody[0].tipo;
       this.body.denominacion = this.usuarioBody[0].denominacion;
       this.body.abreviatura = this.usuarioBody[0].abreviatura;
-      this.body.fechaConstitucion = this.usuarioBody[0].fechaConstitucion;
+      this.body.fechaAlta = this.usuarioBody[0].fechaAlta;
       if (this.usuarioBody[0].fechaBaja != null) {
         this.body.fechaBaja = this.usuarioBody[0].fechaBaja;
       }
@@ -442,7 +442,7 @@ export class DatosGenerales implements OnInit {
   createLegalPerson() {
     this.sigaServices.post("datosGenerales_insert", this.body).subscribe(
       data => {
-        this.body.fechaConstitucion = new Date();
+        this.body.fechaAlta = new Date();
         this.showSuccess();
       },
       error => {
@@ -462,12 +462,12 @@ export class DatosGenerales implements OnInit {
         this.body.idPersona = this.idPersona;
         this.body.idioma = this.idiomaPreferenciaSociedad;
         this.body.tipo = this.selectedTipo.value;
-        this.body.fechaConstitucion = this.transformaFecha(this.body.fechaConstitucion);
+        this.body.fechaAlta = this.transformaFecha(this.body.fechaAlta);
         // newBody.idPersona = this.idPersona;
         // newBody.idioma = this.idiomaPreferenciaSociedad;
         // newBody.tipo = this.selectedTipo.value;
         // newBody.idInstitucion = this.body.idInstitucion;
-        // newBody.fechaConstitucion = this.body.fechaConstitucion;
+        // newBody.fechaAlta = this.body.fechaAlta;
         // newBody.nif = this.body.nif;
         // newBody.denominacion = this.body.denominacion;
         // newBody.abreviatura = this.body.abreviatura;
@@ -668,7 +668,7 @@ export class DatosGenerales implements OnInit {
     } else {
       // this.body.nif = "";
       this.selectedTipo = [];
-      this.body.fechaConstitucion = null;
+      this.body.fechaAlta = null;
       this.body.fechaBaja = null;
       this.body.denominacion = "";
       this.body.abreviatura = "";
@@ -821,7 +821,7 @@ export class DatosGenerales implements OnInit {
       this.body.denominacion != "" &&
       this.body.denominacion != undefined &&
       !this.onlySpaces(this.body.denominacion) &&
-      this.body.fechaConstitucion != undefined &&
+      this.body.fechaAlta != undefined &&
       !this.onlySpaces(this.body.nif) &&
       this.idiomaPreferenciaSociedad != "" &&
       this.idiomaPreferenciaSociedad != undefined
@@ -829,8 +829,8 @@ export class DatosGenerales implements OnInit {
     ) {
       if (
         this.editar &&
-        (this.body.fechaConstitucion != undefined ||
-          this.body.fechaConstitucion != null)
+        (this.body.fechaAlta != undefined ||
+          this.body.fechaAlta != null)
       ) {
         if (this.body.nif.length == 9 && this.isValidCIF(this.body.nif)) {
           this.showGuardar = true;
@@ -852,7 +852,7 @@ export class DatosGenerales implements OnInit {
       this.body.denominacion != "" &&
       this.body.denominacion != undefined &&
       !this.onlySpaces(this.body.denominacion) &&
-      this.body.fechaConstitucion != undefined &&
+      this.body.fechaAlta != undefined &&
       !this.onlySpaces(this.body.nif) &&
       this.idiomaPreferenciaSociedad != "" &&
       this.idiomaPreferenciaSociedad != undefined
@@ -866,8 +866,8 @@ export class DatosGenerales implements OnInit {
 
       if (
         this.editar &&
-        (this.body.fechaConstitucion != undefined ||
-          this.body.fechaConstitucion != null)
+        (this.body.fechaAlta != undefined ||
+          this.body.fechaAlta != null)
       ) {
         if (this.body.nif.length == 9 && this.isValidCIF(this.body.nif)) {
           this.showGuardar = true;
@@ -1004,8 +1004,8 @@ export class DatosGenerales implements OnInit {
       (this.body.nif != undefined && this.body.nif.length == 9) &&
       this.isValidCIF(this.body.nif) &&
       !this.onlySpaces(this.body.denominacion) &&
-      (this.body.fechaConstitucion != undefined ||
-        this.body.fechaConstitucion != null) &&
+      (this.body.fechaAlta != undefined ||
+        this.body.fechaAlta != null) &&
       this.body.denominacion != "" &&
       this.body.denominacion != undefined &&
       !this.onlySpaces(this.body.denominacion)
@@ -1165,7 +1165,7 @@ export class DatosGenerales implements OnInit {
           this.body.denominacion != "" &&
           this.body.denominacion != undefined &&
           !this.onlySpaces(this.body.denominacion) &&
-          this.body.fechaConstitucion != undefined &&
+          this.body.fechaAlta != undefined &&
           !this.onlySpaces(this.body.nif) &&
           this.idiomaPreferenciaSociedad != "" &&
           this.idiomaPreferenciaSociedad != undefined
@@ -1329,7 +1329,7 @@ export class DatosGenerales implements OnInit {
     //   this.body.denominacion != "" &&
     //   this.body.denominacion != undefined &&
     //   !this.onlySpaces(this.body.denominacion) &&
-    //   this.body.fechaConstitucion != undefined &&
+    //   this.body.fechaAlta != undefined &&
     //   !this.onlySpaces(this.body.nif) &&
     //   this.idiomaPreferenciaSociedad != "" &&
     //   this.idiomaPreferenciaSociedad != undefined
@@ -1358,13 +1358,13 @@ export class DatosGenerales implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  fillFechaConstitucion(event) {
-    this.body.fechaConstitucion = event;
+  fillFechaAlta(event) {
+    this.body.fechaAlta = event;
     this.onChangeForm();
   }
 
-  detectFechaConstitucionInput(event) {
-    this.body.fechaConstitucion = event;
+  detectFechaAltaInput(event) {
+    this.body.fechaAlta = event;
     this.onChangeForm();
   }
 
@@ -1438,7 +1438,7 @@ export class DatosGenerales implements OnInit {
       this.body.denominacion == "" ||
       this.body.denominacion == undefined ||
       !this.onlySpaces(this.body.denominacion) ||
-      this.body.fechaConstitucion == undefined ||
+      this.body.fechaAlta == undefined ||
       !this.onlySpaces(this.body.nif) ||
       this.idiomaPreferenciaSociedad == "" ||
       this.idiomaPreferenciaSociedad == undefined
@@ -1465,7 +1465,7 @@ onlyCheckDatos(){
     this.body.denominacion != "" &&
     this.body.denominacion != undefined &&
     !this.onlySpaces(this.body.denominacion) &&
-    this.body.fechaConstitucion != undefined &&
+    this.body.fechaAlta != undefined &&
     !this.onlySpaces(this.body.nif) &&
     this.idiomaPreferenciaSociedad != "" &&
     this.idiomaPreferenciaSociedad != undefined)
