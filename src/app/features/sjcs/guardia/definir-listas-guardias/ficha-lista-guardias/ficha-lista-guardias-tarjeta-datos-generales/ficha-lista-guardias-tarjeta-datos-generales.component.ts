@@ -52,7 +52,7 @@ export class FichaListaGuardiasTarjetaDatosGeneralesComponent implements OnInit,
 
   saveDatosGenerales(){
 
-    if(this.lista && this.lista.nombre){
+    if(this.lista && this.lista.nombre && this.lista.idTipo){
 
       this.progressSpinner = true;
       this.sigaServices
@@ -89,6 +89,12 @@ export class FichaListaGuardiasTarjetaDatosGeneralesComponent implements OnInit,
 
   styleObligatorio(evento){
     if((evento==undefined || evento==null || evento=="")){
+      return this.commonServices.styleObligatorio(evento);
+    }
+  }
+
+  styleObligatorioTipo(evento){
+    if((evento==undefined || evento==null)){
       return this.commonServices.styleObligatorio(evento);
     }
   }
