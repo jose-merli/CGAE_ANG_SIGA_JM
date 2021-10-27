@@ -251,7 +251,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
               );
               this.respuestaInscripciones.push(responseObject);
             })
-            this.jsonToRow();
+            this.jsonToRow(this.respuestaInscripciones);
   
             this.buscar = true;
             this.progressSpinner = false;
@@ -348,7 +348,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
             );
             this.respuestaInscripciones.push(responseObject);
           })
-          this.jsonToRow();
+          this.jsonToRow(this.respuestaInscripciones);
 
           this.buscar = true;
           this.progressSpinner = false;
@@ -376,11 +376,11 @@ export class GuardiasInscripcionesComponent implements OnInit {
         });
   }
 
-  jsonToRow() {
+  jsonToRow(respuestaInscripciones) {
 
     let arr = [];
 
-    this.respuestaInscripciones.forEach((res, i) => {
+    respuestaInscripciones.forEach((res, i) => {
 
       let estadoNombre: String;
 

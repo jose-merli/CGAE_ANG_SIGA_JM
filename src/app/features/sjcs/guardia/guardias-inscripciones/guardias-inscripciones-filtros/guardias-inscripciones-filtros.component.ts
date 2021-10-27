@@ -355,8 +355,8 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
   changeColegiado(event) {
     console.log('colegiado: ', event);
     this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
-    this.usuarioBusquedaExpress.numColegiado = event.numColegiado;
-    this.filtros.ncolegiado = event.numColegiado;
+    this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
+    this.filtros.ncolegiado = event.nColegiado;
   }
 
 }
