@@ -112,7 +112,7 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
     private sigaServices: SigaServices, private translateService: TranslateService, private upperCasePipe: UpperCasePipe,
     private persistenceService: PersistenceService, private commonsService: CommonsService, private confirmationService: ConfirmationService) { }
 
-  ngOnChanges(changes: SimpleChanges) {
+ /*  ngOnChanges(changes: SimpleChanges) {
     this.getCols();
     if (this.datos != undefined) {
       this.body = this.datos;
@@ -122,31 +122,9 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
          this.disableAll = true;  
        else 
          this.disableAll = false;
-      
-      /* 
-      if (this.idPersona != undefined) {
-        
-       
-        this.getInscripciones();
 
-        if (this.body.idpersona == undefined) {
-          this.modoEdicion = false;
-        } else {
-          if (this.persistenceService.getDatos() != undefined) {
-            this.datos = this.persistenceService.getDatos();
-          }
-          if (this.datos.fechabaja != undefined) {
-            this.disableAll = true;
-          }
-          this.modoEdicion = true;
-        }
-      }
-    } else {
-      this.datos = new InscripcionesItems();
-    } */
-    // this.arreglaChecks();
     }
-  }
+  } */
 
   ngOnInit() {
 
@@ -174,7 +152,6 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
       this.numeroGuardias = 0;
     } */
     if(this.modoEdicion==false){
-      this.mostrarVacio = true;
       this.numeroGuardias = 0;
     }
     if (this.persistenceService.getPermisos() != true) {
@@ -202,32 +179,11 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
     this.datos.fechaActual = this.transformaFecha(event);
     // this.getColaOficio();
   }
-  setItalic(dato) {
-    if (dato.fechabaja == null) return false;
-    else return true;
-  }
-  searchHistorical() {
-    this.historico = !this.historico;
-    this.persistenceService.setHistorico(this.historico);
-    this.selectAll = false
-  }
+
+  
   esFichaActiva(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
     return fichaPosible.activa;
-  }
-
-  validateHistorical() {
-    // if (this.datos != undefined && this.datos.length > 0) {
-
-    //   if (this.datos[0].fechabaja != null) {
-    //     this.historico = true;
-    //   } else {
-    //     this.historico = false;
-    //   }
-
-    //   this.persistenceService.setHistorico(this.historico);
-
-    // }
   }
 
   changeDateFormat(date1){
@@ -292,9 +248,10 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
     //console.log("He entrado en el if de getInscripciones()");
         this.sigaServices.post("guardiasInscripciones_inscripcionPorguardia", objVal).subscribe(
           n => {
-            this.progressSpinner = false;
+            
             console.log(n);
             this.inscripcionesItem = JSON.parse(n.body).accion;
+            if(this.inscripcionesItem != null || this.inscripcionesItem != undefined){
             this.inscripcionesItem.forEach(element => {
               if(this.modoEdicion==true){
               element.selectedBoolean = true;
@@ -304,6 +261,7 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
                 element.selectedBooleanPadre = false;
               }
             });
+          }
             this.rowGroupMetadata = {};
             if (this.inscripcionesItem) {
               for (let i = 0; i < this.inscripcionesItem.length; i++) {
@@ -323,6 +281,7 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
                 }
               }
             }
+            this.progressSpinner = false;
           },
           err => {
             console.log(err);
@@ -331,24 +290,24 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
             this.progressSpinner = false;
           }
         );
-
-   
-    this.progressSpinner = false;
   }else{
         this.sigaServices.post("guardiasInscripciones_inscripcionesDisponibles", objVal).subscribe(
           n => {
-            this.progressSpinner = false;
+            
             console.log(n);
             this.inscripcionesItem = JSON.parse(n.body).accion;
-            this.inscripcionesItem.forEach(element => {
-              if(this.modoEdicion==true){
-              element.selectedBoolean = true;
-              element.selectedBooleanPadre = true;
-              }else{
-                element.selectedBoolean =false;
-                element.selectedBooleanPadre = false;
-              }
-            });
+            if(this.inscripcionesItem != null || this.inscripcionesItem != undefined){
+              this.inscripcionesItem.forEach(element => {
+                if(this.modoEdicion==true){
+                element.selectedBoolean = true;
+                element.selectedBooleanPadre = true;
+                }else{
+                  element.selectedBoolean =false;
+                  element.selectedBooleanPadre = false;
+                }
+              });
+            }
+           
             this.rowGroupMetadata = {};
             if (this.inscripcionesItem) {
               for (let i = 0; i < this.inscripcionesItem.length; i++) {
@@ -368,6 +327,7 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
                 }
               }
             }
+            this.progressSpinner = false;
           },
           err => {
             console.log(err);
@@ -376,245 +336,9 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
             this.progressSpinner = false;
           }
         );
-      this.progressSpinner = false;
-
-  }
-    /*this.sigaServices.post("inscripciones_busquedaTarjetaInscripciones", body).subscribe(
-      n => {
-        // this.datos = n.turnosItem;
-        this.inscripcionesItem = JSON.parse(n.body).inscripcionesItem;
-        this.inscripcionesItem.forEach(element => {
-          if(this.modoEdicion==true){
-          element.selectedBoolean = true;
-          element.selectedBooleanPadre = true;
-          }
-          else{
-            element.selectedBoolean =false;
-            element.selectedBooleanPadre = false;
-          }
-        });
-        this.rowGroupMetadata = {};
-        if (this.inscripcionesItem) {
-          for (let i = 0; i < this.inscripcionesItem.length; i++) {
-
-            let rowData = this.inscripcionesItem[i];
-            let inscripcion = rowData.nombre_turno;
-            if (i == 0) {
-              this.rowGroupMetadata[inscripcion] = { index: 0, size: 1 };
-            }
-            else {
-              let previousRowData = this.inscripcionesItem[i - 1];
-              let previousRowGroup = previousRowData.nombre_turno;
-              if (inscripcion === previousRowGroup)
-                this.rowGroupMetadata[inscripcion].size++;
-              else
-                this.rowGroupMetadata[inscripcion] = { index: i, size: 1 };
-            }
-          }
-        }
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner = false;
-      }, () => {
-        this.progressSpinner = false;
-      }
-    );*/
-    this.progressSpinner = false;
-  }
-
-  save() {
-    this.progressSpinner = true;
-    let url = "";
-
-    if (this.nuevo) {
-      url = "fichaAreas_createMaterias";
-      this.validatenewMateria(url);
-
-    } else {
-      url = "fichaAreas_updateMaterias";
-      this.body = new TurnosObject();
-      this.body.areasItems = this.updateAreas;
-      this.callSaveService(url);
-    }
-  }
-
-  callSaveService(url) {
-    this.sigaServices.post(url, this.body).subscribe(
-      data => {
-        if (this.nuevo) {
-          this.nuevo = false;
-          this.datosInicial = JSON.parse(JSON.stringify(this.datos));
-        }
-        // this.getColaOficio();
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
-      },
-      err => {
-        this.progressSpinner = false;
-        if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
-        this.progressSpinner = false;
-      },
-      () => {
-        this.selectedDatos = [];
-        this.updateAreas = [];
-        this.progressSpinner = false;
-      }
-    );
 
   }
 
-  validatenewMateria(url) {
-    let materia = this.datos[0];
-
-    let findDato = this.datosInicial.find(item => item.idArea === materia.idArea && item.nombreMateria === materia.nombreMateria);
-
-    let jurisdiccionesString = "";
-    for (let i in materia.jurisdiccionesReal) {
-      jurisdiccionesString += ";" + materia.jurisdiccionesReal[i].value;
-    }
-
-    materia.jurisdiccion = jurisdiccionesString.substring(1, jurisdiccionesString.length);
-    materia.jurisdicciones = "";
-
-    if (findDato != undefined) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.censo.nombreExiste"));
-      this.progressSpinner = false;
-    } else {
-      this.body = materia;
-      this.callSaveService(url);
-    }
-    this.progressSpinner = false;
-  }
-
-  disabledSave() {
-    if (this.selectMultiple || this.selectAll) {
-      return true;
-    }
-    if (this.nuevo) {
-      if (this.datos[0].nombreMateria != undefined && this.datos[0].nombreMateria != "") {
-        return false;
-      } else {
-        return true;
-      }
-    } else {
-      if ((this.updateAreas != undefined && this.updateAreas.length > 0)) {
-        return false;
-      } else {
-        return true;
-      }
-    }
-  }
-
-  editarMateria(dato) {
-
-    let findDato = this.datosInicial.find(item => item.idMateria == dato.idMateria && item.idArea == dato.idArea);
-    if (findDato != undefined) {
-      if ((dato.nombreMateria != findDato.nombreMateria) || (dato.contenido != findDato.contenido)) {
-        let findUpdate = this.updateAreas.find(item => item.idMateria == dato.idMateria && item.idArea == dato.idArea);
-        if (findUpdate == undefined) {
-          let dato2 = dato;
-          dato2.jurisdicciones = "";
-          this.updateAreas.push(dato2);
-        }
-      }
-    }
-  }
-
-  editJurisdicciones(dato) {
-
-    if (!this.nuevo) {
-
-      // if (dato.jurisdicciones.length == 0) {
-      //   this.showMessage("info", "Informacion", "Debe seleccionar al menos un partido judicial");
-      //   let findUpdate = this.updateZonas.findIndex(item => item.idArea === dato.idArea && item.idMateria === dato.idMateria);
-
-      //   if (findUpdate != undefined) {
-      //     this.updateZonas.splice(findUpdate);
-      //   }
-
-      // } else {
-      let findUpdate = this.updateAreas.find(item => item.idArea === dato.idArea && item.idMateria === dato.idMateria);
-
-      if (findUpdate == undefined) {
-        let dato2 = dato;
-        let jurisdiccionesString = "";
-        for (let i in dato2.jurisdiccionesReal) {
-          jurisdiccionesString += ";" + dato2.jurisdiccionesReal[i].value;
-        }
-
-        dato2.jurisdiccion = jurisdiccionesString.substring(1, jurisdiccionesString.length);
-        dato2.jurisdicciones = "";
-        this.updateAreas.push(dato2);
-      } else {
-        let updateFind = this.updateAreas.findIndex(item => item.idArea === dato.idArea && item.idMateria === dato.idMateria);
-        let jurisdiccionesString = "";
-        for (let i in findUpdate.jurisdiccionesReal) {
-          jurisdiccionesString += ";" + dato.jurisdiccionesReal[i].value;
-        }
-        this.updateAreas[updateFind].jurisdiccionesReal = dato.jurisdiccionesReal;
-        this.updateAreas[updateFind].jurisdiccion = jurisdiccionesString.substring(1, jurisdiccionesString.length);
-        this.updateAreas[updateFind].jurisdicciones = "";
-      }
-      // }
-    } else {
-      this.selectedDatos = [];
-    }
-  }
-
-  delete(selectedDatos) {
-    this.body = new GuardiaObject();
-    this.body.guardiaItems = this.selectedDatos;
-
-    this.sigaServices.post("turnos_eliminateGuardia", this.body).subscribe(
-      data => {
-
-        this.nuevo = false;
-        this.selectedDatos = [];
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
-      },
-      err => {
-
-        if (err != undefined && JSON.parse(err.error).error.description != "") {
-          if (JSON.parse(err.error).error.description == "areasmaterias.materias.ficha.materiaEnUso") {
-            this.showMessage("warn", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-          } else {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-          }
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
-        this.progressSpinner = false;
-      },
-      () => {
-        let send = {
-          buscar: true,
-        }
-        this.sigaServices.notifyupdateCombo(send);
-        this.progressSpinner = false;
-        this.selectAll = false;
-      }
-    );
-  }
-
-  rest() {
-    if (this.datosInicial != undefined) {
-      this.datos = JSON.parse(JSON.stringify(this.datosInicial));
-    } else {
-      // this.datos = [];
-    }
-
-    this.selectedDatos = [];
-    this.updateAreas = [];
-    this.nuevo = false;
-    this.table.sortOrder = 0;
-    this.table.sortField = '';
-    this.table.reset();
   }
 
   showMessage(severity, summary, msg) {
@@ -798,7 +522,7 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
    console.log("He entrado en seleccionar fila");
     if (event == true) {
         rowData.selectedBoolean = true;
-        if(rowData.tipoguardias == "Todas o ninguna"){
+        if(rowData.descripcionObligatoriedad == "Todas o ninguna"){
           this.inscripcionesItem.forEach(element => {
             if (element.idturno == rowData.idTurno) {
               element.selectedBoolean = true;
@@ -810,7 +534,7 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
         }
       
     }else {
-        if(rowData.tipoguardias == "Todas o ninguna"){
+        if(rowData.descripcionObligatoriedad == "Todas o ninguna"){
           rowData.selectedBoolean = false;
           this.inscripcionesItem.forEach(element => {
             if (element.idturno == rowData.idTurno) {
@@ -856,28 +580,30 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
     turno.nombre_zona = rowData.nombreZona;
     turno.obligatoriedad_inscripcion = rowData.obligatoriedadInscripcion;
     turno.tipoguardias = rowData.descripcionbligatoriedad;
+    turno.idguardia = rowData.idGuardia;
+    turno.fechasolicitud = rowData.fechasolicitud
     if (event == true) {
-      if (rowData.tipoguardias == "Obligatorias") {
+      if (rowData.descripcionObligatoriedad == "Obligatorias") {
         this.disabledGuardias = true;
         rowData.selectedBooleanPadre = true;
         this.inscripcionesItem.forEach(element => {
-          if (element.idturno == rowData.idTurno) {
+          if (element.idguardia == rowData.idGuardia) {
             element.selectedBoolean = true;
             this.inscripcionesSelected.push(element);
           }
       });
       }
-      if (rowData.tipoguardias == "Todas o ninguna") {
+      if (rowData.descripcionObligatoriedad == "Todas o ninguna") {
         this.disabledGuardias = false;
         rowData.selectedBooleanPadre = true;
         this.inscripcionesItem.forEach(element => {
-          if (element.idturno == rowData.idTurno) {
+          if (element.idguardia == rowData.idGuardia) {
             element.selectedBoolean = true;
             this.inscripcionesSelected.push(element);
           }
         });
       }
-      if(rowData.tipoguardias == "A elegir"){
+      if(rowData.descripcionObligatoriedad == "A elegir"){
         this.disabledGuardias = false;
         rowData.selectedBooleanPadre = true;
       }
@@ -888,7 +614,7 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
       this.disabledGuardias = true;
       rowData.selectedBooleanPadre = false;
       this.inscripcionesItem.forEach(element => {
-        if (element.idturno == rowData.idTurno) {
+        if (element.idguardia == rowData.idGuardia) {
           element.selectedBoolean = false;
           //let findDato = this.inscripcionesSelected.find(item => item.idguardia == element.idguardia);
           //if (findDato != undefined) {
@@ -896,7 +622,7 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
           //}
           let n=0;
           this.inscripcionesSelected.forEach(item => {
-            if(item.idturno==element.idturno){
+            if(item.idguardia==element.idGuardia){
               delete this.inscripcionesSelected[this.inscripcionesSelected.indexOf(item)];
               n++;
             }

@@ -1205,41 +1205,46 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 	solicitarAlta() {
 		this.progressSpinner = true;
 		let body = new InscripcionesObject();
-		body.inscripcionesItem= this.inscripcionesSelected.inscripcionesSelected;
-        body.inscripcionesItem.forEach(element => {
-		if(this.persistenceService.getPermisos() != true){
-			element.estadonombre = "NoPermisos";// Se crea solicitun sin validar
-		}else{
-			if(this.valorParametroDirecciones=="N"){
-				element.estadonombre = "PendienteDeValidar";
-			}
-		}
-        element.idpersona= this.idPersona;
-		element.idguardia = this.datos.idGuardia;
-        element.observacionessolicitud = this.datos.observaciones;
-      	});
-		
-		this.sigaServices.post("guardiasInscripciones_insertSolicitarAlta", body).subscribe(
-			data => {
-				this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-				this.progressSpinner = false;
-				//El redireccionamiento es una solucion temporal hasta que se
-				//decida el método de actualización de la ficha.
-				//this.router.navigate(["/inscripciones"]);
-				this.ngOnInit();
-			},
-			err => {
-				if (err != undefined && JSON.parse(err.error).error.description != "") {
-					this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-				} else {
-					this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+		if(this.inscripcionesSelected.inscripcionesSelected != undefined){
+			body.inscripcionesItem= this.inscripcionesSelected.inscripcionesSelected;
+			body.inscripcionesItem.forEach(element => {
+			if(this.persistenceService.getPermisos() != true){
+				element.estadonombre = "NoPermisos";// Se crea solicitun sin validar
+			}else{
+				if(this.valorParametroDirecciones=="N"){
+					element.estadonombre = "PendienteDeValidar";
 				}
-				this.progressSpinner = false;
-			},
-			() => {
-				this.progressSpinner = false;
 			}
-		);
+			element.idpersona= this.idPersona;
+			//element.idguardia = this.datos.idGuardia;
+			element.observacionessolicitud = this.datos.observaciones;
+			  });
+			
+			this.sigaServices.post("guardiasInscripciones_insertSolicitarAlta", body).subscribe(
+				data => {
+					this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+					this.progressSpinner = false;
+					//El redireccionamiento es una solucion temporal hasta que se
+					//decida el método de actualización de la ficha.
+					//this.router.navigate(["/inscripciones"]);
+					this.ngOnInit();
+				},
+				err => {
+					if (err != undefined && JSON.parse(err.error).error.description != "") {
+						this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+					} else {
+						this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+					}
+					this.progressSpinner = false;
+				},
+				() => {
+					this.progressSpinner = false;
+				}
+			);
+		}else{
+			this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Debe seleccionar una inscripcion");
+		}
+		
 	}
 
 
