@@ -13,22 +13,22 @@
         <div class="form-group-interlineado col-lg-4 col-md-4">
           <label>{{ 'justiciaGratuita.remesasResultados.filtro.numRemesa' | translate }}</label>
           <div class="form-row">
+             <div class="form-group-interlineado col-lg-4 col-md-4 px-1">
+              <input type="text" name="numRemesaSufijo" value="" class="box" class="registro-control w-100"
+                [(ngModel)]='filtros.numRemesaSufijo' maxLength="8" pInputText>
+            </div>
             <div class="form-group-interlineado col-lg-4 col-md-4 px-1">
               <input type="text" name="numRemesaPrefijo" value="" class="box" class="registro-control w-100"
                 [(ngModel)]='filtros.numRemesaPrefijo' maxLength="8" pInputText>
             </div>
             <div class="form-group-interlineado col-lg-4 col-md-4 px-1">
-              <input type="text" name="numRemesaNumero" value="" class="box" class="registro-control w-100"
-                [(ngModel)]='filtros.numRemesaNumero' maxLength="10" pInputText>
+              <input type="text" name="numRegistroNumero" value="" class="box" class="registro-control w-100"
+                [(ngModel)]='filtros.numRegistroNumero' maxLength="10" pInputText>
             </div>
-
-            <div class="form-group-interlineado col-lg-4 col-md-4 px-1">
-              <input type="text" name="numRemesaSufijo" value="" class="box" class="registro-control w-100"
-                [(ngModel)]='filtros.numRemesaSufijo' maxLength="8" pInputText>
-            </div>
+           
           </div>
         </div>
-
+ 
         <div class="form-group-interlineado col-lg-4 col-md-4">
           <label>{{ 'justiciaGratuita.remesasResultados.filtro.numRegistro' | translate }}</label>
           <div class="form-row">
@@ -37,8 +37,8 @@
                 [(ngModel)]='filtros.numRegistroPrefijo' maxLength="8" pInputText>
             </div>
             <div class="form-group-interlineado col-lg-4 col-md-4 px-1">
-              <input type="text" name="numRegistroNumero" value="" class="box" class="registro-control w-100"
-                [(ngModel)]='filtros.numRegistroNumero' maxLength="10" pInputText>
+              <input type="text" name="numRemesaNumero" value="" class="box" class="registro-control w-100"
+                [(ngModel)]='filtros.numRemesaNumero' maxLength="10" pInputText>
             </div>
 
             <div class="form-group-interlineado col-lg-4 col-md-4 px-1">
