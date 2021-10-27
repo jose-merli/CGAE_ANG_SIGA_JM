@@ -1,16 +1,17 @@
-import { Component, EventEmitter, HostListener, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { MultiSelect, SelectItem } from 'primeng/primeng';
 import { TranslateService } from '../../../../../commons/translate';
 import { RetencionesRequestDto } from '../../../../../models/sjcs/RetencionesRequestDTO';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../_services/siga.service';
+import { TIPOBUSQUEDA } from '../retenciones.component';
 
 export enum KEY_CODE {
   ENTER = 13
 }
 
 export const FILTROS_RETENCIONES = "filtrosBusquedaRetenciones";
-
+export const FILTROS_RETENCIONES_APLICADAS = "filtrosBusquedaRetencionesAplicadas";
 @Component({
   selector: 'app-filtro-busqueda-retenciones',
   templateUrl: './filtro-busqueda-retenciones.component.html',
@@ -18,7 +19,7 @@ export const FILTROS_RETENCIONES = "filtrosBusquedaRetenciones";
 })
 export class FiltroBusquedaRetencionesComponent implements OnInit {
 
-  modoBusqueda: string = "r";
+  modoBusqueda: string = TIPOBUSQUEDA.RETENCIONES;
   filtros: RetencionesRequestDto = new RetencionesRequestDto();
   showDestinatarios: boolean = false;
   showDatosGenerales: boolean = false;
@@ -30,7 +31,11 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
   comboDestinatarios: SelectItem[] = [];
   comboPagos: SelectItem[] = [];
 
-  @Output() buscarEvent = new EventEmitter<RetencionesRequestDto>();
+  @Input() permisoEscritura: boolean;
+
+  @Output() buscarRetencionesEvent = new EventEmitter<RetencionesRequestDto>();
+  @Output() buscarRetencionesAplicadasEvent = new EventEmitter<RetencionesRequestDto>();
+  @Output() modoBusquedaEvent = new EventEmitter<string>();
 
   constructor(private translateService: TranslateService,
     private sigaServices: SigaServices,
@@ -40,10 +45,11 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
 
     if (sessionStorage.getItem('buscadorColegiados')) {
 
-      const { nombre, apellidos, nColegiado } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
+      const { nombre, apellidos, nColegiado, idPersona } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
 
       this.nombreApellidoColegiado = `${apellidos}, ${nombre}`;
       this.filtros.ncolegiado = nColegiado;
+      this.filtros.idPersona = idPersona;
 
       sessionStorage.removeItem('buscadorColegiados');
 
@@ -62,7 +68,7 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
   }
 
   changeFilters() {
-
+    this.modoBusquedaEvent.emit(this.modoBusqueda);
   }
 
   onHideDestinatarios() {
@@ -97,6 +103,7 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
       detail: msg
     });
   }
+
   recuperarColegiado(event) {
     if (event != undefined) {
       this.nombreApellidoColegiado = event.nombreAp;
@@ -104,6 +111,14 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
     } else {
       this.nombreApellidoColegiado = undefined;
       this.filtros.ncolegiado = undefined;
+    }
+  }
+
+  recuperarIdPersona(event) {
+    if (event != undefined && event != '') {
+      this.filtros.idPersona = event;
+    } else {
+      this.filtros.idPersona = undefined;
     }
   }
 
@@ -182,8 +197,14 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
   }
 
   buscar() {
-    sessionStorage.setItem(FILTROS_RETENCIONES, JSON.stringify(this.filtros));
-    this.buscarEvent.emit(this.filtros);
+
+    if (this.modoBusqueda == TIPOBUSQUEDA.RETENCIONES) {
+      sessionStorage.setItem(FILTROS_RETENCIONES, JSON.stringify(this.filtros));
+      this.buscarRetencionesEvent.emit(this.filtros);
+    } else if (this.modoBusqueda == TIPOBUSQUEDA.RETENCIONESAPLICADAS) {
+      sessionStorage.setItem(FILTROS_RETENCIONES_APLICADAS, JSON.stringify(this.filtros));
+      this.buscarRetencionesAplicadasEvent.emit(this.filtros);
+    }
   }
 
   //búsqueda con enter

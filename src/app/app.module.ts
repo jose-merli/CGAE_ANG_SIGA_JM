@@ -478,6 +478,8 @@ import { GuardiaModule } from './features/sjcs/guardia/guardia.module';
 import { RetencionesComponent } from './features/sjcs/facturacionSJCS/retenciones/retenciones.component';
 import { FiltroBusquedaRetencionesComponent } from './features/sjcs/facturacionSJCS/retenciones/filtro-busqueda-retenciones/filtro-busqueda-retenciones.component';
 import { TablaBusquedaRetencionesComponent } from './features/sjcs/facturacionSJCS/retenciones/tabla-busqueda-retenciones/tabla-busqueda-retenciones.component';
+import { TablaBusquedaRetencionesAplicadasComponent } from './features/sjcs/facturacionSJCS/retenciones/tabla-busqueda-retenciones-aplicadas/tabla-busqueda-retenciones-aplicadas.component';
+import { TablaAplicacionRetencionesComponent } from './features/sjcs/facturacionSJCS/retenciones/tabla-busqueda-retenciones-aplicadas/tabla-aplicacion-retenciones/tabla-aplicacion-retenciones.component';
 
 @NgModule({
 	declarations: [
@@ -875,6 +877,8 @@ import { TablaBusquedaRetencionesComponent } from './features/sjcs/facturacionSJ
 		RetencionesComponent,
 		FiltroBusquedaRetencionesComponent,
 		TablaBusquedaRetencionesComponent,
+		TablaBusquedaRetencionesAplicadasComponent,
+		TablaAplicacionRetencionesComponent,
 	],
 	imports: [
 		Paginador3Module,

@@ -1,7 +1,8 @@
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Table } from 'primeng/table';
+import { ConfirmationService } from 'primeng/primeng';
+import { TranslateService } from '../../../../../commons/translate';
 import { RetencionesItem } from '../../../../../models/sjcs/RetencionesItem';
-
 @Component({
   selector: 'app-tabla-busqueda-retenciones',
   templateUrl: './tabla-busqueda-retenciones.component.html',
@@ -9,9 +10,8 @@ import { RetencionesItem } from '../../../../../models/sjcs/RetencionesItem';
 })
 export class TablaBusquedaRetencionesComponent implements OnInit {
 
+  @Input() permisoEscritura: boolean;
   @Input() datos: RetencionesItem[] = [];
-
-  @Output() historicoEvent = new EventEmitter<boolean>();
 
   @Output() buscarEvent = new EventEmitter<boolean>();
   @Output() eliminarEvent = new EventEmitter<{ retenciones: RetencionesItem[], historico: boolean }>();
@@ -25,13 +25,29 @@ export class TablaBusquedaRetencionesComponent implements OnInit {
   numSelected = 0;
   rowsPerPage: any = [];
   cols;
+  msgs;
 
   historico: boolean = false;
 
-  constructor(private changeDetectorRef: ChangeDetectorRef) { }
+  constructor(private changeDetectorRef: ChangeDetectorRef, 
+    private confirmationService: ConfirmationService, 
+    private translateService: TranslateService) { }
 
   ngOnInit() {
     this.getCols();
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+
+  clear() {
+    this.msgs = [];
   }
 
   getCols() {
@@ -70,7 +86,13 @@ export class TablaBusquedaRetencionesComponent implements OnInit {
   onChangeSelectAll() {
 
     if (this.selectAll === true) {
-      this.selectedDatos = this.datos;
+
+      if (this.historico) {
+        this.selectedDatos = this.datos.filter(el => !this.isHistorico(el));
+      } else {
+        this.selectedDatos = this.datos;
+      }
+
       this.numSelected = this.datos.length;
 
     } else {
@@ -85,13 +107,21 @@ export class TablaBusquedaRetencionesComponent implements OnInit {
     this.tabla.reset();
   }
 
-  actualizaSeleccionados() {
+  actualizaDesSeleccionados() {
+    this.numSelected = this.selectedDatos.length;
+  }
+
+  actualizaSeleccionados(event) {
+
+    if (this.historico && this.isHistorico(event.data)) {
+      this.selectedDatos.pop();
+    }
+
     this.numSelected = this.selectedDatos.length;
   }
 
   mostrarHistorico() {
     this.buscarEvent.emit(true);
-    this.historicoEvent.emit(true);
     this.historico = true;
     this.tabla.reset();
   }
@@ -104,6 +134,27 @@ export class TablaBusquedaRetencionesComponent implements OnInit {
 
   isHistorico(item: RetencionesItem) {
     return (item.fechaFin && (null != item.fechaFin || Date.now() >= item.fechaFin.getTime()));
+  }
+
+  confirmDelete() {
+    if (this.permisoEscritura && this.selectedDatos != undefined && this.selectedDatos.length > 0) {
+
+      let mess = this.translateService.instant(
+        "messages.deleteConfirmation"
+      );
+      let icon = "fa fa-edit";
+      this.confirmationService.confirm({
+        message: mess,
+        icon: icon,
+        accept: () => {
+         this.eliminar();
+        },
+        reject: () => {
+          this.showMessage("info", "Info", this.translateService.instant("general.message.accion.cancelada"));
+        }
+      });
+
+    }
   }
 
   eliminar() {

@@ -1,12 +1,17 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+
 <div class="card mt-3">
 
   <div class="card-body p-0" #tablaFoco>
 
     <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [selectionMode]="modoSeleccion"
-      [responsive]="true" #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" paginatorPosition="both"
-      (onRowSelect)="actualizaSeleccionados($event)" (onRowUnselect)="actualizaDesSeleccionados()">
+      [responsive]="true" #table class="tabla-listadoPrueba" [paginator]="true" [rows]="selectedItem"
+      paginatorPosition="both" (onRowSelect)="actualizaSeleccionados($event)"
+      (onRowUnselect)="actualizaDesSeleccionados()" dataKey="id">
 
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
@@ -23,19 +28,35 @@
           </th>
         </tr>
       </ng-template>
-      <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+      <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex" let-expanded="expanded">
         <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
 
           <td class="text-center" *ngFor="let col of columns">
 
-            <div *ngIf="(col.field == 'fechaInicio' || col.field == 'fechaFin')">
+            <a [pRowToggler]="dato" (click)="getAplicacionesRetenciones(dato, expanded)">
+              <div *ngIf="col.field == 'numColegiado'">
+                <i [ngClass]="expanded ? 'fa fa-fw fa-chevron-circle-down' : 'fa fa-fw fa-chevron-circle-right'"></i>
+                <span [ngClass]="{'italic': isHistorico(dato)}">{{dato[col.field]}}</span>
+              </div>
+            </a>
+
+
+            <div *ngIf="col.field == 'fechaInicio'">
               <span [ngClass]="{'italic': isHistorico(dato)}">{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
             </div>
 
-            <div *ngIf="col.field != 'fechaInicio' && col.field != 'fechaFin'">
-              <span [ngClass]=" {'italic': isHistorico(dato)}">{{dato[col.field]}}</span>
+            <div *ngIf="col.field != 'fechaInicio' && col.field != 'numColegiado'">
+              <span [ngClass]="{'italic': isHistorico(dato)}">{{dato[col.field]}}</span>
             </div>
 
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="rowexpansion">
+        <tr class="tr-rowexpansion">
+          <td [attr.colspan]="cols.length" class="td-rowexpansion">
+            <app-tabla-aplicacion-retenciones [datos]="datosAplicacionRetencion"></app-tabla-aplicacion-retenciones>
           </td>
         </tr>
       </ng-template>
@@ -47,6 +68,7 @@
           </td>
         </tr>
       </ng-template>
+
       <ng-template pTemplate="paginatorleft">
         <div class="mostrar d-flex text-right justify-content-end">
           <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' |
@@ -72,6 +94,7 @@
           </div>
         </div>
       </ng-template>
+      
     </p-table>
 
   </div>
@@ -87,16 +110,6 @@
       <button *ngIf="historico" (click)="ocultarHistorico()" pButton type="button" icon="fa fa-history " iconPos="left"
         label="{{'general.message.ocultarHistorico' | translate}}"></button>
 
-      <button pButton type="button" icon="fa fa-trash-alt" iconPos="left"
-        [disabled]="selectedDatos.length == 0 || selectedDatos == undefined || !permisoEscritura"
-        label="{{ 'general.boton.eliminar' | translate}}" (click)="confirmDelete()"></button>
     </div>
   </div>
 </div>
-
-<p-confirmDialog header="Confirmación"  icon="fa fa-question-circle"  width="425"  #cd>
-  <p-footer>
-    <button type="button"  pButton icon="fa-check"  label="Si"  (click)="cd.accept()"></button>
-    <button type="button"  pButton icon="fa-close"  label="No"  (click)="cd.reject()"></button>
-  </p-footer>
-</p-confirmDialog>

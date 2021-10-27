@@ -27,7 +27,8 @@
     <!-- INICIO CAMPOS FILTRO DESTINATARIOS -->
     <div *ngIf="showDestinatarios" class="module vista-simple">
       <app-busqueda-colegiado-express [numColegiado]="filtros.ncolegiado" [nombreAp]="nombreApellidoColegiado"
-        [disabled]="esColegiado" (colegiado)="recuperarColegiado($event)" [obligatorio]="obligatorio">
+        [disabled]="esColegiado" (colegiado)="recuperarColegiado($event)" (idPersona)="recuperarIdPersona($event)"
+        [obligatorio]="obligatorio">
       </app-busqueda-colegiado-express>
     </div>
     <!-- FIN CAMPOS FILTRO DESTINATARIOS -->
@@ -89,6 +90,11 @@
           </p-multiSelect>
         </div>
 
+        <!-- <div *ngIf="modoBusqueda == 'a'" class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ 'facturacionSJCS.retenciones.numAbono' | translate }}</label>
+          <input type="text" pInputText class="form-control" [(ngModel)]="filtros.numeroAbono" />
+        </div> -->
+
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ 'facturacionSJCS.retenciones.fechaApliDesde' | translate }}</label>
           <app-fecha [utc]="false" (valueChangeSelected)="fillFechaDede($event, 'fechaAplicacionDesde')"
@@ -118,7 +124,7 @@
       <button pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"
         (click)="buscar()"></button>
       <button pButton type="button" icon="fa fa-plus" iconPos="left"
-        label="{{ 'general.boton.new' | translate }}"></button>
+        label="{{ 'general.boton.new' | translate }}" [disabled]="!permisoEscritura"></button>
     </div>
   </div>
 

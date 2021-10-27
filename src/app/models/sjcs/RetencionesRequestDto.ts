@@ -8,4 +8,7 @@ export class RetencionesRequestDto {
     fechaAplicacionDesde: Date;
     fechaAplicacionHasta: Date;
     historico: boolean;
+    idRetenciones: string | string[];
+    numeroAbono: string;
+    idPersona: string;
 }

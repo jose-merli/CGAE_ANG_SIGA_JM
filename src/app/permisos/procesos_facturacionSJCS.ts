@@ -19,5 +19,8 @@ export const procesos_facturacionSJCS: any = {
     fichaPagosTarjetaCompFac: "61E",
 
     // Permiso para cartas de facturación y pagos
-    cartasFacturacionPago: "620"
+    cartasFacturacionPago: "620",
+    
+    // Permiso para busqueda de retenciones
+    busquedaRetenciones: "630"
 }
