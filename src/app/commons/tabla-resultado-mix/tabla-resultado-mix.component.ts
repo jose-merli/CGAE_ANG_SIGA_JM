@@ -12,6 +12,7 @@ import { RowGroup } from '../tabla-resultado-desplegable/tabla-resultado-despleg
 import { TranslateService } from '../translate/translation.service';
 import { throwMatDialogContentAlreadyAttachedError } from '@angular/material';
 import { DatePipe } from '@angular/common';
+import { CalendarioProgramadoItem } from '../../models/guardia/CalendarioProgramadoItem';
 
 
 /*interface Cabecera {
@@ -97,7 +98,7 @@ export class TablaResultadoMixComponent implements OnInit {
 
   @Input() firstColumn: number = 0;
   @Input() lastColumn: number = 10;
-
+  @Input() filtrosValues = new CalendarioProgramadoItem();
   constructor(
     
     private renderer: Renderer2,
@@ -437,7 +438,8 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
           'observaciones': selectedRowValue.cells[6].value,
           'idCalendarioProgramado': selectedRowValue.cells[10].value,
           'idTurno': selectedRowValue.cells[11].value,
-          'idGuardia': selectedRowValue.cells[12].value
+          'idGuardia': selectedRowValue.cells[12].value,
+          'filtrosBusqueda' : this.filtrosValues
         }
           if( dataToSend.estado == "Generada"){
             dataToSendArr.push(dataToSend);
@@ -464,7 +466,8 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
         'observaciones': this.selectedRowValue[6].value,
         'idCalendarioProgramado': this.selectedRowValue[10].value,
         'idTurno': this.selectedRowValue[11].value,
-        'idGuardia': this.selectedRowValue[12].value
+        'idGuardia': this.selectedRowValue[12].value,
+        'filtrosBusqueda' : this.filtrosValues
       }
        if( dataToSend.estado == "Generada"){
         dataToSendArr.push(dataToSend);
@@ -522,7 +525,8 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
       'observaciones': row.cells[6].value,
       'idCalendarioProgramado': row.cells[10].value,
       'idTurno': row.cells[11].value,
-      'idGuardia': row.cells[12].value
+      'idGuardia': row.cells[12].value,
+      'filtrosBusqueda' : this.filtrosValues
     }
 
 
@@ -652,7 +656,8 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
       'observaciones': this.selectedRowValue[6].value,
       'idCalendarioProgramado': this.selectedRowValue[10].value,
       'idTurno': this.selectedRowValue[11].value,
-      'idGuardia': this.selectedRowValue[12].value
+      'idGuardia': this.selectedRowValue[12].value,
+      'filtrosBusqueda' : this.filtrosValues
     }
 
 

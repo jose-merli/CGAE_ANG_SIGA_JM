@@ -12,6 +12,7 @@ import { DatePipe } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { GlobalGuardiasService } from '../../guardiasGlobal.service';
 import { saveAs } from "file-saver/FileSaver";
+import { CalendarioProgramadoItem } from '../../../../../models/guardia/CalendarioProgramadoItem';
 
 
 @Component({
@@ -62,6 +63,7 @@ export class FichaProgramacionComponent implements OnInit {
   persistenciaGuardia: GuardiaItem;
   datosTarjetaGuardiasCalendario = [];
   datosTarjetaGuardiasCalendarioIni = [];
+  filtros = new CalendarioProgramadoItem();
   datosGenerales = {
     'duplicar' : '',
     'tabla': [],
@@ -113,7 +115,8 @@ export class FichaProgramacionComponent implements OnInit {
     'observaciones': '',
     'idCalendarioProgramado': '',
     'idTurno': '',
-    'idGuardia': ''
+    'idGuardia': '',
+    'filtrosBusqueda' : new CalendarioProgramadoItem()
   }
   estado = "";
   dataReady = false;
@@ -202,12 +205,14 @@ this.estado = this.datosGeneralesIniciales.estado;
 
   backTo() {
 
-    console.log('this.persistenciaGuardia: ', this.persistenciaGuardia)
+    
     if (this.persistenciaGuardia != undefined) {
       this.persistenciaGuardia.volver = true;
+      console.log('this.persistenciaGuardia: ', this.persistenciaGuardia)
+      this.filtros = this.dataToReceive.filtrosBusqueda;
       sessionStorage.setItem(
         "filtrosBusquedaGuardiasFichaGuardia",
-        JSON.stringify(this.persistenciaGuardia)
+        JSON.stringify(this.filtros)
       );
     }
 
