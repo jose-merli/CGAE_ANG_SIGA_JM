@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Message } from 'primeng/components/common/message';
 import { DataTable } from 'primeng/primeng';
 
@@ -29,6 +29,9 @@ export class DestinatariosListaSeriesFacturaComponent implements OnInit {
   @ViewChild('table') table: DataTable;
   selectedDatos;
 
+  @Input() openTarjetaListaDestinatarios;
+  @Output() guardadoSend = new EventEmitter<any>();
+  
   constructor() { }
 
   ngOnInit() {
@@ -79,7 +82,11 @@ export class DestinatariosListaSeriesFacturaComponent implements OnInit {
   }
 
   esFichaActiva() {
-    return true;
-}
+    return this.openTarjetaListaDestinatarios;
+  }
+
+  abreCierraFicha(key): void {
+    this.openTarjetaListaDestinatarios = !this.openTarjetaListaDestinatarios;
+  }
 
 }

@@ -35,7 +35,8 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit {
   // Sugerencias de los campos de autocompletado
   suggestionsTiposProductos = [];
   suggestionsTiposServicios = [];
-  
+
+  estado: string = "";
 
   resaltadoDatosGenerales: boolean = false;
   resaltadoDatos: boolean = false;
@@ -56,6 +57,8 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit {
       this.body = this.persistenceService.getDatos();
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
       console.log(this.body);
+
+      this.estado = this.esActivo() ? "Alta" : "Baja";
     }
 
     this.getCombos();
@@ -136,37 +139,43 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit {
   // Funciones para el input de autocomplete
 
   filterLabelsTiposProductos(event) {
-    let query = event.query;
-    console.log(query)
-    this.suggestionsTiposProductos = this.comboTiposProductos.filter(tp => {
-      if (tp.label != undefined && query != undefined) {
-        if (!this.body.tiposProductos.some(x => x.value === tp.value)) {
+    let query: string = event.query;
+    
+    if (query != undefined && query.length > 2) {
+      this.suggestionsTiposProductos = this.comboTiposProductos.filter(tp => {
+        if (tp.label != undefined && !this.body.tiposProductos.some(x => x.value === tp.value)) {
           return tp.label.toLowerCase().includes(query.toLowerCase()) || tp.labelSinTilde != undefined && tp.labelSinTilde.toLowerCase().includes(query.toLowerCase());
         }
-      }
-      
-      return false;
-    });
+        
+        return false;
+      });
+    } else {
+      this.suggestionsTiposProductos = [];
+    }
+    
   }
 
   filterLabelsTiposServicios(event) {
-    let query = event.query;
-    console.log(query)
-    this.suggestionsTiposServicios = this.comboTiposServicios.filter(ts => {
-      if (ts.label != undefined && query != undefined) {
-        if (!this.body.tiposServicios.some(x => x.value === ts.value)) {
+    let query: string = event.query;
+    
+    if (query != undefined && query.length > 2) {
+      this.suggestionsTiposServicios = this.comboTiposServicios.filter(ts => {
+        if (ts.label != undefined && !this.body.tiposServicios.some(x => x.value === ts.value)) {
           return ts.label.toLowerCase().includes(query.toLowerCase()) || ts.labelSinTilde != undefined && ts.labelSinTilde.toLowerCase().includes(query.toLowerCase());
         }
-      }
-      
-      return false;
-    });
+        
+        return false;
+      });
+    } else {
+      this.suggestionsTiposServicios = [];
+    }
+    
   }
 
   // Eliminar series de facturación
 
   confirmEliminar(): void {
-    let mess = "Se va a proceder a dar de baja las series de facturación seleccionadas ¿Desea continuar?";
+    let mess = "Se va a proceder a dar de baja la serie de facturación ¿Desea continuar?";
     let icon = "fa fa-eraser";
 
     this.confirmationService.confirm({
@@ -174,7 +183,6 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit {
       message: mess,
       icon: icon,
       accept: () => {
-        this.progressSpinner = true;
         this.eliminar();
       },
       reject: () => {
@@ -184,10 +192,16 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit {
   }
 
   eliminar(): void {
+    this.progressSpinner = true;
+
     this.sigaServices.post("facturacionPyS_eliminaSerieFacturacion", [this.body]).subscribe(
       data => {
-        this.body.fechaBaja = null;
-        this.showMessage("success", "Eliminar", "Las series de facturación han sido dadas de baja con exito.");
+        this.body.fechaBaja = new Date();
+        this.estado = this.esActivo() ? "Alta" : "Baja";
+        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+        this.persistenceService.setDatos(this.bodyInicial);
+        this.guardadoSend.emit();
+        this.showMessage("success", "Eliminar", "Las serie de facturación han sido dada de baja con exito.");
       },
       err => {
         console.log(err);
@@ -201,7 +215,7 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit {
   // Reactivar series de facturación
 
   confirmReactivar(): void {
-    let mess = "Se va a proceder a reactivar las series de facturación seleccionadas ¿Desea continuar?";
+    let mess = "Se va a proceder a reactivar la serie de facturación ¿Desea continuar?";
     let icon = "fa fa-eraser";
 
     this.confirmationService.confirm({
@@ -209,7 +223,6 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit {
       message: mess,
       icon: icon,
       accept: () => {
-        this.progressSpinner = true;
         this.reactivar();
       },
       reject: () => {
@@ -219,9 +232,15 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit {
   }
 
   reactivar(): void {
+    this.progressSpinner = true;
+
     this.sigaServices.post("facturacionPyS_reactivarSerieFacturacion", [this.body]).subscribe(
       data => {
-        this.body.fechaBaja = new Date();
+        this.body.fechaBaja = null;
+        this.estado = this.esActivo() ? "Alta" : "Baja";
+        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+        this.persistenceService.setDatos(this.bodyInicial);
+        this.guardadoSend.emit();
         this.showMessage("success", "Reactivar", "Las series de facturación han sido reactivadas con éxito.");
       },
       err => {
@@ -237,16 +256,32 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit {
 
   restablecer(): void {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    this.estado = this.esActivo() ? "Alta" : "Baja";
   }
 
   // Guadar
+
+  isValid(): boolean {
+    return this.body.abreviatura != undefined && this.body.abreviatura.trim() != "" && this.body.abreviatura.length <= 20
+          && this.body.descripcion != undefined && this.body.descripcion.trim() != "" && this.body.descripcion.length <= 100
+          && this.body.idCuentaBancaria != undefined;
+  }
+
+  checkSave(): void {
+    if (this.isValid()) {
+      this.save();
+    } else {
+      this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+      this.resaltadoDatos = true;
+    }
+  }
 
   save(): void {
     this.progressSpinner = true;
 
     this.sigaServices.post("facturacionPyS_guardarSerieFacturacion", this.body).subscribe(
       n => {
-        this.bodyInicial = this.body;
+        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
         this.persistenceService.setDatos(this.bodyInicial);
         this.guardadoSend.emit();
 
@@ -266,15 +301,9 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit {
     }
   }
 
+  // Comprueba si una serie se encuentra de baja o no
   esActivo(): boolean {
     return this.body.fechaBaja == undefined || this.body.fechaBaja == null;
-  }
-
-  // Abrir y cerrar ficha
-
-  
-  esFichaActiva(): boolean {
-    return true;// this.fichaPosible.activa;
   }
 
   showMessage(severity, summary, msg) {
@@ -286,8 +315,19 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit {
     });
   }
 
-  /*
+  clear() {
+    this.msgs = [];
+  }
+
+  // Abrir y cerrar la ficha
+
+  esFichaActiva(): boolean {
+    return this.openTarjetaDatosGenerales;// this.fichaPosible.activa;
+  }
+
   abreCierraFicha(key): void {
+    this.openTarjetaDatosGenerales = !this.openTarjetaDatosGenerales;
+    /*
     this.resaltadoDatosGenerales = true;
 
     if (key == "datosGenerales" && !this.fichaPosible.activa) {
@@ -304,4 +344,6 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit {
     this.idOpened.emit(key);
   }
   */
+  }
+
 }

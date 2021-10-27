@@ -244,7 +244,6 @@ export class TablaSeriesFacturaComponent implements OnInit {
 
   // Abrir ficha de serie facturación
   openTab(selectedRow) {
-    this.progressSpinner = true;
     let serieFacturacionItem: SerieFacturacionItem = selectedRow;
     sessionStorage.setItem("serieFacturacionItem", JSON.stringify(serieFacturacionItem));
     this.router.navigate(["/datosSeriesFactura"]);
@@ -268,6 +267,8 @@ export class TablaSeriesFacturaComponent implements OnInit {
     }
   }
 
-  clear() { }
+  clear() {
+    this.msgs = [];
+  }
   
 }

@@ -10,10 +10,12 @@
     <app-tarjeta-resumen-fija class="pb-50" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="datos" [icono]="iconoTarjetaResumen" (modoEdicionSend)="modoEdicionSend($event)" [enlaces]="enlacesTarjetaResumen" (isOpen)="isOpenReceive($event)" [manuallyOpened]="manuallyOpened">
     </app-tarjeta-resumen-fija>
 
-    <app-datos-generales-series-factura [tarjetaDatosGenerales]="tarjetaDatosGenerales" [openTarjetaDatosGenerales]="openTarjetaDatosGenerales" (guardadoSend)="guardadoSend()"></app-datos-generales-series-factura>
+    <app-datos-generales-series-factura [openTarjetaDatosGenerales]="openTarjetaDatosGenerales" (guardadoSend)="guardadoSend()"></app-datos-generales-series-factura>
     <app-observaciones-series-factura></app-observaciones-series-factura>
     <app-destinatarios-etiquetas-series-factura></app-destinatarios-etiquetas-series-factura>
     <app-destinatarios-individuales-series-factura></app-destinatarios-individuales-series-factura>
     <app-destinatarios-lista-series-factura></app-destinatarios-lista-series-factura>
   </div>
 </div>
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" width="425"></p-confirmDialog>

@@ -46,6 +46,7 @@ export class GestionSeriesFacturaComponent implements OnInit {
     this.updateEnlacesTarjetaResumen();
 
     this.progressSpinner = false;
+    this.goTop();
   }
 
   // Tarjeta resumen
@@ -62,11 +63,11 @@ export class GestionSeriesFacturaComponent implements OnInit {
         value: this.body.descripcion
       },
       {
-        label: "Cuenta Entidad",
+        label: this.translateService.instant("facturacion.seriesFactura.cuentaBancaria"),
         value: "(..." + this.body.cuentaBancaria.slice(-4) + ")"
       },
       {
-        label: "Sufijos",
+        label: this.translateService.instant("facturacionSJCS.facturacionesYPagos.sufijo"),
         value: this.body.sufijo
       },
       {
@@ -92,19 +93,19 @@ export class GestionSeriesFacturaComponent implements OnInit {
     });
 
     this.enlacesTarjetaResumen.push({
-      label: "Destinatarios por etiquetas", // Internacionalizar
+      label: "facturacion.seriesFactura.destEtiquetas",
       value: document.getElementById("destinatariosEtiquetas"),
       nombre: "destinatariosEtiquetas",
     });
 
     this.enlacesTarjetaResumen.push({
-      label: "facturacion.asignacionConceptos.destIndividuales.cabecera",
+      label: "facturacion.seriesFactura.destIndividuales",
       value: document.getElementById("destinatariosIndividuales"),
       nombre: "destinatariosIndividuales",
     });
 
     this.enlacesTarjetaResumen.push({
-      label: "Lista de destinatarios", // Internacionalizar
+      label: "facturacion.seriesFactura.destLista",
       value: document.getElementById("destinatariosLista"),
       nombre: "destinatariosLista",
     });
@@ -164,5 +165,15 @@ export class GestionSeriesFacturaComponent implements OnInit {
       summary: summary,
       detail: msg
     });
+  }
+
+  goTop() {
+    document.children[document.children.length - 1]
+    let top = document.getElementById("top");
+    if (top) {
+      top.scrollIntoView();
+      top = null;
+    }
+
   }
 }

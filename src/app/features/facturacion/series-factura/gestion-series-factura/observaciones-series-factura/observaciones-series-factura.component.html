@@ -12,7 +12,7 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('observaciones')">
-            <label class="mr-auto title-ficha pointer">{{ 'general.message.datos.generales' | translate }}</label>
+            <label class="mr-auto title-ficha pointer">{{ 'censo.nuevaSolicitud.observaciones' | translate }}</label>
           </div>
           <div class="d-flex justify-content-between default">
             
@@ -29,7 +29,7 @@
         <div class="img-colegiado">
           <i class="far fa-address-book icon-ficha"></i>
         </div>
-        <label class="title-ficha pointer">Observaciones</label>
+        <label class="title-ficha pointer">{{ 'censo.nuevaSolicitud.observaciones' | translate }}</label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
@@ -38,7 +38,6 @@
     <div *ngIf="esFichaActiva('observaciones')" class="card-body card-body-ficha">
       <div class="row">
         <div class="form-group w-100">
-          <label>Observaciones</label>
           <editor apiKey="{{apiKey}}" [init]="editorConfig" [(ngModel)]="body.observaciones"></editor>
         </div>
       </div>
@@ -50,7 +49,7 @@
           (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
 
         <button pButton type="button" icon="fa fa-save" iconPos="left"
-          label="{{ 'general.boton.guardar' | translate }}"></button>
+          (click)="save()" label="{{ 'general.boton.guardar' | translate }}"></button>
       </div>
     </div>
   </div>

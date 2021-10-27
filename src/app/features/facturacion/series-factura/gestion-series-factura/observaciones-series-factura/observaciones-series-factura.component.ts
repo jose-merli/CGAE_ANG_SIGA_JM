@@ -1,6 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { TranslateService } from '../../../../../commons/translate';
 import { SerieFacturacionItem } from '../../../../../models/SerieFacturacionItem';
 import { PersistenceService } from '../../../../../_services/persistence.service';
+import { SigaServices } from '../../../../../_services/siga.service';
 
 @Component({
   selector: 'app-observaciones-series-factura',
@@ -14,7 +16,8 @@ export class ObservacionesSeriesFacturaComponent implements OnInit {
 
   @Input() datos: SerieFacturacionItem;
   @Input() tarjetaDatosGenerales: string;
-  @Input() openTarjetaDatosGenerales;
+  @Input() openTarjetaObservaciones;
+  @Output() guardadoSend = new EventEmitter<any>();
 
   bodyInicial: SerieFacturacionItem;
   body: SerieFacturacionItem = new SerieFacturacionItem();
@@ -37,7 +40,9 @@ export class ObservacionesSeriesFacturaComponent implements OnInit {
   };
 
   constructor(
-    private persistenceService: PersistenceService
+    private persistenceService: PersistenceService,
+    private translateService: TranslateService,
+    private sigaServices: SigaServices
   ) { }
 
   ngOnInit() {
@@ -55,14 +60,53 @@ export class ObservacionesSeriesFacturaComponent implements OnInit {
     this.progressSpinner = false;
   }
 
+
   // Restablecer
 
   restablecer(): void {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
   }
 
+
+  // Guadar
+
+  save(): void {
+    this.progressSpinner = true;
+
+    this.sigaServices.post("facturacionPyS_guardarSerieFacturacion", this.body).subscribe(
+      n => {
+        this.bodyInicial = this.body;
+        this.persistenceService.setDatos(this.bodyInicial);
+        this.guardadoSend.emit();
+
+        this.progressSpinner = false;
+      },
+      err => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+
+  clear() {
+    this.msgs = [];
+  }
+
   esFichaActiva(): boolean {
-    return true;// this.fichaPosible.activa;
+    return this.openTarjetaObservaciones;// this.fichaPosible.activa;
+  }
+
+  abreCierraFicha(key): void {
+    this.openTarjetaObservaciones = !this.openTarjetaObservaciones;
   }
 
 }

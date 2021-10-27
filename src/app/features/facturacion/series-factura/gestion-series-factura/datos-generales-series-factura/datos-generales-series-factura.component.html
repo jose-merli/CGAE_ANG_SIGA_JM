@@ -16,6 +16,16 @@
           </div>
           <div class="d-flex justify-content-between default">
             
+            <label>{{ "administracion.parametrosGenerales.literal.abreviatura" | translate }}: 
+                <span>{{body.abreviatura }}</span></label>
+            <label>{{ "general.description" | translate }}: 
+                <span>{{body.descripcion }}</span></label>
+            <label>{{ "facturacion.seriesFactura.tipoProductos" | translate }}: 
+                <span *ngFor="let item of body.tiposProductos">{{ item.label }}</span>
+            </label>
+            <label>{{ "facturacion.seriesFactura.tipoServicios" | translate }}: 
+              <span *ngFor="let item of body.tiposServicios">{{ item.label }}</span>
+            </label>
             
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('datosGenerales')"
               *ngIf="!esFichaActiva('datosGenerales')"></i>
@@ -40,27 +50,27 @@
         <div class="bloque col-lg-4 col-md-4">
           <div class="form-group">
             <label>{{ 'gratuita.definirTurnosIndex.literal.abreviatura' | translate }} (*)</label>
-            <input type="text" [ngClass]="styleObligatorio(body.abreviatura)" id="abreviatura" [(ngModel)]="body.abreviatura" class="form-control" pInputText>
+            <input type="text" [ngClass]="styleObligatorio(body.abreviatura)" id="abreviatura" [(ngModel)]="body.abreviatura" class="form-control" pInputText maxLength="20">
           </div>
           <div class="form-group">
-            <label>Planificar confirmación posteriormente a</label>
+            <label>{{ 'facturacion.seriesFactura.facturacionPrevia' | translate }}</label>
             <p-dropdown class="select-form" [(ngModel)]='body.idSerieFacturacionPrevia' placeholder="Seleccionar"
               [options]="comboPlanificacion" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
           </div>
             <div class="form-group mb-3 d-flex justify-content-between">
-                <label class="checkbox-label" for="serieGenerica">Serie genérica para facturar todo</label>
+                <label class="checkbox-label" for="serieGenerica">{{ 'facturacion.seriesFactura.serieGenricaFacturar' | translate }}</label>
                 <p-checkbox class="checkbox-inline" id="serieGenerica" [(ngModel)]="body.serieGenerica" binary="true"></p-checkbox>
             </div>
           <div class="form-group">
             <label>{{ 'menu.justiciaGratuita.calendarios.Estado' | translate }}</label>
-            <input type="text" [(ngModel)]="body.estado" [disabled]="true" class="form-control" pInputText>
+            <input type="text" [(ngModel)]="estado" [disabled]="true" class="form-control" pInputText>
           </div>
         </div>
 
         <div class="bloque col-lg-4 col-md-4">
           <div class="form-group">
             <label>{{ 'general.description' | translate }} (*)</label>
-            <input type="text" [ngClass]="styleObligatorio(body.descripcion)" [(ngModel)]="body.descripcion" class="form-control" pInputText>
+            <input type="text" [ngClass]="styleObligatorio(body.descripcion)" [(ngModel)]="body.descripcion" class="form-control" pInputText maxLength="100">
           </div>
           <div class="form-group">
             <label>{{ 'facturacion.maestros.tiposproductos' | translate }}</label>
@@ -104,7 +114,7 @@
 
         <div class="bloque col-lg-4 col-md-4">
           <div class="form-group">
-            <label>Cuenta bancaria Entidad (*)</label>
+            <label>{{ 'facturacion.seriesFactura.bancoEntidad' | translate }} (*)</label>
             <p-dropdown class="select-form" [(ngModel)]='body.idCuentaBancaria' placeholder="Seleccionar"
               [options]="comboCuentaBancaria" [filter]="true" filterBy="label,labelSinTilde"
               [ngClass]="styleObligatorio(body.idCuentaBancaria)" [showClear]="true"></p-dropdown>
@@ -112,8 +122,7 @@
           <div class="form-group">
             <label>{{ 'administracion.parametrosGenerales.literal.sufijo' | translate }}</label>
             <p-dropdown class="select-form" [(ngModel)]='body.idSufijo' placeholder="Seleccionar"
-              [options]="comboSufijo" [filter]="true" filterBy="label,labelSinTilde"
-              [ngClass]="styleObligatorio(body.idSufijo)" [showClear]="true"></p-dropdown>
+              [options]="comboSufijo" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
           </div>
         </div>
       </div>
@@ -128,7 +137,7 @@
           (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
 
         <button pButton type="button" icon="fa fa-save" iconPos="left"
-          (click)="save()" label="{{ 'general.boton.guardar' | translate }}"></button>
+          (click)="checkSave()" label="{{ 'general.boton.guardar' | translate }}"></button>
       </div>
     </div>
   </div>
@@ -137,5 +146,3 @@
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
 </div>
-
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" width="425"></p-confirmDialog>

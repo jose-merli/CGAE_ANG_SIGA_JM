@@ -1,6 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Message } from 'primeng/components/common/message';
 import { DataTable } from 'primeng/primeng';
+import { TranslateService } from '../../../../../commons/translate';
+import { SerieFacturacionItem } from '../../../../../models/SerieFacturacionItem';
+import { PersistenceService } from '../../../../../_services/persistence.service';
+import { SigaServices } from '../../../../../_services/siga.service';
 
 @Component({
   selector: 'app-destinatarios-individuales-series-factura',
@@ -11,6 +15,8 @@ export class DestinatariosIndividualesSeriesFacturaComponent implements OnInit {
 
   msgs: Message[];
   progressSpinner: boolean = false;
+
+  body: SerieFacturacionItem;
 
   // Tabla
   datos: any[];
@@ -25,13 +31,25 @@ export class DestinatariosIndividualesSeriesFacturaComponent implements OnInit {
 
   @ViewChild("table") table: DataTable;
   selectedDatos;
+
+  @Input() openTarjetaDestinatariosIndividuales;
+  @Output() guardadoSend = new EventEmitter<any>();
   
-  constructor() { }
+  constructor(
+    private sigaServices: SigaServices,
+    private persistenceService: PersistenceService,
+    private translateService: TranslateService
+  ) { }
 
   ngOnInit() {
     this.progressSpinner = true;
-    
+
     this.getCols();
+    if (this.persistenceService.getDatos()) {
+      this.body = this.persistenceService.getDatos();
+
+      this.getDestinatariosSeries();
+    }
 
     this.progressSpinner = false;
   }
@@ -79,9 +97,28 @@ export class DestinatariosIndividualesSeriesFacturaComponent implements OnInit {
     ];
   }
   
+  getDestinatariosSeries() {
+    this.sigaServices.getParam("facturacionPyS_getDestinatariosSeries", "?idSerieFacturacion=" + this.body.idSerieFacturacion).subscribe(
+      n => {
+        console.log(n);
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
 
+
+  clear() {
+    this.msgs = [];
+  }
+  
   esFichaActiva(): boolean {
-    return true;// this.fichaPosible.activa;
+    return this.openTarjetaDestinatariosIndividuales;// this.fichaPosible.activa;
+  }
+
+  abreCierraFicha(key): void {
+    this.openTarjetaDestinatariosIndividuales = !this.openTarjetaDestinatariosIndividuales;
   }
 
 }
