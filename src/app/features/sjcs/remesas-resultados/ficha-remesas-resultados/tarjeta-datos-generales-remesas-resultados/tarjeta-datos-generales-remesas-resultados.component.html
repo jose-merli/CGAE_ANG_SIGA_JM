@@ -50,34 +50,17 @@
       <!-- CAMPOS COMPONEN FILTROS BUSQUEDA-->
       <div class="module vista-simple">
         <div class="form-row">
-          <div class="form-group-interlineado col-lg-3 col-md-3">
-            <label>{{ 'justiciaGratuita.remesasResultados.filtro.numRegistro' | translate }}</label>
-            <div class="form-row">
-              <div class="form-group-interlineado col-lg-6 col-md-6 px-1">
-                <input type="text" name="numRegistroPrefijo" value="" class="box" class="registro-control w-100"
-                  maxLength="8" pInputText [disabled]="isEnabledNuevo" [(ngModel)]="remesaItem.numRegistroRemesaCompleto">
-              </div>
-              </div>
-            </div>
-
-
-
-            
-        <div class="form-group-interlineado col-lg-4 col-md-4">
+         
+        <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ 'justiciaGratuita.remesasResultados.filtro.numRegistro' | translate }}</label>
           <div class="form-row">
-            <div class="form-group-interlineado col-lg-4 col-md-4 px-1">
+            <div class="form-group-interlineado col-lg-5 col-md-3 px-1">
               <input type="text" name="numRegistroPrefijo" value="" class="box" class="registro-control w-100"
-                [(ngModel)]='remesaItem.prefijoRemesa' maxLength="8" pInputText>
+                [(ngModel)]='remesaItem.prefijoRemesa' maxLength="8" pInputText [disabled]="isEnabledNuevo" >
             </div>
-            <div class="form-group-interlineado col-lg-4 col-md-4 px-1">
+            <div class="form-group-interlineado col-lg-5 col-md-3 px-1">
               <input type="text" name="numRegistroNumero" value="" class="box" class="registro-control w-100"
-                [(ngModel)]='remesaItem.numRegistroNumero' maxLength="10" pInputText>
-            </div>
-
-            <div class="form-group-interlineado col-lg-4 col-md-4 px-1">
-              <input type="text" name="numRegistroSufijo" value="" class="box" class="registro-control w-100"
-                [(ngModel)]='remesaItem.numRegistroSufijo' maxLength="8" pInputText>
+                [(ngModel)]='remesaItem.numeroRemesa' maxLength="10" pInputText [disabled]="isEnabledNuevo" >
             </div>
           </div>
         </div>
@@ -88,7 +71,7 @@
 
             <div class="form-group-interlineado col-lg-3 col-md-3">
               <label>{{ 'justiciaGratuita.remesasResultados.tabla.fechaCarga' | translate }}</label>
-              <app-fecha [(value)]="remesaItem.fechaCargaRemesaResultado"  name="fechaCarga" ngDefaultControl (valueChangeSelected)="fillFechaCargaDetalle($event)" [(ngModel)]="remesaItem.fechaCargaRemesaResultado"></app-fecha>
+              <app-fecha [(value)]="remesaItem.fechaCargaRemesaResultado"   [disabled]="isEnabledNuevo" name="fechaCarga" ngDefaultControl (valueChangeSelected)="fillFechaCargaDetalle($event)" [(ngModel)]="remesaItem.fechaCargaRemesaResultado"></app-fecha>
             </div>
     
             <div class="form-group-interlineado col-lg-3 col-md-3">
@@ -109,7 +92,7 @@
 
               <div class="ui-inputgroup main-button" *ngIf="conFichero">
                 
-                <button (click)="descargarFicheros()" pButton type="button" icon="far fa-save" iconPos="left"  class="edit my-0 mx-auto main-button"
+                <button (click)="descargarFicheros()" pButton type="button" icon="fa fa-download" iconPos="left"  class="edit my-0 mx-auto main-button"
                 label="{{remesaItem.nombreFichero}}"
                ></button>
 

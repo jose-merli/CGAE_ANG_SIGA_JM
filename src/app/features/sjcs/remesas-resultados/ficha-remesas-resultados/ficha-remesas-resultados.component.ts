@@ -26,6 +26,7 @@ export class FichaRemesasResultadosComponent implements OnInit {
   msgs;
   item;
   remesaTabla;
+  remesaAuxiliar : RemesasResultadoItem;
   remesaResolucion : RemesasResolucionItem = new RemesasResolucionItem();
   remesaItem: RemesasResultadoItem = new RemesasResultadoItem(
     {
@@ -74,6 +75,7 @@ export class FichaRemesasResultadosComponent implements OnInit {
       localStorage.removeItem('remesaItem');
       this.remesaTabla = JSON.parse(this.item);
       console.log("Item en JSON -> ", this.remesaTabla);
+      this.remesaAuxiliar = JSON.parse(this.item);
       this.fichaRemesaResultado = localStorage.getItem('fichaRemesaResultado');
     }else if(localStorage.getItem('fichaRemesaResultado') == "nuevo"){
       this.recuperarDatosContador();
@@ -138,6 +140,23 @@ export class FichaRemesasResultadosComponent implements OnInit {
   volver(){
     this.tarjetaDatosGeneralesRemesasResultados.isEnabledNuevo = false;
     this.router.navigate(["/remesasResultado"]);
+  }
+
+
+
+  restablecer(){
+    if(this.remesaItem.idRemesa == null){
+      this.tarjetaDatosGeneralesRemesasResultados.remesaItem.observacionesRemesaResultado= "";
+      this.tarjetaDatosGeneralesRemesasResultados.remesaItem.fechaResolucionRemesaResultado="";
+      this.tarjetaDatosGeneralesRemesasResultados.remesaItem.nombreFichero = "";
+      this.tarjetaDatosGeneralesRemesasResultados.file = null;
+      this.tarjetaDatosGeneralesRemesasResultados.conFichero = false;
+      this.tarjetaDatosGeneralesRemesasResultados.archivoDisponible = false;
+
+    }else{
+      this.tarjetaDatosGeneralesRemesasResultados.remesaItem.observacionesRemesaResultado = this.remesaAuxiliar.observacionesRemesaResultado;
+      this.tarjetaDatosGeneralesRemesasResultados.remesaItem.fechaResolucionRemesaResultado = this.remesaAuxiliar.fechaResolucionRemesaResultado;
+    }
   }
 
 }

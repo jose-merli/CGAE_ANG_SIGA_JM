@@ -34,6 +34,10 @@ export class TablaRemesasResultadosComponent implements OnInit {
 
   message;
 
+  numRemesaSufijo;
+  prefijoRemesa;
+  numeroRemesa;
+
   initDatos;
   progressSpinner: boolean = false;
   buscadores = []
@@ -63,6 +67,8 @@ export class TablaRemesasResultadosComponent implements OnInit {
 
     this.datosInicial = JSON.parse(JSON.stringify(this.datos));
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
+    console.log(this.datos)
+
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -250,7 +256,4 @@ export class TablaRemesasResultadosComponent implements OnInit {
     );
   }
 
-  consultarEditarRemesaResultado(remesaResultado){
-    console.log(remesaResultado);
-  }
 }

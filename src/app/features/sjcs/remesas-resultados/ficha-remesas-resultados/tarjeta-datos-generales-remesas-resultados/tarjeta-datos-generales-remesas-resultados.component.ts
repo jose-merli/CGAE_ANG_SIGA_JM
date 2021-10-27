@@ -20,6 +20,7 @@ import { SigaStorageService } from '../../../../../siga-storage.service';
 import { RemesasResultadoItem } from '../../../../../models/sjcs/RemesasResultadoItem';
 import { RemesasResolucionItem } from '../../../../../models/sjcs/RemesasResolucionItem';
 import { saveAs } from "file-saver/FileSaver";
+import moment = require('moment');
 
 @Component({
   selector: 'app-tarjeta-datos-generales-remesas-resultados',
@@ -69,6 +70,7 @@ export class TarjetaDatosGeneralesRemesasResultadosComponent implements OnInit {
   MateriaDescripcion
   isDisabledSubZona: boolean = false;
   fOpen: boolean = true;
+  newRegistroNumero;
   fichasPosibles = [
     {
       key: "generales",
@@ -117,26 +119,6 @@ export class TarjetaDatosGeneralesRemesasResultadosComponent implements OnInit {
     private localStorageService: SigaStorageService) { }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.turnosItem != undefined && (changes.turnosItem.currentValue != null || changes.turnosItem.currentValue != undefined)) {
-      this.turnosItem = changes.turnosItem.currentValue;
-      if (this.turnosItem != undefined) {
-        if (this.turnosItem.idturno != undefined) {
-          this.body = this.turnosItem;
-          if (this.body.idturno == undefined) {
-            this.modoEdicion = false;
-          } else {
-            if (this.turnosItem.fechabaja != undefined) {
-              this.disableAll = true;
-            }
-            this.modoEdicion = true;
-            // this.getCombos();
-          }
-        }
-      } else {
-        this.partidoJudicial = "";
-        this.turnosItem = new TurnosItems();
-      }
-    }
     if (this.openGen == true) {
       if (this.openFicha == false) {
         this.abreCierraFicha('datosGenerales')
@@ -166,8 +148,10 @@ export class TarjetaDatosGeneralesRemesasResultadosComponent implements OnInit {
     console.log("Empieza;")
     console.log(this.remesaItem)
     console.log("FIN")
-    if(this.remesaItem != null){
+    if(this.remesaItem.idRemesa == null){
       this.getUltimoRegitroRemesa();
+      this.remesaItem.fechaCargaRemesaResultado = moment(new Date()).format('DD/MM/YYYY');
+
       //this.remesaItem.descripcion = "";
     }
     if(this.remesaItem.nombreFichero.length > 0){
@@ -175,7 +159,6 @@ export class TarjetaDatosGeneralesRemesasResultadosComponent implements OnInit {
         console.log("Tiene fichero")
     }
     this.checkDatosGenerales();
-    this.actualizarFichaResumen();
     this.resaltadoDatosGenerales = true;
     // this.abreCierraFicha('datosGenerales');
     this.commonsService.checkAcceso(procesos_oficio.datosGenerales)
@@ -194,19 +177,6 @@ export class TarjetaDatosGeneralesRemesasResultadosComponent implements OnInit {
         }
       }
       ).catch(error => console.error(error));
-
-    if (this.turnosItem != undefined) {
-      this.body = this.turnosItem;
-      this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
-    } else {
-      this.turnosItem = new TurnosItems();
-    }
-    if (this.body.idturno == undefined) {
-      this.modoEdicion = false;
-    } else {
-      this.modoEdicion = true;
-    }
-    this.getCols();
     this.getInstitucionActual();
   }
 
@@ -222,40 +192,14 @@ export class TarjetaDatosGeneralesRemesasResultadosComponent implements OnInit {
         n => {
           console.log("Dentro de la respuesta. Contenido --> ", n.contador);
           //this.remesaItem.numero = n.contador + 1;
-          console.log("remesaItem -> ", this.remesaItem);
+          this.remesaItem.prefijoRemesa = n.prefijo;
+          this.remesaItem.numeroRemesa = (n.contador+1);
         },
         error => { },
         () => { }
       );
   }
 
-  getCols() {
-
-    this.cols = [
-      { field: "fechaModificacion", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaEstado" },
-      { field: "estado", header: "justiciaGratuita.Calendarios.Estado" }
-    ];
-    this.cols.forEach(it => this.buscadores.push(""))
-
-    this.rowsPerPage = [
-      {
-        label: 10,
-        value: 10
-      },
-      {
-        label: 20,
-        value: 20
-      },
-      {
-        label: 30,
-        value: 30
-      },
-      {
-        label: 40,
-        value: 40
-      }
-    ];
-  }
 
 
 
@@ -264,265 +208,14 @@ export class TarjetaDatosGeneralesRemesasResultadosComponent implements OnInit {
     return this.datepipe.transform(date, pattern);    
   }
 
-  obtenerPartidos() {
-    return this.partidoJudicial;
-  }
 
-  onChangeArea() {
 
-    this.turnosItem.idmateria = "";
-    this.materias = [];
-
-    if (this.turnosItem.idarea != undefined && this.turnosItem.idarea != "") {
-      this.isDisabledMateria = false;
-      this.getComboMaterias();
-    } else {
-      this.isDisabledMateria = true;
-    }
-
-  }
 
   styleObligatorio(resaltado, evento) {
     if ((evento == null || evento == undefined || evento == "") && resaltado == "datosGenerales" && this.resaltadoDatosGenerales) {
       return "camposObligatorios";
     }
   }
-
-  onChangeZona() {
-
-    this.turnosItem.idsubzona = "";
-    this.subzonas = [];
-
-    if (this.turnosItem.idzona != undefined && this.turnosItem.idzona != "") {
-      this.isDisabledSubZona = false;
-      this.getComboSubZonas();
-      this.partidoJudicial = "";
-    } else {
-      this.isDisabledSubZona = true;
-      this.partidoJudicial = "";
-    }
-
-  }
-
-  getPartidosJudiciales() {
-
-    for (let i = 0; i < this.partidasJudiciales.length; i++) {
-      this.partidasJudiciales[i].partidosJudiciales = [];
-      this.partidasJudiciales[i].jurisdiccion.forEach(partido => {
-        let findPartido = this.comboPJ.find(x => x.value === partido);
-        this.partidoJudicial = this.partidasJudiciales[i].nombrePartidosJudiciales.split(";").join("; ");
-      });
-    }
-    this.actualizarFichaResumen();
-  }
-  actualizarFichaResumen() {
-    if (this.modoEdicion) {
-
-
-      this.datosTarjetaResumen = [
-        {
-          label: "Nombre",
-          value: this.turnosItem.nombre
-        },
-        {
-          label: "Área",
-          value: this.turnosItem.area
-        },
-        {
-          label: "Materia",
-          value: this.turnosItem.materia
-        },
-        {
-          label: "Jurisdicción",
-          value: this.jurisdiccionDescripcion
-        },
-        {
-          label: "Tipo Turno",
-          value: this.tipoturnoDescripcion
-        },
-        {
-          label: "Grupo Zona",
-          value: this.turnosItem.zona
-        },
-        {
-          label: "Zona",
-          value: this.turnosItem.subzona
-        },
-        {
-          label: "Partida Presupuestaria",
-          value: this.partidaPresupuestaria
-        },
-        {
-          label: "Partido Judicial",
-          value: this.partidoJudicial
-        },
-      ]
-      this.datosTarjetaResumenEmit.emit(this.datosTarjetaResumen);
-    }
-  }
-
-  partidoJudiciales() {
-    if (this.turnosItem.idsubzona != null || this.turnosItem.idsubzona != undefined) {
-      this.sigaServices
-        .getParam(
-          "fichaZonas_searchSubzones",
-          "?idZona=" + this.turnosItem.idzona
-        )
-        .subscribe(
-          n => {
-            this.partidasJudiciales = n.zonasItems;
-          },
-          err => {
-            console.log(err);
-
-          }, () => {
-            this.getPartidosJudiciales();
-          }
-        );
-    } else {
-      this.partidoJudicial = "";
-    }
-
-  }
-  getComboMaterias() {
-    this.sigaServices
-      .getParam(
-        "combossjcs_comboMaterias",
-        "?idArea=" + this.turnosItem.idarea)
-      .subscribe(
-        n => {
-          this.materias = n.combooItems;
-        },
-        error => { },
-        () => {
-          if (this.turnosItem.idarea != null) {
-            this.isDisabledMateria = false;
-          }
-        }
-      );
-  }
-
-  getComboSubZonas() {
-    this.sigaServices
-      .getParam(
-        "combossjcs_comboSubZonas",
-        "?idZona=" + this.turnosItem.idzona)
-      .subscribe(
-        n => {
-          this.subzonas = n.combooItems;
-        },
-        error => { },
-        () => {
-
-        }
-      );
-  }
-
-  arreglaCombos() {
-    this.sigaServices.get("combossjcs_comboAreas").subscribe(
-      n => {
-        this.areas = n.combooItems;
-
-        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-    para poder filtrar el dato con o sin estos caracteres*/
-      },
-      err => {
-        console.log(err);
-      }, () => {
-        if (this.turnosItem.idarea != null) {
-
-          this.sigaServices
-            .getParam(
-              "combossjcs_comboMaterias",
-              "?idArea=" + this.turnosItem.idarea)
-            .subscribe(
-              n => {
-                this.materias = n.combooItems;
-              },
-              error => { },
-              () => {
-                if (this.turnosItem.idarea != null) {
-                  this.isDisabledMateria = false;
-                }
-              }
-            );
-        }
-      }
-    );
-
-    this.sigaServices.get("combossjcs_comboZonas").subscribe(
-      n => {
-        this.zonas = n.combooItems;
-
-        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-    para poder filtrar el dato con o sin estos caracteres*/
-        this.zonas.map(e => {
-          let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
-          let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
-          let i;
-          let x;
-          for (i = 0; i < e.label.length; i++) {
-            if ((x = accents.indexOf(e.label[i])) != -1) {
-              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
-              return e.labelSinTilde;
-            }
-          }
-        });
-
-      },
-      err => {
-        console.log(err);
-      }, () => {
-        if (this.turnosItem.idzona != null) {
-          this.sigaServices
-            .getParam(
-              "fichaZonas_searchSubzones",
-              "?idZona=" + this.turnosItem.idzona
-            )
-            .subscribe(
-              n => {
-                this.partidasJudiciales = n.zonasItems;
-              },
-              err => {
-                console.log(err);
-
-              }, () => {
-                if (this.turnosItem.idzona != null) {
-                  this.isDisabledSubZona = false;
-                }
-                this.getPartidosJudiciales();
-              }
-            );
-
-          this.sigaServices
-            .getParam(
-              "combossjcs_comboSubZonas",
-              "?idZona=" + this.turnosItem.idzona)
-            .subscribe(
-              n => {
-                this.subzonas = n.combooItems;
-              },
-              error => { },
-              () => {
-                this.body = this.turnosItem;
-                this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
-              }
-            );
-        }
-      }
-    );
-  }
-
-  rest() {
-    if (this.turnosItem != undefined) {
-      this.turnosItem = JSON.parse(JSON.stringify(this.bodyInicial));
-      this.arreglaCombos();
-    }
-
-  }
-
-
-
 
   clear() {
     this.msgs = [];
@@ -608,7 +301,6 @@ export class TarjetaDatosGeneralesRemesasResultadosComponent implements OnInit {
       this.remesaItem.nombreFichero = this.nombreFichero;
     }
   }
-
 
   save(){
     if(this.remesaItem != null){
