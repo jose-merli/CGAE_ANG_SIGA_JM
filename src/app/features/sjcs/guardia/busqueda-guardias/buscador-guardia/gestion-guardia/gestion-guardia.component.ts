@@ -37,7 +37,7 @@ export class GestionGuardiaComponent implements OnInit {
   infoResumen = [];
   enlacesTarjetaResumen: any[] = [];
   manuallyOpened: Boolean;
-  openGen: Boolean = false;
+  openGen: Boolean = true;
   openCalendarios: Boolean = false;
   openConfigCola: Boolean = false;
   openCola: Boolean = false;

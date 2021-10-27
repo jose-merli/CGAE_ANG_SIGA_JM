@@ -8,6 +8,7 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { SaltoCompItem } from '../../../../../../models/guardia/SaltoCompItem';
 import { FileAlreadyExistException } from '@angular-devkit/core';
+import { PersistenceService } from '../../../../../../_services/persistence.service';
 interface Cabecera {
   id: string,
   name: string,
@@ -58,7 +59,8 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
   comboGuardias = [];
   comboColegiados = [];
   isDisabled;
-  constructor(private renderer: Renderer2, private datepipe: DatePipe, private sigaServices: SigaServices, private commonsService: CommonsService) {
+  constructor(private renderer: Renderer2, private datepipe: DatePipe, private sigaServices: SigaServices, private commonsService: CommonsService
+    , private persistenceService : PersistenceService) {
     this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
       for (let i = 0; i < this.table.nativeElement.children.length; i++) {
 
@@ -92,6 +94,8 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
     this.cabeceras.forEach(cab => {
       this.cabecerasMultiselect.push(cab.name);
     });
+
+    this.historico = this.persistenceService.getHistorico()
   }
 
   selectRow(rowId) {
@@ -136,8 +140,11 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
     this.rowGroups = data.sort((a, b) => {
       const isAsc = sort.direction === 'asc';
       let resultado;
-      for (let i = 0; i < a.cells.length; i++) {
-        resultado = compare(a.cells[i].value, b.cells[i].value, isAsc);
+      for (let i = 0; i < this.cabeceras.length; i++) {
+        let nombreCabecera = this.cabeceras[i].id;
+        if (nombreCabecera == sort.active){
+          resultado = compare(a.cells[i].value, b.cells[i].value, isAsc);
+        }
       }
       return resultado;
     });
@@ -344,8 +351,10 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
   }
 
   restablecer() {
-    this.rowGroups = this.rowGroupsInit;
-    this.rowGroupsAux = this.rowGroupsInit;
+    this.rowGroups = [];
+    this.rowGroupsAux = [];
+    this.rowGroups = JSON.parse(JSON.stringify(this.rowGroupsInit));
+    this.rowGroupsAux = JSON.parse(JSON.stringify(this.rowGroupsInit));
     this.totalRegistros = this.rowGroups.length;
   }
 

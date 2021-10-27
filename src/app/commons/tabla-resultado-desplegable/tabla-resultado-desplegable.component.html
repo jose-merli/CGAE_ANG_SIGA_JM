@@ -121,7 +121,7 @@
                                 [ngClass]="{'column-d-flex': changeDisplay() == true}">
                                 <p-dropdown autoWidth="false" class="center width60" [(ngModel)]="cell.value[0]" placeholder = "{{'justiciaGratuita.ejg.preDesigna.delitos' | translate}}"
                                     [options]="cell.combo" filterBy="label,labelSinTilde" [filter]="true" showClear="true" styleClass="widthAll" (onChange)="changeSelect(row, cell, rowGroup.id, row, rowGroup)"></p-dropdown>
-                                <input type="text" class="form-control" pInputText size="10" [value]="cell.value[1]" (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup)" placeholder="{{'gratuita.mantenimientoLG.literal.observaciones' | translate}}">
+                                <input type="text" class="form-control" pInputText size="10" [value]="cell.value[1]" [(ngModel)]="cell.value[1]" (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup)" placeholder="{{'gratuita.mantenimientoLG.literal.observaciones' | translate}}">
                             </span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'input'">
                                <input type="text"
@@ -227,7 +227,7 @@
                                 [ngClass]="{'column-d-flex': changeDisplay() == true}">
                                 <p-dropdown autoWidth="false" class="center" [(ngModel)]="cell.value[0]" placeholder = "{{'justiciaGratuita.ejg.preDesigna.delitos' | translate}}" [filter]="true"
                                     [options]="cell.combo" showClear="true" filterBy="label,labelSinTilde" styleClass="widthAll" (onChange)="changeSelect(row, cell, rowGroup.id, row, rowGroup)"></p-dropdown>
-                                <input type="text" class="form-control" pInputText [value]="cell.value[1]">
+                                <input type="text" class="form-control" pInputText [value]="cell.value[1]" [(ngModel)]="cell.value[1]" (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup)" placeholder="{{'gratuita.mantenimientoLG.literal.observaciones' | translate}}">
                             </span>
                             <span class="w100 cell-value d-flex" *ngIf="cell.type == 'buttomSelect'">
                                 <div class="main-button" style="width: 40%;">

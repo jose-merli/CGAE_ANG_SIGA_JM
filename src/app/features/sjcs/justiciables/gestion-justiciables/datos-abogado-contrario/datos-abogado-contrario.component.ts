@@ -51,9 +51,9 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 	confirmationDisassociate: boolean = false;
 	confirmationCreateRepresentante: boolean = false;
 
-	@ViewChild('cdCreateRepresentante') cdCreateRepresentante: Dialog;
-	@ViewChild('cdRepresentanteAssociate') cdRepresentanteAssociate: Dialog;
-	@ViewChild('cdRepresentanteDisassociate') cdRepresentanteDisassociate: Dialog;
+	@ViewChild('cdCreateAbogado') cdCreateAbogado: Dialog;
+	@ViewChild('cdAbogadoAssociate') cdAbogadoAssociate: Dialog;
+	@ViewChild('cdAbogadoDisassociate') cdAbogadoDisassociate: Dialog;
 
 	@Output() createJusticiableByUpdateRepresentante = new EventEmitter<JusticiableItem>();
 	@Output() contrario = new EventEmitter<boolean>();
@@ -257,7 +257,7 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 	}
 
 	reject() {
-		this.cdCreateRepresentante.hide();
+		this.cdCreateAbogado.hide();
 	}
 
 	rejectAssociate() {

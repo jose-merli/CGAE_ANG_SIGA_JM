@@ -18,6 +18,8 @@ export class PaginadorComponent implements OnInit {
   @Output() perPage = new EventEmitter();
   @Output() fromReg = new EventEmitter();
   @Output() toReg = new EventEmitter();
+  @Output() pageNumber = new EventEmitter();
+  
   @Input() totalRegistros;
   from = 1;
   to = 10;
@@ -115,6 +117,7 @@ export class PaginadorComponent implements OnInit {
     this.toReg.emit(this.to);
     this.comeFrom = "";
     }
+    this.pageNumber.emit(this.pagNumber)
   }
   fn2(event){
     this.calculatingElementsLastPage();
@@ -135,6 +138,7 @@ export class PaginadorComponent implements OnInit {
     this.toReg.emit(this.to);
     this.comeFrom = "";
     }
+    this.pageNumber.emit(this.pagNumber)
   }
 
   calculatingElementsLastPage(){

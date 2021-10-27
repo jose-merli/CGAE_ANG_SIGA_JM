@@ -45,7 +45,7 @@ export class FiltrosGuardiaComponent implements OnInit {
 
   textFilter: string = "Seleccionar";
   textSelected: String = "{0} etiquetas seleccionadas";
-
+  @Input() abogado = false;
   constructor(private router: Router,
     private translateService: TranslateService,
     private sigaServices: SigaServices,

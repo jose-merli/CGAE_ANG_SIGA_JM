@@ -10,7 +10,7 @@
 </div>
 
 <div class="busqueda-container">
-  <app-filtros-guardia [permisoEscritura]="permisoEscritura" (isOpen)="isOpenReceive($event)"></app-filtros-guardia>
+  <app-filtros-guardia [abogado]="abogado" [permisoEscritura]="permisoEscritura" (isOpen)="isOpenReceive($event)"></app-filtros-guardia>
   <app-tabla-guardias  [totalRegistros] = "totalRegistros" [seleccionarTodo]="seleccionarTodo" [guardias]="datos"
               [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups"
               (anySelected)="notifyAnySelected($event)" (selectedRow)="checkSelectedRow($event)" (searchHistoricalSend)="search($event)">

@@ -722,5 +722,12 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
     });
   }
 
+  recuperarColegiado(event){
+    if (event != undefined) {
+      this.filtros.nColegiado = event.nColegiado;
+    } else {
+      this.filtros.nColegiado = undefined;
+    }
+  }
 
 }

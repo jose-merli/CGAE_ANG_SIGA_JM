@@ -415,6 +415,37 @@ export class DatosGeneralesEjgComponent implements OnInit {
                   }
                 );
 
+              }else if(this.datosAsistencia){
+
+                let ejgItem : EJGItem = new EJGItem();
+                ejgItem.annio = String(datosItem.annio);
+                ejgItem.numero = String(datosItem.numero);
+                ejgItem.tipoEJG = String(datosItem.tipoEJG);
+
+                this.sigaServices.postPaginado("busquedaGuardias_asociarEjg","?anioNumero="+this.datosAsistencia.anioNumero+"&copiarDatos=S", ejgItem).subscribe(
+                  n => {
+          
+                    let error = JSON.parse(n.body).error;
+                    this.progressSpinner = false;
+                    sessionStorage.removeItem("radioTajertaValue");
+          
+                    if (error != null && error.description != null) {
+                      this.showMessage("error", "Error al asociar el EJG con la Asistencia", error.description);
+                    } else {
+                      this.showMessage('success', this.translateService.instant("general.message.accion.realizada"), 'Se ha asociado el EJG con la Asistencia correctamente');
+                    }
+                  },
+                  err => {
+                    console.log(err);
+                    this.progressSpinner = false;
+                  }, () => {
+                    this.progressSpinner = false;
+                    sessionStorage.setItem("volver","true");
+                    sessionStorage.removeItem("asistencia");
+                    this.location.back();
+                  }
+                );
+
               }
               this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
               this.body.numEjg = datosItem.numEjg;

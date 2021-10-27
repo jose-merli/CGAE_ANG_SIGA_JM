@@ -142,19 +142,19 @@ export class RelacionesComponent implements OnInit {
         this.noCreaDes = false;
         this.relaciones.forEach(relacion => {
           relacion.fechaasunto = this.formatDate(relacion.fechaasunto);
-          switch (relacion.sjcs) {
-            case 'ASISTENCIA':
-              this.noAsociaASI = true;
-              break;
-            case 'SOJ':
-              this.noAsociaSOJ = true;
-              break;
-            case 'DESIGNACIÓN':
-              //en caso de designacion, si ya esta relacionado no se podra crear una nueva designacion para ese EJG
-              this.noAsociaDES = true;
-              this.noCreaDes = true;
-              break;
-          }
+          // switch (relacion.sjcs) {
+          //   case 'ASISTENCIA':
+          //     this.noAsociaASI = true;
+          //     break;
+          //   case 'SOJ':
+          //     this.noAsociaSOJ = true;
+          //     break;
+          //   case 'DESIGNACIÓN':
+          //     //en caso de designacion, si ya esta relacionado no se podra crear una nueva designacion para ese EJG
+          //     this.noAsociaDES = true;
+          //     this.noCreaDes = true;
+          //     break;
+          // }
         })
         if (this.noAsociaDES == false) this.noAsocDes.emit(true);
         else this.noAsocDes.emit(false);
@@ -226,7 +226,7 @@ export class RelacionesComponent implements OnInit {
     this.cols = [
       { field: "sjcs", header: "justiciaGratuita.oficio.designas.interesados.identificador", width: '6%' },
       { field: "anio", header: "justiciaGratuita.maestros.calendarioLaboralAgenda.anio", width: "3%" },
-      { field: "numero", header: "justiciaGratuita.sjcs.designas.DatosIden.numero", width: "3%" },
+      { field: "codigo", header: "justiciaGratuita.sjcs.designas.DatosIden.numero", width: "3%" },
       { field: "fechaasunto", header: "dato.jgr.guardia.saltcomp.fecha", width: '6%' },
       { field: "descturno", header: "justiciaGratuita.justiciables.literal.turnoGuardia", width: '6%' },
       { field: "letrado", header: "justiciaGratuita.sjcs.designas.colegiado", width: '6%' },
@@ -466,7 +466,13 @@ export class RelacionesComponent implements OnInit {
         
 
         let us = this.oldSigaServices.getOldSigaUrl('detalleSOJ');
-        us +='&granotmp=1630574876868&numeroSOJ=922&IDTIPOSOJ=2&ANIO=2018&idPersonaJG=552608&idInstitucionJG=2005&actionE=/JGR_PestanaSOJBeneficiarios.do&tituloE=pestana.justiciagratuitasoj.solicitante&conceptoE=SOJ&NUMERO=922&anioSOJ=2018&localizacionE=gratuita.busquedaSOJ.localizacion&IDINSTITUCION=2005&idTipoSOJ=2&idInstitucionSOJ=2005&accionE=editar';
+        //us +='&granotmp=1630574876868&numeroSOJ=922&IDTIPOSOJ=2&ANIO=2018&idPersonaJG=552608&idInstitucionJG=2005&actionE=/JGR_PestanaSOJBeneficiarios.do&tituloE=pestana.justiciagratuitasoj.solicitante&conceptoE=SOJ&NUMERO=922&anioSOJ=2018&localizacionE=gratuita.busquedaSOJ.localizacion&IDINSTITUCION=2005&idTipoSOJ=2&idInstitucionSOJ=2005&accionE=editar';
+
+        us +='&granotmp=1630574876868&numeroSOJ' + dato.numero + "&IDTIPOSOJ=" + dato.idtipo + "&ANIO=" + dato.anio + "&idPersonaJG=" + dato.idpersonajg + "&idInstitucionJG=" +
+        this.sigaStorageService.institucionActual + "&actionE=/JGR_PestanaSOJBeneficiarios.do&tituloE=pestana.justiciagratuitasoj.solicitante&conceptoE=SOJ" +
+        "&NUMERO=" + dato.numero + "&anioSOJ=" + dato.anio + "&localizacionE=gratuita.busquedaSOJ.localizacion&IDINSTITUCION=" + this.sigaStorageService.institucionActual +
+        "&idTipoSOJ=" + dato.idtipo + "&idInstitucionSOJ=" + dato.idinstitucion + "&accionE=editar";
+      
 
         /*let us = undefined;
         us = this.sigaServices.getOldSigaUrl() + "JGR_PestanaSOJDatosGenerales.do?numeroSOJ=" + dato.numero +
@@ -474,13 +480,13 @@ export class RelacionesComponent implements OnInit {
           this.sigaStorageService.institucionActual + "&actionE=/JGR_PestanaSOJBeneficiarios.do&tituloE=pestana.justiciagratuitasoj.solicitante&conceptoE=SOJ" +
           "&NUMERO=" + dato.numero + "&anioSOJ=" + dato.anio + "&localizacionE=gratuita.busquedaSOJ.localizacion&IDINSTITUCION=" + this.sigaStorageService.institucionActual +
           "&idTipoSOJ=" + dato.idtipo + "&idInstitucionSOJ=" + dato.idinstitucion + "&accionE=editar";
-
+        */
         us = encodeURI(us);
 
         sessionStorage.setItem("url", JSON.stringify(us));
         sessionStorage.removeItem("reload");
         sessionStorage.setItem("reload", "si");
-*/
+
         this.router.navigate(['/soj']);
         break;
       case 'DESIGNACIÓN':

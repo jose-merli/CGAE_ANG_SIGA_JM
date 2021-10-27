@@ -1,10 +1,11 @@
 import { DatePipe } from '@angular/common';
-import { EventEmitter } from '@angular/core';
+import { EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { AfterViewInit, Component, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Router, RoutesRecognized } from '@angular/router';
 import { Message } from 'primeng/api';
 import { BusquedaColegiadoExpressComponent } from '../../../../../../commons/busqueda-colegiado-express/busqueda-colegiado-express.component';
 import { FiltroAsistenciaItem } from '../../../../../../models/guardia/FiltroAsistenciaItem';
+import { SigaStorageService } from '../../../../../../siga-storage.service';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
 
@@ -13,7 +14,7 @@ import { SigaServices } from '../../../../../../_services/siga.service';
   templateUrl: './buscador-asistencias.component.html',
   styleUrls: ['./buscador-asistencias.component.scss']
 })
-export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit {
+export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnChanges {
 
   msgs : Message[] = [];
   filtro : FiltroAsistenciaItem = new FiltroAsistenciaItem();
@@ -46,15 +47,30 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit {
   openColegiado : boolean = false;
   openDatosAsistido : boolean = false;
   openDatosActuaciones : boolean = false;
+  isLetrado : boolean = false;
+  disabledBusqColegiado : boolean = false;
   @Output() searchAgain = new EventEmitter<boolean>();
   @Input() modoBusqueda : string;
   @ViewChild(BusquedaColegiadoExpressComponent) buscador : BusquedaColegiadoExpressComponent;
   constructor(private router : Router,
     private sigaServices : SigaServices,
     private commonsService : CommonsService,
-    private datePipe : DatePipe) { }
+    private datePipe : DatePipe,
+    private sigaStorageService : SigaStorageService) { }
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes.modoBusqueda.currentValue == 'a' && this.filtro.numColegiado){
+      this.usuarioBusquedaExpress.numColegiado = this.filtro.numColegiado;
+      setTimeout(()=>{
+        if(this.buscador){
+          this.buscador.isBuscar(this.usuarioBusquedaExpress);
+        }
+      },500)
+    }
+  }
   ngAfterViewInit(): void {
+
     if(sessionStorage.getItem("filtroAsistencia") && sessionStorage.getItem("volver") && sessionStorage.getItem("modoBusqueda") == "a"){
+      this.modoBusqueda = 'a';
       let oldFiltro : FiltroAsistenciaItem = JSON.parse(sessionStorage.getItem("filtroAsistencia"));
       this.filtro = oldFiltro;
       if(oldFiltro.idTurno){
@@ -83,9 +99,7 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit {
         || oldFiltro.idJuzgado || oldFiltro.idTipoActuacion || oldFiltro.idProcedimiento || oldFiltro.nig){
           this.openDatosActuaciones = true;
       }
-      sessionStorage.removeItem("filtroAsistencia");
-      sessionStorage.removeItem("volver");
-      sessionStorage.removeItem("modoBusqueda");
+
       this.searchAgain.emit(true);
     }
   }
@@ -99,6 +113,17 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit {
       this.usuarioBusquedaExpress.numColegiado = nColegiado;
       this.filtro.numColegiado = nColegiado;
     }
+
+    if(this.sigaStorageService.idPersona
+      && this.sigaStorageService.isLetrado){
+
+      this.openColegiado = true;
+      this.isLetrado = true;
+      this.filtro.numColegiado = this.sigaStorageService.numColegiado;
+      this.disabledBusqColegiado = true;
+      this.usuarioBusquedaExpress.numColegiado = this.filtro.numColegiado;
+    }
+
     this.filtro.anio = new Date().getFullYear().toString();
     this.getComboTurnos();
     this.getComboJuzgados();

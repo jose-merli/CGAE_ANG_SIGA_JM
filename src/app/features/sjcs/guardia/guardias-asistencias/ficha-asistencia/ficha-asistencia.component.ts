@@ -160,6 +160,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
     .then(respuesta => {
 
       this.visibleTarjetaCaract = respuesta; //Si es undefined se oculta, si es false la mostramos pero ineditable
+      this.listaTarjetas.find(tarj => tarj.id == 'caracteristicas').visible = this.visibleTarjetaCaract;
       this.initTarjetas();
     }).catch(error => console.error(error));
 
@@ -421,7 +422,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
       if(tarj.nombre != 'Datos Generales'){ //Durante la creacion, deshabilitamos las tarjetas que no sean la de datos generales
         tarj.detalle = false;
       }
-      if(tarj.nombre == 'Caracteristicas'){
+      if(tarj.nombre == 'Caracteristicas' && tarj.visible){
         tarj.opened = false;
       }
     });
@@ -453,7 +454,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
           this.listaTarjetas[0].campos[3]["value"] = newAsistenciaData.fechaAsistencia;
 
           let camposAsistido = [];
-          if(!newAsistenciaData.nif){
+          if(!newAsistenciaData.idPersonaJg){
               camposAsistido = [
                 {
                   "key": null,
@@ -525,28 +526,46 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
               fechaResolucion = this.datePipe.transform(newAsistenciaData.primeraRelacion.fecharesolucion, 'dd/MM/yyyy');
             }
 
-            camposRelaciones =[
-              {
-                "key": this.translateService.instant("justiciaGratuita.oficio.designas.interesados.identificador"),
-                "value": newAsistenciaData.primeraRelacion.sjcs
-              },
-              {
-                "key": this.translateService.instant("justiciaGratuita.ejg.datosGenerales.Dictamen"),
-                "value": newAsistenciaData.primeraRelacion.dictamen
-              },
-              {
-                "key": this.translateService.instant("dato.jgr.guardia.saltcomp.fecha") + " " + this.translateService.instant("justiciaGratuita.ejg.datosGenerales.Dictamen"),
-                "value": fechaDictamen
-              },
-              {
-                "key": this.translateService.instant("justiciaGratuita.maestros.fundamentosResolucion.resolucion"),
-                "value": newAsistenciaData.primeraRelacion.resolucion
-              },
-              {
-                "key": this.translateService.instant("justiciaGratuita.ejg.datosGenerales.FechaResolucion"),
-                "value": fechaResolucion
-              }
-            ]
+            if(newAsistenciaData.primeraRelacion.sjcs.startsWith("E")){
+
+              camposRelaciones =[
+                {
+                  "key": this.translateService.instant("justiciaGratuita.oficio.designas.interesados.identificador"),
+                  "value": newAsistenciaData.primeraRelacion.sjcs
+                },
+                {
+                  "key": this.translateService.instant("justiciaGratuita.ejg.datosGenerales.Dictamen"),
+                  "value": newAsistenciaData.primeraRelacion.dictamen
+                },
+                {
+                  "key": this.translateService.instant("dato.jgr.guardia.saltcomp.fecha") + " " + this.translateService.instant("justiciaGratuita.ejg.datosGenerales.Dictamen"),
+                  "value": fechaDictamen
+                },
+                {
+                  "key": this.translateService.instant("justiciaGratuita.maestros.fundamentosResolucion.resolucion"),
+                  "value": newAsistenciaData.primeraRelacion.resolucion
+                },
+                {
+                  "key": this.translateService.instant("justiciaGratuita.ejg.datosGenerales.FechaResolucion"),
+                  "value": fechaResolucion
+                }
+              ]
+            } else if (newAsistenciaData.primeraRelacion.sjcs.startsWith("D")){
+              camposRelaciones =[
+                {
+                  "key": this.translateService.instant("justiciaGratuita.oficio.designas.interesados.identificador"),
+                  "value": newAsistenciaData.primeraRelacion.sjcs
+                },
+                {
+                  "key": this.translateService.instant("dato.jgr.guardia.guardias.turno"),
+                  "value": newAsistenciaData.primeraRelacion.descturno
+                },
+                {
+                  "key": this.translateService.instant("dato.jgr.guardia.inscripciones.letrado"),
+                  "value": newAsistenciaData.primeraRelacion.letrado
+                }
+              ]
+            }
           }
           this.listaTarjetas[5].campos = camposRelaciones;
           let camposDocumentacion = [];
@@ -618,7 +637,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
             if(tarj.nombre != 'Datos Generales' && tarj.nombre != 'Caracteristicas'){ //Una vez creada la asistencia, dejamos abrir las demas tarjetas
               tarj.detalle = true;
             }
-            if(tarj.nombre == 'Caracteristicas'){
+            if(tarj.nombre == 'Caracteristicas' && tarj.visible){
               tarj.opened = true;
             }
           });
@@ -663,11 +682,11 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
           this.listaTarjetas[0].campos[3]["value"] = newAsistenciaData.fechaAsistencia;
 
           let camposAsistido = [];
-          if(!newAsistenciaData.nif){
+          if(!newAsistenciaData.idPersonaJg){
               camposAsistido = [
                 {
                   "key": null,
-                  "value": this.translateService.instant("justiciaGratuita.guardia.fichaasistencia.noasistido")
+                  "value": this.translateService.instant("justiciaGratuita.guardia.fichaasistencia.noasistidos")
                 }
               ]
           }else{
@@ -734,28 +753,46 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
             if(newAsistenciaData.primeraRelacion.fecharesolucion){
               fechaResolucion = this.datePipe.transform(newAsistenciaData.primeraRelacion.fecharesolucion, 'dd/MM/yyyy');
             }
-            camposRelaciones =[
-              {
-                "key": this.translateService.instant("justiciaGratuita.oficio.designas.interesados.identificador"),
-                "value": newAsistenciaData.primeraRelacion.sjcs
-              },
-              {
-                "key": this.translateService.instant("justiciaGratuita.ejg.datosGenerales.Dictamen"),
-                "value": newAsistenciaData.primeraRelacion.dictamen
-              },
-              {
-                "key": this.translateService.instant("dato.jgr.guardia.saltcomp.fecha") + " " + this.translateService.instant("justiciaGratuita.ejg.datosGenerales.Dictamen"),
-                "value": fechaDictamen
-              },
-              {
-                "key": this.translateService.instant("justiciaGratuita.maestros.fundamentosResolucion.resolucion"),
-                "value": newAsistenciaData.primeraRelacion.resolucion
-              },
-              {
-                "key": this.translateService.instant("justiciaGratuita.ejg.datosGenerales.FechaResolucion"),
-                "value": fechaResolucion
-              }
-            ]
+            if(newAsistenciaData.primeraRelacion.sjcs.startsWith("E")){
+
+              camposRelaciones =[
+                {
+                  "key": this.translateService.instant("justiciaGratuita.oficio.designas.interesados.identificador"),
+                  "value": newAsistenciaData.primeraRelacion.sjcs
+                },
+                {
+                  "key": this.translateService.instant("justiciaGratuita.ejg.datosGenerales.Dictamen"),
+                  "value": newAsistenciaData.primeraRelacion.dictamen
+                },
+                {
+                  "key": this.translateService.instant("dato.jgr.guardia.saltcomp.fecha") + " " + this.translateService.instant("justiciaGratuita.ejg.datosGenerales.Dictamen"),
+                  "value": fechaDictamen
+                },
+                {
+                  "key": this.translateService.instant("justiciaGratuita.maestros.fundamentosResolucion.resolucion"),
+                  "value": newAsistenciaData.primeraRelacion.resolucion
+                },
+                {
+                  "key": this.translateService.instant("justiciaGratuita.ejg.datosGenerales.FechaResolucion"),
+                  "value": fechaResolucion
+                }
+              ]
+            } else if (newAsistenciaData.primeraRelacion.sjcs.startsWith("D")){
+              camposRelaciones =[
+                {
+                  "key": this.translateService.instant("justiciaGratuita.oficio.designas.interesados.identificador"),
+                  "value": newAsistenciaData.primeraRelacion.sjcs
+                },
+                {
+                  "key": this.translateService.instant("dato.jgr.guardia.guardias.turno"),
+                  "value": newAsistenciaData.primeraRelacion.descturno
+                },
+                {
+                  "key": this.translateService.instant("dato.jgr.guardia.inscripciones.letrado"),
+                  "value": newAsistenciaData.primeraRelacion.letrado
+                }
+              ]
+            }
           }
           this.listaTarjetas[5].campos = camposRelaciones;
 
@@ -830,7 +867,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
             if(tarj.nombre != 'Datos Generales' && tarj.nombre != 'Caracteristicas'){ //Una vez creada la asistencia, dejamos abrir las demas tarjetas
               tarj.detalle = true;
             }
-            if(tarj.nombre == 'Caracteristicas'){
+            if(tarj.nombre == 'Caracteristicas' && tarj.visible){
               tarj.opened = true;
             }
           });

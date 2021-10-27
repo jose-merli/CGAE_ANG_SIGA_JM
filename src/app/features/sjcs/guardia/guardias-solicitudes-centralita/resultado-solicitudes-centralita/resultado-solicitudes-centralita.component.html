@@ -1,4 +1,5 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<p-confirmDialog></p-confirmDialog>
 <p-dataTable id="tablaFoco" #table [value]="preAsistencias" emptyMessage="{{ 'general.message.no.registros' | translate}}" [responsive] = "true" [loading]="loading" loadingIcon="fa-spinner"
 class="tabla-listado" [sortOrder]="1" [(selection)]="selectedDatos" [paginator]="true" paginatorPosition="both" [rows]="rows" selectionMode="multiple" (onRowSelect)="onSelectRow($event.data)"
 (onRowUnselect)="actualizaSeleccionados()">

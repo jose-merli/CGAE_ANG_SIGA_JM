@@ -26,6 +26,7 @@ export class DefensaJuridicaComponent implements OnInit {
   designa = null;
   bodyInicial: EJGItem;
   @Input() permisoEscritura: boolean;
+  @Input() permisoDefensaJuridica:boolean;
 
   isDisabledProcedimiento: boolean = true;
 
@@ -110,9 +111,21 @@ export class DefensaJuridicaComponent implements OnInit {
     this.progressSpinner = false;
     if (this.body.juzgado != undefined && this.body.juzgado != null) this.isDisabledProcedimiento = false;
 
-    if(this.permisoEscritura)this.perEscritura= true;
+    if(this.permisoEscritura){
+      this.perEscritura = true;
+    }else{
+      this.perEscritura = false;
+    }
 
   }
+
+  ngOnChanges(changes: SimpleChanges): void {
+		if(this.permisoEscritura){
+      this.perEscritura = true;
+    }else{
+      this.perEscritura = false;
+    }
+	}
 
   //Codigo copiado de la tarjeta detalles de la ficha de designaciones
    validarNig(nig) {
@@ -220,10 +233,19 @@ export class DefensaJuridicaComponent implements OnInit {
   }
 
   checkPermisosAsociarDes() {
-    let msg = this.commonsServices.checkPermisos(this.perEscritura, undefined);
-    if (msg != undefined) {
-      this.msgs = msg;
-    } else {
+    if (!this.perEscritura) {
+			this.showMessage(
+				'error',
+				this.translateService.instant('general.message.incorrect'),
+				this.translateService.instant('general.message.existeDesignaAsociado')
+			);
+		}else if (!this.permisoDefensaJuridica) {
+			this.showMessage(
+				'error',
+				this.translateService.instant('general.message.incorrect'),
+				this.translateService.instant('general.message.noTienePermisosRealizarAccion')
+			);
+		} else {
       this.asociarDes();
     }
   }
@@ -237,10 +259,19 @@ export class DefensaJuridicaComponent implements OnInit {
   }
 
   checkPermisosCreateDes() {
-    let msg = this.commonsServices.checkPermisos(this.perEscritura, undefined);
-    if (msg != undefined) {
-      this.msgs = msg;
-    } else {
+    if (!this.perEscritura) {
+			this.showMessage(
+				'error',
+				this.translateService.instant('general.message.incorrect'),
+				this.translateService.instant('general.message.existeDesignaAsociado')
+			);
+		}else if (!this.permisoDefensaJuridica) {
+			this.showMessage(
+				'error',
+				this.translateService.instant('general.message.incorrect'),
+				this.translateService.instant('general.message.noTienePermisosRealizarAccion')
+			);
+		} else {
       this.createDes();
     }
   }
@@ -265,7 +296,19 @@ export class DefensaJuridicaComponent implements OnInit {
 
   checkSave() {
     //Comprobamos que el numero de procedimiento tiene el formato adecuado según la institucion
-    if (this.validarNProcedimiento(this.body.numAnnioProcedimiento)) this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.preDesigna.errorNumProc"));
+    if (!this.perEscritura) {
+			this.showMessage(
+				'error',
+				this.translateService.instant('general.message.incorrect'),
+				this.translateService.instant('general.message.existeDesignaAsociado')
+			);
+		}else if (!this.permisoDefensaJuridica) {
+			this.showMessage(
+				'error',
+				this.translateService.instant('general.message.incorrect'),
+				this.translateService.instant('general.message.noTienePermisosRealizarAccion')
+			);
+		} else if (this.validarNProcedimiento(this.body.numAnnioProcedimiento)) this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.preDesigna.errorNumProc"));
     //Comprobamos el formato del NIG y al ser un servicio siga, a llamada del metodo de guardado estar en su interior.
     else this.validarNig(this.body.nig)
   }
@@ -412,7 +455,7 @@ export class DefensaJuridicaComponent implements OnInit {
   }
 
   getComboJuzgado() {
-    this.sigaServices.get("filtrosejg_comboJuzgados").subscribe(
+    this.sigaServices.get("combo_comboJuzgadoDesignaciones").subscribe(
       n => {
         this.comboJuzgado = n.combooItems;
         this.commonsServices.arregloTildesCombo(this.comboJuzgado);

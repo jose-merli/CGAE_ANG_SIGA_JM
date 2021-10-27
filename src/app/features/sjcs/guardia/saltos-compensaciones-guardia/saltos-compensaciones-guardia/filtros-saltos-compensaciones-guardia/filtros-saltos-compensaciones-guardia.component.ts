@@ -1,4 +1,6 @@
+import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+import moment = require('moment');
 import { ColegiadoItem } from '../../../../../../models/ColegiadoItem';
 import { SaltoCompItem } from '../../../../../../models/guardia/SaltoCompItem';
 import { CommonsService } from '../../../../../../_services/commons.service';
@@ -34,13 +36,17 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
   comboTurnos = [];
 
   @Output() isBuscar = new EventEmitter<boolean>();
-
+  @Input()  dataFilterFromColaGuardia = { 'turno': 0,
+                                          'guardia': 0,
+                                          'colegiado': 0,
+                                          'grupo': 0};
   textFilter: string = "Seleccionar";
   textSelected: String = "{0} etiquetas seleccionadas";
 
   constructor(private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private commonServices: CommonsService) { }
+    private commonServices: CommonsService,
+    private datepipe : DatePipe) { }
 
   ngOnInit() {
 
@@ -48,15 +54,35 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
       this.permisoEscritura = this.persistenceService.getPermisos();
     }
     this.getComboTurno();
-    if (this.persistenceService.getFiltros() != undefined) {
+    if (this.persistenceService.getFiltros() != undefined && sessionStorage.getItem("volver")) {
       this.filtros = this.persistenceService.getFiltros();
       if (this.persistenceService.getHistorico() != undefined) {
         this.historico = this.persistenceService.getHistorico();
       }
+      sessionStorage.removeItem("volver");
       this.isBuscar.emit(this.historico)
 
-    }
 
+    if (this.dataFilterFromColaGuardia != null){
+          if (this.dataFilterFromColaGuardia.turno != 0){
+            this.filtros.idTurno = [this.dataFilterFromColaGuardia.turno.toString()] ;
+          }
+          if (this.dataFilterFromColaGuardia.guardia != 0){
+            if (this.filtros.idTurno) {
+              this.getComboGuardia();
+            }
+            this.isDisabledGuardia = false;
+            this.filtros.idGuardia = [ this.dataFilterFromColaGuardia.guardia.toString()] ;
+          }
+          if (this.dataFilterFromColaGuardia.colegiado != 0){
+            this.filtros.colegiadoGrupo = this.dataFilterFromColaGuardia.colegiado.toString() ;
+          }
+          if (this.dataFilterFromColaGuardia.grupo != 0){
+            this.filtros.grupo = this.dataFilterFromColaGuardia.grupo ;
+          }
+          this.search();
+        }
+      }
 
     if (sessionStorage.getItem("esColegiado") && sessionStorage.getItem("esColegiado") == 'true') {
       /*this.disabledBusquedaExpress = true;
@@ -72,7 +98,6 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
       this.showColegiado = true;
 
     }
-
   }
 
   getComboTurno() {
@@ -88,7 +113,7 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
     );
   }
 
-  onChangeTurno() {
+  onChangeTurno(event) {
     this.filtros.idGuardia = "";
     this.comboGuardias = [];
 
@@ -97,6 +122,9 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
     } else {
       this.isDisabledGuardia = true;
     }
+  }
+  onChangeGuardia(event){
+    console.log(event)
   }
 
   getComboGuardia() {
@@ -130,10 +158,18 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
   }
 
   fillFechaDesde(event) {
-    this.filtros.fechaDesde = event;
+    if(event){
+      this.filtros.fechaDesde = this.datepipe.transform(new Date(event), 'dd/MM/yyyy');
+    }else{
+      this.filtros.fechaDesde = ''
+    }
   }
   fillFechaHasta(event) {
-    this.filtros.fechaHasta = event;
+    if(event){
+      this.filtros.fechaHasta = this.datepipe.transform(new Date(event), 'dd/MM/yyyy');
+    }else{
+      this.filtros.fechaHasta = ''
+    }
   }
 
   getFechaHasta(fechaInputDesde, fechainputHasta) {
@@ -150,7 +186,7 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
 
       if (msRangoFechas < 0) fechainputHasta = undefined;
     }
-    return fechainputHasta;
+    return moment(fechainputHasta,"dd/MM/yyyy").toDate();
   }
   getFechaDesde(fechaInputesde, fechaInputHasta) {
     if (
@@ -164,7 +200,7 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
 
       if (msRangoFechas < 0) fechaInputesde = undefined;
     }
-    return fechaInputesde;
+    return moment(fechaInputesde,"dd/MM/yyyy").toDate();
   }
 
   clearFilters() {
@@ -211,7 +247,7 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
 
   changeColegiado(event) {
     this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
-    this.usuarioBusquedaExpress.numColegiado = event.numColegiado;
+    this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
   }
 
 }

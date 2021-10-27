@@ -420,6 +420,7 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
               this.finalizable = true;
               this.reactivable = false;
             }
+            this.checkEstado();
             this.disableDataForEdit = true;
             this.duplicarAsistencia = false;
             this.asistenciaAux = Object.assign({}, this.asistencia);

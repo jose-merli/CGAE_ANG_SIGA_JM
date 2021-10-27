@@ -79,7 +79,8 @@ export class DatosColaGuardiaComponent implements OnInit {
     'manual': true,
     'porGrupos': true,
     'idConjuntoGuardia': 0,
-    "fromCombo": false
+    "fromCombo": false,
+    "minimoLetradosCola": 0
 };
   allSelected = false;
   isDisabled = true;
@@ -89,9 +90,12 @@ export class DatosColaGuardiaComponent implements OnInit {
   selectedRow:Row;
   totalRegistros = 0;
   suscription: Subscription;
+  porGrupos = false;
   @Input() tarjetaColaGuardia;
   @Input() permisoEscritura: boolean = false;
   @Input() modoEdicion = false;
+  manual: Boolean;
+  minimoLetrado = 0;
   //@ViewChild(TablaDinamicaColaGuardiaComponent) tabla;
   @ViewChild(TablaResultadoOrderComponent) tablaOrder;
 
@@ -106,6 +110,10 @@ export class DatosColaGuardiaComponent implements OnInit {
     ngOnInit(): void {
       this.suscription = this.globalGuardiasService.getConf().subscribe((confValue)=>{
         this.configuracionCola = confValue;
+        this.manual = confValue.manual;
+        this.porGrupos= confValue.porGrupos;
+        this.minimoLetrado = confValue.minimoLetradosCola
+        console.log("MANUAL: ", this.manual)
         this.inicio();
         this.getColaGuardia();
       });
@@ -377,7 +385,7 @@ inicio(){
           this.transformData();
           this.datosInicial = JSON.parse(JSON.stringify(this.datos));
           if (this.datos && this.datos.length > 0)
-            this.resumenColaGuardia = this.datos[0].nColegiado + " " + this.datos[0].nombreApe;
+            this.resumenColaGuardia = this.datos[0].nColegiado + " " + this.datos[0].nombreApe + ", " + this.datos[1].nColegiado + " " + this.datos[1].nombreApe + ", " + this.datos[2].nColegiado + " " + this.datos[2].nombreApe;
           /*if (this.datosInicial.length > 0)
             this.resumenColaGuardia = this.resumenColaGuardia.concat(" ... " + this.datos[this.datos.length - 1].nColegiado + " " + this.datos[this.datos.length - 1].nombreApe
               + " ... " + this.datos.length, " inscritos");*/
@@ -399,6 +407,7 @@ inicio(){
   }
   transformData(){
     let arr = [];
+    let arrLast = [];
     this.datos.forEach(datoObj =>{
       let objArr = {cells:[]};
       let ordenValue = '';
@@ -407,35 +416,51 @@ inicio(){
       } else {
         ordenValue = '';
       }
-      if (this.configuracionCola.porGrupos == false){
+      if (this.configuracionCola.porGrupos == false && this.configuracionCola.porGrupos == false){
         objArr.cells = [
           //{ type: 'text', value: datoObj.ordenCola },
+         
           { type: 'text', value: datoObj.numeroGrupo },
-          { type: 'text', value: datoObj.ordenCola },
+          { type: 'text', value: datoObj.orden },
           { type: 'text', value: datoObj.nColegiado },
           { type: 'text', value: datoObj.apellido1 + ',' + datoObj.apellido2 + ',' + datoObj.nombre},
           { type: 'text', value: datoObj.fechaValidacion },
           { type: 'text', value: datoObj.fechabaja },
           { type: 'text', value: datoObj.compensaciones },
           { type: 'text', value: datoObj.saltos },
-          { type: 'text', value: datoObj.idGrupoGuardiaColegiado}
+          { type: 'text', value: datoObj.idGrupoGuardiaColegiado},
+          { type: 'invisible', value: datoObj.ordenCola },
+          { type: 'invisible', value: datoObj.idturno },
+          { type: 'invisible', value: datoObj.idGuardia }
         ];
       } else {
         objArr.cells = [
           //{ type: 'text', value: datoObj.ordenCola },
+         
           { type: 'input', value: datoObj.numeroGrupo },
-          { type: 'position', value: datoObj.ordenCola },
+          { type: 'position', value: datoObj.orden },
           { type: 'text', value: datoObj.nColegiado },
           { type: 'text', value: datoObj.apellido1 + ',' + datoObj.apellido2 + ',' + datoObj.nombre},
           { type: 'text', value: datoObj.fechaValidacion },
           { type: 'text', value: datoObj.fechabaja },
           { type: 'text', value: datoObj.compensaciones },
           { type: 'text', value: datoObj.saltos },
-          { type: 'text', value: datoObj.idGrupoGuardiaColegiado}
+          { type: 'text', value: datoObj.idGrupoGuardiaColegiado},
+          { type: 'invisible', value: datoObj.ordenCola },
+          { type: 'invisible', value: datoObj.idturno },
+          { type: 'invisible', value: datoObj.idGuardia }
         ];
       }
-    arr.push(objArr);
+      if (datoObj.numeroGrupo == null){
+        arrLast.push(objArr);
+      }else{
+        arr.push(objArr);
+      }
+    
     })
+    for (let i = 0; i < arrLast.length; i++){
+      arr.push(arrLast[i]);
+    }
     this.processedData = arr;
     this.rowGroups = this.trmService.getTableData(this.processedData);
     this.rowGroupsAux = this.trmService.getTableData(this.processedData);
@@ -475,8 +500,18 @@ inicio(){
       this.datos.forEach(dat => {
         if (dat.nColegiado == numCol.value && dat.idGrupoGuardiaColegiado != datCopy.idGrupoGuardiaColegiado && dat.idGrupoGuardiaColegiado == idGGC.value){
             datCopy = Object.assign({},dat);
+            if (ordenCola.value != null){
             datCopy.ordenCola = ordenCola.value.toString();
+            datCopy.orden = ordenCola.value.toString();
+            }else{
+              datCopy.ordenCola = null;
+              datCopy.orden = null;
+            }
+            if (grupo != null){
             datCopy.numeroGrupo = grupo.value;
+            }else{
+              datCopy.numeroGrupo = null;
+            }
             //datCopy.orden = orden.value.toString();
           datosModif.push(datCopy);
         }

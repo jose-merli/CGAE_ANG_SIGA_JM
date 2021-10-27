@@ -435,7 +435,8 @@ formatDate2(date) {
       'manual': false,
       'porGrupos': false,
       'idConjuntoGuardia': idConjuntoGuardiaElegido,
-      "fromCombo": true
+      "fromCombo": true,
+      "minimoLetradosCola": 0
     };
      this.globalGuardiasService.emitConf(configuracionCola);
   }

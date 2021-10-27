@@ -10,7 +10,7 @@
   </div>
 
 <div class="busqueda-container">
-    <app-filtros-guardia-colegiado  [isColegiado]="isColegiado" [permisoEscritura]="permisoEscritura" (isOpen)="isOpenReceive($event)"></app-filtros-guardia-colegiado>
+    <app-filtros-guardia-colegiado  [dataBuscador]="dataBuscador" [isColegiado]="isColegiado" [permisoEscritura]="permisoEscritura" (isOpen)="isOpenReceive($event)"></app-filtros-guardia-colegiado>
     <app-tabla-guardia-colegiado *ngIf="buscar"  [isColegiado]="isColegiado" [permisoEscritura]="permisoEscritura"  [datos]="datos" (isOpen)="isOpenReceive($event)"></app-tabla-guardia-colegiado>
 </div>
 

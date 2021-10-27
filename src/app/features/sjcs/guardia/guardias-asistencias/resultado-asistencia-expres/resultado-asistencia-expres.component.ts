@@ -306,6 +306,7 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
       asistencia.anioNumero = idAsistencia;
       asistencia.fechaAsistencia = this.filtro.diaGuardia + ' 00:00';
       sessionStorage.setItem("asistencia", JSON.stringify(asistencia));
+      sessionStorage.setItem("modoBusqueda","b");
       sessionStorage.setItem("filtroAsistencia", JSON.stringify(this.filtro));
       sessionStorage.setItem("Nuevo","true");
       this.router.navigate(["/gestionEjg"]);
