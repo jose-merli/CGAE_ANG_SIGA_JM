@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild,TemplateRef, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef, Input } from '@angular/core';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { CommonsService } from '../../../../_services/commons.service';
 import { TranslateService } from '../../../../commons/translate';
@@ -41,8 +41,8 @@ export class GuardiasInscripcionesComponent implements OnInit {
   msgs;
   fechaHoy: Date;
   existeSaltosCompensaciones: boolean;
-  permisoEscritura : boolean = false;
-  isLetrado : boolean = false;
+  permisoEscritura: boolean = false;
+  isLetrado: boolean = false;
   progressSpinner: boolean = false;
   inscripcionesDatosEntradaItem;
   respuestaInscripciones: ResultadoInscripciones[] = [];
@@ -59,10 +59,37 @@ export class GuardiasInscripcionesComponent implements OnInit {
   isDisabled = true;
   seleccionarTodo = false;
 
-  firstColumn=0;
-  lastColumn=9;
+  firstColumn = 0;
+  lastColumn = 9;
 
-  infoParaElPadre: { fechasolicitudbajaSeleccionada: any; fechaActual: any; observaciones: any; id_persona: any; idturno: any, idinstitucion: any, idguardia: any, fechasolicitud: any, fechavalidacion: any, fechabaja: any, observacionessolicitud: any, observacionesbaja: any, observacionesvalidacion: any, observacionesdenegacion: any, fechadenegacion: any, observacionesvalbaja: any, observacionesvalidacionNUEVA: any, fechavalidacionNUEVA: any, observacionesvalbajaNUEVA: any,fechasolicitudbajaNUEVA:any, observacionesdenegacionNUEVA: any, fechadenegacionNUEVA: any, observacionessolicitudNUEVA: any, fechasolicitudNUEVA: any, validarinscripciones: any, estado: any}[] = [];
+  infoParaElPadre: {
+    fechasolicitudbajaSeleccionada: any;
+    fechaActual: any;
+    observaciones: any;
+    id_persona: any;
+    idturno: any,
+    idinstitucion: any,
+    idguardia: any,
+    fechasolicitud: any,
+    fechavalidacion: any,
+    fechabaja: any,
+    observacionessolicitud: any,
+    observacionesbaja: any,
+    observacionesvalidacion: any,
+    observacionesdenegacion: any,
+    fechadenegacion: any,
+    observacionesvalbaja: any,
+    observacionesvalidacionNUEVA: any,
+    fechavalidacionNUEVA: any,
+    observacionesvalbajaNUEVA: any,
+    fechasolicitudbajaNUEVA: any,
+    observacionesdenegacionNUEVA: any,
+    fechadenegacionNUEVA: any,
+    observacionessolicitudNUEVA: any,
+    fechasolicitudNUEVA: any,
+    validarinscripciones: any,
+    estado: any
+  }[] = [];
 
 
   jsonParaEnviar = {
@@ -112,7 +139,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
   @ViewChild(TablaResultadoMixComponent) tabla;
   existeTrabajosSJCS: any;
 
-  
+
 
   constructor(private persistenceService: PersistenceService,
     private sigaServices: SigaServices,
@@ -133,12 +160,12 @@ export class GuardiasInscripcionesComponent implements OnInit {
 
     //this.isLetrado = this.sigaStorageService.isLetrado;
     this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
-    
-    if(sessionStorage.getItem("datosColegiado") != null || sessionStorage.getItem("datosColegiado") != undefined) {
+
+    if (sessionStorage.getItem("datosColegiado") != null || sessionStorage.getItem("datosColegiado") != undefined) {
       this.datosColegiado = JSON.parse(sessionStorage.getItem("datosColegiado"));
       this.buscarDesdeEnlace();
       this.filtros.usuarioBusquedaExpress.numColegiado = this.datosColegiado.numColegiado;
-      
+
     }
 
     this.commonsService.checkAcceso(procesos_guardia.inscripciones_guardias)
@@ -167,7 +194,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
   }
   getFiltrosValues(event) {
     this.filtrosValues = JSON.parse(JSON.stringify(event));
-    console.log("FILTROS: ",this.filtrosValues);
+    console.log("FILTROS: ", this.filtrosValues);
     this.convertArraysToStrings();
     this.buscarIns();
 
@@ -193,92 +220,92 @@ export class GuardiasInscripcionesComponent implements OnInit {
 
 
 
-  buscarDesdeEnlace(){
-   
-      this.inscripcionesDatosEntradaItem =
-      {
-        'nColegiado': this.datosColegiado.numColegiado
-      };
-      this.progressSpinner = true;
-      this.sigaServices.post(
-        "guardiasInscripciones_buscarInscripciones", this.inscripcionesDatosEntradaItem).subscribe(
-          data => {
-            let error = JSON.parse(data.body).error;
-            this.datos = JSON.parse(data.body).inscripcionesItem;
-            this.buscar = true;
-            console.log(data);
-            this.datos = this.datos.map(it => {
-              it.letradosIns = +it.letradosIns;
-              return it;
-            })
-            this.respuestaInscripciones = [];
-            this.datos.forEach((dat, i) => {
-              let responseObject = new ResultadoInscripciones(
-                {
-                  'idturno': dat.idturno,
-                  'estado': dat.estado,
-                  'abreviatura': dat.abreviatura,
-                  'validarinscripciones': dat.validarinscripciones,
-                  'validarjustificaciones': dat.validarjustificaciones,
-                  'nombreGuardia': dat.nombreGuardia,
-                  'descripcionGuardia': dat.descripcionGuardia,
-                  'idguardia': dat.idguardia,
-                  'apellidosnombre': dat.apellidosnombre,
-                  'ncolegiado': dat.ncolegiado,
-                  'nombre': dat.nombre,
-                  'apellidos': dat.apellidos,
-                  'apellidos2': dat.apellidos2,
-                  'idinstitucion': dat.idinstitucion,
-                  'idpersona': dat.idpersona,
-                  'fechasolicitud': this.formatDate(dat.fechasolicitud),
-                  'observacionessolicitud': dat.observacionessolicitud,
-                  'fechavalidacion': this.formatDate(dat.fechavalidacion),
-                  'fechabaja': this.formatDate(dat.fechabaja),
-                  'observacionesvalidacion': dat.observacionesvalidacion,
-                  'fechasolicitudbaja': this.formatDate(dat.fechasolicitudbaja),
-                  'observacionesbaja': dat.observacionesbaja,
-                  'observacionesvalbaja': dat.observacionesvalbaja,
-                  'fechadenegacion': dat.fechadenegacion,
-                  'observacionesdenegacion': dat.observacionesdenegacion,
-                  'fechavaloralta': dat.fechavaloralta,
-                  'fechavalorbaja': dat.fechavalorbaja,
-                  'code': dat.code,
-                  'message': dat.message,
-                  'description': dat.description,
-                  'infoURL': dat.infoURL,
-                  'errorDetail': dat.errorDetail
-                }
-              );
-              this.respuestaInscripciones.push(responseObject);
-            })
-            this.jsonToRow(this.respuestaInscripciones);
-  
-            this.buscar = true;
-            this.progressSpinner = false;
-            //this.resetSelect();
-  
-            if (this.totalRegistros == 200) {
-              this.showMessage('info', this.translateService.instant("general.message.informacion"), "La consulta devuelve más de 200 resultados.");
-            }
-  
-            if (this.tabla != null && this.tabla != undefined) {
-              this.tabla.historico = event;
-            }
-  
-  
-            if (error != null && error.description != null) {
-              this.showMessage('info', this.translateService.instant("general.message.informacion"), this.translateService.instant("error.description"));
-            }
-          },
-          err => {
-            this.progressSpinner = false;
-            console.log(err);
-          },
-          () => {
-            setTimeout(()=>{this.commonsService.scrollTablaFoco('tablaFoco');},5);
-          });
+  buscarDesdeEnlace() {
+
+    this.inscripcionesDatosEntradaItem =
+    {
+      'nColegiado': this.datosColegiado.numColegiado
+    };
+    this.progressSpinner = true;
+    this.sigaServices.post(
+      "guardiasInscripciones_buscarInscripciones", this.inscripcionesDatosEntradaItem).subscribe(
+        data => {
+          let error = JSON.parse(data.body).error;
+          this.datos = JSON.parse(data.body).inscripcionesItem;
+          this.buscar = true;
+          console.log(data);
+          this.datos = this.datos.map(it => {
+            it.letradosIns = +it.letradosIns;
+            return it;
+          })
+          this.respuestaInscripciones = [];
+          this.datos.forEach((dat, i) => {
+            let responseObject = new ResultadoInscripciones(
+              {
+                'idturno': dat.idturno,
+                'estado': dat.estado,
+                'abreviatura': dat.abreviatura,
+                'validarinscripciones': dat.validarinscripciones,
+                'validarjustificaciones': dat.validarjustificaciones,
+                'nombreGuardia': dat.nombreGuardia,
+                'descripcionGuardia': dat.descripcionGuardia,
+                'idguardia': dat.idguardia,
+                'apellidosnombre': dat.apellidosnombre,
+                'ncolegiado': dat.ncolegiado,
+                'nombre': dat.nombre,
+                'apellidos': dat.apellidos,
+                'apellidos2': dat.apellidos2,
+                'idinstitucion': dat.idinstitucion,
+                'idpersona': dat.idpersona,
+                'fechasolicitud': this.formatDate(dat.fechasolicitud),
+                'observacionessolicitud': dat.observacionessolicitud,
+                'fechavalidacion': this.formatDate(dat.fechavalidacion),
+                'fechabaja': this.formatDate(dat.fechabaja),
+                'observacionesvalidacion': dat.observacionesvalidacion,
+                'fechasolicitudbaja': this.formatDate(dat.fechasolicitudbaja),
+                'observacionesbaja': dat.observacionesbaja,
+                'observacionesvalbaja': dat.observacionesvalbaja,
+                'fechadenegacion': dat.fechadenegacion,
+                'observacionesdenegacion': dat.observacionesdenegacion,
+                'fechavaloralta': dat.fechavaloralta,
+                'fechavalorbaja': dat.fechavalorbaja,
+                'code': dat.code,
+                'message': dat.message,
+                'description': dat.description,
+                'infoURL': dat.infoURL,
+                'errorDetail': dat.errorDetail
+              }
+            );
+            this.respuestaInscripciones.push(responseObject);
+          })
+          this.jsonToRow(this.respuestaInscripciones);
+
+          this.buscar = true;
+          this.progressSpinner = false;
+          //this.resetSelect();
+
+          if (this.totalRegistros == 200) {
+            this.showMessage('info', this.translateService.instant("general.message.informacion"), "La consulta devuelve más de 200 resultados.");
+          }
+
+          if (this.tabla != null && this.tabla != undefined) {
+            this.tabla.historico = event;
+          }
+
+
+          if (error != null && error.description != null) {
+            this.showMessage('info', this.translateService.instant("general.message.informacion"), this.translateService.instant("error.description"));
+          }
+        },
+        err => {
+          this.progressSpinner = false;
+          console.log(err);
+        },
+        () => {
+          setTimeout(() => { this.commonsService.scrollTablaFoco('tablaFoco'); }, 5);
+        });
   }
-  
+
 
   buscarIns() {
 
@@ -343,7 +370,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
                 'description': dat.description,
                 'infoURL': dat.infoURL,
                 'errorDetail': dat.errorDetail,
-                'descripcion_obligatoriedad':dat.descripcion_obligatoriedad
+                'descripcion_obligatoriedad': dat.descripcion_obligatoriedad
               }
             );
             this.respuestaInscripciones.push(responseObject);
@@ -372,7 +399,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
           console.log(err);
         },
         () => {
-          setTimeout(()=>{this.commonsService.scrollTablaFoco('tablaFoco');},5);
+          setTimeout(() => { this.commonsService.scrollTablaFoco('tablaFoco'); }, 5);
         });
   }
 
@@ -395,7 +422,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
       let objCells = [
         { type: 'text', value: res.ncolegiado },                                                                 //0
         { type: 'text', value: res.apellidosnombre },                                                            //1
-        { type: 'textToolTip', value: [res.nombre,res.abreviatura ]}, //turno                                    //2
+        { type: 'textToolTip', value: [res.nombre, res.abreviatura] }, //turno                                    //2
         { type: 'textToolTip', value: [res.descripcionGuardia, res.nombreGuardia] },                             //3
         { type: 'text', value: res.fechasolicitud },                                                             //4
         { type: 'text', value: res.fechavalidacion },                                                            //5
@@ -425,7 +452,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
         { type: 'invisible', value: res.apellidos2 },                                                            //29
         { type: 'invisible', value: res.fechavaloralta },                                                        //30
         { type: 'invisible', value: res.fechavalorbaja },                                                        //31
-        { type: 'invisible', value: res.descripcion_obligatoriedad}                                              //32
+        { type: 'invisible', value: res.descripcion_obligatoriedad }                                              //32
       ]
         ;
 
@@ -433,7 +460,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
       let obj = { id: i, cells: objCells };
       arr.push(obj);
     });
-  
+
     this.rowGroups = [];
     this.rowGroups = this.trmService.getTableData(arr);
     this.rowGroupsAux = [];
@@ -463,7 +490,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
       'observacionesvalidacion': obj['observacionesvalidacion'],
       'fechasolicitudbaja': obj['fechasolicitudbajaSeleccionada'], //(obj['fechasolicitudbajaSeleccionada'] != null) ? obj['fechasolicitudbajaSeleccionada'] : ""),
       'observacionesbaja': obj['observacionesbaja'],
-      'fechabaja': obj['fechabaja'] , //(obj['fechabaja'] != null && obj['fechabaja'] != undefined) ? this.formatDate(obj['fechabaja']).toString() : this.formatDate(obj['fechabaja']),
+      'fechabaja': obj['fechabaja'], //(obj['fechabaja'] != null && obj['fechabaja'] != undefined) ? this.formatDate(obj['fechabaja']).toString() : this.formatDate(obj['fechabaja']),
       'observacionesvalbaja': obj['observacionesvalbaja'],
       'fechadenegacion': obj['fechadenegacion'], //(obj['fechadenegacion'] != null && obj['fechadenegacion'] != undefined) ? this.formatDate(obj['fechadenegacion']).toString() : this.formatDate(obj['fechadenegacion']),
       'observacionesdenegacion': obj['observacionesdenegacion'],
@@ -474,45 +501,144 @@ export class GuardiasInscripcionesComponent implements OnInit {
       'description': null,
       'infoURL': null,
       'errorDetail': null,
-      'observacionesvalidacionNUEVA' : (obj['observacionesvalidacionNUEVA'] != null && obj['observacionesvalidacionNUEVA'] != undefined) ? obj['observacionesvalidacionNUEVA'] : obj['observacionesvalidacion'],
+      'observacionesvalidacionNUEVA': (obj['observacionesvalidacionNUEVA'] != null && obj['observacionesvalidacionNUEVA'] != undefined) ? obj['observacionesvalidacionNUEVA'] : obj['observacionesvalidacion'],
       'fechavalidacionNUEVA': (obj['fechavalidacionNUEVA'] != null && obj['fechavalidacionNUEVA'] != undefined) ? obj['fechavalidacionNUEVA'] : obj['fechavalidacion'],
-      'observacionesvalbajaNUEVA' : (obj['observacionesvalbajaNUEVA'] != null && obj['observacionesvalbajaNUEVA'] != undefined) ? obj['observacionesvalbajaNUEVA'] : obj['observacionesvalbaja'],
-      'fechasolicitudbajaNUEVA' : (obj['fechasolicitudbajaNUEVA'] != null && obj['fechasolicitudbajaNUEVA'] != undefined) ? obj['fechasolicitudbajaNUEVA'] : obj['fechasolicitudbajaSeleccionada'],
-      'observacionesdenegacionNUEVA' : (obj['observacionesdenegacionNUEVA'] != null && obj['observacionesdenegacionNUEVA'] != undefined) ? obj['observacionesdenegacionNUEVA'] : obj['observacionesdenegacion'],
-      'fechadenegacionNUEVA' : (obj['fechadenegacionNUEVA'] != null && obj['fechadenegacionNUEVA'] != undefined) ? obj['fechadenegacionNUEVA'] : obj['fechadenegacion'],
-      'observacionessolicitudNUEVA' : (obj['observacionessolicitudNUEVA'] != null && obj['observacionessolicitudNUEVA'] != undefined) ? obj['observacionessolicitudNUEVA'] : obj['observacionessolicitud'],
-      'fechasolicitudNUEVA' : (obj['fechasolicitudNUEVA'] != null && obj['fechasolicitudNUEVA'] != undefined) ? obj['fechasolicitudNUEVA'] : obj['fechasolicitud'],
+      'observacionesvalbajaNUEVA': (obj['observacionesvalbajaNUEVA'] != null && obj['observacionesvalbajaNUEVA'] != undefined) ? obj['observacionesvalbajaNUEVA'] : obj['observacionesvalbaja'],
+      'fechasolicitudbajaNUEVA': (obj['fechasolicitudbajaNUEVA'] != null && obj['fechasolicitudbajaNUEVA'] != undefined) ? obj['fechasolicitudbajaNUEVA'] : obj['fechasolicitudbajaSeleccionada'],
+      'observacionesdenegacionNUEVA': (obj['observacionesdenegacionNUEVA'] != null && obj['observacionesdenegacionNUEVA'] != undefined) ? obj['observacionesdenegacionNUEVA'] : obj['observacionesdenegacion'],
+      'fechadenegacionNUEVA': (obj['fechadenegacionNUEVA'] != null && obj['fechadenegacionNUEVA'] != undefined) ? obj['fechadenegacionNUEVA'] : obj['fechadenegacion'],
+      'observacionessolicitudNUEVA': (obj['observacionessolicitudNUEVA'] != null && obj['observacionessolicitudNUEVA'] != undefined) ? obj['observacionessolicitudNUEVA'] : obj['observacionessolicitud'],
+      'fechasolicitudNUEVA': (obj['fechasolicitudNUEVA'] != null && obj['fechasolicitudNUEVA'] != undefined) ? obj['fechasolicitudNUEVA'] : obj['fechasolicitud'],
     };
 
     return new ResultadoInscripcionesBotones(objeto);
   }
 
 
-  llamadaBackValidar() {
+  llamadaBackValidar(objetoValidacion, estado) {
 
     this.progressSpinner = true;
-    this.sigaServices.post(
-      "guardiasInscripciones_validarInscripciones", this.objetoValidacion).subscribe(
-        data => {
-          console.log("entra en el data");
-          this.progressSpinner = false;
-          console.log(data);
-          //mensaje de okey
-          console.log("Se ha realizado correctamente");
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+    if (estado == "0") {//validacion de estado Pendiente de Alta
 
-        },
-        err => {
-          this.progressSpinner = false;
-          console.log(err);
-          //mensaje de error
-          console.log("No se ha podido realizar el servicio de back");
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      this.sigaServices.post(
+        "guardiasInscripciones_validarInscripciones", objetoValidacion).subscribe(
+          data => {
+            console.log("entra en el data");
+            this.progressSpinner = false;
+            console.log(data);
+            //mensaje de okey
+            console.log("Se ha realizado correctamente");
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 
-        },
-        () => {
-          this.commonsService.scrollTablaFoco('tablaFoco');
-        });
+          },
+          err => {
+            this.progressSpinner = false;
+            console.log(err);
+            //mensaje de error
+            console.log("No se ha podido realizar el servicio de back");
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+
+          },
+          () => {
+            this.commonsService.scrollTablaFoco('tablaFoco');
+          });
+
+    } else if (estado == "2") {//validacion de estado Pendiente de Baja
+
+      //comprobacion de si la inscripcion tiene trabajos en SJCS
+      this.sigaServices.post(
+        "guardiasInscripciones_buscarTrabajosSJCS", objetoValidacion).subscribe(
+          data => {
+            console.log("entra en el data");
+            this.progressSpinner = false;
+            this.existeTrabajosSJCS = data.body;
+
+            if (this.existeTrabajosSJCS == "true") {
+
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("Existen trabajos pendientes en SJCS asociados."));
+
+            } else {
+
+              //comprobacion de si existen saltos y compensaciones para esta inscripcion y eliminar en caso de que asi se requiera
+
+              this.sigaServices.post(
+                "guardiasInscripciones_buscarsaltoscompensaciones", objetoValidacion).subscribe(
+                  data => {
+
+                    this.existeSaltosCompensaciones = data.body;
+
+                    if (this.existeSaltosCompensaciones == true) {
+                      let mess = this.translateService.instant(
+                        "justiciaGratuita.oficio.inscripciones.mensajeSaltos"
+                      );
+                      let icon = "fa fa-edit";
+                      this.confirmationService.confirm({
+                        key:'valBaja',
+                        message: mess,
+                        icon: icon,
+                        accept: () => {
+                          this.sigaServices.post("guardiasInscripciones_eliminarsaltoscompensaciones", objetoValidacion).subscribe();
+                        },
+                        reject: () => {
+                          this.msgs = [
+                            {
+                              severity: "info",
+                              summary: "Cancel",
+                              detail: this.translateService.instant(
+                                "general.message.accion.cancelada"
+                              )
+                            }
+                          ];
+                        }
+                      });
+
+                      this.sigaServices.post(
+                        "guardiasInscripciones_validarInscripciones", objetoValidacion).subscribe(
+                          data => {
+                            this.progressSpinner = false;
+                            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+
+                          },
+                          err => {
+                            this.progressSpinner = false;
+                            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+
+                          });
+                    }else{
+                      this.sigaServices.post(
+                        "guardiasInscripciones_validarInscripciones", objetoValidacion).subscribe(
+                          data => {
+                            this.progressSpinner = false;
+                            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+
+                          },
+                          err => {
+                            this.progressSpinner = false;
+                            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+
+                          });
+                    }
+                  },
+                  err => {
+                    this.progressSpinner = false;
+
+                    this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+
+                  });
+
+            }
+
+          },
+          err => {
+            this.progressSpinner = false;
+
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+
+          });
+
+
+    }
+
   }
 
   llamadaBackDenegar() {
@@ -554,7 +680,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
           //mensaje de okey
           console.log("Se ha realizado correctamente");
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-
+          this.objetoValidacion = [];
         },
         err => {
           this.progressSpinner = false;
@@ -569,11 +695,11 @@ export class GuardiasInscripcionesComponent implements OnInit {
         });
   }
 
-  llamadaBackCambiarFecha() {
+  llamadaBackCambiarFecha(objetoValidacion) {
 
     this.progressSpinner = true;
     this.sigaServices.post(
-      "guardiasInscripciones_cambiarFechaInscripciones", this.objetoValidacion).subscribe(
+      "guardiasInscripciones_cambiarFechaInscripciones", objetoValidacion).subscribe(
         data => {
           console.log("entra en el data");
           this.progressSpinner = false;
@@ -595,7 +721,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
         });
   }
 
-  confirmDelete() {
+ /*  confirmDelete() {
     let mess = this.translateService.instant(
       "justiciaGratuita.oficio.inscripciones.mensajeSaltos"
     );
@@ -618,15 +744,15 @@ export class GuardiasInscripcionesComponent implements OnInit {
         ];
       }
     });
-  }
+  } */
 
-  delete() {
+  /* delete() {
 
     this.sigaServices.post("guardiasInscripciones_eliminarsaltoscompensaciones", this.objetoValidacion).subscribe(
 
       data => {
 
-        this.datos=data.body;
+        this.datos = data.body;
         console.log(this.datos);
         console.log(data);
 
@@ -646,45 +772,45 @@ export class GuardiasInscripcionesComponent implements OnInit {
         this.progressSpinner = false;
       }
     );
-  }
+  } */
 
-  llamadaBackSaltosCompensaciones(){
+  /* llamadaBackSaltosCompensaciones() {
     this.progressSpinner = true;
-      this.sigaServices.post(
-        "guardiasInscripciones_buscarsaltoscompensaciones", this.objetoValidacion).subscribe(
-          data => {
-            console.log("entra en el data");
-            this.progressSpinner = false;
-            this.existeSaltosCompensaciones=data.body;
-            console.log(data);
+    this.sigaServices.post(
+      "guardiasInscripciones_buscarsaltoscompensaciones", this.objetoValidacion).subscribe(
+        data => {
+          console.log("entra en el data");
+          this.progressSpinner = false;
+          this.existeSaltosCompensaciones = data.body;
+          console.log(data);
 
-            if(this.existeSaltosCompensaciones==true){
-              //mensaje de diálogo de que hay saltos y compensaciones que si está seguro de eliminarlos
-              this.confirmDelete();
-            }else{
-              //mensaje de que usted ha cancelado la operación.
-              console.log("ha entrado en el else del boleano");
-            }
-            
-            console.log("Se ha realizado correctamente");
-            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-  
-          },
-          err => {
-            this.progressSpinner = false;
-            console.log(err);
-            //mensaje de error
-            console.log("No se ha podido realizar el servicio de back");
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-  
-          },
-          () => {
-            this.commonsService.scrollTablaFoco('tablaFoco');
-          });
+          if (this.existeSaltosCompensaciones == true) {
+            //mensaje de diálogo de que hay saltos y compensaciones que si está seguro de eliminarlos
+            this.confirmDelete();
+          } else {
+            //mensaje de que usted ha cancelado la operación.
+            console.log("ha entrado en el else del boleano");
+          }
 
-  }
+          console.log("Se ha realizado correctamente");
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 
-  confirmBaja(){
+        },
+        err => {
+          this.progressSpinner = false;
+          console.log(err);
+          //mensaje de error
+          console.log("No se ha podido realizar el servicio de back");
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+
+        },
+        () => {
+          this.commonsService.scrollTablaFoco('tablaFoco');
+        });
+
+  } */
+
+  confirmBaja() {
     let mess = this.translateService.instant(
       "justiciaGratuita.oficio.inscripciones.mensajeSaltos"
     );
@@ -693,10 +819,10 @@ export class GuardiasInscripcionesComponent implements OnInit {
       message: mess,
       icon: icon,
       accept: () => {
-         //permitirá hacer la baja
-         this.llamadaBackSolicitarBaja();
-         console.log("Entró por aquí");
-         
+        //permitirá hacer la baja
+        this.llamadaBackSolicitarBaja();
+        console.log("Entró por aquí");
+
 
       },
       reject: () => {
@@ -713,64 +839,64 @@ export class GuardiasInscripcionesComponent implements OnInit {
     });
   }
 
-  llamadaBackTrabajosSJCS(){
+   llamadaBackTrabajosSJCS() {
     this.progressSpinner = true;
-      this.sigaServices.post(
-        "guardiasInscripciones_buscarTrabajosSJCS", this.objetoValidacion).subscribe(
-          data => {
-            console.log("entra en el data");
-            this.progressSpinner = false;
-            this.existeTrabajosSJCS=data.body;
+    this.sigaServices.post(
+      "guardiasInscripciones_buscarTrabajosSJCS", this.objetoValidacion).subscribe(
+        data => {
+          console.log("entra en el data");
+          this.progressSpinner = false;
+          this.existeTrabajosSJCS = data.body;
 
-            if(this.existeTrabajosSJCS == "true"){
-              //mensaje de error
-              if (this.jsonParaEnviar.tipoAccion == "solicitarBaja") {
-                this.confirmBaja();
-              }
-            }
-
-            this.llamadaBackSolicitarBaja();
-           
-            console.log("Se ha realizado correctamente");
-            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-  
-          },
-          err => {
-            this.progressSpinner = false;
-            console.log(err);
-            console.log("No se ha podido realizar el servicio de back");
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));  
-
-  
-          },
-          () => {
-            this.commonsService.scrollTablaFoco('tablaFoco');
-          });
-
-  }
-
-  turnosGuardias(){
-    this.progressSpinner = true;
-      this.sigaServices.post(
-        "guardiasInscripciones_buscarGuardiasAsocTurnos", this.objetoValidacion).subscribe(
-          data => {
-            console.log("entra en el data");
-            this.progressSpinner = false;
-
-            console.log("Se ha realizado correctamente");
-            //this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-  
-          },
-          err => {
-            this.progressSpinner = false;
-            console.log(err);
+          if (this.existeTrabajosSJCS == "true") {
             //mensaje de error
-            console.log("No se ha podido realizar el servicio de back");
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));  
-          },
-          () => {
-            this.commonsService.scrollTablaFoco('tablaFoco');
-          });
+            if (this.jsonParaEnviar.tipoAccion == "solicitarBaja") {
+              this.confirmBaja();
+            }
+          }
+
+          this.llamadaBackSolicitarBaja();
+
+          console.log("Se ha realizado correctamente");
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+
+        },
+        err => {
+          this.progressSpinner = false;
+          console.log(err);
+          console.log("No se ha podido realizar el servicio de back");
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+
+
+        },
+        () => {
+          this.commonsService.scrollTablaFoco('tablaFoco');
+        });
+
+  } 
+
+  turnosGuardias() {
+    this.progressSpinner = true;
+    this.sigaServices.post(
+      "guardiasInscripciones_buscarGuardiasAsocTurnos", this.objetoValidacion).subscribe(
+        data => {
+          console.log("entra en el data");
+          this.progressSpinner = false;
+
+          console.log("Se ha realizado correctamente");
+          //this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.objetoValidacion = [];
+        },
+        err => {
+          this.progressSpinner = false;
+          console.log(err);
+          //mensaje de error
+          console.log("No se ha podido realizar el servicio de back");
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        },
+        () => {
+          this.commonsService.scrollTablaFoco('tablaFoco');
+        });
 
   }
 
@@ -785,107 +911,138 @@ export class GuardiasInscripcionesComponent implements OnInit {
       this.jsonParaEnviar.datos.forEach(el => {
 
 
-        if (el.fechasolicitudbajaSeleccionada == null) {
+        if (el.estado == "0") {//validacion de inscripciones en estado Pendiente de Alta.
           el.fechavalidacionNUEVA = el.fechaActual;
           el.observacionesvalidacionNUEVA = el.observaciones;
-          el.fechasolicitudbajaNUEVA = null;
-          el.fechasolicitudbajaSeleccionada=null;
-
-          if(el.fechavalidacion == undefined){
+          if (el.fechavalidacion == undefined) {
             el.fechavalidacion = null;
-          }else if(el.fechasolicitud == undefined){
+          } else if (el.fechasolicitud == undefined) {
             el.fechasolicitud = null;
-          }else if(el.fechadenegacion == undefined){
+          } else if (el.fechadenegacion == undefined) {
             el.fechadenegacion = null;
           }
-          if(el.fechabaja == undefined){
+          if (el.fechabaja == undefined) {
             el.fechabaja = null;
           }
-          
-        } else {
+          let objVal: ResultadoInscripcionesBotones = this.rellenarObjetoBack(el);
+
+          this.objetoValidacion.push(objVal);
+          this.llamadaBackValidar(this.objetoValidacion, el.estado);
+          this.objetoValidacion = [];
+        } else if (el.estado == "2") {//validacion de inscripcion en estado Pendiente de Baja.
           el.fechasolicitudbajaNUEVA = el.fechaActual;
           el.observacionesvalbajaNUEVA = el.observaciones;
+
+          let objVal: ResultadoInscripcionesBotones = this.rellenarObjetoBack(el);
+
+          this.objetoValidacion.push(objVal);
+          this.llamadaBackValidar(this.objetoValidacion, el.estado);
+          this.objetoValidacion = [];
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), "La validacion solo se lleva a cabo sobre inscripciones en estado de Pendiente de Alta y Pendiente de Baja.");
         }
 
-        let objVal: ResultadoInscripcionesBotones = this.rellenarObjetoBack(el);
+        /*   if (el.fechasolicitudbajaSeleccionada == null) {
+            el.fechavalidacionNUEVA = el.fechaActual;
+            el.observacionesvalidacionNUEVA = el.observaciones;
+            el.fechasolicitudbajaNUEVA = null;
+            el.fechasolicitudbajaSeleccionada = null;
+  
+            if (el.fechavalidacion == undefined) {
+              el.fechavalidacion = null;
+            } else if (el.fechasolicitud == undefined) {
+              el.fechasolicitud = null;
+            } else if (el.fechadenegacion == undefined) {
+              el.fechadenegacion = null;
+            }
+            if (el.fechabaja == undefined) {
+              el.fechabaja = null;
+            }
+  
+          } else {
+            el.fechasolicitudbajaNUEVA = el.fechaActual;
+            el.observacionesvalbajaNUEVA = el.observaciones;
+          } */
 
-        this.objetoValidacion.push(objVal);
+        /*   let objVal: ResultadoInscripcionesBotones = this.rellenarObjetoBack(el);
+  
+          this.objetoValidacion.push(objVal); */
 
       });
 
       //1º llamada al back de la consulta de saltos y compensaciones
-      this.llamadaBackSaltosCompensaciones();
+      //this.llamadaBackSaltosCompensaciones();
 
       //2º llamada al back para la consulta de trabajos SJCS
-      this.llamadaBackTrabajosSJCS();
+      //this.llamadaBackTrabajosSJCS();
 
-      this.llamadaBackValidar();
+      // this.llamadaBackValidar();
 
     } else if (this.jsonParaEnviar.tipoAccion == "denegar") {
 
       this.jsonParaEnviar.datos.forEach(el => {
-        
+
         el.fechadenegacionNUEVA = el.fechaActual;
         el.observacionesdenegacionNUEVA = el.observaciones;
-        
+
         let objVal: ResultadoInscripcionesBotones = this.rellenarObjetoBack(el);
 
         this.objetoValidacion.push(objVal);
 
       });
-      
+
       this.llamadaBackDenegar();
 
     } else if (this.jsonParaEnviar.tipoAccion == "solicitarBaja") {
 
-      this.fechaHoy=this.transformaFecha(new Date());
+      this.fechaHoy = this.transformaFecha(new Date());
 
       this.jsonParaEnviar.datos.forEach(el => {
-        
+
         el.fechasolicitudbajaNUEVA = el.fechaActual;
         el.observacionessolicitudNUEVA = el.observaciones;
-        
-        if(this.formatDate(el.fechaActual)!=this.formatDate(this.fechaHoy)){
+
+        if (this.formatDate(el.fechaActual) != this.formatDate(this.fechaHoy)) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), "La fecha elegida no puede ser distinta a la fecha actual.");
-        }else{
-       
-
-        //De misma forma se realizará con las guardias del turno al que esté inscrito el colegiado.
-
-        let objVal: ResultadoInscripcionesBotones = this.rellenarObjetoBack(el);
-
-        this.objetoValidacion.push(objVal);
-
-         //mirar si el turno tiene guardias y el colegiado está inscrito se le dará automaticamente de baja a todas las guardias
-         this.turnosGuardias();
-
-        //•	Al realizar la solicitud el sistema iniciara las consultas necesarias para determinar si el letrado tiene trabajos SJCS pendientes asociados a dicho turno. En el caso de que existan, se mostrará un mensaje de confirmación para realizar la baja de que hay trabajos SJCS pendientes y permitirá realizar la baja.
-        this.llamadaBackTrabajosSJCS();
+        } else {
 
 
-        //this.llamadaBackSolicitarBaja();
-      }
+          //De misma forma se realizará con las guardias del turno al que esté inscrito el colegiado.
+
+          let objVal: ResultadoInscripcionesBotones = this.rellenarObjetoBack(el);
+
+          this.objetoValidacion.push(objVal);
+
+          //mirar si el turno tiene guardias y el colegiado está inscrito se le dará automaticamente de baja a todas las guardias
+          this.turnosGuardias();
+
+          //•	Al realizar la solicitud el sistema iniciara las consultas necesarias para determinar si el letrado tiene trabajos SJCS pendientes asociados a dicho turno. En el caso de que existan, se mostrará un mensaje de confirmación para realizar la baja de que hay trabajos SJCS pendientes y permitirá realizar la baja.
+          this.llamadaBackTrabajosSJCS();
+          this.objetoValidacion = [];
+
+          //this.llamadaBackSolicitarBaja();
+        }
 
 
       });
-      
+
     } else if (this.jsonParaEnviar.tipoAccion == "cambiarFecha") {
 
       this.jsonParaEnviar.datos.forEach(el => {
-        
+
         el.fechasolicitudNUEVA = el.fechaActual;
         el.observacionessolicitudNUEVA = el.observaciones;
-        
-        if(el.estado=="2" || el.estado=="1"){
+
+        if (el.estado == "2" || el.estado == "1") {
           //cambiar fecha efectiva de alta
-          if(el.fechaActual <= el.fechavalidacion){
-            el.fechavalidacion=el.fechaActual;
+          if (el.fechaActual <= el.fechavalidacion) {
+            el.fechavalidacion = el.fechaActual;
           }
 
-        }else if(el.estado=="3"){
+        } else if (el.estado == "3") {
           //cambiar fecha efectiva de baja
-          if(el.fechaActual >= el.fechabaja){
-            el.fechabaja=el.fechaActual;
+          if (el.fechaActual >= el.fechabaja) {
+            el.fechabaja = el.fechaActual;
           }
         }
 
@@ -893,12 +1050,13 @@ export class GuardiasInscripcionesComponent implements OnInit {
 
         this.objetoValidacion.push(objVal);
 
-        this.llamadaBackCambiarFecha();
-
       });
 
-     
-       
+      this.llamadaBackCambiarFecha(this.objetoValidacion);
+        this.objetoValidacion = [];
+
+
+
 
     }
 
@@ -1011,7 +1169,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
     }
   }
 
-    backTo() {
+  backTo() {
     this.location.back();
   }
 }
