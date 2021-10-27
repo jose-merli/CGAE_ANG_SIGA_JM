@@ -1,19 +1,20 @@
 import { Component, OnInit, Input, Output, ViewChild, EventEmitter, ChangeDetectorRef, SimpleChanges } from '@angular/core';
-import { TranslateService } from '../../../../commons/translate';
-import { SigaServices } from '../../../../_services/siga.service';
-import { PersistenceService } from '../../../../_services/persistence.service';
+import { TranslateService } from '../../../../../commons/translate';
+import { SigaServices } from '../../../../../_services/siga.service';
+import { PersistenceService } from '../../../../../_services/persistence.service';
 import { ConfirmationService } from 'primeng/primeng';
-import { CommonsService } from '../../../../_services/commons.service';
-import { RemesasBusquedaObject } from '../../../../models/sjcs/RemesasBusquedaObject';
-import { Router } from '../../../../../../node_modules/@angular/router';
+import { CommonsService } from '../../../../../_services/commons.service';
+import { Router } from '../../../../../../../node_modules/@angular/router';
 import { DatePipe } from '@angular/common';
+import { saveAs } from "file-saver/FileSaver";
+import { CargaMasivaProcuradorItem } from '../../../../../models/cargaMasivaProcuradorItem';
 
 @Component({
-  selector: 'app-tabla-remesas',
-  templateUrl: './tabla-remesas.component.html',
-  styleUrls: ['./tabla-remesas.component.scss']
+  selector: 'app-tarjeta-listado',
+  templateUrl: './tarjeta-listado.component.html',
+  styleUrls: ['./tarjeta-listado.component.scss']
 })
-export class TablaRemesasComponent implements OnInit {
+export class TarjetaListadoComponent implements OnInit {
 
   rowsPerPage: any = [];
   cols;
@@ -31,8 +32,6 @@ export class TablaRemesasComponent implements OnInit {
   numSelected = 0;
   selectMultiple: boolean = false;
   seleccion: boolean = false;
-
-  message;
 
   initDatos;
   progressSpinner: boolean = false;
@@ -95,43 +94,39 @@ export class TablaRemesasComponent implements OnInit {
     this.datosInicial = JSON.parse(JSON.stringify(this.datos));
   }
 
-  checkPermisosDelete() {
-    let msg = this.commonsService.checkPermisos(this.permisos, undefined);
+  descargarFicheros(){
+    this.progressSpinner = true;
+    let cargaMasivaProcuradorItem: CargaMasivaProcuradorItem[] = []
+    this.selectedDatos.forEach(rem => {
+      let procurador: CargaMasivaProcuradorItem = 
+        {
+          'idCargaMasiva': rem.idCargaMasiva,
+          'nombreFichero': rem.nombreFichero
+        };
 
-    if (msg != undefined) {
-      this.msgs = msg;
-    } else {
-      if (((!this.selectMultiple || !this.selectAll) && (this.selectedDatos == undefined || this.selectedDatos.length == 0)) || !this.permisos) {
-        this.msgs = this.commonsService.checkPermisoAccion();
-      } else {
-        this.confirmDelete();
-      }
-    }
-  }
-
-  confirmDelete() {
-    let mess = this.translateService.instant(
-      "messages.deleteConfirmation"
-    );
-    let icon = "fa fa-edit";
-    this.confirmationService.confirm({
-      message: mess,
-      icon: icon,
-      accept: () => {
-        this.delete()
-      },
-      reject: () => {
-        this.msgs = [
-          {
-            severity: "info",
-            summary: "Cancel",
-            detail: this.translateService.instant(
-              "general.message.accion.cancelada"
-            )
-          }
-        ];
-      }
+      cargaMasivaProcuradorItem.push(procurador);
     });
+    this.sigaServices.postDownloadFilesWithFileName("remesasResultados_descargarFicheros", cargaMasivaProcuradorItem).subscribe(
+      (response: {file: Blob, filename: string}) => {
+        // Se comprueba si todos los documentos asociados no tiene ningún fichero 
+        let documentoAsociado = cargaMasivaProcuradorItem.find(item => item.nombreFichero !=null)
+        if(documentoAsociado != undefined){
+          let filename = response.filename.split(';')[1].split('filename')[1].split('=')[1].trim();
+            if(response.file.size > 0){
+              saveAs(response.file, filename);
+            } else {
+              this.showMessage("error", this.translateService.instant("general.message.informacion"), 'No se puede descargar los ficheros de las remesas de resultados seleccionadas');
+            }
+        }
+        else this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.ejg.documentacion.noFich"));
+
+        this.selectedDatos = [];
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+      }
+    );
   }
 
   selectedRow(selectedDatos) {
@@ -146,33 +141,6 @@ export class TablaRemesasComponent implements OnInit {
         this.selectMultiple = true;
       }
     }
-  }
-
-  delete() {
-    let del = new RemesasBusquedaObject();
-    del.resultadoBusqueda = this.selectedDatos;
-    console.log("Remesa -> ", del.resultadoBusqueda);
-    this.sigaServices.post("listadoremesas_borrarRemesa", del.resultadoBusqueda).subscribe(
-      data => {
-        this.showMessage("success", this.translateService.instant("general.message.correct"), JSON.parse(data.body).error.description);
-        this.selectedDatos = [];
-        this.progressSpinner = false;
-      },
-      err => {
-        if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-        this.selectMultiple = false;
-        this.selectAll = false;
-        this.search.emit(true);
-      }
-    );
   }
 
   onChangeSelectAll() {
@@ -195,13 +163,9 @@ export class TablaRemesasComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "nRegistro", header: "formacion.fichaCursos.tarjetaPrecios.resumen.numRegistros" },
-      { field: "descripcion", header: "administracion.parametrosGenerales.literal.descripcion" },
-      { field: "fechaGeneracion", header: "justiciaGratuita.remesas.tabla.FechaGeneracion" },
-      { field: "fechaEnvio", header: "justiciaGratuita.remesas.tabla.FechaEnvio" },
-      { field: "fechaRecepcion", header: "justiciaGratuita.remesas.tabla.FechaRecepcion" },
-      { field: "estado", header: "justiciaGratuita.Calendarios.Estado" },
-      { field: "incidencias", header: "justiciaGratuita.remesas.tabla.Incidencias" }
+      { field: "fechaCarga", header: "censo.datosCv.literal.fechaCarga" },
+      { field: "nombreFichero", header: "censo.cargaMasivaDatosCurriculares.literal.nombreFichero" },
+      { field: "numRegistros", header: "formacion.fichaCursos.tarjetaPrecios.resumen.numRegistros" }
     ];
     this.cols.forEach(it => this.buscadores.push(""))
 
@@ -223,23 +187,6 @@ export class TablaRemesasComponent implements OnInit {
         value: 40
       }
     ];
-  }
-
-  openTab(evento) {
-
-    let paginacion = {
-      paginacion: this.tabla.first,
-      selectedItem: this.selectedItem
-    };
-
-    console.log("evento -> ", evento);
-
-    this.persistenceService.setPaginacion(paginacion);
-    this.progressSpinner = true;
-    this.persistenceService.setDatos(evento);
-    this.router.navigate(["/fichaRemesasEnvio"]);
-    localStorage.setItem('remesaItem', JSON.stringify(evento));
-    localStorage.setItem('ficha', "registro");
   }
 
   onChangeRowsPerPages(event) {
@@ -281,5 +228,4 @@ export class TablaRemesasComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
-
 }

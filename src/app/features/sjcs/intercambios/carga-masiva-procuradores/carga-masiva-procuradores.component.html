@@ -8,7 +8,8 @@
   </p>
 </div>
 
-<app-tarjeta-datos-curriculares></app-tarjeta-datos-curriculares>
+<app-tarjeta-datos-curriculares [permisoEscritura]="permisoEscritura" (filtrosValues) = "getFiltrosValues($event)"></app-tarjeta-datos-curriculares>
+<app-tarjeta-listado *ngIf="buscar" [permisos]="permisoEscritura" [datos]="datos" (search)="search()"></app-tarjeta-listado>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">
     <div class="loader"></div>

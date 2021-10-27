@@ -182,7 +182,7 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
 
         this.remesaTabla.estado = this.resultado[this.resultado.length-1].estado;
         
-        this.remesaItem.estado = this.resultado[0].estado;
+        this.remesaItem.estado = this.resultado[this.resultado.length-1].estado;
 
         console.log("Contenido de la respuesta del back --> ", this.resultado);
         this.progressSpinner = false;

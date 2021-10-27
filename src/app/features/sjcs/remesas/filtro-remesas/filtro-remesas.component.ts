@@ -109,9 +109,6 @@ export class FiltroRemesasComponent implements OnInit {
   }
 
   search() {
-     /*  this.persistenceService.setFiltros(this.filtros);
-      this.persistenceService.setFiltrosAux(this.filtros);
-      this.filtroAux = this.persistenceService.getFiltrosAux() */
       this.filtrosValues.emit(this.filtros);
   }
 

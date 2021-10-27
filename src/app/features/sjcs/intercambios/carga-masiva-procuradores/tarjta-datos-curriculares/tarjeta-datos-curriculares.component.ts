@@ -1,8 +1,9 @@
-import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
-import { SelectItem } from 'primeng/api';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { KEY_CODE } from '../../../../censo/busqueda-personas-juridicas/busqueda-personas-juridicas.component';
 import { TranslateService } from '../../../../../commons/translate';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { saveAs } from "file-saver/FileSaver";
+import { CargaMasivaItem } from '../../../../../models/CargaMasivaItem';
 
 @Component({
   selector: 'app-tarjeta-datos-curriculares',
@@ -13,13 +14,15 @@ export class TarjetaDatosCurricularesComponent implements OnInit {
 
   msgs: any[];
   progressSpinner: boolean = false;
-  fechaCarga;
+  filtro: CargaMasivaItem = new CargaMasivaItem();
   showTipo: boolean = false;
   file: File = undefined;
   uploadFileDisable: boolean = true;
 
+  @Input() permisoEscritura;
   @Output() tipoEvent = new EventEmitter<string>();
   @ViewChild("pUploadFile") pUploadFile;
+  @Output() filtrosValues = new EventEmitter<CargaMasivaItem>();
 
   constructor(private translateService: TranslateService,
     private sigaServices: SigaServices) { }
@@ -31,7 +34,7 @@ export class TarjetaDatosCurricularesComponent implements OnInit {
 
   fillFechaCarga(event) {
     if (event != null) {
-      this.fechaCarga = event;
+      this.filtro.fechaCarga = event;
     }
   }
 
@@ -69,7 +72,7 @@ export class TarjetaDatosCurricularesComponent implements OnInit {
   descargarModelo(){
     this.progressSpinner = true;
 
-    this.sigaServices.postDownloadFilesWithFileName("intercambios_descargarModelo", undefined).subscribe(
+    this.sigaServices.postDownloadFilesWithFileName("intercambios_descargarModeloCargaMasivaProcuradores", undefined).subscribe(
       (response: {file: Blob, filename: string}) => {
         let filename = response.filename.split(';')[1].split('filename')[1].split('=')[1].trim();
         saveAs(response.file, filename);
@@ -81,6 +84,10 @@ export class TarjetaDatosCurricularesComponent implements OnInit {
 
     
       this.progressSpinner = false;
+  }
+
+  search() {
+    this.filtrosValues.emit(this.filtro);
   }
 
   abreCierraTipo(){
@@ -98,6 +105,14 @@ export class TarjetaDatosCurricularesComponent implements OnInit {
 
 	clear() {
 		this.msgs = [];
+  }
+
+  //búsqueda con enter
+  @HostListener("document:keypress", ["$event"])
+  onKeyPress(event: KeyboardEvent) {
+    if (event.keyCode === KEY_CODE.ENTER) {
+      this.search();
+    }
   }
 
 }

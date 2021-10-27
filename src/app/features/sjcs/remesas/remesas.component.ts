@@ -109,13 +109,7 @@ export class RemesasComponent implements OnInit {
       n => {
         console.log("Dentro del servicio del padre que llama al buscarRemesas");
         this.datos = JSON.parse(n.body).remesasItems;
-
-       /*  this.datos.forEach(element => {
-          element.fechaRecepcion = this.formatDate(element.fechaRecepcion);
-          element.fechaGeneracion = this.formatDate(element.fechaGeneracion);
-          element.fechaEnvio = this.formatDate(element.fechaEnvio);
-        }); */
-
+        
         console.log("Contenido de la respuesta del back --> ", this.datos);
         this.buscar = true;
         this.progressSpinner = false;
