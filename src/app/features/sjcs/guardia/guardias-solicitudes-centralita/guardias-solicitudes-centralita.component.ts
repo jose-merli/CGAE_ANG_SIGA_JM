@@ -76,43 +76,40 @@ export class GuardiasSolicitudesCentralitaComponent implements OnInit {
 
   search(){
 
-    if(!this.buscador.filtro.estado){
-      this.showMsg('error', 'Campos obligatorios',this.translateService.instant("general.message.camposObligatorios"));
-    }else{
-      this.filas = [];
-      this.progressSpinner = true;
-      this.buscador.filtroAux = this.buscador.filtro;
-      sessionStorage.setItem ("filtro", JSON.stringify(this.buscador.filtro))
-      this.sigaServices
-      .post("busquedaPreasistencias_buscarPreasistencias", this.buscador.filtro)
-      .subscribe(
-        n => {
-          let preasistenciasDTO = JSON.parse(n["body"]);
-          if(preasistenciasDTO.error){         
-              if(preasistenciasDTO.error.code == 200){ //Todo ha ido bien pero la consulta ha excedido los registros maximos
-                this.showMsg('info', 'Info', preasistenciasDTO.error.description);
-                this.filas = preasistenciasDTO.preasistenciaItems;
-              }else{
-                this.showMsg('error', this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.errorResultados"), preasistenciasDTO.error.description);
-              }
-          }else if(preasistenciasDTO.preasistenciaItems.length === 0){
-            this.showMsg('info','Info',this.translateService.instant("informesYcomunicaciones.consultas.mensaje.sinResultados"));
-          }else{
-            this.filas = preasistenciasDTO.preasistenciaItems;
-          }    
-          this.progressSpinner = false;
-        },
-        err => {
-          console.log(err);
-        },
-        ()=>{
-          this.progressSpinner = false;
-          setTimeout(() => {
-            this.commonServices.scrollTablaFoco('tablaFoco');
-          }, 5);
-        }
-      );
-    }
+    this.filas = [];
+    this.progressSpinner = true;
+    this.buscador.filtroAux = this.buscador.filtro;
+    sessionStorage.setItem ("filtro", JSON.stringify(this.buscador.filtro))
+    this.sigaServices
+    .post("busquedaPreasistencias_buscarPreasistencias", this.buscador.filtro)
+    .subscribe(
+      n => {
+        let preasistenciasDTO = JSON.parse(n["body"]);
+        if(preasistenciasDTO.error){         
+            if(preasistenciasDTO.error.code == 200){ //Todo ha ido bien pero la consulta ha excedido los registros maximos
+              this.showMsg('info', 'Info', preasistenciasDTO.error.description);
+              this.filas = preasistenciasDTO.preasistenciaItems;
+            }else{
+              this.showMsg('error', this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.errorResultados"), preasistenciasDTO.error.description);
+            }
+        }else if(preasistenciasDTO.preasistenciaItems.length === 0){
+          this.showMsg('info','Info',this.translateService.instant("informesYcomunicaciones.consultas.mensaje.sinResultados"));
+        }else{
+          this.filas = preasistenciasDTO.preasistenciaItems;
+        }    
+        this.progressSpinner = false;
+      },
+      err => {
+        console.log(err);
+      },
+      ()=>{
+        this.progressSpinner = false;
+        setTimeout(() => {
+          this.commonServices.scrollTablaFoco('tablaFoco');
+        }, 5);
+      }
+    );
+    
 
     this.show = true;
   }

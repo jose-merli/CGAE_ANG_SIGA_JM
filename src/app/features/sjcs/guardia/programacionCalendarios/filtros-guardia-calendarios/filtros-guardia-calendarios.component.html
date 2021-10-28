@@ -22,7 +22,7 @@
 
         <!-- GUARDIA -->
         <div class="form-group-interlineado col-lg-3 col-md-3">
-          <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
+          <label>{{"dato.jgr.guardia.inscripciones.guardia" | translate}}</label>
           <p-dropdown class="select-form"  [filter]="true" [(ngModel)]="filtros.idGuardia"  (onChange)="checkFilters()" name="filtros.idGuardia"
           [options]="comboGuardia" filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
           [showClear]="true"> 
@@ -86,7 +86,9 @@
         label="{{ 'general.boton.clear' | translate}}"></button>
       <button pButton (click)="search()" type="button" icon="fa fa-search" iconPos="left"
         label="{{ 'general.boton.search' | translate }}"></button>
-      <button [disabled]="emptyFilters" pButton (click)="nuevo()" type="button" icon="fa fa-plus" iconPos="left"
+      <!--<button [disabled]="emptyFilters" pButton (click)="nuevo()" type="button" icon="fa fa-plus" iconPos="left"
+        label="{{ 'general.boton.new' | translate}}"></button>-->
+        <button pButton (click)="nuevo()" type="button" icon="fa fa-plus" iconPos="left"
         label="{{ 'general.boton.new' | translate}}"></button>
     </div>
   </div>
