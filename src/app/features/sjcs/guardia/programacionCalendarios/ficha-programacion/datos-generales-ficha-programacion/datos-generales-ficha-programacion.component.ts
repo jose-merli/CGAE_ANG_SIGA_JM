@@ -95,6 +95,9 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
     if (this.datosGenerales.fechaProgramacion != null){
       this.datosGenerales.fechaProgramacion = new Date(this.datosGenerales.fechaProgramacion.toString());
     }
+    if(this.datosGenerales.observaciones==null){
+      this.datosGenerales.observaciones="";
+    }
     
     console.log('fecha no ok: ', this.datosGenerales.fechaProgramacion)
     //this.getComboListaGuardia();

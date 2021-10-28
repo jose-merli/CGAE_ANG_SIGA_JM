@@ -24,7 +24,7 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
   filtros = new CalendarioProgramadoItem();
   filtroAux = new CalendarioProgramadoItem();
   historico: boolean = false;
-
+  resaltadoDatos = false;
   isDisabledZona: boolean = true;
   isDisabledMateria: boolean = true;
   resultadosZonas: any;
@@ -50,7 +50,8 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
     private persistenceService: PersistenceService,
     private commonServices: CommonsService,
     private globalGuardiasService: GlobalGuardiasService,
-    private datePipe: DatePipe) { }
+    private datePipe: DatePipe,
+    private commonsService: CommonsService) { }
 
   ngOnInit() {
    this.emptyFilters = true;
@@ -187,6 +188,9 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
   fillFechaCalendarioDesde(event) {
     this.checkFilters();
     this.filtros.fechaCalendarioDesde = event;
+    if(event == undefined || event == null || event == ""){
+      this.muestraCamposObligatorios();
+    }
   }
   fillFechaCalendarioHasta(event) {
     this.checkFilters();
@@ -267,9 +271,9 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
 
 
   search() {
+  if (this.checkFilters() ){
     let compareDateOk = -1;
     let compareDateHourOk = -1;
-    console.log('search')
     if (this.filtros.fechaCalendarioDesde != undefined && this.filtros.fechaCalendarioHasta != undefined){
      compareDateOk = compareDate(this.changeDateFormat(this.formatDate2(this.filtros.fechaCalendarioDesde).toString()), this.changeDateFormat(this.formatDate2(this.filtros.fechaCalendarioHasta).toString()), true);
     }
@@ -293,7 +297,6 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
       const hourA = fechaA.substr(11, 2);
       const minA = fechaA.substr(14, 2);
       const segA = fechaA.substr(17, 2);
-      console.log("fecha a:"+ yearA+","+monthA+","+dayA +  "  " + hourA + ":" + minA + ":" + segA);
       objDate1= {  day: dayA,month: monthA, year: yearA};
       hour1={ hour: hourA,minute: minA,second: segA};
     }
@@ -329,6 +332,9 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Rango de fechas incorrecto. Debe cumplir que la fecha desde sea menor o igual que la fecha hasta");
       }
     }
+  }else{
+    this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
+  }
 
   }
 
@@ -416,7 +422,16 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
     this.isDisabledMateria = true;
   }
 
+  styleObligatorio(evento) {
+		if (this.resaltadoDatos && (evento == undefined || evento == null || evento == "")) {
+		  return this.commonsService.styleObligatorio(evento);
+		}
+	}
 
+  muestraCamposObligatorios() {
+		this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+		this.resaltadoDatos = true;
+	}
 
 
   //búsqueda con enter
