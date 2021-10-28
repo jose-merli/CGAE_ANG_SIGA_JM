@@ -745,12 +745,31 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 
         this.objetoValidacion.push(objVal);
 
-      
-      
-      this.llamadaBackDenegar();
+		this.sigaServices.post(
+		  "guardiasInscripciones_denegarInscripciones", this.objetoValidacion).subscribe(
+			data => {
+			  console.log("entra en el data");
+			  this.progressSpinner = false;
+			  console.log(data);
+			  //mensaje de okey
+			  console.log("Se ha realizado correctamente");
+			  this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+	
+			},
+			err => {
+			  this.progressSpinner = false;
+			  console.log(err);
+			  //mensaje de error
+			  console.log("No se ha podido realizar el servicio de back");
+			  this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+	
+			},
+			() => {
+			  this.commonsService.scrollTablaFoco('tablaFoco');
+			});
 	}
 
-	llamadaBackDenegar() {
+	/* llamadaBackDenegar() {
 
 		this.progressSpinner = true;
 		this.sigaServices.post(
@@ -775,7 +794,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 			() => {
 			  this.commonsService.scrollTablaFoco('tablaFoco');
 			});
-	  }
+	  } */
 
 	goTop(){
 		let top = document.getElementById("top");
