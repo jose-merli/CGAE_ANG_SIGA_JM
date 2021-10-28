@@ -342,7 +342,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
     this.rowGroups = this.rowGroupsAux.filter((row) => {
       let isReturn = true;
       for(let j=0; j<this.cabeceras.length;j++){
-        if (this.searchText[j] != " " &&  this.searchText[j] != undefined){
+        if (this.searchText[j] != " " &&  this.searchText[j]){
           console.log('row.cells[j].value: ', row.cells[j].value)
           if (row.cells[j].value != null && row.cells[j].value != "null"){
              console.log('row.cells[j].value 2: ', row.cells[j].value)
@@ -366,7 +366,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
         }else{
           isReturn = false;
         }
-      }else{
+      }else if(x == j){ //Si no hay nada escrito en la cabecera del filtro y es la cabecera correspondiente, devolvemos la fila
         isReturn = true;
       }
     }

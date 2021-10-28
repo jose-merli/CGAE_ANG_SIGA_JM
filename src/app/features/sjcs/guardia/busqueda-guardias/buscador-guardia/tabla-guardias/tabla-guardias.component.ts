@@ -7,6 +7,7 @@ import { PersistenceService } from '../../../../../../_services/persistence.serv
 import { GuardiaObject } from '../../../../../../models/guardia/GuardiaObject';
 import { GuardiaItem } from '../../../../../../models/guardia/GuardiaItem';
 import { CommonsService } from '../../../../../../_services/commons.service';
+import { SigaStorageService } from '../../../../../../siga-storage.service';
 
 @Component({
   selector: 'app-tabla-guardias',
@@ -26,6 +27,7 @@ export class TablaGuardiasComponent implements OnInit {
   selectMultiple: boolean = false;
   seleccion: boolean = false;
   historico: boolean = false;
+  isAbogado: boolean = false;
   buscadores = []
   message;
 
@@ -50,13 +52,16 @@ export class TablaGuardiasComponent implements OnInit {
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
     private confirmationService: ConfirmationService,
-    private commonsService: CommonsService
+    private commonsService: CommonsService,
+    private sigaStorageService: SigaStorageService
   ) { }
 
   ngOnInit() {
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos();
     }
+
+    this.isAbogado = this.sigaStorageService.isLetrado && this.sigaStorageService.idPersona;
 
     this.getCols();
     this.initDatos = this.datos;

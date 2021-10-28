@@ -7,6 +7,7 @@ import { SigaServices } from '../../../../../../../_services/siga.service';
 import { element } from '../../../../../../../../../node_modules/protractor';
 import { Jsonp } from '../../../../../../../../../node_modules/@angular/http';
 import { CommonsService } from '../../../../../../../_services/commons.service';
+import { SigaStorageService } from '../../../../../../../siga-storage.service';
 
 @Component({
   selector: 'app-datos-calendarios-guardias',
@@ -43,14 +44,16 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
 
   comboUnidad = datos_combos.comboUnidadesTiempo;
   resaltadoDatos: boolean = false;
+  isLetrado : boolean = false;
 
   constructor(private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
     private commonsService: CommonsService,
-    private translateService: TranslateService
-  ) { }
+    private translateService: TranslateService,
+    private sigaStorageService : SigaStorageService) { }
 
   ngOnInit() {
+    this.isLetrado = this.sigaStorageService.isLetrado && this.sigaStorageService.idPersona;
     this.resaltadoDatos=true;
     this.festividades = this.creaSemana();
     this.laborables = this.creaSemana();

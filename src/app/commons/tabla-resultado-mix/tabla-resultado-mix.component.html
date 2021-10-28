@@ -124,12 +124,12 @@
 
 
         <button pButton *ngIf="!calendarios && !inscripciones" type="button" icon="far fa-save" iconPos="left"
-          label="Guardar" [disabled]="isDisabled" (click)="guardar()"></button>
+          label="Guardar" [disabled]="(isDisabled && !isLetrado) || isLetrado" (click)="guardar()"></button>
         <button *ngIf="!calendarios  && !inscripciones" pButton type="button" icon="fa fa-plus" iconPos="left"
-          label="Nuevo" [disabled]="!anySelected"
+          label="Nuevo" [disabled]="(!anySelected && !isLetrado) || isLetrado"
           (click)="nuevo()"></button>
         <button pButton *ngIf="!inscripciones" type="button" icon="fa fa-trash-alt" iconPos="left" label="Eliminar"
-          [disabled]="!anySelected || this.selectedRowValue.length == 0" 
+          [disabled]="(!anySelected && !isLetrado) || (this.selectedRowValue.length == 0 && !isLetrado) || isLetrado" 
           (click)="eliminar()"></button>
         <button *ngIf="calendarios  && !inscripciones" pButton type="button" icon="fa fa-plus" iconPos="left"
           label="Duplicar" [disabled]="!anySelected || this.selectedRowValue.length == 0" (click)="duplicar()"></button>

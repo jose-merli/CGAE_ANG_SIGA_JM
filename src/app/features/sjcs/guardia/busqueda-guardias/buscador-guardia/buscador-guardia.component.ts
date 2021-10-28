@@ -7,6 +7,7 @@ import { TranslateService } from '../../../../../commons/translate';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { procesos_guardia } from '../../../../../permisos/procesos_guarida';
 import { Router } from '../../../../../../../node_modules/@angular/router';
+import { SigaStorageService } from '../../../../../siga-storage.service';
 
 @Component({
   selector: 'app-buscador-guardia',
@@ -35,10 +36,11 @@ export class BuscadorGuardiaComponent implements OnInit {
     private sigaServices: SigaServices,
     private commonsService: CommonsService,
     private translateService: TranslateService,
-    private router: Router) { }
+    private router: Router,
+    private sigaStorageService: SigaStorageService) { }
 
   ngOnInit() {
-    this.abogado = sessionStorage.getItem("permisoAbogado") === "true";
+    this.abogado = this.sigaStorageService.isLetrado && this.sigaStorageService.idPersona;
     console.log('this.abogado: ', this.abogado)
     this.commonsService.checkAcceso(procesos_guardia.guardias)
       .then(respuesta => {
