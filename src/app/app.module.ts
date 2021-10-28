@@ -496,6 +496,13 @@ import { DestinatariosIndividualesSeriesFacturaComponent } from './features/fact
 import { DestinatariosEtiquetasSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/destinatarios-etiquetas-series-factura/destinatarios-etiquetas-series-factura.component';
 import { ObservacionesSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/observaciones-series-factura/observaciones-series-factura.component';
 import { DestinatariosListaSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/destinatarios-lista-series-factura/destinatarios-lista-series-factura.component';
+import { PagoAutomaticoSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/pago-automatico-series-factura/pago-automatico-series-factura.component';
+import { ExportacionSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/exportacion-series-factura/exportacion-series-factura.component';
+import { TraspasoSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/traspaso-series-factura/traspaso-series-factura.component';
+import { ContadorSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/contador-series-factura/contador-series-factura.component';
+import { ContadorRectSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/contador-rect-series-factura/contador-rect-series-factura.component';
+import { GeneracionSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/generacion-series-factura/generacion-series-factura.component';
+import { EnvioSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/envio-series-factura/envio-series-factura.component';
 enableRipple(true);
 
 @NgModule({
@@ -908,7 +915,14 @@ enableRipple(true);
 		ObservacionesSeriesFacturaComponent,
 		DestinatariosIndividualesSeriesFacturaComponent,
 		DestinatariosEtiquetasSeriesFacturaComponent,
-		DestinatariosListaSeriesFacturaComponent
+		DestinatariosListaSeriesFacturaComponent,
+		PagoAutomaticoSeriesFacturaComponent,
+		ExportacionSeriesFacturaComponent,
+		TraspasoSeriesFacturaComponent,
+		ContadorSeriesFacturaComponent,
+		ContadorRectSeriesFacturaComponent,
+		GeneracionSeriesFacturaComponent,
+		EnvioSeriesFacturaComponent
 	],
 	imports: [
 		Paginador3Module,

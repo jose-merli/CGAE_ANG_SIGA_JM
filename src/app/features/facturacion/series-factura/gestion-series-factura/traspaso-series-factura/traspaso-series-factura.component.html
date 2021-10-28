@@ -1,0 +1,69 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="ficha-container" id="traspasoFacturas">
+  <div class="card" id="top">
+    <div class="card-header header-ficha">
+
+      <!-- Cabecera en ficha cerrada -->
+      <div *ngIf="!esFichaActiva('traspasoFacturas')" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('traspasoFacturas')">
+          <div class="img-colegiado">
+            <i class="far fa-address-book icon-ficha pointer"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('traspasoFacturas')">
+            <label class="mr-auto title-ficha pointer">Traspaso de Facturas Automático a Servicio Externo</label>
+          </div>
+          <div class="d-flex justify-content-between default">
+            
+            
+            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('traspasoFacturas')"
+              *ngIf="!esFichaActiva('traspasoFacturas')"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cabecera en ficha abierta -->
+      <div *ngIf="esFichaActiva('traspasoFacturas')" class=" header-ficha-open d-flex justify-content-start align-items-center"
+        (click)="abreCierraFicha('traspasoFacturas')">
+        <div class="img-colegiado">
+          <i class="far fa-address-book icon-ficha"></i>
+        </div>
+        <label class="title-ficha pointer">Traspaso de Facturas Automático a Servicio Externo</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <!-- Cuerpo en ficha abierta -->
+    <div *ngIf="esFichaActiva('traspasoFacturas')" class="card-body card-body-ficha">
+      <div class="form-row">
+        <div class="form-group-interlineado mb-3 d-flex justify-content-between">
+          <label class="checkbox-label" for="traspasarCheckbox">Traspasar facturas autom.</label>
+          <p-checkbox class="checkbox-inline" id="traspasarCheckbox" [(ngModel)]="body.traspasoFacturas" binary="true"></p-checkbox>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>Plantilla SII</label>
+          <input type="text" class="form-control" pInputText [(ngModel)]="body.traspasoPlantilla" />
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>Plantilla auditoría SII</label>
+          <input type="text" class="form-control" pInputText [(ngModel)]="body.traspasoCodauditoriaDef" />
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <div class="text-right main-button">
+        <button pButton type="button" icon="fa fa-undo" iconPos="left"
+          (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
+
+        <button pButton type="button" icon="fa fa-save" iconPos="left"
+          label="{{ 'general.boton.guardar' | translate }}"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

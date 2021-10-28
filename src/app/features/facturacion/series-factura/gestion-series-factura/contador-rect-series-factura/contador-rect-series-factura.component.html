@@ -1,0 +1,78 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="ficha-container" id="contadorFacturasRectificativas">
+  <div class="card" id="top">
+    <div class="card-header header-ficha">
+
+      <!-- Cabecera en ficha cerrada -->
+      <div *ngIf="!esFichaActiva('contadorFacturasRectificativas')" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('contadorFacturasRectificativas')">
+          <div class="img-colegiado">
+            <i class="far fa-address-book icon-ficha pointer"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('contadorFacturasRectificativas')">
+            <label class="mr-auto title-ficha pointer">Contador de Facturas Rectificativas</label>
+          </div>
+          <div class="d-flex justify-content-between default">
+            
+            
+            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('contadorFacturasRectificativas')"
+              *ngIf="!esFichaActiva('contadorFacturasRectificativas')"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cabecera en ficha abierta -->
+      <div *ngIf="esFichaActiva('contadorFacturasRectificativas')" class=" header-ficha-open d-flex justify-content-start align-items-center"
+        (click)="abreCierraFicha('contadorFacturasRectificativas')">
+        <div class="img-colegiado">
+          <i class="far fa-address-book icon-ficha"></i>
+        </div>
+        <label class="title-ficha pointer">Contador de Facturas Rectificativas</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <!-- Cuerpo en ficha abierta -->
+    <div *ngIf="esFichaActiva('contadorFacturasRectificativas')" class="card-body card-body-ficha">
+      <div class="form-row">
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>Selección de contador</label>
+          <p-dropdown class="select-form" [(ngModel)]='contadorFacturasRectificativasSeleccionado' placeholder="{{'general.boton.seleccionar' | translate}}"
+              [options]="comboContadorFacturasRectificativas" [filter]="true" filterBy="label,labelSinTilde"
+              [showClear]="true"></p-dropdown>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>Prefijo</label>
+          <input type="text" class="form-control" pInputText [(ngModel)]="datosContador.prefijo" disabled />
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>Contador</label>
+          <input type="text" class="form-control" pInputText [(ngModel)]="datosContador.contador" disabled />
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>Sufijo</label>
+          <input type="text" class="form-control" pInputText [(ngModel)]="datosContador.sufijo" disabled />
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <div class="text-right main-button">
+        <button pButton type="button" icon="fa fa-plus" iconPos="left"
+          (click)="nuevo()" label="{{ 'general.boton.new' | translate}}"></button>
+
+        <button pButton type="button" icon="fa fa-undo" iconPos="left"
+          (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
+
+        <button pButton type="button" icon="fa fa-save" iconPos="left"
+          label="{{ 'general.boton.guardar' | translate }}"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

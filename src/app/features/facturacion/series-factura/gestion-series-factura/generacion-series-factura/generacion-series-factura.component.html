@@ -1,0 +1,73 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="ficha-container" id="generacion">
+  <div class="card" id="top">
+    <div class="card-header header-ficha">
+
+      <!-- Cabecera en ficha cerrada -->
+      <div *ngIf="!esFichaActiva('generacion')" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('generacion')">
+          <div class="img-colegiado">
+            <i class="far fa-address-book icon-ficha pointer"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('generacion')">
+            <label class="mr-auto title-ficha pointer">Generación de Ficheros de Facturas</label>
+          </div>
+          <div class="d-flex justify-content-between default">
+            
+            
+            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('generacion')"
+              *ngIf="!esFichaActiva('generacion')"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cabecera en ficha abierta -->
+      <div *ngIf="esFichaActiva('generacion')" class=" header-ficha-open d-flex justify-content-start align-items-center"
+        (click)="abreCierraFicha('generacion')">
+        <div class="img-colegiado">
+          <i class="far fa-address-book icon-ficha"></i>
+        </div>
+        <label class="title-ficha pointer">Generación de Ficheros de Facturas</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <!-- Cuerpo en ficha abierta -->
+    <div *ngIf="esFichaActiva('generacion')" class="card-body card-body-ficha">
+      <div class="form-row">
+        <div class="form-group-interlineado mb-3 d-flex justify-content-between">
+          <label class="checkbox-label" for="generarFicheroCheckbox">Generar ficheros de facturas autom.</label>
+          <p-checkbox class="checkbox-inline" id="generarFicheroCheckbox" [(ngModel)]="body.generarPDF" binary="true"></p-checkbox>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>Modelo generación del fichero de factura (*)</label>
+          <p-dropdown class="select-form" [(ngModel)]='body.idModeloFactura' placeholder="{{'general.boton.seleccionar' | translate}}"
+              [options]="comboModeloFactura" [filter]="true" filterBy="label,labelSinTilde"
+              [showClear]="true"></p-dropdown>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>Modelo generación de facturs rectificativa (*)</label>
+          <p-dropdown class="select-form" [(ngModel)]='body.idModeloComunicacion' placeholder="{{'general.boton.seleccionar' | translate}}"
+              [options]="comboModeloComunicacion" [filter]="true" filterBy="label,labelSinTilde"
+              [showClear]="true"></p-dropdown>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <div class="text-right main-button">
+        <button pButton type="button" icon="fa fa-undo" iconPos="left"
+          (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
+
+        <button pButton type="button" icon="fa fa-save" iconPos="left"
+          label="{{ 'general.boton.guardar' | translate }}"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

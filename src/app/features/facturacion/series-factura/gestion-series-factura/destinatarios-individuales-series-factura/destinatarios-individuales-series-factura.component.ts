@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angu
 import { Message } from 'primeng/components/common/message';
 import { DataTable } from 'primeng/primeng';
 import { TranslateService } from '../../../../../commons/translate';
+import { DestinatariosItem } from '../../../../../models/DestinatariosItem';
 import { SerieFacturacionItem } from '../../../../../models/SerieFacturacionItem';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
@@ -19,8 +20,8 @@ export class DestinatariosIndividualesSeriesFacturaComponent implements OnInit {
   body: SerieFacturacionItem;
 
   // Tabla
-  datos: any[];
-  datosInit: any[];
+  datos: DestinatariosItem[];
+  datosInit: DestinatariosItem[];
   cols: any[];
   first: number = 0;
   selectedItem: number;
@@ -60,7 +61,7 @@ export class DestinatariosIndividualesSeriesFacturaComponent implements OnInit {
     
     this.cols = [
       {
-        field: "nombreCompleto",
+        field: "nombre",
         header: "administracion.parametrosGenerales.literal.nombre"
       },
       {
@@ -100,6 +101,8 @@ export class DestinatariosIndividualesSeriesFacturaComponent implements OnInit {
   getDestinatariosSeries() {
     this.sigaServices.getParam("facturacionPyS_getDestinatariosSeries", "?idSerieFacturacion=" + this.body.idSerieFacturacion).subscribe(
       n => {
+        this.datos = n.destinatariosSeriesItems;
+        this.datosInit = JSON.parse(JSON.stringify(this.datos));
         console.log(n);
       },
       err => {
