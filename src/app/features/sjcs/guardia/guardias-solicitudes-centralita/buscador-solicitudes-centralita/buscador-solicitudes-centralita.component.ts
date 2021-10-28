@@ -89,11 +89,7 @@ export class BuscadorSolicitudesCentralitaComponent implements OnInit, AfterView
   clear() {
     this.msgs = [];
   }
-  styleObligatorio(evento){
-    if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
-      return this.commonServices.styleObligatorio(evento);
-    }
-  }
+  
   getComboTurnos(){
 
     if(this.isLetrado){

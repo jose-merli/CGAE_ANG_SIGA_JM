@@ -80,6 +80,18 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 		}
 		/* Proviene de search() */
 		if (sessionStorage.getItem("abogado")) {
+
+			//Para que se muestre la tarjeta una vez vuelve de buscar un procurador
+			//El timer es para que de tiempo a que se cargue la tarjeta
+			setTimeout(() => {
+				this.onHideTarjeta();
+				let top = document.getElementById("abogadoJusticiable");
+				if (top) {
+					top.scrollIntoView();
+					top = null;
+				}
+				}, 10);
+
 			let data = JSON.parse(sessionStorage.getItem("abogado"))[0];
 			sessionStorage.removeItem("abogado");
 			this.generalBody.nombreColegio = data.colegio;
@@ -92,11 +104,11 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 			this.permisoEscritura = true;
 			if(sessionStorage.getItem("EJGItem")) this.contrarioEJG.emit(true);
 			else this.contrario.emit(true);
+			this.Associate();
 		}
 		/* Procede de ficha designacion */
 		else if (sessionStorage.getItem("idabogadoFicha")) {
 			let idabogado = sessionStorage.getItem("idabogadoFicha");
-			sessionStorage.removeItem("idabogadoFicha");
 			this.sigaServices.post("designaciones_searchAbogadoByIdPersona", idabogado).subscribe(
 				n => {
 					let data = JSON.parse(n.body).colegiadoItem;

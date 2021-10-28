@@ -70,7 +70,7 @@
       <!-- body: variable donde se le pasa la informacion de un justiciable -->
       <!-- modoEdicion: variable indica si estamos en modo edicion o nuevo -->
       <div *ngIf="showAbogadoContrario != undefined">
-        <app-datos-abogado-contrario *ngSwitchCase="'abogado'" (contrario)="contrario($event)" (contrarioEJG)="contrarioEJG($event)" [body]="body"  [modoEdicion]="modoEdicion" 
+        <app-datos-abogado-contrario id = abogadoJusticiable *ngSwitchCase="'abogado'" (contrario)="contrario($event)" (contrarioEJG)="contrarioEJG($event)" [body]="body"  [modoEdicion]="modoEdicion" 
         [fromContrario]="fromContrario" [fromContrarioEJG]="fromContrarioEJG"></app-datos-abogado-contrario> 
       </div>
       <!-- showTarjeta: variable indica si se muestra o no la tarjeta -->

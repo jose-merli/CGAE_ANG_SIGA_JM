@@ -5,10 +5,10 @@
 
         <app-tabla-resultado-mix *ngIf="buscar" [firstColumn]="firstColumn" [lastColumn]="lastColumn" [inscripciones]="true" [totalRegistros] = "totalRegistros" [seleccionarTodo]="seleccionarTodo" [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux" [isLetrado]="isLetrado" [rowGroups]="rowGroups" (anySelected)="notifyAnySelected($event)" (selectedRow)="checkSelectedRow($event)" (resultado)="BotonesInfo($event)" ></app-tabla-resultado-mix>
 
-        <p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" #cd>
+        <p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" key ="valBaja" #valBaja>
             <p-footer>
-              <button type="button" pButton icon="fa-check" label="Si" (click)="cd.accept()"></button>
-              <button type="button" pButton icon="fa-close" label="No" (click)="cd.reject()"></button>
+              <button type="button" pButton icon="fa-check" label="Si" (click)="valBaja.accept()"></button>
+              <button type="button" pButton icon="fa-close" label="No" (click)="valBaja.reject()"></button>
             </p-footer>
           </p-confirmDialog>
 

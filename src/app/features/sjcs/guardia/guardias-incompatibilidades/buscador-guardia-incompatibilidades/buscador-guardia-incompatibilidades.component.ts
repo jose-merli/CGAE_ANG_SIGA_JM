@@ -132,6 +132,7 @@ export class BuscadorGuardiaIncompatibilidadesComponent implements OnInit {
   }
 
   getComboGuardiasInc(){
+    this.progressSpinner = true;
     this.comboGuardiasIncompatibles = [];
     let idInstitucion = this.authenticationService.getInstitucionSession();
     this.comboIncompatibilidadesDatosEntradaItem = new ComboIncompatibilidadesDatosEntradaItem(
@@ -491,10 +492,12 @@ guardarInc(nombreTurno, nombreGuardia, nombreTurnoIncompatible, nombreGuardiaInc
           let error = JSON.parse(data.body).error;
           this.datos = JSON.parse(data.body).guardiaItems;
           this.buscar = true;
-          this.datos = this.datos.map(it => {
-            it.letradosIns = +it.letradosIns;
-            return it;
-          })
+          if(this.datos){
+            this.datos = this.datos.map(it => {
+              it.letradosIns = +it.letradosIns;
+              return it;
+            })
+          }
           this.progressSpinner = false;
           /*if (this.tabla != null && this.tabla != undefined) {
             this.tabla.historico = event;

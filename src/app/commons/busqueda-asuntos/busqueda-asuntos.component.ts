@@ -218,7 +218,8 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
       let radioValue = sessionStorage.getItem("radioTajertaValue");
       switch (radioValue) {
         case 'des':
-          let datos = [data.idinstitucion, data.anio, data.numero,
+          let numeroDesigna: string = data.asunto;
+          let datos = [data.idinstitucion, data.anio, numeroDesigna.substring(6),
           data.idTipoDesigna, this.datos.tipoEJG, this.datos.annio, this.datos.numero, data.turnoGuardia
           ];
           this.sigaServices.post("gestionejg_asociarDesignacion", datos).subscribe(

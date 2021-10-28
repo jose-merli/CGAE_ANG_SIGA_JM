@@ -108,6 +108,7 @@ export class GestionEjgComponent implements OnInit {
       } else {
         //obtiene un EJG desde la tarjeta relaciones de la ficha designacion
         this.body = JSON.parse(sessionStorage.getItem("EJGItemDesigna"));
+        this.body.apellidosYNombre = "";
         this.persistenceService.setDatos(this.body);
         this.modoEdicion = true;
         this.updateTarjResumen();
@@ -117,6 +118,7 @@ export class GestionEjgComponent implements OnInit {
 
     } else {
       this.body = this.persistenceService.getDatos();
+      this.body.apellidosYNombre = "";
 
       if (sessionStorage.getItem("datosDesdeJusticiable")) {
         this.body = JSON.parse(sessionStorage.getItem("datosDesdeJusticiable"));
@@ -157,10 +159,15 @@ export class GestionEjgComponent implements OnInit {
     this.goTop();
   }
 
+  actualizaLetradoDesignado(event){
+    this.body.apellidosYNombre = event;
+    this.updateTarjResumen();
+  }
+
   updateTarjResumen() {
     if(!this.nuevo)
-    this.body = this.persistenceService.getDatos();
-
+    //this.body = this.persistenceService.getDatos();
+    
     if(this.body != null && this.body != undefined){
       this.datos = [
         {
