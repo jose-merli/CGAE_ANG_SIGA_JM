@@ -96,14 +96,14 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
       const { numColegiado, nombre } = JSON.parse(sessionStorage.getItem("datosColegiado"));
       this.usuarioBusquedaExpress.numColegiado = numColegiado;
       this.usuarioBusquedaExpress.nombreAp = nombre.replace(/,/g, "");
-
+      this.filtros.ncolegiado = this.usuarioBusquedaExpress.numColegiado;
       //this.isBuscar();
 
       sessionStorage.removeItem("colegiadoRelleno");
       sessionStorage.removeItem("datosColegiado");
     }
 
-    this.clearFilters();
+    //this.clearFilters();
 
     if (sessionStorage.getItem("buscadorColegiados")) {
 
@@ -112,6 +112,8 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
       this.usuarioBusquedaExpress.nombreAp = busquedaColegiado.nombre + " " + busquedaColegiado.apellidos;
 
       this.usuarioBusquedaExpress.numColegiado = busquedaColegiado.nColegiado;
+
+      this.filtros.ncolegiado = this.usuarioBusquedaExpress.numColegiado;
 
       sessionStorage.removeItem("buscadorColegiados");
     }

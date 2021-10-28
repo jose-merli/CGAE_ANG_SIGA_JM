@@ -141,7 +141,10 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
         }
       }).catch(error => console.error(error));
     this.getCols();
+
     this.getInscripciones();
+    
+    
     //Revisar
     /* if (this.idPersona != undefined) {
       this.modoEdicion = true;
@@ -238,13 +241,13 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
     let body = new InscripcionesItems();
     body = this.datos;
     body.idpersona = this.idPersona;
-    body.fechaActual = this.datos.fechaActual;
-    body.observaciones = this.datos.observaciones;
+    // body.fechaActual = this.datos.fechaActual;
+    // body.observaciones = this.datos.observaciones;
     //this.progressSpinner = false;
 
     let objVal: ResultadoInscripciones = this.rellenarObjetoBack(this.datos);
 
-  if(this.modoEdicion){
+  if(this.modoEdicion==true){
     //console.log("He entrado en el if de getInscripciones()");
         this.sigaServices.post("guardiasInscripciones_inscripcionPorguardia", objVal).subscribe(
           n => {
