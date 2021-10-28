@@ -44,10 +44,9 @@ export class EjgComisionComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit() {
-    this.buscar = this.filtros.buscar
-
     this.commonsService.checkAcceso(procesos_comision.ejgComision)
       .then(respuesta => {
+
         this.permisoEscritura = respuesta;
 
         this.persistenceService.setPermisos(this.permisoEscritura);
@@ -79,7 +78,7 @@ export class EjgComisionComponent implements OnInit {
 
     this.progressSpinner = true;
     
-    this.sigaServices.post("filtrosejg_busquedaEJGComision", this.filtros.body).subscribe(
+    this.sigaServices.post("filtrosejgcomision_busquedaEJGComision", this.filtros.body).subscribe(
       n => {
         this.datos = JSON.parse(n.body).ejgItems;
         let error = JSON.parse(n.body).error;

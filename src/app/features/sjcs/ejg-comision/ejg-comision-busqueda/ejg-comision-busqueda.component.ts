@@ -262,7 +262,7 @@ export class EjgComisionBusquedaComponent implements OnInit {
     );
   }
   getComboResolucionComision() {
-    this.sigaServices.get("filtrosejg_comboResolucionComision").subscribe(
+    this.sigaServices.get("filtrosejgcomision_comboResolucionComision").subscribe(
       n => {
         this.comboResolucion = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboResolucion);
@@ -276,7 +276,7 @@ export class EjgComisionBusquedaComponent implements OnInit {
   getComboFundamentoJuridComision() {
     this.sigaServices
       .getParam(
-        "filtrosejg_comboFundamentoJuridComision","?idTurno=" + this.body.resolucion
+        "filtrosejgcomision_comboFundamentoJuridComision","?idTurno=" + this.body.resolucion
       )
       .subscribe(
         n => {
@@ -312,7 +312,7 @@ export class EjgComisionBusquedaComponent implements OnInit {
     );
   }
   getComboPonenteComision() {
-    this.sigaServices.get("filtrosejg_comboPonenteComision").subscribe(
+    this.sigaServices.get("filtrosejgcomision_comboPonenteComision").subscribe(
       n => {
         this.comboPonente = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboPonente);
@@ -348,7 +348,7 @@ export class EjgComisionBusquedaComponent implements OnInit {
     );
   }
   getComboTipoEJGColegioComision() {
-    this.sigaServices.get("filtrosejg_comboTipoEJGColegioComision").subscribe(
+    this.sigaServices.get("filtrosejgcomision_comboTipoEJGColegioComision").subscribe(
       n => {
         this.comboTipoEJGColegio = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboTipoEJGColegio);
@@ -382,7 +382,7 @@ export class EjgComisionBusquedaComponent implements OnInit {
     if (this.body.tipoLetrado == "E") {
       this.tipoLetrado = "2";
     } else if (this.body.tipoLetrado == "D" || this.body.tipoLetrado == "A") { this.tipoLetrado = "1"; }
-    this.sigaServices.getParam("filtrosejg_comboTurnoComision",
+    this.sigaServices.getParam("filtrosejgcomision_comboTurnoComision",
       "?idTurno=" + this.tipoLetrado).subscribe(
         n => {
           this.comboTurno = n.combooItems;
@@ -411,7 +411,7 @@ export class EjgComisionBusquedaComponent implements OnInit {
   }
 
   getComboJuzgadoComision() {
-    this.sigaServices.get("filtrosejg_comboJuzgadosComision").subscribe(
+    this.sigaServices.get("filtrosejgcomision_comboJuzgadosComision").subscribe(
       n => {
         this.comboJuzgado = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboJuzgado);

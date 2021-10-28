@@ -10,6 +10,7 @@ import { procesos_comision } from '../../../permisos/procesos_comision';
 
 
 
+
 @Component({
   selector: 'app-actas',
   templateUrl: './actas.component.html',
@@ -24,7 +25,7 @@ export class ActasComponent implements OnInit {
 
   progressSpinner: boolean = false;
 
-  @ViewChild(FiltroActasComponent) filtros;
+  @ViewChild(FiltroActasComponent) filtros : FiltroActasComponent;
   @ViewChild(TablaActasComponent) tabla;
 
   //comboPartidosJudiciales
@@ -59,7 +60,7 @@ export class ActasComponent implements OnInit {
 
   search(event) {
     this.progressSpinner = true;
-    this.sigaServices.post("filtrosejg_busquedaActas", this.filtros.datosFiltro).subscribe(
+    this.sigaServices.post("filtrosacta_busquedaActas", this.filtros.datosFiltro).subscribe(
       n => {
         this.datos = JSON.parse(n.body).actasItems;
         this.buscar = true;

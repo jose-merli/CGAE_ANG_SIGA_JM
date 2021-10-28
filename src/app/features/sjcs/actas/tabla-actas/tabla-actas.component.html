@@ -31,14 +31,13 @@
             <div *ngIf="col.field != 'fecharesolucion' && col.field != 'fechareunion' && col.field != 'numeroacta'">
               <span>{{dato[col.field]}}</span>
             </div>
-            <a class="enlace" (click)="openTab(dato)">
+            <a class="enlace"  (click)="openTab(dato)">
 
               <span *ngIf="col.field == 'numeroacta'">
 
                 {{dato[col.field]}}
 
               </span>
-
             </a>
           </td>
 

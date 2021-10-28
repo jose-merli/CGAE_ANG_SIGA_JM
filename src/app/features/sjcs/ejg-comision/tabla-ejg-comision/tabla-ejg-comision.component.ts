@@ -256,7 +256,7 @@ export class TablaEjgComisionComponent implements OnInit {
 
 
   getComboAnioActa() {
-    this.sigaServices.get("filtrosejg_comboAnioActaComision").subscribe(
+    this.sigaServices.get("filtrosejgcomision_comboAnioActaComision").subscribe(
       n => {
         console.log("******************comboanioacta**********************");
         this.comboAnioActa = n.combooItems;
@@ -268,7 +268,7 @@ export class TablaEjgComisionComponent implements OnInit {
   }
 
   getComboPonente() {
-    this.sigaServices.get("filtrosejg_comboPonenteComision").subscribe(
+    this.sigaServices.get("filtrosejgcomision_comboPonenteComision").subscribe(
       n => {
         console.log("******************getComboPonente**********************");
         this.comboPonente = n.combooItems;
@@ -280,7 +280,7 @@ export class TablaEjgComisionComponent implements OnInit {
   }
 
   getComboResolucion() {
-    this.sigaServices.get("filtrosejg_comboResolucionComision").subscribe(
+    this.sigaServices.get("filtrosejgcomision_comboResolucionComision").subscribe(
       n => {
         console.log("******************************************getComboResolucion");
         this.comboResolucion = n.combooItems;
@@ -664,29 +664,6 @@ export class TablaEjgComisionComponent implements OnInit {
       }
     );
 
-
-
-    // this.sigaServices.post("", ).subscribe(
-    //   n => {
-    //     this.progressSpinner=false;
-    //     let dato: Error = JSON.parse(n.body); 
-
-    //     if(dato.code=='200'){
-    //       this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-    //     }else{
-    //       if(dato.description == "noExiste"){
-    //         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.mensaje.noExistePeticiones"));
-    //       }else{
-    //         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-    //       }
-    //     }
-    //   },
-    //   err => {
-    //     console.log(err);
-    //     this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-    //     this.progressSpinner=false;
-    //   }
-    // );
   }
 
   addRemesa() {
@@ -754,7 +731,7 @@ export class TablaEjgComisionComponent implements OnInit {
   getComboFundamento() {
     this.sigaServices
       .getParam(
-        "filtrosejg_comboFundamentoJuridComision", "?idTurno=" + this.filtro.resolucion
+        "filtrosejgcomision_comboFundamentoJuridComision", "?idTurno=" + this.filtro.resolucion
       )
       .subscribe(
         n => {
@@ -819,7 +796,7 @@ export class TablaEjgComisionComponent implements OnInit {
       this.selectedDatos.forEach(list => { list.annioActa = annioActa;
                                            list.numActa = idActa;})
   
-      this.sigaServices.post("filtrosejg_editarActaAnio", this.selectedDatos).subscribe(
+      this.sigaServices.post("filtrosejgcomision_editarActaAnio", this.selectedDatos).subscribe(
         n => {
           this.progressSpinner = false;
           if (JSON.parse(n.body).status == "OK") this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
@@ -834,7 +811,7 @@ export class TablaEjgComisionComponent implements OnInit {
     }
   
     if(this.selectAnioActa == true){
-      this.sigaServices.post("filtrosejg_borrarActaAnio", this.selectedDatos).subscribe(
+      this.sigaServices.post("filtrosejgcomision_borrarActaAnio", this.selectedDatos).subscribe(
         n => {
           this.progressSpinner = false;
           if (JSON.parse(n.body).status == "OK") this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
@@ -853,7 +830,7 @@ export class TablaEjgComisionComponent implements OnInit {
       this.selectedDatos.forEach(list => { list.ponente = this.valuePonente;
         list.fechaPonenteDesd = this.valueFechaPonente;})
   
-      this.sigaServices.post("filtrosejg_editarPonente", this.selectedDatos).subscribe(
+      this.sigaServices.post("filtrosejgcomision_editarPonente", this.selectedDatos).subscribe(
         n => {
           this.progressSpinner = false;
           if (JSON.parse(n.body).status == "OK") this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
@@ -868,7 +845,7 @@ export class TablaEjgComisionComponent implements OnInit {
     }
   
     if(this.selectPonente == true){
-      this.sigaServices.post("filtrosejg_borrarPonente", this.selectedDatos).subscribe(
+      this.sigaServices.post("filtrosejgcomision_borrarPonente", this.selectedDatos).subscribe(
         n => {
           this.progressSpinner = false;
           if (JSON.parse(n.body).status == "OK") this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
@@ -888,7 +865,7 @@ export class TablaEjgComisionComponent implements OnInit {
       this.selectedDatos.forEach(list => { list.idTipoDictamen = this.valueResolucion;
         list.fundamentoJuridico = this.valueFundamento;})
   
-      this.sigaServices.post("filtrosejg_editarResolucionFundamento", this.selectedDatos).subscribe(
+      this.sigaServices.post("filtrosejgcomision_editarResolucionFundamento", this.selectedDatos).subscribe(
         n => {
           this.progressSpinner = false;
           if (JSON.parse(n.body).status == "OK") this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
@@ -903,7 +880,7 @@ export class TablaEjgComisionComponent implements OnInit {
     }
   
     if(this.selectResolucionFundamento == true){
-      this.sigaServices.post("filtrosejg_borrarResolucionFundamento", this.selectedDatos).subscribe(
+      this.sigaServices.post("filtrosejgcomision_borrarResolucionFundamento", this.selectedDatos).subscribe(
         n => {
           this.progressSpinner = false;
           if (JSON.parse(n.body).status == "OK") this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));

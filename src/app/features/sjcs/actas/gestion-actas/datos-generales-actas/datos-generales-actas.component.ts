@@ -39,6 +39,7 @@ export class DatosGeneralesActasComponent implements OnInit {
   @Input() permisoEscritura;
 
   datosFiltro: ActasItem = new ActasItem();  
+  restablecerDatosFiltro: ActasItem = new ActasItem();  
   comboPresidente = [];
   comboSecretario = [];
   comboSufijo = [];
@@ -74,14 +75,7 @@ export class DatosGeneralesActasComponent implements OnInit {
 
   progressSpinner: boolean = false;
 
-  avisoMail: boolean = false
-  emailValido: boolean = true;
-  tlf1Valido: boolean = true;
-  tlf2Valido: boolean = true;
-  faxValido: boolean = true;
-  mvlValido: boolean = true;
-  edicionEmail: boolean = false;
-  myDate = new Date();
+  
 
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
@@ -98,9 +92,6 @@ export class DatosGeneralesActasComponent implements OnInit {
       this.permisoEscritura = this.persistenceService.getPermisos()
 
     }
-    this.getComboProvincias();
-
-    this.validateHistorical();
    }
 
    
@@ -110,7 +101,6 @@ export class DatosGeneralesActasComponent implements OnInit {
       .get("filtrosejg_comboPresidente")
       .subscribe(
         n => {
-          console.log("************************************************************************************getComboPresidente**************");
           this.comboPresidente = n.combooItems;
           this.commonsService.arregloTildesCombo(this.comboPresidente);
         },
@@ -122,7 +112,7 @@ export class DatosGeneralesActasComponent implements OnInit {
 
   guardarActa() {
     this.progressSpinner = true;
-    this.sigaServices.post("filtrosejg_guardarActa", this.datosFiltro).subscribe(
+    this.sigaServices.post("filtrosejgacta_guardarActa", this.datosFiltro).subscribe(
       n => {
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
       },
@@ -136,13 +126,20 @@ export class DatosGeneralesActasComponent implements OnInit {
   }
 
 
+  restablecer() {
+
+    this.datosFiltro =JSON.parse(JSON.stringify(this.restablecerDatosFiltro));
+  }
+
+
   abrirActa() {
     this.progressSpinner = true;
-    this.sigaServices.post("filtrosejg_abrirActa", this.datosFiltro).subscribe(
+    this.sigaServices.post("filtrosacta_abrirActa", this.datosFiltro).subscribe(
       data => {
 
         if(JSON.parse(data.body).status == "OK"){
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.datosFiltro.fecharesolucion = null;
         }else{
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(data.body).error.description);
 
@@ -158,10 +155,14 @@ export class DatosGeneralesActasComponent implements OnInit {
 
    cerrarActa() {
     this.progressSpinner = true;
-    this.sigaServices.post("filtrosejg_cerrarActa", this.datosFiltro).subscribe(
+    this.sigaServices.post("filtrosacta_cerrarActa", this.datosFiltro).subscribe(
       data => {
 
         if(JSON.parse(data.body).status == "OK"){
+
+          if(this.datosFiltro.fecharesolucion == null){
+            this.datosFiltro.fecharesolucion = new Date();
+          }
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         }else{
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(data.body).error.description);
@@ -176,15 +177,20 @@ export class DatosGeneralesActasComponent implements OnInit {
     );
   }
 
+
+
   getActa() {
     this.sigaServices
-    this.sigaServices.post("filtrosejg_getActa", this.datos).subscribe(
+    this.sigaServices.post("filtrosacta_getActa", this.datos).subscribe(
       n => {
-          console.log("************************************************************************************getActa**************");
           this.datosFiltro = JSON.parse(n.body);
-          this.datosFiltro.fechaReunion = new Date(JSON.parse(n.body).fechareunion);
-          this.datosFiltro.fechaResolucion = new Date(JSON.parse(n.body).fecharesolucion);
-
+          this.datosFiltro.fechareunion = new Date(JSON.parse(n.body).fechareunion);
+          if(JSON.parse(n.body).fecharesolucion == null){
+            this.datosFiltro.fecharesolucion = null;
+          }else{
+          this.datosFiltro.fecharesolucion = new Date(JSON.parse(n.body).fecharesolucion);
+          }
+          this.restablecerDatosFiltro = JSON.parse(JSON.stringify(this.datosFiltro));
          //let date: Date = new Date(JSON.parse(n.body).horainicioreunion);
          //this.datosFiltro.horaInicio =  this.datePipe.transform((new Date(JSON.parse(n.body).horainicioreunion)));
          //this.datosFiltro.horaFin = this.datePipe.transform((new Date(JSON.parse(n.body).horafinreunion)));
@@ -199,10 +205,9 @@ export class DatosGeneralesActasComponent implements OnInit {
 
   getComboSufijo() {
     this.sigaServices
-      .get("filtrosejg_comboSufijo")
+      .get("filtrosacta_comboSufijo")
       .subscribe(
         n => {
-          console.log("************************************************************************************getComboSufijo**************");
           this.comboSufijo = n.combooItems;
           this.commonsService.arregloTildesCombo(this.comboSufijo);
         },
@@ -217,7 +222,6 @@ export class DatosGeneralesActasComponent implements OnInit {
       .get("filtrosejg_comboSecretario")
       .subscribe(
         n => {
-          console.log("**************************************************************************************getComboSecretario**************");
           this.comboSecretario = n.combooItems;
           this.commonsService.arregloTildesCombo(this.comboSecretario);
         },
@@ -236,136 +240,36 @@ export class DatosGeneralesActasComponent implements OnInit {
 
 
   fillFechaResolucion(event) {
-    if (event != null) {
-      this.datosFiltro.fechaResolucion = this.transformDate(event);
-    }
+      this.datosFiltro.fecharesolucion = this.transformDate(event);
   }
 
   fillFechaReunion(event) {
-    if (event != null) {
-      this.datosFiltro.fechaReunion = this.transformDate(event);
-    }
+      this.datosFiltro.fechareunion = this.transformDate(event);
   }
 
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
 
-  ngAfterViewInit(): void {
-
-  }
-  validateHistorical() {
-    if (this.persistenceService.getDatos() != undefined) {
-
-      if (this.persistenceService.getDatos().fechabaja != null || this.persistenceService.getDatos().institucionVal != undefined) {
-        this.historico = true;
-      } else {
-        this.historico = false;
-      }
-    }
-  }
-
-  getComboProvincias() {
-    this.progressSpinner = true;
-
-    this.sigaServices.get("busquedaComisarias_provinces").subscribe(
-      n => {
-        this.comboProvincias = n.combooItems;
-        this.commonsService.arregloTildesCombo(this.comboProvincias);
-        this.progressSpinner = false;
-
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner = false;
-      }, () => {
-      }
-    );
-  }
-
   anadirEJGPendientesCAJG() {
     this.progressSpinner = true;
-    this.sigaServices.post("filtrosejg_anadirEJGPendientesCAJG", this.datos).subscribe(
-      n => {
-        this.datos = JSON.parse(n.body).actasItems;
-      },
-      err => {
+    this.sigaServices.post("filtrosacta_anadirEJGPendientesCAJG", this.datosFiltro).subscribe(
+      data => {
+
+        if(JSON.parse(data.body).status == "OK"){
+          this.datosFiltro.pendientes = JSON.parse(data.body).error.description;
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        }else{
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(data.body).error.description);
+        }
+
         this.progressSpinner = false;
-        console.log(err);
+      },
+      () => {
+        this.progressSpinner = false;
       });
   }
 
-  onChangeProvincia() {
-
-   
-  }
-
-  onChangePoblacion() {
-   
-  }
-
-  buscarPoblacion(e) {
-  }
-
-  getComboPoblacion(dataFilter) {
-   
-  }
-
-  checkPermisosSave() {
-   
-  }
-
-  save() {
-    this.progressSpinner = true;
-    let url = "";
-
-    if (!this.modoEdicion) {
-      url = "gestionComisarias_createComisaria";
-      this.callSaveService(url);
-
-    } else {
-      url = "gestionComisarias_updateComisarias";
-      this.callSaveService(url);
-    }
-
-  }
-
-  cambiaMovil() {
-  
-  }
-
-  callSaveService(url) {
-    
-
-  }
-
-  onChangeCodigoPostal() {
-    
-  }
-
-  isValidCodigoPostal(): boolean {
-     return (true
-    );
-  }
-
-  checkPermisosRest() {
-    
-  }
-
-  rest() {
-    this.body = JSON.parse(JSON.stringify(this.bodyInicial));
-    this.changeEmail();
-
-    this.tlf1Valido = true
-    this.tlf2Valido = true
-    this.faxValido = true
-  }
-
-  editEmail() {
-    if (this.edicionEmail)
-      this.edicionEmail = false;
-    else this.edicionEmail = true;
-  }
 
   openOutlook(dato) {
     let correo = dato.email;
@@ -386,24 +290,8 @@ export class DatosGeneralesActasComponent implements OnInit {
   }
 
   disabledSave() {
-
-    
   }
 
-  changeEmail() {
-    
-  }
-
-  changeTelefono1() {
-   }
-
-  changeTelefono2() {
-    }
-
-  changeFax() {
-   }
-  onChangeDireccion() {
-  }
   numberOnly(event): boolean {
     const charCode = (event.which) ? event.which : event.keyCode;
     if (charCode >= 48 && charCode <= 57) {
@@ -414,6 +302,7 @@ export class DatosGeneralesActasComponent implements OnInit {
 
     }
   }
+
   clear() {
     this.msgs = [];
   }

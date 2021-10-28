@@ -1,7 +1,6 @@
 import { Component, OnInit, EventEmitter, HostListener, Input, ViewChild, Output } from '@angular/core';
 import { KEY_CODE } from '../../../censo/busqueda-personas-juridicas/busqueda-personas-juridicas.component';
 import { } from '../../../../models/sjcs/ProcedimientoItem';
-import { PretensionItem } from '../../../../models/sjcs/PretensionItem';
 import { Router } from '../../../../../../node_modules/@angular/router';
 import { TranslateService } from '../../../../commons/translate';
 import { SigaServices } from '../../../../_services/siga.service';
@@ -52,10 +51,9 @@ export class FiltroActasComponent implements OnInit {
 
   getComboPresidente() {
     this.sigaServices
-      .get("filtrosejg_comboPresidente")
+      .get("filtrosejgcomision_comboPresidente")
       .subscribe(
         n => {
-          console.log("************************************************************************************getComboPresidente**************");
           this.comboPresidente = n.combooItems;
           this.commonServices.arregloTildesCombo(this.comboPresidente);
         },
@@ -75,10 +73,9 @@ export class FiltroActasComponent implements OnInit {
 
   getComboSecretario() {
     this.sigaServices
-      .get("filtrosejg_comboSecretario")
+      .get("filtrosejgcomision_comboSecretario")
       .subscribe(
         n => {
-          console.log("**************************************************************************************getComboSecretario**************");
           this.comboSecretario = n.combooItems;
           this.commonServices.arregloTildesCombo(this.comboSecretario);
         },
@@ -97,15 +94,13 @@ export class FiltroActasComponent implements OnInit {
 
 
   fillFechaResolucion(event) {
-    if (event != null) {
-      this.datosFiltro.fechaResolucion = this.transformDate(event);
-    }
+      this.datosFiltro.fecharesolucion = this.transformDate(event);
+    
   }
 
   fillFechaReunion(event) {
-    if (event != null) {
-      this.datosFiltro.fechaReunion = this.transformDate(event);
-    }
+      this.datosFiltro.fechareunion = this.transformDate(event);
+     
   }
 
   onHideDatosGenerales() {
@@ -115,13 +110,6 @@ export class FiltroActasComponent implements OnInit {
   search() {
 
     if (this.checkFilters()) {
-      console.log("Entra en el search y intenta enviar algo")
-      console.log(this.datosFiltro.numeroActa)
-      console.log(this.datosFiltro.anio)
-      console.log(this.datosFiltro.fechaResolucion)
-      console.log(this.datosFiltro.fechaReunion)
-      console.log(this.datosFiltro.idPresidente)
-      console.log(this.datosFiltro.idSecretario)
       this.persistenceService.setFiltros(this.datosFiltro);
       this.searchEmitter.emit(true);
     }
@@ -149,15 +137,6 @@ export class FiltroActasComponent implements OnInit {
 
   clear() {
     this.msgs = [];
-  }
-
-  showMessage(severity, summary, msg) {
-    this.msgs = [];
-    this.msgs.push({
-      severity: severity,
-      summary: summary,
-      detail: msg
-    });
   }
 
   //búsqueda con enter

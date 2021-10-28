@@ -38,7 +38,7 @@ export class GestionActasComponent implements OnInit {
 
   modoEdicionSend(event) {
     this.modoEdicion = event.modoEdicion;
-    this.datos.idActa = event.idActa;
+    this.datos.idacta = event.idacta;
   }
   
   }

@@ -66,58 +66,6 @@ export class TablaActasComponent implements OnInit {
 
   }
 
-  checkPermisosDelete() {
-    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
-
-    if (msg != undefined) {
-      this.msgs = msg;
-    } else {
-
-      if (!this.permisoEscritura || ((!this.selectMultiple || !this.selectAll) && this.selectedDatos.length == 0)) {
-        this.msgs = this.commonsService.checkPermisoAccion();
-      } else {
-        this.confirmDelete();
-      }
-    }
-  }
-
-  borrar() {
-    this.sigaServices
-    this.sigaServices.post("filtrosejg_borrar", this.selectedDatos).subscribe(
-      n => {
-          console.log("************************************************************************************getActa**************");
-          this.datos = JSON.parse(n.body);
-        },
-        err => {
-          console.log(err);
-        }
-      );
-  }
-
-  confirmDelete() {
-    let mess = this.translateService.instant(
-      "messages.deleteConfirmation"
-    );
-    let icon = "fa fa-edit";
-    this.confirmationService.confirm({
-      message: mess,
-      icon: icon,
-      accept: () => {
-        this.delete()
-      },
-      reject: () => {
-        this.msgs = [
-          {
-            severity: "info",
-            summary: "Cancelar",
-            detail: this.translateService.instant(
-              "general.message.accion.cancelada"
-            )
-          }
-        ];
-      }
-    });
-  }
 
   isSelectMultiple() {
     this.selectAll = false;
@@ -132,18 +80,6 @@ export class TablaActasComponent implements OnInit {
         this.numSelected = 0;
       }
     }
-  }
-
-  searchHistorical() {
-
-    this.historico = !this.historico;
-    this.persistenceService.setHistorico(this.historico);
-    this.searchHistoricalSend.emit(this.historico);
-    this.selectAll = false
-    if (this.selectMultiple) {
-      this.selectMultiple = false;
-    }
-
   }
 
   openTab(evento) {
@@ -163,7 +99,7 @@ export class TablaActasComponent implements OnInit {
 
   delete() {
 
-    this.sigaServices.post("filtrosejg_borrar", this.selectedDatos).subscribe(
+    this.sigaServices.post("filtrosacta_borrar", this.selectedDatos).subscribe(
 
       data => {
 
@@ -184,47 +120,6 @@ export class TablaActasComponent implements OnInit {
     );
   }
 
-  checkPermisosActivate() {
-    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
-
-    if (msg != undefined) {
-      this.msgs = msg;
-    } else {
-      if (!this.permisoEscritura || ((!this.selectMultiple || !this.selectAll) && this.selectedDatos.length == 0)) {
-        this.msgs = this.commonsService.checkPermisoAccion();
-      } else {
-        this.activate();
-      }
-    }
-  }
-
-  activate() {
-    let comisariaActivate = new ComisariaObject();
-    comisariaActivate.comisariaItems = this.selectedDatos;
-    this.sigaServices.post("busquedaComisarias_activateComisarias", comisariaActivate).subscribe(
-      data => {
-
-        this.selectedDatos = [];
-        this.searchHistoricalSend.emit(true);
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
-      },
-      err => {
-
-        if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-      }
-    );
-  }
-
-
 
   setItalic(dato) {
     if (dato.fechabaja == null) return false;
@@ -234,7 +129,7 @@ export class TablaActasComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "numeroacta", header: "sjcs.actas.numeroActa", width: "15%" },
+      { field: "numeroacta", header: "sjcs.actas.numeroacta", width: "15%" },
       { field: "fecharesolucion", header: "justiciaGratuita.ejg.datosGenerales.FechaResolucion", width: "15%" },
       { field: "fechareunion", header: "justiciaGratuita.ejg.datosGenerales.FechaReunion", width: "15%" },
       { field: "nombrepresidente", header: "justiciaGratuita.ejg.datosGenerales.Presidente", width: "15%" },
@@ -269,33 +164,6 @@ export class TablaActasComponent implements OnInit {
     this.table.reset();
   }
 
-  onChangeSelectAll() {
-    if (this.permisoEscritura) {
-      this.selectedDatos = this.datos.filter(dato => dato.idInstitucion == this.institucionActual);
-      if (!this.historico) {
-        if (this.selectAll) {
-          this.selectMultiple = true;
-          // this.selectedDatos = this.datos;
-          this.numSelected = this.datos.length;
-        } else {
-          this.selectedDatos = [];
-          this.numSelected = 0;
-          this.selectMultiple = false;
-        }
-      } else {
-        if (this.selectAll) {
-          this.selectMultiple = true;
-          this.selectedDatos = this.selectedDatos.filter(dato => dato.fechabaja != undefined && dato.fechabaja != null)
-          this.numSelected = this.selectedDatos.length;
-        } else {
-          this.selectedDatos = [];
-          this.numSelected = 0;
-          this.selectMultiple = false;
-        }
-      }
-    }
-  }
-
   selectedRow(selectedDatos) {
 
     if (this.selectedDatos == undefined) {
@@ -321,7 +189,6 @@ export class TablaActasComponent implements OnInit {
     }
 
   }
-
   actualizaSeleccionados(selectedDatos) {
     this.numSelected = selectedDatos.length;
     this.seleccion = false;
