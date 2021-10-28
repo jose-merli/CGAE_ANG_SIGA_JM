@@ -21,6 +21,7 @@ import { NuevaComunicacionItem } from "../../../models/NuevaComunicacionItem";
 import { ComboItem } from "../../../models/ComboItem";
 import { procesos_com } from "../../../permisos/procesos_com";
 import { ParametroRequestDto } from "../../../models/ParametroRequestDto";
+import { Dialog } from "primeng/dialog";
 
 export enum KEY_CODE {
   ENTER = 13
@@ -82,13 +83,12 @@ export class ComunicacionesComponent implements OnInit {
   comboModelos: ComboItem[];
   permisoNuevaCom: boolean = false;
   permisoIntPNJ: boolean = false;
-  //Comentado temporal
-  // permisoIntPNJ: boolean = true;
-  // permisoNuevaCom: boolean = true;
   selectAllNewDocs: boolean = false;
   selectMultipleNewDocs: boolean = false;
   numSelectedNewDocs: number = 0;
   resaltadoDatos: boolean = false;
+  comboPlantillas: any;
+  @ViewChild("nuevaComm") dialogNuevaComm: Dialog;
 
   constructor(
     private sigaServices: SigaServices,
@@ -110,9 +110,9 @@ export class ComunicacionesComponent implements OnInit {
     this.getEstadosEnvios();
     this.getClasesComunicaciones();
     this.getComboModelos();
-    //REVISAR: Comentado temporal
-    // this.getPermisoNuevaCom();
-    // this.getPermisoIntegracionPNJ();
+    this.getPlantillasEnvioTelematico();
+    this.getPermisoNuevaCom();
+    this.getPermisoIntegracionPNJ();
 
     let objPersona = null;
 
@@ -388,7 +388,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.msgs = msg;
     } 
     else if(this.validarNProcedimiento(this.bodyNuevaComm.numProcedimiento)
-    && this.validarNig(this.bodyNuevaComm.nig)){
+    && (this.validarNig(this.bodyNuevaComm.nig) || this.bodyNuevaComm.nig == null || this.bodyNuevaComm.nig.trim() =="")){
       if (this.checkCamposObligatoriosNuevaComm()){
         if(this.permisoIntPNJ){
           let tamDocs = 0;
@@ -396,7 +396,7 @@ para poder filtrar el dato con o sin estos caracteres*/
             tamDocs += doc.size;
           }
           //Maximo de tamaño permitido actualmente al hacer peticiones al back (5242880)
-          if (tamDocs > 5242880)this.msgs = [{ severity: "info", summary: this.translateService.instant("general.message.informacion"), detail: this.translateService.instant("justiciaGratuita.ejg.documentacion.tamMax") }];
+          if (tamDocs > 5242880)this.msgs = [{ severity: "info", summary: this.translateService.instant("general.message.informacion"), detail: this.translateService.instant("informesycomunicaciones.comunicaciones.documentacion.tamMaxFicheros") }];
           else {
             this.saveNuevaComm();
           }
@@ -469,7 +469,8 @@ para poder filtrar el dato con o sin estos caracteres*/
     let campoVacio: boolean = false;
     if(this.bodyNuevaComm.fechaEfecto == null ||
       this.bodyNuevaComm.asunto == null || this.bodyNuevaComm.asunto.trim() == ""
-      || this.bodyNuevaComm.juzgado == null ){
+      || this.bodyNuevaComm.juzgado == null 
+      || this.bodyNuevaComm.idPlantillaEnvios == null){
         campoVacio = true;
     }
     return !campoVacio;
@@ -478,19 +479,20 @@ para poder filtrar el dato con o sin estos caracteres*/
   saveNuevaComm(){
     this.progressSpinner = true;
 
-    let docs = JSON.parse(JSON.stringify(this.bodyNuevaComm.docs));
-    let peticion = JSON.parse(JSON.stringify(this.bodyNuevaComm));
+    let docs = this.bodyNuevaComm.docs;
+    let peticion : NuevaComunicacionItem = JSON.parse(JSON.stringify(this.bodyNuevaComm));
     peticion.docs= [];
+    peticion.idTipoMensaje = "30";
     
-    //REVISAR: Se recomienda poner alguna especie de limite en base al tamaño total de los ficheros
-    this.sigaServices.postSendFilesAndComunicacion ("comunicaciones_saveNuevaComm", docs, peticion).subscribe(
+    this.sigaServices.postSendFilesAndComunicacion("comunicaciones_saveNuevaComm", docs, peticion).subscribe(
       data => {
+        this.progressSpinner = false;
         
         let resp = data;
 
         if (resp.status == 'OK') {
-          this.progressSpinner = false;
           this.msgs = [{severity:'success', summary: this.translateService.instant('general.message.correct'), detail: this.translateService.instant('general.message.accion.realizada')}];
+          this.dialogNuevaComm.hide();
         }
         else{
           this.msgs = [{severity:'error',summary: 'Error',detail: this.translateService.instant('general.mensaje.error.bbdd')}];
@@ -577,8 +579,13 @@ para poder filtrar el dato con o sin estos caracteres*/
       // var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{7}[/]$/;
       var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{7}$/;
       var ret = objRegExp.test(nProcedimiento);
-      if(ret) this.msgs.push({severity: "error", summary: this.translateService.instant("general.message.incorrect"), detail: this.translateService.instant("justiciaGratuita.ejg.preDesigna.errorNumProc")});
-      return !ret;
+      if(!ret && this.bodyNuevaComm.numProcedimiento != null && this.bodyNuevaComm.numProcedimiento.trim() != ""){
+        this.msgs = [{severity: "error", summary: this.translateService.instant("general.message.incorrect"), detail: this.translateService.instant("justiciaGratuita.ejg.preDesigna.errorNumProc")}];
+        return false;
+      }
+      else{
+        return true;
+      }
     // }
   }
 
@@ -588,7 +595,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     let parametro = new ParametroRequestDto();
     this.sigaServices.get("institucionActual").subscribe(n => {
       parametro.idInstitucion = n.value;
-      parametro.modulo = "COM";
+      parametro.modulo = "SCS";
       parametro.parametrosGenerales = "NIG_VALIDADOR";
       if (nig != null && nig != '') {
         this.progressSpinner = true;
@@ -659,6 +666,67 @@ para poder filtrar el dato con o sin estos caracteres*/
       return this.commonsService.styleObligatorio(evento);
     }
   }
+
+  getPlantillasEnvioTelematico() {
+
+    this.sigaServices
+      .post("enviosMasivos_plantillas", "6") //Tipo "Envío telemático" en la tabla ENV_TIPOSENVIOS
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          let comboPlantillas = JSON.parse(data["body"]);
+          this.comboPlantillas = comboPlantillas.combooItems;
+          
+          this.detallePlantilla();
+
+          // if (this.editar) {
+          //   this.body.idPlantillaEnvios = this.body.idPlantillaEnvios.toString();
+          // }
+          this.comboPlantillas.map(e => {
+            let accents =
+              "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+            let accentsOut =
+              "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+            let i;
+            let x;
+            for (i = 0; i < e.label.length; i++) {
+              if ((x = accents.indexOf(e.label[i])) != -1) {
+                e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+                return e.labelSinTilde;
+              }
+            }
+          });
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => { }
+      );
+
+  }
+
+  detallePlantilla() {
+    this.body.cuerpo = "";
+
+    let datosPlantilla = {
+      idPlantillaEnvios: this.bodyNuevaComm.idPlantillaEnvios, 
+      idTipoEnvios: "6" //Tipo "Envío telemático" en la tabla ENV_TIPOSENVIOS
+    };
+    this.sigaServices
+      .post("enviosMasivos_detallePlantilla", datosPlantilla)
+      .subscribe(data => {
+        let datos = JSON.parse(data["body"]);
+        this.bodyNuevaComm.asunto = datos.asunto;
+        this.bodyNuevaComm.mensaje = datos.cuerpo;
+      },
+        err => {
+          this.progressSpinner = false;
+        }, () => {
+
+        });
+
+}
 
   //FIN MÉTODOS NUEVA COMUNICACIÓN
 

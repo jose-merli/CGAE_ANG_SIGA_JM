@@ -6,5 +6,7 @@ export class NuevaComunicacionItem {
     numProcedimiento: string;
     nig: string;
     idModeloComunicacion: string;
+    idPlantillaEnvios : string;
+    idTipoMensaje: string;
     docs: File[] = [];
   }

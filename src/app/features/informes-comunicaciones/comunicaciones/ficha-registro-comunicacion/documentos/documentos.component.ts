@@ -180,6 +180,9 @@ export class DocumentosComponent implements OnInit {
       .postDownloadFiles("comunicaciones_descargarDocumento", objDownload)
       .subscribe(data => {
         const blob = new Blob([data], { type: "application/octet-stream" });
+        
+        //REVISAR: esta comprobación actual puede provocar que salte error en algunos archivos de prueba subidos 
+        //que están vacios.
         if (blob.size == 0) {
           this.showFail(
             this.translateService.instant(

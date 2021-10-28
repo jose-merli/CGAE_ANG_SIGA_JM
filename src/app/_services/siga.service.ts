@@ -940,10 +940,12 @@ export class SigaServices {
   postSendFilesAndComunicacion(service: string, documentos: File[], nuevaComunicacion: NuevaComunicacionItem): Observable<any> {
     let formData: FormData = new FormData();
 
-    documentos.forEach((el, i) => {
+	if(documentos.length > 0){
+		documentos.forEach((el, i) => {
 
-        formData.append(`uploadFile${i}`, el, el.name + ';');
-    });
+			formData.append(`uploadFile${i}`, el, el.name + ';');
+		});
+	}
 
     formData.append('nuevaComunicacion', JSON.stringify(nuevaComunicacion));
 

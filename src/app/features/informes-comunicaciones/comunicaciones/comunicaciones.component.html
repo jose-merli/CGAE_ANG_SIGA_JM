@@ -240,7 +240,7 @@
 
   <!-- CREACIÓN NUEVA COMUNICACIÓN -->
   <p-dialog [(visible)]="showNuevaComm" responsive="true" [draggable]="false" modal="modal" resizable="false"
-    [minWidth]="400" (onHide)="cerrarDialogNueva()">
+    [minWidth]="400" (onHide)="cerrarDialogNueva()" #nuevaComm>
     <p-header class="title">
       <label>{{ "informesycomunicaciones.comunicaciones.nuevaComunicacion" | translate}}</label>
     </p-header>
@@ -251,9 +251,9 @@
           filterBy="label,labelSinTilde" placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true" ></p-dropdown>
       </div>
       <div class="form-group-interlineado col-lg-4 col-md-4">
-        <label>{{ "enviosMasivos.literal.asunto" | translate }} (*)
-        </label>
-        <input type="text" class="form-control" [ngClass]="styleObligatorio(bodyNuevaComm.asunto)" [attr.maxlength]="100" pInputText [(ngModel)]="bodyNuevaComm.asunto" />
+        <label class="d-block">{{'enviosMasivos.literal.plantillasEnvio' | translate}} (*)</label>
+        <p-dropdown [ngClass]="styleObligatorio(bodyNuevaComm.idPlantillaEnvios)"
+          [options]="comboPlantillas" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="bodyNuevaComm.idPlantillaEnvios" class="select-form" (onChange)="detallePlantilla($event)"></p-dropdown>
       </div>
       <div class="form-group-interlineado col-lg-4 col-md-4">
         <label>{{"administracion.auditoriaUsuarios.literal.fechaEfectiva" | translate}} (*)</label>
@@ -261,6 +261,12 @@
           (valueChangeSelected)="fillNuevaFechaEfecto($event)" [inputStyleClass]="styleObligatorio(bodyNuevaComm.fechaEfecto)" (valueChangeInput)="fillNuevaFechaEfecto($event)">
         </app-fecha>
       </div>
+      <div class="form-group-interlineado col-lg-6 col-md-6">
+        <label>{{ "enviosMasivos.literal.asunto" | translate }} (*)
+        </label>
+        <input type="text" class="form-control" [ngClass]="styleObligatorio(bodyNuevaComm.asunto)" [attr.maxlength]="100" pInputText [(ngModel)]="bodyNuevaComm.asunto" />
+      </div>
+      
       <div class="form-group-interlineado col-lg-12 col-md-12">
         <label>{{"informesycomunicaciones.comunicaciones.mensaje" | translate}}
         </label>
