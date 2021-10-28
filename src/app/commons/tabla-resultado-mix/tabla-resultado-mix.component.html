@@ -132,8 +132,8 @@
           [disabled]="(!anySelected && !isLetrado) || (this.selectedRowValue.length == 0 && !isLetrado) || isLetrado" 
           (click)="eliminar()"></button>
         <button *ngIf="calendarios  && !inscripciones" pButton type="button" icon="fa fa-plus" iconPos="left"
-          label="Duplicar" [disabled]="!anySelected || this.selectedRowValue.length == 0" (click)="duplicar()"></button>
-        <button pButton [disabled]="!anySelected || this.selectedRowValue.length == 0"  *ngIf="!inscripciones && !incompatibilidades" type="button" icon="fa fa-download" iconPos="left" label="Descargar LOG"
+          label="Duplicar" [disabled]="!anySelected || this.selectedRowValue.length == 0 || selectedArray.length == 0" (click)="duplicar()"></button>
+        <button pButton  *ngIf="!inscripciones && !incompatibilidades" type="button" icon="fa fa-download" iconPos="left" label="Descargar LOG"
           (click)="descargarLOG()"></button>
       
 

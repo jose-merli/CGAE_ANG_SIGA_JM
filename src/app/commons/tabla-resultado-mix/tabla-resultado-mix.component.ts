@@ -113,8 +113,9 @@ export class TablaResultadoMixComponent implements OnInit {
     this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
       for (let i = 0; i < this.table.nativeElement.children.length; i++) {
 
-        if (!event.target.classList.contains("selectedRowClass")) {
+        if(!event.target.classList.contains("selectedRowClass")){
           this.selected = false;
+          this.selectedArray = [];
         }
       }
     });
@@ -286,10 +287,10 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
         if (nombreCabecera == sort.active){
           console.log("a.cells["+i+"].type:"+a.cells[i].type);
 
-          if ((a.cells[i].type=='datePickerFin' && b.cells[i].type=='datePickerFin')){
-            return compareDate(a.cells[i].value[0], b.cells[i].value[0], isAsc, false);
+          if (a.cells[i].type=='datePickerFin' && b.cells[i].type=='datePickerFin'){
+            return compareDate(a.cells[i].value[0], b.cells[i].value[0], isAsc);
           }else if (a.cells[i].type=='date' && b.cells[i].type=='date'){
-            return compareDate(a.cells[i].value, b.cells[i].value, isAsc, false);
+            return compareDate(a.cells[i].value, b.cells[i].value, isAsc);
           }
           else if (a.cells[i].type=='dateTime' && b.cells[i].type=='dateTime'){
             return compareDateAndTime(a.cells[i].value.label, b.cells[i].value.label, isAsc);
@@ -298,21 +299,21 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
           let valorA = a.cells[i].value;
           let valorB = b.cells[i].value;
           if (valorA!=null && valorB!=null){
-            /*if(isNaN(valorA)){ //Checked for numeric
+            if(isNaN(valorA)){ //Checked for numeric
               const dayA = valorA.substr(0, 2) ;
               const monthA = valorA.substr(3, 2);
               const yearA = valorA.substr(6, 10);
               console.log("fecha a:"+ yearA+","+monthA+","+dayA);
               var dt=new Date(yearA, monthA, dayA);
               if(!isNaN(dt.getTime())){ //Checked for date
-                return compareDate(a.cells[i].value, b.cells[i].value, isAsc, false);
+                return compareDate(a.cells[i].value, b.cells[i].value, isAsc);
               }else{
               }
             } else{
-            }*/
+            }
           }
 
-          return compare(a.cells[i].value, b.cells[i].value, isAsc, false);
+          return compare(a.cells[i].value, b.cells[i].value, isAsc);
           
         }
       }
@@ -344,7 +345,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
       for(let j=0; j<this.cabeceras.length;j++){
         if (this.searchText[j] != " " &&  this.searchText[j]){
           console.log('row.cells[j].value: ', row.cells[j].value)
-          if (row.cells[j].value != null && row.cells[j].value != "null"){
+          if (row.cells[j].value){
              console.log('row.cells[j].value 2: ', row.cells[j].value)
             console.log("tipo de celda:"+row.cells[j].type);
             if(row.cells[j].type == 'select'){
@@ -354,19 +355,17 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
                 isReturn = false;
                 break;
               }
-            } else if (!row.cells[j].value.toString().toLowerCase().includes(this.searchText[j].toLowerCase()) || row.cells[j].value == "" || row.cells[j].value == null){
+            } else if (!row.cells[j].value.toString().toLowerCase().includes(this.searchText[j].toLowerCase())){
               isReturn = false;
               break;
+			} 
           }else{
-             /* if (this.searchText[j]!=""){
+              if (this.searchText[j]!=""){
                 isReturn = false;
                 break;
-              }*/
+              }
           }
-        }else{
-          isReturn = false;
-        }
-      }else if(x == j){ //Si no hay nada escrito en la cabecera del filtro y es la cabecera correspondiente, devolvemos la fila
+       }else if(x == j){ //Si no hay nada escrito en la cabecera del filtro y es la cabecera correspondiente, devolvemos la fila
         isReturn = true;
       }
     }
@@ -793,7 +792,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
           this.rowGroups.forEach(rg => {
             let fechaDesde = rg.cells[2].value;
             let idGuardia = rg.cells[12].value;
-            if (compareDate (fechaDesde, fechaDesdeSelected, true, true) == 1 && idGuardiaSelected == idGuardia){
+            if (compareDate (fechaDesde, fechaDesdeSelected, true) == 1 && idGuardiaSelected == idGuardia){
               entra = true;
             }
           });
@@ -1140,7 +1139,7 @@ function compareDateHour(dateObj1,hour1,dateObj2,hour2, isAsc){
   return ((objDate1.getTime() / 1000) < (objDate2.getTime() / 1000) ? -1 : 1) * (isAsc ? 1 : -1);
 }
 
-function compareDate (fechaA:  any, fechaB:  any, isAsc: boolean, quitarIgual: Boolean){
+function compareDate (fechaA:  any, fechaB:  any, isAsc: boolean){
 
   let dateA = null;
   let dateB = null;
@@ -1162,10 +1161,12 @@ function compareDate (fechaA:  any, fechaB:  any, isAsc: boolean, quitarIgual: B
 
   console.log("comparacionDate isAsc:"+ isAsc+";");
 
-  return compare(dateA, dateB, isAsc, quitarIgual);
+  return compare(dateA, dateB, isAsc);
+
 
 }
-function compare(a: number | string | Date, b: number | string | Date, isAsc: boolean, quitarIgual: Boolean) {
+
+function compare(a: number | string | Date, b: number | string | Date, isAsc: boolean) {
   console.log("comparacion  a:"+ a+"; b:"+ b);
 
   if (typeof a === "string" && typeof b === "string") {
@@ -1182,10 +1183,7 @@ function compare(a: number | string | Date, b: number | string | Date, isAsc: bo
   if (a!=null && b==null){
     return ( -1 ) * (isAsc ? 1 : -1);
   }
-if (!quitarIgual){
+
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
-}else{
-  return (a <= b ? -1 : 1) * (isAsc ? 1 : -1);
-}
-}
+}					   
 
