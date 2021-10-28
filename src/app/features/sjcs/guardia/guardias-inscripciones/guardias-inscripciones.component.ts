@@ -311,7 +311,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
 
     //let jsonEntrada  = JSON.parse(JSON.stringify(datosEntrada))
 
-
+    this.buscar = false;
 
     this.inscripcionesDatosEntradaItem =
     {
@@ -329,7 +329,6 @@ export class GuardiasInscripcionesComponent implements OnInit {
         data => {
           let error = JSON.parse(data.body).error;
           this.datos = JSON.parse(data.body).inscripcionesItem;
-          this.buscar = true;
           this.datos = this.datos.map(it => {
             it.letradosIns = +it.letradosIns;
             return it;
