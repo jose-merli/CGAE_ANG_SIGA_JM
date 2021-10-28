@@ -61,7 +61,7 @@ export class ProgramacionCalendariosComponent implements OnInit {
     },
     {
       id: "guardia",
-      name: "dato.jgr.guardia.guardias.guardia",
+      name: "oficio.cargasMasivas.guardia",
       size: 250
     },
     {

@@ -102,8 +102,10 @@
                   <!--<a [href]="'data:application/octet-stream;base64,' + data | safe" download="excel.xls">Download</a>-->
             <button *ngIf="calendarios" pButton type="button" icon="far fa-save" iconPos="left" label="Añadir letrado" [disabled]="rowwSelected == undefined || (rowwSelected != undefined && rowwSelected.length == 0)"
                   (click)="anadirLetrado()"></button>
-            <button *ngIf="calendarios" pButton type="button" icon="far fa-save" iconPos="left" label="Eliminar" [disabled]="rowwSelected == undefined || (rowwSelected != undefined && rowwSelected.length == 0)|| estado != 'Pendiente'"
+            <button *ngIf="calendarios" pButton type="button" icon="far fa-save" iconPos="left" label="Eliminar" [disabled]="rowwSelected == undefined || (rowwSelected != undefined && rowwSelected.length == 0) || selectedArray.length > 1 || selectedArray.length == 0"
                   (click)="eliminar()"></button>
+              <!--  <button *ngIf="calendarios" pButton type="button" icon="far fa-save" iconPos="left" label="Eliminar" [disabled]="rowwSelected == undefined || (rowwSelected != undefined && rowwSelected.length == 0)|| estado != 'Pendiente' || rowwSelected.length > 1"
+                    (click)="eliminar()"></button>-->  
             <button *ngIf="calendarios" pButton type="button" icon="far fa-save" iconPos="left" label="Nuevo" [disabled]="isDisabledNuevo"
                   (click)="nuevo()"></button>
         </div>

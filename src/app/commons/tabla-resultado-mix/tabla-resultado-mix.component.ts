@@ -112,8 +112,9 @@ export class TablaResultadoMixComponent implements OnInit {
     this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
       for (let i = 0; i < this.table.nativeElement.children.length; i++) {
 
-        if (!event.target.classList.contains("selectedRowClass")) {
+        if(!event.target.classList.contains("selectedRowClass")){
           this.selected = false;
+          this.selectedArray = [];
         }
       }
     });
