@@ -85,8 +85,8 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
       }
 
     if (sessionStorage.getItem("esColegiado") && sessionStorage.getItem("esColegiado") == 'true') {
-      /*this.disabledBusquedaExpress = true;
-      this.getDataLoggedUser();*/
+       this.disabledBusquedaExpress = true;
+       this.getDataLoggedUser();
     }
 
     if (sessionStorage.getItem('buscadorColegiados')) {
