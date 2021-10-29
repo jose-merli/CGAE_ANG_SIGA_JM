@@ -1,6 +1,6 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
-import { SortEvent } from 'primeng/api';
+import { Message, SortEvent } from 'primeng/api';
 import { TranslateService } from '../../../../commons/translate';
 import { ComboItem } from '../../../../models/ComboItem';
 import { FichaCompraSuscripcionItem } from '../../../../models/FichaCompraSuscripcionItem';
@@ -16,7 +16,7 @@ import { SigaServices } from '../../../../_services/siga.service';
 })
 export class TarjetaFacturaCompraSuscripcionComponent implements OnInit {
 
-  msgs = []; //Para mostrar los mensajes p-growl y dialogos de confirmacion
+  msgs: Message[] = []; //Para mostrar los mensajes p-growl y dialogos de confirmacion
   progressSpinner: boolean = false; //Para mostrar/no mostrar el spinner de carga
   showTarjeta: boolean = false;
   
@@ -76,7 +76,16 @@ export class TarjetaFacturaCompraSuscripcionComponent implements OnInit {
     }
   }
 
+  ngOnChange(changes: SimpleChanges){
+    //Se comprueba el estado de la peticion y si se ha buscado anteriormente las facturas
+    if(this.ficha.fechaAceptada != null && this.ficha.facturas == null){
+      this.getComboEstadosFactura();
+      this.getFacturasPeticion();
+    }
+  }
+
   openTab(selectedRow) {
+    //REVISAR
     // this.progressSpinner = true;
     // sessionStorage.setItem("FichaCompraSuscripcion", JSON.stringify(this.ficha));
     // sessionStorage.setItem("origin", "Compra");
@@ -105,6 +114,7 @@ export class TarjetaFacturaCompraSuscripcionComponent implements OnInit {
             )
             factura.desEstado = estado.label.toString();
           }
+          this.ficha.facturas = this.facturasTarjeta;
         }
         this.progressSpinner = false;
 

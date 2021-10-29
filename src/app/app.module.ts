@@ -489,6 +489,7 @@ import { QueryBuilderModule } from '@syncfusion/ej2-angular-querybuilder';
 import { enableRipple } from '@syncfusion/ej2-base';
 import { DropDownListModule } from '@syncfusion/ej2-angular-dropdowns';
 import { RadioButtonModule as RadioButtonEJSModule} from '@syncfusion/ej2-angular-buttons';
+import { TarjetaDescuentosAnticiposCompraSuscripcionComponent } from './features/facturacion/ficha-compra-suscripcion/tarjeta-descuentos-anticipos-compra-suscripcion/tarjeta-descuentos-anticipos-compra-suscripcion.component';
 enableRipple(true);
 
 @NgModule({
@@ -893,7 +894,8 @@ enableRipple(true);
 		DetalleTarjetaPrecioFichaServiciosFacturacionComponent,
 		TarjetaProductosCompraSuscripcionComponent,
 		ConstructorConsultasComponent,
-		TarjetaFacturaCompraSuscripcionComponent
+		TarjetaFacturaCompraSuscripcionComponent,
+		TarjetaDescuentosAnticiposCompraSuscripcionComponent
 	],
 	imports: [
 		Paginador3Module,
