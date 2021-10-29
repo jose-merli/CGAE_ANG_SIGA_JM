@@ -6,6 +6,7 @@ import { ComboItem } from '../../../../models/ComboItem';
 import { FichaCompraSuscripcionItem } from '../../../../models/FichaCompraSuscripcionItem';
 import { ListaDescuentosPeticionItem } from '../../../../models/ListaDescuentosPeticionItem';
 import { ListaFacturasPeticionItem } from '../../../../models/ListaFacturasPeticionItem';
+import { procesos_PyS } from '../../../../permisos/procesos_PyS';
 import { SigaStorageService } from '../../../../siga-storage.service';
 import { CommonsService } from '../../../../_services/commons.service';
 import { SigaServices } from '../../../../_services/siga.service';
@@ -67,6 +68,8 @@ export class TarjetaDescuentosAnticiposCompraSuscripcionComponent implements OnI
     }
   ];
   disableBorrar: boolean = true;
+  permisoNuevoAnticipo: boolean = false;
+  permisoBorrarAnticipo: boolean = false;
 
   constructor(public sigaServices: SigaServices,
     private commonsService: CommonsService,
@@ -102,6 +105,8 @@ export class TarjetaDescuentosAnticiposCompraSuscripcionComponent implements OnI
             
             }
           }
+
+          this.checkTotal();
         }
         this.progressSpinner = false;
 
@@ -109,6 +114,16 @@ export class TarjetaDescuentosAnticiposCompraSuscripcionComponent implements OnI
       err => {
         this.progressSpinner = false;
       });
+  }
+
+  checkNuevoAnticipo(){
+    let msg = this.commonsService.checkPermisos(this.permisoNuevoAnticipo, undefined);
+
+    if (msg != null) {
+      this.msgs = msg;
+    }  else {
+      this.nuevoAnticipo();
+		}
   }
 
   nuevoAnticipo(){
@@ -128,8 +143,47 @@ export class TarjetaDescuentosAnticiposCompraSuscripcionComponent implements OnI
     //this.router.navigate(["/fichaAnticipo"]); //Cambiar direccion a la ficha de anticipos y añadir item con informacion necesaria para inicializar la ficha
   }
 
-  saveNuevoAnticipo(){
-    this.progressSpinner = true;
+
+  // saveNuevoAnticipo(){
+  //   this.progressSpinner = true;
+
+  //   this.sigaServices.post("PyS_saveAnticipoPeticion",this.selectedRows).subscribe(
+  //     insertResponseDTO => {
+
+  //       if (insertResponseDTO.status != "OK") {
+  //         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+  //       } else {
+  //         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+  //       }
+  //       this.progressSpinner = false;
+
+  //     },
+  //     err => {
+  //       this.progressSpinner = false;
+  //     });
+  // }
+
+  checkTotal(){
+    let pagado = 0;
+    for(let desc of this.descuentosTarjeta){
+      pagado += desc.importe;
+    }
+    this.ficha.pendPago = Number(this.ficha.impTotal) - pagado;
+  }
+
+  checkBorrarAnticipo(){
+    let msg = this.commonsService.checkPermisos(this.permisoBorrarAnticipo, undefined);
+
+    if (msg != null) {
+      this.msgs = msg;
+    }  else {
+      this.borrarAnticipo();
+		}
+  }
+
+  //REVISAR CAMBIAR EL SERVICIO POR EL SERVICIO QUE SE IMPLEMENTE
+  borrarAnticipo(){
+    this.progressSpinner = false;
 
     this.sigaServices.post("PyS_saveAnticipoPeticion",this.selectedRows).subscribe(
       insertResponseDTO => {
@@ -145,21 +199,20 @@ export class TarjetaDescuentosAnticiposCompraSuscripcionComponent implements OnI
       err => {
         this.progressSpinner = false;
       });
-  }
 
-  checkTotal(){
-    let pagado = 0;
-    for(let desc of this.descuentosTarjeta){
-      pagado += desc.importe;
-    }
-    this.ficha.pendPago = Number(this.ficha.impTotal) - pagado;
-  }
-
-  borrarAnticipo(){
     for (let row of this.selectedRows) {
-      if(row.tipo == "Anticipo"){
+      if(row.tipo == 1){
         let index = this.descuentosTarjeta.indexOf(row);
         this.descuentosTarjeta.splice(index, 1);
+      }
+      else{
+        this.msgs = [
+          {
+            severity: "error",
+            summary: "Error",
+            detail: "Solo se pueden eliminar anticipos"
+          }
+        ];
       }
     }
 
@@ -239,5 +292,25 @@ export class TarjetaDescuentosAnticiposCompraSuscripcionComponent implements OnI
       return false;
     }
 
+  }
+
+  getPermisoNuevoAnticipo(){
+    //REVISAR: ACTUALIZAR EL PERMISO CUANDO SE CREE LA FICHA DE ANTICIPO (FACTUTACION DE PYS)
+    this.commonsService
+			.checkAcceso(procesos_PyS.fichaCompraSuscripcion)
+			.then((respuesta) => {
+				this.permisoNuevoAnticipo = respuesta;
+			})
+			.catch((error) => console.error(error));
+  }
+
+  getPermisoBorrarAnticipo(){
+    //REVISAR: ACTUALIZAR EL PERMISO CUANDO SE CREE LA FICHA DE ANTICIPO (FACTUTACION DE PYS)
+    this.commonsService
+			.checkAcceso(procesos_PyS.fichaCompraSuscripcion)
+			.then((respuesta) => {
+				this.permisoBorrarAnticipo = respuesta;
+			})
+			.catch((error) => console.error(error));
   }
 }
