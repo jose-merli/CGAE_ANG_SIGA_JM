@@ -32,11 +32,11 @@
       <!--Cuerpo constructor de consultas-->
       <div *ngIf="openFicha" class="card-body card-body-ficha">
         <div class="col-lg-12 control-section">
-          <ejs-querybuilder width="80%" #constructorConsultas class="row" [rule]="importRules" locale="sigaIdiomas" (actionBegin)="obtenerComboCampo($event)">
+          <ejs-querybuilder width="80%" #constructorConsultas class="row" [rule]="importRules" locale="sigaIdiomas" (created)="setRules()" (actionBegin)="obtenerComboCampo($event)">
             <e-columns>
               <div *ngFor="let campo of configColumnasDTO.configColumnasQueryBuilderItem; let i = index">             
-                <e-column *ngIf="campo.selectayuda == null" [field]="campo.nombreenconsulta" [label]="campo.nombreenconsulta" [type]="campo.tipocampo" [operators]="customOperators"></e-column>
-                <e-column *ngIf="campo.selectayuda != null" [field]="campo.nombreenconsulta" [label]="campo.nombreenconsulta" [type]="campo.tipocampo">
+                <e-column *ngIf="campo.selectayuda == null" [field]="campo.idcampo" [label]="campo.nombreenconsulta" [type]="campo.tipocampo" [operators]="customOperators"></e-column>
+                <e-column *ngIf="campo.selectayuda != null" [field]="campo.idcampo" [label]="campo.nombreenconsulta" [type]="campo.tipocampo">
                   <ng-template #ruleTemplate let-data>
                     <div class="e-rule e-rule-template">
                       <div class="e-rule-filter">
@@ -70,6 +70,10 @@
             icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
           <button (click)="checkDatos()" pButton type="button" icon="far fa-save" iconPos="left"
             label="{{ 'general.boton.guardar' | translate}}"></button>
+            <button (click)="setRules()" pButton type="button" icon="far fa-save" iconPos="left"
+            label="prueba***"></button>
+            <button (click)="pruebaRefresh()" pButton type="button" icon="far fa-save" iconPos="left"
+            label="pruebaRefresh***"></button>
         </div>
       </div>
     </div>

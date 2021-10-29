@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Message } from "primeng/components/common/api";
 import { RuleModel } from '@syncfusion/ej2-querybuilder';
 import { Browser } from '@syncfusion/ej2-base';
@@ -63,22 +63,9 @@ export class ConstructorConsultasComponent implements OnInit {
  
    importRules: RuleModel = {
     //Inicializa los campos del querybuilder
-    'condition': '',
-    'rules': [ { 
-      'label': 'AÑOS COLEGIACION',
-      'field': 'AÑOS COLEGIACION',
-      'type': 'number',
-      'operator': 'equal',
-      'value': 0
-    }]
+    
   }; 
 
- /*  importRules: RuleModel = {
-    
-  };
- */
-
-  
   public fields: Object = { text: 'label', value: 'value' };
 
   public customOperators: any =  [
@@ -102,12 +89,12 @@ export class ConstructorConsultasComponent implements OnInit {
   constructor(private sigaServices: SigaServices,private translateService: TranslateService) { }
 
   ngOnInit() {
+    this.obtenerConfigColumnas();
+
     if(sessionStorage.getItem("consultasSearch")){
       this.consultaBuscador = JSON.parse(sessionStorage.getItem("consultasSearch"));
       this.obtenerDatosConsulta(this.consultaBuscador.idConsulta);    
     }
-    
-    this.obtenerConfigColumnas();
   }
 
   //Necesario para liberar memoria
@@ -147,7 +134,7 @@ export class ConstructorConsultasComponent implements OnInit {
    console.log(this.constructorConsultas.getRules());
    console.log(this.constructorConsultas.getSqlFromRules(this.constructorConsultas.getRules()));
    //console.log(this.constructorConsultas.getRulesFromSql("SELECT CEN_CLIENTE.IDINSTITUCION, CEN_CLIENTE.IDPERSONA FROM CEN_CLIENTE , CEN_COLEGIADO WHERE CEN_CLIENTE.IDINSTITUCION = 2005 AND CEN_CLIENTE.IDPERSONA = @IDPERSONA@ AND ( F_SIGA_GETTIPOCLIENTE(@IDPERSONA@,2005,@FECHA@) = 20 AND CEN_COLEGIADO.SITUACIONRESIDENTE = '0' ) AND ( CEN_CLIENTE.IDPERSONA = CEN_COLEGIADO.IDPERSONA(+) AND CEN_CLIENTE.IDINSTITUCION = CEN_COLEGIADO.IDINSTITUCION(+) ) "));
-   //this.guardarDatosConstructor(this.constructorConsultas.getRules());
+   this.guardarDatosConstructor();
   }
 
   abreCierraFicha() {
@@ -186,6 +173,13 @@ export class ConstructorConsultasComponent implements OnInit {
         err => {
           this.progressSpinner = false;
         }, () => {
+          if(sessionStorage.getItem("consultasSearch")){
+            this.configColumnasDTO.configColumnasQueryBuilderItem.forEach(campo => {
+              if(campo.selectayuda != null){
+                this.obtenerCombosQueryBuilder(campo, campo.nombreenconsulta);
+              }
+            });
+          }
         
         });;
   
@@ -193,6 +187,7 @@ export class ConstructorConsultasComponent implements OnInit {
 
   comboDTOColumnaQueryBuilder: ComboObject = new ComboObject();
   listaCombosObject : Map<string, ComboObject> = new Map<string, ComboObject>();
+ 
  
   obtenerCombosQueryBuilder(campo, nombreCampo){
     this.progressSpinner = true;
@@ -209,87 +204,80 @@ export class ConstructorConsultasComponent implements OnInit {
         this.progressSpinner = false;
       }, () => {
       
+        
       });;
 
   }
 
+  pruebaRefresh(){
+    this.constructorConsultas.refresh();
+  }
+
+  setRules(): void{
+    if(this.constructorConsultas != undefined){
+      this.constructorConsultas.setRules({
+        'condition':'and',
+        'rules': [{
+            "label": "TIPO COLEGIADO",
+            "field": "3000",
+            "operator": "equal",
+            "type": "string",
+            "value": "20"
+        },
+        {
+          "label": "RESIDENTE",
+          "field": "226",
+          "operator": "equal",
+          "type": "string",
+          "value": "0"
+      }
+    ]});
+    
+    /*   console.log(this.consulta);
+      this.constructorConsultas.setRulesFromSql("3000 = '20'");
+      console.log(this.constructorConsultas.getRules()); */
+
+      //PRUEBAS
+     /*  this.constructorConsultas.setRulesFromSql("3000 = '20'");
+      this.constructorConsultas.refresh();
+      console.log(this.constructorConsultas.getRules()); */
+
+    }  
+  }
+
+
+  consulta;
   obtenerDatosConsulta(idConsulta) {
-    //this.progressSpinner = true;
+    this.progressSpinner = true;
 
     this.subscriptionDatosConstructorConsulta = this.sigaServices.getParam("constructorConsultas_obtenerDatosConsulta", "?idConsulta=" + idConsulta).subscribe(
       datosConstructorConsulta => {
-        //this.datosConstructorConsulta.constructorConsultasItem = datosConstructorConsulta.constructorConsultasItem;
-        console.log(this.constructorConsultas.getRulesFromSql(datosConstructorConsulta.consulta));
+        this.consulta = datosConstructorConsulta.consulta;
 
-        this.importRules = this.constructorConsultas.getRulesFromSql(datosConstructorConsulta.consulta);
+        
         this.progressSpinner = false;
       },
       err => {
         this.progressSpinner = false;
       },
       () => {
+
         this.progressSpinner = false;
-      /*   this.datosConstructorConsulta.constructorConsultasItem.forEach((registro, index) => {
-
-          this.importRules.condition = registro.conector; */
-/* 
-          if(index <= 1){
-            this.importRules.rules.push({
-              'label': registro.campo,
-              'field': registro.campo,
-              'type': typeof registro.campo,
-              'operator': registro.operador,
-              'value': registro.valor
-            })
-          } */
-
-          /* if(index > 1){
-            if(this.datosConstructorConsulta.constructorConsultasItem[index].conector != this.datosConstructorConsulta.constructorConsultasItem[index - 1].conector){
-              (Array) (this.importRules.rules[index]).push({
-                'condition': registro.conector,
-                'rules': [{
-                  'label': registro.campo,
-                  'field': registro.campo,
-                  'type': typeof registro.campo,
-                  'operator': registro.operador,
-                  'value': registro.valor
-                }]
-              })
-            }else{
-              
-            }
-          } */
-         /*  this.importRules.rules.push({
-            'label': registro.campo,
-            'field': registro.campo,
-            'type': typeof registro.campo,
-            'operator': registro.operador,
-            'value': registro.valor
-          })
-        });
-        
-
-        console.log(this.importRules.rules[0]);
-        this.constructorConsultas.setRules(this.importRules);
-        this.progressSpinner = false; */
       }
     );
   }
 
-  queryBuilderDTO: QueryBuilderDTO;
+  queryBuilderDTO: QueryBuilderDTO = new QueryBuilderDTO();
  
-  guardarDatosConstructor(datosConstructor) {
+  guardarDatosConstructor() {
     this.progressSpinner = true;
-    
-    this.queryBuilderDTO = datosConstructor;
 
-    /*   let pruebaEnvioDatosConstructor = {
-      idconsulta: this.consultaBuscador.idConsulta,
-      sentencia: this.constructorConsultas.getSqlFromRules(this.constructorConsultas.getRules())
-    }; */
+    this.queryBuilderDTO.consulta = this.constructorConsultas.getSqlFromRules(this.constructorConsultas.getRules());
+    this.queryBuilderDTO.idconsulta = this.consultaBuscador.idConsulta;
 
-    this.subscriptionGuardarDatosConstructor = this.sigaServices.post("constructorConsultas_guardarDatosConstructor", this.constructorConsultas.getSqlFromRules(this.constructorConsultas.getRules())).subscribe(
+    this.subscriptionGuardarDatosConstructor = this.sigaServices.post("constructorConsultas_guardarDatosConstructor", this.queryBuilderDTO).subscribe(
       response => {
+
         /* if (JSON.parse(response.body).error.code == 500) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         } else {
@@ -305,5 +293,6 @@ export class ConstructorConsultasComponent implements OnInit {
     );
   } 
   //FIN SERVICIOS
+  
 
 }
