@@ -1,3 +1,4 @@
+import { ListaFacturasPeticionItem } from "./ListaFacturasPeticionItem";
 import { ListaProductosCompraItem } from "./ListaProductosCompraItem";
 import { ListaProductosItems } from "./ListaProductosItems";
 
@@ -21,7 +22,7 @@ export class FichaCompraSuscripcionItem {
     fechaAnulada: Date;
 
     
-    //TARJETA FORMA DE PAGO
+    //TARJETA PRODUCTOS
     idFormasPagoComunes: string;
     idFormaPagoSeleccionada: string;
     totalNeto: string;
@@ -29,9 +30,15 @@ export class FichaCompraSuscripcionItem {
     impTotal: string;
     pendPago: number;
     cuentaBancSelecc: string;
+    productos: ListaProductosCompraItem[];
+
+    //TRARJETA FACTURACION
+    facturas: ListaFacturasPeticionItem[];
+
+    //TARJETA DESCUENTOS Y ANTICIPOS
+
 
     idEstadoPeticion: string;
-    productos: ListaProductosCompraItem[];
     
     constructor() {}
   }
