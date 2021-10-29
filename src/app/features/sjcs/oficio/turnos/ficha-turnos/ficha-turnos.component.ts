@@ -115,19 +115,6 @@ export class FichaTurnosComponent implements OnInit, AfterViewChecked {
 			},
 
 		];
-		if(sessionStorage.getItem("originGuarCole") == "true"){
-			if(sessionStorage.getItem("datosTurnoGuardiaColeg")){
-				this.progressSpinner = true;
-				this.origenGuarColeg = true;
-        	this.turnosItem = JSON.parse(sessionStorage.getItem("datosTurnoGuardiaColeg"));
-			this.turnosItem2 = this.turnosItem;
-				this.searchTurnos();
-       		 sessionStorage.removeItem("datosTurnoGuardiaColeg");
-				this.progressSpinner = false;
-
-			}
-			sessionStorage.removeItem("originGuarCole");
-		}
 	
 
 		//
@@ -156,14 +143,10 @@ export class FichaTurnosComponent implements OnInit, AfterViewChecked {
 		// this.filtros.filtros.historico = event;
 		this.progressSpinner = true;
 		let filtros: TurnosItems = new TurnosItems;
-		if(this.origenGuarColeg){
-			filtros.idturno = this.turnosItem.idturno;
-			filtros.historico = false;
-			this.origenGuarColeg = false
-		}else{
-			filtros.idturno = this.idTurno;
-			filtros.historico = false;
-		}
+
+		filtros.idturno = this.idTurno;
+		filtros.historico = false;
+		
 		/* let filtros: TurnosItems = new TurnosItems;
 		filtros.idturno = this.idTurno;
 		filtros.historico = false; */

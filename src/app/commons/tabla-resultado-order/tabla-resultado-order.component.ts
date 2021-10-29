@@ -15,6 +15,7 @@ import { Observable } from 'rxjs/Observable';
 import { GuardiaItem } from '../../models/guardia/GuardiaItem';
 import { PersistenceService } from '../../_services/persistence.service';
 import { BuscadorGuardiaComponent } from '../../features/sjcs/guardia/busqueda-guardias/buscador-guardia/buscador-guardia.component';
+import { SigaStorageService } from '../../siga-storage.service';
 @Component({
   selector: 'app-tabla-resultado-order',
   templateUrl: './tabla-resultado-order.component.html',
@@ -103,6 +104,7 @@ export class TablaResultadoOrderComponent implements OnInit {
   @Input() minimoLetrado;
   @Input() s;
   numPage = 0;
+  isLetrado : boolean = false;
   constructor(
     private renderer: Renderer2,
     private sigaServices: SigaServices,
@@ -112,6 +114,7 @@ export class TablaResultadoOrderComponent implements OnInit {
     private translateService: TranslateService,
     private sanitizer: DomSanitizer,
     private persistenceService: PersistenceService,
+    private sigaStorageService : SigaStorageService
   ) {
     this.renderer.listen('window', 'click',(event: { target: HTMLInputElement; })=>{
       for (let i = 0; i < this.table.nativeElement.children.length; i++) {
@@ -127,6 +130,7 @@ export class TablaResultadoOrderComponent implements OnInit {
 
   ngOnInit(): void {
     this.selectedArray = [];
+    this.isLetrado = this.sigaStorageService.isLetrado && this.sigaStorageService.idPersona;
     if(this.rowGroups != undefined){
       this.totalRegistros = this.rowGroups.length;
     }

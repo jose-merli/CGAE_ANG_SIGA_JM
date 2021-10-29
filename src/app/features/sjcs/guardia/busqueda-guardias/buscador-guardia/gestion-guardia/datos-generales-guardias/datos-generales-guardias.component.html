@@ -51,7 +51,7 @@
           </label>
           <div class="p-0 col-6 form-group">
             <p-dropdown [ngClass]="styleObligatorio(body.idTurno)" class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]='body.idTurno' [filter]="true"
-              filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="comboTurno" [disabled]="historico || !permisoEscritura || modoEdicion"
+              filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="comboTurno" [disabled]="historico || !permisoEscritura || modoEdicion || isLetrado"
               [showClear]="true">
             </p-dropdown>
           </div>
@@ -61,7 +61,7 @@
           <label>
             {{ "administracion.parametrosGenerales.literal.nombre" | translate }} (*)
           </label>
-          <input [ngClass]="styleObligatorio(body.nombre)" [(ngModel)]="body.nombre" maxlength="30" [disabled]="!permisoEscritura || historico" type="text" class="form-control"
+          <input [ngClass]="styleObligatorio(body.nombre)" [(ngModel)]="body.nombre" maxlength="30" [disabled]="!permisoEscritura || historico || isLetrado" type="text" class="form-control"
             [maxLength]="200" pInputText>
         </div>
 
@@ -70,7 +70,7 @@
           <label>
             {{"general.description" | translate}} (*)
           </label>
-          <input [ngClass]="styleObligatorio(body.descripcion)" [(ngModel)]="body.descripcion" [disabled]="!permisoEscritura || historico" type="text" class="form-control" [maxLength]="500"
+          <input [ngClass]="styleObligatorio(body.descripcion)" [(ngModel)]="body.descripcion" [disabled]="!permisoEscritura || historico || isLetrado" type="text" class="form-control" [maxLength]="500"
             pInputText>
         </div>
 
@@ -80,7 +80,7 @@
             {{"dato.jgr.guardia.guardias.tipoGuardia" | translate}}
           </label>
           <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]='body.idTipoGuardia'
-            [filter]="true" filterBy="label,labelSinTilde" [options]="comboTipoGuardia" [disabled]="historico || !permisoEscritura"
+            [filter]="true" filterBy="label,labelSinTilde" [options]="comboTipoGuardia" [disabled]="historico || !permisoEscritura || isLetrado"
             [showClear]="true">
           </p-dropdown>
         </div>
@@ -94,7 +94,7 @@
             </label>
           </div>
           <div class="col-3 p-0">
-            <p-checkbox [(ngModel)]="body.envioCentralita" id="checkMovil" binary="true" [disabled]="historico || !permisoEscritura"></p-checkbox>
+            <p-checkbox [(ngModel)]="body.envioCentralita" id="checkMovil" binary="true" [disabled]="historico || !permisoEscritura || isLetrado"></p-checkbox>
           </div>
         </div>
 
@@ -104,7 +104,7 @@
             <label>
               {{"general.description" | translate}} {{"menu.facturacion" | translate}}
             </label>
-            <textarea name="textoEnPlantilla" [disabled]="historico || !permisoEscritura" class="form-control ui-inputtext" pInputTextarea
+            <textarea name="textoEnPlantilla" [disabled]="historico || !permisoEscritura || isLetrado" class="form-control ui-inputtext" pInputTextarea
               [(ngModel)]="body.descripcionFacturacion" autoResize="autoResize" maxlength="3999"></textarea>
           </div>
 
@@ -113,7 +113,7 @@
             <label>
               {{"general.description" | translate}} {{"justiciaGratuita.guardia.gestion.pago" | translate}}
             </label>
-            <textarea name="textoEnPlantilla" [disabled]="historico || !permisoEscritura" class="form-control ui-inputtext" pInputTextarea
+            <textarea name="textoEnPlantilla" [disabled]="historico || !permisoEscritura || isLetrado" class="form-control ui-inputtext" pInputTextarea
               [(ngModel)]="body.descripcionPago" autoResize="autoResize" maxlength="3999"></textarea>
           </div>
         </div>
@@ -127,12 +127,12 @@
             </label>
             <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" (onChange)="onChangeTurno()" [filter]="true"
               filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="comboTurno" [(ngModel)]='body.idTurnoPrincipal'
-              [disabled]="historico || !permisoEscritura" disabled="true" [showClear]="true">
+              [disabled]="historico || !permisoEscritura || isLetrado" disabled="true" [showClear]="true">
             </p-dropdown>
           </div>
           <div class="col-6" style="margin-top: 20px">
             <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]='body.idGuardiaPrincipal'
-              [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="comboGuardia" [disabled]="historico || !permisoEscritura || isDisabledGuardia"
+              [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="comboGuardia" [disabled]="historico || !permisoEscritura || isDisabledGuardia || isLetrado"
               [showClear]="true"></p-dropdown>
           </div>
 
@@ -219,9 +219,9 @@
 
     <div *ngIf="openFicha" class="card-footer">
       <div class="text-right main-button">
-        <button (click)="rest()" pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-undo" iconPos="left"
+        <button (click)="rest()" pButton [disabled]="historico || !permisoEscritura  || isLetrado" type="button" icon="fa fa-undo" iconPos="left"
           label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="save()" pButton type="button" [disabled]="historico || !permisoEscritura" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="save()" pButton type="button" [disabled]="historico || !permisoEscritura  || isLetrado" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
   </div>

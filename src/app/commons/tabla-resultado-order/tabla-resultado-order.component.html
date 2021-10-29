@@ -70,24 +70,24 @@
     </div>
 </div>
 <div *ngIf="pantalla != 'colaGuardias || 'manual" class="col-lg-1 col-md-1 centerAlign row">
-        <div class="col-lg-12 col-md-12"><button class="styledBut" [disabled]="disableButton('up')" class="pointer p-2" (click)="moveRow('up')"><i class="fas fa-chevron-up"></i></button></div>
-        <div class="col-lg-12 col-md-12"><button class="styledBut" [disabled]="disableButton('down')" class="pointer p-2" (click)="moveRow('down')"><i class="fas fa-chevron-down"></i></button></div>
+        <div class="col-lg-12 col-md-12"><button class="styledBut" [disabled]="disableButton('up') || isLetrado" class="pointer p-2" (click)="moveRow('up')"><i class="fas fa-chevron-up"></i></button></div>
+        <div class="col-lg-12 col-md-12"><button class="styledBut" [disabled]="disableButton('down') || isLetrado" class="pointer p-2" (click)="moveRow('down')"><i class="fas fa-chevron-down"></i></button></div>
 </div>
 </div>
 
 <div class="card-footer h50 pt-5">
         <div class="text-right main-button butBottom">
-          <button *ngIf="!calendarios && !listaGuardias" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar" [disabled]="isDisabled"
+          <button *ngIf="!calendarios && !listaGuardias" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar" [disabled]="isDisabled || isLetrado"
             (click)="guardar()"></button>
-           <button *ngIf="!calendarios && !listaGuardias"  pButton type="button" icon="fa fa-reply" iconPos="left" label="Duplicar" [disabled]="!porGrupos || !anySelectedBol"
+           <button *ngIf="!calendarios && !listaGuardias"  pButton type="button" icon="fa fa-reply" iconPos="left" label="Duplicar" [disabled]="!porGrupos ||(!anySelectedBol && !isLetrado)  || isLetrado"
                   (click)="duplicar(); showMsg('success', 'Se ha duplicado correctamente', '')"></button>
-            <button [disabled]="!anySelectedBol" *ngIf="!calendarios && !listaGuardias && pantalla == 'colaGuardias'"  (click)="nuevoSaltoComp()" pButton type="button" icon="fa fa-plus" iconPos="left" [disabled]="!anySelectedBol" label="Nuevo salto / Comp."></button>
-            <button [disabled]="!anySelectedBol" *ngIf="!calendarios && !listaGuardias" pButton type="button" icon="" iconPos="left" label="Marcar último"
+            <button [disabled]="(!anySelectedBol && !isLetrado)  || isLetrado" *ngIf="!calendarios && !listaGuardias && pantalla == 'colaGuardias'"  (click)="nuevoSaltoComp()" pButton type="button" icon="fa fa-plus" iconPos="left" label="Nuevo salto / Comp."></button>
+            <button [disabled]="(!anySelectedBol && !isLetrado)  || isLetrado" *ngIf="!calendarios && !listaGuardias" pButton type="button" icon="" iconPos="left" label="Marcar último"
                   (click)="moveToLast(); showMsg('success', 'Se ha marcado el último correctamente', '')"></button>
-            <button *ngIf="!calendarios && !listaGuardias" pButton type="button" icon="fa fa-comment" iconPos="left" label="Comunicar" [disabled]="!anySelectedBol"
+            <button *ngIf="!calendarios && !listaGuardias" pButton type="button" icon="fa fa-comment" iconPos="left" label="Comunicar" [disabled]="(!anySelectedBol && !isLetrado) || isLetrado"
                   (click)="showMsg('success', 'Se ha comunicado correctamente', '')"></button>
             <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer"
-                  (click)="restablecer()" [disabled]="!permisosEscritura"></button>
+                  (click)="restablecer()" [disabled]="!permisosEscritura || isLetrado"></button>
             <button *ngIf="listaGuardias" [disabled]="(!anySelectedBol  || !permisosEscritura)" pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="Eliminar"
                   (click)="eliminar()"></button>
             <button *ngIf="listaGuardias" pButton type="button" icon="fa fa-plus" iconPos="left" label="Nuevo"

@@ -40,7 +40,7 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
     },
     {
       id: "guardia",
-      name: "dato.jgr.guardia.saltcomp.guardia",
+      name: "menu.justiciaGratuita.GuardiaMenu",
       width: '15%'
     },
     {

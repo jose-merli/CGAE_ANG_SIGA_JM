@@ -55,7 +55,7 @@
             <label>
               {{ "dato.jgr.guardia.guardias.duracion" | translate }} (*)
             </label>
-            <input type="text" [ngClass]="styleObligatorio(body.diasGuardia)" [(ngModel)]="body.diasGuardia" (keypress)="numberOnly($event)" [disabled]="!permisoEscritura || historico"
+            <input type="text" [ngClass]="styleObligatorio(body.diasGuardia)" [(ngModel)]="body.diasGuardia" (keypress)="numberOnly($event)" [disabled]="!permisoEscritura || historico  || isLetrado"
               class="form-control" pInputText>
             <!-- <input [(ngModel)]="body.duracion" [disabled]="!permisoEscritura || historico" type="text" class="form-control" [maxLength]="200"
               pInputText> -->
@@ -66,7 +66,7 @@
             <label>
               {{"justiciaGratuita.guardia.gestion.unidad" | translate}}
             </label>
-            <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [disabled]="!permisoEscritura || historico"
+            <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [disabled]="!permisoEscritura || historico || isLetrado"
               [showClear]="true" [(ngModel)]="body.tipoDiasGuardia" autoDisplayFirst="true" [options]="comboUnidad" [ngClass]="styleObligatorioDuracionTipoDia(body.tipoDiasGuardia)"></p-dropdown>
             <!-- <p-dropdown class="select-form" [(ngModel)]='body.idProvincia' (onChange)="onChangeProvincia()" [filter]="true" filterBy="label,labelSinTilde"
               filterMatchMode="contains" [options]="comboProvincias" placeholder="{{'general.boton.seleccionar' | translate}}"
@@ -79,7 +79,7 @@
             <label>
               {{"justiciaGratuita.guardia.gestion.periodo" | translate}}
             </label>
-            <input type="text" [disabled]="!permisoEscritura || historico" [(ngModel)]="body.diasPeriodo" (keypress)="numberOnly($event)"
+            <input type="text" [disabled]="!permisoEscritura || historico || isLetrado" [(ngModel)]="body.diasPeriodo" (keypress)="numberOnly($event)"
               class="form-control" pInputText>
 
           </div>
@@ -89,7 +89,7 @@
             <label>
               {{"justiciaGratuita.guardia.gestion.unidad" | translate}}
             </label>
-            <p-dropdown class="select-form" [(ngModel)]="body.tipoDiasPeriodo" [disabled]="!permisoEscritura || historico" placeholder="{{'general.boton.seleccionar' | translate}}"
+            <p-dropdown class="select-form" [(ngModel)]="body.tipoDiasPeriodo" [disabled]="!permisoEscritura || historico || isLetrado" placeholder="{{'general.boton.seleccionar' | translate}}"
               [showClear]="true" autoDisplayFirst="true" [options]="comboUnidad" [ngClass]="styleObligatorioPeriodoTipoDia(body.tipoDiasPeriodo)"></p-dropdown>
           </div>
 
@@ -98,7 +98,7 @@
             <label>
               {{"justiciaGratuita.guardia.gestion.diasSeparacionGuardias" | translate}} (*)
             </label>
-            <input type="text" [ngClass]="styleObligatorio(body.diasSeparacionGuardias)" (keypress)="numberOnly($event)" [disabled]="!permisoEscritura || historico" [(ngModel)]="body.diasSeparacionGuardias"
+            <input type="text" [ngClass]="styleObligatorio(body.diasSeparacionGuardias)" (keypress)="numberOnly($event)" [disabled]="!permisoEscritura || historico || isLetrado" [(ngModel)]="body.diasSeparacionGuardias"
               class="form-control" pInputText>
           </div>
 
@@ -109,7 +109,7 @@
               <strong>{{ "justiciaGratuita.guardia.gestion.requeridaValidacionGuardiasColegio" | translate }}</strong>
             </div>
             <div class="col-2 p-0 pt-2">
-              <p-checkbox binary="true" [disabled]="!permisoEscritura || historico" [(ngModel)]="body.requeridaValidacion"></p-checkbox>
+              <p-checkbox binary="true" [disabled]="!permisoEscritura || historico || isLetrado" [(ngModel)]="body.requeridaValidacion"></p-checkbox>
             </div>
           </div>
         </div>
@@ -132,7 +132,7 @@
               </div>
               <div class="form-row m-0">
                 <div *ngFor="let dia of laborables" class="col-1 p-0">
-                  <p-checkbox [(ngModel)]="dia.value" [disabled]="!permisoEscritura || historico" (onChange)="changeLaborables()" binary="true"></p-checkbox>
+                  <p-checkbox [(ngModel)]="dia.value" [disabled]="!permisoEscritura || historico || isLetrado" (onChange)="changeLaborables()" binary="true"></p-checkbox>
 
                 </div>
               </div>
@@ -141,7 +141,7 @@
                   <strong>{{'justiciaGratuita.guardia.gestion.seleccionarTodos'|translate}}</strong>
                 </div>
                 <div class="col-2">
-                  <p-checkbox (onChange)="onChangeSeleccLaborables()" [disabled]="!permisoEscritura || historico" [(ngModel)]="selectLaborables"
+                  <p-checkbox (onChange)="onChangeSeleccLaborables()" [disabled]="!permisoEscritura || historico || isLetrado" [(ngModel)]="selectLaborables"
                     binary="true"></p-checkbox>
                 </div>
               </div>
@@ -159,7 +159,7 @@
               </div>
               <div class="form-row m-0">
                 <div *ngFor="let dia of festividades" class="col-1 p-0">
-                  <p-checkbox [(ngModel)]="dia.value" [disabled]="!permisoEscritura || historico" (onChange)="changeFestividades()" binary="true"></p-checkbox>
+                  <p-checkbox [(ngModel)]="dia.value" [disabled]="!permisoEscritura || historico || isLetrado" (onChange)="changeFestividades()" binary="true"></p-checkbox>
                 </div>
               </div>
               <div class="form-row mt-3">
@@ -167,7 +167,7 @@
                   <strong>{{'justiciaGratuita.guardia.gestion.seleccionarTodos'|translate}}</strong>
                 </div>
                 <div class="col-2">
-                  <p-checkbox (onChange)="onChangeSeleccFestividades()" [disabled]="!permisoEscritura || historico" [(ngModel)]="selectFestividades"
+                  <p-checkbox (onChange)="onChangeSeleccFestividades()" [disabled]="!permisoEscritura || historico || isLetrado" [(ngModel)]="selectFestividades"
                     binary="true"></p-checkbox>
                 </div>
               </div>
@@ -187,7 +187,7 @@
                 <strong *ngIf="body.separarGuardia">{{'justiciaGratuita.guardia.gestion.separarGuardiaCalendario'|translate}} </strong>
               </div>
               <div class="col-2">
-                <p-checkbox binary="true" [disabled]="!permisoEscritura || historico" [(ngModel)]="body.separarGuardia"></p-checkbox>
+                <p-checkbox binary="true" [disabled]="!permisoEscritura || historico || isLetrado" [(ngModel)]="body.separarGuardia"></p-checkbox>
               </div>
             </div>
           </div>
@@ -197,9 +197,9 @@
   </div>
   <div *ngIf="openFicha" class="card-footer ">
     <div class="text-right main-button ">
-      <button (click)="rest()" pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-undo" iconPos="left"
+      <button (click)="rest()" pButton [disabled]="historico || !permisoEscritura || isLetrado" type="button" icon="fa fa-undo" iconPos="left"
         label="{{ 'general.boton.restablecer' | translate}}"></button>
-      <button (click)="save()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+      <button (click)="save()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}" [disabled]="isLetrado"></button>
     </div>
   </div>
 </div>

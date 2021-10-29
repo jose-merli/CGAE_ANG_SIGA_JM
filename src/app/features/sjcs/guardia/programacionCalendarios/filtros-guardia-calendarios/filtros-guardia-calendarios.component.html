@@ -51,7 +51,7 @@
         <!-- FECHA CALENDARIO DESDE -->
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{"justiciaGratuita.Calendarios.FechaDesde" | translate}}</label>
-          <app-fecha [(value)]="filtros.fechaCalendarioDesde" [minDate]="getFechaCalendarioDesde(filtros.fechaCalendarioDesde,filtros.fechaCalendarioHasta)"
+          <app-fecha [(value)]="filtros.fechaCalendarioDesde" [inputStyleClass]="styleObligatorio(filtros.fechaCalendarioDesde)"
             (valueChangeSelected)="fillFechaCalendarioDesde($event)"  (valueChangeInput)="fillFechaCalendarioDesde($event)"></app-fecha>
         </div>
 

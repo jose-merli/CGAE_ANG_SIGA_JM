@@ -51,6 +51,7 @@ export class ResultadoListaGuardiasComponent implements OnInit, AfterViewInit {
     private sigaServices : SigaServices,
     private commonsService : CommonsService) { }
   ngOnInit() {
+    this.table.selectionMode = 'multiple';
     this.currentRoute = this.router.url.toString();
     this.getInstitucion();
   }
