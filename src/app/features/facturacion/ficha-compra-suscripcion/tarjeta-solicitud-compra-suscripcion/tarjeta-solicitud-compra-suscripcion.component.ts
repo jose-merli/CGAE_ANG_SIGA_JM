@@ -9,7 +9,6 @@ import { SigaStorageService } from '../../../../siga-storage.service';
 import { CommonsService } from '../../../../_services/commons.service';
 import { SigaServices } from '../../../../_services/siga.service';
 import { Location } from '@angular/common';
-import { ListaProductosCompraItem } from '../../../../models/ListaProductosCompraItem';
 import { TarjetaProductosCompraSuscripcionComponent } from '../tarjeta-productos-compra-suscripcion/tarjeta-productos-compra-suscripcion.component';
 
 @Component({
