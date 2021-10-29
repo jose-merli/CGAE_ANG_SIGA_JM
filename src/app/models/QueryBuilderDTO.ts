@@ -2,7 +2,8 @@ import { DatosGeneralesConsultaItem } from "./DatosGeneralesConsultaItem";
 import { QueryBuilderItem } from "./QueryBuilderItem";
 
 export class QueryBuilderDTO {
-    idConsulta: string;
+    idconsulta: string;
+    consulta: string;
 
     condition: string;
 	rules: QueryBuilderItem[] = [];
