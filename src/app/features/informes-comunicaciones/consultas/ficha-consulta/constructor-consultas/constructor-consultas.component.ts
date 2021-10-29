@@ -1,7 +1,6 @@
-import { AfterViewChecked, AfterViewInit, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Message } from "primeng/components/common/api";
 import { RuleModel } from '@syncfusion/ej2-querybuilder';
-import { Browser } from '@syncfusion/ej2-base';
 import { QueryBuilderComponent } from '@syncfusion/ej2-angular-querybuilder';
 import { Subscription } from 'rxjs';
 import { SigaServices } from '../../../../../_services/siga.service';
@@ -69,15 +68,15 @@ export class ConstructorConsultasComponent implements OnInit {
   public fields: Object = { text: 'label', value: 'value' };
 
   public customOperators: any =  [
-    {value: 'equal', key: this.translateService.instant("general.message.error.realiza.accion")},
-    {value: 'notequal', key: 'Distinto***'},
-    {value: 'lessthan', key: 'Menor que***'},
-    {value: 'greaterthan', key: 'Mayor que***'},
-    {value: 'lessthanorequal', key: 'Menor o igual***'},
-    {value: 'greaterthanorequal', key: 'Mayor o igual***'},
-    {value: 'startswith', key: 'Empieza con***'},
-    {value: 'endswith', key: 'Termina con***'},
-    {value: 'isnull', key: 'Esta vacio***'},
+    {value: 'equal', key: this.translateService.instant("informesycomunicaciones.consultas.constructor.iguala")},
+    {value: 'notequal', key: this.translateService.instant("informesycomunicaciones.consultas.constructor.distinto")},
+    {value: 'lessthan', key: this.translateService.instant("informesycomunicaciones.consultas.constructor.menorque")},
+    {value: 'greaterthan', key: this.translateService.instant("informesycomunicaciones.consultas.constructor.mayorque")},
+    {value: 'lessthanorequal', key: this.translateService.instant("informesycomunicaciones.consultas.constructor.menorqueoigual")},
+    {value: 'greaterthanorequal', key: this.translateService.instant("informesycomunicaciones.consultas.constructor.mayorqueoigual")},
+    {value: 'startswith', key: this.translateService.instant("informesycomunicaciones.consultas.constructor.empiezacon")},
+    {value: 'endswith', key: this.translateService.instant("informesycomunicaciones.consultas.constructor.terminacon")},
+    {value: 'isnull', key: this.translateService.instant("informesycomunicaciones.consultas.constructor.isnull")},
   ];;
 
   //Suscripciones
