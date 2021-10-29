@@ -133,7 +133,6 @@ export class EjgComisionComponent implements OnInit {
   transformDate(fecha) {
     if (fecha != undefined)
       fecha = new Date(fecha);
-    // fecha = this.datepipe.transform(fecha, 'dd/MM/yyyy');
     return fecha;
   }
 }

@@ -112,15 +112,20 @@ export class DatosGeneralesActasComponent implements OnInit {
 
   guardarActa() {
     this.progressSpinner = true;
-    this.sigaServices.post("filtrosejgacta_guardarActa", this.datosFiltro).subscribe(
-      n => {
+    this.sigaServices.post("filtrosacta_guardarActa", this.datosFiltro).subscribe(
+      data => {
+
+        if(JSON.parse(data.body).status == "OK"){
+          this.datosFiltro.idacta = JSON.parse(data.body).error.url;
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-      },
-      err => {
-        console.log(err);
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        }else{
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(data.body).error.description);
+        }
+
+        this.progressSpinner = false;
       },
       () => {
+        this.progressSpinner = false;
       }
     );
   }
