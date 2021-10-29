@@ -79,6 +79,7 @@ export class TarjetaDescuentosAnticiposCompraSuscripcionComponent implements OnI
     private router: Router) { }
 
   ngOnInit() {
+    this.ficha.impPagado = 0;
     if(this.ficha.fechaAceptada != null){
       this.getDescuentosPeticion();
     }
@@ -165,10 +166,12 @@ export class TarjetaDescuentosAnticiposCompraSuscripcionComponent implements OnI
 
   checkTotal(){
     let pagado = 0;
+
     for(let desc of this.descuentosTarjeta){
       pagado += desc.importe;
     }
-    this.ficha.pendPago = Number(this.ficha.impTotal) - pagado;
+
+    this.ficha.impPagado = pagado;
   }
 
   checkBorrarAnticipo(){
