@@ -42,7 +42,7 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
   isLetrado: boolean = false;
 
   textSelected: String = 'general.boton.seleccionar';
-  @Input() permisos;
+  @Input() permisoEscritura;
   /*Éste método es útil cuando queremos queremos informar de cambios en los datos desde el hijo,
     por ejemplo, si tenemos un botón en el componente hijo y queremos actualizar los datos del padre.*/
   @Output() filtrosValues = new EventEmitter<InscripcionesItems>();
@@ -81,7 +81,7 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
       // this.isBuscar();
     }
     if (this.persistenceService.getPermisos() != undefined) {
-      this.permisos = this.persistenceService.getPermisos();
+      this.permisoEscritura = this.persistenceService.getPermisos();
     }
     if (this.persistenceService.getFiltros() != undefined) {
       this.filtros = this.persistenceService.getFiltros();

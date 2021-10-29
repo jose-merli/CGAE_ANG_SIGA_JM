@@ -564,7 +564,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
                 "guardiasInscripciones_buscarsaltoscompensaciones", objetoValidacion).subscribe(
                   data => {
 
-                    this.existeSaltosCompensaciones = data.body;
+                    this.existeSaltosCompensaciones = JSON.parse(data.body);
 
                     if (this.existeSaltosCompensaciones == true) {
                       let mess = this.translateService.instant(
@@ -679,7 +679,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
           //mensaje de okey
           console.log("Se ha realizado correctamente");
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.objetoValidacion = [];
+          
         },
         err => {
           this.progressSpinner = false;
@@ -876,30 +876,6 @@ export class GuardiasInscripcionesComponent implements OnInit {
 
   } 
 
-  turnosGuardias() {
-    this.progressSpinner = true;
-    this.sigaServices.post(
-      "guardiasInscripciones_buscarGuardiasAsocTurnos", this.objetoValidacion).subscribe(
-        data => {
-          console.log("entra en el data");
-          this.progressSpinner = false;
-
-          console.log("Se ha realizado correctamente");
-          //this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.objetoValidacion = [];
-        },
-        err => {
-          this.progressSpinner = false;
-          console.log(err);
-          //mensaje de error
-          console.log("No se ha podido realizar el servicio de back");
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        },
-        () => {
-          this.commonsService.scrollTablaFoco('tablaFoco');
-        });
-
-  }
 
   BotonesInfo(event) {
     console.log("entra en el botonesinfo")
@@ -990,8 +966,8 @@ export class GuardiasInscripcionesComponent implements OnInit {
 
           this.objetoValidacion.push(objVal);
 
-          //mirar si el turno tiene guardias y el colegiado está inscrito se le dará automaticamente de baja a todas las guardias
-          this.turnosGuardias();
+          this.sigaServices.post(
+            "guardiasInscripciones_buscarGuardiasAsocTurnos", this.objetoValidacion).subscribe();
 
           //•	Al realizar la solicitud el sistema iniciara las consultas necesarias para determinar si el letrado tiene trabajos SJCS pendientes asociados a dicho turno. En el caso de que existan, se mostrará un mensaje de confirmación para realizar la baja de que hay trabajos SJCS pendientes y permitirá realizar la baja.
           this.llamadaBackTrabajosSJCS();

@@ -1,7 +1,7 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="card">
     <div class="busqueda-container" class="card-body card-body-ficha">
-        <app-guardias-inscripciones-filtros (filtrosValues)="getFiltrosValues($event)" [permisos]="permisoEscritura"></app-guardias-inscripciones-filtros>
+        <app-guardias-inscripciones-filtros [permisoEscritura] = "permisoEscritura" (filtrosValues)="getFiltrosValues($event)" [permisos]="permisoEscritura"></app-guardias-inscripciones-filtros>
 
         <app-tabla-resultado-mix *ngIf="buscar" [firstColumn]="firstColumn" [lastColumn]="lastColumn" [inscripciones]="true" [totalRegistros] = "totalRegistros" [seleccionarTodo]="seleccionarTodo" [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux" [isLetrado]="isLetrado" [rowGroups]="rowGroups" (anySelected)="notifyAnySelected($event)" (selectedRow)="checkSelectedRow($event)" (resultado)="BotonesInfo($event)" ></app-tabla-resultado-mix>
 
