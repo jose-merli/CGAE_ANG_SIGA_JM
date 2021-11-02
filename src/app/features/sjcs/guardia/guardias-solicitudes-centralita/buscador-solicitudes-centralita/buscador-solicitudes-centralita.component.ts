@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { Router, RoutesRecognized } from '@angular/router';
 import { Message } from 'primeng/components/common/api';
 import { BusquedaColegiadoExpressComponent } from '../../../../../commons/busqueda-colegiado-express/busqueda-colegiado-express.component';
@@ -30,6 +30,7 @@ export class BuscadorSolicitudesCentralitaComponent implements OnInit, AfterView
   isLetrado : boolean;
   idPersona : string;
   disabledBusqColegiado : boolean = false;
+  @Output() searchByColegiado = new EventEmitter<boolean>();
 
   constructor(private commonServices : CommonsService,
     private translateService : TranslateService,
@@ -83,6 +84,10 @@ export class BuscadorSolicitudesCentralitaComponent implements OnInit, AfterView
         numColegiado: this.filtro.numeroColegiado,
       };
       this.buscadorColegiado.isBuscar(usuarioBusquedaExpress);
+      if(sessionStorage.getItem("origin") == "fichaColegial"){
+        sessionStorage.removeItem("origin");
+        this.searchByColegiado.emit(true);
+      }
     }
   }
 

@@ -3,12 +3,12 @@
   <div class="header-title">
     <i class="fa fa-square"></i>
     <p>{{'menu.justiciaGratuita' | translate}}
-      <i class="fa fa-angle-right"></i>{{'menu.justiciaGratuita.maestros' | translate }}
-      <i class="fa fa-angle-right"></i>{{'menu.facturacionSJCS.calendarios.Programacion'|translate}}
+      <i class="fa fa-angle-right"></i>{{'menu.justiciaGratuita.GuardiaMenu' | translate }}
+      <i class="fa fa-angle-right"></i>{{'menu.justiciaGratuita.guardia.calendarios'|translate}}
     </p>
   </div>
   <div>
-    <app-tarjeta-resumen-fija  class="pb-50" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="infoResumen" [enlaces]="enlacesTarjetaResumen" icono="iconoTarjetaResumen" (modoEdicionSend)="modoEdicionSend($event)" (isOpen)="isOpenReceive($event)" [manuallyOpened]="manuallyOpened"></app-tarjeta-resumen-fija>
+    <app-tarjeta-resumen-fija  class="pb-50" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="infoResumen" [enlaces]="enlacesTarjetaResumen" (modoEdicionSend)="modoEdicionSend($event)" (isOpen)="isOpenReceive($event)" [manuallyOpened]="manuallyOpened"></app-tarjeta-resumen-fija>
 
     <app-datos-generales-ficha-programacion (guardarDatosCalendario)="guardarDatosCalendario($event)" (reloadDatos)="reloadDatos($event)" [openFicha]="openGen" (opened)="manuallyOpened = $event" (dataToDuplicate)="getdataToDuplicate($event)" (idOpened)="isCloseReceive($event)" [datosGeneralesIniciales] = "datosGeneralesIniciales" [datosGenerales] = "datosGenerales" [permisoEscritura]="permisoEscrituraDatosGenerales" [modoEdicion]="modoEdicion" (modoEdicionSend)="modoEdicionSend($event)"></app-datos-generales-ficha-programacion>
 

@@ -205,21 +205,24 @@ export class ServiciosInteresFichaColegialComponent implements OnInit, OnChanges
       sessionStorage.setItem("colegiadoRelleno","true");
       sessionStorage.setItem("datosColegiado",JSON.stringify(this.generalBody));
     }
-      this.router.navigate(["/programacionCalendarios"]);
+    sessionStorage.setItem("origin","fichaColegial");
+    this.router.navigate(["/guardiasColegiado"]);
   }
   asistencias(){
     if(!this.isLetrado){
       sessionStorage.setItem("colegiadoRelleno","true");
       sessionStorage.setItem("datosColegiado",JSON.stringify(this.generalBody));
     }
-      this.router.navigate(["/guardiasAsistencias"]);
+    sessionStorage.setItem("origin","fichaColegial");
+    this.router.navigate(["/guardiasAsistencias"], { queryParams: { searchMode: 'a' } });
   }
   preAsistencia(){
     if(!this.isLetrado){
       sessionStorage.setItem("colegiadoRelleno","true");
       sessionStorage.setItem("datosColegiado",JSON.stringify(this.generalBody));
     }
-      this.router.navigate(["/guardiasSolicitudesCentralita"]);
+    sessionStorage.setItem("origin","fichaColegial");
+    this.router.navigate(["/guardiasSolicitudesCentralita"]);
   }
 
 
