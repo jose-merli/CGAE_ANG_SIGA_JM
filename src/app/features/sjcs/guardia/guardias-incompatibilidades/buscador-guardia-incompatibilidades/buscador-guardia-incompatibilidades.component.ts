@@ -175,7 +175,7 @@ buscarInc(){
 //let jsonEntrada  = JSON.parse(JSON.stringify(datosEntrada))
 this.incompatibilidadesDatosEntradaItem = new IncompatibilidadesDatosEntradaItem(
     { 'idTurno': this.filtrosValues.idTurno,
-      'nombreGuardia': this.filtrosValues.nombre,
+      'idGuardia': this.filtrosValues.idGuardia,
       'idArea': this.filtrosValues.area,
       'idMateria': this.filtrosValues.materia,
       'idZona': this.filtrosValues.zona,
@@ -591,7 +591,7 @@ guardarInc(nombreTurno, nombreGuardia, nombreTurnoIncompatible, nombreGuardiaInc
   }
 
   convertArraysToStrings() {
-    const array = ['idTurno', 'jurisdiccion', 'grupoFacturacion', 'partidaPresupuestaria', 'tipoTurno', 'idTipoGuardia'];
+    const array = ['idTurno', 'idGuardia', 'jurisdiccion', 'grupoFacturacion', 'partidaPresupuestaria', 'tipoTurno', 'idTipoGuardia'];
     if ( this.filtrosValues != undefined){
         array.forEach(element => {
           if (this.filtrosValues[element] != undefined && this.filtrosValues[element] != null && this.filtrosValues[element].length > 0) {
