@@ -198,10 +198,12 @@
         <p-footer>
           <div class="text-right main-button">
             <!-- Nuevo -->
+            <!-- Revisar condicion de no facturado -->
             <button pButton (click)="nuevoAnticipo()" type="button" icon="fa fa-plus" iconPos="left"
               label="{{ 'general.boton.new' | translate}}"
               [disabled]="ficha.fechaAceptada != null || ficha.fechaDenegada != null || ficha.facturas > 0 || (ficha.productos != null && descuentosTarjeta.length > 0)"></button>
             <!-- Borrar -->
+            <!-- Revisar condicion de no facturado -->
             <button pButton (click)="borrarAnticipo()" type="button" icon="fa fa-eraser" iconPos="left"
               label="{{ 'general.boton.borrar' | translate}}"
               [disabled]="(ficha.fechaAceptada != null || ficha.fechaDenegada != null) || selectedRows.length == 0 || ficha.facturas > 0 || disableBorrar"></button>

@@ -117,6 +117,7 @@ export class TarjetaDescuentosAnticiposCompraSuscripcionComponent implements OnI
       });
   }
 
+  //REVISAR AÑADIR COMPROBACION DEL ESTADO DE LA COMPRA Y SU FACTURACION
   checkNuevoAnticipo(){
     let msg = this.commonsService.checkPermisos(this.permisoNuevoAnticipo, undefined);
 
@@ -174,6 +175,8 @@ export class TarjetaDescuentosAnticiposCompraSuscripcionComponent implements OnI
     this.ficha.impPagado = pagado;
   }
 
+  
+  //REVISAR QUE SOLO SE HAN SELECCIONADO ANTICIPOS Y QUE NO SE HAYA FACTURADO
   checkBorrarAnticipo(){
     let msg = this.commonsService.checkPermisos(this.permisoBorrarAnticipo, undefined);
 
