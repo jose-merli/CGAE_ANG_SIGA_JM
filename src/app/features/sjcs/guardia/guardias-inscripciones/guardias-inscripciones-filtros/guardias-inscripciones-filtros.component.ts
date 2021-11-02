@@ -7,6 +7,7 @@ import { InscripcionesItems } from '../../../../../models/guardia/InscripcionesI
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { CommonsService } from '../../../../../../app/_services/commons.service';
 import { ColegiadoItem } from '../../../../../models/ColegiadoItem';
+import { SigaStorageService } from '../../../../../siga-storage.service';
 
 @Component({
   selector: 'app-guardias-inscripciones-filtros',
@@ -51,7 +52,8 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
     private sigaServices: SigaServices,
     private translateService: TranslateService,
     private commonsService: CommonsService,
-    private persistenceService: PersistenceService) { }
+    private persistenceService: PersistenceService,
+    private sigaStorageService : SigaStorageService) { }
   
   ngAfterViewInit(): void {
     if(sessionStorage.getItem("filtroFromFichaGuardia")){
@@ -72,9 +74,7 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
 
     this.getComboTurno();
 
-    if (sessionStorage.getItem("isLetrado") != null && sessionStorage.getItem("isLetrado") != undefined) {
-      this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
-    }
+    this.isLetrado = this.sigaStorageService.isLetrado && this.sigaStorageService.idPersona;
 
     if (this.persistenceService.getHistorico() != undefined) {
       this.filtros.historico = this.persistenceService.getHistorico();
