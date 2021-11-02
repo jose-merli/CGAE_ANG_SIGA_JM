@@ -39,6 +39,9 @@ export class FichaCompraSuscripcionItem {
     //TARJETA DESCUENTOS Y ANTICIPOS
 
 
+    //TARJETA SERVICIOS
+    //servicios: ListaProductosCompraItem[];
+
     idEstadoPeticion: string;
     
     constructor() {}
