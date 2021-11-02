@@ -95,13 +95,13 @@
 
       <div *ngIf="inscripciones" class="col-lg-7 col-md-7 col-sm-7 flex2 align">
         <div class="w-50 mr-5">
-          <label> Fecha </label>
+          <label class="d-flex align-self-left"> {{ 'dato.jgr.guardia.saltcomp.fecha' | translate }}</label>
           <app-fecha [disabled]="isDisabled" [(ngModel)]='fechaActual' 
             (valueChangeInput)="changeFecha($event)" (valueChangeSelected)="changeFecha($event)"
             name="fechaActual" ngDefaultControl></app-fecha>
         </div>
         <div class=" w-50">
-          <label> Observaciones </label>
+          <label class="d-flex align-self-left"> {{ 'gratuita.mantenimientoLG.literal.observaciones' | translate }} </label>
           <textarea class="textareains" [(ngModel)]='observaciones'
             [disabled]="isDisabled" class="form-control" pInputTextarea autoResize="autoResize"
             maxLength="1024" name="observaciones" ngDefaultControl></textarea>
