@@ -210,7 +210,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
     //Se comprueba que todos los productos seleccionados tienen la propiedad ‘Solicitar baja por internet’ si el que lo solicita es un colegiado
     //REVISAR: Cambiar mensaje
     else if(this.esColegiado && this.ficha.productos != null && (this.ficha.productos.find(el => el.solicitarBaja == "0") != undefined)){
-      this.showMessage("info", "**Propiedad 'Solicitar baja por internet' no activada en algún producto de la compra", "** El colegiado actual no puede solicitar la anulación de la petición porque uno o más productos seleccionados no tienen la propiedad 'Solicitar baja por internet'");
+      this.showMessage("info", this.translateService.instant("facturacion.productos.solicitarBajaProd"), this.translateService.instant("facturacion.productos.solicitarBajaProdDesc"));
 		}
     //Se comprueba que todos los servicios de la peticion tienen la propiedad ‘Solicitar baja por internet’ si el que lo solicita es un colegiado
     //REVISAR : Cambiar productos por servicios y cambiar mensaje
@@ -231,13 +231,14 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
 
     //REVISAR MENSAJE
     let mess = this.translateService.instant(
-      "general.boton.anular"
+      "facturacion.productos.anulConf"
     );
 
-    //REVISAR LOGICA FACTURAS y sustituir mensaje
+    //REVISAR LOGICA FACTURAS
     if(this.ficha.facturas.length >0) {
-      mess = "**Existe factura asociada (no anulada) y habrá que anularla también. ¿Quiere continuar?";
+      mess = this.translateService.instant("facturacion.productos.factNoAnuladaPet");
     }
+
     let icon = "fa fa-edit";
     this.confirmationService.confirm({
       key: 'anulPeticion',
@@ -250,7 +251,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
         this.msgs = [
           {
             severity: "info",
-            summary: "Cancelar",
+            summary: this.translateService.instant("general.boton.cancel"),
             detail: this.translateService.instant(
               "general.message.accion.cancelada"
             )
