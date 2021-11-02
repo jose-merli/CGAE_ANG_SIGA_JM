@@ -80,8 +80,8 @@ export class SustitucionesGestionGuardiaColegiadoComponent implements OnInit {
             this.progressSpinner = false;
             let error  = JSON.parse(n.body).error
 
-            if(error.code == 'OK'){
-              this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant(error.description));
+            if(error.code == 200){
+              this.showMessage("success", this.translateService.instant("general.message.correct"), "Sustitucion del letrado realizada");
               this.modoLectura = true;
             }else{
               this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.description));

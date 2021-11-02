@@ -57,39 +57,11 @@ export class CalendarioGestionGuardiaColegiadoComponent implements OnInit {
       }
     );
   }
-
-  getIdconjuntoGuardia(){
-   
-     this.progressSpinner = true
-     this.sigaServices.post("guardiasColegiado_idConjuntoGuardia", this.calendarioBody.idGuardia).subscribe(
-       n => {
-         this.idConjuntoGuardia = JSON.parse(n.body);
-         
-         this.calendarioItemSend = 
-    { 'idTurno': this.calendarioBody.idTurno,
-      'idConjuntoGuardia': this.idConjuntoGuardia,
-     'idGuardia': this.calendarioBody.idGuardia,
-      'fechaCalendarioDesde': this.calendarioItem.fechaDesde,
-      'fechaCalendarioHasta': this.calendarioItem.fechaHasta,
-    };
-         this.progressSpinner = false
-       },
-       err => {
-         console.log(err);
-         this.progressSpinner = false
-         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-       }, () => {
-         
-       }
-     );
-   }
-
+ 
   
 
   navigateToFichaGuardia(){
-    this.getIdconjuntoGuardia()
-    sessionStorage.setItem("datosCalendarioGuardiaColeg",JSON.stringify(this.calendarioItemSend));
-    sessionStorage.setItem("originGuarCole","true");
+    
     this.router.navigate(['/fichaProgramacion']);
   }
 
