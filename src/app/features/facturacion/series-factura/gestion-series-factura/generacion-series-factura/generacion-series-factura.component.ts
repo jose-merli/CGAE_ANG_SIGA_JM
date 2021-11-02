@@ -18,7 +18,6 @@ export class GeneracionSeriesFacturaComponent implements OnInit {
   body: SerieFacturacionItem;
 
   comboModeloFactura: any[] = [];
-  comboModeloComunicacion: any[] = [];
 
   @Input() openTarjetaGeneracion;
   @Output() guardadoSend = new EventEmitter<any>();
@@ -32,12 +31,26 @@ export class GeneracionSeriesFacturaComponent implements OnInit {
   ngOnInit() {
     this.progressSpinner = true;
 
+    // this.getComboModelosComunicacion();
     if (this.persistenceService.getDatos()) {
       this.body = this.persistenceService.getDatos();
 
     }
 
     this.progressSpinner = false;
+  }
+
+  getComboModelosComunicacion() {
+    this.sigaServices.get("facturacionPyS_comboModelosComunicacion").subscribe(
+      n => {
+        this.comboModeloFactura = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboModeloFactura);
+        console.log(n);
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 
   // Restablecer

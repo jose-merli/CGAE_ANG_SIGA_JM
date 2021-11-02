@@ -78,7 +78,7 @@ export class SeriesFacturaComponent implements OnInit {
         
         this.progressSpinner = false;
         if (error != null && error.description != null) {
-          this.showMessageError("info", this.translateService.instant("general.message.informacion"), error.description);
+          this.showMessageError("info", this.translateService.instant("general.message.informacion"), this.translateService.instant(error.description));
         }
       },
       err => {

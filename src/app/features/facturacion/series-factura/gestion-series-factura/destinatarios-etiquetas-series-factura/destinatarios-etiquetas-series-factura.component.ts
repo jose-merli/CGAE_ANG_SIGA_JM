@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Message } from 'primeng/components/common/message';
+import { TranslateService } from '../../../../../commons/translate';
 import { SerieFacturacionItem } from '../../../../../models/SerieFacturacionItem';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
@@ -29,7 +30,8 @@ export class DestinatariosEtiquetasSeriesFacturaComponent implements OnInit {
   constructor(
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private commonsService: CommonsService
+    private commonsService: CommonsService,
+    private translateService: TranslateService
   ) { }
 
   ngOnInit() {
@@ -85,6 +87,29 @@ export class DestinatariosEtiquetasSeriesFacturaComponent implements OnInit {
   restablecer(): void {
     this.etiquetasSeleccionadas = JSON.parse(JSON.stringify(this.etiquetasSeleccionadasInicial));
     this.etiquetasNoSeleccionadas = JSON.parse(JSON.stringify(this.etiquetasNoSeleccionadasInicial));
+  }
+
+  // Guardar
+
+  guardar(): void {
+    this.progressSpinner = true;
+
+    let objEtiquetas = {
+      idSerieFacturacion: this.body.idSerieFacturacion,
+      combooItems: this.etiquetasSeleccionadas
+    };
+
+    this.sigaServices.post("facturacionPyS_guardarEtiquetasSerieFacturacion", objEtiquetas).subscribe(
+      n => {
+        // this.showSuccess(this.translateService.instant("informesYcomunicaciones.enviosMasivos.destinatarioIndv.mensaje.guardar.etiquetas.ok"));
+        this.etiquetasSeleccionadasInicial = JSON.parse(JSON.stringify(this.etiquetasSeleccionadas));
+        this.etiquetasNoSeleccionadasInicial = JSON.parse(JSON.stringify(this.etiquetasNoSeleccionadas));
+        this.progressSpinner = false;
+      },
+      error => {
+        console.log(error);
+        this.progressSpinner = false;
+      });
   }
 
   clear() {

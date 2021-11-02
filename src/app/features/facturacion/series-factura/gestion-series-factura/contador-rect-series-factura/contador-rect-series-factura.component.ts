@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Message } from 'primeng/primeng';
 import { ContadorItem } from '../../../../../models/ContadorItem';
+import { ContadorSeriesItem } from '../../../../../models/ContadorSeriesItem';
 import { SerieFacturacionItem } from '../../../../../models/SerieFacturacionItem';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
@@ -20,9 +21,9 @@ export class ContadorRectSeriesFacturaComponent implements OnInit {
   bodyInicial: SerieFacturacionItem;
 
   comboContadorFacturasRectificativas: any[] = [];
-  contadorFacturasRectificativasSeleccionado;
+  contadorFacturasRectificativasSeleccionado: ContadorSeriesItem = new ContadorSeriesItem();
 
-  datosContador: ContadorItem = new ContadorItem();
+  contadoresRectificativasSerie: ContadorSeriesItem[] = [];
 
   @Input() openTarjetaContadorFacturasRectificativas;
   @Output() guardadoSend = new EventEmitter<any>();
@@ -37,6 +38,7 @@ export class ContadorRectSeriesFacturaComponent implements OnInit {
     this.progressSpinner = true;
 
     this.getComboContadorFacturasRectificativas();
+    this.getContadoresRectificativasSerie();
     if (this.persistenceService.getDatos()) {
       this.body = this.persistenceService.getDatos();
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
@@ -58,6 +60,35 @@ export class ContadorRectSeriesFacturaComponent implements OnInit {
         console.log(err);
       }
     );
+  }
+  
+  // Datos de contadores
+
+  getContadoresRectificativasSerie() {
+    this.sigaServices.get("facturacionPyS_getContadoresRectificativasSerie").subscribe(
+      n => {
+        this.contadoresRectificativasSerie = n.contadorSeriesItems;
+        console.log(this.contadoresRectificativasSerie);
+        this.actualizarInputs();
+
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  // Actualizar información
+
+  actualizarInputs() {
+    if (this.body.idContadorFacturasRectificativas) {
+      this.contadorFacturasRectificativasSeleccionado = this.contadoresRectificativasSerie.find(c => c.idContador == this.body.idContadorFacturasRectificativas);
+      if (!this.contadorFacturasRectificativasSeleccionado) {
+        this.contadorFacturasRectificativasSeleccionado = new ContadorSeriesItem();
+      }
+    } else {
+      this.contadorFacturasRectificativasSeleccionado = new ContadorSeriesItem();
+    }
   }
 
   // Restablecer

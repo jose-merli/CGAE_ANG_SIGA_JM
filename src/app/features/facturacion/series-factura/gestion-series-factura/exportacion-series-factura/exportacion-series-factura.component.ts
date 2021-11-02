@@ -32,6 +32,7 @@ export class ExportacionSeriesFacturaComponent implements OnInit {
   ngOnInit() {
     this.progressSpinner = true;
 
+    this.getCombos();
     if (this.persistenceService.getDatos()) {
       this.body = this.persistenceService.getDatos();
 
@@ -40,10 +41,25 @@ export class ExportacionSeriesFacturaComponent implements OnInit {
     this.progressSpinner = false;
   }
 
+  // Get combos
+
+  getCombos(): void {
+    this.comboConfDeudor = [
+      {value: 'F', label: 'Fijo'},
+      {value: 'C', label: 'Incorporar Subcuenta Cliente'}
+    ];
+
+    this.comboConfIngresos = [
+      {value: 'F', label: 'Fijo'},
+      {value: 'C', label: 'Incorporar Subcuenta Cliente'},
+      {value: 'P', label: 'Incorporar Subcuenta Productos/Servicios'},
+    ];
+  }
+
   // Restablecer
 
   restablecer(): void {
-
+    
   }
 
   clear() {

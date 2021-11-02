@@ -15,7 +15,14 @@
             <label class="mr-auto title-ficha pointer">Contador de Facturas Rectificativas</label>
           </div>
           <div class="d-flex justify-content-between default">
-            
+            <label>Nombre: 
+              <span>{{ contadorFacturasRectificativasSeleccionado.nombre }}</span></label>
+            <label>Prefijo: 
+              <span>{{ contadorFacturasRectificativasSeleccionado.prefijo }}</span></label>
+            <label>Contador: 
+              <span>{{ contadorFacturasRectificativasSeleccionado.contador }}</span></label>
+            <label>Sufijo: 
+              <span>{{ contadorFacturasRectificativasSeleccionado.sufijo }}</span></label>
             
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('contadorFacturasRectificativas')"
               *ngIf="!esFichaActiva('contadorFacturasRectificativas')"></i>
@@ -39,26 +46,26 @@
       <div class="form-row">
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>Selección de contador</label>
-          <p-dropdown class="select-form" [(ngModel)]='contadorFacturasRectificativasSeleccionado' placeholder="{{'general.boton.seleccionar' | translate}}"
+          <p-dropdown class="select-form" [(ngModel)]='body.idContadorFacturasRectificativas' placeholder="{{'general.boton.seleccionar' | translate}}"
               [options]="comboContadorFacturasRectificativas" [filter]="true" filterBy="label,labelSinTilde"
-              [showClear]="true"></p-dropdown>
+              [showClear]="true" (onChange)="actualizarInputs()"></p-dropdown>
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>Prefijo</label>
-          <input type="text" class="form-control" pInputText [(ngModel)]="datosContador.prefijo" disabled />
+          <input type="text" class="form-control" pInputText [(ngModel)]="contadorFacturasRectificativasSeleccionado.prefijo" disabled />
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>Contador</label>
-          <input type="text" class="form-control" pInputText [(ngModel)]="datosContador.contador" disabled />
+          <input type="text" class="form-control" pInputText [(ngModel)]="contadorFacturasRectificativasSeleccionado.contador" disabled />
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>Sufijo</label>
-          <input type="text" class="form-control" pInputText [(ngModel)]="datosContador.sufijo" disabled />
+          <input type="text" class="form-control" pInputText [(ngModel)]="contadorFacturasRectificativasSeleccionado.sufijo" disabled />
         </div>
       </div>
     </div>
 
-    <div class="card-footer">
+    <div *ngIf="esFichaActiva('contadorFacturasRectificativas')" class="card-footer">
       <div class="text-right main-button">
         <button pButton type="button" icon="fa fa-plus" iconPos="left"
           (click)="nuevo()" label="{{ 'general.boton.new' | translate}}"></button>

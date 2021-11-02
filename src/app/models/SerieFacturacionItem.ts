@@ -16,9 +16,22 @@ export class SerieFacturacionItem {
 
 	idFormaPago: string;
 	formaPago: string;
+
 	generarPDF: boolean;
+	idModeloFactura: string;
+	// idModeloComunicacion: string;
+
 	envioFacturas: boolean;
+	// idPlatillaMail: string;
+
 	traspasoFacturas: boolean;
+	traspasoPlatilla:string;
+	traspasoCodAuditoriaDef: string;
+
+	confDeudor: string;
+	ctaClientes: string;
+	confIngresos: string;
+	ctaIngresos: string;
 
 	idTiposProductos: string[];
 	tiposProductos: ComboItem[];

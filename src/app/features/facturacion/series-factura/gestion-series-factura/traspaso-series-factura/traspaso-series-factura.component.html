@@ -15,7 +15,12 @@
             <label class="mr-auto title-ficha pointer">Traspaso de Facturas Automático a Servicio Externo</label>
           </div>
           <div class="d-flex justify-content-between default">
-            
+            <label>Traspasar facturas autom.: 
+              <span>{{ body.traspasoFacturas }}</span></label>
+            <label>Plantilla SII: 
+              <span>{{ body.traspasoPlantilla }}</span></label>
+            <label>Plantilla auditoría SII: 
+              <span>{{ body.traspasoCodAuditoriaDef }}</span></label>
             
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('traspasoFacturas')"
               *ngIf="!esFichaActiva('traspasoFacturas')"></i>
@@ -47,12 +52,12 @@
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>Plantilla auditoría SII</label>
-          <input type="text" class="form-control" pInputText [(ngModel)]="body.traspasoCodauditoriaDef" />
+          <input type="text" class="form-control" pInputText [(ngModel)]="body.traspasoCodAuditoriaDef" />
         </div>
       </div>
     </div>
 
-    <div class="card-footer">
+    <div *ngIf="esFichaActiva('traspasoFacturas')" class="card-footer">
       <div class="text-right main-button">
         <button pButton type="button" icon="fa fa-undo" iconPos="left"
           (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>

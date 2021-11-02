@@ -18,7 +18,6 @@ export class EnvioSeriesFacturaComponent implements OnInit {
   body: SerieFacturacionItem;
 
   comboPlantillasEnvio: any[] = [];
-  platillaEnvioSeleccionada;
 
   @Input() openTarjetaEnvioFacturas;
   @Output() guardadoSend = new EventEmitter<any>();

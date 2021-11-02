@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Message } from 'primeng/primeng';
 import { ContadorItem } from '../../../../../models/ContadorItem';
+import { ContadorSeriesItem } from '../../../../../models/ContadorSeriesItem';
 import { SerieFacturacionItem } from '../../../../../models/SerieFacturacionItem';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
@@ -20,9 +21,9 @@ export class ContadorSeriesFacturaComponent implements OnInit {
   bodyInicial: SerieFacturacionItem;
 
   comboContadorFacturas: any[] = [];
-  contadorFacturasSeleccionado;
+  contadorFacturasSeleccionado: ContadorSeriesItem = new ContadorSeriesItem();
 
-  datosContador: ContadorItem = new ContadorItem();
+  contadoresSerie: ContadorSeriesItem[] = [];
 
   @Input() openTarjetaContadorFacturas;
   @Output() guardadoSend = new EventEmitter<any>();
@@ -37,6 +38,7 @@ export class ContadorSeriesFacturaComponent implements OnInit {
     this.progressSpinner = true;
 
     this.getComboContadorFacturas();
+    this.getContadoresSerie();
     if (this.persistenceService.getDatos()) {
       this.body = this.persistenceService.getDatos();
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
@@ -58,6 +60,34 @@ export class ContadorSeriesFacturaComponent implements OnInit {
         console.log(err);
       }
     );
+  }
+
+  // Datos de contadores
+
+  getContadoresSerie() {
+    this.sigaServices.get("facturacionPyS_getContadoresSerie").subscribe(
+      n => {
+        this.contadoresSerie = n.contadorSeriesItems;
+        console.log(this.contadoresSerie);
+        this.actualizarInputs();
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  // Actualizar información
+
+  actualizarInputs() {
+    if (this.body.idContadorFacturas) {
+      this.contadorFacturasSeleccionado = this.contadoresSerie.find(c => c.idContador == this.body.idContadorFacturas);
+      if (!this.contadorFacturasSeleccionado) {
+        this.contadorFacturasSeleccionado = new ContadorSeriesItem();
+      }
+    } else {
+      this.contadorFacturasSeleccionado = new ContadorSeriesItem();
+    }
   }
 
   // Restablecer

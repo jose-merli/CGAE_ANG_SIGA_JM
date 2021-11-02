@@ -57,9 +57,10 @@
             <p-dropdown class="select-form" [(ngModel)]='body.idSerieFacturacionPrevia' placeholder="Seleccionar"
               [options]="comboPlanificacion" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
           </div>
-          <div class="form-group mb-3 d-flex justify-content-between">
-              <label class="checkbox-label" for="serieGenerica">{{ 'facturacion.seriesFactura.serieGenricaFacturar' | translate }}</label>
-              <p-checkbox class="checkbox-inline" id="serieGenerica" [(ngModel)]="body.serieGenerica" binary="true"></p-checkbox>
+          <div class="form-check d-flex justify-content-between">
+            <label class="form-group-label">{{ 'facturacion.seriesFactura.serieGenricaFacturar' | translate }}</label>
+            &nbsp;&nbsp;
+            <p-checkbox class="float-right" [(ngModel)]="body.serieGenerica" binary="true"></p-checkbox>
           </div>
           <div class="form-group">
             <label>{{ 'menu.justiciaGratuita.calendarios.Estado' | translate }}</label>
@@ -120,15 +121,15 @@
               [ngClass]="styleObligatorio(body.idCuentaBancaria)" [showClear]="true"></p-dropdown>
           </div>
           <div class="form-group">
-            <label>{{ 'administracion.parametrosGenerales.literal.sufijo' | translate }}</label>
+            <label>{{ 'administracion.parametrosGenerales.literal.sufijo' | translate }} (*)</label>
             <p-dropdown class="select-form" [(ngModel)]='body.idSufijo' placeholder="Seleccionar"
-              [options]="comboSufijo" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+              [options]="comboSufijo" [ngClass]="styleObligatorio(body.idSufijo)" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="card-footer">
+    <div *ngIf="esFichaActiva('datosGenerales')" class="card-footer">
       <div class="text-right main-button">
         <button pButton *ngIf="esActivo()" (click)="confirmEliminar()" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.eliminar' | translate }}"></button>
         <button pButton *ngIf="!esActivo()" (click)="confirmReactivar()" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.reactivar' | translate }}"></button>
