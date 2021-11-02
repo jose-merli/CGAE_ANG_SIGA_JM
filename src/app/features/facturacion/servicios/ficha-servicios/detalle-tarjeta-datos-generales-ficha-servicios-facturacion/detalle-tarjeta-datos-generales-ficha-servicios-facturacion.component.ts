@@ -356,6 +356,11 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
     this.showModalSuscripcionesBajas = false;
   }
 
+  nuevacondicion(){
+    sessionStorage.setItem("servicioDetalle", JSON.stringify(this.servicio));
+    this.router.navigate(["/fichaConsulta"]);
+  }
+
   //Borra el mensaje de notificacion p-growl mostrado en la esquina superior derecha cuando pasas el puntero del raton sobre el
   clear() {
     this.msgs = [];
@@ -439,6 +444,11 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
         this.progressSpinner = false;
       },
       () => {
+        if(sessionStorage.getItem("vieneDeNuevaCondicion") == "true"){
+          let maxId;
+          maxId = Math.max.apply(Math, this.condicionesSuscripcionObject.combooItems.map(function(o) { return o.value; }))
+          this.servicio.idconsulta = maxId;
+        }
         this.progressSpinner = false;
       }
     );

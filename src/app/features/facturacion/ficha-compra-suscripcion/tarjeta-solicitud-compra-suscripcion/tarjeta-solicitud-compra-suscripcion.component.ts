@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
-import { Message } from 'primeng/components/common/api';
+import { ConfirmationService, Message } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../commons/translate';
 import { FichaCompraSuscripcionItem } from '../../../../models/FichaCompraSuscripcionItem';
 import { FilaHistoricoPeticionItem } from '../../../../models/FilaHistoricoPeticionItem';
@@ -9,7 +9,6 @@ import { SigaStorageService } from '../../../../siga-storage.service';
 import { CommonsService } from '../../../../_services/commons.service';
 import { SigaServices } from '../../../../_services/siga.service';
 import { Location } from '@angular/common';
-import { ListaProductosCompraItem } from '../../../../models/ListaProductosCompraItem';
 import { TarjetaProductosCompraSuscripcionComponent } from '../tarjeta-productos-compra-suscripcion/tarjeta-productos-compra-suscripcion.component';
 
 @Component({
@@ -33,9 +32,10 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
 
   filas: FilaHistoricoPeticionItem[] = [];
 
-  permisoSolicitarCompra;
-  permisoAprobarCompra;
-  permisoDenegar;
+  permisoSolicitarCompra: boolean = false;
+  permisoAprobarCompra: boolean = false;
+  permisoDenegar: boolean = false;
+  permisoAnularPeticion: boolean = false;
 
   progressSpinner : boolean = false;
   showTarjeta: boolean = false;
@@ -44,7 +44,8 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
   constructor(
     private sigaServices: SigaServices, private translateService: TranslateService, 
     private commonsService: CommonsService, private router: Router,
-    private localStorageService: SigaStorageService,private location: Location, ) { }
+    private localStorageService: SigaStorageService, private location: Location, 
+    private confirmationService: ConfirmationService,) { }
 
   ngOnInit() {
     this.processHist();
@@ -93,17 +94,23 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
     this.getPermisoSolicitarCompra();
     this.getPermisoAprobarCompra();
     this.getPermisoDenegar();
+    this.getPermisoAnularPeticion();
   }
 
   checkProductos(){
     let prods = this.tarjProductos.productosTarjeta;
-    if(prods.length == 0) return true;
+    let campoVacio = false;
     prods.forEach( el => {
-      if(el.cantidad != null || el.cantidad.trim() == "" ||
-      el.descripcion != null || el.descripcion.trim() == "" ||
-      el.precioUnitario != null || el.precioUnitario.trim() == "" ||
-      el.iva != null || el.iva.trim() != "") return true;
-    })
+      if(el.cantidad == null || el.cantidad.trim() == '' ||
+      el.descripcion == null || el.descripcion.trim() == '' ||
+      el.precioUnitario == null || el.precioUnitario.trim() == '' ||
+      el.iva == null || el.iva.trim() == '') {
+        campoVacio = true;
+      }
+    });
+    if(prods.length == 0 || campoVacio) {
+      return true;
+    }
     return false;
   }
 
@@ -129,6 +136,10 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
       //Etiqueta
       this.showMessage("error",this.translateService.instant('general.message.camposObligatorios'),this.translateService.instant("facturacion.productos.seleccPago"));
     }
+    //Si ha seleccionado forma de pago "domicialiacion bancaria" pero no ha elegido cuenta.
+    else if(this.tarjProductos.selectedPago == "80" && this.tarjProductos.datosTarjeta.cuentaBancSelecc == null){
+      this.showMessage("error", this.translateService.instant('menu.facturacion.productos'), this.translateService.instant('general.message.camposObligatorios'));
+    }
     else {
 			this.solicitarCompra();
 		}
@@ -139,22 +150,23 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
     //En el caso que se trate de la aprobacion de una compra
     if(this.ficha.productos != null) {
       msg = this.commonsService.checkPermisos(this.permisoAprobarCompra, undefined);
-      // else msg = this.commonsService.checkPermisos(this.permisoAprobarSuscripcion, undefined);
 
       if (msg != null) {
         this.msgs = msg;
       }  else if(this.ficha.idPersona == null){
-        //Etiqueta
         this.showMessage("error",this.translateService.instant("general.message.camposObligatorios"),this.translateService.instant("facturacion.productos.seleccCliente"));
       }
       //Solicitud nueva
       else if(this.ficha.fechaPendiente == null){
         if(this.tarjProductos.selectedPago == null){
-          //Etiqueta
           this.showMessage("error",this.translateService.instant("general.message.camposObligatorios"),this.translateService.instant("facturacion.productos.seleccPago"));
         }
-        if(this.checkProductos()){
-          if(this.ficha.productos.length == 0){
+        //Si ha seleccionado forma de pago "domicialiacion bancaria" pero no ha elegido cuenta.
+        else if(this.tarjProductos.selectedPago == "80" && this.tarjProductos.datosTarjeta.cuentaBancSelecc == null){
+          this.showMessage("error", this.translateService.instant('menu.facturacion.productos'), this.translateService.instant('general.message.camposObligatorios'));
+        }
+        else if(this.checkProductos()){
+          if(this.tarjProductos.productosTarjeta.length == 0){
             this.showMessage("error",
             this.translateService.instant("facturacion.productos.noBorrarProductos"),
             this.translateService.instant("facturacion.productos.prodNecesario")
@@ -165,7 +177,6 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
           }
         }else {
           this.aprobarCompra();
-          // else this.aprobarSuscripcion();
         }
       }
       else{
@@ -175,14 +186,79 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
   }
 
   checkDenegar(){
-    let msg = null;
-    if(this.ficha.productos!= null) msg = this.commonsService.checkPermisos(this.permisoDenegar, undefined);
+    let msg = this.commonsService.checkPermisos(this.permisoDenegar, undefined);
 
     if (msg != null) {
       this.msgs = msg;
     }  else {
       this.denegar();
 		}
+  }
+
+  // REVISAR: Añadir comprobación de facturación
+  checkAnular(){
+    let msg = null;
+    if(this.ficha.productos!= null) msg = this.commonsService.checkPermisos(this.permisoAnularPeticion, undefined);
+
+    if (msg != null) {
+      this.msgs = msg;
+    }  
+    //Se comprueba que el estado de la peticion permite anularla. Debe ser la misma condición que la de deshabilitacion del botón
+    else if((this.ficha.fechaAceptada == null && this.ficha.fechaSolicitadaAnulacion == null) || this.ficha.fechaAnulada != null || (this.ficha.fechaSolicitadaAnulacion != null && this.esColegiado)){
+      this.showMessage("info", this.translateService.instant("facturacion.productos.solicitudesNoAlteradas"), this.translateService.instant("facturacion.productos.solicitudesNoAlteradasDesc") + this.ficha.nSolicitud);
+		} 
+    //Se comprueba que todos los productos seleccionados tienen la propiedad ‘Solicitar baja por internet’ si el que lo solicita es un colegiado
+    //REVISAR: Cambiar mensaje
+    else if(this.esColegiado && this.ficha.productos != null && (this.ficha.productos.find(el => el.solicitarBaja == "0") != undefined)){
+      this.showMessage("info", this.translateService.instant("facturacion.productos.solicitarBajaProd"), this.translateService.instant("facturacion.productos.solicitarBajaProdDesc"));
+		}
+    //Se comprueba que todos los servicios de la peticion tienen la propiedad ‘Solicitar baja por internet’ si el que lo solicita es un colegiado
+    //REVISAR : Cambiar productos por servicios y cambiar mensaje
+    else if(this.esColegiado && this.ficha.productos == null && (this.ficha.productos.find(el => el.solicitarBaja == "0") != undefined)){
+      this.showMessage("info", this.translateService.instant("facturacion.productos.solicitudesNoAlteradas"), this.translateService.instant("facturacion.productos.solicitudesNoAlteradasDesc") + this.ficha.nSolicitud);
+		}
+    //Se comprueba si hay alguna factura asociada cuando el personal del colegio va a anular una petición
+    //REVISAR: Revisar concepto de factura anulada y no anulada y su anulación.
+    else if(!this.esColegiado && this.ficha.facturas.length > 0){
+      this.showMessage("info", this.translateService.instant("facturacion.productos.solicitudesNoAlteradas"), this.translateService.instant("facturacion.productos.solicitudesNoAlteradasDesc") + this.ficha.nSolicitud);
+		}
+    else{
+      this.confirmAnular();
+    }
+  }
+
+  confirmAnular() {
+
+    //REVISAR MENSAJE
+    let mess = this.translateService.instant(
+      "facturacion.productos.anulConf"
+    );
+
+    //REVISAR LOGICA FACTURAS
+    if(this.ficha.facturas.length >0) {
+      mess = this.translateService.instant("facturacion.productos.factNoAnuladaPet");
+    }
+
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      key: 'anulPeticion',
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.anularPeticion();
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: this.translateService.instant("general.boton.cancel"),
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
   }
 
   solicitarCompra(){
@@ -208,16 +284,20 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
 
   aprobarCompra(){
     this.progressSpinner = true; 
-    this.ficha.productos = this.tarjProductos.productosTarjeta;
-    this.ficha.idFormaPagoSeleccionada = this.tarjProductos.selectedPago;
-		this.sigaServices.post('PyS_aprobarCompra', this.ficha).subscribe(
+    let peticion = JSON.parse(JSON.stringify(this.ficha));
+    if(this.ficha.fechaPendiente == null){
+      peticion.productos = this.tarjProductos.productosTarjeta;
+      peticion.idFormaPagoSeleccionada = this.tarjProductos.selectedPago;
+      peticion.cuentaBancSelecc = this.tarjProductos.datosTarjeta.cuentaBancSelecc;
+    }
+		this.sigaServices.post('PyS_aprobarCompra', peticion).subscribe(
 			(n) => {
 				if( n.status != 200) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         } else {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          
-          //Se actualiza la información de la ficha
+
+          //Se actualiza la información de la ficha y se obtiene su historico actualizado
           this.actualizaFicha.emit();
         }
 				this.progressSpinner = false;
@@ -252,6 +332,26 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
       );
     }
     else this.location.back();
+  }
+
+  anularPeticion(){
+    this.sigaServices.post('PyS_anularPeticion', this.ficha.nSolicitud).subscribe(
+      (n) => {
+        if( n.status != 200) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        } else {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          
+          //Se actualiza la información de la ficha
+          this.actualizaFicha.emit();
+        }
+        this.progressSpinner = false;
+      },
+      (err) => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        this.progressSpinner = false;
+      }
+    );
   }
 
   onHideTarjeta(){
@@ -291,6 +391,16 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
 			.checkAcceso(procesos_PyS.fichaCompraSuscripcion)
 			.then((respuesta) => {
 				this.permisoDenegar = respuesta;
+			})
+			.catch((error) => console.error(error));
+  }
+
+  getPermisoAnularPeticion(){
+    //En la documentación no parece distinguir que se requiera una permiso especifico para esta acción
+    this.commonsService
+			.checkAcceso(procesos_PyS.fichaCompraSuscripcion)
+			.then((respuesta) => {
+				this.permisoAnularPeticion = respuesta;
 			})
 			.catch((error) => console.error(error));
   }

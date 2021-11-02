@@ -11,6 +11,7 @@ export class FichaConsultaComponent implements OnInit {
 	idModelo: string;
 	fichasPosibles: any[];
 	filtrosConsulta;
+	constructorConsultaExperta: string;
 
 	constructor(private activatedRoute: ActivatedRoute, private location: Location) { }
 
@@ -44,6 +45,10 @@ export class FichaConsultaComponent implements OnInit {
 				activa: false
 			}
 		];
+	}
+
+	emitConstructorConsultaExperta(event){
+		this.constructorConsultaExperta = event;
 	}
 
 	backTo() {

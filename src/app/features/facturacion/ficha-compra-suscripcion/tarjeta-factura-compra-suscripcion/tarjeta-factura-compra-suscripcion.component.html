@@ -24,6 +24,11 @@
             </label>
           </div>
           <div class="row">
+            <div class="col-3">
+              <label>{{ "menu.facturacion.facturas" | translate }}
+                <span>{{ facturasTarjeta.length }}</span>
+              </label>
+            </div>
             <div class="d-flex justify-content-start mb-1 ml-auto">
               <i class="fa fa-angle-down ml-auto"></i>
             </div>
@@ -59,7 +64,7 @@
           <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
             <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
               <td class="text-center" *ngFor="let col of columns">
-                <div *ngIf="col.field =='desEstado' && col.field =='tipo'">
+                <div *ngIf="col.field =='desEstado' || col.field =='tipo'">
                   <span>{{rowData[col.field]}}</span>
                 </div>
                 <div *ngIf="col.field =='importe'">

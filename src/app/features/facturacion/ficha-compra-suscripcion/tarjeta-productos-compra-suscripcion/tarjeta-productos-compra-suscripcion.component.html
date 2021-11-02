@@ -160,7 +160,7 @@
               <label>{{ "facturacion.productos.formapago" | translate }}
               </label>
               <p-dropdown class="select-form" [options]="comboComun" [disabled]="ficha.fechaAceptada != null || ficha.fechaDenegada != null || selectedPago == '-1'"
-                placeholder="{{'general.boton.seleccionar' | translate}}" (onChange)="newFormaPagoCabecera()" [(ngModel)]="selectedPago" showClear="true">
+                placeholder="{{'general.boton.seleccionar' | translate}}" (onChange)="onChangePago()" [(ngModel)]="selectedPago" showClear="true">
               </p-dropdown>
             </div>
             <div *ngIf="ficha.productos != null" class="form-row col-lg-6 col-md-6">
@@ -189,16 +189,16 @@
                 </label>
                 <input [(ngModel)]="ficha.pendPago" type="text" class="form-control" disabled pInputText />
               </div> -->
-              <!-- Desplegable condicional que solo aparece si la forma de pago seleccionada es "Domiciliación bancaria". corresponde a idformapago = 20 -->
-              <div *ngIf="selectedPago == '20'" class="form-group col-lg-3 col-md-3">
-                <label>{{ "facturacion.seriesFactura.cuentaBancaria" | translate }}
-                </label>
-                <p-dropdown class="select-form" [options]="cuentasBanc"
-                  [disabled]="ficha.fechaAprobada != null || ficha.fechaDenegada != null "
-                  placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="datosTarjeta.cuentaBancSelecc"
-                  showClear="true"></p-dropdown>
-              </div>
             </div>
+            <!-- Desplegable condicional que solo aparece si la forma de pago seleccionada es "Domiciliación bancaria". corresponde a idformapago = 20 -->
+            <div *ngIf="selectedPago == '80'" class="form-group col-lg-6 col-md-6">
+              <label>{{ "facturacion.seriesFactura.cuentaBancaria" | translate }}
+              </label>
+              <p-dropdown class="select-form" [options]="cuentasBanc"
+              [disabled]="ficha.fechaAceptada != null || ficha.fechaDenegada != null"
+                placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="datosTarjeta.cuentaBancSelecc"
+                showClear="true"></p-dropdown>
+             </div>
           </div>
           <div class="text-right main-button">
             <!-- Guardar -->
@@ -277,7 +277,8 @@
         <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
           <td class="text-center" *ngFor="let col of columns">
             <div>
-              <a (click)="anadirProducto(rowData)"><span>{{rowData[col.field]}}</span></a>
+              <a *ngIf="rowData.fechabaja == null" (click)="anadirProducto(rowData)"><span>{{rowData[col.field]}}</span></a>
+              <span *ngIf="rowData.fechabaja != null" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{rowData[col.field]}}</span>
             </div>
           </td>
         </tr>

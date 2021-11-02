@@ -107,9 +107,9 @@
     <div [hidden]="!showTarjeta" class="card-footer">
       <div class="text-right main-button">
         <!-- Solicitud -->
-        <button pButton *ngIf="ficha.productos != null && esColegiado" (click)="checkSolicitarCompra()" type="button" icon="fa fa-search" iconPos="left"
+        <button pButton *ngIf="ficha.productos != null && esColegiado" (click)="checkSolicitarCompra()" [disabled]="ficha.fechaPendiente != null" type="button" icon="fa fa-search" iconPos="left"
           label="{{ 'facturacion.productos.solicitarCompra' | translate}}" [disabled]="ficha.fechaSolicitada != null"></button>
-        <button pButton *ngIf="ficha.productos == null && esColegiado" (click)="checkSolicitarSuscripcion()" type="button" icon="fa fa-search" iconPos="left"
+        <button pButton *ngIf="ficha.productos == null && esColegiado" (click)="checkSolicitarSuscripcion()" [disabled]="ficha.fechaPendiente != null" type="button" icon="fa fa-search" iconPos="left"
           label="{{ 'facturacion.productos.solicitarSuscripcion' | translate}}" [disabled]="ficha.fechaSolicitada != null"></button>
       <!-- Aprobar -->
         <button pButton *ngIf="!esColegiado"  (click)="checkAprobar()" type="button" icon="fa fa-search" iconPos="left"
@@ -120,8 +120,8 @@
         <button *ngIf="esColegiado" pButton  (click)="checkDenegar()" type="button" icon="fa fa-search" iconPos="left"
           label="{{ 'general.boton.cancel' | translate}}" [disabled]="ficha.fechaAceptada != null || ficha.fechaDenegada != null"></button>
       <!-- Anular -->
-        <button pButton  (click)="checkSearch()" type="button" icon="fa fa-search" iconPos="left"
-          label="{{ 'general.boton.anular' | translate}}" [disabled]="(ficha.fechaAceptada == null && ficha.fechaSolicitadaAnulacion == null) || ficha.fechaAnulada != null "></button>
+        <button pButton  (click)="checkAnular()" type="button" icon="fa fa-search" iconPos="left"
+          label="{{ 'general.boton.anular' | translate}}" [disabled]="(ficha.fechaAceptada == null && ficha.fechaSolicitadaAnulacion == null) || ficha.fechaAnulada != null || (ficha.fechaSolicitadaAnulacion != null && esColegiado)"></button>
       <!-- Facturar -->
         <button pButton  (click)="checkFacturar()" type="button" icon="fa fa-search" iconPos="left"
         label="{{ 'general.boton.facturar' | translate}}" [disabled]="ficha.fechaSolicitada == null"></button>
@@ -132,6 +132,14 @@
     </div>
   </div>
 </div>
+
+<!-- Ventana de confirmación para la anulación de una petición -->
+<p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" key="anulPeticion" #anulPeticion>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="{{ 'messages.si' | translate }}" (click)="anulPeticion.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="{{ 'general.boton.no' | translate }}" (click)="anulPeticion.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>

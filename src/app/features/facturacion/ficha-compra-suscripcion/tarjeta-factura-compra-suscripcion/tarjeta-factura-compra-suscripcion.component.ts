@@ -1,6 +1,6 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
-import { SortEvent } from 'primeng/api';
+import { Message, SortEvent } from 'primeng/api';
 import { TranslateService } from '../../../../commons/translate';
 import { ComboItem } from '../../../../models/ComboItem';
 import { FichaCompraSuscripcionItem } from '../../../../models/FichaCompraSuscripcionItem';
@@ -16,7 +16,7 @@ import { SigaServices } from '../../../../_services/siga.service';
 })
 export class TarjetaFacturaCompraSuscripcionComponent implements OnInit {
 
-  msgs = []; //Para mostrar los mensajes p-growl y dialogos de confirmacion
+  msgs: Message[] = []; //Para mostrar los mensajes p-growl y dialogos de confirmacion
   progressSpinner: boolean = false; //Para mostrar/no mostrar el spinner de carga
   showTarjeta: boolean = false;
   
@@ -76,28 +76,45 @@ export class TarjetaFacturaCompraSuscripcionComponent implements OnInit {
     }
   }
 
+  ngOnChange(changes: SimpleChanges){
+    //Se comprueba el estado de la peticion y si se ha buscado anteriormente las facturas
+    if(this.ficha.fechaAceptada != null && this.ficha.facturas == null){
+      this.getComboEstadosFactura();
+      this.getFacturasPeticion();
+    }
+  }
+
   openTab(selectedRow) {
-    this.progressSpinner = true;
-    sessionStorage.setItem("FichaCompraSuscripcion", JSON.stringify(this.ficha));
-    sessionStorage.setItem("origin", "Compra");
-    this.router.navigate(["/fichaProductos"]); //Cambiar direccion a la ficha de facturas y añadir item con informacion necesaria para inicializar la ficha
+    //REVISAR
+    // this.progressSpinner = true;
+    // sessionStorage.setItem("FichaCompraSuscripcion", JSON.stringify(this.ficha));
+    // sessionStorage.setItem("origin", "Compra");
+    // this.router.navigate(["/fichaProductos"]); //Cambiar direccion a la ficha de facturas y añadir item con informacion necesaria para inicializar la ficha
+    this.msgs = [
+      {
+        severity: "info",
+        summary: "En proceso",
+        detail: "Ficha no implementada actualmente"
+      }
+    ];
   }
 
   getFacturasPeticion(){
-    this.sigaServices.getParam("productosBusqueda_busqueda","?idPeticion="+this.ficha.nSolicitud).subscribe(
+    this.sigaServices.getParam("PyS_getFacturasPeticion","?idPeticion="+this.ficha.nSolicitud).subscribe(
       listaFacturasPeticionDTO => {
 
-        if (JSON.parse(listaFacturasPeticionDTO.body).error.code == 500) {
+        if (listaFacturasPeticionDTO.error != null) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         } else {
           // this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.facturasTarjeta = JSON.parse(listaFacturasPeticionDTO.body).listaFacturasPeticionItems;
+          this.facturasTarjeta = listaFacturasPeticionDTO.listaFacturasPeticionItem;
           for(let factura of this.facturasTarjeta){
             let estado = this.comboEstadosFac.find(el =>
               el.value == factura.estado.toString()
             )
             factura.desEstado = estado.label.toString();
           }
+          this.ficha.facturas = this.facturasTarjeta;
         }
         this.progressSpinner = false;
 
