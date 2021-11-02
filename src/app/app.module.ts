@@ -506,6 +506,7 @@ import { EnvioSeriesFacturaComponent } from './features/facturacion/series-factu
 import { DropDownListModule } from '@syncfusion/ej2-angular-dropdowns';
 import { RadioButtonModule as RadioButtonEJSModule} from '@syncfusion/ej2-angular-buttons';
 import { TarjetaDescuentosAnticiposCompraSuscripcionComponent } from './features/facturacion/ficha-compra-suscripcion/tarjeta-descuentos-anticipos-compra-suscripcion/tarjeta-descuentos-anticipos-compra-suscripcion.component';
+import { ConstructorConsultasComponent } from './features/informes-comunicaciones/consultas/ficha-consulta/constructor-consultas/constructor-consultas.component';
 enableRipple(true);
 
 @NgModule({
@@ -925,7 +926,7 @@ enableRipple(true);
 		ContadorSeriesFacturaComponent,
 		ContadorRectSeriesFacturaComponent,
 		GeneracionSeriesFacturaComponent,
-		EnvioSeriesFacturaComponent
+		EnvioSeriesFacturaComponent,
 		ConstructorConsultasComponent,
 		TarjetaFacturaCompraSuscripcionComponent,
 		TarjetaDescuentosAnticiposCompraSuscripcionComponent
@@ -1002,7 +1003,7 @@ enableRipple(true);
 		Paginador2Module,
 		QueryBuilderModule,
 		OrderListModule,
-		SliderModule
+		SliderModule,
 		DropDownListModule,
 		RadioButtonEJSModule
 	],
