@@ -93,7 +93,7 @@
             <button *ngIf="listaGuardias" pButton type="button" icon="fa fa-plus" iconPos="left" label="Nuevo"
                   (click)="nuevaGuardia()" [disabled]="!permisosEscritura"></button>
             <button *ngIf="listaGuardias" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"
-                  (click)="saveGuardias()" [disabled]="!permisosEscritura"></button>
+                  (click)="saveGuardias()" [disabled]="!permisosEscritura || isLetrado"></button>
             
             <button *ngIf="calendarios" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar" [disabled]="isDisabled"
                   (click)="saveCal()"></button>

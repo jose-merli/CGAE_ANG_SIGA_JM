@@ -51,7 +51,7 @@
          
           <!--<app-tabla-dinamica-cola-guardia [selectionMode]="selectionMode" [editable]="editable" [idUltimo]="body.idPersonaUltimo"
             [porGrupos]="body.porGrupos" [botActivos]="disabledBotones()" [datos]="datos" (updateInscripciones)="changeGrupo($event);changeOrden($event)"></app-tabla-dinamica-cola-guardia>-->
-          <app-tabla-resultado-order  [pantalla] = "'colaGuardias'" [totalRegistros] = "totalRegistros" [seleccionarTodo]="seleccionarTodo" [manual]="manual"
+          <app-tabla-resultado-order [permisoEscritura] = "permisoEscritura" [pantalla] = "'colaGuardias'" [totalRegistros] = "totalRegistros" [seleccionarTodo]="seleccionarTodo" [manual]="manual"
               [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" [fromSlice]="0" [toSlice]="8" [minimoLetrado]="minimoLetrado" [porGrupos]="porGrupos"
               (anySelected)="notifyAnySelected($event)" (selectedRow)="checkSelectedRow($event)" (colaGuardiaModified)="updateColaGuardia($event)" (rest)="rest($event)" (dupli)="duplicar($event)">
             </app-tabla-resultado-order>
