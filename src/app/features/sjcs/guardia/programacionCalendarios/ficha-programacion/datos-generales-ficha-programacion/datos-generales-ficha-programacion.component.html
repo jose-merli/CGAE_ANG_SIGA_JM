@@ -93,7 +93,9 @@
             <label>
               {{"justiciaGratuita.Calendarios.Observaciones" | translate}} 
             </label>
-            <textarea [placeholder] = "datosGenerales.observaciones" name="textoEnPlantilla" [disabled]="historico || !permisoEscritura" class="form-control ui-inputtext" pInputTextarea
+            <textarea *ngIf="datosGenerales.observaciones != null" [placeholder] = "datosGenerales.observaciones" name="textoEnPlantilla" [disabled]="historico || !permisoEscritura" class="form-control ui-inputtext" pInputTextarea
+              [(ngModel)]="datosGenerales.observaciones" autoResize="autoResize" maxlength="3999"></textarea>
+              <textarea *ngIf="datosGenerales.observaciones == null"  [placeholder] = "" name="textoEnPlantilla" [disabled]="historico || !permisoEscritura" class="form-control ui-inputtext" pInputTextarea
               [(ngModel)]="datosGenerales.observaciones" autoResize="autoResize" maxlength="3999"></textarea>
           </div>
 

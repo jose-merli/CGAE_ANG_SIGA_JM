@@ -76,33 +76,33 @@ export class CalendariosComponent implements OnInit {
       'fechaProgramadaHasta': null,
     };
     this.sigaServices.post(
-      "guardiaCalendario_buscar", datosEntrada).subscribe(
+      "guardiaUltimoCalendario_buscar", datosEntrada).subscribe(
         data => {
           console.log('data: ', data.body)
           let error = JSON.parse(data.body).error;
           let datos = JSON.parse(data.body);
-          if(datos && datos.length > 0){
+          if(datos){
 
               let responseObject = 
               {
                 'duplicar': false,
-                'turno': datos[0].turno,
-                'nombre': datos[0].guardia,
+                'turno': datos.turno,
+                'nombre': datos.guardia,
                 'tabla' : [],
-                'idTurno': datos[0].idTurno,
-                'idGuardia': datos[0].idGuardia,
-                'observaciones': datos[0].observaciones,
-                'fechaDesde': datos[0].fechaDesde.split("-")[2].split(" ")[0] +"/"+ datos[0].fechaDesde.split("-")[1] + "/"+ datos[0].fechaDesde.split("-")[0],
-                'fechaHasta': datos[0].fechaHasta.split("-")[2].split(" ")[0] +"/"+ datos[0].fechaHasta.split("-")[1] + "/"+ datos[0].fechaHasta.split("-")[0],
-                'fechaProgramacion': moment(datos[0].fechaProgramacion,'DD/MM/YYYY HH:mm:ss').toDate(),
-                'estado': this.comboEstado.find(comboItem => comboItem.value == datos[0].estado).label ,
-                'generado': datos[0].generado,
-                'numGuardias': datos[0].numGuardias,
-                'idCalG': datos[0].idCalG,
-                'listaGuarias': {value : this.comboListaGuardias.find(comboItem => comboItem.label == datos[0].listaGuardias).value},
-                'idCalendarioProgramado': datos[0].idCalendarioProgramado,
-                'facturado': datos[0].facturado,
-                'asistenciasAsociadas': datos[0].asistenciasAsociadas
+                'idTurno': datos.idTurno,
+                'idGuardia': datos.idGuardia,
+                'observaciones': datos.observaciones,
+                'fechaDesde': datos.fechaDesde.split("-")[2].split(" ")[0] +"/"+ datos.fechaDesde.split("-")[1] + "/"+ datos.fechaDesde.split("-")[0],
+                'fechaHasta': datos.fechaHasta.split("-")[2].split(" ")[0] +"/"+ datos.fechaHasta.split("-")[1] + "/"+ datos.fechaHasta.split("-")[0],
+                'fechaProgramacion': moment(datos.fechaProgramacion,'DD/MM/YYYY HH:mm:ss').toDate(),
+                'estado': this.comboEstado.find(comboItem => comboItem.value == datos.estado).label ,
+                'generado': datos.generado,
+                'numGuardias': datos.numGuardias,
+                'idCalG': datos.idCalG,
+                'listaGuarias': {value : this.comboListaGuardias.find(comboItem => comboItem.label == datos.listaGuardias).value},
+                'idCalendarioProgramado': datos.idCalendarioProgramado,
+                'facturado': datos.facturado,
+                'asistenciasAsociadas': datos.asistenciasAsociadas
               };
 
               this.persistenceService.setDatos(responseObject);

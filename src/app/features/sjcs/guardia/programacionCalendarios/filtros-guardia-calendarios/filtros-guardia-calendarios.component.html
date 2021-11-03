@@ -88,7 +88,7 @@
         label="{{ 'general.boton.search' | translate }}"></button>
       <!--<button [disabled]="emptyFilters" pButton (click)="nuevo()" type="button" icon="fa fa-plus" iconPos="left"
         label="{{ 'general.boton.new' | translate}}"></button>-->
-        <button pButton (click)="nuevo()" type="button" icon="fa fa-plus" iconPos="left"
+        <button pButton  [disabled]="!permisoTotal" (click)="nuevo()" type="button" icon="fa fa-plus" iconPos="left"
         label="{{ 'general.boton.new' | translate}}"></button>
     </div>
   </div>
