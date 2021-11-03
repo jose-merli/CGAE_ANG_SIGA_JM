@@ -16,7 +16,7 @@
           </div>
           <div class="d-flex justify-content-between default">
             <label>Realizar el envío de las facturas autom.: 
-              <span>{{ body.envioFacturas }}</span></label>
+              <span>{{ body.envioFacturas ? "Sí" : "No" }}</span></label>
             <label>Plantilla de envío masivo: 
               <span>{{ 'dato' }}</span></label>
             
@@ -40,9 +40,10 @@
     <!-- Cuerpo en ficha abierta -->
     <div *ngIf="esFichaActiva('envioFacturas')" class="card-body card-body-ficha">
       <div class="form-row">
-        <div class="form-group-interlineado mb-3 d-flex justify-content-between">
-          <label class="checkbox-label" for="envioAutomaticoCheckbox">Realizar el envío de las facturas autom.</label>
-          <p-checkbox class="checkbox-inline" id="envioAutomaticoCheckbox" [(ngModel)]="body.envioFacturas" binary="true"></p-checkbox>
+        <div class="form-check d-flex justify-content-between">
+          <label class="form-group-label">Realizar el envío de las facturas autom.</label>
+          &nbsp;&nbsp;
+          <p-checkbox class="float-right" [(ngModel)]="body.envioFacturas" binary="true"></p-checkbox>
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>Plantilla de envío masivo</label>

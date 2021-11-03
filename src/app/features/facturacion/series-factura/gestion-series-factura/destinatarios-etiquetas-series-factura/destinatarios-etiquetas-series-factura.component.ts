@@ -96,7 +96,8 @@ export class DestinatariosEtiquetasSeriesFacturaComponent implements OnInit {
 
     let objEtiquetas = {
       idSerieFacturacion: this.body.idSerieFacturacion,
-      combooItems: this.etiquetasSeleccionadas
+      seleccionados: this.etiquetasSeleccionadas,
+      noSeleccionados: this.etiquetasNoSeleccionadas
     };
 
     this.sigaServices.post("facturacionPyS_guardarEtiquetasSerieFacturacion", objEtiquetas).subscribe(

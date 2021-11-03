@@ -19,10 +19,10 @@ export class SerieFacturacionItem {
 
 	generarPDF: boolean;
 	idModeloFactura: string;
-	// idModeloComunicacion: string;
+	idModeloRectificativa: string;
 
 	envioFacturas: boolean;
-	// idPlatillaMail: string;
+	idPlatillaMail: string;
 
 	traspasoFacturas: boolean;
 	traspasoPlatilla:string;

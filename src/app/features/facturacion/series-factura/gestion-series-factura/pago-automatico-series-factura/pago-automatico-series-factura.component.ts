@@ -17,11 +17,11 @@ export class PagoAutomaticoSeriesFacturaComponent implements OnInit {
 
   body: SerieFacturacionItem;
   
-  formasPagoSeleccionadasInicial: any[];
-  formasPagoNoSeleccionadasInicial: any[];
+  formasPagosSeleccionadasInicial: any[];
+  formasPagosNoSeleccionadasInicial: any[];
 
-  formasPagoSeleccionadas: any[];
-  formasPagoNoSeleccionadas: any[];
+  formasPagosSeleccionadas: any[];
+  formasPagosNoSeleccionadas: any[];
 
   @Input() openTarjetaPagoAutomatico;
   @Output() guardadoSend = new EventEmitter<any>();
@@ -50,8 +50,8 @@ export class PagoAutomaticoSeriesFacturaComponent implements OnInit {
   cargarDatos() {
     this.sigaServices.get("facturacionPyS_getFormasPagosDisponiblesSeries").subscribe(
       n => {
-        this.formasPagoNoSeleccionadas = n.combooItems;
-        this.commonsService.arregloTildesCombo(this.formasPagoNoSeleccionadas);
+        this.formasPagosNoSeleccionadas = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.formasPagosNoSeleccionadas);
 
         this.getSeleccionadas();
       },
@@ -66,13 +66,13 @@ export class PagoAutomaticoSeriesFacturaComponent implements OnInit {
   getSeleccionadas() {
     this.sigaServices.getParam("facturacionPyS_getFormasPagosSerie", "?idSerieFacturacion=" + this.body.idSerieFacturacion).subscribe(
       n => {
-        this.formasPagoSeleccionadas = n.combooItems;
-        this.commonsService.arregloTildesCombo(this.formasPagoSeleccionadas);
+        this.formasPagosSeleccionadas = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.formasPagosSeleccionadas);
 
-        this.formasPagoNoSeleccionadas = this.formasPagoNoSeleccionadas.filter(e1 => !this.formasPagoSeleccionadas.find(e2 => e1.value == e2.value));
+        this.formasPagosNoSeleccionadas = this.formasPagosNoSeleccionadas.filter(e1 => !this.formasPagosSeleccionadas.find(e2 => e1.value == e2.value));
 
-        this.formasPagoSeleccionadasInicial = JSON.parse(JSON.stringify(this.formasPagoSeleccionadas));
-        this.formasPagoNoSeleccionadasInicial = JSON.parse(JSON.stringify(this.formasPagoNoSeleccionadas));
+        this.formasPagosSeleccionadasInicial = JSON.parse(JSON.stringify(this.formasPagosSeleccionadas));
+        this.formasPagosNoSeleccionadasInicial = JSON.parse(JSON.stringify(this.formasPagosNoSeleccionadas));
       },
       err => {
         console.log(err);
@@ -83,8 +83,32 @@ export class PagoAutomaticoSeriesFacturaComponent implements OnInit {
   // Restablecer
 
   restablecer(): void {
-    this.formasPagoSeleccionadas = JSON.parse(JSON.stringify(this.formasPagoSeleccionadasInicial));
-    this.formasPagoNoSeleccionadas = JSON.parse(JSON.stringify(this.formasPagoNoSeleccionadasInicial));
+    this.formasPagosSeleccionadas = JSON.parse(JSON.stringify(this.formasPagosSeleccionadasInicial));
+    this.formasPagosNoSeleccionadas = JSON.parse(JSON.stringify(this.formasPagosNoSeleccionadasInicial));
+  }
+
+  // Guardar
+
+  guardar() {
+    this.progressSpinner = true;
+
+    let objEtiquetas = {
+      idSerieFacturacion: this.body.idSerieFacturacion,
+      seleccionados: this.formasPagosSeleccionadas,
+      noSeleccionados: this.formasPagosNoSeleccionadas
+    };
+
+    this.sigaServices.post("facturacionPyS_guardarFormasPagosSerie", objEtiquetas).subscribe(
+      n => {
+        // this.showSuccess(this.translateService.instant("informesYcomunicaciones.enviosMasivos.destinatarioIndv.mensaje.guardar.etiquetas.ok"));
+        this.formasPagosSeleccionadasInicial = JSON.parse(JSON.stringify(this.formasPagosSeleccionadas));
+        this.formasPagosNoSeleccionadasInicial = JSON.parse(JSON.stringify(this.formasPagosNoSeleccionadas));
+        this.progressSpinner = false;
+      },
+      error => {
+        console.log(error);
+        this.progressSpinner = false;
+      });
   }
 
   clear() {

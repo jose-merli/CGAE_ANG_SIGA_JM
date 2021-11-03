@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Message } from 'primeng/primeng';
+import { TranslateService } from '../../../../../commons/translate';
 import { SerieFacturacionItem } from '../../../../../models/SerieFacturacionItem';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
@@ -16,6 +17,7 @@ export class TraspasoSeriesFacturaComponent implements OnInit {
   progressSpinner: boolean = false;
 
   body: SerieFacturacionItem;
+  bodyInicial: SerieFacturacionItem;
 
   @Input() openTarjetaTraspasoFacturas;
   @Output() guardadoSend = new EventEmitter<any>();
@@ -23,7 +25,8 @@ export class TraspasoSeriesFacturaComponent implements OnInit {
   constructor(
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private commonsService: CommonsService
+    private commonsService: CommonsService,
+    private translateService: TranslateService
   ) { }
 
   ngOnInit() {
@@ -31,7 +34,7 @@ export class TraspasoSeriesFacturaComponent implements OnInit {
 
     if (this.persistenceService.getDatos()) {
       this.body = this.persistenceService.getDatos();
-
+      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     }
 
     this.progressSpinner = false;
@@ -40,11 +43,40 @@ export class TraspasoSeriesFacturaComponent implements OnInit {
   // Restablecer
 
   restablecer(): void {
+    this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+  }
 
+  // Guardar
+
+  save(): void {
+    this.progressSpinner = true;
+
+    this.sigaServices.post("facturacionPyS_guardarSerieFacturacion", this.body).subscribe(
+      n => {
+        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+        this.persistenceService.setDatos(this.bodyInicial);
+        this.guardadoSend.emit();
+
+        this.progressSpinner = false;
+      },
+      err => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        this.progressSpinner = false;
+      }
+    );
   }
 
   clear() {
     this.msgs = [];
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
   }
 
   // Abrir y cerrar la ficha

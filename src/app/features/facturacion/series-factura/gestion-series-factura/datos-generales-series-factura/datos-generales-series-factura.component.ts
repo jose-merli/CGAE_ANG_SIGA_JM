@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { t } from '@angular/core/src/render3';
 import { ConfirmationService } from 'primeng/api';
+import { AutoComplete } from 'primeng/primeng';
 import { TranslateService } from '../../../../../commons/translate';
 import { SerieFacturacionItem } from '../../../../../models/SerieFacturacionItem';
 import { CommonsService } from '../../../../../_services/commons.service';
@@ -35,6 +36,13 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit {
   // Sugerencias de los campos de autocompletado
   suggestionsTiposProductos = [];
   suggestionsTiposServicios = [];
+
+  // Autocompletado
+  @ViewChild("autocompleteTopics")
+  autocompleteTiposProductos: AutoComplete;
+
+  @ViewChild("autocompleteTopics")
+  autocompleteTiposServicios: AutoComplete;
 
   estado: string = "";
 
@@ -117,6 +125,12 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit {
       n => {
         this.comboTiposProductos = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboTiposProductos);
+
+        this.comboTiposProductos.forEach(e => {
+          if (e.color == undefined) {
+            e.color = "#024eff";
+          }
+        });
       },
       err => {
         console.log(err);
@@ -129,6 +143,12 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit {
       n => {
         this.comboTiposServicios = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboTiposServicios);
+
+        this.comboTiposServicios.forEach(e => {
+          if (e.color == undefined) {
+            e.color = "#024eff";
+          }
+        });
       },
       err => {
         console.log(err);
@@ -171,6 +191,27 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit {
     }
     
   }
+
+  // Blur para el autocompletado
+
+  visiblePanelBlurTiposProductos(event) {
+    if (this.autocompleteTiposProductos.highlightOption != undefined) {
+      this.autocompleteTiposProductos.highlightOption.color = "#024eff";
+      this.suggestionsTiposProductos.push(this.autocompleteTiposProductos.highlightOption);
+      this.autocompleteTiposProductos.highlightOption = undefined;
+    }
+    this.autocompleteTiposProductos.panelVisible = false;
+  }
+
+  visiblePanelBlurTiposServicios(event) {
+    if (this.autocompleteTiposServicios.highlightOption != undefined) {
+      this.autocompleteTiposServicios.highlightOption.color = "#024eff";
+      this.suggestionsTiposServicios.push(this.autocompleteTiposServicios.highlightOption);
+      this.autocompleteTiposServicios.highlightOption = undefined;
+    }
+    this.autocompleteTiposServicios.panelVisible = false;
+  }
+
 
   // Eliminar series de facturación
 
@@ -264,7 +305,8 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit {
   isValid(): boolean {
     return this.body.abreviatura != undefined && this.body.abreviatura.trim() != "" && this.body.abreviatura.length <= 20
           && this.body.descripcion != undefined && this.body.descripcion.trim() != "" && this.body.descripcion.length <= 100
-          && this.body.idCuentaBancaria != undefined;
+          && this.body.idCuentaBancaria != undefined && this.body.idCuentaBancaria.trim() != ""
+          && this.body.idSufijo != undefined && this.body.idSufijo.trim() != "";
   }
 
   checkSave(): void {

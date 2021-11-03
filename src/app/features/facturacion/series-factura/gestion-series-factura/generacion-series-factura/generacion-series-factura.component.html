@@ -16,7 +16,7 @@
           </div>
           <div class="d-flex justify-content-between default">
             <label>Generar ficheros de facturas autom.: 
-              <span>{{ body.generarPDF }}</span></label>
+              <span>{{ body.generarPDF ? "Sí" : "No" }}</span></label>
             <label>Modelo generación del fichero de factura: 
               <span>{{ body.idModeloFactura }}</span></label>
             <label>Modelo generación de factura rectificativa: 
@@ -42,7 +42,7 @@
     <!-- Cuerpo en ficha abierta -->
     <div *ngIf="esFichaActiva('generacion')" class="card-body card-body-ficha">
       <div class="form-row">
-        <div class="pt-2 form-check d-flex justify-content-between">
+        <div class="form-check d-flex justify-content-between">
           <label class="form-group-label">Generar ficheros de facturas autom.</label>
           &nbsp;&nbsp;
           <p-checkbox class="float-right" [(ngModel)]="body.generarPDF" binary="true"></p-checkbox>
