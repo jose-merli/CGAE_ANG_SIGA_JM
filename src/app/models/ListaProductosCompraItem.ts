@@ -15,5 +15,7 @@ export class ListaProductosCompraItem{
     impIva: string;
     impNeto: string;
 
+    solicitarBaja : string;
+
     idPeticion: string;
 }

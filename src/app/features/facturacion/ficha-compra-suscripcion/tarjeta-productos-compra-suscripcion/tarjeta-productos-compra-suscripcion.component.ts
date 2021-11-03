@@ -126,6 +126,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
       this.getProductosCompra();
     }
     else {
+      this.ficha.impTotal = "0";
       this.productosTarjeta = this.ficha.productos;
     }
     this.datosTarjeta = this.ficha;
