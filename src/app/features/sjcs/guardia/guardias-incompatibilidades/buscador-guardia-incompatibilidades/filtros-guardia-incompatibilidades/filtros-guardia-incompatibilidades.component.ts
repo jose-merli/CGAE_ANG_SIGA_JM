@@ -40,10 +40,11 @@ export class FiltrosGuardiaIncompatibilidadesComponent implements OnInit {
   comboTipoTurno = [];
   comboTurno = [];
   comboTipoGuardia = [];
+  comboGuardias = [];
   KEY_CODE = {
     ENTER: 13
   }
-
+  isDisabledGuardia = true;
   textFilter: string = "Seleccionar";
   textSelected: String = "{0} etiquetas seleccionadas";
 
@@ -150,6 +151,34 @@ export class FiltrosGuardiaIncompatibilidadesComponent implements OnInit {
       }
     );
   }
+
+  onChangeTurno(event) {
+    this.filtros.idGuardia = "";
+    this.comboGuardias = [];
+
+    if (this.filtros.idTurno && this.filtros.idTurno.length > 0) {
+      this.getComboGuardia();
+    } else {
+      this.isDisabledGuardia = true;
+    }
+  }
+
+  getComboGuardia() {
+    this.sigaServices.getParam(
+      "busquedaGuardia_guardia", "?idTurno=" + this.filtros.idTurno).subscribe(
+        data => {
+          this.isDisabledGuardia = false;
+          this.comboGuardias = data.combooItems;    
+        },
+        err => {
+          console.log(err);
+        },
+        ()=>{
+          this.commonServices.arregloTildesCombo(this.comboGuardias);
+        }
+      );
+  }
+
   getComboArea() {
     this.sigaServices.get("busquedaGuardia_area").subscribe(
       n => {

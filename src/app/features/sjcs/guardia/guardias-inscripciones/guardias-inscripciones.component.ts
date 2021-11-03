@@ -159,7 +159,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
   ngOnInit() {
 
     //this.isLetrado = this.sigaStorageService.isLetrado;
-    this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
+    this.isLetrado = this.sigaStorageService.isLetrado && this.sigaStorageService.idPersona;
 
     if (sessionStorage.getItem("datosColegiado") != null || sessionStorage.getItem("datosColegiado") != undefined) {
       this.datosColegiado = JSON.parse(sessionStorage.getItem("datosColegiado"));
@@ -311,7 +311,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
 
     //let jsonEntrada  = JSON.parse(JSON.stringify(datosEntrada))
 
-
+    this.buscar = false;
 
     this.inscripcionesDatosEntradaItem =
     {
@@ -329,7 +329,6 @@ export class GuardiasInscripcionesComponent implements OnInit {
         data => {
           let error = JSON.parse(data.body).error;
           this.datos = JSON.parse(data.body).inscripcionesItem;
-          this.buscar = true;
           this.datos = this.datos.map(it => {
             it.letradosIns = +it.letradosIns;
             return it;
@@ -565,7 +564,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
                 "guardiasInscripciones_buscarsaltoscompensaciones", objetoValidacion).subscribe(
                   data => {
 
-                    this.existeSaltosCompensaciones = data.body;
+                    this.existeSaltosCompensaciones = JSON.parse(data.body);
 
                     if (this.existeSaltosCompensaciones == true) {
                       let mess = this.translateService.instant(
@@ -641,11 +640,11 @@ export class GuardiasInscripcionesComponent implements OnInit {
 
   }
 
-  llamadaBackDenegar() {
+  llamadaBackDenegar(objetoValidacion) {
 
     this.progressSpinner = true;
     this.sigaServices.post(
-      "guardiasInscripciones_denegarInscripciones", this.objetoValidacion).subscribe(
+      "guardiasInscripciones_denegarInscripciones", objetoValidacion).subscribe(
         data => {
           console.log("entra en el data");
           this.progressSpinner = false;
@@ -653,7 +652,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
           //mensaje de okey
           console.log("Se ha realizado correctamente");
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-
+          objetoValidacion = [];
         },
         err => {
           this.progressSpinner = false;
@@ -661,7 +660,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
           //mensaje de error
           console.log("No se ha podido realizar el servicio de back");
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-
+          objetoValidacion = [];
         },
         () => {
           this.commonsService.scrollTablaFoco('tablaFoco');
@@ -680,7 +679,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
           //mensaje de okey
           console.log("Se ha realizado correctamente");
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.objetoValidacion = [];
+          
         },
         err => {
           this.progressSpinner = false;
@@ -721,94 +720,6 @@ export class GuardiasInscripcionesComponent implements OnInit {
         });
   }
 
- /*  confirmDelete() {
-    let mess = this.translateService.instant(
-      "justiciaGratuita.oficio.inscripciones.mensajeSaltos"
-    );
-    let icon = "fa fa-edit";
-    this.confirmationService.confirm({
-      message: mess,
-      icon: icon,
-      accept: () => {
-        this.delete(); //llamada al back para borrar
-      },
-      reject: () => {
-        this.msgs = [
-          {
-            severity: "info",
-            summary: "Cancel",
-            detail: this.translateService.instant(
-              "general.message.accion.cancelada"
-            )
-          }
-        ];
-      }
-    });
-  } */
-
-  /* delete() {
-
-    this.sigaServices.post("guardiasInscripciones_eliminarsaltoscompensaciones", this.objetoValidacion).subscribe(
-
-      data => {
-
-        this.datos = data.body;
-        console.log(this.datos);
-        console.log(data);
-
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
-      },
-      err => {
-
-        if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-      }
-    );
-  } */
-
-  /* llamadaBackSaltosCompensaciones() {
-    this.progressSpinner = true;
-    this.sigaServices.post(
-      "guardiasInscripciones_buscarsaltoscompensaciones", this.objetoValidacion).subscribe(
-        data => {
-          console.log("entra en el data");
-          this.progressSpinner = false;
-          this.existeSaltosCompensaciones = data.body;
-          console.log(data);
-
-          if (this.existeSaltosCompensaciones == true) {
-            //mensaje de diálogo de que hay saltos y compensaciones que si está seguro de eliminarlos
-            this.confirmDelete();
-          } else {
-            //mensaje de que usted ha cancelado la operación.
-            console.log("ha entrado en el else del boleano");
-          }
-
-          console.log("Se ha realizado correctamente");
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-
-        },
-        err => {
-          this.progressSpinner = false;
-          console.log(err);
-          //mensaje de error
-          console.log("No se ha podido realizar el servicio de back");
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-
-        },
-        () => {
-          this.commonsService.scrollTablaFoco('tablaFoco');
-        });
-
-  } */
 
   confirmBaja() {
     let mess = this.translateService.instant(
@@ -853,9 +764,11 @@ export class GuardiasInscripcionesComponent implements OnInit {
             if (this.jsonParaEnviar.tipoAccion == "solicitarBaja") {
               this.confirmBaja();
             }
+          }else{
+            this.llamadaBackSolicitarBaja();
           }
 
-          this.llamadaBackSolicitarBaja();
+          
 
           console.log("Se ha realizado correctamente");
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
@@ -875,30 +788,6 @@ export class GuardiasInscripcionesComponent implements OnInit {
 
   } 
 
-  turnosGuardias() {
-    this.progressSpinner = true;
-    this.sigaServices.post(
-      "guardiasInscripciones_buscarGuardiasAsocTurnos", this.objetoValidacion).subscribe(
-        data => {
-          console.log("entra en el data");
-          this.progressSpinner = false;
-
-          console.log("Se ha realizado correctamente");
-          //this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.objetoValidacion = [];
-        },
-        err => {
-          this.progressSpinner = false;
-          console.log(err);
-          //mensaje de error
-          console.log("No se ha podido realizar el servicio de back");
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        },
-        () => {
-          this.commonsService.scrollTablaFoco('tablaFoco');
-        });
-
-  }
 
   BotonesInfo(event) {
     console.log("entra en el botonesinfo")
@@ -906,12 +795,12 @@ export class GuardiasInscripcionesComponent implements OnInit {
     console.log(event);
 
     if (this.jsonParaEnviar.tipoAccion == "validar") {
-
-
+      let estado;
+      let objVal: ResultadoInscripcionesBotones
       this.jsonParaEnviar.datos.forEach(el => {
 
-
         if (el.estado == "0") {//validacion de inscripciones en estado Pendiente de Alta.
+          estado = el.estado;
           el.fechavalidacionNUEVA = el.fechaActual;
           el.observacionesvalidacionNUEVA = el.observaciones;
           if (el.fechavalidacion == undefined) {
@@ -924,59 +813,34 @@ export class GuardiasInscripcionesComponent implements OnInit {
           if (el.fechabaja == undefined) {
             el.fechabaja = null;
           }
-          let objVal: ResultadoInscripcionesBotones = this.rellenarObjetoBack(el);
-
-          this.objetoValidacion.push(objVal);
+           objVal = this.rellenarObjetoBack(el);
+           this.objetoValidacion.push(objVal);
+         /*  this.objetoValidacion.push(objVal);
           this.llamadaBackValidar(this.objetoValidacion, el.estado);
-          this.objetoValidacion = [];
+          this.objetoValidacion = []; */
         } else if (el.estado == "2") {//validacion de inscripcion en estado Pendiente de Baja.
+          estado = el.estado;
           el.fechasolicitudbajaNUEVA = el.fechaActual;
           el.observacionesvalbajaNUEVA = el.observaciones;
 
-          let objVal: ResultadoInscripcionesBotones = this.rellenarObjetoBack(el);
-
+           objVal = this.rellenarObjetoBack(el);
+           this.objetoValidacion.push(objVal);
+/* 
           this.objetoValidacion.push(objVal);
           this.llamadaBackValidar(this.objetoValidacion, el.estado);
-          this.objetoValidacion = [];
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), "La validacion solo se lleva a cabo sobre inscripciones en estado de Pendiente de Alta y Pendiente de Baja.");
+          this.objetoValidacion = []; */
         }
 
-        /*   if (el.fechasolicitudbajaSeleccionada == null) {
-            el.fechavalidacionNUEVA = el.fechaActual;
-            el.observacionesvalidacionNUEVA = el.observaciones;
-            el.fechasolicitudbajaNUEVA = null;
-            el.fechasolicitudbajaSeleccionada = null;
-  
-            if (el.fechavalidacion == undefined) {
-              el.fechavalidacion = null;
-            } else if (el.fechasolicitud == undefined) {
-              el.fechasolicitud = null;
-            } else if (el.fechadenegacion == undefined) {
-              el.fechadenegacion = null;
-            }
-            if (el.fechabaja == undefined) {
-              el.fechabaja = null;
-            }
-  
-          } else {
-            el.fechasolicitudbajaNUEVA = el.fechaActual;
-            el.observacionesvalbajaNUEVA = el.observaciones;
-          } */
-
-        /*   let objVal: ResultadoInscripcionesBotones = this.rellenarObjetoBack(el);
-  
-          this.objetoValidacion.push(objVal); */
-
       });
+      if(estado == "0" || estado == "2"){
+        
+        this.llamadaBackValidar(this.objetoValidacion,estado);
+        this.objetoValidacion = [];
+      }else{
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), "La validacion solo se lleva a cabo sobre inscripciones en estado de Pendiente de Alta y Pendiente de Baja.");
 
-      //1º llamada al back de la consulta de saltos y compensaciones
-      //this.llamadaBackSaltosCompensaciones();
-
-      //2º llamada al back para la consulta de trabajos SJCS
-      //this.llamadaBackTrabajosSJCS();
-
-      // this.llamadaBackValidar();
+      }
+      
 
     } else if (this.jsonParaEnviar.tipoAccion == "denegar") {
 
@@ -988,10 +852,11 @@ export class GuardiasInscripcionesComponent implements OnInit {
         let objVal: ResultadoInscripcionesBotones = this.rellenarObjetoBack(el);
 
         this.objetoValidacion.push(objVal);
+        this.objetoValidacion = [];
 
       });
 
-      this.llamadaBackDenegar();
+      this.llamadaBackDenegar(this.objetoValidacion);
 
     } else if (this.jsonParaEnviar.tipoAccion == "solicitarBaja") {
 
@@ -1013,8 +878,8 @@ export class GuardiasInscripcionesComponent implements OnInit {
 
           this.objetoValidacion.push(objVal);
 
-          //mirar si el turno tiene guardias y el colegiado está inscrito se le dará automaticamente de baja a todas las guardias
-          this.turnosGuardias();
+          this.sigaServices.post(
+            "guardiasInscripciones_buscarGuardiasAsocTurnos", this.objetoValidacion).subscribe();
 
           //•	Al realizar la solicitud el sistema iniciara las consultas necesarias para determinar si el letrado tiene trabajos SJCS pendientes asociados a dicho turno. En el caso de que existan, se mostrará un mensaje de confirmación para realizar la baja de que hay trabajos SJCS pendientes y permitirá realizar la baja.
           this.llamadaBackTrabajosSJCS();
@@ -1169,7 +1034,4 @@ export class GuardiasInscripcionesComponent implements OnInit {
     }
   }
 
-  backTo() {
-    this.location.back();
-  }
 }

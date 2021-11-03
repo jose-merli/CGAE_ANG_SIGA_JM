@@ -18,6 +18,7 @@ import { Row, TablaResultadoMixIncompService } from '../../../../../commons/tabl
 import { AuthenticationService } from '../../../../../_services/authentication.service';
 import { ComboIncompatibilidadesDatosEntradaItem } from './ComboIncompatibilidadesDatosEntradaItem';
 import { ComboIncompatibilidadesRes } from './ComboIncompatibilidadesRes';
+import { SigaStorageService } from '../../../../../siga-storage.service';
 interface GuardiaI {
   label: string,
   value: string
@@ -58,7 +59,7 @@ export class BuscadorGuardiaIncompatibilidadesComponent implements OnInit {
     },
     {
       id: "guardia",
-      name: "dato.jgr.guardia.guardias.guardia"
+      name: "menu.justiciaGratuita.GuardiaMenu"
     },
     {
       id: "guardiasIncompatibles",
@@ -73,6 +74,7 @@ export class BuscadorGuardiaIncompatibilidadesComponent implements OnInit {
       name: "dato.jgr.guardia.guardias.diasSeparacion"
     }
   ];
+  isLetrado : boolean = false;
   @ViewChild(FiltrosGuardiaIncompatibilidadesComponent) filtros;
   //@ViewChild(TablaGuardiasComponent) tabla;
 
@@ -83,11 +85,13 @@ export class BuscadorGuardiaIncompatibilidadesComponent implements OnInit {
     private router: Router,
     public oldSigaServices: OldSigaServices,
     private trmService: TablaResultadoMixIncompService,
-    private authenticationService: AuthenticationService) {
+    private authenticationService: AuthenticationService,
+    private sigaStorageService : SigaStorageService) {
     this.url = oldSigaServices.getOldSigaUrl("guardiasIncompatibilidades");
     }
 
     ngOnInit() {
+      this.isLetrado = this.sigaStorageService.isLetrado && this.sigaStorageService.idPersona;
   this.commonsService.checkAcceso(procesos_guardia.guardias)
       .then(respuesta => {
 
@@ -171,7 +175,7 @@ buscarInc(){
 //let jsonEntrada  = JSON.parse(JSON.stringify(datosEntrada))
 this.incompatibilidadesDatosEntradaItem = new IncompatibilidadesDatosEntradaItem(
     { 'idTurno': this.filtrosValues.idTurno,
-      'nombreGuardia': this.filtrosValues.nombre,
+      'idGuardia': this.filtrosValues.idGuardia,
       'idArea': this.filtrosValues.area,
       'idMateria': this.filtrosValues.materia,
       'idZona': this.filtrosValues.zona,
@@ -587,7 +591,7 @@ guardarInc(nombreTurno, nombreGuardia, nombreTurnoIncompatible, nombreGuardiaInc
   }
 
   convertArraysToStrings() {
-    const array = ['idTurno', 'jurisdiccion', 'grupoFacturacion', 'partidaPresupuestaria', 'tipoTurno', 'idTipoGuardia'];
+    const array = ['idTurno', 'idGuardia', 'jurisdiccion', 'grupoFacturacion', 'partidaPresupuestaria', 'tipoTurno', 'idTipoGuardia'];
     if ( this.filtrosValues != undefined){
         array.forEach(element => {
           if (this.filtrosValues[element] != undefined && this.filtrosValues[element] != null && this.filtrosValues[element].length > 0) {

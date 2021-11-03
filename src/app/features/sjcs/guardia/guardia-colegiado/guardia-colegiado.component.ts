@@ -63,7 +63,14 @@ export class GuardiaColegiadoComponent implements OnInit {
         }
       }
       ).catch(error => console.error(error));
-      this.isColegiado = JSON.parse(sessionStorage.getItem('esColegiado'));
+      
+      if(this.localStorageService.isLetrado
+          && this.localStorageService.idPersona){
+          
+          this.isColegiado = true;
+
+      }
+      
       this.progressSpinner = false;
       this.dataBuscador = JSON.parse(sessionStorage.getItem("itemGuardiaColegiado"));
   }

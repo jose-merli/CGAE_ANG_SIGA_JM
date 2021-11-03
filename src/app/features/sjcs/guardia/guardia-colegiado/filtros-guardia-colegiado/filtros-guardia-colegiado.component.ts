@@ -7,6 +7,8 @@ import { PersistenceService } from '../../../../../_services/persistence.service
 import { SigaServices } from '../../../../../_services/siga.service';
 import { MultiSelect } from 'primeng/primeng';
 import { ColegiadoItem } from '../../../../../models/ColegiadoItem';
+import { BusquedaColegiadoExpressComponent } from '../../../../../commons/busqueda-colegiado-express/busqueda-colegiado-express.component';
+import { ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-filtros-guardia-colegiado',
@@ -49,7 +51,6 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
   colegInfo;
   numColeg;
   nomColeg;
-
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
     private persistenceService: PersistenceService,
@@ -127,6 +128,27 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
       this.usuarioBusquedaExpress.numColegiado = busquedaColegiado.nColegiado;
       this.filtros.numColegiado = this.usuarioBusquedaExpress.numColegiado;
     }
+  }
+
+  if (this.isColegiado && sessionStorage.getItem("origin") == "fichaColegial") {
+    sessionStorage.removeItem("origin");
+    this.progressSpinner = true
+    this.sigaServices.get("usuario_logeado").subscribe(n => {
+      const usuario = n.usuarioLogeadoItem;
+      const colegiadoItem = new ColegiadoItem();
+      colegiadoItem.nif = usuario[0].dni;
+      this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(
+        usr => {
+          let usuarioLogado = JSON.parse(usr.body).colegiadoItem[0];
+          if (usuarioLogado) {
+            this.usuarioBusquedaExpress.numColegiado = usuarioLogado.numColegiado;
+            this.usuarioBusquedaExpress.nombreAp = usuarioLogado.nombre;
+            this.filtros.numColegiado = this.usuarioBusquedaExpress.numColegiado;
+            this.search();
+          }
+          this.progressSpinner = false;
+        });
+    });
   }
 }
   changeDateFormat(date1){

@@ -102,6 +102,19 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
 
       this.searchAgain.emit(true);
     }
+
+    if(sessionStorage.getItem("origin") == "fichaColegial"){
+      this.filtro.anio = '';
+      this.openColegiado = true;
+      this.usuarioBusquedaExpress.numColegiado = this.filtro.numColegiado;
+      setTimeout(()=>{
+        if(this.buscador){
+          this.buscador.isBuscar(this.usuarioBusquedaExpress);
+        }
+      },500)
+      sessionStorage.removeItem("origin");
+      this.searchAgain.emit(true);
+    }
   }
 
   ngOnInit() {

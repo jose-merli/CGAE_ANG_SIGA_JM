@@ -7,6 +7,7 @@ import { InscripcionesItems } from '../../../../../models/guardia/InscripcionesI
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { CommonsService } from '../../../../../../app/_services/commons.service';
 import { ColegiadoItem } from '../../../../../models/ColegiadoItem';
+import { SigaStorageService } from '../../../../../siga-storage.service';
 
 @Component({
   selector: 'app-guardias-inscripciones-filtros',
@@ -42,7 +43,7 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
   isLetrado: boolean = false;
 
   textSelected: String = 'general.boton.seleccionar';
-  @Input() permisos;
+  @Input() permisoEscritura;
   /*Éste método es útil cuando queremos queremos informar de cambios en los datos desde el hijo,
     por ejemplo, si tenemos un botón en el componente hijo y queremos actualizar los datos del padre.*/
   @Output() filtrosValues = new EventEmitter<InscripcionesItems>();
@@ -51,7 +52,8 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
     private sigaServices: SigaServices,
     private translateService: TranslateService,
     private commonsService: CommonsService,
-    private persistenceService: PersistenceService) { }
+    private persistenceService: PersistenceService,
+    private sigaStorageService : SigaStorageService) { }
   
   ngAfterViewInit(): void {
     if(sessionStorage.getItem("filtroFromFichaGuardia")){
@@ -72,16 +74,14 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
 
     this.getComboTurno();
 
-    if (sessionStorage.getItem("isLetrado") != null && sessionStorage.getItem("isLetrado") != undefined) {
-      this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
-    }
+    this.isLetrado = this.sigaStorageService.isLetrado && this.sigaStorageService.idPersona;
 
     if (this.persistenceService.getHistorico() != undefined) {
       this.filtros.historico = this.persistenceService.getHistorico();
       // this.isBuscar();
     }
     if (this.persistenceService.getPermisos() != undefined) {
-      this.permisos = this.persistenceService.getPermisos();
+      this.permisoEscritura = this.persistenceService.getPermisos();
     }
     if (this.persistenceService.getFiltros() != undefined) {
       this.filtros = this.persistenceService.getFiltros();
@@ -96,14 +96,14 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
       const { numColegiado, nombre } = JSON.parse(sessionStorage.getItem("datosColegiado"));
       this.usuarioBusquedaExpress.numColegiado = numColegiado;
       this.usuarioBusquedaExpress.nombreAp = nombre.replace(/,/g, "");
-
+      this.filtros.ncolegiado = this.usuarioBusquedaExpress.numColegiado;
       //this.isBuscar();
 
       sessionStorage.removeItem("colegiadoRelleno");
       sessionStorage.removeItem("datosColegiado");
     }
 
-    this.clearFilters();
+    //this.clearFilters();
 
     if (sessionStorage.getItem("buscadorColegiados")) {
 
@@ -112,6 +112,8 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
       this.usuarioBusquedaExpress.nombreAp = busquedaColegiado.nombre + " " + busquedaColegiado.apellidos;
 
       this.usuarioBusquedaExpress.numColegiado = busquedaColegiado.nColegiado;
+
+      this.filtros.ncolegiado = this.usuarioBusquedaExpress.numColegiado;
 
       sessionStorage.removeItem("buscadorColegiados");
     }

@@ -5,6 +5,7 @@ import { SigaServices } from '../../../../../../../_services/siga.service';
 import { CommonsService } from '../../../../../../../_services/commons.service';
 import { endpoints_guardia } from '../../../../../../../utils/endpoints_guardia';
 import { TranslateService } from '../../../../../../../commons/translate';
+import { SigaStorageService } from '../../../../../../../siga-storage.service';
 
 @Component({
   selector: 'app-datos-generales-guardias',
@@ -36,16 +37,18 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
   progressSpinner;
   msgs;
   resaltadoDatos: boolean = false;
+  isLetrado : boolean = false;
 
   constructor(private persistenceService: PersistenceService,
     private sigaService: SigaServices,
     private commonServices: CommonsService,
-    private translateService: TranslateService) { }
+    private translateService: TranslateService,
+    private sigaStorageService : SigaStorageService) { }
 
 
   ngOnInit() {
     this.resaltadoDatos=true;
-
+    this.isLetrado = this.sigaStorageService.isLetrado && this.sigaStorageService.idPersona;
     this.getCols();
     this.historico = this.persistenceService.getHistorico()
     this.getComboTipoGuardia();

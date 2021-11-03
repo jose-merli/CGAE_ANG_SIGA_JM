@@ -49,7 +49,7 @@
               <label>
                 <strong>{{"justiciaGratuita.guardia.gestion.porGrupos" | translate}} </strong>
               </label>
-              <p-checkbox binary="true" [(ngModel)]="body.porGrupos" [disabled]="historico || !permisoEscritura || tieneGuardiaPrincipal" (onChange)="cambiaGrupo()"></p-checkbox>
+              <p-checkbox binary="true" [(ngModel)]="body.porGrupos" [disabled]="historico || !permisoEscritura || tieneGuardiaPrincipal || isLetrado" (onChange)="cambiaGrupo()"></p-checkbox>
             </div>
 
             <!-- Letrados Guardia -->
@@ -60,7 +60,7 @@
               <label *ngIf="body.porGrupos">
                 {{"dato.jgr.guardia.guardias.minimoLetradosGrupo" | translate}}
               </label>
-              <input [disabled]="!permisoEscritura || historico || tieneGuardiaPrincipal" [(ngModel)]="body.letradosGuardia" (onChange)="cambiaMinimo($event)" (keypress)="numberOnly($event)" type="text"
+              <input [disabled]="!permisoEscritura || historico || tieneGuardiaPrincipal || isLetrado" [(ngModel)]="body.letradosGuardia" (onChange)="cambiaMinimo($event)" (keypress)="numberOnly($event)" type="text"
                 class="form-control" [maxLength]="200" pInputText [ngClass]="styleObligatorio(body.letradosGuardia)">
             </div>
 
@@ -70,7 +70,7 @@
               <label>
                 <strong>{{"justiciaGratuita.guardia.gestion.rotarComponentesAuto" | translate}}</strong>
               </label>
-              <p-checkbox [(ngModel)]="body.rotarComponentes" binary="true" [disabled]="historico || !permisoEscritura || !body.porGrupos || tieneGuardiaPrincipal"></p-checkbox>
+              <p-checkbox [(ngModel)]="body.rotarComponentes" binary="true" [disabled]="historico || !permisoEscritura || !body.porGrupos || tieneGuardiaPrincipal || isLetrado"></p-checkbox>
             </div>
           </div>
         </div>
@@ -86,7 +86,7 @@
                 (onTargetReorder)="moverSeleccionados($event)" (onMoveToSource)="cambioExistentes($event)" (onMoveToTarget)="cambioSeleccionados($event)"
                 targetFilterPlaceholder="{{ 'informesYcomunicaciones.modelosComunicaciones.perfiles.buscarPerfil' | translate }}"
                 [showSourceControls]="false" [showTargetControls]="true" [sourceStyle]="{ height: '200px' }" [targetStyle]="{ height: '200px' }"
-                [disabled]="historico || !permisoEscritura || tieneGuardiaPrincipal">
+                [disabled]="historico || !permisoEscritura || tieneGuardiaPrincipal || isLetrado">
                 <ng-template let-item pTemplate="item">
                   <div>{{ item.por_filas}} {{ item.orden}}</div>
                 </ng-template>
@@ -98,9 +98,9 @@
     </div>
     <div *ngIf="openFicha" class="card-footer ">
       <div class="text-right main-button ">
-        <button (click)="rest()" pButton [disabled]="historico || !permisoEscritura || tieneGuardiaPrincipal" type="button" icon="fa fa-undo" iconPos="left"
+        <button (click)="rest()" pButton [disabled]="historico || !permisoEscritura || tieneGuardiaPrincipal || isLetrado" type="button" icon="fa fa-undo" iconPos="left"
           label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="save()" pButton  type="button" icon="far fa-save" iconPos="left" [disabled]="tieneGuardiaPrincipal || historico || !permisoEscritura" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="save()" pButton  type="button" icon="far fa-save" iconPos="left" [disabled]="tieneGuardiaPrincipal || historico || !permisoEscritura || isLetrado" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
   </div>

@@ -8,6 +8,7 @@ import { datos_combos } from '../../../../../../../utils/datos_combos';
 import { endpoints_guardia } from '../../../../../../../utils/endpoints_guardia';
 import { TranslateService } from '../../../../../../../commons/translate';
 import { ConfiguracionCola, GlobalGuardiasService } from '../../../../guardiasGlobal.service';
+import { SigaStorageService } from '../../../../../../../siga-storage.service';
 
 const asc = "ascendente"
 const desc = "descendente"
@@ -41,17 +42,19 @@ export class DatosConfColaComponent implements OnInit {
   msgs = [];
   progressSpinner: boolean = false;
   tieneGuardiaPrincipal : boolean = false;
+  isLetrado : boolean = false;
 
   isDisabledGuardia: boolean = true;
   constructor(private persistenceService: PersistenceService,
     private translateService: TranslateService,
     private sigaServices: SigaServices,
     private globalGuardiasService: GlobalGuardiasService,
-    private commonServices : CommonsService) { }
+    private commonServices : CommonsService,
+    private sigaStorageService : SigaStorageService) { }
 
   ngOnInit() {
     //Enviamos el valor de "porGrupo"
-    
+    this.isLetrado = this.sigaStorageService.isLetrado && this.sigaStorageService.idPersona;
     this.historico = this.persistenceService.getHistorico();
     this.sigaServices.datosRedy$.subscribe(
       data => {

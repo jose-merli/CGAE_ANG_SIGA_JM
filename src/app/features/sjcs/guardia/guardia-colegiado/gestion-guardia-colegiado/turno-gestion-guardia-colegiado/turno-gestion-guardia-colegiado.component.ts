@@ -45,15 +45,14 @@ export class TurnoGestionGuardiaColegiadoComponent implements OnInit {
         this.progressSpinner = false;
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }, () => {
-        
+        this.progressSpinner = false;
       }
     );
   }
 
   navigateToFichaTurno(){
-    sessionStorage.setItem("datosTurnoGuardiaColeg",JSON.stringify(this.turnosItem));
-    sessionStorage.setItem("originGuarCole","true");
-    this.router.navigate(['/gestionTurnos']);
+    sessionStorage.setItem("infoGuardiaColeg", JSON.stringify(this.guardia));
+    this.router.navigate(['/gestionTurnos'], { queryParams: { idturno: this.persistenceService.getDatos().idTurno } });
   }
 
   clear(){

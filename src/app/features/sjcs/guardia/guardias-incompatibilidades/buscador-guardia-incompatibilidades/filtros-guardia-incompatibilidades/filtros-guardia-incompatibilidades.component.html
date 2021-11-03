@@ -16,14 +16,18 @@
           <label>{{"dato.jgr.guardia.guardias.turno" | translate}}</label>
           <p-multiSelect #multiSelectTurno [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtros.idTurno'
             [options]="comboTurno" maxSelectedLabels="10" [selectedItemsLabel]="textSelected" styleClass="widthAll"
-            [filter]="true" filterBy="label,labelSinTilde" (onPanelShow)="focusInputField(multiSelectTurno)">
+            [filter]="true" filterBy="label,labelSinTilde" (onPanelShow)="focusInputField(multiSelectTurno)" (onChange)="onChangeTurno($event)">
           </p-multiSelect>
         </div>
 
         <!-- GUARDIA -->
         <div class="form-group-interlineado col-lg-3 col-md-3">
-          <label>{{"dato.jgr.guardia.guardias.guardia" | translate}}</label>
-          <input type="text" class="box" name="nombre" [(ngModel)]="filtros.nombre" class="form-control" pInputText>
+          <label>{{"menu.justiciaGratuita.GuardiaMenu" | translate}}</label>
+          <!--<input type="text" class="box" name="nombre" [(ngModel)]="filtros.nombre" class="form-control" pInputText>-->
+          <p-multiSelect #multiSelectGuardias [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtros.idGuardia' [disabled]="isDisabledGuardia"
+            [options]="comboGuardias" maxSelectedLabels="10" [selectedItemsLabel]="textSelected" styleClass="widthAll"
+            [filter]="true" filterBy="label,labelSinTilde" (onPanelShow)="focusInputField(multiSelectGuardias)">
+          </p-multiSelect>
         </div>
 
         <!-- AREAS -->

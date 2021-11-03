@@ -518,6 +518,7 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
           });
         },
         err => {
+          console.log(err);
         },
         () => {
           this.rowGroups.find(el => el.id == row.id).cells[2].combo = this.comboColegiados;
