@@ -167,6 +167,35 @@ export class FichaProgramacionComponent implements OnInit {
     } else {
       this.modoEdicion = false;
     }
+//si el origen es guardias de colegiado
+
+  if (sessionStorage.getItem('guardiaColegiadoData')) {
+    this.dataToReceive = JSON.parse(sessionStorage.getItem('guardiaColegiadoData'));
+    
+
+    if (this.dataToReceive.idCalendarioProgramado != null){
+      this.disableGenerar = false;
+      this.getGuardiasFromCal(this.dataToReceive.idCalendarioProgramado);
+    }else{
+      this.disableGenerar = true;
+      this.dataReady = true;
+    }
+    this.rowGroupsSaved = this.dataToReceive.tabla;
+    console.log('rowGroupsSaved: ', this.rowGroupsSaved)
+    this.datosGenerales = JSON.parse(sessionStorage.getItem('guardiaColegiadoData'));
+    this.datosGeneralesIniciales = Object.assign({},this.datosGenerales );
+    this.duplicar = this.dataToReceive.duplicar;
+    //this.search();
+    this.modoEdicion = true;
+    sessionStorage.removeItem('guardiaColegiadoData');
+  } else {
+    this.modoEdicion = false;
+  }
+
+  
+
+    
+
     this.obtenerPermisos();
 
     if (sessionStorage.getItem("filtrosBusquedaGuardias")) {
@@ -178,22 +207,7 @@ export class FichaProgramacionComponent implements OnInit {
     }
 this.estado = this.datosGeneralesIniciales.estado;
 
-//si el origen es guardias de colegiado
-
-if(sessionStorage.getItem('guardiaColegiadoData')){
   
-  this.dataToReceive = JSON.parse(sessionStorage.getItem('guardiaColegiadoData'));
-  sessionStorage.removeItem('guardiaColegiadoData');
-  if (this.dataToReceive.idCalendarioProgramado != null){
-    this.disableGenerar = false;
-    this.getGuardiasFromCal(this.dataToReceive.idCalendarioProgramado);
-  }else{
-    this.disableGenerar = true;
-    this.dataReady = true;
-  }
-
-  
-}
 
   }
   ngOnDestroy(){

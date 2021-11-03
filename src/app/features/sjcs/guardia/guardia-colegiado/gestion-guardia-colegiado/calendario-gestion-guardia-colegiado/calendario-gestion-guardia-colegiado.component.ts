@@ -6,6 +6,7 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 import { GuardiaItem } from '../../../../../../models/guardia/GuardiaItem';
 import * as moment from 'moment';
 import { CalendarioProgramadoItem } from '../../../../../../models/guardia/CalendarioProgramadoItem';
+import { CommonsService } from '../../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-calendario-gestion-guardia-colegiado',
@@ -17,29 +18,59 @@ export class CalendarioGestionGuardiaColegiadoComponent implements OnInit {
   msgs;
   progressSpinner;
   calendarioItem;
-  calendarioItemSend;
   calendarioBody: GuardiaItem;
   idConjuntoGuardia;
   responseObject
+ dataRecived:boolean;
+ comboEstado = [
+  { label: "Pendiente", value: "5" },
+  { label: "Programada", value: "1" },
+  { label: "En proceso", value: "2" },
+  { label: "Procesada con Errores", value: "3" },
+  { label: "Generada", value: "4" }
+];
+comboListaGuardias =[];
   constructor(
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
     private translateService: TranslateService,
-    private router: Router
+    private router: Router,
+    private commonsService : CommonsService
   ) { }
 
   ngOnInit() {
     this.progressSpinner = true;
     if (this.persistenceService.getDatos()) {
       this.calendarioBody = this.persistenceService.getDatos();
-      this.getCalendarioInfo();
+      this.getComboConjuntoGuardia();
+      if(this.comboListaGuardias != null || this.comboListaGuardias != undefined){
+        this.getCalendarioInfo();
+      }
+      
     }
     this.progressSpinner = false
   }
 
+  getComboConjuntoGuardia() {
+    this.progressSpinner = true
+    this.sigaServices.get(
+      "busquedaGuardia_conjuntoGuardia").subscribe(
+        data => {
+          this.comboListaGuardias = data.combooItems;
+          this.commonsService.arregloTildesCombo(this.comboListaGuardias);
+          this.progressSpinner = false
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false
+        }
+      )
+
+  }
+
   getCalendarioInfo() {
 
-
+    this.progressSpinner = true
     let datosEntrada =
     {
       'idTurno': this.calendarioBody.idTurno,
@@ -51,42 +82,42 @@ export class CalendarioGestionGuardiaColegiadoComponent implements OnInit {
       'fechaProgramadaHasta': null,
     };
     this.sigaServices.post(
-      "guardiaCalendario_buscar", datosEntrada).subscribe(
+      "guardiaUltimoCalendario_buscar", datosEntrada).subscribe(
         data => {
           console.log('data: ', data.body)
           let error = JSON.parse(data.body).error;
-          let datos = JSON.parse(data.body);
-          if (datos && datos.length > 0) {
-
+          this.calendarioItem = JSON.parse(data.body);
+          if(this.calendarioItem){
             this.responseObject =
             {
               'duplicar': false,
-              'turno': datos[0].turno,
-              'nombre': datos[0].guardia,
+              'turno': this.calendarioItem.turno,
+              'nombre': this.calendarioItem.guardia,
               'tabla': [],
-              'idTurno': datos[0].idTurno,
-              'idGuardia': datos[0].idGuardia,
-              'observaciones': datos[0].observaciones,
-              'fechaDesde': datos[0].fechaDesde.split("-")[2].split(" ")[0] + "/" + datos[0].fechaDesde.split("-")[1] + "/" + datos[0].fechaDesde.split("-")[0],
-              'fechaHasta': datos[0].fechaHasta.split("-")[2].split(" ")[0] + "/" + datos[0].fechaHasta.split("-")[1] + "/" + datos[0].fechaHasta.split("-")[0],
-              'fechaProgramacion': moment(datos[0].fechaProgramacion, 'DD/MM/YYYY HH:mm:ss').toDate().toString(),
-              'estado': datos[0].estado,
-              'generado': {value: datos[0].generado},
-              'numGuardias': datos[0].numGuardias,
-              'idCalG': datos[0].idCalG,
-              'listaGuarias': { value: datos[0].listaGuardias },
-              'idCalendarioProgramado': datos[0].idCalendarioProgramado,
-              'facturado': datos[0].facturado,
-              'asistenciasAsociadas': datos[0].asistenciasAsociadas,
-              'filtrosBusqueda' : new CalendarioProgramadoItem()
+              'idTurno': this.calendarioItem.idTurno,
+              'idGuardia': this.calendarioItem.idGuardia,
+              'observaciones': this.calendarioItem.observaciones,
+              'fechaDesde': this.calendarioItem.fechaDesde.split("-")[2].split(" ")[0] +"/"+ this.calendarioItem.fechaDesde.split("-")[1] + "/"+ this.calendarioItem.fechaDesde.split("-")[0],
+              'fechaHasta': this.calendarioItem.fechaHasta.split("-")[2].split(" ")[0] +"/"+ this.calendarioItem.fechaHasta.split("-")[1] + "/"+ this.calendarioItem.fechaHasta.split("-")[0],
+              'fechaProgramacion': moment(this.calendarioItem.fechaProgramacion, 'DD/MM/YYYY HH:mm:ss').toDate(),
+              'estado': this.comboEstado.find(comboItem => comboItem.value == this.calendarioItem.estado).label,
+              'generado': this.calendarioItem.generado,
+              'numGuardias': this.calendarioItem.numGuardias,
+              'idCalG': this.calendarioItem.idCalG,
+              'listaGuarias':   {value : this.comboListaGuardias.find(comboItem => comboItem.label == this.calendarioItem.listaGuardias).value},
+              'idCalendarioProgramado': this.calendarioItem.idCalendarioProgramado,
+              'facturado': this.calendarioItem.facturado,
+              'asistenciasAsociadas': this.calendarioItem.asistenciasAsociadas
             };
-            
+          this.dataRecived = true;
+          }else{
 
           }
-
+          this.progressSpinner = false
         },
         (error) => {
           console.log(error);
+          this.progressSpinner = false
         }
       );
   }
@@ -94,7 +125,7 @@ export class CalendarioGestionGuardiaColegiadoComponent implements OnInit {
 
 
   navigateToFichaGuardia() {
-    sessionStorage.setItem('guardiaColegiadoData', JSON.stringify(this.responseObject));
+    sessionStorage.setItem('guardiaColegiadoData',JSON.stringify(this.responseObject));
     this.router.navigate(["/fichaProgramacion"]);
 
 

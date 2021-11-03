@@ -988,7 +988,9 @@ export class GuardiasInscripcionesComponent implements OnInit {
         this.commonsService.scrollTablaFoco('tablaFoco');
       });*/
   }
-
+  backTo() {
+    this.location.back();
+  }
   resetSelect() {
     if (this.tabla) {
       this.tabla.selectedDatos = [];

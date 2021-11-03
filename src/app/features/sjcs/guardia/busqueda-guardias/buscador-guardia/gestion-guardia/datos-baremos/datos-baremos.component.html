@@ -1,3 +1,4 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="busqueda-container" id="baremos">
   <div class="card">
     <div class="card-header header-ficha">
@@ -17,7 +18,7 @@
               <strong>{{dato.value}}</strong>
             </label>
             <div> </div>
-            <a href="">Listado de baremos</a>
+            <a class="enlace" (click)="goToFichaBaremos()">Listado de baremos</a>
           </div>
         </div>
       </div>
