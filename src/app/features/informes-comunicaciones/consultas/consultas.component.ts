@@ -595,6 +595,7 @@ export class ConsultasComponent implements OnInit {
   }
 
   navigateTo(dato) {
+    sessionStorage.removeItem("servicioDetalle");
     if (
       dato[dato.length - 1].fechaBaja == null &&
       this.historico &&
@@ -661,6 +662,7 @@ export class ConsultasComponent implements OnInit {
   addConsulta() {
     this.router.navigate(["/fichaConsulta"]);
     sessionStorage.removeItem("consultasSearch");
+    sessionStorage.removeItem("servicioDetalle");
     sessionStorage.setItem("crearNuevaConsulta", JSON.stringify("true"));
   }
 

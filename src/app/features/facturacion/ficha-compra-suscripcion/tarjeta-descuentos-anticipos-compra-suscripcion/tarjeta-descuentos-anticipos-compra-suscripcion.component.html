@@ -1,0 +1,220 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="ficha-container">
+  <div class="card">
+    <div class="card-header header-ficha" (click)="onHideTarjeta()">
+      <div *ngIf="showTarjeta" class="header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fa fa-user icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{ "facturacion.productos.descuentosAnticipos" | translate }}</label>
+        <div class="d-flex justify-content-start mb-1 ml-auto">
+          <i class="fa fa-angle-up ml-auto"></i>
+        </div>
+      </div>
+      <div *ngIf="!showTarjeta" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="fa fa-user icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1">
+            <label class="mr-auto title-ficha">{{ "facturacion.productos.descuentosAnticipos" | translate }}
+            </label>
+          </div>
+          <div class="row">
+            <div class="col-3">
+              <label>{{ "facturacionSJCS.facturacionesYPagos.importePendiente" | translate }}
+                <span>{{ ficha.impTotal - ficha.impPagado }} €</span>
+              </label>
+            </div>
+            <div class="d-flex justify-content-start mb-1 ml-auto">
+              <i class="fa fa-angle-down ml-auto"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div [hidden]="!showTarjeta">
+      <div class="card-body p-0">
+        <p-table *ngIf="ficha.productos != null" #descTable [value]="descuentosTarjeta" [columns]="colsProd" [(selection)]="selectedRows"
+          selectionMode="multiple" [responsive]="true" class="tabla-listado" [paginator]="true" [rows]="rowsPerPage"
+          [first]="first" (onRowSelect)="onRowSelect(selectedDatos)"
+          (sortFunction)="customSort($event)" [customSort]="true" paginatorPosition="both">
+
+          <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+              <col *ngFor="let col of cols" [style.width]="col.width">
+            </colgroup>
+          </ng-template>
+
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+                {{ col.header | translate}}
+                <p-sortIcon [field]="col.field"></p-sortIcon>
+                <input pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()"
+                  *ngSwitchCase="col.field" pInputText type="text"
+                  (input)="descTable.filter($event.target.value, col.field, 'contains')" />
+              </th>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+            <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+              <td class="text-center" *ngFor="let col of columns">
+                <div *ngIf="col.field =='tipo'">
+                  <span>{{rowData[col.field]}}</span>
+                </div>
+                <div *ngIf="col.field =='importe'">
+                  <span>{{rowData[col.field]}} €</span>
+                  <!-- <span *ngIf="!editable" (click)="changeEditable()">{{rowData[col.field]}} €</span>
+                  <input *ngIf="editable"
+                pInputText type="text" (input)="checkTotal()" (keypress)="numberOnly($event)" [(ngModel)]="rowData[col.field]" type="number" pInputText step=".01">
+               -->
+                </div>
+                
+                </td>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="emptymessage" let-columns>
+            <tr>
+              <td [attr.colspan]="columns.length">
+                {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
+              </td>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="paginatorleft">
+            <div class="mostrar d-flex text-right justify-content-end">
+              <label class="pr-3 registros-totales">Mostrando registros del {{descTable.first + 1}} al
+                {{descTable.first +
+                descTable.rows}} de un total de {{descTable.totalRecords}}</label>
+              <div>
+                <label class="pr-3 numSeleccionados">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros'
+                  |
+                  translate }}: {{numSelectedRows}}
+                </label>
+              </div>
+              <label>{{"general.message.mostrar" | translate}}</label>
+              <p-dropdown [(ngModel)]="rowsPerPage" [options]="rowsPerPageSelectValues"
+                (onChange)="onChangeRowsPerPages($event)">
+              </p-dropdown>
+              <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+
+              <div class="ml-3 selectAll">
+                <p-checkbox (onChange)="onChangeSelectAllRows()" [(ngModel)]="selectAllRows" binary="true"
+                  label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname">
+                </p-checkbox>
+              </div>
+            </div>
+          </ng-template>
+        </p-table>
+
+        
+
+
+
+
+
+
+        <p-table *ngIf="ficha.productos == null" #descTable [value]="descuentosTarjeta" [columns]="colsServ" [(selection)]="selectedRows"
+          selectionMode="multiple" [responsive]="true" class="tabla-listado" [paginator]="true" [rows]="rowsPerPage"
+          [first]="first" (onRowSelect)="onRowSelect(selectedDatos)"
+          (sortFunction)="customSort($event)" [customSort]="true" paginatorPosition="both">
+
+          <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+              <col *ngFor="let col of cols" [style.width]="col.width">
+            </colgroup>
+          </ng-template>
+
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+                {{ col.header | translate}}
+                <p-sortIcon [field]="col.field"></p-sortIcon>
+                <input pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()"
+                  *ngSwitchCase="col.field" pInputText type="text"
+                  (input)="descTable.filter($event.target.value, col.field, 'contains')" />
+              </th>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+            <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+              <td class="text-center" *ngFor="let col of columns">
+                <div *ngIf="col.field =='tipo'">
+                  <span>{{rowData[col.field]}}</span>
+                </div>
+                <div *ngIf="col.field =='importe'">
+                  <span>{{rowData[col.field]}} €</span>
+                  <!-- <span *ngIf="!editable" (click)="changeEditable()">{{rowData[col.field]}} €</span>
+                  <input *ngIf="editable"
+                pInputText type="text" (input)="checkTotal()" (keypress)="numberOnly($event)" [(ngModel)]="rowData[col.field]" type="number" pInputText step=".01">
+               -->
+                </div>
+                
+                </td>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="emptymessage" let-columns>
+            <tr>
+              <td [attr.colspan]="columns.length">
+                {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
+              </td>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="paginatorleft">
+            <div class="mostrar d-flex text-right justify-content-end">
+              <label class="pr-3 registros-totales">Mostrando registros del {{descTable.first + 1}} al
+                {{descTable.first +
+                descTable.rows}} de un total de {{descTable.totalRecords}}</label>
+              <div>
+                <label class="pr-3 numSeleccionados">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros'
+                  |
+                  translate }}: {{numSelectedRows}}
+                </label>
+              </div>
+              <label>{{"general.message.mostrar" | translate}}</label>
+              <p-dropdown [(ngModel)]="rowsPerPage" [options]="rowsPerPageSelectValues"
+                (onChange)="onChangeRowsPerPages($event)">
+              </p-dropdown>
+              <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+
+              <div class="ml-3 selectAll">
+                <p-checkbox (onChange)="onChangeSelectAllRows()" [(ngModel)]="selectAllRows" binary="true"
+                  label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname">
+                </p-checkbox>
+              </div>
+            </div>
+          </ng-template>
+        </p-table>
+
+        <p-footer>
+          <div class="text-right main-button">
+            <!-- Nuevo -->
+            <!-- Revisar condicion de no facturado -->
+            <button pButton (click)="nuevoAnticipo()" type="button" icon="fa fa-plus" iconPos="left"
+              label="{{ 'general.boton.new' | translate}}"
+              [disabled]="ficha.fechaAceptada != null || ficha.fechaDenegada != null || ficha.facturas > 0 || (ficha.productos != null && descuentosTarjeta.length > 0)"></button>
+            <!-- Borrar -->
+            <!-- Revisar condicion de no facturado -->
+            <button pButton (click)="borrarAnticipo()" type="button" icon="fa fa-eraser" iconPos="left"
+              label="{{ 'general.boton.borrar' | translate}}"
+              [disabled]="(ficha.fechaAceptada != null || ficha.fechaDenegada != null) || selectedRows.length == 0 || ficha.facturas > 0 || disableBorrar"></button>
+          </div>
+        </p-footer>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div *ngIf="progressSpinner" class="overlay-spinner">
+      <div class="loader"></div>
+    </div>

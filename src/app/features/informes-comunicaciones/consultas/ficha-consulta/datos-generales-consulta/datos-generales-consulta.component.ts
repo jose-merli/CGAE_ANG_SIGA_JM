@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { DataTable } from "primeng/datatable";
 import { DatosGeneralesConsultaItem } from '../../../../../models/DatosGeneralesConsultaItem';
 import { DestinatariosItem } from '../../../../../models/DestinatariosItem';
@@ -9,6 +9,8 @@ import { TranslateService } from '../../../../../commons/translate/translation.s
 import { Subject } from "rxjs/Subject";
 import { ModelosComConsultasItem } from '../../../../../models/ModelosComConsultasItem';
 import { CommonsService } from '../../../../../_services/commons.service';
+import { ServicioDetalleItem } from '../../../../../models/ServicioDetalleItem';
+import { Router } from '@angular/router';
 
 @Component({
   selector: "app-datos-generales-consulta",
@@ -40,6 +42,8 @@ export class DatosGeneralesConsultaComponent implements OnInit {
   institucionActual: any;
   msgs: Message[];
   generica: string;
+  constructorConsultaExperta: string;
+  @Output() emitConstructorConsultaExperta = new EventEmitter<string>();
   listaModelos: any = [];
   progressSpinner: Boolean = false;
   resaltadoDatos: boolean = false;
@@ -67,6 +71,7 @@ export class DatosGeneralesConsultaComponent implements OnInit {
 
   private consultasRefresh = new Subject<any>();
   consultasRefresh$ = this.consultasRefresh.asObservable();
+  servicioDetalle: ServicioDetalleItem = new ServicioDetalleItem();
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -74,7 +79,8 @@ export class DatosGeneralesConsultaComponent implements OnInit {
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
     private commonsService: CommonsService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -92,6 +98,18 @@ export class DatosGeneralesConsultaComponent implements OnInit {
     if (sessionStorage.getItem("listadoModelos") != undefined) {
       this.listaModelos = JSON.parse(sessionStorage.getItem("listadoModelos"));
     }
+
+    if(sessionStorage.getItem("servicioDetalle") != undefined){
+      this.servicioDetalle = JSON.parse(sessionStorage.getItem("servicioDetalle"));
+      this.body.nombre = this.servicioDetalle.descripcion;
+      this.body.idModulo = "3";//PONGO CENSO PROVISIONAL COMO MODULO
+      this.body.idObjetivo = "3";
+      this.cargaComboClaseCom("3");
+      this.body.idClaseComunicacion = "1";
+      this.generica = 'N';
+
+    }
+
     this.cols = [
       {
         field: "consulta",
@@ -150,6 +168,10 @@ export class DatosGeneralesConsultaComponent implements OnInit {
     } else {
       this.editMode = false;
     }
+  }
+
+  emitUsoConstructorConsultaExperta(){
+    this.emitConstructorConsultaExperta.emit(this.constructorConsultaExperta);
   }
 
   // Mensajes
@@ -229,8 +251,13 @@ export class DatosGeneralesConsultaComponent implements OnInit {
   cargaComboClaseCom(event) {
     this.onlyCheckDatos();
     if (event != null) {
-      this.body.idModulo = event.value;
+      if(event.value != null){
+        this.body.idModulo = event.value;
+      }else if (sessionStorage.getItem("servicioDetalle") != undefined){
+        this.body.idModulo = event;
+      }
     }
+
     this.sigaServices
       .getParam(
         "consultas_claseComunicacionesByModulo",
@@ -501,6 +528,10 @@ para poder filtrar el dato con o sin estos caracteres*/
           console.log(err);
         },
         () => {
+          if(sessionStorage.getItem("servicioDetalle") != undefined){
+            sessionStorage.setItem("vieneDeNuevaCondicion", "true");
+            this.router.navigate(["/fichaServicios"]);
+          }
           this.progressSpinner = false;
         }
       );
