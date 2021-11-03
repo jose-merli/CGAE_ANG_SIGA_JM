@@ -424,6 +424,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
       newProducto.idtipoiva = selectedProducto.idtipoiva;
       newProducto.idPeticion = this.ficha.nSolicitud;
       newProducto.noFacturable = selectedProducto.noFacturable;
+      newProducto.solicitarBaja = selectedProducto.solicitarBaja;
       this.productosTarjeta.push(newProducto);
       this.checkTotal();
     }

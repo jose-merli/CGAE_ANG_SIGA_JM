@@ -278,7 +278,9 @@ export class TarjetaFiltroCompraProductosComponent implements OnInit {
     let nuevaCompra = new FichaCompraSuscripcionItem();
     nuevaCompra.productos = [];
     //Se asigna la persona seleccionada si la hubiera
-    //nuevaCompra.idPersona = 
+    if(this.filtrosCompraProductos.idpersona != null){
+      nuevaCompra.idPersona = this.filtrosCompraProductos.idpersona;
+    }
     this.sigaServices.post('PyS_getFichaCompraSuscripcion', nuevaCompra).subscribe(
       (n) => {
         this.progressSpinner = false;
