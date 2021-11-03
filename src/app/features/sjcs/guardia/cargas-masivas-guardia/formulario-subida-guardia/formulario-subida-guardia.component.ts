@@ -154,6 +154,12 @@ export class FormularioSubidaGuardiaComponent implements OnInit {
   }
 
   uploadFile() {
+    if(this.fechaSolicitud==undefined && this.tipo == 'I') {
+      this.showFail("Debe rellenar todos los campos obligatorios");
+    }else if ((this.fechaDesde==undefined && this.tipo == 'C') || (this.fechaHasta==undefined && this.tipo == 'C')){
+      this.showFail("Debe rellenar todos los campos obligatorios");
+    }
+    else{
     this.progressSpinner = true;
     let body: CargaMasivaItem = new CargaMasivaItem();
     if (this.file != undefined) {
@@ -248,6 +254,7 @@ export class FormularioSubidaGuardiaComponent implements OnInit {
       this.progressSpinner = false;
       this.showMessage("info", "Información", "Debe rellenar todos los campos obligatorios");
     }
+  }
   }
 
   fillFechaCarga(event) {

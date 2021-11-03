@@ -58,6 +58,7 @@ export let endpoints_guardia: any = {
 
     //Calendarios programados
     guardiaCalendario_buscar: "guardia/buscarCalendariosProgramados",
+    guardiaUltimoCalendario_buscar: "guardia/buscarLastCalendarioProgramado",
     guardiaCalendario_eliminar: "guardia/eliminarCalendariosProgramados",
     guardiaCalendario_guardar: "guardia/guardarCalendariosProgramados",
     guardiaCalendario_guardiaFromConjunto: "guardia/guardiasFromIdConjunto",

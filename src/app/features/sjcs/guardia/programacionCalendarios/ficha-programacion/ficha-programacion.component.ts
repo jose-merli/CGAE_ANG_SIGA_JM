@@ -942,4 +942,40 @@ descargarLog(event){
   clear() {
     this.msgs = [];
   }
+
+  linkGuardiaColegiado2(event){
+
+      let calendario = {
+           'orden': event.orden,
+              'turno': event.turno,
+              'guardia': event.guardia,
+              'generado': event.generado,
+              'idGuardia': event.idGuardia,
+              'idTurno': event.idTurno
+      }
+      let anadirLetrado = {
+        'duplicar' : '',
+        'tabla': [],
+        'turno': calendario.turno,
+        'nombre': calendario.guardia,
+        'generado': this.datosGenerales.generado,
+        'numGuardias': '',
+        'listaGuarias': {label: '', value: ''},
+        'fechaDesde': this.datosGenerales.fechaDesde,
+        'fechaHasta': this.datosGenerales.fechaHasta,
+        'fechaProgramacion': this.datosGenerales.fechaProgramacion,
+        'estado': this.datosGenerales.estado,
+        'observaciones': '',
+        'idCalendarioProgramado': this.datosGenerales.idCalendarioProgramado,
+        'idTurno': calendario.idTurno,
+        'idGuardia': calendario.idGuardia,
+        'orden': calendario.orden,
+        'idConjunto': this.datosGenerales.listaGuarias.value
+      };
+    
+    sessionStorage.setItem("calendariosProgramados","true");
+    sessionStorage.setItem("calendarioSeleccinoado", JSON.stringify(anadirLetrado));
+    this.router.navigate(["/buscadorColegiados"]);
+    
+  }
 }

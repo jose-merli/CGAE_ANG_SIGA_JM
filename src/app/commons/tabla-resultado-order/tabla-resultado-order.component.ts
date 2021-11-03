@@ -102,6 +102,7 @@ export class TablaResultadoOrderComponent implements OnInit {
   @Input() pantalla;
   @Input() minimoLetrado;
   @Input() s;
+  @Output() linkGuardiaColegiado = new EventEmitter<any>();
   numPage = 0;
   constructor(
     private renderer: Renderer2,
@@ -1017,9 +1018,7 @@ this.totalRegistros = this.rowGroups.length;
               'idTurno': this.rowwSelected.cells[6].value
       }
     
-    sessionStorage.setItem("calendariosProgramados","true");
-    sessionStorage.setItem("calendarioSeleccinoado", JSON.stringify(calendario));
-    this.router.navigate(["/buscadorColegiados"]);
+    this.linkGuardiaColegiado.emit(calendario);
     }
   }
   showFail(msg) {

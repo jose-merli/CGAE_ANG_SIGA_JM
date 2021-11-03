@@ -47,6 +47,7 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
   @Output() idOpened = new EventEmitter<Boolean>();
   @Output() disGen = new EventEmitter<Boolean>();
   @Output() fillDatosTarjetaGuardiasCalendario = new EventEmitter<any[]>();
+  @Output() linkGuardiaColegiado2 = new EventEmitter<any>();
   @Output() searchGuardiasFromCal = new EventEmitter<string>();
   @Input() estado;
   dataReady = false;
@@ -570,5 +571,7 @@ setGuardiasCalendario(guardiaCalendario){
   disableGen($event){
     this.disGen.emit($event);
   }
-  
+  linkGuardiaColegiado(event){
+    this.linkGuardiaColegiado2.emit(event);
+  }
 }

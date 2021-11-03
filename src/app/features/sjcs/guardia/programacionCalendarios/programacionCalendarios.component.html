@@ -12,8 +12,8 @@
   </div>
 
   <div class="busqueda-container" class="card-body card-body-ficha">
-    <app-filtros-guardia-calendarios  (isOpen)="isOpenReceive($event)" (filtrosValues)="getFiltrosValues($event)"></app-filtros-guardia-calendarios>
-    <app-tabla-resultado-mix *ngIf="buscar" [dataToDuplicate] = "dataToDuplicate" [calendarios] ="true" [totalRegistros] = "totalRegistros" [seleccionarTodo]="seleccionarTodo"
+    <app-filtros-guardia-calendarios  [permisoTotal]="permisoTotal" (isOpen)="isOpenReceive($event)" (filtrosValues)="getFiltrosValues($event)"></app-filtros-guardia-calendarios>
+    <app-tabla-resultado-mix *ngIf="buscar" [permisoTotal]="permisoTotal" [dataToDuplicate] = "dataToDuplicate" [calendarios] ="true" [totalRegistros] = "totalRegistros" [seleccionarTodo]="seleccionarTodo"
     [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" [comboGuardiasIncompatibles]="comboGuardiasIncompatibles" [filtrosValues]="filtrosValues"
     (anySelected)="notifyAnySelected($event)" (selectedRow)="checkSelectedRow($event)" (save)="save($event)"  (delete)="delete($event)" (deleteFromCombo)="deleteFromCombo($event)" (descargaLOG)="descargaLOG($event)"></app-tabla-resultado-mix>
   </div>

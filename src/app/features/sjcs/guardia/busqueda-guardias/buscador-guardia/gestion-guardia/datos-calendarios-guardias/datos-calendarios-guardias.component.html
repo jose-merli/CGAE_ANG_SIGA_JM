@@ -187,7 +187,7 @@
                 <strong *ngIf="body.separarGuardia">{{'justiciaGratuita.guardia.gestion.separarGuardiaCalendario'|translate}} </strong>
               </div>
               <div class="col-2">
-                <p-checkbox binary="true" [disabled]="!permisoEscritura || historico" [(ngModel)]="body.separarGuardia"></p-checkbox>
+                <p-checkbox binary="true" [disabled]="!permisoEscritura || historico || permisoEscritura" [(ngModel)]="body.separarGuardia"></p-checkbox>
               </div>
             </div>
           </div>
