@@ -71,8 +71,12 @@ export class ContadorRectSeriesFacturaComponent implements OnInit {
       n => {
         this.contadoresRectificativasSerie = n.contadorSeriesItems;
         console.log(this.contadoresRectificativasSerie);
-        this.actualizarInputs();
 
+        if (this.contadoresRectificativasSerie.find(c => c.idContador == this.body.idContadorFacturas)) {
+          this.body.idContadorFacturasRectificativas = this.body.idContadorFacturas;
+          this.body.idContadorFacturas = null;
+        }
+        this.actualizarInputs();
       },
       err => {
         console.log(err);
@@ -106,6 +110,7 @@ export class ContadorRectSeriesFacturaComponent implements OnInit {
 
     this.sigaServices.post("facturacionPyS_guardarSerieFacturacion", this.body).subscribe(
       n => {
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
         this.persistenceService.setDatos(this.bodyInicial);
         this.guardadoSend.emit();

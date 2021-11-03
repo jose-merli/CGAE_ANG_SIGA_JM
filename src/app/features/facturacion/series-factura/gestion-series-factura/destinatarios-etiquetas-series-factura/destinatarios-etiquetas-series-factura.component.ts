@@ -102,7 +102,7 @@ export class DestinatariosEtiquetasSeriesFacturaComponent implements OnInit {
 
     this.sigaServices.post("facturacionPyS_guardarEtiquetasSerieFacturacion", objEtiquetas).subscribe(
       n => {
-        // this.showSuccess(this.translateService.instant("informesYcomunicaciones.enviosMasivos.destinatarioIndv.mensaje.guardar.etiquetas.ok"));
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.etiquetasSeleccionadasInicial = JSON.parse(JSON.stringify(this.etiquetasSeleccionadas));
         this.etiquetasNoSeleccionadasInicial = JSON.parse(JSON.stringify(this.etiquetasNoSeleccionadas));
         this.progressSpinner = false;
@@ -115,6 +115,15 @@ export class DestinatariosEtiquetasSeriesFacturaComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
   }
 
   // Abrir y cerrar la ficha

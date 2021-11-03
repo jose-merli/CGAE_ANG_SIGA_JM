@@ -48,11 +48,12 @@ export class TraspasoSeriesFacturaComponent implements OnInit {
 
   // Guardar
 
-  save(): void {
+  guardar(): void {
     this.progressSpinner = true;
 
     this.sigaServices.post("facturacionPyS_guardarSerieFacturacion", this.body).subscribe(
       n => {
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
         this.persistenceService.setDatos(this.bodyInicial);
         this.guardadoSend.emit();

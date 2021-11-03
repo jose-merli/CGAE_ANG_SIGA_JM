@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Message } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../commons/translate';
@@ -28,7 +29,8 @@ export class GestionSeriesFacturaComponent implements OnInit {
 
   constructor(
     private translateService: TranslateService,
-    private persistenceService: PersistenceService
+    private persistenceService: PersistenceService,
+    private location: Location
   ) { }
 
   ngOnInit() {
@@ -174,6 +176,9 @@ export class GestionSeriesFacturaComponent implements OnInit {
       top.scrollIntoView();
       top = null;
     }
+  }
 
+  backTo() {
+    this.location.back();
   }
 }

@@ -63,10 +63,21 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit {
 
     if (this.persistenceService.getDatos()) {
       this.body = this.persistenceService.getDatos();
-      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+      
       console.log(this.body);
 
       this.estado = this.esActivo() ? "Alta" : "Baja";
+      this.body.tiposProductos.forEach(e => {
+        if (e.color == undefined) {
+          e.color = "#024eff";
+        }
+      });
+      this.body.tiposServicios.forEach(e => {
+        if (e.color == undefined) {
+          e.color = "#024eff";
+        }
+      });
+      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     }
 
     this.getCombos();
@@ -192,27 +203,6 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit {
     
   }
 
-  // Blur para el autocompletado
-
-  visiblePanelBlurTiposProductos(event) {
-    if (this.autocompleteTiposProductos.highlightOption != undefined) {
-      this.autocompleteTiposProductos.highlightOption.color = "#024eff";
-      this.suggestionsTiposProductos.push(this.autocompleteTiposProductos.highlightOption);
-      this.autocompleteTiposProductos.highlightOption = undefined;
-    }
-    this.autocompleteTiposProductos.panelVisible = false;
-  }
-
-  visiblePanelBlurTiposServicios(event) {
-    if (this.autocompleteTiposServicios.highlightOption != undefined) {
-      this.autocompleteTiposServicios.highlightOption.color = "#024eff";
-      this.suggestionsTiposServicios.push(this.autocompleteTiposServicios.highlightOption);
-      this.autocompleteTiposServicios.highlightOption = undefined;
-    }
-    this.autocompleteTiposServicios.panelVisible = false;
-  }
-
-
   // Eliminar series de facturación
 
   confirmEliminar(): void {
@@ -323,6 +313,7 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit {
 
     this.sigaServices.post("facturacionPyS_guardarSerieFacturacion", this.body).subscribe(
       n => {
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
         this.persistenceService.setDatos(this.bodyInicial);
         this.guardadoSend.emit();

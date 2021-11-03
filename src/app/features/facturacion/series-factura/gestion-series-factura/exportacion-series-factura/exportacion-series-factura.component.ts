@@ -72,6 +72,7 @@ export class ExportacionSeriesFacturaComponent implements OnInit {
 
     this.sigaServices.post("facturacionPyS_guardarSerieFacturacion", this.body).subscribe(
       n => {
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
         this.persistenceService.setDatos(this.bodyInicial);
         this.guardadoSend.emit();
@@ -96,6 +97,12 @@ export class ExportacionSeriesFacturaComponent implements OnInit {
       summary: summary,
       detail: msg
     });
+  }
+
+  // Label de un combo
+  findLabelInCombo(combo: any[], value) {
+    let item = combo.find(c => c.value == value);
+    return item ? item.label : "";
   }
 
   // Abrir y cerrar la ficha

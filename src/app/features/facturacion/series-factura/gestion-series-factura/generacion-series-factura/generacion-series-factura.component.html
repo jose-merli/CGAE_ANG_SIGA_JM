@@ -18,9 +18,9 @@
             <label>Generar ficheros de facturas autom.: 
               <span>{{ body.generarPDF ? "Sí" : "No" }}</span></label>
             <label>Modelo generación del fichero de factura: 
-              <span>{{ body.idModeloFactura }}</span></label>
+              <span>{{ findLabelInCombo(comboModeloFactura, body.idModeloFactura) }}</span></label>
             <label>Modelo generación de factura rectificativa: 
-              <span>{{ body.idModeloComunicacion }}</span></label>
+              <span>{{ findLabelInCombo(comboModeloFactura, body.idModeloRectificativa) }}</span></label>
             
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('generacion')"
               *ngIf="!esFichaActiva('generacion')"></i>
@@ -68,7 +68,7 @@
           (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
 
         <button pButton type="button" icon="fa fa-save" iconPos="left"
-          label="{{ 'general.boton.guardar' | translate }}"></button>
+          (click)="guardar()" label="{{ 'general.boton.guardar' | translate }}"></button>
       </div>
     </div>
   </div>

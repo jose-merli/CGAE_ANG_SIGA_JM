@@ -1,6 +1,7 @@
 import { HostListener, Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { MultiSelect } from 'primeng/multiselect';
 import { TranslateService } from '../../../../commons/translate';
 import { ComboItem } from '../../../../models/ComboItem';
@@ -44,7 +45,8 @@ export class FiltrosSeriesFacturaComponent implements OnInit {
     private translateService: TranslateService,
     private persistenceService: PersistenceService,
     private commonServices: CommonsService,
-    private sigaServices: SigaServices
+    private sigaServices: SigaServices,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -186,6 +188,16 @@ export class FiltrosSeriesFacturaComponent implements OnInit {
   }
 
   checkPermisosIsNuevo() { }
+
+  isNuevo() {
+    if (sessionStorage.getItem("serieFacturacionItem")) {
+      sessionStorage.removeItem("serieFacturacionItem");
+    }
+
+    this.persistenceService.clearDatos();
+    sessionStorage.setItem("Nuevo", "true");
+    this.router.navigate(["/datosSeriesFactura"]);
+  }
 
   clear() { 
     this.msgs = [];

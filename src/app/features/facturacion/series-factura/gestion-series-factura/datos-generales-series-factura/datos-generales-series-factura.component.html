@@ -75,22 +75,9 @@
           </div>
           <div class="form-group">
             <label>{{ 'facturacion.maestros.tiposproductos' | translate }}</label>
-            
-            <!--
-            <p-autoComplete #autocompleteTopics [(ngModel)]="body.tiposProductos" [suggestions]="comboTiposProductos" [minLength]="1" field="label"
-              [multiple]="true" [style]="{'width':'100%'}" (onFocus)="filterTopics($event)" (onBlur)="visiblePanelBlurTopics($event)"
-               (completeMethod)="filterLabelsMultipleTopics($event)">
-              <ng-template let-topicsSelecionados pTemplate="selectedItem">
-                <div class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li ui-state-highlight"
-                  [ngStyle]="{'background': topicsSelecionados.color, 'margin': marginPx, 'border': bw}">
-                  <span style="color: white">{{ comboTiposProductos.label }}</span>
-                </div>
-              </ng-template>
-            </p-autoComplete>
-            -->
 
             <p-autoComplete #autocompleteTiposProductos [style]="{'width':'100%'}" [(ngModel)]="body.tiposProductos" [suggestions]="suggestionsTiposProductos" field="label" 
-              (completeMethod)="filterLabelsTiposProductos($event)" (onBlur)="visiblePanelBlurTiposProductos($event)" [multiple]="true" [forceSelection]="true">
+              (completeMethod)="filterLabelsTiposProductos($event)" [multiple]="true" [forceSelection]="true">
               
               <ng-template let-item pTemplate="selectedItem">
                 <div class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li ui-state-highlight"
@@ -102,22 +89,9 @@
           </div>
           <div class="form-group">
             <label>{{ 'facturacion.maestros.tiposservicios' | translate }}</label>
-            
-            <!--
-            <p-autoComplete #autocompleteTopics [(ngModel)]="body.tiposServicios" [suggestions]="comboTiposServicios" [minLength]="1" field="label"
-              [multiple]="true" [style]="{'width':'100%'}" (onFocus)="filterTopics($event)" (onBlur)="visiblePanelBlurTopics($event)"
-               (completeMethod)="filterLabelsMultipleTopics($event)">
-              <ng-template let-topicsSelecionados pTemplate="selectedItem">
-                <div class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li ui-state-highlight"
-                  [ngStyle]="{'background': topicsSelecionados.color, 'margin': marginPx, 'border': bw}">
-                  <span style="color: white">{{ body.tiposServicios.label }}</span>
-                </div>
-              </ng-template>
-            </p-autoComplete>
-            -->
 
             <p-autoComplete #autocompleteTiposServicios [style]="{'width':'100%'}" [(ngModel)]="body.tiposServicios" [suggestions]="suggestionsTiposServicios" field="label" 
-              (completeMethod)="filterLabelsTiposServicios($event)" (onBlur)="visiblePanelBlurTiposServicios($event)" [multiple]="true" [forceSelection]="true">
+              (completeMethod)="filterLabelsTiposServicios($event)" [multiple]="true" [forceSelection]="true">
 
               <ng-template let-item pTemplate="selectedItem">
                 <div class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li ui-state-highlight"

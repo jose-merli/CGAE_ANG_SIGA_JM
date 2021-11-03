@@ -18,7 +18,7 @@
             <label>Realizar el envío de las facturas autom.: 
               <span>{{ body.envioFacturas ? "Sí" : "No" }}</span></label>
             <label>Plantilla de envío masivo: 
-              <span>{{ 'dato' }}</span></label>
+              <span>{{ findLabelInCombo(comboPlantillasEnvio, body.idPlatillaMail) }}</span></label>
             
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('envioFacturas')"
               *ngIf="!esFichaActiva('envioFacturas')"></i>
@@ -60,7 +60,7 @@
           (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
 
         <button pButton type="button" icon="fa fa-save" iconPos="left"
-          label="{{ 'general.boton.guardar' | translate }}"></button>
+        (click)="guardar()" label="{{ 'general.boton.guardar' | translate }}"></button>
       </div>
     </div>
   </div>
