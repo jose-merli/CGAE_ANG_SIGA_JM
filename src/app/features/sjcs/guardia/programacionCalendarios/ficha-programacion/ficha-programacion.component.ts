@@ -13,7 +13,7 @@ import { Subscription } from 'rxjs';
 import { GlobalGuardiasService } from '../../guardiasGlobal.service';
 import { saveAs } from "file-saver/FileSaver";
 import { CalendarioProgramadoItem } from '../../../../../models/guardia/CalendarioProgramadoItem';
-
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-ficha-programacion',
@@ -177,6 +177,24 @@ export class FichaProgramacionComponent implements OnInit {
       );
     }
 this.estado = this.datosGeneralesIniciales.estado;
+
+//si el origen es guardias de colegiado
+
+if(sessionStorage.getItem('guardiaColegiadoData')){
+  
+  this.dataToReceive = JSON.parse(sessionStorage.getItem('guardiaColegiadoData'));
+  sessionStorage.removeItem('guardiaColegiadoData');
+  if (this.dataToReceive.idCalendarioProgramado != null){
+    this.disableGenerar = false;
+    this.getGuardiasFromCal(this.dataToReceive.idCalendarioProgramado);
+  }else{
+    this.disableGenerar = true;
+    this.dataReady = true;
+  }
+
+  
+}
+
   }
   ngOnDestroy(){
     this.suscription.unsubscribe();
