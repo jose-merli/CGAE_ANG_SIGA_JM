@@ -490,6 +490,9 @@ import { enableRipple } from '@syncfusion/ej2-base';
 import { DropDownListModule } from '@syncfusion/ej2-angular-dropdowns';
 import { RadioButtonModule as RadioButtonEJSModule} from '@syncfusion/ej2-angular-buttons';
 import { TarjetaDescuentosAnticiposCompraSuscripcionComponent } from './features/facturacion/ficha-compra-suscripcion/tarjeta-descuentos-anticipos-compra-suscripcion/tarjeta-descuentos-anticipos-compra-suscripcion.component';
+import { CuotasSuscripcionesComponent } from './features/facturacion/cuotas-suscripciones/cuotas-suscripciones.component';
+import { TarjetaFiltroCuotasSuscripcionesComponent } from './features/facturacion/cuotas-suscripciones/tarjeta-filtro-cuotas-suscripciones/tarjeta-filtro-cuotas-suscripciones.component';
+import { TarjetaListaCuotasSuscripcionesComponent } from './features/facturacion/cuotas-suscripciones/tarjeta-lista-cuotas-suscripciones/tarjeta-lista-cuotas-suscripciones.component';
 enableRipple(true);
 
 @NgModule({
@@ -895,7 +898,10 @@ enableRipple(true);
 		TarjetaProductosCompraSuscripcionComponent,
 		ConstructorConsultasComponent,
 		TarjetaFacturaCompraSuscripcionComponent,
-		TarjetaDescuentosAnticiposCompraSuscripcionComponent
+		TarjetaDescuentosAnticiposCompraSuscripcionComponent,
+		CuotasSuscripcionesComponent,
+		TarjetaFiltroCuotasSuscripcionesComponent,
+		TarjetaListaCuotasSuscripcionesComponent
 	],
 	imports: [
 		Paginador3Module,

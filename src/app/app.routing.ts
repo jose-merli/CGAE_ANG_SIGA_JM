@@ -82,6 +82,7 @@ import { SolicitudAnulacionComponent } from './features/productosYServicios/soli
 import { CargaComprasComponent } from './features/productosYServicios/cargaCompras/cargaCompras.component';
 import { FichaCompraSuscripcionComponent } from './features/facturacion/ficha-compra-suscripcion/ficha-compra-suscripcion.component';
 import { CompraProductosComponent } from './features/facturacion/compra-productos/compra-productos.component';
+import { CuotasSuscripcionesComponent } from './features/facturacion/cuotas-suscripciones/cuotas-suscripciones.component';
 
 //Modulo de Expedientes
 import { TiposExpedientesComponent } from './features/expedientes/tipos-expedientes/tipos-expedientes.component';
@@ -668,6 +669,11 @@ const appRoutes: Routes = [
 	{
 		path: 'compraProductos',
 		component: CompraProductosComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'cuotasSuscripciones',
+		component: CuotasSuscripcionesComponent,
 		canActivate: [AuthGuard]
 	},
 

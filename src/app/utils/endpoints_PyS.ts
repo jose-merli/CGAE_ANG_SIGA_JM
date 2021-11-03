@@ -14,5 +14,6 @@ export let endpoints_PyS: any = {
     PyS_getFacturasPeticion: "/pys/getFacturasPeticion",
     PyS_getDescuentosPeticion: "/pys/getDescuentosPeticion",
     PyS_saveAnticipoPeticion: "/pys/saveAnticipoPeticion",
-    PyS_anularPeticion: "/pys/anularPeticion"
+    PyS_anularPeticion: "/pys/anularPeticion",
+    PyS_getListaSuscripciones: "/pys/getListaSuscripciones"
 }

@@ -40,7 +40,7 @@ export class FichaCompraSuscripcionItem {
 
 
     //TARJETA SERVICIOS
-    //servicios: ListaProductosCompraItem[];
+    servicios: ListaProductosCompraItem[]; //ListaServiciosSuscripcionItem REVISAR
 
     idEstadoPeticion: string;
     

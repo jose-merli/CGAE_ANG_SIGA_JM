@@ -7,6 +7,7 @@ import { ListaComprasProductosItem } from '../../../models/ListaComprasProductos
 import { CommonsService } from '../../../_services/commons.service';
 import { SigaServices } from '../../../_services/siga.service';
 import { TarjetaFiltroCompraProductosComponent } from './tarjeta-filtro-compra-productos/tarjeta-filtro-compra-productos.component';
+import { TarjetaListaCompraProductosComponent } from './tarjeta-lista-compra-productos/tarjeta-lista-compra-productos.component';
 
 @Component({
   selector: 'app-compra-productos',
@@ -23,6 +24,7 @@ export class CompraProductosComponent implements OnInit {
   muestraTablaCompraProductos: boolean = false;
 
   @ViewChild(TarjetaFiltroCompraProductosComponent) filtrosBusqueda;
+  @ViewChild(TarjetaListaCompraProductosComponent) listaBusqueda;
   
   //Suscripciones
   subscriptionProductosBusqueda: Subscription;
@@ -45,13 +47,16 @@ export class CompraProductosComponent implements OnInit {
     this.subscriptionProductosBusqueda = this.sigaServices.post("PyS_getListaCompraProductos", filtrosProductos).subscribe(
       listaCompraProductosDTO => {
 
-        this.listaCompraProductos = JSON.parse(listaCompraProductosDTO.body).listaCompraProductosItems;
 
         if (JSON.parse(listaCompraProductosDTO.body).error.code == 500) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         } else {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+
+          this.listaCompraProductos = JSON.parse(listaCompraProductosDTO.body).listaCompraProductosItems;
+
           this.muestraTablaCompraProductos= true;
+          this.listaBusqueda.productsTable.reset();
         }
 
         this.progressSpinner = false;

@@ -6,15 +6,22 @@
 <!-- Campos Buscador -->
 <div class="card-body">
 
-  <!-- Buscador de Persona -->
+  
   <div class="form-row">
-    <div class="col-lg-5 col-md-5">
+    <!-- Activo a fecha de -->
+    <div class="form-group col-lg-3 col-md-3">
+      <label>{{ "justiciaGratuita.oficio.turnos.mostrarinscripciones" | translate }}
+      </label>
+      <app-fecha [(value)]="filtrosSuscripciones.aFechaDe" (valueChangeInput)="fillAfechaDeCalendar($event)" (valueChangeSelected)="fillAfechaDeCalendar($event)"></app-fecha>
+    </div>
+    <!-- Buscador de Persona -->
+    <div class="col-lg-3 col-md-3">
       <label>{{ "censo.consultaDatosColegiacion.literal.numIden" | translate }}
       </label>
       <input [(ngModel)]="nifCifCliente" type="text" disabled class="form-control" 
         pInputText/>
     </div>
-    <div class="col-lg-5 col-md-5">
+    <div class="col-lg-4 col-md-4">
       <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}
       </label>
       <input [(ngModel)]="nombreCliente" type="text" disabled class="form-control" 
@@ -35,16 +42,16 @@
     <div class="col-lg-3 col-md-3">
       <label>{{ "oficio.busquedaBajasTemporales.fechaSolicitudDesde" | translate }}
       </label>
-      <app-fecha [(value)]="filtrosCompraProductos.fechaSolicitudDesde"
-        [maxDate]="getFechaHastaCalendar(filtrosCompraProductos.fechaSolicitudDesde, filtrosCompraProductos.fechaSolicitudHasta)"
+      <app-fecha [(value)]="filtrosSuscripciones.fechaSolicitudDesde"
+        [maxDate]="getFechaHastaCalendar(filtrosSuscripciones.fechaSolicitudDesde, filtrosSuscripciones.fechaSolicitudHasta)"
         (valueChangeSelected)="fillFechaSolicitudDesde($event)" (valueChangeInput)="fillFechaSolicitudDesde($event)">
       </app-fecha>
     </div>
     <div class="ol-lg-3 col-md-3">
       <label>{{ "oficio.busquedaBajasTemporales.fechaSolicitudHasta" | translate }}
       </label>
-      <app-fecha [(value)]="filtrosCompraProductos.fechaSolicitudHasta"
-        [minDate]="getFechaDesdeCalendar(filtrosCompraProductos.fechaSolicitudDesde, filtrosCompraProductos.fechaSolicitudHasta)"
+      <app-fecha [(value)]="filtrosSuscripciones.fechaSolicitudHasta"
+        [minDate]="getFechaDesdeCalendar(filtrosSuscripciones.fechaSolicitudDesde, filtrosSuscripciones.fechaSolicitudHasta)"
         (valueChangeSelected)="fillFechaSolicitudHasta($event)" (valueChangeInput)="fillFechaSolicitudHasta($event)">
       </app-fecha>
     </div>
@@ -52,15 +59,15 @@
     <!-- Numero de solicitud -->
     <div class="col-lg-3 col-md-3">
       <label>{{ "facturacion.productos.nSolicitud" | translate }}</label>
-      <input type="text" class="form-control" [(ngModel)]='filtrosCompraProductos.nSolicitud' pInputText>
+      <input type="text" class="form-control" [(ngModel)]='filtrosSuscripciones.nSolicitud' pInputText>
     </div>
 
     <!-- Estado Solicitud -->
     <div class="col-lg-3 col-md-3">
       <label>{{ "censo.solicitudincorporacion.estadoSolicitud" | translate}}</label>
       <p-dropdown  styleClass="widthAll" [showClear]="true"
-        placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='filtrosCompraProductos.idEstadoSolicitud'
-        [options]="estadosCompraObject">
+        placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='filtrosSuscripciones.idEstadoSolicitud'
+        [options]="estadosSuscripcionObject" [disabled]="filtrosSuscripciones.aFechaDe != null">
       </p-dropdown>
     </div>
   </div>
@@ -70,7 +77,7 @@
     <div class="col-lg-3 col-md-3">
       <label>{{ "facturacion.productos.categoria" | translate}}</label>
       <p-dropdown (onChange)="valueChangeCategoria()" [filter]="true" styleClass="widthAll" [showClear]="true"
-        placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='filtrosCompraProductos.idCategoria'
+        placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='filtrosSuscripciones.idCategoria'
         [options]="categoriasObject.combooItems">
       </p-dropdown>
     </div>
@@ -78,23 +85,23 @@
     <!-- Tipo -->
     <div class="col-lg-3 col-md-3">
       <label>{{ "facturacion.productos.tipo" | translate}}</label>
-      <p-dropdown [disabled]="filtrosCompraProductos.idCategoria == null" [filter]="true" styleClass="widthAll" [showClear]="true"
-        placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='filtrosCompraProductos.idTipoProducto'
+      <p-dropdown [disabled]="filtrosSuscripciones.idCategoria == null" [filter]="true" styleClass="widthAll" [showClear]="true"
+        placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='filtrosSuscripciones.idTipoServicio'
         [options]="tiposObject.combooItems">
       </p-dropdown>
     </div>
 
-    <!-- Producto -->
+    <!-- Servicio -->
     <div class="col-lg-3 col-md-3">
-      <label>{{ "facturacion.productos.producto" | translate}}</label>
-      <input type="text" class="form-control" [(ngModel)]='filtrosCompraProductos.descProd' pInputText>
+      <label>{{ "facturacion.servicios.servicio" | translate}}</label>
+      <input type="text" class="form-control" [(ngModel)]='filtrosSuscripciones.descServ' pInputText>
     </div>
 
     <!-- Estado Factura -->
     <div class="col-lg-3 col-md-3">
       <label>{{ "facturacion.productos.estadoFactura" | translate}}</label>
       <p-dropdown  styleClass="widthAll" [showClear]="true"
-        placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='filtrosCompraProductos.idEstadoFactura'
+        placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='filtrosSuscripciones.idEstadoFactura'
         [options]="estadosFacturaObject">
       </p-dropdown>
     </div>
@@ -112,6 +119,7 @@
       (click)="checkBuscar()">
     </button>
     
-    <button (click)="checkNuevaCompra()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.new' | translate}}"></button>
+    <button (click)="checkNuevaSuscripcion()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.new' | translate}}"></button>
   </div>
 </div>
+
