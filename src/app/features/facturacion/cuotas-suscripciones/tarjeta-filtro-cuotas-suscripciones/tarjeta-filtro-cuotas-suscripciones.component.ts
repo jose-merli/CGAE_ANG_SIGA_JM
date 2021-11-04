@@ -246,8 +246,12 @@ export class TarjetaFiltroCuotasSuscripcionesComponent implements OnInit {
   }
 
   checkBuscar(){
-    if(!this.checkFilters())this.showMessage("error",  this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
-    else this.buscar();
+    if(!this.checkFilters()){
+      this.showMessage("error",  this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
+    }
+    else {
+      this.buscar();
+    }
   }
 
   buscar() {
@@ -259,6 +263,7 @@ export class TarjetaFiltroCuotasSuscripcionesComponent implements OnInit {
     if(this.filtrosSuscripciones.idpersona!=null)return true;
     if(this.filtrosSuscripciones.fechaSolicitudDesde != null) return true;
     if(this.filtrosSuscripciones.fechaSolicitudHasta != null) return true;
+    if(this.filtrosSuscripciones.aFechaDe != null) return true;
     if(this.filtrosSuscripciones.nSolicitud != null && this.filtrosSuscripciones.nSolicitud.trim() != "") return true;
     if(this.filtrosSuscripciones.idCategoria != null) return true;
     if(this.filtrosSuscripciones.idTipoServicio != null) return true;
