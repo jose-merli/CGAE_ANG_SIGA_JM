@@ -69,39 +69,27 @@ export class FiltroRemesasComponent implements OnInit {
   }
 
   fillFechaGeneracionDesde(event) {
-    if (event != null) {
       this.filtros.fechaGeneracionDesde = event;
-    }
   }
 
   fillFechaGeneracionHasta(event) {
-    if (event != null) {
       this.filtros.fechaGeneracionHasta = event;
-    }
   }
 
   fillFechaEnvioDesde(event) {
-    if (event != null) {
       this.filtros.fechaEnvioDesde = event;
-    }
   }
 
   fillFechaEnvioHasta(event) {
-    if (event != null) {
       this.filtros.fechaEnvioHasta = event;
-    }
   }
 
   fillFechaRecepcionDesde(event) {
-    if (event != null) {
       this.filtros.fechaRecepcionDesde = event;
-    }
   }
 
   fillFechaRecepcionHasta(event) {
-    if (event != null) {
       this.filtros.fechaRecepcionHasta = event;
-    }
   }
 
   onHideDatosGenerales() {

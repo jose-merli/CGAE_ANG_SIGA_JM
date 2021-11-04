@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { KEY_CODE } from '../../../../censo/busqueda-personas-juridicas/busqueda-personas-juridicas.component';
 import { TranslateService } from '../../../../../commons/translate';
 import { SigaServices } from '../../../../../_services/siga.service';
@@ -29,13 +29,19 @@ export class TarjetaDatosCurricularesComponent implements OnInit {
 
   ngOnInit() {
     this.showTipo = true;
-
   }
 
-  fillFechaCarga(event) {
-    if (event != null) {
-      this.filtro.fechaCarga = event;
+  ngOnChanges(changes: SimpleChanges) {
+    this.file = undefined;
+    this.filtro.fechaCarga = undefined;
+    if(this.pUploadFile != undefined ){
+      this.pUploadFile.clear();
+      this.pUploadFile.chooseLabel = "Seleccionar Archivo";
     }
+}
+
+  fillFechaCarga(event) {
+      this.filtro.fechaCarga = event;
   }
 
   getFile(event: any) {
@@ -66,6 +72,42 @@ export class TarjetaDatosCurricularesComponent implements OnInit {
       // se almacena el archivo para habilitar boton guardar
       this.file = fileList[0];
       this.pUploadFile.chooseLabel = nombreCompletoArchivo;
+    }
+  }
+
+  uploadFile() {
+    this.progressSpinner = true;
+    let body: CargaMasivaItem = new CargaMasivaItem();
+    if (this.file != undefined) {
+    this.sigaServices
+      .postSendContent("intercambios_cargarFicheroCargaMasivaProcuradores", this.file)
+      .subscribe(
+        data => {
+          this.file = undefined;
+          this.progressSpinner = false;
+          this.uploadFileDisable = true;
+          body.errores = data["error"];
+
+          if (data["error"].code == 200) {
+            this.showMessage("success", "Correcto", data["error"].message);
+          } else if (data["error"].code == null) {
+            this.showMessage("info", "Información", data["error"].message);
+          }
+        },
+        error => {
+          this.showMessage("error", "", "Se ha producido un error al cargar el fichero, vuelva a intentarlo de nuevo pasados unos minutos");
+          this.progressSpinner = false;
+        },
+        () => {
+          this.pUploadFile.clear();
+          this.progressSpinner = false;
+          this.pUploadFile.chooseLabel = "Seleccionar Archivo";
+        }
+      );
+    }
+    else{
+      this.progressSpinner = false;
+      this.showMessage("info", "Información", "Debe rellenar todos los campos obligatorios");
     }
   }
 

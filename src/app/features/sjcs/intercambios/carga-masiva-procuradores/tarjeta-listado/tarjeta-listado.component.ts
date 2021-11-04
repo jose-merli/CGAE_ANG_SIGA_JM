@@ -165,7 +165,8 @@ export class TarjetaListadoComponent implements OnInit {
     this.cols = [
       { field: "fechaCarga", header: "censo.datosCv.literal.fechaCarga" },
       { field: "nombreFichero", header: "censo.cargaMasivaDatosCurriculares.literal.nombreFichero" },
-      { field: "numRegistros", header: "formacion.fichaCursos.tarjetaPrecios.resumen.numRegistros" }
+      { field: "numRegistros", header: "formacion.fichaCursos.tarjetaPrecios.resumen.numRegistros" },
+      { field: "numRegistrosErroneos", header: "cargaMasivaDatosCurriculares.numRegistrosErroneos.literal" }
     ];
     this.cols.forEach(it => this.buscadores.push(""))
 

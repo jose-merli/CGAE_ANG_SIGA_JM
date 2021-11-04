@@ -180,7 +180,9 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
           this.estado.emit(true);
         }
 
-        this.remesaTabla.estado = this.resultado[this.resultado.length-1].estado;
+        if(this.remesaTabla != null){
+          this.remesaTabla.estado = this.resultado[this.resultado.length-1].estado;
+        }
         
         this.remesaItem.estado = this.resultado[this.resultado.length-1].estado;
 
