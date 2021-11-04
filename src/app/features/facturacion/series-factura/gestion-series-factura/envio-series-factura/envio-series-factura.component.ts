@@ -22,6 +22,8 @@ export class EnvioSeriesFacturaComponent implements OnInit {
   comboPlantillasEnvio: any[] = [];
 
   @Input() openTarjetaEnvioFacturas;
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
   @Output() guardadoSend = new EventEmitter<any>();
   
   constructor(
@@ -43,7 +45,7 @@ export class EnvioSeriesFacturaComponent implements OnInit {
     this.progressSpinner = false;
   }
 
-  // Combo de platillas envío masivo
+  // Combo de plantillas envío masivo
 
   getComboPlantillasEnvio() {
     this.sigaServices.get("facturacionPyS_comboPlantillasEnvio").subscribe(
@@ -110,6 +112,8 @@ export class EnvioSeriesFacturaComponent implements OnInit {
 
   abreCierraFicha(key): void {
     this.openTarjetaEnvioFacturas = !this.openTarjetaEnvioFacturas;
+    this.opened.emit(this.openTarjetaEnvioFacturas);
+    this.idOpened.emit(key);
   }
 
 }

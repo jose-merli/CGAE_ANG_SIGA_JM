@@ -22,10 +22,10 @@ export class SerieFacturacionItem {
 	idModeloRectificativa: string;
 
 	envioFacturas: boolean;
-	idPlatillaMail: string;
+	idPlantillaMail: string;
 
 	traspasoFacturas: boolean;
-	traspasoPlatilla:string;
+	traspasoPlantilla:string;
 	traspasoCodAuditoriaDef: string;
 
 	confDeudor: string;

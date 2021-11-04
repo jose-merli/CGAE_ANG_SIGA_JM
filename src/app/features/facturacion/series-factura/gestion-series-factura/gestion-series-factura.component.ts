@@ -1,5 +1,6 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Message } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../commons/translate';
 import { SerieFacturacionItem } from '../../../../models/SerieFacturacionItem';
@@ -22,7 +23,19 @@ export class GestionSeriesFacturaComponent implements OnInit {
 
   tarjetaDatosGenerales: string;
   
-  openTarjetaDatosGenerales: boolean = true
+  openTarjetaDatosGenerales: boolean = true;
+  openTarjetaObservaciones: boolean = false;
+  openTarjetaDestinatariosEtiquetas: boolean = false;
+  openTarjetaDestinatariosIndividuales: boolean = false;
+  openTarjetaListaDestinatarios: boolean = false;
+  openTarjetaPagoAutomatico: boolean = false;
+  openTarjetaContadorFacturas: boolean = false;
+  openTarjetaContadorFacturasRectificativas: boolean = false;
+  openTarjetaGeneracion: boolean = false;
+  openTarjetaEnvioFacturas: boolean = false;
+  openTarjetaTraspasoFacturas: boolean = false;
+  openTarjetaExportacionContabilidad: boolean = false;
+
 
   datos;
   enlacesTarjetaResumen;
@@ -30,7 +43,8 @@ export class GestionSeriesFacturaComponent implements OnInit {
   constructor(
     private translateService: TranslateService,
     private persistenceService: PersistenceService,
-    private location: Location
+    private location: Location,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -113,43 +127,43 @@ export class GestionSeriesFacturaComponent implements OnInit {
     });
 
     this.enlacesTarjetaResumen.push({
-      label: "Pago automático", // Internacionalizar
+      label: "facturacion.seriesFactura.pagos.literal",
       value: document.getElementById("pagoAutomatico"),
       nombre: "pagoAutomatico",
     });
-
+    
     this.enlacesTarjetaResumen.push({
-      label: "Contador de facturas", // Internacionalizar
+      label: "facturacion.seriesFactura.contFact.literal",
       value: document.getElementById("contadorFacturas"),
       nombre: "contadorFacturas",
     });
 
     this.enlacesTarjetaResumen.push({
-      label: "Contador de facturas rectificativas", // Internacionalizar
+      label: "facturacion.seriesFactura.contFactRect.literal",
       value: document.getElementById("contadorFacturasRectificativas"),
       nombre: "contadorFacturasRectificativas",
     });
 
     this.enlacesTarjetaResumen.push({
-      label: "Generación de ficheros de factura", // Internacionalizar
-      value: document.getElementById("generacionFicherosFactura"),
-      nombre: "generacionFicherosFactura",
+      label: "facturacion.seriesFactura.generarPDF.literal",
+      value: document.getElementById("generacion"),
+      nombre: "generacion",
     });
 
     this.enlacesTarjetaResumen.push({
-      label: "Envío de facturas automático", // Internacionalizar
-      value: document.getElementById("envioFacturaAutomatico"),
-      nombre: "envioFacturaAutomatico",
+      label: "facturacion.seriesFactura.envioFact.literal",
+      value: document.getElementById("envioFacturas"),
+      nombre: "envioFacturas",
+    });
+  
+    this.enlacesTarjetaResumen.push({
+      label: "facturacion.seriesFactura.traspaso.literal",
+      value: document.getElementById("traspasoFacturas"),
+      nombre: "traspasoFacturas",
     });
 
     this.enlacesTarjetaResumen.push({
-      label: "Traspaso de facturas automático a servicio externo", // Internacionalizar
-      value: document.getElementById("traspasoFacturaAutomatico"),
-      nombre: "traspasoFacturaAutomatico",
-    });
-
-    this.enlacesTarjetaResumen.push({
-      label: "Exportación Contabilidad", // Internacionalizar
+      label: "facturacion.seriesFactura.export.literal",
       value: document.getElementById("exportacionContabilidad"),
       nombre: "exportacionContabilidad",
     });
@@ -157,9 +171,99 @@ export class GestionSeriesFacturaComponent implements OnInit {
   }
 
   guardadoSend(): void {
-    this.ngOnInit();
+    this.router.navigate(["/datosSeriesFactura"]);
   }
 
+  // Abrir tarjetas desde enlaces
+  isOpenReceive(event) {
+
+    if (event != undefined) {
+      switch (event) {
+        case "datosGenerales":
+          this.openTarjetaDatosGenerales = true;
+          break;
+        case "observaciones":
+          this.openTarjetaObservaciones = true;
+          break;
+        case "destinatariosEtiquetas":
+          this.openTarjetaDestinatariosEtiquetas = true;
+          break;
+        case "destinatariosIndividuales":
+          this.openTarjetaDestinatariosIndividuales = true;
+          break;
+        case "destinatariosLista":
+          this.openTarjetaListaDestinatarios = true;
+          break;
+        case "pagoAutomatico":
+          this.openTarjetaPagoAutomatico = true;
+          break;
+        case "contadorFacturas":
+          this.openTarjetaContadorFacturas = true;
+          break;
+        case "contadorFacturasRectificativas":
+          this.openTarjetaContadorFacturasRectificativas = true;
+          break;
+        case "generacion":
+          this.openTarjetaGeneracion = true;
+          break;
+        case "envioFacturas":
+          this.openTarjetaEnvioFacturas = true;
+          break;
+        case "traspasoFacturas":
+          this.openTarjetaTraspasoFacturas = true;
+          break;
+        case "exportacionContabilidad":
+          this.openTarjetaExportacionContabilidad = true;
+          break;
+      }
+    }
+  }
+
+  // Abrir y cerrar manualmente las tarjetas
+  isCloseReceive(event) {
+
+    if (event != undefined) {
+      switch (event) {
+        case "datosGenerales":
+          this.openTarjetaDatosGenerales = this.manuallyOpened;
+          break;
+        case "observaciones":
+          this.openTarjetaObservaciones = this.manuallyOpened;
+          break;
+        case "destinatariosEtiquetas":
+          this.openTarjetaDestinatariosEtiquetas = this.manuallyOpened;
+          break;
+        case "destinatariosIndividuales":
+          this.openTarjetaDestinatariosIndividuales = this.manuallyOpened;
+          break;
+        case "destinatariosLista":
+          this.openTarjetaListaDestinatarios = this.manuallyOpened;
+          break;
+        case "pagoAutomatico":
+          this.openTarjetaPagoAutomatico = this.manuallyOpened;
+          break;
+        case "contadorFacturas":
+          this.openTarjetaContadorFacturas = this.manuallyOpened;
+          break;
+        case "contadorFacturasRectificativas":
+          this.openTarjetaContadorFacturasRectificativas = this.manuallyOpened;
+          break;
+        case "generacion":
+          this.openTarjetaGeneracion = this.manuallyOpened;
+          break;
+        case "envioFacturas":
+          this.openTarjetaEnvioFacturas = this.manuallyOpened;
+          break;
+        case "traspasoFacturas":
+          this.openTarjetaTraspasoFacturas = this.manuallyOpened;
+          break;
+        case "exportacionContabilidad":
+          this.openTarjetaExportacionContabilidad = this.manuallyOpened;
+          break;
+      }
+    }
+  }
+  
   showMessage(severity, summary, msg) {
     this.msgs = [];
     this.msgs.push({

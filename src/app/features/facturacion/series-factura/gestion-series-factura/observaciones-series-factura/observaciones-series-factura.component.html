@@ -34,7 +34,7 @@
     </div>
 
     <!-- Cuerpo en ficha abierta -->
-    <div *ngIf="esFichaActiva('observaciones')" class="card-body card-body-ficha">
+    <div [hidden]="!esFichaActiva('observaciones')" class="card-body card-body-ficha">
       <div class="row">
         <div class="form-group w-100">
           <editor apiKey="{{apiKey}}" [init]="editorConfig" [(ngModel)]="body.observaciones"></editor>

@@ -25,6 +25,8 @@ export class DestinatariosEtiquetasSeriesFacturaComponent implements OnInit {
   etiquetasNoSeleccionadas: any[];
 
   @Input() openTarjetaDestinatariosEtiquetas;
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
   @Output() guardadoSend = new EventEmitter<any>();
   
   constructor(
@@ -134,6 +136,8 @@ export class DestinatariosEtiquetasSeriesFacturaComponent implements OnInit {
 
   abreCierraFicha(key): void {
     this.openTarjetaDestinatariosEtiquetas = !this.openTarjetaDestinatariosEtiquetas;
+    this.opened.emit(this.openTarjetaDestinatariosEtiquetas);
+    this.idOpened.emit(key);
   }
 
 }

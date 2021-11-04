@@ -14,9 +14,9 @@ export class ObservacionesSeriesFacturaComponent implements OnInit {
   msgs;
   progressSpinner: boolean = false;
 
-  @Input() datos: SerieFacturacionItem;
-  @Input() tarjetaDatosGenerales: string;
   @Input() openTarjetaObservaciones;
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
   @Output() guardadoSend = new EventEmitter<any>();
 
   bodyInicial: SerieFacturacionItem;
@@ -108,6 +108,8 @@ export class ObservacionesSeriesFacturaComponent implements OnInit {
 
   abreCierraFicha(key): void {
     this.openTarjetaObservaciones = !this.openTarjetaObservaciones;
+    this.opened.emit(this.openTarjetaObservaciones);
+    this.idOpened.emit(key);
   }
 
 }

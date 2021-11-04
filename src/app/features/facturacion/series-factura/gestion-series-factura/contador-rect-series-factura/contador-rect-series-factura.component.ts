@@ -27,6 +27,8 @@ export class ContadorRectSeriesFacturaComponent implements OnInit {
   contadoresRectificativasSerie: ContadorSeriesItem[] = [];
 
   @Input() openTarjetaContadorFacturasRectificativas;
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
   @Output() guardadoSend = new EventEmitter<any>();
   
   constructor(
@@ -145,6 +147,8 @@ export class ContadorRectSeriesFacturaComponent implements OnInit {
 
   abreCierraFicha(key): void {
     this.openTarjetaContadorFacturasRectificativas = !this.openTarjetaContadorFacturasRectificativas;
+    this.opened.emit(this.openTarjetaContadorFacturasRectificativas);
+    this.idOpened.emit(key);
   }
 
 }

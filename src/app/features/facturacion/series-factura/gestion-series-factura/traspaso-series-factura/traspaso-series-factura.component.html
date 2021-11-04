@@ -12,14 +12,14 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('traspasoFacturas')">
-            <label class="mr-auto title-ficha pointer">Traspaso de Facturas Automático a Servicio Externo</label>
+            <label class="mr-auto title-ficha pointer">{{ 'facturacion.seriesFactura.traspaso.literal' | translate }}</label>
           </div>
           <div class="d-flex justify-content-between default">
-            <label>Traspasar facturas autom.: 
+            <label>{{ 'facturacion.seriesFactura.traspaso.auto' | translate }}: 
               <span>{{ body.traspasoFacturas ? "Sí" : "No" }}</span></label>
-            <label>Plantilla SII: 
+            <label>{{ 'facturacion.seriesFactura.traspaso.plantilla' | translate }}: 
               <span>{{ body.traspasoPlantilla }}</span></label>
-            <label>Plantilla auditoría SII: 
+            <label>{{ 'facturacion.seriesFactura.traspaso.plantillaAudit' | translate }}: 
               <span>{{ body.traspasoCodAuditoriaDef }}</span></label>
             
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('traspasoFacturas')"
@@ -34,26 +34,27 @@
         <div class="img-colegiado">
           <i class="far fa-address-book icon-ficha"></i>
         </div>
-        <label class="title-ficha pointer">Traspaso de Facturas Automático a Servicio Externo</label>
+        <label class="title-ficha pointer">{{ 'facturacion.seriesFactura.traspaso.literal' | translate }}</label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
 
     <!-- Cuerpo en ficha abierta -->
     <div *ngIf="esFichaActiva('traspasoFacturas')" class="card-body card-body-ficha">
-      <div class="form-row">
-        <div class="form-check d-flex justify-content-between">
-          <label class="form-group-label">Traspasar facturas autom.</label>
-          &nbsp;&nbsp;
-          <p-checkbox class="float-right" [(ngModel)]="body.traspasoFacturas" binary="true"></p-checkbox>
-        </div>
-        <div class="form-group-interlineado col-lg-3 col-md-3">
-          <label>Plantilla SII</label>
-          <input type="text" class="form-control" pInputText [(ngModel)]="body.traspasoPlantilla" />
-        </div>
-        <div class="form-group-interlineado col-lg-3 col-md-3">
-          <label>Plantilla auditoría SII</label>
-          <input type="text" class="form-control" pInputText [(ngModel)]="body.traspasoCodAuditoriaDef" />
+      <div class="row">
+        <div class="form-row w-100">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label></label>
+            <p-checkbox [(ngModel)]="body.traspasoFacturas" label="{{ 'facturacion.seriesFactura.traspaso.auto' | translate }}" binary="true"></p-checkbox>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ 'facturacion.seriesFactura.traspaso.plantilla' | translate }}</label>
+            <input type="text" class="form-control" pInputText [(ngModel)]="body.traspasoPlantilla" maxLength="10" />
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ 'facturacion.seriesFactura.traspaso.plantillaAudit' | translate }}</label>
+            <input type="text" class="form-control" pInputText [(ngModel)]="body.traspasoCodAuditoriaDef" maxLength="10" />
+          </div>
         </div>
       </div>
     </div>
@@ -64,7 +65,7 @@
           (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
 
         <button pButton type="button" icon="fa fa-save" iconPos="left"
-          (click)="guardar()" label="{{ 'general.boton.guardar' | translate }}"></button>
+          (click)="checkSave()" label="{{ 'general.boton.guardar' | translate }}"></button>
       </div>
     </div>
   </div>

@@ -20,7 +20,11 @@ export class TraspasoSeriesFacturaComponent implements OnInit {
   bodyInicial: SerieFacturacionItem;
 
   @Input() openTarjetaTraspasoFacturas;
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
   @Output() guardadoSend = new EventEmitter<any>();
+
+  resaltadoDatos: boolean = false;
   
   constructor(
     private sigaServices: SigaServices,
@@ -47,6 +51,20 @@ export class TraspasoSeriesFacturaComponent implements OnInit {
   }
 
   // Guardar
+
+  isValid(): boolean {
+    return (this.body.traspasoPlantilla == undefined || this.body.traspasoPlantilla.trim() == "" || this.body.traspasoPlantilla.trim().length <= 10 )
+      && (this.body.traspasoCodAuditoriaDef != undefined || this.body.traspasoCodAuditoriaDef.trim() == "" || this.body.traspasoCodAuditoriaDef.trim().length <= 10);
+  }
+
+  checkSave(): void {
+    if (this.isValid()) {
+      this.guardar();
+    } else {
+      this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+      this.resaltadoDatos = true;
+    }
+  }
 
   guardar(): void {
     this.progressSpinner = true;
@@ -88,6 +106,8 @@ export class TraspasoSeriesFacturaComponent implements OnInit {
 
   abreCierraFicha(key): void {
     this.openTarjetaTraspasoFacturas = !this.openTarjetaTraspasoFacturas;
+    this.opened.emit(this.openTarjetaTraspasoFacturas);
+    this.idOpened.emit(key);
   }
 
 }

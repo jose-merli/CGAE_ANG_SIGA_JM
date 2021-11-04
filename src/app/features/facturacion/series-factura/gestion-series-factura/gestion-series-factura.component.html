@@ -10,18 +10,18 @@
     <app-tarjeta-resumen-fija class="pb-50" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="datos" [icono]="iconoTarjetaResumen" (modoEdicionSend)="modoEdicionSend($event)" [enlaces]="enlacesTarjetaResumen" (isOpen)="isOpenReceive($event)" [manuallyOpened]="manuallyOpened">
     </app-tarjeta-resumen-fija>
 
-    <app-datos-generales-series-factura [openTarjetaDatosGenerales]="openTarjetaDatosGenerales" (guardadoSend)="guardadoSend()"></app-datos-generales-series-factura>
-    <app-observaciones-series-factura (guardadoSend)="guardadoSend()"></app-observaciones-series-factura>
-    <app-destinatarios-etiquetas-series-factura (guardadoSend)="guardadoSend()"></app-destinatarios-etiquetas-series-factura>
-    <app-destinatarios-individuales-series-factura (guardadoSend)="guardadoSend()"></app-destinatarios-individuales-series-factura>
-    <app-destinatarios-lista-series-factura (guardadoSend)="guardadoSend()"></app-destinatarios-lista-series-factura>
-    <app-pago-automatico-series-factura (guardadoSend)="guardadoSend()"></app-pago-automatico-series-factura>
-    <app-contador-series-factura (guardadoSend)="guardadoSend()"></app-contador-series-factura>
-    <app-contador-rect-series-factura (guardadoSend)="guardadoSend()"></app-contador-rect-series-factura>
-    <app-generacion-series-factura (guardadoSend)="guardadoSend()"></app-generacion-series-factura>
-    <app-envio-series-factura (guardadoSend)="guardadoSend()"></app-envio-series-factura>
-    <app-traspaso-series-factura (guardadoSend)="guardadoSend()"></app-traspaso-series-factura>
-    <app-exportacion-series-factura (guardadoSend)="guardadoSend()"></app-exportacion-series-factura>
+    <app-datos-generales-series-factura [openTarjetaDatosGenerales]="openTarjetaDatosGenerales" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (guardadoSend)="guardadoSend()"></app-datos-generales-series-factura>
+    <app-observaciones-series-factura [openTarjetaObservaciones]="openTarjetaObservaciones" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (guardadoSend)="guardadoSend()"></app-observaciones-series-factura>
+    <app-destinatarios-etiquetas-series-factura [openTarjetaDestinatariosEtiquetas]="openTarjetaDestinatariosEtiquetas" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (guardadoSend)="guardadoSend()"></app-destinatarios-etiquetas-series-factura>
+    <app-destinatarios-individuales-series-factura [openTarjetaDestinatariosIndividuales]="openTarjetaDestinatariosIndividuales" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (guardadoSend)="guardadoSend()"></app-destinatarios-individuales-series-factura>
+    <app-destinatarios-lista-series-factura [openTarjetaListaDestinatarios]="openTarjetaListaDestinatarios" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (guardadoSend)="guardadoSend()"></app-destinatarios-lista-series-factura>
+    <app-pago-automatico-series-factura [openTarjetaPagoAutomatico]="openTarjetaPagoAutomatico" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (guardadoSend)="guardadoSend()"></app-pago-automatico-series-factura>
+    <app-contador-series-factura [openTarjetaContadorFacturas]="openTarjetaContadorFacturas" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (guardadoSend)="guardadoSend()"></app-contador-series-factura>
+    <app-contador-rect-series-factura [openTarjetaContadorFacturasRectificativas]="openTarjetaContadorFacturasRectificativas" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (guardadoSend)="guardadoSend()"></app-contador-rect-series-factura>
+    <app-generacion-series-factura [openTarjetaGeneracion]="openTarjetaGeneracion" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (guardadoSend)="guardadoSend()"></app-generacion-series-factura>
+    <app-envio-series-factura [openTarjetaEnvioFacturas]="openTarjetaEnvioFacturas" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (guardadoSend)="guardadoSend()"></app-envio-series-factura>
+    <app-traspaso-series-factura [openTarjetaTraspasoFacturas]="openTarjetaTraspasoFacturas" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (guardadoSend)="guardadoSend()"></app-traspaso-series-factura>
+    <app-exportacion-series-factura [openTarjetaExportacionContabilidad]="openTarjetaExportacionContabilidad" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (guardadoSend)="guardadoSend()"></app-exportacion-series-factura>
   </div>
 </div>
 

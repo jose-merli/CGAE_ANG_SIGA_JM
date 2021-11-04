@@ -12,13 +12,13 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('envioFacturas')">
-            <label class="mr-auto title-ficha pointer">Envío de Facturas Automático</label>
+            <label class="mr-auto title-ficha pointer">{{ 'facturacion.seriesFactura.envioFact.literal' | translate }}</label>
           </div>
           <div class="d-flex justify-content-between default">
-            <label>Realizar el envío de las facturas autom.: 
+            <label>{{ 'facturacion.seriesFactura.envioFact.auto' | translate }}: 
               <span>{{ body.envioFacturas ? "Sí" : "No" }}</span></label>
-            <label>Plantilla de envío masivo: 
-              <span>{{ findLabelInCombo(comboPlantillasEnvio, body.idPlatillaMail) }}</span></label>
+            <label>{{ 'facturacion.seriesFactura.envioFact.plantilla' | translate }}: 
+              <span>{{ findLabelInCombo(comboPlantillasEnvio, body.idPlantillaMail) }}</span></label>
             
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('envioFacturas')"
               *ngIf="!esFichaActiva('envioFacturas')"></i>
@@ -32,24 +32,25 @@
         <div class="img-colegiado">
           <i class="far fa-address-book icon-ficha"></i>
         </div>
-        <label class="title-ficha pointer">Envío de Facturas Automático</label>
+        <label class="title-ficha pointer">{{ 'facturacion.seriesFactura.envioFact.literal' | translate }}</label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
 
     <!-- Cuerpo en ficha abierta -->
     <div *ngIf="esFichaActiva('envioFacturas')" class="card-body card-body-ficha">
-      <div class="form-row">
-        <div class="form-check d-flex justify-content-between">
-          <label class="form-group-label">Realizar el envío de las facturas autom.</label>
-          &nbsp;&nbsp;
-          <p-checkbox class="float-right" [(ngModel)]="body.envioFacturas" binary="true"></p-checkbox>
-        </div>
-        <div class="form-group-interlineado col-lg-3 col-md-3">
-          <label>Plantilla de envío masivo</label>
-          <p-dropdown class="select-form" [(ngModel)]='body.idPlatillaMail' placeholder="{{'general.boton.seleccionar' | translate}}"
-              [options]="comboPlantillasEnvio" [filter]="true" filterBy="label,labelSinTilde"
-              [showClear]="true"></p-dropdown>
+      <div class="row">
+        <div class="form-row  w-100">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+              <label></label>
+              <p-checkbox [(ngModel)]="body.envioFacturas" label="{{ 'facturacion.seriesFactura.envioFact.auto' | translate }}" binary="true"></p-checkbox>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ 'facturacion.seriesFactura.envioFact.plantilla' | translate }}</label>
+            <p-dropdown class="select-form" [(ngModel)]='body.idPlantillaMail' placeholder="{{'general.boton.seleccionar' | translate}}"
+                [options]="comboPlantillasEnvio" [filter]="true" filterBy="label,labelSinTilde"
+                [showClear]="true"></p-dropdown>
+          </div>
         </div>
       </div>
     </div>

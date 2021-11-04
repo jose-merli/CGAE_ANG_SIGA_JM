@@ -25,6 +25,8 @@ export class PagoAutomaticoSeriesFacturaComponent implements OnInit {
   formasPagosNoSeleccionadas: any[];
 
   @Input() openTarjetaPagoAutomatico;
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
   @Output() guardadoSend = new EventEmitter<any>();
   
   constructor(
@@ -133,6 +135,8 @@ export class PagoAutomaticoSeriesFacturaComponent implements OnInit {
 
   abreCierraFicha(key): void {
     this.openTarjetaPagoAutomatico = !this.openTarjetaPagoAutomatico;
+    this.opened.emit(this.openTarjetaPagoAutomatico);
+    this.idOpened.emit(key);
   }
 
 }

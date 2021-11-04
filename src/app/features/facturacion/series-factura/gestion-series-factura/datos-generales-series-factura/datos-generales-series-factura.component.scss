@@ -1,49 +1,49 @@
 .ui-autocomplete .ui-autocomplete-panel {
-    min-width: 0;
-    z-index: 1;
+  min-width: 0;
+  z-index: 1;
+}
+
+.button-edit {
+  border: 1px solid #c6c7c8 !important;
+  border-top-left-radius: 3px !important;
+  border-bottom-left-radius: 3px !important;
+}
+.ui-tooltip .ui-tooltip-text {
+  white-space: pre-line !important;
+}
+
+.ui-tooltip-text.ui-shadow.ui-corner-all {
+  background-color: white;
+}
+
+.ui-tooltip {
+  max-width: 80%;
+  box-shadow: none;
+  .ui-tooltip-text {
+    font-size: 0.8rem;
   }
-  
-  .button-edit {
-    border: 1px solid #c6c7c8 !important;
-    border-top-left-radius: 3px !important;
-    border-bottom-left-radius: 3px !important;
-  }
-  .ui-tooltip .ui-tooltip-text {
-    white-space: pre-line !important;
-  }
-  
-  .ui-tooltip-text.ui-shadow.ui-corner-all {
-    background-color: white;
-  }
-  
-  .ui-tooltip {
-    max-width: 80%;
-    box-shadow: none;
-    .ui-tooltip-text {
-      font-size: 0.8rem;
-    }
-  }
-  
-  .paddingInputTable {
-    padding: 0.25em 1em;
-    box-shadow: none !important;
-    border-color: #c6c7c8 !important;
-  }
-  
-  .paddingInput {
-    padding: 0.2em 0.6em;
-    font-size: 14px;
-    box-shadow: none !important;
-    border-color: #c6c7c8 !important;
-  }
-  
-  .disabledOpacity {
-    opacity: 0.6 !important;
-  }
-  
-  .descolorear  {
-    background: none !important;
-  }
-  .enlace {
-    color: #0000EE !important;
-  }
+}
+
+.paddingInputTable {
+  padding: 0.25em 1em;
+  box-shadow: none !important;
+  border-color: #c6c7c8 !important;
+}
+
+.paddingInput {
+  padding: 0.2em 0.6em;
+  font-size: 14px;
+  box-shadow: none !important;
+  border-color: #c6c7c8 !important;
+}
+
+.disabledOpacity {
+  opacity: 0.6 !important;
+}
+
+.descolorear  {
+  background: none !important;
+}
+.enlace {
+  color: #0000EE !important;
+}

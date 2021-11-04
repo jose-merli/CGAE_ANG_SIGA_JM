@@ -27,6 +27,8 @@ export class ContadorSeriesFacturaComponent implements OnInit {
   contadoresSerie: ContadorSeriesItem[] = [];
 
   @Input() openTarjetaContadorFacturas;
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
   @Output() guardadoSend = new EventEmitter<any>();
   
   constructor(
@@ -144,6 +146,8 @@ export class ContadorSeriesFacturaComponent implements OnInit {
 
   abreCierraFicha(key): void {
     this.openTarjetaContadorFacturas = !this.openTarjetaContadorFacturas;
+    this.opened.emit(this.openTarjetaContadorFacturas);
+    this.idOpened.emit(key);
   }
 
 }

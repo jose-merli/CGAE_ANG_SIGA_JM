@@ -30,6 +30,8 @@ export class DestinatariosListaSeriesFacturaComponent implements OnInit {
   selectedDatos;
 
   @Input() openTarjetaListaDestinatarios;
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
   @Output() guardadoSend = new EventEmitter<any>();
   
   constructor() { }
@@ -87,6 +89,8 @@ export class DestinatariosListaSeriesFacturaComponent implements OnInit {
 
   abreCierraFicha(key): void {
     this.openTarjetaListaDestinatarios = !this.openTarjetaListaDestinatarios;
+    this.opened.emit(this.openTarjetaListaDestinatarios);
+    this.idOpened.emit(key);
   }
 
 }

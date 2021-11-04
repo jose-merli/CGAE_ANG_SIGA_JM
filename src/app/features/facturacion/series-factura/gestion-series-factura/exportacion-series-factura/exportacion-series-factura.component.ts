@@ -23,6 +23,8 @@ export class ExportacionSeriesFacturaComponent implements OnInit {
   comboConfIngresos: any[] = [];
 
   @Input() openTarjetaExportacionContabilidad;
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
   @Output() guardadoSend = new EventEmitter<any>();
   
   constructor(
@@ -113,6 +115,8 @@ export class ExportacionSeriesFacturaComponent implements OnInit {
 
   abreCierraFicha(key): void {
     this.openTarjetaExportacionContabilidad = !this.openTarjetaExportacionContabilidad;
+    this.opened.emit(this.openTarjetaExportacionContabilidad);
+    this.idOpened.emit(key);
   }
 
 }

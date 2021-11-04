@@ -18,9 +18,9 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit {
   msgs;
   progressSpinner: boolean = false;
 
-  @Input() datos: SerieFacturacionItem;
-  @Input() tarjetaDatosGenerales: string;
   @Input() openTarjetaDatosGenerales;
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
   @Output() guardadoSend = new EventEmitter<any>();
 
   bodyInicial: SerieFacturacionItem;
@@ -321,15 +321,21 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit {
         this.progressSpinner = false;
       },
       err => {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        let error = JSON.parse(err.error).error;
+        if (error != undefined && error.code == 400 && error.description != undefined) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        }
+
         this.progressSpinner = false;
       }
     );
   }
 
   // Estilo obligatorio
-  styleObligatorio(evento) {
-    if (this.resaltadoDatos && (evento == undefined || evento == null || evento == "")) {
+  styleObligatorio(evento: string) {
+    if (this.resaltadoDatos && (evento == undefined || evento == null || evento.trim() == "")) {
       return this.commonsService.styleObligatorio(evento);
     }
   }
@@ -360,23 +366,8 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit {
 
   abreCierraFicha(key): void {
     this.openTarjetaDatosGenerales = !this.openTarjetaDatosGenerales;
-    /*
-    this.resaltadoDatosGenerales = true;
-
-    if (key == "datosGenerales" && !this.fichaPosible.activa) {
-      this.fichaPosible.activa = !this.fichaPosible.activa;
-      this.openFicha = !this.openFicha;
-    }
-
-    if (this.activacionTarjeta) {
-      this.fichaPosible.activa = !this.fichaPosible.activa;
-      this.openFicha = !this.openFicha;
-    }
-
-    this.opened.emit(this.openFicha);
+    this.opened.emit(this.openTarjetaDatosGenerales);
     this.idOpened.emit(key);
-  }
-  */
   }
 
 }

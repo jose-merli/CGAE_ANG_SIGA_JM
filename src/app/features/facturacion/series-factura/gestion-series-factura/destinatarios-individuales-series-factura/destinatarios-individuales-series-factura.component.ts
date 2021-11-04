@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Message } from 'primeng/components/common/message';
 import { DataTable } from 'primeng/primeng';
 import { TranslateService } from '../../../../../commons/translate';
@@ -34,12 +34,15 @@ export class DestinatariosIndividualesSeriesFacturaComponent implements OnInit {
   selectedDatos;
 
   @Input() openTarjetaDestinatariosIndividuales;
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
   @Output() guardadoSend = new EventEmitter<any>();
   
   constructor(
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private changeDetectorRef: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -115,13 +118,33 @@ export class DestinatariosIndividualesSeriesFacturaComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
-  
+
+  onChangeSelectAll() {
+    if (this.selectAll) {
+      this.selectMultiple = true;
+      this.selectedDatos = this.datos;
+      this.numSelected = this.datos.length;
+    } else {
+      this.selectedDatos = [];
+      this.numSelected = 0;
+      this.selectMultiple = false;
+    }
+  }
+
+  onChangeRowsPerPages(event) {
+    this.selectedItem = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.table.reset();
+  }
+    
   esFichaActiva(): boolean {
     return this.openTarjetaDestinatariosIndividuales;// this.fichaPosible.activa;
   }
 
   abreCierraFicha(key): void {
     this.openTarjetaDestinatariosIndividuales = !this.openTarjetaDestinatariosIndividuales;
+    this.opened.emit(this.openTarjetaDestinatariosIndividuales);
+    this.idOpened.emit(key);
   }
 
 }
