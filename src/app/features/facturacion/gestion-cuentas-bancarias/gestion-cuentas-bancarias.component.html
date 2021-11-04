@@ -2,8 +2,16 @@
 
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 
-<div class="card mt-3">
-  <div class="card-body p-0">
+<div class="busqueda-container">
+  <div class="header-title">
+    <i class="fa fa-square"></i>
+    <p>{{ "menu.facturacion" | translate }}
+      <i class="fa fa-angle-right"></i>{{ "menu.facturacion.gestionCuentasBancarias" | translate }}
+    </p>
+  </div>
+
+  <div class="card mt-3">
+    <div class="card-body p-0">
 
     <!-- TABLA RESULTADOS -- BORRAR --
     <p-table [autoLayout]="true" [value]="listaCuentasBancarias" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table
@@ -23,60 +31,89 @@
       </ng-template> -->
       
     <!--NUEVA TABLA DE RESULTADOS [columns]="cols" [value]="listaCuentasBancarias"-->
-    <p-table #table [(selection)]="selectedDatos" [rows]="selectedItem" [autoLayout]="true"
-              [value]="listaCuentasBancarias" [columns]="cols" [ngClass]="{ 'customCursor' : selectMultiple }" selectionMode="multiple" class="tabla-listado overflow">
+    <p-table [autoLayout]="true" [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table
+      class="tabla-listado overflow" [paginator]="true" [rows]="selectedItem" [ngClass]="{ 'customCursor' : selectMultiple }"
+      selectionMode="multiple" paginatorPosition="both"   id="tablaFoco">
 
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
-          <col *ngFor="let col of cols" [style.width]="col.width">
+          <col *ngFor="let col of columns" [style.width]="col.width">
         </colgroup>
       </ng-template>
+
       <ng-template pTemplate="header" let-columns>
         <tr>
-          <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
-            {{ col.header | translate }}
+          <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+            {{col.header | translate}}
             <p-sortIcon [field]="col.field"></p-sortIcon>
-            <input pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText
-              type="text" (input)="
-                table.filter($event.target.value, col.field, 'contains')
-              " />
+            <input placeholder="{{ 'general.boton.search' | translate }}" pDroppable="false"
+              (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text"
+              (input)="table.filter($event.target.value,col.field, 'contains')">
           </th>
         </tr>
       </ng-template>
 
-      <ng-template pTemplate="body" let-cuentaBancaria let-columns="columns" let-rowIndex="rowIndex">
-          <tr [pSelectableRow]="cuentaBancaria" [pSelectableRowIndex]="rowIndex">
-              <td *ngFor="let col of columns">
-
-                <!-- Muestra las cuentas actuales -->
-                <div *ngIf="!historico">
-                  <div *ngIf="col.field === 'iban'">
-                    <span >(... {{ cuentaBancaria[col.field] | slice:-4 }} )</span>
-                  </div>
-                  <div *ngIf="col.field === 'descripcion'">
-                    <span class="enlace">{{ cuentaBancaria[col.field] }}</span>
-                  </div>
-                  <div *ngIf="col.field !== 'iban' && col.field !== 'descripcion'">
-                    <span>{{ cuentaBancaria[col.field] }}</span>
-                  </div>
-                </div>
-
-                <!-- Muestra el historico de cuentas -->
-                <div *ngIf="historico">
-                  <div *ngIf="col.field === 'iban'">
-                    <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">(... {{ cuentaBancaria[col.field] | slice:-4 }} )</span>
-                  </div>
-                  <div *ngIf="col.field === 'descripcion'">
-                    <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}" class="enlace">{{ cuentaBancaria[col.field] }}</span>
-                  </div>
-                  <div *ngIf="col.field !== 'iban' && col.field !== 'descripcion'">
-                    <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ cuentaBancaria[col.field] }}</span>
-                  </div>
-                </div>
-
-              </td>
-          </tr>
+      <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+        <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+          <td class="text-center" *ngFor="let col of columns">
+            <div [ngSwitch]="col.field">
+              <div *ngSwitchCase="'iban'">
+                <span [ngClass]="{ historico: historico }">(... {{ dato[col.field] | slice:-4 }} )</span>
+              </div>
+              <div *ngSwitchCase="'descripcion'">
+                <span [ngClass]="{ historico: historico }" (click)="openTab(dato)" class="enlace">{{ dato[col.field] }}</span>
+              </div>
+              <div *ngSwitchCase="'sjcs'">
+                <span [ngClass]="{ historico: historico }">{{ dato[col.field] ? "Sí" : "-" }}</span>
+              </div>
+              <div *ngSwitchCase="'comisionImporte'">
+                <span [ngClass]="{ historico: historico }">{{ dato[col.field] }} €</span>
+              </div>
+              <div *ngSwitchDefault>
+                <span [ngClass]="{ historico: historico }">{{ dato[col.field] }}</span>
+              </div>
+            </div>
+          </td>
+        </tr>
       </ng-template>
+      <!--
+      <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+        <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+          <td *ngFor="let col of columns">-->
+
+            <!-- Muestra las cuentas actuales -->
+            <!--
+            <div *ngIf="!historico">
+              <div *ngIf="col.field === 'iban'">
+                <span >(... {{ cuentaBancaria[col.field] | slice:-4 }} )</span>
+              </div>
+              <div *ngIf="col.field === 'descripcion'">
+                <span class="enlace">{{ cuentaBancaria[col.field] }}</span>
+              </div>
+              <div *ngIf="col.field !== 'iban' && col.field !== 'descripcion'">
+                <span>{{ cuentaBancaria[col.field] }}</span>
+              </div>
+            </div>
+            -->
+
+            <!-- Muestra el historico de cuentas -->
+            
+            <!--
+            {{ dato[col.field] }}
+            <div *ngIf="col.field === 'iban'">
+              <span [ngClass]="{ historico: historico }">(... {{ dato[col.field] | slice:-4 }} )</span>
+            </div>
+            <div *ngIf="col.field === 'descripcion'">
+              <span [ngClass]="{ historico: historico }" class="enlace">{{ dato[col.field] }}</span>
+            </div>
+            <div *ngIf="col.field !== 'iban' && col.field !== 'descripcion'">
+              <span [ngClass]="{ historico: historico }">{{ dato[col.field] }}</span>
+            </div>
+            -->
+            <!--
+          </td>
+        </tr>
+      </ng-template>-->
 
       <ng-template pTemplate="emptymessage" let-columns>
         <tr>
@@ -85,21 +122,25 @@
           </td>
         </tr>
       </ng-template>
+
       <ng-template pTemplate="paginatorleft">
         <div class="mostrar d-flex text-right justify-content-end">
-          <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }}{{table.first + 1}} al {{table.first
-            + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}</label>
-          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{selectedDatos.length}}
+          <label
+            class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}}
+            {{table.first + 1}} al {{table.first
+            + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }}
+            {{table.totalRecords}}
           </label>
-          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: 0
+          <label
+            class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}:
+            {{numSelected}}
           </label>
           <label>{{"general.message.mostrar" | translate}}</label>
           <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
           </p-dropdown>
           <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
           <div class="ml-3 selectAll">
-            <p-checkbox (onChange)="onChangeSelectAll()" [disabled]="!permisoEscritura" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
-              name="groupname"></p-checkbox>
+            <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo" name="groupname"></p-checkbox>
           </div>
         </div>
       </ng-template>
@@ -109,6 +150,12 @@
   </div>
   <div class="card-footer">
     <div class="text-right main-button">
+        <button *ngIf="!historico" (click)="mostrarOcultarHistoricos()" pButton type="button" icon="fa fa-history"
+          iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
+
+        <button *ngIf="historico" (click)="mostrarOcultarHistoricos()" pButton type="button" icon="fa fa-undo" iconPos="left"
+          label="{{'general.message.ocultarHistorico' | translate}}"></button>
+      
         <button *ngIf="!historico"
           [disabled]="(selectedDatos.length === 0)"
           (click)="confirm()" pButton type="button" icon="fa fa-trash" iconPos="left"
@@ -116,12 +163,6 @@
 
         <button *ngIf="!historico" [disabled]=" !permisoEscritura" (click)="nuevo()" pButton
           type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
-
-        <button *ngIf="!historico" (click)="mostrarOcultarHistoricos()" pButton type="button" icon="fa fa-history"
-          iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
-
-        <button *ngIf="historico" (click)="mostrarOcultarHistoricos()" pButton type="button" icon="fa fa-undo" iconPos="left"
-          label="{{'general.message.ocultarHistorico' | translate}}"></button>
       </div>
   </div>
 </div>

@@ -1,7 +1,7 @@
 import { Input } from '@angular/core';
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { ConfirmationService, DataTable, ProgressSpinner } from 'primeng/primeng';
+import { ConfirmationService, DataTable, Message, ProgressSpinner } from 'primeng/primeng';
 import { TranslateService } from '../../../commons/translate';
 import { CuentasBancariasItem } from '../../../models/CuentasBancariasItem';
 import { CommonsService } from '../../../_services/commons.service';
@@ -18,37 +18,38 @@ import { SigaServices } from '../../../_services/siga.service';
 })
 export class GestionCuentasBancariasComponent implements OnInit {
 
-  // url;
+  msgs: Message[];
+  progressSpinner: boolean = false;
 
-  /* constructor(public sigaServices: OldSigaServices) {
-    this.url = sigaServices.getOldSigaUrl("gestionCuentasBancarias");
-  } */
-  @Input() datos;
-  @ViewChild("table") table: DataTable;
-  msgs;
-  cols;
-  body: CuentasBancariasItem = new CuentasBancariasItem();
-  selectedDatos = [];
-  selectedItem;
-  selectMultiple;
-  permisoEscritura;
-  selectAll;
-  historico;
+  // Tabla
+
+  datos: CuentasBancariasItem[];
+  cols: any[];
+  first: number = 0;
+  selectedItem: number = 10;
+  selectAll: boolean = false;
+  selectMultiple: boolean = false;
+  numSelected: number = 0;
   rowsPerPage: any = [];
   buscadores = [];
-  numSelected: number;
+
+  @ViewChild("table") table: DataTable;
+  selectedDatos = [];
+  
+  permisoEscritura: boolean = true;
+
+  historico;
   allCuentasBancarias: CuentasBancariasItem[];
-  listaCuentasBancarias: CuentasBancariasItem[];
 
   constructor(private translateService: TranslateService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
     private sigaServices: SigaServices, private persistenceService: PersistenceService,
     private confirmationService: ConfirmationService, private commonServices: CommonsService) {
   }
 
-  async ngOnInit() { 
+  ngOnInit() { 
     this.historico = false;
-    await this.getCols();
-    await this.cargarDatos();
+    this.getCols();
+    this.cargarDatos();
   }
 
    getCols() {
@@ -89,29 +90,21 @@ export class GestionCuentasBancariasComponent implements OnInit {
   }
 
   onChangeSelectAll() {
-    if (this.permisoEscritura) {
-      if (!this.historico) {
-        if (this.selectAll) {
-          this.selectMultiple = true;
-          this.selectedDatos = this.datos;
-          this.numSelected = this.datos.length;
-        } else {
-          this.selectedDatos = [];
-          this.numSelected = 0;
-          this.selectMultiple = false;
-        }
+      if (this.selectAll) {
+        this.selectMultiple = true;
+        this.selectedDatos = this.datos;
+        this.numSelected = this.datos.length;
       } else {
-        if (this.selectAll) {
-          this.selectMultiple = true;
-          this.selectedDatos = this.datos.filter((dato) => dato.fechaBaja != undefined && dato.fechaBaja != null);
-          this.numSelected = this.selectedDatos.length;
-        } else {
-          this.selectedDatos = [];
-          this.numSelected = 0;
-          this.selectMultiple = false;
-        }
+        this.selectedDatos = [];
+        this.numSelected = 0;
+        this.selectMultiple = false;
       }
-    }
+  }
+
+  openTab(selectedRow) {
+    let cuentaBancariaItem: CuentasBancariasItem = selectedRow;
+    sessionStorage.setItem("cuentaBancariaItem", JSON.stringify(cuentaBancariaItem));
+    this.router.navigate(["/fichaCuentaBancaria"]);
   }
 
   nuevo() { }
@@ -135,17 +128,17 @@ export class GestionCuentasBancariasComponent implements OnInit {
   }
 
   cargarListaCuentasBancarias() {
-    this.listaCuentasBancarias = [];
+    this.datos = [];
 
     this.allCuentasBancarias.forEach( cuenta => {
       
       if (this.historico) {
         if (cuenta.fechaBaja != null) {
-          this.listaCuentasBancarias.push(cuenta);
+          this.datos.push(cuenta);
         }
       } else {
         if (cuenta.fechaBaja == null) {
-          this.listaCuentasBancarias.push(cuenta);
+          this.datos.push(cuenta);
         }
       }
 
@@ -171,23 +164,6 @@ export class GestionCuentasBancariasComponent implements OnInit {
     .subscribe( b => {
       
     });
-  }
-
-  isSelectMultiple() {
-    this.selectAll = false;
-
-    if (this.permisoEscritura) {
-      this.selectMultiple = !this.selectMultiple;
-
-      if (!this.selectMultiple) {
-        this.selectedDatos = [];
-        this.numSelected = 0;
-      } else {
-        this.selectAll = false;
-        this.selectedDatos = [];
-        this.numSelected = 0;
-      }
-    }
   }
 
   onChangeRowsPerPages(event) {
