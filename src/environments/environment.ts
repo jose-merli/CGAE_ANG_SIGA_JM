@@ -9,15 +9,14 @@ export const environment = {
   env: "",
   baseHref: "/ang/",
 
-  oldSigaUrl: "http://vmcgaeap002.cloud.es.deloitte.com:7001/SIGA/",
-  //oldSigaUrl: "https://localhost/SIGA/",
+  //oldSigaUrl: "http://vmcgaeap002.cloud.es.deloitte.com:7001/SIGA/",
+  oldSigaUrl: "https://localhost/SIGA/",
   //newSigaUrl: "http://localhost:8180/siga-web/"
   //newSigaUrl: "http://localhost:7001/siga-web/"
 
   // oldSigaUrl: '/SIGA/',
   // newSigaUrl: "http://localhost:8180/siga-web-1.1.0-SNAPSHOT/"
-  // newSigaUrl: "http://vmcgaeap001.cloud.es.deloitte.com:7005/siga-web/"
-  newSigaUrl: "http://vmcgaeap001.cloud.es.deloitte.com:7022/siga-web/"
+  newSigaUrl: "https://localhost/siga-web/"
 
   // newSigaUrl: '/siga-web/'
 };
