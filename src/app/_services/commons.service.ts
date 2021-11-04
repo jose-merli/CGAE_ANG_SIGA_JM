@@ -12,6 +12,10 @@ import { SigaServices } from "./siga.service";
 import { TranslateService } from '../commons/translate/translation.service';
 import { ComboItem } from "../models/ComboItem";
 
+export enum KEY_CODE {
+  ENTER = 13
+}
+
 @Injectable()
 export class CommonsService {
   DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
