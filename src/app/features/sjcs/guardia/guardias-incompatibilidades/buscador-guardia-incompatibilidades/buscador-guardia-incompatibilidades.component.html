@@ -9,7 +9,7 @@
 
   <div class="busqueda-container" class="card-body card-body-ficha">
     <app-filtros-guardia-incompatibilidades [permisoEscritura]="permisoEscritura" (isOpen)="isOpenReceive($event)" (filtrosValues)="getFiltrosValues($event)"></app-filtros-guardia-incompatibilidades>
-    <app-tabla-resultado-mix *ngIf="buscar" [incompatibilidades]="true" [firstColumn]="0" [lastColumn]="5" [totalRegistros] = "totalRegistros" [seleccionarTodo]="seleccionarTodo"
+    <app-tabla-resultado-mix *ngIf="buscar" [permisoEscritura]="permisoEscritura" [incompatibilidades]="true" [firstColumn]="0" [lastColumn]="5" [totalRegistros] = "totalRegistros" [seleccionarTodo]="seleccionarTodo"
     [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" [comboGuardiasIncompatibles]="comboGuardiasIncompatibles" [isLetrado]="isLetrado"
     (anySelected)="notifyAnySelected($event)" (selectedRow)="checkSelectedRow($event)" (save)="save($event)"  (delete)="delete($event)" (deleteFromCombo)="deleteFromCombo($event)"></app-tabla-resultado-mix>
   </div>
