@@ -610,6 +610,8 @@ export class SolicitudesModificacionComponent implements OnInit {
   }
 
   onSelectRow(selectedDatos) {
+    this.selectedDatos = selectedDatos;
+    
     if (selectedDatos[0].especifica == "1") {
       sessionStorage.setItem("saveFilters", JSON.stringify(this.body));
       sessionStorage.setItem("search", JSON.stringify(this.data));
@@ -635,6 +637,7 @@ export class SolicitudesModificacionComponent implements OnInit {
 
       if (selectedDatos[0].estado == "PENDIENTE" && !this.isLetrado) {
         this.disableButton = false;
+        this.disableNew = false;
       } else {
         this.disableButton = true;
       }
@@ -653,6 +656,8 @@ export class SolicitudesModificacionComponent implements OnInit {
   // POPUP
   closeDialog() {
     this.displayGeneralRequest = false;
+    this.selectedDatos = [];
+    this.actualizaSeleccionados(this.selectedDatos);
 
     if (this.isNew) {
       this.tipoModificacionSolGeneral = null;
