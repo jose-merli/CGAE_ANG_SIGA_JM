@@ -894,6 +894,22 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
     return fecha;
   }
 
+  transformaFechaSol(fecha) {
+    if (fecha != null) {
+      let jsonDate = JSON.stringify(fecha);
+      let rawDate = jsonDate.slice(1, -1);
+        let [fechaMod,hora] = rawDate.split(" ");
+        let arrayDate = fechaMod.split("/")[2] + "-" + fechaMod.split("/")[1] + "-" + fechaMod.split("/")[0];
+        fecha = new Date((arrayDate += "T"+hora));
+      
+    } else {
+      fecha = undefined;
+    }
+
+
+    return fecha;
+  }
+
   changeFecha(event){
     this.fechaActual = event;
   }
@@ -952,7 +968,7 @@ if(this.infoHabilitado.estadoNombre=="Alta"){
         'idinstitucion' : obj[9].value,
         'idturno': obj[10].value,
         'idguardia': obj[11].value,
-        'fechasolicitud': this.transformaFecha(obj[4].value),
+        'fechasolicitud': this.transformaFechaSol(obj[4].value),
         'fechavalidacion': this.transformaFecha(obj[5].value),
         'fechabaja': this.transformaFecha(obj[12].value),
         'observacionessolicitud': obj[13].value,
@@ -992,7 +1008,7 @@ if(this.infoHabilitado.estadoNombre=="Alta"){
         'idinstitucion' : obj[9].value,
         'idturno': obj[10].value,
         'idguardia': obj[11].value,
-        'fechasolicitud': this.transformaFecha(obj[4].value),
+        'fechasolicitud': this.transformaFechaSol(obj[4].value),
         'fechavalidacion': this.transformaFecha(obj[5].value),
         'fechabaja': this.transformaFecha(obj[12].value),
         'observacionessolicitud': obj[13].value,
@@ -1029,7 +1045,7 @@ if(this.infoHabilitado.estadoNombre=="Alta"){
         'idinstitucion' : obj[9].value,
         'idturno': obj[10].value,
         'idguardia': obj[11].value,
-        'fechasolicitud': this.transformaFecha(obj[4].value),
+        'fechasolicitud': this.transformaFechaSol(obj[4].value),
         'fechavalidacion': this.transformaFecha(obj[5].value),
         'fechabaja': this.transformaFecha(obj[12].value),
         'observacionessolicitud': obj[13].value,
@@ -1069,7 +1085,7 @@ if(this.infoHabilitado.estadoNombre=="Alta"){
         'idinstitucion' : obj[9].value,
         'idturno': obj[10].value,
         'idguardia': obj[11].value,
-        'fechasolicitud': this.transformaFecha(obj[4].value),
+        'fechasolicitud': this.transformaFechaSol(obj[4].value),
         'fechavalidacion': this.transformaFecha(obj[5].value),
         'fechabaja': this.transformaFecha(obj[12].value),
         'observacionessolicitud': obj[13].value,
