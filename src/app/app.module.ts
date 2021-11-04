@@ -493,6 +493,7 @@ import { TarjetaDescuentosAnticiposCompraSuscripcionComponent } from './features
 import { CuotasSuscripcionesComponent } from './features/facturacion/cuotas-suscripciones/cuotas-suscripciones.component';
 import { TarjetaFiltroCuotasSuscripcionesComponent } from './features/facturacion/cuotas-suscripciones/tarjeta-filtro-cuotas-suscripciones/tarjeta-filtro-cuotas-suscripciones.component';
 import { TarjetaListaCuotasSuscripcionesComponent } from './features/facturacion/cuotas-suscripciones/tarjeta-lista-cuotas-suscripciones/tarjeta-lista-cuotas-suscripciones.component';
+import { TarjetaServiciosCompraSuscripcionComponent } from './features/facturacion/ficha-compra-suscripcion/tarjeta-servicios-compra-suscripcion/tarjeta-servicios-compra-suscripcion.component';
 enableRipple(true);
 
 @NgModule({
@@ -901,7 +902,8 @@ enableRipple(true);
 		TarjetaDescuentosAnticiposCompraSuscripcionComponent,
 		CuotasSuscripcionesComponent,
 		TarjetaFiltroCuotasSuscripcionesComponent,
-		TarjetaListaCuotasSuscripcionesComponent
+		TarjetaListaCuotasSuscripcionesComponent,
+		TarjetaServiciosCompraSuscripcionComponent
 	],
 	imports: [
 		Paginador3Module,

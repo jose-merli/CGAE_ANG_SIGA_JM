@@ -1,6 +1,7 @@
 import { ListaFacturasPeticionItem } from "./ListaFacturasPeticionItem";
 import { ListaProductosCompraItem } from "./ListaProductosCompraItem";
 import { ListaProductosItems } from "./ListaProductosItems";
+import { ListaServiciosSuscripcionItem } from "./ListaServiciosSuscripcionItem";
 
 export class FichaCompraSuscripcionItem {
 
@@ -40,7 +41,7 @@ export class FichaCompraSuscripcionItem {
 
 
     //TARJETA SERVICIOS
-    servicios: ListaProductosCompraItem[]; //ListaServiciosSuscripcionItem REVISAR
+    servicios: ListaServiciosSuscripcionItem[]; 
 
     idEstadoPeticion: string;
     

@@ -278,7 +278,10 @@ export class TarjetaFiltroCuotasSuscripcionesComponent implements OnInit {
 
     if (msg != undefined) {
       this.msgs = msg;
-    } else this.nuevaSuscripcion();
+    } 
+    else{
+      this.nuevaSuscripcion();
+    }
   }
 
   nuevaSuscripcion() {

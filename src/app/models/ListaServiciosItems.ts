@@ -12,6 +12,7 @@ export class ListaServiciosItems {
     iva: string;
     precioperiodicidad: string;
     formapago: string;
+    noFacturable: string;
 
     constructor() { }
 }

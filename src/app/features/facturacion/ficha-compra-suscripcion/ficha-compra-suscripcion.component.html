@@ -12,6 +12,9 @@
       <app-tarjeta-productos-compra-suscripcion #productos *ngIf="ficha.productos != null" [(ficha)]="ficha" (actualizaFicha)="actualizarFicha()" 
       > 
       </app-tarjeta-productos-compra-suscripcion>
+      <app-tarjeta-servicios-compra-suscripcion #servicios *ngIf="ficha.servicios != null" [(ficha)]="ficha" (actualizaFicha)="actualizarFicha()" 
+      > 
+      </app-tarjeta-servicios-compra-suscripcion>
       <app-tarjeta-descuentos-anticipos-compra-suscripcion [(ficha)]="ficha"></app-tarjeta-descuentos-anticipos-compra-suscripcion>
       <app-tarjeta-factura-compra-suscripcion  [(ficha)]="ficha">
       </app-tarjeta-factura-compra-suscripcion>

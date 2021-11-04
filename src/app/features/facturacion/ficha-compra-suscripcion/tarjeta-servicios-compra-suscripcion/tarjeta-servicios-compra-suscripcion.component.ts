@@ -4,25 +4,22 @@ import { SortEvent } from 'primeng/api';
 import { Subject, Subscription } from 'rxjs';
 import { TranslateService } from '../../../../commons/translate';
 import { ComboItem } from '../../../../models/ComboItem';
+import { DatosBancariosItem } from '../../../../models/DatosBancariosItem';
 import { FichaCompraSuscripcionItem } from '../../../../models/FichaCompraSuscripcionItem';
-import { FiltrosCompraProductosItem } from '../../../../models/FiltrosCompraProductosItem';
-import { FiltrosProductos } from '../../../../models/FiltrosProductos';
-import { ListaComprasProductosItem } from '../../../../models/ListaComprasProductosItem';
-import { ListaProductosCompraItem } from '../../../../models/ListaProductosCompraItem';
-import { ListaProductosDTO } from '../../../../models/ListaProductosDTO';
-import { ListaProductosItems } from '../../../../models/ListaProductosItems';
+import { FiltrosServicios } from '../../../../models/FiltrosServicios';
+import { ListaServiciosItems } from '../../../../models/ListaServiciosItems';
+import { ListaServiciosSuscripcionItem } from '../../../../models/ListaServiciosSuscripcionItem';
 import { procesos_PyS } from '../../../../permisos/procesos_PyS';
 import { SigaStorageService } from '../../../../siga-storage.service';
 import { CommonsService } from '../../../../_services/commons.service';
 import { SigaServices } from '../../../../_services/siga.service';
-import { DatosBancariosItem } from '../../../../models/DatosBancariosItem';
 
 @Component({
-  selector: 'app-tarjeta-productos-compra-suscripcion',
-  templateUrl: './tarjeta-productos-compra-suscripcion.component.html',
-  styleUrls: ['./tarjeta-productos-compra-suscripcion.component.scss']
+  selector: 'app-tarjeta-servicios-compra-suscripcion',
+  templateUrl: './tarjeta-servicios-compra-suscripcion.component.html',
+  styleUrls: ['./tarjeta-servicios-compra-suscripcion.component.scss']
 })
-export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
+export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
 
   //Variables generales app
   msgs = []; //Para mostrar los mensajes p-growl y dialogos de confirmacion
@@ -30,37 +27,37 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
   showTarjeta: boolean = false;
   esColegiado  = this.localStorageService.isLetrado;
 
-  productoEditable: boolean = false;
+  servicioEditable: boolean = false;
   observacionesEditable: boolean = false;
   cantidadEditable: boolean = false;
   precioUnitarioEditable: boolean = false;
   ivaEditable: boolean = false;
   permisoEditarImporte: boolean = false;
-  permisoActualizarProductos;
+  permisoActualizarServicios;
   showModal: boolean = false;
 
-  colsProducts = [
-    { field: "categoria", header: "facturacion.productos.categoria" },
-    { field: "tipo", header: "facturacion.productos.tipo" },
-    { field: "descripcion", header: "facturacion.productos.producto" },
-    { field: "formapago", header: "facturacion.productos.formapago" },
+  colsServs = [
+    { field: "categoria", header: "facturacion.servicios.categoria" },
+    { field: "tipo", header: "facturacion.servicios.tipo" },
+    { field: "descripcion", header: "facturacion.servicios.servicio" },
+    { field: "formapago", header: "facturacion.servicios.formapago" },
   ];
 
-  productosTarjeta: ListaProductosCompraItem[] = [];
-  comboProductos: ListaProductosItems[] = [];
+  serviciosTarjeta: ListaServiciosSuscripcionItem[] = [];
+  comboServicios: ListaServiciosItems[] = [];
   ivaCombo: ComboItem[];
   comboComun: ComboItem[] = [];
   comboPagos: ComboItem[];
 
   cols = [
     { field: "orden", header: "administracion.informes.literal.orden" },
-    { field: "descripcion", header: "facturacion.productos.producto" },
+    { field: "descripcion", header: "facturacion.servicios.servicio" },
     { field: "observaciones", header: "censo.nuevaSolicitud.observaciones" },
-    { field: "precioUnitario", header: "facturacion.productos.precioUnitario" },
+    { field: "precioUnitario", header: "facturacion.servicios.precioUnitario" },
     { field: "cantidad", header: "facturacionSJCS.facturacionesYPagos.cantidad" },
-    { field: "impNeto", header: "facturacion.productos.importeNeto" },
-    { field: "iva", header: "facturacion.productos.iva" },
-    { field: "impIva", header: "facturacion.productos.importeIva" },
+    { field: "impNeto", header: "facturacion.servicios.importeNeto" },
+    { field: "iva", header: "facturacion.servicios.iva" },
+    { field: "impIva", header: "facturacion.servicios.importeIva" },
     { field: "total", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.total" },
   ];
 
@@ -85,20 +82,20 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
 
   @Input("ficha") ficha: FichaCompraSuscripcionItem;
   @Output() actualizaFicha = new EventEmitter<Boolean>();
-  @ViewChild("productsTable") tablaProductos;
+  @ViewChild("servicesTable") tablaServicios;
 
-  selectedRows: ListaProductosCompraItem[] = [];
+  selectedRows: ListaServiciosSuscripcionItem[] = [];
   numSelectedRows: number = 0; //Se usa para mostrar visualmente el numero de filas seleccionadas
   selectMultipleRows: boolean = true; //Seleccion multiples filas de la tabla
   selectAllRows: boolean = false; //Selecciona todas las filas de la pagina actual de la tabla
   rowsPerPage: number = 10; //Define el numero de filas mostradas por pagina
   first = 0;
   buscadores = [];
-  buscadoresProductos = [];
+  buscadoresServicios = [];
 
 
-  subscriptionProductosBusqueda: Subscription;
-  sidebarVisibilityChange: Subject<ListaProductosCompraItem[]> = new Subject<ListaProductosCompraItem[]>();
+  subscriptionServiciosBusqueda: Subscription;
+  sidebarVisibilityChange: Subject<ListaServiciosSuscripcionItem[]> = new Subject<ListaServiciosSuscripcionItem[]>();
   cuentasBanc: ComboItem[] = [];
   selectedPago: string;
   totalUnidades: number;
@@ -113,10 +110,10 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
     private router: Router) {}
 
   ngOnInit() {
-    this.getComboProductos();
+    this.getComboServicios();
     this.getComboPagos();
     this.getPermisoEditarImporte();
-    this.getPermisoActualizarProductos();
+    this.getPermisoActualizarServicios();
     this.getComboTipoIva();
     if(this.ficha.idPersona != null){
       this.cargarDatosBancarios(); //Se buscan las cuentas bancarias asociadas al cliente
@@ -124,60 +121,60 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
 
     if (this.ficha.fechaPendiente != null) {
       //Se recomenda añadir un procesamiento asincrono
-      //mediante promesa de los combos de productos y combopagos
-      this.getProductosCompra();
+      //mediante promesa de los combos de servicios y combopagos
+      this.getServiciosSuscripcion();
     }
     else {
       this.ficha.impTotal = "0";
-      this.productosTarjeta = this.ficha.productos;
+      this.serviciosTarjeta = this.ficha.servicios;
     }
     this.datosTarjeta = this.ficha;
   }
 
   ngOnDestroy() {
-    if (this.subscriptionProductosBusqueda){
-      this.subscriptionProductosBusqueda.unsubscribe();
+    if (this.subscriptionServiciosBusqueda){
+      this.subscriptionServiciosBusqueda.unsubscribe();
     }
   }
 
   //INICIO SERVICIOS
-  getProductosCompra() {
+  getServiciosSuscripcion() {
     this.progressSpinner = true;
 
-    this.subscriptionProductosBusqueda = this.sigaServices.getParam("PyS_getListaProductosCompra",
+    this.subscriptionServiciosBusqueda = this.sigaServices.getParam("PyS_getListaServiciosSuscripcion",
       "?idPeticion=" + this.ficha.nSolicitud).subscribe(
-        listaProductosCompraDTO => {
+        listaServiciosSuscripcionDTO => {
 
-          this.productosTarjeta = listaProductosCompraDTO.listaProductosCompraItems;
+          this.serviciosTarjeta = listaServiciosSuscripcionDTO.listaServiciosSuscripcionItems;
 
-          if (listaProductosCompraDTO.error.code == 200) {
+          if (listaServiciosSuscripcionDTO.error.code == 200) {
             // this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           } else {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
           }
           this.checkTotal();
 
-          this.productosTarjeta.sort((a, b) => (a.orden > b.orden) ? 1 : -1);
+          this.serviciosTarjeta.sort((a, b) => (a.orden > b.orden) ? 1 : -1);
 
-          this.ficha.productos = JSON.parse(JSON.stringify(this.productosTarjeta));
+          this.ficha.servicios = JSON.parse(JSON.stringify(this.serviciosTarjeta));
           if (this.ficha.idFormaPagoSeleccionada != null){
-            if(this.ficha.productos[0].noFacturable == "1"){
+            if(this.ficha.servicios[0].noFacturable == "1"){
               let noFacturableItem = new ComboItem();
-              noFacturableItem.label =this.translateService.instant("facturacion.productos.noFacturable");
+              noFacturableItem.label =this.translateService.instant("facturacion.servicios.noFacturable");
               noFacturableItem.value = "-1";
               this.comboComun.push(noFacturableItem);
               this.selectedPago = "-1";
             }
             else{
             this.selectedPago = this.ficha.idFormaPagoSeleccionada.toString();
-            this.checkFormasPagoComunes(this.productosTarjeta);
+            this.checkFormasPagoComunes(this.serviciosTarjeta);
             }
           }
           this.newFormaPagoCabecera();
 
-          for(let productoTarj of this.productosTarjeta){
-            productoTarj.impNeto = Number(productoTarj.impNeto).toFixed(2);
-            productoTarj.precioUnitario = Number(productoTarj.precioUnitario).toFixed(2);
+          for(let servicioTarj of this.serviciosTarjeta){
+            servicioTarj.impNeto = Number(servicioTarj.impNeto).toFixed(2);
+            servicioTarj.precioUnitario = Number(servicioTarj.precioUnitario).toFixed(2);
 
           }
 
@@ -194,7 +191,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
   }
 
   getPermisoEditarImporte() {
-    this.subscriptionProductosBusqueda = this.sigaServices.get("PyS_getListaProductosCompra").subscribe(
+    this.subscriptionServiciosBusqueda = this.sigaServices.get("PyS_getListaServiciosSuscripcion").subscribe(
       permiso => {
         if (permiso == "S") this.permisoEditarImporte = true;
       },
@@ -202,7 +199,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
         this.progressSpinner = false;
       }, () => {
         this.progressSpinner = false;
-      });;
+      });
   }
 
 
@@ -210,13 +207,13 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
   getComboPagos() {
     this.progressSpinner = true;
 
-    this.sigaServices.get("productosBusqueda_comboFormaPago").subscribe(
+    this.sigaServices.get("serviciosBusqueda_comboFormaPago").subscribe(
       comboDTO => {
 
         this.comboPagos = comboDTO.combooItems;
         this.progressSpinner = false;
-        if(this.ficha.productos.length >0){
-          this.checkFormasPagoComunes(this.productosTarjeta);
+        if(this.ficha.servicios.length >0){
+          this.checkFormasPagoComunes(this.serviciosTarjeta);
         }
 
       },
@@ -226,52 +223,52 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
   }
 
 
-  getComboProductos() {
+  getComboServicios() {
     this.progressSpinner = true;
 
 
-    let filtrosProductos: FiltrosProductos = new FiltrosProductos();
-    this.sigaServices.post("productosBusqueda_busqueda", filtrosProductos).subscribe(
-      listaProductosDTO => {
+    let filtrosServicios: FiltrosServicios = new FiltrosServicios();
+    this.sigaServices.post("serviciosBusqueda_busqueda", filtrosServicios).subscribe(
+      listaServiciosDTO => {
 
-        if (JSON.parse(listaProductosDTO.body).error.code == 500) {
+        if (JSON.parse(listaServiciosDTO.body).error.code == 500) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         } else {
           // this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         }
 
-        //Descomentar esto y comentar el codigo de abajo asignando el valor de comboProductos
-        //Si se quiere mostrar unicamente productos no derogados
-        // JSON.parse(listaProductosDTO.body).listaProductosItems.forEach(producto => {
-        //   if (producto.fechabaja == null) {
-        //     this.comboProductos.push(producto);
+        //Descomentar esto y comentar el codigo de abajo asignando el valor de comboServicios
+        //Si se quiere mostrar unicamente servicios no derogados
+        // JSON.parse(listaServiciosDTO.body).listaServiciosItems.forEach(servicio => {
+        //   if (servicio.fechabaja == null) {
+        //     this.comboServicios.push(servicio);
         //   }
         // });
 
-        this.comboProductos = JSON.parse(listaProductosDTO.body).listaProductosItems
+        this.comboServicios = JSON.parse(listaServiciosDTO.body).listaServiciosItems
 
-        //Apaño temporal ya que si no se hace este reset, la tabla muestra unicamente la primera paginad e productos
-        this.tablaProductos.reset();
+        //Apaño temporal ya que si no se hace este reset, la tabla muestra unicamente la primera paginad e servicios
+        this.tablaServicios.reset();
 
         //Se revisan las formas de pago para añadir los "no factuables" y los "No disponible"
-        this.comboProductos.forEach(producto => {
-          if (producto.formapago == null || producto.formapago == "") {
-            if (producto.noFacturable == "1") {
-              producto.formapago = this.translateService.instant("facturacion.productos.noFacturable");
+        this.comboServicios.forEach(servicio => {
+          if (servicio.formapago == null || servicio.formapago == "") {
+            if (servicio.noFacturable == "1") {
+              servicio.formapago = this.translateService.instant("facturacion.servicios.noFacturable");
             }
             else {
-              producto.formapago = this.translateService.instant("facturacion.productos.pagoNoDisponible");
+              servicio.formapago = this.translateService.instant("facturacion.servicios.pagoNoDisponible");
             }
           }
           else {
-            if (producto.noFacturable == "1") {
-              producto.formapago += ", "+this.translateService.instant("facturacion.productos.noFacturable");
+            if (servicio.noFacturable == "1") {
+              servicio.formapago += ", "+this.translateService.instant("facturacion.servicios.noFacturable");
             }
           }
         });
 
-        if(this.ficha.fechaPendiente == null && this.ficha.productos.length > 0){
-          this.initProductos();
+        if(this.ficha.fechaPendiente == null && this.ficha.servicios.length > 0){
+          this.initServicios();
         }
 
         this.progressSpinner = false;
@@ -282,13 +279,13 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
       });
   }
 
-  updateProductosPeticion() {
+  updateServiciosPeticion() {
     this.progressSpinner = true;
 
     let peticion: FichaCompraSuscripcionItem = new FichaCompraSuscripcionItem();
 
-    this.datosTarjeta.productos = this.productosTarjeta;
-    this.sigaServices.post("PyS_updateProductosPeticion", this.datosTarjeta).subscribe(
+    this.datosTarjeta.servicios = this.serviciosTarjeta;
+    this.sigaServices.post("PyS_updateServiciosPeticion", this.datosTarjeta).subscribe(
       n => {
 
         if (n.status == 500) {
@@ -298,7 +295,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
 
           this.checkTotal();
 
-          this.ficha.productos = JSON.parse(JSON.stringify(this.productosTarjeta));
+          this.ficha.servicios = JSON.parse(JSON.stringify(this.serviciosTarjeta));
           //this.actualizaFicha.emit();
           
           this.cantidadEditable = false;
@@ -319,7 +316,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
   getComboTipoIva() {
     this.progressSpinner = true;
 
-    this.sigaServices.get("fichaProducto_comboIvaNoDerogados").subscribe(
+    this.sigaServices.get("fichaServicio_comboIvaNoDerogados").subscribe(
       IvaTypeSelectValues => {
         this.progressSpinner = false;
 
@@ -339,20 +336,20 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
   //INICIO METODOS
 
   checkSave() {
-    let msg = this.commonsService.checkPermisos(this.permisoActualizarProductos, undefined);
+    let msg = this.commonsService.checkPermisos(this.permisoActualizarServicios, undefined);
 
     if (msg != null) {
       this.msgs = msg;
     } else if (this.checkCamposObligatorios()) {
       this.showMessage("error", "Error", this.translateService.instant('general.message.camposObligatorios'));
     } else {
-      this.updateProductosPeticion();
+      this.updateServiciosPeticion();
     }
   }
 
   checkCamposObligatorios() {
     let campoVacio = false;
-    this.productosTarjeta.forEach(el => {
+    this.serviciosTarjeta.forEach(el => {
       if (el.cantidad == null || el.cantidad.trim() == "" ||
         el.descripcion == null || el.descripcion.trim() == "" ||
         el.precioUnitario == null || el.precioUnitario.trim() == "" ||
@@ -366,13 +363,13 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
     return false;
   }
 
-  //En este método se calcula el total de unidades y del importe de cada producto y se actualiza el valor del importe en la compra si se esta creando nueva.
+  //En este método se calcula el total de unidades y del importe de cada servicio y se actualiza el valor del importe en la compra si se esta creando nueva.
   checkTotal() {
     let totalNeto = 0;
     let totalIVA = 0;
     let impTotal = 0;
     this.totalUnidades = 0;
-    this.productosTarjeta.forEach(
+    this.serviciosTarjeta.forEach(
       el => {
         this.totalUnidades += Number(el.cantidad);
         el.total = ((Number(el.cantidad) * Number(el.precioUnitario)) * (1 + Number(el.valorIva) / 100)).toFixed(2);
@@ -403,79 +400,79 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
 
   openTab(selectedRow) {
     this.progressSpinner = true;
-    let productoItem: ListaProductosItems = selectedRow;
+    let servicioItem: ListaServiciosItems = selectedRow;
     sessionStorage.setItem("FichaCompraSuscripcion", JSON.stringify(this.ficha));
     sessionStorage.setItem("origin", "Cliente");
-    sessionStorage.setItem("productoBuscador", JSON.stringify(productoItem));
-    this.router.navigate(["/fichaProductos"]);
+    sessionStorage.setItem("servicioBuscador", JSON.stringify(servicioItem));
+    this.router.navigate(["/fichaServicios"]);
   }
 
-  anadirProducto(selectedProducto) {
-    if (this.checkProductoSeleccionado(selectedProducto)) {
+  anadirServicio(selectedServicio) {
+    if (this.checkServicioSeleccionado(selectedServicio)) {
       this.showModal = false;
-      let newProducto: ListaProductosCompraItem = new ListaProductosCompraItem();
-      newProducto.cantidad = "1";
-      newProducto.descripcion = selectedProducto.descripcion;
-      newProducto.orden = (this.productosTarjeta.length + 1).toString();
-      newProducto.idproducto = selectedProducto.idproducto;
-      newProducto.idtipoproducto = selectedProducto.idtipoproducto;
-      newProducto.idproductoinstitucion = selectedProducto.idproductoinstitucion;
-      newProducto.precioUnitario = selectedProducto.valor.split(" ")[0];
-      newProducto.precioUnitario = newProducto.precioUnitario.replace(",", "."); //para evitar que utilice comas que se procesan de forma erronea
-      newProducto.iva = selectedProducto.iva;
-      newProducto.valorIva = selectedProducto.valorIva;
-      newProducto.idtipoiva = selectedProducto.idtipoiva;
-      newProducto.idPeticion = this.ficha.nSolicitud;
-      newProducto.noFacturable = selectedProducto.noFacturable;
-      newProducto.solicitarBaja = selectedProducto.solicitarBaja;
-      this.productosTarjeta.push(newProducto);
+      let newServicio: ListaServiciosSuscripcionItem = new ListaServiciosSuscripcionItem();
+      newServicio.cantidad = "1";
+      newServicio.descripcion = selectedServicio.descripcion;
+      newServicio.orden = (this.serviciosTarjeta.length + 1).toString();
+      newServicio.idServicio = selectedServicio.idservicio;
+      newServicio.idTipoServicio = selectedServicio.idtiposervicio;
+      newServicio.idServicioInstitucion = selectedServicio.idservicioinstitucion;
+      newServicio.precioUnitario = selectedServicio.precioperiodicidad.split(" ")[0];
+      newServicio.precioUnitario = newServicio.precioUnitario.replace(",", "."); //para evitar que utilice comas que se procesan de forma erronea
+      newServicio.iva = selectedServicio.iva;
+      newServicio.valorIva = selectedServicio.valorIva;
+      newServicio.idtipoiva = selectedServicio.idtipoiva;
+      newServicio.idPeticion = this.ficha.nSolicitud;
+      newServicio.noFacturable = selectedServicio.noFacturable;
+      newServicio.solicitarBaja = selectedServicio.solicitarBaja;
+      this.serviciosTarjeta.push(newServicio);
       this.checkTotal();
     }
 
   }
 
-    initProductos(){
+    initServicios(){
       let i = 1;
-      for(let prodList of this.productosTarjeta){
-        let prod = this.comboProductos.find(prod =>
-          prod.idproducto == prodList.idproducto && prod.idtipoproducto == prodList.idtipoproducto && prod.idproductoinstitucion == prodList.idproductoinstitucion
+      for(let servList of this.serviciosTarjeta){
+        let serv = this.comboServicios.find(serv =>
+          serv.idservicio == servList.idServicio && serv.idtiposervicios == servList.idTipoServicio && serv.idserviciosinstitucion == servList.idServicioInstitucion
         )
-        prodList.cantidad = "1";
-        prodList.orden = i.toString();
-        prodList.idPeticion = this.ficha.nSolicitud; 
-        prodList.precioUnitario = prod.valor.split(" ")[0];
-        prodList.precioUnitario = prodList.precioUnitario.replace(",", "."); //para evitar que utilice comas que se procesan de forma erronea
-        prodList.noFacturable = prod.noFacturable;
+        servList.cantidad = "1";
+        servList.orden = i.toString();
+        servList.idPeticion = this.ficha.nSolicitud; 
+        servList.precioUnitario = serv.precioperiodicidad.split(" ")[0];
+        servList.precioUnitario = servList.precioUnitario.replace(",", "."); //para evitar que utilice comas que se procesan de forma erronea
+        servList.noFacturable = serv.noFacturable;
         i++;
       }
       this.checkTotal();
-      this.checkFormasPagoComunes(this.productosTarjeta);
+      this.checkFormasPagoComunes(this.serviciosTarjeta);
     }
 
-  checkProductoSeleccionado(selectedProducto) {
-    if (selectedProducto.formapago != this.translateService.instant("facturacion.productos.pagoNoDisponible")) {
-      if (selectedProducto.fechaBajaIva == null) {
-        let productosLista = JSON.parse(JSON.stringify(this.productosTarjeta));
+  checkServicioSeleccionado(selectedServicio) {
+    if (selectedServicio.formapago != this.translateService.instant("facturacion.servicios.pagoNoDisponible")) {
+      if (selectedServicio.fechaBajaIva == null) {
+        let serviciosLista = JSON.parse(JSON.stringify(this.serviciosTarjeta));
 
-        let newProducto = new ListaProductosCompraItem();
-        newProducto.idproducto = selectedProducto.idproducto;
-        newProducto.idproductoinstitucion = selectedProducto.idproductoinstitucion;
-        newProducto.idtipoproducto = selectedProducto.idtipoproducto;
-        newProducto.noFacturable = selectedProducto.noFacturable;
-        newProducto.descripcion = selectedProducto.descripcion;
+        let newServicio = new ListaServiciosSuscripcionItem();
+        newServicio.idServicio = selectedServicio.idservicio;
+        newServicio.idServicioInstitucion = selectedServicio.idservicioinstitucion;
+        newServicio.idTipoServicio = selectedServicio.idtiposervicio;
+        newServicio.noFacturable = selectedServicio.noFacturable;
+        newServicio.descripcion = selectedServicio.descripcion;
 
-        productosLista.push(newProducto);
+        serviciosLista.push(newServicio);
 
-        if (this.checkFormasPagoComunes(productosLista)) {
-          let found = this.productosTarjeta.find(prod =>
-            prod.idproducto == selectedProducto.idproducto && prod.idtipoproducto == selectedProducto.idtipoproducto && prod.idproductoinstitucion == selectedProducto.idproductoinstitucion
+        if (this.checkFormasPagoComunes(serviciosLista)) {
+          let found = this.serviciosTarjeta.find(serv =>
+            serv.idServicio == selectedServicio.idservicio && serv.idTipoServicio == selectedServicio.idtiposervicio && serv.idServicioInstitucion == selectedServicio.idservicioinstitucion
           )
           if (found == undefined) {
             return true;
           } else {
             this.showMessage("error",
-              this.translateService.instant("facturacion.productos.productoPresenteLista"),
-              this.translateService.instant("facturacion.productos.productoPresenteListaDesc")
+              this.translateService.instant("facturacion.servicios.servicioPresenteLista"),
+              this.translateService.instant("facturacion.servicios.servicioPresenteListaDesc")
             );
             return false;
           }
@@ -486,20 +483,20 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
       }
       else {
         this.showMessage("error",
-          this.translateService.instant("facturacion.productos.productoIvaDerogado"),
-          this.translateService.instant("facturacion.productos.productoIvaDerogadoDesc"));
+          this.translateService.instant("facturacion.servicios.servicioIvaDerogado"),
+          this.translateService.instant("facturacion.servicios.servicioIvaDerogadoDesc"));
         return false;
       }
     }
     else {
       this.showMessage("error",
-      this.translateService.instant("productoSinFormaPago"),
-      this.translateService.instant("productoSinFormaPago"));
+      this.translateService.instant("servicioSinFormaPago"),
+      this.translateService.instant("servicioSinFormaPago"));
       return false;
     }
   }
 
-  checkFormasPagoComunes(productosLista: any[]) {
+  checkFormasPagoComunes(serviciosLista: any[]) {
     let error: boolean = false;
 
 
@@ -510,16 +507,16 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
 
     this.selectedPago = null;
 
-    let prod;
-    productosLista.forEach(element => {
-      prod = this.comboProductos.find(prod =>
-        prod.idproducto == element.idproducto && prod.idtipoproducto == element.idtipoproducto && prod.idproductoinstitucion == element.idproductoinstitucion
+    let serv;
+    serviciosLista.forEach(element => {
+      serv = this.comboServicios.find(serv =>
+        serv.idservicio == element.idservicio && serv.idtiposervicios == element.idtiposervicio && serv.idserviciosinstitucion == element.idservicioinstitucion
       )
       let idformaspago;
-      if(prod.idFormasPago != null){
-        idformaspago = prod.idFormasPago.split(",");
+      if(serv.idFormasPago != null){
+        idformaspago = serv.idFormasPago.split(",");
       }
-      if(prod.noFacturable == "1"){
+      if(serv.noFacturable == "1"){
         if(idformaspago != undefined){
           idformaspago.push("-1");
         }
@@ -549,22 +546,22 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
           resultUsu.push("-1");
         }
         else{
-          let index = prod.idFormasPago.split(",").indexOf(idpago);
-          if((this.esColegiado && prod.formasPagoInternet.split(",")[index] == "A") ||
-          ((!this.esColegiado && prod.formasPagoInternet.split(",")[index] == "S")) ||
-          (productosLista[0].noFacturable =="0" && prod.idFormasPago.split(",")[index] == this.ficha.idFormaPagoSeleccionada)){
-            resultUsu.push(prod.idFormasPago.split(",")[index]);
+          let index = serv.idFormasPago.split(",").indexOf(idpago);
+          if((this.esColegiado && serv.formasPagoInternet.split(",")[index] == "A") ||
+          ((!this.esColegiado && serv.formasPagoInternet.split(",")[index] == "S")) ||
+          (serviciosLista[0].noFacturable =="0" && serv.idFormasPago.split(",")[index] == this.ficha.idFormaPagoSeleccionada)){
+            resultUsu.push(serv.idFormasPago.split(",")[index]);
           }
         }
       }
 
       if(resultUsu.length > 0){
-        if(this.checkNoFacturable(productosLista)){
+        if(this.checkNoFacturable(serviciosLista)){
           for (let pagoComun of resultUsu) {
             let formaPago = this.comboPagos.find(pago => pago.value == pagoComun);
             if (formaPago != undefined) {
               this.comboComun.push(formaPago);
-              if(pagoComun == this.ficha.idFormaPagoSeleccionada && this.ficha.productos[0].noFacturable == "0"){
+              if(pagoComun == this.ficha.idFormaPagoSeleccionada && this.ficha.servicios[0].noFacturable == "0"){
                 this.selectedPago = this.ficha.idFormaPagoSeleccionada;
                 this.newFormaPagoCabecera();
               }
@@ -594,10 +591,10 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
     else {
       this.showMessage("error",
         this.translateService.instant(
-          "facturacion.productos.ResFormasPagoNoCompatibles"
+          "facturacion.servicios.ResFormasPagoNoCompatibles"
         ),
         this.translateService.instant(
-          "facturacion.productos.FormasPagoNoCompatibles"
+          "facturacion.servicios.FormasPagoNoCompatibles"
         )
       );
       return false;
@@ -613,28 +610,28 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
     this.observacionesEditable = false;
   }
 
-  borrarProducto() {
-    if (this.selectedRows.length < this.productosTarjeta.length) {
+  borrarServicio() {
+    if (this.selectedRows.length < this.serviciosTarjeta.length) {
       for (let row of this.selectedRows) {
-        let index = this.productosTarjeta.indexOf(row);
-        this.productosTarjeta.splice(index, 1);
+        let index = this.serviciosTarjeta.indexOf(row);
+        this.serviciosTarjeta.splice(index, 1);
       }
 
       //Reasignar valores de orden
       let i = 1;
-      for (let prod of this.productosTarjeta) {
-        prod.orden = i + "";
+      for (let serv of this.serviciosTarjeta) {
+        serv.orden = i + "";
         i++;
       }
       this.selectedRows = [];
       this.numSelectedRows = 0;
       this.checkTotal();
-      this.checkFormasPagoComunes(this.productosTarjeta);
+      this.checkFormasPagoComunes(this.serviciosTarjeta);
     }
     else {
       this.showMessage("error",
-        this.translateService.instant("facturacion.productos.noBorrarProductos"),
-        this.translateService.instant("facturacion.productos.prodNecesario")
+        this.translateService.instant("facturacion.servicios.noBorrarServicios"),
+        this.translateService.instant("facturacion.servicios.servNecesario")
       );
     }
   }
@@ -665,8 +662,8 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
   //Metodo activado al pulsar sobre el checkbox Seleccionar todo
   onChangeSelectAllRows() {
     if (this.selectAllRows === true) {
-      this.selectedRows = this.productosTarjeta;
-      this.numSelectedRows = this.productosTarjeta.length;
+      this.selectedRows = this.serviciosTarjeta;
+      this.numSelectedRows = this.serviciosTarjeta.length;
 
     } else {
       this.selectedRows = [];
@@ -689,12 +686,12 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
     }
   }
 
-  getPermisoActualizarProductos() {
+  getPermisoActualizarServicios() {
     this.commonsService
-      //.checkAcceso(procesos_PyS.actualizarProductos)
+      //.checkAcceso(procesos_PyS.actualizarServicios)
       .checkAcceso(procesos_PyS.fichaCompraSuscripcion)
       .then((respuesta) => {
-        this.permisoActualizarProductos = respuesta;
+        this.permisoActualizarServicios = respuesta;
       })
       .catch((error) => console.error(error));
   }
@@ -708,19 +705,19 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
     this.numSelectedRows = this.selectedRows.length;
   }
 
-  checkNoFacturable(productos: ListaProductosItems[]) {
+  checkNoFacturable(servicios: ListaServiciosItems[]) {
     let i = 0;
-    //Se comprueba si todos los productos seleccionados son no facturables facturables
-    for (let prod of productos) {
-      if (prod.noFacturable == "1") i++;
+    //Se comprueba si todos los servicios seleccionados son no facturables facturables
+    for (let serv of servicios) {
+      if (serv.noFacturable == "1") i++;
     }
 
-    if (i == 0 || i == productos.length) {
+    if (i == 0 || i == servicios.length) {
       this.comboComun = [];
       //Si son todos no facturables
-      if (i == productos.length) {
+      if (i == servicios.length) {
         let noFacturableItem = new ComboItem();
-        noFacturableItem.label = this.translateService.instant("facturacion.productos.noFacturable");
+        noFacturableItem.label = this.translateService.instant("facturacion.servicios.noFacturable");
         noFacturableItem.value = "-1";
         this.comboComun.push(noFacturableItem);
         this.selectedPago = "-1";
@@ -736,21 +733,21 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
   moveRow(direccion) {
     if (direccion == 'up' && this.selectedRows[0].orden != "1") {
       //Se intercambian los elementos del array correspondientes
-      [this.productosTarjeta[Number(this.selectedRows[0].orden) - 1], this.productosTarjeta[Number(this.selectedRows[0].orden) - 2]] =
-        [this.productosTarjeta[Number(this.selectedRows[0].orden) - 2], this.productosTarjeta[Number(this.selectedRows[0].orden) - 1]];
+      [this.serviciosTarjeta[Number(this.selectedRows[0].orden) - 1], this.serviciosTarjeta[Number(this.selectedRows[0].orden) - 2]] =
+        [this.serviciosTarjeta[Number(this.selectedRows[0].orden) - 2], this.serviciosTarjeta[Number(this.selectedRows[0].orden) - 1]];
       //Se asignan los nuevos valores de la columna orden
       let orden = this.selectedRows[0].orden;
-      this.productosTarjeta[Number(orden) - 2].orden = (Number(orden) - 1) + "";
-      this.productosTarjeta[Number(orden) - 1].orden = (Number(orden)) + "";
+      this.serviciosTarjeta[Number(orden) - 2].orden = (Number(orden) - 1) + "";
+      this.serviciosTarjeta[Number(orden) - 1].orden = (Number(orden)) + "";
     }
-    else if (direccion == 'down' && this.selectedRows[0].orden != this.productosTarjeta.length + "") {
+    else if (direccion == 'down' && this.selectedRows[0].orden != this.serviciosTarjeta.length + "") {
       //Se intercambian los elementos del array correspondientes
-      [this.productosTarjeta[Number(this.selectedRows[0].orden) - 1], this.productosTarjeta[Number(this.selectedRows[0].orden)]] =
-        [this.productosTarjeta[Number(this.selectedRows[0].orden)], this.productosTarjeta[Number(this.selectedRows[0].orden) - 1]];
+      [this.serviciosTarjeta[Number(this.selectedRows[0].orden) - 1], this.serviciosTarjeta[Number(this.selectedRows[0].orden)]] =
+        [this.serviciosTarjeta[Number(this.selectedRows[0].orden)], this.serviciosTarjeta[Number(this.selectedRows[0].orden) - 1]];
       //Se asignan los nuevos valores de la columna orden
       let orden = this.selectedRows[0].orden;
-      this.productosTarjeta[Number(orden)].orden = (Number(orden) + 1) + "";
-      this.productosTarjeta[Number(orden) - 1].orden = (Number(orden)) + "";
+      this.serviciosTarjeta[Number(orden)].orden = (Number(orden) + 1) + "";
+      this.serviciosTarjeta[Number(orden) - 1].orden = (Number(orden)) + "";
     }
   }
 
@@ -771,7 +768,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
       return true;
     }
     else if (this.selectedRows != undefined && this.selectedRows.length == 1) {
-      return Number(this.selectedRows[0].orden) == this.productosTarjeta.length
+      return Number(this.selectedRows[0].orden) == this.serviciosTarjeta.length
     }
     else {
       return true;
@@ -841,4 +838,5 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
   }
 
   //FIN METODOS
+
 }
