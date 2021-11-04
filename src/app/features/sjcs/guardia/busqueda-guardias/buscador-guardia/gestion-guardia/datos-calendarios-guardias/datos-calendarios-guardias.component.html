@@ -187,7 +187,7 @@
                 <strong *ngIf="body.separarGuardia">{{'justiciaGratuita.guardia.gestion.separarGuardiaCalendario'|translate}} </strong>
               </div>
               <div class="col-2">
-                <p-checkbox binary="true" [disabled]="!permisoEscritura || historico || isLetrado" [(ngModel)]="body.separarGuardia"></p-checkbox>
+                <p-checkbox binary="true" [disabled]="!permisoEscritura || historico || permisoEscritura || isLetrado" [(ngModel)]="body.separarGuardia"></p-checkbox>
               </div>
             </div>
           </div>
@@ -199,7 +199,7 @@
     <div class="text-right main-button ">
       <button (click)="rest()" pButton [disabled]="historico || !permisoEscritura || isLetrado" type="button" icon="fa fa-undo" iconPos="left"
         label="{{ 'general.boton.restablecer' | translate}}"></button>
-      <button (click)="save()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}" [disabled]="isLetrado"></button>
+      <button (click)="save()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}" [disabled]="isLetrado || !permisoEscritura"></button>
     </div>
   </div>
 </div>

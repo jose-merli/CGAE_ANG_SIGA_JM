@@ -22,6 +22,7 @@ import { CalendariosDatosEntradaItem } from './CalendariosDatosEntradaItem.model
 import { FiltrosGuardiaCalendarioComponent } from './filtros-guardia-calendarios/filtros-guardia-calendarios.component';
 import { saveAs } from "file-saver/FileSaver";
 import { forEach } from '@angular/router/src/utils/collection';
+import { ControlAccesoDto } from '../../../../models/ControlAccesoDto';
 
 @Component({
   selector: 'app-programacionCalendarios',
@@ -53,6 +54,7 @@ export class ProgramacionCalendariosComponent implements OnInit {
   comboIncompatibilidadesDatosEntradaItem: ComboIncompatibilidadesDatosEntradaItem;
   comboIncompatibilidadesRes: ComboIncompatibilidadesRes;
   dataToDuplicate;
+  permisoTotal = true;
   cabeceras = [
     {
       id: "turno",
@@ -129,6 +131,8 @@ export class ProgramacionCalendariosComponent implements OnInit {
     }
 
     ngOnInit() {
+
+      this.checkAcceso();
       
       if (this.persistenceService.getDatos() != undefined && this.persistenceService.getDatos().duplicar) {
         console.log('¿duplicar?: ', this.persistenceService.getDatos().duplicar)
@@ -188,6 +192,38 @@ export class ProgramacionCalendariosComponent implements OnInit {
     }
     
 
+  }
+
+  checkAcceso() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "997";
+    let derechoAcceso;
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisosTree = JSON.parse(data.body);
+        let permisosArray = permisosTree.permisoItems;
+        derechoAcceso = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        if (derechoAcceso == 3) {
+          //permiso total
+          this.permisoTotal = true;
+        } else if (derechoAcceso == 2) {
+          // solo lectura
+          this.permisoTotal = false;
+        } else {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
+      }
+    );
   }
 
   getStatusValue(id){
@@ -699,10 +735,11 @@ guardarInc(nombreTurno, nombreGuardia, nombreTurnoIncompatible, nombreGuardiaInc
         }
       })
         if (noGenerado){
-        this.descargarZipLogGenerados(dataToZipArr);
+        this.showMessage({ severity: 'info', summary: 'No puede descargar el log porque no se ha comenzado la generación del calendario', msg: 'No puede descargar el log porque no se ha comenzado la generación del calendario' });
+        
         } else{
-          this.showMessage({ severity: 'info', summary: 'No puede descargar el log porque no se ha comenzado la generación del calendario', msg: 'No puede descargar el log porque no se ha comenzado la generación del calendario' });
-        }
+        this.descargarZipLogGenerados(dataToZipArr);
+          }
   }
 
   /*descargarZipLogGenerados(datos){

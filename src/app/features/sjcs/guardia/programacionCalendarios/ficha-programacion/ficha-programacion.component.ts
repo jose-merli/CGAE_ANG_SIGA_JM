@@ -13,7 +13,7 @@ import { Subscription } from 'rxjs';
 import { GlobalGuardiasService } from '../../guardiasGlobal.service';
 import { saveAs } from "file-saver/FileSaver";
 import { CalendarioProgramadoItem } from '../../../../../models/guardia/CalendarioProgramadoItem';
-
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-ficha-programacion',
@@ -167,6 +167,35 @@ export class FichaProgramacionComponent implements OnInit {
     } else {
       this.modoEdicion = false;
     }
+//si el origen es guardias de colegiado
+
+  if (sessionStorage.getItem('guardiaColegiadoData')) {
+    this.dataToReceive = JSON.parse(sessionStorage.getItem('guardiaColegiadoData'));
+    
+
+    if (this.dataToReceive.idCalendarioProgramado != null){
+      this.disableGenerar = false;
+      this.getGuardiasFromCal(this.dataToReceive.idCalendarioProgramado);
+    }else{
+      this.disableGenerar = true;
+      this.dataReady = true;
+    }
+    this.rowGroupsSaved = this.dataToReceive.tabla;
+    console.log('rowGroupsSaved: ', this.rowGroupsSaved)
+    this.datosGenerales = JSON.parse(sessionStorage.getItem('guardiaColegiadoData'));
+    this.datosGeneralesIniciales = Object.assign({},this.datosGenerales );
+    this.duplicar = this.dataToReceive.duplicar;
+    //this.search();
+    this.modoEdicion = true;
+    sessionStorage.removeItem('guardiaColegiadoData');
+  } else {
+    this.modoEdicion = false;
+  }
+
+  
+
+    
+
     this.obtenerPermisos();
 
     if (sessionStorage.getItem("filtrosBusquedaGuardias")) {
@@ -177,6 +206,9 @@ export class FichaProgramacionComponent implements OnInit {
       );
     }
 this.estado = this.datosGeneralesIniciales.estado;
+
+  
+
   }
   ngOnDestroy(){
     this.suscription.unsubscribe();
@@ -941,5 +973,41 @@ descargarLog(event){
 
   clear() {
     this.msgs = [];
+  }
+
+  linkGuardiaColegiado2(event){
+
+      let calendario = {
+           'orden': event.orden,
+              'turno': event.turno,
+              'guardia': event.guardia,
+              'generado': event.generado,
+              'idGuardia': event.idGuardia,
+              'idTurno': event.idTurno
+      }
+      let anadirLetrado = {
+        'duplicar' : '',
+        'tabla': [],
+        'turno': calendario.turno,
+        'nombre': calendario.guardia,
+        'generado': this.datosGenerales.generado,
+        'numGuardias': '',
+        'listaGuarias': {label: '', value: ''},
+        'fechaDesde': this.datosGenerales.fechaDesde,
+        'fechaHasta': this.datosGenerales.fechaHasta,
+        'fechaProgramacion': this.datosGenerales.fechaProgramacion,
+        'estado': this.datosGenerales.estado,
+        'observaciones': '',
+        'idCalendarioProgramado': this.datosGenerales.idCalendarioProgramado,
+        'idTurno': calendario.idTurno,
+        'idGuardia': calendario.idGuardia,
+        'orden': calendario.orden,
+        'idConjunto': this.datosGenerales.listaGuarias.value
+      };
+    
+    sessionStorage.setItem("calendariosProgramados","true");
+    sessionStorage.setItem("calendarioSeleccinoado", JSON.stringify(anadirLetrado));
+    this.router.navigate(["/buscadorColegiados"]);
+    
   }
 }

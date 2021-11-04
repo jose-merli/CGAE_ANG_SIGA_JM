@@ -42,7 +42,7 @@ export class TablaResultadoMixComponent implements OnInit {
   @Input() inscripciones: boolean;
   @Input() incompatibilidades: boolean;
   @Input() isLetrado: boolean;
-  @Input() permisoEscritura : boolean;
+  @Input() permisoTotal: boolean;
   @Output() resultado = new EventEmitter<{}>();
   @Output() descargaLOG = new EventEmitter<any[]>();
   @Output() anySelected = new EventEmitter<any>();
@@ -507,7 +507,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
             this.descargaLOG.emit(dataToSendArr);
           }
           else{
-             this.showMsg('error', 'Error. No puede descargar el log del calendario ' + dataToSend.idCalendarioProgramado + ' porque no está Generado' ,'')
+             this.showMsg('info', 'Error. No puede descargar el log del calendario ' + dataToSend.idCalendarioProgramado + ' porque no está Generado' ,'')
             }
       })
     } else if (this.selectedRowValue[0] != undefined){
@@ -534,7 +534,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
         dataToSendArr.push(dataToSend);
         this.descargaLOG.emit(dataToSendArr);
        }else{
-        this.showMsg('error', 'Error. No puede descargar el log del calendario ' + dataToSend.idCalendarioProgramado + ' porque no está Generado' ,'')
+        this.showMsg('info', 'Error. No puede descargar el log del calendario ' + dataToSend.idCalendarioProgramado + ' porque no está Generado' ,'')
        }
     }else{
       this.showMsg('error', 'Error. Debe seleccionar uno o más registros para poder descargar sus LOGs' ,'')
@@ -961,12 +961,19 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
   }
 
   HabilitarBotones(){
-
+    let validarjustificaciones = '';
+    let estadoNombre = '';
+    if (this.selectedRowValue[22] != undefined){
+       validarjustificaciones = this.selectedRowValue[22].value;
+    }
+    if (this.selectedRowValue[8] != undefined){
+      estadoNombre = this.selectedRowValue[8].value;
+    }
     this.infoHabilitado= {
       isLetrado : this.isLetrado,
-      validarjustificaciones: this.selectedRowValue[22].value,
-      estadoNombre: this.selectedRowValue[8].value
-    };    
+      validarjustificaciones: validarjustificaciones,
+      estadoNombre: estadoNombre
+ };    
 
     if(this.infoHabilitado.validarjustificaciones=="S" && (this.infoHabilitado.estadoNombre=="Pendiente de Alta" || this.infoHabilitado.estadoNombre=="Pendiente de Baja") && !this.isLetrado){
       this.habilitadoValidar=false;

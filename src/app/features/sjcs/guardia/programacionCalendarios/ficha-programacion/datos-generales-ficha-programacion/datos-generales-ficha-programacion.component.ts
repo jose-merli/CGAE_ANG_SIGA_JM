@@ -360,6 +360,17 @@ formatDate2(date) {
   }
 
   save() {
+    let compareDateOk = compareDate(this.datosGenerales.fechaDesde, this.datosGenerales.fechaHasta, true);
+    let compareDateFuture1 = compareDate(this.datosGenerales.fechaDesde, this.changeDateFormat(this.formatDate2(new Date()).toString()), true);
+    let compareDateFuture2 = compareDate(this.datosGenerales.fechaHasta, this.changeDateFormat(this.formatDate2(new Date()).toString()), true);
+ 
+      if (compareDateOk != -1) {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Rango de fechas incorrecto. Debe cumplir que la fecha desde sea menor o igual que la fecha hasta");
+      }else if (compareDateFuture1 != -1 || compareDateFuture2 != -1){
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No existen guardias asociadas a una programación con fechas futuras");
+      }else{
+
+
     console.log('datosGenerales.fechaHasta: ', this.datosGenerales.fechaHasta)
     this.progressSpinner = true;
     console.log('DUPLICAR: ', this.datosGenerales.duplicar)
@@ -408,6 +419,7 @@ formatDate2(date) {
     }
   }
   this.progressSpinner = false;
+}
   }
 
   showMessage(severity, summary, msg) {
@@ -444,4 +456,50 @@ formatDate2(date) {
      this.globalGuardiasService.emitConf(configuracionCola);
   }
 
+}
+function compareDate (fechaA:  any, fechaB:  any, isAsc: boolean){
+
+  let dateA = null;
+  let dateB = null;
+  if (fechaA!=null){
+    const dayA = fechaA.substr(0, 2) ;
+    const monthA = fechaA.substr(3, 2);
+    const yearA = fechaA.substr(6, 10);
+    console.log("fecha a:"+ yearA+","+monthA+","+dayA);
+    dateA = new Date(yearA, monthA, dayA);
+  }
+
+  if (fechaB!=null){
+    const dayB = fechaB.substr(0, 2) ;
+    const monthB = fechaB.substr(3, 2);
+    const yearB = fechaB.substr(6, 10);
+    console.log("fecha b:"+ yearB+","+monthB+","+dayB);
+    dateB = new Date(yearB, monthB, dayB);
+  }
+
+  console.log("comparacionDate isAsc:"+ isAsc+";");
+
+  return compare(dateA, dateB, isAsc);
+
+}
+
+function compare(a: number | string | Date, b: number | string | Date, isAsc: boolean) {
+  console.log("comparacion  a:"+ a+"; b:"+ b);
+
+  if (typeof a === "string" && typeof b === "string") {
+    console.log("comparacion  de cadenas");
+    a = a.toLowerCase();
+    b = b.toLowerCase();
+  }
+
+  console.log("compare isAsc:"+ isAsc+";");
+
+  if (a==null && b!=null){
+    return ( 1 ) * (isAsc ? 1 : -1);
+  }
+  if (a!=null && b==null){
+    return ( -1 ) * (isAsc ? 1 : -1);
+  }
+
+  return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }

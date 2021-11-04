@@ -4,6 +4,7 @@ import { TurnosItem } from '../../../../../models/sjcs/TurnosItem';
 import { GuardiaItem } from '../../../../../models/guardia/GuardiaItem';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-gestion-guardia-colegiado',
   templateUrl: './gestion-guardia-colegiado.component.html',
@@ -17,7 +18,8 @@ export class GestionGuardiaColegiadoComponent implements OnInit {
   modificar: boolean;
   constructor(private location: Location,
     private sigaServices: SigaServices,
-    private persistenceService: PersistenceService) { }
+    private persistenceService: PersistenceService,
+    private router: Router) { }
 
   ngOnInit() {
 
@@ -25,7 +27,7 @@ export class GestionGuardiaColegiadoComponent implements OnInit {
       if(sessionStorage.getItem("infoGuardiaColeg") != null || sessionStorage.getItem("infoGuardiaColeg") != undefined){
         this.guardia = JSON.parse(sessionStorage.getItem("infoGuardiaColeg"));
         this.persistenceService.setDatos(this.guardia);
-        sessionStorage.removeItem("infoGuardiaColeg");
+        
         this.modificar = true;
         this.activa = true
       }else{
@@ -36,6 +38,31 @@ export class GestionGuardiaColegiadoComponent implements OnInit {
   }
 
   backTo(){
+    
+    if (sessionStorage.getItem("infoGuardiaColeg") != null || sessionStorage.getItem("infoGuardiaColeg") != undefined){
+      let calendarioItemSend = 
+      { 'idTurno': this.guardia.idTurno,
+        'idConjuntoGuardia': this.guardia.idConjuntoGuardia,
+       'idGuardia': this.guardia.idGuardia,
+        'fechaCalendarioDesde': this.guardia.fechadesde,
+        'fechaCalendarioHasta': this.guardia.fechahasta,
+      };
+      this.navigateToFichaGuardia(calendarioItemSend);
+    }else{
     this.location.back();
+    }
+    sessionStorage.removeItem("infoGuardiaColeg");
+  }
+
+  navigateToFichaGuardia(calendarioItemSend){
+    sessionStorage.setItem("datosCalendarioGuardiaColeg",JSON.stringify(calendarioItemSend));
+    sessionStorage.setItem("originGuarCole","true");
+    this.router.navigate(['/fichaProgramacion']);
+  }
+
+  ngOnDestroy(): void {
+    //Called once, before the instance is destroyed.
+    //Add 'implements OnDestroy' to the class.
+    sessionStorage.removeItem("infoGuardiaColeg");
   }
 }

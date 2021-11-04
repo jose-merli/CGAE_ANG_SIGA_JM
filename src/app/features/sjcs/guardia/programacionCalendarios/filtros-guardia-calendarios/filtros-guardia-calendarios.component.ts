@@ -24,6 +24,7 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
   filtros = new CalendarioProgramadoItem();
   filtroAux = new CalendarioProgramadoItem();
   historico: boolean = false;
+  @Input() permisoTotal = true;
   resaltadoDatos = false;
   isDisabledZona: boolean = true;
   isDisabledMateria: boolean = true;

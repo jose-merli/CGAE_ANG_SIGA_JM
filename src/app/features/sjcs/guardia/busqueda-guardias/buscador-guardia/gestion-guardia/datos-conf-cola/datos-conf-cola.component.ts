@@ -64,6 +64,7 @@ export class DatosConfColaComponent implements OnInit {
         if(data.idGuardiaPrincipal){
           this.tieneGuardiaPrincipal = true;
         }
+        
         this.body.letradosGuardia = data.letradosGuardia;
         this.body.idOrdenacionColas = data.idOrdenacionColas;
         this.body.porGrupos = data.porGrupos == "1" ? true : false;
@@ -306,6 +307,7 @@ export class DatosConfColaComponent implements OnInit {
     this.globalGuardiasService.emitConf(configuracionCola);
   }
   cambiaGrupo() {
+    this.body.rotarComponentes = this.body.porGrupos;
     let configuracionCola: ConfiguracionCola = {
       'manual': true,
       'porGrupos': this.body.porGrupos,
