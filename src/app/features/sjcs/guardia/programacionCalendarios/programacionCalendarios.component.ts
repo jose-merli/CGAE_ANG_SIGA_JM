@@ -141,19 +141,19 @@ export class ProgramacionCalendariosComponent implements OnInit {
         this.rowGroups = this.dataToDuplicate.tabla;
         
         let objCells: Cell[] = [
-          { type: 'text', value: this.dataToDuplicate.turno, combo: null, size: 250 },
-          { type: 'text', value: this.dataToDuplicate.nombre, combo: null, size: 250 },
-          { type: 'date', value: this.dataToDuplicate.fechaDesde, combo: null, size: 140},
-          { type: 'date', value: this.dataToDuplicate.fechaHasta , combo: null, size: 140},
-          { type: 'dateTime', value: this.dataToDuplicate.fechaProgramacion , combo: null, size: 140},
-          { type: 'label', value: this.dataToDuplicate.listaGuarias, combo: null, size: 250},
-          { type: 'link', value: this.dataToDuplicate.observaciones , combo: null, size: 250},
-          { type: 'text', value: this.dataToDuplicate.estado , combo: null, size: 140},
-          { type: 'text', value: this.dataToDuplicate.generado, combo: null , size: 140 },
-          { type: 'text', value: this.dataToDuplicate.numGuardias, combo: null, size: 140 },
-          { type: 'invisible', value: this.dataToDuplicate.idCalendarioProgramado, combo: null, size: 0},
-          { type: 'invisible', value: this.dataToDuplicate.idTurno, combo: null, size: 0},
-          { type: 'invisible', value: this.dataToDuplicate.idGuardia, combo: null, size: 0}          
+          { type: 'text', value: this.dataToDuplicate.turno, combo: null, size: 250 , disabled: false},
+          { type: 'text', value: this.dataToDuplicate.nombre, combo: null, size: 250 , disabled: false},
+          { type: 'date', value: this.dataToDuplicate.fechaDesde, combo: null, size: 140, disabled: false},
+          { type: 'date', value: this.dataToDuplicate.fechaHasta , combo: null, size: 140, disabled: false},
+          { type: 'dateTime', value: this.dataToDuplicate.fechaProgramacion , combo: null, size: 140, disabled: false},
+          { type: 'label', value: this.dataToDuplicate.listaGuarias, combo: null, size: 250, disabled: false},
+          { type: 'link', value: this.dataToDuplicate.observaciones , combo: null, size: 250, disabled: false},
+          { type: 'text', value: this.dataToDuplicate.estado , combo: null, size: 140, disabled: false},
+          { type: 'text', value: this.dataToDuplicate.generado, combo: null , size: 140 , disabled: false},
+          { type: 'text', value: this.dataToDuplicate.numGuardias, combo: null, size: 140 , disabled: false},
+          { type: 'invisible', value: this.dataToDuplicate.idCalendarioProgramado, combo: null, size: 0, disabled: false},
+          { type: 'invisible', value: this.dataToDuplicate.idTurno, combo: null, size: 0, disabled: false},
+          { type: 'invisible', value: this.dataToDuplicate.idGuardia, combo: null, size: 0, disabled: false}          
           ];
       
           let obj: Row = {id: this.rowGroups.length, cells: objCells};

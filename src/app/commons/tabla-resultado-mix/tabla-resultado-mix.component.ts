@@ -13,6 +13,8 @@ import { TranslateService } from '../translate/translation.service';
 import { throwMatDialogContentAlreadyAttachedError } from '@angular/material';
 import { DatePipe } from '@angular/common';
 import { CalendarioProgramadoItem } from '../../models/guardia/CalendarioProgramadoItem';
+import { SigaServices } from '../../_services/siga.service';
+import { CommonsService } from '../../_services/commons.service';
 
 
 /*interface Cabecera {
@@ -95,6 +97,7 @@ export class TablaResultadoMixComponent implements OnInit {
   jsonParaEnviar: { tipoAccion:any, datos: any};
   
   infoHabilitado: { isLetrado: any; validarjustificaciones:any; estadoNombre:any};
+  comboTurnos = [];
 
 
   @Input() firstColumn: number = 0;
@@ -107,7 +110,9 @@ export class TablaResultadoMixComponent implements OnInit {
     private persistenceService: PersistenceService,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private commonsService : CommonsService,
+    private sigaServices : SigaServices
 
   ) {
     this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
@@ -161,6 +166,9 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
     })
     console.log('this.rowGroups: ', this.rowGroups)
     console.log('this.totalRegistros: ', this.totalRegistros)
+    if(this.incompatibilidades){
+      this.getComboTurno();
+    }
   }
 
   onChangeMulti(event, rowPosition, cell){
@@ -195,9 +203,52 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
       cellguardiaInc.type = 'text';
       cellguardiaInc.value = labelSelected;
       this.rowGroups[rowPosition].cells[10].value.push(labelSelected);
-      this.nuevoFromCombo(turno, cellguardiaInc, idGuardia, idTurno, idTurnoIncompatible, idGuardiaIncompatible, nombreTurnoInc);
+      //this.nuevoFromCombo(turno, cellguardiaInc, idGuardia, idTurno, idTurnoIncompatible, idGuardiaIncompatible, nombreTurnoInc);
     }
   
+  }
+  getComboTurno() {
+    this.sigaServices.get("busquedaGuardia_turno").subscribe(
+      n => {
+        this.comboTurnos = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.commonsService.arregloTildesCombo(this.comboTurnos);
+      }
+    );
+  }
+  onChangeTurno(event, row : Row, cell){
+    if(event){
+      this.getComboGuardias(row, event.value);
+      row.cells[8].value = event.value;
+    }else{
+      row.cells[1].combo = [];
+      row.cells[8].value = '';
+    }
+  }
+  onChangeGuardia(event, row : Row, cell){
+    if(event){
+      row.cells[7].value = event.value;
+    }else{
+      row.cells[7].value = '';
+    }
+  }
+  getComboGuardias(row : Row, idTurno){
+    this.sigaServices.getParam(
+      "busquedaGuardia_guardia", "?idTurno=" + idTurno).subscribe(
+        data => {
+          row.cells[1].combo = data.combooItems;    
+        },
+        err => {
+          console.log(err);
+        },
+        ()=>{
+          this.commonsService.arregloTildesCombo(row.cells[1].combo);
+        }
+      );
   }
   nuevoFromCombo(turno, guardiaInc, idGuardia, idTurno, idTurnoIncompatible, idGuardiaIncompatible, nombreTurnoInc){
     this.enableGuardar = true;
@@ -228,13 +279,21 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
     if (idGuardia.value != ''){
       this.comboGuardiasIncompatibles.push({ label: labelSelected, value: idGuardia.value})
     }
-   
-    row.cells = [turno, guardiaInc, cellMulti, cell1, cell2, idTurno, idGuardia, idGuardiaIncompatible, idTurnoIncompatible, cellInvisible, cellArr];
+    if(turno.type == 'turnoSelect'){
+      let turnoTextCell : Cell = new Cell();
+      turnoTextCell.type = 'text';
+      turnoTextCell.value = '';
+
+      row.cells = [turnoTextCell, guardiaInc, cellMulti, cell1, cell2, idTurno, idGuardia, idGuardiaIncompatible, idTurnoIncompatible, cellInvisible, cellArr];
+    }else{
+      row.cells = [turno, guardiaInc, cellMulti, cell1, cell2, idTurno, idGuardia, idGuardiaIncompatible, idTurnoIncompatible, cellInvisible, cellArr];
+    }
     if (idGuardia.value != ''){
     this.rowGroups.unshift(row);
     }
     this.totalRegistros = this.rowGroups.length;
     this.rowGroupsAux = this.rowGroups;
+    this.to = this.totalRegistros;
   }
   validaCheck(texto) {
     return texto === 'Si';
@@ -728,34 +787,37 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
       cell10.value = '';
       row.cells = [cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8, cell9, cell10];
     }else{
-      cell1.type = 'input';
+      cell1.type = 'turnoSelect';
+      cell1.combo = JSON.parse(JSON.stringify(this.comboTurnos));
       cell1.value = '';
-      cell2.type = 'input';
+      cell2.type = 'guardiaSelect';
       cell2.value = '';
       cell3.type = 'input';
       cell3.value = '';
       cell4.type = 'input';
       cell4.value = '';
-    cell5.type = 'invisible';
-    cell5.value = '';
-    cell6.type = 'invisible';
-    cell6.value = '';
-    cell7.type = 'invisible';
-    cell7.value = '';
-    cell8.type = 'invisible';
-    cell8.value = '';
-    cell9.type = 'invisible';
-    cell9.value = '';
-    cell10.type = 'invisible';
-    cell10.value = [];
-    cellMulti.combo = this.comboGuardiasIncompatibles;
-    cellMulti.type = 'multiselect'; 
-    row.cells = [cell1, cell2, cellMulti, cell3, cell4, cell5, cell6, cell7, cell8, cell9, cell2];
+      cell5.type = 'invisible';
+      cell5.value = '';
+      cell6.type = 'invisible';
+      cell6.value = '';
+      cell7.type = 'invisible';
+      cell7.value = '';
+      cell8.type = 'invisible';
+      cell8.value = '';
+      cell9.type = 'invisible';
+      cell9.value = '';
+      cell10.type = 'invisible';
+      cell10.value = [];
+      cellMulti.combo = this.comboGuardiasIncompatibles;
+      cellMulti.type = 'multiselect'; 
+      row.cells = [cell1, cell2, cellMulti, cell3, cell4, cell5, cell6, cell7, cell8, cell9, cell10];
     }
+    row.id = 0;
+    this.rowGroups.map(row => row.id += 1);
     this.rowGroups.unshift(row);
     this.rowGroupsAux = this.rowGroups;
     this.totalRegistros = this.rowGroups.length;
-    //this.to = this.totalRegistros;
+    this.to = this.totalRegistros;
   }
   inputChange(event, i, z, cell){
     this.enableGuardar = true;
@@ -929,25 +991,25 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
       estadoNombre: estadoNombre
  };    
 
- if(this.infoHabilitado.validarjustificaciones=="S" && (this.infoHabilitado.estadoNombre=="Pendiente de Alta" || this.infoHabilitado.estadoNombre=="Pendiente de Baja") && !this.isLetrado){
-  this.habilitadoValidar=false;
-}else{
-  this.habilitadoValidar=true;
-}
+    if(this.infoHabilitado.validarjustificaciones=="S" && (this.infoHabilitado.estadoNombre=="Pendiente de Alta" || this.infoHabilitado.estadoNombre=="Pendiente de Baja") && !this.isLetrado){
+      this.habilitadoValidar=false;
+    }else{
+      this.habilitadoValidar=true;
+    }
 
-if((this.infoHabilitado.estadoNombre=="Pendiente de Alta" || this.infoHabilitado.estadoNombre=="Pendiente de Baja")&& !this.isLetrado){
-  this.habilitadoDenegar=false;
-}else{
-  this.habilitadoDenegar=true;
-}
+    if((this.infoHabilitado.estadoNombre=="Pendiente de Alta" || this.infoHabilitado.estadoNombre=="Pendiente de Baja")&& !this.isLetrado){
+      this.habilitadoDenegar=false;
+    }else{
+      this.habilitadoDenegar=true;
+    }
 
 
-if(this.infoHabilitado.estadoNombre=="Alta"){
-  this.habilitadoSolicitarBaja=false;
-}else{
-  this.habilitadoSolicitarBaja=true;
+    if(this.infoHabilitado.estadoNombre=="Alta"){
+      this.habilitadoSolicitarBaja=false;
+    }else{
+      this.habilitadoSolicitarBaja=true;
 
-}
+  }
 
 
   }

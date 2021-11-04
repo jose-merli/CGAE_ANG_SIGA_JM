@@ -11,6 +11,7 @@ export class Cell {
   value: any;
   combo: Combo[];
   size: number;
+  disabled : boolean;
 }
 
 export class Combo {
@@ -65,10 +66,12 @@ export class TablaResultadoMixIncompService {
           cellObject.combo = cell['combo'];
           cellObject.value = cell['value'];
           cellObject.size = cell['size'];
+          cellObject.disabled = cell['disabled'];
         } else {
           cellObject.type = cell['type'];
           cellObject.value = cell['value'];
           cellObject.size = cell['size'];
+          cellObject.disabled = cell['disabled'];
         }
         cells.push(cellObject);
       });
