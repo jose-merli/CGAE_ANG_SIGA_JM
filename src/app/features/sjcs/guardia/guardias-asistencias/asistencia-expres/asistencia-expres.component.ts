@@ -544,72 +544,74 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
   }
 
   searchAsistencias(){
-
-    this.hideResponse();
-    let filtroAsistenciaItem = Object.assign({},this.filtro.filtro);
-    if(this.filtro.filtro.idTurno != undefined  && this.filtro.filtro.idTurno != ""){
-      filtroAsistenciaItem.idTurno = this.filtro.filtro.idTurno.toString();
-    }
-    if(this.filtro.filtro.idGuardia != undefined  && this.filtro.filtro.idGuardia != ""){
-      filtroAsistenciaItem.idGuardia = this.filtro.filtro.idGuardia.toString();
-    }
-    if(this.filtro.filtro.idOrigenAsistencia != undefined  && this.filtro.filtro.idOrigenAsistencia != ""){
-      filtroAsistenciaItem.idOrigenAsistencia = this.filtro.filtro.idOrigenAsistencia.toString(); 
-    }
-    if(this.filtro.filtro.idEstadoAsistencia != undefined  && this.filtro.filtro.idEstadoAsistencia != ""){
-      filtroAsistenciaItem.idEstadoAsistencia = this.filtro.filtro.idEstadoAsistencia.toString();  
-    }
-    if(this.filtro.filtro.idEstadoAsistido != undefined  && this.filtro.filtro.idEstadoAsistido != ""){
-      filtroAsistenciaItem.idEstadoAsistido = this.filtro.filtro.idEstadoAsistido.toString();
-    }
-    if(this.filtro.filtro.idComisaria != undefined  && this.filtro.filtro.idComisaria != ""){
-      filtroAsistenciaItem.idComisaria = this.filtro.filtro.idComisaria.toString();
-    }
-    if(this.filtro.filtro.idJuzgado != undefined  && this.filtro.filtro.idJuzgado != ""){
-      filtroAsistenciaItem.idJuzgado = this.filtro.filtro.idJuzgado.toString();
-    }
-    if(this.filtro.filtro.idProcedimiento != undefined  && this.filtro.filtro.idProcedimiento != ""){
-      filtroAsistenciaItem.idProcedimiento = this.filtro.filtro.idProcedimiento.toString();
-    }
-    if(this.filtro.filtro.idTipoActuacion != undefined  && this.filtro.filtro.idTipoActuacion != ""){
-      filtroAsistenciaItem.idTipoActuacion = this.filtro.filtro.idTipoActuacion.toString();
+    if(this.checkFilters()){
+      this.hideResponse();
+      let filtroAsistenciaItem = Object.assign({},this.filtro.filtro);
+      if(this.filtro.filtro.idTurno != undefined  && this.filtro.filtro.idTurno != ""){
+        filtroAsistenciaItem.idTurno = this.filtro.filtro.idTurno.toString();
+      }
+      if(this.filtro.filtro.idGuardia != undefined  && this.filtro.filtro.idGuardia != ""){
+        filtroAsistenciaItem.idGuardia = this.filtro.filtro.idGuardia.toString();
+      }
+      if(this.filtro.filtro.idOrigenAsistencia != undefined  && this.filtro.filtro.idOrigenAsistencia != ""){
+        filtroAsistenciaItem.idOrigenAsistencia = this.filtro.filtro.idOrigenAsistencia.toString(); 
+      }
+      if(this.filtro.filtro.idEstadoAsistencia != undefined  && this.filtro.filtro.idEstadoAsistencia != ""){
+        filtroAsistenciaItem.idEstadoAsistencia = this.filtro.filtro.idEstadoAsistencia.toString();  
+      }
+      if(this.filtro.filtro.idEstadoAsistido != undefined  && this.filtro.filtro.idEstadoAsistido != ""){
+        filtroAsistenciaItem.idEstadoAsistido = this.filtro.filtro.idEstadoAsistido.toString();
+      }
+      if(this.filtro.filtro.idComisaria != undefined  && this.filtro.filtro.idComisaria != ""){
+        filtroAsistenciaItem.idComisaria = this.filtro.filtro.idComisaria.toString();
+      }
+      if(this.filtro.filtro.idJuzgado != undefined  && this.filtro.filtro.idJuzgado != ""){
+        filtroAsistenciaItem.idJuzgado = this.filtro.filtro.idJuzgado.toString();
+      }
+      if(this.filtro.filtro.idProcedimiento != undefined  && this.filtro.filtro.idProcedimiento != ""){
+        filtroAsistenciaItem.idProcedimiento = this.filtro.filtro.idProcedimiento.toString();
+      }
+      if(this.filtro.filtro.idTipoActuacion != undefined  && this.filtro.filtro.idTipoActuacion != ""){
+        filtroAsistenciaItem.idTipoActuacion = this.filtro.filtro.idTipoActuacion.toString();
+      }
+      
+      setTimeout(()=>{
+        if(this.modoBusqueda == 'a' && this.filtro && this.filtro.filtro){
+          this.progressSpinner = true;
+          this.sigaServices
+          .post("busquedaGuardias_buscarAsistencias", filtroAsistenciaItem)
+          .subscribe(
+            n => {
+              let asistenciasDTO = JSON.parse(n["body"]);
+              if(asistenciasDTO.error && asistenciasDTO.error.code != 200){
+                this.showMsg('error', this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.errorResultados"), asistenciasDTO.error.description);
+              }else if(asistenciasDTO.tarjetaAsistenciaItems.length === 0){
+                this.showMsg('info','Info',this.translateService.instant("informesYcomunicaciones.consultas.mensaje.sinResultados"));
+              }else{
+                if(asistenciasDTO.error && asistenciasDTO.error.code == 200){ //Todo ha ido bien pero la consulta ha excedido los registros maximos
+                  this.showMsg('info', 'Info', asistenciasDTO.error.description);
+                }
+                let asistenciaItems: TarjetaAsistenciaItem[] = asistenciasDTO.tarjetaAsistenciaItems;
+                this.filtro.filtroAux = Object.assign({},this.filtro.filtro);
+                this.asistencias = asistenciaItems;
+                this.showResponse();
+              }    
+              this.progressSpinner = false;
+            },
+            err => {
+              console.log(err);
+            },
+            () =>{
+              this.progressSpinner = false;
+              setTimeout(() => {
+                this.commonServices.scrollTablaFoco('tablaFoco2');
+              }, 5);
+            }
+          );
+        }
+      },500) 
     }
     
-    setTimeout(()=>{
-      if(this.modoBusqueda == 'a' && this.filtro && this.filtro.filtro){
-        this.progressSpinner = true;
-        this.sigaServices
-        .post("busquedaGuardias_buscarAsistencias", filtroAsistenciaItem)
-        .subscribe(
-          n => {
-            let asistenciasDTO = JSON.parse(n["body"]);
-            if(asistenciasDTO.error && asistenciasDTO.error.code != 200){
-              this.showMsg('error', this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.errorResultados"), asistenciasDTO.error.description);
-            }else if(asistenciasDTO.tarjetaAsistenciaItems.length === 0){
-              this.showMsg('info','Info',this.translateService.instant("informesYcomunicaciones.consultas.mensaje.sinResultados"));
-            }else{
-              if(asistenciasDTO.error && asistenciasDTO.error.code == 200){ //Todo ha ido bien pero la consulta ha excedido los registros maximos
-                this.showMsg('info', 'Info', asistenciasDTO.error.description);
-              }
-              let asistenciaItems: TarjetaAsistenciaItem[] = asistenciasDTO.tarjetaAsistenciaItems;
-              this.filtro.filtroAux = Object.assign({},this.filtro.filtro);
-              this.asistencias = asistenciaItems;
-              this.showResponse();
-            }    
-            this.progressSpinner = false;
-          },
-          err => {
-            console.log(err);
-          },
-          () =>{
-            this.progressSpinner = false;
-            setTimeout(() => {
-              this.commonServices.scrollTablaFoco('tablaFoco2');
-            }, 5);
-          }
-        );
-      }
-    },500) 
   }
 
   resetFiltros(){
@@ -635,4 +637,53 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
       this.searchAsistencias();
     }
   }
+
+  checkFilters(){
+    if ((this.filtro.filtro.idTurno == null || this.filtro.filtro.idTurno == undefined || this.filtro.filtro.idTurno.length == 0) &&
+        (this.filtro.filtro.fechaAsistenciaDesde == null || this.filtro.filtro.fechaAsistenciaDesde == undefined || this.filtro.filtro.fechaAsistenciaDesde.trim() == "" )&&
+        (this.filtro.filtro.fechaAsistenciaHasta == null || this.filtro.filtro.fechaAsistenciaHasta == undefined || this.filtro.filtro.fechaAsistenciaHasta.trim() == "" )&&    
+        (this.filtro.filtro.idGuardia == null || this.filtro.filtro.idGuardia == undefined || this.filtro.filtro.idGuardia.length == 0) &&
+        (this.filtro.filtro.idEstadoAsistencia == null || this.filtro.filtro.idEstadoAsistencia == undefined || this.filtro.filtro.idEstadoAsistencia.length == 0) &&
+        (this.filtro.filtro.idActuacionValidada == null || this.filtro.filtro.idActuacionValidada == undefined || this.filtro.filtro.idActuacionValidada.length == 0) &&
+        (this.filtro.filtro.idTipoAsistenciaColegiado == null || this.filtro.filtro.idTipoAsistenciaColegiado == undefined || this.filtro.filtro.idTipoAsistenciaColegiado.length == 0) &&
+        (this.filtro.filtro.numero == null || this.filtro.filtro.numero == undefined || this.filtro.filtro.numero.trim() == "" || this.filtro.filtro.numero.trim().length < 3) &&
+        (this.filtro.filtro.idOrigenAsistencia == null || this.filtro.filtro.idOrigenAsistencia == undefined || this.filtro.filtro.idOrigenAsistencia.length == 0) &&
+        (this.filtro.filtro.nif == null || this.filtro.filtro.nif == undefined || this.filtro.filtro.nif.trim() == "" || this.filtro.filtro.nif.trim().length < 3) &&
+        (this.filtro.filtro.apellidos == null || this.filtro.filtro.apellidos == undefined || this.filtro.filtro.apellidos.trim() == "" || this.filtro.filtro.apellidos.trim().length < 3) &&
+        (this.filtro.filtro.nombre == null || this.filtro.filtro.nombre == undefined || this.filtro.filtro.nombre.trim() == "" || this.filtro.filtro.nombre.trim().length < 3) &&
+        (this.filtro.filtro.idEstadoAsistido == null || this.filtro.filtro.idEstadoAsistido == undefined || this.filtro.filtro.idEstadoAsistido.length == 0) &&
+        (this.filtro.filtro.numDiligencia == null || this.filtro.filtro.numDiligencia == undefined || this.filtro.filtro.numDiligencia.trim() == "" || this.filtro.filtro.numDiligencia.trim().length < 3) &&
+        (this.filtro.filtro.numProcedimiento == null || this.filtro.filtro.numProcedimiento == undefined || this.filtro.filtro.numProcedimiento.trim() == "" || this.filtro.filtro.numProcedimiento.trim().length < 3) &&
+        (this.filtro.filtro.idComisaria == null || this.filtro.filtro.idComisaria == undefined || this.filtro.filtro.idComisaria.length == 0) &&
+        (this.filtro.filtro.idJuzgado == null || this.filtro.filtro.idJuzgado == undefined || this.filtro.filtro.idJuzgado.length == 0) &&
+        (this.filtro.filtro.idTipoActuacion == null || this.filtro.filtro.idTipoActuacion == undefined || this.filtro.filtro.idTipoActuacion.length == 0) &&
+        (this.filtro.filtro.idProcedimiento == null || this.filtro.filtro.idProcedimiento == undefined || this.filtro.filtro.idProcedimiento.length == 0) &&
+        (this.filtro.filtro.nig == null || this.filtro.filtro.nig == undefined || this.filtro.filtro.nig.trim() == "" || this.filtro.filtro.nig.trim().length < 3) &&
+        (this.filtro.filtro.anio == null || this.filtro.filtro.anio == undefined || this.filtro.filtro.anio.trim() == "" || this.filtro.filtro.anio.trim().length < 3)) {
+        
+        this.showMsg("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
+        return false;
+      } else {   
+        // quita espacios vacios antes de buscar
+        if (this.filtro.filtro.anio != undefined && this.filtro.filtro.anio != null) {
+          this.filtro.filtro.anio = this.filtro.filtro.anio.trim();
+        }
+        if (this.filtro.filtro.numero != undefined && this.filtro.filtro.numero != null) {
+          this.filtro.filtro.numero = this.filtro.filtro.numero.trim();
+        }
+        if (this.filtro.filtro.nig != undefined && this.filtro.filtro.nig != null) {
+          this.filtro.filtro.nig = this.filtro.filtro.nig.trim();
+        }
+        if (this.filtro.filtro.apellidos != undefined && this.filtro.filtro.apellidos != null) {
+          this.filtro.filtro.apellidos = this.filtro.filtro.apellidos.trim();
+        }
+        if (this.filtro.filtro.nombre != undefined && this.filtro.filtro.nombre != null) {
+          this.filtro.filtro.nombre = this.filtro.filtro.nombre.trim();
+        }
+        if (this.filtro.filtro.nif != undefined && this.filtro.filtro.nif != null) {
+          this.filtro.filtro.nif = this.filtro.filtro.nif.trim();
+        }
+        return true;
+      }
+    }
 }

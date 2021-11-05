@@ -256,4 +256,5 @@ export class BuscadorSolicitudesCentralitaComponent implements OnInit, AfterView
   onChangeGuardias(event){
     this.filtro.idGuardia = event.value;
   }
+
 }
