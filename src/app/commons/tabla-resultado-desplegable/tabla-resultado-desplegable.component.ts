@@ -102,6 +102,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   idClasesComunicacionArray: string[] = [];
   idClaseComunicacion: String;
   keys: any[] = [];
+  numCell : number;
   constructor(
     private renderer: Renderer2,
     private datepipe: DatePipe,
@@ -136,6 +137,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     if (this.pantalla == 'JE'){
       this.fromRowGroup = 0;
       this.toRowGroup = 9;
+      this.numCell = 2;
       this.rowIdsToUpdate = []; //limpiamos
       this.dataToUpdateArr = []; //limpiamos
       this.newActuacionesArr = []; //limpiamos
@@ -156,6 +158,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }else if(this.pantalla == 'AE'){
       this.fromRowGroup = 0;
       this.toRowGroup = 6;
+      this.numCell = 0;
     }
     this.cabeceras.forEach(cab => {
       this.selectedHeader.push(cab);

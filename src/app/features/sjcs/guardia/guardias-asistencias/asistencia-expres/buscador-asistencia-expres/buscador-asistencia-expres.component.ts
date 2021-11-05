@@ -172,8 +172,14 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
   }
 
   getComboGuardia() {
+    let params : string = '';
+    if(this.filtro.idPersona){
+      params = "?idTurno=" + this.filtro.idTurno + "&guardiaDia=" + this.filtro.diaGuardia + '&idPersona=' + this.filtro.idPersona;
+    }else{
+      params = "?idTurno=" + this.filtro.idTurno + "&guardiaDia=" + this.filtro.diaGuardia;
+    }
     this.sigaServices.getParam(
-      "busquedaGuardia_guardia", "?idTurno=" + this.filtro.idTurno).subscribe(
+      "busquedaGuardias_getGuardiasByTurnoColegiadoFecha", params).subscribe(
         data => {
           this.comboGuardias = data.combooItems;
           this.commonServices.arregloTildesCombo(this.comboGuardias);

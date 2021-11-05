@@ -264,9 +264,7 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
       this.persistenceService.setFiltrosAux(this.filtros);
       this.filtroAux = this.persistenceService.getFiltrosAux(); */
       this.filtrosValues.emit(this.filtros);
-      //this.commonsService.scrollTablaFoco("tablaFoco");
-      
-      console.log(this.filtros);
+
     }
   }
 
@@ -356,7 +354,6 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
   }
 
   changeColegiado(event) {
-    console.log('colegiado: ', event);
     this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
     this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
     this.filtros.ncolegiado = event.nColegiado;

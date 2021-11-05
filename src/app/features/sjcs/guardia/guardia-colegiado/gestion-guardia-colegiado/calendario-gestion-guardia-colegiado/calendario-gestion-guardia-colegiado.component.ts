@@ -84,7 +84,6 @@ comboListaGuardias =[];
     this.sigaServices.post(
       "guardiaUltimoCalendario_buscar", datosEntrada).subscribe(
         data => {
-          console.log('data: ', data.body)
           let error = JSON.parse(data.body).error;
           this.calendarioItem = JSON.parse(data.body);
           if(this.calendarioItem){
