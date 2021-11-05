@@ -137,10 +137,12 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
     this.filtros.idGuardia = "";
     this.comboGuardia = [];
     this.checkFilters();
-    if (this.filtros.idTurno) {
-      this.getComboGuardia();
+    if (this.filtros.idTurno.length == 0) {
+      this.comboGuardia = []
       //this.getComboListaGuardia();
-    } 
+    }else{
+      this.getComboGuardia();
+    }
   }
 
   getComboGuardia() {

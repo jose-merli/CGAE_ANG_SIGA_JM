@@ -117,7 +117,7 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
     this.filtros.idGuardia = "";
     this.comboGuardias = [];
 
-    if (this.filtros.idTurno) {
+    if (this.filtros.idTurno.length != 0) {
       this.getComboGuardia();
     } else {
       this.isDisabledGuardia = true;

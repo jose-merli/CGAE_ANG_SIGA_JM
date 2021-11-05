@@ -23,29 +23,28 @@
         <!-- GUARDIA -->
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{"dato.jgr.guardia.inscripciones.guardia" | translate}}</label>
-          <p-dropdown class="select-form"  [filter]="true" [(ngModel)]="filtros.idGuardia"  (onChange)="checkFilters()" name="filtros.idGuardia"
-          [options]="comboGuardia" filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
-          [showClear]="true"> 
-        </p-dropdown>
+          <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" (onChange)="checkFilters()" [(ngModel)]='filtros.idGuardia'
+            [options]="comboGuardia" maxSelectedLabels="10" [selectedItemsLabel]="textSelected" styleClass="widthAll"
+            [filter]="true" filterBy="label,labelSinTilde">
+          </p-multiSelect>
         </div>
 
         <!-- LISTA DE GUARDIAS -->
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{"menu.justiciaGratuita.calendarios.ListaGuardias" | translate}}</label>
-          <p-dropdown class="select-form"  [filter]="true" [(ngModel)]="filtros.listaGuardias"
-            [options]="comboConjuntoGuardias" filterMatchMode="contains" (onChange)="checkFilters()" placeholder="{{'general.boton.seleccionar' | translate}}"
-            [showClear]="true">
-          </p-dropdown>
+          <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" (onChange)="checkFilters()" [(ngModel)]='filtros.listaGuardias'
+            [options]="comboConjuntoGuardias" maxSelectedLabels="10" [selectedItemsLabel]="textSelected" styleClass="widthAll"
+            [filter]="true" filterBy="label,labelSinTilde">
+          </p-multiSelect>
         </div>
 
         <!-- ESTADO -->
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{"menu.justiciaGratuita.calendarios.Estado" | translate}}</label>
-          <p-dropdown class="select-form" [(ngModel)]="filtros.estado" (onChange)="checkFilters()" [options]="comboEstado" [filter]="true"
-            filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
-            [(disabled)]="isDisabledEstado" (input)="buscarEstado($event)" [showClear]="true"
-            [emptyFilterMessage]="resultadosAreas">
-          </p-dropdown>
+          <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" (onChange)="checkFilters()" [(ngModel)]='filtros.estado'
+            [options]="comboEstado" maxSelectedLabels="10" [selectedItemsLabel]="textSelected" styleClass="widthAll"
+            [filter]="true" filterBy="label,labelSinTilde">
+          </p-multiSelect>
         </div>
 
         <!-- FECHA CALENDARIO DESDE -->

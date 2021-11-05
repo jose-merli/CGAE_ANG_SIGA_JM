@@ -231,9 +231,9 @@ buscarCal(){
 //let jsonEntrada  = JSON.parse(JSON.stringify(datosEntrada))
 let datosEntrada = 
     { 'idTurno': this.filtrosValues.idTurno,
-      'idConjuntoGuardia': this.filtrosValues.listaGuardias,
-     'idGuardia': this.filtrosValues.idGuardia,
-     'estado': this.filtrosValues.estado,
+      'idConjuntoGuardia': (this.filtrosValues.listaGuardias !=undefined && this.filtrosValues.listaGuardias != "") ? this.filtrosValues.listaGuardias.toString() : this.filtrosValues.listaGuardias,
+     'idGuardia': (this.filtrosValues.idGuardia !=undefined && this.filtrosValues.idGuardia != "") ? this.filtrosValues.idGuardia.toString() : this.filtrosValues.idGuardia,
+     'estado': (this.filtrosValues.estado !=undefined && this.filtrosValues.estado != "") ? this.filtrosValues.estado.toString() : this.filtrosValues.estado,
       'fechaCalendarioDesde': this.filtrosValues.fechaCalendarioDesde,
       'fechaCalendarioHasta': this.filtrosValues.fechaCalendarioHasta,
       'fechaProgramadaDesde': this.filtrosValues.fechaProgramadaDesde,
