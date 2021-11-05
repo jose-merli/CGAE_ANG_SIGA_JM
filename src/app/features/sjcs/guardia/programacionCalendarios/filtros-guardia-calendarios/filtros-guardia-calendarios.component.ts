@@ -395,7 +395,6 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
        
       ) {
       this.emptyFilters = true;
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
       return false;
     } else {
       // quita espacios vacios antes de buscar

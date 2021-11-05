@@ -26,13 +26,15 @@
             
             <div *ngFor="let cell of row['cells'] | slice:fromSlice:toSlice; let z = index " class="table-cell p-2 selectedRowClass" [ngClass]="{'borders-child': isPar(i), 'borders-child-last': isLast(i)}" #cellSelected>
                 <div class="breakWord cell-wrapper selectedRowClass">
-                    <span class="w100 cell-value" *ngIf="cell.type != 'inputNumber' && cell.type != 'text' && cell.type != 'select' && cell.type != 'selectDependency' && cell.type != 'selectDependency2' && cell.type != 'invisible' && cell.type != 'link' && cell.type != 'link2'">
+                    <span class="w100 cell-value" *ngIf="cell.type != 'inputNumber' && cell.type != 'text' && cell.type != 'select' && cell.type != 'selectDependency' && cell.type != 'selectDependency2' && cell.type != 'invisible' && cell.type != 'link' && cell.type != 'link2' && cell.type != 'textNew' && cell.type != 'linkNew'">
                         <input *ngIf="cell.value != null" type="text"  (change)="valueChange(i, z, $event)" [ngClass]="styleObligatorio(cell.required , cell.value)" class="form-control mt-2" pInputText  [(ngModel)]="cell.value" [placeholder]="cell.value">
                         <input *ngIf="cell.value == null" type="text"  (change)="valueChange(i, z, $event)" [ngClass]="styleObligatorio(cell.required , cell.value)" class="form-control mt-2" pInputText  [(ngModel)]="cell.value" [placeholder]="">
                     </span>
                     <span class="w100 cell-value" *ngIf="cell.type == 'text' && cell.type != 'invisible'">{{cell?.value || ''}}</span>
+                    <span class="w100 cell-value" *ngIf="cell.type == 'textNew' && cell.type != 'invisible'">{{cell?.value || ''}}</span>
                     <span class="w100 cell-value" *ngIf="cell.type == 'inputNumber'&& cell.type != 'invisible'"><input type="number" min="1" m  (change)="valueChange(i, z, $event)" [ngClass]="styleObligatorio(cell.required , cell.value)" class="form-control mt-2" pInputText  [(ngModel)]="cell.value" [placeholder]="cell.value"></span> 
                     <span class="w100 cell-value" *ngIf="cell.type == 'link' && cell.type != 'invisible'" class="enlace" (click)="openTab(row)">{{cell.value}}</span> 
+                    <span class="w100 cell-value" *ngIf="cell.type == 'linkNew' && cell.type != 'invisible'" class="enlace" (click)="openTab(row)">{{cell.value}}</span> 
                     <span class="w100 cell-value" *ngIf="cell.type == 'link2' && cell.type != 'invisible'" class="enlace" (click)="openTab2(row)">{{cell.value}}</span> 
                     <span class="w100 cell-value" *ngIf="cell.type == 'selectDependency' && cell.type != 'invisible'"><p-dropdown class="select-form"  [filter]="true" [(ngModel)]="cell.value" (onChange)="onChangeTurno(cell.value, row)"
                                                                                     [options]="comboTurno" filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
