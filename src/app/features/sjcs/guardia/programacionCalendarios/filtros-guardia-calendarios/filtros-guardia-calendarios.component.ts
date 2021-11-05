@@ -24,6 +24,7 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
   filtros = new CalendarioProgramadoItem();
   filtroAux = new CalendarioProgramadoItem();
   historico: boolean = false;
+  @Input() permisoTotal = true;
   resaltadoDatos = false;
   isDisabledZona: boolean = true;
   isDisabledMateria: boolean = true;
@@ -71,11 +72,18 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
         sessionStorage.getItem("filtrosBusquedaGuardiasFichaGuardia")
       );
       if (this.filtros  ){
+        if (this.filtros.fechaCalendarioDesde == undefined || this.filtros.fechaCalendarioDesde == null || this.filtros.fechaCalendarioDesde == ''){
+        let AnioAnterior = new Date().getFullYear() - 1;
+        this.filtros.fechaCalendarioDesde = new Date(AnioAnterior, new Date().getMonth(), new Date().getDate());
+        }else{
+          this.filtros.fechaCalendarioDesde = new Date (this.changeDateFormat2(this.filtros.fechaCalendarioDesde))
+        }
         if (!this.filtros.volver){
-          let AnioAnterior = new Date().getFullYear() - 1;
-          this.filtros.fechaCalendarioDesde = new Date(AnioAnterior, new Date().getMonth(), new Date().getDate());
-          console.log('new Date().getMonth(): ', new Date().getMonth())
-          console.log('new Date().getDate(): ', new Date().getDate())
+          if (this.filtros.fechaCalendarioDesde == undefined || this.filtros.fechaCalendarioDesde == null || this.filtros.fechaCalendarioDesde == ''){
+            let AnioAnterior = new Date().getFullYear() - 1;
+            this.filtros.fechaCalendarioDesde = new Date(AnioAnterior, new Date().getMonth(), new Date().getDate());
+            }
+
         }
         this.getComboGuardia();
         this.search();
@@ -101,7 +109,11 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
     }
 
   }
-
+  changeDateFormat2(date1){
+    // date1 dd/MM/yyyy
+    let date1C = date1.split("/").reverse().join("-")
+    return date1C;
+  }
   getComboTurno() {
     this.sigaServices.get("busquedaGuardia_turno").subscribe(
       n => {
@@ -116,10 +128,10 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
 
   getComboEstado() {
     this.comboEstado = [
-      { label: "Pendiente", value: "5" },
+      { label: "Pendiente", value: "3" },
       { label: "Programada", value: "1" },
       { label: "En proceso", value: "2" },
-      { label: "Procesada con Errores", value: "3" },
+      { label: "Procesada con Errores", value: "5" },
       { label: "Generada", value: "4" }
     ];
     /*this.sigaServices.get("busquedaGuardia_estado").subscribe(
@@ -146,6 +158,7 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
   }
 
   getComboGuardia() {
+    if (this.filtros.idTurno != undefined){
     this.sigaServices.getParam(
       "busquedaGuardia_guardia", "?idTurno=" + this.filtros.idTurno).subscribe(
         data => {
@@ -156,7 +169,7 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
           console.log(err);
         }
       )
-
+      }
   }
 
   getComboConjuntouardia() {
@@ -273,7 +286,9 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
 
 
   search() {
+   
   if (this.checkFilters() ){
+    this.resaltadoDatos = false;
     let compareDateOk = -1;
     let compareDateHourOk = -1;
     if (this.filtros.fechaCalendarioDesde != undefined && this.filtros.fechaCalendarioHasta != undefined){
@@ -377,16 +392,12 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
 
   checkFilters() {
 
-    if ((this.filtros.estado == null || this.filtros.estado == undefined) &&
-      (this.filtros.fechaCalendarioDesde == null || this.filtros.fechaCalendarioDesde == undefined) &&
-      (this.filtros.fechaCalendarioHasta == null || this.filtros.fechaCalendarioHasta == undefined) &&
-      (this.filtros.fechaProgramadaDesde == null || this.filtros.fechaProgramadaDesde == undefined) &&
-      (this.filtros.fechaProgramadaHasta == null || this.filtros.fechaProgramadaHasta == undefined) &&
-      (this.filtros.listaGuardias == null || this.filtros.listaGuardias == undefined) &&
-      (this.filtros.idTurno == null || this.filtros.idTurno == undefined) &&
-      (this.filtros.idGuardia == null || this.filtros.idGuardia == undefined)) {
+    if (
+      (this.filtros.fechaCalendarioDesde == null || this.filtros.fechaCalendarioDesde == undefined)  && (this.filtros.fechaCalendarioHasta == null || this.filtros.fechaCalendarioHasta == undefined)
+       
+      ) {
       this.emptyFilters = true;
-      //this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
       return false;
     } else {
       // quita espacios vacios antes de buscar
@@ -419,6 +430,7 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
   }
 
   rest() {
+    this.resaltadoDatos = false;
     this.emptyFilters = true;
     this.filtros = new CalendarioProgramadoItem();
     this.isDisabledMateria = true;

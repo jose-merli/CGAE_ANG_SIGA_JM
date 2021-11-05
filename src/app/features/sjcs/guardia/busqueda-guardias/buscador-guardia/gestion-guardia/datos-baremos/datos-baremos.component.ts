@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, ViewChild, EventEmitter, ChangeDetect
 import { TreeNode } from '../../../../../../../utils/treenode';
 import { SigaServices } from '../../../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../../../_services/persistence.service';
+import { TranslateService } from '../../../../../../../commons/translate';
 
 @Component({
   selector: 'app-datos-baremos',
@@ -35,7 +36,8 @@ export class DatosBaremosComponent implements OnInit {
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
-    private persistenceService: PersistenceService) { }
+    private persistenceService: PersistenceService,
+    private translateService: TranslateService) { }
 
   ngOnInit() {
 
@@ -70,6 +72,21 @@ export class DatosBaremosComponent implements OnInit {
         },
     )
   }
+  goToFichaBaremos(){
+    this.showMessage({ severity: 'info', summary: this.translateService.instant("general.message.informacion"), detail: "Este modulo se encuentra en desarrollo." });
+  }
 
+  showMessage(event) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: event.severity,
+      summary: event.summary,
+      detail: event.msg
+    });
+  }
+
+  clear() {
+    this.msgs = [];
+  }
 
 }

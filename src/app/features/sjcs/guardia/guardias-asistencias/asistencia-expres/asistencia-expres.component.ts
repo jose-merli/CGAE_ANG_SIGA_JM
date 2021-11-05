@@ -113,7 +113,6 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
       this.filtrosAE.filtro.idGuardia = oldFiltro.idGuardia;
       this.filtrosAE.onChangeGuardia();
       this.filtrosAE.filtro.idLetradoGuardia = oldFiltro.idLetradoGuardia;
-      this.filtrosAE.onChangeLetradoGuardia();
       this.filtrosAE.filtro.idPersona = oldFiltro.idPersona;
       this.filtrosAE.filtro.idTipoAsistenciaColegiado = oldFiltro.idTipoAsistenciaColegiado;
       this.filtrosAE.filtro.isSustituto = oldFiltro.isSustituto;

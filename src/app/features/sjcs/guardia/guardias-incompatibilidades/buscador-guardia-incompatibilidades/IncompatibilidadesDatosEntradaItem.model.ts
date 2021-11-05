@@ -9,10 +9,12 @@ export class IncompatibilidadesDatosEntradaItem{
     idGrupoFacturacion: string;
     idPartidaPresupuestaria: string;
     idTipoTurno: string;
-    idTipoGuardia: string
+    idTipoGuardia: string;
+    idGuardia: string;
 
   constructor(obj: Object) {
     this.idTurno = obj['idTurno'];
+    this.idGuardia = obj['idGuardia'];
     this.nombreGuardia = obj['nombreGuardia'];
     this.idArea = obj['idArea'];
     this.idMateria = obj['idMateria'];

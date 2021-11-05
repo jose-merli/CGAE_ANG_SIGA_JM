@@ -116,9 +116,11 @@ export class GestionEjgComponent implements OnInit {
 
       sessionStorage.removeItem("EJGItemDesigna");
 
-    } else {
+    }else {
       this.body = this.persistenceService.getDatos();
-      this.body.apellidosYNombre = "";
+      if(this.body){
+        this.body.apellidosYNombre = "";
+      }
 
       if (sessionStorage.getItem("datosDesdeJusticiable")) {
         this.body = JSON.parse(sessionStorage.getItem("datosDesdeJusticiable"));

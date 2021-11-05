@@ -64,7 +64,7 @@ export class GuardiaItem {
     orden : string;
     idListaGuardia : string;
     tipoGuardia;
-
+    idConjuntoGuardia;
 
     constructor() { }
 

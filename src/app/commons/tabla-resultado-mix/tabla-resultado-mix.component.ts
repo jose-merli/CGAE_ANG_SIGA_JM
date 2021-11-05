@@ -13,6 +13,8 @@ import { TranslateService } from '../translate/translation.service';
 import { throwMatDialogContentAlreadyAttachedError } from '@angular/material';
 import { DatePipe } from '@angular/common';
 import { CalendarioProgramadoItem } from '../../models/guardia/CalendarioProgramadoItem';
+import { SigaServices } from '../../_services/siga.service';
+import { CommonsService } from '../../_services/commons.service';
 
 
 /*interface Cabecera {
@@ -40,7 +42,7 @@ export class TablaResultadoMixComponent implements OnInit {
   @Input() inscripciones: boolean;
   @Input() incompatibilidades: boolean;
   @Input() isLetrado: boolean;
-  
+  @Input() permisoTotal: boolean;
   @Output() resultado = new EventEmitter<{}>();
   @Output() descargaLOG = new EventEmitter<any[]>();
   @Output() anySelected = new EventEmitter<any>();
@@ -95,6 +97,9 @@ export class TablaResultadoMixComponent implements OnInit {
   jsonParaEnviar: { tipoAccion:any, datos: any};
   
   infoHabilitado: { isLetrado: any; validarjustificaciones:any; estadoNombre:any};
+  last;
+  entra = false;
+  comboTurnos = [];
 
 
   @Input() firstColumn: number = 0;
@@ -107,7 +112,9 @@ export class TablaResultadoMixComponent implements OnInit {
     private persistenceService: PersistenceService,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private commonsService : CommonsService,
+    private sigaServices : SigaServices
 
   ) {
     this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
@@ -161,6 +168,9 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
     })
     console.log('this.rowGroups: ', this.rowGroups)
     console.log('this.totalRegistros: ', this.totalRegistros)
+    if(this.incompatibilidades){
+      this.getComboTurno();
+    }
   }
 
   onChangeMulti(event, rowPosition, cell){
@@ -195,9 +205,52 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
       cellguardiaInc.type = 'text';
       cellguardiaInc.value = labelSelected;
       this.rowGroups[rowPosition].cells[10].value.push(labelSelected);
-      this.nuevoFromCombo(turno, cellguardiaInc, idGuardia, idTurno, idTurnoIncompatible, idGuardiaIncompatible, nombreTurnoInc);
+      //this.nuevoFromCombo(turno, cellguardiaInc, idGuardia, idTurno, idTurnoIncompatible, idGuardiaIncompatible, nombreTurnoInc);
     }
   
+  }
+  getComboTurno() {
+    this.sigaServices.get("busquedaGuardia_turno").subscribe(
+      n => {
+        this.comboTurnos = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.commonsService.arregloTildesCombo(this.comboTurnos);
+      }
+    );
+  }
+  onChangeTurno(event, row : Row, cell){
+    if(event){
+      this.getComboGuardias(row, event.value);
+      row.cells[8].value = event.value;
+    }else{
+      row.cells[1].combo = [];
+      row.cells[8].value = '';
+    }
+  }
+  onChangeGuardia(event, row : Row, cell){
+    if(event){
+      row.cells[7].value = event.value;
+    }else{
+      row.cells[7].value = '';
+    }
+  }
+  getComboGuardias(row : Row, idTurno){
+    this.sigaServices.getParam(
+      "busquedaGuardia_guardia", "?idTurno=" + idTurno).subscribe(
+        data => {
+          row.cells[1].combo = data.combooItems;    
+        },
+        err => {
+          console.log(err);
+        },
+        ()=>{
+          this.commonsService.arregloTildesCombo(row.cells[1].combo);
+        }
+      );
   }
   nuevoFromCombo(turno, guardiaInc, idGuardia, idTurno, idTurnoIncompatible, idGuardiaIncompatible, nombreTurnoInc){
     this.enableGuardar = true;
@@ -228,13 +281,21 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
     if (idGuardia.value != ''){
       this.comboGuardiasIncompatibles.push({ label: labelSelected, value: idGuardia.value})
     }
-   
-    row.cells = [turno, guardiaInc, cellMulti, cell1, cell2, idTurno, idGuardia, idGuardiaIncompatible, idTurnoIncompatible, cellInvisible, cellArr];
+    if(turno.type == 'turnoSelect'){
+      let turnoTextCell : Cell = new Cell();
+      turnoTextCell.type = 'text';
+      turnoTextCell.value = '';
+
+      row.cells = [turnoTextCell, guardiaInc, cellMulti, cell1, cell2, idTurno, idGuardia, idGuardiaIncompatible, idTurnoIncompatible, cellInvisible, cellArr];
+    }else{
+      row.cells = [turno, guardiaInc, cellMulti, cell1, cell2, idTurno, idGuardia, idGuardiaIncompatible, idTurnoIncompatible, cellInvisible, cellArr];
+    }
     if (idGuardia.value != ''){
     this.rowGroups.unshift(row);
     }
     this.totalRegistros = this.rowGroups.length;
     this.rowGroupsAux = this.rowGroups;
+    this.to = this.totalRegistros;
   }
   validaCheck(texto) {
     return texto === 'Si';
@@ -448,7 +509,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
             this.descargaLOG.emit(dataToSendArr);
           }
           else{
-             this.showMsg('error', 'Error. No puede descargar el log del calendario ' + dataToSend.idCalendarioProgramado + ' porque no está Generado' ,'')
+             this.showMsg('info', 'Error. No puede descargar el log del calendario ' + dataToSend.idCalendarioProgramado + ' porque no está Generado' ,'')
             }
       })
     } else if (this.selectedRowValue[0] != undefined){
@@ -475,7 +536,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
         dataToSendArr.push(dataToSend);
         this.descargaLOG.emit(dataToSendArr);
        }else{
-        this.showMsg('error', 'Error. No puede descargar el log del calendario ' + dataToSend.idCalendarioProgramado + ' porque no está Generado' ,'')
+        this.showMsg('info', 'Error. No puede descargar el log del calendario ' + dataToSend.idCalendarioProgramado + ' porque no está Generado' ,'')
        }
     }else{
       this.showMsg('error', 'Error. Debe seleccionar uno o más registros para poder descargar sus LOGs' ,'')
@@ -643,6 +704,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
     //duplicar-> fechadesde = fechahastaanterios + 1 dia
     let fd = new Date (this.changeDateFormat2(this.selectedRowValue[3].value))
     fd.setDate(fd.getDate() + 1);
+    //'fechaDesde': this.datetoString(fd),
     let dataToSend = {
       'duplicar': true,
       'tabla': this.rowGroups,
@@ -651,7 +713,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
       'generado': this.selectedRowValue[8].value,
       'numGuardias': this.selectedRowValue[9].value,
       'listaGuarias': this.selectedRowValue[5].value,
-      'fechaDesde': this.datetoString(fd),
+      'fechaDesde': '',
       'fechaHasta': '',
       'fechaProgramacion': this.selectedRowValue[4].value.value,
       'estado': this.selectedRowValue[7].value,
@@ -728,34 +790,37 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
       cell10.value = '';
       row.cells = [cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8, cell9, cell10];
     }else{
-      cell1.type = 'input';
+      cell1.type = 'turnoSelect';
+      cell1.combo = JSON.parse(JSON.stringify(this.comboTurnos));
       cell1.value = '';
-      cell2.type = 'input';
+      cell2.type = 'guardiaSelect';
       cell2.value = '';
       cell3.type = 'input';
       cell3.value = '';
       cell4.type = 'input';
       cell4.value = '';
-    cell5.type = 'invisible';
-    cell5.value = '';
-    cell6.type = 'invisible';
-    cell6.value = '';
-    cell7.type = 'invisible';
-    cell7.value = '';
-    cell8.type = 'invisible';
-    cell8.value = '';
-    cell9.type = 'invisible';
-    cell9.value = '';
-    cell10.type = 'invisible';
-    cell10.value = [];
-    cellMulti.combo = this.comboGuardiasIncompatibles;
-    cellMulti.type = 'multiselect'; 
-    row.cells = [cell1, cell2, cellMulti, cell3, cell4, cell5, cell6, cell7, cell8, cell9, cell2];
+      cell5.type = 'invisible';
+      cell5.value = '';
+      cell6.type = 'invisible';
+      cell6.value = '';
+      cell7.type = 'invisible';
+      cell7.value = '';
+      cell8.type = 'invisible';
+      cell8.value = '';
+      cell9.type = 'invisible';
+      cell9.value = '';
+      cell10.type = 'invisible';
+      cell10.value = [];
+      cellMulti.combo = this.comboGuardiasIncompatibles;
+      cellMulti.type = 'multiselect'; 
+      row.cells = [cell1, cell2, cellMulti, cell3, cell4, cell5, cell6, cell7, cell8, cell9, cell10];
     }
+    row.id = 0;
+    this.rowGroups.map(row => row.id += 1);
     this.rowGroups.unshift(row);
     this.rowGroupsAux = this.rowGroups;
     this.totalRegistros = this.rowGroups.length;
-    //this.to = this.totalRegistros;
+    this.to = this.totalRegistros;
   }
   inputChange(event, i, z, cell){
     this.enableGuardar = true;
@@ -781,23 +846,76 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
       this.totalRegistros = this.rowGroups.length;
     }
   }
+
+  getLastCalendario(idTurno, idGuardia, fechaDesdeSelected, idGuardiaSelected){
+    let datosEntrada = 
+    { 'idTurno': idTurno,
+      'idConjuntoGuardia': null,
+     'idGuardia': idGuardia,
+      'fechaCalendarioDesde': null,
+      'fechaCalendarioHasta': null,
+      'fechaProgramadaDesde': null,
+      'fechaProgramadaHasta': null,
+    };
+    this.sigaServices.post(
+      "guardiaUltimoCalendario_buscar", datosEntrada).subscribe(
+        data => {
+          console.log('data: ', data.body)
+          let error = JSON.parse(data.body).error;
+          let datos = JSON.parse(data.body);
+          if(datos){
+
+              this.last  = 
+              {
+                'duplicar': false,
+                'turno': datos.turno,
+                'nombre': datos.guardia,
+                'tabla' : [],
+                'idTurno': datos.idTurno,
+                'idGuardia': datos.idGuardia,
+                'observaciones': datos.observaciones,
+                'fechaDesde': datos.fechaDesde.split("-")[2].split(" ")[0] +"/"+ datos.fechaDesde.split("-")[1] + "/"+ datos.fechaDesde.split("-")[0],
+                'fechaHasta': datos.fechaHasta.split("-")[2].split(" ")[0] +"/"+ datos.fechaHasta.split("-")[1] + "/"+ datos.fechaHasta.split("-")[0],
+                'fechaProgramacion': '',
+                'estado': '' ,
+                'generado': datos.generado,
+                'numGuardias': datos.numGuardias,
+                'idCalG': datos.idCalG,
+                'listaGuarias': {value : ''},
+                'idCalendarioProgramado': datos.idCalendarioProgramado,
+                'facturado': datos.facturado,
+                'asistenciasAsociadas': datos.asistenciasAsociadas
+              };
+              if (compareDate (this.last.fechaDesde, fechaDesdeSelected, true) == 1 && idGuardiaSelected == this.last.idGuardia){
+                this.entra = true;
+              }
+          }
+
+        },
+        (error)=>{
+          console.log(error);
+        }
+      );
+
+
+  }
   eliminar(){
     let entra = false;
     if(!this.incompatibilidades){
       this.selectedArray.forEach((index) => {
           let fechaDesdeSelected = this.rowGroups[index].cells[2].value;
+          let idTurnoSelected = this.rowGroups[index].cells[11].value;
           let idGuardiaSelected = this.rowGroups[index].cells[12].value;
           let facturadoSelected = this.rowGroups[index].cells[13].value;
           let asistenciasSelected = this.rowGroups[index].cells[14].value;
           this.rowGroups.forEach(rg => {
             let fechaDesde = rg.cells[2].value;
             let idGuardia = rg.cells[12].value;
-            if (compareDate (fechaDesde, fechaDesdeSelected, true) == 1 && idGuardiaSelected == idGuardia){
-              entra = true;
-            }
+            this.getLastCalendario(idTurnoSelected, idGuardiaSelected, fechaDesdeSelected, idGuardiaSelected);
+            
           });
         
-          if (entra){
+          if (entra || this.entra){
             //fechaDesde > fechaDesdeSelected: Calendarios seleccionados no son los últimos generados (por fecha desde) para la misma guardia.
             let errorcalPosterior = "No puede eliminarse el calendario con fecha desde " + fechaDesdeSelected + " , ya que existen calendarios posteriores para esta guardia";
               let mess = 'Se van a borrar ' + this.selectedArray.length + ' calendarios ya generados en la programación seleccionada. ¿Desea continuar?';
@@ -894,37 +1012,60 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
     return fecha;
   }
 
+  transformaFechaSol(fecha) {
+    if (fecha != null) {
+      let jsonDate = JSON.stringify(fecha);
+      let rawDate = jsonDate.slice(1, -1);
+        let [fechaMod,hora] = rawDate.split(" ");
+        let arrayDate = fechaMod.split("/")[2] + "-" + fechaMod.split("/")[1] + "-" + fechaMod.split("/")[0];
+        fecha = new Date((arrayDate += "T"+hora));
+      
+    } else {
+      fecha = undefined;
+    }
+
+
+    return fecha;
+  }
+
   changeFecha(event){
     this.fechaActual = event;
   }
 
   HabilitarBotones(){
-
+    let validarjustificaciones = '';
+    let estadoNombre = '';
+    if (this.selectedRowValue[22] != undefined){
+       validarjustificaciones = this.selectedRowValue[22].value;
+    }
+    if (this.selectedRowValue[8] != undefined){
+      estadoNombre = this.selectedRowValue[8].value;
+    }
     this.infoHabilitado= {
       isLetrado : this.isLetrado,
-      validarjustificaciones: this.selectedRowValue[22].value,
-      estadoNombre: this.selectedRowValue[8].value
+      validarjustificaciones: validarjustificaciones,
+      estadoNombre: estadoNombre
  };    
 
- if(this.infoHabilitado.validarjustificaciones=="S" && (this.infoHabilitado.estadoNombre=="Pendiente de Alta" || this.infoHabilitado.estadoNombre=="Pendiente de Baja") && !this.isLetrado){
-  this.habilitadoValidar=false;
-}else{
-  this.habilitadoValidar=true;
-}
+    if(this.infoHabilitado.validarjustificaciones=="S" && (this.infoHabilitado.estadoNombre=="Pendiente de Alta" || this.infoHabilitado.estadoNombre=="Pendiente de Baja") && !this.isLetrado){
+      this.habilitadoValidar=false;
+    }else{
+      this.habilitadoValidar=true;
+    }
 
-if((this.infoHabilitado.estadoNombre=="Pendiente de Alta" || this.infoHabilitado.estadoNombre=="Pendiente de Baja")&& !this.isLetrado){
-  this.habilitadoDenegar=false;
-}else{
-  this.habilitadoDenegar=true;
-}
+    if((this.infoHabilitado.estadoNombre=="Pendiente de Alta" || this.infoHabilitado.estadoNombre=="Pendiente de Baja")&& !this.isLetrado){
+      this.habilitadoDenegar=false;
+    }else{
+      this.habilitadoDenegar=true;
+    }
 
 
-if(this.infoHabilitado.estadoNombre=="Alta"){
-  this.habilitadoSolicitarBaja=false;
-}else{
-  this.habilitadoSolicitarBaja=true;
+    if(this.infoHabilitado.estadoNombre=="Alta"){
+      this.habilitadoSolicitarBaja=false;
+    }else{
+      this.habilitadoSolicitarBaja=true;
 
-}
+  }
 
 
   }
@@ -945,7 +1086,7 @@ if(this.infoHabilitado.estadoNombre=="Alta"){
         'idinstitucion' : obj[9].value,
         'idturno': obj[10].value,
         'idguardia': obj[11].value,
-        'fechasolicitud': this.transformaFecha(obj[4].value),
+        'fechasolicitud': this.transformaFechaSol(obj[4].value),
         'fechavalidacion': this.transformaFecha(obj[5].value),
         'fechabaja': this.transformaFecha(obj[12].value),
         'observacionessolicitud': obj[13].value,
@@ -985,7 +1126,7 @@ if(this.infoHabilitado.estadoNombre=="Alta"){
         'idinstitucion' : obj[9].value,
         'idturno': obj[10].value,
         'idguardia': obj[11].value,
-        'fechasolicitud': this.transformaFecha(obj[4].value),
+        'fechasolicitud': this.transformaFechaSol(obj[4].value),
         'fechavalidacion': this.transformaFecha(obj[5].value),
         'fechabaja': this.transformaFecha(obj[12].value),
         'observacionessolicitud': obj[13].value,
@@ -1022,7 +1163,7 @@ if(this.infoHabilitado.estadoNombre=="Alta"){
         'idinstitucion' : obj[9].value,
         'idturno': obj[10].value,
         'idguardia': obj[11].value,
-        'fechasolicitud': this.transformaFecha(obj[4].value),
+        'fechasolicitud': this.transformaFechaSol(obj[4].value),
         'fechavalidacion': this.transformaFecha(obj[5].value),
         'fechabaja': this.transformaFecha(obj[12].value),
         'observacionessolicitud': obj[13].value,
@@ -1062,7 +1203,7 @@ if(this.infoHabilitado.estadoNombre=="Alta"){
         'idinstitucion' : obj[9].value,
         'idturno': obj[10].value,
         'idguardia': obj[11].value,
-        'fechasolicitud': this.transformaFecha(obj[4].value),
+        'fechasolicitud': this.transformaFechaSol(obj[4].value),
         'fechavalidacion': this.transformaFecha(obj[5].value),
         'fechabaja': this.transformaFecha(obj[12].value),
         'observacionessolicitud': obj[13].value,

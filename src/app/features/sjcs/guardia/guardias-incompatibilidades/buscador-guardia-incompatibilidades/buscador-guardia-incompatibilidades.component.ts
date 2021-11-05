@@ -119,7 +119,7 @@ export class BuscadorGuardiaIncompatibilidadesComponent implements OnInit {
   getFiltrosValues(event){
     this.filtrosValues = event;
     this.convertArraysToStrings();
-    this.getComboGuardiasInc();
+    this.buscarInc();
     
   }
 
@@ -136,13 +136,12 @@ export class BuscadorGuardiaIncompatibilidadesComponent implements OnInit {
   }
 
   getComboGuardiasInc(){
-    this.progressSpinner = true;
     this.comboGuardiasIncompatibles = [];
     let idInstitucion = this.authenticationService.getInstitucionSession();
     this.comboIncompatibilidadesDatosEntradaItem = new ComboIncompatibilidadesDatosEntradaItem(
-      { 'idTurno': this.filtrosValues.idTurno,
-        'idTipoGuardia': this.filtrosValues.idTipoGuardia,
-        'idPartidaPresupuestaria': this.filtrosValues.partidaPresupuestaria,
+      { 'idTurno': '',
+        'idTipoGuardia': '',
+        'idPartidaPresupuestaria': '',
         'labels': true,
         'idInstitucion': idInstitucion
       }  );
@@ -160,7 +159,7 @@ export class BuscadorGuardiaIncompatibilidadesComponent implements OnInit {
               let objCombo: GuardiaI = {label: l, value: this.comboIncompatibilidadesRes.values[i]};
               this.comboGuardiasIncompatibles.push(objCombo);
             });
-            this.buscarInc();
+            this.jsonToRow();
   },
     err => {
       this.progressSpinner = false;
@@ -171,10 +170,11 @@ export class BuscadorGuardiaIncompatibilidadesComponent implements OnInit {
 
 
 buscarInc(){
-  
+  this.buscar = false;
+  this.progressSpinner = true;
 //let jsonEntrada  = JSON.parse(JSON.stringify(datosEntrada))
 this.incompatibilidadesDatosEntradaItem = new IncompatibilidadesDatosEntradaItem(
-    { 'idTurno': this.filtrosValues.idTurno,
+    { 'idTurno': (this.filtrosValues.idTurno !=undefined && this.filtrosValues.idTurno != "") ? this.filtrosValues.idTurno.toString() : this.filtrosValues.idTurno,
       'nombreGuardia': this.filtrosValues.nombre,
       'idArea': (this.filtrosValues.area !=undefined && this.filtrosValues.area != "") ? this.filtrosValues.area.toString() : this.filtrosValues.area,
       'idMateria': (this.filtrosValues.materia !=undefined && this.filtrosValues.materia != "") ? this.filtrosValues.materia.toString() : this.filtrosValues.materia,
@@ -221,6 +221,7 @@ this.incompatibilidadesDatosEntradaItem = new IncompatibilidadesDatosEntradaItem
             this.comboGuardiasIncompatibles.push(objCombo);*/
             this.respuestaIncompatibilidades.push(responseObject);
           })
+          this.getComboGuardiasInc();
           this.jsonToRow();
 
           this.buscar = true;
@@ -252,9 +253,9 @@ jsonToRow(){
     let objCells = [
     { type: 'text', value: res.nombreTurno },
     { type: 'text', value: res.nombreGuardia },
-    { type: 'multiselect', combo: this.comboGuardiasIncompatibles, value: ArrComboValue },
-    { type: 'input', value: res.motivos },
-    { type: 'input', value: res.diasSeparacionGuardias },
+    { type: 'multiselect', combo: this.comboGuardiasIncompatibles, value: ArrComboValue, disabled: (this.isLetrado || !this.permisoEscritura) },
+    { type: 'input', value: res.motivos, disabled: (this.isLetrado || !this.permisoEscritura) },
+    { type: 'input', value: res.diasSeparacionGuardias, disabled: (this.isLetrado || !this.permisoEscritura) },
     { type: 'invisible', value: res.idTurnoIncompatible },
     { type: 'invisible', value: res.idGuardiaIncompatible },
     { type: 'invisible', value: res.idGuardia },
@@ -311,6 +312,7 @@ jsonToRow(){
 }
 
 save(event){
+  let idInstitucion = this.authenticationService.getInstitucionSession();
   let idTurnoIncompatible;
   let idGuardiaIncompatible;
   let motivos;
@@ -321,6 +323,7 @@ save(event){
   let nombreGuardia;
   let nombreTurnoIncompatible;
   let nombreGuardiaIncompatible;
+  let incompArray : SaveIncompatibilidadesDatosEntradaItem [] = [];
   event.forEach((row, i) => {
     row.cells.forEach((c, index) => {
       if (index == 0){
@@ -354,16 +357,38 @@ save(event){
         nombreGuardiaIncompatible = c.value;
       }
     });
-    this.guardarInc(nombreTurno, nombreGuardia, nombreTurnoIncompatible, nombreGuardiaIncompatible, idTurnoIncompatible, idGuardiaIncompatible, motivos, diasSeparacionGuardias, idGuardia, idTurno)
+    this.saveIncompatibilidadesDatosEntradaItem = new SaveIncompatibilidadesDatosEntradaItem(
+      { 'idTurno': idTurno,
+        'idGuardia': idGuardia,
+        'idTurnoIncompatible': idTurnoIncompatible,
+        'idGuardiaIncompatible': idGuardiaIncompatible,
+        'idInstitucion': idInstitucion, 
+        'motivos': motivos,
+        'diasSeparacionGuardias': diasSeparacionGuardias,
+        'usuario': "1", //se setea en backend
+        'nombreTurno' : nombreTurno,
+        'nombreGuardia' : nombreGuardia,
+        'nombreTurnoIncompatible' : nombreTurnoIncompatible,
+        'nombreGuardiaIncompatible' : nombreGuardiaIncompatible
+      }
+
+    );
+    incompArray.push(this.saveIncompatibilidadesDatosEntradaItem);
   });
+  if(incompArray && incompArray.length > 0){
+    this.guardarInc(incompArray);
   
-   this.rowGroups = event;
-   this.rowGroupsAux = event;
-   this.totalRegistros = this.rowGroups.length;
+    this.rowGroups = event;
+    this.rowGroupsAux = event;
+    this.totalRegistros = this.rowGroups.length;
   }
+  
+}
 
   deleteFromCombo(rowToDelete){
 
+    let incompArray : DeleteIncompatibilidadesDatosEntradaItem [] = [];
+    let idInstitucion = this.authenticationService.getInstitucionSession();
     let idTurnoIncompatible;
     let idGuardiaIncompatible;
     let idGuardia;
@@ -381,19 +406,25 @@ rowToDelete.cells.forEach((c, index) => {
       if (index == 8){
         idTurno = c.value;
       }
-     /* if(c.type == "multiselect"){
-        c.combo.forEach(comboValue => {
-          comboValue.value
-        })
-      }*/
+      this.deleteIncompatibilidadesDatosEntradaItem = new DeleteIncompatibilidadesDatosEntradaItem(
+        { 'idTurno': idTurno,
+          'idGuardia': idGuardia,
+          'idTurnoIncompatible': idTurnoIncompatible,
+          'idGuardiaIncompatible': idGuardiaIncompatible,
+          'idInstitucion': idInstitucion, //DUDA
+        }
+      );
+      incompArray.push(this.deleteIncompatibilidadesDatosEntradaItem);
     })
 
-    this.eliminarInc(idTurnoIncompatible, idGuardiaIncompatible, idGuardia, idTurno)
+    this.eliminarInc(incompArray)
     this.rowGroupsAux = this.rowGroups;
     this.totalRegistros = this.rowGroups.length;
   }
 
 delete(indexToDelete){
+  let incompArray : DeleteIncompatibilidadesDatosEntradaItem [] = [];
+  let idInstitucion = this.authenticationService.getInstitucionSession();
   let idGuardia;
   let idTurno;
   let toDelete:Row[] = [];
@@ -401,8 +432,8 @@ delete(indexToDelete){
     toDelete.push(this.rowGroups[index]);
     this.rowGroups.splice(index, 1); 
   })
-let idTurnoIncompatible;
-let idGuardiaIncompatible;
+  let idTurnoIncompatible;
+  let idGuardiaIncompatible;
   toDelete.forEach(row => {
     row.cells.forEach((c, index) => {
       if (index == 5){
@@ -417,13 +448,17 @@ let idGuardiaIncompatible;
       if (index == 8){
         idTurno = c.value;
       }
-     /* if(c.type == "multiselect"){
-        c.combo.forEach(comboValue => {
-          comboValue.value
-        })
-      }*/
+      this.deleteIncompatibilidadesDatosEntradaItem = new DeleteIncompatibilidadesDatosEntradaItem(
+        { 'idTurno': idTurno,
+          'idGuardia': idGuardia,
+          'idTurnoIncompatible': idTurnoIncompatible,
+          'idGuardiaIncompatible': idGuardiaIncompatible,
+          'idInstitucion': idInstitucion, //DUDA
+        }
+      );
+      incompArray.push(this.deleteIncompatibilidadesDatosEntradaItem);
     })
-    this.eliminarInc(idTurnoIncompatible, idGuardiaIncompatible, idGuardia, idTurno)
+    this.eliminarInc(incompArray)
   })
   this.rowGroupsAux = this.rowGroups;
   this.totalRegistros = this.rowGroups.length;
@@ -431,18 +466,11 @@ let idGuardiaIncompatible;
 
 
 
-  eliminarInc(idTurnoIncompatible, idGuardiaIncompatible, idGuardia, idTurno){
-    let idInstitucion = this.authenticationService.getInstitucionSession();
-  this.deleteIncompatibilidadesDatosEntradaItem = new DeleteIncompatibilidadesDatosEntradaItem(
-    { 'idTurno': idTurno,
-      'idGuardia': idGuardia,
-      'idTurnoIncompatible': idTurnoIncompatible,
-      'idGuardiaIncompatible': idGuardiaIncompatible,
-      'idInstitucion': idInstitucion, //DUDA
-    }
-  );
+  eliminarInc(incompArray : DeleteIncompatibilidadesDatosEntradaItem []){
+    
+    this.progressSpinner = true;
     this.sigaServices.post(
-      "guardiasIncompatibilidades_eliminarIncompatibilidades", this.deleteIncompatibilidadesDatosEntradaItem).subscribe(
+      "guardiasIncompatibilidades_eliminarIncompatibilidades", incompArray).subscribe(
         data => {
           let error = JSON.parse(data.body).error;
           this.datos = JSON.parse(data.body).guardiaItems;
@@ -461,6 +489,8 @@ let idGuardiaIncompatible;
 
           if (error != null && error.description != null) {
             this.showMessage({ severity: 'info', summary: this.translateService.instant("general.message.informacion"), msg: error.description });
+          } else{
+            this.buscarInc();
           }
         },
         err => {
@@ -473,25 +503,10 @@ let idGuardiaIncompatible;
   
 }
 
-guardarInc(nombreTurno, nombreGuardia, nombreTurnoIncompatible, nombreGuardiaIncompatible, idTurnoIncompatible, idGuardiaIncompatible, motivos, diasSeparacionGuardias, idGuardia, idTurno){
-  let idInstitucion = this.authenticationService.getInstitucionSession();
-  this.saveIncompatibilidadesDatosEntradaItem = new SaveIncompatibilidadesDatosEntradaItem(
-    { 'idTurno': idTurno,
-      'idGuardia': idGuardia,
-      'idTurnoIncompatible': idTurnoIncompatible,
-      'idGuardiaIncompatible': idGuardiaIncompatible,
-      'idInstitucion': idInstitucion, 
-      'motivos': motivos,
-      'diasSeparacionGuardias': diasSeparacionGuardias,
-      'usuario': "1", //se setea en backend
-      'nombreTurno' : nombreTurno,
-      'nombreGuardia' : nombreGuardia,
-      'nombreTurnoIncompatible' : nombreTurnoIncompatible,
-      'nombreGuardiaIncompatible' : nombreGuardiaIncompatible
-    }
-  );
+guardarInc(incompArray : SaveIncompatibilidadesDatosEntradaItem []){
+  this.progressSpinner = true;
     this.sigaServices.post(
-      "guardiasIncompatibilidades_guardarIncompatibilidades", this.saveIncompatibilidadesDatosEntradaItem).subscribe(
+      "guardiasIncompatibilidades_guardarIncompatibilidades", incompArray).subscribe(
         data => {
           let error = JSON.parse(data.body).error;
           this.datos = JSON.parse(data.body).guardiaItems;
@@ -510,6 +525,8 @@ guardarInc(nombreTurno, nombreGuardia, nombreTurnoIncompatible, nombreGuardiaInc
 
           if (error != null && error.description != null) {
             this.showMessage({ severity: 'info', summary: this.translateService.instant("general.message.informacion"), msg: error.description });
+          } else{
+            this.buscarInc();
           }
         },
         err => {
@@ -591,7 +608,7 @@ guardarInc(nombreTurno, nombreGuardia, nombreTurnoIncompatible, nombreGuardiaInc
   }
 
   convertArraysToStrings() {
-    const array = ['idTurno', 'jurisdiccion', 'grupoFacturacion', 'partidaPresupuestaria', 'tipoTurno', 'idTipoGuardia'];
+    const array = ['idTurno', 'idGuardia', 'jurisdiccion', 'grupoFacturacion', 'partidaPresupuestaria', 'tipoTurno', 'idTipoGuardia'];
     if ( this.filtrosValues != undefined){
         array.forEach(element => {
           if (this.filtrosValues[element] != undefined && this.filtrosValues[element] != null && this.filtrosValues[element].length > 0) {

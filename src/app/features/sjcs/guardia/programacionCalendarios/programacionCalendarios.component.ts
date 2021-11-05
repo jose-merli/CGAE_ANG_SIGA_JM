@@ -22,6 +22,7 @@ import { CalendariosDatosEntradaItem } from './CalendariosDatosEntradaItem.model
 import { FiltrosGuardiaCalendarioComponent } from './filtros-guardia-calendarios/filtros-guardia-calendarios.component';
 import { saveAs } from "file-saver/FileSaver";
 import { forEach } from '@angular/router/src/utils/collection';
+import { ControlAccesoDto } from '../../../../models/ControlAccesoDto';
 
 @Component({
   selector: 'app-programacionCalendarios',
@@ -53,6 +54,7 @@ export class ProgramacionCalendariosComponent implements OnInit {
   comboIncompatibilidadesDatosEntradaItem: ComboIncompatibilidadesDatosEntradaItem;
   comboIncompatibilidadesRes: ComboIncompatibilidadesRes;
   dataToDuplicate;
+  permisoTotal = true;
   cabeceras = [
     {
       id: "turno",
@@ -107,10 +109,10 @@ export class ProgramacionCalendariosComponent implements OnInit {
   ];
 
   comboEstados = [
-    { label: "Pendiente", value: "5" },
+    { label: "Pendiente", value: "3" },
     { label: "Programada", value: "1" },
     { label: "En proceso", value: "2" },
-    { label: "Procesada con Errores", value: "3" },
+    { label: "Procesada con Errores", value: "5" },
     { label: "Generada", value: "4" }
   ];
   @ViewChild(FiltrosGuardiaCalendarioComponent) filtros;
@@ -129,6 +131,8 @@ export class ProgramacionCalendariosComponent implements OnInit {
     }
 
     ngOnInit() {
+
+      this.checkAcceso();
       
       if (this.persistenceService.getDatos() != undefined && this.persistenceService.getDatos().duplicar) {
         console.log('¿duplicar?: ', this.persistenceService.getDatos().duplicar)
@@ -137,19 +141,19 @@ export class ProgramacionCalendariosComponent implements OnInit {
         this.rowGroups = this.dataToDuplicate.tabla;
         
         let objCells: Cell[] = [
-          { type: 'text', value: this.dataToDuplicate.turno, combo: null, size: 250 },
-          { type: 'text', value: this.dataToDuplicate.nombre, combo: null, size: 250 },
-          { type: 'date', value: this.dataToDuplicate.fechaDesde, combo: null, size: 140},
-          { type: 'date', value: this.dataToDuplicate.fechaHasta , combo: null, size: 140},
-          { type: 'dateTime', value: this.dataToDuplicate.fechaProgramacion , combo: null, size: 140},
-          { type: 'label', value: this.dataToDuplicate.listaGuarias, combo: null, size: 250},
-          { type: 'link', value: this.dataToDuplicate.observaciones , combo: null, size: 250},
-          { type: 'text', value: this.dataToDuplicate.estado , combo: null, size: 140},
-          { type: 'text', value: this.dataToDuplicate.generado, combo: null , size: 140 },
-          { type: 'text', value: this.dataToDuplicate.numGuardias, combo: null, size: 140 },
-          { type: 'invisible', value: this.dataToDuplicate.idCalendarioProgramado, combo: null, size: 0},
-          { type: 'invisible', value: this.dataToDuplicate.idTurno, combo: null, size: 0},
-          { type: 'invisible', value: this.dataToDuplicate.idGuardia, combo: null, size: 0}          
+          { type: 'text', value: this.dataToDuplicate.turno, combo: null, size: 250 , disabled: false},
+          { type: 'text', value: this.dataToDuplicate.nombre, combo: null, size: 250 , disabled: false},
+          { type: 'date', value: this.dataToDuplicate.fechaDesde, combo: null, size: 140, disabled: false},
+          { type: 'date', value: this.dataToDuplicate.fechaHasta , combo: null, size: 140, disabled: false},
+          { type: 'dateTime', value: this.dataToDuplicate.fechaProgramacion , combo: null, size: 140, disabled: false},
+          { type: 'label', value: this.dataToDuplicate.listaGuarias, combo: null, size: 250, disabled: false},
+          { type: 'link', value: this.dataToDuplicate.observaciones , combo: null, size: 250, disabled: false},
+          { type: 'text', value: this.dataToDuplicate.estado , combo: null, size: 140, disabled: false},
+          { type: 'text', value: this.dataToDuplicate.generado, combo: null , size: 140 , disabled: false},
+          { type: 'text', value: this.dataToDuplicate.numGuardias, combo: null, size: 140 , disabled: false},
+          { type: 'invisible', value: this.dataToDuplicate.idCalendarioProgramado, combo: null, size: 0, disabled: false},
+          { type: 'invisible', value: this.dataToDuplicate.idTurno, combo: null, size: 0, disabled: false},
+          { type: 'invisible', value: this.dataToDuplicate.idGuardia, combo: null, size: 0, disabled: false}          
           ];
       
           let obj: Row = {id: this.rowGroups.length, cells: objCells};
@@ -188,6 +192,38 @@ export class ProgramacionCalendariosComponent implements OnInit {
     }
     
 
+  }
+
+  checkAcceso() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "997";
+    let derechoAcceso;
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisosTree = JSON.parse(data.body);
+        let permisosArray = permisosTree.permisoItems;
+        derechoAcceso = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        if (derechoAcceso == 3) {
+          //permiso total
+          this.permisoTotal = true;
+        } else if (derechoAcceso == 2) {
+          // solo lectura
+          this.permisoTotal = false;
+        } else {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
+      }
+    );
   }
 
   getStatusValue(id){
@@ -659,7 +695,7 @@ guardarInc(nombreTurno, nombreGuardia, nombreTurnoIncompatible, nombreGuardiaInc
         let estadoNumerico = "0";
         switch (event.estado) {
           case "Pendiente":
-            estadoNumerico = "5";
+            estadoNumerico = "3";
             break;
           case "Programada":
             estadoNumerico = "1";
@@ -668,7 +704,7 @@ guardarInc(nombreTurno, nombreGuardia, nombreTurnoIncompatible, nombreGuardiaInc
             estadoNumerico = "2";
             break;
           case "Procesada con Errores":
-            estadoNumerico = "3";
+            estadoNumerico = "5";
             break;
           case "Generada":
             estadoNumerico = "4";
@@ -699,10 +735,11 @@ guardarInc(nombreTurno, nombreGuardia, nombreTurnoIncompatible, nombreGuardiaInc
         }
       })
         if (noGenerado){
-        this.descargarZipLogGenerados(dataToZipArr);
+        this.showMessage({ severity: 'info', summary: 'No puede descargar el log porque no se ha comenzado la generación del calendario', msg: 'No puede descargar el log porque no se ha comenzado la generación del calendario' });
+        
         } else{
-          this.showMessage({ severity: 'info', summary: 'No puede descargar el log porque no se ha comenzado la generación del calendario', msg: 'No puede descargar el log porque no se ha comenzado la generación del calendario' });
-        }
+        this.descargarZipLogGenerados(dataToZipArr);
+          }
   }
 
   /*descargarZipLogGenerados(datos){

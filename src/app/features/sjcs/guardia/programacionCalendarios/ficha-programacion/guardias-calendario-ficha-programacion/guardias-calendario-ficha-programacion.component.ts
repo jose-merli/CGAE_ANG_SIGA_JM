@@ -47,6 +47,7 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
   @Output() idOpened = new EventEmitter<Boolean>();
   @Output() disGen = new EventEmitter<Boolean>();
   @Output() fillDatosTarjetaGuardiasCalendario = new EventEmitter<any[]>();
+  @Output() linkGuardiaColegiado2 = new EventEmitter<any>();
   @Output() searchGuardiasFromCal = new EventEmitter<string>();
   @Input() estado;
   dataReady = false;
@@ -433,7 +434,12 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
               'idGuardia': nrg.cells[5].value,
               'idTurno': nrg.cells[6].value
             });
-            newList.push(responseObject);
+            if (nrg.cells[3].value != true && nrg.cells[3].value != "Si" && nrg.cells[3].value != 1){
+              newList.push(responseObject);
+            }else{
+              this.showMessage("error", this.translateService.instant("No pueden eliminarse calendarios generados"), this.translateService.instant("No pueden eliminarse calendarios generados"));
+            }
+            
               
     })
     this.eliminarCal(newList);
@@ -570,5 +576,7 @@ setGuardiasCalendario(guardiaCalendario){
   disableGen($event){
     this.disGen.emit($event);
   }
-  
+  linkGuardiaColegiado(event){
+    this.linkGuardiaColegiado2.emit(event);
+  }
 }

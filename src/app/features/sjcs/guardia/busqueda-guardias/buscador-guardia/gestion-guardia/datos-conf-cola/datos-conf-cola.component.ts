@@ -43,7 +43,7 @@ export class DatosConfColaComponent implements OnInit {
   progressSpinner: boolean = false;
   tieneGuardiaPrincipal : boolean = false;
   isLetrado : boolean = false;
-
+  resumenPesos : string;
   isDisabledGuardia: boolean = true;
   constructor(private persistenceService: PersistenceService,
     private translateService: TranslateService,
@@ -53,6 +53,7 @@ export class DatosConfColaComponent implements OnInit {
     private sigaStorageService : SigaStorageService) { }
 
   ngOnInit() {
+
     //Enviamos el valor de "porGrupo"
     this.isLetrado = this.sigaStorageService.isLetrado && this.sigaStorageService.idPersona;
     this.historico = this.persistenceService.getHistorico();
@@ -64,6 +65,7 @@ export class DatosConfColaComponent implements OnInit {
         if(data.idGuardiaPrincipal){
           this.tieneGuardiaPrincipal = true;
         }
+        
         this.body.letradosGuardia = data.letradosGuardia;
         this.body.idOrdenacionColas = data.idOrdenacionColas;
         this.body.porGrupos = data.porGrupos == "1" ? true : false;
@@ -127,6 +129,19 @@ export class DatosConfColaComponent implements OnInit {
   rest() {
     this.pesosExistentes = JSON.parse(JSON.stringify(this.pesosExistentesInicial));
     this.pesosSeleccionados = JSON.parse(JSON.stringify(this.pesosSeleccionadosInicial));
+    if (this.pesosSeleccionados && this.pesosSeleccionados.length > 0){
+      this.resumenPesos = this.pesosSeleccionados[0].por_filas ;
+    }
+     if (this.pesosSeleccionados.length > 1){
+      this.resumenPesos =this.resumenPesos+ ", " + this.pesosSeleccionados[1].por_filas ;
+    }
+     if (this.pesosSeleccionados.length > 2){
+      this.resumenPesos =this.resumenPesos+ ", "  + this.pesosSeleccionados[2].por_filas;
+    }
+     if (this.pesosSeleccionados.length > 3){
+      this.resumenPesos =this.resumenPesos+ ", "  + this.pesosSeleccionados[3].por_filas;
+    }
+    
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
   }
 
@@ -140,6 +155,18 @@ export class DatosConfColaComponent implements OnInit {
           if (find != undefined) {
             this.pesosExistentes.splice(find, 1);
             this.pesosSeleccionados = [element, ...this.pesosSeleccionados];
+            if (this.pesosSeleccionados && this.pesosSeleccionados.length > 0){
+              this.resumenPesos = this.pesosSeleccionados[0].por_filas ;
+            }
+             if (this.pesosSeleccionados.length > 1){
+              this.resumenPesos =this.resumenPesos+ ", " + this.pesosSeleccionados[1].por_filas ;
+            }
+             if (this.pesosSeleccionados.length > 2){
+              this.resumenPesos =this.resumenPesos+ ", "  + this.pesosSeleccionados[2].por_filas;
+            }
+             if (this.pesosSeleccionados.length > 3){
+              this.resumenPesos =this.resumenPesos+ ", "  + this.pesosSeleccionados[3].por_filas;
+            }
           }
         }
         else if (element.por_filas == ordManual) {
@@ -184,6 +211,19 @@ export class DatosConfColaComponent implements OnInit {
         this.pesosSeleccionados[4].numero = "1";
       }
     }
+
+    if (this.pesosSeleccionados && this.pesosSeleccionados.length > 0){
+      this.resumenPesos = this.pesosSeleccionados[0].por_filas ;
+      }
+    if (this.pesosSeleccionados.length > 1){
+      this.resumenPesos =this.resumenPesos+ ", " + this.pesosSeleccionados[1].por_filas ;
+    }
+    if (this.pesosSeleccionados.length > 2){
+      this.resumenPesos =this.resumenPesos+ ", "  + this.pesosSeleccionados[2].por_filas;
+    }
+    if (this.pesosSeleccionados.length > 3){
+      this.resumenPesos =this.resumenPesos+ ", "  + this.pesosSeleccionados[3].por_filas;
+    }
   }
 
   getPerfilesSeleccionados() {
@@ -200,6 +240,18 @@ export class DatosConfColaComponent implements OnInit {
           n => {
             // coger etiquetas de una persona juridica
             this.pesosExistentes = n.colaOrden;
+            if (this.pesosExistentes && this.pesosExistentes.length > 0){
+              this.resumenPesos = this.pesosExistentes[0].por_filas ;
+            }
+            if (this.pesosExistentes.length > 1){
+              this.resumenPesos =this.resumenPesos+ ", " + this.pesosExistentes[1].por_filas ;
+            }
+             if (this.pesosExistentes.length > 2){
+              this.resumenPesos =this.resumenPesos+ ", "  + this.pesosExistentes[2].por_filas;
+            }
+             if (this.pesosExistentes.length > 3){
+              this.resumenPesos =this.resumenPesos+ ", "  + this.pesosExistentes[3].por_filas;
+            }
             this.pesosExistentes.forEach(element => {
               if (element.por_filas == "ALFABETICOAPELLIDOS") {
                 element.por_filas = "Apellidos y nombre";
@@ -235,6 +287,8 @@ export class DatosConfColaComponent implements OnInit {
           }
         );
     }
+
+
   }
   getPerfilesExistentes() {
 
@@ -248,6 +302,18 @@ export class DatosConfColaComponent implements OnInit {
         this.pesosExistentes.splice(this.pesosExistentes.indexOf(element), 1);
       }
     });
+    if (this.pesosSeleccionados && this.pesosSeleccionados.length > 0){
+      this.resumenPesos = this.pesosSeleccionados[0].por_filas ;
+    }
+     if (this.pesosSeleccionados.length > 1){
+      this.resumenPesos =this.resumenPesos+ ", " + this.pesosSeleccionados[1].por_filas ;
+    }
+     if (this.pesosSeleccionados.length > 2){
+      this.resumenPesos =this.resumenPesos+ ", "  + this.pesosSeleccionados[2].por_filas;
+    }
+     if (this.pesosSeleccionados.length > 3){
+      this.resumenPesos =this.resumenPesos+ ", "  + this.pesosSeleccionados[3].por_filas;
+    }
     this.pesosExistentes.forEach(element => {
       let e = { numero: element.numero, por_filas: element.por_filas, orden: element.orden };
       if (e.por_filas != ordManual) {
@@ -306,6 +372,7 @@ export class DatosConfColaComponent implements OnInit {
     this.globalGuardiasService.emitConf(configuracionCola);
   }
   cambiaGrupo() {
+    this.body.rotarComponentes = this.body.porGrupos;
     let configuracionCola: ConfiguracionCola = {
       'manual': true,
       'porGrupos': this.body.porGrupos,
@@ -333,6 +400,19 @@ export class DatosConfColaComponent implements OnInit {
         por_filas: ordManual,
         orden: ""
       }), ...this.pesosSeleccionados];
+
+      if (this.pesosSeleccionados && this.pesosSeleccionados.length > 0){
+        this.resumenPesos = this.pesosSeleccionados[0].por_filas ;
+      }
+       if (this.pesosSeleccionados.length > 1){
+        this.resumenPesos =this.resumenPesos+ ", " + this.pesosSeleccionados[1].por_filas ;
+      }
+       if (this.pesosSeleccionados.length > 2){
+        this.resumenPesos =this.resumenPesos+ ", "  + this.pesosSeleccionados[2].por_filas;
+      }
+       if (this.pesosSeleccionados.length > 3){
+        this.resumenPesos =this.resumenPesos+ ", "  + this.pesosSeleccionados[3].por_filas;
+      }
     } else {
       this.globalGuardiasService.emitConf(configuracionCola);
     }
@@ -383,13 +463,25 @@ export class DatosConfColaComponent implements OnInit {
   }
 
   callSaveService() {
+
     this.progressSpinner = true;
     this.sigaServices.post("busquedaGuardias_updateGuardia", this.body).subscribe(
       data => {
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
         this.pesosExistentesInicial = JSON.parse(JSON.stringify(this.pesosExistentes));
         this.pesosSeleccionadosInicial = JSON.parse(JSON.stringify(this.pesosSeleccionados));
-
+        if (this.pesosSeleccionados && this.pesosSeleccionados.length > 0){
+          this.resumenPesos = this.pesosSeleccionados[0].por_filas ;
+        }
+         if (this.pesosSeleccionados.length > 1){
+          this.resumenPesos =this.resumenPesos+ ", " + this.pesosSeleccionados[1].por_filas ;
+        }
+         if (this.pesosSeleccionados.length > 2){
+          this.resumenPesos =this.resumenPesos+ ", "  + this.pesosSeleccionados[2].por_filas;
+        }
+         if (this.pesosSeleccionados.length > 3){
+          this.resumenPesos =this.resumenPesos+ ", "  + this.pesosSeleccionados[3].por_filas;
+        }
         this.modoEdicionSend.emit(true);
         this.modoEdicion = true;
         this.progressSpinner = false;

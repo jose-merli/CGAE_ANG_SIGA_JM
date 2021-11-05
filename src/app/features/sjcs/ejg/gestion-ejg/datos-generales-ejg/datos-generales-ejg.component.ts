@@ -118,7 +118,8 @@ export class DatosGeneralesEjgComponent implements OnInit {
       this.bodyInicial = new EJGItem();
       this.showTipoExp = false;
       this.body.fechaApertura = moment(this.datosAsistencia.fechaAsistencia.substr(0,10), 'DD/MM/YYYY').toDate();
-
+      this.body.creadoDesde = "A";
+      this.bodyInicial.creadoDesde = "A";
     } else {
       this.disabledNumEJG = true;
       this.nuevo = true;
@@ -364,6 +365,13 @@ export class DatosGeneralesEjgComponent implements OnInit {
       if (this.body.tipoEJG != null && this.body.tipoEJG != undefined && this.body.fechaApertura != null && this.body.fechaApertura != undefined) {
         this.body.annio = this.body.fechaApertura.getFullYear().toString();
         this.body.idInstitucion = this.institucionActual;
+
+        //si viene de designacion, hay que poner el campo de creado desde
+        if (sessionStorage.getItem("Designacion")) {
+          this.body.creadoDesde='O';
+        }else if(this.body.creadoDesde==undefined || this.body.creadoDesde==null){
+          this.body.creadoDesde='M'
+        }
 
         this.sigaServices.post("gestionejg_insertaDatosGenerales", JSON.stringify(this.body)).subscribe(
           n => {
