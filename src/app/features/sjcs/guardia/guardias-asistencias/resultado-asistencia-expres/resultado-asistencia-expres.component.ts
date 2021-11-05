@@ -128,7 +128,7 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
   notifyAnySelected(event) {
     if ((this.seleccionarTodo || event) && this.permisoEscrituraAE) {
       this.isDisabled = false;
-      let rowInfoAsistencia : RowGroup = this.rowGroups.find(rowGroup => rowGroup.id == this.tabla.selectedArray[0])
+      let rowInfoAsistencia : RowGroup = this.rowGroups.find(rowGroup => rowGroup.id == this.tabla.selectedArray[this.tabla.selectedArray.length-1])
       if((rowInfoAsistencia && rowInfoAsistencia.rows &&
         rowInfoAsistencia.rows[0].cells[2].value) || !rowInfoAsistencia){
         this.disableCrearEJG = true;
@@ -301,7 +301,7 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
   crearEJG(){
     if(this.filtro){
       let asistencia : TarjetaAsistenciaItem = new TarjetaAsistenciaItem();
-      let idAsistencia : string = this.rowGroups.find(rowGroup => rowGroup.id == this.tabla.selectedArray[0]).id;
+      let idAsistencia : string = this.rowGroups.find(rowGroup => rowGroup.id == this.tabla.selectedArray[this.tabla.selectedArray.length-1]).id;
       idAsistencia = idAsistencia.substring(1);
       asistencia.anioNumero = idAsistencia;
       asistencia.fechaAsistencia = this.filtro.diaGuardia + ' 00:00';

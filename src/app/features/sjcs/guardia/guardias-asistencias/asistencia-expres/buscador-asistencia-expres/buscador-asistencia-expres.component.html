@@ -50,13 +50,12 @@
                                 <p-dropdown class="select-form"
                                     placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
                                     [showClear]="true" [(ngModel)]="filtro.idLetradoGuardia" [ngClass]="styleObligatorio(filtro.idLetradoGuardia)"
-                                    [ngModelOptions]="{standalone: true}" [options]="comboLetradosGuardia"
-                                    (onChange)="onChangeLetradoGuardia()">
+                                    [ngModelOptions]="{standalone: true}" [options]="comboLetradosGuardia" [disabled]="isLetrado">
                                 </p-dropdown>
                             </div>
                             <div class="form-group-interlineado col-lg-6 col-md-6">
                                 <app-busqueda-colegiado-express [numColegiado]="usuarioBusquedaExpress.numColegiado"
-                                    [pantalla]="'guardia'"
+                                    [pantalla]="'guardia'" (idPersona)="getIdPersonaLetradoManual($event)" [disabled]="isLetrado"
                                     [nombreAp]="usuarioBusquedaExpress.nombreAp" (colegiado)="changeColegiado($event)">
                                 </app-busqueda-colegiado-express>
                             </div>
@@ -64,7 +63,7 @@
                                 <br>
                                 <label class="form-group-label pt-2"><b>{{"justiciaGratuita.guardia.asistenciasexpress.sustitucion" | translate}}</b></label>
                                 &nbsp;&nbsp;
-                                <p-checkbox [(ngModel)]="filtro.isSustituto" (onChange)="onChangeSustitutoCheck()" binary="true"
+                                <p-checkbox [(ngModel)]="filtro.isSustituto" (onChange)="onChangeSustitutoCheck($event)" binary="true" [ngModelOptions]="{standalone: true}"
                                 [disabled]="filtro.idPersona"></p-checkbox>
                             </div>
                         </div>

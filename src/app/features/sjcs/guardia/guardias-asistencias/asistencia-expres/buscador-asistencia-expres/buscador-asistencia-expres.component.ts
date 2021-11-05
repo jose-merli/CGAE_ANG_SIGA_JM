@@ -41,7 +41,7 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
   resaltadoDatos: boolean = false;
   opcionSeleccionado: string = '0';
   verSeleccion: string = '';
-
+  isLetrado : boolean = false;
   @ViewChild(BusquedaColegiadoExpressComponent) busquedaColegiado: BusquedaColegiadoExpressComponent;
 
   constructor(private router: Router,
@@ -57,6 +57,7 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
       && this.sigaStorageService.isLetrado){
 
       this.filtro.idPersona = this.sigaStorageService.idPersona;
+      this.isLetrado = true;
 
     }
     if (sessionStorage.getItem('esBuscadorColegiados') == "true" && sessionStorage.getItem('buscadorColegiados')) {
@@ -110,6 +111,7 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
       this.getTurnosByColegiadoFecha();
     }else{
       this.filtro.diaGuardia = '';
+      this.comboTurnos = [];
     }
     
   }
@@ -216,7 +218,7 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
             if(this.comboLetradosGuardia !== null
               && this.comboLetradosGuardia.length > 0){
                 this.filtro.idLetradoGuardia = this.comboLetradosGuardia[0].value;
-                this.onChangeLetradoGuardia();
+               // this.onChangeLetradoGuardia();
               }
   
           },
@@ -249,8 +251,11 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
     this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
     this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
   }
+  getIdPersonaLetradoManual(event){
+    this.filtro.idLetradoManual = event;
+  }
 
-  onChangeLetradoGuardia(){
+/*  onChangeLetradoGuardia(){
 
     if(this.filtro.idLetradoGuardia){
 
@@ -272,10 +277,10 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
       );
 
     }
-  }
+  }*/
 
-  onChangeSustitutoCheck() {
-    this.filtro.isSustituto = !this.filtro.isSustituto;
+  onChangeSustitutoCheck(event) {
+    this.filtro.isSustituto = event;
   }
 
   styleObligatorio(evento){
