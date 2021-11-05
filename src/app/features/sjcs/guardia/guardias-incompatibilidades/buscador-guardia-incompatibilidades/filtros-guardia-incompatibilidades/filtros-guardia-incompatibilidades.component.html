@@ -33,39 +33,43 @@
         <!-- AREAS -->
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{"menu.justiciaGratuita.maestros.Area" | translate}}</label>
-          <p-dropdown class="select-form" (onChange)="onChangeArea()" [filter]="true" [(ngModel)]="filtros.area"
-            [options]="comboArea" filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
-            [showClear]="true">
-          </p-dropdown>
+          <p-multiSelect #multiSelectArea [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtros.area'
+            [options]="comboArea" maxSelectedLabels="10" [selectedItemsLabel]="textSelected" styleClass="widthAll" (onChange)="onChangeArea()"
+            [filter]="true" filterBy="label,labelSinTilde">daturnos
+          </p-multiSelect>
         </div>
 
         <!-- MATERIA -->
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{"menu.justiciaGratuita.maestros.Materia" | translate}}</label>
-          <p-dropdown class="select-form" [(ngModel)]="filtros.materia" [options]="comboMateria" [filter]="true"
+          <p-multiSelect #multiSelectTurno [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtros.materia'
+            [options]="comboMateria" maxSelectedLabels="10" [selectedItemsLabel]="textSelected" styleClass="widthAll"
+            [filter]="true" filterBy="label,labelSinTilde">
+          </p-multiSelect>
+          <!-- <p-dropdown class="select-form" [(ngModel)]="filtros.materia" [options]="comboMateria" [filter]="true"
             filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
             [(disabled)]="isDisabledMateria" (input)="buscarMateria($event)" [showClear]="true"
             [emptyFilterMessage]="resultadosAreas">
-          </p-dropdown>
+          </p-dropdown> -->
         </div>
 
         <!-- GRUPOZONA -->
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{"justiciaGratuita.maestros.zonasYSubzonas.grupoZona.cabecera" | translate}}</label>
-          <p-dropdown class="select-form" [(ngModel)]='filtros.grupoZona'
-            placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboGrupoZona" [filter]="true"
-            filterBy="label,labelSinTilde" (onChange)="onChangeZona()" [showClear]="true"></p-dropdown>
+          <p-multiSelect #multiSelectTurno [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtros.grupoZona' (onChange)="onChangeZona()"
+          [options]="comboGrupoZona" maxSelectedLabels="10" [selectedItemsLabel]="textSelected" styleClass="widthAll"
+          [filter]="true" filterBy="label,labelSinTilde">
+        </p-multiSelect>
+          
         </div>
 
         <!-- ZONA -->
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{"justiciaGratuita.maestros.zonasYSubzonas.zona" | translate}}</label>
-          <p-dropdown class="select-form" [(ngModel)]='filtros.zona' [filter]="true" filterMatchMode="contains"
-            filterBy="label,labelSinTilde" [(disabled)]="isDisabledZona" [options]="comboZona"
-            (onChange)="onChangeSubZona()" (input)="buscarZona($event)"
-            placeholder="{{'general.boton.seleccionar' | translate}}" [emptyFilterMessage]="resultadosZonas"
-            [showClear]="true">
-          </p-dropdown>
+          <p-multiSelect #multiSelectTurno [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtros.zona' (onChange)="onChangeSubZona()"
+          [options]="comboZona" maxSelectedLabels="10" [selectedItemsLabel]="textSelected" styleClass="widthAll" (input)="buscarZona($event)"
+          [filter]="true" filterBy="label,labelSinTilde" [(disabled)]="isDisabledZona">
+        </p-multiSelect>
         </div>
 
         <!-- PARTIDO JUDICIAL -->

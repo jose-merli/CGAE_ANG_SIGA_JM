@@ -30,6 +30,8 @@ export class BuscadorSolicitudesCentralitaComponent implements OnInit, AfterView
   isLetrado : boolean;
   idPersona : string;
   disabledBusqColegiado : boolean = false;
+  textSelected: String = '{0} opciones seleccionadas';
+  textFilter: string = "Seleccionar";
   @Output() searchByColegiado = new EventEmitter<boolean>();
 
   constructor(private commonServices : CommonsService,
@@ -72,7 +74,7 @@ export class BuscadorSolicitudesCentralitaComponent implements OnInit, AfterView
       this.filtro.estado = "0";
     }else{
       if(this.filtro.idTurno){
-        this.onChangeTurno();
+        this.onChangeTurno(this.filtro.idTurno);
       }
       sessionStorage.removeItem("volver");
     }
@@ -153,13 +155,14 @@ export class BuscadorSolicitudesCentralitaComponent implements OnInit, AfterView
     );
 
   }
-  onChangeTurno(){
+  onChangeTurno(event){
+    this.filtro.idTurno = event.value;
     //Si tenemos seleccionado un turno, cargamos las guardias correspondientes
-    if(this.filtro.idTurno){
+    if(this.filtro.idTurno.length > 0){
 
       if(this.isLetrado){
 
-        this.sigaServices.getParam("combo_guardiaPorTurnoInscritos","?idTurno="+this.filtro.idTurno+"&idPersona="+this.idPersona).subscribe(
+        this.sigaServices.getParam("combo_guardiaPorTurnoInscritos","?idTurno="+this.filtro.idTurno.toString()+"&idPersona="+this.idPersona).subscribe(
           n => {
             this.comboGuardias = n.combooItems;
           },
@@ -172,7 +175,7 @@ export class BuscadorSolicitudesCentralitaComponent implements OnInit, AfterView
         )
 
       }else{
-        this.sigaServices.getParam("combo_guardiaPorTurno","?idTurno="+this.filtro.idTurno).subscribe(
+        this.sigaServices.getParam("combo_guardiaPorTurno","?idTurno="+this.filtro.idTurno.toString()).subscribe(
           n => {
             this.comboGuardias = n.combooItems;
           },
@@ -227,20 +230,30 @@ export class BuscadorSolicitudesCentralitaComponent implements OnInit, AfterView
       detail: detailParam
     });
   }
-  onChangeComisaria(){
+  onChangeComisaria(event){
+    this.filtro.idComisaria = event.value;
     this.filtro.idJuzgado = "";
-    if(this.filtro.idComisaria){
+    if(this.filtro.idComisaria.length > 0){
       this.filtro.idTipoCentroDetencion = "10";
     }else{
       this.filtro.idTipoCentroDetencion = "";
     }
   }
-  onChangeJuzgado(){
+  onChangeJuzgado(event){
+    this.filtro.idJuzgado = event.value;
     this.filtro.idComisaria = "";
-    if(this.filtro.idJuzgado){
+    if(this.filtro.idJuzgado.length > 0){
       this.filtro.idTipoCentroDetencion = "20";
     }else{
       this.filtro.idTipoCentroDetencion = "";
     }
+  }
+
+  onChangeEstado(event){
+    this.filtro.estado = event.value;
+  }
+
+  onChangeGuardias(event){
+    this.filtro.idGuardia = event.value;
   }
 }

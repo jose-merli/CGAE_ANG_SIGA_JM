@@ -221,7 +221,6 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
       n => {
 
         this.datos = JSON.parse(n.body).saltosCompItems;
-        console.log("file: saltos-compensaciones-guardia.component.ts ~ line 154 ~ SaltosCompensacionesGuardiaComponent ~ search ~  this.datos", this.datos)
         let error = JSON.parse(n.body).error;
         this.historico = event;
         this.jsonToRow();
@@ -441,7 +440,6 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
   }
 
   guardar(event){
-    console.log("file: tabla-resultado-mix-saltos-comp-guardia.component.ts ~ line 379 ~ TablaResultadoMixSaltosCompGuardiaComponent ~ guardar ~ this.rowGroups");
 
     let arraySaltos: SaltoCompItem[] = [];
 
@@ -483,7 +481,6 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
         salto.idGuardia = row.cells[1].value;
         salto.idPersona = row.cells[2].value[0];
       }
-      console.log("salto", salto);
       arraySaltos.push(salto);
     });
     

@@ -114,7 +114,6 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
     }else{
       this.isDisabledNuevo = true;
     }
-    console.log
     if (this.datosTarjetaGuardiasCalendarioIni.length != 0){
       //this.datosTarjetaGuardiasCalendario = Object.assign({},this.datosTarjetaGuardiasCalendarioIni);
       this.jsonToRow(false);
@@ -125,7 +124,6 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
     this.suscription = this.globalGuardiasService.getConf().subscribe((confValue)=>{
       this.dataReady = false;
       this.idConjuntoGuardiaElegido = confValue.idConjuntoGuardia;
-      console.log('idConjuntoGuardiaElegido*****: ', this.idConjuntoGuardiaElegido)
       if (this.idConjuntoGuardiaElegido != null){
         if (this.datosTarjetaGuardiasCalendarioIni.length == 0){
         this.datosTarjetaGuardiasCalendario = [];
@@ -463,8 +461,7 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
 jsonToRow(fromCombo){
   this.dataReady = false;
   this.progressSpinner = true;
-  console.log('jsonToRow')
-  console.log('this.datosTarjetaGuardiasCalendario: ', this.datosTarjetaGuardiasCalendario)
+ 
   let arr: Row[] = [];
   let ord = 0;
     let i = 0;
@@ -493,7 +490,6 @@ jsonToRow(fromCombo){
   this.rowGroupsAux = this.trmService.getTableData(arr);
   this.totalRegistros = this.rowGroups.length;
   this.dataReady = true;
-  console.log('rowGroups: ', this.rowGroups)
   this.progressSpinner = false;
 }
 

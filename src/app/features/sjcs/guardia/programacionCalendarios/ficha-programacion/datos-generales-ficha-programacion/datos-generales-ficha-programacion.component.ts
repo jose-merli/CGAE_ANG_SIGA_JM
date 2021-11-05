@@ -99,7 +99,7 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
       this.datosGenerales.observaciones="";
     }
     
-    console.log('fecha no ok: ', this.datosGenerales.fechaProgramacion)
+  
     //this.getComboListaGuardia();
     this.getComboConjuntouardia();
     if (this.datosGenerales.fechaDesde != undefined && this.datosGenerales.fechaDesde != null && this.datosGenerales.fechaHasta != undefined && this.datosGenerales.fechaHasta){
@@ -146,35 +146,29 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
       });
     }
 
-    console.log('datosGeneralesIniciales!!!!!!!!: ', this.datosGeneralesIniciales)
+   
   }
 
   fillFechaCalendarioDesde(event) {
-    console.log('datosGeneralesIniciales!!!!!!!! 3: ', this.datosGeneralesIniciales)
+    
     if (this.formatDate2(event) != null){
       this.resaltadoDatos = false;
       this.datosGenerales.fechaDesde = this.changeDateFormat(this.formatDate2(event).toString());
     }
-    console.log('datosGeneralesIniciales!!!!!!!! 4: ', this.datosGeneralesIniciales)
   }
   fillFechaCalendarioHasta(event) {
-    console.log('event: ', event)
     if (this.formatDate2(event) != null){
       this.resaltadoDatos = false;
       this.datosGenerales.fechaHasta = this.changeDateFormat(this.formatDate2(event).toString());
     }
-       console.log('datosGenerales.fechaHasta 1: ', this.datosGenerales.fechaHasta)
   }
   fillFechaProgramada(event) {
-    console.log('datosGeneralesIniciales!!!!!!!! 1: ', this.datosGeneralesIniciales)
-    console.log('OK event: ', event)
+   
     if (event == null){
       this.datosGenerales.fechaProgramacion = null;
     }else{
       this.datosGenerales.fechaProgramacion = new Date(event.toString());
-      console.log('OK fecha: ', this.datosGenerales.fechaProgramacion)
     }
-    console.log('datosGeneralesIniciales!!!!!!!! 2: ', this.datosGeneralesIniciales)
   }
   
 formatDate2(date) {
@@ -182,7 +176,6 @@ formatDate2(date) {
     return this.datepipe.transform(date, pattern);
   }
   changeDateFormat(date1){
-    console.log('date1: ', date1)
     let year = date1.substring(0, 4)
     let month = date1.substring(5,7)
     let day = date1.substring(8, 10)
@@ -318,7 +311,6 @@ formatDate2(date) {
   }
 
   rest() {
-    console.log('Reestablecer: ', this.datosGeneralesIniciales)
     //this.datosGenerales = Object.assign(datosInicialesCopy, {});
     this.reloadDatos.emit(this.datosGeneralesIniciales);
   }
@@ -377,9 +369,7 @@ formatDate2(date) {
       }else{
 
 
-    console.log('datosGenerales.fechaHasta: ', this.datosGenerales.fechaHasta)
     this.progressSpinner = true;
-    console.log('DUPLICAR: ', this.datosGenerales.duplicar)
     if (this.datosGenerales.duplicar){
       this.dataToDuplicate.emit(this.datosGenerales);
 
@@ -471,7 +461,6 @@ function compareDate (fechaA:  any, fechaB:  any, isAsc: boolean){
     const dayA = fechaA.substr(0, 2) ;
     const monthA = fechaA.substr(3, 2);
     const yearA = fechaA.substr(6, 10);
-    console.log("fecha a:"+ yearA+","+monthA+","+dayA);
     dateA = new Date(yearA, monthA, dayA);
   }
 
@@ -479,11 +468,9 @@ function compareDate (fechaA:  any, fechaB:  any, isAsc: boolean){
     const dayB = fechaB.substr(0, 2) ;
     const monthB = fechaB.substr(3, 2);
     const yearB = fechaB.substr(6, 10);
-    console.log("fecha b:"+ yearB+","+monthB+","+dayB);
     dateB = new Date(yearB, monthB, dayB);
   }
 
-  console.log("comparacionDate isAsc:"+ isAsc+";");
 
   return compare(dateA, dateB, isAsc);
 

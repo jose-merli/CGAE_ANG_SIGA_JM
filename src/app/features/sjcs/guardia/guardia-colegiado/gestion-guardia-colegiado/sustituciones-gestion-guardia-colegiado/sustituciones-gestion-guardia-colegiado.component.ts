@@ -73,7 +73,7 @@ export class SustitucionesGestionGuardiaColegiadoComponent implements OnInit {
         this.body.idCalendarioGuardias
         ]
 
-        console.log(letradoSus)
+        
     this.progressSpinner = true;
          this.sigaServices.post("guardiasColegiado_sustituirGuardiaColeg", letradoSus).subscribe(
           n => {

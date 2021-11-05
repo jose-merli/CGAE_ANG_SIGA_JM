@@ -174,12 +174,12 @@ buscarInc(){
   this.progressSpinner = true;
 //let jsonEntrada  = JSON.parse(JSON.stringify(datosEntrada))
 this.incompatibilidadesDatosEntradaItem = new IncompatibilidadesDatosEntradaItem(
-    { 'idTurno': this.filtrosValues.idTurno,
-      'idGuardia': this.filtrosValues.idGuardia,
-      'idArea': this.filtrosValues.area,
-      'idMateria': this.filtrosValues.materia,
-      'idZona': this.filtrosValues.zona,
-      'idSubZona': this.filtrosValues.grupoZona,
+    { 'idTurno': (this.filtrosValues.idTurno !=undefined && this.filtrosValues.idTurno != "") ? this.filtrosValues.idTurno.toString() : this.filtrosValues.idTurno,
+      'nombreGuardia': this.filtrosValues.nombre,
+      'idArea': (this.filtrosValues.area !=undefined && this.filtrosValues.area != "") ? this.filtrosValues.area.toString() : this.filtrosValues.area,
+      'idMateria': (this.filtrosValues.materia !=undefined && this.filtrosValues.materia != "") ? this.filtrosValues.materia.toString() : this.filtrosValues.materia,
+      'idZona':  (this.filtrosValues.zona !=undefined && this.filtrosValues.zona != "") ? this.filtrosValues.zona.toString() : this.filtrosValues.zona,
+      'idSubZona': (this.filtrosValues.grupoZona !=undefined && this.filtrosValues.grupoZona != "") ? this.filtrosValues.grupoZona.toString() : this.filtrosValues.grupoZona,
       'idJurisdiccion': this.filtrosValues.jurisdiccion,
       'idGrupoFacturacion': this.filtrosValues.grupoFacturacion,
       'idPartidaPresupuestaria': this.filtrosValues.partidaPresupuestaria,

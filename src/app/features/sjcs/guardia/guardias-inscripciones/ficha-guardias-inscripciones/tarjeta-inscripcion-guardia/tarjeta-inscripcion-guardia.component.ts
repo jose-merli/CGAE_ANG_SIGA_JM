@@ -128,9 +128,6 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
 
   ngOnInit() {
 
-    if (this.persistenceService.getPermisos() != true) {
-      this.disableAll = true;
-    }
     this.commonsService.checkAcceso(procesos_oficio.tarjetaInscripcion)
       .then(respuesta => {
         this.permisosTarjeta = respuesta;
@@ -157,7 +154,7 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
     if(this.modoEdicion==false){
       this.numeroGuardias = 0;
     }
-    if (this.persistenceService.getPermisos() != true) {
+    if (this.permisosTarjeta != true) {
       this.disableAll = true
     }
   }
@@ -248,11 +245,9 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
     let objVal: ResultadoInscripciones = this.rellenarObjetoBack(this.datos);
 
   if(this.modoEdicion==true){
-    //console.log("He entrado en el if de getInscripciones()");
         this.sigaServices.post("guardiasInscripciones_inscripcionPorguardia", objVal).subscribe(
           n => {
             
-            console.log(n);
             this.inscripcionesItem = JSON.parse(n.body).accion;
             if(this.inscripcionesItem != null || this.inscripcionesItem != undefined){
             this.inscripcionesItem.forEach(element => {
@@ -297,7 +292,6 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
         this.sigaServices.post("guardiasInscripciones_inscripcionesDisponibles", objVal).subscribe(
           n => {
             
-            console.log(n);
             this.inscripcionesItem = JSON.parse(n.body).accion;
             if(this.inscripcionesItem != null || this.inscripcionesItem != undefined){
               this.inscripcionesItem.forEach(element => {
@@ -515,14 +509,7 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
     this.showTarjeta = !this.showTarjeta;
   }
   seleccionarFila(rowData, event) {
-    /* comprobar el estado que viene y cambiarlo.
-             si viene a false:
-                - se debe de eliminar del selected datos, por lo que hay que buscarlo en este y eliminarlo del array
-            si viene a true: 
-                - se debe de añadir a selecteddatos.
-    */
-   //this.selectedDatos = [];
-   console.log("He entrado en seleccionar fila");
+  
     if (event == true) {
         rowData.selectedBoolean = true;
         if(rowData.descripcionObligatoriedad == "Todas o ninguna"){
@@ -566,8 +553,7 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
 
 
   seleccionarPadre(rowData, event) {
-    //this.selectedDatos = [];
-    console.log("He entrado en seleccionar padre");
+
 
     let turno = new InscripcionesItems;
     turno.descripcion_tipo_guardia = rowData.descripcion_tipo_guardia;

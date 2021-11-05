@@ -41,7 +41,7 @@ export class BuscadorGuardiaComponent implements OnInit {
 
   ngOnInit() {
     this.abogado = this.sigaStorageService.isLetrado && this.sigaStorageService.idPersona;
-    console.log('this.abogado: ', this.abogado)
+   
     this.commonsService.checkAcceso(procesos_guardia.guardias)
       .then(respuesta => {
 
