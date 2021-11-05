@@ -288,6 +288,23 @@ export class TablaResultadoOrderComponent implements OnInit {
         newRowGroups.push(rowG);
       }
     })
+
+    this.comboTurno.forEach(cT=> {
+      if (cT.label == this.rowGroups[0].cells[1].value){
+        this.rowGroups[0].cells[1].value = cT.label;
+      }else if (cT.value == this.rowGroups[this.rowGroups.length - 1].cells[1].value){
+        this.rowGroups[this.rowGroups.length - 1].cells[1].value = cT.label;
+      }
+    
+    });
+    this.comboGuardia.forEach(cG=> {
+       if (cG.value == this.rowGroups[0].cells[2].value){
+        this.rowGroups[0].cells[2].value = cG.label;
+      }else if (cG.value == this.rowGroups[this.rowGroups.length - 1].cells[2].value){
+        this.rowGroups[this.rowGroups.length - 1].cells[2].value = cG.label;
+      }
+    
+    });
     this.guardarGuardiasEnConjunto.emit(newRowGroups);
    // this.rowGroups.sort((a, b) => a.cells[0].localeCompare(b.cells[0]))
   }
