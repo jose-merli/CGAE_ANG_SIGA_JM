@@ -27,7 +27,6 @@ export class GuardiasSolicitudesCentralitaComponent implements OnInit {
   progressSpinner : boolean;
   filas : PreAsistenciaItem [] = [];
   permisoEscritura : boolean = false;
-
   @ViewChild(BuscadorSolicitudesCentralitaComponent) buscador;
   constructor(public sigaOldServices: OldSigaServices,
     private translateService : TranslateService,
@@ -79,9 +78,26 @@ export class GuardiasSolicitudesCentralitaComponent implements OnInit {
     this.filas = [];
     this.progressSpinner = true;
     this.buscador.filtroAux = this.buscador.filtro;
+    let reAsistenciaItem = Object.assign({},this.buscador.filtro);
+    if(this.buscador.filtro.idTurno != "" && this.buscador.filtro.idTurno != undefined){
+      reAsistenciaItem.idTurno = this.buscador.filtro.idTurno.toString();
+    }
+    if(this.buscador.filtro.idGuardia != "" && this.buscador.filtro.idGuardia != undefined){
+      reAsistenciaItem.idGuardia = this.buscador.filtro.idGuardia.toString();
+    }
+    if(this.buscador.filtro.idComisaria != "" && this.buscador.filtro.idComisaria != undefined){
+      reAsistenciaItem.idComisaria = this.buscador.filtro.idComisaria.toString();
+    }
+    if(this.buscador.filtro.idJuzgado != "" && this.buscador.filtro.idJuzgado != undefined){
+      reAsistenciaItem.idJuzgado = this.buscador.filtroAux.idJuzgado.toString();
+    }
+    if(this.buscador.filtro.estado != "" && this.buscador.filtro.estado != undefined){
+      reAsistenciaItem.estado = this.buscador.filtroAux.estado.toString();
+    }
+    // this.buscador.filtroAux.estado = this.buscador.filtroAux.estado.toString();
     sessionStorage.setItem ("filtro", JSON.stringify(this.buscador.filtro))
     this.sigaServices
-    .post("busquedaPreasistencias_buscarPreasistencias", this.buscador.filtro)
+    .post("busquedaPreasistencias_buscarPreasistencias", reAsistenciaItem)
     .subscribe(
       n => {
         let preasistenciasDTO = JSON.parse(n["body"]);

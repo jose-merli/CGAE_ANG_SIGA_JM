@@ -43,6 +43,7 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
     numColegiado: '',
     nombreAp: ''
   };
+  textSelected: String = '{0} opciones seleccionadas';
   openDatosGenerales : boolean = true;
   openColegiado : boolean = false;
   openDatosAsistido : boolean = false;
@@ -57,6 +58,7 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
     private commonsService : CommonsService,
     private datePipe : DatePipe,
     private sigaStorageService : SigaStorageService) { }
+    textFilter: string = "Seleccionar";
   ngOnChanges(changes: SimpleChanges): void {
     if(changes.modoBusqueda.currentValue == 'a' && this.filtro.numColegiado){
       this.usuarioBusquedaExpress.numColegiado = this.filtro.numColegiado;

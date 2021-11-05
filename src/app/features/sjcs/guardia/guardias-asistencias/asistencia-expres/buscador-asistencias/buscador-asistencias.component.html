@@ -31,21 +31,15 @@
                       </div>
                       <div class="form-group-interlineado col-lg-2 col-md-2">
                           <label>{{"dato.jgr.guardia.guardias.turno" | translate}}</label>
-                          <p-dropdown class="select-form"
-                              placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
-                              [showClear]="true"  [(ngModel)]="filtro.idTurno" [ngModelOptions]="{standalone: true}"
-                              [options]="comboTurnos" 
-                              (onChange)="onChangeTurno()">
-                          </p-dropdown>
+                          <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtro.idTurno'
+                                [options]="comboTurnos" maxSelectedLabels="10" selectionLimits="10" [selectedItemsLabel]="textSelected"
+                                styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeTurno()"></p-multiSelect>
                       </div>
                       <div class="form-group-interlineado col-lg-2 col-md-2">
                           <label>{{"menu.justiciaGratuita.GuardiaMenu" | translate}}</label>
-                          <p-dropdown class="select-form"
-                              placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
-                              [showClear]="true" [(ngModel)]="filtro.idGuardia" [ngModelOptions]="{standalone: true}"
-                               [options]="comboGuardias"
-                              (onChange)="onChangeGuardia()">
-                          </p-dropdown>
+                          <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtro.idGuardia'
+                                [options]="comboGuardias" maxSelectedLabels="10" selectionLimits="10" [selectedItemsLabel]="textSelected"
+                                styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeGuardia()"></p-multiSelect>
                       </div>
                   </div>
                   <div class="form-row">
@@ -58,17 +52,15 @@
                     </div>
                     <div class="form-group-interlineado col-lg-3 col-md-3">
                       <label>{{'menu.expediente.sanciones.busquedaPorSanciones.origen.literal' | translate}}</label>
-                      <p-dropdown class="select-form" [(ngModel)]="filtro.idOrigenAsistencia" [ngModelOptions]="{standalone: true}"
-                          placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
-                          [showClear]="true" [options]="comboOrigenAsistencia">
-                      </p-dropdown>
+                      <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtro.idOrigenAsistencia'
+                                [options]="comboOrigenAsistencia" maxSelectedLabels="10" selectionLimits="10" [selectedItemsLabel]="textSelected"
+                                styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde"></p-multiSelect>
                     </div>
                     <div class="form-group-interlineado col-lg-3 col-md-3">
                       <label>{{'censo.fichaIntegrantes.literal.estado' | translate}}</label>
-                      <p-dropdown class="select-form" [(ngModel)]="filtro.idEstadoAsistencia" [ngModelOptions]="{standalone: true}"
-                          placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
-                          [showClear]="true" [options]="comboEstado">
-                      </p-dropdown>
+                      <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtro.idEstadoAsistencia'
+                                [options]="comboEstado" maxSelectedLabels="10" selectionLimits="10" [selectedItemsLabel]="textSelected"
+                                styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde"></p-multiSelect>
                     </div>
                     <div class="form-group-interlineado col-lg-3 col-md-3">
                       <label>{{'justiciaGratuita.oficio.justificacionExpres.actuacionesValidadas' | translate}}</label>
@@ -147,10 +139,9 @@
                 </div>
                 <div class="form-group-interlineado col-lg-3 col-md-3">
                   <label>{{'justiciaGratuita.guardia.fichaasistencia.comisaria' | translate}}</label>
-                  <p-dropdown class="select-form" [(ngModel)]="filtro.idComisaria" [ngModelOptions]="{standalone: true}"
-                      placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
-                      [showClear]="true" [options]="comboComisarias" (onChange)="onChangeComisaria();">
-                  </p-dropdown>
+                  <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtro.idComisaria'
+                  [options]="comboComisarias" maxSelectedLabels="10" selectionLimits="10" [selectedItemsLabel]="textSelected"
+                  styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeComisaria();"></p-multiSelect>
                 </div>
                 <div class="form-group-interlineado col-lg-3 col-md-3">
                   <label>{{'gratuita.busquedaDesignas.literal.numProcedimiento' | translate}}</label>
@@ -158,26 +149,23 @@
                 </div>
                 <div class="form-group-interlineado col-lg-3 col-md-3">
                   <label>{{'justiciaGratuita.ejg.datosGenerales.Juzgado' | translate}}</label>
-                  <p-dropdown class="select-form" [(ngModel)]="filtro.idJuzgado" [ngModelOptions]="{standalone: true}"
-                      placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
-                      [showClear]="true" [options]="comboJuzgados" (onChange)="onChangeJuzgado();">
-                  </p-dropdown>
+                  <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtro.idJuzgado'
+                  [options]="comboJuzgados" maxSelectedLabels="10" selectionLimits="10" [selectedItemsLabel]="textSelected"
+                  styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeJuzgado();"></p-multiSelect>
                 </div>
               </div>
               <div class="form-row">
                 <div class="form-group-interlineado col-lg-3 col-md-3">
                   <label>{{'justiciaGratuita.maestros.gestionCostesFijos.tipoActuacion' | translate}}</label>
-                  <p-dropdown class="select-form" [(ngModel)]="filtro.idTipoActuacion" [ngModelOptions]="{standalone: true}"
-                      placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
-                      [showClear]="true" [options]="comboTipoActuacion">
-                  </p-dropdown>
+                  <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtro.idTipoActuacion'
+                  [options]="comboTipoActuacion" maxSelectedLabels="10" selectionLimits="10" [selectedItemsLabel]="textSelected"
+                  styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde"></p-multiSelect>
                 </div>
                 <div class="form-group-interlineado col-lg-3 col-md-3">
                   <label>{{'justiciaGratuita.sjcs.designas.DatosIden.procedimiento' | translate}}</label>
-                  <p-dropdown class="select-form" [(ngModel)]="filtro.idProcedimiento" [ngModelOptions]="{standalone: true}"
-                      placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
-                      [showClear]="true" [options]="comboProcedimientos">
-                  </p-dropdown>
+                  <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtro.idProcedimiento'
+                  [options]="comboProcedimientos" maxSelectedLabels="10" selectionLimits="10" [selectedItemsLabel]="textSelected"
+                  styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde"></p-multiSelect>
                 </div>
                 <div class="form-group-interlineado col-lg-3 col-md-3">
                   <label>{{'justiciaGratuita.ejg.datosGenerales.NIG' | translate}}</label>

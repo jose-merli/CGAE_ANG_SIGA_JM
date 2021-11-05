@@ -87,6 +87,7 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
     if (sessionStorage.getItem("esColegiado") && sessionStorage.getItem("esColegiado") == 'true') {
        this.disabledBusquedaExpress = true;
        this.getDataLoggedUser();
+       this.search();
     }
 
     if (sessionStorage.getItem('buscadorColegiados')) {
@@ -117,14 +118,13 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
     this.filtros.idGuardia = "";
     this.comboGuardias = [];
 
-    if (this.filtros.idTurno) {
+    if (this.filtros.idTurno.length != 0) {
       this.getComboGuardia();
     } else {
       this.isDisabledGuardia = true;
     }
   }
   onChangeGuardia(event){
-    console.log(event)
   }
 
   getComboGuardia() {

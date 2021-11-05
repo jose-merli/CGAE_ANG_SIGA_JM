@@ -83,7 +83,14 @@ export class GuardiaColegiadoComponent implements OnInit {
 
   search(event){
     this.progressSpinner = true;
-    this.sigaServices.post("guardiasColegiado_buscarGuardiasColegiado", this.filtros.filtros).subscribe(
+    let guardiaItem = Object.assign({},this.filtros.filtros);
+    if(this.filtros.filtros.idTurno != "" && this.filtros.filtros.idTurno != undefined){
+      guardiaItem.idTurno = this.filtros.filtros.idTurno.toString();
+    }
+    if(this.filtros.filtros.idGuardia != "" && this.filtros.filtros.idGuardia != undefined){
+      guardiaItem.idGuardia = this.filtros.filtros.idGuardia.toString();
+    }
+    this.sigaServices.post("guardiasColegiado_buscarGuardiasColegiado", guardiaItem).subscribe(
       n => {
         let error = JSON.parse(n.body).error;
         this.datos = JSON.parse(n.body).guardiaItems;

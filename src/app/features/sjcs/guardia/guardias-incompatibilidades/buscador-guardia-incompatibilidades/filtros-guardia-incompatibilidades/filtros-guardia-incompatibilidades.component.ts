@@ -47,6 +47,7 @@ export class FiltrosGuardiaIncompatibilidadesComponent implements OnInit {
   isDisabledGuardia = true;
   textFilter: string = "Seleccionar";
   textSelected: String = "{0} etiquetas seleccionadas";
+  partidasJudiciales: any[] = [];
 
   constructor(private router: Router,
     private translateService: TranslateService,
@@ -253,9 +254,40 @@ export class FiltrosGuardiaIncompatibilidadesComponent implements OnInit {
 
   }
   onChangeSubZona() {
-    this.filtros.partidoJudicial = this.comboZona.find(it => it.value == this.filtros.zona).partido;
+    // this.filtros.partidoJudicial = this.comboZona.find(it => it.value == this.filtros.zona).partido;
+    if (this.filtros.zona.length > 0) {
+      this.sigaServices
+        .getParam(
+          "fichaZonas_searchSubzones",
+          "?idZona=" + this.filtros.zona
+        )
+        .subscribe(
+          n => {
+            this.partidasJudiciales = n.zonasItems;
+          },
+          err => {
+            console.log(err);
+
+          }, () => {
+            this.getPartidosJudiciales();
+          }
+        );
+    } else {
+      //this.isDisabledSubZona = true;
+      this.filtros.partidoJudicial = "";
+    }
   }
 
+  getPartidosJudiciales() {
+
+    for (let i = 0; i < this.partidasJudiciales.length; i++) {
+      this.partidasJudiciales[i].partidosJudiciales = [];
+      this.partidasJudiciales[i].jurisdiccion.forEach(partido => {
+        this.filtros.partidoJudicial = this.partidasJudiciales[i].nombrePartidosJudiciales;
+
+      });
+    }
+  }
 
   buscarZona(e) {
     if (e.target.value && e.target.value !== null && e.target.value !== "") {
@@ -382,16 +414,16 @@ export class FiltrosGuardiaIncompatibilidadesComponent implements OnInit {
   }
 
   checkFilters() {
-    if ((this.filtros.area == null || this.filtros.area == undefined) &&
-      (this.filtros.jurisdiccion == null || this.filtros.jurisdiccion == undefined) &&
-      (this.filtros.grupoFacturacion == null || this.filtros.grupoFacturacion == undefined) &&
-      (this.filtros.grupoZona == null || this.filtros.grupoZona == undefined) &&
-      (this.filtros.zona == null || this.filtros.zona == undefined) &&
-      (this.filtros.materia == null || this.filtros.materia == undefined) &&
-      (this.filtros.partidaPresupuestaria == null || this.filtros.partidaPresupuestaria == undefined) &&
-      (this.filtros.tipoTurno == null || this.filtros.tipoTurno == undefined) &&
-      (this.filtros.idTurno == null || this.filtros.idTurno == undefined) &&
-      (this.filtros.idTipoGuardia == null || this.filtros.idTipoGuardia == undefined) &&
+    if ((this.filtros.area == null || this.filtros.area == undefined || this.filtros.area.length == 0) &&
+      (this.filtros.jurisdiccion == null || this.filtros.jurisdiccion == undefined || this.filtros.jurisdiccion.length == 0) &&
+      (this.filtros.grupoFacturacion == null || this.filtros.grupoFacturacion == undefined || this.filtros.grupoFacturacion.length == 0) &&
+      (this.filtros.grupoZona == null || this.filtros.grupoZona == undefined  || this.filtros.grupoZona.length == 0) &&
+      (this.filtros.zona == null || this.filtros.zona == undefined || this.filtros.zona.length == 0) &&
+      (this.filtros.materia == null || this.filtros.materia == undefined || this.filtros.materia.length == 0) &&
+      (this.filtros.partidaPresupuestaria == null || this.filtros.partidaPresupuestaria == undefined || this.filtros.partidaPresupuestaria.length == 0) &&
+      (this.filtros.tipoTurno == null || this.filtros.tipoTurno == undefined || this.filtros.tipoTurno.length == 0) &&
+      (this.filtros.idTurno == null || this.filtros.idTurno == undefined || this.filtros.idTurno.length == 0) &&
+      (this.filtros.idTipoGuardia == null || this.filtros.idTipoGuardia == undefined || this.filtros.idTipoGuardia.length == 0) &&
       (this.filtros.nombre == null || this.filtros.nombre == undefined || this.filtros.nombre.trim() == "" || this.filtros.nombre.trim().length < 3)) {
 
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));

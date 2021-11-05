@@ -103,8 +103,7 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
       if (!this.filtros.volver){
       let AnioAnterior = new Date().getFullYear() - 1;
       this.filtros.fechaCalendarioDesde = new Date(AnioAnterior, new Date().getMonth(), new Date().getDate());
-      console.log('new Date().getMonth(): ', new Date().getMonth())
-      console.log('new Date().getDate(): ', new Date().getDate())
+     
       }
     }
 
@@ -149,10 +148,12 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
     this.filtros.idGuardia = "";
     this.comboGuardia = [];
     this.checkFilters();
-    if (this.filtros.idTurno) {
-      this.getComboGuardia();
+    if (this.filtros.idTurno.length == 0) {
+      this.comboGuardia = []
       //this.getComboListaGuardia();
-    } 
+    }else{
+      this.getComboGuardia();
+    }
   }
 
   getComboGuardia() {
@@ -323,7 +324,6 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
       const hourB = fechaB.substr(11, 2);
       const minB = fechaB.substr(14, 2);
       const segB = fechaB.substr(17, 2);
-      console.log("fecha b:"+ yearB+","+monthB+","+dayB+  "  " + hourB + ":" + minB + ":" + segB);
       objDate2= {  day: dayB,month: monthB, year: yearB};
       hour2={ hour: hourB,minute: minB,second: segB};
    
@@ -339,7 +339,7 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
       sessionStorage.setItem('filtrosBusquedaGuardias', JSON.stringify(this.filtros));
       this.isOpen.emit(false)
       this.filtrosValues.emit(Object.assign({},this.filtros));
-      console.log('search ok', this.filtrosValues)
+      
     }else{
       if (!this.checkFilters() ){
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
@@ -468,7 +468,6 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
       return this.datePipe.transform(date, pattern);
     }
     changeDateFormat(date1){
-      console.log('date1: ', date1)
       let year = date1.substring(0, 4)
       let month = date1.substring(5,7)
       let day = date1.substring(8, 10)
@@ -502,7 +501,6 @@ function compareDate (fechaA:  any, fechaB:  any, isAsc: boolean){
     const dayA = fechaA.substr(0, 2) ;
     const monthA = fechaA.substr(3, 2);
     const yearA = fechaA.substr(6, 10);
-    console.log("fecha a:"+ yearA+","+monthA+","+dayA);
     dateA = new Date(yearA, monthA, dayA);
   }
 
@@ -510,25 +508,23 @@ function compareDate (fechaA:  any, fechaB:  any, isAsc: boolean){
     const dayB = fechaB.substr(0, 2) ;
     const monthB = fechaB.substr(3, 2);
     const yearB = fechaB.substr(6, 10);
-    console.log("fecha b:"+ yearB+","+monthB+","+dayB);
     dateB = new Date(yearB, monthB, dayB);
   }
 
-  console.log("comparacionDate isAsc:"+ isAsc+";");
 
   return compare(dateA, dateB, isAsc);
 
 }
 function compare(a: number | string | Date, b: number | string | Date, isAsc: boolean) {
-  console.log("comparacion  a:"+ a+"; b:"+ b);
+  
 
   if (typeof a === "string" && typeof b === "string") {
-    console.log("comparacion  de cadenas");
+   
     a = a.toLowerCase();
     b = b.toLowerCase();
   }
 
-  console.log("compare isAsc:"+ isAsc+";");
+  
 
   if (a==null && b!=null){
     return ( 1 ) * (isAsc ? 1 : -1);

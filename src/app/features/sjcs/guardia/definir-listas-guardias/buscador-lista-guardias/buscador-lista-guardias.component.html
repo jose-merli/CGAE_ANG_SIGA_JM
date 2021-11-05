@@ -27,20 +27,15 @@
               </div>
               <div class="form-group-interlineado col-lg-2 col-md-2">
                   <label>{{"justiciaGratuita.maestros.zonasYSubzonas.grupoZona.cabecera" | translate}}</label>
-                  <p-dropdown class="select-form"
-                      placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
-                      [showClear]="true" [(ngModel)]="filtro.idGrupoZona"
-                      [ngModelOptions]="{standalone: true}" [options]="comboGrupoZona"
-                      (onChange)="onChangeGrupoZona()">
-                  </p-dropdown>
+                  <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtro.idGrupoZona'
+                  [options]="comboGrupoZona" maxSelectedLabels="10" selectionLimits="10" [selectedItemsLabel]="textSelected" 
+                  styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeGrupoZona($event)" ></p-multiSelect>
               </div>
               <div class="form-group-interlineado col-lg-2 col-md-2">
                 <label>{{"justiciaGratuita.maestros.zonasYSubzonas.zona" | translate}}</label>
-                <p-dropdown class="select-form"
-                    placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
-                    [showClear]="true" [(ngModel)]="filtro.idZona"
-                    [ngModelOptions]="{standalone: true}" [options]="comboZona">
-                </p-dropdown>
+                <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtro.idZona' (onChange)="onChangeZona($event)"
+                  [options]="comboZona" maxSelectedLabels="10" selectionLimits="10" [selectedItemsLabel]="textSelected" 
+                  styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde" ></p-multiSelect>
             </div>
             </div>
         </ng-template>

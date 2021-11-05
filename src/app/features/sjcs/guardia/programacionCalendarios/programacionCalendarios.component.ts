@@ -135,9 +135,7 @@ export class ProgramacionCalendariosComponent implements OnInit {
       this.checkAcceso();
       
       if (this.persistenceService.getDatos() != undefined && this.persistenceService.getDatos().duplicar) {
-        console.log('¿duplicar?: ', this.persistenceService.getDatos().duplicar)
         this.dataToDuplicate = this.persistenceService.getDatos();
-        console.log('DATA TO DUPLICATE 2', this.dataToDuplicate)
         this.rowGroups = this.dataToDuplicate.tabla;
         
         let objCells: Cell[] = [
@@ -158,7 +156,6 @@ export class ProgramacionCalendariosComponent implements OnInit {
       
           let obj: Row = {id: this.rowGroups.length, cells: objCells};
           this.rowGroups.push(obj);
-          console.log('this.rowGroups: ', this.rowGroups)
         this.buscar = true;
       }
   this.commonsService.checkAcceso(procesos_guardia.guardias)
@@ -263,13 +260,12 @@ export class ProgramacionCalendariosComponent implements OnInit {
 buscarCal(){
   this.progressSpinner = true;
   this.buscar = false;
-  console.log('filtrosValues: ', this.filtrosValues)
 //let jsonEntrada  = JSON.parse(JSON.stringify(datosEntrada))
 let datosEntrada = 
     { 'idTurno': this.filtrosValues.idTurno,
-      'idConjuntoGuardia': this.filtrosValues.listaGuardias,
-     'idGuardia': this.filtrosValues.idGuardia,
-     'estado': this.filtrosValues.estado,
+      'idConjuntoGuardia': (this.filtrosValues.listaGuardias !=undefined && this.filtrosValues.listaGuardias != "") ? this.filtrosValues.listaGuardias.toString() : this.filtrosValues.listaGuardias,
+     'idGuardia': (this.filtrosValues.idGuardia !=undefined && this.filtrosValues.idGuardia != "") ? this.filtrosValues.idGuardia.toString() : this.filtrosValues.idGuardia,
+     'estado': (this.filtrosValues.estado !=undefined && this.filtrosValues.estado != "") ? this.filtrosValues.estado.toString() : this.filtrosValues.estado,
       'fechaCalendarioDesde': this.filtrosValues.fechaCalendarioDesde,
       'fechaCalendarioHasta': this.filtrosValues.fechaCalendarioHasta,
       'fechaProgramadaDesde': this.filtrosValues.fechaProgramadaDesde,
@@ -279,11 +275,9 @@ let datosEntrada =
     this.sigaServices.post(
       "guardiaCalendario_buscar", datosEntrada).subscribe(
         data => {
-          console.log('data: ', data.body)
           let error = JSON.parse(data.body).error;
           this.datos = JSON.parse(data.body);
-          console.log(' this.datos: ',  this.datos)
-   console.log('this.datos', this.datos)
+        
           this.respuestaCalendario = [];
          // this.comboGuardiasIncompatibles = [];
           this.datos.forEach((dat, i) => {
@@ -314,7 +308,6 @@ let datosEntrada =
             this.comboGuardiasIncompatibles.push(objCombo);*/
             this.respuestaCalendario.push(responseObject);
           });
-          console.log('respuestaCalendario: ', this.respuestaCalendario)
           this.jsonToRow();
           this.progressSpinner = false;
           /*if (this.tabla != null && this.tabla != undefined) {
@@ -372,18 +365,15 @@ jsonToRow(){
     { type: 'invisible', value: res.asistenciasAsociadas, size: 0},
     
     ];
-console.log('res.fechaProgramacion: ', res.fechaProgramacion)
     let obj = {id: i, cells: objCells};
     arr.push(obj);
   })
-  console.log('arr: ', arr)
 
    this.rowGroups = [];
   this.rowGroups = this.trmService.getTableData(arr);
   this.rowGroupsAux = [];
   this.rowGroupsAux = this.trmService.getTableData(arr);
   this.totalRegistros = this.rowGroups.length;
-  console.log('rowGroups: ', this.rowGroups)
   this.buscar = true;
 }
 
@@ -479,7 +469,6 @@ rowToDelete.cells.forEach((c, index) => {
   }*/
 
 delete(indexToDelete){
-  console.log('indexToDelete: ', indexToDelete)
   let idGuardia;
   let idTurno;
   let idCalendarioProgramado;
@@ -769,7 +758,7 @@ guardarInc(nombreTurno, nombreGuardia, nombreTurnoIncompatible, nombreGuardiaInc
         resHead.header = resp.headers;
         let contentDispositionHeader = resHead.header.get('Content-Disposition');
         let fileName = contentDispositionHeader.split(';')[1].trim().split('=')[1];
-        console.log('fileName: ', fileName)
+      
         let blob = new Blob([resHead.response], { type: 'application/zip' });
         saveAs(blob, fileName);
         this.showMessage({ severity: 'success', summary: 'LOG descargado correctamente', msg: 'LOG descargado correctamente' });
