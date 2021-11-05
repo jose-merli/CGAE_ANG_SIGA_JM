@@ -228,6 +228,10 @@ if(sessionStorage.getItem('guardiaColegiadoData')){
       this.persistenciaGuardia.volver = true;
       console.log('this.persistenciaGuardia: ', this.persistenciaGuardia)
       this.filtros = this.dataToReceive.filtrosBusqueda;
+      if (this.filtros.fechaCalendarioDesde == undefined || this.filtros.fechaCalendarioDesde == null || this.filtros.fechaCalendarioDesde == ''){
+        let AnioAnterior = new Date().getFullYear() - 1;
+        this.filtros.fechaCalendarioDesde = new Date(AnioAnterior, new Date().getMonth(), new Date().getDate());
+        }
       sessionStorage.setItem(
         "filtrosBusquedaGuardiasFichaGuardia",
         JSON.stringify(this.filtros)
@@ -535,7 +539,7 @@ if(sessionStorage.getItem('guardiaColegiadoData')){
   let estadoNumerico = "0";
   switch (event.estado) {
     case "Pendiente":
-      estadoNumerico = "5";
+      estadoNumerico = "3";
       break;
     case "Programada":
       estadoNumerico = "1";
@@ -544,7 +548,7 @@ if(sessionStorage.getItem('guardiaColegiadoData')){
       estadoNumerico = "2";
       break;
     case "Procesada con Errores":
-      estadoNumerico = "3";
+      estadoNumerico = "5";
       break;
     case "Generada":
       estadoNumerico = "4";
@@ -652,7 +656,7 @@ if(sessionStorage.getItem('guardiaColegiadoData')){
       let estadoNumerico = "0";
       switch (datosGeneralesToSave.estado) {
 				case "Pendiente":
-					estadoNumerico = "5";
+					estadoNumerico = "3";
 					break;
 				case "Programada":
 					estadoNumerico = "1";
@@ -661,7 +665,7 @@ if(sessionStorage.getItem('guardiaColegiadoData')){
 					estadoNumerico = "2";
 					break;
 				case "Procesada con Errores":
-					estadoNumerico = "3";
+					estadoNumerico = "5";
           break;
         case "Generada":
 					estadoNumerico = "4";
@@ -847,7 +851,9 @@ if(sessionStorage.getItem('guardiaColegiadoData')){
        this.sigaServices.post(
       "guardiaCalendario_updateCalendarioProgramado",  datos).subscribe(
         data => {
+          this.showMessage('error', "Se ha actualizado correctamente", "Se ha actualizado correctamente");
         }, err => {
+          this.showMessage('error', "No se ha actualizado correctamente", "No se ha actualizado correctamente");
           console.log(err);
         });
   }
@@ -872,6 +878,8 @@ if(sessionStorage.getItem('guardiaColegiadoData')){
       //this.showMessage('error', JSON.stringify(data.body.error.message), JSON.stringify(data.body.error.message));
       if(err.status = "409"){
         this.showMessage('error', "No existen guardias asociadas a esta programación", "No existen guardias asociadas a esta programación");
+      }else {
+        this.showMessage('error', "No se ha generado correctamente", "No se ha generado correctamente");
       }
        console.log(err);
      });

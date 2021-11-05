@@ -51,14 +51,14 @@
         <!-- FECHA CALENDARIO DESDE -->
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{"justiciaGratuita.Calendarios.FechaDesde" | translate}}</label>
-          <app-fecha [(value)]="filtros.fechaCalendarioDesde" [inputStyleClass]="styleObligatorio(filtros.fechaCalendarioDesde)"
+          <app-fecha [(value)]="filtros.fechaCalendarioDesde" [inputStyleClass]="styleObligatorio(filtros.fechaCalendarioDesde)" 
             (valueChangeSelected)="fillFechaCalendarioDesde($event)"  (valueChangeInput)="fillFechaCalendarioDesde($event)"></app-fecha>
         </div>
 
         <!-- FECHA CALENDARIO HASTA -->
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{"justiciaGratuita.Calendarios.FechaHasta" | translate}}</label>
-          <app-fecha [(value)]="filtros.fechaCalendarioHasta" [minDate]="getFechaCalendarioHasta(filtros.fechaCalendarioDesde,filtros.fechaCalendarioHasta)"
+          <app-fecha [(value)]="filtros.fechaCalendarioHasta" [minDate]="getFechaCalendarioHasta(filtros.fechaCalendarioDesde,filtros.fechaCalendarioHasta)" 
             (valueChangeSelected)="fillFechaCalendarioHasta($event)"  (valueChangeInput)="fillFechaCalendarioHasta($event)"></app-fecha>
         </div>
 

@@ -39,7 +39,7 @@
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
-    <div *ngIf="openFicha" class="card-body card-body-ficha">
+    <div *ngIf="openFicha && datosGenerales != undefined" class="card-body card-body-ficha">
       <div class="row col-12">
         <div class="form-group col-lg-12 col-md-12">
           <label>Solo generar vacios</label>
@@ -60,7 +60,7 @@
           <label>
             {{ "justiciaGratuita.Calendarios.FechaDesde" | translate }} (*)
           </label>
-          <app-fecha required="true" [(value)]="datosGenerales.fechaDesde" 
+          <app-fecha required="true" [(value)]="datosGenerales.fechaDesde"  [inputStyleClass]="styleObligatorio(datosGenerales.fechaCalendarioDesde)" 
             (valueChangeSelected)="fillFechaCalendarioDesde($event)"  (valueChangeInput)="fillFechaCalendarioDesde($event)"></app-fecha>
         </div>
 
@@ -69,7 +69,7 @@
           <label>
             {{"justiciaGratuita.Calendarios.FechaHasta" | translate}} (*)
           </label>
-          <app-fecha required="true" [(value)]="datosGenerales.fechaHasta" 
+          <app-fecha required="true" [(value)]="datosGenerales.fechaHasta" [inputStyleClass]="styleObligatorio(datosGenerales.fechaCalendarioDesde)" 
             (valueChangeSelected)="fillFechaCalendarioHasta($event)"  (valueChangeInput)="fillFechaCalendarioHasta($event)"></app-fecha>
         </div>
 

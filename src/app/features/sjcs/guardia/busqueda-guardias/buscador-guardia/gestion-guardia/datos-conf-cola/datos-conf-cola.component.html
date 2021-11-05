@@ -14,7 +14,16 @@
             <label class="mr-auto title-ficha">{{'justiciaGratuita.guardia.gestion.configuracionCola' | translate}}</label>
           </div>
           <div class="d-flex justify-content-between sub">
-            <strong> {{ordenacion}}</strong>
+            <!--<strong> {{ordenacion}}</strong>-->
+            <label>
+              {{"justiciaGratuita.guardia.gestion.porGrupos" | translate}}:
+              <strong *ngIf="!body.porGrupos">No</strong>
+              <strong *ngIf="body.porGrupos">Sí</strong>
+            </label>
+            <label>
+              {{ 'justiciaGratuita.oficio.turnos.pesosseleccionados' | translate }}:
+              <strong>{{resumenPesos}}</strong>
+            </label>
             <label *ngIf="ordenacion != 'Por grupos'">
               {{'dato.jgr.guardia.guardias.letradosGuardia' | translate}}:
               <strong>{{numeroletradosguardia}}</strong>

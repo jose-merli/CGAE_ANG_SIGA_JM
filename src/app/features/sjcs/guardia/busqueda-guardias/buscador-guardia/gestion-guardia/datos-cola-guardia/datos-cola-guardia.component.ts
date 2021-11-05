@@ -385,7 +385,7 @@ inicio(){
           this.transformData();
           this.datosInicial = JSON.parse(JSON.stringify(this.datos));
           if (this.datos && this.datos.length > 0)
-            this.resumenColaGuardia = this.datos[0].nColegiado + " " + this.datos[0].nombreApe + ", " + this.datos[1].nColegiado + " " + this.datos[1].nombreApe + ", " + this.datos[2].nColegiado + " " + this.datos[2].nombreApe;
+            this.resumenColaGuardia = this.datos[0].nColegiado + " " + this.datos[0].nombreApe + "..."  + this.datos[this.datos.length - 1].nColegiado + " " + this.datos[this.datos.length - 1].nombreApe;
           /*if (this.datosInicial.length > 0)
             this.resumenColaGuardia = this.resumenColaGuardia.concat(" ... " + this.datos[this.datos.length - 1].nColegiado + " " + this.datos[this.datos.length - 1].nombreApe
               + " ... " + this.datos.length, " inscritos");*/
