@@ -130,6 +130,8 @@ export class TablaResultadoOrderComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.ordenarByOrderField();
+    console.log('rowGroups al inicio: ', this.rowGroups)
     this.selectedArray = [];
     this.isLetrado = this.sigaStorageService.isLetrado && this.sigaStorageService.idPersona;
     if(this.rowGroups != undefined){
@@ -257,14 +259,52 @@ export class TablaResultadoOrderComponent implements OnInit {
     this.progressSpinner = false;
   }
 
+
+  ordenarByOrderField(){
+    let data :Row[] = [];
+    this.rowGroups = this.rowGroupsAux.filter((row) => {
+        data.push(row);
+    });
+
+    this.rowGroups = data.sort((a, b) => {
+      if (a.cells[0].value != null && b.cells[0].value != null){
+      let resultado;
+      resultado = compare(Number(a.cells[0].value), Number(b.cells[0].value), true);
+      return resultado ;
+      }else{
+        return 0;
+      }
+  });
+  this.rowGroupsAux = this.rowGroups;
+  this.totalRegistros = this.rowGroups.length;
+  }
+
   saveCal(){
+    
     this.disableGen.emit(false);
     let newRowGroups: Row[] = [];
     this.rowGroups.forEach(rowG => {
-      if(rowG.cells[1].type == 'selectDependency'){
+      if(rowG.cells[1].type == 'selectDependency' ||  rowG.cells[1].type == 'textNew'){
         newRowGroups.push(rowG);
       }
     })
+
+    this.comboTurno.forEach(cT=> {
+      if (cT.label == this.rowGroups[0].cells[1].value){
+        this.rowGroups[0].cells[1].value = cT.label;
+      }else if (cT.value == this.rowGroups[this.rowGroups.length - 1].cells[1].value){
+        this.rowGroups[this.rowGroups.length - 1].cells[1].value = cT.label;
+      }
+    
+    });
+    this.comboGuardia.forEach(cG=> {
+       if (cG.value == this.rowGroups[0].cells[2].value){
+        this.rowGroups[0].cells[2].value = cG.label;
+      }else if (cG.value == this.rowGroups[this.rowGroups.length - 1].cells[2].value){
+        this.rowGroups[this.rowGroups.length - 1].cells[2].value = cG.label;
+      }
+    
+    });
     this.guardarGuardiasEnConjunto.emit(newRowGroups);
    // this.rowGroups.sort((a, b) => a.cells[0].localeCompare(b.cells[0]))
   }
@@ -904,6 +944,30 @@ this.totalRegistros = this.rowGroups.length;
       //this.to = this.totalRegistros;
       }
       nuevo(){
+        this.comboTurno.forEach(cT=> {
+          if (cT.value == this.rowGroups[0].cells[1].value){
+            this.rowGroups[0].cells[1].value = cT.label;
+          }else if (cT.value == this.rowGroups[this.rowGroups.length - 1].cells[1].value){
+            this.rowGroups[this.rowGroups.length - 1].cells[1].value = cT.label;
+          }
+        
+        });
+        this.comboGuardia.forEach(cG=> {
+           if (cG.value == this.rowGroups[0].cells[2].value){
+            this.rowGroups[0].cells[2].value = cG.label;
+          }else if (cG.value == this.rowGroups[this.rowGroups.length - 1].cells[2].value){
+            this.rowGroups[this.rowGroups.length - 1].cells[2].value = cG.label;
+          }
+        
+        });
+        this.rowGroups[0].cells[1].type = 'textNew';
+        this.rowGroups[0].cells[1].combo = null;
+        this.rowGroups[0].cells[2].type = 'linkNew';
+        this.rowGroups[0].cells[2].combo = null;
+        this.rowGroups[this.rowGroups.length - 1].cells[1].type = 'textNew';
+        this.rowGroups[this.rowGroups.length - 1].cells[1].combo = null;
+        this.rowGroups[this.rowGroups.length - 1].cells[2].type = 'linkNew';
+        this.rowGroups[this.rowGroups.length - 1].cells[2].combo = null;
         console.log(this.rowGroups)
         this.disableGen.emit(true);
         this.getComboTurno();
@@ -919,7 +983,7 @@ this.totalRegistros = this.rowGroups.length;
           this.rowGroups.unshift(rowObject);
           this.rowGroupsAux = this.rowGroups;
           this.totalRegistros = this.rowGroups.length;
-          this.to = this.totalRegistros;
+          //this.to = this.totalRegistros;
           this.cd.detectChanges();
       }
 

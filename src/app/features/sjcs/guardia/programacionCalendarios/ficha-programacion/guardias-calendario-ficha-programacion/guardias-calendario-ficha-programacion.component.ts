@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, ChangeDetectorRef } from '@angular/core';
 import { GuardiaItem } from '../../../../../../models/guardia/GuardiaItem';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
@@ -105,7 +105,8 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
     private commonServices: CommonsService,
     private translateService: TranslateService,
     private trmService: TablaResultadoOrderCGService,
-    private globalGuardiasService: GlobalGuardiasService) { }
+    private globalGuardiasService: GlobalGuardiasService,
+    private cd: ChangeDetectorRef) { }
 
 
   ngOnInit() {
@@ -272,8 +273,11 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
       }
     );
   }
-
+    ngOnChanges(changes){
+      console.log('changes ', changes)
+    }
     getGuardiasFromConjunto(idConjunto, fromCombo) {
+      this.dataReady = false;
       if (this.datosTarjetaGuardiasCalendario.length != this.datosTarjetaGuardiasCalendarioIni.length){
       this.datosTarjetaGuardiasCalendario = this.datosTarjetaGuardiasCalendarioIni.map(x => Object.assign({}, x));
       }
@@ -284,20 +288,33 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
             if (!fromCombo){
             this.datosTarjetaGuardiasCalendario = [];
             }
-            response.forEach((res, i) => {
-              this.datosTarjetaGuardiasCalendario.push(res);
-              if (i == response.length - 1){
-                this.jsonToRow(fromCombo);
-              }
-            })
+            if (response != null && response != undefined && response.length != 0){
+              response.forEach((res, i) => {
+                this.datosTarjetaGuardiasCalendario.push(res);
+                if (i == response.length - 1){
+                  this.jsonToRow(fromCombo);
+                }
+              })
+            }else{
+              this.datosTarjetaGuardiasCalendario = this.datosTarjetaGuardiasCalendarioIni.map(x => Object.assign({}, x));
+              this.cd.detectChanges();
+              this.dataReady = true;
+              console.log(this.rowGroups)
+              console.log(this.rowGroupsAux)
+            }
+           
             this.progressSpinner = false;
       },
       err => {
         this.progressSpinner = false;
         console.log(err);
+      },
+      ()=>{
+        this.progressSpinner = false;
+        this.fillDatosTarjetaGuardiasCalendario.emit(this.datosTarjetaGuardiasCalendario);
       }
     );
-    this.fillDatosTarjetaGuardiasCalendario.emit(this.datosTarjetaGuardiasCalendario);
+    
   }
 
  
@@ -473,7 +490,7 @@ jsonToRow(fromCombo){
         ord = dat.orden;
       }
     let objCells:Cell[] = [
-    { type: 'text', value: ord , combo: null, hiddenValue:'', required : false},
+    { type: 'input', value: ord , combo: null, hiddenValue:'', required : false},
     { type: 'text', value: dat.turno , combo: null, hiddenValue:'', required : false},
     { type: 'link', value: dat.guardia , combo: null, hiddenValue:'', required : false},
     { type: 'text', value: dat.generado, combo: null, hiddenValue:'', required : false},
@@ -550,6 +567,7 @@ setGuardiasCalendario(guardiaCalendario){
         data => {
           this.getGuardiasFromConjunto(this.idConjuntoGuardiaElegido, true);
         }, err => {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No se ha podido insertar correctamente");
           console.log(err);
         });
   }
@@ -559,6 +577,7 @@ setGuardiasCalendario(guardiaCalendario){
         data => {
           this.searchGuardiasFromCal.emit(this.idCal);
         }, err => {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No se ha podido insertar correctamente");
           console.log(err);
         });
   }
