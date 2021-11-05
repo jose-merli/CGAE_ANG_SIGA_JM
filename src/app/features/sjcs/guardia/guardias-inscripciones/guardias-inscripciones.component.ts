@@ -194,7 +194,6 @@ export class GuardiasInscripcionesComponent implements OnInit {
   }
   getFiltrosValues(event) {
     this.filtrosValues = JSON.parse(JSON.stringify(event));
-    console.log("FILTROS: ", this.filtrosValues);
     this.convertArraysToStrings();
     this.buscarIns();
 
@@ -238,7 +237,6 @@ export class GuardiasInscripcionesComponent implements OnInit {
           let error = JSON.parse(data.body).error;
           this.datos = JSON.parse(data.body).inscripcionesItem;
           this.buscar = true;
-          console.log(data);
           this.datos = this.datos.map(it => {
             it.letradosIns = +it.letradosIns;
             return it;
@@ -527,19 +525,15 @@ export class GuardiasInscripcionesComponent implements OnInit {
       this.sigaServices.post(
         "guardiasInscripciones_validarInscripciones", objetoValidacion).subscribe(
           data => {
-            console.log("entra en el data");
             this.progressSpinner = false;
-            console.log(data);
-            //mensaje de okey
-            console.log("Se ha realizado correctamente");
+           
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 
           },
           err => {
             this.progressSpinner = false;
             console.log(err);
-            //mensaje de error
-            console.log("No se ha podido realizar el servicio de back");
+            
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
 
           },
@@ -553,7 +547,6 @@ export class GuardiasInscripcionesComponent implements OnInit {
       this.sigaServices.post(
         "guardiasInscripciones_buscarTrabajosSJCS", objetoValidacion).subscribe(
           data => {
-            console.log("entra en el data");
             this.progressSpinner = false;
             this.existeTrabajosSJCS = data.body;
 
@@ -651,19 +644,15 @@ export class GuardiasInscripcionesComponent implements OnInit {
     this.sigaServices.post(
       "guardiasInscripciones_denegarInscripciones", objetoValidacion).subscribe(
         data => {
-          console.log("entra en el data");
           this.progressSpinner = false;
-          console.log(data);
-          //mensaje de okey
-          console.log("Se ha realizado correctamente");
+         
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           objetoValidacion = [];
         },
         err => {
           this.progressSpinner = false;
           console.log(err);
-          //mensaje de error
-          console.log("No se ha podido realizar el servicio de back");
+         
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
           objetoValidacion = [];
         },
@@ -678,19 +667,15 @@ export class GuardiasInscripcionesComponent implements OnInit {
     this.sigaServices.post(
       "guardiasInscripciones_solicitarBajaInscripciones", objetoValidacion).subscribe(
         data => {
-          console.log("entra en el data");
           this.progressSpinner = false;
-          console.log(data);
-          //mensaje de okey
-          console.log("Se ha realizado correctamente");
+         
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           
         },
         err => {
           this.progressSpinner = false;
           console.log(err);
-          //mensaje de error
-          console.log("No se ha podido realizar el servicio de back");
+        
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
 
         },
@@ -707,16 +692,12 @@ export class GuardiasInscripcionesComponent implements OnInit {
         data => {
           console.log("entra en el data");
           this.progressSpinner = false;
-          console.log(data);
-          //mensaje de okey
-          console.log("Se ha realizado correctamente");
+         
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         },
         err => {
           this.progressSpinner = false;
           console.log(err);
-          //mensaje de error
-          console.log("No se ha podido realizar el servicio de back");
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
 
         },
@@ -737,7 +718,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
       accept: () => {
         //permitirá hacer la baja
         this.llamadaBackSolicitarBaja(objetoValidacion);
-        console.log("Entró por aquí");
+        
 
 
       },
@@ -760,7 +741,6 @@ export class GuardiasInscripcionesComponent implements OnInit {
     this.sigaServices.post(
       "guardiasInscripciones_buscarTrabajosSJCS", objetoValidacion).subscribe(
         data => {
-          console.log("entra en el data");
           this.progressSpinner = false;
           this.existeTrabajosSJCS = data.body;
 
@@ -773,16 +753,12 @@ export class GuardiasInscripcionesComponent implements OnInit {
             this.llamadaBackSolicitarBaja(objetoValidacion);
           }
 
-          
-
-          console.log("Se ha realizado correctamente");
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 
         },
         err => {
           this.progressSpinner = false;
           console.log(err);
-          console.log("No se ha podido realizar el servicio de back");
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
 
 
@@ -795,9 +771,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
 
 
   BotonesInfo(event) {
-    console.log("entra en el botonesinfo")
     this.jsonParaEnviar = event;
-    console.log(event);
 
     if (this.jsonParaEnviar.tipoAccion == "validar") {
       let estado;

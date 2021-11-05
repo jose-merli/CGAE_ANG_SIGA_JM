@@ -125,7 +125,6 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
     }
   }
   onChangeGuardia(event){
-    console.log(event)
   }
 
   getComboGuardia() {

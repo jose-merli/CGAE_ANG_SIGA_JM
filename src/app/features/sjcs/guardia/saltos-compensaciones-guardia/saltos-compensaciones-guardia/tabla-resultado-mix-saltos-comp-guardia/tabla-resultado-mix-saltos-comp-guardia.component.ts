@@ -311,7 +311,6 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
     let error = false;
 
     this.rowGroups.forEach(row => {
-      console.log("Row ->", row);
       if (
         row.cells[0].value == null || row.cells[0].value.trim() == '' ||
         row.cells[1].value == null || row.cells[1].value.trim() == '' ||
@@ -328,7 +327,6 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
     if (error) {
       this.showMsg('error', 'Error. Existen campos vacíos en la tabla.', '' );
     } else {
-      console.log("Lista pre", this.rowGroups);
       this.saveEvent.emit(this.rowGroups);
       this.selectedArray = [];
     }
@@ -401,7 +399,6 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
           values.push(element.value);
         }
       });
-      console.log("values ->", values);
       row.cells[2].value = values;
       row.cells[3].value = '';
       let letrado = "";
