@@ -547,11 +547,40 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
   searchAsistencias(){
 
     this.hideResponse();
+    let filtroAsistenciaItem = Object.assign({},this.filtro.filtro);
+    if(this.filtro.filtro.idTurno != undefined  && this.filtro.filtro.idTurno != ""){
+      filtroAsistenciaItem.idTurno = this.filtro.filtro.idTurno.toString();
+    }
+    if(this.filtro.filtro.idGuardia != undefined  && this.filtro.filtro.idGuardia != ""){
+      filtroAsistenciaItem.idGuardia = this.filtro.filtro.idGuardia.toString();
+    }
+    if(this.filtro.filtro.idOrigenAsistencia != undefined  && this.filtro.filtro.idOrigenAsistencia != ""){
+      filtroAsistenciaItem.idOrigenAsistencia = this.filtro.filtro.idOrigenAsistencia.toString(); 
+    }
+    if(this.filtro.filtro.idEstadoAsistencia != undefined  && this.filtro.filtro.idEstadoAsistencia != ""){
+      filtroAsistenciaItem.idEstadoAsistencia = this.filtro.filtro.idEstadoAsistencia.toString();  
+    }
+    if(this.filtro.filtro.idEstadoAsistido != undefined  && this.filtro.filtro.idEstadoAsistido != ""){
+      filtroAsistenciaItem.idEstadoAsistido = this.filtro.filtro.idEstadoAsistido.toString();
+    }
+    if(this.filtro.filtro.idComisaria != undefined  && this.filtro.filtro.idComisaria != ""){
+      filtroAsistenciaItem.idComisaria = this.filtro.filtro.idComisaria.toString();
+    }
+    if(this.filtro.filtro.idJuzgado != undefined  && this.filtro.filtro.idJuzgado != ""){
+      filtroAsistenciaItem.idJuzgado = this.filtro.filtro.idJuzgado.toString();
+    }
+    if(this.filtro.filtro.idProcedimiento != undefined  && this.filtro.filtro.idProcedimiento != ""){
+      filtroAsistenciaItem.idProcedimiento = this.filtro.filtro.idProcedimiento.toString();
+    }
+    if(this.filtro.filtro.idTipoActuacion != undefined  && this.filtro.filtro.idTipoActuacion != ""){
+      filtroAsistenciaItem.idTipoActuacion = this.filtro.filtro.idTipoActuacion.toString();
+    }
+    
     setTimeout(()=>{
       if(this.modoBusqueda == 'a' && this.filtro && this.filtro.filtro){
         this.progressSpinner = true;
         this.sigaServices
-        .post("busquedaGuardias_buscarAsistencias", this.filtro.filtro)
+        .post("busquedaGuardias_buscarAsistencias", filtroAsistenciaItem)
         .subscribe(
           n => {
             let asistenciasDTO = JSON.parse(n["body"]);

@@ -16,9 +16,10 @@ export class BuscadorListaGuardiasComponent implements OnInit {
   comboGrupoZona = [];
   comboZona = [];
   msgs;
+  textSelected: String = '{0} opciones seleccionadas';
   constructor(private sigaServices : SigaServices,
     private commonsService : CommonsService) { }
-
+    textFilter: string = "Seleccionar";
   ngOnInit() {
 
     this.comboTipo = [
@@ -52,12 +53,13 @@ export class BuscadorListaGuardiasComponent implements OnInit {
     );
   }
 
-  onChangeGrupoZona(){
-    if(this.filtro.idGrupoZona){
+  onChangeGrupoZona(event){
+    this.filtro.idGrupoZona = event.value;
+    if(this.filtro.idGrupoZona.length != 0){
       this.getComboZona();
     }else{
       this.comboZona = [];
-      this.filtro.idZona = '';
+      this.filtro.idZona = "";
     }
   }
 
@@ -80,5 +82,9 @@ export class BuscadorListaGuardiasComponent implements OnInit {
   }
   clear() {
     this.msgs = [];
+  }
+
+  onChangeZona(event){
+    this.filtro.idZona = event.value;
   }
 }

@@ -37,6 +37,8 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
     ENTER: 13
   }
   permisos;
+  textSelected: String = '{0} opciones seleccionadas';
+  textFilter: string = "Seleccionar";
   @Input('permisoEscritura') permisoEscritura = false;
   @Input() dataBuscador = { 
     'guardia': '',
@@ -197,11 +199,12 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
 
   }
 
-  onChangeTurnos() {
+  onChangeTurnos(event) {
+    this.filtroAux.idTurno = event.value;
     this.filtros.idGuardia = "";
     this.comboGuardia = [];
 
-    if (this.filtros.idTurno) {
+    if (this.filtros.idTurno.length > 0) {
       this.getComboGuardia();
     }
   }
@@ -310,5 +313,7 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
     }, 300);
   }
 
-
+  onChangeGuardia(event) {
+    this.filtroAux.idGuardia = event.value;
+  }
 }

@@ -14,18 +14,17 @@
         <!-- TURNO -->
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ "dato.jgr.guardia.guardias.turno" | translate }}</label>
-          <p-dropdown class="select-form" (onChange)="onChangeTurnos()" [(ngModel)]='filtros.idTurno'
-            placeholder="Seleccionar" [options]="comboTurno" [filter]="true" filterBy="label,labelSinTilde"
-            [showClear]="true"></p-dropdown>
-
+            <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtros.idTurno'
+                  [options]="comboTurno" maxSelectedLabels="10" selectionLimits="10" [selectedItemsLabel]="textSelected"
+                  styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeTurnos($event)"></p-multiSelect>
         </div>
 
         <!-- GUARDIA -->
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ "menu.justiciaGratuita.GuardiaMenu" | translate }}</label>
-          <p-dropdown class="select-form" [(ngModel)]='filtros.idGuardia' [(disabled)]="isDisabledGuardia"
-            placeholder="Seleccionar" [options]="comboGuardia" [filter]="true" filterBy="label,labelSinTilde"
-            [showClear]="true"></p-dropdown>
+            <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtros.idGuardia' [(disabled)]="isDisabledGuardia"
+            [options]="comboGuardia" maxSelectedLabels="10" selectionLimits="10" [selectedItemsLabel]="textSelected"
+            styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeGuardia($event)"></p-multiSelect>
         </div>
 
         <div class="form-group-interlineado col-lg-3 col-md-3">

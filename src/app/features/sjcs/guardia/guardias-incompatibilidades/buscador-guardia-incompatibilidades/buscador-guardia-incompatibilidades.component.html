@@ -7,7 +7,7 @@
     </p>
   </div>
 
-  <div class="busqueda-container" class="card-body card-body-ficha">
+  <div class="busqueda-container">
     <app-filtros-guardia-incompatibilidades [permisoEscritura]="permisoEscritura" (isOpen)="isOpenReceive($event)" (filtrosValues)="getFiltrosValues($event)"></app-filtros-guardia-incompatibilidades>
     <app-tabla-resultado-mix *ngIf="buscar" [incompatibilidades]="true" [firstColumn]="0" [lastColumn]="5" [totalRegistros] = "totalRegistros" [seleccionarTodo]="seleccionarTodo"
     [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" [comboGuardiasIncompatibles]="comboGuardiasIncompatibles" [isLetrado]="isLetrado"
