@@ -12,7 +12,7 @@ import { RowGroup } from '../tabla-resultado-desplegable/tabla-resultado-despleg
 import { TranslateService } from '../translate/translation.service';
 import { throwMatDialogContentAlreadyAttachedError } from '@angular/material';
 import { DatePipe } from '@angular/common';
-import { CalendarioProgramadoItem } from '../../models/guardia/CalendarioProgramadoItem';SigaServices } from "./../../_services/siga.service";
+import { CalendarioProgramadoItem } from '../../models/guardia/CalendarioProgramadoItem';
 import { SigaServices } from '../../_services/siga.service';
 import { CommonsService } from '../../_services/commons.service';
 
