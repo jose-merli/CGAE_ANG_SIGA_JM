@@ -63,7 +63,7 @@
                                 <br>
                                 <label class="form-group-label pt-2"><b>{{"justiciaGratuita.guardia.asistenciasexpress.sustitucion" | translate}}</b></label>
                                 &nbsp;&nbsp;
-                                <p-checkbox [(ngModel)]="filtro.isSustituto" (onChange)="onChangeSustitutoCheck($event)" binary="true" [ngModelOptions]="{standalone: true}"
+                                <p-checkbox (onChange)="onChangeSustitutoCheck($event)" binary="true"
                                 [disabled]="filtro.idPersona"></p-checkbox>
                             </div>
                         </div>
