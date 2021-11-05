@@ -25,7 +25,7 @@ export class FiltroAsistenciaItem{
     apellidos : string;
     nombre : string;
     nig : string;
-    isSustituto : boolean;
+    isSustituto : string;
     idLetradoManual : string;
 
     constructor(){}

@@ -171,7 +171,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
   checkSustitutoCheckBox(){
     if(this.validateForm()){
       this.showSustitutoDialog = true;
-      if(this.filtrosAE.filtro.isSustituto){
+      if(this.filtrosAE.filtro.isSustituto == 'S'){
           this.mensajeSustitutoDialog =  this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.refuerzoguardia");
       }else{
           this.mensajeSustitutoDialog = this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.refuerzoguardia2");
@@ -198,7 +198,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
     this.filtrosAE.filtro.idGuardia = '';
     this.filtrosAE.filtro.idLetradoGuardia = '';
     this.filtrosAE.filtro.idTurno = '';
-    this.filtrosAE.filtro.isSustituto = false;
+    this.filtrosAE.filtro.isSustituto = 'N';
     this.filtrosAE.filtro.idTipoAsistenciaColegiado = '';
     this.filtrosAE.resaltadoDatos = true;
     
@@ -458,8 +458,8 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
 
         })
 
-        if(this.filtrosAE.filtro.isSustituto == undefined){
-          tarjetaAsistenciaItem.filtro.isSustituto = false;
+        if(!this.filtrosAE.filtro.isSustituto){
+          tarjetaAsistenciaItem.filtro.isSustituto = 'N';
         }
         tarjetasAsistenciaItem.push(tarjetaAsistenciaItem);
         

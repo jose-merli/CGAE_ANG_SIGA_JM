@@ -3,6 +3,7 @@ import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@a
 import * as moment from 'moment';
 import { ColegiadoItem } from '../../../../../../models/ColegiadoItem';
 import { SaltoCompItem } from '../../../../../../models/guardia/SaltoCompItem';
+import { SigaStorageService } from '../../../../../../siga-storage.service';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
@@ -46,7 +47,8 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
   constructor(private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
     private commonServices: CommonsService,
-    private datepipe : DatePipe) { }
+    private datepipe : DatePipe,
+    private sigaStorageService : SigaStorageService) { }
 
   ngOnInit() {
 
@@ -84,7 +86,7 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
         }
       }
 
-    if (sessionStorage.getItem("esColegiado") && sessionStorage.getItem("esColegiado") == 'true') {
+    if (this.sigaStorageService.isLetrado && this.sigaStorageService.idPersona) {
        this.disabledBusquedaExpress = true;
        this.getDataLoggedUser();
        this.search();
