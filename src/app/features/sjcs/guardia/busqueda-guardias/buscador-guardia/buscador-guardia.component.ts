@@ -82,7 +82,38 @@ export class BuscadorGuardiaComponent implements OnInit {
     this.filtros.filtroAux.historico = event;
     this.persistenceService.setHistorico(event);
     this.progressSpinner = true;
-    this.sigaServices.post("busquedaGuardias_searchGuardias", this.filtros.filtroAux).subscribe(
+    let guardiaItem = Object.assign({},this.filtros.filtroAux);
+    if(guardiaItem.idTurno != "" && guardiaItem.idTurno != undefined){
+      guardiaItem.idTurno = guardiaItem.idTurno.toString();
+    }
+    if(guardiaItem.area != "" && guardiaItem.area != undefined){
+      guardiaItem.area = guardiaItem.area.toString();
+    }
+    if(guardiaItem.materia != "" && guardiaItem.materia != undefined){
+      guardiaItem.materia = guardiaItem.materia.toString();
+    }
+    if(guardiaItem.grupoZona != "" && guardiaItem.grupoZona != undefined){
+      guardiaItem.grupoZona = guardiaItem.grupoZona.toString();
+    }
+    if(guardiaItem.zona != "" && guardiaItem.zona != undefined){
+      guardiaItem.zona = guardiaItem.zona.toString();
+    }
+    if(guardiaItem.jurisdiccion != "" && guardiaItem.jurisdiccion != undefined){
+      guardiaItem.jurisdiccion = guardiaItem.jurisdiccion.toString();
+    }
+    if(guardiaItem.grupoFacturacion != "" && guardiaItem.grupoFacturacion != undefined){
+      guardiaItem.grupoFacturacion = guardiaItem.grupoFacturacion.toString();
+    }
+    if(guardiaItem.partidaPresupuestaria != "" && guardiaItem.partidaPresupuestaria != undefined){
+      guardiaItem.partidaPresupuestaria = guardiaItem.partidaPresupuestaria.toString();
+    }
+    if(guardiaItem.tipoTurno != "" && guardiaItem.tipoTurno != undefined){
+      guardiaItem.tipoTurno = guardiaItem.tipoTurno.toString();
+    }
+    if(guardiaItem.idTipoGuardia != "" && guardiaItem.idTipoGuardia != undefined){
+      guardiaItem.idTipoGuardia = guardiaItem.idTipoGuardia.toString();
+    }
+    this.sigaServices.post("busquedaGuardias_searchGuardias", guardiaItem).subscribe(
       n => {
         let error = JSON.parse(n.body).error;
         this.datos = JSON.parse(n.body).guardiaItems;
