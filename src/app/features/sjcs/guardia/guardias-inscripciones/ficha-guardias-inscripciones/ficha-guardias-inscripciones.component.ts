@@ -1192,13 +1192,9 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 	}
 
 	backTo() {
-		if (!this.modoEdicion) {
 			sessionStorage.setItem("volver", "true");
 			this.router.navigate(['/inscripcionesGuardia']);
-		} else {
-			sessionStorage.setItem("volver", "true");
-			this.location.back();
-		}
+		
 
 	}
 

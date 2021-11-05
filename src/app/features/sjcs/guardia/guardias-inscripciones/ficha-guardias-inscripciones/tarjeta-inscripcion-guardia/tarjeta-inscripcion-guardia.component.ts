@@ -128,9 +128,6 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
 
   ngOnInit() {
 
-    if (this.persistenceService.getPermisos() != true) {
-      this.disableAll = true;
-    }
     this.commonsService.checkAcceso(procesos_oficio.tarjetaInscripcion)
       .then(respuesta => {
         this.permisosTarjeta = respuesta;
@@ -157,7 +154,7 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
     if(this.modoEdicion==false){
       this.numeroGuardias = 0;
     }
-    if (this.persistenceService.getPermisos() != true) {
+    if (this.permisosTarjeta != true) {
       this.disableAll = true
     }
   }
