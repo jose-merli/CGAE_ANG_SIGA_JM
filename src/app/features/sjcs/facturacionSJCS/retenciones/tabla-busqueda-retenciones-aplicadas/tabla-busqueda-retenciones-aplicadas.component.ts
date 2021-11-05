@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { OverlayPanel } from 'primeng/components/overlaypanel/overlaypanel';
 import { Table } from 'primeng/table';
 import { TranslateService } from '../../../../../commons/translate/translation.service';
 import { AplicacionRetencionItem } from '../../../../../models/sjcs/AplicacionRetencionItem';
@@ -6,6 +7,9 @@ import { AplicacionRetencionObject } from '../../../../../models/sjcs/Aplicacion
 import { AplicacionRetencionRequestDTO } from '../../../../../models/sjcs/AplicacionRetencionRequestDTO';
 import { RetencionesAplicadasItem } from '../../../../../models/sjcs/RetencionesAplicadasItem';
 import { SigaServices } from '../../../../../_services/siga.service';
+import { RetencionesService } from '../retenciones.service';
+import { Router } from '@angular/router';
+import { RetencionesItem } from '../../../../../models/sjcs/RetencionesItem';
 
 @Component({
   selector: 'app-tabla-busqueda-retenciones-aplicadas',
@@ -21,6 +25,7 @@ export class TablaBusquedaRetencionesAplicadasComponent implements OnInit {
 
   @ViewChild("table") tabla: Table;
   @ViewChild("tablaFoco") tablaFoco: ElementRef;
+  @ViewChild("op") op: OverlayPanel;
 
   modoSeleccion = "multiple";
   selectedItem: number = 10;
@@ -34,7 +39,11 @@ export class TablaBusquedaRetencionesAplicadasComponent implements OnInit {
   historico: boolean = false;
   datosAplicacionRetencion: AplicacionRetencionItem[] = [];
 
-  constructor(private changeDetectorRef: ChangeDetectorRef, private sigaServices: SigaServices, private translateService: TranslateService) { }
+  constructor(private changeDetectorRef: ChangeDetectorRef,
+    private sigaServices: SigaServices,
+    private translateService: TranslateService,
+    private retencionesService: RetencionesService,
+    private router: Router) { }
 
   ngOnInit() {
     this.getCols();
@@ -51,7 +60,8 @@ export class TablaBusquedaRetencionesAplicadasComponent implements OnInit {
       { field: "importeRetenido", header: "facturacionSJCS.retenciones.impRetenido", width: "10%" },
       { field: "fechaDesde", header: "facturacionSJCS.retenciones.fechaPago", width: "10%" },
       { field: "importePago", header: "facturacionSJCS.retenciones.impPago", width: "8%" },
-      { field: "pagoRelacionado", header: "facturacionSJCS.retenciones.pago", width: "16%" }
+      { field: "pagoRelacionado", header: "facturacionSJCS.retenciones.pago", width: "16%" },
+      { field: "aplicaciones", header: "facturacionSJCS.retenciones.aplicaciones", width: "16%" }
     ];
 
 
@@ -144,39 +154,47 @@ export class TablaBusquedaRetencionesAplicadasComponent implements OnInit {
 
 
 
-  getAplicacionesRetenciones(item: RetencionesAplicadasItem, expanded: boolean) {
+  getAplicacionesRetenciones(item: RetencionesAplicadasItem, event: any) {
 
-    if (!expanded) {
+    const payload: AplicacionRetencionRequestDTO = new AplicacionRetencionRequestDTO();
+    payload.idPersona = item.idPersona;
+    payload.fechaPagoDesde = item.fechaDesde;
+    payload.fechaPagoHasta = item.fechaHasta;
 
-      const payload: AplicacionRetencionRequestDTO = new AplicacionRetencionRequestDTO();
-      payload.idPersona = item.idPersona;
-      payload.fechaPagoDesde = item.fechaDesde;
-      payload.fechaPagoHasta = item.fechaHasta;
+    this.progressSpinner = true;
 
-      this.progressSpinner = true;
+    this.sigaServices.post("retenciones_buscarAplicacionesRetenciones", payload).subscribe(
+      data => {
+        const res: AplicacionRetencionObject = JSON.parse(data.body);
 
-      this.sigaServices.post("retenciones_buscarAplicacionesRetenciones", payload).subscribe(
-        data => {
-          const res: AplicacionRetencionObject = JSON.parse(data.body);
-
-          if (res.error != null && res.error.description != null && res.error.code != null && res.error.code.toString() == "500") {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(res.error.description.toString()));
-          } else {
-            this.datosAplicacionRetencion = res.aplicacionRetencionItemList;
-          }
-
-          this.progressSpinner = false;
-        },
-        err => {
-          this.progressSpinner = false;
-        },
-        () => {
-          this.progressSpinner = false;
+        if (res.error != null && res.error.description != null && res.error.code != null && res.error.code.toString() == "500") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(res.error.description.toString()));
+        } else {
+          this.datosAplicacionRetencion = res.aplicacionRetencionItemList;
+          this.op.toggle(event);
         }
-      );
 
-    }
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
 
+  }
+
+  openFicha(dato: RetencionesAplicadasItem) {
+    this.retencionesService.modoEdicion = true;
+
+    const retencionItem = new RetencionesItem();
+    retencionItem.idRetencion = dato.idRetencion;
+    retencionItem.idPersona = dato.idPersona;
+    this.retencionesService.retencion = retencionItem;
+
+    this.router.navigate(["/fichaRetencionJudicial"]);
   }
 
 }

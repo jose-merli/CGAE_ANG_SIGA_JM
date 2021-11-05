@@ -11,4 +11,6 @@ export class RetencionesRequestDto {
     idRetenciones: string | string[];
     numeroAbono: string;
     idPersona: string;
+    nombreApellidoColegiado: string;
+    modoBusqueda: string;
 }

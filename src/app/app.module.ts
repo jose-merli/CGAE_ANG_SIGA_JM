@@ -480,6 +480,11 @@ import { FiltroBusquedaRetencionesComponent } from './features/sjcs/facturacionS
 import { TablaBusquedaRetencionesComponent } from './features/sjcs/facturacionSJCS/retenciones/tabla-busqueda-retenciones/tabla-busqueda-retenciones.component';
 import { TablaBusquedaRetencionesAplicadasComponent } from './features/sjcs/facturacionSJCS/retenciones/tabla-busqueda-retenciones-aplicadas/tabla-busqueda-retenciones-aplicadas.component';
 import { TablaAplicacionRetencionesComponent } from './features/sjcs/facturacionSJCS/retenciones/tabla-busqueda-retenciones-aplicadas/tabla-aplicacion-retenciones/tabla-aplicacion-retenciones.component';
+import { FichaRetencionJudicialComponent } from './features/sjcs/facturacionSJCS/retenciones/ficha-retencion-judicial/ficha-retencion-judicial.component';
+import { TarjetaColegiadoComponent } from './features/sjcs/facturacionSJCS/retenciones/ficha-retencion-judicial/tarjeta-colegiado/tarjeta-colegiado.component';
+import { TarjetaDatosRetencionComponent } from './features/sjcs/facturacionSJCS/retenciones/ficha-retencion-judicial/tarjeta-datos-retencion/tarjeta-datos-retencion.component'
+import { TarjetaAplicacionEnPagosComponent } from './features/sjcs/facturacionSJCS/retenciones/ficha-retencion-judicial/tarjeta-aplicacion-en-pagos/tarjeta-aplicacion-en-pagos.component';
+import { RetencionesService } from './features/sjcs/facturacionSJCS/retenciones/retenciones.service';
 
 @NgModule({
 	declarations: [
@@ -879,6 +884,10 @@ import { TablaAplicacionRetencionesComponent } from './features/sjcs/facturacion
 		TablaBusquedaRetencionesComponent,
 		TablaBusquedaRetencionesAplicadasComponent,
 		TablaAplicacionRetencionesComponent,
+		FichaRetencionJudicialComponent,
+		TarjetaColegiadoComponent,
+		TarjetaDatosRetencionComponent,
+		TarjetaAplicacionEnPagosComponent,
 	],
 	imports: [
 		Paginador3Module,
@@ -976,6 +985,7 @@ import { TablaAplicacionRetencionesComponent } from './features/sjcs/facturacion
 		TablaResultadoDesplegableJEService,
 		TablaResultadoDesplegableAEService,
 		TablaResultadoMixDocDesigService,
+		RetencionesService,
 
 		AuthGuard,
 		{

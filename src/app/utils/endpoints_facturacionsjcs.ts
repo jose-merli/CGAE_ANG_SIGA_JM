@@ -62,7 +62,9 @@ export let endpoints_facturacionsjcs: any = {
 
     /* Endpoints Retenciones */
     retenciones_buscarRetenciones: "retenciones/searchRetenciones",
+    retenciones_buscarRetencion: "retenciones/searchRetencion",
     retenciones_eliminarRetenciones: "retenciones/deleteRetenciones",
+    retenciones_saveOrUpdateRetencion: "retenciones/saveOrUpdateRetencion",
     retenciones_buscarRetencionesAplicadas: "retenciones/searchRetencionesAplicadas",
     retenciones_buscarAplicacionesRetenciones: "retenciones/getAplicacionesRetenciones"
 }

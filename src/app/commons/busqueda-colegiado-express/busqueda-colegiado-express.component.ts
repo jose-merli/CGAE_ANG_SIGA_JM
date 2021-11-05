@@ -35,6 +35,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
   msgs;
   @Output() colegiado = new EventEmitter<any>();
   isLetrado: boolean = false;
+  @Output() botonBuscarEvent = new EventEmitter<boolean>();
 
   constructor(private localStorageService: SigaStorageService, private router: Router, private sigaServices: SigaServices, private translateService: TranslateService, private PpersistenceService: PersistenceService) { }
 
@@ -80,6 +81,8 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
   }
 
   isBuscar(form) {
+    // Evento que nos dice si se ha pulsado el botón de buscar
+    this.botonBuscarEvent.emit(true);
     //Se revisa si esta en la pantalla de gestion de Ejg y la tarjeta de servicios de tramitación
     if (this.tarjeta == "ServiciosTramit" && this.pantalla == "gestionEjg") {
       //Se comprueba que se han rellenado los campos de turno y guardia

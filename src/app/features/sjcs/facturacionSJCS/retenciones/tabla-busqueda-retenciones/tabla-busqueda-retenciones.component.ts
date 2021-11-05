@@ -3,6 +3,8 @@ import { Table } from 'primeng/table';
 import { ConfirmationService } from 'primeng/primeng';
 import { TranslateService } from '../../../../../commons/translate';
 import { RetencionesItem } from '../../../../../models/sjcs/RetencionesItem';
+import { Router } from '@angular/router';
+import { RetencionesService } from '../retenciones.service';
 @Component({
   selector: 'app-tabla-busqueda-retenciones',
   templateUrl: './tabla-busqueda-retenciones.component.html',
@@ -29,9 +31,11 @@ export class TablaBusquedaRetencionesComponent implements OnInit {
 
   historico: boolean = false;
 
-  constructor(private changeDetectorRef: ChangeDetectorRef, 
-    private confirmationService: ConfirmationService, 
-    private translateService: TranslateService) { }
+  constructor(private changeDetectorRef: ChangeDetectorRef,
+    private confirmationService: ConfirmationService,
+    private translateService: TranslateService,
+    private router: Router,
+    private retencionesService: RetencionesService) { }
 
   ngOnInit() {
     this.getCols();
@@ -147,7 +151,7 @@ export class TablaBusquedaRetencionesComponent implements OnInit {
         message: mess,
         icon: icon,
         accept: () => {
-         this.eliminar();
+          this.eliminar();
         },
         reject: () => {
           this.showMessage("info", "Info", this.translateService.instant("general.message.accion.cancelada"));
@@ -161,6 +165,12 @@ export class TablaBusquedaRetencionesComponent implements OnInit {
     this.eliminarEvent.emit({ retenciones: this.selectedDatos, historico: this.historico });
     this.tabla.reset();
     this.numSelected = 0;
+  }
+
+  openFicha(dato: RetencionesItem) {
+    this.retencionesService.modoEdicion = true;
+    this.retencionesService.retencion = dato;
+    this.router.navigate(["/fichaRetencionJudicial"]);
   }
 
 }

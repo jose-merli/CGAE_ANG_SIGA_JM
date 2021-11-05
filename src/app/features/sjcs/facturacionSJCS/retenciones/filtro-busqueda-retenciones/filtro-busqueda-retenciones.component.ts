@@ -1,17 +1,18 @@
-import { Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { MultiSelect, SelectItem } from 'primeng/primeng';
 import { TranslateService } from '../../../../../commons/translate';
 import { RetencionesRequestDto } from '../../../../../models/sjcs/RetencionesRequestDTO';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { TIPOBUSQUEDA } from '../retenciones.component';
+import { Router } from '@angular/router';
+import { SigaStorageService } from '../../../../../siga-storage.service';
+import { RetencionesService } from '../retenciones.service';
 
 export enum KEY_CODE {
   ENTER = 13
 }
 
-export const FILTROS_RETENCIONES = "filtrosBusquedaRetenciones";
-export const FILTROS_RETENCIONES_APLICADAS = "filtrosBusquedaRetencionesAplicadas";
 @Component({
   selector: 'app-filtro-busqueda-retenciones',
   templateUrl: './filtro-busqueda-retenciones.component.html',
@@ -26,11 +27,11 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
   obligatorio: boolean = false;
   msgs = [];
   progressSpinner: boolean = false;
-  nombreApellidoColegiado: string = undefined;
   comboTiposRetencion: SelectItem[] = [];
   comboDestinatarios: SelectItem[] = [];
   comboPagos: SelectItem[] = [];
 
+  @Input() isLetrado: boolean;
   @Input() permisoEscritura: boolean;
 
   @Output() buscarRetencionesEvent = new EventEmitter<RetencionesRequestDto>();
@@ -39,27 +40,74 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
 
   constructor(private translateService: TranslateService,
     private sigaServices: SigaServices,
-    private commonsService: CommonsService) { }
+    private commonsService: CommonsService,
+    private router: Router,
+    private sigaStorageService: SigaStorageService,
+    private retencionesService: RetencionesService) { }
 
   ngOnInit() {
 
-    if (sessionStorage.getItem('buscadorColegiados')) {
+    if (this.isLetrado) {
 
-      const { nombre, apellidos, nColegiado, idPersona } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
-
-      this.nombreApellidoColegiado = `${apellidos}, ${nombre}`;
-      this.filtros.ncolegiado = nColegiado;
-      this.filtros.idPersona = idPersona;
-
-      sessionStorage.removeItem('buscadorColegiados');
-
+      this.filtros.nombreApellidoColegiado = this.sigaStorageService.nombreApe;
+      this.filtros.ncolegiado = this.sigaStorageService.numColegiado;
+      this.filtros.idPersona = this.sigaStorageService.idPersona;
       this.showDestinatarios = true;
+
+    } else {
+
+      if (sessionStorage.getItem('buscadorColegiados')) {
+
+        if (sessionStorage.getItem("desdeNuevoFiltroRetenciones")) {
+          sessionStorage.removeItem("desdeNuevoFiltroRetenciones");
+          this.retencionesService.modoEdicion = false;
+          this.router.navigate(['/fichaRetencionJudicial']);
+        } else {
+
+          const { nombre, apellidos, nColegiado, idPersona } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
+
+          this.filtros.nombreApellidoColegiado = `${apellidos}, ${nombre}`;
+          this.filtros.ncolegiado = nColegiado;
+          this.filtros.idPersona = idPersona;
+
+          sessionStorage.removeItem('buscadorColegiados');
+          this.showDestinatarios = true;
+        }
+      }
+
     }
 
-    if (sessionStorage.getItem(FILTROS_RETENCIONES)) {
-      this.filtros = JSON.parse(sessionStorage.getItem(FILTROS_RETENCIONES));
+    if (this.retencionesService.filtrosRetenciones != null) {
+      this.filtros = JSON.parse(JSON.stringify(this.retencionesService.filtrosRetenciones));
+
+      if (this.filtros.modoBusqueda && this.filtros.modoBusqueda != null && this.filtros.modoBusqueda.length > 0) {
+        this.modoBusqueda = this.filtros.modoBusqueda;
+        this.modoBusquedaEvent.emit(this.modoBusqueda);
+      }
+
+      if (this.filtros.fechaInicio && this.filtros.fechaInicio != null) {
+        this.filtros.fechaInicio = new Date(this.filtros.fechaInicio);
+      }
+
+      if (this.filtros.fechaFin && this.filtros.fechaFin != null) {
+        this.filtros.fechaFin = new Date(this.filtros.fechaFin);
+      }
+
+      if (this.filtros.fechaAplicacionDesde && this.filtros.fechaAplicacionDesde != null) {
+        this.filtros.fechaAplicacionDesde = new Date(this.filtros.fechaAplicacionDesde);
+      }
+
+      if (this.filtros.fechaAplicacionHasta && this.filtros.fechaAplicacionHasta != null) {
+        this.filtros.fechaAplicacionHasta = new Date(this.filtros.fechaAplicacionHasta);
+      }
+
+      if (this.filtros.idPersona && this.filtros.idPersona != null && this.filtros.idPersona.length > 0) {
+        this.showDestinatarios = true;
+      }
+
       this.showDatosGenerales = true;
-      sessionStorage.removeItem(FILTROS_RETENCIONES);
+
+      this.buscar();
     }
 
     this.getComboTiposRetencion();
@@ -68,6 +116,7 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
   }
 
   changeFilters() {
+    this.filtros.modoBusqueda = this.modoBusqueda;
     this.modoBusquedaEvent.emit(this.modoBusqueda);
   }
 
@@ -106,10 +155,10 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
 
   recuperarColegiado(event) {
     if (event != undefined) {
-      this.nombreApellidoColegiado = event.nombreAp;
+      this.filtros.nombreApellidoColegiado = event.nombreAp;
       this.filtros.ncolegiado = event.nColegiado;
     } else {
-      this.nombreApellidoColegiado = undefined;
+      this.filtros.nombreApellidoColegiado = undefined;
       this.filtros.ncolegiado = undefined;
     }
   }
@@ -199,10 +248,10 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
   buscar() {
 
     if (this.modoBusqueda == TIPOBUSQUEDA.RETENCIONES) {
-      sessionStorage.setItem(FILTROS_RETENCIONES, JSON.stringify(this.filtros));
+      this.retencionesService.filtrosRetenciones = JSON.parse(JSON.stringify(this.filtros));
       this.buscarRetencionesEvent.emit(this.filtros);
     } else if (this.modoBusqueda == TIPOBUSQUEDA.RETENCIONESAPLICADAS) {
-      sessionStorage.setItem(FILTROS_RETENCIONES_APLICADAS, JSON.stringify(this.filtros));
+      this.retencionesService.filtrosRetenciones = JSON.parse(JSON.stringify(this.filtros));
       this.buscarRetencionesAplicadasEvent.emit(this.filtros);
     }
   }
@@ -217,6 +266,17 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
 
   limpiar() {
     this.filtros = new RetencionesRequestDto();
-    this.nombreApellidoColegiado = '';
   }
+
+  botonBuscarColegiadoExpress() {
+    if (sessionStorage.getItem("desdeNuevoFiltroRetenciones")) {
+      sessionStorage.removeItem("desdeNuevoFiltroRetenciones");
+    }
+  }
+
+  nuevo() {
+    sessionStorage.setItem("desdeNuevoFiltroRetenciones", "true");
+    this.router.navigate(["/buscadorColegiados"]);
+  }
+
 }

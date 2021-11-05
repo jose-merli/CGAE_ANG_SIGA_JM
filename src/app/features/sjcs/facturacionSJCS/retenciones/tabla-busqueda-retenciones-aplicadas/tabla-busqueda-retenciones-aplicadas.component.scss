@@ -1,97 +1,29 @@
-@import "src/sass/variables.scss";
 ::ng-deep {
 	.italic {
 		font-style: italic;
 		font-weight: bold;
 		text-decoration: line-through;
 	}
-	.tabla-listadoPrueba {
 
-        .tr-rowexpansion:hover {
-            background-color: white !important;
-        }
-        
-		p-dropdown {
-			text-align: center;
-		}
-		.ui-datatable th.ui-state-default,
-		.ui-table th.ui-state-default,
-		.ui-table .ui-table-thead> tr> th,
-        .tr-rowexpansion th {
-			background: $blue3 !important;
-			text-align: center;
-			color: $grey1 !important;
-			padding: 0.5rem;
-			border: 1px solid $blue3 !important;
-			font-weight: normal;
-			.ui-sortable-column-icon {
-				font-size: 0.85rem;
-			}
-		}
-		.ui-datatable .ui-datatable-tfoot> tr> td,
-		.ui-datatable .ui-datatable-data> tr> td,
-		.ui-table .ui-table-tbody> tr> td {
-			color: $grey1;
-			padding: 0.5rem;
-			font-size: 0.8rem;
-		}
-		.ui-table .ui-table-tbody> tr.ui-state-highlight:not(.tr-rowexpansion),
-		.ui-table.ui-table-hoverable-rows .ui-table-tbody> tr:not(.ui-state-highlight):not(.tr-rowexpansion):hover {
-			background: $secondary-color;
-			td {
-				color: white;
-			}
-			i {
-				color: #888888;
-			}
-		}
-		.ui-widget input {
-			width: 100%;
-		}
-		p-checkbox {
-			display: block;
-			text-align: center;
-		}
-		tr:nth-child(even) {
-			background: $lightBlue3;
-		}
-		.ui-column-filter {
-			font-family: $general-font;
-			text-align: left;
-			padding-left: 0.5rem;
-		}
-		.ui-paginator {
-			background: none;
-			text-align: right;
-			padding: 0.8rem;
-			font-size: 0.8rem;
-			border: none;
-			a {
-				background: none;
-				border: none;
-			}
-		}
-		.ui-paginator-page.ui-state-active {
-			color: $secondary-color;
-			background: none;
-		}
-		.ui-paginator-top {
-			.registros-totales,
-			.numSeleccionados {
-				display: none;
-			}
-		}
-		.ui-paginator-bottom {
-			.selectAll,
-			.seleccionMultiple {
-				display: none;
-			}
-		}
-		.ui-datatable-footer {
-			padding: 0.75rem 1.25rem;
-		}
-		.ui-datatable .ui-datatable-data> tr> td.ui-editable-column.ui-cell-editing {
-			padding: 0.5rem;
-		}
+	.enlace {
+		color: #0000EE !important;
+		text-decoration: underline !important;
+		cursor: pointer !important;
+	}
+
+	.overlayApliReten {
+		max-width: 60%;
+		max-height: 60%;
+		margin-right: 40%;
+		text-align: center;
+	}
+
+	.ui-overlaypanel {
+		border-radius: 2em;
+	}
+
+	.overlayApliReten>.ui-overlaypanel {
+		left: 5% !important;
+		width: 90%;
 	}
 }

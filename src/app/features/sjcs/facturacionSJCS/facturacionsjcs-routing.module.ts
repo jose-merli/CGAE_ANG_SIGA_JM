@@ -7,6 +7,7 @@ import { CartasFacturacionPagoComponent } from './cartas-facturacion-pago/cartas
 import { BusquedaGeneralSJCSComponent } from '../../../commons/busqueda-generalSJCS/busqueda-generalSJCS.component';
 import { GestionPagosComponent } from './facturaciones-pagos/gestion-pagos/gestion-pagos.component';
 import { RetencionesComponent } from './retenciones/retenciones.component';
+import { FichaRetencionJudicialComponent } from './retenciones/ficha-retencion-judicial/ficha-retencion-judicial.component';
 
 const routesFacturacionsjcs: Routes = [
   {
@@ -32,6 +33,11 @@ const routesFacturacionsjcs: Routes = [
   {
     path: 'retenciones',
     component: RetencionesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "fichaRetencionJudicial",
+    component: FichaRetencionJudicialComponent,
     canActivate: [AuthGuard]
   },
   {

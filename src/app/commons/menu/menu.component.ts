@@ -111,6 +111,7 @@ export class MenuComponent implements OnInit {
         }
 
         this.onCloseMenu();
+        this.sigaServices.setRutaMenu(ruta);
         this.router.navigate([ruta]);
       }
 
@@ -118,7 +119,7 @@ export class MenuComponent implements OnInit {
         setTimeout(() => {
           this.onCloseMenu();
         }, 100);
-
+        this.sigaServices.setRutaMenu(ruta);
         this.router.navigate([ruta]);
       }
     }

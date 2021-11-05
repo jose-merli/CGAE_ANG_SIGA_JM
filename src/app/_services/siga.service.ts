@@ -31,6 +31,7 @@ import { endpoints_generales } from "../utils/endpoints_generales";
 import { Documento } from '../features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-designa/ficha-actuacion/tarjeta-doc-ficha-act/tarjeta-doc-ficha-act.component';
 import { ActuacionDesignaItem } from '../models/sjcs/ActuacionDesignaItem';
 import { DocumentoDesignaItem } from '../models/sjcs/DocumentoDesignaItem';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable()
 export class SigaServices {
@@ -668,6 +669,13 @@ export class SigaServices {
 
   private createJusticiable = new Subject<any>();
   createJusticiable$ = this.createJusticiable.asObservable();
+
+  private rutaMenu = new BehaviorSubject<string>('');
+  rutaMenu$ = this.rutaMenu.asObservable();
+
+  setRutaMenu(ruta: string) {
+	  this.rutaMenu.next(ruta);
+  }
 
   constructor(private http: HttpClient, handler: HttpBackend, private httpbackend: HttpClient) {
     this.httpbackend = new HttpClient(handler);

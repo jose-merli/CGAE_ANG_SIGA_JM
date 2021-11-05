@@ -26,9 +26,9 @@
 
     <!-- INICIO CAMPOS FILTRO DESTINATARIOS -->
     <div *ngIf="showDestinatarios" class="module vista-simple">
-      <app-busqueda-colegiado-express [numColegiado]="filtros.ncolegiado" [nombreAp]="nombreApellidoColegiado"
-        [disabled]="esColegiado" (colegiado)="recuperarColegiado($event)" (idPersona)="recuperarIdPersona($event)"
-        [obligatorio]="obligatorio">
+      <app-busqueda-colegiado-express [numColegiado]="filtros.ncolegiado" [nombreAp]="filtros.nombreApellidoColegiado"
+        [disabled]="isLetrado" (colegiado)="recuperarColegiado($event)" (idPersona)="recuperarIdPersona($event)"
+        [obligatorio]="obligatorio" (botonBuscarEvent)="botonBuscarColegiadoExpress()">
       </app-busqueda-colegiado-express>
     </div>
     <!-- FIN CAMPOS FILTRO DESTINATARIOS -->
@@ -123,8 +123,8 @@
         (click)="limpiar()"></button>
       <button pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"
         (click)="buscar()"></button>
-      <button pButton type="button" icon="fa fa-plus" iconPos="left"
-        label="{{ 'general.boton.new' | translate }}" [disabled]="!permisoEscritura"></button>
+      <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate }}"
+        [disabled]="!permisoEscritura" (click)="nuevo()"></button>
     </div>
   </div>
 

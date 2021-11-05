@@ -9,9 +9,8 @@
   <div class="card-body p-0" #tablaFoco>
 
     <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [selectionMode]="modoSeleccion"
-      [responsive]="true" #table class="tabla-listadoPrueba" [paginator]="true" [rows]="selectedItem"
-      paginatorPosition="both" (onRowSelect)="actualizaSeleccionados($event)"
-      (onRowUnselect)="actualizaDesSeleccionados()" dataKey="id">
+      [responsive]="true" #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" paginatorPosition="both"
+      (onRowSelect)="actualizaSeleccionados($event)" (onRowUnselect)="actualizaDesSeleccionados()">
 
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
@@ -28,35 +27,28 @@
           </th>
         </tr>
       </ng-template>
-      <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex" let-expanded="expanded">
+      <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
         <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
 
           <td class="text-center" *ngFor="let col of columns">
 
-            <a [pRowToggler]="dato" (click)="getAplicacionesRetenciones(dato, expanded)">
-              <div *ngIf="col.field == 'numColegiado'">
-                <i [ngClass]="expanded ? 'fa fa-fw fa-chevron-circle-down' : 'fa fa-fw fa-chevron-circle-right'"></i>
-                <span [ngClass]="{'italic': isHistorico(dato)}">{{dato[col.field]}}</span>
-              </div>
-            </a>
+            <div *ngIf="col.field == 'numColegiado'">
+              <a class="enlace" (click)="openFicha(dato)"><span>{{dato[col.field]}}</span></a>
+            </div>
 
+            <div *ngIf="col.field == 'aplicaciones'" class="align-middle text-center">
+              <i class="fas fa-address-card" (click)="getAplicacionesRetenciones(dato, $event)"
+                style="font-size: 2em;"></i>
+            </div>
 
             <div *ngIf="col.field == 'fechaInicio'">
               <span [ngClass]="{'italic': isHistorico(dato)}">{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
             </div>
 
-            <div *ngIf="col.field != 'fechaInicio' && col.field != 'numColegiado'">
+            <div *ngIf="col.field != 'fechaInicio' && col.field != 'aplicaciones' && col.field != 'numColegiado'">
               <span [ngClass]="{'italic': isHistorico(dato)}">{{dato[col.field]}}</span>
             </div>
 
-          </td>
-        </tr>
-      </ng-template>
-
-      <ng-template pTemplate="rowexpansion">
-        <tr class="tr-rowexpansion">
-          <td [attr.colspan]="cols.length" class="td-rowexpansion">
-            <app-tabla-aplicacion-retenciones [datos]="datosAplicacionRetencion"></app-tabla-aplicacion-retenciones>
           </td>
         </tr>
       </ng-template>
@@ -94,15 +86,15 @@
           </div>
         </div>
       </ng-template>
-      
+
     </p-table>
 
   </div>
 
   <div class="card-footer">
     <div class="text-right main-button">
-      <button pButton [disabled]="selectedDatos.length == 0 || selectedDatos == undefined || !permisoEscritura" type="button"
-        icon="fa fa-comment" iconPos="left" label="{{ 'general.boton.comunicar' | translate}}"></button>
+      <button pButton [disabled]="selectedDatos.length == 0 || selectedDatos == undefined || !permisoEscritura"
+        type="button" icon="fa fa-comment" iconPos="left" label="{{ 'general.boton.comunicar' | translate}}"></button>
 
       <button *ngIf="!historico" (click)="mostrarHistorico()" pButton type="button" icon="fa fa-history " iconPos="left"
         label="{{'general.message.mostrarHistorico' | translate}}"></button>
@@ -113,3 +105,7 @@
     </div>
   </div>
 </div>
+
+<p-overlayPanel class="overlayApliReten" [dismissable]="true" [showCloseIcon]="true" #op>
+  <app-tabla-aplicacion-retenciones [datos]="datosAplicacionRetencion"></app-tabla-aplicacion-retenciones>
+</p-overlayPanel>

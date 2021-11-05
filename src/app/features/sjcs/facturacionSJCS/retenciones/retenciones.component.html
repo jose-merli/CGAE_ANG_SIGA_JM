@@ -14,15 +14,17 @@
 
   <app-filtro-busqueda-retenciones (buscarRetencionesEvent)="buscarRetenciones(false, $event)"
     (buscarRetencionesAplicadasEvent)="buscarRetencionesAplicadas(false, $event)"
-    (modoBusquedaEvent)="changeModoBusqueda($event)" [permisoEscritura]="permisoEscritura">
+    (modoBusquedaEvent)="changeModoBusqueda($event)" [permisoEscritura]="permisoEscritura" [isLetrado]="isLetrado">
   </app-filtro-busqueda-retenciones>
 
-  <app-tabla-busqueda-retenciones *ngIf="mostrarTablaResultados && modoBusqueda == 'r'" [datos]="retencionesItemList" [permisoEscritura]="permisoEscritura"
-    (buscarEvent)="buscarRetenciones($event)" (eliminarEvent)="eliminarRetenciones($event)">
+  <app-tabla-busqueda-retenciones *ngIf="mostrarTablaResultados && modoBusqueda == 'r'" [datos]="retencionesItemList"
+    [permisoEscritura]="permisoEscritura" (buscarEvent)="buscarRetenciones($event)"
+    (eliminarEvent)="eliminarRetenciones($event)">
   </app-tabla-busqueda-retenciones>
 
   <app-tabla-busqueda-retenciones-aplicadas *ngIf="mostrarTablaResultados && modoBusqueda == 'a'"
-    [datos]="retencionesAplicadasItemList" [permisoEscritura]="permisoEscritura" (buscarEvent)="buscarRetencionesAplicadas($event)">
+    [datos]="retencionesAplicadasItemList" [permisoEscritura]="permisoEscritura"
+    (buscarEvent)="buscarRetencionesAplicadas($event)">
   </app-tabla-busqueda-retenciones-aplicadas>
 
 </div>

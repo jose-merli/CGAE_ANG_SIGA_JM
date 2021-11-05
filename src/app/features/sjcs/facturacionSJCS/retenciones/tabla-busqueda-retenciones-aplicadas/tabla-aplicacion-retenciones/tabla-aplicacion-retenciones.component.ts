@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
 import { Table } from 'primeng/table';
 import { AplicacionRetencionItem } from '../../../../../../models/sjcs/AplicacionRetencionItem';
 
@@ -13,7 +13,7 @@ export interface Col {
   templateUrl: './tabla-aplicacion-retenciones.component.html',
   styleUrls: ['./tabla-aplicacion-retenciones.component.scss']
 })
-export class TablaAplicacionRetencionesComponent implements OnInit {
+export class TablaAplicacionRetencionesComponent implements OnInit, OnChanges {
 
   @Input() datos: AplicacionRetencionItem[] = [];
 
@@ -67,6 +67,12 @@ export class TablaAplicacionRetencionesComponent implements OnInit {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
     this.tabla.reset();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.datos && changes.datos.currentValue) {
+      this.selectedItem = 10;
+    }
   }
 
 }

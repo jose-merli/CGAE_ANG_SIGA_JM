@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild, AfterViewChecked } from '@angular/core';
 import { CommonsService } from '../../../../_services/commons.service';
 import { Router } from '@angular/router';
 import { TranslateService } from '../../../../commons/translate';
@@ -11,6 +11,8 @@ import { SigaServices } from '../../../../_services/siga.service';
 import { TablaBusquedaRetencionesAplicadasComponent } from './tabla-busqueda-retenciones-aplicadas/tabla-busqueda-retenciones-aplicadas.component';
 import { TablaBusquedaRetencionesComponent } from './tabla-busqueda-retenciones/tabla-busqueda-retenciones.component';
 import { procesos_facturacionSJCS } from '../../../../permisos/procesos_facturacionSJCS';
+import { SigaStorageService } from '../../../../siga-storage.service';
+import { RetencionesService } from './retenciones.service';
 
 export enum TIPOBUSQUEDA {
   RETENCIONES = "r",
@@ -21,7 +23,7 @@ export enum TIPOBUSQUEDA {
   templateUrl: './retenciones.component.html',
   styleUrls: ['./retenciones.component.scss']
 })
-export class RetencionesComponent implements OnInit {
+export class RetencionesComponent implements OnInit, AfterViewChecked {
 
   msgs = [];
   progressSpinner: boolean = false;
@@ -31,27 +33,35 @@ export class RetencionesComponent implements OnInit {
   filtros: RetencionesRequestDto;
   modoBusqueda: string = TIPOBUSQUEDA.RETENCIONES;
   permisoEscritura: boolean;
+  isLetrado: boolean = false;
 
   @ViewChild(TablaBusquedaRetencionesComponent) tablaRetenciones: TablaBusquedaRetencionesComponent;
   @ViewChild(TablaBusquedaRetencionesAplicadasComponent) tablaRetencionesAplicadas: TablaBusquedaRetencionesAplicadasComponent;
 
-  constructor(private sigaServices: SigaServices, 
-    private translateService: TranslateService, 
+  constructor(private sigaServices: SigaServices,
+    private translateService: TranslateService,
     private commonsService: CommonsService,
-		private router: Router) { }
+    private router: Router,
+    private sigaStorageService: SigaStorageService,
+    private retencionesService: RetencionesService,
+    private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit() {
 
     this.commonsService.checkAcceso(procesos_facturacionSJCS.busquedaRetenciones).then(respuesta => {
 
-		this.permisoEscritura = respuesta;
+      this.permisoEscritura = respuesta;
 
-			if (this.permisoEscritura == undefined) {
-				sessionStorage.setItem("codError", "403");
-				sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
-				this.router.navigate(["/errorAcceso"]);
-			}
-		}).catch(error => console.error(error));
+      if (this.permisoEscritura == undefined) {
+        sessionStorage.setItem("codError", "403");
+        sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+        this.router.navigate(["/errorAcceso"]);
+      }
+    }).catch(error => console.error(error));
+
+    this.isLetrado = this.sigaStorageService.isLetrado;
+    this.retencionesService.modoEdicion = false;
+    this.retencionesService.retencion = undefined;
 
   }
 
@@ -194,6 +204,10 @@ export class RetencionesComponent implements OnInit {
         }, 5);
       }
     );
+  }
+
+  ngAfterViewChecked(): void {
+    this.changeDetectorRef.detectChanges();
   }
 
 }
