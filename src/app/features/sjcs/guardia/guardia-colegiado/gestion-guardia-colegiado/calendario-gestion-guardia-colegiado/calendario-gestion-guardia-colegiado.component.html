@@ -15,19 +15,22 @@
           <label class="mr-auto title-ficha pointer">{{'agenda.fichaEventos.datosGenerales.calendario' | translate}}</label>
           <i class="fas fa-external-link-alt mr-2"></i><label (click)="navigateToFichaGuardia()" class="enlace">{{'dato.jgr.guardia.guardias.fichaProgramacion' | translate}}</label>
         </div>
-        <div class="d-flex justify-content-between default" >
+        <div *ngIf="dataRecived" class="d-flex justify-content-between default" >
           <label >{{'administracion.auditoriaUsuarios.fechaDesde' | translate}}: 
-            <span *ngIf = "responseObject.fechaDesde != null || responseObject.fechaDesde != undefined ">{{responseObject.fechaDesde | date: 'dd/MM/yyyy'}}</span>
+            <span>{{calendarioItem.fechaDesde | date: 'dd/MM/yyyy'}}</span>
           </label>
           <label  >{{'administracion.auditoriaUsuarios.fechaHasta' | translate}}: 
-            <span *ngIf = "responseObject.fechaHasta != null || responseObject.fechaHasta != undefined ">{{responseObject.fechaHasta | date: 'dd/MM/yyyy'}}</span>
+            <span>{{calendarioItem.fechaHasta | date: 'dd/MM/yyyy'}}</span>
           </label>
           <label >{{'dato.jgr.guardia.guardias.generado' | translate}}: 
-            <span *ngIf = "responseObject.generado != null || responseObject.generado != undefined ">{{calendarioItem.generado}}</span>
+            <span>{{calendarioItem.generado}}</span>
           </label>
           
           
           <i class="fa fa-angle-down ml-auto" ></i>
+        </div>
+        <div *ngIf="!dataRecived" class="d-flex justify-content-between default" >
+          <label >"Sin calendario para la guardia"</label>
         </div>
       </div>
     </div>

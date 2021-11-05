@@ -266,7 +266,7 @@ export class TablaResultadoOrderComponent implements OnInit {
       }
     })
     this.guardarGuardiasEnConjunto.emit(newRowGroups);
-    this.rowGroups.sort((a, b) => a.cells[0].localeCompare(b.cells[0]))
+   // this.rowGroups.sort((a, b) => a.cells[0].localeCompare(b.cells[0]))
   }
   updateColaGuardia(){
     this.colaGuardiaModified.emit(this.rowGroups);
