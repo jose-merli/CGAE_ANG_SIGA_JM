@@ -39,26 +39,22 @@ export class GestionGuardiaColegiadoComponent implements OnInit {
 
   backTo(){
     
-    if (sessionStorage.getItem("infoGuardiaColeg") != null || sessionStorage.getItem("infoGuardiaColeg") != undefined){
-      let calendarioItemSend = 
+    this.location.back();
+  
+  }
+
+ /*  navigateToFichaGuardia(){
+    let calendarioItemSend = 
       { 'idTurno': this.guardia.idTurno,
         'idConjuntoGuardia': this.guardia.idConjuntoGuardia,
        'idGuardia': this.guardia.idGuardia,
         'fechaCalendarioDesde': this.guardia.fechadesde,
         'fechaCalendarioHasta': this.guardia.fechahasta,
       };
-      this.navigateToFichaGuardia(calendarioItemSend);
-    }else{
-    this.location.back();
-    }
-    sessionStorage.removeItem("infoGuardiaColeg");
-  }
-
-  navigateToFichaGuardia(calendarioItemSend){
     sessionStorage.setItem("datosCalendarioGuardiaColeg",JSON.stringify(calendarioItemSend));
     sessionStorage.setItem("originGuarCole","true");
     this.router.navigate(['/fichaProgramacion']);
-  }
+  } */
 
   ngOnDestroy(): void {
     //Called once, before the instance is destroyed.

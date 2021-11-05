@@ -102,7 +102,11 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
     console.log('fecha no ok: ', this.datosGenerales.fechaProgramacion)
     //this.getComboListaGuardia();
     this.getComboConjuntouardia();
-    this.resaltadoDatos=true;
+    if (this.datosGenerales.fechaDesde != undefined && this.datosGenerales.fechaDesde != null && this.datosGenerales.fechaHasta != undefined && this.datosGenerales.fechaHasta){
+      this.resaltadoDatos=false;
+    }else{
+      this.resaltadoDatos=true;
+    }
 
     this.getCols();
     this.historico = this.persistenceService.getHistorico()
@@ -148,6 +152,7 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
   fillFechaCalendarioDesde(event) {
     console.log('datosGeneralesIniciales!!!!!!!! 3: ', this.datosGeneralesIniciales)
     if (this.formatDate2(event) != null){
+      this.resaltadoDatos = false;
       this.datosGenerales.fechaDesde = this.changeDateFormat(this.formatDate2(event).toString());
     }
     console.log('datosGeneralesIniciales!!!!!!!! 4: ', this.datosGeneralesIniciales)
@@ -155,6 +160,7 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
   fillFechaCalendarioHasta(event) {
     console.log('event: ', event)
     if (this.formatDate2(event) != null){
+      this.resaltadoDatos = false;
       this.datosGenerales.fechaHasta = this.changeDateFormat(this.formatDate2(event).toString());
     }
        console.log('datosGenerales.fechaHasta 1: ', this.datosGenerales.fechaHasta)
@@ -364,7 +370,7 @@ formatDate2(date) {
     let compareDateFuture1 = compareDate(this.datosGenerales.fechaDesde, this.changeDateFormat(this.formatDate2(new Date()).toString()), true);
     let compareDateFuture2 = compareDate(this.datosGenerales.fechaHasta, this.changeDateFormat(this.formatDate2(new Date()).toString()), true);
  
-      if (compareDateOk != -1) {
+      if (compareDateOk == 1) {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Rango de fechas incorrecto. Debe cumplir que la fecha desde sea menor o igual que la fecha hasta");
       }else if (compareDateFuture1 != -1 || compareDateFuture2 != -1){
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No existen guardias asociadas a una programación con fechas futuras");
@@ -483,16 +489,8 @@ function compareDate (fechaA:  any, fechaB:  any, isAsc: boolean){
 
 }
 
-function compare(a: number | string | Date, b: number | string | Date, isAsc: boolean) {
-  console.log("comparacion  a:"+ a+"; b:"+ b);
-
-  if (typeof a === "string" && typeof b === "string") {
-    console.log("comparacion  de cadenas");
-    a = a.toLowerCase();
-    b = b.toLowerCase();
-  }
-
-  console.log("compare isAsc:"+ isAsc+";");
+function compare(a: Date, b: Date, isAsc: boolean) {
+ 
 
   if (a==null && b!=null){
     return ( 1 ) * (isAsc ? 1 : -1);
@@ -500,6 +498,9 @@ function compare(a: number | string | Date, b: number | string | Date, isAsc: bo
   if (a!=null && b==null){
     return ( -1 ) * (isAsc ? 1 : -1);
   }
-
-  return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+    if ( a.getTime() === b.getTime() ){
+      return 0
+    }else{
+      return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+    }
 }

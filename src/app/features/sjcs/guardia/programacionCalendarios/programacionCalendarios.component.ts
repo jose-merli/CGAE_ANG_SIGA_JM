@@ -109,10 +109,10 @@ export class ProgramacionCalendariosComponent implements OnInit {
   ];
 
   comboEstados = [
-    { label: "Pendiente", value: "5" },
+    { label: "Pendiente", value: "3" },
     { label: "Programada", value: "1" },
     { label: "En proceso", value: "2" },
-    { label: "Procesada con Errores", value: "3" },
+    { label: "Procesada con Errores", value: "5" },
     { label: "Generada", value: "4" }
   ];
   @ViewChild(FiltrosGuardiaCalendarioComponent) filtros;
@@ -695,7 +695,7 @@ guardarInc(nombreTurno, nombreGuardia, nombreTurnoIncompatible, nombreGuardiaInc
         let estadoNumerico = "0";
         switch (event.estado) {
           case "Pendiente":
-            estadoNumerico = "5";
+            estadoNumerico = "3";
             break;
           case "Programada":
             estadoNumerico = "1";
@@ -704,7 +704,7 @@ guardarInc(nombreTurno, nombreGuardia, nombreTurnoIncompatible, nombreGuardiaInc
             estadoNumerico = "2";
             break;
           case "Procesada con Errores":
-            estadoNumerico = "3";
+            estadoNumerico = "5";
             break;
           case "Generada":
             estadoNumerico = "4";

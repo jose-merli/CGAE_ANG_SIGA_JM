@@ -266,6 +266,7 @@ export class TablaResultadoOrderComponent implements OnInit {
       }
     })
     this.guardarGuardiasEnConjunto.emit(newRowGroups);
+   // this.rowGroups.sort((a, b) => a.cells[0].localeCompare(b.cells[0]))
   }
   updateColaGuardia(){
     this.colaGuardiaModified.emit(this.rowGroups);
@@ -903,21 +904,21 @@ this.totalRegistros = this.rowGroups.length;
       //this.to = this.totalRegistros;
       }
       nuevo(){
+        console.log(this.rowGroups)
         this.disableGen.emit(true);
         this.getComboTurno();
         let newCells: Cell[] = [
           { type: 'input', value: '', combo: null, hiddenValue:'', required:false},
           { type: 'selectDependency', value: '' , combo: this.comboTurno, hiddenValue:'', required:false},
           { type: 'selectDependency2', value: '', combo: this.comboGuardia, hiddenValue:'', required:false},
-          { type: 'select', value: '', combo: this.comboGenerado, hiddenValue:'', required:false},
-          { type: 'input', value: '', combo: null, hiddenValue:'', required:false}
+          { type: 'text', value: '', combo: null, hiddenValue:'', required:false},
+          { type: 'text', value: '', combo: null, hiddenValue:'', required:false}
           ];
           let rowObject: Row = new Row();
           rowObject.cells = newCells;
-          this.rowGroups.push(rowObject);
+          this.rowGroups.unshift(rowObject);
+          this.rowGroupsAux = this.rowGroups;
           this.totalRegistros = this.rowGroups.length;
-          console.log('this.rowGroups NUEVO: ', this.rowGroups)
-          console.log('this.totalRegistros NUEVO: ', this.totalRegistros)
           this.to = this.totalRegistros;
           this.cd.detectChanges();
       }

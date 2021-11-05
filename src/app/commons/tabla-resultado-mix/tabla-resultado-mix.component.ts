@@ -97,6 +97,8 @@ export class TablaResultadoMixComponent implements OnInit {
   jsonParaEnviar: { tipoAccion:any, datos: any};
   
   infoHabilitado: { isLetrado: any; validarjustificaciones:any; estadoNombre:any};
+  last;
+  entra = false;
   comboTurnos = [];
 
 
@@ -702,6 +704,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
     //duplicar-> fechadesde = fechahastaanterios + 1 dia
     let fd = new Date (this.changeDateFormat2(this.selectedRowValue[3].value))
     fd.setDate(fd.getDate() + 1);
+    //'fechaDesde': this.datetoString(fd),
     let dataToSend = {
       'duplicar': true,
       'tabla': this.rowGroups,
@@ -710,7 +713,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
       'generado': this.selectedRowValue[8].value,
       'numGuardias': this.selectedRowValue[9].value,
       'listaGuarias': this.selectedRowValue[5].value,
-      'fechaDesde': this.datetoString(fd),
+      'fechaDesde': '',
       'fechaHasta': '',
       'fechaProgramacion': this.selectedRowValue[4].value.value,
       'estado': this.selectedRowValue[7].value,
@@ -843,23 +846,76 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
       this.totalRegistros = this.rowGroups.length;
     }
   }
+
+  getLastCalendario(idTurno, idGuardia, fechaDesdeSelected, idGuardiaSelected){
+    let datosEntrada = 
+    { 'idTurno': idTurno,
+      'idConjuntoGuardia': null,
+     'idGuardia': idGuardia,
+      'fechaCalendarioDesde': null,
+      'fechaCalendarioHasta': null,
+      'fechaProgramadaDesde': null,
+      'fechaProgramadaHasta': null,
+    };
+    this.sigaServices.post(
+      "guardiaUltimoCalendario_buscar", datosEntrada).subscribe(
+        data => {
+          console.log('data: ', data.body)
+          let error = JSON.parse(data.body).error;
+          let datos = JSON.parse(data.body);
+          if(datos){
+
+              this.last  = 
+              {
+                'duplicar': false,
+                'turno': datos.turno,
+                'nombre': datos.guardia,
+                'tabla' : [],
+                'idTurno': datos.idTurno,
+                'idGuardia': datos.idGuardia,
+                'observaciones': datos.observaciones,
+                'fechaDesde': datos.fechaDesde.split("-")[2].split(" ")[0] +"/"+ datos.fechaDesde.split("-")[1] + "/"+ datos.fechaDesde.split("-")[0],
+                'fechaHasta': datos.fechaHasta.split("-")[2].split(" ")[0] +"/"+ datos.fechaHasta.split("-")[1] + "/"+ datos.fechaHasta.split("-")[0],
+                'fechaProgramacion': '',
+                'estado': '' ,
+                'generado': datos.generado,
+                'numGuardias': datos.numGuardias,
+                'idCalG': datos.idCalG,
+                'listaGuarias': {value : ''},
+                'idCalendarioProgramado': datos.idCalendarioProgramado,
+                'facturado': datos.facturado,
+                'asistenciasAsociadas': datos.asistenciasAsociadas
+              };
+              if (compareDate (this.last.fechaDesde, fechaDesdeSelected, true) == 1 && idGuardiaSelected == this.last.idGuardia){
+                this.entra = true;
+              }
+          }
+
+        },
+        (error)=>{
+          console.log(error);
+        }
+      );
+
+
+  }
   eliminar(){
     let entra = false;
     if(!this.incompatibilidades){
       this.selectedArray.forEach((index) => {
           let fechaDesdeSelected = this.rowGroups[index].cells[2].value;
+          let idTurnoSelected = this.rowGroups[index].cells[11].value;
           let idGuardiaSelected = this.rowGroups[index].cells[12].value;
           let facturadoSelected = this.rowGroups[index].cells[13].value;
           let asistenciasSelected = this.rowGroups[index].cells[14].value;
           this.rowGroups.forEach(rg => {
             let fechaDesde = rg.cells[2].value;
             let idGuardia = rg.cells[12].value;
-            if (compareDate (fechaDesde, fechaDesdeSelected, true) == 1 && idGuardiaSelected == idGuardia){
-              entra = true;
-            }
+            this.getLastCalendario(idTurnoSelected, idGuardiaSelected, fechaDesdeSelected, idGuardiaSelected);
+            
           });
         
-          if (entra){
+          if (entra || this.entra){
             //fechaDesde > fechaDesdeSelected: Calendarios seleccionados no son los últimos generados (por fecha desde) para la misma guardia.
             let errorcalPosterior = "No puede eliminarse el calendario con fecha desde " + fechaDesdeSelected + " , ya que existen calendarios posteriores para esta guardia";
               let mess = 'Se van a borrar ' + this.selectedArray.length + ' calendarios ya generados en la programación seleccionada. ¿Desea continuar?';
@@ -956,6 +1012,22 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
     return fecha;
   }
 
+  transformaFechaSol(fecha) {
+    if (fecha != null) {
+      let jsonDate = JSON.stringify(fecha);
+      let rawDate = jsonDate.slice(1, -1);
+        let [fechaMod,hora] = rawDate.split(" ");
+        let arrayDate = fechaMod.split("/")[2] + "-" + fechaMod.split("/")[1] + "-" + fechaMod.split("/")[0];
+        fecha = new Date((arrayDate += "T"+hora));
+      
+    } else {
+      fecha = undefined;
+    }
+
+
+    return fecha;
+  }
+
   changeFecha(event){
     this.fechaActual = event;
   }
@@ -1014,7 +1086,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
         'idinstitucion' : obj[9].value,
         'idturno': obj[10].value,
         'idguardia': obj[11].value,
-        'fechasolicitud': this.transformaFecha(obj[4].value),
+        'fechasolicitud': this.transformaFechaSol(obj[4].value),
         'fechavalidacion': this.transformaFecha(obj[5].value),
         'fechabaja': this.transformaFecha(obj[12].value),
         'observacionessolicitud': obj[13].value,
@@ -1054,7 +1126,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
         'idinstitucion' : obj[9].value,
         'idturno': obj[10].value,
         'idguardia': obj[11].value,
-        'fechasolicitud': this.transformaFecha(obj[4].value),
+        'fechasolicitud': this.transformaFechaSol(obj[4].value),
         'fechavalidacion': this.transformaFecha(obj[5].value),
         'fechabaja': this.transformaFecha(obj[12].value),
         'observacionessolicitud': obj[13].value,
@@ -1091,7 +1163,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
         'idinstitucion' : obj[9].value,
         'idturno': obj[10].value,
         'idguardia': obj[11].value,
-        'fechasolicitud': this.transformaFecha(obj[4].value),
+        'fechasolicitud': this.transformaFechaSol(obj[4].value),
         'fechavalidacion': this.transformaFecha(obj[5].value),
         'fechabaja': this.transformaFecha(obj[12].value),
         'observacionessolicitud': obj[13].value,
@@ -1131,7 +1203,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
         'idinstitucion' : obj[9].value,
         'idturno': obj[10].value,
         'idguardia': obj[11].value,
-        'fechasolicitud': this.transformaFecha(obj[4].value),
+        'fechasolicitud': this.transformaFechaSol(obj[4].value),
         'fechavalidacion': this.transformaFecha(obj[5].value),
         'fechabaja': this.transformaFecha(obj[12].value),
         'observacionessolicitud': obj[13].value,

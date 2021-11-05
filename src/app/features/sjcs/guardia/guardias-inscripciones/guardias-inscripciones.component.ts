@@ -217,6 +217,11 @@ export class GuardiasInscripcionesComponent implements OnInit {
     return this.datepipe.transform(date, pattern);
 
   }
+  formatDateSol(date) {
+    const pattern = 'dd/MM/yyyy hh:mm:ss';
+    return this.datepipe.transform(date, pattern);
+
+  }
 
 
 
@@ -352,7 +357,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
                 'apellidos2': dat.apellidos2,
                 'idinstitucion': dat.idinstitucion,
                 'idpersona': dat.idpersona,
-                'fechasolicitud': this.formatDate(dat.fechasolicitud),
+                'fechasolicitud': this.formatDateSol(dat.fechasolicitud),
                 'observacionessolicitud': dat.observacionessolicitud,
                 'fechavalidacion': this.formatDate(dat.fechavalidacion),
                 'fechabaja': this.formatDate(dat.fechabaja),
@@ -667,11 +672,11 @@ export class GuardiasInscripcionesComponent implements OnInit {
         });
   }
 
-  llamadaBackSolicitarBaja() {
+  llamadaBackSolicitarBaja(objetoValidacion) {
 
     this.progressSpinner = true;
     this.sigaServices.post(
-      "guardiasInscripciones_solicitarBajaInscripciones", this.objetoValidacion).subscribe(
+      "guardiasInscripciones_solicitarBajaInscripciones", objetoValidacion).subscribe(
         data => {
           console.log("entra en el data");
           this.progressSpinner = false;
@@ -721,7 +726,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
   }
 
 
-  confirmBaja() {
+  confirmBaja(objetoValidacion) {
     let mess = this.translateService.instant(
       "justiciaGratuita.oficio.inscripciones.mensajeSaltos"
     );
@@ -731,7 +736,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
       icon: icon,
       accept: () => {
         //permitirá hacer la baja
-        this.llamadaBackSolicitarBaja();
+        this.llamadaBackSolicitarBaja(objetoValidacion);
         console.log("Entró por aquí");
 
 
@@ -750,10 +755,10 @@ export class GuardiasInscripcionesComponent implements OnInit {
     });
   }
 
-   llamadaBackTrabajosSJCS() {
+   llamadaBackTrabajosSJCS(objetoValidacion) {
     this.progressSpinner = true;
     this.sigaServices.post(
-      "guardiasInscripciones_buscarTrabajosSJCS", this.objetoValidacion).subscribe(
+      "guardiasInscripciones_buscarTrabajosSJCS", objetoValidacion).subscribe(
         data => {
           console.log("entra en el data");
           this.progressSpinner = false;
@@ -762,10 +767,10 @@ export class GuardiasInscripcionesComponent implements OnInit {
           if (this.existeTrabajosSJCS == "true") {
             //mensaje de error
             if (this.jsonParaEnviar.tipoAccion == "solicitarBaja") {
-              this.confirmBaja();
+              this.confirmBaja(objetoValidacion);
             }
           }else{
-            this.llamadaBackSolicitarBaja();
+            this.llamadaBackSolicitarBaja(objetoValidacion);
           }
 
           
@@ -836,6 +841,8 @@ export class GuardiasInscripcionesComponent implements OnInit {
         
         this.llamadaBackValidar(this.objetoValidacion,estado);
         this.objetoValidacion = [];
+        this.buscarIns()//se vuelve a buscar las inscripciones una vez que se realiza cualquier accion
+
       }else{
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), "La validacion solo se lleva a cabo sobre inscripciones en estado de Pendiente de Alta y Pendiente de Baja.");
 
@@ -857,6 +864,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
       });
 
       this.llamadaBackDenegar(this.objetoValidacion);
+      this.buscarIns()//se vuelve a buscar las inscripciones una vez que se realiza cualquier accion
 
     } else if (this.jsonParaEnviar.tipoAccion == "solicitarBaja") {
 
@@ -882,10 +890,11 @@ export class GuardiasInscripcionesComponent implements OnInit {
             "guardiasInscripciones_buscarGuardiasAsocTurnos", this.objetoValidacion).subscribe();
 
           //•	Al realizar la solicitud el sistema iniciara las consultas necesarias para determinar si el letrado tiene trabajos SJCS pendientes asociados a dicho turno. En el caso de que existan, se mostrará un mensaje de confirmación para realizar la baja de que hay trabajos SJCS pendientes y permitirá realizar la baja.
-          this.llamadaBackTrabajosSJCS();
+          this.llamadaBackTrabajosSJCS(this.objetoValidacion);
           this.objetoValidacion = [];
 
           //this.llamadaBackSolicitarBaja();
+          this.buscarIns()//se vuelve a buscar las inscripciones una vez que se realiza cualquier accion
         }
 
 
@@ -919,12 +928,13 @@ export class GuardiasInscripcionesComponent implements OnInit {
 
       this.llamadaBackCambiarFecha(this.objetoValidacion);
         this.objetoValidacion = [];
+        this.buscarIns()//se vuelve a buscar las inscripciones una vez que se realiza cualquier accion
 
 
 
 
     }
-
+  
 
   }
   transformaFecha(fecha) {

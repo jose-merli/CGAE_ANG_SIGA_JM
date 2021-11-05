@@ -29,11 +29,11 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
   filtros: InscripcionesItems = new InscripcionesItems();
   turnos: any[] = [];
   comboEstados = [
-    { label: "Pendiente de Alta", value: "0" },
-    { label: "Alta", value: "1" },
-    { label: "Pendiente de Baja", value: "2" },
-    { label: "Baja", value: "3" },
-    { label: "Denegada", value: "4" }
+    { label: "Pendiente de Alta", value: 0 },
+    { label: "Alta", value: 1 },
+    { label: "Pendiente de Baja", value: 2 },
+    { label: "Baja", value: 3 },
+    { label: "Denegada", value: 4 }
   ];
   usuarioBusquedaExpress = {
     numColegiado: '',
@@ -47,6 +47,7 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
   /*Éste método es útil cuando queremos queremos informar de cambios en los datos desde el hijo,
     por ejemplo, si tenemos un botón en el componente hijo y queremos actualizar los datos del padre.*/
   @Output() filtrosValues = new EventEmitter<InscripcionesItems>();
+  permisos: any;
 
   constructor(private router: Router,
     private sigaServices: SigaServices,
@@ -81,7 +82,7 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
       // this.isBuscar();
     }
     if (this.persistenceService.getPermisos() != undefined) {
-      this.permisoEscritura = this.persistenceService.getPermisos();
+      this.permisos = this.persistenceService.getPermisos();
     }
     if (this.persistenceService.getFiltros() != undefined) {
       this.filtros = this.persistenceService.getFiltros();
