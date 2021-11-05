@@ -510,6 +510,11 @@ import { ConstructorConsultasComponent } from './features/informes-comunicacione
 import { FiltrosBusquedaAdeudosComponent } from './features/facturacion/ficheros-adeudos/filtros-busqueda-adeudos/filtros-busqueda-adeudos.component';
 import { TablaAdeudosComponent } from './features/facturacion/ficheros-adeudos/tabla-adeudos/tabla-adeudos.component';
 import { GestionAdeudosComponent } from './features/facturacion/ficheros-adeudos/gestion-adeudos/gestion-adeudos.component';
+import { DatosGeneralesCuentaBancariaComponent } from './features/facturacion/gestion-cuentas-bancarias/ficha-cuenta-bancaria/datos-generales-cuenta-bancaria/datos-generales-cuenta-bancaria.component';
+import { ComisionCuentaBancariaComponent } from './features/facturacion/gestion-cuentas-bancarias/ficha-cuenta-bancaria/comision-cuenta-bancaria/comision-cuenta-bancaria.component';
+import { ConfiguracionCuentaBancariaComponent } from './features/facturacion/gestion-cuentas-bancarias/ficha-cuenta-bancaria/configuracion-cuenta-bancaria/configuracion-cuenta-bancaria.component';
+import { UsoFicherosCuentaBancariaComponent } from './features/facturacion/gestion-cuentas-bancarias/ficha-cuenta-bancaria/uso-ficheros-cuenta-bancaria/uso-ficheros-cuenta-bancaria.component';
+import { UsosSufijosCuentaBancariaComponent } from './features/facturacion/gestion-cuentas-bancarias/ficha-cuenta-bancaria/usos-sufijos-cuenta-bancaria/usos-sufijos-cuenta-bancaria.component';
 enableRipple(true);
 
 @NgModule({
@@ -935,7 +940,12 @@ enableRipple(true);
 		TarjetaDescuentosAnticiposCompraSuscripcionComponent,
 		FiltrosBusquedaAdeudosComponent,
 		TablaAdeudosComponent,
-		GestionAdeudosComponent
+		GestionAdeudosComponent,
+		DatosGeneralesCuentaBancariaComponent,
+		ComisionCuentaBancariaComponent,
+		ConfiguracionCuentaBancariaComponent,
+		UsoFicherosCuentaBancariaComponent,
+		UsosSufijosCuentaBancariaComponent
 	],
 	imports: [
 		Paginador3Module,

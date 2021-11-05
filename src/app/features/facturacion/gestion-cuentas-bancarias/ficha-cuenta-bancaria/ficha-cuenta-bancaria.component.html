@@ -1,3 +1,25 @@
-<p>
-  ficha-cuenta-bancaria works!
-</p>
+<div class="ficha-comunicacion-container" id="top">
+  <div class="header-title">
+    <i class="fa fa-square"></i>
+    <p>{{ "menu.facturacion" | translate }}
+      <i class="fa fa-angle-right"></i>{{ "menu.facturacion.gestionCuentasBancarias" | translate }}
+    </p>
+  </div>
+
+  <div>
+    <app-tarjeta-resumen-fija class="pb-50" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="datos" [icono]="iconoTarjetaResumen" (modoEdicionSend)="modoEdicionSend($event)" [enlaces]="enlacesTarjetaResumen" (isOpen)="isOpenReceive($event)" [manuallyOpened]="manuallyOpened">
+    </app-tarjeta-resumen-fija>
+
+    <app-datos-generales-cuenta-bancaria [openTarjetaDatosGenerales]="openTarjetaDatosGenerales" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (guardadoSend)="guardadoSend()"></app-datos-generales-cuenta-bancaria>
+    <app-comision-cuenta-bancaria></app-comision-cuenta-bancaria>
+    <app-configuracion-cuenta-bancaria></app-configuracion-cuenta-bancaria>
+    <app-uso-ficheros-cuenta-bancaria></app-uso-ficheros-cuenta-bancaria>
+    <app-usos-sufijos-cuenta-bancaria></app-usos-sufijos-cuenta-bancaria>
+  </div>
+</div>
+
+<div class="mt-3 text-right main-button" id="down">
+  <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate }}"></button>
+</div>
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" width="425"></p-confirmDialog>

@@ -1,0 +1,101 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="ficha-container" id="datosGenerales">
+  <div class="card" id="top">
+    <div class="card-header header-ficha">
+
+      <!-- Cabecera en ficha cerrada -->
+      <div *ngIf="!esFichaActiva('datosGenerales')" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('datosGenerales')">
+          <div class="img-colegiado">
+            <i class="far fa-address-book icon-ficha pointer"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('datosGenerales')">
+            <label class="mr-auto title-ficha pointer">{{ 'general.message.datos.generales' | translate }}</label>
+          </div>
+          <div class="d-flex justify-content-between default">
+            <label>IBAN: 
+              <span>{{ body.IBAN }}</span></label>
+            <label>Descripción: 
+              <span>{{ body.descripcion }}</span></label>
+            <label>BIC: 
+              <span>{{ body.BIC }}</span></label>
+            <label>Banco: 
+              <span>{{ body.nombre }}</span></label>
+            <label>Estado: 
+              <span>{{ body.numUsos }}</span></label>
+            
+            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('datosGenerales')"
+              *ngIf="!esFichaActiva('datosGenerales')"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cabecera en ficha abierta -->
+      <div *ngIf="esFichaActiva('datosGenerales')" class=" header-ficha-open d-flex justify-content-start align-items-center"
+        (click)="abreCierraFicha('datosGenerales')">
+        <div class="img-colegiado">
+          <i class="far fa-address-book icon-ficha"></i>
+        </div>
+        <label class="title-ficha pointer">{{ 'general.message.datos.generales' | translate }}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <!-- Cuerpo en ficha abierta -->
+    <div *ngIf="esFichaActiva('datosGenerales')" class="card-body card-body-ficha">
+      <div class="form-row lg-12 md-12">
+        <div class="form-group col-lg-3 col-md-3">
+          <label>IBAN (*)</label>
+          <input type="text" class="form-control" [(ngModel)]="body.IBAN" pInputText>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>Descripción (*)</label>
+          <input type="text" class="form-control" [(ngModel)]="body.descripcion" pInputText>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>C. contable pago por banco</label>
+          <input type="text" class="form-control" [(ngModel)]="body.asientoContable" pInputText>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>C. contable pago por tarjeta</label>
+          <input type="text" class="form-control" [(ngModel)]="body.cuentaContableTarjeta" pInputText>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>BIC (*)</label>
+          <input type="text" class="form-control" [(ngModel)]="body.BIC" [disabled]="true" pInputText>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>Banco (*)</label>
+          <input type="text" class="form-control" [(ngModel)]="body.nombre" [disabled]="true" pInputText>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>Estado (*)</label>
+          <input type="text" class="form-control" [(ngModel)]="body.numUsos" [disabled]="true" pInputText>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>Nº ficheros emitidos</label>
+          <input type="text" class="form-control" [(ngModel)]="body.numFicheros" [disabled]="true" pInputText>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="esFichaActiva('datosGenerales')" class="card-footer">
+      <div class="text-right main-button">
+        <button pButton *ngIf="esActivo()" (click)="confirmEliminar()" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.eliminar' | translate }}"></button>
+        <button pButton *ngIf="!esActivo()" (click)="confirmReactivar()" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.reactivar' | translate }}"></button>
+
+        <button pButton type="button" icon="fa fa-undo" iconPos="left"
+          (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
+
+        <button pButton type="button" icon="fa fa-save" iconPos="left"
+          (click)="checkSave()" label="{{ 'general.boton.guardar' | translate }}"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
