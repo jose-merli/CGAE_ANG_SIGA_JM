@@ -58,7 +58,7 @@
 
                     <div *ngFor="let cell of rowGroup.rows[0]['cells'] | slice:fromRowGroup:toRowGroup; let z = index"
                         class="table-cell p-2 selectedRowClass" #BorderedCell
-                        [ngClass]="{'collapse':posicionOcultar(z + 2)}" [ngStyle]="setMyStyles(cell.size)" #cellSelected>
+                        [ngClass]="{'collapse':posicionOcultar(z + numCell)}" [ngStyle]="setMyStyles(cell.size)" #cellSelected>
 
                        <div *ngIf="cell.type != 'invisible'" [ngStyle]="setMyStyles(cell.size)" class="cell-wrapper selectedRowClass w-100">
                             <span class="column-title">{{cabeceras[z+1].name}}</span>
@@ -167,7 +167,7 @@
                     <div *ngIf="!posicionOcultar(-1) && pantalla == 'AE'" class="table-row-header p-2 hidden selectedRowClass mw81">
                     </div>
                     <div *ngFor="let cell of row['cells']  | slice:fromRowGroup:toRowGroup; let z = index" class="table-cell p-2 selectedRowClass"
-                        [ngClass]="{'collapse':posicionOcultar(z + 2), 'borders-child': isPar(i)}" [ngStyle]="setMyStyles(cell.size)" #cellSelected>
+                        [ngClass]="{'collapse':posicionOcultar(z + numCell), 'borders-child': isPar(i)}" [ngStyle]="setMyStyles(cell.size)" #cellSelected>
                         <div *ngIf="cell.type != 'invisible'" [ngStyle]="setMyStyles(cell.size)" class="cell-wrapper selectedRowClass w-100">
                             <span class="column-title">{{cabeceras[z+1].name}}</span>
                             <span class="w100 cell-value selectWrap" *ngIf="cell.type == 'text'">{{cell.value}}</span>

@@ -76,6 +76,7 @@ export let endpoints_guardia: any = {
 
     //Asistencia
     busquedaGuardias_getTurnosByColegiadoFecha: "asistencia/turnosByColegiadoFecha",
+    busquedaGuardias_getGuardiasByTurnoColegiadoFecha: "asistencia/guardiasByTurnoColegiadoFecha",
     busquedaGuardias_getTiposAsistencia: "asistencia/getTiposAsistencia",
     busquedaGuardias_getLetradosGuardiaDia: "asistencia/getColegiadosGuardiaDia",
     busquedaGuardias_buscarAsistenciasExpress: "asistencia/buscarAsistenciasExpress",
