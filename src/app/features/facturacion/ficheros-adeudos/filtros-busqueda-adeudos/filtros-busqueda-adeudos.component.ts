@@ -23,6 +23,9 @@ export class FiltrosBusquedaAdeudosComponent implements OnInit {
 
   comboSufijo: ComboItem[] = [];
   comboCuentasBancarias: ComboItem[] = [];
+  comboOrigen: ComboItem[] = [];
+  comboSeriesFacturacion: ComboItem[] = [];
+
   msgs: any[] = [];
 
   fechaHoy = new Date();
@@ -53,6 +56,17 @@ export class FiltrosBusquedaAdeudosComponent implements OnInit {
   cargaCombos(){
     this.getComboCuentaBancaria();
     this.getComboSufijo();
+    this.getComboOrigen();
+    this.getComboSeriesFacturacion();
+  }
+
+  getComboSeriesFacturacion(){
+
+  }
+
+  getComboOrigen(){
+    this.comboOrigen.push({value: '0', label: this.translateService.instant('facturacion.ficherosAdeudos.facturacionDeSerie'), local: undefined});
+    this.comboOrigen.push({value: '1', label: this.translateService.instant('facturacion.ficherosAdeudos.facturasSueltas'), local: undefined});
   }
 
   getComboSufijo() {

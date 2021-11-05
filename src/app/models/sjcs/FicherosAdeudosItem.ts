@@ -19,6 +19,8 @@ export class FicherosAdeudosItem {
 	sufijo: String;
 	totalRemesa: String;
 	numRecibos: String;
-
+	origen: String;
+	facturacion: String;
+	
     constructor() { }
 }
