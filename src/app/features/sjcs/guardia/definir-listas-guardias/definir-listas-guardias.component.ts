@@ -114,11 +114,15 @@ export class DefinirListasGuardiasComponent implements OnInit {
     this.hideResponse();
     this.progressSpinner = true;
     let listaGuardiasItem = Object.assign({},this.buscador.filtro);
-    if(this.buscador.filtro.idGrupoZona != "" && this.buscador.filtro.idGrupoZona != undefined){
+    if(this.buscador.filtro.idGrupoZona  && this.buscador.filtro.idGrupoZona.length > 0){
       listaGuardiasItem.idGrupoZona = this.buscador.filtro.idGrupoZona.toString();
+    }else{
+      listaGuardiasItem.idGrupoZona = "";
     }
-    if(this.buscador.filtro.idZona != "" && this.buscador.filtro.idZona != undefined){
+    if(this.buscador.filtro.idZona && this.buscador.filtro.idZona.length > 0){
       listaGuardiasItem.idZona = this.buscador.filtro.idZona.toString();
+    }else{
+      listaGuardiasItem.idZona = "";
     }
     this.sigaServices
     .post("listasGuardias_searchListaGuardias", listaGuardiasItem)

@@ -85,11 +85,15 @@ export class GuardiaColegiadoComponent implements OnInit {
     if(this.checkFilters()){
       this.progressSpinner = true;
       let guardiaItem = Object.assign({},this.filtros.filtros);
-      if(this.filtros.filtros.idTurno != "" && this.filtros.filtros.idTurno != undefined){
+      if(this.filtros.filtros.idTurno  && this.filtros.filtros.idTurno.length > 0){
         guardiaItem.idTurno = this.filtros.filtros.idTurno.toString();
+      }else{
+        guardiaItem.idTurno = "";
       }
-      if(this.filtros.filtros.idGuardia != "" && this.filtros.filtros.idGuardia != undefined){
+      if(this.filtros.filtros.idGuardia && this.filtros.filtros.idGuardia.length > 0){
         guardiaItem.idGuardia = this.filtros.filtros.idGuardia.toString();
+      }else{
+        guardiaItem.idGuardia = "";
       }
       this.sigaServices.post("guardiasColegiado_buscarGuardiasColegiado", guardiaItem).subscribe(
         n => {

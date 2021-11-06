@@ -83,35 +83,55 @@ export class BuscadorGuardiaComponent implements OnInit {
     this.persistenceService.setHistorico(event);
     this.progressSpinner = true;
     let guardiaItem = Object.assign({},this.filtros.filtroAux);
-    if(guardiaItem.idTurno != "" && guardiaItem.idTurno != undefined){
+    if(guardiaItem.idTurno && guardiaItem.idTurno.length > 0){
       guardiaItem.idTurno = guardiaItem.idTurno.toString();
+    }else{
+      guardiaItem.idTurno ="";
     }
-    if(guardiaItem.area != "" && guardiaItem.area != undefined){
+    if(guardiaItem.area && guardiaItem.area.length > 0){
       guardiaItem.area = guardiaItem.area.toString();
+    }else{
+      guardiaItem.area ="";
     }
-    if(guardiaItem.materia != "" && guardiaItem.materia != undefined){
+    if(guardiaItem.materia && guardiaItem.materia.length > 0){
       guardiaItem.materia = guardiaItem.materia.toString();
+    }else{
+      guardiaItem.materia ="";
     }
-    if(guardiaItem.grupoZona != "" && guardiaItem.grupoZona != undefined){
+    if(guardiaItem.grupoZona && guardiaItem.grupoZona.length > 0){
       guardiaItem.grupoZona = guardiaItem.grupoZona.toString();
+    }else{
+      guardiaItem.grupoZona ="";
     }
-    if(guardiaItem.zona != "" && guardiaItem.zona != undefined){
+    if(guardiaItem.zona  && guardiaItem.zona.length > 0){
       guardiaItem.zona = guardiaItem.zona.toString();
+    }else{
+      guardiaItem.zona ="";
     }
-    if(guardiaItem.jurisdiccion != "" && guardiaItem.jurisdiccion != undefined){
+    if(guardiaItem.jurisdiccion && guardiaItem.jurisdiccion.length > 0){
       guardiaItem.jurisdiccion = guardiaItem.jurisdiccion.toString();
+    }else{
+      guardiaItem.jurisdiccion ="";
     }
-    if(guardiaItem.grupoFacturacion != "" && guardiaItem.grupoFacturacion != undefined){
+    if(guardiaItem.grupoFacturacion  && guardiaItem.grupoFacturacion.length > 0){
       guardiaItem.grupoFacturacion = guardiaItem.grupoFacturacion.toString();
+    }else{
+      guardiaItem.grupoFacturacion ="";
     }
-    if(guardiaItem.partidaPresupuestaria != "" && guardiaItem.partidaPresupuestaria != undefined){
+    if(guardiaItem.partidaPresupuestaria  && guardiaItem.partidaPresupuestaria.length > 0){
       guardiaItem.partidaPresupuestaria = guardiaItem.partidaPresupuestaria.toString();
+    }else{
+      guardiaItem.partidaPresupuestaria ="";
     }
-    if(guardiaItem.tipoTurno != "" && guardiaItem.tipoTurno != undefined){
+    if(guardiaItem.tipoTurno  && guardiaItem.tipoTurno.length > 0){
       guardiaItem.tipoTurno = guardiaItem.tipoTurno.toString();
+    }else{
+      guardiaItem.tipoTurno ="";
     }
-    if(guardiaItem.idTipoGuardia != "" && guardiaItem.idTipoGuardia != undefined){
+    if(guardiaItem.idTipoGuardia  && guardiaItem.idTipoGuardia.length > 0){
       guardiaItem.idTipoGuardia = guardiaItem.idTipoGuardia.toString();
+    }else{
+      guardiaItem.idTipoGuardia ="";
     }
     this.sigaServices.post("busquedaGuardias_searchGuardias", guardiaItem).subscribe(
       n => {

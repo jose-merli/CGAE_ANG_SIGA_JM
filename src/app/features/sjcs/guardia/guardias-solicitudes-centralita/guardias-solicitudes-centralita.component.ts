@@ -79,20 +79,30 @@ export class GuardiasSolicitudesCentralitaComponent implements OnInit {
       this.progressSpinner = true;
       this.buscador.filtroAux = this.buscador.filtro;
       let reAsistenciaItem = Object.assign({},this.buscador.filtro);
-      if(this.buscador.filtro.idTurno != "" && this.buscador.filtro.idTurno != undefined){
+      if(this.buscador.filtro.idTurno && this.buscador.filtro.idTurno.length > 0){
         reAsistenciaItem.idTurno = this.buscador.filtro.idTurno.toString();
+      }else{
+        reAsistenciaItem.idTurno = "";
       }
-      if(this.buscador.filtro.idGuardia != "" && this.buscador.filtro.idGuardia != undefined){
+      if(this.buscador.filtro.idGuardia && this.buscador.filtro.idGuardia.length > 0){
         reAsistenciaItem.idGuardia = this.buscador.filtro.idGuardia.toString();
+      }else{
+        reAsistenciaItem.idGuardia = "";
       }
-      if(this.buscador.filtro.idComisaria != "" && this.buscador.filtro.idComisaria != undefined){
+      if(this.buscador.filtro.idComisaria && this.buscador.filtro.idComisaria.length > 0){
         reAsistenciaItem.idComisaria = this.buscador.filtro.idComisaria.toString();
+      }else{
+        reAsistenciaItem.idComisaria = "";
       }
-      if(this.buscador.filtro.idJuzgado != "" && this.buscador.filtro.idJuzgado != undefined){
+      if(this.buscador.filtro.idJuzgado && this.buscador.filtro.idJuzgado.length > 0){
         reAsistenciaItem.idJuzgado = this.buscador.filtroAux.idJuzgado.toString();
+      }else{
+        reAsistenciaItem.idJuzgado = "";
       }
-      if(this.buscador.filtro.estado != "" && this.buscador.filtro.estado != undefined){
+      if(this.buscador.filtro.estado && this.buscador.filtro.estado.length > 0){
         reAsistenciaItem.estado = this.buscador.filtroAux.estado.toString();
+      }else{
+        reAsistenciaItem.estado = "";
       }
       // this.buscador.filtroAux.estado = this.buscador.filtroAux.estado.toString();
       sessionStorage.setItem ("filtro", JSON.stringify(this.buscador.filtro))
