@@ -111,6 +111,7 @@ export class DefinirListasGuardiasComponent implements OnInit {
   }
 
   search(){
+    if (this.checkFilters()){
     this.hideResponse();
     this.progressSpinner = true;
     let listaGuardiasItem = Object.assign({},this.buscador.filtro);
@@ -147,5 +148,48 @@ export class DefinirListasGuardiasComponent implements OnInit {
         this.progressSpinner = false;
       }
     );
+    }
   }
+checkFilters(){
+  if (
+    (this.buscador.filtro.nombre == null ||
+      this.buscador.filtro.nombre == undefined ||
+      this.buscador.filtro.nombre.trim().length < 3) &&
+    (this.buscador.filtro.idGrupoZona == null ||
+      this.buscador.filtro.idGrupoZona == undefined ||
+      this.buscador.filtro.idLista.trim().length < 3) &&
+    (this.buscador.filtro.idLista == null ||
+      this.buscador.filtro.idTipo == undefined ||
+      this.buscador.filtro.idTipo.trim().length < 3) &&
+    (this.buscador.filtro.idZona == null ||
+      this.buscador.filtro.idZona == undefined ||
+      this.buscador.filtro.lugar.trim().length < 3) &&
+    (this.buscador.filtro == undefined ||
+      this.buscador.filtro.lugar == null)
+      &&
+    (this.buscador.filtro.observaciones == null ||
+      this.buscador.filtro.observaciones == undefined ||
+      this.buscador.filtro.observaciones.trim().length < 3)
+      &&
+    (this.buscador.filtro.tipoDesc == null ||
+      this.buscador.filtro.tipoDesc == undefined ||
+      this.buscador.filtro.tipoDesc.trim().length < 3)
+  ) {
+    this.showSearchIncorrect();
+    this.progressSpinner = false;
+    return false;
+  } else {
+    return true;
+  }
+}
+showSearchIncorrect() {
+  this.msgs = [];
+  this.msgs.push({
+    severity: "error",
+    summary: this.translateService.instant("general.message.incorrect"),
+    detail: this.translateService.instant(
+      "cen.busqueda.error.busquedageneral"
+    )
+  });
+}
 }
