@@ -623,6 +623,7 @@ setGuardiasCalendario(guardiaCalendario){
         data => {
           this.searchGuardiasFromCal.emit(this.idCal);
         }, err => {
+          this.jsonToRow(false);
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No se ha podido insertar/actualizar correctamente");
           console.log(err);
         });
