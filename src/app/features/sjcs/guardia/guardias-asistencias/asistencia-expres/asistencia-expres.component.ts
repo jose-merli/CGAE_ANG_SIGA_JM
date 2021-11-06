@@ -547,32 +547,50 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
     if(this.checkFilters()){
       this.hideResponse();
       let filtroAsistenciaItem = Object.assign({},this.filtro.filtro);
-      if(this.filtro.filtro.idTurno != undefined  && this.filtro.filtro.idTurno != ""){
+      if(this.filtro.filtro.idTurno   && this.filtro.filtro.idTurno.length > 0){
         filtroAsistenciaItem.idTurno = this.filtro.filtro.idTurno.toString();
+      }else{
+        filtroAsistenciaItem.idTurno = ""
       }
-      if(this.filtro.filtro.idGuardia != undefined  && this.filtro.filtro.idGuardia != ""){
+      if(this.filtro.filtro.idGuardia   && this.filtro.filtro.idGuardia.length > 0){
         filtroAsistenciaItem.idGuardia = this.filtro.filtro.idGuardia.toString();
+      }else{
+        filtroAsistenciaItem.idGuardia = ""
       }
-      if(this.filtro.filtro.idOrigenAsistencia != undefined  && this.filtro.filtro.idOrigenAsistencia != ""){
+      if(this.filtro.filtro.idOrigenAsistencia  && this.filtro.filtro.idOrigenAsistencia.length > 0){
         filtroAsistenciaItem.idOrigenAsistencia = this.filtro.filtro.idOrigenAsistencia.toString(); 
+      }else{
+        filtroAsistenciaItem.idOrigenAsistencia = ""
       }
-      if(this.filtro.filtro.idEstadoAsistencia != undefined  && this.filtro.filtro.idEstadoAsistencia != ""){
+      if(this.filtro.filtro.idEstadoAsistencia   && this.filtro.filtro.idEstadoAsistencia.length > 0){
         filtroAsistenciaItem.idEstadoAsistencia = this.filtro.filtro.idEstadoAsistencia.toString();  
+      }else{
+        filtroAsistenciaItem.idEstadoAsistencia = ""
       }
-      if(this.filtro.filtro.idEstadoAsistido != undefined  && this.filtro.filtro.idEstadoAsistido != ""){
+      if(this.filtro.filtro.idEstadoAsistido   && this.filtro.filtro.idEstadoAsistido.length > 0){
         filtroAsistenciaItem.idEstadoAsistido = this.filtro.filtro.idEstadoAsistido.toString();
+      }else{
+        filtroAsistenciaItem.idEstadoAsistido = ""
       }
-      if(this.filtro.filtro.idComisaria != undefined  && this.filtro.filtro.idComisaria != ""){
+      if(this.filtro.filtro.idComisaria  && this.filtro.filtro.idComisaria.length > 0){
         filtroAsistenciaItem.idComisaria = this.filtro.filtro.idComisaria.toString();
+      }else{
+        filtroAsistenciaItem.idComisaria = ""
       }
-      if(this.filtro.filtro.idJuzgado != undefined  && this.filtro.filtro.idJuzgado != ""){
+      if(this.filtro.filtro.idJuzgado   && this.filtro.filtro.idJuzgado.length > 0){
         filtroAsistenciaItem.idJuzgado = this.filtro.filtro.idJuzgado.toString();
+      }else{
+        filtroAsistenciaItem.idJuzgado = ""
       }
-      if(this.filtro.filtro.idProcedimiento != undefined  && this.filtro.filtro.idProcedimiento != ""){
+      if(this.filtro.filtro.idProcedimiento   && this.filtro.filtro.idProcedimiento.length > 0){
         filtroAsistenciaItem.idProcedimiento = this.filtro.filtro.idProcedimiento.toString();
+      }else{
+        filtroAsistenciaItem.idProcedimiento = ""
       }
-      if(this.filtro.filtro.idTipoActuacion != undefined  && this.filtro.filtro.idTipoActuacion != ""){
+      if(this.filtro.filtro.idTipoActuacion  && this.filtro.filtro.idTipoActuacion.length > 0){
         filtroAsistenciaItem.idTipoActuacion = this.filtro.filtro.idTipoActuacion.toString();
+      }else{
+        filtroAsistenciaItem.idTipoActuacion = ""
       }
       
       setTimeout(()=>{

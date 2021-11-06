@@ -75,10 +75,10 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
       }
       if (this.dataBuscador != null){
         if (this.dataBuscador.guardia != ''){
-          this.filtros.idGuardia = this.dataBuscador.guardia.toString();
+          this.filtros.idGuardia = [this.dataBuscador.guardia.toString()];
         }
         if(this.dataBuscador.turno != ''){
-          this.filtros.idTurno = this.dataBuscador.turno.toString();
+          this.filtros.idTurno = [this.dataBuscador.turno.toString()];
         }
         if(this.dataBuscador.fechaDesde != ''){
           this.filtros.fechadesde = new Date(this.changeDateFormat(this.dataBuscador.fechaDesde)); //MM/dd/yyyy
