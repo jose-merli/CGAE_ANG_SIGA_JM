@@ -4,6 +4,7 @@ import { AfterViewInit, Component, Input, OnInit, Output, ViewChild } from '@ang
 import { Router, RoutesRecognized } from '@angular/router';
 import { Message } from 'primeng/api';
 import { BusquedaColegiadoExpressComponent } from '../../../../../../commons/busqueda-colegiado-express/busqueda-colegiado-express.component';
+import { TranslateService } from '../../../../../../commons/translate';
 import { FiltroAsistenciaItem } from '../../../../../../models/guardia/FiltroAsistenciaItem';
 import { SigaStorageService } from '../../../../../../siga-storage.service';
 import { CommonsService } from '../../../../../../_services/commons.service';
@@ -57,7 +58,8 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
     private sigaServices : SigaServices,
     private commonsService : CommonsService,
     private datePipe : DatePipe,
-    private sigaStorageService : SigaStorageService) { }
+    private sigaStorageService : SigaStorageService,
+    private translateService: TranslateService) { }
     textFilter: string = "Seleccionar";
   ngOnChanges(changes: SimpleChanges): void {
     if(changes.modoBusqueda.currentValue == 'a' && this.filtro.numColegiado){
@@ -377,5 +379,4 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
   clear() {
     this.msgs = [];
   }
-
 }

@@ -286,7 +286,11 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
   }*/
 
   onChangeSustitutoCheck(event) {
-    this.filtro.isSustituto = event;
+    if(event){
+      this.filtro.isSustituto = 'S';
+    }else{
+      this.filtro.isSustituto = 'N'
+    }
   }
 
   styleObligatorio(evento){

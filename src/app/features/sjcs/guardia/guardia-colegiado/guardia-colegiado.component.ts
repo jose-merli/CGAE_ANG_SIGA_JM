@@ -82,38 +82,39 @@ export class GuardiaColegiadoComponent implements OnInit {
 
 
   search(event){
-    this.progressSpinner = true;
-    let guardiaItem = Object.assign({},this.filtros.filtros);
-    if(this.filtros.filtros.idTurno != "" && this.filtros.filtros.idTurno != undefined){
-      guardiaItem.idTurno = this.filtros.filtros.idTurno.toString();
+    if(this.checkFilters()){
+      this.progressSpinner = true;
+      let guardiaItem = Object.assign({},this.filtros.filtros);
+      if(this.filtros.filtros.idTurno != "" && this.filtros.filtros.idTurno != undefined){
+        guardiaItem.idTurno = this.filtros.filtros.idTurno.toString();
+      }
+      if(this.filtros.filtros.idGuardia != "" && this.filtros.filtros.idGuardia != undefined){
+        guardiaItem.idGuardia = this.filtros.filtros.idGuardia.toString();
+      }
+      this.sigaServices.post("guardiasColegiado_buscarGuardiasColegiado", guardiaItem).subscribe(
+        n => {
+          let error = JSON.parse(n.body).error;
+          this.datos = JSON.parse(n.body).guardiaItems;
+          this.buscar = true;
+         /*  this.datos = this.datos.map(it => {
+            it.letradosIns = +it.letradosIns;
+            return it;
+          }) */
+          this.progressSpinner = false;
+          this.resetSelect();
+  
+          if (error != null && error.description != null) {
+            this.showMessage({ severity: 'info', summary: this.translateService.instant("general.message.informacion"), msg: error.description });
+          }
+        },
+        err => {
+          this.progressSpinner = false;
+          console.log(err);
+        },
+        () => {
+          setTimeout(()=>{this.commonsService.scrollTablaFoco('tablaGuardCole');}, 5);
+        });
     }
-    if(this.filtros.filtros.idGuardia != "" && this.filtros.filtros.idGuardia != undefined){
-      guardiaItem.idGuardia = this.filtros.filtros.idGuardia.toString();
-    }
-    this.sigaServices.post("guardiasColegiado_buscarGuardiasColegiado", guardiaItem).subscribe(
-      n => {
-        let error = JSON.parse(n.body).error;
-        this.datos = JSON.parse(n.body).guardiaItems;
-        this.buscar = true;
-       /*  this.datos = this.datos.map(it => {
-          it.letradosIns = +it.letradosIns;
-          return it;
-        }) */
-        this.progressSpinner = false;
-        this.resetSelect();
-
-        if (error != null && error.description != null) {
-          this.showMessage({ severity: 'info', summary: this.translateService.instant("general.message.informacion"), msg: error.description });
-        }
-      },
-      err => {
-        this.progressSpinner = false;
-        console.log(err);
-      },
-      () => {
-        setTimeout(()=>{this.commonsService.scrollTablaFoco('tablaGuardCole');}, 5);
-      });
-
   }
 
   resetSelect() {
@@ -147,5 +148,29 @@ export class GuardiaColegiadoComponent implements OnInit {
     sessionStorage.removeItem("itemGuardiaColegiado");
     this.location.back();
   }
+
+  checkFilters(){
+    if ((this.filtros.filtros.idTurno == null || this.filtros.filtros.idTurno == undefined || this.filtros.filtros.idTurno.length == 0) &&
+        (this.filtros.filtros.idGuardia == null || this.filtros.filtros.idGuardia == undefined || this.filtros.filtros.idGuardia.length == 0) &&
+        // (this.filtros.filtro.fechadesde == null || this.filtros.filtro.fechadesde == undefined || this.filtros.filtro.fechadesde.trim() == "" )&&
+        // (this.filtros.filtro.fechahasta == null || this.filtros.filtro.fechahasta == undefined || this.filtros.filtro.fechahasta.trim() == "" )&&
+        (this.filtros.filtros.validada == null || this.filtros.filtros.validada == undefined || this.filtros.filtros.validada.length == 0)) {
+        
+        this.showMsg("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
+        return false;
+      } else {   
+        
+        return true;
+      }
+    }
+
+    showMsg(severityParam : string, summaryParam : string, detailParam : string) {
+      this.msgs = [];
+      this.msgs.push({
+        severity: severityParam,
+        summary: summaryParam,
+        detail: detailParam
+      });
+    }
 
 }
