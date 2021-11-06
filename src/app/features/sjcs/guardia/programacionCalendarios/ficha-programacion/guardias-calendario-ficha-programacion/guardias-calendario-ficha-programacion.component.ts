@@ -508,6 +508,48 @@ jsonToRow(fromCombo){
   this.totalRegistros = this.rowGroups.length;
   this.dataReady = true;
   this.progressSpinner = false;
+
+  this.sigaService.get("busquedaGuardia_turno").subscribe(
+    n => {
+      this.progressSpinner = false;
+      let comboTurno = n.combooItems;
+      this.cd.detectChanges();
+      this.commonServices.arregloTildesCombo(comboTurno);
+
+      this.rowGroups.forEach(rowG => {
+        comboTurno.forEach(cT=> {
+        if (cT.value == rowG.cells[1].value){
+          rowG.cells[1].value = cT.label;
+        }
+      
+        });
+      });
+
+      this.sigaService.getParam(
+        "busquedaGuardia_guardia", "?idTurno=" + null).subscribe(
+          data => {
+            this.progressSpinner = false;
+            let comboGuardia = data.combooItems;
+            this.commonServices.arregloTildesCombo(comboGuardia);
+            this.rowGroups.forEach(rowG => {
+              comboGuardia.forEach(cG=> {
+                 if (cG.value == rowG.cells[2].value){
+                  rowG.cells[2].value = cG.label;
+                }
+                });
+              });
+          },
+          err => {
+            this.progressSpinner = false;
+            console.log(err);
+          }
+        )
+    },
+    err => {
+      this.progressSpinner = false;
+      console.log(err);
+    }
+  );
 }
 
 selectedAll(event) {
@@ -540,7 +582,11 @@ setGuardiasCalendario(guardiaCalendario){
 
 
   guardarGuardiasEnConjunto(event){
-    let newRowGroups : Row[] = event;
+    let event2 = {
+      'newRowGroups': event.newRowGroups,
+      'update': event.update
+    }
+    let newRowGroups : Row[] = event2.newRowGroups;
     let newList = [];
     newRowGroups.forEach(nrg => {
       let responseObject = (
@@ -556,7 +602,7 @@ setGuardiasCalendario(guardiaCalendario){
     if (this.idConjuntoGuardiaElegido != 0){
       this.saveGuardiasConjunto(newList);  
     }else{
-      this.saveGuardiasCalendario(newList);  
+      this.saveGuardiasCalendario(newList, event2.update);  
     }
       
   }
@@ -567,17 +613,17 @@ setGuardiasCalendario(guardiaCalendario){
         data => {
           this.getGuardiasFromConjunto(this.idConjuntoGuardiaElegido, true);
         }, err => {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No se ha podido insertar correctamente");
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No se ha podido insertar/actualizar correctamente");
           console.log(err);
         });
   }
-  saveGuardiasCalendario(lista){
+  saveGuardiasCalendario(lista, update){
     this.sigaService.postPaginado(
-      "guardiaCalendario_guardarGuardiaCalendar", "?idCalendar=" +this.idCal, lista).subscribe(
+      "guardiaCalendario_guardarGuardiaCalendar", "?idCalendar=" +this.idCal + "&update=" + update , lista).subscribe(
         data => {
           this.searchGuardiasFromCal.emit(this.idCal);
         }, err => {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No se ha podido insertar correctamente");
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No se ha podido insertar/actualizar correctamente");
           console.log(err);
         });
   }

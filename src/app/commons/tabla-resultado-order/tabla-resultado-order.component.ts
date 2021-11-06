@@ -38,7 +38,7 @@ export class TablaResultadoOrderComponent implements OnInit {
   @Output() colaGuardiaModified = new EventEmitter<any>();
   @Output() rest = new EventEmitter<Boolean>();
   @Output() dupli = new EventEmitter<Boolean>();
-  @Output() guardarGuardiasEnConjunto = new EventEmitter<Row[]>();
+  @Output() guardarGuardiasEnConjunto = new EventEmitter<any>();
   @Output() descargaLog = new EventEmitter<Boolean>();
   @Output() disableGen = new EventEmitter<Boolean>();
   @Output() saveGuardiasEnLista = new EventEmitter<Row[]>();
@@ -135,6 +135,60 @@ export class TablaResultadoOrderComponent implements OnInit {
     this.selectedArray = [];
     this.isLetrado = this.sigaStorageService.isLetrado && this.sigaStorageService.idPersona;
     if(this.rowGroups != undefined){
+
+
+
+
+      this.sigaServices.get("busquedaGuardia_turno").subscribe(
+        n => {
+          this.progressSpinner = false;
+          let comboTurno = n.combooItems;
+          this.cd.detectChanges();
+          this.commonServices.arregloTildesCombo(comboTurno);
+  
+          this.rowGroups.forEach(rowG => {
+            comboTurno.forEach(cT=> {
+            if (cT.value == rowG.cells[1].value){
+              rowG.cells[1].value = cT.label;
+            }
+          
+            });
+          });
+  
+          this.sigaServices.getParam(
+            "busquedaGuardia_guardia", "?idTurno=" + null).subscribe(
+              data => {
+                this.progressSpinner = false;
+                let comboGuardia = data.combooItems;
+                this.commonServices.arregloTildesCombo(comboGuardia);
+                this.rowGroups.forEach(rowG => {
+                  comboGuardia.forEach(cG=> {
+                     if (cG.value == rowG.cells[2].value){
+                      rowG.cells[2].value = cG.label;
+                    }
+                    });
+                  });
+              },
+              err => {
+                this.progressSpinner = false;
+                console.log(err);
+              }
+            )
+        },
+        err => {
+          this.progressSpinner = false;
+          console.log(err);
+        }
+      );
+  
+
+
+
+
+
+
+
+      
       this.totalRegistros = this.rowGroups.length;
     }
     this.numCabeceras = this.cabeceras.length;
@@ -291,24 +345,70 @@ export class TablaResultadoOrderComponent implements OnInit {
         newRowGroups.push(rowG);
       }
     })
+    this.sigaServices.get("busquedaGuardia_turno").subscribe(
+      n => {
+        this.progressSpinner = false;
+        let comboTurno = n.combooItems;
+        this.cd.detectChanges();
+        this.commonServices.arregloTildesCombo(comboTurno);
 
-    this.comboTurno.forEach(cT=> {
-      if (cT.label == this.rowGroups[0].cells[1].value){
-        this.rowGroups[0].cells[1].value = cT.label;
-      }else if (cT.value == this.rowGroups[this.rowGroups.length - 1].cells[1].value){
-        this.rowGroups[this.rowGroups.length - 1].cells[1].value = cT.label;
+        this.rowGroups.forEach(rowG => {
+          comboTurno.forEach(cT=> {
+          if (cT.label == rowG.cells[1].value){
+            rowG.cells[1].value = cT.value;
+          }
+        
+          });
+        });
+
+        this.sigaServices.getParam(
+          "busquedaGuardia_guardia", "?idTurno=" + null).subscribe(
+            data => {
+              this.progressSpinner = false;
+              let comboGuardia = data.combooItems;
+              this.commonServices.arregloTildesCombo(comboGuardia);
+              this.rowGroups.forEach(rowG => {
+                comboGuardia.forEach(cG=> {
+                   if (cG.label == rowG.cells[2].value){
+                    rowG.cells[2].value = cG.value;
+                  }
+                  });
+                });
+
+                let event = {
+                  'newRowGroups': newRowGroups,
+                  'update': false
+                }
+                if (newRowGroups.length == 0){
+                  event = {
+                    'newRowGroups': this.rowGroups,
+                    'update': true
+                  }
+                  this.guardarGuardiasEnConjunto.emit(event);
+                }else{
+                  event = {
+                    'newRowGroups': newRowGroups,
+                    'update': false
+                  }
+                  this.guardarGuardiasEnConjunto.emit(event);
+                }
+            },
+            err => {
+              this.progressSpinner = false;
+              console.log(err);
+            }
+          )
+      },
+      err => {
+        this.progressSpinner = false;
+        console.log(err);
       }
+    );
+
+
+ 
+  
     
-    });
-    this.comboGuardia.forEach(cG=> {
-       if (cG.value == this.rowGroups[0].cells[2].value){
-        this.rowGroups[0].cells[2].value = cG.label;
-      }else if (cG.value == this.rowGroups[this.rowGroups.length - 1].cells[2].value){
-        this.rowGroups[this.rowGroups.length - 1].cells[2].value = cG.label;
-      }
-    
-    });
-    this.guardarGuardiasEnConjunto.emit(newRowGroups);
    // this.rowGroups.sort((a, b) => a.cells[0].localeCompare(b.cells[0]))
   }
   updateColaGuardia(){
@@ -818,6 +918,7 @@ this.totalRegistros = this.rowGroups.length;
     }
   }
   disableButton(type){
+    let posicion = this.numperPage*(this.numPage) + this.positionSelected;
     if (this.rowGroups != undefined){
     this.grupos = [];
     this.rowGroups.forEach((rg, i) =>{
@@ -828,24 +929,24 @@ this.totalRegistros = this.rowGroups.length;
       }
   })
     let disable = false;
-    if (this.positionSelected == 1 || this.grupos[this.positionSelected] <= 2){
+    if (posicion == 1 || this.grupos[posicion] <= 2){
       this.unavailableUp = true;
     } else {
       this.unavailableUp = false;
     }
-    if((this.listaGuardias || !this.calendarios) && this.positionSelected == 0){
+    if((this.listaGuardias || !this.calendarios) && posicion == 0){
       this.unavailableUp = true;
-    }else if ((this.listaGuardias || !this.calendarios) && this.positionSelected > 0){
+    }else if ((this.listaGuardias || !this.calendarios) && posicion > 0){
       this.unavailableUp = false;
     }
     if (this.calendarios){
-      if (this.positionSelected == this.grupos.length || this.grupos[this.positionSelected]  >= this.maxGroup){
+      if (posicion== this.grupos.length || this.grupos[posicion]  >= this.maxGroup){
         this.unavailableDown = true;
       } else {
         this.unavailableDown = false;
       }
     }else{
-      if (this.positionSelected == this.grupos.length - 1 || this.grupos[this.positionSelected]  >= this.maxGroup && this.grupos[this.positionSelected] != null){
+      if (posicion == this.grupos.length - 1 || this.grupos[posicion]  >= this.maxGroup && this.grupos[posicion] != null){
         this.unavailableDown = true;
       } else {
         this.unavailableDown = false;
