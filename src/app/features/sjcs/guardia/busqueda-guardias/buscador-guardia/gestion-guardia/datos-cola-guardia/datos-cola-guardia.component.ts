@@ -513,9 +513,10 @@ inicio(){
               datCopy.numeroGrupo = null;
             }
             //datCopy.orden = orden.value.toString();
-          datosModif.push(datCopy);
+         
         }
       });
+      datosModif.push(datCopy);
     })
     let colaGuardiaUpdated = {"inscripcionesItem": datosModif};
     this.setColaGuardia(colaGuardiaUpdated);

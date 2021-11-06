@@ -820,7 +820,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
     this.rowGroups.unshift(row);
     this.rowGroupsAux = this.rowGroups;
     this.totalRegistros = this.rowGroups.length;
-    this.to = this.totalRegistros;
+    //this.to = this.totalRegistros;
   }
   inputChange(event, i, z, cell){
     this.enableGuardar = true;

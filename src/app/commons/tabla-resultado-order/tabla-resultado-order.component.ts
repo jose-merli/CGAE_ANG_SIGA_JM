@@ -154,8 +154,11 @@ export class TablaResultadoOrderComponent implements OnInit {
         this.xArr.push(x);
       })
       if (!this.calendarios){
-        this.maxGroup = this.grupos.reduce((a, b)=>Math.max(a, b)); 
-        this.ordenarGrupos();
+        if (this.grupos.length != 0){
+          this.maxGroup = this.grupos.reduce((a, b)=>Math.max(a, b)); 
+          this.ordenarGrupos();
+        }
+
       }
     }
   }
@@ -597,6 +600,7 @@ return rowsByGroup;
     this.numPage = event;
   }
 valueChange(i, z, $event){
+  console.log('valueChange')
   if (this.pantalla == 'colaGuardias'){
     let posicion = this.numperPage*(this.numPage) + i
     if ( z == 1){
@@ -841,7 +845,7 @@ this.totalRegistros = this.rowGroups.length;
         this.unavailableDown = false;
       }
     }else{
-      if (this.positionSelected == this.grupos.length - 1 || this.grupos[this.positionSelected]  >= this.maxGroup){
+      if (this.positionSelected == this.grupos.length - 1 || this.grupos[this.positionSelected]  >= this.maxGroup && this.grupos[this.positionSelected] != null){
         this.unavailableDown = true;
       } else {
         this.unavailableDown = false;
