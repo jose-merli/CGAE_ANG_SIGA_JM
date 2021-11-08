@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '../../../../commons/translate';
 import { ComboItem } from '../../../../models/ComboItem';
@@ -14,8 +14,6 @@ import { SigaServices } from '../../../../_services/siga.service';
   styleUrls: ['./filtros-busqueda-adeudos.component.scss']
 })
 export class FiltrosBusquedaAdeudosComponent implements OnInit {
-
-  buscarFicherosAdeudos
 
   progressSpinner: boolean = false;
   showDatosGenerales: boolean = true;
@@ -35,7 +33,7 @@ export class FiltrosBusquedaAdeudosComponent implements OnInit {
  @Input() permisos;
  @Input() permisoEscritura;
 
- @Output() busqueda = new EventEmitter<boolean>();
+ @Output() buscarFicherosAdeudos = new EventEmitter<boolean>();
 
   constructor(private router: Router,
     private datepipe: DatePipe,
@@ -45,12 +43,10 @@ export class FiltrosBusquedaAdeudosComponent implements OnInit {
     private _elementRef: ElementRef,
     private commonServices: CommonsService) { }
 
-  async ngOnInit() {
-    this.progressSpinner=true;
+  ngOnInit() {
     
-    await this.cargaCombos();
+    this.cargaCombos();
 
-    this.progressSpinner=false;
   }
 
   cargaCombos(){
@@ -61,7 +57,19 @@ export class FiltrosBusquedaAdeudosComponent implements OnInit {
   }
 
   getComboSeriesFacturacion(){
+    this.progressSpinner=true;
 
+    this.sigaServices.get("facturacionPyS_comboSeriesFacturacion").subscribe(
+      n => {
+        this.comboSeriesFacturacion = n.combooItems;
+        this.commonServices.arregloTildesCombo(this.comboSufijo);
+        this.progressSpinner=false;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner=false;
+      }
+    );
   }
 
   getComboOrigen(){
@@ -102,8 +110,28 @@ export class FiltrosBusquedaAdeudosComponent implements OnInit {
     );
   }
 
+  checkFilters() {
+    if (this.body.facturacion != undefined)
+      this.body.facturacion = this.body.facturacion.trim();
+
+      
+    if ((this.body.bancosCodigo == null) && (this.body.idSufijo == null) && (this.body.fechaCreacionDesde == null) &&
+      (this.body.fechaCreacionHasta == null) && (this.body.origen==null) && (this.body.idseriefacturacion == null) &&
+      (this.body.facturacion == null || this.body.facturacion.trim() == "" || this.body.facturacion.trim().length < 3) &&
+      (this.body.importeTotalDesde == null) && (this.body.importeTotalHasta == null) && (this.body.numRecibosDesde == null) &&
+      (this.body.numRecibosHasta == null)) {
+      
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   buscar() {
-    this.busqueda.emit(false);
+    if(this.checkFilters()){
+      this.buscarFicherosAdeudos.emit(false);
+    }
   }
 
   fillFecha(event, campo) {

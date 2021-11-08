@@ -40,37 +40,43 @@ export class FicherosAdeudosComponent implements OnInit {
 
   buscarFicherosAdeudos(event) {
     let filtros = JSON.parse(JSON.stringify(this.filtros.body));
+    console.log(filtros);
 
-    // this.sigaServices.post("filtrosejg_busquedaEJG", filtros).subscribe(
-    //   n => {
-    //     this.datos = JSON.parse(n.body).ejgItems;
-    //     let error = JSON.parse(n.body).error;
-    //     this.buscar = true;
-    //     if (this.tabla != null && this.tabla != undefined) {
-    //       this.tabla.historico = event;
-    //       this.tabla.table.sortOrder = 0;
-    //       this.tabla.table.sortField = '';
-    //       this.tabla.table.reset();
-    //       this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
-    //     }
-    //     //cadena = [];
-    //     this.progressSpinner = false;
-    //     if (error != null && error.description != null) {
-    //       this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
-    //     }
-    //   },
-    //   err => {
-    //     this.progressSpinner = false;
-    //     console.log(err);
-    //   },
-    //   () => {
-    //     this.progressSpinner = false;
-    //     setTimeout(() => {
-    //       this.commonsService.scrollTablaFoco('tablaFoco');
-    //       this.commonsService.scrollTop();
-    //     }, 5);
-    //   }
-    // );
+    this.progressSpinner=true;
+
+    this.sigaServices.post("facturacionPyS_getFicherosAdeudos", filtros).subscribe(
+      n => {
+        this.progressSpinner=false;
+
+        this.datos = JSON.parse(n.body).ficherosAdeudosItem;
+        let error = JSON.parse(n.body).error;
+        console.log(this.datos);
+        this.buscar = true;
+
+        if (this.tabla != null && this.tabla != undefined) {
+          this.tabla.historico = event;
+          this.tabla.table.sortOrder = 0;
+          this.tabla.table.sortField = '';
+          this.tabla.table.reset();
+          this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
+        }
+        //cadena = [];
+        this.progressSpinner = false;
+        if (error != null && error.description != null) {
+          this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
+        }
+      },
+      err => {
+        this.progressSpinner = false;
+        console.log(err);
+      },
+      () => {
+        this.progressSpinner = false;
+        setTimeout(() => {
+          this.commonsService.scrollTop();
+        }, 5);
+      }
+    );
   }
 
   showMessage(severity, summary, msg) {

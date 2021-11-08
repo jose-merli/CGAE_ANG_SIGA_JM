@@ -18,9 +18,14 @@ export class FicherosAdeudosItem {
 	idSufijo: String;
 	sufijo: String;
 	totalRemesa: String;
-	numRecibos: String;
+	importeTotalDesde: String;
+	importeTotalHasta: String;
+	numRecibos: number;
+	numRecibosDesde: number;
+	numRecibosHasta: number;
 	origen: String;
 	facturacion: String;
+	
 	
     constructor() { }
 }

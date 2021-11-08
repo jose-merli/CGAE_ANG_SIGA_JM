@@ -41,7 +41,7 @@
           </div>
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ "menu.facturacion.asignacionDeConceptosFacturables" | translate }} </label>
-            <p-dropdown class="select-form" [(ngModel)]='body.idSerieFacturacion' placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboSeriesFacturacion" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+            <p-dropdown class="select-form" [(ngModel)]='body.idseriefacturacion' placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboSeriesFacturacion" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
           </div>
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ "menu.facturacion" | translate }} </label>
@@ -62,19 +62,19 @@
         <div class="form-row">
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ 'facturacion.ficherosAdeudos.importeTotalDesde' | translate }} </label>
-            <input type="text" [(ngModel)]="body.annio" class="form-control" pInputText>
+            <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]='body.importeTotalDesde' pInputText />
           </div>
           <div class="form-group-interlineado col-lg-3 col-md-3">
-            <label>{{ 'facturacion.ficherosAdeudos.importeTotalDesde' | translate }} </label>
-            <input type="text" [(ngModel)]="body.annio" class="form-control" pInputText>
+            <label>{{ 'facturacion.ficherosAdeudos.importeTotalHasta' | translate }} </label>
+            <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]='body.importeTotalHasta' pInputText />
           </div>
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ 'facturacion.ficherosAdeudos.numFacturasDesde' | translate }} </label>
-            <input type="text" [(ngModel)]="body.annio" class="form-control" pInputText>
+            <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]='body.numRecibosDesde' pInputText />
           </div>
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ 'facturacion.ficherosAdeudos.numFacturasHasta' | translate }} </label>
-            <input type="text" [(ngModel)]="body.annio" class="form-control" pInputText>
+            <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]='body.numRecibosHasta' pInputText />
           </div>
         </div>
       </div>

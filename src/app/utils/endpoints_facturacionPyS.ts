@@ -8,6 +8,7 @@ export let endpoints_facturacionPyS: any = {
     facturacionPyS_comboDestinatarios: "facturacionPyS/comboDestinatarios",
     facturacionPyS_comboContadores: "facturacionPyS/comboContadores",
     facturacionPyS_comboContadoresRectificativas: "facturacionPyS/comboContadoresRectificativas",
+    facturacionPyS_comboSeriesFacturacion: "facturacionPyS/comboSeriesFacturacion",
     facturacionPyS_eliminaSerieFacturacion:  "facturacionPyS/eliminaSerieFacturacion",
     facturacionPyS_reactivarSerieFacturacion:  "facturacionPyS/reactivarSerieFacturacion",
     facturacionPyS_comboPlanificacion: "facturacionPyS/comboPlanificacion",
@@ -22,4 +23,5 @@ export let endpoints_facturacionPyS: any = {
     facturacionPyS_getContadoresRectificativasSerie: "facturacionPyS/getContadoresRectificativasSerie",
     facturacionPyS_guardarEtiquetasSerieFacturacion: "facturacionPyS/guardarEtiquetasSerieFacturacion",
     facturacionPyS_guardarFormasPagosSerie: "facturacionPyS/guardarFormasPagosSerie",
+    facturacionPyS_getFicherosAdeudos:  "facturacionPyS/getFicherosAdeudos",
 }
