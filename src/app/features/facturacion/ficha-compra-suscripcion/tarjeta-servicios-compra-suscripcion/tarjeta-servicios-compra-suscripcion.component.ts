@@ -9,6 +9,7 @@ import { FichaCompraSuscripcionItem } from '../../../../models/FichaCompraSuscri
 import { FiltrosServicios } from '../../../../models/FiltrosServicios';
 import { ListaServiciosItems } from '../../../../models/ListaServiciosItems';
 import { ListaServiciosSuscripcionItem } from '../../../../models/ListaServiciosSuscripcionItem';
+import { PrecioServicioItem } from '../../../../models/PrecioServicioItem';
 import { procesos_PyS } from '../../../../permisos/procesos_PyS';
 import { SigaStorageService } from '../../../../siga-storage.service';
 import { CommonsService } from '../../../../_services/commons.service';
@@ -46,18 +47,18 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
   serviciosTarjeta: ListaServiciosSuscripcionItem[] = [];
   comboServicios: ListaServiciosItems[] = [];
   ivaCombo: ComboItem[];
-  comboComun: ComboItem[] = [];
+  comboComun: ComboItem[] = []; //Combo de formas de pago comunes
   comboPagos: ComboItem[];
 
   cols = [
     { field: "orden", header: "administracion.informes.literal.orden" },
     { field: "descripcion", header: "facturacion.servicios.servicio" },
-    { field: "observaciones", header: "censo.nuevaSolicitud.observaciones" },
-    { field: "precioUnitario", header: "facturacion.servicios.precioUnitario" },
-    { field: "cantidad", header: "facturacionSJCS.facturacionesYPagos.cantidad" },
-    { field: "impNeto", header: "facturacion.servicios.importeNeto" },
+    { field: "automatico", header: "facturacion.servicios.tipo" },
+    { field: "impNeto", header: "facturacion.servicios.importeNeto" }, //REVISAR FALTA CAMPO IMPORTE
+    { field: "periodo", header: "facturacion.servicios.fichaservicio.periodicidadcoltablaprecios" },
     { field: "iva", header: "facturacion.servicios.iva" },
-    { field: "impIva", header: "facturacion.servicios.importeIva" },
+    { field: "fechaAlta", header: "administracion.usuarios.literal.fechaAlta" },
+    { field: "fechaBaja", header: "dato.jgr.guardia.inscripciones.fechaBaja" },
     { field: "total", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.total" },
   ];
 
@@ -92,6 +93,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
   first = 0;
   buscadores = [];
   buscadoresServicios = [];
+  aFechaDe : Date;
 
 
   subscriptionServiciosBusqueda: Subscription;
@@ -101,6 +103,13 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
   totalUnidades: number;
   datosTarjeta: FichaCompraSuscripcionItem = new FichaCompraSuscripcionItem();
   pagoCabecera: string;
+  subscriptionPeriodicidadList: Subscription;
+  periodicidadCombo: ComboItem[];
+  precioCombo : PrecioServicioItem[];
+  disableDown: boolean = true;
+  disableUp: boolean = true;
+  // tiposObject: ComboItem[];
+  // subscriptionTypeSelectValues: Subscription;
 
   constructor(public sigaServices: SigaServices,
     private commonsService: CommonsService,
@@ -115,6 +124,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
     this.getPermisoEditarImporte();
     this.getPermisoActualizarServicios();
     this.getComboTipoIva();
+    this.getComboPeriodicidad();
     if(this.ficha.idPersona != null){
       this.cargarDatosBancarios(); //Se buscan las cuentas bancarias asociadas al cliente
     }
@@ -135,6 +145,12 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
     if (this.subscriptionServiciosBusqueda){
       this.subscriptionServiciosBusqueda.unsubscribe();
     }
+    if (this.subscriptionPeriodicidadList){
+      this.subscriptionPeriodicidadList.unsubscribe();
+    }
+    // if (this.subscriptionTypeSelectValues){
+    //   this.subscriptionTypeSelectValues.unsubscribe();
+    // }
   }
 
   //INICIO SERVICIOS
@@ -142,7 +158,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
     this.progressSpinner = true;
 
     this.subscriptionServiciosBusqueda = this.sigaServices.getParam("PyS_getListaServiciosSuscripcion",
-      "?idPeticion=" + this.ficha.nSolicitud).subscribe(
+      "?idPeticion=" + this.ficha.nSolicitud+ "&?afechaDe=" + this.aFechaDe).subscribe(
         listaServiciosSuscripcionDTO => {
 
           this.serviciosTarjeta = listaServiciosSuscripcionDTO.listaServiciosSuscripcionItems;
@@ -174,7 +190,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
 
           for(let servicioTarj of this.serviciosTarjeta){
             servicioTarj.impNeto = Number(servicioTarj.impNeto).toFixed(2);
-            servicioTarj.precioUnitario = Number(servicioTarj.precioUnitario).toFixed(2);
+            servicioTarj.precioServicioValor = Number(servicioTarj.precioServicioValor).toFixed(2);
 
           }
 
@@ -347,12 +363,13 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
     }
   }
 
+  //REVISAR
   checkCamposObligatorios() {
     let campoVacio = false;
     this.serviciosTarjeta.forEach(el => {
       if (el.cantidad == null || el.cantidad.trim() == "" ||
         el.descripcion == null || el.descripcion.trim() == "" ||
-        el.precioUnitario == null || el.precioUnitario.trim() == "" ||
+        el.idPrecioServicio == null ||
         el.iva == null || el.iva.trim() == "") {
           campoVacio = true;
         }
@@ -368,13 +385,12 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
     let totalNeto = 0;
     let totalIVA = 0;
     let impTotal = 0;
-    this.totalUnidades = 0;
+    this.totalUnidades = 1;
     this.serviciosTarjeta.forEach(
       el => {
-        this.totalUnidades += Number(el.cantidad);
-        el.total = ((Number(el.cantidad) * Number(el.precioUnitario)) * (1 + Number(el.valorIva) / 100)).toFixed(2);
-        el.impIva = ((Number(el.cantidad) * Number(el.precioUnitario)) * (Number(el.valorIva) / 100)).toFixed(2);
-        el.impNeto = (Number(el.cantidad) * Number(el.precioUnitario)).toFixed(2);
+        el.total = ((Number(el.precioServicioValor) * Number(el.periodicidadValor)) * (1 + Number(el.valorIva) / 100)).toFixed(2);
+        el.impIva = ((Number(el.precioServicioValor) * Number(el.periodicidadValor)) * (Number(el.valorIva) / 100)).toFixed(2);
+        el.impNeto = (Number(el.precioServicioValor) * Number(el.periodicidadValor)).toFixed(2);
         impTotal += Number(el.total);
         totalNeto += Number(el.impNeto);
         totalIVA += Number(el.impIva);
@@ -385,24 +401,11 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
     this.datosTarjeta.impTotal = impTotal.toFixed(2);
   }
 
-  //Se cambia la tabla a su estado editable en todas las columnas que se permitan según el estado 
-  //de la ficha y permisos
-  changeEditable() {
-    if (this.ficha.fechaAceptada == null && this.ficha.fechaDenegada == null) {
-      this.cantidadEditable = !this.cantidadEditable;
-      if (this.permisoEditarImporte && !this.esColegiado) {
-        this.precioUnitarioEditable = !this.precioUnitarioEditable;
-        this.ivaEditable = !this.ivaEditable;
-      }
-    }
-    this.observacionesEditable = !this.observacionesEditable;
-  }
-
   openTab(selectedRow) {
     this.progressSpinner = true;
     let servicioItem: ListaServiciosItems = selectedRow;
     sessionStorage.setItem("FichaCompraSuscripcion", JSON.stringify(this.ficha));
-    sessionStorage.setItem("origin", "Cliente");
+    sessionStorage.setItem("origin", "Suscripcion");
     sessionStorage.setItem("servicioBuscador", JSON.stringify(servicioItem));
     this.router.navigate(["/fichaServicios"]);
   }
@@ -417,8 +420,8 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
       newServicio.idServicio = selectedServicio.idservicio;
       newServicio.idTipoServicio = selectedServicio.idtiposervicio;
       newServicio.idServicioInstitucion = selectedServicio.idservicioinstitucion;
-      newServicio.precioUnitario = selectedServicio.precioperiodicidad.split(" ")[0];
-      newServicio.precioUnitario = newServicio.precioUnitario.replace(",", "."); //para evitar que utilice comas que se procesan de forma erronea
+      newServicio.precioServicioValor = selectedServicio.precioperiodicidad.split(" ")[0];
+      newServicio.precioServicioValor = newServicio.precioServicioValor.replace(",", "."); //para evitar que utilice comas que se procesan de forma erronea
       newServicio.iva = selectedServicio.iva;
       newServicio.valorIva = selectedServicio.valorIva;
       newServicio.idtipoiva = selectedServicio.idtipoiva;
@@ -440,8 +443,8 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
         servList.cantidad = "1";
         servList.orden = i.toString();
         servList.idPeticion = this.ficha.nSolicitud; 
-        servList.precioUnitario = serv.precioperiodicidad.split(" ")[0];
-        servList.precioUnitario = servList.precioUnitario.replace(",", "."); //para evitar que utilice comas que se procesan de forma erronea
+        servList.precioServicioValor = serv.precioperiodicidad.split(" ")[0];
+        servList.precioServicioValor = servList.precioServicioValor.replace(",", "."); //para evitar que utilice comas que se procesan de forma erronea
         servList.noFacturable = serv.noFacturable;
         i++;
       }
@@ -452,12 +455,12 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
   checkServicioSeleccionado(selectedServicio) {
     if (selectedServicio.formapago != this.translateService.instant("facturacion.servicios.pagoNoDisponible")) {
       if (selectedServicio.fechaBajaIva == null) {
-        let serviciosLista = JSON.parse(JSON.stringify(this.serviciosTarjeta));
+        let serviciosLista : ListaServiciosSuscripcionItem[] = JSON.parse(JSON.stringify(this.serviciosTarjeta));
 
         let newServicio = new ListaServiciosSuscripcionItem();
         newServicio.idServicio = selectedServicio.idservicio;
-        newServicio.idServicioInstitucion = selectedServicio.idservicioinstitucion;
-        newServicio.idTipoServicio = selectedServicio.idtiposervicio;
+        newServicio.idServicioInstitucion = selectedServicio.idserviciosinstitucion;
+        newServicio.idTipoServicio = selectedServicio.idtiposervicios;
         newServicio.noFacturable = selectedServicio.noFacturable;
         newServicio.descripcion = selectedServicio.descripcion;
 
@@ -465,7 +468,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
 
         if (this.checkFormasPagoComunes(serviciosLista)) {
           let found = this.serviciosTarjeta.find(serv =>
-            serv.idServicio == selectedServicio.idservicio && serv.idTipoServicio == selectedServicio.idtiposervicio && serv.idServicioInstitucion == selectedServicio.idservicioinstitucion
+            serv.idServicio == selectedServicio.idServicio && serv.idTipoServicio == selectedServicio.idTipoServicio && serv.idServicioInstitucion == selectedServicio.idServicioInstitucion
           )
           if (found == undefined) {
             return true;
@@ -496,7 +499,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
     }
   }
 
-  checkFormasPagoComunes(serviciosLista: any[]) {
+  checkFormasPagoComunes(serviciosLista: ListaServiciosSuscripcionItem[]) {
     let error: boolean = false;
 
 
@@ -510,7 +513,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
     let serv;
     serviciosLista.forEach(element => {
       serv = this.comboServicios.find(serv =>
-        serv.idservicio == element.idservicio && serv.idtiposervicios == element.idtiposervicio && serv.idserviciosinstitucion == element.idservicioinstitucion
+        serv.idservicio == element.idServicio && serv.idtiposervicios == element.idTipoServicio && serv.idserviciosinstitucion == element.idServicioInstitucion
       )
       let idformaspago;
       if(serv.idFormasPago != null){
@@ -625,6 +628,8 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
       }
       this.selectedRows = [];
       this.numSelectedRows = 0;
+      this.disableDown = true;
+      this.disableUp = true;
       this.checkTotal();
       this.checkFormasPagoComunes(this.serviciosTarjeta);
     }
@@ -665,9 +670,14 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
       this.selectedRows = this.serviciosTarjeta;
       this.numSelectedRows = this.serviciosTarjeta.length;
 
+      this.checkDisableDown();
+      this.checkDisableUp();
+
     } else {
       this.selectedRows = [];
       this.numSelectedRows = 0;
+      this.disableUp = true;
+      this.disableDown = true;
     }
   }
 
@@ -699,13 +709,17 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
   //Metodo para aplicar logica al deseleccionar filas
   onRowUnselect() {
     this.numSelectedRows = this.selectedRows.length;
+    this.checkDisableDown();
+    this.checkDisableUp();
   }
   //Metodo para aplicar logica al seleccionar filas
   onRowSelect() {
     this.numSelectedRows = this.selectedRows.length;
+    this.checkDisableDown();
+    this.checkDisableUp();
   }
 
-  checkNoFacturable(servicios: ListaServiciosItems[]) {
+  checkNoFacturable(servicios: ListaServiciosSuscripcionItem[]) { 
     let i = 0;
     //Se comprueba si todos los servicios seleccionados son no facturables facturables
     for (let serv of servicios) {
@@ -730,6 +744,45 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
     }
   }
 
+  //Metodo para obtener los valores del combo Tipo segun el combo Categoria
+  // getComboTipo() {
+  //   this.progressSpinner = true;
+
+  //   this.subscriptionTypeSelectValues = this.sigaServices.get("tiposServicios_comboServicios").subscribe(
+  //     TipoSelectValues => {
+  //       this.progressSpinner = false;
+
+  //       this.tiposObject = TipoSelectValues;
+  //     },
+  //     err => {
+  //       this.progressSpinner = false;
+  //     },
+  //     () => {
+  //       this.progressSpinner = false;
+  //     }
+  //   );
+  // }
+
+  //Metodo para obtener los valores del combo periodicidad
+  getComboPeriodicidad() {
+    this.progressSpinner = true;
+
+    this.subscriptionPeriodicidadList = this.sigaServices.get("fichaServicio_comboPeriodicidad").subscribe(
+      periodicidadTypeSelectValues => {
+        this.progressSpinner = false;
+
+        this.periodicidadCombo = periodicidadTypeSelectValues.combooItems;
+
+      },
+      err => {
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
   moveRow(direccion) {
     if (direccion == 'up' && this.selectedRows[0].orden != "1") {
       //Se intercambian los elementos del array correspondientes
@@ -751,27 +804,27 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
     }
   }
 
-  disableUp() {
+  checkDisableUp() {
     if (this.ficha.fechaAceptada != null || this.ficha.fechaDenegada != null) {
-      return true;
+      this.disableUp = true;
     }
     else if (this.selectedRows != undefined && this.selectedRows.length == 1) {
-      return this.selectedRows[0].orden == '1'
+      this.disableUp = (this.selectedRows[0].orden == '1');
     }
     else {
-      return true;
+      this.disableUp = true;
     }
   }
 
-  disableDown() {
+  checkDisableDown() {
     if (this.ficha.fechaAceptada != null || this.ficha.fechaDenegada != null) {
-      return true;
+      this.disableDown = true;
     }
     else if (this.selectedRows != undefined && this.selectedRows.length == 1) {
-      return Number(this.selectedRows[0].orden) == this.serviciosTarjeta.length
+      this.disableDown =  (Number(this.selectedRows[0].orden) == this.serviciosTarjeta.length);
     }
     else {
-      return true;
+      this.disableDown = true;
     }
   }
 

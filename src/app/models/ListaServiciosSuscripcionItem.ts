@@ -3,7 +3,10 @@ export class ListaServiciosSuscripcionItem{
     descripcion: string;
     observaciones: string;
     cantidad: string;
-    precioUnitario: string;
+    idPrecioServicio: string;
+    precioServicioValor: string;
+    idPeriodicidad: string;
+    periodicidadValor: string;
     iva: string;
     total: string;
     idServicio: number;

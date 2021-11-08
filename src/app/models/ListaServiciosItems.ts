@@ -13,6 +13,9 @@ export class ListaServiciosItems {
     precioperiodicidad: string;
     formapago: string;
     noFacturable: string;
+	idFormasPago: string;
+	formasPagoInternet: string;
+    solicitarBaja: string;
 
     constructor() { }
 }

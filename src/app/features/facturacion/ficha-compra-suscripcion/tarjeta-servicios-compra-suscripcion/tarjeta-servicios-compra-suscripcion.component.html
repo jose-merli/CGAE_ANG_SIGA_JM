@@ -47,6 +47,13 @@
       </div>
     </div>
     <div [hidden]="!showTarjeta">
+      
+      <!-- Activo a fecha de -->
+      <div class="form-group col-lg-3 col-md-3">
+        <label>{{ "aFechaDe" | translate }}
+        </label>
+        <app-fecha disabled *ngIf="aFechaDe != null" [(value)]="aFechaDe"></app-fecha>
+      </div>
       <div class="card-body card-body-ficha row">
         <div class="row">
           <div class="col-lg-11 col-md-11">
@@ -72,35 +79,34 @@
               <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
                 <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
                   <td class="text-center" *ngFor="let col of columns">
-                    <span *ngIf="col.field == 'descripcion'" class="enlace"
-                      (click)="openTab(rowData)">{{rowData[col.field]}}</span>
+                    <span *ngIf="col.field == 'descripcion'" class="enlace" (click)="openTab(rowData)">{{rowData[col.field]}}</span>
 
-                    <span *ngIf="col.field == 'observaciones' && !observacionesEditable"
-                      (click)="changeEditable()">{{rowData[col.field]}}</span>
-                    <input *ngIf="col.field == 'observaciones' && observacionesEditable" pInputText type="text"
-                      [(ngModel)]="rowData[col.field]" type="text" pInputText>
+                    <span *ngIf="col.field == 'fechaAlta' && esColegiado">{{rowData[col.field] | date : 'dd/MM/yyyy'}}</span>
+                    <app-fecha
+                      *ngIf="col.field == 'fechaAlta' && !esColegiado" [(value)]="rowData[col.field]"></app-fecha>
+                      
+                      
+                    <app-fecha
+                      *ngIf="col.field == 'fechaBaja' && rowData[col.field] != null" [(value)]="rowData[col.field]"></app-fecha>
+                      
+                    <span *ngIf="col.field == 'automatico' && rowData[col.field] == '1'" >{{'facturacion.servicios.automatico' | translate}}</span>
+                    <span *ngIf="col.field == 'automatico' && rowData[col.field] == '0'" >{{'facturacion.servicios.noAutomatico' | translate}}</span>
 
-                    <span *ngIf="col.field == 'cantidad' && !cantidadEditable"
-                      (click)="changeEditable()">{{rowData[col.field]}}</span>
-                    <input *ngIf="col.field == 'cantidad' && cantidadEditable" (input)="checkTotal()" pInputText
-                      type="text" (keypress)="numberOnly($event)" [(ngModel)]="rowData[col.field]" type="text" pInputText>
+                    <span *ngIf="col.field == 'periodo'">{{periodicidadCombo[rowData[col.field]].label}}</span>
+                    
 
-                    <span *ngIf="col.field == 'precioUnitario' && !precioUnitarioEditable"
-                      (click)="changeEditable()">{{rowData[col.field]}} €</span>
-                    <input *ngIf="col.field == 'precioUnitario' && precioUnitarioEditable" (input)="checkTotal()"
-                      pInputText type="text" (keypress)="numberOnly($event)" [(ngModel)]="rowData[col.field]" type="text" pInputText>
+                    <span *ngIf="col.field == 'precio' && ficha.fechaPendiente != null">{{precioCombo[rowData[col.field]].label}} €</span>
+                    <p-dropdown *ngIf="col.field == 'precio' && ficha.fechaPendiente != null" [filter]="true" styleClass="widthAll" [showClear]="true"
+                    placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='rowData.idperiodicidad'
+                    [options]="periodicidadObject.combooItems" (onChange)="changeTableField(rowData)" (input)="checkTotal()"
+                    [ngClass]="{'camposObligatorios': aGuardar && rowData.idperiodicidad == null}">
+                  </p-dropdown>
 
-                    <span *ngIf="col.field == 'iva' && !ivaEditable"
-                      (click)="changeEditable()">{{rowData[col.field]}}</span>
-                    <p-dropdown *ngIf="col.field == 'iva' && ivaEditable" [filter]="true" styleClass="widthAll"
-                      [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
-                      [(ngModel)]='rowData.idtipoiva' [options]="ivaCombo">
-                    </p-dropdown>
-                    <!-- <input *ngIf="col.field == 'iva' && ivaEditable" pInputText type="text" (input)="checkTotal()"
-                    [(ngModel)]="rowData[col.field]" type="text" pInputText> -->
 
+                    <span *ngIf="col.field == 'iva'">{{rowData[col.field]}}</span>
+                    
                     <span
-                      *ngIf="col.field == 'total' || col.field == 'impNeto' || col.field == 'impIva'">{{rowData[col.field]}}
+                      *ngIf="col.field == 'total'">{{rowData[col.field]}}
                       €</span>
                     <span *ngIf="col.field == 'orden'">{{rowData[col.field]}}</span>
                   </td>
@@ -146,11 +152,11 @@
           <div class="col-lg-1 col-md-1 centerAlign">
             <div class="col-lg-12 col-md-12 centerAlign" style="
             top: 50%;
-            transform: translate(0, -50%);"><button class="styledBut" [disabled]="disableUp()"
+            transform: translate(0, -50%);"><button class="styledBut" [disabled]="disableUp"
                 class="pointer p-2" (click)="moveRow('up')"><i class="fas fa-chevron-up"></i></button></div>
             <div class="col-lg-12 col-md-12 centerAlign" style="
             top: 50%;
-            transform: translate(0, -50%);"><button class="styledBut" [disabled]="disableDown()"
+            transform: translate(0, -50%);"><button class="styledBut" [disabled]="disableDown"
                 class="pointer p-2" (click)="moveRow('down')"><i class="fas fa-chevron-down"></i></button></div>
           </div>
         </div>

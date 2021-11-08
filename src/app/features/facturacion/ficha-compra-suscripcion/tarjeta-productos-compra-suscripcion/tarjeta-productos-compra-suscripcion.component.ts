@@ -405,7 +405,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
     this.progressSpinner = true;
     let productoItem: ListaProductosItems = selectedRow;
     sessionStorage.setItem("FichaCompraSuscripcion", JSON.stringify(this.ficha));
-    sessionStorage.setItem("origin", "Cliente");
+    sessionStorage.setItem("origin", "Compra");
     sessionStorage.setItem("productoBuscador", JSON.stringify(productoItem));
     this.router.navigate(["/fichaProductos"]);
   }
@@ -499,7 +499,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
     }
   }
 
-  checkFormasPagoComunes(productosLista: any[]) {
+  checkFormasPagoComunes(productosLista: ListaProductosCompraItem[]) {
     let error: boolean = false;
 
 
@@ -708,7 +708,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
     this.numSelectedRows = this.selectedRows.length;
   }
 
-  checkNoFacturable(productos: ListaProductosItems[]) {
+  checkNoFacturable(productos: ListaProductosCompraItem[]) {
     let i = 0;
     //Se comprueba si todos los productos seleccionados son no facturables facturables
     for (let prod of productos) {
