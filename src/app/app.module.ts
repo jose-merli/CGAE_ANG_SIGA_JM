@@ -361,15 +361,9 @@ import { OtrasColegiacionesFichaColegialComponent } from './features/censo/ficha
 import { ServiciosInteresFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/servicios-interes-ficha-colegial/servicios-interes-ficha-colegial.component';
 import { TarjetaResumenFijaModule } from './commons/tarjeta-resumen-fija/tarjeta-resumen-fija.module';
 import { PipeTranslationModule } from './commons/translate/pipe-translation.module';
-import { BusquedaRetencionesAplicadasComponent } from './features/sjcs/facturacionSJCS/busqueda-retenciones-aplicadas/busqueda-retenciones-aplicadas.component';
 import { EnvioReintegrosXuntaComponent } from './features/sjcs/facturacionSJCS/envio-reintegros-xunta/envio-reintegros-xunta.component';
 import { GenerarImpreso190Component } from './features/sjcs/facturacionSJCS/generar-impreso190/generar-impreso190.component';
-import { MantenimientoFacturacionComponent } from './features/sjcs/facturacionSJCS/mantenimiento-facturacion/mantenimiento-facturacion.component';
-import { MantenimientoPagosComponent } from './features/sjcs/facturacionSJCS/mantenimiento-pagos/mantenimiento-pagos.component';
 import { MovimientosVariosComponent } from './features/sjcs/facturacionSJCS/movimientos-varios/movimientos-varios.component';
-import { PrevisionesComponent } from './features/sjcs/facturacionSJCS/previsiones/previsiones.component';
-import { ResumenPagosComponent } from './features/sjcs/facturacionSJCS/resumen-pagos/resumen-pagos.component';
-import { RetencionesJudicialesComponent } from './features/sjcs/facturacionSJCS/retenciones-judiciales/retenciones-judiciales.component';
 import { TramosLECComponent } from './features/sjcs/facturacionSJCS/tramos-lec/tramos-lec.component';
 
 import { MatSelectModule } from '@angular/material/select';
@@ -659,15 +653,9 @@ import { RetencionesService } from './features/sjcs/facturacionSJCS/retenciones/
 		RegtelEjgComponent,
 
 		GestionActasComponent,
-		MantenimientoFacturacionComponent,
-		PrevisionesComponent,
-		MantenimientoPagosComponent,
 		MovimientosVariosComponent,
 		TramosLECComponent,
-		RetencionesJudicialesComponent,
-		BusquedaRetencionesAplicadasComponent,
 		GenerarImpreso190Component,
-		ResumenPagosComponent,
 		EnvioReintegrosXuntaComponent,
 		JustificacionLetradoComponent,
 		InformeFacturacionComponent,

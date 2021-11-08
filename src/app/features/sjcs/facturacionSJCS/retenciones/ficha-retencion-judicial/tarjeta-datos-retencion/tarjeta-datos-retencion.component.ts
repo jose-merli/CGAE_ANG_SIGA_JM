@@ -10,6 +10,8 @@ import { SelectItem } from 'primeng/primeng';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { Colegiado } from '../tarjeta-colegiado/tarjeta-colegiado.component';
 import { DatePipe } from '@angular/common';
+import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacionSJCS';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tarjeta-datos-retencion',
@@ -28,6 +30,7 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
   expRegPorcentaje: RegExp = /^\d{1,2}(\.\d{1,2})?$/;
   disabledImporte: boolean = true;
   minDate: Date;
+  permisoEscritura: boolean;
 
   @Input() colegiado: Colegiado;
 
@@ -39,12 +42,25 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
     private retencionesService: RetencionesService,
     private translateService: TranslateService,
     private commonsService: CommonsService,
-    private datePipe: DatePipe) { }
+    private datePipe: DatePipe,
+    private router: Router) { }
 
   ngOnInit() {
 
-    this.getComboTiposRetencion();
-    this.getComboDestinatarios();
+    this.commonsService.checkAcceso(procesos_facturacionSJCS.fichaRetTarjetaDatosRetencion).then(respuesta => {
+
+      this.permisoEscritura = respuesta;
+
+      if (this.permisoEscritura == undefined) {
+        sessionStorage.setItem("codError", "403");
+        sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+        this.router.navigate(["/errorAcceso"]);
+      }
+
+      this.getComboTiposRetencion();
+      this.getComboDestinatarios();
+
+    }).catch(error => console.error(error));
 
   }
 
@@ -185,9 +201,11 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
   }
 
   restablecer() {
-    this.progressSpinner = true;
-    Object.assign(this.body, this.bodyAux);
-    this.progressSpinner = false;
+    if (this.permisoEscritura) {
+      this.progressSpinner = true;
+      Object.assign(this.body, this.bodyAux);
+      this.progressSpinner = false;
+    }
   }
 
   compruebaCamposObligatorios() {
@@ -208,7 +226,7 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
 
   guardar() {
 
-    if (this.compruebaCamposObligatorios()) {
+    if (this.permisoEscritura && this.compruebaCamposObligatorios()) {
 
       this.body.idpersona = this.colegiado.idPersona;
 

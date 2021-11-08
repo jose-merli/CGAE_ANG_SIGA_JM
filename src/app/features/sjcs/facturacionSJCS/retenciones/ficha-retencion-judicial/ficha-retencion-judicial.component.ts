@@ -7,6 +7,9 @@ import { TarjetaAplicacionEnPagosComponent } from './tarjeta-aplicacion-en-pagos
 import { SigaStorageService } from '../../../../../siga-storage.service';
 import { RetencionesService } from '../retenciones.service';
 import { RetencionItem } from '../../../../../models/sjcs/RetencionItem';
+import { CommonsService } from '../../../../../_services/commons.service';
+import { procesos_facturacionSJCS } from '../../../../../permisos/procesos_facturacionSJCS';
+import { Router } from '@angular/router';
 
 export interface Enlace {
   id: string;
@@ -70,10 +73,26 @@ export class FichaRetencionJudicialComponent implements OnInit, AfterViewInit {
     private location: Location,
     private sigaStorageService: SigaStorageService,
     private retencionesService: RetencionesService,
-    private datePipe: DatePipe) { }
+    private datePipe: DatePipe,
+    private commonsService: CommonsService,
+    private router: Router) { }
 
   ngOnInit() {
-    this.isLetrado = this.sigaStorageService.isLetrado;
+
+    this.commonsService.checkAcceso(procesos_facturacionSJCS.busquedaRetenciones).then(respuesta => {
+
+      const permisoEscritura = respuesta;
+
+      if (permisoEscritura == undefined) {
+        sessionStorage.setItem("codError", "403");
+        sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+        this.router.navigate(["/errorAcceso"]);
+      }
+
+      this.isLetrado = this.sigaStorageService.isLetrado;
+
+    }).catch(error => console.error(error));
+
   }
 
   isOpenReceive(event) {

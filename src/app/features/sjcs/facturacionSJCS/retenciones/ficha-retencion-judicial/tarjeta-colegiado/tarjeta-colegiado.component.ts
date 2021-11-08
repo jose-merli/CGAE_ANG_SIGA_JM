@@ -5,6 +5,9 @@ import { RetencionesService } from '../../retenciones.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { ColegiadoItem } from '../../../../../../models/ColegiadoItem';
 import { ColegiadoObject } from '../../../../../../models/ColegiadoObject';
+import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacionSJCS';
+import { CommonsService } from '../../../../../../_services/commons.service';
+import { TranslateService } from '../../../../../../commons/translate/translation.service';
 
 export class Colegiado {
   idPersona: string;
@@ -27,6 +30,7 @@ export class TarjetaColegiadoComponent implements OnInit, AfterViewInit {
   bodyAux: Colegiado = new Colegiado();
   // Conn esta propiedad comprobamos si se está cambiando el colegiado con una retención que ya está creada
   cambioColegiado: boolean = false;
+  permisoEscritura: boolean;
 
   @Output() addEnlace = new EventEmitter<Enlace>();
   @Output() colegiadoEvent = new EventEmitter<Colegiado>();
@@ -36,36 +40,52 @@ export class TarjetaColegiadoComponent implements OnInit, AfterViewInit {
   @ViewChild('apellidos2') apellidos2: ElementRef;
   @ViewChild('nif') nif: ElementRef;
 
-  constructor(private router: Router, private retencionesService: RetencionesService, private sigaServices: SigaServices) { }
+  constructor(private router: Router,
+    private retencionesService: RetencionesService,
+    private sigaServices: SigaServices,
+    private commonsService: CommonsService,
+    private translateService: TranslateService) { }
 
   ngOnInit() {
 
-    if (sessionStorage.getItem("buscadorColegiados")) {
+    this.commonsService.checkAcceso(procesos_facturacionSJCS.fichaRetTarjetaColegiado).then(respuesta => {
 
-      const { nombre, apellidos, nif, idPersona, nColegiado } = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
+      this.permisoEscritura = respuesta;
 
-      this.body.nombre = nombre;
-      this.body.apellidos1 = apellidos.split(' ')[0].trim();
-      this.body.apellidos2 = apellidos.split(' ')[1].trim();
-      this.body.nif = nif;
-      this.body.idPersona = idPersona;
-      this.body.numColeiado = nColegiado;
-
-      this.colegiadoEvent.emit(this.body);
-
-      this.bodyAux = JSON.parse(JSON.stringify(this.body));
-
-      sessionStorage.removeItem("buscadorColegiados");
-      this.showTarjeta = true;
-
-      if (this.retencionesService.modoEdicion) {
-        this.cambioColegiado = true;
+      if (this.permisoEscritura == undefined) {
+        sessionStorage.setItem("codError", "403");
+        sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+        this.router.navigate(["/errorAcceso"]);
       }
-    }
 
-    if (this.retencionesService.modoEdicion && !this.cambioColegiado) {
-      this.getColegiado();
-    }
+      if (sessionStorage.getItem("buscadorColegiados")) {
+
+        const { nombre, apellidos, nif, idPersona, nColegiado } = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
+
+        this.body.nombre = nombre;
+        this.body.apellidos1 = apellidos.split(' ')[0].trim();
+        this.body.apellidos2 = apellidos.split(' ')[1].trim();
+        this.body.nif = nif;
+        this.body.idPersona = idPersona;
+        this.body.numColeiado = nColegiado;
+
+        this.colegiadoEvent.emit(this.body);
+
+        this.bodyAux = JSON.parse(JSON.stringify(this.body));
+
+        sessionStorage.removeItem("buscadorColegiados");
+        this.showTarjeta = true;
+
+        if (this.retencionesService.modoEdicion) {
+          this.cambioColegiado = true;
+        }
+      }
+
+      if (this.retencionesService.modoEdicion && !this.cambioColegiado) {
+        this.getColegiado();
+      }
+
+    }).catch(error => console.error(error));
 
   }
 
@@ -96,13 +116,15 @@ export class TarjetaColegiadoComponent implements OnInit, AfterViewInit {
   }
 
   restablecer() {
-    if (this.retencionesService.modoEdicion) {
+    if (this.retencionesService.modoEdicion && this.permisoEscritura) {
       this.getColegiado();
     }
   }
 
   buscar() {
-    this.router.navigate(["/buscadorColegiados"]);
+    if (this.permisoEscritura) {
+      this.router.navigate(["/buscadorColegiados"]);
+    }
   }
 
 

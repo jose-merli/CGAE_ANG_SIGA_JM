@@ -57,11 +57,12 @@ export class RetencionesComponent implements OnInit, AfterViewChecked {
         sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
         this.router.navigate(["/errorAcceso"]);
       }
-    }).catch(error => console.error(error));
 
-    this.isLetrado = this.sigaStorageService.isLetrado;
-    this.retencionesService.modoEdicion = false;
-    this.retencionesService.retencion = undefined;
+      this.isLetrado = this.sigaStorageService.isLetrado;
+      this.retencionesService.modoEdicion = false;
+      this.retencionesService.retencion = undefined;
+
+    }).catch(error => console.error(error));
 
   }
 
