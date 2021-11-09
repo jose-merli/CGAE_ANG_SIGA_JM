@@ -42,7 +42,7 @@
     </div>
 
     <!-- Cuerpo en ficha abierta -->
-    <div *ngIf="esFichaActiva('contadorFacturas')" class="card-body card-body-ficha">
+    <div [hidden]="!esFichaActiva('contadorFacturas')" class="card-body card-body-ficha">
       <div class="form-row">
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ 'facturacion.seriesFactura.cont.seleccion' | translate }}</label>
