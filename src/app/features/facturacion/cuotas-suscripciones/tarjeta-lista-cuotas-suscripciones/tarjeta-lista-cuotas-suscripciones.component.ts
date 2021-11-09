@@ -27,7 +27,7 @@ export class TarjetaListaCuotasSuscripcionesComponent implements OnInit {
   @ViewChild("suscripcionesTable") suscripcionesTable: DataTable;
 
   cols = [
-    { field: "fechaSolicitud", header: "censo.resultadosSolicitudesModificacion.literal.fecha" },
+    { field: "fechaSolicitud", header: "formacion.busquedaInscripcion.fechaSolicitud" },
     { field: "nSolicitud", header: "facturacion.productos.nSolicitud" },
     { field: "nIdentificacion", header: "censo.consultaDatosColegiacion.literal.numIden" },
     { field: "nColegiado", header: "censo.busquedaClientesAvanzada.literal.nColegiado" },
