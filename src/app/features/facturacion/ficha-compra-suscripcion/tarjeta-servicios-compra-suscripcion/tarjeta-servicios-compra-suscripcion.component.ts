@@ -30,11 +30,6 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
   showTarjeta: boolean = false;
   esColegiado  = this.localStorageService.isLetrado;
 
-  servicioEditable: boolean = false;
-  observacionesEditable: boolean = false;
-  cantidadEditable: boolean = false;
-  precioUnitarioEditable: boolean = false;
-  ivaEditable: boolean = false;
   permisoEditarImporte: boolean = false;
   permisoActualizarServicioSuscripcion: boolean = false;
   showModal: boolean = false;
@@ -192,7 +187,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
             }
             else{
               this.selectedPago = this.ficha.idFormaPagoSeleccionada.toString();
-              if(this.comboPagos.length > 0 && this.comboServicios.length > 0){
+              if(this.comboPagos != undefined && this.comboPagos.length > 0 && this.comboServicios.length > 0){
                 this.checkFormasPagoComunes(this.serviciosTarjeta);
               }
             }
@@ -288,7 +283,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
           this.initServicios();
         }
 
-        if(this.comboPagos.length > 0 && this.serviciosTarjeta.length > 0){
+        if(this.comboPagos != undefined && this.comboPagos.length > 0 && this.serviciosTarjeta.length > 0){
           this.checkFormasPagoComunes(this.serviciosTarjeta);
         }
 
@@ -303,10 +298,10 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
   updateServiciosPeticion() {
     this.progressSpinner = true;
 
-    let peticion: FichaCompraSuscripcionItem = new FichaCompraSuscripcionItem();
+    let peticion = JSON.parse(JSON.stringify(this.datosTarjeta));
+    peticion.servicios = this.serviciosTarjeta;
 
-    this.datosTarjeta.servicios = this.serviciosTarjeta;
-    this.sigaServices.post("PyS_updateServiciosPeticion", this.datosTarjeta).subscribe(
+    this.sigaServices.post("PyS_updateServiciosPeticion", peticion).subscribe(
       n => {
 
         if (n.status == 500) {
@@ -318,11 +313,6 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
 
           this.ficha.servicios = JSON.parse(JSON.stringify(this.serviciosTarjeta));
           //this.actualizaFicha.emit();
-          
-          this.cantidadEditable = false;
-          this.precioUnitarioEditable = false;
-          this.ivaEditable = false;
-          this.observacionesEditable = false;
         }
 
         this.progressSpinner = false;
@@ -608,10 +598,6 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
 
   openHideModal() {
     this.showModal = !this.showModal;
-    this.cantidadEditable = false;
-    this.precioUnitarioEditable = false;
-    this.ivaEditable = false;
-    this.observacionesEditable = false;
   }
 
   //Borra el mensaje de notificacion p-growl mostrado en la esquina superior derecha cuando pasas el puntero del raton sobre el
