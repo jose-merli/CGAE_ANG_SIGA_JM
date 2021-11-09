@@ -64,6 +64,7 @@ export class GeneracionSeriesFacturaComponent implements OnInit {
 
   restablecer(): void {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    this.resaltadoDatos = false;
   }
 
   // Guardar

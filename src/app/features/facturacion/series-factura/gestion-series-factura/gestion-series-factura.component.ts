@@ -39,6 +39,7 @@ export class GestionSeriesFacturaComponent implements OnInit {
 
   datos;
   enlacesTarjetaResumen;
+  modoEdicion: boolean = true;
 
   constructor(
     private translateService: TranslateService,
@@ -54,8 +55,12 @@ export class GestionSeriesFacturaComponent implements OnInit {
       this.body = JSON.parse(sessionStorage.getItem("serieFacturacionItem"));
       sessionStorage.removeItem("serieFacturacionItem");
       this.persistenceService.setDatos(this.body);
-    } else {
+    } else if(this.persistenceService.getDatos()) {
       this.body = this.persistenceService.getDatos();
+    } else if(sessionStorage.getItem("Nuevo")) {
+      sessionStorage.removeItem("Nuevo");
+      this.body = new SerieFacturacionItem();
+      this.modoEdicion = false;
     }
 
     this.updateTarjetaResumen();
@@ -171,7 +176,8 @@ export class GestionSeriesFacturaComponent implements OnInit {
   }
 
   guardadoSend(): void {
-    this.router.navigate(["/datosSeriesFactura"]);
+    this.ngOnInit();
+    //this.router.navigate(["/datosSeriesFactura"]);
   }
 
   // Abrir tarjetas desde enlaces
