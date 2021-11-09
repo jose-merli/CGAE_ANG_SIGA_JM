@@ -479,6 +479,9 @@ import { TarjetaColegiadoComponent } from './features/sjcs/facturacionSJCS/reten
 import { TarjetaDatosRetencionComponent } from './features/sjcs/facturacionSJCS/retenciones/ficha-retencion-judicial/tarjeta-datos-retencion/tarjeta-datos-retencion.component'
 import { TarjetaAplicacionEnPagosComponent } from './features/sjcs/facturacionSJCS/retenciones/ficha-retencion-judicial/tarjeta-aplicacion-en-pagos/tarjeta-aplicacion-en-pagos.component';
 import { RetencionesService } from './features/sjcs/facturacionSJCS/retenciones/retenciones.service';
+import { BaremosDeGuardiaComponent } from './features/sjcs/facturacionSJCS/baremos-de-guardia/baremos-de-guardia.component';
+import { FiltroBusquedaBaremosComponent } from './features/sjcs/facturacionSJCS/baremos-de-guardia/filtro-busqueda-baremos/filtro-busqueda-baremos.component';
+import { TablaBusquedaBaremosComponent } from './features/sjcs/facturacionSJCS/baremos-de-guardia/tabla-busqueda-baremos/tabla-busqueda-baremos.component';
 
 @NgModule({
 	declarations: [
@@ -876,6 +879,9 @@ import { RetencionesService } from './features/sjcs/facturacionSJCS/retenciones/
 		TarjetaColegiadoComponent,
 		TarjetaDatosRetencionComponent,
 		TarjetaAplicacionEnPagosComponent,
+		BaremosDeGuardiaComponent,
+		FiltroBusquedaBaremosComponent, 
+		TablaBusquedaBaremosComponent,
 	],
 	imports: [
 		Paginador3Module,
