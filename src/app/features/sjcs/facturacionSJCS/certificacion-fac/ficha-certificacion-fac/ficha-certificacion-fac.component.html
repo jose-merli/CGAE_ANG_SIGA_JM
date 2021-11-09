@@ -1,0 +1,44 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div id="fichaCertFac">
+
+  <div>
+
+    <div id="top"></div>
+
+    <div class="datos-container">
+      <div class="header-title">
+        <i class="fa fa-square"></i>
+        <p>SJCS &nbsp;<i class="fa fa-angle-right"></i>{{'menu.sjcs.facturacionSJCS.fichaCertificacion' |
+          translate}}</p>
+      </div>
+
+      <app-tarjeta-datos-generales [idCertificacion]="idCertificacion" [modoEdicion]="modoEdicion"
+        (changeModoEdicion)="changeModoEdicion($event)">
+      </app-tarjeta-datos-generales>
+
+      <app-tarjeta-facturacion [idCertificacion]="idCertificacion" [modoEdicion]="modoEdicion"
+        (changeModoEdicion)="changeModoEdicion($event)">
+      </app-tarjeta-facturacion>
+
+      <app-tarjeta-movimientos-varios-aplicados [idCertificacion]="idCertificacion" [modoEdicion]="modoEdicion"
+        (changeModoEdicion)="changeModoEdicion($event)"></app-tarjeta-movimientos-varios-aplicados>
+
+      <app-tarjeta-movimientos-varios-asociados [idCertificacion]="idCertificacion" [modoEdicion]="modoEdicion"
+        (changeModoEdicion)="changeModoEdicion($event)"></app-tarjeta-movimientos-varios-asociados>
+
+
+      <div class="text-right main-button">
+        <button (click)="volver()" pButton type="button" icon="fa fa-angle-left" iconPos="left"
+          label="{{ 'general.boton.volver' | translate}}"></button>
+      </div>
+    </div>
+
+    <div id="down"></div>
+
+  </div>
+</div>
+
+<div *ngIf="progressSpinner || spinnerGlobal()" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

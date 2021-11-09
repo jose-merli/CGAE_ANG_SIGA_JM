@@ -22,5 +22,8 @@ export const procesos_facturacionSJCS: any = {
     cartasFacturacionPago: "620",
     
     // Permiso para busqueda de retenciones
-    busquedaRetenciones: "630"
+    busquedaRetenciones: "630",
+
+    //permisos ficha Certificacion
+    fichaCertificacion: "624"
 }

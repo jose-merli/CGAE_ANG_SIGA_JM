@@ -485,6 +485,14 @@ import { TarjetaColegiadoComponent } from './features/sjcs/facturacionSJCS/reten
 import { TarjetaDatosRetencionComponent } from './features/sjcs/facturacionSJCS/retenciones/ficha-retencion-judicial/tarjeta-datos-retencion/tarjeta-datos-retencion.component'
 import { TarjetaAplicacionEnPagosComponent } from './features/sjcs/facturacionSJCS/retenciones/ficha-retencion-judicial/tarjeta-aplicacion-en-pagos/tarjeta-aplicacion-en-pagos.component';
 import { RetencionesService } from './features/sjcs/facturacionSJCS/retenciones/retenciones.service';
+import { CertificacionFacComponent } from './features/sjcs/facturacionSJCS/certificacion-fac/certificacion-fac.component';
+import { FichaCertificacionFacComponent } from './features/sjcs/facturacionSJCS/certificacion-fac/ficha-certificacion-fac/ficha-certificacion-fac.component';
+import { TablaCertificacionFacComponent } from './features/sjcs/facturacionSJCS/certificacion-fac/tabla-certificacion-fac/tabla-certificacion-fac.component';
+import { FiltroCertificacionFacComponent } from './features/sjcs/facturacionSJCS/certificacion-fac/filtro-certificacion-fac/filtro-certificacion-fac.component';
+import { TarjetaDatosGeneralesComponent } from './features/sjcs/facturacionSJCS/certificacion-fac/ficha-certificacion-fac/tarjeta-datos-generales/tarjeta-datos-generales.component';
+import { TarjetaFacturacionComponent } from './features/sjcs/facturacionSJCS/certificacion-fac/ficha-certificacion-fac/tarjeta-facturacion/tarjeta-facturacion.component';
+import { TarjetaMovimientosVariosAsociadosComponent } from './features/sjcs/facturacionSJCS/certificacion-fac/ficha-certificacion-fac/tarjeta-movimientos-varios-asociados/tarjeta-movimientos-varios-asociados.component';
+import { TarjetaMovimientosVariosAplicadosComponent } from './features/sjcs/facturacionSJCS/certificacion-fac/ficha-certificacion-fac/tarjeta-movimientos-varios-aplicados/tarjeta-movimientos-varios-aplicados.component';
 
 @NgModule({
 	declarations: [
@@ -888,6 +896,16 @@ import { RetencionesService } from './features/sjcs/facturacionSJCS/retenciones/
 		TarjetaColegiadoComponent,
 		TarjetaDatosRetencionComponent,
 		TarjetaAplicacionEnPagosComponent,
+		//certificacion de facturacion
+		CertificacionFacComponent,
+		FichaCertificacionFacComponent,
+		TablaCertificacionFacComponent,
+		FiltroCertificacionFacComponent,
+		TarjetaDatosGeneralesComponent,
+		TarjetaFacturacionComponent,
+		TarjetaMovimientosVariosAsociadosComponent,
+		TarjetaMovimientosVariosAplicadosComponent
+
 	],
 	imports: [
 		Paginador3Module,
