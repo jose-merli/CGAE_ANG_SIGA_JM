@@ -7,5 +7,7 @@ export const procesos_PyS: any = {
     anularCompra: "39D",
     actualizarServicioSuscripcion: "39E",
     anularSuscripcion: "39F",
+    solicitarSuscripcion: "39G",
+    aprobarSuscripcion: "39H"
 
 }

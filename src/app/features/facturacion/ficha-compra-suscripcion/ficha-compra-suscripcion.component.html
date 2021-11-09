@@ -7,7 +7,7 @@
   <div>
       <app-tarjeta-cliente-compra-suscripcion #cliente [(ficha)]="ficha">
       </app-tarjeta-cliente-compra-suscripcion>
-      <app-tarjeta-solicitud-compra-suscripcion  [(ficha)]="ficha" (actualizaFicha)="actualizarFicha()" [tarjProductos]="tarjProductos">
+      <app-tarjeta-solicitud-compra-suscripcion  [(ficha)]="ficha" (actualizaFicha)="actualizarFicha()" [tarjProductos]="tarjProductos" [tarjServicios]="tarjServicios">
       </app-tarjeta-solicitud-compra-suscripcion>
       <app-tarjeta-productos-compra-suscripcion #productos *ngIf="ficha.productos != null" [(ficha)]="ficha" (actualizaFicha)="actualizarFicha()" 
       > 

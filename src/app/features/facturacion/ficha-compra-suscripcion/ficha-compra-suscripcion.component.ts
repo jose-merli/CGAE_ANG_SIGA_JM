@@ -25,6 +25,7 @@ export class FichaCompraSuscripcionComponent implements OnInit {
 
   @ViewChild("cliente") tarjCliente;
   @ViewChild("productos") tarjProductos;
+  @ViewChild("servicios") tarjServicios;
 
 
   constructor(private location: Location, 

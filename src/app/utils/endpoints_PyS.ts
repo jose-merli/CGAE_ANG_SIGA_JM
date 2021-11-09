@@ -16,5 +16,7 @@ export let endpoints_PyS: any = {
     PyS_saveAnticipoPeticion: "/pys/saveAnticipoPeticion",
     PyS_anularPeticion: "/pys/anularPeticion",
     PyS_getListaSuscripciones: "/pys/getListaSuscripciones",
-    PyS_getListaServiciosSuscripcion: "/pys/getListaServiciosSuscripcion"
+    PyS_getListaServiciosSuscripcion: "/pys/getListaServiciosSuscripcion",
+    PyS_solicitarSuscripcion: "pys/solicitarSuscripcion",
+    PyS_aprobarSuscripcion: "pys/aprobarSuscripcion",
 }
