@@ -35,12 +35,11 @@ export class FicherosAdeudosComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.buscar = this.filtros.buscar;
+    this.buscar = false;
   }
 
   buscarFicherosAdeudos(event) {
     let filtros = JSON.parse(JSON.stringify(this.filtros.body));
-    console.log(filtros);
 
     this.progressSpinner=true;
 
@@ -48,9 +47,8 @@ export class FicherosAdeudosComponent implements OnInit {
       n => {
         this.progressSpinner=false;
 
-        this.datos = JSON.parse(n.body).ficherosAdeudosItem;
+        this.datos = JSON.parse(n.body).ficherosAdeudosItems;
         let error = JSON.parse(n.body).error;
-        console.log(this.datos);
         this.buscar = true;
 
         if (this.tabla != null && this.tabla != undefined) {
@@ -60,7 +58,7 @@ export class FicherosAdeudosComponent implements OnInit {
           this.tabla.table.reset();
           this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
         }
-        //cadena = [];
+
         this.progressSpinner = false;
         if (error != null && error.description != null) {
           this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);

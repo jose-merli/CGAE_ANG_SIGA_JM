@@ -4,7 +4,7 @@ export class FicherosAdeudosItem {
 	idDisqueteCargos: String;
 	nombreFichero: String;
 	bancosCodigo: String;
-	comisionDescripcion: String;
+	cuentaEntidad: String;
 	iban: String;
 	fechaCreacion: Date;
 	fechaCreacionDesde: Date;
