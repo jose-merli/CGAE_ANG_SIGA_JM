@@ -18,7 +18,6 @@ export class RetencionesService implements OnDestroy {
         if (ruta && ruta.length > 0) {
           this.retencion = new RetencionesItem();
           this.filtrosRetenciones = null;
-          console.log(ruta);
         }
       }
     );

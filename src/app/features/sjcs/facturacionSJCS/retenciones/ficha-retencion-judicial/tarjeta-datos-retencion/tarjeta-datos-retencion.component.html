@@ -123,10 +123,10 @@
     <div class="card-footer" *ngIf="showTarjeta">
       <div class="text-right main-button">
         <button pButton type="button" iconPos="left" icon="fa fa-undo"
-          label="{{ 'general.boton.restablecer' | translate }}" [disabled]="isDisabledRestablecer()"
+          label="{{ 'general.boton.restablecer' | translate }}" [disabled]="isDisabledRestablecer() || !permisoEscritura"
           (click)="restablecer()"></button>
         <button pButton type="button" iconPos="left" icon="fa fa-save" label="{{ 'general.boton.guardar' | translate }}"
-          (click)="guardar()"></button>
+          (click)="guardar()"  [disabled]="!permisoEscritura"></button>
       </div>
     </div>
 

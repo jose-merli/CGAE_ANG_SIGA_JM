@@ -104,7 +104,7 @@
     </div>
     <div class="card-footer" *ngIf="showFicha">
       <div class="text-right main-button">
-       <button *ngIf="idEstadoPago == '10'" pButton type="button" iconPos="left"  icon="fa fa-play-circle"
+        <button *ngIf="idEstadoPago == '10'" pButton type="button" iconPos="left" icon="fa fa-play-circle"
           [disabled]="disabledSimularPago() || !permisos || editingConceptos"
           label="{{ 'facturacionSJCS.facturacionesYPagos.simular' | translate }}" (click)="simularPago()"></button>
         <button *ngIf="idEstadoPago != '30'" pButton type="button" iconPos="left" icon="fa fa-play"
@@ -123,8 +123,9 @@
           (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
         <button pButton type="button" iconPos="left" icon="fa fa-save" [disabled]="disabledSave() || !permisos"
           label="{{ 'general.boton.guardar' | translate }}" (click)="guardar()"></button>
-        <button *ngIf="isVisibleDelete()" [disabled]="disabledDelete()" pButton type="button" iconPos="left" icon="fa fa-trash-alt"
-          label="{{ 'general.boton.borrar' | translate }}" (click)="deletePago()"></button>
+        <button *ngIf="isVisibleDelete()" [disabled]="disabledDelete() || !permisos" pButton type="button"
+          iconPos="left" icon="fa fa-trash-alt" label="{{ 'general.boton.borrar' | translate }}"
+          (click)="deletePago()"></button>
       </div>
     </div>
   </div>

@@ -7,6 +7,9 @@ import { RetencionesService } from '../../retenciones.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { RetencionesAplicadasObject } from '../../../../../../models/sjcs/RetencionesAplicadasObject';
 import { TranslateService } from '../../../../../../commons/translate/translation.service';
+import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacionSJCS';
+import { CommonsService } from '../../../../../../_services/commons.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tarjeta-aplicacion-en-pagos',
@@ -27,6 +30,7 @@ export class TarjetaAplicacionEnPagosComponent implements OnInit, AfterViewInit 
   cols;
   msgs = [];
   progressSpinner: boolean = false;
+  permisoEscritura: boolean;
 
   @ViewChild("table") tabla: Table;
 
@@ -36,13 +40,28 @@ export class TarjetaAplicacionEnPagosComponent implements OnInit, AfterViewInit 
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private retencionesService: RetencionesService,
     private sigaServices: SigaServices,
-    private translateService: TranslateService) { }
+    private translateService: TranslateService,
+    private commonsService: CommonsService,
+    private router: Router) { }
 
   ngOnInit() {
-    this.getCols();
-    if (this.retencionesService.modoEdicion) {
-      this.getRetencionesAplicadas(false);
-    }
+
+    this.commonsService.checkAcceso(procesos_facturacionSJCS.fichaRetTarjetaAplicacionEnPagos).then(respuesta => {
+
+      this.permisoEscritura = respuesta;
+
+      if (this.permisoEscritura == undefined) {
+        sessionStorage.setItem("codError", "403");
+        sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+        this.router.navigate(["/errorAcceso"]);
+      }
+
+      this.getCols();
+      if (this.retencionesService.modoEdicion) {
+        this.getRetencionesAplicadas(false);
+      }
+
+    }).catch(error => console.error(error));
 
   }
 

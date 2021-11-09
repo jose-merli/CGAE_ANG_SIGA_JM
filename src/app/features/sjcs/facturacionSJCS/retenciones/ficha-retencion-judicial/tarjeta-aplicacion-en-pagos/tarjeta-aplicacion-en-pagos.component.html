@@ -127,7 +127,7 @@
         <button *ngIf="historico" (click)="ocultarHistorico()" pButton type="button" icon="fa fa-history" iconPos="left"
           label="{{'general.message.ocultarHistorico' | translate}}"></button>
         <button pButton type="button" icon="fa fa-comment" iconPos="left"
-          label="{{ 'general.boton.comunicar' | translate}}"></button>
+          label="{{ 'general.boton.comunicar' | translate}}" [disabled]="!permisoEscritura"></button>
       </div>
     </div>
 

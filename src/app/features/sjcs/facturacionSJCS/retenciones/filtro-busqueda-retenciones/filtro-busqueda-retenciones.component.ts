@@ -101,11 +101,13 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
         this.filtros.fechaAplicacionHasta = new Date(this.filtros.fechaAplicacionHasta);
       }
 
-      if (this.filtros.idPersona && this.filtros.idPersona != null && this.filtros.idPersona.length > 0) {
+      if (this.hayDestinatariosRellenos()) {
         this.showDestinatarios = true;
       }
 
-      this.showDatosGenerales = true;
+      if (this.hayDatosGeneralesRellenos()) {
+        this.showDatosGenerales = true;
+      }
 
       this.buscar();
     }
@@ -118,6 +120,10 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
   changeFilters() {
     this.filtros.modoBusqueda = this.modoBusqueda;
     this.modoBusquedaEvent.emit(this.modoBusqueda);
+
+    if (this.hayDestinatariosRellenos() || this.hayDatosGeneralesRellenos()) {
+      this.buscar();
+    }
   }
 
   onHideDestinatarios() {
@@ -247,12 +253,18 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
 
   buscar() {
 
-    if (this.modoBusqueda == TIPOBUSQUEDA.RETENCIONES) {
-      this.retencionesService.filtrosRetenciones = JSON.parse(JSON.stringify(this.filtros));
-      this.buscarRetencionesEvent.emit(this.filtros);
-    } else if (this.modoBusqueda == TIPOBUSQUEDA.RETENCIONESAPLICADAS) {
-      this.retencionesService.filtrosRetenciones = JSON.parse(JSON.stringify(this.filtros));
-      this.buscarRetencionesAplicadasEvent.emit(this.filtros);
+    if (!this.hayDestinatariosRellenos() && !this.hayDatosGeneralesRellenos()) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
+    } else {
+
+      if (this.modoBusqueda == TIPOBUSQUEDA.RETENCIONES) {
+        this.retencionesService.filtrosRetenciones = JSON.parse(JSON.stringify(this.filtros));
+        this.buscarRetencionesEvent.emit(this.filtros);
+      } else if (this.modoBusqueda == TIPOBUSQUEDA.RETENCIONESAPLICADAS) {
+        this.retencionesService.filtrosRetenciones = JSON.parse(JSON.stringify(this.filtros));
+        this.buscarRetencionesAplicadasEvent.emit(this.filtros);
+      }
+
     }
   }
 
@@ -277,6 +289,33 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
   nuevo() {
     sessionStorage.setItem("desdeNuevoFiltroRetenciones", "true");
     this.router.navigate(["/buscadorColegiados"]);
+  }
+
+  hayDatosGeneralesRellenos(): boolean {
+
+    if (
+      (this.filtros && this.filtros != null) &&
+      ((this.filtros.tiposRetencion && this.filtros.tiposRetencion != null && this.filtros.tiposRetencion.toString().length > 0) ||
+        (this.filtros.idDestinatarios && this.filtros.idDestinatarios != null && this.filtros.idDestinatarios.toString().length > 0) ||
+        (this.filtros.fechaInicio && this.filtros.fechaInicio != null) ||
+        (this.filtros.fechaFin && this.filtros.fechaFin != null) ||
+        (this.filtros.idPagos && this.filtros.idPagos != null && this.filtros.idPagos.toString().length > 0) ||
+        (this.filtros.fechaAplicacionDesde && this.filtros.fechaAplicacionDesde != null) ||
+        (this.filtros.fechaAplicacionHasta && this.filtros.fechaAplicacionHasta != null))
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
+  hayDestinatariosRellenos(): boolean {
+
+    if (((this.filtros && this.filtros != null)) && this.filtros.idPersona && this.filtros.idPersona != null && this.filtros.idPersona.length > 0) {
+      return true;
+    }
+
+    return false;
   }
 
 }
