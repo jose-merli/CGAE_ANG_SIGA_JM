@@ -4,14 +4,14 @@ export class FichaTarjetaPreciosItem {
     idserviciosinstitucion: number;
     idtiposervicios: number;
     idservicio: number;
-    precio: String;
+    precio: string;
     idperiodicidad: number;
-    descripcionprecio: String;
+    descripcionprecio: string;
     idcondicion: number;
-    descripcionperiodicidad: String;
-    descripcionconsulta: String;
-    pordefecto: String;
-    nuevo: String = '0';
+    descripcionperiodicidad: string;
+    descripcionconsulta: string;
+    pordefecto: string;
+    nuevo: string = '0';
 
     idperiodicidadoriginal: number;
 

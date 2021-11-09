@@ -5,20 +5,25 @@ export class ListaServiciosSuscripcionItem{
     cantidad: string;
     idPrecioServicio: string;
     precioServicioValor: string;
+    precioServicioDesc: string;
     idPeriodicidad: string;
     periodicidadValor: string;
+    periodicidadDesc: string;
     iva: string;
     total: string;
     idServicio: number;
-    idTipoServicio: number;
-    idServicioInstitucion: number;
+    idTipoServicios: number;
+    idServiciosInstitucion: number;
     noFacturable: string;
     idtipoiva: string;
     valorIva: string;
     impIva: string;
     impNeto: string;
+    fechaAlta: Date;
+    fechaBaja: Date;
 
     solicitarBaja : string;
+    automatico: string;
 
     idPeticion: string;
 }

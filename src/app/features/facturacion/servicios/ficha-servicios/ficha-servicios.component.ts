@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { ListaServiciosItems } from '../../../../models/ListaServiciosItems';
 import { ServicioDetalleItem } from '../../../../models/ServicioDetalleItem';
 import { SigaServices } from '../../../../_services/siga.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-ficha-servicios',
@@ -59,7 +60,7 @@ export class FichaServiciosComponent implements OnInit, OnDestroy {
   subscriptionServiceDetail: Subscription;
   subscriptionCategorySelectValues: Subscription;
 
-  constructor(private router: Router, private sigaServices: SigaServices) { }
+  constructor(private location: Location, private router: Router, private sigaServices: SigaServices) { }
 
   ngOnInit() {
     if (sessionStorage.getItem('servicioBuscador')) {
@@ -87,7 +88,8 @@ export class FichaServiciosComponent implements OnInit, OnDestroy {
   backTo() {
     sessionStorage.setItem("volver", 'true');
     sessionStorage.removeItem('servicioBuscador');
-    this.router.navigate(['/servicios']);
+    // this.router.navigate(['/servicios']);
+    this.location.back();
   }
   //FIN METODOS APP
 

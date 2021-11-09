@@ -35,7 +35,9 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
   permisoSolicitarCompra: boolean = false;
   permisoAprobarCompra: boolean = false;
   permisoDenegar: boolean = false;
-  permisoAnularPeticion: boolean = false;
+  permisoAnularCompra: boolean = false;
+  permisoAnularSuscripcion: boolean = false;
+  permisoActualizarServicioSuscripcion: boolean = false;
 
   progressSpinner : boolean = false;
   showTarjeta: boolean = false;
@@ -94,7 +96,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
     this.getPermisoSolicitarCompra();
     this.getPermisoAprobarCompra();
     this.getPermisoDenegar();
-    this.getPermisoAnularPeticion();
+    this.getPermisoAnularCompra();
   }
 
   checkProductos(){
@@ -111,6 +113,20 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
     if(prods.length == 0 || campoVacio) {
       return true;
     }
+    return false;
+  }
+
+  //REVISAR
+  checkCamposObligatorios() {
+    let campoVacio = false;
+    //Comprobacion de campos obligatorios de los servicios
+    // this.tarjServicios.serviciosTarjeta
+    // this.serviciosTarjeta.forEach(el => {
+    //   if (el.idPrecioServicio == null || el.cantidad.trim() == "" ||
+    //     (el.fechaAlta == null && this.ficha.fechaAceptada!= null)) {
+    //       campoVacio = true;
+    //     }
+    // })
     return false;
   }
 
@@ -198,7 +214,8 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
   // REVISAR: Añadir comprobación de facturación
   checkAnular(){
     let msg = null;
-    if(this.ficha.productos!= null) msg = this.commonsService.checkPermisos(this.permisoAnularPeticion, undefined);
+    if(this.ficha.productos!= null) msg = this.commonsService.checkPermisos(this.permisoAnularCompra, undefined);
+    if(this.ficha.servicios!= null) msg = this.commonsService.checkPermisos(this.permisoAnularSuscripcion, undefined);
 
     if (msg != null) {
       this.msgs = msg;
@@ -395,14 +412,23 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
 			.catch((error) => console.error(error));
   }
 
-  getPermisoAnularPeticion(){
+  getPermisoAnularCompra(){
     //En la documentación no parece distinguir que se requiera una permiso especifico para esta acción
     this.commonsService
-			.checkAcceso(procesos_PyS.fichaCompraSuscripcion)
+			.checkAcceso(procesos_PyS.anularCompra)
 			.then((respuesta) => {
-				this.permisoAnularPeticion = respuesta;
+				this.permisoAnularCompra = respuesta;
 			})
 			.catch((error) => console.error(error));
   }
 
+  getPermisoAnularSuscripcion(){
+    //En la documentación no parece distinguir que se requiera una permiso especifico para esta acción
+    this.commonsService
+			.checkAcceso(procesos_PyS.anularSuscripcion)
+			.then((respuesta) => {
+				this.permisoAnularSuscripcion = respuesta;
+			})
+			.catch((error) => console.error(error));
+  }
 }

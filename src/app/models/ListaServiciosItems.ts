@@ -16,6 +16,8 @@ export class ListaServiciosItems {
 	idFormasPago: string;
 	formasPagoInternet: string;
     solicitarBaja: string;
+    fechaBajaIva : Date;
+    valorIva: string;
 
     constructor() { }
 }

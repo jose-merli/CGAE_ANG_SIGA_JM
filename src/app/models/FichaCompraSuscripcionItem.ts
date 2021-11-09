@@ -35,6 +35,7 @@ export class FichaCompraSuscripcionItem {
     productos: ListaProductosCompraItem[];
 
     //TRARJETA FACTURACION
+    aFechaDeServicio: Date;
     facturas: ListaFacturasPeticionItem[];
 
     //TARJETA DESCUENTOS Y ANTICIPOS

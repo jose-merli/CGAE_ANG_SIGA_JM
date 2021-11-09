@@ -296,14 +296,17 @@ export class TarjetaFiltroCuotasSuscripcionesComponent implements OnInit {
       nuevaSuscripcion.idPersona = this.filtrosSuscripciones.idpersona;
     }
     this.sigaServices.post('PyS_getFichaCompraSuscripcion', nuevaSuscripcion).subscribe(
-      (n) => {
+      n => {
         this.progressSpinner = false;
-        sessionStorage.setItem("FichaCompraSuscripcion", n.body);
+        let fichaSuscripcion = JSON.parse(n.body);
+        fichaSuscripcion.aFechaDeServicio = this.filtrosSuscripciones.aFechaDe;
+        sessionStorage.setItem("FichaCompraSuscripcion", JSON.stringify(fichaSuscripcion));
         this.router.navigate(["/fichaCompraSuscripcion"]);
       },
-      (err) => {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+      error => {
         this.progressSpinner = false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        
       }
     );
   }
