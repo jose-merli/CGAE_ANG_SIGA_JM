@@ -9,6 +9,7 @@ import { GestionPagosComponent } from './facturaciones-pagos/gestion-pagos/gesti
 import { RetencionesComponent } from './retenciones/retenciones.component';
 import { FichaRetencionJudicialComponent } from './retenciones/ficha-retencion-judicial/ficha-retencion-judicial.component';
 import { BaremosDeGuardiaComponent } from './baremos-de-guardia/baremos-de-guardia.component';
+import { FichaCertificacionFacComponent } from './certificacion-fac/ficha-certificacion-fac/ficha-certificacion-fac.component';
 
 const routesFacturacionsjcs: Routes = [
   {
@@ -50,7 +51,12 @@ const routesFacturacionsjcs: Routes = [
     path: 'baremosDeGuardia',
     component: BaremosDeGuardiaComponent,
     canActivate: [AuthGuard]
-  }
+  },
+  {
+    path: 'fichaCertificacionFac',
+    component: FichaCertificacionFacComponent,
+    canActivate: [AuthGuard]
+  },
 ];
 
 @NgModule({

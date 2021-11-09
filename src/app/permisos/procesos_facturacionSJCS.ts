@@ -20,6 +20,10 @@ export const procesos_facturacionSJCS: any = {
 
     // Permiso para cartas de facturación y pagos
     cartasFacturacionPago: "620",
+    
+
+    //permisos ficha Certificacion
+    fichaCertificacion: "624",
 
     // Permiso para búsqueda de retenciones y ficha de retenciones judiciales
     busquedaRetenciones: "630",

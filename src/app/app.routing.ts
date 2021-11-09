@@ -243,6 +243,7 @@ import { TramosLECComponent } from "./features/sjcs/facturacionSJCS/tramos-lec/t
 import { MantenimientoGruposFijosComponent } from "./features/censo/mantenimiento-grupos-fijos/mantenimiento-grupos-fijos.component";
 import { DatosPersonaJuridicaComponent } from "./features/censo/datosPersonaJuridica/datosPersonaJuridica.component";
 import { MutualidadAbogaciaPlanUniversal } from "./features/censo/solicitudes-incorporacion/mutualidadDeLaAbogaciaPlanUniversal/mutualidad-abogacia-plan-universal.component";
+import { CertificacionFacComponent } from "./features/sjcs/facturacionSJCS/certificacion-fac/certificacion-fac.component";
 
 const appRoutes: Routes = [
 	{ path: 'home', component: HomeComponent, canActivate: [ AuthGuard ] },
@@ -1298,6 +1299,11 @@ const appRoutes: Routes = [
 		path: 'dialogoComunicaciones',
 		component: DialogoComunicacionesComponent
 		//canActivate: [AuthGuard]
+	},
+	{
+		path: 'certificacionFac',
+		component: CertificacionFacComponent,
+		canActivate: [ AuthGuard ]
 	},
 
 	{ path: ' ', redirectTo: 'home' }
