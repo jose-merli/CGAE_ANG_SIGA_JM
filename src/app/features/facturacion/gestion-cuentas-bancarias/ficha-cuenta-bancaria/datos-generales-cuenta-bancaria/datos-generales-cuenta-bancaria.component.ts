@@ -1,8 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ConfirmationService } from 'primeng/api';
+import { TranslateService } from '../../../../../commons/translate';
 import { CuentasBancariasItem } from '../../../../../models/CuentasBancariasItem';
 import { SerieFacturacionItem } from '../../../../../models/SerieFacturacionItem';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
+import { SigaServices } from '../../../../../_services/siga.service';
 
 @Component({
   selector: 'app-datos-generales-cuenta-bancaria',
@@ -26,7 +29,10 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit {
 
   constructor(
     private persistenceService: PersistenceService,
-    private commonsService: CommonsService
+    private commonsService: CommonsService,
+    private sigaServices: SigaServices,
+    private confirmationService: ConfirmationService,
+    private translateService: TranslateService
   ) { }
 
   ngOnInit() {
@@ -43,17 +49,50 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit {
     this.progressSpinner = false;
   }
 
-  showMessage(severity, summary, msg) {
-    this.msgs = [];
-    this.msgs.push({
-      severity: severity,
-      summary: summary,
-      detail: msg
+  // Restablecer
+
+  restablecer(): void {
+    this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    this.resaltadoDatos = false;
+  }
+
+  // Eliminar series de facturación
+
+  confirmEliminar(): void {
+    let mess = "Se va a proceder a dar de baja la cuenta bancaria ¿Desea continuar?";
+    let icon = "fa fa-eraser";
+
+    this.confirmationService.confirm({
+      //key: "asoc",
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.eliminar();
+      },
+      reject: () => {
+        this.showMessage("info", "Cancelar", this.translateService.instant("general.message.accion.cancelada"));
+      }
     });
   }
 
-  clear() {
-    this.msgs = [];
+  eliminar(): void {
+    this.progressSpinner = true;
+
+    this.sigaServices.post("facturacionPyS_borrarCuentasBancarias", [this.body]).subscribe(
+      data => {
+        this.body.fechaBaja = new Date();
+        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+        this.persistenceService.setDatos(this.bodyInicial);
+        this.guardadoSend.emit();
+        this.showMessage("success", "Eliminar", "La cuenta bancaria ha sido dada de baja con exito.");
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
   }
 
   // Estilo obligatorio
@@ -78,6 +117,21 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit {
     this.openTarjetaDatosGenerales = !this.openTarjetaDatosGenerales;
     this.opened.emit(this.openTarjetaDatosGenerales);
     this.idOpened.emit(key);
+  }
+
+  // Mensajes en pantalla
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+
+  clear() {
+    this.msgs = [];
   }
 
 

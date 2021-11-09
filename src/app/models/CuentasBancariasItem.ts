@@ -1,6 +1,6 @@
 export class CuentasBancariasItem{
 
-    bancoCodigo;
+    bancosCodigo;
     codBanco;
     codSucursal;
     fechaBaja;

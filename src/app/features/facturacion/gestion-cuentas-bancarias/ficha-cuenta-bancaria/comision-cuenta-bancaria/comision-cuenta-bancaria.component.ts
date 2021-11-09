@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CuentasBancariasItem } from '../../../../../models/CuentasBancariasItem';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
+import { SigaServices } from '../../../../../_services/siga.service';
 
 @Component({
   selector: 'app-comision-cuenta-bancaria',
@@ -28,7 +29,8 @@ export class ComisionCuentaBancariaComponent implements OnInit {
 
   constructor(
     private persistenceService: PersistenceService,
-    private commonsService: CommonsService
+    private commonsService: CommonsService,
+    private sigaServices: SigaServices
   ) { }
 
   ngOnInit() {
@@ -39,7 +41,22 @@ export class ComisionCuentaBancariaComponent implements OnInit {
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     }
 
+    this.getComboTiposIVA();
+
     this.progressSpinner = false;
+  }
+
+  // Combo de tipos IVA
+  getComboTiposIVA() {
+    this.sigaServices.getParam("facturacionPyS_comboTiposIVA", "?codBanco=" + this.body.codBanco).subscribe(
+      n => {
+        this.comboTiposIVA = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboTiposIVA);
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 
   showMessage(severity, summary, msg) {

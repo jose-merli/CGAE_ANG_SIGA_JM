@@ -11,10 +11,10 @@
     </app-tarjeta-resumen-fija>
 
     <app-datos-generales-cuenta-bancaria [openTarjetaDatosGenerales]="openTarjetaDatosGenerales" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (guardadoSend)="guardadoSend()"></app-datos-generales-cuenta-bancaria>
-    <app-comision-cuenta-bancaria></app-comision-cuenta-bancaria>
-    <app-configuracion-cuenta-bancaria></app-configuracion-cuenta-bancaria>
-    <app-uso-ficheros-cuenta-bancaria></app-uso-ficheros-cuenta-bancaria>
-    <app-usos-sufijos-cuenta-bancaria></app-usos-sufijos-cuenta-bancaria>
+    <app-comision-cuenta-bancaria *ngIf="modoEdicion" [openTarjetaComision]="openTarjetaComision" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (guardadoSend)="guardadoSend()"></app-comision-cuenta-bancaria>
+    <app-configuracion-cuenta-bancaria *ngIf="modoEdicion" [openTarjetaConfiguracion]="openTarjetaConfiguracion" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (guardadoSend)="guardadoSend()"></app-configuracion-cuenta-bancaria>
+    <app-uso-ficheros-cuenta-bancaria *ngIf="modoEdicion" [openTarjetaUsoFicheros]="openTarjetaUsoFicheros" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (guardadoSend)="guardadoSend()"></app-uso-ficheros-cuenta-bancaria>
+    <app-usos-sufijos-cuenta-bancaria *ngIf="modoEdicion" [openTarjetaUsosSufijos]="openTarjetaUsosSufijos" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (guardadoSend)="guardadoSend()"></app-usos-sufijos-cuenta-bancaria>
   </div>
 </div>
 

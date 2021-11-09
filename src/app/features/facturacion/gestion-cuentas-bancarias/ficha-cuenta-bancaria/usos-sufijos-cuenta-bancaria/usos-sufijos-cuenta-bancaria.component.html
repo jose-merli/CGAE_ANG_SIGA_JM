@@ -87,7 +87,7 @@
               </label>
               <label
                 class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}:
-                {{numSelected}}
+                {{selectedDatos.length}}
               </label>
               <label>{{"general.message.mostrar" | translate}}</label>
               <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">

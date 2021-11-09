@@ -3,6 +3,7 @@ import { DataTable } from 'primeng/primeng';
 import { CuentasBancariasItem } from '../../../../../models/CuentasBancariasItem';
 import { SerieFacturacionItem } from '../../../../../models/SerieFacturacionItem';
 import { PersistenceService } from '../../../../../_services/persistence.service';
+import { SigaServices } from '../../../../../_services/siga.service';
 
 @Component({
   selector: 'app-usos-sufijos-cuenta-bancaria',
@@ -14,7 +15,7 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit {
   msgs;
   progressSpinner: boolean = false;
 
-  @Input() openTarjetaUsoFicheros;
+  @Input() openTarjetaUsosSufijos;
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
   @Output() guardadoSend = new EventEmitter<any>();
@@ -40,7 +41,8 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit {
 
   constructor(
     private persistenceService: PersistenceService,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private sigaServices: SigaServices
   ) { }
 
   ngOnInit() {
@@ -51,8 +53,22 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit {
       this.body = this.persistenceService.getDatos();
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     }
-
+    this.getUsosSufijos();
+    
     this.progressSpinner = false;
+  }
+
+  getUsosSufijos() {
+    this.sigaServices.getParam("facturacionPyS_getUsosSufijos", "?codBanco=" + this.body.bancosCodigo).subscribe(
+      n => {
+        this.datos = n.usosSufijosItems;
+        this.datosInit = JSON.parse(JSON.stringify(this.datos));
+        console.log(this.datos);
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 
   getCols(): void {
@@ -62,15 +78,15 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit {
     this.cols = [
       {
         field: "tipo",
-        header: "Tipo"
+        header: "facturacion.productos.tipo"
       },
       {
         field: 'abreviatura',
-        header: 'Abreviatura'
+        header: 'administracion.parametrosGenerales.literal.abreviatura'
       },
       {
         field: 'descripcion',
-        header: 'Descripción'
+        header: 'general.description'
       },
       {
         field: 'numPendientes',
@@ -78,7 +94,7 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit {
       },
       {
         field: 'sufijo',
-        header: 'Sufijo'
+        header: 'facturacionSJCS.facturacionesYPagos.sufijo'
       }
     ];
 
@@ -136,12 +152,12 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit {
   // Abrir y cerrar la ficha
 
   esFichaActiva(): boolean {
-    return this.openTarjetaUsoFicheros;
+    return this.openTarjetaUsosSufijos;
   }
 
   abreCierraFicha(key): void {
-    this.openTarjetaUsoFicheros = !this.openTarjetaUsoFicheros;
-    this.opened.emit(this.openTarjetaUsoFicheros);
+    this.openTarjetaUsosSufijos = !this.openTarjetaUsosSufijos;
+    this.opened.emit(this.openTarjetaUsosSufijos);
     this.idOpened.emit(key);
   }
 

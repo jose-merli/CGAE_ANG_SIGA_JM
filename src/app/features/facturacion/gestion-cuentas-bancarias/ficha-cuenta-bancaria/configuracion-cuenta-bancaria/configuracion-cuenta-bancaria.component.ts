@@ -37,12 +37,39 @@ export class ConfiguracionCuentaBancariaComponent implements OnInit {
   ngOnInit() {
     this.progressSpinner = true;
 
+    this.getCombos();
     if (this.persistenceService.getDatos()) {
       this.body = this.persistenceService.getDatos();
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     }
 
     this.progressSpinner = false;
+  }
+
+  // Cargar combos
+
+  getCombos() {
+    this.comboConfigFicherosSecuencia = [
+      { value: "0", label: "Uno para todos los recibos (primeros + recurrentes)" },
+      { value: "1", label: "Uno para primeros recibos y otro para recurrentes" },
+      { value: "2", label: "Todos los recibos se consideran recurrentes" }
+    ];
+
+    this.comboConfigFicheroEsquema = [
+      { value: "0", label: "Uno para todos los esquemas (CORE+COR1+B2B)" },
+      { value: "1", label: "Uno para CORE+COR1 y otro para B2B" },
+      { value: "2", label: "Uno para cada esquema separados CORE; COR1; B2B" }
+    ];
+
+    this.comboConfigLugaresQueMasSecuencia = [
+      { value: "0", label: "En el bloque del acreedor (normativa AEB)" },
+      { value: "1", label: "En cada registro individual (normativa UE)" }
+    ];
+
+    this.comboConfigConceptoAmpliado = [
+      { value: "0", label: "Normal (140 caracteres)" },
+      { value: "1", label: "Ampliado (640 caracteres)" }
+    ];
   }
 
   showMessage(severity, summary, msg) {

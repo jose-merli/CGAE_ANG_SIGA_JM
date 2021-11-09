@@ -48,31 +48,31 @@
       <div class="form-row lg-12 md-12">
         <div class="form-group col-lg-3 col-md-3">
           <label>IBAN (*)</label>
-          <input type="text" class="form-control" [(ngModel)]="body.IBAN" pInputText>
+          <input type="text" [ngClass]="styleObligatorio(body.IBAN)" class="form-control" [(ngModel)]="body.IBAN" maxlength="24" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>Descripción (*)</label>
-          <input type="text" class="form-control" [(ngModel)]="body.descripcion" pInputText>
+          <input type="text" [ngClass]="styleObligatorio(body.descripcion)" class="form-control" [(ngModel)]="body.descripcion" maxlength="40" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>C. contable pago por banco</label>
-          <input type="text" class="form-control" [(ngModel)]="body.asientoContable" pInputText>
+          <input type="text" class="form-control" [(ngModel)]="body.asientoContable" maxlength="20" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>C. contable pago por tarjeta</label>
-          <input type="text" class="form-control" [(ngModel)]="body.cuentaContableTarjeta" pInputText>
+          <input type="text" class="form-control" [(ngModel)]="body.cuentaContableTarjeta" maxlength="20" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>BIC (*)</label>
-          <input type="text" class="form-control" [(ngModel)]="body.BIC" [disabled]="true" pInputText>
+          <input type="text" [ngClass]="styleObligatorio(body.BIC)" class="form-control" [(ngModel)]="body.BIC" maxlength="11" [disabled]="true" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>Banco (*)</label>
-          <input type="text" class="form-control" [(ngModel)]="body.nombre" [disabled]="true" pInputText>
+          <input type="text" [ngClass]="styleObligatorio(body.nombre)" class="form-control" [(ngModel)]="body.nombre" [disabled]="true" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>Estado (*)</label>
-          <input type="text" class="form-control" [(ngModel)]="body.numUsos" [disabled]="true" pInputText>
+          <input type="text" [ngClass]="styleObligatorio(body.numUsos)" class="form-control" [(ngModel)]="body.numUsos" [disabled]="true" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>Nº ficheros emitidos</label>

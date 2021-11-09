@@ -28,6 +28,8 @@ export class FichaCuentaBancariaComponent implements OnInit {
   openTarjetaUsoFicheros: boolean = false;
   openTarjetaUsosSufijos: boolean = false;
 
+  modoEdicion: boolean = true;
+
   constructor(
     private location: Location,
     private persistenceService: PersistenceService,
@@ -42,8 +44,12 @@ export class FichaCuentaBancariaComponent implements OnInit {
       this.body = JSON.parse(sessionStorage.getItem("cuentaBancariaItem"));
       sessionStorage.removeItem("cuentaBancariaItem");
       this.persistenceService.setDatos(this.body);
-    } else {
+    } else if (this.persistenceService.getDatos()) {
       this.body = this.persistenceService.getDatos();
+    } else if(sessionStorage.getItem("Nuevo")) {
+      sessionStorage.removeItem("Nuevo");
+      this.body = new CuentasBancariasItem();
+      this.modoEdicion = false;
     }
 
     this.updateTarjetaResumen();
@@ -86,10 +92,35 @@ export class FichaCuentaBancariaComponent implements OnInit {
       nombre: "datosGenerales",
     });
 
+    this.enlacesTarjetaResumen.push({
+      label: "general.message.datos.generales",
+      value: document.getElementById("comision"),
+      nombre: "comision",
+    });
+
+    this.enlacesTarjetaResumen.push({
+      label: "general.message.datos.generales",
+      value: document.getElementById("configuracion"),
+      nombre: "configuracion",
+    });
+
+    this.enlacesTarjetaResumen.push({
+      label: "general.message.datos.generales",
+      value: document.getElementById("usoFicheros"),
+      nombre: "usoFicheros",
+    });
+
+    this.enlacesTarjetaResumen.push({
+      label: "general.message.datos.generales",
+      value: document.getElementById("usosSufijos"),
+      nombre: "usosSufijos",
+    });
+
   }
 
   guardadoSend(): void {
-    this.router.navigate(["/datosSeriesFactura"]);
+    this.ngOnInit();
+    // this.router.navigate(["/fichaCuentaBancaria"]);
   }
 
   // Abrir tarjetas desde enlaces

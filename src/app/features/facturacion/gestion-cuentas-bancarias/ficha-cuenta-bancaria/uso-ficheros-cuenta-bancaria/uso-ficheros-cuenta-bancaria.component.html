@@ -12,7 +12,7 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('usoFicheros')">
-            <label class="mr-auto title-ficha pointer">Configuración particular del banco para la generación de ficheros de adeudos</label>
+            <label class="mr-auto title-ficha pointer">Uso en ficheros de transferencias para pagos SJCS</label>
           </div>
           <div class="d-flex justify-content-between default">
             
@@ -35,7 +35,7 @@
         <div class="img-colegiado">
           <i class="far fa-address-book icon-ficha"></i>
         </div>
-        <label class="title-ficha pointer">Configuración particular del banco para la generación de ficheros de adeudos</label>
+        <label class="title-ficha pointer">Uso en ficheros de transferencias para pagos SJCS</label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
@@ -44,11 +44,11 @@
     <div *ngIf="esFichaActiva('usoFicheros')" class="card-body card-body-ficha">
       <div class="form-row lg-12 md-12">
         <div class="form-group col-lg-3 col-md-3">
-          <label>Usar en fich. de transferencias SJCS (*)</label>
+          <label>Usar en fich. de transferencias SJCS</label>
           <p-checkbox binary="true" [(ngModel)]="body.sjcs"></p-checkbox>
         </div>
         <div class="form-group col-lg-3 col-md-3">
-          <label>Sufijo por defecto (*)</label>
+          <label>Sufijo por defecto</label>
           <p-dropdown class="select-form" [(ngModel)]='body.concepto' placeholder="Seleccionar"
               [options]="comboSufijos" [filter]="true" filterBy="label,labelSinTilde"
               [ngClass]="styleObligatorio(body.concepto)" [showClear]="true"></p-dropdown>
