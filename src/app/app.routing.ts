@@ -154,7 +154,8 @@ import { RemesasResultadosComponent } from './features/sjcs/remesas-resultados/r
 import { FichaRemesasResultadosComponent } from './features/sjcs/remesas-resultados/ficha-remesas-resultados/ficha-remesas-resultados.component';
 import { CargaMasivaProcuradoresComponent } from './features/sjcs/intercambios/carga-masiva-procuradores/carga-masiva-procuradores.component';
 import { CargaDesignaProcuradorComponent } from './features/sjcs/intercambios/carga-designa-procurador/carga-designa-procurador.component';
-
+import {RemesasResolucionesComponent} from './features/sjcs/remesas-resoluciones/remesas-resoluciones.component';
+import { FichaRemesasResolucionesComponent} from './features/sjcs/remesas-resoluciones/ficha-remesas-resoluciones/ficha-remesas-resoluciones.component';
 //Consultas
 import { RecuperarConsultasComponent } from './features/consultas/recuperar-consultas/recuperar-consultas.component';
 import { ConsultasListasDinamicasComponent } from './features/consultas/consultas-listas-dinamicas/consultas-listas-dinamicas.component';
@@ -1367,6 +1368,16 @@ const appRoutes: Routes = [
 	{
 		path: 'remesasResultadoFicha',
 		component: FichaRemesasResultadosComponent,
+		canActivate: [ AuthGuard ]
+	},
+	{
+		path: 'remesasResoluciones',
+		component: RemesasResolucionesComponent,
+		canActivate: [ AuthGuard ]
+	},
+	{
+		path: 'remesasResolucionesFicha',
+		component: FichaRemesasResolucionesComponent,
 		canActivate: [ AuthGuard ]
 	},
 	{ path: ' ', redirectTo: 'home' }

@@ -13,6 +13,10 @@ export let endpoints_remesa: any = {
     remesasResultados_buscarRemesasResultados: "remesasResultado/buscarRemesasResultado",
     remesasResultados_descargarFicheros: "remesasResultado/descargarFicheros",
     remesasResultados_recuperarDatosContador: "remesasResultado/recuperarDatosContador",
-    remesasResultados_guardarRemesaResultado: "remesasResultado/guardarRemesaResultado"
-
+    remesasResultados_guardarRemesaResultado: "remesasResultado/guardarRemesaResultado",
+    remesasResolucion_buscarRemesasResolucion: "remesasResoluciones/buscarRemesasResoluciones",
+    remesasResoluciones_obtenerOperacionTipoAccion :"remesasResoluciones/obtenerOperacionTipoAccion",
+    remesasResoluciones_descargarRemesasResolucion: "remesasResoluciones/descargarRemesasResolucion",
+    remesasResoluciones_obtenerResoluciones : "remesasResoluciones/obtenerResoluciones",
+    remesasResoluciones_guardarRemesaResolucion: "remesasResoluciones/guardarRemesaResolucion"
 }
