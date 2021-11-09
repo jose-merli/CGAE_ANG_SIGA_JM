@@ -26,6 +26,7 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit {
   body: CuentasBancariasItem = new CuentasBancariasItem();
 
   resaltadoDatos: boolean = false;
+  focusIBAN: boolean = false; // Para cambiar dinámicamente la restricción de longitud
 
   constructor(
     private persistenceService: PersistenceService,
@@ -47,6 +48,18 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit {
     }
 
     this.progressSpinner = false;
+  }
+
+  // Validación del IBAN
+
+  onFocusIBAN(event): void {
+    this.focusIBAN = true;
+    this.body.iban = this.body.iban.replace(/\s/g, "");
+  }
+
+  onBlurIBAN(event): void {
+    this.focusIBAN = false;
+    this.body.iban = this.body.iban.replace(/\s/g, "").replace(/(.{4})/g,"$1 ").trim();
   }
 
   // Restablecer

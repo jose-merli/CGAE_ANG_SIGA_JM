@@ -73,7 +73,7 @@ export class FichaCuentaBancariaComponent implements OnInit {
       },
       {
         label: this.translateService.instant("facturacionSJCS.facturacionesYPagos.iban"),
-        value: this.body.IBAN
+        value: this.body.iban
       },
       {
         label: this.translateService.instant("menu.justiciaGratuita"),

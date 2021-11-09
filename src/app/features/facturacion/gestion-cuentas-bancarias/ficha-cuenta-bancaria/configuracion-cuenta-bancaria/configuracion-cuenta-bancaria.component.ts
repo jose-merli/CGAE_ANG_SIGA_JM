@@ -25,7 +25,7 @@ export class ConfiguracionCuentaBancariaComponent implements OnInit {
 
   // Combos
   comboConfigFicherosSecuencia = [];
-  comboConfigFicheroEsquema = [];
+  comboconfigFicherosEsquema = [];
   comboConfigLugaresQueMasSecuencia = [];
   comboConfigConceptoAmpliado = [];
 
@@ -55,7 +55,7 @@ export class ConfiguracionCuentaBancariaComponent implements OnInit {
       { value: "2", label: "Todos los recibos se consideran recurrentes" }
     ];
 
-    this.comboConfigFicheroEsquema = [
+    this.comboconfigFicherosEsquema = [
       { value: "0", label: "Uno para todos los esquemas (CORE+COR1+B2B)" },
       { value: "1", label: "Uno para CORE+COR1 y otro para B2B" },
       { value: "2", label: "Uno para cada esquema separados CORE; COR1; B2B" }

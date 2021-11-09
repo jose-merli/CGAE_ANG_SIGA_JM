@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CuentasBancariasItem } from '../../../../../models/CuentasBancariasItem';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
+import { SigaServices } from '../../../../../_services/siga.service';
 
 @Component({
   selector: 'app-uso-ficheros-cuenta-bancaria',
@@ -28,18 +29,34 @@ export class UsoFicherosCuentaBancariaComponent implements OnInit {
 
   constructor(
     private persistenceService: PersistenceService,
-    private commonsService: CommonsService
+    private commonsService: CommonsService,
+    private sigaServices: SigaServices
   ) { }
 
   ngOnInit() {
     this.progressSpinner = true;
 
+    this.getComboSufijo();
     if (this.persistenceService.getDatos()) {
       this.body = this.persistenceService.getDatos();
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     }
 
     this.progressSpinner = false;
+  }
+
+  // Combo de sufijos
+
+  getComboSufijo() {
+    this.sigaServices.get("facturacionPyS_comboSufijo").subscribe(
+      n => {
+        this.comboSufijos = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboSufijos);
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 
   showMessage(severity, summary, msg) {

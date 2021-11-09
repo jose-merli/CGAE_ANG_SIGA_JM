@@ -56,7 +56,7 @@ export class GestionCuentasBancariasComponent implements OnInit {
     this.cols = [
       { field: "nombre", header: "censo.tipoAbono.banco", width: "35%" },
       { field: "iban", header: "censo.mutualidad.literal.iban", width: "10%" },
-      { field: "descripcion", header: "general.boton.description", width: "10%" },
+      { field: "comisionDescripcion", header: "general.boton.description", width: "10%" },
       { field: "comisionImporte", header: "facturacion.cuentasBancarias.comisionImporte", width: "10%" },
       { field: "sjcs", header: "menu.justiciaGratuita", width: "10%" },
       { field: "numUsos", header: "facturacion.cuentasBancarias.numUsos", width: "10%" },
@@ -153,17 +153,25 @@ export class GestionCuentasBancariasComponent implements OnInit {
         header: null,
         icon: null,
         accept: async () => {
-            await this.confirmDelete();
-            this.cargarDatos();
+            this.confirmDelete();
         }
     });
   }
 
   confirmDelete() { 
+    this.progressSpinner = true;
     this.sigaServices.post("facturacionPyS_borrarCuentasBancarias", this.selectedDatos)
-    .subscribe( b => {
-      
-    });
+    .subscribe( 
+      n => {
+        this.progressSpinner = false;
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.cargarDatos();
+      },
+      err => {
+        this.progressSpinner = false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
   }
 
   onChangeRowsPerPages(event) {

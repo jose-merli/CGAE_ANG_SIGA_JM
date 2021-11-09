@@ -5,26 +5,27 @@ export class CuentasBancariasItem{
     codSucursal;
     fechaBaja;
     
-    IBAN;
-    nombre;
-    descripcion;
-    asientoContable; // Por hacer
-    cuentaContableTarjeta; // Por hacer
-    BIC; // Por hacer
-    numUsos;
-    numFicheros;
+    iban: string = "";
+    nombre: string;
+    descripcion: string;
+    asientoContable: string;
+    cuentaContableTarjeta: string;
+    bic: string;
+    numUsos: string;
+    numFicheros: string;
 
-    comisionImporte;
-    comisionDescripcion; // Por hacer
-    descripcionIVA; // Por hacer
+    comisionImporte: string;
+    comisionDescripcion: string;
+    idTipoIVA: string;
 
-    configFicherosSecuencia; // Por hacer
-    configFicheroEsquema; // Por hacer
-    configLugaresQueMasSecuencia; // Por hacer
-    configConceptoAmpliado; // Por hacer
+    configFicherosSecuencia: string;
+    configFicherosEsquema: string;
+    configLugaresQueMasSecuencia: string;
+    configConceptoAmpliado: string;
 
-    sjcs;
-    concepto;
+    sjcs: string;
+    idSufijoSjcs: string;
+    concepto: string;
     
     constructor(){}
 }
