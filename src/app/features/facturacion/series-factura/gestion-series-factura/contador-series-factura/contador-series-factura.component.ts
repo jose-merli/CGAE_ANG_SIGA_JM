@@ -23,6 +23,7 @@ export class ContadorSeriesFacturaComponent implements OnInit {
 
   comboContadorFacturas: any[] = [];
   contadorFacturasSeleccionado: ContadorSeriesItem = new ContadorSeriesItem();
+  nuevo: boolean = false;
 
   contadoresSerie: ContadorSeriesItem[] = [];
 
@@ -98,10 +99,27 @@ export class ContadorSeriesFacturaComponent implements OnInit {
     }
   }
 
+  // Nuevo
+  nuevoContador() {
+    this.nuevo = true;
+    this.contadorFacturasSeleccionado = new ContadorSeriesItem();
+  }
+
+  // Back to select
+  backToSelect() {
+    this.nuevo = false;
+    this.actualizarInputs();
+  }
+
   // Restablecer
 
   restablecer(): void {
-    this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    if (!this.nuevo) {
+      this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+      this.actualizarInputs();
+    } else {
+      this.contadorFacturasSeleccionado = new ContadorSeriesItem();
+    }
   }
 
   // Guardar
@@ -109,20 +127,41 @@ export class ContadorSeriesFacturaComponent implements OnInit {
   guardar(): void {
     this.progressSpinner = true;
 
-    this.sigaServices.post("facturacionPyS_guardarSerieFacturacion", this.body).subscribe(
-      n => {
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-        this.persistenceService.setDatos(this.bodyInicial);
-        this.guardadoSend.emit();
+    if (this.nuevo) {
+      this.contadorFacturasSeleccionado.idSerieFacturacion = this.body.idSerieFacturacion;
+      this.sigaServices.post("facturacionPyS_guardarContadorSerie", this.contadorFacturasSeleccionado).subscribe(
+        n => {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.body.idContadorFacturas = n.id;
+          this.body.idContadorFacturasRectificativas = null;
+          this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+          this.persistenceService.setDatos(this.bodyInicial);
+          this.guardadoSend.emit();
 
-        this.progressSpinner = false;
-      },
-      err => {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        this.progressSpinner = false;
-      }
-    );
+          this.progressSpinner = false;
+        },
+        err => {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+          this.progressSpinner = false;
+        }
+      );
+    } else {
+      this.sigaServices.post("facturacionPyS_guardarSerieFacturacion", this.body).subscribe(
+        n => {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.body.idContadorFacturasRectificativas = null;
+          this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+          this.persistenceService.setDatos(this.bodyInicial);
+          this.guardadoSend.emit();
+
+          this.progressSpinner = false;
+        },
+        err => {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+          this.progressSpinner = false;
+        }
+      );
+    }
   }
 
   clear() {

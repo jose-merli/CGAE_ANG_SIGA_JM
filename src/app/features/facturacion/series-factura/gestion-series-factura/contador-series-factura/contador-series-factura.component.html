@@ -42,33 +42,37 @@
     </div>
 
     <!-- Cuerpo en ficha abierta -->
-    <div *ngIf="esFichaActiva('contadorFacturas')" class="card-body card-body-ficha">
+    <div [hidden]="!esFichaActiva('contadorFacturas')" class="card-body card-body-ficha">
       <div class="form-row">
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ 'facturacion.seriesFactura.cont.seleccion' | translate }}</label>
-          <p-dropdown class="select-form" [(ngModel)]='body.idContadorFacturas' placeholder="{{'general.boton.seleccionar' | translate}}"
+          <p-dropdown *ngIf="!nuevo" class="select-form" [(ngModel)]='body.idContadorFacturas' placeholder="{{'general.boton.seleccionar' | translate}}"
               [options]="comboContadorFacturas" [filter]="true" filterBy="label,labelSinTilde"
               [showClear]="true" (onChange)="actualizarInputs()"></p-dropdown>
+          <input *ngIf="nuevo" type="text" class="form-control" pInputText [(ngModel)]="contadorFacturasSeleccionado.nombre" />
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ 'administracion.parametrosGenerales.literal.prefijo' | translate }}</label>
-          <input type="text" class="form-control" pInputText [(ngModel)]="contadorFacturasSeleccionado.prefijo" disabled />
+          <input type="text" class="form-control" pInputText [(ngModel)]="contadorFacturasSeleccionado.prefijo" [disabled]="!nuevo" />
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ 'facturacion.seriesFactura.contador.literal' | translate }}</label>
-          <input type="text" class="form-control" pInputText [(ngModel)]="contadorFacturasSeleccionado.contador" disabled />
+          <input type="text" class="form-control" pInputText [(ngModel)]="contadorFacturasSeleccionado.contador" [disabled]="!nuevo" />
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ 'facturacionSJCS.facturacionesYPagos.sufijo' | translate }}</label>
-          <input type="text" class="form-control" pInputText [(ngModel)]="contadorFacturasSeleccionado.sufijo" disabled />
+          <input type="text" class="form-control" pInputText [(ngModel)]="contadorFacturasSeleccionado.sufijo" [disabled]="!nuevo" />
         </div>
       </div>
     </div>
 
     <div *ngIf="esFichaActiva('contadorFacturas')" class="card-footer">
       <div class="text-right main-button">
-        <button pButton type="button" icon="fa fa-plus" iconPos="left"
-          (click)="nuevo()" label="{{ 'general.boton.new' | translate}}"></button>
+        <button *ngIf="nuevo" (click)="backToSelect()" pButton type="button" icon="fa fa-angle-left" 
+          iconPos="left" label="{{ 'general.boton.volver' | translate }}"></button>
+
+        <button *ngIf="!nuevo" pButton type="button" icon="fa fa-plus" iconPos="left"
+          (click)="nuevoContador()" label="{{ 'general.boton.new' | translate}}"></button>
 
         <button pButton type="button" icon="fa fa-undo" iconPos="left"
           (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>

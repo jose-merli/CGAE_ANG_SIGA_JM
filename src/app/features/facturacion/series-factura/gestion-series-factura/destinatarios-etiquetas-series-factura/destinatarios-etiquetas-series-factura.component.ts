@@ -68,7 +68,7 @@ export class DestinatariosEtiquetasSeriesFacturaComponent implements OnInit {
   // Obtener etiquetas seleccionadas
 
   getSeleccionadas() {
-    this.sigaServices.getParam("facturacionPyS_getEtiquetasSerie", "?idSerieFacturacion=" + this.body.idSerieFacturacion).subscribe(
+    this.sigaServices.getParam("facturacionPyS_comboEtiquetasSerie", "?idSerieFacturacion=" + this.body.idSerieFacturacion).subscribe(
       n => {
         this.etiquetasSeleccionadas = n.combooItems;
         this.commonsService.arregloTildesCombo(this.etiquetasSeleccionadas);

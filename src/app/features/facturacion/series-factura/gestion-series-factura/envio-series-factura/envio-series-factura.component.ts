@@ -18,6 +18,7 @@ export class EnvioSeriesFacturaComponent implements OnInit {
 
   body: SerieFacturacionItem;
   bodyInicial: SerieFacturacionItem;
+  resaltadoDatos: boolean = false;
 
   comboPlantillasEnvio: any[] = [];
 
@@ -64,7 +65,23 @@ export class EnvioSeriesFacturaComponent implements OnInit {
 
   restablecer(): void {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    this.resaltadoDatos = false;
   }
+
+  
+  isValid(): boolean {
+    return !this.body.envioFacturas || (this.body.envioFacturas && this.body.idPlantillaMail != null );
+  }
+
+  checkSave(): void {
+    if (this.isValid()) {
+      this.guardar();
+    } else {
+      this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+      this.resaltadoDatos = true;
+    }
+  }
+  
 
   guardar(): void {
     this.progressSpinner = true;
@@ -102,6 +119,13 @@ export class EnvioSeriesFacturaComponent implements OnInit {
   findLabelInCombo(combo: any[], value) {
     let item = combo.find(c => c.value == value);
     return item ? item.label : "";
+  }
+
+  // Estilo obligatorio
+  styleObligatorio(evento: string) {
+    if (this.resaltadoDatos && this.body.envioFacturas && (evento == undefined || evento == null || evento.trim() == "")) {
+      return this.commonsService.styleObligatorio(evento);
+    }
   }
 
   // Abrir y cerrar la ficha

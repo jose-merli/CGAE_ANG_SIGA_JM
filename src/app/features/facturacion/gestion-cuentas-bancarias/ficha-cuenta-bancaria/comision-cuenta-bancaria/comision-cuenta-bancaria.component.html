@@ -47,21 +47,21 @@
       <div class="form-row lg-12 md-12">
         <div class="form-group col-lg-3 col-md-3">
           <label>Importe (*)</label>
-          <input type="text" class="form-control" [(ngModel)]="body.comisionImporte" [ngClass]="styleObligatorio(body.comisionImporte)" pInputText>
+          <input type="text" class="form-control" [(ngModel)]="body.comisionImporte" [ngClass]="styleObligatorio(body.comisionImporte)" maxlength="10" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>Descripción (*)</label>
-          <input type="text" class="form-control" [(ngModel)]="body.comisionDescripcion" [ngClass]="styleObligatorio(body.comisionDescripcion)" pInputText>
+          <input type="text" class="form-control" [(ngModel)]="body.comisionDescripcion" [ngClass]="styleObligatorio(body.comisionDescripcion)" maxlength="255" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>IVA (*)</label>
-          <p-dropdown class="select-form" [(ngModel)]='body.descripcionTipoIVA' placeholder="Seleccionar"
+          <p-dropdown class="select-form" [(ngModel)]='body.idTipoIVA' placeholder="Seleccionar"
               [options]="comboTiposIVA" [filter]="true" filterBy="label,labelSinTilde"
-              [ngClass]="styleObligatorio(body.descripcionTipoIVA)" [showClear]="true"></p-dropdown>
+              [ngClass]="styleObligatorio(body.idTipoIVA)" [showClear]="true"></p-dropdown>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>C. contable</label>
-          <input type="text" class="form-control" [(ngModel)]="body.asientoContable" pInputText>
+          <input type="text" class="form-control" [(ngModel)]="body.asientoContable" maxlength="20" pInputText>
         </div>
       </div>
     </div>

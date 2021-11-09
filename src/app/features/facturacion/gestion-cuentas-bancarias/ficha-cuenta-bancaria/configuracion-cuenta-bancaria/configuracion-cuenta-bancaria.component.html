@@ -18,7 +18,7 @@
             <label>Ficheros por secuencia: 
               <span>{{ body.configFicherosSecuencia }}</span></label>
             <label>Ficheros por esquema: 
-              <span>{{ body.configFicheroEsquema }}</span></label>
+              <span>{{ body.configFicherosEsquema }}</span></label>
             <label>Lugar esquema y secuencia: 
               <span>{{ body.configLugaresQueMasSecuencia }}</span></label>
             <label>Concepto: 
@@ -53,9 +53,9 @@
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>Ficheros por esquema (*)</label>
-          <p-dropdown class="select-form" [(ngModel)]='body.configFicheroEsquema' placeholder="Seleccionar"
-              [options]="comboConfigFicheroEsquema" [filter]="true" filterBy="label,labelSinTilde"
-              [ngClass]="styleObligatorio(body.configFicheroEsquema)" [showClear]="true"></p-dropdown>
+          <p-dropdown class="select-form" [(ngModel)]='body.configFicherosEsquema' placeholder="Seleccionar"
+              [options]="comboconfigFicherosEsquema" [filter]="true" filterBy="label,labelSinTilde"
+              [ngClass]="styleObligatorio(body.configFicherosEsquema)" [showClear]="true"></p-dropdown>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>Lugar esquema y secuencia (*)</label>
