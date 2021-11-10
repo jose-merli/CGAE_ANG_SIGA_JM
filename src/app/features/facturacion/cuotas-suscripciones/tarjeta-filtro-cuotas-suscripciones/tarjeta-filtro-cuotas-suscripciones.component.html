@@ -10,7 +10,7 @@
   <div class="form-row">
     <!-- Activo a fecha de -->
     <div class="form-group col-lg-3 col-md-3">
-      <label>{{ "aFechaDe" | translate }}
+      <label>{{ "** aFechaDe" | translate }}
       </label>
       <app-fecha [(value)]="filtrosSuscripciones.aFechaDe" (valueChangeInput)="fillAfechaDeCalendar($event)" (valueChangeSelected)="fillAfechaDeCalendar($event)"></app-fecha>
     </div>
@@ -34,7 +34,6 @@
         (click)="limpiarCliente()">
       </button>
     </div>
-    
   </div>
 
   <div class="form-row">
@@ -65,10 +64,10 @@
     <!-- Estado Solicitud -->
     <div class="col-lg-3 col-md-3">
       <label>{{ "censo.solicitudincorporacion.estadoSolicitud" | translate}}</label>
-      <p-dropdown  styleClass="widthAll" [showClear]="true"
-        placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='filtrosSuscripciones.idEstadoSolicitud'
+      <p-multiSelect  styleClass="widthAll"
+        [(ngModel)]='filtrosSuscripciones.idEstadoSolicitud' defaultLabel="{{'general.boton.seleccionar' | translate}}"
         [options]="estadosSuscripcionObject" [disabled]="filtrosSuscripciones.aFechaDe != null">
-      </p-dropdown>
+      </p-multiSelect>
     </div>
   </div>
 
@@ -76,19 +75,21 @@
     <!-- Categoria -->
     <div class="col-lg-3 col-md-3">
       <label>{{ "facturacion.productos.categoria" | translate}}</label>
-      <p-dropdown (onChange)="valueChangeCategoria()" [filter]="true" styleClass="widthAll" [showClear]="true"
-        placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='filtrosSuscripciones.idCategoria'
+      <p-multiSelect (onChange)="valueChangeCategoria()" [filter]="true" styleClass="widthAll" 
+        [(ngModel)]='filtrosSuscripciones.idCategoria'
+        defaultLabel="{{'general.boton.seleccionar' | translate}}"
         [options]="categoriasObject.combooItems">
-      </p-dropdown>
+      </p-multiSelect>
     </div>
 
     <!-- Tipo -->
     <div class="col-lg-3 col-md-3">
       <label>{{ "facturacion.productos.tipo" | translate}}</label>
-      <p-dropdown [disabled]="filtrosSuscripciones.idCategoria == null" [filter]="true" styleClass="widthAll" [showClear]="true"
-        placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='filtrosSuscripciones.idTipoServicio'
+      <p-multiSelect [disabled]="filtrosSuscripciones.idCategoria == null" [filter]="true" styleClass="widthAll"
+        [(ngModel)]='filtrosSuscripciones.idTipoServicio'
+        defaultLabel="{{'general.boton.seleccionar' | translate}}"
         [options]="tiposObject.combooItems">
-      </p-dropdown>
+      </p-multiSelect>
     </div>
 
     <!-- Servicio -->
@@ -100,10 +101,11 @@
     <!-- Estado Factura -->
     <div class="col-lg-3 col-md-3">
       <label>{{ "facturacion.productos.estadoFactura" | translate}}</label>
-      <p-dropdown  styleClass="widthAll" [showClear]="true"
-        placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='filtrosSuscripciones.idEstadoFactura'
+      <p-multiSelect  styleClass="widthAll" 
+        [(ngModel)]='filtrosSuscripciones.idEstadoFactura'
+        defaultLabel="{{'general.boton.seleccionar' | translate}}"
         [options]="estadosFacturaObject">
-      </p-dropdown>
+      </p-multiSelect>
     </div>
   </div>
 </div>
