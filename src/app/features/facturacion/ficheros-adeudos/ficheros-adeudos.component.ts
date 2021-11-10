@@ -48,11 +48,9 @@ export class FicherosAdeudosComponent implements OnInit {
         this.progressSpinner=false;
 
         this.datos = JSON.parse(n.body).ficherosAdeudosItems;
-        let error = JSON.parse(n.body).error;
         this.buscar = true;
 
         if (this.tabla != null && this.tabla != undefined) {
-          this.tabla.historico = event;
           this.tabla.table.sortOrder = 0;
           this.tabla.table.sortField = '';
           this.tabla.table.reset();
@@ -60,12 +58,10 @@ export class FicherosAdeudosComponent implements OnInit {
         }
 
         this.progressSpinner = false;
-        if (error != null && error.description != null) {
-          this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
-        }
       },
       err => {
         this.progressSpinner = false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         console.log(err);
       },
       () => {

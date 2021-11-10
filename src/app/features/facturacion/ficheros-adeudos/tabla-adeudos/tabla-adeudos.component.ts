@@ -31,7 +31,6 @@ export class TablaAdeudosComponent implements OnInit {
   progressSpinner: boolean = false;
 
   selectDatos: FicherosAdeudosItem = new FicherosAdeudosItem();
-  datosMostrados: FicherosAdeudosItem[];
 
   @Input() datos;
 
@@ -43,7 +42,7 @@ export class TablaAdeudosComponent implements OnInit {
 
   ngOnInit() {
     this.selectedDatos = [];
-    this.selectAll=false;
+    this.selectAll = false;
 
     this.getCols();
   }
@@ -53,11 +52,11 @@ export class TablaAdeudosComponent implements OnInit {
       { field: "idDisqueteCargos", header: "administracion.grupos.literal.id", width: "5%" },
       { field: "fechaCreacion", header: "informesycomunicaciones.comunicaciones.busqueda.fechaCreacion", width: "10%" },
       { field: "nombreabreviado", header: "facturacionPyS.ficherosAdeudos.serie", width: "10%" },
-      { field: "descripcion", header: "menu.facturacion", width: "35%" },
+      { field: "descripcion", header: "menu.facturacion", width: "20%" },
       { field: "cuentaEntidad", header: "facturacion.seriesFactura.cuentaBancaria", width: "20%" },
       { field: "sufijo", header: "administracion.parametrosGenerales.literal.sufijo", width: "10%" },
       { field: "numRecibos", header: 'facturacionPyS.ficherosAdeudos.numRecibos', width: "10%" },
-      { field: "totalRemesa", header: "facturacionSJCS.facturacionesYPagos.importeTotal", width: "20%" },
+      { field: "totalRemesa", header: "facturacionSJCS.facturacionesYPagos.importeTotal", width: "15%" },
     ];
 
     this.cols.forEach(it => this.buscadores.push(""));
@@ -83,14 +82,12 @@ export class TablaAdeudosComponent implements OnInit {
   }
 
   selectFila(event) {
-    this.selectAll = this.datosMostrados.length == this.selectedDatos.length;
+    this.numSelected = event.length;
   }
 
   unselectFila(event) {
     this.selectAll = false;
-    if (this.selectMultiple) {
-      this.selectMultiple = false;
-    }
+    this.numSelected = event.length;
   }
 
   onChangeRowsPerPages(event) {
@@ -100,14 +97,14 @@ export class TablaAdeudosComponent implements OnInit {
   }
 
   onChangeSelectAll() {
-        if (this.selectAll) {
-          this.selectMultiple = true;
-          this.selectedDatos = this.datosMostrados;
-          this.numSelected = this.datosMostrados.length;
-        } else {
-          this.selectedDatos = [];
-          this.numSelected = 0;
-          this.selectMultiple = false;
-        }
+    if (this.selectAll) {
+      this.selectMultiple = false;
+      this.selectedDatos = this.datos;
+      this.numSelected = this.datos.length;
+    } else {
+      this.selectedDatos = [];
+      this.numSelected = 0;
+      this.selectMultiple = true;
+    }
   }
 }
