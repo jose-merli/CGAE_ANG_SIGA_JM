@@ -481,6 +481,12 @@ import { CargaMasivaProcuradoresComponent } from './features/sjcs/intercambios/c
 import { CargaDesignaProcuradorComponent } from './features/sjcs/intercambios/carga-designa-procurador/carga-designa-procurador.component';
 import { TarjetaDatosCurricularesComponent } from './features/sjcs//intercambios/carga-masiva-procuradores/tarjta-datos-curriculares/tarjeta-datos-curriculares.component';
 import { TarjetaListadoComponent } from './features/sjcs/intercambios/carga-masiva-procuradores/tarjeta-listado/tarjeta-listado.component';
+import { RemesasResolucionesComponent } from './features/sjcs/remesas-resoluciones/remesas-resoluciones.component';
+import { TablaRemesasResolucionesComponent } from './features/sjcs/remesas-resoluciones/tabla-remesas-resoluciones/tabla-remesas-resoluciones.component';
+import { FiltroRemesasResolucionesComponent } from './features/sjcs/remesas-resoluciones/filtro-remesas-resoluciones/filtro-remesas-resoluciones.component';
+import { FichaRemesasResolucionesComponent } from './features/sjcs/remesas-resoluciones/ficha-remesas-resoluciones/ficha-remesas-resoluciones.component';
+import { TarjetaDatosGeneralesRemesasResolucionesComponent } from './features/sjcs/remesas-resoluciones/ficha-remesas-resoluciones/tarjeta-datos-generales-remesas-resoluciones/tarjeta-datos-generales-remesas-resoluciones.component';
+
 
 
 @NgModule({
@@ -878,6 +884,11 @@ import { TarjetaListadoComponent } from './features/sjcs/intercambios/carga-masi
 		FichaRemesasResultadosComponent,
 		TarjetaDatosGeneralesRemesasResultadosComponent,
 		TarjetaRemesasEnvioComponent,
+		RemesasResolucionesComponent,
+		TablaRemesasResolucionesComponent,
+		FiltroRemesasResolucionesComponent,
+		FichaRemesasResolucionesComponent,
+		TarjetaDatosGeneralesRemesasResolucionesComponent,
 		CargaMasivaProcuradoresComponent,
 		CargaDesignaProcuradorComponent,
 		TarjetaDatosCurricularesComponent,

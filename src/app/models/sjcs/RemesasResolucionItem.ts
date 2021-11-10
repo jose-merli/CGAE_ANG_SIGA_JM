@@ -10,7 +10,8 @@ export class RemesasResolucionItem {
     nombreFichero?: string;
     numRemesaPrefijo?: string;
     numRemesaSufijo?: string;
+    numRemesaNumero?: string;
     observaciones?: string;
-    
+    numCompleto?: string;
     constructor() { }
 }
