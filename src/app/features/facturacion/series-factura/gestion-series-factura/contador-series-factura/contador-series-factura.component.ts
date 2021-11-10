@@ -103,6 +103,7 @@ export class ContadorSeriesFacturaComponent implements OnInit {
   nuevoContador() {
     this.nuevo = true;
     this.contadorFacturasSeleccionado = new ContadorSeriesItem();
+    this.contadorFacturasSeleccionado.contador = "1";
   }
 
   // Back to select
@@ -119,6 +120,7 @@ export class ContadorSeriesFacturaComponent implements OnInit {
       this.actualizarInputs();
     } else {
       this.contadorFacturasSeleccionado = new ContadorSeriesItem();
+      this.contadorFacturasSeleccionado.contador = "1";
     }
   }
 
@@ -132,11 +134,13 @@ export class ContadorSeriesFacturaComponent implements OnInit {
       this.sigaServices.post("facturacionPyS_guardarContadorSerie", this.contadorFacturasSeleccionado).subscribe(
         n => {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.body.idContadorFacturas = n.id;
-          this.body.idContadorFacturasRectificativas = null;
+          this.body.idContadorFacturas = JSON.parse(n.body).id;
+          this.nuevo = false;
+
           this.bodyInicial = JSON.parse(JSON.stringify(this.body));
           this.persistenceService.setDatos(this.bodyInicial);
           this.guardadoSend.emit();
+          this.ngOnInit();
 
           this.progressSpinner = false;
         },
@@ -149,7 +153,6 @@ export class ContadorSeriesFacturaComponent implements OnInit {
       this.sigaServices.post("facturacionPyS_guardarSerieFacturacion", this.body).subscribe(
         n => {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.body.idContadorFacturasRectificativas = null;
           this.bodyInicial = JSON.parse(JSON.stringify(this.body));
           this.persistenceService.setDatos(this.bodyInicial);
           this.guardadoSend.emit();
