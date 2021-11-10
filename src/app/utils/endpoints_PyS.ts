@@ -19,4 +19,5 @@ export let endpoints_PyS: any = {
     PyS_getListaServiciosSuscripcion: "/pys/getListaServiciosSuscripcion",
     PyS_solicitarSuscripcion: "pys/solicitarSuscripcion",
     PyS_aprobarSuscripcion: "pys/aprobarSuscripcion",
+    serviciosBusqueda_comboTiposMultiple: "pys/listadoTipoServicioByIdCategoriaMultiple",
 }
