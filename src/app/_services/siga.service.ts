@@ -793,7 +793,8 @@ export class SigaServices {
       .map((response) => {
 		let data = {
 			file: new Blob([response.body], {type: response.headers.get("Content-Type")}),
-			filename: response.headers.get('content-disposition')
+			filename: response.headers.get("Content-Disposition"),
+			status: response.status
 		};
         return data;
       })

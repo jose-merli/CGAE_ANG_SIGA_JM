@@ -14,6 +14,7 @@ export class RemesasBusquedaItem {
     prefijo?: string;
     sufijo?: string;
     ficha?: boolean;
+    informacionEconomica?: boolean;
 
     constructor(){ }
 }

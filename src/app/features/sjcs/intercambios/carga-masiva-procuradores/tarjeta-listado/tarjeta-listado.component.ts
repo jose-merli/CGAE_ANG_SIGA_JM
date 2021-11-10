@@ -101,24 +101,22 @@ export class TarjetaListadoComponent implements OnInit {
       let procurador: CargaMasivaProcuradorItem = 
         {
           'idCargaMasiva': rem.idCargaMasiva,
+          'idFichero': rem.idFichero,
+          'idFicheroLog': rem.idFicheroLog,
           'nombreFichero': rem.nombreFichero
         };
 
       cargaMasivaProcuradorItem.push(procurador);
     });
-    this.sigaServices.postDownloadFilesWithFileName("remesasResultados_descargarFicheros", cargaMasivaProcuradorItem).subscribe(
-      (response: {file: Blob, filename: string}) => {
+    this.sigaServices.postDownloadFilesWithFileName("intercambios_descargarFicheroCargaMasivaProcuradores", cargaMasivaProcuradorItem).subscribe(
+      (response: {file: Blob, filename: string, status: number}) => {
         // Se comprueba si todos los documentos asociados no tiene ningún fichero 
-        let documentoAsociado = cargaMasivaProcuradorItem.find(item => item.nombreFichero !=null)
-        if(documentoAsociado != undefined){
+        if(response.file.size > 0 && response.status == 200){
           let filename = response.filename.split(';')[1].split('filename')[1].split('=')[1].trim();
-            if(response.file.size > 0){
-              saveAs(response.file, filename);
-            } else {
-              this.showMessage("error", this.translateService.instant("general.message.informacion"), 'No se puede descargar los ficheros de las remesas de resultados seleccionadas');
-            }
+          saveAs(response.file, filename);
+        }else{
+           this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.ejg.documentacion.noFich"));
         }
-        else this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.ejg.documentacion.noFich"));
 
         this.selectedDatos = [];
         this.progressSpinner = false;
@@ -164,6 +162,7 @@ export class TarjetaListadoComponent implements OnInit {
 
     this.cols = [
       { field: "fechaCarga", header: "censo.datosCv.literal.fechaCarga" },
+      { field: "usuario", header: "censo.usuario.usuario" },
       { field: "nombreFichero", header: "censo.cargaMasivaDatosCurriculares.literal.nombreFichero" },
       { field: "numRegistros", header: "formacion.fichaCursos.tarjetaPrecios.resumen.numRegistros" },
       { field: "numRegistrosErroneos", header: "cargaMasivaDatosCurriculares.numRegistrosErroneos.literal" }

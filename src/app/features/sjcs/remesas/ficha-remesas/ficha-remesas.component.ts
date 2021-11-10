@@ -30,6 +30,7 @@ export class FichaRemesasComponent implements OnInit {
   msgs;
   datos;
   remesaFromTabla: boolean;
+  descripcion;
   remesaTabla;
   remesaItem: RemesasItem = new RemesasItem();
   ejgItem;
@@ -56,12 +57,14 @@ export class FichaRemesasComponent implements OnInit {
       this.guardado = true;
       this.getAcciones();
       this.remesaFromTabla = true;
+      this.descripcion = this.remesaTabla.descripcion;
       if(this.remesaTabla.estado == "Iniciada" || this.remesaTabla.estado == "Validada" || this.remesaTabla.estado == "Error envío"){
         this.estado = true;
       }
       this.search();
     } else if (localStorage.getItem('ficha') == "nuevo") {
       this.remesaItem.descripcion = "";
+      this.descripcion = "";
       this.remesaFromTabla = false;
     }
     localStorage.removeItem('ficha');
@@ -148,6 +151,9 @@ export class FichaRemesasComponent implements OnInit {
       err => {
         this.progressSpinner = false;
         console.log(err);
+      },
+      () =>{
+        this.progressSpinner = false;
       });
   }
 
@@ -167,6 +173,8 @@ export class FichaRemesasComponent implements OnInit {
       };
     }
 
+    this.progressSpinner = true;
+
     this.sigaServices
       .post("ficharemesas_getAcciones", remesaGetAcciones)
       .subscribe(
@@ -180,9 +188,10 @@ export class FichaRemesasComponent implements OnInit {
           }else{
             this.acciones = true
           }
+          this.progressSpinner = false;
         },
-        error => {},
-        () => { }
+        error => {this.progressSpinner = false;},
+        () => {this.progressSpinner = false; }
       );
   }
 
@@ -459,6 +468,14 @@ export class FichaRemesasComponent implements OnInit {
   volver(){
     this.progressSpinner = true;
     this.router.navigate(["/remesas"]);
+  }
+
+  restablecer(){
+    if(this.tarjetaDatosGenerales.remesaTabla != undefined && this.tarjetaDatosGenerales.remesaTabla != null){
+      this.tarjetaDatosGenerales.remesaTabla.descripcion = this.descripcion;
+    }else{
+      this.tarjetaDatosGenerales.remesaItem.descripcion = this.descripcion;
+    }
   }
 
   showMessage(severity, summary, msg) {

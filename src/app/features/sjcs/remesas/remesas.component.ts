@@ -32,6 +32,7 @@ export class RemesasComponent implements OnInit {
   remesasDatosEntradaItem;
   datos;
   msgs;
+  remesaInformacionEconomica: boolean;
 
   permisoEscritura;
 
@@ -42,6 +43,24 @@ export class RemesasComponent implements OnInit {
   ngOnInit() {
 
     this.commonsService.checkAcceso(procesos_comision.remesasEnvio)
+      .then(respuesta => {
+
+        this.permisoEscritura = respuesta;
+
+        this.persistenceService.setPermisos(this.permisoEscritura);
+
+        if (this.permisoEscritura == undefined) {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
+      }
+      ).catch(error => console.error(error));
+
+      this.commonsService.checkAcceso(procesos_comision.remesasInformacionEconomica)
       .then(respuesta => {
 
         this.permisoEscritura = respuesta;
@@ -102,7 +121,8 @@ export class RemesasComponent implements OnInit {
       'numero': (this.filtrosValues.numero != null && this.filtrosValues.numero != undefined) ? this.filtrosValues.numero.toString() : this.filtrosValues.numero,
       'numeroEJG': (this.filtrosValues.numeroEJG != null && this.filtrosValues.numeroEJG != undefined) ? this.filtrosValues.numeroEJG.toString() : this.filtrosValues.numeroEJG,
       'prefijo': (this.filtrosValues.prefijo != null && this.filtrosValues.prefijo != undefined) ? this.filtrosValues.prefijo.toString() : this.filtrosValues.prefijo,
-      'sufijo': (this.filtrosValues.sufijo != null && this.filtrosValues.sufijo != undefined) ? this.filtrosValues.sufijo.toString() : this.filtrosValues.sufijo
+      'sufijo': (this.filtrosValues.sufijo != null && this.filtrosValues.sufijo != undefined) ? this.filtrosValues.sufijo.toString() : this.filtrosValues.sufijo,
+      'informacionEconomica': (this.remesaInformacionEconomica) ? this.remesaInformacionEconomica : !this.remesaInformacionEconomica
     };
     this.progressSpinner = true;
     this.sigaServices.post("filtrosremesas_buscarRemesa", this.remesasDatosEntradaItem).subscribe(
@@ -127,6 +147,13 @@ export class RemesasComponent implements OnInit {
         this.progressSpinner = false;
         this.resultadoBusqueda.error = err;
         console.log(err);
+      },
+      () =>{
+        this.progressSpinner = false;
+        setTimeout(() => {
+          this.commonsService.scrollTablaFoco('tablaRemesa');
+          this.commonsService.scrollTop();
+        }, 5);
       });
   }
 

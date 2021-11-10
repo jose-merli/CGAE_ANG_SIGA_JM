@@ -25,6 +25,8 @@
       <button (click)="checkPermisosDelete(false)" pButton type="button" icon="fa fa-trash-alt" iconPos="left"
         [disabled] = "((!tarjetaEJGs.selectMultiple || !tarjetaEJGs.selectAll) && (tarjetaEJGs.selectedDatos == undefined || tarjetaEJGs.selectedDatos.length == 0))"
         label="{{ 'general.boton.eliminarExpedientes' | translate}}"></button>
+        <button (click)="restablecer() " [disabled]="noEditar" pButton type="button " icon="fa fa-undo" iconPos="left"
+        label="{{'general.boton.restablecer' | translate}} "></button>
       <button (click)="checkPermisosSave()" pButton type="button" icon="fa fa-save" iconPos="left"
         label="{{ 'general.boton.guardar' | translate}}"></button>
       <button (click)="volver()" pButton type="button" icon="fa fa-angle-left" iconPos="left"
