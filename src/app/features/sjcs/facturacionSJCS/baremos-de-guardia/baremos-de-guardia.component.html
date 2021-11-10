@@ -1,0 +1,16 @@
+<div class="header-title">
+  <i class="fa fa-square"></i>
+  <p>SJCS&nbsp;<i class="fa fa-angle-right"></i>{{'facturacionSJCS.baremos.buscar.titulo' | translate}}
+  </p>
+</div>
+
+<div class="busqueda-container">
+
+  <app-filtro-busqueda-baremos [permisoEscritura]="permisoEscritura"
+    (mostrarTablaResultadosEvent)="mostrarTablaResultados = $event"></app-filtro-busqueda-baremos>
+
+  <div *ngIf="mostrarTablaResultados">
+    <app-tabla-busqueda-baremos></app-tabla-busqueda-baremos>
+  </div>
+
+</div>

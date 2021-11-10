@@ -25,12 +25,15 @@ export const procesos_facturacionSJCS: any = {
     //permisos ficha Certificacion
     fichaCertificacion: "624",
 
-    // Permiso para busqueda de retenciones y ficha de retenciones judiciales
+    // Permiso para búsqueda de retenciones y ficha de retenciones judiciales
     busquedaRetenciones: "630",
 
     // Permisos para tarjetas ficha retención judicial
     fichaRetTarjetaColegiado: "63A",
     fichaRetTarjetaDatosRetencion: "63B",
     fichaRetTarjetaAplicacionEnPagos: "63C",
+
+    // Permiso para búsqueda de baremos de guardia
+    busquedaBaremosDeGuardia: "618"
 
 }

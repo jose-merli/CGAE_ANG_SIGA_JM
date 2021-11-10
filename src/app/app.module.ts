@@ -479,6 +479,9 @@ import { TarjetaColegiadoComponent } from './features/sjcs/facturacionSJCS/reten
 import { TarjetaDatosRetencionComponent } from './features/sjcs/facturacionSJCS/retenciones/ficha-retencion-judicial/tarjeta-datos-retencion/tarjeta-datos-retencion.component'
 import { TarjetaAplicacionEnPagosComponent } from './features/sjcs/facturacionSJCS/retenciones/ficha-retencion-judicial/tarjeta-aplicacion-en-pagos/tarjeta-aplicacion-en-pagos.component';
 import { RetencionesService } from './features/sjcs/facturacionSJCS/retenciones/retenciones.service';
+import { BaremosDeGuardiaComponent } from './features/sjcs/facturacionSJCS/baremos-de-guardia/baremos-de-guardia.component';
+import { FiltroBusquedaBaremosComponent } from './features/sjcs/facturacionSJCS/baremos-de-guardia/filtro-busqueda-baremos/filtro-busqueda-baremos.component';
+import { TablaBusquedaBaremosComponent } from './features/sjcs/facturacionSJCS/baremos-de-guardia/tabla-busqueda-baremos/tabla-busqueda-baremos.component';
 import { CertificacionFacComponent } from './features/sjcs/facturacionSJCS/certificacion-fac/certificacion-fac.component';
 import { FichaCertificacionFacComponent } from './features/sjcs/facturacionSJCS/certificacion-fac/ficha-certificacion-fac/ficha-certificacion-fac.component';
 import { TablaCertificacionFacComponent } from './features/sjcs/facturacionSJCS/certificacion-fac/tabla-certificacion-fac/tabla-certificacion-fac.component';
@@ -884,6 +887,9 @@ import { TarjetaMovimientosVariosAplicadosComponent } from './features/sjcs/fact
 		TarjetaColegiadoComponent,
 		TarjetaDatosRetencionComponent,
 		TarjetaAplicacionEnPagosComponent,
+		BaremosDeGuardiaComponent,
+		FiltroBusquedaBaremosComponent, 
+		TablaBusquedaBaremosComponent,
 		//certificacion de facturacion
 		CertificacionFacComponent,
 		FichaCertificacionFacComponent,
@@ -892,7 +898,7 @@ import { TarjetaMovimientosVariosAplicadosComponent } from './features/sjcs/fact
 		TarjetaDatosGeneralesComponent,
 		TarjetaFacturacionComponent,
 		TarjetaMovimientosVariosAsociadosComponent,
-		TarjetaMovimientosVariosAplicadosComponent
+		TarjetaMovimientosVariosAplicadosComponent,
 
 	],
 	imports: [

@@ -8,6 +8,7 @@ import { BusquedaGeneralSJCSComponent } from '../../../commons/busqueda-generalS
 import { GestionPagosComponent } from './facturaciones-pagos/gestion-pagos/gestion-pagos.component';
 import { RetencionesComponent } from './retenciones/retenciones.component';
 import { FichaRetencionJudicialComponent } from './retenciones/ficha-retencion-judicial/ficha-retencion-judicial.component';
+import { BaremosDeGuardiaComponent } from './baremos-de-guardia/baremos-de-guardia.component';
 import { FichaCertificacionFacComponent } from './certificacion-fac/ficha-certificacion-fac/ficha-certificacion-fac.component';
 
 const routesFacturacionsjcs: Routes = [
@@ -44,6 +45,11 @@ const routesFacturacionsjcs: Routes = [
   {
     path: 'gestionGeneralSJCS',
     component: BusquedaGeneralSJCSComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'baremosDeGuardia',
+    component: BaremosDeGuardiaComponent,
     canActivate: [AuthGuard]
   },
   {
