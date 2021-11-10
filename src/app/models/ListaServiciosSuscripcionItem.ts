@@ -22,6 +22,8 @@ export class ListaServiciosSuscripcionItem{
     fechaAlta: Date;
     fechaBaja: Date;
 
+    idComboPrecio: string;
+
     solicitarBaja : string;
     automatico: string;
 

@@ -26,23 +26,23 @@
           <div class="row">
             <div class="col-2">
               <label>{{ "facturacion.servicios.servicio" | translate }}
-                <span>{{ serviciosTarjeta[0].descripcion }}</span>
+                <span *ngIf="serviciosTarjeta.length > 0">{{ serviciosTarjeta[0].descripcion }}</span>
               </label>
             </div>
             <div class="col-2">
               <label>{{ "facturacion.productos.tipo" | translate }}
-                <span *ngIf="serviciosTarjeta[0].automatico == '1'" >{{'facturacion.servicios.automatico' | translate}}</span>
-                <span *ngIf="serviciosTarjeta[0].automatico != '1'" >{{'facturacion.servicios.manual' | translate}}</span>
+                <span *ngIf="serviciosTarjeta.length > 0 && serviciosTarjeta[0].automatico == '1'" >{{'facturacion.servicios.automatico' | translate}}</span>
+                <span *ngIf="serviciosTarjeta.length > 0 && serviciosTarjeta[0].automatico != '1'" >{{'facturacion.servicios.manual' | translate}}</span>
               </label>
             </div>
             <div class="col-2">
               <label>{{ "form.busquedaCursos.literal.precio" | translate }}
-                <span>{{ serviciosTarjeta[0].precioServicioDesc }}</span>
+                <span *ngIf="serviciosTarjeta.length > 0">{{ serviciosTarjeta[0].precioServicioDesc }}</span>
               </label>
             </div>
             <div class="col-2">
               <label>{{ "facturacionSJCS.facturacionesYPagos.buscarFacturacion.total" | translate }}
-                <span>{{ serviciosTarjeta[0].total }} €</span>
+                <span *ngIf="serviciosTarjeta.length > 0">{{ serviciosTarjeta[0].total }} €</span>
               </label>
             </div>
             <div class="d-flex justify-content-start mb-1 ml-auto">
@@ -91,11 +91,13 @@
                     <!-- REVISAR CONDICION DE "FACTURADA" -->
                     <span *ngIf="col.field == 'fechaAlta' && (ficha.facturas == null || ficha.facturas.length > 0 )&& ficha.fechaAceptada != null">{{rowData[col.field] | date : 'dd/MM/yyyy'}}</span>
                     <app-fecha
-                      *ngIf="col.field == 'fechaAlta' && !esColegiado  && (ficha.facturas == null || ficha.facturas.length == 0) && ficha.fechaAceptada != null" [(value)]="rowData[col.field]"></app-fecha>
+                      *ngIf="col.field == 'fechaAlta' && !esColegiado  && (ficha.facturas == null || ficha.facturas.length == 0) && ficha.fechaAceptada != null" [(value)]="rowData[col.field]"
+                      (valueChangeInput)="fillFechaAlta($event)" (valueChangeSelected)="fillFechaAlta($event)"></app-fecha>
                       
                       
                     <app-fecha
-                      *ngIf="col.field == 'fechaBaja' && rowData[col.field] != null" [minDate]="getFechaUltFact()" [(value)]="rowData[col.field]"></app-fecha>
+                      *ngIf="col.field == 'fechaBaja' && rowData[col.field] != null" [minDate]="getFechaUltFact()" [(value)]="rowData[col.field]"
+                      (valueChangeInput)="fillFechaBaja($event)" (valueChangeSelected)="fillFechaBaja($event)"></app-fecha>
                       
                     <span *ngIf="col.field == 'automatico' && rowData[col.field] == '1'" >{{'facturacion.servicios.automatico' | translate}}</span>
                     <span *ngIf="col.field == 'automatico' && rowData[col.field] != '1'" >{{'facturacion.servicios.manual' | translate}}</span>

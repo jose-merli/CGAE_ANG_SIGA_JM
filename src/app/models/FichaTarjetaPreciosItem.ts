@@ -6,6 +6,7 @@ export class FichaTarjetaPreciosItem {
     idservicio: number;
     precio: string;
     idperiodicidad: number;
+    periodicidadValor: number;
     descripcionprecio: string;
     idcondicion: number;
     descripcionperiodicidad: string;
