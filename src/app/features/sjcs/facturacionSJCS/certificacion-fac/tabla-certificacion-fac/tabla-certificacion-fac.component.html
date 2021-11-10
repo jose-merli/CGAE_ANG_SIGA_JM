@@ -92,6 +92,8 @@
         label="{{ 'general.boton.eliminar' | translate}}"></button>
       <button pButton disabled type="button" icon="fa fa-comment" iconPos="left"
         label="{{ 'general.boton.comunicar' | translate}}"></button>
+        <button (click)="modificarCert()" [disabled]="!permisos" pButton type="button" icon="fa fa-save"
+          iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
     </div>
   </div>
 </div>

@@ -99,6 +99,25 @@ export class TarjetaFacturacionComponent implements OnInit {
 
   }
 
+  confirmDelete(){
+    let mess = this.translateService.instant(
+      "messages.deleteConfirmation"
+    );
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.deleteFacturacion();
+      },
+      reject: () => {
+        this.showMessage("info", "Info", this.translateService.instant("general.message.accion.cancelada"));
+      }
+    });
+  }
+  deleteFacturacion(){
+    
+  }
   selectDesSelectFila(){
     this.numSelected = this.selectedDatos.length;
   }

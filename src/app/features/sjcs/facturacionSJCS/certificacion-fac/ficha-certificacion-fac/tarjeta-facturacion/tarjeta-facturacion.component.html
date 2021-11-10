@@ -103,7 +103,10 @@
     </div>
     <div class="card-footer">
       <div class="text-right main-button">
-        
+        <!--Eliminar-->
+        <button pButton [disabled]="!permisos || selectedDatos.length == 0" 
+        (click)="confirmDelete()" type="button" icon="fa fa-trash-alt" iconPos="left"
+        label="{{ 'general.boton.eliminar' | translate}}"></button>
         <!--Reabrir-->
         <button (click)="reabrir()" [disabled]='!permisos' pButton type="button"
           label="{{ 'facturacionSJCS.facturacionesYPagos.reabrir' | translate }}" icon="fa fa-lock-open"
@@ -127,3 +130,9 @@
     </div>
   </div>
 </div>
+<p-confirmDialog header="Confirmación"  icon="fa fa-question-circle"  width="425"  #cd>
+  <p-footer>
+    <button type="button"  pButton icon="fa-check"  label="Si"  (click)="cd.accept()"></button>
+    <button type="button"  pButton icon="fa-close"  label="No"  (click)="cd.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
