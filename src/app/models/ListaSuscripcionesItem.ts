@@ -18,4 +18,5 @@ export class ListaSuscripcionesItem {
 	fechaSuscripcion: Date; // fecha cuando se acepta la solicitud
 	fechaBaja: Date;
 	idEstadoFactura: string;
+	idPersona: string;
 }

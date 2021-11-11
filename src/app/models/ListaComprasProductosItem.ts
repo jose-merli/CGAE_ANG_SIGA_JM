@@ -14,4 +14,5 @@ export class ListaComprasProductosItem{
 	fechaSolicitadaAnulacion: Date;
 	fechaAnulada: Date;
 	desFormaPago: string;
+    idPersona: string;
 }
