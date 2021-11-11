@@ -161,11 +161,12 @@ export class TarjetaFiltroCuotasSuscripcionesComponent implements OnInit {
   getComboTipo() {
     this.progressSpinner = true;
 
-    this.subscriptionTypeSelectValues = this.sigaServices.getParam("serviciosBusqueda_comboTipos", "?idCategoria=" + this.filtrosSuscripciones.idCategoria).subscribe(
+    this.subscriptionTypeSelectValues = this.sigaServices.getParam("serviciosBusqueda_comboTiposMultiple", "?idCategoria=" + this.filtrosSuscripciones.idCategoria.toString()).subscribe(
       TipoSelectValues => {
         this.progressSpinner = false;
 
         this.tiposObject = TipoSelectValues;
+        this.filtrosSuscripciones.idTipoServicio = [];
       },
       err => {
         this.progressSpinner = false;

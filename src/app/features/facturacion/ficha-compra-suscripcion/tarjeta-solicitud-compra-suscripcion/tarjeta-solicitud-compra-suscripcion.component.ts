@@ -10,6 +10,7 @@ import { CommonsService } from '../../../../_services/commons.service';
 import { SigaServices } from '../../../../_services/siga.service';
 import { Location } from '@angular/common';
 import { TarjetaProductosCompraSuscripcionComponent } from '../tarjeta-productos-compra-suscripcion/tarjeta-productos-compra-suscripcion.component';
+import { TarjetaServiciosCompraSuscripcionComponent } from '../tarjeta-servicios-compra-suscripcion/tarjeta-servicios-compra-suscripcion.component';
 
 @Component({
   selector: 'app-tarjeta-solicitud-compra-suscripcion',
@@ -22,6 +23,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
   
   @Input("ficha") ficha : FichaCompraSuscripcionItem; 
   @Input("tarjProductos") tarjProductos : TarjetaProductosCompraSuscripcionComponent;
+  @Input("tarjServicios") tarjServicios : TarjetaServiciosCompraSuscripcionComponent;
   
   @Output() actualizaFicha = new EventEmitter<Boolean>();
 
@@ -37,7 +39,9 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
   permisoDenegar: boolean = false;
   permisoAnularCompra: boolean = false;
   permisoAnularSuscripcion: boolean = false;
-  permisoActualizarServicioSuscripcion: boolean = false;
+  permisoSolicitarSscripcion: boolean = false;
+  permisoSolicitarSuscripcion: boolean = false;
+  permisoAprobarSuscripcion: boolean = false;
 
   progressSpinner : boolean = false;
   showTarjeta: boolean = false;
@@ -97,6 +101,9 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
     this.getPermisoAprobarCompra();
     this.getPermisoDenegar();
     this.getPermisoAnularCompra();
+    this.getPermisoSolicitarSuscripcion();
+    this.getPermisoAprobarSuscripcion();
+    this.getPermisoAnularSuscripcion();
   }
 
   checkProductos(){
@@ -117,16 +124,21 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
   }
 
   //REVISAR
-  checkCamposObligatorios() {
+  checkServicios() {
+    let servs = this.tarjServicios.serviciosTarjeta;
     let campoVacio = false;
     //Comprobacion de campos obligatorios de los servicios
-    // this.tarjServicios.serviciosTarjeta
-    // this.serviciosTarjeta.forEach(el => {
-    //   if (el.idPrecioServicio == null || el.cantidad.trim() == "" ||
-    //     (el.fechaAlta == null && this.ficha.fechaAceptada!= null)) {
-    //       campoVacio = true;
-    //     }
-    // })
+    this.tarjServicios.serviciosTarjeta.forEach(el => {
+      if (el.idPrecioServicio == null ||
+        (el.fechaAlta == null && this.ficha.fechaAceptada!= null) ||
+        (el.fechaBaja == null && this.ficha.fechaAnulada!= null)) {
+          campoVacio = true;
+        }
+    })
+
+    if(servs.length == 0 || campoVacio) {
+      return true;
+    }
     return false;
   }
 
@@ -161,43 +173,117 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
 		}
   }
 
+  checkSolicitarSuscripcion(){
+    let msg = this.commonsService.checkPermisos(this.permisoSolicitarSuscripcion, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    }  else if(this.ficha.idPersona == null){
+      //Etiqueta
+      this.showMessage("error",this.translateService.instant('general.message.camposObligatorios'),this.translateService.instant("facturacion.productos.seleccCliente"));
+    } else if(this.checkServicios()){
+      if(this.tarjServicios.serviciosTarjeta.length == 0){
+        this.showMessage("error",
+        this.translateService.instant("** No hay servicio asociado"),
+        this.translateService.instant("** Es necesario tener un servicio asociado para procesar una solicitud de suscripcion")
+        );
+      }
+      else {
+        this.showMessage("error", this.translateService.instant('menu.productosYServicios.categorias.servicios'), this.translateService.instant('general.message.camposObligatorios'));
+      }
+    }  else if(this.tarjServicios.selectedPago == null){
+      //Etiqueta
+      this.showMessage("error",this.translateService.instant('general.message.camposObligatorios'),this.translateService.instant("facturacion.productos.seleccPago"));
+    }
+    //Si ha seleccionado forma de pago "domicialiacion bancaria" pero no ha elegido cuenta.
+    else if(this.tarjServicios.selectedPago == "80" && this.tarjServicios.datosTarjeta.cuentaBancSelecc == null){
+      this.showMessage("error", this.translateService.instant('menu.productosYServicios.categorias.servicios'), this.translateService.instant('general.message.camposObligatorios'));
+    }
+    else {
+			this.solicitarSuscripcion();
+		}
+  }
+
   checkAprobar(){
-    let msg = null;
+    
     //En el caso que se trate de la aprobacion de una compra
     if(this.ficha.productos != null) {
-      msg = this.commonsService.checkPermisos(this.permisoAprobarCompra, undefined);
+      this.checkAprobarCompra();
+    }else if(this.ficha.servicios != null) {
+      this.checkAprobarSuscripcion();
+    }
+      
+  }
 
-      if (msg != null) {
-        this.msgs = msg;
-      }  else if(this.ficha.idPersona == null){
-        this.showMessage("error",this.translateService.instant("general.message.camposObligatorios"),this.translateService.instant("facturacion.productos.seleccCliente"));
+  checkAprobarCompra(){
+    let msg = this.commonsService.checkPermisos(this.permisoAprobarCompra, undefined);
+
+    if (msg != null) {
+      this.msgs = msg;
+    } else if (this.ficha.idPersona == null) {
+      this.showMessage("error", this.translateService.instant("general.message.camposObligatorios"), this.translateService.instant("facturacion.productos.seleccCliente"));
+    }
+    //Solicitud nueva
+    else if (this.ficha.fechaPendiente == null) {
+      if (this.tarjProductos.selectedPago == null) {
+        this.showMessage("error", this.translateService.instant("general.message.camposObligatorios"), this.translateService.instant("facturacion.productos.seleccPago"));
       }
-      //Solicitud nueva
-      else if(this.ficha.fechaPendiente == null){
-        if(this.tarjProductos.selectedPago == null){
-          this.showMessage("error",this.translateService.instant("general.message.camposObligatorios"),this.translateService.instant("facturacion.productos.seleccPago"));
-        }
-        //Si ha seleccionado forma de pago "domicialiacion bancaria" pero no ha elegido cuenta.
-        else if(this.tarjProductos.selectedPago == "80" && this.tarjProductos.datosTarjeta.cuentaBancSelecc == null){
-          this.showMessage("error", this.translateService.instant('menu.facturacion.productos'), this.translateService.instant('general.message.camposObligatorios'));
-        }
-        else if(this.checkProductos()){
-          if(this.tarjProductos.productosTarjeta.length == 0){
-            this.showMessage("error",
+      //Si ha seleccionado forma de pago "domicialiacion bancaria" pero no ha elegido cuenta.
+      else if (this.tarjProductos.selectedPago == "80" && this.tarjProductos.datosTarjeta.cuentaBancSelecc == null) {
+        this.showMessage("error", this.translateService.instant('menu.facturacion.productos'), this.translateService.instant('general.message.camposObligatorios'));
+      }
+      else if (this.checkProductos()) {
+        if (this.tarjProductos.productosTarjeta.length == 0) {
+          this.showMessage("error",
             this.translateService.instant("facturacion.productos.noBorrarProductos"),
             this.translateService.instant("facturacion.productos.prodNecesario")
-            );
-          }
-          else {
-            this.showMessage("error", this.translateService.instant("menu.facturacion.productos"), this.translateService.instant('general.message.camposObligatorios'));
-          }
-        }else {
-          this.aprobarCompra();
+          );
         }
-      }
-      else{
+        else {
+          this.showMessage("error", this.translateService.instant("menu.facturacion.productos"), this.translateService.instant('general.message.camposObligatorios'));
+        }
+      } else {
         this.aprobarCompra();
       }
+    }
+    else {
+      this.aprobarCompra();
+    }
+  }
+
+  checkAprobarSuscripcion(){
+    let msg = this.commonsService.checkPermisos(this.permisoAprobarSuscripcion, undefined);
+
+    if (msg != null) {
+      this.msgs = msg;
+    } else if (this.ficha.idPersona == null) {
+      this.showMessage("error", this.translateService.instant("general.message.camposObligatorios"), this.translateService.instant("facturacion.productos.seleccCliente"));
+    }
+    //Solicitud nueva
+    else if (this.ficha.fechaPendiente == null) {
+      if (this.tarjServicios.selectedPago == null) {
+        this.showMessage("error", this.translateService.instant("general.message.camposObligatorios"), this.translateService.instant("facturacion.productos.seleccPago"));
+      }
+      //Si ha seleccionado forma de pago "domicialiacion bancaria" pero no ha elegido cuenta.
+      else if (this.tarjServicios.selectedPago == "80" && this.tarjServicios.datosTarjeta.cuentaBancSelecc == null) {
+        this.showMessage("error", this.translateService.instant('menu.productosYServicios.categorias.servicios'), this.translateService.instant('general.message.camposObligatorios'));
+      }
+      else if (this.checkServicios()) {
+        if (this.tarjServicios.serviciosTarjeta.length == 0) {
+          this.showMessage("error",
+            this.translateService.instant("** No hay servicio asociado"),
+            this.translateService.instant("** Es necesario tener un servicio asociado para procesar una solicitud de suscripcion")
+          );
+        }
+        else {
+          this.showMessage("error", this.translateService.instant("menu.productosYServicios.categorias.servicios"), this.translateService.instant('general.message.camposObligatorios'));
+        }
+      } else {
+        this.aprobarSuscripcion();
+      }
+    }
+    else {
+      this.aprobarSuscripcion();
     }
   }
 
@@ -214,8 +300,12 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
   // REVISAR: Añadir comprobación de facturación
   checkAnular(){
     let msg = null;
-    if(this.ficha.productos!= null) msg = this.commonsService.checkPermisos(this.permisoAnularCompra, undefined);
-    if(this.ficha.servicios!= null) msg = this.commonsService.checkPermisos(this.permisoAnularSuscripcion, undefined);
+    if(this.ficha.productos!= null){
+      msg = this.commonsService.checkPermisos(this.permisoAnularCompra, undefined);
+    }
+    if(this.ficha.servicios!= null){
+      msg = this.commonsService.checkPermisos(this.permisoAnularSuscripcion, undefined);
+    }
 
     if (msg != null) {
       this.msgs = msg;
@@ -299,6 +389,27 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
 		);
   }
 
+  solicitarSuscripcion(){
+    this.progressSpinner = true; 
+		this.sigaServices.post('PyS_solicitarSuscripcion', this.ficha).subscribe(
+			(n) => {
+				if( n.status != 200) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        } else {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          
+          //Se actualiza la información de la ficha
+          this.actualizaFicha.emit();
+        }
+				this.progressSpinner = false;
+			},
+			(err) => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+				this.progressSpinner = false;
+			}
+		);
+  }
+
   aprobarCompra(){
     this.progressSpinner = true; 
     let peticion = JSON.parse(JSON.stringify(this.ficha));
@@ -308,6 +419,33 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
       peticion.cuentaBancSelecc = this.tarjProductos.datosTarjeta.cuentaBancSelecc;
     }
 		this.sigaServices.post('PyS_aprobarCompra', peticion).subscribe(
+			(n) => {
+				if( n.status != 200) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        } else {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+
+          //Se actualiza la información de la ficha y se obtiene su historico actualizado
+          this.actualizaFicha.emit();
+        }
+				this.progressSpinner = false;
+			},
+			(err) => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+				this.progressSpinner = false;
+			}
+		);
+  }
+
+  aprobarSuscripcion(){
+    this.progressSpinner = true; 
+    let peticion = JSON.parse(JSON.stringify(this.ficha));
+    if(this.ficha.fechaPendiente == null){
+      peticion.servicios = this.tarjServicios.serviciosTarjeta;
+      peticion.idFormaPagoSeleccionada = this.tarjServicios.selectedPago;
+      peticion.cuentaBancSelecc = this.tarjServicios.datosTarjeta.cuentaBancSelecc;
+    }
+		this.sigaServices.post('PyS_aprobarSuscripcion', peticion).subscribe(
 			(n) => {
 				if( n.status != 200) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
@@ -393,11 +531,29 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
 			.catch((error) => console.error(error));
   }
 
+  getPermisoSolicitarSuscripcion(){
+    this.commonsService
+			.checkAcceso(procesos_PyS.solicitarSuscripcion)
+			.then((respuesta) => {
+				this.permisoSolicitarSuscripcion = respuesta;
+			})
+			.catch((error) => console.error(error));
+  }
+
   getPermisoAprobarCompra(){
     this.commonsService
 			.checkAcceso(procesos_PyS.aprobarCompra)
 			.then((respuesta) => {
 				this.permisoAprobarCompra = respuesta;
+			})
+			.catch((error) => console.error(error));
+  }
+
+  getPermisoAprobarSuscripcion(){
+    this.commonsService
+			.checkAcceso(procesos_PyS.aprobarSuscripcion)
+			.then((respuesta) => {
+				this.permisoAprobarSuscripcion = respuesta;
 			})
 			.catch((error) => console.error(error));
   }

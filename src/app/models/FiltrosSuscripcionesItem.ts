@@ -4,11 +4,11 @@ export class FiltrosSuscripcionesItem {
     fechaSolicitudHasta: Date;
     aFechaDe: Date;
     nSolicitud: string;
-    idCategoria: string;
-    idTipoServicio: string;
+    idCategoria: string[];
+    idTipoServicio: string[];
     descServ: string;
-    idEstadoSolicitud: string;
-    idEstadoFactura: string;
+    idEstadoSolicitud: string[];
+    idEstadoFactura: string[];
 
     constructor() { }
 }
