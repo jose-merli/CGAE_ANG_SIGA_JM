@@ -160,8 +160,7 @@ checkFilters(){
       this.buscador.filtro.nombre == undefined ||
       this.buscador.filtro.nombre.trim().length < 3) &&
     (this.buscador.filtro.idGrupoZona == null ||
-      this.buscador.filtro.idGrupoZona == undefined ||
-      this.buscador.filtro.idGrupoZona.trim().length < 3) &&
+      this.buscador.filtro.idGrupoZona == undefined) &&
     (this.buscador.filtro.idTipo == null ||
       this.buscador.filtro.idTipo == undefined ||
       this.buscador.filtro.idTipo.trim().length < 3) &&
