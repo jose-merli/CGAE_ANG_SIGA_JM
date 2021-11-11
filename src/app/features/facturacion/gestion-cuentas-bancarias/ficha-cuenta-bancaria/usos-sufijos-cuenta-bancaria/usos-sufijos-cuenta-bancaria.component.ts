@@ -1,7 +1,9 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { DataTable } from 'primeng/primeng';
+import { TranslateService } from '../../../../../commons/translate';
 import { CuentasBancariasItem } from '../../../../../models/CuentasBancariasItem';
 import { SerieFacturacionItem } from '../../../../../models/SerieFacturacionItem';
+import { CommonsService } from '../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 
@@ -21,8 +23,8 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit {
   @Output() guardadoSend = new EventEmitter<any>();
   
   // Tabla
-  datos: SerieFacturacionItem[] = [];
-  datosInit: SerieFacturacionItem[] = [];
+  datos: any[] = [];
+  datosInit: any[] = [];
   cols: any[];
   first: number = 0;
   selectedItem: number;
@@ -34,36 +36,71 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit {
   @ViewChild("table") table: DataTable;
   selectedDatos;
 
-  bodyInicial: CuentasBancariasItem;
   body: CuentasBancariasItem = new CuentasBancariasItem();
 
   resaltadoDatos: boolean = false;
 
+  // Combos
+  comboSufijos = [];
+  comboSeriesFacturacion = [];
+
   constructor(
     private persistenceService: PersistenceService,
     private changeDetectorRef: ChangeDetectorRef,
-    private sigaServices: SigaServices
+    private sigaServices: SigaServices,
+    private commonsService: CommonsService,
+    private translateService: TranslateService
   ) { }
 
   ngOnInit() {
     this.progressSpinner = true;
 
     this.getCols();
+    this.getComboSufijo();
+    this.getComboSerieFacturacion();
     if (this.persistenceService.getDatos()) {
       this.body = this.persistenceService.getDatos();
-      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     }
     this.getUsosSufijos();
     
     this.progressSpinner = false;
   }
 
+  // Combo de sufijos
+
+  getComboSufijo() {
+    this.sigaServices.get("facturacionPyS_comboSufijo").subscribe(
+      n => {
+        this.comboSufijos = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboSufijos);
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  // Combo de Series de Facturación
+
+  getComboSerieFacturacion() {
+    this.sigaServices.get("facturacionPyS_comboSeriesFacturacion").subscribe(
+      n => {
+        this.comboSeriesFacturacion = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboSeriesFacturacion);
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  // Obtener usos y sufijos
+
   getUsosSufijos() {
     this.sigaServices.getParam("facturacionPyS_getUsosSufijos", "?codBanco=" + this.body.bancosCodigo).subscribe(
       n => {
         this.datos = n.usosSufijosItems;
         this.datosInit = JSON.parse(JSON.stringify(this.datos));
-        console.log(this.datos);
       },
       err => {
         console.log(err);
@@ -134,6 +171,73 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
     this.table.reset();
+  }
+
+  // Añadir serie de facturación
+
+  addSerie() {
+    let newDato = {
+      tipo: "SERIE",
+      idSerieFacturacion: undefined,
+      idSufijo: undefined,
+      bancosCodigo: this.body.bancosCodigo,
+      nuevo: true
+    };
+
+    this.datos.unshift(newDato);
+  }
+
+  // Restablecer
+
+  restablecer(): void {
+    this.datos = JSON.parse(JSON.stringify(this.datosInit));
+    this.resaltadoDatos = false;
+  }
+
+  // Guadar
+
+  isValid(): boolean {
+    return this.datos.every(u => (u.nuevo == undefined || u.idSerieFacturacion != undefined) && u.idSufijo != undefined);
+  }
+
+  checkSave(): void {
+    if (this.isValid()) {
+      this.save();
+    } else {
+      this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+      this.resaltadoDatos = true;
+    }
+  }
+
+  save(): void {
+    this.progressSpinner = true;
+
+    this.sigaServices.post("facturacionPyS_insertaActualizaSerie", this.datos).subscribe(
+      n => {
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.guardadoSend.emit();
+        this.getUsosSufijos();
+
+        this.progressSpinner = false;
+      },
+      err => {
+        let error = JSON.parse(err.error).error;
+        if (error != undefined && error.message != undefined) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.message));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        }
+
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  // Estilo obligatorio
+  styleObligatorio(evento: string) {
+    if (this.resaltadoDatos && (evento == undefined || evento == null || evento.trim() == "")) {
+      return this.commonsService.styleObligatorio(evento);
+    }
   }
 
   showMessage(severity, summary, msg) {

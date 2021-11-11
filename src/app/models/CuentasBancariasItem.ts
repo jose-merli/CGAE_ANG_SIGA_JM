@@ -3,7 +3,7 @@ export class CuentasBancariasItem{
     bancosCodigo;
     codBanco;
     codSucursal;
-    fechaBaja;
+    fechaBaja: Date;
     
     iban: string = "";
     nombre: string;
@@ -14,7 +14,7 @@ export class CuentasBancariasItem{
     numUsos: string;
     numFicheros: string;
 
-    comisionImporte: string;
+    comisionImporte: number;
     comisionDescripcion: string;
     idTipoIVA: string;
 
@@ -23,7 +23,7 @@ export class CuentasBancariasItem{
     configLugaresQueMasSecuencia: string;
     configConceptoAmpliado: string;
 
-    sjcs: string;
+    sjcs: boolean;
     idSufijoSjcs: string;
     concepto: string;
     

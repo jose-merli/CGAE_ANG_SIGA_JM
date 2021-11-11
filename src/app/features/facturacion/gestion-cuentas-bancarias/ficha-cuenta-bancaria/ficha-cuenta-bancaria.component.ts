@@ -43,16 +43,19 @@ export class FichaCuentaBancariaComponent implements OnInit {
     if (sessionStorage.getItem("cuentaBancariaItem")) {
       this.body = JSON.parse(sessionStorage.getItem("cuentaBancariaItem"));
       sessionStorage.removeItem("cuentaBancariaItem");
+      this.calcDescripcion();
       this.persistenceService.setDatos(this.body);
     } else if (this.persistenceService.getDatos()) {
       this.body = this.persistenceService.getDatos();
     } else if(sessionStorage.getItem("Nuevo")) {
       sessionStorage.removeItem("Nuevo");
-      this.body = new CuentasBancariasItem();
       this.modoEdicion = false;
     }
 
-    this.updateTarjetaResumen();
+    if (this.modoEdicion) {
+      this.updateTarjetaResumen();
+    }
+    
     this.updateEnlacesTarjetaResumen();
 
     this.progressSpinner = false;
@@ -77,7 +80,7 @@ export class FichaCuentaBancariaComponent implements OnInit {
       },
       {
         label: this.translateService.instant("menu.justiciaGratuita"),
-        value: this.body.sjcs
+        value: (this.body.sjcs ? "Sí" : "No")
       }
     ]
   }
@@ -119,6 +122,7 @@ export class FichaCuentaBancariaComponent implements OnInit {
   }
 
   guardadoSend(): void {
+    this.modoEdicion = true;
     this.ngOnInit();
     // this.router.navigate(["/fichaCuentaBancaria"]);
   }
@@ -167,6 +171,14 @@ export class FichaCuentaBancariaComponent implements OnInit {
           break;
       }
     }
+  }
+
+  // Obtener descripción
+
+  calcDescripcion(): void {
+    // Falta poner la parte del principio
+    let ibanEnd: string = this.body.iban.slice(-4);
+    this.body.descripcion = ` (...${ibanEnd})`;
   }
 
   showMessage(severity, summary, msg) {

@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { TranslateService } from '../../../../../commons/translate';
 import { CuentasBancariasItem } from '../../../../../models/CuentasBancariasItem';
@@ -17,6 +18,7 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit {
   msgs;
   progressSpinner: boolean = false;
 
+  @Input() modoEdicion: boolean;
   @Input() openTarjetaDatosGenerales;
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
@@ -24,6 +26,7 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit {
 
   bodyInicial: CuentasBancariasItem;
   body: CuentasBancariasItem = new CuentasBancariasItem();
+  estado: string;
 
   resaltadoDatos: boolean = false;
   focusIBAN: boolean = false; // Para cambiar dinámicamente la restricción de longitud
@@ -33,7 +36,8 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit {
     private commonsService: CommonsService,
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private datePipe: DatePipe
   ) { }
 
   ngOnInit() {
@@ -41,10 +45,11 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit {
 
     if (this.persistenceService.getDatos()) {
       this.body = this.persistenceService.getDatos();
-      
-      console.log(this.body);
-
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+      this.addSpacesToIBAN();
+      this.checkEstado();
+
+      console.log(this.body);
     }
 
     this.progressSpinner = false;
@@ -52,24 +57,106 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit {
 
   // Validación del IBAN
 
-  onFocusIBAN(event): void {
+  removeSpacesFromIBAN(): void {
     this.focusIBAN = true;
     this.body.iban = this.body.iban.replace(/\s/g, "");
   }
 
-  onBlurIBAN(event): void {
+  addSpacesToIBAN(): void {
     this.focusIBAN = false;
     this.body.iban = this.body.iban.replace(/\s/g, "").replace(/(.{4})/g,"$1 ").trim();
+  }
+
+  // Comprobar el estado
+
+  checkEstado(): void {
+    this.estado = this.body.fechaBaja ? `BAJA DESDE ${this.datePipe.transform(this.body.fechaBaja, 'dd/MM/yyyy')}` : 
+        ( this.body.numUsos != null ? (Number.parseInt(this.body.numUsos) > 0 ? "EN USO" : "SIN USO") : "-");
   }
 
   // Restablecer
 
   restablecer(): void {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    this.checkEstado();
+    this.addSpacesToIBAN();
     this.resaltadoDatos = false;
   }
 
-  // Eliminar series de facturación
+  // Guadar
+
+  isValid(): boolean {
+    return this.body.iban != undefined && this.body.iban.trim() != "" && this.body.iban.length == 24;
+  }
+
+  checkSave(): void {
+    this.removeSpacesFromIBAN();
+    if (this.isValid()) {
+      this.save();
+    } else {
+      this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+      this.resaltadoDatos = true;
+    }
+  }
+
+  save(): void {
+    this.progressSpinner = true;
+
+    if (this.modoEdicion) {
+      this.sigaServices.post("facturacionPyS_actualizaCuentaBancaria", this.body).subscribe(
+        n => {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+          this.persistenceService.setDatos(this.bodyInicial);
+          this.guardadoSend.emit();
+          this.addSpacesToIBAN();
+  
+          this.progressSpinner = false;
+        },
+        err => {
+          let error = JSON.parse(err.error).error;
+          if (error != undefined && error.message != undefined) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.message));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+          }
+
+          this.addSpacesToIBAN();
+  
+          this.progressSpinner = false;
+        }
+      );
+    } else {
+      this.sigaServices.post("facturacionPyS_insertaCuentaBancaria", this.body).subscribe(
+        n => {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          console.log(n);
+          this.body = JSON.parse(n.body).cuentasBancariasITem[0];
+          this.persistenceService.setDatos(this.body);
+          this.guardadoSend.emit();
+          this.ngOnInit();
+          this.addSpacesToIBAN();
+
+          this.progressSpinner = false;
+        },
+        err => {
+          let error = JSON.parse(err.error).error;
+          if (error != undefined && error.message != undefined) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.message));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+          }
+  
+          this.addSpacesToIBAN();
+
+          this.progressSpinner = false;
+        }
+      );
+    }
+    
+  }
+
+  // Eliminar cuenta bancaria
 
   confirmEliminar(): void {
     let mess = "Se va a proceder a dar de baja la cuenta bancaria ¿Desea continuar?";
@@ -94,6 +181,8 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit {
     this.sigaServices.post("facturacionPyS_borrarCuentasBancarias", [this.body]).subscribe(
       data => {
         this.body.fechaBaja = new Date();
+        this.checkEstado();
+
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
         this.persistenceService.setDatos(this.bodyInicial);
         this.guardadoSend.emit();

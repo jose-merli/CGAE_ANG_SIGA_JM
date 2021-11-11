@@ -28,4 +28,7 @@ export let endpoints_facturacionPyS: any = {
     facturacionPyS_comboTiposIVA: "facturacionPyS/general/comboTiposIVA",
     facturacionPyS_guardarContadorSerie: "facturacionPyS/guardarContadorSerie",
     facturacionPyS_guardarContadorRectificativaSerie: "facturacionPyS/guardarContadorRectificativaSerie",
+    facturacionPyS_insertaCuentaBancaria: "facturacionPyS/insertaCuentaBancaria",
+    facturacionPyS_actualizaCuentaBancaria: "facturacionPyS/actualizaCuentaBancaria",
+    facturacionPyS_insertaActualizaSerie: "facturacionPyS/insertaActualizaSerie",
 }

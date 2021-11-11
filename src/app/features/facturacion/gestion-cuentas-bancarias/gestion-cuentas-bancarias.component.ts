@@ -107,7 +107,15 @@ export class GestionCuentasBancariasComponent implements OnInit {
     this.router.navigate(["/fichaCuentaBancaria"]);
   }
 
-  nuevo() { }
+  isNuevo() {
+    if (sessionStorage.getItem("cuentaBancariaItem")) {
+      sessionStorage.removeItem("cuentaBancariaItem");
+    }
+
+    this.persistenceService.clearDatos();
+    sessionStorage.setItem("Nuevo", "true");
+    this.router.navigate(["/fichaCuentaBancaria"]);
+  }
 
   cargarDatos() {
     this.allCuentasBancarias = [];
