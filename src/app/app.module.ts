@@ -487,6 +487,8 @@ import { ListaArchivosGuardiaComponent } from './features/sjcs/guardia/cargas-ma
 import { TarjetaModule } from './commons/tarjeta/tarjeta.module';
 import { DestinatariosModule } from './features/sjcs/maestros/destinatarios-retenciones/destinatarios.module';
 import { MaestrosModule } from './features/sjcs/maestros/maestros.module';
+import { GestionExpedientesExeaComponent } from './features/expedientes-exea/gestion-expedientes-exea/gestion-expedientes-exea.component';
+import { NuevoExpedienteExeaComponent } from './features/expedientes-exea/nuevo-expediente-exea/nuevo-expediente-exea.component';
 
 
 @NgModule({
@@ -906,6 +908,8 @@ import { MaestrosModule } from './features/sjcs/maestros/maestros.module';
 		FichaListaGuardiasComponent,
 		FichaListaGuardiasTarjetaDatosGeneralesComponent,
 		FichaListaGuardiasTarjetaGuardiasComponent,
+		GestionExpedientesExeaComponent,
+		NuevoExpedienteExeaComponent,
 	],
 	imports: [
 		SelectorModule,

@@ -240,6 +240,8 @@ import { FichaAsistenciaComponent } from "./features/sjcs/guardia/guardias-asist
 import { BusquedaAsuntosComponent } from "./commons/busqueda-asuntos/busqueda-asuntos.component";
 import { FichaActuacionAsistenciaComponent } from "./features/sjcs/guardia/guardias-asistencias/ficha-actuacion-asistencia/ficha-actuacion-asistencia.component";
 import { FichaListaGuardiasComponent } from "./features/sjcs/guardia/definir-listas-guardias/ficha-lista-guardias/ficha-lista-guardias.component";
+import { NuevoExpedienteExeaComponent } from "./features/expedientes-exea/nuevo-expediente-exea/nuevo-expediente-exea.component";
+import { GestionExpedientesExeaComponent } from "./features/expedientes-exea/gestion-expedientes-exea/gestion-expedientes-exea.component";
 
 const appRoutes: Routes = [
 	{ path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
@@ -1332,6 +1334,14 @@ const appRoutes: Routes = [
 	{
 		path: 'busquedaAsuntos',
 		component: BusquedaAsuntosComponent 
+	},
+	{
+		path: 'nuevoExpedienteEXEA',
+		component: NuevoExpedienteExeaComponent 
+	},
+	{
+		path: 'gestionExpedientesEXEA',
+		component: GestionExpedientesExeaComponent
 	},
 
 	{ path: ' ', redirectTo: 'home' }

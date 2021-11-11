@@ -702,6 +702,10 @@ export class SigaServices {
     return environment.oldSigaUrl;
   }
 
+  getEXEAUrl(){
+	return environment.EXEAUrl;
+  }
+
   getServucePath(service: string) {
     return this.endpoints[service];
   }
