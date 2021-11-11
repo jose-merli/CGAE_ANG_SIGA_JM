@@ -148,7 +148,18 @@
               <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [ngClass]="styleObligatorio('datosGenerales', generalBody.idTratamiento)"
                 [options]="generalTratamiento" [(ngModel)]="generalBody.idTratamiento" [(disabled)]="isLetrado || (tarjetaGenerales == 2) || disabledAction"
                 [filter]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}" [showClear]="true" filterBy="label,labelSinTilde"
-                (onChange)="activacionGuardarGenerales()"></p-dropdown>
+                (onChange)="activacionGuardarGenerales()">
+              
+                <ng-template let-item pTemplate="selectedItem" >
+                  <div style="min-height: 20px;" *ngIf="item.label.indexOf('(') != -1">
+                    {{item.label.substring(0, item.label.indexOf('('))}}
+                  </div>
+
+                  <div *ngIf="item.label.indexOf('(') == -1">
+                    {{item.label}}
+                  </div>
+                </ng-template>
+              </p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "censo.consultaDatosGenerales.literal.nacido" | translate }}
