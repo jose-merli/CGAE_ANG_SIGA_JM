@@ -80,6 +80,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
   ];
 
   @Input("ficha") ficha: FichaCompraSuscripcionItem;
+  @Input("resaltadoDatos") resaltadoDatos: boolean;
   @Output() actualizaFicha = new EventEmitter<Boolean>();
   @ViewChild("servicesTable") tablaServicios;
   @ViewChild("servicesSuscripcionTable") tablaServiciosSuscripcion;
@@ -207,7 +208,6 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
           for(let servicioTarj of this.serviciosTarjeta){
             servicioTarj.impNeto = Number(servicioTarj.impNeto).toFixed(2);
             servicioTarj.precioServicioValor = Number(servicioTarj.precioServicioValor).toFixed(2);
-
           }
 
           this.datosTarjeta = this.ficha;
@@ -341,6 +341,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
       this.msgs = msg;
     } else if (this.checkCamposObligatorios()) {
       this.showMessage("error", "Error", this.translateService.instant('general.message.camposObligatorios'));
+      this.resaltadoDatos = true;
     } else {
       this.updateServiciosPeticion();
     }
@@ -835,6 +836,12 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
         this.progressSpinner = false;
       }
     );
+  }
+
+  styleObligatorio(evento) {
+    if (this.resaltadoDatos && (evento == undefined || evento == null || evento == "")) {
+      return this.commonsService.styleObligatorio(evento);
+    }
   }
 
   onChangePrecio(rowData : ListaServiciosSuscripcionItem){

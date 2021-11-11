@@ -84,6 +84,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
   ];
 
   @Input("ficha") ficha: FichaCompraSuscripcionItem;
+  @Input("resaltadoDatos") resaltadoDatos: boolean;
   @Output() actualizaFicha = new EventEmitter<Boolean>();
   @ViewChild("productsTable") tablaProductos;
 
@@ -754,6 +755,12 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
       let orden = this.selectedRows[0].orden;
       this.productosTarjeta[Number(orden)].orden = (Number(orden) + 1) + "";
       this.productosTarjeta[Number(orden) - 1].orden = (Number(orden)) + "";
+    }
+  }
+
+  styleObligatorio(evento) {
+    if (this.resaltadoDatos && (evento == undefined || evento == null || evento == "")) {
+      return this.commonsService.styleObligatorio(evento);
     }
   }
 

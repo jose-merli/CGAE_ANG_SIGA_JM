@@ -26,6 +26,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
   @Input("tarjServicios") tarjServicios : TarjetaServiciosCompraSuscripcionComponent;
   
   @Output() actualizaFicha = new EventEmitter<Boolean>();
+  @Output() scrollToOblig = new EventEmitter<String>();
 
   cols = [
     { field: "fecha", header: "censo.resultadosSolicitudesModificacion.literal.fecha"},
@@ -150,23 +151,27 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
     }  else if(this.ficha.idPersona == null){
       //Etiqueta
       this.showMessage("error",this.translateService.instant('general.message.camposObligatorios'),this.translateService.instant("facturacion.productos.seleccCliente"));
+      this.scrollToOblig.emit("cliente");
+
     } else if(this.checkProductos()){
       if(this.tarjProductos.productosTarjeta.length == 0){
         this.showMessage("error",
-        this.translateService.instant("facturacion.productos.noBorrarProductos"),
+        this.translateService.instant("facturacion.productos.noBorrarProductos"), //REVISAR
         this.translateService.instant("facturacion.productos.prodNecesario")
         );
       }
       else {
         this.showMessage("error", this.translateService.instant('menu.facturacion.productos'), this.translateService.instant('general.message.camposObligatorios'));
       }
+      this.scrollToOblig.emit("productos");
     }  else if(this.tarjProductos.selectedPago == null){
-      //Etiqueta
       this.showMessage("error",this.translateService.instant('general.message.camposObligatorios'),this.translateService.instant("facturacion.productos.seleccPago"));
+      this.scrollToOblig.emit("productos");
     }
     //Si ha seleccionado forma de pago "domicialiacion bancaria" pero no ha elegido cuenta.
     else if(this.tarjProductos.selectedPago == "80" && this.tarjProductos.datosTarjeta.cuentaBancSelecc == null){
       this.showMessage("error", this.translateService.instant('menu.facturacion.productos'), this.translateService.instant('general.message.camposObligatorios'));
+      this.scrollToOblig.emit("productos");
     }
     else {
 			this.solicitarCompra();
@@ -178,9 +183,9 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
 
     if (msg != undefined) {
       this.msgs = msg;
-    }  else if(this.ficha.idPersona == null){
-      //Etiqueta
+    } else if(this.ficha.idPersona == null){
       this.showMessage("error",this.translateService.instant('general.message.camposObligatorios'),this.translateService.instant("facturacion.productos.seleccCliente"));
+      this.scrollToOblig.emit("cliente");
     } else if(this.checkServicios()){
       if(this.tarjServicios.serviciosTarjeta.length == 0){
         this.showMessage("error",
@@ -191,13 +196,15 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
       else {
         this.showMessage("error", this.translateService.instant('menu.productosYServicios.categorias.servicios'), this.translateService.instant('general.message.camposObligatorios'));
       }
+      this.scrollToOblig.emit("servicios");
     }  else if(this.tarjServicios.selectedPago == null){
-      //Etiqueta
       this.showMessage("error",this.translateService.instant('general.message.camposObligatorios'),this.translateService.instant("facturacion.productos.seleccPago"));
+      this.scrollToOblig.emit("servicios");
     }
     //Si ha seleccionado forma de pago "domicialiacion bancaria" pero no ha elegido cuenta.
     else if(this.tarjServicios.selectedPago == "80" && this.tarjServicios.datosTarjeta.cuentaBancSelecc == null){
       this.showMessage("error", this.translateService.instant('menu.productosYServicios.categorias.servicios'), this.translateService.instant('general.message.camposObligatorios'));
+      this.scrollToOblig.emit("servicios");
     }
     else {
 			this.solicitarSuscripcion();
@@ -222,15 +229,18 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
       this.msgs = msg;
     } else if (this.ficha.idPersona == null) {
       this.showMessage("error", this.translateService.instant("general.message.camposObligatorios"), this.translateService.instant("facturacion.productos.seleccCliente"));
+      this.scrollToOblig.emit("cliente");
     }
     //Solicitud nueva
     else if (this.ficha.fechaPendiente == null) {
       if (this.tarjProductos.selectedPago == null) {
         this.showMessage("error", this.translateService.instant("general.message.camposObligatorios"), this.translateService.instant("facturacion.productos.seleccPago"));
+        this.scrollToOblig.emit("productos");
       }
       //Si ha seleccionado forma de pago "domicialiacion bancaria" pero no ha elegido cuenta.
       else if (this.tarjProductos.selectedPago == "80" && this.tarjProductos.datosTarjeta.cuentaBancSelecc == null) {
         this.showMessage("error", this.translateService.instant('menu.facturacion.productos'), this.translateService.instant('general.message.camposObligatorios'));
+        this.scrollToOblig.emit("productos");
       }
       else if (this.checkProductos()) {
         if (this.tarjProductos.productosTarjeta.length == 0) {
@@ -242,6 +252,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
         else {
           this.showMessage("error", this.translateService.instant("menu.facturacion.productos"), this.translateService.instant('general.message.camposObligatorios'));
         }
+        this.scrollToOblig.emit("productos");
       } else {
         this.aprobarCompra();
       }
@@ -258,15 +269,18 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
       this.msgs = msg;
     } else if (this.ficha.idPersona == null) {
       this.showMessage("error", this.translateService.instant("general.message.camposObligatorios"), this.translateService.instant("facturacion.productos.seleccCliente"));
+      this.scrollToOblig.emit("cliente");
     }
     //Solicitud nueva
     else if (this.ficha.fechaPendiente == null) {
       if (this.tarjServicios.selectedPago == null) {
         this.showMessage("error", this.translateService.instant("general.message.camposObligatorios"), this.translateService.instant("facturacion.productos.seleccPago"));
+        this.scrollToOblig.emit("servicios");
       }
       //Si ha seleccionado forma de pago "domicialiacion bancaria" pero no ha elegido cuenta.
       else if (this.tarjServicios.selectedPago == "80" && this.tarjServicios.datosTarjeta.cuentaBancSelecc == null) {
         this.showMessage("error", this.translateService.instant('menu.productosYServicios.categorias.servicios'), this.translateService.instant('general.message.camposObligatorios'));
+        this.scrollToOblig.emit("servicios");
       }
       else if (this.checkServicios()) {
         if (this.tarjServicios.serviciosTarjeta.length == 0) {
@@ -278,6 +292,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
         else {
           this.showMessage("error", this.translateService.instant("menu.productosYServicios.categorias.servicios"), this.translateService.instant('general.message.camposObligatorios'));
         }
+        this.scrollToOblig.emit("servicios");
       } else {
         this.aprobarSuscripcion();
       }
@@ -318,17 +333,17 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
     //REVISAR: Cambiar mensaje
     else if(this.esColegiado && this.ficha.productos != null && (this.ficha.productos.find(el => el.solicitarBaja == "0") != undefined)){
       this.showMessage("info", this.translateService.instant("facturacion.productos.solicitarBajaProd"), this.translateService.instant("facturacion.productos.solicitarBajaProdDesc"));
-		}
+    }
     //Se comprueba que todos los servicios de la peticion tienen la propiedad ‘Solicitar baja por internet’ si el que lo solicita es un colegiado
-    //REVISAR : Cambiar productos por servicios y cambiar mensaje
-    else if(this.esColegiado && this.ficha.productos == null && (this.ficha.productos.find(el => el.solicitarBaja == "0") != undefined)){
+    //REVISAR : Cambiar mensaje
+    else if(this.esColegiado && this.ficha.servicios == null && (this.ficha.servicios.find(el => el.solicitarBaja == "0") != undefined)){
       this.showMessage("info", this.translateService.instant("facturacion.productos.solicitudesNoAlteradas"), this.translateService.instant("facturacion.productos.solicitudesNoAlteradasDesc") + this.ficha.nSolicitud);
-		}
+    }
     //Se comprueba si hay alguna factura asociada cuando el personal del colegio va a anular una petición
     //REVISAR: Revisar concepto de factura anulada y no anulada y su anulación.
     else if(!this.esColegiado && this.ficha.facturas.length > 0){
       this.showMessage("info", this.translateService.instant("facturacion.productos.solicitudesNoAlteradas"), this.translateService.instant("facturacion.productos.solicitudesNoAlteradasDesc") + this.ficha.nSolicitud);
-		}
+    }
     else{
       this.confirmAnular();
     }

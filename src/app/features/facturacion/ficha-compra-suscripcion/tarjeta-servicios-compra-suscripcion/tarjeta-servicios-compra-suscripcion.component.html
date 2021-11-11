@@ -95,12 +95,12 @@
 
                     <!-- REVISAR CONDICION DE "FACTURADA" -->
                     <span *ngIf="col.field == 'fechaAlta' && (ficha.facturas == null || ficha.facturas.length > 0 )&& ficha.fechaAceptada != null">{{rowData[col.field] | date : 'dd/MM/yyyy'}}</span>
-                    <app-fecha
+                    <app-fecha  [inputStyleClass]="styleObligatorio(rowData[col.field])"
                       *ngIf="col.field == 'fechaAlta' && !esColegiado  && (ficha.facturas == null || ficha.facturas.length == 0) && ficha.fechaAceptada != null" [(value)]="rowData[col.field]"
                       (valueChangeInput)="fillFechaAlta($event)" (valueChangeSelected)="fillFechaAlta($event)"></app-fecha>
                       
                       
-                    <app-fecha
+                    <app-fecha  [inputStyleClass]="styleObligatorio(rowData[col.field])"
                       *ngIf="col.field == 'fechaBaja' && rowData[col.field] != null" [minDate]="getFechaUltFact()" [(value)]="rowData[col.field]"
                       (valueChangeInput)="fillFechaBaja($event)" (valueChangeSelected)="fillFechaBaja($event)"></app-fecha>
                       
@@ -108,7 +108,7 @@
                     <span *ngIf="col.field == 'automatico' && rowData[col.field] != '1'" >{{'facturacion.servicios.manual' | translate}}</span>
 
                     <span *ngIf="col.field == 'precioServicioDesc' && (ficha.fechaAceptada != null || (ficha.fechaAceptada == null && rowData['automatico'] == '1'))">{{rowData[col.field]}}</span>
-                    <p-dropdown *ngIf="col.field == 'precioServicioDesc' && ficha.fechaAceptada == null && rowData['automatico'] != '1'" [filter]="true" styleClass="widthAll" [showClear]="true"
+                    <p-dropdown [ngClass]="styleObligatorio(rowData[col.field])" *ngIf="col.field == 'precioServicioDesc' && ficha.fechaAceptada == null && rowData['automatico'] != '1'" [filter]="true" styleClass="widthAll" [showClear]="true"
                     placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='rowData.idprecio'
                     [options]="comboPrecios" (onChange)="onChangePrecio(rowData)" (input)="checkTotal()"
                     [ngClass]="{'camposObligatorios': aGuardar && rowData.idperiodicidad == null}">
@@ -181,7 +181,7 @@
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "facturacion.productos.formapago" | translate }}
               </label>
-              <p-dropdown class="select-form" [options]="comboComun" [disabled]="ficha.fechaAceptada != null || ficha.fechaDenegada != null || selectedPago == '-1'"
+              <p-dropdown [ngClass]="styleObligatorio(selectedPago)" class="select-form" [options]="comboComun" [disabled]="ficha.fechaAceptada != null || ficha.fechaDenegada != null || selectedPago == '-1' || comboComun.length == 0"
                 placeholder="{{'general.boton.seleccionar' | translate}}" (onChange)="onChangePago()" [(ngModel)]="selectedPago" showClear="true">
               </p-dropdown>
             </div>
@@ -212,7 +212,7 @@
               <label>{{ "facturacion.seriesFactura.cuentaBancaria" | translate }}
               </label>
               <p-dropdown class="select-form" [options]="cuentasBanc"
-              [disabled]="ficha.fechaAceptada != null || ficha.fechaDenegada != null"
+              [disabled]="ficha.fechaAceptada != null || ficha.fechaDenegada != null || ficha.idPersona == null"
                 placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="datosTarjeta.cuentaBancSelecc"
                 showClear="true"></p-dropdown>
              </div>

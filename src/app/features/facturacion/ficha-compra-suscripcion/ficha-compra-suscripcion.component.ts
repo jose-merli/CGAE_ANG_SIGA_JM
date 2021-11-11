@@ -5,6 +5,7 @@ import { SigaServices } from '../../../_services/siga.service';
 import { Message } from 'primeng/components/common/api';
 import { TranslateService } from '../../../commons/translate';
 import { ListaProductosCompraItem } from '../../../models/ListaProductosCompraItem';
+import { CommonsService } from '../../../_services/commons.service';
 
 @Component({
   selector: 'app-ficha-compra-suscripcion',
@@ -18,6 +19,7 @@ export class FichaCompraSuscripcionComponent implements OnInit {
   progressSpinner: boolean = false;
 
   ficha: FichaCompraSuscripcionItem = new FichaCompraSuscripcionItem;
+  resaltadoDatos: boolean = false;
 
   comboComun: any[] = [];
   desFormaPagoSelecc: string;
@@ -29,7 +31,8 @@ export class FichaCompraSuscripcionComponent implements OnInit {
 
 
   constructor(private location: Location, 
-    private sigaServices: SigaServices, private translateService: TranslateService,) { }
+    private sigaServices: SigaServices, private translateService: TranslateService,
+    private commonsService : CommonsService) { }
 
   ngOnInit() {
 
@@ -91,6 +94,20 @@ export class FichaCompraSuscripcionComponent implements OnInit {
         this.progressSpinner = false;
       }
     );
+  }
+
+  scrollToOblig(element : string){
+    this.resaltadoDatos = true;
+    this.commonsService.scrollTablaFoco(element);
+    if(element == "cliente"){
+      this.tarjCliente.showTarjeta = true;
+    }
+    if(element == "productos"){
+      this.tarjProductos.showTarjeta = true;
+    }
+    if(element == "servicios"){
+      this.tarjServicios.showTarjeta = true;
+    }
   }
 
   backTo(){
