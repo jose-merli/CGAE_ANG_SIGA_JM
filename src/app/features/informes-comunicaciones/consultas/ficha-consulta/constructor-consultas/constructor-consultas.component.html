@@ -45,8 +45,8 @@
                         </ejs-dropdownlist>
                       </div>
                        <div class="e-rule-operator e-operator">
-                        <ejs-radiobutton id="{{data.ruleID}}_operator1" label='Es igual***' name='{{data.ruleID}}_operator' value='equal' (change)="operatorChange($event)" [checked]="(data.rule.operator == 'equal')"></ejs-radiobutton>
-                        <ejs-radiobutton id="{{data.ruleID}}_operator2" label='No es igual***' name='{{data.ruleID}}_operator' value='notequal' (change)="operatorChange($event)" [checked]="(data.rule.operator == 'notequal')"></ejs-radiobutton>
+                        <ejs-radiobutton id="{{data.ruleID}}_operator1" label="Es igual" name='{{data.ruleID}}_operator' value='equal' (change)="operatorChange($event)" [checked]="(data.rule.operator == 'equal')"></ejs-radiobutton>
+                        <ejs-radiobutton id="{{data.ruleID}}_operator2" label="Distinto" name='{{data.ruleID}}_operator' value='notequal' (change)="operatorChange($event)" [checked]="(data.rule.operator == 'notequal')"></ejs-radiobutton>
                       </div> 
                       <div class="e-rule-value e-value e-custom-value">
                         <ejs-dropdownlist (change)="valueChange($event)" [fields]="fields" [dataSource]="listaCombosObject.get(campo.nombreenconsulta).combooItems" [value]="data.rule.value">
@@ -67,14 +67,10 @@
       </div>
       <div *ngIf="openFicha" class="card-footer ">
         <div class="text-right main-button ">
-          <button [disabled]="!editar || !activaRestablecer()" (click)="restablecer()" pButton type="button"
-            icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
           <button (click)="checkDatos()" pButton type="button" icon="far fa-save" iconPos="left"
             label="{{ 'general.boton.guardar' | translate}}"></button>
             <button (click)="setRules()" pButton type="button" icon="far fa-save" iconPos="left"
             label="prueba***"></button>
-            <button (click)="pruebaRefresh()" pButton type="button" icon="far fa-save" iconPos="left"
-            label="pruebaRefresh***"></button>
         </div>
       </div>
     </div>
