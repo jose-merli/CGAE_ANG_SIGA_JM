@@ -90,9 +90,9 @@
         <div class="row">
           <div class="form-group col-lg-12 col-md-12">
             <p-radioButton [(ngModel)]="constructorConsultaExperta" name="usoConstructorConsultaExperta" value="constructor"
-                    label="Utilizar Constructor***" (onClick)="constructorConsultaExperta = 'constructor'; emitUsoConstructorConsultaExperta()"></p-radioButton>
+                    label="{{ 'informesycomunicaciones.fichaconsultas.datosgenerales.constructorconsultasbtn' | translate}}" (onClick)="constructorConsultaExperta = 'constructor'; emitUsoConstructorConsultaExperta()"></p-radioButton>
             <p-radioButton [(ngModel)]="constructorConsultaExperta" class="mr-2 mt-auto"
-                    name="usoConstructorConsultaExperta" value="consultaExperta" label="Utilizar Consulta experta***" (onClick)="constructorConsultaExperta = 'consultaExperta'; emitUsoConstructorConsultaExperta()"></p-radioButton>
+                    name="usoConstructorConsultaExperta" value="consultaExperta" label="{{ 'informesycomunicaciones.fichaconsultas.datosgenerales.consultaexpertabtn' | translate}}" (onClick)="constructorConsultaExperta = 'consultaExperta'; emitUsoConstructorConsultaExperta()"></p-radioButton>
           </div>
         </div>
       </div>

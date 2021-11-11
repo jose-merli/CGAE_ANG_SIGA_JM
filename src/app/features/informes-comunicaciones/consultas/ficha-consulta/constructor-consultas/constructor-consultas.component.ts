@@ -14,35 +14,7 @@ import { ComboObject } from '../../../../../models/ComboObject';
 //Idioma
 setCulture('sigaIdiomas');
 
-//IDIOMAS
-L10n.load({
-  'sigaIdiomas': {
-      'querybuilder': {
-          'AddGroup': 'Añadir Grupo',
-          'AddCondition': 'Añadir condicion',
-          'DeleteRule': 'Borrar condicion',
-          'DeleteGroup': 'Borrar grupo',
-          'Edit': 'Editar',
-          'SelectField': 'Seleccionar campo',
-          'SelectOperator': 'Seleccionar operador',
-          'StartsWith': 'Empieza con',
-          'EndsWith': 'Termina con',
-          'Contains': 'Contiene',
-          'Equal': 'Igual a',
-          'NotEqual': 'Distinto',
-          'LessThan': 'Menor que',
-          'LessThanOrEqual': 'Menor o igual',
-          'GreaterThan': 'Mayor que',
-          'GreaterThanOrEqual': 'Mayor o igual',
-          'Between': 'Entre',
-          'NotBetween': 'No esta entre',
-          'In': 'incluido',
-          'NotIn': 'No incluido',
-          'Remove': 'Eliminar',
-          'ValidationMessage': 'Dieses Feld wird benötigt',
-      }
-  }
-});
+
 
 @Component({
   selector: 'app-constructor-consultas',
@@ -51,7 +23,7 @@ L10n.load({
   encapsulation: ViewEncapsulation.None
 })
 export class ConstructorConsultasComponent implements OnInit {
-  @ViewChild('constructorConsultas') constructorConsultas: QueryBuilderComponent;
+  @ViewChild('constructorConsultas') public constructorConsultas: QueryBuilderComponent;
 
   msgs: Message[];
   openFicha: boolean = false;
@@ -85,7 +57,24 @@ export class ConstructorConsultasComponent implements OnInit {
   subscriptionObtenerConfigColumnas: Subscription;
   subscriptionObtenerCombo: Subscription;
 
-  constructor(private sigaServices: SigaServices,private translateService: TranslateService) { }
+  constructor(private sigaServices: SigaServices,private translateService: TranslateService) { 
+    //IDIOMAS
+    L10n.load({
+      'sigaIdiomas': {
+          'querybuilder': {
+              'AddGroup': 'Nuevo Grupo***',
+              'AddCondition': this.translateService.instant("informesycomunicaciones.consultas.constructor.nuevacondicionboton"),
+              'StartsWith': this.translateService.instant("informesycomunicaciones.consultas.constructor.empiezacon"),
+              'EndsWith': this.translateService.instant("informesycomunicaciones.consultas.constructor.terminacon"),
+              'Equal': this.translateService.instant("informesycomunicaciones.consultas.constructor.iguala"),
+              'NotEqual': this.translateService.instant("informesycomunicaciones.consultas.constructor.distinto"),
+              'LessThan': this.translateService.instant("informesycomunicaciones.consultas.constructor.menorque"),
+              'LessThanOrEqual': this.translateService.instant("informesycomunicaciones.consultas.constructor.menorqueoigual"),
+              'GreaterThan': this.translateService.instant("informesycomunicaciones.consultas.constructor.mayorque"),
+              'GreaterThanOrEqual': this.translateService.instant("informesycomunicaciones.consultas.constructor.mayorqueoigual")
+          }
+      }
+    });}
 
   ngOnInit() {
     this.obtenerConfigColumnas();
@@ -210,40 +199,28 @@ export class ConstructorConsultasComponent implements OnInit {
 
   }
 
-  pruebaRefresh(){
-    this.constructorConsultas.refresh();
-  }
-
   setRules(): void{
     if(this.constructorConsultas != undefined){
-      this.constructorConsultas.setRules({
-        'condition':'and',
-        'rules': [{
-            "label": "TIPO COLEGIADO",
-            "field": "3000",
+     /*  this.constructorConsultas.setRules({
+          'condition':'and',
+          'rules': [{
+              "label": "TIPO COLEGIADO",
+              "field": "3000",
+              "operator": "equal",
+              "type": "string",
+              "value": "20"
+          },
+          {
+            "label": "RESIDENTE",
+            "field": "226",
             "operator": "equal",
             "type": "string",
-            "value": "20"
-        },
-        {
-          "label": "RESIDENTE",
-          "field": "226",
-          "operator": "equal",
-          "type": "string",
-          "value": "0"
-      }
-    ]});
-    
-    /*   console.log(this.consulta);
-      this.constructorConsultas.setRulesFromSql("3000 = '20'");
-      console.log(this.constructorConsultas.getRules()); */
-
-      //PRUEBAS
-     /*  this.constructorConsultas.setRulesFromSql("3000 = '20'");
-      this.constructorConsultas.refresh();
-      console.log(this.constructorConsultas.getRules()); */
-
-    }  
+            "value": "0"
+        }
+      ]}); */
+      this.constructorConsultas.setRulesFromSql(this.consulta);
+      console.log(this.constructorConsultas.getRulesFromSql(this.consulta));
+    }   
   }
 
 
