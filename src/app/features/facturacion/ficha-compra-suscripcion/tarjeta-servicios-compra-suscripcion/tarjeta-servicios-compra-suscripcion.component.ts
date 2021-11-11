@@ -179,14 +179,14 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
           if (this.ficha.idFormaPagoSeleccionada != null){
             if(this.ficha.servicios[0].noFacturable == "1"){
               let noFacturableItem = new ComboItem();
-              noFacturableItem.label =this.translateService.instant("facturacion.servicios.noFacturable");
+              noFacturableItem.label =this.translateService.instant("facturacion.productos.noFacturable");
               noFacturableItem.value = "-1";
               this.comboComun.push(noFacturableItem);
               this.selectedPago = "-1";
             }
             else{
               this.selectedPago = this.ficha.idFormaPagoSeleccionada.toString();
-              if(this.comboPagos != undefined && this.comboPagos.length > 0 && this.comboServicios.length > 0){
+              if(this.comboPagos != undefined && this.comboPagos.length > 0 && this.comboServicios.length > 0 && this.ficha.servicios.length >0){
                 this.checkFormasPagoComunes(this.serviciosTarjeta);
               }
             }
@@ -275,15 +275,15 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
           this.comboServicios.forEach(servicio => {
             if (servicio.formapago == null || servicio.formapago == "") {
               if (servicio.noFacturable == "1") {
-                servicio.formapago = this.translateService.instant("facturacion.servicios.noFacturable");
+                servicio.formapago = this.translateService.instant("facturacion.productos.noFacturable");
               }
               else {
-                servicio.formapago = this.translateService.instant("facturacion.servicios.pagoNoDisponible");
+                servicio.formapago = this.translateService.instant("facturacion.productos.pagoNoDisponible");
               }
             }
             else {
               if (servicio.noFacturable == "1") {
-                servicio.formapago += ", "+this.translateService.instant("facturacion.servicios.noFacturable");
+                servicio.formapago += ", "+this.translateService.instant("facturacion.productos.noFacturable");
               }
             }
           });

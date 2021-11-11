@@ -279,11 +279,11 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
           this.showMessage("error", this.translateService.instant("menu.productosYServicios.categorias.servicios"), this.translateService.instant('general.message.camposObligatorios'));
         }
       } else {
-        this.aprobarCompra();
+        this.aprobarSuscripcion();
       }
     }
     else {
-      this.aprobarCompra();
+      this.aprobarSuscripcion();
     }
   }
 
@@ -300,8 +300,12 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
   // REVISAR: Añadir comprobación de facturación
   checkAnular(){
     let msg = null;
-    if(this.ficha.productos!= null) msg = this.commonsService.checkPermisos(this.permisoAnularCompra, undefined);
-    if(this.ficha.servicios!= null) msg = this.commonsService.checkPermisos(this.permisoAnularSuscripcion, undefined);
+    if(this.ficha.productos!= null){
+      msg = this.commonsService.checkPermisos(this.permisoAnularCompra, undefined);
+    }
+    if(this.ficha.servicios!= null){
+      msg = this.commonsService.checkPermisos(this.permisoAnularSuscripcion, undefined);
+    }
 
     if (msg != null) {
       this.msgs = msg;
@@ -415,6 +419,33 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
       peticion.cuentaBancSelecc = this.tarjProductos.datosTarjeta.cuentaBancSelecc;
     }
 		this.sigaServices.post('PyS_aprobarCompra', peticion).subscribe(
+			(n) => {
+				if( n.status != 200) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        } else {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+
+          //Se actualiza la información de la ficha y se obtiene su historico actualizado
+          this.actualizaFicha.emit();
+        }
+				this.progressSpinner = false;
+			},
+			(err) => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+				this.progressSpinner = false;
+			}
+		);
+  }
+
+  aprobarSuscripcion(){
+    this.progressSpinner = true; 
+    let peticion = JSON.parse(JSON.stringify(this.ficha));
+    if(this.ficha.fechaPendiente == null){
+      peticion.servicios = this.tarjServicios.serviciosTarjeta;
+      peticion.idFormaPagoSeleccionada = this.tarjServicios.selectedPago;
+      peticion.cuentaBancSelecc = this.tarjServicios.datosTarjeta.cuentaBancSelecc;
+    }
+		this.sigaServices.post('PyS_aprobarSuscripcion', peticion).subscribe(
 			(n) => {
 				if( n.status != 200) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
