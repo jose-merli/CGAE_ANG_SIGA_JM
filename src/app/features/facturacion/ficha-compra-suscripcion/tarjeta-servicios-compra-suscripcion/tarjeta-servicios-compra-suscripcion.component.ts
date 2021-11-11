@@ -743,11 +743,16 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
     if(this.ficha.facturas != null && this.ficha.facturas.length > 0){
       let facturaMax = this.ficha.facturas.reduce((prev, current) => (prev.fechaFactura > current.fechaFactura) ? prev : current);
 
-      return new Date(facturaMax.fechaFactura);
+      if(this.ficha.fechaAceptada < new Date(facturaMax.fechaFactura)){
+        return new Date(facturaMax.fechaFactura);
+      }
+      else{
+        return this.ficha.fechaAceptada;
+      }
       // return Math.max.apply(Math, this.ficha.facturas.map(function(o) { return o.fechaFactura; }));
     }
     else{
-      return undefined;
+      return this.ficha.fechaAceptada;
     }
   }
 
