@@ -994,7 +994,7 @@ const appRoutes: Routes = [
 		canActivate: [ AuthGuard ]
 	},
 	{
-		path: 'remesas',
+		path: 'remesas/:tipoRemesa',
 		component: RemesasComponent,
 		canActivate: [ AuthGuard ]
 	},

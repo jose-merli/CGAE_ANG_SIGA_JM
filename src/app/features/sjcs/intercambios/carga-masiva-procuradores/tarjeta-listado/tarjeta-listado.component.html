@@ -4,7 +4,7 @@
   <div class="card-body p-0">
 
     <p-table [value]="datos" [columns]="cols" [first]="page" selectionMode="multiple" [(selection)]="selectedDatos"
-      [responsive]="true" #tabla class="tabla-listado" [paginator]="true" [rows]="selectedItem"
+      [responsive]="true" #tabla class="tabla-listado" id="tablaCarga" [paginator]="true" [rows]="selectedItem"
       (onRowSelect)="selectedRow(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
       [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">
       <ng-template pTemplate="colgroup" let-columns>

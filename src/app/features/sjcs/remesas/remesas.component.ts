@@ -3,7 +3,7 @@ import { PersistenceService } from '../../../_services/persistence.service';
 import { TranslateService } from '../../../commons/translate';
 import { CommonsService } from '../../../_services/commons.service';
 import { SigaServices } from '../../../_services/siga.service';
-import { Router } from '../../../../../node_modules/@angular/router';
+import { Router, ActivatedRoute } from '../../../../../node_modules/@angular/router';
 import { FiltroRemesasComponent } from './filtro-remesas/filtro-remesas.component';
 import { TablaRemesasComponent } from './tabla-remesas/tabla-remesas.component';
 import { procesos_comision } from '../../../permisos/procesos_comision';
@@ -37,10 +37,19 @@ export class RemesasComponent implements OnInit {
   permisoEscritura;
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
-    private commonsService: CommonsService, private translateService: TranslateService, private router: Router, private datepipe: DatePipe) { }
+    private commonsService: CommonsService, private translateService: TranslateService, private router: Router, private datepipe: DatePipe,
+    private activatedRoute: ActivatedRoute) { }
 
 
   ngOnInit() {
+
+    if(this.activatedRoute.snapshot.paramMap.get('tipoRemesa') == '0'){
+      this.remesaInformacionEconomica = false;
+    }
+    
+    if(this.activatedRoute.snapshot.paramMap.get('tipoRemesa') == '1'){
+      this.remesaInformacionEconomica = true;
+    }
 
     this.commonsService.checkAcceso(procesos_comision.remesasEnvio)
       .then(respuesta => {

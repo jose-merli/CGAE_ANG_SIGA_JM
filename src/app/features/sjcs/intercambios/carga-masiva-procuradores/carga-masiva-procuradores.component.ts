@@ -88,6 +88,13 @@ export class CargaMasivaProcuradoresComponent implements OnInit {
         this.progressSpinner = false;
         this.resultadoBusqueda.error = err;
         console.log(err);
+      },
+      () =>{
+        this.progressSpinner = false;
+        setTimeout(() => {
+          this.commonsService.scrollTablaFoco('tablaCarga');
+          this.commonsService.scrollTop();
+        }, 5);
       });
   }
 
