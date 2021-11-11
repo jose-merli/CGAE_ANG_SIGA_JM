@@ -51,14 +51,18 @@ export class CuotasSuscripcionesComponent implements OnInit {
 
         
 
-        if (JSON.parse(listaSuscripcionesDTO.body).error.code == 500) {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        } else {
+        if (JSON.parse(listaSuscripcionesDTO.body).error.code == 200){
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 
           this.listaSuscripciones = JSON.parse(listaSuscripcionesDTO.body).listaSuscripcionesItems;
           this.muestraTablaSuscripciones= true;
           this.listaBusqueda.suscripcionesTable.reset();
+          setTimeout(() => {
+            this.commonsService.scrollTablaFoco('tablaSuscripciones');
+          }, 5);
+        }
+        else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
 
         this.progressSpinner = false;

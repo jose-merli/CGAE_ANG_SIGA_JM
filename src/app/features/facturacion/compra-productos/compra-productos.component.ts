@@ -48,15 +48,18 @@ export class CompraProductosComponent implements OnInit {
       listaCompraProductosDTO => {
 
 
-        if (JSON.parse(listaCompraProductosDTO.body).error.code == 500) {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        } else {
+        if (JSON.parse(listaCompraProductosDTO.body).error.code == 200) {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 
           this.listaCompraProductos = JSON.parse(listaCompraProductosDTO.body).listaCompraProductosItems;
 
           this.muestraTablaCompraProductos= true;
           this.listaBusqueda.productsTable.reset();
+          setTimeout(() => {
+            this.commonsService.scrollTablaFoco('tablaCompraProductos');
+          }, 5);
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
 
         this.progressSpinner = false;
