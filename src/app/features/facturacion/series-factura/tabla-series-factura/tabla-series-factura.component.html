@@ -7,7 +7,6 @@
     <p-table [autoLayout]="true" [value]="datosMostrados" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table
       class="tabla-listado overflow" [paginator]="true" [rows]="selectedItem" [ngClass]="{ 'customCursor' : selectMultiple }"
       selectionMode="multiple" paginatorPosition="both" (onRowSelect)="selectFila($event)" (onRowUnselect)="unselectFila($event)" id="tablaFoco">
-        <!-- (onRowUnselect)="actualizaSeleccionados(selectedDatos)" (onRowSelect)="clickFila($event)" -->
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
           <col *ngFor="let col of cols" [style.width]="col.width">

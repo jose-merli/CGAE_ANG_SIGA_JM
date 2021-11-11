@@ -43,9 +43,12 @@ export class FiltrosBusquedaAdeudosComponent implements OnInit {
     private _elementRef: ElementRef,
     private commonServices: CommonsService) { }
 
-  ngOnInit() {
-    
-    this.cargaCombos();
+  async ngOnInit() {
+    this.progressSpinner=true;
+
+    await this.cargaCombos();
+
+   this.progressSpinner=false;
 
   }
 
@@ -57,17 +60,14 @@ export class FiltrosBusquedaAdeudosComponent implements OnInit {
   }
 
   getComboSeriesFacturacion(){
-    this.progressSpinner=true;
-
     this.sigaServices.get("facturacionPyS_comboSeriesFacturacion").subscribe(
       n => {
         this.comboSeriesFacturacion = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboSufijo);
-        this.progressSpinner=false;
       },
       err => {
         console.log(err);
-        this.progressSpinner=false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }
     );
   }
@@ -78,33 +78,26 @@ export class FiltrosBusquedaAdeudosComponent implements OnInit {
   }
 
   getComboSufijo() {
-    this.progressSpinner=true;
-
     this.sigaServices.get("facturacionPyS_comboSufijo").subscribe(
       n => {
         this.comboSufijo = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboSufijo);
-        this.progressSpinner=false;
       },
       err => {
         console.log(err);
-        this.progressSpinner=false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }
     );
   }
 
   getComboCuentaBancaria() {
-    this.progressSpinner=true;
-
     this.sigaServices.get("facturacionPyS_comboCuentaBancaria").subscribe(
       n => {
-        this.progressSpinner=false;
-
         this.comboCuentasBancarias = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboCuentasBancarias);
       },
       err => {
-        this.progressSpinner=false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         console.log(err);
       }
     );
