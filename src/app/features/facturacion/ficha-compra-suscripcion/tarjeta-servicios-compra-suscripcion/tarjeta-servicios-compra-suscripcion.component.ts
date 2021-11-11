@@ -256,44 +256,45 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         } else {
           // this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        }
+        
 
-        //Descomentar esto y comentar el codigo de abajo asignando el valor de comboServicios
-        //Si se quiere mostrar unicamente servicios no derogados
-        // JSON.parse(listaServiciosDTO.body).listaServiciosItems.forEach(servicio => {
-        //   if (servicio.fechabaja == null) {
-        //     this.comboServicios.push(servicio);
-        //   }
-        // });
+          //Descomentar esto y comentar el codigo de abajo asignando el valor de comboServicios
+          //Si se quiere mostrar unicamente servicios no derogados
+          // JSON.parse(listaServiciosDTO.body).listaServiciosItems.forEach(servicio => {
+          //   if (servicio.fechabaja == null) {
+          //     this.comboServicios.push(servicio);
+          //   }
+          // });
 
-        this.comboServicios = JSON.parse(listaServiciosDTO.body).listaServiciosItems
+          this.comboServicios = JSON.parse(listaServiciosDTO.body).listaServiciosItems
 
-        //Apaño temporal ya que si no se hace este reset, la tabla muestra unicamente la primera paginad e servicios
-        this.tablaServicios.reset();
+          //Apaño temporal ya que si no se hace este reset, la tabla muestra unicamente la primera paginad e servicios
+          this.tablaServicios.reset();
 
-        //Se revisan las formas de pago para añadir los "no factuables" y los "No disponible"
-        this.comboServicios.forEach(servicio => {
-          if (servicio.formapago == null || servicio.formapago == "") {
-            if (servicio.noFacturable == "1") {
-              servicio.formapago = this.translateService.instant("facturacion.servicios.noFacturable");
+          //Se revisan las formas de pago para añadir los "no factuables" y los "No disponible"
+          this.comboServicios.forEach(servicio => {
+            if (servicio.formapago == null || servicio.formapago == "") {
+              if (servicio.noFacturable == "1") {
+                servicio.formapago = this.translateService.instant("facturacion.servicios.noFacturable");
+              }
+              else {
+                servicio.formapago = this.translateService.instant("facturacion.servicios.pagoNoDisponible");
+              }
             }
             else {
-              servicio.formapago = this.translateService.instant("facturacion.servicios.pagoNoDisponible");
+              if (servicio.noFacturable == "1") {
+                servicio.formapago += ", "+this.translateService.instant("facturacion.servicios.noFacturable");
+              }
             }
-          }
-          else {
-            if (servicio.noFacturable == "1") {
-              servicio.formapago += ", "+this.translateService.instant("facturacion.servicios.noFacturable");
-            }
-          }
-        });
+          });
 
-        if(this.ficha.fechaPendiente == null && this.ficha.servicios.length > 0){
-          this.initServicios();
-        }
+          if(this.ficha.fechaPendiente == null && this.ficha.servicios.length > 0){
+            this.initServicios();
+          }
 
-        if(this.comboPagos != undefined && this.comboPagos.length > 0 && this.serviciosTarjeta.length > 0){
-          this.checkFormasPagoComunes(this.serviciosTarjeta);
+          if(this.comboPagos != undefined && this.comboPagos.length > 0 && this.serviciosTarjeta.length > 0){
+            this.checkFormasPagoComunes(this.serviciosTarjeta);
+          }
         }
 
         this.progressSpinner = false;
