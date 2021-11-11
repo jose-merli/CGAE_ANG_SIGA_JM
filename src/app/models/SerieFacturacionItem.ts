@@ -46,7 +46,7 @@ export class SerieFacturacionItem {
 	idContadorFacturasRectificativas: string;
 
 	idSerieFacturacionPrevia: string;
-	serieGenerica: boolean;
+	serieGenerica: boolean = false;
     
 	constructor() { };
 

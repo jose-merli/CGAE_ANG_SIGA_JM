@@ -10,7 +10,7 @@
     <app-tarjeta-resumen-fija class="pb-50" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="datos" [icono]="iconoTarjetaResumen" (modoEdicionSend)="modoEdicionSend($event)" [enlaces]="enlacesTarjetaResumen" (isOpen)="isOpenReceive($event)" [manuallyOpened]="manuallyOpened">
     </app-tarjeta-resumen-fija>
 
-    <app-datos-generales-series-factura [openTarjetaDatosGenerales]="openTarjetaDatosGenerales" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (guardadoSend)="guardadoSend()"></app-datos-generales-series-factura>
+    <app-datos-generales-series-factura [modoEdicion]="modoEdicion" [openTarjetaDatosGenerales]="openTarjetaDatosGenerales" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (guardadoSend)="guardadoSend()"></app-datos-generales-series-factura>
     <app-observaciones-series-factura *ngIf="modoEdicion" [openTarjetaObservaciones]="openTarjetaObservaciones" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (guardadoSend)="guardadoSend()"></app-observaciones-series-factura>
     <app-destinatarios-etiquetas-series-factura *ngIf="modoEdicion" [openTarjetaDestinatariosEtiquetas]="openTarjetaDestinatariosEtiquetas" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (guardadoSend)="guardadoSend()"></app-destinatarios-etiquetas-series-factura>
     <app-destinatarios-individuales-series-factura *ngIf="modoEdicion" [openTarjetaDestinatariosIndividuales]="openTarjetaDestinatariosIndividuales" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (guardadoSend)="guardadoSend()"></app-destinatarios-individuales-series-factura>

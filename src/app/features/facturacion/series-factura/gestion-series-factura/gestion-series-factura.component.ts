@@ -37,7 +37,7 @@ export class GestionSeriesFacturaComponent implements OnInit {
   openTarjetaExportacionContabilidad: boolean = false;
 
 
-  datos;
+  datos = [];
   enlacesTarjetaResumen;
   modoEdicion: boolean = true;
 
@@ -63,7 +63,10 @@ export class GestionSeriesFacturaComponent implements OnInit {
       this.modoEdicion = false;
     }
 
-    this.updateTarjetaResumen();
+    if (this.modoEdicion) {
+      this.updateTarjetaResumen();
+    }
+    
     this.updateEnlacesTarjetaResumen();
 
     this.progressSpinner = false;
@@ -176,6 +179,7 @@ export class GestionSeriesFacturaComponent implements OnInit {
   }
 
   guardadoSend(): void {
+    this.modoEdicion = true;
     this.ngOnInit();
     //this.router.navigate(["/datosSeriesFactura"]);
   }

@@ -19,6 +19,7 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit {
   progressSpinner: boolean = false;
 
   @Input() openTarjetaDatosGenerales;
+  @Input() modoEdicion: boolean;
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
   @Output() guardadoSend = new EventEmitter<any>();
@@ -46,7 +47,6 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit {
 
   estado: string = "";
 
-  resaltadoDatosGenerales: boolean = false;
   resaltadoDatos: boolean = false;
   
   constructor(
@@ -58,7 +58,6 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.resaltadoDatos = true;
     this.progressSpinner = false;
 
     if (this.persistenceService.getDatos()) {
@@ -288,6 +287,7 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit {
   restablecer(): void {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
     this.estado = this.esActivo() ? "Alta" : "Baja";
+    this.resaltadoDatos = false;
   }
 
   // Guadar
@@ -314,16 +314,21 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit {
     this.sigaServices.post("facturacionPyS_guardarSerieFacturacion", this.body).subscribe(
       n => {
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-        this.persistenceService.setDatos(this.bodyInicial);
-        this.guardadoSend.emit();
 
+        if (this.modoEdicion) {
+          this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+          this.persistenceService.setDatos(this.bodyInicial);
+          this.guardadoSend.emit();
+        } else {
+          this.recuperarDatosSerieFacuturacion();
+        }
+        
         this.progressSpinner = false;
       },
       err => {
         let error = JSON.parse(err.error).error;
-        if (error != undefined && error.code == 400 && error.description != undefined) {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.description));
+        if (error != undefined && error.code == 500 && error.message != undefined) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.message));
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         }
@@ -332,6 +337,28 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit {
       }
     );
   }
+
+  recuperarDatosSerieFacuturacion(): void {
+    let filtros = new SerieFacturacionItem();
+    filtros.abreviatura = this.body.abreviatura;
+    filtros.descripcion = this.body.descripcion;
+    
+    this.sigaServices.post("facturacionPyS_getSeriesFacturacion", filtros).subscribe(
+      n => {
+        let datos: SerieFacturacionItem[] = JSON.parse(n.body).serieFacturacionItems;
+        this.body = datos.find(d => d.idSerieFacturacion == this.body.idSerieFacturacion);
+        this.persistenceService.setDatos(this.body);
+        
+        
+        this.progressSpinner = false;
+      },
+      err => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        this.progressSpinner = false;
+      }
+    );
+  }
+  
 
   // Estilo obligatorio
   styleObligatorio(evento: string) {
