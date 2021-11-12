@@ -63,8 +63,12 @@ export class TarjetaClienteCompraSuscripcionComponent implements OnInit {
 
   checkHideSearch(){
     if(this.ficha.idEstadoPeticion==null || this.ficha.idEstadoPeticion==undefined){
-      if(this.localStorageService.isLetrado)this.showSearch = false;
-      else this.showSearch = true;
+      if(this.localStorageService.isLetrado){
+        this.showSearch = false;
+      }
+      else{
+        this.showSearch = true;
+      }
     }
     //El cliente solo se puede cambiar cuando se esta creando la ficha.
     else this.showSearch = false;

@@ -46,7 +46,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
 
   progressSpinner : boolean = false;
   showTarjeta: boolean = false;
-  esColegiado: boolean = this.localStorageService.isLetrado;
+  esColegiado: boolean = true;
 
   constructor(
     private sigaServices: SigaServices, private translateService: TranslateService, 
@@ -57,6 +57,13 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
   ngOnInit() {
     this.processHist();
     this.checkPermisos();
+    if(this.localStorageService.isLetrado){
+      this.esColegiado = true;
+    }
+    else{
+      this.esColegiado = false;
+    }
+
   }
 
   ngOnChanges(changes: SimpleChanges){

@@ -28,7 +28,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
   msgs = []; //Para mostrar los mensajes p-growl y dialogos de confirmacion
   progressSpinner: boolean = false; //Para mostrar/no mostrar el spinner de carga
   showTarjeta: boolean = false;
-  esColegiado  = this.localStorageService.isLetrado;
+  esColegiado: boolean = true;
 
   permisoEditarImporte: boolean = false;
   permisoActualizarServicioSuscripcion: boolean = false;
@@ -127,6 +127,13 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
     if(this.ficha.idPersona != null){
       this.cargarDatosBancarios(); //Se buscan las cuentas bancarias asociadas al cliente
     }
+    if(this.localStorageService.isLetrado){
+      this.esColegiado = true;
+    }
+    else{
+      this.esColegiado = false;
+    }
+    
 
     if (this.ficha.fechaPendiente != null) {
       //Se recomenda añadir un procesamiento asincrono

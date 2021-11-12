@@ -66,7 +66,6 @@ export class TarjetaFacturaCompraSuscripcionComponent implements OnInit {
     private commonsService: CommonsService,
     private translateService: TranslateService,
     private cdRef: ChangeDetectorRef,
-    private localStorageService: SigaStorageService,
     private router: Router) { }
 
   ngOnInit() {

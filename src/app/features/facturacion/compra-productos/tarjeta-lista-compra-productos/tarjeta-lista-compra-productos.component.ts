@@ -73,7 +73,7 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
   buscadores = [];
 
   progressSpinner: boolean = false;
-  esColegiado: boolean = this.localStorageService.isLetrado;
+  esColegiado: boolean = true;
 
   constructor(
     private sigaServices: SigaServices, private translateService: TranslateService,
@@ -81,6 +81,12 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
     private localStorageService: SigaStorageService,) { }
 
   ngOnInit() {
+    if(this.localStorageService.isLetrado){
+      this.esColegiado = true;
+    }
+    else{
+      this.esColegiado = false;
+    }
     this.checkPermisos();
     this.initComboEstadoCompra();
   }
