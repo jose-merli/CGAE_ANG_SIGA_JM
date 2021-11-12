@@ -35,7 +35,8 @@
             <div *ngIf="col.field !='fechaSolicitud' && col.field != 'fechaEfectiva'" >
               <span *ngIf="col.field == 'concepto'" class="enlace" (click)="openTab(rowData)">{{rowData[col.field]}}</span>
               <span *ngIf="col.field == 'idEstadoSolicitud'">{{estadosCompraObject[rowData[col.field]-1].label}}</span>
-              <span *ngIf="col.field != 'concepto' && col.field != 'idEstadoSolicitud'">{{rowData[col.field]}}</span>
+              <span *ngIf="col.field != 'concepto' && col.field != 'idEstadoSolicitud' && col.field != 'importe'">{{rowData[col.field]}}</span>
+              <span *ngIf="col.field == 'importe'">{{rowData[col.field]}} €</span>
             </div>
             <div *ngIf="col.field =='fechaSolicitud' || col.field == 'fechaEfectiva'" >
               <span>{{rowData[col.field] | date: 'dd/MM/yyyy'}}</span>

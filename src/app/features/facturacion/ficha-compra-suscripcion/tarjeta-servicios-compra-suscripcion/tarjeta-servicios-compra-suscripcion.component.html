@@ -94,7 +94,7 @@
                     <span *ngIf="col.field == 'descripcion'" class="enlace" (click)="openTab(rowData)">{{rowData[col.field]}}</span>
 
                     <!-- REVISAR CONDICION DE "FACTURADA" -->
-                    <span *ngIf="col.field == 'fechaAlta' && (ficha.facturas == null || ficha.facturas.length > 0 )&& ficha.fechaAceptada != null">{{rowData[col.field] | date : 'dd/MM/yyyy'}}</span>
+                    <span *ngIf="col.field == 'fechaAlta' && !(!esColegiado && (ficha.facturas == null || ficha.facturas.length == 0 )) && ficha.fechaAceptada != null">{{rowData[col.field] | date : 'dd/MM/yyyy'}}</span>
                     <app-fecha  [inputStyleClass]="styleObligatorio(rowData[col.field])"
                       *ngIf="col.field == 'fechaAlta' && !esColegiado  && (ficha.facturas == null || ficha.facturas.length == 0) && ficha.fechaAceptada != null" [(value)]="rowData[col.field]"
                       (valueChangeInput)="fillFechaAlta($event)" (valueChangeSelected)="fillFechaAlta($event)"></app-fecha>
@@ -222,7 +222,7 @@
             <!-- Se permite guardar aunque la peticion ya haya sido aceptada porque en algunos casos se puede modificar la fecha de alta y baja -->
             <button pButton (click)="checkSave()" type="button" icon="far fa-save" iconPos="left"
               label="{{ 'general.boton.guardar' | translate}}"
-              [disabled]="ficha.fechaPendiente == null"></button>
+              [disabled]="ficha.fechaPendiente == null || (!(!esColegiado  && (ficha.facturas == null || ficha.facturas.length == 0) && ficha.fechaAceptada != null) && ficha.fechaAnulada == null) "></button>
             <!-- Nuevo -->
             <button pButton (click)="openHideModal()" type="button" icon="fa fa-plus" iconPos="left"
               label="{{ 'general.boton.new' | translate}}"

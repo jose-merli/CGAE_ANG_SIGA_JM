@@ -341,7 +341,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
     }
     //Se comprueba si hay alguna factura asociada cuando el personal del colegio va a anular una petición
     //REVISAR: Revisar concepto de factura anulada y no anulada y su anulación.
-    else if(!this.esColegiado && this.ficha.facturas.length > 0){
+    else if(!this.esColegiado && this.ficha.facturas != null && this.ficha.facturas.length > 0){
       this.showMessage("info", this.translateService.instant("facturacion.productos.solicitudesNoAlteradas"), this.translateService.instant("facturacion.productos.solicitudesNoAlteradasDesc") + this.ficha.nSolicitud);
     }
     else{
@@ -357,7 +357,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
     );
 
     //REVISAR LOGICA FACTURAS
-    if(this.ficha.facturas.length >0) {
+    if(this.ficha.facturas != null && this.ficha.facturas.length >0) {
       mess = this.translateService.instant("facturacion.productos.factNoAnuladaPet");
     }
 
