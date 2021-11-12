@@ -245,6 +245,7 @@ import { ServiciosComponent } from "./features/facturacion/servicios/servicios.c
 import { FichaServiciosComponent } from "./features/facturacion/servicios/ficha-servicios/ficha-servicios.component";
 import { BusquedaAsuntosComponent } from "./commons/busqueda-asuntos/busqueda-asuntos.component";
 import { GestionSeriesFacturaComponent } from "./features/facturacion/series-factura/gestion-series-factura/gestion-series-factura.component";
+import { GestionAdeudosComponent } from "./features/facturacion/ficheros-adeudos/gestion-adeudos/gestion-adeudos.component";
 
 const appRoutes: Routes = [
 	{ path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
@@ -587,7 +588,11 @@ const appRoutes: Routes = [
 		component: ComunicacionSociedadesComponent,
 		canActivate: [AuthGuard]
 	},
-
+	{
+		path: 'gestionAdeudos',
+		component: GestionAdeudosComponent,
+		canActivate: [AuthGuard]
+	},
 	{
 		path: 'ficherosAdeudos',
 		component: FicherosAdeudosComponent,
