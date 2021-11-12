@@ -66,33 +66,55 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
     private router: Router) { }
 
   ngOnInit(): void {
-    if (this.activatedRoute.snapshot.queryParamMap.get('searchMode') != null &&
-      this.activatedRoute.snapshot.queryParamMap.get('searchMode') != undefined
-      && this.activatedRoute.snapshot.queryParamMap.get('searchMode') != ''
-      && this.activatedRoute.snapshot.queryParamMap.get('searchMode') == 'a') {
+    if ((this.activatedRoute.snapshot.queryParamMap.get('searchMode')
+      && this.activatedRoute.snapshot.queryParamMap.get('searchMode') == 'a')
+      || sessionStorage.getItem("modoBusqueda") == "a") {
 
       this.modoBusqueda = 'a';
 
+    } else if((this.activatedRoute.snapshot.queryParamMap.get('searchMode')
+    && this.activatedRoute.snapshot.queryParamMap.get('searchMode') == 'b')
+    || sessionStorage.getItem("modoBusqueda") == "b"){
+      this.modoBusqueda = 'b';
     }
     this.isLetrado = this.sigaStorageService.isLetrado;
+    if(this.modoBusqueda == 'b'){
+      this.commonServices.checkAcceso(procesos_guardia.asistencias_express)
+      .then(respuesta => {
 
-    this.commonServices.checkAcceso(procesos_guardia.asistencias_express)
-    .then(respuesta => {
+        this.permisoEscrituraAE = respuesta;
 
-      this.permisoEscrituraAE = respuesta;
+        this.persistenceService.setPermisos(this.permisoEscrituraAE);
 
-      this.persistenceService.setPermisos(this.permisoEscrituraAE);
+        if (this.permisoEscrituraAE == undefined && this.modoBusqueda == 'b') {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
 
-       if (this.permisoEscrituraAE == undefined) {
-         sessionStorage.setItem("codError", "403");
-         sessionStorage.setItem(
-           "descError",
-           this.translateService.instant("generico.error.permiso.denegado")
-         );
-         this.router.navigate(["/errorAcceso"]);
-       }
+      }).catch(error => console.error(error));
+    }else if(this.modoBusqueda == 'a'){
+      this.commonServices.checkAcceso(procesos_guardia.asistencias)
+      .then(respuesta => {
 
-    }).catch(error => console.error(error));
+        this.permisoEscrituraAE = respuesta;
+
+        this.persistenceService.setPermisos(this.permisoEscrituraAE);
+
+        if (this.permisoEscrituraAE == undefined && this.modoBusqueda == 'a') {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
+
+      }).catch(error => console.error(error));
+    }
 
     this.radios = [
                     { label: this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.busquedaasistencias"), value: 'a' },
