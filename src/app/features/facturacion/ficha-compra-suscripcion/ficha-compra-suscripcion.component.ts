@@ -6,6 +6,7 @@ import { Message } from 'primeng/components/common/api';
 import { TranslateService } from '../../../commons/translate';
 import { ListaProductosCompraItem } from '../../../models/ListaProductosCompraItem';
 import { CommonsService } from '../../../_services/commons.service';
+import { SigaStorageService } from '../../../siga-storage.service';
 
 @Component({
   selector: 'app-ficha-compra-suscripcion',
@@ -28,13 +29,21 @@ export class FichaCompraSuscripcionComponent implements OnInit {
   @ViewChild("cliente") tarjCliente;
   @ViewChild("productos") tarjProductos;
   @ViewChild("servicios") tarjServicios;
+  esColegiado: boolean;
 
 
   constructor(private location: Location, 
     private sigaServices: SigaServices, private translateService: TranslateService,
-    private commonsService : CommonsService) { }
+    private commonsService : CommonsService,
+    private localStorageService: SigaStorageService,) { }
 
   ngOnInit() {
+    if(this.localStorageService.isLetrado){
+      this.esColegiado = true;
+    }
+    else{
+      this.esColegiado = false;
+    }
 
     sessionStorage.removeItem("origin");
 
@@ -77,7 +86,7 @@ export class FichaCompraSuscripcionComponent implements OnInit {
 
   actualizarFicha(){
     this.progressSpinner = true;
-    
+
     this.sigaServices.post('PyS_getFichaCompraSuscripcion', this.ficha).subscribe(
       (n) => {
 

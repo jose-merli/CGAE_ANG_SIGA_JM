@@ -28,7 +28,6 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
   msgs = []; //Para mostrar los mensajes p-growl y dialogos de confirmacion
   progressSpinner: boolean = false; //Para mostrar/no mostrar el spinner de carga
   showTarjeta: boolean = false;
-  esColegiado: boolean = true;
 
   permisoEditarImporte: boolean = false;
   permisoActualizarServicioSuscripcion: boolean = false;
@@ -38,7 +37,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
     { field: "categoria", header: "facturacion.productos.categoria" },
     { field: "tipo", header: "facturacion.productos.tipo" },
     { field: "descripcion", header: "facturacion.servicios.servicio" },
-    { field: "formapago", header: "facturacion.productos.formapago" },
+    { field: "formapago", header: "facturacion.productos.formapago" }
   ];
 
   serviciosTarjeta: ListaServiciosSuscripcionItem[] = [];
@@ -81,6 +80,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
 
   @Input("ficha") ficha: FichaCompraSuscripcionItem;
   @Input("resaltadoDatos") resaltadoDatos: boolean;
+  @Input("esColegiado") esColegiado: boolean;
   @Output() actualizaFicha = new EventEmitter<Boolean>();
   @ViewChild("servicesTable") tablaServicios;
   @ViewChild("servicesSuscripcionTable") tablaServiciosSuscripcion;
@@ -126,12 +126,6 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
     this.getPermisoActualizarServicio();
     if(this.ficha.idPersona != null){
       this.cargarDatosBancarios(); //Se buscan las cuentas bancarias asociadas al cliente
-    }
-    if(this.localStorageService.isLetrado){
-      this.esColegiado = true;
-    }
-    else{
-      this.esColegiado = false;
     }
     
 
