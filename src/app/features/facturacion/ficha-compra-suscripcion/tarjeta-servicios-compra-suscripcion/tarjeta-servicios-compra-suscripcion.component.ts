@@ -320,13 +320,14 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 
           this.ficha.servicios = JSON.parse(JSON.stringify(this.serviciosTarjeta));
-          //this.actualizaFicha.emit();
+          this.actualizaFicha.emit();
         }
 
         this.progressSpinner = false;
 
       },
       err => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         this.progressSpinner = false;
       });
   }
@@ -606,7 +607,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
     }
   }
 
-  fillFechaBajaCalendar(event) {
+  fillFechaBaja(event) {
     if (event != null) {
       this.serviciosTarjeta[0].fechaBaja = event;
       // Ignora el error provocado por la estructura de datos de InscripcionesItem
@@ -618,7 +619,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
     }
   }
 
-  fillFechaAltaCalendar(event) {
+  fillFechaAlta(event) {
     if (event != null) {
       this.serviciosTarjeta[0].fechaAlta = event;
       // Ignora el error provocado por la estructura de datos de InscripcionesItem
@@ -748,12 +749,12 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
         return new Date(facturaMax.fechaFactura);
       }
       else{
-        return this.ficha.fechaAceptada;
+        return new Date(this.ficha.fechaAceptada);
       }
       // return Math.max.apply(Math, this.ficha.facturas.map(function(o) { return o.fechaFactura; }));
     }
     else{
-      return this.ficha.fechaAceptada;
+      return new Date(this.ficha.fechaAceptada);
     }
   }
 
@@ -804,7 +805,6 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
                 serv.periodicidadValor = precioDef.periodicidadValor.toString();//REVISAR
                 serv.periodicidadDesc = precioDef.descripcionperiodicidad;
                 serv.idPeriodicidad = precioDef.idperiodicidad.toString();
-                this.checkTotal();
               }
             }
             else{
@@ -826,6 +826,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
               })
             }
           })
+          this.checkTotal();
         }
         
       },

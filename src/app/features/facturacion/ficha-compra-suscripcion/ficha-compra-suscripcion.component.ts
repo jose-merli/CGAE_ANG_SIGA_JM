@@ -76,6 +76,8 @@ export class FichaCompraSuscripcionComponent implements OnInit {
   }
 
   actualizarFicha(){
+    this.progressSpinner = true;
+    
     this.sigaServices.post('PyS_getFichaCompraSuscripcion', this.ficha).subscribe(
       (n) => {
 
@@ -84,6 +86,10 @@ export class FichaCompraSuscripcionComponent implements OnInit {
         } else {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.ficha = JSON.parse(n.body);
+
+          if(this.ficha.servicios != null){
+            this.tarjServicios.getServiciosSuscripcion();
+          }
         }
 
         this.progressSpinner = false;
