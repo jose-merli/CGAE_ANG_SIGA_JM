@@ -475,7 +475,7 @@ export class SigaServices {
 		busquedaSanciones_updateSanction: 'busquedaSanciones/updateSanction',
 		busquedaSanciones_insertSanction: 'busquedaSanciones/insertSanction',
 		fichaDatosGenerales_etiquetasPersona: 'fichaDatosGenerales/etiquetasPersona',
-		getLetrado: '/getLetrado',
+		getLetrado: 'getLetrado',
 		fichaDatosCurriculares_solicitudUpdate: 'fichaDatosCurriculares/solicitudUpdate',
 		fichaDatosDirecciones_solicitudCreate: 'fichaDatosDirecciones/solicitudCreate',
 		fichaDatosDirecciones_solicitudUpdate: 'fichaDatosDirecciones/solicitudUpdate',
