@@ -5,6 +5,7 @@ import { TranslateService } from '../../../commons/translate';
 import { FiltrosSuscripcionesItem } from '../../../models/FiltrosSuscripcionesItem';
 import { ListaSuscripcionesItem } from '../../../models/ListaSuscripcionesItem';
 import { CommonsService } from '../../../_services/commons.service';
+import { PersistenceService } from '../../../_services/persistence.service';
 import { SigaServices } from '../../../_services/siga.service';
 import { TarjetaFiltroCuotasSuscripcionesComponent } from './tarjeta-filtro-cuotas-suscripciones/tarjeta-filtro-cuotas-suscripciones.component';
 import { TarjetaListaCuotasSuscripcionesComponent } from './tarjeta-lista-cuotas-suscripciones/tarjeta-lista-cuotas-suscripciones.component';
@@ -31,7 +32,7 @@ export class CuotasSuscripcionesComponent implements OnInit {
   subscriptionSuscripcionesBusqueda: Subscription;
 
   constructor(private commonsService:CommonsService, private sigaServices: SigaServices,
-    private translateService: TranslateService) { }
+    private translateService: TranslateService, private persistenceService: PersistenceService) { }
 
   ngOnInit() {
   }
@@ -45,6 +46,8 @@ export class CuotasSuscripcionesComponent implements OnInit {
   busquedaSuscripciones(event) {
     this.progressSpinner = true;
     let filtrosSuscripciones: FiltrosSuscripcionesItem = this.filtrosBusqueda.filtrosSuscripciones;
+
+    sessionStorage.setItem("filtroBusqSuscripcion",JSON.stringify(this.filtrosBusqueda.filtrosSuscripciones));
 
     this.subscriptionSuscripcionesBusqueda = this.sigaServices.post("PyS_getListaSuscripciones", filtrosSuscripciones).subscribe(
       listaSuscripcionesDTO => {

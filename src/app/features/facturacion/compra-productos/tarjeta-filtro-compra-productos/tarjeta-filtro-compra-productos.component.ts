@@ -11,6 +11,7 @@ import { procesos_PyS } from '../../../../permisos/procesos_PyS';
 import { CommonsService } from '../../../../_services/commons.service';
 import { ComboItem } from '../../../../models/ComboItem';
 import { SigaStorageService } from '../../../../siga-storage.service';
+import { PersistenceService } from '../../../../_services/persistence.service';
 
 @Component({
   selector: 'app-tarjeta-filtro-compra-productos',
@@ -47,35 +48,53 @@ export class TarjetaFiltroCompraProductosComponent implements OnInit {
   @Output() busqueda = new EventEmitter<boolean>();
 
   constructor(private translateService: TranslateService, private sigaServices: SigaServices,
-    private router: Router, private commonsService: CommonsService, private localStorageService: SigaStorageService,) { }
+    private router: Router, private commonsService: CommonsService, private localStorageService: SigaStorageService,
+    private persistenceService: PersistenceService) { }
 
   ngOnInit() {
 
+    if (sessionStorage.getItem("filtroBusqCompra")) {
+
+      this.filtrosCompraProductos = JSON.parse(sessionStorage.getItem("filtroBusqCompra"));
+
+      if(this.filtrosCompraProductos.fechaSolicitudHasta != undefined){
+        this.filtrosCompraProductos.fechaSolicitudHasta = new Date(this.filtrosCompraProductos.fechaSolicitudHasta);
+      }
+      if(this.filtrosCompraProductos.fechaSolicitudDesde != undefined){
+        this.filtrosCompraProductos.fechaSolicitudDesde = new Date(this.filtrosCompraProductos.fechaSolicitudDesde);
+      }
+
+      sessionStorage.removeItem("filtroBusqCompra");
+      this.busqueda.emit(true);
+
+    } else {
+
+      this.filtrosCompraProductos.fechaSolicitudDesde = new Date(); 
+
+      //En la documentación funcional se pide que por defecto aparezca el campo 
+      //con la fecha de dos años antes
+      this.filtrosCompraProductos.fechaSolicitudDesde.setDate(this.filtrosCompraProductos.fechaSolicitudDesde.getDate() - (365*2));
+    }
+
     if(sessionStorage.getItem("abogado")){
       let data = JSON.parse(sessionStorage.getItem("abogado"))[0];
-			sessionStorage.removeItem("abogado");
-			this.nombreCliente = data.nombre;
-			this.filtrosCompraProductos.idpersona = data.idPersona;
+      sessionStorage.removeItem("abogado");
+      this.nombreCliente = data.nombre;
+      this.filtrosCompraProductos.idpersona = data.idPersona;
       this.apellidosCliente = data.apellidos;
-			this.nifCifCliente = data.nif;
+      this.nifCifCliente = data.nif;
     }
     else if(this.localStorageService.isLetrado){
       this.sigaServices.post("designaciones_searchAbogadoByIdPersona", this.localStorageService.idPersona).subscribe(
-				n => {
-					let data = JSON.parse(n.body).colegiadoItem;
-					this.nombreCliente = data.nombre;
-					this.nifCifCliente = data.nif;
-				},
-				err => {
-					this.progressSpinner = false;
-				});
+        n => {
+          let data = JSON.parse(n.body).colegiadoItem;
+          this.nombreCliente = data.nombre;
+          this.nifCifCliente = data.nif;
+        },
+        err => {
+          this.progressSpinner = false;
+        });
     }
-
-    this.filtrosCompraProductos.fechaSolicitudDesde = new Date(); 
-
-    //En la documentación funcional se pide que por defecto aparezca el campo 
-    //con la fecha de dos años antes
-    this.filtrosCompraProductos.fechaSolicitudDesde.setDate(this.filtrosCompraProductos.fechaSolicitudDesde.getDate() - (365*2));
 
     this.getComboCategoria();
     this.getPermisoComprar();

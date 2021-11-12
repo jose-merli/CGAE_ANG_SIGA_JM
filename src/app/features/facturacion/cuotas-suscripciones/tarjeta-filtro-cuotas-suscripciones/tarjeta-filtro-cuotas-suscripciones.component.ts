@@ -10,6 +10,7 @@ import { FiltrosSuscripcionesItem } from '../../../../models/FiltrosSuscripcione
 import { procesos_PyS } from '../../../../permisos/procesos_PyS';
 import { SigaStorageService } from '../../../../siga-storage.service';
 import { CommonsService } from '../../../../_services/commons.service';
+import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
 
 @Component({
@@ -47,9 +48,28 @@ export class TarjetaFiltroCuotasSuscripcionesComponent implements OnInit {
   @Output() busqueda = new EventEmitter<boolean>();
 
   constructor(private translateService: TranslateService, private sigaServices: SigaServices,
-    private router: Router, private commonsService: CommonsService, private localStorageService: SigaStorageService,) { }
+    private router: Router, private commonsService: CommonsService, private localStorageService: SigaStorageService,
+    private persistenceService: PersistenceService) { }
 
   ngOnInit() {
+    if (sessionStorage.getItem("filtroBusqSuscripcion")) {
+
+      this.filtrosSuscripciones = JSON.parse(sessionStorage.getItem("filtroBusqSuscripcion"));
+
+      if(this.filtrosSuscripciones.fechaSolicitudHasta != undefined){
+        this.filtrosSuscripciones.fechaSolicitudHasta = new Date(this.filtrosSuscripciones.fechaSolicitudHasta);
+      }
+      if(this.filtrosSuscripciones.fechaSolicitudDesde != undefined){
+        this.filtrosSuscripciones.fechaSolicitudDesde = new Date(this.filtrosSuscripciones.fechaSolicitudDesde);
+      }
+      if(this.filtrosSuscripciones.aFechaDe != undefined){
+        this.filtrosSuscripciones.aFechaDe = new Date(this.filtrosSuscripciones.aFechaDe);
+      }
+
+      sessionStorage.removeItem("filtroBusqSuscripcion");
+      this.busqueda.emit(true);
+
+    } 
 
     if(sessionStorage.getItem("abogado")){
       let data = JSON.parse(sessionStorage.getItem("abogado"))[0];

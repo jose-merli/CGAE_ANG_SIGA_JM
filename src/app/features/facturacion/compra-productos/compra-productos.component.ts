@@ -5,6 +5,7 @@ import { TranslateService } from '../../../commons/translate';
 import { FiltrosCompraProductosItem } from '../../../models/FiltrosCompraProductosItem';
 import { ListaComprasProductosItem } from '../../../models/ListaComprasProductosItem';
 import { CommonsService } from '../../../_services/commons.service';
+import { PersistenceService } from '../../../_services/persistence.service';
 import { SigaServices } from '../../../_services/siga.service';
 import { TarjetaFiltroCompraProductosComponent } from './tarjeta-filtro-compra-productos/tarjeta-filtro-compra-productos.component';
 import { TarjetaListaCompraProductosComponent } from './tarjeta-lista-compra-productos/tarjeta-lista-compra-productos.component';
@@ -30,7 +31,7 @@ export class CompraProductosComponent implements OnInit {
   subscriptionProductosBusqueda: Subscription;
 
   constructor(private commonsService:CommonsService, private sigaServices: SigaServices,
-    private translateService: TranslateService) { }
+    private translateService: TranslateService, private persistenceService: PersistenceService) { }
 
   ngOnInit() {
   }
@@ -43,6 +44,8 @@ export class CompraProductosComponent implements OnInit {
   busquedaCompraProductos(event) {
     this.progressSpinner = true;
     let filtrosProductos: FiltrosCompraProductosItem = this.filtrosBusqueda.filtrosCompraProductos;
+
+    sessionStorage.setItem("filtroBusqCompra",JSON.stringify(this.filtrosBusqueda.filtrosCompraProductos));
 
     this.subscriptionProductosBusqueda = this.sigaServices.post("PyS_getListaCompraProductos", filtrosProductos).subscribe(
       listaCompraProductosDTO => {
