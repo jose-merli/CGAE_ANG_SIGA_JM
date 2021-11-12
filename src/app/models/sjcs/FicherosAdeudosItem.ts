@@ -20,9 +20,9 @@ export class FicherosAdeudosItem {
 	totalRemesa: String;
 	importeTotalDesde: String;
 	importeTotalHasta: String;
-	numRecibos: number;
-	numRecibosDesde: number;
-	numRecibosHasta: number;
+	numRecibos: String;
+	numRecibosDesde: String;
+	numRecibosHasta: String;
 	origen: String;
 	facturacion: String;
 	

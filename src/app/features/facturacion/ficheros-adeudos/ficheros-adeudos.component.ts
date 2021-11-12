@@ -21,12 +21,11 @@ export class FicherosAdeudosComponent implements OnInit {
 
   progressSpinner: boolean = false;
   buscar: boolean = false;
-
-  permisoEscritura: any;
+  permisoEscritura: boolean = false;
 
   @ViewChild(FiltrosBusquedaAdeudosComponent) filtros;
   @ViewChild(TablaAdeudosComponent) tabla;
-  
+
   constructor(private translateService: TranslateService,
     private sigaServices: SigaServices,
     private commonsService: CommonsService,
@@ -36,25 +35,32 @@ export class FicherosAdeudosComponent implements OnInit {
 
   ngOnInit() {
     this.buscar = false;
+    this.permisoEscritura=true //cambiar cuando se implemente los permisos
   }
 
   buscarFicherosAdeudos(event) {
     let filtros = JSON.parse(JSON.stringify(this.filtros.body));
 
-    this.progressSpinner=true;
+    this.progressSpinner = true;
 
     this.sigaServices.post("facturacionPyS_getFicherosAdeudos", filtros).subscribe(
       n => {
-        this.progressSpinner=false;
+        this.progressSpinner = false;
 
         this.datos = JSON.parse(n.body).ficherosAdeudosItems;
         this.buscar = true;
+        let error = JSON.parse(n.body).error;
 
         if (this.tabla != null && this.tabla != undefined) {
           this.tabla.table.sortOrder = 0;
           this.tabla.table.sortField = '';
           this.tabla.table.reset();
           this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
+        }
+
+        //comprobamos el mensaje de info de resultados
+        if (error!=undefined && error!=null) {
+          this.showMessage("info", "INFO", this.translateService.instant(error.message));
         }
 
         this.progressSpinner = false;

@@ -47,16 +47,23 @@ export class TablaAdeudosComponent implements OnInit {
     this.getCols();
   }
 
+  navigateTo(dato){
+    this.router.navigate(['/gestionAdeudos']);
+  }
+  
+  descargarFicheroAdeudo(){
+
+  }
   getCols() {
     this.cols = [
       { field: "idDisqueteCargos", header: "administracion.grupos.literal.id", width: "5%" },
       { field: "fechaCreacion", header: "informesycomunicaciones.comunicaciones.busqueda.fechaCreacion", width: "10%" },
-      { field: "nombreabreviado", header: "facturacionPyS.ficherosAdeudos.serie", width: "10%" },
+      { field: "nombreabreviado", header: "facturacionPyS.ficherosAdeudos.serie", width: "20%" },
       { field: "descripcion", header: "menu.facturacion", width: "20%" },
-      { field: "cuentaEntidad", header: "facturacion.seriesFactura.cuentaBancaria", width: "20%" },
+      { field: "cuentaEntidad", header: "facturacion.seriesFactura.cuentaBancaria", width: "15%" },
       { field: "sufijo", header: "administracion.parametrosGenerales.literal.sufijo", width: "10%" },
       { field: "numRecibos", header: 'facturacionPyS.ficherosAdeudos.numRecibos', width: "10%" },
-      { field: "totalRemesa", header: "facturacionSJCS.facturacionesYPagos.importeTotal", width: "15%" },
+      { field: "totalRemesa", header: "facturacionSJCS.facturacionesYPagos.importeTotal", width: "10%" },
     ];
 
     this.cols.forEach(it => this.buscadores.push(""));
